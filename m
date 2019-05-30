@@ -2,125 +2,97 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD431C28CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F83C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:26:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9A2125F8C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:26:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RRkSK4If"
+	by mail.kernel.org (Postfix) with ESMTP id 4FF5725F8D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:26:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbfE3S0Z (ORCPT
+        id S1726701AbfE3S02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 14:26:25 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:44366 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726330AbfE3S0Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 14:26:24 -0400
-Received: by mail-qk1-f195.google.com with SMTP id w187so4492828qkb.11;
-        Thu, 30 May 2019 11:26:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=X4F8rpOYydEBteOrpJHUvf+ltyCvWepHpLkF2UiorwM=;
-        b=RRkSK4IfvrJOfIwSjMgfplKYF7wdFEqbVZokEFKrsSgjxhxsqrXhbWdDEkHHg9z0+R
-         fYgBk43pk0yhzGD0PhJb1ve5dR3i9GAsniDND86t5kU3i9MjfiN8/rZl3LzuqOpIRAYH
-         X0lToH5zZcu6uNbkr6GpZIW42peuw1SacYN8h0alTmHFL+v3MK07EVhHlzQlbUBPNj5n
-         xMW5GMOPToCAeTwyZ+fXlOWciYxhWxQsAodrlS3u3zpoAQvSQRBt4QvFzpJcWiH8pqxJ
-         boWSoCZyYeXjqPrgfUd9XJJGfpi+Ks5gmHgJleX+kIpgbdObGIScjPsEmcfD6Og4vgv4
-         dnYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X4F8rpOYydEBteOrpJHUvf+ltyCvWepHpLkF2UiorwM=;
-        b=gQa7+FVZ3T38VFmkODQQj8qv/qsiXUtxK7oVf8dUJJMQMSBnZGkt9bhcH5v6lhdZos
-         pncPS0WVIYc/eRmDvX2qej3gdP8CPCD9mQl5S2X7JOeBiS0JwpGdMeAh3VDt1ROxMkGS
-         8RqOuUjxe864vAHY3uZtF4aFgRtbVu+pOBEuqHczNH9szmDFxQn2El89lgRGg/JY6hVA
-         wnREwCR8r/mTsa7XgA/KlRvdCjB5VITCA/eoIUf8Xg+qF9zR945fSFDzyVARfePRiMf3
-         iH5ZZ0QkFaSSxpk7YEv6bWC+5NFqWUxKkJ8IKQH1izu4OaneLnvaUvz7jNbLYSlAAiw4
-         TRVw==
-X-Gm-Message-State: APjAAAWftATB5kSAVjfh29JJPooMhwYltFom9TlfTEOXLoFn1vj44Z14
-        0TKbYPuCKdfm6WG6gXWQoJxoGhTEDABkmC3VrTA=
-X-Google-Smtp-Source: APXvYqwvh8h7SfCboFztJzuM3+QCUwc1Dzk8sGI8iZVjBaAM3c01ZJ7ar8ATunTMtOXppOU1D1YKjWaHfB58Gr1Hqvw=
-X-Received: by 2002:a37:4e92:: with SMTP id c140mr4637203qkb.48.1559240783402;
- Thu, 30 May 2019 11:26:23 -0700 (PDT)
+        Thu, 30 May 2019 14:26:28 -0400
+Received: from mga11.intel.com ([192.55.52.93]:32937 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726330AbfE3S00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 14:26:26 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 11:26:25 -0700
+X-ExtLoop1: 1
+Received: from unknown (HELO [10.228.129.69]) ([10.228.129.69])
+  by orsmga007.jf.intel.com with ESMTP; 30 May 2019 11:26:23 -0700
+Subject: Re: [PATCH][next] IB/rdmavt: Use struct_size() helper
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190529151248.GA24080@embeddedor>
+From:   Dennis Dalessandro <dennis.dalessandro@intel.com>
+Message-ID: <09563aec-f6d0-f27f-4f67-1e21cebd997c@intel.com>
+Date:   Thu, 30 May 2019 14:26:22 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190530010359.2499670-1-guro@fb.com> <20190530010359.2499670-2-guro@fb.com>
-In-Reply-To: <20190530010359.2499670-2-guro@fb.com>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Thu, 30 May 2019 11:26:12 -0700
-Message-ID: <CAPhsuW6MxT51mqmkuyC87xCpsLm1cFpCXx7rCYdWL4TBzOsHqQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 1/5] bpf: add memlock precharge check for cgroup_local_storage
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        bpf <bpf@vger.kernel.org>, Kernel Team <kernel-team@fb.com>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190529151248.GA24080@embeddedor>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 6:05 PM Roman Gushchin <guro@fb.com> wrote:
->
-> Cgroup local storage maps lack the memlock precharge check,
-> which is performed before the memory allocation for
-> most other bpf map types.
->
-> Let's add it in order to unify all map types.
->
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-
-Acked-by: Song Liu <songliubraving@fb.com>
-
+On 5/29/2019 11:12 AM, Gustavo A. R. Silva wrote:
+> Make use of the struct_size() helper instead of an open-coded version
+> in order to avoid any potential type mistakes, in particular in the
+> context in which this code is being used.
+> 
+> So, replace the following form:
+> 
+> sizeof(struct rvt_sge) * init_attr->cap.max_send_sge + sizeof(struct rvt_swqe)
+> 
+> with:
+> 
+> struct_size(swq, sg_list, init_attr->cap.max_send_sge)
+> 
+> and so on...
+> 
+> Also, notice that variable size is unnecessary, hence it is removed.
+> 
+> This code was detected with the help of Coccinelle.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 > ---
->  kernel/bpf/local_storage.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
->
-> diff --git a/kernel/bpf/local_storage.c b/kernel/bpf/local_storage.c
-> index 980e8f1f6cb5..e48302ecb389 100644
-> --- a/kernel/bpf/local_storage.c
-> +++ b/kernel/bpf/local_storage.c
-> @@ -272,6 +272,8 @@ static struct bpf_map *cgroup_storage_map_alloc(union bpf_attr *attr)
->  {
->         int numa_node = bpf_map_attr_numa_node(attr);
->         struct bpf_cgroup_storage_map *map;
-> +       u32 pages;
-> +       int ret;
->
->         if (attr->key_size != sizeof(struct bpf_cgroup_storage_key))
->                 return ERR_PTR(-EINVAL);
-> @@ -290,13 +292,18 @@ static struct bpf_map *cgroup_storage_map_alloc(union bpf_attr *attr)
->                 /* max_entries is not used and enforced to be 0 */
->                 return ERR_PTR(-EINVAL);
->
-> +       pages = round_up(sizeof(struct bpf_cgroup_storage_map), PAGE_SIZE) >>
-> +               PAGE_SHIFT;
-> +       ret = bpf_map_precharge_memlock(pages);
-> +       if (ret < 0)
-> +               return ERR_PTR(ret);
-> +
->         map = kmalloc_node(sizeof(struct bpf_cgroup_storage_map),
->                            __GFP_ZERO | GFP_USER, numa_node);
->         if (!map)
->                 return ERR_PTR(-ENOMEM);
->
-> -       map->map.pages = round_up(sizeof(struct bpf_cgroup_storage_map),
-> -                                 PAGE_SIZE) >> PAGE_SHIFT;
-> +       map->map.pages = pages;
->
->         /* copy mandatory map attributes */
->         bpf_map_init_from_attr(&map->map, attr);
-> --
-> 2.20.1
->
+>   drivers/infiniband/sw/rdmavt/qp.c | 4 +---
+>   1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/infiniband/sw/rdmavt/qp.c b/drivers/infiniband/sw/rdmavt/qp.c
+> index 31a2e65e4906..a60f5faea198 100644
+> --- a/drivers/infiniband/sw/rdmavt/qp.c
+> +++ b/drivers/infiniband/sw/rdmavt/qp.c
+> @@ -988,9 +988,7 @@ struct ib_qp *rvt_create_qp(struct ib_pd *ibpd,
+>   	case IB_QPT_UC:
+>   	case IB_QPT_RC:
+>   	case IB_QPT_UD:
+> -		sz = sizeof(struct rvt_sge) *
+> -			init_attr->cap.max_send_sge +
+> -			sizeof(struct rvt_swqe);
+> +		sz = struct_size(swq, sg_list, init_attr->cap.max_send_sge);
+>   		swq = vzalloc_node(array_size(sz, sqsize), rdi->dparms.node);
+>   		if (!swq)
+>   			return ERR_PTR(-ENOMEM);
+> 
+
+Looks correct, I don't think this makes the code easier to read though. 
+The macro name "struct_size" is misleading to me. Maybe that's just me, 
+and in any case...
+
+Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+
+
