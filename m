@@ -2,59 +2,63 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F997C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 00:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C267FC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 00:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E43E243B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 00:53:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97853243B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 00:53:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fbbGY86H"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h8FHABKx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727192AbfE3AxI (ORCPT
+        id S1727220AbfE3AxV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 20:53:08 -0400
-Received: from mail-yw1-f73.google.com ([209.85.161.73]:37686 "EHLO
-        mail-yw1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726859AbfE3AxI (ORCPT
+        Wed, 29 May 2019 20:53:21 -0400
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:52782 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727194AbfE3AxU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 20:53:08 -0400
-Received: by mail-yw1-f73.google.com with SMTP id j68so3937914ywj.4
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 17:53:07 -0700 (PDT)
+        Wed, 29 May 2019 20:53:20 -0400
+Received: by mail-pl1-f202.google.com with SMTP id q2so2751603plr.19
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 17:53:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=p0enTo1paGhtTCzKrRxNViLV0NJbbGkfixUzKcvFAIM=;
-        b=fbbGY86HQAvMyuGABmIV5PWAqyAjKpNYQPTVcYsDDwLMglTCo/RHkGXEHGjlPQlO1i
-         1maBy1XlB8ZPwQF1a4O65dbNcWKaebodjcj8l91tKo7tj7lfzms/LmWum3fYAkSCF9+a
-         1MduZ6NgfZ4J4RsrcjHMnjmUA/OLn/1xplY3+eg6JF39R9cjdd0UM4lb5tbyKLyN2Flw
-         Imwh+pgUv75Np9AyNwYEWKPBO/FRJRrzAlqLSYPGQ2W1XvDlp+vOaZzMVcUBsMuVa0aF
-         UhUtZx1Rwvk2/6sFkV3HlEKjNDlqDECo3ImPqfc4klHFAG5mtBhfs4Gt4xbiOYfl1x3s
-         9mKg==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=1zLLzunRacIsvbkfTaWpC4CoBmiOmCh3qurXkU7Ik8U=;
+        b=h8FHABKxdlBN53cFTYJ5d0UiBL7PihQINuldUv4FTl0bNIxkuNBt/0Vhf2uJoL5oHc
+         ntnxQeBd3+C8qEPYr5NVptJ+q35h8Vb6fgT/+ZS105INBTY18oRGfX0xwxo1L6VPNRA5
+         c22OcQrAt10dKzRjCahiaTgdDbZ/vBceEd0fjRMjFH/6+q0u9FQKKJf/x+fsZdfIY04A
+         Vc4TLPxz0LbwxUj10798jCsJzwt35n5zYTHpIofjFuIp+AqXXRE63vKbMXk1C/H9oUB6
+         yHBPeUJEjTFKYiZzaX0gOwoHu4F0VQMZ+O+jfseDir1gYMx+VP4rwUkz9NYSSctfnSkb
+         q/KQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=p0enTo1paGhtTCzKrRxNViLV0NJbbGkfixUzKcvFAIM=;
-        b=LbTranNk64Xv2s2+6Hd9wHSNf0u4aI9F9mKAcn+jGM2wenrfebqgcXpV4KZbtiXqTJ
-         ry1kKYIzuSnQYP/ikCzPDRPeHFaURMP7ntf5TfK6mEhnok5mxIuU42zzI1Tu2youRBfn
-         GoKZJ5TyOcCQXr77VAsnSvH49RWcQNP/hjqlWEnJdZ4UL8Rv/Iw+4BLOAAo9fMj/c6Yo
-         SFey52g6gpFtmsJE6bRdp0zM8Zn6ijW/d2pUm9GlSOT0BWwk2DoHh5c/tUE8UvSwHXwm
-         IsgvYO7bnGlZFCrPypJ7Vh5bJjmYLPzRo9L79xfU2CmLaSDnxV60GLp42HY7DOVeIEhq
-         KjJw==
-X-Gm-Message-State: APjAAAVvMkHcm1EvUIc5EqsPR/g/ksAYIk1ZVZMT6jHAK1zlVnXRpQOP
-        QSWgj7Lg9BxrcVQBKbJlAQ8sLQZdcGg=
-X-Google-Smtp-Source: APXvYqzWm35RV29MwLeQluK9gcDBYwAUwpZj3MTGP+M+S2CQ5CrRwwOROjnO+bcTCPD25gcsaXKtfsvXOEM=
-X-Received: by 2002:a25:4050:: with SMTP id n77mr310800yba.77.1559177587174;
- Wed, 29 May 2019 17:53:07 -0700 (PDT)
-Date:   Wed, 29 May 2019 17:49:02 -0700
-Message-Id: <20190530004906.261170-1-drosen@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=1zLLzunRacIsvbkfTaWpC4CoBmiOmCh3qurXkU7Ik8U=;
+        b=FFt+2RyuoSUpGg+fkdB9oDXIt+xursWTV0yo7AIW2fl5kKoeZCUdBBGhw4sIStzf8T
+         vOIRBRvylIaJpisPyA8EGdV28daAKYAgH3J+1x7Xds/LbSGrw4DFtKYEx21TwWo0v+3p
+         /OELvZHWsnrP5raMOzowSebAo7JYZiwtPKNwKgTkhCruwDk81vg5XEeXkClo36Xy6UgF
+         l7zFWNTme2x7SmXq0aI7in7JUPgoM62k/hsmvhfeKeKzdHb+4TeJTiixleoJquoOYj/I
+         qSVWWc7K/YvfyS6/NCgQHbluaBv6x9zpll8atCcCIzOa1lecXyiTsmuxNKaZN1aDMgyM
+         cRkQ==
+X-Gm-Message-State: APjAAAVtMP30ke2oPsocSO8kn4NIL8UmWysGNnTEEvm4okOnY2e5WzyJ
+        qRPjFBViG7qNhPG8ma4Xtt5idJB5YXg=
+X-Google-Smtp-Source: APXvYqyldr1oA4bszRUF74gO+ABbvOdB1x8BeqSdaTU/ourXVmDB1Vf2L9oUISnK4Rb3ipD8ZuMVYmiiBMg=
+X-Received: by 2002:a63:1622:: with SMTP id w34mr958542pgl.45.1559177599505;
+ Wed, 29 May 2019 17:53:19 -0700 (PDT)
+Date:   Wed, 29 May 2019 17:49:03 -0700
+In-Reply-To: <20190530004906.261170-1-drosen@google.com>
+Message-Id: <20190530004906.261170-2-drosen@google.com>
 Mime-Version: 1.0
+References: <20190530004906.261170-1-drosen@google.com>
 X-Mailer: git-send-email 2.22.0.rc1.257.g3120a18244-goog
-Subject: [PATCH v3 0/4] F2FS Checkpointing without GC, related fixes
+Subject: [PATCH v3 1/4] f2fs: Lower threshold for disable_cp_again
 From:   Daniel Rosenberg <drosen@google.com>
 To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
         Jonathan Corbet <corbet@lwn.net>,
@@ -68,42 +72,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The first patch adjusts the default allowable holes for checkpointing, and
-the next two patches fix underflow issues related to inc_valid_block_count
-and inc_valid_node_count. The final one adds a new feature for
-checkpointing where the user can specify an acceptable amount of space to
-lose access to up front in checkpointing=disable mode instead of requiring
-garbage collection.
+The existing threshold for allowable holes at checkpoint=disable time is
+too high. The OVP space contains reserved segments, which are always in
+the form of free segments. These must be subtracted from the OVP value.
 
-There is still a question around what to do when the current reserved
-space is less than reserved. As it stands, when a block is deleted, if it
-was an old block, the space is not actually given back, and is marked as
-unusable. But current reserve may still rise towards reserve, which would
-make freeing one block result in a net loss of one block, as opposed to no
-change. Reserved and unusable serve the same function, so it may make
-sense to just handle it as max(current_reserved, unusable), which
-effectively removes the double counting. I'm leaving that until later.
+The current threshold is meant to be the maximum value of holes of a
+single type we can have and still guarantee that we can fill the disk
+without failing to find space for a block of a given type.
 
-Changes from v2:
-Adjust threshold for initial unusable blocks
-Patches to fix underflows
-Added option to set a block limit in addition to a percent for initial
-unusable space
+If the disk is full, ignoring current reserved, which only helps us,
+the amount of unused blocks is equal to the OVP area. Of that, there
+are reserved segments, which must be free segments, and the rest of the
+ovp area, which can come from either free segments or holes. The maximum
+possible amount of holes is OVP-reserved.
 
-Daniel Rosenberg (4):
-  f2fs: Lower threshold for disable_cp_again
-  f2fs: Fix root reserved on remount
-  f2fs: Fix accounting for unusable blocks
-  f2fs: Add option to limit required GC for checkpoint=disable
+Now, consider the disk when mounting with checkpoint=disable.
+We must be able to fill all available free space with either data or
+node blocks. When we start with checkpoint=disable, holes are locked to
+their current type. Say we have H of one type of hole, and H+X of the
+other. We can fill H of that space with arbitrary typed blocks via SSR.
+For the remaining H+X blocks, we may not have any of a given block type
+left at all. For instance, if we were to fill the disk entirely with
+blocks of the type with fewer holes, the H+X blocks of the opposite type
+would not be used. If H+X > OVP-reserved, there would be more holes than
+could possibly exist, and we would have failed to find a suitable block
+earlier on, leading to a crash in update_sit_entry.
 
- Documentation/ABI/testing/sysfs-fs-f2fs |  8 ++++
- Documentation/filesystems/f2fs.txt      | 19 +++++++-
- fs/f2fs/f2fs.h                          | 22 ++++++---
- fs/f2fs/segment.c                       | 21 +++++++--
- fs/f2fs/super.c                         | 62 ++++++++++++++++---------
- fs/f2fs/sysfs.c                         | 16 +++++++
- 6 files changed, 115 insertions(+), 33 deletions(-)
+If H+X <= OVP-reserved, then the holes end up effectively masked by the OVP
+region in this case.
 
+Signed-off-by: Daniel Rosenberg <drosen@google.com>
+---
+ fs/f2fs/segment.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 1a83115284b93..ec59cbd0e661d 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -876,7 +876,9 @@ void f2fs_dirty_to_prefree(struct f2fs_sb_info *sbi)
+ int f2fs_disable_cp_again(struct f2fs_sb_info *sbi)
+ {
+ 	struct dirty_seglist_info *dirty_i = DIRTY_I(sbi);
+-	block_t ovp = overprovision_segments(sbi) << sbi->log_blocks_per_seg;
++	int ovp_hole_segs =
++		(overprovision_segments(sbi) - reserved_segments(sbi));
++	block_t ovp_holes = ovp_hole_segs << sbi->log_blocks_per_seg;
+ 	block_t holes[2] = {0, 0};	/* DATA and NODE */
+ 	struct seg_entry *se;
+ 	unsigned int segno;
+@@ -891,10 +893,10 @@ int f2fs_disable_cp_again(struct f2fs_sb_info *sbi)
+ 	}
+ 	mutex_unlock(&dirty_i->seglist_lock);
+ 
+-	if (holes[DATA] > ovp || holes[NODE] > ovp)
++	if (holes[DATA] > ovp_holes || holes[NODE] > ovp_holes)
+ 		return -EAGAIN;
+ 	if (is_sbi_flag_set(sbi, SBI_CP_DISABLED_QUICK) &&
+-		dirty_segments(sbi) > overprovision_segments(sbi))
++		dirty_segments(sbi) > ovp_hole_segs)
+ 		return -EAGAIN;
+ 	return 0;
+ }
 -- 
 2.22.0.rc1.257.g3120a18244-goog
 
