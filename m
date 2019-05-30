@@ -2,136 +2,80 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66ACEC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45F14C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43C6A26035
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:55:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 254DD26032
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:55:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbfE3SzS (ORCPT
+        id S1726678AbfE3Szv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 14:55:18 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38754 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726031AbfE3SzS (ORCPT
+        Thu, 30 May 2019 14:55:51 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:57602 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726031AbfE3Szu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 14:55:18 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UIqi46021980
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 14:55:16 -0400
-Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2stmjagppw-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 14:55:16 -0400
-Received: from localhost
-        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Thu, 30 May 2019 19:55:15 +0100
-Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
-        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 30 May 2019 19:55:12 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4UIrv4l35127356
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 May 2019 18:53:57 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F1F2DB2064;
-        Thu, 30 May 2019 18:53:56 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D50BCB205F;
-        Thu, 30 May 2019 18:53:56 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 30 May 2019 18:53:56 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id D760016C2D27; Thu, 30 May 2019 11:53:58 -0700 (PDT)
-Date:   Thu, 30 May 2019 11:53:58 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <Will.Deacon@arm.com>,
-        arcml <linux-snps-arc@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Subject: Re: single copy atomicity for double load/stores on 32-bit systems
-Reply-To: paulmck@linux.ibm.com
-References: <2fd3a455-6267-5d21-c530-41964a4f6ce9@synopsys.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2fd3a455-6267-5d21-c530-41964a4f6ce9@synopsys.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19053018-2213-0000-0000-00000398092F
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011186; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01210864; UDB=6.00636205; IPR=6.00991898;
- MB=3.00027122; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-30 18:55:14
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19053018-2214-0000-0000-00005EA377A9
-Message-Id: <20190530185358.GG28207@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-30_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905300132
+        Thu, 30 May 2019 14:55:50 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id D87A914D9DD5B;
+        Thu, 30 May 2019 11:55:49 -0700 (PDT)
+Date:   Thu, 30 May 2019 11:55:49 -0700 (PDT)
+Message-Id: <20190530.115549.1509561180724590494.davem@davemloft.net>
+To:     mst@redhat.com
+Cc:     jasowang@redhat.com, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, peterx@redhat.com,
+        James.Bottomley@hansenpartnership.com, hch@infradead.org,
+        jglisse@redhat.com, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org,
+        christophe.de.dinechin@gmail.com, jrdr.linux@gmail.com
+Subject: Re: [PATCH net-next 0/6] vhost: accelerate metadata access
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190530141243-mutt-send-email-mst@kernel.org>
+References: <20190524081218.2502-1-jasowang@redhat.com>
+        <20190530.110730.2064393163616673523.davem@davemloft.net>
+        <20190530141243-mutt-send-email-mst@kernel.org>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 30 May 2019 11:55:50 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 11:22:42AM -0700, Vineet Gupta wrote:
-> Hi Peter,
-> 
-> Had an interesting lunch time discussion with our hardware architects pertinent to
-> "minimal guarantees expected of a CPU" section of memory-barriers.txt
-> 
-> 
-> |  (*) These guarantees apply only to properly aligned and sized scalar
-> |     variables.  "Properly sized" currently means variables that are
-> |     the same size as "char", "short", "int" and "long".  "Properly
-> |     aligned" means the natural alignment, thus no constraints for
-> |     "char", two-byte alignment for "short", four-byte alignment for
-> |     "int", and either four-byte or eight-byte alignment for "long",
-> |     on 32-bit and 64-bit systems, respectively.
-> 
-> 
-> I'm not sure how to interpret "natural alignment" for the case of double
-> load/stores on 32-bit systems where the hardware and ABI allow for 4 byte
-> alignment (ARCv2 LDD/STD, ARM LDRD/STRD ....)
-> 
-> I presume (and the question) that lkmm doesn't expect such 8 byte load/stores to
-> be atomic unless 8-byte aligned
+From: "Michael S. Tsirkin" <mst@redhat.com>
+Date: Thu, 30 May 2019 14:13:28 -0400
 
-I would not expect 8-byte accesses to be atomic on 32-bit systems unless
-some special instruction was in use.  But that usually means special
-intrinsics or assembly code.
-
-> ARMv7 arch ref manual seems to confirm this. Quoting
+> On Thu, May 30, 2019 at 11:07:30AM -0700, David Miller wrote:
+>> From: Jason Wang <jasowang@redhat.com>
+>> Date: Fri, 24 May 2019 04:12:12 -0400
+>> 
+>> > This series tries to access virtqueue metadata through kernel virtual
+>> > address instead of copy_user() friends since they had too much
+>> > overheads like checks, spec barriers or even hardware feature
+>> > toggling like SMAP. This is done through setup kernel address through
+>> > direct mapping and co-opreate VM management with MMU notifiers.
+>> > 
+>> > Test shows about 23% improvement on TX PPS. TCP_STREAM doesn't see
+>> > obvious improvement.
+>> 
+>> I'm still waiting for some review from mst.
+>> 
+>> If I don't see any review soon I will just wipe these changes from
+>> patchwork as it serves no purpose to just let them rot there.
+>> 
+>> Thank you.
 > 
-> | LDM, LDC, LDC2, LDRD, STM, STC, STC2, STRD, PUSH, POP, RFE, SRS, VLDM, VLDR,
-> | VSTM, and VSTR instructions are executed as a sequence of word-aligned word
-> | accesses. Each 32-bit word access is guaranteed to be single-copy atomic. A
-> | subsequence of two or more word accesses from the sequence might not exhibit
-> | single-copy atomicity
-> 
-> While it seems reasonable form hardware pov to not implement such atomicity by
-> default it seems there's an additional burden on application writers. They could
-> be happily using a lockless algorithm with just a shared flag between 2 threads
-> w/o need for any explicit synchronization. But upgrade to a new compiler which
-> aggressively "packs" struct rendering long long 32-bit aligned (vs. 64-bit before)
-> causing the code to suddenly stop working. Is the onus on them to declare such
-> memory as c11 atomic or some such.
+> I thought we agreed I'm merging this through my tree, not net-next.
+> So you can safely wipe it.
 
-There are also GCC extensions that allow specifying the alignment of
-structure fields.
-
-								Thanx, Paul
-
+Aha, I didn't catch that, thanks!
