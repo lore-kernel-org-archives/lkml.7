@@ -5,53 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E31C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC2C8C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DB212502A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:05:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C191525041
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:05:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189105;
-	bh=wL6SzCRMp/GYdzn4Dq2l7ulTOCe8csBtTh8exIgd8Os=;
+	s=default; t=1559189108;
+	bh=CSdObxmxmp8l1cFga4GAwgnZxIW80MVnHARyIn9Jhp8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wfsOCJYvACu1ooLjPG3nXXDDK2c1odX5uR9GhfTgrL0knVjelgTpUhnz8bvW2ni0p
-	 rqfyB9EDxamLZlUtu/pEjNdnx12nwf2sCM1DQNllhp2l5OF84WR4SU58uYUktNKR41
-	 mCzpHCKeVloH8rBfmxzLAk5/vK8flJ4ZwZvITLqc=
+	b=hZ3O/yOehZak9kAyrHEmC+Nee/+h/KZkOtvsA0bRpOoot8v9GjwTNwzHQ1J9UwUA/
+	 CVDfpHy/Li80qtMrFprjVgx6KYXY8zYwGB8758HOfs4WNFE60c2gFKSnu3GV03L4HN
+	 tNEf3bIvosnYJpXmAp+Yz8ecX9eeE8zQLvr23Qa8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387414AbfE3EFE (ORCPT
+        id S1731251AbfE3DRr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:05:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48304 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:17:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731257AbfE3DRs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:17:48 -0400
+        id S1729739AbfE3DOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:09 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F92024479;
-        Thu, 30 May 2019 03:17:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2CEA24547;
+        Thu, 30 May 2019 03:14:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186268;
-        bh=wL6SzCRMp/GYdzn4Dq2l7ulTOCe8csBtTh8exIgd8Os=;
+        s=default; t=1559186048;
+        bh=CSdObxmxmp8l1cFga4GAwgnZxIW80MVnHARyIn9Jhp8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZufvDXatyt8VZSZ9q6Cw27L1WEPUA/H4swC0CJIL5ExeuVppBZNdO2hnwvpI5tvdY
-         Tko8rK1xvgZmlgaeEGzb1iHxScA95yvtDQUCTzHHQyANCV8yXIx5DUXrx6Ihqpq6bV
-         m1Nxb2icyElBrC/H4vQufhpweiIoDQTzPJNHAK5o=
+        b=cvFO6CLIXYVZHd2Jf7Gs8ssgETFoZTst5ZBTclLK1lPB9dNADNp6lST7VB6/fv+Ev
+         FZ3dgwh0agSFnKuW0GJKb7XuO0d7DBSl27oM+63SJNKTZwaNYVFA+tA84+yf7MbaHT
+         ilZrSOuZO3d974rmr+IKeDHSkip0mFDl5n9lm1Wc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lior David <liord@codeaurora.org>,
-        Maya Erez <merez@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Hugues Fruchet <hugues.fruchet@st.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 205/276] wil6210: fix return code of wmi_mgmt_tx and wmi_mgmt_tx_ext
-Date:   Wed, 29 May 2019 20:06:03 -0700
-Message-Id: <20190530030537.950857448@linuxfoundation.org>
+Subject: [PATCH 5.0 143/346] media: stm32-dcmi: fix crash when subdev do not expose any formats
+Date:   Wed, 29 May 2019 20:03:36 -0700
+Message-Id: <20190530030548.380053259@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
-References: <20190530030523.133519668@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,69 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 49122ec42634f73babb1dc96f170023e5228d080 ]
+[ Upstream commit 33dfeb62e23c31619d2197850f7e8b50e8cc5466 ]
 
-The functions that send management TX frame have 3 possible
-results: success and other side acknowledged receive (ACK=1),
-success and other side did not acknowledge receive(ACK=0) and
-failure to send the frame. The current implementation
-incorrectly reports the ACK=0 case as failure.
+Do not access sd_formats[] if num_of_sd_formats is zero, ie
+subdev sensor didn't expose any formats.
 
-Signed-off-by: Lior David <liord@codeaurora.org>
-Signed-off-by: Maya Erez <merez@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/wil6210/cfg80211.c |  5 +++++
- drivers/net/wireless/ath/wil6210/wmi.c      | 11 ++++++-----
- 2 files changed, 11 insertions(+), 5 deletions(-)
+ drivers/media/platform/stm32/stm32-dcmi.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/wil6210/cfg80211.c b/drivers/net/wireless/ath/wil6210/cfg80211.c
-index 2daf33342b23d..1fc2bf66845c7 100644
---- a/drivers/net/wireless/ath/wil6210/cfg80211.c
-+++ b/drivers/net/wireless/ath/wil6210/cfg80211.c
-@@ -1131,7 +1131,12 @@ int wil_cfg80211_mgmt_tx(struct wiphy *wiphy, struct wireless_dev *wdev,
- 			     params->wait);
+diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
+index 918e49f27c7ed..a33d497bd5b71 100644
+--- a/drivers/media/platform/stm32/stm32-dcmi.c
++++ b/drivers/media/platform/stm32/stm32-dcmi.c
+@@ -811,6 +811,9 @@ static int dcmi_try_fmt(struct stm32_dcmi *dcmi, struct v4l2_format *f,
  
- out:
-+	/* when the sent packet was not acked by receiver(ACK=0), rc will
-+	 * be -EAGAIN. In this case this function needs to return success,
-+	 * the ACK=0 will be reflected in tx_status.
-+	 */
- 	tx_status = (rc == 0);
-+	rc = (rc == -EAGAIN) ? 0 : rc;
- 	cfg80211_mgmt_tx_status(wdev, cookie ? *cookie : 0, buf, len,
- 				tx_status, GFP_KERNEL);
- 
-diff --git a/drivers/net/wireless/ath/wil6210/wmi.c b/drivers/net/wireless/ath/wil6210/wmi.c
-index 42c02a20ec97c..6e3b3031f29bd 100644
---- a/drivers/net/wireless/ath/wil6210/wmi.c
-+++ b/drivers/net/wireless/ath/wil6210/wmi.c
-@@ -3107,8 +3107,9 @@ int wmi_mgmt_tx(struct wil6210_vif *vif, const u8 *buf, size_t len)
- 	rc = wmi_call(wil, WMI_SW_TX_REQ_CMDID, vif->mid, cmd, total,
- 		      WMI_SW_TX_COMPLETE_EVENTID, &evt, sizeof(evt), 2000);
- 	if (!rc && evt.evt.status != WMI_FW_STATUS_SUCCESS) {
--		wil_err(wil, "mgmt_tx failed with status %d\n", evt.evt.status);
--		rc = -EINVAL;
-+		wil_dbg_wmi(wil, "mgmt_tx failed with status %d\n",
-+			    evt.evt.status);
-+		rc = -EAGAIN;
+ 	sd_fmt = find_format_by_fourcc(dcmi, pix->pixelformat);
+ 	if (!sd_fmt) {
++		if (!dcmi->num_of_sd_formats)
++			return -ENODATA;
++
+ 		sd_fmt = dcmi->sd_formats[dcmi->num_of_sd_formats - 1];
+ 		pix->pixelformat = sd_fmt->fourcc;
  	}
+@@ -989,6 +992,9 @@ static int dcmi_set_sensor_format(struct stm32_dcmi *dcmi,
  
- 	kfree(cmd);
-@@ -3160,9 +3161,9 @@ int wmi_mgmt_tx_ext(struct wil6210_vif *vif, const u8 *buf, size_t len,
- 	rc = wmi_call(wil, WMI_SW_TX_REQ_EXT_CMDID, vif->mid, cmd, total,
- 		      WMI_SW_TX_COMPLETE_EVENTID, &evt, sizeof(evt), 2000);
- 	if (!rc && evt.evt.status != WMI_FW_STATUS_SUCCESS) {
--		wil_err(wil, "mgmt_tx_ext failed with status %d\n",
--			evt.evt.status);
--		rc = -EINVAL;
-+		wil_dbg_wmi(wil, "mgmt_tx_ext failed with status %d\n",
-+			    evt.evt.status);
-+		rc = -EAGAIN;
+ 	sd_fmt = find_format_by_fourcc(dcmi, pix->pixelformat);
+ 	if (!sd_fmt) {
++		if (!dcmi->num_of_sd_formats)
++			return -ENODATA;
++
+ 		sd_fmt = dcmi->sd_formats[dcmi->num_of_sd_formats - 1];
+ 		pix->pixelformat = sd_fmt->fourcc;
  	}
- 
- 	kfree(cmd);
 -- 
 2.20.1
 
