@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 475B1C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC48C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1514B24A2E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:23:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28A6124A2F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:23:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186623;
-	bh=W6hhyP4Sz0xsqJqXoWMUMQRgHBcyX134EWeoywxxvPQ=;
+	s=default; t=1559186626;
+	bh=URVjh6HX3fhskZ59nH4rwVj+B/K4XCdbJ3cmWj8i8Ds=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jiwraEHBjXU5R+lXh4gMZyDCFIWhR652PzLk6d6d3syuNbWhVsFFdkjgIQvRD1IhJ
-	 DWxsD2d9zIWckQBlMh/DvSqivP1MVCTlof+1Wh6hrjg8lyACHbhlwv1Qj3znD6c+69
-	 h7/5+XEFwM6BRF6rtj8clOSdffJGrGLzuot1dvDU=
+	b=QIizENssjjbd3cdybKZPJFhjNiPZYwOivfHdi1F9Firvt3Bw02HcjzlwcLDMT1bPT
+	 D7OfyMa4MRmcDk21doKdoSW2hXUHmdxh/w7zSijMhSZHAsq25Gng1O3IOzvo84zWxQ
+	 xJdWA/kvpMBLjLNZd79YM6jRFaZq1kmORXCRxGZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733099AbfE3DXm (ORCPT
+        id S1733117AbfE3DXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:23:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47548 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:23:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730278AbfE3DRc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:17:32 -0400
+        id S1731167AbfE3DRf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:17:35 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47E682469D;
-        Thu, 30 May 2019 03:17:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FBD5246E7;
+        Thu, 30 May 2019 03:17:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186251;
-        bh=W6hhyP4Sz0xsqJqXoWMUMQRgHBcyX134EWeoywxxvPQ=;
+        s=default; t=1559186254;
+        bh=URVjh6HX3fhskZ59nH4rwVj+B/K4XCdbJ3cmWj8i8Ds=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zhNaxbB9pP/nVyNmA7ZxbjhqUcKgFS/ciAe2cU2Tr7E3apO3MM2SuGZeEv6mGcgMf
-         rILnS13bMizxi7yuvu2CTSpKl1nkcCeHEx3eGBmSJ1yhsNINVi8I4rfyVbIGF/M6Hd
-         508wuh/nAoj5peOPy51iuY00cWzU3EvcwouUSYSY=
+        b=ysnCGBYMx+c4j0Ac4K+62VQAVeft8tRVGB/MrNXaMdi+VTVoh2hCkCYIqs0y6NiOw
+         LDljru+uKGVciNzxYL9l+qRaZFSXhf6gCPQl6qh5m4HutbUYlJGl3X3/4SEgZdIoIN
+         R4LRWnrAbimHEOLKFM3ams7R0mtg5gQchDA6G+8o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 171/276] extcon: arizona: Disable mic detect if running when driver is removed
-Date:   Wed, 29 May 2019 20:05:29 -0700
-Message-Id: <20190530030536.069725414@linuxfoundation.org>
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 134/276] random: add a spinlock_t to struct batched_entropy
+Date:   Wed, 29 May 2019 20:04:52 -0700
+Message-Id: <20190530030534.124206910@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -61,46 +60,186 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 00053de52231117ddc154042549f2256183ffb86 ]
+[ Upstream commit b7d5dc21072cda7124d13eae2aefb7343ef94197 ]
 
-Microphone detection provides the button detection features on the
-Arizona CODECs as such it will be running if the jack is currently
-inserted. If the driver is unbound whilst the jack is still inserted
-this will cause warnings from the regulator framework as the MICVDD
-regulator is put but was never disabled.
+The per-CPU variable batched_entropy_uXX is protected by get_cpu_var().
+This is just a preempt_disable() which ensures that the variable is only
+from the local CPU. It does not protect against users on the same CPU
+from another context. It is possible that a preemptible context reads
+slot 0 and then an interrupt occurs and the same value is read again.
 
-Correct this by disabling microphone detection on driver removal and if
-the microphone detection was running disable the regulator and put the
-runtime reference that was currently held.
+The above scenario is confirmed by lockdep if we add a spinlock:
+| ================================
+| WARNING: inconsistent lock state
+| 5.1.0-rc3+ #42 Not tainted
+| --------------------------------
+| inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage.
+| ksoftirqd/9/56 [HC0[0]:SC1[1]:HE0:SE0] takes:
+| (____ptrval____) (batched_entropy_u32.lock){+.?.}, at: get_random_u32+0x3e/0xe0
+| {SOFTIRQ-ON-W} state was registered at:
+|   _raw_spin_lock+0x2a/0x40
+|   get_random_u32+0x3e/0xe0
+|   new_slab+0x15c/0x7b0
+|   ___slab_alloc+0x492/0x620
+|   __slab_alloc.isra.73+0x53/0xa0
+|   kmem_cache_alloc_node+0xaf/0x2a0
+|   copy_process.part.41+0x1e1/0x2370
+|   _do_fork+0xdb/0x6d0
+|   kernel_thread+0x20/0x30
+|   kthreadd+0x1ba/0x220
+|   ret_from_fork+0x3a/0x50
+…
+| other info that might help us debug this:
+|  Possible unsafe locking scenario:
+|
+|        CPU0
+|        ----
+|   lock(batched_entropy_u32.lock);
+|   <Interrupt>
+|     lock(batched_entropy_u32.lock);
+|
+|  *** DEADLOCK ***
+|
+| stack backtrace:
+| Call Trace:
+…
+|  kmem_cache_alloc_trace+0x20e/0x270
+|  ipmi_alloc_recv_msg+0x16/0x40
+…
+|  __do_softirq+0xec/0x48d
+|  run_ksoftirqd+0x37/0x60
+|  smpboot_thread_fn+0x191/0x290
+|  kthread+0xfe/0x130
+|  ret_from_fork+0x3a/0x50
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Add a spinlock_t to the batched_entropy data structure and acquire the
+lock while accessing it. Acquire the lock with disabled interrupts
+because this function may be used from interrupt context.
+
+Remove the batched_entropy_reset_lock lock. Now that we have a lock for
+the data scructure, we can access it from a remote CPU.
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/extcon/extcon-arizona.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/char/random.c | 52 ++++++++++++++++++++++---------------------
+ 1 file changed, 27 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
-index da0e9bc4262fa..9327479c719c2 100644
---- a/drivers/extcon/extcon-arizona.c
-+++ b/drivers/extcon/extcon-arizona.c
-@@ -1726,6 +1726,16 @@ static int arizona_extcon_remove(struct platform_device *pdev)
- 	struct arizona_extcon_info *info = platform_get_drvdata(pdev);
- 	struct arizona *arizona = info->arizona;
- 	int jack_irq_rise, jack_irq_fall;
-+	bool change;
-+
-+	regmap_update_bits_check(arizona->regmap, ARIZONA_MIC_DETECT_1,
-+				 ARIZONA_MICD_ENA, 0,
-+				 &change);
-+
-+	if (change) {
-+		regulator_disable(info->micvdd);
-+		pm_runtime_put(info->dev);
-+	}
+diff --git a/drivers/char/random.c b/drivers/char/random.c
+index a4515703cfcdd..0a84b7f468ad0 100644
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -2215,8 +2215,8 @@ struct batched_entropy {
+ 		u32 entropy_u32[CHACHA20_BLOCK_SIZE / sizeof(u32)];
+ 	};
+ 	unsigned int position;
++	spinlock_t batch_lock;
+ };
+-static rwlock_t batched_entropy_reset_lock = __RW_LOCK_UNLOCKED(batched_entropy_reset_lock);
  
- 	gpiod_put(info->micd_pol_gpio);
+ /*
+  * Get a random word for internal kernel use only. The quality of the random
+@@ -2226,12 +2226,14 @@ static rwlock_t batched_entropy_reset_lock = __RW_LOCK_UNLOCKED(batched_entropy_
+  * wait_for_random_bytes() should be called and return 0 at least once
+  * at any point prior.
+  */
+-static DEFINE_PER_CPU(struct batched_entropy, batched_entropy_u64);
++static DEFINE_PER_CPU(struct batched_entropy, batched_entropy_u64) = {
++	.batch_lock	= __SPIN_LOCK_UNLOCKED(batched_entropy_u64.lock),
++};
++
+ u64 get_random_u64(void)
+ {
+ 	u64 ret;
+-	bool use_lock;
+-	unsigned long flags = 0;
++	unsigned long flags;
+ 	struct batched_entropy *batch;
+ 	static void *previous;
  
+@@ -2246,28 +2248,25 @@ u64 get_random_u64(void)
+ 
+ 	warn_unseeded_randomness(&previous);
+ 
+-	use_lock = READ_ONCE(crng_init) < 2;
+-	batch = &get_cpu_var(batched_entropy_u64);
+-	if (use_lock)
+-		read_lock_irqsave(&batched_entropy_reset_lock, flags);
++	batch = raw_cpu_ptr(&batched_entropy_u64);
++	spin_lock_irqsave(&batch->batch_lock, flags);
+ 	if (batch->position % ARRAY_SIZE(batch->entropy_u64) == 0) {
+ 		extract_crng((__u32 *)batch->entropy_u64);
+ 		batch->position = 0;
+ 	}
+ 	ret = batch->entropy_u64[batch->position++];
+-	if (use_lock)
+-		read_unlock_irqrestore(&batched_entropy_reset_lock, flags);
+-	put_cpu_var(batched_entropy_u64);
++	spin_unlock_irqrestore(&batch->batch_lock, flags);
+ 	return ret;
+ }
+ EXPORT_SYMBOL(get_random_u64);
+ 
+-static DEFINE_PER_CPU(struct batched_entropy, batched_entropy_u32);
++static DEFINE_PER_CPU(struct batched_entropy, batched_entropy_u32) = {
++	.batch_lock	= __SPIN_LOCK_UNLOCKED(batched_entropy_u32.lock),
++};
+ u32 get_random_u32(void)
+ {
+ 	u32 ret;
+-	bool use_lock;
+-	unsigned long flags = 0;
++	unsigned long flags;
+ 	struct batched_entropy *batch;
+ 	static void *previous;
+ 
+@@ -2276,18 +2275,14 @@ u32 get_random_u32(void)
+ 
+ 	warn_unseeded_randomness(&previous);
+ 
+-	use_lock = READ_ONCE(crng_init) < 2;
+-	batch = &get_cpu_var(batched_entropy_u32);
+-	if (use_lock)
+-		read_lock_irqsave(&batched_entropy_reset_lock, flags);
++	batch = raw_cpu_ptr(&batched_entropy_u32);
++	spin_lock_irqsave(&batch->batch_lock, flags);
+ 	if (batch->position % ARRAY_SIZE(batch->entropy_u32) == 0) {
+ 		extract_crng(batch->entropy_u32);
+ 		batch->position = 0;
+ 	}
+ 	ret = batch->entropy_u32[batch->position++];
+-	if (use_lock)
+-		read_unlock_irqrestore(&batched_entropy_reset_lock, flags);
+-	put_cpu_var(batched_entropy_u32);
++	spin_unlock_irqrestore(&batch->batch_lock, flags);
+ 	return ret;
+ }
+ EXPORT_SYMBOL(get_random_u32);
+@@ -2301,12 +2296,19 @@ static void invalidate_batched_entropy(void)
+ 	int cpu;
+ 	unsigned long flags;
+ 
+-	write_lock_irqsave(&batched_entropy_reset_lock, flags);
+ 	for_each_possible_cpu (cpu) {
+-		per_cpu_ptr(&batched_entropy_u32, cpu)->position = 0;
+-		per_cpu_ptr(&batched_entropy_u64, cpu)->position = 0;
++		struct batched_entropy *batched_entropy;
++
++		batched_entropy = per_cpu_ptr(&batched_entropy_u32, cpu);
++		spin_lock_irqsave(&batched_entropy->batch_lock, flags);
++		batched_entropy->position = 0;
++		spin_unlock(&batched_entropy->batch_lock);
++
++		batched_entropy = per_cpu_ptr(&batched_entropy_u64, cpu);
++		spin_lock(&batched_entropy->batch_lock);
++		batched_entropy->position = 0;
++		spin_unlock_irqrestore(&batched_entropy->batch_lock, flags);
+ 	}
+-	write_unlock_irqrestore(&batched_entropy_reset_lock, flags);
+ }
+ 
+ /**
 -- 
 2.20.1
 
