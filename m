@@ -2,57 +2,56 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76EEFC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F6AC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5014825804
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:36:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D16D325846
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:36:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191016;
-	bh=nQZYqrwWCpdbUbQ16wM+a+UtsLY3q9D6MPb3TEL2vLM=;
+	s=default; t=1559191019;
+	bh=6RPWTBSids8jpnfkiKL3ALT3grkFLg/V1aA0rerayp4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a8enGfl1W4IFN0W6xVyFnOOhKhrxTnmvmh6QyBFvrPWfPbz+VmN/pAlecyl+isM50
-	 5j1etqTYHONdec2J2D0XOGEqhwwkfk1yTyPuQ9WlC3ovNTo6DDs+3OSdFMFjsHnGcX
-	 J+YFA6+4B067nvcCGUorHY/n14G4FKZQ3usm/QDk=
+	b=MrGdX9aD+YUzQZiMzvxHR4LU6XxiXtWpoCWudMKNdeJ+DKYzPoQ6ws+4Vdj2N7xdS
+	 woUqTu+fMbYV8UWGwmitrZVmzEwAZHgE7UmkFD4QzB7fRCsGN6SHWXY8bAiZUD5kFz
+	 a/STIIG1tJc83osQCE2wrUjrWha1/mx5ZgeDQI44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388558AbfE3Egz (ORCPT
+        id S2388417AbfE3Egt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:36:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56850 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:36:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729299AbfE3DM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:57 -0400
+        id S1729302AbfE3DM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:12:58 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69EB923E29;
-        Thu, 30 May 2019 03:12:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F8AC2449A;
+        Thu, 30 May 2019 03:12:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185976;
-        bh=nQZYqrwWCpdbUbQ16wM+a+UtsLY3q9D6MPb3TEL2vLM=;
+        s=default; t=1559185977;
+        bh=6RPWTBSids8jpnfkiKL3ALT3grkFLg/V1aA0rerayp4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kh2u8wnXNLRhp7GKHulHo4K4xXPptJJpKDJtgoHJwXo6NOol3zqiPRkNYD+VZXlT4
-         mDrJWa1oPfpvbzuuhrhmqUOOVO6wpzICesSDK10/ILhZVU7CtiCS1og6UsWbs76zMB
-         cTacyAcGxmD+zV/qpIxpEAfAwafgC9QyoCWAxdNc=
+        b=k8dngso5q64tAU8HsvHur0rkbaHFtf14m3YbFHLniNWDFzkj8LLIbz8L05H28Jg8S
+         ryeLf2tZK7m8kIR1ck2IbKsEKD/uHVzYlTvVGwhg+n+akFLq5h+VXJgkBadNqK9E/B
+         sDE/eCgomOzl4jCslj9KH82V3hA6E5vvSqZO8psU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Steve Twiss <stwiss.opensource@diasemi.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 380/405] regulator: ltc3589: Fix notifier mutex lock warning
-Date:   Wed, 29 May 2019 20:06:18 -0700
-Message-Id: <20190530030559.955927562@linuxfoundation.org>
+        stable@vger.kernel.org, Trac Hoang <trac.hoang@broadcom.com>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.0 010/346] mmc: sdhci-iproc: cygnus: Set NO_HISPD bit to fix HS50 data hold time problem
+Date:   Wed, 29 May 2019 20:01:23 -0700
+Message-Id: <20190530030541.050502306@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
-References: <20190530030540.291644921@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,57 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f132da2534ec6599c78c4adcef15340cff2e9dd9 ]
+From: Trac Hoang <trac.hoang@broadcom.com>
 
-The mutex for the regulator_dev must be controlled by the caller of
-the regulator_notifier_call_chain(), as described in the comment
-for that function.
+commit b7dfa695afc40d5396ed84b9f25aa3754de23e39 upstream.
 
-Failure to mutex lock and unlock surrounding the notifier call results
-in a kernel WARN_ON_ONCE() which will dump a backtrace for the
-regulator_notifier_call_chain() when that function call is first made.
-The mutex can be controlled using the regulator_lock/unlock() API.
+The iproc host eMMC/SD controller hold time does not meet the
+specification in the HS50 mode. This problem can be mitigated
+by disabling the HISPD bit; thus forcing the controller output
+data to be driven on the falling clock edges rather than the
+rising clock edges.
 
-Fixes: 3eb2c7ecb7ea ("regulator: Add LTC3589 support")
-Suggested-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This change applies only to the Cygnus platform.
+
+Stable tag (v4.12+) chosen to assist stable kernel maintainers so that
+the change does not produce merge conflicts backporting to older kernel
+versions. In reality, the timing bug existed since the driver was first
+introduced but there is no need for this driver to be supported in kernel
+versions that old.
+
+Cc: stable@vger.kernel.org # v4.12+
+Signed-off-by: Trac Hoang <trac.hoang@broadcom.com>
+Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/regulator/ltc3589.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/mmc/host/sdhci-iproc.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/ltc3589.c b/drivers/regulator/ltc3589.c
-index 63f724f260ef7..75089b037b723 100644
---- a/drivers/regulator/ltc3589.c
-+++ b/drivers/regulator/ltc3589.c
-@@ -419,16 +419,22 @@ static irqreturn_t ltc3589_isr(int irq, void *dev_id)
+--- a/drivers/mmc/host/sdhci-iproc.c
++++ b/drivers/mmc/host/sdhci-iproc.c
+@@ -196,7 +196,8 @@ static const struct sdhci_ops sdhci_ipro
+ };
  
- 	if (irqstat & LTC3589_IRQSTAT_THERMAL_WARN) {
- 		event = REGULATOR_EVENT_OVER_TEMP;
--		for (i = 0; i < LTC3589_NUM_REGULATORS; i++)
-+		for (i = 0; i < LTC3589_NUM_REGULATORS; i++) {
-+		        regulator_lock(ltc3589->regulators[i]);
- 			regulator_notifier_call_chain(ltc3589->regulators[i],
- 						      event, NULL);
-+		        regulator_unlock(ltc3589->regulators[i]);
-+		}
- 	}
- 
- 	if (irqstat & LTC3589_IRQSTAT_UNDERVOLT_WARN) {
- 		event = REGULATOR_EVENT_UNDER_VOLTAGE;
--		for (i = 0; i < LTC3589_NUM_REGULATORS; i++)
-+		for (i = 0; i < LTC3589_NUM_REGULATORS; i++) {
-+		        regulator_lock(ltc3589->regulators[i]);
- 			regulator_notifier_call_chain(ltc3589->regulators[i],
- 						      event, NULL);
-+		        regulator_unlock(ltc3589->regulators[i]);
-+		}
- 	}
- 
- 	/* Clear warning condition */
--- 
-2.20.1
-
+ static const struct sdhci_pltfm_data sdhci_iproc_cygnus_pltfm_data = {
+-	.quirks = SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK,
++	.quirks = SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK |
++		  SDHCI_QUIRK_NO_HISPD_BIT,
+ 	.quirks2 = SDHCI_QUIRK2_ACMD23_BROKEN | SDHCI_QUIRK2_HOST_OFF_CARD_ON,
+ 	.ops = &sdhci_iproc_32only_ops,
+ };
 
 
