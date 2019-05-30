@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA41C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCE6C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E99C225AB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:43:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87E0E25AB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:43:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191428;
-	bh=HKU+6LKeZKnv9AwHRolGx+Az8Xhii/B67PSHNqRrb64=;
+	s=default; t=1559191431;
+	bh=giia1H8fV3MI0n0b6NEl9yVmTOqXajqyIE74fhzbvmw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rtix+5kYUI/lmFH3lImygoblTm/qSTR9GosevyiMNtnoFvObQrwIqHTz9UhI8FohH
-	 iyJjOmfk5DnV4d21IHUImTRocg2JKCyYdI0amdRtQEDkwQExmuNIb+5HgWd9fbKR8S
-	 TtXBgJDalm8Uy1yCzT2LCjmQAEaDKh4Jiy7aaYRQ=
+	b=VB1ClDwgVI4R6vhPgycy5inbI0yEGYWmJWx0qzEmxKK4baPDMe3S/sLQmzWEH1TKp
+	 IjT/0GLVRYskgju/5zLCtr88cx4KXILOJdyoWidFy2N8ykOsKiDQVRTexv3EMKEcQm
+	 5jDaV02oiIaP/Qxe1++Ra1U+EK1RfHzUMe4S5/NI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388759AbfE3Enq (ORCPT
+        id S2388766AbfE3Ent (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:43:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53662 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:43:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728197AbfE3DMI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728840AbfE3DMI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:12:08 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 524AA2446F;
-        Thu, 30 May 2019 03:12:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8769244E8;
+        Thu, 30 May 2019 03:12:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185928;
-        bh=HKU+6LKeZKnv9AwHRolGx+Az8Xhii/B67PSHNqRrb64=;
+        s=default; t=1559185927;
+        bh=giia1H8fV3MI0n0b6NEl9yVmTOqXajqyIE74fhzbvmw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gjbfB778Eh016NxUBO7ewtDcqTvyJWHHckzU4mOTWOXoTlKDG/MRqAA8Yu9HoJPWF
-         qa0H9IwYbr/JUnW/1ZlFECLZxDKrKQN+oP+JeEkHh6ZAwkpctm90F4ZpFsu3qDibRX
-         EMV2GF4quhBWWUj6dZ5h1BKTagQgNa1ZLV6qsIH4=
+        b=bDgbuE5MiK0P6olwkawb4cbuDP0Y1D7kWvhJXPH+4CSQB9akouI/UMHbFYEzVP9m+
+         YjbDoUJXmdu8imdztCz5OJEByBvQS7ykOSWr/ZMr3HP0HhUg31JIQLp5fWc95AVTBj
+         Znsi9TZG1GMHsWG0HODjoXvY1iAmSYmWysFN8YFI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>,
-        Antonio Quartulli <a@unstable.cc>,
-        Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Paul Moore <paul@paul-moore.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 320/405] batman-adv: allow updating DAT entry timeouts on incoming ARP Replies
-Date:   Wed, 29 May 2019 20:05:18 -0700
-Message-Id: <20190530030556.948474067@linuxfoundation.org>
+Subject: [PATCH 5.1 319/405] selinux: avoid uninitialized variable warning
+Date:   Wed, 29 May 2019 20:05:17 -0700
+Message-Id: <20190530030556.904947838@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -63,55 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 099e6cc1582dc2903fecb898bbeae8f7cf4262c7 ]
+[ Upstream commit 98bbbb76f2edcfb8fb2b8f4b3ccc7b6e99d64bd8 ]
 
-Currently incoming ARP Replies, for example via a DHT-PUT message, do
-not update the timeout for an already existing DAT entry. These ARP
-Replies are dropped instead.
+clang correctly points out a code path that would lead
+to an uninitialized variable use:
 
-This however defeats the purpose of the DHCPACK snooping, for instance.
-Right now, a DAT entry in the DHT will be purged every five minutes,
-likely leading to a mesh-wide ARP Request broadcast after this timeout.
-Which then recreates the entry. The idea of the DHCPACK snooping is to
-be able to update an entry before a timeout happens, to avoid ARP Request
-flooding.
+security/selinux/netlabel.c:310:6: error: variable 'addr' is used uninitialized whenever 'if' condition is false
+      [-Werror,-Wsometimes-uninitialized]
+        if (ip_hdr(skb)->version == 4) {
+            ^~~~~~~~~~~~~~~~~~~~~~~~~
+security/selinux/netlabel.c:322:40: note: uninitialized use occurs here
+        rc = netlbl_conn_setattr(ep->base.sk, addr, &secattr);
+                                              ^~~~
+security/selinux/netlabel.c:310:2: note: remove the 'if' if its condition is always true
+        if (ip_hdr(skb)->version == 4) {
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+security/selinux/netlabel.c:291:23: note: initialize the variable 'addr' to silence this warning
+        struct sockaddr *addr;
+                             ^
+                              = NULL
 
-This patch fixes this issue by updating a DAT entry on incoming
-ARP Replies even if a matching DAT entry already exists. While still
-filtering the ARP Reply towards the soft-interface, to avoid duplicate
-messages on the client device side.
+This is probably harmless since we should not see ipv6 packets
+of CONFIG_IPV6 is disabled, but it's better to rearrange the code
+so this cannot happen.
 
-Signed-off-by: Linus Lüssing <linus.luessing@c0d3.blue>
-Acked-by: Antonio Quartulli <a@unstable.cc>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+[PM: removed old patchwork link, fixed checkpatch.pl style errors]
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/distributed-arp-table.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ security/selinux/netlabel.c | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
 
-diff --git a/net/batman-adv/distributed-arp-table.c b/net/batman-adv/distributed-arp-table.c
-index 310a4f353008d..8d290da0d5967 100644
---- a/net/batman-adv/distributed-arp-table.c
-+++ b/net/batman-adv/distributed-arp-table.c
-@@ -1444,7 +1444,6 @@ bool batadv_dat_snoop_incoming_arp_reply(struct batadv_priv *bat_priv,
- 			   hw_src, &ip_src, hw_dst, &ip_dst,
- 			   dat_entry->mac_addr,	&dat_entry->ip);
- 		dropped = true;
--		goto out;
+diff --git a/security/selinux/netlabel.c b/security/selinux/netlabel.c
+index 186e727b737b9..6fd9954e1c085 100644
+--- a/security/selinux/netlabel.c
++++ b/security/selinux/netlabel.c
+@@ -288,11 +288,8 @@ int selinux_netlbl_sctp_assoc_request(struct sctp_endpoint *ep,
+ 	int rc;
+ 	struct netlbl_lsm_secattr secattr;
+ 	struct sk_security_struct *sksec = ep->base.sk->sk_security;
+-	struct sockaddr *addr;
+ 	struct sockaddr_in addr4;
+-#if IS_ENABLED(CONFIG_IPV6)
+ 	struct sockaddr_in6 addr6;
+-#endif
+ 
+ 	if (ep->base.sk->sk_family != PF_INET &&
+ 				ep->base.sk->sk_family != PF_INET6)
+@@ -310,16 +307,15 @@ int selinux_netlbl_sctp_assoc_request(struct sctp_endpoint *ep,
+ 	if (ip_hdr(skb)->version == 4) {
+ 		addr4.sin_family = AF_INET;
+ 		addr4.sin_addr.s_addr = ip_hdr(skb)->saddr;
+-		addr = (struct sockaddr *)&addr4;
+-#if IS_ENABLED(CONFIG_IPV6)
+-	} else {
++		rc = netlbl_conn_setattr(ep->base.sk, (void *)&addr4, &secattr);
++	} else if (IS_ENABLED(CONFIG_IPV6) && ip_hdr(skb)->version == 6) {
+ 		addr6.sin6_family = AF_INET6;
+ 		addr6.sin6_addr = ipv6_hdr(skb)->saddr;
+-		addr = (struct sockaddr *)&addr6;
+-#endif
++		rc = netlbl_conn_setattr(ep->base.sk, (void *)&addr6, &secattr);
++	} else {
++		rc = -EAFNOSUPPORT;
  	}
  
- 	/* Update our internal cache with both the IP addresses the node got
-@@ -1453,6 +1452,9 @@ bool batadv_dat_snoop_incoming_arp_reply(struct batadv_priv *bat_priv,
- 	batadv_dat_entry_add(bat_priv, ip_src, hw_src, vid);
- 	batadv_dat_entry_add(bat_priv, ip_dst, hw_dst, vid);
+-	rc = netlbl_conn_setattr(ep->base.sk, addr, &secattr);
+ 	if (rc == 0)
+ 		sksec->nlbl_state = NLBL_LABELED;
  
-+	if (dropped)
-+		goto out;
-+
- 	/* If BLA is enabled, only forward ARP replies if we have claimed the
- 	 * source of the ARP reply or if no one else of the same backbone has
- 	 * already claimed that client. This prevents that different gateways
 -- 
 2.20.1
 
