@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C862DC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A6EDC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A231525D5C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:51:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DAFC25D6B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:51:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191868;
-	bh=Xk/iLw49z1JCoFtls8/ow6PFTak0KhUDk4mdqxEWnqw=;
+	s=default; t=1559191876;
+	bh=lG9g6xWdNOcCH7xw6fij6IKTMhN748dLgUokM2N4NBo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HJU1UsVD2HlJWd0OYxq+jR1EMk9w9iN9L/bfKUm6uazlfkkmoK3R7epT9YuRuM8BX
-	 BXzTK3pujOb+UZnaa7rdGYTbr3Mejc9edwwnoPmw9iZv2PbRwQERLzbY2g2yyrfn2W
-	 wKqq3MVw8Ifcv0keBIRiTDxNeegoHNYmwBp5NRp0=
+	b=Xhv7JoLItSKqYqbaF/K3biBsoqBQnVgTWNZdM1eJuGC4mWPE4kClKUtExZM2pXInC
+	 6/ZibQCrVaKLq+zyzdfJ16mUsm6a/07Hqoj58QHiCUIZO6Heljb1d3G9CeGrseFcl6
+	 OQnelGimBoWg+yBpnxMC/kQCtBe8Jjh9GuApu/9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388997AbfE3EvD (ORCPT
+        id S2387586AbfE3EvP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:51:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49578 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:51:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727636AbfE3DLA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:11:00 -0400
+        id S1728304AbfE3DK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:10:58 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2A2B244C4;
-        Thu, 30 May 2019 03:10:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5E8024496;
+        Thu, 30 May 2019 03:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185859;
-        bh=Xk/iLw49z1JCoFtls8/ow6PFTak0KhUDk4mdqxEWnqw=;
+        s=default; t=1559185857;
+        bh=lG9g6xWdNOcCH7xw6fij6IKTMhN748dLgUokM2N4NBo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BshtIrXijfoZsukoXPLFXnLoKSTnlLPCyw4BhvQdyQq4ErKn/kfS6/Hj/p7A6Mf6N
-         Uj7hUPWfgFCm+rCkbzPDOgpZzKmL8KNRxLPvXHqFo+wj9UQUDEY3z7jSMyY9Ub5iPQ
-         DKEOPDQT4C0fL1+hZERXlilMycKl/CZm6inT84mo=
+        b=mUZplhswt9FHgaRH3OSEAkUf8hEsfPtcL4RABpsngnndHiZnxxBMG1GuqlQhaerfY
+         1TrO4mB02GsG/7AX0fK2b7TMdXwxTvWK5joURT/qzuuDtVfEQY/+xU6Sm7/ic62W0C
+         MTjRRO7LswVXMBPjTQAoJQmNg4djLG1jM/RDjZh0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 147/405] pinctrl: pistachio: fix leaked of_node references
-Date:   Wed, 29 May 2019 20:02:25 -0700
-Message-Id: <20190530030548.560333495@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Ioana Radulescu <ruxandra.radulescu@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 186/405] dpaa2-eth: Fix Rx classification status
+Date:   Wed, 29 May 2019 20:03:04 -0700
+Message-Id: <20190530030550.459344401@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -60,45 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 44a4455ac2c6b0981eace683a2b6eccf47689022 ]
+[ Upstream commit df8e249be866e2f762be11b14a9e7a94752614d4 ]
 
-The call to of_get_child_by_name returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+Set the Rx flow classification enable flag only if key config
+operation is successful.
 
-Detected by coccinelle with the following warnings:
-./drivers/pinctrl/pinctrl-pistachio.c:1422:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1360, but without a corresponding object release within this function.
+Fixes 3f9b5c9 ("dpaa2-eth: Configure Rx flow classification key")
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Ioana Radulescu <ruxandra.radulescu@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-pistachio.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/pinctrl-pistachio.c b/drivers/pinctrl/pinctrl-pistachio.c
-index aa5f949ef219c..5b0678f310e52 100644
---- a/drivers/pinctrl/pinctrl-pistachio.c
-+++ b/drivers/pinctrl/pinctrl-pistachio.c
-@@ -1367,6 +1367,7 @@ static int pistachio_gpio_register(struct pistachio_pinctrl *pctl)
- 		if (!of_find_property(child, "gpio-controller", NULL)) {
- 			dev_err(pctl->dev,
- 				"No gpio-controller property for bank %u\n", i);
-+			of_node_put(child);
- 			ret = -ENODEV;
- 			goto err;
- 		}
-@@ -1374,6 +1375,7 @@ static int pistachio_gpio_register(struct pistachio_pinctrl *pctl)
- 		irq = irq_of_parse_and_map(child, 0);
- 		if (irq < 0) {
- 			dev_err(pctl->dev, "No IRQ for bank %u: %d\n", i, irq);
-+			of_node_put(child);
- 			ret = irq;
- 			goto err;
- 		}
+diff --git a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+index dc339dc1adb21..57cbaa38d2477 100644
+--- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
++++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+@@ -2796,6 +2796,7 @@ int dpaa2_eth_set_hash(struct net_device *net_dev, u64 flags)
+ static int dpaa2_eth_set_cls(struct dpaa2_eth_priv *priv)
+ {
+ 	struct device *dev = priv->net_dev->dev.parent;
++	int err;
+ 
+ 	/* Check if we actually support Rx flow classification */
+ 	if (dpaa2_eth_has_legacy_dist(priv)) {
+@@ -2814,9 +2815,13 @@ static int dpaa2_eth_set_cls(struct dpaa2_eth_priv *priv)
+ 		return -EOPNOTSUPP;
+ 	}
+ 
++	err = dpaa2_eth_set_dist_key(priv->net_dev, DPAA2_ETH_RX_DIST_CLS, 0);
++	if (err)
++		return err;
++
+ 	priv->rx_cls_enabled = 1;
+ 
+-	return dpaa2_eth_set_dist_key(priv->net_dev, DPAA2_ETH_RX_DIST_CLS, 0);
++	return 0;
+ }
+ 
+ /* Bind the DPNI to its needed objects and resources: buffer pool, DPIOs,
 -- 
 2.20.1
 
