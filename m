@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F687C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18AB4C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6957F24DAE
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:38:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D761E258C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:38:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191097;
-	bh=ID128AdOvohhUlVirNhpCMtz499mR40R1nvT+k2SiIM=;
+	s=default; t=1559191108;
+	bh=xJ8Arp/ag80s7p8RExPV8Tq/H/C6hupbqTYKxTsNmD8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lAF4SFf3EtBw/Zn/fMhVd6/cTGdn0FLqY+dt1O9Y4MG7WXqbGhOwxCrCUIO/stFrg
-	 YaQHLp6+Ic90TrivPLGaPr6Ajn6kw/c/RhLbUWxb+b+VRuSvNCOJZNiSD1ul6hOwhi
-	 dULhTqdYBz69wDVbHCdrWNEqbCTUL6Jih+U5zhz8=
+	b=HTObelVlxwlWRfjoy3vckhbeL7m5m26sdNraxUKoi1ShVICpEzPhsfYRe1++h2K0d
+	 ySilJvGoPWOjrzI4038SQcW9VmhBonV7srexrXrsutfL0XYgB6ohUixHBEGBzd4Pgk
+	 TvrPNW9vtqmYoZPZbh5a+m5sEXdkPh+DT6nsYh8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388569AbfE3EiM (ORCPT
+        id S1732360AbfE3Ei0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:38:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56214 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:38:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728205AbfE3DMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:46 -0400
+        id S1729197AbfE3DMp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:12:45 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 136A524502;
-        Thu, 30 May 2019 03:12:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72DBE23E29;
+        Thu, 30 May 2019 03:12:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185966;
-        bh=ID128AdOvohhUlVirNhpCMtz499mR40R1nvT+k2SiIM=;
+        s=default; t=1559185964;
+        bh=xJ8Arp/ag80s7p8RExPV8Tq/H/C6hupbqTYKxTsNmD8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=no7b5bvPK+FmpKMdbAPqihNuaYf7WxOBb2uwkzUr/9L/ISAIXpNxbhogJsP8vAqav
-         S+L+UCxN9A0uGvlpzdNAHDkTkTf65NtCAa8mls103mf3C9gvRpOkhllAcVRT9FM97W
-         Wq+OW21IY7PLckB12k9uR41yCmQpEpBDYKCkbFQI=
+        b=nlb+jcKJlwythqHbS/QTImYz7NDcIb0KUuaJRjhefi6Th9Q+DlJg/KZH6LP65CUhc
+         3qH35VTjv6Udyji0XaPtb/7y8kHItrbv7nXk5Wvq+Pu1iCXZbOOrVXgLmf5Hzf3C+o
+         mLYNbLidmNUrhvipUfwYqxuJDdvKhvw38UB/U9rI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Anholt <eric@anholt.net>,
-        Dave Emett <david.emett@broadcom.com>,
+        stable@vger.kernel.org,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Steve Twiss <stwiss.opensource@diasemi.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 394/405] drm/v3d: Handle errors from IRQ setup.
-Date:   Wed, 29 May 2019 20:06:32 -0700
-Message-Id: <20190530030600.532094254@linuxfoundation.org>
+Subject: [PATCH 5.1 390/405] regulator: da9055: Fix notifier mutex lock warning
+Date:   Wed, 29 May 2019 20:06:28 -0700
+Message-Id: <20190530030600.370084234@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -60,95 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fc22771547e7e8a63679f0218e943d72b107de65 ]
+[ Upstream commit 5e6afb3832bedf420dd8e4c5b32ed85117c5087d ]
 
-Noted in review by Dave Emett for V3D 4.2 support.
+The mutex for the regulator_dev must be controlled by the caller of
+the regulator_notifier_call_chain(), as described in the comment
+for that function.
 
-Signed-off-by: Eric Anholt <eric@anholt.net>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190308174336.7866-1-eric@anholt.net
-Reviewed-by: Dave Emett <david.emett@broadcom.com>
+Failure to mutex lock and unlock surrounding the notifier call results
+in a kernel WARN_ON_ONCE() which will dump a backtrace for the
+regulator_notifier_call_chain() when that function call is first made.
+The mutex can be controlled using the regulator_lock/unlock() API.
+
+Fixes: f6130be652d0 ("regulator: DA9055 regulator driver")
+Suggested-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/v3d/v3d_drv.c |  8 ++++++--
- drivers/gpu/drm/v3d/v3d_drv.h |  2 +-
- drivers/gpu/drm/v3d/v3d_irq.c | 13 +++++++++++--
- 3 files changed, 18 insertions(+), 5 deletions(-)
+ drivers/regulator/da9055-regulator.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/v3d/v3d_drv.c b/drivers/gpu/drm/v3d/v3d_drv.c
-index f0afcec72c348..30ae1c74edaa8 100644
---- a/drivers/gpu/drm/v3d/v3d_drv.c
-+++ b/drivers/gpu/drm/v3d/v3d_drv.c
-@@ -312,14 +312,18 @@ static int v3d_platform_drm_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto dev_destroy;
- 
--	v3d_irq_init(v3d);
-+	ret = v3d_irq_init(v3d);
-+	if (ret)
-+		goto gem_destroy;
- 
- 	ret = drm_dev_register(drm, 0);
- 	if (ret)
--		goto gem_destroy;
-+		goto irq_disable;
- 
- 	return 0;
- 
-+irq_disable:
-+	v3d_irq_disable(v3d);
- gem_destroy:
- 	v3d_gem_destroy(drm);
- dev_destroy:
-diff --git a/drivers/gpu/drm/v3d/v3d_drv.h b/drivers/gpu/drm/v3d/v3d_drv.h
-index fdda3037f7af7..2fdb456b72d32 100644
---- a/drivers/gpu/drm/v3d/v3d_drv.h
-+++ b/drivers/gpu/drm/v3d/v3d_drv.h
-@@ -310,7 +310,7 @@ void v3d_reset(struct v3d_dev *v3d);
- void v3d_invalidate_caches(struct v3d_dev *v3d);
- 
- /* v3d_irq.c */
--void v3d_irq_init(struct v3d_dev *v3d);
-+int v3d_irq_init(struct v3d_dev *v3d);
- void v3d_irq_enable(struct v3d_dev *v3d);
- void v3d_irq_disable(struct v3d_dev *v3d);
- void v3d_irq_reset(struct v3d_dev *v3d);
-diff --git a/drivers/gpu/drm/v3d/v3d_irq.c b/drivers/gpu/drm/v3d/v3d_irq.c
-index 69338da70ddce..29d746cfce572 100644
---- a/drivers/gpu/drm/v3d/v3d_irq.c
-+++ b/drivers/gpu/drm/v3d/v3d_irq.c
-@@ -156,7 +156,7 @@ v3d_hub_irq(int irq, void *arg)
- 	return status;
- }
- 
--void
-+int
- v3d_irq_init(struct v3d_dev *v3d)
+diff --git a/drivers/regulator/da9055-regulator.c b/drivers/regulator/da9055-regulator.c
+index 3c6fac7936585..3ade4b8d204eb 100644
+--- a/drivers/regulator/da9055-regulator.c
++++ b/drivers/regulator/da9055-regulator.c
+@@ -487,8 +487,10 @@ static irqreturn_t da9055_ldo5_6_oc_irq(int irq, void *data)
  {
- 	int ret, core;
-@@ -173,13 +173,22 @@ v3d_irq_init(struct v3d_dev *v3d)
- 	ret = devm_request_irq(v3d->dev, platform_get_irq(v3d->pdev, 0),
- 			       v3d_hub_irq, IRQF_SHARED,
- 			       "v3d_hub", v3d);
-+	if (ret)
-+		goto fail;
-+
- 	ret = devm_request_irq(v3d->dev, platform_get_irq(v3d->pdev, 1),
- 			       v3d_irq, IRQF_SHARED,
- 			       "v3d_core0", v3d);
- 	if (ret)
--		dev_err(v3d->dev, "IRQ setup failed: %d\n", ret);
-+		goto fail;
+ 	struct da9055_regulator *regulator = data;
  
- 	v3d_irq_enable(v3d);
-+	return 0;
-+
-+fail:
-+	if (ret != -EPROBE_DEFER)
-+		dev_err(v3d->dev, "IRQ setup failed: %d\n", ret);
-+	return ret;
++	regulator_lock(regulator->rdev);
+ 	regulator_notifier_call_chain(regulator->rdev,
+ 				      REGULATOR_EVENT_OVER_CURRENT, NULL);
++	regulator_unlock(regulator->rdev);
+ 
+ 	return IRQ_HANDLED;
  }
- 
- void
 -- 
 2.20.1
 
