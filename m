@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B77A5C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41126C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D0F325DF8
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:53:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D65125E29
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:53:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192010;
-	bh=v5bitYYz81CeiEo0mIMs0qgwoUQvc+2tND4SCh3gwtU=;
+	s=default; t=1559192019;
+	bh=kVRfrjvPo+B7C+qBW2PuBLIcBxpNmt8T9gPRzhukQ/c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xaA9HdBAtnyphaQOu/8uSMlYe/TJHX6TT3fDVXwDm0NoVBKOMWJ+MRMhVEIFMwivB
-	 k/4PKlY1WNuFlK3NePBRofzVLgJZWgrfZTSxUNiB6vFr9utu6FTJAAixWGlpahnUzZ
-	 jihzVU6SlZ8lgJ0k4HMjWY4slI6kmeYWQhlEPYEM=
+	b=S+sWcsMEH0e6ara/DWfCPj9wycHi67iG7Spo0wODuFRvnLddvE/MdB5cSVS7k45G/
+	 syqtlbO5NbSZnAyZKgB5rMNqItEAKkDZe/oymq3CDMbFYilZNuY1Q+xJTiAMXOElIZ
+	 uotxZZOjzVZPjX47AKImIVCZNtMC2ydsYGPaqubQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388711AbfE3Ex3 (ORCPT
+        id S2387538AbfE3Exi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:53:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47936 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:53:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728174AbfE3DKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:10:39 -0400
+        id S1728152AbfE3DKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:10:36 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5E9C24482;
-        Thu, 30 May 2019 03:10:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A11CE24476;
+        Thu, 30 May 2019 03:10:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185838;
-        bh=v5bitYYz81CeiEo0mIMs0qgwoUQvc+2tND4SCh3gwtU=;
+        s=default; t=1559185835;
+        bh=kVRfrjvPo+B7C+qBW2PuBLIcBxpNmt8T9gPRzhukQ/c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZJMeL7GHesGRYKFqN8PyOBmIq3lEw1oRQ5I3eIGGPLfJi3CCcx27jwE7jMxJ44Eur
-         zDYsP3n4QgJuMBjGEnjpYaBPcsFeWawVgr/6p0SKsQ6Zng1dSR5+v5CxWeqdOp1Gp8
-         uQwgUqafYUm6dYx55a6G7b2SntVzx0qECBxXD21I=
+        b=nnASWLAv9yrnyH78HIQt8zAUkTlYf1NlWUTpj9k2AlOFn9sdw8bQW2jsw4mOxVXsq
+         GbjeKX3nMNRHzgU4Zj6K/xGlBLPpzA8/6Xxkv4P3AT9nJ8jzxKmtNEKGLGt54k5n+r
+         3bMGMBCfs3KDdh0H4wFEBu3QSkxVR9aHG9SKlzDw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
+        Giridhar Malavali <gmalavali@marvell.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 153/405] media: coda: clear error return value before picture run
-Date:   Wed, 29 May 2019 20:02:31 -0700
-Message-Id: <20190530030548.891333041@linuxfoundation.org>
+Subject: [PATCH 5.1 091/405] scsi: qla2xxx: Fix a qla24xx_enable_msix() error path
+Date:   Wed, 29 May 2019 20:01:29 -0700
+Message-Id: <20190530030545.633427064@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,35 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bbeefa7357a648afe70e7183914c87c3878d528d ]
+[ Upstream commit 24afabdbd0b3553963a2bbf465895492b14d1107 ]
 
-The error return value is not written by some firmware codecs, such as
-MPEG-2 decode on CodaHx4. Clear the error return value before starting
-the picture run to avoid misinterpreting unrelated values returned by
-sequence initialization as error return value.
+Make sure that the allocated interrupts are freed if allocating memory for
+the msix_entries array fails.
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Himanshu Madhani <hmadhani@marvell.com>
+Cc: Giridhar Malavali <gmalavali@marvell.com>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/coda/coda-bit.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/scsi/qla2xxx/qla_isr.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/coda/coda-bit.c b/drivers/media/platform/coda/coda-bit.c
-index b4f396c2e72c7..eaa86737fa04e 100644
---- a/drivers/media/platform/coda/coda-bit.c
-+++ b/drivers/media/platform/coda/coda-bit.c
-@@ -2010,6 +2010,9 @@ static int coda_prepare_decode(struct coda_ctx *ctx)
- 	/* Clear decode success flag */
- 	coda_write(dev, 0, CODA_RET_DEC_PIC_SUCCESS);
+diff --git a/drivers/scsi/qla2xxx/qla_isr.c b/drivers/scsi/qla2xxx/qla_isr.c
+index 69bbea9239cc8..add17843148dd 100644
+--- a/drivers/scsi/qla2xxx/qla_isr.c
++++ b/drivers/scsi/qla2xxx/qla_isr.c
+@@ -3475,7 +3475,7 @@ qla24xx_enable_msix(struct qla_hw_data *ha, struct rsp_que *rsp)
+ 		ql_log(ql_log_fatal, vha, 0x00c8,
+ 		    "Failed to allocate memory for ha->msix_entries.\n");
+ 		ret = -ENOMEM;
+-		goto msix_out;
++		goto free_irqs;
+ 	}
+ 	ha->flags.msix_enabled = 1;
  
-+	/* Clear error return value */
-+	coda_write(dev, 0, CODA_RET_DEC_PIC_ERR_MB);
+@@ -3558,6 +3558,10 @@ qla24xx_enable_msix(struct qla_hw_data *ha, struct rsp_que *rsp)
+ 
+ msix_out:
+ 	return ret;
 +
- 	trace_coda_dec_pic_run(ctx, meta);
++free_irqs:
++	pci_free_irq_vectors(ha->pdev);
++	goto msix_out;
+ }
  
- 	coda_command_async(ctx, CODA_COMMAND_PIC_RUN);
+ int
 -- 
 2.20.1
 
