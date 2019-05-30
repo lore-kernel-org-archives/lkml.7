@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D76C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED76C28CC1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF06724B70
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:36:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39E9124B80
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:36:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187370;
-	bh=8gRQZ733zbroR7nLj5wr3+V5DHtMrt2aYomVG95miOY=;
+	s=default; t=1559187373;
+	bh=j5IrkmXoqipm6SS+hShpCMelEn2qPU/FEDpbZVsmWNM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K67mvvqSEqt5vGWVYmty1qfSvSQYh8krqBytmWf+cosa2ELC0ltwJhbnjZEL/7p05
-	 yf4m/0IMCWn8BeVhpScDOqUmYer8qK7nNHJGw+3lVCUc4w/QIgW8ksM1L+NG2Jt+AL
-	 1wCU0Bd8cNFVkodHRYABvH+vfHg4V2EMWFf7FBNE=
+	b=u5MnOTHlmzZcnEYmdCXkxyh1GhpRsXy4IMMjeetNn4np9XJ7L6tgIrsdTQzyTXBnR
+	 YQTfgOOUYVZi88B8Z8aqvxdg+7/1mqLRFdzaLcd2b7Z4HZbj/wAN5CdPEu6wsOvNwY
+	 OUGuJBr70tqSHdncxTgBQGHenhDonpCAIIDiFqpU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387557AbfE3DZc (ORCPT
+        id S1732831AbfE3DZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:25:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50856 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:25:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731566AbfE3DSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:30 -0400
+        id S1731563AbfE3DS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:29 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B72622472C;
-        Thu, 30 May 2019 03:18:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B17B5247C2;
+        Thu, 30 May 2019 03:18:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186309;
-        bh=8gRQZ733zbroR7nLj5wr3+V5DHtMrt2aYomVG95miOY=;
+        s=default; t=1559186308;
+        bh=j5IrkmXoqipm6SS+hShpCMelEn2qPU/FEDpbZVsmWNM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0hOrIda8REVcbtSlduRMmOzECRvumE/hIwduBdcXRnv30VaW0eORJKq21M95KQi5S
-         Iaouj0K3UpNZQLZInt2KMQ/ixzKXP4C78plfl5PvkQ88CdsCFBrogkEwEPp3uoKD4d
-         tTGXSCMy9MJuVk7ACofeeORaBSKrzp7gwfZeKEQQ=
+        b=H1q/y9UscHsksiRgcXiGnGVYABFNhjtslU4z0Mrqn/gjRm2pi48EPojA9WcYT/DIM
+         0E9tKI6GaW+Upf+YucljD7aXzxmP5n/rmsiNe+sHOeMarZQDtCtvVli5dAavETbQdV
+         wKTjxGHcaLrMHosqv0vJgW0D+53oUnZ5AD+cqC44=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Anholt <eric@anholt.net>,
-        Dave Emett <david.emett@broadcom.com>,
+        stable@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 270/276] drm/v3d: Handle errors from IRQ setup.
-Date:   Wed, 29 May 2019 20:07:08 -0700
-Message-Id: <20190530030542.094351553@linuxfoundation.org>
+Subject: [PATCH 4.19 275/276] drm/sun4i: dsi: Enforce boundaries on the start delay
+Date:   Wed, 29 May 2019 20:07:13 -0700
+Message-Id: <20190530030542.392185247@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -60,95 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fc22771547e7e8a63679f0218e943d72b107de65 ]
+[ Upstream commit efa31801203ac2f5c6a82a28cb991c7163ee0f1d ]
 
-Noted in review by Dave Emett for V3D 4.2 support.
+The Allwinner BSP makes sure that we don't end up with a null start delay
+or with a delay larger than vtotal.
 
-Signed-off-by: Eric Anholt <eric@anholt.net>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190308174336.7866-1-eric@anholt.net
-Reviewed-by: Dave Emett <david.emett@broadcom.com>
+The former condition is likely to happen now with the reworked start delay,
+so make sure we enforce the same boundaries.
+
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/c9889cf5f7a3d101ef380905900b45a182596f56.1549896081.git-series.maxime.ripard@bootlin.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/v3d/v3d_drv.c |  8 ++++++--
- drivers/gpu/drm/v3d/v3d_drv.h |  2 +-
- drivers/gpu/drm/v3d/v3d_irq.c | 13 +++++++++++--
- 3 files changed, 18 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/v3d/v3d_drv.c b/drivers/gpu/drm/v3d/v3d_drv.c
-index 2a85fa68ffea5..2a4c6187e675f 100644
---- a/drivers/gpu/drm/v3d/v3d_drv.c
-+++ b/drivers/gpu/drm/v3d/v3d_drv.c
-@@ -305,14 +305,18 @@ static int v3d_platform_drm_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto dev_destroy;
- 
--	v3d_irq_init(v3d);
-+	ret = v3d_irq_init(v3d);
-+	if (ret)
-+		goto gem_destroy;
- 
- 	ret = drm_dev_register(drm, 0);
- 	if (ret)
--		goto gem_destroy;
-+		goto irq_disable;
- 
- 	return 0;
- 
-+irq_disable:
-+	v3d_irq_disable(v3d);
- gem_destroy:
- 	v3d_gem_destroy(drm);
- dev_destroy:
-diff --git a/drivers/gpu/drm/v3d/v3d_drv.h b/drivers/gpu/drm/v3d/v3d_drv.h
-index e6fed696ad869..0ad73f4b7509a 100644
---- a/drivers/gpu/drm/v3d/v3d_drv.h
-+++ b/drivers/gpu/drm/v3d/v3d_drv.h
-@@ -284,7 +284,7 @@ void v3d_invalidate_caches(struct v3d_dev *v3d);
- void v3d_flush_caches(struct v3d_dev *v3d);
- 
- /* v3d_irq.c */
--void v3d_irq_init(struct v3d_dev *v3d);
-+int v3d_irq_init(struct v3d_dev *v3d);
- void v3d_irq_enable(struct v3d_dev *v3d);
- void v3d_irq_disable(struct v3d_dev *v3d);
- void v3d_irq_reset(struct v3d_dev *v3d);
-diff --git a/drivers/gpu/drm/v3d/v3d_irq.c b/drivers/gpu/drm/v3d/v3d_irq.c
-index e07514eb11b51..22be0f2dff99c 100644
---- a/drivers/gpu/drm/v3d/v3d_irq.c
-+++ b/drivers/gpu/drm/v3d/v3d_irq.c
-@@ -137,7 +137,7 @@ v3d_hub_irq(int irq, void *arg)
- 	return status;
- }
- 
--void
-+int
- v3d_irq_init(struct v3d_dev *v3d)
+diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+index 3de41de43127b..97a0573cc5145 100644
+--- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
++++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+@@ -358,8 +358,12 @@ static u16 sun6i_dsi_get_video_start_delay(struct sun6i_dsi *dsi,
+ 					   struct drm_display_mode *mode)
  {
- 	int ret, core;
-@@ -154,13 +154,22 @@ v3d_irq_init(struct v3d_dev *v3d)
- 	ret = devm_request_irq(v3d->dev, platform_get_irq(v3d->pdev, 0),
- 			       v3d_hub_irq, IRQF_SHARED,
- 			       "v3d_hub", v3d);
-+	if (ret)
-+		goto fail;
-+
- 	ret = devm_request_irq(v3d->dev, platform_get_irq(v3d->pdev, 1),
- 			       v3d_irq, IRQF_SHARED,
- 			       "v3d_core0", v3d);
- 	if (ret)
--		dev_err(v3d->dev, "IRQ setup failed: %d\n", ret);
-+		goto fail;
+ 	u16 start = clamp(mode->vtotal - mode->vdisplay - 10, 8, 100);
++	u16 delay = mode->vtotal - (mode->vsync_end - mode->vdisplay) + start;
  
- 	v3d_irq_enable(v3d);
-+	return 0;
+-	return mode->vtotal - (mode->vsync_end - mode->vdisplay) + start;
++	if (delay > mode->vtotal)
++		delay = delay % mode->vtotal;
 +
-+fail:
-+	if (ret != -EPROBE_DEFER)
-+		dev_err(v3d->dev, "IRQ setup failed: %d\n", ret);
-+	return ret;
++	return max_t(u16, delay, 1);
  }
  
- void
+ static void sun6i_dsi_setup_burst(struct sun6i_dsi *dsi,
 -- 
 2.20.1
 
