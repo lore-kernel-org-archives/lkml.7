@@ -2,122 +2,123 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E8CC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB7EC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18BD224B9B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:39:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187540;
-	bh=TNOZSDXwP8xmsxJb5/sSE6vY5iXMrQUbVKK/nw3wRZM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CctY19eYUzYAyihf4DrT8m917ytpvlHrq+8R+eJ8FEE2tXSGr0/w5BHIVKH8VZ41z
-	 NzHnoSebnHTh6tIw+8LyRUGWBoUJwIkcAIhIiESNJ00s9ziY6+hdbXaoFhab6LsvBL
-	 SIYveWRlu4rqNUU1BkUcHN4S5ee1uvLn70wq7vWc=
+	by mail.kernel.org (Postfix) with ESMTP id 9334124B8D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:39:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732851AbfE3DWc (ORCPT
+        id S1728834AbfE3DjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:22:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43894 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730800AbfE3DQq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:46 -0400
-Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 208AB2461E;
-        Thu, 30 May 2019 03:16:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186206;
-        bh=TNOZSDXwP8xmsxJb5/sSE6vY5iXMrQUbVKK/nw3wRZM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wu7TDdJrze8YUZvJjsnlmrZtL15JBGr+gOSN9AiWC+BwYrPLkgDIuiOEw/LXdu0zu
-         QIy3Fdzg3ct4RVNwK6Tr/86tqjmh/JywvH3NtrlnbrfbHsugWOhEIy1dxrrvMC27OL
-         OqVlio38XHN0J9iqwym6RqIHDh5eBVYSZ7Tk9wHw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Daniel T. Lee" <danieltimlee@gmail.com>,
-        Yonghong Song <yhs@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 093/276] libbpf: fix samples/bpf build failure due to undefined UINT32_MAX
-Date:   Wed, 29 May 2019 20:04:11 -0700
-Message-Id: <20190530030532.001609492@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
-References: <20190530030523.133519668@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 29 May 2019 23:39:01 -0400
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:49725 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732844AbfE3DWb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:22:31 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R451e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07487;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TT-SMAB_1559186545;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TT-SMAB_1559186545)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 30 May 2019 11:22:26 +0800
+Subject: Re: [RFC PATCH 0/3] Make deferred split shrinker memcg aware
+To:     David Rientjes <rientjes@google.com>
+Cc:     ktkhai@virtuozzo.com, hannes@cmpxchg.org, mhocko@suse.com,
+        kirill.shutemov@linux.intel.com, hughd@google.com,
+        shakeelb@google.com, Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1559047464-59838-1-git-send-email-yang.shi@linux.alibaba.com>
+ <alpine.DEB.2.21.1905281817090.86034@chino.kir.corp.google.com>
+ <2e23bd8c-6120-5a86-9e9e-ab43b02ce150@linux.alibaba.com>
+ <alpine.DEB.2.21.1905291402360.242480@chino.kir.corp.google.com>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <9af25d50-576a-3cc3-20a3-c0c61cf3e494@linux.alibaba.com>
+Date:   Thu, 30 May 2019 11:22:21 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <alpine.DEB.2.21.1905291402360.242480@chino.kir.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 32e621e55496a0009f44fe4914cd4a23cade4984 ]
 
-Currently, building bpf samples will cause the following error.
 
-    ./tools/lib/bpf/bpf.h:132:27: error: 'UINT32_MAX' undeclared here (not in a function) ..
-     #define BPF_LOG_BUF_SIZE (UINT32_MAX >> 8) /* verifier maximum in kernels <= 5.1 */
-                               ^
-    ./samples/bpf/bpf_load.h:31:25: note: in expansion of macro 'BPF_LOG_BUF_SIZE'
-     extern char bpf_log_buf[BPF_LOG_BUF_SIZE];
-                             ^~~~~~~~~~~~~~~~
+On 5/30/19 5:07 AM, David Rientjes wrote:
+> On Wed, 29 May 2019, Yang Shi wrote:
+>
+>>> Right, we've also encountered this.  I talked to Kirill about it a week or
+>>> so ago where the suggestion was to split all compound pages on the
+>>> deferred split queues under the presence of even memory pressure.
+>>>
+>>> That breaks cgroup isolation and perhaps unfairly penalizes workloads that
+>>> are running attached to other memcg hierarchies that are not under
+>>> pressure because their compound pages are now split as a side effect.
+>>> There is a benefit to keeping these compound pages around while not under
+>>> memory pressure if all pages are subsequently mapped again.
+>> Yes, I do agree. I tried other approaches too, it sounds making deferred split
+>> queue per memcg is the optimal one.
+>>
+> The approach we went with were to track the actual counts of compound
+> pages on the deferred split queue for each pgdat for each memcg and then
+> invoke the shrinker for memcg reclaim and iterate those not charged to the
+> hierarchy under reclaim.  That's suboptimal and was a stop gap measure
+> under time pressure: it's refreshing to see the optimal method being
+> pursued, thanks!
 
-Due to commit 4519efa6f8ea ("libbpf: fix BPF_LOG_BUF_SIZE off-by-one error")
-hard-coded size of BPF_LOG_BUF_SIZE has been replaced with UINT32_MAX which is
-defined in <stdint.h> header.
+We did the exactly same thing for a temporary hotfix.
 
-Even with this change, bpf selftests are running fine since these are built
-with clang and it includes header(-idirafter) from clang/6.0.0/include.
-(it has <stdint.h>)
+>
+>>> I'm curious if your internal applications team is also asking for
+>>> statistics on how much memory can be freed if the deferred split queues
+>>> can be shrunk?  We have applications that monitor their own memory usage
+>> No, but this reminds me. The THPs on deferred split queue should be accounted
+>> into available memory too.
+>>
+> Right, and we have also seen this for users of MADV_FREE that have both an
+> increased rss and memcg usage that don't realize that the memory is freed
+> under pressure.  I'm thinking that we need some kind of MemAvailable for
+> memcg hierarchies to be the authoritative source of what can be reclaimed
+> under pressure.
 
-    clang -I. -I./include/uapi -I../../../include/uapi -idirafter /usr/local/include -idirafter /usr/include \
-    -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.0/include -idirafter /usr/include/x86_64-linux-gnu \
-    -Wno-compare-distinct-pointer-types -O2 -target bpf -emit-llvm -c progs/test_sysctl_prog.c -o - | \
-    llc -march=bpf -mcpu=generic  -filetype=obj -o /linux/tools/testing/selftests/bpf/test_sysctl_prog.o
+It sounds useful. We also need know the available memory in memcg scope 
+in our containers.
 
-But bpf samples are compiled with GCC, and it only searches and includes
-headers declared at the target file. As '#include <stdint.h>' hasn't been
-declared in tools/lib/bpf/bpf.h, it causes build failure of bpf samples.
+>
+>>> through memcg stats or usage and proactively try to reduce that usage when
+>>> it is growing too large.  The deferred split queues have significantly
+>>> increased both memcg usage and rss when they've upgraded kernels.
+>>>
+>>> How are your applications monitoring how much memory from deferred split
+>>> queues can be freed on memory pressure?  Any thoughts on providing it as a
+>>> memcg stat?
+>> I don't think they have such monitor. I saw rss_huge is abormal in memcg stat
+>> even after the application is killed by oom, so I realized the deferred split
+>> queue may play a role here.
+>>
+> Exactly the same in my case :)  We were likely looking at the exact same
+> issue at the same time.
 
-    gcc -Wp,-MD,./samples/bpf/.sockex3_user.o.d -Wall -Wmissing-prototypes -Wstrict-prototypes \
-    -O2 -fomit-frame-pointer -std=gnu89 -I./usr/include -I./tools/lib/ -I./tools/testing/selftests/bpf/ \
-    -I./tools/  lib/ -I./tools/include -I./tools/perf -c -o ./samples/bpf/sockex3_user.o ./samples/bpf/sockex3_user.c;
+Yes, it seems so. :-)
 
-This commit add declaration of '#include <stdint.h>' to tools/lib/bpf/bpf.h
-to fix this problem.
+>> The memcg stat doesn't have counters for available memory as global vmstat. It
+>> may be better to have such statistics, or extending reclaimable "slab" to
+>> shrinkable/reclaimable "memory".
+>>
+> Have you considered following how NR_ANON_MAPPED is tracked for each pgdat
+> and using that as an indicator of when the modify a memcg stat to track
+> the amount of memory on a compound page?  I think this would be necessary
+> for userspace to know what their true memory usage is.
 
-Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
-Acked-by: Yonghong Song <yhs@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/lib/bpf/bpf.h | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/tools/lib/bpf/bpf.h b/tools/lib/bpf/bpf.h
-index 6f38164b26181..c3145ab3bdcac 100644
---- a/tools/lib/bpf/bpf.h
-+++ b/tools/lib/bpf/bpf.h
-@@ -26,6 +26,7 @@
- #include <linux/bpf.h>
- #include <stdbool.h>
- #include <stddef.h>
-+#include <stdint.h>
- 
- struct bpf_create_map_attr {
- 	const char *name;
--- 
-2.20.1
-
+No, I haven't. Do you mean minus MADV_FREE and deferred split THP from 
+NR_ANON_MAPPED? It looks they have been decreased from NR_ANON_MAPPED 
+when removing rmap.
 
 
