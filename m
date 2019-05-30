@@ -2,127 +2,163 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58945C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A247BC28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B86A257D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:15:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="UdPMPcc0"
+	by mail.kernel.org (Postfix) with ESMTP id 81B45257E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:15:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727013AbfE3IPj (ORCPT
+        id S1727285AbfE3IPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 30 May 2019 04:15:40 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:39118 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725440AbfE3IPj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 May 2019 04:15:39 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:50413 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbfE3IPi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 04:15:38 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4U8FTLP2905079
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 30 May 2019 01:15:29 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4U8FTLP2905079
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559204130;
-        bh=SCYMXrbHCocyfPzXCCuOMuKzjQ/bE/bgm/lZzNov28Y=;
-        h=Date:From:Cc:Reply-To:To:Subject:From;
-        b=UdPMPcc0D6f7nI0gEMJl4PijfUfaE/fD+j25pdyXllrKHKVmmoQfABIxElIzZX6hm
-         bomuLOI6ZhZGtj0ncIBYFf0KXZvrwCQwwl7x4fE/YzAZiZzjtOl7/mD59gJWyumqUW
-         lC+i0Ce+WQNMQC1ELfu9da26uYs/cKBmQhHwsWa+bS+hMPJQSTZCW8sDONvHUkxijN
-         1/qVejl4a06UABgjlwn7dE/1c5/ECuDbVGmJjFRoZ5PbKf+4guVjqEU9r5atUqYlJC
-         lBOIzhBeoD0fRNYM8WSw9Pl4P3tb7rTF98yXP9E74N4zPgfy/SfNcYKabsSx/f0kpZ
-         M314QK90NikIg==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4U8FThe2905076;
-        Thu, 30 May 2019 01:15:29 -0700
-Date:   Thu, 30 May 2019 01:15:29 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-f9nexro58q62l3o9hez8hr0i@git.kernel.org>
-Cc:     jolsa@kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        namhyung@kernel.org, hpa@zytor.com, mingo@kernel.org,
-        adrian.hunter@intel.com, acme@redhat.com
-Reply-To: mingo@kernel.org, hpa@zytor.com, acme@redhat.com,
-          adrian.hunter@intel.com, jolsa@kernel.org,
-          linux-kernel@vger.kernel.org, namhyung@kernel.org,
-          tglx@linutronix.de
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf annotate TUI browser: Do not use member from
- variable within its own initialization
-Git-Commit-ID: da2019633f0b5c105ce658aada333422d8cb28fe
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 67677EBEDAA20966E231;
+        Thu, 30 May 2019 16:15:36 +0800 (CST)
+Received: from [127.0.0.1] (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Thu, 30 May 2019
+ 16:15:35 +0800
+Subject: Re: [PATCH -next] platform/chrome: cros_ec_lpc: Make some symbols
+ static
+To:     Guenter Roeck <groeck@google.com>
+References: <20190529150749.8032-1-yuehaibing@huawei.com>
+ <CABXOdTfbfWsan3MH0e=pnQ2DKw5p===1s4hKcnDdbRUwARPSDg@mail.gmail.com>
+CC:     Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <e11f1097-7010-064d-1b82-17d6d8b697ec@huawei.com>
+Date:   Thu, 30 May 2019 16:15:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+In-Reply-To: <CABXOdTfbfWsan3MH0e=pnQ2DKw5p===1s4hKcnDdbRUwARPSDg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  da2019633f0b5c105ce658aada333422d8cb28fe
-Gitweb:     https://git.kernel.org/tip/da2019633f0b5c105ce658aada333422d8cb28fe
-Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Tue, 28 May 2019 16:02:56 -0300
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Tue, 28 May 2019 18:37:44 -0300
+On 2019/5/29 23:12, Guenter Roeck wrote:
+> On Wed, May 29, 2019 at 8:08 AM YueHaibing <yuehaibing@huawei.com> wrote:
+>>
+>> Fix sparse warning:
+>>
+>> drivers/platform/chrome/cros_ec_debugfs.c:256:30: warning: symbol 'cros_ec_console_log_fops' was not declared. Should it be static?
+>> drivers/platform/chrome/cros_ec_debugfs.c:265:30: warning: symbol 'cros_ec_pdinfo_fops' was not declared. Should it be static?
+>> drivers/platform/chrome/cros_ec_lightbar.c:550:24: warning: symbol 'cros_ec_lightbar_attr_group' was not declared. Should it be static?
+>> drivers/platform/chrome/cros_ec_sysfs.c:338:24: warning: symbol 'cros_ec_attr_group' was not declared. Should it be static?
+>> drivers/platform/chrome/cros_ec_vbc.c:104:24: warning: symbol 'cros_ec_vbc_attr_group' was not declared. Should it be static?
+>> drivers/platform/chrome/cros_ec_lpc.c:408:25: warning: symbol 'cros_ec_lpc_pm_ops' was not declared. Should it be static?
+>>
+> 
+> The subject is misleading: The patch does not only affect cros_ec_lpc.
 
-perf annotate TUI browser: Do not use member from variable within its own initialization
+Sorry, will fix it in v2.
 
-Some compilers will complain when using a member of a struct to
-initialize another member, in the same struct initialization.
+> 
+> Guenter
+> 
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>> ---
+>>  drivers/platform/chrome/cros_ec_debugfs.c  | 4 ++--
+>>  drivers/platform/chrome/cros_ec_lightbar.c | 2 +-
+>>  drivers/platform/chrome/cros_ec_lpc.c      | 2 +-
+>>  drivers/platform/chrome/cros_ec_sysfs.c    | 2 +-
+>>  drivers/platform/chrome/cros_ec_vbc.c      | 2 +-
+>>  5 files changed, 6 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/platform/chrome/cros_ec_debugfs.c b/drivers/platform/chrome/cros_ec_debugfs.c
+>> index 4c2a27f6a6d0..4578eb3e0731 100644
+>> --- a/drivers/platform/chrome/cros_ec_debugfs.c
+>> +++ b/drivers/platform/chrome/cros_ec_debugfs.c
+>> @@ -241,7 +241,7 @@ static ssize_t cros_ec_pdinfo_read(struct file *file,
+>>                                        read_buf, p - read_buf);
+>>  }
+>>
+>> -const struct file_operations cros_ec_console_log_fops = {
+>> +static const struct file_operations cros_ec_console_log_fops = {
+>>         .owner = THIS_MODULE,
+>>         .open = cros_ec_console_log_open,
+>>         .read = cros_ec_console_log_read,
+>> @@ -250,7 +250,7 @@ const struct file_operations cros_ec_console_log_fops = {
+>>         .release = cros_ec_console_log_release,
+>>  };
+>>
+>> -const struct file_operations cros_ec_pdinfo_fops = {
+>> +static const struct file_operations cros_ec_pdinfo_fops = {
+>>         .owner = THIS_MODULE,
+>>         .open = simple_open,
+>>         .read = cros_ec_pdinfo_read,
+>> diff --git a/drivers/platform/chrome/cros_ec_lightbar.c b/drivers/platform/chrome/cros_ec_lightbar.c
+>> index d30a6650b0b5..23a82ee4c785 100644
+>> --- a/drivers/platform/chrome/cros_ec_lightbar.c
+>> +++ b/drivers/platform/chrome/cros_ec_lightbar.c
+>> @@ -547,7 +547,7 @@ static struct attribute *__lb_cmds_attrs[] = {
+>>         NULL,
+>>  };
+>>
+>> -struct attribute_group cros_ec_lightbar_attr_group = {
+>> +static struct attribute_group cros_ec_lightbar_attr_group = {
+>>         .name = "lightbar",
+>>         .attrs = __lb_cmds_attrs,
+>>  };
+>> diff --git a/drivers/platform/chrome/cros_ec_lpc.c b/drivers/platform/chrome/cros_ec_lpc.c
+>> index c9c240fbe7c6..aaa21803633a 100644
+>> --- a/drivers/platform/chrome/cros_ec_lpc.c
+>> +++ b/drivers/platform/chrome/cros_ec_lpc.c
+>> @@ -405,7 +405,7 @@ static int cros_ec_lpc_resume(struct device *dev)
+>>  }
+>>  #endif
+>>
+>> -const struct dev_pm_ops cros_ec_lpc_pm_ops = {
+>> +static const struct dev_pm_ops cros_ec_lpc_pm_ops = {
+>>         SET_LATE_SYSTEM_SLEEP_PM_OPS(cros_ec_lpc_suspend, cros_ec_lpc_resume)
+>>  };
+>>
+>> diff --git a/drivers/platform/chrome/cros_ec_sysfs.c b/drivers/platform/chrome/cros_ec_sysfs.c
+>> index fe0b7614ae1b..3edb237bf8ed 100644
+>> --- a/drivers/platform/chrome/cros_ec_sysfs.c
+>> +++ b/drivers/platform/chrome/cros_ec_sysfs.c
+>> @@ -335,7 +335,7 @@ static umode_t cros_ec_ctrl_visible(struct kobject *kobj,
+>>         return a->mode;
+>>  }
+>>
+>> -struct attribute_group cros_ec_attr_group = {
+>> +static struct attribute_group cros_ec_attr_group = {
+>>         .attrs = __ec_attrs,
+>>         .is_visible = cros_ec_ctrl_visible,
+>>  };
+>> diff --git a/drivers/platform/chrome/cros_ec_vbc.c b/drivers/platform/chrome/cros_ec_vbc.c
+>> index 8392a1ec33a7..2aaefed87eb4 100644
+>> --- a/drivers/platform/chrome/cros_ec_vbc.c
+>> +++ b/drivers/platform/chrome/cros_ec_vbc.c
+>> @@ -101,7 +101,7 @@ static struct bin_attribute *cros_ec_vbc_bin_attrs[] = {
+>>         NULL
+>>  };
+>>
+>> -struct attribute_group cros_ec_vbc_attr_group = {
+>> +static struct attribute_group cros_ec_vbc_attr_group = {
+>>         .name = "vbc",
+>>         .bin_attrs = cros_ec_vbc_bin_attrs,
+>>  };
+>> --
+>> 2.17.1
+>>
+>>
+> 
+> .
+> 
 
-For instance:
-
-  debian:8      Debian clang version 3.5.0-10 (tags/RELEASE_350/final) (based on LLVM 3.5.0)
-  oraclelinux:7 clang version 3.4.2 (tags/RELEASE_34/dot2-final)
-
-Produce:
-
-  ui/browsers/annotate.c:104:12: error: variable 'ops' is uninitialized when used within its own initialization [-Werror,-Wuninitialized]
-                                              (!ops.current_entry ||
-                                                ^~~
-  1 error generated.
-
-So use an extra variable, initialized just before that struct, to have
-the value used in the expressions used to init two of the struct
-members.
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Fixes: c298304bd747 ("perf annotate: Use a ops table for annotation_line__write()")
-Link: https://lkml.kernel.org/n/tip-f9nexro58q62l3o9hez8hr0i@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/ui/browsers/annotate.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 98d934a36d86..b0d089a95dac 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -97,11 +97,12 @@ static void annotate_browser__write(struct ui_browser *browser, void *entry, int
- 	struct annotate_browser *ab = container_of(browser, struct annotate_browser, b);
- 	struct annotation *notes = browser__annotation(browser);
- 	struct annotation_line *al = list_entry(entry, struct annotation_line, node);
-+	const bool is_current_entry = ui_browser__is_current_entry(browser, row);
- 	struct annotation_write_ops ops = {
- 		.first_line		 = row == 0,
--		.current_entry		 = ui_browser__is_current_entry(browser, row),
-+		.current_entry		 = is_current_entry,
- 		.change_color		 = (!notes->options->hide_src_code &&
--					    (!ops.current_entry ||
-+					    (!is_current_entry ||
- 					     (browser->use_navkeypressed &&
- 					      !browser->navkeypressed))),
- 		.width			 = browser->width,
