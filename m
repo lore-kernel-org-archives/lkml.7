@@ -7,55 +7,56 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C83A1C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 07:54:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5CAC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 07:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9938F2576A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 07:54:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E3602576C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 07:55:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="v4evDbvM"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="PXtXDXkk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbfE3HyT (ORCPT
+        id S1727788AbfE3HzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 03:54:19 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:52087 "EHLO
+        Thu, 30 May 2019 03:55:03 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:39859 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726027AbfE3HyT (ORCPT
+        with ESMTP id S1726027AbfE3HzC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 03:54:19 -0400
+        Thu, 30 May 2019 03:55:02 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4U7s5TL2899783
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4U7sm7Z2899831
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 30 May 2019 00:54:05 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4U7s5TL2899783
+        Thu, 30 May 2019 00:54:49 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4U7sm7Z2899831
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559202846;
-        bh=ISJGxcdQ2x7eF37zluznuz6Qu8JbNfefp/gWFkXGgSg=;
+        s=2019051801; t=1559202889;
+        bh=LK8Cf6X9rKPqO355G3EsTQDa9jTgl+V8xjJ9X6E7rlU=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=v4evDbvMnGYCOWI0c7ef5RMapMaORyD6t4P8WHPqJJpzYRyhmz003JwnNukFOurUw
-         PU7ntqYLJSkLh+W2GZJAF8wOptzb24di9cxVL/TK4M5fgiDKuLIGGLwmlf59CFn3OV
-         y/dpX9Cc60Q3Z/ZiuLm9pQk8lOwyUQD2bX+VObxxs1azX2wBlgTVwSiE7A1+LQJSGS
-         u/BuMd5JnTE8sOdmnwjPC+jphHDSBx4o4WMeE82tLaa2tbxqSvClvJgaCqpxxYMOvM
-         TIUiBQg8HhzZch/UcgwJR374gYEIHJJq8A9dmXtw34epX0E2k/E3eqwUHSKCq32LXL
-         NXHSQG/kplOZQ==
+        b=PXtXDXkkm2adzMjd6a6jg1FP5mexo3GxOYTcQGPgXPXAo8nR4Bgepola5KEkFKjo9
+         L5G6c0ubnYFv29xQK3Wji9BGmPqKvS/yX8hS8/Ghwicmkm7HiGQrNXNFjkoAce84jG
+         9kS6v9WyaNmtYV4wZi07qzsOBGNoy3T8hna/66Dn6kS2ck+JYTuBBhH2SgMt3KfncG
+         8dBb1Pe19l3xnyUDfSzQH8Qwey4xZdEoo5uK9hb4bbJ9zLVy5A05KQp5aRDqs1c/hX
+         llCbSHqDOlSYpARSMH9FNHPefiBVIpLAXrFKP0M5DUKu/hdko+xuAHwm1Z5EQlNeEy
+         2KrwWzUnsqKVA==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4U7s4Ze2899780;
-        Thu, 30 May 2019 00:54:04 -0700
-Date:   Thu, 30 May 2019 00:54:04 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4U7smGU2899828;
+        Thu, 30 May 2019 00:54:48 -0700
+Date:   Thu, 30 May 2019 00:54:48 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Adrian Hunter <tipbot@zytor.com>
-Message-ID: <tip-355200e0f6a9ce14771625014aa469f5ecbd8977@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, adrian.hunter@intel.com,
-        acme@redhat.com, hpa@zytor.com, mingo@kernel.org,
-        tglx@linutronix.de, jolsa@redhat.com
-Reply-To: acme@redhat.com, hpa@zytor.com, mingo@kernel.org,
+Message-ID: <tip-a2d8a1585e35444789c1c8cf7e2e51fb15589880@git.kernel.org>
+Cc:     adrian.hunter@intel.com, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, acme@redhat.com, jolsa@redhat.com,
+        hpa@zytor.com, mingo@kernel.org
+Reply-To: mingo@kernel.org, hpa@zytor.com, adrian.hunter@intel.com,
           linux-kernel@vger.kernel.org, tglx@linutronix.de,
-          jolsa@redhat.com, adrian.hunter@intel.com
-In-Reply-To: <20190520113728.14389-3-adrian.hunter@intel.com>
-References: <20190520113728.14389-3-adrian.hunter@intel.com>
+          acme@redhat.com, jolsa@redhat.com
+In-Reply-To: <20190520113728.14389-4-adrian.hunter@intel.com>
+References: <20190520113728.14389-4-adrian.hunter@intel.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf auxtrace: Fix itrace defaults for perf script
-Git-Commit-ID: 355200e0f6a9ce14771625014aa469f5ecbd8977
+Subject: [tip:perf/core] perf intel-pt: Fix itrace defaults for perf script
+ intel-pt documentation
+Git-Commit-ID: a2d8a1585e35444789c1c8cf7e2e51fb15589880
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -69,58 +70,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  355200e0f6a9ce14771625014aa469f5ecbd8977
-Gitweb:     https://git.kernel.org/tip/355200e0f6a9ce14771625014aa469f5ecbd8977
+Commit-ID:  a2d8a1585e35444789c1c8cf7e2e51fb15589880
+Gitweb:     https://git.kernel.org/tip/a2d8a1585e35444789c1c8cf7e2e51fb15589880
 Author:     Adrian Hunter <adrian.hunter@intel.com>
-AuthorDate: Mon, 20 May 2019 14:37:08 +0300
+AuthorDate: Mon, 20 May 2019 14:37:09 +0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Tue, 28 May 2019 18:37:42 -0300
 
-perf auxtrace: Fix itrace defaults for perf script
+perf intel-pt: Fix itrace defaults for perf script intel-pt documentation
 
-Commit 4eb068157121 ("perf script: Make itrace script default to all
-calls") does not work for the case when '--itrace' only is used, because
-default_no_sample is not being passed.
-
-Example:
-
- Before:
-
-  $ perf record -e intel_pt/cyc/u ls
-  $ perf script --itrace > cmp1.txt
-  $ perf script --itrace=cepwx > cmp2.txt
-  $ diff -sq cmp1.txt cmp2.txt
-  Files cmp1.txt and cmp2.txt differ
-
- After:
-
-  $ perf script --itrace > cmp1.txt
-  $ perf script --itrace=cepwx > cmp2.txt
-  $ diff -sq cmp1.txt cmp2.txt
-  Files cmp1.txt and cmp2.txt are identical
+Fix intel-pt documentation to reflect the change of itrace defaults for
+perf script.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: stable@vger.kernel.org
 Fixes: 4eb068157121 ("perf script: Make itrace script default to all calls")
-Link: http://lkml.kernel.org/r/20190520113728.14389-3-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20190520113728.14389-4-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/auxtrace.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/Documentation/intel-pt.txt | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index fb76b6b232d4..5dd9d1893b89 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -1010,7 +1010,8 @@ int itrace_parse_synth_opts(const struct option *opt, const char *str,
- 	}
+diff --git a/tools/perf/Documentation/intel-pt.txt b/tools/perf/Documentation/intel-pt.txt
+index 115eaacc455f..60d99e5e7921 100644
+--- a/tools/perf/Documentation/intel-pt.txt
++++ b/tools/perf/Documentation/intel-pt.txt
+@@ -88,16 +88,16 @@ smaller.
  
- 	if (!str) {
--		itrace_synth_opts__set_default(synth_opts, false);
-+		itrace_synth_opts__set_default(synth_opts,
-+					       synth_opts->default_no_sample);
- 		return 0;
- 	}
+ To represent software control flow, "branches" samples are produced.  By default
+ a branch sample is synthesized for every single branch.  To get an idea what
+-data is available you can use the 'perf script' tool with no parameters, which
+-will list all the samples.
++data is available you can use the 'perf script' tool with all itrace sampling
++options, which will list all the samples.
+ 
+ 	perf record -e intel_pt//u ls
+-	perf script
++	perf script --itrace=ibxwpe
+ 
+ An interesting field that is not printed by default is 'flags' which can be
+ displayed as follows:
+ 
+-	perf script -Fcomm,tid,pid,time,cpu,event,trace,ip,sym,dso,addr,symoff,flags
++	perf script --itrace=ibxwpe -F+flags
+ 
+ The flags are "bcrosyiABEx" which stand for branch, call, return, conditional,
+ system, asynchronous, interrupt, transaction abort, trace begin, trace end, and
+@@ -713,7 +713,7 @@ Having no option is the same as
+ 
+ which, in turn, is the same as
+ 
+-	--itrace=ibxwpe
++	--itrace=cepwx
+ 
+ The letters are:
  
