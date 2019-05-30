@@ -2,52 +2,53 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF93EC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18163C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C657624BA8
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:39:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E417724BA8
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:39:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187570;
-	bh=PDQKFwTZ+4tb8UFV3uA4gFWymgWjmywDPoUt7qwHpMU=;
+	s=default; t=1559187574;
+	bh=nGAUJRbLvnG4RZXmH6VU4fSaW9467h2MfLvkpldJnBI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MZnS5fF1FcRoP2smSJyekMmAZ7Ir3qiPGcsnl1z00CKb/hwx9Pv0Lpz/RrezuVLA1
-	 ofcOJ6INFNJomJMHi3fIDlRcOOESZynTek6OsuDucUxyPZJafQ2uW9bcjsVOw++nGb
-	 qzW8LLjfuxceeUgB+4d7MakLifqnXVP5/+KTfQNI=
+	b=z2FmyuvVs0++zLyxdgGiwUVDhTYr8+gvy+XE5Q0tcTSrvEoCVcxkCuxfwCMYCn5+J
+	 GJv9zlWpwba4vPBu6t7ZeDpD9Uw2j3bISvVpFTLv+gxehbXYhXrhhf/i4a9dNGNohd
+	 AxQ9ki+gL8OrNAdZ45oul5g53N5NSUuN9u4M2sq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732721AbfE3DWN (ORCPT
+        id S1732705AbfE3DWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:22:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43188 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:22:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729778AbfE3DQg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:36 -0400
+        id S1729790AbfE3DQf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:16:35 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF835245AB;
-        Thu, 30 May 2019 03:16:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82D9924605;
+        Thu, 30 May 2019 03:16:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186195;
-        bh=PDQKFwTZ+4tb8UFV3uA4gFWymgWjmywDPoUt7qwHpMU=;
+        s=default; t=1559186194;
+        bh=nGAUJRbLvnG4RZXmH6VU4fSaW9467h2MfLvkpldJnBI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dtFoOS+XO3LZ3F2U+uWcKGPohqQaZhPOKUADy/J2eWRPoByhhi9Ui57z5byKpPrdQ
-         pvSO1qeAyPbDJeKJTbOHNjV9AwZ4YQXWgRPfhymwpDWTxI/BddaSFvt6ucdF1xXqNP
-         tKahl17ZGbbbpV8oQmNdEPJn8kt1Pttl57mDSIAw=
+        b=gc3UOaGbM6UXSTDYf8D8QXHRuybzTcwE6UviYsnXY2x4hlIsh2B83ex9jPq7nswqQ
+         VfbkMmFA0rOLw3hXk9lcEBPe1RY+8rY73APrihH8mc/5QFUhhz7e9Gq4XWLPmAHo36
+         9wYZC0dtKB41nRFPW/S/7bNdBurYFicGzXw8tc5o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Derrick <jonathan.derrick@intel.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 069/276] drm/nouveau/bar/nv50: ensure BAR is mapped
-Date:   Wed, 29 May 2019 20:03:47 -0700
-Message-Id: <20190530030530.477145842@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+9c69c282adc4edd2b540@syzkaller.appspotmail.com,
+        Amir Goldstein <amir73il@gmail.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 4.19 032/276] ovl: relax WARN_ON() for overlapping layers use case
+Date:   Wed, 29 May 2019 20:03:10 -0700
+Message-Id: <20190530030526.260586516@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -60,58 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f10b83de1fd49216a4c657816f48001437e4bdd5 ]
+From: Amir Goldstein <amir73il@gmail.com>
 
-If the BAR is zero size, it indicates it was never successfully mapped.
-Ensure that the BAR is valid during initialization before attempting to
-use it.
+commit acf3062a7e1ccf67c6f7e7c28671a6708fde63b0 upstream.
 
-Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This nasty little syzbot repro:
+https://syzkaller.appspot.com/x/repro.syz?x=12c7a94f400000
+
+Creates overlay mounts where the same directory is both in upper and lower
+layers. Simplified example:
+
+  mkdir foo work
+  mount -t overlay none foo -o"lowerdir=.,upperdir=foo,workdir=work"
+
+The repro runs several threads in parallel that attempt to chdir into foo
+and attempt to symlink/rename/exec/mkdir the file bar.
+
+The repro hits a WARN_ON() I placed in ovl_instantiate(), which suggests
+that an overlay inode already exists in cache and is hashed by the pointer
+of the real upper dentry that ovl_create_real() has just created. At the
+point of the WARN_ON(), for overlay dir inode lock is held and upper dir
+inode lock, so at first, I did not see how this was possible.
+
+On a closer look, I see that after ovl_create_real(), because of the
+overlapping upper and lower layers, a lookup by another thread can find the
+file foo/bar that was just created in upper layer, at overlay path
+foo/foo/bar and hash the an overlay inode with the new real dentry as lower
+dentry. This is possible because the overlay directory foo/foo is not
+locked and the upper dentry foo/bar is in dcache, so ovl_lookup() can find
+it without taking upper dir inode shared lock.
+
+Overlapping layers is considered a wrong setup which would result in
+unexpected behavior, but it shouldn't crash the kernel and it shouldn't
+trigger WARN_ON() either, so relax this WARN_ON() and leave a pr_warn()
+instead to cover all cases of failure to get an overlay inode.
+
+The error returned from failure to insert new inode to cache with
+inode_insert5() was changed to -EEXIST, to distinguish from the error
+-ENOMEM returned on failure to get/allocate inode with iget5_locked().
+
+Reported-by: syzbot+9c69c282adc4edd2b540@syzkaller.appspotmail.com
+Fixes: 01b39dcc9568 ("ovl: use inode_insert5() to hash a newly...")
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpu/drm/nouveau/nvkm/subdev/bar/nv50.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ fs/overlayfs/dir.c   |    2 +-
+ fs/overlayfs/inode.c |    3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/bar/nv50.c b/drivers/gpu/drm/nouveau/nvkm/subdev/bar/nv50.c
-index 157b076a12723..38c9c086754b6 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/bar/nv50.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/bar/nv50.c
-@@ -109,7 +109,7 @@ nv50_bar_oneinit(struct nvkm_bar *base)
- 	struct nvkm_device *device = bar->base.subdev.device;
- 	static struct lock_class_key bar1_lock;
- 	static struct lock_class_key bar2_lock;
--	u64 start, limit;
-+	u64 start, limit, size;
- 	int ret;
+--- a/fs/overlayfs/dir.c
++++ b/fs/overlayfs/dir.c
+@@ -260,7 +260,7 @@ static int ovl_instantiate(struct dentry
+ 		 * hashed directory inode aliases.
+ 		 */
+ 		inode = ovl_get_inode(dentry->d_sb, &oip);
+-		if (WARN_ON(IS_ERR(inode)))
++		if (IS_ERR(inode))
+ 			return PTR_ERR(inode);
+ 	} else {
+ 		WARN_ON(ovl_inode_real(inode) != d_inode(newdentry));
+--- a/fs/overlayfs/inode.c
++++ b/fs/overlayfs/inode.c
+@@ -832,7 +832,7 @@ struct inode *ovl_get_inode(struct super
+ 	int fsid = bylower ? oip->lowerpath->layer->fsid : 0;
+ 	bool is_dir, metacopy = false;
+ 	unsigned long ino = 0;
+-	int err = -ENOMEM;
++	int err = oip->newinode ? -EEXIST : -ENOMEM;
  
- 	ret = nvkm_gpuobj_new(device, 0x20000, 0, false, NULL, &bar->mem);
-@@ -127,7 +127,10 @@ nv50_bar_oneinit(struct nvkm_bar *base)
+ 	if (!realinode)
+ 		realinode = d_inode(lowerdentry);
+@@ -917,6 +917,7 @@ out:
+ 	return inode;
  
- 	/* BAR2 */
- 	start = 0x0100000000ULL;
--	limit = start + device->func->resource_size(device, 3);
-+	size = device->func->resource_size(device, 3);
-+	if (!size)
-+		return -ENOMEM;
-+	limit = start + size;
- 
- 	ret = nvkm_vmm_new(device, start, limit-- - start, NULL, 0,
- 			   &bar2_lock, "bar2", &bar->bar2_vmm);
-@@ -164,7 +167,10 @@ nv50_bar_oneinit(struct nvkm_bar *base)
- 
- 	/* BAR1 */
- 	start = 0x0000000000ULL;
--	limit = start + device->func->resource_size(device, 1);
-+	size = device->func->resource_size(device, 1);
-+	if (!size)
-+		return -ENOMEM;
-+	limit = start + size;
- 
- 	ret = nvkm_vmm_new(device, start, limit-- - start, NULL, 0,
- 			   &bar1_lock, "bar1", &bar->bar1_vmm);
--- 
-2.20.1
-
+ out_err:
++	pr_warn_ratelimited("overlayfs: failed to get inode (%i)\n", err);
+ 	inode = ERR_PTR(err);
+ 	goto out;
+ }
 
 
