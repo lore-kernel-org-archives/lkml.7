@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30291C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBDBC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 049F325E65
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 941C425E36
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:54:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192041;
-	bh=B71QUzXxuY/5P12+ReZl2k2PlJJ2/W9n9mOxrKU+LfA=;
+	s=default; t=1559192043;
+	bh=da8K1vDjRSUZxYNo8nwf8K0lKJ+leQX8MRJ1igQfLTI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KCA+CYgeJt19PjGslnfoxTINXlkRyzzIsMbvVej9wXaOlmf7ABBswwfnIUdufYNcx
-	 7ZU1HtHjsbb1jNAVVsKJcEpvrbDHDyq75yKimt8BxRlk2Zfu9ri5eyhQjpOR9nc3Zh
-	 4Bq5yvbYhtj1oVLfDKC9YhsnKDfqfNrOLRnOB1fY=
+	b=dA04DLzFQLaaQW1/eVdK4pLquT+TiNdsjOnul7UmbbmhJoYCZYKZ9Xo/ak4l0GNGx
+	 wE0ujLamTa9qtEvOAJFFm24CoYPX0sCflKFzFytk19YmA/+tFO9nsgL6NVfde/shp8
+	 1U6LxEREfClbi0bWsWV1SN9vN/r+dzN3GKHyYP44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389097AbfE3EyA (ORCPT
+        id S2389102AbfE3EyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:54:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47618 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:54:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728121AbfE3DKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728118AbfE3DKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:10:31 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72ED3244BE;
+        by mail.kernel.org (Postfix) with ESMTPSA id 162C2244A6;
         Thu, 30 May 2019 03:10:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559185830;
-        bh=B71QUzXxuY/5P12+ReZl2k2PlJJ2/W9n9mOxrKU+LfA=;
+        bh=da8K1vDjRSUZxYNo8nwf8K0lKJ+leQX8MRJ1igQfLTI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wplino6MiugmBislBpPoYPYwR5TJYSm/FcbQ0xv8DLZ1qScUyekwRBCKZFW1yTbV+
-         nEHZaqY08cnS3XDSEVT0pwoRbDwDGwunkPM5+lZu3c60l1jyprcmmrWuodB9f5yibI
-         Ijh++kvdudlfTTffLsQEcuEdGFshGVezCPcWsOFQ=
+        b=ag/gxUqRGo/Q0fdN6sJ9r8IMzXKJGUQpK00nDxlPKxCwXf+1cxmM8cVI7kJiR9huA
+         sI/VJ9h6NIk17/JUdchZx/M6fGE7VsG+dVF97Y/dhu4NHZjhVgvwbcE8eL16U+TFpY
+         Y9vuscUt8p/fCzeGrR0lIkKqhSrLCCj2dCjnuWTE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 133/405] bcache: avoid clang -Wunintialized warning
-Date:   Wed, 29 May 2019 20:02:11 -0700
-Message-Id: <20190530030547.815389736@linuxfoundation.org>
+        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 132/405] bcache: add failure check to run_cache_set() for journal replay
+Date:   Wed, 29 May 2019 20:02:10 -0700
+Message-Id: <20190530030547.754507390@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,73 +59,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 78d4eb8ad9e1d413449d1b7a060f50b6efa81ebd ]
+[ Upstream commit ce3e4cfb59cb382f8e5ce359238aa580d4ae7778 ]
 
-clang has identified a code path in which it thinks a
-variable may be unused:
+Currently run_cache_set() has no return value, if there is failure in
+bch_journal_replay(), the caller of run_cache_set() has no idea about
+such failure and just continue to execute following code after
+run_cache_set().  The internal failure is triggered inside
+bch_journal_replay() and being handled in async way. This behavior is
+inefficient, while failure handling inside bch_journal_replay(), cache
+register code is still running to start the cache set. Registering and
+unregistering code running as same time may introduce some rare race
+condition, and make the code to be more hard to be understood.
 
-drivers/md/bcache/alloc.c:333:4: error: variable 'bucket' is used uninitialized whenever 'if' condition is false
-      [-Werror,-Wsometimes-uninitialized]
-                        fifo_pop(&ca->free_inc, bucket);
-                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/md/bcache/util.h:219:27: note: expanded from macro 'fifo_pop'
- #define fifo_pop(fifo, i)       fifo_pop_front(fifo, (i))
-                                ^~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/md/bcache/util.h:189:6: note: expanded from macro 'fifo_pop_front'
-        if (_r) {                                                       \
-            ^~
-drivers/md/bcache/alloc.c:343:46: note: uninitialized use occurs here
-                        allocator_wait(ca, bch_allocator_push(ca, bucket));
-                                                                  ^~~~~~
-drivers/md/bcache/alloc.c:287:7: note: expanded from macro 'allocator_wait'
-                if (cond)                                               \
-                    ^~~~
-drivers/md/bcache/alloc.c:333:4: note: remove the 'if' if its condition is always true
-                        fifo_pop(&ca->free_inc, bucket);
-                        ^
-drivers/md/bcache/util.h:219:27: note: expanded from macro 'fifo_pop'
- #define fifo_pop(fifo, i)       fifo_pop_front(fifo, (i))
-                                ^
-drivers/md/bcache/util.h:189:2: note: expanded from macro 'fifo_pop_front'
-        if (_r) {                                                       \
-        ^
-drivers/md/bcache/alloc.c:331:15: note: initialize the variable 'bucket' to silence this warning
-                        long bucket;
-                                   ^
+This patch adds return value to run_cache_set(), and returns -EIO if
+bch_journal_rreplay() fails. Then caller of run_cache_set() may detect
+such failure and stop registering code flow immedidately inside
+register_cache_set().
 
-This cannot happen in practice because we only enter the loop
-if there is at least one element in the list.
+If journal replay fails, run_cache_set() can report error immediately
+to register_cache_set(). This patch makes the failure handling for
+bch_journal_replay() be in synchronized way, easier to understand and
+debug, and avoid poetential race condition for register-and-unregister
+in same time.
 
-Slightly rearranging the code makes this clearer to both the
-reader and the compiler, which avoids the warning.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: Coly Li <colyli@suse.de>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/alloc.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/md/bcache/super.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/md/bcache/alloc.c b/drivers/md/bcache/alloc.c
-index 5002838ea4760..f8986effcb501 100644
---- a/drivers/md/bcache/alloc.c
-+++ b/drivers/md/bcache/alloc.c
-@@ -327,10 +327,11 @@ static int bch_allocator_thread(void *arg)
- 		 * possibly issue discards to them, then we add the bucket to
- 		 * the free list:
- 		 */
--		while (!fifo_empty(&ca->free_inc)) {
-+		while (1) {
- 			long bucket;
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index 5c9751e9a76a4..e489d2459569f 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -1775,7 +1775,7 @@ struct cache_set *bch_cache_set_alloc(struct cache_sb *sb)
+ 	return NULL;
+ }
  
--			fifo_pop(&ca->free_inc, bucket);
-+			if (!fifo_pop(&ca->free_inc, bucket))
-+				break;
+-static void run_cache_set(struct cache_set *c)
++static int run_cache_set(struct cache_set *c)
+ {
+ 	const char *err = "cannot allocate memory";
+ 	struct cached_dev *dc, *t;
+@@ -1871,7 +1871,9 @@ static void run_cache_set(struct cache_set *c)
+ 		if (j->version < BCACHE_JSET_VERSION_UUID)
+ 			__uuid_write(c);
  
- 			if (ca->discard) {
- 				mutex_unlock(&ca->set->bucket_lock);
+-		bch_journal_replay(c, &journal);
++		err = "bcache: replay journal failed";
++		if (bch_journal_replay(c, &journal))
++			goto err;
+ 	} else {
+ 		pr_notice("invalidating existing data");
+ 
+@@ -1939,7 +1941,7 @@ static void run_cache_set(struct cache_set *c)
+ 	flash_devs_run(c);
+ 
+ 	set_bit(CACHE_SET_RUNNING, &c->flags);
+-	return;
++	return 0;
+ err:
+ 	while (!list_empty(&journal)) {
+ 		l = list_first_entry(&journal, struct journal_replay, list);
+@@ -1950,6 +1952,8 @@ static void run_cache_set(struct cache_set *c)
+ 	closure_sync(&cl);
+ 	/* XXX: test this, it's broken */
+ 	bch_cache_set_error(c, "%s", err);
++
++	return -EIO;
+ }
+ 
+ static bool can_attach_cache(struct cache *ca, struct cache_set *c)
+@@ -2013,8 +2017,11 @@ static const char *register_cache_set(struct cache *ca)
+ 	ca->set->cache[ca->sb.nr_this_dev] = ca;
+ 	c->cache_by_alloc[c->caches_loaded++] = ca;
+ 
+-	if (c->caches_loaded == c->sb.nr_in_set)
+-		run_cache_set(c);
++	if (c->caches_loaded == c->sb.nr_in_set) {
++		err = "failed to run cache set";
++		if (run_cache_set(c) < 0)
++			goto err;
++	}
+ 
+ 	return NULL;
+ err:
 -- 
 2.20.1
 
