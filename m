@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39969C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A99C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13A5F24B44
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 832BE24B3B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187256;
-	bh=MmIkGhU8yGNON9B772QdRYAIc7GER/U26lleh8N4WcU=;
+	s=default; t=1559187263;
+	bh=3qcF+It7ZgF9O7yVVn6m42N5ieFLuWTJwpZZOOeBv+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mrB8glGvqlU8nHTgUdhR+1NLROqy7C57fBChy3/Wn8U/bkBLim2NQbW104ATvdm/2
-	 9SRT+oPx8cMaCxbZX7vlPCaEi1AaK9oQeU8tkw5crSPLc+cvxJrpoPmFHI9Z5KHN+u
-	 4BO2rL+/Li77k0sM1DRfB13+gZlPCdT4pC4JgHzE=
+	b=ZhnG5y4zn2yfDTnz7N9HQqx07d/5l1BzqcFVje/ctXPHW5CFnoPTwVSHuLiSMDEWC
+	 FLW6hZ1qDZEkoq48/Zc7yMfdNGvDvt1+7kwkY+xsxge4G+6Cj8vprLMdrAgB/X6jMj
+	 tKRwjP5fChYa2HaoT8V4A7uAdYTFr8Fx3T9yxdo0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387446AbfE3D1g (ORCPT
+        id S2387987AbfE3D1V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:27:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55402 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:27:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731919AbfE3DTb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:31 -0400
+        id S1731877AbfE3DTX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:23 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDFA024893;
-        Thu, 30 May 2019 03:19:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 544662484D;
+        Thu, 30 May 2019 03:19:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186370;
-        bh=MmIkGhU8yGNON9B772QdRYAIc7GER/U26lleh8N4WcU=;
+        s=default; t=1559186363;
+        bh=3qcF+It7ZgF9O7yVVn6m42N5ieFLuWTJwpZZOOeBv+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R0CGy/jHEyYRS2k9Ws3sT9GOvrGregCdWSbDlRWSuCrPTMW2X8ehXH1yf/hbvQJdf
-         GyzPzmf5apjQRkwHEaBzfwNidDyTgV1whX5vci8luYBD/X8B+nBx96JYOgWYEe+b5a
-         H3qUaPQrsax+fQkP9b2wIKI5vIbv+Lf23oXOY+aw=
+        b=dlufcCxaQktqN+q6HrCxQMgHx3hO+p7cLDRgphCzaewYLsRQILCWZVKT7ijkAoJQ4
+         RZqLfRJQhqJWP/WmYIJgxcRdYScMJZvRmzd1Xy3OvpeVzuyNzBQaU6Blj9VaHQQNfz
+         89n2ad+te29vxE7BQuxoZqcYI1293Zt1jXRfHGSU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yinbo Zhu <yinbo.zhu@nxp.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Potnuri Bharat Teja <bharat@chelsio.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 119/193] mmc: sdhci-of-esdhc: add erratum eSDHC5 support
-Date:   Wed, 29 May 2019 20:06:13 -0700
-Message-Id: <20190530030505.202984416@linuxfoundation.org>
+Subject: [PATCH 4.14 110/193] RDMA/cxgb4: Fix null pointer dereference on alloc_skb failure
+Date:   Wed, 29 May 2019 20:06:04 -0700
+Message-Id: <20190530030504.102789725@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -61,36 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a46e42712596b51874f04c73f1cdf1017f88df52 ]
+[ Upstream commit a6d2a5a92e67d151c98886babdc86d530d27111c ]
 
-Software writing to the Transfer Type configuration register
-(system clock domain) can cause a setup/hold violation in the
-CRC flops (card clock domain), which can cause write accesses
-to be sent with corrupt CRC values. This issue occurs only for
-write preceded by read. this erratum is to fix this issue.
+Currently if alloc_skb fails to allocate the skb a null skb is passed to
+t4_set_arp_err_handler and this ends up dereferencing the null skb.  Avoid
+the NULL pointer dereference by checking for a NULL skb and returning
+early.
 
-Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Addresses-Coverity: ("Dereference null return")
+Fixes: b38a0ad8ec11 ("RDMA/cxgb4: Set arp error handler for PASS_ACCEPT_RPL messages")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Acked-by: Potnuri Bharat Teja <bharat@chelsio.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-of-esdhc.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/infiniband/hw/cxgb4/cm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/mmc/host/sdhci-of-esdhc.c b/drivers/mmc/host/sdhci-of-esdhc.c
-index 7b7d077e40fd4..9207820514ceb 100644
---- a/drivers/mmc/host/sdhci-of-esdhc.c
-+++ b/drivers/mmc/host/sdhci-of-esdhc.c
-@@ -880,6 +880,9 @@ static int sdhci_esdhc_probe(struct platform_device *pdev)
- 	if (esdhc->vendor_ver > VENDOR_V_22)
- 		host->quirks &= ~SDHCI_QUIRK_NO_BUSY_IRQ;
- 
-+	if (of_find_compatible_node(NULL, NULL, "fsl,p2020-esdhc"))
-+		host->quirks2 |= SDHCI_QUIRK_RESET_AFTER_REQUEST;
-+
- 	if (of_device_is_compatible(np, "fsl,p5040-esdhc") ||
- 	    of_device_is_compatible(np, "fsl,p5020-esdhc") ||
- 	    of_device_is_compatible(np, "fsl,p4080-esdhc") ||
+diff --git a/drivers/infiniband/hw/cxgb4/cm.c b/drivers/infiniband/hw/cxgb4/cm.c
+index e17f11782821b..d87f08cd78ad4 100644
+--- a/drivers/infiniband/hw/cxgb4/cm.c
++++ b/drivers/infiniband/hw/cxgb4/cm.c
+@@ -456,6 +456,8 @@ static struct sk_buff *get_skb(struct sk_buff *skb, int len, gfp_t gfp)
+ 		skb_reset_transport_header(skb);
+ 	} else {
+ 		skb = alloc_skb(len, gfp);
++		if (!skb)
++			return NULL;
+ 	}
+ 	t4_set_arp_err_handler(skb, NULL, NULL);
+ 	return skb;
 -- 
 2.20.1
 
