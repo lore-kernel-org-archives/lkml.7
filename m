@@ -2,115 +2,203 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C82C2C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB9AC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97BB22618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 535BF26195
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:56:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oE25Ep7x"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="ti4Gq1TT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbfE3Uzs (ORCPT
+        id S1726558AbfE3U4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 16:55:48 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42562 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725961AbfE3Uzr (ORCPT
+        Thu, 30 May 2019 16:56:45 -0400
+Received: from mail.efficios.com ([167.114.142.138]:52656 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725961AbfE3U4p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 16:55:47 -0400
-Received: by mail-pf1-f196.google.com with SMTP id r22so4698891pfh.9
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 13:55:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uteyPwppfLddUxR1+sE7iM1BJAEP/f3DTyxZGmrJeF4=;
-        b=oE25Ep7xqDsbPY+5NCN6qcKjPrmaBJqGm9Jwu3KOxRqgsQCVFS2RVHHigWj6oXIESq
-         8CnmtxtPXVuMgPRquWSEReIZBceayYrSvV8/zgAg8sOmsRlYaRAcFa3XSm06Zmg2M5Ct
-         vV280Wy72vDO69MCNEXTBo/yAdVXk4wFvGxz04NTAHZvsZQZchjurT3X9GKRardssZ18
-         E5QYw86gnqzTmLgCiGkWmXAqP9M8fIfEK/h0Dtx/e0NngadhuIORwxHBfCCQh0/ycFyc
-         FrgiMLA4MqqqyQDA02aJOXfzUI+KelN845m/rXxHFIIXBbiIp8vDwDfkUVW463oxY7zE
-         KR4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uteyPwppfLddUxR1+sE7iM1BJAEP/f3DTyxZGmrJeF4=;
-        b=Tr5dyrVMTyxtvAVBVKIez+CfALXAGVqIBsd81z8tNH/OPj6TNZH9r+Dum0EjxzxUgM
-         turAgo6l1Kq2O+qKgn0iwnXmW81+jmbP+3bZFM0mJrb7BvJ9wXCBy+i854rXy/9LSPjh
-         IBGPo+Iqj/qQNTuQDPJskx5Nk6VnqToCKZjrxKwFFupOuwZJJC6BvvCiXyl6ZKlvAQHz
-         AEo1/V7PX8z7oJ09xqd6f1rVlMuiGbTvo2d/PbDKBn95CD43+BT2PQWDiZweHjNsqP7X
-         6MB1jFz2m/8RJZbfALDXT9BC6B8QKo673Urrv7fDS1MlsyiAps+LqGu3lTCc6xyuCQzM
-         V+Yw==
-X-Gm-Message-State: APjAAAWdkPN7JtwYYSXJISaDGv3H2gQ1Gk6LWXG/n3452UevRzkJBabw
-        KvuVkaz+ASi2yFiYCgcbzro=
-X-Google-Smtp-Source: APXvYqyNlAlC5Pbp/Qy5331BHKkGNGIynoOtauF7yLjK9abrJ+4vwYu9rlTnuQuugdWffvBv7AxbwQ==
-X-Received: by 2002:a17:90a:2268:: with SMTP id c95mr5319802pje.8.1559249746772;
-        Thu, 30 May 2019 13:55:46 -0700 (PDT)
-Received: from localhost.localdomain ([47.15.209.13])
-        by smtp.gmail.com with ESMTPSA id k3sm3426676pgo.81.2019.05.30.13.55.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 13:55:46 -0700 (PDT)
-From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
-To:     larry.finger@lwfinger.net, florian.c.schilhabel@googlemail.com,
-        gregkh@linuxfoundation.org, himadri18.07@gmail.com,
-        dan.carpenter@oracle.com, colin.king@canonical.com,
-        straube.linux@gmail.com, yangx92@hotmail.com,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Subject: [PATCH] staging: rtl8712: Replace function r8712_init_mlme_priv
-Date:   Fri, 31 May 2019 02:25:31 +0530
-Message-Id: <20190530205531.30016-1-nishkadg.linux@gmail.com>
-X-Mailer: git-send-email 2.19.1
+        Thu, 30 May 2019 16:56:45 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 4525422C75B;
+        Thu, 30 May 2019 16:56:43 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id xuiTPSZpoVyF; Thu, 30 May 2019 16:56:41 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id B82AE22C751;
+        Thu, 30 May 2019 16:56:41 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com B82AE22C751
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1559249801;
+        bh=DqOvR38azidtYWY064tHH9yFqc/Lp232qmUcNljW6/w=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=ti4Gq1TTCmk7QcERHGMQFI+rpEs4P/FlDBc30sVpoX1rLp7WbqvcQmBRJzceKzdxr
+         o0IgSLBfRABzGGp/LqjddVURi9pIEXCYnwhLLuOCrKcC1RY/fmy4gJsquighrOqdnd
+         SOR4JmRVzp1NoV6xwxd/njIj7tkxesscLeLisON3YEDXEP7X2Mlqv1PdMP0pMxQ7Ok
+         WCylazPt4cRd1DgUQK5BP+yfZVHzayn4UQ1AcuRL3RQWIvlrOaPviR9WNOH3Xw2PA1
+         aMW9HbmaXtOCh1r/wiv8eKOS/4qMJPsmwyOnyAFAVN3Vz8hXjUQ+qG0m6WhismStmQ
+         Bg8njsogzn3ew==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id zBslBDFYXAWg; Thu, 30 May 2019 16:56:41 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 9CFA222C74B;
+        Thu, 30 May 2019 16:56:41 -0400 (EDT)
+Date:   Thu, 30 May 2019 16:56:41 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>
+Message-ID: <2022553041.20966.1559249801435.JavaMail.zimbra@efficios.com>
+In-Reply-To: <140718133.18261.1559144710554.JavaMail.zimbra@efficios.com>
+References: <20190503184219.19266-1-mathieu.desnoyers@efficios.com> <20190503184219.19266-2-mathieu.desnoyers@efficios.com> <87h89gjgaf.fsf@oldenburg2.str.redhat.com> <1239705947.14878.1558985272873.JavaMail.zimbra@efficios.com> <140718133.18261.1559144710554.JavaMail.zimbra@efficios.com>
+Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup
+ and thread creation (v10)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3803 (ZimbraWebClient - FF67 (Linux)/8.8.12_GA_3794)
+Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v10)
+Thread-Index: 18yTu+T8PFt4cXiNhOg61XhmaTl3EWs0GkO7rE/zIqc=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Delete r8712_init_mlme_priv as it does nothing except call
-_init_mlme_priv, and rename _init_mlme_priv to
-r8712_init_mlme_priv.
-Change the type of the new r8712_init_mlme_priv (formerly _init_mlme_priv)
-to (non-static) int, from static sint.
+----- On May 29, 2019, at 11:45 AM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
 
-Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
----
- drivers/staging/rtl8712/rtl871x_mlme.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+> ----- On May 27, 2019, at 3:27 PM, Mathieu Desnoyers
+> mathieu.desnoyers@efficios.com wrote:
+> 
+>> ----- On May 27, 2019, at 7:19 AM, Florian Weimer fweimer@redhat.com wrote:
+>> 
+> 
+> [...]
+> 
+>>> 
+>>> Furthermore, the reference to ELF constructors is misleading.  I believe
+>>> the code you added to __libc_start_main to initialize __rseq_handled and
+>>> register __seq_abi with the kernel runs *after* ELF constructors have
+>>> executed (and not at all if the main program is written in Go, alas).
+>>> All initialization activity for the shared case needs to happen in
+>>> elf/rtld.c or called from there, probably as part of the security
+>>> initialization code or thereabouts.
+>> 
+>> in elf/rtld.c:dl_main() we have the following code:
+>> 
+>>  /* We do not initialize any of the TLS functionality unless any of the
+>>     initial modules uses TLS.  This makes dynamic loading of modules with
+>>     TLS impossible, but to support it requires either eagerly doing setup
+>>     now or lazily doing it later.  Doing it now makes us incompatible with
+>>     an old kernel that can't perform TLS_INIT_TP, even if no TLS is ever
+>>     used.  Trying to do it lazily is too hairy to try when there could be
+>>     multiple threads (from a non-TLS-using libpthread).  */
+>>  bool was_tls_init_tp_called = tls_init_tp_called;
+>>  if (tcbp == NULL)
+>>    tcbp = init_tls ();
+>> 
+>> If I understand your point correctly, I should move the rseq_init() and
+>> rseq_register_current_thread() for the SHARED case just after this
+>> initialization, otherwise calling those from LIBC_START_MAIN() is too
+>> late and it runs after initial modules constructors (or not at all for
+>> Go). However, this means glibc will start using TLS internally. I'm
+>> concerned that this is not quite in line with the above comment which
+>> states that TLS is not initialized if no initial modules use TLS.
+>> 
+>> For the !SHARED use-case, if my understanding is correct, I should keep
+>> rseq_init() and rseq_register_current_thread() calls within LIBC_START_MAIN().
+> 
+> I've moved the rseq initialization for SHARED case to the very end of
+> elf/rtld.c:init_tls(), and get the following error on make check:
+> 
+> Generating locale am_ET.UTF-8: this might take a while...
+> Inconsistency detected by ld.so: get-dynamic-info.h: 143: elf_get_dynamic_info:
+> Assertion `info[DT_FLAGS] == NULL || (info[DT_FLAGS]->d_un.d_val &
+> ~DF_BIND_NOW) == 0' failed!
+> Charmap: "UTF-8" Inputfile: "am_ET" Outputdir: "am_ET.UTF-8" failed
+> /bin/sh: 4: cannot create
+> /home/efficios/git/glibc-build/localedata/am_ET.UTF-8/LC_CTYPE.test-result:
+> Directory nonexistent
+> 
+> This error goes away if I comment out the call to rseq_register_current_thread
+> (),
+> which touches the __rseq_abi __thread variable and issues a system call.
+> 
+> Currently, the __rseq_abi __thread variable is within
+> sysdeps/unix/sysv/linux/rseq-sym.c, which is added to the
+> sysdep_routines within sysdeps/unix/sysv/linux/Makefile. I
+> suspect it may need to be moved elsewhere.
+> 
+> Any thoughts on how to solve this ?
 
-diff --git a/drivers/staging/rtl8712/rtl871x_mlme.c b/drivers/staging/rtl8712/rtl871x_mlme.c
-index 7c7267d0fc9e..57d8e7dceef7 100644
---- a/drivers/staging/rtl8712/rtl871x_mlme.c
-+++ b/drivers/staging/rtl8712/rtl871x_mlme.c
-@@ -29,7 +29,7 @@
+I found that it's because touching a __thread variable from
+ld-linux-x86-64.so.2 ends up setting the DF_STATIC_TLS flag
+for that .so, which is really not expected.
+
+Even if I tweak the assert to make it more lenient there,
+touching the __thread variable ends up triggering a SIGFPE.
+
+So rather than touching the TLS from ld-linux-x86-64.so.2,
+I've rather experimented with moving the rseq initialization
+for both SHARED and !SHARED cases to a library constructor
+within libc.so.
+
+Are you aware of any downside to this approach ?
+
+diff --git a/csu/libc-start.c b/csu/libc-start.c
+index 5d9c3675fa..9755ed5467 100644
+--- a/csu/libc-start.c
++++ b/csu/libc-start.c
+@@ -22,6 +22,7 @@
+ #include <ldsodefs.h>
+ #include <exit-thread.h>
+ #include <libc-internal.h>
++#include <rseq-internal.h>
  
- static void update_ht_cap(struct _adapter *padapter, u8 *pie, uint ie_len);
+ #include <elf/dl-tunables.h>
  
--static sint _init_mlme_priv(struct _adapter *padapter)
-+int r8712_init_mlme_priv(struct _adapter *padapter)
- {
- 	sint	i;
- 	u8	*pbuf;
-@@ -205,11 +205,6 @@ u8 *r8712_get_capability_from_ie(u8 *ie)
- 	return ie + 8 + 2;
+@@ -81,6 +82,14 @@ apply_irel (void)
  }
+ #endif
  
--int r8712_init_mlme_priv(struct _adapter *padapter)
--{
--	return _init_mlme_priv(padapter);
--}
--
- void r8712_free_mlme_priv(struct mlme_priv *pmlmepriv)
- {
- 	kfree(pmlmepriv->free_bss_buf);
--- 
-2.19.1
++static
++__attribute__ ((constructor))
++void __rseq_libc_init (void)
++{
++  rseq_init ();
++  /* Register rseq ABI to the kernel.   */
++  (void) rseq_register_current_thread ();
++}
+ 
+ #ifdef LIBC_START_MAIN
+ # ifdef LIBC_START_DISABLE_INLINE
 
+
+Thanks,
+
+Mathieu
+
+
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
