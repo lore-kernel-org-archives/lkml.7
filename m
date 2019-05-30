@@ -2,193 +2,102 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2CA1C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A173C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C154243D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:05:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1F6A243D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:05:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IPrIlAtX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GTCRRX0F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727367AbfE3BFM (ORCPT
+        id S1727381AbfE3BFU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 21:05:12 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42100 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727146AbfE3BFM (ORCPT
+        Wed, 29 May 2019 21:05:20 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:45335 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726718AbfE3BFT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 21:05:12 -0400
-Received: by mail-pf1-f193.google.com with SMTP id r22so2776764pfh.9;
-        Wed, 29 May 2019 18:05:11 -0700 (PDT)
+        Wed, 29 May 2019 21:05:19 -0400
+Received: by mail-pl1-f196.google.com with SMTP id x7so819483plr.12;
+        Wed, 29 May 2019 18:05:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=beZsP/rjfL8EXcX60xBuuJ47HiagG33HBKhM1gI7z7o=;
-        b=IPrIlAtXr2FDMSjX0/bzIEMw/DD91kRI7Kyd2nGYNcDCqviqF1yxJsKXacq5gSvR4M
-         mBMuI9tFBSVxJtViMOKIdFfjPHDOCjrob7YTUQIobPby9v3cBSKt/FkrhY8i3ptyz54Z
-         SJMLgYl/OVIWGJsq/YfN4ueGa2+iEX3UCeyVg5Jp1Tes3SZMJjw/iPyA/J1TxkwjhnTY
-         XaT1Um7uoW+VB7utBeyzIeMfgNu3aQg57D5D/K+wcsh+k0nZyodje++7T7/JYXBVld/k
-         +lMCKSyD7OuPJ4KapoZjFyaRryz8wNedo4iha6ZtqqF2vAeSqMW0Fi/9+N2OWe/gURNP
-         QiZw==
+        h=from:to:cc:subject:date:message-id;
+        bh=pyl/L4lftqre86x4sDXFC//cXdVYSHdszkBDIq0F9kA=;
+        b=GTCRRX0FPev8NT+YGJsHGcCdJCxG92nkcB8v64iqMk23Rjub8TZ98noOEp9km4gkGo
+         uuf3oW7XL5QFgCpU531dAHkFlDOhFqNf6uyTY/wFPbLVyX+BoNZV98xnQ3oARRBdLgxO
+         DrneOgK9Ld1Nsvma+2iTIDqo8cn7onzbJUYHy9XbL/6mN9u0z4n069XW/NMqp+rLNwr2
+         b21QtQPGxN9KswIMpKnidvm+Itg2ATLUeteHrgu3NVqJhDyS6CKD31kfzXbmf4oj6Sf+
+         QHaTnU5LaVEZhqIjQEnr9vHQGdvbGYIPrcSf0SEPqv/L6fR26G/wCgzXp7TS3HxkfTVG
+         mA+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=beZsP/rjfL8EXcX60xBuuJ47HiagG33HBKhM1gI7z7o=;
-        b=hrE/F3JFe2VqzBTm+lLMrZKhsGL8RPn1vl4UqE+KKMGVsCogQmknof+LrKEBHhgWDh
-         vZCdQfUBnenr2ur+4WlmjnYQQs7PvGXx61c2+x+5MjdmmpXq2ts45WlVFosexM0bCzvT
-         PzUPxu7X1MDLxjOyz1ccBpMjMDChR+NI9u7wGJUJ8+yOsdSIA8sUVVW4O4AiYny8UFEO
-         YtwgnrZ26ASSFEpBfTrJu8+JuwpFnxB44Da2uXtRzvp/KeKExOF8y5oXgnA7u7FR3XQm
-         JG2WR3DHAjeWXESHTw6zSba/LrMDwpuTzLxdnVVpWRyc4Q0phsOwPtjT2sIA5ycma3jG
-         S4yg==
-X-Gm-Message-State: APjAAAX3Aw+7jjuYWfei6rXEXg5pB0tNu3DusCtCrYDnrp96bl3V3z2m
-        O3LyEwjT3mCrJjh7ypxMP3Q=
-X-Google-Smtp-Source: APXvYqwhXINGpYIe3fien1AMYupfuhGAODKoz3EA3gp4YnMJViJP2gBaJ4YnyeKQZhwk32gigQp88g==
-X-Received: by 2002:a17:90a:bf0d:: with SMTP id c13mr675233pjs.88.1559178311313;
-        Wed, 29 May 2019 18:05:11 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id s42sm799092pjc.5.2019.05.29.18.05.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 18:05:10 -0700 (PDT)
-Subject: Re: [PATCH 2/2] Docs: hwmon: pmbus: Add PXE1610 driver
-To:     Vijay Khemka <vijaykhemka@fb.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     joel@jms.id.au, linux-aspeed@lists.ozlabs.org, sdasari@fb.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20190529223511.4059120-1-vijaykhemka@fb.com>
- <20190529223511.4059120-2-vijaykhemka@fb.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <0a94e784-41a0-4f2d-f9f8-6b365a1e755e@roeck-us.net>
-Date:   Wed, 29 May 2019 18:05:09 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190529223511.4059120-2-vijaykhemka@fb.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=pyl/L4lftqre86x4sDXFC//cXdVYSHdszkBDIq0F9kA=;
+        b=GSBZY5KMm4AHbkM2s/xFmD2KfgIUq+weIabNafW26CnfCPFAZ7rAlsPZI9mS/Hkcha
+         npj0QpH5MhAwGcg1ch9Yjz/bGKo0kJAYpj68bzvMlchGEQK5ssYWrlylqLuJ4TCF+Tx1
+         kZFosP1AXyaqoFZNtSEdSxMy40Yd5Le6EEWK35mpFe5uwsLUQlvVHV7pHpJL8h7EgoI3
+         I1DwPN7w0kwTdtxWWQVEDC9l6LjLcnU8Su0ZKjB7cUs3oPfddp0hjmSy5zrQGQ5TkMdS
+         uWNZ1IB9kqYNNT5BxZHHZL4mUyV4HWEWbCdPVevnd0yI7c6pCu8UW2lnsXcUknpery6I
+         NNoQ==
+X-Gm-Message-State: APjAAAXyKQsmFmhHUnKnz7MDE1U10dBk4qO6XXRV4gOQWKGEphj0Rz2g
+        OJvgezFXFYaoQaKj5Yy16b/BG3ZR
+X-Google-Smtp-Source: APXvYqxkxvXL66NaVgVxd4ZMCG5XUs4T06D1NIsaC6C41tKJWj7CHQ0CoEFgnNnaykwmwlGCS4evUg==
+X-Received: by 2002:a17:902:15c5:: with SMTP id a5mr974456plh.39.1559178318967;
+        Wed, 29 May 2019 18:05:18 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.123])
+        by smtp.googlemail.com with ESMTPSA id c76sm861965pfc.43.2019.05.29.18.05.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 29 May 2019 18:05:18 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Subject: [PATCH v3 0/3] KVM: Yield to IPI target if necessary
+Date:   Thu, 30 May 2019 09:05:04 +0800
+Message-Id: <1559178307-6835-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/29/19 3:35 PM, Vijay Khemka wrote:
-> Added support for Infenion PXE1610 driver
-> 
-> Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
-> ---
->   Documentation/hwmon/pxe1610 | 84 +++++++++++++++++++++++++++++++++++++
->   1 file changed, 84 insertions(+)
->   create mode 100644 Documentation/hwmon/pxe1610
-> 
-> diff --git a/Documentation/hwmon/pxe1610 b/Documentation/hwmon/pxe1610
-> new file mode 100644
-> index 000000000000..b5c83edf027a
-> --- /dev/null
-> +++ b/Documentation/hwmon/pxe1610
-> @@ -0,0 +1,84 @@
-> +Kernel driver pxe1610
-> +=====================
-> +
-> +Supported chips:
-> +  * Infinion PXE1610
-> +    Prefix: 'pxe1610'
-> +    Addresses scanned: -
-> +    Datasheet: Datasheet is not publicly available.
-> +
-> +  * Infinion PXE1110
-> +    Prefix: 'pxe1110'
-> +    Addresses scanned: -
-> +    Datasheet: Datasheet is not publicly available.
-> +
-> +  * Infinion PXM1310
-> +    Prefix: 'pxm1310'
-> +    Addresses scanned: -
-> +    Datasheet: Datasheet is not publicly available.
-> +
-> +Author: Vijay Khemka <vijaykhemka@fb.com>
-> +
-> +
-> +Description
-> +-----------
-> +
-> +PXE1610 is a Multi-rail/Multiphase Digital Controllers and
-> +it is compliant to Intel VR13 DC-DC converter specifications.
-> +
+The idea is from Xen, when sending a call-function IPI-many to vCPUs, 
+yield if any of the IPI target vCPUs was preempted. 17% performance 
+increasement of ebizzy benchmark can be observed in an over-subscribe 
+environment. (w/ kvm-pv-tlb disabled, testing TLB flush call-function 
+IPI-many since call-function is not easy to be trigged by userspace 
+workload).
 
-And the others ?
+v2 -> v3:
+ * add bounds-check on dest_id
 
-> +
-> +Usage Notes
-> +-----------
-> +
-> +This driver can be enabled with kernel config CONFIG_SENSORS_PXE1610
-> +set to 'y' or 'm'(for module).
-> +
-The above does not really add value.
+v1 -> v2:
+ * check map is not NULL
+ * check map->phys_map[dest_id] is not NULL
+ * make kvm_sched_yield static
+ * change dest_id to unsinged long
 
-> +This driver does not probe for PMBus devices. You will have
-> +to instantiate devices explicitly.
-> +
-> +Example: the following commands will load the driver for an PXE1610
-> +at address 0x70 on I2C bus #4:
-> +
-> +# modprobe pxe1610
-> +# echo pxe1610 0x70 > /sys/bus/i2c/devices/i2c-4/new_device
-> +
-> +It can also be instantiated by declaring in device tree if it is
-> +built as a kernel not as a module.
-> +
+Wanpeng Li (3):
+  KVM: X86: Yield to IPI target if necessary
+  KVM: X86: Implement PV sched yield hypercall
+  KVM: X86: Expose PV_SCHED_YIELD CPUID feature bit to guest
 
-I assume you mean "built into the kernel".
-Why would devicetree based instantiation not work if the driver is built
-as module ?
+ Documentation/virtual/kvm/cpuid.txt      |  4 ++++
+ Documentation/virtual/kvm/hypercalls.txt | 11 +++++++++++
+ arch/x86/include/uapi/asm/kvm_para.h     |  1 +
+ arch/x86/kernel/kvm.c                    | 21 +++++++++++++++++++++
+ arch/x86/kvm/cpuid.c                     |  3 ++-
+ arch/x86/kvm/x86.c                       | 26 ++++++++++++++++++++++++++
+ include/uapi/linux/kvm_para.h            |  1 +
+ 7 files changed, 66 insertions(+), 1 deletion(-)
 
-> +
-> +Sysfs attributes
-> +----------------
-> +
-> +curr1_label		"iin"
-> +curr1_input		Measured input current
-> +curr1_alarm		Current high alarm
-> +
-> +curr[2-4]_label		"iout[1-3]"
-> +curr[2-4]_input		Measured output current
-> +curr[2-4]_crit		Critical maximum current
-> +curr[2-4]_crit_alarm	Current critical high alarm
-> +
-> +in1_label		"vin"
-> +in1_input		Measured input voltage
-> +in1_crit		Critical maximum input voltage
-> +in1_crit_alarm		Input voltage critical high alarm
-> +
-> +in[2-4]_label		"vout[1-3]"
-> +in[2-4]_input		Measured output voltage
-> +in[2-4]_lcrit		Critical minimum output voltage
-> +in[2-4]_lcrit_alarm	Output voltage critical low alarm
-> +in[2-4]_crit		Critical maximum output voltage
-> +in[2-4]_crit_alarm	Output voltage critical high alarm
-> +
-> +power1_label		"pin"
-> +power1_input		Measured input power
-> +power1_alarm		Input power high alarm
-> +
-> +power[2-4]_label	"pout[1-3]"
-> +power[2-4]_input	Measured output power
-> +
-> +temp[1-3]_input		Measured temperature
-> +temp[1-3]_crit		Critical high temperature
-> +temp[1-3]_crit_alarm	Chip temperature critical high alarm
-> +temp[1-3]_max		Maximum temperature
-> +temp[1-3]_max_alarm	Chip temperature high alarm
-> 
+-- 
+2.7.4
 
