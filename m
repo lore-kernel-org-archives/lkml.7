@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9E5C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84839C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 291B02184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:27:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 565612499C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:27:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190443;
-	bh=LUA98mtYbLoFF5SBGBxmbooAGm/0s25pCjeNGGv4PpI=;
+	s=default; t=1559190450;
+	bh=7TaJ9LYxlB+gyH9pSRfmw/ln/c6YPZijTqXWCPUUQBA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oNy7lmr7c7yibzG8/wg/C8pGhEfqZew5OHvY2QpoX5RLtL0J6yZVKIFe7mBb+0fPT
-	 Wv8Rgto8pAWGalX1b7ke3DNdGZ8pP/IS/mTJaRTi21b5fJ6GpIWJWj0qxSVBHwNnms
-	 RxACriLiknsm+qHuVl+TlyLoWY62hn0TDtNNemdQ=
+	b=GP0zO9BPCiPoTATIkTLxsa4F4IW9HAWb2A6kgHu2LJ8HVnWB6OlX5DJHpz47TcfFJ
+	 b3OaC8e8yvEvLD5IIz6TGL9+IVrFImu8PBukmqtIUvtuzJqgu193sEqxvuyQXkN6Wn
+	 X/30p7CWkKsUqpu8/A3J+AV4+9EWg50MSXLYAjmY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388239AbfE3E1W (ORCPT
+        id S2388242AbfE3E13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:27:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33692 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:27:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729831AbfE3DOV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729826AbfE3DOV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:14:21 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56F7E2455C;
-        Thu, 30 May 2019 03:14:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCEB724565;
+        Thu, 30 May 2019 03:14:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186061;
-        bh=LUA98mtYbLoFF5SBGBxmbooAGm/0s25pCjeNGGv4PpI=;
+        bh=7TaJ9LYxlB+gyH9pSRfmw/ln/c6YPZijTqXWCPUUQBA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IM006jd649+7jBfOmexSHxLaadh/eiPrMlY91wWnqW50uQIa/rP3s0iJyS2MLV8qN
-         GRb6gfrJJtvZoau27/nnbOC/kJ6d5EcamIXoW/XGdCw745E5EPQfyTiAtZ61Shx2Vj
-         gbcac7roH5ukaBZQKEQf2N2n1NWYkjOsHPqjn9i8=
+        b=eIYwKuKGkD0G23GMcW4l23Q7RVA4zO/r2eFaQVmWI12W0m1zyfteAqXwxqoa/hwks
+         d7XFYDJb1pDfONRNuV0BVlAgMTC5aHEWj9JutooTKhNgEb1Tu+D9HEIPLf5lNKR1tU
+         rdjCVUrqSge6GhHy35Q66fIrSQjLDzz3L6HMx2gY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        stable@vger.kernel.org, Evan Green <evgreen@chromium.org>,
+        Rob Herring <robh@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
         Kishon Vijay Abraham I <kishon@ti.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 168/346] phy: sun4i-usb: Make sure to disable PHY0 passby for peripheral mode
-Date:   Wed, 29 May 2019 20:04:01 -0700
-Message-Id: <20190530030549.669050168@linuxfoundation.org>
+Subject: [PATCH 5.0 167/346] dt-bindings: phy-qcom-qmp: Add UFS PHY reset
+Date:   Wed, 29 May 2019 20:04:00 -0700
+Message-Id: <20190530030549.618392895@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -61,46 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e6f32efb1b128344a2c7df9875bc1a1abaa1d395 ]
+[ Upstream commit 95cee0b4e30a09a411a17e9a3bc6b72ed92063da ]
 
-On platforms where the MUSB and HCI controllers share PHY0, PHY passby
-is required when using the HCI controller with the PHY, but it must be
-disabled when the MUSB controller is used instead.
+Add a required reset to the SDM845 UFS phy to express the PHY reset
+bit inside the UFS controller register space. Before this change, this
+reset was not expressed in the DT, and the driver utilized two different
+callbacks (phy_init and phy_poweron) to implement a two-phase
+initialization procedure that involved deasserting this reset between
+init and poweron. This abused the two callbacks and diluted their
+purpose.
 
-Without this, PHY0 passby is always enabled, which results in broken
-peripheral mode on such platforms (e.g. H3/H5).
+That scheme does not work as regulators cannot be turned off in
+phy_poweroff because they were turned on in init, rather than poweron.
+The net result is that regulators are left on in suspend that shouldn't
+be.
 
-Fixes: ba4bdc9e1dc0 ("PHY: sunxi: Add driver for sunxi usb phy")
+This new scheme gives the UFS reset to the PHY, so that it can fully
+initialize itself in a single callback. We can then turn regulators on
+during poweron and off during poweroff.
 
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Signed-off-by: Evan Green <evgreen@chromium.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/allwinner/phy-sun4i-usb.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/phy/allwinner/phy-sun4i-usb.c b/drivers/phy/allwinner/phy-sun4i-usb.c
-index 4bbd9ede38c83..cc5af961778d6 100644
---- a/drivers/phy/allwinner/phy-sun4i-usb.c
-+++ b/drivers/phy/allwinner/phy-sun4i-usb.c
-@@ -554,6 +554,7 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
- 	struct sun4i_usb_phy_data *data =
- 		container_of(work, struct sun4i_usb_phy_data, detect.work);
- 	struct phy *phy0 = data->phys[0].phy;
-+	struct sun4i_usb_phy *phy = phy_get_drvdata(phy0);
- 	bool force_session_end, id_notify = false, vbus_notify = false;
- 	int id_det, vbus_det;
+diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+index 41a1074228ba7..6b6ca4456dc7c 100644
+--- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
++++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+@@ -53,7 +53,8 @@ Required properties:
+ 	   one for each entry in reset-names.
+  - reset-names: "phy" for reset of phy block,
+ 		"common" for phy common block reset,
+-		"cfg" for phy's ahb cfg block reset.
++		"cfg" for phy's ahb cfg block reset,
++		"ufsphy" for the PHY reset in the UFS controller.
  
-@@ -610,6 +611,9 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
- 			mutex_unlock(&phy0->mutex);
- 		}
+ 		For "qcom,ipq8074-qmp-pcie-phy" must contain:
+ 			"phy", "common".
+@@ -65,7 +66,8 @@ Required properties:
+ 			"phy", "common".
+ 		For "qcom,sdm845-qmp-usb3-uni-phy" must contain:
+ 			"phy", "common".
+-		For "qcom,sdm845-qmp-ufs-phy": no resets are listed.
++		For "qcom,sdm845-qmp-ufs-phy": must contain:
++			"ufsphy".
  
-+		/* Enable PHY0 passby for host mode only. */
-+		sun4i_usb_phy_passby(phy, !id_det);
-+
- 		/* Re-route PHY0 if necessary */
- 		if (data->cfg->phy0_dual_route)
- 			sun4i_usb_phy0_reroute(data, id_det);
+  - vdda-phy-supply: Phandle to a regulator supply to PHY core block.
+  - vdda-pll-supply: Phandle to 1.8V regulator supply to PHY refclk pll block.
 -- 
 2.20.1
 
