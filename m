@@ -5,59 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BECE8C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C82BFC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9808225556
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 945082554A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:28:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190514;
-	bh=mRHgJ3UhnTRcFQL1xZISQ2F6rEeLpWGTtQaHVwdZ1n0=;
+	s=default; t=1559190519;
+	bh=aQJcM1cVq7gWa9y+IphsuHHAkoXxn9PEzhVxGMJBiBo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mh5NCOelvSyiNLzpqRf6BDmmb7rncw6sFNxbYhJmmxzakTmL4wJ876aOZcsmcOcnA
-	 16CrlJ8G1QBSTqL+2s6KF8UBm4yoqXKpaOuiNpTPxztgA3Tlw7cp6xCXTz87nrNHSi
-	 BoZcLMHKkTnmkTRwxGB6MU2jtXVD+up9iW9hM3y0=
+	b=X+e6VarQY7deNJ5gsncYzf/kRAmcdGG+t2910wkvv5SkcITFOcjg6XMBkQE3xbmWJ
+	 yvNxxAKSTbWSQt7wL/rY/VynbN9iFI5Rm8m9+LDA41gdpvXin8JF0y99VM2cu7zFfc
+	 0wpXCSsno8FThnzjpO8oxsLhLbDxPxi0eegQyg3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729761AbfE3DON (ORCPT
+        id S1731840AbfE3E2i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:14:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52748 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:28:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728728AbfE3DLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:11:55 -0400
+        id S1728844AbfE3DON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:13 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3F46244D6;
-        Thu, 30 May 2019 03:11:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC83D24547;
+        Thu, 30 May 2019 03:14:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185914;
-        bh=mRHgJ3UhnTRcFQL1xZISQ2F6rEeLpWGTtQaHVwdZ1n0=;
+        s=default; t=1559186052;
+        bh=aQJcM1cVq7gWa9y+IphsuHHAkoXxn9PEzhVxGMJBiBo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OoDXiCWRh2qii/FPKN5mRklWUAHlwjMS+2SyrMq4pSJ7v8S+TLiC9PC26kNvK2iyC
-         ercNP2Oq3syWIaV/9CIUpRFeKgOrqjliSbV3u6O1Rmg9e4xJzSOvd+utn8QfvDK2i5
-         mvohwvrNbYDEH4fvq+fdnaosMEGcGhSrifhiD5jM=
+        b=sjHIaF3siB6ZcjBX0G3gj9L5Cs3OymV3/1r1BHJEK30jx/9eXUtXN6Z5IfA9iAene
+         5Dgc1oAb3PnNOV7tcWdyaMy7O4OqV+yyGSWaAiwd2rb7Shh/57QepuLWaTCAbL3pZb
+         sBP7SuphmvKhzmRgOAtdn8Gu5sDQ4t05L95nx/qo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        Hongbo Yao <yaohongbo@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Miroslav Lichvar <mlichvar@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        stable@vger.kernel.org, Russell Currey <ruscur@russell.cc>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 295/405] timekeeping: Force upper bound for setting CLOCK_REALTIME
-Date:   Wed, 29 May 2019 20:04:53 -0700
-Message-Id: <20190530030555.760390115@linuxfoundation.org>
+Subject: [PATCH 5.0 149/346] powerpc/64: Fix booting large kernels with STRICT_KERNEL_RWX
+Date:   Wed, 29 May 2019 20:03:42 -0700
+Message-Id: <20190530030548.730027230@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
-References: <20190530030540.291644921@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -67,129 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7a8e61f8478639072d402a26789055a4a4de8f77 ]
+[ Upstream commit 56c46bba9bbfe229b4472a5be313c44c5b714a39 ]
 
-Several people reported testing failures after setting CLOCK_REALTIME close
-to the limits of the kernel internal representation in nanoseconds,
-i.e. year 2262.
+With STRICT_KERNEL_RWX enabled anything marked __init is placed at a 16M
+boundary.  This is necessary so that it can be repurposed later with
+different permissions.  However, in kernels with text larger than 16M,
+this pushes early_setup past 32M, incapable of being reached by the
+branch instruction.
 
-The failures are exposed in subsequent operations, i.e. when arming timers
-or when the advancing CLOCK_MONOTONIC makes the calculation of
-CLOCK_REALTIME overflow into negative space.
+Fix this by setting the CTR and branching there instead.
 
-Now people start to paper over the underlying problem by clamping
-calculations to the valid range, but that's just wrong because such
-workarounds will prevent detection of real issues as well.
-
-It is reasonable to force an upper bound for the various methods of setting
-CLOCK_REALTIME. Year 2262 is the absolute upper bound. Assume a maximum
-uptime of 30 years which is plenty enough even for esoteric embedded
-systems. That results in an upper bound of year 2232 for setting the time.
-
-Once that limit is reached in reality this limit is only a small part of
-the problem space. But until then this stops people from trying to paper
-over the problem at the wrong places.
-
-Reported-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Reported-by: Hongbo Yao <yaohongbo@huawei.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: John Stultz <john.stultz@linaro.org>
-Cc: Stephen Boyd <sboyd@kernel.org>
-Cc: Miroslav Lichvar <mlichvar@redhat.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Richard Cochran <richardcochran@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1903231125480.2157@nanos.tec.linutronix.de
+Fixes: 1e0fc9d1eb2b ("powerpc/Kconfig: Enable STRICT_KERNEL_RWX for some configs")
+Signed-off-by: Russell Currey <ruscur@russell.cc>
+[mpe: Fix it to work on BE by using DOTSYM()]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/time64.h    | 21 +++++++++++++++++++++
- kernel/time/time.c        |  2 +-
- kernel/time/timekeeping.c |  6 +++---
- 3 files changed, 25 insertions(+), 4 deletions(-)
+ arch/powerpc/kernel/head_64.S | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/time64.h b/include/linux/time64.h
-index f38d382ffec13..a620ee610b9f3 100644
---- a/include/linux/time64.h
-+++ b/include/linux/time64.h
-@@ -33,6 +33,17 @@ struct itimerspec64 {
- #define KTIME_MAX			((s64)~((u64)1 << 63))
- #define KTIME_SEC_MAX			(KTIME_MAX / NSEC_PER_SEC)
+diff --git a/arch/powerpc/kernel/head_64.S b/arch/powerpc/kernel/head_64.S
+index 4898e9491a1cd..9168a247e24ff 100644
+--- a/arch/powerpc/kernel/head_64.S
++++ b/arch/powerpc/kernel/head_64.S
+@@ -970,7 +970,9 @@ start_here_multiplatform:
  
-+/*
-+ * Limits for settimeofday():
-+ *
-+ * To prevent setting the time close to the wraparound point time setting
-+ * is limited so a reasonable uptime can be accomodated. Uptime of 30 years
-+ * should be really sufficient, which means the cutoff is 2232. At that
-+ * point the cutoff is just a small part of the larger problem.
-+ */
-+#define TIME_UPTIME_SEC_MAX		(30LL * 365 * 24 *3600)
-+#define TIME_SETTOD_SEC_MAX		(KTIME_SEC_MAX - TIME_UPTIME_SEC_MAX)
-+
- static inline int timespec64_equal(const struct timespec64 *a,
- 				   const struct timespec64 *b)
- {
-@@ -100,6 +111,16 @@ static inline bool timespec64_valid_strict(const struct timespec64 *ts)
- 	return true;
- }
+ 	/* Restore parameters passed from prom_init/kexec */
+ 	mr	r3,r31
+-	bl	early_setup		/* also sets r13 and SPRG_PACA */
++	LOAD_REG_ADDR(r12, DOTSYM(early_setup))
++	mtctr	r12
++	bctrl		/* also sets r13 and SPRG_PACA */
  
-+static inline bool timespec64_valid_settod(const struct timespec64 *ts)
-+{
-+	if (!timespec64_valid(ts))
-+		return false;
-+	/* Disallow values which cause overflow issues vs. CLOCK_REALTIME */
-+	if ((unsigned long long)ts->tv_sec >= TIME_SETTOD_SEC_MAX)
-+		return false;
-+	return true;
-+}
-+
- /**
-  * timespec64_to_ns - Convert timespec64 to nanoseconds
-  * @ts:		pointer to the timespec64 variable to be converted
-diff --git a/kernel/time/time.c b/kernel/time/time.c
-index c3f756f8534bb..86656bbac232e 100644
---- a/kernel/time/time.c
-+++ b/kernel/time/time.c
-@@ -171,7 +171,7 @@ int do_sys_settimeofday64(const struct timespec64 *tv, const struct timezone *tz
- 	static int firsttime = 1;
- 	int error = 0;
- 
--	if (tv && !timespec64_valid(tv))
-+	if (tv && !timespec64_valid_settod(tv))
- 		return -EINVAL;
- 
- 	error = security_settime64(tv, tz);
-diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
-index f986e1918d129..f136c56c28057 100644
---- a/kernel/time/timekeeping.c
-+++ b/kernel/time/timekeeping.c
-@@ -1221,7 +1221,7 @@ int do_settimeofday64(const struct timespec64 *ts)
- 	unsigned long flags;
- 	int ret = 0;
- 
--	if (!timespec64_valid_strict(ts))
-+	if (!timespec64_valid_settod(ts))
- 		return -EINVAL;
- 
- 	raw_spin_lock_irqsave(&timekeeper_lock, flags);
-@@ -1278,7 +1278,7 @@ static int timekeeping_inject_offset(const struct timespec64 *ts)
- 	/* Make sure the proposed value is valid */
- 	tmp = timespec64_add(tk_xtime(tk), *ts);
- 	if (timespec64_compare(&tk->wall_to_monotonic, ts) > 0 ||
--	    !timespec64_valid_strict(&tmp)) {
-+	    !timespec64_valid_settod(&tmp)) {
- 		ret = -EINVAL;
- 		goto error;
- 	}
-@@ -1527,7 +1527,7 @@ void __init timekeeping_init(void)
- 	unsigned long flags;
- 
- 	read_persistent_wall_and_boot_offset(&wall_time, &boot_offset);
--	if (timespec64_valid_strict(&wall_time) &&
-+	if (timespec64_valid_settod(&wall_time) &&
- 	    timespec64_to_ns(&wall_time) > 0) {
- 		persistent_clock_exists = true;
- 	} else if (timespec64_to_ns(&wall_time) != 0) {
+ 	LOAD_REG_ADDR(r3, start_here_common)
+ 	ld	r4,PACAKMSR(r13)
 -- 
 2.20.1
 
