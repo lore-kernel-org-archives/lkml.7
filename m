@@ -2,165 +2,71 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D58C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 604ABC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5783C2500B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:42:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191354;
-	bh=LzKJXOeiQ17vHM3+ckSUF66amKUIRGoN2NeYO7IoEGU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WpRHVO/aZJbtP6jQOCm23EyFHP7wP0Pg+8cXD47GQ7d9jjajvQ4lIkLgr5TVvBNcE
-	 B5gEj7ogBPo84Wl2/hgANul4RZ965Qr5iDw0u/aeHIUWsX7XdyyDw3A/Nr+QbkxDnE
-	 L7xtKHZf3m6/tRylqDVT+N++il1fkLez8oWGfBBk=
+	by mail.kernel.org (Postfix) with ESMTP id 2B39725876
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:42:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388783AbfE3Emc (ORCPT
+        id S1729255AbfE3Emj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:42:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54256 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:42:39 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:41378 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728926AbfE3DMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:17 -0400
-Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAFB024481;
-        Thu, 30 May 2019 03:12:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185937;
-        bh=LzKJXOeiQ17vHM3+ckSUF66amKUIRGoN2NeYO7IoEGU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=slxUAnoDbXwJlrIhiJeEboEaR63Nis9iCX6q9LC/MAm8SQml8LRHd+4ikhchKPbTp
-         DPtkGxzh/v1v2p24TOQGNfCdA5V3BOltWoscSyx4L/X1hgPqKdRU5sCvkcmAVBKU5D
-         uyeclnl3gJC6FI8nQSQM/jLUCmhmTvQ1VHZqrvp8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 283/405] spi: tegra114: reset controller on probe
-Date:   Wed, 29 May 2019 20:04:41 -0700
-Message-Id: <20190530030555.199785132@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
-References: <20190530030540.291644921@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S1728904AbfE3DMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:12:16 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id DD86720122C;
+        Thu, 30 May 2019 05:12:14 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id CB0BA2005A3;
+        Thu, 30 May 2019 05:12:08 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 166D94029F;
+        Thu, 30 May 2019 11:12:01 +0800 (SGT)
+From:   Anson.Huang@nxp.com
+To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
+        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] dt-bindings: imx: Correct pinfunc head file path for i.MX8MM
+Date:   Thu, 30 May 2019 11:13:57 +0800
+Message-Id: <20190530031357.17484-1-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 019194933339b3e9b486639c8cb3692020844d65 ]
+From: Anson Huang <Anson.Huang@nxp.com>
 
-Fixes: SPI driver can be built as module so perform SPI controller reset
-on probe to make sure it is in valid state before initiating transfer.
+The i.MX8MM pinfunc head file is located in DT folder, correct it.
 
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- drivers/spi/spi-tegra114.c | 32 ++++++++++++++++++--------------
- 1 file changed, 18 insertions(+), 14 deletions(-)
+ Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
-index a76acedd7e2f4..a1888dc6a938a 100644
---- a/drivers/spi/spi-tegra114.c
-+++ b/drivers/spi/spi-tegra114.c
-@@ -1067,27 +1067,19 @@ static int tegra_spi_probe(struct platform_device *pdev)
+diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.txt
+index 524a16f..e4e01c0 100644
+--- a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.txt
+@@ -12,7 +12,7 @@ Required properties in sub-nodes:
+ - fsl,pins: each entry consists of 6 integers and represents the mux and config
+   setting for one pin.  The first 5 integers <mux_reg conf_reg input_reg mux_val
+   input_val> are specified using a PIN_FUNC_ID macro, which can be found in
+-  <dt-bindings/pinctrl/imx8mm-pinfunc.h>. The last integer CONFIG is
++  <arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h>. The last integer CONFIG is
+   the pad setting value like pull-up on this pin.  Please refer to i.MX8M Mini
+   Reference Manual for detailed CONFIG settings.
  
- 	spi_irq = platform_get_irq(pdev, 0);
- 	tspi->irq = spi_irq;
--	ret = request_threaded_irq(tspi->irq, tegra_spi_isr,
--			tegra_spi_isr_thread, IRQF_ONESHOT,
--			dev_name(&pdev->dev), tspi);
--	if (ret < 0) {
--		dev_err(&pdev->dev, "Failed to register ISR for IRQ %d\n",
--					tspi->irq);
--		goto exit_free_master;
--	}
- 
- 	tspi->clk = devm_clk_get(&pdev->dev, "spi");
- 	if (IS_ERR(tspi->clk)) {
- 		dev_err(&pdev->dev, "can not get clock\n");
- 		ret = PTR_ERR(tspi->clk);
--		goto exit_free_irq;
-+		goto exit_free_master;
- 	}
- 
- 	tspi->rst = devm_reset_control_get_exclusive(&pdev->dev, "spi");
- 	if (IS_ERR(tspi->rst)) {
- 		dev_err(&pdev->dev, "can not get reset\n");
- 		ret = PTR_ERR(tspi->rst);
--		goto exit_free_irq;
-+		goto exit_free_master;
- 	}
- 
- 	tspi->max_buf_size = SPI_FIFO_DEPTH << 2;
-@@ -1095,7 +1087,7 @@ static int tegra_spi_probe(struct platform_device *pdev)
- 
- 	ret = tegra_spi_init_dma_param(tspi, true);
- 	if (ret < 0)
--		goto exit_free_irq;
-+		goto exit_free_master;
- 	ret = tegra_spi_init_dma_param(tspi, false);
- 	if (ret < 0)
- 		goto exit_rx_dma_free;
-@@ -1117,18 +1109,32 @@ static int tegra_spi_probe(struct platform_device *pdev)
- 		dev_err(&pdev->dev, "pm runtime get failed, e = %d\n", ret);
- 		goto exit_pm_disable;
- 	}
-+
-+	reset_control_assert(tspi->rst);
-+	udelay(2);
-+	reset_control_deassert(tspi->rst);
- 	tspi->def_command1_reg  = SPI_M_S;
- 	tegra_spi_writel(tspi, tspi->def_command1_reg, SPI_COMMAND1);
- 	pm_runtime_put(&pdev->dev);
-+	ret = request_threaded_irq(tspi->irq, tegra_spi_isr,
-+				   tegra_spi_isr_thread, IRQF_ONESHOT,
-+				   dev_name(&pdev->dev), tspi);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "Failed to register ISR for IRQ %d\n",
-+			tspi->irq);
-+		goto exit_pm_disable;
-+	}
- 
- 	master->dev.of_node = pdev->dev.of_node;
- 	ret = devm_spi_register_master(&pdev->dev, master);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "can not register to master err %d\n", ret);
--		goto exit_pm_disable;
-+		goto exit_free_irq;
- 	}
- 	return ret;
- 
-+exit_free_irq:
-+	free_irq(spi_irq, tspi);
- exit_pm_disable:
- 	pm_runtime_disable(&pdev->dev);
- 	if (!pm_runtime_status_suspended(&pdev->dev))
-@@ -1136,8 +1142,6 @@ static int tegra_spi_probe(struct platform_device *pdev)
- 	tegra_spi_deinit_dma_param(tspi, false);
- exit_rx_dma_free:
- 	tegra_spi_deinit_dma_param(tspi, true);
--exit_free_irq:
--	free_irq(spi_irq, tspi);
- exit_free_master:
- 	spi_master_put(master);
- 	return ret;
 -- 
-2.20.1
-
-
+2.7.4
 
