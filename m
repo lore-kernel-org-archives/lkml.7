@@ -5,54 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B3CC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B47C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F89D244FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:12:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB885244B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:12:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559185920;
-	bh=pVWxZxbNvKqIRiN5qwRTrLrmotdfRvBhYgFWEWGfkok=;
+	s=default; t=1559185923;
+	bh=ooLmpwkcLoMhxVfvFpVYBfGTFCq3m9d3/e7UeQfE2mc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JfSqTp/Icl8EEcFUHlrmDrUIa5qKxd0U5ulZJG/cA0YeK/vZCO5geAcNt8YVYE9ps
-	 Exkuro1awgcOvbxq78dhq52n7wq/ZJEHoMzQ8O453kS2F0G4Xg+Vrw3aMZaufO/OLh
-	 GDiWlSYkNJg9J4/VuwntCfGffehRvnCzQK+zX1Ec=
+	b=SQri2svoJ+Jd5KuSQbLqGHpe5SyUJq+/3mRqdukSQAFjZub5OfQR9wU5ro/hHOyEc
+	 c6N8LqD2JNkSJhk8gJIjYbouuxn0sgmyjzjH85mvI9c4EbxocI59F+6i8Gzke1WW6L
+	 6U1IWc1mxFt/sGM+PuUBQS4nER4BTU9AdyuR4oqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728776AbfE3DL7 (ORCPT
+        id S1728809AbfE3DMD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:11:59 -0400
+        Wed, 29 May 2019 23:12:03 -0400
 Received: from mail.kernel.org ([198.145.29.99]:47936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728155AbfE3DKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:10:37 -0400
+        id S1728184AbfE3DKl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:10:41 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8E49244D2;
-        Thu, 30 May 2019 03:10:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C49E2447F;
+        Thu, 30 May 2019 03:10:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185836;
-        bh=pVWxZxbNvKqIRiN5qwRTrLrmotdfRvBhYgFWEWGfkok=;
+        s=default; t=1559185840;
+        bh=ooLmpwkcLoMhxVfvFpVYBfGTFCq3m9d3/e7UeQfE2mc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wni6xMvg4wVCLshHAmgIEDjYjwqIZBOdN3p4r1YEXCDBe/qMEeLyveQ9QTggqzsFa
-         7O9DWM6GvUJk68gpupw5OTaYb72axxtHbic4rSgpR/4xSlmyALW/BowKthSwkkQTWc
-         sOU7jDvxcVQwGfOZuY0VkGcwlfFzEa23GfnBuTsE=
+        b=Cf1bIwzCyMQ9TGLZoKVECzgVLqI8Qj2FiNwN2Kp7rd1N+RdMille3hqzG4FvyUOSz
+         xKA3k4iJug5lbwgKmogRtBRRV5+IVAV8qnllCYCOis1vQCEJVGtqdcLJ+yP7QXP2ql
+         o0CV6puKy3R/MrHGl8RY9Ijz0W803e/c7EVc5lDA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+        stable@vger.kernel.org, Wenwen Wang <wang6495@umn.edu>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        Paul Moore <paul@paul-moore.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 149/405] pinctrl: samsung: fix leaked of_node references
-Date:   Wed, 29 May 2019 20:02:27 -0700
-Message-Id: <20190530030548.677494978@linuxfoundation.org>
+Subject: [PATCH 5.1 157/405] audit: fix a memory leak bug
+Date:   Wed, 29 May 2019 20:02:35 -0700
+Message-Id: <20190530030549.082328534@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -65,43 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 44b9f86cd41db6c522effa5aec251d664a52fbc0 ]
+[ Upstream commit 70c4cf17e445264453bc5323db3e50aa0ac9e81f ]
 
-The call to of_find_compatible_node returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+In audit_rule_change(), audit_data_to_entry() is firstly invoked to
+translate the payload data to the kernel's rule representation. In
+audit_data_to_entry(), depending on the audit field type, an audit tree may
+be created in audit_make_tree(), which eventually invokes kmalloc() to
+allocate the tree.  Since this tree is a temporary tree, it will be then
+freed in the following execution, e.g., audit_add_rule() if the message
+type is AUDIT_ADD_RULE or audit_del_rule() if the message type is
+AUDIT_DEL_RULE. However, if the message type is neither AUDIT_ADD_RULE nor
+AUDIT_DEL_RULE, i.e., the default case of the switch statement, this
+temporary tree is not freed.
 
-Detected by coccinelle with the following warnings:
-./drivers/pinctrl/samsung/pinctrl-exynos-arm.c:76:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 66, but without a corresponding object release within this function.
-./drivers/pinctrl/samsung/pinctrl-exynos-arm.c:82:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 66, but without a corresponding object release within this function.
+To fix this issue, only allocate the tree when the type is AUDIT_ADD_RULE
+or AUDIT_DEL_RULE.
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Kukjin Kim <kgene@kernel.org>
-Cc: linux-samsung-soc@vger.kernel.org
-Cc: linux-gpio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Wenwen Wang <wang6495@umn.edu>
+Reviewed-by: Richard Guy Briggs <rgb@redhat.com>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/samsung/pinctrl-exynos-arm.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/auditfilter.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pinctrl/samsung/pinctrl-exynos-arm.c b/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
-index 44c6b753f692a..85ddf49a51885 100644
---- a/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
-@@ -71,6 +71,7 @@ s5pv210_retention_init(struct samsung_pinctrl_drv_data *drvdata,
+diff --git a/kernel/auditfilter.c b/kernel/auditfilter.c
+index 63f8b3f26fab4..3ac71c4fda49a 100644
+--- a/kernel/auditfilter.c
++++ b/kernel/auditfilter.c
+@@ -1114,22 +1114,24 @@ int audit_rule_change(int type, int seq, void *data, size_t datasz)
+ 	int err = 0;
+ 	struct audit_entry *entry;
+ 
+-	entry = audit_data_to_entry(data, datasz);
+-	if (IS_ERR(entry))
+-		return PTR_ERR(entry);
+-
+ 	switch (type) {
+ 	case AUDIT_ADD_RULE:
++		entry = audit_data_to_entry(data, datasz);
++		if (IS_ERR(entry))
++			return PTR_ERR(entry);
+ 		err = audit_add_rule(entry);
+ 		audit_log_rule_change("add_rule", &entry->rule, !err);
+ 		break;
+ 	case AUDIT_DEL_RULE:
++		entry = audit_data_to_entry(data, datasz);
++		if (IS_ERR(entry))
++			return PTR_ERR(entry);
+ 		err = audit_del_rule(entry);
+ 		audit_log_rule_change("remove_rule", &entry->rule, !err);
+ 		break;
+ 	default:
+-		err = -EINVAL;
+ 		WARN_ON(1);
++		return -EINVAL;
  	}
  
- 	clk_base = of_iomap(np, 0);
-+	of_node_put(np);
- 	if (!clk_base) {
- 		pr_err("%s: failed to map clock registers\n", __func__);
- 		return ERR_PTR(-EINVAL);
+ 	if (err || type == AUDIT_DEL_RULE) {
 -- 
 2.20.1
 
