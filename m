@@ -2,57 +2,58 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C503C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76EEFC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E65D025804
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5014825804
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:36:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191013;
-	bh=oi8lKQ5r/i49dFb9dykc0Y0t9E2sFOuG489GbRWGmc4=;
+	s=default; t=1559191016;
+	bh=nQZYqrwWCpdbUbQ16wM+a+UtsLY3q9D6MPb3TEL2vLM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=flpNxjrrgxSdrwTqfzPqe8YcJx/7ezYNFM8IxGgymuEIkW66qYwmQbVkW9QLRxu+3
-	 nbcXLfziMADuUG1RIx4O43PpEj5KMsrVopSzl34HCw146IrjQ975OQ4GZ+NLpkSnhY
-	 sIUFwi0FAXl+uKIMAfj5mER9isz5e8UYXE74dmPk=
+	b=a8enGfl1W4IFN0W6xVyFnOOhKhrxTnmvmh6QyBFvrPWfPbz+VmN/pAlecyl+isM50
+	 5j1etqTYHONdec2J2D0XOGEqhwwkfk1yTyPuQ9WlC3ovNTo6DDs+3OSdFMFjsHnGcX
+	 J+YFA6+4B067nvcCGUorHY/n14G4FKZQ3usm/QDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388551AbfE3Egv (ORCPT
+        id S2388558AbfE3Egz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:36:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56898 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:36:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729301AbfE3DM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729299AbfE3DM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:12:57 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAF9A244E8;
+        by mail.kernel.org (Postfix) with ESMTPSA id 69EB923E29;
         Thu, 30 May 2019 03:12:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559185976;
-        bh=oi8lKQ5r/i49dFb9dykc0Y0t9E2sFOuG489GbRWGmc4=;
+        bh=nQZYqrwWCpdbUbQ16wM+a+UtsLY3q9D6MPb3TEL2vLM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kevY+k94O/zBFhLGYTF4ou4qsWGS9cw6sJ0oEbRqLRzdsBvTVoApvQJQE9UpBaZUG
-         7SuoRXZl8mMBjsrhDkARTcVKO6zS0WaDnidXbRgw5xDNju1PDae7rfvaJZuujkXHvj
-         O40niDGv9rYlc5Dca4J9i2Z4HjKAYCMaasmdjIB0=
+        b=Kh2u8wnXNLRhp7GKHulHo4K4xXPptJJpKDJtgoHJwXo6NOol3zqiPRkNYD+VZXlT4
+         mDrJWa1oPfpvbzuuhrhmqUOOVO6wpzICesSDK10/ILhZVU7CtiCS1og6UsWbs76zMB
+         cTacyAcGxmD+zV/qpIxpEAfAwafgC9QyoCWAxdNc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.0 001/346] x86: Hide the int3_emulate_call/jmp functions from UML
-Date:   Wed, 29 May 2019 20:01:14 -0700
-Message-Id: <20190530030540.450712739@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Steve Twiss <stwiss.opensource@diasemi.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 380/405] regulator: ltc3589: Fix notifier mutex lock warning
+Date:   Wed, 29 May 2019 20:06:18 -0700
+Message-Id: <20190530030559.955927562@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
-References: <20190530030540.363386121@linuxfoundation.org>
+In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
+References: <20190530030540.291644921@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,41 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+[ Upstream commit f132da2534ec6599c78c4adcef15340cff2e9dd9 ]
 
-commit 693713cbdb3a4bda5a8a678c31f06560bbb14657 upstream.
+The mutex for the regulator_dev must be controlled by the caller of
+the regulator_notifier_call_chain(), as described in the comment
+for that function.
 
-User Mode Linux does not have access to the ip or sp fields of the pt_regs,
-and accessing them causes UML to fail to build. Hide the int3_emulate_jmp()
-and int3_emulate_call() instructions from UML, as it doesn't need them
-anyway.
+Failure to mutex lock and unlock surrounding the notifier call results
+in a kernel WARN_ON_ONCE() which will dump a backtrace for the
+regulator_notifier_call_chain() when that function call is first made.
+The mutex can be controlled using the regulator_lock/unlock() API.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 3eb2c7ecb7ea ("regulator: Add LTC3589 support")
+Suggested-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/text-patching.h |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/regulator/ltc3589.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/arch/x86/include/asm/text-patching.h
-+++ b/arch/x86/include/asm/text-patching.h
-@@ -39,6 +39,7 @@ extern int poke_int3_handler(struct pt_r
- extern void *text_poke_bp(void *addr, const void *opcode, size_t len, void *handler);
- extern int after_bootmem;
+diff --git a/drivers/regulator/ltc3589.c b/drivers/regulator/ltc3589.c
+index 63f724f260ef7..75089b037b723 100644
+--- a/drivers/regulator/ltc3589.c
++++ b/drivers/regulator/ltc3589.c
+@@ -419,16 +419,22 @@ static irqreturn_t ltc3589_isr(int irq, void *dev_id)
  
-+#ifndef CONFIG_UML_X86
- static inline void int3_emulate_jmp(struct pt_regs *regs, unsigned long ip)
- {
- 	regs->ip = ip;
-@@ -65,6 +66,7 @@ static inline void int3_emulate_call(str
- 	int3_emulate_push(regs, regs->ip - INT3_INSN_SIZE + CALL_INSN_SIZE);
- 	int3_emulate_jmp(regs, func);
- }
--#endif
-+#endif /* CONFIG_X86_64 */
-+#endif /* !CONFIG_UML_X86 */
+ 	if (irqstat & LTC3589_IRQSTAT_THERMAL_WARN) {
+ 		event = REGULATOR_EVENT_OVER_TEMP;
+-		for (i = 0; i < LTC3589_NUM_REGULATORS; i++)
++		for (i = 0; i < LTC3589_NUM_REGULATORS; i++) {
++		        regulator_lock(ltc3589->regulators[i]);
+ 			regulator_notifier_call_chain(ltc3589->regulators[i],
+ 						      event, NULL);
++		        regulator_unlock(ltc3589->regulators[i]);
++		}
+ 	}
  
- #endif /* _ASM_X86_TEXT_PATCHING_H */
+ 	if (irqstat & LTC3589_IRQSTAT_UNDERVOLT_WARN) {
+ 		event = REGULATOR_EVENT_UNDER_VOLTAGE;
+-		for (i = 0; i < LTC3589_NUM_REGULATORS; i++)
++		for (i = 0; i < LTC3589_NUM_REGULATORS; i++) {
++		        regulator_lock(ltc3589->regulators[i]);
+ 			regulator_notifier_call_chain(ltc3589->regulators[i],
+ 						      event, NULL);
++		        regulator_unlock(ltc3589->regulators[i]);
++		}
+ 	}
+ 
+ 	/* Clear warning condition */
+-- 
+2.20.1
+
 
 
