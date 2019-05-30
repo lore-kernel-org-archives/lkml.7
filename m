@@ -5,52 +5,59 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF850C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E8BC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5008255C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9ED02564A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:31:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190658;
-	bh=5RLysbjutLyy0H2j0S6gLUuxbUtDMbuWmcgwqXBZXwA=;
+	s=default; t=1559190662;
+	bh=dI6k68iBI9a6EZae/YyfhT5m9Df2yEszOFsOyZfW4Ow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T+a/ASuiFzaqoreOrsPifqU5XDnk7VVR8mOL8/wq2iX0hy7FU4I9t5braa2CJJGkO
-	 qvMtasZeZdNRjGfM3+jVSv+kqoKl+JUQEDRq94t6kj+ryWq2gtD+U6UXRRvr5KLDBf
-	 C1G/hUD5sWCHzKk6RajVxh1vXRt4t8pQBLpdsWxw=
+	b=zO0VXzTegbSYHGOoaAhpje+gednjJVY6aAdjlqKgjfiRWzppmcx9Lxw8aV1dQ078A
+	 tmk2r3T/n6FxAMzDB6nE9RTTDs28ETHNUPeUX/mI3x9djkV7g2YNaZsK6sF/WKSA4B
+	 bLAdYxcb6zdlML/9T+k1DheOFmzHdXPy8eq+AK1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388139AbfE3Ea5 (ORCPT
+        id S1727967AbfE3DNu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:30:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60312 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:13:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729606AbfE3DNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:13:51 -0400
+        id S1728661AbfE3DLp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:45 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BE2723D14;
-        Thu, 30 May 2019 03:13:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 742332449A;
+        Thu, 30 May 2019 03:11:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186030;
-        bh=5RLysbjutLyy0H2j0S6gLUuxbUtDMbuWmcgwqXBZXwA=;
+        s=default; t=1559185904;
+        bh=dI6k68iBI9a6EZae/YyfhT5m9Df2yEszOFsOyZfW4Ow=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P+9+dZFgrQDaGsQK4nX9Lu9VSfWUZsO/D+mT/Vip/kHYnh6ub1MdJzUWf7FyuZ4pl
-         ikEGHzSMjZnIoUsuv46530wmrlSRs+fSE2OUYtu9KB62bO0RNaSU94yO1lQs2UHvyG
-         sNdmGOoGggtrTRi/TvjTLo29gR85twxcsiJWAaPY=
+        b=gYJLN38BcTwjpG+T79mNaV/INQ4uNJjYuo1X2GedKLeJcvOZvVdfx5T/aahpKwXed
+         Cbqjt/sIPZehyYzgGu9OuiMbY9hEyAuM8LLnySySjLYmwXtOwt+rPdCRZ/sdfrw+nv
+         q0N+BoZfopwo/qp4uyBVakmj0ACkU6nlfgKvRn6I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiaoli Feng <fengxiaoli0714@gmail.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 108/346] Fix nfs4.2 return -EINVAL when do dedupe operation
-Date:   Wed, 29 May 2019 20:03:01 -0700
-Message-Id: <20190530030546.576648554@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Timur Tabi <timur@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 275/405] ASoC: fsl_utils: fix a leaked reference by adding missing of_node_put
+Date:   Wed, 29 May 2019 20:04:33 -0700
+Message-Id: <20190530030554.808270059@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
-References: <20190530030540.363386121@linuxfoundation.org>
+In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
+References: <20190530030540.291644921@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,40 +67,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ce96e888fe48ecfa868c9a39adc03292c78a80ff ]
+[ Upstream commit c705247136a523488eac806bd357c3e5d79a7acd ]
 
-dedupe_file_range operations is combiled into remap_file_range.
-But in nfs42_remap_file_range, it's skiped for dedupe operations.
-Before this patch:
-  # dd if=/dev/zero of=nfs/file bs=1M count=1
-  # xfs_io -c "dedupe nfs/file 4k 64k 4k" nfs/file
-  XFS_IOC_FILE_EXTENT_SAME: Invalid argument
-After this patch:
-  # dd if=/dev/zero of=nfs/file bs=1M count=1
-  # xfs_io -c "dedupe nfs/file 4k 64k 4k" nfs/file
-  deduped 4096/4096 bytes at offset 65536
-  4 KiB, 1 ops; 0.0046 sec (865.988 KiB/sec and 216.4971 ops/sec)
+The call to of_parse_phandle returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Signed-off-by: Xiaoli Feng <fengxiaoli0714@gmail.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Detected by coccinelle with the following warnings:
+./sound/soc/fsl/fsl_utils.c:74:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 38, but without a corresponding     object release within this function.
+
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Timur Tabi <timur@kernel.org>
+Cc: Nicolin Chen <nicoleotsuka@gmail.com>
+Cc: Xiubo Li <Xiubo.Lee@gmail.com>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: alsa-devel@alsa-project.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4file.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/fsl/fsl_utils.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
-index 00d17198ee12a..f10b660805fc4 100644
---- a/fs/nfs/nfs4file.c
-+++ b/fs/nfs/nfs4file.c
-@@ -187,7 +187,7 @@ static loff_t nfs42_remap_file_range(struct file *src_file, loff_t src_off,
- 	bool same_inode = false;
- 	int ret;
- 
--	if (remap_flags & ~REMAP_FILE_ADVISORY)
-+	if (remap_flags & ~(REMAP_FILE_DEDUP | REMAP_FILE_ADVISORY))
+diff --git a/sound/soc/fsl/fsl_utils.c b/sound/soc/fsl/fsl_utils.c
+index 9981668ab5909..040d06b89f00a 100644
+--- a/sound/soc/fsl/fsl_utils.c
++++ b/sound/soc/fsl/fsl_utils.c
+@@ -71,6 +71,7 @@ int fsl_asoc_get_dma_channel(struct device_node *ssi_np,
+ 	iprop = of_get_property(dma_np, "cell-index", NULL);
+ 	if (!iprop) {
+ 		of_node_put(dma_np);
++		of_node_put(dma_channel_np);
  		return -EINVAL;
- 
- 	/* check alignment w.r.t. clone_blksize */
+ 	}
+ 	*dma_id = be32_to_cpup(iprop);
 -- 
 2.20.1
 
