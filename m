@@ -2,169 +2,231 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED345C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C751DC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3F2D24ACF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AE3C24AEF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:31:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187077;
-	bh=ubls7VOPOLSUi6cCp9oYYMaXNUL0byr/KJ4jjhEK1iE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tImMQ7JdEAYVVLmz4SzVf4d6o8wOksYoTrR1gSQKLEZiCMwpDmo71lM0uWln+ksKP
-	 TwHLEpjWnmN4axoqr9UBuFQxXvQ/5xSmP2/TT2Pi604JQmbVqHBpwltF9LJv9TQnXd
-	 0HVMEHPZNhYZPgZJ31tEQ9k+18G/yvyI00DE+qBo=
+	s=default; t=1559187082;
+	bh=DdLwdqSSRhtuBrsjGhPCyUJFVKGv7nEHu7Igw3L85AA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=WCwdmTzGb8KXlZqYR65QzV3VqCme3uwd/19L0TcAGw9vE9eNtO3/njuMU09sSUDtS
+	 LzbxKZyQZPAEoS/89wICaf3tcXi2cykgNIy1ksfnhWPOZVRHJgygOQsSLuP7pNaw7d
+	 IQz7VMzg+ajMseIfIyVM/LLe+4olfmRUYYysbG58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388546AbfE3DaW (ORCPT
+        id S1733053AbfE3DbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:30:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34362 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:31:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732525AbfE3DVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:21:22 -0400
-Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
+        id S1727454AbfE3DbT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:31:19 -0400
+Received: from localhost (unknown [104.132.1.68])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AE68249D8;
-        Thu, 30 May 2019 03:21:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D92F24ACF;
+        Thu, 30 May 2019 03:31:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186481;
-        bh=ubls7VOPOLSUi6cCp9oYYMaXNUL0byr/KJ4jjhEK1iE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y8l78jctWggZxnkapiIEpygFqSIZk25lokw5SLWOU2tfs5d1znc6NfeUOJIWO/LFo
-         irNv1J+oahB30DcAdgs4P2Oi3e2EYv7TXKMNe0+A7aRTWbjNSgzuvVN3++uP+NRkpQ
-         IKgb9MBAewS4gsQuxsYZRLMxneWvHPl3B7O0+oI4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mohan Kumar D <mkumard@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Sameer Pujar <spujar@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 118/128] dmaengine: tegra210-adma: use devm_clk_*() helpers
-Date:   Wed, 29 May 2019 20:07:30 -0700
-Message-Id: <20190530030455.784081738@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
-References: <20190530030432.977908967@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1559187078;
+        bh=DdLwdqSSRhtuBrsjGhPCyUJFVKGv7nEHu7Igw3L85AA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=qOPnTp4wTIEUEgwFxPgxGDlYe0bp9jjcwifpoEewmo9nhl5CbzBbXeNPeOLbWZwgP
+         xRBtOHDqjT3pbeKuSFzP87NG3XXWsl//H92kK+5/B4o6bzUaSFe2VNgQMFra6mqoyP
+         MstvJkJn99vIkhVNQLHGRV2YMuI4fzMkmpKQuhzQ=
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: [PATCH] f2fs: add a rw_sem to cover quota flag changes
+Date:   Wed, 29 May 2019 20:31:15 -0700
+Message-Id: <20190530033115.16853-1-jaegeuk@kernel.org>
+X-Mailer: git-send-email 2.19.0.605.g01d371f741-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f6ed6491d565c336a360471e0c29228e34f4380e ]
+thread 1:                        thread 2:
+writeback                        checkpoint
+set QUOTA_NEED_FLUSH
+                                 clear QUOTA_NEED_FLUSH
+f2fs_dquot_commit
+dquot_commit
+clear_dquot_dirty
+                                 f2fs_quota_sync
+                                 dquot_writeback_dquots
+				 nothing to commit
+commit_dqblk
+quota_write
+f2fs_quota_write
+waiting for f2fs_lock_op()
+				 pass __need_flush_quota
+                                 (no F2FS_DIRTY_QDATA)
 
-adma driver is using pm_clk_*() interface for managing clock resources.
-With this it is observed that clocks remain ON always. This happens on
-Tegra devices which use BPMP co-processor to manage clock resources,
-where clocks are enabled during prepare phase. This is necessary because
-clocks to BPMP are always blocking. When pm_clk_*() interface is used on
-such Tegra devices, clock prepare count is not balanced till remove call
-happens for the driver and hence clocks are seen ON always. Thus this
-patch replaces pm_clk_*() with devm_clk_*() framework.
+-> up-to-date quota is not written
 
-Suggested-by: Mohan Kumar D <mkumard@nvidia.com>
-Reviewed-by: Jonathan Hunter <jonathanh@nvidia.com>
-Signed-off-by: Sameer Pujar <spujar@nvidia.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 ---
- drivers/dma/tegra210-adma.c | 27 ++++++++++++---------------
- 1 file changed, 12 insertions(+), 15 deletions(-)
+ fs/f2fs/checkpoint.c | 26 ++++++++++++++++----------
+ fs/f2fs/f2fs.h       |  1 +
+ fs/f2fs/super.c      | 27 ++++++++++++++++++++++-----
+ 3 files changed, 39 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-index af3487538c191..e9e46a5207452 100644
---- a/drivers/dma/tegra210-adma.c
-+++ b/drivers/dma/tegra210-adma.c
-@@ -22,7 +22,6 @@
- #include <linux/of_device.h>
- #include <linux/of_dma.h>
- #include <linux/of_irq.h>
--#include <linux/pm_clock.h>
- #include <linux/pm_runtime.h>
- #include <linux/slab.h>
+diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+index 89825261d474..cf3b15c963d2 100644
+--- a/fs/f2fs/checkpoint.c
++++ b/fs/f2fs/checkpoint.c
+@@ -1131,17 +1131,23 @@ static void __prepare_cp_block(struct f2fs_sb_info *sbi)
  
-@@ -141,6 +140,7 @@ struct tegra_adma {
- 	struct dma_device		dma_dev;
- 	struct device			*dev;
- 	void __iomem			*base_addr;
-+	struct clk			*ahub_clk;
- 	unsigned int			nr_channels;
- 	unsigned long			rx_requests_reserved;
- 	unsigned long			tx_requests_reserved;
-@@ -637,8 +637,9 @@ static int tegra_adma_runtime_suspend(struct device *dev)
- 	struct tegra_adma *tdma = dev_get_drvdata(dev);
- 
- 	tdma->global_cmd = tdma_read(tdma, ADMA_GLOBAL_CMD);
-+	clk_disable_unprepare(tdma->ahub_clk);
- 
--	return pm_clk_suspend(dev);
-+	return 0;
+ static bool __need_flush_quota(struct f2fs_sb_info *sbi)
+ {
++	bool ret = false;
++
++	down_write(&sbi->quota_sem);
+ 	if (!is_journalled_quota(sbi))
+-		return false;
+-	if (is_sbi_flag_set(sbi, SBI_QUOTA_SKIP_FLUSH))
+-		return false;
+-	if (is_sbi_flag_set(sbi, SBI_QUOTA_NEED_REPAIR))
+-		return false;
+-	if (is_sbi_flag_set(sbi, SBI_QUOTA_NEED_FLUSH))
+-		return true;
+-	if (get_pages(sbi, F2FS_DIRTY_QDATA))
+-		return true;
+-	return false;
++		ret = false;
++	else if (is_sbi_flag_set(sbi, SBI_QUOTA_SKIP_FLUSH))
++		ret = false;
++	else if (is_sbi_flag_set(sbi, SBI_QUOTA_NEED_REPAIR))
++		ret = false;
++	else if (is_sbi_flag_set(sbi, SBI_QUOTA_NEED_FLUSH))
++		ret = true;
++	else if (get_pages(sbi, F2FS_DIRTY_QDATA))
++		ret = true;
++	else
++		ret = false;
++	up_write(&sbi->quota_sem);
++	return ret;
  }
  
- static int tegra_adma_runtime_resume(struct device *dev)
-@@ -646,10 +647,11 @@ static int tegra_adma_runtime_resume(struct device *dev)
- 	struct tegra_adma *tdma = dev_get_drvdata(dev);
+ /*
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 9b3d9977cd1e..692c0922f5b2 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -1250,6 +1250,7 @@ struct f2fs_sb_info {
+ 	block_t unusable_block_count;		/* # of blocks saved by last cp */
+ 
+ 	unsigned int nquota_files;		/* # of quota sysfile */
++	struct rw_semaphore quota_sem;		/* blocking cp for flags */
+ 
+ 	/* # of pages, see count_type */
+ 	atomic_t nr_pages[NR_COUNT_TYPE];
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 912e2619d581..5ddf5e97ee60 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -1944,7 +1944,10 @@ int f2fs_quota_sync(struct super_block *sb, int type)
+ 	int cnt;
  	int ret;
  
--	ret = pm_clk_resume(dev);
--	if (ret)
-+	ret = clk_prepare_enable(tdma->ahub_clk);
-+	if (ret) {
-+		dev_err(dev, "ahub clk_enable failed: %d\n", ret);
- 		return ret;
--
-+	}
- 	tdma_write(tdma, ADMA_GLOBAL_CMD, tdma->global_cmd);
++	down_read(&sbi->quota_sem);
+ 	ret = dquot_writeback_dquots(sb, type);
++	up_read(&sbi->quota_sem);
++
+ 	if (ret)
+ 		goto out;
  
- 	return 0;
-@@ -692,13 +694,11 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 	if (IS_ERR(tdma->base_addr))
- 		return PTR_ERR(tdma->base_addr);
+@@ -2074,32 +2077,40 @@ static void f2fs_truncate_quota_inode_pages(struct super_block *sb)
  
--	ret = pm_clk_create(&pdev->dev);
--	if (ret)
--		return ret;
--
--	ret = of_pm_clk_add_clk(&pdev->dev, "d_audio");
--	if (ret)
--		goto clk_destroy;
-+	tdma->ahub_clk = devm_clk_get(&pdev->dev, "d_audio");
-+	if (IS_ERR(tdma->ahub_clk)) {
-+		dev_err(&pdev->dev, "Error: Missing ahub controller clock\n");
-+		return PTR_ERR(tdma->ahub_clk);
-+	}
+ static int f2fs_dquot_commit(struct dquot *dquot)
+ {
++	struct f2fs_sb_info *sbi = F2FS_SB(dquot->dq_sb);
+ 	int ret;
  
- 	pm_runtime_enable(&pdev->dev);
- 
-@@ -775,8 +775,6 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 	pm_runtime_put_sync(&pdev->dev);
- rpm_disable:
- 	pm_runtime_disable(&pdev->dev);
--clk_destroy:
--	pm_clk_destroy(&pdev->dev);
- 
++	down_read(&sbi->quota_sem);
+ 	ret = dquot_commit(dquot);
+ 	if (ret < 0)
+-		set_sbi_flag(F2FS_SB(dquot->dq_sb), SBI_QUOTA_NEED_REPAIR);
++		set_sbi_flag(sbi, SBI_QUOTA_NEED_REPAIR);
++	up_read(&sbi->quota_sem);
  	return ret;
  }
-@@ -794,7 +792,6 @@ static int tegra_adma_remove(struct platform_device *pdev)
  
- 	pm_runtime_put_sync(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
--	pm_clk_destroy(&pdev->dev);
+ static int f2fs_dquot_acquire(struct dquot *dquot)
+ {
++	struct f2fs_sb_info *sbi = F2FS_SB(dquot->dq_sb);
+ 	int ret;
  
- 	return 0;
++	down_read(&sbi->quota_sem);
+ 	ret = dquot_acquire(dquot);
+ 	if (ret < 0)
+-		set_sbi_flag(F2FS_SB(dquot->dq_sb), SBI_QUOTA_NEED_REPAIR);
+-
++		set_sbi_flag(sbi, SBI_QUOTA_NEED_REPAIR);
++	up_read(&sbi->quota_sem);
+ 	return ret;
  }
+ 
+ static int f2fs_dquot_release(struct dquot *dquot)
+ {
++	struct f2fs_sb_info *sbi = F2FS_SB(dquot->dq_sb);
+ 	int ret;
+ 
++	down_read(&sbi->quota_sem);
+ 	ret = dquot_release(dquot);
+ 	if (ret < 0)
+-		set_sbi_flag(F2FS_SB(dquot->dq_sb), SBI_QUOTA_NEED_REPAIR);
++		set_sbi_flag(sbi, SBI_QUOTA_NEED_REPAIR);
++	up_read(&sbi->quota_sem);
+ 	return ret;
+ }
+ 
+@@ -2109,22 +2120,27 @@ static int f2fs_dquot_mark_dquot_dirty(struct dquot *dquot)
+ 	struct f2fs_sb_info *sbi = F2FS_SB(sb);
+ 	int ret;
+ 
++	down_read(&sbi->quota_sem);
+ 	ret = dquot_mark_dquot_dirty(dquot);
+ 
+ 	/* if we are using journalled quota */
+ 	if (is_journalled_quota(sbi))
+ 		set_sbi_flag(sbi, SBI_QUOTA_NEED_FLUSH);
+ 
++	up_read(&sbi->quota_sem);
+ 	return ret;
+ }
+ 
+ static int f2fs_dquot_commit_info(struct super_block *sb, int type)
+ {
++	struct f2fs_sb_info *sbi = F2FS_SB(sb);
+ 	int ret;
+ 
++	down_read(&sbi->quota_sem);
+ 	ret = dquot_commit_info(sb, type);
+ 	if (ret < 0)
+-		set_sbi_flag(F2FS_SB(sb), SBI_QUOTA_NEED_REPAIR);
++		set_sbi_flag(sbi, SBI_QUOTA_NEED_REPAIR);
++	up_read(&sbi->quota_sem);
+ 	return ret;
+ }
+ 
+@@ -3233,6 +3249,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+ 	}
+ 
+ 	init_rwsem(&sbi->cp_rwsem);
++	init_rwsem(&sbi->quota_sem);
+ 	init_waitqueue_head(&sbi->cp_wait);
+ 	init_sb_info(sbi);
+ 
 -- 
-2.20.1
-
-
+2.19.0.605.g01d371f741-goog
 
