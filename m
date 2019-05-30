@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D51C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CEA8C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4F1324921
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B16024921
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:37:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187470;
-	bh=1rPMMUnAEw/PbwAbQkw+rWsgCAavxUsZNbw2R/Ydn20=;
+	s=default; t=1559187473;
+	bh=aQJcM1cVq7gWa9y+IphsuHHAkoXxn9PEzhVxGMJBiBo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dgWrLJRr1nEDSxlW+yerm5rnuY1XjBb+1LStLNW3Labmw38gPSwXtd3QjRfzxsNl1
-	 ZEvzBCw7wtgL2ah7V1AVz5fH4pFjdl9P5m/3DdTwxh3kggdb2BftfFvsL21xnOOiOD
-	 dzEnmZkY92WVqPD7M4wqEpdiUIUT6pMUcjdZjBiQ=
+	b=EIwygaMvjfcgaO0ZQAjweK0Odm+vX5BQJtSHgYkeIs/l/SeHlhApMT5pjE64CObHZ
+	 vt1NxYF1GeDvRMRvClNZWkzdffZnYTz8kHjZNQ7vSVyiJP2RAybj++vTwp+6mToPgs
+	 YO9jDrBeMXDa//ATLqFITit9eyQWFf+8rMzYm0nE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733125AbfE3DXq (ORCPT
+        id S1733109AbfE3DXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:23:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47824 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:23:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731179AbfE3DRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:17:36 -0400
+        id S1731160AbfE3DRd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:17:33 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A293246F3;
-        Thu, 30 May 2019 03:17:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17A3E24664;
+        Thu, 30 May 2019 03:17:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186255;
-        bh=1rPMMUnAEw/PbwAbQkw+rWsgCAavxUsZNbw2R/Ydn20=;
+        s=default; t=1559186253;
+        bh=aQJcM1cVq7gWa9y+IphsuHHAkoXxn9PEzhVxGMJBiBo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BSqxhwakXTWiZqIXYaEpqM5CTOjelr14ujZkT/qxgOFgLA75NuLJ8VFS50lDptaJw
-         i0Flq0pz0dPaIIjIyy+fJQ6uGWoXbvlQu+mIJxtQhGw9bvR3/xuIIOTiQAmWc6CKxv
-         hG95xKyj3PmIEs2lyvif+vSyLWjwPxzADzdIsEYE=
+        b=HTf1jHAW3ZyWKRPJ3q5gae0i1X6g5Ps3e7ZikhTvuC3BUV0QLlGZ4a2zvwghlHHtt
+         +JKqgieJywMSb2kZ6/H2EeaDPGjITAnlujY7hunk1RgJczj6qPUyd02FsLNjZQGQT6
+         RjTJ2KDJZPK3Qiy611l/4eU3I1nNzuyEuPaWTN7Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Derrick <jonathan.derrick@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Scott Bauer <sbauer@plzdonthack.me>,
-        David Kozub <zub@linux.fjfi.cvut.cz>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 183/276] block: sed-opal: fix IOC_OPAL_ENABLE_DISABLE_MBR
-Date:   Wed, 29 May 2019 20:05:41 -0700
-Message-Id: <20190530030536.703908741@linuxfoundation.org>
+        stable@vger.kernel.org, Russell Currey <ruscur@russell.cc>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 132/276] powerpc/64: Fix booting large kernels with STRICT_KERNEL_RWX
+Date:   Wed, 29 May 2019 20:04:50 -0700
+Message-Id: <20190530030534.020918776@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -62,63 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 78bf47353b0041865564deeed257a54f047c2fdc ]
+[ Upstream commit 56c46bba9bbfe229b4472a5be313c44c5b714a39 ]
 
-The implementation of IOC_OPAL_ENABLE_DISABLE_MBR handled the value
-opal_mbr_data.enable_disable incorrectly: enable_disable is expected
-to be one of OPAL_MBR_ENABLE(0) or OPAL_MBR_DISABLE(1). enable_disable
-was passed directly to set_mbr_done and set_mbr_enable_disable where
-is was interpreted as either OPAL_TRUE(1) or OPAL_FALSE(0). The end
-result was that calling IOC_OPAL_ENABLE_DISABLE_MBR with OPAL_MBR_ENABLE
-actually disabled the shadow MBR and vice versa.
+With STRICT_KERNEL_RWX enabled anything marked __init is placed at a 16M
+boundary.  This is necessary so that it can be repurposed later with
+different permissions.  However, in kernels with text larger than 16M,
+this pushes early_setup past 32M, incapable of being reached by the
+branch instruction.
 
-This patch adds correct conversion from OPAL_MBR_DISABLE/ENABLE to
-OPAL_FALSE/TRUE. The change affects existing programs using
-IOC_OPAL_ENABLE_DISABLE_MBR but this is typically used only once when
-setting up an Opal drive.
+Fix this by setting the CTR and branching there instead.
 
-Acked-by: Jon Derrick <jonathan.derrick@intel.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Scott Bauer <sbauer@plzdonthack.me>
-Signed-off-by: David Kozub <zub@linux.fjfi.cvut.cz>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 1e0fc9d1eb2b ("powerpc/Kconfig: Enable STRICT_KERNEL_RWX for some configs")
+Signed-off-by: Russell Currey <ruscur@russell.cc>
+[mpe: Fix it to work on BE by using DOTSYM()]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/sed-opal.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/powerpc/kernel/head_64.S | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/block/sed-opal.c b/block/sed-opal.c
-index e0de4dd448b3c..1196408972937 100644
---- a/block/sed-opal.c
-+++ b/block/sed-opal.c
-@@ -2095,13 +2095,16 @@ static int opal_erase_locking_range(struct opal_dev *dev,
- static int opal_enable_disable_shadow_mbr(struct opal_dev *dev,
- 					  struct opal_mbr_data *opal_mbr)
- {
-+	u8 enable_disable = opal_mbr->enable_disable == OPAL_MBR_ENABLE ?
-+		OPAL_TRUE : OPAL_FALSE;
-+
- 	const struct opal_step mbr_steps[] = {
- 		{ opal_discovery0, },
- 		{ start_admin1LSP_opal_session, &opal_mbr->key },
--		{ set_mbr_done, &opal_mbr->enable_disable },
-+		{ set_mbr_done, &enable_disable },
- 		{ end_opal_session, },
- 		{ start_admin1LSP_opal_session, &opal_mbr->key },
--		{ set_mbr_enable_disable, &opal_mbr->enable_disable },
-+		{ set_mbr_enable_disable, &enable_disable },
- 		{ end_opal_session, },
- 		{ NULL, }
- 	};
-@@ -2221,7 +2224,7 @@ static int __opal_lock_unlock(struct opal_dev *dev,
+diff --git a/arch/powerpc/kernel/head_64.S b/arch/powerpc/kernel/head_64.S
+index 4898e9491a1cd..9168a247e24ff 100644
+--- a/arch/powerpc/kernel/head_64.S
++++ b/arch/powerpc/kernel/head_64.S
+@@ -970,7 +970,9 @@ start_here_multiplatform:
  
- static int __opal_set_mbr_done(struct opal_dev *dev, struct opal_key *key)
- {
--	u8 mbr_done_tf = 1;
-+	u8 mbr_done_tf = OPAL_TRUE;
- 	const struct opal_step mbrdone_step [] = {
- 		{ opal_discovery0, },
- 		{ start_admin1LSP_opal_session, key },
+ 	/* Restore parameters passed from prom_init/kexec */
+ 	mr	r3,r31
+-	bl	early_setup		/* also sets r13 and SPRG_PACA */
++	LOAD_REG_ADDR(r12, DOTSYM(early_setup))
++	mtctr	r12
++	bctrl		/* also sets r13 and SPRG_PACA */
+ 
+ 	LOAD_REG_ADDR(r3, start_here_common)
+ 	ld	r4,PACAKMSR(r13)
 -- 
 2.20.1
 
