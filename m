@@ -5,52 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB7EC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 876A2C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C41825CC5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 584F425C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:49:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191759;
-	bh=jYzDwC7GtsN77ay9dC5WCV3Ym8aKwuHHWzw2Lx0m6vE=;
+	s=default; t=1559191771;
+	bh=9mXslimkPMmlanAaQNdynl1vDE9sPKhg5fOEZZEViIs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pKCtAXNKIjf2/cP0i50W4KcbkIk/P4ov7FN1N6cav9QEfwUZsI+Kc3XMdCCFXQRBB
-	 2ZqaVa8cMqDjqrPM2ylqOxajFziMNchi/I5kXnfOnvZtlab9IKWIKQRJTr4JrQfXk8
-	 hXTQl8kx8cGepy6SEAzOWmRswwQu5GQqaVRrOSx8=
+	b=fNrBS72y5C64woMco6NsgUeZ2Dh85XrOH/y2PMMVafbk9rPtkowLIQnLPywQf/nI2
+	 nXag97rqTZnnjuRstY0efFoSSKi3RQMdEfBZseeSpavo3ym++/qRX2LVdnnTWhf20H
+	 lk+P8qtvHBr+6mjqCIw+gQI45Czj7kWg1m7f8xdU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388695AbfE3EtS (ORCPT
+        id S2388959AbfE3Eta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:49:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50232 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:49:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728425AbfE3DLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:11:14 -0400
+        id S1727645AbfE3DLM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:12 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81CE4244E6;
-        Thu, 30 May 2019 03:11:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82923244B0;
+        Thu, 30 May 2019 03:11:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185873;
-        bh=jYzDwC7GtsN77ay9dC5WCV3Ym8aKwuHHWzw2Lx0m6vE=;
+        s=default; t=1559185871;
+        bh=9mXslimkPMmlanAaQNdynl1vDE9sPKhg5fOEZZEViIs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l/8Erduz98v7x7b2Tkz5o95UJarGsIBbGIiGsHRst0rP+kizmTK04GQO1B/lK3EXh
-         HGuwqfItHB9VpGGKthXK7RMmKxuyXddXVXKuIMq10Tl28AsNsYNxuVfsi5YtqWtE90
-         EK9AmgDgGQX1X2GpeMl0v/Zf4IaVcCk/lCjwPP6k=
+        b=N0pvUJIJMjc0YojysSDN4R0tqFdfLPQtzVcgdC7+5WvQUp9c18YXNxTN8fJiwIVLy
+         8hZkxzKCrzShUk+pV1D77nmnZ3htMWFsp8q8dBxClSiMlhUCrolA1NPJiS6WEUdRF+
+         zFaJg07o6pVVY1bGy6GMjn5JlCIyT70FRdJQybDY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sun peng Li <Sunpeng.Li@amd.com>,
-        Harry Wentland <Harry.Wentland@amd.com>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Michael Tretter <m.tretter@pengutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 217/405] drm/amd/display: Initialize stream_update with memset
-Date:   Wed, 29 May 2019 20:03:35 -0700
-Message-Id: <20190530030552.064780213@linuxfoundation.org>
+Subject: [PATCH 5.1 214/405] clk: zynqmp: fix check for fractional clock
+Date:   Wed, 29 May 2019 20:03:32 -0700
+Message-Id: <20190530030551.919150670@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -63,45 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2aa632c5ffbedb2ee0e68857683466ea788f17eb ]
+[ Upstream commit c06e64407e031e71c67f45f07981510ca4c880a1 ]
 
-The brace initialization used here generates warnings on some
-compilers. For example, on GCC 4.9:
+The firmware sets BIT(13) in clkflag to mark a divider as fractional
+divider. The clock driver copies the clkflag straight to the flags of
+the common clock framework. In the common clk framework flags, BIT(13)
+is defined as CLK_DUTY_CYCLE_PARENT.
 
-[...] In function ‘dm_determine_update_type_for_commit’:
-[...] error: missing braces around initializer [-Werror=missing-braces]
-   struct dc_stream_update stream_update = { 0 };
-          ^
+Add a new field to the zynqmp_clk_divider to specify if a divider is a
+fractional devider. Set this field based on the clkflag when registering
+a divider.
 
-Use memset to make this more portable.
+At the same time, unset BIT(13) from clkflag when copying the flags to
+the common clk framework flags.
 
-v2: Specify the compiler / diagnostic in the commit message (Paul)
-
-Cc: Sun peng Li <Sunpeng.Li@amd.com>
-Cc: Harry Wentland <Harry.Wentland@amd.com>
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Reviewed-by: Leo Li <sunpeng.li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/clk/zynqmp/divider.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index 3082b55b1e774..66f19d1864b17 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -5858,7 +5858,9 @@ dm_determine_update_type_for_commit(struct dc *dc,
- 	}
+diff --git a/drivers/clk/zynqmp/divider.c b/drivers/clk/zynqmp/divider.c
+index a371c66e72ef6..bd9b5fbc443b3 100644
+--- a/drivers/clk/zynqmp/divider.c
++++ b/drivers/clk/zynqmp/divider.c
+@@ -31,12 +31,14 @@
+  * struct zynqmp_clk_divider - adjustable divider clock
+  * @hw:		handle between common and hardware-specific interfaces
+  * @flags:	Hardware specific flags
++ * @is_frac:	The divider is a fractional divider
+  * @clk_id:	Id of clock
+  * @div_type:	divisor type (TYPE_DIV1 or TYPE_DIV2)
+  */
+ struct zynqmp_clk_divider {
+ 	struct clk_hw hw;
+ 	u8 flags;
++	bool is_frac;
+ 	u32 clk_id;
+ 	u32 div_type;
+ };
+@@ -116,8 +118,7 @@ static long zynqmp_clk_divider_round_rate(struct clk_hw *hw,
  
- 	for_each_oldnew_crtc_in_state(state, crtc, old_crtc_state, new_crtc_state, i) {
--		struct dc_stream_update stream_update = { 0 };
-+		struct dc_stream_update stream_update;
-+
-+		memset(&stream_update, 0, sizeof(stream_update));
+ 	bestdiv = zynqmp_divider_get_val(*prate, rate);
  
- 		new_dm_crtc_state = to_dm_crtc_state(new_crtc_state);
- 		old_dm_crtc_state = to_dm_crtc_state(old_crtc_state);
+-	if ((clk_hw_get_flags(hw) & CLK_SET_RATE_PARENT) &&
+-	    (divider->flags & CLK_FRAC))
++	if ((clk_hw_get_flags(hw) & CLK_SET_RATE_PARENT) && divider->is_frac)
+ 		bestdiv = rate % *prate ? 1 : bestdiv;
+ 	*prate = rate * bestdiv;
+ 
+@@ -195,11 +196,13 @@ struct clk_hw *zynqmp_clk_register_divider(const char *name,
+ 
+ 	init.name = name;
+ 	init.ops = &zynqmp_clk_divider_ops;
+-	init.flags = nodes->flag;
++	/* CLK_FRAC is not defined in the common clk framework */
++	init.flags = nodes->flag & ~CLK_FRAC;
+ 	init.parent_names = parents;
+ 	init.num_parents = 1;
+ 
+ 	/* struct clk_divider assignments */
++	div->is_frac = !!(nodes->flag & CLK_FRAC);
+ 	div->flags = nodes->type_flag;
+ 	div->hw.init = &init;
+ 	div->clk_id = clk_id;
 -- 
 2.20.1
 
