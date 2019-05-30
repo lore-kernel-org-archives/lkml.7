@@ -2,54 +2,51 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF8B6C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6800BC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F31324923
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E72D24B8D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:39:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187553;
-	bh=p/PGZMBxZ3FmHkSc09aP1Q+HL/GM+WS2VcIPGF7ylIU=;
+	s=default; t=1559187557;
+	bh=zgiv+qFIzyKL+BVY8zd+kxmbe99pwOeqQq748lSnyHU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Em5spP601wqIsUqMsYvVXMfQqxsIlKUU8QKJmYJbGbd+l/GXRdkcfZ5oh+tMTu7h5
-	 xaYm6o7kVNpPuw3MesxJSlLnpKs+cQRfL0/h6LKhCyg09wBfK0kqah2gS7X2aZRrXu
-	 h1s1FUhCQ5rsQh+8I75KQM4tAT6/QRpsdkssK3UI=
+	b=Wf5ZgMfMWfkqL+t+N4jSLpi5tL6aAFkh/B7M9uyWwOh9JKkjEa1o6416CEb0ZUOdB
+	 wsR3TQQjBH6S+MEfrsz72BzHzqe1ZUBH7JiOea6gbgpfMOb0KJdrcaEQxrTIy6E1Q8
+	 CsiNXW5YXbcQAqh17HgrXE4h3192P4W8cvy3Va10=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732826AbfE3DWR (ORCPT
+        id S1729797AbfE3DWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:22:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43432 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:22:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730748AbfE3DQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:39 -0400
+        id S1728934AbfE3DQk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:16:40 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13BBE24619;
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CBF92461C;
         Thu, 30 May 2019 03:16:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186199;
-        bh=p/PGZMBxZ3FmHkSc09aP1Q+HL/GM+WS2VcIPGF7ylIU=;
+        bh=zgiv+qFIzyKL+BVY8zd+kxmbe99pwOeqQq748lSnyHU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DB1ypQDoHjb7aq4HDzh5Axds2mP0u+fcheHym+nE6B6v1/BN6QWWfSCuBV1cuwHce
-         1+MOERdts7Ao+tqbad6+m73NpKSy0bVZKjzatuhhkk5mnPTCMA6TXw4pjzHUAuS7OT
-         Y2YoIOBxYvO2RKQlmLI+3U/TSAauIcawBLVOOguQ=
+        b=Yw9sFhWGTr3XPHGMd1RhtSbKpWsOSXWmWpxL68UQK3IgSVz6Qj4PL6+rF+2vegT5O
+         YCUVsnVObO7q8XVa162ffDovft9K+CaHpO+tAnwtZ/gPtSY5gCn1VGDEMk4uwDP9P4
+         HEHfAbjmKtcDT1GbOYIHPbOrkCpk7EeVC+x1U4bg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
-        Giridhar Malavali <gmalavali@marvell.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 076/276] scsi: qla2xxx: Fix abort handling in tcm_qla2xxx_write_pending()
-Date:   Wed, 29 May 2019 20:03:54 -0700
-Message-Id: <20190530030531.182656568@linuxfoundation.org>
+        stable@vger.kernel.org, Jiufei Xue <jiufei.xue@linux.alibaba.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH 4.19 033/276] fbdev: fix WARNING in __alloc_pages_nodemask bug
+Date:   Wed, 29 May 2019 20:03:11 -0700
+Message-Id: <20190530030526.308879506@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -62,42 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e209783d66bca04b5fce4429e59338517ffc1a0b ]
+From: Jiufei Xue <jiufei.xue@linux.alibaba.com>
 
-Implementations of the .write_pending() callback functions must guarantee
-that an appropriate LIO core callback function will be called immediately or
-at a later time.  Make sure that this guarantee is met for aborted SCSI
-commands.
+commit 8c40292be9169a9cbe19aadd1a6fc60cbd1af82f upstream.
 
-[mkp: typo]
+Syzkaller hit 'WARNING in __alloc_pages_nodemask' bug.
 
-Cc: Himanshu Madhani <hmadhani@marvell.com>
-Cc: Giridhar Malavali <gmalavali@marvell.com>
-Fixes: 694833ee00c4 ("scsi: tcm_qla2xxx: Do not allow aborted cmd to advance.") # v4.13.
-Fixes: a07100e00ac4 ("qla2xxx: Fix TMR ABORT interaction issue between qla2xxx and TCM") # v4.5.
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+WARNING: CPU: 1 PID: 1473 at mm/page_alloc.c:4377
+__alloc_pages_nodemask+0x4da/0x2130
+Kernel panic - not syncing: panic_on_warn set ...
+
+Call Trace:
+ alloc_pages_current+0xb1/0x1e0
+ kmalloc_order+0x1f/0x60
+ kmalloc_order_trace+0x1d/0x120
+ fb_alloc_cmap_gfp+0x85/0x2b0
+ fb_set_user_cmap+0xff/0x370
+ do_fb_ioctl+0x949/0xa20
+ fb_ioctl+0xdd/0x120
+ do_vfs_ioctl+0x186/0x1070
+ ksys_ioctl+0x89/0xa0
+ __x64_sys_ioctl+0x74/0xb0
+ do_syscall_64+0xc8/0x550
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+This is a warning about order >= MAX_ORDER and the order is from
+userspace ioctl. Add flag __NOWARN to silence this warning.
+
+Signed-off-by: Jiufei Xue <jiufei.xue@linux.alibaba.com>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/scsi/qla2xxx/tcm_qla2xxx.c | 2 ++
+ drivers/video/fbdev/core/fbcmap.c |    2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/drivers/scsi/qla2xxx/tcm_qla2xxx.c b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
-index 64e2d859f6332..7ef549903124d 100644
---- a/drivers/scsi/qla2xxx/tcm_qla2xxx.c
-+++ b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
-@@ -390,6 +390,8 @@ static int tcm_qla2xxx_write_pending(struct se_cmd *se_cmd)
- 			cmd->se_cmd.transport_state,
- 			cmd->se_cmd.t_state,
- 			cmd->se_cmd.se_cmd_flags);
-+		transport_generic_request_failure(&cmd->se_cmd,
-+			TCM_CHECK_CONDITION_ABORT_CMD);
- 		return 0;
- 	}
- 	cmd->trc_flags |= TRC_XFR_RDY;
--- 
-2.20.1
-
+--- a/drivers/video/fbdev/core/fbcmap.c
++++ b/drivers/video/fbdev/core/fbcmap.c
+@@ -94,6 +94,8 @@ int fb_alloc_cmap_gfp(struct fb_cmap *cm
+ 	int size = len * sizeof(u16);
+ 	int ret = -ENOMEM;
+ 
++	flags |= __GFP_NOWARN;
++
+ 	if (cmap->len != len) {
+ 		fb_dealloc_cmap(cmap);
+ 		if (!len)
 
 
