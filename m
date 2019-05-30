@@ -7,51 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6532C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D03B4C46460
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 904A92457F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F8032459C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186139;
-	bh=SHD36+BY1QvaEGUkOypXBRfC8ohz3yaLFqEMSfO4UWU=;
+	s=default; t=1559186142;
+	bh=zgiv+qFIzyKL+BVY8zd+kxmbe99pwOeqQq748lSnyHU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B4JlpMZT7L1q/Z42BoAvKmARUwM8HdYVgWhOmUe/kmUef8qFiktXowynA6fHvDvAA
-	 VFWg/bSpRWrTjsZ2o5bTsqDRsKnTH25wM7bTwJQnJRbeH5vkzEnURQtnfCNNIbjd4r
-	 P8PdqP746X+4ScjrDwm3s8nTvv8R0FMeIUbyDiIo=
+	b=cWjq6ZUg6iOXmjS/6vhyaJA8q2UzQ0sV5SQGDVMbHxBA9D9i9tpwIsGoi6pjjte9l
+	 q8FW/QCtdC+KrCy8/I3O2mwe/K+IC7guuUllbFxrKbN6DYYL0TpRBAdY3OQSaWqRsg
+	 wEEQcoeJ+azBIubB0ZT/CDyZW21Hcawd+lIY4aMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730412AbfE3DPj (ORCPT
+        id S1730448AbfE3DPl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:15:39 -0400
+        Wed, 29 May 2019 23:15:41 -0400
 Received: from mail.kernel.org ([198.145.29.99]:57438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728369AbfE3DNH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:13:07 -0400
+        id S1728408AbfE3DNJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:09 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF95421BE2;
-        Thu, 30 May 2019 03:13:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B4DD24544;
+        Thu, 30 May 2019 03:13:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185985;
-        bh=SHD36+BY1QvaEGUkOypXBRfC8ohz3yaLFqEMSfO4UWU=;
+        s=default; t=1559185988;
+        bh=zgiv+qFIzyKL+BVY8zd+kxmbe99pwOeqQq748lSnyHU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ILmeb8BvdDqC1TuRd3hl72FA+Y+1x2GWkheEASzPnRQEHv0/d+S+MH+EotawGer8A
-         P348dRzCiQ+dtWX4MuQfeXMdtmiGtCtziBAj+NZ3XGRpTCb7u+p+p/9n/3KQJa+Oat
-         RZl8O3fbOozSSMZikHj2wMZ48G0/m5l8BkX1q6tg=
+        b=Se/dmvzGWWpF/tanff1zT842bs/LnQXNgtM4sFSWSUGsngy2SCv9uKXX9AE+sif4A
+         Ofi1PYQ6T0f04ERZPnd7m1wRMCiVjSj3J0pQajUPF/TKESjp8MtSE53KrGgCFLGYTQ
+         v/IEOQ+Ae8y3anGocqVE6TTT3beTnQWY3TTHGC+I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 5.0 026/346] brcmfmac: add subtype check for event handling in data path
-Date:   Wed, 29 May 2019 20:01:39 -0700
-Message-Id: <20190530030542.073544918@linuxfoundation.org>
+        stable@vger.kernel.org, Jiufei Xue <jiufei.xue@linux.alibaba.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH 5.0 030/346] fbdev: fix WARNING in __alloc_pages_nodemask bug
+Date:   Wed, 29 May 2019 20:01:43 -0700
+Message-Id: <20190530030542.300764281@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -64,103 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arend van Spriel <arend.vanspriel@broadcom.com>
+From: Jiufei Xue <jiufei.xue@linux.alibaba.com>
 
-commit a4176ec356c73a46c07c181c6d04039fafa34a9f upstream.
+commit 8c40292be9169a9cbe19aadd1a6fc60cbd1af82f upstream.
 
-For USB there is no separate channel being used to pass events
-from firmware to the host driver and as such are passed over the
-data path. In order to detect mock event messages an additional
-check is needed on event subtype. This check is added conditionally
-using unlikely() keyword.
+Syzkaller hit 'WARNING in __alloc_pages_nodemask' bug.
 
-Reviewed-by: Hante Meuleman <hante.meuleman@broadcom.com>
-Reviewed-by: Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>
-Reviewed-by: Franky Lin <franky.lin@broadcom.com>
-Signed-off-by: Arend van Spriel <arend.vanspriel@broadcom.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Cc: Ben Hutchings <ben.hutchings@codethink.co.uk>
+WARNING: CPU: 1 PID: 1473 at mm/page_alloc.c:4377
+__alloc_pages_nodemask+0x4da/0x2130
+Kernel panic - not syncing: panic_on_warn set ...
+
+Call Trace:
+ alloc_pages_current+0xb1/0x1e0
+ kmalloc_order+0x1f/0x60
+ kmalloc_order_trace+0x1d/0x120
+ fb_alloc_cmap_gfp+0x85/0x2b0
+ fb_set_user_cmap+0xff/0x370
+ do_fb_ioctl+0x949/0xa20
+ fb_ioctl+0xdd/0x120
+ do_vfs_ioctl+0x186/0x1070
+ ksys_ioctl+0x89/0xa0
+ __x64_sys_ioctl+0x74/0xb0
+ do_syscall_64+0xc8/0x550
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+This is a warning about order >= MAX_ORDER and the order is from
+userspace ioctl. Add flag __NOWARN to silence this warning.
+
+Signed-off-by: Jiufei Xue <jiufei.xue@linux.alibaba.com>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c   |    5 ++--
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.h   |   16 ++++++++++----
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.c |    2 -
- 3 files changed, 16 insertions(+), 7 deletions(-)
+ drivers/video/fbdev/core/fbcmap.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c
-@@ -464,7 +464,8 @@ void brcmf_rx_frame(struct device *dev,
- 	} else {
- 		/* Process special event packets */
- 		if (handle_event)
--			brcmf_fweh_process_skb(ifp->drvr, skb);
-+			brcmf_fweh_process_skb(ifp->drvr, skb,
-+					       BCMILCP_SUBTYPE_VENDOR_LONG);
+--- a/drivers/video/fbdev/core/fbcmap.c
++++ b/drivers/video/fbdev/core/fbcmap.c
+@@ -94,6 +94,8 @@ int fb_alloc_cmap_gfp(struct fb_cmap *cm
+ 	int size = len * sizeof(u16);
+ 	int ret = -ENOMEM;
  
- 		brcmf_netif_rx(ifp, skb);
- 	}
-@@ -481,7 +482,7 @@ void brcmf_rx_event(struct device *dev,
- 	if (brcmf_rx_hdrpull(drvr, skb, &ifp))
- 		return;
- 
--	brcmf_fweh_process_skb(ifp->drvr, skb);
-+	brcmf_fweh_process_skb(ifp->drvr, skb, 0);
- 	brcmu_pkt_buf_free_skb(skb);
- }
- 
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.h
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.h
-@@ -211,7 +211,7 @@ enum brcmf_fweh_event_code {
-  */
- #define BRCM_OUI				"\x00\x10\x18"
- #define BCMILCP_BCM_SUBTYPE_EVENT		1
--
-+#define BCMILCP_SUBTYPE_VENDOR_LONG		32769
- 
- /**
-  * struct brcm_ethhdr - broadcom specific ether header.
-@@ -334,10 +334,10 @@ void brcmf_fweh_process_event(struct brc
- void brcmf_fweh_p2pdev_setup(struct brcmf_if *ifp, bool ongoing);
- 
- static inline void brcmf_fweh_process_skb(struct brcmf_pub *drvr,
--					  struct sk_buff *skb)
-+					  struct sk_buff *skb, u16 stype)
- {
- 	struct brcmf_event *event_packet;
--	u16 usr_stype;
-+	u16 subtype, usr_stype;
- 
- 	/* only process events when protocol matches */
- 	if (skb->protocol != cpu_to_be16(ETH_P_LINK_CTL))
-@@ -346,8 +346,16 @@ static inline void brcmf_fweh_process_sk
- 	if ((skb->len + ETH_HLEN) < sizeof(*event_packet))
- 		return;
- 
--	/* check for BRCM oui match */
- 	event_packet = (struct brcmf_event *)skb_mac_header(skb);
++	flags |= __GFP_NOWARN;
 +
-+	/* check subtype if needed */
-+	if (unlikely(stype)) {
-+		subtype = get_unaligned_be16(&event_packet->hdr.subtype);
-+		if (subtype != stype)
-+			return;
-+	}
-+
-+	/* check for BRCM oui match */
- 	if (memcmp(BRCM_OUI, &event_packet->hdr.oui[0],
- 		   sizeof(event_packet->hdr.oui)))
- 		return;
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.c
-@@ -1116,7 +1116,7 @@ static void brcmf_msgbuf_process_event(s
- 
- 	skb->protocol = eth_type_trans(skb, ifp->ndev);
- 
--	brcmf_fweh_process_skb(ifp->drvr, skb);
-+	brcmf_fweh_process_skb(ifp->drvr, skb, 0);
- 
- exit:
- 	brcmu_pkt_buf_free_skb(skb);
+ 	if (cmap->len != len) {
+ 		fb_dealloc_cmap(cmap);
+ 		if (!len)
 
 
