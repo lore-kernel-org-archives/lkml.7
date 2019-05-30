@@ -2,105 +2,91 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 847EEC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 23:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E6BC28CC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 23:38:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48666262F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 23:34:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="g803IyKm"
+	by mail.kernel.org (Postfix) with ESMTP id 4A5B526322
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 23:38:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbfE3Xee (ORCPT
+        id S1726558AbfE3XiM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 19:34:34 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:50764 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfE3Xee (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 19:34:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Hz3TUVy+fk7QzxStO7gYvUeaWeWPlTOz3axkOG534dE=; b=g803IyKm/XCD6t3YsBtwE8rEE
-        j/thrRuF9f8ZHHnpNh/TarPKtCum7k3InzE+013q9567uwQylEqGn37vRHeT3g7F9qFMaJIZbuMcM
-        HOSDmJnT8wrOm27JeNAS2D3nk5OsHDaku302gd2MMaREbkwRVWm6z7glIXn20QyfIy5WFACfEYFm0
-        H9RaEi2NfBNdrV5S15lLx13lcyYBFmq66e4XDQdHsvFZgmB9R7wrllofDc12c7L38f+X+ugELMGau
-        cHcDmdagjJ2jIqQsFKWiECT4Yx9h0+CLes44vyhY/ArRX+qFaa3LRzRNcfm5AnDhIivVUQnZdYKYD
-        qu6DNfcDQ==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:38386)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hWUZ3-0005ia-VJ; Fri, 31 May 2019 00:34:30 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hWUZ1-0005nP-UE; Fri, 31 May 2019 00:34:27 +0100
-Date:   Fri, 31 May 2019 00:34:27 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 0/2] arm64: smp: Include smp_plat.h from smp.h
-Message-ID: <20190530233427.qbaa76ukbzuuic22@shell.armlinux.org.uk>
-References: <20190530230518.4334-1-f.fainelli@gmail.com>
- <c0492b62-0ad2-3dae-7a6d-06e89afd59fe@gmail.com>
- <20190530231735.n7so5mhec72xjmhm@shell.armlinux.org.uk>
- <43c5568f-b230-0ed2-e810-7870703b54f0@gmail.com>
+        Thu, 30 May 2019 19:38:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47194 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726029AbfE3XiM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 19:38:12 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0818F3082A9A;
+        Thu, 30 May 2019 23:38:12 +0000 (UTC)
+Received: from treble (ovpn-124-142.rdu2.redhat.com [10.10.124.142])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 98C437A462;
+        Thu, 30 May 2019 23:38:07 +0000 (UTC)
+Date:   Thu, 30 May 2019 18:38:04 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Kosina <jikos@kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4] x86/power: Fix 'nosmt' vs. hibernation triple fault
+ during resume
+Message-ID: <20190530233804.syv4brpe3ndslyvo@treble>
+References: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm>
+ <nycvar.YFH.7.76.1905300007470.1962@cbobk.fhfr.pm>
+ <CAJZ5v0ja5sQ73zMvUtV+w79LC_d+g6UdomL36rV-EpVDxEzbhA@mail.gmail.com>
+ <alpine.DEB.2.21.1905301425330.2265@nanos.tec.linutronix.de>
+ <CAJZ5v0go1g9KhE=mc19VCFrBuEERzFZCoRD4xt=tF=EnMjfH=A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <43c5568f-b230-0ed2-e810-7870703b54f0@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <CAJZ5v0go1g9KhE=mc19VCFrBuEERzFZCoRD4xt=tF=EnMjfH=A@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Thu, 30 May 2019 23:38:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 04:20:37PM -0700, Florian Fainelli wrote:
-> On 5/30/19 4:17 PM, Russell King - ARM Linux admin wrote:
-> > On Thu, May 30, 2019 at 04:14:28PM -0700, Florian Fainelli wrote:
-> >> On 5/30/19 4:05 PM, Florian Fainelli wrote:
-> >>> Hi ARM64 maintainers,
-> >>>
-> >>> This patch series aims at enabling irq-bcm7038-l1.c on
-> >>> ARM64/ARCH_BRCMSTB, this driver makes use of cpu_logical_map[] and in
-> >>> order to avoid adding a CONFIG_ARM64 conditional inclusion of
-> >>> smp_plat.h, instead smp.h includes smp_plat.h, which is in turn included
-> >>> by linux/smp.h.
-> >>>
-> >>> If you like the approach, I would suggest to carry that through the
-> >>> Broadcom ARM64 SoC pull request for 5.3.
-> >>
-> >> ARM (32-bit) needs the same thing kind of thing so a conditional include
-> >> may be appropriate after all...
-> > 
-> > The whole idea of the smp_plat.h vs smp.h separation is to avoid
-> > including lots of arch-private stuff in the rest of the kernel
-> > build, thereby exposing arch-private stuff to the world.  I'm be
-> > opposed to that.
+On Thu, May 30, 2019 at 11:38:51PM +0200, Rafael J. Wysocki wrote:
+> On Thu, May 30, 2019 at 11:27 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >
+> > On Thu, 30 May 2019, Rafael J. Wysocki wrote:
+> > > >
+> > > > Cc: stable@vger.kernel.org # v4.19+
+> > > > Debugged-by: Thomas Gleixner <tglx@linutronix.de>
+> > > > Fixes: 0cc3cd21657b ("cpu/hotplug: Boot HT siblings at least once")
+> > > > Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+> > >
+> > > LGTM
+> > >
+> > > And I would prefer this one to go in through the PM tree due to the
+> > > hibernate core changes,
+> >
+> > Ok.
+> >
+> > > so can I get an ACK from the x86 arch side here, please?
+> >
+> > No. Is the following good enough?
+> >
+> >     Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
 > 
-> I was on the fence, sent it just in case, but ended up doing this:
-> 
-> https://lore.kernel.org/patchwork/patch/1082410/
-> 
-> will take patch #2 through the Broadcom ARM64 SoC tree once this patch
-> above gets accepted.
+> Yes, it is, thanks!
 
-Well, there's another alternative: we move just what is required from
-smp_plat.h to smp.h.
+I still think changing monitor/mwait to use a fixmap address would be a
+much cleaner way to fix this.  I can try to work up a patch tomorrow.
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Josh
