@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C5EC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF39C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5138C250E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:09:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D97D025115
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:09:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189357;
-	bh=8dupTE69iXTuiR/Dve+SGnSpw1wvW4cREdHwZWJ7Xcw=;
+	s=default; t=1559189361;
+	bh=Sggf7DE/dWqdGOyyTn7HrVZ2bSeYDvsNmoVhtkxp1Tw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vu70JcBsGZvqiDd/k32aK3hnatWll6tsUE4C8N40CPB9wRIqLSAWsXPID/vAa92Kd
-	 u2a2XXkTKc4jc7BH5yBdPJQtW0kS0YYxSAFuUeo5/6OUygmveO1H/0nXyhFvd8tGFf
-	 CEvcnaSiYFilx5gKDffGSSgc5p+bbi4vhpHkCxxw=
+	b=jzzl33kmIaxogtahJKRZkllUwfUtF4AjX1oPEpmaYg8s57rQ/dnR1pe2CIzhTscVP
+	 86zmncQNAomNIDamI9SHIU2QQCW31tizJY+PkF8xS69pLdX+cqjaPICn4lcE0faZpn
+	 KX1Ha2MvwhdxTKuW8kid9eex0FctmRgDNrnpBoaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbfE3EHJ (ORCPT
+        id S1727110AbfE3EJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:07:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47328 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:09:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731133AbfE3DRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:17:30 -0400
+        id S1730963AbfE3DRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:17:13 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F8FE24027;
-        Thu, 30 May 2019 03:17:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8934824667;
+        Thu, 30 May 2019 03:17:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186249;
-        bh=8dupTE69iXTuiR/Dve+SGnSpw1wvW4cREdHwZWJ7Xcw=;
+        s=default; t=1559186232;
+        bh=Sggf7DE/dWqdGOyyTn7HrVZ2bSeYDvsNmoVhtkxp1Tw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qsIFZmH5gBinGxMhqrr0Dao2EuIre1BE45KBnsOFXjMBWWpCwEp8mlsUopSJsLnE6
-         dqTqWB/1OJGx73gmdGiGXHE6yJqg4Mlmnq9LzxjeK6lMEGlXlaK8IuY/kTGTt99r0u
-         l34PrvQ5p5+pyk9xSA3wQIjgQs1Yh+2zb5OUtjzU=
+        b=ybYMDG7pNuUiujDHnVoCG0mHWhOIKNW5+JarrZStXJ2L9AcwX4/6oNP0Z9H1iR896
+         kGT0uYedBmkpAuAZHhIqkAyra0vjPw0szrax90W5SoPv0mPdp3U6i/t3NP0N5yXjW5
+         4N0HqrUHKlDrxwc74IOx+EgZwCQsxdLlQV0UGqRs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yinbo Zhu <yinbo.zhu@nxp.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 167/276] mmc: sdhci-of-esdhc: add erratum eSDHC-A001 and A-008358 support
-Date:   Wed, 29 May 2019 20:05:25 -0700
-Message-Id: <20190530030535.858249716@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 138/276] sched/core: Handle overflow in cpu_shares_write_u64
+Date:   Wed, 29 May 2019 20:04:56 -0700
+Message-Id: <20190530030534.341055704@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -61,45 +64,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 05cb6b2a66fa7837211a060878e91be5eb10cb07 ]
+[ Upstream commit 5b61d50ab4ef590f5e1d4df15cd2cea5f5715308 ]
 
-eSDHC-A001: The data timeout counter (SYSCTL[DTOCV]) is not
-reliable for DTOCV values 0x4(2^17 SD clock), 0x8(2^21 SD clock),
-and 0xC(2^25 SD clock). The data timeout counter can count from
-2^13–2^27, but for values 2^17, 2^21, and 2^25, the timeout
-counter counts for only 2^13 SD clocks.
-A-008358: The data timeout counter value loaded into the timeout
-counter is less than expected and can result into early timeout
-error in case of eSDHC data transactions. The table below shows
-the expected vs actual timeout period for different values of
-SYSCTL[DTOCV]:
-these two erratum has the same quirk to control it, and set
-SDHCI_QUIRK_RESET_AFTER_REQUEST to fix above issue.
+Bit shift in scale_load() could overflow shares. This patch saturates
+it to MAX_SHARES like following sched_group_set_shares().
 
-Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Example:
+
+ # echo 9223372036854776832 > cpu.shares
+ # cat cpu.shares
+
+Before patch: 1024
+After pattch: 262144
+
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/155125501891.293431.3345233332801109696.stgit@buzz
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-of-esdhc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ kernel/sched/core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/mmc/host/sdhci-of-esdhc.c b/drivers/mmc/host/sdhci-of-esdhc.c
-index e63d22fb99edf..e5c598ae5f244 100644
---- a/drivers/mmc/host/sdhci-of-esdhc.c
-+++ b/drivers/mmc/host/sdhci-of-esdhc.c
-@@ -920,8 +920,10 @@ static int sdhci_esdhc_probe(struct platform_device *pdev)
- 	if (esdhc->vendor_ver > VENDOR_V_22)
- 		host->quirks &= ~SDHCI_QUIRK_NO_BUSY_IRQ;
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index bd5ae34c20c0b..6138754e5030f 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -6491,6 +6491,8 @@ static void cpu_cgroup_attach(struct cgroup_taskset *tset)
+ static int cpu_shares_write_u64(struct cgroup_subsys_state *css,
+ 				struct cftype *cftype, u64 shareval)
+ {
++	if (shareval > scale_load_down(ULONG_MAX))
++		shareval = MAX_SHARES;
+ 	return sched_group_set_shares(css_tg(css), scale_load(shareval));
+ }
  
--	if (of_find_compatible_node(NULL, NULL, "fsl,p2020-esdhc"))
-+	if (of_find_compatible_node(NULL, NULL, "fsl,p2020-esdhc")) {
- 		host->quirks2 |= SDHCI_QUIRK_RESET_AFTER_REQUEST;
-+		host->quirks2 |= SDHCI_QUIRK_BROKEN_TIMEOUT_VAL;
-+	}
- 
- 	if (of_device_is_compatible(np, "fsl,p5040-esdhc") ||
- 	    of_device_is_compatible(np, "fsl,p5020-esdhc") ||
 -- 
 2.20.1
 
