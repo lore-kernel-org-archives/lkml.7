@@ -2,74 +2,108 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6042BC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:20:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75866C28CC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:21:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34EA92597B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:20:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559222423;
-	bh=WWUvePG/F5W9jMrKSPbf0krNclZJzDEIlb3GAxBTdPw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ICy+WGenhHEP8aAwEreny+qpHlCSrywHPa3h/KHEyx16P0Vj6J7gF77Ns8j9iFx3I
-	 ss0D2gaNuxihlC+bNcT5+dgk/CDgfZNR5t8CCm3fNn9TMfyOOCJq061nC64em52QQ8
-	 Bc4qm4XsGfcf/iMJWAW5BqdYX0Dp4j+ZvKFGfMYE=
+	by mail.kernel.org (Postfix) with ESMTP id 4F49825981
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:21:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FcT6A7Vc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726972AbfE3NUW (ORCPT
+        id S1726957AbfE3NVo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 09:20:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44032 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726253AbfE3NUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 09:20:17 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 295362596C;
-        Thu, 30 May 2019 13:20:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559222416;
-        bh=WWUvePG/F5W9jMrKSPbf0krNclZJzDEIlb3GAxBTdPw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jv6lKTJpSAmsvbT9Oc+pbk9Pt+iz2dQ6CvIDOQrDijLggnudc1qnTgggJ8e2jc6Mo
-         wrtl8xLxSaK9pbN0w/QXHk779vZzPu+F9/YAjdKVH5/wOZraWPKeQIFjwCBEBggF1X
-         NrnY+sX+UwXZbkACNs8yTw5tRfrF2r1BC0jdczJc=
-Date:   Thu, 30 May 2019 08:20:15 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     "Raj, Ashok" <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, keith.busch@intel.com
-Subject: Re: [PATCH v2 1/5] PCI/ATS: Add PRI support for PCIe VF devices
-Message-ID: <20190530132015.GL28250@google.com>
-References: <cover.1557162861.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <f773440c0eee2a8d4e5d6e2856717404ac836458.1557162861.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20190529225714.GE28250@google.com>
- <20190529230426.GB5108@araj-mobl1.jf.intel.com>
- <e93c7b6b-c414-6e0f-7983-9a46c67acb92@linux.intel.com>
+        Thu, 30 May 2019 09:21:44 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:19914 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726328AbfE3NVo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 09:21:44 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cefd8e60000>; Thu, 30 May 2019 06:21:42 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 30 May 2019 06:21:43 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 30 May 2019 06:21:43 -0700
+Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 May
+ 2019 13:21:40 +0000
+Subject: Re: [PATCH 4.9 000/128] 4.9.180-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20190530030432.977908967@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <e3e21897-caeb-a117-557e-b7e81be781de@nvidia.com>
+Date:   Thu, 30 May 2019 14:21:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e93c7b6b-c414-6e0f-7983-9a46c67acb92@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559222503; bh=eJ9/lrAQXCscJbbmFU5xTGhbH0mNiN99kg3JDvCQFOk=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=FcT6A7VcCVc7nH72HVeC3siH1tZv8O7gnBB7dViYBjBw1gkmA+cgdRrQj/OfKgfnX
+         iwS1z1+EpHAK63vJGzgrEvu012kgUgFsEQ/SRJv8rAz+vcfg4BHgZAXP7lvT1B3xA3
+         rXJEj0TPrrgkf6KeXJ8SXslwijWPZ3xfji4M/30XiviIe29T2X+DsVYspNWnR97JfB
+         DdnrHIqYRhvNH3pArd/tQo+dAteOqI1qN2VHpvVQ7wyKnX8g8jNKn2yTK40brKpavI
+         7G3/UGDkRNql0yRkkVQsARFfndGFCF+eCJ6Qu1jGllZqMbmWQnqgXYaCHieSQZ0sA7
+         5zEJLPIXgNsPw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 04:24:05PM -0700, sathyanarayanan kuppuswamy wrote:
-> But, regarding VF spec compliance checks, Is there any issue in having them
-> in enable code ? Perhaps I can change dev_err to dev_warn and not return
-> error if it found implementation errors. I found it useful to have them
-> because it helped me in finding some faulty devices during my testing. Let
-> me know your comments.
 
-If you need quirks to make these non-compliant devices usable, we
-should check for compliance.  If not, my personal opinion is that we
-shouldn't touch things we don't need.
+On 30/05/2019 04:05, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.9.180 release.
+> There are 128 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat 01 Jun 2019 03:02:06 AM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.180-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Bjorn
+All tests are passing for Tegra ...
+
+Test results for stable-v4.9:
+    8 builds:	8 pass, 0 fail
+    16 boots:	16 pass, 0 fail
+    24 tests:	24 pass, 0 fail
+
+Linux version:	4.9.180-rc1-g545b59e
+Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
+                tegra210-p2371-2180, tegra30-cardhu-a04
+
+Cheers
+Jon
+
+-- 
+nvpublic
