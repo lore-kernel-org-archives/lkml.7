@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC5FC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E8BC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C37624570
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A16812456F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:14:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186089;
-	bh=kwHtIen6EI50lBGjIP9gmunCiomDZO0K6TnGNUNHRM4=;
+	s=default; t=1559186091;
+	bh=Ux4iU9NMy5l3YIqvdhdoJ0rRWPRxf2Q1ouyCQdxHfqY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lh7th8eZZuGPArt+fUnKwuyHn3giw7r+RNn0fJ3UQcXR96tzUT5ovegKHEZwCTC9q
-	 Put2W/2UTXi3SNyvSYYfLT/ZapTUqPQywSiTTo+Nu0CfikJP+mJt8kUIkoyFKVksca
-	 oDmH6sfIjrt/ZojgGVlDqgwwNl4R76fmouSQA8Wc=
+	b=Fh40zCgIQ4SFjeiLrUsawHJZBbpJS+kOoWaU3YXE5n7GSVztOHA8K7VtDX7G1CkHJ
+	 GYg24k4XJyNCgN5vP//nFX92CCYJueqF640h+K5Xym8Fb+CTCVdK4MZMsuMMNX3xw4
+	 WQ1LtK2jWFUBoHad4ndWpb2LZj7VM0wV9ObZejG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730001AbfE3DOs (ORCPT
+        id S1730016AbfE3DOu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:14:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53798 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:14:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728028AbfE3DMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:12 -0400
+        id S1728048AbfE3DMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:12:16 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 103C7244E8;
-        Thu, 30 May 2019 03:12:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BACC244EF;
+        Thu, 30 May 2019 03:12:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185932;
-        bh=kwHtIen6EI50lBGjIP9gmunCiomDZO0K6TnGNUNHRM4=;
+        s=default; t=1559185935;
+        bh=Ux4iU9NMy5l3YIqvdhdoJ0rRWPRxf2Q1ouyCQdxHfqY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oxs/GNyFQi12ScSgWNyZEVC+NuWm5E1ZcpW0wFbDFtxfoWZuipkTxo+eB/0AZGU4a
-         47bJ5Uo/sW6KvY9UIcFPHWTZ0dI5WM1Jth24vhHi8OAW4UxjLFFgRrI4CIHp5CtL3d
-         WoY95ehkTyszeEwkzkQL90CkU8+Sp0U2zVSdsS5c=
+        b=gY67FwwSYjCQ5i4o8B9GqQxGGQo//D4S9dheVgAi2joKq9DBf8oZyZuUD+Wd54hj8
+         F4IGQS98XvwnAwwG3GhMgyYbZkYLFvlbd0lLBWKYr+rGn1UK4Pzb+CtFtQ8pO9s/mH
+         FhpntAXWH0NSviNEsnYWxg0H4hHX+spvdj1ScCkc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        stable@vger.kernel.org, Alexandre Courbot <acourbot@chromium.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 327/405] thunderbolt: Fix to check for kmemdup failure
-Date:   Wed, 29 May 2019 20:05:25 -0700
-Message-Id: <20190530030557.287667542@linuxfoundation.org>
+Subject: [PATCH 5.1 290/405] media: mtk-vcodec: fix access to incorrect planes member
+Date:   Wed, 29 May 2019 20:04:48 -0700
+Message-Id: <20190530030555.531409844@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,85 +62,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2cc12751cf464a722ff57b54d17d30c84553f9c0 ]
+[ Upstream commit 52fafc58c3535c9f4f53864686dbaee3bcbadcb4 ]
 
-Memory allocated via kmemdup might fail and return a NULL pointer.
-This patch adds a check on the return value of kmemdup and passes the
-error upstream.
+Commit 0650a91499e0 ("media: mtk-vcodec: Correct return type for mem2mem
+buffer helpers") fixed the return types for mem2mem buffer helper
+functions by changing a few local variables from vb2_buffer to
+vb2_v4l2_buffer. However, it left a few accesses to vb2_buffer::planes
+as-is, accidentally turning them into accesses to
+vb2_v4l2_buffer::planes and resulting in values being read from/written
+to the wrong place.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Fix this by inserting vb2_buf into these accesses so they mimic their
+original behavior.
+
+Fixes: 0650a91499e0 ("media: mtk-vcodec: Correct return type for mem2mem buffer helpers")
+
+Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
+Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thunderbolt/switch.c | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c |  4 ++--
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c | 10 +++++-----
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
-index 32e012713dbeb..f569a2673742f 100644
---- a/drivers/thunderbolt/switch.c
-+++ b/drivers/thunderbolt/switch.c
-@@ -1287,13 +1287,14 @@ int tb_switch_configure(struct tb_switch *sw)
- 	return tb_plug_events_active(sw, true);
- }
- 
--static void tb_switch_set_uuid(struct tb_switch *sw)
-+static int tb_switch_set_uuid(struct tb_switch *sw)
- {
- 	u32 uuid[4];
--	int cap;
-+	int cap, ret;
- 
-+	ret = 0;
- 	if (sw->uuid)
--		return;
-+		return ret;
- 
- 	/*
- 	 * The newer controllers include fused UUID as part of link
-@@ -1301,7 +1302,9 @@ static void tb_switch_set_uuid(struct tb_switch *sw)
- 	 */
- 	cap = tb_switch_find_vse_cap(sw, TB_VSE_CAP_LINK_CONTROLLER);
- 	if (cap > 0) {
--		tb_sw_read(sw, uuid, TB_CFG_SWITCH, cap + 3, 4);
-+		ret = tb_sw_read(sw, uuid, TB_CFG_SWITCH, cap + 3, 4);
-+		if (ret)
-+			return ret;
- 	} else {
- 		/*
- 		 * ICM generates UUID based on UID and fills the upper
-@@ -1316,6 +1319,9 @@ static void tb_switch_set_uuid(struct tb_switch *sw)
+diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
+index d022c65bb34c2..49babf994cb75 100644
+--- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
++++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
+@@ -388,7 +388,7 @@ static void mtk_vdec_worker(struct work_struct *work)
  	}
+ 	buf.va = vb2_plane_vaddr(&src_buf->vb2_buf, 0);
+ 	buf.dma_addr = vb2_dma_contig_plane_dma_addr(&src_buf->vb2_buf, 0);
+-	buf.size = (size_t)src_buf->planes[0].bytesused;
++	buf.size = (size_t)src_buf->vb2_buf.planes[0].bytesused;
+ 	if (!buf.va) {
+ 		v4l2_m2m_job_finish(dev->m2m_dev_dec, ctx->m2m_ctx);
+ 		mtk_v4l2_err("[%d] id=%d src_addr is NULL!!",
+@@ -1155,7 +1155,7 @@ static void vb2ops_vdec_buf_queue(struct vb2_buffer *vb)
  
- 	sw->uuid = kmemdup(uuid, sizeof(uuid), GFP_KERNEL);
-+	if (!sw->uuid)
-+		ret = -ENOMEM;
-+	return ret;
- }
+ 	src_mem.va = vb2_plane_vaddr(&src_buf->vb2_buf, 0);
+ 	src_mem.dma_addr = vb2_dma_contig_plane_dma_addr(&src_buf->vb2_buf, 0);
+-	src_mem.size = (size_t)src_buf->planes[0].bytesused;
++	src_mem.size = (size_t)src_buf->vb2_buf.planes[0].bytesused;
+ 	mtk_v4l2_debug(2,
+ 			"[%d] buf id=%d va=%p dma=%pad size=%zx",
+ 			ctx->id, src_buf->index,
+diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
+index c6b48b5925fbe..50351adafc470 100644
+--- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
++++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
+@@ -894,7 +894,7 @@ static void vb2ops_venc_stop_streaming(struct vb2_queue *q)
  
- static int tb_switch_add_dma_port(struct tb_switch *sw)
-@@ -1365,7 +1371,9 @@ static int tb_switch_add_dma_port(struct tb_switch *sw)
- 
- 	if (status) {
- 		tb_sw_info(sw, "switch flash authentication failed\n");
--		tb_switch_set_uuid(sw);
-+		ret = tb_switch_set_uuid(sw);
-+		if (ret)
-+			return ret;
- 		nvm_set_auth_status(sw, status);
- 	}
- 
-@@ -1415,7 +1423,9 @@ int tb_switch_add(struct tb_switch *sw)
+ 	if (q->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE) {
+ 		while ((dst_buf = v4l2_m2m_dst_buf_remove(ctx->m2m_ctx))) {
+-			dst_buf->planes[0].bytesused = 0;
++			dst_buf->vb2_buf.planes[0].bytesused = 0;
+ 			v4l2_m2m_buf_done(dst_buf, VB2_BUF_STATE_ERROR);
  		}
- 		tb_sw_dbg(sw, "uid: %#llx\n", sw->uid);
+ 	} else {
+@@ -947,7 +947,7 @@ static int mtk_venc_encode_header(void *priv)
  
--		tb_switch_set_uuid(sw);
-+		ret = tb_switch_set_uuid(sw);
-+		if (ret)
-+			return ret;
+ 	bs_buf.va = vb2_plane_vaddr(&dst_buf->vb2_buf, 0);
+ 	bs_buf.dma_addr = vb2_dma_contig_plane_dma_addr(&dst_buf->vb2_buf, 0);
+-	bs_buf.size = (size_t)dst_buf->planes[0].length;
++	bs_buf.size = (size_t)dst_buf->vb2_buf.planes[0].length;
  
- 		for (i = 0; i <= sw->config.max_port_number; i++) {
- 			if (sw->ports[i].disabled) {
+ 	mtk_v4l2_debug(1,
+ 			"[%d] buf id=%d va=0x%p dma_addr=0x%llx size=%zu",
+@@ -976,7 +976,7 @@ static int mtk_venc_encode_header(void *priv)
+ 	}
+ 
+ 	ctx->state = MTK_STATE_HEADER;
+-	dst_buf->planes[0].bytesused = enc_result.bs_size;
++	dst_buf->vb2_buf.planes[0].bytesused = enc_result.bs_size;
+ 	v4l2_m2m_buf_done(dst_buf, VB2_BUF_STATE_DONE);
+ 
+ 	return 0;
+@@ -1107,12 +1107,12 @@ static void mtk_venc_worker(struct work_struct *work)
+ 
+ 	if (ret) {
+ 		v4l2_m2m_buf_done(src_buf, VB2_BUF_STATE_ERROR);
+-		dst_buf->planes[0].bytesused = 0;
++		dst_buf->vb2_buf.planes[0].bytesused = 0;
+ 		v4l2_m2m_buf_done(dst_buf, VB2_BUF_STATE_ERROR);
+ 		mtk_v4l2_err("venc_if_encode failed=%d", ret);
+ 	} else {
+ 		v4l2_m2m_buf_done(src_buf, VB2_BUF_STATE_DONE);
+-		dst_buf->planes[0].bytesused = enc_result.bs_size;
++		dst_buf->vb2_buf.planes[0].bytesused = enc_result.bs_size;
+ 		v4l2_m2m_buf_done(dst_buf, VB2_BUF_STATE_DONE);
+ 		mtk_v4l2_debug(2, "venc_if_encode bs size=%d",
+ 				 enc_result.bs_size);
 -- 
 2.20.1
 
