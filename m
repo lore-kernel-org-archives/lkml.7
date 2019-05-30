@@ -2,135 +2,79 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8678C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF18C46460
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8633525889
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:55:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="K9uQ1yE7"
+	by mail.kernel.org (Postfix) with ESMTP id E457025897
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:57:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559217455;
+	bh=6nakkgFOlBb6tykWloF+3IRNTh2N9WxQ6FnBheDM6co=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=A+kzvXBiQ8DA8pyVdV2FWtf9st6630TruVLDIqBiR/Hf3fskhvVFn+7N328cLfCuT
+	 tl2vAAD2lZ0Rft+J5KOVnX5BeGP3MsPViX/dsWS+MDnc6dJIL3Kr2mPT1UXjgJV0hz
+	 2ECfAuYFR3T6//aOrORGa/nO67sBjHS3jnGKM6rQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727172AbfE3LzK (ORCPT
+        id S1727025AbfE3L5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 07:55:10 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37822 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726792AbfE3LzK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 07:55:10 -0400
-Received: by mail-wr1-f68.google.com with SMTP id h1so4034459wro.4
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 04:55:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:user-agent:in-reply-to:references:mime-version
-         :content-transfer-encoding:subject:to:cc:from:message-id;
-        bh=fp8w61/sXd/cMGRwN+CUPEh3aDFreFtZ+1N4JDzWGWY=;
-        b=K9uQ1yE7GDKMFwVeCVTJc6F4fvEKOgM7aCV/xt7i1VjkBDAbc5bNnfu6PRB/bGoeiO
-         8c6gH2XWZxwWjnu6JQX/Kh1xcYaaY5wViMWd1ZgpHHOYkLegawZ+QYJvCnRADBMLjs+A
-         afAQBT0dfpuvob8uiIitJPG3gi+CcBv6PntxMXR5DcvClfblHw0ft4teQ4yYE43htMVI
-         Xh9K6afgx/4dLxw1Avh3SHTgmZJ3t/RWqp03PR2r6jxVQflfsx23yfXFb8wdDbdLE0Xf
-         XWMLlU+LsgnEz4Gx9h8+bTmzxAyQrpEVQ08m63RXb2JErHzCutwmKZVlKF+n3kskHmpf
-         e1Cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=fp8w61/sXd/cMGRwN+CUPEh3aDFreFtZ+1N4JDzWGWY=;
-        b=jb4aO3DSGbeRli8VSaYJLAJ94iTFJ2ZQpqI/y7D1d0g/9aXr8vYhqWx6CsMvdvQk+B
-         oEk6shvgp4SXEmu4KoLBl9xAQAH/8q6OM6Lsx0Fwy4va5qo+HpCaQj4b+h9ePxT3+E5+
-         EsUqxqB7jXFpfAFBetwJRL0MKsxYe1EP4ubRmUl7RUKi7SwVglNUhenq70NUeX5wlA2E
-         79jXLr58nHtBQEJa2o883JamUcu5sAlb7fYcWXq5KFcBzokWZ+MuN/u1UF1XvbGZmF31
-         XAYRgbikNUl+Twp3HunLhaZ7/8Kqf7HW5xUPYQ1NQ2zZeOUpLfWb/tlfuJfzR3btMaRq
-         r1pg==
-X-Gm-Message-State: APjAAAXj3q9ToTZ8FKYaYgIja3gUCl7KNeldS8MLPqXY9rfC4C3OG6iR
-        t5+J4+Juo+qekKZ+3kHoIW5S0g==
-X-Google-Smtp-Source: APXvYqz6sFyNjjHcwBpS+Jm0SBEiuIWJGYm3n1mxxgEXLwa+lEb8AkRorOAyF2xDMwEHgU9WyG6FNw==
-X-Received: by 2002:adf:f041:: with SMTP id t1mr2358945wro.74.1559217308820;
-        Thu, 30 May 2019 04:55:08 -0700 (PDT)
-Received: from [192.168.1.161] (93-32-55-82.ip32.fastwebnet.it. [93.32.55.82])
-        by smtp.gmail.com with ESMTPSA id h200sm3734380wme.11.2019.05.30.04.55.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 04:55:08 -0700 (PDT)
-Date:   Thu, 30 May 2019 13:55:06 +0200
-User-Agent: K-9 Mail for Android
-In-Reply-To: <b4e3a71d-9892-f71c-3df5-4c721ff0ed75@roeck-us.net>
-References: <1559216447-28355-1-git-send-email-linux@roeck-us.net> <CAB50BEC-4816-4D92-AC46-921C62B1D344@brauner.io> <b4e3a71d-9892-f71c-3df5-4c721ff0ed75@roeck-us.net>
+        Thu, 30 May 2019 07:57:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38058 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726792AbfE3L5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 07:57:33 -0400
+Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E614B253BD;
+        Thu, 30 May 2019 11:57:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559217453;
+        bh=6nakkgFOlBb6tykWloF+3IRNTh2N9WxQ6FnBheDM6co=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ItYDNrdsSW5lbjYeWlWir785To5jJK03JenekGpraZ5kt/FrcA9o3UxrSK+8+psBf
+         YKZ4+pHPnRUKVa5EQAcMpP0iHTJ64G+KktH579NY/cyFKCst3C8ZqQ3uhWKtldsf1Q
+         tqJt0PwPwl3o/WRaSKuSDZeEg97vjIu8LcyekWCk=
+Date:   Thu, 30 May 2019 04:57:32 -0700
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Hanna Hawa <hhhawa@amazon.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de,
+        mchehab@kernel.org, james.morse@arm.com, davem@davemloft.net,
+        nicolas.ferre@microchip.com, paulmck@linux.ibm.com,
+        dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com,
+        talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com,
+        linux-edac@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+Message-ID: <20190530115732.GB14088@kroah.com>
+References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
+ <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] samples: pidfd: Fix compile error seen if __NR_pidfd_send_signal is undefined
-To:     Guenter Roeck <linux@roeck-us.net>, Jann Horn <jannh@google.com>
-CC:     linux-kernel@vger.kernel.org
-From:   Christian Brauner <christian@brauner.io>
-Message-ID: <3C2871DE-8F84-4B5E-81CA-04B073E4B27D@brauner.io>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On May 30, 2019 1:50:31 PM GMT+02:00, Guenter Roeck <linux@roeck-us=2Enet> =
-wrote:
->On 5/30/19 4:43 AM, Christian Brauner wrote:
->> On May 30, 2019 1:40:47 PM GMT+02:00, Guenter Roeck
-><linux@roeck-us=2Enet> wrote:
->>> To make pidfd-metadata compile on all arches, irrespective of
->whether
->>> or not syscall numbers are assigned, define the syscall number to -1
->>> if it isn't to cause the kernel to return -ENOSYS=2E
->>>
->>> Fixes: 43c6afee48d4 ("samples: show race-free pidfd metadata
->access")
->>> Cc: Christian Brauner <christian@brauner=2Eio>
->>> Signed-off-by: Guenter Roeck <linux@roeck-us=2Enet>
->>> ---
->>> samples/pidfd/pidfd-metadata=2Ec | 4 ++++
->>> 1 file changed, 4 insertions(+)
->>>
->>> diff --git a/samples/pidfd/pidfd-metadata=2Ec
->>> b/samples/pidfd/pidfd-metadata=2Ec
->>> index 640f5f757c57=2E=2E1e125ddde268 100644
->>> --- a/samples/pidfd/pidfd-metadata=2Ec
->>> +++ b/samples/pidfd/pidfd-metadata=2Ec
->>> @@ -21,6 +21,10 @@
->>> #define CLONE_PIDFD 0x00001000
->>> #endif
->>>
->>> +#ifndef __NR_pidfd_send_signal
->>> +#define __NR_pidfd_send_signal	-1
->>> +#endif
->>> +
->>> static int do_child(void *args)
->>> {
->>> 	printf("%d\n", getpid());
->>=20
->> Couldn't you just use the actual syscall number?
->> That should still fail if the kernel is to old
->> and still work on kernels that support it
->> but for whatever reason the unistd=2Eh h
->> header doesn't have it defined=2E
->>=20
->
->syscall numbers can differ from architecture to architecture, and the
->provided solution is used in other test code=2E Please feel free to
->submit
->a different patch, though - I am only interested in a fix, which
->doesn't
->have to be mine=2E
->
->Note that this fails in mips builds=2E
->
->Thanks,
->Guenter
+On Thu, May 30, 2019 at 01:15:29PM +0300, Hanna Hawa wrote:
+> +static void al_a57_edac_cpumerrsr(void *arg)
+> +{
+> +	struct edac_device_ctl_info *edac_dev =
+> +		(struct edac_device_ctl_info *)arg;
 
-The syscall number is the same on all arches for this syscall=2E
-It's been added after the syscall numbering
-work by Arnd=2E
+No need for casting anything here, just assign it.  Doesn't checkpatch
+catch this type of thing these days?  You did run it, right?
 
-Christian
+Please fix that up everywhere you do this in the driver.
+
+
+thanks,
+
+greg k-h
