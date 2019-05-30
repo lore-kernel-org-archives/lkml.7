@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D06AC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8648DC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 309D925965
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C8A22597B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:40:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191216;
-	bh=w+FhmIhS0K7NwRM3XfhGWEoAAytEYILGc9QhUeP4gCs=;
+	s=default; t=1559191219;
+	bh=R18vmRkvyvPiwMmVicyJXTYdoTg+OwqAuU6dOmOc0yI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L9RU7+WSKoLpl83WLu0X4gK2bLWR2aeHb2fXK/1/Ww1FW5u5fwtVcYJiUvwd/2exh
-	 Qgi4p0XoltZSL9A7b5HdhYxNsZTAUvNFcnOIkbntfDWK/aRzF5LCowTIwZ4Qr+/3Bj
-	 /2NQ0/VoQU6Pl7+/fcm7uE3zjROUwfCWQptxfV5U=
+	b=XjdkDVW3AUXWSZiI2KkoKkSGNNldHxnDMdc+tnPTUrIW7jS3lOcD5UgHKrTMvDen7
+	 yHBAJW36MpUQZjfhORS2aZnvCwqH6Y5thKAaaVBokVlGjCym+YdVSVobwMG8k1MS48
+	 BiEqeXYiNMUm6lxIh6dc2tFbMfbvlm5VkaFsDTWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729347AbfE3EkP (ORCPT
+        id S1729695AbfE3EkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:40:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55566 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:40:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729106AbfE3DMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729103AbfE3DMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:12:34 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 584E623D14;
-        Thu, 30 May 2019 03:12:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E75F623C5A;
+        Thu, 30 May 2019 03:12:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559185954;
-        bh=w+FhmIhS0K7NwRM3XfhGWEoAAytEYILGc9QhUeP4gCs=;
+        bh=R18vmRkvyvPiwMmVicyJXTYdoTg+OwqAuU6dOmOc0yI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q7dk0rUyTpNwccOB2Yu6adrY3FUKHNhiNRPUbgNXnueg+2GefvuCcIlpwMZTwtXPv
-         TeYJMzaHbwqczp+coHgVDKP//m7dDooBTnpLxQwzIRcSH9lvbzagiE4g04gUJWPMme
-         eIXKbUNQY6TcspAEAbker3olZR9+e5Mf66+yTunc=
+        b=JoJZlfGDDyrZigDUZNyNHwLGpyFVM/88oV4W1VFGCz6YBTJYfVUKfWXGZjO43bv+L
+         9dEU5L4zXoN32cEvP1RAIcWqAiOrtLwnqUKJkUQpP5ShT5m+6T8gKzYF7wVEOlaex6
+         P1kVj8hTI6KwfJchUMxjnw8WxCPj7dnzHEHM2lKU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
+        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
         James Smart <jsmart2021@gmail.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 370/405] scsi: lpfc: Fix use-after-free mailbox cmd completion
-Date:   Wed, 29 May 2019 20:06:08 -0700
-Message-Id: <20190530030559.442336586@linuxfoundation.org>
+Subject: [PATCH 5.1 369/405] scsi: lpfc: Resolve irq-unsafe lockdep heirarchy warning in lpfc_io_free
+Date:   Wed, 29 May 2019 20:06:07 -0700
+Message-Id: <20190530030559.391747686@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,57 +62,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9b1640686470fbbd1c6efb35ada6fe1427ea8d0f ]
+[ Upstream commit 50e3f871fb20a9bb644743e2986e8f50f98a25bc ]
 
-When unloading the driver, mailbox commands may be sent without holding a
-reference on the ndlp. By the time the mailbox command completes, the ndlp
-may have reduced its ref counts and been freed.  The problem was reported
-by KASAN.
+A patch in the 12.2.0.0 set caused a new lockdep warning:
 
-While unregistering due to driver unload, have the completion noop'd by
-setting the ndlp context NULL'd. Due to the unload, no further action was
-necessary.  Also, while reviewing this path, the generic nulling of the
-context after handling should be slightly moved.
+  WARNING: SOFTIRQ-safe -> SOFTIRQ-unsafe lock order detected
+  5.0.0-rc8-next-20190301-dbg+ #1 Not tainted
 
-Reported by: Bart Van Assche <bvanassche@acm.org>
+  Possible interrupt unsafe locking scenario:
+       CPU0                    CPU1
+       ----                    ----
+  lock(&(&qp->io_buf_list_put_lock)->rlock);
+                               local_irq_disable();
+                               lock(&(&phba->hbalock)->rlock);
+                               lock(&(&qp->io_buf_list_put_lock)->rlock);
+  <Interrupt>
+    lock(&(&phba->hbalock)->rlock);
+
+see: https://www.spinics.net/lists/linux-scsi/msg128389.html
+
+In summary, the new patch added taking the io_buf_list_put_lock while under
+an irq-disabled hbalock. This created a lock heirarchy dependent upon irq
+being disabled, and there are paths that take the io_buf_list_put_lock
+without disabling irq.
+
+Looking at the lpfc_io_free routine, which is where the new heirarchy was
+introduced, there is no reason to be taking out the hbalock and raising
+irq, as the functionality is replaced by the io_buf_list_xxx locks.
+
+Resolve by removing the hbalock/irq calls in lpfc_io_free.
+
+Fixes: 5e5b511d8bfa ("scsi: lpfc: Partition XRI buffer list across Hardware Queues")
+Reported-by: Bart Van Assche <bvanassche@acm.org>
 Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
 Signed-off-by: James Smart <jsmart2021@gmail.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_hbadisc.c | 4 ++++
- drivers/scsi/lpfc/lpfc_sli.c     | 2 +-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ drivers/scsi/lpfc/lpfc_init.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_hbadisc.c b/drivers/scsi/lpfc/lpfc_hbadisc.c
-index 676f4bf3f33a3..75e9d46d44d42 100644
---- a/drivers/scsi/lpfc/lpfc_hbadisc.c
-+++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
-@@ -4873,6 +4873,10 @@ lpfc_unreg_rpi(struct lpfc_vport *vport, struct lpfc_nodelist *ndlp)
- 					 * accept PLOGIs after unreg_rpi_cmpl
- 					 */
- 					acc_plogi = 0;
-+				} else if (vport->load_flag & FC_UNLOADING) {
-+					mbox->ctx_ndlp = NULL;
-+					mbox->mbox_cmpl =
-+						lpfc_sli_def_mbox_cmpl;
- 				} else {
- 					mbox->ctx_ndlp = ndlp;
- 					mbox->mbox_cmpl =
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index 7d2abb70cf093..dc933b6d7800e 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -2502,8 +2502,8 @@ lpfc_sli_def_mbox_cmpl(struct lpfc_hba *phba, LPFC_MBOXQ_t *pmb)
- 			} else {
- 				ndlp->nlp_flag &= ~NLP_UNREG_INP;
- 			}
-+			pmb->ctx_ndlp = NULL;
- 		}
--		pmb->ctx_ndlp = NULL;
- 	}
+diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
+index 89a0c2bdb6a15..46e155d1fa155 100644
+--- a/drivers/scsi/lpfc/lpfc_init.c
++++ b/drivers/scsi/lpfc/lpfc_init.c
+@@ -3618,8 +3618,6 @@ lpfc_io_free(struct lpfc_hba *phba)
+ 	struct lpfc_sli4_hdw_queue *qp;
+ 	int idx;
  
- 	/* Check security permission status on INIT_LINK mailbox command */
+-	spin_lock_irq(&phba->hbalock);
+-
+ 	for (idx = 0; idx < phba->cfg_hdw_queue; idx++) {
+ 		qp = &phba->sli4_hba.hdwq[idx];
+ 		/* Release all the lpfc_nvme_bufs maintained by this host. */
+@@ -3649,8 +3647,6 @@ lpfc_io_free(struct lpfc_hba *phba)
+ 		}
+ 		spin_unlock(&qp->io_buf_list_get_lock);
+ 	}
+-
+-	spin_unlock_irq(&phba->hbalock);
+ }
+ 
+ /**
 -- 
 2.20.1
 
