@@ -2,56 +2,53 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9479C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FF1C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EFBF24A77
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B44624A72
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186782;
-	bh=gRs00eQpVYDeAi3+ItvjowrW/Vj6ZVdnC36d39vqAsQ=;
+	s=default; t=1559186786;
+	bh=Si3j1yTPqK5NevGyq/Mg/kLi2fvNusVTnF7ZPW0gFDU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XENaVO8wSYDwd1VGIkJ3S9ux6D0WSZaEc+dmHhyPcClIh3Eh2DgvaCSHRxe8QvAe5
-	 dDYb6jOabTav9VEEAU1OBzOXRp0FG4AZ24nqI1lrUi8rFkApziFanKxBUlPgXjOOkR
-	 g/YZaoPMq/KL4gv6Oy4isYPRA4qPfThpjdrd9lr8=
+	b=Vd3m7nklj4UpHWkvLeI31i1HRuNXrQqvEhdWU5aZ0LUjwNhO9uNjSWQ2s1LE3Uf9Q
+	 O0sIAVAWdw3Xd9M7NGjbhytiGce0zY+TwgXjJupTrgzBaWYy0bXb1zyZsCxQlG9pzx
+	 gUJ7jaVHAbtKKAtHjtfe1C9o1X9Zkfwl3xGLbnqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387698AbfE3D0V (ORCPT
+        id S2387700AbfE3D0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:26:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52718 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:26:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730302AbfE3DSw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:52 -0400
+        id S1731743AbfE3DSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:53 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2C3B24808;
-        Thu, 30 May 2019 03:18:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51D162479B;
+        Thu, 30 May 2019 03:18:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186331;
-        bh=gRs00eQpVYDeAi3+ItvjowrW/Vj6ZVdnC36d39vqAsQ=;
+        s=default; t=1559186333;
+        bh=Si3j1yTPqK5NevGyq/Mg/kLi2fvNusVTnF7ZPW0gFDU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y3Ha0DcNS1Cf09IxeZtVWA0RxSqIxM9rZ50TNDjpBZNzEAWLva0N7KWyk91697ljU
-         vUzayo+gCjuEWuo160aVQLZKypq3Lk7+hriNMwM3dW+HhpBWhKatDlqgl9THl4L0MR
-         8e6bmNbUavXkt9WZeU1HfnWgXO43/kRlC7os0TF0=
+        b=cjhiLi5QHoKW2tUwDzfCvx1+J/jbRJahz7UJDT13GbCy/R24bJiD1KUhDrCJOPUGD
+         wCrvDmmbQV2M5gR+h7ieZ4CfIX5cMwjLJ3qXd8o8pjcRdq4aXQSPKiegc+liKALuXU
+         ZlDPwY8R4g3EF/HPgqs5sNL2bIPzhb92mXocVxRg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.14 024/193] brcmfmac: add subtype check for event handling in data path
-Date:   Wed, 29 May 2019 20:04:38 -0700
-Message-Id: <20190530030452.226472235@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 053/193] ARM: vdso: Remove dependency with the arch_timer driver internals
+Date:   Wed, 29 May 2019 20:05:07 -0700
+Message-Id: <20190530030456.907422213@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -64,103 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arend van Spriel <arend.vanspriel@broadcom.com>
+[ Upstream commit 1f5b62f09f6b314c8d70b9de5182dae4de1f94da ]
 
-commit a4176ec356c73a46c07c181c6d04039fafa34a9f upstream.
+The VDSO code uses the kernel helper that was originally designed
+to abstract the access between 32 and 64bit systems. It worked so
+far because this function is declared as 'inline'.
 
-For USB there is no separate channel being used to pass events
-from firmware to the host driver and as such are passed over the
-data path. In order to detect mock event messages an additional
-check is needed on event subtype. This check is added conditionally
-using unlikely() keyword.
+As we're about to revamp that part of the code, the VDSO would
+break. Let's fix it by doing what should have been done from
+the start, a proper system register access.
 
-Reviewed-by: Hante Meuleman <hante.meuleman@broadcom.com>
-Reviewed-by: Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>
-Reviewed-by: Franky Lin <franky.lin@broadcom.com>
-Signed-off-by: Arend van Spriel <arend.vanspriel@broadcom.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Cc: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c   |    5 ++--
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.h   |   16 ++++++++++----
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.c |    2 -
- 3 files changed, 16 insertions(+), 7 deletions(-)
+ arch/arm/include/asm/cp15.h   | 2 ++
+ arch/arm/vdso/vgettimeofday.c | 5 +++--
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c
-@@ -344,7 +344,8 @@ void brcmf_rx_frame(struct device *dev,
- 	} else {
- 		/* Process special event packets */
- 		if (handle_event)
--			brcmf_fweh_process_skb(ifp->drvr, skb);
-+			brcmf_fweh_process_skb(ifp->drvr, skb,
-+					       BCMILCP_SUBTYPE_VENDOR_LONG);
+diff --git a/arch/arm/include/asm/cp15.h b/arch/arm/include/asm/cp15.h
+index 07e27f212dc75..d2453e2d3f1f3 100644
+--- a/arch/arm/include/asm/cp15.h
++++ b/arch/arm/include/asm/cp15.h
+@@ -68,6 +68,8 @@
+ #define BPIALL				__ACCESS_CP15(c7, 0, c5, 6)
+ #define ICIALLU				__ACCESS_CP15(c7, 0, c5, 0)
  
- 		brcmf_netif_rx(ifp, skb);
- 	}
-@@ -361,7 +362,7 @@ void brcmf_rx_event(struct device *dev,
- 	if (brcmf_rx_hdrpull(drvr, skb, &ifp))
- 		return;
- 
--	brcmf_fweh_process_skb(ifp->drvr, skb);
-+	brcmf_fweh_process_skb(ifp->drvr, skb, 0);
- 	brcmu_pkt_buf_free_skb(skb);
- }
- 
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.h
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.h
-@@ -211,7 +211,7 @@ enum brcmf_fweh_event_code {
-  */
- #define BRCM_OUI				"\x00\x10\x18"
- #define BCMILCP_BCM_SUBTYPE_EVENT		1
--
-+#define BCMILCP_SUBTYPE_VENDOR_LONG		32769
- 
- /**
-  * struct brcm_ethhdr - broadcom specific ether header.
-@@ -334,10 +334,10 @@ void brcmf_fweh_process_event(struct brc
- void brcmf_fweh_p2pdev_setup(struct brcmf_if *ifp, bool ongoing);
- 
- static inline void brcmf_fweh_process_skb(struct brcmf_pub *drvr,
--					  struct sk_buff *skb)
-+					  struct sk_buff *skb, u16 stype)
- {
- 	struct brcmf_event *event_packet;
--	u16 usr_stype;
-+	u16 subtype, usr_stype;
- 
- 	/* only process events when protocol matches */
- 	if (skb->protocol != cpu_to_be16(ETH_P_LINK_CTL))
-@@ -346,8 +346,16 @@ static inline void brcmf_fweh_process_sk
- 	if ((skb->len + ETH_HLEN) < sizeof(*event_packet))
- 		return;
- 
--	/* check for BRCM oui match */
- 	event_packet = (struct brcmf_event *)skb_mac_header(skb);
++#define CNTVCT				__ACCESS_CP15_64(1, c14)
 +
-+	/* check subtype if needed */
-+	if (unlikely(stype)) {
-+		subtype = get_unaligned_be16(&event_packet->hdr.subtype);
-+		if (subtype != stype)
-+			return;
-+	}
-+
-+	/* check for BRCM oui match */
- 	if (memcmp(BRCM_OUI, &event_packet->hdr.oui[0],
- 		   sizeof(event_packet->hdr.oui)))
- 		return;
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.c
-@@ -1112,7 +1112,7 @@ static void brcmf_msgbuf_process_event(s
+ extern unsigned long cr_alignment;	/* defined in entry-armv.S */
  
- 	skb->protocol = eth_type_trans(skb, ifp->ndev);
+ static inline unsigned long get_cr(void)
+diff --git a/arch/arm/vdso/vgettimeofday.c b/arch/arm/vdso/vgettimeofday.c
+index 79214d5ff0970..3af02d2a0b7f2 100644
+--- a/arch/arm/vdso/vgettimeofday.c
++++ b/arch/arm/vdso/vgettimeofday.c
+@@ -18,9 +18,9 @@
+ #include <linux/compiler.h>
+ #include <linux/hrtimer.h>
+ #include <linux/time.h>
+-#include <asm/arch_timer.h>
+ #include <asm/barrier.h>
+ #include <asm/bug.h>
++#include <asm/cp15.h>
+ #include <asm/page.h>
+ #include <asm/unistd.h>
+ #include <asm/vdso_datapage.h>
+@@ -123,7 +123,8 @@ static notrace u64 get_ns(struct vdso_data *vdata)
+ 	u64 cycle_now;
+ 	u64 nsec;
  
--	brcmf_fweh_process_skb(ifp->drvr, skb);
-+	brcmf_fweh_process_skb(ifp->drvr, skb, 0);
+-	cycle_now = arch_counter_get_cntvct();
++	isb();
++	cycle_now = read_sysreg(CNTVCT);
  
- exit:
- 	brcmu_pkt_buf_free_skb(skb);
+ 	cycle_delta = (cycle_now - vdata->cs_cycle_last) & vdata->cs_mask;
+ 
+-- 
+2.20.1
+
 
 
