@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4AE5C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12068C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74283249C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC097249D2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:21:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186469;
-	bh=t6bx2D04IYoytuycVZr10En/w9fgx4z/f8hlVwcsreI=;
+	s=default; t=1559186473;
+	bh=SHD36+BY1QvaEGUkOypXBRfC8ohz3yaLFqEMSfO4UWU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m71OFoeesCPrN354OmB+tImwrRMvg91hx0n5z3g2hU1ATsCvrNEmqCAhTk8fANmy4
-	 lwNIdnzr9gVN1KhXeyGH5i+EF94UwSgGUjqu2Jq3PWkVhyvSiytqcSIsPjE/II6iV0
-	 SJRXIMXum0DOu5uVu5+fQNd1bG2TGbTjgQtK0pps=
+	b=QDlLgMctINbwjZkyWFIMjNsJigl7CpTxQWheY/nQF2ysPms7INIPKn09EKXP0Yisz
+	 D9gsehWMoWFBu6kqBOJ89Ad0YZJ+Q2wjTZ8YnbIbBonodO8hlLuX6DJsglEyfLQkgT
+	 ADJntB2qGa+fLCaY61Yt7oNkF5MKevi+ZsZYX1YI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732474AbfE3DVI (ORCPT
+        id S1732489AbfE3DVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:21:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41588 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:21:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727592AbfE3DQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:15 -0400
+        id S1728034AbfE3DQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:16:16 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0CE7245DF;
-        Thu, 30 May 2019 03:16:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4034E245D7;
+        Thu, 30 May 2019 03:16:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186175;
-        bh=t6bx2D04IYoytuycVZr10En/w9fgx4z/f8hlVwcsreI=;
+        s=default; t=1559186176;
+        bh=SHD36+BY1QvaEGUkOypXBRfC8ohz3yaLFqEMSfO4UWU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BIew0IZ6ecBvv5VYs+x4tFbKGz2bfNuWDJpCxQgQbdWsmGd2YCPjqScWOJKZAoEnh
-         CAk6CoGwC6isrgBUhnIF0nt1M/r/4UtdyRp0Mk7ZLST+1ddlA+4yIK+YMzT+f+jEBK
-         QMBUXjVBIV0d2qC2Cgs12X5/E0Ht9Tn0B4JxDmGU=
+        b=V37Zz8wa1tzTCiWI5RH2ugAdK96UGS0OUpU00x/v5NFt6PTB6oQJjcVu3qXRQc0RG
+         AIt82ZEW7wplkOQz9pU+tzTEL88PEV16hbShxBddro0tbpK7bq2Wk7l0MkPG+7ka2Z
+         DkDSKtUdCfvEZT1CW899BUFN7//x+1b7lPi+qbSI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Axtens <dja@axtens.net>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 009/276] crypto: vmx - CTR: always increment IV as quadword
-Date:   Wed, 29 May 2019 20:02:47 -0700
-Message-Id: <20190530030524.161880676@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: [PATCH 4.19 029/276] brcmfmac: add subtype check for event handling in data path
+Date:   Wed, 29 May 2019 20:03:07 -0700
+Message-Id: <20190530030525.996904578@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -60,57 +64,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Axtens <dja@axtens.net>
+From: Arend van Spriel <arend.vanspriel@broadcom.com>
 
-commit 009b30ac7444c17fae34c4f435ebce8e8e2b3250 upstream.
+commit a4176ec356c73a46c07c181c6d04039fafa34a9f upstream.
 
-The kernel self-tests picked up an issue with CTR mode:
-alg: skcipher: p8_aes_ctr encryption test failed (wrong result) on test vector 3, cfg="uneven misaligned splits, may sleep"
+For USB there is no separate channel being used to pass events
+from firmware to the host driver and as such are passed over the
+data path. In order to detect mock event messages an additional
+check is needed on event subtype. This check is added conditionally
+using unlikely() keyword.
 
-Test vector 3 has an IV of FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD, so
-after 3 increments it should wrap around to 0.
-
-In the aesp8-ppc code from OpenSSL, there are two paths that
-increment IVs: the bulk (8 at a time) path, and the individual
-path which is used when there are fewer than 8 AES blocks to
-process.
-
-In the bulk path, the IV is incremented with vadduqm: "Vector
-Add Unsigned Quadword Modulo", which does 128-bit addition.
-
-In the individual path, however, the IV is incremented with
-vadduwm: "Vector Add Unsigned Word Modulo", which instead
-does 4 32-bit additions. Thus the IV would instead become
-FFFFFFFFFFFFFFFFFFFFFFFF00000000, throwing off the result.
-
-Use vadduqm.
-
-This was probably a typo originally, what with q and w being
-adjacent. It is a pretty narrow edge case: I am really
-impressed by the quality of the kernel self-tests!
-
-Fixes: 5c380d623ed3 ("crypto: vmx - Add support for VMS instructions by ASM")
-Cc: stable@vger.kernel.org
-Signed-off-by: Daniel Axtens <dja@axtens.net>
-Acked-by: Nayna Jain <nayna@linux.ibm.com>
-Tested-by: Nayna Jain <nayna@linux.ibm.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Reviewed-by: Hante Meuleman <hante.meuleman@broadcom.com>
+Reviewed-by: Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>
+Reviewed-by: Franky Lin <franky.lin@broadcom.com>
+Signed-off-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Cc: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/vmx/aesp8-ppc.pl |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c   |    5 ++--
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.h   |   16 ++++++++++----
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.c |    2 -
+ 3 files changed, 16 insertions(+), 7 deletions(-)
 
---- a/drivers/crypto/vmx/aesp8-ppc.pl
-+++ b/drivers/crypto/vmx/aesp8-ppc.pl
-@@ -1357,7 +1357,7 @@ Loop_ctr32_enc:
- 	addi		$idx,$idx,16
- 	bdnz		Loop_ctr32_enc
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c
+@@ -464,7 +464,8 @@ void brcmf_rx_frame(struct device *dev,
+ 	} else {
+ 		/* Process special event packets */
+ 		if (handle_event)
+-			brcmf_fweh_process_skb(ifp->drvr, skb);
++			brcmf_fweh_process_skb(ifp->drvr, skb,
++					       BCMILCP_SUBTYPE_VENDOR_LONG);
  
--	vadduwm		$ivec,$ivec,$one
-+	vadduqm		$ivec,$ivec,$one
- 	 vmr		$dat,$inptail
- 	 lvx		$inptail,0,$inp
- 	 addi		$inp,$inp,16
+ 		brcmf_netif_rx(ifp, skb);
+ 	}
+@@ -481,7 +482,7 @@ void brcmf_rx_event(struct device *dev,
+ 	if (brcmf_rx_hdrpull(drvr, skb, &ifp))
+ 		return;
+ 
+-	brcmf_fweh_process_skb(ifp->drvr, skb);
++	brcmf_fweh_process_skb(ifp->drvr, skb, 0);
+ 	brcmu_pkt_buf_free_skb(skb);
+ }
+ 
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.h
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.h
+@@ -211,7 +211,7 @@ enum brcmf_fweh_event_code {
+  */
+ #define BRCM_OUI				"\x00\x10\x18"
+ #define BCMILCP_BCM_SUBTYPE_EVENT		1
+-
++#define BCMILCP_SUBTYPE_VENDOR_LONG		32769
+ 
+ /**
+  * struct brcm_ethhdr - broadcom specific ether header.
+@@ -334,10 +334,10 @@ void brcmf_fweh_process_event(struct brc
+ void brcmf_fweh_p2pdev_setup(struct brcmf_if *ifp, bool ongoing);
+ 
+ static inline void brcmf_fweh_process_skb(struct brcmf_pub *drvr,
+-					  struct sk_buff *skb)
++					  struct sk_buff *skb, u16 stype)
+ {
+ 	struct brcmf_event *event_packet;
+-	u16 usr_stype;
++	u16 subtype, usr_stype;
+ 
+ 	/* only process events when protocol matches */
+ 	if (skb->protocol != cpu_to_be16(ETH_P_LINK_CTL))
+@@ -346,8 +346,16 @@ static inline void brcmf_fweh_process_sk
+ 	if ((skb->len + ETH_HLEN) < sizeof(*event_packet))
+ 		return;
+ 
+-	/* check for BRCM oui match */
+ 	event_packet = (struct brcmf_event *)skb_mac_header(skb);
++
++	/* check subtype if needed */
++	if (unlikely(stype)) {
++		subtype = get_unaligned_be16(&event_packet->hdr.subtype);
++		if (subtype != stype)
++			return;
++	}
++
++	/* check for BRCM oui match */
+ 	if (memcmp(BRCM_OUI, &event_packet->hdr.oui[0],
+ 		   sizeof(event_packet->hdr.oui)))
+ 		return;
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.c
+@@ -1116,7 +1116,7 @@ static void brcmf_msgbuf_process_event(s
+ 
+ 	skb->protocol = eth_type_trans(skb, ifp->ndev);
+ 
+-	brcmf_fweh_process_skb(ifp->drvr, skb);
++	brcmf_fweh_process_skb(ifp->drvr, skb, 0);
+ 
+ exit:
+ 	brcmu_pkt_buf_free_skb(skb);
 
 
