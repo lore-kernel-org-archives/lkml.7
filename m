@@ -2,55 +2,54 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D01C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 458DCC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:42:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AFE725B40
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2622C25B41
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:42:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbfE3Omq (ORCPT
+        id S1727499AbfE3Oms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 10:42:46 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:48696 "EHLO
+        Thu, 30 May 2019 10:42:48 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49344 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727382AbfE3Omj (ORCPT
+        by vger.kernel.org with ESMTP id S1727427AbfE3Omm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 10:42:39 -0400
+        Thu, 30 May 2019 10:42:42 -0400
 Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UEfPmm059057
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 10:42:38 -0400
-Received: from e17.ny.us.ibm.com (e17.ny.us.ibm.com [129.33.205.207])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2stfacdv1b-1
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UEfS12059217
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 10:42:42 -0400
+Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2stfacdv0k-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 10:42:37 -0400
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 10:42:38 -0400
 Received: from localhost
-        by e17.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Thu, 30 May 2019 15:42:32 +0100
+        Thu, 30 May 2019 15:42:31 +0100
 Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
-        by e17.ny.us.ibm.com (146.89.104.204) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 30 May 2019 15:42:26 +0100
+        Thu, 30 May 2019 15:42:27 +0100
 Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4UEgPOe37814414
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4UEgPOv37814416
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 May 2019 14:42:25 GMT
+        Thu, 30 May 2019 14:42:26 GMT
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 65B59B2077;
+        by IMSVA (Postfix) with ESMTP id 974D0B2082;
         Thu, 30 May 2019 14:42:25 +0000 (GMT)
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4809BB2074;
+        by IMSVA (Postfix) with ESMTP id 83DE7B207B;
         Thu, 30 May 2019 14:42:25 +0000 (GMT)
 Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
         by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
         Thu, 30 May 2019 14:42:25 +0000 (GMT)
 Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id CAADF16C5DAA; Thu, 30 May 2019 07:42:26 -0700 (PDT)
+        id 2B05416C8E89; Thu, 30 May 2019 07:42:27 -0700 (PDT)
 From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
 To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         mingo@kernel.org
@@ -59,82 +58,57 @@ Cc:     stern@rowland.harvard.edu, andrea.parri@amarulasolutions.com,
         npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
         luc.maranget@inria.fr, akiyks@gmail.com,
         "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH RFC memory-model 15/33] tools/memory-model: Add simpletest.sh to check locking, RCU, and SRCU
-Date:   Thu, 30 May 2019 07:42:07 -0700
+Subject: [PATCH RFC memory-model 28/33] tools/memory-model: Make checkghlitmus.sh use mselect7
+Date:   Thu, 30 May 2019 07:42:20 -0700
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190530144202.GA26201@linux.ibm.com>
 References: <20190530144202.GA26201@linux.ibm.com>
 X-TM-AS-GCONF: 00
-x-cbid: 19053014-0040-0000-0000-000004F680BF
+x-cbid: 19053014-2213-0000-0000-00000397F321
 X-IBM-SpamModules-Scores: 
 X-IBM-SpamModules-Versions: BY=3.00011185; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01210780; UDB=6.00636154; IPR=6.00991813;
- MB=3.00027120; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-30 14:42:30
+ PH=3.00000004; SC=3.00000286; SDB=6.01210779; UDB=6.00636154; IPR=6.00991814;
+ MB=3.00027120; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-30 14:42:31
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19053014-0041-0000-0000-000009029B0E
-Message-Id: <20190530144225.27624-15-paulmck@linux.ibm.com>
+x-cbparentid: 19053014-2214-0000-0000-00005EA2F2E9
+Message-Id: <20190530144225.27624-28-paulmck@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-30_08:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=968 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=607 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1905300105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit abstracts out common function to check a given litmus test
-for locking, RCU, and SRCU in order to avoid duplicating code.
+The checkghlitmus.sh script currently uses grep to ignore non-C-language
+litmus tests, which is a bit fragile.  This commit therefore enlists the
+aid of "mselect7 -arch C", given Luc Maraget's recent modifications that
+allow mselect7 to operate in filter mode.
+
+This change requires herdtools 7.52-32-g1da3e0e50977 or later.
 
 Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 ---
- tools/memory-model/scripts/simpletest.sh | 35 ++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100755 tools/memory-model/scripts/simpletest.sh
+ tools/memory-model/scripts/checkghlitmus.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/memory-model/scripts/simpletest.sh b/tools/memory-model/scripts/simpletest.sh
-new file mode 100755
-index 000000000000..7edc5d361665
---- /dev/null
-+++ b/tools/memory-model/scripts/simpletest.sh
-@@ -0,0 +1,35 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+# Give zero status if this is a simple test and non-zero otherwise.
-+# Simple tests do not contain locking, RCU, or SRCU.
-+#
-+# Usage:
-+#	simpletest.sh file.litmus
-+#
-+# Copyright IBM Corporation, 2019
-+#
-+# Author: Paul E. McKenney <paulmck@linux.ibm.com>
-+
-+
-+litmus=$1
-+
-+if test -f "$litmus" -a -r "$litmus"
-+then
-+	:
-+else
-+	echo ' --- ' error: \"$litmus\" is not a readable file
-+	exit 255
-+fi
-+exclude="^[[:space:]]*\("
-+exclude="${exclude}spin_lock(\|spin_unlock(\|spin_trylock(\|spin_is_locked("
-+exclude="${exclude}\|rcu_read_lock(\|rcu_read_unlock("
-+exclude="${exclude}\|synchronize_rcu(\|synchronize_rcu_expedited("
-+exclude="${exclude}\|srcu_read_lock(\|srcu_read_unlock("
-+exclude="${exclude}\|synchronize_srcu(\|synchronize_srcu_expedited("
-+exclude="${exclude}\)"
-+if grep -q $exclude $litmus
-+then
-+	exit 255
-+fi
-+exit 0
+diff --git a/tools/memory-model/scripts/checkghlitmus.sh b/tools/memory-model/scripts/checkghlitmus.sh
+index 2ea220d2564b..cedd0290b73f 100755
+--- a/tools/memory-model/scripts/checkghlitmus.sh
++++ b/tools/memory-model/scripts/checkghlitmus.sh
+@@ -41,7 +41,7 @@ fi
+ 
+ # Create a list of C-language litmus tests with "Result:" commands and
+ # no more than the specified number of processes.
+-find litmus -name '*.litmus' -exec grep -l -m 1 "^C " {} \; > $T/list-C
++find litmus -name '*.litmus' -print | mselect7 -arch C > $T/list-C
+ xargs < $T/list-C -r egrep -l '^ \* Result: (Never|Sometimes|Always|DEADLOCK)' > $T/list-C-result
+ xargs < $T/list-C-result -r grep -L "^P${LKMM_PROCS}" > $T/list-C-result-short
+ 
 -- 
 2.17.1
 
