@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A6C3C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2597C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D70CE24B74
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:37:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 890FA24B82
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:37:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187427;
-	bh=s4sEmka+JMBB/kOX95PYJO5kakMzJ8aZR65LG0JRT30=;
+	s=default; t=1559187431;
+	bh=uJWCgcHIYbc4SdYfmmV2gAJQm/i9pZikepTpAYBVqCY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VQXx+oq9inxXldYaECxSi6XUOvGMhkF1fPYWApnlouSLPEXd4psyv1aSSh9Eoh8Jx
-	 r+0fDvj17iS5cqQ3yoKdOFu7f5lyuiL8nGMV3yxNQwpr+QQv8c2U089vRg5Hq72Ias
-	 Cn31cPTBlKT0pYGD+XWbqzrz5RguPNL/y5L0v/SM=
+	b=Q41g9EqlVlOYhamR4JeJPTDt5WWsto9Tc5xJuPWST4n4huEiQSOsinaY58DaGFjyj
+	 hnw1oHfl+jD5JC+nbjGAs5Ef+r+OXxyT1V8omo2S/rSHPtVg8LfA+luhn2eRZtn19d
+	 B4muWSWvLk+CiB3r+YQSTRZQeWy7XvjAto8sWhzQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733281AbfE3DYZ (ORCPT
+        id S1733271AbfE3DYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:24:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49764 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:24:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731404AbfE3DSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:03 -0400
+        id S1731405AbfE3DSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:04 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A96624768;
+        by mail.kernel.org (Postfix) with ESMTPSA id B72C12475D;
         Thu, 30 May 2019 03:18:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186283;
-        bh=s4sEmka+JMBB/kOX95PYJO5kakMzJ8aZR65LG0JRT30=;
+        bh=uJWCgcHIYbc4SdYfmmV2gAJQm/i9pZikepTpAYBVqCY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lm3rjavcxdVd0SqzWneQN/AiXJ7QHU5/SEqPtKAcZsrP3aunovvsj/iYfrXExRkOm
-         Q6tgdCej6wF+30NYTZJUH3SYP/LY87pbPBK1FnH4C4pIwMkvP13BTxHO++WtEAd0Ri
-         A0Slvy5RuqcyHVs/Dhpw1MQ+TpdwobDuSxWTr6qM=
+        b=i4grOyIOBOiRJo7Pc80MdvusLFa1d93T2atjV+are6CAAHfd7dV+3MZSlKIi1O+Ca
+         0zZYJc6Y91jhhkcDGpMxoqaTFbWlZf3dsfyt2FxM2lF4It9RdweUumYBFpxjfDGWMJ
+         aJq2ny3V76f9ejoGUavxo14hKM0VvVj8voplxcG0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
+        James Smart <james.smart@broadcom.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 236/276] scsi: qla4xxx: avoid freeing unallocated dma memory
-Date:   Wed, 29 May 2019 20:06:34 -0700
-Message-Id: <20190530030539.881955962@linuxfoundation.org>
+Subject: [PATCH 4.19 237/276] scsi: lpfc: avoid uninitialized variable warning
+Date:   Wed, 29 May 2019 20:06:35 -0700
+Message-Id: <20190530030539.944220603@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -61,50 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 608f729c31d4caf52216ea00d20092a80959256d ]
+[ Upstream commit faf5a744f4f8d76e7c03912b5cd381ac8045f6ec ]
 
-Clang -Wuninitialized notices that on is_qla40XX we never allocate any DMA
-memory in get_fw_boot_info() but attempt to free it anyway:
+clang -Wuninitialized incorrectly sees a variable being used without
+initialization:
 
-drivers/scsi/qla4xxx/ql4_os.c:5915:7: error: variable 'buf_dma' is used uninitialized whenever 'if' condition is false
-      [-Werror,-Wsometimes-uninitialized]
-                if (!(val & 0x07)) {
-                    ^~~~~~~~~~~~~
-drivers/scsi/qla4xxx/ql4_os.c:5985:47: note: uninitialized use occurs here
-        dma_free_coherent(&ha->pdev->dev, size, buf, buf_dma);
-                                                     ^~~~~~~
-drivers/scsi/qla4xxx/ql4_os.c:5915:3: note: remove the 'if' if its condition is always true
-                if (!(val & 0x07)) {
-                ^~~~~~~~~~~~~~~~~~~
-drivers/scsi/qla4xxx/ql4_os.c:5885:20: note: initialize the variable 'buf_dma' to silence this warning
-        dma_addr_t buf_dma;
-                          ^
-                           = 0
+drivers/scsi/lpfc/lpfc_nvme.c:2102:37: error: variable 'localport' is uninitialized when used here
+      [-Werror,-Wuninitialized]
+                lport = (struct lpfc_nvme_lport *)localport->private;
+                                                  ^~~~~~~~~
+drivers/scsi/lpfc/lpfc_nvme.c:2059:38: note: initialize the variable 'localport' to silence this warning
+        struct nvme_fc_local_port *localport;
+                                            ^
+                                             = NULL
+1 error generated.
 
-Skip the call to dma_free_coherent() here.
+This is clearly in dead code, as the condition leading up to it is always
+false when CONFIG_NVME_FC is disabled, and the variable is always
+initialized when nvme_fc_register_localport() got called successfully.
 
-Fixes: 2a991c215978 ("[SCSI] qla4xxx: Boot from SAN support for open-iscsi")
+Change the preprocessor conditional to the equivalent C construct, which
+makes the code more readable and gets rid of the warning.
+
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: James Smart <james.smart@broadcom.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla4xxx/ql4_os.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/lpfc/lpfc_nvme.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_os.c
-index 5dd3e4e01b109..25c8ce54a976d 100644
---- a/drivers/scsi/qla4xxx/ql4_os.c
-+++ b/drivers/scsi/qla4xxx/ql4_os.c
-@@ -5935,7 +5935,7 @@ static int get_fw_boot_info(struct scsi_qla_host *ha, uint16_t ddb_index[])
- 		val = rd_nvram_byte(ha, sec_addr);
- 		if (val & BIT_7)
- 			ddb_index[1] = (val & 0x7f);
--
-+		goto exit_boot_info;
- 	} else if (is_qla80XX(ha)) {
- 		buf = dma_alloc_coherent(&ha->pdev->dev, size,
- 					 &buf_dma, GFP_KERNEL);
+diff --git a/drivers/scsi/lpfc/lpfc_nvme.c b/drivers/scsi/lpfc/lpfc_nvme.c
+index ca62117a2d131..099f70798fdda 100644
+--- a/drivers/scsi/lpfc/lpfc_nvme.c
++++ b/drivers/scsi/lpfc/lpfc_nvme.c
+@@ -2482,15 +2482,15 @@ lpfc_nvme_create_localport(struct lpfc_vport *vport)
+ 	if (!cstat)
+ 		return -ENOMEM;
+ 
++	if (!IS_ENABLED(CONFIG_NVME_FC))
++		return ret;
++
+ 	/* localport is allocated from the stack, but the registration
+ 	 * call allocates heap memory as well as the private area.
+ 	 */
+-#if (IS_ENABLED(CONFIG_NVME_FC))
++
+ 	ret = nvme_fc_register_localport(&nfcp_info, &lpfc_nvme_template,
+ 					 &vport->phba->pcidev->dev, &localport);
+-#else
+-	ret = -ENOMEM;
+-#endif
+ 	if (!ret) {
+ 		lpfc_printf_vlog(vport, KERN_INFO, LOG_NVME | LOG_NVME_DISC,
+ 				 "6005 Successfully registered local "
 -- 
 2.20.1
 
