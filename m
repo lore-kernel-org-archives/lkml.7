@@ -2,105 +2,119 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C693AC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DDDC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F20C24D4D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:49:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188161;
-	bh=XTYT+Zjx4efHvomWboiyx+5cbYpMYlvQgDuWNjWDh9M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l3EiXYvecVNb+16nasD1yxpmR/qQNqtNT7PDA4+z7bPI+viFjsjlhukrfeptrAs7Z
-	 FXl8PBh0BHWc065a6qQJlh1WbZGHiOwHF/HVm82e1dJAdnZ8jr3gaNtdvy6wnSJJ1L
-	 6tifK4S4SmYPcTOBcpdvrUDNQY03qCjCb+uJ/Dow=
+	by mail.kernel.org (Postfix) with ESMTP id B1B8124D63
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:49:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387638AbfE3DtU (ORCPT
+        id S1732716AbfE3DtY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 29 May 2019 23:49:24 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:18047 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729827AbfE3DtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:49:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58924 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732241AbfE3DUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:20:33 -0400
-Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1371F24941;
-        Thu, 30 May 2019 03:20:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186433;
-        bh=XTYT+Zjx4efHvomWboiyx+5cbYpMYlvQgDuWNjWDh9M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nUUSunvmkLycvPZLn+4eiGpN0kVzq66nb0GaURUESQS6x/a6bbw0fOeY/7GdHtRa0
-         bkjPoKmBm1vth/LzYQiTr+l6+W+jZZ+d9dWgKnEIqeTz77KN9ndmJRRsi7FRIVPhvG
-         eWT8BzyuoG15N0bfq5jzGHB8s8nYe5ojsU6gTX8s=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 027/128] net: ena: gcc 8: fix compilation warning
-Date:   Wed, 29 May 2019 20:05:59 -0700
-Message-Id: <20190530030439.578007972@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
-References: <20190530030432.977908967@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id A41468F06A13BCCAA76D;
+        Thu, 30 May 2019 11:49:17 +0800 (CST)
+Received: from HGHY4L002753561.china.huawei.com (10.133.215.186) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 30 May 2019 11:49:10 +0800
+From:   Zhen Lei <thunder.leizhen@huawei.com>
+To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        John Garry <john.garry@huawei.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "Michael Ellerman" <mpe@ellerman.id.au>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        iommu <iommu@lists.linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>
+CC:     Zhen Lei <thunder.leizhen@huawei.com>,
+        Hanjun Guo <guohanjun@huawei.com>
+Subject: [PATCH v8 0/7] iommu: enhance IOMMU default DMA mode build options
+Date:   Thu, 30 May 2019 11:48:24 +0800
+Message-ID: <20190530034831.4184-1-thunder.leizhen@huawei.com>
+X-Mailer: git-send-email 2.21.0.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.133.215.186]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f913308879bc6ae437ce64d878c7b05643ddea44 ]
+v7--> v8
+1. Split into multiple small patches base on ARCHs or IOMMU drivers.
+2. Hide the unsupported build options on the related ARCH or IOMMU.
 
-GCC 8 contains a number of new warnings as well as enhancements to existing
-checkers. The warning - Wstringop-truncation - warns for calls to bounded
-string manipulation functions such as strncat, strncpy, and stpncpy that
-may either truncate the copied string or leave the destination unchanged.
+v6 --> v7:
+1. Fix some text editing errors
 
-In our case the destination string length (32 bytes) is much shorter than
-the source string (64 bytes) which causes this warning to show up. In
-general the destination has to be at least a byte larger than the length
-of the source string with strncpy for this warning not to showup.
+v5 --> v6:
+1. give up adding boot option iommu.dma_mode
 
-This can be easily fixed by using strlcpy instead which already does the
-truncation to the string. Documentation for this function can be
-found here:
+v4 --> v5:
+As Hanjun and Thomas Gleixner's suggestion:
+1. Keep the old ARCH specific boot options no change.
+2. Keep build option CONFIG_IOMMU_DEFAULT_PASSTHROUGH no change.
 
-https://elixir.bootlin.com/linux/latest/source/lib/string.c#L141
+v4:
+As Robin Murphy's suggestion:
+"It's also not necessarily obvious to the user how this interacts with
+IOMMU_DEFAULT_PASSTHROUGH, so if we really do go down this route, maybe it
+would be better to refactor the whole lot into a single selection of something
+like IOMMU_DEFAULT_MODE anyway."
 
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/amazon/ena/ena_netdev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+In this version, I tried to normalize the IOMMU dma mode boot options for all
+ARCHs. When IOMMU is enabled, there are 3 dma modes: paasthrough(bypass),
+lazy(mapping but defer the IOTLB invalidation), strict. But currently each
+ARCHs defined their private boot options, different with each other. For
+example, to enable/disable "passthrough", ARM64 use iommu.passthrough=1/0,
+X86 use iommu=pt/nopt, PPC/POWERNV use iommu=nobypass.
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-index 0c298878bf46f..0780900b37c72 100644
---- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-@@ -2116,7 +2116,7 @@ static void ena_config_host_info(struct ena_com_dev *ena_dev)
- 
- 	host_info->os_type = ENA_ADMIN_OS_LINUX;
- 	host_info->kernel_ver = LINUX_VERSION_CODE;
--	strncpy(host_info->kernel_ver_str, utsname()->version,
-+	strlcpy(host_info->kernel_ver_str, utsname()->version,
- 		sizeof(host_info->kernel_ver_str) - 1);
- 	host_info->os_dist = 0;
- 	strncpy(host_info->os_dist_str, utsname()->release,
+Zhen Lei (7):
+  iommu: enhance IOMMU default DMA mode build options
+  x86/dma: use IS_ENABLED() to simplify the code
+  s390/pci: add support for IOMMU default DMA mode build options
+  powernv/iommu: add support for IOMMU default DMA mode build options
+  iommu/vt-d: add support for IOMMU default DMA mode build options
+  iommu/amd: add support for IOMMU default DMA mode build options
+  ia64: hide build option IOMMU_DEFAULT_PASSTHROUGH
+
+ arch/powerpc/platforms/powernv/pci-ioda.c |  3 +-
+ arch/s390/pci/pci_dma.c                   |  2 +-
+ arch/x86/kernel/pci-dma.c                 |  7 ++---
+ drivers/iommu/Kconfig                     | 46 ++++++++++++++++++++++++++-----
+ drivers/iommu/amd_iommu_init.c            |  3 +-
+ drivers/iommu/intel-iommu.c               |  2 +-
+ drivers/iommu/iommu.c                     |  3 +-
+ 7 files changed, 49 insertions(+), 17 deletions(-)
+
 -- 
-2.20.1
-
+1.8.3
 
 
