@@ -2,55 +2,57 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF6CC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0A3C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71D8A25216
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAB0325227
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:15:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189701;
-	bh=irsuCSjqH9Xp7SJpFQA1MXvfKEAZZxM4R5/EeSWs8qo=;
+	s=default; t=1559189704;
+	bh=X5au7f96IOi/d7xdbcCMJXSy7yjvbMLDW17izV5+LAw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pl8PwO762odnrfzAl1Plza1BN/boWP1FvqjMYvso2097oXHC78ZsyyGPx/Afc5jDy
-	 8EHWwi9TmfosUwfJS6U3tPjdxi9s73bLigPzRTC2J0QLYoc3jKTSWkJP+6gFpIKI88
-	 yob4Ar7z4QguOcOw1/uTgVEP5xFCnz23JfnEfqn8=
+	b=GF0FcB+57JkKvghAM86EnnAJNfsJn4CitxDqsS9e2FZCg/ambq0gMfvb5Pmq3CQhE
+	 4q1zSVwoliWupzpIuGf6QfLP2wuWNbjPhae4h8L4M6FvQbh0e83a8Wyam4k5Bvx++O
+	 ImlisO2OQU+8YWO2TwCHF/3G7kuyTJbDlj3xxIl4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730763AbfE3EO4 (ORCPT
+        id S1729594AbfE3DQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:14:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41138 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:16:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730591AbfE3DQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:07 -0400
+        id S1728440AbfE3DNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:18 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DEB1245AF;
-        Thu, 30 May 2019 03:16:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 890AD2449A;
+        Thu, 30 May 2019 03:13:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186166;
-        bh=irsuCSjqH9Xp7SJpFQA1MXvfKEAZZxM4R5/EeSWs8qo=;
+        s=default; t=1559185997;
+        bh=X5au7f96IOi/d7xdbcCMJXSy7yjvbMLDW17izV5+LAw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nC2VoI3qEqYlEc+UuQXEo8tDfvXH26UAAUgGrp0Wix6Zp3cqU9/61BKDCSQNdPi2a
-         8lLJKsFCzx9HJWugrPc39Z+yyGCUp8m2+OKmRQEpOpXumDBQjYQ7CHAbIw4ijVNcaU
-         hZxygSNwkztVvxdxBrO+Y0K3m+NqXN1Clhm74lkw=
+        b=hj8/CWFPslY6l9GahmJbZURo9em/P4ey+SXhXnQVP4wwa18H/YgYwMOtGm/Yx9hRQ
+         3uGnGLtGLvVt9LetqsDrGZt+KSd8oW1urdZjKamOmJ0RGHnfbHWN/XpV/q3fdWalWE
+         a9kFvdSgLmEh3yTmHLJ5BQP77LXkiYaJhwIVvMPQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 019/276] Btrfs: avoid fallback to transaction commit during fsync of files with holes
-Date:   Wed, 29 May 2019 20:02:57 -0700
-Message-Id: <20190530030525.240003863@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Roberto Bergantinos Corpas <rbergant@redhat.com>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 045/346] NFS: make nfs_match_client killable
+Date:   Wed, 29 May 2019 20:01:58 -0700
+Message-Id: <20190530030543.160262551@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
-References: <20190530030523.133519668@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,84 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+[ Upstream commit 950a578c6128c2886e295b9c7ecb0b6b22fcc92b ]
 
-commit ebb929060aeb162417b4c1307e63daee47b208d9 upstream.
+    Actually we don't do anything with return value from
+    nfs_wait_client_init_complete in nfs_match_client, as a
+    consequence if we get a fatal signal and client is not
+    fully initialised, we'll loop to "again" label
 
-When we are doing a full fsync (bit BTRFS_INODE_NEEDS_FULL_SYNC set) of a
-file that has holes and has file extent items spanning two or more leafs,
-we can end up falling to back to a full transaction commit due to a logic
-bug that leads to failure to insert a duplicate file extent item that is
-meant to represent a hole between the last file extent item of a leaf and
-the first file extent item in the next leaf. The failure (EEXIST error)
-leads to a transaction commit (as most errors when logging an inode do).
+    This has been proven to cause soft lockups on some scenarios
+    (no-carrier but configured network interfaces)
 
-For example, we have the two following leafs:
-
-Leaf N:
-
-  -----------------------------------------------
-  | ..., ..., ..., (257, FILE_EXTENT_ITEM, 64K) |
-  -----------------------------------------------
-  The file extent item at the end of leaf N has a length of 4Kb,
-  representing the file range from 64K to 68K - 1.
-
-Leaf N + 1:
-
-  -----------------------------------------------
-  | (257, FILE_EXTENT_ITEM, 72K), ..., ..., ... |
-  -----------------------------------------------
-  The file extent item at the first slot of leaf N + 1 has a length of
-  4Kb too, representing the file range from 72K to 76K - 1.
-
-During the full fsync path, when we are at tree-log.c:copy_items() with
-leaf N as a parameter, after processing the last file extent item, that
-represents the extent at offset 64K, we take a look at the first file
-extent item at the next leaf (leaf N + 1), and notice there's a 4K hole
-between the two extents, and therefore we insert a file extent item
-representing that hole, starting at file offset 68K and ending at offset
-72K - 1. However we don't update the value of *last_extent, which is used
-to represent the end offset (plus 1, non-inclusive end) of the last file
-extent item inserted in the log, so it stays with a value of 68K and not
-with a value of 72K.
-
-Then, when copy_items() is called for leaf N + 1, because the value of
-*last_extent is smaller then the offset of the first extent item in the
-leaf (68K < 72K), we look at the last file extent item in the previous
-leaf (leaf N) and see it there's a 4K gap between it and our first file
-extent item (again, 68K < 72K), so we decide to insert a file extent item
-representing the hole, starting at file offset 68K and ending at offset
-72K - 1, this insertion will fail with -EEXIST being returned from
-btrfs_insert_file_extent() because we already inserted a file extent item
-representing a hole for this offset (68K) in the previous call to
-copy_items(), when processing leaf N.
-
-The -EEXIST error gets propagated to the fsync callback, btrfs_sync_file(),
-which falls back to a full transaction commit.
-
-Fix this by adjusting *last_extent after inserting a hole when we had to
-look at the next leaf.
-
-Fixes: 4ee3fad34a9c ("Btrfs: fix fsync after hole punching when using no-holes feature")
-Cc: stable@vger.kernel.org # 4.14+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/tree-log.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/nfs/client.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/fs/btrfs/tree-log.c
-+++ b/fs/btrfs/tree-log.c
-@@ -4121,6 +4121,7 @@ fill_holes:
- 							       *last_extent, 0,
- 							       0, len, 0, len,
- 							       0, 0, 0);
-+				*last_extent += len;
- 			}
+diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+index 90d71fda65cec..350cfa561e0e8 100644
+--- a/fs/nfs/client.c
++++ b/fs/nfs/client.c
+@@ -284,6 +284,7 @@ static struct nfs_client *nfs_match_client(const struct nfs_client_initdata *dat
+ 	struct nfs_client *clp;
+ 	const struct sockaddr *sap = data->addr;
+ 	struct nfs_net *nn = net_generic(data->net, nfs_net_id);
++	int error;
+ 
+ again:
+ 	list_for_each_entry(clp, &nn->nfs_client_list, cl_share_link) {
+@@ -296,8 +297,10 @@ static struct nfs_client *nfs_match_client(const struct nfs_client_initdata *dat
+ 		if (clp->cl_cons_state > NFS_CS_READY) {
+ 			refcount_inc(&clp->cl_count);
+ 			spin_unlock(&nn->nfs_client_lock);
+-			nfs_wait_client_init_complete(clp);
++			error = nfs_wait_client_init_complete(clp);
+ 			nfs_put_client(clp);
++			if (error < 0)
++				return ERR_PTR(error);
+ 			spin_lock(&nn->nfs_client_lock);
+ 			goto again;
  		}
- 	}
+@@ -407,6 +410,8 @@ struct nfs_client *nfs_get_client(const struct nfs_client_initdata *cl_init)
+ 		clp = nfs_match_client(cl_init);
+ 		if (clp) {
+ 			spin_unlock(&nn->nfs_client_lock);
++			if (IS_ERR(clp))
++				return clp;
+ 			if (new)
+ 				new->rpc_ops->free_client(new);
+ 			return nfs_found_client(cl_init, clp);
+-- 
+2.20.1
+
 
 
