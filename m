@@ -2,127 +2,105 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 401F0C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02547C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2182F261CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:16:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7B352238C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:16:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbfE3VQA (ORCPT
+        id S1726874AbfE3VQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 17:16:00 -0400
-Received: from mailoutvs48.siol.net ([185.57.226.239]:55402 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726794AbfE3VPq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 17:15:46 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 1B9BF52286B;
-        Thu, 30 May 2019 23:15:45 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id uezCuMHm-0Ve; Thu, 30 May 2019 23:15:44 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id C27FC5227EC;
-        Thu, 30 May 2019 23:15:44 +0200 (CEST)
-Received: from localhost.localdomain (cpe-86-58-52-202.static.triera.net [86.58.52.202])
-        (Authenticated sender: 031275009)
-        by mail.siol.net (Postfix) with ESMTPSA id 7E01D5228C1;
-        Thu, 30 May 2019 23:15:42 +0200 (CEST)
-From:   Jernej Skrabec <jernej.skrabec@siol.net>
-To:     paul.kocialkowski@bootlin.com, maxime.ripard@bootlin.com
-Cc:     wens@csie.org, mchehab@kernel.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 6/7] media: cedrus: Add infra for extra buffers connected to capture buffers
-Date:   Thu, 30 May 2019 23:15:15 +0200
-Message-Id: <20190530211516.1891-7-jernej.skrabec@siol.net>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530211516.1891-1-jernej.skrabec@siol.net>
-References: <20190530211516.1891-1-jernej.skrabec@siol.net>
+        Thu, 30 May 2019 17:16:48 -0400
+Received: from mga06.intel.com ([134.134.136.31]:47617 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726308AbfE3VQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 17:16:47 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 14:16:46 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by fmsmga006.fm.intel.com with ESMTP; 30 May 2019 14:16:45 -0700
+Date:   Thu, 30 May 2019 14:16:45 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        William Roberts <bill.c.roberts@gmail.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+Message-ID: <20190530211645.GB27551@linux.intel.com>
+References: <960B34DE67B9E140824F1DCDEC400C0F654E9824@ORSMSX116.amr.corp.intel.com>
+ <20190528202407.GB13158@linux.intel.com>
+ <285f279f-b500-27f0-ab42-fb1dbcc5ab18@tycho.nsa.gov>
+ <960B34DE67B9E140824F1DCDEC400C0F654EB487@ORSMSX116.amr.corp.intel.com>
+ <678a37af-797d-7bd5-a406-32548a270e3d@tycho.nsa.gov>
+ <CALCETrWXB9fNNDH7gZxPTx05F78Og6K=ZtAr2aA++BDwY09Wbg@mail.gmail.com>
+ <c1135352-0b5e-4694-b1a9-105876095877@tycho.nsa.gov>
+ <CALCETrWsEXzUC33eJpGCpdMCBO4aYVviZLRD-CLMNaG5Jv-TCA@mail.gmail.com>
+ <20190530180110.GB23930@linux.intel.com>
+ <CALCETrX2PgUc_jetXHqp85aaS0a0jHB8E7=T1rsW+5vyRgwnUA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrX2PgUc_jetXHqp85aaS0a0jHB8E7=T1rsW+5vyRgwnUA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-H264 and HEVC engines need additional buffers for each capture buffer.
-H264 engine has this currently solved by allocating fixed size pool,
-which is not ideal. Most of the time pool size is much bigger than it
-needs to be.
+On Thu, May 30, 2019 at 12:20:45PM -0700, Andy Lutomirski wrote:
+> On Thu, May 30, 2019 at 11:01 AM Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
+> >
+> > On Thu, May 30, 2019 at 09:14:10AM -0700, Andy Lutomirski wrote:
+> > > Enclave file -- that is, the file backing the vma from which the data is loaded.
+> >
+> > It wasn't explicitly called out in Andy's proposal(s), but the idea is
+> > that the SGX driver would effectively inherit permissions from the source
+> > VMA (EADD needs a source for the initial value of the encave page).
+> 
+> I actually meant for it to *not* work like this.  I don't want the
+> source VMA to have to be VM_EXEC.  I think the LSM should just check
+> permissions on ->vm_file.
 
-Ideally, extra buffer should be allocated at buffer initialization, but
-that's not efficient. It's size in H264 depends on flags set in SPS, but
-that information is not available in buffer init callback.
+But if ->vm_file is NULL, i.e. the enclave is not backed by a file,
+then PROCESS__EXECMEM is required (or more likely, ENCLAVE__EXECMEM).
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
----
- drivers/staging/media/sunxi/cedrus/cedrus.h   |  4 ++++
- .../staging/media/sunxi/cedrus/cedrus_video.c | 19 +++++++++++++++++++
- 2 files changed, 23 insertions(+)
+In practice, it's the same net effect of using sigstruct as a proxy,
+i.e. *something* has to get to the file system to avoid EXECMEM.  But
+putting the entire enclave to the filesystem seems like a heaver lift
+than dumping the sigstruct.
 
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h b/drivers/stagin=
-g/media/sunxi/cedrus/cedrus.h
-index d8e6777e5e27..16c1bdfd243a 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus.h
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
-@@ -81,6 +81,10 @@ struct cedrus_run {
- struct cedrus_buffer {
- 	struct v4l2_m2m_buffer          m2m_buf;
-=20
-+	void		*extra_buf;
-+	dma_addr_t	extra_buf_dma;
-+	ssize_t		extra_buf_size;
-+
- 	union {
- 		struct {
- 			unsigned int			position;
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_video.c b/drivers/=
-staging/media/sunxi/cedrus/cedrus_video.c
-index 681dfe3367a6..d756e0e69634 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-@@ -411,6 +411,24 @@ static void cedrus_queue_cleanup(struct vb2_queue *v=
-q, u32 state)
- 	}
- }
-=20
-+static void cedrus_buf_cleanup(struct vb2_buffer *vb)
-+{
-+	struct vb2_queue *vq =3D vb->vb2_queue;
-+
-+	if (!V4L2_TYPE_IS_OUTPUT(vq->type)) {
-+		struct cedrus_ctx *ctx =3D vb2_get_drv_priv(vq);
-+		struct cedrus_buffer *cedrus_buf;
-+
-+		cedrus_buf =3D vb2_to_cedrus_buffer(vq->bufs[vb->index]);
-+
-+		if (cedrus_buf->extra_buf_size)
-+			dma_free_coherent(ctx->dev->dev,
-+					  cedrus_buf->extra_buf_size,
-+					  cedrus_buf->extra_buf,
-+					  cedrus_buf->extra_buf_dma);
-+	}
-+}
-+
- static int cedrus_buf_out_validate(struct vb2_buffer *vb)
- {
- 	struct vb2_v4l2_buffer *vbuf =3D to_vb2_v4l2_buffer(vb);
-@@ -497,6 +515,7 @@ static void cedrus_buf_request_complete(struct vb2_bu=
-ffer *vb)
- static struct vb2_ops cedrus_qops =3D {
- 	.queue_setup		=3D cedrus_queue_setup,
- 	.buf_prepare		=3D cedrus_buf_prepare,
-+	.buf_cleanup		=3D cedrus_buf_cleanup,
- 	.buf_queue		=3D cedrus_buf_queue,
- 	.buf_out_validate	=3D cedrus_buf_out_validate,
- 	.buf_request_complete	=3D cedrus_buf_request_complete,
---=20
-2.21.0
-
+And if sigstruct needs to be in the file system for
+security_enclave_create/init()...
