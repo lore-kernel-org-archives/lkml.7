@@ -2,304 +2,127 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 376A6C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34DE2C28CC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE6DF262C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:56:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="e1FmwpqF"
+	by mail.kernel.org (Postfix) with ESMTP id 08A64262C8
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:57:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559257030;
+	bh=iWlHwQIQWXgJxw5M7bJPq4MrgLHO4zyeNxvUKrcQDJs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=a/slKhBhGhOPphq3dgl5X1nz6CC9J73O5iMTRykDmXozDK3nzbN1Pa3cTsNbm4/qH
+	 iWUJGofifYQiSKyEn92mmUwWHdyX4XPQvwVIQaDVdiIffXElgBvtcCPKZ4nmgi9SDP
+	 UofRTrEzjXAunn3U4NZ4hNZ02qFGK4032h9kBkyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbfE3W4v (ORCPT
+        id S1726652AbfE3W5J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 18:56:51 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:42812 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726100AbfE3W4v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 18:56:51 -0400
-Received: from pps.filterd (m0001255.ppops.net [127.0.0.1])
-        by mx0b-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UMqEc3026649;
-        Thu, 30 May 2019 15:56:00 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=g2VAEJYlSGFykMmStR3pOLvCKwNbg8GPznfQ02stqXI=;
- b=e1FmwpqFEKUbZGleBjg3rpucU6bJZp7407u6WAwobyAGqBtQIKBPy4YOrAsLJ4cF5AfH
- AC70gvM79xSFl9gneUO+oAbTfOpVF/Gk4jIfb7osGm4OxzTOM/eD56t2bFHrfr2+JzPW
- XcTMbx7pkLQRvzwJKqNoK2K+UGza/WU0mlE= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0b-00082601.pphosted.com with ESMTP id 2stj9yhbcf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 30 May 2019 15:56:00 -0700
-Received: from mmullins-1.thefacebook.com (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::130) with Microsoft SMTP Server id
- 15.1.1713.5; Thu, 30 May 2019 15:55:58 -0700
-From:   Matt Mullins <mmullins@fb.com>
-To:     <hall@fb.com>, <mmullins@fb.com>, <ast@kernel.org>,
-        <bpf@vger.kernel.org>, <netdev@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, "Yonghong Song" <yhs@fb.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: [PATCH bpf] bpf: preallocate a perf_sample_data per event fd
-Date:   Thu, 30 May 2019 15:55:48 -0700
-Message-ID: <20190530225549.23014-1-mmullins@fb.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 30 May 2019 18:57:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60968 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726045AbfE3W5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 18:57:08 -0400
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09E78262D1;
+        Thu, 30 May 2019 22:57:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559257027;
+        bh=iWlHwQIQWXgJxw5M7bJPq4MrgLHO4zyeNxvUKrcQDJs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=eDQuxbkGjkCAjxTDwhjOqsUUKwS5T+l9GzaPR7RBxLxTl+iBKmcTUMdrT+fiJdW+/
+         kKRS+2KsvqgM5EqpG8kq54+6i7djmBKARo6z3QPbMHFi7wxOubOmP56RGfYFMvk9za
+         7Gd+MU8CdRzFhTJyrd436HeCx2cUeKXtLt7sUdxc=
+Received: by mail-wr1-f49.google.com with SMTP id h1so5237366wro.4;
+        Thu, 30 May 2019 15:57:06 -0700 (PDT)
+X-Gm-Message-State: APjAAAWWRiMwClP1MkrImTklWxojrmHlSVaZO0IDG43CX/t5AqAEr4wa
+        C80WGISLN1I0hPIOU1T8qFxQi89FKFR4IzBqhVE=
+X-Google-Smtp-Source: APXvYqzB/imXLBAYcgV5SPngjuVw5E3+3UKU9f5J+X1Zzb2GO4Nj5erqdYaBmQU52zkdl0I+DX6YMxUcnUkt7x5fGUA=
+X-Received: by 2002:adf:afd5:: with SMTP id y21mr4064469wrd.12.1559257025604;
+ Thu, 30 May 2019 15:57:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [2620:10d:c081:10::13]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-30_14:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905300160
-X-FB-Internal: deliver
+References: <1558946326-13630-1-git-send-email-neal.liu@mediatek.com> <1558946326-13630-3-git-send-email-neal.liu@mediatek.com>
+In-Reply-To: <1558946326-13630-3-git-send-email-neal.liu@mediatek.com>
+From:   Sean Wang <sean.wang@kernel.org>
+Date:   Thu, 30 May 2019 15:56:55 -0700
+X-Gmail-Original-Message-ID: <CAGp9LzrQegBb9Oe-=jfkwOrsYY=eN3BSF=DWnu+aSBAhQ5bexA@mail.gmail.com>
+Message-ID: <CAGp9LzrQegBb9Oe-=jfkwOrsYY=eN3BSF=DWnu+aSBAhQ5bexA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] dt-bindings: rng: update bindings for MediaTek
+ ARMv8 SoCs
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>, wsd_upstream@mediatek.com,
+        Crystal Guo <Crystal.Guo@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is possible that a BPF program can be called while another BPF
-program is executing bpf_perf_event_output.  This has been observed with
-I/O completion occurring as a result of an interrupt:
+Hi, Neal
 
-	bpf_prog_247fd1341cddaea4_trace_req_end+0x8d7/0x1000
-	? trace_call_bpf+0x82/0x100
-	? sch_direct_xmit+0xe2/0x230
-	? blk_mq_end_request+0x1/0x100
-	? blk_mq_end_request+0x5/0x100
-	? kprobe_perf_func+0x19b/0x240
-	? __qdisc_run+0x86/0x520
-	? blk_mq_end_request+0x1/0x100
-	? blk_mq_end_request+0x5/0x100
-	? kprobe_ftrace_handler+0x90/0xf0
-	? ftrace_ops_assist_func+0x6e/0xe0
-	? ip6_input_finish+0xbf/0x460
-	? 0xffffffffa01e80bf
-	? nbd_dbg_flags_show+0xc0/0xc0 [nbd]
-	? blkdev_issue_zeroout+0x200/0x200
-	? blk_mq_end_request+0x1/0x100
-	? blk_mq_end_request+0x5/0x100
-	? flush_smp_call_function_queue+0x6c/0xe0
-	? smp_call_function_single_interrupt+0x32/0xc0
-	? call_function_single_interrupt+0xf/0x20
-	? call_function_single_interrupt+0xa/0x20
-	? swiotlb_map_page+0x140/0x140
-	? refcount_sub_and_test+0x1a/0x50
-	? tcp_wfree+0x20/0xf0
-	? skb_release_head_state+0x62/0xc0
-	? skb_release_all+0xe/0x30
-	? napi_consume_skb+0xb5/0x100
-	? mlx5e_poll_tx_cq+0x1df/0x4e0
-	? mlx5e_poll_tx_cq+0x38c/0x4e0
-	? mlx5e_napi_poll+0x58/0xc30
-	? mlx5e_napi_poll+0x232/0xc30
-	? net_rx_action+0x128/0x340
-	? __do_softirq+0xd4/0x2ad
-	? irq_exit+0xa5/0xb0
-	? do_IRQ+0x7d/0xc0
-	? common_interrupt+0xf/0xf
-	</IRQ>
-	? __rb_free_aux+0xf0/0xf0
-	? perf_output_sample+0x28/0x7b0
-	? perf_prepare_sample+0x54/0x4a0
-	? perf_event_output+0x43/0x60
-	? bpf_perf_event_output_raw_tp+0x15f/0x180
-	? blk_mq_start_request+0x1/0x120
-	? bpf_prog_411a64a706fc6044_should_trace+0xad4/0x1000
-	? bpf_trace_run3+0x2c/0x80
-	? nbd_send_cmd+0x4c2/0x690 [nbd]
+On Mon, May 27, 2019 at 1:39 AM Neal Liu <neal.liu@mediatek.com> wrote:
+>
+> Document the binding used by the MediaTek ARMv8 SoCs random
+> number generator with TrustZone enabled.
+>
+> Signed-off-by: Neal Liu <neal.liu@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/rng/mtk-rng.txt |   13 ++++++++++---
+>  1 file changed, 10 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/rng/mtk-rng.txt b/Documentation/devicetree/bindings/rng/mtk-rng.txt
+> index 2bc89f1..1fb9b1d 100644
+> --- a/Documentation/devicetree/bindings/rng/mtk-rng.txt
+> +++ b/Documentation/devicetree/bindings/rng/mtk-rng.txt
+> @@ -3,9 +3,12 @@ found in MediaTek SoC family
+>
+>  Required properties:
+>  - compatible       : Should be
+> -                       "mediatek,mt7622-rng",  "mediatek,mt7623-rng" : for MT7622
+> -                       "mediatek,mt7629-rng",  "mediatek,mt7623-rng" : for MT7629
+> -                       "mediatek,mt7623-rng" : for MT7623
+> +                       "mediatek,mt7622-rng", "mediatek,mt7623-rng" for MT7622
+> +                       "mediatek,mt7629-rng", "mediatek,mt7623-rng" for MT7629
+> +                       "mediatek,mt7623-rng" for MT7623
 
-This also cannot be alleviated by further splitting the per-cpu
-perf_sample_data structs (as in commit 283ca526a9bd ("bpf: fix
-corruption on concurrent perf_event_output calls")), as a raw_tp could
-be attached to the block:block_rq_complete tracepoint and execute during
-another raw_tp.  Instead, keep a pre-allocated perf_sample_data
-structure per perf_event_array element and fail a bpf_perf_event_output
-if that element is concurrently being used.
+No make any change for those lines not belong to the series
 
-Fixes: 20b9d7ac4852 ("bpf: avoid excessive stack usage for perf_sample_data")
-Signed-off-by: Matt Mullins <mmullins@fb.com>
----
-It felt a bit overkill, but I had to split bpf_event_entry into its own
-header file to break an include cycle from perf_event.h -> cgroup.h ->
-cgroup-defs.h -> bpf-cgroup.h -> bpf.h -> (potentially) perf_event.h.
+> +                       "mediatek,mtk-sec-rng" for MediaTek ARMv8 SoCs
 
- include/linux/bpf.h       |  7 -------
- include/linux/bpf_event.h | 20 ++++++++++++++++++++
- kernel/bpf/arraymap.c     |  2 ++
- kernel/trace/bpf_trace.c  | 30 +++++++++++++++++-------------
- 4 files changed, 39 insertions(+), 20 deletions(-)
- create mode 100644 include/linux/bpf_event.h
+I thought "mediatek,mtk-sec-rng" is only for those MediaTek ARMv8 SoCs
+with security RNG
 
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index 4fb3aa2dc975..13b253a36402 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -467,13 +467,6 @@ static inline bool bpf_map_flags_access_ok(u32 access_flags)
- 	       (BPF_F_RDONLY_PROG | BPF_F_WRONLY_PROG);
- }
- 
--struct bpf_event_entry {
--	struct perf_event *event;
--	struct file *perf_file;
--	struct file *map_file;
--	struct rcu_head rcu;
--};
--
- bool bpf_prog_array_compatible(struct bpf_array *array, const struct bpf_prog *fp);
- int bpf_prog_calc_tag(struct bpf_prog *fp);
- 
-diff --git a/include/linux/bpf_event.h b/include/linux/bpf_event.h
-new file mode 100644
-index 000000000000..9f415990f921
---- /dev/null
-+++ b/include/linux/bpf_event.h
-@@ -0,0 +1,20 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef _LINUX_BPF_EVENT_H
-+#define _LINUX_BPF_EVENT_H
-+
-+#include <linux/perf_event.h>
-+#include <linux/types.h>
-+
-+struct file;
-+
-+struct bpf_event_entry {
-+	struct perf_event *event;
-+	struct file *perf_file;
-+	struct file *map_file;
-+	struct rcu_head rcu;
-+	struct perf_sample_data sd;
-+	atomic_t in_use;
-+};
-+
-+#endif /* _LINUX_BPF_EVENT_H */
-diff --git a/kernel/bpf/arraymap.c b/kernel/bpf/arraymap.c
-index 584636c9e2eb..08e5e486d563 100644
---- a/kernel/bpf/arraymap.c
-+++ b/kernel/bpf/arraymap.c
-@@ -11,6 +11,7 @@
-  * General Public License for more details.
-  */
- #include <linux/bpf.h>
-+#include <linux/bpf_event.h>
- #include <linux/btf.h>
- #include <linux/err.h>
- #include <linux/slab.h>
-@@ -659,6 +660,7 @@ static struct bpf_event_entry *bpf_event_entry_gen(struct file *perf_file,
- 		ee->event = perf_file->private_data;
- 		ee->perf_file = perf_file;
- 		ee->map_file = map_file;
-+		atomic_set(&ee->in_use, 0);
- 	}
- 
- 	return ee;
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index f92d6ad5e080..a03e29957698 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -6,6 +6,7 @@
- #include <linux/types.h>
- #include <linux/slab.h>
- #include <linux/bpf.h>
-+#include <linux/bpf_event.h>
- #include <linux/bpf_perf_event.h>
- #include <linux/filter.h>
- #include <linux/uaccess.h>
-@@ -410,17 +411,17 @@ static const struct bpf_func_proto bpf_perf_event_read_value_proto = {
- 	.arg4_type	= ARG_CONST_SIZE,
- };
- 
--static DEFINE_PER_CPU(struct perf_sample_data, bpf_trace_sd);
--
- static __always_inline u64
- __bpf_perf_event_output(struct pt_regs *regs, struct bpf_map *map,
--			u64 flags, struct perf_sample_data *sd)
-+			u64 flags, struct perf_raw_record *raw)
- {
- 	struct bpf_array *array = container_of(map, struct bpf_array, map);
- 	unsigned int cpu = smp_processor_id();
- 	u64 index = flags & BPF_F_INDEX_MASK;
- 	struct bpf_event_entry *ee;
- 	struct perf_event *event;
-+	struct perf_sample_data *sd;
-+	u64 ret;
- 
- 	if (index == BPF_F_CURRENT_CPU)
- 		index = cpu;
-@@ -439,13 +440,22 @@ __bpf_perf_event_output(struct pt_regs *regs, struct bpf_map *map,
- 	if (unlikely(event->oncpu != cpu))
- 		return -EOPNOTSUPP;
- 
--	return perf_event_output(event, sd, regs);
-+	if (atomic_cmpxchg(&ee->in_use, 0, 1) != 0)
-+		return -EBUSY;
-+
-+	sd = &ee->sd;
-+	perf_sample_data_init(sd, 0, 0);
-+	sd->raw = raw;
-+
-+	ret = perf_event_output(event, sd, regs);
-+
-+	atomic_set(&ee->in_use, 0);
-+	return ret;
- }
- 
- BPF_CALL_5(bpf_perf_event_output, struct pt_regs *, regs, struct bpf_map *, map,
- 	   u64, flags, void *, data, u64, size)
- {
--	struct perf_sample_data *sd = this_cpu_ptr(&bpf_trace_sd);
- 	struct perf_raw_record raw = {
- 		.frag = {
- 			.size = size,
-@@ -456,10 +466,8 @@ BPF_CALL_5(bpf_perf_event_output, struct pt_regs *, regs, struct bpf_map *, map,
- 	if (unlikely(flags & ~(BPF_F_INDEX_MASK)))
- 		return -EINVAL;
- 
--	perf_sample_data_init(sd, 0, 0);
--	sd->raw = &raw;
- 
--	return __bpf_perf_event_output(regs, map, flags, sd);
-+	return __bpf_perf_event_output(regs, map, flags, &raw);
- }
- 
- static const struct bpf_func_proto bpf_perf_event_output_proto = {
-@@ -474,12 +482,10 @@ static const struct bpf_func_proto bpf_perf_event_output_proto = {
- };
- 
- static DEFINE_PER_CPU(struct pt_regs, bpf_pt_regs);
--static DEFINE_PER_CPU(struct perf_sample_data, bpf_misc_sd);
- 
- u64 bpf_event_output(struct bpf_map *map, u64 flags, void *meta, u64 meta_size,
- 		     void *ctx, u64 ctx_size, bpf_ctx_copy_t ctx_copy)
- {
--	struct perf_sample_data *sd = this_cpu_ptr(&bpf_misc_sd);
- 	struct pt_regs *regs = this_cpu_ptr(&bpf_pt_regs);
- 	struct perf_raw_frag frag = {
- 		.copy		= ctx_copy,
-@@ -497,10 +503,8 @@ u64 bpf_event_output(struct bpf_map *map, u64 flags, void *meta, u64 meta_size,
- 	};
- 
- 	perf_fetch_caller_regs(regs);
--	perf_sample_data_init(sd, 0, 0);
--	sd->raw = &raw;
- 
--	return __bpf_perf_event_output(regs, map, flags, sd);
-+	return __bpf_perf_event_output(regs, map, flags, &raw);
- }
- 
- BPF_CALL_0(bpf_get_current_task)
--- 
-2.17.1
+> +
+> +Optional properties:
+>  - clocks           : list of clock specifiers, corresponding to
+>                       entries in clock-names property;
+>  - clock-names      : Should contain "rng" entries;
+> @@ -19,3 +22,7 @@ rng: rng@1020f000 {
+>         clocks = <&infracfg CLK_INFRA_TRNG>;
+>         clock-names = "rng";
+>  };
 
+For those MediaTek ARMv8 SoCs with security RNG
+
+> +
+> +hwrng: hwrng {
+> +       compatible = "mediatek,mtk-sec-rng";
+> +};
+> --
+> 1.7.9.5
+>
