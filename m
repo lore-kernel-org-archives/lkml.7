@@ -2,177 +2,93 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1C9C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2AEC28CC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 593EC242D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:20:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97547256BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:21:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="Z2k6P15B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbfE3MUr (ORCPT
+        id S1727255AbfE3MU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 08:20:47 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:17628 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726065AbfE3MUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 08:20:47 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 2BC0084B9352ECE62CBB;
-        Thu, 30 May 2019 20:20:41 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Thu, 30 May 2019
- 20:20:31 +0800
-Subject: Re: [PATCH v8 1/7] iommu: enhance IOMMU default DMA mode build
- options
-To:     Zhen Lei <thunder.leizhen@huawei.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "Will Deacon" <will.deacon@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "Michael Ellerman" <mpe@ellerman.id.au>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        iommu <iommu@lists.linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>
-References: <20190530034831.4184-1-thunder.leizhen@huawei.com>
- <20190530034831.4184-2-thunder.leizhen@huawei.com>
-CC:     Hanjun Guo <guohanjun@huawei.com>, Linuxarm <linuxarm@huawei.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <645bd526-4eb0-4a36-2dda-023f009247ab@huawei.com>
-Date:   Thu, 30 May 2019 13:20:16 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        Thu, 30 May 2019 08:20:59 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:43576 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726065AbfE3MU7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 08:20:59 -0400
+Received: by mail-ed1-f67.google.com with SMTP id w33so8823377edb.10
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 05:20:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YT3ORHa/ZvJBb9khTyipcwzY8aPEUTPQ5f0pg4jxr5Y=;
+        b=Z2k6P15BL06hicotC2dSnEhV4GaouaYG/VP+GJ3fGnAhF6at7jpkvpP/YG0JsS3EXO
+         /WmsTJLB5yROTZTpRxkMVP5tsNLz1NTj4KHZjtrEY3hwmzJ0k+hnd8h5BPu5s5utlIaY
+         4GgG5pQr07iKIMbAzXkcfrvYvubSvkZzB0y/Tgyo+teWVipAtuwqkcQ0mATGh2pId31v
+         FlOjjKi7NJhawjq3cI2k0UcyG6Uo1GdWhl0a6KGpV9MNvka+4sAXH206O2kwt8JdXvdP
+         xVnDd4ry5jN/dyzJLCyT7PseowF6bzOXZRvj0IjQMxxiKs8NV0ibOIfa+4TYyVwTHni2
+         V63w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YT3ORHa/ZvJBb9khTyipcwzY8aPEUTPQ5f0pg4jxr5Y=;
+        b=X/FIWCfYzOvvRf3CwkQeK05x+eYeGQhihyWbDc87whotsjyaxJWbXCtg16Pz2TgWLR
+         jOyIaWoDz4xr1rCdM1sZoG+Fb1zLnDoySX6Yfi7DPjrCWfQflST66HmUuCRu8/2i/tgo
+         9RbrvRTb6kSSwMsPll3ehALpArDYZIqnECaLu9h1BC4vgVtAlVVNyFkJVq7Bsr4pMDwR
+         Xve1DEqoxLqh9onhGO0eR4PDAzJrOwVjtjqnhgz4Rj5CgEd1PyrlQriOW2jP0e9oUjP1
+         AlSwVnOPyGGw5sLTfAiZHLiSg3Cgj0LK0g/UwHGIvEAOdecFk47x3xxds6eGgpz44XNv
+         LCdg==
+X-Gm-Message-State: APjAAAU4fDqfWdMJJilvGkfAOabQCXeQ1VrDJHb8p877o4e/lt5uy+q9
+        rOyFutwJ7b/k27vL1KGUvqKscg==
+X-Google-Smtp-Source: APXvYqz1QMEcICzGq1904VHz2gHy6zj21AwriFZbwIfNLZqfdA6Rb2hqgd+xEtLtBupnaHP/sjhZpw==
+X-Received: by 2002:a17:906:63c1:: with SMTP id u1mr3160741ejk.173.1559218857620;
+        Thu, 30 May 2019 05:20:57 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id d11sm682334eda.45.2019.05.30.05.20.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 May 2019 05:20:56 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 975811041ED; Thu, 30 May 2019 15:20:55 +0300 (+03)
+Date:   Thu, 30 May 2019 15:20:55 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org, namit@vmware.com,
+        peterz@infradead.org, oleg@redhat.com, rostedt@goodmis.org,
+        mhiramat@kernel.org, matthew.wilcox@oracle.com,
+        kirill.shutemov@linux.intel.com, kernel-team@fb.com,
+        william.kucharski@oracle.com, chad.mynhier@oracle.com,
+        mike.kravetz@oracle.com
+Subject: Re: [PATCH uprobe, thp 4/4] uprobe: collapse THP pmd after removing
+ all uprobes
+Message-ID: <20190530122055.xzlbo3wfpqtmo2fw@box>
+References: <20190529212049.2413886-1-songliubraving@fb.com>
+ <20190529212049.2413886-5-songliubraving@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <20190530034831.4184-2-thunder.leizhen@huawei.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190529212049.2413886-5-songliubraving@fb.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/05/2019 04:48, Zhen Lei wrote:
-> First, add build option IOMMU_DEFAULT_{LAZY|STRICT}, so that we have the
-> opportunity to set {lazy|strict} mode as default at build time. Then put
-> the three config options in an choice, make people can only choose one of
-> the three at a time.
->
+On Wed, May 29, 2019 at 02:20:49PM -0700, Song Liu wrote:
+> After all uprobes are removed from the huge page (with PTE pgtable), it
+> is possible to collapse the pmd and benefit from THP again. This patch
+> does the collapse.
 
-Since this was not picked up, but modulo (somtimes same) comments below:
+I don't think it's right way to go. We should deferred it to khugepaged.
+We need to teach khugepaged to deal with PTE-mapped compound page.
+And uprobe should only kick khugepaged for a VMA. Maybe synchronously.
 
-Reviewed-by: John Garry <john.garry@huawei.com>
-
-> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-> ---
->  drivers/iommu/Kconfig | 42 +++++++++++++++++++++++++++++++++++-------
->  drivers/iommu/iommu.c |  3 ++-
->  2 files changed, 37 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> index 83664db5221df02..d6a1a45f80ffbf5 100644
-> --- a/drivers/iommu/Kconfig
-> +++ b/drivers/iommu/Kconfig
-> @@ -75,17 +75,45 @@ config IOMMU_DEBUGFS
->  	  debug/iommu directory, and then populate a subdirectory with
->  	  entries as required.
->
-> -config IOMMU_DEFAULT_PASSTHROUGH
-> -	bool "IOMMU passthrough by default"
-> +choice
-> +	prompt "IOMMU default DMA mode"
->  	depends on IOMMU_API
-> -        help
-> -	  Enable passthrough by default, removing the need to pass in
-> -	  iommu.passthrough=on or iommu=pt through command line. If this
-> -	  is enabled, you can still disable with iommu.passthrough=off
-> -	  or iommu=nopt depending on the architecture.
-> +	default IOMMU_DEFAULT_STRICT
-> +	help
-> +	  This option allows IOMMU DMA mode to be chose at build time, to
-
-As before:
-/s/chose/chosen/, /s/allows IOMMU/allows an IOMMU/
-
-> +	  override the default DMA mode of each ARCHs, removing the need to
-
-Again, as before:
-ARCHs should be singular
-
-> +	  pass in kernel parameters through command line. You can still use
-> +	  ARCHs specific boot options to override this option again.
-> +
-> +config IOMMU_DEFAULT_PASSTHROUGH
-> +	bool "passthrough"
-> +	help
-> +	  In this mode, the DMA access through IOMMU without any addresses
-> +	  translation. That means, the wrong or illegal DMA access can not
-> +	  be caught, no error information will be reported.
->
->  	  If unsure, say N here.
->
-> +config IOMMU_DEFAULT_LAZY
-> +	bool "lazy"
-> +	help
-> +	  Support lazy mode, where for every IOMMU DMA unmap operation, the
-> +	  flush operation of IOTLB and the free operation of IOVA are deferred.
-> +	  They are only guaranteed to be done before the related IOVA will be
-> +	  reused.
-
-why no advisory on how to set if unsure?
-
-> +
-> +config IOMMU_DEFAULT_STRICT
-> +	bool "strict"
-> +	help
-> +	  For every IOMMU DMA unmap operation, the flush operation of IOTLB and
-> +	  the free operation of IOVA are guaranteed to be done in the unmap
-> +	  function.
-> +
-> +	  This mode is safer than the two above, but it maybe slower in some
-> +	  high performace scenarios.
-
-and here?
-
-> +
-> +endchoice
-> +
->  config OF_IOMMU
->         def_bool y
->         depends on OF && IOMMU_API
-> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-> index 67ee6623f9b2a4d..56bce221285b15f 100644
-> --- a/drivers/iommu/iommu.c
-> +++ b/drivers/iommu/iommu.c
-> @@ -43,7 +43,8 @@
->  #else
->  static unsigned int iommu_def_domain_type = IOMMU_DOMAIN_DMA;
->  #endif
-> -static bool iommu_dma_strict __read_mostly = true;
-> +static bool iommu_dma_strict __read_mostly =
-> +			IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
->
->  struct iommu_group {
->  	struct kobject kobj;
->
-
-
+-- 
+ Kirill A. Shutemov
