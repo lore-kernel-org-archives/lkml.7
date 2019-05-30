@@ -5,52 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F862C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54AF2C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD50C2512E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D22A25130
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:09:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189380;
-	bh=27umrm3N9KF4pYwIo8YMkA0kKNn7I/cefH8k/2uDEpE=;
+	s=default; t=1559189384;
+	bh=CYi8NvBAxVHnyCPZsVnbMsCHDi5Ti7e1WI+OTRJsNws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i/9sXrHxkXwvutd/hADIIl2rNQnqmTw0UshgnVSJnWzyImS2+BSraQA7Xht1Fhvus
-	 eeqYFTeN5+EOsO14Bto7lzR+rx/VnJbYlNHMhr19JwJEUrrXfGV8e2rtTGTXlbJ/ic
-	 LGZHDmBSW572MGYiSCZOuMqNU5Og+/IUbF0499sY=
+	b=D30mAH2BrqmC9Q/19fiTdlYIgoa8qviMFLyZYmVDChsFKqxXbkrCpChggetirqdq5
+	 2RJ5sKdvF71TXGK7IrxG021bMlNqhR0B1PlsfGJjXjXN28mqGDqC19rHe0MJf7QBne
+	 wLmQ7obtxImjxEzuhoKig5DYDpa9qwomXVEOzeZ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbfE3EJg (ORCPT
+        id S1729585AbfE3DRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:09:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45302 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:17:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730104AbfE3DRM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:17:12 -0400
+        id S1729596AbfE3DNt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:49 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 313A124685;
-        Thu, 30 May 2019 03:17:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A102E24556;
+        Thu, 30 May 2019 03:13:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186231;
-        bh=27umrm3N9KF4pYwIo8YMkA0kKNn7I/cefH8k/2uDEpE=;
+        s=default; t=1559186028;
+        bh=CYi8NvBAxVHnyCPZsVnbMsCHDi5Ti7e1WI+OTRJsNws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OszGQFAJkXvuKSnBhn9alJQFYAA0cuQUDDpwruHuVtcz0WTYFsN7bOUlUiA/QbnB5
-         FHs1upJvVLwPuvBvDffegluEihfiQ5f+IL4XP/A3ebE/6OxfS00QfvCXyNTR1BokjK
-         6uA6+xRF5x4jyCLydPPd4+UfGj1vZvrp85WFBgBU=
+        b=g2vf315RdJi/hQSBHX7mFGUJDXEqLy1OX6UMP1Vk+4LHC3k6jSEt2bxlEi/jIgTeB
+         sX2aIaCnG/PT3aj9F6L3rR+wqROW9C+a8Frphr4t5iO484Meh7Ci9lAGlAPn9S8UEb
+         m4+CR/oEEAaJS7bp0j5Sx6nvvgHlhUAett1lzxjc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roman Gushchin <guro@fb.com>,
-        Tejun Heo <tj@kernel.org>, kernel-team@fb.com,
+        stable@vger.kernel.org,
+        Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 135/276] cgroup: protect cgroup->nr_(dying_)descendants by css_set_lock
-Date:   Wed, 29 May 2019 20:04:53 -0700
-Message-Id: <20190530030534.180015747@linuxfoundation.org>
+Subject: [PATCH 5.0 104/346] mac80211/cfg80211: update bss channel on channel switch
+Date:   Wed, 29 May 2019 20:02:57 -0700
+Message-Id: <20190530030546.399761699@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
-References: <20190530030523.133519668@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,92 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4dcabece4c3a9f9522127be12cc12cc120399b2f ]
+[ Upstream commit 5dc8cdce1d722c733f8c7af14c5fb595cfedbfa8 ]
 
-The number of descendant cgroups and the number of dying
-descendant cgroups are currently synchronized using the cgroup_mutex.
+FullMAC STAs have no way to update bss channel after CSA channel switch
+completion. As a result, user-space tools may provide inconsistent
+channel info. For instance, consider the following two commands:
+$ sudo iw dev wlan0 link
+$ sudo iw dev wlan0 info
+The latter command gets channel info from the hardware, so most probably
+its output will be correct. However the former command gets channel info
+from scan cache, so its output will contain outdated channel info.
+In fact, current bss channel info will not be updated until the
+next [re-]connect.
 
-The number of descendant cgroups will be required by the cgroup v2
-freezer, which will use it to determine if a cgroup is frozen
-(depending on total number of descendants and number of frozen
-descendants). It's not always acceptable to grab the cgroup_mutex,
-especially from quite hot paths (e.g. exit()).
+Note that mac80211 STAs have a workaround for this, but it requires
+access to internal cfg80211 data, see ieee80211_chswitch_work:
 
-To avoid this, let's additionally synchronize these counters using
-the css_set_lock.
+	/* XXX: shouldn't really modify cfg80211-owned data! */
+	ifmgd->associated->channel = sdata->csa_chandef.chan;
 
-So, it's safe to read these counters with either cgroup_mutex or
-css_set_lock locked, and for changing both locks should be acquired.
+This patch suggests to convert mac80211 workaround into cfg80211 behavior
+and to update current bss channel in cfg80211_ch_switch_notify.
 
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: kernel-team@fb.com
+Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/cgroup-defs.h | 5 +++++
- kernel/cgroup/cgroup.c      | 6 ++++++
- 2 files changed, 11 insertions(+)
+ net/mac80211/mlme.c    | 3 ---
+ net/wireless/nl80211.c | 5 +++++
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
-index 6002275937f55..a6090154b2ab7 100644
---- a/include/linux/cgroup-defs.h
-+++ b/include/linux/cgroup-defs.h
-@@ -346,6 +346,11 @@ struct cgroup {
- 	 * Dying cgroups are cgroups which were deleted by a user,
- 	 * but are still existing because someone else is holding a reference.
- 	 * max_descendants is a maximum allowed number of descent cgroups.
-+	 *
-+	 * nr_descendants and nr_dying_descendants are protected
-+	 * by cgroup_mutex and css_set_lock. It's fine to read them holding
-+	 * any of cgroup_mutex and css_set_lock; for writing both locks
-+	 * should be held.
- 	 */
- 	int nr_descendants;
- 	int nr_dying_descendants;
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index 63dae7e0ccae7..81441117f6114 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -4659,9 +4659,11 @@ static void css_release_work_fn(struct work_struct *work)
- 		if (cgroup_on_dfl(cgrp))
- 			cgroup_rstat_flush(cgrp);
- 
-+		spin_lock_irq(&css_set_lock);
- 		for (tcgrp = cgroup_parent(cgrp); tcgrp;
- 		     tcgrp = cgroup_parent(tcgrp))
- 			tcgrp->nr_dying_descendants--;
-+		spin_unlock_irq(&css_set_lock);
- 
- 		cgroup_idr_remove(&cgrp->root->cgroup_idr, cgrp->id);
- 		cgrp->id = -1;
-@@ -4874,12 +4876,14 @@ static struct cgroup *cgroup_create(struct cgroup *parent)
- 	if (ret)
- 		goto out_idr_free;
- 
-+	spin_lock_irq(&css_set_lock);
- 	for (tcgrp = cgrp; tcgrp; tcgrp = cgroup_parent(tcgrp)) {
- 		cgrp->ancestor_ids[tcgrp->level] = tcgrp->id;
- 
- 		if (tcgrp != cgrp)
- 			tcgrp->nr_descendants++;
+diff --git a/net/mac80211/mlme.c b/net/mac80211/mlme.c
+index 6878215672871..715ab0e6579cb 100644
+--- a/net/mac80211/mlme.c
++++ b/net/mac80211/mlme.c
+@@ -1167,9 +1167,6 @@ static void ieee80211_chswitch_work(struct work_struct *work)
+ 		goto out;
  	}
-+	spin_unlock_irq(&css_set_lock);
  
- 	if (notify_on_release(parent))
- 		set_bit(CGRP_NOTIFY_ON_RELEASE, &cgrp->flags);
-@@ -5162,10 +5166,12 @@ static int cgroup_destroy_locked(struct cgroup *cgrp)
- 	if (parent && cgroup_is_threaded(cgrp))
- 		parent->nr_threaded_children--;
+-	/* XXX: shouldn't really modify cfg80211-owned data! */
+-	ifmgd->associated->channel = sdata->csa_chandef.chan;
+-
+ 	ifmgd->csa_waiting_bcn = true;
  
-+	spin_lock_irq(&css_set_lock);
- 	for (tcgrp = cgroup_parent(cgrp); tcgrp; tcgrp = cgroup_parent(tcgrp)) {
- 		tcgrp->nr_descendants--;
- 		tcgrp->nr_dying_descendants++;
- 	}
-+	spin_unlock_irq(&css_set_lock);
+ 	ieee80211_sta_reset_beacon_monitor(sdata);
+diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
+index 156ce708b5330..0044bfb526abc 100644
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -15667,6 +15667,11 @@ void cfg80211_ch_switch_notify(struct net_device *dev,
  
- 	cgroup1_check_for_release(parent);
- 
+ 	wdev->chandef = *chandef;
+ 	wdev->preset_chandef = *chandef;
++
++	if (wdev->iftype == NL80211_IFTYPE_STATION &&
++	    !WARN_ON(!wdev->current_bss))
++		wdev->current_bss->pub.channel = chandef->chan;
++
+ 	nl80211_ch_switch_notify(rdev, dev, chandef, GFP_KERNEL,
+ 				 NL80211_CMD_CH_SWITCH_NOTIFY, 0);
+ }
 -- 
 2.20.1
 
