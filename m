@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9538FC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D5EC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 604CD25096
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:07:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F4C225095
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:07:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189233;
-	bh=AqjRXvAowMkD8Xr9ZMA3vBOBovKcSxEwvdYWHoscRq8=;
+	s=default; t=1559189237;
+	bh=A61OVX+qhxljkiOkU0eMW39eESdk+BXN3QoFqUVRpco=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eN2ODiXLgKkgX8cUomFfzfGmFIkGBCsLoxASGKUxji2ejrvgy6LJVnfX1AB9mPofx
-	 6Y7b6w+/NjTafFutAdquIMiGWcyN0OadjNHLTpfpzvzt5huerzpJA25EW791vTWWwg
-	 eOtHmAPQW9AnI6ie0hsqsPWIhm7D/16rOSx2anyo=
+	b=x5Y6sLYec5ZA2udrlmCD8/t6sql5II8m/7pwf8WafPnSjqnJOu5aaUlGSL0m6o5Aw
+	 h8CIoacm5pfHa6bVrgvrF7nDGKXg+7M4HaADGYGThxKMfdxh7oKFYMnOzU/IToHuvv
+	 Qp5ec83i/eewUvNlxsW4ayjsSXvbf9xUH4QCgyOE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727055AbfE3EHM (ORCPT
+        id S1726487AbfE3EHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:07:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47466 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:07:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731137AbfE3DRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731136AbfE3DRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:17:30 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49E032464B;
-        Thu, 30 May 2019 03:17:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCFD323B5C;
+        Thu, 30 May 2019 03:17:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186250;
-        bh=AqjRXvAowMkD8Xr9ZMA3vBOBovKcSxEwvdYWHoscRq8=;
+        s=default; t=1559186249;
+        bh=A61OVX+qhxljkiOkU0eMW39eESdk+BXN3QoFqUVRpco=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xBD21zjLfFnAHRbuLJaoCCvlKBipZiSUGBLL3DwR9lhwFTWf9Ob0xGFloqD7NJCi+
-         F5csTMvZYsks437xp4EITcTsdG8YGClU7TnK3Obj/S27zf13heT9qKXqAGpFz5nXhM
-         CFQimDFEqsIZQXBTCGx+X6H8+ONVeXPpQ3n9vFYU=
+        b=gO3EX1Q1N7deQkUi1JSq5EED1ulNKwp7N5vOi32i3+gC7z3k+pOGOz9DE3iQ4QxSV
+         JCFmvGCrFkSGHHehkQBTaVppv6DbJl7OKBryvxzOfbNyF03L/Og/d4HRwD9j7lxYwq
+         mc3LWpzc9LRwjf6dGwdvj4f5zqv4qQCJ28xIM2Xk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Loic Pallardy <loic.pallardy@st.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Chunming Zhou <david1.zhou@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 169/276] PM / core: Propagate dev->power.wakeup_path when no callbacks
-Date:   Wed, 29 May 2019 20:05:27 -0700
-Message-Id: <20190530030535.965554437@linuxfoundation.org>
+Subject: [PATCH 4.19 168/276] drm/amdgpu: fix old fence check in amdgpu_fence_emit
+Date:   Wed, 29 May 2019 20:05:26 -0700
+Message-Id: <20190530030535.911897710@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -61,45 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit dc351d4c5f4fe4d0f274d6d660227be0c3a03317 ]
+[ Upstream commit 3d2aca8c8620346abdba96c6300d2c0b90a1d0cc ]
 
-The dev->power.direct_complete flag may become set in device_prepare() in
-case the device don't have any PM callbacks (dev->power.no_pm_callbacks is
-set). This leads to a broken behaviour, when there is child having wakeup
-enabled and relies on its parent to be used in the wakeup path.
+We don't hold a reference to the old fence, so it can go away
+any time we are waiting for it to signal.
 
-More precisely, when the direct complete path becomes selected for the
-child in __device_suspend(), the propagation of the dev->power.wakeup_path
-becomes skipped as well.
-
-Let's address this problem, by checking if the device is a part the wakeup
-path or has wakeup enabled, then prevent the direct complete path from
-being used.
-
-Reported-by: Loic Pallardy <loic.pallardy@st.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-[ rjw: Comment cleanup ]
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Christian König <christian.koenig@amd.com>
+Reviewed-by: Chunming Zhou <david1.zhou@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/power/main.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c | 24 ++++++++++++++++-------
+ 1 file changed, 17 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
-index a690fd4002605..4abd7c6531d9d 100644
---- a/drivers/base/power/main.c
-+++ b/drivers/base/power/main.c
-@@ -1736,6 +1736,10 @@ static int __device_suspend(struct device *dev, pm_message_t state, bool async)
- 	if (dev->power.syscore)
- 		goto Complete;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
+index 7056925eb3860..869ff624b108c 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
+@@ -136,8 +136,9 @@ int amdgpu_fence_emit(struct amdgpu_ring *ring, struct dma_fence **f,
+ {
+ 	struct amdgpu_device *adev = ring->adev;
+ 	struct amdgpu_fence *fence;
+-	struct dma_fence *old, **ptr;
++	struct dma_fence __rcu **ptr;
+ 	uint32_t seq;
++	int r;
  
-+	/* Avoid direct_complete to let wakeup_path propagate. */
-+	if (device_may_wakeup(dev) || dev->power.wakeup_path)
-+		dev->power.direct_complete = false;
+ 	fence = kmem_cache_alloc(amdgpu_fence_slab, GFP_KERNEL);
+ 	if (fence == NULL)
+@@ -153,15 +154,24 @@ int amdgpu_fence_emit(struct amdgpu_ring *ring, struct dma_fence **f,
+ 			       seq, flags | AMDGPU_FENCE_FLAG_INT);
+ 
+ 	ptr = &ring->fence_drv.fences[seq & ring->fence_drv.num_fences_mask];
++	if (unlikely(rcu_dereference_protected(*ptr, 1))) {
++		struct dma_fence *old;
 +
- 	if (dev->power.direct_complete) {
- 		if (pm_runtime_status_suspended(dev)) {
- 			pm_runtime_disable(dev);
++		rcu_read_lock();
++		old = dma_fence_get_rcu_safe(ptr);
++		rcu_read_unlock();
++
++		if (old) {
++			r = dma_fence_wait(old, false);
++			dma_fence_put(old);
++			if (r)
++				return r;
++		}
++	}
++
+ 	/* This function can't be called concurrently anyway, otherwise
+ 	 * emitting the fence would mess up the hardware ring buffer.
+ 	 */
+-	old = rcu_dereference_protected(*ptr, 1);
+-	if (old && !dma_fence_is_signaled(old)) {
+-		DRM_INFO("rcu slot is busy\n");
+-		dma_fence_wait(old, false);
+-	}
+-
+ 	rcu_assign_pointer(*ptr, dma_fence_get(&fence->base));
+ 
+ 	*f = &fence->base;
 -- 
 2.20.1
 
