@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01AB6C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 927E4C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5CB825079
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69AB02506E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:06:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189183;
-	bh=xNydASI18Rj2zLvBaJytxcUwe6gFezTCWCARsuFWbys=;
+	s=default; t=1559189193;
+	bh=NVvAzGOIg97qKyAva+g4y1yXfLiTQHg1ERmm+Zug250=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mMJp42gVMwAIMdvUKMsqauEmsGuzGwoCu7TQv/2ZMYea8hbPS33+IYYy9K58mRZVB
-	 ECkbscF20RVBh9yce5HzY6mupDTP3jfiD56colK3/oi3Wt+aQkSbUMTgoCH1zGoddi
-	 bOtfuTeZ0oZvRfB7T9czfAoxEVtYLNOsMpzKrS08=
+	b=WkmrYyQSKw8MPXjUrxsaSJ8eIJbq/csy1s/t492MUkOASyR6sSvQp9QM4wDHBuKQs
+	 Mf7OeCM1rgTdeog5V1wVB41zqNsxswq4i6g0ELv0IyfBmYvj6TO2mJ2WHPmVU2gxqs
+	 Q+l8tk7eOqWR+NToMNrxMwk19XZHH5Iu2O7cQ9xI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbfE3EGX (ORCPT
+        id S1727066AbfE3EGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:06:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47798 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:06:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731173AbfE3DRf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731169AbfE3DRf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:17:35 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0458D246EE;
-        Thu, 30 May 2019 03:17:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9544A246BB;
+        Thu, 30 May 2019 03:17:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186255;
-        bh=xNydASI18Rj2zLvBaJytxcUwe6gFezTCWCARsuFWbys=;
+        s=default; t=1559186254;
+        bh=NVvAzGOIg97qKyAva+g4y1yXfLiTQHg1ERmm+Zug250=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rx43P8SqF9Czn9kYPEX5u0IrTVeMmLWayk1ETrTcFBma+YOQ3wUgPcQo4/PDGLR1c
-         zgJ9gE17jp/XeQbcukueJOnXIirTB2p1Ijkis5r3GthKYYQ7qnd5E0K/vITMKHEIXP
-         MYdkXj1ZEhTCFQ6nbw2AP1E0d2OP0FKrtitdBnBQ=
+        b=ATaeByppsrPo4o3JKwpRYydMSOClOnM2SCg8109Ra+r/DtrHetn7aupF3C95JRVSi
+         ZzD8tc51zpSahUSc784MsYF0Y2mTd8BAfl+iDB3MCK+7Vlxh1LmKFw7A1prqkAiKzy
+         MnKZkXoNmiihuumWQH3bqe8rw/0fJhvB2wxjT1VQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 174/276] x86/microcode: Fix the ancient deprecated microcode loading method
-Date:   Wed, 29 May 2019 20:05:32 -0700
-Message-Id: <20190530030536.226687991@linuxfoundation.org>
+        stable@vger.kernel.org, Wenwen Wang <wang6495@umn.edu>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 125/276] audit: fix a memory leak bug
+Date:   Wed, 29 May 2019 20:04:43 -0700
+Message-Id: <20190530030533.643045833@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -60,43 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 24613a04ad1c0588c10f4b5403ca60a73d164051 ]
+[ Upstream commit 70c4cf17e445264453bc5323db3e50aa0ac9e81f ]
 
-Commit
+In audit_rule_change(), audit_data_to_entry() is firstly invoked to
+translate the payload data to the kernel's rule representation. In
+audit_data_to_entry(), depending on the audit field type, an audit tree may
+be created in audit_make_tree(), which eventually invokes kmalloc() to
+allocate the tree.  Since this tree is a temporary tree, it will be then
+freed in the following execution, e.g., audit_add_rule() if the message
+type is AUDIT_ADD_RULE or audit_del_rule() if the message type is
+AUDIT_DEL_RULE. However, if the message type is neither AUDIT_ADD_RULE nor
+AUDIT_DEL_RULE, i.e., the default case of the switch statement, this
+temporary tree is not freed.
 
-  2613f36ed965 ("x86/microcode: Attempt late loading only when new microcode is present")
+To fix this issue, only allocate the tree when the type is AUDIT_ADD_RULE
+or AUDIT_DEL_RULE.
 
-added the new define UCODE_NEW to denote that an update should happen
-only when newer microcode (than installed on the system) has been found.
-
-But it missed adjusting that for the old /dev/cpu/microcode loading
-interface. Fix it.
-
-Fixes: 2613f36ed965 ("x86/microcode: Attempt late loading only when new microcode is present")
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jann Horn <jannh@google.com>
-Link: https://lkml.kernel.org/r/20190405133010.24249-3-bp@alien8.de
+Signed-off-by: Wenwen Wang <wang6495@umn.edu>
+Reviewed-by: Richard Guy Briggs <rgb@redhat.com>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/microcode/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/auditfilter.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/microcode/core.c b/arch/x86/kernel/cpu/microcode/core.c
-index b9bc8a1a584e3..b43ddefd77f45 100644
---- a/arch/x86/kernel/cpu/microcode/core.c
-+++ b/arch/x86/kernel/cpu/microcode/core.c
-@@ -418,8 +418,9 @@ static int do_microcode_update(const void __user *buf, size_t size)
- 		if (ustate == UCODE_ERROR) {
- 			error = -1;
- 			break;
--		} else if (ustate == UCODE_OK)
-+		} else if (ustate == UCODE_NEW) {
- 			apply_microcode_on_target(cpu);
-+		}
+diff --git a/kernel/auditfilter.c b/kernel/auditfilter.c
+index bf309f2592c46..425c67e4f5681 100644
+--- a/kernel/auditfilter.c
++++ b/kernel/auditfilter.c
+@@ -1114,22 +1114,24 @@ int audit_rule_change(int type, int seq, void *data, size_t datasz)
+ 	int err = 0;
+ 	struct audit_entry *entry;
+ 
+-	entry = audit_data_to_entry(data, datasz);
+-	if (IS_ERR(entry))
+-		return PTR_ERR(entry);
+-
+ 	switch (type) {
+ 	case AUDIT_ADD_RULE:
++		entry = audit_data_to_entry(data, datasz);
++		if (IS_ERR(entry))
++			return PTR_ERR(entry);
+ 		err = audit_add_rule(entry);
+ 		audit_log_rule_change("add_rule", &entry->rule, !err);
+ 		break;
+ 	case AUDIT_DEL_RULE:
++		entry = audit_data_to_entry(data, datasz);
++		if (IS_ERR(entry))
++			return PTR_ERR(entry);
+ 		err = audit_del_rule(entry);
+ 		audit_log_rule_change("remove_rule", &entry->rule, !err);
+ 		break;
+ 	default:
+-		err = -EINVAL;
+ 		WARN_ON(1);
++		return -EINVAL;
  	}
  
- 	return error;
+ 	if (err || type == AUDIT_DEL_RULE) {
 -- 
 2.20.1
 
