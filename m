@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FFDC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F005EC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76DB3241B8
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:13:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA059251C5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:13:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189582;
-	bh=VEZpUIdlXjhf23J0PQHrbPeW73H2jqsEXS2Vwuma1lw=;
+	s=default; t=1559189585;
+	bh=kr1mZsj8ygrObG5nQgZ3wG80bWrkj5wGYBAuMQDFlWQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=COHNcuOcNol0TSFaTJQq1A5UWhCrs5zACSKgC1OjZJc49zYveQ6jg1+RuAFtnwqcV
-	 qEk+35PJas9XgzBtg32IwWMpcsINCdAkYBtYREvrNRhOZviJUJImn+KiQoeF46CWoR
-	 ekl8fMIc1IUzG2YmltpQ3IKuWftUpeh67b5P1Fv0=
+	b=pp9UTY5UQHJ4ha6W9/JH2F9PyIABPgTEf2UCTAggjA5si6rSDSppnrI3B0oJ3gBBU
+	 BF+sy6tU7G2Y/gdZ4USfrsD3l6LO5MFW9q6v1mKm8hjI9R0CnTu3siHxxZYqI/GnoZ
+	 IKRng/Bkm+N4nJXy8dtzcF3IZplv+Nxju9Shshq0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbfE3ENB (ORCPT
+        id S1729905AbfE3ENA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:13:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42566 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:13:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730671AbfE3DQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:26 -0400
+        id S1730673AbfE3DQ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:16:27 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBCDD245DF;
-        Thu, 30 May 2019 03:16:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8CF52458C;
+        Thu, 30 May 2019 03:16:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186185;
-        bh=VEZpUIdlXjhf23J0PQHrbPeW73H2jqsEXS2Vwuma1lw=;
+        s=default; t=1559186187;
+        bh=kr1mZsj8ygrObG5nQgZ3wG80bWrkj5wGYBAuMQDFlWQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xKnP5yrQ/JxZORrQV5/hDw60ckGALYbdwvPkxZH9riO2/NnQbtqe/ZoYVmiOWCgqq
-         pe74eZlDPA0Ev6psGhkMDC5L40CFIy4GHc/QUg6Cy7vZSQYVecpKte8/p0bikHm8zo
-         I1YnVoCcYUMjDDdoah7KrRj2sa3BHeMPJ1ppPGq0=
+        b=zBvskeImPKfmHsilzgw7fB8c0ygSmsW/bCxU+kO6Cd5obV5u9J3OzePAOtaG+3ugH
+         IOjWqMrgAyRuFRE3g2CvK/n8KW+jSgO0pc26c3zhNicR4i/9yH4PghZmnWj93FHJPE
+         q+RRLb2oHFKb41HoRPpNHHZJRece6xB/1QWJvNe0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sameer Pujar <spujar@nvidia.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 053/276] dmaengine: tegra210-dma: free dma controller in remove()
-Date:   Wed, 29 May 2019 20:03:31 -0700
-Message-Id: <20190530030528.440186289@linuxfoundation.org>
+        stable@vger.kernel.org, Haiyang Zhang <haiyangz@microsoft.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>,
+        Stephan Klein <stephan.klein@wegfinder.at>
+Subject: [PATCH 4.19 055/276] hv_netvsc: fix race that may miss tx queue wakeup
+Date:   Wed, 29 May 2019 20:03:33 -0700
+Message-Id: <20190530030528.713320653@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -60,85 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f030e419501cb95e961e9ed35c493b5d46a04eca ]
+[ Upstream commit 93aa4792c3908eac87ddd368ee0fe0564148232b ]
 
-Following kernel panic is seen during DMA driver unload->load sequence
-==========================================================================
-Unable to handle kernel paging request at virtual address ffffff8001198880
-Internal error: Oops: 86000007 [#1] PREEMPT SMP
-CPU: 0 PID: 5907 Comm: HwBinder:4123_1 Tainted: G C 4.9.128-tegra-g065839f
-Hardware name: galen (DT)
-task: ffffffc3590d1a80 task.stack: ffffffc3d0678000
-PC is at 0xffffff8001198880
-LR is at of_dma_request_slave_channel+0xd8/0x1f8
-pc : [<ffffff8001198880>] lr : [<ffffff8008746f30>] pstate: 60400045
-sp : ffffffc3d067b710
-x29: ffffffc3d067b710 x28: 000000000000002f
-x27: ffffff800949e000 x26: ffffff800949e750
-x25: ffffff800949e000 x24: ffffffbefe817d84
-x23: ffffff8009f77cb0 x22: 0000000000000028
-x21: ffffffc3ffda49c8 x20: 0000000000000029
-x19: 0000000000000001 x18: ffffffffffffffff
-x17: 0000000000000000 x16: ffffff80082b66a0
-x15: ffffff8009e78250 x14: 000000000000000a
-x13: 0000000000000038 x12: 0101010101010101
-x11: 0000000000000030 x10: 0101010101010101
-x9 : fffffffffffffffc x8 : 7f7f7f7f7f7f7f7f
-x7 : 62ff726b6b64622c x6 : 0000000000008064
-x5 : 6400000000000000 x4 : ffffffbefe817c44
-x3 : ffffffc3ffda3e08 x2 : ffffff8001198880
-x1 : ffffffc3d48323c0 x0 : ffffffc3d067b788
+When the ring buffer is almost full due to RX completion messages, a
+TX packet may reach the "low watermark" and cause the queue stopped.
+If the TX completion arrives earlier than queue stopping, the wakeup
+may be missed.
 
-Process HwBinder:4123_1 (pid: 5907, stack limit = 0xffffffc3d0678028)
-Call trace:
-[<ffffff8001198880>] 0xffffff8001198880
-[<ffffff80087459f8>] dma_request_chan+0x50/0x1f0
-[<ffffff8008745bc0>] dma_request_slave_channel+0x28/0x40
-[<ffffff8001552c44>] tegra_alt_pcm_open+0x114/0x170
-[<ffffff8008d65fa4>] soc_pcm_open+0x10c/0x878
-[<ffffff8008d18618>] snd_pcm_open_substream+0xc0/0x170
-[<ffffff8008d1878c>] snd_pcm_open+0xc4/0x240
-[<ffffff8008d189e0>] snd_pcm_playback_open+0x58/0x80
-[<ffffff8008cfc6d4>] snd_open+0xb4/0x178
-[<ffffff8008250628>] chrdev_open+0xb8/0x1d0
-[<ffffff8008246fdc>] do_dentry_open+0x214/0x318
-[<ffffff80082485d0>] vfs_open+0x58/0x88
-[<ffffff800825bce0>] do_last+0x450/0xde0
-[<ffffff800825c718>] path_openat+0xa8/0x368
-[<ffffff800825dd84>] do_filp_open+0x8c/0x110
-[<ffffff8008248a74>] do_sys_open+0x164/0x220
-[<ffffff80082b66dc>] compat_SyS_openat+0x3c/0x50
-[<ffffff8008083040>] el0_svc_naked+0x34/0x38
----[ end trace 67e6d544e65b5145 ]---
-Kernel panic - not syncing: Fatal exception
-==========================================================================
+This patch moves the check for the last pending packet to cover both
+EAGAIN and success cases, so the queue will be reliably waked up when
+necessary.
 
-In device probe(), of_dma_controller_register() registers DMA controller.
-But when driver is removed, this is not freed. During driver reload this
-results in data abort and kernel panic. Add of_dma_controller_free() in
-driver remove path to fix the issue.
-
-Fixes: f46b195799b5 ("dmaengine: tegra-adma: Add support for Tegra210 ADMA")
-Signed-off-by: Sameer Pujar <spujar@nvidia.com>
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Reported-and-tested-by: Stephan Klein <stephan.klein@wegfinder.at>
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/tegra210-adma.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/hyperv/netvsc.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-index b26256f23d67f..08b10274284a8 100644
---- a/drivers/dma/tegra210-adma.c
-+++ b/drivers/dma/tegra210-adma.c
-@@ -786,6 +786,7 @@ static int tegra_adma_remove(struct platform_device *pdev)
- 	struct tegra_adma *tdma = platform_get_drvdata(pdev);
- 	int i;
+diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
+index fb12b63439c67..35413041dcf81 100644
+--- a/drivers/net/hyperv/netvsc.c
++++ b/drivers/net/hyperv/netvsc.c
+@@ -872,12 +872,6 @@ static inline int netvsc_send_pkt(
+ 	} else if (ret == -EAGAIN) {
+ 		netif_tx_stop_queue(txq);
+ 		ndev_ctx->eth_stats.stop_queue++;
+-		if (atomic_read(&nvchan->queue_sends) < 1 &&
+-		    !net_device->tx_disable) {
+-			netif_tx_wake_queue(txq);
+-			ndev_ctx->eth_stats.wake_queue++;
+-			ret = -ENOSPC;
+-		}
+ 	} else {
+ 		netdev_err(ndev,
+ 			   "Unable to send packet pages %u len %u, ret %d\n",
+@@ -885,6 +879,15 @@ static inline int netvsc_send_pkt(
+ 			   ret);
+ 	}
  
-+	of_dma_controller_free(pdev->dev.of_node);
- 	dma_async_device_unregister(&tdma->dma_dev);
++	if (netif_tx_queue_stopped(txq) &&
++	    atomic_read(&nvchan->queue_sends) < 1 &&
++	    !net_device->tx_disable) {
++		netif_tx_wake_queue(txq);
++		ndev_ctx->eth_stats.wake_queue++;
++		if (ret == -EAGAIN)
++			ret = -ENOSPC;
++	}
++
+ 	return ret;
+ }
  
- 	for (i = 0; i < tdma->nr_channels; ++i)
 -- 
 2.20.1
 
