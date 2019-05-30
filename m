@@ -2,53 +2,53 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEACFC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC6CC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 986CE26022
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0030D25FF7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:58:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192329;
-	bh=2tai9SaB6+Ar6w+cqsaRceMO4vIi6bU87Bu09RCKnFY=;
+	s=default; t=1559192339;
+	bh=jRbH94i8EEbsYSk00/p/DOZAUYbkLLbNDdJOKu9f+1Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oKDwS0pR9A6hO6NJf7H1+qfmWZzNok7CJPClvEx9eGu+7ggdNezZD9kBHmaVwhNqk
-	 06XV4lZGdarDdDWpLKUetG0X44VdGCkfN82xKCYnhQrAGapQsmwltvhSB9kGAY4aHl
-	 i/im2RqngA3JJyM7c89V78KRU+wl6cGKB4csHKtc=
+	b=mVyZIv6D9SxFxHapTlNEUOiqEwpn2BD5SIR85IVx8kU83AiWcZwXVlS7Hevcmq9Fs
+	 JxDF9hQdETFRurZo2V33BorlCJxvVg31WoMNZyQOwuxT+vsASdl6IuxNLqOtUJ6Fxx
+	 GQrFfN6J09PxnOZDs0U9n4SSwuWKiKVPhrULZaa0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389164AbfE3E6s (ORCPT
+        id S2389354AbfE3E65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:58:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45250 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:58:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727767AbfE3DJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:09:48 -0400
+        id S1727745AbfE3DJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:09:46 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D02E24490;
-        Thu, 30 May 2019 03:09:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FADE2447C;
+        Thu, 30 May 2019 03:09:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185787;
-        bh=2tai9SaB6+Ar6w+cqsaRceMO4vIi6bU87Bu09RCKnFY=;
+        s=default; t=1559185784;
+        bh=jRbH94i8EEbsYSk00/p/DOZAUYbkLLbNDdJOKu9f+1Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q/m9O0ehO2r+mXMoyULQ401E3QUN6I+3SluOr5EsSJb2lpQ/n4NVGSKb8kp9M+z6G
-         IdrbYGL04VUlkL9tVokFDG8UKlte0uoYYvBr78dG58jlmle7Fk1JHvebI3zFPTzmCl
-         ZjS/aEDRtZuWMsFAmT6jeoXNYJwwBbZfrbeT/ync=
+        b=OGdYiR8iOWjuRslxAGYtV4xXyLOHEVZIaonIeEK/aCT2D/I9l0uogCzSJQCyZXI5v
+         A/w8xdaX85GBVLlABwhx7IiRZSD3fJuyUfJK0eo9E01wOtEQOscxOuknBfAmwvAGs4
+         e2ds9YmBM/M8TkEAhp5cPsBKDlQ89HPBwkSXyUqU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, William Tu <u9012063@gmail.com>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 056/405] libbpf: fix invalid munmap call
-Date:   Wed, 29 May 2019 20:00:54 -0700
-Message-Id: <20190530030543.695689262@linuxfoundation.org>
+        stable@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Eric Biggers <ebiggers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.1 009/405] crypto: hash - fix incorrect HASH_MAX_DESCSIZE
+Date:   Wed, 29 May 2019 20:00:07 -0700
+Message-Id: <20190530030540.874518385@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,182 +61,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0e6741f092979535d159d5a851f12c88bfb7cb9a ]
+From: Eric Biggers <ebiggers@google.com>
 
-When unmapping the AF_XDP memory regions used for the rings, an
-invalid address was passed to the munmap() calls. Instead of passing
-the beginning of the memory region, the descriptor region was passed
-to munmap.
+commit e1354400b25da645c4764ed6844d12f1582c3b66 upstream.
 
-When the userspace application tried to tear down an AF_XDP socket,
-the operation failed and the application would still have a reference
-to socket it wished to get rid of.
+The "hmac(sha3-224-generic)" algorithm has a descsize of 368 bytes,
+which is greater than HASH_MAX_DESCSIZE (360) which is only enough for
+sha3-224-generic.  The check in shash_prepare_alg() doesn't catch this
+because the HMAC template doesn't set descsize on the algorithms, but
+rather sets it on each individual HMAC transform.
 
-Reported-by: William Tu <u9012063@gmail.com>
-Fixes: 1cad07884239 ("libbpf: add support for using AF_XDP sockets")
-Signed-off-by: Björn Töpel <bjorn.topel@intel.com>
-Tested-by: William Tu <u9012063@gmail.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This causes a stack buffer overflow when SHASH_DESC_ON_STACK() is used
+with hmac(sha3-224-generic).
+
+Fix it by increasing HASH_MAX_DESCSIZE to the real maximum.  Also add a
+sanity check to hmac_init().
+
+This was detected by the improved crypto self-tests in v5.2, by loading
+the tcrypt module with CONFIG_CRYPTO_MANAGER_EXTRA_TESTS=y enabled.  I
+didn't notice this bug when I ran the self-tests by requesting the
+algorithms via AF_ALG (i.e., not using tcrypt), probably because the
+stack layout differs in the two cases and that made a difference here.
+
+KASAN report:
+
+    BUG: KASAN: stack-out-of-bounds in memcpy include/linux/string.h:359 [inline]
+    BUG: KASAN: stack-out-of-bounds in shash_default_import+0x52/0x80 crypto/shash.c:223
+    Write of size 360 at addr ffff8880651defc8 by task insmod/3689
+
+    CPU: 2 PID: 3689 Comm: insmod Tainted: G            E     5.1.0-10741-g35c99ffa20edd #11
+    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+    Call Trace:
+     __dump_stack lib/dump_stack.c:77 [inline]
+     dump_stack+0x86/0xc5 lib/dump_stack.c:113
+     print_address_description+0x7f/0x260 mm/kasan/report.c:188
+     __kasan_report+0x144/0x187 mm/kasan/report.c:317
+     kasan_report+0x12/0x20 mm/kasan/common.c:614
+     check_memory_region_inline mm/kasan/generic.c:185 [inline]
+     check_memory_region+0x137/0x190 mm/kasan/generic.c:191
+     memcpy+0x37/0x50 mm/kasan/common.c:125
+     memcpy include/linux/string.h:359 [inline]
+     shash_default_import+0x52/0x80 crypto/shash.c:223
+     crypto_shash_import include/crypto/hash.h:880 [inline]
+     hmac_import+0x184/0x240 crypto/hmac.c:102
+     hmac_init+0x96/0xc0 crypto/hmac.c:107
+     crypto_shash_init include/crypto/hash.h:902 [inline]
+     shash_digest_unaligned+0x9f/0xf0 crypto/shash.c:194
+     crypto_shash_digest+0xe9/0x1b0 crypto/shash.c:211
+     generate_random_hash_testvec.constprop.11+0x1ec/0x5b0 crypto/testmgr.c:1331
+     test_hash_vs_generic_impl+0x3f7/0x5c0 crypto/testmgr.c:1420
+     __alg_test_hash+0x26d/0x340 crypto/testmgr.c:1502
+     alg_test_hash+0x22e/0x330 crypto/testmgr.c:1552
+     alg_test.part.7+0x132/0x610 crypto/testmgr.c:4931
+     alg_test+0x1f/0x40 crypto/testmgr.c:4952
+
+Fixes: b68a7ec1e9a3 ("crypto: hash - Remove VLA usage")
+Reported-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: <stable@vger.kernel.org> # v4.20+
+Cc: Kees Cook <keescook@chromium.org>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Tested-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- tools/lib/bpf/xsk.c | 77 +++++++++++++++++++++++----------------------
- 1 file changed, 40 insertions(+), 37 deletions(-)
+ crypto/hmac.c         |    2 ++
+ include/crypto/hash.h |    8 +++++++-
+ 2 files changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/tools/lib/bpf/xsk.c b/tools/lib/bpf/xsk.c
-index 8d0078b65486f..af5f310ecca1c 100644
---- a/tools/lib/bpf/xsk.c
-+++ b/tools/lib/bpf/xsk.c
-@@ -248,8 +248,7 @@ int xsk_umem__create(struct xsk_umem **umem_ptr, void *umem_area, __u64 size,
+--- a/crypto/hmac.c
++++ b/crypto/hmac.c
+@@ -168,6 +168,8 @@ static int hmac_init_tfm(struct crypto_t
+ 
+ 	parent->descsize = sizeof(struct shash_desc) +
+ 			   crypto_shash_descsize(hash);
++	if (WARN_ON(parent->descsize > HASH_MAX_DESCSIZE))
++		return -EINVAL;
+ 
+ 	ctx->hash = hash;
  	return 0;
+--- a/include/crypto/hash.h
++++ b/include/crypto/hash.h
+@@ -152,7 +152,13 @@ struct shash_desc {
+ };
  
- out_mmap:
--	munmap(umem->fill,
--	       off.fr.desc + umem->config.fill_size * sizeof(__u64));
-+	munmap(map, off.fr.desc + umem->config.fill_size * sizeof(__u64));
- out_socket:
- 	close(umem->fd);
- out_umem_alloc:
-@@ -523,11 +522,11 @@ int xsk_socket__create(struct xsk_socket **xsk_ptr, const char *ifname,
- 		       struct xsk_ring_cons *rx, struct xsk_ring_prod *tx,
- 		       const struct xsk_socket_config *usr_config)
- {
-+	void *rx_map = NULL, *tx_map = NULL;
- 	struct sockaddr_xdp sxdp = {};
- 	struct xdp_mmap_offsets off;
- 	struct xsk_socket *xsk;
- 	socklen_t optlen;
--	void *map;
- 	int err;
- 
- 	if (!umem || !xsk_ptr || !rx || !tx)
-@@ -593,40 +592,40 @@ int xsk_socket__create(struct xsk_socket **xsk_ptr, const char *ifname,
- 	}
- 
- 	if (rx) {
--		map = xsk_mmap(NULL, off.rx.desc +
--			       xsk->config.rx_size * sizeof(struct xdp_desc),
--			       PROT_READ | PROT_WRITE,
--			       MAP_SHARED | MAP_POPULATE,
--			       xsk->fd, XDP_PGOFF_RX_RING);
--		if (map == MAP_FAILED) {
-+		rx_map = xsk_mmap(NULL, off.rx.desc +
-+				  xsk->config.rx_size * sizeof(struct xdp_desc),
-+				  PROT_READ | PROT_WRITE,
-+				  MAP_SHARED | MAP_POPULATE,
-+				  xsk->fd, XDP_PGOFF_RX_RING);
-+		if (rx_map == MAP_FAILED) {
- 			err = -errno;
- 			goto out_socket;
- 		}
- 
- 		rx->mask = xsk->config.rx_size - 1;
- 		rx->size = xsk->config.rx_size;
--		rx->producer = map + off.rx.producer;
--		rx->consumer = map + off.rx.consumer;
--		rx->ring = map + off.rx.desc;
-+		rx->producer = rx_map + off.rx.producer;
-+		rx->consumer = rx_map + off.rx.consumer;
-+		rx->ring = rx_map + off.rx.desc;
- 	}
- 	xsk->rx = rx;
- 
- 	if (tx) {
--		map = xsk_mmap(NULL, off.tx.desc +
--			       xsk->config.tx_size * sizeof(struct xdp_desc),
--			       PROT_READ | PROT_WRITE,
--			       MAP_SHARED | MAP_POPULATE,
--			       xsk->fd, XDP_PGOFF_TX_RING);
--		if (map == MAP_FAILED) {
-+		tx_map = xsk_mmap(NULL, off.tx.desc +
-+				  xsk->config.tx_size * sizeof(struct xdp_desc),
-+				  PROT_READ | PROT_WRITE,
-+				  MAP_SHARED | MAP_POPULATE,
-+				  xsk->fd, XDP_PGOFF_TX_RING);
-+		if (tx_map == MAP_FAILED) {
- 			err = -errno;
- 			goto out_mmap_rx;
- 		}
- 
- 		tx->mask = xsk->config.tx_size - 1;
- 		tx->size = xsk->config.tx_size;
--		tx->producer = map + off.tx.producer;
--		tx->consumer = map + off.tx.consumer;
--		tx->ring = map + off.tx.desc;
-+		tx->producer = tx_map + off.tx.producer;
-+		tx->consumer = tx_map + off.tx.consumer;
-+		tx->ring = tx_map + off.tx.desc;
- 		tx->cached_cons = xsk->config.tx_size;
- 	}
- 	xsk->tx = tx;
-@@ -653,13 +652,11 @@ int xsk_socket__create(struct xsk_socket **xsk_ptr, const char *ifname,
- 
- out_mmap_tx:
- 	if (tx)
--		munmap(xsk->tx,
--		       off.tx.desc +
-+		munmap(tx_map, off.tx.desc +
- 		       xsk->config.tx_size * sizeof(struct xdp_desc));
- out_mmap_rx:
- 	if (rx)
--		munmap(xsk->rx,
--		       off.rx.desc +
-+		munmap(rx_map, off.rx.desc +
- 		       xsk->config.rx_size * sizeof(struct xdp_desc));
- out_socket:
- 	if (--umem->refcount)
-@@ -684,10 +681,12 @@ int xsk_umem__delete(struct xsk_umem *umem)
- 	optlen = sizeof(off);
- 	err = getsockopt(umem->fd, SOL_XDP, XDP_MMAP_OFFSETS, &off, &optlen);
- 	if (!err) {
--		munmap(umem->fill->ring,
--		       off.fr.desc + umem->config.fill_size * sizeof(__u64));
--		munmap(umem->comp->ring,
--		       off.cr.desc + umem->config.comp_size * sizeof(__u64));
-+		(void)munmap(umem->fill->ring - off.fr.desc,
-+			     off.fr.desc +
-+			     umem->config.fill_size * sizeof(__u64));
-+		(void)munmap(umem->comp->ring - off.cr.desc,
-+			     off.cr.desc +
-+			     umem->config.comp_size * sizeof(__u64));
- 	}
- 
- 	close(umem->fd);
-@@ -698,6 +697,7 @@ int xsk_umem__delete(struct xsk_umem *umem)
- 
- void xsk_socket__delete(struct xsk_socket *xsk)
- {
-+	size_t desc_sz = sizeof(struct xdp_desc);
- 	struct xdp_mmap_offsets off;
- 	socklen_t optlen;
- 	int err;
-@@ -710,14 +710,17 @@ void xsk_socket__delete(struct xsk_socket *xsk)
- 	optlen = sizeof(off);
- 	err = getsockopt(xsk->fd, SOL_XDP, XDP_MMAP_OFFSETS, &off, &optlen);
- 	if (!err) {
--		if (xsk->rx)
--			munmap(xsk->rx->ring,
--			       off.rx.desc +
--			       xsk->config.rx_size * sizeof(struct xdp_desc));
--		if (xsk->tx)
--			munmap(xsk->tx->ring,
--			       off.tx.desc +
--			       xsk->config.tx_size * sizeof(struct xdp_desc));
-+		if (xsk->rx) {
-+			(void)munmap(xsk->rx->ring - off.rx.desc,
-+				     off.rx.desc +
-+				     xsk->config.rx_size * desc_sz);
-+		}
-+		if (xsk->tx) {
-+			(void)munmap(xsk->tx->ring - off.tx.desc,
-+				     off.tx.desc +
-+				     xsk->config.tx_size * desc_sz);
-+		}
+ #define HASH_MAX_DIGESTSIZE	 64
+-#define HASH_MAX_DESCSIZE	360
 +
- 	}
++/*
++ * Worst case is hmac(sha3-224-generic).  Its context is a nested 'shash_desc'
++ * containing a 'struct sha3_state'.
++ */
++#define HASH_MAX_DESCSIZE	(sizeof(struct shash_desc) + 360)
++
+ #define HASH_MAX_STATESIZE	512
  
- 	xsk->umem->refcount--;
--- 
-2.20.1
-
+ #define SHASH_DESC_ON_STACK(shash, ctx)				  \
 
 
