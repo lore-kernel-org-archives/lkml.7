@@ -7,52 +7,55 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62418C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA4D7C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3280F25285
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:23:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF8A025329
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:23:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190184;
-	bh=nJrK3IwcmUuml2VnBzBzfEVYgjEkYxYSoUHjbBVQfMw=;
+	s=default; t=1559190187;
+	bh=a5vBKldDFMIWqKj3YFCiqzTrdTC6lPMJps72Dvwnk3k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JxhPxBdomWLNleuEhRZfBQGyqG0IYmbBzvb5pQ+v1f8Vcg0numqHEE3gRTBd/k/Tu
-	 pJjI1i0S2ExliF+0Eig0hVz0KF51/JlgOZHMxVlVj4XwkEnu2HdHaTBEsGGTR5XOYB
-	 GL57NdBkgRiV33PXoiGP9QqntJnaJX3MOLPI2ey0=
+	b=iOF+oG4byCAgCjNRjq34Tfe/9rCEC+quvLaKHvQxI8tmZtAINONlOIRpj3fArZUIx
+	 /+zt+eqkrnAmcY6BawBER9hFZup/KX0eGaHltqXxnolcrRU8Cop9HUy/SUxNxvJ74z
+	 FSwn4xpucORQJ8EAxaL8VMdbLZtX14HZ6ckw9vq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730075AbfE3DPD (ORCPT
+        id S1732046AbfE3EXG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:15:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54256 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:23:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728945AbfE3DMT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:19 -0400
+        id S1730070AbfE3DPD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:03 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BFE0244F1;
-        Thu, 30 May 2019 03:12:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EF0024580;
+        Thu, 30 May 2019 03:15:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185938;
-        bh=nJrK3IwcmUuml2VnBzBzfEVYgjEkYxYSoUHjbBVQfMw=;
+        s=default; t=1559186102;
+        bh=a5vBKldDFMIWqKj3YFCiqzTrdTC6lPMJps72Dvwnk3k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uecJWuKRS77fIVbGuyGXtBoy7ZTnNQEhXrjfRpkDGzdCvyoG5PPhzLzX/mDtG68YK
-         csCDUi3CAaaMKBv1aR83JEi1XC+m71+obMf0Kjzh/QXUvNt80ZtFAyghpoG/cVZVCl
-         fdSCvenqQgwb5UyTX6pI643yNu+qCyzDKMy9JfdY=
+        b=jzsPGwUgnNsLBBe+o67ybbeV6yenGys9+q/mTw3cyPnd7w4bnnyC9UOyUWD66ni1T
+         ywvS3WazwjkEqCPahfhOZXP5TxhEHN64pGODt+xYmm1J1LCgmSdOya9jRhEF4i11Bx
+         oURjBNiI/lPE2f5XFpgiDi4qBca3oittGy5LHiH8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 342/405] igb: Exclude device from suspend direct complete optimization
-Date:   Wed, 29 May 2019 20:05:40 -0700
-Message-Id: <20190530030557.996823260@linuxfoundation.org>
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 241/346] x86/uaccess, signal: Fix AC=1 bloat
+Date:   Wed, 29 May 2019 20:05:14 -0700
+Message-Id: <20190530030553.240182109@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
-References: <20190530030540.291644921@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,40 +65,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5b6e13216be29ced7350d9c354a1af8fe0ad9a3e ]
+[ Upstream commit 88e4718275c1bddca6f61f300688b4553dc8584b ]
 
-igb sets different WoL settings in system suspend callback and runtime
-suspend callback.
+Occasionally GCC is less agressive with inlining and the following is
+observed:
 
-The suspend direct complete optimization leaves igb in runtime suspended
-state with wrong WoL setting during system suspend.
+  arch/x86/kernel/signal.o: warning: objtool: restore_sigcontext()+0x3cc: call to force_valid_ss.isra.5() with UACCESS enabled
+  arch/x86/kernel/signal.o: warning: objtool: do_signal()+0x384: call to frame_uc_flags.isra.0() with UACCESS enabled
 
-To fix this, we need to disable suspend direct complete optimization to
-let igb always use suspend callback to set correct WoL during system
-suspend.
+Cure this by moving this code out of the AC=1 region, since it really
+isn't needed for the user access.
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/igb/igb_main.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/kernel/signal.c | 29 +++++++++++++++++------------
+ 1 file changed, 17 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
-index 3269d8e94744f..580d14b49fda1 100644
---- a/drivers/net/ethernet/intel/igb/igb_main.c
-+++ b/drivers/net/ethernet/intel/igb/igb_main.c
-@@ -3452,6 +3452,9 @@ static int igb_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 			break;
- 		}
- 	}
-+
-+	dev_pm_set_driver_flags(&pdev->dev, DPM_FLAG_NEVER_SKIP);
-+
- 	pm_runtime_put_noidle(&pdev->dev);
- 	return 0;
+diff --git a/arch/x86/kernel/signal.c b/arch/x86/kernel/signal.c
+index 08dfd4c1a4f95..c8aa58a2bab97 100644
+--- a/arch/x86/kernel/signal.c
++++ b/arch/x86/kernel/signal.c
+@@ -132,16 +132,6 @@ static int restore_sigcontext(struct pt_regs *regs,
+ 		COPY_SEG_CPL3(cs);
+ 		COPY_SEG_CPL3(ss);
  
+-#ifdef CONFIG_X86_64
+-		/*
+-		 * Fix up SS if needed for the benefit of old DOSEMU and
+-		 * CRIU.
+-		 */
+-		if (unlikely(!(uc_flags & UC_STRICT_RESTORE_SS) &&
+-			     user_64bit_mode(regs)))
+-			force_valid_ss(regs);
+-#endif
+-
+ 		get_user_ex(tmpflags, &sc->flags);
+ 		regs->flags = (regs->flags & ~FIX_EFLAGS) | (tmpflags & FIX_EFLAGS);
+ 		regs->orig_ax = -1;		/* disable syscall checks */
+@@ -150,6 +140,15 @@ static int restore_sigcontext(struct pt_regs *regs,
+ 		buf = (void __user *)buf_val;
+ 	} get_user_catch(err);
+ 
++#ifdef CONFIG_X86_64
++	/*
++	 * Fix up SS if needed for the benefit of old DOSEMU and
++	 * CRIU.
++	 */
++	if (unlikely(!(uc_flags & UC_STRICT_RESTORE_SS) && user_64bit_mode(regs)))
++		force_valid_ss(regs);
++#endif
++
+ 	err |= fpu__restore_sig(buf, IS_ENABLED(CONFIG_X86_32));
+ 
+ 	force_iret();
+@@ -461,6 +460,7 @@ static int __setup_rt_frame(int sig, struct ksignal *ksig,
+ {
+ 	struct rt_sigframe __user *frame;
+ 	void __user *fp = NULL;
++	unsigned long uc_flags;
+ 	int err = 0;
+ 
+ 	frame = get_sigframe(&ksig->ka, regs, sizeof(struct rt_sigframe), &fp);
+@@ -473,9 +473,11 @@ static int __setup_rt_frame(int sig, struct ksignal *ksig,
+ 			return -EFAULT;
+ 	}
+ 
++	uc_flags = frame_uc_flags(regs);
++
+ 	put_user_try {
+ 		/* Create the ucontext.  */
+-		put_user_ex(frame_uc_flags(regs), &frame->uc.uc_flags);
++		put_user_ex(uc_flags, &frame->uc.uc_flags);
+ 		put_user_ex(0, &frame->uc.uc_link);
+ 		save_altstack_ex(&frame->uc.uc_stack, regs->sp);
+ 
+@@ -541,6 +543,7 @@ static int x32_setup_rt_frame(struct ksignal *ksig,
+ {
+ #ifdef CONFIG_X86_X32_ABI
+ 	struct rt_sigframe_x32 __user *frame;
++	unsigned long uc_flags;
+ 	void __user *restorer;
+ 	int err = 0;
+ 	void __user *fpstate = NULL;
+@@ -555,9 +558,11 @@ static int x32_setup_rt_frame(struct ksignal *ksig,
+ 			return -EFAULT;
+ 	}
+ 
++	uc_flags = frame_uc_flags(regs);
++
+ 	put_user_try {
+ 		/* Create the ucontext.  */
+-		put_user_ex(frame_uc_flags(regs), &frame->uc.uc_flags);
++		put_user_ex(uc_flags, &frame->uc.uc_flags);
+ 		put_user_ex(0, &frame->uc.uc_link);
+ 		compat_save_altstack_ex(&frame->uc.uc_stack, regs->sp);
+ 		put_user_ex(0, &frame->uc.uc__pad0);
 -- 
 2.20.1
 
