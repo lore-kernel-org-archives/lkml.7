@@ -5,50 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 426EEC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75770C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C6B32449A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:12:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FA532453F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:12:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559185968;
-	bh=mcd2FS0t0z1bCwO4klx+xNkmovjnhdydm2bFSiWeul0=;
+	s=default; t=1559185974;
+	bh=xD8BCILq0qaxWL0pZybmxB4YVqjMc1p4hd14D/e0VZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uDND4+rNnpI5mrfrDb17iglkLAwHTdVpVNsNPms/IMOo93gy/6p81tcm5peiQyWcp
-	 Vqj95DjNnMqIMPyIzx97uhMugY8KHrfZAc0VUZy3478fPROuf8glkjdDqlEs0T0x63
-	 qj5DMHYf+oD5iDTNx4wFqZrX1yPTDOlPquPU9SV8=
+	b=Aae2yqm8sfz7fODXTJn2z4CCTcD9UpWhdX3s0+ZoljWzSpKm6xkSGKZ/W/YLVZvnU
+	 /UpnHQitvMEmNCm8UqrmGgUsNKaLg7fv/vapeIgLgqoIa3nezGpit4iSeV7+hE9ecK
+	 qDFtIwtotoqKwox/bAey4uEn5j2dFZ6jfBRIoERY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729231AbfE3DMr (ORCPT
+        id S1729287AbfE3DMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:12:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49964 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:12:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728421AbfE3DLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:11:13 -0400
+        id S1728482AbfE3DLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:20 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC5A5244D8;
-        Thu, 30 May 2019 03:11:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20ED6244FA;
+        Thu, 30 May 2019 03:11:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185873;
-        bh=mcd2FS0t0z1bCwO4klx+xNkmovjnhdydm2bFSiWeul0=;
+        s=default; t=1559185880;
+        bh=xD8BCILq0qaxWL0pZybmxB4YVqjMc1p4hd14D/e0VZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xdvcxNCXCDEM9Yyc43pcEkMLcomFkw/mKdUEDqYDWtlIusEN5GuX2HHHdbQSHe92/
-         YkduuaQzLjfg54B7MuLgJTGTVyj0vyzu+5xcIdw0Qq6q1yGbXA3OEbPto6uK8med7q
-         mhXU+whhEuRlxtP5GXnztHowRLUnpjy5b3GPi10A=
+        b=SzQjMJWCNZn8J8ShGCujh2tP2P79RrjOsrDe+HCt+EsAlSnHqDGR7LXPCyuFVDvem
+         xUg0lXBKAt7EDglS0mnBVq4mvkQTZ+hTGuuL+MV02FHpeRUUY2mrLArGiNEZAwUEaV
+         v2n2QEYdUaslN0rtYQvUJWT6QkoqYElIi7UlJJqg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 190/405] arm64: vdso: Fix clock_getres() for CLOCK_REALTIME
-Date:   Wed, 29 May 2019 20:03:08 -0700
-Message-Id: <20190530030550.629262924@linuxfoundation.org>
+Subject: [PATCH 5.1 229/405] cpufreq: imx6q: fix possible object reference leak
+Date:   Wed, 29 May 2019 20:03:47 -0700
+Message-Id: <20190530030552.617460274@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,104 +67,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 81fb8736dd81da3fe94f28968dac60f392ec6746 ]
+[ Upstream commit ddb64c5db3cc8fb9c1242214d5798b2c2865681c ]
 
-clock_getres() in the vDSO library has to preserve the same behaviour
-of posix_get_hrtimer_res().
+The call to of_node_get returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-In particular, posix_get_hrtimer_res() does:
+Detected by coccinelle with the following warnings:
+./drivers/cpufreq/imx6q-cpufreq.c:391:4-10: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 348, but without a corresponding object release within this function.
+./drivers/cpufreq/imx6q-cpufreq.c:395:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 348, but without a corresponding object release within this function.
 
-    sec = 0;
-    ns = hrtimer_resolution;
-
-where 'hrtimer_resolution' depends on whether or not high resolution
-timers are enabled, which is a runtime decision.
-
-The vDSO incorrectly returns the constant CLOCK_REALTIME_RES. Fix this
-by exposing 'hrtimer_resolution' in the vDSO datapage and returning that
-instead.
-
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-[will: Use WRITE_ONCE(), move adr off COARSE path, renumber labels, use 'w' reg]
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Cc: linux-pm@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/vdso_datapage.h | 1 +
- arch/arm64/kernel/asm-offsets.c        | 2 +-
- arch/arm64/kernel/vdso.c               | 3 +++
- arch/arm64/kernel/vdso/gettimeofday.S  | 7 +++----
- 4 files changed, 8 insertions(+), 5 deletions(-)
+ drivers/cpufreq/imx6q-cpufreq.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/include/asm/vdso_datapage.h b/arch/arm64/include/asm/vdso_datapage.h
-index 2b9a63771eda8..f89263c8e11af 100644
---- a/arch/arm64/include/asm/vdso_datapage.h
-+++ b/arch/arm64/include/asm/vdso_datapage.h
-@@ -38,6 +38,7 @@ struct vdso_data {
- 	__u32 tz_minuteswest;	/* Whacky timezone stuff */
- 	__u32 tz_dsttime;
- 	__u32 use_syscall;
-+	__u32 hrtimer_res;
- };
+diff --git a/drivers/cpufreq/imx6q-cpufreq.c b/drivers/cpufreq/imx6q-cpufreq.c
+index a4ff09f91c8f8..3e17560b1efe3 100644
+--- a/drivers/cpufreq/imx6q-cpufreq.c
++++ b/drivers/cpufreq/imx6q-cpufreq.c
+@@ -388,11 +388,11 @@ static int imx6q_cpufreq_probe(struct platform_device *pdev)
+ 		ret = imx6ul_opp_check_speed_grading(cpu_dev);
+ 		if (ret) {
+ 			if (ret == -EPROBE_DEFER)
+-				return ret;
++				goto put_node;
  
- #endif /* !__ASSEMBLY__ */
-diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
-index 7f40dcbdd51d0..e10e2a5d9ddcf 100644
---- a/arch/arm64/kernel/asm-offsets.c
-+++ b/arch/arm64/kernel/asm-offsets.c
-@@ -94,7 +94,7 @@ int main(void)
-   DEFINE(CLOCK_REALTIME,	CLOCK_REALTIME);
-   DEFINE(CLOCK_MONOTONIC,	CLOCK_MONOTONIC);
-   DEFINE(CLOCK_MONOTONIC_RAW,	CLOCK_MONOTONIC_RAW);
--  DEFINE(CLOCK_REALTIME_RES,	MONOTONIC_RES_NSEC);
-+  DEFINE(CLOCK_REALTIME_RES,	offsetof(struct vdso_data, hrtimer_res));
-   DEFINE(CLOCK_REALTIME_COARSE,	CLOCK_REALTIME_COARSE);
-   DEFINE(CLOCK_MONOTONIC_COARSE,CLOCK_MONOTONIC_COARSE);
-   DEFINE(CLOCK_COARSE_RES,	LOW_RES_NSEC);
-diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
-index 2d419006ad433..ec0bb588d7553 100644
---- a/arch/arm64/kernel/vdso.c
-+++ b/arch/arm64/kernel/vdso.c
-@@ -232,6 +232,9 @@ void update_vsyscall(struct timekeeper *tk)
- 	vdso_data->wtm_clock_sec		= tk->wall_to_monotonic.tv_sec;
- 	vdso_data->wtm_clock_nsec		= tk->wall_to_monotonic.tv_nsec;
- 
-+	/* Read without the seqlock held by clock_getres() */
-+	WRITE_ONCE(vdso_data->hrtimer_res, hrtimer_resolution);
-+
- 	if (!use_syscall) {
- 		/* tkr_mono.cycle_last == tkr_raw.cycle_last */
- 		vdso_data->cs_cycle_last	= tk->tkr_mono.cycle_last;
-diff --git a/arch/arm64/kernel/vdso/gettimeofday.S b/arch/arm64/kernel/vdso/gettimeofday.S
-index e8f60112818fc..856fee6d35129 100644
---- a/arch/arm64/kernel/vdso/gettimeofday.S
-+++ b/arch/arm64/kernel/vdso/gettimeofday.S
-@@ -308,13 +308,14 @@ ENTRY(__kernel_clock_getres)
- 	ccmp	w0, #CLOCK_MONOTONIC_RAW, #0x4, ne
- 	b.ne	1f
- 
--	ldr	x2, 5f
-+	adr	vdso_data, _vdso_data
-+	ldr	w2, [vdso_data, #CLOCK_REALTIME_RES]
- 	b	2f
- 1:
- 	cmp	w0, #CLOCK_REALTIME_COARSE
- 	ccmp	w0, #CLOCK_MONOTONIC_COARSE, #0x4, ne
- 	b.ne	4f
--	ldr	x2, 6f
-+	ldr	x2, 5f
- 2:
- 	cbz	x1, 3f
- 	stp	xzr, x2, [x1]
-@@ -328,8 +329,6 @@ ENTRY(__kernel_clock_getres)
- 	svc	#0
- 	ret
- 5:
--	.quad	CLOCK_REALTIME_RES
--6:
- 	.quad	CLOCK_COARSE_RES
- 	.cfi_endproc
- ENDPROC(__kernel_clock_getres)
+ 			dev_err(cpu_dev, "failed to read ocotp: %d\n",
+ 				ret);
+-			return ret;
++			goto put_node;
+ 		}
+ 	} else {
+ 		imx6q_opp_check_speed_grading(cpu_dev);
 -- 
 2.20.1
 
