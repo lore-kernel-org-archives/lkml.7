@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14EC0C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 518BCC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:49:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5BA124D2F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:48:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D53724D42
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:49:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188135;
-	bh=D57ohe9MJE9ynAZ87YT9Yn/9+tuD5LBAyKgmV/j5pcY=;
+	s=default; t=1559188142;
+	bh=NCfw1U1CQMpRXu+CHoKx2Bzex75ACkaz93vAgIsN+Gw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yaItBkKWfJcNVx75E3dudvkq7UPSkWmhJAjGmn+61tc6hz2leVVrj0xCs26tgfBMx
-	 qO4p7IQzk4p916NHfHnDU6HLItZ5sMz/YFZgljg/FjoQjQqmIlgZSF8VdhJo+oA0qe
-	 57JQ6HLbFhP6tybleYwrUKOh3pQLE9QeWuKc+bWQ=
+	b=Z7Jc76z2MvHLzKn7wJshGTP0A1Bb4oqbz8YTqJHHLm/EbemyqLIYuLxoJulI/56sL
+	 dhUdEa9zSlvXbp9ioagSBhcKac/ualucRVftwBhn0C7sTArkp+ZPzFg2iZbAOnXLdJ
+	 /QjCxCLc2WxLur0SdGjilwInBlNO89hI1b9H0P6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387573AbfE3Dsy (ORCPT
+        id S1730677AbfE3DtB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:48:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58046 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:49:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732143AbfE3DUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731534AbfE3DUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:20:17 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31C2324913;
-        Thu, 30 May 2019 03:20:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0F5E2491D;
+        Thu, 30 May 2019 03:20:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186417;
-        bh=D57ohe9MJE9ynAZ87YT9Yn/9+tuD5LBAyKgmV/j5pcY=;
+        s=default; t=1559186416;
+        bh=NCfw1U1CQMpRXu+CHoKx2Bzex75ACkaz93vAgIsN+Gw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sge8uHlRmtsLZrAV7q0Y6V56U8QgS05AZyC62euBSUL83OgqcGnyDkvEyJAfqpKup
-         7UGkiJ3SqC5Hne28rTwNsSnlpI7m2BpEJj8ZCJ2wFvXZIKABGEBuwQcmUU5L9WeDTr
-         k1EoG3DXxlC9LAZUJ/O1ePXxsQU5IR3arHrRp5JM=
+        b=yxYSUVwS2PiKUyfmBkfvKwsBS1Ajws92hifeYafNqlrDYRLiWDaFL4QpK1KZaS8/s
+         egUerEUiltc6qfUhjopscUbLk41aG6grA5uKqhX0ZXN1nYVW+EekYrNHyVrEouH2vj
+         naVrkfZ4O74W+VQdcjt76zhXZ87HwK9IK54zJ9GM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 191/193] drm: Wake up next in drm_read() chain if we are forced to putback the event
-Date:   Wed, 29 May 2019 20:07:25 -0700
-Message-Id: <20190530030513.324164890@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 190/193] drm/drv: Hold ref on parent device during drm_device lifetime
+Date:   Wed, 29 May 2019 20:07:24 -0700
+Message-Id: <20190530030513.268297456@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -61,37 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 60b801999c48b6c1dd04e653a38e2e613664264e ]
+[ Upstream commit 56be6503aab2bc3a30beae408071b9be5e1bae51 ]
 
-After an event is sent, we try to copy it into the user buffer of the
-first waiter in drm_read() and if the user buffer doesn't have enough
-room we put it back onto the list. However, we didn't wake up any
-subsequent waiter, so that event may sit on the list until either a new
-vblank event is sent or a new waiter appears. Rare, but in the worst
-case may lead to a stuck process.
+This makes it safe to access drm_device->dev after the parent device has
+been removed/unplugged.
 
-Testcase: igt/drm_read/short-buffer-wakeup
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20170804082328.17173-1-chris@chris-wilson.co.uk
+Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
+Reviewed-by: Gerd Hoffmann <kraxel@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190225144232.20761-2-noralf@tronnes.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_file.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/drm_drv.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_file.c b/drivers/gpu/drm/drm_file.c
-index 03244b3c985d7..3cf07f5063ff6 100644
---- a/drivers/gpu/drm/drm_file.c
-+++ b/drivers/gpu/drm/drm_file.c
-@@ -525,6 +525,7 @@ ssize_t drm_read(struct file *filp, char __user *buffer,
- 				file_priv->event_space -= length;
- 				list_add(&e->link, &file_priv->event_list);
- 				spin_unlock_irq(&dev->event_lock);
-+				wake_up_interruptible(&file_priv->event_wait);
- 				break;
- 			}
+diff --git a/drivers/gpu/drm/drm_drv.c b/drivers/gpu/drm/drm_drv.c
+index a7b6734bc3c32..340440febf9a5 100644
+--- a/drivers/gpu/drm/drm_drv.c
++++ b/drivers/gpu/drm/drm_drv.c
+@@ -505,7 +505,7 @@ int drm_dev_init(struct drm_device *dev,
+ 	}
  
+ 	kref_init(&dev->ref);
+-	dev->dev = parent;
++	dev->dev = get_device(parent);
+ 	dev->driver = driver;
+ 
+ 	INIT_LIST_HEAD(&dev->filelist);
+@@ -572,6 +572,7 @@ int drm_dev_init(struct drm_device *dev,
+ 	drm_minor_free(dev, DRM_MINOR_CONTROL);
+ 	drm_fs_inode_free(dev->anon_inode);
+ err_free:
++	put_device(dev->dev);
+ 	mutex_destroy(&dev->master_mutex);
+ 	mutex_destroy(&dev->ctxlist_mutex);
+ 	mutex_destroy(&dev->filelist_mutex);
+@@ -607,6 +608,8 @@ void drm_dev_fini(struct drm_device *dev)
+ 	drm_minor_free(dev, DRM_MINOR_RENDER);
+ 	drm_minor_free(dev, DRM_MINOR_CONTROL);
+ 
++	put_device(dev->dev);
++
+ 	mutex_destroy(&dev->master_mutex);
+ 	mutex_destroy(&dev->ctxlist_mutex);
+ 	mutex_destroy(&dev->filelist_mutex);
 -- 
 2.20.1
 
