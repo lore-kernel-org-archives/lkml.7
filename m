@@ -5,53 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D93C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FFEC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABCB224B07
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C63124B14
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:32:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187131;
-	bh=LeDPiyFnxwiZOP4NSwMJs2cfD37WSrq+sC4BCzOfoYg=;
+	s=default; t=1559187140;
+	bh=8ZGw+O+lYMpOk7M7BplUdAuuAL/k6VhQ0Oqhxramy5s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nRaXFIRa6fLOKMcQ/gLeJUO822QYO8m2qlC+42vwQcMVLjaNxefLxXZawTvAMZqi+
-	 El0d2xOU5M9wkHFklrnZaRlkn5DHZ6//4HQSfN5FeHtS/S2uOcb0NmgOjwR6zCHMZY
-	 WfcpnSLjdonQgdzSQiZP8tTZ/YC1jTFKLcQk7Hak=
+	b=qnkTL/++MCyynAtu9mEJpnexexNZG5Xg76IgRFaDQcXWQN5sZQJqxOd3xKyMRqCOx
+	 Ft2PqGq+mbfNhuXOV+nKp4WJ4e0MetT8YMSKr3m41nNl8BNUttvFm0uKLi4ZA+iKB7
+	 cY0+7OyLTa/tLfmMBAf0jvCdAUjNyXnnOgGJsONo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388436AbfE3D3t (ORCPT
+        id S2388416AbfE3D3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:29:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60312 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:29:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732373AbfE3DUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:20:54 -0400
+        id S1732325AbfE3DUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:20:47 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0F662496D;
-        Thu, 30 May 2019 03:20:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77BDD24953;
+        Thu, 30 May 2019 03:20:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186453;
-        bh=LeDPiyFnxwiZOP4NSwMJs2cfD37WSrq+sC4BCzOfoYg=;
+        s=default; t=1559186446;
+        bh=8ZGw+O+lYMpOk7M7BplUdAuuAL/k6VhQ0Oqhxramy5s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bzKN0bHE7O+x8VmcsFuQxj6aD6BdnMFsx76vPt7aGu67mCqpU1GIF51GsMyyD4kdr
-         rVomBIY9eVmGiZGQ6Qe3sRa/0ftKRK9YwEqeAYXZZJ3u05YBuOCJliDRLLPb16cMbE
-         pg1kj1ZzMCgH7knWBKwVapBatvsC7Hzk8Pc1vUzY=
+        b=JNOpOiBSotfv6WGs5VJjNShgGTrygSApKPI9s5DMKy6mI8RRdSlmIIXL207H0R+BY
+         SjqmPDOu7P6F+n4a6jgOiIHyjFD6kRoCoHY2+7lr9nstWalKVkl1B7ul47AWTxM2h+
+         QASSmQJSroTAQYF6GXkShrroUmMc5yhGTFu4Zkzw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 065/128] sched/core: Check quota and period overflow at usec to nsec conversion
-Date:   Wed, 29 May 2019 20:06:37 -0700
-Message-Id: <20190530030446.474976146@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 054/128] HID: logitech-hidpp: use RAP instead of FAP to get the protocol version
+Date:   Wed, 29 May 2019 20:06:26 -0700
+Message-Id: <20190530030444.717362972@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -64,58 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1a8b4540db732ca16c9e43ac7c08b1b8f0b252d8 ]
+[ Upstream commit 096377525cdb8251e4656085efc988bdf733fb4c ]
 
-Large values could overflow u64 and pass following sanity checks.
+According to the logitech_hidpp_2.0_specification_draft_2012-06-04.pdf doc:
+https://lekensteyn.nl/files/logitech/logitech_hidpp_2.0_specification_draft_2012-06-04.pdf
 
- # echo 18446744073750000 > cpu.cfs_period_us
- # cat cpu.cfs_period_us
- 40448
+We should use a register-access-protocol request using the short input /
+output report ids. This is necessary because 27MHz HID++ receivers have
+a max-packetsize on their HIP++ endpoint of 8, so they cannot support
+long reports. Using a feature-access-protocol request (which is always
+long or very-long) with these will cause a timeout error, followed by
+the hidpp driver treating the device as not being HID++ capable.
 
- # echo 18446744073750000 > cpu.cfs_quota_us
- # cat cpu.cfs_quota_us
- 40448
+This commit fixes this by switching to using a rap request to get the
+protocol version.
 
-After this patch they will fail with -EINVAL.
+Besides being tested with a (046d:c517) 27MHz receiver with various
+27MHz keyboards and mice, this has also been tested to not cause
+regressions on a non-unifying dual-HID++ nano receiver (046d:c534) with
+k270 and m185 HID++-2.0 devices connected and on a unifying/dj receiver
+(046d:c52b) with a HID++-2.0 Logitech Rechargeable Touchpad T650.
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/155125502079.293431.3947497929372138600.stgit@buzz
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/core.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/hid/hid-logitech-hidpp.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 50e80b1be2c8f..4617ede80f020 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -8611,8 +8611,10 @@ int tg_set_cfs_quota(struct task_group *tg, long cfs_quota_us)
- 	period = ktime_to_ns(tg->cfs_bandwidth.period);
- 	if (cfs_quota_us < 0)
- 		quota = RUNTIME_INF;
--	else
-+	else if ((u64)cfs_quota_us <= U64_MAX / NSEC_PER_USEC)
- 		quota = (u64)cfs_quota_us * NSEC_PER_USEC;
-+	else
-+		return -EINVAL;
+diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
+index 3198faf5cff4d..38d9deb03d16c 100644
+--- a/drivers/hid/hid-logitech-hidpp.c
++++ b/drivers/hid/hid-logitech-hidpp.c
+@@ -449,13 +449,16 @@ static int hidpp_root_get_feature(struct hidpp_device *hidpp, u16 feature,
  
- 	return tg_set_cfs_bandwidth(tg, period, quota);
- }
-@@ -8634,6 +8636,9 @@ int tg_set_cfs_period(struct task_group *tg, long cfs_period_us)
+ static int hidpp_root_get_protocol_version(struct hidpp_device *hidpp)
  {
- 	u64 quota, period;
++	const u8 ping_byte = 0x5a;
++	u8 ping_data[3] = { 0, 0, ping_byte };
+ 	struct hidpp_report response;
+ 	int ret;
  
-+	if ((u64)cfs_period_us > U64_MAX / NSEC_PER_USEC)
-+		return -EINVAL;
+-	ret = hidpp_send_fap_command_sync(hidpp,
++	ret = hidpp_send_rap_command_sync(hidpp,
++			REPORT_ID_HIDPP_SHORT,
+ 			HIDPP_PAGE_ROOT_IDX,
+ 			CMD_ROOT_GET_PROTOCOL_VERSION,
+-			NULL, 0, &response);
++			ping_data, sizeof(ping_data), &response);
+ 
+ 	if (ret == HIDPP_ERROR_INVALID_SUBID) {
+ 		hidpp->protocol_major = 1;
+@@ -475,8 +478,14 @@ static int hidpp_root_get_protocol_version(struct hidpp_device *hidpp)
+ 	if (ret)
+ 		return ret;
+ 
+-	hidpp->protocol_major = response.fap.params[0];
+-	hidpp->protocol_minor = response.fap.params[1];
++	if (response.rap.params[2] != ping_byte) {
++		hid_err(hidpp->hid_dev, "%s: ping mismatch 0x%02x != 0x%02x\n",
++			__func__, response.rap.params[2], ping_byte);
++		return -EPROTO;
++	}
 +
- 	period = (u64)cfs_period_us * NSEC_PER_USEC;
- 	quota = tg->cfs_bandwidth.quota;
++	hidpp->protocol_major = response.rap.params[0];
++	hidpp->protocol_minor = response.rap.params[1];
  
+ 	return ret;
+ }
 -- 
 2.20.1
 
