@@ -3,209 +3,172 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C2BC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B61A0C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FFD8254D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:59:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EAC72589C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:00:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbfE3L7Y (ORCPT
+        id S1727168AbfE3MAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 07:59:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56028 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726792AbfE3L7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 07:59:23 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 05923308626C;
-        Thu, 30 May 2019 11:59:23 +0000 (UTC)
-Received: from [10.72.12.113] (ovpn-12-113.pek2.redhat.com [10.72.12.113])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C96AA19736;
-        Thu, 30 May 2019 11:59:15 +0000 (UTC)
-Subject: Re: [PATCH 3/4] vsock/virtio: fix flush of works during the .remove()
-To:     Stefano Garzarella <sgarzare@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-References: <20190528105623.27983-1-sgarzare@redhat.com>
- <20190528105623.27983-4-sgarzare@redhat.com>
- <9ac9fc4b-5c39-2503-dfbb-660a7bdcfbfd@redhat.com>
- <20190529105832.oz3sagbne5teq3nt@steredhat>
- <8c9998c8-1b9c-aac6-42eb-135fcb966187@redhat.com>
- <20190530101036.wnjphmajrz6nz6zc@steredhat.homenet.telecomitalia.it>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <4c881585-8fee-0a53-865c-05d41ffb8ed1@redhat.com>
-Date:   Thu, 30 May 2019 19:59:14 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190530101036.wnjphmajrz6nz6zc@steredhat.homenet.telecomitalia.it>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Thu, 30 May 2019 08:00:43 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35208 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727015AbfE3MAm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 08:00:42 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UBv8I7145477
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 08:00:41 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2stcebqjcj-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 08:00:41 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 30 May 2019 13:00:37 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 30 May 2019 13:00:34 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4UC0Yn961341902
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 May 2019 12:00:34 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0C9EE52071;
+        Thu, 30 May 2019 12:00:33 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.80.109])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id E8D9952050;
+        Thu, 30 May 2019 12:00:31 +0000 (GMT)
+Subject: Re: [PATCH v2 2/3] ima: don't ignore INTEGRITY_UNKNOWN EVM status
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        dmitry.kasatkin@huawei.com, mjg59@google.com
+Cc:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com,
+        stable@vger.kernel.org
+Date:   Thu, 30 May 2019 08:00:21 -0400
+In-Reply-To: <20190529133035.28724-3-roberto.sassu@huawei.com>
+References: <20190529133035.28724-1-roberto.sassu@huawei.com>
+         <20190529133035.28724-3-roberto.sassu@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 30 May 2019 11:59:23 +0000 (UTC)
+X-TM-AS-GCONF: 00
+x-cbid: 19053012-0020-0000-0000-00000341F4A4
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19053012-0021-0000-0000-00002194F9B8
+Message-Id: <1559217621.4008.7.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-30_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905300091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 2019-05-29 at 15:30 +0200, Roberto Sassu wrote:
+> Currently, ima_appraise_measurement() ignores the EVM status when
+> evm_verifyxattr() returns INTEGRITY_UNKNOWN. If a file has a valid
+> security.ima xattr with type IMA_XATTR_DIGEST or IMA_XATTR_DIGEST_NG,
+> ima_appraise_measurement() returns INTEGRITY_PASS regardless of the EVM
+> status. The problem is that the EVM status is overwritten with the
+> > appraisal statu
 
-On 2019/5/30 下午6:10, Stefano Garzarella wrote:
-> On Thu, May 30, 2019 at 05:46:18PM +0800, Jason Wang wrote:
->> On 2019/5/29 下午6:58, Stefano Garzarella wrote:
->>> On Wed, May 29, 2019 at 11:22:40AM +0800, Jason Wang wrote:
->>>> On 2019/5/28 下午6:56, Stefano Garzarella wrote:
->>>>> We flush all pending works before to call vdev->config->reset(vdev),
->>>>> but other works can be queued before the vdev->config->del_vqs(vdev),
->>>>> so we add another flush after it, to avoid use after free.
->>>>>
->>>>> Suggested-by: Michael S. Tsirkin <mst@redhat.com>
->>>>> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
->>>>> ---
->>>>>     net/vmw_vsock/virtio_transport.c | 23 +++++++++++++++++------
->>>>>     1 file changed, 17 insertions(+), 6 deletions(-)
->>>>>
->>>>> diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
->>>>> index e694df10ab61..ad093ce96693 100644
->>>>> --- a/net/vmw_vsock/virtio_transport.c
->>>>> +++ b/net/vmw_vsock/virtio_transport.c
->>>>> @@ -660,6 +660,15 @@ static int virtio_vsock_probe(struct virtio_device *vdev)
->>>>>     	return ret;
->>>>>     }
->>>>> +static void virtio_vsock_flush_works(struct virtio_vsock *vsock)
->>>>> +{
->>>>> +	flush_work(&vsock->loopback_work);
->>>>> +	flush_work(&vsock->rx_work);
->>>>> +	flush_work(&vsock->tx_work);
->>>>> +	flush_work(&vsock->event_work);
->>>>> +	flush_work(&vsock->send_pkt_work);
->>>>> +}
->>>>> +
->>>>>     static void virtio_vsock_remove(struct virtio_device *vdev)
->>>>>     {
->>>>>     	struct virtio_vsock *vsock = vdev->priv;
->>>>> @@ -668,12 +677,6 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
->>>>>     	mutex_lock(&the_virtio_vsock_mutex);
->>>>>     	the_virtio_vsock = NULL;
->>>>> -	flush_work(&vsock->loopback_work);
->>>>> -	flush_work(&vsock->rx_work);
->>>>> -	flush_work(&vsock->tx_work);
->>>>> -	flush_work(&vsock->event_work);
->>>>> -	flush_work(&vsock->send_pkt_work);
->>>>> -
->>>>>     	/* Reset all connected sockets when the device disappear */
->>>>>     	vsock_for_each_connected_socket(virtio_vsock_reset_sock);
->>>>> @@ -690,6 +693,9 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
->>>>>     	vsock->event_run = false;
->>>>>     	mutex_unlock(&vsock->event_lock);
->>>>> +	/* Flush all pending works */
->>>>> +	virtio_vsock_flush_works(vsock);
->>>>> +
->>>>>     	/* Flush all device writes and interrupts, device will not use any
->>>>>     	 * more buffers.
->>>>>     	 */
->>>>> @@ -726,6 +732,11 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
->>>>>     	/* Delete virtqueues and flush outstanding callbacks if any */
->>>>>     	vdev->config->del_vqs(vdev);
->>>>> +	/* Other works can be queued before 'config->del_vqs()', so we flush
->>>>> +	 * all works before to free the vsock object to avoid use after free.
->>>>> +	 */
->>>>> +	virtio_vsock_flush_works(vsock);
->>>> Some questions after a quick glance:
->>>>
->>>> 1) It looks to me that the work could be queued from the path of
->>>> vsock_transport_cancel_pkt() . Is that synchronized here?
->>>>
->>> Both virtio_transport_send_pkt() and vsock_transport_cancel_pkt() can
->>> queue work from the upper layer (socket).
->>>
->>> Setting the_virtio_vsock to NULL, should synchronize, but after a careful look
->>> a rare issue could happen:
->>> we are setting the_virtio_vsock to NULL at the start of .remove() and we
->>> are freeing the object pointed by it at the end of .remove(), so
->>> virtio_transport_send_pkt() or vsock_transport_cancel_pkt() may still be
->>> running, accessing the object that we are freed.
->>
->> Yes, that's my point.
->>
->>
->>> Should I use something like RCU to prevent this issue?
->>>
->>>       virtio_transport_send_pkt() and vsock_transport_cancel_pkt()
->>>       {
->>>           rcu_read_lock();
->>>           vsock = rcu_dereference(the_virtio_vsock_mutex);
->>
->> RCU is probably a way to go. (Like what vhost_transport_send_pkt() did).
->>
-> Okay, I'm going this way.
->
->>>           ...
->>>           rcu_read_unlock();
->>>       }
->>>
->>>       virtio_vsock_remove()
->>>       {
->>>           rcu_assign_pointer(the_virtio_vsock_mutex, NULL);
->>>           synchronize_rcu();
->>>
->>>           ...
->>>
->>>           free(vsock);
->>>       }
->>>
->>> Could there be a better approach?
->>>
->>>
->>>> 2) If we decide to flush after dev_vqs(), is tx_run/rx_run/event_run still
->>>> needed? It looks to me we've already done except that we need flush rx_work
->>>> in the end since send_pkt_work can requeue rx_work.
->>> The main reason of tx_run/rx_run/event_run is to prevent that a worker
->>> function is running while we are calling config->reset().
->>>
->>> E.g. if an interrupt comes between virtio_vsock_flush_works() and
->>> config->reset(), it can queue new works that can access the device while
->>> we are in config->reset().
->>>
->>> IMHO they are still needed.
->>>
->>> What do you think?
->>
->> I mean could we simply do flush after reset once and without tx_rx/rx_run
->> tricks?
->>
->> rest();
->>
->> virtio_vsock_flush_work();
->>
->> virtio_vsock_free_buf();
-> My only doubt is:
-> is it safe to call config->reset() while a worker function could access
-> the device?
->
-> I had this doubt reading the Michael's advice[1] and looking at
-> virtnet_remove() where there are these lines before the config->reset():
->
-> 	/* Make sure no work handler is accessing the device. */
-> 	flush_work(&vi->config_work);
->
-> Thanks,
-> Stefano
->
-> [1] https://lore.kernel.org/netdev/20190521055650-mutt-send-email-mst@kernel.org
+Roberto, your framing of this problem is harsh and misleading.  IMA
+and EVM are intentionally independent of each other and can be
+configured independently of each other.  The intersection of the two
+is the call to evm_verifyxattr().  INTEGRITY_UNKNOWN is returned for a
+number of reasons - when EVM is not configured, the EVM hmac key has
+not yet been loaded, the protected security attribute is unknown, or
+the file is not in policy.
 
+This patch does not differentiate between any of the above cases,
+requiring mutable files to always be protected by EVM, when specified
+as an "ima_appraise=" option on the boot command line.
 
-Good point. Then I agree with you. But if we can use the RCU to detect 
-the detach of device from socket for these, it would be even better.
+IMA could be extended to require EVM on a per IMA policy rule basis.  
+Instead of framing allowing IMA file hashes without EVM as a bug that
+has existed from the very beginning, now that IMA/EVM have matured and
+is being used, you could frame it as extending IMA or hardening.
 
-Thanks
+> 
+> This patch mitigates the issue by selecting signature verification as the
+> only method allowed for appraisal when EVM is not initialized. Since the
+> new behavior might break user space, it must be turned on by adding the
+> '-evm' suffix to the value of the ima_appraise= kernel option.
+> 
+> Fixes: 2fe5d6def1672 ("ima: integrity appraisal extension")
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> Cc: stable@vger.kernel.org
+> ---
+>  Documentation/admin-guide/kernel-parameters.txt | 3 ++-
+>  security/integrity/ima/ima_appraise.c           | 8 ++++++++
+>  2 files changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 138f6664b2e2..d84a2e612b93 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -1585,7 +1585,8 @@
+>  			Set number of hash buckets for inode cache.
+>  
+>  	ima_appraise=	[IMA] appraise integrity measurements
+> -			Format: { "off" | "enforce" | "fix" | "log" }
+> +			Format: { "off" | "enforce" | "fix" | "log" |
+> +				  "enforce-evm" | "log-evm" } 
 
+Is it necessary to define both "enforce-evm" and "log-evm"?  Perhaps
+defining "require-evm" is sufficient.
+
+Mimi
+
+>  			default: "enforce"
+>  
+>  	ima_appraise_tcb [IMA] Deprecated.  Use ima_policy= instead.
+> diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
+> index 5fb7127bbe68..afef06e10fb9 100644
+> --- a/security/integrity/ima/ima_appraise.c
+> +++ b/security/integrity/ima/ima_appraise.c
+> @@ -18,6 +18,7 @@
+>  
+>  #include "ima.h"
+>  
+> +static bool ima_appraise_req_evm __ro_after_init;
+>  static int __init default_appraise_setup(char *str)
+>  {
+>  #ifdef CONFIG_IMA_APPRAISE_BOOTPARAM
+> @@ -28,6 +29,9 @@ static int __init default_appraise_setup(char *str)
+>  	else if (strncmp(str, "fix", 3) == 0)
+>  		ima_appraise = IMA_APPRAISE_FIX;
+>  #endif
+> +	if (strcmp(str, "enforce-evm") == 0 ||
+> +	    strcmp(str, "log-evm") == 0)
+> +		ima_appraise_req_evm = true;
+>  	return 1;
+>  }
+>  
+> @@ -245,7 +249,11 @@ int ima_appraise_measurement(enum ima_hooks func,
+>  	switch (status) {
+>  	case INTEGRITY_PASS:
+>  	case INTEGRITY_PASS_IMMUTABLE:
+> +		break;
+>  	case INTEGRITY_UNKNOWN:
+> +		if (ima_appraise_req_evm &&
+> +		    xattr_value->type != EVM_IMA_XATTR_DIGSIG)
+> +			goto out;
+>  		break;
+>  	case INTEGRITY_NOXATTRS:	/* No EVM protected xattrs. */
+>  	case INTEGRITY_NOLABEL:		/* No security.evm xattr. */
 
