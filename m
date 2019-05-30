@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5818BC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22353C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2410924B2E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC9B224B3E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187209;
-	bh=Wa7TcyT+ufSchs5dR12KCtbsY23wB+eK/kdXfxO7PYM=;
+	s=default; t=1559187218;
+	bh=1l+uLQ5PpwC1pRKuZh+AeJdYqL965Z1CZfsnWZkPdWs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bJJVMYB2l7B2rOj5fjVdSaE5Q6ORE3HPfdGYUxLvxQrETPmxY4ALnbagucr16YZcK
-	 Fe7kZ/dGrdunnxPQNeRwnEPW9EajJA4j4rveTg+lTZbKmD+zMSwQJ+wlis1RToGiV/
-	 H/4gThFR2QKMm07POFFNe/So5blMueLZnWq5MlCw=
+	b=cGtcTjC2rDYGSmRNNEc/rTghEwfxlZQwTMP1tkIjXj7k+lEIm36pF6VZsq1pc+BSZ
+	 pA7csSgvDMx1UIKthJHCTqV1iOsBht3Vwp94g+4lclS4ddRzAiOscn1p4U3kFD906/
+	 cI3H4k2VQwogWDi+cwQ22MMRYz9nr72v73Cbz4Uw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388184AbfE3D2d (ORCPT
+        id S2388153AbfE3D2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:28:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57474 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:28:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728112AbfE3DT7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:59 -0400
+        id S1732060AbfE3DTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:53 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B39024818;
-        Thu, 30 May 2019 03:19:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1E55248DD;
+        Thu, 30 May 2019 03:19:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186398;
-        bh=Wa7TcyT+ufSchs5dR12KCtbsY23wB+eK/kdXfxO7PYM=;
+        s=default; t=1559186393;
+        bh=1l+uLQ5PpwC1pRKuZh+AeJdYqL965Z1CZfsnWZkPdWs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nl4WkIo3jpJBfxfHYt5fPWWc9TRxlOuYKRg0nsXvq1SjWTtHUkcg72UX/rEpmcNqw
-         9Gr3RCc+GO3aYmooB4TXcr+Kv7FM4vYfGo3dOxd/ssdTUh4qZLCOkc39QThqRXYjTL
-         5rc5FQLT3lICxG92sNk6RFGvM/ZK/B3FRM+3MrMA=
+        b=IitRkRem5Os5XyY1T8oxfBGN4c9wL9gXrQMfVKuhHFfsPcvncAeaVd5n/jVeKGC3p
+         FQoaHlcDxVqtsAfJ0n9/wL+jtLCsP2AZgyfgbtySpOoXM0mytm5QNR7cLUgnl1cJjP
+         0GKddm5vvcF6UyJXRItLxYXpBvAWA8lQ4Mgt9C5o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>,
-        Helen Koike <helen.koike@collabora.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 179/193] media: vimc: stream: fix thread state before sleep
-Date:   Wed, 29 May 2019 20:07:13 -0700
-Message-Id: <20190530030512.532737234@linuxfoundation.org>
+Subject: [PATCH 4.14 165/193] media: wl128x: prevent two potential buffer overflows
+Date:   Wed, 29 May 2019 20:06:59 -0700
+Message-Id: <20190530030511.012969660@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -62,46 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2978a505aaa981b279ef359f74ba93d25098e0a0 ]
+[ Upstream commit 9c2ccc324b3a6cbc865ab8b3e1a09e93d3c8ade9 ]
 
-The state TASK_UNINTERRUPTIBLE should be set just before
-schedule_timeout() call, so it knows the sleep mode it should enter.
-There is no point in setting TASK_UNINTERRUPTIBLE at the initialization
-of the thread as schedule_timeout() will set the state back to
-TASK_RUNNING.
+Smatch marks skb->data as untrusted so it warns that "evt_hdr->dlen"
+can copy up to 255 bytes and we only have room for two bytes.  Even
+if this comes from the firmware and we trust it, the new policy
+generally is just to fix it as kernel hardenning.
 
-This fixes a warning in __might_sleep() call, as it's expecting the
-task to be in TASK_RUNNING state just before changing the state to
-a sleeping state.
+I can't test this code so I tried to be very conservative.  I considered
+not allowing "evt_hdr->dlen == 1" because it doesn't initialize the
+whole variable but in the end I decided to allow it and manually
+initialized "asic_id" and "asic_ver" to zero.
 
-Reported-by: Hans Verkuil <hverkuil@xs4all.nl>
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
+Fixes: e8454ff7b9a4 ("[media] drivers:media:radio: wl128x: FM Driver Common sources")
+
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/vimc/vimc-streamer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/radio/wl128x/fmdrv_common.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/vimc/vimc-streamer.c b/drivers/media/platform/vimc/vimc-streamer.c
-index fcc897fb247bc..392754c18046c 100644
---- a/drivers/media/platform/vimc/vimc-streamer.c
-+++ b/drivers/media/platform/vimc/vimc-streamer.c
-@@ -120,7 +120,6 @@ static int vimc_streamer_thread(void *data)
- 	int i;
- 
- 	set_freezable();
--	set_current_state(TASK_UNINTERRUPTIBLE);
- 
- 	for (;;) {
- 		try_to_freeze();
-@@ -137,6 +136,7 @@ static int vimc_streamer_thread(void *data)
- 				break;
- 		}
- 		//wait for 60hz
-+		set_current_state(TASK_UNINTERRUPTIBLE);
- 		schedule_timeout(HZ / 60);
+diff --git a/drivers/media/radio/wl128x/fmdrv_common.c b/drivers/media/radio/wl128x/fmdrv_common.c
+index ab3428bf63fee..26895ae42fcf4 100644
+--- a/drivers/media/radio/wl128x/fmdrv_common.c
++++ b/drivers/media/radio/wl128x/fmdrv_common.c
+@@ -489,7 +489,8 @@ int fmc_send_cmd(struct fmdev *fmdev, u8 fm_op, u16 type, void *payload,
+ 		return -EIO;
  	}
+ 	/* Send response data to caller */
+-	if (response != NULL && response_len != NULL && evt_hdr->dlen) {
++	if (response != NULL && response_len != NULL && evt_hdr->dlen &&
++	    evt_hdr->dlen <= payload_len) {
+ 		/* Skip header info and copy only response data */
+ 		skb_pull(skb, sizeof(struct fm_event_msg_hdr));
+ 		memcpy(response, skb->data, evt_hdr->dlen);
+@@ -583,6 +584,8 @@ static void fm_irq_handle_flag_getcmd_resp(struct fmdev *fmdev)
+ 		return;
+ 
+ 	fm_evt_hdr = (void *)skb->data;
++	if (fm_evt_hdr->dlen > sizeof(fmdev->irq_info.flag))
++		return;
+ 
+ 	/* Skip header info and copy only response data */
+ 	skb_pull(skb, sizeof(struct fm_event_msg_hdr));
+@@ -1308,7 +1311,7 @@ static int load_default_rx_configuration(struct fmdev *fmdev)
+ static int fm_power_up(struct fmdev *fmdev, u8 mode)
+ {
+ 	u16 payload;
+-	__be16 asic_id, asic_ver;
++	__be16 asic_id = 0, asic_ver = 0;
+ 	int resp_len, ret;
+ 	u8 fw_name[50];
  
 -- 
 2.20.1
