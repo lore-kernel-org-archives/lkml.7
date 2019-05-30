@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF0AC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A468C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17BD323CCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E53A23CCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187199;
-	bh=CPMl6SYE1pkraUwSH7rr43h7gr7o0/BsdLlmPYqkMRA=;
+	s=default; t=1559187204;
+	bh=Nw1S3ljB75XOEqY4ile3e0I008mEEAwfaIm2KJFl3dk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c9uFqRGuARCoYCa+cLo3eCT+FHHHuhp1GsDbT9MAx1oFai3A+eq48GcW11t7V/4wl
-	 B1DO3cGvJOvjftNKFYo8igM/6FCR5oJHCnSPAHu3uRi+4lXaBkMydpirOn6Dvw24Uh
-	 rU57yTVi8lYqZovK1Jl/Q4bhYQEK2/ysi35o+hD0=
+	b=XidOGikMjWq7Rx79dmo4C9CG9mPcUCjJUfndj5PgthROco4V4CEv9vAPFqrNCw2cH
+	 oc6lHuBHOunHnCb+xTLDAxT7hY15ltH9i8qz1Q7bp1AELWz5NnsTWYXyHN8xfB0/I8
+	 yMQ9Pwg1K1MSjpV7A3Y1xZgrmymWDHtDyPR30goU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388224AbfE3D2p (ORCPT
+        id S2388196AbfE3D2i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:28:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57408 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:28:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731135AbfE3DUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:20:02 -0400
+        id S1732109AbfE3DUB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:20:01 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B0DD2490E;
-        Thu, 30 May 2019 03:20:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9438B2490A;
+        Thu, 30 May 2019 03:20:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186401;
-        bh=CPMl6SYE1pkraUwSH7rr43h7gr7o0/BsdLlmPYqkMRA=;
+        s=default; t=1559186400;
+        bh=Nw1S3ljB75XOEqY4ile3e0I008mEEAwfaIm2KJFl3dk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xgEqAtV/vi/RMDhKl6dhh8yWbQmRG0BJ3ll6UiqwPp3dmEzeiFF2OFt+K7a7gvxlt
-         uIFQhAOh9FPYfei2FnCgEjb4tImPHf6oTvLX4A2ubp1hRDgZAzqWrHD5NzrNTHQSWV
-         zAU5x5A1w9+OLqbs2N9PHI3vGUOpfAIkfizo3yTQ=
+        b=p1tJUMe5MkRyqSKa8yPR9Wewt88tpRMiMUieBHzhdAOrwtpHx/Z4N57QUXknpToWX
+         woAZHu1ASiL1uYhPgzbt/C0TRA5vrV0meLcJOhmmp/G2KSqNlzGMgTGxyfXBx2AM98
+         1b1C9b2gCuftwpRqLlK76nCpSzWw6jc2lP46fFgA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         James Smart <jsmart2021@gmail.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 185/193] scsi: lpfc: Fix SLI3 commands being issued on SLI4 devices
-Date:   Wed, 29 May 2019 20:07:19 -0700
-Message-Id: <20190530030512.974272487@linuxfoundation.org>
+Subject: [PATCH 4.14 183/193] scsi: lpfc: Fix fc4type information for FDMI
+Date:   Wed, 29 May 2019 20:07:17 -0700
+Message-Id: <20190530030512.869029471@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -61,58 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c95a3b4b0fb8d351e2329a96f87c4fc96a149505 ]
+[ Upstream commit 32a80c093b524a0682f1c6166c910387b116ffce ]
 
-During debug, it was seen that the driver is issuing commands specific to
-SLI3 on SLI4 devices. Although the adapter correctly rejected the command,
-this should not be done.
+The driver is reporting support for NVME even when not configured for NVME
+operation.
 
-Revise the code to stop sending these commands on a SLI4 adapter.
+Fix (and make more readable) when NVME protocol support is indicated.
 
 Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
 Signed-off-by: James Smart <jsmart2021@gmail.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_hbadisc.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/scsi/lpfc/lpfc_ct.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_hbadisc.c b/drivers/scsi/lpfc/lpfc_hbadisc.c
-index 4962d665b4d21..b970933a218d5 100644
---- a/drivers/scsi/lpfc/lpfc_hbadisc.c
-+++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
-@@ -924,7 +924,11 @@ lpfc_linkdown(struct lpfc_hba *phba)
- 		}
- 	}
- 	lpfc_destroy_vport_work_array(phba, vports);
--	/* Clean up any firmware default rpi's */
-+
-+	/* Clean up any SLI3 firmware default rpi's */
-+	if (phba->sli_rev > LPFC_SLI_REV3)
-+		goto skip_unreg_did;
-+
- 	mb = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
- 	if (mb) {
- 		lpfc_unreg_did(phba, 0xffff, LPFC_UNREG_ALL_DFLT_RPIS, mb);
-@@ -936,6 +940,7 @@ lpfc_linkdown(struct lpfc_hba *phba)
- 		}
- 	}
+diff --git a/drivers/scsi/lpfc/lpfc_ct.c b/drivers/scsi/lpfc/lpfc_ct.c
+index 54664a07d92ec..601a4ee60de85 100644
+--- a/drivers/scsi/lpfc/lpfc_ct.c
++++ b/drivers/scsi/lpfc/lpfc_ct.c
+@@ -2092,10 +2092,11 @@ lpfc_fdmi_port_attr_fc4type(struct lpfc_vport *vport,
+ 	ae = (struct lpfc_fdmi_attr_entry *)&ad->AttrValue;
+ 	memset(ae, 0, 32);
  
-+ skip_unreg_did:
- 	/* Setup myDID for link up if we are in pt2pt mode */
- 	if (phba->pport->fc_flag & FC_PT2PT) {
- 		mb = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
-@@ -4853,6 +4858,10 @@ lpfc_unreg_default_rpis(struct lpfc_vport *vport)
- 	LPFC_MBOXQ_t     *mbox;
- 	int rc;
+-	ae->un.AttrTypes[3] = 0x02; /* Type 1 - ELS */
+-	ae->un.AttrTypes[2] = 0x01; /* Type 8 - FCP */
+-	ae->un.AttrTypes[6] = 0x01; /* Type 40 - NVME */
+-	ae->un.AttrTypes[7] = 0x01; /* Type 32 - CT */
++	ae->un.AttrTypes[3] = 0x02; /* Type 0x1 - ELS */
++	ae->un.AttrTypes[2] = 0x01; /* Type 0x8 - FCP */
++	if (vport->nvmei_support || vport->phba->nvmet_support)
++		ae->un.AttrTypes[6] = 0x01; /* Type 0x28 - NVME */
++	ae->un.AttrTypes[7] = 0x01; /* Type 0x20 - CT */
+ 	size = FOURBYTES + 32;
+ 	ad->AttrLen = cpu_to_be16(size);
+ 	ad->AttrType = cpu_to_be16(RPRT_SUPPORTED_FC4_TYPES);
+@@ -2395,9 +2396,11 @@ lpfc_fdmi_port_attr_active_fc4type(struct lpfc_vport *vport,
+ 	ae = (struct lpfc_fdmi_attr_entry *)&ad->AttrValue;
+ 	memset(ae, 0, 32);
  
-+	/* Unreg DID is an SLI3 operation. */
-+	if (phba->sli_rev > LPFC_SLI_REV3)
-+		return;
-+
- 	mbox = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
- 	if (mbox) {
- 		lpfc_unreg_did(phba, vport->vpi, LPFC_UNREG_ALL_DFLT_RPIS,
+-	ae->un.AttrTypes[3] = 0x02; /* Type 1 - ELS */
+-	ae->un.AttrTypes[2] = 0x01; /* Type 8 - FCP */
+-	ae->un.AttrTypes[7] = 0x01; /* Type 32 - CT */
++	ae->un.AttrTypes[3] = 0x02; /* Type 0x1 - ELS */
++	ae->un.AttrTypes[2] = 0x01; /* Type 0x8 - FCP */
++	if (vport->phba->cfg_enable_fc4_type & LPFC_ENABLE_NVME)
++		ae->un.AttrTypes[6] = 0x1; /* Type 0x28 - NVME */
++	ae->un.AttrTypes[7] = 0x01; /* Type 0x20 - CT */
+ 	size = FOURBYTES + 32;
+ 	ad->AttrLen = cpu_to_be16(size);
+ 	ad->AttrType = cpu_to_be16(RPRT_ACTIVE_FC4_TYPES);
 -- 
 2.20.1
 
