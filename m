@@ -5,54 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 736B9C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32356C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49DE824A94
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 020A624A94
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:27:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186818;
-	bh=Tl5/7jqDJfLV6WJFej4cv+HQKoDaH2ceYmadyWG+yuw=;
+	s=default; t=1559186821;
+	bh=n0EU5+leGe+lJAsvMkP5CTo0DLy0+7c5xiTlKmyNsX0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aW/J/VqZpKL/C12oa8cb4ieSay9EwGiS5DGgChiMNc6SZbPpoXGGtoE0P4R6dQGZJ
-	 YNbRgXDQcDDHbjZq1n6eaywMcJh4s4PWojnb0vis4EaMrg8EKLg5r9nqC8yx5N9/z9
-	 VZlL1vcEVz2PyZ3GqIBU+8GI2xKs7TWrW9PUHTkU=
+	b=mUPWFsh+TIym8rloAN1mQHPihVXW5JZ3KyKuRJLPjlMLocYfg2Olta7Sbb9EvBXrK
+	 WOr7WO1K2M6OFXZDPDocCGAF0RTS1PcZgluZqEun2UMw8DBisTK6b8lhsdmu6KsyN3
+	 BxdDwWfpShbkhXby4nypam2Kf4jGzD7U3PurR/Tk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387796AbfE3D05 (ORCPT
+        id S2387811AbfE3D1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:26:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53996 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:27:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731810AbfE3DTJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:09 -0400
+        id S1727528AbfE3DTI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:08 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BFA92483C;
+        by mail.kernel.org (Postfix) with ESMTPSA id 4020424839;
         Thu, 30 May 2019 03:19:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186348;
-        bh=Tl5/7jqDJfLV6WJFej4cv+HQKoDaH2ceYmadyWG+yuw=;
+        bh=n0EU5+leGe+lJAsvMkP5CTo0DLy0+7c5xiTlKmyNsX0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c9FWP9focdmaFDztFzptxDm3O7EhKBGLmMJqONzdNZjpCEtfOHLsX/WzB5hq61Ht/
-         ICi1O2mAsYbkNkDwwh44YB4zi3mE4jVyhR6OrMziJY9rZp7xDqSZlnL/KX4p/tkXp8
-         y4L97hLiubGyA0rOOlb3Y8i4Y4jJ4z3IOUqYQE1c=
+        b=CAESjz8ao4H4LgxrbL4rmSU14g/AJijhR+73sBt53SMW3P1bU0Xdg13qdLUBGy4/z
+         xb0PKo1hajgC9RlWkOYwZUNSBPNwH85Pi0uaso2maXUDXnBq5yq5A1fi5X3xacxGo2
+         LC8wA6Hm/nbxnZdzNPDnh8VmbK2yTChOMNHipys0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 085/193] pinctrl: samsung: fix leaked of_node references
-Date:   Wed, 29 May 2019 20:05:39 -0700
-Message-Id: <20190530030500.804526252@linuxfoundation.org>
+        linux-gpio@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 084/193] pinctrl: pistachio: fix leaked of_node references
+Date:   Wed, 29 May 2019 20:05:38 -0700
+Message-Id: <20190530030500.659002411@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -65,43 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 44b9f86cd41db6c522effa5aec251d664a52fbc0 ]
+[ Upstream commit 44a4455ac2c6b0981eace683a2b6eccf47689022 ]
 
-The call to of_find_compatible_node returns a node pointer with refcount
+The call to of_get_child_by_name returns a node pointer with refcount
 incremented thus it must be explicitly decremented after the last
 usage.
 
 Detected by coccinelle with the following warnings:
-./drivers/pinctrl/samsung/pinctrl-exynos-arm.c:76:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 66, but without a corresponding object release within this function.
-./drivers/pinctrl/samsung/pinctrl-exynos-arm.c:82:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 66, but without a corresponding object release within this function.
+./drivers/pinctrl/pinctrl-pistachio.c:1422:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1360, but without a corresponding object release within this function.
 
 Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
 Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Kukjin Kim <kgene@kernel.org>
-Cc: linux-samsung-soc@vger.kernel.org
 Cc: linux-gpio@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/samsung/pinctrl-exynos-arm.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pinctrl/pinctrl-pistachio.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pinctrl/samsung/pinctrl-exynos-arm.c b/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
-index afeb4876ffb2c..07eb4f071fa87 100644
---- a/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
-@@ -76,6 +76,7 @@ s5pv210_retention_init(struct samsung_pinctrl_drv_data *drvdata,
- 	}
- 
- 	clk_base = of_iomap(np, 0);
-+	of_node_put(np);
- 	if (!clk_base) {
- 		pr_err("%s: failed to map clock registers\n", __func__);
- 		return ERR_PTR(-EINVAL);
+diff --git a/drivers/pinctrl/pinctrl-pistachio.c b/drivers/pinctrl/pinctrl-pistachio.c
+index 55375b1b3cc81..b2b7e238bda97 100644
+--- a/drivers/pinctrl/pinctrl-pistachio.c
++++ b/drivers/pinctrl/pinctrl-pistachio.c
+@@ -1368,6 +1368,7 @@ static int pistachio_gpio_register(struct pistachio_pinctrl *pctl)
+ 		if (!of_find_property(child, "gpio-controller", NULL)) {
+ 			dev_err(pctl->dev,
+ 				"No gpio-controller property for bank %u\n", i);
++			of_node_put(child);
+ 			ret = -ENODEV;
+ 			goto err;
+ 		}
+@@ -1375,6 +1376,7 @@ static int pistachio_gpio_register(struct pistachio_pinctrl *pctl)
+ 		irq = irq_of_parse_and_map(child, 0);
+ 		if (irq < 0) {
+ 			dev_err(pctl->dev, "No IRQ for bank %u: %d\n", i, irq);
++			of_node_put(child);
+ 			ret = irq;
+ 			goto err;
+ 		}
 -- 
 2.20.1
 
