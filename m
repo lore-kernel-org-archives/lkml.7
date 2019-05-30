@@ -2,64 +2,74 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D53C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6042BC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 557EB25981
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34EA92597B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:20:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559222423;
+	bh=WWUvePG/F5W9jMrKSPbf0krNclZJzDEIlb3GAxBTdPw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ICy+WGenhHEP8aAwEreny+qpHlCSrywHPa3h/KHEyx16P0Vj6J7gF77Ns8j9iFx3I
+	 ss0D2gaNuxihlC+bNcT5+dgk/CDgfZNR5t8CCm3fNn9TMfyOOCJq061nC64em52QQ8
+	 Bc4qm4XsGfcf/iMJWAW5BqdYX0Dp4j+ZvKFGfMYE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbfE3NUS (ORCPT
+        id S1726972AbfE3NUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 09:20:18 -0400
-Received: from out4437.biz.mail.alibaba.com ([47.88.44.37]:10539 "EHLO
-        out4437.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726372AbfE3NUQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 09:20:16 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R671e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07487;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TT0Pbqg_1559222413;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TT0Pbqg_1559222413)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 30 May 2019 21:20:14 +0800
-Subject: Re: [PATCH 3/3] mm: shrinker: make shrinker not depend on memcg kmem
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     ktkhai@virtuozzo.com, hannes@cmpxchg.org, mhocko@suse.com,
-        kirill.shutemov@linux.intel.com, hughd@google.com,
-        shakeelb@google.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <1559047464-59838-1-git-send-email-yang.shi@linux.alibaba.com>
- <1559047464-59838-4-git-send-email-yang.shi@linux.alibaba.com>
- <20190530120820.l5crrblgybcii63f@box>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <a19af445-8830-285c-2fbc-a5425ca06a6b@linux.alibaba.com>
-Date:   Thu, 30 May 2019 21:20:12 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Thu, 30 May 2019 09:20:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44032 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726253AbfE3NUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 09:20:17 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 295362596C;
+        Thu, 30 May 2019 13:20:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559222416;
+        bh=WWUvePG/F5W9jMrKSPbf0krNclZJzDEIlb3GAxBTdPw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jv6lKTJpSAmsvbT9Oc+pbk9Pt+iz2dQ6CvIDOQrDijLggnudc1qnTgggJ8e2jc6Mo
+         wrtl8xLxSaK9pbN0w/QXHk779vZzPu+F9/YAjdKVH5/wOZraWPKeQIFjwCBEBggF1X
+         NrnY+sX+UwXZbkACNs8yTw5tRfrF2r1BC0jdczJc=
+Date:   Thu, 30 May 2019 08:20:15 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sathyanarayanan kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     "Raj, Ashok" <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, keith.busch@intel.com
+Subject: Re: [PATCH v2 1/5] PCI/ATS: Add PRI support for PCIe VF devices
+Message-ID: <20190530132015.GL28250@google.com>
+References: <cover.1557162861.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <f773440c0eee2a8d4e5d6e2856717404ac836458.1557162861.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20190529225714.GE28250@google.com>
+ <20190529230426.GB5108@araj-mobl1.jf.intel.com>
+ <e93c7b6b-c414-6e0f-7983-9a46c67acb92@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190530120820.l5crrblgybcii63f@box>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e93c7b6b-c414-6e0f-7983-9a46c67acb92@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 29, 2019 at 04:24:05PM -0700, sathyanarayanan kuppuswamy wrote:
+> But, regarding VF spec compliance checks, Is there any issue in having them
+> in enable code ? Perhaps I can change dev_err to dev_warn and not return
+> error if it found implementation errors. I found it useful to have them
+> because it helped me in finding some faulty devices during my testing. Let
+> me know your comments.
 
+If you need quirks to make these non-compliant devices usable, we
+should check for compliance.  If not, my personal opinion is that we
+shouldn't touch things we don't need.
 
-On 5/30/19 8:08 PM, Kirill A. Shutemov wrote:
-> On Tue, May 28, 2019 at 08:44:24PM +0800, Yang Shi wrote:
->> @@ -81,6 +79,7 @@ struct shrinker {
->>   /* Flags */
->>   #define SHRINKER_NUMA_AWARE	(1 << 0)
->>   #define SHRINKER_MEMCG_AWARE	(1 << 1)
->> +#define SHRINKER_NONSLAB	(1 << 3)
-> Why 3?
-
-My fault, it is a typo. Should be 2.
-
->
-
+Bjorn
