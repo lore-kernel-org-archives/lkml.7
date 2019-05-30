@@ -2,160 +2,175 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB470C28CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5CDFC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B87E3259AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:29:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KZICn+MN"
+	by mail.kernel.org (Postfix) with ESMTP id 74530259A7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:31:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727138AbfE3N3w (ORCPT
+        id S1727149AbfE3NbQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 09:29:52 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35933 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727036AbfE3N3t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 09:29:49 -0400
-Received: by mail-pl1-f194.google.com with SMTP id d21so2584540plr.3;
-        Thu, 30 May 2019 06:29:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=MKbB7PTDLyUPgE5LxpgYdWEo36N/ezyeckgzW0tkbcQ=;
-        b=KZICn+MNu+poaBOe9RL+jAsJOYKwlZroU8gM9qXOm1buylOI+ckaGSCpzu0HAaZ1fz
-         eH6NacBTzFYqNbNgQCqvLz3oKYb8KtNvkIRUPB3uhyTwrRXB9amGji94WnqVJzygJtxU
-         vdC83UACQ6cZtj2kTM4c4gFm6DXUtgehocpSmHR4XvER2I1cifLjzY7nUg8EavsiS6Df
-         I73uRU7gI1pq5i920VU/aEEubl4vJnSCjuomNzU5M2egUB5Di4lsCv5yoAYYx8B846FB
-         8YJWDZt3wvR+rGF3RfYhayUDndQeGB0fpPxmiyySLoLpocDWDnnLNHSNZUL+Zj1RyxBW
-         O0Iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=MKbB7PTDLyUPgE5LxpgYdWEo36N/ezyeckgzW0tkbcQ=;
-        b=t3O4O1QSePU8LHThDslro5iH1XV73cG/HcWqjJtzb9H1bG9uOQNpa3oIFG2t3gBUls
-         V6qWeebWFPIk5DT59ZX+h7jFkB/s9Uukrlo4867+vHlyrDrDEtOoMlP3cYQYWqpsYx2s
-         d/9960fOX/bvhDqs9RyIebPnvQsG/HM3CXT0Ldo2a9Dv4aiPc4nzptqlbB2G8QHrpGjs
-         hbSVV0fG64pCMtHr85BE4PgPX1SRzIOkY5snZDUvOjYGSLyMs2aUyjrjIh2yNQHtc40V
-         IfDD4JVuoM1z6IsBltKCuxdXLruCE+2Ks+M+aDGQqgXWL0nLZ75ChpKr4WNAcPy74mMJ
-         C/MQ==
-X-Gm-Message-State: APjAAAWxa6JAHgtv+Xv7rFgosiseM7pmFNw4Cfc8rK4g5ac2aR4r6Ld6
-        U2OwLwA+5P/QXAx9a/nGbIo=
-X-Google-Smtp-Source: APXvYqyd7YiO3Ny5IPDNTGCQIaW42td9HCoDVpD98+8Zf/7AAlJG29s6U+Z3tA2vUib7HazFDmcKbg==
-X-Received: by 2002:a17:902:2869:: with SMTP id e96mr3613687plb.203.1559222988499;
-        Thu, 30 May 2019 06:29:48 -0700 (PDT)
-Received: from node5.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id a5sm1402442pjo.29.2019.05.30.06.29.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 06:29:47 -0700 (PDT)
-From:   ufo19890607 <ufo19890607@gmail.com>
-To:     peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        dsahern@gmail.com, namhyung@kernel.org, milian.wolff@kdab.com,
-        arnaldo.melo@gmail.com, yuzhoujian@didichuxing.com,
-        adrian.hunter@intel.com, wangnan0@huawei.com
-Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        acme@redhat.com
-Subject: [PATCH] perf record: Add support to collect callchains from kernel or user space only.
-Date:   Thu, 30 May 2019 14:29:22 +0100
-Message-Id: <1559222962-22891-1-git-send-email-ufo19890607@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        Thu, 30 May 2019 09:31:16 -0400
+Received: from mga03.intel.com ([134.134.136.65]:51815 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726835AbfE3NbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 09:31:16 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 06:31:15 -0700
+Received: from jkrzyszt-desk.igk.intel.com ([172.22.244.18])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 06:31:12 -0700
+From:   Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
+To:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Michal Wajdeczko <michal.wajdeczko@intel.com>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
+Subject: [PATCH v2] drm/i915: Split off pci_driver.remove() tail to drm_driver.release()
+Date:   Thu, 30 May 2019 15:31:05 +0200
+Message-Id: <20190530133105.30467-1-janusz.krzysztofik@linux.intel.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yuzhoujian <yuzhoujian@didichuxing.com>
+In order to support driver hot unbind, some cleanup operations, now
+performed on PCI driver remove, must be called later, after all device
+file descriptors are closed.
 
-One can just record callchains in the kernel or user space with
-this new options. We can use it together with "--all-kernel" options.
-This two options is used just like print_stack(sys) or print_ustack(usr)
-for systemtap.
+Split out those operations from the tail of pci_driver.remove()
+callback and put them into drm_driver.release() which is called as soon
+as all references to the driver are put.  As a result, those cleanups
+will be now run on last drm_dev_put(), either still called from
+pci_driver.remove() if all device file descriptors are already closed,
+or on last drm_release() file operation.
 
-Show below is the usage of this new option combined with "--all-kernel"
-options.
-	1. Configure all used events to run in kernel space and just
-collect kernel callchains.
-	$ perf record -a -g --all-kernel --kernel-callchains
-	2. Configure all used events to run in kernel space and just
-collect user callchains.
-	$ perf record -a -g --all-kernel --user-callchains
-
-Signed-off-by: yuzhoujian <yuzhoujian@didichuxing.com>
+Signed-off-by: Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
 ---
- tools/perf/Documentation/perf-record.txt | 6 ++++++
- tools/perf/builtin-record.c              | 4 ++++
- tools/perf/perf.h                        | 2 ++
- tools/perf/util/evsel.c                  | 4 ++++
- 4 files changed, 16 insertions(+)
+Changelog:
+v1 -> v2:
+- defer intel_engines_cleanup() as well. (Chris)
 
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index de269430720a..b647eb3db0c6 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -490,6 +490,12 @@ Configure all used events to run in kernel space.
- --all-user::
- Configure all used events to run in user space.
+ drivers/gpu/drm/i915/i915_drv.c | 17 +++++++++++++----
+ drivers/gpu/drm/i915/i915_drv.h |  1 +
+ drivers/gpu/drm/i915/i915_gem.c | 10 +++++++++-
+ 3 files changed, 23 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/gpu/drm/i915/i915_drv.c b/drivers/gpu/drm/i915/i915_drv.c
+index 83d2eb9e74cb..8be69f84eb6d 100644
+--- a/drivers/gpu/drm/i915/i915_drv.c
++++ b/drivers/gpu/drm/i915/i915_drv.c
+@@ -738,6 +738,7 @@ static int i915_load_modeset_init(struct drm_device *dev)
  
-+--kernel-callchains::
-+Collect callchains from kernel space.
+ cleanup_gem:
+ 	i915_gem_suspend(dev_priv);
++	i915_gem_fini_hw(dev_priv);
+ 	i915_gem_fini(dev_priv);
+ cleanup_modeset:
+ 	intel_modeset_cleanup(dev);
+@@ -1685,7 +1686,6 @@ static void i915_driver_cleanup_hw(struct drm_i915_private *dev_priv)
+ 		pci_disable_msi(pdev);
+ 
+ 	pm_qos_remove_request(&dev_priv->pm_qos);
+-	i915_ggtt_cleanup_hw(dev_priv);
+ }
+ 
+ /**
+@@ -1909,6 +1909,7 @@ int i915_driver_load(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 
+ out_cleanup_hw:
+ 	i915_driver_cleanup_hw(dev_priv);
++	i915_ggtt_cleanup_hw(dev_priv);
+ out_cleanup_mmio:
+ 	i915_driver_cleanup_mmio(dev_priv);
+ out_runtime_pm_put:
+@@ -1960,21 +1961,29 @@ void i915_driver_unload(struct drm_device *dev)
+ 	cancel_delayed_work_sync(&dev_priv->gpu_error.hangcheck_work);
+ 	i915_reset_error_state(dev_priv);
+ 
+-	i915_gem_fini(dev_priv);
++	i915_gem_fini_hw(dev_priv);
+ 
+ 	intel_power_domains_fini_hw(dev_priv);
+ 
+ 	i915_driver_cleanup_hw(dev_priv);
+-	i915_driver_cleanup_mmio(dev_priv);
+ 
+ 	enable_rpm_wakeref_asserts(dev_priv);
+-	intel_runtime_pm_cleanup(dev_priv);
+ }
+ 
+ static void i915_driver_release(struct drm_device *dev)
+ {
+ 	struct drm_i915_private *dev_priv = to_i915(dev);
+ 
++	disable_rpm_wakeref_asserts(dev_priv);
 +
-+--user-callchains::
-+Collect callchains from user space.
++	i915_gem_fini(dev_priv);
 +
- --timestamp-filename
- Append timestamp to output file name.
++	i915_ggtt_cleanup_hw(dev_priv);
++	i915_driver_cleanup_mmio(dev_priv);
++
++	enable_rpm_wakeref_asserts(dev_priv);
++	intel_runtime_pm_cleanup(dev_priv);
++
+ 	i915_driver_cleanup_early(dev_priv);
+ 	i915_driver_destroy(dev_priv);
+ }
+diff --git a/drivers/gpu/drm/i915/i915_drv.h b/drivers/gpu/drm/i915/i915_drv.h
+index a2664ea1395b..d08e7bd83544 100644
+--- a/drivers/gpu/drm/i915/i915_drv.h
++++ b/drivers/gpu/drm/i915/i915_drv.h
+@@ -3047,6 +3047,7 @@ void i915_gem_init_mmio(struct drm_i915_private *i915);
+ int __must_check i915_gem_init(struct drm_i915_private *dev_priv);
+ int __must_check i915_gem_init_hw(struct drm_i915_private *dev_priv);
+ void i915_gem_init_swizzling(struct drm_i915_private *dev_priv);
++void i915_gem_fini_hw(struct drm_i915_private *dev_priv);
+ void i915_gem_fini(struct drm_i915_private *dev_priv);
+ int i915_gem_wait_for_idle(struct drm_i915_private *dev_priv,
+ 			   unsigned int flags, long timeout);
+diff --git a/drivers/gpu/drm/i915/i915_gem.c b/drivers/gpu/drm/i915/i915_gem.c
+index 7cafd5612f71..20d3f7532cef 100644
+--- a/drivers/gpu/drm/i915/i915_gem.c
++++ b/drivers/gpu/drm/i915/i915_gem.c
+@@ -4667,7 +4667,7 @@ int i915_gem_init(struct drm_i915_private *dev_priv)
+ 	return ret;
+ }
  
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index e2c3a585a61e..dca55997934e 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -2191,6 +2191,10 @@ static struct option __record_options[] = {
- 	OPT_BOOLEAN_FLAG(0, "all-user", &record.opts.all_user,
- 			 "Configure all used events to run in user space.",
- 			 PARSE_OPT_EXCLUSIVE),
-+	OPT_BOOLEAN(0, "kernel-callchains", &record.opts.kernel_callchains,
-+		    "collect kernel callchains"),
-+	OPT_BOOLEAN(0, "user-callchains", &record.opts.user_callchains,
-+		    "collect user callchains"),
- 	OPT_STRING(0, "clang-path", &llvm_param.clang_path, "clang path",
- 		   "clang binary to use for compiling BPF scriptlets"),
- 	OPT_STRING(0, "clang-opt", &llvm_param.clang_opt, "clang options",
-diff --git a/tools/perf/perf.h b/tools/perf/perf.h
-index d59dee61b64d..711e009381ec 100644
---- a/tools/perf/perf.h
-+++ b/tools/perf/perf.h
-@@ -61,6 +61,8 @@ struct record_opts {
- 	bool	     record_switch_events;
- 	bool	     all_kernel;
- 	bool	     all_user;
-+	bool	     kernel_callchains;
-+	bool	     user_callchains;
- 	bool	     tail_synthesize;
- 	bool	     overwrite;
- 	bool	     ignore_missing_thread;
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index a6f572a40deb..a606b2833e27 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -680,6 +680,10 @@ static void __perf_evsel__config_callchain(struct perf_evsel *evsel,
+-void i915_gem_fini(struct drm_i915_private *dev_priv)
++void i915_gem_fini_hw(struct drm_i915_private *dev_priv)
+ {
+ 	GEM_BUG_ON(dev_priv->gt.awake);
  
- 	attr->sample_max_stack = param->max_stack;
- 
-+	if (opts->kernel_callchains)
-+		attr->exclude_callchain_user = 1;
-+	if (opts->user_callchains)
-+		attr->exclude_callchain_kernel = 1;
- 	if (param->record_mode == CALLCHAIN_LBR) {
- 		if (!opts->branch_stack) {
- 			if (attr->exclude_user) {
+@@ -4680,6 +4680,14 @@ void i915_gem_fini(struct drm_i915_private *dev_priv)
+ 	mutex_lock(&dev_priv->drm.struct_mutex);
+ 	intel_uc_fini_hw(dev_priv);
+ 	intel_uc_fini(dev_priv);
++	mutex_unlock(&dev_priv->drm.struct_mutex);
++
++	i915_gem_drain_freed_objects(dev_priv);
++}
++
++void i915_gem_fini(struct drm_i915_private *dev_priv)
++{
++	mutex_lock(&dev_priv->drm.struct_mutex);
+ 	intel_engines_cleanup(dev_priv);
+ 	i915_gem_contexts_fini(dev_priv);
+ 	i915_gem_fini_scratch(dev_priv);
 -- 
-2.14.1
+2.21.0
 
