@@ -5,50 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1949C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1D7C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84CEF24B04
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:38:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 398DA249BD
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:38:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187487;
-	bh=ulusacNnrQBiMj7ktZxXDLnB92u6HH8UujHdL43sXdU=;
+	s=default; t=1559187494;
+	bh=lZqlFI5rRdNdBUUDFTiQ61znwPK0+JBPzKezX7TVJFQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w8byko2d/g4a60QWQ4fzDq2/U5Sgd6621EMr/i4Z+stKpbibwaa3nIHzA89hnMLKY
-	 l64VlbVFas1tcNsp7/P7pB/pAs2k29qJRgCaw1uj9bYNv/7lpqZApslF7Owze6mcwz
-	 U6GgGn5YYQgc1za1e36dguF0TRGk3cbSJHc6AAEo=
+	b=NEHE/467D9QYi54v5fcgRhA4o/pJuAVtk/lixlS4l6feP4w693s6AXKtQXawT7MoN
+	 hv3GUzmkoN9rZ+IQ1H7JOdiNDi9bUWH8RpPuG2ZCjPhrYe5kX12VxO9HnDe3BGy3yk
+	 raevq/eqjPAZchnyAfeCCV+96eP69fIJrJ5KUxgU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732238AbfE3DXS (ORCPT
+        id S1731981AbfE3DXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:23:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45326 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:23:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731059AbfE3DRU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:17:20 -0400
+        id S1731002AbfE3DRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:17:15 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 408862469F;
-        Thu, 30 May 2019 03:17:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 038F224688;
+        Thu, 30 May 2019 03:17:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186240;
-        bh=ulusacNnrQBiMj7ktZxXDLnB92u6HH8UujHdL43sXdU=;
+        s=default; t=1559186234;
+        bh=lZqlFI5rRdNdBUUDFTiQ61znwPK0+JBPzKezX7TVJFQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J8Jaawx7HMBXjp5y23GDGaTk6+qz0U4YtKU/vvyHlVgB84LZR69DJH+B3gbmGo/vV
-         cHqNUdVM9SKxyonYLKFGMekZDBnY2Goza8taot2MTT1suyVCEtZ6T9eIFRS7hVou6G
-         xrL+XquymWYWbZYUa/EoA/bqFhnI7bpicev8wzzY=
+        b=lJR8+yoS3Xss3HyUyY7RiAYGZPXihnef/kQ4sY9UmqqHjTxB4dwt3rgtkhvHVLAkT
+         bmNbZHfYlEwCQ83ujapPD8zuFevrX+lvqXqeRuzDPdTvEVg0Jkdeb0PnPJBEE8IlEc
+         ZiO3YCso/eZ97OoBtW3+yz6J7CV9PZLXbapYi7KY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 152/276] arm64: vdso: Fix clock_getres() for CLOCK_REALTIME
-Date:   Wed, 29 May 2019 20:05:10 -0700
-Message-Id: <20190530030535.080336468@linuxfoundation.org>
+        stable@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Suraj Jitindar Singh <sjitindarsingh@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 141/276] irq_work: Do not raise an IPI when queueing work on the local CPU
+Date:   Wed, 29 May 2019 20:04:59 -0700
+Message-Id: <20190530030534.501329077@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -61,104 +68,142 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 81fb8736dd81da3fe94f28968dac60f392ec6746 ]
+[ Upstream commit 471ba0e686cb13752bc1ff3216c54b69a2d250ea ]
 
-clock_getres() in the vDSO library has to preserve the same behaviour
-of posix_get_hrtimer_res().
+The QEMU PowerPC/PSeries machine model was not expecting a self-IPI,
+and it may be a bit surprising thing to do, so have irq_work_queue_on
+do local queueing when target is the current CPU.
 
-In particular, posix_get_hrtimer_res() does:
-
-    sec = 0;
-    ns = hrtimer_resolution;
-
-where 'hrtimer_resolution' depends on whether or not high resolution
-timers are enabled, which is a runtime decision.
-
-The vDSO incorrectly returns the constant CLOCK_REALTIME_RES. Fix this
-by exposing 'hrtimer_resolution' in the vDSO datapage and returning that
-instead.
-
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-[will: Use WRITE_ONCE(), move adr off COARSE path, renumber labels, use 'w' reg]
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Tested-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190409093403.20994-1-npiggin@gmail.com
+[ Simplified the preprocessor comments.
+  Fixed unbalanced curly brackets pointed out by Thomas. ]
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/vdso_datapage.h | 1 +
- arch/arm64/kernel/asm-offsets.c        | 2 +-
- arch/arm64/kernel/vdso.c               | 3 +++
- arch/arm64/kernel/vdso/gettimeofday.S  | 7 +++----
- 4 files changed, 8 insertions(+), 5 deletions(-)
+ kernel/irq_work.c | 75 ++++++++++++++++++++++++++---------------------
+ 1 file changed, 42 insertions(+), 33 deletions(-)
 
-diff --git a/arch/arm64/include/asm/vdso_datapage.h b/arch/arm64/include/asm/vdso_datapage.h
-index 2b9a63771eda8..f89263c8e11af 100644
---- a/arch/arm64/include/asm/vdso_datapage.h
-+++ b/arch/arm64/include/asm/vdso_datapage.h
-@@ -38,6 +38,7 @@ struct vdso_data {
- 	__u32 tz_minuteswest;	/* Whacky timezone stuff */
- 	__u32 tz_dsttime;
- 	__u32 use_syscall;
-+	__u32 hrtimer_res;
- };
+diff --git a/kernel/irq_work.c b/kernel/irq_work.c
+index 6b7cdf17ccf89..73288914ed5e7 100644
+--- a/kernel/irq_work.c
++++ b/kernel/irq_work.c
+@@ -56,61 +56,70 @@ void __weak arch_irq_work_raise(void)
+ 	 */
+ }
  
- #endif /* !__ASSEMBLY__ */
-diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
-index 323aeb5f2fe62..92fba851ce53a 100644
---- a/arch/arm64/kernel/asm-offsets.c
-+++ b/arch/arm64/kernel/asm-offsets.c
-@@ -99,7 +99,7 @@ int main(void)
-   DEFINE(CLOCK_REALTIME,	CLOCK_REALTIME);
-   DEFINE(CLOCK_MONOTONIC,	CLOCK_MONOTONIC);
-   DEFINE(CLOCK_MONOTONIC_RAW,	CLOCK_MONOTONIC_RAW);
--  DEFINE(CLOCK_REALTIME_RES,	MONOTONIC_RES_NSEC);
-+  DEFINE(CLOCK_REALTIME_RES,	offsetof(struct vdso_data, hrtimer_res));
-   DEFINE(CLOCK_REALTIME_COARSE,	CLOCK_REALTIME_COARSE);
-   DEFINE(CLOCK_MONOTONIC_COARSE,CLOCK_MONOTONIC_COARSE);
-   DEFINE(CLOCK_COARSE_RES,	LOW_RES_NSEC);
-diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
-index 2d419006ad433..ec0bb588d7553 100644
---- a/arch/arm64/kernel/vdso.c
-+++ b/arch/arm64/kernel/vdso.c
-@@ -232,6 +232,9 @@ void update_vsyscall(struct timekeeper *tk)
- 	vdso_data->wtm_clock_sec		= tk->wall_to_monotonic.tv_sec;
- 	vdso_data->wtm_clock_nsec		= tk->wall_to_monotonic.tv_nsec;
+-/*
+- * Enqueue the irq_work @work on @cpu unless it's already pending
+- * somewhere.
+- *
+- * Can be re-enqueued while the callback is still in progress.
+- */
+-bool irq_work_queue_on(struct irq_work *work, int cpu)
++/* Enqueue on current CPU, work must already be claimed and preempt disabled */
++static void __irq_work_queue_local(struct irq_work *work)
+ {
+-	/* All work should have been flushed before going offline */
+-	WARN_ON_ONCE(cpu_is_offline(cpu));
+-
+-#ifdef CONFIG_SMP
+-
+-	/* Arch remote IPI send/receive backend aren't NMI safe */
+-	WARN_ON_ONCE(in_nmi());
++	/* If the work is "lazy", handle it from next tick if any */
++	if (work->flags & IRQ_WORK_LAZY) {
++		if (llist_add(&work->llnode, this_cpu_ptr(&lazy_list)) &&
++		    tick_nohz_tick_stopped())
++			arch_irq_work_raise();
++	} else {
++		if (llist_add(&work->llnode, this_cpu_ptr(&raised_list)))
++			arch_irq_work_raise();
++	}
++}
  
-+	/* Read without the seqlock held by clock_getres() */
-+	WRITE_ONCE(vdso_data->hrtimer_res, hrtimer_resolution);
++/* Enqueue the irq work @work on the current CPU */
++bool irq_work_queue(struct irq_work *work)
++{
+ 	/* Only queue if not already pending */
+ 	if (!irq_work_claim(work))
+ 		return false;
+ 
+-	if (llist_add(&work->llnode, &per_cpu(raised_list, cpu)))
+-		arch_send_call_function_single_ipi(cpu);
+-
+-#else /* #ifdef CONFIG_SMP */
+-	irq_work_queue(work);
+-#endif /* #else #ifdef CONFIG_SMP */
++	/* Queue the entry and raise the IPI if needed. */
++	preempt_disable();
++	__irq_work_queue_local(work);
++	preempt_enable();
+ 
+ 	return true;
+ }
++EXPORT_SYMBOL_GPL(irq_work_queue);
+ 
+-/* Enqueue the irq work @work on the current CPU */
+-bool irq_work_queue(struct irq_work *work)
++/*
++ * Enqueue the irq_work @work on @cpu unless it's already pending
++ * somewhere.
++ *
++ * Can be re-enqueued while the callback is still in progress.
++ */
++bool irq_work_queue_on(struct irq_work *work, int cpu)
+ {
++#ifndef CONFIG_SMP
++	return irq_work_queue(work);
 +
- 	if (!use_syscall) {
- 		/* tkr_mono.cycle_last == tkr_raw.cycle_last */
- 		vdso_data->cs_cycle_last	= tk->tkr_mono.cycle_last;
-diff --git a/arch/arm64/kernel/vdso/gettimeofday.S b/arch/arm64/kernel/vdso/gettimeofday.S
-index e8f60112818fc..856fee6d35129 100644
---- a/arch/arm64/kernel/vdso/gettimeofday.S
-+++ b/arch/arm64/kernel/vdso/gettimeofday.S
-@@ -308,13 +308,14 @@ ENTRY(__kernel_clock_getres)
- 	ccmp	w0, #CLOCK_MONOTONIC_RAW, #0x4, ne
- 	b.ne	1f
++#else /* CONFIG_SMP: */
++	/* All work should have been flushed before going offline */
++	WARN_ON_ONCE(cpu_is_offline(cpu));
++
+ 	/* Only queue if not already pending */
+ 	if (!irq_work_claim(work))
+ 		return false;
  
--	ldr	x2, 5f
-+	adr	vdso_data, _vdso_data
-+	ldr	w2, [vdso_data, #CLOCK_REALTIME_RES]
- 	b	2f
- 1:
- 	cmp	w0, #CLOCK_REALTIME_COARSE
- 	ccmp	w0, #CLOCK_MONOTONIC_COARSE, #0x4, ne
- 	b.ne	4f
--	ldr	x2, 6f
-+	ldr	x2, 5f
- 2:
- 	cbz	x1, 3f
- 	stp	xzr, x2, [x1]
-@@ -328,8 +329,6 @@ ENTRY(__kernel_clock_getres)
- 	svc	#0
- 	ret
- 5:
--	.quad	CLOCK_REALTIME_RES
--6:
- 	.quad	CLOCK_COARSE_RES
- 	.cfi_endproc
- ENDPROC(__kernel_clock_getres)
+-	/* Queue the entry and raise the IPI if needed. */
+ 	preempt_disable();
+-
+-	/* If the work is "lazy", handle it from next tick if any */
+-	if (work->flags & IRQ_WORK_LAZY) {
+-		if (llist_add(&work->llnode, this_cpu_ptr(&lazy_list)) &&
+-		    tick_nohz_tick_stopped())
+-			arch_irq_work_raise();
++	if (cpu != smp_processor_id()) {
++		/* Arch remote IPI send/receive backend aren't NMI safe */
++		WARN_ON_ONCE(in_nmi());
++		if (llist_add(&work->llnode, &per_cpu(raised_list, cpu)))
++			arch_send_call_function_single_ipi(cpu);
+ 	} else {
+-		if (llist_add(&work->llnode, this_cpu_ptr(&raised_list)))
+-			arch_irq_work_raise();
++		__irq_work_queue_local(work);
+ 	}
+-
+ 	preempt_enable();
+ 
+ 	return true;
++#endif /* CONFIG_SMP */
+ }
+-EXPORT_SYMBOL_GPL(irq_work_queue);
++
+ 
+ bool irq_work_needs_cpu(void)
+ {
 -- 
 2.20.1
 
