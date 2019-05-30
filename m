@@ -2,98 +2,57 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 013D1C46460
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 808ACC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C326A2626E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:06:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559253981;
-	bh=O0Od9UjA78KdCTtQuTOoCmHPjqrdEk/p7lpKoxkjPOs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=EhPzpvWHtAo1WlyMc/GGmwgkMczG+/4oAo8CPHAIfuoTBcoXY90X8pKb+NWVm7WsW
-	 POl+iTFmDB0bVl6K+qfX0K7E+b/c9VRw/mgZBzrl8YWT+lRVg1/2FXhGiWFtz7bWf7
-	 lCGv1PPZhY7McoDB2TwY64sQo1rPfH6pBufLnOyY=
+	by mail.kernel.org (Postfix) with ESMTP id 5C9BF25180
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:08:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbfE3WGV (ORCPT
+        id S1726678AbfE3WIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 18:06:21 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:39838 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726328AbfE3WGU (ORCPT
+        Thu, 30 May 2019 18:08:46 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:32974 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbfE3WIq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 18:06:20 -0400
-Received: by mail-ot1-f68.google.com with SMTP id k24so2077564otn.6;
-        Thu, 30 May 2019 15:06:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mS/ULbrvznIqIBah+sjqhJbkEnUKlNTyCEQKdcPdFxU=;
-        b=J5d/aCCaD5Cghrm6JPfOau+A0FzAzaM61fAOljfhHfMbD5eNg5hge6arUigcOsZ+Dm
-         yuh+DLlhxli4wIy4t9MoiFpVVTIw2dmP/iloPvyCSNE3w4n6yBoUSJ6jtjLyYczTuMYs
-         rWaqerrbtMjNXHc71ie4u9wdqx/CrregswVDCa5hwyxMOeoayNpYuOpP4vWlrGjfRK9p
-         Qo5N/THuwrHTK9KrhzjHUHUhgxSbe7RUVzAgYkoWtt3uG2khOwW+1+H2NAsPoTZ1gSAL
-         C7ZcgHYHdHTt9bL5yv0tJ77NdHtHY1OSjnYkBsCgppSCMXIBdoi6HEq7jTSLD3/TgUcG
-         H17w==
-X-Gm-Message-State: APjAAAUSgoba/dqTgJRrt+QixzrrLmkrTGSYncb+FtxWPRJNdzsobifT
-        St+bvcCP/hpdxLTVjfeL+F+veIwzn1qhFEJf3iS0eQ==
-X-Google-Smtp-Source: APXvYqwNTMv7O+pOK5bKS1YKsS1yWwjHs1FZ2Z/zSggvLAm+F6SvH5rvjMNqRjMo0cR0/tATH5zm1wW4v46N/ECPnyY=
-X-Received: by 2002:a9d:3285:: with SMTP id u5mr4582299otb.266.1559252343151;
- Thu, 30 May 2019 14:39:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm>
- <nycvar.YFH.7.76.1905300007470.1962@cbobk.fhfr.pm> <CAJZ5v0ja5sQ73zMvUtV+w79LC_d+g6UdomL36rV-EpVDxEzbhA@mail.gmail.com>
- <alpine.DEB.2.21.1905301425330.2265@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1905301425330.2265@nanos.tec.linutronix.de>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 30 May 2019 23:38:51 +0200
-Message-ID: <CAJZ5v0go1g9KhE=mc19VCFrBuEERzFZCoRD4xt=tF=EnMjfH=A@mail.gmail.com>
-Subject: Re: [PATCH v4] x86/power: Fix 'nosmt' vs. hibernation triple fault
- during resume
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 30 May 2019 18:08:46 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5042C14DD3CA7;
+        Thu, 30 May 2019 15:08:45 -0700 (PDT)
+Date:   Thu, 30 May 2019 15:08:44 -0700 (PDT)
+Message-Id: <20190530.150844.1826796344374758568.davem@davemloft.net>
+To:     laurentiu.tudor@nxp.com
+Cc:     netdev@vger.kernel.org, madalin.bucur@nxp.com, roy.pledge@nxp.com,
+        camelia.groza@nxp.com, leoyang.li@nxp.com,
+        Joakim.Tjernlund@infinera.com, iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/6] Prerequisites for NXP LS104xA SMMU enablement
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190530141951.6704-1-laurentiu.tudor@nxp.com>
+References: <20190530141951.6704-1-laurentiu.tudor@nxp.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 30 May 2019 15:08:45 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 11:27 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Thu, 30 May 2019, Rafael J. Wysocki wrote:
-> > >
-> > > Cc: stable@vger.kernel.org # v4.19+
-> > > Debugged-by: Thomas Gleixner <tglx@linutronix.de>
-> > > Fixes: 0cc3cd21657b ("cpu/hotplug: Boot HT siblings at least once")
-> > > Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-> >
-> > LGTM
-> >
-> > And I would prefer this one to go in through the PM tree due to the
-> > hibernate core changes,
->
-> Ok.
->
-> > so can I get an ACK from the x86 arch side here, please?
->
-> No. Is the following good enough?
->
->     Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+From: laurentiu.tudor@nxp.com
+Date: Thu, 30 May 2019 17:19:45 +0300
 
-Yes, it is, thanks!
+> Depends on this pull request:
+> 
+>  http://lists.infradead.org/pipermail/linux-arm-kernel/2019-May/653554.html
+
+I'm not sure how you want me to handle this.
