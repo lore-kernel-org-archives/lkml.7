@@ -3,74 +3,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8381C28CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A200EC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ACE1261EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:53:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84011261E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:53:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbfE3Vxx (ORCPT
+        id S1726666AbfE3Vx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 17:53:53 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:60832 "EHLO
+        Thu, 30 May 2019 17:53:56 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:60840 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726693AbfE3Vxu (ORCPT
+        with ESMTP id S1726682AbfE3Vxu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 May 2019 17:53:50 -0400
 Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 257FC14DB1D91;
-        Thu, 30 May 2019 14:36:05 -0700 (PDT)
-Date:   Thu, 30 May 2019 14:36:04 -0700 (PDT)
-Message-Id: <20190530.143604.925231544360388287.davem@davemloft.net>
-To:     mcroce@redhat.com
-Cc:     linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
-        vyasevich@gmail.com, nhorman@tuxdriver.com,
-        marcelo.leitner@gmail.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] sctp: deduplicate identical skb_checksum_ops
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id C9F9914DB1C6C;
+        Thu, 30 May 2019 14:34:38 -0700 (PDT)
+Date:   Thu, 30 May 2019 14:34:38 -0700 (PDT)
+Message-Id: <20190530.143438.2168815307729525615.davem@davemloft.net>
+To:     yuehaibing@huawei.com
+Cc:     olteanv@gmail.com, andrew@lunn.ch, vivien.didelot@gmail.com,
+        f.fainelli@gmail.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH net-next] net: dsa: sja1105: Make
+ static_config_check_memory_size static
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190529153941.12166-1-mcroce@redhat.com>
-References: <20190529153941.12166-1-mcroce@redhat.com>
+In-Reply-To: <20190529143432.19268-1-yuehaibing@huawei.com>
+References: <20190529143432.19268-1-yuehaibing@huawei.com>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 30 May 2019 14:36:05 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 30 May 2019 14:34:39 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matteo Croce <mcroce@redhat.com>
-Date: Wed, 29 May 2019 17:39:41 +0200
+From: YueHaibing <yuehaibing@huawei.com>
+Date: Wed, 29 May 2019 22:34:32 +0800
 
-> The same skb_checksum_ops struct is defined twice in two different places,
-> leading to code duplication. Declare it as a global variable into a common
-> header instead of allocating it on the stack on each function call.
-> bloat-o-meter reports a slight code shrink.
+> Fix sparse warning:
 > 
-> add/remove: 1/1 grow/shrink: 0/10 up/down: 128/-1282 (-1154)
-> Function                                     old     new   delta
-> sctp_csum_ops                                  -     128    +128
-> crc32c_csum_ops                               16       -     -16
-> sctp_rcv                                    6616    6583     -33
-> sctp_packet_pack                            4542    4504     -38
-> nf_conntrack_sctp_packet                    4980    4926     -54
-> execute_masked_set_action                   6453    6389     -64
-> tcf_csum_sctp                                575     428    -147
-> sctp_gso_segment                            1292    1126    -166
-> sctp_csum_check                              579     412    -167
-> sctp_snat_handler                            957     772    -185
-> sctp_dnat_handler                           1321    1132    -189
-> l4proto_manip_pkt                           2536    2313    -223
-> Total: Before=359297613, After=359296459, chg -0.00%
+> drivers/net/dsa/sja1105/sja1105_static_config.c:446:1: warning:
+>  symbol 'static_config_check_memory_size' was not declared. Should it be static?
 > 
-> Reviewed-by: Xin Long <lucien.xin@gmail.com>
-> Signed-off-by: Matteo Croce <mcroce@redhat.com>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
 Applied.
