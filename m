@@ -5,54 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E52C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B96CC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 088B7255CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:29:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B59C2558C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:29:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190585;
-	bh=mOTHQkA9xhzrx9IqUyYSupDYM6744LKs6Vi2Qm5MEVA=;
+	s=default; t=1559190588;
+	bh=C5z9Bk167e3r31mhrvlDOQ2kyyHohCiznWZsGsX1/50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XXbsR41qbJ5LXyfpWQ9BSB3ejzjdBoyXM7r23R/P+kOOL8jGMB6Ly9nFcBVJ7Fr8q
-	 yCjUuyd1HMN4o0kQILbx2Hmg+vs8iiRKtRcO8bWk4v7JHJVJGu1oaZsprfFr1x/i0k
-	 em4MUeMJDAPjtbbj4WLsZ0ZjNlYclRJENMktYRcU=
+	b=SLOCOI7GaVZIi9H/yEKyefziFo4EKOXlkkVXRsNXDxWJ6hOfEks99iVpuCim/UDlS
+	 UIxuewx8kqF290CXP6FCa1wmw7I+X5tCZgmEoVFTwOWik6ayOrUpdM3VfS/CfJxUWo
+	 n4QqDLfvtG1+tNzlEgdB/vJZt9RJmQB/RXN4Jqoc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729673AbfE3DOA (ORCPT
+        id S2387481AbfE3E3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:14:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52128 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:29:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728672AbfE3DLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:11:47 -0400
+        id S1729659AbfE3DOB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:01 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 299EF2446F;
-        Thu, 30 May 2019 03:11:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 669DE24570;
+        Thu, 30 May 2019 03:14:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185906;
-        bh=mOTHQkA9xhzrx9IqUyYSupDYM6744LKs6Vi2Qm5MEVA=;
+        s=default; t=1559186040;
+        bh=C5z9Bk167e3r31mhrvlDOQ2kyyHohCiznWZsGsX1/50=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LexhCAaCym2L+a3bUX/G+Ja5fj3Oknzo1QQMN0XiRezueZtTzebEA4LY75ENf46hR
-         c7j8lDjXSfSA7wmRbToT+Fn037TaEr/6vRBK4ZIsZO4otEnFao5TaXayDgz8uxuaIn
-         CZ5zOu4gil/GoALm9f3czbINy4la9cqhbLIvAZLI=
+        b=sKXKGd2B2akp1fllsHHU7ha5fmv6yIYE0jReanuJRSEjEyokeCTXRxQGHrQIP3b96
+         YRKL6nyKp9+JqAZfc9zIbwpu3xWHSAdy4QwOGGFoJ0LlMs7Tn3TXZVXylBcUckM4MI
+         O1TiRnPBxZu0+atO2vH8k71Cih2iZvX2YVCI7fM8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Takeshi Kihara <takeshi.kihara.df@renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
+        Rocky Liao <rjliao@codeaurora.org>,
+        Claire Chang <tientzu@chromium.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 278/405] clk: renesas: rcar-gen3: Correct parent clock of SYS-DMAC
-Date:   Wed, 29 May 2019 20:04:36 -0700
-Message-Id: <20190530030554.955734994@linuxfoundation.org>
+Subject: [PATCH 5.0 129/346] Bluetooth: hci_qca: Give enough time to ROME controller to bootup.
+Date:   Wed, 29 May 2019 20:03:22 -0700
+Message-Id: <20190530030547.653264330@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
-References: <20190530030540.291644921@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,95 +63,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3c772f71a552d343a96868ed9a809f9047be94f5 ]
+[ Upstream commit 7f09d5a6c33be66a5ca19bf9dd1c2d90c5dfcf0d ]
 
-The clock sources of the AXI BUS clock (266.66 MHz) used for SYS-DMAC
-DMA transfers are:
+This patch enables enough time to ROME controller to bootup
+after we bring the enable pin out of reset.
 
-    Channel      R-Car H3    R-Car M3-W    R-Car M3-N
-    -------------------------------------------------
-    SYS-DMAC0    S0D3        S0D3          S0D3
-    SYS-DMAC1    S3D1        S3D1          S3D1
-    SYS-DMAC2    S3D1        S3D1          S3D1
-
-As a result, change the parent clocks of the SYS-DMAC{1,2} module clocks
-on R-Car H3, R-Car M3-W, and R-Car M3-N to S3D1.
-
-NOTE: This information will be reflected in a future revision of the
-      R-Car Gen3 Hardware Manual.
-
-Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-[geert: Update RZ/G2M]
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Fixes: 05ba533c5c11 ("Bluetooth: hci_qca: Add serdev support").
+Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Reviewed-by: Rocky Liao <rjliao@codeaurora.org>
+Tested-by: Rocky Liao <rjliao@codeaurora.org>
+Tested-by: Claire Chang <tientzu@chromium.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/renesas/r8a774a1-cpg-mssr.c | 4 ++--
- drivers/clk/renesas/r8a7795-cpg-mssr.c  | 4 ++--
- drivers/clk/renesas/r8a7796-cpg-mssr.c  | 4 ++--
- drivers/clk/renesas/r8a77965-cpg-mssr.c | 4 ++--
- 4 files changed, 8 insertions(+), 8 deletions(-)
+ drivers/bluetooth/hci_qca.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/clk/renesas/r8a774a1-cpg-mssr.c b/drivers/clk/renesas/r8a774a1-cpg-mssr.c
-index 4d92b27a61538..047599579c651 100644
---- a/drivers/clk/renesas/r8a774a1-cpg-mssr.c
-+++ b/drivers/clk/renesas/r8a774a1-cpg-mssr.c
-@@ -123,8 +123,8 @@ static const struct mssr_mod_clk r8a774a1_mod_clks[] __initconst = {
- 	DEF_MOD("msiof2",		 209,	R8A774A1_CLK_MSO),
- 	DEF_MOD("msiof1",		 210,	R8A774A1_CLK_MSO),
- 	DEF_MOD("msiof0",		 211,	R8A774A1_CLK_MSO),
--	DEF_MOD("sys-dmac2",		 217,	R8A774A1_CLK_S0D3),
--	DEF_MOD("sys-dmac1",		 218,	R8A774A1_CLK_S0D3),
-+	DEF_MOD("sys-dmac2",		 217,	R8A774A1_CLK_S3D1),
-+	DEF_MOD("sys-dmac1",		 218,	R8A774A1_CLK_S3D1),
- 	DEF_MOD("sys-dmac0",		 219,	R8A774A1_CLK_S0D3),
- 	DEF_MOD("cmt3",			 300,	R8A774A1_CLK_R),
- 	DEF_MOD("cmt2",			 301,	R8A774A1_CLK_R),
-diff --git a/drivers/clk/renesas/r8a7795-cpg-mssr.c b/drivers/clk/renesas/r8a7795-cpg-mssr.c
-index 86842c9fd314e..eade38e9ed36b 100644
---- a/drivers/clk/renesas/r8a7795-cpg-mssr.c
-+++ b/drivers/clk/renesas/r8a7795-cpg-mssr.c
-@@ -129,8 +129,8 @@ static struct mssr_mod_clk r8a7795_mod_clks[] __initdata = {
- 	DEF_MOD("msiof2",		 209,	R8A7795_CLK_MSO),
- 	DEF_MOD("msiof1",		 210,	R8A7795_CLK_MSO),
- 	DEF_MOD("msiof0",		 211,	R8A7795_CLK_MSO),
--	DEF_MOD("sys-dmac2",		 217,	R8A7795_CLK_S0D3),
--	DEF_MOD("sys-dmac1",		 218,	R8A7795_CLK_S0D3),
-+	DEF_MOD("sys-dmac2",		 217,	R8A7795_CLK_S3D1),
-+	DEF_MOD("sys-dmac1",		 218,	R8A7795_CLK_S3D1),
- 	DEF_MOD("sys-dmac0",		 219,	R8A7795_CLK_S0D3),
- 	DEF_MOD("sceg-pub",		 229,	R8A7795_CLK_CR),
- 	DEF_MOD("cmt3",			 300,	R8A7795_CLK_R),
-diff --git a/drivers/clk/renesas/r8a7796-cpg-mssr.c b/drivers/clk/renesas/r8a7796-cpg-mssr.c
-index 12c455859f2c2..654f3ea88f335 100644
---- a/drivers/clk/renesas/r8a7796-cpg-mssr.c
-+++ b/drivers/clk/renesas/r8a7796-cpg-mssr.c
-@@ -126,8 +126,8 @@ static const struct mssr_mod_clk r8a7796_mod_clks[] __initconst = {
- 	DEF_MOD("msiof2",		 209,	R8A7796_CLK_MSO),
- 	DEF_MOD("msiof1",		 210,	R8A7796_CLK_MSO),
- 	DEF_MOD("msiof0",		 211,	R8A7796_CLK_MSO),
--	DEF_MOD("sys-dmac2",		 217,	R8A7796_CLK_S0D3),
--	DEF_MOD("sys-dmac1",		 218,	R8A7796_CLK_S0D3),
-+	DEF_MOD("sys-dmac2",		 217,	R8A7796_CLK_S3D1),
-+	DEF_MOD("sys-dmac1",		 218,	R8A7796_CLK_S3D1),
- 	DEF_MOD("sys-dmac0",		 219,	R8A7796_CLK_S0D3),
- 	DEF_MOD("cmt3",			 300,	R8A7796_CLK_R),
- 	DEF_MOD("cmt2",			 301,	R8A7796_CLK_R),
-diff --git a/drivers/clk/renesas/r8a77965-cpg-mssr.c b/drivers/clk/renesas/r8a77965-cpg-mssr.c
-index eb1cca58a1e1f..13d1f88be04a5 100644
---- a/drivers/clk/renesas/r8a77965-cpg-mssr.c
-+++ b/drivers/clk/renesas/r8a77965-cpg-mssr.c
-@@ -123,8 +123,8 @@ static const struct mssr_mod_clk r8a77965_mod_clks[] __initconst = {
- 	DEF_MOD("msiof2",		209,	R8A77965_CLK_MSO),
- 	DEF_MOD("msiof1",		210,	R8A77965_CLK_MSO),
- 	DEF_MOD("msiof0",		211,	R8A77965_CLK_MSO),
--	DEF_MOD("sys-dmac2",		217,	R8A77965_CLK_S0D3),
--	DEF_MOD("sys-dmac1",		218,	R8A77965_CLK_S0D3),
-+	DEF_MOD("sys-dmac2",		217,	R8A77965_CLK_S3D1),
-+	DEF_MOD("sys-dmac1",		218,	R8A77965_CLK_S3D1),
- 	DEF_MOD("sys-dmac0",		219,	R8A77965_CLK_S0D3),
- 
- 	DEF_MOD("cmt3",			300,	R8A77965_CLK_R),
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index f036c8f98ea33..97bc17670b7aa 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -508,6 +508,8 @@ static int qca_open(struct hci_uart *hu)
+ 		qcadev = serdev_device_get_drvdata(hu->serdev);
+ 		if (qcadev->btsoc_type != QCA_WCN3990) {
+ 			gpiod_set_value_cansleep(qcadev->bt_en, 1);
++			/* Controller needs time to bootup. */
++			msleep(150);
+ 		} else {
+ 			hu->init_speed = qcadev->init_speed;
+ 			hu->oper_speed = qcadev->oper_speed;
 -- 
 2.20.1
 
