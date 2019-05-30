@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C3EC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A83C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF37B24CE2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:46:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B98924CE2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:46:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188008;
-	bh=KnTVExqNKtl5Xl8ksL32IR1ybhO8+AKU6IU8voJuysE=;
+	s=default; t=1559188012;
+	bh=cIGnD4yXtI3MMHtih8BtRCO6noHVs0fjrkprujW0B5Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gh4JG8jYuH/EZwAOX/qKGrp2iOlbnR9zT45N+ogckJneH3nAEe6rQXM0pSdo0uqUF
-	 xBOsNCje0gm6ioSq0oxlR0MlwVGZ0xM6gWL7YMjvfLOgPPv6ZbkJyqSnCsuav1TMVD
-	 Focwkx2tHBBeWX9tin5gtTvUpme2qHmd5AlEnX6c=
+	b=fU56RhAlEuwBUauxgD9Sf3Ds29Qedv180p2fgLNHsh+n6RQUzDpmMxS3eqM+QK2Qs
+	 eRSvovI87aKgJy8VRjuCA9rT/09c6KJAxRIPLTnC4WYQI13RfVjWCbEd+dBIwdnGFC
+	 w66v3haoM2MuiKWBdaNyhlgigU5K7851KBD0T4Ec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733141AbfE3Dqs (ORCPT
+        id S1733120AbfE3Dqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:46:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59298 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:46:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732268AbfE3DUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732265AbfE3DUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:20:37 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29B2E24934;
-        Thu, 30 May 2019 03:20:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85A6D2492F;
+        Thu, 30 May 2019 03:20:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186437;
-        bh=KnTVExqNKtl5Xl8ksL32IR1ybhO8+AKU6IU8voJuysE=;
+        s=default; t=1559186436;
+        bh=cIGnD4yXtI3MMHtih8BtRCO6noHVs0fjrkprujW0B5Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dNYLMMLIfGpQClsXSAIXC+yFZde+v2MK1gnHRyVTBhnUlvUi+gCrFJHTRhmFLPPdX
-         R18DM5HZeWtHMKDbJ9oEG3jxbxXDqMh7QyKzU3XnJCGuGmyq7lJ1dcSVBNXkbwayd3
-         gKbmqsVFfrEp95bejfMERlOsHzaEqhOF6OnoEnWg=
+        b=UUqcZjnlZvsb2PCucUWsG/JKE54tdoKGFWaoeQ0w3S00ORk+4lDHyY+tuiMfHujT2
+         TUMDlKMjZ0trsTrXlhfSQYdXRbQWcCuv9sIDHfrD65+ESltEwYr3b37Wgl2EYekTON
+         oKcQBCPgi4WlrJiSVDiozeyYNgaiaE8aAb7QNBv0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
         Will Deacon <will.deacon@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 034/128] arm64: Fix compiler warning from pte_unmap() with -Wunused-but-set-variable
-Date:   Wed, 29 May 2019 20:06:06 -0700
-Message-Id: <20190530030440.503603979@linuxfoundation.org>
+Subject: [PATCH 4.9 033/128] ARM: vdso: Remove dependency with the arch_timer driver internals
+Date:   Wed, 29 May 2019 20:06:05 -0700
+Message-Id: <20190530030440.414195214@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -60,59 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 74dd022f9e6260c3b5b8d15901d27ebcc5f21eda ]
+[ Upstream commit 1f5b62f09f6b314c8d70b9de5182dae4de1f94da ]
 
-When building with -Wunused-but-set-variable, the compiler shouts about
-a number of pte_unmap() users, since this expands to an empty macro on
-arm64:
+The VDSO code uses the kernel helper that was originally designed
+to abstract the access between 32 and 64bit systems. It worked so
+far because this function is declared as 'inline'.
 
-  | mm/gup.c: In function 'gup_pte_range':
-  | mm/gup.c:1727:16: warning: variable 'ptem' set but not used
-  | [-Wunused-but-set-variable]
-  | mm/gup.c: At top level:
-  | mm/memory.c: In function 'copy_pte_range':
-  | mm/memory.c:821:24: warning: variable 'orig_dst_pte' set but not used
-  | [-Wunused-but-set-variable]
-  | mm/memory.c:821:9: warning: variable 'orig_src_pte' set but not used
-  | [-Wunused-but-set-variable]
-  | mm/swap_state.c: In function 'swap_ra_info':
-  | mm/swap_state.c:641:15: warning: variable 'orig_pte' set but not used
-  | [-Wunused-but-set-variable]
-  | mm/madvise.c: In function 'madvise_free_pte_range':
-  | mm/madvise.c:318:9: warning: variable 'orig_pte' set but not used
-  | [-Wunused-but-set-variable]
+As we're about to revamp that part of the code, the VDSO would
+break. Let's fix it by doing what should have been done from
+the start, a proper system register access.
 
-Rewrite pte_unmap() as a static inline function, which silences the
-warnings.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/pgtable.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/include/asm/cp15.h   | 2 ++
+ arch/arm/vdso/vgettimeofday.c | 5 +++--
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index 3a30a3994e4a2..73e3718356b05 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -413,6 +413,8 @@ static inline phys_addr_t pmd_page_paddr(pmd_t pmd)
- 	return pmd_val(pmd) & PHYS_MASK & (s32)PAGE_MASK;
- }
+diff --git a/arch/arm/include/asm/cp15.h b/arch/arm/include/asm/cp15.h
+index b74b174ac9fcd..b458e41227943 100644
+--- a/arch/arm/include/asm/cp15.h
++++ b/arch/arm/include/asm/cp15.h
+@@ -67,6 +67,8 @@
+ #define BPIALL				__ACCESS_CP15(c7, 0, c5, 6)
+ #define ICIALLU				__ACCESS_CP15(c7, 0, c5, 0)
  
-+static inline void pte_unmap(pte_t *pte) { }
++#define CNTVCT				__ACCESS_CP15_64(1, c14)
 +
- /* Find an entry in the third-level page table. */
- #define pte_index(addr)		(((addr) >> PAGE_SHIFT) & (PTRS_PER_PTE - 1))
+ extern unsigned long cr_alignment;	/* defined in entry-armv.S */
  
-@@ -421,7 +423,6 @@ static inline phys_addr_t pmd_page_paddr(pmd_t pmd)
+ static inline unsigned long get_cr(void)
+diff --git a/arch/arm/vdso/vgettimeofday.c b/arch/arm/vdso/vgettimeofday.c
+index 79214d5ff0970..3af02d2a0b7f2 100644
+--- a/arch/arm/vdso/vgettimeofday.c
++++ b/arch/arm/vdso/vgettimeofday.c
+@@ -18,9 +18,9 @@
+ #include <linux/compiler.h>
+ #include <linux/hrtimer.h>
+ #include <linux/time.h>
+-#include <asm/arch_timer.h>
+ #include <asm/barrier.h>
+ #include <asm/bug.h>
++#include <asm/cp15.h>
+ #include <asm/page.h>
+ #include <asm/unistd.h>
+ #include <asm/vdso_datapage.h>
+@@ -123,7 +123,8 @@ static notrace u64 get_ns(struct vdso_data *vdata)
+ 	u64 cycle_now;
+ 	u64 nsec;
  
- #define pte_offset_map(dir,addr)	pte_offset_kernel((dir), (addr))
- #define pte_offset_map_nested(dir,addr)	pte_offset_kernel((dir), (addr))
--#define pte_unmap(pte)			do { } while (0)
- #define pte_unmap_nested(pte)		do { } while (0)
+-	cycle_now = arch_counter_get_cntvct();
++	isb();
++	cycle_now = read_sysreg(CNTVCT);
  
- #define pte_set_fixmap(addr)		((pte_t *)set_fixmap_offset(FIX_PTE, addr))
+ 	cycle_delta = (cycle_now - vdata->cs_cycle_last) & vdata->cs_mask;
+ 
 -- 
 2.20.1
 
