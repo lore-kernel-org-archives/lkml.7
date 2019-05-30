@@ -7,52 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFB7C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B051C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2DD025C40
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:48:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 273FB25C80
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:48:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191712;
-	bh=cYj6tGVRkcCfyzn1WMPn2V4eRoSHbAJSj6gDIu0hjcw=;
+	s=default; t=1559191717;
+	bh=omCfLSJT/bcAzC95PyXPqGhXkRgBnfZz+kJGLpqGPss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1b4FlW7q9skhO6ma0drSOq1JHeqFbYCMaaPwqEC2TX42ZZOBVb0vfMqM04q+6CMr6
-	 PDYcDhl4se8wVCY0di67aCGLKTxmWRHH65ilHDyPEQPhzd94O1EP+Z3A6Aym32q9xk
-	 u42HEkU4CJ/wCqs+hX08Fo/zAEmx7Hr6nUuI4PYg=
+	b=tXaZRqoZPdzfcQENXX3zKeNTzUW9BwvCfOTdEMGeFBBkv+ZjTFAvnVJhuYXHqfQLI
+	 yvM+k5EgXcPmTTKWjIYJkjTO/5oY8OYxHDWqtxZJvxXRU3Fh2w/EPug4PCr6s+oWvc
+	 cLTuembkYgTitFkZ+5mf9E9QOigkJ89mH4pLEOHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388428AbfE3Esb (ORCPT
+        id S2388877AbfE3Esf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:48:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49964 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:48:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728479AbfE3DLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727697AbfE3DLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:11:19 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 399DC244F6;
-        Thu, 30 May 2019 03:11:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA456244E6;
+        Thu, 30 May 2019 03:11:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185879;
-        bh=cYj6tGVRkcCfyzn1WMPn2V4eRoSHbAJSj6gDIu0hjcw=;
+        s=default; t=1559185878;
+        bh=omCfLSJT/bcAzC95PyXPqGhXkRgBnfZz+kJGLpqGPss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uXryasG9jmEbIr57rklm7Dz4+QfWHc6jcpGTYGMHvkm4S0RqifBctgwcsMrNuce2K
-         GzVqdch0laLLb7bvuuO29Kp9ScQhHu40Xy6BOvb5xSE/U9DHq517tdlo6x4pp3sDQG
-         j68tkaGFCo1dTHvoL86iBST87NGs1hF3W0xfnV2A=
+        b=EQa7aMjej3jZGeg61GSggJomq3PAVSvc6xO7OB9JnLHk/80TKMwbVLkrDBtAEiavj
+         Z+4o5w1YpQM66MrXK4TS/u+tObsdDZpeaTYgJTUL1Adx9R0Sp/2WuDJdTOBq8geKgW
+         puY6FF0KBAhuWt8HQsIT9VVYrQxoeAfW4cHDD514=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Potnuri Bharat Teja <bharat@chelsio.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 227/405] cpufreq: pmac32: fix possible object reference leak
-Date:   Wed, 29 May 2019 20:03:45 -0700
-Message-Id: <20190530030552.526559633@linuxfoundation.org>
+Subject: [PATCH 5.1 191/405] RDMA/cxgb4: Fix null pointer dereference on alloc_skb failure
+Date:   Wed, 29 May 2019 20:03:09 -0700
+Message-Id: <20190530030550.672920659@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -65,52 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8d10dc28a9ea6e8c02e825dab28699f3c72b02d9 ]
+[ Upstream commit a6d2a5a92e67d151c98886babdc86d530d27111c ]
 
-The call to of_find_node_by_name returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+Currently if alloc_skb fails to allocate the skb a null skb is passed to
+t4_set_arp_err_handler and this ends up dereferencing the null skb.  Avoid
+the NULL pointer dereference by checking for a NULL skb and returning
+early.
 
-Detected by coccinelle with the following warnings:
-./drivers/cpufreq/pmac32-cpufreq.c:557:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 552, but without a corresponding object release within this function.
-./drivers/cpufreq/pmac32-cpufreq.c:569:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 552, but without a corresponding object release within this function.
-./drivers/cpufreq/pmac32-cpufreq.c:598:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 587, but without a corresponding object release within this function.
-
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linux-pm@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Addresses-Coverity: ("Dereference null return")
+Fixes: b38a0ad8ec11 ("RDMA/cxgb4: Set arp error handler for PASS_ACCEPT_RPL messages")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Acked-by: Potnuri Bharat Teja <bharat@chelsio.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/pmac32-cpufreq.c | 2 ++
+ drivers/infiniband/hw/cxgb4/cm.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/drivers/cpufreq/pmac32-cpufreq.c b/drivers/cpufreq/pmac32-cpufreq.c
-index 52f0d91d30c17..9b4ce2eb8222c 100644
---- a/drivers/cpufreq/pmac32-cpufreq.c
-+++ b/drivers/cpufreq/pmac32-cpufreq.c
-@@ -552,6 +552,7 @@ static int pmac_cpufreq_init_7447A(struct device_node *cpunode)
- 	volt_gpio_np = of_find_node_by_name(NULL, "cpu-vcore-select");
- 	if (volt_gpio_np)
- 		voltage_gpio = read_gpio(volt_gpio_np);
-+	of_node_put(volt_gpio_np);
- 	if (!voltage_gpio){
- 		pr_err("missing cpu-vcore-select gpio\n");
- 		return 1;
-@@ -588,6 +589,7 @@ static int pmac_cpufreq_init_750FX(struct device_node *cpunode)
- 	if (volt_gpio_np)
- 		voltage_gpio = read_gpio(volt_gpio_np);
- 
-+	of_node_put(volt_gpio_np);
- 	pvr = mfspr(SPRN_PVR);
- 	has_cpu_l2lve = !((pvr & 0xf00) == 0x100);
- 
+diff --git a/drivers/infiniband/hw/cxgb4/cm.c b/drivers/infiniband/hw/cxgb4/cm.c
+index 4d232bdf9e976..689ba6bc2ca9c 100644
+--- a/drivers/infiniband/hw/cxgb4/cm.c
++++ b/drivers/infiniband/hw/cxgb4/cm.c
+@@ -457,6 +457,8 @@ static struct sk_buff *get_skb(struct sk_buff *skb, int len, gfp_t gfp)
+ 		skb_reset_transport_header(skb);
+ 	} else {
+ 		skb = alloc_skb(len, gfp);
++		if (!skb)
++			return NULL;
+ 	}
+ 	t4_set_arp_err_handler(skb, NULL, NULL);
+ 	return skb;
 -- 
 2.20.1
 
