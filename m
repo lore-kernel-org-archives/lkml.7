@@ -2,88 +2,100 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA45C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D12CFC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45DB525853
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E49225855
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:33:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UA9Qb3+o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbfE3LbK (ORCPT
+        id S1726613AbfE3Ldq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 07:31:10 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:34700 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726065AbfE3LbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 07:31:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 78B11374;
-        Thu, 30 May 2019 04:31:07 -0700 (PDT)
-Received: from e108454-lin.cambridge.arm.com (e108454-lin.cambridge.arm.com [10.1.196.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 853FF3F5AF;
-        Thu, 30 May 2019 04:31:05 -0700 (PDT)
-From:   Julien Grall <julien.grall@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     tglx@linutronix.de, rostedt@goodmis.org, bigeasy@linutronix.de,
-        suzuki.poulose@arm.com, catalin.marinas@arm.com,
-        will.deacon@arm.com, dave.martin@arm.com,
-        Julien Grall <julien.grall@arm.com>
-Subject: [PATCH] arm64/cpufeature: Convert hook_lock to raw_spin_lock_t in cpu_enable_ssbs()
-Date:   Thu, 30 May 2019 12:30:58 +0100
-Message-Id: <20190530113058.1988-1-julien.grall@arm.com>
-X-Mailer: git-send-email 2.11.0
+        Thu, 30 May 2019 07:33:46 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44733 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726065AbfE3Ldq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 07:33:46 -0400
+Received: by mail-pg1-f196.google.com with SMTP id n2so1849841pgp.11
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 04:33:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=uHUXjMAxZ7f333Sg3vEFlgpoxeG65zBCwY0OPq6Zo+E=;
+        b=UA9Qb3+onXN9DfXKGJbKzo+8eEwp5c/WM6aaU5+cPTOH2z8CCpCkPaZaGjeRtCBWpm
+         qqIdRAp4vsLorCov67VVFrnBIvtuseEm4MS1lbBy0tgsnAmtYkTPl0SxCkgDEKA0MxTn
+         sBOFCUQsGsXIlaLJ4xk8dEhlJmWLHjsh2NWEyYBPxhTIOEBnazitt4jHPoIFc9oVe/EX
+         8+03Haum8GOOsPuxCMP8aaopsCnBUrs2zO4YUyLhtKVm8t5S//xVfXujs3xVgRp9ZiJY
+         6bh6GqhgDiW4i4+cSvUlf8GHlhlA5V4zZBD9PFrlcwp0V6MWKv0fwl9WuL+c4k6RpPRj
+         iDRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=uHUXjMAxZ7f333Sg3vEFlgpoxeG65zBCwY0OPq6Zo+E=;
+        b=CMpCP8EgRd6CMTF6mdj/21KloWxIIs+ji9wzenIZFExTnFOeb1GnmT5D1VhBb1ph0j
+         Z7qdrjxaZ0O8KzBO3KwyhQmTSC+2hRsbTAY5P1otzyg50YemhNOLNEqyX31DYMEzxkPB
+         kz2NOmCp+h9XewkdO2+vgcNgdMxU4x7o9NVw7T7YQSiMzlK2KTaHeX95HF+4URMKHL5f
+         2k4ZiC0d8rw+W7TMY9s4jxpzCwJ8XiHCWFaL9WrAl07txH+WanVdq6OUFggyHm/jaWU/
+         sqnbfv6jPyfdD7Ly1b+XP7UFJVVRt7CBafmYNqA58ZMv8/oqNcuPRnseheD6+XYm1Qck
+         iDyQ==
+X-Gm-Message-State: APjAAAVSxSW/yRbwdxjYqOjNhyO0wOCOK0HPLDtBQfaAd2V8Yrv5KDF3
+        HN2el0KvA9jj3XT+hqKy0+BF+Gps
+X-Google-Smtp-Source: APXvYqyhYJGrTjocqyHSUYlQlckWxxyWSNYTDPqcXq/sUyBIJyx4S0nWLmYDjFWxUf3adWf78uuM9Q==
+X-Received: by 2002:aa7:8a95:: with SMTP id a21mr3273783pfc.215.1559216025909;
+        Thu, 30 May 2019 04:33:45 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id z9sm2170387pgc.82.2019.05.30.04.33.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 May 2019 04:33:44 -0700 (PDT)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Matt Sickler <Matt.Sickler@daktronics.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH] staging: kpc2000: Fix build failure caused by wrong include file
+Date:   Thu, 30 May 2019 04:33:42 -0700
+Message-Id: <1559216022-644-1-git-send-email-linux@roeck-us.net>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-cpu_enable_ssbs() is called via stop_machine() as part of the cpu_enable
-callback. A spin lock is used to ensure the hook is registered before
-the rest of the callback is executed.
+xtensa:allmodconfig fails to build.
 
-On -RT spin_lock() may sleep. However, all the callees in stop_machine()
-are expected to not sleep. Therefore a raw_spin_lock() is required here.
+arch/xtensa/include/asm/uaccess.h: In function 'clear_user':
+arch/xtensa/include/asm/uaccess.h:40:22: error:
+	implicit declaration of function 'uaccess_kernel'
 
-Given this is already done under stop_machine() and the work done under
-the lock is quite small, the latency should not increase too much.
+uaccess_kernel() is declared in linux/uaccess.h, not asm/uaccess.h.
 
-Signed-off-by: Julien Grall <julien.grall@arm.com>
-
+Fixes: 7df95299b94a ("staging: kpc2000: Add DMA driver")
+Cc: Matt Sickler <Matt.Sickler@daktronics.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 ---
+ drivers/staging/kpc2000/kpc_dma/fileops.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-It was noticed when looking at the current use of spin_lock in
-arch/arm64. I don't have a platform calling that callback, so I have
-hacked the code to reproduce the error and check it is now fixed.
----
- arch/arm64/kernel/cpufeature.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index ca27e08e3d8a..2a7159fda3ce 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -1194,14 +1194,14 @@ static struct undef_hook ssbs_emulation_hook = {
- static void cpu_enable_ssbs(const struct arm64_cpu_capabilities *__unused)
- {
- 	static bool undef_hook_registered = false;
--	static DEFINE_SPINLOCK(hook_lock);
-+	static DEFINE_RAW_SPINLOCK(hook_lock);
- 
--	spin_lock(&hook_lock);
-+	raw_spin_lock(&hook_lock);
- 	if (!undef_hook_registered) {
- 		register_undef_hook(&ssbs_emulation_hook);
- 		undef_hook_registered = true;
- 	}
--	spin_unlock(&hook_lock);
-+	raw_spin_unlock(&hook_lock);
- 
- 	if (arm64_get_ssbd_state() == ARM64_SSBD_FORCE_DISABLE) {
- 		sysreg_clear_set(sctlr_el1, 0, SCTLR_ELx_DSSBS);
+diff --git a/drivers/staging/kpc2000/kpc_dma/fileops.c b/drivers/staging/kpc2000/kpc_dma/fileops.c
+index 5741d2b49a7d..e741fa753ca1 100644
+--- a/drivers/staging/kpc2000/kpc_dma/fileops.c
++++ b/drivers/staging/kpc2000/kpc_dma/fileops.c
+@@ -8,7 +8,7 @@
+ #include <linux/errno.h>    /* error codes */
+ #include <linux/types.h>    /* size_t */
+ #include <linux/cdev.h>
+-#include <asm/uaccess.h>    /* copy_*_user */
++#include <linux/uaccess.h>    /* copy_*_user */
+ #include <linux/aio.h>      /* aio stuff */
+ #include <linux/highmem.h>
+ #include <linux/pagemap.h>
 -- 
-2.11.0
+2.7.4
 
