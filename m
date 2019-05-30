@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C773C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68187C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50B192561B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:37:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36FF0249B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:37:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191066;
-	bh=R0qs3whX4ECIj9uSpugfnFNFmdy6ANl8+OnbmX9xhpk=;
+	s=default; t=1559191070;
+	bh=DVm8cUoM2GUEV1LjUHxjwniAIsCCEkp6fyjE0tp7TLo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f4aliTkJs34aUYSDC6fw5cMTZXR3NQTuQvGzyIqCH87Up1VDgfr6oqHanojjllzq8
-	 YxlUDireZwDNgiTGv9/Q+vd8Vjr3LJICUj1065EnLsx0T02NNMmgd4xzMTs0uAS3YK
-	 MVnZHp5iR/T0msHPg0NKdUwCxLgECHc8lNJIkFhc=
+	b=Rouk/b1yNI2vd3hqH4hZG6S/jcfJbFgQ9BpZX14YlQqjvj0YbGzMut4Pc3pgRUa2T
+	 nn2ZIS4cg5dvuI2xKyM4SDRyQicbdNNifc58qxgz7ANOvN1OFEg0gWw+je/527H2jJ
+	 Lr70Oi8Oj6HRpg4fUm1hEVybHELKKcV3KwRWtllY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388461AbfE3Ehp (ORCPT
+        id S1728312AbfE3DMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:37:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56518 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729248AbfE3DMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:12:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50420 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728452AbfE3DLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:16 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCC982449A;
-        Thu, 30 May 2019 03:12:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18A9F244A0;
+        Thu, 30 May 2019 03:11:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185969;
-        bh=R0qs3whX4ECIj9uSpugfnFNFmdy6ANl8+OnbmX9xhpk=;
+        s=default; t=1559185876;
+        bh=DVm8cUoM2GUEV1LjUHxjwniAIsCCEkp6fyjE0tp7TLo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hhyXqhMOY85EEqaXlzJGujIqJZwaj3fjinG3ZtqYpE9gpJRrYSkvZP6hv8Ja05AkZ
-         iZUiK2EtxvLoBpEXKts8kTlA4icHTIGpGrUOItX3buKd1UnFR4frxxbiUIgpHIcEEI
-         OMsULWnsik0N9Fu5AUBx9Pk06ewsHWMuFHkqceoA=
+        b=ru+9ylJly3vUL9bEBnrMUNVDtOfPPvw5NqAiAH8vfVG8fxoUfkym3vHH5TFE97H0A
+         bnn0jLS1YVTsX7++2g9vGK6Uc1xBY/Os7n71nsK2Z17uQQ0o00dWvQj0nZrxFAmXug
+         adrkB31ADt0VTRNx1e7XlbRVee6kq/g3YZAmliZA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
+        stable@vger.kernel.org, Huazhong Tan <tanhuazhong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 400/405] drm/sun4i: dsi: Restrict DSI tcon clock divider
-Date:   Wed, 29 May 2019 20:06:38 -0700
-Message-Id: <20190530030600.797307841@linuxfoundation.org>
+Subject: [PATCH 5.1 222/405] net: hns3: fix keep_alive_timer not stop problem
+Date:   Wed, 29 May 2019 20:03:40 -0700
+Message-Id: <20190530030552.290139794@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,55 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 85fb352666732a9e5caf6027b9c253b3d7881d8f ]
+[ Upstream commit e233516e6a92baeec20aa40fa5b63be6b94f1627 ]
 
-The current code allows the TCON clock divider to have a range between 4
-and 127 when feeding the DSI controller.
+When hclgevf_client_start() fails or VF driver unloaded, there is
+nobody to disable keep_alive_timer.
 
-The only display supported so far had a display clock rate that ended up
-using a divider of 4, but testing with other displays show that only 4
-seems to be functional.
+So this patch fixes them.
 
-This also aligns with what Allwinner is doing in their BSP, so let's just
-hardcode that we want a divider of 4 when using the DSI output.
-
-Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/074e88ae472f5e0492e26939c74b44fb4125ffbd.1549896081.git-series.maxime.ripard@bootlin.com
+Fixes: a6d818e31d08 ("net: hns3: Add vport alive state checking support")
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/sun4i/sun4i_tcon.c     | 4 ++--
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h | 2 ++
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c    | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-index 7136fc91c6036..e75f77ff8e0fc 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-@@ -341,8 +341,8 @@ static void sun4i_tcon0_mode_set_cpu(struct sun4i_tcon *tcon,
- 	u32 block_space, start_delay;
- 	u32 tcon_div;
- 
--	tcon->dclk_min_div = 4;
--	tcon->dclk_max_div = 127;
-+	tcon->dclk_min_div = SUN6I_DSI_TCON_DIV;
-+	tcon->dclk_max_div = SUN6I_DSI_TCON_DIV;
- 
- 	sun4i_tcon0_mode_set_common(tcon, mode);
- 
-diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-index a07090579f84b..5c3ad5be06901 100644
---- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-+++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-@@ -13,6 +13,8 @@
- #include <drm/drm_encoder.h>
- #include <drm/drm_mipi_dsi.h>
- 
-+#define SUN6I_DSI_TCON_DIV	4
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+index 8bc28e6f465f1..8dd7fef863f68 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+@@ -2007,9 +2007,15 @@ static int hclgevf_set_alive(struct hnae3_handle *handle, bool alive)
+ static int hclgevf_client_start(struct hnae3_handle *handle)
+ {
+ 	struct hclgevf_dev *hdev = hclgevf_ae_get_hdev(handle);
++	int ret;
 +
- struct sun6i_dsi {
- 	struct drm_connector	connector;
- 	struct drm_encoder	encoder;
++	ret = hclgevf_set_alive(handle, true);
++	if (ret)
++		return ret;
+ 
+ 	mod_timer(&hdev->keep_alive_timer, jiffies + 2 * HZ);
+-	return hclgevf_set_alive(handle, true);
++
++	return 0;
+ }
+ 
+ static void hclgevf_client_stop(struct hnae3_handle *handle)
+@@ -2051,6 +2057,10 @@ static void hclgevf_state_uninit(struct hclgevf_dev *hdev)
+ {
+ 	set_bit(HCLGEVF_STATE_DOWN, &hdev->state);
+ 
++	if (hdev->keep_alive_timer.function)
++		del_timer_sync(&hdev->keep_alive_timer);
++	if (hdev->keep_alive_task.func)
++		cancel_work_sync(&hdev->keep_alive_task);
+ 	if (hdev->service_timer.function)
+ 		del_timer_sync(&hdev->service_timer);
+ 	if (hdev->service_task.func)
 -- 
 2.20.1
 
