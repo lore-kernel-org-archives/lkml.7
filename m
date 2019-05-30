@@ -2,53 +2,56 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B2BC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76EDFC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC55251F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:13:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50AAA251DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:13:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189625;
-	bh=SsyLdrVu3g1kfXDJ3CVlT1l7yvhaQ2LxfJLp6ZCpiok=;
+	s=default; t=1559189631;
+	bh=mSzL1hcKt131tmacPX7ThpoegzP7tWdCiOXYRuVVyAk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y+02Hdl8K1WSkgicvtA7gKHGXAkhlp6HqQk2qBnxRLhUl1kBJWCh5mBei38ZDzeu1
-	 2dUCMFsmG2dOso5VsntOB3EyaV7C68Rq3OTP9M4W/JeAkhL/CTK0nmPvGa7CcXChPy
-	 en+PpqusNoDjuftqhLFlb+S6avP5dy3e3i25vh7E=
+	b=OZtSg41P7THxajr63WMM9jZ3rHfyD1NeB5xMbED8MiJJsQkWp1UGKjgiAbKk6yRhh
+	 VM9m2rGcIKZLFkXYNE4RBhE37lmRoxy/xFpKwhYZU3ookOIg2pY5AeSnUDfJxVQUYo
+	 TgFT8MLoz9nhsPEdWFa1hX8hTLIbUFgaaMTL//uk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbfE3ENo (ORCPT
+        id S1729407AbfE3DQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:13:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41638 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:16:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730653AbfE3DQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:20 -0400
+        id S1729406AbfE3DNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:19 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C23BF245D8;
-        Thu, 30 May 2019 03:16:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0343C244EA;
+        Thu, 30 May 2019 03:13:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186179;
-        bh=SsyLdrVu3g1kfXDJ3CVlT1l7yvhaQ2LxfJLp6ZCpiok=;
+        s=default; t=1559185999;
+        bh=mSzL1hcKt131tmacPX7ThpoegzP7tWdCiOXYRuVVyAk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=is+vb4n++RIssMOO6CEMXfM2+vmnmjbZDKIS7NjF2c/Yg1JG0O6xgwOzGNw7mp3ne
-         6AKaSDPM3GfYAF+zjbk8wGRklNayJYR/bQpWG7sICKlURNz4C/8wFgPxXWPX+j+5g/
-         zDWxxdyZtBSALJjoH/QirNu+uK6cXFa9VYrOloAg=
+        b=izPsUqFKZPRn8KBcpEbYlT3OySaEO2vtMIUfWQdyUjF7RHq8OaOU/oc6hfUUq0By0
+         KfmxxhlpdZYLAVJLAjwXsmfYBqSuqKa8bOdaNqz11xsfoWdaorlHN31fFUYPlX8z2+
+         YlE/cVJpVwdxsyaND8sSqcN43YVY2xX4kcpTLbQg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 043/276] Revert "btrfs: Honour FITRIM range constraints during free space trim"
-Date:   Wed, 29 May 2019 20:03:21 -0700
-Message-Id: <20190530030527.261513597@linuxfoundation.org>
+        stable@vger.kernel.org, Ross Lagerwall <ross.lagerwall@citrix.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Bob Peterson <rpeterso@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 048/346] gfs2: Fix occasional glock use-after-free
+Date:   Wed, 29 May 2019 20:02:01 -0700
+Message-Id: <20190530030543.332611695@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
-References: <20190530030523.133519668@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,93 +61,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Sterba <dsterba@suse.com>
+[ Upstream commit 9287c6452d2b1f24ea8e84bd3cf6f3c6f267f712 ]
 
-This reverts commit 8b13bb911f0c0c77d41e5ddc41ad3c127c356b8a.
+This patch has to do with the life cycle of glocks and buffers.  When
+gfs2 metadata or journaled data is queued to be written, a gfs2_bufdata
+object is assigned to track the buffer, and that is queued to various
+lists, including the glock's gl_ail_list to indicate it's on the active
+items list.  Once the page associated with the buffer has been written,
+it is removed from the ail list, but its life isn't over until a revoke
+has been successfully written.
 
-There is currently no corresponding patch in master due to additional
-changes that would be significantly different from plain revert in the
-respective stable branch.
+So after the block is written, its bufdata object is moved from the
+glock's gl_ail_list to a file-system-wide list of pending revokes,
+sd_log_le_revoke.  At that point the glock still needs to track how many
+revokes it contributed to that list (in gl_revokes) so that things like
+glock go_sync can ensure all the metadata has been not only written, but
+also revoked before the glock is granted to a different node.  This is
+to guarantee journal replay doesn't replay the block once the glock has
+been granted to another node.
 
-The range argument was not handled correctly and could cause trim to
-overlap allocated areas or reach beyond the end of the device. The
-address space that fitrim normally operates on is in logical
-coordinates, while the discards are done on the physical device extents.
-This distinction cannot be made with the current ioctl interface and
-caused the confusion.
+Ross Lagerwall recently discovered a race in which an inode could be
+evicted, and its glock freed after its ail list had been synced, but
+while it still had unwritten revokes on the sd_log_le_revoke list.  The
+evict decremented the glock reference count to zero, which allowed the
+glock to be freed.  After the revoke was written, function
+revoke_lo_after_commit tried to adjust the glock's gl_revokes counter
+and clear its GLF_LFLUSH flag, at which time it referenced the freed
+glock.
 
-The bug depends on the layout of block groups and does not always
-happen. The whole-fs trim (run by default by the fstrim tool) is not
-affected.
+This patch fixes the problem by incrementing the glock reference count
+in gfs2_add_revoke when the glock's first bufdata object is moved from
+the glock to the global revokes list. Later, when the glock's last such
+bufdata object is freed, the reference count is decremented. This
+guarantees that whichever process finishes last (the revoke writing or
+the evict) will properly free the glock, and neither will reference the
+glock after it has been freed.
 
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-by: Ross Lagerwall <ross.lagerwall@citrix.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/extent-tree.c |   25 ++++++-------------------
- 1 file changed, 6 insertions(+), 19 deletions(-)
+ fs/gfs2/glock.c | 1 +
+ fs/gfs2/log.c   | 3 ++-
+ fs/gfs2/lops.c  | 6 ++++--
+ 3 files changed, 7 insertions(+), 3 deletions(-)
 
---- a/fs/btrfs/extent-tree.c
-+++ b/fs/btrfs/extent-tree.c
-@@ -10788,9 +10788,9 @@ int btrfs_error_unpin_extent_range(struc
-  * held back allocations.
-  */
- static int btrfs_trim_free_extents(struct btrfs_device *device,
--				   struct fstrim_range *range, u64 *trimmed)
-+				   u64 minlen, u64 *trimmed)
+diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
+index 2d25d89e77f9b..c925e9ec68f44 100644
+--- a/fs/gfs2/glock.c
++++ b/fs/gfs2/glock.c
+@@ -140,6 +140,7 @@ void gfs2_glock_free(struct gfs2_glock *gl)
  {
--	u64 start = range->start, len = 0;
-+	u64 start = 0, len = 0;
- 	int ret;
+ 	struct gfs2_sbd *sdp = gl->gl_name.ln_sbd;
  
- 	*trimmed = 0;
-@@ -10833,8 +10833,8 @@ static int btrfs_trim_free_extents(struc
- 		if (!trans)
- 			up_read(&fs_info->commit_root_sem);
- 
--		ret = find_free_dev_extent_start(trans, device, range->minlen,
--						 start, &start, &len);
-+		ret = find_free_dev_extent_start(trans, device, minlen, start,
-+						 &start, &len);
- 		if (trans) {
- 			up_read(&fs_info->commit_root_sem);
- 			btrfs_put_transaction(trans);
-@@ -10847,16 +10847,6 @@ static int btrfs_trim_free_extents(struc
- 			break;
- 		}
- 
--		/* If we are out of the passed range break */
--		if (start > range->start + range->len - 1) {
--			mutex_unlock(&fs_info->chunk_mutex);
--			ret = 0;
--			break;
--		}
--
--		start = max(range->start, start);
--		len = min(range->len, len);
--
- 		ret = btrfs_issue_discard(device->bdev, start, len, &bytes);
- 		mutex_unlock(&fs_info->chunk_mutex);
- 
-@@ -10866,10 +10856,6 @@ static int btrfs_trim_free_extents(struc
- 		start += len;
- 		*trimmed += bytes;
- 
--		/* We've trimmed enough */
--		if (*trimmed >= range->len)
--			break;
--
- 		if (fatal_signal_pending(current)) {
- 			ret = -ERESTARTSYS;
- 			break;
-@@ -10953,7 +10939,8 @@ int btrfs_trim_fs(struct btrfs_fs_info *
- 	mutex_lock(&fs_info->fs_devices->device_list_mutex);
- 	devices = &fs_info->fs_devices->devices;
- 	list_for_each_entry(device, devices, dev_list) {
--		ret = btrfs_trim_free_extents(device, range, &group_trimmed);
-+		ret = btrfs_trim_free_extents(device, range->minlen,
-+					      &group_trimmed);
- 		if (ret) {
- 			dev_failed++;
- 			dev_ret = ret;
++	BUG_ON(atomic_read(&gl->gl_revokes));
+ 	rhashtable_remove_fast(&gl_hash_table, &gl->gl_node, ht_parms);
+ 	smp_mb();
+ 	wake_up_glock(gl);
+diff --git a/fs/gfs2/log.c b/fs/gfs2/log.c
+index b8830fda51e8f..0e04f87a7dddb 100644
+--- a/fs/gfs2/log.c
++++ b/fs/gfs2/log.c
+@@ -606,7 +606,8 @@ void gfs2_add_revoke(struct gfs2_sbd *sdp, struct gfs2_bufdata *bd)
+ 	gfs2_remove_from_ail(bd); /* drops ref on bh */
+ 	bd->bd_bh = NULL;
+ 	sdp->sd_log_num_revoke++;
+-	atomic_inc(&gl->gl_revokes);
++	if (atomic_inc_return(&gl->gl_revokes) == 1)
++		gfs2_glock_hold(gl);
+ 	set_bit(GLF_LFLUSH, &gl->gl_flags);
+ 	list_add(&bd->bd_list, &sdp->sd_log_le_revoke);
+ }
+diff --git a/fs/gfs2/lops.c b/fs/gfs2/lops.c
+index 2295042bc6259..f09cd5d8ac631 100644
+--- a/fs/gfs2/lops.c
++++ b/fs/gfs2/lops.c
+@@ -667,8 +667,10 @@ static void revoke_lo_after_commit(struct gfs2_sbd *sdp, struct gfs2_trans *tr)
+ 		bd = list_entry(head->next, struct gfs2_bufdata, bd_list);
+ 		list_del_init(&bd->bd_list);
+ 		gl = bd->bd_gl;
+-		atomic_dec(&gl->gl_revokes);
+-		clear_bit(GLF_LFLUSH, &gl->gl_flags);
++		if (atomic_dec_return(&gl->gl_revokes) == 0) {
++			clear_bit(GLF_LFLUSH, &gl->gl_flags);
++			gfs2_glock_queue_put(gl);
++		}
+ 		kmem_cache_free(gfs2_bufdata_cachep, bd);
+ 	}
+ }
+-- 
+2.20.1
+
 
 
