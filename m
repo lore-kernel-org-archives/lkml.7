@@ -2,175 +2,71 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC6BC46470
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61EA6C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E53A824E5D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:27:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RNktRFBl"
+	by mail.kernel.org (Postfix) with ESMTP id 3EC7325DBF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:33:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbfE3Q1Q (ORCPT
+        id S1727477AbfE3Qdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 12:27:16 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:39937 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726079AbfE3Q1Q (ORCPT
+        Thu, 30 May 2019 12:33:39 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:52332 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbfE3Qdj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 12:27:16 -0400
-Received: by mail-lf1-f68.google.com with SMTP id a9so4104304lff.7
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 09:27:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=bcgcWgAyzI4wAMncBYoxjWmRoluq1i/e3trlgUy2IJ8=;
-        b=RNktRFBlwcjGyYnbw3SlhETA+ckBoUlLX1aqAYKYzFAqR/LmYJVdb6zbRDztX4bVZR
-         xMxFtfUJ958V/utMqciXOq/0nkU3VIRxmKanWKEeCYWO3TBn3TdwKy8x0BY3o/hPboZg
-         Qaqc5tlvq0T0U2TU11Fdw+cKF6vucPHiZh0m9ESWfqrWc8ZV4pE4rIMo5yW/6ea96oHv
-         ePSImUavQYJWKu9aib7UKT8uwW3xa4m2TKNbvcFsW/1I3CNkX2sF8LUUjGjkZP5qcsf+
-         W5slPKsIzo+FHfwiSVn29OaLyqdUghysHthp0PK0y26OiUB+dcqKK1hKbp+72xa9GHAF
-         kkwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=bcgcWgAyzI4wAMncBYoxjWmRoluq1i/e3trlgUy2IJ8=;
-        b=L6RbYZRN16TtrOVePmbvL29n4eLkYK9IdtQsu4fvjKicXahJZD/R1Cwvg/q5C0+U51
-         KpZvmlVZsETURpgkSR41dgpGoC3EqEnblR2QeXcldd6vNpAzOtppl7DEk5nEwWzOg7iY
-         VZL0ldSYSn1V9jL7gsAkRcUfAV5uMGjsQqCkAm+HYZ95jHMrXF4Q9s2ND4euV/F80Tor
-         Iv/r54ylW8gsFSDO3V5lyu+PcJ/5mj4fqMTDNtEAGzk5tJ3IbvSGVf0kk0RyxH6PRRXb
-         wXosXbV8qG5AihKR6BG9j/z8Z4KyI2T33HrKc6ANxq25hn/KiTdUARLpK0d9jsFgb8IX
-         qVHA==
-X-Gm-Message-State: APjAAAVF0md3C+oBvAlcSmd057S+ylv3ffQzoe37zRRuZ7xq4NbGX4W8
-        w2+FZ5QHbX6Fq7r+fpfyLUBL8psUkVUKBGwgA2psNQ==
-X-Google-Smtp-Source: APXvYqydY4ZuyQWHYbcBdwdAWkev+5Azw5+28aPegnVHkirUji7qVs1ZDH5C7jRMtA00wwMOi6t+7VP3lC8jhpm6vI0=
-X-Received: by 2002:a19:488e:: with SMTP id v136mr2524437lfa.192.1559233634141;
- Thu, 30 May 2019 09:27:14 -0700 (PDT)
+        Thu, 30 May 2019 12:33:39 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hWNzk-0003HE-Ds; Thu, 30 May 2019 16:33:36 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Vitaly Wool <vitalywool@gmail.com>, linux-mm@kvack.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] z3fold: remove redundant assignment to bud
+Date:   Thu, 30 May 2019 17:33:36 +0100
+Message-Id: <20190530163336.5148-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190530030432.977908967@linuxfoundation.org>
-In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Thu, 30 May 2019 21:57:02 +0530
-Message-ID: <CA+G9fYuZo54ui8A_Zy=N3kL5gyFbF9KwO2EYF417xU8FQwWb3Q@mail.gmail.com>
-Subject: Re: [PATCH 4.9 000/128] 4.9.180-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 May 2019 at 08:59, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.9.180 release.
-> There are 128 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat 01 Jun 2019 03:02:06 AM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.9.180-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.9.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+From: Colin Ian King <colin.king@canonical.com>
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+The variable bud is initialized with the value 'LAST' which is never
+read and bud is reassigned later on the return from the call to the
+function handle_to_buddy. This initialization is redundant and
+can be removed.
 
-Summary
-------------------------------------------------------------------------
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ mm/z3fold.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-kernel: 4.9.180-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.9.y
-git commit: 545b59ea794cfbac3646ccfab4a34c9f7753621e
-git describe: v4.9.179-129-g545b59ea794c
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
-ld/v4.9.179-129-g545b59ea794c
+diff --git a/mm/z3fold.c b/mm/z3fold.c
+index 2bc3dbde6255..0a62bc293de4 100644
+--- a/mm/z3fold.c
++++ b/mm/z3fold.c
+@@ -1176,7 +1176,7 @@ static void z3fold_free(struct z3fold_pool *pool, unsigned long handle)
+ {
+ 	struct z3fold_header *zhdr;
+ 	struct page *page;
+-	enum buddy bud = LAST; /* initialize to !HEADLESS */
++	enum buddy bud;
+ 
+ 	zhdr = get_z3fold_header(handle);
+ 
+-- 
+2.20.1
 
-No regressions (compared to build v4.9.179)
-
-No fixes (compared to build v4.9.179)
-
-Ran 18444 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-open-posix-tests
-* network-basic-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* kvm-unit-tests
-* prep-tmp-disk
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
