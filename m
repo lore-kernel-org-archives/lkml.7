@@ -2,100 +2,117 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B38B1C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B79EC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96AF025AA0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B99925AD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:24:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HMJxlnxJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbfE3OVt (ORCPT
+        id S1726722AbfE3OYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 10:21:49 -0400
-Received: from foss.arm.com ([217.140.101.70]:37432 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726045AbfE3OVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 10:21:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9B323A78;
-        Thu, 30 May 2019 07:21:48 -0700 (PDT)
-Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C9C853F59C;
-        Thu, 30 May 2019 07:21:47 -0700 (PDT)
-Subject: Re: [PATCH 2/3] x86/vdso: Allow clock specific mult and shift values
-To:     Huw Davies <huw@codeweavers.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        linux kernel <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>
-References: <20190411101205.10006-1-huw@codeweavers.com>
- <20190411101205.10006-3-huw@codeweavers.com>
- <alpine.DEB.2.21.1904141229380.4917@nanos.tec.linutronix.de>
- <20190415093042.GA21726@merlot.physics.ox.ac.uk>
- <alpine.DEB.2.21.1904151148160.17231@nanos.tec.linutronix.de>
- <82a61daf-f6f9-8be0-2157-e9f9d7ba1cdf@arm.com>
- <20190415121431.GA22003@merlot.physics.ox.ac.uk>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <d7fd1ac4-c0fc-7d6c-ff7d-38079e65a1f0@arm.com>
-Date:   Thu, 30 May 2019 15:21:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 30 May 2019 10:24:01 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37095 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbfE3OYA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 10:24:00 -0400
+Received: by mail-pf1-f195.google.com with SMTP id a23so4085318pff.4;
+        Thu, 30 May 2019 07:24:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Aqu62B/DKxla8ndIhEipp1qRgwp9oqBg86uO64aK/fw=;
+        b=HMJxlnxJErTsQDLyfwoNeDIG5q3g/Bp40rZMlMSl5GtwYdNtW65QBIryuUiLa/QDjs
+         /Y8iQbJgneYRKpyKqwdtQ6BhKIk3w75Zxxa+A0BxAvJ/C+Sa6H24WYxVFC1yrW2lp1lL
+         cEvOq1oOC31YPsDULTabzzkHAVybxcthpyygqUAsL2lE0rF2stjkAxlGeZrNLVb96F6K
+         EZySuoon5/6ueCgnOHQLs8AymOCmjDP7FntlEQ/G8WjL5RoKuVwzAu+2UDkFhuEhwbsv
+         8v5vfURhH9LbX1rs11Hr00fLYV84DUyTqsjUHpY3kWLAGHS4lHPzJzloTLLx6tFfl/GX
+         26zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Aqu62B/DKxla8ndIhEipp1qRgwp9oqBg86uO64aK/fw=;
+        b=GLI6DQt1pW5H7R3FFsnthJZdSF2voSoFDrg2CebMgprbqywEKRoYQ8bXAZPF0/8gyK
+         SnuIj3+UY3FQVemY1+giYyJqOb5I3wkUfEc9SYpQ9PpalTLPE/Cti0HpfbTb81BlpU6d
+         fV9txorQRF3dRObHwA2ds7fRhvkMo938+BoBrGg7L/r6QZFa8M38s11rgqSkLcPNOhT3
+         9XAwwsLPxglSs5Yuvqtzm1lG5XhWA2J4WZ2OXoWnV/hnWr3m+LViXZZs66gnZehXFagk
+         AKLZjKHtmGf2c8BK5aKhOJlq1FWpoFb4V16Tb3RWYGEtKGSzVE7wgrJ9DZw161B17yqu
+         VAKQ==
+X-Gm-Message-State: APjAAAWegkvPTg4EMgaXq1GGzH2MmfwevqV/EDQGaYL6eq1zWPnXwEWr
+        2y9y8wmDFW+Que5JmdIuEk5sOC2a
+X-Google-Smtp-Source: APXvYqwDm5nkekcJ7+8rVNtAGhVaUqWNPjush0pCuR+bMv37uZqwFXmvRk76eH94CEIO6fShKXbAXQ==
+X-Received: by 2002:a65:514a:: with SMTP id g10mr3930486pgq.328.1559226240381;
+        Thu, 30 May 2019 07:24:00 -0700 (PDT)
+Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
+        by smtp.gmail.com with ESMTPSA id 194sm3466122pfb.125.2019.05.30.07.23.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 30 May 2019 07:23:59 -0700 (PDT)
+Date:   Thu, 30 May 2019 07:23:56 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Subject: Re: [PATCH net-next 3/5] net: dsa: mv88e6xxx: Let taggers specify a
+ can_timestamp function
+Message-ID: <20190530142356.vxkhsjalxfytvx2c@localhost>
+References: <20190528235627.1315-1-olteanv@gmail.com>
+ <20190528235627.1315-4-olteanv@gmail.com>
+ <20190529044912.cyg44rqvdo73oeiu@localhost>
+ <CA+h21hoNrhcpAONTvJra5Ekk+yJ6xP0VAaPSygaLOw31qsGPTg@mail.gmail.com>
+ <20190530035112.qbn3nnoxrgum7anz@localhost>
+ <CA+h21hqko57LB0BB2TSGSr4p9_czPM-g9krO+wnU7PgvaMdSDA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190415121431.GA22003@merlot.physics.ox.ac.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+h21hqko57LB0BB2TSGSr4p9_czPM-g9krO+wnU7PgvaMdSDA@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Huw,
+On Thu, May 30, 2019 at 10:42:41AM +0300, Vladimir Oltean wrote:
+> The meta frames generated by the SJA1105 do not contain any seqid.
 
-On 15/04/2019 13:14, Huw Davies wrote:
-> On Mon, Apr 15, 2019 at 11:15:56AM +0100, Vincenzo Frascino wrote:
->> On 15/04/2019 10:51, Thomas Gleixner wrote:
->>> On Mon, 15 Apr 2019, Huw Davies wrote:
->>>> On Sun, Apr 14, 2019 at 12:53:32PM +0200, Thomas Gleixner wrote:
->>>>> See https://lkml.kernel.org/r/alpine.DEB.2.21.1902231727060.1666@nanos.tec.linutronix.de
->>>>> for an alternate solution to this problem, which avoids this and just gives
->>>>> CLOCK_MONOTONIC_RAW a separate storage space alltogether.
->>>>
->>>> I can certainly do this for the x86 vdso.  Would that be useful or
->>>> should I wait for Vincenzo's work on the generic vdso first?
->>>
->>> Depends. If Vincenzo comes along with his new version soon, then you might
->>> get this for free :)
->>>
->>> Vincenzo, what's the state of your work?
->>>
->>
->> I am mostly done with the development, the only thing missing is the integration
->> of the generic update_vsyscall. After this is complete, I will need to do some
->> testing and extract the performance numbers.
->>
->> Considering that I will be on Easter holiday from this Wednesday till the end of
->> April, I think v6 will be ready around second week of May.
-> 
-> Hi Vincenzo,
-> 
-> Great!  In which case there's not much point in me changing the x86
-> vdso---it'll just end up making more work for you.
-> 
-> Let me know if there's anything I can help with.
-> 
+So this cannot ever work...
 
-I wanted to let you know that I just posted my updated patchset for unifying
-vdso. I should have tested it enough (I hope :) ), but if your help offer is
-still valid, and you want to give it a go, you are more than welcome.
+> They contain:
+> * A globally programmable DMAC
+> * A globally programmable SMAC
 
-Please let me know if you find any issue.
+Don't know what these are, but doesn't sound like they uniquely
+identify the original frame.
 
-> Huw.
-> 
+> * The 0x8 EtherType
+> * A partial (24-bit or 32-bit) RX timestamp
+> * Two bytes from the initial (pre follow-up) frame's DMAC, before the
+> switch mangled those with the source port and switch id. The driver is
+> supposed to patch these bytes from the follow-up back into the initial
+> frame before passing them up the stack.
+> * The source port that generated the meta frame
+> * The switch id that generated the meta frame
 
--- 
-Regards,
-Vincenzo
+None of these match to the original frame uniquely.  Looks like this
+is a dead end.
+
+I recommend forgetting about these meta frames.  Instead, read out the
+time stamps over MDIO.
+
+Thanks,
+Richard
