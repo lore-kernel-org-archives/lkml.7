@@ -2,203 +2,88 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1668CC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA45C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEF912584E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:28:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l/k58YGH"
+	by mail.kernel.org (Postfix) with ESMTP id 45DB525853
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:31:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbfE3L20 (ORCPT
+        id S1726549AbfE3LbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 07:28:26 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41562 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726699AbfE3L2R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 07:28:17 -0400
-Received: by mail-wr1-f65.google.com with SMTP id c2so3963693wrm.8;
-        Thu, 30 May 2019 04:28:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=0zslCchXkU9/iE2gw3QRd9dcZ6RTFcWD2DAc5YM+PJU=;
-        b=l/k58YGHILVSQ3nCQBqu7l0MU9SYbdSF3ri5oKMWxBw/9EO1UR+Zs57slpEHC4BfJw
-         ZLELcw/QSBiSq7Jh0wbnj3uynynmL864AH/3COtA/u5hTMo3m0lNJWdhlXUhUlzsYoyy
-         fkjjmovfRx2HZJ8Xk3Ouek+ofPuCSXcHfIb1ox3iCCO087iziUEHTXX2t1y/bSb2MFha
-         dmUSImR2uxEoiI/vokVk9xaQIPx8ZMP4uYPpd11XhIDf5MoTREoTv9ZPRiHKk2cbyPBx
-         EkyUW3hAwsXthKIxjPmtJ8VbMilnfy4XcH6/yRs3m5V2pPOgf663vx7HlIPJOvDRqPHs
-         GeCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=0zslCchXkU9/iE2gw3QRd9dcZ6RTFcWD2DAc5YM+PJU=;
-        b=Dw8e0whjCLHOSxVSyZ3k84OgOjBv8eb9hvPxODmos0CU1FFeobzASrQk0UzZ3fVHOA
-         H4q1uFMc++GrA8ANElCIGzOB2bpjCI6vTdNwj5VJPGgWBvDh4J2aEaYdAecBabMA/Qew
-         bT32jXZubQyjBzKxs6oZZHwpZuIUERI8xOJdARN4Xa3MCZpNPQKRM31COE021/fB0+42
-         KHXgJuqt8AO84dXNQxnInEmL4tsViX9u0AP3i3V22PpINUYy4h+PdpQdOQLgiS64VjwI
-         jI+Z7gjV85atAw2wlxcu1zXt2ib8qodT7BsaLEG8a7OTUdIbN+kwzA9ZL6n7aREmy5kY
-         TVLQ==
-X-Gm-Message-State: APjAAAWi+wKfNj6IQI0xzLtZF8kZuQpz5MArUSLRmIngElkwn0fgb024
-        4794iMGZNsC3mzEGYv1kLp+0wweV
-X-Google-Smtp-Source: APXvYqwQ1ZolElu//tR8q8fWIFyB08c1e/wWz3z13PLYJQojuLdZFVZt1KGebgNtncrsD4/yItIvJQ==
-X-Received: by 2002:a5d:6389:: with SMTP id p9mr2330104wru.297.1559215695004;
-        Thu, 30 May 2019 04:28:15 -0700 (PDT)
-Received: from donizetti.redhat.com ([2001:b07:6468:f312:f91e:ffe0:9205:3b26])
-        by smtp.gmail.com with ESMTPSA id o14sm2601855wrp.77.2019.05.30.04.28.14
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 30 May 2019 04:28:14 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, stefanha@redhat.com
-Subject: [PATCH 2/2] virtio_scsi: implement request batching
-Date:   Thu, 30 May 2019 13:28:11 +0200
-Message-Id: <20190530112811.3066-3-pbonzini@redhat.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530112811.3066-1-pbonzini@redhat.com>
-References: <20190530112811.3066-1-pbonzini@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 30 May 2019 07:31:10 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:34700 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726065AbfE3LbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 07:31:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 78B11374;
+        Thu, 30 May 2019 04:31:07 -0700 (PDT)
+Received: from e108454-lin.cambridge.arm.com (e108454-lin.cambridge.arm.com [10.1.196.50])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 853FF3F5AF;
+        Thu, 30 May 2019 04:31:05 -0700 (PDT)
+From:   Julien Grall <julien.grall@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     tglx@linutronix.de, rostedt@goodmis.org, bigeasy@linutronix.de,
+        suzuki.poulose@arm.com, catalin.marinas@arm.com,
+        will.deacon@arm.com, dave.martin@arm.com,
+        Julien Grall <julien.grall@arm.com>
+Subject: [PATCH] arm64/cpufeature: Convert hook_lock to raw_spin_lock_t in cpu_enable_ssbs()
+Date:   Thu, 30 May 2019 12:30:58 +0100
+Message-Id: <20190530113058.1988-1-julien.grall@arm.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding the command and kicking the virtqueue so far was done one after
-another.  Make the kick optional, so that we can take into account SCMD_LAST.
-We also need a commit_rqs callback to kick the device if blk-mq aborts
-the submission before the last request is reached.
+cpu_enable_ssbs() is called via stop_machine() as part of the cpu_enable
+callback. A spin lock is used to ensure the hook is registered before
+the rest of the callback is executed.
 
-Suggested-by: Stefan Hajnoczi <stefanha@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+On -RT spin_lock() may sleep. However, all the callees in stop_machine()
+are expected to not sleep. Therefore a raw_spin_lock() is required here.
+
+Given this is already done under stop_machine() and the work done under
+the lock is quite small, the latency should not increase too much.
+
+Signed-off-by: Julien Grall <julien.grall@arm.com>
+
 ---
- drivers/scsi/virtio_scsi.c | 55 +++++++++++++++++++++++++++-----------
- 1 file changed, 40 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/scsi/virtio_scsi.c b/drivers/scsi/virtio_scsi.c
-index 8af01777d09c..918c811cea95 100644
---- a/drivers/scsi/virtio_scsi.c
-+++ b/drivers/scsi/virtio_scsi.c
-@@ -375,14 +375,7 @@ static void virtscsi_event_done(struct virtqueue *vq)
- 	virtscsi_vq_done(vscsi, &vscsi->event_vq, virtscsi_complete_event);
- };
- 
--/**
-- * virtscsi_add_cmd - add a virtio_scsi_cmd to a virtqueue
-- * @vq		: the struct virtqueue we're talking about
-- * @cmd		: command structure
-- * @req_size	: size of the request buffer
-- * @resp_size	: size of the response buffer
-- */
--static int virtscsi_add_cmd(struct virtqueue *vq,
-+static int __virtscsi_add_cmd(struct virtqueue *vq,
- 			    struct virtio_scsi_cmd *cmd,
- 			    size_t req_size, size_t resp_size)
+It was noticed when looking at the current use of spin_lock in
+arch/arm64. I don't have a platform calling that callback, so I have
+hacked the code to reproduce the error and check it is now fixed.
+---
+ arch/arm64/kernel/cpufeature.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index ca27e08e3d8a..2a7159fda3ce 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -1194,14 +1194,14 @@ static struct undef_hook ssbs_emulation_hook = {
+ static void cpu_enable_ssbs(const struct arm64_cpu_capabilities *__unused)
  {
-@@ -427,17 +420,39 @@ static int virtscsi_add_cmd(struct virtqueue *vq,
- 	return virtqueue_add_sgs(vq, sgs, out_num, in_num, cmd, GFP_ATOMIC);
- }
+ 	static bool undef_hook_registered = false;
+-	static DEFINE_SPINLOCK(hook_lock);
++	static DEFINE_RAW_SPINLOCK(hook_lock);
  
--static int virtscsi_kick_cmd(struct virtio_scsi_vq *vq,
-+static void virtscsi_kick_vq(struct virtio_scsi_vq *vq)
-+{
-+	bool needs_kick;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&vq->vq_lock, flags);
-+	needs_kick = virtqueue_kick_prepare(vq->vq);
-+	spin_unlock_irqrestore(&vq->vq_lock, flags);
-+
-+	if (needs_kick)
-+		virtqueue_notify(vq->vq);
-+}
-+
-+/**
-+ * virtscsi_add_cmd - add a virtio_scsi_cmd to a virtqueue, optionally kick it
-+ * @vq		: the struct virtqueue we're talking about
-+ * @cmd		: command structure
-+ * @req_size	: size of the request buffer
-+ * @resp_size	: size of the response buffer
-+ * @kick	: whether to kick the virtqueue immediately
-+ */
-+static int virtscsi_add_cmd(struct virtio_scsi_vq *vq,
- 			     struct virtio_scsi_cmd *cmd,
--			     size_t req_size, size_t resp_size)
-+			     size_t req_size, size_t resp_size,
-+			     bool kick)
- {
- 	unsigned long flags;
- 	int err;
- 	bool needs_kick = false;
- 
- 	spin_lock_irqsave(&vq->vq_lock, flags);
--	err = virtscsi_add_cmd(vq->vq, cmd, req_size, resp_size);
--	if (!err)
-+	err = __virtscsi_add_cmd(vq->vq, cmd, req_size, resp_size);
-+	if (!err && kick)
- 		needs_kick = virtqueue_kick_prepare(vq->vq);
- 
- 	spin_unlock_irqrestore(&vq->vq_lock, flags);
-@@ -502,6 +517,7 @@ static int virtscsi_queuecommand(struct Scsi_Host *shost,
- 	struct virtio_scsi *vscsi = shost_priv(shost);
- 	struct virtio_scsi_vq *req_vq = virtscsi_pick_vq_mq(vscsi, sc);
- 	struct virtio_scsi_cmd *cmd = scsi_cmd_priv(sc);
-+	bool kick;
- 	unsigned long flags;
- 	int req_size;
- 	int ret;
-@@ -531,7 +547,8 @@ static int virtscsi_queuecommand(struct Scsi_Host *shost,
- 		req_size = sizeof(cmd->req.cmd);
+-	spin_lock(&hook_lock);
++	raw_spin_lock(&hook_lock);
+ 	if (!undef_hook_registered) {
+ 		register_undef_hook(&ssbs_emulation_hook);
+ 		undef_hook_registered = true;
  	}
+-	spin_unlock(&hook_lock);
++	raw_spin_unlock(&hook_lock);
  
--	ret = virtscsi_kick_cmd(req_vq, cmd, req_size, sizeof(cmd->resp.cmd));
-+	kick = (sc->flags & SCMD_LAST) != 0;
-+	ret = virtscsi_add_cmd(req_vq, cmd, req_size, sizeof(cmd->resp.cmd), kick);
- 	if (ret == -EIO) {
- 		cmd->resp.cmd.response = VIRTIO_SCSI_S_BAD_TARGET;
- 		spin_lock_irqsave(&req_vq->vq_lock, flags);
-@@ -549,8 +566,8 @@ static int virtscsi_tmf(struct virtio_scsi *vscsi, struct virtio_scsi_cmd *cmd)
- 	int ret = FAILED;
- 
- 	cmd->comp = &comp;
--	if (virtscsi_kick_cmd(&vscsi->ctrl_vq, cmd,
--			      sizeof cmd->req.tmf, sizeof cmd->resp.tmf) < 0)
-+	if (virtscsi_add_cmd(&vscsi->ctrl_vq, cmd,
-+			      sizeof cmd->req.tmf, sizeof cmd->resp.tmf, true) < 0)
- 		goto out;
- 
- 	wait_for_completion(&comp);
-@@ -664,6 +681,13 @@ static int virtscsi_map_queues(struct Scsi_Host *shost)
- 	return blk_mq_virtio_map_queues(qmap, vscsi->vdev, 2);
- }
- 
-+static void virtscsi_commit_rqs(struct Scsi_Host *shost, u16 hwq)
-+{
-+	struct virtio_scsi *vscsi = shost_priv(shost);
-+
-+	virtscsi_kick_vq(&vscsi->req_vqs[hwq]);
-+}
-+
- /*
-  * The host guarantees to respond to each command, although I/O
-  * latencies might be higher than on bare metal.  Reset the timer
-@@ -681,6 +705,7 @@ static struct scsi_host_template virtscsi_host_template = {
- 	.this_id = -1,
- 	.cmd_size = sizeof(struct virtio_scsi_cmd),
- 	.queuecommand = virtscsi_queuecommand,
-+	.commit_rqs = virtscsi_commit_rqs,
- 	.change_queue_depth = virtscsi_change_queue_depth,
- 	.eh_abort_handler = virtscsi_abort,
- 	.eh_device_reset_handler = virtscsi_device_reset,
+ 	if (arm64_get_ssbd_state() == ARM64_SSBD_FORCE_DISABLE) {
+ 		sysreg_clear_set(sctlr_el1, 0, SCTLR_ELx_DSSBS);
 -- 
-2.21.0
+2.11.0
 
