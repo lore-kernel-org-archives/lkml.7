@@ -7,48 +7,54 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6494C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D66C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 981F725309
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80D8725318
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:21:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190079;
-	bh=x2/QNGx8nirwxcagObMIBp3v/Rk1Pl5OmQJ2gEngKL4=;
+	s=default; t=1559190081;
+	bh=Ot1Y1CO3QazXGRibaCqGWuu+uo69Bq3D27qLPY5Vty0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hOAfokIVrzXx6JCQqITh/eUeTEdXmw9pSS45CZFN1JF32Xw1y4scuY3qaYjKamW40
-	 SqL5Gtxo+Y93w0TnOd/EotfFNWajehwtCg2+WMu+4Df2M1EHXRbJT2MG0HTdl8kTsI
-	 HgNrfodSQUAFJPFLie9CUWvJGuKXtOZ9WRwB1DhY=
+	b=RpdPVERRuIvL6V/+AOjbRKrNgSaXbASa4krLSYE8GJ8c7PWy91Z/H8Xn+yRP+twog
+	 neny9hHsQQvWwFTe4NGjG/HmQLBzmKhUL3BIyRDvM7uZy2C4q9TuaM3aQLhCVRLhfx
+	 a9AKWczgCYQF/ORVXp8NnZa5GAONRjHY6Uwt7i6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731694AbfE3EVS (ORCPT
+        id S1731761AbfE3EVU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:21:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37752 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:21:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729089AbfE3DPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730169AbfE3DPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:15:14 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3084F24580;
-        Thu, 30 May 2019 03:15:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93BCB245AC;
+        Thu, 30 May 2019 03:15:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186114;
-        bh=x2/QNGx8nirwxcagObMIBp3v/Rk1Pl5OmQJ2gEngKL4=;
+        s=default; t=1559186113;
+        bh=Ot1Y1CO3QazXGRibaCqGWuu+uo69Bq3D27qLPY5Vty0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=flQWU27SOnDDYPjr+q9AOxpDHQnmI7dsAOX9W485E49pXHs7sCXc9Nxk8k2D2pqbH
-         VC+DLffZ/er2F+GSRKbvrv6T4sI86Coarxe/qikGKMU8j1EvPK5YJilxeDevfAHcm3
-         jM0vTjuhmGCkSHGhvW7IxmLRT2Z3/+QuM6c19WEg=
+        b=cfBS2m5UMLKf5KFPfeeKVQGLMqLx9Z3MSd3SwOQWMmz0nHyFgyhQMWRWKDkUfr2Em
+         Up5jQIJsySegAAYl9aD4JbhYr6Rf1qhAKxKIH82BD88GkIM6g7bt+ePXnDvL4a6ktA
+         Lu99xYrt8bHsgf5wFj1/MtmnmMnHb6fmXjf9+dWE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chad Dupuis <cdupuis@marvell.com>,
-        Saurav Kashyap <skashyap@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Xiongfeng Wang <wangxiongfeng2@huawei.com>,
+        Hongbo Yao <yaohongbo@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Miroslav Lichvar <mlichvar@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 265/346] scsi: qedf: Add missing return in qedf_post_io_req() in the fcport offload check
-Date:   Wed, 29 May 2019 20:05:38 -0700
-Message-Id: <20190530030554.405247996@linuxfoundation.org>
+Subject: [PATCH 5.0 264/346] timekeeping: Force upper bound for setting CLOCK_REALTIME
+Date:   Wed, 29 May 2019 20:05:37 -0700
+Message-Id: <20190530030554.354330075@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -61,77 +67,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c5e06ba2f76809ad1492fdad312e81335df46bc5 ]
+[ Upstream commit 7a8e61f8478639072d402a26789055a4a4de8f77 ]
 
-Fixes the following crash as the return was missing from the check if an
-fcport is offloaded. If we hit this code we continue to try to post an
-invalid task which can lead to the crash:
+Several people reported testing failures after setting CLOCK_REALTIME close
+to the limits of the kernel internal representation in nanoseconds,
+i.e. year 2262.
 
-[30259.616411] [0000:61:00.3]:[qedf_post_io_req:989]:3: Session not offloaded yet.
-[30259.616413] [0000:61:00.3]:[qedf_upload_connection:1340]:3: Uploading connection port_id=490020.
-[30259.623769] BUG: unable to handle kernel NULL pointer dereference at 0000000000000198
-[30259.631645] IP: [<ffffffffc035b1ed>] qedf_init_task.isra.16+0x3d/0x450 [qedf]
-[30259.638816] PGD 0
-[30259.640841] Oops: 0000 [#1] SMP
-[30259.644098] Modules linked in: fuse xt_CHECKSUM iptable_mangle ipt_MASQUERADE nf_nat_masquerade_ipv4 iptable_nat nf_nat_ipv4 nf_nat nf_conntrack_ipv4 nf_defrag_ipv4 xt_conntrack nf_conntrack ipt_REJECT nf_reject_ipv4 tun bridge stp llc ebtable_filter ebtables devlink ip6table_filter ip6_tables iptable_filter vfat fat ib_isert iscsi_target_mod ib_srpt target_core_mod ib_srp scsi_transport_srp ib_ipoib ib_ucm ib_umad dm_service_time skx_edac intel_powerclamp coretemp intel_rapl iosf_mbi kvm_intel kvm irqbypass crc32_pclmul ghash_clmulni_intel aesni_intel rpcrdma sunrpc rdma_ucm ib_uverbs lrw gf128mul ib_iser rdma_cm iw_cm ib_cm libiscsi scsi_transport_iscsi qedr(OE) glue_helper ablk_helper cryptd ib_core dm_round_robin joydev pcspkr ipmi_ssif ses enclosure ipmi_si ipmi_devintf ipmi_msghandler mei_me
-[30259.715529]  mei sg hpilo hpwdt shpchp wmi lpc_ich acpi_power_meter dm_multipath ip_tables xfs libcrc32c sd_mod crc_t10dif crct10dif_generic uas usb_storage mgag200 qedf(OE) i2c_algo_bit libfcoe drm_kms_helper libfc syscopyarea sysfillrect scsi_transport_fc qede(OE) sysimgblt fb_sys_fops ptp ttm pps_core drm qed(OE) smartpqi crct10dif_pclmul crct10dif_common crc32c_intel i2c_core scsi_transport_sas scsi_tgt dm_mirror dm_region_hash dm_log dm_mod
-[30259.754237] CPU: 9 PID: 977 Comm: kdmwork-253:7 Kdump: loaded Tainted: G        W  OE  ------------   3.10.0-862.el7.x86_64 #1
-[30259.765664] Hardware name: HPE Synergy 480 Gen10/Synergy 480 Gen10 Compute Module, BIOS I42 04/04/2018
-[30259.775000] task: ffff8c801efd0000 ti: ffff8c801efd8000 task.ti: ffff8c801efd8000
-[30259.782505] RIP: 0010:[<ffffffffc035b1ed>]  [<ffffffffc035b1ed>] qedf_init_task.isra.16+0x3d/0x450 [qedf]
-[30259.792116] RSP: 0018:ffff8c801efdbbb0  EFLAGS: 00010046
-[30259.797444] RAX: 0000000000000000 RBX: ffffa7f1450948d8 RCX: ffff8c7fe5bc40c8
-[30259.804600] RDX: ffff8c800715b300 RSI: ffffa7f1450948d8 RDI: ffff8c80169c2480
-[30259.811755] RBP: ffff8c801efdbc30 R08: 00000000000000ae R09: ffff8c800a314540
-[30259.818911] R10: ffff8c7fe5bc40c8 R11: ffff8c801efdb8ae R12: 0000000000000000
-[30259.826068] R13: ffff8c800715b300 R14: ffff8c80169c2480 R15: ffff8c8005da28e0
-[30259.833223] FS:  0000000000000000(0000) GS:ffff8c803f840000(0000) knlGS:0000000000000000
-[30259.841338] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[30259.847100] CR2: 0000000000000198 CR3: 000000081242e000 CR4: 00000000007607e0
-[30259.854256] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[30259.861412] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[30259.868568] PKRU: 00000000
-[30259.871278] Call Trace:
-[30259.873737]  [<ffffffffc035c948>] qedf_post_io_req+0x148/0x680 [qedf]
-[30259.880201]  [<ffffffffc035d070>] qedf_queuecommand+0x1f0/0x240 [qedf]
-[30259.886749]  [<ffffffffa329b050>] scsi_dispatch_cmd+0xb0/0x240
-[30259.892600]  [<ffffffffa32a45bc>] scsi_request_fn+0x4cc/0x680
-[30259.898364]  [<ffffffffa3118ad9>] __blk_run_queue+0x39/0x50
-[30259.903954]  [<ffffffffa3114393>] __elv_add_request+0xd3/0x260
-[30259.909805]  [<ffffffffa311baf0>] blk_insert_cloned_request+0xf0/0x1b0
-[30259.916358]  [<ffffffffc010b622>] map_request+0x142/0x220 [dm_mod]
-[30259.922560]  [<ffffffffc010b716>] map_tio_request+0x16/0x40 [dm_mod]
-[30259.928932]  [<ffffffffa2ebb1f5>] kthread_worker_fn+0x85/0x180
-[30259.934782]  [<ffffffffa2ebb170>] ? kthread_stop+0xf0/0xf0
-[30259.940284]  [<ffffffffa2ebae31>] kthread+0xd1/0xe0
-[30259.945176]  [<ffffffffa2ebad60>] ? insert_kthread_work+0x40/0x40
-[30259.951290]  [<ffffffffa351f61d>] ret_from_fork_nospec_begin+0x7/0x21
-[30259.957750]  [<ffffffffa2ebad60>] ? insert_kthread_work+0x40/0x40
-[30259.963860] Code: fe 41 55 49 89 d5 41 54 53 48 89 f3 48 83 ec 58 4c 8b 67 28 4c 8b 4e 18 65 48 8b 04 25 28 00 00 00 48 89 45 d0 31 c0 4c 8b 7e 58 <49> 8b 84 24 98 01 00 00 48 8b 00 f6 80 31 01 00 00 10 0f 85 0b
-[30259.983372] RIP  [<ffffffffc035b1ed>] qedf_init_task.isra.16+0x3d/0x450 [qedf]
-[30259.990630]  RSP <ffff8c801efdbbb0>
-[30259.994127] CR2: 0000000000000198
+The failures are exposed in subsequent operations, i.e. when arming timers
+or when the advancing CLOCK_MONOTONIC makes the calculation of
+CLOCK_REALTIME overflow into negative space.
 
-Signed-off-by: Chad Dupuis <cdupuis@marvell.com>
-Signed-off-by: Saurav Kashyap <skashyap@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Now people start to paper over the underlying problem by clamping
+calculations to the valid range, but that's just wrong because such
+workarounds will prevent detection of real issues as well.
+
+It is reasonable to force an upper bound for the various methods of setting
+CLOCK_REALTIME. Year 2262 is the absolute upper bound. Assume a maximum
+uptime of 30 years which is plenty enough even for esoteric embedded
+systems. That results in an upper bound of year 2232 for setting the time.
+
+Once that limit is reached in reality this limit is only a small part of
+the problem space. But until then this stops people from trying to paper
+over the problem at the wrong places.
+
+Reported-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Reported-by: Hongbo Yao <yaohongbo@huawei.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: Miroslav Lichvar <mlichvar@redhat.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Richard Cochran <richardcochran@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1903231125480.2157@nanos.tec.linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qedf/qedf_io.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/time64.h    | 21 +++++++++++++++++++++
+ kernel/time/time.c        |  2 +-
+ kernel/time/timekeeping.c |  6 +++---
+ 3 files changed, 25 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/qedf/qedf_io.c b/drivers/scsi/qedf/qedf_io.c
-index 6bbc38b1b4654..a17c13846d1eb 100644
---- a/drivers/scsi/qedf/qedf_io.c
-+++ b/drivers/scsi/qedf/qedf_io.c
-@@ -902,6 +902,7 @@ int qedf_post_io_req(struct qedf_rport *fcport, struct qedf_ioreq *io_req)
- 	if (!test_bit(QEDF_RPORT_SESSION_READY, &fcport->flags)) {
- 		QEDF_ERR(&(qedf->dbg_ctx), "Session not offloaded yet.\n");
- 		kref_put(&io_req->refcount, qedf_release_cmd);
-+		return -EINVAL;
- 	}
+diff --git a/include/linux/time64.h b/include/linux/time64.h
+index 05634afba0db6..4a45aea0f96e9 100644
+--- a/include/linux/time64.h
++++ b/include/linux/time64.h
+@@ -41,6 +41,17 @@ struct itimerspec64 {
+ #define KTIME_MAX			((s64)~((u64)1 << 63))
+ #define KTIME_SEC_MAX			(KTIME_MAX / NSEC_PER_SEC)
  
- 	/* Obtain free SQE */
++/*
++ * Limits for settimeofday():
++ *
++ * To prevent setting the time close to the wraparound point time setting
++ * is limited so a reasonable uptime can be accomodated. Uptime of 30 years
++ * should be really sufficient, which means the cutoff is 2232. At that
++ * point the cutoff is just a small part of the larger problem.
++ */
++#define TIME_UPTIME_SEC_MAX		(30LL * 365 * 24 *3600)
++#define TIME_SETTOD_SEC_MAX		(KTIME_SEC_MAX - TIME_UPTIME_SEC_MAX)
++
+ static inline int timespec64_equal(const struct timespec64 *a,
+ 				   const struct timespec64 *b)
+ {
+@@ -108,6 +119,16 @@ static inline bool timespec64_valid_strict(const struct timespec64 *ts)
+ 	return true;
+ }
+ 
++static inline bool timespec64_valid_settod(const struct timespec64 *ts)
++{
++	if (!timespec64_valid(ts))
++		return false;
++	/* Disallow values which cause overflow issues vs. CLOCK_REALTIME */
++	if ((unsigned long long)ts->tv_sec >= TIME_SETTOD_SEC_MAX)
++		return false;
++	return true;
++}
++
+ /**
+  * timespec64_to_ns - Convert timespec64 to nanoseconds
+  * @ts:		pointer to the timespec64 variable to be converted
+diff --git a/kernel/time/time.c b/kernel/time/time.c
+index 2edb5088a70b6..e7a3b9236f0b5 100644
+--- a/kernel/time/time.c
++++ b/kernel/time/time.c
+@@ -171,7 +171,7 @@ int do_sys_settimeofday64(const struct timespec64 *tv, const struct timezone *tz
+ 	static int firsttime = 1;
+ 	int error = 0;
+ 
+-	if (tv && !timespec64_valid(tv))
++	if (tv && !timespec64_valid_settod(tv))
+ 		return -EINVAL;
+ 
+ 	error = security_settime64(tv, tz);
+diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+index ac5dbf2cd4a21..161b2728ac09e 100644
+--- a/kernel/time/timekeeping.c
++++ b/kernel/time/timekeeping.c
+@@ -1221,7 +1221,7 @@ int do_settimeofday64(const struct timespec64 *ts)
+ 	unsigned long flags;
+ 	int ret = 0;
+ 
+-	if (!timespec64_valid_strict(ts))
++	if (!timespec64_valid_settod(ts))
+ 		return -EINVAL;
+ 
+ 	raw_spin_lock_irqsave(&timekeeper_lock, flags);
+@@ -1278,7 +1278,7 @@ static int timekeeping_inject_offset(const struct timespec64 *ts)
+ 	/* Make sure the proposed value is valid */
+ 	tmp = timespec64_add(tk_xtime(tk), *ts);
+ 	if (timespec64_compare(&tk->wall_to_monotonic, ts) > 0 ||
+-	    !timespec64_valid_strict(&tmp)) {
++	    !timespec64_valid_settod(&tmp)) {
+ 		ret = -EINVAL;
+ 		goto error;
+ 	}
+@@ -1527,7 +1527,7 @@ void __init timekeeping_init(void)
+ 	unsigned long flags;
+ 
+ 	read_persistent_wall_and_boot_offset(&wall_time, &boot_offset);
+-	if (timespec64_valid_strict(&wall_time) &&
++	if (timespec64_valid_settod(&wall_time) &&
+ 	    timespec64_to_ns(&wall_time) > 0) {
+ 		persistent_clock_exists = true;
+ 	} else if (timespec64_to_ns(&wall_time) != 0) {
 -- 
 2.20.1
 
