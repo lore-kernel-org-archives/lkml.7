@@ -2,123 +2,111 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A14CC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 375E3C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20F4126165
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:07:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAA2B26199
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:09:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="VEU5u5GD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QK1diwgo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726688AbfE3VHS (ORCPT
+        id S1726518AbfE3VJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 17:07:18 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:42011 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726079AbfE3VHR (ORCPT
+        Thu, 30 May 2019 17:09:31 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44364 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726079AbfE3VJb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 17:07:17 -0400
-Received: by mail-ed1-f65.google.com with SMTP id g24so1452255eds.9
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 14:07:16 -0700 (PDT)
+        Thu, 30 May 2019 17:09:31 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c9so1469258pfc.11;
+        Thu, 30 May 2019 14:09:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Pv5CB4WwZj0N9C+rEj8/2lRh5EGUHdn0uj79m0rM0oo=;
-        b=VEU5u5GDrcgB8PRAclAeTaxHNWRXxNgMKQuxMFD2SFRizhpvwX2vSFrW58YKLvKdGO
-         eVuKFZtXyc1RHb9iKevkl1RKESa8X+H4JsE7X49/wDWGTTF1++R+Oi6bCGLu0qiMFC7q
-         hWo0t+OsCQNb5YJC5V+PLRuPaGXL4SH2RlhfYwJV76d+wtYGM87zkTYGJrmM5dahxIDn
-         qHnxrRKHJ981k6zXutXR8rLnD27RwSUR9gdS6t3qdzrPraAAqPEeILMrt+Xu+DkaI8aO
-         CnVCUN2x67n04/yYkoMoVaF4yzXSA1yTow1K1ywH4DmLZh4o+OnP8FcuMAvRu6sLPZIL
-         UDpQ==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=j14yKpcraW/rk5VffAXFmNUym97W4z1OGk3c597/tVM=;
+        b=QK1diwgown3rJt0cB8vXV26gQVEfLpYfy8VwmoYRrIcAwHL7l7U2IUd2s9XOHUzm1j
+         vtv9rpjrwza1F/3QNmq16VjemwsPHO+orrG+fUilKc0WCS3fGHS6imwQrF88suA6xOc8
+         04gYKkUso1YipS9qM5DGa5zgLlYssgmFGnZEY8hcDccKCxmGIsMrE4jtpSbCsyMDsrmI
+         Frq8a0F6p2svJn5nfeZvhGnEbOgA4oEEb0PPvwu2ogvJ1NYcBdVO8Me949P0M6b2t2bF
+         tXxoY8n62PSpu/e1EVoSPmV1B+dPr9F4vmsliOPvPsR4zkprfPmbHyc+osmwMwSJYUXG
+         Hphw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Pv5CB4WwZj0N9C+rEj8/2lRh5EGUHdn0uj79m0rM0oo=;
-        b=JlPWsGfCayQP4lI4jgIc+5134oQNXrQ44r7AM2IbpfbPdT9tEWdsftOMfFphlXgnoh
-         jb3Z4aqxwzg+PpEQSsKu42c1ANNDIwuDmAGYlWkrjCmbQ97n7fS+butRDeuPGnxGRldo
-         CEpibGao/OhaI9tG+so1MkQ7XOf6xqPjeI5e+BrhjtKacpdxgdL3J0s5jKk3imacObt8
-         nBkNb7wG95zvVUW4UKS+7U5o8b8jTRpvU8Ki2d16P952aKWNurx/LfmpMqvSPpEfAKWW
-         ZneHZrBRxh1HXW0pt4RAx0pwjKHunoCdvGtI5OwAh9I6XA4e+n+xEkZ245IDgP2+gNRz
-         otKQ==
-X-Gm-Message-State: APjAAAXXUYVPs2rDqrFvJoGW2DGcTwaPqctQIIBUvq+asQaSjIhlJDd3
-        XFQToAPAGmWpnQ7twAzTwW/8JtM5O5hRHxzCDuZelA==
-X-Google-Smtp-Source: APXvYqzIBqcTjn5yiKx6Vr6nLGFPUVRyPMd7kuo7uA8Xmjn8HuSs90QeWcqYdxDxX2LpwL8i4qi0lXPOMCD5KRVUoAU=
-X-Received: by 2002:aa7:d711:: with SMTP id t17mr7195382edq.80.1559250436307;
- Thu, 30 May 2019 14:07:16 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=j14yKpcraW/rk5VffAXFmNUym97W4z1OGk3c597/tVM=;
+        b=Pcc5RD3N4YVxqOjwewO7v4/43hSONiLXcMhqLSWKOOuUKtkc8fqIZMegan/XCjTimT
+         x/d6mwOZIJOoOaFRvuIWRk68fWsMsybSFZXtcOHpIrr9NcGH5keJrRVxFsYNru3q9u8R
+         VQFMJhfxTEsNCUxmZLJDrmy1u3FALTi4mILAaGR35h7RNyE55usgfkTfZ5dXrTssB+9n
+         JTIyVQpR2jl9FiXcttxpy+VBN5fJyfAxd8/qTWvbuBuR/2BmfkfSOl1Yj8pTlNSVDxiD
+         ardVvO5J7iU6hkJ78qrAo8foDP3+8ljRmow8hrmJhP2UldMGIugrpsNtkEJu0nyb68Aq
+         Ti5A==
+X-Gm-Message-State: APjAAAU9uiFmA/HUMV4gCpK3MWkSEyvk93XrfCpodiY49Ae5GisuYHYu
+        qqV5w+D+5tmtp0rPGBnqUZC9/FyX
+X-Google-Smtp-Source: APXvYqyyMX/HcnvTDhYbABKRcF/fe6hNOlg0dP/SvOirSzwJX44yR6CjJMc8vQDER9r8e8H3a8OW/A==
+X-Received: by 2002:a63:1d05:: with SMTP id d5mr5356299pgd.157.1559250570518;
+        Thu, 30 May 2019 14:09:30 -0700 (PDT)
+Received: from [10.0.2.15] ([47.15.209.13])
+        by smtp.gmail.com with ESMTPSA id p21sm3799580pfn.129.2019.05.30.14.09.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 May 2019 14:09:30 -0700 (PDT)
+Subject: Re: [PATCH] staging: media: davinci_vpfe: Remove variable vpfe_dev
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     hans.verkuil@cisco.com, mchehab@kernel.org, code@wizofe.uk,
+        ezequiel@collabora.com, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+References: <20190530204718.29892-1-nishkadg.linux@gmail.com>
+ <20190530205540.GA5308@kroah.com>
+From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
+Message-ID: <9b870baa-4d15-cb72-0579-6bb6ca57cadd@gmail.com>
+Date:   Fri, 31 May 2019 02:39:23 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190527111152.16324-1-david@redhat.com> <20190527111152.16324-8-david@redhat.com>
-In-Reply-To: <20190527111152.16324-8-david@redhat.com>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Thu, 30 May 2019 17:07:05 -0400
-Message-ID: <CA+CK2bBLtZL8qxsjJt-tdaOraJCbDYfH2cbQ1ABJJ8hYif8LiQ@mail.gmail.com>
-Subject: Re: [PATCH v3 07/11] mm/memory_hotplug: Create memory block devices
- after arch_add_memory()
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-mm <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "mike.travis@hpe.com" <mike.travis@hpe.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Banman <andrew.banman@hpe.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>, Qian Cai <cai@lca.pw>,
-        Arun KS <arunks@codeaurora.org>,
-        Mathieu Malaterre <malat@debian.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190530205540.GA5308@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 27, 2019 at 7:12 AM David Hildenbrand <david@redhat.com> wrote:
->
-> Only memory to be added to the buddy and to be onlined/offlined by
-> user space using /sys/devices/system/memory/... needs (and should have!)
-> memory block devices.
->
-> Factor out creation of memory block devices. Create all devices after
-> arch_add_memory() succeeded. We can later drop the want_memblock parameter,
-> because it is now effectively stale.
->
-> Only after memory block devices have been added, memory can be onlined
-> by user space. This implies, that memory is not visible to user space at
-> all before arch_add_memory() succeeded.
->
-> While at it
-> - use WARN_ON_ONCE instead of BUG_ON in moved unregister_memory()
-> - introduce find_memory_block_by_id() to search via block id
-> - Use find_memory_block_by_id() in init_memory_block() to catch
->   duplicates
->
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: "mike.travis@hpe.com" <mike.travis@hpe.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: Andrew Banman <andrew.banman@hpe.com>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-> Cc: Qian Cai <cai@lca.pw>
-> Cc: Wei Yang <richard.weiyang@gmail.com>
-> Cc: Arun KS <arunks@codeaurora.org>
-> Cc: Mathieu Malaterre <malat@debian.org>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+On 31/05/19 2:25 AM, Greg KH wrote:
+> On Fri, May 31, 2019 at 02:17:18AM +0530, Nishka Dasgupta wrote:
+>> Remove variable vpfe_dev and replace it with its value (since the
+>> function otherwise uses values directly instead of local variables).
+> 
+> This says _what_ you do.  But we can see that in the patch itself.
+> 
+> You need to say _why_ you are doing this.
+> 
+> There's no need for this change at all.  Again, as I have said before,
+> we write code for developers to read first, the compiler second.  By
+> making these types of changes you are making it harder to
+> read/understand by a developer, and providing absolutely no benifit to
+> the compiler at all.
+> 
+> So it's actually making the code worse!
+> 
+> not good at all.
+> 
+> Please reconsider this type of change, as I keep asking you to.
 
-LGTM
-Reviewed-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+Okay. In this case I thought it wouldn't make it worse since the 
+function is low on local variables anyway? Clearly I was wrong, so I 
+won't count this case as an exception in future.
+
+Thanking you,
+Nishka
+
+> greg k-h
+> 
+
