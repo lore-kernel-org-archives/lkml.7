@@ -2,113 +2,128 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A21FC28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1482DC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1AD525C3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:08:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD6AE25C40
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:08:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559228913;
+	bh=K8S1o3hok0TErQKmCVyPVIBGjzoc1w8mVdKqqRTbs4E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Eq/M5YohWXMekZk72NkCQ/NM4lh0YI4nai78ME4nMr5fvhnmK4gMcI0YaHubj7Tq9
+	 A7PxhBNQmuMczwrSzoVDdDiPqVkfUUWgABLTMiw6UFxepk7+Qj+n8A5tNZWT4lK6Z8
+	 7qxHUKuSHKKF+Mba9OnLTVTgXlreyU+5xvQrlXrc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727203AbfE3PIZ (ORCPT
+        id S1727357AbfE3PId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 11:08:25 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37946 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725934AbfE3PIY (ORCPT
+        Thu, 30 May 2019 11:08:33 -0400
+Received: from casper.infradead.org ([85.118.1.10]:43944 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbfE3PIc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 11:08:24 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UF2NwK108917
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 11:08:23 -0400
-Received: from e17.ny.us.ibm.com (e17.ny.us.ibm.com [129.33.205.207])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2stgfkb9bk-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 11:08:23 -0400
-Received: from localhost
-        by e17.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Thu, 30 May 2019 16:08:22 +0100
-Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
-        by e17.ny.us.ibm.com (146.89.104.204) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 30 May 2019 16:08:16 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4UF8FjE25428290
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 May 2019 15:08:15 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5D99DB2066;
-        Thu, 30 May 2019 15:08:15 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3CF15B2064;
-        Thu, 30 May 2019 15:08:15 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 30 May 2019 15:08:15 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 0420A16C3620; Thu, 30 May 2019 08:08:16 -0700 (PDT)
-Date:   Thu, 30 May 2019 08:08:16 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     rcu@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
-Subject: [PATCH tip/core/rcu 0/4] RCU-sync updates for v5.3
-Reply-To: paulmck@linux.ibm.com
+        Thu, 30 May 2019 11:08:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=1+pzj3s0zzfo7hTFiNb297cHY2u6PGyfMetnDFPkAiU=; b=Ru3PJ70jwGsXP69VmpOtylbB6j
+        CAyjE5jRFU4OiGcPm+xCn1w/6OZ7lhUvoRQYqZZjOoCCkekUZSc93AG3CAgFaXgoHgTNWVvIssA9K
+        UU7/wg5dCYzwMxJBEH+DYtGFbpPJe/9c//H4T4U+t38z9yRdQq1bh2fGrZ7Ut3hKHbC8OP3ZFCGd6
+        PMAGEslsSPz+faXcnAaccOCwpyy6sLXQrL+X4pQOKVCX74xp9+l6nWN+MOvkSywEQOrGu4twJKcg3
+        fsZO2t5pGAi9ryOrTLSBTAfrdOmtHIoegB5GrymF9oHFKRMxfi6H8g/gZpZ6a6Vbb6iGEWJI5+ckc
+        E4OnCiQw==;
+Received: from 177.132.232.81.dynamic.adsl.gvt.net.br ([177.132.232.81] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hWMfN-0000UD-69; Thu, 30 May 2019 15:08:29 +0000
+Date:   Thu, 30 May 2019 12:08:24 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/5] docs: by default, build docs a lot faster with
+ Sphinx >= 1.7
+Message-ID: <20190530120824.6bc5594c@coco.lan>
+In-Reply-To: <20190530085404.54973d02@lwn.net>
+References: <cover.1558955082.git.mchehab+samsung@kernel.org>
+        <baf19095789f2b2ed0c7a940703037a00cd77850.1558955082.git.mchehab+samsung@kernel.org>
+        <20190529170202.65c7f9ca@lwn.net>
+        <20190529202005.04dcd4a0@coco.lan>
+        <20190529174716.4f0e21ad@lwn.net>
+        <20190529225305.213d8c36@coco.lan>
+        <20190530085404.54973d02@lwn.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19053015-0040-0000-0000-000004F6833D
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011185; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01210788; UDB=6.00636159; IPR=6.00991822;
- MB=3.00027120; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-30 15:08:20
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19053015-0041-0000-0000-000009029D8E
-Message-Id: <20190530150816.GA32130@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-30_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=13 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=805 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905300107
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+Em Thu, 30 May 2019 08:54:04 -0600
+Jonathan Corbet <corbet@lwn.net> escreveu:
 
-This series contains flavor-consolidation updates to RCU-sync:
+> On Wed, 29 May 2019 22:53:05 -0300
+> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
+> 
+> > > Yup.  The point is that I see the sphinx-build output *in the docs-build
+> > > output", not when I run it standalone (where it does the expected thing).    
+> > 
+> > Weird... could some versions of Sphinx be redirecting the output of
+> > --version to stderr instead of stdout?
+> > 
+> > If so, something like:
+> > 
+> > 	perl -e 'open IN,"sphinx-build --version 2>&1 |"; while (<IN>) { if (m/([\d\.]+)/) { print "-jauto\n" if ($1 >= "1.7") } ;} close IN'
+> > 
+> > would make it print "-jauto" with those other versions you're trying.  
+> 
+> That does improve the behavior from the command line; it seems that
+> sphinx-build is indeed writing to stderr.  BUT that still doesn't fix the
+> docs build!  To get the option to take effect, I also have to explicitly
+> export SPHINXOPTS.  So the winning combination is:
+> 
+>   export SPHINXOPTS = $(shell perl -e 'open IN,"sphinx-build --version
+>   2>&1 |"; while (<IN>) { if (m/([\d\.]+)/) { print "-jauto" if ($$1 >= "1.7") } ;} close IN')  
+> 
+> I don't have any weird version of make, so I'm not sure why you see
+> different results than I do here.
+> 
+> I can apply those tweaks to your patch if it's OK with you.
 
-1.	Kill rcu_sync_type/gp_type, courtesy of Oleg Nesterov.
+Yeah, sure! With those changes it work fine here too.
 
-2.	Use DEFINE_STATIC_PERCPU_RWSEM() to initialize dup_mmap_sem in
-	uprobes, courtesy of Oleg Nesterov.
+So, feel free to apply the changes.
 
-3.	Add DEFINE_PERCPU_RWSEM(), use it to initialize
-	cgroup_threadgroup_rwsem in percpu-rwsem, courtesy of Oleg Nesterov.
+> 
+> > I didn't try the python2 versions, though.  
+> 
+> Interestingly, I would appear to have both versions installed, with
+> python2 winning in $PATH.
 
-4.	Simplify the state machine, courtesy of Oleg Nesterov.
+It sounds that Fedora 30 is conservative with regards to python :-)
 
-							Thanx, Paul
+The Sphinx version detection script takes it into account,
+suggesting pip3 instead of pip - or when called like:
 
-------------------------------------------------------------------------
+	$ ./scripts/sphinx-pre-install --no-virtualenv
+	Detected OS: Fedora release 30 (Thirty).
 
- include/linux/percpu-rwsem.h  |   10 +
- include/linux/rcu_sync.h      |   40 ++-----
- kernel/cgroup/cgroup.c        |    3 
- kernel/events/uprobes.c       |    4 
- kernel/locking/percpu-rwsem.c |    2 
- kernel/rcu/sync.c             |  220 +++++++++++++++++++-----------------------
- 6 files changed, 121 insertions(+), 158 deletions(-)
+	ERROR: please install "python-sphinx", otherwise, build won't work.
+	Warning: better to also install "sphinx_rtd_theme".
+	You should run:
 
+		sudo dnf install -y python3-sphinx python3-sphinx_rtd_theme
+
+It seeks for the python3 packages on Fedora.
+
+Regards,
+Mauro
