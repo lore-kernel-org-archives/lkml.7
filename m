@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D03C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C65C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10586256EE
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8827256C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:32:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190763;
-	bh=W9Hl3z1lh1OzMBu05h7bMKuHaM+Q3mM1d9ytbZ7pGLA=;
+	s=default; t=1559190768;
+	bh=KKm8tQobGgirNLVNYlyF73ua17hZpMFCc1GhanWrZdE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X6BzzlnayhdrFzQJ6f4G2IemvEB+ZXEfiZPHABk2JKTxHo0rA83XRuS9UB/yLf9wl
-	 GvATaSpFGrGlmmZrjyXsLJIGkiuVAQzByjvVGM0MvYhIOdEFS77MhphbBVJBBdoG1m
-	 jbZYbw44hQLW+uaagoMnEN9Tr8uJSkLqk8RHle5Q=
+	b=rtjaEhJlL1wNAlfwLoBYjxaxL0SZSUqkc4EmLF765wvoMBDmh4Ugr9k8uNGbH7Toj
+	 cKyAMA9g8BAngVnr1jrwlZMVQUXRs2L5rvvEcQc8/zDRus6oiLwBwppsdkXgVBC3hB
+	 oBXmpy9El7FAa0mUfr75ePvVAdo3DZY/SaewA+q0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388294AbfE3Ecm (ORCPT
+        id S2388326AbfE3Ecs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:32:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58950 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:32:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729508AbfE3DNe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729519AbfE3DNe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:13:34 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28BE024523;
-        Thu, 30 May 2019 03:13:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CDD724526;
+        Thu, 30 May 2019 03:13:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186013;
-        bh=W9Hl3z1lh1OzMBu05h7bMKuHaM+Q3mM1d9ytbZ7pGLA=;
+        s=default; t=1559186014;
+        bh=KKm8tQobGgirNLVNYlyF73ua17hZpMFCc1GhanWrZdE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PNkh9gYYoSPNlpLk7bESDOE33s9Pgc1OHqtpOW2Evbw3YQ5UuGXX9F59zcL9I985U
-         C3NeRjMhVijwtzCwLZz7Td2kFcu06HwK9VEWkFvfZj/m20/OakmHCDZOT+ltcpZ16U
-         YtVdST3nznkqohoXwNY/6HIBFurQCKpbF3elZ7aA=
+        b=HIZxu/6dr49+BNrMcpC4gXQ6FRHosrra9NCeNkh77LfZpyH/lP2PR4ngBB6FfAxS6
+         fFRuQ8PYwWlsPfEr3OMQ+EFXXtLqka5OU7sB15M1Hclb08gwgf9M9ZdmY2wJJi9/qJ
+         uI1XImaTyGyNp52tiXZiM8nmTt/LUJ4wZf8HTZ3w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabien Dessenne <fabien.dessenne@st.com>,
-        Hugues Fruchet <hugues.fruchet@st.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Will Deacon <will.deacon@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 076/346] media: stm32-dcmi: return appropriate error codes during probe
-Date:   Wed, 29 May 2019 20:02:29 -0700
-Message-Id: <20190530030544.953487388@linuxfoundation.org>
+Subject: [PATCH 5.0 078/346] arm64: Fix compiler warning from pte_unmap() with -Wunused-but-set-variable
+Date:   Wed, 29 May 2019 20:02:31 -0700
+Message-Id: <20190530030545.066155392@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -62,70 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b5b5a27bee5884860798ffd0f08e611a3942064b ]
+[ Upstream commit 74dd022f9e6260c3b5b8d15901d27ebcc5f21eda ]
 
-During probe, return the provided errors value instead of -ENODEV.
-This allows the driver to be deferred probed if needed.
+When building with -Wunused-but-set-variable, the compiler shouts about
+a number of pte_unmap() users, since this expands to an empty macro on
+arm64:
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
-Acked-by: Hugues Fruchet <hugues.fruchet@st.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+  | mm/gup.c: In function 'gup_pte_range':
+  | mm/gup.c:1727:16: warning: variable 'ptem' set but not used
+  | [-Wunused-but-set-variable]
+  | mm/gup.c: At top level:
+  | mm/memory.c: In function 'copy_pte_range':
+  | mm/memory.c:821:24: warning: variable 'orig_dst_pte' set but not used
+  | [-Wunused-but-set-variable]
+  | mm/memory.c:821:9: warning: variable 'orig_src_pte' set but not used
+  | [-Wunused-but-set-variable]
+  | mm/swap_state.c: In function 'swap_ra_info':
+  | mm/swap_state.c:641:15: warning: variable 'orig_pte' set but not used
+  | [-Wunused-but-set-variable]
+  | mm/madvise.c: In function 'madvise_free_pte_range':
+  | mm/madvise.c:318:9: warning: variable 'orig_pte' set but not used
+  | [-Wunused-but-set-variable]
+
+Rewrite pte_unmap() as a static inline function, which silences the
+warnings.
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/stm32/stm32-dcmi.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ arch/arm64/include/asm/pgtable.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
-index 6732874114cf7..918e49f27c7ed 100644
---- a/drivers/media/platform/stm32/stm32-dcmi.c
-+++ b/drivers/media/platform/stm32/stm32-dcmi.c
-@@ -1645,7 +1645,7 @@ static int dcmi_probe(struct platform_device *pdev)
- 	dcmi->rstc = devm_reset_control_get_exclusive(&pdev->dev, NULL);
- 	if (IS_ERR(dcmi->rstc)) {
- 		dev_err(&pdev->dev, "Could not get reset control\n");
--		return -ENODEV;
-+		return PTR_ERR(dcmi->rstc);
- 	}
+diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+index de70c1eabf336..74ebe96937141 100644
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -478,6 +478,8 @@ static inline phys_addr_t pmd_page_paddr(pmd_t pmd)
+ 	return __pmd_to_phys(pmd);
+ }
  
- 	/* Get bus characteristics from devicetree */
-@@ -1660,7 +1660,7 @@ static int dcmi_probe(struct platform_device *pdev)
- 	of_node_put(np);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Could not parse the endpoint\n");
--		return -ENODEV;
-+		return ret;
- 	}
++static inline void pte_unmap(pte_t *pte) { }
++
+ /* Find an entry in the third-level page table. */
+ #define pte_index(addr)		(((addr) >> PAGE_SHIFT) & (PTRS_PER_PTE - 1))
  
- 	if (ep.bus_type == V4L2_MBUS_CSI2_DPHY) {
-@@ -1673,8 +1673,9 @@ static int dcmi_probe(struct platform_device *pdev)
+@@ -486,7 +488,6 @@ static inline phys_addr_t pmd_page_paddr(pmd_t pmd)
  
- 	irq = platform_get_irq(pdev, 0);
- 	if (irq <= 0) {
--		dev_err(&pdev->dev, "Could not get irq\n");
--		return -ENODEV;
-+		if (irq != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "Could not get irq\n");
-+		return irq;
- 	}
+ #define pte_offset_map(dir,addr)	pte_offset_kernel((dir), (addr))
+ #define pte_offset_map_nested(dir,addr)	pte_offset_kernel((dir), (addr))
+-#define pte_unmap(pte)			do { } while (0)
+ #define pte_unmap_nested(pte)		do { } while (0)
  
- 	dcmi->res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -1694,12 +1695,13 @@ static int dcmi_probe(struct platform_device *pdev)
- 					dev_name(&pdev->dev), dcmi);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Unable to request irq %d\n", irq);
--		return -ENODEV;
-+		return ret;
- 	}
- 
- 	mclk = devm_clk_get(&pdev->dev, "mclk");
- 	if (IS_ERR(mclk)) {
--		dev_err(&pdev->dev, "Unable to get mclk\n");
-+		if (PTR_ERR(mclk) != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "Unable to get mclk\n");
- 		return PTR_ERR(mclk);
- 	}
- 
+ #define pte_set_fixmap(addr)		((pte_t *)set_fixmap_offset(FIX_PTE, addr))
 -- 
 2.20.1
 
