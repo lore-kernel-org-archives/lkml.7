@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3695C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 289C6C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCADB2502B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8ED525035
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:04:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189082;
-	bh=dCVDXips007izB5sZEkFSjcUty+mk+m6uZJDYn5+XbQ=;
+	s=default; t=1559189093;
+	bh=6GuArfTvBzCsb8xZnBZRozVOoVR8LndQKkMUmS0qzpw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qFYvPHFqqj/yYYM6Ukap2q+sgs7ELhS0GHvZRSh2wCqy0NlQQei8NLvpcyPuUsjdA
-	 a5q2NqifJcdslJJ2ER/jJp3wOpa5qUldvyUTBTHqnhJtRGgswD2PnHtCAN22g4Ao9E
-	 owQBF+o0xVp365zQY0ETscMhFlEkMAsy3GhGOrbs=
+	b=zP4RJNX8sSC1j9cU7+GVsU/F1qvFlv0Q/7+mDB3H9KZkCyxgqWPSlMhLmX7Rjd+Ov
+	 2K0AdCA2pNwShg/tcD+i4+mugz1FUKg//jzwBHobw/91uISIpZBF6uTkw6A1o+Oti4
+	 2TubPs2ALRN+DuHXAXHnpUyc8Q/as1Q020O3rme8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732196AbfE3EEl (ORCPT
+        id S1733148AbfE3EEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:04:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48858 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:04:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731276AbfE3DRu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731272AbfE3DRu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:17:50 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08B3B2472D;
-        Thu, 30 May 2019 03:17:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97AE82472A;
+        Thu, 30 May 2019 03:17:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186270;
-        bh=dCVDXips007izB5sZEkFSjcUty+mk+m6uZJDYn5+XbQ=;
+        s=default; t=1559186269;
+        bh=6GuArfTvBzCsb8xZnBZRozVOoVR8LndQKkMUmS0qzpw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rnx3H752W2wD973HP3sBnCKfni1EpPTyU7dI/byW4cZwozskJV/JbA+Uyah+Lz2Kn
-         W9+topTJRqY1Q7zHn5rjUn2lp75wgsjL0IPYuwnsTd7z2Rva155A1Y+f/OGdj7MYn3
-         3CUTyf/W0/0s5bm1SADxnTAg5oqvQ2ET6aMuWIuQ=
+        b=JB6ozZAOaUb5LmfUHltjC65g9oakIIwHOZBiLuCYd1JD58o7uTEvyIqDPEkTqjlbs
+         ZPgwhVwx7sj/u98kVAY7cUgMdk9AC1vN5t+n5BWGHKK8K0tzlB/p0BnPhUYvLpvNg5
+         eLst2LdzQ4ordlLyB0hVKRkLjimmW0UKVQeXXxao=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -49,9 +49,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 209/276] x86/uaccess: Fix up the fixup
-Date:   Wed, 29 May 2019 20:06:07 -0700
-Message-Id: <20190530030538.201874533@linuxfoundation.org>
+Subject: [PATCH 4.19 208/276] x86/ia32: Fix ia32_restore_sigcontext() AC leak
+Date:   Wed, 29 May 2019 20:06:06 -0700
+Message-Id: <20190530030538.134917754@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -64,17 +64,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b69656fa7ea2f75e47d7bd5b9430359fa46488af ]
+[ Upstream commit 67a0514afdbb8b2fc70b771b8c77661a9cb9d3a9 ]
 
-New tooling got confused about this:
-
-  arch/x86/lib/memcpy_64.o: warning: objtool: .fixup+0x7: return with UACCESS enabled
-
-While the code isn't wrong, it is tedious (if at all possible) to
-figure out what function a particular chunk of .fixup belongs to.
-
-This then confuses the objtool uaccess validation. Instead of
-returning directly from the .fixup, jump back into the right function.
+Objtool spotted that we call native_load_gs_index() with AC set.
+Re-arrange the code to avoid that.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Cc: Borislav Petkov <bp@alien8.de>
@@ -85,30 +78,71 @@ Cc: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/lib/memcpy_64.S | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/ia32/ia32_signal.c | 29 +++++++++++++++++------------
+ 1 file changed, 17 insertions(+), 12 deletions(-)
 
-diff --git a/arch/x86/lib/memcpy_64.S b/arch/x86/lib/memcpy_64.S
-index 3b24dc05251c7..9d05572370edc 100644
---- a/arch/x86/lib/memcpy_64.S
-+++ b/arch/x86/lib/memcpy_64.S
-@@ -257,6 +257,7 @@ ENTRY(__memcpy_mcsafe)
- 	/* Copy successful. Return zero */
- .L_done_memcpy_trap:
- 	xorl %eax, %eax
-+.L_done:
- 	ret
- ENDPROC(__memcpy_mcsafe)
- EXPORT_SYMBOL_GPL(__memcpy_mcsafe)
-@@ -273,7 +274,7 @@ EXPORT_SYMBOL_GPL(__memcpy_mcsafe)
- 	addl	%edx, %ecx
- .E_trailing_bytes:
- 	mov	%ecx, %eax
--	ret
-+	jmp	.L_done
+diff --git a/arch/x86/ia32/ia32_signal.c b/arch/x86/ia32/ia32_signal.c
+index 86b1341cba9ac..513ba49c204fe 100644
+--- a/arch/x86/ia32/ia32_signal.c
++++ b/arch/x86/ia32/ia32_signal.c
+@@ -61,9 +61,8 @@
+ } while (0)
  
- 	/*
- 	 * For write fault handling, given the destination is unaligned,
+ #define RELOAD_SEG(seg)		{		\
+-	unsigned int pre = GET_SEG(seg);	\
++	unsigned int pre = (seg) | 3;		\
+ 	unsigned int cur = get_user_seg(seg);	\
+-	pre |= 3;				\
+ 	if (pre != cur)				\
+ 		set_user_seg(seg, pre);		\
+ }
+@@ -72,6 +71,7 @@ static int ia32_restore_sigcontext(struct pt_regs *regs,
+ 				   struct sigcontext_32 __user *sc)
+ {
+ 	unsigned int tmpflags, err = 0;
++	u16 gs, fs, es, ds;
+ 	void __user *buf;
+ 	u32 tmp;
+ 
+@@ -79,16 +79,10 @@ static int ia32_restore_sigcontext(struct pt_regs *regs,
+ 	current->restart_block.fn = do_no_restart_syscall;
+ 
+ 	get_user_try {
+-		/*
+-		 * Reload fs and gs if they have changed in the signal
+-		 * handler.  This does not handle long fs/gs base changes in
+-		 * the handler, but does not clobber them at least in the
+-		 * normal case.
+-		 */
+-		RELOAD_SEG(gs);
+-		RELOAD_SEG(fs);
+-		RELOAD_SEG(ds);
+-		RELOAD_SEG(es);
++		gs = GET_SEG(gs);
++		fs = GET_SEG(fs);
++		ds = GET_SEG(ds);
++		es = GET_SEG(es);
+ 
+ 		COPY(di); COPY(si); COPY(bp); COPY(sp); COPY(bx);
+ 		COPY(dx); COPY(cx); COPY(ip); COPY(ax);
+@@ -106,6 +100,17 @@ static int ia32_restore_sigcontext(struct pt_regs *regs,
+ 		buf = compat_ptr(tmp);
+ 	} get_user_catch(err);
+ 
++	/*
++	 * Reload fs and gs if they have changed in the signal
++	 * handler.  This does not handle long fs/gs base changes in
++	 * the handler, but does not clobber them at least in the
++	 * normal case.
++	 */
++	RELOAD_SEG(gs);
++	RELOAD_SEG(fs);
++	RELOAD_SEG(ds);
++	RELOAD_SEG(es);
++
+ 	err |= fpu__restore_sig(buf, 1);
+ 
+ 	force_iret();
 -- 
 2.20.1
 
