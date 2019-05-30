@@ -2,121 +2,134 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B36C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04230C46470
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45DDC238F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:48:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rflj/enl"
+	by mail.kernel.org (Postfix) with ESMTP id DB61C25BA2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:52:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbfE3OsJ (ORCPT
+        id S1726666AbfE3OwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 10:48:09 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:38372 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbfE3OsI (ORCPT
+        Thu, 30 May 2019 10:52:11 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40730 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725961AbfE3OwK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 10:48:08 -0400
-Received: by mail-ed1-f68.google.com with SMTP id g13so9509678edu.5;
-        Thu, 30 May 2019 07:48:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=C9E51ZhwTVP2YDkKNnHyBwrwMch4rhjQofN8cIkB4Wk=;
-        b=rflj/enlljMqqWL5Fspgm/IFob3rkrZIcEFvxHqEO1GO8OoyGwHQlbM788bklcYMkD
-         yfDX9H1WXd7dtD0biy5Maaumln3ywPLCa1NUJDvq1V40EVmeg4CIX2B6Lxp/tkrueZXr
-         QpeD1Sdp7S7oPmgwWADz1VkUBA74XY/5H7hPikSFfEIw6Oa8TjSewUN/q0snPYuUP2di
-         R59LNpF2R7Pl8fUsGebhbchrImCuEyO38JQWj+50rhWwdUcv0sdH6807dTrA6yB2keTW
-         EM6BjegcWMACoE9vkFo0ILBjjd71mnP1ssz2Bj38NtQq2nAl1GG/ar2qb1i5416nH62t
-         zCBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=C9E51ZhwTVP2YDkKNnHyBwrwMch4rhjQofN8cIkB4Wk=;
-        b=kBzvILv0MDb23Ob83IzOILT9eqOD9n1kR6pUxt+iEae+4uim5UN7pgjOIHsKaBN7yM
-         IyIJ20f/wJPOXk4QS2mavW3WhWTeW+mCJ7LDMYS0BkLtH4WCpXIqcUSF/MOsfEC8n49C
-         Vj2CNUxYaFetEegqCu78qesDwy3qBxaQL14lcODP1zBw5p7SKv+1VfP4XDTP+i/8GOyj
-         EGtPL8sKAX6eC+vAevZJ/lH8MzI3N3fOQTvVxs3L9GaYrv2LRf3h/btnnRTsdLkmakew
-         lTWQsSzMXPDsQ1nDnBSWVGW90RyzKUR4s2cb1rEKMx1ebpupEx33yJojJsZhM6InkhEz
-         OUcg==
-X-Gm-Message-State: APjAAAXTZm1XkbEGZawf2fvsSBj/ipKYnGBFdB3PN/rK74uiLF8DVtGf
-        rGW7bC0qb47wfy1aP2LFZCYzlw038dluk9/s7Ow=
-X-Google-Smtp-Source: APXvYqwGgVx8dH1DO0bkYjO/Mjf0Bdl50l/INQBcBiPlW8sHmh9iDs4hd6EHSw/TBd5FH+hBST3PqZKxt4PRDLJ1ri0=
-X-Received: by 2002:a17:906:5855:: with SMTP id h21mr3907379ejs.15.1559227686918;
- Thu, 30 May 2019 07:48:06 -0700 (PDT)
+        Thu, 30 May 2019 10:52:10 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UEpooU105077
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 10:52:09 -0400
+Received: from e17.ny.us.ibm.com (e17.ny.us.ibm.com [129.33.205.207])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2stgu3shvh-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 10:52:09 -0400
+Received: from localhost
+        by e17.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Thu, 30 May 2019 15:52:08 +0100
+Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
+        by e17.ny.us.ibm.com (146.89.104.204) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 30 May 2019 15:52:03 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4UEq2Cu30933256
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 May 2019 14:52:02 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C7B47B2065;
+        Thu, 30 May 2019 14:52:02 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A99C3B2064;
+        Thu, 30 May 2019 14:52:02 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 30 May 2019 14:52:02 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 6EC0616C373B; Thu, 30 May 2019 07:52:04 -0700 (PDT)
+Date:   Thu, 30 May 2019 07:52:04 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
+Subject: [PATCH tip/core/rcu 0/12]
+Reply-To: paulmck@linux.ibm.com
 MIME-Version: 1.0
-References: <20190528235627.1315-1-olteanv@gmail.com> <20190528235627.1315-4-olteanv@gmail.com>
- <20190529044912.cyg44rqvdo73oeiu@localhost> <CA+h21hoNrhcpAONTvJra5Ekk+yJ6xP0VAaPSygaLOw31qsGPTg@mail.gmail.com>
- <20190530035112.qbn3nnoxrgum7anz@localhost> <CA+h21hqko57LB0BB2TSGSr4p9_czPM-g9krO+wnU7PgvaMdSDA@mail.gmail.com>
- <20190530142356.vxkhsjalxfytvx2c@localhost>
-In-Reply-To: <20190530142356.vxkhsjalxfytvx2c@localhost>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Thu, 30 May 2019 17:47:55 +0300
-Message-ID: <CA+h21hqqO2RYv_zG3gW17c_NBJR80ag8PSVVan66douQN+MQpw@mail.gmail.com>
-Subject: Re: [PATCH net-next 3/5] net: dsa: mv88e6xxx: Let taggers specify a
- can_timestamp function
-To:     Richard Cochran <richardcochran@gmail.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19053014-0040-0000-0000-000004F681C7
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011185; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01210783; UDB=6.00636156; IPR=6.00991817;
+ MB=3.00027120; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-30 14:52:07
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19053014-0041-0000-0000-000009029C18
+Message-Id: <20190530145204.GA28526@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-30_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=13 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=854 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905300106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 May 2019 at 17:24, Richard Cochran <richardcochran@gmail.com> wrote:
->
-> On Thu, May 30, 2019 at 10:42:41AM +0300, Vladimir Oltean wrote:
-> > The meta frames generated by the SJA1105 do not contain any seqid.
->
-> So this cannot ever work...
->
-> > They contain:
-> > * A globally programmable DMAC
-> > * A globally programmable SMAC
->
-> Don't know what these are, but doesn't sound like they uniquely
-> identify the original frame.
->
-> > * The 0x8 EtherType
-> > * A partial (24-bit or 32-bit) RX timestamp
-> > * Two bytes from the initial (pre follow-up) frame's DMAC, before the
-> > switch mangled those with the source port and switch id. The driver is
-> > supposed to patch these bytes from the follow-up back into the initial
-> > frame before passing them up the stack.
-> > * The source port that generated the meta frame
-> > * The switch id that generated the meta frame
->
-> None of these match to the original frame uniquely.  Looks like this
-> is a dead end.
->
+Hello!
 
-Yes, they don't identify the original frame.
-The hardware's line of thinking seems to be "The meta frame is sent
-immediately after the trapped frame that triggered the action." (quote
-from https://www.nxp.com/docs/en/user-guide/UM10944.pdf).
+This series provides yet more cleanups and fixes for the RCU flavor
+consolidation effort:
 
-> I recommend forgetting about these meta frames.  Instead, read out the
-> time stamps over MDIO.
->
+1.	Enable elimination of Tree-RCU softirq processing, courtesy of
+	Sebastian Andrzej Siewior.  (More along the lines of real-time
+	than consolidation, but placed here to avoid conflicts.)
 
-If there was any other way to retrieve RX timestamps I would have done
-it already.
+2.	Check for wakeup-safe conditions in rcu_read_unlock_special().
 
-> Thanks,
-> Richard
+3.	Only do rcu_read_unlock_special() wakeups if expedited.
+
+4.	Allow rcu_read_unlock_special() to raise_softirq() if in_irq().
+
+5.	Use irq_work to get scheduler's attention in clean context.
+
+6.	Inline invoke_rcu_callbacks() into its sole remaining caller.
+
+7.	Avoid self-IPI in sync_rcu_exp_select_node_cpus().
+
+8.	Avoid self-IPI in sync_sched_exp_online_cleanup().
+
+9.	Add assertion to check if in an interrupt, courtesy of Joel
+	Fernandes.
+
+10.	Add checks for dynticks counters in rcu_is_cpu_rrupt_from_idle(),
+	courtesy of Joel Fernandes.
+
+11.	Rename rcu_data's ->deferred_qs to ->exp_deferred_qs.
+
+12.	Remove unused rdp local from synchronize_rcu_expedited(),
+	courtesy of Jiang Biao.
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+ Documentation/admin-guide/kernel-parameters.txt |    6 
+ include/linux/lockdep.h                         |    7 
+ include/linux/sched.h                           |    2 
+ kernel/rcu/tree.c                               |  179 +++++++++++++++++----
+ kernel/rcu/tree.h                               |    6 
+ kernel/rcu/tree_exp.h                           |   50 ++++-
+ kernel/rcu/tree_plugin.h                        |  201 +++++++-----------------
+ 7 files changed, 267 insertions(+), 184 deletions(-)
+
