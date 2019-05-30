@@ -2,173 +2,319 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C20CC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94111C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24D0A26179
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:45:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5488726172
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:45:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C2e/Jzbp"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MVfYyapC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbfE3UpA (ORCPT
+        id S1726604AbfE3Upf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 16:45:00 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36117 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726489AbfE3Uo7 (ORCPT
+        Thu, 30 May 2019 16:45:35 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:46030 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726225AbfE3Upf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 16:44:59 -0400
-Received: by mail-pf1-f194.google.com with SMTP id u22so4701098pfm.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 13:44:58 -0700 (PDT)
+        Thu, 30 May 2019 16:45:35 -0400
+Received: by mail-qt1-f193.google.com with SMTP id t1so8702710qtc.12
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 13:45:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=from:to:cc:subject:references:date:in-reply-to:message-id
-         :user-agent:mime-version;
-        bh=q6AUBPvqyat2bLNM++F9NloXkkCwBt3/tItx63cMlpE=;
-        b=C2e/JzbpUueBW6GWiWsrwQbKeGbHeV+0umj6fYHo//SnFeP6ktUlkhrM4ciCTH1r01
-         GiqRMuwhQC4PFGeU4JtJ0cJmEDB1GcL+fEV+5ReV0/OX84vu6QQipYF9IhWRIseSCwye
-         Yd6Ny28KV9jXxKId1cKev/qx2qjNT0bNlIcUcOqT0gSzZOqgBx5CcDyj9XKs/HG3tl2u
-         A+9dmAt0jbXOjWnMgRSXENvJAGGJ+s8n42XCpdvtVEegDqVRT4irnQKFTlL8YP4C6XFA
-         m7/G009ugSO8iFwOfoNeeFB2/YjQO5yA7UBg1McHFypCDaz91MGXSxTYKuZtMWd09wdF
-         2lsA==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gWieCtH2yIUBG5LWs9OEX59nD7DlvSQy6nQ6THrqLpQ=;
+        b=MVfYyapCMJ3LatqnyKDs+2vpLg9MtdQ6eIUIapTUApTID2TcLQ0zGLd1PRJdlGCyX1
+         bNDECPJiTcFJ6RgaNyW5qC1fFq+gd310kusmYNxUucmmRT1PxF0j1vQLmo33XvWLYl9/
+         k21lyFySdRC9fu5ciEyARhp5fKwuXC0/YaC/M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
-         :message-id:user-agent:mime-version;
-        bh=q6AUBPvqyat2bLNM++F9NloXkkCwBt3/tItx63cMlpE=;
-        b=CT2hjKs7ZimHCKdAyq8mcZYCP032vQYVuW/+WmWV3IwJI34GEwk/bwG2Avqo4oR84v
-         qSBT8qCojuoo+yTe1w/2bSKaGWITyRbToft0JZHYqjmfI3lWXdJpS7oWSo8DH/XxVKGj
-         PHF53ta2qtD+0z5naEF7xXIKrNfNXAsV1AGlp5bSwp3biST5X5lzk/s/w3j9yuFmk1jE
-         hcl8L7P+K2UH0LaQ9T1xu10HIYEnN8NVe3jWcUZvpd1Sc69LOqH0CMtvlUfRYOtjMzXk
-         7BoequhP5KmMoPxBnaf6aL8LmKKUEIMnQIPv39fnehN+PrY16mFaOicyCLlzxW2ei2k5
-         V9DQ==
-X-Gm-Message-State: APjAAAXDw4N0rD+eI+Q+g/M8VUYoyGfPPdwM4BnnhOmW0ljSC69awyLB
-        24HX85VKT31qaTKl5BnWLOqMGQ==
-X-Google-Smtp-Source: APXvYqwupWORAT9iyn5M2LRuwVXU+wPnlXfdJiuevQ15iB/9Mq30VTKY+wUMHcd1Nm1Mx7YzW8V9nQ==
-X-Received: by 2002:a17:90a:2a09:: with SMTP id i9mr5287388pjd.103.1559249097503;
-        Thu, 30 May 2019 13:44:57 -0700 (PDT)
-Received: from bsegall-linux.svl.corp.google.com.localhost ([2620:15c:2cd:202:39d7:98b3:2536:e93f])
-        by smtp.gmail.com with ESMTPSA id k22sm4021024pfk.54.2019.05.30.13.44.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 30 May 2019 13:44:56 -0700 (PDT)
-From:   bsegall@google.com
-To:     Dave Chiluk <chiluk+linux@indeed.com>
-Cc:     Phil Auld <pauld@redhat.com>, Peter Oskolkov <posk@posk.io>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Brendan Gregg <bgregg@netflix.com>,
-        Kyle Anderson <kwa@yelp.com>,
-        Gabriel Munos <gmunoz@netflix.com>,
-        John Hammond <jhammond@indeed.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        pjt@google.com
-Subject: Re: [PATCH v3 1/1] sched/fair: Fix low cpu usage with high throttling by removing expiration of cpu-local slices
-References: <1558121424-2914-1-git-send-email-chiluk+linux@indeed.com>
-        <1559156926-31336-1-git-send-email-chiluk+linux@indeed.com>
-        <1559156926-31336-2-git-send-email-chiluk+linux@indeed.com>
-        <xm264l5dynrg.fsf@bsegall-linux.svl.corp.google.com>
-        <CAC=E7cU9GetuKVQE1HxXsSuOKgyxezXUmSH2ZDHOrLio_YZi1g@mail.gmail.com>
-Date:   Thu, 30 May 2019 13:44:55 -0700
-In-Reply-To: <CAC=E7cU9GetuKVQE1HxXsSuOKgyxezXUmSH2ZDHOrLio_YZi1g@mail.gmail.com>
-        (Dave Chiluk's message of "Thu, 30 May 2019 12:53:37 -0500")
-Message-ID: <xm26zhn3y8mw.fsf@bsegall-linux.svl.corp.google.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gWieCtH2yIUBG5LWs9OEX59nD7DlvSQy6nQ6THrqLpQ=;
+        b=YTC7GO5YkCM1a8qGQFV3J4/6JX191mz+4wWuC/AKzqKjj8+LMseu6kLzcbS1gMxEPo
+         IkShbiZwjcxOJgBsc0NPjptFpt9nq2t6UAzAch+Qqyhijg+8qSm9FLMHIpzz71MwNQIm
+         RB3SEMJIx7B43y/o6pXunMQNLMPRJ+00AWuZkkxwWNxMIVxewPs3BQ/2VhLO08egFsgX
+         JGbj+yjQq7ALr3mNJIgoQ8A9wSi2yCT6d4IwATS8xa0+JfYRtOoFZ1tgIbpgs7unmUa9
+         BOLS1nw1uckoF3lV8KyeKkFlhXJW612duTszzqGj4Cd70u3hfFnfNUqaXxOj511UAWyK
+         bN6A==
+X-Gm-Message-State: APjAAAUnk5uNEgSQ3huorXtWld4dSNTQ+7jk8fmPxePkCVoD1rkZ60zJ
+        95a3T3cPb8PFBzSAoU5kJ3B9HkqG1RMc5+on+6t81g==
+X-Google-Smtp-Source: APXvYqwNLwP00A8U2czycL+eEwL5OUMXo5jNJuA8YWPXcRQvTPdJRTYAmeu3ErcrzQbw0KQSEmCrt5YH4A64vrPlTC8=
+X-Received: by 2002:ac8:2fce:: with SMTP id m14mr5717317qta.22.1559249133671;
+ Thu, 30 May 2019 13:45:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190519092537.69053-1-jitao.shi@mediatek.com> <20190519092537.69053-7-jitao.shi@mediatek.com>
+In-Reply-To: <20190519092537.69053-7-jitao.shi@mediatek.com>
+From:   Ryan Case <ryandcase@chromium.org>
+Date:   Thu, 30 May 2019 13:45:23 -0700
+Message-ID: <CACjz--m7X13XShZ4ST+54jF_K6=Cfzj1DNBduyVdVsVd2dpULw@mail.gmail.com>
+Subject: Re: [v3 6/7] drm/mediatek: change the dsi phytiming calculate method
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        Kumar Gala <galak@codeaurora.org>, linux-pwm@vger.kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>, stonea168@163.com,
+        dri-devel@lists.freedesktop.org,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Ajay Kumar <ajaykumar.rs@samsung.com>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
+        ck.hu@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>,
+        Thierry Reding <treding@nvidia.com>,
+        devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
+        Inki Dae <inki.dae@samsung.com>,
+        linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com,
+        eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org,
+        Rahul Sharma <rahul.sharma@samsung.com>,
+        srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Sean Paul <seanpaul@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dave Chiluk <chiluk+linux@indeed.com> writes:
+Hi Jitao,
 
-> On Wed, May 29, 2019 at 02:05:55PM -0700, bsegall@google.com wrote:
->> Dave Chiluk <chiluk+linux@indeed.com> writes:
->>
->> Yeah, having run the test, stranding only 1 ms per cpu rather than 5
->> doesn't help if you only have 10 ms of quota and even 10 threads/cpus.
->> The slack timer isn't important in this test, though I think it probably
->> should be changed.
-> My min_cfs_rq_runtime was already set to 1ms.
+On Sun, May 19, 2019 at 2:27 AM Jitao Shi <jitao.shi@mediatek.com> wrote:
+>
+> Change the method of frame rate calc which can get more accurate
+> frame rate.
+>
+> data rate = pixel_clock * bit_per_pixel / lanes
+> Adjust hfp_wc to adapt the additional phy_data
+>
+> if MIPI_DSI_MODE_VIDEO_BURST
+>         hfp_wc = hfp * bpp - data_phy_cycles * lanes - 12 - 6;
+> else
+>         hfp_wc = hfp * bpp - data_phy_cycles * lanes - 12;
+>
+> Note:
+> //(2: 1 for sync, 1 for phy idle)
+> data_phy_cycles = T_hs_exit + T_lpx + T_hs_prepare + T_hs_zero + 2;
+>
+> bpp: bit per pixel
+>
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_dsi.c | 119 +++++++++++++++++++++--------
+>  1 file changed, 86 insertions(+), 33 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> index 1165ff944889..3f51b2000c68 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> @@ -158,6 +158,25 @@
+>         (type == MIPI_DSI_GENERIC_READ_REQUEST_2_PARAM) || \
+>         (type == MIPI_DSI_DCS_READ))
+>
+> +struct mtk_phy_timing {
+> +       u32 lpx;
+> +       u32 da_hs_prepare;
+> +       u32 da_hs_zero;
+> +       u32 da_hs_trail;
+> +
+> +       u32 ta_go;
+> +       u32 ta_sure;
+> +       u32 ta_get;
+> +       u32 da_hs_exit;
+> +
+> +       u32 clk_hs_zero;
+> +       u32 clk_hs_trail;
+> +
+> +       u32 clk_hs_prepare;
+> +       u32 clk_hs_post;
+> +       u32 clk_hs_exit;
+> +};
+> +
+>  struct phy;
+>
+>  struct mtk_dsi_driver_data {
+> @@ -182,12 +201,13 @@ struct mtk_dsi {
+>         struct clk *digital_clk;
+>         struct clk *hs_clk;
+>
+> -       u32 data_rate;
+> +       u64 data_rate;
+>
+>         unsigned long mode_flags;
+>         enum mipi_dsi_pixel_format format;
+>         unsigned int lanes;
+>         struct videomode vm;
+> +       struct mtk_phy_timing phy_timing;
+>         int refcount;
+>         bool enabled;
+>         u32 irq_data;
+> @@ -221,17 +241,39 @@ static void mtk_dsi_phy_timconfig(struct mtk_dsi *dsi)
+>  {
+>         u32 timcon0, timcon1, timcon2, timcon3;
+>         u32 ui, cycle_time;
+> +       struct mtk_phy_timing *timing = &dsi->phy_timing;
+> +
+> +       ui = 1000000000 / dsi->data_rate;
+> +       cycle_time = 8000000000 / dsi->data_rate;
+> +
+> +       timing->lpx = NS_TO_CYCLE(60, cycle_time);
+> +       timing->da_hs_prepare = NS_TO_CYCLE((40 + 5 * ui), cycle_time);
+> +       timing->da_hs_zero = NS_TO_CYCLE((110 + 6 * ui), cycle_time);
+> +       timing->da_hs_trail = NS_TO_CYCLE(((0x4 * ui) + 80), cycle_time);
+> +
+> +       if (timing->da_hs_zero > timing->da_hs_prepare)
+> +               timing->da_hs_zero -= timing->da_hs_prepare;
 
-Yeah, I meant min_cfs_rq_runtime vs the 5ms if the slack stuff was
-broken.
+I don't follow why the above comparison and subtraction is necessary
+when the values are being explicitly set immediately prior and it
+seems to introduce a bug. Leftover from an early revision?
+
+It looks like you've tuned the values such that hs_prepare+hs_zero are
+just above the minimum requirements for that sum, however due to this
+comparison and subtraction we wind up with a value of
+hs_prepare+hs_zero-hs_prepare and fall below spec. Either boosting the
+initial value set for hs_zero or removing the comparison makes display
+happy again. Since I don't see any reason for the compare and subtract
+I'd just drop that.
+
+> +
+> +       timing->ta_go = 4 * timing->lpx;
+> +       timing->ta_sure = 3 * timing->lpx / 2;
+> +       timing->ta_get = 5 * timing->lpx;
+> +       timing->da_hs_exit = 2 * timing->lpx;
+> +
+> +       timing->clk_hs_zero = NS_TO_CYCLE(0x150, cycle_time);
+> +       timing->clk_hs_trail = NS_TO_CYCLE(0x64, cycle_time) + 0xa;
+>
+> -       ui = 1000 / dsi->data_rate + 0x01;
+> -       cycle_time = 8000 / dsi->data_rate + 0x01;
+> +       timing->clk_hs_prepare = NS_TO_CYCLE(0x40, cycle_time);
+> +       timing->clk_hs_post = NS_TO_CYCLE(80 + 52 * ui, cycle_time);
+> +       timing->clk_hs_exit = 2 * timing->lpx;
+
+There is a lot of alternating between hex and decimal values in this
+function which makes it a little hard to follow. Would be nice to
+stick to one or the other.
 
 >
-> Additionally raising the amount of quota from 10ms to 50ms or even
-> 100ms, still results in throttling without full quota usage.
+> -       timcon0 = T_LPX | T_HS_PREP << 8 | T_HS_ZERO << 16 | T_HS_TRAIL << 24;
+> -       timcon1 = 4 * T_LPX | (3 * T_LPX / 2) << 8 | 5 * T_LPX << 16 |
+> -                 T_HS_EXIT << 24;
+> -       timcon2 = ((NS_TO_CYCLE(0x64, cycle_time) + 0xa) << 24) |
+> -                 (NS_TO_CYCLE(0x150, cycle_time) << 16);
+> -       timcon3 = NS_TO_CYCLE(0x40, cycle_time) | (2 * T_LPX) << 16 |
+> -                 NS_TO_CYCLE(80 + 52 * ui, cycle_time) << 8;
+> +       timcon0 = timing->lpx | timing->da_hs_prepare << 8 |
+> +                 timing->da_hs_zero << 16 | timing->da_hs_trail << 24;
+> +       timcon1 = timing->ta_go | timing->ta_sure << 8 |
+> +                 timing->ta_get << 16 | timing->da_hs_exit << 24;
+> +       timcon2 = 1 << 8 | timing->clk_hs_zero << 16 |
+> +                 timing->clk_hs_trail << 24;
+> +       timcon3 = timing->clk_hs_prepare | timing->clk_hs_post << 8 |
+> +                 timing->clk_hs_exit << 16;
 >
->> Decreasing min_cfs_rq_runtime helps, but would mean that we have to pull
->> quota more often / always. The worst case here I think is where you
->> run/sleep for ~1ns, so you wind up taking the lock twice every
->> min_cfs_rq_runtime: once for assign and once to return all but min,
->> which you then use up doing short run/sleep. I suppose that determines
->> how much we care about this overhead at all.
-> I'm not so concerned about how inefficiently the user-space application
-> runs, as that's up to the invidual developer.
-
-Increasing scheduler overhead is something we generally try to prevent
-is what I was worried about.
-
-> The fibtest testcase, is
-> purely my approximation of what a java application with lots of worker
-> threads might do, as I didn't have a great deterministic java
-> reproducer, and I feared posting java to LKML.  I'm more concerned with
-> the fact that the user requested 10ms/period or 100ms/period and they
-> hit throttling while simultaneously not seeing that amount of cpu usage.
-> i.e. on an 8 core machine if I
-> $ ./runfibtest 1
-> Iterations Completed(M): 1886
-> Throttled for: 51
-> CPU Usage (msecs) = 507
-> $ ./runfibtest 8
-> Iterations Completed(M): 1274
-> Throttled for: 52
-> CPU Usage (msecs) = 380
+>         writel(timcon0, dsi->regs + DSI_PHY_TIMECON0);
+>         writel(timcon1, dsi->regs + DSI_PHY_TIMECON1);
+> @@ -418,7 +460,8 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
+>         u32 horizontal_sync_active_byte;
+>         u32 horizontal_backporch_byte;
+>         u32 horizontal_frontporch_byte;
+> -       u32 dsi_tmp_buf_bpp;
+> +       u32 dsi_tmp_buf_bpp, data_phy_cycles;
+> +       struct mtk_phy_timing *timing = &dsi->phy_timing;
 >
-> You see that in the 8 core case where we have 7 do nothing threads on
-> cpu's 1-7, we see only 380 ms of usage, and 52 periods of throttling
-> when we should have received ~500ms of cpu usage.
+>         struct videomode *vm = &dsi->vm;
 >
-> Looking more closely at the __return_cfs_rq_runtime logic I noticed
->         if (cfs_b->quota != RUNTIME_INF &&
->             cfs_rq->runtime_expires == cfs_b->runtime_expires) {
+> @@ -433,7 +476,8 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
+>         writel(vm->vactive, dsi->regs + DSI_VACT_NL);
 >
-> Which is awfully similar to the logic that was fixed by 512ac999.  Is it
-> possible that we are just not ever returning runtime back to the cfs_b
-> because of the runtime_expires comparison here?
-
-The relevant issue that patch fixes is that the old conditional was
-backwards. Also lowering min_cfs_rq_runtime to 0 fixes your testcase, so
-it's working.
-
+>         if (dsi->driver_data->has_size_ctl)
+> -               writel(vm->vactive << 16 | vm->hactive, dsi->regs + DSI_SIZE_CON);
+> +               writel(vm->vactive << 16 | vm->hactive,
+> +                      dsi->regs + DSI_SIZE_CON);
 >
->> Removing expiration means that in the worst case period and quota can be
->> effectively twice what the user specified, but only on very particular
->> workloads.
-> I'm only removing expiration of slices that have already been assigned
-> to individual cfs_rq.  My understanding is that there is at most one
-> cfs_rq per cpu, and each of those can have at most one slice of
-> available runtime.  So the worst case burst is slice_ms * cpus.  Please
-> help me understand how you get to twice user specified quota and period
-> as it's not obvious to me *(I've only been looking at this for a few
-> months).
-
-The reason that this effect is so significant is because slice_ms * cpus
-is roughly 100% of the quota. So yes, it's roughly the same thing.
-Unfortunately if there are more spare cpus on the system just doubling
-quota and period (keeping the same ratio) would not fix your issue,
-while removing expiration does while also potentially having that effect.
-
+>         horizontal_sync_active_byte = (vm->hsync_len * dsi_tmp_buf_bpp - 10);
 >
->> I think we should at least think about instead lowering
->> min_cfs_rq_runtime to some smaller value
-> Do you mean lower than 1ms?
+> @@ -444,7 +488,34 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
+>                 horizontal_backporch_byte = ((vm->hback_porch + vm->hsync_len) *
+>                         dsi_tmp_buf_bpp - 10);
+>
+> -       horizontal_frontporch_byte = (vm->hfront_porch * dsi_tmp_buf_bpp - 12);
+> +       data_phy_cycles = timing->lpx + timing->da_hs_prepare +
+> +                                 timing->da_hs_zero + timing->da_hs_exit + 2;
+> +
+> +       if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_BURST) {
+> +               if (vm->hfront_porch * dsi_tmp_buf_bpp >
+> +                   data_phy_cycles * dsi->lanes + 18) {
+> +                       horizontal_frontporch_byte = vm->hfront_porch *
+> +                                                    dsi_tmp_buf_bpp -
+> +                                                    data_phy_cycles *
+> +                                                    dsi->lanes - 18;
+> +               } else {
+> +                       DRM_WARN("HFP less than d-phy, FPS will under 60Hz\n");
+> +                       horizontal_frontporch_byte = vm->hfront_porch *
+> +                                                    dsi_tmp_buf_bpp;
+> +               }
+> +       } else {
+> +               if (vm->hfront_porch * dsi_tmp_buf_bpp >
+> +                   data_phy_cycles * dsi->lanes + 12) {
+> +                       horizontal_frontporch_byte = vm->hfront_porch *
+> +                                                    dsi_tmp_buf_bpp -
+> +                                                    data_phy_cycles *
+> +                                                    dsi->lanes - 12;
+> +               } else {
+> +                       DRM_WARN("HFP less than d-phy, FPS will under 60Hz\n");
+> +                       horizontal_frontporch_byte = vm->hfront_porch *
+> +                                                    dsi_tmp_buf_bpp;
+> +               }
+> +       }
+>
+>         writel(horizontal_sync_active_byte, dsi->regs + DSI_HSA_WC);
+>         writel(horizontal_backporch_byte, dsi->regs + DSI_HBP_WC);
+> @@ -544,8 +615,7 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
+>  {
+>         struct device *dev = dsi->dev;
+>         int ret;
+> -       u64 pixel_clock, total_bits;
+> -       u32 htotal, htotal_bits, bit_per_pixel, overhead_cycles, overhead_bits;
+> +       u32 bit_per_pixel;
+>
+>         if (++dsi->refcount != 1)
+>                 return 0;
+> @@ -564,24 +634,7 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
+>                 break;
+>         }
+>
+> -       /**
+> -        * htotal_time = htotal * byte_per_pixel / num_lanes
+> -        * overhead_time = lpx + hs_prepare + hs_zero + hs_trail + hs_exit
+> -        * mipi_ratio = (htotal_time + overhead_time) / htotal_time
+> -        * data_rate = pixel_clock * bit_per_pixel * mipi_ratio / num_lanes;
+> -        */
+> -       pixel_clock = dsi->vm.pixelclock;
+> -       htotal = dsi->vm.hactive + dsi->vm.hback_porch + dsi->vm.hfront_porch +
+> -                       dsi->vm.hsync_len;
+> -       htotal_bits = htotal * bit_per_pixel;
+> -
+> -       overhead_cycles = T_LPX + T_HS_PREP + T_HS_ZERO + T_HS_TRAIL +
+> -                       T_HS_EXIT;
+> -       overhead_bits = overhead_cycles * dsi->lanes * 8;
+> -       total_bits = htotal_bits + overhead_bits;
+> -
+> -       dsi->data_rate = DIV_ROUND_UP_ULL(pixel_clock * total_bits,
+> -                                         htotal * dsi->lanes);
+> +       dsi->data_rate = dsi->vm.pixelclock * bit_per_pixel / dsi->lanes;
+>
+>         ret = clk_set_rate(dsi->hs_clk, dsi->data_rate);
+>         if (ret < 0) {
 
-Yes
+
+With the earlier fix feel free to add to the next revision
+Tested-by: Ryan Case <ryandcase@chromium.org>
