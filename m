@@ -5,53 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0879C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A37C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACBB425521
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:28:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D18225542
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:28:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190489;
-	bh=oydYdC0NqSDUA9GLPTTmL9wL9pNRkReA8vZR24mINLw=;
+	s=default; t=1559190497;
+	bh=liMFPV4QR74oLXsBCEfRhVHqrg6haZHG8XLecAlvi34=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=USe2CzRJQOblj4ajjqMFK81QzZoWRqvVqgZwLtI3+9R8XXpahf4svxoVouN1l9wiO
-	 m8lXYD0/1d971RRFDOm43SrebgcbK9yGxpDtGYQRmcr60TvqnzwY0o5ieqsAwv4QOm
-	 jnRT+bJFSxN01cf0ovcVlMqjA4g2vl5rQPYl0Gfk=
+	b=Ooktlek4TKvvnJ+EmTc6NU+wGf8ClI1vdUCUGy5mvMmB53FcC9lwAANOqRDIzC7lI
+	 e2vn5/CrPv3sTz7VJAMMpj+2/pQDFa6RSnqtbIbjDLl9blvxbwDQm7bkwVX09S+nHJ
+	 z/vE28qGnPXckBkPPzeNWz4u+gXPqjIJ80Fqd81A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729888AbfE3E2I (ORCPT
+        id S1730410AbfE3E2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:28:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33726 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:28:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728145AbfE3DOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:16 -0400
+        id S1728734AbfE3DOP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:15 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24A8C2455E;
-        Thu, 30 May 2019 03:14:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6660C24561;
+        Thu, 30 May 2019 03:14:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186056;
-        bh=oydYdC0NqSDUA9GLPTTmL9wL9pNRkReA8vZR24mINLw=;
+        s=default; t=1559186054;
+        bh=liMFPV4QR74oLXsBCEfRhVHqrg6haZHG8XLecAlvi34=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nhQ3uw8X+aDe50OohTGQGsTtDMQjT67QxzvPrpWK6y24wYIr2x9CIcFpwzZ31uo0q
-         Hx/liBhNeuW89d713VigJEHZytjB7Fswc1N7Xa/bZfC4XLCDzKbr/QaW3/mZU5yVxW
-         ahWL8VoR9b/qf/hEv2BKUJmzVt0CS6xjcMLnt9cY=
+        b=snLJckr8b71k3NG2G+TR96j+wmWsMm5KhtDkl8IqHWTadqdp+xdFNZ2VBuwK42Dce
+         QWmxv30ODKw8aIfxbze6aQ8gwWPKutjJDTHZa4ZMm5nhH0sOL3YMAks7ZxjXNeOLnr
+         s4RJ0bbFqaYJOltoXXmIynEXK3nO+egF1PmigF4I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 155/346] sched/core: Handle overflow in cpu_shares_write_u64
-Date:   Wed, 29 May 2019 20:03:48 -0700
-Message-Id: <20190530030549.030446153@linuxfoundation.org>
+        stable@vger.kernel.org, Roman Gushchin <guro@fb.com>,
+        Tejun Heo <tj@kernel.org>, kernel-team@fb.com,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 152/346] cgroup: protect cgroup->nr_(dying_)descendants by css_set_lock
+Date:   Wed, 29 May 2019 20:03:45 -0700
+Message-Id: <20190530030548.885112505@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -64,43 +60,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5b61d50ab4ef590f5e1d4df15cd2cea5f5715308 ]
+[ Upstream commit 4dcabece4c3a9f9522127be12cc12cc120399b2f ]
 
-Bit shift in scale_load() could overflow shares. This patch saturates
-it to MAX_SHARES like following sched_group_set_shares().
+The number of descendant cgroups and the number of dying
+descendant cgroups are currently synchronized using the cgroup_mutex.
 
-Example:
+The number of descendant cgroups will be required by the cgroup v2
+freezer, which will use it to determine if a cgroup is frozen
+(depending on total number of descendants and number of frozen
+descendants). It's not always acceptable to grab the cgroup_mutex,
+especially from quite hot paths (e.g. exit()).
 
- # echo 9223372036854776832 > cpu.shares
- # cat cpu.shares
+To avoid this, let's additionally synchronize these counters using
+the css_set_lock.
 
-Before patch: 1024
-After pattch: 262144
+So, it's safe to read these counters with either cgroup_mutex or
+css_set_lock locked, and for changing both locks should be acquired.
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/155125501891.293431.3345233332801109696.stgit@buzz
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Cc: kernel-team@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/core.c | 2 ++
- 1 file changed, 2 insertions(+)
+ include/linux/cgroup-defs.h | 5 +++++
+ kernel/cgroup/cgroup.c      | 6 ++++++
+ 2 files changed, 11 insertions(+)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 55c1061b5aeb1..9346e2ce0ac03 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -6503,6 +6503,8 @@ static void cpu_cgroup_attach(struct cgroup_taskset *tset)
- static int cpu_shares_write_u64(struct cgroup_subsys_state *css,
- 				struct cftype *cftype, u64 shareval)
- {
-+	if (shareval > scale_load_down(ULONG_MAX))
-+		shareval = MAX_SHARES;
- 	return sched_group_set_shares(css_tg(css), scale_load(shareval));
- }
+diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
+index 120d1d40704bc..319c07305500f 100644
+--- a/include/linux/cgroup-defs.h
++++ b/include/linux/cgroup-defs.h
+@@ -348,6 +348,11 @@ struct cgroup {
+ 	 * Dying cgroups are cgroups which were deleted by a user,
+ 	 * but are still existing because someone else is holding a reference.
+ 	 * max_descendants is a maximum allowed number of descent cgroups.
++	 *
++	 * nr_descendants and nr_dying_descendants are protected
++	 * by cgroup_mutex and css_set_lock. It's fine to read them holding
++	 * any of cgroup_mutex and css_set_lock; for writing both locks
++	 * should be held.
+ 	 */
+ 	int nr_descendants;
+ 	int nr_dying_descendants;
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index f84bf28f36ba8..ee77b0f00eddd 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -4728,9 +4728,11 @@ static void css_release_work_fn(struct work_struct *work)
+ 		if (cgroup_on_dfl(cgrp))
+ 			cgroup_rstat_flush(cgrp);
+ 
++		spin_lock_irq(&css_set_lock);
+ 		for (tcgrp = cgroup_parent(cgrp); tcgrp;
+ 		     tcgrp = cgroup_parent(tcgrp))
+ 			tcgrp->nr_dying_descendants--;
++		spin_unlock_irq(&css_set_lock);
+ 
+ 		cgroup_idr_remove(&cgrp->root->cgroup_idr, cgrp->id);
+ 		cgrp->id = -1;
+@@ -4948,12 +4950,14 @@ static struct cgroup *cgroup_create(struct cgroup *parent)
+ 	if (ret)
+ 		goto out_psi_free;
+ 
++	spin_lock_irq(&css_set_lock);
+ 	for (tcgrp = cgrp; tcgrp; tcgrp = cgroup_parent(tcgrp)) {
+ 		cgrp->ancestor_ids[tcgrp->level] = tcgrp->id;
+ 
+ 		if (tcgrp != cgrp)
+ 			tcgrp->nr_descendants++;
+ 	}
++	spin_unlock_irq(&css_set_lock);
+ 
+ 	if (notify_on_release(parent))
+ 		set_bit(CGRP_NOTIFY_ON_RELEASE, &cgrp->flags);
+@@ -5238,10 +5242,12 @@ static int cgroup_destroy_locked(struct cgroup *cgrp)
+ 	if (parent && cgroup_is_threaded(cgrp))
+ 		parent->nr_threaded_children--;
+ 
++	spin_lock_irq(&css_set_lock);
+ 	for (tcgrp = cgroup_parent(cgrp); tcgrp; tcgrp = cgroup_parent(tcgrp)) {
+ 		tcgrp->nr_descendants--;
+ 		tcgrp->nr_dying_descendants++;
+ 	}
++	spin_unlock_irq(&css_set_lock);
+ 
+ 	cgroup1_check_for_release(parent);
  
 -- 
 2.20.1
