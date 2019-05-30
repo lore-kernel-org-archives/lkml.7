@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C62C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81BB3C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE2D125446
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BB372543D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:25:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190347;
-	bh=Mslr04vKCV+c1HCoGRdDiyNkQPaY5BPKy2YaXll0TQI=;
+	s=default; t=1559190350;
+	bh=nQWv/pQ9TneryxCoIWHr+e55gDaqdyjRUi4cNskNqwQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IyMksvRhEnEb0X8cIFn3HL9R8l7UdN+h5tAtkMLzvm3tttpA9WS+H8JcgpDEQ0A5p
-	 0mQXSmONN40zYzhUUKA5uyotpAzq3+WfJkB6NYq+ORc8PEGbYyZuC1MM2v5KMQ0BRm
-	 v5DkxRrxyRsTfxRXu1ON7F5i+4pCtvOE8Q4BkldE=
+	b=OZbQUJ/OdAA5E9cSzkDUO1rkP4wPl4fV2yZn6GUOje157xsallcaHjgs/oBVqrhCh
+	 uAqK6XjdigUz2oA9izDYrAOj1+iI/bUXZUxMPsIyvX28GFY5sSINudxiVpP51XRwC2
+	 QcCj79FssTY3u8MVjE92jDVC8FHG5rNv2Y8oxKm4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733173AbfE3EZq (ORCPT
+        id S1733115AbfE3EZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:25:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35412 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:25:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728195AbfE3DOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729939AbfE3DOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:14:41 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0651A24557;
-        Thu, 30 May 2019 03:14:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99E9824555;
+        Thu, 30 May 2019 03:14:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186081;
-        bh=Mslr04vKCV+c1HCoGRdDiyNkQPaY5BPKy2YaXll0TQI=;
+        s=default; t=1559186080;
+        bh=nQWv/pQ9TneryxCoIWHr+e55gDaqdyjRUi4cNskNqwQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0SCMVEaBh4Sexdn7YWxXXL7dlRVZSO/u2lCEN4cIMeFnZvqpIa3q3npsssOU1k4CX
-         6yzzD6v1Igry6KH7GRdPPsiVphhGTMkY9irwDEYaUj95Ewn/6apJSvfiLfAuF38Zhs
-         hWfb37AnGNQYBEhCAOAFGFNGIuGKEnwUR0oO0KHY=
+        b=rr0RTrNPm6K8AlJgBwTXtN0XoMr4//G0NPfdFu+PZPmXpoR+o6Gk3N7A+X5pNNrto
+         7FADjluY1fRxYFnsSmIfv2yZYRETLYoHBPnILSWykmHsBoHL37qwRXHu46YNdt3uGp
+         yddkKyQY9arp5laC1IR03yIP+1qazaCN3bbcU/dc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Sebastian Ott <sebott@linux.ibm.com>,
+        stable@vger.kernel.org, Thomas Huth <thuth@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
         Martin Schwidefsky <schwidefsky@de.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 201/346] s390: cio: fix cio_irb declaration
-Date:   Wed, 29 May 2019 20:04:34 -0700
-Message-Id: <20190530030551.386002744@linuxfoundation.org>
+Subject: [PATCH 5.0 200/346] s390/mm: silence compiler warning when compiling without CONFIG_PGSTE
+Date:   Wed, 29 May 2019 20:04:33 -0700
+Message-Id: <20190530030551.350818430@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -62,59 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e91012ee855ad9f5ef2ab106a3de51db93fe4d0c ]
+[ Upstream commit 81a8f2beb32a5951ecf04385301f50879abc092b ]
 
-clang points out that the declaration of cio_irb does not match the
-definition exactly, it is missing the alignment attribute:
+If CONFIG_PGSTE is not set (e.g. when compiling without KVM), GCC complains:
 
-../drivers/s390/cio/cio.c:50:1: warning: section does not match previous declaration [-Wsection]
-DEFINE_PER_CPU_ALIGNED(struct irb, cio_irb);
-^
-../include/linux/percpu-defs.h:150:2: note: expanded from macro 'DEFINE_PER_CPU_ALIGNED'
-        DEFINE_PER_CPU_SECTION(type, name, PER_CPU_ALIGNED_SECTION)     \
-        ^
-../include/linux/percpu-defs.h:93:9: note: expanded from macro 'DEFINE_PER_CPU_SECTION'
-        extern __PCPU_ATTRS(sec) __typeof__(type) name;                 \
-               ^
-../include/linux/percpu-defs.h:49:26: note: expanded from macro '__PCPU_ATTRS'
-        __percpu __attribute__((section(PER_CPU_BASE_SECTION sec)))     \
-                                ^
-../drivers/s390/cio/cio.h:118:1: note: previous attribute is here
-DECLARE_PER_CPU(struct irb, cio_irb);
-^
-../include/linux/percpu-defs.h:111:2: note: expanded from macro 'DECLARE_PER_CPU'
-        DECLARE_PER_CPU_SECTION(type, name, "")
-        ^
-../include/linux/percpu-defs.h:87:9: note: expanded from macro 'DECLARE_PER_CPU_SECTION'
-        extern __PCPU_ATTRS(sec) __typeof__(type) name
-               ^
-../include/linux/percpu-defs.h:49:26: note: expanded from macro '__PCPU_ATTRS'
-        __percpu __attribute__((section(PER_CPU_BASE_SECTION sec)))     \
-                                ^
-Use DECLARE_PER_CPU_ALIGNED() here, to make the two match.
+  CC      arch/s390/mm/pgtable.o
+arch/s390/mm/pgtable.c:413:15: warning: ‘pmd_alloc_map’ defined but not
+ used [-Wunused-function]
+ static pmd_t *pmd_alloc_map(struct mm_struct *mm, unsigned long addr)
+               ^~~~~~~~~~~~~
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Sebastian Ott <sebott@linux.ibm.com>
+Wrap the function with "#ifdef CONFIG_PGSTE" to silence the warning.
+
+Signed-off-by: Thomas Huth <thuth@redhat.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
 Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/cio/cio.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/s390/mm/pgtable.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/s390/cio/cio.h b/drivers/s390/cio/cio.h
-index 9811fd8a0c731..92eabbb5f18d4 100644
---- a/drivers/s390/cio/cio.h
-+++ b/drivers/s390/cio/cio.h
-@@ -115,7 +115,7 @@ struct subchannel {
- 	struct schib_config config;
- } __attribute__ ((aligned(8)));
+diff --git a/arch/s390/mm/pgtable.c b/arch/s390/mm/pgtable.c
+index f2cc7da473e4e..ae894ac83fd61 100644
+--- a/arch/s390/mm/pgtable.c
++++ b/arch/s390/mm/pgtable.c
+@@ -410,6 +410,7 @@ static inline pmd_t pmdp_flush_lazy(struct mm_struct *mm,
+ 	return old;
+ }
  
--DECLARE_PER_CPU(struct irb, cio_irb);
-+DECLARE_PER_CPU_ALIGNED(struct irb, cio_irb);
++#ifdef CONFIG_PGSTE
+ static pmd_t *pmd_alloc_map(struct mm_struct *mm, unsigned long addr)
+ {
+ 	pgd_t *pgd;
+@@ -427,6 +428,7 @@ static pmd_t *pmd_alloc_map(struct mm_struct *mm, unsigned long addr)
+ 	pmd = pmd_alloc(mm, pud, addr);
+ 	return pmd;
+ }
++#endif
  
- #define to_subchannel(n) container_of(n, struct subchannel, dev)
- 
+ pmd_t pmdp_xchg_direct(struct mm_struct *mm, unsigned long addr,
+ 		       pmd_t *pmdp, pmd_t new)
 -- 
 2.20.1
 
