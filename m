@@ -2,73 +2,151 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D960C28CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF86C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6780325C3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:06:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B451825C43
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:07:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727678AbfE3PGv (ORCPT
+        id S1726807AbfE3PH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 11:06:51 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:38830 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725440AbfE3PGv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 11:06:51 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hWMdi-0007tD-O5; Thu, 30 May 2019 23:06:46 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hWMde-0004DR-DL; Thu, 30 May 2019 23:06:42 +0800
-Date:   Thu, 30 May 2019 23:06:42 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH] crypto: gcm - fix cacheline sharing
-Message-ID: <20190530150642.fswcxt6m2y4pnjon@gondor.apana.org.au>
-References: <VI1PR04MB44459EEF7BCD3458BB3D143D8C180@VI1PR04MB4445.eurprd04.prod.outlook.com>
- <20190530133427.qrwjzctac2x6nsby@gondor.apana.org.au>
- <VI1PR04MB444562A2352FE4BAD7F681258C180@VI1PR04MB4445.eurprd04.prod.outlook.com>
- <CAKv+Gu-jTWQP0Zp=QpuzX41v8Eb5Bvd0O9ajwSnFkDO-ijBf_A@mail.gmail.com>
- <CAKv+Gu9JoC+GKJ6mMAE25mr_k2gbznh-83jApT4=FZsAW=jd8w@mail.gmail.com>
- <20190530142734.qlhgzeal22zxfhk5@gondor.apana.org.au>
- <CAKv+Gu8jJQCZwiHFORUJUzRaAizWzBQ95EAgYe36sFrcvzb6vg@mail.gmail.com>
- <CAKv+Gu-KBgiyNY2Dypx6vqtmpTXNfOxxWxJf50BTiF2rCOFqnw@mail.gmail.com>
- <20190530143438.d62y3woaogyivqpm@gondor.apana.org.au>
- <CAKv+Gu87wkLkZZLfsJwc02yuKpDx7Sa=Nx+1YW8pPE4DoWXGRw@mail.gmail.com>
+        Thu, 30 May 2019 11:07:56 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:38124 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725440AbfE3PHz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 11:07:55 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 31A7D341;
+        Thu, 30 May 2019 08:07:55 -0700 (PDT)
+Received: from redmoon (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F1AD23F59C;
+        Thu, 30 May 2019 08:07:53 -0700 (PDT)
+Date:   Thu, 30 May 2019 16:07:51 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Ley Foon Tan <lftan.linux@gmail.com>
+Cc:     Ley Foon Tan <ley.foon.tan@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org,
+        linux-pci <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH] PCI: altera: Allow building as module
+Message-ID: <20190530150751.GB13993@redmoon>
+References: <1556081835-12921-1-git-send-email-ley.foon.tan@intel.com>
+ <CAFiDJ5-4vquVtrqpjgk8D6yhng3RFHN6dF4Kh_PGYe_doZtvqw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKv+Gu87wkLkZZLfsJwc02yuKpDx7Sa=Nx+1YW8pPE4DoWXGRw@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <CAFiDJ5-4vquVtrqpjgk8D6yhng3RFHN6dF4Kh_PGYe_doZtvqw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 05:04:51PM +0200, Ard Biesheuvel wrote:
->
-> But given your remark regarding CBC being the only algo that has this
-> requirement, I wonder if this might be sufficient as well.
+On Tue, May 14, 2019 at 01:35:05PM +0800, Ley Foon Tan wrote:
+> On Wed, Apr 24, 2019 at 12:57 PM Ley Foon Tan <ley.foon.tan@intel.com> wrote:
+> >
+> > Altera PCIe Rootport IP is a soft IP and is only available after
+> > FPGA image is programmed.
+> >
+> > Make driver modulable to support use case FPGA image is programmed
+> > after kernel is booted. User proram FPGA image in kernel then only load
+> > PCIe driver module.
+> >
+> > Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
+> > ---
+> >  drivers/pci/controller/Kconfig       |  2 +-
+> >  drivers/pci/controller/pcie-altera.c | 28 ++++++++++++++++++++++++++--
+> >  2 files changed, 27 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> > index 6012f3059acd..4b550f9cdd56 100644
+> > --- a/drivers/pci/controller/Kconfig
+> > +++ b/drivers/pci/controller/Kconfig
+> > @@ -174,7 +174,7 @@ config PCIE_IPROC_MSI
+> >           PCIe controller
+> >
+> >  config PCIE_ALTERA
+> > -       bool "Altera PCIe controller"
+> > +       tristate "Altera PCIe controller"
+> >         depends on ARM || NIOS2 || ARM64 || COMPILE_TEST
+> >         help
+> >           Say Y here if you want to enable PCIe controller support on Altera
+> > diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
+> > index 27edcebd1726..6c86bc69ace8 100644
+> > --- a/drivers/pci/controller/pcie-altera.c
+> > +++ b/drivers/pci/controller/pcie-altera.c
+> > @@ -10,6 +10,7 @@
+> >  #include <linux/interrupt.h>
+> >  #include <linux/irqchip/chained_irq.h>
+> >  #include <linux/init.h>
+> > +#include <linux/module.h>
+> >  #include <linux/of_address.h>
+> >  #include <linux/of_device.h>
+> >  #include <linux/of_irq.h>
+> > @@ -705,6 +706,13 @@ static int altera_pcie_init_irq_domain(struct altera_pcie *pcie)
+> >         return 0;
+> >  }
+> >
+> > +static int altera_pcie_irq_teardown(struct altera_pcie *pcie)
+> > +{
+> > +       irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
+> > +       irq_domain_remove(pcie->irq_domain);
+> > +       irq_dispose_mapping(pcie->irq);
+> > +}
+> > +
+> >  static int altera_pcie_parse_dt(struct altera_pcie *pcie)
+> >  {
+> >         struct device *dev = &pcie->pdev->dev;
+> > @@ -798,6 +806,7 @@ static int altera_pcie_probe(struct platform_device *pdev)
+> >
+> >         pcie = pci_host_bridge_priv(bridge);
+> >         pcie->pdev = pdev;
+> > +       platform_set_drvdata(pdev, pcie);
+> >
+> >         match = of_match_device(altera_pcie_of_match, &pdev->dev);
+> >         if (!match)
+> > @@ -855,13 +864,28 @@ static int altera_pcie_probe(struct platform_device *pdev)
+> >         return ret;
+> >  }
+> >
+> > +static int altera_pcie_remove(struct platform_device *pdev)
+> > +{
+> > +       struct altera_pcie *pcie = platform_get_drvdata(pdev);
+> > +       struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
+> > +
+> > +       pci_stop_root_bus(bridge->bus);
+> > +       pci_remove_root_bus(bridge->bus);
+> > +       pci_free_resource_list(&pcie->resources);
+> > +       altera_pcie_irq_teardown(pcie);
+> > +
+> > +       return 0;
+> > +}
+> > +
+> >  static struct platform_driver altera_pcie_driver = {
+> >         .probe          = altera_pcie_probe,
+> > +       .remove         = altera_pcie_remove,
+> >         .driver = {
+> >                 .name   = "altera-pcie",
+> >                 .of_match_table = altera_pcie_of_match,
+> > -               .suppress_bind_attrs = true,
+> >         },
+> >  };
+> >
+> > -builtin_platform_driver(altera_pcie_driver);
+> > +MODULE_DEVICE_TABLE(of, altera_pcie_of_match);
+> > +module_platform_driver(altera_pcie_driver);
+> > +MODULE_LICENSE("GPL v2");
+> > --
+> > 2.19.0
+> >
+> Hi
+> 
+> Any comment for this patch?
 
-It's not that CBC is the only one with the requirement.  It's just
-that this is the wrong output IV for CTR.
+Applied to pci/altera for v5.3, thanks.
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Lorenzo
