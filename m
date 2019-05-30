@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C23C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C76CCC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 473D725219
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0C4825227
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:14:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189689;
-	bh=g7xRx7wbkWXxzsmEexPdZrCdeFMYV6Mspchdbw0hIvI=;
+	s=default; t=1559189698;
+	bh=IMvOMrwfmvlEvp9BbnZTOcWW0xU9lq/DlMKMHRjOHos=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eUNRaYvTHCtK/ULMCnCAJpy0bbjPZB3puB7R1ZsfldZmRIrTiTMJ4quwL/A0OSt5O
-	 A6soXUAA0g9HKZuBJilJLFfyYcky+ay6toivIBWav2c6efE0Xwo2gkGVezKQD7ZLNa
-	 V/xhdKnKjURWSDMR+0EtG6y2QiiHWqoPG3gL5osk=
+	b=oZkS5Hwg97/6Saf7hKyc66x6tRC473SfvO/a+qL+zTZnGa3/ET/+N3bMYDXm96g+L
+	 62/H5FXK5euqsXzy6aA3eWKejcQo079l9CZ65vhu4hks5kC8E+Tuoh5bwFG2Yw8ytl
+	 ChN16QnGCe/8EISLogRhE3GLhvrXGksqQTbepp2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731035AbfE3EOs (ORCPT
+        id S1731056AbfE3EO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:14:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41472 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:14:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730603AbfE3DQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:09 -0400
+        id S1730588AbfE3DQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:16:06 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E95342458C;
-        Thu, 30 May 2019 03:16:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F15C82458A;
+        Thu, 30 May 2019 03:16:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186169;
-        bh=g7xRx7wbkWXxzsmEexPdZrCdeFMYV6Mspchdbw0hIvI=;
+        s=default; t=1559186166;
+        bh=IMvOMrwfmvlEvp9BbnZTOcWW0xU9lq/DlMKMHRjOHos=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YYvTiJiT8+Ees7CUAwnaeq5i+sfWybzfrzMFkb4B8lB4fgcW8icuxy35zPzjiw364
-         vhVFkZV5Ej+PQ4yX+t+iNwKVpqQCUIXeK2CNuVVSaxa+y916OKaS38nXt15JvbcGVB
-         Q0hmSKiMPu3/Vm/yu1nfZiM8/8yWSsOOs1cAS4nY=
+        b=eQC4kKmgllhC5LnVhEhoD0Px4lST3TH1EpstctPUnFrIlL+7UsGtovUmPNiCUk0ij
+         XzY8Fpl9qksqHynf2pJEEaVqeo5gESof/yBEteFRuB5YOo2mRlytTlkzRxEMiGBBGX
+         5UTyMTMqdx4OaTrlIZ72kW2rLB1C6BcYimMPUmBc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Tobin C. Harding" <tobin@kernel.org>,
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Anand Jain <anand.jain@oracle.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 022/276] btrfs: sysfs: dont leak memory when failing add fsid
-Date:   Wed, 29 May 2019 20:03:00 -0700
-Message-Id: <20190530030525.532621039@linuxfoundation.org>
+Subject: [PATCH 4.19 018/276] Btrfs: do not abort transaction at btrfs_update_root() after failure to COW path
+Date:   Wed, 29 May 2019 20:02:56 -0700
+Message-Id: <20190530030525.139495426@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -59,53 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tobin C. Harding <tobin@kernel.org>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit e32773357d5cc271b1d23550b3ed026eb5c2a468 upstream.
+commit 72bd2323ec87722c115a5906bc6a1b31d11e8f54 upstream.
 
-A failed call to kobject_init_and_add() must be followed by a call to
-kobject_put().  Currently in the error path when adding fs_devices we
-are missing this call.  This could be fixed by calling
-btrfs_sysfs_remove_fsid() if btrfs_sysfs_add_fsid() returns an error or
-by adding a call to kobject_put() directly in btrfs_sysfs_add_fsid().
-Here we choose the second option because it prevents the slightly
-unusual error path handling requirements of kobject from leaking out
-into btrfs functions.
+Currently when we fail to COW a path at btrfs_update_root() we end up
+always aborting the transaction. However all the current callers of
+btrfs_update_root() are able to deal with errors returned from it, many do
+end up aborting the transaction themselves (directly or not, such as the
+transaction commit path), other BUG_ON() or just gracefully cancel whatever
+they were doing.
 
-Add a call to kobject_put() in the error path of kobject_add_and_init().
-This causes the release method to be called if kobject_init_and_add()
-fails.  open_tree() is the function that calls btrfs_sysfs_add_fsid()
-and the error code in this function is already written with the
-assumption that the release method is called during the error path of
-open_tree() (as seen by the call to btrfs_sysfs_remove_fsid() under the
-fail_fsdev_sysfs label).
+When syncing the fsync log, we call btrfs_update_root() through
+tree-log.c:update_log_root(), and if it returns an -ENOSPC error, the log
+sync code does not abort the transaction, instead it gracefully handles
+the error and returns -EAGAIN to the fsync handler, so that it falls back
+to a transaction commit. Any other error different from -ENOSPC, makes the
+log sync code abort the transaction.
 
-Cc: stable@vger.kernel.org # v4.4+
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-Reviewed-by: David Sterba <dsterba@suse.com>
+So remove the transaction abort from btrfs_update_log() when we fail to
+COW a path to update the root item, so that if an -ENOSPC failure happens
+we avoid aborting the current transaction and have a chance of the fsync
+succeeding after falling back to a transaction commit.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203413
+Fixes: 79787eaab46121 ("btrfs: replace many BUG_ONs with proper error handling")
+Cc: stable@vger.kernel.org # 4.4+
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: Anand Jain <anand.jain@oracle.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/sysfs.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ fs/btrfs/root-tree.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/fs/btrfs/sysfs.c
-+++ b/fs/btrfs/sysfs.c
-@@ -811,7 +811,12 @@ int btrfs_sysfs_add_fsid(struct btrfs_fs
- 	fs_devs->fsid_kobj.kset = btrfs_kset;
- 	error = kobject_init_and_add(&fs_devs->fsid_kobj,
- 				&btrfs_ktype, parent, "%pU", fs_devs->fsid);
--	return error;
-+	if (error) {
-+		kobject_put(&fs_devs->fsid_kobj);
-+		return error;
-+	}
-+
-+	return 0;
- }
+--- a/fs/btrfs/root-tree.c
++++ b/fs/btrfs/root-tree.c
+@@ -132,10 +132,8 @@ int btrfs_update_root(struct btrfs_trans
+ 		return -ENOMEM;
  
- int btrfs_sysfs_add_mounted(struct btrfs_fs_info *fs_info)
+ 	ret = btrfs_search_slot(trans, root, key, path, 0, 1);
+-	if (ret < 0) {
+-		btrfs_abort_transaction(trans, ret);
++	if (ret < 0)
+ 		goto out;
+-	}
+ 
+ 	if (ret != 0) {
+ 		btrfs_print_leaf(path->nodes[0]);
 
 
