@@ -2,87 +2,89 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9AEC46460
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE54BC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64A9925BC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:54:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 927B125BCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:54:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727330AbfE3Oyi (ORCPT
+        id S1727374AbfE3Oyl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 10:54:38 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:37898 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725934AbfE3Oyi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 10:54:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E4E37341;
-        Thu, 30 May 2019 07:54:37 -0700 (PDT)
-Received: from redmoon (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D51E43F59C;
-        Thu, 30 May 2019 07:54:36 -0700 (PDT)
-Date:   Thu, 30 May 2019 15:54:31 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Ley Foon Tan <lftan.linux@gmail.com>
-Cc:     Ley Foon Tan <ley.foon.tan@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, linux-pci <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH] PCI: altera: Fix no return warning for
- altera_pcie_irq_teardown()
-Message-ID: <20190530145411.GA13993@redmoon>
-References: <1558664151-2584-1-git-send-email-ley.foon.tan@intel.com>
- <CAFiDJ5_HCeY0hf8W-HiEMLFWgjYNspXuH9dBV1kKY-YEvMLAeA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFiDJ5_HCeY0hf8W-HiEMLFWgjYNspXuH9dBV1kKY-YEvMLAeA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Thu, 30 May 2019 10:54:41 -0400
+Received: from mga01.intel.com ([192.55.52.88]:62323 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725934AbfE3Oyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 10:54:41 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 07:54:40 -0700
+X-ExtLoop1: 1
+Received: from otc-lr-04.jf.intel.com ([10.54.39.157])
+  by orsmga006.jf.intel.com with ESMTP; 30 May 2019 07:54:40 -0700
+From:   kan.liang@linux.intel.com
+To:     acme@kernel.org, jolsa@kernel.org, mingo@redhat.com,
+        linux-kernel@vger.kernel.org
+Cc:     peterz@infradead.org, ak@linux.intel.com,
+        Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH V2 1/5] perf cpumap: Retrieve die id information
+Date:   Thu, 30 May 2019 07:53:45 -0700
+Message-Id: <1559228029-5876-1-git-send-email-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 10:17:28AM +0800, Ley Foon Tan wrote:
-> On Fri, May 24, 2019 at 10:15 AM Ley Foon Tan <ley.foon.tan@intel.com> wrote:
-> >
-> > Fix compilation warning caused by patch "PCI: altera: Allow building as module".
-> >
-> > drivers/pci/controller/pcie-altera.c: In function ‘altera_pcie_irq_teardown’:
-> > drivers/pci/controller/pcie-altera.c:723:1: warning: no return statement in function returning non-void [-Wreturn-type]
-> >  }
-> >
-> > Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
-> > ---
-> >  drivers/pci/controller/pcie-altera.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
-> > index 6c86bc69ace8..27222071ace7 100644
-> > --- a/drivers/pci/controller/pcie-altera.c
-> > +++ b/drivers/pci/controller/pcie-altera.c
-> > @@ -706,7 +706,7 @@ static int altera_pcie_init_irq_domain(struct altera_pcie *pcie)
-> >         return 0;
-> >  }
-> >
-> > -static int altera_pcie_irq_teardown(struct altera_pcie *pcie)
-> > +static void altera_pcie_irq_teardown(struct altera_pcie *pcie)
-> >  {
-> >         irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
-> >         irq_domain_remove(pcie->irq_domain);
-> > --
-> > 2.19.0
-> >
-> Hi
-> 
-> You can squash this patch to this https://lkml.org/lkml/2019/4/24/18
-> "PCI: altera: Allow building as module" if want.
+From: Kan Liang <kan.liang@linux.intel.com>
 
-Done, thanks.
+There is no function to retrieve die id information of a given CPU.
 
-Lorenzo
+Add cpu_map__get_die_id() to retrieve die id information.
+
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
+
+New patch for V2.
+
+ tools/perf/util/cpumap.c | 7 +++++++
+ tools/perf/util/cpumap.h | 1 +
+ 2 files changed, 8 insertions(+)
+
+diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+index 0b59922..7db1365 100644
+--- a/tools/perf/util/cpumap.c
++++ b/tools/perf/util/cpumap.c
+@@ -373,6 +373,13 @@ int cpu_map__build_map(struct cpu_map *cpus, struct cpu_map **res,
+ 	return 0;
+ }
+ 
++int cpu_map__get_die_id(int cpu)
++{
++	int value, ret = cpu__get_topology_int(cpu, "die_id", &value);
++
++	return ret ?: value;
++}
++
+ int cpu_map__get_core_id(int cpu)
+ {
+ 	int value, ret = cpu__get_topology_int(cpu, "core_id", &value);
+diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
+index f00ce62..6762ff9 100644
+--- a/tools/perf/util/cpumap.h
++++ b/tools/perf/util/cpumap.h
+@@ -25,6 +25,7 @@ size_t cpu_map__snprint_mask(struct cpu_map *map, char *buf, size_t size);
+ size_t cpu_map__fprintf(struct cpu_map *map, FILE *fp);
+ int cpu_map__get_socket_id(int cpu);
+ int cpu_map__get_socket(struct cpu_map *map, int idx, void *data);
++int cpu_map__get_die_id(int cpu);
+ int cpu_map__get_core_id(int cpu);
+ int cpu_map__get_core(struct cpu_map *map, int idx, void *data);
+ int cpu_map__build_socket_map(struct cpu_map *cpus, struct cpu_map **sockp);
+-- 
+2.7.4
+
