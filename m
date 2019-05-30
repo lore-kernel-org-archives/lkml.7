@@ -7,48 +7,52 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36358C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 736B9C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D82B24A93
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49DE824A94
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186814;
-	bh=Nmf83k/tJU31KQN/PoLuiZHPJEcaxrZfzZ6Fw9uzICY=;
+	s=default; t=1559186818;
+	bh=Tl5/7jqDJfLV6WJFej4cv+HQKoDaH2ceYmadyWG+yuw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x+wSme97ZmbmA+GBVOH38WKuZHN7G07ISYp+3pgQe+83Yqq8N/uZNdHXNNbBtWlNg
-	 9i18VrwE3/vsoami3kx4kQqyU7K9wgA6xCcvF73pjCmXIGkVIUNWc3cDA/mf3uwEtC
-	 HveODxOZTIQkTBDYKVNlc8MM+ShT5pvZtxan4ntQ=
+	b=aW/J/VqZpKL/C12oa8cb4ieSay9EwGiS5DGgChiMNc6SZbPpoXGGtoE0P4R6dQGZJ
+	 YNbRgXDQcDDHbjZq1n6eaywMcJh4s4PWojnb0vis4EaMrg8EKLg5r9nqC8yx5N9/z9
+	 VZlL1vcEVz2PyZ3GqIBU+8GI2xKs7TWrW9PUHTkU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387781AbfE3D0x (ORCPT
+        id S2387796AbfE3D05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:26:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53532 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:26:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730383AbfE3DTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:02 -0400
+        id S1731810AbfE3DTJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:09 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D46B024725;
-        Thu, 30 May 2019 03:19:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BFA92483C;
+        Thu, 30 May 2019 03:19:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186341;
-        bh=Nmf83k/tJU31KQN/PoLuiZHPJEcaxrZfzZ6Fw9uzICY=;
+        s=default; t=1559186348;
+        bh=Tl5/7jqDJfLV6WJFej4cv+HQKoDaH2ceYmadyWG+yuw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rqZldkN1xDSTt7kBBl4gei4A4VUwXG7wD6ZaDCnvC3mN3QCTgUWAIsscbyjpM51y9
-         B0lHKRUFp5TvYb2WmogdR1+L24oTPky2278q0BJ91+QmQe6NKJdEkVTDWsAlmPpVzj
-         sRnwYrrsXdshIy0qBVp7vffC1C67p7BArH4MRi+0=
+        b=c9FWP9focdmaFDztFzptxDm3O7EhKBGLmMJqONzdNZjpCEtfOHLsX/WzB5hq61Ht/
+         ICi1O2mAsYbkNkDwwh44YB4zi3mE4jVyhR6OrMziJY9rZp7xDqSZlnL/KX4p/tkXp8
+         y4L97hLiubGyA0rOOlb3Y8i4Y4jJ4z3IOUqYQE1c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Daniel T. Lee" <danieltimlee@gmail.com>,
-        Yonghong Song <yhs@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 068/193] libbpf: fix samples/bpf build failure due to undefined UINT32_MAX
-Date:   Wed, 29 May 2019 20:05:22 -0700
-Message-Id: <20190530030458.820580739@linuxfoundation.org>
+Subject: [PATCH 4.14 085/193] pinctrl: samsung: fix leaked of_node references
+Date:   Wed, 29 May 2019 20:05:39 -0700
+Message-Id: <20190530030500.804526252@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -61,61 +65,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 32e621e55496a0009f44fe4914cd4a23cade4984 ]
+[ Upstream commit 44b9f86cd41db6c522effa5aec251d664a52fbc0 ]
 
-Currently, building bpf samples will cause the following error.
+The call to of_find_compatible_node returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-    ./tools/lib/bpf/bpf.h:132:27: error: 'UINT32_MAX' undeclared here (not in a function) ..
-     #define BPF_LOG_BUF_SIZE (UINT32_MAX >> 8) /* verifier maximum in kernels <= 5.1 */
-                               ^
-    ./samples/bpf/bpf_load.h:31:25: note: in expansion of macro 'BPF_LOG_BUF_SIZE'
-     extern char bpf_log_buf[BPF_LOG_BUF_SIZE];
-                             ^~~~~~~~~~~~~~~~
+Detected by coccinelle with the following warnings:
+./drivers/pinctrl/samsung/pinctrl-exynos-arm.c:76:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 66, but without a corresponding object release within this function.
+./drivers/pinctrl/samsung/pinctrl-exynos-arm.c:82:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 66, but without a corresponding object release within this function.
 
-Due to commit 4519efa6f8ea ("libbpf: fix BPF_LOG_BUF_SIZE off-by-one error")
-hard-coded size of BPF_LOG_BUF_SIZE has been replaced with UINT32_MAX which is
-defined in <stdint.h> header.
-
-Even with this change, bpf selftests are running fine since these are built
-with clang and it includes header(-idirafter) from clang/6.0.0/include.
-(it has <stdint.h>)
-
-    clang -I. -I./include/uapi -I../../../include/uapi -idirafter /usr/local/include -idirafter /usr/include \
-    -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.0/include -idirafter /usr/include/x86_64-linux-gnu \
-    -Wno-compare-distinct-pointer-types -O2 -target bpf -emit-llvm -c progs/test_sysctl_prog.c -o - | \
-    llc -march=bpf -mcpu=generic  -filetype=obj -o /linux/tools/testing/selftests/bpf/test_sysctl_prog.o
-
-But bpf samples are compiled with GCC, and it only searches and includes
-headers declared at the target file. As '#include <stdint.h>' hasn't been
-declared in tools/lib/bpf/bpf.h, it causes build failure of bpf samples.
-
-    gcc -Wp,-MD,./samples/bpf/.sockex3_user.o.d -Wall -Wmissing-prototypes -Wstrict-prototypes \
-    -O2 -fomit-frame-pointer -std=gnu89 -I./usr/include -I./tools/lib/ -I./tools/testing/selftests/bpf/ \
-    -I./tools/  lib/ -I./tools/include -I./tools/perf -c -o ./samples/bpf/sockex3_user.o ./samples/bpf/sockex3_user.c;
-
-This commit add declaration of '#include <stdint.h>' to tools/lib/bpf/bpf.h
-to fix this problem.
-
-Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
-Acked-by: Yonghong Song <yhs@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Kukjin Kim <kgene@kernel.org>
+Cc: linux-samsung-soc@vger.kernel.org
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/bpf.h | 1 +
+ drivers/pinctrl/samsung/pinctrl-exynos-arm.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/tools/lib/bpf/bpf.h b/tools/lib/bpf/bpf.h
-index b8ea5843c39ee..e9423d6af9332 100644
---- a/tools/lib/bpf/bpf.h
-+++ b/tools/lib/bpf/bpf.h
-@@ -23,6 +23,7 @@
+diff --git a/drivers/pinctrl/samsung/pinctrl-exynos-arm.c b/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
+index afeb4876ffb2c..07eb4f071fa87 100644
+--- a/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
++++ b/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
+@@ -76,6 +76,7 @@ s5pv210_retention_init(struct samsung_pinctrl_drv_data *drvdata,
+ 	}
  
- #include <linux/bpf.h>
- #include <stddef.h>
-+#include <stdint.h>
- 
- int bpf_create_map_node(enum bpf_map_type map_type, int key_size,
- 			int value_size, int max_entries, __u32 map_flags,
+ 	clk_base = of_iomap(np, 0);
++	of_node_put(np);
+ 	if (!clk_base) {
+ 		pr_err("%s: failed to map clock registers\n", __func__);
+ 		return ERR_PTR(-EINVAL);
 -- 
 2.20.1
 
