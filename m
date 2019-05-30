@@ -2,122 +2,112 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FAE5C28CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13413C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 494CD254E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:28:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QtLbf2Hm"
+	by mail.kernel.org (Postfix) with ESMTP id D33F3254EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:29:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559208568;
+	bh=z37S3eU6mARunEgZS89SCwtxniogx+stPp5qD9PNZqE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=FeMhPFT6Xx2uPW/0Eigyhafhsc9CjgRVxcIauRtILh/YhIGSV42KOr3vzFCxhj+nS
+	 Thx3wVIseNTDD4KY36bvXQEtKwhBOHPKvVhIICrqqC2R0KTwAWsHqKPMy8DlxL/tSA
+	 u75cJ2Qsqr/e9r5jMIS7v1W6AIlVsjR73sN8JADU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727428AbfE3J2B (ORCPT
+        id S1727388AbfE3J31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 05:28:01 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38462 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726382AbfE3J2B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 05:28:01 -0400
-Received: by mail-wr1-f66.google.com with SMTP id d18so3705997wrs.5;
-        Thu, 30 May 2019 02:28:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=V9uS1keBW3VpEfdw8YbBt35z4e82IzpdzTkrruky1E8=;
-        b=QtLbf2HmeJA14Jf1AcY7WgDdWbr0B/C84z9/ERtg1Ea1H9PTS7kqNhnGKZY+dPDjPC
-         KbeOi8QpjT2t0+jlvl05Jq58LCsRl6NXwYmKRMqm8AAsQqi/VENdBGl0EZJ2mpl1nHRR
-         QibgPIATXT/RCX7UeeCr5m7mPYg+ih/oV9mwM1UXYkokeIoQCqhLRSlhCDQ87MxU4r6v
-         HtRYiITzXvN1mLjGpneqU5cAIEVRoxDLlvtFFHlIY0iDXjG3QP00tVAKZUf93GH+HQ5n
-         iOKumKG/s83Lb1HPwNeapI2hCHj1xk/HotATLvhC7rJbvJTD/ajL9rfERTfhO0OPqSsr
-         m8ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=V9uS1keBW3VpEfdw8YbBt35z4e82IzpdzTkrruky1E8=;
-        b=VAuPRknRfwLoPuavE7DF9XI97OhYOa0Ep41HUoOkO5NeddUyBVw/SQRZmps0lBzP7d
-         P/LdzhUE1+aXHyV1b1vpJJwiS6kuJ6VdqklsWmQ1/POxM/9u28NbzkuSMu6gBMev6jT0
-         M+b+LZVM6XJJuy648f/AWNKy5Xwg/Cd2Co4nLJJteXxK34Nth7IIee2H4OsLXuLYFiF/
-         srPEwA55/7xlJ3goDQtSSn6vwfxAMw8bbsjctNCzXlIX6aMGhFkxBuj3eIUlKVZ1WtfC
-         BYd81E7zKRdhgAI6SI35bR89aaA/Ke2kmyM0Oup69zL8BR6g2bpttXAa98cNNXVw61AW
-         yf7A==
-X-Gm-Message-State: APjAAAUipeuswXVT2C6y3XyKHNr0IjTO+P/4fVahDO7W0XoRkAH6Mp4g
-        oMat//FNHXi5LckzBQxNn24=
-X-Google-Smtp-Source: APXvYqwAYe7240hTlEiIsSSbTkHNnMmocCkj0k5gjshu065TwpUUnlDOU/rPhN+bZXP3GcvjnesCAQ==
-X-Received: by 2002:adf:fd09:: with SMTP id e9mr1920656wrr.292.1559208479457;
-        Thu, 30 May 2019 02:27:59 -0700 (PDT)
-Received: from localhost.localdomain ([109.126.142.5])
-        by smtp.gmail.com with ESMTPSA id u25sm147605wmc.3.2019.05.30.02.27.57
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 30 May 2019 02:27:58 -0700 (PDT)
-From:   "Pavel Begunkov (Silence)" <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     osandov@fb.com, ming.lei@redhat.com, Hou Tao <houtao1@huawei.com>,
-        Pavel Begunkov <asml.silence@gmail.com>
-Subject: [PATCH v2 1/1] blk-mq: Fix disabled hybrid polling
-Date:   Thu, 30 May 2019 12:27:08 +0300
-Message-Id: <71c31759a882e00f156a8434caed7064ec93d3da.1559208134.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 30 May 2019 05:29:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47450 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726382AbfE3J31 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 05:29:27 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0A1E254E4;
+        Thu, 30 May 2019 09:29:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559208566;
+        bh=z37S3eU6mARunEgZS89SCwtxniogx+stPp5qD9PNZqE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=eEBOUttdGJAUhwxn0K17880pmCNDabd+w+xw+79EmPq4gdBBKgT3VQugK1GbcpMuo
+         /6hIMVmb/b3MoQU+dSKbdGMMAhawH/bdR39kE9SLeqwrDU+mvUZEGmHbYADwcO/nTE
+         RirDcdU/Czk/hkW5300xiOrNglDDkJe0Y0K3bisQ=
+Date:   Thu, 30 May 2019 18:29:20 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "Frank Ch. Eigler" <fche@redhat.com>
+Subject: Re: [RFC][PATCH 00/14 v2] function_graph: Rewrite to allow multiple
+ users
+Message-Id: <20190530182920.d8ef9f3c09ba0ae1beaa605a@kernel.org>
+In-Reply-To: <20190529052521.6623ae7b@oasis.local.home>
+References: <20190520142001.270067280@goodmis.org>
+        <20190522231955.72899b0d606adb919e8716ff@kernel.org>
+        <20190522104027.1b2aabd8@gandalf.local.home>
+        <20190529154740.016517ff9225680f64961097@kernel.org>
+        <20190529052521.6623ae7b@oasis.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Begunkov <asml.silence@gmail.com>
+On Wed, 29 May 2019 05:25:21 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Commit 4bc6339a583cec650b05 ("block: move blk_stat_add() to
-__blk_mq_end_request()") moved blk_stat_add() to reuse ktime_get_ns(),
-so now it's called after blk_update_request(), which zeroes
-rq->__data_len. Without length, blk_stat_add() can't calculate stat
-bucket and returns error, effectively disabling hybrid polling.
+> On Wed, 29 May 2019 15:47:40 +0900
+> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> 
+> 
+> > Hi Steve,
+> > 
+> > I found that these interfaces seem tightly coupled with fgraph_ops. But that
+> > cause a problem when I'm using it from kretprobe.
+> 
+> I was thinking that the kretprobes could use the fgraph_ops like
+> kprobes uses ftrace_ops.
+> 
+> > 
+> > kretprobe has 2 handlers, entry handler and return handler, and both need
+> > pt_regs. But fgraph_ops's entryfunc and retfunc do not pass the pt_regs.
+> > That is the biggest issue for me on these APIs.
+> > Can we expand fgraph_ops with regs parameter?
+> 
+> Ug. Yeah, of course you need that :-/
+> 
+> OK, so this series isn't enough to allow kretprobes to use it yet. OK,
+> I plan on still keeping it because it does allow for placing function
+> graph tracer into instances with their own filters.
 
-v2: Hybrid polling needs pure io time for precision, but according to
-the feedback from Omar Sandoval other components require end-to-end
-time. So, it can't be reused, and should be sampled twice insted.
+OK, that will be a "regs" extension.
+> 
+> I'll look into adding a REGS flag like we do with ftrace_ops.
+> 
+> Does the return need all regs? Or is just the return code good enough?
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- block/blk-mq.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Since it depends on arch, I think all regs we need. And for the entry
+handler, we need all.
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 32b8ad3d341b..907799282d57 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -537,11 +537,6 @@ inline void __blk_mq_end_request(struct request *rq, blk_status_t error)
- 	if (blk_mq_need_time_stamp(rq))
- 		now = ktime_get_ns();
- 
--	if (rq->rq_flags & RQF_STATS) {
--		blk_mq_poll_stats_start(rq->q);
--		blk_stat_add(rq, now);
--	}
--
- 	if (rq->internal_tag != -1)
- 		blk_mq_sched_completed_request(rq, now);
- 
-@@ -580,6 +575,11 @@ static void __blk_mq_complete_request(struct request *rq)
- 	int cpu;
- 
- 	WRITE_ONCE(rq->state, MQ_RQ_COMPLETE);
-+
-+	if (rq->rq_flags & RQF_STATS) {
-+		blk_mq_poll_stats_start(rq->q);
-+		blk_stat_add(rq, ktime_get_ns());
-+	}
- 	/*
- 	 * Most of single queue controllers, there is only one irq vector
- 	 * for handling IO completion, and the only irq's affinity is set
+Thank you,
+
+
 -- 
-2.21.0
-
+Masami Hiramatsu <mhiramat@kernel.org>
