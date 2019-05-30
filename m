@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6651C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 05:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A7DEC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 05:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DF7B260C5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 05:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8702260B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 05:00:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192434;
-	bh=Npxmw6nnvgD0ZjvtCKn1B+RkWhFeIgCUudF25HHwcB4=;
+	s=default; t=1559192439;
+	bh=D22WBElfsfKcrJroUrR87y58gP39ciTL7nqz0YFONb0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EmshTU5HQWM/80lqeQj1MdJ5yW9bWJWmHEo7OqBasFCT/H1hooOIeeBPeQBvRyfo0
-	 tUNrRabzNEIDKiCwZ7Q8HAkVLnFUb9486TEFhOS+YlWvJVaX6FARUSqWFX8Dr66KqC
-	 tgYRdLYvdNTr/NiEjpsdx7GgWOfcrkXKG+q3znT0=
+	b=oVtDnv+OzTVEMxqsyO8ovG2yU9+f0Y+DooSsnzYpuTKde+IkeIgUB25/WLl43meEa
+	 ZltpIb7iluDn/5/ZFPQxbWPyoovzyp2WxO3n4fTxQ2tjqEwvWw8rFNWFlGK0RNpiYd
+	 qX+AFw7DmZhzVQtQtW7pKYo64wX2y83uLkZ4kGQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389374AbfE3FAd (ORCPT
+        id S1728340AbfE3FAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 01:00:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44380 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 01:00:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727602AbfE3DJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:09:31 -0400
+        id S1727593AbfE3DJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:09:30 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAAE824487;
+        by mail.kernel.org (Postfix) with ESMTPSA id 3399024485;
         Thu, 30 May 2019 03:09:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559185770;
-        bh=Npxmw6nnvgD0ZjvtCKn1B+RkWhFeIgCUudF25HHwcB4=;
+        bh=D22WBElfsfKcrJroUrR87y58gP39ciTL7nqz0YFONb0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cKNCB8HQ/5TODGd3up5wcftsV+eK7sIyjY+dukxZ20cX0JLG29ebl9y2NrCr0Jgea
-         6FA/pW8yLxJY8FK7+Pv2kV4E1tHbqDt+vsepFuf+KYPbSGmIkZ2NeusHKBBh0BQJvj
-         C50bsn/8EuM4Ag8pTW33lVrGct5iYiA3GFwXVloo=
+        b=BfhsxlQm6qwOvsCoHHyNQzD71SocWn9Cmb40ovdPWDWfBEGCjChj6WckNpMLSeZlM
+         xVJx2Irw0pAGtPi4K2PZMYiiUxhb8lwuDfBR5TLcxWLmbgJ3ax1hBlnCaXZINmGCov
+         0p1f1E6IjIswsx+Cbd3SbpRqIfA+ePncWbqXKYjU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Gruenbacher <agruenba@redhat.com>
-Subject: [PATCH 5.1 022/405] gfs2: Fix sign extension bug in gfs2_update_stats
-Date:   Wed, 29 May 2019 20:00:20 -0700
-Message-Id: <20190530030541.731722275@linuxfoundation.org>
+        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Will Deacon <will.deacon@arm.com>
+Subject: [PATCH 5.1 021/405] arm64/iommu: handle non-remapped addresses in ->mmap and ->get_sgtable
+Date:   Wed, 29 May 2019 20:00:19 -0700
+Message-Id: <20190530030541.674075690@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -58,49 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Gruenbacher <agruenba@redhat.com>
+From: Christoph Hellwig <hch@lst.de>
 
-commit 5a5ec83d6ac974b12085cd99b196795f14079037 upstream.
+commit a98d9ae937d256ed679a935fc82d9deaa710d98e upstream.
 
-Commit 4d207133e9c3 changed the types of the statistic values in struct
-gfs2_lkstats from s64 to u64.  Because of that, what should be a signed
-value in gfs2_update_stats turned into an unsigned value.  When shifted
-right, we end up with a large positive value instead of a small negative
-value, which results in an incorrect variance estimate.
+DMA allocations that can't sleep may return non-remapped addresses, but
+we do not properly handle them in the mmap and get_sgtable methods.
+Resolve non-vmalloc addresses using virt_to_page to handle this corner
+case.
 
-Fixes: 4d207133e9c3 ("gfs2: Make statistics unsigned, suitable for use with do_div()")
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-Cc: stable@vger.kernel.org # v4.4+
+Cc: <stable@vger.kernel.org>
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/gfs2/lock_dlm.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ arch/arm64/mm/dma-mapping.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- a/fs/gfs2/lock_dlm.c
-+++ b/fs/gfs2/lock_dlm.c
-@@ -31,9 +31,10 @@
-  * @delta is the difference between the current rtt sample and the
-  * running average srtt. We add 1/8 of that to the srtt in order to
-  * update the current srtt estimate. The variance estimate is a bit
-- * more complicated. We subtract the abs value of the @delta from
-- * the current variance estimate and add 1/4 of that to the running
-- * total.
-+ * more complicated. We subtract the current variance estimate from
-+ * the abs value of the @delta and add 1/4 of that to the running
-+ * total.  That's equivalent to 3/4 of the current variance
-+ * estimate plus 1/4 of the abs of @delta.
-  *
-  * Note that the index points at the array entry containing the smoothed
-  * mean value, and the variance is always in the following entry
-@@ -49,7 +50,7 @@ static inline void gfs2_update_stats(str
- 	s64 delta = sample - s->stats[index];
- 	s->stats[index] += (delta >> 3);
- 	index++;
--	s->stats[index] += ((abs(delta) - s->stats[index]) >> 2);
-+	s->stats[index] += (s64)(abs(delta) - s->stats[index]) >> 2;
- }
+--- a/arch/arm64/mm/dma-mapping.c
++++ b/arch/arm64/mm/dma-mapping.c
+@@ -249,6 +249,11 @@ static int __iommu_mmap_attrs(struct dev
+ 	if (dma_mmap_from_dev_coherent(dev, vma, cpu_addr, size, &ret))
+ 		return ret;
  
- /**
++	if (!is_vmalloc_addr(cpu_addr)) {
++		unsigned long pfn = page_to_pfn(virt_to_page(cpu_addr));
++		return __swiotlb_mmap_pfn(vma, pfn, size);
++	}
++
+ 	if (attrs & DMA_ATTR_FORCE_CONTIGUOUS) {
+ 		/*
+ 		 * DMA_ATTR_FORCE_CONTIGUOUS allocations are always remapped,
+@@ -272,6 +277,11 @@ static int __iommu_get_sgtable(struct de
+ 	unsigned int count = PAGE_ALIGN(size) >> PAGE_SHIFT;
+ 	struct vm_struct *area = find_vm_area(cpu_addr);
+ 
++	if (!is_vmalloc_addr(cpu_addr)) {
++		struct page *page = virt_to_page(cpu_addr);
++		return __swiotlb_get_sgtable_page(sgt, page, size);
++	}
++
+ 	if (attrs & DMA_ATTR_FORCE_CONTIGUOUS) {
+ 		/*
+ 		 * DMA_ATTR_FORCE_CONTIGUOUS allocations are always remapped,
 
 
