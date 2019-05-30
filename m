@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9622C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:04:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BC2C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92C062501F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:04:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EEBD25024
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:04:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189066;
-	bh=YiBITfarlqX5UZbgmMONnIHOh9RONNDpBsaMYVkL+E8=;
+	s=default; t=1559189072;
+	bh=bGWh8woQtXz5m+43YaRhu03gvWUMuFyE+qLFTPAiZ50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jTLkpATsdH5HYDD9OhUPLicZF03Vt3U1rC/bSb7t0YhWrgy190FhnPiY6TyWWZDkL
-	 1X/jQmToPKf4eI5uX/vtvks1IboFZMKCugD5I0wsKizGIZn/BbyXzfwwDnEEVQoqez
-	 epZSJm8jG073GKoe83yntGryAfbX7bY6Thno9hMo=
+	b=Z868ycb+Zdubs1razEuiIjbjdZopu2MClFWOrkSC3sVkLTDiR0wx6C3LQkkwgWQJI
+	 QvT5+gYQ1mYEvVRVOeN9aVZAtS0eL4VkA0/LubN13EVi7GbqpEj7geZazZAV1YtiMi
+	 AtI4VMd/7dyxufAJ72QRV9F/SsxPL8BrFMs5Innw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731298AbfE3DRv (ORCPT
+        id S2388038AbfE3EEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:17:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33468 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:04:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729752AbfE3DOM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:12 -0400
+        id S1731286AbfE3DRv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:17:51 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62CDA2455A;
-        Thu, 30 May 2019 03:14:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97FAD24479;
+        Thu, 30 May 2019 03:17:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186051;
-        bh=YiBITfarlqX5UZbgmMONnIHOh9RONNDpBsaMYVkL+E8=;
+        s=default; t=1559186270;
+        bh=bGWh8woQtXz5m+43YaRhu03gvWUMuFyE+qLFTPAiZ50=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gZqjRV5V4I6XUWYyNOyihzeevwbCgRn6kMlKYzY4xJIp6NjON91qW5QM/uhKgHc1b
-         CwOE2LV1Xk3w0eiLklZCsMYxZ1KDonz1X7HGza0EVE79SdEZV2ezIYJf8KicEGwNn8
-         10WAoerYC0xhgeTAQanghIXJiVvOxg5yIRsmiST8=
+        b=Tnr35mWVMe1r+dq51UGFAHqRLhb+E7MI8uTCQBU9q99pp+Erey7LMSBDAkrq06oHS
+         RSPqf5jJyuwhspMI22l5DHt6nfhs0J4zbQMgv9HfmdHJ4gXD02jiDtzlLfqo3ZakdN
+         Z//vyld7FU3dT/P73JOVfJeVdnVplqXcrSL7BeGo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Chengguang Xu <cgxu519@gmx.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 148/346] powerpc/numa: improve control of topology updates
-Date:   Wed, 29 May 2019 20:03:41 -0700
-Message-Id: <20190530030548.678192712@linuxfoundation.org>
+Subject: [PATCH 4.19 210/276] chardev: add additional check for minor range overlap
+Date:   Wed, 29 May 2019 20:06:08 -0700
+Message-Id: <20190530030538.267410610@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
-References: <20190530030540.363386121@linuxfoundation.org>
+In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
+References: <20190530030523.133519668@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,79 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2d4d9b308f8f8dec68f6dbbff18c68ec7c6bd26f ]
+[ Upstream commit de36e16d1557a0b6eb328bc3516359a12ba5c25c ]
 
-When booted with "topology_updates=no", or when "off" is written to
-/proc/powerpc/topology_updates, NUMA reassignments are inhibited for
-PRRN and VPHN events. However, migration and suspend unconditionally
-re-enable reassignments via start_topology_update(). This is
-incoherent.
+Current overlap checking cannot correctly handle
+a case which is baseminor < existing baseminor &&
+baseminor + minorct > existing baseminor + minorct.
 
-Check the topology_updates_enabled flag in
-start/stop_topology_update() so that callers of those APIs need not be
-aware of whether reassignments are enabled. This allows the
-administrative decision on reassignments to remain in force across
-migrations and suspensions.
-
-Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Chengguang Xu <cgxu519@gmx.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/numa.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ fs/char_dev.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
-index b5d1c45c14758..2a85a4bcc2771 100644
---- a/arch/powerpc/mm/numa.c
-+++ b/arch/powerpc/mm/numa.c
-@@ -1494,6 +1494,9 @@ int start_topology_update(void)
- {
- 	int rc = 0;
- 
-+	if (!topology_updates_enabled)
-+		return 0;
+diff --git a/fs/char_dev.c b/fs/char_dev.c
+index a279c58fe3606..8a63cfa290053 100644
+--- a/fs/char_dev.c
++++ b/fs/char_dev.c
+@@ -159,6 +159,12 @@ __register_chrdev_region(unsigned int major, unsigned int baseminor,
+ 			ret = -EBUSY;
+ 			goto out;
+ 		}
 +
- 	if (firmware_has_feature(FW_FEATURE_PRRN)) {
- 		if (!prrn_enabled) {
- 			prrn_enabled = 1;
-@@ -1527,6 +1530,9 @@ int stop_topology_update(void)
- {
- 	int rc = 0;
- 
-+	if (!topology_updates_enabled)
-+		return 0;
++		if (new_min < old_min && new_max > old_max) {
++			ret = -EBUSY;
++			goto out;
++		}
 +
- 	if (prrn_enabled) {
- 		prrn_enabled = 0;
- #ifdef CONFIG_SMP
-@@ -1584,11 +1590,13 @@ static ssize_t topology_write(struct file *file, const char __user *buf,
+ 	}
  
- 	kbuf[read_len] = '\0';
- 
--	if (!strncmp(kbuf, "on", 2))
-+	if (!strncmp(kbuf, "on", 2)) {
-+		topology_updates_enabled = true;
- 		start_topology_update();
--	else if (!strncmp(kbuf, "off", 3))
-+	} else if (!strncmp(kbuf, "off", 3)) {
- 		stop_topology_update();
--	else
-+		topology_updates_enabled = false;
-+	} else
- 		return -EINVAL;
- 
- 	return count;
-@@ -1603,9 +1611,7 @@ static const struct file_operations topology_ops = {
- 
- static int topology_update_init(void)
- {
--	/* Do not poll for changes if disabled at boot */
--	if (topology_updates_enabled)
--		start_topology_update();
-+	start_topology_update();
- 
- 	if (vphn_enabled)
- 		topology_schedule_update();
+ 	cd->next = *cp;
 -- 
 2.20.1
 
