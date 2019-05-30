@@ -2,75 +2,88 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DEFDC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 19:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 409E8C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 19:39:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ADFE260D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 19:38:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ED53260DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 19:39:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559245162;
+	bh=HAeeeyIuKJlselAZMCf8MCqGbbGxod0OcJMX5igAlNw=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=h8aLz1Q1TVnfqQwj4pLo+uBK19cwfkdMxnAhStMP34xRwV8fPpvoGekW8CBx39kZ3
+	 7hOCetXuTxK4NE5a7zYf3FDMjhVXuG+a8sYqUUDMEEXztO8y+3SCksY6MllRlEChPJ
+	 AaBwNbICN7BPf/Kcyrhvga9LJH2m9OKL6V0ohftg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbfE3Tif (ORCPT
+        id S1726636AbfE3TjV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 15:38:35 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:58966 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbfE3Tif (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 15:38:35 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3509214DA8954;
-        Thu, 30 May 2019 12:38:34 -0700 (PDT)
-Date:   Thu, 30 May 2019 12:38:33 -0700 (PDT)
-Message-Id: <20190530.123833.494901093768074533.davem@davemloft.net>
-To:     92siuyang@gmail.com
-Cc:     isdn@linux-pingi.de, netdev@vger.kernel.org,
+        Thu, 30 May 2019 15:39:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40722 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726045AbfE3TjV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 15:39:21 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27192260FB;
+        Thu, 30 May 2019 19:39:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559245160;
+        bh=HAeeeyIuKJlselAZMCf8MCqGbbGxod0OcJMX5igAlNw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=rmks5ni16WOqtF/AY18TEJktC7/0uGmxKKCgtK9Mrm7N7GNdJVVY+FXpIY4pw+G61
+         lFWgyWVvGvf84OHHQe5Z47PgPpQg9S6EA5UEFTvI0n/jKvudquK53ilx8yx2fewT+t
+         3HAhl9FW93DfwyvgjWzig4S8K9iarj70BQdI1w7M=
+Subject: Re: [PATCH 5.0 000/346] 5.0.20-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] isdn: hisax: isac: fix a possible concurrency
- use-after-free bug in ISAC_l1hw()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1559119739-27588-1-git-send-email-92siuyang@gmail.com>
-References: <1559119739-27588-1-git-send-email-92siuyang@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20190530030540.363386121@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <f9aff09d-f6dc-7d0f-e6ed-2445d3a4a45c@kernel.org>
+Date:   Thu, 30 May 2019 13:39:19 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 30 May 2019 12:38:34 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Young Xiao <92siuyang@gmail.com>
-Date: Wed, 29 May 2019 16:48:59 +0800
-
-> In drivers/isdn/hisax/isac.c, the function isac_interrupt() and
-> ISAC_l1hw() may be concurrently executed.
+On 5/29/19 9:01 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.0.20 release.
+> There are 346 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> ISAC_l1hw()
->     line 499: if (!cs->tx_skb)
+> Responses should be made by Sat 01 Jun 2019 03:02:10 AM UTC.
+> Anything received after that time might be too late.
 > 
-> isac_interrupt()
->     line 250: dev_kfree_skb_irq(cs->tx_skb);
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.0.20-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.0.y
+> and the diffstat can be found below.
 > 
-> Thus, a possible concurrency use-after-free bug may occur in ISAC_l1hw().
- ...
-> +		spin_lock_irqsave(&cs->lock, flags);
->  		if (!cs->tx_skb) {
->  			test_and_clear_bit(FLG_L1_PULL_REQ, &st->l1.Flags);
->  			st->l1.l1l2(st, PH_PULL | CONFIRM, NULL);
->  		} else
->  			test_and_set_bit(FLG_L1_PULL_REQ, &st->l1.Flags);
-> +		spin_unlock_irqrestore(&cs->lock, flags);
+> thanks,
+> 
+> greg k-h
+> 
 
-Nothing in this code accesses the cs->tx_skb object.  It is just a logic test
-upon whether it is NULL or not.
+Compiled and booted on my test system. No dmesg regressions.
 
-I'm not applying stuff like this, sorry.
+thanks,
+-- Shuah
 
-You have to show how something can actually go wrong when fixing a bug.
+
