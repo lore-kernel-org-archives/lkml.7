@@ -2,122 +2,138 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D4FAC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2163C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C22425F72
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:21:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 915C625F45
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:22:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wU1WwXoE"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="AWJDMB/l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbfE3SVj (ORCPT
+        id S1726640AbfE3SWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 14:21:39 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:37163 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbfE3SUy (ORCPT
+        Thu, 30 May 2019 14:22:55 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:50084 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726079AbfE3SWz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 14:20:54 -0400
-Received: by mail-lf1-f65.google.com with SMTP id m15so5783537lfh.4
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 11:20:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=J8udFRfvbZ6fXOojTQ4C0YPBDnze74Ovvj+f7jr19Fw=;
-        b=wU1WwXoEjKxZ3uqM80S4B/iacjxdOKTanw/C0MhErCrltoOGbqOgl6D3+r1s/I5MDs
-         43CeGw6Y6RckooIj+upDJFUOq/x8S44sRl4IecU2CAs9bIntSdh8qHidWHvG+s5sZZwr
-         tMo1h8S1ts9QZr8NNUvE3T9naG3R4FHAPT23kfi5+VV7aUci43qWu5ZZWJKAHQleHoEy
-         /ajuUGqlAVxb3HPheATiiuEdAXwo7PokCTbdy4XNP9sZTvD5RheyUk1vZwg8Azp9xD2i
-         pnBXFBTfRa7tQ02r91dRnH9CWokN/c7+ti7EZKQlpvZEfndG6pFqlRF4421kR1+T9DU1
-         CSjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=J8udFRfvbZ6fXOojTQ4C0YPBDnze74Ovvj+f7jr19Fw=;
-        b=LD3801oK8dwNL55At8p3UNM5Ih45hHkrgTUkvTHssE2RNEfwEfnfLyziWliTPuQtle
-         ciPDdWyC1jhxnGGnte0Cr/8L3qT3JXrED60jKGOlpBGF6wgFPMeHA5x0hyxWNrOwJJDh
-         AAY4H8aDyUHEqSozCYqkiZwdUwV/ZLWvpu7ssmjy+AynniAQzFdeH68ZV+6IdcPmxtEf
-         Ntc6w4j70VwQP+IHBlm1pXR/YEiqfOJEYs+HXD0KFMW9lt0xSnPLibBTql5Icx5wPzAQ
-         ONwftsK+9d4V3iTGGYA53IZ9dsDkvTFN7kgu4D1yAWiBqOi13xizOZTgh3B+pSdXgxoJ
-         Zv0w==
-X-Gm-Message-State: APjAAAXoL/7PWSfA/ITejNTvkbVMD5xbYcNRg7k7Ij/pA52OXtSmaLZV
-        J4TMzK8xcXxil473m2Fls70pbg==
-X-Google-Smtp-Source: APXvYqzmIrTETx9SuLnFJbbk7eE7VgPvlT6tOo6LaT1WkjJJjIEn1SeLZrsHAr7qOO6dBn1fCt8qbg==
-X-Received: by 2002:ac2:494f:: with SMTP id o15mr2908131lfi.22.1559240452479;
-        Thu, 30 May 2019 11:20:52 -0700 (PDT)
-Received: from localhost.localdomain (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
-        by smtp.gmail.com with ESMTPSA id v7sm388946lfe.11.2019.05.30.11.20.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 11:20:51 -0700 (PDT)
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net
-Cc:     ast@kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
-        daniel@iogearbox.net, jakub.kicinski@netronome.com,
-        john.fastabend@gmail.com,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Subject: [PATCH v2 net-next 2/7] net: page_pool: add helper function to unmap dma addresses
-Date:   Thu, 30 May 2019 21:20:34 +0300
-Message-Id: <20190530182039.4945-3-ivan.khoronzhuk@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190530182039.4945-1-ivan.khoronzhuk@linaro.org>
-References: <20190530182039.4945-1-ivan.khoronzhuk@linaro.org>
+        Thu, 30 May 2019 14:22:55 -0400
+Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 97543C00B0;
+        Thu, 30 May 2019 18:23:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1559240584; bh=tXKhvVlPB83lnrd1soG4Udon/Z/gh72d6RoQk4zGMQY=;
+        h=From:Subject:To:CC:Date:From;
+        b=AWJDMB/lKPYORIWltA0gVIDA/bblb/OfrBvX4EsMpJtq5ysYbRaFFJNcKic+AmHEt
+         bFW6N58qK4VY5vpdBkf6rI3gew7gnjCfI9XQQsNoF3ZGHcX/Dsm7ZlXUQI6U7WBS4S
+         fVcTZcUQ0QX1ut8uC73HLqCcw+MZBH2C5W1RFaQgt836+zxTOmBNL5fF/mhlD5EP8N
+         x0yChiH+/zJ5prVF3ahLy3REMlahcxJZDAeFcN5vRAG0HhblkGDrTbGWyArSHw0RGU
+         lD6jt4lQhljX1J5jPd0J3PjVZMMXufV2+uY/2HFUTRkPjGPWpVuOWg0T3tEHWy6CtH
+         LGJjQckwzDhsg==
+Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
+        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 19922A0095;
+        Thu, 30 May 2019 18:22:51 +0000 (UTC)
+Received: from IN01WEHTCB.internal.synopsys.com (10.144.199.106) by
+ US01WEHTC2.internal.synopsys.com (10.12.239.237) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 30 May 2019 11:22:51 -0700
+Received: from IN01WEHTCA.internal.synopsys.com (10.144.199.103) by
+ IN01WEHTCB.internal.synopsys.com (10.144.199.105) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 30 May 2019 23:52:50 +0530
+Received: from [10.10.161.35] (10.10.161.35) by
+ IN01WEHTCA.internal.synopsys.com (10.144.199.243) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 30 May 2019 23:53:02 +0530
+X-Mozilla-News-Host: news://gmane.comp.lib.uclibc.buildroot:119
+From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=vgupta@synopsys.com; keydata=
+ mQINBFEffBMBEADIXSn0fEQcM8GPYFZyvBrY8456hGplRnLLFimPi/BBGFA24IR+B/Vh/EFk
+ B5LAyKuPEEbR3WSVB1x7TovwEErPWKmhHFbyugdCKDv7qWVj7pOB+vqycTG3i16eixB69row
+ lDkZ2RQyy1i/wOtHt8Kr69V9aMOIVIlBNjx5vNOjxfOLux3C0SRl1veA8sdkoSACY3McOqJ8
+ zR8q1mZDRHCfz+aNxgmVIVFN2JY29zBNOeCzNL1b6ndjU73whH/1hd9YMx2Sp149T8MBpkuQ
+ cFYUPYm8Mn0dQ5PHAide+D3iKCHMupX0ux1Y6g7Ym9jhVtxq3OdUI5I5vsED7NgV9c8++baM
+ 7j7ext5v0l8UeulHfj4LglTaJIvwbUrCGgtyS9haKlUHbmey/af1j0sTrGxZs1ky1cTX7yeF
+ nSYs12GRiVZkh/Pf3nRLkjV+kH++ZtR1GZLqwamiYZhAHjo1Vzyl50JT9EuX07/XTyq/Bx6E
+ dcJWr79ZphJ+mR2HrMdvZo3VSpXEgjROpYlD4GKUApFxW6RrZkvMzuR2bqi48FThXKhFXJBd
+ JiTfiO8tpXaHg/yh/V9vNQqdu7KmZIuZ0EdeZHoXe+8lxoNyQPcPSj7LcmE6gONJR8ZqAzyk
+ F5voeRIy005ZmJJ3VOH3Gw6Gz49LVy7Kz72yo1IPHZJNpSV5xwARAQABtCpWaW5lZXQgR3Vw
+ dGEgKGFsaWFzKSA8dmd1cHRhQHN5bm9wc3lzLmNvbT6JAj4EEwECACgCGwMGCwkIBwMCBhUI
+ AgkKCwQWAgMBAh4BAheABQJbBYpwBQkLx0HcAAoJEGnX8d3iisJeChAQAMR2UVbJyydOv3aV
+ jmqP47gVFq4Qml1weP5z6czl1I8n37bIhdW0/lV2Zll+yU1YGpMgdDTHiDqnGWi4pJeu4+c5
+ xsI/VqkH6WWXpfruhDsbJ3IJQ46//jb79ogjm6VVeGlOOYxx/G/RUUXZ12+CMPQo7Bv+Jb+t
+ NJnYXYMND2Dlr2TiRahFeeQo8uFbeEdJGDsSIbkOV0jzrYUAPeBwdN8N0eOB19KUgPqPAC4W
+ HCg2LJ/o6/BImN7bhEFDFu7gTT0nqFVZNXlOw4UcGGpM3dq/qu8ZgRE0turY9SsjKsJYKvg4
+ djAaOh7H9NJK72JOjUhXY/sMBwW5vnNwFyXCB5t4ZcNxStoxrMtyf35synJVinFy6wCzH3eJ
+ XYNfFsv4gjF3l9VYmGEJeI8JG/ljYQVjsQxcrU1lf8lfARuNkleUL8Y3rtxn6eZVtAlJE8q2
+ hBgu/RUj79BKnWEPFmxfKsaj8of+5wubTkP0I5tXh0akKZlVwQ3lbDdHxznejcVCwyjXBSny
+ d0+qKIXX1eMh0/5sDYM06/B34rQyq9HZVVPRHdvsfwCU0s3G+5Fai02mK68okr8TECOzqZtG
+ cuQmkAeegdY70Bpzfbwxo45WWQq8dSRURA7KDeY5LutMphQPIP2syqgIaiEatHgwetyVCOt6
+ tf3ClCidHNaGky9KcNSQ
+Subject: single copy atomicity for double load/stores on 32-bit systems
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <Will.Deacon@arm.com>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
+CC:     arcml <linux-snps-arc@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Message-ID: <2fd3a455-6267-5d21-c530-41964a4f6ce9@synopsys.com>
+Date:   Thu, 30 May 2019 11:22:42 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.10.161.35]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Hi Peter,
 
-On a previous patch dma addr was stored in 'struct page'.
-Use that to unmap DMA addresses used by network drivers
+Had an interesting lunch time discussion with our hardware architects pertinent to
+"minimal guarantees expected of a CPU" section of memory-barriers.txt
 
-Signed-off-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
----
- include/net/page_pool.h | 1 +
- net/core/page_pool.c    | 7 +++++++
- 2 files changed, 8 insertions(+)
 
-diff --git a/include/net/page_pool.h b/include/net/page_pool.h
-index b885d86cb7a1..ad218cef88c5 100644
---- a/include/net/page_pool.h
-+++ b/include/net/page_pool.h
-@@ -110,6 +110,7 @@ static inline struct page *page_pool_dev_alloc_pages(struct page_pool *pool)
- struct page_pool *page_pool_create(const struct page_pool_params *params);
- 
- void page_pool_destroy(struct page_pool *pool);
-+void page_pool_unmap_page(struct page_pool *pool, struct page *page);
- 
- /* Never call this directly, use helpers below */
- void __page_pool_put_page(struct page_pool *pool,
-diff --git a/net/core/page_pool.c b/net/core/page_pool.c
-index 5b2252c6d49b..205af7bd6d09 100644
---- a/net/core/page_pool.c
-+++ b/net/core/page_pool.c
-@@ -190,6 +190,13 @@ static void __page_pool_clean_page(struct page_pool *pool,
- 	page->dma_addr = 0;
- }
- 
-+/* unmap the page and clean our state */
-+void page_pool_unmap_page(struct page_pool *pool, struct page *page)
-+{
-+	__page_pool_clean_page(pool, page);
-+}
-+EXPORT_SYMBOL(page_pool_unmap_page);
-+
- /* Return a page to the page allocator, cleaning up our state */
- static void __page_pool_return_page(struct page_pool *pool, struct page *page)
- {
--- 
-2.17.1
+|  (*) These guarantees apply only to properly aligned and sized scalar
+|     variables.  "Properly sized" currently means variables that are
+|     the same size as "char", "short", "int" and "long".  "Properly
+|     aligned" means the natural alignment, thus no constraints for
+|     "char", two-byte alignment for "short", four-byte alignment for
+|     "int", and either four-byte or eight-byte alignment for "long",
+|     on 32-bit and 64-bit systems, respectively.
 
+
+I'm not sure how to interpret "natural alignment" for the case of double
+load/stores on 32-bit systems where the hardware and ABI allow for 4 byte
+alignment (ARCv2 LDD/STD, ARM LDRD/STRD ....)
+
+I presume (and the question) that lkmm doesn't expect such 8 byte load/stores to
+be atomic unless 8-byte aligned
+
+ARMv7 arch ref manual seems to confirm this. Quoting
+
+| LDM, LDC, LDC2, LDRD, STM, STC, STC2, STRD, PUSH, POP, RFE, SRS, VLDM, VLDR,
+| VSTM, and VSTR instructions are executed as a sequence of word-aligned word
+| accesses. Each 32-bit word access is guaranteed to be single-copy atomic. A
+| subsequence of two or more word accesses from the sequence might not exhibit
+| single-copy atomicity
+
+While it seems reasonable form hardware pov to not implement such atomicity by
+default it seems there's an additional burden on application writers. They could
+be happily using a lockless algorithm with just a shared flag between 2 threads
+w/o need for any explicit synchronization. But upgrade to a new compiler which
+aggressively "packs" struct rendering long long 32-bit aligned (vs. 64-bit before)
+causing the code to suddenly stop working. Is the onus on them to declare such
+memory as c11 atomic or some such.
+
+Thx,
+-Vineet
