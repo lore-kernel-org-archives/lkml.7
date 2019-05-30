@@ -2,250 +2,260 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB55C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 10:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A8BC28CC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 10:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4999C2578D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 10:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B51552578F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 10:46:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="+HVmTuFC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZHcoAoPW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726941AbfE3KoQ (ORCPT
+        id S1726879AbfE3KqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 06:44:16 -0400
-Received: from mail-eopbgr30086.outbound.protection.outlook.com ([40.107.3.86]:4614
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725440AbfE3KoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 06:44:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dmdN6uQOvLD/+j2WGtGkTDj4bfXrfygLKIGm9iJigJw=;
- b=+HVmTuFCrMSbVFBbzBU/11KIhIqQg7ZjihGLLzbEyE19xbCKnKDVPNGkWAp+9GUFrFIinb3mYhYgYZOCb2iTKYUxEbaXjyf1ewpFKmxiiALyQ0CRIAv3NjKq/khYqZNUmOwabmsLj2XQrg14pylSBr3V6khmZTPR2g/GslK6deY=
-Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
- VE1PR08MB4942.eurprd08.prod.outlook.com (10.255.158.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.16; Thu, 30 May 2019 10:44:11 +0000
-Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
- ([fe80::206b:5cf6:97e:1358]) by VE1PR08MB5006.eurprd08.prod.outlook.com
- ([fe80::206b:5cf6:97e:1358%7]) with mapi id 15.20.1922.021; Thu, 30 May 2019
- 10:44:11 +0000
-From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-To:     Liviu Dudau <Liviu.Dudau@arm.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "sean@poorly.run" <sean@poorly.run>
-CC:     "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
-        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
-        "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>,
-        nd <nd@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Ben Davis <Ben.Davis@arm.com>,
-        "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
-        "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>,
-        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-Subject: [PATCH 2/2] drm/komeda: Enable writeback split support
-Thread-Topic: [PATCH 2/2] drm/komeda: Enable writeback split support
-Thread-Index: AQHVFtSeqxU8K/1jNEOnckUkKvipJg==
-Date:   Thu, 30 May 2019 10:44:11 +0000
-Message-ID: <20190530104335.2395-3-james.qian.wang@arm.com>
-References: <20190530104335.2395-1-james.qian.wang@arm.com>
-In-Reply-To: <20190530104335.2395-1-james.qian.wang@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [113.29.88.7]
-x-clientproxiedby: HK2PR04CA0069.apcprd04.prod.outlook.com
- (2603:1096:202:15::13) To VE1PR08MB5006.eurprd08.prod.outlook.com
- (2603:10a6:803:113::31)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=james.qian.wang@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 81a4ac53-b6b4-4e15-a0ab-08d6e4ebc060
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VE1PR08MB4942;
-x-ms-traffictypediagnostic: VE1PR08MB4942:
-nodisclaimer: True
-x-microsoft-antispam-prvs: <VE1PR08MB4942546D1BEF57E4F4FA57CFB3180@VE1PR08MB4942.eurprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 00531FAC2C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39860400002)(136003)(346002)(376002)(396003)(189003)(199004)(25786009)(26005)(66476007)(6116002)(3846002)(73956011)(103116003)(54906003)(66446008)(14444005)(4326008)(446003)(476003)(2616005)(66556008)(256004)(68736007)(186003)(64756008)(386003)(14454004)(11346002)(66946007)(55236004)(76176011)(102836004)(110136005)(52116002)(99286004)(6506007)(2201001)(50226002)(6436002)(8676002)(86362001)(6512007)(305945005)(6486002)(81156014)(71200400001)(81166006)(2501003)(66066001)(8936002)(36756003)(7736002)(2906002)(486006)(5660300002)(316002)(1076003)(53936002)(478600001)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB4942;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: KmUnqadREpkknkU2AhF+5j8JnXprj6/knqm7W5NKhMVsM8cr4fVFQh6YJRNq77FkVagWYttnLz1SBhpIQU/AE063JswNpCcEguNCYqe5Ee3A1xxNH8YYQlwdbW7jfJeLiDMYLInBg62AmFfETKTbQZIkI0OBeEqrWq4VcBxpDjnFaUupY/21YXohZERszt7pgj3iQAP8ljwwHKKSCLF1fQW/hLRoAdBHKK0x8aoM8Kt7kbsZi8hI0YfBZuoS8TXXKyL4n8KqxVPzNpoVgWMz4Q31s/I9GbA1jBK9wJ4k0GEa245/wX3AKIPTE47xy4h1Lgo06Ktxvo/aDDadt3222YtAXUMaXOeUF3qQUZvU9AGrfVdsO6seLU1TGTkLGSCyIa4pj5pRgd6sxUfBsnChpaAJjDN6qHBMT6wfqr61qNE=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 81a4ac53-b6b4-4e15-a0ab-08d6e4ebc060
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 May 2019 10:44:11.8527
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: james.qian.wang@arm.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB4942
+        Thu, 30 May 2019 06:46:03 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33569 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbfE3KqD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 06:46:03 -0400
+Received: by mail-wr1-f67.google.com with SMTP id d9so3911777wrx.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 03:46:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=C4BgjhOQ5WaS5BA3N176Rm/rfCh1eKw3G7OX1NDf330=;
+        b=ZHcoAoPWP49Y2hs6v2CQOh3DuFecDqeF+g/Ha0Cx5554RiqUdqSjrUzEZQVawME5Cc
+         t+JWaCh6cNprvD3GC4CZfFFbIwJWiKzfGohC55oV4K0Na9RhHK/LLTzKj4xnTd5f2Gaq
+         0JUpqCX5DrLWJ666CabaEEq9HV3pSETTY2fM1u0f59YmtuRGzeuPmEfX7Ul8rAQX3yhS
+         Ph0H9Zx+IcE06NJeEbMaQwmxzJHsWPOOfQIj1iyCpkACP5B3j6lRRXABD3PpiTQiaHgC
+         vFDLvU0hiN5zArHGDOJyjx8412ViMLTh/x389UmROZNRRzaqxLyusdnuWtLi2exM6T65
+         4m9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=C4BgjhOQ5WaS5BA3N176Rm/rfCh1eKw3G7OX1NDf330=;
+        b=T+yrn3FQogAK0/c49OyKKilpTPXkp7GKTFA6XveoksYTJmRwsJnjrArNbniCyBmpJK
+         WTqI1hOUlbhuzHDm+DuuFaWU35CL5wnkodzbGwtyb/8xu6g4QR+l8oWkjVpG+zCGVYUJ
+         0rH1VoS/EcDRzt09qnoHCOMaVQyD1+59Ccq4102fgAi/juhF3mMMyT/T9aEDZSMaZ6mx
+         vDz+FsWLobwk3xCQAChUcbhv3hgtzTk37nOnm9kbnom2FyqHpis6HVnzMJqS1srnQEh9
+         BwnMPxj/tvdfQfQyBGQJ5jZn7VdFbbAjseqacUJMXBi4xCbftprR2P7GVBJYPd0y6GOw
+         RhQg==
+X-Gm-Message-State: APjAAAWiV7+w9UUFHIkBMEvBWrs+WSimuVTSHWYH80lA/bxWb4u2lSAD
+        2ureCsE2lBYw4JhvKUxSiltaVA==
+X-Google-Smtp-Source: APXvYqw1PXKaN2XzfkxrvWWIUxCH2bCO0CxsjAS2wAGmjr/lS4zV9Vzp6V0DJRzdzI6FdoPQh7Bf9w==
+X-Received: by 2002:adf:e408:: with SMTP id g8mr2145454wrm.143.1559213160542;
+        Thu, 30 May 2019 03:46:00 -0700 (PDT)
+Received: from [192.168.0.101] (84-33-71-35.dyn.eolo.it. [84.33.71.35])
+        by smtp.gmail.com with ESMTPSA id j123sm3875449wmb.32.2019.05.30.03.45.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 May 2019 03:45:59 -0700 (PDT)
+From:   Paolo Valente <paolo.valente@linaro.org>
+Message-Id: <7B74A790-BD98-412B-ADAB-3B513FB1944E@linaro.org>
+Content-Type: multipart/signed;
+        boundary="Apple-Mail=_D5FC080D-8BC9-40E2-AD6D-43794CA895EE";
+        protocol="application/pgp-signature";
+        micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
+ controller
+Date:   Thu, 30 May 2019 12:45:57 +0200
+In-Reply-To: <0d6e3c02-1952-2177-02d7-10ebeb133940@csail.mit.edu>
+Cc:     linux-fsdevel@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
+        Jeff Moyer <jmoyer@redhat.com>, Theodore Ts'o <tytso@mit.edu>,
+        amakhalov@vmware.com, anishs@vmware.com, srivatsab@vmware.com,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+To:     "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+References: <8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu>
+ <46c6a4be-f567-3621-2e16-0e341762b828@csail.mit.edu>
+ <07D11833-8285-49C2-943D-E4C1D23E8859@linaro.org>
+ <A0DFE635-EFEC-4670-AD70-5D813E170BEE@linaro.org>
+ <5B6570A2-541A-4CF8-98E0-979EA6E3717D@linaro.org>
+ <2CB39B34-21EE-4A95-A073-8633CF2D187C@linaro.org>
+ <FC24E25F-4578-454D-AE2B-8D8D352478D8@linaro.org>
+ <0e3fdf31-70d9-26eb-7b42-2795d4b03722@csail.mit.edu>
+ <F5E29C98-6CC4-43B8-994D-0B5354EECBF3@linaro.org>
+ <686D6469-9DE7-4738-B92A-002144C3E63E@linaro.org>
+ <01d55216-5718-767a-e1e6-aadc67b632f4@csail.mit.edu>
+ <CA8A23E2-6F22-4444-9A20-E052A94CAA9B@linaro.org>
+ <cc148388-3c82-d7c0-f9ff-8c31bb5dc77d@csail.mit.edu>
+ <6FE0A98F-1E3D-4EF6-8B38-2C85741924A4@linaro.org>
+ <2A58C239-EF3F-422B-8D87-E7A3B500C57C@linaro.org>
+ <a04368ba-f1d5-8f2c-1279-a685a137d024@csail.mit.edu>
+ <E270AD92-943E-4529-8158-AB480D6D9DF8@linaro.org>
+ <5b71028c-72f0-73dd-0cd5-f28ff298a0a3@csail.mit.edu>
+ <FFA44D26-75FF-4A8E-A331-495349BE5FFC@linaro.org>
+ <0d6e3c02-1952-2177-02d7-10ebeb133940@csail.mit.edu>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-V3JpdGViYWNrIHNwbGl0IGlzIGFsc28gZm9yIHdvcmthcm91bmQgdGhlIHNpemUgbGltaXRhdGlv
-biBvZiBkNzEgc2NhbGVyLg0KTGlrZSBsYXllcl9zcGxpdCwgd3JpdGViYWNrIGRvd25zY2FsaW5n
-IGFsc28gY2FuIHVzZSB0d28gc2NhbGVycyB0byBoYW5kbGUNCnRoZSBzY2FsaW5nIGhhbGYtYnkt
-aGFsZi4gVGhlIG9ubHkgZGlmZmVybmVuY2UgaXMgd3JpdGJhY2sgbmVlZHMgYQ0Kc3RhbmRhbG9u
-ZSBjb21wb25lbnQgKHNwbGl0dGVyKSdzIGhlbHAgdG8gc3BsaXQgdGhlIGNvbXBvc2l0aW9uIHJl
-c3VsdC4NClRoZSBkYXRhIHBpcGVsaW5lIG9mIHdyaXRlYmFjayBzcGxpdCBhcyBiZWxvdzoNCg0K
-ICAgICAgICAgICAgICAgICAgIC8tPiBzY2FsZXItMCAtPlwNCiBjb21waXogLT4gc3BsaXR0ZXIg
-ICAgICAgICAgICAgICAgbWVyZ2VyIC0+IHdiX2xheWVyIC0+IG1lbW9yeQ0KICAgICAgICAgICAg
-ICAgICAgIFwtPiBzY2FsZXItMSAtPi8NCg0KU2lnbmVkLW9mZi1ieTogSmFtZXMgUWlhbiBXYW5n
-IChBcm0gVGVjaG5vbG9neSBDaGluYSkgPGphbWVzLnFpYW4ud2FuZ0Bhcm0uY29tPg0KLS0tDQog
-Li4uL2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX3BpcGVsaW5lLmggIHwgICA0ICsNCiAu
-Li4vZGlzcGxheS9rb21lZGEva29tZWRhX3BpcGVsaW5lX3N0YXRlLmMgICAgfCAxMTcgKysrKysr
-KysrKysrKysrKy0tDQogLi4uL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfd2JfY29ubmVjdG9y
-LmMgIHwgIDE3ICsrLQ0KIDMgZmlsZXMgY2hhbmdlZCwgMTI0IGluc2VydGlvbnMoKyksIDE0IGRl
-bGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tv
-bWVkYS9rb21lZGFfcGlwZWxpbmUuaCBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21l
-ZGEva29tZWRhX3BpcGVsaW5lLmgNCmluZGV4IDQ2MzJmYzVlYzcxZi4uOTA1N2RjNTEyY2YyIDEw
-MDY0NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfcGlw
-ZWxpbmUuaA0KKysrIGIvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFf
-cGlwZWxpbmUuaA0KQEAgLTUyNCw2ICs1MjQsMTAgQEAgaW50IGtvbWVkYV9idWlsZF9sYXllcl9z
-cGxpdF9kYXRhX2Zsb3coc3RydWN0IGtvbWVkYV9sYXllciAqbGVmdCwNCiAJCQkJICAgICAgIHN0
-cnVjdCBrb21lZGFfcGxhbmVfc3RhdGUgKmtwbGFuZV9zdCwNCiAJCQkJICAgICAgIHN0cnVjdCBr
-b21lZGFfY3J0Y19zdGF0ZSAqa2NydGNfc3QsDQogCQkJCSAgICAgICBzdHJ1Y3Qga29tZWRhX2Rh
-dGFfZmxvd19jZmcgKmRmbG93KTsNCitpbnQga29tZWRhX2J1aWxkX3diX3NwbGl0X2RhdGFfZmxv
-dyhzdHJ1Y3Qga29tZWRhX2xheWVyICp3Yl9sYXllciwNCisJCQkJICAgIHN0cnVjdCBkcm1fY29u
-bmVjdG9yX3N0YXRlICpjb25uX3N0LA0KKwkJCQkgICAgc3RydWN0IGtvbWVkYV9jcnRjX3N0YXRl
-ICprY3J0Y19zdCwNCisJCQkJICAgIHN0cnVjdCBrb21lZGFfZGF0YV9mbG93X2NmZyAqZGZsb3cp
-Ow0KDQogaW50IGtvbWVkYV9yZWxlYXNlX3VuY2xhaW1lZF9yZXNvdXJjZXMoc3RydWN0IGtvbWVk
-YV9waXBlbGluZSAqcGlwZSwNCiAJCQkJICAgICAgIHN0cnVjdCBrb21lZGFfY3J0Y19zdGF0ZSAq
-a2NydGNfc3QpOw0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21l
-ZGEva29tZWRhX3BpcGVsaW5lX3N0YXRlLmMgYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkv
-a29tZWRhL2tvbWVkYV9waXBlbGluZV9zdGF0ZS5jDQppbmRleCA4MmVhNmNmOWE5ODkuLmFmZDg1
-N2VmMjIzOSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEv
-a29tZWRhX3BpcGVsaW5lX3N0YXRlLmMNCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxh
-eS9rb21lZGEva29tZWRhX3BpcGVsaW5lX3N0YXRlLmMNCkBAIC0yODQsMzAgKzI4NCwzMyBAQCBr
-b21lZGFfbGF5ZXJfY2hlY2tfY2ZnKHN0cnVjdCBrb21lZGFfbGF5ZXIgKmxheWVyLA0KIAkJICAg
-ICAgIHN0cnVjdCBrb21lZGFfZmIgKmtmYiwNCiAJCSAgICAgICBzdHJ1Y3Qga29tZWRhX2RhdGFf
-Zmxvd19jZmcgKmRmbG93KQ0KIHsNCi0JdTMyIGhzaXplX2luLCB2c2l6ZV9pbjsNCisJdTMyIHNy
-Y194LCBzcmNfeSwgc3JjX3csIHNyY19oOw0KDQogCWlmICgha29tZWRhX2ZiX2lzX2xheWVyX3N1
-cHBvcnRlZChrZmIsIGxheWVyLT5sYXllcl90eXBlLCBkZmxvdy0+cm90KSkNCiAJCXJldHVybiAt
-RUlOVkFMOw0KDQotCWlmIChrb21lZGFfZmJfY2hlY2tfc3JjX2Nvb3JkcyhrZmIsIGRmbG93LT5p
-bl94LCBkZmxvdy0+aW5feSwNCi0JCQkJICAgICAgIGRmbG93LT5pbl93LCBkZmxvdy0+aW5faCkp
-DQotCQlyZXR1cm4gLUVJTlZBTDsNCi0NCiAJaWYgKGxheWVyLT5iYXNlLmlkID09IEtPTUVEQV9D
-T01QT05FTlRfV0JfTEFZRVIpIHsNCi0JCWhzaXplX2luID0gZGZsb3ctPm91dF93Ow0KLQkJdnNp
-emVfaW4gPSBkZmxvdy0+b3V0X2g7DQorCQlzcmNfeCA9IGRmbG93LT5vdXRfeDsNCisJCXNyY195
-ID0gZGZsb3ctPm91dF95Ow0KKwkJc3JjX3cgPSBkZmxvdy0+b3V0X3c7DQorCQlzcmNfaCA9IGRm
-bG93LT5vdXRfaDsNCiAJfSBlbHNlIHsNCi0JCWhzaXplX2luID0gZGZsb3ctPmluX3c7DQotCQl2
-c2l6ZV9pbiA9IGRmbG93LT5pbl9oOw0KKwkJc3JjX3ggPSBkZmxvdy0+aW5feDsNCisJCXNyY195
-ID0gZGZsb3ctPmluX3k7DQorCQlzcmNfdyA9IGRmbG93LT5pbl93Ow0KKwkJc3JjX2ggPSBkZmxv
-dy0+aW5faDsNCiAJfQ0KDQotCWlmICghaW5fcmFuZ2UoJmxheWVyLT5oc2l6ZV9pbiwgaHNpemVf
-aW4pKSB7DQotCQlEUk1fREVCVUdfQVRPTUlDKCJpbnZhbGlkYXRlIHNyY193ICVkLlxuIiwgaHNp
-emVfaW4pOw0KKwlpZiAoa29tZWRhX2ZiX2NoZWNrX3NyY19jb29yZHMoa2ZiLCBzcmNfeCwgc3Jj
-X3ksIHNyY193LCBzcmNfaCkpDQorCQlyZXR1cm4gLUVJTlZBTDsNCisNCisJaWYgKCFpbl9yYW5n
-ZSgmbGF5ZXItPmhzaXplX2luLCBzcmNfdykpIHsNCisJCURSTV9ERUJVR19BVE9NSUMoImludmFs
-aWRhdGUgc3JjX3cgJWQuXG4iLCBzcmNfdyk7DQogCQlyZXR1cm4gLUVJTlZBTDsNCiAJfQ0KDQot
-CWlmICghaW5fcmFuZ2UoJmxheWVyLT52c2l6ZV9pbiwgdnNpemVfaW4pKSB7DQotCQlEUk1fREVC
-VUdfQVRPTUlDKCJpbnZhbGlkYXRlIHNyY19oICVkLlxuIiwgdnNpemVfaW4pOw0KKwlpZiAoIWlu
-X3JhbmdlKCZsYXllci0+dnNpemVfaW4sIHNyY19oKSkgew0KKwkJRFJNX0RFQlVHX0FUT01JQygi
-aW52YWxpZGF0ZSBzcmNfaCAlZC5cbiIsIHNyY19oKTsNCiAJCXJldHVybiAtRUlOVkFMOw0KIAl9
-DQoNCkBAIC01MzQsNiArNTM3LDU5IEBAIGtvbWVkYV9zY2FsZXJfdmFsaWRhdGUodm9pZCAqdXNl
-ciwNCiAJcmV0dXJuIGVycjsNCiB9DQoNCitzdGF0aWMgdm9pZCBrb21lZGFfc3BsaXRfZGF0YV9m
-bG93KHN0cnVjdCBrb21lZGFfc2NhbGVyICpzY2FsZXIsDQorCQkJCSAgIHN0cnVjdCBrb21lZGFf
-ZGF0YV9mbG93X2NmZyAqZGZsb3csDQorCQkJCSAgIHN0cnVjdCBrb21lZGFfZGF0YV9mbG93X2Nm
-ZyAqbF9kZmxvdywNCisJCQkJICAgc3RydWN0IGtvbWVkYV9kYXRhX2Zsb3dfY2ZnICpyX2RmbG93
-KTsNCisNCitzdGF0aWMgaW50DQora29tZWRhX3NwbGl0dGVyX3ZhbGlkYXRlKHN0cnVjdCBrb21l
-ZGFfc3BsaXR0ZXIgKnNwbGl0dGVyLA0KKwkJCSBzdHJ1Y3QgZHJtX2Nvbm5lY3Rvcl9zdGF0ZSAq
-Y29ubl9zdCwNCisJCQkgc3RydWN0IGtvbWVkYV9kYXRhX2Zsb3dfY2ZnICpkZmxvdywNCisJCQkg
-c3RydWN0IGtvbWVkYV9kYXRhX2Zsb3dfY2ZnICpsX291dHB1dCwNCisJCQkgc3RydWN0IGtvbWVk
-YV9kYXRhX2Zsb3dfY2ZnICpyX291dHB1dCkNCit7DQorCXN0cnVjdCBrb21lZGFfY29tcG9uZW50
-X3N0YXRlICpjX3N0Ow0KKwlzdHJ1Y3Qga29tZWRhX3NwbGl0dGVyX3N0YXRlICpzdDsNCisNCisJ
-aWYgKCFzcGxpdHRlcikgew0KKwkJRFJNX0RFQlVHX0FUT01JQygiQ3VycmVudCBIVyBkb2Vzbid0
-IHN1cHBvcnQgc3BsaXR0ZXIuXG4iKTsNCisJCXJldHVybiAtRUlOVkFMOw0KKwl9DQorDQorCWlm
-ICghaW5fcmFuZ2UoJnNwbGl0dGVyLT5oc2l6ZSwgZGZsb3ctPmluX3cpKSB7DQorCQlEUk1fREVC
-VUdfQVRPTUlDKCJzcGxpdCBpbl93OiVkIGlzIG91dCBvZiB0aGUgYWNjZXB0YWJsZSByYW5nZS5c
-biIsDQorCQkJCSBkZmxvdy0+aW5fdyk7DQorCQlyZXR1cm4gLUVJTlZBTDsNCisJfQ0KKw0KKwlp
-ZiAoIWluX3JhbmdlKCZzcGxpdHRlci0+dnNpemUsIGRmbG93LT5pbl9oKSkgew0KKwkJRFJNX0RF
-QlVHX0FUT01JQygic3BsaXQgaW5faW46ICVkIGV4Y2VlZCB0aGUgYWNjZXB0YWJsZSByYW5nZS5c
-biIsDQorCQkJCSBkZmxvdy0+aW5fdyk7DQorCQlyZXR1cm4gLUVJTlZBTDsNCisJfQ0KKw0KKwlj
-X3N0ID0ga29tZWRhX2NvbXBvbmVudF9nZXRfc3RhdGVfYW5kX3NldF91c2VyKCZzcGxpdHRlci0+
-YmFzZSwNCisJCQljb25uX3N0LT5zdGF0ZSwgY29ubl9zdC0+Y29ubmVjdG9yLCBjb25uX3N0LT5j
-cnRjKTsNCisNCisJaWYgKElTX0VSUihjX3N0KSkNCisJCXJldHVybiBQVFJfRVJSKGNfc3QpOw0K
-Kw0KKwlrb21lZGFfc3BsaXRfZGF0YV9mbG93KHNwbGl0dGVyLT5iYXNlLnBpcGVsaW5lLT5zY2Fs
-ZXJzWzBdLA0KKwkJCSAgICAgICBkZmxvdywgbF9vdXRwdXQsIHJfb3V0cHV0KTsNCisNCisJc3Qg
-PSB0b19zcGxpdHRlcl9zdChjX3N0KTsNCisJc3QtPmhzaXplID0gZGZsb3ctPmluX3c7DQorCXN0
-LT52c2l6ZSA9IGRmbG93LT5pbl9oOw0KKwlzdC0+b3ZlcmxhcCA9IGRmbG93LT5vdmVybGFwOw0K
-Kw0KKwlrb21lZGFfY29tcG9uZW50X2FkZF9pbnB1dCgmc3QtPmJhc2UsICZkZmxvdy0+aW5wdXQs
-IDApOw0KKwlrb21lZGFfY29tcG9uZW50X3NldF9vdXRwdXQoJmxfb3V0cHV0LT5pbnB1dCwgJnNw
-bGl0dGVyLT5iYXNlLCAwKTsNCisJa29tZWRhX2NvbXBvbmVudF9zZXRfb3V0cHV0KCZyX291dHB1
-dC0+aW5wdXQsICZzcGxpdHRlci0+YmFzZSwgMSk7DQorDQorCXJldHVybiAwOw0KK30NCisNCiBz
-dGF0aWMgaW50DQoga29tZWRhX21lcmdlcl92YWxpZGF0ZShzdHJ1Y3Qga29tZWRhX21lcmdlciAq
-bWVyZ2VyLA0KIAkJICAgICAgIHZvaWQgKnVzZXIsDQpAQCAtMTAzMSw2ICsxMDg3LDQxIEBAIGlu
-dCBrb21lZGFfYnVpbGRfd2JfZGF0YV9mbG93KHN0cnVjdCBrb21lZGFfbGF5ZXIgKndiX2xheWVy
-LA0KIAlyZXR1cm4ga29tZWRhX3diX2xheWVyX3ZhbGlkYXRlKHdiX2xheWVyLCBjb25uX3N0LCBk
-Zmxvdyk7DQogfQ0KDQorLyogd3JpdGViYWNrIHNjYWxpbmcgc3BsaXQgZGF0YSBwYXRoOg0KKyAq
-ICAgICAgICAgICAgICAgICAgIC8tPiBzY2FsZXIgLT5cDQorICogY29tcGl6IC0+IHNwbGl0dGVy
-ICAgICAgICAgICAgICBtZXJnZXIgLT4gd2JfbGF5ZXIgLT4gbWVtb3J5DQorICogICAgICAgICAg
-ICAgICAgICAgXC0+IHNjYWxlciAtPi8NCisgKi8NCitpbnQga29tZWRhX2J1aWxkX3diX3NwbGl0
-X2RhdGFfZmxvdyhzdHJ1Y3Qga29tZWRhX2xheWVyICp3Yl9sYXllciwNCisJCQkJICAgIHN0cnVj
-dCBkcm1fY29ubmVjdG9yX3N0YXRlICpjb25uX3N0LA0KKwkJCQkgICAgc3RydWN0IGtvbWVkYV9j
-cnRjX3N0YXRlICprY3J0Y19zdCwNCisJCQkJICAgIHN0cnVjdCBrb21lZGFfZGF0YV9mbG93X2Nm
-ZyAqZGZsb3cpDQorew0KKwlzdHJ1Y3Qga29tZWRhX3BpcGVsaW5lICpwaXBlID0gd2JfbGF5ZXIt
-PmJhc2UucGlwZWxpbmU7DQorCXN0cnVjdCBkcm1fY29ubmVjdG9yICpjb25uID0gY29ubl9zdC0+
-Y29ubmVjdG9yOw0KKwlzdHJ1Y3Qga29tZWRhX2RhdGFfZmxvd19jZmcgbF9kZmxvdywgcl9kZmxv
-dzsNCisJaW50IGVycjsNCisNCisJZXJyID0ga29tZWRhX3NwbGl0dGVyX3ZhbGlkYXRlKHBpcGUt
-PnNwbGl0dGVyLCBjb25uX3N0LA0KKwkJCQkgICAgICAgZGZsb3csICZsX2RmbG93LCAmcl9kZmxv
-dyk7DQorCWlmIChlcnIpDQorCQlyZXR1cm4gZXJyOw0KKwllcnIgPSBrb21lZGFfc2NhbGVyX3Zh
-bGlkYXRlKGNvbm4sIGtjcnRjX3N0LCAmbF9kZmxvdyk7DQorCWlmIChlcnIpDQorCQlyZXR1cm4g
-ZXJyOw0KKw0KKwllcnIgPSBrb21lZGFfc2NhbGVyX3ZhbGlkYXRlKGNvbm4sIGtjcnRjX3N0LCAm
-cl9kZmxvdyk7DQorCWlmIChlcnIpDQorCQlyZXR1cm4gZXJyOw0KKw0KKwllcnIgPSBrb21lZGFf
-bWVyZ2VyX3ZhbGlkYXRlKHBpcGUtPm1lcmdlciwgY29ubl9zdCwga2NydGNfc3QsDQorCQkJCSAg
-ICAgJmxfZGZsb3csICZyX2RmbG93LCBkZmxvdyk7DQorCWlmIChlcnIpDQorCQlyZXR1cm4gZXJy
-Ow0KKw0KKwlyZXR1cm4ga29tZWRhX3diX2xheWVyX3ZhbGlkYXRlKHdiX2xheWVyLCBjb25uX3N0
-LCBkZmxvdyk7DQorfQ0KKw0KIC8qIGJ1aWxkIGRpc3BsYXkgb3V0cHV0IGRhdGEgZmxvdywgdGhl
-IGRhdGEgcGF0aCBpczoNCiAgKiBjb21waXogLT4gaW1wcm9jIC0+IHRpbWluZ19jdHJscg0KICAq
-Lw0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRh
-X3diX2Nvbm5lY3Rvci5jIGIvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21l
-ZGFfd2JfY29ubmVjdG9yLmMNCmluZGV4IDI2MTNiYjBkNzljZS4uNGUyNmIyNzg2Y2UwIDEwMDY0
-NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfd2JfY29u
-bmVjdG9yLmMNCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRh
-X3diX2Nvbm5lY3Rvci5jDQpAQCAtMTMsNiArMTMsNyBAQCBrb21lZGFfd2JfaW5pdF9kYXRhX2Zs
-b3coc3RydWN0IGtvbWVkYV9sYXllciAqd2JfbGF5ZXIsDQogCQkJIHN0cnVjdCBrb21lZGFfY3J0
-Y19zdGF0ZSAqa2NydGNfc3QsDQogCQkJIHN0cnVjdCBrb21lZGFfZGF0YV9mbG93X2NmZyAqZGZs
-b3cpDQogew0KKwlzdHJ1Y3Qga29tZWRhX3NjYWxlciAqc2NhbGVyID0gd2JfbGF5ZXItPmJhc2Uu
-cGlwZWxpbmUtPnNjYWxlcnNbMF07DQogCXN0cnVjdCBkcm1fZnJhbWVidWZmZXIgKmZiID0gY29u
-bl9zdC0+d3JpdGViYWNrX2pvYi0+ZmI7DQoNCiAJbWVtc2V0KGRmbG93LCAwLCBzaXplb2YoKmRm
-bG93KSk7DQpAQCAtMjksNiArMzAsMTMgQEAga29tZWRhX3diX2luaXRfZGF0YV9mbG93KHN0cnVj
-dCBrb21lZGFfbGF5ZXIgKndiX2xheWVyLA0KDQogCWtvbWVkYV9jb21wbGV0ZV9kYXRhX2Zsb3df
-Y2ZnKGRmbG93LCBmYik7DQoNCisJLyogaWYgc2NhbGluZyBleGNlZWQgdGhlIGFjY2VwdGFibGUg
-c2NhbGVyIGlucHV0L291dHB1dCByYW5nZSwgdHJ5IHRvDQorCSAqIGVuYWJsZSBzcGxpdC4NCisJ
-ICovDQorCWlmIChkZmxvdy0+bmVlZHNfc2NhbGluZyAmJiBzY2FsZXIpDQorCQlkZmxvdy0+bmVl
-ZHNfc3BsaXQgPSAhaW5fcmFuZ2UoJnNjYWxlci0+aHNpemUsIGRmbG93LT5pbl93KSB8fA0KKwkJ
-CQkgICAgICFpbl9yYW5nZSgmc2NhbGVyLT5oc2l6ZSwgZGZsb3ctPm91dF93KTsNCisNCiAJcmV0
-dXJuIDA7DQogfQ0KDQpAQCAtNjUsNyArNzMsMTQgQEAga29tZWRhX3diX2VuY29kZXJfYXRvbWlj
-X2NoZWNrKHN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2RlciwNCiAJaWYgKGVycikNCiAJCXJldHVy
-biBlcnI7DQoNCi0JcmV0dXJuIGtvbWVkYV9idWlsZF93Yl9kYXRhX2Zsb3cod2JfbGF5ZXIsIGNv
-bm5fc3QsIGtjcnRjX3N0LCAmZGZsb3cpOw0KKwlpZiAoZGZsb3cubmVlZHNfc3BsaXQpDQorCQll
-cnIgPSBrb21lZGFfYnVpbGRfd2Jfc3BsaXRfZGF0YV9mbG93KHdiX2xheWVyLA0KKwkJCQljb25u
-X3N0LCBrY3J0Y19zdCwgJmRmbG93KTsNCisJZWxzZQ0KKwkJZXJyID0ga29tZWRhX2J1aWxkX3di
-X2RhdGFfZmxvdyh3Yl9sYXllciwNCisJCQkJY29ubl9zdCwga2NydGNfc3QsICZkZmxvdyk7DQor
-DQorCXJldHVybiBlcnI7DQogfQ0KDQogc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fZW5jb2Rlcl9o
-ZWxwZXJfZnVuY3Mga29tZWRhX3diX2VuY29kZXJfaGVscGVyX2Z1bmNzID0gew0KLS0NCjIuMTcu
-MQ0K
+
+--Apple-Mail=_D5FC080D-8BC9-40E2-AD6D-43794CA895EE
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
+
+
+
+> Il giorno 30 mag 2019, alle ore 10:29, Srivatsa S. Bhat =
+<srivatsa@csail.mit.edu> ha scritto:
+>=20
+> On 5/29/19 12:41 AM, Paolo Valente wrote:
+>>=20
+>>=20
+>>> Il giorno 29 mag 2019, alle ore 03:09, Srivatsa S. Bhat =
+<srivatsa@csail.mit.edu> ha scritto:
+>>>=20
+>>> On 5/23/19 11:51 PM, Paolo Valente wrote:
+>>>>=20
+>>>>> Il giorno 24 mag 2019, alle ore 01:43, Srivatsa S. Bhat =
+<srivatsa@csail.mit.edu> ha scritto:
+>>>>>=20
+>>>>> When trying to run multiple dd tasks simultaneously, I get the =
+kernel
+>>>>> panic shown below (mainline is fine, without these patches).
+>>>>>=20
+>>>>=20
+>>>> Could you please provide me somehow with a list =
+*(bfq_serv_to_charge+0x21) ?
+>>>>=20
+>>>=20
+>>> Hi Paolo,
+>>>=20
+>>> Sorry for the delay! Here you go:
+>>>=20
+>>> (gdb) list *(bfq_serv_to_charge+0x21)
+>>> 0xffffffff814bad91 is in bfq_serv_to_charge =
+(./include/linux/blkdev.h:919).
+>>> 914
+>>> 915	extern unsigned int blk_rq_err_bytes(const struct request *rq);
+>>> 916
+>>> 917	static inline unsigned int blk_rq_sectors(const struct request =
+*rq)
+>>> 918	{
+>>> 919		return blk_rq_bytes(rq) >> SECTOR_SHIFT;
+>>> 920	}
+>>> 921
+>>> 922	static inline unsigned int blk_rq_cur_sectors(const struct =
+request *rq)
+>>> 923	{
+>>> (gdb)
+>>>=20
+>>>=20
+>>> For some reason, I've not been able to reproduce this issue after
+>>> reporting it here. (Perhaps I got lucky when I hit the kernel panic
+>>> a bunch of times last week).
+>>>=20
+>>> I'll test with your fix applied and see how it goes.
+>>>=20
+>>=20
+>> Great!  the offending line above gives me hope that my fix is =
+correct.
+>> If no more failures occur, then I'm eager (and a little worried ...)
+>> to see how it goes with throughput :)
+>>=20
+>=20
+> Your fix held up well under my testing :)
+>=20
+
+Great!
+
+> As for throughput, with low_latency =3D 1, I get around 1.4 MB/s with
+> bfq (vs 1.6 MB/s with mq-deadline). This is a huge improvement
+> compared to what it was before (70 KB/s).
+>=20
+
+That's beautiful news!
+
+So, now we have the best of the two worlds: maximum throughput and
+total control on I/O (including minimum latency for interactive and
+soft real-time applications).  Besides, no manual configuration
+needed.  Of course, this holds unless/until you find other flaws ... ;)
+
+> With tracing on, the throughput is a bit lower (as expected I guess),
+> about 1 MB/s, and the corresponding trace file
+> (trace-waker-detection-1MBps) is available at:
+>=20
+> https://www.dropbox.com/s/3roycp1zwk372zo/bfq-traces.tar.gz?dl=3D0
+>=20
+
+Thank you for the new trace.  I've analyzed it carefully, and, as I
+imagined, this residual 12% throughput loss is due to a couple of
+heuristics that occasionally get something wrong.  Most likely, ~12%
+is the worst-case loss, and if one repeats the tests, the loss may be
+much lower in some runs.
+
+I think it is very hard to eliminate this fluctuation while keeping
+full I/O control.  But, who knows, I might have some lucky idea in the
+future.
+
+At any rate, since you pointed out that you are interested in
+out-of-the-box performance, let me complete the context: in case
+low_latency is left set, one gets, in return for this 12% loss,
+a) at least 1000% higher responsiveness, e.g., 1000% lower start-up
+times of applications under load [1];
+b) 500-1000% higher throughput in multi-client server workloads, as I
+already pointed out [2].
+
+I'm going to prepare complete patches.  In addition, if ok for you,
+I'll report these results on the bug you created.  Then I guess we can
+close it.
+
+[1] https://algo.ing.unimo.it/people/paolo/disk_sched/results.php
+[2] =
+https://www.linaro.org/blog/io-bandwidth-management-for-production-quality=
+-services/
+
+> Thank you so much for your tireless efforts in fixing this issue!
+>=20
+
+I did enjoy working on this with you: your test case and your support
+enabled me to make important improvements.  So, thank you very much
+for your collaboration so far,
+Paolo
+
+
+> Regards,
+> Srivatsa
+> VMware Photon OS
+
+
+--Apple-Mail=_D5FC080D-8BC9-40E2-AD6D-43794CA895EE
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEpYoduex+OneZyvO8OAkCLQGo9oMFAlzvtGUACgkQOAkCLQGo
+9oNVJw//fwlcfMSVaKx721kD5B4qn6aWHMN4d2RzIDbrJh88OKMa9IDy70+NPqXq
+dEDMwLetb/KsF3Ox2dEaWt+NTwIW9/AzzdIZSwuwMvuZVR606rmQhqcBfW5uhQuF
+WKozLzC5VPIJLowgpYmWSQ+q283Ufsl4R/dGyaXBwYx8qRFarjsKQe+v+ozzzM+8
+m8c0nf5K17nwsMVLAk7HizOAUosP+kHkNILsgXV9gu2RpPc1LE3SYHF5ujfnR8lh
+3t4PJdH7r1gi4vRcyqVZvW9i15bhgUgQNlJARvgA9EeV5ekQQbY6a/ywds3z8CTV
+fSlCJt9xsqqz7cxf4BQUiBud2UTv1NoVCMTYwDJ4AK4r9hffMpy1iyhMyhx9Q8WE
++jOpntWPeMyU8RCnV87pKo3ELzIlMpucCxTvlRAoZBmEltuQn/DvUGv0N0YizeIF
+s99H14r4yrNKsQSzna6qyE+FAs+QpUHpXV44IHVZzhyXesxqPtaju/LisYCIilNs
+GAVcHW9JIv68KdAMq3t5EX/XXfn/v9/3/8vY1UrhGafcJu9JkJW0Z5UyjzRctRC0
+3UmIgpEWz9+mAjPuIboYbmL1uHaUcfxNUwqr38/rEv2rMm0zzd3ipHzzJCIS09NX
+OjDXhgG+zqvWE7H8OC7Sqxg8ZUKpKPkhJRi8m0MrZsl7GYaM9Ok=
+=sgcb
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_D5FC080D-8BC9-40E2-AD6D-43794CA895EE--
