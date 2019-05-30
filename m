@@ -2,52 +2,55 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA69C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB60BC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 048D32570B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:33:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A512F2571B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:33:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190792;
-	bh=w3IVtbtJNkqRBo+VDM/Lw8cnn4ALV8HzJvwSy/aYl6k=;
+	s=default; t=1559190800;
+	bh=/2LHEkYu/goeeY7c4o2zeiu0wluSLY7o9LR3wpTiklk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LunLKGTqIMGqZW8TkOw6A36LAENO8Pe26PqTfSUe6J2Y2uVTRfgYVonomXeeb+LpK
-	 bjr+ejKVpSaDial3TG1+uJFgYHvbyxIOa6/1CRUGWtNyxdUcZ2lgUDCw3TmCFo6gKB
-	 TYt20vmS6ZN1sNPW8cDxaVO6wNzquMYio3M8tQ3I=
+	b=rTbFYRD2oiOhwWArN5GwQzYzt/8jcWNbAAwd7VmYBN5s7bdPNjKoO+8M9qo5VNGWW
+	 dPGPZ8ZLIF34GAayYHVIJ7MrKGx3WHMVxN4BS0oOn+JqB2HZIGhn/SYI3eVNQ1EfYW
+	 sTd7K1gJXcDgcykUCw7ihiM5ordf+eJPEcVIrUCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388384AbfE3EdK (ORCPT
+        id S2388398AbfE3EdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:33:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58950 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:33:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729491AbfE3DNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:13:32 -0400
+        id S1729473AbfE3DN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:29 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 688CF24526;
-        Thu, 30 May 2019 03:13:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93A2624555;
+        Thu, 30 May 2019 03:13:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186011;
-        bh=w3IVtbtJNkqRBo+VDM/Lw8cnn4ALV8HzJvwSy/aYl6k=;
+        s=default; t=1559186008;
+        bh=/2LHEkYu/goeeY7c4o2zeiu0wluSLY7o9LR3wpTiklk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hreetgwAffaJ7YkxYLJSYI2CRGruBbk5smvi0ccUKYBV0fkFXseBUEtB9mhSaSh/l
-         adOCy8U5sv9DVmalRV5fg6tj0IpvRJnVDRH5beVjk8Dar7MriW6TocBWbRe/gceiyF
-         Z45mkXEsCvRG/RlDHGRPUQ/+yiKUBppy5SefbUvA=
+        b=pFnFR5mn5KzSAuk/GvWUCxiVL8IXZKP/A3qJh1iRorcV+F35wcWQbqXryDAKfbgVo
+         fFN4wKPcqnJfVDdUe7QQoVJpS7QnpGG6oBBRpXSvrSummIvaNU8lSspgNU+S6A2x0M
+         LpcNUg+ncJV11aJzjTn19m6Hdb7BkQDsRgYPFrIQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 073/346] brcm80211: potential NULL dereference in brcmf_cfg80211_vndr_cmds_dcmd_handler()
-Date:   Wed, 29 May 2019 20:02:26 -0700
-Message-Id: <20190530030544.780551237@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Fredrik Noring <noring@nocrew.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH 5.0 023/346] fbdev: fix divide error in fb_var_to_videomode
+Date:   Wed, 29 May 2019 20:01:36 -0700
+Message-Id: <20190530030541.902184837@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -60,57 +63,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e025da3d7aa4770bb1d1b3b0aa7cc4da1744852d ]
+From: Shile Zhang <shile.zhang@linux.alibaba.com>
 
-If "ret_len" is negative then it could lead to a NULL dereference.
+commit cf84807f6dd0be5214378e66460cfc9187f532f9 upstream.
 
-The "ret_len" value comes from nl80211_vendor_cmd(), if it's negative
-then we don't allocate the "dcmd_buf" buffer.  Then we pass "ret_len" to
-brcmf_fil_cmd_data_set() where it is cast to a very high u32 value.
-Most of the functions in that call tree check whether the buffer we pass
-is NULL but there are at least a couple places which don't such as
-brcmf_dbg_hex_dump() and brcmf_msgbuf_query_dcmd().  We memcpy() to and
-from the buffer so it would result in a NULL dereference.
+To fix following divide-by-zero error found by Syzkaller:
 
-The fix is to change the types so that "ret_len" can't be negative.  (If
-we memcpy() zero bytes to NULL, that's a no-op and doesn't cause an
-issue).
+  divide error: 0000 [#1] SMP PTI
+  CPU: 7 PID: 8447 Comm: test Kdump: loaded Not tainted 4.19.24-8.al7.x86_64 #1
+  Hardware name: Alibaba Cloud Alibaba Cloud ECS, BIOS rel-1.12.0-0-ga698c8995f-prebuilt.qemu.org 04/01/2014
+  RIP: 0010:fb_var_to_videomode+0xae/0xc0
+  Code: 04 44 03 46 78 03 4e 7c 44 03 46 68 03 4e 70 89 ce d1 ee 69 c0 e8 03 00 00 f6 c2 01 0f 45 ce 83 e2 02 8d 34 09 0f 45 ce 31 d2 <41> f7 f0 31 d2 f7 f1 89 47 08 f3 c3 66 0f 1f 44 00 00 0f 1f 44 00
+  RSP: 0018:ffffb7e189347bf0 EFLAGS: 00010246
+  RAX: 00000000e1692410 RBX: ffffb7e189347d60 RCX: 0000000000000000
+  RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffb7e189347c10
+  RBP: ffff99972a091c00 R08: 0000000000000000 R09: 0000000000000000
+  R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000100
+  R13: 0000000000010000 R14: 00007ffd66baf6d0 R15: 0000000000000000
+  FS:  00007f2054d11740(0000) GS:ffff99972fbc0000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 00007f205481fd20 CR3: 00000004288a0001 CR4: 00000000001606a0
+  Call Trace:
+   fb_set_var+0x257/0x390
+   ? lookup_fast+0xbb/0x2b0
+   ? fb_open+0xc0/0x140
+   ? chrdev_open+0xa6/0x1a0
+   do_fb_ioctl+0x445/0x5a0
+   do_vfs_ioctl+0x92/0x5f0
+   ? __alloc_fd+0x3d/0x160
+   ksys_ioctl+0x60/0x90
+   __x64_sys_ioctl+0x16/0x20
+   do_syscall_64+0x5b/0x190
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  RIP: 0033:0x7f20548258d7
+  Code: 44 00 00 48 8b 05 b9 15 2d 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 89 15 2d 00 f7 d8 64 89 01 48
 
-Fixes: 1bacb0487d0e ("brcmfmac: replace cfg80211 testmode with vendor command")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+It can be triggered easily with following test code:
+
+  #include <linux/fb.h>
+  #include <fcntl.h>
+  #include <sys/ioctl.h>
+  int main(void)
+  {
+          struct fb_var_screeninfo var = {.activate = 0x100, .pixclock = 60};
+          int fd = open("/dev/fb0", O_RDWR);
+          if (fd < 0)
+                  return 1;
+
+          if (ioctl(fd, FBIOPUT_VSCREENINFO, &var))
+                  return 1;
+
+          return 0;
+  }
+
+Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+Cc: Fredrik Noring <noring@nocrew.org>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/video/fbdev/core/modedb.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c
-index 8eff2753abade..d493021f60318 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c
-@@ -35,9 +35,10 @@ static int brcmf_cfg80211_vndr_cmds_dcmd_handler(struct wiphy *wiphy,
- 	struct brcmf_if *ifp;
- 	const struct brcmf_vndr_dcmd_hdr *cmdhdr = data;
- 	struct sk_buff *reply;
--	int ret, payload, ret_len;
-+	unsigned int payload, ret_len;
- 	void *dcmd_buf = NULL, *wr_pointer;
- 	u16 msglen, maxmsglen = PAGE_SIZE - 0x100;
-+	int ret;
+--- a/drivers/video/fbdev/core/modedb.c
++++ b/drivers/video/fbdev/core/modedb.c
+@@ -935,6 +935,9 @@ void fb_var_to_videomode(struct fb_video
+ 	if (var->vmode & FB_VMODE_DOUBLE)
+ 		vtotal *= 2;
  
- 	if (len < sizeof(*cmdhdr)) {
- 		brcmf_err("vendor command too short: %d\n", len);
-@@ -65,7 +66,7 @@ static int brcmf_cfg80211_vndr_cmds_dcmd_handler(struct wiphy *wiphy,
- 			brcmf_err("oversize return buffer %d\n", ret_len);
- 			ret_len = BRCMF_DCMD_MAXLEN;
- 		}
--		payload = max(ret_len, len) + 1;
-+		payload = max_t(unsigned int, ret_len, len) + 1;
- 		dcmd_buf = vzalloc(payload);
- 		if (NULL == dcmd_buf)
- 			return -ENOMEM;
--- 
-2.20.1
-
++	if (!htotal || !vtotal)
++		return;
++
+ 	hfreq = pixclock/htotal;
+ 	mode->refresh = hfreq/vtotal;
+ }
 
 
