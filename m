@@ -2,97 +2,61 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F83C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73FACC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:26:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FF5725F8D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:26:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 570F125F8D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:26:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbfE3S02 (ORCPT
+        id S1726748AbfE3S0d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 14:26:28 -0400
-Received: from mga11.intel.com ([192.55.52.93]:32937 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726330AbfE3S00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 14:26:26 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 11:26:25 -0700
-X-ExtLoop1: 1
-Received: from unknown (HELO [10.228.129.69]) ([10.228.129.69])
-  by orsmga007.jf.intel.com with ESMTP; 30 May 2019 11:26:23 -0700
-Subject: Re: [PATCH][next] IB/rdmavt: Use struct_size() helper
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190529151248.GA24080@embeddedor>
-From:   Dennis Dalessandro <dennis.dalessandro@intel.com>
-Message-ID: <09563aec-f6d0-f27f-4f67-1e21cebd997c@intel.com>
-Date:   Thu, 30 May 2019 14:26:22 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190529151248.GA24080@embeddedor>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        Thu, 30 May 2019 14:26:33 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:56736 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726649AbfE3S0b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 14:26:31 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 19E9F14D92C59;
+        Thu, 30 May 2019 11:26:31 -0700 (PDT)
+Date:   Thu, 30 May 2019 11:26:30 -0700 (PDT)
+Message-Id: <20190530.112630.476132829981439143.davem@davemloft.net>
+To:     mkubecek@suse.cz
+Cc:     netdev@vger.kernel.org, vivien.didelot@gmail.com,
+        linux-kernel@vger.kernel.org, kernel@savoirfairelinux.com,
+        linville@redhat.com, f.fainelli@gmail.com
+Subject: Re: [PATCH net-next] ethtool: copy reglen to userspace
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190530082722.GB27401@unicorn.suse.cz>
+References: <20190529.221744.1136074795446305909.davem@davemloft.net>
+        <20190530064848.GA27401@unicorn.suse.cz>
+        <20190530082722.GB27401@unicorn.suse.cz>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 30 May 2019 11:26:31 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/29/2019 11:12 AM, Gustavo A. R. Silva wrote:
-> Make use of the struct_size() helper instead of an open-coded version
-> in order to avoid any potential type mistakes, in particular in the
-> context in which this code is being used.
-> 
-> So, replace the following form:
-> 
-> sizeof(struct rvt_sge) * init_attr->cap.max_send_sge + sizeof(struct rvt_swqe)
-> 
-> with:
-> 
-> struct_size(swq, sg_list, init_attr->cap.max_send_sge)
-> 
-> and so on...
-> 
-> Also, notice that variable size is unnecessary, hence it is removed.
-> 
-> This code was detected with the help of Coccinelle.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->   drivers/infiniband/sw/rdmavt/qp.c | 4 +---
->   1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/infiniband/sw/rdmavt/qp.c b/drivers/infiniband/sw/rdmavt/qp.c
-> index 31a2e65e4906..a60f5faea198 100644
-> --- a/drivers/infiniband/sw/rdmavt/qp.c
-> +++ b/drivers/infiniband/sw/rdmavt/qp.c
-> @@ -988,9 +988,7 @@ struct ib_qp *rvt_create_qp(struct ib_pd *ibpd,
->   	case IB_QPT_UC:
->   	case IB_QPT_RC:
->   	case IB_QPT_UD:
-> -		sz = sizeof(struct rvt_sge) *
-> -			init_attr->cap.max_send_sge +
-> -			sizeof(struct rvt_swqe);
-> +		sz = struct_size(swq, sg_list, init_attr->cap.max_send_sge);
->   		swq = vzalloc_node(array_size(sz, sqsize), rdi->dparms.node);
->   		if (!swq)
->   			return ERR_PTR(-ENOMEM);
-> 
+From: Michal Kubecek <mkubecek@suse.cz>
+Date: Thu, 30 May 2019 10:27:22 +0200
 
-Looks correct, I don't think this makes the code easier to read though. 
-The macro name "struct_size" is misleading to me. Maybe that's just me, 
-and in any case...
+> I believe this should be handled by ethtool_get_regs(), either by
+> returning an error or by only copying data up to original regs.len
+> passed by userspace. The former seems more correct but broken userspace
+> software would suddenly start to fail where it "used to work". The
+> latter would be closer to current behaviour but it would mean that
+> broken userspace software might nerver notice there is something wrong.
 
-Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-
-
+I therefore think we need to meticulously fixup all of these adjustments
+of regs.len before adjusting the copy call here in generic ethtool.
