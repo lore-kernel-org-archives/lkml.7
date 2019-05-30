@@ -7,49 +7,55 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EC5C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F38C3C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E03F124F1A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBA70250CF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:08:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189304;
-	bh=UFh/zJ1gijS7gMSPqAyLNEYVNc/ARSAND5iI9zLBZgw=;
+	s=default; t=1559189305;
+	bh=i//CKohb3ZNdiLHFXsidC0nCrriCmgp4KxQfe9bIMmA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yXAX6OgyLSWCLbCRsbYA9087J2eoMXJHAfVJpza3BFXFHlkDDp5bl1QTpWuCqs2cH
-	 45fSsccb1Nx3NORHBf5fLIdTtYpgZQbOQoV8xLJwHY41D515VWPUYFKAaBHabOTSoK
-	 OEHCDPIeuwEBwhtKtFFE+QgA9Y7cWJwawEF0ejfM=
+	b=0iYdXBKiSq/QFwr4TwPp92YrFSGv37txLS1rrAtfgKCTM+owFEKbY66OaqySU9LMa
+	 ixlwQMHGfzZLHFym3iY2fEt86HDruvOPZltV12cfLCaymCUzvimKLwzrWrwWjHhHbS
+	 NoKpIMeSwL0Zo8MuhopD5RB6hN+c1BCEyOUoIY/M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727346AbfE3EIS (ORCPT
+        id S1727333AbfE3EIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:08:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46034 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:08:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729621AbfE3DRU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:17:20 -0400
+        id S1730229AbfE3DRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:17:21 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF3412469E;
-        Thu, 30 May 2019 03:17:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 510932469D;
+        Thu, 30 May 2019 03:17:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186239;
-        bh=UFh/zJ1gijS7gMSPqAyLNEYVNc/ARSAND5iI9zLBZgw=;
+        s=default; t=1559186241;
+        bh=i//CKohb3ZNdiLHFXsidC0nCrriCmgp4KxQfe9bIMmA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=scksEpJys201TQbs9qjEokUF8Qmaui57+AwZNnCIafcLNqBxbXq4oldrESc1azD28
-         P6J+3VkFFf3ef6kK6hrP2AU1531zgo0YV0acmiD3sA42tLoTIbBk9yKUitbzzy33Ey
-         rDBCp9OXOg9rJy903Af/hjuLkyvYRsHQkAp5ZwVI=
+        b=gkesNESp0IJvhRpMN3Hk3CezFEBvu5DWTFlM1F3mwVkm0OpMj/hb1uAbRPktLJqet
+         p150eGXH2VOQH55IiF6o2l0Ucq6DDO90fZTaLlYkyjE5aCVayGLTtleZC3RnDyiJtN
+         UeQFcMY47NQdMfAikW8BBHpZGKSxVm3A0zFZW0+4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Will Deacon <will.deacon@arm.com>,
+        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>, acme@kernel.org,
+        jolsa@kernel.org, Ingo Molnar <mingo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 151/276] ACPI/IORT: Reject platform device creation on NUMA node mapping failure
-Date:   Wed, 29 May 2019 20:05:09 -0700
-Message-Id: <20190530030535.028955066@linuxfoundation.org>
+Subject: [PATCH 4.19 154/276] perf/x86/msr: Add Icelake support
+Date:   Wed, 29 May 2019 20:05:12 -0700
+Message-Id: <20190530030535.184687483@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -62,122 +68,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 36a2ba07757df790b4a874efb1a105b9330a9ae7 ]
+[ Upstream commit cf50d79a8cfe5adae37fec026220b009559bbeed ]
 
-In a system where, through IORT firmware mappings, the SMMU device is
-mapped to a NUMA node that is not online, the kernel bootstrap results
-in the following crash:
+Icelake is the same as the existing Skylake parts.
 
-  Unable to handle kernel paging request at virtual address 0000000000001388
-  Mem abort info:
-    ESR = 0x96000004
-    Exception class = DABT (current EL), IL = 32 bits
-    SET = 0, FnV = 0
-    EA = 0, S1PTW = 0
-  Data abort info:
-    ISV = 0, ISS = 0x00000004
-    CM = 0, WnR = 0
-  [0000000000001388] user address but active_mm is swapper
-  Internal error: Oops: 96000004 [#1] SMP
-  Modules linked in:
-  CPU: 5 PID: 1 Comm: swapper/0 Not tainted 5.0.0 #15
-  pstate: 80c00009 (Nzcv daif +PAN +UAO)
-  pc : __alloc_pages_nodemask+0x13c/0x1068
-  lr : __alloc_pages_nodemask+0xdc/0x1068
-  ...
-  Process swapper/0 (pid: 1, stack limit = 0x(____ptrval____))
-  Call trace:
-   __alloc_pages_nodemask+0x13c/0x1068
-   new_slab+0xec/0x570
-   ___slab_alloc+0x3e0/0x4f8
-   __slab_alloc+0x60/0x80
-   __kmalloc_node_track_caller+0x10c/0x478
-   devm_kmalloc+0x44/0xb0
-   pinctrl_bind_pins+0x4c/0x188
-   really_probe+0x78/0x2b8
-   driver_probe_device+0x64/0x110
-   device_driver_attach+0x74/0x98
-   __driver_attach+0x9c/0xe8
-   bus_for_each_dev+0x84/0xd8
-   driver_attach+0x30/0x40
-   bus_add_driver+0x170/0x218
-   driver_register+0x64/0x118
-   __platform_driver_register+0x54/0x60
-   arm_smmu_driver_init+0x24/0x2c
-   do_one_initcall+0xbc/0x328
-   kernel_init_freeable+0x304/0x3ac
-   kernel_init+0x18/0x110
-   ret_from_fork+0x10/0x1c
-  Code: f90013b5 b9410fa1 1a9f0694 b50014c2 (b9400804)
-  ---[ end trace dfeaed4c373a32da ]--
-
-Change the dev_set_proximity() hook prototype so that it returns a
-value and make it return failure if the PXM->NUMA-node mapping
-corresponds to an offline node, fixing the crash.
-
-Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Link: https://lore.kernel.org/linux-arm-kernel/20190315021940.86905-1-wangkefeng.wang@huawei.com/
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: acme@kernel.org
+Cc: jolsa@kernel.org
+Link: https://lkml.kernel.org/r/20190402194509.2832-12-kan.liang@linux.intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/arm64/iort.c | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ arch/x86/events/msr.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-index e48eebc27b81b..43c2615434b48 100644
---- a/drivers/acpi/arm64/iort.c
-+++ b/drivers/acpi/arm64/iort.c
-@@ -1231,18 +1231,24 @@ static bool __init arm_smmu_v3_is_coherent(struct acpi_iort_node *node)
- /*
-  * set numa proximity domain for smmuv3 device
-  */
--static void  __init arm_smmu_v3_set_proximity(struct device *dev,
-+static int  __init arm_smmu_v3_set_proximity(struct device *dev,
- 					      struct acpi_iort_node *node)
- {
- 	struct acpi_iort_smmu_v3 *smmu;
- 
- 	smmu = (struct acpi_iort_smmu_v3 *)node->node_data;
- 	if (smmu->flags & ACPI_IORT_SMMU_V3_PXM_VALID) {
--		set_dev_node(dev, acpi_map_pxm_to_node(smmu->pxm));
-+		int node = acpi_map_pxm_to_node(smmu->pxm);
-+
-+		if (node != NUMA_NO_NODE && !node_online(node))
-+			return -EINVAL;
-+
-+		set_dev_node(dev, node);
- 		pr_info("SMMU-v3[%llx] Mapped to Proximity domain %d\n",
- 			smmu->base_address,
- 			smmu->pxm);
- 	}
-+	return 0;
- }
- #else
- #define arm_smmu_v3_set_proximity NULL
-@@ -1317,7 +1323,7 @@ struct iort_dev_config {
- 	int (*dev_count_resources)(struct acpi_iort_node *node);
- 	void (*dev_init_resources)(struct resource *res,
- 				     struct acpi_iort_node *node);
--	void (*dev_set_proximity)(struct device *dev,
-+	int (*dev_set_proximity)(struct device *dev,
- 				    struct acpi_iort_node *node);
- };
- 
-@@ -1368,8 +1374,11 @@ static int __init iort_add_platform_device(struct acpi_iort_node *node,
- 	if (!pdev)
- 		return -ENOMEM;
- 
--	if (ops->dev_set_proximity)
--		ops->dev_set_proximity(&pdev->dev, node);
-+	if (ops->dev_set_proximity) {
-+		ret = ops->dev_set_proximity(&pdev->dev, node);
-+		if (ret)
-+			goto dev_put;
-+	}
- 
- 	count = ops->dev_count_resources(node);
- 
+diff --git a/arch/x86/events/msr.c b/arch/x86/events/msr.c
+index 1b9f85abf9bc1..ace6c1e752fb1 100644
+--- a/arch/x86/events/msr.c
++++ b/arch/x86/events/msr.c
+@@ -89,6 +89,7 @@ static bool test_intel(int idx)
+ 	case INTEL_FAM6_SKYLAKE_X:
+ 	case INTEL_FAM6_KABYLAKE_MOBILE:
+ 	case INTEL_FAM6_KABYLAKE_DESKTOP:
++	case INTEL_FAM6_ICELAKE_MOBILE:
+ 		if (idx == PERF_MSR_SMI || idx == PERF_MSR_PPERF)
+ 			return true;
+ 		break;
 -- 
 2.20.1
 
