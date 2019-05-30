@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 442F6C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7674C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01D952229C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:38:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87989258BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:38:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191087;
-	bh=ZeohyddH6FkTCMAWCFJ5ZMUegBhCJh5LZK63ycK1bl0=;
+	s=default; t=1559191090;
+	bh=1/jtWjLwtQUBaIeNDr26UgU8Xxb0ANdHzNd+W3F8NtE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Ys2bH9zih3DZeaoIpj/86+2MoAZw83AbAY2FC7LSUXB3L0H/28NB9po7E73CvuFb
-	 w8rj/+DAvB9eqqtxBhZxhRPKXOVz8P0VxYf5vTJxOc7FY6K5SRw4sjMYJBAvSYw+zS
-	 Of88qED1TMUZ/ftmFqyVsm/MUkC5S3uliQmiw6k0=
+	b=Y6nGnnGxm+lqLrMUBz/jmQjTniInF1vVJrxBOVkolp19KV8nIsjB8nGJE6JBphENW
+	 29wMTh2WODFPkyVbRR4dGXfWMh9eseTx/kATVG6H7XgGeW6A/99uuQaTKTebQKIxBT
+	 Zv17vvLH+TXJv5F8wvKcf7VWg9MjAN5BcRiSFH/Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388086AbfE3EiG (ORCPT
+        id S1729216AbfE3DMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:38:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56188 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729219AbfE3DMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:12:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50232 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728420AbfE3DLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:13 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7675A23E29;
-        Thu, 30 May 2019 03:12:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94A1C24476;
+        Thu, 30 May 2019 03:11:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185966;
-        bh=ZeohyddH6FkTCMAWCFJ5ZMUegBhCJh5LZK63ycK1bl0=;
+        s=default; t=1559185872;
+        bh=1/jtWjLwtQUBaIeNDr26UgU8Xxb0ANdHzNd+W3F8NtE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t64I0aytXrtW+6o10G7iKf12VY/ftyaJvGsieZYFyE27WYe6JlYPMd3r7Ff4kF8hV
-         M4Tb57pHXsHDfN6Fh+zF21n4UMrz45ubB8U27DDsQkWIPpZRywmKwAAALgirP4poVm
-         RYKFGlpEn6HQy2mDg4Qg6Y3urIjvmyiWrRJzwUJE=
+        b=Q9qYCRpTbQziYRCVA+bpiMplT8SG7taDQgA5wPJri3HzOnh1TQVFHOFAwwwQ9MsT1
+         mF/PBCRZHUIdRWMq2Fj05U58pIyFsYMBrzwXsZkJsylIXnwllH0DgkfpP3YW/QyQDT
+         r/Lrd3UxnmliXWLAJg57SqC348TSxBmYbMiBUbRY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anthony Koo <Anthony.Koo@amd.com>,
-        Aric Cyr <Aric.Cyr@amd.com>, Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 395/405] drm/amd/display: Fix exception from AUX acquire failure
-Date:   Wed, 29 May 2019 20:06:33 -0700
-Message-Id: <20190530030600.578945165@linuxfoundation.org>
+        stable@vger.kernel.org, Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jann Horn <jannh@google.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 216/405] x86/microcode: Fix the ancient deprecated microcode loading method
+Date:   Wed, 29 May 2019 20:03:34 -0700
+Message-Id: <20190530030552.020366038@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,51 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit dcf1a988678e2e39ce2b4115b8ce14d208c8c481 ]
+[ Upstream commit 24613a04ad1c0588c10f4b5403ca60a73d164051 ]
 
-[Why]
-AUX arbitration occurs between SW and FW components.
-When AUX acquire fails, it causes engine->ddc to be NULL,
-which leads to an exception when we try to release the AUX
-engine.
+Commit
 
-[How]
-When AUX engine acquire fails, it should return from the
-function without trying to continue the operation.
-The upper level will determine if it wants to retry.
-i.e. dce_aux_transfer_with_retries will be used and retry.
+  2613f36ed965 ("x86/microcode: Attempt late loading only when new microcode is present")
 
-Signed-off-by: Anthony Koo <Anthony.Koo@amd.com>
-Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
-Acked-by: Leo Li <sunpeng.li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+added the new define UCODE_NEW to denote that an update should happen
+only when newer microcode (than installed on the system) has been found.
+
+But it missed adjusting that for the old /dev/cpu/microcode loading
+interface. Fix it.
+
+Fixes: 2613f36ed965 ("x86/microcode: Attempt late loading only when new microcode is present")
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jann Horn <jannh@google.com>
+Link: https://lkml.kernel.org/r/20190405133010.24249-3-bp@alien8.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dce/dce_aux.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kernel/cpu/microcode/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c b/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c
-index 4fe3664fb4950..5ecfcb9ee8a0c 100644
---- a/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c
-+++ b/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c
-@@ -377,7 +377,6 @@ static bool acquire(
- 	struct dce_aux *engine,
- 	struct ddc *ddc)
- {
--
- 	enum gpio_result result;
+diff --git a/arch/x86/kernel/cpu/microcode/core.c b/arch/x86/kernel/cpu/microcode/core.c
+index 5260185cbf7ba..8a4a7823451ac 100644
+--- a/arch/x86/kernel/cpu/microcode/core.c
++++ b/arch/x86/kernel/cpu/microcode/core.c
+@@ -418,8 +418,9 @@ static int do_microcode_update(const void __user *buf, size_t size)
+ 		if (ustate == UCODE_ERROR) {
+ 			error = -1;
+ 			break;
+-		} else if (ustate == UCODE_OK)
++		} else if (ustate == UCODE_NEW) {
+ 			apply_microcode_on_target(cpu);
++		}
+ 	}
  
- 	if (!is_engine_available(engine))
-@@ -458,7 +457,8 @@ int dce_aux_transfer(struct ddc_service *ddc,
- 	memset(&aux_rep, 0, sizeof(aux_rep));
- 
- 	aux_engine = ddc->ctx->dc->res_pool->engines[ddc_pin->pin_data->en];
--	acquire(aux_engine, ddc_pin);
-+	if (!acquire(aux_engine, ddc_pin))
-+		return -1;
- 
- 	if (payload->i2c_over_aux)
- 		aux_req.type = AUX_TRANSACTION_TYPE_I2C;
+ 	return error;
 -- 
 2.20.1
 
