@@ -2,94 +2,101 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB05C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFEFC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69CBE243D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:36:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC8E9243D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:36:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="153vMePa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dfwSc+GQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727354AbfE3Bg3 (ORCPT
+        id S1727379AbfE3Bgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 21:36:29 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:48014 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbfE3Bg2 (ORCPT
+        Wed, 29 May 2019 21:36:35 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:39166 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbfE3Bgf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 21:36:28 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4U1YMoD160919;
-        Thu, 30 May 2019 01:36:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=7e2gvQJw68TcHhBtlQevW3z0rO3vwTqu6igHTvHuJ38=;
- b=153vMePaItf7lQ+JryaGrtQVtrGbkt4VIwWVOfLOlqrExI0KeLtBcOep6ZV0mv1KKWkc
- QPmAa1kT2FM3tjoxcJQEcb0aEQhTiJDxWmIa5MdVzr35y7e1wJ/+z3YBW4AatjCKFr44
- TzlXptl8WnfRPwydWpefjvmntkVhbiDq6YpqFdATBqnfSqtcKAYrY4wNobFWWCabNa9W
- 4Oy1g7lk7q40/kwNaWrOiaFiMeqS7mbi/kX05duYhmxVLZHEG4/tvflim15RF2mjfJLI
- cm37SxsB9DQ+aBixwaLUSkdP7hVmmTAm32cz6anOsZWRW00Wl0/ejD907g1SuEBL5H+N sw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2spw4tn914-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 May 2019 01:36:19 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4U1YNvY146914;
-        Thu, 30 May 2019 01:36:19 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2sqh741m03-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 May 2019 01:36:18 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4U1a92w005119;
-        Thu, 30 May 2019 01:36:10 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 29 May 2019 18:36:09 -0700
-To:     Weitao Hou <houweitaoo@gmail.com>
-Cc:     jinpu.wang@profitbricks.com, lindar_liu@usish.com,
-        jejb@linux.ibm.com, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scsi: fix typos in code comments
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190520032403.12513-1-houweitaoo@gmail.com>
-Date:   Wed, 29 May 2019 21:36:07 -0400
-In-Reply-To: <20190520032403.12513-1-houweitaoo@gmail.com> (Weitao Hou's
-        message of "Mon, 20 May 2019 11:24:03 +0800")
-Message-ID: <yq1y32ozptk.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Wed, 29 May 2019 21:36:35 -0400
+Received: by mail-io1-f68.google.com with SMTP id r185so3647675iod.6;
+        Wed, 29 May 2019 18:36:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=irinaYFfplFObiKBsJmYaHsEQZ1KpbKkCxIEwRZjjFU=;
+        b=dfwSc+GQ97vXQ4CPM8w9u3zBgDStVgkR4cYi/l38n7V9JAcOjEMpZGh17nBvNE92Xj
+         tbOdVyFvyTuniYSvb754RZCwEbOo5Tg+x4px3o42M+2seL0kttLN9GJm5MTXsz8a/3ce
+         4JvEVfHt5R+nOmXnhwAorvBvGm9UIjworiSoskPSQ+NvfENMVWck5GB4/nmlKeu53Nrw
+         DREledL/9HcJsiv9wn/aR7PNRyk9U6aTt1gDpHAbRhUAz1m2ENj6CPzlZPmKm+NuPnrr
+         iPRqfWKLFQveWvW/ZCnG9Q+BCG4pAwosVnSzEbBAcR/tQeALyi3Y/3+OId43hUViZb7O
+         KEZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=irinaYFfplFObiKBsJmYaHsEQZ1KpbKkCxIEwRZjjFU=;
+        b=pC7BpfdjgF/IVdr5INTiPIodSD0pxKBNWSh/hDAZBpO7BPpSMLkK7nF8og23PdM1j4
+         NprHky9GUB5tDuekwB1NFKbfZyp5mwqcCk0B2blMeokK7wZ2AXTdtQhiPmWenhcv0uG3
+         ilv3XoP1bSZYQTFCIz+K3loNPAWWFuMIH/OMiZKr6hoYf4BTMdKeeQzC94Wp47qakLxT
+         YiOeNlJLJ9mGfxwBcqQjeaBtRzDaU+EO8RDmryucIn0WAhaJnSzsPCrHsrjf0NSwCPjI
+         PcJDYMB+eQDQqEz4W+FLUu4EqtSuT5hFMhcMCZ/l9kxm/H2XVswmlaU2qQBVOaQbtsdW
+         ohrg==
+X-Gm-Message-State: APjAAAVmloIcG9BRRVZA47zTsnI5bYW24QOopG7AUHyw//8JCwWosIaj
+        BPa51zhbnmXDe8e23x86pmugSNVKD2JkDMM6kug=
+X-Google-Smtp-Source: APXvYqwXXniw3DxiQ8rgN/3mjrxf/rcx98ATwOCFDpnhwot08KfekceL08J5gQJndET8qP3ifU8BiJzZgaMNKRrR1IU=
+X-Received: by 2002:a6b:8dcf:: with SMTP id p198mr1028939iod.46.1559180194549;
+ Wed, 29 May 2019 18:36:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=670
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905300010
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=709 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905300010
+References: <20190529130656.23979-1-tonylu@linux.alibaba.com> <20190529130656.23979-4-tonylu@linux.alibaba.com>
+In-Reply-To: <20190529130656.23979-4-tonylu@linux.alibaba.com>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Thu, 30 May 2019 09:35:57 +0800
+Message-ID: <CALOAHbAghVKLKE2Y0A--cTUgheA=-HzF_kSmsBeNUguLFTT_Xg@mail.gmail.com>
+Subject: Re: [PATCH net-next 3/3] tcp: remove redundant new line from tcp_event_sk_skb
+To:     Tony Lu <tonylu@linux.alibaba.com>
+Cc:     netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Song Liu <songliubraving@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 29, 2019 at 9:08 PM Tony Lu <tonylu@linux.alibaba.com> wrote:
+>
+> This removes '\n' from trace event class tcp_event_sk_skb to avoid
+> redundant new blank line and make output compact.
+>
+> Signed-off-by: Tony Lu <tonylu@linux.alibaba.com>
 
-Weitao,
+Acked-by: Yafang Shao <laoar.shao@gmail.com>
 
-> fix abord to abort
-
-Updated patch header to reflect the pm8001 driver and applied to
-5.3/scsi-queue. Thanks!
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+> ---
+>  include/trace/events/tcp.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
+> index 2bc9960a31aa..cf97f6339acb 100644
+> --- a/include/trace/events/tcp.h
+> +++ b/include/trace/events/tcp.h
+> @@ -86,7 +86,7 @@ DECLARE_EVENT_CLASS(tcp_event_sk_skb,
+>                               sk->sk_v6_rcv_saddr, sk->sk_v6_daddr);
+>         ),
+>
+> -       TP_printk("sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s\n",
+> +       TP_printk("sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s",
+>                   __entry->sport, __entry->dport, __entry->saddr, __entry->daddr,
+>                   __entry->saddr_v6, __entry->daddr_v6,
+>                   show_tcp_state_name(__entry->state))
+> --
+> 2.21.0
+>
