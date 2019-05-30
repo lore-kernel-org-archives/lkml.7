@@ -2,86 +2,87 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4756BC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61205C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14C3921670
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:58:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36ABB22839
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:58:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gEkYKR3e"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="au90tRQV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfE3M6c (ORCPT
+        id S1727074AbfE3M6l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 08:58:32 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:44549 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726015AbfE3M6b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 08:58:31 -0400
-Received: by mail-ot1-f67.google.com with SMTP id g18so5460045otj.11
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 05:58:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Xtj26eS6VSA28N6pJF40jIB52D/4p8VvWoFMN8kmTto=;
-        b=gEkYKR3eOQ7KZl5uQnNYgFRumtLun0ACBfXduK4oHrRcgWCyVGlvMXW7FfqSYHctQi
-         /mjV/Ut3fgbU9a5DFDasyQBLj8Awej+i8PygRIljiAnORYlaXkFD943Syfmdy4icSiVM
-         j9DCeXHIHTFtkwbEX2UrsVUXJ/z6HSc4xudXsd7XhBGZfgRfalgwWHsdeGCcrzjCiSOF
-         zBiC3BQVgW0qAuRHwRkFoHxE+9rstBQ++Z0sdAUSQeFRVi5JYjUzox+UymPLv7E79TMx
-         Ps7TUMNBFWYfapKeJXK1oGRf3K0kiczitP8HgSXf9APQCdwNok2ASABerxMnw00thhSV
-         /XnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Xtj26eS6VSA28N6pJF40jIB52D/4p8VvWoFMN8kmTto=;
-        b=Y4glO90Y95SRf61NEUAVM701PDtOSjRO3hGTtXaojF7Ks+4zi0deZdHg/hMZei71Bt
-         3py7386kAxTFuYBUOk4QVBNDNQevKxsjy6kpVd7xksaOAvyc5esTEgzn+rpGc18a9WR4
-         aeuVebtkMjrSRHw5dmYwYYcHaIu93vjKk4PcrQjH6p7vYm4nnqq8LUXHK/7Y68HyPq0q
-         xtsn4yjTCGHdaDw3+4Z2v7LvNbVsrGLc+dE0gplNCz0kYp6d0hyUJPxuNOZ3TXCtXrjw
-         ICjlZRdNxVh9gOkPLF9gnatKbqdTk9PP41XMBsG/4YUaZ27OHdQMNzJD3HCDr6GA3BJO
-         HoAw==
-X-Gm-Message-State: APjAAAWw4mGaxDPzSz/h/pcoNCqDng1l75Jr7/2MuX8jC2L9oQy6u67l
-        m4EBQjwMSUexIzpaEr8wnhBMJw==
-X-Google-Smtp-Source: APXvYqxFhmDlPzIwjL/pN4OQ2ZZlrSzuFeHJEPPgkIPMQXw5dm1SUGB/4xexszLTzjydWrHWi3IiIg==
-X-Received: by 2002:a9d:7d13:: with SMTP id v19mr2354403otn.234.1559221111220;
-        Thu, 30 May 2019 05:58:31 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (li808-42.members.linode.com. [104.237.132.42])
-        by smtp.gmail.com with ESMTPSA id j62sm1050197otc.31.2019.05.30.05.58.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 30 May 2019 05:58:30 -0700 (PDT)
-Date:   Thu, 30 May 2019 20:58:25 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf symbols: Remove unused variable 'err'
-Message-ID: <20190530125825.GC5927@leoy-ThinkPad-X240s>
-References: <20190530093801.20510-1-leo.yan@linaro.org>
- <20190530124302.GA21962@kernel.org>
+        Thu, 30 May 2019 08:58:41 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:41438 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726015AbfE3M6k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 08:58:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=xB8+uSAdIi4vE4Eke8RLPhwzB3Hq8CNeR8jI1cAMG4Y=; b=au90tRQVfIG3mn4gw9H55zbnEe
+        2X/auosHq6eeIf3yI8q9MoXw6bsCpn+t+hQuP4nMOsfZAU3LJLwuxeCEpqFbkIy5EbfQ7UQJg5x46
+        hn1FMNgYEko9UF2kViIYhRyXeXVgyfJl3zpWoGGZxey0OkaZYCr2oONQjsUf+qWzxJl0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hWKdc-0006T7-PS; Thu, 30 May 2019 14:58:32 +0200
+Date:   Thu, 30 May 2019 14:58:32 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Biao Huang <biao.huang@mediatek.com>
+Cc:     Jose Abreu <joabreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, yt.shen@mediatek.com,
+        jianguo.zhang@mediatek.com, boon.leong.ong@intel.com
+Subject: Re: [PATCH 3/4] net: stmmac: modify default value of tx-frames
+Message-ID: <20190530125832.GB22727@lunn.ch>
+References: <1559206484-1825-1-git-send-email-biao.huang@mediatek.com>
+ <1559206484-1825-4-git-send-email-biao.huang@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190530124302.GA21962@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1559206484-1825-4-git-send-email-biao.huang@mediatek.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 09:43:02AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Thu, May 30, 2019 at 05:38:01PM +0800, Leo Yan escreveu:
-> > Variable 'err' is defined but never used in function symsrc__init(),
-> > remove it and directly return -1 at the end of the function.
+On Thu, May 30, 2019 at 04:54:43PM +0800, Biao Huang wrote:
+> the default value of tx-frames is 25, it's too late when
+> passing tstamp to stack, then the ptp4l will fail:
 > 
-> Thanks, applied.
+> ptp4l -i eth0 -f gPTP.cfg -m
+> ptp4l: selected /dev/ptp0 as PTP clock
+> ptp4l: port 1: INITIALIZING to LISTENING on INITIALIZE
+> ptp4l: port 0: INITIALIZING to LISTENING on INITIALIZE
+> ptp4l: port 1: link up
+> ptp4l: timed out while polling for tx timestamp
+> ptp4l: increasing tx_timestamp_timeout may correct this issue,
+>        but it is likely caused by a driver bug
+> ptp4l: port 1: send peer delay response failed
+> ptp4l: port 1: LISTENING to FAULTY on FAULT_DETECTED (FT_UNSPECIFIED)
+> 
+> ptp4l tests pass when changing the tx-frames from 25 to 1 with
+> ethtool -C option.
+> It should be fine to set tx-frames default value to 1, so ptp4l will pass
+> by default.
 
-Thanks, Arnaldo.
+Hi Biao
+
+What does this do to the number of interrupts? Do we get 25 times more
+interrupts? Have you done any performance tests to see if this causes
+performance regressions?
+
+	    Andrew
