@@ -4,53 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B796C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDC4C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A827239B8
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:12:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B12B23A1C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:12:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189565;
-	bh=ETxqmV7FS2AKCIeo4tjonjq8r25TMozlArfrBeEhZBQ=;
+	s=default; t=1559189569;
+	bh=jxFEU4hEZfRWH8xSa6TsEgftBEFtYHFMd2kCHP1i7X8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t+M3rpaqaqjXb3IlIhZ437uWBA+FEPR7lBF+I5jR17R9GwEjEXlQ7k62HX/29agZr
-	 DKk1auNCc1s4H7ibMTDYMGrsnw92YWcan6Ek1QEVAvK1BCz5lYjLkB0bCOdPFnOdXJ
-	 lQP+/82c+/i3JEvMe3WKH/6SA7POsWAAA9N+UDcQ=
+	b=kyJsjm9Jm3OHBasYadPc9FKYDdLFrVPegKjARJoGY9jZ9zEcW1z/27H7eU7mbcB+U
+	 wGQ4KgEQYLbanJf1jnACiQPekVxFE2GcztB5IUrKdBdA3it1rugKy256arPSjpyyb0
+	 jUTnKAKbqSxnGWfyfy/5IBi/GbzwlVVTY6OgdAvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729548AbfE3EMo (ORCPT
+        id S1730712AbfE3DQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:12:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42908 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:16:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729413AbfE3DQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:33 -0400
+        id S1729413AbfE3DNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:21 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E2CF245F0;
-        Thu, 30 May 2019 03:16:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10716244E8;
+        Thu, 30 May 2019 03:13:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186193;
-        bh=ETxqmV7FS2AKCIeo4tjonjq8r25TMozlArfrBeEhZBQ=;
+        s=default; t=1559186001;
+        bh=jxFEU4hEZfRWH8xSa6TsEgftBEFtYHFMd2kCHP1i7X8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gC6fxLtzqoNObDAZEnhgkC3Yz1B7EMu6pUhTVB4Zovv/p/5O9ysBFtcirYYO6jxyp
-         UQnX+xJeqG3V3O+/kKO9iZyyZ+ZUGjHbAJbKgCGnlCf/UBUBhxZ0QyfSjndElDKcST
-         QYOvvXS16RpIK8/2Qss+jq4Sq7ZbvjlPRoUo/f4I=
+        b=nWDhIUCw902KJZZl4U48T5t9Rp9VNo6tUD9LsdDVJpW8mQNjb9u2nNol8x/ciufGN
+         XW98bS1vtgm0SMYrlVStSiyRU1mXliw+rOupSNcCK0L+rNQ0R5Ffa1JyFlyi72xb10
+         DGgtuCE2Z72p0SsTF2X/MCWx0AO2JsxlJHCd6Bao=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Alexei Starovoitov <ast@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 065/276] ASoC: imx: fix fiq dependencies
-Date:   Wed, 29 May 2019 20:03:43 -0700
-Message-Id: <20190530030530.000686127@linuxfoundation.org>
+Subject: [PATCH 5.0 052/346] bpftool: exclude bash-completion/bpftool from .gitignore pattern
+Date:   Wed, 29 May 2019 20:02:05 -0700
+Message-Id: <20190530030543.558284058@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
-References: <20190530030523.133519668@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,65 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ea751227c813ab833609afecfeedaf0aa26f327e ]
+[ Upstream commit a7d006714724de4334c5e3548701b33f7b12ca96 ]
 
-During randconfig builds, I occasionally run into an invalid configuration
-of the freescale FIQ sound support:
+tools/bpf/bpftool/.gitignore has the "bpftool" pattern, which is
+intended to ignore the following build artifact:
 
-WARNING: unmet direct dependencies detected for SND_SOC_IMX_PCM_FIQ
-  Depends on [m]: SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_IMX_SOC [=m]
-  Selected by [y]:
-  - SND_SOC_FSL_SPDIF [=y] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_IMX_SOC [=m]!=n && (MXC_TZIC [=n] || MXC_AVIC [=y])
+  tools/bpf/bpftool/bpftool
 
-sound/soc/fsl/imx-ssi.o: In function `imx_ssi_remove':
-imx-ssi.c:(.text+0x28): undefined reference to `imx_pcm_fiq_exit'
-sound/soc/fsl/imx-ssi.o: In function `imx_ssi_probe':
-imx-ssi.c:(.text+0xa64): undefined reference to `imx_pcm_fiq_init'
+However, the .gitignore entry is effective not only for the current
+directory, but also for any sub-directories.
 
-The Kconfig warning is a result of the symbol being defined inside of
-the "if SND_IMX_SOC" block, and is otherwise harmless. The link error
-is more tricky and happens with SND_SOC_IMX_SSI=y, which may or may not
-imply FIQ support. However, if SND_SOC_FSL_SSI is set to =m at the same
-time, that selects SND_SOC_IMX_PCM_FIQ as a loadable module dependency,
-which then causes a link failure from imx-ssi.
+So, from the point of .gitignore grammar, the following check-in file
+is also considered to be ignored:
 
-The solution here is to make SND_SOC_IMX_PCM_FIQ built-in whenever
-one of its potential users is built-in.
+  tools/bpf/bpftool/bash-completion/bpftool
 
-Fixes: ff40260f79dc ("ASoC: fsl: refine DMA/FIQ dependencies")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+As the manual gitignore(5) says "Files already tracked by Git are not
+affected", this is not a problem as far as Git is concerned.
+
+However, Git is not the only program that parses .gitignore because
+.gitignore is useful to distinguish build artifacts from source files.
+
+For example, tar(1) supports the --exclude-vcs-ignore option. As of
+writing, this option does not work perfectly, but it intends to create
+a tarball excluding files specified by .gitignore.
+
+So, I believe it is better to fix this issue.
+
+You can fix it by prefixing the pattern with a slash; the leading slash
+means the specified pattern is relative to the current directory.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Reviewed-by: Quentin Monnet <quentin.monnet@netronome.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/Kconfig | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ tools/bpf/bpftool/.gitignore | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/fsl/Kconfig b/sound/soc/fsl/Kconfig
-index 2e75b5bc5f1da..f721cd4e3f972 100644
---- a/sound/soc/fsl/Kconfig
-+++ b/sound/soc/fsl/Kconfig
-@@ -173,16 +173,17 @@ config SND_MPC52xx_SOC_EFIKA
- 
- endif # SND_POWERPC_SOC
- 
-+config SND_SOC_IMX_PCM_FIQ
-+	tristate
-+	default y if SND_SOC_IMX_SSI=y && (SND_SOC_FSL_SSI=m || SND_SOC_FSL_SPDIF=m) && (MXC_TZIC || MXC_AVIC)
-+	select FIQ
-+
- if SND_IMX_SOC
- 
- config SND_SOC_IMX_SSI
- 	tristate
- 	select SND_SOC_FSL_UTILS
- 
--config SND_SOC_IMX_PCM_FIQ
--	tristate
--	select FIQ
--
- comment "SoC Audio support for Freescale i.MX boards:"
- 
- config SND_MXC_SOC_WM1133_EV1
+diff --git a/tools/bpf/bpftool/.gitignore b/tools/bpf/bpftool/.gitignore
+index 67167e44b7266..8248b8dd89d4b 100644
+--- a/tools/bpf/bpftool/.gitignore
++++ b/tools/bpf/bpftool/.gitignore
+@@ -1,5 +1,5 @@
+ *.d
+-bpftool
++/bpftool
+ bpftool*.8
+ bpf-helpers.*
+ FEATURE-DUMP.bpftool
 -- 
 2.20.1
 
