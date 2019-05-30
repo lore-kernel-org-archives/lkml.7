@@ -7,53 +7,54 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04468C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:32:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D93C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE2A624B06
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABCB224B07
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:32:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187128;
-	bh=pVFNa/G7hgjffWOnRwXp358JyH6cNkVChLnO2BQu8ek=;
+	s=default; t=1559187131;
+	bh=LeDPiyFnxwiZOP4NSwMJs2cfD37WSrq+sC4BCzOfoYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RoaUytwI+u5UJSA5bQiIjjtv9UvQ4HGkoEJfxfg69r6AqFwCJAKFZTjiQf4V1xJGh
-	 6mpW5mJIDAzhy/4hXibe5ogvC6e0GijdDTkhVF4z49YIFo7wWvLvNIKDhbzSmM5Uh3
-	 aUVX7Y8U4xP7QelFVwVqjz/O2yqqZrz+gKILmbhg=
+	b=nRaXFIRa6fLOKMcQ/gLeJUO822QYO8m2qlC+42vwQcMVLjaNxefLxXZawTvAMZqi+
+	 El0d2xOU5M9wkHFklrnZaRlkn5DHZ6//4HQSfN5FeHtS/S2uOcb0NmgOjwR6zCHMZY
+	 WfcpnSLjdonQgdzSQiZP8tTZ/YC1jTFKLcQk7Hak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387680AbfE3DcI (ORCPT
+        id S2388436AbfE3D3t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:32:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48138 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:29:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388435AbfE3D3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:29:50 -0400
+        id S1732373AbfE3DUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:20:54 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3827524AE0;
-        Thu, 30 May 2019 03:29:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0F662496D;
+        Thu, 30 May 2019 03:20:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186989;
-        bh=pVFNa/G7hgjffWOnRwXp358JyH6cNkVChLnO2BQu8ek=;
+        s=default; t=1559186453;
+        bh=LeDPiyFnxwiZOP4NSwMJs2cfD37WSrq+sC4BCzOfoYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ij/3VanJkmpBajosVMn/jqtm2LppuEagiusLtuLY4XIc5gpZ1Ymd/FDdcLNND0/7T
-         8f1pKJqrFA0flemEzWZyfXEMmId2aVPfuXrIiueBcGLqm3urGLnydRI+p4i/I/o7wY
-         ThuDVUYOTvNZJcjIrw5orcc99vVgevMfSZXIidcY=
+        b=bzKN0bHE7O+x8VmcsFuQxj6aD6BdnMFsx76vPt7aGu67mCqpU1GIF51GsMyyD4kdr
+         rVomBIY9eVmGiZGQ6Qe3sRa/0ftKRK9YwEqeAYXZZJ3u05YBuOCJliDRLLPb16cMbE
+         pg1kj1ZzMCgH7knWBKwVapBatvsC7Hzk8Pc1vUzY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Li, Meng" <Meng.Li@windriver.com>,
-        Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 136/346] perf/arm-cci: Remove broken race mitigation
-Date:   Wed, 29 May 2019 20:03:29 -0700
-Message-Id: <20190530030548.021579766@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 065/128] sched/core: Check quota and period overflow at usec to nsec conversion
+Date:   Wed, 29 May 2019 20:06:37 -0700
+Message-Id: <20190530030446.474976146@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
-References: <20190530030540.363386121@linuxfoundation.org>
+In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
+References: <20190530030432.977908967@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,98 +64,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0d2e2a82d4de298d006bf8eddc86829e3c7da820 ]
+[ Upstream commit 1a8b4540db732ca16c9e43ac7c08b1b8f0b252d8 ]
 
-Uncore PMU drivers face an awkward cyclic dependency wherein:
+Large values could overflow u64 and pass following sanity checks.
 
- - They have to pick a valid online CPU to associate with before
-   registering the PMU device, since it will get exposed to userspace
-   immediately.
- - The PMU registration has to be be at least partly complete before
-   hotplug events can be handled, since trying to migrate an
-   uninitialised context would be bad.
- - The hotplug handler has to be ready as soon as a CPU is chosen, lest
-   it go offline without the user-visible cpumask value getting updated.
+ # echo 18446744073750000 > cpu.cfs_period_us
+ # cat cpu.cfs_period_us
+ 40448
 
-The arm-cci driver has tried to solve this by using get_cpu() to pick
-the current CPU and prevent it from disappearing while both
-registrations are performed, but that results in taking mutexes with
-preemption disabled, which makes certain configurations very unhappy:
+ # echo 18446744073750000 > cpu.cfs_quota_us
+ # cat cpu.cfs_quota_us
+ 40448
 
-[ 1.983337] BUG: sleeping function called from invalid context at kernel/locking/rtmutex.c:2004
-[ 1.983340] in_atomic(): 1, irqs_disabled(): 0, pid: 1, name: swapper/0
-[ 1.983342] Preemption disabled at:
-[ 1.983353] [<ffffff80089801f4>] cci_pmu_probe+0x1dc/0x488
-[ 1.983360] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 4.18.20-rt8-yocto-preempt-rt #1
-[ 1.983362] Hardware name: ZynqMP ZCU102 Rev1.0 (DT)
-[ 1.983364] Call trace:
-[ 1.983369] dump_backtrace+0x0/0x158
-[ 1.983372] show_stack+0x24/0x30
-[ 1.983378] dump_stack+0x80/0xa4
-[ 1.983383] ___might_sleep+0x138/0x160
-[ 1.983386] __might_sleep+0x58/0x90
-[ 1.983391] __rt_mutex_lock_state+0x30/0xc0
-[ 1.983395] _mutex_lock+0x24/0x30
-[ 1.983400] perf_pmu_register+0x2c/0x388
-[ 1.983404] cci_pmu_probe+0x2bc/0x488
-[ 1.983409] platform_drv_probe+0x58/0xa8
+After this patch they will fail with -EINVAL.
 
-It is not feasible to resolve all the possible races outside of the perf
-core itself, so address the immediate bug by following the example of
-nearly every other PMU driver and not even trying to do so. Registering
-the hotplug notifier first should minimise the window in which things
-can go wrong, so that's about as much as we can reasonably do here. This
-also revealed an additional race in assigning the global pointer too
-late relative to the hotplug notifier, which gets fixed in the process.
-
-Reported-by: Li, Meng <Meng.Li@windriver.com>
-Tested-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/155125502079.293431.3947497929372138600.stgit@buzz
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/perf/arm-cci.c | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ kernel/sched/core.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/perf/arm-cci.c b/drivers/perf/arm-cci.c
-index 1bfeb160c5b16..14a541c453e58 100644
---- a/drivers/perf/arm-cci.c
-+++ b/drivers/perf/arm-cci.c
-@@ -1692,21 +1692,24 @@ static int cci_pmu_probe(struct platform_device *pdev)
- 	raw_spin_lock_init(&cci_pmu->hw_events.pmu_lock);
- 	mutex_init(&cci_pmu->reserve_mutex);
- 	atomic_set(&cci_pmu->active_events, 0);
--	cci_pmu->cpu = get_cpu();
--
--	ret = cci_pmu_init(cci_pmu, pdev);
--	if (ret) {
--		put_cpu();
--		return ret;
--	}
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 50e80b1be2c8f..4617ede80f020 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -8611,8 +8611,10 @@ int tg_set_cfs_quota(struct task_group *tg, long cfs_quota_us)
+ 	period = ktime_to_ns(tg->cfs_bandwidth.period);
+ 	if (cfs_quota_us < 0)
+ 		quota = RUNTIME_INF;
+-	else
++	else if ((u64)cfs_quota_us <= U64_MAX / NSEC_PER_USEC)
+ 		quota = (u64)cfs_quota_us * NSEC_PER_USEC;
++	else
++		return -EINVAL;
  
-+	cci_pmu->cpu = raw_smp_processor_id();
-+	g_cci_pmu = cci_pmu;
- 	cpuhp_setup_state_nocalls(CPUHP_AP_PERF_ARM_CCI_ONLINE,
- 				  "perf/arm/cci:online", NULL,
- 				  cci_pmu_offline_cpu);
--	put_cpu();
--	g_cci_pmu = cci_pmu;
-+
-+	ret = cci_pmu_init(cci_pmu, pdev);
-+	if (ret)
-+		goto error_pmu_init;
-+
- 	pr_info("ARM %s PMU driver probed", cci_pmu->model->name);
- 	return 0;
-+
-+error_pmu_init:
-+	cpuhp_remove_state(CPUHP_AP_PERF_ARM_CCI_ONLINE);
-+	g_cci_pmu = NULL;
-+	return ret;
+ 	return tg_set_cfs_bandwidth(tg, period, quota);
  }
+@@ -8634,6 +8636,9 @@ int tg_set_cfs_period(struct task_group *tg, long cfs_period_us)
+ {
+ 	u64 quota, period;
  
- static int cci_pmu_remove(struct platform_device *pdev)
++	if ((u64)cfs_period_us > U64_MAX / NSEC_PER_USEC)
++		return -EINVAL;
++
+ 	period = (u64)cfs_period_us * NSEC_PER_USEC;
+ 	quota = tg->cfs_bandwidth.quota;
+ 
 -- 
 2.20.1
 
