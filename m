@@ -1,52 +1,48 @@
 Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B0A2C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 05:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB0FC46470
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 05:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14896260B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 05:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4728B260CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 05:00:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192442;
-	bh=SbTFFUuSRSP005lrWiHb6QE2jPtSQRfWODw8nUneGEI=;
+	s=default; t=1559192446;
+	bh=VMAVDhYlf8UytxJ5fjCqwzG9Fe/FJnxlukvbYTMVkKc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eDkWlVjwi6uzzfGJlW5Lv1IzUFFSoVbLCYrsEwiF0QVOKmAiD6M5VbqLsVaiA+jZl
-	 fvwihu7JCLufARwwh/xLSXV9VJgn/QGeuOXEnVUz014JtK5TMhmFzPJ8ez7lN7qSvP
-	 2AD6ZoV7w6lAn5v2LyrTvLBBrb/GieQuUCMRtTws=
+	b=wFfQ82hArQx+mEdi0foeqRM3ZhwObv8UgJEcMsvn309HxHeMKNwTyUlWSgixqzH9S
+	 AonCe+lHXBu4CPW/ut/zBwOh5CsU2H8N/qxHWSqXadmnutOENxDnvgqlTC5InZumg1
+	 1lFcezePmBu6onz3KpV/Kq7wvhlxM+9R1uNyYYMI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727945AbfE3FAl (ORCPT
+        id S1727590AbfE3DJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 01:00:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44028 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727577AbfE3DJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:09:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44120 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727536AbfE3DJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:09:27 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B89F32447E;
-        Thu, 30 May 2019 03:09:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15F6B24479;
+        Thu, 30 May 2019 03:09:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185768;
-        bh=SbTFFUuSRSP005lrWiHb6QE2jPtSQRfWODw8nUneGEI=;
+        s=default; t=1559185767;
+        bh=VMAVDhYlf8UytxJ5fjCqwzG9Fe/FJnxlukvbYTMVkKc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2AjFhBt6E9tX4Z/cERk+zEPnpSY7dRTraalO1ywGYS/bQ5lbeCKUt7rUSXC0e2zcm
-         7T7A16ZPMUMcnrFNmfcTs/dbiHnkEEWlCF+1xmr7y1GHbIAKO0eWMlGvSggPTqN16k
-         wR9brZ5bpIWZbX/arW/U1ti0ACnMkiNRL2gnbqeg=
+        b=a+PyQSl8Tbvh/Foq3M4ax3V8AMaAyPHPhg9sfPf8OrYpRjJtnqVJcsmeAK1J/Qf6h
+         K4eveExoL6yn3LoFUOjKiw365BOecslkQHipbf1v/tNLm/HhmkUZSfLSjvr9872KKI
+         PaAViHp35DdcTu6BWq+l2YurXSlVtKRujqptoGhY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-Subject: [PATCH 5.1 019/405] arm64/kernel: kaslr: reduce module randomization range to 2 GB
-Date:   Wed, 29 May 2019 20:00:17 -0700
-Message-Id: <20190530030541.544807094@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Eduardo Habkost <ehabkost@redhat.com>,
+        Peter Xu <peterx@redhat.com>
+Subject: [PATCH 5.1 015/405] kvm: Check irqchip mode before assign irqfd
+Date:   Wed, 29 May 2019 20:00:13 -0700
+Message-Id: <20190530030541.268402067@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -59,85 +55,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@arm.com>
+From: Peter Xu <peterx@redhat.com>
 
-commit b2eed9b58811283d00fa861944cb75797d4e52a7 upstream.
+commit 654f1f13ea56b92bacade8ce2725aea0457f91c0 upstream.
 
-The following commit
+When assigning kvm irqfd we didn't check the irqchip mode but we allow
+KVM_IRQFD to succeed with all the irqchip modes.  However it does not
+make much sense to create irqfd even without the kernel chips.  Let's
+provide a arch-dependent helper to check whether a specific irqfd is
+allowed by the arch.  At least for x86, it should make sense to check:
 
-  7290d5809571 ("module: use relative references for __ksymtab entries")
+- when irqchip mode is NONE, all irqfds should be disallowed, and,
 
-updated the ksymtab handling of some KASLR capable architectures
-so that ksymtab entries are emitted as pairs of 32-bit relative
-references. This reduces the size of the entries, but more
-importantly, it gets rid of statically assigned absolute
-addresses, which require fixing up at boot time if the kernel
-is self relocating (which takes a 24 byte RELA entry for each
-member of the ksymtab struct).
+- when irqchip mode is SPLIT, irqfds that are with resamplefd should
+  be disallowed.
 
-Since ksymtab entries are always part of the same module as the
-symbol they export, it was assumed at the time that a 32-bit
-relative reference is always sufficient to capture the offset
-between a ksymtab entry and its target symbol.
+For either of the case, previously we'll silently ignore the irq or
+the irq ack event if the irqchip mode is incorrect.  However that can
+cause misterious guest behaviors and it can be hard to triage.  Let's
+fail KVM_IRQFD even earlier to detect these incorrect configurations.
 
-Unfortunately, this is not always true: in the case of per-CPU
-variables, a per-CPU variable's base address (which usually differs
-from the actual address of any of its per-CPU copies) is allocated
-in the vicinity of the ..data.percpu section in the core kernel
-(i.e., in the per-CPU reserved region which follows the section
-containing the core kernel's statically allocated per-CPU variables).
-
-Since we randomize the module space over a 4 GB window covering
-the core kernel (based on the -/+ 4 GB range of an ADRP/ADD pair),
-we may end up putting the core kernel out of the -/+ 2 GB range of
-32-bit relative references of module ksymtab entries that refer to
-per-CPU variables.
-
-So reduce the module randomization range a bit further. We lose
-1 bit of randomization this way, but this is something we can
-tolerate.
-
-Cc: <stable@vger.kernel.org> # v4.19+
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+CC: Paolo Bonzini <pbonzini@redhat.com>
+CC: Radim Krčmář <rkrcmar@redhat.com>
+CC: Alex Williamson <alex.williamson@redhat.com>
+CC: Eduardo Habkost <ehabkost@redhat.com>
+Signed-off-by: Peter Xu <peterx@redhat.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kernel/kaslr.c  |    6 +++---
- arch/arm64/kernel/module.c |    2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ arch/x86/kvm/irq.c |    7 +++++++
+ arch/x86/kvm/irq.h |    1 +
+ virt/kvm/eventfd.c |    9 +++++++++
+ 3 files changed, 17 insertions(+)
 
---- a/arch/arm64/kernel/kaslr.c
-+++ b/arch/arm64/kernel/kaslr.c
-@@ -145,15 +145,15 @@ u64 __init kaslr_early_init(u64 dt_phys)
+--- a/arch/x86/kvm/irq.c
++++ b/arch/x86/kvm/irq.c
+@@ -172,3 +172,10 @@ void __kvm_migrate_timers(struct kvm_vcp
+ 	__kvm_migrate_apic_timer(vcpu);
+ 	__kvm_migrate_pit_timer(vcpu);
+ }
++
++bool kvm_arch_irqfd_allowed(struct kvm *kvm, struct kvm_irqfd *args)
++{
++	bool resample = args->flags & KVM_IRQFD_FLAG_RESAMPLE;
++
++	return resample ? irqchip_kernel(kvm) : irqchip_in_kernel(kvm);
++}
+--- a/arch/x86/kvm/irq.h
++++ b/arch/x86/kvm/irq.h
+@@ -114,6 +114,7 @@ static inline int irqchip_in_kernel(stru
+ 	return mode != KVM_IRQCHIP_NONE;
+ }
  
- 	if (IS_ENABLED(CONFIG_RANDOMIZE_MODULE_REGION_FULL)) {
- 		/*
--		 * Randomize the module region over a 4 GB window covering the
-+		 * Randomize the module region over a 2 GB window covering the
- 		 * kernel. This reduces the risk of modules leaking information
- 		 * about the address of the kernel itself, but results in
- 		 * branches between modules and the core kernel that are
- 		 * resolved via PLTs. (Branches between modules will be
- 		 * resolved normally.)
- 		 */
--		module_range = SZ_4G - (u64)(_end - _stext);
--		module_alloc_base = max((u64)_end + offset - SZ_4G,
-+		module_range = SZ_2G - (u64)(_end - _stext);
-+		module_alloc_base = max((u64)_end + offset - SZ_2G,
- 					(u64)MODULES_VADDR);
- 	} else {
- 		/*
---- a/arch/arm64/kernel/module.c
-+++ b/arch/arm64/kernel/module.c
-@@ -56,7 +56,7 @@ void *module_alloc(unsigned long size)
- 		 * can simply omit this fallback in that case.
- 		 */
- 		p = __vmalloc_node_range(size, MODULE_ALIGN, module_alloc_base,
--				module_alloc_base + SZ_4G, GFP_KERNEL,
-+				module_alloc_base + SZ_2G, GFP_KERNEL,
- 				PAGE_KERNEL_EXEC, 0, NUMA_NO_NODE,
- 				__builtin_return_address(0));
++bool kvm_arch_irqfd_allowed(struct kvm *kvm, struct kvm_irqfd *args);
+ void kvm_inject_pending_timer_irqs(struct kvm_vcpu *vcpu);
+ void kvm_inject_apic_timer_irqs(struct kvm_vcpu *vcpu);
+ void kvm_apic_nmi_wd_deliver(struct kvm_vcpu *vcpu);
+--- a/virt/kvm/eventfd.c
++++ b/virt/kvm/eventfd.c
+@@ -44,6 +44,12 @@
  
+ static struct workqueue_struct *irqfd_cleanup_wq;
+ 
++bool __attribute__((weak))
++kvm_arch_irqfd_allowed(struct kvm *kvm, struct kvm_irqfd *args)
++{
++	return true;
++}
++
+ static void
+ irqfd_inject(struct work_struct *work)
+ {
+@@ -297,6 +303,9 @@ kvm_irqfd_assign(struct kvm *kvm, struct
+ 	if (!kvm_arch_intc_initialized(kvm))
+ 		return -EAGAIN;
+ 
++	if (!kvm_arch_irqfd_allowed(kvm, args))
++		return -EINVAL;
++
+ 	irqfd = kzalloc(sizeof(*irqfd), GFP_KERNEL_ACCOUNT);
+ 	if (!irqfd)
+ 		return -ENOMEM;
 
 
