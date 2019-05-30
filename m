@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7239EC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B85C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BC0F24ABE
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:29:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AFC024AB7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:29:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186983;
-	bh=uhWnmlcoF64u9MNy02zFBaoTIoSFXPkx4megjZ25jHc=;
+	s=default; t=1559186986;
+	bh=gy2c3jagldGVCBf1KyNMROKxUi6Nyeqv3QrEWPH9vOM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u2iueq1Pc84B9ZxXXzQfHyJX1F4N+gTIuzLZ6N3LvEdn+tAE97GiVgKZzxXic6SSv
-	 Ivj6yIEu0Tl4N6aPX2y9EMprWRv2iR9TTC7l52uB3+Zkkk/ndRvCeWIjlaDh6FqUpU
-	 pfZRWNggn06V08Z5Y5M4aRaVS9xAv8nIvuQeqKPk=
+	b=O/8i+KpUkq8jorW2SXOdu6fvM26/ncN/PNM4uHELnVjE084rnsaEpzpPZwq3r+F3l
+	 M4lD0ZMLXWU1GAKpy3V6UC2VlG52WYC4wWHh8+1vLq9otUeur7z3IG+nL/Vg4mOD82
+	 6ucsZO8vy8NlqjjjQQ/wfXh0oJjCI24n6A0u84ME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388084AbfE3D3m (ORCPT
+        id S2388429AbfE3D3p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:29:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60252 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:29:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729807AbfE3DUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:20:51 -0400
+        id S1732371AbfE3DUx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:20:53 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 085662497E;
-        Thu, 30 May 2019 03:20:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F38A24966;
+        Thu, 30 May 2019 03:20:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186451;
-        bh=uhWnmlcoF64u9MNy02zFBaoTIoSFXPkx4megjZ25jHc=;
+        s=default; t=1559186452;
+        bh=gy2c3jagldGVCBf1KyNMROKxUi6Nyeqv3QrEWPH9vOM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kh1WaY8zfph02blH5dlBkPc7aZn2WPu4ORw/CyfT2z98dHShUgv2iJUFcC+kCwq9D
-         r77j/Gfpz3lSCCiH3+PdANw6S8lI+M3gEpHALl8prnBgEul//8jXdIlImhAdHeGQlT
-         fbZacUVrAae8SK2YOA25z89WsYyreLjoTvT6hTtA=
+        b=QZ8zPbZkncoIH7nPpWE0E0JZymtWMtItiMLgGsioaS97g9ampK2bgntjnL0QL9iqD
+         r3vzUhsuig9rTmsXvMU16MWY7Emdm4WaxIMZYj9cgYSYaLX7SDJpIGbrPYltBqVooS
+         lB4iap818Oj/K4wCODqd/93sgrw38X7Az7ZMKtgI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wang6495@umn.edu>,
-        Richard Guy Briggs <rgb@redhat.com>,
-        Paul Moore <paul@paul-moore.com>,
+        stable@vger.kernel.org, Nathan Lynch <nathanl@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 061/128] audit: fix a memory leak bug
-Date:   Wed, 29 May 2019 20:06:33 -0700
-Message-Id: <20190530030445.709897200@linuxfoundation.org>
+Subject: [PATCH 4.9 064/128] powerpc/numa: improve control of topology updates
+Date:   Wed, 29 May 2019 20:06:36 -0700
+Message-Id: <20190530030446.206548998@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -61,64 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 70c4cf17e445264453bc5323db3e50aa0ac9e81f ]
+[ Upstream commit 2d4d9b308f8f8dec68f6dbbff18c68ec7c6bd26f ]
 
-In audit_rule_change(), audit_data_to_entry() is firstly invoked to
-translate the payload data to the kernel's rule representation. In
-audit_data_to_entry(), depending on the audit field type, an audit tree may
-be created in audit_make_tree(), which eventually invokes kmalloc() to
-allocate the tree.  Since this tree is a temporary tree, it will be then
-freed in the following execution, e.g., audit_add_rule() if the message
-type is AUDIT_ADD_RULE or audit_del_rule() if the message type is
-AUDIT_DEL_RULE. However, if the message type is neither AUDIT_ADD_RULE nor
-AUDIT_DEL_RULE, i.e., the default case of the switch statement, this
-temporary tree is not freed.
+When booted with "topology_updates=no", or when "off" is written to
+/proc/powerpc/topology_updates, NUMA reassignments are inhibited for
+PRRN and VPHN events. However, migration and suspend unconditionally
+re-enable reassignments via start_topology_update(). This is
+incoherent.
 
-To fix this issue, only allocate the tree when the type is AUDIT_ADD_RULE
-or AUDIT_DEL_RULE.
+Check the topology_updates_enabled flag in
+start/stop_topology_update() so that callers of those APIs need not be
+aware of whether reassignments are enabled. This allows the
+administrative decision on reassignments to remain in force across
+migrations and suspensions.
 
-Signed-off-by: Wenwen Wang <wang6495@umn.edu>
-Reviewed-by: Richard Guy Briggs <rgb@redhat.com>
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/auditfilter.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ arch/powerpc/mm/numa.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/auditfilter.c b/kernel/auditfilter.c
-index cd4f41397c7e8..42b7251c597fb 100644
---- a/kernel/auditfilter.c
-+++ b/kernel/auditfilter.c
-@@ -1095,22 +1095,24 @@ int audit_rule_change(int type, __u32 portid, int seq, void *data,
- 	int err = 0;
- 	struct audit_entry *entry;
+diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
+index 9cad2ed812ab7..31e9064ba6281 100644
+--- a/arch/powerpc/mm/numa.c
++++ b/arch/powerpc/mm/numa.c
+@@ -1574,6 +1574,9 @@ int start_topology_update(void)
+ {
+ 	int rc = 0;
  
--	entry = audit_data_to_entry(data, datasz);
--	if (IS_ERR(entry))
--		return PTR_ERR(entry);
--
- 	switch (type) {
- 	case AUDIT_ADD_RULE:
-+		entry = audit_data_to_entry(data, datasz);
-+		if (IS_ERR(entry))
-+			return PTR_ERR(entry);
- 		err = audit_add_rule(entry);
- 		audit_log_rule_change("add_rule", &entry->rule, !err);
- 		break;
- 	case AUDIT_DEL_RULE:
-+		entry = audit_data_to_entry(data, datasz);
-+		if (IS_ERR(entry))
-+			return PTR_ERR(entry);
- 		err = audit_del_rule(entry);
- 		audit_log_rule_change("remove_rule", &entry->rule, !err);
- 		break;
- 	default:
--		err = -EINVAL;
- 		WARN_ON(1);
-+		return -EINVAL;
- 	}
++	if (!topology_updates_enabled)
++		return 0;
++
+ 	if (firmware_has_feature(FW_FEATURE_PRRN)) {
+ 		if (!prrn_enabled) {
+ 			prrn_enabled = 1;
+@@ -1603,6 +1606,9 @@ int stop_topology_update(void)
+ {
+ 	int rc = 0;
  
- 	if (err || type == AUDIT_DEL_RULE) {
++	if (!topology_updates_enabled)
++		return 0;
++
+ 	if (prrn_enabled) {
+ 		prrn_enabled = 0;
+ #ifdef CONFIG_SMP
+@@ -1648,11 +1654,13 @@ static ssize_t topology_write(struct file *file, const char __user *buf,
+ 
+ 	kbuf[read_len] = '\0';
+ 
+-	if (!strncmp(kbuf, "on", 2))
++	if (!strncmp(kbuf, "on", 2)) {
++		topology_updates_enabled = true;
+ 		start_topology_update();
+-	else if (!strncmp(kbuf, "off", 3))
++	} else if (!strncmp(kbuf, "off", 3)) {
+ 		stop_topology_update();
+-	else
++		topology_updates_enabled = false;
++	} else
+ 		return -EINVAL;
+ 
+ 	return count;
+@@ -1667,9 +1675,7 @@ static const struct file_operations topology_ops = {
+ 
+ static int topology_update_init(void)
+ {
+-	/* Do not poll for changes if disabled at boot */
+-	if (topology_updates_enabled)
+-		start_topology_update();
++	start_topology_update();
+ 
+ 	if (!proc_create("powerpc/topology_updates", 0644, NULL, &topology_ops))
+ 		return -ENOMEM;
 -- 
 2.20.1
 
