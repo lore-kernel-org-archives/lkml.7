@@ -2,95 +2,73 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A34C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D960C28CC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5613025C2E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:06:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6780325C3B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:06:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727541AbfE3PGn (ORCPT
+        id S1727678AbfE3PGv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 11:06:43 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:18058 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726430AbfE3PGn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 11:06:43 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 2BE6D373B5D541E28654;
-        Thu, 30 May 2019 23:06:40 +0800 (CST)
-Received: from huawei.com (10.67.189.240) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Thu, 30 May 2019
- 23:06:31 +0800
-From:   l00383200 <liucheng32@huawei.com>
-To:     <rmk+kernel@arm.linux.org.uk>, <tglx@linutronix.de>
-CC:     <peterz@infradead.org>, <gregkh@linuxfoundation.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <liucheng32@huawei.com>
-Subject: [PATCH] Stacktrace in ARM32 architecture has jumped the first 2 layers, which may ignore the display of save_stack_trace_tsk.
-Date:   Thu, 30 May 2019 23:06:39 +0800
-Message-ID: <1559228799-84473-1-git-send-email-liucheng32@huawei.com>
-X-Mailer: git-send-email 1.8.5.6
+        Thu, 30 May 2019 11:06:51 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:38830 "EHLO deadmen.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725440AbfE3PGv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 11:06:51 -0400
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1hWMdi-0007tD-O5; Thu, 30 May 2019 23:06:46 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1hWMde-0004DR-DL; Thu, 30 May 2019 23:06:42 +0800
+Date:   Thu, 30 May 2019 23:06:42 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH] crypto: gcm - fix cacheline sharing
+Message-ID: <20190530150642.fswcxt6m2y4pnjon@gondor.apana.org.au>
+References: <VI1PR04MB44459EEF7BCD3458BB3D143D8C180@VI1PR04MB4445.eurprd04.prod.outlook.com>
+ <20190530133427.qrwjzctac2x6nsby@gondor.apana.org.au>
+ <VI1PR04MB444562A2352FE4BAD7F681258C180@VI1PR04MB4445.eurprd04.prod.outlook.com>
+ <CAKv+Gu-jTWQP0Zp=QpuzX41v8Eb5Bvd0O9ajwSnFkDO-ijBf_A@mail.gmail.com>
+ <CAKv+Gu9JoC+GKJ6mMAE25mr_k2gbznh-83jApT4=FZsAW=jd8w@mail.gmail.com>
+ <20190530142734.qlhgzeal22zxfhk5@gondor.apana.org.au>
+ <CAKv+Gu8jJQCZwiHFORUJUzRaAizWzBQ95EAgYe36sFrcvzb6vg@mail.gmail.com>
+ <CAKv+Gu-KBgiyNY2Dypx6vqtmpTXNfOxxWxJf50BTiF2rCOFqnw@mail.gmail.com>
+ <20190530143438.d62y3woaogyivqpm@gondor.apana.org.au>
+ <CAKv+Gu87wkLkZZLfsJwc02yuKpDx7Sa=Nx+1YW8pPE4DoWXGRw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.189.240]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu87wkLkZZLfsJwc02yuKpDx7Sa=Nx+1YW8pPE4DoWXGRw@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Without optimization, both save_stack_trace_tsk and __save_stack_trace
-will have stacktrace information in ARM32.
+On Thu, May 30, 2019 at 05:04:51PM +0200, Ard Biesheuvel wrote:
+>
+> But given your remark regarding CBC being the only algo that has this
+> requirement, I wonder if this might be sufficient as well.
 
-In this situation, "data.skip += 2" operation will skip the first two layers,
-which may make the stacktrace strange and different from other architectures.
+It's not that CBC is the only one with the requirement.  It's just
+that this is the wrong output IV for CTR.
 
-A simple example is as follows:
-In ARM32 architecture:
-[<ffffff80083cb3f8>] proc_pid_stack+0xac/0x12c
-[<ffffff80083c7c70>] proc_single_show+0x5c/0xa8
-[<ffffff800838aca8>] seq_read+0x130/0x420
-[<ffffff8008365c54>] __vfs_read+0x60/0x11c
-[<ffffff80083665dc>] vfs_read+0x8c/0x140
-[<ffffff800836717c>] SyS_read+0x6c/0xcc
-[<ffffff8008202cb8>] __sys_trace_return+0x0/0x4
-[<ffffffffffffffff>] 0xffffffffffffffff
-
-In some other architectures(ARM64):
-[<ffffff8008209be0>] save_stack_trace_tsk+0x0/0xf0
-[<ffffff80083cb3f8>] proc_pid_stack+0xac/0x12c
-[<ffffff80083c7c70>] proc_single_show+0x5c/0xa8
-[<ffffff800838aca8>] seq_read+0x130/0x420
-[<ffffff8008365c54>] __vfs_read+0x60/0x11c
-[<ffffff80083665dc>] vfs_read+0x8c/0x140
-[<ffffff800836717c>] SyS_read+0x6c/0xcc
-[<ffffff8008202cb8>] __sys_trace_return+0x0/0x4
-[<ffffffffffffffff>] 0xffffffffffffffff
-
-Therefore, we'd better just jump only one layer to ensure accuracy and consistency.
-
-Signed-off-by: liucheng <liucheng32@huawei.com>
----
- arch/arm/kernel/stacktrace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/kernel/stacktrace.c b/arch/arm/kernel/stacktrace.c
-index 71778bb..bb3da38 100644
---- a/arch/arm/kernel/stacktrace.c
-+++ b/arch/arm/kernel/stacktrace.c
-@@ -125,7 +125,7 @@ static noinline void __save_stack_trace(struct task_struct *tsk,
- #endif
- 	} else {
- 		/* We don't want this function nor the caller */
--		data.skip += 2;
-+		data.skip += 1;
- 		frame.fp = (unsigned long)__builtin_frame_address(0);
- 		frame.sp = current_stack_pointer;
- 		frame.lr = (unsigned long)__builtin_return_address(0);
+Cheers,
 -- 
-1.8.5.6
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
