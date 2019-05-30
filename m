@@ -7,51 +7,52 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18012C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:25:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C62C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5CA72543C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:25:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE2D125446
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:25:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190344;
-	bh=Jan7DD9Uh0cQPM9Trrlwh8Yfj1EXn5QYmANOkL08xFg=;
+	s=default; t=1559190347;
+	bh=Mslr04vKCV+c1HCoGRdDiyNkQPaY5BPKy2YaXll0TQI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aMJ2nJqsGGAk/VRczO2WTrPjO14bcW4kVlB71s4AQuPAjF0Mza15zWIYzW6m3Zh2m
-	 mH96yVKyn9Cm1LdWWvuuFOi8CNr02t3ujOwKscigogh/bf96NbdgH6THfwMB6ZvmAg
-	 u/DbSZObe7zRQwdYoIiUk/6N7I3dtnTzJviUsYsY=
+	b=IyMksvRhEnEb0X8cIFn3HL9R8l7UdN+h5tAtkMLzvm3tttpA9WS+H8JcgpDEQ0A5p
+	 0mQXSmONN40zYzhUUKA5uyotpAzq3+WfJkB6NYq+ORc8PEGbYyZuC1MM2v5KMQ0BRm
+	 v5DkxRrxyRsTfxRXu1ON7F5i+4pCtvOE8Q4BkldE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729940AbfE3DOl (ORCPT
+        id S1733173AbfE3EZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:14:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53500 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:25:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728195AbfE3DMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:06 -0400
+        id S1728195AbfE3DOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:41 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B91E24519;
-        Thu, 30 May 2019 03:12:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0651A24557;
+        Thu, 30 May 2019 03:14:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185925;
-        bh=Jan7DD9Uh0cQPM9Trrlwh8Yfj1EXn5QYmANOkL08xFg=;
+        s=default; t=1559186081;
+        bh=Mslr04vKCV+c1HCoGRdDiyNkQPaY5BPKy2YaXll0TQI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bf/hFyIT5hXGqwGLCIb4SvwBdhPzfBQSH1z04YvT+Qon+PTWE59MRHHf1+WXmzsJf
-         u/a7kLdH9JqRFco1s4/rDiG/9PGExy/ZORcy49BPWw734qE4odyadhcwZqUY+L8khE
-         nnpsIJdqA59i5b4TFnkzj3Z1v/ANp76k3zoH8RnU=
+        b=0SCMVEaBh4Sexdn7YWxXXL7dlRVZSO/u2lCEN4cIMeFnZvqpIa3q3npsssOU1k4CX
+         6yzzD6v1Igry6KH7GRdPPsiVphhGTMkY9irwDEYaUj95Ewn/6apJSvfiLfAuF38Zhs
+         hWfb37AnGNQYBEhCAOAFGFNGIuGKEnwUR0oO0KHY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
         Nathan Chancellor <natechancellor@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 315/405] scsi: qla4xxx: avoid freeing unallocated dma memory
-Date:   Wed, 29 May 2019 20:05:13 -0700
-Message-Id: <20190530030556.725255091@linuxfoundation.org>
+Subject: [PATCH 5.0 201/346] s390: cio: fix cio_irb declaration
+Date:   Wed, 29 May 2019 20:04:34 -0700
+Message-Id: <20190530030551.386002744@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
-References: <20190530030540.291644921@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,50 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 608f729c31d4caf52216ea00d20092a80959256d ]
+[ Upstream commit e91012ee855ad9f5ef2ab106a3de51db93fe4d0c ]
 
-Clang -Wuninitialized notices that on is_qla40XX we never allocate any DMA
-memory in get_fw_boot_info() but attempt to free it anyway:
+clang points out that the declaration of cio_irb does not match the
+definition exactly, it is missing the alignment attribute:
 
-drivers/scsi/qla4xxx/ql4_os.c:5915:7: error: variable 'buf_dma' is used uninitialized whenever 'if' condition is false
-      [-Werror,-Wsometimes-uninitialized]
-                if (!(val & 0x07)) {
-                    ^~~~~~~~~~~~~
-drivers/scsi/qla4xxx/ql4_os.c:5985:47: note: uninitialized use occurs here
-        dma_free_coherent(&ha->pdev->dev, size, buf, buf_dma);
-                                                     ^~~~~~~
-drivers/scsi/qla4xxx/ql4_os.c:5915:3: note: remove the 'if' if its condition is always true
-                if (!(val & 0x07)) {
-                ^~~~~~~~~~~~~~~~~~~
-drivers/scsi/qla4xxx/ql4_os.c:5885:20: note: initialize the variable 'buf_dma' to silence this warning
-        dma_addr_t buf_dma;
-                          ^
-                           = 0
+../drivers/s390/cio/cio.c:50:1: warning: section does not match previous declaration [-Wsection]
+DEFINE_PER_CPU_ALIGNED(struct irb, cio_irb);
+^
+../include/linux/percpu-defs.h:150:2: note: expanded from macro 'DEFINE_PER_CPU_ALIGNED'
+        DEFINE_PER_CPU_SECTION(type, name, PER_CPU_ALIGNED_SECTION)     \
+        ^
+../include/linux/percpu-defs.h:93:9: note: expanded from macro 'DEFINE_PER_CPU_SECTION'
+        extern __PCPU_ATTRS(sec) __typeof__(type) name;                 \
+               ^
+../include/linux/percpu-defs.h:49:26: note: expanded from macro '__PCPU_ATTRS'
+        __percpu __attribute__((section(PER_CPU_BASE_SECTION sec)))     \
+                                ^
+../drivers/s390/cio/cio.h:118:1: note: previous attribute is here
+DECLARE_PER_CPU(struct irb, cio_irb);
+^
+../include/linux/percpu-defs.h:111:2: note: expanded from macro 'DECLARE_PER_CPU'
+        DECLARE_PER_CPU_SECTION(type, name, "")
+        ^
+../include/linux/percpu-defs.h:87:9: note: expanded from macro 'DECLARE_PER_CPU_SECTION'
+        extern __PCPU_ATTRS(sec) __typeof__(type) name
+               ^
+../include/linux/percpu-defs.h:49:26: note: expanded from macro '__PCPU_ATTRS'
+        __percpu __attribute__((section(PER_CPU_BASE_SECTION sec)))     \
+                                ^
+Use DECLARE_PER_CPU_ALIGNED() here, to make the two match.
 
-Skip the call to dma_free_coherent() here.
-
-Fixes: 2a991c215978 ("[SCSI] qla4xxx: Boot from SAN support for open-iscsi")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sebastian Ott <sebott@linux.ibm.com>
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla4xxx/ql4_os.c | 2 +-
+ drivers/s390/cio/cio.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_os.c
-index 6e4f4931ae175..8c674eca09f13 100644
---- a/drivers/scsi/qla4xxx/ql4_os.c
-+++ b/drivers/scsi/qla4xxx/ql4_os.c
-@@ -5930,7 +5930,7 @@ static int get_fw_boot_info(struct scsi_qla_host *ha, uint16_t ddb_index[])
- 		val = rd_nvram_byte(ha, sec_addr);
- 		if (val & BIT_7)
- 			ddb_index[1] = (val & 0x7f);
--
-+		goto exit_boot_info;
- 	} else if (is_qla80XX(ha)) {
- 		buf = dma_alloc_coherent(&ha->pdev->dev, size,
- 					 &buf_dma, GFP_KERNEL);
+diff --git a/drivers/s390/cio/cio.h b/drivers/s390/cio/cio.h
+index 9811fd8a0c731..92eabbb5f18d4 100644
+--- a/drivers/s390/cio/cio.h
++++ b/drivers/s390/cio/cio.h
+@@ -115,7 +115,7 @@ struct subchannel {
+ 	struct schib_config config;
+ } __attribute__ ((aligned(8)));
+ 
+-DECLARE_PER_CPU(struct irb, cio_irb);
++DECLARE_PER_CPU_ALIGNED(struct irb, cio_irb);
+ 
+ #define to_subchannel(n) container_of(n, struct subchannel, dev)
+ 
 -- 
 2.20.1
 
