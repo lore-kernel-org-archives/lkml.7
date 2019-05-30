@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03150C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F695C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C20EA24B44
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 792CE24B44
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187283;
-	bh=zmCdAn9dAnPcSZ07GrUCxCZ+in2QjZV2IqkciN5z/vw=;
+	s=default; t=1559187287;
+	bh=X4oh5b0sq6P97AQ/irYKNhAaCFn2Vb2y2FN1gN+gQKs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DSpQhVcug6Ab4TXw8GlTi8kVPk4N6GmMB/iEvBPzEYUzTRDLkXLdQSa8OUR7yiYeq
-	 CE1miis0inARbWAPYCaF4PJMUFC/RDuMAujJoyaFwq0HI9ARM5NdHNJ8kZ2IvlRUgu
-	 bhQH2QwOY7yKTzUfC/h3/YJRzaDmlGoeGmktjKvk=
+	b=mSp5ZX+W58yQBoitEKPv0vmAYgLYTL9Paxxxqh7JhooFCZDMbw+OIQS1dy0/lwMz4
+	 QP6vYPVsj4l1X2W3EOrCNHrhXppirQBhXjuJtip6R+e1A8matLGpbtz2OD1vKcYL49
+	 kgV7Rl4eRKy54uuYAwPyF6+Y8eDd2zyzkPo+/utQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387883AbfE3D1N (ORCPT
+        id S2387868AbfE3D1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:27:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54450 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:27:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731848AbfE3DTP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:15 -0400
+        id S1731838AbfE3DTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:14 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0744F2485E;
-        Thu, 30 May 2019 03:19:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C7AC24844;
+        Thu, 30 May 2019 03:19:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186355;
-        bh=zmCdAn9dAnPcSZ07GrUCxCZ+in2QjZV2IqkciN5z/vw=;
+        s=default; t=1559186353;
+        bh=X4oh5b0sq6P97AQ/irYKNhAaCFn2Vb2y2FN1gN+gQKs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wd/JYJcgAiHS06LPrErkBzXNUc+E1gNfoyaTHCD0I4PjvrzqPbQpBS3PVRRGiGZCF
-         dd13RFkR4tkLCQn6sIAx6R2uLwgqGHS1tf4XIM/LGnXNScGEkYvG9/E+nzGXe8i7vj
-         LD/MGO9kReAw/etr+xC5slhfwqMH6uhUM6AyrffQ=
+        b=FSes2h/c5GZ0cTw/fbfHgVc8rBTN3B/np+k0WGe7bDdnKtUBtnDSgWChAsLBMWGzH
+         sJlPpE/AYk8wnVjsfM8ABEJP2DHDN4BNXvlvPOkzlSqrdWs2/eiJyDOjjGy2FsINlg
+         2gZIhDTsMIKE+dRPOIYD7S7dnu6BoRNPYnRishkI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell Currey <ruscur@russell.cc>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 097/193] powerpc/64: Fix booting large kernels with STRICT_KERNEL_RWX
-Date:   Wed, 29 May 2019 20:05:51 -0700
-Message-Id: <20190530030502.511689011@linuxfoundation.org>
+Subject: [PATCH 4.14 094/193] media: au0828: Fix NULL pointer dereference in au0828_analog_stream_enable()
+Date:   Wed, 29 May 2019 20:05:48 -0700
+Message-Id: <20190530030502.100827162@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -60,40 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 56c46bba9bbfe229b4472a5be313c44c5b714a39 ]
+[ Upstream commit 898bc40bfcc26abb6e06e960d6d4754c36c58b50 ]
 
-With STRICT_KERNEL_RWX enabled anything marked __init is placed at a 16M
-boundary.  This is necessary so that it can be repurposed later with
-different permissions.  However, in kernels with text larger than 16M,
-this pushes early_setup past 32M, incapable of being reached by the
-branch instruction.
+Fix au0828_analog_stream_enable() to check if device is in the right
+state first. When unbind happens while bind is in progress, usbdev
+pointer could be invalid in au0828_analog_stream_enable() and a call
+to usb_ifnum_to_if() will result in the null pointer dereference.
 
-Fix this by setting the CTR and branching there instead.
+This problem is found with the new media_dev_allocator.sh test.
 
-Fixes: 1e0fc9d1eb2b ("powerpc/Kconfig: Enable STRICT_KERNEL_RWX for some configs")
-Signed-off-by: Russell Currey <ruscur@russell.cc>
-[mpe: Fix it to work on BE by using DOTSYM()]
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+kernel: [  590.359623] BUG: unable to handle kernel NULL pointer dereference at 00000000000004e8
+kernel: [  590.359627] #PF error: [normal kernel read fault]
+kernel: [  590.359629] PGD 0 P4D 0
+kernel: [  590.359632] Oops: 0000 [#1] SMP PTI
+kernel: [  590.359634] CPU: 3 PID: 1458 Comm: v4l_id Not tainted 5.1.0-rc2+ #30
+kernel: [  590.359636] Hardware name: Dell Inc. OptiPlex 7 90/0HY9JP, BIOS A18 09/24/2013
+kernel: [  590.359641] RIP: 0010:usb_ifnum_to_if+0x6/0x60
+kernel: [  590.359643] Code: 5d 41 5e 41 5f 5d c3 48 83 c4
+ 10 b8 fa ff ff ff 5b 41 5c 41 5d 41 5e 41 5f 5d c3 b8 fa ff ff ff c3 0f 1f 00 6
+6 66 66 66 90 55 <48> 8b 97 e8 04 00 00 48 89 e5 48 85 d2 74 41 0f b6 4a 04 84 c
+9 74
+kernel: [  590.359645] RSP: 0018:ffffad3cc3c1fc00 EFLAGS: 00010246
+kernel: [  590.359646] RAX: 0000000000000000 RBX: ffff8ded b1f3c000 RCX: 1f377e4500000000
+kernel: [  590.359648] RDX: ffff8dedfa3a6b50 RSI: 00000000 00000000 RDI: 0000000000000000
+kernel: [  590.359649] RBP: ffffad3cc3c1fc28 R08: 00000000 8574acc2 R09: ffff8dedfa3a6b50
+kernel: [  590.359650] R10: 0000000000000001 R11: 00000000 00000000 R12: 0000000000000000
+kernel: [  590.359652] R13: ffff8dedb1f3f0f0 R14: ffffffff adcf7ec0 R15: 0000000000000000
+kernel: [  590.359654] FS:  00007f7917198540(0000) GS:ffff 8dee258c0000(0000) knlGS:0000000000000000
+kernel: [  590.359655] CS:  0010 DS: 0000 ES: 0000 CR0: 00 00000080050033
+kernel: [  590.359657] CR2: 00000000000004e8 CR3: 00000001 a388e002 CR4: 00000000000606e0
+kernel: [  590.359658] Call Trace:
+kernel: [  590.359664]  ? au0828_analog_stream_enable+0x2c/0x180
+kernel: [  590.359666]  au0828_v4l2_open+0xa4/0x110
+kernel: [  590.359670]  v4l2_open+0x8b/0x120
+kernel: [  590.359674]  chrdev_open+0xa6/0x1c0
+kernel: [  590.359676]  ? cdev_put.part.3+0x20/0x20
+kernel: [  590.359678]  do_dentry_open+0x1f6/0x360
+kernel: [  590.359681]  vfs_open+0x2f/0x40
+kernel: [  590.359684]  path_openat+0x299/0xc20
+kernel: [  590.359688]  do_filp_open+0x9b/0x110
+kernel: [  590.359695]  ? _raw_spin_unlock+0x27/0x40
+kernel: [  590.359697]  ? __alloc_fd+0xb2/0x160
+kernel: [  590.359700]  do_sys_open+0x1ba/0x260
+kernel: [  590.359702]  ? do_sys_open+0x1ba/0x260
+kernel: [  590.359712]  __x64_sys_openat+0x20/0x30
+kernel: [  590.359715]  do_syscall_64+0x5a/0x120
+kernel: [  590.359718]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Signed-off-by: Shuah Khan <shuah@kernel.org>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/head_64.S | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/media/usb/au0828/au0828-video.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/powerpc/kernel/head_64.S b/arch/powerpc/kernel/head_64.S
-index ff8511d6d8ead..4f2e18266e34a 100644
---- a/arch/powerpc/kernel/head_64.S
-+++ b/arch/powerpc/kernel/head_64.S
-@@ -961,7 +961,9 @@ start_here_multiplatform:
+diff --git a/drivers/media/usb/au0828/au0828-video.c b/drivers/media/usb/au0828/au0828-video.c
+index 7cd2daf869895..067f46c4f61a7 100644
+--- a/drivers/media/usb/au0828/au0828-video.c
++++ b/drivers/media/usb/au0828/au0828-video.c
+@@ -758,6 +758,9 @@ static int au0828_analog_stream_enable(struct au0828_dev *d)
  
- 	/* Restore parameters passed from prom_init/kexec */
- 	mr	r3,r31
--	bl	early_setup		/* also sets r13 and SPRG_PACA */
-+	LOAD_REG_ADDR(r12, DOTSYM(early_setup))
-+	mtctr	r12
-+	bctrl		/* also sets r13 and SPRG_PACA */
+ 	dprintk(1, "au0828_analog_stream_enable called\n");
  
- 	LOAD_REG_ADDR(r3, start_here_common)
- 	ld	r4,PACAKMSR(r13)
++	if (test_bit(DEV_DISCONNECTED, &d->dev_state))
++		return -ENODEV;
++
+ 	iface = usb_ifnum_to_if(d->usbdev, 0);
+ 	if (iface && iface->cur_altsetting->desc.bAlternateSetting != 5) {
+ 		dprintk(1, "Changing intf#0 to alt 5\n");
 -- 
 2.20.1
 
