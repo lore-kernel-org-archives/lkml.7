@@ -2,97 +2,93 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2E9C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B157BC28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6451B2402E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:27:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86F1A24168
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:28:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726566AbfE3I1Z (ORCPT
+        id S1726604AbfE3I2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 04:27:25 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34114 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725440AbfE3I1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 04:27:24 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 82429AD7B;
-        Thu, 30 May 2019 08:27:23 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id B5F9EE0326; Thu, 30 May 2019 10:27:22 +0200 (CEST)
-Date:   Thu, 30 May 2019 10:27:22 +0200
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     netdev@vger.kernel.org
-Cc:     David Miller <davem@davemloft.net>, vivien.didelot@gmail.com,
-        linux-kernel@vger.kernel.org, kernel@savoirfairelinux.com,
-        linville@redhat.com, f.fainelli@gmail.com
-Subject: Re: [PATCH net-next] ethtool: copy reglen to userspace
-Message-ID: <20190530082722.GB27401@unicorn.suse.cz>
-References: <20190528205848.21208-1-vivien.didelot@gmail.com>
- <20190529.221744.1136074795446305909.davem@davemloft.net>
- <20190530064848.GA27401@unicorn.suse.cz>
+        Thu, 30 May 2019 04:28:54 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:42101 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726079AbfE3I2y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 04:28:54 -0400
+Received: by mail-oi1-f196.google.com with SMTP id v25so3750963oic.9
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 01:28:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=a4/V6C9EK4vY7/JLXibmWc3UiOpGTZPM0ljUbojs3aI=;
+        b=uSf9qd5czeq/E4Z8ATFJgo8BGPC/lhO/Dko6Tlpu1FaSw+IKCbOU0ULNjn2rjhoXnY
+         l5ZfhHxoe4SGAKaZmWn4sGUnb0YaIoleNM1bzlkfEbBuoRCxcpyo0QiNV5Z8F6HlPW/o
+         qnJf2Z/u9u7lf7Mkj5RgJCVFE4je/5phDWonfjljkkRXkrGL0gsabzW5ZMecjWsbmWQj
+         7iw1R4Xm6LGn4e/mIreSJGOkc3gSChLRUztgxh1Lg3wMpAlTERSJHUnj3TGVKJ/FzCsq
+         5EkOx1+E11wl5aeCvmFJoXXSXIHhx5OafHCm8TMRfLuoRYk5g/AOu85RI2LeS3t3Q/1A
+         6fUw==
+X-Gm-Message-State: APjAAAUWdktOQDP00puNrB2Mn6megomJJTduN/ipTvguqHA/bdWbrDXG
+        caRMIL5TllBKXSmmTG5Ma1Ued88ggwizuHqkYuoybQ==
+X-Google-Smtp-Source: APXvYqz8Iw8/yjTeW0ZPob8U9xgh/OrWA3XSOSxGUsJCtkPzLy3bnytgOFnAYpOTDJoJ1VvfTiEd8WIOqAIMIBngZT4=
+X-Received: by 2002:aca:e146:: with SMTP id y67mr1244852oig.127.1559204933231;
+ Thu, 30 May 2019 01:28:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190530064848.GA27401@unicorn.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190530035310.GA9127@zhanggen-UX430UQ>
+In-Reply-To: <20190530035310.GA9127@zhanggen-UX430UQ>
+From:   Ondrej Mosnacek <omosnace@redhat.com>
+Date:   Thu, 30 May 2019 10:28:46 +0200
+Message-ID: <CAFqZXNv-54DJhd8gyUhwDo6RvmjFGSHo=+s-BVsL87S+u0cQxQ@mail.gmail.com>
+Subject: Re: [PATCH] hooks: fix a missing-check bug in selinux_sb_eat_lsm_opts()
+To:     Gen Zhang <blackgod016574@gmail.com>
+Cc:     Paul Moore <paul@paul-moore.com>, tony.luck@intel.com,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 08:48:48AM +0200, Michal Kubecek wrote:
-> On Wed, May 29, 2019 at 10:17:44PM -0700, David Miller wrote:
-> > From: Vivien Didelot <vivien.didelot@gmail.com>
-> > Date: Tue, 28 May 2019 16:58:48 -0400
-> > 
-> > > ethtool_get_regs() allocates a buffer of size reglen obtained from
-> > > ops->get_regs_len(), thus only this value must be used when copying
-> > > the buffer back to userspace. Also no need to check regbuf twice.
-> > > 
-> > > Signed-off-by: Vivien Didelot <vivien.didelot@gmail.com>
-> > 
-> > Hmmm, can't regs.len be modified by the driver potentially?
-> 
-> The driver certainly shouldn't raise it as that could result in kernel
-> writing past the buffer provided by userspace. (I'll check some drivers
-> to see if they truncate the dump or return an error if regs.len from
-> userspace is insufficient.) And lowering it would be also wrong as that
-> would mean dump would be shorter than what ops->get_regs_len() returned.
+On Thu, May 30, 2019 at 5:53 AM Gen Zhang <blackgod016574@gmail.com> wrote:
+> In selinux_sb_eat_lsm_opts(), 'arg' is allocated by kmemdup_nul(). It
+> returns NULL when fails. So 'arg' should be checked.
+>
+> Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
 
-I looked around a bit. First of all, the driver cannot actually return
-error as ethtool_ops::get_regs() returns void. Most drivers do not touch
-regs->len and only fill data and possibly regs->version which is fine.
+Since it looks like you are going to respin this patch, please add:
 
-There are few drivers which modify regs->len:
+Fixes: 99dbbb593fe6 ("selinux: rewrite selinux_sb_eat_lsm_opts()")
 
-  s2io_ethtool_gdrvinfo()	neterion/s2io
-  vxge_ethtool_gregs()		neterion/vxge
-  ixgb_get_regs()		intel/ixgb
-  emac_get_regs_len()		qualcomm/emac
-  ql_get_regs()			qlogic/qlge
-  axienet_ethtools_get_regs()	xilinx/axienet
+to the commit message so that there is a record of which commit
+introduced the issue (then it can be picked up automatically for
+backport into the relevant stable kernels).
 
-All of these set regs->len to the same value as ->get_regs_len() returns
-(ixgb does it in rather fragile way). This means that if userspace
-passes insufficient buffer size, current code would write pass that
-buffer; but proposed patch would make things worse as with it, kernel
-would always write past the userspace buffer in such case.
+Thanks for spotting the issue and sending the patch(es)!
 
-Note: ieee80211_get_regs() in net/mac80211/ethtool.c also sets regs->len
-but it always sets it to 0 which is also what ->get_regs_len() returns
-so that it does not actually modify the value.
+> ---
+> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+> index 3ec702c..5a9e959 100644
+> --- a/security/selinux/hooks.c
+> +++ b/security/selinux/hooks.c
+> @@ -2635,6 +2635,8 @@ static int selinux_sb_eat_lsm_opts(char *options, void **mnt_opts)
+>                                                 *q++ = c;
+>                                 }
+>                                 arg = kmemdup_nul(arg, q - arg, GFP_KERNEL);
+> +                               if (!arg)
+> +                                       return 0;
+>                         }
+>                         rc = selinux_add_opt(token, arg, mnt_opts);
+>                         if (unlikely(rc)) {
 
-I believe this should be handled by ethtool_get_regs(), either by
-returning an error or by only copying data up to original regs.len
-passed by userspace. The former seems more correct but broken userspace
-software would suddenly start to fail where it "used to work". The
-latter would be closer to current behaviour but it would mean that
-broken userspace software might nerver notice there is something wrong.
-
-Michal Kubecek
+-- 
+Ondrej Mosnacek <omosnace at redhat dot com>
+Software Engineer, Security Technologies
+Red Hat, Inc.
