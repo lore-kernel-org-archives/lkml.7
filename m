@@ -2,52 +2,50 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0100C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63086C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 957B725799
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:35:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38B88257AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:35:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190910;
-	bh=Y3bVksjnQh7k/rJJ4G1pwP/+ZO+2G9N/Aan3epLQxaQ=;
+	s=default; t=1559190915;
+	bh=5cIoNPrYoOfe6SHmkc6fk808rFkjGP3Hjmm2cmWKvu8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KaWGd0AbGlJcZ/haELCcF5LyFm9tV/h7fXOY1CjNVfIPghlIQ251Z0k1AZta1K3Qa
-	 jyeVVGSp4d9lLfJLRZwzD6rcqxzRJodykm04VQUHJxJfbHyEVOrriB/qaX9//aEMe7
-	 R4XODfNlzlcbCTzya2iimPjawecsmqBYEfSmN0RE=
+	b=A++y8jSVfJzKV3F/MnZpHQpxc/N2b7FeohwGPp9TrNRt+9wjWInfZlk+/fWuSSRjO
+	 6Ch93UPiMEmF7fJkCsz/sFvYMjH0MpoGIBmCe6Ueo0qg0iGFeNDd81vMpnSCgkiWMy
+	 KoXcrhxMiaDyV7nsOQdo/45uFTn25oQO7ql07uIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388420AbfE3EfK (ORCPT
+        id S2388434AbfE3EfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:35:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57816 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:35:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727715AbfE3DNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729384AbfE3DNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:13:16 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A26BD2449A;
-        Thu, 30 May 2019 03:13:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0075221BE2;
+        Thu, 30 May 2019 03:13:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559185995;
-        bh=Y3bVksjnQh7k/rJJ4G1pwP/+ZO+2G9N/Aan3epLQxaQ=;
+        bh=5cIoNPrYoOfe6SHmkc6fk808rFkjGP3Hjmm2cmWKvu8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mD+kEz26h+Hc11r8xNUDCTv/Qg3dIkK7cI4PukoIKPwi/pplhfzL216ZrGzuAB8jb
-         ppYgl9QiCaPn+WFPHDxxOy6mT+dJFGst/853cexjDHcW0Vc6c6nqWRaI3B02PEsL5r
-         nwm04XXIKeYbGrAoIm4C5R351Q/huUFtJa7VI57o=
+        b=Gp7tqwgTeqPLAW0w4R5RWloce3JH8LeSQLfxvbOeaYT2I0l75DHKcNB+n+SvcA9zU
+         OBI/BlbjNnycy+SaPL1BnLcm1ET27Dxq5ZgcoVC2v1LS02KfVPsaYQK+tQ2TyLuZ6r
+         AD3/RaV9pwPl4X0zPrrLcjKTUVgW8XrYpIj+A/ps=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ross Lagerwall <ross.lagerwall@citrix.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 042/346] gfs2: Fix lru_count going negative
-Date:   Wed, 29 May 2019 20:01:55 -0700
-Message-Id: <20190530030542.990551051@linuxfoundation.org>
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.0 041/346] Revert "btrfs: Honour FITRIM range constraints during free space trim"
+Date:   Wed, 29 May 2019 20:01:54 -0700
+Message-Id: <20190530030542.936701328@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -60,111 +58,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7881ef3f33bb80f459ea6020d1e021fc524a6348 ]
+From: David Sterba <dsterba@suse.com>
 
-Under certain conditions, lru_count may drop below zero resulting in
-a large amount of log spam like this:
+This reverts commit b9ee627187491547791aacf96d4dd8f4d9afbf1c.
 
-vmscan: shrink_slab: gfs2_dump_glock+0x3b0/0x630 [gfs2] \
-    negative objects to delete nr=-1
+There is currently no corresponding patch in master due to additional
+changes that would be significantly different from plain revert in the
+respective stable branch.
 
-This happens as follows:
-1) A glock is moved from lru_list to the dispose list and lru_count is
-   decremented.
-2) The dispose function calls cond_resched() and drops the lru lock.
-3) Another thread takes the lru lock and tries to add the same glock to
-   lru_list, checking if the glock is on an lru list.
-4) It is on a list (actually the dispose list) and so it avoids
-   incrementing lru_count.
-5) The glock is moved to lru_list.
-5) The original thread doesn't dispose it because it has been re-added
-   to the lru list but the lru_count has still decreased by one.
+The range argument was not handled correctly and could cause trim to
+overlap allocated areas or reach beyond the end of the device. The
+address space that fitrim normally operates on is in logical
+coordinates, while the discards are done on the physical device extents.
+This distinction cannot be made with the current ioctl interface and
+caused the confusion.
 
-Fix by checking if the LRU flag is set on the glock rather than checking
-if the glock is on some list and rearrange the code so that the LRU flag
-is added/removed precisely when the glock is added/removed from lru_list.
+The bug depends on the layout of block groups and does not always
+happen. The whole-fs trim (run by default by the fstrim tool) is not
+affected.
 
-Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/gfs2/glock.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+ fs/btrfs/extent-tree.c |   25 ++++++-------------------
+ 1 file changed, 6 insertions(+), 19 deletions(-)
 
-diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
-index 4b038f25f2564..2d25d89e77f9b 100644
---- a/fs/gfs2/glock.c
-+++ b/fs/gfs2/glock.c
-@@ -183,15 +183,19 @@ static int demote_ok(const struct gfs2_glock *gl)
- 
- void gfs2_glock_add_to_lru(struct gfs2_glock *gl)
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -11191,9 +11191,9 @@ int btrfs_error_unpin_extent_range(struc
+  * held back allocations.
+  */
+ static int btrfs_trim_free_extents(struct btrfs_device *device,
+-				   struct fstrim_range *range, u64 *trimmed)
++				   u64 minlen, u64 *trimmed)
  {
-+	if (!(gl->gl_ops->go_flags & GLOF_LRU))
-+		return;
-+
- 	spin_lock(&lru_lock);
+-	u64 start = range->start, len = 0;
++	u64 start = 0, len = 0;
+ 	int ret;
  
--	if (!list_empty(&gl->gl_lru))
--		list_del_init(&gl->gl_lru);
--	else
-+	list_del(&gl->gl_lru);
-+	list_add_tail(&gl->gl_lru, &lru_list);
-+
-+	if (!test_bit(GLF_LRU, &gl->gl_flags)) {
-+		set_bit(GLF_LRU, &gl->gl_flags);
- 		atomic_inc(&lru_count);
-+	}
+ 	*trimmed = 0;
+@@ -11236,8 +11236,8 @@ static int btrfs_trim_free_extents(struc
+ 		if (!trans)
+ 			up_read(&fs_info->commit_root_sem);
  
--	list_add_tail(&gl->gl_lru, &lru_list);
--	set_bit(GLF_LRU, &gl->gl_flags);
- 	spin_unlock(&lru_lock);
- }
- 
-@@ -201,7 +205,7 @@ static void gfs2_glock_remove_from_lru(struct gfs2_glock *gl)
- 		return;
- 
- 	spin_lock(&lru_lock);
--	if (!list_empty(&gl->gl_lru)) {
-+	if (test_bit(GLF_LRU, &gl->gl_flags)) {
- 		list_del_init(&gl->gl_lru);
- 		atomic_dec(&lru_count);
- 		clear_bit(GLF_LRU, &gl->gl_flags);
-@@ -1159,8 +1163,7 @@ void gfs2_glock_dq(struct gfs2_holder *gh)
- 		    !test_bit(GLF_DEMOTE, &gl->gl_flags))
- 			fast_path = 1;
- 	}
--	if (!test_bit(GLF_LFLUSH, &gl->gl_flags) && demote_ok(gl) &&
--	    (glops->go_flags & GLOF_LRU))
-+	if (!test_bit(GLF_LFLUSH, &gl->gl_flags) && demote_ok(gl))
- 		gfs2_glock_add_to_lru(gl);
- 
- 	trace_gfs2_glock_queue(gh, 0);
-@@ -1456,6 +1459,7 @@ __acquires(&lru_lock)
- 		if (!spin_trylock(&gl->gl_lockref.lock)) {
- add_back_to_lru:
- 			list_add(&gl->gl_lru, &lru_list);
-+			set_bit(GLF_LRU, &gl->gl_flags);
- 			atomic_inc(&lru_count);
- 			continue;
+-		ret = find_free_dev_extent_start(trans, device, range->minlen,
+-						 start, &start, &len);
++		ret = find_free_dev_extent_start(trans, device, minlen, start,
++						 &start, &len);
+ 		if (trans) {
+ 			up_read(&fs_info->commit_root_sem);
+ 			btrfs_put_transaction(trans);
+@@ -11250,16 +11250,6 @@ static int btrfs_trim_free_extents(struc
+ 			break;
  		}
-@@ -1463,7 +1467,6 @@ __acquires(&lru_lock)
- 			spin_unlock(&gl->gl_lockref.lock);
- 			goto add_back_to_lru;
- 		}
--		clear_bit(GLF_LRU, &gl->gl_flags);
- 		gl->gl_lockref.count++;
- 		if (demote_ok(gl))
- 			handle_callback(gl, LM_ST_UNLOCKED, 0, false);
-@@ -1498,6 +1501,7 @@ static long gfs2_scan_glock_lru(int nr)
- 		if (!test_bit(GLF_LOCK, &gl->gl_flags)) {
- 			list_move(&gl->gl_lru, &dispose);
- 			atomic_dec(&lru_count);
-+			clear_bit(GLF_LRU, &gl->gl_flags);
- 			freed++;
- 			continue;
- 		}
--- 
-2.20.1
-
+ 
+-		/* If we are out of the passed range break */
+-		if (start > range->start + range->len - 1) {
+-			mutex_unlock(&fs_info->chunk_mutex);
+-			ret = 0;
+-			break;
+-		}
+-
+-		start = max(range->start, start);
+-		len = min(range->len, len);
+-
+ 		ret = btrfs_issue_discard(device->bdev, start, len, &bytes);
+ 		mutex_unlock(&fs_info->chunk_mutex);
+ 
+@@ -11269,10 +11259,6 @@ static int btrfs_trim_free_extents(struc
+ 		start += len;
+ 		*trimmed += bytes;
+ 
+-		/* We've trimmed enough */
+-		if (*trimmed >= range->len)
+-			break;
+-
+ 		if (fatal_signal_pending(current)) {
+ 			ret = -ERESTARTSYS;
+ 			break;
+@@ -11356,7 +11342,8 @@ int btrfs_trim_fs(struct btrfs_fs_info *
+ 	mutex_lock(&fs_info->fs_devices->device_list_mutex);
+ 	devices = &fs_info->fs_devices->devices;
+ 	list_for_each_entry(device, devices, dev_list) {
+-		ret = btrfs_trim_free_extents(device, range, &group_trimmed);
++		ret = btrfs_trim_free_extents(device, range->minlen,
++					      &group_trimmed);
+ 		if (ret) {
+ 			dev_failed++;
+ 			dev_ret = ret;
 
 
