@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE45DC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E1DC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:59:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE6FE2609C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:59:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6B1826063
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:59:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192392;
-	bh=vSqXZ0l0ldwE+VmBMCfBQs1BzcztFcN3rc4xlAM8x+o=;
+	s=default; t=1559192395;
+	bh=TFD9QtOmrEADc49mR+g0tRg0jNoao5ZKTnu6JPQhWPQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EgenKpoEcKcI3mFrfhR9aLWNnoPJlUIPIkddXAZuO11BJVn/5uUpld7Gt7yFfkHK6
-	 MMV/hexHIv9CAmbTfpfDd0wDJDtG97O5g5IobiVXyolHCpjYZZv4bCFFPQsKFjBulq
-	 wXJ2ATAflfgNVadNjXzPVtDHHfn6lNKXEUQZ916g=
+	b=n8zU2Tnve5dCNOthCI9IbMXuhcEPzwL3ushAOTi7yb+jgpJT9T/POIFy4tI+7ZOZI
+	 sO1GRcDjt/JpRbvXsFPOokVhQrKtEG1sI+SwnUyeHDWdl3ipUX3pDihe0LwsZEzOUI
+	 yfA9XvGl2tvs0kBEqXnicriAJHxPab2+bc2YqRFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730656AbfE3E7w (ORCPT
+        id S2389358AbfE3E7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:59:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44612 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:59:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727646AbfE3DJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727655AbfE3DJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:09:35 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A6D924490;
-        Thu, 30 May 2019 03:09:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 229B32447A;
+        Thu, 30 May 2019 03:09:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185774;
-        bh=vSqXZ0l0ldwE+VmBMCfBQs1BzcztFcN3rc4xlAM8x+o=;
+        s=default; t=1559185775;
+        bh=TFD9QtOmrEADc49mR+g0tRg0jNoao5ZKTnu6JPQhWPQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oejJ561wmVwM9qOTI6WdQoSbWs0eg5GK5uvGLPlweP6zPAq5qCp+nMWaTKQ3WGwQ+
-         S3RMxzWGwTog5vuFRrSU8sYIeiaK+16dmufAEJGWSlpdBLBKn6K4RXpQkFBlcHcC+R
-         YhAwIaWc7gjk21g43E1MO8XWkYUiYbzDGvpZOm8U=
+        b=jEGlzhz5o/PXVMvaGWj6W0H+Kp1LERZciywV/GOfUagdjlyahvEIHLiNpMvGPilxT
+         zLL+xSIUvMbpokU0or1WBiY4ITJ79oUxJiVBhKH8UrP8d3+dmrkMxLyRegPHKjKmwX
+         FsjO27jbKf5HRrX7x7GQQAqNFMSjFWorKocQjcqw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Tobin C. Harding" <tobin@kernel.org>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.1 029/405] btrfs: sysfs: dont leak memory when failing add fsid
-Date:   Wed, 29 May 2019 20:00:27 -0700
-Message-Id: <20190530030542.169113762@linuxfoundation.org>
+        stable@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
+        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 5.1 003/405] ext4: wait for outstanding dio during truncate in nojournal mode
+Date:   Wed, 29 May 2019 20:00:01 -0700
+Message-Id: <20190530030540.513497665@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -59,53 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tobin C. Harding <tobin@kernel.org>
+From: Jan Kara <jack@suse.cz>
 
-commit e32773357d5cc271b1d23550b3ed026eb5c2a468 upstream.
+commit 82a25b027ca48d7ef197295846b352345853dfa8 upstream.
 
-A failed call to kobject_init_and_add() must be followed by a call to
-kobject_put().  Currently in the error path when adding fs_devices we
-are missing this call.  This could be fixed by calling
-btrfs_sysfs_remove_fsid() if btrfs_sysfs_add_fsid() returns an error or
-by adding a call to kobject_put() directly in btrfs_sysfs_add_fsid().
-Here we choose the second option because it prevents the slightly
-unusual error path handling requirements of kobject from leaking out
-into btrfs functions.
+We didn't wait for outstanding direct IO during truncate in nojournal
+mode (as we skip orphan handling in that case). This can lead to fs
+corruption or stale data exposure if truncate ends up freeing blocks
+and these get reallocated before direct IO finishes. Fix the condition
+determining whether the wait is necessary.
 
-Add a call to kobject_put() in the error path of kobject_add_and_init().
-This causes the release method to be called if kobject_init_and_add()
-fails.  open_tree() is the function that calls btrfs_sysfs_add_fsid()
-and the error code in this function is already written with the
-assumption that the release method is called during the error path of
-open_tree() (as seen by the call to btrfs_sysfs_remove_fsid() under the
-fail_fsdev_sysfs label).
-
-Cc: stable@vger.kernel.org # v4.4+
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+CC: stable@vger.kernel.org
+Fixes: 1c9114f9c0f1 ("ext4: serialize unlocked dio reads with truncate")
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/sysfs.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ fs/ext4/inode.c |   21 +++++++++------------
+ 1 file changed, 9 insertions(+), 12 deletions(-)
 
---- a/fs/btrfs/sysfs.c
-+++ b/fs/btrfs/sysfs.c
-@@ -825,7 +825,12 @@ int btrfs_sysfs_add_fsid(struct btrfs_fs
- 	fs_devs->fsid_kobj.kset = btrfs_kset;
- 	error = kobject_init_and_add(&fs_devs->fsid_kobj,
- 				&btrfs_ktype, parent, "%pU", fs_devs->fsid);
--	return error;
-+	if (error) {
-+		kobject_put(&fs_devs->fsid_kobj);
-+		return error;
-+	}
-+
-+	return 0;
- }
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -5624,20 +5624,17 @@ int ext4_setattr(struct dentry *dentry,
+ 				goto err_out;
+ 			}
+ 		}
+-		if (!shrink)
++		if (!shrink) {
+ 			pagecache_isize_extended(inode, oldsize, inode->i_size);
+-
+-		/*
+-		 * Blocks are going to be removed from the inode. Wait
+-		 * for dio in flight.  Temporarily disable
+-		 * dioread_nolock to prevent livelock.
+-		 */
+-		if (orphan) {
+-			if (!ext4_should_journal_data(inode)) {
+-				inode_dio_wait(inode);
+-			} else
+-				ext4_wait_for_tail_page_commit(inode);
++		} else {
++			/*
++			 * Blocks are going to be removed from the inode. Wait
++			 * for dio in flight.
++			 */
++			inode_dio_wait(inode);
+ 		}
++		if (orphan && ext4_should_journal_data(inode))
++			ext4_wait_for_tail_page_commit(inode);
+ 		down_write(&EXT4_I(inode)->i_mmap_sem);
  
- int btrfs_sysfs_add_mounted(struct btrfs_fs_info *fs_info)
+ 		rc = ext4_break_layouts(inode);
 
 
