@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C8FC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 540C2C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C18DA25159
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:10:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BD1025159
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189450;
-	bh=mB1JwBppuuYo9KbxWZGD36wEw4Y+aFhaE5D0Y/3vHP8=;
+	s=default; t=1559189457;
+	bh=3bXHZzvKXyytTWbUilpHdWW3mqkSwQgfLkel3gxWD6Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1yn1aTysCfwc2iLM3/ggCQ8wWdi4zDxyz0AV66PcWx54a0JS01GHNhv++pkRFBTEk
-	 iCF5EMXqA2DO7F3Gbe/BsG0vSvoGALXaop3KUNBFR+0UoDRpotS5nsQFP0lgQqWCI3
-	 JqiHDOFIMY40h0jzOm1leQLdWgPKDuoQvJUY6iSI=
+	b=lcj4R87FBfKbPypZurMXaGukzfeTKk6eWVK+B/N+k8nHhSUj0CVL7WqBzcCy8TYaw
+	 fUwl+g0tGZo9HjaclCvuNLuHNOGsaXRWx651OpWx/n7rGj9XfaHR3EEaMqOY2iCWGi
+	 hRY95mMWfw1HEXu78ZT8XY+RU1KbrXqSU/g3IfLY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbfE3EKt (ORCPT
+        id S1728441AbfE3EK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:10:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44448 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:10:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729935AbfE3DQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727612AbfE3DQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:16:58 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC3032463F;
+        by mail.kernel.org (Postfix) with ESMTPSA id 50ACD24646;
         Thu, 30 May 2019 03:16:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186218;
-        bh=mB1JwBppuuYo9KbxWZGD36wEw4Y+aFhaE5D0Y/3vHP8=;
+        s=default; t=1559186217;
+        bh=3bXHZzvKXyytTWbUilpHdWW3mqkSwQgfLkel3gxWD6Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1BsVPh4lb43Cuz1pkWH0TJS96AsWBF79mhWbcVbr2Kcxk5xwpLtJ2I0e+e5a/UAq0
-         Q66PuHoYDHapbbhOQ6UdHbwlRMDmIsHpfMJ7rRDxOBHNWGe9t75WSzb8dM99Z+8ncY
-         FGbWfX8OJ/N5eUccyx86EVGErBzVCiQcqSUfDcYA=
+        b=QbU685Oj1HhxSXc+rymFdF2uDmOzv5x2P7JMrqGnTPaoS3XYfaX52XGs5op6gETqH
+         daKelX13273QdYv4mRTqS02b0SN07krlLqCl2eAK8pfQWcPZ8nEl3FYwUO8XIgaook
+         gNcXfcsLgfrfGgxRtT3Ufm85GMuaxpw4EYFBhNz4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Robbie Ko <robbieko@synology.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 080/276] Btrfs: fix data bytes_may_use underflow with fallocate due to failed quota reserve
-Date:   Wed, 29 May 2019 20:03:58 -0700
-Message-Id: <20190530030531.374696788@linuxfoundation.org>
+Subject: [PATCH 4.19 106/276] bcache: avoid clang -Wunintialized warning
+Date:   Wed, 29 May 2019 20:04:24 -0700
+Message-Id: <20190530030532.661154521@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -61,57 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 39ad317315887c2cb9a4347a93a8859326ddf136 ]
+[ Upstream commit 78d4eb8ad9e1d413449d1b7a060f50b6efa81ebd ]
 
-When doing fallocate, we first add the range to the reserve_list and
-then reserve the quota.  If quota reservation fails, we'll release all
-reserved parts of reserve_list.
+clang has identified a code path in which it thinks a
+variable may be unused:
 
-However, cur_offset is not updated to indicate that this range is
-already been inserted into the list.  Therefore, the same range is freed
-twice.  Once at list_for_each_entry loop, and once at the end of the
-function.  This will result in WARN_ON on bytes_may_use when we free the
-remaining space.
+drivers/md/bcache/alloc.c:333:4: error: variable 'bucket' is used uninitialized whenever 'if' condition is false
+      [-Werror,-Wsometimes-uninitialized]
+                        fifo_pop(&ca->free_inc, bucket);
+                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/md/bcache/util.h:219:27: note: expanded from macro 'fifo_pop'
+ #define fifo_pop(fifo, i)       fifo_pop_front(fifo, (i))
+                                ^~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/md/bcache/util.h:189:6: note: expanded from macro 'fifo_pop_front'
+        if (_r) {                                                       \
+            ^~
+drivers/md/bcache/alloc.c:343:46: note: uninitialized use occurs here
+                        allocator_wait(ca, bch_allocator_push(ca, bucket));
+                                                                  ^~~~~~
+drivers/md/bcache/alloc.c:287:7: note: expanded from macro 'allocator_wait'
+                if (cond)                                               \
+                    ^~~~
+drivers/md/bcache/alloc.c:333:4: note: remove the 'if' if its condition is always true
+                        fifo_pop(&ca->free_inc, bucket);
+                        ^
+drivers/md/bcache/util.h:219:27: note: expanded from macro 'fifo_pop'
+ #define fifo_pop(fifo, i)       fifo_pop_front(fifo, (i))
+                                ^
+drivers/md/bcache/util.h:189:2: note: expanded from macro 'fifo_pop_front'
+        if (_r) {                                                       \
+        ^
+drivers/md/bcache/alloc.c:331:15: note: initialize the variable 'bucket' to silence this warning
+                        long bucket;
+                                   ^
 
-At the end, under the 'out' label we have a call to:
+This cannot happen in practice because we only enter the loop
+if there is at least one element in the list.
 
-   btrfs_free_reserved_data_space(inode, data_reserved, alloc_start, alloc_end - cur_offset);
+Slightly rearranging the code makes this clearer to both the
+reader and the compiler, which avoids the warning.
 
-The start offset, third argument, should be cur_offset.
-
-Everything from alloc_start to cur_offset was freed by the
-list_for_each_entry_safe_loop.
-
-Fixes: 18513091af94 ("btrfs: update btrfs_space_info's bytes_may_use timely")
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Robbie Ko <robbieko@synology.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/file.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/md/bcache/alloc.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
-index de4d3baec1616..e24c0a69ff5d4 100644
---- a/fs/btrfs/file.c
-+++ b/fs/btrfs/file.c
-@@ -3161,6 +3161,7 @@ static long btrfs_fallocate(struct file *file, int mode,
- 			ret = btrfs_qgroup_reserve_data(inode, &data_reserved,
- 					cur_offset, last_byte - cur_offset);
- 			if (ret < 0) {
-+				cur_offset = last_byte;
- 				free_extent_map(em);
- 				break;
- 			}
-@@ -3210,7 +3211,7 @@ static long btrfs_fallocate(struct file *file, int mode,
- 	/* Let go of our reservation. */
- 	if (ret != 0 && !(mode & FALLOC_FL_ZERO_RANGE))
- 		btrfs_free_reserved_data_space(inode, data_reserved,
--				alloc_start, alloc_end - cur_offset);
-+				cur_offset, alloc_end - cur_offset);
- 	extent_changeset_free(data_reserved);
- 	return ret;
- }
+diff --git a/drivers/md/bcache/alloc.c b/drivers/md/bcache/alloc.c
+index 7a28232d868bd..de85b3af3b39d 100644
+--- a/drivers/md/bcache/alloc.c
++++ b/drivers/md/bcache/alloc.c
+@@ -327,10 +327,11 @@ static int bch_allocator_thread(void *arg)
+ 		 * possibly issue discards to them, then we add the bucket to
+ 		 * the free list:
+ 		 */
+-		while (!fifo_empty(&ca->free_inc)) {
++		while (1) {
+ 			long bucket;
+ 
+-			fifo_pop(&ca->free_inc, bucket);
++			if (!fifo_pop(&ca->free_inc, bucket))
++				break;
+ 
+ 			if (ca->discard) {
+ 				mutex_unlock(&ca->set->bucket_lock);
 -- 
 2.20.1
 
