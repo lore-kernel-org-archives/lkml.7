@@ -2,57 +2,52 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8839BC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 916B9C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5862B245AB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:16:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BA0F24628
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:16:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186200;
-	bh=/27MC/24vy0pzlQ1bxrg2WEVvYdYFBSyYBq0wfcmfUc=;
+	s=default; t=1559186203;
+	bh=ZHEtNDfR/QT50PNn2KzsiynEhrp0uaN1i7z4WEqqhNU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p4XS+Q60dlDKElxw49crbzhgy1I1rZTEJ15eLuOe9556xkfZEfyjKWMt4YzgETE5K
-	 TaKUtMw4CxzgAG9r3i6oBC/cdRyVC12BjmUv739Ct2xFYUEeuDweLlc0HPv2a1p9nK
-	 I4UAPvZzeCeeOgvAZ5gPE5i6DhsgJ9as9VaRepzQ=
+	b=mL6UifPD87be9bFUylzu7FhpEU6xv5nBVolqN+JVONKnmWZ+GGiVHif14+PbyMEjR
+	 1qHLXi9o78MhKhK83552luE/0LnjBFbMgVETR9bKNRHXc5tbPZ/33Xymerc5wlZk0o
+	 rDC8UscxGgoVblQHNbrlbZrRvKby0cl1SdJuexZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730750AbfE3DQj (ORCPT
+        id S1730775AbfE3DQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:16:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58448 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:16:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729426AbfE3DNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:13:24 -0400
+        id S1729484AbfE3DNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:31 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 306E623D14;
-        Thu, 30 May 2019 03:13:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 643ED24502;
+        Thu, 30 May 2019 03:13:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186003;
-        bh=/27MC/24vy0pzlQ1bxrg2WEVvYdYFBSyYBq0wfcmfUc=;
+        s=default; t=1559186010;
+        bh=ZHEtNDfR/QT50PNn2KzsiynEhrp0uaN1i7z4WEqqhNU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dy2mbto3EfvGjw8SNcvX6OkaAf3S63Q4DKdbzKEJVIBq88Ykz1uGJpuFmNLhNXQIE
-         VL/OBed8ujaSBxiFIOMF7oERee+GAT9ckERP0T6AeD3k+NQBwzkMsLPnXBGLMY5p7n
-         YUtEFD5w8xSflD47fpAlvtK4lDSrEIPOOkz0VjFg=
+        b=meLpF/KTKiw3cXRXEU3mWQzbZPeujvi0S27QVTiqhbCerAkJp6yGGL/7l23hfEn5J
+         0cprZM+SxO8SS0an4TBBz+I5ri7r+2MFpOUVKDMS747GDAECPDv/fCIf7jP6MQPrB9
+         59F240eo9Y3Oh9lyxdOyvSWBTTqueQPIKPwA/Wjw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>,
-        James Smart <james.smart@broadcom.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>
-Subject: [PATCH 5.0 055/346] blk-mq: grab .q_usage_counter when queuing request from plug code path
-Date:   Wed, 29 May 2019 20:02:08 -0700
-Message-Id: <20190530030543.736817542@linuxfoundation.org>
+        stable@vger.kernel.org, Minas Harutyunyan <hminas@synopsys.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 063/346] usb: dwc2: gadget: Increase descriptors count for ISOCs
+Date:   Wed, 29 May 2019 20:02:16 -0700
+Message-Id: <20190530030544.255087781@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -65,89 +60,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e87eb301bee183d82bb3d04bd71b6660889a2588 ]
+[ Upstream commit 54f37f56631747075f1f9a2f0edf6ba405e3e66c ]
 
-Just like aio/io_uring, we need to grab 2 refcount for queuing one
-request, one is for submission, another is for completion.
+Some function drivers queueing more than 128 ISOC requests at a time.
+To avoid "descriptor chain full" cases, increasing descriptors count
+from MAX_DMA_DESC_NUM_GENERIC to MAX_DMA_DESC_NUM_HS_ISOC for ISOC's
+only.
 
-If the request isn't queued from plug code path, the refcount grabbed
-in generic_make_request() serves for submission. In theroy, this
-refcount should have been released after the sumission(async run queue)
-is done. blk_freeze_queue() works with blk_sync_queue() together
-for avoiding race between cleanup queue and IO submission, given async
-run queue activities are canceled because hctx->run_work is scheduled with
-the refcount held, so it is fine to not hold the refcount when
-running the run queue work function for dispatch IO.
-
-However, if request is staggered into plug list, and finally queued
-from plug code path, the refcount in submission side is actually missed.
-And we may start to run queue after queue is removed because the queue's
-kobject refcount isn't guaranteed to be grabbed in flushing plug list
-context, then kernel oops is triggered, see the following race:
-
-blk_mq_flush_plug_list():
-        blk_mq_sched_insert_requests()
-                insert requests to sw queue or scheduler queue
-                blk_mq_run_hw_queue
-
-Because of concurrent run queue, all requests inserted above may be
-completed before calling the above blk_mq_run_hw_queue. Then queue can
-be freed during the above blk_mq_run_hw_queue().
-
-Fixes the issue by grab .q_usage_counter before calling
-blk_mq_sched_insert_requests() in blk_mq_flush_plug_list(). This way is
-safe because the queue is absolutely alive before inserting request.
-
-Cc: Dongli Zhang <dongli.zhang@oracle.com>
-Cc: James Smart <james.smart@broadcom.com>
-Cc: linux-scsi@vger.kernel.org,
-Cc: Martin K . Petersen <martin.petersen@oracle.com>,
-Cc: Christoph Hellwig <hch@lst.de>,
-Cc: James E . J . Bottomley <jejb@linux.vnet.ibm.com>,
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Tested-by: James Smart <james.smart@broadcom.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Minas Harutyunyan <hminas@synopsys.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-mq-sched.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/usb/dwc2/gadget.c | 27 +++++++++++++++------------
+ 1 file changed, 15 insertions(+), 12 deletions(-)
 
-diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
-index 0c98b6c1ca49c..1213556a20dad 100644
---- a/block/blk-mq-sched.c
-+++ b/block/blk-mq-sched.c
-@@ -413,6 +413,14 @@ void blk_mq_sched_insert_requests(struct blk_mq_hw_ctx *hctx,
- 				  struct list_head *list, bool run_queue_async)
- {
- 	struct elevator_queue *e;
-+	struct request_queue *q = hctx->queue;
-+
-+	/*
-+	 * blk_mq_sched_insert_requests() is called from flush plug
-+	 * context only, and hold one usage counter to prevent queue
-+	 * from being released.
-+	 */
-+	percpu_ref_get(&q->q_usage_counter);
+diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
+index 55ef3cc2701b9..f541274732397 100644
+--- a/drivers/usb/dwc2/gadget.c
++++ b/drivers/usb/dwc2/gadget.c
+@@ -714,13 +714,11 @@ static unsigned int dwc2_gadget_get_chain_limit(struct dwc2_hsotg_ep *hs_ep)
+ 	unsigned int maxsize;
  
- 	e = hctx->queue->elevator;
- 	if (e && e->type->ops.insert_requests)
-@@ -426,12 +434,14 @@ void blk_mq_sched_insert_requests(struct blk_mq_hw_ctx *hctx,
- 		if (!hctx->dispatch_busy && !e && !run_queue_async) {
- 			blk_mq_try_issue_list_directly(hctx, list);
- 			if (list_empty(list))
--				return;
-+				goto out;
- 		}
- 		blk_mq_insert_requests(hctx, ctx, list);
+ 	if (is_isoc)
+-		maxsize = hs_ep->dir_in ? DEV_DMA_ISOC_TX_NBYTES_LIMIT :
+-					   DEV_DMA_ISOC_RX_NBYTES_LIMIT;
++		maxsize = (hs_ep->dir_in ? DEV_DMA_ISOC_TX_NBYTES_LIMIT :
++					   DEV_DMA_ISOC_RX_NBYTES_LIMIT) *
++					   MAX_DMA_DESC_NUM_HS_ISOC;
+ 	else
+-		maxsize = DEV_DMA_NBYTES_LIMIT;
+-
+-	/* Above size of one descriptor was chosen, multiple it */
+-	maxsize *= MAX_DMA_DESC_NUM_GENERIC;
++		maxsize = DEV_DMA_NBYTES_LIMIT * MAX_DMA_DESC_NUM_GENERIC;
+ 
+ 	return maxsize;
+ }
+@@ -903,7 +901,7 @@ static int dwc2_gadget_fill_isoc_desc(struct dwc2_hsotg_ep *hs_ep,
+ 
+ 	/* Update index of last configured entry in the chain */
+ 	hs_ep->next_desc++;
+-	if (hs_ep->next_desc >= MAX_DMA_DESC_NUM_GENERIC)
++	if (hs_ep->next_desc >= MAX_DMA_DESC_NUM_HS_ISOC)
+ 		hs_ep->next_desc = 0;
+ 
+ 	return 0;
+@@ -935,7 +933,7 @@ static void dwc2_gadget_start_isoc_ddma(struct dwc2_hsotg_ep *hs_ep)
  	}
  
- 	blk_mq_run_hw_queue(hctx, run_queue_async);
-+ out:
-+	percpu_ref_put(&q->q_usage_counter);
- }
+ 	/* Initialize descriptor chain by Host Busy status */
+-	for (i = 0; i < MAX_DMA_DESC_NUM_GENERIC; i++) {
++	for (i = 0; i < MAX_DMA_DESC_NUM_HS_ISOC; i++) {
+ 		desc = &hs_ep->desc_list[i];
+ 		desc->status = 0;
+ 		desc->status |= (DEV_DMA_BUFF_STS_HBUSY
+@@ -2122,7 +2120,7 @@ static void dwc2_gadget_complete_isoc_request_ddma(struct dwc2_hsotg_ep *hs_ep)
+ 		dwc2_hsotg_complete_request(hsotg, hs_ep, hs_req, 0);
  
- static void blk_mq_sched_free_tags(struct blk_mq_tag_set *set,
+ 		hs_ep->compl_desc++;
+-		if (hs_ep->compl_desc > (MAX_DMA_DESC_NUM_GENERIC - 1))
++		if (hs_ep->compl_desc > (MAX_DMA_DESC_NUM_HS_ISOC - 1))
+ 			hs_ep->compl_desc = 0;
+ 		desc_sts = hs_ep->desc_list[hs_ep->compl_desc].status;
+ 	}
+@@ -3859,6 +3857,7 @@ static int dwc2_hsotg_ep_enable(struct usb_ep *ep,
+ 	unsigned int i, val, size;
+ 	int ret = 0;
+ 	unsigned char ep_type;
++	int desc_num;
+ 
+ 	dev_dbg(hsotg->dev,
+ 		"%s: ep %s: a 0x%02x, attr 0x%02x, mps 0x%04x, intr %d\n",
+@@ -3905,11 +3904,15 @@ static int dwc2_hsotg_ep_enable(struct usb_ep *ep,
+ 	dev_dbg(hsotg->dev, "%s: read DxEPCTL=0x%08x from 0x%08x\n",
+ 		__func__, epctrl, epctrl_reg);
+ 
++	if (using_desc_dma(hsotg) && ep_type == USB_ENDPOINT_XFER_ISOC)
++		desc_num = MAX_DMA_DESC_NUM_HS_ISOC;
++	else
++		desc_num = MAX_DMA_DESC_NUM_GENERIC;
++
+ 	/* Allocate DMA descriptor chain for non-ctrl endpoints */
+ 	if (using_desc_dma(hsotg) && !hs_ep->desc_list) {
+ 		hs_ep->desc_list = dmam_alloc_coherent(hsotg->dev,
+-			MAX_DMA_DESC_NUM_GENERIC *
+-			sizeof(struct dwc2_dma_desc),
++			desc_num * sizeof(struct dwc2_dma_desc),
+ 			&hs_ep->desc_list_dma, GFP_ATOMIC);
+ 		if (!hs_ep->desc_list) {
+ 			ret = -ENOMEM;
+@@ -4051,7 +4054,7 @@ static int dwc2_hsotg_ep_enable(struct usb_ep *ep,
+ 
+ error2:
+ 	if (ret && using_desc_dma(hsotg) && hs_ep->desc_list) {
+-		dmam_free_coherent(hsotg->dev, MAX_DMA_DESC_NUM_GENERIC *
++		dmam_free_coherent(hsotg->dev, desc_num *
+ 			sizeof(struct dwc2_dma_desc),
+ 			hs_ep->desc_list, hs_ep->desc_list_dma);
+ 		hs_ep->desc_list = NULL;
 -- 
 2.20.1
 
