@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB82C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C29C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CADCC25EEB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:55:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21F5425EF6
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:55:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192119;
-	bh=Hx/9KAYVK97mnvSDuNU+dPrOJ3A2j8SqY9kszNUgStI=;
+	s=default; t=1559192122;
+	bh=dIX+XPG1CzanJnUiB7bQWSthEH1EBW7Pr3kmuaUzxJE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wfo8revBPuAHifrvXfkb58XIWbJ6z4/v8ir0A3PHWcfps0SaldoA/MW81BhoVngsl
-	 BujCOMrI9HLAptOO+NVG68o/sIZBDllaY/hTAvGGEja2uej3US/EWfKCiCy8KgVJvO
-	 l/h/PXuFyYsXp+WqKLF4YhtXBpcNQoMbSmpmJfHY=
+	b=cr7oIN01weRZaTjH5LNxWcg/4vYCw3BguDb9movZwKDF3ENDyJ0IdDfcDjdPiDfCv
+	 ntRINnWpJ2IZAjXllq4j3XHLYgBNHVBmk4RpwoMy86hONB6s9sBnPMR3Kp/B4Ip+J1
+	 RLqCLIDM/GAp9Qk3u516lrZGX4BlSAn2cep7tspI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389111AbfE3EzS (ORCPT
+        id S1732174AbfE3EzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:55:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46954 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:55:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728022AbfE3DKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728017AbfE3DKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:10:17 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF4BE2449D;
+        by mail.kernel.org (Postfix) with ESMTPSA id 737AF244BD;
         Thu, 30 May 2019 03:10:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559185816;
-        bh=Hx/9KAYVK97mnvSDuNU+dPrOJ3A2j8SqY9kszNUgStI=;
+        bh=dIX+XPG1CzanJnUiB7bQWSthEH1EBW7Pr3kmuaUzxJE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H79yEwZjXE0cIjprwvR8nMvGscsywJ7wMNPkmLQp7ie4J9aWAbNicxTMn9whmns5D
-         kpEDPzNWqLF+p1w2f57gwnIpS79AmMAEBL2XrpjgwtDxxr0akOJ15fMhZfE7Y8j61Y
-         7enJTay/6PtBr4Lr4Kq48hUZEhHC/ZGrdNVOLyxs=
+        b=dYrw4Z/jpkK7BtDKGrWy8svwvqMAoPbWggy3XZ7RgHsN3e4bb+GlGFLF7dUS31UDo
+         6U6DRwvkONfpRfne5+l4rMopMG10RP83qtQWBsCrmjnlYOb09QgU1aTPRKS1ICsaNN
+         OBjyim2LkjjhlTvY6Qj1YVhbBWfM29YWsh6/tmXQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
+        stable@vger.kernel.org, Yunsheng Lin <linyunsheng@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 110/405] net: phy: improve genphy_soft_reset
-Date:   Wed, 29 May 2019 20:01:48 -0700
-Message-Id: <20190530030546.569711943@linuxfoundation.org>
+Subject: [PATCH 5.1 109/405] net: hns3: fix for TX clean num when cleaning TX BD
+Date:   Wed, 29 May 2019 20:01:47 -0700
+Message-Id: <20190530030546.519716984@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -60,60 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8c90b795e90f7753d23c18e8b95dd71b4a18c5d9 ]
+[ Upstream commit 63380a1ae4ced8aef67659ff9547c69ef8b9613a ]
 
-PHY's behave differently when being reset. Some reset registers to
-defaults, some don't. Some trigger an autoneg restart, some don't.
+hns3_desc_unused() returns how many BD have been cleaned, but new
+buffer has not been attached to them. The register of
+HNS3_RING_RX_RING_FBDNUM_REG returns how many BD need allocating new
+buffer to or need to cleaned. So the remaining BD need to be clean
+is HNS3_RING_RX_RING_FBDNUM_REG - hns3_desc_unused().
 
-So let's also set the autoneg restart bit when resetting. Then PHY
-behavior should be more consistent. Clearing BMCR_ISOLATE serves the
-same purpose and is borrowed from genphy_restart_aneg.
+Also, new buffer can not attach to the pending BD when the last BD is
+not handled, because memcpy has not been done on the first pending BD.
 
-BMCR holds the speed / duplex settings in fixed mode. Therefore
-we may have an issue if a soft reset resets BMCR to its default.
-So better call genphy_setup_forced() afterwards in fixed mode.
-We've seen no related complaint in the last >10 yrs, so let's
-treat it as an improvement.
+This patch fixes by subtracting the pending BD num from unused_count
+after 'HNS3_RING_RX_RING_FBDNUM_REG - unused_count' is used to calculate
+the BD bum need to be clean.
 
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Fixes: e55970950556 ("net: hns3: Add handling of GRO Pkts not fully RX'ed in NAPI poll")
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/phy_device.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index cd5966b0db571..f6a6cc5bf118d 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -1829,13 +1829,25 @@ EXPORT_SYMBOL(genphy_read_status);
-  */
- int genphy_soft_reset(struct phy_device *phydev)
- {
-+	u16 res = BMCR_RESET;
- 	int ret;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index 162cb9afa0e70..0208efe282775 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -2705,7 +2705,7 @@ int hns3_clean_rx_ring(
+ #define RCB_NOF_ALLOC_RX_BUFF_ONCE 16
+ 	struct net_device *netdev = ring->tqp->handle->kinfo.netdev;
+ 	int recv_pkts, recv_bds, clean_count, err;
+-	int unused_count = hns3_desc_unused(ring) - ring->pending_buf;
++	int unused_count = hns3_desc_unused(ring);
+ 	struct sk_buff *skb = ring->skb;
+ 	int num;
  
--	ret = phy_set_bits(phydev, MII_BMCR, BMCR_RESET);
-+	if (phydev->autoneg == AUTONEG_ENABLE)
-+		res |= BMCR_ANRESTART;
-+
-+	ret = phy_modify(phydev, MII_BMCR, BMCR_ISOLATE, res);
- 	if (ret < 0)
- 		return ret;
+@@ -2714,6 +2714,7 @@ int hns3_clean_rx_ring(
  
--	return phy_poll_reset(phydev);
-+	ret = phy_poll_reset(phydev);
-+	if (ret)
-+		return ret;
-+
-+	/* BMCR may be reset to defaults */
-+	if (phydev->autoneg == AUTONEG_DISABLE)
-+		ret = genphy_setup_forced(phydev);
-+
-+	return ret;
- }
- EXPORT_SYMBOL(genphy_soft_reset);
+ 	recv_pkts = 0, recv_bds = 0, clean_count = 0;
+ 	num -= unused_count;
++	unused_count -= ring->pending_buf;
  
+ 	while (recv_pkts < budget && recv_bds < num) {
+ 		/* Reuse or realloc buffers */
 -- 
 2.20.1
 
