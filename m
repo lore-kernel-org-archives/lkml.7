@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC3DC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA192C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BEA42458C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2992245A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186152;
-	bh=oQi+LBWQl62U/gK8w8KtJLAKDAtJ6dbUAVFw0YbHPF8=;
+	s=default; t=1559186158;
+	bh=ecFYmclGr4Ma+CSqI+4aEMpcsPaqhZ/WD2pBQ7Jm9GI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J2V4fwb5lw/gP/fiuNaa7fnKiuBwolUkaDEzuRKKz/r1uWvid71Q4BkF3cyOjKItT
-	 i4i/Chp4NzBpDCQgYrw1pUmyQXI7B9g6WH38CbYU0aUJ7+LBcxli4h5hALXaVn77fS
-	 K02RaWAxT0bwH12/HanPHx4C85bnY8sQ7D1mE2tk=
+	b=GqmA9JvtrwPK0NFij2V6Yr9Zsg7+hLk6HhEFTTco+dh4zbhEe+nEV+A/SErR+NqJ8
+	 /faeoUJOfWXcj0K5JwUbVh8dptkWlzNrj+DO3A8MWko5qXmDaZwiAVzdWrIOMaXx3T
+	 43516EGu9c0HBNlZpjgDtlZn2acFm5S+YP6qTkIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730514AbfE3DPv (ORCPT
+        id S1730547AbfE3DP5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:15:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57360 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:15:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729353AbfE3DNL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:13:11 -0400
+        id S1729365AbfE3DNM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:12 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 799A3244B0;
-        Thu, 30 May 2019 03:13:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27A1F23F4C;
+        Thu, 30 May 2019 03:13:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185990;
-        bh=oQi+LBWQl62U/gK8w8KtJLAKDAtJ6dbUAVFw0YbHPF8=;
+        s=default; t=1559185992;
+        bh=ecFYmclGr4Ma+CSqI+4aEMpcsPaqhZ/WD2pBQ7Jm9GI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ln5XVbmamUcWLXJAzvv1AZ2UKrkuWm/zr6eqT1FBvlrdxhxqogaKvpkMaJkaqoFY6
-         p2iGq9asZnA18KBuMYPg6RRfcZpNDWp2RN9GkQ3sVMM4AiHP15QxF5LUW/gdmgu0zw
-         n1NYGPDr1tFFX/7BprawBiVJfoYEtXJABnbKi+lE=
+        b=SljYIdwuG55wAbC7HHgdciNVmGM+DRVO2ghVMp7tY/PueIEPncfGkgJdBlLNcpp0a
+         aBxtmNqQQeWuI5I+RjXmPNcn93DOyfSHCBOdEmXETDASEhfXU76id0rD2/6bulG96C
+         T1CDfUotIDZIph0owLv3Qv8lADHymQGT76aAv2I8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.0 017/346] btrfs: dont double unlock on error in btrfs_punch_hole
-Date:   Wed, 29 May 2019 20:01:30 -0700
-Message-Id: <20190530030541.523261725@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot+457d3e2ffbcf31aee5c0@syzkaller.appspotmail.com,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: [PATCH 5.0 036/346] bpf: devmap: fix use-after-free Read in __dev_map_entry_free
+Date:   Wed, 29 May 2019 20:01:49 -0700
+Message-Id: <20190530030542.664181305@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -60,40 +62,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 8fca955057b9c58467d1b231e43f19c4cf26ae8c upstream.
+commit 2baae3545327632167c0180e9ca1d467416f1919 upstream.
 
-If we have an error writing out a delalloc range in
-btrfs_punch_hole_lock_range we'll unlock the inode and then goto
-out_only_mutex, where we will again unlock the inode.  This is bad,
-don't do this.
+synchronize_rcu() is fine when the rcu callbacks only need
+to free memory (kfree_rcu() or direct kfree() call rcu call backs)
 
-Fixes: f27451f22996 ("Btrfs: add support for fallocate's zero range operation")
-CC: stable@vger.kernel.org # 4.19+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+__dev_map_entry_free() is a bit more complex, so we need to make
+sure that call queued __dev_map_entry_free() callbacks have completed.
+
+sysbot report:
+
+BUG: KASAN: use-after-free in dev_map_flush_old kernel/bpf/devmap.c:365
+[inline]
+BUG: KASAN: use-after-free in __dev_map_entry_free+0x2a8/0x300
+kernel/bpf/devmap.c:379
+Read of size 8 at addr ffff8801b8da38c8 by task ksoftirqd/1/18
+
+CPU: 1 PID: 18 Comm: ksoftirqd/1 Not tainted 4.17.0+ #39
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x1b9/0x294 lib/dump_stack.c:113
+  print_address_description+0x6c/0x20b mm/kasan/report.c:256
+  kasan_report_error mm/kasan/report.c:354 [inline]
+  kasan_report.cold.7+0x242/0x2fe mm/kasan/report.c:412
+  __asan_report_load8_noabort+0x14/0x20 mm/kasan/report.c:433
+  dev_map_flush_old kernel/bpf/devmap.c:365 [inline]
+  __dev_map_entry_free+0x2a8/0x300 kernel/bpf/devmap.c:379
+  __rcu_reclaim kernel/rcu/rcu.h:178 [inline]
+  rcu_do_batch kernel/rcu/tree.c:2558 [inline]
+  invoke_rcu_callbacks kernel/rcu/tree.c:2818 [inline]
+  __rcu_process_callbacks kernel/rcu/tree.c:2785 [inline]
+  rcu_process_callbacks+0xe9d/0x1760 kernel/rcu/tree.c:2802
+  __do_softirq+0x2e0/0xaf5 kernel/softirq.c:284
+  run_ksoftirqd+0x86/0x100 kernel/softirq.c:645
+  smpboot_thread_fn+0x417/0x870 kernel/smpboot.c:164
+  kthread+0x345/0x410 kernel/kthread.c:240
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:412
+
+Allocated by task 6675:
+  save_stack+0x43/0xd0 mm/kasan/kasan.c:448
+  set_track mm/kasan/kasan.c:460 [inline]
+  kasan_kmalloc+0xc4/0xe0 mm/kasan/kasan.c:553
+  kmem_cache_alloc_trace+0x152/0x780 mm/slab.c:3620
+  kmalloc include/linux/slab.h:513 [inline]
+  kzalloc include/linux/slab.h:706 [inline]
+  dev_map_alloc+0x208/0x7f0 kernel/bpf/devmap.c:102
+  find_and_alloc_map kernel/bpf/syscall.c:129 [inline]
+  map_create+0x393/0x1010 kernel/bpf/syscall.c:453
+  __do_sys_bpf kernel/bpf/syscall.c:2351 [inline]
+  __se_sys_bpf kernel/bpf/syscall.c:2328 [inline]
+  __x64_sys_bpf+0x303/0x510 kernel/bpf/syscall.c:2328
+  do_syscall_64+0x1b1/0x800 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 26:
+  save_stack+0x43/0xd0 mm/kasan/kasan.c:448
+  set_track mm/kasan/kasan.c:460 [inline]
+  __kasan_slab_free+0x11a/0x170 mm/kasan/kasan.c:521
+  kasan_slab_free+0xe/0x10 mm/kasan/kasan.c:528
+  __cache_free mm/slab.c:3498 [inline]
+  kfree+0xd9/0x260 mm/slab.c:3813
+  dev_map_free+0x4fa/0x670 kernel/bpf/devmap.c:191
+  bpf_map_free_deferred+0xba/0xf0 kernel/bpf/syscall.c:262
+  process_one_work+0xc64/0x1b70 kernel/workqueue.c:2153
+  worker_thread+0x181/0x13a0 kernel/workqueue.c:2296
+  kthread+0x345/0x410 kernel/kthread.c:240
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:412
+
+The buggy address belongs to the object at ffff8801b8da37c0
+  which belongs to the cache kmalloc-512 of size 512
+The buggy address is located 264 bytes inside of
+  512-byte region [ffff8801b8da37c0, ffff8801b8da39c0)
+The buggy address belongs to the page:
+page:ffffea0006e368c0 count:1 mapcount:0 mapping:ffff8801da800940
+index:0xffff8801b8da3540
+flags: 0x2fffc0000000100(slab)
+raw: 02fffc0000000100 ffffea0007217b88 ffffea0006e30cc8 ffff8801da800940
+raw: ffff8801b8da3540 ffff8801b8da3040 0000000100000004 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff8801b8da3780: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
+  ffff8801b8da3800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ffff8801b8da3880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                               ^
+  ffff8801b8da3900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8801b8da3980: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+
+Fixes: 546ac1ffb70d ("bpf: add devmap, a map for storing net device references")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot+457d3e2ffbcf31aee5c0@syzkaller.appspotmail.com
+Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/file.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ kernel/bpf/devmap.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/fs/btrfs/file.c
-+++ b/fs/btrfs/file.c
-@@ -2546,10 +2546,8 @@ static int btrfs_punch_hole(struct inode
+--- a/kernel/bpf/devmap.c
++++ b/kernel/bpf/devmap.c
+@@ -164,6 +164,9 @@ static void dev_map_free(struct bpf_map
+ 	bpf_clear_redirect_map(map);
+ 	synchronize_rcu();
  
- 	ret = btrfs_punch_hole_lock_range(inode, lockstart, lockend,
- 					  &cached_state);
--	if (ret) {
--		inode_unlock(inode);
-+	if (ret)
- 		goto out_only_mutex;
--	}
- 
- 	path = btrfs_alloc_path();
- 	if (!path) {
++	/* Make sure prior __dev_map_entry_free() have completed. */
++	rcu_barrier();
++
+ 	/* To ensure all pending flush operations have completed wait for flush
+ 	 * bitmap to indicate all flush_needed bits to be zero on _all_ cpus.
+ 	 * Because the above synchronize_rcu() ensures the map is disconnected
 
 
