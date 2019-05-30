@@ -2,52 +2,52 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF255C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A85C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8377223FC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:59:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C96624F1A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:59:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188751;
-	bh=JcgCuUVI0KmRJ06DvIXV4qPc+VcdQWGfunt/RgHyQ7Y=;
+	s=default; t=1559188753;
+	bh=w3IVtbtJNkqRBo+VDM/Lw8cnn4ALV8HzJvwSy/aYl6k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=14H/y8y8OdFKUnGLbNrwH0k6P1Dy+WftWkyGC65VMAbtaM8MJuRKdJvDciwj2ViXc
-	 5T9un8niEfXj9ytDCFbKoKMzNdmRLrsAx7kJuj/7wbUBxzLLdpIIOtY6Uypyaop7md
-	 2eZU8J90lAGh4ZO6ayuJSTom53zjlOQETNIbqxbo=
+	b=pbYMbv4+ZUAQER/0/D2swOJKNgtTQcWmH8nJoIHDb6YzRvN1il5tdeldQZDJsdu6C
+	 alVUPJ/o6VrFFJVulqpbtv9aw7urLve4iz5SH6GSvFDYD7v8FAwG/EexXQVyjz0OSv
+	 LNScd0TLo4n7/pFF0UojWkicoBlyhsChWM/4YAtE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733021AbfE3D7F (ORCPT
+        id S2387956AbfE3D5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:59:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52132 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:57:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731611AbfE3DSj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:39 -0400
+        id S1731736AbfE3DSw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:52 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35BD62474D;
-        Thu, 30 May 2019 03:18:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E7B324806;
+        Thu, 30 May 2019 03:18:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186319;
-        bh=JcgCuUVI0KmRJ06DvIXV4qPc+VcdQWGfunt/RgHyQ7Y=;
+        s=default; t=1559186332;
+        bh=w3IVtbtJNkqRBo+VDM/Lw8cnn4ALV8HzJvwSy/aYl6k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZKn9cpX5KnRqaovSwX8fA8YzvpQt7i28ue1AMTl8Nb/Z3kbfTeUvks2N+ReMG5NWR
-         l0+arjrKucNRyHWOEDTcpMl2dDML1c6NIv4FvxzV8flf+bF/9siUpeMipsNR05a4qx
-         hu43oj8s4W4AdyLniTzjdwdtvaFktIrnUUA/gcD4=
+        b=myJP0LnnJXldYcKqi8FCqnONVTelJGNu6nSigVUTfMf2A0KVPXsnHBBm5lSv2iXn8
+         0x3LjZf7rFpnKrXFtkw9gQLIDIPkM+mV07lmemFt1PU01yLtdY6FQVPXCWDxRizXWY
+         Y+wxYT3DstCDE9Et3sY+i52vv2EIRIrxFnhCs3dA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Axtens <dja@axtens.net>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.14 008/193] crypto: vmx - CTR: always increment IV as quadword
-Date:   Wed, 29 May 2019 20:04:22 -0700
-Message-Id: <20190530030448.316614404@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 051/193] brcm80211: potential NULL dereference in brcmf_cfg80211_vndr_cmds_dcmd_handler()
+Date:   Wed, 29 May 2019 20:05:05 -0700
+Message-Id: <20190530030456.765896314@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -60,57 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Axtens <dja@axtens.net>
+[ Upstream commit e025da3d7aa4770bb1d1b3b0aa7cc4da1744852d ]
 
-commit 009b30ac7444c17fae34c4f435ebce8e8e2b3250 upstream.
+If "ret_len" is negative then it could lead to a NULL dereference.
 
-The kernel self-tests picked up an issue with CTR mode:
-alg: skcipher: p8_aes_ctr encryption test failed (wrong result) on test vector 3, cfg="uneven misaligned splits, may sleep"
+The "ret_len" value comes from nl80211_vendor_cmd(), if it's negative
+then we don't allocate the "dcmd_buf" buffer.  Then we pass "ret_len" to
+brcmf_fil_cmd_data_set() where it is cast to a very high u32 value.
+Most of the functions in that call tree check whether the buffer we pass
+is NULL but there are at least a couple places which don't such as
+brcmf_dbg_hex_dump() and brcmf_msgbuf_query_dcmd().  We memcpy() to and
+from the buffer so it would result in a NULL dereference.
 
-Test vector 3 has an IV of FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD, so
-after 3 increments it should wrap around to 0.
+The fix is to change the types so that "ret_len" can't be negative.  (If
+we memcpy() zero bytes to NULL, that's a no-op and doesn't cause an
+issue).
 
-In the aesp8-ppc code from OpenSSL, there are two paths that
-increment IVs: the bulk (8 at a time) path, and the individual
-path which is used when there are fewer than 8 AES blocks to
-process.
-
-In the bulk path, the IV is incremented with vadduqm: "Vector
-Add Unsigned Quadword Modulo", which does 128-bit addition.
-
-In the individual path, however, the IV is incremented with
-vadduwm: "Vector Add Unsigned Word Modulo", which instead
-does 4 32-bit additions. Thus the IV would instead become
-FFFFFFFFFFFFFFFFFFFFFFFF00000000, throwing off the result.
-
-Use vadduqm.
-
-This was probably a typo originally, what with q and w being
-adjacent. It is a pretty narrow edge case: I am really
-impressed by the quality of the kernel self-tests!
-
-Fixes: 5c380d623ed3 ("crypto: vmx - Add support for VMS instructions by ASM")
-Cc: stable@vger.kernel.org
-Signed-off-by: Daniel Axtens <dja@axtens.net>
-Acked-by: Nayna Jain <nayna@linux.ibm.com>
-Tested-by: Nayna Jain <nayna@linux.ibm.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 1bacb0487d0e ("brcmfmac: replace cfg80211 testmode with vendor command")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/vmx/aesp8-ppc.pl |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/crypto/vmx/aesp8-ppc.pl
-+++ b/drivers/crypto/vmx/aesp8-ppc.pl
-@@ -1318,7 +1318,7 @@ Loop_ctr32_enc:
- 	addi		$idx,$idx,16
- 	bdnz		Loop_ctr32_enc
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c
+index 8eff2753abade..d493021f60318 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c
+@@ -35,9 +35,10 @@ static int brcmf_cfg80211_vndr_cmds_dcmd_handler(struct wiphy *wiphy,
+ 	struct brcmf_if *ifp;
+ 	const struct brcmf_vndr_dcmd_hdr *cmdhdr = data;
+ 	struct sk_buff *reply;
+-	int ret, payload, ret_len;
++	unsigned int payload, ret_len;
+ 	void *dcmd_buf = NULL, *wr_pointer;
+ 	u16 msglen, maxmsglen = PAGE_SIZE - 0x100;
++	int ret;
  
--	vadduwm		$ivec,$ivec,$one
-+	vadduqm		$ivec,$ivec,$one
- 	 vmr		$dat,$inptail
- 	 lvx		$inptail,0,$inp
- 	 addi		$inp,$inp,16
+ 	if (len < sizeof(*cmdhdr)) {
+ 		brcmf_err("vendor command too short: %d\n", len);
+@@ -65,7 +66,7 @@ static int brcmf_cfg80211_vndr_cmds_dcmd_handler(struct wiphy *wiphy,
+ 			brcmf_err("oversize return buffer %d\n", ret_len);
+ 			ret_len = BRCMF_DCMD_MAXLEN;
+ 		}
+-		payload = max(ret_len, len) + 1;
++		payload = max_t(unsigned int, ret_len, len) + 1;
+ 		dcmd_buf = vzalloc(payload);
+ 		if (NULL == dcmd_buf)
+ 			return -ENOMEM;
+-- 
+2.20.1
+
 
 
