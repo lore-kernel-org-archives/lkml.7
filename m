@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DB4C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3F7C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B79FB25B4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D89425B56
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:43:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727621AbfE3On3 (ORCPT
+        id S1727607AbfE3On2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 10:43:29 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53190 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727330AbfE3Omf (ORCPT
+        Thu, 30 May 2019 10:43:28 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49540 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727278AbfE3Omf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 May 2019 10:42:35 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UEe2Et091730
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 10:42:34 -0400
-Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2stgm11rt0-1
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UEdqDC082142
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 10:42:33 -0400
+Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2stfk75e2w-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
         for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 10:42:33 -0400
 Received: from localhost
-        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Thu, 30 May 2019 15:42:30 +0100
+        Thu, 30 May 2019 15:42:32 +0100
 Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
-        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 30 May 2019 15:42:26 +0100
+        Thu, 30 May 2019 15:42:27 +0100
 Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4UEgPB137814412
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4UEgQUI31653982
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 May 2019 14:42:25 GMT
+        Thu, 30 May 2019 14:42:26 GMT
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 410DBB2065;
+        by IMSVA (Postfix) with ESMTP id BCCE0B2065;
         Thu, 30 May 2019 14:42:25 +0000 (GMT)
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 24CD6B2067;
+        by IMSVA (Postfix) with ESMTP id A89F7B2087;
         Thu, 30 May 2019 14:42:25 +0000 (GMT)
 Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
         by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
         Thu, 30 May 2019 14:42:25 +0000 (GMT)
 Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id A446216C5D9D; Thu, 30 May 2019 07:42:26 -0700 (PDT)
+        id 3083516C8E8A; Thu, 30 May 2019 07:42:27 -0700 (PDT)
 From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
 To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         mingo@kernel.org
@@ -58,62 +58,71 @@ Cc:     stern@rowland.harvard.edu, andrea.parri@amarulasolutions.com,
         npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
         luc.maranget@inria.fr, akiyks@gmail.com,
         "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH RFC memory-model 08/33] tools/memory-model: Make judgelitmus.sh note timeouts
-Date:   Thu, 30 May 2019 07:42:00 -0700
+Subject: [PATCH RFC memory-model 29/33] tools/memory-model: Make history-check scripts use mselect7
+Date:   Thu, 30 May 2019 07:42:21 -0700
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190530144202.GA26201@linux.ibm.com>
 References: <20190530144202.GA26201@linux.ibm.com>
 X-TM-AS-GCONF: 00
-x-cbid: 19053014-0052-0000-0000-000003C911B2
+x-cbid: 19053014-0064-0000-0000-000003E70C73
 X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011184; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01210780; UDB=6.00636154; IPR=6.00991814;
- MB=3.00027120; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-30 14:42:30
+X-IBM-SpamModules-Versions: BY=3.00011185; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01210779; UDB=6.00636154; IPR=6.00991814;
+ MB=3.00027120; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-30 14:42:31
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19053014-0053-0000-0000-0000611A0B60
-Message-Id: <20190530144225.27624-8-paulmck@linux.ibm.com>
+x-cbparentid: 19053014-0065-0000-0000-00003DAB92D7
+Message-Id: <20190530144225.27624-29-paulmck@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-30_08:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=880 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=797 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1905300105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, judgelitmus.sh treats timeouts (as in the "--timeout" argument)
-as "!!! Verification error".  This can be misleading because it is quite
-possible that running the test longer would have produced a verification.
-This commit therefore changes judgelitmus.sh to check for timeouts and
-to report them with "!!! Timeout".
+The history-check scripts currently use grep to ignore non-C-language
+litmus tests, which is a bit fragile.  This commit therefore enlists the
+aid of "mselect7 -arch C", given Luc Maraget's recent modifications that
+allow mselect7 to operate in filter mode.
+
+This change requires herdtools 7.52-32-g1da3e0e50977 or later.
 
 Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 ---
- tools/memory-model/scripts/judgelitmus.sh | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ tools/memory-model/scripts/initlitmushist.sh | 2 +-
+ tools/memory-model/scripts/newlitmushist.sh  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/memory-model/scripts/judgelitmus.sh b/tools/memory-model/scripts/judgelitmus.sh
-index 0cc63875e395..d3c313b9a458 100755
---- a/tools/memory-model/scripts/judgelitmus.sh
-+++ b/tools/memory-model/scripts/judgelitmus.sh
-@@ -42,6 +42,14 @@ grep '^Observation' $LKMM_DESTDIR/$litmus.out
- if grep -q '^Observation' $LKMM_DESTDIR/$litmus.out
- then
- 	:
-+elif grep '^Command exited with non-zero status 124' $LKMM_DESTDIR/$litmus.out
-+then
-+	echo ' !!! Timeout' $litmus
-+	if ! grep -q '!!!' $LKMM_DESTDIR/$litmus.out
-+	then
-+		echo ' !!! Timeout' >> $LKMM_DESTDIR/$litmus.out 2>&1
-+	fi
-+	exit 124
- else
- 	echo ' !!! Verification error' $litmus
- 	if ! grep -q '!!!' $LKMM_DESTDIR/$litmus.out
+diff --git a/tools/memory-model/scripts/initlitmushist.sh b/tools/memory-model/scripts/initlitmushist.sh
+index 956b6957484d..31ea782955d3 100755
+--- a/tools/memory-model/scripts/initlitmushist.sh
++++ b/tools/memory-model/scripts/initlitmushist.sh
+@@ -60,7 +60,7 @@ fi
+ 
+ # Create a list of the C-language litmus tests with no more than the
+ # specified number of processes (per the --procs argument).
+-find litmus -name '*.litmus' -exec grep -l -m 1 "^C " {} \; > $T/list-C
++find litmus -name '*.litmus' -print | mselect7 -arch C > $T/list-C
+ xargs < $T/list-C -r grep -L "^P${LKMM_PROCS}" > $T/list-C-short
+ 
+ scripts/runlitmushist.sh < $T/list-C-short
+diff --git a/tools/memory-model/scripts/newlitmushist.sh b/tools/memory-model/scripts/newlitmushist.sh
+index 3f4b06e29988..25235e2049cf 100755
+--- a/tools/memory-model/scripts/newlitmushist.sh
++++ b/tools/memory-model/scripts/newlitmushist.sh
+@@ -43,7 +43,7 @@ fi
+ 
+ # Form full list of litmus tests with no more than the specified
+ # number of processes (per the --procs argument).
+-find litmus -name '*.litmus' -exec grep -l -m 1 "^C " {} \; > $T/list-C-all
++find litmus -name '*.litmus' -print | mselect7 -arch C > $T/list-C-all
+ xargs < $T/list-C-all -r grep -L "^P${LKMM_PROCS}" > $T/list-C-short
+ 
+ # Form list of new tests.  Note: This does not handle litmus-test deletion!
 -- 
 2.17.1
 
