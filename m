@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE10C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B97F7C28CC1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:11:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6704A244EE
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EF86244A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:11:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559185866;
-	bh=6czPBgd3ZPJBn1SWaLPaebmKXxqJOReB0ik4PnA2jT4=;
+	s=default; t=1559185870;
+	bh=7DV/oEmtjL0CMN/Y3tOWLsHH6mF/zdqT2RUmRQqsRUI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ro1Ajqj72CF988WeBk4BLjY/9VI8EcsBaoQtwUb4768PDU8hFudw83aKq5BfXKXxY
-	 Iujdk1GmyZwA2LvW9LCJNoOQI3BZU9aRJjolwwPa6a5PEAwyhPKQH1RvGsNtGQTyjW
-	 H4XGS6zDtUQ2PgZu2rvnV6J2fK7VaVURT3UKoDbM=
+	b=HAH2nSJT4wRKV6RB2BgHQJAwYmJd9xYZ+FdCnHOSyITVkJ68NHRQjB8BWyKbinLfI
+	 0ul9WVMAZ3BLo2IGnqVVK+aDhoHgN39U+ITQE2lN3eNaDK1T4hZWGi0Q3bEzN2M7yX
+	 kOnenkh/ursl/DFQVmPA8ZkH+PrO6n8s+2d26CKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728353AbfE3DLF (ORCPT
+        id S1728399AbfE3DLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:11:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46632 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:11:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727977AbfE3DKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:10:11 -0400
+        id S1728043AbfE3DKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:10:21 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27ECF244A0;
-        Thu, 30 May 2019 03:10:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A224E2446F;
+        Thu, 30 May 2019 03:10:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185811;
-        bh=6czPBgd3ZPJBn1SWaLPaebmKXxqJOReB0ik4PnA2jT4=;
+        s=default; t=1559185820;
+        bh=7DV/oEmtjL0CMN/Y3tOWLsHH6mF/zdqT2RUmRQqsRUI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bGS2V3+q3awn3oj7ktUUTHsKWBGZ9MWDvcycAjyrdg7qkbPoS56DHMQjaVlBxAPcD
-         I0KcxxKeg1T54J396ZTDLFArkxN31h0MSRWF9et7gus41xMQQMC2TF0S20lcCCiz6V
-         w1F6OPjBC+kGRAHkpN2FoZOZjs7CgUSOuLTG0dDM=
+        b=k91Qzx1B1txw0wG+z59XheCg2/YxP8v4xUFZtX8WcRzMthSEDbEDsUhVrp6ZOae4s
+         fP1Td8v78AKSYixK4B9coWkAJZux7OF90KY3PgYLAffK9q/Ut1PN6wGruk7eAXEQlx
+         pXAiZ8NoSN2B6ABzf4yA81Dq8eDdFMSo3BND6+PU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
-        Giridhar Malavali <gmalavali@marvell.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, "Daniel T. Lee" <danieltimlee@gmail.com>,
+        Yonghong Song <yhs@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 092/405] scsi: qla2xxx: Fix abort handling in tcm_qla2xxx_write_pending()
-Date:   Wed, 29 May 2019 20:01:30 -0700
-Message-Id: <20190530030545.678378154@linuxfoundation.org>
+Subject: [PATCH 5.1 117/405] libbpf: fix samples/bpf build failure due to undefined UINT32_MAX
+Date:   Wed, 29 May 2019 20:01:55 -0700
+Message-Id: <20190530030546.915608617@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -62,40 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e209783d66bca04b5fce4429e59338517ffc1a0b ]
+[ Upstream commit 32e621e55496a0009f44fe4914cd4a23cade4984 ]
 
-Implementations of the .write_pending() callback functions must guarantee
-that an appropriate LIO core callback function will be called immediately or
-at a later time.  Make sure that this guarantee is met for aborted SCSI
-commands.
+Currently, building bpf samples will cause the following error.
 
-[mkp: typo]
+    ./tools/lib/bpf/bpf.h:132:27: error: 'UINT32_MAX' undeclared here (not in a function) ..
+     #define BPF_LOG_BUF_SIZE (UINT32_MAX >> 8) /* verifier maximum in kernels <= 5.1 */
+                               ^
+    ./samples/bpf/bpf_load.h:31:25: note: in expansion of macro 'BPF_LOG_BUF_SIZE'
+     extern char bpf_log_buf[BPF_LOG_BUF_SIZE];
+                             ^~~~~~~~~~~~~~~~
 
-Cc: Himanshu Madhani <hmadhani@marvell.com>
-Cc: Giridhar Malavali <gmalavali@marvell.com>
-Fixes: 694833ee00c4 ("scsi: tcm_qla2xxx: Do not allow aborted cmd to advance.") # v4.13.
-Fixes: a07100e00ac4 ("qla2xxx: Fix TMR ABORT interaction issue between qla2xxx and TCM") # v4.5.
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Due to commit 4519efa6f8ea ("libbpf: fix BPF_LOG_BUF_SIZE off-by-one error")
+hard-coded size of BPF_LOG_BUF_SIZE has been replaced with UINT32_MAX which is
+defined in <stdint.h> header.
+
+Even with this change, bpf selftests are running fine since these are built
+with clang and it includes header(-idirafter) from clang/6.0.0/include.
+(it has <stdint.h>)
+
+    clang -I. -I./include/uapi -I../../../include/uapi -idirafter /usr/local/include -idirafter /usr/include \
+    -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.0/include -idirafter /usr/include/x86_64-linux-gnu \
+    -Wno-compare-distinct-pointer-types -O2 -target bpf -emit-llvm -c progs/test_sysctl_prog.c -o - | \
+    llc -march=bpf -mcpu=generic  -filetype=obj -o /linux/tools/testing/selftests/bpf/test_sysctl_prog.o
+
+But bpf samples are compiled with GCC, and it only searches and includes
+headers declared at the target file. As '#include <stdint.h>' hasn't been
+declared in tools/lib/bpf/bpf.h, it causes build failure of bpf samples.
+
+    gcc -Wp,-MD,./samples/bpf/.sockex3_user.o.d -Wall -Wmissing-prototypes -Wstrict-prototypes \
+    -O2 -fomit-frame-pointer -std=gnu89 -I./usr/include -I./tools/lib/ -I./tools/testing/selftests/bpf/ \
+    -I./tools/  lib/ -I./tools/include -I./tools/perf -c -o ./samples/bpf/sockex3_user.o ./samples/bpf/sockex3_user.c;
+
+This commit add declaration of '#include <stdint.h>' to tools/lib/bpf/bpf.h
+to fix this problem.
+
+Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
+Acked-by: Yonghong Song <yhs@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/tcm_qla2xxx.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/lib/bpf/bpf.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/qla2xxx/tcm_qla2xxx.c b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
-index 8a3075d17c63c..bddb573c88dd2 100644
---- a/drivers/scsi/qla2xxx/tcm_qla2xxx.c
-+++ b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
-@@ -399,6 +399,8 @@ static int tcm_qla2xxx_write_pending(struct se_cmd *se_cmd)
- 			cmd->se_cmd.transport_state,
- 			cmd->se_cmd.t_state,
- 			cmd->se_cmd.se_cmd_flags);
-+		transport_generic_request_failure(&cmd->se_cmd,
-+			TCM_CHECK_CONDITION_ABORT_CMD);
- 		return 0;
- 	}
- 	cmd->trc_flags |= TRC_XFR_RDY;
+diff --git a/tools/lib/bpf/bpf.h b/tools/lib/bpf/bpf.h
+index 6ffdd79bea89d..6dc1f418034fb 100644
+--- a/tools/lib/bpf/bpf.h
++++ b/tools/lib/bpf/bpf.h
+@@ -26,6 +26,7 @@
+ #include <linux/bpf.h>
+ #include <stdbool.h>
+ #include <stddef.h>
++#include <stdint.h>
+ 
+ #ifdef __cplusplus
+ extern "C" {
 -- 
 2.20.1
 
