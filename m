@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01628C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C99F0C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5D302490A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:20:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 861C124947
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:20:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186426;
-	bh=Abh9yq3u4rDNWsfi/7nQqad8KR6xGjgWlEyf7rT3IYg=;
+	s=default; t=1559186434;
+	bh=xKdvYiTrysXl8tAQY5xmYsYmJtshszSnb1+V0B/wqFY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2l0gvy/UhuwzfzMJ5A4xS3gf6EKeP0o28HprkFav3yOrdEW0sJPpZakIEiA7o4X1N
-	 WoIqMbzj404umPIVMvzHykQgHs3C1vypLvabnqSjzArME2hoUSxU4V0YLvNmo/i0WL
-	 ysraYXMd0h5YYwtGrMyJ4oYW+fkjXx7JPFEfRjBI=
+	b=Uhs4EE+GYkJWHiMOH8HBN6LoqowY8FLSPjpBMxzdftRVE6TY3f5MhBBWlEbHtxylE
+	 RAIgwgRy5DhTF8Ars9rPwzdDVn9YDKfREuPeuMUtZPDXDvPjN5pvPsPICaN9H5uUHE
+	 EIdw1iZGwBjq8+SW0jlyjN1g6qSof78HWDUYeOtk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729141AbfE3DUZ (ORCPT
+        id S1732250AbfE3DUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:20:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40328 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:20:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728162AbfE3DPx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:15:53 -0400
+        id S1730526AbfE3DPz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:55 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B75F724590;
-        Thu, 30 May 2019 03:15:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F7CA24595;
+        Thu, 30 May 2019 03:15:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186152;
-        bh=Abh9yq3u4rDNWsfi/7nQqad8KR6xGjgWlEyf7rT3IYg=;
+        s=default; t=1559186155;
+        bh=xKdvYiTrysXl8tAQY5xmYsYmJtshszSnb1+V0B/wqFY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CpYYQhKGbGz8LjRzEZGajP+zRpLN+2kl3LPE8VWXPYYrXHmVAHcMLhmGUVO+3AS5F
-         spEojtN/WPSkGhN/Fo4soFjrJ/r6JETAE0HdCytyvgs5SL+K56QpD6zcy85mdk325A
-         TIp1nVeEbcyzdx9C1Wm9e2Xd1PBpCYTts3FNs7tg=
+        b=dDc0gcDMuhkCf9mhEZL7b3B5dntyVvtGiT5V1mr6n1prwlVHh79HMn2BfgJtk9CAf
+         BPT++tFukthArCmhSDsIr7UgnLTIac7JKJSRIMswvjcbU+3l6CeUuS2zksEMgojD72
+         iNSGmajThSkD9yN2LOuBDSKNBOs6s44WaUhPbSss=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 337/346] ASoC: davinci-mcasp: Fix clang warning without CONFIG_PM
-Date:   Wed, 29 May 2019 20:06:50 -0700
-Message-Id: <20190530030557.809253714@linuxfoundation.org>
+Subject: [PATCH 5.0 306/346] media: gspca: do not resubmit URBs when streaming has stopped
+Date:   Wed, 29 May 2019 20:06:19 -0700
+Message-Id: <20190530030556.342442279@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -62,47 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8ca5104715cfd14254ea5aecc390ae583b707607 ]
+[ Upstream commit e6f8bd59c28f758feea403a70d6c3ef28c50959f ]
 
-Building with clang shows a variable that is only used by the
-suspend/resume functions but defined outside of their #ifdef block:
+When streaming is stopped all URBs are killed, but in fill_frame and in
+bulk_irq this results in an attempt to resubmit the killed URB. That is
+not what you want and causes spurious kernel messages.
 
-sound/soc/ti/davinci-mcasp.c:48:12: error: variable 'context_regs' is not needed and will not be emitted
+So check if streaming has stopped before resubmitting.
 
-We commonly fix these by marking the PM functions as __maybe_unused,
-but here that would grow the davinci_mcasp structure, so instead
-add another #ifdef here.
+Also check against gspca_dev->streaming rather than vb2_start_streaming_called()
+since vb2_start_streaming_called() will return true when in stop_streaming,
+but gspca_dev->streaming is set to false when stop_streaming is called.
 
-Fixes: 1cc0c054f380 ("ASoC: davinci-mcasp: Convert the context save/restore to use array")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 6992effe5344 ("gspca: Kill all URBs before releasing any of them")
+
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/ti/davinci-mcasp.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/media/usb/gspca/gspca.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/ti/davinci-mcasp.c b/sound/soc/ti/davinci-mcasp.c
-index a10fcb5963c67..570d435e3e8be 100644
---- a/sound/soc/ti/davinci-mcasp.c
-+++ b/sound/soc/ti/davinci-mcasp.c
-@@ -44,6 +44,7 @@
+diff --git a/drivers/media/usb/gspca/gspca.c b/drivers/media/usb/gspca/gspca.c
+index cac8e5f0543be..bdb81e93b74dd 100644
+--- a/drivers/media/usb/gspca/gspca.c
++++ b/drivers/media/usb/gspca/gspca.c
+@@ -314,6 +314,8 @@ static void fill_frame(struct gspca_dev *gspca_dev,
+ 	}
  
- #define MCASP_MAX_AFIFO_DEPTH	64
+ resubmit:
++	if (!gspca_dev->streaming)
++		return;
+ 	/* resubmit the URB */
+ 	st = usb_submit_urb(urb, GFP_ATOMIC);
+ 	if (st < 0)
+@@ -330,7 +332,7 @@ static void isoc_irq(struct urb *urb)
+ 	struct gspca_dev *gspca_dev = (struct gspca_dev *) urb->context;
  
-+#ifdef CONFIG_PM
- static u32 context_regs[] = {
- 	DAVINCI_MCASP_TXFMCTL_REG,
- 	DAVINCI_MCASP_RXFMCTL_REG,
-@@ -66,6 +67,7 @@ struct davinci_mcasp_context {
- 	u32	*xrsr_regs; /* for serializer configuration */
- 	bool	pm_state;
- };
-+#endif
+ 	gspca_dbg(gspca_dev, D_PACK, "isoc irq\n");
+-	if (!vb2_start_streaming_called(&gspca_dev->queue))
++	if (!gspca_dev->streaming)
+ 		return;
+ 	fill_frame(gspca_dev, urb);
+ }
+@@ -344,7 +346,7 @@ static void bulk_irq(struct urb *urb)
+ 	int st;
  
- struct davinci_mcasp_ruledata {
- 	struct davinci_mcasp *mcasp;
+ 	gspca_dbg(gspca_dev, D_PACK, "bulk irq\n");
+-	if (!vb2_start_streaming_called(&gspca_dev->queue))
++	if (!gspca_dev->streaming)
+ 		return;
+ 	switch (urb->status) {
+ 	case 0:
+@@ -367,6 +369,8 @@ static void bulk_irq(struct urb *urb)
+ 				urb->actual_length);
+ 
+ resubmit:
++	if (!gspca_dev->streaming)
++		return;
+ 	/* resubmit the URB */
+ 	if (gspca_dev->cam.bulk_nurbs != 0) {
+ 		st = usb_submit_urb(urb, GFP_ATOMIC);
 -- 
 2.20.1
 
