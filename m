@@ -2,282 +2,89 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2044C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53410C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9997A25EE1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:57:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559239037;
-	bh=w8hNSnfYZ3vC8KLmmbKZFRJHcMSb2JVko1p4pcUentA=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=wM9WgCzgw9j2aD+Pw4MTy3fCc/9KVaGxFkC2phG1LrWfC5k7uhek8KzzjbgYC6xL8
-	 G9eiX6wRNeSRlQwoJjZ8kylAq8HyuEeTqRnGL8/386B3qg5w9dWvHyYculsAJDHeeE
-	 5+qIgTqTMLp+g0Q1x2xI23RuioK3tki3fZGRnxI0=
+	by mail.kernel.org (Postfix) with ESMTP id 2BC9B25EDD
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:58:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="V8J8o0JH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbfE3R5Q (ORCPT
+        id S1726735AbfE3R6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 13:57:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49212 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726171AbfE3R5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 13:57:16 -0400
-Received: from localhost (unknown [104.132.1.68])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47EE725EDD;
-        Thu, 30 May 2019 17:57:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559239035;
-        bh=w8hNSnfYZ3vC8KLmmbKZFRJHcMSb2JVko1p4pcUentA=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=xN8e76AtwOSE3SMEmWxCUpUerbHkDmGhS1c9DeamLHkX5Ws5DnCZLtI96X8CGsJYB
-         2ZjwIezD8mkoC9tbl2Q6AVAWXNDeiVm3l9nN82Sx6bqcH3ChfP9sMjFIdEZab6+RzF
-         Rtzdpsn5e2Fw8ld/mr9Bp4pXrG6tWW1i5xZA3vAs=
-Date:   Thu, 30 May 2019 10:57:14 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [PATCH v2] f2fs: add a rw_sem to cover quota flag changes
-Message-ID: <20190530175714.GB28719@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20190530033115.16853-1-jaegeuk@kernel.org>
+        Thu, 30 May 2019 13:58:04 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40618 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726547AbfE3R6E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 13:58:04 -0400
+Received: by mail-pf1-f194.google.com with SMTP id u17so4431807pfn.7
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 10:58:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UdtCpjjQ91i6JdeO1o6cmQH2Jj5NVts/neyKdRuf9u0=;
+        b=V8J8o0JH07x2wsBm99n7DGytzSCB9uQ7i73/R7tiHi2EW+jlFvc9gPYtl/fH4Vtxfk
+         8+4Cfa4e63aA5rrFDRaRFWVlXZO4x+21PiB/3o4FZZJOF0sMkYhr4qoWdTzCynaKwyPZ
+         kBcIAAH67jJTafpsCBQrUe1ANdMKdiKshInIwRJ+BUPz/kaCKBTlvGwLD0vk0Cy79OFL
+         pQV8FyejxTWwBSkNkb2i0W+gU4dNKH5fQz3CURzx8VpGqok0gIMOvcEsrvCSRBvJK1VB
+         UpIQ+Vac+NqKi2v6odcKj9Za3/R+Om3zqq5+o43oUOnVrotaFmWZapzBt60tB2lW5z7V
+         S6vQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UdtCpjjQ91i6JdeO1o6cmQH2Jj5NVts/neyKdRuf9u0=;
+        b=a1+4fofdQuL8pjt0aDrZz/81RkSeJXO0PF4vzptlfFWmECYRnmrKA4EzX8jJqJlWq3
+         byuHpvWROZypDTwVt326J5uzfRatNIjDLDuzB97TUJgnzUCKv6FBP+n3b2tLd1YUvtZA
+         dGeYtmmePO6XS4QcC7+X84eFCmc2E19+1xdjemSYL6w1AVGIeneSD0HheBtPUQArLbyJ
+         etf8I5vH0o5GaG+Q49eTJhW/YnP0AAGBkoC2sz+t63kgYvMdCTfGYTYNEgnu10XpeKnN
+         Sr27fp8v/CwPvKREuupW+lAQEvcryThRxusWiO9ClyyDvV8TELwyo1r5gtjFOrt7BGeR
+         YOxw==
+X-Gm-Message-State: APjAAAV2UOoXJSvwE7g9Ia17OZ4/8FVEr/ftaXTzXUHIBe5mBhw+kAHP
+        j3I4hCogUnSq+h+ie3mvl2xRraQll1k=
+X-Google-Smtp-Source: APXvYqzy2V8ZQUSqq4q5Py2O0ZZ+w6f/HjgTMagL9FbXBX1DIOdqD+h8jSz65+ynIN0EAeD3DVxpFw==
+X-Received: by 2002:a63:fe51:: with SMTP id x17mr4712540pgj.339.1559239083470;
+        Thu, 30 May 2019 10:58:03 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::7ef9])
+        by smtp.gmail.com with ESMTPSA id d186sm3003141pgc.58.2019.05.30.10.58.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 30 May 2019 10:58:02 -0700 (PDT)
+Date:   Thu, 30 May 2019 13:58:00 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH] mm: fix page cache convergence regression
+Message-ID: <20190530175800.GA10941@cmpxchg.org>
+References: <20190524153148.18481-1-hannes@cmpxchg.org>
+ <20190524160417.GB1075@bombadil.infradead.org>
+ <20190524173900.GA11702@cmpxchg.org>
+ <20190530161548.GA8415@cmpxchg.org>
+ <20190530171356.GA19630@bombadil.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190530033115.16853-1-jaegeuk@kernel.org>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+In-Reply-To: <20190530171356.GA19630@bombadil.infradead.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-thread 1:                        thread 2:
-writeback                        checkpoint
-set QUOTA_NEED_FLUSH
-                                 clear QUOTA_NEED_FLUSH
-f2fs_dquot_commit
-dquot_commit
-clear_dquot_dirty
-                                 f2fs_quota_sync
-                                 dquot_writeback_dquots
-				 nothing to commit
-commit_dqblk
-quota_write
-f2fs_quota_write
-waiting for f2fs_lock_op()
-				 pass __need_flush_quota
-                                 (no F2FS_DIRTY_QDATA)
+On Thu, May 30, 2019 at 10:13:56AM -0700, Matthew Wilcox wrote:
+> On Thu, May 30, 2019 at 12:15:48PM -0400, Johannes Weiner wrote:
+> > Are there any objections or feedback on the proposed fix below? This
+> > is kind of a serious regression.
+> 
+> I'll drop it into the xarray tree for merging in a week, if that's ok
+> with you?
 
--> up-to-date quota is not written
-
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
----
-
-v2 from v1:
- - avoid deadlock.
- - shorten the loop path
-
- fs/f2fs/checkpoint.c | 40 ++++++++++++++++++++--------------------
- fs/f2fs/f2fs.h       |  1 +
- fs/f2fs/super.c      | 27 ++++++++++++++++++++++-----
- 3 files changed, 43 insertions(+), 25 deletions(-)
-
-diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-index 89825261d474..66f29907fc0e 100644
---- a/fs/f2fs/checkpoint.c
-+++ b/fs/f2fs/checkpoint.c
-@@ -1131,17 +1131,26 @@ static void __prepare_cp_block(struct f2fs_sb_info *sbi)
- 
- static bool __need_flush_quota(struct f2fs_sb_info *sbi)
- {
-+	bool ret;
-+
- 	if (!is_journalled_quota(sbi))
- 		return false;
--	if (is_sbi_flag_set(sbi, SBI_QUOTA_SKIP_FLUSH))
--		return false;
--	if (is_sbi_flag_set(sbi, SBI_QUOTA_NEED_REPAIR))
--		return false;
--	if (is_sbi_flag_set(sbi, SBI_QUOTA_NEED_FLUSH))
--		return true;
--	if (get_pages(sbi, F2FS_DIRTY_QDATA))
-+
-+	if (!down_write_trylock(&sbi->quota_sem))
- 		return true;
--	return false;
-+
-+	if (is_sbi_flag_set(sbi, SBI_QUOTA_SKIP_FLUSH))
-+		ret = false;
-+	else if (is_sbi_flag_set(sbi, SBI_QUOTA_NEED_REPAIR))
-+		ret = false;
-+	else if (is_sbi_flag_set(sbi, SBI_QUOTA_NEED_FLUSH))
-+		ret = true;
-+	else if (get_pages(sbi, F2FS_DIRTY_QDATA))
-+		ret = true;
-+	else
-+		ret = false;
-+	up_write(&sbi->quota_sem);
-+	return ret;
- }
- 
- /*
-@@ -1160,14 +1169,16 @@ static int block_operations(struct f2fs_sb_info *sbi)
- 	blk_start_plug(&plug);
- 
- retry_flush_quotas:
-+	f2fs_lock_all(sbi);
- 	if (__need_flush_quota(sbi)) {
- 		int locked;
- 
- 		if (++cnt > DEFAULT_RETRY_QUOTA_FLUSH_COUNT) {
- 			set_sbi_flag(sbi, SBI_QUOTA_SKIP_FLUSH);
--			f2fs_lock_all(sbi);
- 			goto retry_flush_dents;
- 		}
-+
-+		f2fs_unlock_all(sbi);
- 		clear_sbi_flag(sbi, SBI_QUOTA_NEED_FLUSH);
- 
- 		/* only failed during mount/umount/freeze/quotactl */
-@@ -1175,11 +1186,6 @@ static int block_operations(struct f2fs_sb_info *sbi)
- 		f2fs_quota_sync(sbi->sb, -1);
- 		if (locked)
- 			up_read(&sbi->sb->s_umount);
--	}
--
--	f2fs_lock_all(sbi);
--	if (__need_flush_quota(sbi)) {
--		f2fs_unlock_all(sbi);
- 		cond_resched();
- 		goto retry_flush_quotas;
- 	}
-@@ -1201,12 +1207,6 @@ static int block_operations(struct f2fs_sb_info *sbi)
- 	 */
- 	down_write(&sbi->node_change);
- 
--	if (__need_flush_quota(sbi)) {
--		up_write(&sbi->node_change);
--		f2fs_unlock_all(sbi);
--		goto retry_flush_quotas;
--	}
--
- 	if (get_pages(sbi, F2FS_DIRTY_IMETA)) {
- 		up_write(&sbi->node_change);
- 		f2fs_unlock_all(sbi);
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 9b3d9977cd1e..692c0922f5b2 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -1250,6 +1250,7 @@ struct f2fs_sb_info {
- 	block_t unusable_block_count;		/* # of blocks saved by last cp */
- 
- 	unsigned int nquota_files;		/* # of quota sysfile */
-+	struct rw_semaphore quota_sem;		/* blocking cp for flags */
- 
- 	/* # of pages, see count_type */
- 	atomic_t nr_pages[NR_COUNT_TYPE];
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 1dc02101e5e5..7a6d70d8e851 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -1946,7 +1946,10 @@ int f2fs_quota_sync(struct super_block *sb, int type)
- 	int cnt;
- 	int ret;
- 
-+	down_read(&sbi->quota_sem);
- 	ret = dquot_writeback_dquots(sb, type);
-+	up_read(&sbi->quota_sem);
-+
- 	if (ret)
- 		goto out;
- 
-@@ -2076,32 +2079,40 @@ static void f2fs_truncate_quota_inode_pages(struct super_block *sb)
- 
- static int f2fs_dquot_commit(struct dquot *dquot)
- {
-+	struct f2fs_sb_info *sbi = F2FS_SB(dquot->dq_sb);
- 	int ret;
- 
-+	down_read(&sbi->quota_sem);
- 	ret = dquot_commit(dquot);
- 	if (ret < 0)
--		set_sbi_flag(F2FS_SB(dquot->dq_sb), SBI_QUOTA_NEED_REPAIR);
-+		set_sbi_flag(sbi, SBI_QUOTA_NEED_REPAIR);
-+	up_read(&sbi->quota_sem);
- 	return ret;
- }
- 
- static int f2fs_dquot_acquire(struct dquot *dquot)
- {
-+	struct f2fs_sb_info *sbi = F2FS_SB(dquot->dq_sb);
- 	int ret;
- 
-+	down_read(&sbi->quota_sem);
- 	ret = dquot_acquire(dquot);
- 	if (ret < 0)
--		set_sbi_flag(F2FS_SB(dquot->dq_sb), SBI_QUOTA_NEED_REPAIR);
--
-+		set_sbi_flag(sbi, SBI_QUOTA_NEED_REPAIR);
-+	up_read(&sbi->quota_sem);
- 	return ret;
- }
- 
- static int f2fs_dquot_release(struct dquot *dquot)
- {
-+	struct f2fs_sb_info *sbi = F2FS_SB(dquot->dq_sb);
- 	int ret;
- 
-+	down_read(&sbi->quota_sem);
- 	ret = dquot_release(dquot);
- 	if (ret < 0)
--		set_sbi_flag(F2FS_SB(dquot->dq_sb), SBI_QUOTA_NEED_REPAIR);
-+		set_sbi_flag(sbi, SBI_QUOTA_NEED_REPAIR);
-+	up_read(&sbi->quota_sem);
- 	return ret;
- }
- 
-@@ -2111,22 +2122,27 @@ static int f2fs_dquot_mark_dquot_dirty(struct dquot *dquot)
- 	struct f2fs_sb_info *sbi = F2FS_SB(sb);
- 	int ret;
- 
-+	down_read(&sbi->quota_sem);
- 	ret = dquot_mark_dquot_dirty(dquot);
- 
- 	/* if we are using journalled quota */
- 	if (is_journalled_quota(sbi))
- 		set_sbi_flag(sbi, SBI_QUOTA_NEED_FLUSH);
- 
-+	up_read(&sbi->quota_sem);
- 	return ret;
- }
- 
- static int f2fs_dquot_commit_info(struct super_block *sb, int type)
- {
-+	struct f2fs_sb_info *sbi = F2FS_SB(sb);
- 	int ret;
- 
-+	down_read(&sbi->quota_sem);
- 	ret = dquot_commit_info(sb, type);
- 	if (ret < 0)
--		set_sbi_flag(F2FS_SB(sb), SBI_QUOTA_NEED_REPAIR);
-+		set_sbi_flag(sbi, SBI_QUOTA_NEED_REPAIR);
-+	up_read(&sbi->quota_sem);
- 	return ret;
- }
- 
-@@ -3235,6 +3251,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
- 	}
- 
- 	init_rwsem(&sbi->cp_rwsem);
-+	init_rwsem(&sbi->quota_sem);
- 	init_waitqueue_head(&sbi->cp_wait);
- 	init_sb_info(sbi);
- 
--- 
-2.19.0.605.g01d371f741-goog
-
+That sounds great, thank you.
