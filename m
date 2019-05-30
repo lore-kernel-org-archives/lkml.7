@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4D5C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 984D1C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 559C725A79
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:43:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 726C525A94
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:43:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191418;
-	bh=qWwad4BUKaij/skN+7yXHYUmBvbU4q5h/cwNL4vySvs=;
+	s=default; t=1559191424;
+	bh=k/DFDhT28fNL96xS6/KX2l6JDpDseEomSmkyL5TdaSo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SwIFfs4N24sEo4LsZqNIs2EQ3Q+3KTV58Cd9JAU/bcvboVv40WkK9xbnSc3etq/8b
-	 PupD7LNcgye/feHa5+l/oXG3WJnry6Zx6ccgsBZWcrUuKOhLhU6AXarqAdFCyUWVOk
-	 +yriDGs13ekHadD3eN/p5Fw+sFuQi7MW4/K0I/f4=
+	b=r/v/xmTE5xuyRUmH7SSiECKX8C+838IIAETj9ahHSrLLJl8EVlHGTPxVPSH/Q6g5l
+	 BPOXtgHQMBehZFjMGryk7ZrEpGCfSFjDmTJKP9o3jOk7JNUb7j3ORMdaBByYVGI8pm
+	 z10JWqmMhKPp1F+eHLKphuNWvPsWQVurIaJoJeUI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388707AbfE3Enh (ORCPT
+        id S2388753AbfE3Enn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:43:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53754 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:43:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728847AbfE3DMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:10 -0400
+        id S1727983AbfE3DMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:12:09 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60C4624526;
-        Thu, 30 May 2019 03:12:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C871A24481;
+        Thu, 30 May 2019 03:12:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185929;
-        bh=qWwad4BUKaij/skN+7yXHYUmBvbU4q5h/cwNL4vySvs=;
+        s=default; t=1559185928;
+        bh=k/DFDhT28fNL96xS6/KX2l6JDpDseEomSmkyL5TdaSo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UuMcWRGKixnBWflMx3cnj7R/2G5ZhCdEZMeuZYcZHE1jU0jdZptOIdS0qR1uYCond
-         XKWhrO3QtAKbuu85dE3XLWezEb3m0pDBe+Ztf2G+YY82oadX73pPA4vg94S6kD7AO1
-         Hi79MTQ+wJmNWxC9tXXOV36kJxMxtY1VqGelf3nY=
+        b=PvZ0p0ZwZ6WXO3nqGmsgf9+pZzXXYqbh8giMiOXzhj0FZFNeH0We40r9Ci5+VwsPK
+         79WByEqLcz2nLMFCwwbmApSt6ce2IaD3UKYEo7ejciG8/6QVW/TrXLr8tUaMZ/9R1D
+         Ws6wrRbKlRiS3QnjPY5NfriW/u36xqnmcjQ690ZA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pu Wen <puwen@hygon.cn>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>,
-        Yazen Ghannam <yazen.ghannam@amd.com>, x86-ml <x86@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 322/405] x86/CPU/hygon: Fix phys_proc_id calculation logic for multi-die processors
-Date:   Wed, 29 May 2019 20:05:20 -0700
-Message-Id: <20190530030557.042188802@linuxfoundation.org>
+        stable@vger.kernel.org, Mohan Kumar D <mkumard@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Sameer Pujar <spujar@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 321/405] dmaengine: tegra210-adma: use devm_clk_*() helpers
+Date:   Wed, 29 May 2019 20:05:19 -0700
+Message-Id: <20190530030556.994716092@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -64,122 +61,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e0ceeae708cebf22c990c3d703a4ca187dc837f5 ]
+[ Upstream commit f6ed6491d565c336a360471e0c29228e34f4380e ]
 
-The Hygon family 18h multi-die processor platform supports 1, 2 or
-4-Dies per socket. The topology looks like this:
+adma driver is using pm_clk_*() interface for managing clock resources.
+With this it is observed that clocks remain ON always. This happens on
+Tegra devices which use BPMP co-processor to manage clock resources,
+where clocks are enabled during prepare phase. This is necessary because
+clocks to BPMP are always blocking. When pm_clk_*() interface is used on
+such Tegra devices, clock prepare count is not balanced till remove call
+happens for the driver and hence clocks are seen ON always. Thus this
+patch replaces pm_clk_*() with devm_clk_*() framework.
 
-  System View (with 1-Die 2-Socket):
-             |------------|
-           ------       -----
-   SOCKET0 | D0 |       | D1 |  SOCKET1
-           ------       -----
-
-  System View (with 2-Die 2-socket):
-             --------------------
-             |     -------------|------
-             |     |            |     |
-           ------------       ------------
-   SOCKET0 | D1 -- D0 |       | D3 -- D2 | SOCKET1
-           ------------       ------------
-
-  System View (with 4-Die 2-Socket) :
-             --------------------
-             |     -------------|------
-             |     |            |     |
-           ------------       ------------
-           | D1 -- D0 |       | D7 -- D6 |
-           | |  \/ |  |       | |  \/ |  |
-   SOCKET0 | |  /\ |  |       | |  /\ |  | SOCKET1
-           | D2 -- D3 |       | D4 -- D5 |
-           ------------       ------------
-             |     |            |     |
-             ------|------------|     |
-                   --------------------
-
-Currently
-
-  phys_proc_id = initial_apicid >> bits
-
-calculates the physical processor ID from the initial_apicid by shifting
-*bits*.
-
-However, this does not work for 1-Die and 2-Die 2-socket systems.
-
-According to document [1] section 2.1.11.1, the bits is the value of
-CPUID_Fn80000008_ECX[12:15]. The possible values are 4, 5 or 6 which
-mean:
-
-  4 - 1 die
-  5 - 2 dies
-  6 - 3/4 dies.
-
-Hygon programs the initial ApicId the same way as AMD. The ApicId is
-read from CPUID_Fn00000001_EBX (see section 2.1.11.1 of referrence [1])
-and the definition is as below (see section 2.1.10.2.1.3 of [1]):
-
-      -------------------------------------------------
-  Bit |     6     |   5  4  |    3   |    2   1   0   |
-      |-----------|---------|--------|----------------|
-  IDs | Socket ID | Node ID | CCX ID | Core/Thread ID |
-      -------------------------------------------------
-
-So for 3/4-Die configurations, the bits variable is 6, which is the same
-as the ApicID definition field.
-
-For 1-Die and 2-Die configurations, bits is 4 or 5, which will cause the
-right shifted result to not be exactly the value of socket ID.
-
-However, the socket ID should be obtained from ApicId[6]. To fix the
-problem and match the ApicID field definition, set the shift bits to 6
-for all Hygon family 18h multi-die CPUs.
-
-Because AMD doesn't have 2-Socket systems with 1-Die/2-Die processors
-(see reference [2]), this doesn't need to be changed on the AMD side but
-only for Hygon.
-
-[1] https://www.amd.com/system/files/TechDocs/54945_PPR_Family_17h_Models_00h-0Fh.pdf
-[2] https://www.amd.com/en/products/specifications/processors
-
- [bp: heavily massage commit message. ]
-
-Signed-off-by: Pu Wen <puwen@hygon.cn>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Thomas Lendacky <Thomas.Lendacky@amd.com>
-Cc: Yazen Ghannam <yazen.ghannam@amd.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/1553355740-19999-1-git-send-email-puwen@hygon.cn
+Suggested-by: Mohan Kumar D <mkumard@nvidia.com>
+Reviewed-by: Jonathan Hunter <jonathanh@nvidia.com>
+Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/hygon.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/dma/tegra210-adma.c | 27 ++++++++++++---------------
+ 1 file changed, 12 insertions(+), 15 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/hygon.c b/arch/x86/kernel/cpu/hygon.c
-index cf25405444ab3..415621ddb8a23 100644
---- a/arch/x86/kernel/cpu/hygon.c
-+++ b/arch/x86/kernel/cpu/hygon.c
-@@ -19,6 +19,8 @@
+diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+index 9aa35a7f13692..1477cce33dbe5 100644
+--- a/drivers/dma/tegra210-adma.c
++++ b/drivers/dma/tegra210-adma.c
+@@ -22,7 +22,6 @@
+ #include <linux/of_device.h>
+ #include <linux/of_dma.h>
+ #include <linux/of_irq.h>
+-#include <linux/pm_clock.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/slab.h>
  
- #include "cpu.h"
+@@ -141,6 +140,7 @@ struct tegra_adma {
+ 	struct dma_device		dma_dev;
+ 	struct device			*dev;
+ 	void __iomem			*base_addr;
++	struct clk			*ahub_clk;
+ 	unsigned int			nr_channels;
+ 	unsigned long			rx_requests_reserved;
+ 	unsigned long			tx_requests_reserved;
+@@ -637,8 +637,9 @@ static int tegra_adma_runtime_suspend(struct device *dev)
+ 	struct tegra_adma *tdma = dev_get_drvdata(dev);
  
-+#define APICID_SOCKET_ID_BIT 6
-+
- /*
-  * nodes_per_socket: Stores the number of nodes per socket.
-  * Refer to CPUID Fn8000_001E_ECX Node Identifiers[10:8]
-@@ -87,6 +89,9 @@ static void hygon_get_topology(struct cpuinfo_x86 *c)
- 		if (!err)
- 			c->x86_coreid_bits = get_count_order(c->x86_max_cores);
+ 	tdma->global_cmd = tdma_read(tdma, ADMA_GLOBAL_CMD);
++	clk_disable_unprepare(tdma->ahub_clk);
  
-+		/* Socket ID is ApicId[6] for these processors. */
-+		c->phys_proc_id = c->apicid >> APICID_SOCKET_ID_BIT;
-+
- 		cacheinfo_hygon_init_llc_id(c, cpu, node_id);
- 	} else if (cpu_has(c, X86_FEATURE_NODEID_MSR)) {
- 		u64 value;
+-	return pm_clk_suspend(dev);
++	return 0;
+ }
+ 
+ static int tegra_adma_runtime_resume(struct device *dev)
+@@ -646,10 +647,11 @@ static int tegra_adma_runtime_resume(struct device *dev)
+ 	struct tegra_adma *tdma = dev_get_drvdata(dev);
+ 	int ret;
+ 
+-	ret = pm_clk_resume(dev);
+-	if (ret)
++	ret = clk_prepare_enable(tdma->ahub_clk);
++	if (ret) {
++		dev_err(dev, "ahub clk_enable failed: %d\n", ret);
+ 		return ret;
+-
++	}
+ 	tdma_write(tdma, ADMA_GLOBAL_CMD, tdma->global_cmd);
+ 
+ 	return 0;
+@@ -693,13 +695,11 @@ static int tegra_adma_probe(struct platform_device *pdev)
+ 	if (IS_ERR(tdma->base_addr))
+ 		return PTR_ERR(tdma->base_addr);
+ 
+-	ret = pm_clk_create(&pdev->dev);
+-	if (ret)
+-		return ret;
+-
+-	ret = of_pm_clk_add_clk(&pdev->dev, "d_audio");
+-	if (ret)
+-		goto clk_destroy;
++	tdma->ahub_clk = devm_clk_get(&pdev->dev, "d_audio");
++	if (IS_ERR(tdma->ahub_clk)) {
++		dev_err(&pdev->dev, "Error: Missing ahub controller clock\n");
++		return PTR_ERR(tdma->ahub_clk);
++	}
+ 
+ 	pm_runtime_enable(&pdev->dev);
+ 
+@@ -776,8 +776,6 @@ static int tegra_adma_probe(struct platform_device *pdev)
+ 	pm_runtime_put_sync(&pdev->dev);
+ rpm_disable:
+ 	pm_runtime_disable(&pdev->dev);
+-clk_destroy:
+-	pm_clk_destroy(&pdev->dev);
+ 
+ 	return ret;
+ }
+@@ -795,7 +793,6 @@ static int tegra_adma_remove(struct platform_device *pdev)
+ 
+ 	pm_runtime_put_sync(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
+-	pm_clk_destroy(&pdev->dev);
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
