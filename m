@@ -2,53 +2,57 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C421FC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5204CC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E7AE23FC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:58:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C45D24D42
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:58:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188718;
-	bh=ycQ2WHH2xNsssHbMyy4jABS/gcIb3YQqerQeBf5PbcM=;
+	s=default; t=1559188722;
+	bh=C/p0y0jppIEGiBaHSxMEGSZjx9jQaK1YdEp7rBzeljc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yUNk7Fv6SrD/Vdjmo8Y2YaXD2Iaez8hAcWoXUlHlWRFD6xjXLZoeGiAD7QKmgtQsc
-	 QAwmw2sluhi3cc/giXqJVp9M+Ns6xQIasOVle/vcaSC2FSjNs/sDzPTNo+/t2Kz/8V
-	 O5ExAsmCCLH+Znvw/2hq3e8cVoevxM25JhXcv5+A=
+	b=tuD1l+OtCOQPZ4i/4+qxfnSfjFJGqKChmn2wU+5/73QmZje6QsQw16lSBtwn2+D82
+	 qIhuIWWMoLCJP5oed0TwB5BtAN6loMTcdtxlR2bFmCqOXRWLdRCaEsHZrLCiuNEgjU
+	 4wIjkC0tFFc/aBzmGNHdhII3/ucl14nRAy+saHlw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731733AbfE3D6h (ORCPT
+        id S1731651AbfE3DSn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:58:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52284 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:18:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729968AbfE3DSo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:44 -0400
+        id S1729968AbfE3DOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:45 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3082E24779;
-        Thu, 30 May 2019 03:18:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 938FC24585;
+        Thu, 30 May 2019 03:14:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186323;
-        bh=ycQ2WHH2xNsssHbMyy4jABS/gcIb3YQqerQeBf5PbcM=;
+        s=default; t=1559186084;
+        bh=C/p0y0jppIEGiBaHSxMEGSZjx9jQaK1YdEp7rBzeljc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LE7qvSQ9syFLac8m/qdAK/Bb8XGfVjT8XtQIAuyYKMZ/+AXsKic9a/VML3VOZgxiB
-         JWWYFu8H76uAEQJtaIBF7IyvDVSCk04oRPf3INhSyvKpebuSqJXWcyeFtDk8l1wD24
-         wd8H9EC9du5MUn5OjfWQ2nxkbiuhaYRInEz3JxyI=
+        b=PQvS4OkgH0vQodizcgu83US4nEsBnxLYDr9u7lZGHpV8hjeRPAwVIrtoGDwj5j4hJ
+         VxakCJmdVsGOynK/hTBJBljfNMgxIocCtLdlCEHI4J1HF15mtHQB4aF3rwctraF1Ui
+         rWyxT5717HJw0UJnH89OVOh33S0ulOXySU77XGWQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 035/193] Revert "btrfs: Honour FITRIM range constraints during free space trim"
-Date:   Wed, 29 May 2019 20:04:49 -0700
-Message-Id: <20190530030454.199169279@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Kento Kobayashi <Kento.A.Kobayashi@sony.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Jacky Cao <Jacky.Cao@sony.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 164/346] USB: core: Dont unbind interfaces following device reset failure
+Date:   Wed, 29 May 2019 20:03:57 -0700
+Message-Id: <20190530030549.474783185@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
-References: <20190530030446.953835040@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,93 +62,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Sterba <dsterba@suse.com>
+[ Upstream commit 381419fa720060ba48b7bbc483be787d5b1dca6f ]
 
-This reverts commit b327ff8a9b5767ce39db650d468fb124b48974a5.
+The SCSI core does not like to have devices or hosts unregistered
+while error recovery is in progress.  Trying to do so can lead to
+self-deadlock: Part of the removal code tries to obtain a lock already
+held by the error handler.
 
-There is currently no corresponding patch in master due to additional
-changes that would be significantly different from plain revert in the
-respective stable branch.
+This can cause problems for the usb-storage and uas drivers, because
+their error handler routines perform a USB reset, and if the reset
+fails then the USB core automatically goes on to unbind all drivers
+from the device's interfaces -- all while still in the context of the
+SCSI error handler.
 
-The range argument was not handled correctly and could cause trim to
-overlap allocated areas or reach beyond the end of the device. The
-address space that fitrim normally operates on is in logical
-coordinates, while the discards are done on the physical device extents.
-This distinction cannot be made with the current ioctl interface and
-caused the confusion.
+As it turns out, practically all the scenarios leading to a USB reset
+failure end up causing a device disconnect (the main error pathway in
+usb_reset_and_verify_device(), at the end of the routine, calls
+hub_port_logical_disconnect() before returning).  As a result, the
+hub_wq thread will soon become aware of the problem and will unbind
+all the device's drivers in its own context, not in the
+error-handler's context.
 
-The bug depends on the layout of block groups and does not always
-happen. The whole-fs trim (run by default by the fstrim tool) is not
-affected.
+This means that usb_reset_device() does not need to call
+usb_unbind_and_rebind_marked_interfaces() in cases where
+usb_reset_and_verify_device() has returned an error, because hub_wq
+will take care of everything anyway.
 
-Signed-off-by: David Sterba <dsterba@suse.com>
+This particular problem was observed in somewhat artificial
+circumstances, by using usbfs to tell a hub to power-down a port
+connected to a USB-3 mass storage device using the UAS protocol.  With
+the port turned off, the currently executing command timed out and the
+error handler started running.  The USB reset naturally failed,
+because the hub port was off, and the error handler deadlocked as
+described above.  Not carrying out the call to
+usb_unbind_and_rebind_marked_interfaces() fixes this issue.
+
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Reported-by: Kento Kobayashi <Kento.A.Kobayashi@sony.com>
+Tested-by: Kento Kobayashi <Kento.A.Kobayashi@sony.com>
+CC: Bart Van Assche <bvanassche@acm.org>
+CC: Martin K. Petersen <martin.petersen@oracle.com>
+CC: Jacky Cao <Jacky.Cao@sony.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/extent-tree.c |   25 ++++++-------------------
- 1 file changed, 6 insertions(+), 19 deletions(-)
+ drivers/usb/core/hub.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/fs/btrfs/extent-tree.c
-+++ b/fs/btrfs/extent-tree.c
-@@ -11057,9 +11057,9 @@ int btrfs_error_unpin_extent_range(struc
-  * transaction.
-  */
- static int btrfs_trim_free_extents(struct btrfs_device *device,
--				   struct fstrim_range *range, u64 *trimmed)
-+				   u64 minlen, u64 *trimmed)
- {
--	u64 start = range->start, len = 0;
-+	u64 start = 0, len = 0;
- 	int ret;
- 
- 	*trimmed = 0;
-@@ -11095,8 +11095,8 @@ static int btrfs_trim_free_extents(struc
- 			refcount_inc(&trans->use_count);
- 		spin_unlock(&fs_info->trans_lock);
- 
--		ret = find_free_dev_extent_start(trans, device, range->minlen,
--						 start, &start, &len);
-+		ret = find_free_dev_extent_start(trans, device, minlen, start,
-+						 &start, &len);
- 		if (trans)
- 			btrfs_put_transaction(trans);
- 
-@@ -11108,16 +11108,6 @@ static int btrfs_trim_free_extents(struc
- 			break;
+diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+index 55c87be5764c6..d325dd66f10e1 100644
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -5864,7 +5864,10 @@ int usb_reset_device(struct usb_device *udev)
+ 					cintf->needs_binding = 1;
+ 			}
  		}
+-		usb_unbind_and_rebind_marked_interfaces(udev);
++
++		/* If the reset failed, hub_wq will unbind drivers later */
++		if (ret == 0)
++			usb_unbind_and_rebind_marked_interfaces(udev);
+ 	}
  
--		/* If we are out of the passed range break */
--		if (start > range->start + range->len - 1) {
--			mutex_unlock(&fs_info->chunk_mutex);
--			ret = 0;
--			break;
--		}
--
--		start = max(range->start, start);
--		len = min(range->len, len);
--
- 		ret = btrfs_issue_discard(device->bdev, start, len, &bytes);
- 		up_read(&fs_info->commit_root_sem);
- 		mutex_unlock(&fs_info->chunk_mutex);
-@@ -11128,10 +11118,6 @@ static int btrfs_trim_free_extents(struc
- 		start += len;
- 		*trimmed += bytes;
- 
--		/* We've trimmed enough */
--		if (*trimmed >= range->len)
--			break;
--
- 		if (fatal_signal_pending(current)) {
- 			ret = -ERESTARTSYS;
- 			break;
-@@ -11215,7 +11201,8 @@ int btrfs_trim_fs(struct btrfs_fs_info *
- 	mutex_lock(&fs_info->fs_devices->device_list_mutex);
- 	devices = &fs_info->fs_devices->devices;
- 	list_for_each_entry(device, devices, dev_list) {
--		ret = btrfs_trim_free_extents(device, range, &group_trimmed);
-+		ret = btrfs_trim_free_extents(device, range->minlen,
-+					      &group_trimmed);
- 		if (ret) {
- 			dev_failed++;
- 			dev_ret = ret;
+ 	usb_autosuspend_device(udev);
+-- 
+2.20.1
+
 
 
