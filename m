@@ -2,97 +2,101 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 116C5C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E79C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:02:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D74892624E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:01:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3033D26253
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:02:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fo0gHtHV"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="vI/yXlJ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbfE3WBU (ORCPT
+        id S1726825AbfE3WB7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 18:01:20 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:38303 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726100AbfE3WBT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 18:01:19 -0400
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailnew.nyi.internal (Postfix) with ESMTP id A8A7012D0;
-        Thu, 30 May 2019 17:41:52 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Thu, 30 May 2019 17:41:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=content-type:date:from:message-id
-        :mime-version:subject:to:x-me-proxy:x-me-proxy:x-me-sender
-        :x-me-sender:x-sasl-enc; s=fm2; bh=d2+Dp3Qj0fsXCsX5yZVzFRkNZR9Uw
-        yiUPVU/PPpFWZI=; b=fo0gHtHVQapoYdcUhltjWTs73KQxPdaIakt1qX2Twmhq+
-        LZpep/Zmza7sACdDxAQVgQVjPpNQCjrA17lpTwnSfNfC/1Cec6hYsk8tV//ftZ5d
-        tCb6UUwJtpDnLHH3C66UJ1dLpqrxvpStrFXy08SD7qmjKKbsqTiF92o5MjxhvN7F
-        v7F1I4KgceDFUwmCg/b9J6YERiJ8hbkILKq3hJ2HUuJR1nqWnmpLCm3+SBONL8hU
-        gLIExno4lV9DpKRZMTDXN8ZhPeF3WcjMPXTIMBwh/iY/6RqrIVv6y3J/mObHpT5D
-        9aKBi7Vy377SYRyPVGmGkiPXulWsOgYoJY3LZPxMg==
-X-ME-Sender: <xms:IE7wXBwAC0Hwwx1tvjP_xySIPi-O9fJ19bNllvz_zJsyIbKOyA8Saw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrudeftddgtdduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfggtggusehttdertddttddvnecuhfhrohhmpeeuvghnjhgrmhhi
-    nhcuufhhvghrmhgrnhcuoegsvghnjhgrmhhinhessggvnhhshhgvrhhmrghnrdhioheqne
-    cukfhppeduvdekrdduudefrddujedruddvvdenucfrrghrrghmpehmrghilhhfrhhomhep
-    sggvnhhjrghmihhnsegsvghnshhhvghrmhgrnhdrihhonecuvehluhhsthgvrhfuihiivg
-    eptd
-X-ME-Proxy: <xmx:IE7wXJh-FWTMkWKWc94swp4aTI2IRRTcWfokEWfTdIwWZXloHdraSw>
-    <xmx:IE7wXBPH4G7yvXDy-vg60rb24bHrfpQeSjVm6bQfk02KKIKAXiFKcg>
-    <xmx:IE7wXFPxbaPb7rYjAPA4mLfnChsnJLVaLFLlit4lUHrmqtlC6mjZTA>
-    <xmx:IE7wXMWLuaK3oRas4RdLqpjU-8bDnip1bnDGUKwcZxN3PRCaCF1tRfgVQs4>
-Received: from valkyrie-prime.rpi (el-tovar-33.dynamic2.rpi.edu [128.113.17.122])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 1507A8005B;
-        Thu, 30 May 2019 17:41:52 -0400 (EDT)
-Date:   Thu, 30 May 2019 21:41:43 +0000
-From:   Benjamin Sherman <benjamin@bensherman.io>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: mt7621-dma: sizeof via pointer dereference
-Message-ID: <20190530214142.cna6mgdhqgxgaczw@valkyrie-prime.rpi>
+        Thu, 30 May 2019 18:01:59 -0400
+Received: from ozlabs.org ([203.11.71.1]:57473 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726576AbfE3WB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 18:01:58 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45FLsl1nFVz9s4Y;
+        Fri, 31 May 2019 07:52:42 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1559253163;
+        bh=gOBTgmZaBjxqpDUeDB6t2pE2Hbw5l3eOipRGnzHP7pY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=vI/yXlJ9Kg2gUNdSiinuIHNmEvmSkpTp3/pZuQBUx72Lj5c2/lRxR37AUTv/wlZCd
+         CgacJXRf0cfNQ57AaXcUf+an8tk0Js8H/SBK+kHfJ6ILwubtosii3uhGm+mkNfwSh0
+         l+DZce03wE21SVbFQPGmmZLHvIC/6PahnBtLnoBqdHCnq2lkEIbgLd/icrRVr9R8dL
+         /5ILl0P987A6lbjzzZk4R10ejU4OQGvcwvtNYkDOllGZAIhtQjqH6GYEV+h9eDA3mz
+         olag97kuov6+H5ary9uK0D60SbYvD+3+/05hW4C54Mmaw+Cg1ebnDbbc5DegjSQuP2
+         WcYrSAUI/e/vA==
+Date:   Fri, 31 May 2019 07:52:41 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Parav Pandit <parav@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: linux-next: Fixes tag needs some work in the net tree
+Message-ID: <20190531075241.63c45a9a@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/APS2ye.u3t/PPPabyavOeAO"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pass the size of a struct into kzalloc by pointer dereference.  This
-complies with the Linux kernel coding style and removes the possibility
-for a bug when the pointer's type is changed.
+--Sig_/APS2ye.u3t/PPPabyavOeAO
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Benjamin Sherman <benjamin@bensherman.io>
----
-This is my first patch, so please forgive any seemingly obvious
-mistakes.  I apologize if this is the incorrect mailing list.
----
- drivers/staging/mt7621-dma/mtk-hsdma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi all,
 
-diff --git a/drivers/staging/mt7621-dma/mtk-hsdma.c b/drivers/staging/mt7621-dma/mtk-hsdma.c
-index a58725dd2611..60db06768c8a 100644
---- a/drivers/staging/mt7621-dma/mtk-hsdma.c
-+++ b/drivers/staging/mt7621-dma/mtk-hsdma.c
-@@ -468,7 +468,7 @@ static struct dma_async_tx_descriptor *mtk_hsdma_prep_dma_memcpy(
- 	if (len <= 0)
- 		return NULL;
- 
--	desc = kzalloc(sizeof(struct mtk_hsdma_desc), GFP_ATOMIC);
-+	desc = kzalloc(sizeof(*desc), GFP_ATOMIC);
- 	if (!desc) {
- 		dev_err(c->device->dev, "alloc memcpy decs error\n");
- 		return NULL;
--- 
-2.21.0
+In commit
 
+  9414277a5df3 ("net/mlx5: Avoid double free in fs init error unwinding pat=
+h")
+
+Fixes tag
+
+  Fixes: 40c3eebb49e51 ("net/mlx5: Add support in RDMA RX steering")
+
+has these problem(s):
+
+  - Target SHA1 does not exist
+
+Did you mean
+
+Fixes: 905f6bd30bb6 ("net/mlx5: Avoid double free of root ns in the error f=
+low path")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/APS2ye.u3t/PPPabyavOeAO
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzwUKkACgkQAVBC80lX
+0Gwb6Qf/WbXbNdJOvEKybT0z9SB+Ts6v8F2pQ3rKuW3RpXSwxg1qKSHfJc7To/rg
+VEdinIe7DURap+dkR5LzWHl/nN28iAENzCSPSXaAlGoMl3Rag3XDG94H7TEF8s9G
+vPQ4YX98Yl2GySnO60gMPxcPRVj6AKMBk/MNtwE/0kXKy9xeUwf/bd9F7FOcQoCv
+eWZv8MreB8o4CA/dYYalShE4hx+UyB8O39nv5uYa3hUZ+jjc8Hc/mQEJTIID9JVl
+Qd4F85ZmdO/Cknvd4K75TRdIKjd3r8xINQez6727buS4yH4HxLEJhy9F7mOylVGe
+KYBKrJM/J2fi1F7UpGkb0NudTzZRxQ==
+=Iy6v
+-----END PGP SIGNATURE-----
+
+--Sig_/APS2ye.u3t/PPPabyavOeAO--
