@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 309B1C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E3CC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AA2C254D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A77C62548C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:27:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190426;
-	bh=eh6h31HQ7VhWfJe/YCSWiRRtJiJ7KBMSnVVSP8weWXQ=;
+	s=default; t=1559190434;
+	bh=BPAmBvRdrM0+9Hrl/sZmbLqwysejDtJbo/57DQcGMrU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vjzEK5VFmsfkxnK2uFR2tcwHnrihwRyvo6QIzFT4AwQOneTuRoCOvUQnfALGnBEQs
-	 Xf0jCLovQ/4PM6QKAaFKoQIDJgKXIZsAxzYXrIl1we5/WLn9tUm4f1lkRCvgCTrNMz
-	 mjbHd1yP6EImM1+5RS1AxtCCycoLpak9Bdg+cNUs=
+	b=Ld6+fnB8vMyOcHE0Hu0nMPESaEVxDEEB5k23oXoYr5ruVOoYYLJXadd+/pFXeVr43
+	 sgMQLwfHQRJno1QKhN+Mr1y16E8vILnRTAj1ee5hJqa6cgq3BFphpn0jW+7E1nL/WD
+	 3zN9dvOaENr3NOvDJ5v5jyYSMi5Gi0w0t4lSMT1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388029AbfE3E1F (ORCPT
+        id S1730396AbfE3E1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:27:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34232 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:27:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729042AbfE3DOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:25 -0400
+        id S1729846AbfE3DOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:22 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CABF32455C;
-        Thu, 30 May 2019 03:14:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 540FB24555;
+        Thu, 30 May 2019 03:14:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186063;
-        bh=eh6h31HQ7VhWfJe/YCSWiRRtJiJ7KBMSnVVSP8weWXQ=;
+        s=default; t=1559186062;
+        bh=BPAmBvRdrM0+9Hrl/sZmbLqwysejDtJbo/57DQcGMrU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nDRVdjeG0OW536CF1NFhSpJX0c4wS759DmYuW3ArzF3Pyun6JuQLO2W0cf28ocMq2
-         G+z+y3GY2Nnfq9tXOazlu85XBrLql5kvy1/UKz2eOFLt+QrypXXcV1zn9MCMa3S+HX
-         pu/S8JsQZcVk2m+xXMQ6uPaiXGgyjqU4ENGCXOiI=
+        b=u2MhViauFmjMeBOMPxM32wiadDHHNvXuLo20f0F9T9KCPzD85S2HHT/YuaRSFicvt
+         U4ZMt/FMrrbmAHdU2s0C6AHlBDeXToPvlrduXp9NN3g6CIWR5xuW+gA5mNcmK3rIH4
+         mCD5mTPeKr9C4bPJEM7aERznm8lXnLaJ8zpHvu3M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Will Deacon <will.deacon@arm.com>,
+        Ioana Radulescu <ruxandra.radulescu@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 173/346] ACPI/IORT: Reject platform device creation on NUMA node mapping failure
-Date:   Wed, 29 May 2019 20:04:06 -0700
-Message-Id: <20190530030549.924571487@linuxfoundation.org>
+Subject: [PATCH 5.0 170/346] dpaa2-eth: Fix Rx classification status
+Date:   Wed, 29 May 2019 20:04:03 -0700
+Message-Id: <20190530030549.769816752@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -62,122 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 36a2ba07757df790b4a874efb1a105b9330a9ae7 ]
+[ Upstream commit df8e249be866e2f762be11b14a9e7a94752614d4 ]
 
-In a system where, through IORT firmware mappings, the SMMU device is
-mapped to a NUMA node that is not online, the kernel bootstrap results
-in the following crash:
+Set the Rx flow classification enable flag only if key config
+operation is successful.
 
-  Unable to handle kernel paging request at virtual address 0000000000001388
-  Mem abort info:
-    ESR = 0x96000004
-    Exception class = DABT (current EL), IL = 32 bits
-    SET = 0, FnV = 0
-    EA = 0, S1PTW = 0
-  Data abort info:
-    ISV = 0, ISS = 0x00000004
-    CM = 0, WnR = 0
-  [0000000000001388] user address but active_mm is swapper
-  Internal error: Oops: 96000004 [#1] SMP
-  Modules linked in:
-  CPU: 5 PID: 1 Comm: swapper/0 Not tainted 5.0.0 #15
-  pstate: 80c00009 (Nzcv daif +PAN +UAO)
-  pc : __alloc_pages_nodemask+0x13c/0x1068
-  lr : __alloc_pages_nodemask+0xdc/0x1068
-  ...
-  Process swapper/0 (pid: 1, stack limit = 0x(____ptrval____))
-  Call trace:
-   __alloc_pages_nodemask+0x13c/0x1068
-   new_slab+0xec/0x570
-   ___slab_alloc+0x3e0/0x4f8
-   __slab_alloc+0x60/0x80
-   __kmalloc_node_track_caller+0x10c/0x478
-   devm_kmalloc+0x44/0xb0
-   pinctrl_bind_pins+0x4c/0x188
-   really_probe+0x78/0x2b8
-   driver_probe_device+0x64/0x110
-   device_driver_attach+0x74/0x98
-   __driver_attach+0x9c/0xe8
-   bus_for_each_dev+0x84/0xd8
-   driver_attach+0x30/0x40
-   bus_add_driver+0x170/0x218
-   driver_register+0x64/0x118
-   __platform_driver_register+0x54/0x60
-   arm_smmu_driver_init+0x24/0x2c
-   do_one_initcall+0xbc/0x328
-   kernel_init_freeable+0x304/0x3ac
-   kernel_init+0x18/0x110
-   ret_from_fork+0x10/0x1c
-  Code: f90013b5 b9410fa1 1a9f0694 b50014c2 (b9400804)
-  ---[ end trace dfeaed4c373a32da ]--
+Fixes 3f9b5c9 ("dpaa2-eth: Configure Rx flow classification key")
 
-Change the dev_set_proximity() hook prototype so that it returns a
-value and make it return failure if the PXM->NUMA-node mapping
-corresponds to an offline node, fixing the crash.
-
-Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Link: https://lore.kernel.org/linux-arm-kernel/20190315021940.86905-1-wangkefeng.wang@huawei.com/
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Ioana Radulescu <ruxandra.radulescu@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/arm64/iort.c | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-index e48894e002ba8..a46c2c162c03e 100644
---- a/drivers/acpi/arm64/iort.c
-+++ b/drivers/acpi/arm64/iort.c
-@@ -1232,18 +1232,24 @@ static bool __init arm_smmu_v3_is_coherent(struct acpi_iort_node *node)
- /*
-  * set numa proximity domain for smmuv3 device
-  */
--static void  __init arm_smmu_v3_set_proximity(struct device *dev,
-+static int  __init arm_smmu_v3_set_proximity(struct device *dev,
- 					      struct acpi_iort_node *node)
+diff --git a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+index 1ca9a18139ec5..0982fb4f131db 100644
+--- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
++++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+@@ -2604,6 +2604,7 @@ int dpaa2_eth_set_hash(struct net_device *net_dev, u64 flags)
+ static int dpaa2_eth_set_cls(struct dpaa2_eth_priv *priv)
  {
- 	struct acpi_iort_smmu_v3 *smmu;
+ 	struct device *dev = priv->net_dev->dev.parent;
++	int err;
  
- 	smmu = (struct acpi_iort_smmu_v3 *)node->node_data;
- 	if (smmu->flags & ACPI_IORT_SMMU_V3_PXM_VALID) {
--		set_dev_node(dev, acpi_map_pxm_to_node(smmu->pxm));
-+		int node = acpi_map_pxm_to_node(smmu->pxm);
-+
-+		if (node != NUMA_NO_NODE && !node_online(node))
-+			return -EINVAL;
-+
-+		set_dev_node(dev, node);
- 		pr_info("SMMU-v3[%llx] Mapped to Proximity domain %d\n",
- 			smmu->base_address,
- 			smmu->pxm);
+ 	/* Check if we actually support Rx flow classification */
+ 	if (dpaa2_eth_has_legacy_dist(priv)) {
+@@ -2622,9 +2623,13 @@ static int dpaa2_eth_set_cls(struct dpaa2_eth_priv *priv)
+ 		return -EOPNOTSUPP;
  	}
+ 
++	err = dpaa2_eth_set_dist_key(priv->net_dev, DPAA2_ETH_RX_DIST_CLS, 0);
++	if (err)
++		return err;
++
+ 	priv->rx_cls_enabled = 1;
+ 
+-	return dpaa2_eth_set_dist_key(priv->net_dev, DPAA2_ETH_RX_DIST_CLS, 0);
 +	return 0;
  }
- #else
- #define arm_smmu_v3_set_proximity NULL
-@@ -1318,7 +1324,7 @@ struct iort_dev_config {
- 	int (*dev_count_resources)(struct acpi_iort_node *node);
- 	void (*dev_init_resources)(struct resource *res,
- 				     struct acpi_iort_node *node);
--	void (*dev_set_proximity)(struct device *dev,
-+	int (*dev_set_proximity)(struct device *dev,
- 				    struct acpi_iort_node *node);
- };
  
-@@ -1369,8 +1375,11 @@ static int __init iort_add_platform_device(struct acpi_iort_node *node,
- 	if (!pdev)
- 		return -ENOMEM;
- 
--	if (ops->dev_set_proximity)
--		ops->dev_set_proximity(&pdev->dev, node);
-+	if (ops->dev_set_proximity) {
-+		ret = ops->dev_set_proximity(&pdev->dev, node);
-+		if (ret)
-+			goto dev_put;
-+	}
- 
- 	count = ops->dev_count_resources(node);
- 
+ /* Bind the DPNI to its needed objects and resources: buffer pool, DPIOs,
 -- 
 2.20.1
 
