@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0AB3C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1C8C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7501724E94
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:56:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D80824E81
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:56:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188569;
-	bh=80qvU2A6W1cvNMjQy9ODmjDz8WoL5gRikq7V+gJgsDI=;
+	s=default; t=1559188572;
+	bh=BCB1gKyFBCxZOzWt4F6nU9APsJkem9tiJGG7YipQI0s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JLHNlGHaVirj0DPgRbQSB4TAcMBXP+6NiuQbEqNrhaLCrBeeRMuzc0X49/eLd7Qnc
-	 ybZZmiF/tLkjr+2VjXSvgZ+0KLcYmGeoplYRcBy65dOiL8FGb6aotKMwJaOSCJEzut
-	 nPlr+IZizlYTgsx7oTnTSKD4fBgDxYUWdLo6LHJE=
+	b=v6gDqSVOX7dfsesmuI9zDmjsZzReGOrmAuyI3KfxJNVfrWsU6hd//OFO53JJWNyue
+	 rqVR1daMbmDk6coljie7UJi1YP7JwJf9OZgtD6XMeKNirtmVFQA1/faHewdd0CLUsP
+	 e/hPeKT/AAHZFQPjH0aqYhb+85ByUkRSYfb8HMBM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387853AbfE3D4I (ORCPT
+        id S1732102AbfE3D4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:56:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53556 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:56:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731801AbfE3DTF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:05 -0400
+        id S1731789AbfE3DTE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:04 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2110624821;
-        Thu, 30 May 2019 03:19:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9E562482D;
+        Thu, 30 May 2019 03:19:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186345;
-        bh=80qvU2A6W1cvNMjQy9ODmjDz8WoL5gRikq7V+gJgsDI=;
+        s=default; t=1559186344;
+        bh=BCB1gKyFBCxZOzWt4F6nU9APsJkem9tiJGG7YipQI0s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=apFGtAY+/OwLEi380vn9KmcydCSRE+6wxVFs57RMOn7pRw/FN3xUf3+XNxcQ3Dra+
-         h/ZNtCl1zHB6Jbm2X5TRmIwzJZ/q3IQp1LCE0sgfHbn9nPbzVhSZlMxQSErzzRaevX
-         jaHtmT3agzKo6bapjePPs4LHtJGtK/jYoL5MeSrA=
+        b=Nb95ES2XPJMK76ZdZ94Tcycz0sQ1gNYUNJ3J1fEoXYCa5eKLLTy1rCaZzoohA4df3
+         zIN2DGwblnbwqgIOj2yhh/CkknqMci3w+fXhw//0jz4tKl2l5BbgjJyuTB8tgr/+X0
+         r7OgEc704r/UwihkoVh/ouPqvD83VG3XsQteghgg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.14 030/193] ssb: Fix possible NULL pointer dereference in ssb_host_pcmcia_exit
-Date:   Wed, 29 May 2019 20:04:44 -0700
-Message-Id: <20190530030453.442768686@linuxfoundation.org>
+        YueHaibing <yuehaibing@huawei.com>, Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 4.14 028/193] media: serial_ir: Fix use-after-free in serial_ir_init_module
+Date:   Wed, 29 May 2019 20:04:42 -0700
+Message-Id: <20190530030453.252415625@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -62,92 +62,138 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: YueHaibing <yuehaibing@huawei.com>
 
-commit b2c01aab9646ed8ffb7c549afe55d5349c482425 upstream.
+commit 56cd26b618855c9af48c8301aa6754ced8dd0beb upstream.
 
 Syzkaller report this:
 
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] SMP KASAN PTI
-CPU: 0 PID: 4492 Comm: syz-executor.0 Not tainted 5.0.0-rc7+ #45
+BUG: KASAN: use-after-free in sysfs_remove_file_ns+0x5f/0x70 fs/sysfs/file.c:468
+Read of size 8 at addr ffff8881dc7ae030 by task syz-executor.0/6249
+
+CPU: 1 PID: 6249 Comm: syz-executor.0 Not tainted 5.0.0-rc8+ #3
 Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-RIP: 0010:sysfs_remove_file_ns+0x27/0x70 fs/sysfs/file.c:468
-Code: 00 00 00 41 54 55 48 89 fd 53 49 89 d4 48 89 f3 e8 ee 76 9c ff 48 8d 7d 30 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 75 2d 48 89 da 48 b8 00 00 00 00 00 fc ff df 48 8b 6d
-RSP: 0018:ffff8881e9d9fc00 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: ffffffff900367e0 RCX: ffffffff81a95952
-RDX: 0000000000000006 RSI: ffffc90001405000 RDI: 0000000000000030
-RBP: 0000000000000000 R08: fffffbfff1fa22ed R09: fffffbfff1fa22ed
-R10: 0000000000000001 R11: fffffbfff1fa22ec R12: 0000000000000000
-R13: ffffffffc1abdac0 R14: 1ffff1103d3b3f8b R15: 0000000000000000
-FS:  00007fe409dc1700(0000) GS:ffff8881f1200000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b2d721000 CR3: 00000001e98b6005 CR4: 00000000007606f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-PKRU: 55555554
 Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xfa/0x1ce lib/dump_stack.c:113
+ print_address_description+0x65/0x270 mm/kasan/report.c:187
+ kasan_report+0x149/0x18d mm/kasan/report.c:317
+ ? 0xffffffffc1728000
+ sysfs_remove_file_ns+0x5f/0x70 fs/sysfs/file.c:468
  sysfs_remove_file include/linux/sysfs.h:519 [inline]
  driver_remove_file+0x40/0x50 drivers/base/driver.c:122
- pcmcia_remove_newid_file drivers/pcmcia/ds.c:163 [inline]
- pcmcia_unregister_driver+0x7d/0x2b0 drivers/pcmcia/ds.c:209
- ssb_modexit+0xa/0x1b [ssb]
- __do_sys_delete_module kernel/module.c:1018 [inline]
- __se_sys_delete_module kernel/module.c:961 [inline]
- __x64_sys_delete_module+0x3dc/0x5e0 kernel/module.c:961
+ remove_bind_files drivers/base/bus.c:585 [inline]
+ bus_remove_driver+0x186/0x220 drivers/base/bus.c:725
+ driver_unregister+0x6c/0xa0 drivers/base/driver.c:197
+ serial_ir_init_module+0x169/0x1000 [serial_ir]
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
  do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 RIP: 0033:0x462e99
 Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fe409dc0c58 EFLAGS: 00000246 ORIG_RAX: 00000000000000b0
+RSP: 002b:00007f9450132c58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
 RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000200000c0
-RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fe409dc16bc
-R13: 00000000004bccaa R14: 00000000006f6bc8 R15: 00000000ffffffff
-Modules linked in: ssb(-) 3c59x nvme_core macvlan tap pata_hpt3x3 rt2x00pci null_blk tsc40 pm_notifier_error_inject notifier_error_inject mdio cdc_wdm nf_reject_ipv4 ath9k_common ath9k_hw ath pppox ppp_generic slhc ehci_platform wl12xx wlcore tps6507x_ts ioc4 nf_synproxy_core ide_gd_mod ax25 can_dev iwlwifi can_raw atm tm2_touchkey can_gw can sundance adp5588_keys rt2800mmio rt2800lib rt2x00mmio rt2x00lib eeprom_93cx6 pn533 lru_cache elants_i2c ip_set nfnetlink gameport tipc hampshire nhc_ipv6 nhc_hop nhc_udp nhc_fragment nhc_routing nhc_mobility nhc_dest 6lowpan silead brcmutil nfc mt76_usb mt76 mac80211 iptable_security iptable_raw iptable_mangle iptable_nat nf_nat_ipv4 nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 iptable_filter bpfilter ip6_vti ip_gre sit hsr veth vxcan batman_adv cfg80211 rfkill chnl_net caif nlmon vcan bridge stp llc ip6_gre ip6_tunnel tunnel6 tun joydev mousedev serio_raw ide_pci_generic piix floppy ide_core sch_fq_codel ip_tables x_tables ipv6
- [last unloaded: 3c59x]
-Dumping ftrace buffer:
-   (ftrace buffer empty)
----[ end trace 3913cbf8011e1c05 ]---
+RDX: 0000000000000000 RSI: 0000000020000100 RDI: 0000000000000003
+RBP: 00007f9450132c70 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f94501336bc
+R13: 00000000004bcefa R14: 00000000006f6fb0 R15: 0000000000000004
 
-In ssb_modinit, it does not fail SSB init when ssb_host_pcmcia_init failed,
-however in ssb_modexit, ssb_host_pcmcia_exit calls pcmcia_unregister_driver
-unconditionally, which may tigger a NULL pointer dereference issue as above.
+Allocated by task 6249:
+ set_track mm/kasan/common.c:85 [inline]
+ __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:495
+ kmalloc include/linux/slab.h:545 [inline]
+ kzalloc include/linux/slab.h:740 [inline]
+ bus_add_driver+0xc0/0x610 drivers/base/bus.c:651
+ driver_register+0x1bb/0x3f0 drivers/base/driver.c:170
+ serial_ir_init_module+0xe8/0x1000 [serial_ir]
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 6249:
+ set_track mm/kasan/common.c:85 [inline]
+ __kasan_slab_free+0x130/0x180 mm/kasan/common.c:457
+ slab_free_hook mm/slub.c:1430 [inline]
+ slab_free_freelist_hook mm/slub.c:1457 [inline]
+ slab_free mm/slub.c:3005 [inline]
+ kfree+0xe1/0x270 mm/slub.c:3957
+ kobject_cleanup lib/kobject.c:662 [inline]
+ kobject_release lib/kobject.c:691 [inline]
+ kref_put include/linux/kref.h:67 [inline]
+ kobject_put+0x146/0x240 lib/kobject.c:708
+ bus_remove_driver+0x10e/0x220 drivers/base/bus.c:732
+ driver_unregister+0x6c/0xa0 drivers/base/driver.c:197
+ serial_ir_init_module+0x14c/0x1000 [serial_ir]
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8881dc7ae000
+ which belongs to the cache kmalloc-256 of size 256
+The buggy address is located 48 bytes inside of
+ 256-byte region [ffff8881dc7ae000, ffff8881dc7ae100)
+The buggy address belongs to the page:
+page:ffffea000771eb80 count:1 mapcount:0 mapping:ffff8881f6c02e00 index:0x0
+flags: 0x2fffc0000000200(slab)
+raw: 02fffc0000000200 ffffea0007d14800 0000000400000002 ffff8881f6c02e00
+raw: 0000000000000000 00000000800c000c 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8881dc7adf00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff8881dc7adf80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>ffff8881dc7ae000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                     ^
+ ffff8881dc7ae080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8881dc7ae100: fc fc fc fc fc fc fc fc 00 00 00 00 00 00 00 00
+
+There are already cleanup handlings in serial_ir_init error path,
+no need to call serial_ir_exit do it again in serial_ir_init_module,
+otherwise will trigger a use-after-free issue.
+
+Fixes: fa5dc29c1fcc ("[media] lirc_serial: move out of staging and rename to serial_ir")
 
 Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 399500da18f7 ("ssb: pick PCMCIA host code support from b43 driver")
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/ssb/bridge_pcmcia_80211.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/media/rc/serial_ir.c |    9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
---- a/drivers/ssb/bridge_pcmcia_80211.c
-+++ b/drivers/ssb/bridge_pcmcia_80211.c
-@@ -113,16 +113,21 @@ static struct pcmcia_driver ssb_host_pcm
- 	.resume		= ssb_host_pcmcia_resume,
- };
+--- a/drivers/media/rc/serial_ir.c
++++ b/drivers/media/rc/serial_ir.c
+@@ -774,8 +774,6 @@ static void serial_ir_exit(void)
  
-+static int pcmcia_init_failed;
-+
- /*
-  * These are not module init/exit functions!
-  * The module_pcmcia_driver() helper cannot be used here.
-  */
- int ssb_host_pcmcia_init(void)
+ static int __init serial_ir_init_module(void)
  {
--	return pcmcia_register_driver(&ssb_host_pcmcia_driver);
-+	pcmcia_init_failed = pcmcia_register_driver(&ssb_host_pcmcia_driver);
-+
-+	return pcmcia_init_failed;
+-	int result;
+-
+ 	switch (type) {
+ 	case IR_HOMEBREW:
+ 	case IR_IRDEO:
+@@ -803,12 +801,7 @@ static int __init serial_ir_init_module(
+ 	if (sense != -1)
+ 		sense = !!sense;
+ 
+-	result = serial_ir_init();
+-	if (!result)
+-		return 0;
+-
+-	serial_ir_exit();
+-	return result;
++	return serial_ir_init();
  }
  
- void ssb_host_pcmcia_exit(void)
- {
--	pcmcia_unregister_driver(&ssb_host_pcmcia_driver);
-+	if (!pcmcia_init_failed)
-+		pcmcia_unregister_driver(&ssb_host_pcmcia_driver);
- }
+ static void __exit serial_ir_exit_module(void)
 
 
