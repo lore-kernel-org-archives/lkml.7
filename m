@@ -2,58 +2,57 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A69EC28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51084C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A39724953
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:20:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 111DA24968
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:20:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186442;
-	bh=2HFrA1Syu5LHtOeNK0QxU2MnJ/8ZxGAovQXoZHNkB6g=;
+	s=default; t=1559186445;
+	bh=oi8lKQ5r/i49dFb9dykc0Y0t9E2sFOuG489GbRWGmc4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X31bys4Wk3oTaIMr5byz5EJncSElheZ/zYKUFO9HH7TApAHcfsY+3eeEsF54eOg3G
-	 Ok42qMWqqNCajHXquVzi+HgNrI67tS+4GAY0FE857OZV/eBvhav/SqE53XjV481YZw
-	 0h3iKNmW5PBmP9oHVFVgiGay6q25dd+T7J80ZV9c=
+	b=Wm1tI679oqOP6tdfdrnDbZTY27fxVMIYTnMWY13DTVw8/pPpsOxAVvLxvf8SQQj4A
+	 kNwdk+KAMmJI2EriUEJIglTS6czbasE+HL+LDQYw8oM9/rrj/s6WpgoPmcUv2CizCo
+	 v8aHB1169qZt6cDuKwWFI7EAG4HYfLTKf5SvtjdA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732294AbfE3DUl (ORCPT
+        id S1732313AbfE3DUo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:20:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40496 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:20:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729365AbfE3DP6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:15:58 -0400
+        id S1729566AbfE3DQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:16:02 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A8542458A;
-        Thu, 30 May 2019 03:15:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84F39245C4;
+        Thu, 30 May 2019 03:16:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186158;
-        bh=2HFrA1Syu5LHtOeNK0QxU2MnJ/8ZxGAovQXoZHNkB6g=;
+        s=default; t=1559186161;
+        bh=oi8lKQ5r/i49dFb9dykc0Y0t9E2sFOuG489GbRWGmc4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lBVZdXXsUxb0yn+Pl8ZrngIpiAyb8+MZ5y6e6LrjfHp8nXnZP4c74tAmpdhhvP3nf
-         a5q83PTQZNO+srLWFNq7m2Ju+ERWbX6mWhjv7BRRUcH6cwxjkwgdhWTx+emXO/VnHW
-         fYlcpf66hE6NMj84QPobQipatv96AjrbgM83BJXE=
+        b=qtTn2FDPtUpo/7YMD8wo2asV0DTGtZlBJjOv2hyjkbXSae7mdhvywpP//4iJh0KiT
+         VfFWupNX2HrPtOy6kT+V1uiLKI8epcyU8Zt+1/fuUt2ANZXhhzQbODeinX06+jVp4J
+         AXD030tct8tI2LbIZcY1Gnazm0OJ57UZzg+SgU9g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+228a82b263b5da91883d@syzkaller.appspotmail.com,
-        Benjamin Coddington <bcodding@redhat.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 346/346] NFS: Fix a double unlock from nfs_match,get_client
-Date:   Wed, 29 May 2019 20:06:59 -0700
-Message-Id: <20190530030558.250313691@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.19 001/276] x86: Hide the int3_emulate_call/jmp functions from UML
+Date:   Wed, 29 May 2019 20:02:39 -0700
+Message-Id: <20190530030523.290639899@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
-References: <20190530030540.363386121@linuxfoundation.org>
+In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
+References: <20190530030523.133519668@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,38 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c260121a97a3e4df6536edbc2f26e166eff370ce ]
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-Now that nfs_match_client drops the nfs_client_lock, we should be
-careful
-to always return it in the same condition: locked.
+commit 693713cbdb3a4bda5a8a678c31f06560bbb14657 upstream.
 
-Fixes: 950a578c6128 ("NFS: make nfs_match_client killable")
-Reported-by: syzbot+228a82b263b5da91883d@syzkaller.appspotmail.com
-Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+User Mode Linux does not have access to the ip or sp fields of the pt_regs,
+and accessing them causes UML to fail to build. Hide the int3_emulate_jmp()
+and int3_emulate_call() instructions from UML, as it doesn't need them
+anyway.
+
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/nfs/client.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/asm/text-patching.h |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-index 350cfa561e0e8..dfb796eab9121 100644
---- a/fs/nfs/client.c
-+++ b/fs/nfs/client.c
-@@ -299,9 +299,9 @@ static struct nfs_client *nfs_match_client(const struct nfs_client_initdata *dat
- 			spin_unlock(&nn->nfs_client_lock);
- 			error = nfs_wait_client_init_complete(clp);
- 			nfs_put_client(clp);
-+			spin_lock(&nn->nfs_client_lock);
- 			if (error < 0)
- 				return ERR_PTR(error);
--			spin_lock(&nn->nfs_client_lock);
- 			goto again;
- 		}
+--- a/arch/x86/include/asm/text-patching.h
++++ b/arch/x86/include/asm/text-patching.h
+@@ -39,6 +39,7 @@ extern int poke_int3_handler(struct pt_r
+ extern void *text_poke_bp(void *addr, const void *opcode, size_t len, void *handler);
+ extern int after_bootmem;
  
--- 
-2.20.1
-
++#ifndef CONFIG_UML_X86
+ static inline void int3_emulate_jmp(struct pt_regs *regs, unsigned long ip)
+ {
+ 	regs->ip = ip;
+@@ -65,6 +66,7 @@ static inline void int3_emulate_call(str
+ 	int3_emulate_push(regs, regs->ip - INT3_INSN_SIZE + CALL_INSN_SIZE);
+ 	int3_emulate_jmp(regs, func);
+ }
+-#endif
++#endif /* CONFIG_X86_64 */
++#endif /* !CONFIG_UML_X86 */
+ 
+ #endif /* _ASM_X86_TEXT_PATCHING_H */
 
 
