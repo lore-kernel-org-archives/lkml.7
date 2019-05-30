@@ -2,107 +2,121 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1FA2C28CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D00C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C10425C4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:08:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57AED25C50
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:08:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfE3PIq (ORCPT
+        id S1727552AbfE3PIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 11:08:46 -0400
-Received: from foss.arm.com ([217.140.101.70]:38142 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725934AbfE3PIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 11:08:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3046F341;
-        Thu, 30 May 2019 08:08:45 -0700 (PDT)
-Received: from redmoon (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F1C093F59C;
-        Thu, 30 May 2019 08:08:43 -0700 (PDT)
-Date:   Thu, 30 May 2019 16:08:41 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Ley Foon Tan <ley.foon.tan@intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        lftan.linux@gmail.com
-Subject: Re: [PATCH] PCI: altera-msi: Allow building as module
-Message-ID: <20190530150841.GC13993@redmoon>
-References: <1556081835-12921-1-git-send-email-ley.foon.tan@intel.com>
- <1556081835-12921-2-git-send-email-ley.foon.tan@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556081835-12921-2-git-send-email-ley.foon.tan@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Thu, 30 May 2019 11:08:55 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51794 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727445AbfE3PIy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 11:08:54 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UF2buk085426
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 11:08:53 -0400
+Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2stf2187qm-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 11:08:53 -0400
+Received: from localhost
+        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Thu, 30 May 2019 16:08:52 +0100
+Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
+        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 30 May 2019 16:08:48 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4UF8kUZ18612722
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 May 2019 15:08:47 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BF2F4B2067;
+        Thu, 30 May 2019 15:08:46 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9D601B2070;
+        Thu, 30 May 2019 15:08:46 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 30 May 2019 15:08:46 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 6D17816C4086; Thu, 30 May 2019 08:08:48 -0700 (PDT)
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>
+Subject: [PATCH tip/core/rcu 2/4] uprobes: Use DEFINE_STATIC_PERCPU_RWSEM() to initialize dup_mmap_sem
+Date:   Thu, 30 May 2019 08:08:44 -0700
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190530150816.GA32130@linux.ibm.com>
+References: <20190530150816.GA32130@linux.ibm.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19053015-0060-0000-0000-00000349F775
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011185; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01210788; UDB=6.00636160; IPR=6.00991822;
+ MB=3.00027120; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-30 15:08:51
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19053015-0061-0000-0000-0000498DFFAF
+Message-Id: <20190530150846.32644-2-paulmck@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-30_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=13 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905300107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 12:57:15PM +0800, Ley Foon Tan wrote:
-> Altera MSI IP is a soft IP and is only available after
-> FPGA image is programmed.
-> 
-> Make driver modulable to support use case FPGA image is programmed
-> after kernel is booted. User proram FPGA image in kernel then only load
-> MSI driver module.
-> 
-> Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
-> ---
->  drivers/pci/controller/Kconfig           |  2 +-
->  drivers/pci/controller/pcie-altera-msi.c | 10 ++++++++++
->  2 files changed, 11 insertions(+), 1 deletion(-)
+From: Oleg Nesterov <oleg@redhat.com>
 
-Applied to pci/altera for v5.3, thanks.
+Use DEFINE_STATIC_PERCPU_RWSEM() to initialize dup_mmap_sem.
 
-Lorenzo
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+---
+ kernel/events/uprobes.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> index 4b550f9cdd56..920546cb84e2 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -181,7 +181,7 @@ config PCIE_ALTERA
->  	  FPGA.
->  
->  config PCIE_ALTERA_MSI
-> -	bool "Altera PCIe MSI feature"
-> +	tristate "Altera PCIe MSI feature"
->  	depends on PCIE_ALTERA
->  	depends on PCI_MSI_IRQ_DOMAIN
->  	help
-> diff --git a/drivers/pci/controller/pcie-altera-msi.c b/drivers/pci/controller/pcie-altera-msi.c
-> index 025ef7d9a046..16d938920ca5 100644
-> --- a/drivers/pci/controller/pcie-altera-msi.c
-> +++ b/drivers/pci/controller/pcie-altera-msi.c
-> @@ -10,6 +10,7 @@
->  #include <linux/interrupt.h>
->  #include <linux/irqchip/chained_irq.h>
->  #include <linux/init.h>
-> +#include <linux/module.h>
->  #include <linux/msi.h>
->  #include <linux/of_address.h>
->  #include <linux/of_irq.h>
-> @@ -288,4 +289,13 @@ static int __init altera_msi_init(void)
->  {
->  	return platform_driver_register(&altera_msi_driver);
->  }
-> +
-> +static void __exit altera_msi_exit(void)
-> +{
-> +	platform_driver_unregister(&altera_msi_driver);
-> +}
-> +
->  subsys_initcall(altera_msi_init);
-> +MODULE_DEVICE_TABLE(of, altera_msi_of_match);
-> +module_exit(altera_msi_exit);
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 2.19.0
-> 
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 78f61bfc6b79..97c367f0a9aa 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -46,7 +46,7 @@ static DEFINE_SPINLOCK(uprobes_treelock);	/* serialize rbtree access */
+ static struct mutex uprobes_mmap_mutex[UPROBES_HASH_SZ];
+ #define uprobes_mmap_hash(v)	(&uprobes_mmap_mutex[((unsigned long)(v)) % UPROBES_HASH_SZ])
+ 
+-static struct percpu_rw_semaphore dup_mmap_sem;
++DEFINE_STATIC_PERCPU_RWSEM(dup_mmap_sem);
+ 
+ /* Have a copy of original instruction */
+ #define UPROBE_COPY_INSN	0
+@@ -2302,7 +2302,5 @@ void __init uprobes_init(void)
+ 	for (i = 0; i < UPROBES_HASH_SZ; i++)
+ 		mutex_init(&uprobes_mmap_mutex[i]);
+ 
+-	BUG_ON(percpu_init_rwsem(&dup_mmap_sem));
+-
+ 	BUG_ON(register_die_notifier(&uprobe_exception_nb));
+ }
+-- 
+2.17.1
+
