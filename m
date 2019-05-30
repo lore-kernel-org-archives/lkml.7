@@ -5,60 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8325C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DDEC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 925DD250AB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4982024F1A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:07:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189264;
-	bh=pM1kv8vnaDOl1N/LUuTf4DaiXw4vOEWZ891Shpbm7lE=;
+	s=default; t=1559189270;
+	bh=s4kCazaRSWnzkH+QoFib8l1lxFponnhzdXNy2kqfGz0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AvSHMw+nUqUgUlITBzaO1RXClIfmKSYTy9kC8aMAzVfrNi6z32kxLfFfCBI5hzlmH
-	 S+MvGGBBPsPxJmsUlCxCKKT09oeYWWT+4IonF/amOU4+awPwZgdyBNHM60Rc74o1mO
-	 0meN/m4KsMXj08BTC+Yr6TCDENzGL4/CnD4E9T2M=
+	b=PwKnyYo+Hsed1IFeCsjUFWJE0mBOuJwbxmmRZLG7puX3ZxKkjSsKf9VtH2MFnORFv
+	 hq0JqLPePMd5Utcd9gAbZVRNrASn9palEjwhqRvK1DpFK4rfnCNcBFhSgIJ52ML3ky
+	 rw75MEBPsTRm2KNMb92oLYsnPZnUwLzVjnPa73TE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731117AbfE3DR1 (ORCPT
+        id S1727103AbfE3EHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:17:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60512 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:07:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729644AbfE3DN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:13:59 -0400
+        id S1730287AbfE3DRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:17:25 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9B1C24547;
-        Thu, 30 May 2019 03:13:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4073F24499;
+        Thu, 30 May 2019 03:17:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186038;
-        bh=pM1kv8vnaDOl1N/LUuTf4DaiXw4vOEWZ891Shpbm7lE=;
+        s=default; t=1559186245;
+        bh=s4kCazaRSWnzkH+QoFib8l1lxFponnhzdXNy2kqfGz0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k+PDcT1f6w7gjrhHbSJ1v8DzoTLRCYJNhoqNpCO0/OocAU1KhfYgNs+20RK7NxMFz
-         rLVFRCZl81gqWsLwCbIJv+avdahHoc9l/cgZhlmUH+jF+d79UyFxtas9YdNBCljVPe
-         7FZTznlJ/g7BI7tTfbjw5ONAAa6fiPXa+/s3k8hg=
+        b=RTG6PsEME2qIO2LDZqn78nSQi+2WDWCDVcsqzPAAOivRP1v8MVwdTmCmISfJ/oBHD
+         A30x3jIQR5nat0IQ3S2eSYGduEfQnyqn4R0b7TJ3fNUcsqfHdsZUaSLv37cp4yNYmJ
+         4/y2yuzGi1kyCEA15jFKJpL3gMpwoVlvIm0FvrXE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolai Stange <nstange@suse.de>,
-        Jiri Kosina <jkosina@suse.cz>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 127/346] x86/mm: Remove in_nmi() warning from 64-bit implementation of vmalloc_fault()
-Date:   Wed, 29 May 2019 20:03:20 -0700
-Message-Id: <20190530030547.546028339@linuxfoundation.org>
+        stable@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 160/276] hwmon: (pc87427) Use request_muxed_region for Super-IO accesses
+Date:   Wed, 29 May 2019 20:05:18 -0700
+Message-Id: <20190530030535.500200616@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
-References: <20190530030540.363386121@linuxfoundation.org>
+In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
+References: <20190530030523.133519668@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -68,59 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a65c88e16f32aa9ef2e8caa68ea5c29bd5eb0ff0 ]
+[ Upstream commit 755a9b0f8aaa5639ba5671ca50080852babb89ce ]
 
-In-NMI warnings have been added to vmalloc_fault() via:
+Super-IO accesses may fail on a system with no or unmapped LPC bus.
 
-  ebc8827f75 ("x86: Barf when vmalloc and kmemcheck faults happen in NMI")
+Also, other drivers may attempt to access the LPC bus at the same time,
+resulting in undefined behavior.
 
-back in the time when our NMI entry code could not cope with nested NMIs.
+Use request_muxed_region() to ensure that IO access on the requested
+address space is supported, and to ensure that access by multiple drivers
+is synchronized.
 
-These days, it's perfectly fine to take a fault in NMI context and we
-don't have to care about the fact that IRET from the fault handler might
-cause NMI nesting.
-
-This warning has already been removed from 32-bit implementation of
-vmalloc_fault() in:
-
-  6863ea0cda8 ("x86/mm: Remove in_nmi() warning from vmalloc_fault()")
-
-but the 64-bit version was omitted.
-
-Remove the bogus warning also from 64-bit implementation of vmalloc_fault().
-
-Reported-by: Nicolai Stange <nstange@suse.de>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>
-Cc: Joerg Roedel <jroedel@suse.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: 6863ea0cda8 ("x86/mm: Remove in_nmi() warning from vmalloc_fault()")
-Link: http://lkml.kernel.org/r/nycvar.YFH.7.76.1904240902280.9803@cbobk.fhfr.pm
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: ba224e2c4f0a7 ("hwmon: New PC87427 hardware monitoring driver")
+Reported-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Reported-by: John Garry <john.garry@huawei.com>
+Cc: John Garry <john.garry@huawei.com>
+Acked-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/fault.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/hwmon/pc87427.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 9d5c75f022956..55233dec5ff4a 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -359,8 +359,6 @@ static noinline int vmalloc_fault(unsigned long address)
- 	if (!(address >= VMALLOC_START && address < VMALLOC_END))
- 		return -1;
+diff --git a/drivers/hwmon/pc87427.c b/drivers/hwmon/pc87427.c
+index dc5a9d5ada516..81a05cd1a5121 100644
+--- a/drivers/hwmon/pc87427.c
++++ b/drivers/hwmon/pc87427.c
+@@ -106,6 +106,13 @@ static const char *logdev_str[2] = { DRVNAME " FMC", DRVNAME " HMC" };
+ #define LD_IN		1
+ #define LD_TEMP		1
  
--	WARN_ON_ONCE(in_nmi());
--
- 	/*
- 	 * Copy kernel mappings over when needed. This can also
- 	 * happen within a race in page table update. In the later
++static inline int superio_enter(int sioaddr)
++{
++	if (!request_muxed_region(sioaddr, 2, DRVNAME))
++		return -EBUSY;
++	return 0;
++}
++
+ static inline void superio_outb(int sioaddr, int reg, int val)
+ {
+ 	outb(reg, sioaddr);
+@@ -122,6 +129,7 @@ static inline void superio_exit(int sioaddr)
+ {
+ 	outb(0x02, sioaddr);
+ 	outb(0x02, sioaddr + 1);
++	release_region(sioaddr, 2);
+ }
+ 
+ /*
+@@ -1220,7 +1228,11 @@ static int __init pc87427_find(int sioaddr, struct pc87427_sio_data *sio_data)
+ {
+ 	u16 val;
+ 	u8 cfg, cfg_b;
+-	int i, err = 0;
++	int i, err;
++
++	err = superio_enter(sioaddr);
++	if (err)
++		return err;
+ 
+ 	/* Identify device */
+ 	val = force_id ? force_id : superio_inb(sioaddr, SIOREG_DEVID);
 -- 
 2.20.1
 
