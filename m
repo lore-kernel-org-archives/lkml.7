@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD0FC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3292CC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7736522387
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08612240BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:17:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189857;
-	bh=JqatIXW8F2RINk5p6vnLD6MHuZb2+n6pr8nC3ExS3uI=;
+	s=default; t=1559189862;
+	bh=b/IinIURLaCTrdzZikqrms9DNQ+ATXm92QGfCHzVu7A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FibTTLvkwFf94LBeJG2s8jpgrHQD1fDHoGz55WlnCoY45cLJ2yrFxhKG7K8g/yuQ6
-	 yVSEDVMANmSKQVYpJk+lWuMqtdx9uVM6dP4YxnI+X+Bq5m/oDgzxSG2DgfnLLd1D0X
-	 Sdt8oHz4B6HgyzDhwatzo2ujDS3pckZMVZXFm5Ww=
+	b=JMoH7gNn2cNcYNTSl6jniZAwRuQCfLU/omBIx6ZW6kk0iyu5YAiTnjVlL25M391/4
+	 ibuF8nKLlDnacKCZy45AJ0RAFIxHabfJVUk5GH1VLUKQzd29s54kd/eeYkcGkGLyjs
+	 LUK2HmVALd4WaTe/4MjZzazbNAE72VDEOI+5OBvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731164AbfE3ERg (ORCPT
+        id S1731043AbfE3ERl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:17:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39450 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:17:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729460AbfE3DPj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730410AbfE3DPj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:15:39 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BF2024585;
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EA1B2459C;
         Thu, 30 May 2019 03:15:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186138;
-        bh=JqatIXW8F2RINk5p6vnLD6MHuZb2+n6pr8nC3ExS3uI=;
+        bh=b/IinIURLaCTrdzZikqrms9DNQ+ATXm92QGfCHzVu7A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RR1f4la68YUEh6caxpOLoGLWduUMd4975sCYzAjsLIvQ1daGR9RZ7hK0zHxbxwSP/
-         e8OkTYU8RZeA1Yq6tTeGkR5o1By18YL8SqvMBb4nQDxNR1L6irHOO48qub/NLGOqNK
-         P8B1jPT+KvYBjp81lmfcHstjgKicYktqX2N09LU8=
+        b=cLvR1yEmVOCx/5XAA3cd1g/s+OITnM8ig1OMYvSlW3DErqARE9SUsPbxdw/NyLbKN
+         2/5xGSAq2zEa6N1aa+DI8CkRhZWSuH7nwH8pLBe8p2XtfoiG7bDiyO5rGs/diXQvi/
+         ovhRJQgrUIKYmYdumJ5dn20LvsrP8R5/b3GPPWLM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Takeshi Kihara <takeshi.kihara.df@renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Sun peng Li <Sunpeng.Li@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 253/346] clk: renesas: rcar-gen3: Correct parent clock of Audio-DMAC
-Date:   Wed, 29 May 2019 20:05:26 -0700
-Message-Id: <20190530030553.821825089@linuxfoundation.org>
+Subject: [PATCH 5.0 303/346] drm/amd/display: Set stream->mode_changed when connectors change
+Date:   Wed, 29 May 2019 20:06:16 -0700
+Message-Id: <20190530030556.187855921@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -62,137 +63,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b9df2ea2b8d09ad850afe4d4a0403cb23d9e0c02 ]
+[ Upstream commit b9952f93cd2cf5fca82b06a8179c0f5f7b769e83 ]
 
-The clock sources of the AXI-bus clock (266.66 MHz) used for Audio-DMAC
-DMA transfers are:
+[Why]
+The kms_plane@plane-position-covered-pipe-*-planes subtests can produce
+a sequence of atomic commits such that neither active_changed nor
+mode_changed but connectors_changed.
 
-    Channel        R-Car H3    R-Car M3-W    R-Car M3-N    R-Car E3
-    ---------------------------------------------------------------
-    Audio-DMAC0    S1D2        S1D2          S1D2          S1D2
-    Audio-DMAC1    S1D2        S1D2          S1D2          -
+When this happens we remove the old stream from the context and add
+a new stream but the new stream doesn't have mode_changed=true set.
 
-As a result, change the parent clocks of the Audio-DMAC{0,1} module
-clocks on R-Car H3, R-Car M3-W, and R-Car M3-N to S1D2, and change the
-parent clock of the Audio-DMAC0 module on R-Car E3 to S1D2.
+This incorrect programming sequence causes CRC mismatches to occur in
+the test.
 
-NOTE: This information will be reflected in a future revision of the
-      R-Car Gen3 Hardware Manual.
+The stream->mode_changed value should be set whenever a new stream
+is created.
 
-Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-[geert: Update R-Car D3, RZ/G2M, and RZ/G2E]
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+[How]
+A new stream is created whenever drm_atomic_crtc_needs_modeset is true.
+We previously covered the active_changed and mode_changed conditions
+for the CRTC but connectors_changed is also checked within
+drm_atomic_crtc_needs_modeset.
+
+So just use drm_atomic_crtc_needs_modeset directly to determine the
+mode_changed flag.
+
+Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Reviewed-by: Sun peng Li <Sunpeng.Li@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/renesas/r8a774a1-cpg-mssr.c | 4 ++--
- drivers/clk/renesas/r8a774c0-cpg-mssr.c | 2 +-
- drivers/clk/renesas/r8a7795-cpg-mssr.c  | 4 ++--
- drivers/clk/renesas/r8a7796-cpg-mssr.c  | 4 ++--
- drivers/clk/renesas/r8a77965-cpg-mssr.c | 4 ++--
- drivers/clk/renesas/r8a77990-cpg-mssr.c | 2 +-
- drivers/clk/renesas/r8a77995-cpg-mssr.c | 2 +-
- 7 files changed, 11 insertions(+), 11 deletions(-)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/clk/renesas/r8a774a1-cpg-mssr.c b/drivers/clk/renesas/r8a774a1-cpg-mssr.c
-index ddde2a7a24273..904d4d4ebcad5 100644
---- a/drivers/clk/renesas/r8a774a1-cpg-mssr.c
-+++ b/drivers/clk/renesas/r8a774a1-cpg-mssr.c
-@@ -142,8 +142,8 @@ static const struct mssr_mod_clk r8a774a1_mod_clks[] __initconst = {
- 	DEF_MOD("rwdt",			 402,	R8A774A1_CLK_R),
- 	DEF_MOD("intc-ex",		 407,	R8A774A1_CLK_CP),
- 	DEF_MOD("intc-ap",		 408,	R8A774A1_CLK_S0D3),
--	DEF_MOD("audmac1",		 501,	R8A774A1_CLK_S0D3),
--	DEF_MOD("audmac0",		 502,	R8A774A1_CLK_S0D3),
-+	DEF_MOD("audmac1",		 501,	R8A774A1_CLK_S1D2),
-+	DEF_MOD("audmac0",		 502,	R8A774A1_CLK_S1D2),
- 	DEF_MOD("hscif4",		 516,	R8A774A1_CLK_S3D1),
- 	DEF_MOD("hscif3",		 517,	R8A774A1_CLK_S3D1),
- 	DEF_MOD("hscif2",		 518,	R8A774A1_CLK_S3D1),
-diff --git a/drivers/clk/renesas/r8a774c0-cpg-mssr.c b/drivers/clk/renesas/r8a774c0-cpg-mssr.c
-index 10b96895d4521..4a0525425c161 100644
---- a/drivers/clk/renesas/r8a774c0-cpg-mssr.c
-+++ b/drivers/clk/renesas/r8a774c0-cpg-mssr.c
-@@ -149,7 +149,7 @@ static const struct mssr_mod_clk r8a774c0_mod_clks[] __initconst = {
- 	DEF_MOD("intc-ex",		 407,	R8A774C0_CLK_CP),
- 	DEF_MOD("intc-ap",		 408,	R8A774C0_CLK_S0D3),
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index e766dede5b472..864c2faf672bd 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -4978,8 +4978,7 @@ static void amdgpu_dm_commit_planes(struct drm_atomic_state *state,
+ static void amdgpu_dm_crtc_copy_transient_flags(struct drm_crtc_state *crtc_state,
+ 						struct dc_stream_state *stream_state)
+ {
+-	stream_state->mode_changed =
+-		crtc_state->mode_changed || crtc_state->active_changed;
++	stream_state->mode_changed = drm_atomic_crtc_needs_modeset(crtc_state);
+ }
  
--	DEF_MOD("audmac0",		 502,	R8A774C0_CLK_S3D4),
-+	DEF_MOD("audmac0",		 502,	R8A774C0_CLK_S1D2),
- 	DEF_MOD("hscif4",		 516,	R8A774C0_CLK_S3D1C),
- 	DEF_MOD("hscif3",		 517,	R8A774C0_CLK_S3D1C),
- 	DEF_MOD("hscif2",		 518,	R8A774C0_CLK_S3D1C),
-diff --git a/drivers/clk/renesas/r8a7795-cpg-mssr.c b/drivers/clk/renesas/r8a7795-cpg-mssr.c
-index eade38e9ed36b..0825cd0ff2866 100644
---- a/drivers/clk/renesas/r8a7795-cpg-mssr.c
-+++ b/drivers/clk/renesas/r8a7795-cpg-mssr.c
-@@ -153,8 +153,8 @@ static struct mssr_mod_clk r8a7795_mod_clks[] __initdata = {
- 	DEF_MOD("rwdt",			 402,	R8A7795_CLK_R),
- 	DEF_MOD("intc-ex",		 407,	R8A7795_CLK_CP),
- 	DEF_MOD("intc-ap",		 408,	R8A7795_CLK_S0D3),
--	DEF_MOD("audmac1",		 501,	R8A7795_CLK_S0D3),
--	DEF_MOD("audmac0",		 502,	R8A7795_CLK_S0D3),
-+	DEF_MOD("audmac1",		 501,	R8A7795_CLK_S1D2),
-+	DEF_MOD("audmac0",		 502,	R8A7795_CLK_S1D2),
- 	DEF_MOD("drif7",		 508,	R8A7795_CLK_S3D2),
- 	DEF_MOD("drif6",		 509,	R8A7795_CLK_S3D2),
- 	DEF_MOD("drif5",		 510,	R8A7795_CLK_S3D2),
-diff --git a/drivers/clk/renesas/r8a7796-cpg-mssr.c b/drivers/clk/renesas/r8a7796-cpg-mssr.c
-index 654f3ea88f335..997cd956f12bc 100644
---- a/drivers/clk/renesas/r8a7796-cpg-mssr.c
-+++ b/drivers/clk/renesas/r8a7796-cpg-mssr.c
-@@ -146,8 +146,8 @@ static const struct mssr_mod_clk r8a7796_mod_clks[] __initconst = {
- 	DEF_MOD("rwdt",			 402,	R8A7796_CLK_R),
- 	DEF_MOD("intc-ex",		 407,	R8A7796_CLK_CP),
- 	DEF_MOD("intc-ap",		 408,	R8A7796_CLK_S0D3),
--	DEF_MOD("audmac1",		 501,	R8A7796_CLK_S0D3),
--	DEF_MOD("audmac0",		 502,	R8A7796_CLK_S0D3),
-+	DEF_MOD("audmac1",		 501,	R8A7796_CLK_S1D2),
-+	DEF_MOD("audmac0",		 502,	R8A7796_CLK_S1D2),
- 	DEF_MOD("drif7",		 508,	R8A7796_CLK_S3D2),
- 	DEF_MOD("drif6",		 509,	R8A7796_CLK_S3D2),
- 	DEF_MOD("drif5",		 510,	R8A7796_CLK_S3D2),
-diff --git a/drivers/clk/renesas/r8a77965-cpg-mssr.c b/drivers/clk/renesas/r8a77965-cpg-mssr.c
-index 13d1f88be04a5..afc9c72fa0940 100644
---- a/drivers/clk/renesas/r8a77965-cpg-mssr.c
-+++ b/drivers/clk/renesas/r8a77965-cpg-mssr.c
-@@ -146,8 +146,8 @@ static const struct mssr_mod_clk r8a77965_mod_clks[] __initconst = {
- 	DEF_MOD("intc-ex",		407,	R8A77965_CLK_CP),
- 	DEF_MOD("intc-ap",		408,	R8A77965_CLK_S0D3),
- 
--	DEF_MOD("audmac1",		501,	R8A77965_CLK_S0D3),
--	DEF_MOD("audmac0",		502,	R8A77965_CLK_S0D3),
-+	DEF_MOD("audmac1",		501,	R8A77965_CLK_S1D2),
-+	DEF_MOD("audmac0",		502,	R8A77965_CLK_S1D2),
- 	DEF_MOD("drif7",		508,	R8A77965_CLK_S3D2),
- 	DEF_MOD("drif6",		509,	R8A77965_CLK_S3D2),
- 	DEF_MOD("drif5",		510,	R8A77965_CLK_S3D2),
-diff --git a/drivers/clk/renesas/r8a77990-cpg-mssr.c b/drivers/clk/renesas/r8a77990-cpg-mssr.c
-index 9a278c75c918c..03f445d47ef69 100644
---- a/drivers/clk/renesas/r8a77990-cpg-mssr.c
-+++ b/drivers/clk/renesas/r8a77990-cpg-mssr.c
-@@ -152,7 +152,7 @@ static const struct mssr_mod_clk r8a77990_mod_clks[] __initconst = {
- 	DEF_MOD("intc-ex",		 407,	R8A77990_CLK_CP),
- 	DEF_MOD("intc-ap",		 408,	R8A77990_CLK_S0D3),
- 
--	DEF_MOD("audmac0",		 502,	R8A77990_CLK_S3D4),
-+	DEF_MOD("audmac0",		 502,	R8A77990_CLK_S1D2),
- 	DEF_MOD("drif7",		 508,	R8A77990_CLK_S3D2),
- 	DEF_MOD("drif6",		 509,	R8A77990_CLK_S3D2),
- 	DEF_MOD("drif5",		 510,	R8A77990_CLK_S3D2),
-diff --git a/drivers/clk/renesas/r8a77995-cpg-mssr.c b/drivers/clk/renesas/r8a77995-cpg-mssr.c
-index eee3874865a95..68707277b17b4 100644
---- a/drivers/clk/renesas/r8a77995-cpg-mssr.c
-+++ b/drivers/clk/renesas/r8a77995-cpg-mssr.c
-@@ -133,7 +133,7 @@ static const struct mssr_mod_clk r8a77995_mod_clks[] __initconst = {
- 	DEF_MOD("rwdt",			 402,	R8A77995_CLK_R),
- 	DEF_MOD("intc-ex",		 407,	R8A77995_CLK_CP),
- 	DEF_MOD("intc-ap",		 408,	R8A77995_CLK_S1D2),
--	DEF_MOD("audmac0",		 502,	R8A77995_CLK_S3D1),
-+	DEF_MOD("audmac0",		 502,	R8A77995_CLK_S1D2),
- 	DEF_MOD("hscif3",		 517,	R8A77995_CLK_S3D1C),
- 	DEF_MOD("hscif0",		 520,	R8A77995_CLK_S3D1C),
- 	DEF_MOD("thermal",		 522,	R8A77995_CLK_CP),
+ static int amdgpu_dm_atomic_commit(struct drm_device *dev,
 -- 
 2.20.1
 
