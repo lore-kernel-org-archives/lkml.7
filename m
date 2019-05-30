@@ -7,56 +7,55 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF8EC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C34BAC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F228255EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90CA6255BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:30:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190601;
-	bh=OP34NqQ4nCzrgrEOVghTv1qjubuhWWBEwB2RnRZva84=;
+	s=default; t=1559190606;
+	bh=m+MFcebfE+eoqIOtZcJCxPk7qMcJECbsCQ1vSNgwBO4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LpdvoN903TU1kpPJILs6GmThnCXZkGJHndjLN8ShY2Nt25aWtoZZykhPdRBSP4vgg
-	 eWjjMN3DXQdaluQRxD4Dbp2kfHZUJcQvf3JBOG5pS22F8VfQbM4hBfUZYtBwEP3UHJ
-	 2G8bpGiExMozuVO6dNVk72FjTPGPJABMAgjBsSSk=
+	b=MhcZGoQwZhq2mKyxOcFM8f1l50/gMjjqMOuqiCjksVXAJvTW4lSMRZsukYQ6ppIoJ
+	 pfJ/s1NcE+YcQZ42OocXMh257rmReoVajYWX6h3EPIK4/Tf2wuCt99VaBNo9qoizxK
+	 iRPoEeb5b2obFOjya3oLm92AS+G3pE+OZGAahMvQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729643AbfE3DN6 (ORCPT
+        id S2388043AbfE3EaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:13:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52216 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:30:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728664AbfE3DLp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:11:45 -0400
+        id S1729634AbfE3DN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:57 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F68524504;
-        Thu, 30 May 2019 03:11:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AAEF24569;
+        Thu, 30 May 2019 03:13:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185905;
-        bh=OP34NqQ4nCzrgrEOVghTv1qjubuhWWBEwB2RnRZva84=;
+        s=default; t=1559186037;
+        bh=m+MFcebfE+eoqIOtZcJCxPk7qMcJECbsCQ1vSNgwBO4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y1zkshmHoex4BjW4gjDvfFdCWf+jxVrqgxshNWpOTFJ1EJ1nP0byJaw7CJgsmmdB1
-         uF99QcI424OP/M/qUPNVtK20unDIgDkmfbpfLpoC3/eGM0PO58wsYBh5PHZW126xZI
-         E084OOmutFTP//O3/KSenhiPgyX124hkWsJWEznM=
+        b=qgszChpUn9DRNfCIG6RXFqahyoKbeH2snuS5CexRTgpqhI/yeRpXGFaxknPn2HNO3
+         XGZi1KEG72H7Nvf7HGbmfkC2MAZinFSxmjjDkITEDjy9q3sR0XZNjwZL26okFKEFqX
+         5Q/0IZKcJOq9hqCBVAtQS8oV9aWiyfZ6kU/sS9pU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, alsa-devel@alsa-project.org,
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH 5.1 276/405] ASoC: wcd9335: fix a leaked reference by adding missing of_node_put
-Date:   Wed, 29 May 2019 20:04:34 -0700
-Message-Id: <20190530030554.859752508@linuxfoundation.org>
+        Sami Tolvanen <samitolvanen@google.com>
+Subject: [PATCH 5.0 124/346] x86/build: Move _etext to actual end of .text
+Date:   Wed, 29 May 2019 20:03:17 -0700
+Message-Id: <20190530030547.389030707@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
-References: <20190530030540.291644921@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -66,43 +65,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 64b92de9603f22b5455da925ee57268ef7fb4e80 ]
+[ Upstream commit 392bef709659abea614abfe53cf228e7a59876a4 ]
 
-The call to of_parse_phandle returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+When building x86 with Clang LTO and CFI, CFI jump regions are
+automatically added to the end of the .text section late in linking. As a
+result, the _etext position was being labelled before the appended jump
+regions, causing confusion about where the boundaries of the executable
+region actually are in the running kernel, and broke at least the fault
+injection code. This moves the _etext mark to outside (and immediately
+after) the .text area, as it already the case on other architectures
+(e.g. arm64, arm).
 
-Detected by coccinelle with the following warnings:
-./sound/soc/codecs/wcd9335.c:5193:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 5183, but without a correspon    ding object release within this function.
-
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: Dan Carpenter <dan.carpenter@oracle.com> (commit_signer:1/11=9%,authored:1/11=9%)
-Cc: alsa-devel@alsa-project.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reported-and-tested-by: Sami Tolvanen <samitolvanen@google.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/20190423183827.GA4012@beast
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/wcd9335.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kernel/vmlinux.lds.S | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/codecs/wcd9335.c b/sound/soc/codecs/wcd9335.c
-index 981f88a5f6154..a04a7cedd99de 100644
---- a/sound/soc/codecs/wcd9335.c
-+++ b/sound/soc/codecs/wcd9335.c
-@@ -5188,6 +5188,7 @@ static int wcd9335_slim_status(struct slim_device *sdev,
+diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+index c45214c44e612..5cbce783d4d10 100644
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -141,11 +141,11 @@ SECTIONS
+ 		*(.text.__x86.indirect_thunk)
+ 		__indirect_thunk_end = .;
+ #endif
+-
+-		/* End of text section */
+-		_etext = .;
+ 	} :text = 0x9090
  
- 	wcd->slim = sdev;
- 	wcd->slim_ifc_dev = of_slim_get_device(sdev->ctrl, ifc_dev_np);
-+	of_node_put(ifc_dev_np);
- 	if (!wcd->slim_ifc_dev) {
- 		dev_err(dev, "Unable to get SLIM Interface device\n");
- 		return -EINVAL;
++	/* End of text section */
++	_etext = .;
++
+ 	NOTES :text :note
+ 
+ 	EXCEPTION_TABLE(16) :text = 0x9090
 -- 
 2.20.1
 
