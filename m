@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1AB7C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D280C28CC1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AED8224A5B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DDFE24A61
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:25:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186712;
-	bh=vadiD9nOAC2sEEEAsCaxI1oHCY6Dqzonpd/E1Ic6hHU=;
+	s=default; t=1559186714;
+	bh=pq8DH5vJ+r/czJBLB7goRxkkFDsB/y4F+Nuk/fNzKh0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gtVoDe/H0N19qrR2rDnQpk+ih7QDS6dD0KqQZyxpnpAnUWMvpjohdJCNRrce1znDO
-	 wWmoB3mvyFiZ5Pm+UUgZgYFBFjNlxvVYGoXUYluu7ZRyy9IWk8LCr0x+6LNKnY6Che
-	 4mf32h7hkEzJYVgy0rU1U8HOyk7TSerY/kQiMWNE=
+	b=2evOFSniO/lDTbec5K51RDrxSv9aU7vUgk4lT7ym7nkiZEo8ERVovdmX0FmPKZ9mm
+	 SifxLPmsZJ8V+dGWRvUGhIvsZV7mzMnCjhm+TtPm909LL92NEJCUmf4FzW/ekHXcOX
+	 jraj3IcSDqUzRAgy+syKcz6+TiAG8f64LioqBHNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387497AbfE3DZL (ORCPT
+        id S1727350AbfE3DZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:25:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50888 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:25:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731521AbfE3DSW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730035AbfE3DSW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:18:22 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2FBA247AD;
-        Thu, 30 May 2019 03:18:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3586A247BC;
+        Thu, 30 May 2019 03:18:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186300;
-        bh=vadiD9nOAC2sEEEAsCaxI1oHCY6Dqzonpd/E1Ic6hHU=;
+        s=default; t=1559186302;
+        bh=pq8DH5vJ+r/czJBLB7goRxkkFDsB/y4F+Nuk/fNzKh0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pmd9SeoHDiBQjJ3sGo1mpvpD5R/xOqwgRqWfXYuRLoETAm0I4EWrW9pExIzxnJd2E
-         Q1aluEmLEcUvsc3lq+V98PCiiiqvRYsU/w0tZ4U3w7lfKgSCPRep+vbb0+y4siw9UV
-         TrdoCMAcjHb56ZHqSxi7TuNi7grBe5i6cjR4lWW8=
+        b=aGR1yB8SjtZyOQxWqQjN1yNBobQbrgsfn67RqW5imj7QLN3Wxp5X81LHK43+IZTwB
+         meLpZfp32FWaulr6BPTth3BeESrItAXKhhQibqCLpdEWclBgH+YRrgmBsJBn0kwdDQ
+         iHZX8hk7zNgpMEJc0CJ9ikBw1oJ52PfPYHwbqh0A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org, Chris Lesiak <chris.lesiak@licor.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 265/276] drm/omap: dsi: Fix PM for display blank with paired dss_pll calls
-Date:   Wed, 29 May 2019 20:07:03 -0700
-Message-Id: <20190530030541.777974877@linuxfoundation.org>
+Subject: [PATCH 4.19 268/276] spi: Fix zero length xfer bug
+Date:   Wed, 29 May 2019 20:07:06 -0700
+Message-Id: <20190530030541.962793651@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -60,165 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fe4ed1b457943113ee1138c939fbdeede4af6cf3 ]
+[ Upstream commit 5442dcaa0d90fc376bdfc179a018931a8f43dea4 ]
 
-Currently dsi_display_init_dsi() calls dss_pll_enable() but it is not
-paired with dss_pll_disable() in dsi_display_uninit_dsi(). This leaves
-the DSS clocks enabled when the display is blanked wasting about extra
-5mW of power while idle.
+This fixes a bug for messages containing both zero length and
+unidirectional xfers.
 
-The clock that is left on by not calling dss_pll_disable() is
-DSS_CLKCTRL bit 10 OPTFCLKEN_SYS_CLK that is the source clock for
-DSI PLL.
+The function spi_map_msg will allocate dummy tx and/or rx buffers
+for use with unidirectional transfers when the hardware can only do
+a bidirectional transfer.  That dummy buffer will be used in place
+of a NULL buffer even when the xfer length is 0.
 
-We can fix this issue by by making the current dsi_pll_uninit() into
-dsi_pll_disable(). This way we can just call dss_pll_disable() from
-dsi_display_uninit_dsi() and the code becomes a bit easier to follow.
+Then in the function __spi_map_msg, if he hardware can dma,
+the zero length xfer will have spi_map_buf called on the dummy
+buffer.
 
-However, we need to also consider that DSI PLL can be muxed for DVI too
-as pointed out by Tomi Valkeinen <tomi.valkeinen@ti.com>. In the DVI
-case, we want to unconditionally disable the clocks. To get around this
-issue, we separate out the DSI lane handling from dsi_pll_enable() and
-dsi_pll_disable() as suggested by Tomi in an earlier experimental patch.
+Eventually, __sg_alloc_table is called and returns -EINVAL
+because nents == 0.
 
-So we must only toggle the DSI regulator based on the vdds_dsi_enabled
-flag from dsi_display_init_dsi() and dsi_display_uninit_dsi().
+This fix prevents the error by not using the dummy buffer when
+the xfer length is zero.
 
-We need to make these two changes together to avoid breaking things
-for DVI when fixing the DSI clock handling. And this all causes a
-slight renumbering of the error path for dsi_display_init_dsi().
-
-Suggested-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Chris Lesiak <chris.lesiak@licor.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/omapdrm/dss/dsi.c | 60 ++++++++++++++++---------------
- 1 file changed, 31 insertions(+), 29 deletions(-)
+ drivers/spi/spi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/omapdrm/dss/dsi.c b/drivers/gpu/drm/omapdrm/dss/dsi.c
-index 74467b3087218..8160954ebc257 100644
---- a/drivers/gpu/drm/omapdrm/dss/dsi.c
-+++ b/drivers/gpu/drm/omapdrm/dss/dsi.c
-@@ -1386,12 +1386,9 @@ static int dsi_pll_enable(struct dss_pll *pll)
- 	 */
- 	dsi_enable_scp_clk(dsi);
- 
--	if (!dsi->vdds_dsi_enabled) {
--		r = regulator_enable(dsi->vdds_dsi_reg);
--		if (r)
--			goto err0;
--		dsi->vdds_dsi_enabled = true;
--	}
-+	r = regulator_enable(dsi->vdds_dsi_reg);
-+	if (r)
-+		goto err0;
- 
- 	/* XXX PLL does not come out of reset without this... */
- 	dispc_pck_free_enable(dsi->dss->dispc, 1);
-@@ -1416,36 +1413,25 @@ static int dsi_pll_enable(struct dss_pll *pll)
- 
- 	return 0;
- err1:
--	if (dsi->vdds_dsi_enabled) {
--		regulator_disable(dsi->vdds_dsi_reg);
--		dsi->vdds_dsi_enabled = false;
--	}
-+	regulator_disable(dsi->vdds_dsi_reg);
- err0:
- 	dsi_disable_scp_clk(dsi);
- 	dsi_runtime_put(dsi);
- 	return r;
- }
- 
--static void dsi_pll_uninit(struct dsi_data *dsi, bool disconnect_lanes)
-+static void dsi_pll_disable(struct dss_pll *pll)
- {
-+	struct dsi_data *dsi = container_of(pll, struct dsi_data, pll);
-+
- 	dsi_pll_power(dsi, DSI_PLL_POWER_OFF);
--	if (disconnect_lanes) {
--		WARN_ON(!dsi->vdds_dsi_enabled);
--		regulator_disable(dsi->vdds_dsi_reg);
--		dsi->vdds_dsi_enabled = false;
--	}
-+
-+	regulator_disable(dsi->vdds_dsi_reg);
- 
- 	dsi_disable_scp_clk(dsi);
- 	dsi_runtime_put(dsi);
- 
--	DSSDBG("PLL uninit done\n");
--}
--
--static void dsi_pll_disable(struct dss_pll *pll)
--{
--	struct dsi_data *dsi = container_of(pll, struct dsi_data, pll);
--
--	dsi_pll_uninit(dsi, true);
-+	DSSDBG("PLL disable done\n");
- }
- 
- static void dsi_dump_dsi_clocks(struct dsi_data *dsi, struct seq_file *s)
-@@ -4195,11 +4181,11 @@ static int dsi_display_init_dsi(struct dsi_data *dsi)
- 
- 	r = dss_pll_enable(&dsi->pll);
- 	if (r)
--		goto err0;
-+		return r;
- 
- 	r = dsi_configure_dsi_clocks(dsi);
- 	if (r)
--		goto err1;
-+		goto err0;
- 
- 	dss_select_dsi_clk_source(dsi->dss, dsi->module_id,
- 				  dsi->module_id == 0 ?
-@@ -4207,6 +4193,14 @@ static int dsi_display_init_dsi(struct dsi_data *dsi)
- 
- 	DSSDBG("PLL OK\n");
- 
-+	if (!dsi->vdds_dsi_enabled) {
-+		r = regulator_enable(dsi->vdds_dsi_reg);
-+		if (r)
-+			goto err1;
-+
-+		dsi->vdds_dsi_enabled = true;
-+	}
-+
- 	r = dsi_cio_init(dsi);
- 	if (r)
- 		goto err2;
-@@ -4235,10 +4229,13 @@ static int dsi_display_init_dsi(struct dsi_data *dsi)
- err3:
- 	dsi_cio_uninit(dsi);
- err2:
--	dss_select_dsi_clk_source(dsi->dss, dsi->module_id, DSS_CLK_SRC_FCK);
-+	regulator_disable(dsi->vdds_dsi_reg);
-+	dsi->vdds_dsi_enabled = false;
- err1:
--	dss_pll_disable(&dsi->pll);
-+	dss_select_dsi_clk_source(dsi->dss, dsi->module_id, DSS_CLK_SRC_FCK);
- err0:
-+	dss_pll_disable(&dsi->pll);
-+
- 	return r;
- }
- 
-@@ -4257,7 +4254,12 @@ static void dsi_display_uninit_dsi(struct dsi_data *dsi, bool disconnect_lanes,
- 
- 	dss_select_dsi_clk_source(dsi->dss, dsi->module_id, DSS_CLK_SRC_FCK);
- 	dsi_cio_uninit(dsi);
--	dsi_pll_uninit(dsi, disconnect_lanes);
-+	dss_pll_disable(&dsi->pll);
-+
-+	if (disconnect_lanes) {
-+		regulator_disable(dsi->vdds_dsi_reg);
-+		dsi->vdds_dsi_enabled = false;
-+	}
- }
- 
- static int dsi_display_enable(struct omap_dss_device *dssdev)
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 9da0bc5a036cf..88a8a8edd44be 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -982,6 +982,8 @@ static int spi_map_msg(struct spi_controller *ctlr, struct spi_message *msg)
+ 		if (max_tx || max_rx) {
+ 			list_for_each_entry(xfer, &msg->transfers,
+ 					    transfer_list) {
++				if (!xfer->len)
++					continue;
+ 				if (!xfer->tx_buf)
+ 					xfer->tx_buf = ctlr->dummy_tx;
+ 				if (!xfer->rx_buf)
 -- 
 2.20.1
 
