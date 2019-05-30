@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18105C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E8CC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E61A924923
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:38:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18BD224B9B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:39:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187537;
-	bh=Doz9nPlWGUNpWvla7mOSYN9TlcKDSLcUbeMO3iDwmz4=;
+	s=default; t=1559187540;
+	bh=TNOZSDXwP8xmsxJb5/sSE6vY5iXMrQUbVKK/nw3wRZM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y+72RbE5RLVr+E0wLFA4k+V44yy+hp8Q6d1PQEGniF98AR/kub3xH520DgEnKD0MV
-	 5Iiiy98+9t42iA8ffjHOpeVv9iDXqJ5Ra4B+DBX7Oq+es2XeJzZ6khRCkTW12vJbey
-	 lnrqmoPecttrBSQIP1fs4fTxtHje3yiwxx3hjnIk=
+	b=CctY19eYUzYAyihf4DrT8m917ytpvlHrq+8R+eJ8FEE2tXSGr0/w5BHIVKH8VZ41z
+	 NzHnoSebnHTh6tIw+8LyRUGWBoUJwIkcAIhIiESNJ00s9ziY6+hdbXaoFhab6LsvBL
+	 SIYveWRlu4rqNUU1BkUcHN4S5ee1uvLn70wq7vWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731843AbfE3DWh (ORCPT
+        id S1732851AbfE3DWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:22:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44360 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:22:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730870AbfE3DQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:57 -0400
+        id S1730800AbfE3DQq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:16:46 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C04C24643;
-        Thu, 30 May 2019 03:16:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 208AB2461E;
+        Thu, 30 May 2019 03:16:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186216;
-        bh=Doz9nPlWGUNpWvla7mOSYN9TlcKDSLcUbeMO3iDwmz4=;
+        s=default; t=1559186206;
+        bh=TNOZSDXwP8xmsxJb5/sSE6vY5iXMrQUbVKK/nw3wRZM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IZ8Etljh9QvaE7jgvC6YPnjLmtluHPtbgMupQlEPLethbihCv5TgQ46pZKR4RfFuL
-         RKqkBNb439mLGW8p3n6V4OjReAD/qlzMVySzTZWlONs2+J0Hfg5grShj+3xFizNxfu
-         c0+aBHnC04bPTygIT6cyRGeSwoIyMmuDHBR15ZYs=
+        b=Wu7TDdJrze8YUZvJjsnlmrZtL15JBGr+gOSN9AiWC+BwYrPLkgDIuiOEw/LXdu0zu
+         QIy3Fdzg3ct4RVNwK6Tr/86tqjmh/JywvH3NtrlnbrfbHsugWOhEIy1dxrrvMC27OL
+         OqVlio38XHN0J9iqwym6RqIHDh5eBVYSZ7Tk9wHw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tang Junhui <tang.junhui.linux@gmail.com>,
-        Dennis Schridde <devurandom@gmx.net>, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 104/276] bcache: fix failure in journal relplay
-Date:   Wed, 29 May 2019 20:04:22 -0700
-Message-Id: <20190530030532.557672049@linuxfoundation.org>
+        stable@vger.kernel.org, "Daniel T. Lee" <danieltimlee@gmail.com>,
+        Yonghong Song <yhs@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 093/276] libbpf: fix samples/bpf build failure due to undefined UINT32_MAX
+Date:   Wed, 29 May 2019 20:04:11 -0700
+Message-Id: <20190530030532.001609492@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -60,86 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 631207314d88e9091be02fbdd1fdadb1ae2ed79a ]
+[ Upstream commit 32e621e55496a0009f44fe4914cd4a23cade4984 ]
 
-journal replay failed with messages:
-Sep 10 19:10:43 ceph kernel: bcache: error on
-bb379a64-e44e-4812-b91d-a5599871a3b1: bcache: journal entries
-2057493-2057567 missing! (replaying 2057493-2076601), disabling
-caching
+Currently, building bpf samples will cause the following error.
 
-The reason is in journal_reclaim(), when discard is enabled, we send
-discard command and reclaim those journal buckets whose seq is old
-than the last_seq_now, but before we write a journal with last_seq_now,
-the machine is restarted, so the journal with the last_seq_now is not
-written to the journal bucket, and the last_seq_wrote in the newest
-journal is old than last_seq_now which we expect to be, so when we doing
-replay, journals from last_seq_wrote to last_seq_now are missing.
+    ./tools/lib/bpf/bpf.h:132:27: error: 'UINT32_MAX' undeclared here (not in a function) ..
+     #define BPF_LOG_BUF_SIZE (UINT32_MAX >> 8) /* verifier maximum in kernels <= 5.1 */
+                               ^
+    ./samples/bpf/bpf_load.h:31:25: note: in expansion of macro 'BPF_LOG_BUF_SIZE'
+     extern char bpf_log_buf[BPF_LOG_BUF_SIZE];
+                             ^~~~~~~~~~~~~~~~
 
-It's hard to write a journal immediately after journal_reclaim(),
-and it harmless if those missed journal are caused by discarding
-since those journals are already wrote to btree node. So, if miss
-seqs are started from the beginning journal, we treat it as normal,
-and only print a message to show the miss journal, and point out
-it maybe caused by discarding.
+Due to commit 4519efa6f8ea ("libbpf: fix BPF_LOG_BUF_SIZE off-by-one error")
+hard-coded size of BPF_LOG_BUF_SIZE has been replaced with UINT32_MAX which is
+defined in <stdint.h> header.
 
-Patch v2 add a judgement condition to ignore the missed journal
-only when discard enabled as Coly suggested.
+Even with this change, bpf selftests are running fine since these are built
+with clang and it includes header(-idirafter) from clang/6.0.0/include.
+(it has <stdint.h>)
 
-(Coly Li: rebase the patch with other changes in bch_journal_replay())
+    clang -I. -I./include/uapi -I../../../include/uapi -idirafter /usr/local/include -idirafter /usr/include \
+    -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.0/include -idirafter /usr/include/x86_64-linux-gnu \
+    -Wno-compare-distinct-pointer-types -O2 -target bpf -emit-llvm -c progs/test_sysctl_prog.c -o - | \
+    llc -march=bpf -mcpu=generic  -filetype=obj -o /linux/tools/testing/selftests/bpf/test_sysctl_prog.o
 
-Signed-off-by: Tang Junhui <tang.junhui.linux@gmail.com>
-Tested-by: Dennis Schridde <devurandom@gmx.net>
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+But bpf samples are compiled with GCC, and it only searches and includes
+headers declared at the target file. As '#include <stdint.h>' hasn't been
+declared in tools/lib/bpf/bpf.h, it causes build failure of bpf samples.
+
+    gcc -Wp,-MD,./samples/bpf/.sockex3_user.o.d -Wall -Wmissing-prototypes -Wstrict-prototypes \
+    -O2 -fomit-frame-pointer -std=gnu89 -I./usr/include -I./tools/lib/ -I./tools/testing/selftests/bpf/ \
+    -I./tools/  lib/ -I./tools/include -I./tools/perf -c -o ./samples/bpf/sockex3_user.o ./samples/bpf/sockex3_user.c;
+
+This commit add declaration of '#include <stdint.h>' to tools/lib/bpf/bpf.h
+to fix this problem.
+
+Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
+Acked-by: Yonghong Song <yhs@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/journal.c | 25 +++++++++++++++++++++----
- 1 file changed, 21 insertions(+), 4 deletions(-)
+ tools/lib/bpf/bpf.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/md/bcache/journal.c b/drivers/md/bcache/journal.c
-index 07da39ac2d110..f880e5eba8dd9 100644
---- a/drivers/md/bcache/journal.c
-+++ b/drivers/md/bcache/journal.c
-@@ -317,6 +317,18 @@ void bch_journal_mark(struct cache_set *c, struct list_head *list)
- 	}
- }
+diff --git a/tools/lib/bpf/bpf.h b/tools/lib/bpf/bpf.h
+index 6f38164b26181..c3145ab3bdcac 100644
+--- a/tools/lib/bpf/bpf.h
++++ b/tools/lib/bpf/bpf.h
+@@ -26,6 +26,7 @@
+ #include <linux/bpf.h>
+ #include <stdbool.h>
+ #include <stddef.h>
++#include <stdint.h>
  
-+bool is_discard_enabled(struct cache_set *s)
-+{
-+	struct cache *ca;
-+	unsigned int i;
-+
-+	for_each_cache(ca, s, i)
-+		if (ca->discard)
-+			return true;
-+
-+	return false;
-+}
-+
- int bch_journal_replay(struct cache_set *s, struct list_head *list)
- {
- 	int ret = 0, keys = 0, entries = 0;
-@@ -331,10 +343,15 @@ int bch_journal_replay(struct cache_set *s, struct list_head *list)
- 		BUG_ON(i->pin && atomic_read(i->pin) != 1);
- 
- 		if (n != i->j.seq) {
--			pr_err("bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
--			n, i->j.seq - 1, start, end);
--			ret = -EIO;
--			goto err;
-+			if (n == start && is_discard_enabled(s))
-+				pr_info("bcache: journal entries %llu-%llu may be discarded! (replaying %llu-%llu)",
-+					n, i->j.seq - 1, start, end);
-+			else {
-+				pr_err("bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
-+					n, i->j.seq - 1, start, end);
-+				ret = -EIO;
-+				goto err;
-+			}
- 		}
- 
- 		for (k = i->j.start;
+ struct bpf_create_map_attr {
+ 	const char *name;
 -- 
 2.20.1
 
