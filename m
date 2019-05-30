@@ -4,144 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A05C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B10C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:52:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6726D258C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 560772590E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:52:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YXw58dhV"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ArXgolZZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726355AbfE3MuJ (ORCPT
+        id S1726520AbfE3MwS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 08:50:09 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:57456 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbfE3MuJ (ORCPT
+        Thu, 30 May 2019 08:52:18 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:50270 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbfE3MwS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 08:50:09 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4UCnUXT083599;
-        Thu, 30 May 2019 12:49:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=tLRStMKEMYQqRDmfYS8ik13IzAInjLgCJQGREChQ4/Q=;
- b=YXw58dhVHtnxaasYuEh6W8reroHkn01KEbU/DnF73/eRu87ugU9LBiL/u2Mb37JqMvn0
- fRuLyyZ76+3z/4x+6QarX+IItAx/rH8uXYZkDUUmgEgGTDaPyl9F9SBcetrsLk0eGC+K
- wpBp4aXivAIpJdBKAWiEYMwB4Vd2rnuf/1aJRH1V5zdI2Q+toJaTVbTT/77clhwFeuq6
- lCLc5/jm23nr0lpdszv/h5e7ewfTcaVx1toIi0DV+rxPNVLUZmRS/7l4J5mEKWiXXTl5
- sV+IXJm79hf7WDSvLCWiFCpuMat8ZghVJSCuuh27l5dp/wIggP+QXwLI4dinkY1kV/FJ uQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2spxbqfq12-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 May 2019 12:49:38 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4UClVJe136784;
-        Thu, 30 May 2019 12:47:37 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2ss1fp1u67-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 May 2019 12:47:37 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4UClYnL006134;
-        Thu, 30 May 2019 12:47:34 GMT
-Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 30 May 2019 05:47:34 -0700
-Subject: Re: [PATCH v2 3/3] xen/swiotlb: remember having called
- xen_create_contiguous_region()
-To:     Christoph Hellwig <hch@infradead.org>,
-        Juergen Gross <jgross@suse.com>
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org
-References: <20190529090407.1225-1-jgross@suse.com>
- <20190529090407.1225-4-jgross@suse.com>
- <20190530090409.GB30428@infradead.org>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=boris.ostrovsky@oracle.com; prefer-encrypt=mutual; keydata=
- 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
- Jg6OxFYd01z+a+oL
-Message-ID: <eebb0275-9418-717f-97d7-5e55917f46fd@oracle.com>
-Date:   Thu, 30 May 2019 08:46:39 -0400
+        Thu, 30 May 2019 08:52:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1559220737; x=1590756737;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=O4eMaMbEMmqb10KzGuvzyUaJ2EVJ+M/kW9KVSV6qXKU=;
+  b=ArXgolZZFHDwKJ+koSulk8zmrsZMqcQi6IsZ9EY2JVEl5hMPCr67tb1x
+   wLWwnf81nNdl5MVt7ZO6gur7CgKoL3I5L9lvnuwyCHnkBTeossGezYgSz
+   4pgQ3NRpdlZgZtzO+Dg9NGOubmqMKbwGo8AL8ubGEq5WsqU+8AbeNkI+m
+   M=;
+X-IronPort-AV: E=Sophos;i="5.60,531,1549929600"; 
+   d="scan'208";a="677188830"
+Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-1e-a70de69e.us-east-1.amazon.com) ([10.47.22.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 30 May 2019 12:52:11 +0000
+Received: from EX13MTAUEB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-a70de69e.us-east-1.amazon.com (Postfix) with ESMTPS id 18792A221B;
+        Thu, 30 May 2019 12:52:07 +0000 (UTC)
+Received: from EX13D08UEB003.ant.amazon.com (10.43.60.11) by
+ EX13MTAUEB001.ant.amazon.com (10.43.60.129) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 30 May 2019 12:52:05 +0000
+Received: from EX13MTAUEB001.ant.amazon.com (10.43.60.96) by
+ EX13D08UEB003.ant.amazon.com (10.43.60.11) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 30 May 2019 12:52:04 +0000
+Received: from ub6d44c9ce3e25c.ant.amazon.com (10.125.236.61) by
+ mail-relay.amazon.com (10.43.60.129) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Thu, 30 May 2019 12:52:01 +0000
+Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>, <bp@alien8.de>,
+        <mchehab@kernel.org>, <james.morse@arm.com>, <davem@davemloft.net>,
+        <nicolas.ferre@microchip.com>, <paulmck@linux.ibm.com>,
+        <dwmw@amazon.co.uk>, <benh@amazon.com>, <ronenk@amazon.com>,
+        <talel@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
+        <linux-edac@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
+ <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
+ <20190530115732.GB14088@kroah.com>
+From:   <hhhawa@amazon.com>
+Message-ID: <0ebfe8d7-3e0c-e0be-abd5-5e10b7d4b6aa@amazon.com>
+Date:   Thu, 30 May 2019 15:52:00 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190530090409.GB30428@infradead.org>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190530115732.GB14088@kroah.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=883
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905300095
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=923 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905300095
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/30/19 5:04 AM, Christoph Hellwig wrote:
-> Please don't add your private flag to page-flags.h.  The whole point of
-> the private flag is that you can use it in any way you want withou
-> touching the common code.
+On 5/30/19 2:57 PM, Greg KH wrote:
+> On Thu, May 30, 2019 at 01:15:29PM +0300, Hanna Hawa wrote:
+>> +static void al_a57_edac_cpumerrsr(void *arg)
+>> +{
+>> +	struct edac_device_ctl_info *edac_dev =
+>> +		(struct edac_device_ctl_info *)arg;
+> No need for casting anything here, just assign it.  Doesn't checkpatch
+> catch this type of thing these days?  You did run it, right?
+
+I did, but checkpatch didn't catch this. I'll fix in next patch-set.
+
+Thanks for your review.
 
 
-There is already a bunch of aliases for various sub-components
-(including Xen) in page-flags.h for private flags, which is why I
-suggested we do the same for the new use case. Adding this new alias
-will keep flag usage consistent.
+Hanna
 
--boris
+>
+> Please fix that up everywhere you do this in the driver.
+>
+>
+> thanks,
+>
+> greg k-h
+
+
