@@ -5,55 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F16BC28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B739CC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 695FA24E6E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D06F24E78
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:55:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188539;
-	bh=PrASumR4TwpvbI9yKAcKLsEX+QBbVstRS6VbOrnSOUg=;
+	s=default; t=1559188546;
+	bh=4iId1YHXYivKs1rRk46OLXtUoWdAmRb0lWxyFQEx5tA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ycVp9tdSgCm7GtFB8HWMakvzMO4wbZ9jF+SJpX8DSRqajd1/dkDq9zlMTWOU5DC8q
-	 hAQ9+m89ENniCAT2kBM0R+v7iQ3oDrYJl8UNlmgnRR/5ZZe2hdhoePLJHWcQqBm+r2
-	 3pU+UtrcNUZ5GziaDuZKgwteT7Js5PWL7GxWdjFc=
+	b=v/OT1dC3JJJkihzEuNzJgo8GuzMHGXXae0AhF0GQohVEKUxpiayBx+DrM6YT7f6f+
+	 V5psImiagr5+RX4owhMvkMPITNlHuLzZjGTo/qDath6v6lrqZxOPJzfFZ6jHE0M+AI
+	 MahilrF4TjE4HMwpM/KgrpRmVYKSO0dxDf917780=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730406AbfE3DTI (ORCPT
+        id S1732282AbfE3Dzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:19:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37226 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:55:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730116AbfE3DPH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:15:07 -0400
+        id S1727519AbfE3DTH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:07 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C73DC23D83;
-        Thu, 30 May 2019 03:15:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62EE324833;
+        Thu, 30 May 2019 03:19:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186106;
-        bh=PrASumR4TwpvbI9yKAcKLsEX+QBbVstRS6VbOrnSOUg=;
+        s=default; t=1559186346;
+        bh=4iId1YHXYivKs1rRk46OLXtUoWdAmRb0lWxyFQEx5tA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NdaVn3nAwlvm4uiYCS/859f+hi8MWZnjo+cLiv3iGflQpiOZF7hFwcvHmE7KoErQx
-         hdqPK9P8MV39g6dGXr+gfUlmiyvNb+jLSgSleT5O70yMrhf6Sg+Wu2fIU0i50P7CNo
-         5J2RtyiAGm3bjFGEntQj6QIDQF8tsuFEMZuaf3d8=
+        b=lkXM8wcDVhlC+EA/6Y9ajIzs1VQoVp7j0da/ZikfN0AZG4npNRGL8mnYNPHz+9x/H
+         8BkCnFsYxQqQsp57zqBqZIrm9PWHdjXKx+KPieKk/o8QT6g1O05onxGp37LhccnpR+
+         D+V4Nd5jycGVSMk1jf2tWzk4XY68KgB2c3viCdjA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 248/346] ASoC: eukrea-tlv320: fix a leaked reference by adding missing of_node_put
-Date:   Wed, 29 May 2019 20:05:21 -0700
-Message-Id: <20190530030553.592279120@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 080/193] smpboot: Place the __percpu annotation correctly
+Date:   Wed, 29 May 2019 20:05:34 -0700
+Message-Id: <20190530030500.020958541@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
-References: <20190530030540.363386121@linuxfoundation.org>
+In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
+References: <20190530030446.953835040@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,49 +64,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b820d52e7eed7b30b2dfef5f4213a2bc3cbea6f3 ]
+[ Upstream commit d4645d30b50d1691c26ff0f8fa4e718b08f8d3bb ]
 
-The call to of_parse_phandle returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+The test robot reported a wrong assignment of a per-CPU variable which
+it detected by using sparse and sent a report. The assignment itself is
+correct. The annotation for sparse was wrong and hence the report.
+The first pointer is a "normal" pointer and points to the per-CPU memory
+area. That means that the __percpu annotation has to be moved.
 
-Detected by coccinelle with the following warnings:
-./sound/soc/fsl/eukrea-tlv320.c:121:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 102, but without a correspo    nding object release within this function.
-./sound/soc/fsl/eukrea-tlv320.c:127:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 102, but without a correspo    nding object release within this function.
+Move the __percpu annotation to pointer which points to the per-CPU
+area. This change affects only the sparse tool (and is ignored by the
+compiler).
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: alsa-devel@alsa-project.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paul E. McKenney <paulmck@linux.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: f97f8f06a49fe ("smpboot: Provide infrastructure for percpu hotplug threads")
+Link: http://lkml.kernel.org/r/20190424085253.12178-1-bigeasy@linutronix.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/eukrea-tlv320.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/smpboot.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/fsl/eukrea-tlv320.c b/sound/soc/fsl/eukrea-tlv320.c
-index 191426a6d9adf..30a3d68b5c033 100644
---- a/sound/soc/fsl/eukrea-tlv320.c
-+++ b/sound/soc/fsl/eukrea-tlv320.c
-@@ -118,13 +118,13 @@ static int eukrea_tlv320_probe(struct platform_device *pdev)
- 		if (ret) {
- 			dev_err(&pdev->dev,
- 				"fsl,mux-int-port node missing or invalid.\n");
--			return ret;
-+			goto err;
- 		}
- 		ret = of_property_read_u32(np, "fsl,mux-ext-port", &ext_port);
- 		if (ret) {
- 			dev_err(&pdev->dev,
- 				"fsl,mux-ext-port node missing or invalid.\n");
--			return ret;
-+			goto err;
- 		}
- 
- 		/*
+diff --git a/include/linux/smpboot.h b/include/linux/smpboot.h
+index c174844cf663e..585e777a7f6ef 100644
+--- a/include/linux/smpboot.h
++++ b/include/linux/smpboot.h
+@@ -31,7 +31,7 @@ struct smpboot_thread_data;
+  * @thread_comm:	The base name of the thread
+  */
+ struct smp_hotplug_thread {
+-	struct task_struct __percpu	**store;
++	struct task_struct		* __percpu *store;
+ 	struct list_head		list;
+ 	int				(*thread_should_run)(unsigned int cpu);
+ 	void				(*thread_fn)(unsigned int cpu);
 -- 
 2.20.1
 
