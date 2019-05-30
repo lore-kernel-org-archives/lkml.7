@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D95D9C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C314C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A51D324A33
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:23:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33FF524A37
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:23:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186631;
-	bh=nQWv/pQ9TneryxCoIWHr+e55gDaqdyjRUi4cNskNqwQ=;
+	s=default; t=1559186635;
+	bh=dFVTRMQShWSKyV+DNlr1H0V44BM6jzEICjqpG4UeNmU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZaXFr/mKCuJopltPpcg2c0jMIgcS/IijZ64c8litek6prmBWHFkZn95sVlSavg6CE
-	 7/wPNRPPhzD2uqh3iqcBmFO9DB7kvifksuRMkLM1aBvfJGvdmV2riG6GrNnvd55c4z
-	 vqsa/YEUea77EL3fFPQKm2eaRgdehwY57/ihS09c=
+	b=VwleSSpAbqt5PCTJke7Y7a2ojlxT68d66p7yst07XFSaJyC5bBwDmzIhQDjBvdrrJ
+	 iWn75O/OPUSD1TGkR5yyWYNfyADDSkKsLGFrhtCkB+ymNMf3ciW86NbJc/TiaFIScE
+	 RdzIashqJDigRoxfp/rQ+c7xNWmiJM11Jj6G7+3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732658AbfE3DXv (ORCPT
+        id S1733178AbfE3DXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:23:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48178 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:23:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731209AbfE3DRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:17:41 -0400
+        id S1731214AbfE3DRm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:17:42 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54A8124664;
-        Thu, 30 May 2019 03:17:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60C4724590;
+        Thu, 30 May 2019 03:17:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186260;
-        bh=nQWv/pQ9TneryxCoIWHr+e55gDaqdyjRUi4cNskNqwQ=;
+        s=default; t=1559186261;
+        bh=dFVTRMQShWSKyV+DNlr1H0V44BM6jzEICjqpG4UeNmU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2FrPOntBsMfKh5H/glEiFN16/X4how600IJM2SYADsAI1HfEGiQfZJhHlrTkreKri
-         8UesgQ0w42oyC6xMhSGDA+w36NP5O/YZ9LanXinMXvszSJLbWexVUHQgpby6pRa+FH
-         xWOlec9Xx4lgYWWjocESZmDTtAGdhwCSmMyGI2ps=
+        b=tzeT2aWAgpj08yCSnLgIPPUCeu/hD3+0nFDLvDGPlh2TNS/LCF1fvY9QaFbJZK5cr
+         mp05z5rSeGLYv9BUqu3PEdChQS/oGf3wTBjxnj827u0SAabpuSzrwvPMBDZ+MyMHDI
+         0ttkE1eexmMOfnGarNNQC0ceAZ5UCJdv2C1lG97o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Huth <thuth@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 175/276] s390/mm: silence compiler warning when compiling without CONFIG_PGSTE
-Date:   Wed, 29 May 2019 20:05:33 -0700
-Message-Id: <20190530030536.278675697@linuxfoundation.org>
+Subject: [PATCH 4.19 194/276] b43: shut up clang -Wuninitialized variable warning
+Date:   Wed, 29 May 2019 20:05:52 -0700
+Message-Id: <20190530030537.266079756@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -62,47 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 81a8f2beb32a5951ecf04385301f50879abc092b ]
+[ Upstream commit d825db346270dbceef83b7b750dbc29f1d7dcc0e ]
 
-If CONFIG_PGSTE is not set (e.g. when compiling without KVM), GCC complains:
+Clang warns about what is clearly a case of passing an uninitalized
+variable into a static function:
 
-  CC      arch/s390/mm/pgtable.o
-arch/s390/mm/pgtable.c:413:15: warning: ‘pmd_alloc_map’ defined but not
- used [-Wunused-function]
- static pmd_t *pmd_alloc_map(struct mm_struct *mm, unsigned long addr)
-               ^~~~~~~~~~~~~
+drivers/net/wireless/broadcom/b43/phy_lp.c:1852:23: error: variable 'gains' is uninitialized when used here
+      [-Werror,-Wuninitialized]
+                lpphy_papd_cal(dev, gains, 0, 1, 30);
+                                    ^~~~~
+drivers/net/wireless/broadcom/b43/phy_lp.c:1838:2: note: variable 'gains' is declared here
+        struct lpphy_tx_gains gains, oldgains;
+        ^
+1 error generated.
 
-Wrap the function with "#ifdef CONFIG_PGSTE" to silence the warning.
+However, this function is empty, and its arguments are never evaluated,
+so gcc in contrast does not warn here. Both compilers behave in a
+reasonable way as far as I can tell, so we should change the code
+to avoid the warning everywhere.
 
-Signed-off-by: Thomas Huth <thuth@redhat.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+We could just eliminate the lpphy_papd_cal() function entirely,
+given that it has had the TODO comment in it for 10 years now
+and is rather unlikely to ever get done. I'm doing a simpler
+change here, and just pass the 'oldgains' variable in that has
+been initialized, based on the guess that this is what was
+originally meant.
+
+Fixes: 2c0d6100da3e ("b43: LP-PHY: Begin implementing calibration & software RFKILL support")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Larry Finger <Larry.Finger@lwfinger.net>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/mm/pgtable.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/wireless/broadcom/b43/phy_lp.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/s390/mm/pgtable.c b/arch/s390/mm/pgtable.c
-index f2cc7da473e4e..ae894ac83fd61 100644
---- a/arch/s390/mm/pgtable.c
-+++ b/arch/s390/mm/pgtable.c
-@@ -410,6 +410,7 @@ static inline pmd_t pmdp_flush_lazy(struct mm_struct *mm,
- 	return old;
- }
- 
-+#ifdef CONFIG_PGSTE
- static pmd_t *pmd_alloc_map(struct mm_struct *mm, unsigned long addr)
+diff --git a/drivers/net/wireless/broadcom/b43/phy_lp.c b/drivers/net/wireless/broadcom/b43/phy_lp.c
+index 6922cbb99a044..5a0699fb4b9ab 100644
+--- a/drivers/net/wireless/broadcom/b43/phy_lp.c
++++ b/drivers/net/wireless/broadcom/b43/phy_lp.c
+@@ -1834,7 +1834,7 @@ static void lpphy_papd_cal(struct b43_wldev *dev, struct lpphy_tx_gains gains,
+ static void lpphy_papd_cal_txpwr(struct b43_wldev *dev)
  {
- 	pgd_t *pgd;
-@@ -427,6 +428,7 @@ static pmd_t *pmd_alloc_map(struct mm_struct *mm, unsigned long addr)
- 	pmd = pmd_alloc(mm, pud, addr);
- 	return pmd;
- }
-+#endif
+ 	struct b43_phy_lp *lpphy = dev->phy.lp;
+-	struct lpphy_tx_gains gains, oldgains;
++	struct lpphy_tx_gains oldgains;
+ 	int old_txpctl, old_afe_ovr, old_rf, old_bbmult;
  
- pmd_t pmdp_xchg_direct(struct mm_struct *mm, unsigned long addr,
- 		       pmd_t *pmdp, pmd_t new)
+ 	lpphy_read_tx_pctl_mode_from_hardware(dev);
+@@ -1848,9 +1848,9 @@ static void lpphy_papd_cal_txpwr(struct b43_wldev *dev)
+ 	lpphy_set_tx_power_control(dev, B43_LPPHY_TXPCTL_OFF);
+ 
+ 	if (dev->dev->chip_id == 0x4325 && dev->dev->chip_rev == 0)
+-		lpphy_papd_cal(dev, gains, 0, 1, 30);
++		lpphy_papd_cal(dev, oldgains, 0, 1, 30);
+ 	else
+-		lpphy_papd_cal(dev, gains, 0, 1, 65);
++		lpphy_papd_cal(dev, oldgains, 0, 1, 65);
+ 
+ 	if (old_afe_ovr)
+ 		lpphy_set_tx_gains(dev, oldgains);
 -- 
 2.20.1
 
