@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C7BC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E16CBC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68518259D2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:41:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8220259D0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:41:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191262;
-	bh=aq+pFlzRX86VxARbygEbyQtzAqJ7YxsGDMBDyJmYGes=;
+	s=default; t=1559191265;
+	bh=D+5N3J0AABMuG8rp/HgB9iUEugWCO/ru35dHsRfNSgc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hTBCySNKcmW04fZCe/LcZaTldjDcLDkdzemqku1Fg7p9sfMmdFezQsGeaL9ulXRgJ
-	 MsDY4CfAAXb3M6RxvZ+4D2ZLj/3WnifMzm0hPdsy11FoYD5586Se8lCdaSB11f+M5U
-	 5H20HNXMSZ+uuzravstnKgR/oZWxLjuFbzBTeeaw=
+	b=zkq+UqqnXQUL4dUL6GyX/4wP4ZEmj6V0zfYyJW7yj6mC0X5ZFm+TV1RX53iprriMP
+	 AYbFlDA85/K5LmH66HNWVhOI1TwTCbpCaPzKk+LM7l3R7gisBrUIS58wjLPpX8KG/b
+	 PYLc1IDTjdSz2bHUFkGViFxbY7rBF0e/pu+cY3k8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729037AbfE3DM2 (ORCPT
+        id S2388575AbfE3ElE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:12:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49216 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:41:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727732AbfE3DKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:10:55 -0400
+        id S1729033AbfE3DM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:12:28 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68324244BB;
-        Thu, 30 May 2019 03:10:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCCC923F4C;
+        Thu, 30 May 2019 03:12:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185855;
-        bh=aq+pFlzRX86VxARbygEbyQtzAqJ7YxsGDMBDyJmYGes=;
+        s=default; t=1559185947;
+        bh=D+5N3J0AABMuG8rp/HgB9iUEugWCO/ru35dHsRfNSgc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NQXpQGrTPA7jsb5Mn/7HRqc1oytncEUOvxqJ64SOeSP1nTS92ZmKZYNO0pyhJ4YbX
-         2/d9bLRwu9hmVOmD3k9bJR/ZcwIsYuEYGIlIWgV/gAmHUVtFChU9ShvyPQ3wseAu/b
-         kD2LRNhYSsMCYk96AtuVK6emBhXyX0CIP4q7VU8w=
+        b=sjmUKD18fgWlNs03AyisZetkl+XoTgLm8CYiXMnrnfoVMjVXHU8BDvEigb4N/Dg1B
+         58UWP2ovgQ+gKJdwriUFKfqdOlazQhSQgEaghqUQNewDhs+yPmqfKh4+WMNmZc83Po
+         ZjZUu1kTwyE+1PkPPqkPj1EDOn8tAk3pc1ZfPer0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Green <evgreen@chromium.org>,
-        Rob Herring <robh@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
+        stable@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>,
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 182/405] dt-bindings: phy-qcom-qmp: Add UFS PHY reset
-Date:   Wed, 29 May 2019 20:03:00 -0700
-Message-Id: <20190530030550.286418608@linuxfoundation.org>
+Subject: [PATCH 5.1 358/405] media: imx: vdic: Restore default case to prepare_vdi_in_buffers()
+Date:   Wed, 29 May 2019 20:05:56 -0700
+Message-Id: <20190530030558.736222920@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -62,58 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 95cee0b4e30a09a411a17e9a3bc6b72ed92063da ]
+[ Upstream commit ce3c2433b074eb9d569a0f63a15d6fd5dbc87f02 ]
 
-Add a required reset to the SDM845 UFS phy to express the PHY reset
-bit inside the UFS controller register space. Before this change, this
-reset was not expressed in the DT, and the driver utilized two different
-callbacks (phy_init and phy_poweron) to implement a two-phase
-initialization procedure that involved deasserting this reset between
-init and poweron. This abused the two callbacks and diluted their
-purpose.
+Restore a default case to prepare_vdi_in_buffers() to fix the following
+smatch errors:
 
-That scheme does not work as regulators cannot be turned off in
-phy_poweroff because they were turned on in init, rather than poweron.
-The net result is that regulators are left on in suspend that shouldn't
-be.
+drivers/staging/media/imx/imx-media-vdic.c:236 prepare_vdi_in_buffers() error: uninitialized symbol 'prev_phys'.
+drivers/staging/media/imx/imx-media-vdic.c:237 prepare_vdi_in_buffers() error: uninitialized symbol 'curr_phys'.
+drivers/staging/media/imx/imx-media-vdic.c:238 prepare_vdi_in_buffers() error: uninitialized symbol 'next_phys'.
 
-This new scheme gives the UFS reset to the PHY, so that it can fully
-initialize itself in a single callback. We can then turn regulators on
-during poweron and off during poweroff.
+Fixes: 6e537b58de772 ("media: imx: vdic: rely on VDIC for correct field order")
 
-Signed-off-by: Evan Green <evgreen@chromium.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Reported-by: Hans Verkuil <hverkuil@xs4all.nl>
+Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/staging/media/imx/imx-media-vdic.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-index 5d181fc3cc182..4a78ba8b85bc0 100644
---- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-@@ -59,7 +59,8 @@ Required properties:
- 	   one for each entry in reset-names.
-  - reset-names: "phy" for reset of phy block,
- 		"common" for phy common block reset,
--		"cfg" for phy's ahb cfg block reset.
-+		"cfg" for phy's ahb cfg block reset,
-+		"ufsphy" for the PHY reset in the UFS controller.
+diff --git a/drivers/staging/media/imx/imx-media-vdic.c b/drivers/staging/media/imx/imx-media-vdic.c
+index 8a9af4688fd41..8cdd3daa6c5f0 100644
+--- a/drivers/staging/media/imx/imx-media-vdic.c
++++ b/drivers/staging/media/imx/imx-media-vdic.c
+@@ -231,6 +231,12 @@ static void __maybe_unused prepare_vdi_in_buffers(struct vdic_priv *priv,
+ 		curr_phys = vb2_dma_contig_plane_dma_addr(curr_vb, 0);
+ 		next_phys = vb2_dma_contig_plane_dma_addr(curr_vb, 0) + is;
+ 		break;
++	default:
++		/*
++		 * can't get here, priv->fieldtype can only be one of
++		 * the above. This is to quiet smatch errors.
++		 */
++		return;
+ 	}
  
- 		For "qcom,ipq8074-qmp-pcie-phy" must contain:
- 			"phy", "common".
-@@ -74,7 +75,8 @@ Required properties:
- 			"phy", "common".
- 		For "qcom,sdm845-qmp-usb3-uni-phy" must contain:
- 			"phy", "common".
--		For "qcom,sdm845-qmp-ufs-phy": no resets are listed.
-+		For "qcom,sdm845-qmp-ufs-phy": must contain:
-+			"ufsphy".
- 
-  - vdda-phy-supply: Phandle to a regulator supply to PHY core block.
-  - vdda-pll-supply: Phandle to 1.8V regulator supply to PHY refclk pll block.
+ 	ipu_cpmem_set_buffer(priv->vdi_in_ch_p, 0, prev_phys);
 -- 
 2.20.1
 
