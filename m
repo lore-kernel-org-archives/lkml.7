@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 518BCC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADDDEC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D53724D42
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BA5524D3B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:49:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188142;
-	bh=NCfw1U1CQMpRXu+CHoKx2Bzex75ACkaz93vAgIsN+Gw=;
+	s=default; t=1559188147;
+	bh=+djWcGgy2No/+yoPtO7vIEh47nbEQRqJVwaSz8tf3Vc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z7Jc76z2MvHLzKn7wJshGTP0A1Bb4oqbz8YTqJHHLm/EbemyqLIYuLxoJulI/56sL
-	 dhUdEa9zSlvXbp9ioagSBhcKac/ualucRVftwBhn0C7sTArkp+ZPzFg2iZbAOnXLdJ
-	 /QjCxCLc2WxLur0SdGjilwInBlNO89hI1b9H0P6M=
+	b=kj2JrQzmeopW/BCq2Bc1hpocMy9SfGfEmv1IGhRmS2UCmccwZgLb2RXgBuimRHpWx
+	 gAmOVmqmEvaYrEjIdxGyUiNvob+NH8KX04lSQh6ZGSM7faqWOSlLdeaya6EbaNrEBB
+	 SjRbwvMr5q3WhVdLLJfPiMbD5NGO/LFXyRUfjy8o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730677AbfE3DtB (ORCPT
+        id S2387587AbfE3DtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:49:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58016 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:49:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731534AbfE3DUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:20:17 -0400
+        id S1728539AbfE3DUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:20:16 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0F5E2491D;
-        Thu, 30 May 2019 03:20:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2659248AB;
+        Thu, 30 May 2019 03:20:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186416;
-        bh=NCfw1U1CQMpRXu+CHoKx2Bzex75ACkaz93vAgIsN+Gw=;
+        s=default; t=1559186415;
+        bh=+djWcGgy2No/+yoPtO7vIEh47nbEQRqJVwaSz8tf3Vc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yxYSUVwS2PiKUyfmBkfvKwsBS1Ajws92hifeYafNqlrDYRLiWDaFL4QpK1KZaS8/s
-         egUerEUiltc6qfUhjopscUbLk41aG6grA5uKqhX0ZXN1nYVW+EekYrNHyVrEouH2vj
-         naVrkfZ4O74W+VQdcjt76zhXZ87HwK9IK54zJ9GM=
+        b=T/gFYsFbBpiBV4ir/Kxc/okcAzOLwt2xBIdGQgRkQsrIXjfVX7rre1qAE+N8iFbfU
+         iZNsuYhYI07E+ExrlA+iCGMQEMkkNHtqxQ499idG8c/BVFr++lzRKNH3sYzAX53CTH
+         9bsVO5TyCbQAdlDKURUju1+97AuEOssD58dh/RI0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
-        Gerd Hoffmann <kraxel@redhat.com>,
+        stable@vger.kernel.org, Chris Lesiak <chris.lesiak@licor.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 190/193] drm/drv: Hold ref on parent device during drm_device lifetime
-Date:   Wed, 29 May 2019 20:07:24 -0700
-Message-Id: <20190530030513.268297456@linuxfoundation.org>
+Subject: [PATCH 4.14 188/193] spi: Fix zero length xfer bug
+Date:   Wed, 29 May 2019 20:07:22 -0700
+Message-Id: <20190530030513.151403941@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -61,49 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 56be6503aab2bc3a30beae408071b9be5e1bae51 ]
+[ Upstream commit 5442dcaa0d90fc376bdfc179a018931a8f43dea4 ]
 
-This makes it safe to access drm_device->dev after the parent device has
-been removed/unplugged.
+This fixes a bug for messages containing both zero length and
+unidirectional xfers.
 
-Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
-Reviewed-by: Gerd Hoffmann <kraxel@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190225144232.20761-2-noralf@tronnes.org
+The function spi_map_msg will allocate dummy tx and/or rx buffers
+for use with unidirectional transfers when the hardware can only do
+a bidirectional transfer.  That dummy buffer will be used in place
+of a NULL buffer even when the xfer length is 0.
+
+Then in the function __spi_map_msg, if he hardware can dma,
+the zero length xfer will have spi_map_buf called on the dummy
+buffer.
+
+Eventually, __sg_alloc_table is called and returns -EINVAL
+because nents == 0.
+
+This fix prevents the error by not using the dummy buffer when
+the xfer length is zero.
+
+Signed-off-by: Chris Lesiak <chris.lesiak@licor.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_drv.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/spi/spi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/drm_drv.c b/drivers/gpu/drm/drm_drv.c
-index a7b6734bc3c32..340440febf9a5 100644
---- a/drivers/gpu/drm/drm_drv.c
-+++ b/drivers/gpu/drm/drm_drv.c
-@@ -505,7 +505,7 @@ int drm_dev_init(struct drm_device *dev,
- 	}
- 
- 	kref_init(&dev->ref);
--	dev->dev = parent;
-+	dev->dev = get_device(parent);
- 	dev->driver = driver;
- 
- 	INIT_LIST_HEAD(&dev->filelist);
-@@ -572,6 +572,7 @@ int drm_dev_init(struct drm_device *dev,
- 	drm_minor_free(dev, DRM_MINOR_CONTROL);
- 	drm_fs_inode_free(dev->anon_inode);
- err_free:
-+	put_device(dev->dev);
- 	mutex_destroy(&dev->master_mutex);
- 	mutex_destroy(&dev->ctxlist_mutex);
- 	mutex_destroy(&dev->filelist_mutex);
-@@ -607,6 +608,8 @@ void drm_dev_fini(struct drm_device *dev)
- 	drm_minor_free(dev, DRM_MINOR_RENDER);
- 	drm_minor_free(dev, DRM_MINOR_CONTROL);
- 
-+	put_device(dev->dev);
-+
- 	mutex_destroy(&dev->master_mutex);
- 	mutex_destroy(&dev->ctxlist_mutex);
- 	mutex_destroy(&dev->filelist_mutex);
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 670dbb7a8500a..56035637d8f6c 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -991,6 +991,8 @@ static int spi_map_msg(struct spi_controller *ctlr, struct spi_message *msg)
+ 		if (max_tx || max_rx) {
+ 			list_for_each_entry(xfer, &msg->transfers,
+ 					    transfer_list) {
++				if (!xfer->len)
++					continue;
+ 				if (!xfer->tx_buf)
+ 					xfer->tx_buf = ctlr->dummy_tx;
+ 				if (!xfer->rx_buf)
 -- 
 2.20.1
 
