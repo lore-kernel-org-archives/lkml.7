@@ -2,112 +2,108 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45891C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 05:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DCD7C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 05:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B3BC2541F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 05:45:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uTLm6a7F"
+	by mail.kernel.org (Postfix) with ESMTP id 1C1892541F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 05:46:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbfE3Fpa (ORCPT
+        id S1727154AbfE3Fqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 01:45:30 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:34965 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726308AbfE3Fpa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 01:45:30 -0400
-Received: by mail-ua1-f65.google.com with SMTP id r7so2045457ual.2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 22:45:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cM0pxdkktIwtckIEKuMloCnwIAX2mlYUlZjtqoSteus=;
-        b=uTLm6a7FmuQr3Ww5TrE8ju7nqeqMk6VgDEIe/0WkW4WrBIMllpo8Q9bNoBOTDsB7BS
-         8/0/MWxEbE3vAEA/r+70ry30rb/8T3J+0kALevEe0kbY148aVfSatFODEPsfmTQr+cBS
-         8yUui0furqOKB3RJv6gjfVFh8pyd8SvEsgl3Rh2mK14KJFRv2DHm7TjEl57tKvDNd5dQ
-         eigKB9oQDpml5yfaYzGcTHA0Nb5MZgB38sEoBkx7vJQ2hEP0Yvd1/P3P6WXDttJMBehD
-         lBFTZvTKUO8dNMuH2EMpSkfCfTufVvQ33JtA0WJu4kx/pyy+ASdFuqNn42TB/Kw6zDaJ
-         HQdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cM0pxdkktIwtckIEKuMloCnwIAX2mlYUlZjtqoSteus=;
-        b=IDSHMdaMTVAqvm4V2zXfsB9ffRSh6EyboYBKTVm6HojBvCTHj0RCRzU6Nfmwuey7Wz
-         Ay3CyOmE313w3jfcGunMQG09QvUsIcvaE1atQkCDZ73Od/x+x0hpni5V/vDSy6kuMRnw
-         D2UihancYkrhR77eQkj2Mah3/hWlxZ+8Qd7jqxnkXqvxSHdC0yYu/d+x+JNKBtISiwLR
-         pBV9OJBZsh1FuMkFwzAqCUYZZFDZpJPQRCvURh17a+2a3qe1G4eHgzwCATWC+3KxRIDz
-         PsulTGx4QLobw8fLk2y5FeKYr0IGF58Vl9dUlv2oAlY4CQ2OfSLwRAC8moQPJt1QkzLd
-         F3aA==
-X-Gm-Message-State: APjAAAWO+vgNSUfLMz9/QiurC14UjWZHsYEJbd4sB65ZEjn6EPoXLa2h
-        dRyYwObTfSR+BL5gKfR34ADj/0xjk1rQB6BgIvM=
-X-Google-Smtp-Source: APXvYqyH4m9TJk/Rb+/MkwbrL7U3L/W9OjNTQcWYsXAMUABUVWzGoSKKk0POOolcMUBm7hhsYj/aZnQTHSAVvi6hkXE=
-X-Received: by 2002:a9f:3241:: with SMTP id y1mr928222uad.107.1559195129051;
- Wed, 29 May 2019 22:45:29 -0700 (PDT)
+        Thu, 30 May 2019 01:46:45 -0400
+Received: from muru.com ([72.249.23.125]:51828 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726308AbfE3Fqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 01:46:44 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 2744A8027;
+        Thu, 30 May 2019 05:47:03 +0000 (UTC)
+Date:   Wed, 29 May 2019 22:46:40 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@collabora.com,
+        Keerthy <j-keerthy@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCHv6 0/4] omapdrm: DSI command mode panel support
+Message-ID: <20190530054640.GQ5447@atomide.com>
+References: <20190523200756.25314-1-sebastian.reichel@collabora.com>
+ <60c45d23-de2f-d94a-c3d7-146a2bee538f@ti.com>
+ <20190527112122.GJ5447@atomide.com>
+ <e507c415-38de-86fe-9265-4b0aed0d7224@ti.com>
+ <20190528093952.GM5447@atomide.com>
+ <14c6c702-844b-756d-2d97-44e8f5a169df@ti.com>
+ <20190528101847.GN5447@atomide.com>
+ <ac487765-01a3-2c82-d86e-db00451563a9@ti.com>
+ <20190529081038.GP5447@atomide.com>
 MIME-Version: 1.0
-References: <CAFbcbMATqCCpCR596FTaSdUV50nQSxDgXMd1ASgXu1CE+DJqTw@mail.gmail.com>
- <20190528071053.GL11013@uranus> <CAFbcbMAi_QhoT=JyU6NjNiJJwFbXF4Z1eV8TtfLv9UWJT-K_CQ@mail.gmail.com>
- <20190529121831.GU11013@uranus>
-In-Reply-To: <20190529121831.GU11013@uranus>
-From:   Dianzhang Chen <dianzhangchen0@gmail.com>
-Date:   Thu, 30 May 2019 13:45:16 +0800
-Message-ID: <CAFbcbMCLwoBB8syLCSU8i0Hc7OMnHT4A+AzWdmF5g9BzbY7CXQ@mail.gmail.com>
-Subject: Re: [PATCH] kernel/sys.c: fix possible spectre-v1 in do_prlimit()
-To:     Cyrill Gorcunov <gorcunov@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190529081038.GP5447@atomide.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Though syscall `getrlimit` , it seems not works after check_prlimit_permission.
+* Tony Lindgren <tony@atomide.com> [190529 08:11]:
+> * Tomi Valkeinen <tomi.valkeinen@ti.com> [190529 07:06]:
+> > On 28/05/2019 13:18, Tony Lindgren wrote:
+> > 
+> > > > My board is x15 rev A3, attached to AM5 EVM. I've also attached my kernel
+> > > > config.
+> > > 
+> > > Strange that this is not affecting other x15? I think timer12 would
+> > > be blocked on HS devices though?
+> > 
+> > Seems that the kernel config affects. omap2plus_defconfig boots ok.
+> 
+> OK, this line in your oops:
+> 
+> Unable to handle kernel paging request at virtual address 5a5a5a5a
+> 
+> Probably means we hit some slab poison with DEBUG_SLAB set.
+> Looks like your config boots fine with DEBUG_SLAB disabled
+> for me.
+> 
+> As this only happens for timer12, I wonder if we're again
+> hitting some uncompress issue with corrupted dtb. Changing
+> u-boot ftdaddr higher up might possibly make it go away.
+> Or else there's a bug elsewhere :)
 
-And the speculation windows are large, as said[1]:
->> Can the speculation proceed past the task_lock()?  Or is the policy to
->> ignore such happy happenstances even if they are available?
->
-> Locks are not in the way of speculation. Speculation has almost no limits
-> except serializing instructions. At least they respect the magic AND
-> limitation in array_index_nospec().
+Oh but CM_WKUPAON_TIMER12_CLKCTRL has no CLKSEL option unlike
+CM_WKUPAON_TIMER1_CLKCTRL. Below is one part of the fix, but
+it seems like we're missing handling somewhere as trying to
+get a non-existing clock should just produce -ENODEV type error.
 
-[1] https://do-db2.lkml.org/lkml/2018/5/15/1056
+And the clksel should be just handled with assigned-clocks
+in general, but I think we still need it there until we
+have drivers/clocksource/ timer drivers updated to boot
+using early_platform_device.
 
-On Wed, May 29, 2019 at 8:18 PM Cyrill Gorcunov <gorcunov@gmail.com> wrote:
->
-> On Wed, May 29, 2019 at 10:39:52AM +0800, Dianzhang Chen wrote:
-> > Hi,
-> >
-> > Although when detect it is misprediction and drop the execution, but
-> > it can not drop all the effects of speculative execution, like the
-> > cache state. During the speculative execution, the:
-> >
-> >
-> > rlim = tsk->signal->rlim + resource;    // use resource as index
-> >
-> > ...
-> >
-> >             *old_rlim = *rlim;
-> >
-> >
-> > may read some secret data into cache.
-> >
-> > and then the attacker can use side-channel attack to find out what the
-> > secret data is.
->
-> This code works after check_prlimit_permission call, which means you already
-> should have a permission granted. And you implies that misprediction gonna
-> be that deep which involves a number of calls/read/writes/jumps/locks-rb-wb-flushes
-> and a bunch or other instructions, moreover all conditions are "mispredicted".
-> This is very bold and actually unproved claim!
->
-> Note that I pointed the patch is fine in cleanup context but seriously I
-> don't see how this all can be exploitable in sense of spectre.
+Regards,
+
+Tony
+
+8< ---------------
+diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
+--- a/arch/arm/boot/dts/dra7-l4.dtsi
++++ b/arch/arm/boot/dts/dra7-l4.dtsi
+@@ -4450,8 +4450,6 @@
+ 			timer12: timer@0 {
+ 				compatible = "ti,omap5430-timer";
+ 				reg = <0x0 0x80>;
+-				clocks = <&wkupaon_clkctrl DRA7_WKUPAON_TIMER12_CLKCTRL 24>;
+-				clock-names = "fck";
+ 				interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
+ 				ti,timer-alwon;
+ 				ti,timer-secure;
