@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B2EC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A2EC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EB1E24D3A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:48:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3683A24D32
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:48:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188117;
-	bh=MiooSD0rWkqKK4flaOwrfWB+eO0A5ruYrhlxcARL354=;
+	s=default; t=1559188126;
+	bh=qpIVF3Cx9pKmLiimFB7271ld1ODQuXJahy+4CSBYWh0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m5FSsjVXGs5LFHFX5pjB2rJ9fObUL551B6pVHIrd7Sfp5ngDobxyjWU7dSqK3ZuQa
-	 A9wrIsFSdfE4an3FGY34aNZ41cCfyLFZfPotmvnqN4F4q4pEXV4d4RKjA8N/IY05xM
-	 Z412E+TMX54ykCIuA93aiubYyHuxZcc4nqbmBEF4=
+	b=u4oWhUbiJNSSdVCcDrx5jXGRnSkqPfixV3J949QXzkm4eLZ8dBa3+xyFmqaLe/tm1
+	 2AvvSD0C+xxbDiOrlbw0edM5yweSa9+Vexyjwrn5NSXXBoJYMJxgD5DQCaReM98ZJ2
+	 uPrNg83lwwP6qAyyv7DOzrM59K8je8ta6Fz+pLLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732802AbfE3Dsc (ORCPT
+        id S1732784AbfE3Dsp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:48:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58046 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:48:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732157AbfE3DUT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:20:19 -0400
+        id S1732147AbfE3DUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:20:18 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7552E2490E;
-        Thu, 30 May 2019 03:20:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C3362490A;
+        Thu, 30 May 2019 03:20:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186419;
-        bh=MiooSD0rWkqKK4flaOwrfWB+eO0A5ruYrhlxcARL354=;
+        s=default; t=1559186417;
+        bh=qpIVF3Cx9pKmLiimFB7271ld1ODQuXJahy+4CSBYWh0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VMYV0f/OpgilxawMY5EysJ7tdtHC1U/AKl5bG5aQfrCmAzec9mV2XqnpsvEFyWuBk
-         gvlp1p0FidwgbQHOSSEEsv7yAATJK6RLXnUNbm0XuB2lCDwh1xL/jVRmtAD5m/ymbC
-         +bXGAE0+AQ3uRMqffaEm1kivAlUCFUAxpACzFo5U=
+        b=Tp8a7dRkQRCgUE4oTArpY0OX4pLoaFNbsk4KqiVXExl4n9U+feELHrLWRzi1yIQVJ
+         AnNFPtmC32cXsdhdrrGyUXl3TnT9xsyyJeycqaH31lhxTan4NMgUNMvL7+qzGlstu6
+         MQ6UegWZp5jrFGhSKQAvVZALl4WhMIKFf+7QPZgw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
+        stable@vger.kernel.org, Eric Farman <farman@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 172/193] usb: core: Add PM runtime calls to usb_hcd_platform_shutdown
-Date:   Wed, 29 May 2019 20:07:06 -0700
-Message-Id: <20190530030511.898815094@linuxfoundation.org>
+Subject: [PATCH 4.14 192/193] vfio-ccw: Prevent quiesce function going into an infinite loop
+Date:   Wed, 29 May 2019 20:07:26 -0700
+Message-Id: <20190530030513.378820673@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -60,36 +62,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8ead7e817224d7832fe51a19783cb8fcadc79467 ]
+[ Upstream commit d1ffa760d22aa1d8190478e5ef555c59a771db27 ]
 
-If ohci-platform is runtime suspended, we can currently get an "imprecise
-external abort" on reboot with ohci-platform loaded when PM runtime
-is implemented for the SoC.
+The quiesce function calls cio_cancel_halt_clear() and if we
+get an -EBUSY we go into a loop where we:
+	- wait for any interrupts
+	- flush all I/O in the workqueue
+	- retry cio_cancel_halt_clear
 
-Let's fix this by adding PM runtime support to usb_hcd_platform_shutdown.
+During the period where we are waiting for interrupts or
+flushing all I/O, the channel subsystem could have completed
+a halt/clear action and turned off the corresponding activity
+control bits in the subchannel status word. This means the next
+time we call cio_cancel_halt_clear(), we will again start by
+calling cancel subchannel and so we can be stuck between calling
+cancel and halt forever.
 
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Rather than calling cio_cancel_halt_clear() immediately after
+waiting, let's try to disable the subchannel. If we succeed in
+disabling the subchannel then we know nothing else can happen
+with the device.
+
+Suggested-by: Eric Farman <farman@linux.ibm.com>
+Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
+Message-Id: <4d5a4b98ab1b41ac6131b5c36de18b76c5d66898.1555449329.git.alifm@linux.ibm.com>
+Reviewed-by: Eric Farman <farman@linux.ibm.com>
+Acked-by: Halil Pasic <pasic@linux.ibm.com>
+Signed-off-by: Cornelia Huck <cohuck@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/core/hcd.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/s390/cio/vfio_ccw_drv.c | 32 ++++++++++++++++++--------------
+ 1 file changed, 18 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
-index d0b2e0ed9babb..5fcea1114e2f6 100644
---- a/drivers/usb/core/hcd.c
-+++ b/drivers/usb/core/hcd.c
-@@ -3053,6 +3053,9 @@ usb_hcd_platform_shutdown(struct platform_device *dev)
- {
- 	struct usb_hcd *hcd = platform_get_drvdata(dev);
+diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
+index 59eb5e6d9c79d..6cd41086f23e4 100644
+--- a/drivers/s390/cio/vfio_ccw_drv.c
++++ b/drivers/s390/cio/vfio_ccw_drv.c
+@@ -38,26 +38,30 @@ int vfio_ccw_sch_quiesce(struct subchannel *sch)
+ 	if (ret != -EBUSY)
+ 		goto out_unlock;
  
-+	/* No need for pm_runtime_put(), we're shutting down */
-+	pm_runtime_get_sync(&dev->dev);
++	iretry = 255;
+ 	do {
+-		iretry = 255;
+ 
+ 		ret = cio_cancel_halt_clear(sch, &iretry);
+-		while (ret == -EBUSY) {
+-			/*
+-			 * Flush all I/O and wait for
+-			 * cancel/halt/clear completion.
+-			 */
+-			private->completion = &completion;
+-			spin_unlock_irq(sch->lock);
+ 
+-			wait_for_completion_timeout(&completion, 3*HZ);
++		if (ret == -EIO) {
++			pr_err("vfio_ccw: could not quiesce subchannel 0.%x.%04x!\n",
++			       sch->schid.ssid, sch->schid.sch_no);
++			break;
++		}
 +
- 	if (hcd->driver->shutdown)
- 		hcd->driver->shutdown(hcd);
- }
++		/*
++		 * Flush all I/O and wait for
++		 * cancel/halt/clear completion.
++		 */
++		private->completion = &completion;
++		spin_unlock_irq(sch->lock);
+ 
+-			private->completion = NULL;
+-			flush_workqueue(vfio_ccw_work_q);
+-			spin_lock_irq(sch->lock);
+-			ret = cio_cancel_halt_clear(sch, &iretry);
+-		};
++		if (ret == -EBUSY)
++			wait_for_completion_timeout(&completion, 3*HZ);
+ 
++		private->completion = NULL;
++		flush_workqueue(vfio_ccw_work_q);
++		spin_lock_irq(sch->lock);
+ 		ret = cio_disable_subchannel(sch);
+ 	} while (ret == -EBUSY);
+ out_unlock:
 -- 
 2.20.1
 
