@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 251B9C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 957C1C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E584D24996
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:20:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 611CD2498A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:21:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186455;
-	bh=w0FNEcwamqYLDkj3GaVPl4jMvnrBDG1Rp3VxgMOjzwE=;
+	s=default; t=1559186463;
+	bh=YlPrh8K80E/Ugmg5D1lT+uJVwaWCaWzq3kBRQR+V0F4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JNhqtUbGdX31JvxaedKRGmKD82eXlsevPHMmLabtcQo0QbHx7N5O9+ly8NgESjSB8
-	 dzd8SVxJbjLjBTtn8IyAYWmHHBnscZSmalxV92Ycpq/xWvd2j4HL/MI/7wKBGCaWGY
-	 RxZNgGF0NjEc0iekXMPI8e13IgQ9QmscXqPCC5sw=
+	b=m2Y3sNEsETDx25/6wU10jSboow7WeVNgr7rWPVlGZl6wSl4p8iZvfzzgCeE+ub+Xa
+	 zcrZSlYti4u94GNvTuPKXKVgyY+CrqAeUQXsLout0G6Z4b4eeUAqMqICA61GnADEYK
+	 ke2RkaN3bgc9xmBIVx9kYXiM1b90Gdm4fpH2gpLg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732376AbfE3DUy (ORCPT
+        id S1732421AbfE3DVC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:20:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41206 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:21:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730581AbfE3DQF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:05 -0400
+        id S1730602AbfE3DQI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:16:08 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CA952455E;
-        Thu, 30 May 2019 03:16:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AD252449A;
+        Thu, 30 May 2019 03:16:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186164;
-        bh=w0FNEcwamqYLDkj3GaVPl4jMvnrBDG1Rp3VxgMOjzwE=;
+        s=default; t=1559186168;
+        bh=YlPrh8K80E/Ugmg5D1lT+uJVwaWCaWzq3kBRQR+V0F4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wgGItlKffiEnG6L/MXKFJ1fxmRg4z9BaYF2Lsjfn9ALsjjAngO7+mXSDJc9v4EuCj
-         Jqxm26eGaoZGL7gD8rQ7DHKChq518PuJMwn8D/DPaD8tofCP5rS+Fs1+erSIgi4QmI
-         cdxC935e1kWurXV0KAhTGgqbWspEPFyp3mo+A7fs=
+        b=x0BorF/84yal8Xb78erMdws7QlmkjpYfJ/s/e2Dz7pUlVp4e8yjVX2YLhYNAMh8pK
+         Aevf9kCq09b7sugrarQMd5aFNiot8ivvq+hY0eW+rE6D6Bsdlygd6HcI+mFOUCKA1I
+         A5E9WW9Zc5KcQztHn7q/LUXDPsAMis9BgkGAujsQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Will Deacon <will.deacon@arm.com>
-Subject: [PATCH 4.19 015/276] arm64/iommu: handle non-remapped addresses in ->mmap and ->get_sgtable
-Date:   Wed, 29 May 2019 20:02:53 -0700
-Message-Id: <20190530030524.868919123@linuxfoundation.org>
+        stable@vger.kernel.org, "Tobin C. Harding" <tobin@kernel.org>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 021/276] btrfs: sysfs: Fix error path kobject memory leak
+Date:   Wed, 29 May 2019 20:02:59 -0700
+Message-Id: <20190530030525.458287378@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -61,51 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Tobin C. Harding <tobin@kernel.org>
 
-commit a98d9ae937d256ed679a935fc82d9deaa710d98e upstream.
+commit 450ff8348808a89cc27436771aa05c2b90c0eef1 upstream.
 
-DMA allocations that can't sleep may return non-remapped addresses, but
-we do not properly handle them in the mmap and get_sgtable methods.
-Resolve non-vmalloc addresses using virt_to_page to handle this corner
-case.
+If a call to kobject_init_and_add() fails we must call kobject_put()
+otherwise we leak memory.
 
-Cc: <stable@vger.kernel.org>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Calling kobject_put() when kobject_init_and_add() fails drops the
+refcount back to 0 and calls the ktype release method (which in turn
+calls the percpu destroy and kfree).
+
+Add call to kobject_put() in the error path of call to
+kobject_init_and_add().
+
+Cc: stable@vger.kernel.org # v4.4+
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/mm/dma-mapping.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ fs/btrfs/extent-tree.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/arch/arm64/mm/dma-mapping.c
-+++ b/arch/arm64/mm/dma-mapping.c
-@@ -664,6 +664,11 @@ static int __iommu_mmap_attrs(struct dev
- 	if (dma_mmap_from_dev_coherent(dev, vma, cpu_addr, size, &ret))
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -3911,8 +3911,7 @@ static int create_space_info(struct btrf
+ 				    info->space_info_kobj, "%s",
+ 				    alloc_name(space_info->flags));
+ 	if (ret) {
+-		percpu_counter_destroy(&space_info->total_bytes_pinned);
+-		kfree(space_info);
++		kobject_put(&space_info->kobj);
  		return ret;
+ 	}
  
-+	if (!is_vmalloc_addr(cpu_addr)) {
-+		unsigned long pfn = page_to_pfn(virt_to_page(cpu_addr));
-+		return __swiotlb_mmap_pfn(vma, pfn, size);
-+	}
-+
- 	if (attrs & DMA_ATTR_FORCE_CONTIGUOUS) {
- 		/*
- 		 * DMA_ATTR_FORCE_CONTIGUOUS allocations are always remapped,
-@@ -687,6 +692,11 @@ static int __iommu_get_sgtable(struct de
- 	unsigned int count = PAGE_ALIGN(size) >> PAGE_SHIFT;
- 	struct vm_struct *area = find_vm_area(cpu_addr);
- 
-+	if (!is_vmalloc_addr(cpu_addr)) {
-+		struct page *page = virt_to_page(cpu_addr);
-+		return __swiotlb_get_sgtable_page(sgt, page, size);
-+	}
-+
- 	if (attrs & DMA_ATTR_FORCE_CONTIGUOUS) {
- 		/*
- 		 * DMA_ATTR_FORCE_CONTIGUOUS allocations are always remapped,
 
 
