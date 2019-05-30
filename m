@@ -2,53 +2,54 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA38EC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6409C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8744E25F31
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:56:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9605B25F5E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:56:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192183;
-	bh=lRmJIZw+ba2FZo1nR3YVt2jbgh9JHH8uJGxiZiXFWa8=;
+	s=default; t=1559192187;
+	bh=A/qTvWQsG3Ff5F0BoRVW48/iXrDe5cHXZgzWL8eWG+o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gWfqogVKAxVq4y+CF9+i2tnBmdIykcYPYbJsb4pl3l6Qj8gcjpE3BgkOJVY5xla2D
-	 oCOqdkHXHi7y5UadcDSnj7T1rQEBkWw7thcjdnXCkE65dFHrWPwpGha9moe9VEYb/I
-	 evrkaG67WDoNagP7wWsphWfsgd56zK6n2XSfDHdM=
+	b=jCbXjuz++7vnhNcquGjkY8YNRZdyk/WPr4eF7ACyHOFIMjNMJ9Q+hXwebZ3mYAYJg
+	 on++IdjXHyInPnmjz3AxcRiMiFdOPWwOSOyZCruxPdGeS4YOegIN8ly2buGLqskbaK
+	 w8Z+xo3UZT/phPy4AiFzN+k9ZtcIUfOgbgay/ECQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389203AbfE3E4W (ORCPT
+        id S1727928AbfE3DKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:56:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46444 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:10:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727944AbfE3DKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:10:07 -0400
+        id S1727724AbfE3DJn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:09:43 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48467244B2;
-        Thu, 30 May 2019 03:10:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D7A124485;
+        Thu, 30 May 2019 03:09:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185807;
-        bh=lRmJIZw+ba2FZo1nR3YVt2jbgh9JHH8uJGxiZiXFWa8=;
+        s=default; t=1559185783;
+        bh=A/qTvWQsG3Ff5F0BoRVW48/iXrDe5cHXZgzWL8eWG+o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WJBar6aCNC61ijLA8yA71nhsqCtE3tjnnxE0B+Z1IpABOx8UiWfbUvcyzvP9m7kiX
-         M8QQ3/4mMI7Ln3oSLdMKIsrckMX01019LGfclZ35DCLBkk60f5dDfGZ6eYjr3BNqYD
-         CO2c7mq6y1HCl8O3UgCT3fjZYIS7SQb8eVMQUZys=
+        b=Se+li6CLtBf/Xj/RinfP6ii6EZ7gh1zmXivDlK0GGOpEWYippR1IcIoOgYil8WS8A
+         2E7xBmlNQq8dJSZJSuCP5Gw8QJRY+sNTIqQrKUNpUnqRG6qOwZFVlb0u6/BCchwo8Q
+         onHFNd3wymcuVvu9z8gtMA8tS9GX6DCDL8zU4CCk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>,
-        "Tobin C. Harding" <tobin@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 090/405] cpufreq: Fix kobject memleak
-Date:   Wed, 29 May 2019 20:01:28 -0700
-Message-Id: <20190530030545.590218618@linuxfoundation.org>
+        stable@vger.kernel.org, "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Omar Sandoval <osandov@fb.com>, linux-block@vger.kernel.org
+Subject: [PATCH 5.1 007/405] sbitmap: fix improper use of smp_mb__before_atomic()
+Date:   Wed, 29 May 2019 20:00:05 -0700
+Message-Id: <20190530030540.754728543@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,51 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4ebe36c94aed95de71a8ce6a6762226d31c938ee ]
+From: Andrea Parri <andrea.parri@amarulasolutions.com>
 
-Currently the error return path from kobject_init_and_add() is not
-followed by a call to kobject_put() - which means we are leaking the
-kobject.
+commit a0934fd2b1208458e55fc4b48f55889809fce666 upstream.
 
-Fix it by adding a call to kobject_put() in the error path of
-kobject_init_and_add().
+This barrier only applies to the read-modify-write operations; in
+particular, it does not apply to the atomic_set() primitive.
 
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Reviewed-by: Tobin C. Harding <tobin@kernel.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Replace the barrier with an smp_mb().
+
+Fixes: 6c0ca7ae292ad ("sbitmap: fix wakeup hang after sbq resize")
+Cc: stable@vger.kernel.org
+Reported-by: "Paul E. McKenney" <paulmck@linux.ibm.com>
+Reported-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Omar Sandoval <osandov@fb.com>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: linux-block@vger.kernel.org
+Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/cpufreq/cpufreq.c          | 1 +
- drivers/cpufreq/cpufreq_governor.c | 2 ++
- 2 files changed, 3 insertions(+)
+ lib/sbitmap.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index e10922709d139..bbf79544d0ad8 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -1098,6 +1098,7 @@ static struct cpufreq_policy *cpufreq_policy_alloc(unsigned int cpu)
- 				   cpufreq_global_kobject, "policy%u", cpu);
- 	if (ret) {
- 		pr_err("%s: failed to init policy->kobj: %d\n", __func__, ret);
-+		kobject_put(&policy->kobj);
- 		goto err_free_real_cpus;
+--- a/lib/sbitmap.c
++++ b/lib/sbitmap.c
+@@ -435,7 +435,7 @@ static void sbitmap_queue_update_wake_ba
+ 		 * to ensure that the batch size is updated before the wait
+ 		 * counts.
+ 		 */
+-		smp_mb__before_atomic();
++		smp_mb();
+ 		for (i = 0; i < SBQ_WAIT_QUEUES; i++)
+ 			atomic_set(&sbq->ws[i].wait_cnt, 1);
  	}
- 
-diff --git a/drivers/cpufreq/cpufreq_governor.c b/drivers/cpufreq/cpufreq_governor.c
-index ffa9adeaba31b..9d1d9bf02710b 100644
---- a/drivers/cpufreq/cpufreq_governor.c
-+++ b/drivers/cpufreq/cpufreq_governor.c
-@@ -459,6 +459,8 @@ int cpufreq_dbs_governor_init(struct cpufreq_policy *policy)
- 	/* Failure, so roll back. */
- 	pr_err("initialization failed (dbs_data kobject init error %d)\n", ret);
- 
-+	kobject_put(&dbs_data->attr_set.kobj);
-+
- 	policy->governor_data = NULL;
- 
- 	if (!have_governor_per_policy())
--- 
-2.20.1
-
 
 
