@@ -2,138 +2,104 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 352F8C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D80CDC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14D2625637
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2E1A25651
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:36:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="bWNTUJM6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727566AbfE3Je5 (ORCPT
+        id S1727599AbfE3JgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 05:34:57 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:34844 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727402AbfE3Je4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 05:34:56 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-43-7gh7PonmMjqzmTiRGe_CfA-1; Thu, 30 May 2019 10:34:54 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 30 May 2019 10:34:53 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 30 May 2019 10:34:53 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Eric Wong' <e@80x24.org>
-CC:     'Oleg Nesterov' <oleg@redhat.com>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Al Viro <viro@ZenIV.linux.org.uk>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "arnd@arndb.de" <arnd@arndb.de>, "dbueso@suse.de" <dbueso@suse.de>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "dave@stgolabs.net" <dave@stgolabs.net>,
-        "jbaron@akamai.com" <jbaron@akamai.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-aio@kvack.org" <linux-aio@kvack.org>,
-        "omar.kilani@gmail.com" <omar.kilani@gmail.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: pselect/etc semantics (Was: [PATCH v2] signal: Adjust error codes
- according to restore_user_sigmask())
-Thread-Topic: pselect/etc semantics (Was: [PATCH v2] signal: Adjust error
- codes according to restore_user_sigmask())
-Thread-Index: AQHVFjlRjDlHH6TU60ajIVKPNNmjrqaCR7xwgAAZvgCAAP1NYA==
-Date:   Thu, 30 May 2019 09:34:53 +0000
-Message-ID: <a703239f468d44d3b3e7d71b40289072@AcuMS.aculab.com>
-References: <20190522032144.10995-1-deepa.kernel@gmail.com>
- <20190529161157.GA27659@redhat.com>
- <b05cec7f9e8f457281e689576a7a360f@AcuMS.aculab.com>
- <20190529185012.qqeqq4fsolprknrz@dcvr>
-In-Reply-To: <20190529185012.qqeqq4fsolprknrz@dcvr>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 30 May 2019 05:36:07 -0400
+Received: from mta-01.yadro.com ([89.207.88.251]:52198 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726985AbfE3JgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 05:36:07 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id EC249418F9;
+        Thu, 30 May 2019 09:36:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-type:content-type:content-transfer-encoding:mime-version
+        :x-mailer:message-id:date:date:subject:subject:from:from
+        :received:received:received; s=mta-01; t=1559208964; x=
+        1561023365; bh=Mu95EKtaQY/5ic5LnPWzPshc+PWDAixLkJ5r9QM+Pyc=; b=b
+        WNTUJM6n2crg9ginmn/IUSerVWkjHc3SF6QEgcxBUSgaosf8n7a5q4sZPd7qrC0d
+        Q0DsL2cwsLDC7PKJznfTHYRrmfeVY9poUu4RSQYaLD8oAzvYqKaFMANDJ0bqkBz5
+        wxDG+2id/R2wRVVeJFkTjlRWwptRV5lMTgjIcas8Wc=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id hLO47OulB66Z; Thu, 30 May 2019 12:36:04 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 6FBF341860;
+        Thu, 30 May 2019 12:36:04 +0300 (MSK)
+Received: from bbwork.com (172.17.14.115) by T-EXCH-02.corp.yadro.com
+ (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Thu, 30
+ May 2019 12:36:04 +0300
+From:   Alexander Filippov <a.filippov@yadro.com>
+To:     <linux-aspeed@lists.ozlabs.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, Andrew Jeffery <andrew@aj.id.au>,
+        Joel Stanley <joel@jms.id.au>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Alexander Filippov <a.filippov@yadro.com>
+Subject: [PATCH v2] ARM: dts: aspeed: g4: add video engine support
+Date:   Thu, 30 May 2019 12:35:44 +0300
+Message-ID: <20190530093544.12215-1-a.filippov@yadro.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-MC-Unique: 7gh7PonmMjqzmTiRGe_CfA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [172.17.14.115]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogRXJpYyBXb25nDQo+IFNlbnQ6IDI5IE1heSAyMDE5IDE5OjUwDQouLi4NCj4gPiBQZXJz
-b25hbGx5IEkgdGhpbmsgdGhhdCBpcyB3cm9uZy4NCj4gPiBHaXZlbiBjb2RlIGxpa2UgdGhlIGFi
-b3ZlIHRoYXQgaGFzOg0KPiA+IAkJd2hpbGUgKCFpbnRlcnJ1cHRlZCkgew0KPiA+IAkJCXBzZWxl
-Y3QoLi4uLCAmc2lnaW50KTsNCj4gPiAJCQkvLyBwcm9jZXNzIGF2YWlsYWJsZSBkYXRhDQo+ID4g
-CQl9DQo+ID4NCj4gPiBZb3Ugd2FudCB0aGUgc2lnbmFsIGhhbmRsZXIgdG8gYmUgZXhlY3V0ZWQg
-ZXZlbiBpZiBvbmUgb2YgdGhlIGZkcw0KPiA+IGFsd2F5cyBoYXMgYXZhaWxhYmxlIGRhdGEuDQo+
-ID4gT3RoZXJ3aXNlIHlvdSBjYW4ndCBpbnRlcnJ1cHQgYSBwcm9jZXNzIHRoYXQgaXMgYWx3YXlz
-IGJ1c3kuDQoNCkZXSVcgaW4gdGhlIHBhc3QgSSd2ZSBzZWVuIGEgcHJvY2VzcyB0aGF0IGxvb3Bz
-IHNlbGVjdC1hY2NlcHQtZm9yay1leGVjDQpnZXQgaXRzIHByaW9yaXR5IHJlZHVjZWQgdG8gdGhl
-IHBvaW50IHdoZXJlIGl0IG5ldmVyIGJsb2NrZWQNCmluIHNlbGVjdC4gVGhlIGNsaWVudCBzaWRl
-IHJldHJpZXMgbWFkZSBpdCBnbyBiYWRseSB3cm9uZyENCklmIGl0IGhhZCBsaW1pdGVkIHdoZW4g
-U0lHX0lOVCB3YXMgZGV0ZWN0ZWQgaXQgd291bGQgaGF2ZSBiZWVuDQphIGxpdHRsZSBtb3JlIGRp
-ZmZpY3VsdCB0byBraWxsLg0KDQo+IEFncmVlZC4uLiAgSSBiZWxpZXZlIGNtb2dzdG9yZWQgaGFz
-IGFsd2F5cyBoYWQgYSBidWcgaW4gdGhlIHdheQ0KPiBpdCB1c2VzIGVwb2xsX3B3YWl0IGJlY2F1
-c2UgaXQgZmFpbGVkIHRvIGNoZWNrIGludGVycnVwdHMgaWY6DQo+IA0KPiBhKSBhbiBGRCBpcyBy
-ZWFkeSArIGludGVycnVwdA0KPiBiKSBlcG9sbF9wd2FpdCByZXR1cm5zIDAgb24gaW50ZXJydXB0
-DQoNCkJ1dCB0aGUga2VybmVsIGNvZGUgc2VlbXMgdG8gb25seSBjYWxsIHRoZSBzaWduYWwgaGFu
-ZGxlcg0KKGZvciBzaWduYWxzIHRoYXQgYXJlIGVuYWJsZWQgZHVyaW5nIHBzZWxlY3QoKSAoZXRj
-KSkgaWYNCnRoZSB1bmRlcmx5aW5nIHdhaXQgaXMgaW50ZXJydXB0ZWQuDQoNCj4gVGhlIGJ1ZyBy
-ZW1haW5zIGluIHVzZXJzcGFjZSBmb3IgYSksIHdoaWNoIEkgd2lsbCBmaXggYnkgYWRkaW5nDQo+
-IGFuIGludGVycnVwdCBjaGVjayB3aGVuIGFuIEZEIGlzIHJlYWR5LiAgVGhlIHdpbmRvdyBpcyB2
-ZXJ5DQo+IHNtYWxsIGZvciBhKSBhbmQgZGlmZmljdWx0IHRvIHRyaWdnZXIsIGFuZCBhbHNvIGlu
-IGEgcmFyZSBjb2RlDQo+IHBhdGguDQo+IA0KPiBUaGUgYikgY2FzZSBpcyB0aGUga2VybmVsIGJ1
-ZyBpbnRyb2R1Y2VkIGluIDg1NGE2ZWQ1NjgzOWE0MGYNCj4gKCJzaWduYWw6IEFkZCByZXN0b3Jl
-X3VzZXJfc2lnbWFzaygpIikuDQo+IA0KPiBJIGRvbid0IHRoaW5rIHRoZXJlJ3MgYW55IGRpc2Fn
-cmVlbWVudCB0aGF0IGIpIGlzIGEga2VybmVsIGJ1Zy4NCg0KSWYgdGhlIHNpZ25hbCBpcyByYWlz
-ZWQgYWZ0ZXIgdGhlIHdhaXQgaGFzIHRpbWVkIG91dCBidXQgYmVmb3JlDQp0aGUgc2lnbmFsIG1h
-c2sgaXMgcmVzdG9yZWQuDQoNCj4gU28gdGhlIGNvbmZ1c2lvbiBpcyBmb3IgYSksIGFuZCBQT1NJ
-WCBpcyBub3QgY2xlYXIgdy5yLnQuIGhvdw0KPiBwc2VsZWN0L3BvbGwgd29ya3Mgd2hlbiB0aGVy
-ZSdzIGJvdGggRkQgcmVhZGluZXNzIGFuZCBhbg0KPiBpbnRlcnJ1cHQuDQo+IA0KPiBUaHVzIEkn
-bSBpbmNsaW5lZCB0byBiZWxpZXZlICpzZWxlY3QvKnBvbGwvZXBvbGxfKndhaXQgc2hvdWxkDQo+
-IGZvbGxvdyBQT1NJWCByZWFkKCkgc2VtYW50aWNzOg0KPiANCj4gICAgICAgIElmIGEgcmVhZCgp
-IGlzIGludGVycnVwdGVkIGJ5IGEgc2lnbmFsIGJlZm9yZSBpdCByZWFkcyBhbnkgZGF0YSwgaXQg
-c2hhbGwNCj4gICAgICAgIHJldHVybiDiiJIxIHdpdGggZXJybm8gc2V0IHRvIFtFSU5UUl0uDQo+
-IA0KPiAgICAgICAgSWYgIGEgIHJlYWQoKSAgaXMgIGludGVycnVwdGVkIGJ5IGEgc2lnbmFsIGFm
-dGVyIGl0IGhhcyBzdWNjZXNzZnVsbHkgcmVhZA0KPiAgICAgICAgc29tZSBkYXRhLCBpdCBzaGFs
-bCByZXR1cm4gdGhlIG51bWJlciBvZiBieXRlcyByZWFkLg0KDQpFeGNlcHQgdGhhdCBhYm92ZSB5
-b3Ugd2FudCBkaWZmZXJlbnQgc2VtYW50aWNzIDotKQ0KRm9yIHJlYWQoKSBhbnkgc2lnbmFsIGhh
-bmRsZXIgaXMgYWx3YXlzIGNhbGxlZC4NCkFuZCB0aGUgcmV0dXJuIHZhbHVlIG9mIGEgbm9uLWJs
-b2NraW5nIHJlYWQgdGhhdCByZXR1cm5zIG5vIGRhdGENCmlzIG5vdCBhZmZlY3RlZCBieSBhbnkg
-cGVuZGluZyBzaWduYWxzLg0KDQpGb3IgcHNlbGVjdCgpIHRoYXQgd291bGQgbWVhbiB0aGF0IGlm
-IHRoZSB3YWl0IHRpbWVkIG91dCAocmVzdWx0IDApDQphbmQgdGhlbiBhIHNpZ25hbCB3YXMgcmFp
-c2VkIChiZWZvcmUgdGhlIG1hc2sgZ290IGNoYW5nZWQgYmFjaykgdGhlbg0KdGhlIHJldHVybiB2
-YWx1ZSB3b3VsZCBiZSB6ZXJvIGFuZCB0aGUgc2lnbmFsIGhhbmRsZXIgd291bGQgYmUgY2FsbGVk
-Lg0KU28geW91ciAoYikgYWJvdmUgaXMgbm90IGEgYnVnLg0KRXZlbiBzZWxlY3QoKSBjYW4gcmV0
-dXJuICd0aW1lb3V0JyBhbmQgaGF2ZSBhIHNpZ25hbCBoYW5kbGVyIGNhbGxlZC4NCg0KVGhlcmUg
-YXJlIHJlYWxseSB0d28gc2VwYXJhdGUgaXNzdWVzOg0KMSkgU2lnbmFscyB0aGF0IGFyZSBwZW5k
-aW5nIHdoZW4gdGhlIG5ldyBtYXNrIGlzIGFwcGxpZWQuDQoyKSBTaWduYWxzIHRoYXQgYXJlIHJh
-aXNlZCBhZnRlciB0aGUgd2FpdCB0ZXJtaW5hdGVzIChzdWNjZXNzIG9yIHRpbWVvdXQpLg0KSWYg
-dGhlIHNpZ25hbCBoYW5kbGVycyBmb3IgKDIpIGFyZSBub3QgY2FsbGVkIHRoZW4gdGhleSBiZWNv
-bWUgKDEpDQpuZXh0IHRpbWUgYXJvdW5kIHRoZSBhcHBsaWNhdGlvbiBsb29wLg0KDQpNYXliZSB0
-aGUgJ3Jlc3RvcmUgc2lnbWFzaycgZnVuY3Rpb24gc2hvdWxkIGJlIHBhc3NlZCBhbiBpbmRpY2F0
-aW9uDQpvZiB3aGV0aGVyIGl0IGlzIGFsbG93ZWQgdG8gbGV0IHNpZ25hbCBoYW5kbGVyIGJlIGNh
-bGxlZCBhbmQgcmV0dXJuDQp3aGV0aGVyIHRoZXkgd291bGQgYmUgY2FsbGVkIChpZSB3aGV0aGVy
-IGl0IHJlc3RvcmVkIHRoZSBzaWduYWwgbWFzaw0Kb3IgbGVmdCBpdCBmb3IgdGhlIHN5c2NhbGwg
-ZXhpdCBjb2RlIHRvIGRvIGFmdGVyIGNhbGxpbmcgdGhlIHNpZ25hbA0KaGFuZGxlcnMpLg0KDQpU
-aGF0IHdvdWxkIGFsbG93IGVwb2xsKCkgdG8gY29udmVydCB0aW1lb3V0K3BlbmRpbmcgc2lnbmFs
-IHRvIEVJTlRSLA0Kb3IgdG8gYWxsb3cgYWxsIGhhbmRsZXJzIGJlIGNhbGxlZCByZWdhcmRsZXNz
-IG9mIHRoZSByZXR1cm4gdmFsdWUuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3Mg
-TGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQ
-VCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+Add a node to describe the video engine on AST2400.
+
+These changes were copied from aspeed-g5.dtsi
+
+Signed-off-by: Alexander Filippov <a.filippov@yadro.com>
+---
+ arch/arm/boot/dts/aspeed-g4.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
+index 6011692df15a..5a9e3f684359 100644
+--- a/arch/arm/boot/dts/aspeed-g4.dtsi
++++ b/arch/arm/boot/dts/aspeed-g4.dtsi
+@@ -195,6 +195,16 @@
+ 				reg = <0x1e720000 0x8000>;	// 32K
+ 			};
+ 
++			video: video@1e700000 {
++				compatible = "aspeed,ast2400-video-engine";
++				reg = <0x1e700000 0x1000>;
++				clocks = <&syscon ASPEED_CLK_GATE_VCLK>,
++					 <&syscon ASPEED_CLK_GATE_ECLK>;
++				clock-names = "vclk", "eclk";
++				interrupts = <7>;
++				status = "disabled";
++			};
++
+ 			gpio: gpio@1e780000 {
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+-- 
+2.20.1
 
