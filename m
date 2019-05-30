@@ -2,55 +2,57 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC931C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FEF4C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99A6924CA5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:45:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 571A324CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:45:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187939;
-	bh=SAzFDsewiCPjzYSPONmROVQkzi0S0thIkqhQiidclBY=;
+	s=default; t=1559187944;
+	bh=qydilEWEQqasVCq9cYkBAWbqdN+AQcFoT0hQC5NMJ3g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bhaCE8MbyXnVyYverg9sLTvsb/9ALfFBwyrAE6pHpgnHgutIggehGKhBaN0rAK1p3
-	 N4gFAGlIE/OgxfHUBn1oCtPAJxAslwrrvsA/ANcqJpqC672C3jVoG0fAiC7N9OPIjL
-	 0zZgYkh7+WbYfqsJYV/H6uJbHw7MR+9z+I+YqeI0=
+	b=He7zfSpfK/2vB589B8diV2X864s5mvzI8yHm4jk2/sOhTD/KHhd2Zp2xZWbRBhZRP
+	 zMqkDu9N5v21aLxA8Ey9oEp2FOvVG3v9I3TOCMl+vq6snxGh993iAWbM807Vv0Qr/0
+	 hsmda2/PSSRRfT4Xk+qwRnNEOYNze2qa4GfYu5X4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732327AbfE3DUr (ORCPT
+        id S1732535AbfE3Dpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:20:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40878 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:45:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730575AbfE3DQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:03 -0400
+        id S1732322AbfE3DUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:20:47 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E46A624585;
-        Thu, 30 May 2019 03:16:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA5032496D;
+        Thu, 30 May 2019 03:20:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186163;
-        bh=SAzFDsewiCPjzYSPONmROVQkzi0S0thIkqhQiidclBY=;
+        s=default; t=1559186445;
+        bh=qydilEWEQqasVCq9cYkBAWbqdN+AQcFoT0hQC5NMJ3g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NdE86ixMWWnnsYFBD+PrU56kziJSm0vPZhqpmL2cml/i3gNvXwYCjVQq10IhCBA0M
-         Hv2uZlUXFmB2oteWSzj0MvOMfeFcuwPsV2hOIqYGDfBJAmDjqnHVxc+b4mWm43rkrW
-         MpxSRPRdbWJCknwtPV8mUIFAU997mUO4jro07wrE=
+        b=POtrs3nm9ynx4f5GEUc6Y1cy1y6a1pUcxixIXTWKNzLklLRfXJQEj7b9xu5YQXubM
+         2rj+i3Q4LGeShFyXSeDBw8WkP46H880jR5JpEb2lxGwnoXINebYEKqG460tnAeAGnL
+         +Kqt40YWBTuOaqR4O7Y+50HmXepbltKnH0cr55dI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.19 012/276] kvm: svm/avic: fix off-by-one in checking host APIC ID
-Date:   Wed, 29 May 2019 20:02:50 -0700
-Message-Id: <20190530030524.513568972@linuxfoundation.org>
+        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, luto@kernel.org,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 053/128] mm/uaccess: Use unsigned long to placate UBSAN warnings on older GCC versions
+Date:   Wed, 29 May 2019 20:06:25 -0700
+Message-Id: <20190530030444.261281524@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
-References: <20190530030523.133519668@linuxfoundation.org>
+In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
+References: <20190530030432.977908967@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,43 +62,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suthikulpanit, Suravee <Suravee.Suthikulpanit@amd.com>
+[ Upstream commit 29da93fea3ea39ab9b12270cc6be1b70ef201c9e ]
 
-commit c9bcd3e3335d0a29d89fabd2c385e1b989e6f1b0 upstream.
+Randy reported objtool triggered on his (GCC-7.4) build:
 
-Current logic does not allow VCPU to be loaded onto CPU with
-APIC ID 255. This should be allowed since the host physical APIC ID
-field in the AVIC Physical APIC table entry is an 8-bit value,
-and APIC ID 255 is valid in system with x2APIC enabled.
-Instead, do not allow VCPU load if the host APIC ID cannot be
-represented by an 8-bit value.
+  lib/strncpy_from_user.o: warning: objtool: strncpy_from_user()+0x315: call to __ubsan_handle_add_overflow() with UACCESS enabled
+  lib/strnlen_user.o: warning: objtool: strnlen_user()+0x337: call to __ubsan_handle_sub_overflow() with UACCESS enabled
 
-Also, use the more appropriate AVIC_PHYSICAL_ID_ENTRY_HOST_PHYSICAL_ID_MASK
-instead of AVIC_MAX_PHYSICAL_ID_COUNT.
+This is due to UBSAN generating signed-overflow-UB warnings where it
+should not. Prior to GCC-8 UBSAN ignored -fwrapv (which the kernel
+uses through -fno-strict-overflow).
 
-Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Make the functions use 'unsigned long' throughout.
 
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: luto@kernel.org
+Link: http://lkml.kernel.org/r/20190424072208.754094071@infradead.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/svm.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ lib/strncpy_from_user.c | 5 +++--
+ lib/strnlen_user.c      | 4 ++--
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -2022,7 +2022,11 @@ static void avic_vcpu_load(struct kvm_vc
- 	if (!kvm_vcpu_apicv_active(vcpu))
- 		return;
+diff --git a/lib/strncpy_from_user.c b/lib/strncpy_from_user.c
+index 7e35fc450c5bb..5a07f19059c36 100644
+--- a/lib/strncpy_from_user.c
++++ b/lib/strncpy_from_user.c
+@@ -22,10 +22,11 @@
+  * hit it), 'max' is the address space maximum (and we return
+  * -EFAULT if we hit it).
+  */
+-static inline long do_strncpy_from_user(char *dst, const char __user *src, long count, unsigned long max)
++static inline long do_strncpy_from_user(char *dst, const char __user *src,
++					unsigned long count, unsigned long max)
+ {
+ 	const struct word_at_a_time constants = WORD_AT_A_TIME_CONSTANTS;
+-	long res = 0;
++	unsigned long res = 0;
  
--	if (WARN_ON(h_physical_id >= AVIC_MAX_PHYSICAL_ID_COUNT))
-+	/*
-+	 * Since the host physical APIC id is 8 bits,
-+	 * we can support host APIC ID upto 255.
-+	 */
-+	if (WARN_ON(h_physical_id > AVIC_PHYSICAL_ID_ENTRY_HOST_PHYSICAL_ID_MASK))
- 		return;
+ 	/*
+ 	 * Truncate 'max' to the user-specified limit, so that
+diff --git a/lib/strnlen_user.c b/lib/strnlen_user.c
+index 8e105ed4df12b..9ff4f3bbb1aae 100644
+--- a/lib/strnlen_user.c
++++ b/lib/strnlen_user.c
+@@ -27,7 +27,7 @@
+ static inline long do_strnlen_user(const char __user *src, unsigned long count, unsigned long max)
+ {
+ 	const struct word_at_a_time constants = WORD_AT_A_TIME_CONSTANTS;
+-	long align, res = 0;
++	unsigned long align, res = 0;
+ 	unsigned long c;
  
- 	entry = READ_ONCE(*(svm->avic_physical_id_cache));
+ 	/*
+@@ -41,7 +41,7 @@ static inline long do_strnlen_user(const char __user *src, unsigned long count,
+ 	 * Do everything aligned. But that means that we
+ 	 * need to also expand the maximum..
+ 	 */
+-	align = (sizeof(long) - 1) & (unsigned long)src;
++	align = (sizeof(unsigned long) - 1) & (unsigned long)src;
+ 	src -= align;
+ 	max += align;
+ 
+-- 
+2.20.1
+
 
 
