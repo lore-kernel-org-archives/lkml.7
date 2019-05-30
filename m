@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F765C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DAFC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BBA8245AD
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1A8524590
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186112;
-	bh=NY+bzGCLjPOwmO4DfrTLzjvI0VS/oC+/ExlyrjN8xHU=;
+	s=default; t=1559186115;
+	bh=G0WwxCGxWt8M2yPclyrVs6do+B1idp9xfogDxJogi1U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PnlXU2AC4jw1kJD27L9t48tJhP4xdHBbDGmoiRDryGCcvqkMxuvNdXPhCwWIhVood
-	 VU/xX4n/RPxUlnfZcBDWdEm+QVWN0eM7Sg5QyuW9eYNXRXSvgBAK4TpP/IZKbPewJE
-	 eejZo6kaZDGWdYU2yYNHPvClh2NuH2Mq5Tud0Z/M=
+	b=DnJ2xcg4xnBEO7W/tRz/1r12v3InKetHonQqHB+H+3vwlYnWusuUqMeHZQqpGrngM
+	 Oq6CxQeRYoZXacxviZgS3az9q2ZL4u8+Qp0Qf1IP0DE1cnWQFhHPh2J4NlTVQpVtf/
+	 HJcuPTbPQeL8+aYoieY5ju+fV6euUXonlpjwutUI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730154AbfE3DPL (ORCPT
+        id S1729382AbfE3DPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:15:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55246 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:15:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729058AbfE3DM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:29 -0400
+        id S1729095AbfE3DMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:12:34 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67CE8218B6;
-        Thu, 30 May 2019 03:12:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5DDC23DE3;
+        Thu, 30 May 2019 03:12:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185949;
-        bh=NY+bzGCLjPOwmO4DfrTLzjvI0VS/oC+/ExlyrjN8xHU=;
+        s=default; t=1559185952;
+        bh=G0WwxCGxWt8M2yPclyrVs6do+B1idp9xfogDxJogi1U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hmAdeJTB9h4RdHZzpVsLknpTOx+zgsix2PACuYvP1VfetU08/wcZArCFDXYDKQFfI
-         zwVthCc1HI9CT5GU9uJgZPAaKJxq+2vLT5NO+xkW413k75Ss4jhGFZgkBQmsMNLlpk
-         BzLCpguTh4ZJcIkczPFsxArWX/i6tsqlsybWfank=
+        b=B8TLKDQrTv0jTBy0zDTk+eZoLeQTYb0L+DqVsgSuyHw/2RAZGZEusz292Fi5NrYFi
+         YR6g9Bj2oOgo4zBq1atVAHwsAVVG+55M4LPHVlfh0Smif2HyRV5fp+WuUEQgcF8LyY
+         /+vernLuXWFeVmYP5S8472e7w/bEadyaMLY3ePzA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <jsmart2021@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 334/405] thunderbolt: property: Fix a NULL pointer dereference
-Date:   Wed, 29 May 2019 20:05:32 -0700
-Message-Id: <20190530030557.612661571@linuxfoundation.org>
+Subject: [PATCH 5.1 367/405] scsi: lpfc: Fix mailbox hang on adapter init
+Date:   Wed, 29 May 2019 20:06:05 -0700
+Message-Id: <20190530030559.267293822@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -60,34 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 106204b56f60abf1bead7dceb88f2be3e34433da ]
+[ Upstream commit e8869f5b0a7273fcf20ef99066fd8129e58ba5b7 ]
 
-In case kzalloc fails, the fix releases resources and returns
--ENOMEM to avoid the NULL pointer dereference.
+The adapter initialization sequence enables interrupts, initializes the
+adapter link_state to LINK_DOWN, then issues commands to initialize the
+adapter. The interrupt handler on the adapter validates the link_state (has
+to be at least LINK_DOWN) and if invalid, will discard the interrupting
+event.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+In most cases, there is not a command completion, thus an interrupt until
+the initialization commands have been sent which is post the setting of
+state to LINK_DOWN.  However, in cases of firmware reset, the reset will
+modify the link_state to an invalid value (indicating a reset of the
+adapter) and there occasionally are cases where the adapter will generate
+an asynchronous event which shares the eq/cq used for mailbox commands. In
+the failure case, an interrupt is generated immediately after enabling them
+due to the async event.  As link_state is invalid, the eq is list and the
+CQ not serviced.  At this point link_state is initialized and the mailbox
+command sent.  As the CQ has not been serviced, it is not armed, so no
+interrupt event is generated when the mailbox command completes.
+
+Modify the initialization sequence so that interrupts are enabled after
+link_state is properly initialized, which avoids the race condition with
+the async event.
+
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thunderbolt/property.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/scsi/lpfc/lpfc_sli.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/thunderbolt/property.c b/drivers/thunderbolt/property.c
-index ead18c532b53d..8c077c4f3b5b2 100644
---- a/drivers/thunderbolt/property.c
-+++ b/drivers/thunderbolt/property.c
-@@ -548,6 +548,11 @@ int tb_property_add_data(struct tb_property_dir *parent, const char *key,
+diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+index 57b4a463b5892..7d2abb70cf093 100644
+--- a/drivers/scsi/lpfc/lpfc_sli.c
++++ b/drivers/scsi/lpfc/lpfc_sli.c
+@@ -7652,12 +7652,6 @@ lpfc_sli4_hba_setup(struct lpfc_hba *phba)
+ 		phba->cfg_xri_rebalancing = 0;
+ 	}
  
- 	property->length = size / 4;
- 	property->value.data = kzalloc(size, GFP_KERNEL);
-+	if (!property->value.data) {
-+		kfree(property);
-+		return -ENOMEM;
-+	}
+-	/* Arm the CQs and then EQs on device */
+-	lpfc_sli4_arm_cqeq_intr(phba);
+-
+-	/* Indicate device interrupt mode */
+-	phba->sli4_hba.intr_enable = 1;
+-
+ 	/* Allow asynchronous mailbox command to go through */
+ 	spin_lock_irq(&phba->hbalock);
+ 	phba->sli.sli_flag &= ~LPFC_SLI_ASYNC_MBX_BLK;
+@@ -7726,6 +7720,12 @@ lpfc_sli4_hba_setup(struct lpfc_hba *phba)
+ 		phba->trunk_link.link3.state = LPFC_LINK_DOWN;
+ 	spin_unlock_irq(&phba->hbalock);
+ 
++	/* Arm the CQs and then EQs on device */
++	lpfc_sli4_arm_cqeq_intr(phba);
 +
- 	memcpy(property->value.data, buf, buflen);
- 
- 	list_add_tail(&property->list, &parent->properties);
++	/* Indicate device interrupt mode */
++	phba->sli4_hba.intr_enable = 1;
++
+ 	if (!(phba->hba_flag & HBA_FCOE_MODE) &&
+ 	    (phba->hba_flag & LINK_DISABLED)) {
+ 		lpfc_printf_log(phba, KERN_ERR, LOG_INIT | LOG_SLI,
 -- 
 2.20.1
 
