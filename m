@@ -2,107 +2,161 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A87C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA8EC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9738A25F41
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C43A25F40
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:16:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IhxIFiTl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfE3SQB (ORCPT
+        id S1726757AbfE3SQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 14:16:01 -0400
-Received: from mga11.intel.com ([192.55.52.93]:32247 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726280AbfE3SQB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 14:16:01 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 11:16:00 -0700
-X-ExtLoop1: 1
-Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.24.14.123]) ([10.24.14.123])
-  by orsmga003.jf.intel.com with ESMTP; 30 May 2019 11:16:00 -0700
-Subject: Re: [PATCH] x86/resctrl: Don't stop walking closids when a locksetup
- group is found
-To:     James Morse <james.morse@arm.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org
-Cc:     Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Avin <hpa@zytor.com>
-References: <20190530155742.84547-1-james.morse@arm.com>
-From:   Reinette Chatre <reinette.chatre@intel.com>
-Message-ID: <3859c54e-65fb-5760-5092-509b4a4fb6ff@intel.com>
-Date:   Thu, 30 May 2019 11:16:00 -0700
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Thu, 30 May 2019 14:16:41 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:36002 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726461AbfE3SQl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 14:16:41 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4UIGVuL114706;
+        Thu, 30 May 2019 13:16:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559240191;
+        bh=oRaCzpkhU9F+bh07oXIPESTr239zaKBUXyVW0YXCdGs=;
+        h=From:To:CC:Subject:Date;
+        b=IhxIFiTlpl3MpZ5YNOyritLcMANh010TLRRdSYvQGL9NKu3QbE6yT7XG9SjlyZ5pb
+         ECCgzi/wzUpLXwRFNBSK4v0dYc5fCL+sgjJ24cR7TkWJhENsyM7APz0xbyXeO4TSAE
+         etbD8t0eeHc2HiUl2XMKYsCgQ5lIIl+n3MannB/4=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4UIGVVS089727
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 30 May 2019 13:16:31 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 30
+ May 2019 13:16:31 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 30 May 2019 13:16:30 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4UIGUGj035678;
+        Thu, 30 May 2019 13:16:31 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v4 1/2] leds: multicolor: Add sysfs interface definition
+Date:   Thu, 30 May 2019 13:16:28 -0500
+Message-ID: <20190530181630.30373-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.21.0.5.gaeb582a983
 MIME-Version: 1.0
-In-Reply-To: <20190530155742.84547-1-james.morse@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi James,
+Add a documentation of LED Multicolor LED class specific
+sysfs attributes.
 
-On 5/30/2019 8:57 AM, James Morse wrote:
-> When a new control group is created __init_one_rdt_domain() walks all
-> the other closids to calculate the sets of used and unused bits.
-> 
-> If it discovers a pseudo_locksetup group, it breaks out of the loop.
-> This means any later closid doesn't get its used bits added to used_b.
-> These bits will then get set in unused_b, and added to the new
-> control group's configuration, even if they were marked as exclusive
-> for a later closid.
-> 
-> When encountering a pseudo_locksetup group, we should continue. This
-> is because "a resource group enters 'pseudo-locked' mode after the
-> schemata is written while the resource group is in 'pseudo-locksetup'
-> mode." When we find a pseudo_locksetup group, its configuration is
-> expected to be overwritten, we can skip it.
-> 
-> Fixes: dfe9674b04ff6 ("x86/intel_rdt: Enable entering of pseudo-locksetup mode")
-> Signed-off-by: James Morse <james.morse@arm.com>
-> ---
->  arch/x86/kernel/cpu/resctrl/rdtgroup.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-> index 333c177a2471..049ccb709957 100644
-> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-> @@ -2541,8 +2541,15 @@ static int __init_one_rdt_domain(struct rdt_domain *d, struct rdt_resource *r,
->  	for (i = 0; i < closids_supported(); i++, ctrl++) {
->  		if (closid_allocated(i) && i != closid) {
->  			mode = rdtgroup_mode_by_closid(i);
-> -			if (mode == RDT_MODE_PSEUDO_LOCKSETUP)
-> -				break;
-> +			if (mode == RDT_MODE_PSEUDO_LOCKSETUP) {
-> +				/*
-> +				 * ctrl values for locksetup aren't relevant
-> +				 * until the schemata is written, and the mode
-> +				 * becomes RDT_MODE_PSEUDO_LOCKED.
-> +				 */
-> +				continue;
-> +			}
-> +
->  			/*
->  			 * If CDP is active include peer domain's
->  			 * usage to ensure there is no overlap
-> 
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
 
-Thank you very much for catching this. The only possible quibbles that
-will be guided by the maintainer's style preference are the unnecessary
-braces and extra empty line, but this fix is needed. Also, could "Cc:
-stable@vger.kernel.org" please be added to the sign-off area?
+v4 - Add LED class parent brightness definition to the text - https://lore.kernel.org/patchwork/patch/1078398/
 
-Acked-by: Reinette Chatre <reinette.chatre@intel.com>
+ .../ABI/testing/sysfs-class-led-multicolor    | 74 +++++++++++++++++++
+ 1 file changed, 74 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
 
-Reinette
+diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor b/Documentation/ABI/testing/sysfs-class-led-multicolor
+new file mode 100644
+index 000000000000..ec2b6ac63ecc
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-class-led-multicolor
+@@ -0,0 +1,74 @@
++What:		/sys/class/leds/<led>/brightness
++Date:		April 2019
++KernelVersion:	5.2
++Contact:	Dan Murphy <dmurphy@ti.com>
++Description:	read/write
++		The multicolor class will redirect the device drivers call back
++		function for brightness control to the multicolor class
++		brightness control function.
++
++		Writing to this file will update all LEDs within the group to a
++		calculated percentage of what each color LED in the group is set
++		to.  Please refer to the leds-class-multicolor.txt in the
++		Documentation directory for a complete description.
++
++		The value of the color is from 0 to
++		/sys/class/leds/<led>/max_brightness.
++
++What:		/sys/class/leds/<led>/colors/sync_enable
++Date:		April 2019
++KernelVersion:	5.2
++Contact:	Dan Murphy <dmurphy@ti.com>
++Description:	read/write
++		Writing a 1 to this file will enable the synchronization of all
++		the defined color LEDs within the LED node.  Brightness values
++		for each LED will be stored and written when sync is set to 1.
++		Writing a 0 to this file will disable syncing and allow
++		individual control of the LEDs brightness settings.
++
++What:		/sys/class/leds/<led>/colors/sync
++Date:		April 2019
++KernelVersion:	5.2
++Contact:	Dan Murphy <dmurphy@ti.com>
++Description:	write only
++		Writing a 1 to this file while sync_enable is set to 1 will
++		write the current brightness values to all defined LEDs within
++		the LED node.  All LEDs defined will be configured based
++		on the brightness that has been requested.
++
++		If sync_enable is set to 0 then writing a 1 to sync has no
++		affect on the LEDs.
++
++What:		/sys/class/leds/<led>/colors/<led_color>/brightness
++Date:		April 2019
++KernelVersion:	5.2
++Contact:	Dan Murphy <dmurphy@ti.com>
++Description:	read/write
++		The led_color directory is dynamically created based on the
++		colors defined by the registrar of the class.
++		The led_color can be but not limited to red, green, blue,
++		white, amber, yellow and violet.  Drivers can also declare a
++		LED color for presentation.  There is one directory per color
++		presented.  The brightness file is created under each
++		led_color directory and controls the individual LED color
++		setting.
++
++		If sync is enabled then	writing the brightness value of the LED
++		is deferred until a 1 is written to
++		/sys/class/leds/<led>/color/sync.  If syncing is
++		disabled then the LED brightness value will be written
++		immediately to the LED driver.
++
++		The value of the color is from 0 to
++		/sys/class/leds/<led>/colors/<led_color>/max_brightness.
++
++What:		/sys/class/leds/<led>/colors/<led_color>/max_brightness
++Date:		April 2019
++KernelVersion:	5.2
++Contact:	Dan Murphy <dmurphy@ti.com>
++Description:	read only
++		Maximum brightness level for the LED color, default is
++		255 (LED_FULL).
++
++		If the LED does not support different brightness levels, this
++		should be 1.
+-- 
+2.21.0.5.gaeb582a983
+
