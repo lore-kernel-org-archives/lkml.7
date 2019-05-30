@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F48C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B94C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:10:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91F5E25152
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92AC125152
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:10:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189440;
-	bh=xtJxQC0Yev/gdAJgBJR+QbV4KFDeR1pDpv2e2eMbnsc=;
+	s=default; t=1559189448;
+	bh=4db5lcLgJ3ET8TrH4aWhQ7EKOifDOX0uLXxtvfOh7nM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PAg+48yM3Po4Vb6u2L7upIMQQfQCTpfB/sMiyfZWl5wD1k7YxkY0hPYbfOOqXqcnz
-	 aKQwWEOv1snJphD+aT/9Rh5OYm+KfZyZeQnH6+IHyFfNcvN92rzzmLxTI25pEgzydE
-	 +zDWlYhe3RlqiRpZFSJ+p2zRYGl54OP/6PFXz0xs=
+	b=UAigZjXA/IIK4CbkFjzpdZBpbpkPRN4m0WR5VujIX4nTQ2CiG7u/94dQ/LwH2DgE7
+	 ll+Oolk4zW1iYUwR08o31DaTLosGI5QHwe6F4qpNrDYF8ajN1CuANseFl3OAICTp0f
+	 7ASvb9vPCf5xexidAbsnoolFL7i1Ntd4z9GVFXo0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727231AbfE3EKj (ORCPT
+        id S1727456AbfE3EKo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:10:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44526 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:10:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730885AbfE3DRA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:17:00 -0400
+        id S1730878AbfE3DQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:16:59 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64EA524654;
-        Thu, 30 May 2019 03:17:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C1F724627;
+        Thu, 30 May 2019 03:16:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186220;
-        bh=xtJxQC0Yev/gdAJgBJR+QbV4KFDeR1pDpv2e2eMbnsc=;
+        s=default; t=1559186218;
+        bh=4db5lcLgJ3ET8TrH4aWhQ7EKOifDOX0uLXxtvfOh7nM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IF/A/y7I8BAlvJlaGjpL09RqoSE9JlSd295xF2qUk8jGDSFn7kiGe/T6iO+CFQEJ4
-         1QeTQf2lMOpwdYIREpIPCE21xyzWVR7XMKAS6KKwYUYOEe5G+f87NJJRy1lx8bMzKu
-         UB/7Bgsim/HVPmC6pWNx8CemV3NYLXhSHhNpZ1rE=
+        b=ytsp3uqcOBlnb6sRDhZxJfJOPuQtZq6QEbTu/DMyifb4SpLXXHfr+gX0t+muoUPr/
+         O7i1if/+8sALyUghzXfCbRhf99891mwSrhV7oPcNfT8NEMe0RIjMuU37OJO5imnb0d
+         okjn1B+cMc0Hv2w0ekVHHrifNMkSnDWJ/wNZlOxo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 111/276] smpboot: Place the __percpu annotation correctly
-Date:   Wed, 29 May 2019 20:04:29 -0700
-Message-Id: <20190530030532.921374081@linuxfoundation.org>
+        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
+        Daniel Jurgens <danielj@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 107/276] RDMA/cma: Consider scope_id while binding to ipv6 ll address
+Date:   Wed, 29 May 2019 20:04:25 -0700
+Message-Id: <20190530030532.719815315@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -64,45 +62,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d4645d30b50d1691c26ff0f8fa4e718b08f8d3bb ]
+[ Upstream commit 5d7ed2f27bbd482fd29e6b2e204b1a1ee8a0b268 ]
 
-The test robot reported a wrong assignment of a per-CPU variable which
-it detected by using sparse and sent a report. The assignment itself is
-correct. The annotation for sparse was wrong and hence the report.
-The first pointer is a "normal" pointer and points to the per-CPU memory
-area. That means that the __percpu annotation has to be moved.
+When two netdev have same link local addresses (such as vlan and non
+vlan), two rdma cm listen id should be able to bind to following different
+addresses.
 
-Move the __percpu annotation to pointer which points to the per-CPU
-area. This change affects only the sparse tool (and is ignored by the
-compiler).
+listener-1: addr=lla, scope_id=A, port=X
+listener-2: addr=lla, scope_id=B, port=X
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul E. McKenney <paulmck@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: f97f8f06a49fe ("smpboot: Provide infrastructure for percpu hotplug threads")
-Link: http://lkml.kernel.org/r/20190424085253.12178-1-bigeasy@linutronix.de
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+However while comparing the addresses only addr and port are considered,
+due to which 2nd listener fails to listen.
+
+In below example of two listeners, 2nd listener is failing with address in
+use error.
+
+$ rping -sv -a fe80::268a:7ff:feb3:d113%ens2f1 -p 4545&
+
+$ rping -sv -a fe80::268a:7ff:feb3:d113%ens2f1.200 -p 4545
+rdma_bind_addr: Address already in use
+
+To overcome this, consider the scope_ids as well which forms the accurate
+IPv6 link local address.
+
+Signed-off-by: Parav Pandit <parav@mellanox.com>
+Reviewed-by: Daniel Jurgens <danielj@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/smpboot.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/core/cma.c | 25 +++++++++++++++++++------
+ 1 file changed, 19 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/smpboot.h b/include/linux/smpboot.h
-index d0884b5250010..9d1bc65d226cc 100644
---- a/include/linux/smpboot.h
-+++ b/include/linux/smpboot.h
-@@ -29,7 +29,7 @@ struct smpboot_thread_data;
-  * @thread_comm:	The base name of the thread
-  */
- struct smp_hotplug_thread {
--	struct task_struct __percpu	**store;
-+	struct task_struct		* __percpu *store;
- 	struct list_head		list;
- 	int				(*thread_should_run)(unsigned int cpu);
- 	void				(*thread_fn)(unsigned int cpu);
+diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
+index 6f5be78024762..39dc7be56884a 100644
+--- a/drivers/infiniband/core/cma.c
++++ b/drivers/infiniband/core/cma.c
+@@ -1078,18 +1078,31 @@ static inline bool cma_any_addr(const struct sockaddr *addr)
+ 	return cma_zero_addr(addr) || cma_loopback_addr(addr);
+ }
+ 
+-static int cma_addr_cmp(struct sockaddr *src, struct sockaddr *dst)
++static int cma_addr_cmp(const struct sockaddr *src, const struct sockaddr *dst)
+ {
+ 	if (src->sa_family != dst->sa_family)
+ 		return -1;
+ 
+ 	switch (src->sa_family) {
+ 	case AF_INET:
+-		return ((struct sockaddr_in *) src)->sin_addr.s_addr !=
+-		       ((struct sockaddr_in *) dst)->sin_addr.s_addr;
+-	case AF_INET6:
+-		return ipv6_addr_cmp(&((struct sockaddr_in6 *) src)->sin6_addr,
+-				     &((struct sockaddr_in6 *) dst)->sin6_addr);
++		return ((struct sockaddr_in *)src)->sin_addr.s_addr !=
++		       ((struct sockaddr_in *)dst)->sin_addr.s_addr;
++	case AF_INET6: {
++		struct sockaddr_in6 *src_addr6 = (struct sockaddr_in6 *)src;
++		struct sockaddr_in6 *dst_addr6 = (struct sockaddr_in6 *)dst;
++		bool link_local;
++
++		if (ipv6_addr_cmp(&src_addr6->sin6_addr,
++					  &dst_addr6->sin6_addr))
++			return 1;
++		link_local = ipv6_addr_type(&dst_addr6->sin6_addr) &
++			     IPV6_ADDR_LINKLOCAL;
++		/* Link local must match their scope_ids */
++		return link_local ? (src_addr6->sin6_scope_id !=
++				     dst_addr6->sin6_scope_id) :
++				    0;
++	}
++
+ 	default:
+ 		return ib_addr_cmp(&((struct sockaddr_ib *) src)->sib_addr,
+ 				   &((struct sockaddr_ib *) dst)->sib_addr);
 -- 
 2.20.1
 
