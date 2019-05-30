@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5261BC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB32FC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15CF024CBF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:46:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A20FE24CC5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:46:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187980;
-	bh=5PplgaAws3iXqb6sbpckHoEGhKhqIT2kiGkYsYt5o04=;
+	s=default; t=1559187984;
+	bh=j5IrkmXoqipm6SS+hShpCMelEn2qPU/FEDpbZVsmWNM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hNvK6LTMPrNvxEagdSB0rqsHtGwVjB62pPM/1+vskOdNBcd37RDyVXQV7sz7Fhlqi
-	 aWGhNrgknmri9h6hPzmQ8ywo0Q9PkVS2G1pN1GSF24Cjhqs82qlU5Q+fwq4CGaSUQy
-	 BUGIIyHk+cP9XV/cii3vbe87xuyK3xfqUzfdhjek=
+	b=ZWdOrlm1Kx/yI5M5fq078jav5TtwWkx+H3qBEA9D6zoCwUeVdSULBm5n9zmAAzqAQ
+	 JXA/QL5YPFKtyxg/AF+qMbzQq5697bwxybHs8fAHurgfVYMF0/KpUhtrr3sfTzkb4m
+	 Ca3/0SSPJZc4vdN92IHFqRw1ccbEPtb7CfqPvlHE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732906AbfE3DqT (ORCPT
+        id S1732277AbfE3DUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:46:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59298 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:20:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732295AbfE3DUm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:20:42 -0400
+        id S1730545AbfE3DP5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:57 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCB5024949;
-        Thu, 30 May 2019 03:20:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66DCB2458C;
+        Thu, 30 May 2019 03:15:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186441;
-        bh=5PplgaAws3iXqb6sbpckHoEGhKhqIT2kiGkYsYt5o04=;
+        s=default; t=1559186157;
+        bh=j5IrkmXoqipm6SS+hShpCMelEn2qPU/FEDpbZVsmWNM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EcIGmiEvIsxWG/oyt+pNK4MaVrssJ40bKpDAdkI7k23Qa3CnUBAn0Z+7jCOWKnY6C
-         MSMVC3o/2jaaNJSNe7F0W9c/SIbs95wxFpSE/P2C/Wn8Kq6pJtCGld4p1BkRi/Zqir
-         ZRW0enx7bFdYgMpbzysxQv3wDjxEAugECBG2omSg=
+        b=f7npststurNcj6Mkm6U+Ln2UIa0GYpUZ7j6/0ktmoNl1CiHT/8Jhurbh8RittzTR2
+         AgoGHgRZ15qlSgTr0c570wVq3TteEpZSA6bpqruo5cagwUl+hMriWIz0PqWx0M7m6j
+         fO15k3F/DyV5G5WyPVTvy26W6R1QtKkqBKhVh7HA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 045/128] crypto: sun4i-ss - Fix invalid calculation of hash end
-Date:   Wed, 29 May 2019 20:06:17 -0700
-Message-Id: <20190530030442.779255122@linuxfoundation.org>
+Subject: [PATCH 5.0 345/346] drm/sun4i: dsi: Enforce boundaries on the start delay
+Date:   Wed, 29 May 2019 20:06:58 -0700
+Message-Id: <20190530030558.196706692@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
-References: <20190530030432.977908967@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,38 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f87391558acf816b48f325a493d81d45dec40da0 ]
+[ Upstream commit efa31801203ac2f5c6a82a28cb991c7163ee0f1d ]
 
-When nbytes < 4, end is wronlgy set to a negative value which, due to
-uint, is then interpreted to a large value leading to a deadlock in the
-following code.
+The Allwinner BSP makes sure that we don't end up with a null start delay
+or with a delay larger than vtotal.
 
-This patch fix this problem.
+The former condition is likely to happen now with the reworked start delay,
+so make sure we enforce the same boundaries.
 
-Fixes: 6298e948215f ("crypto: sunxi-ss - Add Allwinner Security System crypto accelerator")
-Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/c9889cf5f7a3d101ef380905900b45a182596f56.1549896081.git-series.maxime.ripard@bootlin.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/sunxi-ss/sun4i-ss-hash.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/sunxi-ss/sun4i-ss-hash.c b/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
-index 0de2f62d51ff7..ec16ec2e284d0 100644
---- a/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
-+++ b/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
-@@ -250,7 +250,10 @@ static int sun4i_hash(struct ahash_request *areq)
- 		}
- 	} else {
- 		/* Since we have the flag final, we can go up to modulo 4 */
--		end = ((areq->nbytes + op->len) / 4) * 4 - op->len;
-+		if (areq->nbytes < 4)
-+			end = 0;
-+		else
-+			end = ((areq->nbytes + op->len) / 4) * 4 - op->len;
- 	}
+diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+index 3de41de43127b..97a0573cc5145 100644
+--- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
++++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+@@ -358,8 +358,12 @@ static u16 sun6i_dsi_get_video_start_delay(struct sun6i_dsi *dsi,
+ 					   struct drm_display_mode *mode)
+ {
+ 	u16 start = clamp(mode->vtotal - mode->vdisplay - 10, 8, 100);
++	u16 delay = mode->vtotal - (mode->vsync_end - mode->vdisplay) + start;
  
- 	/* TODO if SGlen % 4 and op->len == 0 then DMA */
+-	return mode->vtotal - (mode->vsync_end - mode->vdisplay) + start;
++	if (delay > mode->vtotal)
++		delay = delay % mode->vtotal;
++
++	return max_t(u16, delay, 1);
+ }
+ 
+ static void sun6i_dsi_setup_burst(struct sun6i_dsi *dsi,
 -- 
 2.20.1
 
