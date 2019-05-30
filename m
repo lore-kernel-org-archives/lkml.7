@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BACC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55939C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF84425B95
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B2CA25B91
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:46:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191576;
-	bh=GZUqsTk4DRyMhsW1KtZI2tC5X5LSHWq2AHH1vJ4K+oM=;
+	s=default; t=1559191579;
+	bh=JiKLfGdF1GBvxS/NHn/yixWD70lJRE3tN76wzctWgYo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rgoh8BC6tYJ10xS5XxsEBuaVR+/M3lNxvDCXG+ARlMQ9KqF2MQKFyfU2krS6KQsQ8
-	 l0BiQ+uM/NHj+KLcY4arQmq4/PP94I9dgrKbZzwm1ZRdqRUSgSyNPJtCwv5c1T3Jf4
-	 Q8jEfErwQ9BhGKALxuvnZ6U/Oqqo9fEMr+8umOrw=
+	b=AGEoRRy/+VVBL9QE3Yf4W9VUVUlCXePafo+ecG1w5zhFKXKIqLWOi7rNxInBTkw8I
+	 gQ63K1bXVu8GBSyWyJv8PYOEiMV/DwKe+wXtuhXtZjPzznh0sZXTpCDTAXFxOaW7kg
+	 aSlT9/JvnCwnddmuKcnbERF8NUhSrfqYFZSuaHUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388828AbfE3EqQ (ORCPT
+        id S2388837AbfE3EqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:46:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52128 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:46:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728657AbfE3DLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728655AbfE3DLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:11:44 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FA98244C4;
-        Thu, 30 May 2019 03:11:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E49C244FC;
+        Thu, 30 May 2019 03:11:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185904;
-        bh=GZUqsTk4DRyMhsW1KtZI2tC5X5LSHWq2AHH1vJ4K+oM=;
+        s=default; t=1559185902;
+        bh=JiKLfGdF1GBvxS/NHn/yixWD70lJRE3tN76wzctWgYo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XDq+ijSknErqK8+23pyCh04VQSURpX2Y8oEBR29tsWEgjAEcTnAsFIIU4xktW93cM
-         p8niY5HmFqVrr5grz7vP/zZwlcQEOOnDeGKgGL3Cox0nDNMx4qRLrdbnpLs4aPq6ns
-         JvUPcii+CCvnYlZ1bNbMDaN49vptAZ2z8bRSR1ds=
+        b=lw2P+prs42dAwb11Sw0mXBOs/dJ2FvUDdL76szxreQz0cXIcCIOWE6jG8+IPUBxHf
+         dmlnkw5jfC/+XTnk81yzBwiO/5uqUbqcfM0VchCQw+VxFpYMluUbJ8/fyzqWAtoXz8
+         Cfgbg+FO6lN4LgmBk9+ylNaW7b+mqk87hxpPuxv8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        dri-devel@lists.freedesktop.org ("open list:DRM DRIVERS"),
-        Eric Anholt <eric@anholt.net>, Sasha Levin <sashal@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH 5.1 239/405] drm/pl111: fix possible object reference leak
-Date:   Wed, 29 May 2019 20:03:57 -0700
-Message-Id: <20190530030553.101349333@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 272/405] sh: sh7786: Add explicit I/O cast to sh7786_mm_sel()
+Date:   Wed, 29 May 2019 20:04:30 -0700
+Message-Id: <20190530030554.657716581@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -62,66 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bc29d3a69d4c1bd1a103e8b3c1ed81b807c1870b ]
+[ Upstream commit 8440bb9b944c02222c7a840d406141ed42e945cd ]
 
-The call to of_find_matching_node_and_match returns a node pointer with
-refcount incremented thus it must be explicitly decremented after the
-last usage.
+When compile-testing on arm:
 
-Detected by coccinelle with the following warnings:
-drivers/gpu/drm/pl111/pl111_versatile.c:333:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 317, but without a corresponding object release within this function.
-drivers/gpu/drm/pl111/pl111_versatile.c:340:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 317, but without a corresponding object release within this function.
-drivers/gpu/drm/pl111/pl111_versatile.c:346:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 317, but without a corresponding object release within this function.
-drivers/gpu/drm/pl111/pl111_versatile.c:354:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 317, but without a corresponding object release within this function.
-drivers/gpu/drm/pl111/pl111_versatile.c:395:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 317, but without a corresponding object release within this function.
-drivers/gpu/drm/pl111/pl111_versatile.c:402:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 317, but without a corresponding object release within this function.
+    arch/sh/include/cpu-sh4/cpu/sh7786.h: In function ‘sh7786_mm_sel’:
+    arch/sh/include/cpu-sh4/cpu/sh7786.h:135:21: warning: passing argument 1 of ‘__raw_readl’ makes pointer from integer without a cast [-Wint-conversion]
+      return __raw_readl(0xFC400020) & 0x7;
+			 ^~~~~~~~~~
+    In file included from include/linux/io.h:25:0,
+		     from arch/sh/include/cpu-sh4/cpu/sh7786.h:14,
+		     from drivers/pinctrl/sh-pfc/pfc-sh7786.c:15:
+    arch/arm/include/asm/io.h:113:21: note: expected ‘const volatile void *’ but argument is of type ‘unsigned int’
+     #define __raw_readl __raw_readl
+			 ^
+    arch/arm/include/asm/io.h:114:19: note: in expansion of macro ‘__raw_readl’
+     static inline u32 __raw_readl(const volatile void __iomem *addr)
+		       ^~~~~~~~~~~
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Eric Anholt <eric@anholt.net> (supporter:DRM DRIVER FOR ARM PL111 CLCD)
-Cc: David Airlie <airlied@linux.ie> (maintainer:DRM DRIVERS)
-Cc: Daniel Vetter <daniel@ffwll.ch> (maintainer:DRM DRIVERS)
-Cc: dri-devel@lists.freedesktop.org (open list:DRM DRIVERS)
-Cc: linux-kernel@vger.kernel.org (open list)
-Signed-off-by: Eric Anholt <eric@anholt.net>
-Link: https://patchwork.freedesktop.org/patch/msgid/1554307455-40361-6-git-send-email-wen.yang99@zte.com.cn
+__raw_readl() on SuperH is a macro that casts the passed I/O address to
+the correct type, while the implementations on most other architectures
+expect to be passed the correct pointer type.
+
+Add an explicit cast to fix this.
+
+Note that this also gets rid of a sparse warning on SuperH:
+
+    arch/sh/include/cpu-sh4/cpu/sh7786.h:135:16: warning: incorrect type in argument 1 (different base types)
+    arch/sh/include/cpu-sh4/cpu/sh7786.h:135:16:    expected void const volatile [noderef] <asn:2>*<noident>
+    arch/sh/include/cpu-sh4/cpu/sh7786.h:135:16:    got unsigned int
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/pl111/pl111_versatile.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/sh/include/cpu-sh4/cpu/sh7786.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/pl111/pl111_versatile.c b/drivers/gpu/drm/pl111/pl111_versatile.c
-index b9baefdba38a1..1c318ad32a8cd 100644
---- a/drivers/gpu/drm/pl111/pl111_versatile.c
-+++ b/drivers/gpu/drm/pl111/pl111_versatile.c
-@@ -330,6 +330,7 @@ int pl111_versatile_init(struct device *dev, struct pl111_drm_dev_private *priv)
- 		ret = vexpress_muxfpga_init();
- 		if (ret) {
- 			dev_err(dev, "unable to initialize muxfpga driver\n");
-+			of_node_put(np);
- 			return ret;
- 		}
+diff --git a/arch/sh/include/cpu-sh4/cpu/sh7786.h b/arch/sh/include/cpu-sh4/cpu/sh7786.h
+index 8f9bfbf3cdb10..d6cce65b48713 100644
+--- a/arch/sh/include/cpu-sh4/cpu/sh7786.h
++++ b/arch/sh/include/cpu-sh4/cpu/sh7786.h
+@@ -132,7 +132,7 @@ enum {
  
-@@ -337,17 +338,20 @@ int pl111_versatile_init(struct device *dev, struct pl111_drm_dev_private *priv)
- 		pdev = of_find_device_by_node(np);
- 		if (!pdev) {
- 			dev_err(dev, "can't find the sysreg device, deferring\n");
-+			of_node_put(np);
- 			return -EPROBE_DEFER;
- 		}
- 		map = dev_get_drvdata(&pdev->dev);
- 		if (!map) {
- 			dev_err(dev, "sysreg has not yet probed\n");
- 			platform_device_put(pdev);
-+			of_node_put(np);
- 			return -EPROBE_DEFER;
- 		}
- 	} else {
- 		map = syscon_node_to_regmap(np);
- 	}
-+	of_node_put(np);
+ static inline u32 sh7786_mm_sel(void)
+ {
+-	return __raw_readl(0xFC400020) & 0x7;
++	return __raw_readl((const volatile void __iomem *)0xFC400020) & 0x7;
+ }
  
- 	if (IS_ERR(map)) {
- 		dev_err(dev, "no Versatile syscon regmap\n");
+ #endif /* __CPU_SH7786_H__ */
 -- 
 2.20.1
 
