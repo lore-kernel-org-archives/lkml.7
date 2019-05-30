@@ -2,187 +2,158 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4EFCC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 23:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8176FC28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 23:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A37D262EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 23:12:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="ieNj+yxW"
+	by mail.kernel.org (Postfix) with ESMTP id 6476524638
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 23:13:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbfE3XMN (ORCPT
+        id S1726761AbfE3XNL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 19:12:13 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:34078 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726652AbfE3XML (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 19:12:11 -0400
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UN9Y06030401
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 16:12:11 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=facebook; bh=L+Xo4JtXD536apqmBpEwKLsnjYbEVrCerp8o0Fqlvl8=;
- b=ieNj+yxWu54i17/IIDJ3/sRL8AHZZ+waW9dmChEeyYvd6xbK0fTpseG9rwzauQZFlmdR
- 2YZ/WwoMcUCn9Kvk8OF61nfe21gCVi29TQysQg8BW46xcPoN564htbwE7jsjjxDb1ZPm
- O7pA2TN466aTQiYHL1K681zDHWUA5vClPO8= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2stgjuhud9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 16:12:11 -0700
-Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::125) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Thu, 30 May 2019 16:12:07 -0700
-Received: by devvm4117.prn2.facebook.com (Postfix, from userid 167582)
-        id 0C898E9320CC; Thu, 30 May 2019 16:12:03 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Vijay Khemka <vijaykhemka@fb.com>
-Smtp-Origin-Hostname: devvm4117.prn2.facebook.com
-To:     Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        <linux-hwmon@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <vijaykhemka@fb.com>, <joel@jms.id.au>,
-        <linux-aspeed@lists.ozlabs.org>, <sdasari@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH v2 2/2] Docs: hwmon: pmbus: Add PXE1610 driver
-Date:   Thu, 30 May 2019 16:11:57 -0700
-Message-ID: <20190530231159.222188-2-vijaykhemka@fb.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190530231159.222188-1-vijaykhemka@fb.com>
-References: <20190530231159.222188-1-vijaykhemka@fb.com>
-X-FB-Internal: Safe
+        Thu, 30 May 2019 19:13:11 -0400
+Received: from mga01.intel.com ([192.55.52.88]:32124 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726326AbfE3XNL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 19:13:11 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 16:13:10 -0700
+X-ExtLoop1: 1
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by orsmga001.jf.intel.com with ESMTP; 30 May 2019 16:13:10 -0700
+Subject: [PATCH v2 0/8] EFI Specific Purpose Memory Support
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-efi@vger.kernel.org
+Cc:     Dave Jiang <dave.jiang@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kbuild test robot <lkp@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Len Brown <lenb@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Darren Hart <dvhart@infradead.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-nvdimm@lists.01.org
+Date:   Thu, 30 May 2019 15:59:22 -0700
+Message-ID: <155925716254.3775979.16716824941364738117.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-2-gc94f
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-30_14:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905300162
-X-FB-Internal: deliver
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added support for Infenion PXE1610 driver
+Changes since the initial RFC [1]
+* Split the generic detection of the attribute from any policy /
+  mechanism that leverages the EFI_MEMORY_SP designation (Ard).
 
-Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
+* Various cleanups to the lib/memregion implementation (Willy)
+
+* Rebase on v5.2-rc2
+
+* Several fixes resulting from testing with efi_fake_mem and the
+  work-in-progress patches that add HMAT support to qemu. Details in
+  patch3 and patch8.
+
+[1]: https://lore.kernel.org/lkml/155440490809.3190322.15060922240602775809.stgit@dwillia2-desk3.amr.corp.intel.com/
+
 ---
-Changes in v2:
-incorporated all the feedback from Guenter Roeck <linux@roeck-us.net>
 
- Documentation/hwmon/pxe1610 | 90 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 90 insertions(+)
- create mode 100644 Documentation/hwmon/pxe1610
+The EFI 2.8 Specification [2] introduces the EFI_MEMORY_SP ("specific
+purpose") memory attribute. This attribute bit replaces the deprecated
+ACPI HMAT "reservation hint" that was introduced in ACPI 6.2 and removed
+in ACPI 6.3.
 
-diff --git a/Documentation/hwmon/pxe1610 b/Documentation/hwmon/pxe1610
-new file mode 100644
-index 000000000000..24825db8736f
---- /dev/null
-+++ b/Documentation/hwmon/pxe1610
-@@ -0,0 +1,90 @@
-+Kernel driver pxe1610
-+=====================
-+
-+Supported chips:
-+  * Infinion PXE1610
-+    Prefix: 'pxe1610'
-+    Addresses scanned: -
-+    Datasheet: Datasheet is not publicly available.
-+
-+  * Infinion PXE1110
-+    Prefix: 'pxe1110'
-+    Addresses scanned: -
-+    Datasheet: Datasheet is not publicly available.
-+
-+  * Infinion PXM1310
-+    Prefix: 'pxm1310'
-+    Addresses scanned: -
-+    Datasheet: Datasheet is not publicly available.
-+
-+Author: Vijay Khemka <vijaykhemka@fb.com>
-+
-+
-+Description
-+-----------
-+
-+PXE1610/PXE1110 are Multi-rail/Multiphase Digital Controllers
-+and compliant to
-+	-- Intel VR13 DC-DC converter specifications.
-+	-- Intel SVID protocol.
-+Used for Vcore power regulation for Intel VR13 based microprocessors
-+	-- Servers, Workstations, and High-end desktops
-+
-+PXM1310 is a Multi-rail Controllers and it is compliant to
-+	-- Intel VR13 DC-DC converter specifications.
-+	-- Intel SVID protocol.
-+Used for DDR3/DDR4 Memory power regulation for Intel VR13 and
-+IMVP8 based systems
-+
-+
-+Usage Notes
-+-----------
-+
-+This driver does not probe for PMBus devices. You will have
-+to instantiate devices explicitly.
-+
-+Example: the following commands will load the driver for an PXE1610
-+at address 0x70 on I2C bus #4:
-+
-+# modprobe pxe1610
-+# echo pxe1610 0x70 > /sys/bus/i2c/devices/i2c-4/new_device
-+
-+It can also be instantiated by declaring in device tree
-+
-+
-+Sysfs attributes
-+----------------
-+
-+curr1_label		"iin"
-+curr1_input		Measured input current
-+curr1_alarm		Current high alarm
-+
-+curr[2-4]_label		"iout[1-3]"
-+curr[2-4]_input		Measured output current
-+curr[2-4]_crit		Critical maximum current
-+curr[2-4]_crit_alarm	Current critical high alarm
-+
-+in1_label		"vin"
-+in1_input		Measured input voltage
-+in1_crit		Critical maximum input voltage
-+in1_crit_alarm		Input voltage critical high alarm
-+
-+in[2-4]_label		"vout[1-3]"
-+in[2-4]_input		Measured output voltage
-+in[2-4]_lcrit		Critical minimum output voltage
-+in[2-4]_lcrit_alarm	Output voltage critical low alarm
-+in[2-4]_crit		Critical maximum output voltage
-+in[2-4]_crit_alarm	Output voltage critical high alarm
-+
-+power1_label		"pin"
-+power1_input		Measured input power
-+power1_alarm		Input power high alarm
-+
-+power[2-4]_label	"pout[1-3]"
-+power[2-4]_input	Measured output power
-+
-+temp[1-3]_input		Measured temperature
-+temp[1-3]_crit		Critical high temperature
-+temp[1-3]_crit_alarm	Chip temperature critical high alarm
-+temp[1-3]_max		Maximum temperature
-+temp[1-3]_max_alarm	Chip temperature high alarm
--- 
-2.17.1
+Given the increasing diversity of memory types that might be advertised
+to the operating system, there is a need for platform firmware to hint
+which memory ranges are free for the OS to use as general purpose memory
+and which ranges are intended for application specific usage. For
+example, an application with prior knowledge of the platform may expect
+to be able to exclusively allocate a precious / limited pool of high
+bandwidth memory. Alternatively, for the general purpose case, the
+operating system may want to make the memory available on a best effort
+basis as a unique numa-node with performance properties by the new
+CONFIG_HMEM_REPORTING [3] facility.
 
+In support of optionally allowing either application-exclusive and
+core-kernel-mm managed access to differentiated memory, claim
+EFI_MEMORY_SP ranges for exposure as device-dax instances by default.
+Such instances can be directly owned / mapped by a
+platform-topology-aware application. Alternatively, with the new kmem
+facility [4], the administrator has the option to instead designate that
+those memory ranges be hot-added to the core-kernel-mm as a unique
+memory numa-node. In short, allow for the decision about what software
+agent manages specific-purpose memory to be made at runtime.
+
+The patches are based on the new HMAT+HMEM_REPORTING facilities merged
+for v5.2-rc1. The implementation is tested with qemu emulation of HMAT
+[5] plus the efi_fake_mem facility for applying the EFI_MEMORY_SP
+attribute.
+
+[2]: https://uefi.org/sites/default/files/resources/UEFI_Spec_2_8_final.pdf
+[3]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e1cf33aafb84
+[4]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=c221c0b0308f
+[5]: http://patchwork.ozlabs.org/cover/1096737/
+
+---
+
+Dan Williams (8):
+      acpi: Drop drivers/acpi/hmat/ directory
+      acpi/hmat: Skip publishing target info for nodes with no online memory
+      efi: Enumerate EFI_MEMORY_SP
+      x86, efi: Reserve UEFI 2.8 Specific Purpose Memory for dax
+      lib/memregion: Uplevel the pmem "region" ida to a global allocator
+      device-dax: Add a driver for "hmem" devices
+      acpi/hmat: Register HMAT at device_initcall level
+      acpi/hmat: Register "specific purpose" memory as an "hmem" device
+
+
+ arch/x86/Kconfig                  |   20 +++++
+ arch/x86/boot/compressed/eboot.c  |    5 +
+ arch/x86/boot/compressed/kaslr.c  |    2
+ arch/x86/include/asm/e820/types.h |    9 ++
+ arch/x86/kernel/e820.c            |    9 ++
+ arch/x86/kernel/setup.c           |    1
+ arch/x86/platform/efi/efi.c       |   37 ++++++++-
+ drivers/acpi/Kconfig              |   13 +++
+ drivers/acpi/Makefile             |    2
+ drivers/acpi/hmat.c               |  149 +++++++++++++++++++++++++++++++++----
+ drivers/acpi/hmat/Kconfig         |   11 ---
+ drivers/acpi/hmat/Makefile        |    2
+ drivers/acpi/numa.c               |   15 +++-
+ drivers/dax/Kconfig               |   27 +++++--
+ drivers/dax/Makefile              |    2
+ drivers/dax/hmem.c                |   58 ++++++++++++++
+ drivers/firmware/efi/efi.c        |    5 +
+ drivers/nvdimm/Kconfig            |    1
+ drivers/nvdimm/core.c             |    1
+ drivers/nvdimm/nd-core.h          |    1
+ drivers/nvdimm/region_devs.c      |   13 +--
+ include/linux/efi.h               |   15 ++++
+ include/linux/ioport.h            |    1
+ include/linux/memblock.h          |    7 ++
+ include/linux/memregion.h         |   11 +++
+ lib/Kconfig                       |    7 ++
+ lib/Makefile                      |    1
+ lib/memregion.c                   |   15 ++++
+ mm/memblock.c                     |    4 +
+ 29 files changed, 387 insertions(+), 57 deletions(-)
+ rename drivers/acpi/{hmat/hmat.c => hmat.c} (81%)
+ delete mode 100644 drivers/acpi/hmat/Kconfig
+ delete mode 100644 drivers/acpi/hmat/Makefile
+ create mode 100644 drivers/dax/hmem.c
+ create mode 100644 include/linux/memregion.h
+ create mode 100644 lib/memregion.c
