@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C27C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E01C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C415521848
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FA7024528
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:42:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191344;
-	bh=oH0YCFAp+soncbqg6ny+iS5tZ+uDyJS+4jsJAbEtK2w=;
+	s=default; t=1559191350;
+	bh=cYSEBoyL/c0J0IttZgI+ZyzCbPfzJtjq+fzS93Y8oxw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FHyQcltw4tzeBfmC0gWhZ2eV4fb+9e2Ptb8b1lFsYMmbliQu8kQo7+/wflM9rgSik
-	 982PXK+5txj0FBnGvNwpodUeQ4B5HYyyVA9bvqwh4DvanZz4jrVS3zH9XqZBy93OmB
-	 7uAa71tFJF73F4aZJjvpvTPihkvIL2A5llQB3kdE=
+	b=vnBpsL5E4YWa0qzRBvv6FcympKKl9KlboKUojt6cfpWMqdkcsDEWwk9e5fwG3GOMu
+	 Xjqx04N9CuGe1KoU1xURevldPw4a/DtzYhqH+4Ck4lzVXoxJfYZ4XLzVLe/B1SSuaJ
+	 Fc0f8eryE6NOa2PNgOci++2EJ2shb5iP+mThOaXI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728931AbfE3DMR (ORCPT
+        id S1729055AbfE3Em3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:12:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48608 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:42:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728214AbfE3DKr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:10:47 -0400
+        id S1728944AbfE3DMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:12:18 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7FFD244BB;
-        Thu, 30 May 2019 03:10:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1C3C244E6;
+        Thu, 30 May 2019 03:12:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185845;
-        bh=oH0YCFAp+soncbqg6ny+iS5tZ+uDyJS+4jsJAbEtK2w=;
+        s=default; t=1559185938;
+        bh=cYSEBoyL/c0J0IttZgI+ZyzCbPfzJtjq+fzS93Y8oxw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I1wFQjeMsaAK74/oJvbbQa8MTjrbn+8tMkXxWtKNbvB2hYlgAEXoMbhk4ydeYVfw+
-         FnCmLSbJNV1Li6+HCvSxsthAP8qry2Y6eq32lMpdE9MVCcg1FP0KIfwf+NF4FnTO09
-         q7X1Lpr2KjnH1eAWpaF688MRiu9dtFlnxfdtQbxM=
+        b=Usxb6+voSTSsFjD3clf9Au1nj42pdBwJNrG/0vkyG8LcSEeTP4Ha+7zpSmUJ5jbur
+         8xKQqVPcXO5sNIq/imN9Ekdx9vQgTbN+B7gjUoeFsBw2Wxyb5QQLLS1URpfCiQm+fw
+         8u2DDCcmSoONg01tikU1yt1paP8QzmjUkA8OVTe4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 166/405] random: add a spinlock_t to struct batched_entropy
-Date:   Wed, 29 May 2019 20:02:44 -0700
-Message-Id: <20190530030549.530838478@linuxfoundation.org>
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 341/405] tinydrm/mipi-dbi: Use dma-safe buffers for all SPI transfers
+Date:   Wed, 29 May 2019 20:05:39 -0700
+Message-Id: <20190530030557.947502012@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -60,186 +61,251 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b7d5dc21072cda7124d13eae2aefb7343ef94197 ]
+[ Upstream commit a89bfc5d9a0732d84b4de311e27133daa0586316 ]
 
-The per-CPU variable batched_entropy_uXX is protected by get_cpu_var().
-This is just a preempt_disable() which ensures that the variable is only
-from the local CPU. It does not protect against users on the same CPU
-from another context. It is possible that a preemptible context reads
-slot 0 and then an interrupt occurs and the same value is read again.
+Buffers passed to spi_sync() must be dma-safe even for tiny buffers since
+some SPI controllers use DMA for all transfers.
 
-The above scenario is confirmed by lockdep if we add a spinlock:
-| ================================
-| WARNING: inconsistent lock state
-| 5.1.0-rc3+ #42 Not tainted
-| --------------------------------
-| inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage.
-| ksoftirqd/9/56 [HC0[0]:SC1[1]:HE0:SE0] takes:
-| (____ptrval____) (batched_entropy_u32.lock){+.?.}, at: get_random_u32+0x3e/0xe0
-| {SOFTIRQ-ON-W} state was registered at:
-|   _raw_spin_lock+0x2a/0x40
-|   get_random_u32+0x3e/0xe0
-|   new_slab+0x15c/0x7b0
-|   ___slab_alloc+0x492/0x620
-|   __slab_alloc.isra.73+0x53/0xa0
-|   kmem_cache_alloc_node+0xaf/0x2a0
-|   copy_process.part.41+0x1e1/0x2370
-|   _do_fork+0xdb/0x6d0
-|   kernel_thread+0x20/0x30
-|   kthreadd+0x1ba/0x220
-|   ret_from_fork+0x3a/0x50
-…
-| other info that might help us debug this:
-|  Possible unsafe locking scenario:
-|
-|        CPU0
-|        ----
-|   lock(batched_entropy_u32.lock);
-|   <Interrupt>
-|     lock(batched_entropy_u32.lock);
-|
-|  *** DEADLOCK ***
-|
-| stack backtrace:
-| Call Trace:
-…
-|  kmem_cache_alloc_trace+0x20e/0x270
-|  ipmi_alloc_recv_msg+0x16/0x40
-…
-|  __do_softirq+0xec/0x48d
-|  run_ksoftirqd+0x37/0x60
-|  smpboot_thread_fn+0x191/0x290
-|  kthread+0xfe/0x130
-|  ret_from_fork+0x3a/0x50
+Example splat with CONFIG_DMA_API_DEBUG enabled:
 
-Add a spinlock_t to the batched_entropy data structure and acquire the
-lock while accessing it. Acquire the lock with disabled interrupts
-because this function may be used from interrupt context.
+[   23.750467] DMA-API: dw_dmac_pci 0000:00:15.0: device driver maps memory from stack [probable addr=000000001e49185d]
+[   23.750529] WARNING: CPU: 1 PID: 1296 at kernel/dma/debug.c:1161 check_for_stack+0xb7/0x190
+[   23.750533] Modules linked in: mmc_block(+) spi_pxa2xx_platform(+) pwm_lpss_pci pwm_lpss spi_pxa2xx_pci sdhci_pci cqhci intel_mrfld_pwrbtn extcon_intel_mrfld sdhci intel_mrfld_adc led_class mmc_core ili9341 mipi_dbi tinydrm backlight ti_ads7950 industrialio_triggered_buffer kfifo_buf intel_soc_pmic_mrfld hci_uart btbcm
+[   23.750599] CPU: 1 PID: 1296 Comm: modprobe Not tainted 5.0.0-rc7+ #236
+[   23.750605] Hardware name: Intel Corporation Merrifield/BODEGA BAY, BIOS 542 2015.01.21:18.19.48
+[   23.750620] RIP: 0010:check_for_stack+0xb7/0x190
+[   23.750630] Code: 8b 6d 50 4d 85 ed 75 04 4c 8b 6d 10 48 89 ef e8 2f 8b 44 00 48 89 c6 4a 8d 0c 23 4c 89 ea 48 c7 c7 88 d0 82 b4 e8 40 7c f9 ff <0f> 0b 8b 05 79 00 4b 01 85 c0 74 07 5b 5d 41 5c 41 5d c3 8b 05 54
+[   23.750637] RSP: 0000:ffff97bbc0292fa0 EFLAGS: 00010286
+[   23.750646] RAX: 0000000000000000 RBX: ffff97bbc0290000 RCX: 0000000000000006
+[   23.750652] RDX: 0000000000000007 RSI: 0000000000000002 RDI: ffff94b33e115450
+[   23.750658] RBP: ffff94b33c8578b0 R08: 0000000000000002 R09: 00000000000201c0
+[   23.750664] R10: 00000006ecb0ccc6 R11: 0000000000034f38 R12: 000000000000316c
+[   23.750670] R13: ffff94b33c84b250 R14: ffff94b33dedd5a0 R15: 0000000000000001
+[   23.750679] FS:  0000000000000000(0000) GS:ffff94b33e100000(0063) knlGS:00000000f7faf690
+[   23.750686] CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
+[   23.750691] CR2: 00000000f7f54faf CR3: 000000000722c000 CR4: 00000000001006e0
+[   23.750696] Call Trace:
+[   23.750713]  debug_dma_map_sg+0x100/0x340
+[   23.750727]  ? dma_direct_map_sg+0x3b/0xb0
+[   23.750739]  spi_map_buf+0x25a/0x300
+[   23.750751]  __spi_pump_messages+0x2a4/0x680
+[   23.750762]  __spi_sync+0x1dd/0x1f0
+[   23.750773]  spi_sync+0x26/0x40
+[   23.750790]  mipi_dbi_typec3_command_read+0x14d/0x240 [mipi_dbi]
+[   23.750802]  ? spi_finalize_current_transfer+0x10/0x10
+[   23.750821]  mipi_dbi_typec3_command+0x1bc/0x1d0 [mipi_dbi]
 
-Remove the batched_entropy_reset_lock lock. Now that we have a lock for
-the data scructure, we can access it from a remote CPU.
-
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
+Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190222124329.23046-1-noralf@tronnes.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/random.c | 52 ++++++++++++++++++++++---------------------
- 1 file changed, 27 insertions(+), 25 deletions(-)
+ drivers/gpu/drm/tinydrm/ili9225.c  |  6 ++--
+ drivers/gpu/drm/tinydrm/mipi-dbi.c | 58 +++++++++++++++++++++---------
+ include/drm/tinydrm/mipi-dbi.h     |  5 +--
+ 3 files changed, 48 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/char/random.c b/drivers/char/random.c
-index d4d45ccfeefc0..af6e240f98ff4 100644
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -2214,8 +2214,8 @@ struct batched_entropy {
- 		u32 entropy_u32[CHACHA_BLOCK_SIZE / sizeof(u32)];
- 	};
- 	unsigned int position;
-+	spinlock_t batch_lock;
- };
--static rwlock_t batched_entropy_reset_lock = __RW_LOCK_UNLOCKED(batched_entropy_reset_lock);
+diff --git a/drivers/gpu/drm/tinydrm/ili9225.c b/drivers/gpu/drm/tinydrm/ili9225.c
+index 43a3b68d90a20..998d75be9e16f 100644
+--- a/drivers/gpu/drm/tinydrm/ili9225.c
++++ b/drivers/gpu/drm/tinydrm/ili9225.c
+@@ -301,7 +301,7 @@ static void ili9225_pipe_disable(struct drm_simple_display_pipe *pipe)
+ 	mipi->enabled = false;
+ }
  
- /*
-  * Get a random word for internal kernel use only. The quality of the random
-@@ -2225,12 +2225,14 @@ static rwlock_t batched_entropy_reset_lock = __RW_LOCK_UNLOCKED(batched_entropy_
-  * wait_for_random_bytes() should be called and return 0 at least once
-  * at any point prior.
+-static int ili9225_dbi_command(struct mipi_dbi *mipi, u8 cmd, u8 *par,
++static int ili9225_dbi_command(struct mipi_dbi *mipi, u8 *cmd, u8 *par,
+ 			       size_t num)
+ {
+ 	struct spi_device *spi = mipi->spi;
+@@ -311,11 +311,11 @@ static int ili9225_dbi_command(struct mipi_dbi *mipi, u8 cmd, u8 *par,
+ 
+ 	gpiod_set_value_cansleep(mipi->dc, 0);
+ 	speed_hz = mipi_dbi_spi_cmd_max_speed(spi, 1);
+-	ret = tinydrm_spi_transfer(spi, speed_hz, NULL, 8, &cmd, 1);
++	ret = tinydrm_spi_transfer(spi, speed_hz, NULL, 8, cmd, 1);
+ 	if (ret || !num)
+ 		return ret;
+ 
+-	if (cmd == ILI9225_WRITE_DATA_TO_GRAM && !mipi->swap_bytes)
++	if (*cmd == ILI9225_WRITE_DATA_TO_GRAM && !mipi->swap_bytes)
+ 		bpw = 16;
+ 
+ 	gpiod_set_value_cansleep(mipi->dc, 1);
+diff --git a/drivers/gpu/drm/tinydrm/mipi-dbi.c b/drivers/gpu/drm/tinydrm/mipi-dbi.c
+index 918f77c7de34e..295cbcbc2bb65 100644
+--- a/drivers/gpu/drm/tinydrm/mipi-dbi.c
++++ b/drivers/gpu/drm/tinydrm/mipi-dbi.c
+@@ -153,16 +153,42 @@ EXPORT_SYMBOL(mipi_dbi_command_read);
   */
--static DEFINE_PER_CPU(struct batched_entropy, batched_entropy_u64);
-+static DEFINE_PER_CPU(struct batched_entropy, batched_entropy_u64) = {
-+	.batch_lock	= __SPIN_LOCK_UNLOCKED(batched_entropy_u64.lock),
-+};
-+
- u64 get_random_u64(void)
+ int mipi_dbi_command_buf(struct mipi_dbi *mipi, u8 cmd, u8 *data, size_t len)
  {
- 	u64 ret;
--	bool use_lock;
--	unsigned long flags = 0;
-+	unsigned long flags;
- 	struct batched_entropy *batch;
- 	static void *previous;
++	u8 *cmdbuf;
+ 	int ret;
  
-@@ -2245,28 +2247,25 @@ u64 get_random_u64(void)
++	/* SPI requires dma-safe buffers */
++	cmdbuf = kmemdup(&cmd, 1, GFP_KERNEL);
++	if (!cmdbuf)
++		return -ENOMEM;
++
+ 	mutex_lock(&mipi->cmdlock);
+-	ret = mipi->command(mipi, cmd, data, len);
++	ret = mipi->command(mipi, cmdbuf, data, len);
+ 	mutex_unlock(&mipi->cmdlock);
  
- 	warn_unseeded_randomness(&previous);
- 
--	use_lock = READ_ONCE(crng_init) < 2;
--	batch = &get_cpu_var(batched_entropy_u64);
--	if (use_lock)
--		read_lock_irqsave(&batched_entropy_reset_lock, flags);
-+	batch = raw_cpu_ptr(&batched_entropy_u64);
-+	spin_lock_irqsave(&batch->batch_lock, flags);
- 	if (batch->position % ARRAY_SIZE(batch->entropy_u64) == 0) {
- 		extract_crng((u8 *)batch->entropy_u64);
- 		batch->position = 0;
- 	}
- 	ret = batch->entropy_u64[batch->position++];
--	if (use_lock)
--		read_unlock_irqrestore(&batched_entropy_reset_lock, flags);
--	put_cpu_var(batched_entropy_u64);
-+	spin_unlock_irqrestore(&batch->batch_lock, flags);
++	kfree(cmdbuf);
++
  	return ret;
  }
- EXPORT_SYMBOL(get_random_u64);
+ EXPORT_SYMBOL(mipi_dbi_command_buf);
  
--static DEFINE_PER_CPU(struct batched_entropy, batched_entropy_u32);
-+static DEFINE_PER_CPU(struct batched_entropy, batched_entropy_u32) = {
-+	.batch_lock	= __SPIN_LOCK_UNLOCKED(batched_entropy_u32.lock),
-+};
- u32 get_random_u32(void)
- {
- 	u32 ret;
--	bool use_lock;
--	unsigned long flags = 0;
-+	unsigned long flags;
- 	struct batched_entropy *batch;
- 	static void *previous;
- 
-@@ -2275,18 +2274,14 @@ u32 get_random_u32(void)
- 
- 	warn_unseeded_randomness(&previous);
- 
--	use_lock = READ_ONCE(crng_init) < 2;
--	batch = &get_cpu_var(batched_entropy_u32);
--	if (use_lock)
--		read_lock_irqsave(&batched_entropy_reset_lock, flags);
-+	batch = raw_cpu_ptr(&batched_entropy_u32);
-+	spin_lock_irqsave(&batch->batch_lock, flags);
- 	if (batch->position % ARRAY_SIZE(batch->entropy_u32) == 0) {
- 		extract_crng((u8 *)batch->entropy_u32);
- 		batch->position = 0;
- 	}
- 	ret = batch->entropy_u32[batch->position++];
--	if (use_lock)
--		read_unlock_irqrestore(&batched_entropy_reset_lock, flags);
--	put_cpu_var(batched_entropy_u32);
-+	spin_unlock_irqrestore(&batch->batch_lock, flags);
- 	return ret;
- }
- EXPORT_SYMBOL(get_random_u32);
-@@ -2300,12 +2295,19 @@ static void invalidate_batched_entropy(void)
- 	int cpu;
- 	unsigned long flags;
- 
--	write_lock_irqsave(&batched_entropy_reset_lock, flags);
- 	for_each_possible_cpu (cpu) {
--		per_cpu_ptr(&batched_entropy_u32, cpu)->position = 0;
--		per_cpu_ptr(&batched_entropy_u64, cpu)->position = 0;
-+		struct batched_entropy *batched_entropy;
++/* This should only be used by mipi_dbi_command() */
++int mipi_dbi_command_stackbuf(struct mipi_dbi *mipi, u8 cmd, u8 *data, size_t len)
++{
++	u8 *buf;
++	int ret;
 +
-+		batched_entropy = per_cpu_ptr(&batched_entropy_u32, cpu);
-+		spin_lock_irqsave(&batched_entropy->batch_lock, flags);
-+		batched_entropy->position = 0;
-+		spin_unlock(&batched_entropy->batch_lock);
++	buf = kmemdup(data, len, GFP_KERNEL);
++	if (!buf)
++		return -ENOMEM;
 +
-+		batched_entropy = per_cpu_ptr(&batched_entropy_u64, cpu);
-+		spin_lock(&batched_entropy->batch_lock);
-+		batched_entropy->position = 0;
-+		spin_unlock_irqrestore(&batched_entropy->batch_lock, flags);
- 	}
--	write_unlock_irqrestore(&batched_entropy_reset_lock, flags);
- }
- 
++	ret = mipi_dbi_command_buf(mipi, cmd, buf, len);
++
++	kfree(buf);
++
++	return ret;
++}
++EXPORT_SYMBOL(mipi_dbi_command_stackbuf);
++
  /**
+  * mipi_dbi_buf_copy - Copy a framebuffer, transforming it if necessary
+  * @dst: The destination buffer
+@@ -774,18 +800,18 @@ static int mipi_dbi_spi1_transfer(struct mipi_dbi *mipi, int dc,
+ 	return 0;
+ }
+ 
+-static int mipi_dbi_typec1_command(struct mipi_dbi *mipi, u8 cmd,
++static int mipi_dbi_typec1_command(struct mipi_dbi *mipi, u8 *cmd,
+ 				   u8 *parameters, size_t num)
+ {
+-	unsigned int bpw = (cmd == MIPI_DCS_WRITE_MEMORY_START) ? 16 : 8;
++	unsigned int bpw = (*cmd == MIPI_DCS_WRITE_MEMORY_START) ? 16 : 8;
+ 	int ret;
+ 
+-	if (mipi_dbi_command_is_read(mipi, cmd))
++	if (mipi_dbi_command_is_read(mipi, *cmd))
+ 		return -ENOTSUPP;
+ 
+-	MIPI_DBI_DEBUG_COMMAND(cmd, parameters, num);
++	MIPI_DBI_DEBUG_COMMAND(*cmd, parameters, num);
+ 
+-	ret = mipi_dbi_spi1_transfer(mipi, 0, &cmd, 1, 8);
++	ret = mipi_dbi_spi1_transfer(mipi, 0, cmd, 1, 8);
+ 	if (ret || !num)
+ 		return ret;
+ 
+@@ -794,7 +820,7 @@ static int mipi_dbi_typec1_command(struct mipi_dbi *mipi, u8 cmd,
+ 
+ /* MIPI DBI Type C Option 3 */
+ 
+-static int mipi_dbi_typec3_command_read(struct mipi_dbi *mipi, u8 cmd,
++static int mipi_dbi_typec3_command_read(struct mipi_dbi *mipi, u8 *cmd,
+ 					u8 *data, size_t len)
+ {
+ 	struct spi_device *spi = mipi->spi;
+@@ -803,7 +829,7 @@ static int mipi_dbi_typec3_command_read(struct mipi_dbi *mipi, u8 cmd,
+ 	struct spi_transfer tr[2] = {
+ 		{
+ 			.speed_hz = speed_hz,
+-			.tx_buf = &cmd,
++			.tx_buf = cmd,
+ 			.len = 1,
+ 		}, {
+ 			.speed_hz = speed_hz,
+@@ -821,8 +847,8 @@ static int mipi_dbi_typec3_command_read(struct mipi_dbi *mipi, u8 cmd,
+ 	 * Support non-standard 24-bit and 32-bit Nokia read commands which
+ 	 * start with a dummy clock, so we need to read an extra byte.
+ 	 */
+-	if (cmd == MIPI_DCS_GET_DISPLAY_ID ||
+-	    cmd == MIPI_DCS_GET_DISPLAY_STATUS) {
++	if (*cmd == MIPI_DCS_GET_DISPLAY_ID ||
++	    *cmd == MIPI_DCS_GET_DISPLAY_STATUS) {
+ 		if (!(len == 3 || len == 4))
+ 			return -EINVAL;
+ 
+@@ -852,7 +878,7 @@ static int mipi_dbi_typec3_command_read(struct mipi_dbi *mipi, u8 cmd,
+ 			data[i] = (buf[i] << 1) | !!(buf[i + 1] & BIT(7));
+ 	}
+ 
+-	MIPI_DBI_DEBUG_COMMAND(cmd, data, len);
++	MIPI_DBI_DEBUG_COMMAND(*cmd, data, len);
+ 
+ err_free:
+ 	kfree(buf);
+@@ -860,7 +886,7 @@ static int mipi_dbi_typec3_command_read(struct mipi_dbi *mipi, u8 cmd,
+ 	return ret;
+ }
+ 
+-static int mipi_dbi_typec3_command(struct mipi_dbi *mipi, u8 cmd,
++static int mipi_dbi_typec3_command(struct mipi_dbi *mipi, u8 *cmd,
+ 				   u8 *par, size_t num)
+ {
+ 	struct spi_device *spi = mipi->spi;
+@@ -868,18 +894,18 @@ static int mipi_dbi_typec3_command(struct mipi_dbi *mipi, u8 cmd,
+ 	u32 speed_hz;
+ 	int ret;
+ 
+-	if (mipi_dbi_command_is_read(mipi, cmd))
++	if (mipi_dbi_command_is_read(mipi, *cmd))
+ 		return mipi_dbi_typec3_command_read(mipi, cmd, par, num);
+ 
+-	MIPI_DBI_DEBUG_COMMAND(cmd, par, num);
++	MIPI_DBI_DEBUG_COMMAND(*cmd, par, num);
+ 
+ 	gpiod_set_value_cansleep(mipi->dc, 0);
+ 	speed_hz = mipi_dbi_spi_cmd_max_speed(spi, 1);
+-	ret = tinydrm_spi_transfer(spi, speed_hz, NULL, 8, &cmd, 1);
++	ret = tinydrm_spi_transfer(spi, speed_hz, NULL, 8, cmd, 1);
+ 	if (ret || !num)
+ 		return ret;
+ 
+-	if (cmd == MIPI_DCS_WRITE_MEMORY_START && !mipi->swap_bytes)
++	if (*cmd == MIPI_DCS_WRITE_MEMORY_START && !mipi->swap_bytes)
+ 		bpw = 16;
+ 
+ 	gpiod_set_value_cansleep(mipi->dc, 1);
+diff --git a/include/drm/tinydrm/mipi-dbi.h b/include/drm/tinydrm/mipi-dbi.h
+index f4ec2834bc229..7dfa67a15a04e 100644
+--- a/include/drm/tinydrm/mipi-dbi.h
++++ b/include/drm/tinydrm/mipi-dbi.h
+@@ -43,7 +43,7 @@ struct mipi_dbi {
+ 	struct spi_device *spi;
+ 	bool enabled;
+ 	struct mutex cmdlock;
+-	int (*command)(struct mipi_dbi *mipi, u8 cmd, u8 *param, size_t num);
++	int (*command)(struct mipi_dbi *mipi, u8 *cmd, u8 *param, size_t num);
+ 	const u8 *read_commands;
+ 	struct gpio_desc *dc;
+ 	u16 *tx_buf;
+@@ -82,6 +82,7 @@ u32 mipi_dbi_spi_cmd_max_speed(struct spi_device *spi, size_t len);
+ 
+ int mipi_dbi_command_read(struct mipi_dbi *mipi, u8 cmd, u8 *val);
+ int mipi_dbi_command_buf(struct mipi_dbi *mipi, u8 cmd, u8 *data, size_t len);
++int mipi_dbi_command_stackbuf(struct mipi_dbi *mipi, u8 cmd, u8 *data, size_t len);
+ int mipi_dbi_buf_copy(void *dst, struct drm_framebuffer *fb,
+ 		      struct drm_rect *clip, bool swap);
+ /**
+@@ -99,7 +100,7 @@ int mipi_dbi_buf_copy(void *dst, struct drm_framebuffer *fb,
+ #define mipi_dbi_command(mipi, cmd, seq...) \
+ ({ \
+ 	u8 d[] = { seq }; \
+-	mipi_dbi_command_buf(mipi, cmd, d, ARRAY_SIZE(d)); \
++	mipi_dbi_command_stackbuf(mipi, cmd, d, ARRAY_SIZE(d)); \
+ })
+ 
+ #ifdef CONFIG_DEBUG_FS
 -- 
 2.20.1
 
