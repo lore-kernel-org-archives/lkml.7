@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DD1C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B47FC46470
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9D4F24811
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:18:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B65724828
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:19:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186340;
-	bh=uaRMoL5wlZ6kDLSuDyHVPV2xn/4AO4FX8g0HIPN9Oco=;
+	s=default; t=1559186343;
+	bh=jRWxpbZmGzdZ4v+fOPI/7x2p+SW4aRK9HIIBcEKr9XI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lvw/HKGUrxabNbUQfL1g+ealJJeN03djdrX5ron4NI/PKt95KJzV6vEkGbTc7A0Sn
-	 Vwa7YfM2W4cCW90mdoRt/K1zj4sl0e5atpqdUs81UKoHxTS3FVQKkVXZ7cNGSGnhup
-	 sIq3sYO9Ag4dSx6BNNyJ5mVLwUENsOouZSKuFryY=
+	b=ExrP2Bozv/WlvkZwM3n/GmpKjUarRoPyPY6UKBELvFRzjpdNfkPcfuscxcRI8jv/x
+	 cVqh25DYZNP2gx/Iq4Cg02udvPaeNK/vOXjBgWbQB87Asp2Q2xMTF5rttSnUx5Jxge
+	 0CumszfeiZW560m9ar4otjdyLm2zYueu7WNykEzk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731766AbfE3DS7 (ORCPT
+        id S1731780AbfE3DTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:18:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36712 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:19:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728681AbfE3DPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:15:00 -0400
+        id S1728638AbfE3DPF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:05 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD6AE24580;
-        Thu, 30 May 2019 03:14:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FDBD24597;
+        Thu, 30 May 2019 03:15:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186099;
-        bh=uaRMoL5wlZ6kDLSuDyHVPV2xn/4AO4FX8g0HIPN9Oco=;
+        s=default; t=1559186105;
+        bh=jRWxpbZmGzdZ4v+fOPI/7x2p+SW4aRK9HIIBcEKr9XI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QpeiJlQzzIZgGkB5nIyOp0TtA17nHYno1e1JnUDF1kLYhXukfHKcersntNt3pXtQD
-         Gnt5Jtb9ZXCY8YfOXZtVePOgOlJ4EhJeDG1Lm9aanQgeKSr3DUuSaDNHgDaKL7M5V1
-         ijupE9mf6zCOaTvHXJDXDWN+sWAR89LWH8wg3u1E=
+        b=pQpHLjjDV9waREqjj1O3C/TO7B5auyVL7jBoY8mdDs20+LIAsvA0QKxM8EVegIYM1
+         /2oEDFWKmmSsUmX7fEadU8QxqqSO8BRRF/9x6mSSAgpGdvvxUS6hPZwuzTS/vscMID
+         olv8S/Z/rYUoVMgzXkC1gaeOFDQIOXQLNYq02xgs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>,
-        Philippe Cornu <philippe.cornu@st.com>,
-        Thierry Reding <treding@nvidia.com>,
+        stable@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
+        Gal Pressman <galpress@amazon.com>,
+        Lijun Ou <ouliun@huawei.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 235/346] drm/panel: otm8009a: Add delay at the end of initialization
-Date:   Wed, 29 May 2019 20:05:08 -0700
-Message-Id: <20190530030552.945728871@linuxfoundation.org>
+Subject: [PATCH 5.0 245/346] RDMA/hns: Fix bad endianess of port_pd variable
+Date:   Wed, 29 May 2019 20:05:18 -0700
+Message-Id: <20190530030553.433721529@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -62,36 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0084c3c71126fc878c6dab8a6ab8ecc484c2be02 ]
+[ Upstream commit 6734b2973565e36659e97e12ab0d0faf1d9f3fbe ]
 
-At the end of initialization, a delay is required by the panel. Without
-this delay, the panel could received a frame early & generate a crash of
-panel (black screen).
+port_pd is treated as le32 in declaration and read, fix assignment to be
+in le32 too. This change fixes the following compilation warnings.
 
-Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
-Reviewed-by: Philippe Cornu <philippe.cornu@st.com>
-Tested-by: Philippe Cornu <philippe.cornu@st.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/1553155445-13407-1-git-send-email-yannick.fertre@st.com
+drivers/infiniband/hw/hns/hns_roce_ah.c:67:24: warning: incorrect type
+in assignment (different base types)
+drivers/infiniband/hw/hns/hns_roce_ah.c:67:24: expected restricted __le32 [usertype] port_pd
+drivers/infiniband/hw/hns/hns_roce_ah.c:67:24: got restricted __be32 [usertype]
+
+Fixes: 9a4435375cd1 ("IB/hns: Add driver files for hns RoCE driver")
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Reviewed-by: Gal Pressman <galpress@amazon.com>
+Reviewed-by: Lijun Ou <ouliun@huawei.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/panel/panel-orisetech-otm8009a.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/infiniband/hw/hns/hns_roce_ah.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-orisetech-otm8009a.c b/drivers/gpu/drm/panel/panel-orisetech-otm8009a.c
-index 87fa316e1d7b0..58ccf648b70fb 100644
---- a/drivers/gpu/drm/panel/panel-orisetech-otm8009a.c
-+++ b/drivers/gpu/drm/panel/panel-orisetech-otm8009a.c
-@@ -248,6 +248,9 @@ static int otm8009a_init_sequence(struct otm8009a *ctx)
- 	/* Send Command GRAM memory write (no parameters) */
- 	dcs_write_seq(ctx, MIPI_DCS_WRITE_MEMORY_START);
+diff --git a/drivers/infiniband/hw/hns/hns_roce_ah.c b/drivers/infiniband/hw/hns/hns_roce_ah.c
+index b3c8c45ec1e3e..64e0c69b69c53 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_ah.c
++++ b/drivers/infiniband/hw/hns/hns_roce_ah.c
+@@ -70,7 +70,7 @@ struct ib_ah *hns_roce_create_ah(struct ib_pd *ibpd,
+ 			     HNS_ROCE_VLAN_SL_BIT_MASK) <<
+ 			     HNS_ROCE_VLAN_SL_SHIFT;
  
-+	/* Wait a short while to let the panel be ready before the 1st frame */
-+	mdelay(10);
-+
- 	return 0;
- }
- 
+-	ah->av.port_pd = cpu_to_be32(to_hr_pd(ibpd)->pdn |
++	ah->av.port_pd = cpu_to_le32(to_hr_pd(ibpd)->pdn |
+ 				     (rdma_ah_get_port_num(ah_attr) <<
+ 				     HNS_ROCE_PORT_NUM_SHIFT));
+ 	ah->av.gid_index = grh->sgid_index;
 -- 
 2.20.1
 
