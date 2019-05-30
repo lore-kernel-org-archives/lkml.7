@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5265C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C7BC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79555259CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:40:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68518259D2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:41:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191257;
-	bh=bYZ7HeSZb8851DyKUc2Ht8f0mLDiJa48lCbIpn2UIEQ=;
+	s=default; t=1559191262;
+	bh=aq+pFlzRX86VxARbygEbyQtzAqJ7YxsGDMBDyJmYGes=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ObNep6xJgN6tld2i5lyIZwR79PlpKftGaOWgfqIaE1f4yN/SaXB0SCCkGM8Lncyb0
-	 vFpmgZ9ECgUiW2lLqrNd7ZefhPsJQ43gLOyaIwCtWNvI91X+mHeZFKEFyOuIQ3N2pX
-	 2zgBafw3DVEpAt7iClSKX6P9qoOD4WydFb+RrP5U=
+	b=hTBCySNKcmW04fZCe/LcZaTldjDcLDkdzemqku1Fg7p9sfMmdFezQsGeaL9ulXRgJ
+	 MsDY4CfAAXb3M6RxvZ+4D2ZLj/3WnifMzm0hPdsy11FoYD5586Se8lCdaSB11f+M5U
+	 5H20HNXMSZ+uuzravstnKgR/oZWxLjuFbzBTeeaw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388350AbfE3Ek4 (ORCPT
+        id S1729037AbfE3DM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:40:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55166 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729040AbfE3DM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:12:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49216 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727732AbfE3DKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:10:55 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59A3521BE2;
-        Thu, 30 May 2019 03:12:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68324244BB;
+        Thu, 30 May 2019 03:10:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185948;
-        bh=bYZ7HeSZb8851DyKUc2Ht8f0mLDiJa48lCbIpn2UIEQ=;
+        s=default; t=1559185855;
+        bh=aq+pFlzRX86VxARbygEbyQtzAqJ7YxsGDMBDyJmYGes=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VhgIMBn3dGBBx5tKms8ZXh4habFhD+GOcvCrbBacuILSO+54Wb8oqOjN0NfIVLQ/H
-         aUa3joIn/2VqtCgy7cxPBHhI/nSKi5bFbv+WlKYuXSob50V3JwBC6swBPOuqAFdPmM
-         P+BzpDfl40Ei+5F4C2migNgB4R1RMGUc42w3VD4w=
+        b=NQXpQGrTPA7jsb5Mn/7HRqc1oytncEUOvxqJ64SOeSP1nTS92ZmKZYNO0pyhJ4YbX
+         2/d9bLRwu9hmVOmD3k9bJR/ZcwIsYuEYGIlIWgV/gAmHUVtFChU9ShvyPQ3wseAu/b
+         kD2LRNhYSsMCYk96AtuVK6emBhXyX0CIP4q7VU8w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Evan Green <evgreen@chromium.org>,
+        Rob Herring <robh@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 359/405] media: vimc: zero the media_device on probe
-Date:   Wed, 29 May 2019 20:05:57 -0700
-Message-Id: <20190530030558.782590967@linuxfoundation.org>
+Subject: [PATCH 5.1 182/405] dt-bindings: phy-qcom-qmp: Add UFS PHY reset
+Date:   Wed, 29 May 2019 20:03:00 -0700
+Message-Id: <20190530030550.286418608@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,36 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f74267b51cb36321f777807b2e04ca02167ecc08 ]
+[ Upstream commit 95cee0b4e30a09a411a17e9a3bc6b72ed92063da ]
 
-The media_device is part of a static global vimc_device struct.
-The media framework expects this to be zeroed before it is
-used, however, since this is a global this is not the case if
-vimc is unbound and then bound again.
+Add a required reset to the SDM845 UFS phy to express the PHY reset
+bit inside the UFS controller register space. Before this change, this
+reset was not expressed in the DT, and the driver utilized two different
+callbacks (phy_init and phy_poweron) to implement a two-phase
+initialization procedure that involved deasserting this reset between
+init and poweron. This abused the two callbacks and diluted their
+purpose.
 
-So call memset to ensure any left-over values are cleared.
+That scheme does not work as regulators cannot be turned off in
+phy_poweroff because they were turned on in init, rather than poweron.
+The net result is that regulators are left on in suspend that shouldn't
+be.
 
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+This new scheme gives the UFS reset to the PHY, so that it can fully
+initialize itself in a single callback. We can then turn regulators on
+during poweron and off during poweroff.
+
+Signed-off-by: Evan Green <evgreen@chromium.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/vimc/vimc-core.c | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/vimc/vimc-core.c b/drivers/media/platform/vimc/vimc-core.c
-index 0fbb7914098f6..3aa62d7e3d0e0 100644
---- a/drivers/media/platform/vimc/vimc-core.c
-+++ b/drivers/media/platform/vimc/vimc-core.c
-@@ -304,6 +304,8 @@ static int vimc_probe(struct platform_device *pdev)
+diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+index 5d181fc3cc182..4a78ba8b85bc0 100644
+--- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
++++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+@@ -59,7 +59,8 @@ Required properties:
+ 	   one for each entry in reset-names.
+  - reset-names: "phy" for reset of phy block,
+ 		"common" for phy common block reset,
+-		"cfg" for phy's ahb cfg block reset.
++		"cfg" for phy's ahb cfg block reset,
++		"ufsphy" for the PHY reset in the UFS controller.
  
- 	dev_dbg(&pdev->dev, "probe");
+ 		For "qcom,ipq8074-qmp-pcie-phy" must contain:
+ 			"phy", "common".
+@@ -74,7 +75,8 @@ Required properties:
+ 			"phy", "common".
+ 		For "qcom,sdm845-qmp-usb3-uni-phy" must contain:
+ 			"phy", "common".
+-		For "qcom,sdm845-qmp-ufs-phy": no resets are listed.
++		For "qcom,sdm845-qmp-ufs-phy": must contain:
++			"ufsphy".
  
-+	memset(&vimc->mdev, 0, sizeof(vimc->mdev));
-+
- 	/* Create platform_device for each entity in the topology*/
- 	vimc->subdevs = devm_kcalloc(&vimc->pdev.dev, vimc->pipe_cfg->num_ents,
- 				     sizeof(*vimc->subdevs), GFP_KERNEL);
+  - vdda-phy-supply: Phandle to a regulator supply to PHY core block.
+  - vdda-pll-supply: Phandle to 1.8V regulator supply to PHY refclk pll block.
 -- 
 2.20.1
 
