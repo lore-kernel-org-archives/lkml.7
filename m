@@ -2,66 +2,174 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 468F3C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 06:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD3DC28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 06:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 251DE247CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 06:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB5DB247DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 06:58:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559199480;
+	bh=NCqgFKSMufEY4JKCMrT0JsyytTkaZ/rOHs04TRsgIjA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=THiHBz8ouEEqas4BR1KE375wCcBJ2pFLAh19Qe6MO00I/BOZvHUx0jWc+bYY7VX7L
+	 UcGhWhe7wtPhT2/qBLnG9qX/nH38hxeeeNiKsYaDeAkHaJWHLqciy7nnd5QyWfNx4x
+	 fPnN+uV+cU7IXSgFDSYtlDVkIfvyOHTBUrn9uACg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727614AbfE3G5v (ORCPT
+        id S1727674AbfE3G6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 02:57:51 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:48610 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725862AbfE3G5v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 02:57:51 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0TT.K-Od_1559199467;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TT.K-Od_1559199467)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 30 May 2019 14:57:47 +0800
-To:     Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Subject: [HELP] How to get task_struct from mm
-Message-ID: <5cf71366-ba01-8ef0-3dbd-c9fec8a2b26f@linux.alibaba.com>
-Date:   Thu, 30 May 2019 14:57:46 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Thu, 30 May 2019 02:58:00 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51768 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725862AbfE3G57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 02:57:59 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3B51BAF48;
+        Thu, 30 May 2019 06:57:57 +0000 (UTC)
+Date:   Thu, 30 May 2019 08:57:55 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Daniel Colascione <dancol@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: [RFC 6/7] mm: extend process_madvise syscall to support vector
+ arrary
+Message-ID: <20190530065755.GD6703@dhcp22.suse.cz>
+References: <20190520035254.57579-7-minchan@kernel.org>
+ <20190520092258.GZ6836@dhcp22.suse.cz>
+ <20190521024820.GG10039@google.com>
+ <20190521062421.GD32329@dhcp22.suse.cz>
+ <20190521102613.GC219653@google.com>
+ <20190521103726.GM32329@dhcp22.suse.cz>
+ <20190527074940.GB6879@google.com>
+ <CAKOZuesK-8zrm1zua4dzqh4TEMivsZKiccySMvfBjOyDkg-MEw@mail.gmail.com>
+ <20190529103352.GD18589@dhcp22.suse.cz>
+ <20190530021748.GE229459@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190530021748.GE229459@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi folks,
+On Thu 30-05-19 11:17:48, Minchan Kim wrote:
+> On Wed, May 29, 2019 at 12:33:52PM +0200, Michal Hocko wrote:
+> > On Wed 29-05-19 03:08:32, Daniel Colascione wrote:
+> > > On Mon, May 27, 2019 at 12:49 AM Minchan Kim <minchan@kernel.org> wrote:
+> > > >
+> > > > On Tue, May 21, 2019 at 12:37:26PM +0200, Michal Hocko wrote:
+> > > > > On Tue 21-05-19 19:26:13, Minchan Kim wrote:
+> > > > > > On Tue, May 21, 2019 at 08:24:21AM +0200, Michal Hocko wrote:
+> > > > > > > On Tue 21-05-19 11:48:20, Minchan Kim wrote:
+> > > > > > > > On Mon, May 20, 2019 at 11:22:58AM +0200, Michal Hocko wrote:
+> > > > > > > > > [Cc linux-api]
+> > > > > > > > >
+> > > > > > > > > On Mon 20-05-19 12:52:53, Minchan Kim wrote:
+> > > > > > > > > > Currently, process_madvise syscall works for only one address range
+> > > > > > > > > > so user should call the syscall several times to give hints to
+> > > > > > > > > > multiple address range.
+> > > > > > > > >
+> > > > > > > > > Is that a problem? How big of a problem? Any numbers?
+> > > > > > > >
+> > > > > > > > We easily have 2000+ vma so it's not trivial overhead. I will come up
+> > > > > > > > with number in the description at respin.
+> > > > > > >
+> > > > > > > Does this really have to be a fast operation? I would expect the monitor
+> > > > > > > is by no means a fast path. The system call overhead is not what it used
+> > > > > > > to be, sigh, but still for something that is not a hot path it should be
+> > > > > > > tolerable, especially when the whole operation is quite expensive on its
+> > > > > > > own (wrt. the syscall entry/exit).
+> > > > > >
+> > > > > > What's different with process_vm_[readv|writev] and vmsplice?
+> > > > > > If the range needed to be covered is a lot, vector operation makes senese
+> > > > > > to me.
+> > > > >
+> > > > > I am not saying that the vector API is wrong. All I am trying to say is
+> > > > > that the benefit is not really clear so far. If you want to push it
+> > > > > through then you should better get some supporting data.
+> > > >
+> > > > I measured 1000 madvise syscall vs. a vector range syscall with 1000
+> > > > ranges on ARM64 mordern device. Even though I saw 15% improvement but
+> > > > absoluate gain is just 1ms so I don't think it's worth to support.
+> > > > I will drop vector support at next revision.
+> > > 
+> > > Please do keep the vector support. Absolute timing is misleading,
+> > > since in a tight loop, you're not going to contend on mmap_sem. We've
+> > > seen tons of improvements in things like camera start come from
+> > > coalescing mprotect calls, with the gains coming from taking and
+> > > releasing various locks a lot less often and bouncing around less on
+> > > the contended lock paths. Raw throughput doesn't tell the whole story,
+> > > especially on mobile.
+> > 
+> > This will always be a double edge sword. Taking a lock for longer can
+> > improve a throughput of a single call but it would make a latency for
+> > anybody contending on the lock much worse.
+> > 
+> > Besides that, please do not overcomplicate the thing from the early
+> > beginning please. Let's start with a simple and well defined remote
+> > madvise alternative first and build a vector API on top with some
+> > numbers based on _real_ workloads.
+> 
+> First time, I didn't think about atomicity about address range race
+> because MADV_COLD/PAGEOUT is not critical for the race.
+> However you raised the atomicity issue because people would extend
+> hints to destructive ones easily. I agree with that and that's why
+> we discussed how to guarantee the race and Daniel comes up with good idea.
 
+Just for the clarification, I didn't really mean atomicity but rather a
+_consistency_ (essentially time to check to time to use consistency).
+ 
+>   - vma configuration seq number via process_getinfo(2).
+> 
+> We discussed the race issue without _read_ workloads/requests because
+> it's common sense that people might extend the syscall later.
+> 
+> Here is same. For current workload, we don't need to support vector
+> for perfomance point of view based on my experiment. However, it's
+> rather limited experiment. Some configuration might have 10000+ vmas
+> or really slow CPU. 
+> 
+> Furthermore, I want to have vector support due to atomicity issue
+> if it's really the one we should consider.
+> With vector support of the API and vma configuration sequence number
+> from Daniel, we could support address ranges operations's atomicity.
 
-As what we discussed about page demotion for PMEM at LSF/MM, the 
-demotion should respect to the mempolicy and allowed mems of the process 
-which the page (anonymous page only for now) belongs to.
+I am not sure what do you mean here. Perform all ranges atomicaly wrt.
+other address space modifications? If yes I am not sure we want that
+semantic because it can cause really long stalls for other operations
+but that is a discussion on its own and I would rather focus on a simple
+interface first.
 
+> However, since we don't introduce vector at this moment, we need to
+> introduce *another syscall* later to be able to handle multile ranges
+> all at once atomically if it's okay.
 
-The vma that the page is mapped to can be retrieved from rmap walk 
-easily, but we need know the task_struct that the vma belongs to. It 
-looks there is not such API, and container_of seems not work with 
-pointer member.
+Agreed.
 
+> Other thought:
+> Maybe we could extend address range batch syscall covers other MM
+> syscall like mmap/munmap/madvise/mprotect and so on because there
+> are multiple users that would benefit from this general batching
+> mechanism.
 
-Any suggestion?
+Again a discussion on its own ;)
 
-
-Thanks,
-
-Yang
-
+-- 
+Michal Hocko
+SUSE Labs
