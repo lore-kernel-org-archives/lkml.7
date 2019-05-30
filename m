@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6490AC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95723C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3175D24C20
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:42:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B8E824C2D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:42:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187763;
-	bh=nI1hJSSzPMF0V+a9RjsHDvr2N4Iii0c5mwQkd5roz+k=;
+	s=default; t=1559187775;
+	bh=EMYS1qhUe763nuCW1K+nwIWiN/wiyn9Qh5hzGuOl2mE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z6frXmtAwrU9CTLLFtBR3D+5Kuu1vd9Tr0TzMzleqP2G8fOz+v5HH+mIzedBxI3sH
-	 neDVowcGC8YzVWnyipoviQGsPABWh6ePyfVZzLiNfmvEzE9tmveUMZ1XoiOjav3CiW
-	 VoUfL36Gr96iA40x/p8wYj1jvA0W927o+lJnJV4E=
+	b=fm/QkTohE7H4Jw59OO/tg3Nj0k9zJtQoeX4vJvzsc2Pu01ETsGoGtArZ3rMh6diOu
+	 2VJjXlnD+VIWizzsrJe9SPeGRCFPuaRTbFHM1a60CuuAtkN7kSBWwmjBdDn9qkZhji
+	 5RHJygGsqzCL7hQD8Emh9W8C6vEcqQe+On3L08UE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732630AbfE3Dml (ORCPT
+        id S1727480AbfE3Dmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:42:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60994 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:42:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732451AbfE3DVH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:21:07 -0400
+        id S1732439AbfE3DVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:21:05 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5438C24987;
-        Thu, 30 May 2019 03:21:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF330249AC;
+        Thu, 30 May 2019 03:21:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186466;
-        bh=nI1hJSSzPMF0V+a9RjsHDvr2N4Iii0c5mwQkd5roz+k=;
+        s=default; t=1559186464;
+        bh=EMYS1qhUe763nuCW1K+nwIWiN/wiyn9Qh5hzGuOl2mE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EJ88WhOF4zZTRpaaMpGywPjLGxvWyd3bYRpHZ4rBRh4b63qbOMLpHkkKqOFKKMGd/
-         nAW2gzF8+dIYHirZnWMsq6qpdx/ymmpZbXtjm4xB2emMiSMR3bZu7MJsC5QcMRga9g
-         /gKpTLIFBGSW2yqtoDgjwkTmm+qenhSNAy5OCCPg=
+        b=ciVQfx5u6NN/mbuWekVGhLs1KOkDBr8TOa6AFiJfd9yatiz9vcpDnWsrI5mIX7/9S
+         y4KBQb4lKQ2/H3qd5NmMcSeKCY3P20N+QW/LizsYNR1dTLq/ligbiNYgLZSZ1HbSlq
+         cAQBcTbmjqYZtu0hvCVr9FwrtXBtgZiewdQbrZAg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 083/128] extcon: arizona: Disable mic detect if running when driver is removed
-Date:   Wed, 29 May 2019 20:06:55 -0700
-Message-Id: <20190530030449.707847284@linuxfoundation.org>
+Subject: [PATCH 4.9 043/128] mwifiex: prevent an array overflow
+Date:   Wed, 29 May 2019 20:06:15 -0700
+Message-Id: <20190530030442.254322473@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -61,46 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 00053de52231117ddc154042549f2256183ffb86 ]
+[ Upstream commit b4c35c17227fe437ded17ce683a6927845f8c4a4 ]
 
-Microphone detection provides the button detection features on the
-Arizona CODECs as such it will be running if the jack is currently
-inserted. If the driver is unbound whilst the jack is still inserted
-this will cause warnings from the regulator framework as the MICVDD
-regulator is put but was never disabled.
+The "rate_index" is only used as an index into the phist_data->rx_rate[]
+array in the mwifiex_hist_data_set() function.  That array has
+MWIFIEX_MAX_AC_RX_RATES (74) elements and it's used to generate some
+debugfs information.  The "rate_index" variable comes from the network
+skb->data[] and it is a u8 so it's in the 0-255 range.  We need to cap
+it to prevent an array overflow.
 
-Correct this by disabling microphone detection on driver removal and if
-the microphone detection was running disable the regulator and put the
-runtime reference that was currently held.
-
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Fixes: cbf6e05527a7 ("mwifiex: add rx histogram statistics support")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/extcon/extcon-arizona.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/net/wireless/marvell/mwifiex/cfp.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
-index 56e6c4c7c60d2..4c0b6df8b5ddb 100644
---- a/drivers/extcon/extcon-arizona.c
-+++ b/drivers/extcon/extcon-arizona.c
-@@ -1684,6 +1684,16 @@ static int arizona_extcon_remove(struct platform_device *pdev)
- 	struct arizona_extcon_info *info = platform_get_drvdata(pdev);
- 	struct arizona *arizona = info->arizona;
- 	int jack_irq_rise, jack_irq_fall;
-+	bool change;
-+
-+	regmap_update_bits_check(arizona->regmap, ARIZONA_MIC_DETECT_1,
-+				 ARIZONA_MICD_ENA, 0,
-+				 &change);
-+
-+	if (change) {
-+		regulator_disable(info->micvdd);
-+		pm_runtime_put(info->dev);
-+	}
+diff --git a/drivers/net/wireless/marvell/mwifiex/cfp.c b/drivers/net/wireless/marvell/mwifiex/cfp.c
+index 1ff22055e54f8..9ddaa767ea747 100644
+--- a/drivers/net/wireless/marvell/mwifiex/cfp.c
++++ b/drivers/net/wireless/marvell/mwifiex/cfp.c
+@@ -533,5 +533,8 @@ u8 mwifiex_adjust_data_rate(struct mwifiex_private *priv,
+ 		rate_index = (rx_rate > MWIFIEX_RATE_INDEX_OFDM0) ?
+ 			      rx_rate - 1 : rx_rate;
  
- 	gpiod_put(info->micd_pol_gpio);
- 
++	if (rate_index >= MWIFIEX_MAX_AC_RX_RATES)
++		rate_index = MWIFIEX_MAX_AC_RX_RATES - 1;
++
+ 	return rate_index;
+ }
 -- 
 2.20.1
 
