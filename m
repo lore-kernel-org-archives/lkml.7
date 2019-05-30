@@ -2,110 +2,114 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B33C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBCDC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:43:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39F3C2586E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:43:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03C812586E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:43:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C6caECW1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="V5ZBBqW2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbfE3LnJ (ORCPT
+        id S1726973AbfE3Lng (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 07:43:09 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:33958 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbfE3LnI (ORCPT
+        Thu, 30 May 2019 07:43:36 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43579 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbfE3Lnf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 07:43:08 -0400
-Received: by mail-lf1-f67.google.com with SMTP id v18so4781950lfi.1;
-        Thu, 30 May 2019 04:43:07 -0700 (PDT)
+        Thu, 30 May 2019 07:43:35 -0400
+Received: by mail-wr1-f65.google.com with SMTP id l17so3984321wrm.10
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 04:43:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=AfIJUQIJtYB15GKYwWwSC4aOpQ5iN7AaoTDt0q758OI=;
-        b=C6caECW1ACTDGTB5k3qKTLFFXCM5giPH2RO3+zrU2HieJt9TAFjtfq9XDFweICrekd
-         lBUgQeooHd736yMnaBX/Rlk7gOrJZUc+fcylhk8cOi2+NX77wn7tTK7jOLU5AGhcUy7f
-         J0eCA0a0p6JwIOAg33kSjPA3dmf/AkXbWIeh7vBMNCRxoxPO/XM4crzxOoBLlGes9g5I
-         7hKf+LeuBpuByUjp2OVRv8//h9pxhwDQ+27qoF92KlTiBBOOEf2156ySmOKZ3l5oVKfo
-         vJH9y5vaP6Bi5QnpAnXEy946zFWg7+buOA/1vOjkh+7yjVtCHsjxPfO5iCwWe/LFSh77
-         V5SQ==
+        d=brauner.io; s=google;
+        h=date:user-agent:in-reply-to:references:mime-version
+         :content-transfer-encoding:subject:to:cc:from:message-id;
+        bh=x7Qyy1KyQMpKaNghFb+JOHZdFPq1/NIbfTjt3A+5EHs=;
+        b=V5ZBBqW2T06RqnvJVzT3AO8/ouFOu/LNxk7BIU7QtYl4402Th+Nm1rmpB/wGMbPZwL
+         Jj7mH5BsTRf0ANI4qiDv6PVjNRr+mwfmr0Zt6u07WXcC3j3VQkvuM/sAITId7ZIRvOKU
+         OrmOToyll1UmmqRp6fr+JGZ/kEDZvbOqaCIcsDKr2tNA4CzUEgpDb0T2/i4Gt/QSoqSj
+         RVmogbtHxynyT8dYrvNft6PPfDD+v/Rhxk1dUVj8A1XIjcyc53o+q/vY5pXJbBsCb/Ls
+         bJBj5FQXvuwN6tPfmcuPaW8oOP/oCYkO2PBygQmfO2jf/7QUpihAhGrl1ZItIqgnGjdi
+         X+pQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=AfIJUQIJtYB15GKYwWwSC4aOpQ5iN7AaoTDt0q758OI=;
-        b=kRX9vYnNjIRjti5IJTo8/mtIR890NcQOT712f8nLKxF+n6amGZ9NuQEa+p3nUD1z7X
-         Nx9GvwsJCbn3ylAuYVnLKt7H/J9F5uaTGxdRY2jc/SGueMkLXf0S999jcG61bsjlvtMH
-         RTZKzQR2Al8Pci/OFWi/+cSc/bqDmfMYuLjAHpS1iyEfiOQNHWBDHZaB7ePUW7++oQ62
-         a/avE0WdnemqZ0KzrhZiAGmqOrgLlJBggmXfg1WoJy4PG7DM5HHJM79hz8IDX+Ol6UBL
-         3M+fzn0IYWbePWgXUjBzklVw9Z4D6fZSRQxWmWo8EIfYzUjsYQ/ZxlvlEB/OI4hydEhC
-         e5bA==
-X-Gm-Message-State: APjAAAX6Y1yOeNmQktLSB0ejxfLYLpVCQM5BuO6j4ie7XA8tlAXMzGfE
-        e3niSg6c8YTN/I19ZyfXF2kw139m
-X-Google-Smtp-Source: APXvYqyMw0O8azT+38bH3/Lq9CJrahVmxItdzYLZauTb1HSG62AyVGY1RZH+JWengrRCA+8jSPA0mA==
-X-Received: by 2002:a19:4017:: with SMTP id n23mr2066509lfa.112.1559216586593;
-        Thu, 30 May 2019 04:43:06 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.35.141])
-        by smtp.googlemail.com with ESMTPSA id d2sm446964lfh.1.2019.05.30.04.43.05
+        h=x-gm-message-state:date:user-agent:in-reply-to:references
+         :mime-version:content-transfer-encoding:subject:to:cc:from
+         :message-id;
+        bh=x7Qyy1KyQMpKaNghFb+JOHZdFPq1/NIbfTjt3A+5EHs=;
+        b=fO6THnM9g9/QiTnPIYArXrPbMpbQJKdKchPsxVyV9xBF9kmOoI7YVqGcQ3T8+GwzoE
+         TJRgBjT/7EScjf7m8rGyJNzhcqTVG4SPF2joPPHWelrTEgZZcRzTLHGQXqdAY7m8RgIT
+         orq/e/AFOULrUAsC1CUc0H2Qsfk6Ls4Qin739VkGX4qbnHCl+ib/N4O4OAeL7kEd4gHI
+         cUyH5XkaKyUAtd0VNbhCtrGHRtKpFLIYCj4ucrhOssxGbFnc/21o+e5WZrA91uxMF2Uh
+         n4srepD8+LzSwrbjRz+awzHzeqgIM8KhGn9lhg/JWi3Bw3XkrwuekoblX22tii3xNWSK
+         YFyg==
+X-Gm-Message-State: APjAAAUYl+5Fz8WAwjDxXy1r2liRGru5Hg2eyBnyQ2GJ7G/PkqOnYUin
+        HgxD+DRuho7qKdCyYSeDDjHumBzq9dLKbw==
+X-Google-Smtp-Source: APXvYqx7eo2IJq8TtX8+mg3zeaoQIHvU24aNQ2F00GoN/ZR8ZliFL6QkTniZ3/dMyJm1NRP2tp7kng==
+X-Received: by 2002:a5d:5048:: with SMTP id h8mr2358129wrt.177.1559216613878;
+        Thu, 30 May 2019 04:43:33 -0700 (PDT)
+Received: from [192.168.1.161] (93-32-55-82.ip32.fastwebnet.it. [93.32.55.82])
+        by smtp.gmail.com with ESMTPSA id c18sm3206011wrm.7.2019.05.30.04.43.33
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 04:43:06 -0700 (PDT)
-Subject: Re: [PATCH V2] drivers: i2c: tegra: fix checkpatch defects
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Bitan Biswas <bbiswas@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1559196850-7007-1-git-send-email-bbiswas@nvidia.com>
- <e9e3d8b0-a76a-81a9-1110-2d07ba1c787f@gmail.com>
-Message-ID: <911e52ed-8f3c-583a-7610-e38723219eca@gmail.com>
-Date:   Thu, 30 May 2019 14:43:05 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 30 May 2019 04:43:33 -0700 (PDT)
+Date:   Thu, 30 May 2019 13:43:31 +0200
+User-Agent: K-9 Mail for Android
+In-Reply-To: <1559216447-28355-1-git-send-email-linux@roeck-us.net>
+References: <1559216447-28355-1-git-send-email-linux@roeck-us.net>
 MIME-Version: 1.0
-In-Reply-To: <e9e3d8b0-a76a-81a9-1110-2d07ba1c787f@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] samples: pidfd: Fix compile error seen if __NR_pidfd_send_signal is undefined
+To:     Guenter Roeck <linux@roeck-us.net>, Jann Horn <jannh@google.com>
+CC:     linux-kernel@vger.kernel.org
+From:   Christian Brauner <christian@brauner.io>
+Message-ID: <CAB50BEC-4816-4D92-AC46-921C62B1D344@brauner.io>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-30.05.2019 14:36, Dmitry Osipenko пишет:
-> 30.05.2019 9:14, Bitan Biswas пишет:
->> Fix checkpatch.pl warning(s)/error(s)/check(s) in i2c-tegra.c
->> except for BUG/BUG_ON checks
-> 
-> Please turn the BUG_ON's into WARN_ON's. The machine won't go on fire,
-> hence there is absolutely no good reason in making system unusable on a
-> software bug. BUG_ON may be more useful for development, but not for a
-> casual daily usage.
-> 
->> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
->> ---
-> 
->> @@ -1034,7 +1038,7 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
->>  	u32 *buffer = NULL;
->>  	int err = 0;
->>  	bool dma;
->> -	u16 xfer_time = 100;
->> +	u16 xfer_tm = 100;
-> 
-> What's wrong with the "time"? I'm finding the "xfer_tm" as a very
-> unintuitive naming.
-> 
+On May 30, 2019 1:40:47 PM GMT+02:00, Guenter Roeck <linux@roeck-us=2Enet> =
+wrote:
+>To make pidfd-metadata compile on all arches, irrespective of whether
+>or not syscall numbers are assigned, define the syscall number to -1
+>if it isn't to cause the kernel to return -ENOSYS=2E
+>
+>Fixes: 43c6afee48d4 ("samples: show race-free pidfd metadata access")
+>Cc: Christian Brauner <christian@brauner=2Eio>
+>Signed-off-by: Guenter Roeck <linux@roeck-us=2Enet>
+>---
+> samples/pidfd/pidfd-metadata=2Ec | 4 ++++
+> 1 file changed, 4 insertions(+)
+>
+>diff --git a/samples/pidfd/pidfd-metadata=2Ec
+>b/samples/pidfd/pidfd-metadata=2Ec
+>index 640f5f757c57=2E=2E1e125ddde268 100644
+>--- a/samples/pidfd/pidfd-metadata=2Ec
+>+++ b/samples/pidfd/pidfd-metadata=2Ec
+>@@ -21,6 +21,10 @@
+> #define CLONE_PIDFD 0x00001000
+> #endif
+>=20
+>+#ifndef __NR_pidfd_send_signal
+>+#define __NR_pidfd_send_signal	-1
+>+#endif
+>+
+> static int do_child(void *args)
+> {
+> 	printf("%d\n", getpid());
 
-Also, please don't version patch as v2 if v1 was never sent out.
+Couldn't you just use the actual syscall number?=20
+That should still fail if the kernel is to old=20
+and still work on kernels that support it
+but for whatever reason the unistd=2Eh h
+header doesn't have it defined=2E
+
+Thanks!
+Christian
