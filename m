@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE09C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 638EDC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C22AF25298
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:17:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D55025278
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:17:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189826;
-	bh=r4n9B0Nzlwy+WTd/3TjJMZizJyy4JvP92WwFbRE+sXY=;
+	s=default; t=1559189839;
+	bh=IDRiz9yMnUVa9EqiwOcEISUc1H4lpoejZIC77XXYcXc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sds6dntVUKplm0jUWflLy2o/7yWgEeWSi4RD0PY5DU/GOodiiSRu8CivTiV6vg53r
-	 14ZBrYexl4mOJ93anRYbr5J3OzlIemVl0GjgvucpSKQMqcJ8ppP/I5gkNaB1ibh0kt
-	 qAG/rkRlNYTF50u8T8L3b+qjHUwu8/mbz1k7BrFA=
+	b=n6aZKReajNXN9v3OJoHXKFv5zpAFlxSvOewhXdLNiTk7zHUgBjJFj9Fxfvaut5BBM
+	 oiHkv0H7iyVlR7uIuJZuuY3Lq/9NAbGnSNMz5KALplLnVBggPa05ABhZrEzaDKFiJu
+	 KGlkogrb+MZDF4JTx0SN0xNlJwA/J4QIjBflVJMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730784AbfE3ERF (ORCPT
+        id S1732172AbfE3ERS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:17:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39708 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:17:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728520AbfE3DPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:15:42 -0400
+        id S1730427AbfE3DPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:41 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 015F42458A;
-        Thu, 30 May 2019 03:15:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CECD24547;
+        Thu, 30 May 2019 03:15:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186142;
-        bh=r4n9B0Nzlwy+WTd/3TjJMZizJyy4JvP92WwFbRE+sXY=;
+        s=default; t=1559186140;
+        bh=IDRiz9yMnUVa9EqiwOcEISUc1H4lpoejZIC77XXYcXc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o9kYfTmR+7Ss6PegwoWUUvKQAdf5+JqGMcCUOOQCUC+8dJ7ye7O6kPha7ehdWAeth
-         TUZ/So5GVNpMAoFETVww1limRAdi4PMPrWwxoqC5wMifYLV+5fkQjFyS5tpE48DI5/
-         CZIRDyJWy4WePC2gakVIRcsNoYrtTzP/cyw2UutM=
+        b=YtbbNe5/LUDUwvqGUtkNQdzeEO2+iizIeLxTlohA9dNFnKC3osxPOezLuyvf/EJmM
+         vPfnMctVezrPR1d1lCINoSm9+Qfc52ZRh4Kyciu3uFzaupm1l8kGILKbudAg3IP6CM
+         rXSzA5Y+YfJq9vTa0ZVXjFFJf3BmJ8szQ6tpv1ro=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Brian Starkey <brian.starkey@arm.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
+        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <jsmart2021@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 318/346] drm: writeback: Fix leak of writeback job
-Date:   Wed, 29 May 2019 20:06:31 -0700
-Message-Id: <20190530030556.911351032@linuxfoundation.org>
+Subject: [PATCH 5.0 315/346] scsi: lpfc: Fix use-after-free mailbox cmd completion
+Date:   Wed, 29 May 2019 20:06:28 -0700
+Message-Id: <20190530030556.781145612@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -62,88 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e482ae9b5fdc01a343f22f52930e85a6cfdf85eb ]
+[ Upstream commit 9b1640686470fbbd1c6efb35ada6fe1427ea8d0f ]
 
-Writeback jobs are allocated when the WRITEBACK_FB_ID is set, and
-deleted when the jobs complete. This results in both a memory leak of
-the job and a leak of the framebuffer if the atomic commit returns
-before the job is queued for processing, for instance if the atomic
-check fails or if the commit runs in test-only mode.
+When unloading the driver, mailbox commands may be sent without holding a
+reference on the ndlp. By the time the mailbox command completes, the ndlp
+may have reduced its ref counts and been freed.  The problem was reported
+by KASAN.
 
-Fix this by implementing the drm_writeback_cleanup_job() function and
-calling it from __drm_atomic_helper_connector_destroy_state(). As
-writeback jobs are removed from the state when they're queued for
-processing, any job left in the state when the state gets destroyed
-needs to be cleaned up.
+While unregistering due to driver unload, have the completion noop'd by
+setting the ndlp context NULL'd. Due to the unload, no further action was
+necessary.  Also, while reviewing this path, the generic nulling of the
+context after handling should be slightly moved.
 
-The existing declaration of the drm_writeback_cleanup_job() function
-without an implementation hints that this problem was considered, but
-never addressed.
-
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Reviewed-by: Brian Starkey <brian.starkey@arm.com>
-Acked-by: Liviu Dudau <liviu.dudau@arm.com>
+Reported by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_atomic_state_helper.c |  4 ++++
- drivers/gpu/drm/drm_writeback.c           | 14 +++++++++++---
- 2 files changed, 15 insertions(+), 3 deletions(-)
+ drivers/scsi/lpfc/lpfc_hbadisc.c | 4 ++++
+ drivers/scsi/lpfc/lpfc_sli.c     | 2 +-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_atomic_state_helper.c b/drivers/gpu/drm/drm_atomic_state_helper.c
-index 4985384e51f6e..59ffb6b9c7453 100644
---- a/drivers/gpu/drm/drm_atomic_state_helper.c
-+++ b/drivers/gpu/drm/drm_atomic_state_helper.c
-@@ -30,6 +30,7 @@
- #include <drm/drm_connector.h>
- #include <drm/drm_atomic.h>
- #include <drm/drm_device.h>
-+#include <drm/drm_writeback.h>
+diff --git a/drivers/scsi/lpfc/lpfc_hbadisc.c b/drivers/scsi/lpfc/lpfc_hbadisc.c
+index 2f01e5397a11d..8d553cfb85aa1 100644
+--- a/drivers/scsi/lpfc/lpfc_hbadisc.c
++++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
+@@ -4879,6 +4879,10 @@ lpfc_unreg_rpi(struct lpfc_vport *vport, struct lpfc_nodelist *ndlp)
+ 					 * accept PLOGIs after unreg_rpi_cmpl
+ 					 */
+ 					acc_plogi = 0;
++				} else if (vport->load_flag & FC_UNLOADING) {
++					mbox->ctx_ndlp = NULL;
++					mbox->mbox_cmpl =
++						lpfc_sli_def_mbox_cmpl;
+ 				} else {
+ 					mbox->ctx_ndlp = ndlp;
+ 					mbox->mbox_cmpl =
+diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+index 2242e9b3ca128..d3a942971d818 100644
+--- a/drivers/scsi/lpfc/lpfc_sli.c
++++ b/drivers/scsi/lpfc/lpfc_sli.c
+@@ -2518,8 +2518,8 @@ lpfc_sli_def_mbox_cmpl(struct lpfc_hba *phba, LPFC_MBOXQ_t *pmb)
+ 			} else {
+ 				ndlp->nlp_flag &= ~NLP_UNREG_INP;
+ 			}
++			pmb->ctx_ndlp = NULL;
+ 		}
+-		pmb->ctx_ndlp = NULL;
+ 	}
  
- #include <linux/slab.h>
- #include <linux/dma-fence.h>
-@@ -412,6 +413,9 @@ __drm_atomic_helper_connector_destroy_state(struct drm_connector_state *state)
- 
- 	if (state->commit)
- 		drm_crtc_commit_put(state->commit);
-+
-+	if (state->writeback_job)
-+		drm_writeback_cleanup_job(state->writeback_job);
- }
- EXPORT_SYMBOL(__drm_atomic_helper_connector_destroy_state);
- 
-diff --git a/drivers/gpu/drm/drm_writeback.c b/drivers/gpu/drm/drm_writeback.c
-index c20e6fe00cb38..2d75032f81591 100644
---- a/drivers/gpu/drm/drm_writeback.c
-+++ b/drivers/gpu/drm/drm_writeback.c
-@@ -268,6 +268,15 @@ void drm_writeback_queue_job(struct drm_writeback_connector *wb_connector,
- }
- EXPORT_SYMBOL(drm_writeback_queue_job);
- 
-+void drm_writeback_cleanup_job(struct drm_writeback_job *job)
-+{
-+	if (job->fb)
-+		drm_framebuffer_put(job->fb);
-+
-+	kfree(job);
-+}
-+EXPORT_SYMBOL(drm_writeback_cleanup_job);
-+
- /*
-  * @cleanup_work: deferred cleanup of a writeback job
-  *
-@@ -280,10 +289,9 @@ static void cleanup_work(struct work_struct *work)
- 	struct drm_writeback_job *job = container_of(work,
- 						     struct drm_writeback_job,
- 						     cleanup_work);
--	drm_framebuffer_put(job->fb);
--	kfree(job);
--}
- 
-+	drm_writeback_cleanup_job(job);
-+}
- 
- /**
-  * drm_writeback_signal_completion - Signal the completion of a writeback job
+ 	/* Check security permission status on INIT_LINK mailbox command */
 -- 
 2.20.1
 
