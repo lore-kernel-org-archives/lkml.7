@@ -2,135 +2,177 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA78FC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF48DC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:22:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB77525E4F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:21:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3ED925E3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:22:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbfE3RVy (ORCPT
+        id S1726918AbfE3RWm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 13:21:54 -0400
-Received: from mga12.intel.com ([192.55.52.136]:15132 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726566AbfE3RVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 13:21:52 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 10:21:51 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by orsmga004.jf.intel.com with ESMTP; 30 May 2019 10:21:51 -0700
-Date:   Thu, 30 May 2019 10:21:51 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     "Xing, Cedric" <cedric.xing@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-Message-ID: <20190530172150.GA23930@linux.intel.com>
-References: <CALCETrUyAAhnQ+RUeN1L41TKj-vcD2CNt-FJ9siO=Zo6gvH1Aw@mail.gmail.com>
- <20190524224107.GJ365@linux.intel.com>
- <683B5E3D-AFB6-4B45-8D39-B00847312209@amacapital.net>
- <960B34DE67B9E140824F1DCDEC400C0F654E965F@ORSMSX116.amr.corp.intel.com>
- <CALCETrXXVMutX8eZk6nnkOAeS+Tj0sQd0FkW+wk6Rx8hQxCe6w@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F654E9824@ORSMSX116.amr.corp.intel.com>
- <20190528202407.GB13158@linux.intel.com>
- <CALCETrWTXCb1jru1G5G3sOp5AV8iYUtrffiSxE-5gotXtrZD-g@mail.gmail.com>
- <20190528214107.GD13158@linux.intel.com>
- <960B34DE67B9E140824F1DCDEC400C0F654EB439@ORSMSX116.amr.corp.intel.com>
+        Thu, 30 May 2019 13:22:42 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53050 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726538AbfE3RWl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 13:22:41 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UHMbEj078678
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 13:22:40 -0400
+Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sthh558p2-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 13:22:39 -0400
+Received: from localhost
+        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Thu, 30 May 2019 18:22:38 +0100
+Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
+        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 30 May 2019 18:22:36 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4UHLKLf43319380
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 May 2019 17:21:20 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 59079B2064;
+        Thu, 30 May 2019 17:21:20 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2CEEAB2065;
+        Thu, 30 May 2019 17:21:20 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 30 May 2019 17:21:20 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 1A01016C5D7E; Thu, 30 May 2019 10:21:22 -0700 (PDT)
+Date:   Thu, 30 May 2019 10:21:22 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org
+Subject: Re: [rcu:test 69/69] arch/x86/include/asm/irqflags.h:41:2: warning:
+ 'flags' may be used uninitialized in this function
+Reply-To: paulmck@linux.ibm.com
+References: <201905310055.7eYmYEK8%lkp@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <960B34DE67B9E140824F1DCDEC400C0F654EB439@ORSMSX116.amr.corp.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <201905310055.7eYmYEK8%lkp@intel.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19053017-0060-0000-0000-0000034A0372
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011185; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01210833; UDB=6.00636186; IPR=6.00991867;
+ MB=3.00027121; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-30 17:22:37
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19053017-0061-0000-0000-0000498E449D
+Message-Id: <20190530172122.GE28207@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-30_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905300122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 10:38:06PM -0700, Xing, Cedric wrote:
-> > From: Christopherson, Sean J
-> > Sent: Tuesday, May 28, 2019 2:41 PM
-> > 
-> > On Tue, May 28, 2019 at 01:48:02PM -0700, Andy Lutomirski wrote:
-> > > On Tue, May 28, 2019 at 1:24 PM Sean Christopherson
-> > > <sean.j.christopherson@intel.com> wrote:
-> > > >
-> > > > Actually, I think we do have everything we need from an LSM perspective.
-> > > > LSMs just need to understand that sgx_enclave_load() with a NULL vma
-> > > > implies a transition from RW.  For example, SELinux would interpret
-> > > > sgx_enclave_load(NULL, RX) as requiring FILE__EXECMOD.
-> > >
-> > > You lost me here.  What operation triggers this callback?  And
-> > > wouldn't sgx_enclave_load(NULL, RX) sometimes be a transition from RO
-> > > or just some fresh executable zero bytes?
-> > 
-> > An explicit ioctl() after EACCEPTCOPY to update the allowed permissions.
-> > For all intents and purposes, the EAUG'd page must start RW.  Maybe a better way to phrase
-> > it is that at some point the page must be writable to have any value whatsover.
-> > EACCEPTCOPY explicitly requires the page to be at least RW.  EACCEPT technically doesn't
-> > require RW, but a RO or RX zero page is useless.  Userspace could still EACCEPT with RO or
-> > RX, but SGX would assume a minimum of RW for the purposes of the LSM check.
+On Fri, May 31, 2019 at 12:35:01AM +0800, kbuild test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git test
+> head:   685a26bc60076305987bf06cfd1269e5e4094c73
+> commit: 685a26bc60076305987bf06cfd1269e5e4094c73 [69/69] rcu/nocb: Avoid ->nocb_lock capture by corresponding CPU
+> config: x86_64-randconfig-x009-201921 (attached as .config)
+> compiler: gcc-7 (Debian 7.3.0-1) 7.3.0
+> reproduce:
+>         git checkout 685a26bc60076305987bf06cfd1269e5e4094c73
+>         # save the attached .config to linux build tree
+>         make ARCH=x86_64 
 > 
-> Why is an explicit ioctl() necessary after EACCEPTCOPY? Or why is mprotect() not sufficient?
-
-Ignore this, I was trying to avoid having to add a vm_ops mprotect(),
-which Andy pointed out was silly.
-
-> > In theory, it's still your MAXPERM model, but with the unnecessary states removed and the
-> > others enforced/handled by the natural SGX transitions instead of explictly in ioctls.
-> > Underneath the hood the SGX driver would still need to track the MAXPERM.
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
 > 
-> What are the "unnecessary states" removed? 
+> Note: it may well be a FALSE warning. FWIW you are at least aware of it now.
+> http://gcc.gnu.org/wiki/Better_Uninitialized_Warnings
 
-Andy proposed taking full RWX in MAXPERMs, but really we only need "can
-writes ever happen to this page", as that allows the SGX driver to avoid
-having to track if a page has been mapped PROT_WRITE by any VMA in any
-process.
+This is a false positive.  The return value of rcu_segcblist_is_offloaded()
+for a given CPU cannot change post-boot.  (Famous last words!)
 
-> I'm not sure understand the proposal fully. The whole thing looks to me like
-> the driver is undertaking things that should/would otherwise be done by
-> mmap()/mprotect() syscalls. It also imposes unnecessary restrictions on user
-> mode code, such as mmap(PROT_NONE), ACTIVATE_REGION can be called only once,
-> etc. What'd happen if ACTIVATE_REGION is called with a range spanning
-> multiple/partial VMAs? What'd happen if an enclave was unmapped than mapped
-> again? I'd say the proposal is unintuitive at least.
+								Thanx, Paul
+
+> All warnings (new ones prefixed by >>):
 > 
-> In theory, if the driver can keep track of MAXPERM for all pages within an
-> enclave, then it could fail mmap() if the requested prot conflicts with any
-> page's MAXPERM within that range. Otherwise, MAXPERM could be copied into
-> VM_MAY* flags then mprotect() will just follow through. Wouldn't that be a
-> much simpler and more intuitive approach?
+>    In file included from include/linux/irqflags.h:16:0,
+>                     from arch/x86/include/asm/processor.h:33,
+>                     from arch/x86/include/asm/cpufeature.h:5,
+>                     from arch/x86/include/asm/thread_info.h:53,
+>                     from include/linux/thread_info.h:38,
+>                     from arch/x86/include/asm/preempt.h:7,
+>                     from include/linux/preempt.h:78,
+>                     from include/linux/spinlock.h:51,
+>                     from kernel/rcu/tree.c:23:
+>    kernel/rcu/tree_plugin.h: In function 'rcu_nocb_gp_kthread':
+> >> arch/x86/include/asm/irqflags.h:41:2: warning: 'flags' may be used uninitialized in this function [-Wmaybe-uninitialized]
+>      asm volatile("push %0 ; popf"
+>      ^~~
+>    In file included from kernel/rcu/tree.c:3519:0:
+>    kernel/rcu/tree_plugin.h:1719:16: note: 'flags' was declared here
+>      unsigned long flags;
+>                    ^~~~~
+>    kernel/rcu/tree_plugin.h: In function 'do_nocb_deferred_wakeup_common':
+>    kernel/rcu/tree_plugin.h:1891:2: warning: 'flags' may be used uninitialized in this function [-Wmaybe-uninitialized]
+>      wake_nocb_gp(rdp, ndw == RCU_NOCB_WAKE_FORCE, flags);
+>      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> --
+>    In file included from include/linux/irqflags.h:16:0,
+>                     from arch/x86/include/asm/processor.h:33,
+>                     from arch/x86/include/asm/cpufeature.h:5,
+>                     from arch/x86/include/asm/thread_info.h:53,
+>                     from include/linux/thread_info.h:38,
+>                     from arch/x86/include/asm/preempt.h:7,
+>                     from include/linux/preempt.h:78,
+>                     from include/linux/spinlock.h:51,
+>                     from kernel//rcu/tree.c:23:
+>    kernel//rcu/tree_plugin.h: In function 'rcu_nocb_gp_kthread':
+> >> arch/x86/include/asm/irqflags.h:41:2: warning: 'flags' may be used uninitialized in this function [-Wmaybe-uninitialized]
+>      asm volatile("push %0 ; popf"
+>      ^~~
+>    In file included from kernel//rcu/tree.c:3519:0:
+>    kernel//rcu/tree_plugin.h:1719:16: note: 'flags' was declared here
+>      unsigned long flags;
+>                    ^~~~~
+>    kernel//rcu/tree_plugin.h: In function 'do_nocb_deferred_wakeup_common':
+>    kernel//rcu/tree_plugin.h:1891:2: warning: 'flags' may be used uninitialized in this function [-Wmaybe-uninitialized]
+>      wake_nocb_gp(rdp, ndw == RCU_NOCB_WAKE_FORCE, flags);
+>      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> vim +/flags +41 arch/x86/include/asm/irqflags.h
+> 
+> 6abcd98f include/asm-x86/irqflags.h      Glauber de Oliveira Costa 2008-01-30  37  
+> 1f59a458 arch/x86/include/asm/irqflags.h Nick Desaulniers          2018-08-27  38  extern inline void native_restore_fl(unsigned long flags);
+> 1f59a458 arch/x86/include/asm/irqflags.h Nick Desaulniers          2018-08-27  39  extern inline void native_restore_fl(unsigned long flags)
+> 6abcd98f include/asm-x86/irqflags.h      Glauber de Oliveira Costa 2008-01-30  40  {
+> cf7f7191 include/asm-x86/irqflags.h      Joe Perches               2008-03-23 @41  	asm volatile("push %0 ; popf"
+> 6abcd98f include/asm-x86/irqflags.h      Glauber de Oliveira Costa 2008-01-30  42  		     : /* no output */
+> 6abcd98f include/asm-x86/irqflags.h      Glauber de Oliveira Costa 2008-01-30  43  		     :"g" (flags)
+> cf7f7191 include/asm-x86/irqflags.h      Joe Perches               2008-03-23  44  		     :"memory", "cc");
+> 6abcd98f include/asm-x86/irqflags.h      Glauber de Oliveira Costa 2008-01-30  45  }
+> 6abcd98f include/asm-x86/irqflags.h      Glauber de Oliveira Costa 2008-01-30  46  
+> 
+> :::::: The code at line 41 was first introduced by commit
+> :::::: cf7f7191cf20011e47243b594e433275a6db811b include/asm-x86/irqflags.h: checkpatch cleanups - formatting only
+> 
+> :::::: TO: Joe Perches <joe@perches.com>
+> :::::: CC: Ingo Molnar <mingo@elte.hu>
+> 
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
-Ignore all this, again I was trying to avoid hooking mprotect().
+
