@@ -5,53 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80EAEC28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A91AC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AE7B25167
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:10:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1276825167
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:11:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189459;
-	bh=T1OAIHJK2VqEpf73x8rM2XJMH3ZYZPwP1CIqcF0Eg54=;
+	s=default; t=1559189462;
+	bh=51h9W7jm+N2K/Rbbz/PlPliMaIU8cxTjg5mDJa6/Bno=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oRLOejBtzba5F53+y86hx1x9IcZMlgAie6oFttkDmZ4zr+W0UHMtiAnBNVo5ehu2s
-	 f/3XhNwAxWxU12oxSwxQP8tDlarExjZDdpTH/IX8zOeWAlsU96uY42/IoNU7WiN908
-	 H1VB8668vAZGRzy39c6VaXfgMnNyxRYH+MiPxHXw=
+	b=Y2ldzJqMmNC1m5ott43ZPfbLya1Ve0h7zKF5JttY6AAknFYKaqBqlfLCg6PHNmsZd
+	 UIdnKRZ2AtIO8JGaWZbtshI8biun47G4mfk3/bDCFu7bOyx359ONsQXM1aykf+knon
+	 gbtk4+T0z9YZXR4GUhSWk+GzqBYUK17O9msJxkbQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730868AbfE3DQ4 (ORCPT
+        id S1727328AbfE3ELB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:16:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59592 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:11:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729542AbfE3DNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:13:41 -0400
+        id S1730866AbfE3DQ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:16:56 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5D6C244EF;
-        Thu, 30 May 2019 03:13:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5D742463F;
+        Thu, 30 May 2019 03:16:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186019;
-        bh=T1OAIHJK2VqEpf73x8rM2XJMH3ZYZPwP1CIqcF0Eg54=;
+        s=default; t=1559186216;
+        bh=51h9W7jm+N2K/Rbbz/PlPliMaIU8cxTjg5mDJa6/Bno=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fVEpfC9zjSCGQp8TUD+e8TkTBf9MhBuJ6DrjSVX4Fqhz3UJaDE1I8bv94vIYNp4ln
-         imvGd8EPUA5Nb7roXrUVE/no526whZiRF+0OsH/QqsHgQZntpEuQfzoXAFPgfRUK8V
-         hOAB1OzkPWeHAhDZOEd29wUBYbUdWMWjAIqlVI+4=
+        b=K+X23mkUoy8tF5IPVnyVxy4+ReZJDtDQOHInjYLGLVEkTz+YBSOeVk2u/z34eVt3+
+         Co9FfifWJMT3xbgUwl0y1zfC2mYVhmMRe+CBhSGnViKMlZb+nfM12g4vCEoEPDzXUY
+         3O+Vp9M4XRVjxxXh31BSDdtC8D0vWU5Kxkh7Gjb4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Hannes Reinecke <hare@suse.com>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 088/346] btrfs: fix panic during relocation after ENOSPC before writeback happens
-Date:   Wed, 29 May 2019 20:02:41 -0700
-Message-Id: <20190530030545.620153475@linuxfoundation.org>
+Subject: [PATCH 4.19 103/276] bcache: return error immediately in bch_journal_replay()
+Date:   Wed, 29 May 2019 20:04:21 -0700
+Message-Id: <20190530030532.508804458@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
-References: <20190530030540.363386121@linuxfoundation.org>
+In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
+References: <20190530030523.133519668@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,118 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ff612ba7849964b1898fd3ccd1f56941129c6aab ]
+[ Upstream commit 68d10e6979a3b59e3cd2e90bfcafed79c4cf180a ]
 
-We've been seeing the following sporadically throughout our fleet
+When failure happens inside bch_journal_replay(), calling
+cache_set_err_on() and handling the failure in async way is not a good
+idea. Because after bch_journal_replay() returns, registering code will
+continue to execute following steps, and unregistering code triggered
+by cache_set_err_on() is running in same time. First it is unnecessary
+to handle failure and unregister cache set in an async way, second there
+might be potential race condition to run register and unregister code
+for same cache set.
 
-panic: kernel BUG at fs/btrfs/relocation.c:4584!
-netversion: 5.0-0
-Backtrace:
- #0 [ffffc90003adb880] machine_kexec at ffffffff81041da8
- #1 [ffffc90003adb8c8] __crash_kexec at ffffffff8110396c
- #2 [ffffc90003adb988] crash_kexec at ffffffff811048ad
- #3 [ffffc90003adb9a0] oops_end at ffffffff8101c19a
- #4 [ffffc90003adb9c0] do_trap at ffffffff81019114
- #5 [ffffc90003adba00] do_error_trap at ffffffff810195d0
- #6 [ffffc90003adbab0] invalid_op at ffffffff81a00a9b
-    [exception RIP: btrfs_reloc_cow_block+692]
-    RIP: ffffffff8143b614  RSP: ffffc90003adbb68  RFLAGS: 00010246
-    RAX: fffffffffffffff7  RBX: ffff8806b9c32000  RCX: ffff8806aad00690
-    RDX: ffff880850b295e0  RSI: ffff8806b9c32000  RDI: ffff88084f205bd0
-    RBP: ffff880849415000   R8: ffffc90003adbbe0   R9: ffff88085ac90000
-    R10: ffff8805f7369140  R11: 0000000000000000  R12: ffff880850b295e0
-    R13: ffff88084f205bd0  R14: 0000000000000000  R15: 0000000000000000
-    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
- #7 [ffffc90003adbbb0] __btrfs_cow_block at ffffffff813bf1cd
- #8 [ffffc90003adbc28] btrfs_cow_block at ffffffff813bf4b3
- #9 [ffffc90003adbc78] btrfs_search_slot at ffffffff813c2e6c
+So in this patch, if failure happens in bch_journal_replay(), we don't
+call cache_set_err_on(), and just print out the same error message to
+kernel message buffer, then return -EIO immediately caller. Then caller
+can detect such failure and handle it in synchrnozied way.
 
-The way relocation moves data extents is by creating a reloc inode and
-preallocating extents in this inode and then copying the data into these
-preallocated extents.  Once we've done this for all of our extents,
-we'll write out these dirty pages, which marks the extent written, and
-goes into btrfs_reloc_cow_block().  From here we get our current
-reloc_control, which _should_ match the reloc_control for the current
-block group we're relocating.
-
-However if we get an ENOSPC in this path at some point we'll bail out,
-never initiating writeback on this inode.  Not a huge deal, unless we
-happen to be doing relocation on a different block group, and this block
-group is now rc->stage == UPDATE_DATA_PTRS.  This trips the BUG_ON() in
-btrfs_reloc_cow_block(), because we expect to be done modifying the data
-inode.  We are in fact done modifying the metadata for the data inode
-we're currently using, but not the one from the failed block group, and
-thus we BUG_ON().
-
-(This happens when writeback finishes for extents from the previous
-group, when we are at btrfs_finish_ordered_io() which updates the data
-reloc tree (inode item, drops/adds extent items, etc).)
-
-Fix this by writing out the reloc data inode always, and then breaking
-out of the loop after that point to keep from tripping this BUG_ON()
-later.
-
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-[ add note from Filipe ]
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/relocation.c | 31 ++++++++++++++++++++-----------
- 1 file changed, 20 insertions(+), 11 deletions(-)
+ drivers/md/bcache/journal.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
-index 272b287f8cf0d..0395b8233c905 100644
---- a/fs/btrfs/relocation.c
-+++ b/fs/btrfs/relocation.c
-@@ -4271,27 +4271,36 @@ int btrfs_relocate_block_group(struct btrfs_fs_info *fs_info, u64 group_start)
- 		mutex_lock(&fs_info->cleaner_mutex);
- 		ret = relocate_block_group(rc);
- 		mutex_unlock(&fs_info->cleaner_mutex);
--		if (ret < 0) {
-+		if (ret < 0)
- 			err = ret;
--			goto out;
--		}
--
--		if (rc->extents_found == 0)
--			break;
--
--		btrfs_info(fs_info, "found %llu extents", rc->extents_found);
+diff --git a/drivers/md/bcache/journal.c b/drivers/md/bcache/journal.c
+index 772258ee1f517..07da39ac2d110 100644
+--- a/drivers/md/bcache/journal.c
++++ b/drivers/md/bcache/journal.c
+@@ -330,9 +330,12 @@ int bch_journal_replay(struct cache_set *s, struct list_head *list)
+ 	list_for_each_entry(i, list, list) {
+ 		BUG_ON(i->pin && atomic_read(i->pin) != 1);
  
-+		/*
-+		 * We may have gotten ENOSPC after we already dirtied some
-+		 * extents.  If writeout happens while we're relocating a
-+		 * different block group we could end up hitting the
-+		 * BUG_ON(rc->stage == UPDATE_DATA_PTRS) in
-+		 * btrfs_reloc_cow_block.  Make sure we write everything out
-+		 * properly so we don't trip over this problem, and then break
-+		 * out of the loop if we hit an error.
-+		 */
- 		if (rc->stage == MOVE_DATA_EXTENTS && rc->found_file_extent) {
- 			ret = btrfs_wait_ordered_range(rc->data_inode, 0,
- 						       (u64)-1);
--			if (ret) {
-+			if (ret)
- 				err = ret;
--				goto out;
--			}
- 			invalidate_mapping_pages(rc->data_inode->i_mapping,
- 						 0, -1);
- 			rc->stage = UPDATE_DATA_PTRS;
- 		}
-+
-+		if (err < 0)
-+			goto out;
-+
-+		if (rc->extents_found == 0)
-+			break;
-+
-+		btrfs_info(fs_info, "found %llu extents", rc->extents_found);
-+
- 	}
+-		cache_set_err_on(n != i->j.seq, s,
+-"bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
+-				 n, i->j.seq - 1, start, end);
++		if (n != i->j.seq) {
++			pr_err("bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
++			n, i->j.seq - 1, start, end);
++			ret = -EIO;
++			goto err;
++		}
  
- 	WARN_ON(rc->block_group->pinned > 0);
+ 		for (k = i->j.start;
+ 		     k < bset_bkey_last(&i->j);
 -- 
 2.20.1
 
