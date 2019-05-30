@@ -2,64 +2,66 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD9BEC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E16ACC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CF43257C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABD48257C8
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:10:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="VZxAiSLI"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="KavaIMX4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbfE3IKG (ORCPT
+        id S1728130AbfE3IKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 04:10:06 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:55657 "EHLO
+        Thu, 30 May 2019 04:10:52 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:57053 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727330AbfE3IKG (ORCPT
+        with ESMTP id S1727330AbfE3IKw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 04:10:06 -0400
+        Thu, 30 May 2019 04:10:52 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4U89moG2904100
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4U8AUAw2904234
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 30 May 2019 01:09:48 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4U89moG2904100
+        Thu, 30 May 2019 01:10:30 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4U8AUAw2904234
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559203789;
-        bh=xbzSye5RDmUBGSiyMJs4k4QyVNiNyq46ryzLyHHn7Sg=;
+        s=2019051801; t=1559203831;
+        bh=9M6OzNL7rv7rHmmNJPNEspaV6z4hH4gUT99h+fZMBpw=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=VZxAiSLIDy25O6HeDQFQUJ3dOIkCcTEi1f1bhl9CxX6zX1D+TjlSf6yx+8C0zn408
-         iq4XCeEs+lSl4jadlCcyFg0E41REtsIP6YCld+SxGaXz5z2yQ3Qd6p4hbW7XaKz8rF
-         aN+Jru/aHyl4H2g5LtKsbGX+iqdeg0SoVvugYLHe/oY34cT4pRbYKaK2NRWLM3Tfxz
-         P6mrklYJwcAS6eok0xdDD43wG/S9i1Y/rFuh4m7MFthfVVpZOMH66dv42IAZ31r2o9
-         6AcO5CsHvfjcdK1jJimJOHyHECG3VxrDD1yBBBba49ydqWXnCEIeKujyCAlVnToPG1
-         vf084PkXfxbQA==
+        b=KavaIMX4NfNTzhEmhq5BBoo2xT8Gab6ptnQPvJHkhPt9fWbpQyOFLuTC6CB/AAN7K
+         GAS/S1tw/cFXfpusAy4LpLCVfbhYVfl5QebPXT849THSiXzBfY7QVTA0FT4SaW2Ji2
+         6EXHlKmF/oAMVo74bgpUea3jbrz31ANiVHfi7dUm940zQK6eh3loQamry8mFzfqTV4
+         1+FRVOx0CNqq/bit8FLtOVjPa4Qhh+XaFR2n7/TwpTL9BnZHL1kQ+ElTVl03PBRfvb
+         Xzum5rRz2QDrmSgdJDRWSAWxg+S7ChKYmlrm/HvBx4yNk4WL2EMHyhts7h1fq3WRTP
+         XWCMju6nnQ+Zg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4U89mbu2904097;
-        Thu, 30 May 2019 01:09:48 -0700
-Date:   Thu, 30 May 2019 01:09:48 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4U8AUmO2904231;
+        Thu, 30 May 2019 01:10:30 -0700
+Date:   Thu, 30 May 2019 01:10:30 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
-Message-ID: <tip-cacddfe7b0804752528e8100461266ec33dc6b64@git.kernel.org>
-Cc:     mingo@kernel.org, tglx@linutronix.de, songliubraving@fb.com,
-        sdf@google.com, acme@redhat.com, adrian.hunter@intel.com,
-        alexander.shishkin@linux.intel.com, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, peterz@infradead.org,
-        ak@linux.intel.com, jolsa@kernel.org, namhyung@kernel.org
-Reply-To: jolsa@kernel.org, ak@linux.intel.com, peterz@infradead.org,
-          namhyung@kernel.org, adrian.hunter@intel.com, acme@redhat.com,
-          songliubraving@fb.com, sdf@google.com, tglx@linutronix.de,
-          mingo@kernel.org, linux-kernel@vger.kernel.org, hpa@zytor.com,
-          alexander.shishkin@linux.intel.com
-In-Reply-To: <20190508132010.14512-4-jolsa@kernel.org>
-References: <20190508132010.14512-4-jolsa@kernel.org>
+Message-ID: <tip-6c398d723a6a6d27485e701ae21e50304ec95595@git.kernel.org>
+Cc:     tglx@linutronix.de, hpa@zytor.com, adrian.hunter@intel.com,
+        acme@redhat.com, namhyung@kernel.org, peterz@infradead.org,
+        alexander.shishkin@linux.intel.com, mingo@kernel.org,
+        ak@linux.intel.com, linux-kernel@vger.kernel.org, sdf@google.com,
+        jolsa@kernel.org, songliubraving@fb.com
+Reply-To: peterz@infradead.org, tglx@linutronix.de,
+          adrian.hunter@intel.com, hpa@zytor.com, namhyung@kernel.org,
+          acme@redhat.com, linux-kernel@vger.kernel.org,
+          ak@linux.intel.com, sdf@google.com, jolsa@kernel.org,
+          songliubraving@fb.com, alexander.shishkin@linux.intel.com,
+          mingo@kernel.org
+In-Reply-To: <20190508132010.14512-5-jolsa@kernel.org>
+References: <20190508132010.14512-5-jolsa@kernel.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf dso: Simplify dso_cache__read function
-Git-Commit-ID: cacddfe7b0804752528e8100461266ec33dc6b64
+Subject: [tip:perf/core] perf dso: Add BPF DSO read and size hooks
+Git-Commit-ID: 6c398d723a6a6d27485e701ae21e50304ec95595
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -73,17 +75,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  cacddfe7b0804752528e8100461266ec33dc6b64
-Gitweb:     https://git.kernel.org/tip/cacddfe7b0804752528e8100461266ec33dc6b64
+Commit-ID:  6c398d723a6a6d27485e701ae21e50304ec95595
+Gitweb:     https://git.kernel.org/tip/6c398d723a6a6d27485e701ae21e50304ec95595
 Author:     Jiri Olsa <jolsa@kernel.org>
-AuthorDate: Wed, 8 May 2019 15:20:01 +0200
+AuthorDate: Wed, 8 May 2019 15:20:02 +0200
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Tue, 28 May 2019 18:37:44 -0300
 
-perf dso: Simplify dso_cache__read function
+perf dso: Add BPF DSO read and size hooks
 
-There's no need for the while loop now, also we can connect two (ret >
-0) condition legs together.
+Add BPF related code into DSO reading paths to return size (bpf_size)
+and read the BPF code (bpf_read).
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Acked-by: Song Liu <songliubraving@fb.com>
@@ -92,47 +94,92 @@ Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
 Cc: Stanislav Fomichev <sdf@google.com>
-Link: http://lkml.kernel.org/r/20190508132010.14512-4-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190508132010.14512-5-jolsa@kernel.org
+[ Use uintptr_t when casting from u64 to u8 pointers ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/dso.c | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
+ tools/perf/util/dso.c | 49 ++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 48 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index 7734f50a6912..1e6a045adb8c 100644
+index 1e6a045adb8c..1fb18292c2d3 100644
 --- a/tools/perf/util/dso.c
 +++ b/tools/perf/util/dso.c
-@@ -823,25 +823,20 @@ static ssize_t
- dso_cache__read(struct dso *dso, struct machine *machine,
- 		u64 offset, u8 *data, ssize_t size)
+@@ -9,6 +9,8 @@
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <libgen.h>
++#include <bpf/libbpf.h>
++#include "bpf-event.h"
+ #include "compress.h"
+ #include "namespaces.h"
+ #include "path.h"
+@@ -706,6 +708,44 @@ bool dso__data_status_seen(struct dso *dso, enum dso_data_status_seen by)
+ 	return false;
+ }
+ 
++static ssize_t bpf_read(struct dso *dso, u64 offset, char *data)
++{
++	struct bpf_prog_info_node *node;
++	ssize_t size = DSO__DATA_CACHE_SIZE;
++	u64 len;
++	u8 *buf;
++
++	node = perf_env__find_bpf_prog_info(dso->bpf_prog.env, dso->bpf_prog.id);
++	if (!node || !node->info_linear) {
++		dso->data.status = DSO_DATA_STATUS_ERROR;
++		return -1;
++	}
++
++	len = node->info_linear->info.jited_prog_len;
++	buf = (u8 *)(uintptr_t)node->info_linear->info.jited_prog_insns;
++
++	if (offset >= len)
++		return -1;
++
++	size = (ssize_t)min(len - offset, (u64)size);
++	memcpy(data, buf + offset, size);
++	return size;
++}
++
++static int bpf_size(struct dso *dso)
++{
++	struct bpf_prog_info_node *node;
++
++	node = perf_env__find_bpf_prog_info(dso->bpf_prog.env, dso->bpf_prog.id);
++	if (!node || !node->info_linear) {
++		dso->data.status = DSO_DATA_STATUS_ERROR;
++		return -1;
++	}
++
++	dso->data.file_size = node->info_linear->info.jited_prog_len;
++	return 0;
++}
++
+ static void
+ dso_cache__free(struct dso *dso)
  {
-+	u64 cache_offset = offset & DSO__DATA_CACHE_MASK;
- 	struct dso_cache *cache;
- 	struct dso_cache *old;
- 	ssize_t ret;
+@@ -832,7 +872,11 @@ dso_cache__read(struct dso *dso, struct machine *machine,
+ 	if (!cache)
+ 		return -ENOMEM;
  
--	do {
--		u64 cache_offset = offset & DSO__DATA_CACHE_MASK;
--
--		cache = zalloc(sizeof(*cache) + DSO__DATA_CACHE_SIZE);
--		if (!cache)
--			return -ENOMEM;
--
--		ret = file_read(dso, machine, cache_offset, cache->data);
-+	cache = zalloc(sizeof(*cache) + DSO__DATA_CACHE_SIZE);
-+	if (!cache)
-+		return -ENOMEM;
- 
-+	ret = file_read(dso, machine, cache_offset, cache->data);
-+	if (ret > 0) {
+-	ret = file_read(dso, machine, cache_offset, cache->data);
++	if (dso->binary_type == DSO_BINARY_TYPE__BPF_PROG_INFO)
++		ret = bpf_read(dso, cache_offset, cache->data);
++	else
++		ret = file_read(dso, machine, cache_offset, cache->data);
++
+ 	if (ret > 0) {
  		cache->offset = cache_offset;
  		cache->size   = ret;
--	} while (0);
--
+@@ -941,6 +985,9 @@ int dso__data_file_size(struct dso *dso, struct machine *machine)
+ 	if (dso->data.status == DSO_DATA_STATUS_ERROR)
+ 		return -1;
  
--	if (ret > 0) {
- 		old = dso_cache__insert(dso, cache);
- 		if (old) {
- 			/* we lose the race */
++	if (dso->binary_type == DSO_BINARY_TYPE__BPF_PROG_INFO)
++		return bpf_size(dso);
++
+ 	return file_size(dso, machine);
+ }
+ 
