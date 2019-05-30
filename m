@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE25C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE3C4C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC97F24E50
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8554524E52
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:54:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188479;
-	bh=27AnvQp6V1UBvA8YUZr5d1qzCcobTE+49gHKQuYrNho=;
+	s=default; t=1559188482;
+	bh=Udqoyn03xR71fL5XiDPWv5x+FeOrtCnyp8Wqxzu3yJY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RNM/eiUyZB03ozbWHsM1gkRftwAEoGhf8JedXw/xe2tIRR9mJZdjFGx7DPy95YshV
-	 TInyi1X7qaQ8ugbXA0otFxM0nDcxZFe2x5sVwUlcyK5G6vI40e27HC8E2XVKj3BLKE
-	 TyOa/YgDg74tZQx+q1pKqYTs/2zalv009iN+GTTs=
+	b=NApk7rkVT1KFdm4Yhc4hQ4duH7Brn0MKkefBc6vvnRnjp108tIJ+lYth88DcnMd7m
+	 03ZfHFStzXmmspHh7VKjL86rExrEWGSH1fhwXYMS3LrfND5gKL22Uz2viquW2xzEFT
+	 +JXhKVNg7wP7t2nEsea43dCO4gKx15LQPnyyqplE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387575AbfE3Dyh (ORCPT
+        id S2387888AbfE3Dyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:54:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54624 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:54:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731857AbfE3DTS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:18 -0400
+        id S1731854AbfE3DTR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:17 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA02424849;
+        by mail.kernel.org (Postfix) with ESMTPSA id 13CDA24865;
         Thu, 30 May 2019 03:19:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186357;
-        bh=27AnvQp6V1UBvA8YUZr5d1qzCcobTE+49gHKQuYrNho=;
+        bh=Udqoyn03xR71fL5XiDPWv5x+FeOrtCnyp8Wqxzu3yJY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X9nqEoAGNFATa2OcGFF+HQCe+235D/PgGdtQ/CzZ8mQgUt6cLEtfo0ostAGMcLCr6
-         HBT058KCY3jG6RoKJmpRfHY2HOg8c00UeBPFgC99jXY5nuA+TkoAEY2Ps0jWN9IZDt
-         NOhQUHqiWWTr3Gt6VoJ2dNRtB88UAtjR12GH++hs=
+        b=laV57B8xkRpdpN+aEPqrWv6FDNX9WMB8qDC671737xpFh6sAFFA2En9elnUcOmozt
+         dsWE5rdMjaUy79ER/FNfieLAPc6U6xouJgKrARff5nXn8YsTK7Dc7KAeGtPwuoHjKY
+         gvTj17cfaspcDePbRlo0NKkrIgHeRaQ7b0xEOQT8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -49,9 +49,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 101/193] sched/rt: Check integer overflow at usec to nsec conversion
-Date:   Wed, 29 May 2019 20:05:55 -0700
-Message-Id: <20190530030502.959142662@linuxfoundation.org>
+Subject: [PATCH 4.14 100/193] sched/core: Check quota and period overflow at usec to nsec conversion
+Date:   Wed, 29 May 2019 20:05:54 -0700
+Message-Id: <20190530030502.850842444@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -64,17 +64,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1a010e29cfa00fee2888fd2fd4983f848cbafb58 ]
+[ Upstream commit 1a8b4540db732ca16c9e43ac7c08b1b8f0b252d8 ]
 
-Example of unhandled overflows:
+Large values could overflow u64 and pass following sanity checks.
 
- # echo 18446744073709651 > cpu.rt_runtime_us
- # cat cpu.rt_runtime_us
- 99
+ # echo 18446744073750000 > cpu.cfs_period_us
+ # cat cpu.cfs_period_us
+ 40448
 
- # echo 18446744073709900 > cpu.rt_period_us
- # cat cpu.rt_period_us
- 348
+ # echo 18446744073750000 > cpu.cfs_quota_us
+ # cat cpu.cfs_quota_us
+ 40448
 
 After this patch they will fail with -EINVAL.
 
@@ -83,35 +83,38 @@ Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/155125501739.293431.5252197504404771496.stgit@buzz
+Link: http://lkml.kernel.org/r/155125502079.293431.3947497929372138600.stgit@buzz
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/rt.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ kernel/sched/core.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index cb9a5b8532fa5..cc7dd1aaf08e3 100644
---- a/kernel/sched/rt.c
-+++ b/kernel/sched/rt.c
-@@ -2533,6 +2533,8 @@ int sched_group_set_rt_runtime(struct task_group *tg, long rt_runtime_us)
- 	rt_runtime = (u64)rt_runtime_us * NSEC_PER_USEC;
- 	if (rt_runtime_us < 0)
- 		rt_runtime = RUNTIME_INF;
-+	else if ((u64)rt_runtime_us > U64_MAX / NSEC_PER_USEC)
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 0552ddbb25e2a..2464a242d6c9d 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -6482,8 +6482,10 @@ int tg_set_cfs_quota(struct task_group *tg, long cfs_quota_us)
+ 	period = ktime_to_ns(tg->cfs_bandwidth.period);
+ 	if (cfs_quota_us < 0)
+ 		quota = RUNTIME_INF;
+-	else
++	else if ((u64)cfs_quota_us <= U64_MAX / NSEC_PER_USEC)
+ 		quota = (u64)cfs_quota_us * NSEC_PER_USEC;
++	else
 +		return -EINVAL;
  
- 	return tg_set_rt_bandwidth(tg, rt_period, rt_runtime);
+ 	return tg_set_cfs_bandwidth(tg, period, quota);
  }
-@@ -2553,6 +2555,9 @@ int sched_group_set_rt_period(struct task_group *tg, u64 rt_period_us)
+@@ -6505,6 +6507,9 @@ int tg_set_cfs_period(struct task_group *tg, long cfs_period_us)
  {
- 	u64 rt_runtime, rt_period;
+ 	u64 quota, period;
  
-+	if (rt_period_us > U64_MAX / NSEC_PER_USEC)
++	if ((u64)cfs_period_us > U64_MAX / NSEC_PER_USEC)
 +		return -EINVAL;
 +
- 	rt_period = rt_period_us * NSEC_PER_USEC;
- 	rt_runtime = tg->rt_bandwidth.rt_runtime;
+ 	period = (u64)cfs_period_us * NSEC_PER_USEC;
+ 	quota = tg->cfs_bandwidth.quota;
  
 -- 
 2.20.1
