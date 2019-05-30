@@ -2,57 +2,59 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02797C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6532C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6CEB24563
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 904A92457F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186130;
-	bh=2HFrA1Syu5LHtOeNK0QxU2MnJ/8ZxGAovQXoZHNkB6g=;
+	s=default; t=1559186139;
+	bh=SHD36+BY1QvaEGUkOypXBRfC8ohz3yaLFqEMSfO4UWU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ehdYwYvc9T1n6EVKCECl2aKvjfI6brJEhRBN6BgDGyro4KJhHZGG/Tnv4H/0MhH23
-	 0UWlIVquH8AK3qWsw0uJGoSlO98VhwJDNQlQIEcHujUTaQUjUp5YdZPAFBhJWxLr5Q
-	 s6sGiPGUH7kPWoKaDr3nRQMONmU5Ngcow6V3Wxro=
+	b=B4JlpMZT7L1q/Z42BoAvKmARUwM8HdYVgWhOmUe/kmUef8qFiktXowynA6fHvDvAA
+	 VFWg/bSpRWrTjsZ2o5bTsqDRsKnTH25wM7bTwJQnJRbeH5vkzEnURQtnfCNNIbjd4r
+	 P8PdqP746X+4ScjrDwm3s8nTvv8R0FMeIUbyDiIo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730321AbfE3DPa (ORCPT
+        id S1730412AbfE3DPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:15:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56480 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:15:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729282AbfE3DMw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:52 -0400
+        id S1728369AbfE3DNH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:07 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C2D521BE2;
-        Thu, 30 May 2019 03:12:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF95421BE2;
+        Thu, 30 May 2019 03:13:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185972;
-        bh=2HFrA1Syu5LHtOeNK0QxU2MnJ/8ZxGAovQXoZHNkB6g=;
+        s=default; t=1559185985;
+        bh=SHD36+BY1QvaEGUkOypXBRfC8ohz3yaLFqEMSfO4UWU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sErnmPBZiHV+R/GWr2NwDccq2eupqocwlMiU40S6H0LK3NHM8xliNZ5pPvuwBW4qx
-         DNbHRFM3UweZ7eF/O+cE/+GUMvcveWkZe8IXCuOzVgWq51sFsRfscJlss6Z9mtfE7u
-         HEZNr3QbS3ky2BWRjoJgSR6pY82hL6VsHRPT7eKg=
+        b=ILmeb8BvdDqC1TuRd3hl72FA+Y+1x2GWkheEASzPnRQEHv0/d+S+MH+EotawGer8A
+         P348dRzCiQ+dtWX4MuQfeXMdtmiGtCtziBAj+NZ3XGRpTCb7u+p+p/9n/3KQJa+Oat
+         RZl8O3fbOozSSMZikHj2wMZ48G0/m5l8BkX1q6tg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+228a82b263b5da91883d@syzkaller.appspotmail.com,
-        Benjamin Coddington <bcodding@redhat.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 405/405] NFS: Fix a double unlock from nfs_match,get_client
-Date:   Wed, 29 May 2019 20:06:43 -0700
-Message-Id: <20190530030601.022642520@linuxfoundation.org>
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: [PATCH 5.0 026/346] brcmfmac: add subtype check for event handling in data path
+Date:   Wed, 29 May 2019 20:01:39 -0700
+Message-Id: <20190530030542.073544918@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
-References: <20190530030540.291644921@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,38 +64,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c260121a97a3e4df6536edbc2f26e166eff370ce ]
+From: Arend van Spriel <arend.vanspriel@broadcom.com>
 
-Now that nfs_match_client drops the nfs_client_lock, we should be
-careful
-to always return it in the same condition: locked.
+commit a4176ec356c73a46c07c181c6d04039fafa34a9f upstream.
 
-Fixes: 950a578c6128 ("NFS: make nfs_match_client killable")
-Reported-by: syzbot+228a82b263b5da91883d@syzkaller.appspotmail.com
-Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+For USB there is no separate channel being used to pass events
+from firmware to the host driver and as such are passed over the
+data path. In order to detect mock event messages an additional
+check is needed on event subtype. This check is added conditionally
+using unlikely() keyword.
+
+Reviewed-by: Hante Meuleman <hante.meuleman@broadcom.com>
+Reviewed-by: Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>
+Reviewed-by: Franky Lin <franky.lin@broadcom.com>
+Signed-off-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Cc: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/nfs/client.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c   |    5 ++--
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.h   |   16 ++++++++++----
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.c |    2 -
+ 3 files changed, 16 insertions(+), 7 deletions(-)
 
-diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-index 350cfa561e0e8..dfb796eab9121 100644
---- a/fs/nfs/client.c
-+++ b/fs/nfs/client.c
-@@ -299,9 +299,9 @@ static struct nfs_client *nfs_match_client(const struct nfs_client_initdata *dat
- 			spin_unlock(&nn->nfs_client_lock);
- 			error = nfs_wait_client_init_complete(clp);
- 			nfs_put_client(clp);
-+			spin_lock(&nn->nfs_client_lock);
- 			if (error < 0)
- 				return ERR_PTR(error);
--			spin_lock(&nn->nfs_client_lock);
- 			goto again;
- 		}
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c
+@@ -464,7 +464,8 @@ void brcmf_rx_frame(struct device *dev,
+ 	} else {
+ 		/* Process special event packets */
+ 		if (handle_event)
+-			brcmf_fweh_process_skb(ifp->drvr, skb);
++			brcmf_fweh_process_skb(ifp->drvr, skb,
++					       BCMILCP_SUBTYPE_VENDOR_LONG);
  
--- 
-2.20.1
-
+ 		brcmf_netif_rx(ifp, skb);
+ 	}
+@@ -481,7 +482,7 @@ void brcmf_rx_event(struct device *dev,
+ 	if (brcmf_rx_hdrpull(drvr, skb, &ifp))
+ 		return;
+ 
+-	brcmf_fweh_process_skb(ifp->drvr, skb);
++	brcmf_fweh_process_skb(ifp->drvr, skb, 0);
+ 	brcmu_pkt_buf_free_skb(skb);
+ }
+ 
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.h
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.h
+@@ -211,7 +211,7 @@ enum brcmf_fweh_event_code {
+  */
+ #define BRCM_OUI				"\x00\x10\x18"
+ #define BCMILCP_BCM_SUBTYPE_EVENT		1
+-
++#define BCMILCP_SUBTYPE_VENDOR_LONG		32769
+ 
+ /**
+  * struct brcm_ethhdr - broadcom specific ether header.
+@@ -334,10 +334,10 @@ void brcmf_fweh_process_event(struct brc
+ void brcmf_fweh_p2pdev_setup(struct brcmf_if *ifp, bool ongoing);
+ 
+ static inline void brcmf_fweh_process_skb(struct brcmf_pub *drvr,
+-					  struct sk_buff *skb)
++					  struct sk_buff *skb, u16 stype)
+ {
+ 	struct brcmf_event *event_packet;
+-	u16 usr_stype;
++	u16 subtype, usr_stype;
+ 
+ 	/* only process events when protocol matches */
+ 	if (skb->protocol != cpu_to_be16(ETH_P_LINK_CTL))
+@@ -346,8 +346,16 @@ static inline void brcmf_fweh_process_sk
+ 	if ((skb->len + ETH_HLEN) < sizeof(*event_packet))
+ 		return;
+ 
+-	/* check for BRCM oui match */
+ 	event_packet = (struct brcmf_event *)skb_mac_header(skb);
++
++	/* check subtype if needed */
++	if (unlikely(stype)) {
++		subtype = get_unaligned_be16(&event_packet->hdr.subtype);
++		if (subtype != stype)
++			return;
++	}
++
++	/* check for BRCM oui match */
+ 	if (memcmp(BRCM_OUI, &event_packet->hdr.oui[0],
+ 		   sizeof(event_packet->hdr.oui)))
+ 		return;
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.c
+@@ -1116,7 +1116,7 @@ static void brcmf_msgbuf_process_event(s
+ 
+ 	skb->protocol = eth_type_trans(skb, ifp->ndev);
+ 
+-	brcmf_fweh_process_skb(ifp->drvr, skb);
++	brcmf_fweh_process_skb(ifp->drvr, skb, 0);
+ 
+ exit:
+ 	brcmu_pkt_buf_free_skb(skb);
 
 
