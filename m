@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F5FC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96103C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E178A249A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:22:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B921249C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:22:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186523;
-	bh=z91C+efps4nO/LVIwO5lsJQzsK4lqT/ZYA0wlbfwdYk=;
+	s=default; t=1559186530;
+	bh=MjXQS3y9/+u+lZla8UU9/IM/aiALE+hEOkl2pgRuKEE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0eVdvXqFzhOIBAwJ6iLuBtlJ3Wz4M0L3qVT8RWfIIJdh/lZTolJf6MSoJpYYWO2an
-	 r9Eoh4knxAqk04/4U403ixmKwhnnmAQh+0HBCljw53amyJnqI1HDAWXU3SeWHnXbwK
-	 GsSQeE4E7s3KoS6MC2yZzj3zjvEPVcLE7kehKOx0=
+	b=Qlhgk7vaNKokpDiZGGsfafapsIkfdopB9VmmQgRVhvrCEdHe4KYQ0zy99DPhiZot6
+	 N2H/iOY8/6iw8C9r+3wry5LPUrl7GU5nqE9BcXs/TULkWgSctb/mTbQU7g7fVvmlwp
+	 oa8mBgk9owgNfrDPXzYClItwD99BsT7FiUbGuCXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732676AbfE3DWB (ORCPT
+        id S1732699AbfE3DWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:22:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42990 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:22:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728384AbfE3DQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:33 -0400
+        id S1729838AbfE3DQf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:16:35 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD3E0245F8;
-        Thu, 30 May 2019 03:16:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3130924590;
+        Thu, 30 May 2019 03:16:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186192;
-        bh=z91C+efps4nO/LVIwO5lsJQzsK4lqT/ZYA0wlbfwdYk=;
+        s=default; t=1559186195;
+        bh=MjXQS3y9/+u+lZla8UU9/IM/aiALE+hEOkl2pgRuKEE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rlbexNxmtDGGYER3Ez40Da8/kVNiEqyanp6TuTkjXcbGLLBS3ZIUUFj1u1Dvb76Nn
-         3wwZO87NX+v0PAk/l9qVhaJ7RTMTOKxeoVoDwV77Mer38kxtt+okYm1b3NZjDDuYv0
-         alwm+MOZkn8f8S3qqDpeEp87e5kVX9sDeTqnh0PM=
+        b=bkBah5nto+xUvFqXSCf9r78g1AutI0aH59mHonuEiHwDh5NtMTT5YFCtEukfV5nj5
+         kDBITOJZEeFScgeDVWjoY3qFYTLP7j3gsGtF41jedTxrvDS9m7uNezlYHPMhWMXIi3
+         d+YEJ+CFISqJKRkSesPvCmSoxGMNWfVOqVbZhQHc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 064/276] powerpc/perf: Fix loop exit condition in nest_imc_event_init
-Date:   Wed, 29 May 2019 20:03:42 -0700
-Message-Id: <20190530030529.899161703@linuxfoundation.org>
+Subject: [PATCH 4.19 068/276] ACPI / property: fix handling of data_nodes in acpi_get_next_subnode()
+Date:   Wed, 29 May 2019 20:03:46 -0700
+Message-Id: <20190530030530.373484267@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -62,58 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 860b7d2286236170a36f94946d03ca9888d32571 ]
+[ Upstream commit 23583f7795025e3c783b680d906509366b0906ad ]
 
-The data structure (i.e struct imc_mem_info) to hold the memory address
-information for nest imc units is allocated based on the number of nodes
-in the system.
+When the DSDT tables expose devices with subdevices and a set of
+hierarchical _DSD properties, the data returned by
+acpi_get_next_subnode() is incorrect, with the results suggesting a bad
+pointer assignment. The parser works fine with device_nodes or
+data_nodes, but not with a combination of the two.
 
-nest_imc_event_init() traverse this struct array to calculate the memory
-base address for the event-cpu. If we fail to find a match for the event
-cpu's chip-id in imc_mem_info struct array, then the do-while loop will
-iterate until we crash.
+The problem is traced to an invalid pointer used when jumping from
+handling device_nodes to data nodes. The existing code looks for data
+nodes below the last subdevice found instead of the common root. Fix
+by forcing the acpi_device pointer to be derived from the same fwnode
+for the two types of subnodes.
 
-Fix this by changing the loop exit condition based on the number of
-non zero vbase elements in the array, since the allocation is done for
-nr_chips + 1.
+This same problem of handling device and data nodes was already fixed
+in a similar way by 'commit bf4703fdd166 ("ACPI / property: fix data
+node parsing in acpi_get_next_subnode()")' but broken later by 'commit
+34055190b19 ("ACPI / property: Add fwnode_get_next_child_node()")', so
+this should probably go to linux-stable all the way to 4.12
 
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Fixes: 885dcd709ba91 ("powerpc/perf: Add nest IMC PMU support")
-Signed-off-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
-Reviewed-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/perf/imc-pmu.c               | 2 +-
- arch/powerpc/platforms/powernv/opal-imc.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/acpi/property.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/powerpc/perf/imc-pmu.c b/arch/powerpc/perf/imc-pmu.c
-index 3cebfdf362116..5553226770748 100644
---- a/arch/powerpc/perf/imc-pmu.c
-+++ b/arch/powerpc/perf/imc-pmu.c
-@@ -508,7 +508,7 @@ static int nest_imc_event_init(struct perf_event *event)
- 			break;
- 		}
- 		pcni++;
--	} while (pcni);
-+	} while (pcni->vbase != 0);
+diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
+index 693cf05b0cc44..288673cff85ea 100644
+--- a/drivers/acpi/property.c
++++ b/drivers/acpi/property.c
+@@ -975,6 +975,14 @@ struct fwnode_handle *acpi_get_next_subnode(const struct fwnode_handle *fwnode,
+ 		const struct acpi_data_node *data = to_acpi_data_node(fwnode);
+ 		struct acpi_data_node *dn;
  
- 	if (!flag)
- 		return -ENODEV;
-diff --git a/arch/powerpc/platforms/powernv/opal-imc.c b/arch/powerpc/platforms/powernv/opal-imc.c
-index 58a07948c76e7..3d27f02695e41 100644
---- a/arch/powerpc/platforms/powernv/opal-imc.c
-+++ b/arch/powerpc/platforms/powernv/opal-imc.c
-@@ -127,7 +127,7 @@ static int imc_get_mem_addr_nest(struct device_node *node,
- 								nr_chips))
- 		goto error;
- 
--	pmu_ptr->mem_info = kcalloc(nr_chips, sizeof(*pmu_ptr->mem_info),
-+	pmu_ptr->mem_info = kcalloc(nr_chips + 1, sizeof(*pmu_ptr->mem_info),
- 				    GFP_KERNEL);
- 	if (!pmu_ptr->mem_info)
- 		goto error;
++		/*
++		 * We can have a combination of device and data nodes, e.g. with
++		 * hierarchical _DSD properties. Make sure the adev pointer is
++		 * restored before going through data nodes, otherwise we will
++		 * be looking for data_nodes below the last device found instead
++		 * of the common fwnode shared by device_nodes and data_nodes.
++		 */
++		adev = to_acpi_device_node(fwnode);
+ 		if (adev)
+ 			head = &adev->data.subnodes;
+ 		else if (data)
 -- 
 2.20.1
 
