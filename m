@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EBB4C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EEE1C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58E5525F32
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:57:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA7EB2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:57:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192240;
-	bh=sUJDhYTyPu29Q+DaCjAFng4qj8oNdAgF6LDb2tgvF9s=;
+	s=default; t=1559192243;
+	bh=yFYJFqXYy4pT1N+v8TDuMyKOBiPLrB1ikOYIvvdyVpc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V1yXfp9iJUlIEekWTdhWGKNLMmS07I01Crngy3YWPfEn4RXSP31K0b/KnwGEz5j3i
-	 o3pPoeQueZIACeu0JOb6df+AsDfTLk7Zx6MzllrzdzA7r5HOBLYG/O+G3saLEGZ1Ym
-	 b+IHu7gsCxqH41QDofD/ghaXwbr3IfRIFDOMtLYE=
+	b=OsKvi0R/bn0wVLx4K3+ugGG9VkrMZG9oO6rHfzYashcsN80tQ6yRCN37Nhkev7tpT
+	 dvYmbKIRTBogAwF9+BFq53iixOXbIECEDI1umTlOhqrsZFRpF5+hDRErmQha3pdldr
+	 a+pN1szcqnmuuv79ywR+DHDL3YLv+vN4RJzuW+Mc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389265AbfE3E5K (ORCPT
+        id S1728242AbfE3E5J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:57:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45216 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:57:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727866AbfE3DJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727868AbfE3DJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:09:57 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01EEF244A2;
-        Thu, 30 May 2019 03:09:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78B8B244A5;
+        Thu, 30 May 2019 03:09:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559185797;
-        bh=sUJDhYTyPu29Q+DaCjAFng4qj8oNdAgF6LDb2tgvF9s=;
+        bh=yFYJFqXYy4pT1N+v8TDuMyKOBiPLrB1ikOYIvvdyVpc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tQPBLbDFPIi319Ker9I/RIdhqxBlMlsVHOqPEE9k21rD/GuY6VLHkBXMA34KSLGcW
-         RWDz9i965kmiHwchojqYYEITyolLp9esbAS16V9bJGjDWEfh/zM/wbRcGxrqYdbYY1
-         5+sDhceND5CrlpY6sYNg/O13erHvjz8Jx8Mb8bQo=
+        b=rrcQPC16DOSrBVOOD7Ym3dYwIHHK8JEYjEvNZGb9EddzVvwUtzI/GlHecppqu1sDW
+         0blgV/5hpdEkUiznk8c0ueBH4fp7zcwmjLVG9oIQ7dDwfBhTQTtG5reuglrxAXRhS/
+         4n3cs/UpCj9u2C1jZB2bKlHzXSZcRSO7s5Cpv4Rc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 046/405] cxgb4: Fix error path in cxgb4_init_module
-Date:   Wed, 29 May 2019 20:00:44 -0700
-Message-Id: <20190530030543.145441323@linuxfoundation.org>
+Subject: [PATCH 5.1 073/405] ASoC: hdmi-codec: unlock the device on startup errors
+Date:   Wed, 29 May 2019 20:01:11 -0700
+Message-Id: <20190530030544.631691367@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -60,83 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a3147770bea76c8dbad73eca3a24c2118da5e719 ]
+[ Upstream commit 30180e8436046344b12813dc954b2e01dfdcd22d ]
 
-BUG: unable to handle kernel paging request at ffffffffa016a270
-PGD 3270067 P4D 3270067 PUD 3271063 PMD 230bbd067 PTE 0
-Oops: 0000 [#1
-CPU: 0 PID: 6134 Comm: modprobe Not tainted 5.1.0+ #33
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
-RIP: 0010:atomic_notifier_chain_register+0x24/0x60
-Code: 1f 80 00 00 00 00 55 48 89 e5 41 54 49 89 f4 53 48 89 fb e8 ae b4 38 01 48 8b 53 38 48 8d 4b 38 48 85 d2 74 20 45 8b 44 24 10 <44> 3b 42 10 7e 08 eb 13 44 39 42 10 7c 0d 48 8d 4a 08 48 8b 52 08
-RSP: 0018:ffffc90000e2bc60 EFLAGS: 00010086
-RAX: 0000000000000292 RBX: ffffffff83467240 RCX: ffffffff83467278
-RDX: ffffffffa016a260 RSI: ffffffff83752140 RDI: ffffffff83467240
-RBP: ffffc90000e2bc70 R08: 0000000000000000 R09: 0000000000000001
-R10: 0000000000000000 R11: 00000000014fa61f R12: ffffffffa01c8260
-R13: ffff888231091e00 R14: 0000000000000000 R15: ffffc90000e2be78
-FS:  00007fbd8d7cd540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffa016a270 CR3: 000000022c7e3000 CR4: 00000000000006f0
-Call Trace:
- register_inet6addr_notifier+0x13/0x20
- cxgb4_init_module+0x6c/0x1000 [cxgb4
- ? 0xffffffffa01d7000
- do_one_initcall+0x6c/0x3cc
- ? do_init_module+0x22/0x1f1
- ? rcu_read_lock_sched_held+0x97/0xb0
- ? kmem_cache_alloc_trace+0x325/0x3b0
- do_init_module+0x5b/0x1f1
- load_module+0x1db1/0x2690
- ? m_show+0x1d0/0x1d0
- __do_sys_finit_module+0xc5/0xd0
- __x64_sys_finit_module+0x15/0x20
- do_syscall_64+0x6b/0x1d0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+If the hdmi codec startup fails, it should clear the current_substream
+pointer to free the device. This is properly done for the audio_startup()
+callback but for snd_pcm_hw_constraint_eld().
 
-If pci_register_driver fails, register inet6addr_notifier is
-pointless. This patch fix the error path in cxgb4_init_module.
+Make sure the pointer cleared if an error is reported.
 
-Fixes: b5a02f503caa ("cxgb4 : Update ipv6 address handling api")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ sound/soc/codecs/hdmi-codec.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-index 89179e3166878..4bc0c357cb8ea 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-@@ -6161,15 +6161,24 @@ static int __init cxgb4_init_module(void)
- 
- 	ret = pci_register_driver(&cxgb4_driver);
- 	if (ret < 0)
--		debugfs_remove(cxgb4_debugfs_root);
-+		goto err_pci;
- 
- #if IS_ENABLED(CONFIG_IPV6)
- 	if (!inet6addr_registered) {
--		register_inet6addr_notifier(&cxgb4_inet6addr_notifier);
--		inet6addr_registered = true;
-+		ret = register_inet6addr_notifier(&cxgb4_inet6addr_notifier);
-+		if (ret)
-+			pci_unregister_driver(&cxgb4_driver);
-+		else
-+			inet6addr_registered = true;
- 	}
- #endif
- 
-+	if (ret == 0)
-+		return ret;
-+
-+err_pci:
-+	debugfs_remove(cxgb4_debugfs_root);
-+
- 	return ret;
- }
- 
+diff --git a/sound/soc/codecs/hdmi-codec.c b/sound/soc/codecs/hdmi-codec.c
+index 35df73e42cbc5..fb2f0ac1f16f3 100644
+--- a/sound/soc/codecs/hdmi-codec.c
++++ b/sound/soc/codecs/hdmi-codec.c
+@@ -439,8 +439,12 @@ static int hdmi_codec_startup(struct snd_pcm_substream *substream,
+ 		if (!ret) {
+ 			ret = snd_pcm_hw_constraint_eld(substream->runtime,
+ 							hcp->eld);
+-			if (ret)
++			if (ret) {
++				mutex_lock(&hcp->current_stream_lock);
++				hcp->current_stream = NULL;
++				mutex_unlock(&hcp->current_stream_lock);
+ 				return ret;
++			}
+ 		}
+ 		/* Select chmap supported */
+ 		hdmi_codec_eld_chmap(hcp);
 -- 
 2.20.1
 
