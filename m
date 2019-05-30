@@ -2,165 +2,172 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT
+X-Spam-Status: No, score=-11.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C6CC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A03D2C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C635261A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:09:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559250585;
-	bh=6/Bn59/+vl2K5/idmqH2J+1q6RKOCaWO4Jg+AB0eFyM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ooiJWRRB/jccmY7PWofMKswN8nWbDZXK+rwqqWJKrtl8I6u41z2Ftu2002O+TlMcM
-	 DHrCmt1mhLoWYkGn/UHJ4dWAop1HheCAJsf2olh8LQI489GshcfpATbmdBEcfYPXOR
-	 nOT6bpb7MJ4QrAu/Nq5eeSp6DYRA3zmpDta11X14=
+	by mail.kernel.org (Postfix) with ESMTP id 72F66261A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:10:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbfE3VJo (ORCPT
+        id S1726694AbfE3VKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 17:09:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44586 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 17:10:30 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59820 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726079AbfE3VJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 17:09:44 -0400
-Received: from localhost (unknown [207.225.69.115])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726079AbfE3VKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 17:10:30 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F6C2261A1;
-        Thu, 30 May 2019 21:09:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559250582;
-        bh=6/Bn59/+vl2K5/idmqH2J+1q6RKOCaWO4Jg+AB0eFyM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CGckxHtHODHnGLOmF9kzYy6wgcp21NbBeNzGKHJd8Tw+kqp0CZnd0Gl28zy0Yzcd8
-         ZaUCTQVJgKQT/XNFq8qsYnf2FNoSVpcyIcjEymAx+EQ/y/BCcFSn/ml0JqhFKFzC4T
-         urbPBCx47fWWXNGb+DpAwfdcjexOkPQnfyTyAGE4=
-Date:   Thu, 30 May 2019 14:09:42 -0700
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
-Cc:     Vatsala Narang <vatsalanarang@gmail.com>,
-        Emanuel Bennici <benniciemanuel78@gmail.com>,
-        Nishka Dasgupta <nishka.dasgupta@yahoo.com>,
-        Hardik Singh Rathore <hardiksingh.k@gmail.com>,
-        Madhumitha Prabakaran <madhumithabiw@gmail.com>,
-        Michael Straube <straube.linux@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, Paolo Abeni <pabeni@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@intel.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [Patch v3] staging: rtl8723bs: core: rtw_mlme_ext: fix warning
- Unneeded variable: "ret"
-Message-ID: <20190530210942.GA11363@kroah.com>
-References: <20190523173940.GA6591@hari-Inspiron-1545>
+        by mx1.redhat.com (Postfix) with ESMTPS id 3C37983F44;
+        Thu, 30 May 2019 21:10:29 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-16.phx2.redhat.com [10.3.112.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2649A410A;
+        Thu, 30 May 2019 21:10:18 +0000 (UTC)
+Date:   Thu, 30 May 2019 17:10:11 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
+        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
+        nhorman@tuxdriver.com
+Subject: Re: [PATCH ghak90 V6 08/10] audit: add containerid filtering
+Message-ID: <20190530211011.clcwyedz3swh3pfz@madcap2.tricolour.ca>
+References: <cover.1554732921.git.rgb@redhat.com>
+ <0785ee2644804f3ec6af1243cc0dcf89709c1fd4.1554732921.git.rgb@redhat.com>
+ <CAHC9VhRV-0LSEcRvPO1uXtKdpEQsaLZnBV3T=zcMTZPN5ugz5w@mail.gmail.com>
+ <20190530141951.iofimovrndap4npq@madcap2.tricolour.ca>
+ <CAHC9VhQhkzCtVOXhPL7BzaqvF0y+8gBQwhOo1EQDS2OUyZbV5g@mail.gmail.com>
+ <20190530203702.fibsrazabbiifjvf@madcap2.tricolour.ca>
+ <CAHC9VhR6oqKer_p6Xsu6oO2j3bMZGPXWHnGchZOqUoMx9yJFwQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190523173940.GA6591@hari-Inspiron-1545>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <CAHC9VhR6oqKer_p6Xsu6oO2j3bMZGPXWHnGchZOqUoMx9yJFwQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Thu, 30 May 2019 21:10:29 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 11:09:41PM +0530, Hariprasad Kelam wrote:
-> This patch fixes below warnings reported by coccicheck
+On 2019-05-30 16:45, Paul Moore wrote:
+> On Thu, May 30, 2019 at 4:37 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > On 2019-05-30 10:34, Paul Moore wrote:
+> > > On Thu, May 30, 2019 at 10:20 AM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > >
+> > > > On 2019-05-29 18:16, Paul Moore wrote:
+> > > > > On Mon, Apr 8, 2019 at 11:41 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > > > >
+> > > > > > Implement audit container identifier filtering using the AUDIT_CONTID
+> > > > > > field name to send an 8-character string representing a u64 since the
+> > > > > > value field is only u32.
+> > > > > >
+> > > > > > Sending it as two u32 was considered, but gathering and comparing two
+> > > > > > fields was more complex.
+> > > > > >
+> > > > > > The feature indicator is AUDIT_FEATURE_BITMAP_CONTAINERID.
+> > > > > >
+> > > > > > Please see the github audit kernel issue for the contid filter feature:
+> > > > > >   https://github.com/linux-audit/audit-kernel/issues/91
+> > > > > > Please see the github audit userspace issue for filter additions:
+> > > > > >   https://github.com/linux-audit/audit-userspace/issues/40
+> > > > > > Please see the github audit testsuiite issue for the test case:
+> > > > > >   https://github.com/linux-audit/audit-testsuite/issues/64
+> > > > > > Please see the github audit wiki for the feature overview:
+> > > > > >   https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
+> > > > > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > > > > > Acked-by: Serge Hallyn <serge@hallyn.com>
+> > > > > > Acked-by: Neil Horman <nhorman@tuxdriver.com>
+> > > > > > Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
+> > > > > > ---
+> > > > > >  include/linux/audit.h      |  1 +
+> > > > > >  include/uapi/linux/audit.h |  5 ++++-
+> > > > > >  kernel/audit.h             |  1 +
+> > > > > >  kernel/auditfilter.c       | 47 ++++++++++++++++++++++++++++++++++++++++++++++
+> > > > > >  kernel/auditsc.c           |  4 ++++
+> > > > > >  5 files changed, 57 insertions(+), 1 deletion(-)
+> > > > >
+> > > > > ...
+> > > > >
+> > > > > > diff --git a/kernel/auditfilter.c b/kernel/auditfilter.c
+> > > > > > index 63f8b3f26fab..407b5bb3b4c6 100644
+> > > > > > --- a/kernel/auditfilter.c
+> > > > > > +++ b/kernel/auditfilter.c
+> > > > > > @@ -1206,6 +1224,31 @@ int audit_comparator(u32 left, u32 op, u32 right)
+> > > > > >         }
+> > > > > >  }
+> > > > > >
+> > > > > > +int audit_comparator64(u64 left, u32 op, u64 right)
+> > > > > > +{
+> > > > > > +       switch (op) {
+> > > > > > +       case Audit_equal:
+> > > > > > +               return (left == right);
+> > > > > > +       case Audit_not_equal:
+> > > > > > +               return (left != right);
+> > > > > > +       case Audit_lt:
+> > > > > > +               return (left < right);
+> > > > > > +       case Audit_le:
+> > > > > > +               return (left <= right);
+> > > > > > +       case Audit_gt:
+> > > > > > +               return (left > right);
+> > > > > > +       case Audit_ge:
+> > > > > > +               return (left >= right);
+> > > > > > +       case Audit_bitmask:
+> > > > > > +               return (left & right);
+> > > > > > +       case Audit_bittest:
+> > > > > > +               return ((left & right) == right);
+> > > > > > +       default:
+> > > > > > +               BUG();
+> > > > >
+> > > > > A little birdy mentioned the BUG() here as a potential issue and while
+> > > > > I had ignored it in earlier patches because this is likely a
+> > > > > cut-n-paste from another audit comparator function, I took a closer
+> > > > > look this time.  It appears as though we will never have an invalid op
+> > > > > value as audit_data_to_entry()/audit_to_op() ensure that the op value
+> > > > > is a a known good value.  Removing the BUG() from all the audit
+> > > > > comparators is a separate issue, but I think it would be good to
+> > > > > remove it from this newly added comparator; keeping it so that we
+> > > > > return "0" in the default case seems reasoanble.
+> > > >
+> > > > Fair enough.  That BUG(); can be removed.
+> > >
+> > > Please send a fixup patch for this.
+> >
+> > The fixup patch is trivial.
 > 
-> drivers/staging/rtl8723bs/core/rtw_mlme_ext.c:1888:14-17: Unneeded
-> variable: "ret". Return "_FAIL" on line 1920
-> drivers/staging/rtl8723bs/core/rtw_mlme_ext.c:466:5-8: Unneeded
-> variable: "res". Return "_SUCCESS" on line 494
+> Yes, I know.
 > 
-> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-> ----
-> changes in v2:
->                 change return type of init_mlme_ext_priv() from int to
->                 void
->                 We cant change return type of on_action_spct() it is a
->                 call back function from action_handler.
->                 So directly return _FAIL from this function.
-> changes in v3:
-> 		Dont remove initilization of init_mlme_ext_priv
-> ---
->  drivers/staging/rtl8723bs/core/rtw_mlme_ext.c    | 9 ++-------
->  drivers/staging/rtl8723bs/include/rtw_mlme_ext.h | 2 +-
->  drivers/staging/rtl8723bs/os_dep/os_intfs.c      | 6 +-----
->  3 files changed, 4 insertions(+), 13 deletions(-)
+> > The rebase to v5.2-rc1 audit/next had merge
+> > conflicts with four recent patchsets.  It may be simpler to submit a new
+> > patchset and look at a diff of the two sets.  I'm testing the rebase
+> > now.
 > 
-> diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
-> index 65e8cba..4b0129c 100644
-> --- a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
-> +++ b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
-> @@ -458,9 +458,8 @@ static u8 init_channel_set(struct adapter *padapter, u8 ChannelPlan, RT_CHANNEL_
->  	return chanset_size;
->  }
->  
-> -int	init_mlme_ext_priv(struct adapter *padapter)
-> +void	init_mlme_ext_priv(struct adapter *padapter)
->  {
-> -	int	res = _SUCCESS;
->  	struct registry_priv *pregistrypriv = &padapter->registrypriv;
->  	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
->  	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
-> @@ -487,9 +486,6 @@ int	init_mlme_ext_priv(struct adapter *padapter)
->  #ifdef DBG_FIXED_CHAN
->  	pmlmeext->fixed_chan = 0xFF;
->  #endif
-> -
-> -	return res;
-> -
->  }
->  
->  void free_mlme_ext_priv(struct mlme_ext_priv *pmlmeext)
-> @@ -1881,7 +1877,6 @@ unsigned int OnAtim(struct adapter *padapter, union recv_frame *precv_frame)
->  
->  unsigned int on_action_spct(struct adapter *padapter, union recv_frame *precv_frame)
->  {
-> -	unsigned int ret = _FAIL;
->  	struct sta_info *psta = NULL;
->  	struct sta_priv *pstapriv = &padapter->stapriv;
->  	u8 *pframe = precv_frame->u.hdr.rx_data;
-> @@ -1913,7 +1908,7 @@ unsigned int on_action_spct(struct adapter *padapter, union recv_frame *precv_fr
->  	}
->  
->  exit:
-> -	return ret;
-> +	return _FAIL;
->  }
->  
->  unsigned int OnAction_back(struct adapter *padapter, union recv_frame *precv_frame)
-> diff --git a/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h b/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h
-> index f6eabad..0eb2da5 100644
-> --- a/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h
-> +++ b/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h
-> @@ -535,7 +535,7 @@ struct mlme_ext_priv
->  };
->  
->  void init_mlme_default_rate_set(struct adapter *padapter);
-> -int init_mlme_ext_priv(struct adapter *padapter);
-> +void init_mlme_ext_priv(struct adapter *padapter);
->  int init_hw_mlme_ext(struct adapter *padapter);
->  void free_mlme_ext_priv (struct mlme_ext_priv *pmlmeext);
->  extern void init_mlme_ext_timer(struct adapter *padapter);
-> diff --git a/drivers/staging/rtl8723bs/os_dep/os_intfs.c b/drivers/staging/rtl8723bs/os_dep/os_intfs.c
-> index 8a9d838..4afb35b 100644
-> --- a/drivers/staging/rtl8723bs/os_dep/os_intfs.c
-> +++ b/drivers/staging/rtl8723bs/os_dep/os_intfs.c
-> @@ -774,11 +774,7 @@ u8 rtw_init_drv_sw(struct adapter *padapter)
->  		goto exit;
->  	}
->  
-> -	if (init_mlme_ext_priv(padapter) == _FAIL) {
-> -		RT_TRACE(_module_os_intfs_c_, _drv_err_, ("\n Can't init mlme_ext_priv\n"));
-> -		ret8 = _FAIL;
-> -		goto exit;
-> -	}
-> +	init_mlme_ext_priv(padapter); 
+> Great thanks.  Although you might want to hold off a bit on posting
+> the next revision until we sort out the discussion which is happening
+> in patch 02/10; unfortunately I fear we may need to change some of the
+> logic.
 
-Always run checkpatch.pl on your patches so you do not get grumpy
-maintainers telling you to run checkpatch.pl on your patches :(
+I'm watching...  I have no immediate ideas on how to address that
+discussion yet.  I'm optimistic it can be adjusted after the initial
+commit without changing the API.
 
+> paul moore www.paul-moore.com
 
+- RGB
+
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
