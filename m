@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB337C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF62CC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B43D8253E9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:24:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86308253D0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:25:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190297;
-	bh=G7/EF0+sycBI1xObFRMuUqqyLtCEWKWSYGWiHh9zcnk=;
+	s=default; t=1559190303;
+	bh=GZUqsTk4DRyMhsW1KtZI2tC5X5LSHWq2AHH1vJ4K+oM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iB/bew6RXnWpumga4TxHnoFitqV2JFqdhCxZnPUvvgcMtSywc8hHwOkAlAjzdasVo
-	 FTbmdg/MdciDOxNSuBAH0HM/Sny1HxKxVR/UCB6c/s2cEPTuKN7MAhXt44u1SagPzP
-	 bEatI5gXYlpKn4NjY0cW3HIuvD3b4lRK0F/b2i18=
+	b=v20hXtKIw+Y0aOWjPCYBZBJy0COL8dGigYkHIMh483OF/qtmBLEeo2Z8YcOx+J0Z1
+	 9Z7nurDfMcz14bVZrYI3urKh5+EI0s3lmlWk1vS/eesTqp7w2iYwmNNq8JLYDQFvPc
+	 xYEN3ur2t4o1ohCfs0Vxik7DKMqyn+UaFRRBOIRc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732909AbfE3EY5 (ORCPT
+        id S1733012AbfE3EZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:24:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35954 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:25:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730003AbfE3DOt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:49 -0400
+        id S1729993AbfE3DOs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:48 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9599F2456F;
-        Thu, 30 May 2019 03:14:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D05424557;
+        Thu, 30 May 2019 03:14:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186088;
-        bh=G7/EF0+sycBI1xObFRMuUqqyLtCEWKWSYGWiHh9zcnk=;
+        s=default; t=1559186087;
+        bh=GZUqsTk4DRyMhsW1KtZI2tC5X5LSHWq2AHH1vJ4K+oM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g6S9ltkkNjR9rNuY3tcQTdfl2o6ivqDXbBPxJKtyGWqvneXbwuoMzBDZEt66ZNQX4
-         1Sw4+JdCacirc9Ulg81WP3gj1hMQ8gjwiAYz7M5kV5kvJhUmAyPWDdnOKW2nGrN602
-         U05YHWN7KddBuyBOeu7sRL2DjU8olcxGdXQhHAXw=
+        b=LnbXVTSaKnOD1zJn5CSxnOZD4LdwVB2rZQNk6hWfGUQH29NVPO4r3Nb3tSHEDLmP4
+         cpEbOCNLjF8jgZlJBGe9JqxnP82JEVq99B/GIHTdwrsz518ALBxIY7FQLQJhrbu681
+         BOo/x2T9tXrbvr+0dAnBatwUvg9zY8vMfbUyWGWA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 217/346] iio: hmc5843: fix potential NULL pointer dereferences
-Date:   Wed, 29 May 2019 20:04:50 -0700
-Message-Id: <20190530030552.089778323@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        dri-devel@lists.freedesktop.org ("open list:DRM DRIVERS"),
+        Eric Anholt <eric@anholt.net>, Sasha Levin <sashal@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH 5.0 215/346] drm/pl111: fix possible object reference leak
+Date:   Wed, 29 May 2019 20:04:48 -0700
+Message-Id: <20190530030551.988267471@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -60,64 +62,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 536cc27deade8f1ec3c1beefa60d5fbe0f6fcb28 ]
+[ Upstream commit bc29d3a69d4c1bd1a103e8b3c1ed81b807c1870b ]
 
-devm_regmap_init_i2c may fail and return NULL. The fix returns
-the error when it fails.
+The call to of_find_matching_node_and_match returns a node pointer with
+refcount incremented thus it must be explicitly decremented after the
+last usage.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Detected by coccinelle with the following warnings:
+drivers/gpu/drm/pl111/pl111_versatile.c:333:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 317, but without a corresponding object release within this function.
+drivers/gpu/drm/pl111/pl111_versatile.c:340:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 317, but without a corresponding object release within this function.
+drivers/gpu/drm/pl111/pl111_versatile.c:346:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 317, but without a corresponding object release within this function.
+drivers/gpu/drm/pl111/pl111_versatile.c:354:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 317, but without a corresponding object release within this function.
+drivers/gpu/drm/pl111/pl111_versatile.c:395:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 317, but without a corresponding object release within this function.
+drivers/gpu/drm/pl111/pl111_versatile.c:402:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 317, but without a corresponding object release within this function.
+
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Eric Anholt <eric@anholt.net> (supporter:DRM DRIVER FOR ARM PL111 CLCD)
+Cc: David Airlie <airlied@linux.ie> (maintainer:DRM DRIVERS)
+Cc: Daniel Vetter <daniel@ffwll.ch> (maintainer:DRM DRIVERS)
+Cc: dri-devel@lists.freedesktop.org (open list:DRM DRIVERS)
+Cc: linux-kernel@vger.kernel.org (open list)
+Signed-off-by: Eric Anholt <eric@anholt.net>
+Link: https://patchwork.freedesktop.org/patch/msgid/1554307455-40361-6-git-send-email-wen.yang99@zte.com.cn
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/magnetometer/hmc5843_i2c.c | 7 ++++++-
- drivers/iio/magnetometer/hmc5843_spi.c | 7 ++++++-
- 2 files changed, 12 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/pl111/pl111_versatile.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/iio/magnetometer/hmc5843_i2c.c b/drivers/iio/magnetometer/hmc5843_i2c.c
-index 3de7f4426ac40..86abba5827a25 100644
---- a/drivers/iio/magnetometer/hmc5843_i2c.c
-+++ b/drivers/iio/magnetometer/hmc5843_i2c.c
-@@ -58,8 +58,13 @@ static const struct regmap_config hmc5843_i2c_regmap_config = {
- static int hmc5843_i2c_probe(struct i2c_client *cli,
- 			     const struct i2c_device_id *id)
- {
-+	struct regmap *regmap = devm_regmap_init_i2c(cli,
-+			&hmc5843_i2c_regmap_config);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
- 	return hmc5843_common_probe(&cli->dev,
--			devm_regmap_init_i2c(cli, &hmc5843_i2c_regmap_config),
-+			regmap,
- 			id->driver_data, id->name);
- }
+diff --git a/drivers/gpu/drm/pl111/pl111_versatile.c b/drivers/gpu/drm/pl111/pl111_versatile.c
+index b9baefdba38a1..1c318ad32a8cd 100644
+--- a/drivers/gpu/drm/pl111/pl111_versatile.c
++++ b/drivers/gpu/drm/pl111/pl111_versatile.c
+@@ -330,6 +330,7 @@ int pl111_versatile_init(struct device *dev, struct pl111_drm_dev_private *priv)
+ 		ret = vexpress_muxfpga_init();
+ 		if (ret) {
+ 			dev_err(dev, "unable to initialize muxfpga driver\n");
++			of_node_put(np);
+ 			return ret;
+ 		}
  
-diff --git a/drivers/iio/magnetometer/hmc5843_spi.c b/drivers/iio/magnetometer/hmc5843_spi.c
-index 535f03a70d630..79b2b707f90e7 100644
---- a/drivers/iio/magnetometer/hmc5843_spi.c
-+++ b/drivers/iio/magnetometer/hmc5843_spi.c
-@@ -58,6 +58,7 @@ static const struct regmap_config hmc5843_spi_regmap_config = {
- static int hmc5843_spi_probe(struct spi_device *spi)
- {
- 	int ret;
-+	struct regmap *regmap;
- 	const struct spi_device_id *id = spi_get_device_id(spi);
+@@ -337,17 +338,20 @@ int pl111_versatile_init(struct device *dev, struct pl111_drm_dev_private *priv)
+ 		pdev = of_find_device_by_node(np);
+ 		if (!pdev) {
+ 			dev_err(dev, "can't find the sysreg device, deferring\n");
++			of_node_put(np);
+ 			return -EPROBE_DEFER;
+ 		}
+ 		map = dev_get_drvdata(&pdev->dev);
+ 		if (!map) {
+ 			dev_err(dev, "sysreg has not yet probed\n");
+ 			platform_device_put(pdev);
++			of_node_put(np);
+ 			return -EPROBE_DEFER;
+ 		}
+ 	} else {
+ 		map = syscon_node_to_regmap(np);
+ 	}
++	of_node_put(np);
  
- 	spi->mode = SPI_MODE_3;
-@@ -67,8 +68,12 @@ static int hmc5843_spi_probe(struct spi_device *spi)
- 	if (ret)
- 		return ret;
- 
-+	regmap = devm_regmap_init_spi(spi, &hmc5843_spi_regmap_config);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
- 	return hmc5843_common_probe(&spi->dev,
--			devm_regmap_init_spi(spi, &hmc5843_spi_regmap_config),
-+			regmap,
- 			id->driver_data, id->name);
- }
- 
+ 	if (IS_ERR(map)) {
+ 		dev_err(dev, "no Versatile syscon regmap\n");
 -- 
 2.20.1
 
