@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F1AC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03150C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ADFF24B53
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C20EA24B44
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187275;
-	bh=slVuyKV+KlKo7Zs7N/nUpeypBEk7xTvR2V2HDd9lqPw=;
+	s=default; t=1559187283;
+	bh=zmCdAn9dAnPcSZ07GrUCxCZ+in2QjZV2IqkciN5z/vw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DAAFp/TXlfLbTLo0Y2WhNiy/n89QC1MPEjtERkuEdabkR+u3gZixEz+/wduxIxRPY
-	 tuZdmV2RpKjdIMCKJ5M/CULhhBbKhL2EjdDY1caaiVXgJJJ4cQshuI2EgQ+z9NU1Ie
-	 USyW9ZExA2mWcf2Ko5gEvnMGHKHVp+s1hRrRLK7o=
+	b=DSpQhVcug6Ab4TXw8GlTi8kVPk4N6GmMB/iEvBPzEYUzTRDLkXLdQSa8OUR7yiYeq
+	 CE1miis0inARbWAPYCaF4PJMUFC/RDuMAujJoyaFwq0HI9ARM5NdHNJ8kZ2IvlRUgu
+	 bhQH2QwOY7yKTzUfC/h3/YJRzaDmlGoeGmktjKvk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387939AbfE3D1P (ORCPT
+        id S2387883AbfE3D1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:27:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54664 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:27:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731860AbfE3DTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:19 -0400
+        id S1731848AbfE3DTP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:15 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56D4E24831;
-        Thu, 30 May 2019 03:19:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0744F2485E;
+        Thu, 30 May 2019 03:19:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186358;
-        bh=slVuyKV+KlKo7Zs7N/nUpeypBEk7xTvR2V2HDd9lqPw=;
+        s=default; t=1559186355;
+        bh=zmCdAn9dAnPcSZ07GrUCxCZ+in2QjZV2IqkciN5z/vw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W5oBbjwxfkQfTFxlZhhBX5tcqabf7EaS/HYXjxMSpjfbsCzWzri3m8oNv4mwWEZm+
-         dQfmR+gibdoONSyI1/+8gpHbo/+yWC4tcvgHNQ1RTGrGKfwKz+Uj9YPW+yUwI0HrR1
-         BlE/HQ0XsYqKfh5kRf3okShxah6ydYgl8O99O69g=
+        b=Wd/JYJcgAiHS06LPrErkBzXNUc+E1gNfoyaTHCD0I4PjvrzqPbQpBS3PVRRGiGZCF
+         dd13RFkR4tkLCQn6sIAx6R2uLwgqGHS1tf4XIM/LGnXNScGEkYvG9/E+nzGXe8i7vj
+         LD/MGO9kReAw/etr+xC5slhfwqMH6uhUM6AyrffQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 102/193] sched/core: Handle overflow in cpu_shares_write_u64
-Date:   Wed, 29 May 2019 20:05:56 -0700
-Message-Id: <20190530030503.072210829@linuxfoundation.org>
+        stable@vger.kernel.org, Russell Currey <ruscur@russell.cc>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 097/193] powerpc/64: Fix booting large kernels with STRICT_KERNEL_RWX
+Date:   Wed, 29 May 2019 20:05:51 -0700
+Message-Id: <20190530030502.511689011@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -64,44 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5b61d50ab4ef590f5e1d4df15cd2cea5f5715308 ]
+[ Upstream commit 56c46bba9bbfe229b4472a5be313c44c5b714a39 ]
 
-Bit shift in scale_load() could overflow shares. This patch saturates
-it to MAX_SHARES like following sched_group_set_shares().
+With STRICT_KERNEL_RWX enabled anything marked __init is placed at a 16M
+boundary.  This is necessary so that it can be repurposed later with
+different permissions.  However, in kernels with text larger than 16M,
+this pushes early_setup past 32M, incapable of being reached by the
+branch instruction.
 
-Example:
+Fix this by setting the CTR and branching there instead.
 
- # echo 9223372036854776832 > cpu.shares
- # cat cpu.shares
-
-Before patch: 1024
-After pattch: 262144
-
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/155125501891.293431.3345233332801109696.stgit@buzz
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 1e0fc9d1eb2b ("powerpc/Kconfig: Enable STRICT_KERNEL_RWX for some configs")
+Signed-off-by: Russell Currey <ruscur@russell.cc>
+[mpe: Fix it to work on BE by using DOTSYM()]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/core.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/powerpc/kernel/head_64.S | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 2464a242d6c9d..b3ff73d6a4c23 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -6380,6 +6380,8 @@ static void cpu_cgroup_attach(struct cgroup_taskset *tset)
- static int cpu_shares_write_u64(struct cgroup_subsys_state *css,
- 				struct cftype *cftype, u64 shareval)
- {
-+	if (shareval > scale_load_down(ULONG_MAX))
-+		shareval = MAX_SHARES;
- 	return sched_group_set_shares(css_tg(css), scale_load(shareval));
- }
+diff --git a/arch/powerpc/kernel/head_64.S b/arch/powerpc/kernel/head_64.S
+index ff8511d6d8ead..4f2e18266e34a 100644
+--- a/arch/powerpc/kernel/head_64.S
++++ b/arch/powerpc/kernel/head_64.S
+@@ -961,7 +961,9 @@ start_here_multiplatform:
  
+ 	/* Restore parameters passed from prom_init/kexec */
+ 	mr	r3,r31
+-	bl	early_setup		/* also sets r13 and SPRG_PACA */
++	LOAD_REG_ADDR(r12, DOTSYM(early_setup))
++	mtctr	r12
++	bctrl		/* also sets r13 and SPRG_PACA */
+ 
+ 	LOAD_REG_ADDR(r3, start_here_common)
+ 	ld	r4,PACAKMSR(r13)
 -- 
 2.20.1
 
