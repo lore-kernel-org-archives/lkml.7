@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F376C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A32C46460
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:44:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B96F25AE7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FFC725AF9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:44:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191475;
-	bh=Qo4uhTRuwdTgrgWmIGr4DOtuQXlL6wBHRQOi1G4vB5E=;
+	s=default; t=1559191477;
+	bh=YeDlf52phRKrXD74FV1sV6yCl9qOF84tqVlkV2IO+z0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y25KFvN5dJ8gxfFOu6wPRFFW7qI6XVfeCC7gDAvLPoOpn5Q8Z56H6Q+fEtS6ctvRN
-	 67yeTuLLqyDJY8k+/wrEdqMrTGgvBIRSQtiAA6RUe/9WAH0zQjkMPlVV8pgZASoV6Y
-	 p+2oASyzbgmDVKH4urSQVLj4V9c3SEbdpO8k73Y8=
+	b=NocUsuIkWY2AzzeT+r0exr6JK3y6rLFO0CqvE6kiK29EG/VmIkEIzjw8A9NyY2SBm
+	 oXw9/hOClHaBvsxuls1KLJ26VkzYArJ/qlvAO2eexO6+RAuLKuunc3ixJB7TzrrJl7
+	 LrCeNKyv7VlLifluMFmW1RrTRSeCxq894aV2ymX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388786AbfE3Eoe (ORCPT
+        id S1728795AbfE3DMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:44:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52812 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728793AbfE3DMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:12:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48176 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728164AbfE3DKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:10:38 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0BA024516;
-        Thu, 30 May 2019 03:12:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C9D424481;
+        Thu, 30 May 2019 03:10:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185921;
-        bh=Qo4uhTRuwdTgrgWmIGr4DOtuQXlL6wBHRQOi1G4vB5E=;
+        s=default; t=1559185837;
+        bh=YeDlf52phRKrXD74FV1sV6yCl9qOF84tqVlkV2IO+z0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QaAY5HskRixk/BSuAA57LqUjAqvgJfTemUDaaVN3aVt4z6SdCf5l0XzHlFvMcdI/q
-         4a8snNqCJxbXtv1VJLHdYcXl8McKP2+ElD7HHS/fvtJRh/kWh6EFqE2LmIli2zYK/O
-         tZebnTjFAAG+AnreLpPhYAisi0+wwJ4hljJJCeik=
+        b=YHCWEFiw4UZDGvXqvda8SyLhxXbnmIL7wsb0CcznZedIAEJhvscR+YFhl472Zr5Wk
+         ljcCqSlSxeIQ4WeLitL2wGtB+0FLly9LJc6BaMKZAKDmUQwFeRyZMuNzHsImxC5/uJ
+         pNi0SJpDxBo5eDBGTiEmlUl8m11Oyd+O3mEyjUiw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Elaine Zhang <zhangqing@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 308/405] rcuperf: Fix cleanup path for invalid perf_type strings
-Date:   Wed, 29 May 2019 20:05:06 -0700
-Message-Id: <20190530030556.389622669@linuxfoundation.org>
+Subject: [PATCH 5.1 150/405] clk: rockchip: undo several noc and special clocks as critical on rk3288
+Date:   Wed, 29 May 2019 20:02:28 -0700
+Message-Id: <20190530030548.730666383@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -59,50 +61,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ad092c027713a68a34168942a5ef422e42e039f4 ]
+[ Upstream commit f4033db5b84ebe4b32c25ba2ed65ab20b628996a ]
 
-If the specified rcuperf.perf_type is not in the rcu_perf_init()
-function's perf_ops[] array, rcuperf prints some console messages and
-then invokes rcu_perf_cleanup() to set state so that a future torture
-test can run.  However, rcu_perf_cleanup() also attempts to end the
-test that didn't actually start, and in doing so relies on the value
-of cur_ops, a value that is not particularly relevant in this case.
-This can result in confusing output or even follow-on failures due to
-attempts to use facilities that have not been properly initialized.
+This is mostly a revert of commit 55bb6a633c33 ("clk: rockchip: mark
+noc and some special clk as critical on rk3288") except that we're
+keeping "pmu_hclk_otg0" as critical still.
 
-This commit therefore sets the value of cur_ops to NULL in this case and
-inserts a check near the beginning of rcu_perf_cleanup(), thus avoiding
-relying on an irrelevant cur_ops value.
+NOTE: turning these clocks off doesn't seem to do a whole lot in terms
+of power savings (checking the power on the logic rail).  It appears
+to save maybe 1-2mW.  ...but still it seems like we should turn the
+clocks off if they aren't needed.
 
-Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+About "pmu_hclk_otg0" (the one clock from the original commit we're
+still keeping critical) from an email thread:
+
+> pmu ahb clock
+>
+> Function: Clock to pmu module when hibernation and/or ADP is
+> enabled. Must be greater than or equal to 30 MHz.
+>
+> If the SOC design does not support hibernation/ADP function, only have
+> hclk_otg, this clk can be switched according to the usage of otg.
+> If the SOC design support hibernation/ADP, has two clocks, hclk_otg and
+> pmu_hclk_otg0.
+> Hclk_otg belongs to the closed part of otg logic, which can be switched
+> according to the use of otg.
+>
+> pmu_hclk_otg0 belongs to the always on part.
+>
+> As for whether pmu_hclk_otg0 can be turned off when otg is not in use,
+> we have not tested. IC suggest make pmu_hclk_otg0 always on.
+
+For the rest of the clocks:
+
+atclk: No documentation about this clock other than that it goes to
+the CPU.  CPU functions fine without it on.  Maybe needed for JTAG?
+
+jtag: Presumably this clock is only needed if you're debugging with
+JTAG.  It doesn't seem like it makes sense to waste power for every
+rk3288 user.  In any case to do JTAG you'd need private patches to
+adjust the pinctrl the mux the JTAG out anyway.
+
+pclk_dbg, pclk_core_niu: On veyron Chromebooks we turn these two
+clocks on only during kernel panics in order to access some coresight
+registers.  Since nothing in the upstream kernel does this we should
+be able to leave them off safely.  Maybe also needed for JTAG?
+
+hsicphy12m_xin12m: There is no indication of why this clock would need
+to be turned on for boards that don't use HSIC.
+
+pclk_ddrupctl[0-1], pclk_publ0[0-1]: On veyron Chromebooks we turn
+these 4 clocks on only when doing DDR transitions and they are off
+otherwise.  I see no reason why they'd need to be on in the upstream
+kernel which doesn't support DDRFreq.
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Elaine Zhang <zhangqing@rock-chips.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/rcu/rcuperf.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/clk/rockchip/clk-rk3288.c | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
-diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
-index c297611528744..7a6890b23c5f5 100644
---- a/kernel/rcu/rcuperf.c
-+++ b/kernel/rcu/rcuperf.c
-@@ -494,6 +494,10 @@ rcu_perf_cleanup(void)
+diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
+index 5a67b7869960e..f3bbcdfa88ead 100644
+--- a/drivers/clk/rockchip/clk-rk3288.c
++++ b/drivers/clk/rockchip/clk-rk3288.c
+@@ -313,13 +313,13 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
+ 	COMPOSITE_NOMUX(0, "aclk_core_mp", "armclk", CLK_IGNORE_UNUSED,
+ 			RK3288_CLKSEL_CON(0), 4, 4, DFLAGS | CLK_DIVIDER_READ_ONLY,
+ 			RK3288_CLKGATE_CON(12), 6, GFLAGS),
+-	COMPOSITE_NOMUX(0, "atclk", "armclk", CLK_IGNORE_UNUSED,
++	COMPOSITE_NOMUX(0, "atclk", "armclk", 0,
+ 			RK3288_CLKSEL_CON(37), 4, 5, DFLAGS | CLK_DIVIDER_READ_ONLY,
+ 			RK3288_CLKGATE_CON(12), 7, GFLAGS),
+ 	COMPOSITE_NOMUX(0, "pclk_dbg_pre", "armclk", CLK_IGNORE_UNUSED,
+ 			RK3288_CLKSEL_CON(37), 9, 5, DFLAGS | CLK_DIVIDER_READ_ONLY,
+ 			RK3288_CLKGATE_CON(12), 8, GFLAGS),
+-	GATE(0, "pclk_dbg", "pclk_dbg_pre", CLK_IGNORE_UNUSED,
++	GATE(0, "pclk_dbg", "pclk_dbg_pre", 0,
+ 			RK3288_CLKGATE_CON(12), 9, GFLAGS),
+ 	GATE(0, "cs_dbg", "pclk_dbg_pre", CLK_IGNORE_UNUSED,
+ 			RK3288_CLKGATE_CON(12), 10, GFLAGS),
+@@ -647,7 +647,7 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
+ 	INVERTER(SCLK_HSADC, "sclk_hsadc", "sclk_hsadc_out",
+ 			RK3288_CLKSEL_CON(22), 7, IFLAGS),
  
- 	if (torture_cleanup_begin())
- 		return;
-+	if (!cur_ops) {
-+		torture_cleanup_end();
-+		return;
-+	}
+-	GATE(0, "jtag", "ext_jtag", CLK_IGNORE_UNUSED,
++	GATE(0, "jtag", "ext_jtag", 0,
+ 			RK3288_CLKGATE_CON(4), 14, GFLAGS),
  
- 	if (reader_tasks) {
- 		for (i = 0; i < nrealreaders; i++)
-@@ -614,6 +618,7 @@ rcu_perf_init(void)
- 		pr_cont("\n");
- 		WARN_ON(!IS_MODULE(CONFIG_RCU_PERF_TEST));
- 		firsterr = -EINVAL;
-+		cur_ops = NULL;
- 		goto unwind;
- 	}
- 	if (cur_ops->init)
+ 	COMPOSITE_NODIV(SCLK_USBPHY480M_SRC, "usbphy480m_src", mux_usbphy480m_p, 0,
+@@ -656,7 +656,7 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
+ 	COMPOSITE_NODIV(SCLK_HSICPHY480M, "sclk_hsicphy480m", mux_hsicphy480m_p, 0,
+ 			RK3288_CLKSEL_CON(29), 0, 2, MFLAGS,
+ 			RK3288_CLKGATE_CON(3), 6, GFLAGS),
+-	GATE(0, "hsicphy12m_xin12m", "xin12m", CLK_IGNORE_UNUSED,
++	GATE(0, "hsicphy12m_xin12m", "xin12m", 0,
+ 			RK3288_CLKGATE_CON(13), 9, GFLAGS),
+ 	DIV(0, "hsicphy12m_usbphy", "sclk_hsicphy480m", 0,
+ 			RK3288_CLKSEL_CON(11), 8, 6, DFLAGS),
+@@ -837,11 +837,6 @@ static const char *const rk3288_critical_clocks[] __initconst = {
+ 	"pclk_alive_niu",
+ 	"pclk_pd_pmu",
+ 	"pclk_pmu_niu",
+-	"pclk_core_niu",
+-	"pclk_ddrupctl0",
+-	"pclk_publ0",
+-	"pclk_ddrupctl1",
+-	"pclk_publ1",
+ 	"pmu_hclk_otg0",
+ };
+ 
 -- 
 2.20.1
 
