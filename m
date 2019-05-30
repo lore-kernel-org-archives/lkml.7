@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A416C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE6E4C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D53DD25049
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:05:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DCC72504A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:05:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189123;
-	bh=6pM+PNif8JYGgG7H6zUEqqTadsP929Buviyt5KO/yAw=;
+	s=default; t=1559189132;
+	bh=fNIicfzKqgNknvOL8kafg05oEuWLA66QXO1DUGfYGHg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F6c3mJf1fBx9qQcSNewTxUx1Rg48IyoVKDgSSAiRRrG6vqqu8W2dXoLk747EQLhqx
-	 rwmmR5/Tz1TqakGpbuEXsSp2ifNIWLFsb8ieBD3CvCU4Ghb4MdGdN3fqTvQqYYMVju
-	 F5l9gZa8abRqSmW5P6Vcnyv1+qegK9kCj1ZtZh7M=
+	b=atGGcRXFFaQOWvkkZVsUGCSxmdYV7Pps5Qz55cyjaCZiZTX0l6JncT2taRFl3vaTs
+	 JRam2xnmv/34k7uCp3yOt09xOMl27J5Abx2TgIsUoQFwZZnTejrF9fpKwkL2uK2XBu
+	 +8chvdRlsrMb1KnP/1vBjICTA7ZId3H3bVLsn6/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731695AbfE3EFW (ORCPT
+        id S1726812AbfE3EFb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:05:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48276 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:05:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731243AbfE3DRq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:17:46 -0400
+        id S1731238AbfE3DRo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:17:44 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52CB124715;
-        Thu, 30 May 2019 03:17:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 106302470B;
+        Thu, 30 May 2019 03:17:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186265;
-        bh=6pM+PNif8JYGgG7H6zUEqqTadsP929Buviyt5KO/yAw=;
+        s=default; t=1559186264;
+        bh=fNIicfzKqgNknvOL8kafg05oEuWLA66QXO1DUGfYGHg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pH598TkbBT4SZzJoQbqKMJeKfv6VlgyQnQL4609whNDPuzbPONdpnyix6rnGkS0sI
-         PgKPZDDc1l+G4IhGKbKtOmsbKf5BGgoZVHRt8wOOZNcdOe+yG3YnJgQdFMrpfsSb6f
-         DJLBPsXgFwN3fQI/Jfm45iZhqWxYVuEYiR5No7J4=
+        b=ljj529Q7UCyBuSOwseUv/P/i0V/5T0em2AEmcLxMW3ulnFDgSKvUgKbsFNH5WlhYc
+         2L1UkjsUaENQpZ3QD/AoXwmpxKK7WGCn/LGz3RerwkorECobtiu2V9bP5ZeC3t1DIP
+         TYlVURdqqmp33wH51qLrnbUYIR4YC5Ci9klQeCHo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stanley Chu <stanley.chu@mediatek.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 201/276] scsi: ufs: Fix regulator load and icc-level configuration
-Date:   Wed, 29 May 2019 20:05:59 -0700
-Message-Id: <20190530030537.691588710@linuxfoundation.org>
+Subject: [PATCH 4.19 199/276] rtc: xgene: fix possible race condition
+Date:   Wed, 29 May 2019 20:05:57 -0700
+Message-Id: <20190530030537.555698648@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -62,74 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0487fff76632ec023d394a05b82e87a971db8c03 ]
+[ Upstream commit a652e00ee1233e251a337c28e18a1da59224e5ce ]
 
-Currently if a regulator has "<name>-fixed-regulator" property in device
-tree, it will skip current limit initialization.  This lead to a zero
-"max_uA" value in struct ufs_vreg.
+The IRQ is requested before the struct rtc is allocated and registered, but
+this struct is used in the IRQ handler. This may lead to a NULL pointer
+dereference.
 
-However, "regulator_set_load" operation shall be required on regulators
-which have valid current limits, otherwise a zero "max_uA" set by
-"regulator_set_load" may cause unexpected behavior when this regulator is
-enabled or set as high power mode.
+Switch to devm_rtc_allocate_device/rtc_register_device to allocate the rtc
+struct before requesting the IRQ.
 
-Similarly, in device's icc_level configuration flow, the target icc_level
-shall be updated if regulator also has valid current limit, otherwise a
-wrong icc_level will be calculated by zero "max_uA" and thus causes
-unexpected results after it is written to device.
-
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Acked-by: Alim Akhtar <alim.akhtar@samsung.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/rtc/rtc-xgene.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 6e80dfe4fa979..73156579e9885 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -6130,19 +6130,19 @@ static u32 ufshcd_find_max_sup_active_icc_level(struct ufs_hba *hba,
- 		goto out;
+diff --git a/drivers/rtc/rtc-xgene.c b/drivers/rtc/rtc-xgene.c
+index 153820876a820..2f741f455c30a 100644
+--- a/drivers/rtc/rtc-xgene.c
++++ b/drivers/rtc/rtc-xgene.c
+@@ -168,6 +168,10 @@ static int xgene_rtc_probe(struct platform_device *pdev)
+ 	if (IS_ERR(pdata->csr_base))
+ 		return PTR_ERR(pdata->csr_base);
+ 
++	pdata->rtc = devm_rtc_allocate_device(&pdev->dev);
++	if (IS_ERR(pdata->rtc))
++		return PTR_ERR(pdata->rtc);
++
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq < 0) {
+ 		dev_err(&pdev->dev, "No IRQ resource\n");
+@@ -198,15 +202,15 @@ static int xgene_rtc_probe(struct platform_device *pdev)
+ 		return ret;
  	}
  
--	if (hba->vreg_info.vcc)
-+	if (hba->vreg_info.vcc && hba->vreg_info.vcc->max_uA)
- 		icc_level = ufshcd_get_max_icc_level(
- 				hba->vreg_info.vcc->max_uA,
- 				POWER_DESC_MAX_ACTV_ICC_LVLS - 1,
- 				&desc_buf[PWR_DESC_ACTIVE_LVLS_VCC_0]);
- 
--	if (hba->vreg_info.vccq)
-+	if (hba->vreg_info.vccq && hba->vreg_info.vccq->max_uA)
- 		icc_level = ufshcd_get_max_icc_level(
- 				hba->vreg_info.vccq->max_uA,
- 				icc_level,
- 				&desc_buf[PWR_DESC_ACTIVE_LVLS_VCCQ_0]);
- 
--	if (hba->vreg_info.vccq2)
-+	if (hba->vreg_info.vccq2 && hba->vreg_info.vccq2->max_uA)
- 		icc_level = ufshcd_get_max_icc_level(
- 				hba->vreg_info.vccq2->max_uA,
- 				icc_level,
-@@ -6767,6 +6767,15 @@ static int ufshcd_config_vreg_load(struct device *dev, struct ufs_vreg *vreg,
- 	if (!vreg)
- 		return 0;
- 
-+	/*
-+	 * "set_load" operation shall be required on those regulators
-+	 * which specifically configured current limitation. Otherwise
-+	 * zero max_uA may cause unexpected behavior when regulator is
-+	 * enabled or set as high power mode.
-+	 */
-+	if (!vreg->max_uA)
-+		return 0;
+-	pdata->rtc = devm_rtc_device_register(&pdev->dev, pdev->name,
+-					 &xgene_rtc_ops, THIS_MODULE);
+-	if (IS_ERR(pdata->rtc)) {
+-		clk_disable_unprepare(pdata->clk);
+-		return PTR_ERR(pdata->rtc);
+-	}
+-
+ 	/* HW does not support update faster than 1 seconds */
+ 	pdata->rtc->uie_unsupported = 1;
++	pdata->rtc->ops = &xgene_rtc_ops;
 +
- 	ret = regulator_set_load(vreg->reg, ua);
- 	if (ret < 0) {
- 		dev_err(dev, "%s: %s set load (ua=%d) failed, err=%d\n",
++	ret = rtc_register_device(pdata->rtc);
++	if (ret) {
++		clk_disable_unprepare(pdata->clk);
++		return ret;
++	}
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
