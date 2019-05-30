@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E787C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 05:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7D7C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 05:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E90D426093
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 05:00:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41E8D260A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 05:00:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192420;
-	bh=IMvOMrwfmvlEvp9BbnZTOcWW0xU9lq/DlMKMHRjOHos=;
+	s=default; t=1559192427;
+	bh=aNQ7m6pVjPpcwkmbpDyRhE8MoPoAKBxGV94to5iTdfE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YW43FuxCTttHBPolJ0TgUB0ULJRDyV6YxLhu0v7RzTeLboSPGk5at732QznAyt+ZA
-	 nxvB1VuUL075D9GQxUMSv5ceMoa6sy6p67NXINveIeTp6iNIByskxdrX8PW4uRUt6u
-	 6Vh0grM1BB2rXOmo4iTdWrzoxg7hCw2WXgtAsNng=
+	b=LslZ3IJ2l09yWMFj87wqQQdyPrYj0y2NpsnHVrMO4gCldMbj5C+iTa/G0oJHI1loi
+	 jk6BlMGBXdKJBma+DPwQilakiMpOhhVyH3vpp1gYYGPtQ0XRjdxyAe4h688F1/0eHE
+	 5dHOfLundmaFtdgTda2idOPo8RyokYhVCfbKTXfc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389258AbfE3FAS (ORCPT
+        id S2389371AbfE3FAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 01:00:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44488 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 01:00:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727623AbfE3DJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:09:33 -0400
+        id S1727615AbfE3DJc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:09:32 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B98D724488;
+        by mail.kernel.org (Postfix) with ESMTPSA id 19FA824481;
         Thu, 30 May 2019 03:09:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559185772;
-        bh=IMvOMrwfmvlEvp9BbnZTOcWW0xU9lq/DlMKMHRjOHos=;
+        bh=aNQ7m6pVjPpcwkmbpDyRhE8MoPoAKBxGV94to5iTdfE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LSxh7EZMlVPTy6UG1KNpoUUfcDXRUyeNVBJyvMnBRs5nZo7tjo81ocxoujIYrMm93
-         cKXzV4coeNEhI85jBAVkwM+rRvT8AhOocghwsWcE6q1ZLyTdhC/1vuZ7aVoQDbd5zq
-         A12Tr3xg6VhoMJIIODdL4uDc3vYSq4UhsIjbVpNg=
+        b=xFFzJIJZkRiUwwn0ctTXA0Hmp+ryb6WPHmtqwtO0tjfiP4txTFOBlKxgu8uuF3O/p
+         /GpgZzg8J9y8HwvYQqnuuDJ+9VvboJLsfInKi4AWW4++etG+w0fbzpo77Isev/xYUq
+         KI5GbbY+aAwUUoLVm+1apAnuEXqVaMp4oXMHQve8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Anand Jain <anand.jain@oracle.com>,
+        stable@vger.kernel.org, Johnny Chang <johnnyc@synology.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.1 025/405] Btrfs: do not abort transaction at btrfs_update_root() after failure to COW path
-Date:   Wed, 29 May 2019 20:00:23 -0700
-Message-Id: <20190530030541.927906826@linuxfoundation.org>
+Subject: [PATCH 5.1 024/405] btrfs: Check the compression level before getting a workspace
+Date:   Wed, 29 May 2019 20:00:22 -0700
+Message-Id: <20190530030541.864967520@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -60,54 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Johnny Chang <johnnyc@synology.com>
 
-commit 72bd2323ec87722c115a5906bc6a1b31d11e8f54 upstream.
+commit 2b90883c561ddcc641741c2e4df1f702a4f2acb8 upstream.
 
-Currently when we fail to COW a path at btrfs_update_root() we end up
-always aborting the transaction. However all the current callers of
-btrfs_update_root() are able to deal with errors returned from it, many do
-end up aborting the transaction themselves (directly or not, such as the
-transaction commit path), other BUG_ON() or just gracefully cancel whatever
-they were doing.
+When a file's compression property is set as zlib or zstd but leave
+the compression mount option not be set, that means btrfs will try
+to compress the file with default compression level. But in
+btrfs_compress_pages(), it calls get_workspace() with level = 0.
+This will return a workspace with a wrong compression level.
+For zlib, the compression level in the workspace will be 0
+(that means "store only"). And for zstd, the compression in the
+workspace will be 1, not the default level 3.
 
-When syncing the fsync log, we call btrfs_update_root() through
-tree-log.c:update_log_root(), and if it returns an -ENOSPC error, the log
-sync code does not abort the transaction, instead it gracefully handles
-the error and returns -EAGAIN to the fsync handler, so that it falls back
-to a transaction commit. Any other error different from -ENOSPC, makes the
-log sync code abort the transaction.
+How to reproduce:
+  mkfs -t btrfs /dev/sdb
+  mount /dev/sdb /mnt/
+  mkdir /mnt/zlib
+  btrfs property set /mnt/zlib/ compression zlib
+  dd if=/dev/zero of=/mnt/zlib/compression-friendly-file-10M bs=1M count=10
+  sync
+  btrfs-debugfs -f /mnt/zlib/compression-friendly-file-10M
 
-So remove the transaction abort from btrfs_update_log() when we fail to
-COW a path to update the root item, so that if an -ENOSPC failure happens
-we avoid aborting the current transaction and have a chance of the fsync
-succeeding after falling back to a transaction commit.
+btrfs-debugfs output:
+* before:
+  ...
+  (258 9961472): ram 524288 disk 1106247680 disk_size 524288
+  file: ... extents 20 disk size 10485760 logical size 10485760 ratio 1.00
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203413
-Fixes: 79787eaab46121 ("btrfs: replace many BUG_ONs with proper error handling")
-Cc: stable@vger.kernel.org # 4.4+
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: Anand Jain <anand.jain@oracle.com>
+* after:
+ ...
+ (258 10354688): ram 131072 disk 14217216 disk_size 4096
+ file: ... extents 80 disk size 327680 logical size 10485760 ratio 32.00
+
+The steps for zstd are similar, but need to put a debugging message to
+show the level of the return workspace in zstd_get_workspace().
+
+This commit adds a check of the compression level before getting a
+workspace by set_level().
+
+CC: stable@vger.kernel.org # 5.1+
+Signed-off-by: Johnny Chang <johnnyc@synology.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/root-tree.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ fs/btrfs/compression.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/btrfs/root-tree.c
-+++ b/fs/btrfs/root-tree.c
-@@ -132,10 +132,8 @@ int btrfs_update_root(struct btrfs_trans
- 		return -ENOMEM;
+--- a/fs/btrfs/compression.c
++++ b/fs/btrfs/compression.c
+@@ -1009,6 +1009,7 @@ int btrfs_compress_pages(unsigned int ty
+ 	struct list_head *workspace;
+ 	int ret;
  
- 	ret = btrfs_search_slot(trans, root, key, path, 0, 1);
--	if (ret < 0) {
--		btrfs_abort_transaction(trans, ret);
-+	if (ret < 0)
- 		goto out;
--	}
- 
- 	if (ret != 0) {
- 		btrfs_print_leaf(path->nodes[0]);
++	level = btrfs_compress_op[type]->set_level(level);
+ 	workspace = get_workspace(type, level);
+ 	ret = btrfs_compress_op[type]->compress_pages(workspace, mapping,
+ 						      start, pages,
 
 
