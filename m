@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D00C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C61ABC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57AED25C50
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A494025C57
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:08:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727552AbfE3PIz (ORCPT
+        id S1727670AbfE3PI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 11:08:55 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51794 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727445AbfE3PIy (ORCPT
+        Thu, 30 May 2019 11:08:57 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39606 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727448AbfE3PIz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 11:08:54 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UF2buk085426
+        Thu, 30 May 2019 11:08:55 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UF2XWn150585
         for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 11:08:53 -0400
-Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2stf2187qm-1
+Received: from e17.ny.us.ibm.com (e17.ny.us.ibm.com [129.33.205.207])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2stfk76jr4-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
         for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 11:08:53 -0400
 Received: from localhost
-        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e17.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
         Thu, 30 May 2019 16:08:52 +0100
 Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
-        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e17.ny.us.ibm.com (146.89.104.204) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
         Thu, 30 May 2019 16:08:48 +0100
 Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4UF8kUZ18612722
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4UF8ksa15401370
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Thu, 30 May 2019 15:08:47 GMT
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BF2F4B2067;
+        by IMSVA (Postfix) with ESMTP id C6344B2068;
         Thu, 30 May 2019 15:08:46 +0000 (GMT)
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9D601B2070;
+        by IMSVA (Postfix) with ESMTP id A4E1BB2064;
         Thu, 30 May 2019 15:08:46 +0000 (GMT)
 Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
         by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
         Thu, 30 May 2019 15:08:46 +0000 (GMT)
 Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 6D17816C4086; Thu, 30 May 2019 08:08:48 -0700 (PDT)
+        id 71AD916C5D84; Thu, 30 May 2019 08:08:48 -0700 (PDT)
 From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
@@ -59,20 +59,20 @@ Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E . McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH tip/core/rcu 2/4] uprobes: Use DEFINE_STATIC_PERCPU_RWSEM() to initialize dup_mmap_sem
-Date:   Thu, 30 May 2019 08:08:44 -0700
+Subject: [PATCH tip/core/rcu 3/4] locking/percpu-rwsem: Add DEFINE_PERCPU_RWSEM(), use it to initialize cgroup_threadgroup_rwsem
+Date:   Thu, 30 May 2019 08:08:45 -0700
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190530150816.GA32130@linux.ibm.com>
 References: <20190530150816.GA32130@linux.ibm.com>
 X-TM-AS-GCONF: 00
-x-cbid: 19053015-0060-0000-0000-00000349F775
+x-cbid: 19053015-0040-0000-0000-000004F6834B
 X-IBM-SpamModules-Scores: 
 X-IBM-SpamModules-Versions: BY=3.00011185; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01210788; UDB=6.00636160; IPR=6.00991822;
- MB=3.00027120; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-30 15:08:51
+ PH=3.00000004; SC=3.00000286; SDB=6.01210788; UDB=6.00636159; IPR=6.00991822;
+ MB=3.00027120; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-30 15:08:52
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19053015-0061-0000-0000-0000498DFFAF
-Message-Id: <20190530150846.32644-2-paulmck@linux.ibm.com>
+x-cbparentid: 19053015-0041-0000-0000-000009029D9A
+Message-Id: <20190530150846.32644-3-paulmck@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-30_08:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
@@ -87,36 +87,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Oleg Nesterov <oleg@redhat.com>
 
-Use DEFINE_STATIC_PERCPU_RWSEM() to initialize dup_mmap_sem.
+Turn DEFINE_STATIC_PERCPU_RWSEM() into __DEFINE_PERCPU_RWSEM() with the
+additional "is_static" argument to introduce DEFINE_PERCPU_RWSEM().
+
+Change cgroup.c to use DEFINE_PERCPU_RWSEM(cgroup_threadgroup_rwsem).
 
 Signed-off-by: Oleg Nesterov <oleg@redhat.com>
 Reviewed-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 ---
- kernel/events/uprobes.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ include/linux/percpu-rwsem.h | 8 ++++++--
+ kernel/cgroup/cgroup.c       | 3 +--
+ 2 files changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 78f61bfc6b79..97c367f0a9aa 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -46,7 +46,7 @@ static DEFINE_SPINLOCK(uprobes_treelock);	/* serialize rbtree access */
- static struct mutex uprobes_mmap_mutex[UPROBES_HASH_SZ];
- #define uprobes_mmap_hash(v)	(&uprobes_mmap_mutex[((unsigned long)(v)) % UPROBES_HASH_SZ])
+diff --git a/include/linux/percpu-rwsem.h b/include/linux/percpu-rwsem.h
+index 6887636ea169..2809b44cbbee 100644
+--- a/include/linux/percpu-rwsem.h
++++ b/include/linux/percpu-rwsem.h
+@@ -17,14 +17,18 @@ struct percpu_rw_semaphore {
+ 	int			readers_block;
+ };
  
--static struct percpu_rw_semaphore dup_mmap_sem;
-+DEFINE_STATIC_PERCPU_RWSEM(dup_mmap_sem);
- 
- /* Have a copy of original instruction */
- #define UPROBE_COPY_INSN	0
-@@ -2302,7 +2302,5 @@ void __init uprobes_init(void)
- 	for (i = 0; i < UPROBES_HASH_SZ; i++)
- 		mutex_init(&uprobes_mmap_mutex[i]);
- 
--	BUG_ON(percpu_init_rwsem(&dup_mmap_sem));
--
- 	BUG_ON(register_die_notifier(&uprobe_exception_nb));
+-#define DEFINE_STATIC_PERCPU_RWSEM(name)				\
++#define __DEFINE_PERCPU_RWSEM(name, is_static)				\
+ static DEFINE_PER_CPU(unsigned int, __percpu_rwsem_rc_##name);		\
+-static struct percpu_rw_semaphore name = {				\
++is_static struct percpu_rw_semaphore name = {				\
+ 	.rss = __RCU_SYNC_INITIALIZER(name.rss),			\
+ 	.read_count = &__percpu_rwsem_rc_##name,			\
+ 	.rw_sem = __RWSEM_INITIALIZER(name.rw_sem),			\
+ 	.writer = __RCUWAIT_INITIALIZER(name.writer),			\
  }
++#define DEFINE_PERCPU_RWSEM(name)		\
++	__DEFINE_PERCPU_RWSEM(name, /* not static */)
++#define DEFINE_STATIC_PERCPU_RWSEM(name)	\
++	__DEFINE_PERCPU_RWSEM(name, static)
+ 
+ extern int __percpu_down_read(struct percpu_rw_semaphore *, int);
+ extern void __percpu_up_read(struct percpu_rw_semaphore *);
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index 217cec4e22c6..b112e93388dc 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -101,7 +101,7 @@ static DEFINE_SPINLOCK(cgroup_idr_lock);
+  */
+ static DEFINE_SPINLOCK(cgroup_file_kn_lock);
+ 
+-struct percpu_rw_semaphore cgroup_threadgroup_rwsem;
++DEFINE_PERCPU_RWSEM(cgroup_threadgroup_rwsem);
+ 
+ #define cgroup_assert_mutex_or_rcu_locked()				\
+ 	RCU_LOCKDEP_WARN(!rcu_read_lock_held() &&			\
+@@ -5616,7 +5616,6 @@ int __init cgroup_init(void)
+ 	int ssid;
+ 
+ 	BUILD_BUG_ON(CGROUP_SUBSYS_COUNT > 16);
+-	BUG_ON(percpu_init_rwsem(&cgroup_threadgroup_rwsem));
+ 	BUG_ON(cgroup_init_cftypes(NULL, cgroup_base_files));
+ 	BUG_ON(cgroup_init_cftypes(NULL, cgroup1_base_files));
+ 
 -- 
 2.17.1
 
