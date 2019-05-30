@@ -2,127 +2,98 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CA9C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F2AC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9061324DAD
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:51:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188273;
-	bh=rPBCzzUJlptEP951D4yPK4MGsRf7+UEXKPZT7CVSj7c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K3JxxEW/iW1BUiFsGDW7mcnbOoNS3w6JAiqbdR+Pen1KhaOH4c2IESU+l9nTERtGE
-	 2KzBy9rihF1uzJEDKkjDjTpsu3nak1zq4lWbosmutRGz2I50hXOQzEoGJCuFzAu9iK
-	 CyaZTW1E6owj7XmVctEbIKtUvfTbmzZqL8rnYyMA=
+	by mail.kernel.org (Postfix) with ESMTP id 9B06724DB8
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:51:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZwE5b0ZF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387487AbfE3DvM (ORCPT
+        id S1732280AbfE3DvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:51:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56600 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732033AbfE3DTs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:48 -0400
-Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32CDF248D3;
-        Thu, 30 May 2019 03:19:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186388;
-        bh=rPBCzzUJlptEP951D4yPK4MGsRf7+UEXKPZT7CVSj7c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fxrq9Kzx4m8meooccA4mQomjD4B2kc+xRrKEb9NlkZqpLIdck5sGqvVXyRzBxx5DA
-         448djDsaIZvytFdPyhhcpwwwkOAJkyB5O+WqdCdxDZJeEbtaGtXwl05vvepX7hRMKk
-         7zAvQmqw0tHHcfXwgeBqoEdn5cLNm3GUOZwUueB4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Chunming Zhou <david1.zhou@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 122/193] drm/amdgpu: fix old fence check in amdgpu_fence_emit
-Date:   Wed, 29 May 2019 20:06:16 -0700
-Message-Id: <20190530030505.578069191@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
-References: <20190530030446.953835040@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 29 May 2019 23:51:17 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44268 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729901AbfE3DvQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:51:16 -0400
+Received: by mail-pf1-f196.google.com with SMTP id g9so3017340pfo.11;
+        Wed, 29 May 2019 20:51:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3ZN60qwibmbZGc7THAFZZ2/hms+fJLyOqOJKZuQflBE=;
+        b=ZwE5b0ZFm4ynttpd5kMK35jDuC/dWIl6rZ0AxFpXFbRUHfeUb3Ml4ENGatP4aD5RYY
+         23QXnN+HULJJo7Z0UhYGmuaxLPnpaRVa1K6vrK7hBSYlYRoPf3+MRGMrcHZctNVs2l7s
+         MWnplg0pNOxJyuwEHim48WgIsJ8M34bNmyeWk77XoRJMgZ7hYTE29jVGu7e52b6cyvuY
+         85NFO7nLtWYbAWcqCcdsXVQDcE42kdoeBG6an2HXAE2yfDQB/mDnsJH19IzaFxI4Dztz
+         evh3apIabkns36LhHDLSdQuHyDDRE5vAqSe6IXSbg7XWRvLelGBRmVcEwgDSIOAe+gLK
+         fawQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3ZN60qwibmbZGc7THAFZZ2/hms+fJLyOqOJKZuQflBE=;
+        b=JyqgRdABbw4vJfzfKBxLEHXev6urFxjQO0rQvzqJWOqgBOGtgkZBwxx66gTkrxc6jS
+         bleT4+M2td3xXGMK8jFsuH+oCPCGetlpbOHSqpD85mEdU6yJmAcGcBef6U2RlhVhgMLI
+         FF3lb38wF+R6bKLhwB/mN8MzQJKqasfdE73QZaQwB1SbKHGK6Syxf1K+aUnWISIQ4NfG
+         4Co3YaZMejtbWAMHdddDQEZ/fPV1aPSD0R3dfOAf7TJwgJPz1uJWrZ+MVBW3CE/RkE09
+         2ifBUXnUylOoIAUfSn35X06ubZ/rWp4zRFFlca1D/Uo1i467EYJOn2S0Nvcc06hqlKJn
+         LlRg==
+X-Gm-Message-State: APjAAAVjoaFMtSpl6zItSe+LQxIUiSDSxDAlKKUgRr9jF4P6jTjAZt46
+        EdohhNYGa9l+8PkMURe99rw=
+X-Google-Smtp-Source: APXvYqytd5fkdlkjvOUabmuc2c4XXV8pyR+vCkOalg3TJkjUC1ShJDnM9GkbvULv9oAxmWggsceYnw==
+X-Received: by 2002:a63:d150:: with SMTP id c16mr1778481pgj.439.1559188275085;
+        Wed, 29 May 2019 20:51:15 -0700 (PDT)
+Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
+        by smtp.gmail.com with ESMTPSA id t124sm989859pfb.80.2019.05.29.20.51.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 May 2019 20:51:14 -0700 (PDT)
+Date:   Wed, 29 May 2019 20:51:12 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Subject: Re: [PATCH net-next 3/5] net: dsa: mv88e6xxx: Let taggers specify a
+ can_timestamp function
+Message-ID: <20190530035112.qbn3nnoxrgum7anz@localhost>
+References: <20190528235627.1315-1-olteanv@gmail.com>
+ <20190528235627.1315-4-olteanv@gmail.com>
+ <20190529044912.cyg44rqvdo73oeiu@localhost>
+ <CA+h21hoNrhcpAONTvJra5Ekk+yJ6xP0VAaPSygaLOw31qsGPTg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+h21hoNrhcpAONTvJra5Ekk+yJ6xP0VAaPSygaLOw31qsGPTg@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3d2aca8c8620346abdba96c6300d2c0b90a1d0cc ]
+On Wed, May 29, 2019 at 11:33:31PM +0300, Vladimir Oltean wrote:
+> I would like to avoid keeping meta frames in their own RX queue,
+> because then I'm complicating (or rather put, making impossible) the
+> association between a meta frame and the frame it holds a timestamp
+> of.
 
-We don't hold a reference to the old fence, so it can go away
-any time we are waiting for it to signal.
+We have an example of how a driver can match meta time stamp packets
+with received packets.  See drivers/net/phy/dp83640.c to see how it
+can be done completely within the driver.
 
-Signed-off-by: Christian König <christian.koenig@amd.com>
-Reviewed-by: Chunming Zhou <david1.zhou@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c | 24 ++++++++++++++++-------
- 1 file changed, 17 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
-index 333bad7490678..415e9a384799e 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
-@@ -135,8 +135,9 @@ int amdgpu_fence_emit(struct amdgpu_ring *ring, struct dma_fence **f)
- {
- 	struct amdgpu_device *adev = ring->adev;
- 	struct amdgpu_fence *fence;
--	struct dma_fence *old, **ptr;
-+	struct dma_fence __rcu **ptr;
- 	uint32_t seq;
-+	int r;
- 
- 	fence = kmem_cache_alloc(amdgpu_fence_slab, GFP_KERNEL);
- 	if (fence == NULL)
-@@ -152,15 +153,24 @@ int amdgpu_fence_emit(struct amdgpu_ring *ring, struct dma_fence **f)
- 			       seq, AMDGPU_FENCE_FLAG_INT);
- 
- 	ptr = &ring->fence_drv.fences[seq & ring->fence_drv.num_fences_mask];
-+	if (unlikely(rcu_dereference_protected(*ptr, 1))) {
-+		struct dma_fence *old;
-+
-+		rcu_read_lock();
-+		old = dma_fence_get_rcu_safe(ptr);
-+		rcu_read_unlock();
-+
-+		if (old) {
-+			r = dma_fence_wait(old, false);
-+			dma_fence_put(old);
-+			if (r)
-+				return r;
-+		}
-+	}
-+
- 	/* This function can't be called concurrently anyway, otherwise
- 	 * emitting the fence would mess up the hardware ring buffer.
- 	 */
--	old = rcu_dereference_protected(*ptr, 1);
--	if (old && !dma_fence_is_signaled(old)) {
--		DRM_INFO("rcu slot is busy\n");
--		dma_fence_wait(old, false);
--	}
--
- 	rcu_assign_pointer(*ptr, dma_fence_get(&fence->base));
- 
- 	*f = &fence->base;
--- 
-2.20.1
-
-
-
+Thanks,
+Richard
