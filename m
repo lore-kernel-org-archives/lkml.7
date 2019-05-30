@@ -2,69 +2,80 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE56AC28CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3706C28CC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BFFA25836
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:24:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDBD825838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:24:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbfE3LYt (ORCPT
+        id S1726952AbfE3LY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 07:24:49 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:34574 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725440AbfE3LYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 07:24:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F33D6374;
-        Thu, 30 May 2019 04:24:48 -0700 (PDT)
-Received: from queper01-lin (queper01-lin.cambridge.arm.com [10.1.195.48])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7343E3F5AF;
-        Thu, 30 May 2019 04:24:46 -0700 (PDT)
-Date:   Thu, 30 May 2019 12:24:44 +0100
-From:   Quentin Perret <quentin.perret@arm.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     edubezval@gmail.com, rui.zhang@intel.com, javi.merino@kernel.org,
-        amit.kachhap@gmail.com, rjw@rjwysocki.net, will.deacon@arm.com,
-        catalin.marinas@arm.com, daniel.lezcano@linaro.org,
-        dietmar.eggemann@arm.com, ionela.voinescu@arm.com,
-        mka@chromium.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 2/3] thermal: cpu_cooling: Make the power-related code
- depend on IPA
-Message-ID: <20190530112442.kywpbophjkv2j2tq@queper01-lin>
-References: <20190530092038.12020-1-quentin.perret@arm.com>
- <20190530092038.12020-3-quentin.perret@arm.com>
- <20190530110356.vet2exwowdbm4umq@vireshk-i7>
+        Thu, 30 May 2019 07:24:58 -0400
+Received: from charlotte.tuxdriver.com ([70.61.120.58]:36507 "EHLO
+        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbfE3LY6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 07:24:58 -0400
+Received: from cpe-2606-a000-111b-405a-0-0-0-162e.dyn6.twc.com ([2606:a000:111b:405a::162e] helo=localhost)
+        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
+        (Exim 4.63)
+        (envelope-from <nhorman@tuxdriver.com>)
+        id 1hWJAr-0006YK-LB; Thu, 30 May 2019 07:24:52 -0400
+Date:   Thu, 30 May 2019 07:24:18 -0400
+From:   Neil Horman <nhorman@tuxdriver.com>
+To:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Cc:     syzbot <syzbot+f7e9153b037eac9b1df8@syzkaller.appspotmail.com>,
+        davem@davemloft.net, linux-kernel@vger.kernel.org,
+        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, vyasevich@gmail.com
+Subject: Re: memory leak in sctp_process_init
+Message-ID: <20190530112418.GB1966@hmswarspite.think-freely.org>
+References: <00000000000097abb90589e804fd@google.com>
+ <20190528013600.GM5506@localhost.localdomain>
+ <20190528111550.GA4658@hmswarspite.think-freely.org>
+ <20190529190709.GE31099@hmswarspite.think-freely.org>
+ <20190529233757.GC3713@localhost.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190530110356.vet2exwowdbm4umq@vireshk-i7>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20190529233757.GC3713@localhost.localdomain>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 30 May 2019 at 16:33:56 (+0530), Viresh Kumar wrote:
-> On 30-05-19, 10:20, Quentin Perret wrote:
-> > The core CPU cooling infrastructure has power-related functions
-> > that have only one client: IPA. Since there can be no user of those
-> > functions if IPA is not compiled in, make sure to guard them with
-> > checks on CONFIG_THERMAL_GOV_POWER_ALLOCATOR to not waste space
-> > unnecessarily.
-> > 
-> > Suggested-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > Signed-off-by: Quentin Perret <quentin.perret@arm.com>
-> > ---
-> >  drivers/thermal/cpu_cooling.c | 214 +++++++++++++++++-----------------
-> >  1 file changed, 104 insertions(+), 110 deletions(-)
+On Wed, May 29, 2019 at 08:37:57PM -0300, Marcelo Ricardo Leitner wrote:
+> On Wed, May 29, 2019 at 03:07:09PM -0400, Neil Horman wrote:
+> > --- a/net/sctp/sm_make_chunk.c
+> > +++ b/net/sctp/sm_make_chunk.c
+> > @@ -2419,9 +2419,12 @@ int sctp_process_init(struct sctp_association *asoc, struct sctp_chunk *chunk,
+> >  	/* Copy cookie in case we need to resend COOKIE-ECHO. */
+> >  	cookie = asoc->peer.cookie;
+> >  	if (cookie) {
+> > +		if (asoc->peer.cookie_allocated)
+> > +			kfree(cookie);
+> >  		asoc->peer.cookie = kmemdup(cookie, asoc->peer.cookie_len, gfp);
+> >  		if (!asoc->peer.cookie)
+> >  			goto clean_up;
+> > +		asoc->peer.cookie_allocated=1;
+> >  	}
+> >  
+> >  	/* RFC 2960 7.2.1 The initial value of ssthresh MAY be arbitrarily
 > 
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> What if we kmemdup directly at sctp_process_param(), as it's done for
+> others already? Like SCTP_PARAM_RANDOM and SCTP_PARAM_HMAC_ALGO. I
+> don't see a reason for SCTP_PARAM_STATE_COOKIE to be different
+> here. This way it would be always allocated, and ready to be kfreed.
+> 
+> We still need to free it after the handshake, btw.
+> 
+Yeah, that makes sense, I'll give that a shot.
+Neil
 
-Thanks !
-Quentin
+>   Marcelo
+> 
