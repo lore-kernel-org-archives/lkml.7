@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 957C1C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85006C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 611CD2498A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5642C249BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:21:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186463;
-	bh=YlPrh8K80E/Ugmg5D1lT+uJVwaWCaWzq3kBRQR+V0F4=;
+	s=default; t=1559186466;
+	bh=56vgd8SDkEUz3UFrrp79KWlabZkIwvwexkR8pA6e3O8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m2Y3sNEsETDx25/6wU10jSboow7WeVNgr7rWPVlGZl6wSl4p8iZvfzzgCeE+ub+Xa
-	 zcrZSlYti4u94GNvTuPKXKVgyY+CrqAeUQXsLout0G6Z4b4eeUAqMqICA61GnADEYK
-	 ke2RkaN3bgc9xmBIVx9kYXiM1b90Gdm4fpH2gpLg=
+	b=PswNTyD0jkoKmXRIz9z0E7x0SWcj+RKvfW6nrffbF3hvvy9yekxwdw/KG2gZiaR/m
+	 5MKJne5+PeNmHpt6zZhHhO3pDDu4hx+87Ta1SaROXZXmgBFJ/dwcbzpOrDBERR9kza
+	 GLcLw8gFsBJBKOj3EH2w34i9n2bSOpBTqsUBU1eQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732421AbfE3DVC (ORCPT
+        id S1732445AbfE3DVF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:21:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41444 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:21:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730602AbfE3DQI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:08 -0400
+        id S1730622AbfE3DQN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:16:13 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AD252449A;
-        Thu, 30 May 2019 03:16:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA3E1245AB;
+        Thu, 30 May 2019 03:16:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186168;
-        bh=YlPrh8K80E/Ugmg5D1lT+uJVwaWCaWzq3kBRQR+V0F4=;
+        s=default; t=1559186172;
+        bh=56vgd8SDkEUz3UFrrp79KWlabZkIwvwexkR8pA6e3O8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x0BorF/84yal8Xb78erMdws7QlmkjpYfJ/s/e2Dz7pUlVp4e8yjVX2YLhYNAMh8pK
-         Aevf9kCq09b7sugrarQMd5aFNiot8ivvq+hY0eW+rE6D6Bsdlygd6HcI+mFOUCKA1I
-         A5E9WW9Zc5KcQztHn7q/LUXDPsAMis9BgkGAujsQ=
+        b=pgQgAc94r1kaZGI8HiUMA+3fTiqH0Ve2N561khZkvTrRixvtlgD6/wP1YhqeFo3K/
+         +ips+2p8BmlKpGnILyAn2zbi5qh9vsm+mbnQ7s7gC9ebtHOeMF3D3dmqHoJglCRMAu
+         PWvnW+flSiTIHeKX2pIvcIh+GiO1kqmAx8Qtzucg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Tobin C. Harding" <tobin@kernel.org>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 021/276] btrfs: sysfs: Fix error path kobject memory leak
-Date:   Wed, 29 May 2019 20:02:59 -0700
-Message-Id: <20190530030525.458287378@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Machek <pavel@denx.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.19 005/276] KVM: x86: fix return value for reserved EFER
+Date:   Wed, 29 May 2019 20:02:43 -0700
+Message-Id: <20190530030523.731037078@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -59,42 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tobin C. Harding <tobin@kernel.org>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-commit 450ff8348808a89cc27436771aa05c2b90c0eef1 upstream.
+commit 66f61c92889ff3ca365161fb29dd36d6354682ba upstream.
 
-If a call to kobject_init_and_add() fails we must call kobject_put()
-otherwise we leak memory.
+Commit 11988499e62b ("KVM: x86: Skip EFER vs. guest CPUID checks for
+host-initiated writes", 2019-04-02) introduced a "return false" in a
+function returning int, and anyway set_efer has a "nonzero on error"
+conventon so it should be returning 1.
 
-Calling kobject_put() when kobject_init_and_add() fails drops the
-refcount back to 0 and calls the ktype release method (which in turn
-calls the percpu destroy and kfree).
-
-Add call to kobject_put() in the error path of call to
-kobject_init_and_add().
-
-Cc: stable@vger.kernel.org # v4.4+
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Reported-by: Pavel Machek <pavel@denx.de>
+Fixes: 11988499e62b ("KVM: x86: Skip EFER vs. guest CPUID checks for host-initiated writes")
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/extent-tree.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/x86/kvm/x86.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/btrfs/extent-tree.c
-+++ b/fs/btrfs/extent-tree.c
-@@ -3911,8 +3911,7 @@ static int create_space_info(struct btrf
- 				    info->space_info_kobj, "%s",
- 				    alloc_name(space_info->flags));
- 	if (ret) {
--		percpu_counter_destroy(&space_info->total_bytes_pinned);
--		kfree(space_info);
-+		kobject_put(&space_info->kobj);
- 		return ret;
- 	}
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -1188,7 +1188,7 @@ static int set_efer(struct kvm_vcpu *vcp
+ 	u64 efer = msr_info->data;
  
+ 	if (efer & efer_reserved_bits)
+-		return false;
++		return 1;
+ 
+ 	if (!msr_info->host_initiated) {
+ 		if (!__kvm_valid_efer(vcpu, efer))
 
 
