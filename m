@@ -2,190 +2,121 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06060C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B36C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D074825B89
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:44:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45DDC238F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:48:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rflj/enl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbfE3Oot (ORCPT
+        id S1726664AbfE3OsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 10:44:49 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59648 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726842AbfE3Omc (ORCPT
+        Thu, 30 May 2019 10:48:09 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:38372 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbfE3OsI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 10:42:32 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UEdM4v144573
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 10:42:32 -0400
-Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2stgu3s3y6-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 10:42:31 -0400
-Received: from localhost
-        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Thu, 30 May 2019 15:42:30 +0100
-Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
-        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 30 May 2019 15:42:26 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4UEgPK419464210
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 May 2019 14:42:25 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 63024B2066;
-        Thu, 30 May 2019 14:42:25 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3BF5DB206E;
-        Thu, 30 May 2019 14:42:25 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 30 May 2019 14:42:25 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id BA41316C5DA2; Thu, 30 May 2019 07:42:26 -0700 (PDT)
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        mingo@kernel.org
-Cc:     stern@rowland.harvard.edu, andrea.parri@amarulasolutions.com,
-        will.deacon@arm.com, peterz@infradead.org, boqun.feng@gmail.com,
-        npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
-        luc.maranget@inria.fr, akiyks@gmail.com,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH RFC memory-model 12/33] tools/memory-model: Fix paulmck email address on pre-existing scripts
-Date:   Thu, 30 May 2019 07:42:04 -0700
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190530144202.GA26201@linux.ibm.com>
-References: <20190530144202.GA26201@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19053014-0064-0000-0000-000003E70C71
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011185; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01210779; UDB=6.00636154; IPR=6.00991814;
- MB=3.00027120; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-30 14:42:30
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19053014-0065-0000-0000-00003DAB92D3
-Message-Id: <20190530144225.27624-12-paulmck@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-30_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=740 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905300105
+        Thu, 30 May 2019 10:48:08 -0400
+Received: by mail-ed1-f68.google.com with SMTP id g13so9509678edu.5;
+        Thu, 30 May 2019 07:48:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=C9E51ZhwTVP2YDkKNnHyBwrwMch4rhjQofN8cIkB4Wk=;
+        b=rflj/enlljMqqWL5Fspgm/IFob3rkrZIcEFvxHqEO1GO8OoyGwHQlbM788bklcYMkD
+         yfDX9H1WXd7dtD0biy5Maaumln3ywPLCa1NUJDvq1V40EVmeg4CIX2B6Lxp/tkrueZXr
+         QpeD1Sdp7S7oPmgwWADz1VkUBA74XY/5H7hPikSFfEIw6Oa8TjSewUN/q0snPYuUP2di
+         R59LNpF2R7Pl8fUsGebhbchrImCuEyO38JQWj+50rhWwdUcv0sdH6807dTrA6yB2keTW
+         EM6BjegcWMACoE9vkFo0ILBjjd71mnP1ssz2Bj38NtQq2nAl1GG/ar2qb1i5416nH62t
+         zCBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=C9E51ZhwTVP2YDkKNnHyBwrwMch4rhjQofN8cIkB4Wk=;
+        b=kBzvILv0MDb23Ob83IzOILT9eqOD9n1kR6pUxt+iEae+4uim5UN7pgjOIHsKaBN7yM
+         IyIJ20f/wJPOXk4QS2mavW3WhWTeW+mCJ7LDMYS0BkLtH4WCpXIqcUSF/MOsfEC8n49C
+         Vj2CNUxYaFetEegqCu78qesDwy3qBxaQL14lcODP1zBw5p7SKv+1VfP4XDTP+i/8GOyj
+         EGtPL8sKAX6eC+vAevZJ/lH8MzI3N3fOQTvVxs3L9GaYrv2LRf3h/btnnRTsdLkmakew
+         lTWQsSzMXPDsQ1nDnBSWVGW90RyzKUR4s2cb1rEKMx1ebpupEx33yJojJsZhM6InkhEz
+         OUcg==
+X-Gm-Message-State: APjAAAXTZm1XkbEGZawf2fvsSBj/ipKYnGBFdB3PN/rK74uiLF8DVtGf
+        rGW7bC0qb47wfy1aP2LFZCYzlw038dluk9/s7Ow=
+X-Google-Smtp-Source: APXvYqwGgVx8dH1DO0bkYjO/Mjf0Bdl50l/INQBcBiPlW8sHmh9iDs4hd6EHSw/TBd5FH+hBST3PqZKxt4PRDLJ1ri0=
+X-Received: by 2002:a17:906:5855:: with SMTP id h21mr3907379ejs.15.1559227686918;
+ Thu, 30 May 2019 07:48:06 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190528235627.1315-1-olteanv@gmail.com> <20190528235627.1315-4-olteanv@gmail.com>
+ <20190529044912.cyg44rqvdo73oeiu@localhost> <CA+h21hoNrhcpAONTvJra5Ekk+yJ6xP0VAaPSygaLOw31qsGPTg@mail.gmail.com>
+ <20190530035112.qbn3nnoxrgum7anz@localhost> <CA+h21hqko57LB0BB2TSGSr4p9_czPM-g9krO+wnU7PgvaMdSDA@mail.gmail.com>
+ <20190530142356.vxkhsjalxfytvx2c@localhost>
+In-Reply-To: <20190530142356.vxkhsjalxfytvx2c@localhost>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Thu, 30 May 2019 17:47:55 +0300
+Message-ID: <CA+h21hqqO2RYv_zG3gW17c_NBJR80ag8PSVVan66douQN+MQpw@mail.gmail.com>
+Subject: Re: [PATCH net-next 3/5] net: dsa: mv88e6xxx: Let taggers specify a
+ can_timestamp function
+To:     Richard Cochran <richardcochran@gmail.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
----
- tools/memory-model/scripts/checkalllitmus.sh  | 2 +-
- tools/memory-model/scripts/checklitmus.sh     | 2 +-
- tools/memory-model/scripts/checklitmushist.sh | 2 +-
- tools/memory-model/scripts/judgelitmus.sh     | 2 +-
- tools/memory-model/scripts/newlitmushist.sh   | 2 +-
- tools/memory-model/scripts/parseargs.sh       | 2 +-
- tools/memory-model/scripts/runlitmushist.sh   | 2 +-
- 7 files changed, 7 insertions(+), 7 deletions(-)
+On Thu, 30 May 2019 at 17:24, Richard Cochran <richardcochran@gmail.com> wrote:
+>
+> On Thu, May 30, 2019 at 10:42:41AM +0300, Vladimir Oltean wrote:
+> > The meta frames generated by the SJA1105 do not contain any seqid.
+>
+> So this cannot ever work...
+>
+> > They contain:
+> > * A globally programmable DMAC
+> > * A globally programmable SMAC
+>
+> Don't know what these are, but doesn't sound like they uniquely
+> identify the original frame.
+>
+> > * The 0x8 EtherType
+> > * A partial (24-bit or 32-bit) RX timestamp
+> > * Two bytes from the initial (pre follow-up) frame's DMAC, before the
+> > switch mangled those with the source port and switch id. The driver is
+> > supposed to patch these bytes from the follow-up back into the initial
+> > frame before passing them up the stack.
+> > * The source port that generated the meta frame
+> > * The switch id that generated the meta frame
+>
+> None of these match to the original frame uniquely.  Looks like this
+> is a dead end.
+>
 
-diff --git a/tools/memory-model/scripts/checkalllitmus.sh b/tools/memory-model/scripts/checkalllitmus.sh
-index 3c0c7fbbd223..10e14d94acee 100755
---- a/tools/memory-model/scripts/checkalllitmus.sh
-+++ b/tools/memory-model/scripts/checkalllitmus.sh
-@@ -17,7 +17,7 @@
- #
- # Copyright IBM Corporation, 2018
- #
--# Author: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-+# Author: Paul E. McKenney <paulmck@linux.ibm.com>
- 
- . scripts/parseargs.sh
- 
-diff --git a/tools/memory-model/scripts/checklitmus.sh b/tools/memory-model/scripts/checklitmus.sh
-index 11461ed40b5e..638b8c610894 100755
---- a/tools/memory-model/scripts/checklitmus.sh
-+++ b/tools/memory-model/scripts/checklitmus.sh
-@@ -15,7 +15,7 @@
- #
- # Copyright IBM Corporation, 2018
- #
--# Author: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-+# Author: Paul E. McKenney <paulmck@linux.ibm.com>
- 
- litmus=$1
- herdoptions=${LKMM_HERD_OPTIONS--conf linux-kernel.cfg}
-diff --git a/tools/memory-model/scripts/checklitmushist.sh b/tools/memory-model/scripts/checklitmushist.sh
-index 1d210ffb7c8a..406ecfc0aee4 100755
---- a/tools/memory-model/scripts/checklitmushist.sh
-+++ b/tools/memory-model/scripts/checklitmushist.sh
-@@ -12,7 +12,7 @@
- #
- # Copyright IBM Corporation, 2018
- #
--# Author: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-+# Author: Paul E. McKenney <paulmck@linux.ibm.com>
- 
- . scripts/parseargs.sh
- 
-diff --git a/tools/memory-model/scripts/judgelitmus.sh b/tools/memory-model/scripts/judgelitmus.sh
-index 84c62eee321b..d82133e75580 100755
---- a/tools/memory-model/scripts/judgelitmus.sh
-+++ b/tools/memory-model/scripts/judgelitmus.sh
-@@ -13,7 +13,7 @@
- #
- # Copyright IBM Corporation, 2018
- #
--# Author: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-+# Author: Paul E. McKenney <paulmck@linux.ibm.com>
- 
- litmus=$1
- 
-diff --git a/tools/memory-model/scripts/newlitmushist.sh b/tools/memory-model/scripts/newlitmushist.sh
-index 991f8f814881..3f4b06e29988 100755
---- a/tools/memory-model/scripts/newlitmushist.sh
-+++ b/tools/memory-model/scripts/newlitmushist.sh
-@@ -12,7 +12,7 @@
- #
- # Copyright IBM Corporation, 2018
- #
--# Author: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-+# Author: Paul E. McKenney <paulmck@linux.ibm.com>
- 
- . scripts/parseargs.sh
- 
-diff --git a/tools/memory-model/scripts/parseargs.sh b/tools/memory-model/scripts/parseargs.sh
-index 40f52080fdbd..afe7bd23de6b 100755
---- a/tools/memory-model/scripts/parseargs.sh
-+++ b/tools/memory-model/scripts/parseargs.sh
-@@ -9,7 +9,7 @@
- #
- # Copyright IBM Corporation, 2018
- #
--# Author: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-+# Author: Paul E. McKenney <paulmck@linux.ibm.com>
- 
- T=/tmp/parseargs.sh.$$
- mkdir $T
-diff --git a/tools/memory-model/scripts/runlitmushist.sh b/tools/memory-model/scripts/runlitmushist.sh
-index 6ed376f495bb..852786fef179 100755
---- a/tools/memory-model/scripts/runlitmushist.sh
-+++ b/tools/memory-model/scripts/runlitmushist.sh
-@@ -13,7 +13,7 @@
- #
- # Copyright IBM Corporation, 2018
- #
--# Author: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-+# Author: Paul E. McKenney <paulmck@linux.ibm.com>
- 
- T=/tmp/runlitmushist.sh.$$
- trap 'rm -rf $T' 0
--- 
-2.17.1
+Yes, they don't identify the original frame.
+The hardware's line of thinking seems to be "The meta frame is sent
+immediately after the trapped frame that triggered the action." (quote
+from https://www.nxp.com/docs/en/user-guide/UM10944.pdf).
 
+> I recommend forgetting about these meta frames.  Instead, read out the
+> time stamps over MDIO.
+>
+
+If there was any other way to retrieve RX timestamps I would have done
+it already.
+
+> Thanks,
+> Richard
