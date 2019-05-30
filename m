@@ -2,176 +2,164 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DD3C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8689C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68FA925B26
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:31:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559226690;
-	bh=t9FNMyuHdKiRj7lNbCFjHjSQ+ossF6GJx2uNN/K/Nqk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=c5jZyXFWz9yUAIY0YaOMGamwTwQ+iypZcrFFqG7R2l7gJP+bWVcIgEKmVUdJhEdPW
-	 7NlgPAavSXxY2dTau0yVBuyOEo3IW9kl3vpw2hF0T8wX1VcABszArZ4RJMfRrFj1XE
-	 fG+7wdwWQgEfaeiVETpdzbLOI11ZHlOOvjYAC2T8=
+	by mail.kernel.org (Postfix) with ESMTP id 8E43B25250
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:32:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="XTIIueYD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbfE3Ob3 (ORCPT
+        id S1727075AbfE3Ocl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 10:31:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43950 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726640AbfE3Ob2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 10:31:28 -0400
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F36F825AF8
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 14:31:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559226688;
-        bh=t9FNMyuHdKiRj7lNbCFjHjSQ+ossF6GJx2uNN/K/Nqk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=TanxQO2eHs1jPHFF+ujiL9pPGiOw95ZuR5Jw7GbGZDBmPGvKg79QrhOPYwjJpAmng
-         PtMth2Fx9PdPORT4hPl2E7d5uXJgqsrnQ7hrg1bYALSH368KM2xJ2LQojfMc+xL+DP
-         Wo16AAsUzlwoqhqdLm8zOLdmPi4jeJYk2N2rmrXs=
-Received: by mail-wm1-f42.google.com with SMTP id u78so4115685wmu.5
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 07:31:27 -0700 (PDT)
-X-Gm-Message-State: APjAAAWNrehOtFVTrPf0/r2c3LVyHmpBqnonzTXlfiyUt5HVoOwOVTu9
-        Qn0i8U0IrbM4M4SYz3AFau/rqId40zoQiBud+6WCGg==
-X-Google-Smtp-Source: APXvYqwORgGGojbciIM4fBZHz5YhRKo/2ULQ4NI80rS2FJvcS6cz6SrRTtIjmZI7sCvf88uhtvJhxWljXytA/bz2Lfc=
-X-Received: by 2002:a7b:c450:: with SMTP id l16mr2110219wmi.0.1559226686610;
- Thu, 30 May 2019 07:31:26 -0700 (PDT)
+        Thu, 30 May 2019 10:32:41 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:33103 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbfE3Oci (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 10:32:38 -0400
+Received: by mail-lf1-f65.google.com with SMTP id y17so5225965lfe.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 07:32:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vPRuBME96qBkv2+pdKHmfYwrxMsHLYg2XjuDskufNdA=;
+        b=XTIIueYDuIgusp3aH/O/Ki3sag5Wo0nfFBfQ5a1MquEch+jZpd5CxLU9S/Vcl1vcBP
+         +e/cbimawwKO5T7z6axW+B8doqpZbxx+w4JqnZ1W4X0pNfaJsiS6UNFI9ppHs0yLg8jA
+         MJZ1u1tJuNQZIt4PnlrR7EOBDumvSxEOcENCwrOeR4qPt82fOdeBPxdvUPRN3VzBm2zs
+         5jc3A6uBDJ0mhFfHdcm3oAtkX645YiV0lWSAfOFzGSySLJV6dm/2IM67xOOsUGKcQE4F
+         uUDgJNZPQukOMWkZfVyK5chCylXVcH6Ovs78CXXT6oZrsvd2YVkdsa1SS8uvVOuJDPIW
+         Q3Fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vPRuBME96qBkv2+pdKHmfYwrxMsHLYg2XjuDskufNdA=;
+        b=hx5gnnhTawbO8gL7CVcpYrBVpo2atqjhjNaU65EZSYApTPMsFMFtztKznPIuRg9sO1
+         LaSeU+GFJGao0yZyY/e5KsSvTkep8I6ExS7SPXEGeK0LrIONqpOefOm1eNVp0bsP0UpQ
+         K0QX7vLVSIuieCMM68l1/Pw+RuAWqAFXQA6CROoiiG+jf6pBLRwQNAOao164Ak0migZB
+         fec/V9Y7AqMorcjUWd7noGe846zIs6QQ5e2sjadGuxB5ehgr7G2QUEu00MBUDbnpRkYH
+         5VacTC3nC0oT3ElOOkOrolId1xb7mWWz4E9myl3akAiSR28Ct+xdusiFbKxzmlCMm1RW
+         Rd/w==
+X-Gm-Message-State: APjAAAXoy4a3FyL4GGA7xOOqwcrVhHFzOo6OWKLYS5qmCdCFM/hjiKYG
+        D7BGQXfPX+ji/BHVp7L2czrmVYPoRwG55RO5EbVj
+X-Google-Smtp-Source: APXvYqwqhEkdksMPTeb2g5KCjCxj8n1bQStwL7p4+8Wc9za8dt2GnyEk0aqQIiknzks4C0Ggoh9fezHY+u9LtZClqqc=
+X-Received: by 2002:ac2:4358:: with SMTP id o24mr2301162lfl.13.1559226755674;
+ Thu, 30 May 2019 07:32:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190524175458.GB365@linux.intel.com> <960B34DE67B9E140824F1DCDEC400C0F654E8E1D@ORSMSX116.amr.corp.intel.com>
- <CALCETrUw5sEr-MHPMU4CzEzkrejDs-JOThHB9Buhoxo5-rdpRw@mail.gmail.com>
- <20190524200333.GF365@linux.intel.com> <CALCETrUyAAhnQ+RUeN1L41TKj-vcD2CNt-FJ9siO=Zo6gvH1Aw@mail.gmail.com>
- <20190524224107.GJ365@linux.intel.com> <683B5E3D-AFB6-4B45-8D39-B00847312209@amacapital.net>
- <960B34DE67B9E140824F1DCDEC400C0F654E965F@ORSMSX116.amr.corp.intel.com>
- <CALCETrXXVMutX8eZk6nnkOAeS+Tj0sQd0FkW+wk6Rx8hQxCe6w@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F654E9824@ORSMSX116.amr.corp.intel.com>
- <20190528202407.GB13158@linux.intel.com> <285f279f-b500-27f0-ab42-fb1dbcc5ab18@tycho.nsa.gov>
- <960B34DE67B9E140824F1DCDEC400C0F654EB487@ORSMSX116.amr.corp.intel.com> <678a37af-797d-7bd5-a406-32548a270e3d@tycho.nsa.gov>
-In-Reply-To: <678a37af-797d-7bd5-a406-32548a270e3d@tycho.nsa.gov>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 30 May 2019 07:31:14 -0700
-X-Gmail-Original-Message-ID: <CALCETrWXB9fNNDH7gZxPTx05F78Og6K=ZtAr2aA++BDwY09Wbg@mail.gmail.com>
-Message-ID: <CALCETrWXB9fNNDH7gZxPTx05F78Og6K=ZtAr2aA++BDwY09Wbg@mail.gmail.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-To:     Stephen Smalley <sds@tycho.nsa.gov>
-Cc:     "Xing, Cedric" <cedric.xing@intel.com>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        William Roberts <bill.c.roberts@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
+References: <cover.1554732921.git.rgb@redhat.com> <423ed5e5c5e4ed7c3e26ac7d2bd7c267aaae777c.1554732921.git.rgb@redhat.com>
+ <CAHC9VhQ9t-mvJGNCzArjg+MTGNXcZbVrWV4=RUD5ML_bHqua1Q@mail.gmail.com> <20190530141555.qqcbasvyp7eokwjz@madcap2.tricolour.ca>
+In-Reply-To: <20190530141555.qqcbasvyp7eokwjz@madcap2.tricolour.ca>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Thu, 30 May 2019 10:32:24 -0400
+Message-ID: <CAHC9VhQ0miKFDegG-FTF6_y1nfOPpf69L8ONd3xgCZZxRrmo1w@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V6 09/10] audit: add support for containerid to
+ network namespaces
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
+        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
+        nhorman@tuxdriver.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all-
+On Thu, May 30, 2019 at 10:16 AM Richard Guy Briggs <rgb@redhat.com> wrote:
+>
+> On 2019-05-29 18:17, Paul Moore wrote:
+> > On Mon, Apr 8, 2019 at 11:41 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > >
+> > > Audit events could happen in a network namespace outside of a task
+> > > context due to packets received from the net that trigger an auditing
+> > > rule prior to being associated with a running task.  The network
+> > > namespace could be in use by multiple containers by association to the
+> > > tasks in that network namespace.  We still want a way to attribute
+> > > these events to any potential containers.  Keep a list per network
+> > > namespace to track these audit container identifiiers.
+> > >
+> > > Add/increment the audit container identifier on:
+> > > - initial setting of the audit container identifier via /proc
+> > > - clone/fork call that inherits an audit container identifier
+> > > - unshare call that inherits an audit container identifier
+> > > - setns call that inherits an audit container identifier
+> > > Delete/decrement the audit container identifier on:
+> > > - an inherited audit container identifier dropped when child set
+> > > - process exit
+> > > - unshare call that drops a net namespace
+> > > - setns call that drops a net namespace
+> > >
+> > > Please see the github audit kernel issue for contid net support:
+> > >   https://github.com/linux-audit/audit-kernel/issues/92
+> > > Please see the github audit testsuiite issue for the test case:
+> > >   https://github.com/linux-audit/audit-testsuite/issues/64
+> > > Please see the github audit wiki for the feature overview:
+> > >   https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
+> > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > > Acked-by: Neil Horman <nhorman@tuxdriver.com>
+> > > Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
+> > > ---
+> > >  include/linux/audit.h | 19 +++++++++++
+> > >  kernel/audit.c        | 88 +++++++++++++++++++++++++++++++++++++++++++++++++--
+> > >  kernel/nsproxy.c      |  4 +++
+> > >  3 files changed, 108 insertions(+), 3 deletions(-)
+> >
+> > ...
+> >
+> > > diff --git a/kernel/audit.c b/kernel/audit.c
+> > > index 6c742da66b32..996213591617 100644
+> > > --- a/kernel/audit.c
+> > > +++ b/kernel/audit.c
+> > > @@ -376,6 +384,75 @@ static struct sock *audit_get_sk(const struct net *net)
+> > >         return aunet->sk;
+> > >  }
+> > >
+> > > +void audit_netns_contid_add(struct net *net, u64 contid)
+> > > +{
+> > > +       struct audit_net *aunet;
+> > > +       struct list_head *contid_list;
+> > > +       struct audit_contid *cont;
+> > > +
+> > > +       if (!net)
+> > > +               return;
+> > > +       if (!audit_contid_valid(contid))
+> > > +               return;
+> > > +       aunet = net_generic(net, audit_net_id);
+> > > +       if (!aunet)
+> > > +               return;
+> > > +       contid_list = &aunet->contid_list;
+> > > +       spin_lock(&aunet->contid_list_lock);
+> > > +       list_for_each_entry_rcu(cont, contid_list, list)
+> > > +               if (cont->id == contid) {
+> > > +                       refcount_inc(&cont->refcount);
+> > > +                       goto out;
+> > > +               }
+> > > +       cont = kmalloc(sizeof(struct audit_contid), GFP_ATOMIC);
+> > > +       if (cont) {
+> > > +               INIT_LIST_HEAD(&cont->list);
+> >
+> > I thought you were going to get rid of this INIT_LIST_HEAD() call?
+>
+> I was intending to, and then Neil weighed in with this opinion:
+>
+>         https://www.redhat.com/archives/linux-audit/2019-April/msg00014.html
+>
+> If you feel that isn't important, please remove it.
 
-After an offline discussion with Sean yesterday, here are some updates
-to the user API parts of my proposal.
+Okay, I missed/forgot that, it seems like the right thing to do is to
+leave it as-is.
 
-Unfortunately, Sean convinced me that MAXPERM doesn't work the way I
-described it because, for SGX2, the enclave loader won't know at load
-time whether a given EAUG-ed page will ever be executed.  So here's an
-update.
-
-First, here are the requrements as I see them, where EXECUTE, EXECMOD,
-and EXECMEM could be substituted with other rules at the LSM's
-discretion:
-
- - You can create a WX or RWX mapping if and only if you have EXECMEM.
-
- - To create an X mapping of an enclave page that has ever been W, you
-need EXECMOD.
-
- - To create an X mapping of an enclave page that came from EADD, you
-need EXECUTE on the source file.  Optionally, we could also permit
-this if you have EXECMOD.
-
-And I have two design proposals.  One is static and one is dynamic.
-To implement either one, we will probably need a new .may_mprotect vm
-operation, and that operation can call an LSM hook.  Or we can give
-LSMs a way to detect that a given vm_area_struct is an enclave.  As I
-see it, this is an implementation detail that is certainly solveable.
-
-
-Static proposal:
-
-
-EADD takes an execute_intent flag.  It calls a new hook:
-
-  int security_enclave_load(struct vm_area_struct *source, bool execute_intent);
-
-This hook will fail if execute_intent==true and the caller has neither
-EXECUTE, EXECMOD, nor EXECMEM.
-
-EAUG sets execute_intent = false.
-
-EINIT takes a sigstruct pointer.  SGX can (when initially upstreamed
-or later on once there's demand) call a new hook:
-
-  security_enclave_init(struct sigstruct *sigstruct, struct
-vm_area_struct *source);
-
-mmap() and mprotect() will require EXECMEM to create WX or RWX
-mappings.  They will require EXECMOD to create RX or X mappings of an
-execute_intent==false page.  They require no permissions in the other
-cases.
-
-
-Dynamic proposal:
-
-
-EADD does not take any special flags.  It does something like this internally:
-
-  bool execute_intent = true;
-  int security_enclave_load(struct vm_area_struct *source, bool
-*execute_intent);
-
-The implementation of security_enclave_load() may set *execute_intent to false.
-The driver records execute_intent after the LSM is done.
-
-mmap() and mprotect() will require EXECMEM to create WX or RWX
-mappings.  They will require EXECMOD to create RX or X mappings of an
-execute_intent==false page.  They require no permissions in the other
-cases.
-
-
-
-A benefit of the static proposal is that audit failures due to a lack
-of EXECUTE permission are easy to implement and to understand in the
-lods.  With the dynamic model, we can only really audit the lack of
-EXECMOD or EXECMEM.  A benefit of the dynamic model is that we hide
-what is arguably a decently large wart from the API.
+-- 
+paul moore
+www.paul-moore.com
