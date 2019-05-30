@@ -2,161 +2,103 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB20C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 02:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E54C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 02:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0199242E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 02:41:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="e7IC8g7j";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="UIhRzLqN"
+	by mail.kernel.org (Postfix) with ESMTP id C10B524393
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 02:42:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbfE3ClN (ORCPT
+        id S1726634AbfE3Cme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 22:41:13 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:45538 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbfE3ClN (ORCPT
+        Wed, 29 May 2019 22:42:34 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36154 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726065AbfE3Cme (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 22:41:13 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 7A667604D4; Thu, 30 May 2019 02:41:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559184072;
-        bh=KZzN8mKGdKvkpGucs4JphPlo8n4hbN/Gg9urLIAqbEc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=e7IC8g7jbEZyR+Oy5Cm7ksMUi1pUaG272SUfx/BrYxsoB8zBP32jJTpGY+o1dHHwU
-         uzF7hy0dmzcIdUNf23Qvv9LZLKvVTXzdTaYdMFJUwm9TF7j9KxIa+h2rOUUMY9BHv5
-         2NBkurXSfWtu9LjP6f2HytphCOQxLOvd/VaKdkKI=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 973AD604D4;
-        Thu, 30 May 2019 02:41:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559184071;
-        bh=KZzN8mKGdKvkpGucs4JphPlo8n4hbN/Gg9urLIAqbEc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=UIhRzLqN0mLLoPvzy2/rp0Vg6yv0YHzt4vL33AmZl1rDVmProV9LOCUm21CUs2Xp8
-         otrP0LuFQLkcNW/hqQwsDT5WH152PerZEaXcNYrBeTHyulj0zamuhooukp10Q/+Dz0
-         2inymFXuNAeNo49NrIZz0B1JyyeSCvC4vJZjN+FQ=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 30 May 2019 10:41:11 +0800
-From:   tengfeif@codeaurora.org
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com,
-        anshuman.khandual@arm.com, andreyknvl@google.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tengfei@codeaurora.org
-Subject: Re: [PATCH] arm64: break while loop if task had been rescheduled
-In-Reply-To: <20190524104148.GB12796@lakrids.cambridge.arm.com>
-References: <1558430404-4840-1-git-send-email-tengfeif@codeaurora.org>
- <20190524104148.GB12796@lakrids.cambridge.arm.com>
-Message-ID: <665641d42e21da3466693ac49ac5d40e@codeaurora.org>
-X-Sender: tengfeif@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+        Wed, 29 May 2019 22:42:34 -0400
+Received: by mail-pg1-f196.google.com with SMTP id a3so1068650pgb.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 19:42:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=KpcFXbFBwLxCGyy/Jk49fis3KZuLGYD4HsSFk6V42fk=;
+        b=SwDEMuVWt+wXYfUu4gJ15OAEZ7+G3FIIa+bPjk8FIlYoqpNS3i1o9uOLJEPbzLw7bi
+         YtVjPcR3FgTtg6vJaFWevXMAplzwPeodmX6A40w2ZIhM6KxYwRc21OUbXiF5UGTWnw4h
+         doAVBe94v6zRig/xZFF7R8Q8c2ZS7JAVUW7lf6o8AbcrRfAwgK99yEV3DGtqlsmnhLPJ
+         cyfkNXScLB4zV56msk/FryHWDWrAw7YkWKBdLG5Nig/Kh6JxwPAH0u6zLCPM+PrW/cBg
+         IvjyxhY9B/QfcU1J2pGRXJ6LA6MD4E+5zrV0i4GWEoP0w5GGNA74m0dquu/4bV8ZlO1b
+         7mCg==
+X-Gm-Message-State: APjAAAXh44fa5nXzglVWYscL5EDJXTJ9XBrpooo6KNBvXxusPFen59A/
+        W6AEPpz9620dIbGedMNQojf7dg==
+X-Google-Smtp-Source: APXvYqyMgSr8zbcysyqaP52vbPviSt9ykqRZ6sLQ4REBy1M6NY8HNtd2bruAoXR44eoyah/GzDNUJA==
+X-Received: by 2002:a62:ea0a:: with SMTP id t10mr1228321pfh.236.1559184153533;
+        Wed, 29 May 2019 19:42:33 -0700 (PDT)
+Received: from localhost ([12.206.222.5])
+        by smtp.gmail.com with ESMTPSA id b90sm363054pjc.0.2019.05.29.19.42.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 May 2019 19:42:32 -0700 (PDT)
+Date:   Wed, 29 May 2019 19:42:32 -0700 (PDT)
+X-Google-Original-Date: Wed, 29 May 2019 19:42:12 PDT (-0700)
+Subject:     Re: [PATCH 2/2] net: macb: Add support for SiFive FU540-C000
+In-Reply-To: <20190524134847.GF2979@lunn.ch>
+CC:     yash.shah@sifive.com, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, aou@eecs.berkeley.edu,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        nicolas.ferre@microchip.com,
+        Sachin Ghadi <sachin.ghadi@sifive.com>, robh+dt@kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>, ynezz@true.cz,
+        linux-riscv@lists.infradead.org, davem@davemloft.net
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     andrew@lunn.ch
+Message-ID: <mhng-c7fba225-8035-4808-bdd6-bc05da5d2674@palmer-si-x1e>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-05-24 18:41, Mark Rutland wrote:
-> On Tue, May 21, 2019 at 05:20:04PM +0800, Tengfei Fan wrote:
->> While printing a task's backtrace and this task isn't
->> current task, it is possible that task's fp and fp+8
->> have the same value, so cannot break the while loop.
->> This can break while loop if this task had been
->> rescheduled during print this task's backtrace.
-> 
-> There are a few cases where backtracing can get stuck in an infinite
-> loop. I'd attempted to address that more generally in my
-> arm64/robust-stacktrace branch [1].
-> 
-> Looking at tsk->state here is inherently racy, and doesn't solve the
-> general case, so I'd prefer to avoid that.
-> 
-> Do my patches help you here? If so, I'm happy to rebase those to
-> v5.2-rc1 and repost.
+On Fri, 24 May 2019 06:48:47 PDT (-0700), andrew@lunn.ch wrote:
+> On Fri, May 24, 2019 at 10:22:06AM +0530, Yash Shah wrote:
+>> On Thu, May 23, 2019 at 8:24 PM Andrew Lunn <andrew@lunn.ch> wrote:
+>> >
+>> > > +static int fu540_macb_tx_set_rate(struct clk_hw *hw, unsigned long rate,
+>> > > +                               unsigned long parent_rate)
+>> > > +{
+>> > > +     rate = fu540_macb_tx_round_rate(hw, rate, &parent_rate);
+>> > > +     iowrite32(rate != 125000000, mgmt->reg);
+>> >
+>> > That looks odd. Writing the result of a comparison to a register?
+>>
+>> The idea was to write "1" to the register if the value of rate is
+>> anything else than 125000000.
+>
+> I'm not a language lawyer. Is it guaranteed that an expression like
+> this returns 1? Any value !0 is true, so maybe it actually returns 42?
 
-I think your arm64/robust-stacktrace branch [1] can cover my issue, 
-please
-rebase and reposet
+From Stack Overflow: https://stackoverflow.com/questions/18097922/return-value-of-operator-in-c
 
-Thanks,
-Tengfei Fan
+"C11(ISO/IEC 9899:201x) §6.5.8 Relational operators
 
-> 
-> Thanks,
-> Mark.
-> 
-> [1]
-> https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/log/?h=arm64/robust-stacktrace
-> 
->> 
->> Signed-off-by: Tengfei Fan <tengfeif@codeaurora.org>
->> ---
->>  arch/arm64/kernel/traps.c | 23 +++++++++++++++++++++++
->>  1 file changed, 23 insertions(+)
->> 
->> diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
->> index 2975598..9df6e02 100644
->> --- a/arch/arm64/kernel/traps.c
->> +++ b/arch/arm64/kernel/traps.c
->> @@ -103,6 +103,9 @@ void dump_backtrace(struct pt_regs *regs, struct 
->> task_struct *tsk)
->>  {
->>  	struct stackframe frame;
->>  	int skip = 0;
->> +	long cur_state = 0;
->> +	unsigned long cur_sp = 0;
->> +	unsigned long cur_fp = 0;
->> 
->>  	pr_debug("%s(regs = %p tsk = %p)\n", __func__, regs, tsk);
->> 
->> @@ -127,6 +130,9 @@ void dump_backtrace(struct pt_regs *regs, struct 
->> task_struct *tsk)
->>  		 */
->>  		frame.fp = thread_saved_fp(tsk);
->>  		frame.pc = thread_saved_pc(tsk);
->> +		cur_state = tsk->state;
->> +		cur_sp = thread_saved_sp(tsk);
->> +		cur_fp = frame.fp;
->>  	}
->>  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
->>  	frame.graph = 0;
->> @@ -134,6 +140,23 @@ void dump_backtrace(struct pt_regs *regs, struct 
->> task_struct *tsk)
->> 
->>  	printk("Call trace:\n");
->>  	do {
->> +		if (tsk != current && (cur_state != tsk->state
->> +			/*
->> +			 * We would not be printing backtrace for the task
->> +			 * that has changed state from uninterruptible to
->> +			 * running before hitting the do-while loop but after
->> +			 * saving the current state. If task is in running
->> +			 * state before saving the state, then we may print
->> +			 * wrong call trace or end up in infinite while loop
->> +			 * if *(fp) and *(fp+8) are same. While the situation
->> +			 * will stop print when that task schedule out.
->> +			 */
->> +			|| cur_sp != thread_saved_sp(tsk)
->> +			|| cur_fp != thread_saved_fp(tsk))) {
->> +			printk("The task:%s had been rescheduled!\n",
->> +				tsk->comm);
->> +			break;
->> +		}
->>  		/* skip until specified stack frame */
->>  		if (!skip) {
->>  			dump_backtrace_entry(frame.pc);
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
->> Forum,
->> a Linux Foundation Collaborative Project
->> 
+Each of the operators < (less than), > (greater than), <= (less than or equal
+to), and >= (greater than or equal to) shall yield 1 if the specified relation
+is true and 0 if it is false. The result has type int."
+
+>> To make it easier to read, I will change this to below:
+>>     - iowrite32(rate != 125000000, mgmt->reg);
+>>     + if (rate != 125000000)
+>>     +     iowrite32(1, mgmt->reg);
+>>     + else
+>>     +     iowrite32(0, mgmt->reg);
+>>
+>> Hope that's fine. Thanks for your comment
+>
+> Yes, that is good.
+>
+>      Andrew
