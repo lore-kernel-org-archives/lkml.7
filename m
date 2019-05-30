@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 496F5C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B42C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DBA624ECF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:57:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9076824ED3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:57:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188624;
-	bh=vraa4DO0CKAQ0cePnddNicGGHZfeaTl86+HfTCh+TJA=;
+	s=default; t=1559188629;
+	bh=na4CyxEsEuxP5NhcIN35foFKL/ChBDwaX/t8mPmZ248=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZaSLyQ3VCvn+eYh2QInS/8ONWv107uANN5BK4AZ+mBwa7J/JINo6WJjrRGB2+Xc8P
-	 7d3iI7YnR8I9GVu6yUiF6J/h4NkV5LJALjMFUTw/561RGRMEsPY5by9Uxk2JX58GPj
-	 ieRbBI3gPvRGAf5E6u2U8ZYe9pKB6n0qqcium9tU=
+	b=bNQFt/n67hy86UfXtoPLD1SuRvWzfNuQhFMDbNoSwnlXB8rNphA7jyu6jE7wWS5sI
+	 6q9vuARsTiwSeeh5uvsGssUzuPDUs9eQrVV4j00A2hRhOOr0QLAcYyQcihijs1+gYO
+	 eqZBXMCAMwIj9bO7LE/hDf3X+pNC40OynF69W79U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387918AbfE3D5D (ORCPT
+        id S2387972AbfE3D5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:57:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52636 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:57:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731738AbfE3DSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:53 -0400
+        id S1731732AbfE3DSv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:51 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B300B2480D;
-        Thu, 30 May 2019 03:18:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDAD124777;
+        Thu, 30 May 2019 03:18:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186332;
-        bh=vraa4DO0CKAQ0cePnddNicGGHZfeaTl86+HfTCh+TJA=;
+        s=default; t=1559186330;
+        bh=na4CyxEsEuxP5NhcIN35foFKL/ChBDwaX/t8mPmZ248=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DYJDZcL++IUImmAe8pLxgZKOfkrvm6/6kWf9NnBZ49GeuICSBpiyNi7llIIBQ41gl
-         fPm2cti1py0qpMWq3H/nD38vSNHV6PVaAboRjwyyUG0gugGtVYyxedlGPklH8IZho9
-         SGJJSJQb+N8YEh4DavgLfuwnqogE/VHNi03a0ZLg=
+        b=SXHgXrkhhjSynd1kp7+l0Bte2ar8fs6wBOkA3m8tK9CU8VXBT6iPLLAjTRNsLZ92j
+         N/o4TGSlwusAMDu9jULjs42OHy0jRPEYl698nfMh7YhVcTOyKykJXyS6V5qckbyEfJ
+         pPdtZqKAnnLcoBTvkafeWyu4y96vTK1aUd5q7ruQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 052/193] ACPI / property: fix handling of data_nodes in acpi_get_next_subnode()
-Date:   Wed, 29 May 2019 20:05:06 -0700
-Message-Id: <20190530030456.821909111@linuxfoundation.org>
+Subject: [PATCH 4.14 049/193] ASoC: imx: fix fiq dependencies
+Date:   Wed, 29 May 2019 20:05:03 -0700
+Message-Id: <20190530030456.508767576@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -62,53 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 23583f7795025e3c783b680d906509366b0906ad ]
+[ Upstream commit ea751227c813ab833609afecfeedaf0aa26f327e ]
 
-When the DSDT tables expose devices with subdevices and a set of
-hierarchical _DSD properties, the data returned by
-acpi_get_next_subnode() is incorrect, with the results suggesting a bad
-pointer assignment. The parser works fine with device_nodes or
-data_nodes, but not with a combination of the two.
+During randconfig builds, I occasionally run into an invalid configuration
+of the freescale FIQ sound support:
 
-The problem is traced to an invalid pointer used when jumping from
-handling device_nodes to data nodes. The existing code looks for data
-nodes below the last subdevice found instead of the common root. Fix
-by forcing the acpi_device pointer to be derived from the same fwnode
-for the two types of subnodes.
+WARNING: unmet direct dependencies detected for SND_SOC_IMX_PCM_FIQ
+  Depends on [m]: SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_IMX_SOC [=m]
+  Selected by [y]:
+  - SND_SOC_FSL_SPDIF [=y] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_IMX_SOC [=m]!=n && (MXC_TZIC [=n] || MXC_AVIC [=y])
 
-This same problem of handling device and data nodes was already fixed
-in a similar way by 'commit bf4703fdd166 ("ACPI / property: fix data
-node parsing in acpi_get_next_subnode()")' but broken later by 'commit
-34055190b19 ("ACPI / property: Add fwnode_get_next_child_node()")', so
-this should probably go to linux-stable all the way to 4.12
+sound/soc/fsl/imx-ssi.o: In function `imx_ssi_remove':
+imx-ssi.c:(.text+0x28): undefined reference to `imx_pcm_fiq_exit'
+sound/soc/fsl/imx-ssi.o: In function `imx_ssi_probe':
+imx-ssi.c:(.text+0xa64): undefined reference to `imx_pcm_fiq_init'
 
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+The Kconfig warning is a result of the symbol being defined inside of
+the "if SND_IMX_SOC" block, and is otherwise harmless. The link error
+is more tricky and happens with SND_SOC_IMX_SSI=y, which may or may not
+imply FIQ support. However, if SND_SOC_FSL_SSI is set to =m at the same
+time, that selects SND_SOC_IMX_PCM_FIQ as a loadable module dependency,
+which then causes a link failure from imx-ssi.
+
+The solution here is to make SND_SOC_IMX_PCM_FIQ built-in whenever
+one of its potential users is built-in.
+
+Fixes: ff40260f79dc ("ASoC: fsl: refine DMA/FIQ dependencies")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/property.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ sound/soc/fsl/Kconfig | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-index e26ea209b63ef..7a3194e2e0906 100644
---- a/drivers/acpi/property.c
-+++ b/drivers/acpi/property.c
-@@ -943,6 +943,14 @@ struct fwnode_handle *acpi_get_next_subnode(const struct fwnode_handle *fwnode,
- 		const struct acpi_data_node *data = to_acpi_data_node(fwnode);
- 		struct acpi_data_node *dn;
+diff --git a/sound/soc/fsl/Kconfig b/sound/soc/fsl/Kconfig
+index 4087deeda7cf9..2523b00659908 100644
+--- a/sound/soc/fsl/Kconfig
++++ b/sound/soc/fsl/Kconfig
+@@ -173,16 +173,17 @@ config SND_MPC52xx_SOC_EFIKA
  
-+		/*
-+		 * We can have a combination of device and data nodes, e.g. with
-+		 * hierarchical _DSD properties. Make sure the adev pointer is
-+		 * restored before going through data nodes, otherwise we will
-+		 * be looking for data_nodes below the last device found instead
-+		 * of the common fwnode shared by device_nodes and data_nodes.
-+		 */
-+		adev = to_acpi_device_node(fwnode);
- 		if (adev)
- 			head = &adev->data.subnodes;
- 		else if (data)
+ endif # SND_POWERPC_SOC
+ 
++config SND_SOC_IMX_PCM_FIQ
++	tristate
++	default y if SND_SOC_IMX_SSI=y && (SND_SOC_FSL_SSI=m || SND_SOC_FSL_SPDIF=m) && (MXC_TZIC || MXC_AVIC)
++	select FIQ
++
+ if SND_IMX_SOC
+ 
+ config SND_SOC_IMX_SSI
+ 	tristate
+ 	select SND_SOC_FSL_UTILS
+ 
+-config SND_SOC_IMX_PCM_FIQ
+-	tristate
+-	select FIQ
+-
+ comment "SoC Audio support for Freescale i.MX boards:"
+ 
+ config SND_MXC_SOC_WM1133_EV1
 -- 
 2.20.1
 
