@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D69CC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF63AC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E71F425AFF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:44:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B927C25B24
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:45:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191498;
-	bh=i1++ugkGFy9cTN8Pw+YwfRoCFDrSB4l8XHeSdcQnPQ4=;
+	s=default; t=1559191506;
+	bh=dFb6AU3j1hRuep8QAfyqSFlBYLisUFvTepGXb2ad46g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YVLdP+QVjdanJfniIo853pCpZQuwWzWWtd9BOR8/8xrhnN/vtDNPwa2OghweEuek1
-	 TCXD8SIkcE5+Nusjbra4TeIJc9s5PB+lfvds6gaEcxbKOxlgR7mxdTqcfEVfvlVj5q
-	 3axdv0Lvu9My9TjaSTQm84dwsKUfOPTYYPS6tjos=
+	b=P0a73Vbh868o3yH54WuHphec7AJS/V0I2mKNJwaCgysQwef0n59mLu0vn8Fvrfhxc
+	 1Oh9tBUVflqmD6uyPhNRDUX+ts8RGbSXTZ2BjdcoEKU74WzFdSuDjEJjtm6gPqBgL3
+	 0xF8jIcPMjOjCyKZulu+2IS0sPS7dBb0CdWoc7FQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730312AbfE3Eo4 (ORCPT
+        id S1732562AbfE3EpF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:44:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52788 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:45:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728771AbfE3DL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:11:59 -0400
+        id S1728749AbfE3DL5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:57 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2ECC24481;
-        Thu, 30 May 2019 03:11:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CACA244E8;
+        Thu, 30 May 2019 03:11:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185919;
-        bh=i1++ugkGFy9cTN8Pw+YwfRoCFDrSB4l8XHeSdcQnPQ4=;
+        s=default; t=1559185916;
+        bh=dFb6AU3j1hRuep8QAfyqSFlBYLisUFvTepGXb2ad46g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cdbp2w4UUQGtCFw6xJl1P+9OdGnec5iLvphhsABkVp6CITqukx1O0I/MgZJel0Si9
-         G5+MlZL2r2DbW0w9R5OYr5Ng2l8yf2dm7TSrr8/VMPw3gJbhvIs6IrShdA4YS9q1mU
-         gWiY5HNHHJIAcuYJkLnZAQkB91hpE8coTuKMjaGE=
+        b=CaLp9V0bKTPrjVAouRgi9/ucpkr8Ff+dwQDWn0nS3CSo+xxBh9m7GVJIucl3aiE4J
+         wCvv+g0L78Thq3PaPdshkZixVtmHBzvMZ886+UifkcVOIXwSILMDSkvN1+zdDoFyMm
+         hsQQcEGADtts5aPDari4F+fylUMOI9bwLjTeKkio=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Kees Cook <keescook@chromium.org>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org,
+        Thierry Escande <thierry.escande@linaro.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 304/405] overflow: Fix -Wtype-limits compilation warnings
-Date:   Wed, 29 May 2019 20:05:02 -0700
-Message-Id: <20190530030556.192614956@linuxfoundation.org>
+Subject: [PATCH 5.1 300/405] misc: fastrpc: Fix a possible double free
+Date:   Wed, 29 May 2019 20:04:58 -0700
+Message-Id: <20190530030556.000648592@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -62,74 +61,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit dc7fe518b0493faa0af0568d6d8c2a33c00f58d0 ]
+[ Upstream commit b49f6d83e290f17e20f4e5cf31288d3bb4955ea6 ]
 
-Attempt to use check_shl_overflow() with inputs of unsigned type
-produces the following compilation warnings.
+This patch fixes the error exit path of fastrpc_init_create_process().
+If the DMA allocation or the DSP invoke fails the fastrpc_map was freed
+but not removed from the mapping list leading to a double free once the
+mapping list is emptied in fastrpc_device_release().
 
-drivers/infiniband/hw/mlx5/qp.c: In function _set_user_rq_size_:
-./include/linux/overflow.h:230:6: warning: comparison of unsigned
-expression >= 0 is always true [-Wtype-limits]
-   _s >= 0 && _s < 8 * sizeof(*d) ? _s : 0;  \
-      ^~
-drivers/infiniband/hw/mlx5/qp.c:5820:6: note: in expansion of macro _check_shl_overflow_
-  if (check_shl_overflow(rwq->wqe_count, rwq->wqe_shift,
-&rwq->buf_size))
-      ^~~~~~~~~~~~~~~~~~
-./include/linux/overflow.h:232:26: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
-  (_to_shift != _s || *_d < 0 || _a < 0 ||   \
-                          ^
-drivers/infiniband/hw/mlx5/qp.c:5820:6: note: in expansion of macro _check_shl_overflow_
-  if (check_shl_overflow(rwq->wqe_count, rwq->wqe_shift, &rwq->buf_size))
-      ^~~~~~~~~~~~~~~~~~
-./include/linux/overflow.h:232:36: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
-  (_to_shift != _s || *_d < 0 || _a < 0 ||   \
-                                    ^
-drivers/infiniband/hw/mlx5/qp.c:5820:6: note: in expansion of macro _check_shl_overflow_
-  if (check_shl_overflow(rwq->wqe_count, rwq->wqe_shift,&rwq->buf_size))
-      ^~~~~~~~~~~~~~~~~~
-
-Fixes: 0c66847793d1 ("overflow.h: Add arithmetic shift helper")
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Acked-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+[srinivas kandagatla]: Cleaned up error path labels and reset init mem
+to NULL after free
+Fixes: d73f71c7c6ee("misc: fastrpc: Add support for create remote init process")
+Signed-off-by: Thierry Escande <thierry.escande@linaro.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/overflow.h | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/misc/fastrpc.c | 31 ++++++++++++++++++++-----------
+ 1 file changed, 20 insertions(+), 11 deletions(-)
 
-diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-index 40b48e2133cb8..15eb85de92269 100644
---- a/include/linux/overflow.h
-+++ b/include/linux/overflow.h
-@@ -36,6 +36,12 @@
- #define type_max(T) ((T)((__type_half_max(T) - 1) + __type_half_max(T)))
- #define type_min(T) ((T)((T)-type_max(T)-(T)1))
+diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+index a10937652ca73..35be1cc11dd85 100644
+--- a/drivers/misc/fastrpc.c
++++ b/drivers/misc/fastrpc.c
+@@ -856,12 +856,12 @@ static int fastrpc_init_create_process(struct fastrpc_user *fl,
  
-+/*
-+ * Avoids triggering -Wtype-limits compilation warning,
-+ * while using unsigned data types to check a < 0.
-+ */
-+#define is_non_negative(a) ((a) > 0 || (a) == 0)
-+#define is_negative(a) (!(is_non_negative(a)))
+ 	if (copy_from_user(&init, argp, sizeof(init))) {
+ 		err = -EFAULT;
+-		goto bail;
++		goto err;
+ 	}
  
- #ifdef COMPILER_HAS_GENERIC_BUILTIN_OVERFLOW
- /*
-@@ -227,10 +233,10 @@
- 	typeof(d) _d = d;						\
- 	u64 _a_full = _a;						\
- 	unsigned int _to_shift =					\
--		_s >= 0 && _s < 8 * sizeof(*d) ? _s : 0;		\
-+		is_non_negative(_s) && _s < 8 * sizeof(*d) ? _s : 0;	\
- 	*_d = (_a_full << _to_shift);					\
--	(_to_shift != _s || *_d < 0 || _a < 0 ||			\
--		(*_d >> _to_shift) != _a);				\
-+	(_to_shift != _s || is_negative(*_d) || is_negative(_a) ||	\
-+	(*_d >> _to_shift) != _a);					\
- })
+ 	if (init.filelen > INIT_FILELEN_MAX) {
+ 		err = -EINVAL;
+-		goto bail;
++		goto err;
+ 	}
  
- /**
+ 	inbuf.pgid = fl->tgid;
+@@ -875,17 +875,15 @@ static int fastrpc_init_create_process(struct fastrpc_user *fl,
+ 	if (init.filelen && init.filefd) {
+ 		err = fastrpc_map_create(fl, init.filefd, init.filelen, &map);
+ 		if (err)
+-			goto bail;
++			goto err;
+ 	}
+ 
+ 	memlen = ALIGN(max(INIT_FILELEN_MAX, (int)init.filelen * 4),
+ 		       1024 * 1024);
+ 	err = fastrpc_buf_alloc(fl, fl->sctx->dev, memlen,
+ 				&imem);
+-	if (err) {
+-		fastrpc_map_put(map);
+-		goto bail;
+-	}
++	if (err)
++		goto err_alloc;
+ 
+ 	fl->init_mem = imem;
+ 	args[0].ptr = (u64)(uintptr_t)&inbuf;
+@@ -921,13 +919,24 @@ static int fastrpc_init_create_process(struct fastrpc_user *fl,
+ 
+ 	err = fastrpc_internal_invoke(fl, true, FASTRPC_INIT_HANDLE,
+ 				      sc, args);
++	if (err)
++		goto err_invoke;
+ 
+-	if (err) {
++	kfree(args);
++
++	return 0;
++
++err_invoke:
++	fl->init_mem = NULL;
++	fastrpc_buf_free(imem);
++err_alloc:
++	if (map) {
++		spin_lock(&fl->lock);
++		list_del(&map->node);
++		spin_unlock(&fl->lock);
+ 		fastrpc_map_put(map);
+-		fastrpc_buf_free(imem);
+ 	}
+-
+-bail:
++err:
+ 	kfree(args);
+ 
+ 	return err;
 -- 
 2.20.1
 
