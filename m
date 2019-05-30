@@ -2,77 +2,78 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78263C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F83C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 581822397F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:12:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E758923BC5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:14:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727758AbfE3QMY (ORCPT
+        id S1727356AbfE3QOA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 12:12:24 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:51786 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726320AbfE3QMX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 12:12:23 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hWNf9-0001rC-CV; Thu, 30 May 2019 16:12:19 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Anthony Koo <anthony.koo@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] drm/amd/display: remove redundant assignment to status
-Date:   Thu, 30 May 2019 17:12:19 +0100
-Message-Id: <20190530161219.2507-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 30 May 2019 12:14:00 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35566 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725934AbfE3QN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 12:13:59 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5F2A6C057E7D;
+        Thu, 30 May 2019 16:13:54 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id D84D75C22E;
+        Thu, 30 May 2019 16:13:49 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Thu, 30 May 2019 18:13:53 +0200 (CEST)
+Date:   Thu, 30 May 2019 18:13:48 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     "'Eric W. Biederman'" <ebiederm@xmission.com>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Al Viro <viro@ZenIV.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "arnd@arndb.de" <arnd@arndb.de>, "dbueso@suse.de" <dbueso@suse.de>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "dave@stgolabs.net" <dave@stgolabs.net>,
+        "e@80x24.org" <e@80x24.org>,
+        "jbaron@akamai.com" <jbaron@akamai.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-aio@kvack.org" <linux-aio@kvack.org>,
+        "omar.kilani@gmail.com" <omar.kilani@gmail.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: pselect/etc semantics
+Message-ID: <20190530161348.GJ22536@redhat.com>
+References: <20190522032144.10995-1-deepa.kernel@gmail.com>
+ <20190529161157.GA27659@redhat.com>
+ <87woi8rt96.fsf@xmission.com>
+ <9150b8cb8123426492a82e193f45229e@AcuMS.aculab.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9150b8cb8123426492a82e193f45229e@AcuMS.aculab.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Thu, 30 May 2019 16:13:59 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On 05/30, David Laight wrote:
+>
+> 4) As an optimisation a signal that arrives after the timer
+>    expires, but before the mask is restored can be 'deemed'
+>    to have happened before the timeout expired and EINTR
+>    returned.
 
-The variable status is initialized with a value that is never read
-and status is reassigned several statements later. This initialization
-is redundant and can be removed.
+This is what pselect/ppoll already does.
 
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-index 65d6caedbd82..cf6166a1be53 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-@@ -2367,7 +2367,7 @@ static bool retrieve_link_cap(struct dc_link *link)
- 	union down_stream_port_count down_strm_port_count;
- 	union edp_configuration_cap edp_config_cap;
- 	union dp_downstream_port_present ds_port = { 0 };
--	enum dc_status status = DC_ERROR_UNEXPECTED;
-+	enum dc_status status;
- 	uint32_t read_dpcd_retry_cnt = 3;
- 	int i;
- 	struct dp_sink_hw_fw_revision dp_hw_fw_revision;
--- 
-2.20.1
+Oleg.
 
