@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87BABC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C91ADC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 539B224A72
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9910B24A77
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186792;
-	bh=7JlLM6tAZcPI2nrMLtz6FPHVWc1dRZ5YfIQnWq+twzg=;
+	s=default; t=1559186796;
+	bh=QP1POT/RpiZp1yNC2eCRKp00tyzQRi3oVWsk3RE0y2k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pOjDXM0dojICLSy8K+YbHUSzErjz/ZgzyVKILImi7jJQYuBflg3e0fjzaQMVNvpm6
-	 GJdOdba3QH/Qa0n2V5RBgzzIZajGh905eRgNmXM62qQYpmmZ1flO3vHysymyUWAEI8
-	 MGUNOXQ7BJtTuke8tdAjO27/k7vMiO21rw/uMLGE=
+	b=TKJmM01FAzNKqjR2XVuKvwkA8tmFCkHo7mzZujRgWVjWLvl4DhlGBaP16HLSn9bFF
+	 ISKa06HLcjHKMfoYwtseSrV4/YwDRYiKOe1ti01zTpnWFGjKPNA+E3VrvbYoc5MmNm
+	 URYuDB36Euvg02GHe1pnZCoPnb+q1/oFa8yhivC4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387718AbfE3D0b (ORCPT
+        id S2387734AbfE3D0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:26:31 -0400
+        Wed, 29 May 2019 23:26:35 -0400
 Received: from mail.kernel.org ([198.145.29.99]:53140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731747AbfE3DS4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:56 -0400
+        id S1731755AbfE3DS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:58 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD1822479B;
-        Thu, 30 May 2019 03:18:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AAE424818;
+        Thu, 30 May 2019 03:18:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186335;
-        bh=7JlLM6tAZcPI2nrMLtz6FPHVWc1dRZ5YfIQnWq+twzg=;
+        s=default; t=1559186337;
+        bh=QP1POT/RpiZp1yNC2eCRKp00tyzQRi3oVWsk3RE0y2k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VOZyDFOajCXIjQNwELT0eHcuGP1s87wDqiQFh3PV9Ad9c2kAWK1dvrsIMdhETH23C
-         YzFtFKOyk17cENtOiZgUDKIQ70a3AxicuDj94QyZLljJHnne0kUdwLy57Twi5sP15+
-         RQxGKdm4prtzwCSdBC+ARUG5WGYB17DVtWMuRu9I=
+        b=q7zk8o1wJbbq6NW3PtIu2EKAw8pzCLVzJ+FtiFKeC16iA+tWZtd/BmaN+2+qEgnrd
+         BLbzZaYFrks8Trq6MAEiASubAYx086WgMQf8Qro95n7bCRDt+LXUQDGJkKIRr/IYaV
+         /T+HjALI7vw7iKVv2t8rXOduzY+bLUhMaAOV+1qI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
-        Giridhar Malavali <gmalavali@marvell.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 057/193] scsi: qla2xxx: Fix abort handling in tcm_qla2xxx_write_pending()
-Date:   Wed, 29 May 2019 20:05:11 -0700
-Message-Id: <20190530030457.456710099@linuxfoundation.org>
+Subject: [PATCH 4.14 060/193] btrfs: fix panic during relocation after ENOSPC before writeback happens
+Date:   Wed, 29 May 2019 20:05:14 -0700
+Message-Id: <20190530030457.835382127@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -62,40 +61,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e209783d66bca04b5fce4429e59338517ffc1a0b ]
+[ Upstream commit ff612ba7849964b1898fd3ccd1f56941129c6aab ]
 
-Implementations of the .write_pending() callback functions must guarantee
-that an appropriate LIO core callback function will be called immediately or
-at a later time.  Make sure that this guarantee is met for aborted SCSI
-commands.
+We've been seeing the following sporadically throughout our fleet
 
-[mkp: typo]
+panic: kernel BUG at fs/btrfs/relocation.c:4584!
+netversion: 5.0-0
+Backtrace:
+ #0 [ffffc90003adb880] machine_kexec at ffffffff81041da8
+ #1 [ffffc90003adb8c8] __crash_kexec at ffffffff8110396c
+ #2 [ffffc90003adb988] crash_kexec at ffffffff811048ad
+ #3 [ffffc90003adb9a0] oops_end at ffffffff8101c19a
+ #4 [ffffc90003adb9c0] do_trap at ffffffff81019114
+ #5 [ffffc90003adba00] do_error_trap at ffffffff810195d0
+ #6 [ffffc90003adbab0] invalid_op at ffffffff81a00a9b
+    [exception RIP: btrfs_reloc_cow_block+692]
+    RIP: ffffffff8143b614  RSP: ffffc90003adbb68  RFLAGS: 00010246
+    RAX: fffffffffffffff7  RBX: ffff8806b9c32000  RCX: ffff8806aad00690
+    RDX: ffff880850b295e0  RSI: ffff8806b9c32000  RDI: ffff88084f205bd0
+    RBP: ffff880849415000   R8: ffffc90003adbbe0   R9: ffff88085ac90000
+    R10: ffff8805f7369140  R11: 0000000000000000  R12: ffff880850b295e0
+    R13: ffff88084f205bd0  R14: 0000000000000000  R15: 0000000000000000
+    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
+ #7 [ffffc90003adbbb0] __btrfs_cow_block at ffffffff813bf1cd
+ #8 [ffffc90003adbc28] btrfs_cow_block at ffffffff813bf4b3
+ #9 [ffffc90003adbc78] btrfs_search_slot at ffffffff813c2e6c
 
-Cc: Himanshu Madhani <hmadhani@marvell.com>
-Cc: Giridhar Malavali <gmalavali@marvell.com>
-Fixes: 694833ee00c4 ("scsi: tcm_qla2xxx: Do not allow aborted cmd to advance.") # v4.13.
-Fixes: a07100e00ac4 ("qla2xxx: Fix TMR ABORT interaction issue between qla2xxx and TCM") # v4.5.
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+The way relocation moves data extents is by creating a reloc inode and
+preallocating extents in this inode and then copying the data into these
+preallocated extents.  Once we've done this for all of our extents,
+we'll write out these dirty pages, which marks the extent written, and
+goes into btrfs_reloc_cow_block().  From here we get our current
+reloc_control, which _should_ match the reloc_control for the current
+block group we're relocating.
+
+However if we get an ENOSPC in this path at some point we'll bail out,
+never initiating writeback on this inode.  Not a huge deal, unless we
+happen to be doing relocation on a different block group, and this block
+group is now rc->stage == UPDATE_DATA_PTRS.  This trips the BUG_ON() in
+btrfs_reloc_cow_block(), because we expect to be done modifying the data
+inode.  We are in fact done modifying the metadata for the data inode
+we're currently using, but not the one from the failed block group, and
+thus we BUG_ON().
+
+(This happens when writeback finishes for extents from the previous
+group, when we are at btrfs_finish_ordered_io() which updates the data
+reloc tree (inode item, drops/adds extent items, etc).)
+
+Fix this by writing out the reloc data inode always, and then breaking
+out of the loop after that point to keep from tripping this BUG_ON()
+later.
+
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+[ add note from Filipe ]
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/tcm_qla2xxx.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/btrfs/relocation.c | 31 ++++++++++++++++++++-----------
+ 1 file changed, 20 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/tcm_qla2xxx.c b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
-index 9465acd18df03..4c99f1797b489 100644
---- a/drivers/scsi/qla2xxx/tcm_qla2xxx.c
-+++ b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
-@@ -391,6 +391,8 @@ static int tcm_qla2xxx_write_pending(struct se_cmd *se_cmd)
- 			cmd->se_cmd.transport_state,
- 			cmd->se_cmd.t_state,
- 			cmd->se_cmd.se_cmd_flags);
-+		transport_generic_request_failure(&cmd->se_cmd,
-+			TCM_CHECK_CONDITION_ABORT_CMD);
- 		return 0;
+diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
+index 5feb8b03ffe86..9fa6db6a6f7d5 100644
+--- a/fs/btrfs/relocation.c
++++ b/fs/btrfs/relocation.c
+@@ -4403,27 +4403,36 @@ int btrfs_relocate_block_group(struct btrfs_fs_info *fs_info, u64 group_start)
+ 		mutex_lock(&fs_info->cleaner_mutex);
+ 		ret = relocate_block_group(rc);
+ 		mutex_unlock(&fs_info->cleaner_mutex);
+-		if (ret < 0) {
++		if (ret < 0)
+ 			err = ret;
+-			goto out;
+-		}
+-
+-		if (rc->extents_found == 0)
+-			break;
+-
+-		btrfs_info(fs_info, "found %llu extents", rc->extents_found);
+ 
++		/*
++		 * We may have gotten ENOSPC after we already dirtied some
++		 * extents.  If writeout happens while we're relocating a
++		 * different block group we could end up hitting the
++		 * BUG_ON(rc->stage == UPDATE_DATA_PTRS) in
++		 * btrfs_reloc_cow_block.  Make sure we write everything out
++		 * properly so we don't trip over this problem, and then break
++		 * out of the loop if we hit an error.
++		 */
+ 		if (rc->stage == MOVE_DATA_EXTENTS && rc->found_file_extent) {
+ 			ret = btrfs_wait_ordered_range(rc->data_inode, 0,
+ 						       (u64)-1);
+-			if (ret) {
++			if (ret)
+ 				err = ret;
+-				goto out;
+-			}
+ 			invalidate_mapping_pages(rc->data_inode->i_mapping,
+ 						 0, -1);
+ 			rc->stage = UPDATE_DATA_PTRS;
+ 		}
++
++		if (err < 0)
++			goto out;
++
++		if (rc->extents_found == 0)
++			break;
++
++		btrfs_info(fs_info, "found %llu extents", rc->extents_found);
++
  	}
- 	cmd->trc_flags |= TRC_XFR_RDY;
+ 
+ 	WARN_ON(rc->block_group->pinned > 0);
 -- 
 2.20.1
 
