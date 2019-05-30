@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B1E0C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2133C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 245232597F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:40:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC1AB259B4
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:40:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191243;
-	bh=UQF0Ml44h/IxhTMqQj/+YHFRrflug3EJb4HFixmOSw4=;
+	s=default; t=1559191246;
+	bh=YVSsXPhSV/AB32E936YZFOqFqKBy8o2/bd5r9JlQOZ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dOUAfvlqAAb70V7B8d4ApDpFluAtKmG/mfqb3S3p3A9DXzg8D5K7Z4pBO4eGihcET
-	 vL8WO5DtgHsHFiewUo4TKLpvwR7RCA66zCpaapti9OLA9FxrWiEMYtA3aSXsR6cMEO
-	 +7CTiIsib5o1R8ycYfrcGySXDNQV4SZYHl7v2GrQ=
+	b=aJ4MCx/IsBQq47VD8QhnXkBZQVnUgZBpnZLVeC0x7lsIJO4YmqT9dP7xgkDVbFf7b
+	 bWrpctKlNcycGUdZTz8cwAYa0vU17kxArCpY2kzduPQYlGoawKd9WLk/fbiKjfyIIO
+	 KgeY1+L7bShAcdMiKxMYw4r1hvqo6PAxqFoA/Tfo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730215AbfE3Ekk (ORCPT
+        id S1729075AbfE3DMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:40:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55246 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:12:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729080AbfE3DMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:31 -0400
+        id S1728314AbfE3DLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:01 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0235C23C5A;
-        Thu, 30 May 2019 03:12:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EC46244D4;
+        Thu, 30 May 2019 03:11:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185951;
-        bh=UQF0Ml44h/IxhTMqQj/+YHFRrflug3EJb4HFixmOSw4=;
+        s=default; t=1559185860;
+        bh=YVSsXPhSV/AB32E936YZFOqFqKBy8o2/bd5r9JlQOZ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0uBui3Y+IuOCmS8XYRQxyrHRkc9OHTcxJ4KI88d/hJPtVMn5Ssr57TQlayxdhQAf5
-         4DGlqFoaXlBeAPq94NdOdh3sgOnhxnHfeD7FxXecihlZUcxs+xUfPf4gVFN/rjw2XW
-         dENgnCHvVu3ft3rUh9n5Yo3qHTvmKtMsaTENCvlk=
+        b=o1lMVS7Y10R1sCfZoL0FxImRbHLJK3uhC1dzsB5s4ZJLR8qWCLgjLVnafHzFdkZcK
+         U7F/3+/1dHTFp9+Rq1tlspAaVYONM75nGc0NcgQPiBny5PVz5VwbuVk3ll2idxVrLs
+         mTMSPefOrpjKUtY8WYKR6Pok9IfwusUSPY/HcD7g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 363/405] scsi: lpfc: Fix fc4type information for FDMI
-Date:   Wed, 29 May 2019 20:06:01 -0700
-Message-Id: <20190530030558.970202392@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 148/405] pinctrl: st: fix leaked of_node references
+Date:   Wed, 29 May 2019 20:02:26 -0700
+Message-Id: <20190530030548.613760858@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,56 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 32a80c093b524a0682f1c6166c910387b116ffce ]
+[ Upstream commit 483d70d73beaecab55882fcd2a357af72674e24c ]
 
-The driver is reporting support for NVME even when not configured for NVME
-operation.
+The call to of_get_child_by_name returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Fix (and make more readable) when NVME protocol support is indicated.
+Detected by coccinelle with the following warnings:
+./drivers/pinctrl/pinctrl-st.c:1188:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1175, but without a corresponding object release within this function.
+./drivers/pinctrl/pinctrl-st.c:1188:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1175, but without a corresponding object release within this function.
+./drivers/pinctrl/pinctrl-st.c:1199:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1175, but without a corresponding object release within this function.
+./drivers/pinctrl/pinctrl-st.c:1199:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1175, but without a corresponding object release within this function.
 
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Patrice Chotard <patrice.chotard@st.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org (open list)
+Reviewed-by: Patrice Chotard <patrice.chotard@st.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_ct.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ drivers/pinctrl/pinctrl-st.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_ct.c b/drivers/scsi/lpfc/lpfc_ct.c
-index 2e0ba206c084c..25553e7ba85c8 100644
---- a/drivers/scsi/lpfc/lpfc_ct.c
-+++ b/drivers/scsi/lpfc/lpfc_ct.c
-@@ -2363,10 +2363,11 @@ lpfc_fdmi_port_attr_fc4type(struct lpfc_vport *vport,
- 	ae = (struct lpfc_fdmi_attr_entry *)&ad->AttrValue;
- 	memset(ae, 0, 32);
+diff --git a/drivers/pinctrl/pinctrl-st.c b/drivers/pinctrl/pinctrl-st.c
+index e66af93f2cbf8..195b442a23434 100644
+--- a/drivers/pinctrl/pinctrl-st.c
++++ b/drivers/pinctrl/pinctrl-st.c
+@@ -1170,7 +1170,7 @@ static int st_pctl_dt_parse_groups(struct device_node *np,
+ 	struct property *pp;
+ 	struct st_pinconf *conf;
+ 	struct device_node *pins;
+-	int i = 0, npins = 0, nr_props;
++	int i = 0, npins = 0, nr_props, ret = 0;
  
--	ae->un.AttrTypes[3] = 0x02; /* Type 1 - ELS */
--	ae->un.AttrTypes[2] = 0x01; /* Type 8 - FCP */
--	ae->un.AttrTypes[6] = 0x01; /* Type 40 - NVME */
--	ae->un.AttrTypes[7] = 0x01; /* Type 32 - CT */
-+	ae->un.AttrTypes[3] = 0x02; /* Type 0x1 - ELS */
-+	ae->un.AttrTypes[2] = 0x01; /* Type 0x8 - FCP */
-+	if (vport->nvmei_support || vport->phba->nvmet_support)
-+		ae->un.AttrTypes[6] = 0x01; /* Type 0x28 - NVME */
-+	ae->un.AttrTypes[7] = 0x01; /* Type 0x20 - CT */
- 	size = FOURBYTES + 32;
- 	ad->AttrLen = cpu_to_be16(size);
- 	ad->AttrType = cpu_to_be16(RPRT_SUPPORTED_FC4_TYPES);
-@@ -2676,9 +2677,11 @@ lpfc_fdmi_port_attr_active_fc4type(struct lpfc_vport *vport,
- 	ae = (struct lpfc_fdmi_attr_entry *)&ad->AttrValue;
- 	memset(ae, 0, 32);
+ 	pins = of_get_child_by_name(np, "st,pins");
+ 	if (!pins)
+@@ -1185,7 +1185,8 @@ static int st_pctl_dt_parse_groups(struct device_node *np,
+ 			npins++;
+ 		} else {
+ 			pr_warn("Invalid st,pins in %pOFn node\n", np);
+-			return -EINVAL;
++			ret = -EINVAL;
++			goto out_put_node;
+ 		}
+ 	}
  
--	ae->un.AttrTypes[3] = 0x02; /* Type 1 - ELS */
--	ae->un.AttrTypes[2] = 0x01; /* Type 8 - FCP */
--	ae->un.AttrTypes[7] = 0x01; /* Type 32 - CT */
-+	ae->un.AttrTypes[3] = 0x02; /* Type 0x1 - ELS */
-+	ae->un.AttrTypes[2] = 0x01; /* Type 0x8 - FCP */
-+	if (vport->phba->cfg_enable_fc4_type & LPFC_ENABLE_NVME)
-+		ae->un.AttrTypes[6] = 0x1; /* Type 0x28 - NVME */
-+	ae->un.AttrTypes[7] = 0x01; /* Type 0x20 - CT */
- 	size = FOURBYTES + 32;
- 	ad->AttrLen = cpu_to_be16(size);
- 	ad->AttrType = cpu_to_be16(RPRT_ACTIVE_FC4_TYPES);
+@@ -1195,8 +1196,10 @@ static int st_pctl_dt_parse_groups(struct device_node *np,
+ 	grp->pin_conf = devm_kcalloc(info->dev,
+ 					npins, sizeof(*conf), GFP_KERNEL);
+ 
+-	if (!grp->pins || !grp->pin_conf)
+-		return -ENOMEM;
++	if (!grp->pins || !grp->pin_conf) {
++		ret = -ENOMEM;
++		goto out_put_node;
++	}
+ 
+ 	/* <bank offset mux direction rt_type rt_delay rt_clk> */
+ 	for_each_property_of_node(pins, pp) {
+@@ -1229,9 +1232,11 @@ static int st_pctl_dt_parse_groups(struct device_node *np,
+ 		}
+ 		i++;
+ 	}
++
++out_put_node:
+ 	of_node_put(pins);
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ static int st_pctl_parse_functions(struct device_node *np,
 -- 
 2.20.1
 
