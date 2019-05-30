@@ -2,111 +2,115 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA3FC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4C6C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AF622483D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:13:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E48025778
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:14:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GfFK5rHz"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="KSESlhYv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbfE3INS (ORCPT
+        id S1726911AbfE3IOW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 04:13:18 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34434 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726667AbfE3INS (ORCPT
+        Thu, 30 May 2019 04:14:22 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:43325 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726386AbfE3IOW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 04:13:18 -0400
-Received: by mail-wr1-f65.google.com with SMTP id f8so3558857wrt.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 01:13:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=mRYtIjjBT0gCdPjqX8QzT/b2ruybZVo2i8tgf4wGRV8=;
-        b=GfFK5rHzsE1osVxjdjhR4PeXIj1ID4T6yvBWAAp16aTYwkVQSDD5A+MLTYoFmR22fd
-         ct5mHRZ0XECSWo53oWawynKw5l4Lrfi0wCGSLspP/5Yba7A/SuCMdaD3/P5JcD8HjN2N
-         G0j2Hh/aOWjC+223jAk6GjHBPme5iMsfo9I4V3MYKtA1iguEcSw4xb36fqsDcEz7g4v/
-         K3N+qi4JkGCmPb8OUHmdbvwShyB81z/xgQIYreQhz8T16aoBsXpC1mzf8IXpXgGwSnHj
-         6HyU1uuTCie6PzjPHy5glNQkJdeun9HfAn607LpsHBBjwNSjmFBLK8n/yygUiTULXoNr
-         MgeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=mRYtIjjBT0gCdPjqX8QzT/b2ruybZVo2i8tgf4wGRV8=;
-        b=SjxkK78r/Qe9sJNrC7VFhKD7yLMoDFH3UT/FBoB5jUsa0vsSfHFOz8WRL9pRgjjM2c
-         wMcxyhj5SBlE3oPY17mDdzwKWFxDS1a12mhVGtcOALxrp/VS7R4XwA6tlvRPYTssgFrz
-         194yMVUnEhxLM1QpR+T0GNj7XlRxp/2cHFj0y+klqfC3x47TO4tydCVwfKTsLZjydd3f
-         Y0T+QVQymcykKigYl/ymfphXBQCeOfHjem+eRKIQ/7o62bcBnvp67C0c/Tl+FaZB6feQ
-         yhhciUIPyoor7D5FfuSTT381QWU/LvebHVTVC+A3cWrXBwtbDX7ul4Flde4JRggPdfaL
-         nFQA==
-X-Gm-Message-State: APjAAAVuNBdc92PSmT2UMxquhw1nvHSLZKzmv2qSY8xdMmJDAySgLoBY
-        SoKV0SLrPeWci1KCxZzvLfbfL6AY
-X-Google-Smtp-Source: APXvYqzhxswiaqqeuv9e0qfSz5uRCPOay6zgOIboxlJ+o1LLAM2DzCoRDQbck2DVz8PaJD4q7oS8Gg==
-X-Received: by 2002:adf:8b83:: with SMTP id o3mr1546275wra.278.1559203996684;
-        Thu, 30 May 2019 01:13:16 -0700 (PDT)
-Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id 17sm1678651wmi.25.2019.05.30.01.13.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 01:13:15 -0700 (PDT)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org
-Subject: [PATCH] habanalabs: fix bug in checking huge page optimization
-Date:   Thu, 30 May 2019 11:13:14 +0300
-Message-Id: <20190530081314.19904-1-oded.gabbay@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 30 May 2019 04:14:22 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4U8E4512904717
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 30 May 2019 01:14:04 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4U8E4512904717
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019051801; t=1559204045;
+        bh=YocNR03LztEIRwgfs2gHJqyMB8B1v6MAyp624O+VnD4=;
+        h=Date:From:Cc:Reply-To:To:Subject:From;
+        b=KSESlhYvCJZCQwpDtsiRjusrRE2dtP2bDnhzNci9UGr1M10zOTNN2EGr/2j5VtdoD
+         +HbO3A8DdaT7/AVt7y9xJfy5BvdbfGvdfQXOfZgbA8LshxH8TspKF+cTQb2/gSh0BM
+         KJT1EuOljOd5MaEVV1Xt3+78duetBJ6xI6mYqB9ASK9iVNB46LLUkE1YWoyzGdlIUr
+         /jasnH2hq5SH0LfGwj7TL5JiUpVrRavqLyMzGrQSnryuJoDYQFBMKSzWAApZC3PlQB
+         QoCn4UKLcn/RJCs+x2rk/A8EEcGrhFXfPEmoBwE4taYz+QjQRZHYcaRJX5dLCM+hJm
+         1Y1z+sriHPPAw==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4U8E4F62904714;
+        Thu, 30 May 2019 01:14:04 -0700
+Date:   Thu, 30 May 2019 01:14:04 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
+Message-ID: <tip-p4yun2nxlo7eeeohyx5v4kw7@git.kernel.org>
+Cc:     mingo@kernel.org, adrian.hunter@intel.com, tglx@linutronix.de,
+        acme@redhat.com, jolsa@kernel.org, linux-kernel@vger.kernel.org,
+        hpa@zytor.com, namhyung@kernel.org
+Reply-To: hpa@zytor.com, linux-kernel@vger.kernel.org, namhyung@kernel.org,
+          adrian.hunter@intel.com, mingo@kernel.org, jolsa@kernel.org,
+          acme@redhat.com, tglx@linutronix.de
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/core] perf version: Append 12 git SHA chars to the
+ version string
+Git-Commit-ID: 80ec26d110c5c5a81b60c444db851e5734dee09a
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fix a bug in the mmu code that checks whether we can use huge
-page mappings for host pages.
+Commit-ID:  80ec26d110c5c5a81b60c444db851e5734dee09a
+Gitweb:     https://git.kernel.org/tip/80ec26d110c5c5a81b60c444db851e5734dee09a
+Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate: Fri, 24 May 2019 15:50:18 -0300
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Tue, 28 May 2019 18:37:44 -0300
 
-The code is supposed to enable huge page mappings only if ALL DMA
-addresses are aligned to 2MB AND the number of pages in each DMA chunk is
-a modulo of the number of pages in 2MB. However, the code ignored the
-first requirement for the first DMA chunk.
+perf version: Append 12 git SHA chars to the version string
 
-This patch fix that issue by making sure the requirement of address
-alignment is validated against all DMA chunks.
+Bumping it from just 4:
 
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+Before:
+
+  $ perf -v
+  perf version 5.2.rc1.g80978f
+  $
+
+After:
+
+  $ perf -v
+  perf version 5.2.rc1.g80978fc864c5
+  $
+
+Requested-by: Ingo Molnar <mingo@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-p4yun2nxlo7eeeohyx5v4kw7@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- drivers/misc/habanalabs/memory.c | 6 ------
- 1 file changed, 6 deletions(-)
+ tools/perf/util/PERF-VERSION-GEN | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/misc/habanalabs/memory.c b/drivers/misc/habanalabs/memory.c
-index d67d24c13efd..693877e37fd8 100644
---- a/drivers/misc/habanalabs/memory.c
-+++ b/drivers/misc/habanalabs/memory.c
-@@ -675,11 +675,6 @@ static int init_phys_pg_pack_from_userptr(struct hl_ctx *ctx,
- 
- 		total_npages += npages;
- 
--		if (first) {
--			first = false;
--			dma_addr &= PAGE_MASK_2MB;
--		}
--
- 		if ((npages % PGS_IN_2MB_PAGE) ||
- 					(dma_addr & (PAGE_SIZE_2MB - 1)))
- 			is_huge_page_opt = false;
-@@ -704,7 +699,6 @@ static int init_phys_pg_pack_from_userptr(struct hl_ctx *ctx,
- 	phys_pg_pack->total_size = total_npages * page_size;
- 
- 	j = 0;
--	first = true;
- 	for_each_sg(userptr->sgt->sgl, sg, userptr->sgt->nents, i) {
- 		npages = get_sg_info(sg, &dma_addr);
- 
--- 
-2.17.1
-
+diff --git a/tools/perf/util/PERF-VERSION-GEN b/tools/perf/util/PERF-VERSION-GEN
+index 3802cee5e188..59241ff342be 100755
+--- a/tools/perf/util/PERF-VERSION-GEN
++++ b/tools/perf/util/PERF-VERSION-GEN
+@@ -19,7 +19,7 @@ TAG=
+ if test -d ../../.git -o -f ../../.git
+ then
+ 	TAG=$(git describe --abbrev=0 --match "v[0-9].[0-9]*" 2>/dev/null )
+-	CID=$(git log -1 --abbrev=4 --pretty=format:"%h" 2>/dev/null) && CID="-g$CID"
++	CID=$(git log -1 --abbrev=12 --pretty=format:"%h" 2>/dev/null) && CID="-g$CID"
+ elif test -f ../../PERF-VERSION-FILE
+ then
+ 	TAG=$(cut -d' ' -f3 ../../PERF-VERSION-FILE | sed -e 's/\"//g')
