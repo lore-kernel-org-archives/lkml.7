@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B03C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B37D2C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79B4624C96
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:45:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 845AB24CA4
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:45:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187919;
-	bh=S1j6bad579v5fusLnPckpJ2t/x9ds1L+5EFoRA5iTbk=;
+	s=default; t=1559187925;
+	bh=ZCsxXdpu8EEZLeV/iQOFEU/H1o4X1Ff8AUSV1hp8S+4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gEJ+4PXnlxcbjtXRy160Bt/RtjmxMPnBCzn3PrlIORfZ6TdCnCDzMGCU36x+x5jws
-	 36WosmMAFd29B5I/X7D4iKotjbHN6z+IUuM8HY0b9qfaefG1Ro1rwdEMo392ECGS4T
-	 x9jIfTGd5KJXBy4JuUpsklIBdJ/ya5t71bkGNJS8=
+	b=dOnFLDHZexnZCCpXsbJUswUSfQs11qLjXk2tz0Pr83946ChFXYuZYFrTw6CdOknAx
+	 ZyaXDycTYNSpLcpE95+CwOmrAFt/PP7N2HpduuuFwBOn6t/AXWFeh7yFofS2suGZk4
+	 RpuDiUuDPkwTMcTHaU85WEI0mRqPFMR4t0BRqxwY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732701AbfE3DpS (ORCPT
+        id S1732855AbfE3DpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:45:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60140 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:45:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732356AbfE3DUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732344AbfE3DUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:20:49 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CAAD2497E;
-        Thu, 30 May 2019 03:20:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C34212497C;
+        Thu, 30 May 2019 03:20:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186449;
-        bh=S1j6bad579v5fusLnPckpJ2t/x9ds1L+5EFoRA5iTbk=;
+        s=default; t=1559186448;
+        bh=ZCsxXdpu8EEZLeV/iQOFEU/H1o4X1Ff8AUSV1hp8S+4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2c0MPi5nlbN1h2ka+PHpgQm+b2BgdKbeL7n1804Bv97KXIodBLT1/8RFjfS2ek5hT
-         FtOhPeS4KNhO8ApNcOKr9FZcHWYzvEI+pBsfNfFJaS6OJ2UnTm9Wce+u273S6plG7+
-         0x9kiDw+SPuOhrbSkBupi8x0XIVIMjqJa53eq3FU=
+        b=eCoj6KAhiPqhqat+bxIJiULZrKuL0Ua3SkO24/t6e5rIhuzOveA2T150eSQxAMrUe
+         SayAgUOG0RRvXHYbInBHmdQC+l5kTcE78C+nVPB6kno4SzDfCVPkMNIwmEb/Cio4pM
+         yxvm8AUOg9j5p/qcJIN+LycKV2x0PljnzCBEcMYs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        stable@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 058/128] media: ov6650: Move v4l2_clk_get() to ov6650_video_probe() helper
-Date:   Wed, 29 May 2019 20:06:30 -0700
-Message-Id: <20190530030445.289771897@linuxfoundation.org>
+Subject: [PATCH 4.9 057/128] media: coda: clear error return value before picture run
+Date:   Wed, 29 May 2019 20:06:29 -0700
+Message-Id: <20190530030445.134089589@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -61,77 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ccdd85d518d8b9320ace1d87271f0ba2175f21fa ]
+[ Upstream commit bbeefa7357a648afe70e7183914c87c3878d528d ]
 
-In preparation for adding asynchronous subdevice support to the driver,
-don't acquire v4l2_clk from the driver .probe() callback as that may
-fail if the clock is provided by a bridge driver which may be not yet
-initialized.  Move the v4l2_clk_get() to ov6650_video_probe() helper
-which is going to be converted to v4l2_subdev_internal_ops.registered()
-callback, executed only when the bridge driver is ready.
+The error return value is not written by some firmware codecs, such as
+MPEG-2 decode on CodaHx4. Clear the error return value before starting
+the picture run to avoid misinterpreting unrelated values returned by
+sequence initialization as error return value.
 
-Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/soc_camera/ov6650.c | 25 ++++++++++++++-----------
- 1 file changed, 14 insertions(+), 11 deletions(-)
+ drivers/media/platform/coda/coda-bit.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/media/i2c/soc_camera/ov6650.c b/drivers/media/i2c/soc_camera/ov6650.c
-index e21b7e1c2ee15..fc187c5aeb1e9 100644
---- a/drivers/media/i2c/soc_camera/ov6650.c
-+++ b/drivers/media/i2c/soc_camera/ov6650.c
-@@ -840,9 +840,16 @@ static int ov6650_video_probe(struct i2c_client *client)
- 	u8		pidh, pidl, midh, midl;
- 	int		ret;
+diff --git a/drivers/media/platform/coda/coda-bit.c b/drivers/media/platform/coda/coda-bit.c
+index b6625047250d6..717ee9a6a80ef 100644
+--- a/drivers/media/platform/coda/coda-bit.c
++++ b/drivers/media/platform/coda/coda-bit.c
+@@ -1829,6 +1829,9 @@ static int coda_prepare_decode(struct coda_ctx *ctx)
+ 	/* Clear decode success flag */
+ 	coda_write(dev, 0, CODA_RET_DEC_PIC_SUCCESS);
  
-+	priv->clk = v4l2_clk_get(&client->dev, NULL);
-+	if (IS_ERR(priv->clk)) {
-+		ret = PTR_ERR(priv->clk);
-+		dev_err(&client->dev, "v4l2_clk request err: %d\n", ret);
-+		return ret;
-+	}
++	/* Clear error return value */
++	coda_write(dev, 0, CODA_RET_DEC_PIC_ERR_MB);
 +
- 	ret = ov6650_s_power(&priv->subdev, 1);
- 	if (ret < 0)
--		return ret;
-+		goto eclkput;
+ 	trace_coda_dec_pic_run(ctx, meta);
  
- 	msleep(20);
- 
-@@ -879,6 +886,11 @@ static int ov6650_video_probe(struct i2c_client *client)
- 
- done:
- 	ov6650_s_power(&priv->subdev, 0);
-+	if (!ret)
-+		return 0;
-+eclkput:
-+	v4l2_clk_put(priv->clk);
-+
- 	return ret;
- }
- 
-@@ -1035,18 +1047,9 @@ static int ov6650_probe(struct i2c_client *client,
- 	priv->code	  = MEDIA_BUS_FMT_YUYV8_2X8;
- 	priv->colorspace  = V4L2_COLORSPACE_JPEG;
- 
--	priv->clk = v4l2_clk_get(&client->dev, NULL);
--	if (IS_ERR(priv->clk)) {
--		ret = PTR_ERR(priv->clk);
--		goto eclkget;
--	}
--
- 	ret = ov6650_video_probe(client);
--	if (ret) {
--		v4l2_clk_put(priv->clk);
--eclkget:
-+	if (ret)
- 		v4l2_ctrl_handler_free(&priv->hdl);
--	}
- 
- 	return ret;
- }
+ 	coda_command_async(ctx, CODA_COMMAND_PIC_RUN);
 -- 
 2.20.1
 
