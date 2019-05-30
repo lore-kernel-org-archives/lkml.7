@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1FCC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2BE9C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:45:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBAB724C70
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B85B324CA7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:45:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187896;
-	bh=9PYpEDZLRhbi7YVmJolHM37nqF9o+1KmaP4pr3hYhsM=;
+	s=default; t=1559187904;
+	bh=3TA2AzyxQEl+G5zh5dnkbqdGmZr3VF6U1/rc6Iz8bqU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D9723FRwPEA8BhHwe9HDkZyAkKhzGl9JNwE0zvFqalezinyHoVPEW299JthbXSsxK
-	 DB9+HeYCEyasymhnjt1mE5IIbYfYSZmU9AzYhZJUY5sqcG+SOVL0D4MkaIUKBVEMk2
-	 4DlCztFOqmqb4dsCocUORrjp1IdCv2+wlKJYHEFE=
+	b=ZAwpyFz5kzLersVUFtawI+TMmh2Qcr8r+q3WDAGFygBL7ur2Ir1WYIFcr1hsAuqnG
+	 fUVsiLtUgfp10aQGGl6c+QtMHxWci1DJpKCaA25YX2t0UTjVd6eidTbY4qZ85hyX4U
+	 h1UTpI1wLs892k/y1is4pb7cLG7mnfp3Y0JRw/uw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732887AbfE3Doy (ORCPT
+        id S1732934AbfE3DpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:44:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60414 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:45:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731213AbfE3DUx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:20:53 -0400
+        id S1732367AbfE3DUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:20:52 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15BD92497F;
-        Thu, 30 May 2019 03:20:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6D722492F;
+        Thu, 30 May 2019 03:20:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186453;
-        bh=9PYpEDZLRhbi7YVmJolHM37nqF9o+1KmaP4pr3hYhsM=;
+        s=default; t=1559186451;
+        bh=3TA2AzyxQEl+G5zh5dnkbqdGmZr3VF6U1/rc6Iz8bqU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TxrpropmjZ3IpslVElra0Rh2dinwmxTPHMt4DgOWE3Q2mRc+r7GLb+/jcyJIa4frh
-         CYnCRjOdsI/TutErxKvY9QnCgG0S8D1u2AAEVfzRnN2LDJ2BRRww3mVNIbEJSpCzR2
-         WLcXv/8NWARYofha8VKAnrmIXlTfsxkMI7w/m8LY=
+        b=ApvSibe03Y8gIqUaggIXgymjULeZpmraAJSWe8q4T2u6UkyPMhKC2W2zgpNwUMcbW
+         qQAusZYe2eE2TODDQqfaKkaYjzjq6NSCjyGD0HMwMj588j4gwK+KWjeDNiit6KOSnV
+         wi3+QaiHQKE/Utfey7OgI3N2qvze3M9LySDInFyU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Van Asbroeck <TheSven73@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 038/128] rtc: 88pm860x: prevent use-after-free on device remove
-Date:   Wed, 29 May 2019 20:06:10 -0700
-Message-Id: <20190530030441.114078667@linuxfoundation.org>
+Subject: [PATCH 4.9 063/128] media: pvrusb2: Prevent a buffer overflow
+Date:   Wed, 29 May 2019 20:06:35 -0700
+Message-Id: <20190530030446.046747137@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -60,42 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f22b1ba15ee5785aa028384ebf77dd39e8e47b70 ]
+[ Upstream commit c1ced46c7b49ad7bc064e68d966e0ad303f917fb ]
 
-The device's remove() attempts to shut down the delayed_work scheduled
-on the kernel-global workqueue by calling flush_scheduled_work().
+The ctrl_check_input() function is called from pvr2_ctrl_range_check().
+It's supposed to validate user supplied input and return true or false
+depending on whether the input is valid or not.  The problem is that
+negative shifts or shifts greater than 31 are undefined in C.  In
+practice with GCC they result in shift wrapping so this function returns
+true for some inputs which are not valid and this could result in a
+buffer overflow:
 
-Unfortunately, flush_scheduled_work() does not prevent the delayed_work
-from re-scheduling itself. The delayed_work might run after the device
-has been removed, and touch the already de-allocated info structure.
-This is a potential use-after-free.
+    drivers/media/usb/pvrusb2/pvrusb2-ctrl.c:205 pvr2_ctrl_get_valname()
+    warn: uncapped user index 'names[val]'
 
-Fix by calling cancel_delayed_work_sync() during remove(): this ensures
-that the delayed work is properly cancelled, is no longer running, and
-is not able to re-schedule itself.
+The cptr->hdw->input_allowed_mask mask is configured in pvr2_hdw_create()
+and the highest valid bit is BIT(4).
 
-This issue was detected with the help of Coccinelle.
+Fixes: 7fb20fa38caa ("V4L/DVB (7299): pvrusb2: Improve logic which handles input choice availability")
 
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-88pm860x.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/usb/pvrusb2/pvrusb2-hdw.c | 2 ++
+ drivers/media/usb/pvrusb2/pvrusb2-hdw.h | 1 +
+ 2 files changed, 3 insertions(+)
 
-diff --git a/drivers/rtc/rtc-88pm860x.c b/drivers/rtc/rtc-88pm860x.c
-index 19e53b3b8e005..166faae3a59cd 100644
---- a/drivers/rtc/rtc-88pm860x.c
-+++ b/drivers/rtc/rtc-88pm860x.c
-@@ -414,7 +414,7 @@ static int pm860x_rtc_remove(struct platform_device *pdev)
- 	struct pm860x_rtc_info *info = platform_get_drvdata(pdev);
+diff --git a/drivers/media/usb/pvrusb2/pvrusb2-hdw.c b/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
+index 1eb4f7ba2967d..ff489645e0701 100644
+--- a/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
++++ b/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
+@@ -670,6 +670,8 @@ static int ctrl_get_input(struct pvr2_ctrl *cptr,int *vp)
  
- #ifdef VRTC_CALIBRATION
--	flush_scheduled_work();
-+	cancel_delayed_work_sync(&info->calib_work);
- 	/* disable measurement */
- 	pm860x_set_bits(info->i2c, PM8607_MEAS_EN2, MEAS2_VRTC, 0);
- #endif	/* VRTC_CALIBRATION */
+ static int ctrl_check_input(struct pvr2_ctrl *cptr,int v)
+ {
++	if (v < 0 || v > PVR2_CVAL_INPUT_MAX)
++		return 0;
+ 	return ((1 << v) & cptr->hdw->input_allowed_mask) != 0;
+ }
+ 
+diff --git a/drivers/media/usb/pvrusb2/pvrusb2-hdw.h b/drivers/media/usb/pvrusb2/pvrusb2-hdw.h
+index a82a00dd73293..80869990ffbbb 100644
+--- a/drivers/media/usb/pvrusb2/pvrusb2-hdw.h
++++ b/drivers/media/usb/pvrusb2/pvrusb2-hdw.h
+@@ -54,6 +54,7 @@
+ #define PVR2_CVAL_INPUT_COMPOSITE 2
+ #define PVR2_CVAL_INPUT_SVIDEO 3
+ #define PVR2_CVAL_INPUT_RADIO 4
++#define PVR2_CVAL_INPUT_MAX PVR2_CVAL_INPUT_RADIO
+ 
+ enum pvr2_config {
+ 	pvr2_config_empty,    /* No configuration */
 -- 
 2.20.1
 
