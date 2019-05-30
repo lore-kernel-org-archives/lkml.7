@@ -2,55 +2,52 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA6AFC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F80CC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:55:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 907EC24E8E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:55:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58D4024E8E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:55:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188557;
-	bh=po6PrqAoVpGPWqDdgcC6f5pnQsj2Uf8VLIkfxgVObCw=;
+	s=default; t=1559188559;
+	bh=VW8zFYc7LGrG75ibVxxccs8Ca2UPAcd4Hcgipwg08j4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZQQHxU3PC7fWG8Zp/9VuR1rOXwGwOmhwLG0CxrRN5revp+3zb4u25DHjGsJI2T7FF
-	 TuEp+ZKigUYBPB8luKzG6uZ6uWvdXqiwAZbKyVrJGcS4gp3NVDTVlQVUqAecYgywlh
-	 Pc+ThW9X5IXOywI2yxAL1XgFRKdUVrK/XXrFdMDs=
+	b=K4yO2x+Qi2kevXR8ccfBubeRhEFjA2uDBm0ymixlFv3i51RErYOMyZOimVMEOWkBG
+	 G5yO2NQV6bAjQxupCxlG+3bKsUV6G9OO5ay/LnUtc6XnV9kmamW399cuVR8iNTGEyM
+	 cSz/aEyGecXGK0KET+UBcI0nng6kBzWJOvxnjTls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732413AbfE3Dz4 (ORCPT
+        id S2387826AbfE3Dz6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:55:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53532 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:55:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731803AbfE3DTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727510AbfE3DTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:19:06 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 927ED24823;
-        Thu, 30 May 2019 03:19:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03AC524825;
+        Thu, 30 May 2019 03:19:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186345;
-        bh=po6PrqAoVpGPWqDdgcC6f5pnQsj2Uf8VLIkfxgVObCw=;
+        s=default; t=1559186346;
+        bh=VW8zFYc7LGrG75ibVxxccs8Ca2UPAcd4Hcgipwg08j4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wW+GwSZ+BmdT3UWOLKcLOPdpLIiZJzhVeL7Ffdp3HjAEEXJlJhJ5Y0zxclJBh0dfi
-         zq+DVt70LegHPoH6AnJfWGWbfr3CCOYBhvlRTP8NFsuG/RODTnFccghJx4s0SSW44v
-         SFWnv90iPm/2pOIxISgyerefuURDzQSsqZj6vlTA=
+        b=flMcWWRpmDHsO6ROEeAN74Y/wTZyjW3ll4NxialpNpllaDnJji0xbkJZERohjhA7K
+         u7UG2MgCNOgAmjFMg6HweMD0WojojYsfm3O9RbziK+tzvU4g6vj1emkfCeajzZJ1Yj
+         pOW3pXc32u5X6djf830PpfAl34AyPbIAno4qgsUs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Fredrik Noring <noring@nocrew.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 4.14 021/193] fbdev: fix divide error in fb_var_to_videomode
-Date:   Wed, 29 May 2019 20:04:35 -0700
-Message-Id: <20190530030451.742146474@linuxfoundation.org>
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 071/193] net: cw1200: fix a NULL pointer dereference
+Date:   Wed, 29 May 2019 20:05:25 -0700
+Message-Id: <20190530030459.150130685@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -63,81 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shile Zhang <shile.zhang@linux.alibaba.com>
+[ Upstream commit 0ed2a005347400500a39ea7c7318f1fea57fb3ca ]
 
-commit cf84807f6dd0be5214378e66460cfc9187f532f9 upstream.
+In case create_singlethread_workqueue fails, the fix free the
+hardware and returns NULL to avoid NULL pointer dereference.
 
-To fix following divide-by-zero error found by Syzkaller:
-
-  divide error: 0000 [#1] SMP PTI
-  CPU: 7 PID: 8447 Comm: test Kdump: loaded Not tainted 4.19.24-8.al7.x86_64 #1
-  Hardware name: Alibaba Cloud Alibaba Cloud ECS, BIOS rel-1.12.0-0-ga698c8995f-prebuilt.qemu.org 04/01/2014
-  RIP: 0010:fb_var_to_videomode+0xae/0xc0
-  Code: 04 44 03 46 78 03 4e 7c 44 03 46 68 03 4e 70 89 ce d1 ee 69 c0 e8 03 00 00 f6 c2 01 0f 45 ce 83 e2 02 8d 34 09 0f 45 ce 31 d2 <41> f7 f0 31 d2 f7 f1 89 47 08 f3 c3 66 0f 1f 44 00 00 0f 1f 44 00
-  RSP: 0018:ffffb7e189347bf0 EFLAGS: 00010246
-  RAX: 00000000e1692410 RBX: ffffb7e189347d60 RCX: 0000000000000000
-  RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffb7e189347c10
-  RBP: ffff99972a091c00 R08: 0000000000000000 R09: 0000000000000000
-  R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000100
-  R13: 0000000000010000 R14: 00007ffd66baf6d0 R15: 0000000000000000
-  FS:  00007f2054d11740(0000) GS:ffff99972fbc0000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 00007f205481fd20 CR3: 00000004288a0001 CR4: 00000000001606a0
-  Call Trace:
-   fb_set_var+0x257/0x390
-   ? lookup_fast+0xbb/0x2b0
-   ? fb_open+0xc0/0x140
-   ? chrdev_open+0xa6/0x1a0
-   do_fb_ioctl+0x445/0x5a0
-   do_vfs_ioctl+0x92/0x5f0
-   ? __alloc_fd+0x3d/0x160
-   ksys_ioctl+0x60/0x90
-   __x64_sys_ioctl+0x16/0x20
-   do_syscall_64+0x5b/0x190
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-  RIP: 0033:0x7f20548258d7
-  Code: 44 00 00 48 8b 05 b9 15 2d 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 89 15 2d 00 f7 d8 64 89 01 48
-
-It can be triggered easily with following test code:
-
-  #include <linux/fb.h>
-  #include <fcntl.h>
-  #include <sys/ioctl.h>
-  int main(void)
-  {
-          struct fb_var_screeninfo var = {.activate = 0x100, .pixclock = 60};
-          int fd = open("/dev/fb0", O_RDWR);
-          if (fd < 0)
-                  return 1;
-
-          if (ioctl(fd, FBIOPUT_VSCREENINFO, &var))
-                  return 1;
-
-          return 0;
-  }
-
-Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
-Cc: Fredrik Noring <noring@nocrew.org>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/core/modedb.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/wireless/st/cw1200/main.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/video/fbdev/core/modedb.c
-+++ b/drivers/video/fbdev/core/modedb.c
-@@ -933,6 +933,9 @@ void fb_var_to_videomode(struct fb_video
- 	if (var->vmode & FB_VMODE_DOUBLE)
- 		vtotal *= 2;
- 
-+	if (!htotal || !vtotal)
-+		return;
+diff --git a/drivers/net/wireless/st/cw1200/main.c b/drivers/net/wireless/st/cw1200/main.c
+index dc478cedbde0d..84624c812a15f 100644
+--- a/drivers/net/wireless/st/cw1200/main.c
++++ b/drivers/net/wireless/st/cw1200/main.c
+@@ -345,6 +345,11 @@ static struct ieee80211_hw *cw1200_init_common(const u8 *macaddr,
+ 	mutex_init(&priv->wsm_cmd_mux);
+ 	mutex_init(&priv->conf_mutex);
+ 	priv->workqueue = create_singlethread_workqueue("cw1200_wq");
++	if (!priv->workqueue) {
++		ieee80211_free_hw(hw);
++		return NULL;
++	}
 +
- 	hfreq = pixclock/htotal;
- 	mode->refresh = hfreq/vtotal;
- }
+ 	sema_init(&priv->scan.lock, 1);
+ 	INIT_WORK(&priv->scan.work, cw1200_scan_work);
+ 	INIT_DELAYED_WORK(&priv->scan.probe_work, cw1200_probe_work);
+-- 
+2.20.1
+
 
 
