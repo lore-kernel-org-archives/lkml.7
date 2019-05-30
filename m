@@ -2,136 +2,96 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED092C28CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F310C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C314425A0D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:59:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OG+gfv4N";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EXH6js2p"
+	by mail.kernel.org (Postfix) with ESMTP id 65EEB25A13
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:59:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727281AbfE3N7R (ORCPT
+        id S1727314AbfE3N7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 09:59:17 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:46720 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbfE3N7Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 09:59:16 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 49D97609EF; Thu, 30 May 2019 13:59:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559224755;
-        bh=Gw03O+/PtVO6JQStq1Nny3J68DvX5BsW7lmhCePed3U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OG+gfv4Ni2bzOX1nNoYSy4B6FSPbFPI5Wyq+JBNQu3sGwzbLSL1r7MQpDa9EVKOzX
-         98j1lDSNhY2Lm5O7vj3heoa5o6FAjY1lBP1G2bvbjNnEnasG3ImwlFLQwebed0vHqd
-         V8Lq8zkx2fdKue0mX/JPvZynEWXMBzLUscZ9bAJY=
-Received: from amasule-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: amasule@codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DC96460E5D;
-        Thu, 30 May 2019 13:59:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559224754;
-        bh=Gw03O+/PtVO6JQStq1Nny3J68DvX5BsW7lmhCePed3U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EXH6js2pxZoeAE+q/qRjza3UdVT++DP1m2BMWeHoZwju/eVwUInpwt8DVTZQDYuLI
-         Drw1Nw0iJ2oSYfeyL4bJb0anZxhu5p9hMWiXapAcSdjKHJM77Op9mLck/hwlqGZ/oi
-         wrCVG/5VMoo596Or3Pv9r3FpWxVm59bJkWkTWHk8=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DC96460E5D
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=amasule@codeaurora.org
-From:   Aniket Masule <amasule@codeaurora.org>
-To:     linux-media@vger.kernel.org, stanimir.varbanov@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        vgarodia@codeaurora.org, Aniket Masule <amasule@codeaurora.org>
-Subject: [PATCH 4/5] media: venus: Add interface for load per core
-Date:   Thu, 30 May 2019 19:28:27 +0530
-Message-Id: <1559224708-6039-5-git-send-email-amasule@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1559224708-6039-1-git-send-email-amasule@codeaurora.org>
-References: <1559224708-6039-1-git-send-email-amasule@codeaurora.org>
+        Thu, 30 May 2019 09:59:22 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:18056 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726232AbfE3N7V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 09:59:21 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 6E5F5EED7AC29741A111;
+        Thu, 30 May 2019 21:59:19 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Thu, 30 May 2019
+ 21:59:10 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <jeyu@kernel.org>, <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <paulmck@linux.ibm.com>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH v2] kernel/module: Fix mem leak in module_add_modinfo_attrs
+Date:   Thu, 30 May 2019 21:43:04 +0800
+Message-ID: <20190530134304.4976-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <20190515161212.28040-1-yuehaibing@huawei.com>
+References: <20190515161212.28040-1-yuehaibing@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add and interface to calculate load per core. Also,
-add an interface to get maximum cores available with
-video. This interface is preparation for updating core
-selection.
+In module_add_modinfo_attrs if sysfs_create_file
+fails, we forget to free allocated modinfo_attrs
+and roll back the sysfs files.
 
-Signed-off-by: Aniket Masule <amasule@codeaurora.org>
+Fixes: 03e88ae1b13d ("[PATCH] fix module sysfs files reference counting")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/media/platform/qcom/venus/helpers.c    | 18 ++++++++++++++++++
- drivers/media/platform/qcom/venus/hfi_helper.h |  1 +
- drivers/media/platform/qcom/venus/hfi_parser.h |  5 +++++
- 3 files changed, 24 insertions(+)
+v2: free from '--i' instead of 'i--'  
+---
+ kernel/module.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
-index f2470af..692ba3b 100644
---- a/drivers/media/platform/qcom/venus/helpers.c
-+++ b/drivers/media/platform/qcom/venus/helpers.c
-@@ -331,6 +331,24 @@ static u32 load_per_instance(struct venus_inst *inst)
- 	return mbs * inst->fps;
- }
+diff --git a/kernel/module.c b/kernel/module.c
+index 6e6712b..78e21a7 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -1723,15 +1723,29 @@ static int module_add_modinfo_attrs(struct module *mod)
+ 		return -ENOMEM;
  
-+static u32 load_per_core(struct venus_core *core, u32 core_id)
-+{
-+	struct venus_inst *inst = NULL;
-+	u32 mbs_per_sec = 0, load = 0;
+ 	temp_attr = mod->modinfo_attrs;
+-	for (i = 0; (attr = modinfo_attrs[i]) && !error; i++) {
++	for (i = 0; (attr = modinfo_attrs[i]); i++) {
+ 		if (!attr->test || attr->test(mod)) {
+ 			memcpy(temp_attr, attr, sizeof(*temp_attr));
+ 			sysfs_attr_init(&temp_attr->attr);
+ 			error = sysfs_create_file(&mod->mkobj.kobj,
+ 					&temp_attr->attr);
++			if (error)
++				goto error_out;
+ 			++temp_attr;
+ 		}
+ 	}
 +
-+	mutex_lock(&core->lock);
-+	list_for_each_entry(inst, &core->instances, list) {
-+		if (!(inst->clk_data.core_id == core_id))
-+			continue;
++	return 0;
 +
-+		mbs_per_sec += load_per_instance(inst);
-+		load += mbs_per_sec * inst->clk_data.codec_data->vpp_cycles;
++error_out:
++	for (; (attr = &mod->modinfo_attrs[i]) && i >= 0; --i) {
++		if (!attr->attr.name)
++			break;
++		sysfs_remove_file(&mod->mkobj.kobj, &attr->attr);
++		if (attr->free)
++			attr->free(mod);
 +	}
-+	mutex_unlock(&core->lock);
-+
-+	return load;
-+}
-+
- static u32 load_per_type(struct venus_core *core, u32 session_type)
- {
- 	struct venus_inst *inst = NULL;
-diff --git a/drivers/media/platform/qcom/venus/hfi_helper.h b/drivers/media/platform/qcom/venus/hfi_helper.h
-index 34ea503..3677e2e 100644
---- a/drivers/media/platform/qcom/venus/hfi_helper.h
-+++ b/drivers/media/platform/qcom/venus/hfi_helper.h
-@@ -559,6 +559,7 @@ struct hfi_bitrate {
- #define HFI_CAPABILITY_LCU_SIZE				0x14
- #define HFI_CAPABILITY_HIER_P_HYBRID_NUM_ENH_LAYERS	0x15
- #define HFI_CAPABILITY_MBS_PER_SECOND_POWERSAVE		0x16
-+#define HFI_CAPABILITY_MAX_VIDEOCORES          0x2B
- 
- struct hfi_capability {
- 	u32 capability_type;
-diff --git a/drivers/media/platform/qcom/venus/hfi_parser.h b/drivers/media/platform/qcom/venus/hfi_parser.h
-index 3e931c7..264e6dd 100644
---- a/drivers/media/platform/qcom/venus/hfi_parser.h
-+++ b/drivers/media/platform/qcom/venus/hfi_parser.h
-@@ -107,4 +107,9 @@ static inline u32 frate_step(struct venus_inst *inst)
- 	return cap_step(inst, HFI_CAPABILITY_FRAMERATE);
++	kfree(mod->modinfo_attrs);
+ 	return error;
  }
  
-+static inline u32 core_num_max(struct venus_inst *inst)
-+{
-+	return cap_max(inst, HFI_CAPABILITY_MAX_VIDEOCORES);
-+}
-+
- #endif
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.7.4
+
 
