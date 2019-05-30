@@ -2,243 +2,145 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 329F2C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D20C28CC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 090B4253FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:20:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDB68253F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:20:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727334AbfE3JUh (ORCPT
+        id S1727734AbfE3JUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 05:20:37 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:20215 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726819AbfE3JUf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 05:20:35 -0400
-X-UUID: bea91755b226484eb6ad6fba44482b5e-20190530
-X-UUID: bea91755b226484eb6ad6fba44482b5e-20190530
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <biao.huang@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1042707664; Thu, 30 May 2019 17:20:24 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 30 May 2019 17:20:23 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 30 May 2019 17:20:22 +0800
-From:   Biao Huang <biao.huang@mediatek.com>
-To:     <davem@davemloft.net>, Jose Abreu <joabreu@synopsys.com>
-CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <netdev@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <yt.shen@mediatek.com>,
-        <biao.huang@mediatek.com>, <jianguo.zhang@mediatek.com>,
-        <boon.leong.ong@intel.com>, <andrew@lunn.ch>
-Subject: [v6, PATCH] net: stmmac: add support for hash table size 128/256 in dwmac4
-Date:   Thu, 30 May 2019 17:20:19 +0800
-Message-ID: <1559208019-2778-2-git-send-email-biao.huang@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1559208019-2778-1-git-send-email-biao.huang@mediatek.com>
-References: <1559208019-2778-1-git-send-email-biao.huang@mediatek.com>
+        Thu, 30 May 2019 05:20:48 -0400
+Received: from foss.arm.com ([217.140.101.70]:32998 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726903AbfE3JUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 05:20:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1FD60A78;
+        Thu, 30 May 2019 02:20:47 -0700 (PDT)
+Received: from queper01-lin.cambridge.arm.com (queper01-lin.cambridge.arm.com [10.1.195.48])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6FED33F59C;
+        Thu, 30 May 2019 02:20:44 -0700 (PDT)
+From:   Quentin Perret <quentin.perret@arm.com>
+To:     edubezval@gmail.com, rui.zhang@intel.com, javi.merino@kernel.org,
+        viresh.kumar@linaro.org, amit.kachhap@gmail.com, rjw@rjwysocki.net,
+        will.deacon@arm.com, catalin.marinas@arm.com,
+        daniel.lezcano@linaro.org, dietmar.eggemann@arm.com,
+        ionela.voinescu@arm.com, mka@chromium.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, quentin.perret@arm.com
+Subject: [PATCH v5 0/3] Make IPA use PM_EM
+Date:   Thu, 30 May 2019 10:20:35 +0100
+Message-Id: <20190530092038.12020-1-quentin.perret@arm.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1. get hash table size in hw feature reigster, and add support
-for taller hash table(128/256) in dwmac4.
-2. only clear GMAC_PACKET_FILTER bits used in this function,
-to avoid side effect to functions of other bits.
+Changes in v5:
+**************
+ - Changed patch 02 to guard IPA-specific code in cpu_cooling.c with
+   appropriate ifdefery (Daniel)
+ - Rebased on 5.2-rc2
 
-stmmac selftests output log with flow control on:
-	ethtool -t eth0
-	The test result is FAIL
-	The test extra info:
-	 1. MAC Loopback                 0
-	 2. PHY Loopback                 -95
-	 3. MMC Counters                 0
-	 4. EEE                          -95
-	 5. Hash Filter MC               0
-	 6. Perfect Filter UC            0
-	 7. MC Filter                    0
-	 8. UC Filter                    0
-	 9. Flow Control                 0
+Changes in v4:
+**************
+ - Added Viresh's Acked-by to all 3 patches
+ - Improved commit message of patch 3/3 to explain how it has no
+   functional impact on existing users (Eduardo)
 
-Signed-off-by: Biao Huang <biao.huang@mediatek.com>
----
- drivers/net/ethernet/stmicro/stmmac/common.h      |    7 +--
- drivers/net/ethernet/stmicro/stmmac/dwmac4.h      |    4 +-
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c |   49 ++++++++++++---------
- drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c  |    1 +
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |    6 +++
- 5 files changed, 42 insertions(+), 25 deletions(-)
+Changes in v3:
+**************
+ - Changed warning message for unordered tables to something more
+   explicit (Viresh)
+ - Changed WARN() into a pr_err() for consistency
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
-index 1961fe9..26bbcd8 100644
---- a/drivers/net/ethernet/stmicro/stmmac/common.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-@@ -335,6 +335,7 @@ struct dma_features {
- 	/* 802.3az - Energy-Efficient Ethernet (EEE) */
- 	unsigned int eee;
- 	unsigned int av;
-+	unsigned int hash_tb_sz;
- 	unsigned int tsoen;
- 	/* TX and RX csum */
- 	unsigned int tx_coe;
-@@ -428,9 +429,9 @@ struct mac_device_info {
- 	struct mii_regs mii;	/* MII register Addresses */
- 	struct mac_link link;
- 	void __iomem *pcsr;     /* vpointer to device CSRs */
--	int multicast_filter_bins;
--	int unicast_filter_entries;
--	int mcast_bits_log2;
-+	unsigned int multicast_filter_bins;
-+	unsigned int unicast_filter_entries;
-+	unsigned int mcast_bits_log2;
- 	unsigned int rx_csum;
- 	unsigned int pcs;
- 	unsigned int pmt;
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
-index 01c1089..b68785f7 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
-@@ -18,8 +18,7 @@
- /*  MAC registers */
- #define GMAC_CONFIG			0x00000000
- #define GMAC_PACKET_FILTER		0x00000008
--#define GMAC_HASH_TAB_0_31		0x00000010
--#define GMAC_HASH_TAB_32_63		0x00000014
-+#define GMAC_HASH_TAB(x)		(0x10 + (x) * 4)
- #define GMAC_RX_FLOW_CTRL		0x00000090
- #define GMAC_QX_TX_FLOW_CTRL(x)		(0x70 + x * 4)
- #define GMAC_TXQ_PRTY_MAP0		0x98
-@@ -184,6 +183,7 @@ enum power_event {
- #define GMAC_HW_FEAT_MIISEL		BIT(0)
- 
- /* MAC HW features1 bitmap */
-+#define GMAC_HW_HASH_TB_SZ		GENMASK(25, 24)
- #define GMAC_HW_FEAT_AVSEL		BIT(20)
- #define GMAC_HW_TSOEN			BIT(18)
- #define GMAC_HW_TXFIFOSIZE		GENMASK(10, 6)
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index 5e98da4..4183607 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -403,41 +403,50 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
- 			      struct net_device *dev)
- {
- 	void __iomem *ioaddr = (void __iomem *)dev->base_addr;
--	unsigned int value = 0;
-+	int numhashregs = (hw->multicast_filter_bins >> 5);
-+	int mcbitslog2 = hw->mcast_bits_log2;
-+	unsigned int value;
-+	int i;
- 
-+	value = readl(ioaddr + GMAC_PACKET_FILTER);
-+	value &= ~GMAC_PACKET_FILTER_HMC;
-+	value &= ~GMAC_PACKET_FILTER_HPF;
-+	value &= ~GMAC_PACKET_FILTER_PCF;
-+	value &= ~GMAC_PACKET_FILTER_PM;
-+	value &= ~GMAC_PACKET_FILTER_PR;
- 	if (dev->flags & IFF_PROMISC) {
- 		value = GMAC_PACKET_FILTER_PR | GMAC_PACKET_FILTER_PCF;
- 	} else if ((dev->flags & IFF_ALLMULTI) ||
--			(netdev_mc_count(dev) > HASH_TABLE_SIZE)) {
-+		   (netdev_mc_count(dev) > hw->multicast_filter_bins)) {
- 		/* Pass all multi */
--		value = GMAC_PACKET_FILTER_PM;
--		/* Set the 64 bits of the HASH tab. To be updated if taller
--		 * hash table is used
--		 */
--		writel(0xffffffff, ioaddr + GMAC_HASH_TAB_0_31);
--		writel(0xffffffff, ioaddr + GMAC_HASH_TAB_32_63);
-+		value |= GMAC_PACKET_FILTER_PM;
-+		/* Set all the bits of the HASH tab */
-+		for (i = 0; i < numhashregs; i++)
-+			writel(0xffffffff, ioaddr + GMAC_HASH_TAB(i));
- 	} else if (!netdev_mc_empty(dev)) {
--		u32 mc_filter[2];
- 		struct netdev_hw_addr *ha;
-+		u32 mc_filter[8];
- 
- 		/* Hash filter for multicast */
--		value = GMAC_PACKET_FILTER_HMC;
-+		value |= GMAC_PACKET_FILTER_HMC;
- 
- 		memset(mc_filter, 0, sizeof(mc_filter));
- 		netdev_for_each_mc_addr(ha, dev) {
--			/* The upper 6 bits of the calculated CRC are used to
--			 * index the content of the Hash Table Reg 0 and 1.
-+			/* The upper n bits of the calculated CRC are used to
-+			 * index the contents of the hash table. The number of
-+			 * bits used depends on the hardware configuration
-+			 * selected at core configuration time.
- 			 */
--			int bit_nr =
--				(bitrev32(~crc32_le(~0, ha->addr, 6)) >> 26);
--			/* The most significant bit determines the register
--			 * to use while the other 5 bits determines the bit
--			 * within the selected register
-+			int bit_nr = bitrev32(~crc32_le(~0, ha->addr,
-+					ETH_ALEN)) >> (32 - mcbitslog2);
-+			/* The most significant bit determines the register to
-+			 * use (H/L) while the other 5 bits determine the bit
-+			 * within the register.
- 			 */
--			mc_filter[bit_nr >> 5] |= (1 << (bit_nr & 0x1F));
-+			mc_filter[bit_nr >> 5] |= (1 << (bit_nr & 0x1f));
- 		}
--		writel(mc_filter[0], ioaddr + GMAC_HASH_TAB_0_31);
--		writel(mc_filter[1], ioaddr + GMAC_HASH_TAB_32_63);
-+		for (i = 0; i < numhashregs; i++)
-+			writel(mc_filter[i], ioaddr + GMAC_HASH_TAB(i));
- 	}
- 
- 	value |= GMAC_PACKET_FILTER_HPF;
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
-index edb6053..59afb53 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
-@@ -354,6 +354,7 @@ static void dwmac4_get_hw_feature(void __iomem *ioaddr,
- 
- 	/* MAC HW feature1 */
- 	hw_cap = readl(ioaddr + GMAC_HW_FEATURE1);
-+	dma_cap->hash_tb_sz = (hw_cap & GMAC_HW_HASH_TB_SZ) >> 24;
- 	dma_cap->av = (hw_cap & GMAC_HW_FEAT_AVSEL) >> 20;
- 	dma_cap->tsoen = (hw_cap & GMAC_HW_TSOEN) >> 18;
- 	/* RX and TX FIFO sizes are encoded as log2(n / 128). Undo that by
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 8fcbf22..f7aac15 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -4166,6 +4166,12 @@ static int stmmac_hw_init(struct stmmac_priv *priv)
- 		priv->plat->enh_desc = priv->dma_cap.enh_desc;
- 		priv->plat->pmt = priv->dma_cap.pmt_remote_wake_up;
- 		priv->hw->pmt = priv->plat->pmt;
-+		if (priv->dma_cap.hash_tb_sz) {
-+			priv->hw->multicast_filter_bins =
-+					(BIT(priv->dma_cap.hash_tb_sz) << 5);
-+			priv->hw->mcast_bits_log2 =
-+					ilog2(priv->hw->multicast_filter_bins);
-+		}
- 
- 		/* TXCOE doesn't work in thresh DMA mode */
- 		if (priv->plat->force_thresh_dma_mode)
+Changes in v2:
+**************
+ - Fixed patch 01/03 to actually enable CONFIG_ENERGY_MODEL
+ - Added "depends on ENERGY_MODEL" to IPA (Daniel)
+ - Added check to bail out if the freq table is unsorted (Viresh)
+
+Cover letter:
+*************
+
+The Intelligent Power Allocator (IPA) thermal governor uses an Energy
+Model (or EM) of the CPUs to re-distribute the power budget. To do so,
+it builds a table of <frequency, power> tuples where the power values
+are computed using the 'dynamic-power-coefficient' DT property. All of
+this is done in and only for the thermal subsystem, and more
+specifically for CPUs -- the power of other types of devices is obtained
+differently.
+
+Recently, the CPU scheduler has seen the introduction of Energy Aware
+Scheduling (EAS) patches, which also rely on an EM of the CPUs. This EM,
+however, is managed by an independent framework, called PM_EM, aimed to
+be used by all kernel subsystems interested in the power consumed by
+CPUs, and not only the scheduler.
+
+This patch series follows this logic and removes the (now redundant)
+thermal-specific EM computation code to migrate IPA to use PM_EM
+instead.
+
+Doing so should have no visible functional impact for existing users of
+IPA since:
+
+ - during the 5.1 development cycle, a series of patches [1] introduced
+   in PM_OPP some infrastructure (dev_pm_opp_of_register_em()) enabling
+   the registration of EMs in PM_EM using the DT property used by IPA;
+
+ - the existing upstream cpufreq drivers marked with the
+   'CPUFREQ_IS_COOLING_DEV' flag all call dev_pm_opp_of_register_em(),
+   which means they all support PM_EM (the only two exceptions are
+   qoriq-cpufreq which doesn't in fact use an EM and scmi-cpufreq which
+   already supports PM_EM without using the PM_OPP infrastructurei
+   because it read power costs directly from firmware);
+
+So, migrating IPA to using PM_EM should effectively be just plumbing
+since for the existing IPA users the PM_EM tables will contain the
+exact same power values that IPA used to compute on its own until now.
+The only new dependency is to compile in CONFIG_ENERGY_MODEL.
+
+Why is this migration still a good thing ? For three main reasons.
+
+ 1. it removes redundant code;
+
+ 2. it introduces an abstraction layer between IPA and the EM
+    computation. PM_EM offers to EAS and IPA (and potentially other
+    clients) standardized EM tables and hides 'how' these tables have
+    been obtained. PM_EM as of now supports power values either coming
+    from the 'dynamic-power-coefficient' DT property or obtained
+    directly from firmware using SCMI. The latter is a new feature for
+    IPA and that comes 'for free' with the migration. This will also be
+    true in the future every time PM_EM gets support for other ways of
+    loading the EM. Moreover, PM_EM is documented and has a debugfs
+    interface which should help adding support for new platforms.
+
+ 3. it builds a consistent view of the EM of CPUs across kernel
+    subsystems, which is a pre-requisite for any kind of future work
+    aiming at a smarter power allocation using scheduler knowledge about
+    the system for example.
+
+[1] https://lore.kernel.org/lkml/20190204110952.16025-1-quentin.perret@arm.com/
+
+
+Quentin Perret (3):
+  arm64: defconfig: Enable CONFIG_ENERGY_MODEL
+  thermal: cpu_cooling: Make the power-related code depend on IPA
+  thermal: cpu_cooling: Migrate to using the EM framework
+
+ arch/arm64/configs/defconfig  |   1 +
+ drivers/thermal/Kconfig       |   1 +
+ drivers/thermal/cpu_cooling.c | 428 ++++++++++++++--------------------
+ 3 files changed, 178 insertions(+), 252 deletions(-)
+
 -- 
-1.7.9.5
+2.21.0
 
