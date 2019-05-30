@@ -2,89 +2,67 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F33C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 06:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E4EEC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 06:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E98AF25A34
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 06:33:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E144025A3C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 06:35:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qw1P2yCe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbfE3GdF (ORCPT
+        id S1727401AbfE3GfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 02:33:05 -0400
-Received: from 59-120-53-16.HINET-IP.hinet.net ([59.120.53.16]:33611 "EHLO
-        ATCSQR.andestech.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727196AbfE3GdE (ORCPT
+        Thu, 30 May 2019 02:35:00 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41688 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725961AbfE3Ge7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 02:33:04 -0400
-Received: from mail.andestech.com (atcpcs16.andestech.com [10.0.1.222])
-        by ATCSQR.andestech.com with ESMTP id x4U6QvwC058344;
-        Thu, 30 May 2019 14:26:57 +0800 (GMT-8)
-        (envelope-from nickhu@andestech.com)
-Received: from andestech.com (10.0.15.65) by ATCPCS16.andestech.com
- (10.0.1.222) with Microsoft SMTP Server id 14.3.123.3; Thu, 30 May 2019
- 14:32:31 +0800
-Date:   Thu, 30 May 2019 14:32:32 +0800
-From:   Nick Hu <nickhu@andestech.com>
-To:     Christoph Hellwig <hch@infradead.org>
-CC:     "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "palmer@sifive.com" <palmer@sifive.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "green.hu@gmail.com" <green.hu@gmail.com>,
-        Greentime Ying-Han =?utf-8?B?SHUo6IOh6Iux5ryiKQ==?= 
-        <greentime@andestech.com>
-Subject: Re: [PATCH] riscv: Fix udelay in RV32.
-Message-ID: <20190530063232.GA17102@andestech.com>
-References: <381ee6950c84b868ca6a3c676eb981a1980889a3.1559035050.git.nickhu@andestech.com>
- <20190530055258.GA7170@infradead.org>
+        Thu, 30 May 2019 02:34:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=jr8TFbprzSDAQ8IU8dPBj96p3eA/WBFaKx/uITpNZxo=; b=qw1P2yCe/tNQ53IWK8sRhTlQ/
+        7BOzfMuds62GDyiMXXH0kaXp1Y+C9rv3rPLSzwvtXfy2QGuFj7Z4GM+RO8YF28VJED1HBAVuJiacv
+        HfYJ8LtXhewzVwZPvZj+5oYXx2zT6rEK1SyEt/ODgaLXdjqFaYQUKil4+7nXra90GSGQk7EXlZj8Y
+        zR8FSrFgCmzAQsmE0qwBRRVez9amvdlg3cLbTtuDXOhSU8dOxHmsBsyayqcOKZhpq7X5TjV0Vtph+
+        SNe5iYHi6xjjdAMoXuQN3GXfEYLx/kF6PhaP+VsY3yVJyVgoDw6XzDkR0ixeywqN5YUy/hPRiubF1
+        hBGqc8phQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hWEeR-0000fN-4p; Thu, 30 May 2019 06:34:59 +0000
+Date:   Wed, 29 May 2019 23:34:59 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>
+Subject: Re: [PATCH 4/4] arm64/mm: Drop vm_fault_t argument from
+ __do_page_fault()
+Message-ID: <20190530063459.GA2181@infradead.org>
+References: <1559133285-27986-1-git-send-email-anshuman.khandual@arm.com>
+ <1559133285-27986-5-git-send-email-anshuman.khandual@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190530055258.GA7170@infradead.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Originating-IP: [10.0.15.65]
-X-DNSRBL: 
-X-MAIL: ATCSQR.andestech.com x4U6QvwC058344
+In-Reply-To: <1559133285-27986-5-git-send-email-anshuman.khandual@arm.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 01:52:58PM +0800, Christoph Hellwig wrote:
-> On Tue, May 28, 2019 at 05:26:49PM +0800, Nick Hu wrote:
-> > In RV32, udelay would delay the wrong cycle.
-> > When it shifts right "UDELAY_SHITFT" bits, it
-> > either delays 0 cycle or 1 cycle. It only works
-> > correctly in RV64. Because the 'ucycles' always
-> > needs to be 64 bits variable.
-> 
-> Please use up all your ~72 chars per line in the commit log.
->
+On Wed, May 29, 2019 at 06:04:45PM +0530, Anshuman Khandual wrote:
+> __do_page_fault() is over complicated with multiple goto statements. This
+> cleans up code flow and while there drops the vm_fault_t argument.
 
-OK, Thanks! 
-
-> > diff --git a/arch/riscv/lib/delay.c b/arch/riscv/lib/delay.c
-> > index dce8ae24c6d3..da847f49fb74 100644
-> > --- a/arch/riscv/lib/delay.c
-> > +++ b/arch/riscv/lib/delay.c
-> > @@ -88,7 +88,7 @@ EXPORT_SYMBOL(__delay);
-> >  
-> >  void udelay(unsigned long usecs)
-> >  {
-> > -	unsigned long ucycles = usecs * lpj_fine * UDELAY_MULT;
-> > +	unsigned long long ucycles = (unsigned long long)usecs * lpj_fine * UDELAY_MULT;
-> 
-> And this creates a way too long line.  Pleaase use u64 instead of
-> unsigned long long to clarify the intention while also fixing the long
-> lines.
->
-
-Sure, I will fix it and send another patch. Thanks.
-
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+There is no argument dropped anywhere, just a local variable.
