@@ -2,100 +2,97 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D7AC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BCFDC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E9BE25F09
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:55:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192131;
-	bh=F6fL20tFwnTnHRQPPUAAQLpR0OjfBcTWFSmquw6yw04=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R/Bmp8ZDIO5w4t8ynZCAL4/TsuPY5gzlyDTayNLDlcFJUh5L6K50rHIGI2SA8kA4X
-	 P7SynbESduYE3az3VMMqJ/LAKfUC64IvWjbrZORyBVEEa9WkJR7AsEz5UAJGQD6od0
-	 D2pJCXGH6Kc6l/Lg1AphMCpi1ZAEYKKWWAJ6E7YI=
+	by mail.kernel.org (Postfix) with ESMTP id 3B87F25EFF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:55:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MwFQC0UI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389162AbfE3Ez3 (ORCPT
+        id S2389169AbfE3Eze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:55:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46738 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:55:34 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:48881 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728014AbfE3DKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:10:16 -0400
-Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2389159AbfE3Ez2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 00:55:28 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01271244A9;
-        Thu, 30 May 2019 03:10:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185816;
-        bh=F6fL20tFwnTnHRQPPUAAQLpR0OjfBcTWFSmquw6yw04=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RKnO7evygkzQiEYrSJN+H+nOAf7bd4g3q3Z7V8iehDQmhoM2EICpMdei3hGNBFkrW
-         1Ifeuh4TY193HRb9TL9yIY6mcaZf3JQVMmRIvUjshjJ8pFS6ovAQZVv6Aj1IfeZSaz
-         v0jH0EQb5TCwQ5PbHPrnM49cr5JbMuQdTsHe4AUs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Huazhong Tan <tanhuazhong@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 108/405] net: hns3: fix pause configure fail problem
-Date:   Wed, 29 May 2019 20:01:46 -0700
-Message-Id: <20190530030546.469198018@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
-References: <20190530030540.291644921@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45DwHy1HfMz9s5c;
+        Thu, 30 May 2019 14:55:26 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1559192126;
+        bh=u6qX2YcuuXUCj/6CtLWX3CJivrXavFG+g3vTC3MYfAc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=MwFQC0UI8ucaEuuFqT5vif7bsig8REJxHLJjTwdpysfmXDzHBsd+c90jQQ9Eeu3xj
+         mJCgs3itT/0eovrlyNSDloRzfbglDsAJCSOqJCFo1vAmAHtlmFWizmY0j3ft8sW+Vz
+         CDqY54mnIT5cucBWn8DtEfK12V+vo5KkHLk0AlXNe/SwGPj/d6BcpvBMDhxi/9YQqW
+         DCkSyR9DPw3U/CYlPmyYdatHaJQpiDQFxtODblzgk4UUWctpnROXOk/CoyDMj8ILiv
+         jl1N814XoOGvgsd4K3CSiHrGWM7zJraRNlXHseqXzXMLA5ZuPqE7K9Ep6PkM5a6BwA
+         tYfg6n6xDcefA==
+Date:   Thu, 30 May 2019 14:55:25 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matteo Croce <mcroce@redhat.com>
+Subject: linux-next: build warning after merge of the akpm-current tree
+Message-ID: <20190530145525.3cca17cb@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/8aSEcKm1n18JLWopbjCv0hG"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fba2efdae8b4f998f66a2ff4c9f0575e1c4bbc40 ]
+--Sig_/8aSEcKm1n18JLWopbjCv0hG
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-When configure pause, current implementation returns directly
-after setup PFC without setup BP, which is not sufficient.
+Hi all,
 
-So this patch fixes it, only return while setting PFC failed.
+After merging the akpm-current tree, today's linux-next build (x86_64
+allmodconfig) produced this warning:
 
-Fixes: 44e59e375bf7 ("net: hns3: do not return GE PFC setting err when initializing")
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+net/tipc/sysctl.c:42:12: warning: 'one' defined but not used [-Wunused-vari=
+able]
+ static int one =3D 1;
+            ^~~
+net/tipc/sysctl.c:41:12: warning: 'zero' defined but not used [-Wunused-var=
+iable]
+ static int zero;
+            ^~~~
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
-index aafc69f4bfdd6..a7bbb6d3091a6 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
-@@ -1331,8 +1331,11 @@ int hclge_pause_setup_hw(struct hclge_dev *hdev, bool init)
- 	ret = hclge_pfc_setup_hw(hdev);
- 	if (init && ret == -EOPNOTSUPP)
- 		dev_warn(&hdev->pdev->dev, "GE MAC does not support pfc\n");
--	else
-+	else if (ret) {
-+		dev_err(&hdev->pdev->dev, "config pfc failed! ret = %d\n",
-+			ret);
- 		return ret;
-+	}
- 
- 	return hclge_tm_bp_setup(hdev);
- }
--- 
-2.20.1
+Introduced by commit
 
+  6a33853c5773 ("proc/sysctl: add shared variables for range check")
 
+--=20
+Cheers,
+Stephen Rothwell
 
+--Sig_/8aSEcKm1n18JLWopbjCv0hG
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzvYj0ACgkQAVBC80lX
+0GwB6wgAmmW1oDLUmcW6Jc2Q79FQC0TF/nrsmwrnrFajk64ae3ZfZYJpfRZn++9p
+QyqqPNyEIKbIeFEZ2TG30LPZ6NgKStitxF4MhgnUr25NEmp1WjoCbniZhxNy4YG/
+7VezifgRRiWkaTEHWutSDvdyiq3y6lR9K6flYYr2oQhpCnvqlAWLVyn6gJNTh9Vu
+boELoEuJsePyiayxjK/Hryp4QW2b2QVMlU3uooueo7mVRUsxzeNd/nwiEgLFmmEO
+e/3rDYA8yhCNKSy2zWw+40bSjpVY5MTm0moLBOM9Gnw4aTZcVyPtG+Pq4fpnED+T
+w8ClR4AEddix/9uKLHAAw4mDvuSQFA==
+=kH6a
+-----END PGP SIGNATURE-----
+
+--Sig_/8aSEcKm1n18JLWopbjCv0hG--
