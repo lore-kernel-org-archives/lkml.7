@@ -7,53 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC9DFC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9222DC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B20D124C6C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:44:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6240B24C81
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:44:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187882;
-	bh=Ff4fiUhKF78asIqhF4O+7RlfmrvJnhFpQLyghkBMiuQ=;
+	s=default; t=1559187884;
+	bh=T9SxAwafuresF+eC9gf4q9GPP2Aw9iKG8uR2pLrfE3A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W4HjaCI/fj1hcoXBwSQ2wPYAYI5DPWYJrlUlul/NBnM/PuIl0ORoT3ZZGsVpLo+u/
-	 mH5sn/Sz1DOT0m3Fiv9Qqy/GlbAc9tWhRhZVOLx97DKlFuWU79/LGNzG2QkHxROGpQ
-	 IcExNn3BQDsClR4gV4HmAQHyRkcueqFARvGIRDuI=
+	b=IYZtFCcr4FQhAKvLgOOIB7QtbpCuMaEswo9PvY+cckgoIgah/irIfLWsSrAXBwElr
+	 CUXf/yzwY/8MBQMmH8yuuZoVzFGQM700VBuoXwAftLiW3/3D2Ct5KaELAKCjEx1A/i
+	 NCriM/GDilTcwLKI9Ki1XpNAJOcNbWg2LeYwKGmE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732877AbfE3Dol (ORCPT
+        id S1732862AbfE3Doj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:44:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60480 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:44:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732380AbfE3DU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732382AbfE3DU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:20:56 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 582EC2498D;
+        by mail.kernel.org (Postfix) with ESMTPSA id 014432492F;
         Thu, 30 May 2019 03:20:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186455;
-        bh=Ff4fiUhKF78asIqhF4O+7RlfmrvJnhFpQLyghkBMiuQ=;
+        s=default; t=1559186456;
+        bh=T9SxAwafuresF+eC9gf4q9GPP2Aw9iKG8uR2pLrfE3A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K6PNh9Jnt+FmxYuQqUhP/vs14ff2m3AJ7RJUc3pfwJoJirYNjR9jI7C55G9bN2u42
-         yY0whLGJ1gMF6XMGc4GQfNylBFEumLt0H1qba53zh2Uq+ZHrse+4oB/I4t6A9r2UuW
-         iPjrpXBCS8RInF3oqYGdSBCWDk8IpKtE857Z0zzA=
+        b=FXgRNuiZKG1lT49udixDJ1TyzGnTYlTqaauBn3x+/Ex0DFafz9Bfev2VF+lATqbza
+         6O4Vr4TFzJmA29wM439NcT8dFcNCtwp+eVnwh7bA1++0w5J7inGxGxQ7xM3rA151/0
+         +lSNnzBamfUukiq0M4akScGuLFK/vySWVUZBPwoM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@suse.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Mitsuo Hayasaka <mitsuo.hayasaka.hu@hitachi.com>,
-        Nicolai Stange <nstange@suse.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 068/128] x86/irq/64: Limit IST stack overflow check to #DB stack
-Date:   Wed, 29 May 2019 20:06:40 -0700
-Message-Id: <20190530030446.997261154@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nicholas Nunley <nicholas.d.nunley@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 069/128] i40e: dont allow changes to HW VLAN stripping on active port VLANs
+Date:   Wed, 29 May 2019 20:06:41 -0700
+Message-Id: <20190530030447.142036945@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -66,80 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7dbcf2b0b770eeb803a416ee8dcbef78e6389d40 ]
+[ Upstream commit bfb0ebed53857cfc57f11c63fa3689940d71c1c8 ]
 
-Commit
+Modifying the VLAN stripping options when a port VLAN is configured
+will break traffic for the VSI, and conceptually doesn't make sense,
+so don't allow this.
 
-  37fe6a42b343 ("x86: Check stack overflow in detail")
-
-added a broad check for the full exception stack area, i.e. it considers
-the full exception stack area as valid.
-
-That's wrong in two aspects:
-
- 1) It does not check the individual areas one by one
-
- 2) #DF, NMI and #MCE are not enabling interrupts which means that a
-    regular device interrupt cannot happen in their context. In fact if a
-    device interrupt hits one of those IST stacks that's a bug because some
-    code path enabled interrupts while handling the exception.
-
-Limit the check to the #DB stack and consider all other IST stacks as
-'overflow' or invalid.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Mitsuo Hayasaka <mitsuo.hayasaka.hu@hitachi.com>
-Cc: Nicolai Stange <nstange@suse.de>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190414160143.682135110@linutronix.de
+Signed-off-by: Nicholas Nunley <nicholas.d.nunley@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/irq_64.c | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/intel/i40e/i40e_main.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/x86/kernel/irq_64.c b/arch/x86/kernel/irq_64.c
-index bcd1b82c86e81..005e9a77a664e 100644
---- a/arch/x86/kernel/irq_64.c
-+++ b/arch/x86/kernel/irq_64.c
-@@ -25,9 +25,18 @@ int sysctl_panic_on_stackoverflow;
- /*
-  * Probabilistic stack overflow check:
-  *
-- * Only check the stack in process context, because everything else
-- * runs on the big interrupt stacks. Checking reliably is too expensive,
-- * so we just check from interrupts.
-+ * Regular device interrupts can enter on the following stacks:
-+ *
-+ * - User stack
-+ *
-+ * - Kernel task stack
-+ *
-+ * - Interrupt stack if a device driver reenables interrupts
-+ *   which should only happen in really old drivers.
-+ *
-+ * - Debug IST stack
-+ *
-+ * All other contexts are invalid.
-  */
- static inline void stack_overflow_check(struct pt_regs *regs)
- {
-@@ -52,8 +61,8 @@ static inline void stack_overflow_check(struct pt_regs *regs)
- 		return;
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
+index 7836072d3f631..886378c5334fa 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_main.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
+@@ -2285,6 +2285,10 @@ void i40e_vlan_stripping_enable(struct i40e_vsi *vsi)
+ 	struct i40e_vsi_context ctxt;
+ 	i40e_status ret;
  
- 	oist = this_cpu_ptr(&orig_ist);
--	estack_top = (u64)oist->ist[0] - EXCEPTION_STKSZ + STACK_TOP_MARGIN;
--	estack_bottom = (u64)oist->ist[N_EXCEPTION_STACKS - 1];
-+	estack_bottom = (u64)oist->ist[DEBUG_STACK];
-+	estack_top = estack_bottom - DEBUG_STKSZ + STACK_TOP_MARGIN;
- 	if (regs->sp >= estack_top && regs->sp <= estack_bottom)
- 		return;
++	/* Don't modify stripping options if a port VLAN is active */
++	if (vsi->info.pvid)
++		return;
++
+ 	if ((vsi->info.valid_sections &
+ 	     cpu_to_le16(I40E_AQ_VSI_PROP_VLAN_VALID)) &&
+ 	    ((vsi->info.port_vlan_flags & I40E_AQ_VSI_PVLAN_MODE_MASK) == 0))
+@@ -2315,6 +2319,10 @@ void i40e_vlan_stripping_disable(struct i40e_vsi *vsi)
+ 	struct i40e_vsi_context ctxt;
+ 	i40e_status ret;
  
++	/* Don't modify stripping options if a port VLAN is active */
++	if (vsi->info.pvid)
++		return;
++
+ 	if ((vsi->info.valid_sections &
+ 	     cpu_to_le16(I40E_AQ_VSI_PROP_VLAN_VALID)) &&
+ 	    ((vsi->info.port_vlan_flags & I40E_AQ_VSI_PVLAN_EMOD_MASK) ==
 -- 
 2.20.1
 
