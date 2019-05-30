@@ -5,53 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9263EC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6426EC28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 691D424131
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:12:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E13D24E8D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:12:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189549;
-	bh=oDp3VEB09fC7B/D5QmrWyIiX/u6HdGaoyP3JsUBBgxw=;
+	s=default; t=1559189555;
+	bh=VEZpUIdlXjhf23J0PQHrbPeW73H2jqsEXS2Vwuma1lw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XIhfj1KO08NA2c86tKpYh+BLu7s/XNBXtMxKztuSedNod5xuVyCrBsU6p6m19+3C2
-	 MWV4uRxzn96eudG42bM8qfdjU3K4O/PKSbWIlrNOMjoDojHf2JGV4hILuBK66RqTV4
-	 JDdJpr5A0lQti/Xk7/DYdTJ4teNBUCsj32zt+0UU=
+	b=hu3ethFOZdpy9GkI3Qix2mqzgjBu3R9GJ3hnW/abya88N6+LoB+8Ncc+5OXXPK28T
+	 TS3Lgn9FOwQNO/UaAIYdcnMumFEWMnbfKzHMSE2rj8AIgiu87WfNoal5/kRoNlgoft
+	 4u7gP4mU5F+Bw55KYdyzNNx7ifl1gP+xsJnefiDU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731141AbfE3EM1 (ORCPT
+        id S1730731AbfE3DQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:12:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43252 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:16:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730735AbfE3DQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:37 -0400
+        id S1728548AbfE3DNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:24 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E228B245AB;
-        Thu, 30 May 2019 03:16:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1FA624534;
+        Thu, 30 May 2019 03:13:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186197;
-        bh=oDp3VEB09fC7B/D5QmrWyIiX/u6HdGaoyP3JsUBBgxw=;
+        s=default; t=1559186003;
+        bh=VEZpUIdlXjhf23J0PQHrbPeW73H2jqsEXS2Vwuma1lw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xx+BoNI3kZoOwmBOj/2IiThfWed0w+lsbTejKzSO34nYwWg0fvUcJB7z9fds3E44Y
-         UtKDWfIpkT4/x1gdrnGGDD/wzEkh6FqFuBqKpok3+FPRDGZRuPAITBwRy7yOcLI7Np
-         oZikbinxCEVpIfx2uOOCawt0ppouc9Dz8LRhSQgs=
+        b=ZVZfbHY5z3Oj50HQKxdrVBpLsIVo7k1yyfKhEw1HS5pjwBYC8wrrPoKseo5fui17e
+         Av9iLb+06+hk95FRWIJrG1CfH0L3lNFTQGAVcemfWqR1wxO0Mw6MGyq0cmRZLlq3yx
+         eef/9hydSJAlnkurkJhD9LG2Mhq7s9smkrzrqEPs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 071/276] ARM: vdso: Remove dependency with the arch_timer driver internals
-Date:   Wed, 29 May 2019 20:03:49 -0700
-Message-Id: <20190530030530.679202176@linuxfoundation.org>
+        stable@vger.kernel.org, Sameer Pujar <spujar@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 056/346] dmaengine: tegra210-dma: free dma controller in remove()
+Date:   Wed, 29 May 2019 20:02:09 -0700
+Message-Id: <20190530030543.846003375@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
-References: <20190530030523.133519668@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,63 +60,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1f5b62f09f6b314c8d70b9de5182dae4de1f94da ]
+[ Upstream commit f030e419501cb95e961e9ed35c493b5d46a04eca ]
 
-The VDSO code uses the kernel helper that was originally designed
-to abstract the access between 32 and 64bit systems. It worked so
-far because this function is declared as 'inline'.
+Following kernel panic is seen during DMA driver unload->load sequence
+==========================================================================
+Unable to handle kernel paging request at virtual address ffffff8001198880
+Internal error: Oops: 86000007 [#1] PREEMPT SMP
+CPU: 0 PID: 5907 Comm: HwBinder:4123_1 Tainted: G C 4.9.128-tegra-g065839f
+Hardware name: galen (DT)
+task: ffffffc3590d1a80 task.stack: ffffffc3d0678000
+PC is at 0xffffff8001198880
+LR is at of_dma_request_slave_channel+0xd8/0x1f8
+pc : [<ffffff8001198880>] lr : [<ffffff8008746f30>] pstate: 60400045
+sp : ffffffc3d067b710
+x29: ffffffc3d067b710 x28: 000000000000002f
+x27: ffffff800949e000 x26: ffffff800949e750
+x25: ffffff800949e000 x24: ffffffbefe817d84
+x23: ffffff8009f77cb0 x22: 0000000000000028
+x21: ffffffc3ffda49c8 x20: 0000000000000029
+x19: 0000000000000001 x18: ffffffffffffffff
+x17: 0000000000000000 x16: ffffff80082b66a0
+x15: ffffff8009e78250 x14: 000000000000000a
+x13: 0000000000000038 x12: 0101010101010101
+x11: 0000000000000030 x10: 0101010101010101
+x9 : fffffffffffffffc x8 : 7f7f7f7f7f7f7f7f
+x7 : 62ff726b6b64622c x6 : 0000000000008064
+x5 : 6400000000000000 x4 : ffffffbefe817c44
+x3 : ffffffc3ffda3e08 x2 : ffffff8001198880
+x1 : ffffffc3d48323c0 x0 : ffffffc3d067b788
 
-As we're about to revamp that part of the code, the VDSO would
-break. Let's fix it by doing what should have been done from
-the start, a proper system register access.
+Process HwBinder:4123_1 (pid: 5907, stack limit = 0xffffffc3d0678028)
+Call trace:
+[<ffffff8001198880>] 0xffffff8001198880
+[<ffffff80087459f8>] dma_request_chan+0x50/0x1f0
+[<ffffff8008745bc0>] dma_request_slave_channel+0x28/0x40
+[<ffffff8001552c44>] tegra_alt_pcm_open+0x114/0x170
+[<ffffff8008d65fa4>] soc_pcm_open+0x10c/0x878
+[<ffffff8008d18618>] snd_pcm_open_substream+0xc0/0x170
+[<ffffff8008d1878c>] snd_pcm_open+0xc4/0x240
+[<ffffff8008d189e0>] snd_pcm_playback_open+0x58/0x80
+[<ffffff8008cfc6d4>] snd_open+0xb4/0x178
+[<ffffff8008250628>] chrdev_open+0xb8/0x1d0
+[<ffffff8008246fdc>] do_dentry_open+0x214/0x318
+[<ffffff80082485d0>] vfs_open+0x58/0x88
+[<ffffff800825bce0>] do_last+0x450/0xde0
+[<ffffff800825c718>] path_openat+0xa8/0x368
+[<ffffff800825dd84>] do_filp_open+0x8c/0x110
+[<ffffff8008248a74>] do_sys_open+0x164/0x220
+[<ffffff80082b66dc>] compat_SyS_openat+0x3c/0x50
+[<ffffff8008083040>] el0_svc_naked+0x34/0x38
+---[ end trace 67e6d544e65b5145 ]---
+Kernel panic - not syncing: Fatal exception
+==========================================================================
 
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+In device probe(), of_dma_controller_register() registers DMA controller.
+But when driver is removed, this is not freed. During driver reload this
+results in data abort and kernel panic. Add of_dma_controller_free() in
+driver remove path to fix the issue.
+
+Fixes: f46b195799b5 ("dmaengine: tegra-adma: Add support for Tegra210 ADMA")
+Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/include/asm/cp15.h   | 2 ++
- arch/arm/vdso/vgettimeofday.c | 5 +++--
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ drivers/dma/tegra210-adma.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/include/asm/cp15.h b/arch/arm/include/asm/cp15.h
-index 07e27f212dc75..d2453e2d3f1f3 100644
---- a/arch/arm/include/asm/cp15.h
-+++ b/arch/arm/include/asm/cp15.h
-@@ -68,6 +68,8 @@
- #define BPIALL				__ACCESS_CP15(c7, 0, c5, 6)
- #define ICIALLU				__ACCESS_CP15(c7, 0, c5, 0)
+diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+index b26256f23d67f..08b10274284a8 100644
+--- a/drivers/dma/tegra210-adma.c
++++ b/drivers/dma/tegra210-adma.c
+@@ -786,6 +786,7 @@ static int tegra_adma_remove(struct platform_device *pdev)
+ 	struct tegra_adma *tdma = platform_get_drvdata(pdev);
+ 	int i;
  
-+#define CNTVCT				__ACCESS_CP15_64(1, c14)
-+
- extern unsigned long cr_alignment;	/* defined in entry-armv.S */
++	of_dma_controller_free(pdev->dev.of_node);
+ 	dma_async_device_unregister(&tdma->dma_dev);
  
- static inline unsigned long get_cr(void)
-diff --git a/arch/arm/vdso/vgettimeofday.c b/arch/arm/vdso/vgettimeofday.c
-index a9dd619c6c290..7bdbf5d5c47d3 100644
---- a/arch/arm/vdso/vgettimeofday.c
-+++ b/arch/arm/vdso/vgettimeofday.c
-@@ -18,9 +18,9 @@
- #include <linux/compiler.h>
- #include <linux/hrtimer.h>
- #include <linux/time.h>
--#include <asm/arch_timer.h>
- #include <asm/barrier.h>
- #include <asm/bug.h>
-+#include <asm/cp15.h>
- #include <asm/page.h>
- #include <asm/unistd.h>
- #include <asm/vdso_datapage.h>
-@@ -123,7 +123,8 @@ static notrace u64 get_ns(struct vdso_data *vdata)
- 	u64 cycle_now;
- 	u64 nsec;
- 
--	cycle_now = arch_counter_get_cntvct();
-+	isb();
-+	cycle_now = read_sysreg(CNTVCT);
- 
- 	cycle_delta = (cycle_now - vdata->cs_cycle_last) & vdata->cs_mask;
- 
+ 	for (i = 0; i < tdma->nr_channels; ++i)
 -- 
 2.20.1
 
