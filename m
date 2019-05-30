@@ -2,84 +2,76 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 975F5C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 23:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3EA2C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 23:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72A1A262CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 23:06:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B053C262D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 23:07:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbfE3XGP (ORCPT
+        id S1726791AbfE3XHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 19:06:15 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:55926
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726100AbfE3XGP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 19:06:15 -0400
-X-IronPort-AV: E=Sophos;i="5.60,532,1549926000"; 
-   d="scan'208";a="307713717"
-Received: from unknown (HELO hadrien) ([207.96.196.254])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 May 2019 01:06:12 +0200
-Date:   Thu, 30 May 2019 19:06:11 -0400 (EDT)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, kbuild-all@01.org
-Subject: [PATCH] ASoC: soc-core: fix ifnullfree.cocci warnings
-Message-ID: <alpine.DEB.2.21.1905301904530.2500@hadrien>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 30 May 2019 19:07:11 -0400
+Received: from mga18.intel.com ([134.134.136.126]:5592 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726131AbfE3XHK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 19:07:10 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 16:07:10 -0700
+X-ExtLoop1: 1
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 30 May 2019 16:07:08 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1hWU8a-0008nQ-2F; Fri, 31 May 2019 07:07:08 +0800
+Date:   Fri, 31 May 2019 07:06:20 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Jason Baron <jbaron@akamai.com>
+Cc:     kbuild-all@01.org, netdev@vger.kernel.org,
+        Christoph Paasch <cpaasch@apple.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        linux-kernel@vger.kernel.org
+Subject: [net-next:master 251/280] net/ipv4/tcp_fastopen.c:75:29: sparse:
+ sparse: symbol 'tcp_fastopen_alloc_ctx' was not declared. Should it be
+ static?
+Message-ID: <201905310755.SmE6F5XI%lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: kbuild test robot <lkp@intel.com>
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git master
+head:   84a32edec48056131c91bebb706c2a0a5976a1a1
+commit: 9092a76d3cf8638467b09bbb4f409094349b2b53 [251/280] tcp: add backup TFO key infrastructure
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-rc1-7-g2b96cd8-dirty
+        git checkout 9092a76d3cf8638467b09bbb4f409094349b2b53
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
 
-sound/soc/soc-core.c:391:2-7: WARNING: NULL check before some freeing functions is not needed.
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
 
- NULL check before some freeing functions is not needed.
 
- Based on checkpatch warning
- "kfree(NULL) is safe this check is probably not required"
- and kfreeaddr.cocci by Julia Lawall.
+sparse warnings: (new ones prefixed by >>)
 
-Generated by: scripts/coccinelle/free/ifnullfree.cocci
+>> net/ipv4/tcp_fastopen.c:75:29: sparse: sparse: symbol 'tcp_fastopen_alloc_ctx' was not declared. Should it be static?
 
-Fixes: 8e144273005d ("ASoC: soc-core: merge soc_new_pcm_runtime() and soc_rtd_init()")
-Signed-off-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Julia Lawall <julia.lawall@lip6.fr>
+Please review and possibly fold the followup patch.
+
 ---
-
-tree:   https://github.com/morimoto/linux fw-cleanup-2019-05-30-v3
-head:   7f2c61a9097fcf25dac44865db31e7eab5c8fc9d
-commit: 8e144273005d3caf8b9978e407e3d00b6180dd49 [96/103] ASoC: soc-core: merge soc_new_pcm_runtime() and soc_rtd_init()
-:::::: branch date: 12 hours ago
-:::::: commit date: 12 hours ago
-
-Please take the patch only if it's a positive warning. Thanks!
-
- soc-core.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
---- a/sound/soc/soc-core.c
-+++ b/sound/soc/soc-core.c
-@@ -387,8 +387,7 @@ static void soc_free_pcm_runtime(struct
-
- 	snd_soc_rtdcom_del_all(rtd);
-
--	if (rtd->codec_dais)
--		kfree(rtd->codec_dais);
-+	kfree(rtd->codec_dais);
-
- 	list_del(&rtd->list);
- 	kfree(rtd);
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
