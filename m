@@ -5,50 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55939C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C147C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B2CA25B91
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:46:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 325A825B6E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:46:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191579;
-	bh=JiKLfGdF1GBvxS/NHn/yixWD70lJRE3tN76wzctWgYo=;
+	s=default; t=1559191585;
+	bh=PrASumR4TwpvbI9yKAcKLsEX+QBbVstRS6VbOrnSOUg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AGEoRRy/+VVBL9QE3Yf4W9VUVUlCXePafo+ecG1w5zhFKXKIqLWOi7rNxInBTkw8I
-	 gQ63K1bXVu8GBSyWyJv8PYOEiMV/DwKe+wXtuhXtZjPzznh0sZXTpCDTAXFxOaW7kg
-	 aSlT9/JvnCwnddmuKcnbERF8NUhSrfqYFZSuaHUo=
+	b=E4J3V7ykm3T1OONWJxknkJbjGuM1eL1Y4p7qz0qXsGuof73zLWuHojW255GAtx3P7
+	 TUfDyAFITtFPnupSMFYCgbKR1bgzOEp8INuG/Bw3ppoV0Az4sGz2CS5w0zewHI3XtU
+	 SU2C1k+bmrknwMqOoW9N96Y/YEgbeBJuVC4yxF1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388837AbfE3EqS (ORCPT
+        id S2388816AbfE3EqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:46:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52108 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:46:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728655AbfE3DLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728654AbfE3DLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:11:44 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E49C244FC;
-        Thu, 30 May 2019 03:11:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABAC2244EB;
+        Thu, 30 May 2019 03:11:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185902;
-        bh=JiKLfGdF1GBvxS/NHn/yixWD70lJRE3tN76wzctWgYo=;
+        s=default; t=1559185903;
+        bh=PrASumR4TwpvbI9yKAcKLsEX+QBbVstRS6VbOrnSOUg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lw2P+prs42dAwb11Sw0mXBOs/dJ2FvUDdL76szxreQz0cXIcCIOWE6jG8+IPUBxHf
-         dmlnkw5jfC/+XTnk81yzBwiO/5uqUbqcfM0VchCQw+VxFpYMluUbJ8/fyzqWAtoXz8
-         Cfgbg+FO6lN4LgmBk9+ylNaW7b+mqk87hxpPuxv8=
+        b=r9S5dQFaOFj/E8oH8D9mJi4L/0+xWhkuJ7FOPeBZnd5Pn7zZwrMEThf7G6I/wm8XV
+         WOWwXwDL6PNZjqK5jdjN7PYdPeMv7WsoMtWPPwvT+RB2BwgPf2BFYGRSLjUkS5PoYw
+         9qMwPO3vFSxHtI78l/4Xb3vYoZdyrNB2dh74XUZU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 272/405] sh: sh7786: Add explicit I/O cast to sh7786_mm_sel()
-Date:   Wed, 29 May 2019 20:04:30 -0700
-Message-Id: <20190530030554.657716581@linuxfoundation.org>
+Subject: [PATCH 5.1 274/405] ASoC: eukrea-tlv320: fix a leaked reference by adding missing of_node_put
+Date:   Wed, 29 May 2019 20:04:32 -0700
+Message-Id: <20190530030554.758240117@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,56 +63,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8440bb9b944c02222c7a840d406141ed42e945cd ]
+[ Upstream commit b820d52e7eed7b30b2dfef5f4213a2bc3cbea6f3 ]
 
-When compile-testing on arm:
+The call to of_parse_phandle returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-    arch/sh/include/cpu-sh4/cpu/sh7786.h: In function ‘sh7786_mm_sel’:
-    arch/sh/include/cpu-sh4/cpu/sh7786.h:135:21: warning: passing argument 1 of ‘__raw_readl’ makes pointer from integer without a cast [-Wint-conversion]
-      return __raw_readl(0xFC400020) & 0x7;
-			 ^~~~~~~~~~
-    In file included from include/linux/io.h:25:0,
-		     from arch/sh/include/cpu-sh4/cpu/sh7786.h:14,
-		     from drivers/pinctrl/sh-pfc/pfc-sh7786.c:15:
-    arch/arm/include/asm/io.h:113:21: note: expected ‘const volatile void *’ but argument is of type ‘unsigned int’
-     #define __raw_readl __raw_readl
-			 ^
-    arch/arm/include/asm/io.h:114:19: note: in expansion of macro ‘__raw_readl’
-     static inline u32 __raw_readl(const volatile void __iomem *addr)
-		       ^~~~~~~~~~~
+Detected by coccinelle with the following warnings:
+./sound/soc/fsl/eukrea-tlv320.c:121:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 102, but without a correspo    nding object release within this function.
+./sound/soc/fsl/eukrea-tlv320.c:127:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 102, but without a correspo    nding object release within this function.
 
-__raw_readl() on SuperH is a macro that casts the passed I/O address to
-the correct type, while the implementations on most other architectures
-expect to be passed the correct pointer type.
-
-Add an explicit cast to fix this.
-
-Note that this also gets rid of a sparse warning on SuperH:
-
-    arch/sh/include/cpu-sh4/cpu/sh7786.h:135:16: warning: incorrect type in argument 1 (different base types)
-    arch/sh/include/cpu-sh4/cpu/sh7786.h:135:16:    expected void const volatile [noderef] <asn:2>*<noident>
-    arch/sh/include/cpu-sh4/cpu/sh7786.h:135:16:    got unsigned int
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: alsa-devel@alsa-project.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sh/include/cpu-sh4/cpu/sh7786.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/fsl/eukrea-tlv320.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/sh/include/cpu-sh4/cpu/sh7786.h b/arch/sh/include/cpu-sh4/cpu/sh7786.h
-index 8f9bfbf3cdb10..d6cce65b48713 100644
---- a/arch/sh/include/cpu-sh4/cpu/sh7786.h
-+++ b/arch/sh/include/cpu-sh4/cpu/sh7786.h
-@@ -132,7 +132,7 @@ enum {
+diff --git a/sound/soc/fsl/eukrea-tlv320.c b/sound/soc/fsl/eukrea-tlv320.c
+index 191426a6d9adf..30a3d68b5c033 100644
+--- a/sound/soc/fsl/eukrea-tlv320.c
++++ b/sound/soc/fsl/eukrea-tlv320.c
+@@ -118,13 +118,13 @@ static int eukrea_tlv320_probe(struct platform_device *pdev)
+ 		if (ret) {
+ 			dev_err(&pdev->dev,
+ 				"fsl,mux-int-port node missing or invalid.\n");
+-			return ret;
++			goto err;
+ 		}
+ 		ret = of_property_read_u32(np, "fsl,mux-ext-port", &ext_port);
+ 		if (ret) {
+ 			dev_err(&pdev->dev,
+ 				"fsl,mux-ext-port node missing or invalid.\n");
+-			return ret;
++			goto err;
+ 		}
  
- static inline u32 sh7786_mm_sel(void)
- {
--	return __raw_readl(0xFC400020) & 0x7;
-+	return __raw_readl((const volatile void __iomem *)0xFC400020) & 0x7;
- }
- 
- #endif /* __CPU_SH7786_H__ */
+ 		/*
 -- 
 2.20.1
 
