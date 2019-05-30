@@ -5,54 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B9AC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4BE9C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A00A25BB8
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:46:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A60B25BC5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:46:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191601;
-	bh=a5vBKldDFMIWqKj3YFCiqzTrdTC6lPMJps72Dvwnk3k=;
+	s=default; t=1559191605;
+	bh=qSGAm3ySwwe1r1Jo0mKGE3uXUctJ7VgWT9hCHmPXyjk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fk9KOTnFVvOZ4rsBrFtr2KpsvAkWmUfuT1kkzjK5Wx3j9XG0ON1+4P2Kfoor49Edw
-	 7IFachVIGph6SR00TuyNHhCiEdycetqGXLNsudeLp4EgbNtp9IVvCrsmz2THs5NnN/
-	 583J3jQGa7Fnq3b1jMcZb0ftHnpBBFxlwr2Y4mI8=
+	b=p+kR0aa5Mpg/cIykHLrO7VSHpiPF+M2IbeGO+TZIXCiKHhqR7M20HCCjITqOZ+KmQ
+	 MTC9/082zxGqBzry9d7V6DjKcKiRdtra8VQcO4OI4Hv6fh2xJ3U4zL9aiSaXwzaj5I
+	 pB14kGRM9qV4KCcQL9vWLpd6IBfgndhvQ5sqn7/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388621AbfE3Eqc (ORCPT
+        id S2388853AbfE3Eqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:46:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51872 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:46:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728643AbfE3DLl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:11:41 -0400
+        id S1728640AbfE3DLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:40 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 003AB244D1;
+        by mail.kernel.org (Postfix) with ESMTPSA id 61EE6244A6;
         Thu, 30 May 2019 03:11:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185900;
-        bh=a5vBKldDFMIWqKj3YFCiqzTrdTC6lPMJps72Dvwnk3k=;
+        s=default; t=1559185899;
+        bh=qSGAm3ySwwe1r1Jo0mKGE3uXUctJ7VgWT9hCHmPXyjk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xAcnF5zdV1UmvwkSFIS07+sP07Q9UHcEdwuF88CWDGIl/VmzCtKAP6DtwPOgblYX0
-         ZCwhNGRGyoBG520Pw+A/u0Q/OKLTUVMWKRbHnNIi8GlcRdYTcaHBO4MWe1unuuavmd
-         7NcibVTCKfC/pSCWOeg0yIhKnorbaijgCCBwUQtQ=
+        b=RxZwNhYkcHzPLK1g+WNCcobcA/B7UgZtlJh0VqgG13aLdqaKcPYSKKOLir/l/uiqs
+         UdpU+V1nAEvsviWRjdCZ6OgXEGLm+JPb9p3DA7OXdnU2SS2Bh69TNX7QvCjWmODdNZ
+         cxa2J/YBffJD6rdOMvJMa5ZiYXJdCmgzQDN0w1i8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 267/405] x86/uaccess, signal: Fix AC=1 bloat
-Date:   Wed, 29 May 2019 20:04:25 -0700
-Message-Id: <20190530030554.434153719@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 266/405] iwlwifi: mvm: IBSS: use BE FIFO for multicast
+Date:   Wed, 29 May 2019 20:04:24 -0700
+Message-Id: <20190530030554.385469838@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -65,109 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 88e4718275c1bddca6f61f300688b4553dc8584b ]
+[ Upstream commit 192a7e1f731fd9a64216cce35287eb23360437f6 ]
 
-Occasionally GCC is less agressive with inlining and the following is
-observed:
+Back in commit 4d339989acd7 ("iwlwifi: mvm: support ibss in dqa mode")
+we changed queue selection for IBSS to be:
 
-  arch/x86/kernel/signal.o: warning: objtool: restore_sigcontext()+0x3cc: call to force_valid_ss.isra.5() with UACCESS enabled
-  arch/x86/kernel/signal.o: warning: objtool: do_signal()+0x384: call to frame_uc_flags.isra.0() with UACCESS enabled
+    if (ieee80211_is_probe_resp(fc) || ieee80211_is_auth(fc) ||
+        ieee80211_is_deauth(fc))
+            return IWL_MVM_DQA_AP_PROBE_RESP_QUEUE;
+    if (info->hw_queue == info->control.vif->cab_queue)
+            return info->hw_queue;
+    return IWL_MVM_DQA_AP_PROBE_RESP_QUEUE;
 
-Cure this by moving this code out of the AC=1 region, since it really
-isn't needed for the user access.
+Clearly, the thought at the time must've been that mac80211 will
+select the hw_queue as the cab_queue, so that we'll return and use
+that, where we store the multicast queue for IBSS. This, however,
+isn't true because mac80211 doesn't implement powersave for IBSS
+and thus selects the normal IBSS interface AC queue (best effort).
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+This therefore always used the probe response queue, which maps to
+the BE FIFO.
+
+In commit cfbc6c4c5b91 ("iwlwifi: mvm: support mac80211 TXQs model")
+we rethought this code, and as a consequence now started mapping the
+multicast traffic to the multicast hardware queue since we no longer
+relied on mac80211 selecting the queue, doing it ourselves instead.
+This queue is mapped to the MCAST FIFO. however, this isn't actually
+enabled/controlled by the firmware in IBSS mode because we don't
+implement powersave, and frames from this queue can never go out in
+this case.
+
+Therefore, we got queue hang reports such as
+https://bugzilla.kernel.org/show_bug.cgi?id=201707
+
+Fix this by mapping the multicast queue to the BE FIFO in IBSS so
+that all the frames can go out.
+
+Fixes: cfbc6c4c5b91 ("iwlwifi: mvm: support mac80211 TXQs model")
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/signal.c | 29 +++++++++++++++++------------
- 1 file changed, 17 insertions(+), 12 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/sta.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/signal.c b/arch/x86/kernel/signal.c
-index 08dfd4c1a4f95..c8aa58a2bab97 100644
---- a/arch/x86/kernel/signal.c
-+++ b/arch/x86/kernel/signal.c
-@@ -132,16 +132,6 @@ static int restore_sigcontext(struct pt_regs *regs,
- 		COPY_SEG_CPL3(cs);
- 		COPY_SEG_CPL3(ss);
- 
--#ifdef CONFIG_X86_64
--		/*
--		 * Fix up SS if needed for the benefit of old DOSEMU and
--		 * CRIU.
--		 */
--		if (unlikely(!(uc_flags & UC_STRICT_RESTORE_SS) &&
--			     user_64bit_mode(regs)))
--			force_valid_ss(regs);
--#endif
--
- 		get_user_ex(tmpflags, &sc->flags);
- 		regs->flags = (regs->flags & ~FIX_EFLAGS) | (tmpflags & FIX_EFLAGS);
- 		regs->orig_ax = -1;		/* disable syscall checks */
-@@ -150,6 +140,15 @@ static int restore_sigcontext(struct pt_regs *regs,
- 		buf = (void __user *)buf_val;
- 	} get_user_catch(err);
- 
-+#ifdef CONFIG_X86_64
-+	/*
-+	 * Fix up SS if needed for the benefit of old DOSEMU and
-+	 * CRIU.
-+	 */
-+	if (unlikely(!(uc_flags & UC_STRICT_RESTORE_SS) && user_64bit_mode(regs)))
-+		force_valid_ss(regs);
-+#endif
-+
- 	err |= fpu__restore_sig(buf, IS_ENABLED(CONFIG_X86_32));
- 
- 	force_iret();
-@@ -461,6 +460,7 @@ static int __setup_rt_frame(int sig, struct ksignal *ksig,
- {
- 	struct rt_sigframe __user *frame;
- 	void __user *fp = NULL;
-+	unsigned long uc_flags;
- 	int err = 0;
- 
- 	frame = get_sigframe(&ksig->ka, regs, sizeof(struct rt_sigframe), &fp);
-@@ -473,9 +473,11 @@ static int __setup_rt_frame(int sig, struct ksignal *ksig,
- 			return -EFAULT;
- 	}
- 
-+	uc_flags = frame_uc_flags(regs);
-+
- 	put_user_try {
- 		/* Create the ucontext.  */
--		put_user_ex(frame_uc_flags(regs), &frame->uc.uc_flags);
-+		put_user_ex(uc_flags, &frame->uc.uc_flags);
- 		put_user_ex(0, &frame->uc.uc_link);
- 		save_altstack_ex(&frame->uc.uc_stack, regs->sp);
- 
-@@ -541,6 +543,7 @@ static int x32_setup_rt_frame(struct ksignal *ksig,
- {
- #ifdef CONFIG_X86_X32_ABI
- 	struct rt_sigframe_x32 __user *frame;
-+	unsigned long uc_flags;
- 	void __user *restorer;
- 	int err = 0;
- 	void __user *fpstate = NULL;
-@@ -555,9 +558,11 @@ static int x32_setup_rt_frame(struct ksignal *ksig,
- 			return -EFAULT;
- 	}
- 
-+	uc_flags = frame_uc_flags(regs);
-+
- 	put_user_try {
- 		/* Create the ucontext.  */
--		put_user_ex(frame_uc_flags(regs), &frame->uc.uc_flags);
-+		put_user_ex(uc_flags, &frame->uc.uc_flags);
- 		put_user_ex(0, &frame->uc.uc_link);
- 		compat_save_altstack_ex(&frame->uc.uc_stack, regs->sp);
- 		put_user_ex(0, &frame->uc.uc__pad0);
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
+index 98d123dd71778..eb452e9dce057 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
+@@ -2277,7 +2277,8 @@ int iwl_mvm_add_mcast_sta(struct iwl_mvm *mvm, struct ieee80211_vif *vif)
+ 	static const u8 _maddr[] = {0x03, 0x00, 0x00, 0x00, 0x00, 0x00};
+ 	const u8 *maddr = _maddr;
+ 	struct iwl_trans_txq_scd_cfg cfg = {
+-		.fifo = IWL_MVM_TX_FIFO_MCAST,
++		.fifo = vif->type == NL80211_IFTYPE_AP ?
++			IWL_MVM_TX_FIFO_MCAST : IWL_MVM_TX_FIFO_BE,
+ 		.sta_id = msta->sta_id,
+ 		.tid = 0,
+ 		.aggregate = false,
 -- 
 2.20.1
 
