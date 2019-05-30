@@ -2,238 +2,116 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA6F8C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25BE8C46470
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:08:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8149325D4E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:07:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F320C25D59
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:08:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AwmlutIR"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cVdkU0Us"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727528AbfE3QHG (ORCPT
+        id S1727611AbfE3QI1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 12:07:06 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:43836 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbfE3QHG (ORCPT
+        Thu, 30 May 2019 12:08:27 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40721 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbfE3QI1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 12:07:06 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4UG4VBr062702;
-        Thu, 30 May 2019 16:06:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=+GLA6qLrn26KPJEpEajh3ipF/BPoxxfouik/rd34OzM=;
- b=AwmlutIReVoUCST+0CvuT1i683wuk/bgaVaXpwFLuLObOH6WAfasg+1gIzeRdE2lXYjb
- k8P67eGtLM2jUaKR9Cy3m4TvgSb5+cBwa2T8P+yN1HdMoZWh+Ggt2lVsYNq8wgS4RczC
- Ob71kUfljvyH5fcGoqQaqFQS4TYWXfMx3pY3C+r2yQF46AIqpx1jAW7P3kPlizYiO3T0
- ZblzYxr+PrepeLcYjU1orVLKF6nQOQcaFQBGNaPWrM8vzs9svllGt0RN7sK/lmLWd9+b
- VLJpczb5tPtPCsmplNczUgngjT1jT/8Yk0IfRgeZkTSIRA/aLnoWnZFsdY3idrib592i Ow== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2spw4ts5tq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 May 2019 16:06:12 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4UG64iQ193779;
-        Thu, 30 May 2019 16:06:12 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2sr31vy3va-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 May 2019 16:06:12 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4UG62SZ026718;
-        Thu, 30 May 2019 16:06:02 GMT
-Received: from [192.168.1.16] (/24.9.64.241)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 30 May 2019 09:06:02 -0700
-Subject: Re: [PATCH v15 05/17] arms64: untag user pointers passed to memory
- syscalls
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Andrew Murray <andrew.murray@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, Dmitry Vyukov <dvyukov@google.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        linux-media@vger.kernel.org, Kevin Brodsky <kevin.brodsky@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Kostya Serebryany <kcc@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        linux-kernel@vger.kernel.org,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-References: <cover.1557160186.git.andreyknvl@google.com>
- <00eb4c63fefc054e2c8d626e8fedfca11d7c2600.1557160186.git.andreyknvl@google.com>
- <20190527143719.GA59948@MBP.local>
- <20190528145411.GA709@e119886-lin.cambridge.arm.com>
- <20190528154057.GD32006@arrakis.emea.arm.com>
- <11193998209cc6ff34e7d704f081206b8787b174.camel@oracle.com>
- <20190529142008.5quqv3wskmpwdfbu@mbp>
- <b2753e81-7b57-481f-0095-3c6fecb1a74c@oracle.com>
- <20190530151105.GA35418@arrakis.emea.arm.com>
-From:   Khalid Aziz <khalid.aziz@oracle.com>
-Organization: Oracle Corp
-Message-ID: <f79336b5-46b4-39c0-b754-23366207e32d@oracle.com>
-Date:   Thu, 30 May 2019 10:05:55 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 30 May 2019 12:08:27 -0400
+Received: by mail-pl1-f195.google.com with SMTP id g69so2751667plb.7
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 09:08:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CCzOFuBrRzsjGJT6QYZDplwoC8znNP+oEnCTc9pJCd8=;
+        b=cVdkU0UsiubYEXpbBQbS7cvSuFjQe08Adw6e346iSTE5OsA/QADaLcgAVFLBakmg6z
+         2Q2O38L63Bn80R60xkrnN8k4evgFKp+1SBFNsoKvL2F2vTQOA/WqzUnFi3fuWiBpjCnh
+         bf2mpR9Tm+9Kh9qyWRGBinlrH9NFfRCKnnjE4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CCzOFuBrRzsjGJT6QYZDplwoC8znNP+oEnCTc9pJCd8=;
+        b=oh7h/DNpopf5iBqkkIyYb9eHll7x+nUAqxzOKO9kvz3AkUVZwS3uElPKyNFdjI0HD9
+         UgAkRtMD4q5+7JVHyspORyEUwIDmRfZDDbaJ76hFaEq2G7rAWb+eV1P7z5RtLFqITFbx
+         gEJCnpFBpno3RsSFmU/psBOuhcQmqUXndUGf/Ab4s1rOGCJkXLM3lveegP1M8KLGcvSb
+         rxM/82MM5nc6ZaYOqkVia6ZFargMStISXiqdgF5SstxXt6uKyuZ+vkToKj7/KNxf93Mt
+         WRL0IH+m1JvrtaTmrAIDVvIhHSWDM7s2d0LhIZO0tqWfl66QMjWJIWRX6t78QQJsDQ76
+         HxAg==
+X-Gm-Message-State: APjAAAU9vgSKpaJl9ybo+YHO2eejzuoQAMI8LVP6HP3P+/RmHZI2Rho3
+        4mO4x5lpHNDC6Adc3Ky3h06jNg==
+X-Google-Smtp-Source: APXvYqwTufU4ReY8GoGuWrjOS8pyLhEFpYHGf/dPgPB2mg1+d5otdc1js0QS6kCxqXlGXEcw9FpdAA==
+X-Received: by 2002:a17:902:690b:: with SMTP id j11mr4416976plk.149.1559232506416;
+        Thu, 30 May 2019 09:08:26 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id a69sm4045967pfa.81.2019.05.30.09.08.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 30 May 2019 09:08:25 -0700 (PDT)
+Date:   Thu, 30 May 2019 09:08:25 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+Cc:     "michael.kao" <michael.kao@mediatek.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v2 1/8] arm64: dts: mt8183: add thermal zone node
+Message-ID: <20190530160825.GM40515@google.com>
+References: <1557494826-6044-1-git-send-email-michael.kao@mediatek.com>
+ <1557494826-6044-2-git-send-email-michael.kao@mediatek.com>
+ <CAJMQK-giJTeERnqjxoSMjF-JXxW9SPmeARWf3f9ZyRgBsYN5fg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190530151105.GA35418@arrakis.emea.arm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=660
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905300114
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=684 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905300114
+Content-Disposition: inline
+In-Reply-To: <CAJMQK-giJTeERnqjxoSMjF-JXxW9SPmeARWf3f9ZyRgBsYN5fg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/30/19 9:11 AM, Catalin Marinas wrote:
-> On Wed, May 29, 2019 at 01:16:37PM -0600, Khalid Aziz wrote:
->> mmap() can return the same tagged address but I am uneasy about kernel=
+On Thu, May 30, 2019 at 02:27:28PM +0800, Hsin-Yi Wang wrote:
+> On Fri, May 10, 2019 at 9:27 PM michael.kao <michael.kao@mediatek.com> wrote:
+> 
+> > +
+> > +                       tzts1: tzts1 {
+> > +                               polling-delay-passive = <0>;
+> > +                               polling-delay = <0>;
+> > +                               thermal-sensors = <&thermal 1>;
+> > +                               sustainable-power = <0>;
+> > +                               trips {};
+> > +                               cooling-maps {};
+> > +                       };
+> > +
+> Is 0 a valid initial sustainable-power setting? Since we'll still get
+> warning[1] about this, though it might not be harmful.
+> 
+> If 0 is a valid setting, maybe we should consider showing the warning
+> of not setting this property in [2]?
+> 
+> [1] https://elixir.bootlin.com/linux/latest/source/drivers/thermal/power_allocator.c#L570
+> [2] https://elixir.bootlin.com/linux/latest/source/drivers/thermal/of-thermal.c#L1049
 
->> pre-coloring the pages. Database can mmap 100's of GB of memory. That =
-is
->> lot of work being offloaded to the kernel to pre-color the page even i=
-f
->> done in batches as pages are faulted in.
->=20
-> For anonymous mmap() for example, the kernel would have to zero the
-> faulted in pages anyway. We can handle the colouring at the same time i=
-n
-> clear_user_page() (as I said below, we have to clear the colour anyway
-> from previous uses, so it's simply extending this to support something
-> other than tag/colour 0 by default with no additional overhead).
->=20
+IIUC a value of 0 is pointless, the thermal framework will still use
+an estimated value:
 
-On sparc M7, clear_user_page() ends up in M7clear_user_page defined in
-arch/sparc/lib/M7memset.S. M7 code use Block Init Store (BIS) to clear
-the page. BIS on M7 clears the memory tags as well and no separate
-instructions are needed to clear the tags. As a result when kernel
-clears a page before returning it to user, the page is not only zeroed
-out, its tags are also cleared to 0.
+https://elixir.bootlin.com/linux/v5.1.5/source/drivers/thermal/power_allocator.c#L203
 
->>> Since we already need such loop in the kernel, we might as well allow=
-
->>> user space to require a certain colour. This comes in handy for large=
-
->>> malloc() and another advantage is that the C library won't be stuck
->>> trying to paint the whole range (think GB).
->>
->> If kernel is going to pre-color all pages in a vma, we will need to
->> store the default tag in the vma. It will add more time to page fault
->> handling code. On sparc M7, kernel will need to execute additional 128=
-
->> stxa instructions to set the tags on a normal page.
->=20
-> As I said, since the user can retrieve an old colour using ldxa, the
-> kernel should perform this operation anyway on any newly allocated page=
-
-> (unless you clear the existing colour on page freeing).>
-
-Tags are not cleared on sparc on freeing. They get cleared when the page
-is allocated again.
-
->>>> We can try to store tags for an entire region in vma but that is
->>>> expensive, plus on sparc tags are set in userspace with no
->>>> participation from kernel and now we need a way for userspace to
->>>> communicate the tags to kernel.
->>>
->>> We can't support finer granularity through the mmap() syscall and, as=
-
->>> you said, the vma is not the right thing to store the individual tags=
-=2E
->>> With the above extension to mmap(), we'd have to store a colour per v=
-ma
->>> and prevent merging if different colours (we could as well use the
->>> pkeys mechanism we already have in the kernel but use a colour per vm=
-a
->>> instead of a key).
->>
->> Since tags can change on any part of mmap region on sparc at any time
->> without kernel being involved, I am not sure I see much reason for
->> kernel to enforce any tag related restrictions.
->=20
-> It's not enforcing a tag, more like the default colour for a faulted in=
-
-> page. Anyway, if sparc is going with default 0/untagged, that's fine as=
-
-> well. We may add this mmap() option to arm64 only.
->=20
->>>> From sparc point of view, making kernel responsible for assigning ta=
-gs
->>>> to a page on page fault is full of pitfalls.
->>>
->>> This could be just some arm64-specific but if you plan to deploy it m=
-ore
->>> generically for sparc (at the C library level), you may find this
->>> useful.
->>
->> Common semantics from app developer point of view will be very useful =
-to
->> maintain. If arm64 says mmap with MAP_FIXED and a tagged address will
->> return a pre-colored page, I would rather have it be the same on any
->> architecture. Is there a use case that justifies kernel doing this ext=
-ra
->> work?
->=20
-> So if a database program is doing an anonymous mmap(PROT_TBI) of 100GB,=
-
-> IIUC for sparc the faulted-in pages will have random colours (on 64-byt=
-e
-> granularity). Ignoring the information leak from prior uses of such
-> pages, it would be the responsibility of the db program to issue the
-> stxa. On arm64, since we also want to do this via malloc(), any large
-> allocation would require all pages to be faulted in so that malloc() ca=
-n
-> set the write colour before being handed over to the user. That's what
-> we want to avoid and the user is free to repaint the memory as it likes=
-=2E
->=20
-
-On sparc, any newly allocated page is cleared along with any old tags on
-it. Since clearing tag happens automatically when page is cleared on
-sparc, clear_user_page() will need to execute additional stxa
-instructions to set a new tag. It is doable. In a way it is done already
-if page is being pre-colored with tag 0 always ;) Where would the
-pre-defined tag be stored - as part of address stored in vm_start or a
-new field in vm_area_struct?
-
---
-Khalid
-
+As commented on v1 (https://patchwork.kernel.org/patch/10926519/#22620905)
+the value of the property may depend on the thermal characteristics of
+the device, there is not one correct value per SoC/core. If it is
+specified at SoC level device makers should be aware that they might
+have to override it for 'optimal' behavior on their device.
