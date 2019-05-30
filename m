@@ -2,55 +2,54 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63371C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD98C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42AB625C11
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:00:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B07925C15
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:00:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727225AbfE3PA2 (ORCPT
+        id S1727462AbfE3PAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 11:00:28 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55906 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727001AbfE3PA0 (ORCPT
+        Thu, 30 May 2019 11:00:47 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41176 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725934AbfE3PAZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 11:00:26 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UEr9nY125913
+        Thu, 30 May 2019 11:00:25 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UEppt7105229
         for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 11:00:24 -0400
-Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2stg3buve3-1
+Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2stgu3sw0x-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
         for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 11:00:22 -0400
 Received: from localhost
-        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
         Thu, 30 May 2019 16:00:21 +0100
 Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
-        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 30 May 2019 16:00:17 +0100
+        Thu, 30 May 2019 16:00:16 +0100
 Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4UF0Gnr31850944
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4UF0Fet41484658
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 May 2019 15:00:16 GMT
+        Thu, 30 May 2019 15:00:15 GMT
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 80718B2072;
+        by IMSVA (Postfix) with ESMTP id 31EDFB2088;
         Thu, 30 May 2019 15:00:15 +0000 (GMT)
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6B201B2078;
+        by IMSVA (Postfix) with ESMTP id 1BAA8B2087;
         Thu, 30 May 2019 15:00:15 +0000 (GMT)
 Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
         by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
         Thu, 30 May 2019 15:00:15 +0000 (GMT)
 Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id EE5AA16C5D9C; Thu, 30 May 2019 08:00:16 -0700 (PDT)
+        id DAFDB16C5D85; Thu, 30 May 2019 08:00:16 -0700 (PDT)
 From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
@@ -60,20 +59,20 @@ Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH tip/core/rcu 7/9] rcu: Fix irritating whitespace error in rcu_assign_pointer()
-Date:   Thu, 30 May 2019 08:00:13 -0700
+Subject: [PATCH tip/core/rcu 4/9] rcu: Set a maximum limit for back-to-back callback invocation
+Date:   Thu, 30 May 2019 08:00:10 -0700
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190530145942.GA30318@linux.ibm.com>
 References: <20190530145942.GA30318@linux.ibm.com>
 X-TM-AS-GCONF: 00
-x-cbid: 19053015-0052-0000-0000-000003C91386
+x-cbid: 19053015-0060-0000-0000-00000349F6A6
 X-IBM-SpamModules-Scores: 
 X-IBM-SpamModules-Versions: BY=3.00011185; HX=3.00000242; KW=3.00000007;
  PH=3.00000004; SC=3.00000286; SDB=6.01210785; UDB=6.00636158; IPR=6.00991820;
- MB=3.00027120; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-30 15:00:21
+ MB=3.00027120; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-30 15:00:20
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19053015-0053-0000-0000-0000611A1472
-Message-Id: <20190530150015.30995-7-paulmck@linux.ibm.com>
+x-cbparentid: 19053015-0061-0000-0000-0000498DF85E
+Message-Id: <20190530150015.30995-4-paulmck@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-30_08:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
@@ -86,24 +85,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Currently, if a CPU has more than 10,000 callbacks pending, it will
+increase rdp->blimit to LONG_MAX.  If you are lucky, LONG_MAX is only
+about two billion, but this is still a bit too many callbacks to invoke
+back-to-back while otherwise ignoring the world.
+
+This commit therefore sets a maximum limit of DEFAULT_MAX_RCU_BLIMIT,
+which is set to 10,000, for rdp->blimit.
+
+Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 ---
- include/linux/rcupdate.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/rcu/tree.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-index 915460ec0872..534c05d529b5 100644
---- a/include/linux/rcupdate.h
-+++ b/include/linux/rcupdate.h
-@@ -369,7 +369,7 @@ static inline void rcu_preempt_sleep_check(void) { }
- #define rcu_assign_pointer(p, v)					      \
- ({									      \
- 	uintptr_t _r_a_p__v = (uintptr_t)(v);				      \
--	rcu_check_sparse(p, __rcu);				      \
-+	rcu_check_sparse(p, __rcu);					      \
- 									      \
- 	if (__builtin_constant_p(v) && (_r_a_p__v) == (uintptr_t)NULL)	      \
- 		WRITE_ONCE((p), (typeof(p))(_r_a_p__v));		      \
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 980ca3ca643f..f888a76673da 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -380,7 +380,8 @@ static int rcu_is_cpu_rrupt_from_idle(void)
+ 	       __this_cpu_read(rcu_data.dynticks_nmi_nesting) <= 1;
+ }
+ 
+-#define DEFAULT_RCU_BLIMIT 10     /* Maximum callbacks per rcu_do_batch. */
++#define DEFAULT_RCU_BLIMIT 10     /* Maximum callbacks per rcu_do_batch ... */
++#define DEFAULT_MAX_RCU_BLIMIT 10000 /* ... even during callback flood. */
+ static long blimit = DEFAULT_RCU_BLIMIT;
+ #define DEFAULT_RCU_QHIMARK 10000 /* If this many pending, ignore blimit. */
+ static long qhimark = DEFAULT_RCU_QHIMARK;
+@@ -2113,7 +2114,7 @@ static void rcu_do_batch(struct rcu_data *rdp)
+ 
+ 	/* Reinstate batch limit if we have worked down the excess. */
+ 	count = rcu_segcblist_n_cbs(&rdp->cblist);
+-	if (rdp->blimit == LONG_MAX && count <= qlowmark)
++	if (rdp->blimit >= DEFAULT_MAX_RCU_BLIMIT && count <= qlowmark)
+ 		rdp->blimit = blimit;
+ 
+ 	/* Reset ->qlen_last_fqs_check trigger if enough CBs have drained. */
+@@ -2354,7 +2355,7 @@ static void __call_rcu_core(struct rcu_data *rdp, struct rcu_head *head,
+ 			rcu_accelerate_cbs_unlocked(rdp->mynode, rdp);
+ 		} else {
+ 			/* Give the grace period a kick. */
+-			rdp->blimit = LONG_MAX;
++			rdp->blimit = DEFAULT_MAX_RCU_BLIMIT;
+ 			if (rcu_state.n_force_qs == rdp->n_force_qs_snap &&
+ 			    rcu_segcblist_first_pend_cb(&rdp->cblist) != head)
+ 				rcu_force_quiescent_state();
 -- 
 2.17.1
 
