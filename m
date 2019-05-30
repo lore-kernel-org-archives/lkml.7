@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E7BC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68323C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 636C824AC5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:29:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C5E424AC5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186999;
-	bh=cUOQWn5WeOO5C2d4/1sFxufHKsFKwSesPfLkcaF011Y=;
+	s=default; t=1559187004;
+	bh=dFVTRMQShWSKyV+DNlr1H0V44BM6jzEICjqpG4UeNmU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1JiulyPc9qOXnA607PZlkc/Px3h/N6g+GsRXj3Z682jREvX28GzROoXrJGY/pUYYM
-	 HZhXA0/KLmsViY5b5GURx+i5zaXWO6ulVykeZqX7VYyXW2gc7jGJFaWD95/rCVenqf
-	 60AxUxttpsYm2/OPBVTTFJsLHb8UnnQzMeNntIic=
+	b=jHNNQTXBgzOqgsgN+BrDd/CasWcMpn/VDfkDtAjtROO/3l3Z1rMcrySwtHwT7XUGP
+	 l8QwLLm700T1mk9qemZpf5F6QtZ/3K+lgjzynpMvZ0eJMBjZWmWcNNS197hrNzhh9L
+	 N5Ia13JbQX9/GAR+K11ugu36QES6BgkDcq4LxFW8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388466AbfE3D36 (ORCPT
+        id S2388489AbfE3DaD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:29:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60900 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:30:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731180AbfE3DVB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:21:01 -0400
+        id S1732475AbfE3DVK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:21:10 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90F56249A9;
-        Thu, 30 May 2019 03:21:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8A2B249C2;
+        Thu, 30 May 2019 03:21:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186460;
-        bh=cUOQWn5WeOO5C2d4/1sFxufHKsFKwSesPfLkcaF011Y=;
+        s=default; t=1559186469;
+        bh=dFVTRMQShWSKyV+DNlr1H0V44BM6jzEICjqpG4UeNmU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b2Igrhy95QYI6cu1hp6PRngaBboOQP193YiPhBSvO6GjQBTlV6y5MDQWg065sc2h5
-         shCcEVdmMmQKpJ3iA+C6gcZz9a+DAyEFec+pPvwk6vTZk2skNdiEQZg3oNSM+My2Tz
-         Deo/YiK31UEpTDYm9+4JC5F7kleT0ssC1BAMLX9g=
+        b=Sb3FusQ9EiQfb+8ljlP4ZfbI5bRXrplpDi2OgL7M+MF8qJFJjfTVZ41MDm+x3fG5W
+         rWTCx1HaG2ltpTNgulSo0fp9zC5PgXVMHf1JIfct7wqBplPeoX/eyu27lQZhz03UdN
+         Uf15IjYb19eXG8fopU5L06Ik7yzrrOMAvWHmJcXo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 077/128] scsi: libsas: Do discovery on empty PHY to update PHY info
-Date:   Wed, 29 May 2019 20:06:49 -0700
-Message-Id: <20190530030448.455271747@linuxfoundation.org>
+Subject: [PATCH 4.9 095/128] b43: shut up clang -Wuninitialized variable warning
+Date:   Wed, 29 May 2019 20:07:07 -0700
+Message-Id: <20190530030451.719097680@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -60,53 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d8649fc1c5e40e691d589ed825998c36a947491c ]
+[ Upstream commit d825db346270dbceef83b7b750dbc29f1d7dcc0e ]
 
-When we discover the PHY is empty in sas_rediscover_dev(), the PHY
-information (like negotiated linkrate) is not updated.
+Clang warns about what is clearly a case of passing an uninitalized
+variable into a static function:
 
-As such, for a user examining sysfs for that PHY, they would see
-incorrect values:
+drivers/net/wireless/broadcom/b43/phy_lp.c:1852:23: error: variable 'gains' is uninitialized when used here
+      [-Werror,-Wuninitialized]
+                lpphy_papd_cal(dev, gains, 0, 1, 30);
+                                    ^~~~~
+drivers/net/wireless/broadcom/b43/phy_lp.c:1838:2: note: variable 'gains' is declared here
+        struct lpphy_tx_gains gains, oldgains;
+        ^
+1 error generated.
 
-root@(none)$ cd /sys/class/sas_phy/phy-0:0:20
-root@(none)$ more negotiated_linkrate
-3.0 Gbit
-root@(none)$ echo 0 > enable
-root@(none)$ more negotiated_linkrate
-3.0 Gbit
+However, this function is empty, and its arguments are never evaluated,
+so gcc in contrast does not warn here. Both compilers behave in a
+reasonable way as far as I can tell, so we should change the code
+to avoid the warning everywhere.
 
-So fix this, simply discover the PHY again, even though we know it's empty;
-in the above example, this gives us:
+We could just eliminate the lpphy_papd_cal() function entirely,
+given that it has had the TODO comment in it for 10 years now
+and is rather unlikely to ever get done. I'm doing a simpler
+change here, and just pass the 'oldgains' variable in that has
+been initialized, based on the guess that this is what was
+originally meant.
 
-root@(none)$ more negotiated_linkrate
-Phy disabled
-
-We must do this after unregistering the device associated with the PHY
-(in sas_unregister_devs_sas_addr()).
-
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 2c0d6100da3e ("b43: LP-PHY: Begin implementing calibration & software RFKILL support")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Larry Finger <Larry.Finger@lwfinger.net>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/libsas/sas_expander.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/wireless/broadcom/b43/phy_lp.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
-index 1a6f65db615e8..ee1f9ee995e53 100644
---- a/drivers/scsi/libsas/sas_expander.c
-+++ b/drivers/scsi/libsas/sas_expander.c
-@@ -2027,6 +2027,11 @@ static int sas_rediscover_dev(struct domain_device *dev, int phy_id, bool last)
- 	if ((SAS_ADDR(sas_addr) == 0) || (res == -ECOMM)) {
- 		phy->phy_state = PHY_EMPTY;
- 		sas_unregister_devs_sas_addr(dev, phy_id, last);
-+		/*
-+		 * Even though the PHY is empty, for convenience we discover
-+		 * the PHY to update the PHY info, like negotiated linkrate.
-+		 */
-+		sas_ex_phy_discover(dev, phy_id);
- 		return res;
- 	} else if (SAS_ADDR(sas_addr) == SAS_ADDR(phy->attached_sas_addr) &&
- 		   dev_type_flutter(type, phy->attached_dev_type)) {
+diff --git a/drivers/net/wireless/broadcom/b43/phy_lp.c b/drivers/net/wireless/broadcom/b43/phy_lp.c
+index 6922cbb99a044..5a0699fb4b9ab 100644
+--- a/drivers/net/wireless/broadcom/b43/phy_lp.c
++++ b/drivers/net/wireless/broadcom/b43/phy_lp.c
+@@ -1834,7 +1834,7 @@ static void lpphy_papd_cal(struct b43_wldev *dev, struct lpphy_tx_gains gains,
+ static void lpphy_papd_cal_txpwr(struct b43_wldev *dev)
+ {
+ 	struct b43_phy_lp *lpphy = dev->phy.lp;
+-	struct lpphy_tx_gains gains, oldgains;
++	struct lpphy_tx_gains oldgains;
+ 	int old_txpctl, old_afe_ovr, old_rf, old_bbmult;
+ 
+ 	lpphy_read_tx_pctl_mode_from_hardware(dev);
+@@ -1848,9 +1848,9 @@ static void lpphy_papd_cal_txpwr(struct b43_wldev *dev)
+ 	lpphy_set_tx_power_control(dev, B43_LPPHY_TXPCTL_OFF);
+ 
+ 	if (dev->dev->chip_id == 0x4325 && dev->dev->chip_rev == 0)
+-		lpphy_papd_cal(dev, gains, 0, 1, 30);
++		lpphy_papd_cal(dev, oldgains, 0, 1, 30);
+ 	else
+-		lpphy_papd_cal(dev, gains, 0, 1, 65);
++		lpphy_papd_cal(dev, oldgains, 0, 1, 65);
+ 
+ 	if (old_afe_ovr)
+ 		lpphy_set_tx_gains(dev, oldgains);
 -- 
 2.20.1
 
