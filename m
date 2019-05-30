@@ -2,126 +2,117 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F0CC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E487DC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 132BD25CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:20:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B67FA25CEB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:23:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k6nQK2dz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727753AbfE3PUB (ORCPT
+        id S1727219AbfE3PXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 11:20:01 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54244 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726476AbfE3PUA (ORCPT
+        Thu, 30 May 2019 11:23:23 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:41460 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726253AbfE3PXW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 11:20:00 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UFITGa126601
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 11:19:59 -0400
-Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2stfevffu1-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 11:18:29 -0400
-Received: from localhost
-        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Thu, 30 May 2019 16:17:18 +0100
-Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
-        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 30 May 2019 16:17:13 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4UFHBXg33816730
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 May 2019 15:17:12 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E2953B2072;
-        Thu, 30 May 2019 15:17:11 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C2AFAB2067;
-        Thu, 30 May 2019 15:17:11 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 30 May 2019 15:17:11 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 92F5E16C5D84; Thu, 30 May 2019 08:17:13 -0700 (PDT)
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     rcu@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH tip/core/rcu 03/21] rcutorture: Add cond_resched() to forward-progress free-up loop
-Date:   Thu, 30 May 2019 08:16:54 -0700
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190530151650.GA422@linux.ibm.com>
-References: <20190530151650.GA422@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19053015-2213-0000-0000-00000397F650
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011185; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01210791; UDB=6.00636161; IPR=6.00991825;
- MB=3.00027120; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-30 15:17:17
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19053015-2214-0000-0000-00005EA307FF
-Message-Id: <20190530151712.1612-3-paulmck@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-30_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=13
- malwarescore=0 phishscore=0 bulkscore=0 spamscore=0 mlxscore=0
- lowpriorityscore=0 mlxlogscore=999 adultscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.0.1-1810050000 definitions=main-1905300108
+        Thu, 30 May 2019 11:23:22 -0400
+Received: by mail-ed1-f65.google.com with SMTP id y15so3692176edo.8;
+        Thu, 30 May 2019 08:23:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RCDLlGYJgL0buQMnh0bUr8c4NmNRLG9BRcbGN/X5h/Q=;
+        b=k6nQK2dzl0iWLlYN8CYEqKZE4VFAL46E1jtyi1SUqMGSVtsBy9PB6QAh437YVWIPic
+         YURsvfCP5gmmpvZh0xEw3lOUE1RGzJPVwMPFSIdB0RAvMFYIk6M5pmdgKYoMJF8E3CpN
+         WSIWRxIiOyScLZvJyQNwRC3tg81OCBGRk9PDisQhJA6aRGu38WUNsTG4JppPVBkvPjIV
+         kG5lhKWIIUktk4MzDk7uKLbkCjPwdzhm/jpn55NrVf4RrRC4cGy231AxEDQTmQFEntiF
+         KsZlAAkmYYTvUugUAa7kAk4yiM57MLsOjQG5geiy3mDx+23L1dnL4SElNWqMu8CnvdqX
+         wrVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RCDLlGYJgL0buQMnh0bUr8c4NmNRLG9BRcbGN/X5h/Q=;
+        b=MeOZLx+llBeCXRGg/E86mAVwXjPbysZNsG2NXP4B6jX8tgHN2WsG2OwsfUO52IZS3g
+         PJj+O5scQsfuq0yfwTaQbqBSAg6ceA+JJyPbvffs2gDeqZpx9vzhreoTJlCeaHiXBiPA
+         Qy4KpzcaeDw19fSOyawgxcIBs+Fv/gVoVfLgR+36n+AbJZt5x3Of0NWoMaFKQe8A1TeH
+         5Skzqw724JyGL/RiMl+2VSFV/AWZ4yU8pivAUQGgKjvHOKynu9ND/sEaPOfZ87cTiDRB
+         PlGeRj6S9cFZ1IMR6Vo3RMdYqzMjOaM23G7dYSdkx/OE4Ogz71ZWcGcGSCwX/O08sHMW
+         +Wgg==
+X-Gm-Message-State: APjAAAVHhSt6y9DlHz9SiaUu9kwVsaa4j5r384MgstNknok7gVLL+xel
+        h6gjLHlyZYKT6luS1/7r/9FWoDMYgpHlrN6k3EE=
+X-Google-Smtp-Source: APXvYqx3aJN/bOOORxGjvfzJUASMDGRGn7cpzALSAmSFcD4ex0V1B0UmE02xxaVGaMkibPxnihjvE3sVUi8INMdkZso=
+X-Received: by 2002:aa7:ca47:: with SMTP id j7mr2711085edt.36.1559229800607;
+ Thu, 30 May 2019 08:23:20 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190528235627.1315-1-olteanv@gmail.com> <20190529045207.fzvhuu6d6jf5p65t@localhost>
+ <dbe0a38f-8b48-06dd-cc2c-676e92ba0e74@gmail.com> <20190530034555.wv35efen3igwwzjq@localhost>
+ <CA+h21hpjsC=ie5G7Gx3EcPpazyxze6X_k+8eC+vw7JBvEO2zNg@mail.gmail.com>
+ <20190530143037.iky5kk3h4ssmec3f@localhost> <CA+h21hpp68AEEykxr8bJB=uJ+b0tg881Z7Ao_OfbTAXNxS8WgQ@mail.gmail.com>
+ <20190530150557.iur7fruhyf5bs3qw@localhost>
+In-Reply-To: <20190530150557.iur7fruhyf5bs3qw@localhost>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Thu, 30 May 2019 18:23:09 +0300
+Message-ID: <CA+h21hrBwR4Sow7q0_rS1u2md1M4bSAJt8FO5+VLFiu9UGnvjA@mail.gmail.com>
+Subject: Re: [PATCH net-next 0/5] PTP support for the SJA1105 DSA driver
+To:     Richard Cochran <richardcochran@gmail.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The rcu_torture_fwd_prog_cbfree() function frees callbacks used during
-rcutorture's call_rcu() forward-progress test, but does so in a tight
-loop.  This could cause problems given a very long list of callbacks to be
-freed, and actual testing produces lists with as many as 25M callbacks.
-This commit therefore adds a cond_resched() to this loop.  While in
-the area, this commit also rearranges the lock releases to look a bit
-more sane.
+On Thu, 30 May 2019 at 18:06, Richard Cochran <richardcochran@gmail.com> wrote:
+>
+> On Thu, May 30, 2019 at 05:57:30PM +0300, Vladimir Oltean wrote:
+> > On Thu, 30 May 2019 at 17:30, Richard Cochran <richardcochran@gmail.com> wrote:
+> > >
+> > > Not necessarily.  If two frames that arrive at nearly the same time
+> > > get their timestamps mixed up, that would be enough to break the time
+> > > values but without breaking your state machine.
+> > >
+> >
+> > This doesn't exactly sound like the type of thing I can check for.
+>
+> And that is why it cannot work.
+>
+> > The RX and TX timestamps *are* monotonically increasing with time for
+> > all frames when I'm printing them in the {rx,tx}tstamp callbacks.
+>
+> But are the frames received in the same order?  What happens your MAC
+> drops a frame?
+>
 
-Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
----
- kernel/rcu/rcutorture.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+If it drops a normal frame, it carries on.
+If it drops a meta frame, it prints "Expected meta frame", resets the
+state machine and carries on.
+If it drops a timestampable frame, it prints "Unexpected meta frame",
+resets the state machine and carries on.
+This doesn't happen under correct runtime conditions though.
 
-diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index efaa5b3f4d3f..7906ba2d9dad 100644
---- a/kernel/rcu/rcutorture.c
-+++ b/kernel/rcu/rcutorture.c
-@@ -1674,16 +1674,18 @@ static unsigned long rcu_torture_fwd_prog_cbfree(void)
- 	for (;;) {
- 		spin_lock_irqsave(&rcu_fwd_lock, flags);
- 		rfcp = rcu_fwd_cb_head;
--		if (!rfcp)
-+		if (!rfcp) {
-+			spin_unlock_irqrestore(&rcu_fwd_lock, flags);
- 			break;
-+		}
- 		rcu_fwd_cb_head = rfcp->rfc_next;
- 		if (!rcu_fwd_cb_head)
- 			rcu_fwd_cb_tail = &rcu_fwd_cb_head;
- 		spin_unlock_irqrestore(&rcu_fwd_lock, flags);
- 		kfree(rfcp);
- 		freed++;
-+		cond_resched();
- 	}
--	spin_unlock_irqrestore(&rcu_fwd_lock, flags);
- 	return freed;
- }
- 
--- 
-2.17.1
+-Vladimir
 
+> > The driver returns free-running timestamps altered with a timecounter
+> > frequency set by adjfine and offset set by adjtime.
+>
+> That should be correct.
+>
+> Thanks,
+> Richard
