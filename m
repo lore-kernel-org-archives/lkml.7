@@ -2,94 +2,198 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7812C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC73AC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA9B3245C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3CC0245A9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559186146;
+	bh=SJxAlDVuFAv8bWtusgdrlGlrI8X7tedSS3c/ZX5tGcc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=idWFqGMnuW4PCZs4V4k14oc/LbWBEhCpvGEHf6wY5BkG9xrwOp/AtgSB0LHgAgDa4
+	 xXsvHKviQ6RrBGB5YlGpDQbpzWkYiHL7Qb0TtzoYi56zE1ofau5PJ9VfXZ3cVGG+9Y
+	 f8hiXva2UbDMLxJYai6tikCprAHl5q/FIqXtKejo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730461AbfE3DPo (ORCPT
+        id S1730479AbfE3DPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:15:44 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:39245 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729337AbfE3DNJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57358 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729342AbfE3DNJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:13:09 -0400
-Received: from callcc.thunk.org ([66.31.38.53])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x4U3C1r7025530
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 May 2019 23:12:02 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 34535420481; Wed, 29 May 2019 23:12:01 -0400 (EDT)
-Date:   Wed, 29 May 2019 23:12:01 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     Neil Horman <nhorman@tuxdriver.com>
-Cc:     linux-kernel@vger.kernel.org, Steve Grubb <sgrubb@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] Fix xoring of arch_get_random_long into crng->state array
-Message-ID: <20190530031201.GA2751@mit.edu>
-Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
-        Neil Horman <nhorman@tuxdriver.com>, linux-kernel@vger.kernel.org,
-        Steve Grubb <sgrubb@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20190402220025.14499-1-nhorman@tuxdriver.com>
+Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4468624526;
+        Thu, 30 May 2019 03:13:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559185989;
+        bh=SJxAlDVuFAv8bWtusgdrlGlrI8X7tedSS3c/ZX5tGcc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VyY4fvG1jSSS23qlMWrYkyxs8VHZKzNT+S9Rlvv6QpUmx+hPXw3yVaaQKSb8YgJAO
+         wix59hven8uwxdobHph47QUQDs5FOqn0l1fnUB1GnPGeUO5x4KLlGG63TVnHSy2Bf6
+         lmW7StbJZ1p6QsmVVySGUeeYBScGrbcC4zRohDNE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>, Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 5.0 032/346] media: serial_ir: Fix use-after-free in serial_ir_init_module
+Date:   Wed, 29 May 2019 20:01:45 -0700
+Message-Id: <20190530030542.424031872@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190402220025.14499-1-nhorman@tuxdriver.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 06:00:25PM -0400, Neil Horman wrote:
-> When _crng_extract is called, any arch that has a registered
-> arch_get_random_long method, attempts to mix an unsigned long value into
-> the crng->state buffer, it only mixes in 32 of the 64 bits available,
-> because the state buffer is an array of u32 values, even though 2 u32
-> are expected to be filled (owing to the fact that it expects indexes 14
-> and 15 to be filled).
+From: YueHaibing <yuehaibing@huawei.com>
 
-Index 15 does get initialized; in fact, it's changed each time
-crng_reseed() is called.
+commit 56cd26b618855c9af48c8301aa6754ced8dd0beb upstream.
 
-The way things currently work is that we use state[12] and state[13]
-as 64-bit counter (it gets incremented each time we call
-_extract_crng), and state[14] and state[15] are nonce values.  After
-crng->state has been in use for five minutes, we reseed the crng by
-grabbing randomness from the input pool, and using that to initialize
-state[4..15].  (State[0..3] are always set to the ChaCha20 constant of
-"expand 32-byte k".)
+Syzkaller report this:
 
-If the CPU provides and RDRAND-like instruction (which can be the case
-for x86, PPC, and S390), we xor it into state[14].  Whether we xor any
-extra entropy into state[15] to be honest, really doesn't matter much.
-I think I was trying to keep things simple, and it wasn't worth it to
-call RDRAND twice on a 32-bit x86.  (And there isn't an
-arch_get_random_long_long.  :-)
+BUG: KASAN: use-after-free in sysfs_remove_file_ns+0x5f/0x70 fs/sysfs/file.c:468
+Read of size 8 at addr ffff8881dc7ae030 by task syz-executor.0/6249
 
-Why do we do this at all?  Well, the goal was to feed in some
-contributing randomness from RDRAND when we turn the CRNG crank.  (The
-reason why we don't just XOR in the RDRAND into the output ohf the
-CRNG is mainly to assuage critics that hypothetical RDRAND backdoor
-has access to the CPU registers.  So we perturb the inputs to the
-CRNG, on the theory that if malicious firmware can reverse
-CHACHA20... we've got bigger problems.  :-)  We get up to 20 bytes out
-of a single turn of the CRNG crank, so whether we mix in 4 bytes or 8
-bytes from RDRAND, we're never going to be depending on RDRAND
-completely in any case.
+CPU: 1 PID: 6249 Comm: syz-executor.0 Not tainted 5.0.0-rc8+ #3
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xfa/0x1ce lib/dump_stack.c:113
+ print_address_description+0x65/0x270 mm/kasan/report.c:187
+ kasan_report+0x149/0x18d mm/kasan/report.c:317
+ ? 0xffffffffc1728000
+ sysfs_remove_file_ns+0x5f/0x70 fs/sysfs/file.c:468
+ sysfs_remove_file include/linux/sysfs.h:519 [inline]
+ driver_remove_file+0x40/0x50 drivers/base/driver.c:122
+ remove_bind_files drivers/base/bus.c:585 [inline]
+ bus_remove_driver+0x186/0x220 drivers/base/bus.c:725
+ driver_unregister+0x6c/0xa0 drivers/base/driver.c:197
+ serial_ir_init_module+0x169/0x1000 [serial_ir]
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x462e99
+Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f9450132c58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
+RDX: 0000000000000000 RSI: 0000000020000100 RDI: 0000000000000003
+RBP: 00007f9450132c70 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f94501336bc
+R13: 00000000004bcefa R14: 00000000006f6fb0 R15: 0000000000000004
 
-The bottom line is that I'm not at all convinced it worth the effort
-to mix in 8 bytes versus 4 bytes from RDRAND.  This is really a CRNG,
-and the RDRAND inputs really don't change that.
+Allocated by task 6249:
+ set_track mm/kasan/common.c:85 [inline]
+ __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:495
+ kmalloc include/linux/slab.h:545 [inline]
+ kzalloc include/linux/slab.h:740 [inline]
+ bus_add_driver+0xc0/0x610 drivers/base/bus.c:651
+ driver_register+0x1bb/0x3f0 drivers/base/driver.c:170
+ serial_ir_init_module+0xe8/0x1000 [serial_ir]
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-    	       	      	     	   	  - Ted
+Freed by task 6249:
+ set_track mm/kasan/common.c:85 [inline]
+ __kasan_slab_free+0x130/0x180 mm/kasan/common.c:457
+ slab_free_hook mm/slub.c:1430 [inline]
+ slab_free_freelist_hook mm/slub.c:1457 [inline]
+ slab_free mm/slub.c:3005 [inline]
+ kfree+0xe1/0x270 mm/slub.c:3957
+ kobject_cleanup lib/kobject.c:662 [inline]
+ kobject_release lib/kobject.c:691 [inline]
+ kref_put include/linux/kref.h:67 [inline]
+ kobject_put+0x146/0x240 lib/kobject.c:708
+ bus_remove_driver+0x10e/0x220 drivers/base/bus.c:732
+ driver_unregister+0x6c/0xa0 drivers/base/driver.c:197
+ serial_ir_init_module+0x14c/0x1000 [serial_ir]
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8881dc7ae000
+ which belongs to the cache kmalloc-256 of size 256
+The buggy address is located 48 bytes inside of
+ 256-byte region [ffff8881dc7ae000, ffff8881dc7ae100)
+The buggy address belongs to the page:
+page:ffffea000771eb80 count:1 mapcount:0 mapping:ffff8881f6c02e00 index:0x0
+flags: 0x2fffc0000000200(slab)
+raw: 02fffc0000000200 ffffea0007d14800 0000000400000002 ffff8881f6c02e00
+raw: 0000000000000000 00000000800c000c 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8881dc7adf00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff8881dc7adf80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>ffff8881dc7ae000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                     ^
+ ffff8881dc7ae080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8881dc7ae100: fc fc fc fc fc fc fc fc 00 00 00 00 00 00 00 00
+
+There are already cleanup handlings in serial_ir_init error path,
+no need to call serial_ir_exit do it again in serial_ir_init_module,
+otherwise will trigger a use-after-free issue.
+
+Fixes: fa5dc29c1fcc ("[media] lirc_serial: move out of staging and rename to serial_ir")
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/media/rc/serial_ir.c |    9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
+
+--- a/drivers/media/rc/serial_ir.c
++++ b/drivers/media/rc/serial_ir.c
+@@ -773,8 +773,6 @@ static void serial_ir_exit(void)
+ 
+ static int __init serial_ir_init_module(void)
+ {
+-	int result;
+-
+ 	switch (type) {
+ 	case IR_HOMEBREW:
+ 	case IR_IRDEO:
+@@ -802,12 +800,7 @@ static int __init serial_ir_init_module(
+ 	if (sense != -1)
+ 		sense = !!sense;
+ 
+-	result = serial_ir_init();
+-	if (!result)
+-		return 0;
+-
+-	serial_ir_exit();
+-	return result;
++	return serial_ir_init();
+ }
+ 
+ static void __exit serial_ir_exit_module(void)
+
+
