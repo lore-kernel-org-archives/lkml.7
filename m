@@ -2,88 +2,157 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA51C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B00C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B135625A5E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:16:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D41125A4C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:16:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbfE3OQS (ORCPT
+        id S1727433AbfE3OQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 10:16:18 -0400
-Received: from foss.arm.com ([217.140.101.70]:36654 "EHLO foss.arm.com"
+        Thu, 30 May 2019 10:16:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58472 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727368AbfE3OQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 10:16:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B42C7165C;
-        Thu, 30 May 2019 07:16:15 -0700 (PDT)
-Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9C8AF3F59C;
-        Thu, 30 May 2019 07:16:12 -0700 (PDT)
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-To:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Huw Davies <huw@codeweavers.com>
-Subject: [PATCH v6 09/19] lib: vdso: Add compat support
-Date:   Thu, 30 May 2019 15:15:21 +0100
-Message-Id: <20190530141531.43462-10-vincenzo.frascino@arm.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530141531.43462-1-vincenzo.frascino@arm.com>
-References: <20190530141531.43462-1-vincenzo.frascino@arm.com>
+        id S1727394AbfE3OQT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 10:16:19 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 56DA73082A98;
+        Thu, 30 May 2019 14:16:09 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-16.phx2.redhat.com [10.3.112.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3DE937AB52;
+        Thu, 30 May 2019 14:15:58 +0000 (UTC)
+Date:   Thu, 30 May 2019 10:15:55 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
+        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
+        nhorman@tuxdriver.com
+Subject: Re: [PATCH ghak90 V6 09/10] audit: add support for containerid to
+ network namespaces
+Message-ID: <20190530141555.qqcbasvyp7eokwjz@madcap2.tricolour.ca>
+References: <cover.1554732921.git.rgb@redhat.com>
+ <423ed5e5c5e4ed7c3e26ac7d2bd7c267aaae777c.1554732921.git.rgb@redhat.com>
+ <CAHC9VhQ9t-mvJGNCzArjg+MTGNXcZbVrWV4=RUD5ML_bHqua1Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhQ9t-mvJGNCzArjg+MTGNXcZbVrWV4=RUD5ML_bHqua1Q@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Thu, 30 May 2019 14:16:19 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some 64 bit architectures have support for 32 bit applications that
-require a separate version of the vDSOs.
+On 2019-05-29 18:17, Paul Moore wrote:
+> On Mon, Apr 8, 2019 at 11:41 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> >
+> > Audit events could happen in a network namespace outside of a task
+> > context due to packets received from the net that trigger an auditing
+> > rule prior to being associated with a running task.  The network
+> > namespace could be in use by multiple containers by association to the
+> > tasks in that network namespace.  We still want a way to attribute
+> > these events to any potential containers.  Keep a list per network
+> > namespace to track these audit container identifiiers.
+> >
+> > Add/increment the audit container identifier on:
+> > - initial setting of the audit container identifier via /proc
+> > - clone/fork call that inherits an audit container identifier
+> > - unshare call that inherits an audit container identifier
+> > - setns call that inherits an audit container identifier
+> > Delete/decrement the audit container identifier on:
+> > - an inherited audit container identifier dropped when child set
+> > - process exit
+> > - unshare call that drops a net namespace
+> > - setns call that drops a net namespace
+> >
+> > Please see the github audit kernel issue for contid net support:
+> >   https://github.com/linux-audit/audit-kernel/issues/92
+> > Please see the github audit testsuiite issue for the test case:
+> >   https://github.com/linux-audit/audit-testsuite/issues/64
+> > Please see the github audit wiki for the feature overview:
+> >   https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
+> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > Acked-by: Neil Horman <nhorman@tuxdriver.com>
+> > Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
+> > ---
+> >  include/linux/audit.h | 19 +++++++++++
+> >  kernel/audit.c        | 88 +++++++++++++++++++++++++++++++++++++++++++++++++--
+> >  kernel/nsproxy.c      |  4 +++
+> >  3 files changed, 108 insertions(+), 3 deletions(-)
+> 
+> ...
+> 
+> > diff --git a/kernel/audit.c b/kernel/audit.c
+> > index 6c742da66b32..996213591617 100644
+> > --- a/kernel/audit.c
+> > +++ b/kernel/audit.c
+> > @@ -376,6 +384,75 @@ static struct sock *audit_get_sk(const struct net *net)
+> >         return aunet->sk;
+> >  }
+> >
+> > +void audit_netns_contid_add(struct net *net, u64 contid)
+> > +{
+> > +       struct audit_net *aunet;
+> > +       struct list_head *contid_list;
+> > +       struct audit_contid *cont;
+> > +
+> > +       if (!net)
+> > +               return;
+> > +       if (!audit_contid_valid(contid))
+> > +               return;
+> > +       aunet = net_generic(net, audit_net_id);
+> > +       if (!aunet)
+> > +               return;
+> > +       contid_list = &aunet->contid_list;
+> > +       spin_lock(&aunet->contid_list_lock);
+> > +       list_for_each_entry_rcu(cont, contid_list, list)
+> > +               if (cont->id == contid) {
+> > +                       refcount_inc(&cont->refcount);
+> > +                       goto out;
+> > +               }
+> > +       cont = kmalloc(sizeof(struct audit_contid), GFP_ATOMIC);
+> > +       if (cont) {
+> > +               INIT_LIST_HEAD(&cont->list);
+> 
+> I thought you were going to get rid of this INIT_LIST_HEAD() call?
 
-Add support to the generic code for compat fallback functions.
+I was intending to, and then Neil weighed in with this opinion:
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
----
- lib/vdso/gettimeofday.c | 4 ++++
- 1 file changed, 4 insertions(+)
+	https://www.redhat.com/archives/linux-audit/2019-April/msg00014.html
 
-diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
-index a226675731f4..44b9c6a0cb95 100644
---- a/lib/vdso/gettimeofday.c
-+++ b/lib/vdso/gettimeofday.c
-@@ -21,7 +21,11 @@
-  * - clock_gettime_fallback(): fallback for clock_gettime.
-  * - clock_getres_fallback(): fallback for clock_getres.
-  */
-+#ifdef ENABLE_COMPAT_VDSO
-+#include <asm/vdso/compat_gettimeofday.h>
-+#else
- #include <asm/vdso/gettimeofday.h>
-+#endif /* ENABLE_COMPAT_VDSO */
- 
- static notrace int do_hres(const struct vdso_data *vd,
- 			   clockid_t clk,
--- 
-2.21.0
+If you feel that isn't important, please remove it.
 
+> > +               cont->id = contid;
+> > +               refcount_set(&cont->refcount, 1);
+> > +               list_add_rcu(&cont->list, contid_list);
+> > +       }
+> > +out:
+> > +       spin_unlock(&aunet->contid_list_lock);
+> > +}
+> 
+> --
+> paul moore
+> www.paul-moore.com
+
+- RGB
+
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
