@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B2F0C28CC1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7ECC46460
 	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D933424820
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:20:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 106452489F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:20:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186414;
-	bh=JgN37LjgXSRNCtPU8BWPOAtUz0V1fcZPJhyRBE7O2SQ=;
+	s=default; t=1559186415;
+	bh=QQtSQFa9MxCbMXvIROQN59cBbxs72+r/F/Fi9pUI/No=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2CQX3cC9xP4rk501+o+y7vp8uW3GXzA23Vqzq/YLfQ/XrFJEv2jfWqK2u5NOC4wae
-	 N94IomigO00sHndf7XN7SZAcPfsUqMwbj8ClPXuvRzLiAm8uT1MA7aCxbIjy0i80jY
-	 UEbxWjKV2Kps5LL1kHsj+M6bo29sqDh08AktrSFQ=
+	b=pfW0dT6TSjxs/SZBCxSNOGEZYOsmTpXXi0/by/Z0yPJInyoI/a56PQ6/8W4iiAmSh
+	 ukmQDi59c16nmy/U4oUdpzM1DGlrmMCXAitST/F4RcefzXGZ5Nm8DIImzHBPjpSo5O
+	 Lu09PI+QKMrf1on3bB6k93yO8/Iwbgl1bF5jrkMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731471AbfE3DUK (ORCPT
+        id S1732141AbfE3DUN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:20:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40154 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:20:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730486AbfE3DPs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730497AbfE3DPs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:15:48 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CBEA24580;
-        Thu, 30 May 2019 03:15:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17CA324595;
+        Thu, 30 May 2019 03:15:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186147;
-        bh=JgN37LjgXSRNCtPU8BWPOAtUz0V1fcZPJhyRBE7O2SQ=;
+        s=default; t=1559186148;
+        bh=QQtSQFa9MxCbMXvIROQN59cBbxs72+r/F/Fi9pUI/No=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yhvCFePpJU5oTFqoUMEHrPgyPm+pMODU34gjNZsmxgxrvaZfzA1hNZm0HVt5NYAYC
-         DBcSNiXMTaUBV2R1lYNrQi7jIrykCr3PUecScuqLjBn1uCmp45nqLQPTlZBdTSsbp+
-         Ze9DPC/X506iSlHi4UwsrNy3cl/2oo4/4PbS4uKQ=
+        b=twBiDTEqCD1xqbOuqCf5vF6SKblaL2LiyBEShqKM4t+yixDaXoXGF/L0uujjRCHCo
+         5RZV50Sv85eu5Y1JMKeCHgypRIEHwpWIh1G7D2NUbaOesEu1zpuNZCZSBjkEozwsCL
+         xGt2+JckZ2JKZl0Ry5vMNoVRJ2I7kneVkjTzRqZc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Steve Twiss <stwiss.opensource@diasemi.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 329/346] regulator: da9211: Fix notifier mutex lock warning
-Date:   Wed, 29 May 2019 20:06:42 -0700
-Message-Id: <20190530030557.441567212@linuxfoundation.org>
+Subject: [PATCH 5.0 330/346] regulator: da9063: Fix notifier mutex lock warning
+Date:   Wed, 29 May 2019 20:06:43 -0700
+Message-Id: <20190530030557.487183461@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -62,7 +62,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 65378de3359d30ebce44762d8b8027f372b5b1c4 ]
+[ Upstream commit 29d40b4a5776ec4727c9f0e00a884423dd5e3366 ]
 
 The mutex for the regulator_dev must be controlled by the caller of
 the regulator_notifier_call_chain(), as described in the comment
@@ -73,41 +73,33 @@ in a kernel WARN_ON_ONCE() which will dump a backtrace for the
 regulator_notifier_call_chain() when that function call is first made.
 The mutex can be controlled using the regulator_lock/unlock() API.
 
-Fixes: 1028a37daa14 ("regulator: da9211: new regulator driver")
+Fixes: 69ca3e58d178 ("regulator: da9063: Add Dialog DA9063 voltage regulators support.")
 Suggested-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
 Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/da9211-regulator.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/regulator/da9063-regulator.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/da9211-regulator.c b/drivers/regulator/da9211-regulator.c
-index 109ee12d43626..4d7fe4819c1ce 100644
---- a/drivers/regulator/da9211-regulator.c
-+++ b/drivers/regulator/da9211-regulator.c
-@@ -322,8 +322,10 @@ static irqreturn_t da9211_irq_handler(int irq, void *data)
- 		goto error_i2c;
+diff --git a/drivers/regulator/da9063-regulator.c b/drivers/regulator/da9063-regulator.c
+index 8cbcd2a3eb205..d3ea73ab59209 100644
+--- a/drivers/regulator/da9063-regulator.c
++++ b/drivers/regulator/da9063-regulator.c
+@@ -615,9 +615,12 @@ static irqreturn_t da9063_ldo_lim_event(int irq, void *data)
+ 		if (regl->info->oc_event.reg != DA9063_REG_STATUS_D)
+ 			continue;
  
- 	if (reg_val & DA9211_E_OV_CURR_A) {
-+	        regulator_lock(chip->rdev[0]);
- 		regulator_notifier_call_chain(chip->rdev[0],
- 			REGULATOR_EVENT_OVER_CURRENT, NULL);
-+	        regulator_unlock(chip->rdev[0]);
- 
- 		err = regmap_write(chip->regmap, DA9211_REG_EVENT_B,
- 			DA9211_E_OV_CURR_A);
-@@ -334,8 +336,10 @@ static irqreturn_t da9211_irq_handler(int irq, void *data)
+-		if (BIT(regl->info->oc_event.lsb) & bits)
++		if (BIT(regl->info->oc_event.lsb) & bits) {
++		        regulator_lock(regl->rdev);
+ 			regulator_notifier_call_chain(regl->rdev,
+ 					REGULATOR_EVENT_OVER_CURRENT, NULL);
++		        regulator_unlock(regl->rdev);
++		}
  	}
  
- 	if (reg_val & DA9211_E_OV_CURR_B) {
-+	        regulator_lock(chip->rdev[1]);
- 		regulator_notifier_call_chain(chip->rdev[1],
- 			REGULATOR_EVENT_OVER_CURRENT, NULL);
-+	        regulator_unlock(chip->rdev[1]);
- 
- 		err = regmap_write(chip->regmap, DA9211_REG_EVENT_B,
- 			DA9211_E_OV_CURR_B);
+ 	return IRQ_HANDLED;
 -- 
 2.20.1
 
