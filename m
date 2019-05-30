@@ -2,117 +2,126 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D940EC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 176E5C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC37D25BF3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:55:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD6E225BE7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:57:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="CHfsdM4u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ap3UfpQY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbfE3Ozx (ORCPT
+        id S1726797AbfE3O5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 10:55:53 -0400
-Received: from vps.xff.cz ([195.181.215.36]:33506 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726512AbfE3Ozw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 10:55:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1559228150; bh=4poS9dzXjZyZHVsMTWE55BoeyiNgM40bOoxh48wj2rQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CHfsdM4utd+EIvKv6wDe1J6SZi5pLvTw1w0fitol8/pxnTYF5o+BY8QJNpbVWCOpu
-         fR2KJHmrElEorkXXaP+81G4vNKdJEt/LK3oBGT8SpVZbPIkes3vHjQNQDIoTseAMPZ
-         67EvfWmInFdCaae5mTrHdcWX2SEAykrQfn4kwLKs=
-Date:   Thu, 30 May 2019 16:55:50 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
-Subject: Re: [PATCH v3 10/12] arm64: dts: allwinner: h6: Add IR receiver node
-Message-ID: <20190530145550.amalnxmx7kpokykv@core.my.home>
-Mail-Followup-To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
-References: <20190528161440.27172-1-peron.clem@gmail.com>
- <20190528161440.27172-11-peron.clem@gmail.com>
+        Thu, 30 May 2019 10:57:43 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:41539 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726065AbfE3O5m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 10:57:42 -0400
+Received: by mail-ed1-f66.google.com with SMTP id y15so3573069edo.8;
+        Thu, 30 May 2019 07:57:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gUcLhVuM4u8ThLlgb5AD/BxYretrvQweG0sh8Y6YVsQ=;
+        b=ap3UfpQYhfSmX+EQxxFZ+Ou73eB0So1oqkh7kGnfO3ROYDmxqk8AJGTDTYaMT8Lk5+
+         89eB/zKGk0Be9WjtaEX76sLZmDM2lVx983WR7sjnnXCCzlj6hjjV+DijOgNJRIx+WaUs
+         250X4RBksnDnyT1DJ+PmPUrYqtPpCPA74QfJQRDyhMt8Jift6YD/s3YScFjcifvPQJ1h
+         dsfDBsgkiBAUoflJCLhb1/YuZq6oDNWvJvOtqaKbQ2Dwvxgr/rpesdnp1Q7ibWfeQOOJ
+         0Z+OcfWY0rkzemEnGjJ97tvwIz2d/7ORe9DNe8itb4Xn0TjSTcUmDvH+Qb25BLNiOSoy
+         8YRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gUcLhVuM4u8ThLlgb5AD/BxYretrvQweG0sh8Y6YVsQ=;
+        b=AejEfjXu4HW8r5guDqxl0QMiFeIY+iQoC3dCrM5ePaUzB8nBem+fDRTYX2YlSrK+OS
+         mH8HrsE+cUQQm8yG1/wf+LPoE0VRQOSEBzuX7qzDa/MB7emrnlV+utoMEUvuMklSfJXP
+         6pxBAdaMPQl27Xlnq9D0AWClhFy7C9XOGkFV5pHOosMLxejHWgsQUXi0lw4A3Zqxjgad
+         fRDyfbjTI2IZLT/foufB7DyvSBIFOvbmNODRGcLBIJXfp7GwUWOaPHrXW5Vh8fGxpLnD
+         cXuoZSTG8ugZCRhb0fLvoTMdoMpy0MrsadHCyGkPLBPuBQWtSZxEDJmXGXiu4iFYlkY+
+         vnzQ==
+X-Gm-Message-State: APjAAAUpKwJ4jLUePVtzv3YXtMywHj7mrRDoXxgwKD14SE9LEo9vvROV
+        6yih7rgOmEjGRkSXcdwLKiYjYbVeXHmhiT6F62w=
+X-Google-Smtp-Source: APXvYqw7zpObGQB3C2POA85DrkRu6dZnPLYfC0oGlSNSGn3E+DbA6SQ1FgUNoticBxJCGrQrET23jX26Bbmbi2WgUjw=
+X-Received: by 2002:aa7:c402:: with SMTP id j2mr5159229edq.165.1559228261213;
+ Thu, 30 May 2019 07:57:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190528161440.27172-11-peron.clem@gmail.com>
+References: <20190528235627.1315-1-olteanv@gmail.com> <20190529045207.fzvhuu6d6jf5p65t@localhost>
+ <dbe0a38f-8b48-06dd-cc2c-676e92ba0e74@gmail.com> <20190530034555.wv35efen3igwwzjq@localhost>
+ <CA+h21hpjsC=ie5G7Gx3EcPpazyxze6X_k+8eC+vw7JBvEO2zNg@mail.gmail.com> <20190530143037.iky5kk3h4ssmec3f@localhost>
+In-Reply-To: <20190530143037.iky5kk3h4ssmec3f@localhost>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Thu, 30 May 2019 17:57:30 +0300
+Message-ID: <CA+h21hpp68AEEykxr8bJB=uJ+b0tg881Z7Ao_OfbTAXNxS8WgQ@mail.gmail.com>
+Subject: Re: [PATCH net-next 0/5] PTP support for the SJA1105 DSA driver
+To:     Richard Cochran <richardcochran@gmail.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Clément,
+On Thu, 30 May 2019 at 17:30, Richard Cochran <richardcochran@gmail.com> wrote:
+>
+> On Thu, May 30, 2019 at 12:01:23PM +0300, Vladimir Oltean wrote:
+> > In fact that's why it doesn't work: because linuxptp adds ptp_dst_mac
+> > (01-1B-19-00-00-00) and (01-80-C2-00-00-0E) to the MAC's multicast
+> > filter, but the switch in its great wisdom mangles bytes
+> > 01-1B-19-xx-xx-00 of the DMAC to place the switch id and source port
+> > there (a rudimentary tagging mechanism). So the frames are no longer
+> > accepted by this multicast MAC filter on the DSA master port unless
+> > it's put in ALLMULTI or PROMISC.
+>
+> IOW, it is not linuxptp's choice to use these modes, but rather this
+> is caused by a limitation of your device.
+>
 
-On Tue, May 28, 2019 at 06:14:38PM +0200, Clément Péron wrote:
-> Allwinner H6 IR is similar to A31 and can use same driver.
-> 
-> Add support for it.
-> 
-> Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> index 16c5c3d0fd81..649cbdfe452e 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> @@ -647,6 +647,25 @@
->  				pins = "PL0", "PL1";
->  				function = "s_i2c";
->  			};
-> +
-> +			r_ir_rx_pin: r-ir-rx-pin {
-> +				pins = "PL9";
-> +				function = "s_cir_rx";
-> +			};
-> +		};
-> +
-> +		r_ir: ir@7040000 {
-> +				compatible = "allwinner,sun50i-h6-ir",
-> +					     "allwinner,sun6i-a31-ir";
-> +				reg = <0x07040000 0x400>;
-> +				interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&r_ccu CLK_R_APB1_IR>,
-> +					 <&r_ccu CLK_IR>;
-> +				clock-names = "apb", "ir";
-> +				resets = <&r_ccu RST_R_APB1_IR>;
-> +				pinctrl-names = "default";
-> +				pinctrl-0 = <&r_ir_rx_pin>;
-> +				status = "disabled";
->  		};
+Didn't want to suggest otherwise. I'll see how I'm going to address that.
 
-Please make a comment here, that this is known broken on some boards and may
-result IRQ flood if enabled. Otherwise noone will know.
+> > If the meta frames weren't associated with the correct link-local
+> > frame, then the whole expect_meta -> SJA1105_STATE_META_ARRIVED
+> > mechanism would go haywire, but it doesn't.
+>
+> Not necessarily.  If two frames that arrive at nearly the same time
+> get their timestamps mixed up, that would be enough to break the time
+> values but without breaking your state machine.
+>
 
-thanks,
-	o.
+This doesn't exactly sound like the type of thing I can check for.
+The RX and TX timestamps *are* monotonically increasing with time for
+all frames when I'm printing them in the {rx,tx}tstamp callbacks.
 
->  		r_i2c: i2c@7081400 {
-> -- 
-> 2.20.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > I was actually thinking it has something to do with the fact that I
+> > shouldn't apply frequency corrections on timestamps of PTP delay
+> > messages. Does that make any sense?
+>
+> What do you mean by that?  Is the driver altering PTP message fields?
+
+No.
+The driver returns free-running timestamps altered with a timecounter
+frequency set by adjfine and offset set by adjtime.
+I was wondering out loud if there's any value in identifying delay
+messages in order to not apply this frequency adjustment for their
+timestamps.
+
+-Vladimir
+
+>
+> Thanks,
+> Richard
