@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4097C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D8AAC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DAAB24D7A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:50:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBC3624D6B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:50:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188227;
-	bh=VMGfWRwBmFr2ssnEfJgw36U9a0a4gbCJ+vV7i2R05Cs=;
+	s=default; t=1559188224;
+	bh=F+hl5h+p7FG1yySKoaIIOhNXx2f4OrJUVzBXMxQpzTY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ah/IFk6MW0E/kj7pJRgHehKoyZrEMv3v2vSxhcGjFSbKbFrX3eOBRniMvMp6TubeE
-	 FSDodZYAagbXvjd5jghM7m4AlHXaeVYqGwBY+hdBL7LD6IXczMxII//o77LaUQe0Eo
-	 xvHjMSYiK/T20cN0VP1bQBr57KnwOJY0S2dhAsV4=
+	b=VvC5Mj1MheMhVo+y+kKdxjJhCBGmxgMgVln+8pBUCP4dZ4qWrRgJIKjOjdGSDpwaQ
+	 OMMKmeGNCvapwBgG3E7OmZCgbgGrn/+qj9+6KO3BtcMatT83aAsK90pwOp2qlY5Lfo
+	 EzEeM+8bZ3ISrwroo1vAZ7XN0/LdpIy/FaIzXQv4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733293AbfE3Du0 (ORCPT
+        id S1733188AbfE3DuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:50:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57262 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:50:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732076AbfE3DT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:56 -0400
+        id S1730657AbfE3DT5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:57 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F015B248F2;
-        Thu, 30 May 2019 03:19:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 547D42485E;
+        Thu, 30 May 2019 03:19:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186396;
-        bh=VMGfWRwBmFr2ssnEfJgw36U9a0a4gbCJ+vV7i2R05Cs=;
+        s=default; t=1559186397;
+        bh=F+hl5h+p7FG1yySKoaIIOhNXx2f4OrJUVzBXMxQpzTY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bl2GYGrzzrpjOpXMX96/2rEoITdMfoHb57u4R5Qo7HG/5QRmi9vgxZTDlYyea/QhB
-         w+WfsRn7lV535BSC76qHsl5Fn0fo51gDHbrIu+iUCoBtyOPJhfGF67in3VS1Il6I8Q
-         QoSopQEztPq+MQwwkcDUwTXMGEsrEZ/AH9DpmlkY=
+        b=f+QHCH2yo1ikGjXrv15nifvC9qo3b69E2ANJGsV+fDxHGgL/BXSI+jyCbkMFKaq1V
+         lPvmccsKXbWWKqLZsYAyJM8hErY1V9FjY2NQTvoGn9ehUWsWO4zmQByV0znoaW38JE
+         6ZCUxowCSlEkFsrs8uZ2hoCaFWG1444Gh3t1YiBI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 127/193] s390: zcrypt: initialize variables before_use
-Date:   Wed, 29 May 2019 20:06:21 -0700
-Message-Id: <20190530030506.217079100@linuxfoundation.org>
+Subject: [PATCH 4.14 177/193] thunderbolt: Fix to check for kmemdup failure
+Date:   Wed, 29 May 2019 20:07:11 -0700
+Message-Id: <20190530030512.325244420@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -60,72 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 913140e221567b3ecd21b4242257a7e3fa279026 ]
+[ Upstream commit 2cc12751cf464a722ff57b54d17d30c84553f9c0 ]
 
-The 'func_code' variable gets printed in debug statements without
-a prior initialization in multiple functions, as reported when building
-with clang:
+Memory allocated via kmemdup might fail and return a NULL pointer.
+This patch adds a check on the return value of kmemdup and passes the
+error upstream.
 
-drivers/s390/crypto/zcrypt_api.c:659:6: warning: variable 'func_code' is used uninitialized whenever 'if' condition is true
-      [-Wsometimes-uninitialized]
-        if (mex->outputdatalength < mex->inputdatalength) {
-            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/s390/crypto/zcrypt_api.c:725:29: note: uninitialized use occurs here
-        trace_s390_zcrypt_rep(mex, func_code, rc,
-                                   ^~~~~~~~~
-drivers/s390/crypto/zcrypt_api.c:659:2: note: remove the 'if' if its condition is always false
-        if (mex->outputdatalength < mex->inputdatalength) {
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/s390/crypto/zcrypt_api.c:654:24: note: initialize the variable 'func_code' to silence this warning
-        unsigned int func_code;
-                              ^
-
-Add initializations to all affected code paths to shut up the warning
-and make the warning output consistent.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/crypto/zcrypt_api.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/thunderbolt/switch.c | 22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/s390/crypto/zcrypt_api.c b/drivers/s390/crypto/zcrypt_api.c
-index a9a56aa9c26b7..3743828106db8 100644
---- a/drivers/s390/crypto/zcrypt_api.c
-+++ b/drivers/s390/crypto/zcrypt_api.c
-@@ -237,6 +237,7 @@ static long zcrypt_rsa_modexpo(struct ica_rsa_modexpo *mex)
- 	trace_s390_zcrypt_req(mex, TP_ICARSAMODEXPO);
+diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
+index 8bd1371099808..fe2384b019ec9 100644
+--- a/drivers/thunderbolt/switch.c
++++ b/drivers/thunderbolt/switch.c
+@@ -1206,13 +1206,14 @@ int tb_switch_configure(struct tb_switch *sw)
+ 	return tb_plug_events_active(sw, true);
+ }
  
- 	if (mex->outputdatalength < mex->inputdatalength) {
-+		func_code = 0;
- 		rc = -EINVAL;
- 		goto out;
+-static void tb_switch_set_uuid(struct tb_switch *sw)
++static int tb_switch_set_uuid(struct tb_switch *sw)
+ {
+ 	u32 uuid[4];
+-	int cap;
++	int cap, ret;
+ 
++	ret = 0;
+ 	if (sw->uuid)
+-		return;
++		return ret;
+ 
+ 	/*
+ 	 * The newer controllers include fused UUID as part of link
+@@ -1220,7 +1221,9 @@ static void tb_switch_set_uuid(struct tb_switch *sw)
+ 	 */
+ 	cap = tb_switch_find_vse_cap(sw, TB_VSE_CAP_LINK_CONTROLLER);
+ 	if (cap > 0) {
+-		tb_sw_read(sw, uuid, TB_CFG_SWITCH, cap + 3, 4);
++		ret = tb_sw_read(sw, uuid, TB_CFG_SWITCH, cap + 3, 4);
++		if (ret)
++			return ret;
+ 	} else {
+ 		/*
+ 		 * ICM generates UUID based on UID and fills the upper
+@@ -1235,6 +1238,9 @@ static void tb_switch_set_uuid(struct tb_switch *sw)
  	}
-@@ -311,6 +312,7 @@ static long zcrypt_rsa_crt(struct ica_rsa_modexpo_crt *crt)
- 	trace_s390_zcrypt_req(crt, TP_ICARSACRT);
  
- 	if (crt->outputdatalength < crt->inputdatalength) {
-+		func_code = 0;
- 		rc = -EINVAL;
- 		goto out;
+ 	sw->uuid = kmemdup(uuid, sizeof(uuid), GFP_KERNEL);
++	if (!sw->uuid)
++		ret = -ENOMEM;
++	return ret;
+ }
+ 
+ static int tb_switch_add_dma_port(struct tb_switch *sw)
+@@ -1280,7 +1286,9 @@ static int tb_switch_add_dma_port(struct tb_switch *sw)
+ 
+ 	if (status) {
+ 		tb_sw_info(sw, "switch flash authentication failed\n");
+-		tb_switch_set_uuid(sw);
++		ret = tb_switch_set_uuid(sw);
++		if (ret)
++			return ret;
+ 		nvm_set_auth_status(sw, status);
  	}
-@@ -492,6 +494,7 @@ static long zcrypt_send_ep11_cprb(struct ep11_urb *xcrb)
  
- 		targets = kcalloc(target_num, sizeof(*targets), GFP_KERNEL);
- 		if (!targets) {
-+			func_code = 0;
- 			rc = -ENOMEM;
- 			goto out;
+@@ -1330,7 +1338,9 @@ int tb_switch_add(struct tb_switch *sw)
  		}
-@@ -499,6 +502,7 @@ static long zcrypt_send_ep11_cprb(struct ep11_urb *xcrb)
- 		uptr = (struct ep11_target_dev __force __user *) xcrb->targets;
- 		if (copy_from_user(targets, uptr,
- 				   target_num * sizeof(*targets))) {
-+			func_code = 0;
- 			rc = -EFAULT;
- 			goto out;
- 		}
+ 		tb_sw_info(sw, "uid: %#llx\n", sw->uid);
+ 
+-		tb_switch_set_uuid(sw);
++		ret = tb_switch_set_uuid(sw);
++		if (ret)
++			return ret;
+ 
+ 		for (i = 0; i <= sw->config.max_port_number; i++) {
+ 			if (sw->ports[i].disabled) {
 -- 
 2.20.1
 
