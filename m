@@ -5,53 +5,59 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D90BBC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:22:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C32C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:22:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE7EC240F2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:22:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C4B424562
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:22:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190146;
-	bh=8Tir1141JjLcigccpWzUNXfjFuNnn/QHv3gE1I82T9A=;
+	s=default; t=1559190149;
+	bh=dI6k68iBI9a6EZae/YyfhT5m9Df2yEszOFsOyZfW4Ow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PnRXqg7429DiifmGX28Y7+gRsPdAYm8IYicExqsC8t/RQ1024hAnAZrBC0o2BXwpv
-	 uV5jmyGJQyRlO0SSSWggTFQV553hpxE56hMLb+Sg7kNTZBTHgXi9MlqWDwhZlI+oPP
-	 iSFguKsuD2NIkn4cTA+uplt/GRgYBfcPSJFJ06Qc=
+	b=JGC/FSdmkRiIRDjejtGOgOJj+nu0zmvIu+0ieBrIImbceULjrDR2omacuGU1XMvzs
+	 lgjdxaYqXEcHVrnEOxvHJe7yHNzgBQj2DVx6lgZ0XHHwcsd9ac2QXVD4NEaYG2K7u7
+	 tO+CMgww8G2qbAnZhczdZhQB274aH6bz8hXej7c0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730127AbfE3DPI (ORCPT
+        id S1730440AbfE3EW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:15:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54818 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:22:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728267AbfE3DMY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:24 -0400
+        id S1730117AbfE3DPH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:07 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 631D823C5A;
-        Thu, 30 May 2019 03:12:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24501245A9;
+        Thu, 30 May 2019 03:15:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185944;
-        bh=8Tir1141JjLcigccpWzUNXfjFuNnn/QHv3gE1I82T9A=;
+        s=default; t=1559186107;
+        bh=dI6k68iBI9a6EZae/YyfhT5m9Df2yEszOFsOyZfW4Ow=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B/a6XQ/MTI4LqxmAOFJbWRJxwByyjaPBTxyH2BQLRqFhR6edFnyQm/70jK18MwyNc
-         LOUx0FwSJqzx2K0s9boREZEy9+0RPt9EGUQwirU5ztlvl/qVTyPaGcjCYdhx/CY419
-         OMfO+nFwIaOZ80wkFtwKv4t/r+oGj0Ur3y299c84=
+        b=KK4ZkzRtLClBod2RShs6A9t7BLwDGSrWEc8/Tn8aW/thY+yb4oxM4CXKKAeGpb0mJ
+         5CR50bjxfix8Ge6DLkcy3pEThJce46VrcOE3WPUxnd78P7yM3Z9oyuHcwWBb9xMC69
+         t8eDIDmmPpXnJPY1/rBJFIhnAWwY4Rr9EFoiodd8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Avri Altman <avri.altman@wdc.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 352/405] scsi: ufs: fix a missing check of devm_reset_control_get
-Date:   Wed, 29 May 2019 20:05:50 -0700
-Message-Id: <20190530030558.473851295@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Timur Tabi <timur@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 249/346] ASoC: fsl_utils: fix a leaked reference by adding missing of_node_put
+Date:   Wed, 29 May 2019 20:05:22 -0700
+Message-Id: <20190530030553.640391239@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
-References: <20190530030540.291644921@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,34 +67,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 63a06181d7ce169d09843645c50fea1901bc9f0a ]
+[ Upstream commit c705247136a523488eac806bd357c3e5d79a7acd ]
 
-devm_reset_control_get could fail, so the fix checks its return value and
-passes the error code upstream in case it fails.
+The call to of_parse_phandle returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Acked-by: Avri Altman <avri.altman@wdc.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Detected by coccinelle with the following warnings:
+./sound/soc/fsl/fsl_utils.c:74:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 38, but without a corresponding     object release within this function.
+
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Timur Tabi <timur@kernel.org>
+Cc: Nicolin Chen <nicoleotsuka@gmail.com>
+Cc: Xiubo Li <Xiubo.Lee@gmail.com>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: alsa-devel@alsa-project.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufs-hisi.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ sound/soc/fsl/fsl_utils.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/ufs/ufs-hisi.c b/drivers/scsi/ufs/ufs-hisi.c
-index 0e855b5afe82a..2f592df921d97 100644
---- a/drivers/scsi/ufs/ufs-hisi.c
-+++ b/drivers/scsi/ufs/ufs-hisi.c
-@@ -587,6 +587,10 @@ static int ufs_hisi_init_common(struct ufs_hba *hba)
- 	ufshcd_set_variant(hba, host);
- 
- 	host->rst  = devm_reset_control_get(dev, "rst");
-+	if (IS_ERR(host->rst)) {
-+		dev_err(dev, "%s: failed to get reset control\n", __func__);
-+		return PTR_ERR(host->rst);
-+	}
- 
- 	ufs_hisi_set_pm_lvl(hba);
- 
+diff --git a/sound/soc/fsl/fsl_utils.c b/sound/soc/fsl/fsl_utils.c
+index 9981668ab5909..040d06b89f00a 100644
+--- a/sound/soc/fsl/fsl_utils.c
++++ b/sound/soc/fsl/fsl_utils.c
+@@ -71,6 +71,7 @@ int fsl_asoc_get_dma_channel(struct device_node *ssi_np,
+ 	iprop = of_get_property(dma_np, "cell-index", NULL);
+ 	if (!iprop) {
+ 		of_node_put(dma_np);
++		of_node_put(dma_channel_np);
+ 		return -EINVAL;
+ 	}
+ 	*dma_id = be32_to_cpup(iprop);
 -- 
 2.20.1
 
