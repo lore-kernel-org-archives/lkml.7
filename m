@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31510C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:40:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5265C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8BBA25981
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:40:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79555259CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:40:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191251;
-	bh=riq+bOws0Q3vzQ+R5piNsq9Mu8gswZDeB9nryb09Weo=;
+	s=default; t=1559191257;
+	bh=bYZ7HeSZb8851DyKUc2Ht8f0mLDiJa48lCbIpn2UIEQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U9opXcGmGtnv24GvBDbgdjr5nHqz7LyiG1T2cKbmhv9D/HmdG4n7xvohiErYXIjnW
-	 nWq/ig2cgYzZ4dXoj3+GVYnf2JXpeMP4NGWeo6bjzhPDx3UGOG8zzLzDm8WQUzcZoy
-	 bWtEzwai8p8xs8ltzR98qnOXtlloLUPZvO5q+q3g=
+	b=ObNep6xJgN6tld2i5lyIZwR79PlpKftGaOWgfqIaE1f4yN/SaXB0SCCkGM8Lncyb0
+	 vFpmgZ9ECgUiW2lLqrNd7ZefhPsJQ43gLOyaIwCtWNvI91X+mHeZFKEFyOuIQ3N2pX
+	 2zgBafw3DVEpAt7iClSKX6P9qoOD4WydFb+RrP5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388088AbfE3Ekt (ORCPT
+        id S2388350AbfE3Ek4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:40:49 -0400
+        Thu, 30 May 2019 00:40:56 -0400
 Received: from mail.kernel.org ([198.145.29.99]:55166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729066AbfE3DMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:30 -0400
+        id S1729040AbfE3DM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:12:28 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E57B72449A;
-        Thu, 30 May 2019 03:12:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59A3521BE2;
+        Thu, 30 May 2019 03:12:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185950;
-        bh=riq+bOws0Q3vzQ+R5piNsq9Mu8gswZDeB9nryb09Weo=;
+        s=default; t=1559185948;
+        bh=bYZ7HeSZb8851DyKUc2Ht8f0mLDiJa48lCbIpn2UIEQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kqfZBNAU8yLiJxzbzwbqllZVDY6tPCy6UptrF+UyoAH5sM6pb3xV9QF0wkXdXGIb1
-         XwK91NE+jSc6Im7vxZJYBbKSSNRk78T/2SjnOBMAsgefITxDLLYdLZBp8Ncpe1rGui
-         XVrPI7eROlbfaXk5k+7zxfwPCGfp8PKl1vLgWU0g=
+        b=VhgIMBn3dGBBx5tKms8ZXh4habFhD+GOcvCrbBacuILSO+54Wb8oqOjN0NfIVLQ/H
+         aUa3joIn/2VqtCgy7cxPBHhI/nSKi5bFbv+WlKYuXSob50V3JwBC6swBPOuqAFdPmM
+         P+BzpDfl40Ei+5F4C2migNgB4R1RMGUc42w3VD4w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 361/405] media: cedrus: Add a quirk for not setting DMA offset
-Date:   Wed, 29 May 2019 20:05:59 -0700
-Message-Id: <20190530030558.875529027@linuxfoundation.org>
+Subject: [PATCH 5.1 359/405] media: vimc: zero the media_device on probe
+Date:   Wed, 29 May 2019 20:05:57 -0700
+Message-Id: <20190530030558.782590967@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -62,57 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 70a4f5cda82f7197c350099b66fd23506620810e ]
+[ Upstream commit f74267b51cb36321f777807b2e04ca02167ecc08 ]
 
-H6 VPU doesn't work if DMA offset is set.
+The media_device is part of a static global vimc_device struct.
+The media framework expects this to be zeroed before it is
+used, however, since this is a global this is not the case if
+vimc is unbound and then bound again.
 
-Add a quirk for it.
+So call memset to ensure any left-over values are cleared.
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/sunxi/cedrus/cedrus.h    | 3 +++
- drivers/staging/media/sunxi/cedrus/cedrus_hw.c | 3 ++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ drivers/media/platform/vimc/vimc-core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h b/drivers/staging/media/sunxi/cedrus/cedrus.h
-index 4aedd24a98480..c57c04b41d2e8 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus.h
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
-@@ -28,6 +28,8 @@
+diff --git a/drivers/media/platform/vimc/vimc-core.c b/drivers/media/platform/vimc/vimc-core.c
+index 0fbb7914098f6..3aa62d7e3d0e0 100644
+--- a/drivers/media/platform/vimc/vimc-core.c
++++ b/drivers/media/platform/vimc/vimc-core.c
+@@ -304,6 +304,8 @@ static int vimc_probe(struct platform_device *pdev)
  
- #define CEDRUS_CAPABILITY_UNTILED	BIT(0)
+ 	dev_dbg(&pdev->dev, "probe");
  
-+#define CEDRUS_QUIRK_NO_DMA_OFFSET	BIT(0)
++	memset(&vimc->mdev, 0, sizeof(vimc->mdev));
 +
- enum cedrus_codec {
- 	CEDRUS_CODEC_MPEG2,
- 
-@@ -91,6 +93,7 @@ struct cedrus_dec_ops {
- 
- struct cedrus_variant {
- 	unsigned int	capabilities;
-+	unsigned int	quirks;
- };
- 
- struct cedrus_dev {
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-index 0acf219a8c918..fbfff7c1c771f 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-@@ -177,7 +177,8 @@ int cedrus_hw_probe(struct cedrus_dev *dev)
- 	 */
- 
- #ifdef PHYS_PFN_OFFSET
--	dev->dev->dma_pfn_offset = PHYS_PFN_OFFSET;
-+	if (!(variant->quirks & CEDRUS_QUIRK_NO_DMA_OFFSET))
-+		dev->dev->dma_pfn_offset = PHYS_PFN_OFFSET;
- #endif
- 
- 	ret = of_reserved_mem_device_init(dev->dev);
+ 	/* Create platform_device for each entity in the topology*/
+ 	vimc->subdevs = devm_kcalloc(&vimc->pdev.dev, vimc->pipe_cfg->num_ents,
+ 				     sizeof(*vimc->subdevs), GFP_KERNEL);
 -- 
 2.20.1
 
