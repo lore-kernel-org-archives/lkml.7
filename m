@@ -5,52 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20067C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C95C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB58E25086
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11A7C250A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:07:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189218;
-	bh=nkRGmyUwdjOOZEN1bV2aoAyTIqai0OB2YKorjIp4+Y4=;
+	s=default; t=1559189222;
+	bh=4qFf+ReEGAlxmB+u/dhYnW1b0I/eQL6fC26LheLmXMg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nAY/hIYPxJ0HCPHidlPS5slEZV+7pYpTEdN15FD1HzrdThg08lbJ4Fp7AOCBuhMj1
-	 AYpxvKCiy8+x3vAiGfkFSVIVP7NojLuqlIuexR/wNt5AZ6m3SBflEd3DDQ1agJLn3g
-	 1kkcD5tsMpqyAVPGuGHD5nO7hEQ47QO5IANGtqtI=
+	b=MkTFcs5hcpApA/t/+pKhQbNGOreEP9/ZxF7xVi7fGaZlLPjS/eNCHCFXtz6QzpL+E
+	 PWggO1Mkv3ucPvOfKo00ErEeI+iCEMudisA1uFzIXWDHYAkpdF8keobGtf193ibldt
+	 WWM+dJkrUphyIUiTf99IE4Z8hnAhcXtOyqJJxtO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731146AbfE3DRb (ORCPT
+        id S1726546AbfE3EHA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:17:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32826 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:07:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729681AbfE3DOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:02 -0400
+        id S1731147AbfE3DRc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:17:32 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73A1E2455E;
-        Thu, 30 May 2019 03:14:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB84123B5C;
+        Thu, 30 May 2019 03:17:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186041;
-        bh=nkRGmyUwdjOOZEN1bV2aoAyTIqai0OB2YKorjIp4+Y4=;
+        s=default; t=1559186252;
+        bh=4qFf+ReEGAlxmB+u/dhYnW1b0I/eQL6fC26LheLmXMg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=11MMFR/S9QykJZBpN/sFtUJGPZ0Iu35/OffoWKeIEBMWNN4TFoWMGN2PCdpR0NIjs
-         3X+kYlp/1PD0szAR+SmL6fxvtk4vTrFqEEVjBMNpZOmVrnXzcdNFn5OLrSJ65iWNFg
-         3ZyUQGmiOgJzJ6BQFmdLx8hq/+N7xxf2LcnbhA7k=
+        b=0sL0TzuQpEzVjAW6TwhmfmwsXRGb2JHlSwd4Fg8ya7lyVqdzfBX+6Qdl71i4oiyms
+         5loC9HBGKkgc0tZ6EsF6tyStD1s6p2SbiSqBuFj1TM5YWtZz40N6PHBN1p1sujE80/
+         ok7Zo7Kgg769oiMIXR5b6jDvZnKbAyp5WDZ4dahA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 131/346] HID: logitech-hidpp: use RAP instead of FAP to get the protocol version
-Date:   Wed, 29 May 2019 20:03:24 -0700
-Message-Id: <20190530030547.751588104@linuxfoundation.org>
+Subject: [PATCH 4.19 172/276] clk: rockchip: Make rkpwm a critical clock on rk3288
+Date:   Wed, 29 May 2019 20:05:30 -0700
+Message-Id: <20190530030536.122559536@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
-References: <20190530030540.363386121@linuxfoundation.org>
+In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
+References: <20190530030523.133519668@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,74 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 096377525cdb8251e4656085efc988bdf733fb4c ]
+[ Upstream commit dfe7fb21cd9e730230d55a79bc72cf2ece67cdd5 ]
 
-According to the logitech_hidpp_2.0_specification_draft_2012-06-04.pdf doc:
-https://lekensteyn.nl/files/logitech/logitech_hidpp_2.0_specification_draft_2012-06-04.pdf
+Most rk3288-based boards are derived from the EVB and thus use a PWM
+regulator for the logic rail.  However, most rk3288-based boards don't
+specify the PWM regulator in their device tree.  We'll deal with that
+by making it critical.
 
-We should use a register-access-protocol request using the short input /
-output report ids. This is necessary because 27MHz HID++ receivers have
-a max-packetsize on their HIP++ endpoint of 8, so they cannot support
-long reports. Using a feature-access-protocol request (which is always
-long or very-long) with these will cause a timeout error, followed by
-the hidpp driver treating the device as not being HID++ capable.
+NOTE: it's important to make it critical and not just IGNORE_UNUSED
+because all PWMs in the system share the same clock.  We don't want
+another PWM user to turn the clock on and off and kill the logic rail.
 
-This commit fixes this by switching to using a rap request to get the
-protocol version.
+This change is in preparation for actually having the PWMs in the
+rk3288 device tree actually point to the proper PWM clock.  Up until
+now they've all pointed to the clock for the old IP block and they've
+all worked due to the fact that rkpwm was IGNORE_UNUSED and that the
+clock rates for both clocks were the same.
 
-Besides being tested with a (046d:c517) 27MHz receiver with various
-27MHz keyboards and mice, this has also been tested to not cause
-regressions on a non-unifying dual-HID++ nano receiver (046d:c534) with
-k270 and m185 HID++-2.0 devices connected and on a unifying/dj receiver
-(046d:c52b) with a HID++-2.0 Logitech Rechargeable Touchpad T650.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-logitech-hidpp.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ drivers/clk/rockchip/clk-rk3288.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
-index 199cc256e9d9d..ffd30c7492df8 100644
---- a/drivers/hid/hid-logitech-hidpp.c
-+++ b/drivers/hid/hid-logitech-hidpp.c
-@@ -836,13 +836,16 @@ static int hidpp_root_get_feature(struct hidpp_device *hidpp, u16 feature,
+diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
+index c6cd6d28af56f..64191694ff6e9 100644
+--- a/drivers/clk/rockchip/clk-rk3288.c
++++ b/drivers/clk/rockchip/clk-rk3288.c
+@@ -676,7 +676,7 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
+ 	GATE(PCLK_TZPC, "pclk_tzpc", "pclk_cpu", 0, RK3288_CLKGATE_CON(11), 3, GFLAGS),
+ 	GATE(PCLK_UART2, "pclk_uart2", "pclk_cpu", 0, RK3288_CLKGATE_CON(11), 9, GFLAGS),
+ 	GATE(PCLK_EFUSE256, "pclk_efuse_256", "pclk_cpu", 0, RK3288_CLKGATE_CON(11), 10, GFLAGS),
+-	GATE(PCLK_RKPWM, "pclk_rkpwm", "pclk_cpu", CLK_IGNORE_UNUSED, RK3288_CLKGATE_CON(11), 11, GFLAGS),
++	GATE(PCLK_RKPWM, "pclk_rkpwm", "pclk_cpu", 0, RK3288_CLKGATE_CON(11), 11, GFLAGS),
  
- static int hidpp_root_get_protocol_version(struct hidpp_device *hidpp)
- {
-+	const u8 ping_byte = 0x5a;
-+	u8 ping_data[3] = { 0, 0, ping_byte };
- 	struct hidpp_report response;
- 	int ret;
+ 	/* ddrctrl [DDR Controller PHY clock] gates */
+ 	GATE(0, "nclk_ddrupctl0", "ddrphy", CLK_IGNORE_UNUSED, RK3288_CLKGATE_CON(11), 4, GFLAGS),
+@@ -817,6 +817,8 @@ static const char *const rk3288_critical_clocks[] __initconst = {
+ 	"pclk_pd_pmu",
+ 	"pclk_pmu_niu",
+ 	"pmu_hclk_otg0",
++	/* pwm-regulators on some boards, so handoff-critical later */
++	"pclk_rkpwm",
+ };
  
--	ret = hidpp_send_fap_command_sync(hidpp,
-+	ret = hidpp_send_rap_command_sync(hidpp,
-+			REPORT_ID_HIDPP_SHORT,
- 			HIDPP_PAGE_ROOT_IDX,
- 			CMD_ROOT_GET_PROTOCOL_VERSION,
--			NULL, 0, &response);
-+			ping_data, sizeof(ping_data), &response);
- 
- 	if (ret == HIDPP_ERROR_INVALID_SUBID) {
- 		hidpp->protocol_major = 1;
-@@ -862,8 +865,14 @@ static int hidpp_root_get_protocol_version(struct hidpp_device *hidpp)
- 	if (ret)
- 		return ret;
- 
--	hidpp->protocol_major = response.fap.params[0];
--	hidpp->protocol_minor = response.fap.params[1];
-+	if (response.rap.params[2] != ping_byte) {
-+		hid_err(hidpp->hid_dev, "%s: ping mismatch 0x%02x != 0x%02x\n",
-+			__func__, response.rap.params[2], ping_byte);
-+		return -EPROTO;
-+	}
-+
-+	hidpp->protocol_major = response.rap.params[0];
-+	hidpp->protocol_minor = response.rap.params[1];
- 
- 	return ret;
- }
+ static void __iomem *rk3288_cru_base;
 -- 
 2.20.1
 
