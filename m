@@ -1,186 +1,115 @@
 Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58775C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 02:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8AFC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 02:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22F432442B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 02:18:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559182680;
-	bh=zh51hL6NGTDmDcVm+eJO2zpITbe7KvBRT/t524IKVvc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1UC1tZY5J8dOWAqQfY1AFOYf9O9f0C9YYBwVfKkqKs22/6LSN8PJSEiXGlgcaajNq
-	 nxp/s1X6DTDYlEXBDiAlUDCJeoFLwIh8cpf8otZRx94RCeO+TqGdJK50qJc9jSpy4i
-	 v/rGmlPt8WXUdI3aXLZcGgZn94i+gjA4lcpSN5nA=
+	by mail.kernel.org (Postfix) with ESMTP id 0E95624430
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 02:18:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727418AbfE3CR7 (ORCPT
+        id S1727457AbfE3CST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 22:17:59 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:43280 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726311AbfE3CR5 (ORCPT
+        Wed, 29 May 2019 22:18:19 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:3869 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726311AbfE3CSS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 22:17:57 -0400
-Received: by mail-pg1-f193.google.com with SMTP id f25so1013205pgv.10;
-        Wed, 29 May 2019 19:17:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=J+LGGnWuJWHM+WKg8MeU6gQViXIAZaAk3p0BItg7HfQ=;
-        b=U0XfxOsc2OjdQNPm9YJSBLzCkPPka1w7KrIp8pfB9nSjkHD3XrqaanRyTU6Ibf3sOE
-         uPc44k60qghDz6uZY3QXZFyl4ZIdUkKfVqVPfvnXvKzgCNTTP0Kg4L53SkfciBTy24PH
-         M131ULqW0TNdVD9v46mTV8F/ORYDQINPwHKDV8+tAVVwDDNv4gAiJBUqdYG/jteTLvh0
-         jnWDDl8ybAsf24TeIa2DUdXqlFCinU0eIORRz9zMVhxurVEHbLgtEiRyMpP1/GHFNz6W
-         DGBOxh54730ahlQmCWu3i+iHBd7RSujz8NQZGycKXA/twSos5CRjIcz08kZvsaRAp9J0
-         p+zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=J+LGGnWuJWHM+WKg8MeU6gQViXIAZaAk3p0BItg7HfQ=;
-        b=CVvrpUtZqK0nmOyPtvB4By95bO7qYa30l+oX9xAAHiVLwHf5SA6sLTHIqjSzQ8nDcU
-         DrDMrwVWSvQlTJZHPJr86SVYlB8aB4PJ1fQTqXmAhjH/ezKTcaN2X/BKrmUlNZHwW3a1
-         9O/917rBUnTM4By1kdzyZoB4XxhjHBY6AqX8eCYMeUSqy/+YA3UkB4BcswnR8RmCeA7g
-         lIFZQ6Z//ABgin5hiV/1iPj1ae6ybq/4RAYlYsCP+tlLsPbiLQmpoWwyixbuuoCxXpgW
-         AP4gyu7uzlInQO7jozugFLB6P6oWvrWzVYsPkGSUoCzsGenK01679ykXz7hxI8yZ6v+l
-         rabg==
-X-Gm-Message-State: APjAAAU6ti5I5+AE8IM5D1SrubjoAmDAsGSBeBPyrkYzBy3zgoGacVpI
-        C+jW3YUw8svXXKkt4YaIo9WL17WH
-X-Google-Smtp-Source: APXvYqz99GsR3E/xgrKz139jKb0mewXMFlMkRWz23qGbtOHzhcmYVGdIzRT2lqrEuBCIIuj/OVhYqw==
-X-Received: by 2002:aa7:8a11:: with SMTP id m17mr1117999pfa.122.1559182675823;
-        Wed, 29 May 2019 19:17:55 -0700 (PDT)
-Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
-        by smtp.gmail.com with ESMTPSA id x18sm1054452pfo.8.2019.05.29.19.17.51
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 29 May 2019 19:17:54 -0700 (PDT)
-Date:   Thu, 30 May 2019 11:17:48 +0900
-From:   Minchan Kim <minchan@kernel.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Daniel Colascione <dancol@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Re: [RFC 6/7] mm: extend process_madvise syscall to support vector
- arrary
-Message-ID: <20190530021748.GE229459@google.com>
-References: <20190520035254.57579-1-minchan@kernel.org>
- <20190520035254.57579-7-minchan@kernel.org>
- <20190520092258.GZ6836@dhcp22.suse.cz>
- <20190521024820.GG10039@google.com>
- <20190521062421.GD32329@dhcp22.suse.cz>
- <20190521102613.GC219653@google.com>
- <20190521103726.GM32329@dhcp22.suse.cz>
- <20190527074940.GB6879@google.com>
- <CAKOZuesK-8zrm1zua4dzqh4TEMivsZKiccySMvfBjOyDkg-MEw@mail.gmail.com>
- <20190529103352.GD18589@dhcp22.suse.cz>
+        Wed, 29 May 2019 22:18:18 -0400
+X-UUID: a31b93e34ffa48d98dd6601f83dabafe-20190530
+X-UUID: a31b93e34ffa48d98dd6601f83dabafe-20190530
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 108718663; Thu, 30 May 2019 10:17:59 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 30 May 2019 10:17:58 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 30 May 2019 10:17:58 +0800
+Message-ID: <1559182678.6868.1.camel@mtksdaap41>
+Subject: Re: [PATCH v2 2/4] drm: mediatek: unbind components in
+ mtk_drm_unbind()
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Thu, 30 May 2019 10:17:58 +0800
+In-Reply-To: <20190529102555.251579-3-hsinyi@chromium.org>
+References: <20190529102555.251579-1-hsinyi@chromium.org>
+         <20190529102555.251579-3-hsinyi@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190529103352.GD18589@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 12:33:52PM +0200, Michal Hocko wrote:
-> On Wed 29-05-19 03:08:32, Daniel Colascione wrote:
-> > On Mon, May 27, 2019 at 12:49 AM Minchan Kim <minchan@kernel.org> wrote:
-> > >
-> > > On Tue, May 21, 2019 at 12:37:26PM +0200, Michal Hocko wrote:
-> > > > On Tue 21-05-19 19:26:13, Minchan Kim wrote:
-> > > > > On Tue, May 21, 2019 at 08:24:21AM +0200, Michal Hocko wrote:
-> > > > > > On Tue 21-05-19 11:48:20, Minchan Kim wrote:
-> > > > > > > On Mon, May 20, 2019 at 11:22:58AM +0200, Michal Hocko wrote:
-> > > > > > > > [Cc linux-api]
-> > > > > > > >
-> > > > > > > > On Mon 20-05-19 12:52:53, Minchan Kim wrote:
-> > > > > > > > > Currently, process_madvise syscall works for only one address range
-> > > > > > > > > so user should call the syscall several times to give hints to
-> > > > > > > > > multiple address range.
-> > > > > > > >
-> > > > > > > > Is that a problem? How big of a problem? Any numbers?
-> > > > > > >
-> > > > > > > We easily have 2000+ vma so it's not trivial overhead. I will come up
-> > > > > > > with number in the description at respin.
-> > > > > >
-> > > > > > Does this really have to be a fast operation? I would expect the monitor
-> > > > > > is by no means a fast path. The system call overhead is not what it used
-> > > > > > to be, sigh, but still for something that is not a hot path it should be
-> > > > > > tolerable, especially when the whole operation is quite expensive on its
-> > > > > > own (wrt. the syscall entry/exit).
-> > > > >
-> > > > > What's different with process_vm_[readv|writev] and vmsplice?
-> > > > > If the range needed to be covered is a lot, vector operation makes senese
-> > > > > to me.
-> > > >
-> > > > I am not saying that the vector API is wrong. All I am trying to say is
-> > > > that the benefit is not really clear so far. If you want to push it
-> > > > through then you should better get some supporting data.
-> > >
-> > > I measured 1000 madvise syscall vs. a vector range syscall with 1000
-> > > ranges on ARM64 mordern device. Even though I saw 15% improvement but
-> > > absoluate gain is just 1ms so I don't think it's worth to support.
-> > > I will drop vector support at next revision.
-> > 
-> > Please do keep the vector support. Absolute timing is misleading,
-> > since in a tight loop, you're not going to contend on mmap_sem. We've
-> > seen tons of improvements in things like camera start come from
-> > coalescing mprotect calls, with the gains coming from taking and
-> > releasing various locks a lot less often and bouncing around less on
-> > the contended lock paths. Raw throughput doesn't tell the whole story,
-> > especially on mobile.
+Hi, Hsin-Yi:
+
+On Wed, 2019-05-29 at 18:25 +0800, Hsin-Yi Wang wrote:
+> Unbinding components (i.e. mtk_dsi and mtk_disp_ovl/rdma/color) will
+> trigger master(mtk_drm)'s .unbind(), and currently mtk_drm's unbind
+> won't actually unbind components. During the next bind,
+> mtk_drm_kms_init() is called, and the components are added back.
 > 
-> This will always be a double edge sword. Taking a lock for longer can
-> improve a throughput of a single call but it would make a latency for
-> anybody contending on the lock much worse.
+> .unbind() should call mtk_drm_kms_deinit() to unbind components.
 > 
-> Besides that, please do not overcomplicate the thing from the early
-> beginning please. Let's start with a simple and well defined remote
-> madvise alternative first and build a vector API on top with some
-> numbers based on _real_ workloads.
+> And since component_master_del() in .remove() will trigger .unbind(),
+> which will also unregister device, it's fine to remove original functions
+> called here.
 
-First time, I didn't think about atomicity about address range race
-because MADV_COLD/PAGEOUT is not critical for the race.
-However you raised the atomicity issue because people would extend
-hints to destructive ones easily. I agree with that and that's why
-we discussed how to guarantee the race and Daniel comes up with good idea.
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
 
-  - vma configuration seq number via process_getinfo(2).
+> 
+> Fixes: 119f5173628a ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> ---
+> change log v1->v2:
+> * separate another 2 fixes to other patches.
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_drv.c | 6 +-----
+>  1 file changed, 1 insertion(+), 5 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> index 57ce4708ef1b..e7362bdafa82 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> @@ -397,6 +397,7 @@ static void mtk_drm_unbind(struct device *dev)
+>  	struct mtk_drm_private *private = dev_get_drvdata(dev);
+>  
+>  	drm_dev_unregister(private->drm);
+> +	mtk_drm_kms_deinit(private->drm);
+>  	drm_dev_put(private->drm);
+>  	private->drm = NULL;
+>  }
+> @@ -568,13 +569,8 @@ static int mtk_drm_probe(struct platform_device *pdev)
+>  static int mtk_drm_remove(struct platform_device *pdev)
+>  {
+>  	struct mtk_drm_private *private = platform_get_drvdata(pdev);
+> -	struct drm_device *drm = private->drm;
+>  	int i;
+>  
+> -	drm_dev_unregister(drm);
+> -	mtk_drm_kms_deinit(drm);
+> -	drm_dev_put(drm);
+> -
+>  	component_master_del(&pdev->dev, &mtk_drm_ops);
+>  	pm_runtime_disable(&pdev->dev);
+>  	of_node_put(private->mutex_node);
 
-We discussed the race issue without _read_ workloads/requests because
-it's common sense that people might extend the syscall later.
 
-Here is same. For current workload, we don't need to support vector
-for perfomance point of view based on my experiment. However, it's
-rather limited experiment. Some configuration might have 10000+ vmas
-or really slow CPU. 
-
-Furthermore, I want to have vector support due to atomicity issue
-if it's really the one we should consider.
-With vector support of the API and vma configuration sequence number
-from Daniel, we could support address ranges operations's atomicity.
-However, since we don't introduce vector at this moment, we need to
-introduce *another syscall* later to be able to handle multile ranges
-all at once atomically if it's okay.
-
-Other thought:
-Maybe we could extend address range batch syscall covers other MM
-syscall like mmap/munmap/madvise/mprotect and so on because there
-are multiple users that would benefit from this general batching
-mechanism.
