@@ -5,52 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 561C0C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1C7C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 307CB24D42
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A9C824D45
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:58:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188688;
-	bh=nqfYF8dUGO4hkuMbiBjfoewqvUHFBm1r8Wi5bynYi2o=;
+	s=default; t=1559188694;
+	bh=mx5RlGk1idEIFRaio2toXNGCdHdh03sU1B+uGZcN3J4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vXdZI+eqF6NbM9f96TrhEHeo3IiT+gjOrwdf+ToLpAEh/VVvUTun3RaWXdILCNjyV
-	 hGPnZ8rpD60klajpXpdr+ZzVrbd8lOJB5R0cgSnh0bu2QBx72ptece2Ejpy4Hs+d12
-	 idKHquuYbhEKfsUdNgjl48dYzQ4URtTc9vRd0Sps=
+	b=0N2EXoVTRNqxZSkvidU4gmGj7Gm1sjiGVO3AV53+UKtx2st7dejZAKCFYVYnBOSTK
+	 drccADSCFR0Npz9uVVq3lQVS/dOC0s2E9E0JPzx1WD0kXrY/xw1V3Fa0StHItU3kDB
+	 DO6TWHpVqis80Jq/uO31MH5UMvlStd/Vk/MtTJs8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731700AbfE3DSq (ORCPT
+        id S1733250AbfE3D6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:18:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35142 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:58:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730009AbfE3DOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:50 -0400
+        id S1731689AbfE3DSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:46 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0D7B24561;
-        Thu, 30 May 2019 03:14:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 791FB2475F;
+        Thu, 30 May 2019 03:18:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186089;
-        bh=nqfYF8dUGO4hkuMbiBjfoewqvUHFBm1r8Wi5bynYi2o=;
+        s=default; t=1559186325;
+        bh=mx5RlGk1idEIFRaio2toXNGCdHdh03sU1B+uGZcN3J4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QCytm3wkLAs+WRtO0hzcnXSAEr4fcg0EPZfnfo+ofnoPKyOW1vtdqgftDNSxhSkYn
-         kvP7W80JqN/IwDStDaQ1vs4eT8e8Bd7N/FeqOSEPCgTPhzG8pEo/gcygDeeESMO/bk
-         V8/sWpnELk+kZMglSI8EOJHpV0oEhrSnsaH0Rno0=
+        b=VzZ4u8P5d1rjmA29QKJyIbWKeZMupTzvvYOImZI1zBT7vBGaRcK/K886klogfh1UD
+         0leZQrcx3aVonqVTS551mtvj6cDno374gFNrYGDmJ6ZZANEkjS5uUet+BhsQxv27RA
+         yJKm1yAdMTazjaqcc7Ymy9OQd1xPP5dPkemYzjg0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Justin Chen <justinpopo6@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        stable@vger.kernel.org,
+        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 219/346] iio: adc: ti-ads7950: Fix improper use of mlock
-Date:   Wed, 29 May 2019 20:04:52 -0700
-Message-Id: <20190530030552.188244015@linuxfoundation.org>
+Subject: [PATCH 4.14 039/193] IB/hfi1: Fix WQ_MEM_RECLAIM warning
+Date:   Wed, 29 May 2019 20:04:53 -0700
+Message-Id: <20190530030454.826604753@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
-References: <20190530030540.363386121@linuxfoundation.org>
+In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
+References: <20190530030446.953835040@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,107 +63,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit abbde2792999c9ad3514dd25d7f8d9a96034fe16 ]
+[ Upstream commit 4c4b1996b5db688e2dcb8242b0a3bf7b1e845e42 ]
 
-Indio->mlock is used for protecting the different iio device modes.
-It is currently not being used in this way. Replace the lock with
-an internal lock specifically used for protecting the SPI transfer
-buffer.
+The work_item cancels that occur when a QP is destroyed can elicit the
+following trace:
 
-Signed-off-by: Justin Chen <justinpopo6@gmail.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+ workqueue: WQ_MEM_RECLAIM ipoib_wq:ipoib_cm_tx_reap [ib_ipoib] is flushing !WQ_MEM_RECLAIM hfi0_0:_hfi1_do_send [hfi1]
+ WARNING: CPU: 7 PID: 1403 at kernel/workqueue.c:2486 check_flush_dependency+0xb1/0x100
+ Call Trace:
+  __flush_work.isra.29+0x8c/0x1a0
+  ? __switch_to_asm+0x40/0x70
+  __cancel_work_timer+0x103/0x190
+  ? schedule+0x32/0x80
+  iowait_cancel_work+0x15/0x30 [hfi1]
+  rvt_reset_qp+0x1f8/0x3e0 [rdmavt]
+  rvt_destroy_qp+0x65/0x1f0 [rdmavt]
+  ? _cond_resched+0x15/0x30
+  ib_destroy_qp+0xe9/0x230 [ib_core]
+  ipoib_cm_tx_reap+0x21c/0x560 [ib_ipoib]
+  process_one_work+0x171/0x370
+  worker_thread+0x49/0x3f0
+  kthread+0xf8/0x130
+  ? max_active_store+0x80/0x80
+  ? kthread_bind+0x10/0x10
+  ret_from_fork+0x35/0x40
+
+Since QP destruction frees memory, hfi1_wq should have the WQ_MEM_RECLAIM.
+
+The hfi1_wq does not allocate memory with GFP_KERNEL or otherwise become
+entangled with memory reclaim, so this flag is appropriate.
+
+Fixes: 0a226edd203f ("staging/rdma/hfi1: Use parallel workqueue for SDMA engines")
+Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/ti-ads7950.c | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ drivers/infiniband/hw/hfi1/init.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iio/adc/ti-ads7950.c b/drivers/iio/adc/ti-ads7950.c
-index 0ad63592cc3c9..1e47bef72bb79 100644
---- a/drivers/iio/adc/ti-ads7950.c
-+++ b/drivers/iio/adc/ti-ads7950.c
-@@ -56,6 +56,9 @@ struct ti_ads7950_state {
- 	struct spi_message	ring_msg;
- 	struct spi_message	scan_single_msg;
- 
-+	/* Lock to protect the spi xfer buffers */
-+	struct mutex		slock;
-+
- 	struct regulator	*reg;
- 	unsigned int		vref_mv;
- 
-@@ -268,6 +271,7 @@ static irqreturn_t ti_ads7950_trigger_handler(int irq, void *p)
- 	struct ti_ads7950_state *st = iio_priv(indio_dev);
- 	int ret;
- 
-+	mutex_lock(&st->slock);
- 	ret = spi_sync(st->spi, &st->ring_msg);
- 	if (ret < 0)
- 		goto out;
-@@ -276,6 +280,7 @@ static irqreturn_t ti_ads7950_trigger_handler(int irq, void *p)
- 					   iio_get_time_ns(indio_dev));
- 
- out:
-+	mutex_unlock(&st->slock);
- 	iio_trigger_notify_done(indio_dev->trig);
- 
- 	return IRQ_HANDLED;
-@@ -286,7 +291,7 @@ static int ti_ads7950_scan_direct(struct iio_dev *indio_dev, unsigned int ch)
- 	struct ti_ads7950_state *st = iio_priv(indio_dev);
- 	int ret, cmd;
- 
--	mutex_lock(&indio_dev->mlock);
-+	mutex_lock(&st->slock);
- 
- 	cmd = TI_ADS7950_CR_WRITE | TI_ADS7950_CR_CHAN(ch) | st->settings;
- 	st->single_tx = cmd;
-@@ -298,7 +303,7 @@ static int ti_ads7950_scan_direct(struct iio_dev *indio_dev, unsigned int ch)
- 	ret = st->single_rx;
- 
- out:
--	mutex_unlock(&indio_dev->mlock);
-+	mutex_unlock(&st->slock);
- 
- 	return ret;
- }
-@@ -432,16 +437,19 @@ static int ti_ads7950_probe(struct spi_device *spi)
- 	if (ACPI_COMPANION(&spi->dev))
- 		st->vref_mv = TI_ADS7950_VA_MV_ACPI_DEFAULT;
- 
-+	mutex_init(&st->slock);
-+
- 	st->reg = devm_regulator_get(&spi->dev, "vref");
- 	if (IS_ERR(st->reg)) {
- 		dev_err(&spi->dev, "Failed get get regulator \"vref\"\n");
--		return PTR_ERR(st->reg);
-+		ret = PTR_ERR(st->reg);
-+		goto error_destroy_mutex;
- 	}
- 
- 	ret = regulator_enable(st->reg);
- 	if (ret) {
- 		dev_err(&spi->dev, "Failed to enable regulator \"vref\"\n");
--		return ret;
-+		goto error_destroy_mutex;
- 	}
- 
- 	ret = iio_triggered_buffer_setup(indio_dev, NULL,
-@@ -463,6 +471,8 @@ static int ti_ads7950_probe(struct spi_device *spi)
- 	iio_triggered_buffer_cleanup(indio_dev);
- error_disable_reg:
- 	regulator_disable(st->reg);
-+error_destroy_mutex:
-+	mutex_destroy(&st->slock);
- 
- 	return ret;
- }
-@@ -475,6 +485,7 @@ static int ti_ads7950_remove(struct spi_device *spi)
- 	iio_device_unregister(indio_dev);
- 	iio_triggered_buffer_cleanup(indio_dev);
- 	regulator_disable(st->reg);
-+	mutex_destroy(&st->slock);
- 
- 	return 0;
- }
+diff --git a/drivers/infiniband/hw/hfi1/init.c b/drivers/infiniband/hw/hfi1/init.c
+index b7481701542e9..27e7de4c4a34b 100644
+--- a/drivers/infiniband/hw/hfi1/init.c
++++ b/drivers/infiniband/hw/hfi1/init.c
+@@ -769,7 +769,8 @@ static int create_workqueues(struct hfi1_devdata *dd)
+ 			ppd->hfi1_wq =
+ 				alloc_workqueue(
+ 				    "hfi%d_%d",
+-				    WQ_SYSFS | WQ_HIGHPRI | WQ_CPU_INTENSIVE,
++				    WQ_SYSFS | WQ_HIGHPRI | WQ_CPU_INTENSIVE |
++				    WQ_MEM_RECLAIM,
+ 				    HFI1_MAX_ACTIVE_WORKQUEUE_ENTRIES,
+ 				    dd->unit, pidx);
+ 			if (!ppd->hfi1_wq)
 -- 
 2.20.1
 
