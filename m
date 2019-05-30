@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF85C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 779CCC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F3B525137
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:09:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 509FA25137
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:10:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189397;
-	bh=GfU+Vi1ysvIgwd+gKfQxbeqNXe9DP2/I+P5v4onUCyg=;
+	s=default; t=1559189403;
+	bh=PEFDu1+k8T8ykKHz4YwvRCtoXOkMfwVc22GXXxz3HMQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z0SeLHbHYrOOTLuy5kOFhL1gJwWutgytkyOds935esWTKfnHi1Jt/eew8WibB2eUH
-	 m+9GWRD82CbEt5+5AY7MCc9Twc8ZNnfkhf5a1ziL9JsNtkOV5E5eSF+4txUiQI28Im
-	 CqFBg3akHBn0NtfiCgSXtsdsw3AjCdiz3LKjPuhc=
+	b=lGMzHhc3xqZPk3DG0Hb4hHHMEYcrpbHqjzhSe/sUK4jJZmpY2A3yRLT9mUM8+ulrd
+	 3VyCH/+Ybvk9FRxbKlzgdoDpWT/yTCsBbwnwDrOTxThEsz4KPHKQRMbJvB41MyHMo1
+	 pbXArvY79JOC6zbbqKh6JN1dZ27zclfqxKMljA2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbfE3EJ4 (ORCPT
+        id S1727175AbfE3EKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:09:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44490 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:10:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730909AbfE3DRF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728220AbfE3DRF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:17:05 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2D5A24659;
-        Thu, 30 May 2019 03:17:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0657C245EB;
+        Thu, 30 May 2019 03:17:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186225;
-        bh=GfU+Vi1ysvIgwd+gKfQxbeqNXe9DP2/I+P5v4onUCyg=;
+        s=default; t=1559186224;
+        bh=PEFDu1+k8T8ykKHz4YwvRCtoXOkMfwVc22GXXxz3HMQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S2Eft74j/JhxZJG8u9xPCiq7if0FTcyIOG/fyOwky9DbA88dTOtbv/QYI/yJTKy0f
-         wd0bXk1osxVXflpBks2tWaqQP5M2uLIB1tykWy6PR7JUNQnEEGz++J5jdMkU8GGl5p
-         YsrAA5OMOlOUe3FWjmCp2OanilZUGb1LytufkOS4=
+        b=RHRqYJ+lslaq8g2jzNotD44vNCFsm3FDy7nG3b8Tq1DYRYPgcYItrmqdxyWAp5Xyd
+         jZTbB70yDXDH+4fUxsO1Q6fWig8coiZXuNoImUH7YDsqLdcJP7lqTRVvUR+755sEZ4
+         AsmofA527IITCtYK+JRwtZavE8EhCqRjLxZthqq8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 120/276] dmaengine: at_xdmac: remove BUG_ON macro in tasklet
-Date:   Wed, 29 May 2019 20:04:38 -0700
-Message-Id: <20190530030533.386730715@linuxfoundation.org>
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Elaine Zhang <zhangqing@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 118/276] clk: rockchip: undo several noc and special clocks as critical on rk3288
+Date:   Wed, 29 May 2019 20:04:36 -0700
+Message-Id: <20190530030533.277382361@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -61,37 +61,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e2c114c06da2d9ffad5b16690abf008d6696f689 ]
+[ Upstream commit f4033db5b84ebe4b32c25ba2ed65ab20b628996a ]
 
-Even if this case shouldn't happen when controller is properly programmed,
-it's still better to avoid dumping a kernel Oops for this.
-As the sequence may happen only for debugging purposes, log the error and
-just finish the tasklet call.
+This is mostly a revert of commit 55bb6a633c33 ("clk: rockchip: mark
+noc and some special clk as critical on rk3288") except that we're
+keeping "pmu_hclk_otg0" as critical still.
 
-Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+NOTE: turning these clocks off doesn't seem to do a whole lot in terms
+of power savings (checking the power on the logic rail).  It appears
+to save maybe 1-2mW.  ...but still it seems like we should turn the
+clocks off if they aren't needed.
+
+About "pmu_hclk_otg0" (the one clock from the original commit we're
+still keeping critical) from an email thread:
+
+> pmu ahb clock
+>
+> Function: Clock to pmu module when hibernation and/or ADP is
+> enabled. Must be greater than or equal to 30 MHz.
+>
+> If the SOC design does not support hibernation/ADP function, only have
+> hclk_otg, this clk can be switched according to the usage of otg.
+> If the SOC design support hibernation/ADP, has two clocks, hclk_otg and
+> pmu_hclk_otg0.
+> Hclk_otg belongs to the closed part of otg logic, which can be switched
+> according to the use of otg.
+>
+> pmu_hclk_otg0 belongs to the always on part.
+>
+> As for whether pmu_hclk_otg0 can be turned off when otg is not in use,
+> we have not tested. IC suggest make pmu_hclk_otg0 always on.
+
+For the rest of the clocks:
+
+atclk: No documentation about this clock other than that it goes to
+the CPU.  CPU functions fine without it on.  Maybe needed for JTAG?
+
+jtag: Presumably this clock is only needed if you're debugging with
+JTAG.  It doesn't seem like it makes sense to waste power for every
+rk3288 user.  In any case to do JTAG you'd need private patches to
+adjust the pinctrl the mux the JTAG out anyway.
+
+pclk_dbg, pclk_core_niu: On veyron Chromebooks we turn these two
+clocks on only during kernel panics in order to access some coresight
+registers.  Since nothing in the upstream kernel does this we should
+be able to leave them off safely.  Maybe also needed for JTAG?
+
+hsicphy12m_xin12m: There is no indication of why this clock would need
+to be turned on for boards that don't use HSIC.
+
+pclk_ddrupctl[0-1], pclk_publ0[0-1]: On veyron Chromebooks we turn
+these 4 clocks on only when doing DDR transitions and they are off
+otherwise.  I see no reason why they'd need to be on in the upstream
+kernel which doesn't support DDRFreq.
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Elaine Zhang <zhangqing@rock-chips.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/at_xdmac.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/clk/rockchip/clk-rk3288.c | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
-index a75b95fac3bd5..db5b8fe1dd4ab 100644
---- a/drivers/dma/at_xdmac.c
-+++ b/drivers/dma/at_xdmac.c
-@@ -1606,7 +1606,11 @@ static void at_xdmac_tasklet(unsigned long data)
- 					struct at_xdmac_desc,
- 					xfer_node);
- 		dev_vdbg(chan2dev(&atchan->chan), "%s: desc 0x%p\n", __func__, desc);
--		BUG_ON(!desc->active_xfer);
-+		if (!desc->active_xfer) {
-+			dev_err(chan2dev(&atchan->chan), "Xfer not active: exiting");
-+			spin_unlock_bh(&atchan->lock);
-+			return;
-+		}
+diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
+index 450de24a1b422..45cd2897e586b 100644
+--- a/drivers/clk/rockchip/clk-rk3288.c
++++ b/drivers/clk/rockchip/clk-rk3288.c
+@@ -292,13 +292,13 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
+ 	COMPOSITE_NOMUX(0, "aclk_core_mp", "armclk", CLK_IGNORE_UNUSED,
+ 			RK3288_CLKSEL_CON(0), 4, 4, DFLAGS | CLK_DIVIDER_READ_ONLY,
+ 			RK3288_CLKGATE_CON(12), 6, GFLAGS),
+-	COMPOSITE_NOMUX(0, "atclk", "armclk", CLK_IGNORE_UNUSED,
++	COMPOSITE_NOMUX(0, "atclk", "armclk", 0,
+ 			RK3288_CLKSEL_CON(37), 4, 5, DFLAGS | CLK_DIVIDER_READ_ONLY,
+ 			RK3288_CLKGATE_CON(12), 7, GFLAGS),
+ 	COMPOSITE_NOMUX(0, "pclk_dbg_pre", "armclk", CLK_IGNORE_UNUSED,
+ 			RK3288_CLKSEL_CON(37), 9, 5, DFLAGS | CLK_DIVIDER_READ_ONLY,
+ 			RK3288_CLKGATE_CON(12), 8, GFLAGS),
+-	GATE(0, "pclk_dbg", "pclk_dbg_pre", CLK_IGNORE_UNUSED,
++	GATE(0, "pclk_dbg", "pclk_dbg_pre", 0,
+ 			RK3288_CLKGATE_CON(12), 9, GFLAGS),
+ 	GATE(0, "cs_dbg", "pclk_dbg_pre", CLK_IGNORE_UNUSED,
+ 			RK3288_CLKGATE_CON(12), 10, GFLAGS),
+@@ -626,7 +626,7 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
+ 	INVERTER(SCLK_HSADC, "sclk_hsadc", "sclk_hsadc_out",
+ 			RK3288_CLKSEL_CON(22), 7, IFLAGS),
  
- 		txd = &desc->tx_dma_desc;
+-	GATE(0, "jtag", "ext_jtag", CLK_IGNORE_UNUSED,
++	GATE(0, "jtag", "ext_jtag", 0,
+ 			RK3288_CLKGATE_CON(4), 14, GFLAGS),
+ 
+ 	COMPOSITE_NODIV(SCLK_USBPHY480M_SRC, "usbphy480m_src", mux_usbphy480m_p, 0,
+@@ -635,7 +635,7 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
+ 	COMPOSITE_NODIV(SCLK_HSICPHY480M, "sclk_hsicphy480m", mux_hsicphy480m_p, 0,
+ 			RK3288_CLKSEL_CON(29), 0, 2, MFLAGS,
+ 			RK3288_CLKGATE_CON(3), 6, GFLAGS),
+-	GATE(0, "hsicphy12m_xin12m", "xin12m", CLK_IGNORE_UNUSED,
++	GATE(0, "hsicphy12m_xin12m", "xin12m", 0,
+ 			RK3288_CLKGATE_CON(13), 9, GFLAGS),
+ 	DIV(0, "hsicphy12m_usbphy", "sclk_hsicphy480m", 0,
+ 			RK3288_CLKSEL_CON(11), 8, 6, DFLAGS),
+@@ -816,11 +816,6 @@ static const char *const rk3288_critical_clocks[] __initconst = {
+ 	"pclk_alive_niu",
+ 	"pclk_pd_pmu",
+ 	"pclk_pmu_niu",
+-	"pclk_core_niu",
+-	"pclk_ddrupctl0",
+-	"pclk_publ0",
+-	"pclk_ddrupctl1",
+-	"pclk_publ1",
+ 	"pmu_hclk_otg0",
+ };
  
 -- 
 2.20.1
