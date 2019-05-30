@@ -5,55 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D136C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E88C46460
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB33A24D2C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A20D124D3A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:48:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188106;
-	bh=nIogvrBNilFmJItUjp19blsKg1b9fJovWYXIMeADW7o=;
+	s=default; t=1559188110;
+	bh=zXBT3MGxgwPuZn7f4wKcOXvF+MuMgwG9Fd/Zs7Ewpk4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jl3SlFiaFKsbBXDtMH+Kot38YNy7F3VAM6Ro94Fn9a8AouaFZ+sbjIs0l88GHvoEv
-	 +6oHcoGNE9S9i6xt9moFgmQ9kAoKQamR54T8FntUFYot6qR6fLZkkiqxUPiFjlzhcz
-	 jGPM9AKnQkckgo4fi0kQrbG3mGYRvWBqQ9T08d7U=
+	b=I5LAiGX4mfqqvlmtlHBjt42vB280ctqaA0fuulhm9O/IxkzXKsAZigDZa9kAWT7XL
+	 xIPVr5NFw6sz7vz2MtbpVPzNzcAKEPaY3sRrEG9n2PiKCq1Ibo8cADSPvDhsY1SR6h
+	 MhpBFQTNv18V0KfzQaug84NmIj42A5zxpnx7Fj28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732923AbfE3Ds0 (ORCPT
+        id S1732162AbfE3DUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:48:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58294 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:20:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732166AbfE3DUV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:20:21 -0400
+        id S1730512AbfE3DPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:51 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7D46248C3;
-        Thu, 30 May 2019 03:20:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 444CD24559;
+        Thu, 30 May 2019 03:15:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186420;
-        bh=nIogvrBNilFmJItUjp19blsKg1b9fJovWYXIMeADW7o=;
+        s=default; t=1559186151;
+        bh=zXBT3MGxgwPuZn7f4wKcOXvF+MuMgwG9Fd/Zs7Ewpk4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rX+mk7fuR5SNEiVPhQ6hsZZYKCxqE0suuMhXxoAXnjIB+O82Ln8O6BLEN//FqLsEX
-         VgnpKSoo+c9kYLt0pf0hSbOqQO1UfntGjIRhnOD6pcnK5AUrHZkFSB7imXSXOImkfk
-         5/kABEqRQLc/UGILiTMCz0HjXMIG6nCU5wlb+iNQ=
+        b=dfc+/TjMKktkOU8072WdrMFuGPoS+gWfjI2FkdB5o4+4P7VhbGdAPEe0CxI/dyaJE
+         wCsclu5TK22MXPY2QK8QSq28f0+oAmgvwVRL4QAIV6I2KiB0f2YWwIWe0TUkC1rqrB
+         RJI++grexpiflNNdFPqPyWJut8IFDJDMcvOp8QFk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>,
-        Antonio Quartulli <a@unstable.cc>,
-        Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Steve Twiss <stwiss.opensource@diasemi.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 174/193] batman-adv: allow updating DAT entry timeouts on incoming ARP Replies
-Date:   Wed, 29 May 2019 20:07:08 -0700
-Message-Id: <20190530030512.070537709@linuxfoundation.org>
+Subject: [PATCH 5.0 334/346] regulator: da9062: Fix notifier mutex lock warning
+Date:   Wed, 29 May 2019 20:06:47 -0700
+Message-Id: <20190530030557.666152416@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
-References: <20190530030446.953835040@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,55 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 099e6cc1582dc2903fecb898bbeae8f7cf4262c7 ]
+[ Upstream commit 978995def0f6030aa6b3b494682f673aca13881b ]
 
-Currently incoming ARP Replies, for example via a DHT-PUT message, do
-not update the timeout for an already existing DAT entry. These ARP
-Replies are dropped instead.
+The mutex for the regulator_dev must be controlled by the caller of
+the regulator_notifier_call_chain(), as described in the comment
+for that function.
 
-This however defeats the purpose of the DHCPACK snooping, for instance.
-Right now, a DAT entry in the DHT will be purged every five minutes,
-likely leading to a mesh-wide ARP Request broadcast after this timeout.
-Which then recreates the entry. The idea of the DHCPACK snooping is to
-be able to update an entry before a timeout happens, to avoid ARP Request
-flooding.
+Failure to mutex lock and unlock surrounding the notifier call results
+in a kernel WARN_ON_ONCE() which will dump a backtrace for the
+regulator_notifier_call_chain() when that function call is first made.
+The mutex can be controlled using the regulator_lock/unlock() API.
 
-This patch fixes this issue by updating a DAT entry on incoming
-ARP Replies even if a matching DAT entry already exists. While still
-filtering the ARP Reply towards the soft-interface, to avoid duplicate
-messages on the client device side.
-
-Signed-off-by: Linus Lüssing <linus.luessing@c0d3.blue>
-Acked-by: Antonio Quartulli <a@unstable.cc>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Fixes: 4068e5182ada ("regulator: da9062: DA9062 regulator driver")
+Suggested-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/distributed-arp-table.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/regulator/da9062-regulator.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/batman-adv/distributed-arp-table.c b/net/batman-adv/distributed-arp-table.c
-index 4f0111bc6621e..8d1d0fdb157e7 100644
---- a/net/batman-adv/distributed-arp-table.c
-+++ b/net/batman-adv/distributed-arp-table.c
-@@ -1240,7 +1240,6 @@ bool batadv_dat_snoop_incoming_arp_reply(struct batadv_priv *bat_priv,
- 			   hw_src, &ip_src, hw_dst, &ip_dst,
- 			   dat_entry->mac_addr,	&dat_entry->ip);
- 		dropped = true;
--		goto out;
+diff --git a/drivers/regulator/da9062-regulator.c b/drivers/regulator/da9062-regulator.c
+index 34a70d9dc450e..5224304c10b3f 100644
+--- a/drivers/regulator/da9062-regulator.c
++++ b/drivers/regulator/da9062-regulator.c
+@@ -974,8 +974,10 @@ static irqreturn_t da9062_ldo_lim_event(int irq, void *data)
+ 			continue;
+ 
+ 		if (BIT(regl->info->oc_event.lsb) & bits) {
++			regulator_lock(regl->rdev);
+ 			regulator_notifier_call_chain(regl->rdev,
+ 					REGULATOR_EVENT_OVER_CURRENT, NULL);
++			regulator_unlock(regl->rdev);
+ 			handled = IRQ_HANDLED;
+ 		}
  	}
- 
- 	/* Update our internal cache with both the IP addresses the node got
-@@ -1249,6 +1248,9 @@ bool batadv_dat_snoop_incoming_arp_reply(struct batadv_priv *bat_priv,
- 	batadv_dat_entry_add(bat_priv, ip_src, hw_src, vid);
- 	batadv_dat_entry_add(bat_priv, ip_dst, hw_dst, vid);
- 
-+	if (dropped)
-+		goto out;
-+
- 	/* If BLA is enabled, only forward ARP replies if we have claimed the
- 	 * source of the ARP reply or if no one else of the same backbone has
- 	 * already claimed that client. This prevents that different gateways
 -- 
 2.20.1
 
