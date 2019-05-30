@@ -2,285 +2,162 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 312C4C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61EE7C28CC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1E6A2628E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:31:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A21726260
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:33:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Na05WTbb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=anastas.io header.i=@anastas.io header.b="M+lxrRvM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbfE3WbV (ORCPT
+        id S1726601AbfE3WdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 18:31:21 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:44464 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbfE3WbV (ORCPT
+        Thu, 30 May 2019 18:33:09 -0400
+Received: from alpha.anastas.io ([104.248.188.109]:53149 "EHLO
+        alpha.anastas.io" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbfE3WdJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 18:31:21 -0400
-Received: by mail-ed1-f67.google.com with SMTP id b8so11343472edm.11
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 15:31:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=doIN73qoxEAhanza5GxdbSOYZQ8yzsT8VbpSFVXMRKo=;
-        b=Na05WTbburdeIzLk8lZXQGmQi2KyCV850nl+uvRei+4g2tVD05HZ4W6lQL/EA9vQ6C
-         EK0hLpYWxz4IRVVcNdFyPS77UlSoPCSnBxFaS9fasgUtWzF1zZCbiSsFhEzIY6n6ZiNl
-         Eb8XxVre0az3muSMBXpQHb0Z1Aq65T7qHrtjklCJ/KnwZpjaEoFz89mxQeTP76PdBJFy
-         RervTaCOG/Lz2A2qsBT67fKoxY/PWVlRVdOxeNdqtlhLN6tsQrivuskQLPJXS8qYIFeb
-         Ls7pY9b9hm0yZbEnI92wa3/RIgw1foX92UMasAlisUSTCh8L0u3kOtHMSdCqAN5LrHUC
-         8Zpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=doIN73qoxEAhanza5GxdbSOYZQ8yzsT8VbpSFVXMRKo=;
-        b=oq/h9y3SZCVEmKtP8T6V/UdITkbrBxbe4Kyt+Et/S1IWIZMNT0QH0JO1qMEC5c5GVq
-         4Ho+GzylQy/sC+PwtHLZ8CmSOwuwj6XFI0agrQTptTXPJDCg+V+y31j3WfDGR9wC3Not
-         pWkRyXOB6HeyNToP/6aayp9hVwdkFGCrhzfjeDcr/Pysi3WDDVk9l3viZFPM9tATGR5J
-         iC/7c/cLDpFnXCmePxGyWzTPlD8/GPaCz5TTrS2Wjm0LJwljZeKrblKGq6cPgTlRrxeq
-         QHz4ebIHEnhHmUpy7re8QcJCCjQh5LAFGl/SBL9d2T/wHBGF/s8itEheFkIEaIJy89DK
-         K4Ig==
-X-Gm-Message-State: APjAAAXb1MFZuzEfGnzYya4G9i2YfVbf9oKuxVRhQcYSyVYrluVEpl/b
-        hapnIdhvWBtf9llpRAYvxqts9cPy
-X-Google-Smtp-Source: APXvYqyl9f50kyZTktpnwAxwR9mkPiTo6qe70Ybd3W9BiEUUKydljzpbthY71amBhM6pIQ6x6vBkUA==
-X-Received: by 2002:a50:ce06:: with SMTP id y6mr7262339edi.160.1559251277367;
-        Thu, 30 May 2019 14:21:17 -0700 (PDT)
-Received: from mail.broadcom.com ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id h25sm597082ejz.10.2019.05.30.14.21.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 14:21:16 -0700 (PDT)
-From:   Kamal Dasu <kdasu.kdev@gmail.com>
-To:     linux-mtd@lists.infradead.org
-Cc:     bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Subject: [PATCH 2/3] mtd: nand: raw: brcmnand: Add support for v7.3 controller
-Date:   Thu, 30 May 2019 17:20:36 -0400
-Message-Id: <1559251257-12383-2-git-send-email-kdasu.kdev@gmail.com>
-X-Mailer: git-send-email 1.9.0.138.g2de3478
-In-Reply-To: <1559251257-12383-1-git-send-email-kdasu.kdev@gmail.com>
-References: <1559251257-12383-1-git-send-email-kdasu.kdev@gmail.com>
+        Thu, 30 May 2019 18:33:09 -0400
+Received: from authenticated-user (alpha.anastas.io [104.248.188.109])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by alpha.anastas.io (Postfix) with ESMTPSA id 72F8B7F8BF;
+        Thu, 30 May 2019 17:33:07 -0500 (CDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=anastas.io; s=mail;
+        t=1559255588; bh=3ZOWYrFYbkF4GORGQ+Tfp7UoyviSixFiW9Lo/7bz6do=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=M+lxrRvMT6PV/3q7mqKTyEQq6Y/Bq0qvZpo8+0gEZ8xNqXCwiXB4vzvl6XfoXL0im
+         KtCT7SK67s8LIKoPP/0gbjLJE7dIj8tWfyhbVgiCsajhsMNxZtP20aDvHRz3RhTekW
+         uIeqYh6LZakkKsWQKGrO4YtmAZcKttqsVfePLHEo5G41dXiaVGkUf0Ng43ltcuY2tU
+         jr3JFJWd6xmJCJAyl5WYiPaJhVtnNo0ULrVVUxFxbOUm3u74KpqUrM9LT5bHQXpZAt
+         5+EKsu9zGSOViXVcgGKlsdkYpzlGprPWwmKJ2PyhRhtY9XvnI41EVATsr4Fi+N0E8i
+         RS29W2UNAkjBg==
+Subject: Re: [EXTERNAL] Re: [PATCH v3 1/3] PCI: Introduce
+ pcibios_ignore_alignment_request
+To:     Sam Bobroff <sbobroff@linux.ibm.com>, Oliver <oohall@gmail.com>
+Cc:     linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        rppt@linux.ibm.com, Paul Mackerras <paulus@samba.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, xyjxie@linux.vnet.ibm.com,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+References: <20190528040313.35582-1-shawn@anastas.io>
+ <20190528040313.35582-2-shawn@anastas.io>
+ <CAOSf1CEFfbmwfvmdqT1xdt8SFb=tYdYXLfXeyZ8=iRnhg4a3Pg@mail.gmail.com>
+ <20190530065556.GA29428@tungsten.ozlabs.ibm.com>
+From:   Shawn Anastasio <shawn@anastas.io>
+Message-ID: <8785226a-b2eb-8157-e724-d575c66b7bef@anastas.io>
+Date:   Thu, 30 May 2019 17:33:05 -0500
+MIME-Version: 1.0
+In-Reply-To: <20190530065556.GA29428@tungsten.ozlabs.ibm.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change adds support for brcm NAND v7.3 controller. This controller
-uses a newer version of flash_dma engine and change mostly implements
-these differences.
 
-Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
----
- drivers/mtd/nand/raw/brcmnand/brcmnand.c | 102 ++++++++++++++++++++++++-------
- 1 file changed, 80 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-index 77b7850..544088f 100644
---- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-+++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-@@ -92,6 +92,12 @@ struct brcm_nand_dma_desc {
- #define FLASH_DMA_ECC_ERROR	(1 << 8)
- #define FLASH_DMA_CORR_ERROR	(1 << 9)
- 
-+/* Bitfields for DMA_MODE */
-+#define FLASH_DMA_MODE_STOP_ON_ERROR	BIT(1) /* stop in Uncorr ECC error */
-+#define FLASH_DMA_MODE_MODE		BIT(0) /* link list */
-+#define FLASH_DMA_MODE_MASK		(FLASH_DMA_MODE_STOP_ON_ERROR |	\
-+						FLASH_DMA_MODE_MODE)
-+
- /* 512B flash cache in the NAND controller HW */
- #define FC_SHIFT		9U
- #define FC_BYTES		512U
-@@ -104,6 +110,51 @@ struct brcm_nand_dma_desc {
- #define NAND_CTRL_RDY			(INTFC_CTLR_READY | INTFC_FLASH_READY)
- #define NAND_POLL_STATUS_TIMEOUT_MS	100
- 
-+/* flash_dma registers */
-+enum flash_dma_reg {
-+	FLASH_DMA_REVISION = 0,
-+	FLASH_DMA_FIRST_DESC,
-+	FLASH_DMA_FIRST_DESC_EXT,
-+	FLASH_DMA_CTRL,
-+	FLASH_DMA_MODE,
-+	FLASH_DMA_STATUS,
-+	FLASH_DMA_INTERRUPT_DESC,
-+	FLASH_DMA_INTERRUPT_DESC_EXT,
-+	FLASH_DMA_ERROR_STATUS,
-+	FLASH_DMA_CURRENT_DESC,
-+	FLASH_DMA_CURRENT_DESC_EXT,
-+};
-+
-+/* flash_dma registers v1*/
-+static const u16 flash_dma_regs_v1[] = {
-+	[FLASH_DMA_REVISION]		= 0x00,
-+	[FLASH_DMA_FIRST_DESC]		= 0x04,
-+	[FLASH_DMA_FIRST_DESC_EXT]	= 0x08,
-+	[FLASH_DMA_CTRL]		= 0x0c,
-+	[FLASH_DMA_MODE]		= 0x10,
-+	[FLASH_DMA_STATUS]		= 0x14,
-+	[FLASH_DMA_INTERRUPT_DESC]	= 0x18,
-+	[FLASH_DMA_INTERRUPT_DESC_EXT]	= 0x1c,
-+	[FLASH_DMA_ERROR_STATUS]	= 0x20,
-+	[FLASH_DMA_CURRENT_DESC]	= 0x24,
-+	[FLASH_DMA_CURRENT_DESC_EXT]	= 0x28,
-+};
-+
-+/* flash_dma registers v4 */
-+static const u16 flash_dma_regs_v4[] = {
-+	[FLASH_DMA_REVISION]		= 0x00,
-+	[FLASH_DMA_FIRST_DESC]		= 0x08,
-+	[FLASH_DMA_FIRST_DESC_EXT]	= 0x0c,
-+	[FLASH_DMA_CTRL]		= 0x10,
-+	[FLASH_DMA_MODE]		= 0x14,
-+	[FLASH_DMA_STATUS]		= 0x18,
-+	[FLASH_DMA_INTERRUPT_DESC]	= 0x20,
-+	[FLASH_DMA_INTERRUPT_DESC_EXT]	= 0x24,
-+	[FLASH_DMA_ERROR_STATUS]	= 0x28,
-+	[FLASH_DMA_CURRENT_DESC]	= 0x30,
-+	[FLASH_DMA_CURRENT_DESC_EXT]	= 0x34,
-+};
-+
- /* Controller feature flags */
- enum {
- 	BRCMNAND_HAS_1K_SECTORS			= BIT(0),
-@@ -136,6 +187,8 @@ struct brcmnand_controller {
- 	/* List of NAND hosts (one for each chip-select) */
- 	struct list_head host_list;
- 
-+	/* flash_dma reg */
-+	const u16		*flash_dma_offsets;
- 	struct brcm_nand_dma_desc *dma_desc;
- 	dma_addr_t		dma_pa;
- 
-@@ -470,7 +523,7 @@ static int brcmnand_revision_init(struct brcmnand_controller *ctrl)
- 	/* Register offsets */
- 	if (ctrl->nand_version >= 0x0702)
- 		ctrl->reg_offsets = brcmnand_regs_v72;
--	else if (ctrl->nand_version >= 0x0701)
-+	else if (ctrl->nand_version == 0x0701)
- 		ctrl->reg_offsets = brcmnand_regs_v71;
- 	else if (ctrl->nand_version >= 0x0600)
- 		ctrl->reg_offsets = brcmnand_regs_v60;
-@@ -515,7 +568,7 @@ static int brcmnand_revision_init(struct brcmnand_controller *ctrl)
- 	}
- 
- 	/* Maximum spare area sector size (per 512B) */
--	if (ctrl->nand_version >= 0x0702)
-+	if (ctrl->nand_version == 0x0702)
- 		ctrl->max_oob = 128;
- 	else if (ctrl->nand_version >= 0x0600)
- 		ctrl->max_oob = 64;
-@@ -546,6 +599,15 @@ static int brcmnand_revision_init(struct brcmnand_controller *ctrl)
- 	return 0;
- }
- 
-+static void brcmnand_flash_dma_revision_init(struct brcmnand_controller *ctrl)
-+{
-+	/* flash_dma register offsets */
-+	if (ctrl->nand_version >= 0x0703)
-+		ctrl->flash_dma_offsets = flash_dma_regs_v4;
-+	else
-+		ctrl->flash_dma_offsets = flash_dma_regs_v1;
-+}
-+
- static inline u32 brcmnand_read_reg(struct brcmnand_controller *ctrl,
- 		enum brcmnand_reg reg)
- {
-@@ -668,7 +730,7 @@ static void brcmnand_wr_corr_thresh(struct brcmnand_host *host, u8 val)
- 	enum brcmnand_reg reg = BRCMNAND_CORR_THRESHOLD;
- 	int cs = host->cs;
- 
--	if (ctrl->nand_version >= 0x0702)
-+	if (ctrl->nand_version == 0x0702)
- 		bits = 7;
- 	else if (ctrl->nand_version >= 0x0600)
- 		bits = 6;
-@@ -722,7 +784,7 @@ enum {
- 
- static inline u32 brcmnand_spare_area_mask(struct brcmnand_controller *ctrl)
- {
--	if (ctrl->nand_version >= 0x0702)
-+	if (ctrl->nand_version == 0x0702)
- 		return GENMASK(7, 0);
- 	else if (ctrl->nand_version >= 0x0600)
- 		return GENMASK(6, 0);
-@@ -852,20 +914,6 @@ static inline void brcmnand_set_wp(struct brcmnand_controller *ctrl, bool en)
-  * Flash DMA
-  ***********************************************************************/
- 
--enum flash_dma_reg {
--	FLASH_DMA_REVISION		= 0x00,
--	FLASH_DMA_FIRST_DESC		= 0x04,
--	FLASH_DMA_FIRST_DESC_EXT	= 0x08,
--	FLASH_DMA_CTRL			= 0x0c,
--	FLASH_DMA_MODE			= 0x10,
--	FLASH_DMA_STATUS		= 0x14,
--	FLASH_DMA_INTERRUPT_DESC	= 0x18,
--	FLASH_DMA_INTERRUPT_DESC_EXT	= 0x1c,
--	FLASH_DMA_ERROR_STATUS		= 0x20,
--	FLASH_DMA_CURRENT_DESC		= 0x24,
--	FLASH_DMA_CURRENT_DESC_EXT	= 0x28,
--};
--
- static inline bool has_flash_dma(struct brcmnand_controller *ctrl)
- {
- 	return ctrl->flash_dma_base;
-@@ -877,14 +925,19 @@ static inline bool flash_dma_buf_ok(const void *buf)
- 		likely(IS_ALIGNED((uintptr_t)buf, 4));
- }
- 
--static inline void flash_dma_writel(struct brcmnand_controller *ctrl, u8 offs,
--				    u32 val)
-+static inline void flash_dma_writel(struct brcmnand_controller *ctrl,
-+				    enum flash_dma_reg dma_reg, u32 val)
- {
-+	u16 offs = ctrl->flash_dma_offsets[dma_reg];
-+
- 	brcmnand_writel(val, ctrl->flash_dma_base + offs);
- }
- 
--static inline u32 flash_dma_readl(struct brcmnand_controller *ctrl, u8 offs)
-+static inline u32 flash_dma_readl(struct brcmnand_controller *ctrl,
-+				  enum flash_dma_reg dma_reg)
- {
-+	u16 offs = ctrl->flash_dma_offsets[dma_reg];
-+
- 	return brcmnand_readl(ctrl->flash_dma_base + offs);
- }
- 
-@@ -2427,6 +2480,7 @@ static int brcmnand_resume(struct device *dev)
- 	{ .compatible = "brcm,brcmnand-v7.0" },
- 	{ .compatible = "brcm,brcmnand-v7.1" },
- 	{ .compatible = "brcm,brcmnand-v7.2" },
-+	{ .compatible = "brcm,brcmnand-v7.3" },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, brcmnand_of_match);
-@@ -2513,7 +2567,11 @@ int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
- 			goto err;
- 		}
- 
--		flash_dma_writel(ctrl, FLASH_DMA_MODE, 1); /* linked-list */
-+		/* initialize the dma version */
-+		brcmnand_flash_dma_revision_init(ctrl);
-+
-+		/* linked-list and stop on error */
-+		flash_dma_writel(ctrl, FLASH_DMA_MODE, FLASH_DMA_MODE_MASK);
- 		flash_dma_writel(ctrl, FLASH_DMA_ERROR_STATUS, 0);
- 
- 		/* Allocate descriptor(s) */
--- 
-1.9.0.138.g2de3478
+On 5/30/19 1:55 AM, Sam Bobroff wrote:
+> On Tue, May 28, 2019 at 03:36:34PM +1000, Oliver wrote:
+>> On Tue, May 28, 2019 at 2:03 PM Shawn Anastasio <shawn@anastas.io> wrote:
+>>>
+>>> Introduce a new pcibios function pcibios_ignore_alignment_request
+>>> which allows the PCI core to defer to platform-specific code to
+>>> determine whether or not to ignore alignment requests for PCI resources.
+>>>
+>>> The existing behavior is to simply ignore alignment requests when
+>>> PCI_PROBE_ONLY is set. This is behavior is maintained by the
+>>> default implementation of pcibios_ignore_alignment_request.
+>>>
+>>> Signed-off-by: Shawn Anastasio <shawn@anastas.io>
+>>> ---
+>>>   drivers/pci/pci.c   | 9 +++++++--
+>>>   include/linux/pci.h | 1 +
+>>>   2 files changed, 8 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+>>> index 8abc843b1615..8207a09085d1 100644
+>>> --- a/drivers/pci/pci.c
+>>> +++ b/drivers/pci/pci.c
+>>> @@ -5882,6 +5882,11 @@ resource_size_t __weak pcibios_default_alignment(void)
+>>>          return 0;
+>>>   }
+>>>
+>>> +int __weak pcibios_ignore_alignment_request(void)
+>>> +{
+>>> +       return pci_has_flag(PCI_PROBE_ONLY);
+>>> +}
+>>> +
+>>>   #define RESOURCE_ALIGNMENT_PARAM_SIZE COMMAND_LINE_SIZE
+>>>   static char resource_alignment_param[RESOURCE_ALIGNMENT_PARAM_SIZE] = {0};
+>>>   static DEFINE_SPINLOCK(resource_alignment_lock);
+>>> @@ -5906,9 +5911,9 @@ static resource_size_t pci_specified_resource_alignment(struct pci_dev *dev,
+>>>          p = resource_alignment_param;
+>>>          if (!*p && !align)
+>>>                  goto out;
+>>> -       if (pci_has_flag(PCI_PROBE_ONLY)) {
+>>> +       if (pcibios_ignore_alignment_request()) {
+>>>                  align = 0;
+>>> -               pr_info_once("PCI: Ignoring requested alignments (PCI_PROBE_ONLY)\n");
+>>> +               pr_info_once("PCI: Ignoring requested alignments\n");
+>>>                  goto out;
+>>>          }
+>>
+>> I think the logic here is questionable to begin with. If the user has
+>> explicitly requested re-aligning a resource via the command line then
+>> we should probably do it even if PCI_PROBE_ONLY is set. When it breaks
+>> they get to keep the pieces.
+>>
+>> That said, the real issue here is that PCI_PROBE_ONLY probably
+>> shouldn't be set under qemu/kvm. Under the other hypervisor (PowerVM)
+>> hotplugged devices are configured by firmware before it's passed to
+>> the guest and we need to keep the FW assignments otherwise things
+>> break. QEMU however doesn't do any BAR assignments and relies on that
+>> being handled by the guest. At boot time this is done by SLOF, but
+>> Linux only keeps SLOF around until it's extracted the device-tree.
+>> Once that's done SLOF gets blown away and the kernel needs to do it's
+>> own BAR assignments. I'm guessing there's a hack in there to make it
+>> work today, but it's a little surprising that it works at all...
+>>
+>> IIRC Sam Bobroff was looking at hotplug under pseries recently so he
+>> might have something to add. He's sick at the moment, but I'll ask him
+>> to take a look at this once he's back among the living
+> 
+> There seems to be some code already in the kernel that will disable
+> PCI_PROBE_ONLY based on a device tree property, so I did a quick test
+> today and it seems to work. Only a trivial tweak is needed in QEMU to
+> do it (have spapr_dt_chosen() add a node called "linux,pci-probe-only"
+> with a value of 0), and that would allow us to set it only for QEMU (and
+> not PowerVM) if that's what we want to do. Is that useful?
+> 
+> (I haven't done any real testing yet but the guest booted up OK.)
 
+It was my understanding that PCI_PROBE_ONLY should actually be set
+initially so that Linux uses SLOF's BAR assignments. The issue here
+is that PCI_PROBE_ONLY shouldn't be honored after initial bringup
+on KVM so that hotplugged PCI devices can have custom BAR alignments.
+
+Of course, if there's no need to honor SLOF's initial assignments,
+I assume disabling PCI_PROBE_ONLY would work fine. In fact, I'm
+not entirely sure why it's done in the first place. Does anybody
+know?
+
+If there is actually a valid reason for preserving SLOF's initial
+assignments, then it seems like the correct solution is to disable
+PCI_PROBE_ONLY after initial PCI bringup or ignore it in
+pci_specified_resource_alignment() like I do in this patch set.
+
+Bjorn Helgaas also suggested marking individual resources provided
+by SLOF/PHYP with IORESOURCE_PCI_FIXED which would remove the need
+to use PCI_PROBE_ONLY altogether.
+
+Any thoughts?
+
+- Shawn
