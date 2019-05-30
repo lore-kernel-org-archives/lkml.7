@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7559CC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7431C46460
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F78F24544
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:13:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9963F2454E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:13:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186015;
-	bh=uaRMoL5wlZ6kDLSuDyHVPV2xn/4AO4FX8g0HIPN9Oco=;
+	s=default; t=1559186018;
+	bh=FnfeHTWJDsY+DyhRxNTtnG8qAasfhPaw1DVptajiCys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0+zCIS1GqRPF3mqFaN3RaGDtXhtUhs4IL0AwBVQM5rT9/efM9+BF0dDrkVe1u58Kl
-	 IWQD1krQkxYUfhCyERHi/owJh/qnM0fZRoLhToAqvbZFibOjiwjWWZsGhBQjoxsZ94
-	 3c6vBeI0PLkftIg5D5gSPw4z1JqVaCN5l0urfjgo=
+	b=UxWlQaAZmsJF323mjX4ZWLcZwXE5Jnnqty/qiMRH4qolEwRqEkwYz7v+nVjh7P+Ve
+	 XUJISx38vGhuA2FKlZqDnXqDnKzNjUzGdIpLAzX/doOeo4Ho946sGDtLhpX3MNaME7
+	 KRUP8rh7vdVGCurWKnEj/fxpiA02/u66VNijfylo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729521AbfE3DNe (ORCPT
+        id S1729534AbfE3DNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:13:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51574 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:13:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728611AbfE3DLg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:11:36 -0400
+        id S1728616AbfE3DLh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:37 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3198244C4;
-        Thu, 30 May 2019 03:11:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45558244A6;
+        Thu, 30 May 2019 03:11:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185895;
-        bh=uaRMoL5wlZ6kDLSuDyHVPV2xn/4AO4FX8g0HIPN9Oco=;
+        s=default; t=1559185896;
+        bh=FnfeHTWJDsY+DyhRxNTtnG8qAasfhPaw1DVptajiCys=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gotRDag4lMpDOT9OIKt6QtpWG6hqX/CA0PWVqQO64listEz1b/TkJyzWePU+9FnLt
-         MJURzEiq3KMV1fDzGLrY51o2BFZEl71DkUJCBj+6oufDXEUTLSY6HM8HyKkFjN/hSI
-         eODHCM869PRhCLfDei22m/wEYwBQFuW3rM9w9qj0=
+        b=oaKPQLTzQNKQjisBHjJTKJdm/k3TZl1/Gxk6euG0wolgRh7TeNgr7zHTmK9VG46dy
+         2VsislFKLZoDDMbIwSn7CgPwkkBOlXhKyNHhzN/Rbon2LrlaLQI2un4TUxr76uMSWT
+         9IAHL3ssz3wK1kpsdtxuLjzzSp6OST1g/tqlHhCQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>,
-        Philippe Cornu <philippe.cornu@st.com>,
-        Thierry Reding <treding@nvidia.com>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Sun peng Li <Sunpeng.Li@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 260/405] drm/panel: otm8009a: Add delay at the end of initialization
-Date:   Wed, 29 May 2019 20:04:18 -0700
-Message-Id: <20190530030554.110483946@linuxfoundation.org>
+Subject: [PATCH 5.1 261/405] drm/amd/display: Prevent cursor hotspot overflow for RV overlay planes
+Date:   Wed, 29 May 2019 20:04:19 -0700
+Message-Id: <20190530030554.154110575@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -62,36 +63,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0084c3c71126fc878c6dab8a6ab8ecc484c2be02 ]
+[ Upstream commit 6752bea8b03e77c98be7d8d25b0a9d86a00b3cf7 ]
 
-At the end of initialization, a delay is required by the panel. Without
-this delay, the panel could received a frame early & generate a crash of
-panel (black screen).
+[Why]
+The actual position for the cursor on the screen is essentially:
 
-Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
-Reviewed-by: Philippe Cornu <philippe.cornu@st.com>
-Tested-by: Philippe Cornu <philippe.cornu@st.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/1553155445-13407-1-git-send-email-yannick.fertre@st.com
+x_out = x - x_plane - x_hotspot
+y_out = y - y_plane - y_hotspot
+
+The register values for cursor position and cursor hotspot need to be
+greater than zero when programmed, but we also need to subtract off
+the plane position to display the cursor at the correct position.
+
+Since we don't want x or y to be less than zero, we add the plane
+position as a positive value to x_hotspot or y_hotspot. However, what
+this doesn't take into account is that the hotspot registers are limited
+by the maximum cursor size.
+
+On DCN10 the cursor hotspot regitsers are masked to 0xFF, so they have
+a maximum value of 0-255. Values greater this will wrap, causing the
+cursor to display in the wrong position.
+
+In practice this means that for sufficiently large plane positions, the
+cursor will be drawn twice on the screen, and can cause screen flashes
+or p-state WARNS depending on what the wrapped value is.
+
+So we need a way to remove the value from x_plane and y_plane without
+exceeding the maximum cursor size.
+
+[How]
+Subtract as much as x_plane/y_plane as possible from x and y and place
+the remainder in the cursor hotspot register.
+
+The value for x_hotspot and y_hotspot can still wrap around but it
+won't happen in a case where the cursor is actually enabled.
+
+The cursor plane needs to intersect at least one pixel of the plane's
+rectangle to be enabled, so the cursor position + hotspot provided by
+userspace must always be strictly less than the maximum cursor size for
+the cursor to actually be enabled.
+
+Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Reviewed-by: Sun peng Li <Sunpeng.Li@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/panel/panel-orisetech-otm8009a.c | 3 +++
- 1 file changed, 3 insertions(+)
+ .../drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c    | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-orisetech-otm8009a.c b/drivers/gpu/drm/panel/panel-orisetech-otm8009a.c
-index 87fa316e1d7b0..58ccf648b70fb 100644
---- a/drivers/gpu/drm/panel/panel-orisetech-otm8009a.c
-+++ b/drivers/gpu/drm/panel/panel-orisetech-otm8009a.c
-@@ -248,6 +248,9 @@ static int otm8009a_init_sequence(struct otm8009a *ctx)
- 	/* Send Command GRAM memory write (no parameters) */
- 	dcs_write_seq(ctx, MIPI_DCS_WRITE_MEMORY_START);
- 
-+	/* Wait a short while to let the panel be ready before the 1st frame */
-+	mdelay(10);
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
+index d1a8f1c302a96..401ea9561618e 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
+@@ -2692,9 +2692,15 @@ static void dcn10_set_cursor_position(struct pipe_ctx *pipe_ctx)
+ 		.rotation = pipe_ctx->plane_state->rotation,
+ 		.mirror = pipe_ctx->plane_state->horizontal_mirror
+ 	};
+-
+-	pos_cpy.x_hotspot += pipe_ctx->plane_state->dst_rect.x;
+-	pos_cpy.y_hotspot += pipe_ctx->plane_state->dst_rect.y;
++	uint32_t x_plane = pipe_ctx->plane_state->dst_rect.x;
++	uint32_t y_plane = pipe_ctx->plane_state->dst_rect.y;
++	uint32_t x_offset = min(x_plane, pos_cpy.x);
++	uint32_t y_offset = min(y_plane, pos_cpy.y);
 +
- 	return 0;
- }
++	pos_cpy.x -= x_offset;
++	pos_cpy.y -= y_offset;
++	pos_cpy.x_hotspot += (x_plane - x_offset);
++	pos_cpy.y_hotspot += (y_plane - y_offset);
  
+ 	if (pipe_ctx->plane_state->address.type
+ 			== PLN_ADDR_TYPE_VIDEO_PROGRESSIVE)
 -- 
 2.20.1
 
