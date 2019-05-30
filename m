@@ -2,110 +2,186 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10284C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C82C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE2D125C9A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C150325C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:17:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p+i9hild"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ti1Bco5a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbfE3PQv (ORCPT
+        id S1727273AbfE3PRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 11:16:51 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:37180 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725961AbfE3PQu (ORCPT
+        Thu, 30 May 2019 11:17:11 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:38333 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725961AbfE3PRL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 11:16:50 -0400
-Received: by mail-oi1-f195.google.com with SMTP id i4so4838758oih.4;
-        Thu, 30 May 2019 08:16:50 -0700 (PDT)
+        Thu, 30 May 2019 11:17:11 -0400
+Received: by mail-qk1-f195.google.com with SMTP id a27so4081855qkk.5;
+        Thu, 30 May 2019 08:17:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=doj4IenzvkfWML5SzqtumJTZIFAZxiRbmcpcN5zKAZ4=;
-        b=p+i9hildaNu7ZwZqAZm4SxIdnxeld89mgtaKkYql/hwiBmxkwvCkJvkyfwaSd1STOY
-         cYz3gUYDPJW9WckbtAChfhlS4R+VlqJLETLZnWu6vqn9LSmqnLSUAqXh7HcfdlB3UB/d
-         /38MB49Vo7PfBnn1wNpyCCgLotzlxKoE97/X3rJ5+tqyT0dCIjdN2Aeeb9EbDiXSNe50
-         uAC7Yo0mPz+WzxD3JmuwoJfuzT0707fuX2YBz3ushN+Vixav47djmprqcVjt6+Kmtsyn
-         Wo82gOToZPmrlnLWBb/uP9GfwASMMSYZeRF70jr/B/mpbTqrokZd3fNNDm7R9Yn6gyTN
-         xcbQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4A000il5T3jzbYsRqaA+7piiGaZhTSMA8bRbS6hmam4=;
+        b=ti1Bco5a03yhkwzz1x/vtE5k3yPQ9pjgiDiB76maHMeQswqvVewwqqDlQtmj8nDZ4Z
+         AjdL3x0cTNXoguUSFKXforFl8fWlKvMKRv8LAOK9Rz9qgBecyewG1R3WFVC40XdGIjtR
+         6oMBcHnioALXukCdB0vx+9cPOBZ/FMKmdPSccbPEuetlGK/LqR818oT1Z5xQI8CCZ/aJ
+         bOXG2MZdHHjDJMgvJP0eGdqsRqnAfOux5vyJa6jB6aRLyD16OoACSmRxWDnpU1WscP51
+         q7ivnokVrrWv9mdX0FL8eV62tSqmq7l9fa26GYL2/a2UsaQtdRJtWjTLqdxqoFUYFMe2
+         60NQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=doj4IenzvkfWML5SzqtumJTZIFAZxiRbmcpcN5zKAZ4=;
-        b=i3YuAGo4TtRTa17cu7bDfZXXGKFXQAy6UdMgwGedSEgWMtEwrGl2upjGRgyV1EknBI
-         diW/y2QTyf+jSHBdMquSzP8KZ4U1GHtfI6eKSQANaOAQMdaDF7cTZSu/Z8Dtir0JUXTv
-         KHOZX9CK2g85j8HcAZSGDdEr75pwslOoeEpuKDf10YPDb2RIIi0frkQBtkVAAcHi8NxU
-         ehiiz4yVe0qnBXB3Q5TcZG+5/Qb/HFo+2QWui7d2u99+3TKsPMNd+73EsBlNnoOzRrXg
-         hdnSaT0n7imwgpXfd+Wkl3E1I/XAO+Zm9e9VKBz1QgXvl+aYuTCTPZDuqJOxGYZF5Fq5
-         onOw==
-X-Gm-Message-State: APjAAAXohrH6FTlmpxaidbzrwMT1OxOIRMBO3+6zudvpOcDEusa+U9NE
-        LIVqMBTPzo00lCLwoqW1Il6OUO9Kv7981joE/CI=
-X-Google-Smtp-Source: APXvYqxSZ3vGjHStGNJLCCQWu5Essf+jnKrYzgB4w8LB70DS2VmD7rdSIaH64go20Figke7PzWM99sEjxpsyWi+Qp8I=
-X-Received: by 2002:aca:eb4a:: with SMTP id j71mr1562553oih.69.1559229409571;
- Thu, 30 May 2019 08:16:49 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4A000il5T3jzbYsRqaA+7piiGaZhTSMA8bRbS6hmam4=;
+        b=hBWGKZAqos9kVR7JKBzLHe5ziH2NGvVeac4MYInAr1KL6x7JXaVsr+V2mxTzrxHcQC
+         jQImAby6lr57T/F+cv7EG+SS8SHVimqOujy4BtAh0o74Uud/3q6ct6Wb2sLIvVhLh9r8
+         lMG8ATlIcbfzS8nD3HvMtpiq+Ua3LwlAcrt61T/eM1I3s17N1wfcYfAIHY4YN1gfRdaM
+         S+wFRHrfYQkA/rFdeVZHpkA5mHu/PI1m2DicxksT+FCNJcjC51lKniEvdRuBETowdLc9
+         uJdTv11ypt3uMkSD/cckM4wal7ucuVTguLyVMrhLKDHAVezzWzUw9OvNjSRflha6nnSf
+         2N2w==
+X-Gm-Message-State: APjAAAXotAg9bpFviBaRCzg9+1QikTT/uIMLK3ZRUPeW5cGvTZtDkgzf
+        Fj1aokUTxJBU3e6T8n0gQOQ=
+X-Google-Smtp-Source: APXvYqxCD99bs2PZU3x0gd8+eKKKNHall5W3LxGwF3ZCxL+K8UgGYkntCNiWmbvDyBVdXojuqr1xLA==
+X-Received: by 2002:a37:502:: with SMTP id 2mr3446513qkf.93.1559229429753;
+        Thu, 30 May 2019 08:17:09 -0700 (PDT)
+Received: from localhost.localdomain ([2001:1284:f016:d534:113c:6e5f:4426:2d54])
+        by smtp.gmail.com with ESMTPSA id 196sm1399167qkh.94.2019.05.30.08.17.08
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 30 May 2019 08:17:08 -0700 (PDT)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+        id B67F9C1BC5; Thu, 30 May 2019 12:17:05 -0300 (-03)
+Date:   Thu, 30 May 2019 12:17:05 -0300
+From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+To:     Neil Horman <nhorman@tuxdriver.com>
+Cc:     syzbot <syzbot+f7e9153b037eac9b1df8@syzkaller.appspotmail.com>,
+        davem@davemloft.net, linux-kernel@vger.kernel.org,
+        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, vyasevich@gmail.com
+Subject: Re: memory leak in sctp_process_init
+Message-ID: <20190530151705.GD3713@localhost.localdomain>
+References: <00000000000097abb90589e804fd@google.com>
+ <20190528013600.GM5506@localhost.localdomain>
+ <20190528111550.GA4658@hmswarspite.think-freely.org>
+ <20190529190709.GE31099@hmswarspite.think-freely.org>
+ <20190529233757.GC3713@localhost.localdomain>
+ <20190530142011.GC1966@hmswarspite.think-freely.org>
 MIME-Version: 1.0
-References: <20190530035310.GA9127@zhanggen-UX430UQ> <CAFqZXNv-54DJhd8gyUhwDo6RvmjFGSHo=+s-BVsL87S+u0cQxQ@mail.gmail.com>
- <20190530085106.GA2711@zhanggen-UX430UQ> <CAFqZXNuVVTL4FmBRvsZri+tvv4T4U47tMLjTZvSr7Cro=hR5Dg@mail.gmail.com>
-In-Reply-To: <CAFqZXNuVVTL4FmBRvsZri+tvv4T4U47tMLjTZvSr7Cro=hR5Dg@mail.gmail.com>
-From:   William Roberts <bill.c.roberts@gmail.com>
-Date:   Thu, 30 May 2019 08:16:36 -0700
-Message-ID: <CAFftDdoCmXCZwfr52wry+3eCZHiBAfHg_PQyLC-s-r3tEZw09g@mail.gmail.com>
-Subject: Re: [PATCH v2] hooks: fix a missing-check bug in selinux_sb_eat_lsm_opts()
-To:     Ondrej Mosnacek <omosnace@redhat.com>
-Cc:     Gen Zhang <blackgod016574@gmail.com>,
-        Paul Moore <paul@paul-moore.com>, tony.luck@intel.com,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
-        bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190530142011.GC1966@hmswarspite.think-freely.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 4:52 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
->
-> On Thu, May 30, 2019 at 10:51 AM Gen Zhang <blackgod016574@gmail.com> wrote:
-> > In selinux_sb_eat_lsm_opts(), 'arg' is allocated by kmemdup_nul(). It
-> > returns NULL when fails. So 'arg' should be checked.
-> >
-> > Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-> > Fixes: 99dbbb593fe6 ("selinux: rewrite selinux_sb_eat_lsm_opts()")
-> > ---
-> > diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-> > index 3ec702c..5a9e959 100644
-> > --- a/security/selinux/hooks.c
-> > +++ b/security/selinux/hooks.c
-> > @@ -2635,6 +2635,8 @@ static int selinux_sb_eat_lsm_opts(char *options, void **mnt_opts)
-> >                                                 *q++ = c;
-> >                                 }
-> >                                 arg = kmemdup_nul(arg, q - arg, GFP_KERNEL);
-> > +                               if (!arg)
-> > +                                       return -ENOMEM;
+On Thu, May 30, 2019 at 10:20:11AM -0400, Neil Horman wrote:
+> On Wed, May 29, 2019 at 08:37:57PM -0300, Marcelo Ricardo Leitner wrote:
+> > On Wed, May 29, 2019 at 03:07:09PM -0400, Neil Horman wrote:
+> > > --- a/net/sctp/sm_make_chunk.c
+> > > +++ b/net/sctp/sm_make_chunk.c
+> > > @@ -2419,9 +2419,12 @@ int sctp_process_init(struct sctp_association *asoc, struct sctp_chunk *chunk,
+> > >  	/* Copy cookie in case we need to resend COOKIE-ECHO. */
+> > >  	cookie = asoc->peer.cookie;
+> > >  	if (cookie) {
+> > > +		if (asoc->peer.cookie_allocated)
+> > > +			kfree(cookie);
+> > >  		asoc->peer.cookie = kmemdup(cookie, asoc->peer.cookie_len, gfp);
+> > >  		if (!asoc->peer.cookie)
+> > >  			goto clean_up;
+> > > +		asoc->peer.cookie_allocated=1;
+> > >  	}
+> > >  
+> > >  	/* RFC 2960 7.2.1 The initial value of ssthresh MAY be arbitrarily
+> > 
+> > What if we kmemdup directly at sctp_process_param(), as it's done for
+> > others already? Like SCTP_PARAM_RANDOM and SCTP_PARAM_HMAC_ALGO. I
+> > don't see a reason for SCTP_PARAM_STATE_COOKIE to be different
+> > here. This way it would be always allocated, and ready to be kfreed.
+> > 
+> > We still need to free it after the handshake, btw.
+> > 
+> >   Marcelo
+> > 
+> 
+> Still untested, but something like this?
+> 
 
-Yeah -ENOMEM is correct here. Ack by me.
+Yes, just..
 
-> >                         }
-> >                         rc = selinux_add_opt(token, arg, mnt_opts);
-> >                         if (unlikely(rc)) {
->
-> Looking at the callers of security_sb_eat_lsm_opts() (which is the
-> function that eventually calls the selinux_sb_eat_lsm_opts() hook),
-> -ENOMEM should be appropriate here.
->
-> Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
->
-> --
-> Ondrej Mosnacek <omosnace at redhat dot com>
-> Software Engineer, Security Technologies
-> Red Hat, Inc.
+> 
+> diff --git a/net/sctp/associola.c b/net/sctp/associola.c
+> index d2c7d0d2abc1..718b9917844e 100644
+> --- a/net/sctp/associola.c
+> +++ b/net/sctp/associola.c
+> @@ -393,6 +393,7 @@ void sctp_association_free(struct sctp_association *asoc)
+>  	kfree(asoc->peer.peer_random);
+>  	kfree(asoc->peer.peer_chunks);
+>  	kfree(asoc->peer.peer_hmacs);
+> +	kfree(asoc->peer.cookie);
+
+this chunk is not needed because it is freed right above the first
+kfree() in the context here.
+
+>  
+>  	/* Release the transport structures. */
+>  	list_for_each_safe(pos, temp, &asoc->peer.transport_addr_list) {
+> diff --git a/net/sctp/sm_make_chunk.c b/net/sctp/sm_make_chunk.c
+> index 72e74503f9fc..ff365f22a3c1 100644
+> --- a/net/sctp/sm_make_chunk.c
+> +++ b/net/sctp/sm_make_chunk.c
+> @@ -2431,14 +2431,6 @@ int sctp_process_init(struct sctp_association *asoc, struct sctp_chunk *chunk,
+>  	/* Peer Rwnd   : Current calculated value of the peer's rwnd.  */
+>  	asoc->peer.rwnd = asoc->peer.i.a_rwnd;
+>  
+> -	/* Copy cookie in case we need to resend COOKIE-ECHO. */
+> -	cookie = asoc->peer.cookie;
+> -	if (cookie) {
+> -		asoc->peer.cookie = kmemdup(cookie, asoc->peer.cookie_len, gfp);
+> -		if (!asoc->peer.cookie)
+> -			goto clean_up;
+> -	}
+> -
+>  	/* RFC 2960 7.2.1 The initial value of ssthresh MAY be arbitrarily
+>  	 * high (for example, implementations MAY use the size of the receiver
+>  	 * advertised window).
+> @@ -2607,7 +2599,9 @@ static int sctp_process_param(struct sctp_association *asoc,
+>  	case SCTP_PARAM_STATE_COOKIE:
+>  		asoc->peer.cookie_len =
+>  			ntohs(param.p->length) - sizeof(struct sctp_paramhdr);
+> -		asoc->peer.cookie = param.cookie->body;
+> +		asoc->peer.cookie = kmemdup(param.cookie->body, asoc->peer.cookie_len, gfp);
+> +		if (!asoc->peer.cookie)
+> +			retval = 0;
+>  		break;
+>  
+>  	case SCTP_PARAM_HEARTBEAT_INFO:
+
+Plus:
+
+--- a/net/sctp/sm_sideeffect.c
++++ b/net/sctp/sm_sideeffect.c
+@@ -898,6 +898,11 @@ static void sctp_cmd_new_state(struct sctp_cmd_seq *cmds,
+ 						asoc->rto_initial;
+ 	}
+ 
++	if (sctp_state(asoc, ESTABLISHED)) {
++		kfree(asoc->peer.cookie);
++		asoc->peer.cookie = NULL;
++	}
++
+ 	if (sctp_state(asoc, ESTABLISHED) ||
+ 	    sctp_state(asoc, CLOSED) ||
+ 	    sctp_state(asoc, SHUTDOWN_RECEIVED)) {
+
+Also untested, just sharing the idea.
+
+  Marcelo
