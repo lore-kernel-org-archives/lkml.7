@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E675DC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 515C7C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:17:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2245246DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:17:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D0B5246BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:17:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186249;
-	bh=2CHFQ1yD2ZdQPUiiceM3lTdpPGv4jFPq8lmnLRRah/I=;
+	s=default; t=1559186254;
+	bh=Xk/iLw49z1JCoFtls8/ow6PFTak0KhUDk4mdqxEWnqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l+3r7Q4FIxdv065kZx+P4Bj/B4WI71kebbK52j1qdRD880uN3hqJk05d4DevwtrIM
-	 AsK6ydrU2X0KdufjEQenGbHqInhpaMqXdkyICFaoEkUs5wFDsCqEJ3XBa5Yl2YZvb4
-	 HNLsH5R757cE5rzGQkoL/7DIj7EeTkM1ej9n06fo=
+	b=mZzSv+i1UoufjkvaP02ajiSg+g60PCt9USVbi3QJjkkixXqHVRhY14EsOyI/yp7it
+	 jrc/u9aD5XuWuW+VxTSTQ9N0j5WgV7WupsiWFMIFvEfuclQ5+yh9e9Nsy0N2UgGmFa
+	 CKFcHoqf6jjOnd3J/qFcCcDP7iFfcjPUhPR1OVlM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731130AbfE3DR2 (ORCPT
+        id S1729682AbfE3DRd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:17:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60604 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:17:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729661AbfE3DOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:00 -0400
+        id S1729685AbfE3DOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:02 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAEE72455E;
-        Thu, 30 May 2019 03:13:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7ADB23D83;
+        Thu, 30 May 2019 03:14:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186039;
-        bh=2CHFQ1yD2ZdQPUiiceM3lTdpPGv4jFPq8lmnLRRah/I=;
+        s=default; t=1559186042;
+        bh=Xk/iLw49z1JCoFtls8/ow6PFTak0KhUDk4mdqxEWnqw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jB0lmsLx4aPnWNufuc0e2YD8Zhbkv2nWLM5Rq1TUEHWMJk8mxvq+W93dLZM+FflF9
-         tf0cRdO7uVKecp5U0bJoJV06FwgwJULHAbWunFFX+fsjhPlT2XvzQEH0Uw439YkyJS
-         vfNpKbWXGWsZLY763Ploej0Y7cki18fusOc54sAc=
+        b=KJo2pSPIJBM+7eTiayALOwj3slrqdIsN829LAeQDFuOWPIG/NL7n39n9VFtlKhybT
+         aV2Depjt1aacILBXdUubNUYNojJDDX4flh7JvaljiUoR/Q7UzJNXQlo2P6XVfCfev2
+         OBN4MxY1BHISM7GRZQ7hIdghGzZ5ZLrH4FzGKMp4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 111/346] net: cw1200: fix a NULL pointer dereference
-Date:   Wed, 29 May 2019 20:03:04 -0700
-Message-Id: <20190530030546.718580107@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 132/346] pinctrl: pistachio: fix leaked of_node references
+Date:   Wed, 29 May 2019 20:03:25 -0700
+Message-Id: <20190530030547.804195707@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -60,34 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0ed2a005347400500a39ea7c7318f1fea57fb3ca ]
+[ Upstream commit 44a4455ac2c6b0981eace683a2b6eccf47689022 ]
 
-In case create_singlethread_workqueue fails, the fix free the
-hardware and returns NULL to avoid NULL pointer dereference.
+The call to of_get_child_by_name returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Detected by coccinelle with the following warnings:
+./drivers/pinctrl/pinctrl-pistachio.c:1422:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1360, but without a corresponding object release within this function.
+
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/st/cw1200/main.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/pinctrl/pinctrl-pistachio.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/wireless/st/cw1200/main.c b/drivers/net/wireless/st/cw1200/main.c
-index 90dc979f260b6..c1608f0bf6d01 100644
---- a/drivers/net/wireless/st/cw1200/main.c
-+++ b/drivers/net/wireless/st/cw1200/main.c
-@@ -345,6 +345,11 @@ static struct ieee80211_hw *cw1200_init_common(const u8 *macaddr,
- 	mutex_init(&priv->wsm_cmd_mux);
- 	mutex_init(&priv->conf_mutex);
- 	priv->workqueue = create_singlethread_workqueue("cw1200_wq");
-+	if (!priv->workqueue) {
-+		ieee80211_free_hw(hw);
-+		return NULL;
-+	}
-+
- 	sema_init(&priv->scan.lock, 1);
- 	INIT_WORK(&priv->scan.work, cw1200_scan_work);
- 	INIT_DELAYED_WORK(&priv->scan.probe_work, cw1200_probe_work);
+diff --git a/drivers/pinctrl/pinctrl-pistachio.c b/drivers/pinctrl/pinctrl-pistachio.c
+index aa5f949ef219c..5b0678f310e52 100644
+--- a/drivers/pinctrl/pinctrl-pistachio.c
++++ b/drivers/pinctrl/pinctrl-pistachio.c
+@@ -1367,6 +1367,7 @@ static int pistachio_gpio_register(struct pistachio_pinctrl *pctl)
+ 		if (!of_find_property(child, "gpio-controller", NULL)) {
+ 			dev_err(pctl->dev,
+ 				"No gpio-controller property for bank %u\n", i);
++			of_node_put(child);
+ 			ret = -ENODEV;
+ 			goto err;
+ 		}
+@@ -1374,6 +1375,7 @@ static int pistachio_gpio_register(struct pistachio_pinctrl *pctl)
+ 		irq = irq_of_parse_and_map(child, 0);
+ 		if (irq < 0) {
+ 			dev_err(pctl->dev, "No IRQ for bank %u: %d\n", i, irq);
++			of_node_put(child);
+ 			ret = irq;
+ 			goto err;
+ 		}
 -- 
 2.20.1
 
