@@ -5,55 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 715E5C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D72AC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46D6B252B0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:18:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 070EF252B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:19:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189936;
-	bh=pBp0MadGZ6iq4Rn25Lwz6Ox1cKj7Tsg+bto5JUfxHtg=;
+	s=default; t=1559189941;
+	bh=SnqwmFzw03K1gcPmMYOzxHxxvJbpotaVF5rgolxW8i4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JLf50C2NHjab1xEGUBY1cgVf29+10cJSKvgeFyynJOWouqXMLQy+XnkUqytuT17Xx
-	 WKWmkEy9oNRnmnwIdoo+mgSB8D1D9dyaQ0/nTt3yO4rRWdmd/tLjLZJjYU7RcqS6tX
-	 XH8fnUXXLjHLLf0U92xefJk/Hfy5aAn/ys6njzd0=
+	b=eOdzVys48IcqU0J0FBHtFFCEHJ9SokYOUyDdOjnZbGayhy3q8zP2oPrr0pH26hTOa
+	 MQDULS90LBsgO23YQHa6lOnHCZNlKrdYbIIPF2vOi/esr+RXxawYa8SEa+Uo11ihtv
+	 fZOdXqjJo/y0H4EIzASIj3jjMsnH6be2+6to+KFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730309AbfE3DP2 (ORCPT
+        id S1730987AbfE3ETA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:15:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56518 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:19:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729263AbfE3DMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:51 -0400
+        id S1730306AbfE3DP3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:29 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBC7E244E8;
-        Thu, 30 May 2019 03:12:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C06224547;
+        Thu, 30 May 2019 03:15:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185971;
-        bh=pBp0MadGZ6iq4Rn25Lwz6Ox1cKj7Tsg+bto5JUfxHtg=;
+        s=default; t=1559186128;
+        bh=SnqwmFzw03K1gcPmMYOzxHxxvJbpotaVF5rgolxW8i4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nK5dPtAK2GhZMz0I+TaPDw4DsliUuBH3BSXe8SkJf3Sk6QBRMIcG3migqLbCYG1LS
-         kNP9o/QgnfpM9xdIZVNZUyRiwAf5uuWudZ48y11S+pAt0Y0A4JZT/YA37coH5NhCkK
-         cM109w/fB0JU7LbTh6IWbB0svTCcx7Q7WVzo7s/s=
+        b=nspBsodjbrLd/8/s9iJpVKZg+LJz0J/qZFSauCBNZl/oIYei4WQhXfgBwJ94j2Abw
+         1wz7EXb9M3rMDRn5AAC05iLogzpsS1/A+fUMnbUn2MskbpErLZWTro/g0bPr4bvh4i
+         AdHSJe2ZABGg54JEOhlBGoFeCu57ubIYRyGNIpBg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
+        stable@vger.kernel.org, Samson Tam <Samson.Tam@amd.com>,
+        Aric Cyr <Aric.Cyr@amd.com>, Anthony Koo <Anthony.Koo@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 402/405] extcon: axp288: Add a depends on ACPI to the Kconfig entry
-Date:   Wed, 29 May 2019 20:06:40 -0700
-Message-Id: <20190530030600.887026935@linuxfoundation.org>
+Subject: [PATCH 5.0 289/346] drm/amd/display: Link train only when link is DP and backend is enabled
+Date:   Wed, 29 May 2019 20:06:02 -0700
+Message-Id: <20190530030555.524480172@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
-References: <20190530030540.291644921@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,41 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fa3c098c2d52a268f6372fa053932e11f50cecb1 ]
+[ Upstream commit 66acd4418d7de131ef3831e52a8af3d2480e5b15 ]
 
-As Hans de Goede pointed, using this driver without ACPI
-makes little sense, so add ACPI dependency to Kconfig entry
-to fix a build error while CONFIG_ACPI is not set.
+[Why]
+In certain cases we do link training when we don't have a backend.
 
-drivers/extcon/extcon-axp288.c: In function 'axp288_extcon_probe':
-drivers/extcon/extcon-axp288.c:363:20: error: dereferencing pointer to incomplete type
-    put_device(&adev->dev);
+[How]
+In dc_link_set_preferred_link_settings(), store preferred link settings
+first and then verify that the link is DP and the link stream's backend is
+enabled.  If either is false, then we will not do any link retraining.
 
-Fixes: 0cf064db948a ("extcon: axp288: Convert to use acpi_dev_get_first_match_dev()")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Suggested-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Samson Tam <Samson.Tam@amd.com>
+Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
+Acked-by: Anthony Koo <Anthony.Koo@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/extcon/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/dc/core/dc.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
-index 540e8cd16ee6e..db3bcf96b98fb 100644
---- a/drivers/extcon/Kconfig
-+++ b/drivers/extcon/Kconfig
-@@ -30,7 +30,7 @@ config EXTCON_ARIZONA
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
+index 5af2ea1f201d3..68529acba015f 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
+@@ -524,6 +524,14 @@ void dc_link_set_preferred_link_settings(struct dc *dc,
+ 	struct dc_stream_state *link_stream;
+ 	struct dc_link_settings store_settings = *link_setting;
  
- config EXTCON_AXP288
- 	tristate "X-Power AXP288 EXTCON support"
--	depends on MFD_AXP20X && USB_SUPPORT && X86
-+	depends on MFD_AXP20X && USB_SUPPORT && X86 && ACPI
- 	select USB_ROLE_SWITCH
- 	help
- 	  Say Y here to enable support for USB peripheral detection
++	link->preferred_link_setting = store_settings;
++
++	/* Retrain with preferred link settings only relevant for
++	 * DP signal type
++	 */
++	if (!dc_is_dp_signal(link->connector_signal))
++		return;
++
+ 	for (i = 0; i < MAX_PIPES; i++) {
+ 		pipe = &dc->current_state->res_ctx.pipe_ctx[i];
+ 		if (pipe->stream && pipe->stream->sink
+@@ -539,7 +547,10 @@ void dc_link_set_preferred_link_settings(struct dc *dc,
+ 
+ 	link_stream = link->dc->current_state->res_ctx.pipe_ctx[i].stream;
+ 
+-	link->preferred_link_setting = store_settings;
++	/* Cannot retrain link if backend is off */
++	if (link_stream->dpms_off)
++		return;
++
+ 	if (link_stream)
+ 		decide_link_settings(link_stream, &store_settings);
+ 
 -- 
 2.20.1
 
