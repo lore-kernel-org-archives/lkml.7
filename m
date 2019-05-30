@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA84C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:51:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F7AC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9466524D85
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:51:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 834B724D9D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:51:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188260;
-	bh=+r2YI0Q+g0xBv+6BwQnG273incqihmmMR/lkbQEqO7M=;
+	s=default; t=1559188262;
+	bh=m8QEM/pFxCfxTcHSKNahObBFJDwpB5U9Z7VT3abzRP8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aKlSX3UNHEoBZPSRFAgVooKiBRwvxp1lTMQCuVdozP5DGLCoM3RQ7NjTbVNE0r7Zp
-	 Q82sUaOMiBKUUnMuvsJ3aqdYhICP6zQaFxZAmjYlIGch7fVx33te/r5WnUL/4rsX5T
-	 xhCMxQBSTqB2a9wvWXsug1Cm3bfCaxbnIuuud9Ds=
+	b=vqQWGXcHWHnfX/RXRYy49ic05aGzLhcqaFQgbMZSg1C1c2PBVfrZE/x/jKIGrqteh
+	 UdZR367lYY+ZEIuj9eXOlrdnbaFdtgIxz/rf/1ugntxuXEVImWnq0CYs60dUoDiTKg
+	 PpdWHLx2dZFk6MIflKOkF2FsXIuvYfg15fUTvweg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387428AbfE3Du7 (ORCPT
+        id S2387460AbfE3DvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:50:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56714 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:51:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730656AbfE3DTv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732050AbfE3DTv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:19:51 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 249C224849;
-        Thu, 30 May 2019 03:19:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C631248E3;
+        Thu, 30 May 2019 03:19:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186391;
-        bh=+r2YI0Q+g0xBv+6BwQnG273incqihmmMR/lkbQEqO7M=;
+        s=default; t=1559186390;
+        bh=m8QEM/pFxCfxTcHSKNahObBFJDwpB5U9Z7VT3abzRP8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wy+m1CJsaHLHiqoVbxrW6trCMWb5o+SaY1QHNGqwdLya3FlxstOwLt3ReVGwfSbfL
-         9HMr3YUQCjnbmni03xmbRaR94HiNYUq8mXV+m9cIurVsriftE7H62Ao41PjiC08/aY
-         yCAWtzXJjD5rmjCrcCObvpwmu6s/ryvdNJ8ODVFM=
+        b=tvqr2LqEfjg072xKSPqQ3ns8k48hr3QTxybWikBFlX8vQeG1fubZkSR/k7kmEyXAp
+         aA+PltccC0IRHoONHTV6ocoydnioayBY+gzx5VDRsmAUoGl2+h7kuVkqHfvbgX88LX
+         tNToXhJzQzQF03t3i6INX2ZzeNmaiObYnMpaFdWI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 162/193] spi: tegra114: reset controller on probe
-Date:   Wed, 29 May 2019 20:06:56 -0700
-Message-Id: <20190530030510.624005517@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 161/193] HID: logitech-hidpp: change low battery level threshold from 31 to 30 percent
+Date:   Wed, 29 May 2019 20:06:55 -0700
+Message-Id: <20190530030510.483197958@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -61,104 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 019194933339b3e9b486639c8cb3692020844d65 ]
+[ Upstream commit 1f87b0cd32b3456d7efdfb017fcf74d0bfe3ec29 ]
 
-Fixes: SPI driver can be built as module so perform SPI controller reset
-on probe to make sure it is in valid state before initiating transfer.
+According to hidpp20_batterylevel_get_battery_info my Logitech K270
+keyboard reports only 2 battery levels. This matches with what I've seen
+after testing with batteries at varying level of fullness, it always
+reports either 5% or 30%.
 
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Windows reports "battery good" for the 30% level. I've captured an USB
+trace of Windows reading the battery and it is getting the same info
+as the Linux hidpp code gets.
+
+Now that Linux handles these devices as hidpp devices, it reports the
+battery as being low as it treats anything under 31% as low, this leads
+to the user constantly getting a "Keyboard battery is low" warning from
+GNOME3, which is very annoying.
+
+This commit fixes this by changing the low threshold to anything under
+30%, which I assume is what Windows does.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-tegra114.c | 32 ++++++++++++++++++--------------
- 1 file changed, 18 insertions(+), 14 deletions(-)
+ drivers/hid/hid-logitech-hidpp.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
-index 44550182a4a36..2ad04796ef298 100644
---- a/drivers/spi/spi-tegra114.c
-+++ b/drivers/spi/spi-tegra114.c
-@@ -1067,27 +1067,19 @@ static int tegra_spi_probe(struct platform_device *pdev)
- 
- 	spi_irq = platform_get_irq(pdev, 0);
- 	tspi->irq = spi_irq;
--	ret = request_threaded_irq(tspi->irq, tegra_spi_isr,
--			tegra_spi_isr_thread, IRQF_ONESHOT,
--			dev_name(&pdev->dev), tspi);
--	if (ret < 0) {
--		dev_err(&pdev->dev, "Failed to register ISR for IRQ %d\n",
--					tspi->irq);
--		goto exit_free_master;
--	}
- 
- 	tspi->clk = devm_clk_get(&pdev->dev, "spi");
- 	if (IS_ERR(tspi->clk)) {
- 		dev_err(&pdev->dev, "can not get clock\n");
- 		ret = PTR_ERR(tspi->clk);
--		goto exit_free_irq;
-+		goto exit_free_master;
- 	}
- 
- 	tspi->rst = devm_reset_control_get_exclusive(&pdev->dev, "spi");
- 	if (IS_ERR(tspi->rst)) {
- 		dev_err(&pdev->dev, "can not get reset\n");
- 		ret = PTR_ERR(tspi->rst);
--		goto exit_free_irq;
-+		goto exit_free_master;
- 	}
- 
- 	tspi->max_buf_size = SPI_FIFO_DEPTH << 2;
-@@ -1095,7 +1087,7 @@ static int tegra_spi_probe(struct platform_device *pdev)
- 
- 	ret = tegra_spi_init_dma_param(tspi, true);
- 	if (ret < 0)
--		goto exit_free_irq;
-+		goto exit_free_master;
- 	ret = tegra_spi_init_dma_param(tspi, false);
- 	if (ret < 0)
- 		goto exit_rx_dma_free;
-@@ -1117,18 +1109,32 @@ static int tegra_spi_probe(struct platform_device *pdev)
- 		dev_err(&pdev->dev, "pm runtime get failed, e = %d\n", ret);
- 		goto exit_pm_disable;
- 	}
-+
-+	reset_control_assert(tspi->rst);
-+	udelay(2);
-+	reset_control_deassert(tspi->rst);
- 	tspi->def_command1_reg  = SPI_M_S;
- 	tegra_spi_writel(tspi, tspi->def_command1_reg, SPI_COMMAND1);
- 	pm_runtime_put(&pdev->dev);
-+	ret = request_threaded_irq(tspi->irq, tegra_spi_isr,
-+				   tegra_spi_isr_thread, IRQF_ONESHOT,
-+				   dev_name(&pdev->dev), tspi);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "Failed to register ISR for IRQ %d\n",
-+			tspi->irq);
-+		goto exit_pm_disable;
-+	}
- 
- 	master->dev.of_node = pdev->dev.of_node;
- 	ret = devm_spi_register_master(&pdev->dev, master);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "can not register to master err %d\n", ret);
--		goto exit_pm_disable;
-+		goto exit_free_irq;
- 	}
- 	return ret;
- 
-+exit_free_irq:
-+	free_irq(spi_irq, tspi);
- exit_pm_disable:
- 	pm_runtime_disable(&pdev->dev);
- 	if (!pm_runtime_status_suspended(&pdev->dev))
-@@ -1136,8 +1142,6 @@ static int tegra_spi_probe(struct platform_device *pdev)
- 	tegra_spi_deinit_dma_param(tspi, false);
- exit_rx_dma_free:
- 	tegra_spi_deinit_dma_param(tspi, true);
--exit_free_irq:
--	free_irq(spi_irq, tspi);
- exit_free_master:
- 	spi_master_put(master);
- 	return ret;
+diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
+index d209b12057d59..b705cbb58ca6b 100644
+--- a/drivers/hid/hid-logitech-hidpp.c
++++ b/drivers/hid/hid-logitech-hidpp.c
+@@ -910,7 +910,11 @@ static int hidpp_map_battery_level(int capacity)
+ {
+ 	if (capacity < 11)
+ 		return POWER_SUPPLY_CAPACITY_LEVEL_CRITICAL;
+-	else if (capacity < 31)
++	/*
++	 * The spec says this should be < 31 but some devices report 30
++	 * with brand new batteries and Windows reports 30 as "Good".
++	 */
++	else if (capacity < 30)
+ 		return POWER_SUPPLY_CAPACITY_LEVEL_LOW;
+ 	else if (capacity < 81)
+ 		return POWER_SUPPLY_CAPACITY_LEVEL_NORMAL;
 -- 
 2.20.1
 
