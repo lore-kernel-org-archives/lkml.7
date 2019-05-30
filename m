@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC3EC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8455EC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B63C225CBF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:49:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B3E425CB2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:49:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191751;
-	bh=DGwI68EpuJ6zAp05syVes+pWzZQjOwsZ0B9Eg/W2hJw=;
+	s=default; t=1559191757;
+	bh=ZnKmzH2d36q/ebULNOmESAOuV8j+Oxu0N0V/yWvpEL4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ASgbzPWLqPjjheNXfYIZLv+2cPpilHBKTNCpEqZDULIgxi1H+T7FD6rNDSPP7aYW5
-	 eVY+9UaMi0DB1vVyTvAVpPfjFe3Qxy43j08gPocK9M91f8EmjMi+yldXSICiDJQVpb
-	 rgk4AhtHTBubBbeH3P/mOVdsoXFeA87jqlpttaMM=
+	b=eE5+RJsoMumDYnc3T/gIXoLI6V4m6h+SYDAcalqWV46EYDKrUmsXyiS5AWgyGmy1z
+	 IyHGj4Ty2FfKlS7wEY9Wbvpzim4P5ksnS35gXhth/o3Rm4KjJKg/CtS3poc4LeG4Ii
+	 0kPOVcyknvdCQUI7BKHjzvwhETbhvTON++s2dH9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728435AbfE3DLO (ORCPT
+        id S2387555AbfE3EtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:11:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46738 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:49:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728058AbfE3DKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:10:23 -0400
+        id S1727669AbfE3DLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:14 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61BF42448B;
-        Thu, 30 May 2019 03:10:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 271ED244A0;
+        Thu, 30 May 2019 03:11:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185822;
-        bh=DGwI68EpuJ6zAp05syVes+pWzZQjOwsZ0B9Eg/W2hJw=;
+        s=default; t=1559185874;
+        bh=ZnKmzH2d36q/ebULNOmESAOuV8j+Oxu0N0V/yWvpEL4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XyQ3UFAGru8po4+ghMFzrNtWmZ1Mg0H7YFoJWbYyY+eOanY3+GWF9PFvlWGd7nGw+
-         NRz4Jp9kqY/XqO+eb1jJSFJgKV3Xpxf0Luu+PZjOFLlvnCiDg3z7okWeey9LDPmImS
-         RJk6ag1xswmH0ESYPB2Y7vSslVYqygS5U1Bu16kc=
+        b=pw53CBt9YKPtL/I56ZGfztDLl22s3oQyQADqgveaq+ETDbdMRaUHdxUm1wmu3m9aF
+         W0JD7TdmWy9E0OtIe6x9R5svlNC1UO1VJaPOqrlkAoXbWhRKFFruF21F/WhGlEo6jN
+         5AVozNzwLH420vvAppClBlVwHIGPbppucZ/tQFZw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Baluta <daniel.baluta@nxp.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Thomas Huth <thuth@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 120/405] ASoC: fsl_sai: Update is_slave_mode with correct value
-Date:   Wed, 29 May 2019 20:01:58 -0700
-Message-Id: <20190530030547.072208511@linuxfoundation.org>
+Subject: [PATCH 5.1 218/405] s390/mm: silence compiler warning when compiling without CONFIG_PGSTE
+Date:   Wed, 29 May 2019 20:03:36 -0700
+Message-Id: <20190530030552.107241744@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,45 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ddb351145a967ee791a0fb0156852ec2fcb746ba ]
+[ Upstream commit 81a8f2beb32a5951ecf04385301f50879abc092b ]
 
-is_slave_mode defaults to false because sai structure
-that contains it is kzalloc'ed.
+If CONFIG_PGSTE is not set (e.g. when compiling without KVM), GCC complains:
 
-Anyhow, if we decide to set the following configuration
-SAI slave -> SAI master, is_slave_mode will remain set on true
-although SAI being master it should be set to false.
+  CC      arch/s390/mm/pgtable.o
+arch/s390/mm/pgtable.c:413:15: warning: ‘pmd_alloc_map’ defined but not
+ used [-Wunused-function]
+ static pmd_t *pmd_alloc_map(struct mm_struct *mm, unsigned long addr)
+               ^~~~~~~~~~~~~
 
-Fix this by updating is_slave_mode for each call of
-fsl_sai_set_dai_fmt.
+Wrap the function with "#ifdef CONFIG_PGSTE" to silence the warning.
 
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Thomas Huth <thuth@redhat.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/fsl_sai.c | 2 ++
+ arch/s390/mm/pgtable.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-index db9e0872f73db..7549b74e464e9 100644
---- a/sound/soc/fsl/fsl_sai.c
-+++ b/sound/soc/fsl/fsl_sai.c
-@@ -268,12 +268,14 @@ static int fsl_sai_set_dai_fmt_tr(struct snd_soc_dai *cpu_dai,
- 	case SND_SOC_DAIFMT_CBS_CFS:
- 		val_cr2 |= FSL_SAI_CR2_BCD_MSTR;
- 		val_cr4 |= FSL_SAI_CR4_FSD_MSTR;
-+		sai->is_slave_mode = false;
- 		break;
- 	case SND_SOC_DAIFMT_CBM_CFM:
- 		sai->is_slave_mode = true;
- 		break;
- 	case SND_SOC_DAIFMT_CBS_CFM:
- 		val_cr2 |= FSL_SAI_CR2_BCD_MSTR;
-+		sai->is_slave_mode = false;
- 		break;
- 	case SND_SOC_DAIFMT_CBM_CFS:
- 		val_cr4 |= FSL_SAI_CR4_FSD_MSTR;
+diff --git a/arch/s390/mm/pgtable.c b/arch/s390/mm/pgtable.c
+index 8485d6dc27549..9ebd01219812c 100644
+--- a/arch/s390/mm/pgtable.c
++++ b/arch/s390/mm/pgtable.c
+@@ -410,6 +410,7 @@ static inline pmd_t pmdp_flush_lazy(struct mm_struct *mm,
+ 	return old;
+ }
+ 
++#ifdef CONFIG_PGSTE
+ static pmd_t *pmd_alloc_map(struct mm_struct *mm, unsigned long addr)
+ {
+ 	pgd_t *pgd;
+@@ -427,6 +428,7 @@ static pmd_t *pmd_alloc_map(struct mm_struct *mm, unsigned long addr)
+ 	pmd = pmd_alloc(mm, pud, addr);
+ 	return pmd;
+ }
++#endif
+ 
+ pmd_t pmdp_xchg_direct(struct mm_struct *mm, unsigned long addr,
+ 		       pmd_t *pmdp, pmd_t new)
 -- 
 2.20.1
 
