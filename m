@@ -2,157 +2,91 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83AEEC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C803AC28CC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:27:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5989724298
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:27:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZmxKCWRr"
+	by mail.kernel.org (Postfix) with ESMTP id AB7BE2583F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:27:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726454AbfE3L1e (ORCPT
+        id S1726653AbfE3L1z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 07:27:34 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:41462 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725440AbfE3L1e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 07:27:34 -0400
-Received: by mail-lf1-f66.google.com with SMTP id 136so4728984lfa.8;
-        Thu, 30 May 2019 04:27:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=JENy3lopc80MuuiSTYnGTbQpOx3WqOUAndzP5hkjx4w=;
-        b=ZmxKCWRrz772eNoIL9TX0K3sGashtoYX5uOJp2C3SxKFtNwWHviuIyyVM27VV8EUAc
-         6JzDONOGIMSpa91cqdy1Ia28gt5UpF1DM36qH5Zi29Dnbeh1EuaEEDSvzcM4RGQWiK+o
-         s9kiRxd+55flyoBu43by+e7FpZ7KmYGy+/GpyXHB+VjfTihSbh+pHhHOrh59aMNJsrn3
-         9wAngvmmzrwFM/FYwMHPid+RxbUhoONswax/4cQ1MgWJMpgzNJFh9vkhcRuV/e/yjER5
-         A0iSX12zYze0fOuKcKdYHul/g53iy7DrtYePXCPsVO14kxWmI7DeUhTk2tYClGOWjge5
-         zEOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JENy3lopc80MuuiSTYnGTbQpOx3WqOUAndzP5hkjx4w=;
-        b=iPkslVXGN79rc0pngp/J6KSXZCAB9GVyiU9QjAV81+AbGyaO8FmmRyUjO5K697EpF+
-         2MQPwIQI76wrieGoH3a9hSpME297WeTnu5CABq/HxMxrJxdxWa6dTBPSbnhMo0qG+AWm
-         eCyj4je4Eg+gknTI1WqN52O6aK0470qF4FVRZZNQWgJGclIiKEOWlVcvTywLdDw+xNQf
-         PeMrDawThJ94qO8XVrn9BQlnI+CfnhojU3+tjI9u27qEEEQnYp9eVOJZh5FR7Hb693jF
-         EocaOeZQQgj8TTY7WGpSEKNuWu4bEehA8Lwy+xtxEsCApbT++zqGJSx2TsuO6S3u47JT
-         so0w==
-X-Gm-Message-State: APjAAAWZAo+NCvX0M5r52MocUK8uGe/CJW/5IbaLhEb7tRF4q1tbjrLK
-        lrKibOa3nIQA+6y+hAu6dxkq2HKS
-X-Google-Smtp-Source: APXvYqwTSfyXXvpfDT8aiAY/fiws1afRBScx7FfoqwY3K0Gu+QtxuoAsy0swpn2Y4fWUmFFcH92JfQ==
-X-Received: by 2002:a19:7905:: with SMTP id u5mr1815085lfc.117.1559215652093;
-        Thu, 30 May 2019 04:27:32 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.35.141])
-        by smtp.googlemail.com with ESMTPSA id u13sm440578lfm.16.2019.05.30.04.27.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 04:27:31 -0700 (PDT)
-Subject: Re: [PATCH V1] i2c: busses: tegra: Add suspend-resume support
-To:     Bitan Biswas <bbiswas@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1559195718-6693-1-git-send-email-bbiswas@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <c8bad04b-67ef-bcdf-04df-4aa61271e81c@gmail.com>
-Date:   Thu, 30 May 2019 14:27:30 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 30 May 2019 07:27:55 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:34640 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725440AbfE3L1y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 07:27:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD97E374;
+        Thu, 30 May 2019 04:27:53 -0700 (PDT)
+Received: from queper01-lin (queper01-lin.cambridge.arm.com [10.1.195.48])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5C3FE3F5AF;
+        Thu, 30 May 2019 04:27:51 -0700 (PDT)
+Date:   Thu, 30 May 2019 12:27:49 +0100
+From:   Quentin Perret <quentin.perret@arm.com>
+To:     edubezval@gmail.com, rui.zhang@intel.com, javi.merino@kernel.org,
+        viresh.kumar@linaro.org, amit.kachhap@gmail.com, rjw@rjwysocki.net,
+        will.deacon@arm.com, catalin.marinas@arm.com,
+        daniel.lezcano@linaro.org, dietmar.eggemann@arm.com,
+        ionela.voinescu@arm.com, mka@chromium.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 3/3] thermal: cpu_cooling: Migrate to using the EM
+ framework
+Message-ID: <20190530112747.nlfyctzjkz5lak7o@queper01-lin>
+References: <20190530092038.12020-1-quentin.perret@arm.com>
+ <20190530092038.12020-4-quentin.perret@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <1559195718-6693-1-git-send-email-bbiswas@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190530092038.12020-4-quentin.perret@arm.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-30.05.2019 8:55, Bitan Biswas пишет:
-> Post suspend I2C registers have power on reset values. Before any
-> transfer initialize I2C registers to prevent I2C transfer timeout
-> and implement suspend and resume callbacks needed. Fix below errors
-> post suspend:
+On Thursday 30 May 2019 at 10:20:38 (+0100), Quentin Perret wrote:
+> The newly introduced Energy Model framework manages power cost tables in
+> a generic way. Moreover, it supports several types of models since the
+> tables can come from DT or firmware (through SCMI) for example. On the
+> other hand, the cpu_cooling subsystem manages its own power cost tables
+> using only DT data.
 > 
-> 1) Tegra I2C transfer timeout during jetson tx2 resume:
+> In order to avoid the duplication of data in the kernel, and in order to
+> enable IPA with EMs coming from more than just DT, remove the private
+> tables from cpu_cooling.c and migrate it to using the centralized EM
+> framework. Doing so should have no visible functional impact for
+> existing users of IPA since:
 > 
-> [   27.520613] pca953x 1-0074: calling pca953x_resume+0x0/0x1b0 @ 2939, parent: i2c-1
-> [   27.633623] tegra-i2c 3160000.i2c: i2c transfer timed out
-> [   27.639162] pca953x 1-0074: Unable to sync registers 0x3-0x5. -110
-> [   27.645336] pca953x 1-0074: Failed to sync GPIO dir registers: -110
-> [   27.651596] PM: dpm_run_callback(): pca953x_resume+0x0/0x1b0 returns -110
-> [   27.658375] pca953x 1-0074: pca953x_resume+0x0/0x1b0 returned -110 after 127152 usecs
-> [   27.666194] PM: Device 1-0074 failed to resume: error -110
+>  - recent extenstions to the the PM_OPP infrastructure enable the
+>    registration of EMs in PM_EM using the DT property used by IPA;
 > 
-> 2) Tegra I2C transfer timeout error on jetson Xavier post resume.
+>  - the existing upstream cpufreq drivers marked with the
+>    'CPUFREQ_IS_COOLING_DEV' flag all use the aforementioned PM_OPP
+>    infrastructure, which means they all support PM_EM. The only two
+>    exceptions are qoriq-cpufreq which doesn't in fact use an EM and
+>    scmi-cpufreq which doesn't use DT for power costs.
 > 
-> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
-> ---
->  drivers/i2c/busses/i2c-tegra.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
+> For existing users of cpu_cooling, PM_EM tables will contain the exact
+> same power values that IPA used to compute on its own until now. The
+> only new dependency for them is to compile in CONFIG_ENERGY_MODEL.
 > 
-> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-> index ebaa78d..f6a377f 100644
-> --- a/drivers/i2c/busses/i2c-tegra.c
-> +++ b/drivers/i2c/busses/i2c-tegra.c
-> @@ -1687,9 +1687,33 @@ static int tegra_i2c_remove(struct platform_device *pdev)
->  }
->  
->  #ifdef CONFIG_PM_SLEEP
-> +static int tegra_i2c_suspend(struct device *dev)
-> +{
-> +	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
-> +
-> +	i2c_mark_adapter_suspended(&i2c_dev->adapter);
-> +
-> +	return 0;
-> +}
-> +
-> +static int tegra_i2c_resume(struct device *dev)
-> +{
-> +	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	i2c_lock_bus(&i2c_dev->adapter, I2C_LOCK_ROOT_ADAPTER);
-> +	ret = tegra_i2c_init(i2c_dev, false);
-> +	i2c_unlock_bus(&i2c_dev->adapter, I2C_LOCK_ROOT_ADAPTER);
+> The case where the thermal subsystem is used without an Energy Model
+> (cpufreq_cooling_ops) is handled by looking directly at CPUFreq's
+> frequency table which is already a dependency for cpu_cooling.c anyway.
+> Since the thermal framework expects the cooling states in a particular
+> order, bail out whenever the CPUFreq table is unsorted, since that is
+> fairly uncommon in general, and there are currently no users of
+> cpu_cooling for this use-case.
+> 
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-Why the locking is needed here?
+Viresh: the patch hasn't changed much so I kept this, but please shout
+if you're not happy with the new version :-)
 
-> +	if (!ret)
-> +		i2c_mark_adapter_resumed(&i2c_dev->adapter);
-> +
-> +       return ret;
-
-A very minor nit.. will be a bit more straightforward to write this as:
-
-	int err;
-
-	err = tegra_i2c_init(i2c_dev, false);
-	if (err)
-		return err;
-
-	i2c_mark_adapter_resumed(&i2c_dev->adapter);
-
-	return 0;
-
-It is always cleaner to return 0 on success.
-
---
-Dmitry
+Thanks,
+Quentin
