@@ -5,52 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4EF9C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2006EC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 909442513A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:10:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED56E2513D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:10:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189415;
-	bh=mSKlZux6lezkQaiVAF7+TsAapDtrd6W5CepR/4mSkWc=;
+	s=default; t=1559189424;
+	bh=fftdQk/7amfLgc7ki+wpqJ+JdSTVNsCzjgwyklgGKRA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k/Azdo+Dki3kz8dHoOncmeIvD2bx2ldU0xYA4/HXRFVhrzKOeD5c2pkjxv0nx2PNI
-	 hgeR+MepTNvO3cGzDk1cGnFxHA8wysjIAMNiaa+KA0zU0hrYYwtYXKFZu55OXxbH+J
-	 X5I8vTjklm3/cfUZnMU21Tmy7xz01XWsWW/op/i8=
+	b=OJiDIlFnw9vthSIg9G3mPu2eBn3hd3dB9sPh5p2XMo4CLjr1VlBCHNbAQh5Qa+3y2
+	 9dlSqPLLH45DD9d2rRfzr/TzMC4uYf2wbwWZP1ks1p+bpdNu9Dj9HweR8FeE8s/Wzl
+	 rzSZfBysCYa/vD+VjaUj/K3XEOpmLyTs+G4N33ac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727227AbfE3EKO (ORCPT
+        id S1727230AbfE3EKW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:10:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44776 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:10:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730895AbfE3DRC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:17:02 -0400
+        id S1730888AbfE3DRB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:17:01 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4951245EB;
-        Thu, 30 May 2019 03:17:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B887924656;
+        Thu, 30 May 2019 03:17:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186221;
-        bh=mSKlZux6lezkQaiVAF7+TsAapDtrd6W5CepR/4mSkWc=;
+        s=default; t=1559186220;
+        bh=fftdQk/7amfLgc7ki+wpqJ+JdSTVNsCzjgwyklgGKRA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yOSPnBHonlfAf0MlKGC+cqdaRmaHTc7MeOQiD4bDcaLOS4tsBw5rGc4qOljmMNBFw
-         t7ec6BH22ePlTmY4uxdrq8qpkFeiaQaXHmhov0N+KuVmLhUFi5ZN3ClWh0ZD3jPu+9
-         bUM9lkxdXknOgM5fIDXiCjbQOY+i5f/RCYLvXHQE=
+        b=vv0NMyj7RTM0yPtglW/Z6mrNXfRVxJNluW8NVXamKUH9k84UVJQgrEcZ5BcFOhCga
+         K2z1d5V3dTliHDLSfdXVKiEZWIwQg1TmeIyWabkRLxNGA8J60pM3iV6iOn9zR1Y92g
+         Bx2VhF3x2YmE+oFL7jJ8NRNG2IVUug1WJanJLLPM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
-        Rocky Liao <rjliao@codeaurora.org>,
-        Claire Chang <tientzu@chromium.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 114/276] Bluetooth: hci_qca: Give enough time to ROME controller to bootup.
-Date:   Wed, 29 May 2019 20:04:32 -0700
-Message-Id: <20190530030533.070327189@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolai Stange <nstange@suse.de>,
+        Jiri Kosina <jkosina@suse.cz>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 112/276] x86/mm: Remove in_nmi() warning from 64-bit implementation of vmalloc_fault()
+Date:   Wed, 29 May 2019 20:04:30 -0700
+Message-Id: <20190530030532.968779573@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -63,35 +68,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7f09d5a6c33be66a5ca19bf9dd1c2d90c5dfcf0d ]
+[ Upstream commit a65c88e16f32aa9ef2e8caa68ea5c29bd5eb0ff0 ]
 
-This patch enables enough time to ROME controller to bootup
-after we bring the enable pin out of reset.
+In-NMI warnings have been added to vmalloc_fault() via:
 
-Fixes: 05ba533c5c11 ("Bluetooth: hci_qca: Add serdev support").
-Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Reviewed-by: Rocky Liao <rjliao@codeaurora.org>
-Tested-by: Rocky Liao <rjliao@codeaurora.org>
-Tested-by: Claire Chang <tientzu@chromium.org>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+  ebc8827f75 ("x86: Barf when vmalloc and kmemcheck faults happen in NMI")
+
+back in the time when our NMI entry code could not cope with nested NMIs.
+
+These days, it's perfectly fine to take a fault in NMI context and we
+don't have to care about the fact that IRET from the fault handler might
+cause NMI nesting.
+
+This warning has already been removed from 32-bit implementation of
+vmalloc_fault() in:
+
+  6863ea0cda8 ("x86/mm: Remove in_nmi() warning from vmalloc_fault()")
+
+but the 64-bit version was omitted.
+
+Remove the bogus warning also from 64-bit implementation of vmalloc_fault().
+
+Reported-by: Nicolai Stange <nstange@suse.de>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Joerg Roedel <jroedel@suse.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: 6863ea0cda8 ("x86/mm: Remove in_nmi() warning from vmalloc_fault()")
+Link: http://lkml.kernel.org/r/nycvar.YFH.7.76.1904240902280.9803@cbobk.fhfr.pm
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/hci_qca.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/mm/fault.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index f0d593c3fa728..77004c29da089 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -504,6 +504,8 @@ static int qca_open(struct hci_uart *hu)
- 		qcadev = serdev_device_get_drvdata(hu->serdev);
- 		if (qcadev->btsoc_type != QCA_WCN3990) {
- 			gpiod_set_value_cansleep(qcadev->bt_en, 1);
-+			/* Controller needs time to bootup. */
-+			msleep(150);
- 		} else {
- 			hu->init_speed = qcadev->init_speed;
- 			hu->oper_speed = qcadev->oper_speed;
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 47bebfe6efa70..9d9765e4d1ef1 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -427,8 +427,6 @@ static noinline int vmalloc_fault(unsigned long address)
+ 	if (!(address >= VMALLOC_START && address < VMALLOC_END))
+ 		return -1;
+ 
+-	WARN_ON_ONCE(in_nmi());
+-
+ 	/*
+ 	 * Copy kernel mappings over when needed. This can also
+ 	 * happen within a race in page table update. In the later
 -- 
 2.20.1
 
