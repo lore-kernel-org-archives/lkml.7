@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A468C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5818BC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E53A23CCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2410924B2E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187204;
-	bh=Nw1S3ljB75XOEqY4ile3e0I008mEEAwfaIm2KJFl3dk=;
+	s=default; t=1559187209;
+	bh=Wa7TcyT+ufSchs5dR12KCtbsY23wB+eK/kdXfxO7PYM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XidOGikMjWq7Rx79dmo4C9CG9mPcUCjJUfndj5PgthROco4V4CEv9vAPFqrNCw2cH
-	 oc6lHuBHOunHnCb+xTLDAxT7hY15ltH9i8qz1Q7bp1AELWz5NnsTWYXyHN8xfB0/I8
-	 yMQ9Pwg1K1MSjpV7A3Y1xZgrmymWDHtDyPR30goU=
+	b=bJJVMYB2l7B2rOj5fjVdSaE5Q6ORE3HPfdGYUxLvxQrETPmxY4ALnbagucr16YZcK
+	 Fe7kZ/dGrdunnxPQNeRwnEPW9EajJA4j4rveTg+lTZbKmD+zMSwQJ+wlis1RToGiV/
+	 H/4gThFR2QKMm07POFFNe/So5blMueLZnWq5MlCw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388196AbfE3D2i (ORCPT
+        id S2388184AbfE3D2d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:28:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57612 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:28:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732109AbfE3DUB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:20:01 -0400
+        id S1728112AbfE3DT7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:59 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9438B2490A;
-        Thu, 30 May 2019 03:20:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B39024818;
+        Thu, 30 May 2019 03:19:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186400;
-        bh=Nw1S3ljB75XOEqY4ile3e0I008mEEAwfaIm2KJFl3dk=;
+        s=default; t=1559186398;
+        bh=Wa7TcyT+ufSchs5dR12KCtbsY23wB+eK/kdXfxO7PYM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p1tJUMe5MkRyqSKa8yPR9Wewt88tpRMiMUieBHzhdAOrwtpHx/Z4N57QUXknpToWX
-         woAZHu1ASiL1uYhPgzbt/C0TRA5vrV0meLcJOhmmp/G2KSqNlzGMgTGxyfXBx2AM98
-         1b1C9b2gCuftwpRqLlK76nCpSzWw6jc2lP46fFgA=
+        b=nl4WkIo3jpJBfxfHYt5fPWWc9TRxlOuYKRg0nsXvq1SjWTtHUkcg72UX/rEpmcNqw
+         9Gr3RCc+GO3aYmooB4TXcr+Kv7FM4vYfGo3dOxd/ssdTUh4qZLCOkc39QThqRXYjTL
+         5rc5FQLT3lICxG92sNk6RFGvM/ZK/B3FRM+3MrMA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>,
+        Helen Koike <helen.koike@collabora.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 183/193] scsi: lpfc: Fix fc4type information for FDMI
-Date:   Wed, 29 May 2019 20:07:17 -0700
-Message-Id: <20190530030512.869029471@linuxfoundation.org>
+Subject: [PATCH 4.14 179/193] media: vimc: stream: fix thread state before sleep
+Date:   Wed, 29 May 2019 20:07:13 -0700
+Message-Id: <20190530030512.532737234@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -61,56 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 32a80c093b524a0682f1c6166c910387b116ffce ]
+[ Upstream commit 2978a505aaa981b279ef359f74ba93d25098e0a0 ]
 
-The driver is reporting support for NVME even when not configured for NVME
-operation.
+The state TASK_UNINTERRUPTIBLE should be set just before
+schedule_timeout() call, so it knows the sleep mode it should enter.
+There is no point in setting TASK_UNINTERRUPTIBLE at the initialization
+of the thread as schedule_timeout() will set the state back to
+TASK_RUNNING.
 
-Fix (and make more readable) when NVME protocol support is indicated.
+This fixes a warning in __might_sleep() call, as it's expecting the
+task to be in TASK_RUNNING state just before changing the state to
+a sleeping state.
 
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reported-by: Hans Verkuil <hverkuil@xs4all.nl>
+Signed-off-by: Helen Koike <helen.koike@collabora.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_ct.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ drivers/media/platform/vimc/vimc-streamer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_ct.c b/drivers/scsi/lpfc/lpfc_ct.c
-index 54664a07d92ec..601a4ee60de85 100644
---- a/drivers/scsi/lpfc/lpfc_ct.c
-+++ b/drivers/scsi/lpfc/lpfc_ct.c
-@@ -2092,10 +2092,11 @@ lpfc_fdmi_port_attr_fc4type(struct lpfc_vport *vport,
- 	ae = (struct lpfc_fdmi_attr_entry *)&ad->AttrValue;
- 	memset(ae, 0, 32);
+diff --git a/drivers/media/platform/vimc/vimc-streamer.c b/drivers/media/platform/vimc/vimc-streamer.c
+index fcc897fb247bc..392754c18046c 100644
+--- a/drivers/media/platform/vimc/vimc-streamer.c
++++ b/drivers/media/platform/vimc/vimc-streamer.c
+@@ -120,7 +120,6 @@ static int vimc_streamer_thread(void *data)
+ 	int i;
  
--	ae->un.AttrTypes[3] = 0x02; /* Type 1 - ELS */
--	ae->un.AttrTypes[2] = 0x01; /* Type 8 - FCP */
--	ae->un.AttrTypes[6] = 0x01; /* Type 40 - NVME */
--	ae->un.AttrTypes[7] = 0x01; /* Type 32 - CT */
-+	ae->un.AttrTypes[3] = 0x02; /* Type 0x1 - ELS */
-+	ae->un.AttrTypes[2] = 0x01; /* Type 0x8 - FCP */
-+	if (vport->nvmei_support || vport->phba->nvmet_support)
-+		ae->un.AttrTypes[6] = 0x01; /* Type 0x28 - NVME */
-+	ae->un.AttrTypes[7] = 0x01; /* Type 0x20 - CT */
- 	size = FOURBYTES + 32;
- 	ad->AttrLen = cpu_to_be16(size);
- 	ad->AttrType = cpu_to_be16(RPRT_SUPPORTED_FC4_TYPES);
-@@ -2395,9 +2396,11 @@ lpfc_fdmi_port_attr_active_fc4type(struct lpfc_vport *vport,
- 	ae = (struct lpfc_fdmi_attr_entry *)&ad->AttrValue;
- 	memset(ae, 0, 32);
+ 	set_freezable();
+-	set_current_state(TASK_UNINTERRUPTIBLE);
  
--	ae->un.AttrTypes[3] = 0x02; /* Type 1 - ELS */
--	ae->un.AttrTypes[2] = 0x01; /* Type 8 - FCP */
--	ae->un.AttrTypes[7] = 0x01; /* Type 32 - CT */
-+	ae->un.AttrTypes[3] = 0x02; /* Type 0x1 - ELS */
-+	ae->un.AttrTypes[2] = 0x01; /* Type 0x8 - FCP */
-+	if (vport->phba->cfg_enable_fc4_type & LPFC_ENABLE_NVME)
-+		ae->un.AttrTypes[6] = 0x1; /* Type 0x28 - NVME */
-+	ae->un.AttrTypes[7] = 0x01; /* Type 0x20 - CT */
- 	size = FOURBYTES + 32;
- 	ad->AttrLen = cpu_to_be16(size);
- 	ad->AttrType = cpu_to_be16(RPRT_ACTIVE_FC4_TYPES);
+ 	for (;;) {
+ 		try_to_freeze();
+@@ -137,6 +136,7 @@ static int vimc_streamer_thread(void *data)
+ 				break;
+ 		}
+ 		//wait for 60hz
++		set_current_state(TASK_UNINTERRUPTIBLE);
+ 		schedule_timeout(HZ / 60);
+ 	}
+ 
 -- 
 2.20.1
 
