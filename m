@@ -2,156 +2,178 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C9FFC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDF5C46460
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2946B2446A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:38:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="mEKjcb4y";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="SgV7m4q8"
+	by mail.kernel.org (Postfix) with ESMTP id 5DC8225E9F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:41:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbfE3RiX (ORCPT
+        id S1726548AbfE3Rl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 13:38:23 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:50566 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725961AbfE3RiW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 13:38:22 -0400
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UHRerI019186;
-        Thu, 30 May 2019 10:37:13 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=dYvSx3n73QE5SPrO9pQBHil9DGJ6/LAvj9gyQnfT7kk=;
- b=mEKjcb4yrYMTXS/uzghFQQjCB5hWBeA+2/LxHOlz/kdXzvZJH1KvFM0go0O+hSE3uJTn
- S7cgAFeaMiPktjiEgAosVIuePMNd8PhgarC+Dq1TJPFXspoQKwrcn1sG4lOgm+JggI3C
- Ssl2zvFyY2vcdisy+UB2mbR4/tTU6uXY/sM= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2stgkcrrby-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 30 May 2019 10:37:13 -0700
-Received: from ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) by
- ash-exhub201.TheFacebook.com (2620:10d:c0a8:83::7) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 30 May 2019 10:37:07 -0700
-Received: from NAM01-SN1-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.173) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 30 May 2019 10:37:07 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dYvSx3n73QE5SPrO9pQBHil9DGJ6/LAvj9gyQnfT7kk=;
- b=SgV7m4q8PkUAEPK0HF2bYXh8RJF600nC7MUtVeFrFsVnu4AmG2D+PkAbM8CyL1/79ADJcuVLjTHACqXG1hs7WSy0dqlxmQMaS8wiVfMyVlLC7MYkcGdLfyvLhOwJyEL3DA+HdxlYu6Qe6pPBrXpLtSjs4I5uDnadAj/LtbiJ2nM=
-Received: from BN6PR15MB1154.namprd15.prod.outlook.com (10.172.208.137) by
- BN6PR15MB1859.namprd15.prod.outlook.com (10.174.115.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.17; Thu, 30 May 2019 17:37:03 +0000
-Received: from BN6PR15MB1154.namprd15.prod.outlook.com
- ([fe80::adc0:9bbf:9292:27bd]) by BN6PR15MB1154.namprd15.prod.outlook.com
- ([fe80::adc0:9bbf:9292:27bd%2]) with mapi id 15.20.1922.021; Thu, 30 May 2019
- 17:37:03 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-CC:     LKML <linux-kernel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>,
-        "namit@vmware.com" <namit@vmware.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "oleg@redhat.com" <oleg@redhat.com>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        "matthew.wilcox@oracle.com" <matthew.wilcox@oracle.com>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        Kernel Team <Kernel-team@fb.com>,
-        "william.kucharski@oracle.com" <william.kucharski@oracle.com>,
-        "chad.mynhier@oracle.com" <chad.mynhier@oracle.com>,
-        "mike.kravetz@oracle.com" <mike.kravetz@oracle.com>
-Subject: Re: [PATCH uprobe, thp 3/4] uprobe: support huge page by only
- splitting the pmd
-Thread-Topic: [PATCH uprobe, thp 3/4] uprobe: support huge page by only
- splitting the pmd
-Thread-Index: AQHVFma7iu6PqkG6zkadRvREvp8axaaDlYUAgABaQgA=
-Date:   Thu, 30 May 2019 17:37:03 +0000
-Message-ID: <2BF5CB81-166B-45E8-908A-CF5EDAEC05D1@fb.com>
-References: <20190529212049.2413886-1-songliubraving@fb.com>
- <20190529212049.2413886-4-songliubraving@fb.com>
- <20190530121400.amti2s5ilrba2wvb@box>
-In-Reply-To: <20190530121400.amti2s5ilrba2wvb@box>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3445.104.11)
-x-originating-ip: [2620:10d:c090:200::3:bc80]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c3e1cac9-7d79-446b-a22e-08d6e5256da6
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN6PR15MB1859;
-x-ms-traffictypediagnostic: BN6PR15MB1859:
-x-microsoft-antispam-prvs: <BN6PR15MB18597C0843BFDE593349F381B3180@BN6PR15MB1859.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 00531FAC2C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(396003)(366004)(136003)(346002)(39860400002)(199004)(189003)(6506007)(53546011)(91956017)(66476007)(66556008)(53936002)(229853002)(6486002)(73956011)(68736007)(66446008)(7416002)(66946007)(186003)(5660300002)(102836004)(25786009)(486006)(33656002)(6512007)(6916009)(64756008)(76176011)(11346002)(256004)(14444005)(6246003)(6436002)(86362001)(54906003)(99286004)(305945005)(82746002)(7736002)(81166006)(4744005)(6116002)(81156014)(71200400001)(36756003)(316002)(476003)(2616005)(2906002)(478600001)(14454004)(57306001)(8936002)(8676002)(50226002)(71190400001)(83716004)(446003)(4326008)(46003)(76116006)(14583001);DIR:OUT;SFP:1102;SCL:1;SRVR:BN6PR15MB1859;H:BN6PR15MB1154.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: JB/7bIZPhvXvN7NNelf8yYrFjwTNfqCZVMvX/jZ2CXFIuOnJhfxWtRi4bykdtd8IyXXIZruJHZsC6UdaTruXc511WdwZ2oSHEQeYWgwdIs7KTGaHTO1ohnGUixqEvnmMg6G2/fJpDyeB/dE11DzR/ld67VJzz3Zi8zg7waqh9WTpCb6ZkLDSS7f3CDv+grS6/DL93llK8v2yNTARu/5SBY6o1ZXBKKrBp7VQZQSamjtfzOavfMRQNYKAUotMrBFbY18WEI84qlmMP913rQltOynaCGWrb0saN37zYouxgqHxRMfEJx/+JzrbLz6H1Qt58+mMRfhBFG3mYl/L66SV22RDReKLAuDFi1qMZKFYiMkKEB7JPZr8lfcweoo2a/qF5/s2vHDsL676PhJrbNDnon2+q+Mf4azgLcWZ/h85TZo=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <8F4D7D9E124AFA45A85763D4C3198CA2@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 30 May 2019 13:41:29 -0400
+Received: from mga04.intel.com ([192.55.52.120]:26068 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726307AbfE3Rl3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 13:41:29 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 10:41:28 -0700
+X-ExtLoop1: 1
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP; 30 May 2019 10:41:28 -0700
+Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
+        by linux.intel.com (Postfix) with ESMTP id A26095804BA;
+        Thu, 30 May 2019 10:41:27 -0700 (PDT)
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v2 1/5] PCI/ATS: Add PRI support for PCIe VF devices
+To:     "Raj, Ashok" <ashok.raj@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        keith.busch@intel.com
+References: <cover.1557162861.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <f773440c0eee2a8d4e5d6e2856717404ac836458.1557162861.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20190529225714.GE28250@google.com>
+ <20190529230426.GB5108@araj-mobl1.jf.intel.com>
+ <20190530131738.GK28250@google.com>
+ <20190530172055.GB18559@araj-mobl1.jf.intel.com>
+From:   sathyanarayanan kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Organization: Intel
+Message-ID: <b531ba10-0776-a5d0-77e4-b0bcaba1b558@linux.intel.com>
+Date:   Thu, 30 May 2019 10:39:35 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: c3e1cac9-7d79-446b-a22e-08d6e5256da6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 May 2019 17:37:03.4130
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: songliubraving@fb.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR15MB1859
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-30_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=901 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905300123
-X-FB-Internal: deliver
+In-Reply-To: <20190530172055.GB18559@araj-mobl1.jf.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+On 5/30/19 10:20 AM, Raj, Ashok wrote:
+> On Thu, May 30, 2019 at 08:17:38AM -0500, Bjorn Helgaas wrote:
+>> On Wed, May 29, 2019 at 04:04:27PM -0700, Raj, Ashok wrote:
+>>> On Wed, May 29, 2019 at 05:57:14PM -0500, Bjorn Helgaas wrote:
+>>>> On Mon, May 06, 2019 at 10:20:03AM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+>>>>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>>>>
+>>>>> When IOMMU tries to enable PRI for VF device in
+>>>>> iommu_enable_dev_iotlb(), it always fails because PRI support for PCIe
+>>>>> VF device is currently broken in PCIE driver. Current implementation
+>>>>> expects the given PCIe device (PF & VF) to implement PRI capability
+>>>>> before enabling the PRI support. But this assumption is incorrect. As
+>>>>> per PCIe spec r4.0, sec 9.3.7.11, all VFs associated with PF can only
+>>>>> use the Page Request Interface (PRI) of the PF and not implement it.
+>>>>> Hence we need to create exception for handling the PRI support for PCIe
+>>>>> VF device.
+>>>>>
+>>>>> Since PRI is shared between PF/VF devices, following rules should apply.
+>>>>>
+>>>>> 1. Enable PRI in VF only if its already enabled in PF.
+>>>>> 2. When enabling/disabling PRI for VF, instead of configuring the
+>>>>> registers just increase/decrease the usage count (pri_ref_cnt) of PF.
+>>>>> 3. Disable PRI in PF only if pr_ref_cnt is zero.
+>>>> s/pr_ref_cnt/pri_ref_cnt/
+>>>>
+>>>>> Cc: Ashok Raj <ashok.raj@intel.com>
+>>>>> Cc: Keith Busch <keith.busch@intel.com>
+>>>>> Suggested-by: Ashok Raj <ashok.raj@intel.com>
+>>>>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>>>> ---
+>>>>>   drivers/pci/ats.c   | 53 +++++++++++++++++++++++++++++++++++++++++++--
+>>>>>   include/linux/pci.h |  1 +
+>>>>>   2 files changed, 52 insertions(+), 2 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+>>>>> index 97c08146534a..5582e5d83a3f 100644
+>>>>> --- a/drivers/pci/ats.c
+>>>>> +++ b/drivers/pci/ats.c
+>>>>> @@ -181,12 +181,39 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
+>>>>>   	u16 control, status;
+>>>>>   	u32 max_requests;
+>>>>>   	int pos;
+>>>>> +	struct pci_dev *pf;
+>>>>>   
+>>>>>   	if (WARN_ON(pdev->pri_enabled))
+>>>>>   		return -EBUSY;
+>>>>>   
+>>>>>   	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
+>>>>> -	if (!pos)
+>>>>> +
+>>>>> +	if (pdev->is_virtfn) {
+>>>>> +		/*
+>>>>> +		 * Per PCIe r4.0, sec 9.3.7.11, VF must not implement PRI
+>>>>> +		 * Capability.
+>>>>> +		 */
+>>>>> +		if (pos) {
+>>>>> +			dev_err(&pdev->dev, "VF must not implement PRI");
+>>>>> +			return -EINVAL;
+>>>>> +		}
+>>>> This seems gratuitous.  It finds implementation errors, but since we
+>>>> correctly use the PF here anyway, it doesn't *need* to prevent PRI on
+>>>> the VF from working.
+>>>>
+>>>> I think you should just have:
+>>>>
+>>>>    if (pdev->is_virtfn) {
+>>>>      pf = pci_physfn(pdev);
+>>>>      if (!pf->pri_enabled)
+>>>>        return -EINVAL;
+>>> This would be incorrect. Since if we never did any bind_mm to the PF
+>>> PRI would not have been enabled. Currently this is done in the IOMMU
+>>> driver, and not in the device driver.
+>> This is functionally the same as the original patch, only omitting the
+>> "VF must not implement PRI" check.
+>>
+>>> I suppose we should enable PF capability if its not enabled. Same
+>>> comment would be applicable for PASID as well.
+>> Operating on a device other than the one the driver owns opens the
+>> issue of mutual exclusion and races, so would require careful
+>> scrutiny.  Are PRI/PASID things that could be *always* enabled for the
+>> PF at enumeration-time, or do we have to wait until a driver claims
+>> the VF?  If the latter, are there coordination issues between drivers
+>> of different VFs?
+> I suppose that's a reasonably good alternative. You mean we could
+> do this when VF's are being created? Otherwise we can do this as its
+> done today, on demand for all normal PF's.
 
-> On May 30, 2019, at 5:14 AM, Kirill A. Shutemov <kirill@shutemov.name> wr=
-ote:
->=20
-> On Wed, May 29, 2019 at 02:20:48PM -0700, Song Liu wrote:
->> Instead of splitting the compound page with FOLL_SPLIT, this patch allow=
-s
->> uprobe to only split pmd for huge pages.
->>=20
->> A helper function mm_address_trans_huge(mm, address) was introduced to
->> test whether the address in mm is pointing to THP.
->=20
-> Maybe it would be cleaner to have FOLL_SPLIT_PMD which would strip
-> trans_huge PMD if any and then set pte using get_locked_pte()?
+If we are going to enable it with default features then its doable. But 
+for cases with custom requirements, it will become complicated. For 
+example, in following code, IOMMU sets PRI Outstanding Page Allocation 
+quota as 32 or 1 based on errata info. So if we just enable it by 
+default then we may not be able to take these requirements into 
+consideration.
 
-FOLL_SPLIT_PMD sounds like a great idea! Let me try it.=20
+2051 static int pdev_iommuv2_enable(struct pci_dev *pdev)
+2052 {
+2053         bool reset_enable;
+2054         int reqs, ret;
+2055
+2056         /* FIXME: Hardcode number of outstanding requests for now */
+2057         reqs = 32;
+2058         if (pdev_pri_erratum(pdev, AMD_PRI_DEV_ERRATUM_LIMIT_REQ_ONE))
+2059                 reqs = 1;
+2060         reset_enable = pdev_pri_erratum(pdev, 
+AMD_PRI_DEV_ERRATUM_ENABLE_RESET);
 
-Thanks,
-Song
+2073         ret = pci_enable_pri(pdev, reqs);
 
->=20
-> This way you'll not need any changes in split_huge_pmd() path. Clearing
-> PMD will be fine.
->=20
-> --=20
-> Kirill A. Shutemov
+
+>
+>
+> Cheers,
+> Ashok
+>
+-- 
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
 
