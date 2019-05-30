@@ -7,49 +7,54 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4779CC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A800C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 128CF2449B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D35832449B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:28:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186885;
-	bh=R3+18SrnbkXmtV7km6lH+5wCO1acv+pLtnh84LYcPA8=;
+	s=default; t=1559186889;
+	bh=7HI6N91vbKXJrX1wN4OS7tsYTq/hOQxF0ZkTbp8oJ14=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wJz9KRgZeYvx57XI3Fh27pqQRS45jb3Q2V6ZbtLtPUZRlveZSfmXdYZ3zEzt+YPgq
-	 GYYMpZi13it9Z47XyZeh183muqZlpyjOsHgOaf8irLx1DhilLADcRGD9OBOMs3gBtl
-	 LVT7qhSVF9aXVUimoHbNXRfELkDrtiaoZYWWDvNE=
+	b=TwRWk4QzBasiTnVmwr0dOsM1qNQsEG8QH8bSH5DO1LZmk41+4LH9H/uOcFW4jSgae
+	 raTM1gxZL/Lizro+dFPoA5e8XTg5+T5Y3ZHRmG8a2MDeLt8xZYSm9cS8t0irVcYhp7
+	 GEbNgUq9Jp/MMTUd//tjBZ5ixg2VJS193G3aJlac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388118AbfE3D2E (ORCPT
+        id S2387456AbfE3D2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:28:04 -0400
+        Wed, 29 May 2019 23:28:08 -0400
 Received: from mail.kernel.org ([198.145.29.99]:56714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732024AbfE3DTs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:48 -0400
+        id S1731275AbfE3DTu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:50 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CD9F24849;
-        Thu, 30 May 2019 03:19:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 797322486B;
+        Thu, 30 May 2019 03:19:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186387;
-        bh=R3+18SrnbkXmtV7km6lH+5wCO1acv+pLtnh84LYcPA8=;
+        s=default; t=1559186389;
+        bh=7HI6N91vbKXJrX1wN4OS7tsYTq/hOQxF0ZkTbp8oJ14=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NKgQ6ODtHVRaO1TRqBxyXo2Q2lMZvD1M139inhY0nr7sLkMcduLrIe+u+lRlF1gAc
-         i/EHZlfLEboq3AT2LYglHMBlNpQCKRqau4xMKkn+ZIkarxQRwEdcWGNXhw3/3NHCyZ
-         1l5M4ZJoVn4NiY0dQJFe/Hz0byLuMYKV6fmGgCGA=
+        b=Oxxtk6B1szocWsO+llYI+z7GZLsG0ddIgHMCoskURcKthUuDARFF7Eq0vbfXGLGwp
+         LIOUe8NS0iwbwjPjICJD8NfWp/c91FZlLI2JQrEaZLEnficQRpHtI03wgTgCme/g7H
+         qeaMvSjYqhJWyZozT4oVVJQCjfpBpGVpStP+EPLE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
-        Gal Pressman <galpress@amazon.com>,
-        Lijun Ou <ouliun@huawei.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 156/193] RDMA/hns: Fix bad endianess of port_pd variable
-Date:   Wed, 29 May 2019 20:06:50 -0700
-Message-Id: <20190530030509.899180539@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Timur Tabi <timur@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 159/193] ASoC: fsl_utils: fix a leaked reference by adding missing of_node_put
+Date:   Wed, 29 May 2019 20:06:53 -0700
+Message-Id: <20190530030510.270374548@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -62,39 +67,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6734b2973565e36659e97e12ab0d0faf1d9f3fbe ]
+[ Upstream commit c705247136a523488eac806bd357c3e5d79a7acd ]
 
-port_pd is treated as le32 in declaration and read, fix assignment to be
-in le32 too. This change fixes the following compilation warnings.
+The call to of_parse_phandle returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-drivers/infiniband/hw/hns/hns_roce_ah.c:67:24: warning: incorrect type
-in assignment (different base types)
-drivers/infiniband/hw/hns/hns_roce_ah.c:67:24: expected restricted __le32 [usertype] port_pd
-drivers/infiniband/hw/hns/hns_roce_ah.c:67:24: got restricted __be32 [usertype]
+Detected by coccinelle with the following warnings:
+./sound/soc/fsl/fsl_utils.c:74:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 38, but without a corresponding     object release within this function.
 
-Fixes: 9a4435375cd1 ("IB/hns: Add driver files for hns RoCE driver")
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Reviewed-by: Gal Pressman <galpress@amazon.com>
-Reviewed-by: Lijun Ou <ouliun@huawei.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Timur Tabi <timur@kernel.org>
+Cc: Nicolin Chen <nicoleotsuka@gmail.com>
+Cc: Xiubo Li <Xiubo.Lee@gmail.com>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: alsa-devel@alsa-project.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hns/hns_roce_ah.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/fsl/fsl_utils.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_ah.c b/drivers/infiniband/hw/hns/hns_roce_ah.c
-index d545302b8ef8c..0cdd4492811bb 100644
---- a/drivers/infiniband/hw/hns/hns_roce_ah.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_ah.c
-@@ -91,7 +91,7 @@ struct ib_ah *hns_roce_create_ah(struct ib_pd *ibpd,
- 			     HNS_ROCE_VLAN_SL_BIT_MASK) <<
- 			     HNS_ROCE_VLAN_SL_SHIFT;
- 
--	ah->av.port_pd = cpu_to_be32(to_hr_pd(ibpd)->pdn |
-+	ah->av.port_pd = cpu_to_le32(to_hr_pd(ibpd)->pdn |
- 				     (rdma_ah_get_port_num(ah_attr) <<
- 				     HNS_ROCE_PORT_NUM_SHIFT));
- 	ah->av.gid_index = grh->sgid_index;
+diff --git a/sound/soc/fsl/fsl_utils.c b/sound/soc/fsl/fsl_utils.c
+index b9e42b503a377..4f8bdb7650e84 100644
+--- a/sound/soc/fsl/fsl_utils.c
++++ b/sound/soc/fsl/fsl_utils.c
+@@ -75,6 +75,7 @@ int fsl_asoc_get_dma_channel(struct device_node *ssi_np,
+ 	iprop = of_get_property(dma_np, "cell-index", NULL);
+ 	if (!iprop) {
+ 		of_node_put(dma_np);
++		of_node_put(dma_channel_np);
+ 		return -EINVAL;
+ 	}
+ 	*dma_id = be32_to_cpup(iprop);
 -- 
 2.20.1
 
