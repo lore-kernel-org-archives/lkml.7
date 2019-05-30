@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6EDC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82084C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8CF1259D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58E29259D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:41:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191312;
-	bh=MU83gl83aJRinqmOR9ybTmHXWOWHcYU5xKkUMbZTKus=;
+	s=default; t=1559191314;
+	bh=zcYXCLDHVhGC+NS8oueAupsBWd0nWcs0IvU5yFJNkIs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EKEAueTo6KEdCmjfehhldAjfESCDxuV2ER3WRIYbBczWd6RpY1dNFMSppdGYZbcdH
-	 A9yZ8kfGy362b/Zz0UaSvw3o4y5sCD2XMVS1WHoOJ52VnxX1/3C9kvoX+mfhbHjlru
-	 XUgRm0aj81Bk9y1ZfzjT4XnNJUn5TumoWvtqwUxE=
+	b=LQ9kLKfza0Eu9tMtubVj9aVmXbpkWuNVXm/w8yYD2kXQL+zG9ezEPcF/bXLWwjdhl
+	 OXmCaoNXlgD7cewZ8BYw+U7kMoyXlQ3eAbmZtd0DyG+I8leYOyBzP/8b60z80l8gPP
+	 Nytyjs9rRW3x67m3RrOTyV5/4amTRJyxezPtHQgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730828AbfE3Elv (ORCPT
+        id S2388709AbfE3Elx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:41:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54638 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:41:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728982AbfE3DMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:23 -0400
+        id S1728980AbfE3DMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:12:22 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71C61218B6;
-        Thu, 30 May 2019 03:12:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA7A3244D4;
+        Thu, 30 May 2019 03:12:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559185942;
-        bh=MU83gl83aJRinqmOR9ybTmHXWOWHcYU5xKkUMbZTKus=;
+        bh=zcYXCLDHVhGC+NS8oueAupsBWd0nWcs0IvU5yFJNkIs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JrFGBKmtKzrFyGMWoUlwGqyFmPQjE/+5tZjTtmLC76WLsxYHHInzFLxwuFRQVzlVc
-         rpFfbK8SzTmZyPEkdxiSl4nmvC9cSgtlAfL7qnMiHRjpK5Gqj40iAjp0+VXnNcJlTQ
-         833Jc7jmIgvujDH+SESc9ko/XK1+LhwU47PO379Y=
+        b=xbg2ozpY7Q7KAh4lmlpCZ9yUjqXOz5S6fDkyEZ1cQPlLvSZsGvtraZD5ibWEvvRk+
+         C4AM/xyBdBofSqdWTnvitKlZ6Oci4ylzJAhw2DTlPJYHSrCx3QMYYWBqEQH84lF+F7
+         N3JknmOv5idESqLbqcZs9dEZZSacXmpAEtDAZvvc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Francis <David.Francis@amd.com>,
-        Krunoslav Kovac <Krunoslav.Kovac@amd.com>,
+        stable@vger.kernel.org, Murton Liu <murton.liu@amd.com>,
+        Aric Cyr <Aric.Cyr@amd.com>,
         Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Sivapiriyan Kumarasamy <Sivapiriyan.Kumarasamy@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 349/405] drm/amd/display: Re-add custom degamma support
-Date:   Wed, 29 May 2019 20:05:47 -0700
-Message-Id: <20190530030558.330911326@linuxfoundation.org>
+Subject: [PATCH 5.1 348/405] drm/amd/display: Fix Divide by 0 in memory calculations
+Date:   Wed, 29 May 2019 20:05:46 -0700
+Message-Id: <20190530030558.287948873@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -62,40 +63,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f91813992c343272813e707343b50f8d06383659 ]
+[ Upstream commit 59979bf8be1784ebfc44215031c6c88ca22ae65d ]
 
-[Why]
-The dc_gamma_type CUSTOM_GAMMA is used to represent degamma
-mappings passed in by drm. This type of gamma must be interpolated
-into a transfer function by apply_1d_lut.  The line in
-mod_color_calculate_degamma_params that handled this case
-was erroneously removed.
+Check if we get any values equal to 0, and set to 1 if so.
 
-[How]
-For CUSTOM_GAMMA degamma, calculate the lut as before.
-
-Signed-off-by: David Francis <David.Francis@amd.com>
-Reviewed-by: Krunoslav Kovac <Krunoslav.Kovac@amd.com>
+Signed-off-by: Murton Liu <murton.liu@amd.com>
+Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
 Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Acked-by: Sivapiriyan Kumarasamy <Sivapiriyan.Kumarasamy@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/modules/color/color_gamma.c | 2 ++
- 1 file changed, 2 insertions(+)
+ .../drm/amd/display/dc/dcn10/dcn10_dpp_dscl.c | 20 ++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/modules/color/color_gamma.c b/drivers/gpu/drm/amd/display/modules/color/color_gamma.c
-index 0fbc8fbc35416..a1055413bade6 100644
---- a/drivers/gpu/drm/amd/display/modules/color/color_gamma.c
-+++ b/drivers/gpu/drm/amd/display/modules/color/color_gamma.c
-@@ -1854,6 +1854,8 @@ bool mod_color_calculate_degamma_params(struct dc_transfer_func *input_tf,
- 			coordinates_x, axis_x, curve,
- 			MAX_HW_POINTS, tf_pts,
- 			mapUserRamp && ramp && ramp->type == GAMMA_RGB_256);
-+	if (ramp->type == GAMMA_CUSTOM)
-+		apply_lut_1d(ramp, MAX_HW_POINTS, tf_pts);
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_dpp_dscl.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_dpp_dscl.c
+index c7642e7482970..ce21a290bf3e4 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_dpp_dscl.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_dpp_dscl.c
+@@ -406,15 +406,25 @@ void dpp1_dscl_calc_lb_num_partitions(
+ 		int *num_part_y,
+ 		int *num_part_c)
+ {
++	int lb_memory_size, lb_memory_size_c, lb_memory_size_a, num_partitions_a,
++	lb_bpc, memory_line_size_y, memory_line_size_c, memory_line_size_a;
++
+ 	int line_size = scl_data->viewport.width < scl_data->recout.width ?
+ 			scl_data->viewport.width : scl_data->recout.width;
+ 	int line_size_c = scl_data->viewport_c.width < scl_data->recout.width ?
+ 			scl_data->viewport_c.width : scl_data->recout.width;
+-	int lb_bpc = dpp1_dscl_get_lb_depth_bpc(scl_data->lb_params.depth);
+-	int memory_line_size_y = (line_size * lb_bpc + 71) / 72; /* +71 to ceil */
+-	int memory_line_size_c = (line_size_c * lb_bpc + 71) / 72; /* +71 to ceil */
+-	int memory_line_size_a = (line_size + 5) / 6; /* +5 to ceil */
+-	int lb_memory_size, lb_memory_size_c, lb_memory_size_a, num_partitions_a;
++
++	if (line_size == 0)
++		line_size = 1;
++
++	if (line_size_c == 0)
++		line_size_c = 1;
++
++
++	lb_bpc = dpp1_dscl_get_lb_depth_bpc(scl_data->lb_params.depth);
++	memory_line_size_y = (line_size * lb_bpc + 71) / 72; /* +71 to ceil */
++	memory_line_size_c = (line_size_c * lb_bpc + 71) / 72; /* +71 to ceil */
++	memory_line_size_a = (line_size + 5) / 6; /* +5 to ceil */
  
- 	ret = true;
- 
+ 	if (lb_config == LB_MEMORY_CONFIG_1) {
+ 		lb_memory_size = 816;
 -- 
 2.20.1
 
