@@ -2,171 +2,185 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D217EC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AED57C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:08:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5B4B25701
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:08:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A52325703
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:08:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="me7/1+DH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FJU2ZnF7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbfE3IIA (ORCPT
+        id S1728084AbfE3IIh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 04:08:00 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:59267 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727448AbfE3IH7 (ORCPT
+        Thu, 30 May 2019 04:08:37 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:38255 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727403AbfE3IIh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 04:07:59 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4U87fWN2903615
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 30 May 2019 01:07:41 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4U87fWN2903615
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559203661;
-        bh=QWixjzdmohAYpdAUcNAkd2WSNsK3YJGf6dEXKDiw0T0=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=me7/1+DHTRwYHXcZfPHVSCB91Ng1+jUJZ3ShY867l1dqXxumlmlQeCYaoCRVlZfMH
-         XwxmkdjB2c8627Q2f3oWN9uYqiE98ngd9Rq4w7OhbDOUdLbSVbLohfJYzlzkhZFDw5
-         lnPzv4G/5BOZOsjaXWsjkytdaFTRoRvur+NS3x35OB/9i0VNRaFWxzsg6Hjnvf7TxM
-         lwdrKXLzfMSFLBU/e+IBtRNaFkRLzfQKSkwd9KHbxb5aNRKC/oNbwPkzJpWMNELrrR
-         G2kF9r9WJHHsZHsIOrsrpNPVwzG1K488Q5Id5/yxI8nedr/FccG5pQflmkkq0iv0TO
-         S5qj3T4Cloo+A==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4U87eUt2903612;
-        Thu, 30 May 2019 01:07:40 -0700
-Date:   Thu, 30 May 2019 01:07:40 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Namhyung Kim <tipbot@zytor.com>
-Message-ID: <tip-7cb10a08df98e643b87d4bc8422e50e9c43b5c60@git.kernel.org>
-Cc:     mingo@kernel.org, hbathini@linux.vnet.ibm.com,
-        linux-kernel@vger.kernel.org, namhyung@kernel.org, acme@redhat.com,
-        jolsa@redhat.com, kjlx@templeofstupid.com, hpa@zytor.com,
-        tglx@linutronix.de
-Reply-To: hpa@zytor.com, tglx@linutronix.de, kjlx@templeofstupid.com,
-          jolsa@redhat.com, acme@redhat.com, namhyung@kernel.org,
-          hbathini@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
-          mingo@kernel.org
-In-Reply-To: <20190527061149.168640-1-namhyung@kernel.org>
-References: <20190527061149.168640-1-namhyung@kernel.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf tools: Remove const from thread read accessors
-Git-Commit-ID: 7cb10a08df98e643b87d4bc8422e50e9c43b5c60
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 30 May 2019 04:08:37 -0400
+Received: by mail-it1-f196.google.com with SMTP id i63so3706776ita.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 01:08:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uhATQPJSNTCMowVFk8RS0eyAucGgi+lBjsF7DlqvU5Y=;
+        b=FJU2ZnF7rvCzqS2ruJWUcu1tibbF9MfXHIVsy5ZkhxzKE2PduyDwe0nqDS886Ruo4Q
+         0Xf348dXwhUflq4MaHxWgLJbNeov2ZUxnfBaB2N6IgR+kjGOUA5+T/8Ne3LvwtSK4xO9
+         gcj+OQl5IYSKWxU/m0dzEsLX2I3HolzCkGoibrn0qRmBub9NR1nC0B3NiJ+eMTwjMm2c
+         n8dhAWfVS9vKjnSbhKC+0U35ZpHpl+Js046GLpyRBQcxBOwQR15FgYgx6bxUbTCRNs7k
+         YTVUgWunpGYv445IvEgxE0QFpXA9N2x92xuARuDMWjNxwhP2dQCw6Bz03FRUskJDSfSo
+         ge6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uhATQPJSNTCMowVFk8RS0eyAucGgi+lBjsF7DlqvU5Y=;
+        b=trxBkQzpQQP2mUSzTz7Nw+2MT38Qlc8VOcZrsyI8U/TpdZUo5PW67gDOpDCOtOq0hX
+         hFVK/+Pqb6JAM5fP2osaEe+lQvrHZGnx1q3ug+IqrgDF6u38Ilbu6a11SfzlNBreXVwJ
+         uQwJta3TeCB2B4qeBEUv+VoJyT2AcqrPRMOppzw0XVd/jMPfs2vL9uxFaqR6UtuYmGm4
+         zk0B0uM7MomCTrufKl8olFFaHr7PQtBJd2JFLY1x0DGGAV/v89bSM5wUzCAK2QTenR9u
+         Ntlhyx/FoRrK+o4VFx/GlPo/XY67syZ3VMVnDSIj4ALcLFC6ZtQFv12pCJAIAFKa6ol5
+         ljYQ==
+X-Gm-Message-State: APjAAAWRRAWpG6dRRCC5prrKPLaE666P8lCXz+mJfuRvLr+Yh1zQn2hc
+        J+Rn+VQ9ERK9MV4m+ao2WgFrvMQNmDOGwnomlynLNA==
+X-Google-Smtp-Source: APXvYqy4+Xt68oesIIciXkhTP1lixxkoR9l+Brf6z52pkjk12vcRFS7olRf0M3doNsE9oTywISw01h9vnhNupOD11nQ=
+X-Received: by 2002:a24:910b:: with SMTP id i11mr2065671ite.76.1559203715644;
+ Thu, 30 May 2019 01:08:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+References: <1559149856-7938-1-git-send-email-iuliana.prodan@nxp.com>
+ <20190529202728.GA35103@gmail.com> <20190530053421.keesqb54yu5w7hgk@gondor.apana.org.au>
+ <VI1PR0402MB3485ADA3C4410D61191582A498180@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR0402MB3485ADA3C4410D61191582A498180@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Thu, 30 May 2019 10:08:22 +0200
+Message-ID: <CAKv+Gu84HndAnkn7DU=ykjCokw_+bAHEcF0Rm12-hnXhVy2u_Q@mail.gmail.com>
+Subject: Re: [PATCH] crypto: gcm - fix cacheline sharing
+To:     Horia Geanta <horia.geanta@nxp.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  7cb10a08df98e643b87d4bc8422e50e9c43b5c60
-Gitweb:     https://git.kernel.org/tip/7cb10a08df98e643b87d4bc8422e50e9c43b5c60
-Author:     Namhyung Kim <namhyung@kernel.org>
-AuthorDate: Mon, 27 May 2019 15:11:49 +0900
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Tue, 28 May 2019 18:37:43 -0300
+On Thu, 30 May 2019 at 09:46, Horia Geanta <horia.geanta@nxp.com> wrote:
+>
+> On 5/30/2019 8:34 AM, Herbert Xu wrote:
+> > On Wed, May 29, 2019 at 01:27:28PM -0700, Eric Biggers wrote:
+> >>
+> >> So what about the other places that also pass an IV located next to the data,
+> >> like crypto/ccm.c and crypto/adiantum.c?  If we're actually going to make this a
+> Fix for ccm is WIP.
+> We were not aware of adiantum since our crypto engine does not accelerate it.
+>
+> >> new API requirement, then we need to add a debugging option that makes the API
+> >> detect this violation so that the other places can be fixed too.
+> >>
+> IMO this is not a new crypto API requirement.
+> crypto API and its users must follow DMA API rules, besides crypto-specific ones.
+>
+> In this particular case, crypto/gcm.c is both an implementation and a crypto API
+> user, since it uses underneath ctr(aes) (and ghash).
+> Currently generic gcm implementation is breaking DMA API, since part of the dst
+> buffer (auth_tag) provided to ctr(aes) is sharing a cache line with some other
+> data structure (iv).
+>
+> The DMA API rule is mentioned in Documentation/DMA-API.txt
+>
+> .. warning::
+>
+>         Memory coherency operates at a granularity called the cache
+>         line width.  In order for memory mapped by this API to operate
+>         correctly, the mapped region must begin exactly on a cache line
+>         boundary and end exactly on one (to prevent two separately mapped
+>         regions from sharing a single cache line).
+>
+>
 
-perf tools: Remove const from thread read accessors
+This is overly restrictive, and not in line with reality. The whole
+networking stack operates on buffers shifted by 2 bytes if
+NET_IP_ALIGN is left at its default value of 2. There are numerous
+examples in other places as well.
 
-The namespaces and comm fields of a thread are protected by rwsem and
-require write access for it.  So it ended up using a cast to remove
-the const qualifier.  Let's get rid of the const then.
+Given that kmalloc() will take the cacheline granularity into account
+if necessary, the only way this issue can hit is when a single kmalloc
+buffer is written to by two different masters.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Suggested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Hari Bathini <hbathini@linux.vnet.ibm.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Krister Johansen <kjlx@templeofstupid.com>
-Link: http://lkml.kernel.org/r/20190527061149.168640-1-namhyung@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/hist.c   |  2 +-
- tools/perf/util/thread.c | 12 ++++++------
- tools/perf/util/thread.h |  4 ++--
- 3 files changed, 9 insertions(+), 9 deletions(-)
+> >> Also, doing a kmalloc() per requset is inefficient and very error-prone.  In
+> >> fact there are at least 3 bugs here: (1) not checking the return value, (2)
+> >> incorrectly using GFP_KERNEL when it may be atomic context, and (3) not always
+> For (2) I assume this means checking for CRYPTO_TFM_REQ_MAY_SLEEP flag.
+>
+> >> freeing the memory.  Why not use cacheline-aligned memory within the request
+> >> context, so that a separate kmalloc() isn't needed?
+> >>
+> If you check previous discussion referenced in the commit message:
+> Link:
+> https://lore.kernel.org/linux-crypto/20190208114459.5nixe76xmmkhur75@gondor.apana.org.au/
+>
+> or (probably easier) look at the full thread:
+> https://patchwork.kernel.org/patch/10789697/
+>
+> you'll see that at some point I proposed changing crypto_gcm_req_priv_ctx struct
+> as follows:
+> -       u8 auth_tag[16];
+> +       u8 auth_tag[16] ____cacheline_aligned;
+>
+> Ard suggested it would be better to kmalloc the auth_tag.
+>
+> I am open to changing the fix, however I don't think the problem is in the
+> implementation (caam driver).
+>
 
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 7ace7a10054d..fb3271fd420c 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -2561,7 +2561,7 @@ int __hists__scnprintf_title(struct hists *hists, char *bf, size_t size, bool sh
- 	char unit;
- 	int printed;
- 	const struct dso *dso = hists->dso_filter;
--	const struct thread *thread = hists->thread_filter;
-+	struct thread *thread = hists->thread_filter;
- 	int socket_id = hists->socket_filter;
- 	unsigned long nr_samples = hists->stats.nr_events[PERF_RECORD_SAMPLE];
- 	u64 nr_events = hists->stats.total_period;
-diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-index b413ba5b9835..aab7807d445f 100644
---- a/tools/perf/util/thread.c
-+++ b/tools/perf/util/thread.c
-@@ -141,13 +141,13 @@ static struct namespaces *__thread__namespaces(const struct thread *thread)
- 	return list_first_entry(&thread->namespaces_list, struct namespaces, list);
- }
- 
--struct namespaces *thread__namespaces(const struct thread *thread)
-+struct namespaces *thread__namespaces(struct thread *thread)
- {
- 	struct namespaces *ns;
- 
--	down_read((struct rw_semaphore *)&thread->namespaces_lock);
-+	down_read(&thread->namespaces_lock);
- 	ns = __thread__namespaces(thread);
--	up_read((struct rw_semaphore *)&thread->namespaces_lock);
-+	up_read(&thread->namespaces_lock);
- 
- 	return ns;
- }
-@@ -271,13 +271,13 @@ static const char *__thread__comm_str(const struct thread *thread)
- 	return comm__str(comm);
- }
- 
--const char *thread__comm_str(const struct thread *thread)
-+const char *thread__comm_str(struct thread *thread)
- {
- 	const char *str;
- 
--	down_read((struct rw_semaphore *)&thread->comm_lock);
-+	down_read(&thread->comm_lock);
- 	str = __thread__comm_str(thread);
--	up_read((struct rw_semaphore *)&thread->comm_lock);
-+	up_read(&thread->comm_lock);
- 
- 	return str;
- }
-diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
-index cf8375c017a0..e97ef6977eb9 100644
---- a/tools/perf/util/thread.h
-+++ b/tools/perf/util/thread.h
-@@ -76,7 +76,7 @@ static inline void thread__exited(struct thread *thread)
- 	thread->dead = true;
- }
- 
--struct namespaces *thread__namespaces(const struct thread *thread);
-+struct namespaces *thread__namespaces(struct thread *thread);
- int thread__set_namespaces(struct thread *thread, u64 timestamp,
- 			   struct namespaces_event *event);
- 
-@@ -93,7 +93,7 @@ int thread__set_comm_from_proc(struct thread *thread);
- int thread__comm_len(struct thread *thread);
- struct comm *thread__comm(const struct thread *thread);
- struct comm *thread__exec_comm(const struct thread *thread);
--const char *thread__comm_str(const struct thread *thread);
-+const char *thread__comm_str(struct thread *thread);
- int thread__insert_map(struct thread *thread, struct map *map);
- int thread__fork(struct thread *thread, struct thread *parent, u64 timestamp, bool do_maps_clone);
- size_t thread__fprintf(struct thread *thread, FILE *fp);
+I remember that. But in the discussion that followed, I did ask about
+accessing the memory while the buffer is mapped for DMA, and I
+misunderstood the response. The scatterwalk_map_and_copy writes to the
+request while it is mapped for DMA.
+
+> >> Also, did you consider whether there's any way to make the crypto API handle
+> >> this automatically, so that all the individual users don't have to?
+> That would probably work, but I guess it would come up with a big overhead.
+>
+> I am thinking crypto API would have to check each buffer used by src, dst
+> scatterlists is correctly aligned - starting and ending on cache line boundaries.
+>
+> >
+> > You're absolutely right Eric.
+> >
+> > What I suggested in the old thread is non-sense.  While you can
+> > force GCM to provide the right pointers you cannot force all the
+> > other crypto API users to do this.
+> >
+> Whose problem is that crypto API users don't follow the DMA API requirements?
+>
+> > It would appear that Ard's latest suggestion should fix the problem
+> > and is the correct approach.
+> >
+> I disagree.
+> We shouldn't force crypto implementations to be aware of such inconsistencies in
+> the I/O data buffers (pointed to by src/dst scatterlists) that are supposed to
+> be safely DMA mapped.
+>
+
+I'm on the fence here. On the one hand, it is slightly dodgy for the
+GCM driver to pass a scatterlist referencing a buffer that shares a
+cacheline with another buffer passed by an ordinary pointer, and for
+which an explicit requirement exists that the callee should update it
+before returning.
+
+On the other hand, I think it is reasonable to require drivers not to
+perform such updates while the scatterlist is mapped for DMA, since
+fixing it in the callers puts a disproportionate burden on them, given
+that non-coherent DMA only represents a small minority of use cases.
