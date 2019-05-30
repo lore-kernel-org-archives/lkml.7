@@ -2,553 +2,96 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C14C1C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3264C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F5B1253DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D670253D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:20:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727657AbfE3JUF (ORCPT
+        id S1727665AbfE3JUd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 05:20:05 -0400
-Received: from mx.socionext.com ([202.248.49.38]:34663 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727557AbfE3JUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 05:20:03 -0400
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 30 May 2019 18:20:00 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 9F85860629;
-        Thu, 30 May 2019 18:20:00 +0900 (JST)
-Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Thu, 30 May 2019 18:20:00 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by iyokan.css.socionext.com (Postfix) with ESMTP id 3FD4D40370;
-        Thu, 30 May 2019 18:20:00 +0900 (JST)
-Received: from user-VB.e01.socionext.com (unknown [10.213.119.151])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id 26C80120C10;
-        Thu, 30 May 2019 18:20:00 +0900 (JST)
-From:   Takao Orito <orito.takao@socionext.com>
-To:     ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, masami.hiramatsu@linaro.org,
-        jaswinder.singh@linaro.org, sugaya.taichi@socionext.com,
-        kasai.kazuhiro@socionext.com, kanematsu.shinji@socionext.com,
-        orito.takao@socionext.com
-Subject: [PATCH v2 2/2] mmc: sdhci-milbeaut: add Milbeaut SD controller driver
-Date:   Thu, 30 May 2019 18:22:38 +0900
-Message-Id: <1559208158-468-1-git-send-email-orito.takao@socionext.com>
-X-Mailer: git-send-email 1.9.1
+        Thu, 30 May 2019 05:20:33 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:54873 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726902AbfE3JUd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 05:20:33 -0400
+X-UUID: 9149feeb84aa422f92ccb81a361bb777-20190530
+X-UUID: 9149feeb84aa422f92ccb81a361bb777-20190530
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <biao.huang@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1333165472; Thu, 30 May 2019 17:20:24 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 30 May 2019 17:20:22 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 30 May 2019 17:20:21 +0800
+From:   Biao Huang <biao.huang@mediatek.com>
+To:     <davem@davemloft.net>, Jose Abreu <joabreu@synopsys.com>
+CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <netdev@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <yt.shen@mediatek.com>,
+        <biao.huang@mediatek.com>, <jianguo.zhang@mediatek.com>,
+        <boon.leong.ong@intel.com>, <andrew@lunn.ch>
+Subject: [v6, PATCH] add some features in stmmac
+Date:   Thu, 30 May 2019 17:20:18 +0800
+Message-ID: <1559208019-2778-1-git-send-email-biao.huang@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+MIME-Version: 1.0
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 00D74C4A67192BF2D8FCF3A20E60CE58346C2B4688C88E87FBC1C8D124E4871A2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SD Host controller on Milbeaut consists of two controller parts.
-One is core controller F_SDH30, this is similar to sdhci-fujitsu
-controller.
-Another is bridge controller.
-This bridge controller is not compatible with sdhci-fujitsu controller.
-This is special for Milbeaut series. This has some functions.
-For example, reset control, clock enable/select for SDR50/25/12, set
-property of SD physical pins, retuning control, set capabilityies.
-
-This bridge controller requires special procedures at reset or clock
-enablement or change for further tuning of clock.
-
-Signed-off-by: Takao Orito <orito.takao@socionext.com>
----
- drivers/mmc/host/Kconfig          |  11 ++
- drivers/mmc/host/Makefile         |   1 +
- drivers/mmc/host/sdhci-milbeaut.c | 362 ++++++++++++++++++++++++++++++++++++++
- drivers/mmc/host/sdhci_f_sdh30.c  |  26 +--
- drivers/mmc/host/sdhci_f_sdh30.h  |  32 ++++
- 5 files changed, 407 insertions(+), 25 deletions(-)
- create mode 100644 drivers/mmc/host/sdhci-milbeaut.c
- create mode 100644 drivers/mmc/host/sdhci_f_sdh30.h
-
-diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-index 28fcd8f..9b39111 100644
---- a/drivers/mmc/host/Kconfig
-+++ b/drivers/mmc/host/Kconfig
-@@ -353,6 +353,17 @@ config MMC_SDHCI_F_SDH30
- 
- 	  If unsure, say N.
- 
-+config MMC_SDHCI_MILBEAUT
-+	tristate "SDHCI support for Socionext Milbeaut Serieas using F_SDH30"
-+	depends on MMC_SDHCI_PLTFM
-+	depends on OF
-+	help
-+	  This selects the Secure Digital Host Controller Interface (SDHCI)
-+	  Needed by Milbeaut SoC for MMC / SD / SDIO support.
-+	  If you have a controller with this interface, say Y or M here.
-+
-+	  If unsure, say N.
-+
- config MMC_SDHCI_IPROC
- 	tristate "SDHCI support for the BCM2835 & iProc SD/MMC Controller"
- 	depends on ARCH_BCM2835 || ARCH_BCM_IPROC || COMPILE_TEST
-diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
-index 7357871..db98e8a 100644
---- a/drivers/mmc/host/Makefile
-+++ b/drivers/mmc/host/Makefile
-@@ -21,6 +21,7 @@ obj-$(CONFIG_MMC_SDHCI_PXAV2)	+= sdhci-pxav2.o
- obj-$(CONFIG_MMC_SDHCI_S3C)	+= sdhci-s3c.o
- obj-$(CONFIG_MMC_SDHCI_SIRF)   	+= sdhci-sirf.o
- obj-$(CONFIG_MMC_SDHCI_F_SDH30)	+= sdhci_f_sdh30.o
-+obj-$(CONFIG_MMC_SDHCI_MILBEAUT)	+= sdhci-milbeaut.o
- obj-$(CONFIG_MMC_SDHCI_SPEAR)	+= sdhci-spear.o
- obj-$(CONFIG_MMC_SDHCI_AM654)	+= sdhci_am654.o
- obj-$(CONFIG_MMC_WBSD)		+= wbsd.o
-diff --git a/drivers/mmc/host/sdhci-milbeaut.c b/drivers/mmc/host/sdhci-milbeaut.c
-new file mode 100644
-index 0000000..a1aa21b
---- /dev/null
-+++ b/drivers/mmc/host/sdhci-milbeaut.c
-@@ -0,0 +1,362 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2013 - 2015 Fujitsu Semiconductor, Ltd
-+ *              Vincent Yang <vincent.yang@tw.fujitsu.com>
-+ * Copyright (C) 2015 Linaro Ltd  Andy Green <andy.green@linaro.org>
-+ * Copyright (C) 2019 Socionext Inc.
-+ *              Takao Orito <orito.takao@socionext.com>
-+ */
-+
-+#include <linux/bits.h>
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/property.h>
-+
-+#include "sdhci-pltfm.h"
-+#include "sdhci_f_sdh30.h"
-+
-+/* milbeaut bridge controller register */
-+#define MLB_SOFT_RESET		0x0200
-+#define  MLB_SOFT_RESET_RSTX		BIT(0)
-+
-+#define MLB_WP_CD_LED_SET	0x0210
-+#define  MLB_WP_CD_LED_SET_LED_INV  BIT(2)
-+
-+#define MLB_CR_SET			0x0220
-+#define  MLB_CR_SET_CR_TOCLKUNIT       BIT(24)
-+#define  MLB_CR_SET_CR_TOCLKFREQ_SFT   (16)
-+#define  MLB_CR_SET_CR_TOCLKFREQ_MASK  (0x3F << MLB_CR_SET_CR_TOCLKFREQ_SFT)
-+#define  MLB_CR_SET_CR_BCLKFREQ_SFT    (8)
-+#define  MLB_CR_SET_CR_BCLKFREQ_MASK   (0xFF << MLB_CR_SET_CR_BCLKFREQ_SFT)
-+#define  MLB_CR_SET_CR_RTUNTIMER_SFT   (4)
-+#define  MLB_CR_SET_CR_RTUNTIMER_MASK  (0xF << MLB_CR_SET_CR_RTUNTIMER_SFT)
-+
-+#define MLB_SD_TOCLK_I_DIV  16
-+#define MLB_TOCLKFREQ_UNIT_THRES    16000000
-+#define MLB_CAL_TOCLKFREQ_MHZ(rate) (rate / MLB_SD_TOCLK_I_DIV / 1000000)
-+#define MLB_CAL_TOCLKFREQ_KHZ(rate) (rate / MLB_SD_TOCLK_I_DIV / 1000)
-+#define MLB_TOCLKFREQ_MAX   63
-+#define MLB_TOCLKFREQ_MIN    1
-+
-+#define MLB_SD_BCLK_I_DIV   4
-+#define MLB_CAL_BCLKFREQ(rate)  (rate / MLB_SD_BCLK_I_DIV / 1000000)
-+#define MLB_BCLKFREQ_MAX        255
-+#define MLB_BCLKFREQ_MIN          1
-+
-+#define MLB_CDR_SET			0x0230
-+#define MLB_CDR_SET_CLK2POW16	3
-+
-+struct f_sdhost_priv {
-+	struct clk *clk_iface;
-+	struct clk *clk;
-+	struct device *dev;
-+	bool enable_cmd_dat_delay;
-+};
-+
-+static void sdhci_milbeaut_soft_voltage_switch(struct sdhci_host *host)
-+{
-+	u32 ctrl = 0;
-+
-+	usleep_range(2500, 3000);
-+	ctrl = sdhci_readl(host, F_SDH30_IO_CONTROL2);
-+	ctrl |= F_SDH30_CRES_O_DN;
-+	sdhci_writel(host, ctrl, F_SDH30_IO_CONTROL2);
-+	ctrl |= F_SDH30_MSEL_O_1_8;
-+	sdhci_writel(host, ctrl, F_SDH30_IO_CONTROL2);
-+
-+	ctrl &= ~F_SDH30_CRES_O_DN;
-+	sdhci_writel(host, ctrl, F_SDH30_IO_CONTROL2);
-+	usleep_range(2500, 3000);
-+
-+	ctrl = sdhci_readl(host, F_SDH30_TUNING_SETTING);
-+	ctrl |= F_SDH30_CMD_CHK_DIS;
-+	sdhci_writel(host, ctrl, F_SDH30_TUNING_SETTING);
-+}
-+
-+static unsigned int sdhci_milbeaut_get_min_clock(struct sdhci_host *host)
-+{
-+	return F_SDH30_MIN_CLOCK;
-+}
-+
-+static void sdhci_milbeaut_reset(struct sdhci_host *host, u8 mask)
-+{
-+	struct f_sdhost_priv *priv = sdhci_priv(host);
-+	u16 clk;
-+	u32 ctl;
-+	ktime_t timeout;
-+
-+	clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
-+	clk = (clk & ~SDHCI_CLOCK_CARD_EN) | SDHCI_CLOCK_INT_EN;
-+	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
-+
-+	sdhci_reset(host, mask);
-+
-+	clk |= SDHCI_CLOCK_CARD_EN;
-+	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
-+
-+	timeout = ktime_add_ms(ktime_get(), 10);
-+	while (1) {
-+		bool timedout = ktime_after(ktime_get(), timeout);
-+
-+		clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
-+		if (clk & SDHCI_CLOCK_INT_STABLE)
-+			break;
-+		if (timedout) {
-+			pr_err("%s: Internal clock never stabilised.\n",
-+				mmc_hostname(host->mmc));
-+			sdhci_dumpregs(host);
-+			return;
-+		}
-+		udelay(10);
-+	}
-+
-+	if (priv->enable_cmd_dat_delay) {
-+		ctl = sdhci_readl(host, F_SDH30_ESD_CONTROL);
-+		ctl |= F_SDH30_CMD_DAT_DELAY;
-+		sdhci_writel(host, ctl, F_SDH30_ESD_CONTROL);
-+	}
-+}
-+
-+static void sdhci_milbeaut_set_power(struct sdhci_host *host,
-+			unsigned char mode, unsigned short vdd)
-+{
-+	if (!IS_ERR(host->mmc->supply.vmmc)) {
-+		struct mmc_host *mmc = host->mmc;
-+
-+		mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, vdd);
-+	}
-+	sdhci_set_power_noreg(host, mode, vdd);
-+}
-+
-+static const struct sdhci_ops sdhci_milbeaut_ops = {
-+	.voltage_switch = sdhci_milbeaut_soft_voltage_switch,
-+	.get_min_clock = sdhci_milbeaut_get_min_clock,
-+	.reset = sdhci_milbeaut_reset,
-+	.set_clock = sdhci_set_clock,
-+	.set_bus_width = sdhci_set_bus_width,
-+	.set_uhs_signaling = sdhci_set_uhs_signaling,
-+	.set_power = sdhci_milbeaut_set_power,
-+};
-+
-+static void sdhci_milbeaut_bridge_reset(struct sdhci_host *host,
-+						int reset_flag)
-+{
-+	if (reset_flag)
-+		sdhci_writel(host, 0, MLB_SOFT_RESET);
-+	else
-+		sdhci_writel(host, MLB_SOFT_RESET_RSTX, MLB_SOFT_RESET);
-+}
-+
-+static void sdhci_milbeaut_bridge_init(struct sdhci_host *host,
-+						int rate)
-+{
-+	u32 val, clk;
-+
-+	/* IO_SDIO_CR_SET should be set while reset */
-+	val = sdhci_readl(host, MLB_CR_SET);
-+	val &= ~(MLB_CR_SET_CR_TOCLKFREQ_MASK | MLB_CR_SET_CR_TOCLKUNIT |
-+			MLB_CR_SET_CR_BCLKFREQ_MASK);
-+	if (rate >= MLB_TOCLKFREQ_UNIT_THRES) {
-+		clk = MLB_CAL_TOCLKFREQ_MHZ(rate);
-+		clk = min_t(u32, MLB_TOCLKFREQ_MAX, clk);
-+		val |= MLB_CR_SET_CR_TOCLKUNIT |
-+			(clk << MLB_CR_SET_CR_TOCLKFREQ_SFT);
-+	} else {
-+		clk = MLB_CAL_TOCLKFREQ_KHZ(rate);
-+		clk = min_t(u32, MLB_TOCLKFREQ_MAX, clk);
-+		clk = max_t(u32, MLB_TOCLKFREQ_MIN, clk);
-+		val |= clk << MLB_CR_SET_CR_TOCLKFREQ_SFT;
-+	}
-+
-+	clk = MLB_CAL_BCLKFREQ(rate);
-+	clk = min_t(u32, MLB_BCLKFREQ_MAX, clk);
-+	clk = max_t(u32, MLB_BCLKFREQ_MIN, clk);
-+	val |=  clk << MLB_CR_SET_CR_BCLKFREQ_SFT;
-+	val &= ~MLB_CR_SET_CR_RTUNTIMER_MASK;
-+	sdhci_writel(host, val, MLB_CR_SET);
-+
-+	sdhci_writel(host, MLB_CDR_SET_CLK2POW16, MLB_CDR_SET);
-+
-+	sdhci_writel(host, MLB_WP_CD_LED_SET_LED_INV, MLB_WP_CD_LED_SET);
-+}
-+
-+static void sdhci_milbeaut_vendor_init(struct sdhci_host *host)
-+{
-+	struct f_sdhost_priv *priv = sdhci_priv(host);
-+	u32 ctl;
-+
-+	ctl = sdhci_readl(host, F_SDH30_IO_CONTROL2);
-+	ctl |= F_SDH30_CRES_O_DN;
-+	sdhci_writel(host, ctl, F_SDH30_IO_CONTROL2);
-+	ctl &= ~F_SDH30_MSEL_O_1_8;
-+	sdhci_writel(host, ctl, F_SDH30_IO_CONTROL2);
-+	ctl &= ~F_SDH30_CRES_O_DN;
-+	sdhci_writel(host, ctl, F_SDH30_IO_CONTROL2);
-+
-+	ctl = sdhci_readw(host, F_SDH30_AHB_CONFIG);
-+	ctl |= F_SDH30_SIN | F_SDH30_AHB_INCR_16 | F_SDH30_AHB_INCR_8 |
-+	       F_SDH30_AHB_INCR_4;
-+	ctl &= ~(F_SDH30_AHB_BIGED | F_SDH30_BUSLOCK_EN);
-+	sdhci_writew(host, ctl, F_SDH30_AHB_CONFIG);
-+
-+	if (priv->enable_cmd_dat_delay) {
-+		ctl = sdhci_readl(host, F_SDH30_ESD_CONTROL);
-+		ctl |= F_SDH30_CMD_DAT_DELAY;
-+		sdhci_writel(host, ctl, F_SDH30_ESD_CONTROL);
-+	}
-+}
-+
-+static const struct of_device_id mlb_dt_ids[] = {
-+	{
-+		.compatible = "socionext,milbeaut-m10v-sdhci-3.0",
-+	},
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, mlb_dt_ids);
-+
-+static void sdhci_milbeaut_init(struct sdhci_host *host)
-+{
-+	struct f_sdhost_priv *priv = sdhci_priv(host);
-+	int rate = clk_get_rate(priv->clk);
-+	u16 ctl;
-+
-+	sdhci_milbeaut_bridge_reset(host, 0);
-+
-+	ctl = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
-+	ctl &= ~(SDHCI_CLOCK_CARD_EN | SDHCI_CLOCK_INT_EN);
-+	sdhci_writew(host, ctl, SDHCI_CLOCK_CONTROL);
-+
-+	sdhci_milbeaut_bridge_reset(host, 1);
-+
-+	sdhci_milbeaut_bridge_init(host, rate);
-+	sdhci_milbeaut_bridge_reset(host, 0);
-+
-+	sdhci_milbeaut_vendor_init(host);
-+}
-+
-+static int sdhci_milbeaut_probe(struct platform_device *pdev)
-+{
-+	struct sdhci_host *host;
-+	struct device *dev = &pdev->dev;
-+	struct resource *res;
-+	int irq, ret = 0;
-+	struct f_sdhost_priv *priv;
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0) {
-+		dev_err(dev, "%s: no irq specified\n", __func__);
-+		return irq;
-+	}
-+
-+	host = sdhci_alloc_host(dev, sizeof(struct f_sdhost_priv));
-+	if (IS_ERR(host))
-+		return PTR_ERR(host);
-+
-+	priv = sdhci_priv(host);
-+	priv->dev = dev;
-+
-+	host->quirks = SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC |
-+			   SDHCI_QUIRK_INVERTED_WRITE_PROTECT |
-+			   SDHCI_QUIRK_CLOCK_BEFORE_RESET |
-+			   SDHCI_QUIRK_DELAY_AFTER_POWER;
-+	host->quirks2 = SDHCI_QUIRK2_SUPPORT_SINGLE |
-+			SDHCI_QUIRK2_TUNING_WORK_AROUND |
-+			SDHCI_QUIRK2_PRESET_VALUE_BROKEN;
-+
-+	priv->enable_cmd_dat_delay = device_property_read_bool(dev,
-+						"fujitsu,cmd-dat-delay-select");
-+
-+	ret = mmc_of_parse(host->mmc);
-+	if (ret)
-+		goto err;
-+
-+	platform_set_drvdata(pdev, host);
-+
-+	host->hw_name = "f_sdh30";
-+	host->ops = &sdhci_milbeaut_ops;
-+	host->irq = irq;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	host->ioaddr = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(host->ioaddr)) {
-+		ret = PTR_ERR(host->ioaddr);
-+		goto err;
-+	}
-+
-+	if (dev_of_node(dev)) {
-+		sdhci_get_of_property(pdev);
-+
-+		priv->clk_iface = devm_clk_get(&pdev->dev, "iface");
-+		if (IS_ERR(priv->clk_iface)) {
-+			ret = PTR_ERR(priv->clk_iface);
-+			goto err;
-+		}
-+
-+		ret = clk_prepare_enable(priv->clk_iface);
-+		if (ret)
-+			goto err;
-+
-+		priv->clk = devm_clk_get(&pdev->dev, "core");
-+		if (IS_ERR(priv->clk)) {
-+			ret = PTR_ERR(priv->clk);
-+			goto err_clk;
-+		}
-+
-+		ret = clk_prepare_enable(priv->clk);
-+		if (ret)
-+			goto err_clk;
-+	}
-+
-+	sdhci_milbeaut_init(host);
-+
-+	ret = sdhci_add_host(host);
-+	if (ret)
-+		goto err_add_host;
-+
-+	return 0;
-+
-+err_add_host:
-+	clk_disable_unprepare(priv->clk);
-+err_clk:
-+	clk_disable_unprepare(priv->clk_iface);
-+err:
-+	sdhci_free_host(host);
-+	return ret;
-+}
-+
-+static int sdhci_milbeaut_remove(struct platform_device *pdev)
-+{
-+	struct sdhci_host *host = platform_get_drvdata(pdev);
-+	struct f_sdhost_priv *priv = sdhci_priv(host);
-+
-+	sdhci_remove_host(host, readl(host->ioaddr + SDHCI_INT_STATUS) ==
-+			  0xffffffff);
-+
-+	clk_disable_unprepare(priv->clk_iface);
-+	clk_disable_unprepare(priv->clk);
-+
-+	sdhci_free_host(host);
-+	platform_set_drvdata(pdev, NULL);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver sdhci_milbeaut_driver = {
-+	.driver = {
-+		.name = "sdhci-milbeaut",
-+		.of_match_table = of_match_ptr(mlb_dt_ids),
-+	},
-+	.probe	= sdhci_milbeaut_probe,
-+	.remove	= sdhci_milbeaut_remove,
-+};
-+
-+module_platform_driver(sdhci_milbeaut_driver);
-+
-+MODULE_DESCRIPTION("MILBEAUT SD Card Controller driver");
-+MODULE_AUTHOR("Takao Orito <orito.takao@socionext.com>");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:sdhci-milbeaut");
-diff --git a/drivers/mmc/host/sdhci_f_sdh30.c b/drivers/mmc/host/sdhci_f_sdh30.c
-index 485f759..ca4c99a 100644
---- a/drivers/mmc/host/sdhci_f_sdh30.c
-+++ b/drivers/mmc/host/sdhci_f_sdh30.c
-@@ -19,31 +19,7 @@
- #include <linux/clk.h>
- 
- #include "sdhci-pltfm.h"
--
--/* F_SDH30 extended Controller registers */
--#define F_SDH30_AHB_CONFIG		0x100
--#define  F_SDH30_AHB_BIGED		0x00000040
--#define  F_SDH30_BUSLOCK_DMA		0x00000020
--#define  F_SDH30_BUSLOCK_EN		0x00000010
--#define  F_SDH30_SIN			0x00000008
--#define  F_SDH30_AHB_INCR_16		0x00000004
--#define  F_SDH30_AHB_INCR_8		0x00000002
--#define  F_SDH30_AHB_INCR_4		0x00000001
--
--#define F_SDH30_TUNING_SETTING		0x108
--#define  F_SDH30_CMD_CHK_DIS		0x00010000
--
--#define F_SDH30_IO_CONTROL2		0x114
--#define  F_SDH30_CRES_O_DN		0x00080000
--#define  F_SDH30_MSEL_O_1_8		0x00040000
--
--#define F_SDH30_ESD_CONTROL		0x124
--#define  F_SDH30_EMMC_RST		0x00000002
--#define  F_SDH30_EMMC_HS200		0x01000000
--
--#define F_SDH30_CMD_DAT_DELAY		0x200
--
--#define F_SDH30_MIN_CLOCK		400000
-+#include "sdhci_f_sdh30.h"
- 
- struct f_sdhost_priv {
- 	struct clk *clk_iface;
-diff --git a/drivers/mmc/host/sdhci_f_sdh30.h b/drivers/mmc/host/sdhci_f_sdh30.h
-new file mode 100644
-index 0000000..fc1ad28
---- /dev/null
-+++ b/drivers/mmc/host/sdhci_f_sdh30.h
-@@ -0,0 +1,32 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2013 - 2015 Fujitsu Semiconductor, Ltd
-+ *              Vincent Yang <vincent.yang@tw.fujitsu.com>
-+ * Copyright (C) 2015 Linaro Ltd  Andy Green <andy.green@linaro.org>
-+ * Copyright (C) 2019 Socionext Inc.
-+ *
-+ */
-+
-+/* F_SDH30 extended Controller registers */
-+#define F_SDH30_AHB_CONFIG      0x100
-+#define  F_SDH30_AHB_BIGED      BIT(6)
-+#define  F_SDH30_BUSLOCK_DMA    BIT(5)
-+#define  F_SDH30_BUSLOCK_EN     BIT(4)
-+#define  F_SDH30_SIN            BIT(3)
-+#define  F_SDH30_AHB_INCR_16    BIT(2)
-+#define  F_SDH30_AHB_INCR_8     BIT(1)
-+#define  F_SDH30_AHB_INCR_4     BIT(0)
-+
-+#define F_SDH30_TUNING_SETTING  0x108
-+#define  F_SDH30_CMD_CHK_DIS    BIT(16)
-+
-+#define F_SDH30_IO_CONTROL2     0x114
-+#define  F_SDH30_CRES_O_DN      BIT(19)
-+#define  F_SDH30_MSEL_O_1_8     BIT(18)
-+
-+#define F_SDH30_ESD_CONTROL     0x124
-+#define	 F_SDH30_EMMC_RST		BIT(1)
-+#define  F_SDH30_CMD_DAT_DELAY	BIT(9)
-+#define	 F_SDH30_EMMC_HS200		BIT(24)
-+
-+#define F_SDH30_MIN_CLOCK		400000
--- 
-1.9.1
-
+Changes in v6:                                                                  
+        update commit message with selftest output log when flow control on        
+                                                                                
+Changes in v5:                                                                  
+        1. run checkpatch.pl to fix coding style issue.                         
+        2. apply reverse xmas tree.                                             
+        3. add output log of "ethtool -t eth0" to commit message.               
+                                                                                
+Changes in v4:                                                                  
+        retain the reverse xmas tree ordering.                                  
+                                                                                
+Changes in v3:                                                                  
+        rewrite the patch base on serires in                                    
+        https://patchwork.ozlabs.org/project/netdev/list/?series=109699         
+                                                                                
+Changes in v2;                                                                  
+        1. reverse Christmas tree order in dwmac4_set_filter.                   
+        2. remove clause 45 patch, waiting for cl45 patch from Boon Leong          
+                                                                                
+v1:                                                                             
+This series add some features in stmmac driver.                                 
+        1. add support for hash table size 128/256                              
+        2. add mdio clause 45 access from mac device for dwmac4.                
+                                                                                
+Biao Huang (1):                                                                 
+  net: stmmac: add support for hash table size 128/256 in dwmac4                
+                                                                                
+ drivers/net/ethernet/stmicro/stmmac/common.h      |    7 +--                   
+ drivers/net/ethernet/stmicro/stmmac/dwmac4.h      |    4 +-                    
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c |   49 ++++++++++++--------- 
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c  |    1 +                     
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |    6 +++                   
+ 5 files changed, 42 insertions(+), 25 deletions(-)                             
+                                                                                
+--                                                                              
+1.7.9.5
 
