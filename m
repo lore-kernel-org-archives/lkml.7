@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D530C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B20BCC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A30424AF6
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C66C24AE0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187039;
-	bh=rHRYoMxf+3+xCzC0iUQ9wehSRgMHzUgWyR+/TDKu0MY=;
+	s=default; t=1559187043;
+	bh=pVFNa/G7hgjffWOnRwXp358JyH6cNkVChLnO2BQu8ek=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WHIUR36yRI1ptlyin9El1SwuI2CjeGZNSRxsrqpt/AAFX4fqbE6iOee6J/WV8HsFV
-	 4os7oUvnZEH0/tA5di9hJt77P1LL/SuX+UKXYl7OQ1SZ9MpxDBmVowR5v6uJZnDjQr
-	 TTo7cEgzkFptl8LA+Q609u8/kkrTTbbGZMjHUWTI=
+	b=PUikIgpPBsabMsUrA6uTEe5dsMC3s+h1+2DIFOOmNCL5ov7yYanNsYXCZDLaA3R6c
+	 CAMOxXbvynoDi+FKQTpnh04LID8Zx5ICAUsd9LCff/s+/FWgvL8bxftVOmcfi7BeDv
+	 LNi4z9kP8QxJ74ZQGhV0kb5Bzva88VtgxkQ73UOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733183AbfE3Dai (ORCPT
+        id S2388658AbfE3Dan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:30:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48934 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:30:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388433AbfE3Dae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:30:34 -0400
+        id S2388620AbfE3Dad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:30:33 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD33F24AF9;
-        Thu, 30 May 2019 03:30:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A0F824AF2;
+        Thu, 30 May 2019 03:30:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559187033;
-        bh=rHRYoMxf+3+xCzC0iUQ9wehSRgMHzUgWyR+/TDKu0MY=;
+        s=default; t=1559187032;
+        bh=pVFNa/G7hgjffWOnRwXp358JyH6cNkVChLnO2BQu8ek=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tOXhY2/GTqYF9bscholl+lTA34iQYphvUT0wghvJu05c/GuCQaEPFkwDZES1EXndq
-         iE0kB7poukphleUCT0RsKjENGJxxeg0cZgCitqsTpIvQgTn8gK/tHEEGJLxCsl6RWl
-         5VCfzicdqtKsn/PVCloW4Ed9LMYeIJAhx80pea38=
+        b=ikg4rkZC4kP/87SGnL4jEObP2ef0ZugRwEerjdsorUsdDOSUdOr+35y1QRQF+cS85
+         mOI8ZNZAX/8/HqOMMDjFT4OwuBmiFo/9jeCJ3Dd9XFmnuRsUTfh8EPYCW/Hqi4VxNE
+         yeQN8Zf0jWQddCBCA/6gWA4VKMzGGGdaCGoF2n20=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, "Li, Meng" <Meng.Li@windriver.com>,
+        Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 060/128] media: ov2659: make S_FMT succeed even if requested format doesnt match
-Date:   Wed, 29 May 2019 20:06:32 -0700
-Message-Id: <20190530030445.565807220@linuxfoundation.org>
+Subject: [PATCH 4.19 119/276] perf/arm-cci: Remove broken race mitigation
+Date:   Wed, 29 May 2019 20:04:37 -0700
+Message-Id: <20190530030533.332047175@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
-References: <20190530030432.977908967@linuxfoundation.org>
+In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
+References: <20190530030523.133519668@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,48 +63,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bccb89cf9cd07a0690d519696a00c00a973b3fe4 ]
+[ Upstream commit 0d2e2a82d4de298d006bf8eddc86829e3c7da820 ]
 
-This driver returns an error if unsupported media bus pixel code is
-requested by VIDIOC_SUBDEV_S_FMT.
+Uncore PMU drivers face an awkward cyclic dependency wherein:
 
-But according to Documentation/media/uapi/v4l/vidioc-subdev-g-fmt.rst,
+ - They have to pick a valid online CPU to associate with before
+   registering the PMU device, since it will get exposed to userspace
+   immediately.
+ - The PMU registration has to be be at least partly complete before
+   hotplug events can be handled, since trying to migrate an
+   uninitialised context would be bad.
+ - The hotplug handler has to be ready as soon as a CPU is chosen, lest
+   it go offline without the user-visible cpumask value getting updated.
 
-Drivers must not return an error solely because the requested format
-doesn't match the device capabilities. They must instead modify the
-format to match what the hardware can provide.
+The arm-cci driver has tried to solve this by using get_cpu() to pick
+the current CPU and prevent it from disappearing while both
+registrations are performed, but that results in taking mutexes with
+preemption disabled, which makes certain configurations very unhappy:
 
-So select default format code and return success in that case.
+[ 1.983337] BUG: sleeping function called from invalid context at kernel/locking/rtmutex.c:2004
+[ 1.983340] in_atomic(): 1, irqs_disabled(): 0, pid: 1, name: swapper/0
+[ 1.983342] Preemption disabled at:
+[ 1.983353] [<ffffff80089801f4>] cci_pmu_probe+0x1dc/0x488
+[ 1.983360] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 4.18.20-rt8-yocto-preempt-rt #1
+[ 1.983362] Hardware name: ZynqMP ZCU102 Rev1.0 (DT)
+[ 1.983364] Call trace:
+[ 1.983369] dump_backtrace+0x0/0x158
+[ 1.983372] show_stack+0x24/0x30
+[ 1.983378] dump_stack+0x80/0xa4
+[ 1.983383] ___might_sleep+0x138/0x160
+[ 1.983386] __might_sleep+0x58/0x90
+[ 1.983391] __rt_mutex_lock_state+0x30/0xc0
+[ 1.983395] _mutex_lock+0x24/0x30
+[ 1.983400] perf_pmu_register+0x2c/0x388
+[ 1.983404] cci_pmu_probe+0x2bc/0x488
+[ 1.983409] platform_drv_probe+0x58/0xa8
 
-This is detected by v4l2-compliance.
+It is not feasible to resolve all the possible races outside of the perf
+core itself, so address the immediate bug by following the example of
+nearly every other PMU driver and not even trying to do so. Registering
+the hotplug notifier first should minimise the window in which things
+can go wrong, so that's about as much as we can reasonably do here. This
+also revealed an additional race in assigning the global pointer too
+late relative to the hotplug notifier, which gets fixed in the process.
 
-Cc: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
-Acked-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Reported-by: Li, Meng <Meng.Li@windriver.com>
+Tested-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov2659.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/perf/arm-cci.c | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-index 1f999e9c0118e..3554eea77e04c 100644
---- a/drivers/media/i2c/ov2659.c
-+++ b/drivers/media/i2c/ov2659.c
-@@ -1117,8 +1117,10 @@ static int ov2659_set_fmt(struct v4l2_subdev *sd,
- 		if (ov2659_formats[index].code == mf->code)
- 			break;
+diff --git a/drivers/perf/arm-cci.c b/drivers/perf/arm-cci.c
+index 1bfeb160c5b16..14a541c453e58 100644
+--- a/drivers/perf/arm-cci.c
++++ b/drivers/perf/arm-cci.c
+@@ -1692,21 +1692,24 @@ static int cci_pmu_probe(struct platform_device *pdev)
+ 	raw_spin_lock_init(&cci_pmu->hw_events.pmu_lock);
+ 	mutex_init(&cci_pmu->reserve_mutex);
+ 	atomic_set(&cci_pmu->active_events, 0);
+-	cci_pmu->cpu = get_cpu();
+-
+-	ret = cci_pmu_init(cci_pmu, pdev);
+-	if (ret) {
+-		put_cpu();
+-		return ret;
+-	}
  
--	if (index < 0)
--		return -EINVAL;
-+	if (index < 0) {
-+		index = 0;
-+		mf->code = ov2659_formats[index].code;
-+	}
++	cci_pmu->cpu = raw_smp_processor_id();
++	g_cci_pmu = cci_pmu;
+ 	cpuhp_setup_state_nocalls(CPUHP_AP_PERF_ARM_CCI_ONLINE,
+ 				  "perf/arm/cci:online", NULL,
+ 				  cci_pmu_offline_cpu);
+-	put_cpu();
+-	g_cci_pmu = cci_pmu;
++
++	ret = cci_pmu_init(cci_pmu, pdev);
++	if (ret)
++		goto error_pmu_init;
++
+ 	pr_info("ARM %s PMU driver probed", cci_pmu->model->name);
+ 	return 0;
++
++error_pmu_init:
++	cpuhp_remove_state(CPUHP_AP_PERF_ARM_CCI_ONLINE);
++	g_cci_pmu = NULL;
++	return ret;
+ }
  
- 	mf->colorspace = V4L2_COLORSPACE_SRGB;
- 	mf->code = ov2659_formats[index].code;
+ static int cci_pmu_remove(struct platform_device *pdev)
 -- 
 2.20.1
 
