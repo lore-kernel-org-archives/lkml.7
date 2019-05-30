@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 693A8C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E6EC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F0D024A93
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B318424A8B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186810;
-	bh=figzrZJk28omJxNn3z3++baoDIH28NEjwx59Tq0jw9M=;
+	s=default; t=1559186811;
+	bh=nPvomvPQq5adWu3ARBRN8eWC1pZmBx/+VxfUKkmkx04=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IJvHOe1IINMJnIFLwiO9Qb9qp90mcSQVKQJzv5NIklgP3laGDwuE9uiLsLJ3DKhth
-	 HqSjcJcVo3BS6WUnA7dpC2E0F/pg9UZOrr/HeR3GIan+TH876XcjnpEv+icslK7SZU
-	 G0Ct6c4ID2wLXKFkKdvhkJkp2sAeZtDxQZd1RYd8=
+	b=LLuPEPmVyCXlr9XXXTnK2hYAPTdmYAA3Se0WsmUMadY5hAg8TmosKICqd1z5gBai7
+	 Lv67vMgzopE6mI94FhnvEDz+h6J5MqSYpOss2QR5EmdlrdUQJ6xWtRHCr0CjbvHJUx
+	 iOfmLisjlHIxEWG6xD9Zt2fO/PuEYRgSDRM/0xwo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387431AbfE3D0t (ORCPT
+        id S2387776AbfE3D0v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:26:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53498 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:26:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730851AbfE3DTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:02 -0400
+        id S1731782AbfE3DTD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:03 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EE2D24823;
-        Thu, 30 May 2019 03:19:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75940247F0;
+        Thu, 30 May 2019 03:19:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186341;
-        bh=figzrZJk28omJxNn3z3++baoDIH28NEjwx59Tq0jw9M=;
+        s=default; t=1559186342;
+        bh=nPvomvPQq5adWu3ARBRN8eWC1pZmBx/+VxfUKkmkx04=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0d/f40jBA6iORE4JnSknPixlNHrsea2YNwRZ3a6okET9aJ1OKVaGmVmxDOlilLZAe
-         +Xnseb5/IbeGrX6ZujqhYluGRb0Tv/nytRn/ImAkxvrx36QwTaNsYOm0xpsJC9cZRt
-         ELyIUDQOxEKT9QbBWWPaweUOLcmWY8Ugt1b8cG7Q=
+        b=L+Ve/SOUYpWXSMan6j9ocsNuMHLK4ngHa3iI5x9CaT96ygAasWiLFpL/0DFHPpvUv
+         J9IPmFwMijfzSjDCM1J8ud7Dx6kc+l3/W1jUm6iJ7w5/RBxeN6AuN/ubL8IpwpP31/
+         N+SeAXB5ZNBr8z54nb6sWVJ4slquhsvwO/psXpZU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Daniel Baluta <daniel.baluta@nxp.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 067/193] mac80211/cfg80211: update bss channel on channel switch
-Date:   Wed, 29 May 2019 20:05:21 -0700
-Message-Id: <20190530030458.695246233@linuxfoundation.org>
+Subject: [PATCH 4.14 069/193] ASoC: fsl_sai: Update is_slave_mode with correct value
+Date:   Wed, 29 May 2019 20:05:23 -0700
+Message-Id: <20190530030458.901771595@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -61,66 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5dc8cdce1d722c733f8c7af14c5fb595cfedbfa8 ]
+[ Upstream commit ddb351145a967ee791a0fb0156852ec2fcb746ba ]
 
-FullMAC STAs have no way to update bss channel after CSA channel switch
-completion. As a result, user-space tools may provide inconsistent
-channel info. For instance, consider the following two commands:
-$ sudo iw dev wlan0 link
-$ sudo iw dev wlan0 info
-The latter command gets channel info from the hardware, so most probably
-its output will be correct. However the former command gets channel info
-from scan cache, so its output will contain outdated channel info.
-In fact, current bss channel info will not be updated until the
-next [re-]connect.
+is_slave_mode defaults to false because sai structure
+that contains it is kzalloc'ed.
 
-Note that mac80211 STAs have a workaround for this, but it requires
-access to internal cfg80211 data, see ieee80211_chswitch_work:
+Anyhow, if we decide to set the following configuration
+SAI slave -> SAI master, is_slave_mode will remain set on true
+although SAI being master it should be set to false.
 
-	/* XXX: shouldn't really modify cfg80211-owned data! */
-	ifmgd->associated->channel = sdata->csa_chandef.chan;
+Fix this by updating is_slave_mode for each call of
+fsl_sai_set_dai_fmt.
 
-This patch suggests to convert mac80211 workaround into cfg80211 behavior
-and to update current bss channel in cfg80211_ch_switch_notify.
-
-Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/mlme.c    | 3 ---
- net/wireless/nl80211.c | 5 +++++
- 2 files changed, 5 insertions(+), 3 deletions(-)
+ sound/soc/fsl/fsl_sai.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/mac80211/mlme.c b/net/mac80211/mlme.c
-index 4c59b5507e7ac..33bd6da00a1c5 100644
---- a/net/mac80211/mlme.c
-+++ b/net/mac80211/mlme.c
-@@ -1071,9 +1071,6 @@ static void ieee80211_chswitch_work(struct work_struct *work)
- 		goto out;
- 	}
- 
--	/* XXX: shouldn't really modify cfg80211-owned data! */
--	ifmgd->associated->channel = sdata->csa_chandef.chan;
--
- 	ifmgd->csa_waiting_bcn = true;
- 
- 	ieee80211_sta_reset_beacon_monitor(sdata);
-diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
-index c1a2ad050e617..c672a790df1ce 100644
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -14706,6 +14706,11 @@ void cfg80211_ch_switch_notify(struct net_device *dev,
- 
- 	wdev->chandef = *chandef;
- 	wdev->preset_chandef = *chandef;
-+
-+	if (wdev->iftype == NL80211_IFTYPE_STATION &&
-+	    !WARN_ON(!wdev->current_bss))
-+		wdev->current_bss->pub.channel = chandef->chan;
-+
- 	nl80211_ch_switch_notify(rdev, dev, chandef, GFP_KERNEL,
- 				 NL80211_CMD_CH_SWITCH_NOTIFY, 0);
- }
+diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
+index 18e5ce81527d2..c1c733b573a7f 100644
+--- a/sound/soc/fsl/fsl_sai.c
++++ b/sound/soc/fsl/fsl_sai.c
+@@ -274,12 +274,14 @@ static int fsl_sai_set_dai_fmt_tr(struct snd_soc_dai *cpu_dai,
+ 	case SND_SOC_DAIFMT_CBS_CFS:
+ 		val_cr2 |= FSL_SAI_CR2_BCD_MSTR;
+ 		val_cr4 |= FSL_SAI_CR4_FSD_MSTR;
++		sai->is_slave_mode = false;
+ 		break;
+ 	case SND_SOC_DAIFMT_CBM_CFM:
+ 		sai->is_slave_mode = true;
+ 		break;
+ 	case SND_SOC_DAIFMT_CBS_CFM:
+ 		val_cr2 |= FSL_SAI_CR2_BCD_MSTR;
++		sai->is_slave_mode = false;
+ 		break;
+ 	case SND_SOC_DAIFMT_CBM_CFS:
+ 		val_cr4 |= FSL_SAI_CR4_FSD_MSTR;
 -- 
 2.20.1
 
