@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A240EC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A0DC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70273250CF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:08:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38BA3250D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:08:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189311;
-	bh=FjfK/RamjqEShfTjBAQ5NavTeA4udxDVHYeDtM2xaqg=;
+	s=default; t=1559189316;
+	bh=35T0qHW0GoLyTvKSX60pYUseUsylkpZKu7B/BgGYgcY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=syhAnLt0IzkRP0Sm5nkZuiRVTZIIxCnJvXPMjx6CSh2eKaE5a86T21INSNKhP2Ei9
-	 reXr0WRTXSI+kgwA5VyRzg7+i4vUyJObLmLxwMWiwVjgungIbTv9FTDMinl5r3KKb2
-	 Ckd9pxVcqOGZWbINpN+0I/7Wl93CSJUB0oK0tqGo=
+	b=jVNcnnjiM0/lCNRBlH3q1DHJhig6Y3qafoNRVwLUI3rlQK/FkhjHpYxVhdUEb/L2F
+	 n11oe9PjgsFZ2Z66il7LN3X9igPlvC9ZM5o2hQ1Eqf9fuzfl43Yz5eB7ka3efELPpP
+	 oS/ppgfFN6KMQhQn/slks1wT/jpJA7E/j2mg2p1A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfE3EIa (ORCPT
+        id S1726280AbfE3EIe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:08:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46034 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:08:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731074AbfE3DRT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731070AbfE3DRT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:17:19 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D4AE246BE;
-        Thu, 30 May 2019 03:17:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34183246A1;
+        Thu, 30 May 2019 03:17:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186239;
-        bh=FjfK/RamjqEShfTjBAQ5NavTeA4udxDVHYeDtM2xaqg=;
+        s=default; t=1559186238;
+        bh=35T0qHW0GoLyTvKSX60pYUseUsylkpZKu7B/BgGYgcY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=idGxML0pZvkP0we+6tl4DJRqw937Jec2qy15Rb4gpdGT7y2phSvcTa1xrFJZ3oDhY
-         A8M9LuxtCTwXabY1fNyr8FvHVJLLwmvW8gez2A/z99Op9LKgFz5B1pivRARjx5A/RA
-         pZliycdHZXcyujJcpPWGzm9tHejes+zW0XCAOrmY=
+        b=VjS+roE4piIDYe8Zci3UU1F1uZuQgYVYVQvMCjRKDrR6Id/xBptFqivXOWe0CARuN
+         mG+GPsUsBQPhK5T+gZlxCnhj9QvajRxUXkc8WDgnMgNtRfkIMpqliOICW5cbq2t96m
+         pCRJnEP2X2x4Jdnx1Zlag8ENLf5opFoSMQaO9o+k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicholas Nunley <nicholas.d.nunley@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Tony Lindgren <tony@atomide.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 150/276] i40e: dont allow changes to HW VLAN stripping on active port VLANs
-Date:   Wed, 29 May 2019 20:05:08 -0700
-Message-Id: <20190530030534.974271194@linuxfoundation.org>
+Subject: [PATCH 4.19 148/276] phy: mapphone-mdm6600: add gpiolib dependency
+Date:   Wed, 29 May 2019 20:05:06 -0700
+Message-Id: <20190530030534.874778653@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -61,45 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bfb0ebed53857cfc57f11c63fa3689940d71c1c8 ]
+[ Upstream commit 208d3423ee463ab257908456f6bbca4024ab63f7 ]
 
-Modifying the VLAN stripping options when a port VLAN is configured
-will break traffic for the VSI, and conceptually doesn't make sense,
-so don't allow this.
+gcc points out that when CONFIG_GPIOLIB is disabled,
+gpiod_get_array_value_cansleep() returns 0 but fails to set its output:
 
-Signed-off-by: Nicholas Nunley <nicholas.d.nunley@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+drivers/phy/motorola/phy-mapphone-mdm6600.c: In function 'phy_mdm6600_status':
+drivers/phy/motorola/phy-mapphone-mdm6600.c:220:24: error: 'values[0]' is used uninitialized in this function [-Werror=uninitialized]
+
+This could be fixed more generally in gpiolib by returning a failure
+code, but for this specific case, the easier workaround is to add a
+gpiolib dependency.
+
+Fixes: 5d1ebbda0318 ("phy: mapphone-mdm6600: Add USB PHY driver for MDM6600 on Droid 4")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/i40e/i40e_main.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/phy/motorola/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
-index f81ad0aa8b095..df8808cd7e114 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_main.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
-@@ -2654,6 +2654,10 @@ void i40e_vlan_stripping_enable(struct i40e_vsi *vsi)
- 	struct i40e_vsi_context ctxt;
- 	i40e_status ret;
+diff --git a/drivers/phy/motorola/Kconfig b/drivers/phy/motorola/Kconfig
+index 82651524ffb9c..718f8729701df 100644
+--- a/drivers/phy/motorola/Kconfig
++++ b/drivers/phy/motorola/Kconfig
+@@ -13,7 +13,7 @@ config PHY_CPCAP_USB
  
-+	/* Don't modify stripping options if a port VLAN is active */
-+	if (vsi->info.pvid)
-+		return;
-+
- 	if ((vsi->info.valid_sections &
- 	     cpu_to_le16(I40E_AQ_VSI_PROP_VLAN_VALID)) &&
- 	    ((vsi->info.port_vlan_flags & I40E_AQ_VSI_PVLAN_MODE_MASK) == 0))
-@@ -2684,6 +2688,10 @@ void i40e_vlan_stripping_disable(struct i40e_vsi *vsi)
- 	struct i40e_vsi_context ctxt;
- 	i40e_status ret;
- 
-+	/* Don't modify stripping options if a port VLAN is active */
-+	if (vsi->info.pvid)
-+		return;
-+
- 	if ((vsi->info.valid_sections &
- 	     cpu_to_le16(I40E_AQ_VSI_PROP_VLAN_VALID)) &&
- 	    ((vsi->info.port_vlan_flags & I40E_AQ_VSI_PVLAN_EMOD_MASK) ==
+ config PHY_MAPPHONE_MDM6600
+ 	tristate "Motorola Mapphone MDM6600 modem USB PHY driver"
+-	depends on OF && USB_SUPPORT
++	depends on OF && USB_SUPPORT && GPIOLIB
+ 	select GENERIC_PHY
+ 	help
+ 	  Enable this for MDM6600 USB modem to work on Motorola phones
 -- 
 2.20.1
 
