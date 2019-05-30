@@ -2,84 +2,87 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6895BC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9AEC46460
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A3C025BC9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64A9925BC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:54:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727588AbfE3OyH (ORCPT
+        id S1727330AbfE3Oyi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 10:54:07 -0400
-Received: from ms.lwn.net ([45.79.88.28]:57006 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725934AbfE3OyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 10:54:05 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 5DD576D9;
-        Thu, 30 May 2019 14:54:05 +0000 (UTC)
-Date:   Thu, 30 May 2019 08:54:04 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/5] docs: by default, build docs a lot faster with
- Sphinx >= 1.7
-Message-ID: <20190530085404.54973d02@lwn.net>
-In-Reply-To: <20190529225305.213d8c36@coco.lan>
-References: <cover.1558955082.git.mchehab+samsung@kernel.org>
-        <baf19095789f2b2ed0c7a940703037a00cd77850.1558955082.git.mchehab+samsung@kernel.org>
-        <20190529170202.65c7f9ca@lwn.net>
-        <20190529202005.04dcd4a0@coco.lan>
-        <20190529174716.4f0e21ad@lwn.net>
-        <20190529225305.213d8c36@coco.lan>
-Organization: LWN.net
+        Thu, 30 May 2019 10:54:38 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:37898 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725934AbfE3Oyi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 10:54:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E4E37341;
+        Thu, 30 May 2019 07:54:37 -0700 (PDT)
+Received: from redmoon (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D51E43F59C;
+        Thu, 30 May 2019 07:54:36 -0700 (PDT)
+Date:   Thu, 30 May 2019 15:54:31 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Ley Foon Tan <lftan.linux@gmail.com>
+Cc:     Ley Foon Tan <ley.foon.tan@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, linux-pci <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH] PCI: altera: Fix no return warning for
+ altera_pcie_irq_teardown()
+Message-ID: <20190530145411.GA13993@redmoon>
+References: <1558664151-2584-1-git-send-email-ley.foon.tan@intel.com>
+ <CAFiDJ5_HCeY0hf8W-HiEMLFWgjYNspXuH9dBV1kKY-YEvMLAeA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFiDJ5_HCeY0hf8W-HiEMLFWgjYNspXuH9dBV1kKY-YEvMLAeA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 May 2019 22:53:05 -0300
-Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
-
-> > Yup.  The point is that I see the sphinx-build output *in the docs-build
-> > output", not when I run it standalone (where it does the expected thing).  
+On Fri, May 24, 2019 at 10:17:28AM +0800, Ley Foon Tan wrote:
+> On Fri, May 24, 2019 at 10:15 AM Ley Foon Tan <ley.foon.tan@intel.com> wrote:
+> >
+> > Fix compilation warning caused by patch "PCI: altera: Allow building as module".
+> >
+> > drivers/pci/controller/pcie-altera.c: In function ‘altera_pcie_irq_teardown’:
+> > drivers/pci/controller/pcie-altera.c:723:1: warning: no return statement in function returning non-void [-Wreturn-type]
+> >  }
+> >
+> > Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
+> > ---
+> >  drivers/pci/controller/pcie-altera.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
+> > index 6c86bc69ace8..27222071ace7 100644
+> > --- a/drivers/pci/controller/pcie-altera.c
+> > +++ b/drivers/pci/controller/pcie-altera.c
+> > @@ -706,7 +706,7 @@ static int altera_pcie_init_irq_domain(struct altera_pcie *pcie)
+> >         return 0;
+> >  }
+> >
+> > -static int altera_pcie_irq_teardown(struct altera_pcie *pcie)
+> > +static void altera_pcie_irq_teardown(struct altera_pcie *pcie)
+> >  {
+> >         irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
+> >         irq_domain_remove(pcie->irq_domain);
+> > --
+> > 2.19.0
+> >
+> Hi
 > 
-> Weird... could some versions of Sphinx be redirecting the output of
-> --version to stderr instead of stdout?
-> 
-> If so, something like:
-> 
-> 	perl -e 'open IN,"sphinx-build --version 2>&1 |"; while (<IN>) { if (m/([\d\.]+)/) { print "-jauto\n" if ($1 >= "1.7") } ;} close IN'
-> 
-> would make it print "-jauto" with those other versions you're trying.
+> You can squash this patch to this https://lkml.org/lkml/2019/4/24/18
+> "PCI: altera: Allow building as module" if want.
 
-That does improve the behavior from the command line; it seems that
-sphinx-build is indeed writing to stderr.  BUT that still doesn't fix the
-docs build!  To get the option to take effect, I also have to explicitly
-export SPHINXOPTS.  So the winning combination is:
+Done, thanks.
 
-  export SPHINXOPTS = $(shell perl -e 'open IN,"sphinx-build --version
-  2>&1 |"; while (<IN>) { if (m/([\d\.]+)/) { print "-jauto" if ($$1 >= "1.7") } ;} close IN')
-
-I don't have any weird version of make, so I'm not sure why you see
-different results than I do here.
-
-I can apply those tweaks to your patch if it's OK with you.
-
-> I didn't try the python2 versions, though.
-
-Interestingly, I would appear to have both versions installed, with
-python2 winning in $PATH.
-
-jon
+Lorenzo
