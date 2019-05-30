@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08867C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE88C28CC1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8574249C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:22:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C5C424A01
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:22:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186574;
-	bh=C3ZDdjFT/jI5HBPcnzTA83LDoHog36YyeaKM7WpykOw=;
+	s=default; t=1559186576;
+	bh=i1Vi4hGrEFyWzIxeGsWxePBBNB1HBqFssvmMcgk/xcg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YLbda8Sfy7WOXEZf/38d7jlmiOuVYziXkP8HEeKC5F8xPsHmhzc1Slf0RCzPzPvE5
-	 Br/RDCugd1i7NsNgTq3bqctBUcJ50ywOsRnjT27z+825P4THVwLro3cK8OmkxXdmXB
-	 vm2Xpxco+Gk3rZ1BJkgwB5EXxgjy/M81y3PQZldg=
+	b=evO3jHFawIo7H7artv0p1Dj+R84M0828C5XeDf8cvIip/bMkaCeZhbYiC6iYgxcKG
+	 LNWiB0TeAJyzEje3mJQHZSeOKPhvpp+puugAtKxfHtoH2r0veCzfobiDEu/Idn6vAk
+	 n08VX9ygSPTaRWYwwh809fx6rmhzBIHezDoPNfHE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732965AbfE3DWy (ORCPT
+        id S1732975AbfE3DWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:22:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45190 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:22:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729306AbfE3DRI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:17:08 -0400
+        id S1729965AbfE3DRJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:17:09 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41CEB24677;
+        by mail.kernel.org (Postfix) with ESMTPSA id CCF1124673;
         Thu, 30 May 2019 03:17:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186228;
-        bh=C3ZDdjFT/jI5HBPcnzTA83LDoHog36YyeaKM7WpykOw=;
+        bh=i1Vi4hGrEFyWzIxeGsWxePBBNB1HBqFssvmMcgk/xcg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pMAxvOPSvBNBgPLmkzd6cfyztutsU7ERvAk45gB2fv3WogcZNSoe/IwnwAuOBjUv7
-         omjBum5CzkV5vAD8gpicYaLcqI7ToFdSUH2pU5NuwSRREdlrZBkhsGE7+S36yWeRBm
-         jPBscdyT0G2VKILBSaWxdMqfAz6Kh6z1DMdxUkhg=
+        b=X4mw2Yr14/g2jm1YKPtjxoJtYfXjAwfwyKkvHNkqI0bNLCG+moKIFlQq7xnFn62Z1
+         zHHybq7fDWxUKAQEzRpplr4g0RhxKJ95FRA2WpP5PCbts/DArgw9J7IetwxITb4T9h
+         MWdWQJdpuB7y44Yq1zz8Ei9O5RS4dg7ZkQmjgmoI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
+        stable@vger.kernel.org, Sven Van Asbroeck <TheSven73@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 083/276] iwlwifi: pcie: dont crash on invalid RX interrupt
-Date:   Wed, 29 May 2019 20:04:01 -0700
-Message-Id: <20190530030531.510521696@linuxfoundation.org>
+Subject: [PATCH 4.19 084/276] rtc: 88pm860x: prevent use-after-free on device remove
+Date:   Wed, 29 May 2019 20:04:02 -0700
+Message-Id: <20190530030531.555933764@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -60,43 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 30f24eabab8cd801064c5c37589d803cb4341929 ]
+[ Upstream commit f22b1ba15ee5785aa028384ebf77dd39e8e47b70 ]
 
-If for some reason the device gives us an RX interrupt before we're
-ready for it, perhaps during device power-on with misconfigured IRQ
-causes mapping or so, we can crash trying to access the queues.
+The device's remove() attempts to shut down the delayed_work scheduled
+on the kernel-global workqueue by calling flush_scheduled_work().
 
-Prevent that by checking that we actually have RXQs and that they
-were properly allocated.
+Unfortunately, flush_scheduled_work() does not prevent the delayed_work
+from re-scheduling itself. The delayed_work might run after the device
+has been removed, and touch the already de-allocated info structure.
+This is a potential use-after-free.
 
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Fix by calling cancel_delayed_work_sync() during remove(): this ensures
+that the delayed work is properly cancelled, is no longer running, and
+is not able to re-schedule itself.
+
+This issue was detected with the help of Coccinelle.
+
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/pcie/rx.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/rtc/rtc-88pm860x.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
-index b2905f01b7df3..6dcd5374d9b4d 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
-@@ -1388,10 +1388,15 @@ static struct iwl_rx_mem_buffer *iwl_pcie_get_rxb(struct iwl_trans *trans,
- static void iwl_pcie_rx_handle(struct iwl_trans *trans, int queue)
- {
- 	struct iwl_trans_pcie *trans_pcie = IWL_TRANS_GET_PCIE_TRANS(trans);
--	struct iwl_rxq *rxq = &trans_pcie->rxq[queue];
-+	struct iwl_rxq *rxq;
- 	u32 r, i, count = 0;
- 	bool emergency = false;
+diff --git a/drivers/rtc/rtc-88pm860x.c b/drivers/rtc/rtc-88pm860x.c
+index 01ffc0ef8033f..fbcf13bbbd8d1 100644
+--- a/drivers/rtc/rtc-88pm860x.c
++++ b/drivers/rtc/rtc-88pm860x.c
+@@ -414,7 +414,7 @@ static int pm860x_rtc_remove(struct platform_device *pdev)
+ 	struct pm860x_rtc_info *info = platform_get_drvdata(pdev);
  
-+	if (WARN_ON_ONCE(!trans_pcie->rxq || !trans_pcie->rxq[queue].bd))
-+		return;
-+
-+	rxq = &trans_pcie->rxq[queue];
-+
- restart:
- 	spin_lock(&rxq->lock);
- 	/* uCode's read index (stored in shared DRAM) indicates the last Rx
+ #ifdef VRTC_CALIBRATION
+-	flush_scheduled_work();
++	cancel_delayed_work_sync(&info->calib_work);
+ 	/* disable measurement */
+ 	pm860x_set_bits(info->i2c, PM8607_MEAS_EN2, MEAS2_VRTC, 0);
+ #endif	/* VRTC_CALIBRATION */
 -- 
 2.20.1
 
