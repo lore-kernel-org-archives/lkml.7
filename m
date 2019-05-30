@@ -2,54 +2,53 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5111FC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:32:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D6FC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D44A2189E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:32:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8823723C4F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:32:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187160;
-	bh=Gh2SH9ciqBTpsiaSefHXI2RPs4vrW9UNvsPEoZ4y/QY=;
+	s=default; t=1559187167;
+	bh=DAzweQMGmYgLZ4SGVEZjbKvDh41CeFf+yhPVel4pdOk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PsyfkWmiap+soRokM2MF/1eKTxM0bY3YKGk/jbADEAgwa4K8A4TQ8VGvxYr78FPE4
-	 VOpZxsuqmm4k6/L6CO3A4RStUD1Omwv1tKGwoA6fo7Sq0hDvSTpfiuksgTtwHH5ANO
-	 j322v4DKrA7UHQtqYg+PAqtnE2lDi0yge3JgIb4A=
+	b=GYBTbAnYQZv4xA30O5Z6zb1PA/z8r9uI29e7bE2GWqrX4FHcPWJhezJReMSynp4kh
+	 egV+j1Jc6T4iJyPzQB1N9WUZMGO2zJ4mdblQfEYp25cJ9AtTIKG6tbF+9Jstpz2Vvr
+	 +PBCLxSX4t1ZfI8qbe/Ej3lSU7GE0733s8Ot52Ng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388356AbfE3D3V (ORCPT
+        id S1731872AbfE3D3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:29:21 -0400
+        Wed, 29 May 2019 23:29:15 -0400
 Received: from mail.kernel.org ([198.145.29.99]:58924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732254AbfE3DUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:20:35 -0400
+        id S1732235AbfE3DUc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:20:32 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A982024948;
-        Thu, 30 May 2019 03:20:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FD78248C3;
+        Thu, 30 May 2019 03:20:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186434;
-        bh=Gh2SH9ciqBTpsiaSefHXI2RPs4vrW9UNvsPEoZ4y/QY=;
+        s=default; t=1559186432;
+        bh=DAzweQMGmYgLZ4SGVEZjbKvDh41CeFf+yhPVel4pdOk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DD4/Vq8/aqhCgl5E5K0kCbVxVfTXXKpSzlLFIhUP7d5WXLR6ypnnQEEvcI4Kv2QS5
-         eRhtA4rXUcw6P8/9s58CekcjqBn+6Ipc2IJuG7Uu7IKdtazkrV/Mid35n/jSg4kir/
-         0t+Fd0whRFx2jti9n5sS9u3aFPGPZ76szFwY/mdc=
+        b=gaWr85E1FpfjgUmlGA92JhhxgQZTlFqByLTMacSNwLcLlYgYTFIfRxIawJ9Bo32uB
+         TZSO0FhJatPHs00RvHxx5XseciBW+qLpvw+fy97kkqO2Hz/o6pF5U8rsW8AN7ruvpY
+         R2rkMAWIZwMWqoM61DIvik/MDP2HbfpEn3ZaOAwc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        linux-block@vger.kernel.org
-Subject: [PATCH 4.9 003/128] bio: fix improper use of smp_mb__before_atomic()
-Date:   Wed, 29 May 2019 20:05:35 -0700
-Message-Id: <20190530030433.605961301@linuxfoundation.org>
+        stable@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
+        Raul E Rangel <rrangel@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 025/128] mmc: core: Verify SD bus width
+Date:   Wed, 29 May 2019 20:05:57 -0700
+Message-Id: <20190530030439.381967370@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -62,43 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Parri <andrea.parri@amarulasolutions.com>
+[ Upstream commit 9e4be8d03f50d1b25c38e2b59e73b194c130df7d ]
 
-commit f381c6a4bd0ae0fde2d6340f1b9bb0f58d915de6 upstream.
+The SD Physical Layer Spec says the following: Since the SD Memory Card
+shall support at least the two bus modes 1-bit or 4-bit width, then any SD
+Card shall set at least bits 0 and 2 (SD_BUS_WIDTH="0101").
 
-This barrier only applies to the read-modify-write operations; in
-particular, it does not apply to the atomic_set() primitive.
+This change verifies the card has specified a bus width.
 
-Replace the barrier with an smp_mb().
+AMD SDHC Device 7806 can get into a bad state after a card disconnect
+where anything transferred via the DATA lines will always result in a
+zero filled buffer. Currently the driver will continue without error if
+the HC is in this condition. A block device will be created, but reading
+from it will result in a zero buffer. This makes it seem like the SD
+device has been erased, when in actuality the data is never getting
+copied from the DATA lines to the data buffer.
 
-Fixes: dac56212e8127 ("bio: skip atomic inc/dec of ->bi_cnt for most use cases")
-Cc: stable@vger.kernel.org
-Reported-by: "Paul E. McKenney" <paulmck@linux.ibm.com>
-Reported-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Ming Lei <ming.lei@redhat.com>
-Cc: linux-block@vger.kernel.org
-Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+SCR is the first command in the SD initialization sequence that uses the
+DATA lines. By checking that the response was invalid, we can abort
+mounting the card.
 
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/bio.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mmc/core/sd.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/include/linux/bio.h
-+++ b/include/linux/bio.h
-@@ -237,7 +237,7 @@ static inline void bio_cnt_set(struct bi
- {
- 	if (count != 1) {
- 		bio->bi_flags |= (1 << BIO_REFFED);
--		smp_mb__before_atomic();
-+		smp_mb();
- 	}
- 	atomic_set(&bio->__bi_cnt, count);
+diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
+index f09148a4ab557..00ba8807dafe4 100644
+--- a/drivers/mmc/core/sd.c
++++ b/drivers/mmc/core/sd.c
+@@ -214,6 +214,14 @@ static int mmc_decode_scr(struct mmc_card *card)
+ 
+ 	if (scr->sda_spec3)
+ 		scr->cmds = UNSTUFF_BITS(resp, 32, 2);
++
++	/* SD Spec says: any SD Card shall set at least bits 0 and 2 */
++	if (!(scr->bus_widths & SD_SCR_BUS_WIDTH_1) ||
++	    !(scr->bus_widths & SD_SCR_BUS_WIDTH_4)) {
++		pr_err("%s: invalid bus width\n", mmc_hostname(card->host));
++		return -EINVAL;
++	}
++
+ 	return 0;
  }
+ 
+-- 
+2.20.1
+
 
 
