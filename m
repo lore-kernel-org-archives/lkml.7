@@ -2,118 +2,107 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 514CEC28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E0CDC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3537B25C0F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:01:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1F2025C12
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:01:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G1VgT/UK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727563AbfE3PBP (ORCPT
+        id S1727585AbfE3PBv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 11:01:15 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57532 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725897AbfE3PBP (ORCPT
+        Thu, 30 May 2019 11:01:51 -0400
+Received: from mail-pf1-f180.google.com ([209.85.210.180]:38036 "EHLO
+        mail-pf1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbfE3PBu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 11:01:15 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UEpsFn128988;
-        Thu, 30 May 2019 11:00:29 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2stfb3ps72-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 May 2019 11:00:29 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x4UEqJ6G130442;
-        Thu, 30 May 2019 11:00:28 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2stfb3prye-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 May 2019 11:00:28 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x4UCslWT014806;
-        Thu, 30 May 2019 13:02:09 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma01dal.us.ibm.com with ESMTP id 2spwb96q5r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 May 2019 13:02:09 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4UF0FRG34603326
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 May 2019 15:00:15 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1D27CB2068;
-        Thu, 30 May 2019 15:00:15 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 07AE0B2078;
-        Thu, 30 May 2019 15:00:15 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 30 May 2019 15:00:14 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id C86A816C366B; Thu, 30 May 2019 08:00:16 -0700 (PDT)
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     rcu@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        Neeraj Upadhyay <neeraju@codeaurora.org>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH tip/core/rcu 1/9] rcu: Dump specified number of blocked tasks
-Date:   Thu, 30 May 2019 08:00:07 -0700
-Message-Id: <20190530150015.30995-1-paulmck@linux.ibm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190530145942.GA30318@linux.ibm.com>
-References: <20190530145942.GA30318@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-30_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=13 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905300106
+        Thu, 30 May 2019 11:01:50 -0400
+Received: by mail-pf1-f180.google.com with SMTP id a186so3439361pfa.5;
+        Thu, 30 May 2019 08:01:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bXVTnzNn3OxqQjLNbsEEP+BrmVnoXEVTBRZDLOj4oHM=;
+        b=G1VgT/UKdoz05v6wch8nRGcrrAV+f/3iU8QVjpfS42vxcl1vp0ILPmBbFfAseVs/X/
+         TgrES4P78oNrJkkLYoWfitx0IpQ8vvgD//hea0R69UkQTh6rjtkTly0OtkGvSsWVj6FF
+         ZlaNNJfFThBZEbnhJfC68eJEqYaQ55ODIghMyd7I/mIz3cy/nfOV5pyBpYaRgf4SFUn9
+         q/Yp7Iud0KqDzvnvBRuM6ooGp4SF2QbQHWzvehM14dS209vikfPEiAjKrA6OGeLR5RJB
+         AGgvvvCbkNlK3FvfqaVjTd0Sd3O1lboGY1MKgj4oYrx8wS8TR2cd+nLeeVvhs4PuH7wr
+         XJUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bXVTnzNn3OxqQjLNbsEEP+BrmVnoXEVTBRZDLOj4oHM=;
+        b=UbZ79anT6f+BUXXwjSq1I851fvRAXIOTjCwUlhf38cB1awCB/56YPWIdXoJMTtoQXZ
+         +43R1WWcMc9x/L4HwHb1W98Qe4NcRqWcuGHKx+Go6QSDDvCDhoIvWVAxl28AsOkYQiOC
+         2440tuSnrSTFbuG4wA1pQfPci55bt/N+dJ8Au2vJSA19BM3W6CFG1P52HGn+q4toskWo
+         yVgvbdLan/P0xeyylVMAADqjlIDqXISRlz5j/FEetQD9rhgmDPOWDfuDVrw5jcPMjpwB
+         LnTi6IUH2fu6qT3LPXDbcSH+nTAbbI4mkbA9mL4FXPl9z1WHVpBOMrs/i0VRPhgjU2B3
+         4Ylw==
+X-Gm-Message-State: APjAAAXiroE9r4XHQ4vdtyn59fGLFEakoI+zU44HcAqYjwMhGEXn4HYA
+        ubSomEhuH8iPEFRj3T+kwtQ=
+X-Google-Smtp-Source: APXvYqwV0TP2oFy7+ywo2/3FPXHDNDA3z9y3edHq3PfZrDdxNEABb5YEa5aizPl2O3sY89ROYEFtMg==
+X-Received: by 2002:a63:5024:: with SMTP id e36mr4249736pgb.220.1559228510204;
+        Thu, 30 May 2019 08:01:50 -0700 (PDT)
+Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
+        by smtp.gmail.com with ESMTPSA id q3sm2546792pgv.21.2019.05.30.08.01.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 30 May 2019 08:01:49 -0700 (PDT)
+Date:   Thu, 30 May 2019 08:01:47 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Subject: Re: [PATCH net-next 3/5] net: dsa: mv88e6xxx: Let taggers specify a
+ can_timestamp function
+Message-ID: <20190530150147.kyokyfu462bhtvnf@localhost>
+References: <20190528235627.1315-1-olteanv@gmail.com>
+ <20190528235627.1315-4-olteanv@gmail.com>
+ <20190529044912.cyg44rqvdo73oeiu@localhost>
+ <CA+h21hoNrhcpAONTvJra5Ekk+yJ6xP0VAaPSygaLOw31qsGPTg@mail.gmail.com>
+ <20190530035112.qbn3nnoxrgum7anz@localhost>
+ <CA+h21hqko57LB0BB2TSGSr4p9_czPM-g9krO+wnU7PgvaMdSDA@mail.gmail.com>
+ <20190530142356.vxkhsjalxfytvx2c@localhost>
+ <CA+h21hqqO2RYv_zG3gW17c_NBJR80ag8PSVVan66douQN+MQpw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+h21hqqO2RYv_zG3gW17c_NBJR80ag8PSVVan66douQN+MQpw@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neeraj Upadhyay <neeraju@codeaurora.org>
+On Thu, May 30, 2019 at 05:47:55PM +0300, Vladimir Oltean wrote:
+> Yes, they don't identify the original frame.
+> The hardware's line of thinking seems to be "The meta frame is sent
+> immediately after the trapped frame that triggered the action." (quote
+> from https://www.nxp.com/docs/en/user-guide/UM10944.pdf).
 
-The dump_blkd_tasks() function dumps at most 10 blocked tasks, ignoring
-the value of the ncheck parameter.  This commit therefore substitutes
-the value of ncheck for the hard-coded value of 10.  Because all callers
-currently pass 10 as the number, this patch does not change behavior,
-but it is clearly an accident waiting to happen.
+Hm.
 
-Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
----
- kernel/rcu/tree_plugin.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> If there was any other way to retrieve RX timestamps I would have done
+> it already.
 
-diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-index 1102765f91fd..3a9891a74ead 100644
---- a/kernel/rcu/tree_plugin.h
-+++ b/kernel/rcu/tree_plugin.h
-@@ -760,7 +760,7 @@ dump_blkd_tasks(struct rcu_node *rnp, int ncheck)
- 	i = 0;
- 	list_for_each(lhp, &rnp->blkd_tasks) {
- 		pr_cont(" %p", lhp);
--		if (++i >= 10)
-+		if (++i >= ncheck)
- 			break;
- 	}
- 	pr_cont("\n");
--- 
-2.17.1
+So it cannot even possibly work.
+ 
+Sorry,
+Richard
 
