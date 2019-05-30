@@ -6,56 +6,56 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E79C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B89BC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3033D26253
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:02:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6282F26255
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:02:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="vI/yXlJ9"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XabQyxjy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbfE3WB7 (ORCPT
+        id S1726849AbfE3WCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 18:01:59 -0400
-Received: from ozlabs.org ([203.11.71.1]:57473 "EHLO ozlabs.org"
+        Thu, 30 May 2019 18:02:17 -0400
+Received: from ozlabs.org ([203.11.71.1]:47639 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726576AbfE3WB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 18:01:58 -0400
+        id S1726576AbfE3WCR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 18:02:17 -0400
 Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45FLsl1nFVz9s4Y;
-        Fri, 31 May 2019 07:52:42 +1000 (AEST)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45FM4l06hHz9s3l;
+        Fri, 31 May 2019 08:02:14 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1559253163;
-        bh=gOBTgmZaBjxqpDUeDB6t2pE2Hbw5l3eOipRGnzHP7pY=;
+        s=201702; t=1559253735;
+        bh=kJLoTCjBs/nwP+hdiL4Z0EGzrpWOykBaAOwDzaoToEs=;
         h=Date:From:To:Cc:Subject:From;
-        b=vI/yXlJ9Kg2gUNdSiinuIHNmEvmSkpTp3/pZuQBUx72Lj5c2/lRxR37AUTv/wlZCd
-         CgacJXRf0cfNQ57AaXcUf+an8tk0Js8H/SBK+kHfJ6ILwubtosii3uhGm+mkNfwSh0
-         l+DZce03wE21SVbFQPGmmZLHvIC/6PahnBtLnoBqdHCnq2lkEIbgLd/icrRVr9R8dL
-         /5ILl0P987A6lbjzzZk4R10ejU4OQGvcwvtNYkDOllGZAIhtQjqH6GYEV+h9eDA3mz
-         olag97kuov6+H5ary9uK0D60SbYvD+3+/05hW4C54Mmaw+Cg1ebnDbbc5DegjSQuP2
-         WcYrSAUI/e/vA==
-Date:   Fri, 31 May 2019 07:52:41 +1000
+        b=XabQyxjyYhU4FPhHRp526ehMPht8l4ZwJGXrsUAGlvjAp+KmYHLvQEG9+iuMYhkas
+         3lpd2flEOLEW6A5i4E3JLAn7fTi1GKzTS6crd6vv0QKZg5P1vEl7dRcRvZ/w0npjOj
+         2T31FS2Q2y/v6Lg5rNuphnJpyCtwk0WhQLBnMcQOQLDE72aERL0oyWBvM/JitwEqbw
+         vRaEfLV3OqTdYhFD5VhAZCRleQFLfuH8yIa+dU7eUQlRDh3uqUqZhOSIu/lC7m9R39
+         C0B3wtIMVXES6e8hQQqk4I006wdktiasUkUPGN5ozsI8cvvy2KX77/DSVbtsJMCK5H
+         zqm9tFWAS8KWQ==
+Date:   Fri, 31 May 2019 08:02:12 +1000
 From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
 Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Parav Pandit <parav@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: linux-next: Fixes tag needs some work in the net tree
-Message-ID: <20190531075241.63c45a9a@canb.auug.org.au>
+        Zhu Yingjiang <yingjiang.zhu@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: linux-next: Fixes tag needs some work in the sound-asoc tree
+Message-ID: <20190531080212.234f5149@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/APS2ye.u3t/PPPabyavOeAO"; protocol="application/pgp-signature"
+ boundary="Sig_/xwFiduZFtHNxIq6+IWrFOX8"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/APS2ye.u3t/PPPabyavOeAO
+--Sig_/xwFiduZFtHNxIq6+IWrFOX8
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
@@ -63,40 +63,36 @@ Hi all,
 
 In commit
 
-  9414277a5df3 ("net/mlx5: Avoid double free in fs init error unwinding pat=
-h")
+  970c43d17835 ("ASoC: SOF: Intel: hda: use the defined ppcap functions")
 
 Fixes tag
 
-  Fixes: 40c3eebb49e51 ("net/mlx5: Add support in RDMA RX steering")
+  Fixes: 8a300c8fb17 ("ASoC: SOF: Intel: Add HDA controller for Intel DSP")
 
 has these problem(s):
 
-  - Target SHA1 does not exist
-
-Did you mean
-
-Fixes: 905f6bd30bb6 ("net/mlx5: Avoid double free of root ns in the error f=
-low path")
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
 
 --=20
 Cheers,
 Stephen Rothwell
 
---Sig_/APS2ye.u3t/PPPabyavOeAO
+--Sig_/xwFiduZFtHNxIq6+IWrFOX8
 Content-Type: application/pgp-signature
 Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzwUKkACgkQAVBC80lX
-0Gwb6Qf/WbXbNdJOvEKybT0z9SB+Ts6v8F2pQ3rKuW3RpXSwxg1qKSHfJc7To/rg
-VEdinIe7DURap+dkR5LzWHl/nN28iAENzCSPSXaAlGoMl3Rag3XDG94H7TEF8s9G
-vPQ4YX98Yl2GySnO60gMPxcPRVj6AKMBk/MNtwE/0kXKy9xeUwf/bd9F7FOcQoCv
-eWZv8MreB8o4CA/dYYalShE4hx+UyB8O39nv5uYa3hUZ+jjc8Hc/mQEJTIID9JVl
-Qd4F85ZmdO/Cknvd4K75TRdIKjd3r8xINQez6727buS4yH4HxLEJhy9F7mOylVGe
-KYBKrJM/J2fi1F7UpGkb0NudTzZRxQ==
-=Iy6v
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzwUuQACgkQAVBC80lX
+0GzVRwgAmyt/mf9wP3UCFmKzhD6E1U3i67ofU3ZBR/QMjdZhjrbwy7cA5uaiSIjZ
+u4eQj0C0uzwYfHk7wBhksk4u1Z5Lr4Gvg9lWxd1Q7KR4GUJd5aQoZEeID9lLQ6vI
+Xv20PUr7KhpiCfT5oWfdxx/zQfGUPBcXjJv93ZCq/UifX3TNuK0ALXcT9HwsXr1N
+bRYz85g03PTDtT9hfUQXzQW6To8lZavwvhO3lLPlcYkVereeVEYz40VU6ojlV7zo
+Mp6zs6p/EmTWtNQv0mspARQwY6Td0ehZgam1lxJOOhM4YAqqb25vb3ovcI/deK2O
+fiQKx9Y+snzykRoGCUAzvzxVkfMhFw==
+=hKvK
 -----END PGP SIGNATURE-----
 
---Sig_/APS2ye.u3t/PPPabyavOeAO--
+--Sig_/xwFiduZFtHNxIq6+IWrFOX8--
