@@ -2,269 +2,132 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D1BC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6571AC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AF4C25ECD
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:54:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=indeed.com header.i=@indeed.com header.b="tIyoSAMN"
+	by mail.kernel.org (Postfix) with ESMTP id 498DD25ED1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:54:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbfE3RyG (ORCPT
+        id S1726806AbfE3RyQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 13:54:06 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:51994 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbfE3RyE (ORCPT
+        Thu, 30 May 2019 13:54:16 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:40458 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726708AbfE3RyQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 13:54:04 -0400
-Received: by mail-it1-f193.google.com with SMTP id m3so11394664itl.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 10:54:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=indeed.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GuxcT4bNE7Lanuh6HBPPFB8YOlbNRYRQt9yxyQj+Xf4=;
-        b=tIyoSAMNQKihKq0XyVCx7ExyCL+KbWQErT3Pr6vbWiL8Ve+1visWW3DAUyOry/zGpU
-         +HwNcVdCrXF9Kzgr8gsRW0AhZhoZ+n5q8ZGdQFKCrASp6D5KxtAUH0e6rQ9eXiG2Z7dv
-         TfHhAkrNfrt2LDcEqaD12uez5QTXOKfuFmB5s=
+        Thu, 30 May 2019 13:54:16 -0400
+Received: by mail-pl1-f193.google.com with SMTP id g69so2861542plb.7;
+        Thu, 30 May 2019 10:54:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GuxcT4bNE7Lanuh6HBPPFB8YOlbNRYRQt9yxyQj+Xf4=;
-        b=fecTZ6kjMtGdpVQ70Z2niSITK3Nv+Oig/1t45CVn4NaI6mGZ+FwWLPIiSFGBi6zScm
-         o1sO7BuUTP+GEiv+Kf14qLe11ApcXehgey94kpbuXVhBKf0Eb1LX75zjiIu6opHi5f2i
-         C7+cEeUi32302ob1ipCcKIfO0lLBW2JJtHKYQRbiEGw4C8LL3scfTIz61RuNZ1bhc5Ge
-         baHFS3n0fZzSxXIF37ZsW3ym7e2sOtzzfRP9pxpIyhY/xC7ift4gYxu65Fa+dtMTZPTO
-         hvJcTEk+5F9NVNsYeBKb2gzkK4ZOiV5SSoE0lZpY77qnpXklzCeYkCk4gmyAvPzJWdhh
-         3bdA==
-X-Gm-Message-State: APjAAAWJuihnXkPu3bzx8LbKnvymXfqUNBnPJXG2bW8A6tt7S9+riyNM
-        j3bQO1ZjCaHijGfbXNhECivr1d9Lb0lICVYYuFd2VQ==
-X-Google-Smtp-Source: APXvYqwF9Y3/c0yi205TGCahwX97qwEwu4iwRt88jl9FlE+jOQfq3E3QeOdk+UxhXaA4JUHng04qr3twtUBWIS40d0Q=
-X-Received: by 2002:a24:4453:: with SMTP id o80mr3845078ita.160.1559238843258;
- Thu, 30 May 2019 10:54:03 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DT3jejRxZC9WvUsnuDGX0vv5ag+rjxjKs+Fh8jcJz98=;
+        b=lXHTiDB4IamxOOqph0rtarOe1KzFqq/PUdL1MHexSTz6yS7z0oEnsxZMmBbs1eOEnq
+         lvKsWc56i+MaoNzWWmEDNwEOYmLchw+0dQ+VuOfOLbCU9geeFtrisyeXt6CEPvfxYKd1
+         czot+O7WuIRHJSQswrrSiKeZH3OVS1C/dQnB6vMzpG0/0Zz664CqmbTIO7svnzckuxPi
+         YFzyHUaE85sjSCmsDr4hK0azuaQesAmbZeEO06IXEflShhW0e7kV0CAY7kV1LIzh9lpk
+         3rZkQs9cxzYKSS633TBreRHV1r1lvcUfRSApvw1ikzVXSwcphFfmPA1ffygk8kpWr2KZ
+         qTmg==
+X-Gm-Message-State: APjAAAWEsyLEaH7G+49w0t33Htip5Hx72U2EpppojVUKuzWv0nh9SLoj
+        0Gommx0qINkXnLbANsXDvZQ=
+X-Google-Smtp-Source: APXvYqzK6sgyXCnG5Uz/GrSVTUHD9LMf41xalET7RK+9Ru/R2DFNR9BmKxeezRH+MLP1gT8ibpfuCg==
+X-Received: by 2002:a17:902:9a4c:: with SMTP id x12mr4520833plv.298.1559238855334;
+        Thu, 30 May 2019 10:54:15 -0700 (PDT)
+Received: from ?IPv6:2620:15c:2c1:200:fb9c:664d:d2ad:c9b5? ([2620:15c:2c1:200:fb9c:664d:d2ad:c9b5])
+        by smtp.gmail.com with ESMTPSA id n70sm3009774pjb.4.2019.05.30.10.54.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 May 2019 10:54:13 -0700 (PDT)
+Subject: Re: [PATCH 1/2] scsi_host: add support for request batching
+To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, stefanha@redhat.com
+References: <20190530112811.3066-1-pbonzini@redhat.com>
+ <20190530112811.3066-2-pbonzini@redhat.com>
+ <ad0578b0-ce73-85ed-b67d-70c5d8176a23@acm.org>
+ <461fe0cd-c5bc-a612-6013-7c002b92dcdc@redhat.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <740d2f33-004e-7a37-1f6e-cf29480439b1@acm.org>
+Date:   Thu, 30 May 2019 10:54:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <1558121424-2914-1-git-send-email-chiluk+linux@indeed.com>
- <1559156926-31336-1-git-send-email-chiluk+linux@indeed.com>
- <1559156926-31336-2-git-send-email-chiluk+linux@indeed.com> <xm264l5dynrg.fsf@bsegall-linux.svl.corp.google.com>
-In-Reply-To: <xm264l5dynrg.fsf@bsegall-linux.svl.corp.google.com>
-From:   Dave Chiluk <chiluk+linux@indeed.com>
-Date:   Thu, 30 May 2019 12:53:37 -0500
-Message-ID: <CAC=E7cU9GetuKVQE1HxXsSuOKgyxezXUmSH2ZDHOrLio_YZi1g@mail.gmail.com>
-Subject: Re: [PATCH v3 1/1] sched/fair: Fix low cpu usage with high throttling
- by removing expiration of cpu-local slices
-To:     bsegall@google.com
-Cc:     Phil Auld <pauld@redhat.com>, Peter Oskolkov <posk@posk.io>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Brendan Gregg <bgregg@netflix.com>,
-        Kyle Anderson <kwa@yelp.com>,
-        Gabriel Munos <gmunoz@netflix.com>,
-        John Hammond <jhammond@indeed.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        pjt@google.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <461fe0cd-c5bc-a612-6013-7c002b92dcdc@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 02:05:55PM -0700, bsegall@google.com wrote:
-> Dave Chiluk <chiluk+linux@indeed.com> writes:
->
-> Yeah, having run the test, stranding only 1 ms per cpu rather than 5
-> doesn't help if you only have 10 ms of quota and even 10 threads/cpus.
-> The slack timer isn't important in this test, though I think it probably
-> should be changed.
-My min_cfs_rq_runtime was already set to 1ms.
+On 5/30/19 8:54 AM, Paolo Bonzini wrote:
+> On 30/05/19 17:36, Bart Van Assche wrote:
+>> On 5/30/19 4:28 AM, Paolo Bonzini wrote:
+>>> +static const struct blk_mq_ops scsi_mq_ops_no_commit = {
+>>> +    .get_budget    = scsi_mq_get_budget,
+>>> +    .put_budget    = scsi_mq_put_budget,
+>>> +    .queue_rq    = scsi_queue_rq,
+>>> +    .complete    = scsi_softirq_done,
+>>> +    .timeout    = scsi_timeout,
+>>> +#ifdef CONFIG_BLK_DEBUG_FS
+>>> +    .show_rq    = scsi_show_rq,
+>>> +#endif
+>>> +    .init_request    = scsi_mq_init_request,
+>>> +    .exit_request    = scsi_mq_exit_request,
+>>> +    .initialize_rq_fn = scsi_initialize_rq,
+>>> +    .busy        = scsi_mq_lld_busy,
+>>> +    .map_queues    = scsi_map_queues,
+>>> +};
+>>> +
+>>> +static void scsi_commit_rqs(struct blk_mq_hw_ctx *hctx)
+>>> +{
+>>> +    struct request_queue *q = hctx->queue;
+>>> +    struct scsi_device *sdev = q->queuedata;
+>>> +    struct Scsi_Host *shost = sdev->host;
+>>> +
+>>> +    shost->hostt->commit_rqs(shost, hctx->queue_num);
+>>> +}
+>>> +
+>>>   static const struct blk_mq_ops scsi_mq_ops = {
+>>>       .get_budget    = scsi_mq_get_budget,
+>>>       .put_budget    = scsi_mq_put_budget,
+>>>       .queue_rq    = scsi_queue_rq,
+>>> +    .commit_rqs    = scsi_commit_rqs,
+>>>       .complete    = scsi_softirq_done,
+>>>       .timeout    = scsi_timeout,
+>>>   #ifdef CONFIG_BLK_DEBUG_FS
+>>
+>> Hi Paolo,
+>>
+>> Have you considered to modify the block layer such that a single
+>> scsi_mq_ops structure can be used for all SCSI LLD types?
+> 
+> Yes, but I don't think it's possible to do it in a nice way.
+> Any adjustment we make to the block layer to fit the SCSI subsystem's
+> desires would make all other block drivers uglier, so I chose to confine
+> the ugliness here.
+> 
+> The root issue is that the SCSI subsystem is unique in how it sits on
+> top of the block layer; this is the famous "adapter" (or "midlayer",
+> though that is confusing when talking about SCSI) design that Linux
+> usually tries to avoid.
 
-Additionally raising the amount of quota from 10ms to 50ms or even
-100ms, still results in throttling without full quota usage.
+As far as I can see the only impact of defining an empty commit_rqs
+callback on the queueing behavior is that blk_mq_make_request() will
+queue requests for multiple hwqs on the plug list instead of requests
+for a single hwq. The plug list is sorted by hwq before it is submitted
+to a block driver. If that helps NVMe performance it should also help
+SCSI performance. How about always setting commit_rqs = scsi_commit_rqs
+in scsi_mq_ops?
 
-> Decreasing min_cfs_rq_runtime helps, but would mean that we have to pull
-> quota more often / always. The worst case here I think is where you
-> run/sleep for ~1ns, so you wind up taking the lock twice every
-> min_cfs_rq_runtime: once for assign and once to return all but min,
-> which you then use up doing short run/sleep. I suppose that determines
-> how much we care about this overhead at all.
-I'm not so concerned about how inefficiently the user-space application
-runs, as that's up to the invidual developer.  The fibtest testcase, is
-purely my approximation of what a java application with lots of worker
-threads might do, as I didn't have a great deterministic java
-reproducer, and I feared posting java to LKML.  I'm more concerned with
-the fact that the user requested 10ms/period or 100ms/period and they
-hit throttling while simultaneously not seeing that amount of cpu usage.
-i.e. on an 8 core machine if I
-$ ./runfibtest 1
-Iterations Completed(M): 1886
-Throttled for: 51
-CPU Usage (msecs) = 507
-$ ./runfibtest 8
-Iterations Completed(M): 1274
-Throttled for: 52
-CPU Usage (msecs) = 380
+Thanks,
 
-You see that in the 8 core case where we have 7 do nothing threads on
-cpu's 1-7, we see only 380 ms of usage, and 52 periods of throttling
-when we should have received ~500ms of cpu usage.
+Bart.
 
-Looking more closely at the __return_cfs_rq_runtime logic I noticed
-        if (cfs_b->quota != RUNTIME_INF &&
-            cfs_rq->runtime_expires == cfs_b->runtime_expires) {
-
-Which is awfully similar to the logic that was fixed by 512ac999.  Is it
-possible that we are just not ever returning runtime back to the cfs_b
-because of the runtime_expires comparison here?
-
-Early on in my testing I created a patch that would report via sysfs the
-amount of quota that was expired at the end of a period in
-expire_cfs_rq_runtime, and it roughly equalled the difference in quota
-between the actual cpu usage and the alloted quota.  That leads me to
-believe that something is not going quite correct in the slack return
-logic __return_cfs_rq_runtime.  I'll attach that patch at the bottom of
-this e-mail in case you'd like to reproduce my tests.
-
-> Removing expiration means that in the worst case period and quota can be
-> effectively twice what the user specified, but only on very particular
-> workloads.
-I'm only removing expiration of slices that have already been assigned
-to individual cfs_rq.  My understanding is that there is at most one
-cfs_rq per cpu, and each of those can have at most one slice of
-available runtime.  So the worst case burst is slice_ms * cpus.  Please
-help me understand how you get to twice user specified quota and period
-as it's not obvious to me *(I've only been looking at this for a few
-months).
-
-> I think we should at least think about instead lowering
-> min_cfs_rq_runtime to some smaller value
-Do you mean lower than 1ms?
-
-Thanks
-Dave.
-
-From: Dave Chiluk <chiluk+linux@indeed.com>
-Date: Thu, 30 May 2019 12:47:12 -0500
-Subject: [PATCH] Add expired_time sysfs entry
-
-Signed-off-by: Dave Chiluk <chiluk+linux@indeed.com>
----
- kernel/sched/core.c  | 41 +++++++++++++++++++++++++++++++++++++++++
- kernel/sched/fair.c  |  4 ++++
- kernel/sched/sched.h |  1 +
- 3 files changed, 46 insertions(+)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 874c427..3c06df9 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -6655,6 +6655,30 @@ static long tg_get_cfs_period(struct task_group *tg)
-        return cfs_period_us;
- }
-
-+static int tg_set_cfs_expired_runtime(struct task_group *tg, long
-slice_expiration)
-+{
-+       struct cfs_bandwidth *cfs_b = &tg->cfs_bandwidth;
-+
-+       if (slice_expiration == 0)
-+       {
-+               raw_spin_lock_irq(&cfs_b->lock);
-+               cfs_b->expired_runtime= 0;
-+               raw_spin_unlock_irq(&cfs_b->lock);
-+               return 0;
-+       }
-+       return 1;
-+}
-+
-+static u64 tg_get_cfs_expired_runtime(struct task_group *tg)
-+{
-+       u64 expired_runtime;
-+
-+       expired_runtime = tg->cfs_bandwidth.expired_runtime;
-+       do_div(expired_runtime, NSEC_PER_USEC);
-+
-+       return expired_runtime;
-+}
-+
- static s64 cpu_cfs_quota_read_s64(struct cgroup_subsys_state *css,
-                                  struct cftype *cft)
- {
-@@ -6679,6 +6703,18 @@ static int cpu_cfs_period_write_u64(struct
-cgroup_subsys_state *css,
-        return tg_set_cfs_period(css_tg(css), cfs_period_us);
- }
-
-+static u64 cpu_cfs_expired_runtime_read_u64(struct cgroup_subsys_state *css,
-+                                 struct cftype *cft)
-+{
-+       return tg_get_cfs_expired_runtime(css_tg(css));
-+}
-+
-+static int cpu_cfs_expired_runtime_write_s64(struct cgroup_subsys_state *css,
-+                                  struct cftype *cftype, s64
-cfs_slice_expiration_us)
-+{
-+       return tg_set_cfs_expired_runtime(css_tg(css), cfs_slice_expiration_us);
-+}
-+
- struct cfs_schedulable_data {
-        struct task_group *tg;
-        u64 period, quota;
-@@ -6832,6 +6868,11 @@ static u64 cpu_rt_period_read_uint(struct
-cgroup_subsys_state *css,
-                .write_u64 = cpu_cfs_period_write_u64,
-        },
-        {
-+               .name = "cfs_expired_runtime",
-+               .read_u64 = cpu_cfs_expired_runtime_read_u64,
-+               .write_s64 = cpu_cfs_expired_runtime_write_s64,
-+       },
-+       {
-                .name = "stat",
-                .seq_show = cpu_cfs_stat_show,
-        },
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index f35930f..bcbd4ef 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4382,6 +4382,9 @@ static void expire_cfs_rq_runtime(struct cfs_rq *cfs_rq)
-                cfs_rq->runtime_expires += TICK_NSEC;
-        } else {
-                /* global deadline is ahead, expiration has passed */
-+               raw_spin_lock_irq(&cfs_b->lock);
-+               cfs_b->expired_runtime += cfs_rq->runtime_remaining;
-+               raw_spin_unlock_irq(&cfs_b->lock);
-                cfs_rq->runtime_remaining = 0;
-        }
- }
-@@ -4943,6 +4946,7 @@ void init_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
-        cfs_b->runtime = 0;
-        cfs_b->quota = RUNTIME_INF;
-        cfs_b->period = ns_to_ktime(default_cfs_period());
-+       cfs_b->expired_runtime = 0;
-
-        INIT_LIST_HEAD(&cfs_b->throttled_cfs_rq);
-        hrtimer_init(&cfs_b->period_timer, CLOCK_MONOTONIC,
-HRTIMER_MODE_ABS_PINNED);
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index b52ed1a..499d2e2 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -343,6 +343,7 @@ struct cfs_bandwidth {
-        s64                     hierarchical_quota;
-        u64                     runtime_expires;
-        int                     expires_seq;
-+       u64                     expired_runtime;
-
-        short                   idle;
-        short                   period_active;
-
---
-1.8.3.1
