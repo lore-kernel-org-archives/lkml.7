@@ -4,56 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 824ACC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5A7C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52B9B25589
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:29:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B21F255B2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:29:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190594;
-	bh=XMg1VJPFU8dRxGPVBd3Y/ZFiH2pYiUvj9KpvL6JtE/c=;
+	s=default; t=1559190597;
+	bh=u+nUiTKKKXyldh9p4wc93XIBYk6vNLNZaGRrS5m1MzU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jVYdHv6Cmbv9LO2hpkaerAyrHm7IB9J7PdeCru9mugZ+jizrxPptd6DWRM3jJRgdk
-	 yuSHyUIvTGNvpFULDhN4O2krpKpCzPHivbLQwY2h59s+3Vg8fnfYTxFXG8PQuiOas7
-	 PlAzEZZfoLd13lLmD4ecHXyKQaT/YSuv+vP9TGUk=
+	b=ubVLHVpfPZus6m9QVzAj6CPomAS9ZKg00golw58dm71DiMDogqoYvxuwZTyi9sgvA
+	 +AggxcMxqsKF5dh2MhqrlY7sAzzh0YjP/514jNCVl4f+TuzYgyWnsakSZhmI6/mBYB
+	 CIqnPP+88Rm2ICKdJp/90BvdCGZvnFaKcHoW0Wis=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729660AbfE3DN7 (ORCPT
+        id S1730579AbfE3E34 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:13:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52180 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:29:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728676AbfE3DLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:11:47 -0400
+        id S1729652AbfE3DOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:00 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EDB624502;
-        Thu, 30 May 2019 03:11:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D5982455A;
+        Thu, 30 May 2019 03:13:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185906;
-        bh=XMg1VJPFU8dRxGPVBd3Y/ZFiH2pYiUvj9KpvL6JtE/c=;
+        s=default; t=1559186039;
+        bh=u+nUiTKKKXyldh9p4wc93XIBYk6vNLNZaGRrS5m1MzU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VA4AA1Jqb2pOj+SdtoiO1joQ8Bgw1JA9QTHFYOA7IN4vEtxQ5igRGsSei+ovEsOTt
-         ZozCH9uneWHWi5YczIitWGI2O+Bqqh2K+LPy10BGjj2AMd+aJWhYO0nR1fFZ2wYejJ
-         7KWbR+qefySQ9zaoaWEBXlv6f77mKFZaEs0cTKqQ=
+        b=LI7FODCjVCgJD0HJNZ6AN8bG/wtB3YKsvgmBG5XF2boy/3WDBSblzAGGCvzCcy42R
+         IXIS0v5yOZXfXTt1zyRhW9lktnkdcavwlmEh03zo4r6muOKYtXo/gZ0L01sgbaavUM
+         /L6EuZDXa18BK9+zgf1m4BGI1JnH//OUbqnApeLE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, ris Ostrovsky <boris.ostrovsky@oracle.com>,
-        xen-devel@lists.xenproject.org, Omar Sandoval <osandov@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Juergen Gross <jgross@suse.com>,
-        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 279/405] block: avoid to break XEN by multi-page bvec
-Date:   Wed, 29 May 2019 20:04:37 -0700
-Message-Id: <20190530030555.005862356@linuxfoundation.org>
+        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, luto@kernel.org,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 128/346] mm/uaccess: Use unsigned long to placate UBSAN warnings on older GCC versions
+Date:   Wed, 29 May 2019 20:03:21 -0700
+Message-Id: <20190530030547.598146383@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
-References: <20190530030540.291644921@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,38 +62,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit db5ebd6edd2627d7e81a031643cf43587f63e66c ]
+[ Upstream commit 29da93fea3ea39ab9b12270cc6be1b70ef201c9e ]
 
-XEN has special page merge requirement, see xen_biovec_phys_mergeable().
-We can't merge pages into one bvec simply for XEN.
+Randy reported objtool triggered on his (GCC-7.4) build:
 
-So move XEN's specific check on page merge into __bio_try_merge_page(),
-then abvoid to break XEN by multi-page bvec.
+  lib/strncpy_from_user.o: warning: objtool: strncpy_from_user()+0x315: call to __ubsan_handle_add_overflow() with UACCESS enabled
+  lib/strnlen_user.o: warning: objtool: strnlen_user()+0x337: call to __ubsan_handle_sub_overflow() with UACCESS enabled
 
-Cc: ris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: xen-devel@lists.xenproject.org
-Cc: Omar Sandoval <osandov@fb.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+This is due to UBSAN generating signed-overflow-UB warnings where it
+should not. Prior to GCC-8 UBSAN ignored -fwrapv (which the kernel
+uses through -fno-strict-overflow).
+
+Make the functions use 'unsigned long' throughout.
+
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: luto@kernel.org
+Link: http://lkml.kernel.org/r/20190424072208.754094071@infradead.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bio.c | 2 ++
- 1 file changed, 2 insertions(+)
+ lib/strncpy_from_user.c | 5 +++--
+ lib/strnlen_user.c      | 4 ++--
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/block/bio.c b/block/bio.c
-index 716510ecd7ffa..a3c80a6c1fe51 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -776,6 +776,8 @@ bool __bio_try_merge_page(struct bio *bio, struct page *page,
+diff --git a/lib/strncpy_from_user.c b/lib/strncpy_from_user.c
+index 58eacd41526c5..023ba9f3b99f0 100644
+--- a/lib/strncpy_from_user.c
++++ b/lib/strncpy_from_user.c
+@@ -23,10 +23,11 @@
+  * hit it), 'max' is the address space maximum (and we return
+  * -EFAULT if we hit it).
+  */
+-static inline long do_strncpy_from_user(char *dst, const char __user *src, long count, unsigned long max)
++static inline long do_strncpy_from_user(char *dst, const char __user *src,
++					unsigned long count, unsigned long max)
+ {
+ 	const struct word_at_a_time constants = WORD_AT_A_TIME_CONSTANTS;
+-	long res = 0;
++	unsigned long res = 0;
  
- 		if (vec_end_addr + 1 != page_addr + off)
- 			return false;
-+		if (xen_domain() && !xen_biovec_phys_mergeable(bv, page))
-+			return false;
- 		if (same_page && (vec_end_addr & PAGE_MASK) != page_addr)
- 			return false;
+ 	/*
+ 	 * Truncate 'max' to the user-specified limit, so that
+diff --git a/lib/strnlen_user.c b/lib/strnlen_user.c
+index 1c1a1b0e38a5f..7f2db3fe311fd 100644
+--- a/lib/strnlen_user.c
++++ b/lib/strnlen_user.c
+@@ -28,7 +28,7 @@
+ static inline long do_strnlen_user(const char __user *src, unsigned long count, unsigned long max)
+ {
+ 	const struct word_at_a_time constants = WORD_AT_A_TIME_CONSTANTS;
+-	long align, res = 0;
++	unsigned long align, res = 0;
+ 	unsigned long c;
+ 
+ 	/*
+@@ -42,7 +42,7 @@ static inline long do_strnlen_user(const char __user *src, unsigned long count,
+ 	 * Do everything aligned. But that means that we
+ 	 * need to also expand the maximum..
+ 	 */
+-	align = (sizeof(long) - 1) & (unsigned long)src;
++	align = (sizeof(unsigned long) - 1) & (unsigned long)src;
+ 	src -= align;
+ 	max += align;
  
 -- 
 2.20.1
