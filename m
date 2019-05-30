@@ -5,53 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A16EEC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F7AC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E7C12504D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:05:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C669A25051
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:05:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189145;
-	bh=ywf1nuG7kMfD5ctTdkXYQCTqMgoIsl1j0TPUzIGUXX4=;
+	s=default; t=1559189149;
+	bh=R7ydtanNvP1M/PVD+PbSlxI6quaxB5Iq76MBUnNU2o4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zOyJUWQE1uwych5cIjpKgP3ITOUAPmvbNFrpYy2AKfMqBWvJbeU8FUT2is9iQgasx
-	 WSCJRg58riIVFFL2twiiG1Pq0Q7fk86BW8qLLNG30b/VRxD5aMADXxXVBBleoZRZeu
-	 AQ4j1zwgBY1ySvUtSwh8piw/FkJojOH8sISP37Tk=
+	b=tEZmWLnIuTH8vOCwXVlb2rvwXZI7eSGMGO/1fgkTOTbO4Jb8XoMMVeNRvcqPUN+cn
+	 Y0atMPn4H54LG16qV4w8/2bypAbyOsbWGXFelhmkxM2vBpRyg8oWQElwjUxF4komP3
+	 cl4BcGWGlTpgtYknvp/H5L0dizeVOynqmQSr4XXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbfE3EFo (ORCPT
+        id S1730361AbfE3DRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:05:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48276 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:17:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730850AbfE3DRm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:17:42 -0400
+        id S1729716AbfE3DOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:06 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B93A82470B;
-        Thu, 30 May 2019 03:17:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06E7B24570;
+        Thu, 30 May 2019 03:14:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186261;
-        bh=ywf1nuG7kMfD5ctTdkXYQCTqMgoIsl1j0TPUzIGUXX4=;
+        s=default; t=1559186046;
+        bh=R7ydtanNvP1M/PVD+PbSlxI6quaxB5Iq76MBUnNU2o4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WbDNGVIVohH5hXLGJeODdO+dNH2HCyPa4EChLVDusWgy+82vOdqNVHknsX9RLDYHq
-         MGJSdN2kAi+Iv0yxOrX0hS2luU08ZsQAkTAGBLjgQh+PD3RggWlNN8Ff92fwpR58GV
-         lLlRUw+Y4a+N+sscrbNyscaNJA/XVdPN9fI8AwN4=
+        b=LDGt/H/DL2erkJEOXdq+3L03SmTTGdKGFHf0e5jK31/IspRc5zIrpXQ0mF1lCd+20
+         YfabGUSCm4GdlxO+RhCS5g/sj7GOczzDGY79eC3gYNRmBXJLVQRvtLCcJnjja4jZAC
+         k4TRMLpzYDhQNyp8c/rQI1cmPc0tCrUxC4yNaKKY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Piotr Figiel <p.figiel@camlintechnologies.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 195/276] brcmfmac: convert dev_init_lock mutex to completion
-Date:   Wed, 29 May 2019 20:05:53 -0700
-Message-Id: <20190530030537.321732327@linuxfoundation.org>
+        stable@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 112/346] nvme: set 0 capacity if namespace block size exceeds PAGE_SIZE
+Date:   Wed, 29 May 2019 20:03:05 -0700
+Message-Id: <20190530030546.766998136@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
-References: <20190530030523.133519668@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,188 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a9fd0953fa4a62887306be28641b4b0809f3b2fd ]
+[ Upstream commit 01fa017484ad98fccdeaab32db0077c574b6bd6f ]
 
-Leaving dev_init_lock mutex locked in probe causes BUG and a WARNING when
-kernel is compiled with CONFIG_PROVE_LOCKING. Convert mutex to completion
-which silences those warnings and improves code readability.
+If our target exposed a namespace with a block size that is greater
+than PAGE_SIZE, set 0 capacity on the namespace as we do not support it.
 
-Fix below errors when connecting the USB WiFi dongle:
+This issue encountered when the nvmet namespace was backed by a tempfile.
 
-brcmfmac: brcmf_fw_alloc_request: using brcm/brcmfmac43143 for chip BCM43143/2
-BUG: workqueue leaked lock or atomic: kworker/0:2/0x00000000/434
-     last function: hub_event
-1 lock held by kworker/0:2/434:
- #0: 18d5dcdf (&devinfo->dev_init_lock){+.+.}, at: brcmf_usb_probe+0x78/0x550 [brcmfmac]
-CPU: 0 PID: 434 Comm: kworker/0:2 Not tainted 4.19.23-00084-g454a789-dirty #123
-Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
-Workqueue: usb_hub_wq hub_event
-[<8011237c>] (unwind_backtrace) from [<8010d74c>] (show_stack+0x10/0x14)
-[<8010d74c>] (show_stack) from [<809c4324>] (dump_stack+0xa8/0xd4)
-[<809c4324>] (dump_stack) from [<8014195c>] (process_one_work+0x710/0x808)
-[<8014195c>] (process_one_work) from [<80141a80>] (worker_thread+0x2c/0x564)
-[<80141a80>] (worker_thread) from [<80147bcc>] (kthread+0x13c/0x16c)
-[<80147bcc>] (kthread) from [<801010b4>] (ret_from_fork+0x14/0x20)
-Exception stack(0xed1d9fb0 to 0xed1d9ff8)
-9fa0:                                     00000000 00000000 00000000 00000000
-9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-
-======================================================
-WARNING: possible circular locking dependency detected
-4.19.23-00084-g454a789-dirty #123 Not tainted
-------------------------------------------------------
-kworker/0:2/434 is trying to acquire lock:
-e29cf799 ((wq_completion)"events"){+.+.}, at: process_one_work+0x174/0x808
-
-but task is already holding lock:
-18d5dcdf (&devinfo->dev_init_lock){+.+.}, at: brcmf_usb_probe+0x78/0x550 [brcmfmac]
-
-which lock already depends on the new lock.
-
-the existing dependency chain (in reverse order) is:
-
--> #2 (&devinfo->dev_init_lock){+.+.}:
-       mutex_lock_nested+0x1c/0x24
-       brcmf_usb_probe+0x78/0x550 [brcmfmac]
-       usb_probe_interface+0xc0/0x1bc
-       really_probe+0x228/0x2c0
-       __driver_attach+0xe4/0xe8
-       bus_for_each_dev+0x68/0xb4
-       bus_add_driver+0x19c/0x214
-       driver_register+0x78/0x110
-       usb_register_driver+0x84/0x148
-       process_one_work+0x228/0x808
-       worker_thread+0x2c/0x564
-       kthread+0x13c/0x16c
-       ret_from_fork+0x14/0x20
-         (null)
-
--> #1 (brcmf_driver_work){+.+.}:
-       worker_thread+0x2c/0x564
-       kthread+0x13c/0x16c
-       ret_from_fork+0x14/0x20
-         (null)
-
--> #0 ((wq_completion)"events"){+.+.}:
-       process_one_work+0x1b8/0x808
-       worker_thread+0x2c/0x564
-       kthread+0x13c/0x16c
-       ret_from_fork+0x14/0x20
-         (null)
-
-other info that might help us debug this:
-
-Chain exists of:
-  (wq_completion)"events" --> brcmf_driver_work --> &devinfo->dev_init_lock
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&devinfo->dev_init_lock);
-                               lock(brcmf_driver_work);
-                               lock(&devinfo->dev_init_lock);
-  lock((wq_completion)"events");
-
- *** DEADLOCK ***
-
-1 lock held by kworker/0:2/434:
- #0: 18d5dcdf (&devinfo->dev_init_lock){+.+.}, at: brcmf_usb_probe+0x78/0x550 [brcmfmac]
-
-stack backtrace:
-CPU: 0 PID: 434 Comm: kworker/0:2 Not tainted 4.19.23-00084-g454a789-dirty #123
-Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
-Workqueue: events request_firmware_work_func
-[<8011237c>] (unwind_backtrace) from [<8010d74c>] (show_stack+0x10/0x14)
-[<8010d74c>] (show_stack) from [<809c4324>] (dump_stack+0xa8/0xd4)
-[<809c4324>] (dump_stack) from [<80172838>] (print_circular_bug+0x210/0x330)
-[<80172838>] (print_circular_bug) from [<80175940>] (__lock_acquire+0x160c/0x1a30)
-[<80175940>] (__lock_acquire) from [<8017671c>] (lock_acquire+0xe0/0x268)
-[<8017671c>] (lock_acquire) from [<80141404>] (process_one_work+0x1b8/0x808)
-[<80141404>] (process_one_work) from [<80141a80>] (worker_thread+0x2c/0x564)
-[<80141a80>] (worker_thread) from [<80147bcc>] (kthread+0x13c/0x16c)
-[<80147bcc>] (kthread) from [<801010b4>] (ret_from_fork+0x14/0x20)
-Exception stack(0xed1d9fb0 to 0xed1d9ff8)
-9fa0:                                     00000000 00000000 00000000 00000000
-9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-
-Signed-off-by: Piotr Figiel <p.figiel@camlintechnologies.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Keith Busch <keith.busch@intel.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../wireless/broadcom/brcm80211/brcmfmac/usb.c  | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+ drivers/nvme/host/core.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-index a4308c6e72d79..5aeb401d9a024 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-@@ -160,7 +160,7 @@ struct brcmf_usbdev_info {
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 4c4413ad3ceb3..5b389fed6d54c 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -1551,6 +1551,10 @@ static void nvme_update_disk_info(struct gendisk *disk,
+ 	sector_t capacity = le64_to_cpup(&id->nsze) << (ns->lba_shift - 9);
+ 	unsigned short bs = 1 << ns->lba_shift;
  
- 	struct usb_device *usbdev;
- 	struct device *dev;
--	struct mutex dev_init_lock;
-+	struct completion dev_init_done;
++	if (ns->lba_shift > PAGE_SHIFT) {
++		/* unsupported block size, set capacity to 0 later */
++		bs = (1 << 9);
++	}
+ 	blk_mq_freeze_queue(disk->queue);
+ 	blk_integrity_unregister(disk);
  
- 	int ctl_in_pipe, ctl_out_pipe;
- 	struct urb *ctl_urb; /* URB for control endpoint */
-@@ -1195,11 +1195,11 @@ static void brcmf_usb_probe_phase2(struct device *dev, int ret,
- 	if (ret)
- 		goto error;
+@@ -1561,7 +1565,8 @@ static void nvme_update_disk_info(struct gendisk *disk,
+ 	if (ns->ms && !ns->ext &&
+ 	    (ns->ctrl->ops->flags & NVME_F_METADATA_SUPPORTED))
+ 		nvme_init_integrity(disk, ns->ms, ns->pi_type);
+-	if (ns->ms && !nvme_ns_has_pi(ns) && !blk_get_integrity(disk))
++	if ((ns->ms && !nvme_ns_has_pi(ns) && !blk_get_integrity(disk)) ||
++	    ns->lba_shift > PAGE_SHIFT)
+ 		capacity = 0;
  
--	mutex_unlock(&devinfo->dev_init_lock);
-+	complete(&devinfo->dev_init_done);
- 	return;
- error:
- 	brcmf_dbg(TRACE, "failed: dev=%s, err=%d\n", dev_name(dev), ret);
--	mutex_unlock(&devinfo->dev_init_lock);
-+	complete(&devinfo->dev_init_done);
- 	device_release_driver(dev);
- }
- 
-@@ -1267,7 +1267,7 @@ static int brcmf_usb_probe_cb(struct brcmf_usbdev_info *devinfo)
- 		if (ret)
- 			goto fail;
- 		/* we are done */
--		mutex_unlock(&devinfo->dev_init_lock);
-+		complete(&devinfo->dev_init_done);
- 		return 0;
- 	}
- 	bus->chip = bus_pub->devid;
-@@ -1327,11 +1327,10 @@ brcmf_usb_probe(struct usb_interface *intf, const struct usb_device_id *id)
- 
- 	devinfo->usbdev = usb;
- 	devinfo->dev = &usb->dev;
--	/* Take an init lock, to protect for disconnect while still loading.
-+	/* Init completion, to protect for disconnect while still loading.
- 	 * Necessary because of the asynchronous firmware load construction
- 	 */
--	mutex_init(&devinfo->dev_init_lock);
--	mutex_lock(&devinfo->dev_init_lock);
-+	init_completion(&devinfo->dev_init_done);
- 
- 	usb_set_intfdata(intf, devinfo);
- 
-@@ -1409,7 +1408,7 @@ brcmf_usb_probe(struct usb_interface *intf, const struct usb_device_id *id)
- 	return 0;
- 
- fail:
--	mutex_unlock(&devinfo->dev_init_lock);
-+	complete(&devinfo->dev_init_done);
- 	kfree(devinfo);
- 	usb_set_intfdata(intf, NULL);
- 	return ret;
-@@ -1424,7 +1423,7 @@ brcmf_usb_disconnect(struct usb_interface *intf)
- 	devinfo = (struct brcmf_usbdev_info *)usb_get_intfdata(intf);
- 
- 	if (devinfo) {
--		mutex_lock(&devinfo->dev_init_lock);
-+		wait_for_completion(&devinfo->dev_init_done);
- 		/* Make sure that devinfo still exists. Firmware probe routines
- 		 * may have released the device and cleared the intfdata.
- 		 */
+ 	set_capacity(disk, capacity);
 -- 
 2.20.1
 
