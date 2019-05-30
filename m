@@ -4,60 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CAB3C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D41FFC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76F76256C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:32:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9F7B256CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:32:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190732;
-	bh=P3JTk7xVOJNuPEoVcNeajWlhbZPMJjIyXv67yz0Vxn8=;
+	s=default; t=1559190735;
+	bh=kWmMwuPTRb+1T90BSCkgw5VI7OQpnESmY40S8zU9mM4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b6crRqJaa0IJhrxLh+VQEvmD31V/yamBLZoe4Jcd1wvpqv7B32iUiCGAd6t6ss1Ch
-	 2LdLXswy90N+q1Gvh41Y4fzG0kRhe3BIapC5a4kMsGUbesYVgF1ZEgXW+HM7ODDl5j
-	 dt+94Ilw00NjX1Dz/lwOQ76mGuDlesT8zbRd0w/M=
+	b=M5No9B+/25DHBAqjPObfmv+oHIaoJ7cTU4tr5esu9el5O9kGc7B969FRAprbdW855
+	 CIA3j6SddsXCjmKuUELrOMR9PSquxoYxEpk0k3PlWbo5seJxgTozSy66Wyztlxb6dz
+	 VOWEZUQn6o4k0O7amI3tV4ghxB8DP0JI4yhdQxpE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729549AbfE3DNl (ORCPT
+        id S2388269AbfE3EcO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:13:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51652 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:32:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728621AbfE3DLh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:11:37 -0400
+        id S1729545AbfE3DNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:41 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F85B244D2;
-        Thu, 30 May 2019 03:11:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E1E424561;
+        Thu, 30 May 2019 03:13:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185897;
-        bh=P3JTk7xVOJNuPEoVcNeajWlhbZPMJjIyXv67yz0Vxn8=;
+        s=default; t=1559186020;
+        bh=kWmMwuPTRb+1T90BSCkgw5VI7OQpnESmY40S8zU9mM4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GimkMwz3G180jpbG+QHyPyvCDMhyLwDS8fjMw2EjJa7cU1US2DLSZW79ptf9RHPqq
-         JitgTZ0RtdI0PiLsS5z3u466/qM5QLMwZ9EVeO3cEk/kPglo9nWWvKPwDrGoFbpEye
-         v9ym+UY5ETYy/ExF6EnXBTEFAMb0raxHDQwhEF3M=
+        b=bJFnVMe20z2UcNXbQ4kCayKNgAYPRlPu83d61H+qoPck4rRVKDflwjrNMeQhMFbNM
+         oVDWaTFvel+6V65LRRNimKApw2xQGpZkKpP+zs/RGJzWHZ6ek66oMMBL5HwFjNYjcA
+         PsnAgIAVNrdGAZFz1smSTgz/q0bECVNkDnDfzQFE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>, ard.biesheuvel@linaro.org,
-        oss-drivers@netronome.com, pbonzini@redhat.com,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 263/405] locking/static_key: Fix false positive warnings on concurrent dec/inc
-Date:   Wed, 29 May 2019 20:04:21 -0700
-Message-Id: <20190530030554.247311160@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 089/346] btrfs: Dont panic when we cant find a root key
+Date:   Wed, 29 May 2019 20:02:42 -0700
+Message-Id: <20190530030545.672744731@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
-References: <20190530030540.291644921@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -67,89 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a1247d06d01045d7ab2882a9c074fbf21137c690 ]
+[ Upstream commit 7ac1e464c4d473b517bb784f30d40da1f842482e ]
 
-Even though the atomic_dec_and_mutex_lock() in
-__static_key_slow_dec_cpuslocked() can never see a negative value in
-key->enabled the subsequent sanity check is re-reading key->enabled, which may
-have been set to -1 in the meantime by static_key_slow_inc_cpuslocked().
+When we failed to find a root key in btrfs_update_root(), we just panic.
 
-                CPU  A                               CPU B
+That's definitely not cool, fix it by outputting an unique error
+message, aborting current transaction and return -EUCLEAN. This should
+not normally happen as the root has been used by the callers in some
+way.
 
- __static_key_slow_dec_cpuslocked():          static_key_slow_inc_cpuslocked():
-                               # enabled = 1
-   atomic_dec_and_mutex_lock()
-                               # enabled = 0
-                                              atomic_read() == 0
-                                              atomic_set(-1)
-                               # enabled = -1
-   val = atomic_read()
-   # Oops - val == -1!
-
-The test case is TCP's clean_acked_data_enable() / clean_acked_data_disable()
-as tickled by KTLS (net/ktls).
-
-Suggested-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reported-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Tested-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: ard.biesheuvel@linaro.org
-Cc: oss-drivers@netronome.com
-Cc: pbonzini@redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/jump_label.c | 21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+ fs/btrfs/root-tree.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/jump_label.c b/kernel/jump_label.c
-index bad96b476eb6e..a799b1ac6b2fe 100644
---- a/kernel/jump_label.c
-+++ b/kernel/jump_label.c
-@@ -206,6 +206,8 @@ static void __static_key_slow_dec_cpuslocked(struct static_key *key,
- 					   unsigned long rate_limit,
- 					   struct delayed_work *work)
- {
-+	int val;
-+
- 	lockdep_assert_cpus_held();
+diff --git a/fs/btrfs/root-tree.c b/fs/btrfs/root-tree.c
+index fb205ebeca391..3228d3b3084a4 100644
+--- a/fs/btrfs/root-tree.c
++++ b/fs/btrfs/root-tree.c
+@@ -135,11 +135,14 @@ int btrfs_update_root(struct btrfs_trans_handle *trans, struct btrfs_root
+ 	if (ret < 0)
+ 		goto out;
  
- 	/*
-@@ -215,17 +217,20 @@ static void __static_key_slow_dec_cpuslocked(struct static_key *key,
- 	 * returns is unbalanced, because all other static_key_slow_inc()
- 	 * instances block while the update is in progress.
- 	 */
--	if (!atomic_dec_and_mutex_lock(&key->enabled, &jump_label_mutex)) {
--		WARN(atomic_read(&key->enabled) < 0,
--		     "jump label: negative count!\n");
-+	val = atomic_fetch_add_unless(&key->enabled, -1, 1);
-+	if (val != 1) {
-+		WARN(val < 0, "jump label: negative count!\n");
- 		return;
+-	if (ret != 0) {
+-		btrfs_print_leaf(path->nodes[0]);
+-		btrfs_crit(fs_info, "unable to update root key %llu %u %llu",
+-			   key->objectid, key->type, key->offset);
+-		BUG_ON(1);
++	if (ret > 0) {
++		btrfs_crit(fs_info,
++			"unable to find root key (%llu %u %llu) in tree %llu",
++			key->objectid, key->type, key->offset,
++			root->root_key.objectid);
++		ret = -EUCLEAN;
++		btrfs_abort_transaction(trans, ret);
++		goto out;
  	}
  
--	if (rate_limit) {
--		atomic_inc(&key->enabled);
--		schedule_delayed_work(work, rate_limit);
--	} else {
--		jump_label_update(key);
-+	jump_label_lock();
-+	if (atomic_dec_and_test(&key->enabled)) {
-+		if (rate_limit) {
-+			atomic_inc(&key->enabled);
-+			schedule_delayed_work(work, rate_limit);
-+		} else {
-+			jump_label_update(key);
-+		}
- 	}
- 	jump_label_unlock();
- }
+ 	l = path->nodes[0];
 -- 
 2.20.1
 
