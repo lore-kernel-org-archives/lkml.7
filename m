@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DD5C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:09:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C5EC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE675250E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:09:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5138C250E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:09:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189356;
-	bh=dgVPfRnNrS9sF00eZQGA8PRNy4LT4oN8ILxqoCCnE5Y=;
+	s=default; t=1559189357;
+	bh=8dupTE69iXTuiR/Dve+SGnSpw1wvW4cREdHwZWJ7Xcw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SD8tKQsbkf2FtxzBRz40v2PYHybIH70kKOT2yXBmA98n5brwL0r5QRLBdKWw83Fub
-	 +8bYXA+PBnTucASlNeXetWlONGe1p8rWnbgLQhVY4OPe+J1N3zYchLqGGSkIxADRXw
-	 PQLs6uAWgh8v5BWBtyiXH5e67DQSAjHbolDLoJ6c=
+	b=vu70JcBsGZvqiDd/k32aK3hnatWll6tsUE4C8N40CPB9wRIqLSAWsXPID/vAa92Kd
+	 u2a2XXkTKc4jc7BH5yBdPJQtW0kS0YYxSAFuUeo5/6OUygmveO1H/0nXyhFvd8tGFf
+	 CEvcnaSiYFilx5gKDffGSSgc5p+bbi4vhpHkCxxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbfE3EJO (ORCPT
+        id S1727028AbfE3EHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:09:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45532 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:07:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730967AbfE3DRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:17:13 -0400
+        id S1731133AbfE3DRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:17:30 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D18224685;
-        Thu, 30 May 2019 03:17:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F8FE24027;
+        Thu, 30 May 2019 03:17:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186233;
-        bh=dgVPfRnNrS9sF00eZQGA8PRNy4LT4oN8ILxqoCCnE5Y=;
+        s=default; t=1559186249;
+        bh=8dupTE69iXTuiR/Dve+SGnSpw1wvW4cREdHwZWJ7Xcw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JiDB2jvnI88PhcQeZybE2V2jnnpmm0ORtlJJbXzyV6PDGxvAM1AAnMXxg2QVGNACX
-         C+pRnTK89vQpO+5JhIOQCNpfE5TT9KX00kKOCXdNtXCJ+VinmcTQvWsTzermfRmBV3
-         EpwbyhYnG6A/L9d+JVaNsFy4413dugPsZ6ePts2A=
+        b=qsIFZmH5gBinGxMhqrr0Dao2EuIre1BE45KBnsOFXjMBWWpCwEp8mlsUopSJsLnE6
+         dqTqWB/1OJGx73gmdGiGXHE6yJqg4Mlmnq9LzxjeK6lMEGlXlaK8IuY/kTGTt99r0u
+         l34PrvQ5p5+pyk9xSA3wQIjgQs1Yh+2zb5OUtjzU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicholas Mc Guire <hofrat@osadl.org>,
-        kbuild test robot <lkp@intel.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
+        stable@vger.kernel.org, Yinbo Zhu <yinbo.zhu@nxp.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 139/276] staging: vc04_services: handle kzalloc failure
-Date:   Wed, 29 May 2019 20:04:57 -0700
-Message-Id: <20190530030534.392200891@linuxfoundation.org>
+Subject: [PATCH 4.19 167/276] mmc: sdhci-of-esdhc: add erratum eSDHC-A001 and A-008358 support
+Date:   Wed, 29 May 2019 20:05:25 -0700
+Message-Id: <20190530030535.858249716@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -61,52 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a5112277872a56017b777770e2fd4324d4a6c866 ]
+[ Upstream commit 05cb6b2a66fa7837211a060878e91be5eb10cb07 ]
 
-The kzalloc here was being used without checking the return - if the
-kzalloc fails return VCHIQ_ERROR. The call-site of
-vchiq_platform_init_state() vchiq_init_state() was not responding
-to an allocation failure so checks for != VCHIQ_SUCCESS
-and pass VCHIQ_ERROR up to vchiq_platform_init() which then
-will fail with -EINVAL.
+eSDHC-A001: The data timeout counter (SYSCTL[DTOCV]) is not
+reliable for DTOCV values 0x4(2^17 SD clock), 0x8(2^21 SD clock),
+and 0xC(2^25 SD clock). The data timeout counter can count from
+2^13–2^27, but for values 2^17, 2^21, and 2^25, the timeout
+counter counts for only 2^13 SD clocks.
+A-008358: The data timeout counter value loaded into the timeout
+counter is less than expected and can result into early timeout
+error in case of eSDHC data transactions. The table below shows
+the expected vs actual timeout period for different values of
+SYSCTL[DTOCV]:
+these two erratum has the same quirk to control it, and set
+SDHCI_QUIRK_RESET_AFTER_REQUEST to fix above issue.
 
-Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
-Reported-by: kbuild test robot <lkp@intel.com>
-Acked-By: Stefan Wahren <stefan.wahren@i2se.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c | 3 +++
- drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c | 2 ++
- 2 files changed, 5 insertions(+)
+ drivers/mmc/host/sdhci-of-esdhc.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-index e767209030642..c7c8ef67b67fa 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-@@ -208,6 +208,9 @@ vchiq_platform_init_state(VCHIQ_STATE_T *state)
- 	struct vchiq_2835_state *platform_state;
+diff --git a/drivers/mmc/host/sdhci-of-esdhc.c b/drivers/mmc/host/sdhci-of-esdhc.c
+index e63d22fb99edf..e5c598ae5f244 100644
+--- a/drivers/mmc/host/sdhci-of-esdhc.c
++++ b/drivers/mmc/host/sdhci-of-esdhc.c
+@@ -920,8 +920,10 @@ static int sdhci_esdhc_probe(struct platform_device *pdev)
+ 	if (esdhc->vendor_ver > VENDOR_V_22)
+ 		host->quirks &= ~SDHCI_QUIRK_NO_BUSY_IRQ;
  
- 	state->platform_state = kzalloc(sizeof(*platform_state), GFP_KERNEL);
-+	if (!state->platform_state)
-+		return VCHIQ_ERROR;
-+
- 	platform_state = (struct vchiq_2835_state *)state->platform_state;
+-	if (of_find_compatible_node(NULL, NULL, "fsl,p2020-esdhc"))
++	if (of_find_compatible_node(NULL, NULL, "fsl,p2020-esdhc")) {
+ 		host->quirks2 |= SDHCI_QUIRK_RESET_AFTER_REQUEST;
++		host->quirks2 |= SDHCI_QUIRK_BROKEN_TIMEOUT_VAL;
++	}
  
- 	platform_state->inited = 1;
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
-index 7642ced314364..63ce567eb6b75 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
-@@ -2537,6 +2537,8 @@ vchiq_init_state(VCHIQ_STATE_T *state, VCHIQ_SLOT_ZERO_T *slot_zero,
- 	local->debug[DEBUG_ENTRIES] = DEBUG_MAX;
- 
- 	status = vchiq_platform_init_state(state);
-+	if (status != VCHIQ_SUCCESS)
-+		return VCHIQ_ERROR;
- 
- 	/*
- 		bring up slot handler thread
+ 	if (of_device_is_compatible(np, "fsl,p5040-esdhc") ||
+ 	    of_device_is_compatible(np, "fsl,p5020-esdhc") ||
 -- 
 2.20.1
 
