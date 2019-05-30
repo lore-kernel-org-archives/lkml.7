@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4168C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A21FC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD731244A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:28:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3307246F6
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:28:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186906;
-	bh=TLQ6wRuSyYf00wfdWZw3VLwozrQHQv4iyOZqob7MM3A=;
+	s=default; t=1559186909;
+	bh=4qFf+ReEGAlxmB+u/dhYnW1b0I/eQL6fC26LheLmXMg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C7MC0H7HP0HEXUhf1euani+eYwXbutINzxtnBWWUVwaZ+sQgprmiUi7usIErVBMkD
-	 jw7czvOg+UBsOEWtme5cAcViDHBiw5A4hiHTLO4TZ+nTWM+PSNo4U2CzJezWgSQa3k
-	 hdbH4ithx7X3AU0huf5cPL/p8pg77UX/ZgUUbFkc=
+	b=0ArN3uPxz7SxOJvVU6uTIMi/MilhYtgdRtus3S6WUeXEyj/5r3DtS8DBzvjuNwCy6
+	 xt4ur8+DVUBOqSo+kwfiA6ia24YuWNlM59whwe42LoRtv+kDvA/bBnhSf/aiDVU0Vc
+	 2XbBH1B9dN4OtBQxtzV50fYPhkZQKeEFlBixE6DE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388168AbfE3D2Z (ORCPT
+        id S1732805AbfE3D22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:28:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57160 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:28:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732071AbfE3DTz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:55 -0400
+        id S1731332AbfE3DT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:56 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8484A248DE;
-        Thu, 30 May 2019 03:19:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F1EB248ED;
+        Thu, 30 May 2019 03:19:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186394;
-        bh=TLQ6wRuSyYf00wfdWZw3VLwozrQHQv4iyOZqob7MM3A=;
+        s=default; t=1559186395;
+        bh=4qFf+ReEGAlxmB+u/dhYnW1b0I/eQL6fC26LheLmXMg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0yJK/LEuoKb0IvPng75YYtKUtduD2bpBQs09b4ToKEARlfeTo539pbMjmDBVj7xf0
-         nqrXB9UnbT3v9LyW4NZKm1DVUqdeKHbb0fYr97rF0JIKiH+EicUdMe0TgypZ1i9tzx
-         i2S6TXR2/lnE7otdH1Quvg15Vlvx9RG/xvCmakXg=
+        b=quch1U7DmT5Le3JIkUPV6steBia4OQNSlWwCZN2nEDaB5mZTAxLbG3cojcwRSseBz
+         Ge+9iGVkpAOenmIliE2R+ZDu3YaDOANNvKFf28S+UYrTJIuOBesRxpk5m8QrkFBVkF
+         XUG9PHMbVM4oDnQIS1l0/4alnUBp12Nj+eGWeRDQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>,
-        Randy Li <ayaka@soulik.info>,
-        Douglas Anderson <dianders@chromium.org>,
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
         Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 124/193] clk: rockchip: Fix video codec clocks on rk3288
-Date:   Wed, 29 May 2019 20:06:18 -0700
-Message-Id: <20190530030505.787225686@linuxfoundation.org>
+Subject: [PATCH 4.14 126/193] clk: rockchip: Make rkpwm a critical clock on rk3288
+Date:   Wed, 29 May 2019 20:06:20 -0700
+Message-Id: <20190530030506.055879300@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -62,81 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 00c0cd9e59d265b393553e9afa54fee8b10e8158 ]
+[ Upstream commit dfe7fb21cd9e730230d55a79bc72cf2ece67cdd5 ]
 
-It appears that there is a typo in the rk3288 TRM.  For
-GRF_SOC_CON0[7] it says that 0 means "vepu" and 1 means "vdpu".  It's
-the other way around.
+Most rk3288-based boards are derived from the EVB and thus use a PWM
+regulator for the logic rail.  However, most rk3288-based boards don't
+specify the PWM regulator in their device tree.  We'll deal with that
+by making it critical.
 
-How do I know?  Here's my evidence:
+NOTE: it's important to make it critical and not just IGNORE_UNUSED
+because all PWMs in the system share the same clock.  We don't want
+another PWM user to turn the clock on and off and kill the logic rail.
 
-1. Prior to commit 4d3e84f99628 ("clk: rockchip: describe aclk_vcodec
-   using the new muxgrf type on rk3288") we always pretended that we
-   were using "aclk_vdpu" and the comment in the code said that this
-   matched the default setting in the system.  In fact the default
-   setting is 0 according to the TRM and according to reading memory
-   at bootup.  In addition rk3288-based Chromebooks ran like this and
-   the video codecs worked.
-2. With the existing clock code if you boot up and try to enable the
-   new VIDEO_ROCKCHIP_VPU as a module (and without "clk_ignore_unused"
-   on the command line), you get errors like "failed to get ack on
-   domain 'pd_video', val=0x80208".  After flipping vepu/vdpu things
-   init OK.
-3. If I export and add both the vepu and vdpu to the list of clocks
-   for RK3288_PD_VIDEO I can get past the power domain errors, but now
-   I freeze when the vpu_mmu gets initted.
-4. If I just mark the "vdpu" as IGNORE_UNUSED then everything boots up
-   and probes OK showing that somehow the "vdpu" was important to keep
-   enabled.  This is because we were actually using it as a parent.
-5. After this change I can hack "aclk_vcodec_pre" to parent from
-   "aclk_vepu" using assigned-clocks and the video codec still probes
-   OK.
-6. Rockchip has said so on the mailing list [1].
+This change is in preparation for actually having the PWMs in the
+rk3288 device tree actually point to the proper PWM clock.  Up until
+now they've all pointed to the clock for the old IP block and they've
+all worked due to the fact that rkpwm was IGNORE_UNUSED and that the
+clock rates for both clocks were the same.
 
-...so let's fix it.
-
-Let's also add CLK_SET_RATE_PARENT to "aclk_vcodec_pre" as suggested
-by Jonas Karlman.  Prior to the same commit you could do
-clk_set_rate() on "aclk_vcodec" and it would change "aclk_vdpu".
-That's because "aclk_vcodec" was a simple gate clock (always gets
-CLK_SET_RATE_PARENT) and its direct parent was "aclk_vdpu".  After
-that commit "aclk_vcodec_pre" gets in the way so we need to add
-CLK_SET_RATE_PARENT to it too.
-
-[1] https://lkml.kernel.org/r/1d17b015-9e17-34b9-baf8-c285dc1957aa@rock-chips.com
-
-Fixes: 4d3e84f99628 ("clk: rockchip: describe aclk_vcodec using the new muxgrf type on rk3288")
-Suggested-by: Jonas Karlman <jonas@kwiboo.se>
-Suggested-by: Randy Li <ayaka@soulik.info>
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/rockchip/clk-rk3288.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/clk/rockchip/clk-rk3288.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
-index 45cd2897e586b..c6cd6d28af56f 100644
+index c6cd6d28af56f..64191694ff6e9 100644
 --- a/drivers/clk/rockchip/clk-rk3288.c
 +++ b/drivers/clk/rockchip/clk-rk3288.c
-@@ -198,7 +198,7 @@ PNAME(mux_hsadcout_p)	= { "hsadc_src", "ext_hsadc" };
- PNAME(mux_edp_24m_p)	= { "ext_edp_24m", "xin24m" };
- PNAME(mux_tspout_p)	= { "cpll", "gpll", "npll", "xin27m" };
+@@ -676,7 +676,7 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
+ 	GATE(PCLK_TZPC, "pclk_tzpc", "pclk_cpu", 0, RK3288_CLKGATE_CON(11), 3, GFLAGS),
+ 	GATE(PCLK_UART2, "pclk_uart2", "pclk_cpu", 0, RK3288_CLKGATE_CON(11), 9, GFLAGS),
+ 	GATE(PCLK_EFUSE256, "pclk_efuse_256", "pclk_cpu", 0, RK3288_CLKGATE_CON(11), 10, GFLAGS),
+-	GATE(PCLK_RKPWM, "pclk_rkpwm", "pclk_cpu", CLK_IGNORE_UNUSED, RK3288_CLKGATE_CON(11), 11, GFLAGS),
++	GATE(PCLK_RKPWM, "pclk_rkpwm", "pclk_cpu", 0, RK3288_CLKGATE_CON(11), 11, GFLAGS),
  
--PNAME(mux_aclk_vcodec_pre_p)	= { "aclk_vepu", "aclk_vdpu" };
-+PNAME(mux_aclk_vcodec_pre_p)	= { "aclk_vdpu", "aclk_vepu" };
- PNAME(mux_usbphy480m_p)		= { "sclk_otgphy1_480m", "sclk_otgphy2_480m",
- 				    "sclk_otgphy0_480m" };
- PNAME(mux_hsicphy480m_p)	= { "cpll", "gpll", "usbphy480m_src" };
-@@ -399,7 +399,7 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
- 	COMPOSITE(0, "aclk_vdpu", mux_pll_src_cpll_gpll_usb480m_p, 0,
- 			RK3288_CLKSEL_CON(32), 14, 2, MFLAGS, 8, 5, DFLAGS,
- 			RK3288_CLKGATE_CON(3), 11, GFLAGS),
--	MUXGRF(0, "aclk_vcodec_pre", mux_aclk_vcodec_pre_p, 0,
-+	MUXGRF(0, "aclk_vcodec_pre", mux_aclk_vcodec_pre_p, CLK_SET_RATE_PARENT,
- 			RK3288_GRF_SOC_CON(0), 7, 1, MFLAGS),
- 	GATE(ACLK_VCODEC, "aclk_vcodec", "aclk_vcodec_pre", 0,
- 		RK3288_CLKGATE_CON(9), 0, GFLAGS),
+ 	/* ddrctrl [DDR Controller PHY clock] gates */
+ 	GATE(0, "nclk_ddrupctl0", "ddrphy", CLK_IGNORE_UNUSED, RK3288_CLKGATE_CON(11), 4, GFLAGS),
+@@ -817,6 +817,8 @@ static const char *const rk3288_critical_clocks[] __initconst = {
+ 	"pclk_pd_pmu",
+ 	"pclk_pmu_niu",
+ 	"pmu_hclk_otg0",
++	/* pwm-regulators on some boards, so handoff-critical later */
++	"pclk_rkpwm",
+ };
+ 
+ static void __iomem *rk3288_cru_base;
 -- 
 2.20.1
 
