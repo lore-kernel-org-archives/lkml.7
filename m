@@ -2,212 +2,75 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E39DC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 19:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DEFDC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 19:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3F15260D2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 19:36:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ADFE260D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 19:38:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbfE3Tgz (ORCPT
+        id S1726574AbfE3Tif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 15:36:55 -0400
-Received: from mga11.intel.com ([192.55.52.93]:37241 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726307AbfE3Tgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 15:36:54 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 12:36:53 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by orsmga001.jf.intel.com with ESMTP; 30 May 2019 12:36:53 -0700
-Date:   Thu, 30 May 2019 12:36:53 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Subject: Re: [PATCH 1/2] KVM: LAPIC: Optimize timer latency consider world
- switch time
-Message-ID: <20190530193653.GA27551@linux.intel.com>
-References: <1558585131-1321-1-git-send-email-wanpengli@tencent.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1558585131-1321-1-git-send-email-wanpengli@tencent.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Thu, 30 May 2019 15:38:35 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:58966 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbfE3Tif (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 15:38:35 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3509214DA8954;
+        Thu, 30 May 2019 12:38:34 -0700 (PDT)
+Date:   Thu, 30 May 2019 12:38:33 -0700 (PDT)
+Message-Id: <20190530.123833.494901093768074533.davem@davemloft.net>
+To:     92siuyang@gmail.com
+Cc:     isdn@linux-pingi.de, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] isdn: hisax: isac: fix a possible concurrency
+ use-after-free bug in ISAC_l1hw()
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1559119739-27588-1-git-send-email-92siuyang@gmail.com>
+References: <1559119739-27588-1-git-send-email-92siuyang@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 30 May 2019 12:38:34 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 12:18:50PM +0800, Wanpeng Li wrote:
-> From: Wanpeng Li <wanpengli@tencent.com>
+From: Young Xiao <92siuyang@gmail.com>
+Date: Wed, 29 May 2019 16:48:59 +0800
+
+> In drivers/isdn/hisax/isac.c, the function isac_interrupt() and
+> ISAC_l1hw() may be concurrently executed.
 > 
-> Advance lapic timer tries to hidden the hypervisor overhead between the
-> host emulated timer fires and the guest awares the timer is fired. However,
-> even though after more sustaining optimizations, kvm-unit-tests/tscdeadline_latency 
-> still awares ~1000 cycles latency since we lost the time between the end of 
-> wait_lapic_expire and the guest awares the timer is fired. There are 
-> codes between the end of wait_lapic_expire and the world switch, futhermore, 
-> the world switch itself also has overhead. Actually the guest_tsc is equal 
-> to the target deadline time in wait_lapic_expire is too late, guest will
-> aware the latency between the end of wait_lapic_expire() and after vmentry 
-> to the guest. This patch takes this time into consideration. 
+> ISAC_l1hw()
+>     line 499: if (!cs->tx_skb)
 > 
-> The vmentry_lapic_timer_advance_ns module parameter should be well tuned by 
-> host admin, it can reduce average cyclictest latency from 3us to 2us on 
-> Skylake server. (guest w/ nohz=off, idle=poll, host w/ preemption_timer=N, 
-> the cyclictest latency is not too sensitive when preemption_timer=Y for this 
-> optimization in my testing), kvm-unit-tests/tscdeadline_latency can reach 0.
+> isac_interrupt()
+>     line 250: dev_kfree_skb_irq(cs->tx_skb);
 > 
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Radim Krčmář <rkrcmar@redhat.com>
-> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
->  arch/x86/kvm/lapic.c   | 17 +++++++++++++++--
->  arch/x86/kvm/lapic.h   |  1 +
->  arch/x86/kvm/vmx/vmx.c |  2 +-
->  arch/x86/kvm/x86.c     |  3 +++
->  arch/x86/kvm/x86.h     |  2 ++
->  5 files changed, 22 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index fcf42a3..6f85221 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -1531,6 +1531,19 @@ static inline void adjust_lapic_timer_advance(struct kvm_vcpu *vcpu,
->  	apic->lapic_timer.timer_advance_ns = timer_advance_ns;
->  }
->  
-> +u64 get_vmentry_advance_delta(struct kvm_vcpu *vcpu)
+> Thus, a possible concurrency use-after-free bug may occur in ISAC_l1hw().
+ ...
+> +		spin_lock_irqsave(&cs->lock, flags);
+>  		if (!cs->tx_skb) {
+>  			test_and_clear_bit(FLG_L1_PULL_REQ, &st->l1.Flags);
+>  			st->l1.l1l2(st, PH_PULL | CONFIRM, NULL);
+>  		} else
+>  			test_and_set_bit(FLG_L1_PULL_REQ, &st->l1.Flags);
+> +		spin_unlock_irqrestore(&cs->lock, flags);
 
-Hmm, this isn't a delta, I think get_vmentry_advance_cycles would be more
-appropriate.
+Nothing in this code accesses the cs->tx_skb object.  It is just a logic test
+upon whether it is NULL or not.
 
-> +{
-> +	u64 vmentry_lapic_timer_advance_cycles = 0;
-> +
-> +	if (vmentry_lapic_timer_advance_ns) {
-> +		vmentry_lapic_timer_advance_cycles = vmentry_lapic_timer_advance_ns *
-> +			vcpu->arch.virtual_tsc_khz;
-> +		do_div(vmentry_lapic_timer_advance_cycles, 1000000);
-> +	}
-> +	return vmentry_lapic_timer_advance_cycles;
-> +}
-> +EXPORT_SYMBOL_GPL(get_vmentry_advance_delta);
-> +
->  void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
->  {
->  	struct kvm_lapic *apic = vcpu->arch.apic;
-> @@ -1544,7 +1557,7 @@ void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
->  
->  	tsc_deadline = apic->lapic_timer.expired_tscdeadline;
->  	apic->lapic_timer.expired_tscdeadline = 0;
-> -	guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc());
-> +	guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc()) + get_vmentry_advance_delta(vcpu);
->  	apic->lapic_timer.advance_expire_delta = guest_tsc - tsc_deadline;
->  
->  	if (guest_tsc < tsc_deadline)
-> @@ -1572,7 +1585,7 @@ static void start_sw_tscdeadline(struct kvm_lapic *apic)
->  	local_irq_save(flags);
->  
->  	now = ktime_get();
-> -	guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc());
-> +	guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc()) + get_vmentry_advance_delta(vcpu);
->  
->  	ns = (tscdeadline - guest_tsc) * 1000000ULL;
->  	do_div(ns, this_tsc_khz);
-> diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-> index f974a3d..df2fe17 100644
-> --- a/arch/x86/kvm/lapic.h
-> +++ b/arch/x86/kvm/lapic.h
-> @@ -221,6 +221,7 @@ static inline int kvm_lapic_latched_init(struct kvm_vcpu *vcpu)
->  bool kvm_apic_pending_eoi(struct kvm_vcpu *vcpu, int vector);
->  
->  void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu);
-> +u64 get_vmentry_advance_delta(struct kvm_vcpu *vcpu);
->  
->  bool kvm_intr_is_single_vcpu_fast(struct kvm *kvm, struct kvm_lapic_irq *irq,
->  			struct kvm_vcpu **dest_vcpu);
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index da24f18..0199ac3 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -7047,7 +7047,7 @@ static int vmx_set_hv_timer(struct kvm_vcpu *vcpu, u64 guest_deadline_tsc,
->  
->  	vmx = to_vmx(vcpu);
->  	tscl = rdtsc();
-> -	guest_tscl = kvm_read_l1_tsc(vcpu, tscl);
-> +	guest_tscl = kvm_read_l1_tsc(vcpu, tscl) + get_vmentry_advance_delta(vcpu);
->  	delta_tsc = max(guest_deadline_tsc, guest_tscl) - guest_tscl;
->  	lapic_timer_advance_cycles = nsec_to_cycles(vcpu,
->  						    ktimer->timer_advance_ns);
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index a4eb711..a02e2c3 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -145,6 +145,9 @@ module_param(tsc_tolerance_ppm, uint, S_IRUGO | S_IWUSR);
->  static int __read_mostly lapic_timer_advance_ns = -1;
->  module_param(lapic_timer_advance_ns, int, S_IRUGO | S_IWUSR);
->  
-> +u32 __read_mostly vmentry_lapic_timer_advance_ns = 0;
-> +module_param(vmentry_lapic_timer_advance_ns, uint, S_IRUGO | S_IWUSR);
+I'm not applying stuff like this, sorry.
 
-Hmm, an interesting idea would be to have some way to "lock" this param,
-e.g. setting bit 0 locks the param.  That would allow KVM to calculate the
-cycles value to avoid the function call and the MUL+DIV.  If I'm not
-mistaken, vcpu->arch.virtual_tsc_khz is set only in kvm_set_tsc_khz().
-
-For example, if get_vmentry_advance_cycles() sees the value is locked, it
-caches the value in struct kvm_lapic.  The cached value would also need to
-be updated in kvm_set_tsc_khz() if it has been set.
-
-static inline u64 get_vmentry_advance_cycles(struct kvm_lapic *lapic)
-{
-        if (lapic->vmentry_advance_cycles)
-                return lapic->vmentry_advance_cycles;
-
-        return compute_vmentry_advance_cycles(lapic);
-}
-
-u64 compute_vmentry_advance_cycles(struct kvm_lapic *lapic)
-{
-        u64 val = vmentry_lapic_timer_advance_ns;
-        u64 cycles = (val & ~1ULL) * lapic->vcpu->arch.virtual_tsc_khz;
-
-        do_div(cycles, 1000000);
-
-        if (val & 1)
-                lapic->vmentry_advance_cycles = cycles;
-        return cycles;
-}
-
-> +
->  static bool __read_mostly vector_hashing = true;
->  module_param(vector_hashing, bool, S_IRUGO);
->  
-> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-> index 275b3b6..b0a3b84 100644
-> --- a/arch/x86/kvm/x86.h
-> +++ b/arch/x86/kvm/x86.h
-> @@ -294,6 +294,8 @@ extern u64 kvm_supported_xcr0(void);
->  
->  extern unsigned int min_timer_period_us;
->  
-> +extern unsigned int vmentry_lapic_timer_advance_ns;
-> +
->  extern bool enable_vmware_backdoor;
->  
->  extern struct static_key kvm_no_apic_vcpu;
-> -- 
-> 2.7.4
-> 
+You have to show how something can actually go wrong when fixing a bug.
