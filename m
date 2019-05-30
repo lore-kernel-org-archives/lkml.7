@@ -2,106 +2,140 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D967C28CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41092C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:53:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7014925618
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:51:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1557625982
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:53:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aV3a3Qtp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbfE3NvJ (ORCPT
+        id S1726701AbfE3Nxr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 09:51:09 -0400
-Received: from mail-wm1-f52.google.com ([209.85.128.52]:53180 "EHLO
-        mail-wm1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfE3NvJ (ORCPT
+        Thu, 30 May 2019 09:53:47 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:45355 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbfE3Nxq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 09:51:09 -0400
-Received: by mail-wm1-f52.google.com with SMTP id y3so4034570wmm.2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 06:51:07 -0700 (PDT)
+        Thu, 30 May 2019 09:53:46 -0400
+Received: by mail-io1-f67.google.com with SMTP id e3so5082957ioc.12
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 06:53:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o1cBK1xetXKqPQsIIl75xlp+mHn3/szubtAs7P5Ucrg=;
+        b=aV3a3QtpMLNViDLENhBHXiInGoHjqzPYoqVjaHiako1F0ud6Zv8vgIPbnzMFJf6oRU
+         Tu/eQUXbTUUrKaA3CfD0sYTQhYGA+YvZ7or472tod4QzEQVq1/uX0qCm0ixiKXRQ59JY
+         +9yhmdudR0wefvU88p3HkWSGJpRXAUmBoRtwrpXN/eonDDUasHf3zt76jqNJIKNCWLef
+         WzO5/mRt2LLTszN1YyFdnXoKlqkaM6AZ9DHPKz5xIm1Vzo1aVei2Q8ruz8r098ec1Nyb
+         CiFJ9DYnI04MYcLr0XTiplqRxa3ypbYB7DeiKb/DFrbTROK1pRnhSmsUdPkt7NNraiLE
+         Ku4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=VJdacDVHBRo3cqkBw/isPcHDnC2ea++G9bD0r1ee6oo=;
-        b=a1zAZOE49fO48si2ZAbWC63sV3B3kVsryhVVR/s/OAq2ZOySbyP1P6qjNUniujtksk
-         gZdDJtfDl43bKUfgtwYwRsELTp+QTzMgXDCB8gMITtqOyBj4ZjH33waWQdlUyzQXoJrF
-         LGLgbCz0964O6BSsdHiAH45lxCtpIya2ifNK7MFOOK3DeJdKjhBnKkrGpE/x1WDSxFwZ
-         F5+Ft9vuZ4G+XB2sGKIiYbpjYvzAdkxaIsygxDnms4ShwmwJvNl1incVUuNXDFYt0GF0
-         r9ccQ2pM31UqPmgPAxgF1lq38lUC7Mwg+tWlXF9q6Tob4XmBEswx9O4vOf7ddpTAVm7h
-         nLgg==
-X-Gm-Message-State: APjAAAUDGWWPs61+z0Xcs/+gGsY3WKsZ17q1VPLxaerUunfD424GYcmp
-        MYUZ06ts0ZuuGx64y/pqmatFZw==
-X-Google-Smtp-Source: APXvYqwclqccELRhv/Sc7m1LCuXJUri8+5XDjrijQ5Xip1CQhdaXGUvUnmQqjXffUiL+V6d2OnkrVg==
-X-Received: by 2002:a1c:f50a:: with SMTP id t10mr2421566wmh.86.1559224267185;
-        Thu, 30 May 2019 06:51:07 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id f2sm3815143wrq.48.2019.05.30.06.51.06
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 30 May 2019 06:51:06 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     "catalin.marinas\@arm.com" <catalin.marinas@arm.com>,
-        "mark.rutland\@arm.com" <mark.rutland@arm.com>,
-        "will.deacon\@arm.com" <will.deacon@arm.com>,
-        "marc.zyngier\@arm.com" <marc.zyngier@arm.com>,
-        "linux-arm-kernel\@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "olaf\@aepfle.de" <olaf@aepfle.de>,
-        "apw\@canonical.com" <apw@canonical.com>,
-        "jasowang\@redhat.com" <jasowang@redhat.com>,
-        "marcelo.cerri\@canonical.com" <marcelo.cerri@canonical.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>
-Subject: RE: [PATCH v3 2/2] Drivers: hv: Move Hyper-V clocksource code to new clocksource driver
-In-Reply-To: <BYAPR21MB122115920E78B7897FDC7BE9D7180@BYAPR21MB1221.namprd21.prod.outlook.com>
-References: <1558969089-13204-1-git-send-email-mikelley@microsoft.com> <1558969089-13204-3-git-send-email-mikelley@microsoft.com> <87r28gl1d1.fsf@vitty.brq.redhat.com> <BYAPR21MB122115920E78B7897FDC7BE9D7180@BYAPR21MB1221.namprd21.prod.outlook.com>
-Date:   Thu, 30 May 2019 15:51:05 +0200
-Message-ID: <87imtskq46.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o1cBK1xetXKqPQsIIl75xlp+mHn3/szubtAs7P5Ucrg=;
+        b=fkXZUHVCm9TDPTIV0An7tNgABi3gDpIhSw17vQzX3t30KDaDXf1oT386dEwQqYBTSt
+         v/VmwVlCq8uia6Andm5HaCEw7HT21PUOOJ7nqt01FkL2hMd5ohf5WHDpecLWK59X8iDT
+         TFOLv9rLOs3pYAg8Pnif5oyBWfrPSA8miDjEJyoSSFl6pLsX+8FKe4CKq1NyftYZfdgI
+         cMoDyP++hgN7xd08ie6YiNt7Rd+bdTx+qViG5cWHEL/NCa7RV/8xSsi12Yc59taXlAE6
+         /UmgAf4J9nZIBOLaFMy6klWfjlEMNhilxY7dElHX6oeH5Z5HUOlUQ04o5C9GmfF0xwuv
+         7VSw==
+X-Gm-Message-State: APjAAAUP83Vtxq9169vRhTCo8BI032HcAT+s5xL0/PlZ2JadNJK+2Ejj
+        LxNXEKT6NSAnim1hmgsAa191kvAkJpMTBzmZvm83Og==
+X-Google-Smtp-Source: APXvYqxaz4GV5Y25t4/1krn0WhJBfKXcPRD9UUG155gKE/opIPm5E72E9h3/aLPqygECtWX9Ke/4tfms6QNF36/k2gM=
+X-Received: by 2002:a5d:968e:: with SMTP id m14mr2702733ion.49.1559224426119;
+ Thu, 30 May 2019 06:53:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <1559149856-7938-1-git-send-email-iuliana.prodan@nxp.com>
+ <20190529202728.GA35103@gmail.com> <CAKv+Gu-4KqcY=WhwY98JigTzeXaL5ggYEcu7+kNzNtpO2FLQXg@mail.gmail.com>
+ <VI1PR04MB44459EEF7BCD3458BB3D143D8C180@VI1PR04MB4445.eurprd04.prod.outlook.com>
+ <20190530133427.qrwjzctac2x6nsby@gondor.apana.org.au> <VI1PR04MB444562A2352FE4BAD7F681258C180@VI1PR04MB4445.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR04MB444562A2352FE4BAD7F681258C180@VI1PR04MB4445.eurprd04.prod.outlook.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Thu, 30 May 2019 15:53:32 +0200
+Message-ID: <CAKv+Gu-jTWQP0Zp=QpuzX41v8Eb5Bvd0O9ajwSnFkDO-ijBf_A@mail.gmail.com>
+Subject: Re: [PATCH] crypto: gcm - fix cacheline sharing
+To:     Iuliana Prodan <iuliana.prodan@nxp.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Eric Biggers <ebiggers@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michael Kelley <mikelley@microsoft.com> writes:
-
-> From: Vitaly Kuznetsov <vkuznets@redhat.com> Sent: Thursday, May 30, 2019 2:48 AM
->> > +		/*
->> > +		 * sched_clock_register is needed on ARM64 but
->> > +		 * is a no-op on x86
->> > +		 */
->> > +		sched_clock_register(read_hv_sched_clock_msr,
->> > +						64, HV_CLOCK_HZ);
->> 
->> I'm not sure about ARM, but MSR-based clocksource would be a really bad
->> choice for sched clock on x86, this will slow things down
->> significantly. Luckily, as you're validly stating above,
->> sched_clock_register() is a no-op on x86 as we don't define
->> CONFIG_GENERIC_SCHED_CLOCK.
->> 
->> Can we actually *not* do sched_clock_register() in case
->> TSC page is unavailable (and revert to counting jiffies or whatever)?
->> 
+On Thu, 30 May 2019 at 15:45, Iuliana Prodan <iuliana.prodan@nxp.com> wrote:
 >
-> We can't skip the sched_clock_register() on ARM64 because it
-> does define CONFIG_GENERIC_SCHED_CLOCK.  However, Hyper-V
-> should always provide REFERENCE_TSC_AVAILALBE on ARM64,
-> so we should never end up in the MSR-based code on ARM64.
-> Arguably that means the call to sched_clock_register() could be
-> removed since it's a no-op on x86.  But I'd like to keep it for symmetry
-> and in case there's a testing/debugging situation on ARM64 where
-> we want to clear REFERENCE_TSC_AVAILABLE and go down the
-> MSR-based code path.
+> On 5/30/2019 4:34 PM, Herbert Xu wrote:
+> > On Thu, May 30, 2019 at 01:29:41PM +0000, Iuliana Prodan wrote:
+> >>
+> >> I've tried coping the IV before the extended descriptor allocation, but
+> >> is not working and to make it work will need to make more changes in
+> >> CAAM. We need the original iv, and if we move it before
+> >> skcipher_edesc_alloc we lose it.
+> >> The fix exclusively in CAAM drv, to copy iv before DMA map, is more complex.
+> >
+> > Why doesn't it work (apart from the fact that this only makes sense
+> > for CBC and yet you're doing it for everything including CTR)?
+> >
+> > Cheers,
+> >
+>
+> On the current structure of caamalg, to work, iv needs to be copied
+> before memcpy(iv, req->iv, ivsize), from skcipher_edesc_alloc function.
+> For this we need edesc, but this cannot be allocated before knowing how
+> much memory we need. So, to make it work, we'll need to modify more in CAAM.
+>
 
-Ok, so it is just a fall-back and not going to be actively used. Thanks!
+Would this work?
 
--- 
-Vitaly
+diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
+index c0ece44f303b..2ef2f76a3cb8 100644
+--- a/drivers/crypto/caam/caamalg.c
++++ b/drivers/crypto/caam/caamalg.c
+@@ -1832,22 +1832,25 @@ static int skcipher_decrypt(struct
+skcipher_request *req)
+        struct caam_ctx *ctx = crypto_skcipher_ctx(skcipher);
+        int ivsize = crypto_skcipher_ivsize(skcipher);
+        struct device *jrdev = ctx->jrdev;
++       u8 out_iv[AES_BLOCK_SIZE];
+        u32 *desc;
+        int ret = 0;
+
+-       /* allocate extended descriptor */
+-       edesc = skcipher_edesc_alloc(req, DESC_JOB_IO_LEN * CAAM_CMD_SZ);
+-       if (IS_ERR(edesc))
+-               return PTR_ERR(edesc);
+-
+        /*
+         * The crypto API expects us to set the IV (req->iv) to the last
+         * ciphertext block.
+         */
+        if (ivsize)
+-               scatterwalk_map_and_copy(req->iv, req->src, req->cryptlen -
++               scatterwalk_map_and_copy(out_iv, req->src, req->cryptlen -
+                                         ivsize, ivsize, 0);
+
++       /* allocate extended descriptor */
++       edesc = skcipher_edesc_alloc(req, DESC_JOB_IO_LEN * CAAM_CMD_SZ);
++       if (IS_ERR(edesc))
++               return PTR_ERR(edesc);
++
++       memcpy(req->iv, out_iv, ivsize);
++
+        /* Create and submit job descriptor*/
+        init_skcipher_job(req, edesc, false);
+        desc = edesc->hw_desc;
