@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3092C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 329FFC28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6038D25B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:40:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE90125B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:40:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbfE3OkI (ORCPT
+        id S1726933AbfE3OkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 10:40:08 -0400
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:58908 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726106AbfE3OkI (ORCPT
+        Thu, 30 May 2019 10:40:11 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:38624 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726169AbfE3OkJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 10:40:08 -0400
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UEJ9gP031613;
-        Thu, 30 May 2019 09:39:57 -0500
+        Thu, 30 May 2019 10:40:09 -0400
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UEJEBS025700;
+        Thu, 30 May 2019 09:39:56 -0500
 Authentication-Results: ppops.net;
         spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
 Received: from mail1.cirrus.com (mail1.cirrus.com [141.131.3.20])
-        by mx0a-001ae601.pphosted.com with ESMTP id 2sq340pesu-1;
-        Thu, 30 May 2019 09:39:56 -0500
+        by mx0b-001ae601.pphosted.com with ESMTP id 2sq24q6ak3-1;
+        Thu, 30 May 2019 09:39:55 -0500
 Received: from EDIEX02.ad.cirrus.com (unknown [198.61.84.81])
-        by mail1.cirrus.com (Postfix) with ESMTP id 9F448611E125;
-        Thu, 30 May 2019 09:39:55 -0500 (CDT)
+        by mail1.cirrus.com (Postfix) with ESMTP id A8243611E124;
+        Thu, 30 May 2019 09:39:54 -0500 (CDT)
 Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
  (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 30 May
@@ -39,16 +39,16 @@ Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
  (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
  Transport; Thu, 30 May 2019 15:39:54 +0100
 Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 0972144;
-        Thu, 30 May 2019 15:39:54 +0100 (BST)
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id EC9E32DA;
+        Thu, 30 May 2019 15:39:53 +0100 (BST)
 From:   Charles Keepax <ckeepax@opensource.cirrus.com>
 To:     <lee.jones@linaro.org>
 CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <patches@opensource.cirrus.com>
-Subject: [PATCH 3/3] mfd: madera: Add Madera core support for CS47L92
-Date:   Thu, 30 May 2019 15:39:53 +0100
-Message-ID: <20190530143953.25799-3-ckeepax@opensource.cirrus.com>
+Subject: [PATCH 2/3] mfd: madera: Add Madera core support for CS47L15
+Date:   Thu, 30 May 2019 15:39:52 +0100
+Message-ID: <20190530143953.25799-2-ckeepax@opensource.cirrus.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190530143953.25799-1-ckeepax@opensource.cirrus.com>
 References: <20190530143953.25799-1-ckeepax@opensource.cirrus.com>
@@ -67,75 +67,72 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 From: Richard Fitzgerald <rf@opensource.cirrus.com>
 
 This patch adds all the core support and defines for the Cirrus
-Logic CS42L92, CS47L92 and CS47L93 smart audio CODECs.
+Logic CS47L15 smart audio CODEC.
 
 Registers or fields are named MADERA_* if it is part of the
 common hardware platform and does not conflict with any other
 Madera codecs. It is named CS47L15_* if it is unique to CS47L15
 and conflicts with definitions on other codecs.
 
-Signed-off-by: Stuart Henderson <stuarth@opensource.cirrus.com>
 Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
 Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 ---
  drivers/mfd/Kconfig                  |    7 +
  drivers/mfd/Makefile                 |    3 +
- drivers/mfd/cs47l92-tables.c         | 1948 ++++++++++++++++++++++++++++++++++
- drivers/mfd/madera-core.c            |   58 +
- drivers/mfd/madera-i2c.c             |   11 +
- drivers/mfd/madera-spi.c             |   11 +
- drivers/mfd/madera.h                 |    7 +
- include/linux/mfd/madera/core.h      |    4 +
- include/linux/mfd/madera/registers.h |  195 ++++
- 9 files changed, 2244 insertions(+)
- create mode 100644 drivers/mfd/cs47l92-tables.c
+ drivers/mfd/cs47l15-tables.c         | 1301 ++++++++++++++++++++++++++++++++++
+ drivers/mfd/madera-core.c            |   44 ++
+ drivers/mfd/madera-i2c.c             |    7 +
+ drivers/mfd/madera-spi.c             |    7 +
+ drivers/mfd/madera.h                 |    6 +
+ include/linux/mfd/madera/core.h      |    2 +
+ include/linux/mfd/madera/registers.h |    5 +
+ 9 files changed, 1382 insertions(+)
+ create mode 100644 drivers/mfd/cs47l15-tables.c
 
 diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index cae6977f6fc03..784e00db2b282 100644
+index 294d9567cc71c..cae6977f6fc03 100644
 --- a/drivers/mfd/Kconfig
 +++ b/drivers/mfd/Kconfig
-@@ -288,6 +288,13 @@ config MFD_CS47L90
- 	help
- 	  Support for Cirrus Logic CS47L90 and CS47L91 Smart Codecs
+@@ -260,6 +260,13 @@ config MFD_MADERA_SPI
+ 	  Support for the Cirrus Logic Madera platform audio SoC
+ 	  core functionality controlled via SPI.
  
-+config MFD_CS47L92
-+	bool "Cirrus Logic CS47L92/93"
-+	select PINCTRL_CS47L92
++config MFD_CS47L15
++	bool "Cirrus Logic CS47L15"
++	select PINCTRL_CS47L15
 +	depends on MFD_MADERA
 +	help
-+	  Support for Cirrus Logic CS42L92, CS47L92 and CS47L93 Smart Codecs
++	  Support for Cirrus Logic CS47L15 Smart Codec
 +
- config MFD_ASIC3
- 	bool "Compaq ASIC3"
- 	depends on GPIOLIB && ARM
+ config MFD_CS47L35
+ 	bool "Cirrus Logic CS47L35"
+ 	select PINCTRL_CS47L35
 diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 5444e89f14806..8ae665f483a09 100644
+index 52b1a90ff5159..5444e89f14806 100644
 --- a/drivers/mfd/Makefile
 +++ b/drivers/mfd/Makefile
-@@ -87,6 +87,9 @@ endif
- ifeq ($(CONFIG_MFD_CS47L90),y)
- madera-objs			+= cs47l90-tables.o
- endif
-+ifeq ($(CONFIG_MFD_CS47L92),y)
-+madera-objs			+= cs47l92-tables.o
+@@ -75,6 +75,9 @@ obj-$(CONFIG_MFD_WM8994)	+= wm8994.o
+ obj-$(CONFIG_MFD_WM97xx)	+= wm97xx-core.o
+ 
+ madera-objs			:= madera-core.o
++ifeq ($(CONFIG_MFD_CS47L15),y)
++madera-objs			+= cs47l15-tables.o
 +endif
- obj-$(CONFIG_MFD_MADERA)	+= madera.o
- obj-$(CONFIG_MFD_MADERA_I2C)	+= madera-i2c.o
- obj-$(CONFIG_MFD_MADERA_SPI)	+= madera-spi.o
-diff --git a/drivers/mfd/cs47l92-tables.c b/drivers/mfd/cs47l92-tables.c
+ ifeq ($(CONFIG_MFD_CS47L35),y)
+ madera-objs			+= cs47l35-tables.o
+ endif
+diff --git a/drivers/mfd/cs47l15-tables.c b/drivers/mfd/cs47l15-tables.c
 new file mode 100644
-index 0000000000000..3dc1fefe68f59
+index 0000000000000..1b4f6f79eac2c
 --- /dev/null
-+++ b/drivers/mfd/cs47l92-tables.c
-@@ -0,0 +1,1948 @@
++++ b/drivers/mfd/cs47l15-tables.c
+@@ -0,0 +1,1301 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Regmap tables for CS47L92 codec
++ * Regmap tables for CS47L15 codec
 + *
 + * Copyright (C) 2016-2019 Cirrus Logic, Inc. and
 + *                         Cirrus Logic International Semiconductor Ltd.
-+ *
-+ * Author: Stuart Henderson <stuarth@opensource.cirrus.com>
 + */
 +
 +#include <linux/device.h>
@@ -147,105 +144,37 @@ index 0000000000000..3dc1fefe68f59
 +
 +#include "madera.h"
 +
-+static const struct reg_sequence cs47l92_reva_16_patch[] = {
-+	{ 0x3A2,  0x2C29 },
-+	{ 0x3A3,  0x0E00 },
-+	{ 0x281,  0x0000 },
-+	{ 0x282,  0x0000 },
-+	{ 0x4EA,  0x0100 },
-+	{ 0x22B,  0x0000 },
-+	{ 0x4A0,  0x0080 },
-+	{ 0x4A1,  0x0000 },
-+	{ 0x4A2,  0x0000 },
-+	{ 0x180B, 0x033F },
-+	{ 0x190B, 0x033F },
-+	{ 0x442,  0x0304 },
-+	{ 0x34C,  0x0003 },
-+	{ 0x124,  0x0C49 },
-+	{ 0x120,  0x0345 },
-+	{ 0x120,  0x0305 },
-+	{ 0x4FA,  0x5064 },
-+	{ 0x1300, 0x050E },
-+	{ 0x1302, 0x0101 },
-+	{ 0x1380, 0x02E0 },
-+	{ 0x1381, 0xF942 },
-+	{ 0x1382, 0x04CE },
-+	{ 0x1383, 0xFF06 },
-+	{ 0x1390, 0x0304 },
-+	{ 0x1391, 0xF8FF },
-+	{ 0x1392, 0x04F3 },
-+	{ 0x1393, 0xFF00 },
-+	{ 0x13A0, 0x02E0 },
-+	{ 0x13A1, 0xF942 },
-+	{ 0x13A2, 0x04CE },
-+	{ 0x13A3, 0xFF06 },
-+	{ 0x13B0, 0x0304 },
-+	{ 0x13B1, 0xF8FF },
-+	{ 0x13B2, 0x04F3 },
-+	{ 0x13B3, 0xFF00 },
-+	{ 0x412,  0x0005 },
-+	{ 0x41A,  0x0005 },
-+	{ 0x422,  0x0005 },
++static const struct reg_sequence cs47l15_reva_16_patch[] = {
++	{ 0x8C, 0x5555 },
++	{ 0x8C, 0xAAAA },
++	{ 0x314, 0x0080 },
++	{ 0x4A8, 0x6023 },
++	{ 0x4A9, 0x6023 },
++	{ 0x4D4, 0x0008 },
++	{ 0x4CF, 0x0F00 },
++	{ 0x4D7, 0x1B2B },
++	{ 0x8C, 0xCCCC },
++	{ 0x8C, 0x3333 },
 +};
 +
-+static const struct reg_sequence cs47l92_reva_32_patch[] = {
-+	{ 0x3030, 0x04A00C01 },
-+	{ 0x3032, 0x0225F501 },
-+	{ 0x3044, 0x04A00C00 },
-+	{ 0x3046, 0x0225FF01 },
-+	{ 0x3080, 0x04A00C01 },
-+	{ 0x3082, 0x0226F501 },
-+	{ 0x3094, 0x04A00C00 },
-+	{ 0x3096, 0x0226FF01 },
-+	{ 0x30D1, 0x04A10C01 },
-+	{ 0x30D2, 0x0227F501 },
-+	{ 0x30E4, 0x04A10C00 },
-+	{ 0x30E6, 0x0227FF01 },
-+	{ 0x3120, 0x04A10C01 },
-+	{ 0x3122, 0x0228F501 },
-+	{ 0x3134, 0x04A10C00 },
-+	{ 0x3136, 0x0228FF01 },
-+	{ 0x3170, 0x04A20C01 },
-+	{ 0x3172, 0x022B0101 },
-+	{ 0x3174, 0x0229F501 },
-+	{ 0x3184, 0x04A20C00 },
-+	{ 0x3186, 0x022B0100 },
-+	{ 0x3188, 0x0229FF01 },
-+	{ 0x31C0, 0x04A20C01 },
-+	{ 0x31C2, 0x022B0001 },
-+	{ 0x31C4, 0x022AF501 },
-+	{ 0x31D4, 0x04A20C00 },
-+	{ 0x31D6, 0x022B0000 },
-+	{ 0x31D8, 0x022AFF01 },
-+};
-+
-+int cs47l92_patch(struct madera *madera)
++int cs47l15_patch(struct madera *madera)
 +{
 +	int ret;
 +
 +	ret = regmap_register_patch(madera->regmap,
-+				    cs47l92_reva_16_patch,
-+				    ARRAY_SIZE(cs47l92_reva_16_patch));
++				    cs47l15_reva_16_patch,
++				    ARRAY_SIZE(cs47l15_reva_16_patch));
 +	if (ret < 0) {
 +		dev_err(madera->dev,
 +			"Error in applying 16-bit patch: %d\n", ret);
 +		return ret;
 +	}
 +
-+	ret = regmap_register_patch(madera->regmap_32bit,
-+				    cs47l92_reva_32_patch,
-+				    ARRAY_SIZE(cs47l92_reva_32_patch));
-+	if (ret < 0) {
-+		dev_err(madera->dev,
-+			"Error in applying 32-bit patch: %d\n", ret);
-+		return ret;
-+	}
-+
 +	return 0;
 +}
-+EXPORT_SYMBOL_GPL(cs47l92_patch);
++EXPORT_SYMBOL_GPL(cs47l15_patch);
 +
-+static const struct reg_default cs47l92_reg_default[] = {
++static const struct reg_default cs47l15_reg_default[] = {
 +	{ 0x00000020, 0x0000 }, /* R32 (0x20) - Tone Generator 1 */
 +	{ 0x00000021, 0x1000 }, /* R33 (0x21) - Tone Generator 2 */
 +	{ 0x00000022, 0x0000 }, /* R34 (0x22) - Tone Generator 3 */
@@ -258,6 +187,8 @@ index 0000000000000..3dc1fefe68f59
 +	{ 0x00000062, 0x01ff }, /* R98 (0x62) - Sample Rate Sequence Select 2 */
 +	{ 0x00000063, 0x01ff }, /* R99 (0x63) - Sample Rate Sequence Select 3 */
 +	{ 0x00000064, 0x01ff }, /* R100 (0x64) - Sample Rate Sequence Select 4 */
++	{ 0x00000066, 0x01ff }, /* R102 (0x66) - Always On Triggers Sequence Select 1 */
++	{ 0x00000067, 0x01ff }, /* R103 (0x67) - Always On Triggers Sequence Select 2 */
 +	{ 0x00000090, 0x0000 }, /* R144 (0x90) - Haptics Control 1 */
 +	{ 0x00000091, 0x7fff }, /* R145 (0x91) - Haptics Control 2 */
 +	{ 0x00000092, 0x0000 }, /* R146 (0x92) - Haptics Phase 1 Intensity */
@@ -266,92 +197,67 @@ index 0000000000000..3dc1fefe68f59
 +	{ 0x00000095, 0x0000 }, /* R149 (0x95) - Haptics Phase 2 Duration */
 +	{ 0x00000096, 0x0000 }, /* R150 (0x96) - Haptics Phase 3 Intensity */
 +	{ 0x00000097, 0x0000 }, /* R151 (0x97) - Haptics Phase 3 Duration */
-+	{ 0x000000a0, 0x0000 }, /* R160 (0xa0) - Comfort Noise Generator */
-+	{ 0x00000100, 0x0002 }, /* R256 (0x100) - Clock 32k 1 */
++	{ 0x000000a0, 0x0000 }, /* R160 (0xA0) - Comfort Noise Generator */
++	{ 0x00000100, 0x0002 }, /* R256 (0x100) - Clock 32K 1 */
 +	{ 0x00000101, 0x0404 }, /* R257 (0x101) - System Clock 1 */
 +	{ 0x00000102, 0x0011 }, /* R258 (0x102) - Sample Rate 1 */
 +	{ 0x00000103, 0x0011 }, /* R259 (0x103) - Sample Rate 2 */
 +	{ 0x00000104, 0x0011 }, /* R260 (0x104) - Sample Rate 3 */
-+	{ 0x00000112, 0x0305 }, /* R274 (0x112) - Async Clock 1 */
-+	{ 0x00000113, 0x0011 }, /* R275 (0x113) - Async Sample Rate 1 */
-+	{ 0x00000114, 0x0011 }, /* R276 (0x114) - Async Sample Rate 2 */
-+	{ 0x00000120, 0x0305 }, /* R288 (0x120) - DSP Clock 1 */
++	{ 0x00000120, 0x0304 }, /* R288 (0x120) - DSP Clock 1 */
 +	{ 0x00000122, 0x0000 }, /* R290 (0x122) - DSP Clock 2 */
 +	{ 0x00000149, 0x0000 }, /* R329 (0x149) - Output System Clock */
-+	{ 0x0000014a, 0x0000 }, /* R330 (0x14a) - Output Async Clock */
 +	{ 0x00000152, 0x0000 }, /* R338 (0x152) - Rate Estimator 1 */
 +	{ 0x00000153, 0x0000 }, /* R339 (0x153) - Rate Estimator 2 */
 +	{ 0x00000154, 0x0000 }, /* R340 (0x154) - Rate Estimator 3 */
 +	{ 0x00000155, 0x0000 }, /* R341 (0x155) - Rate Estimator 4 */
 +	{ 0x00000156, 0x0000 }, /* R342 (0x156) - Rate Estimator 5 */
-+	{ 0x00000171, 0x7004 }, /* R369 (0x171) - FLL1 Control 1 */
-+	{ 0x00000172, 0x0004 }, /* R370 (0x172) - FLL1 Control 2 */
-+	{ 0x00000173, 0x0000 }, /* R371 (0x173) - FLL1 Control 3 */
-+	{ 0x00000174, 0x0000 }, /* R372 (0x174) - FLL1 Control 4 */
-+	{ 0x00000175, 0x0001 }, /* R373 (0x175) - FLL1 Control 5 */
-+	{ 0x00000176, 0x8000 }, /* R374 (0x176) - FLL1 Control 6 */
-+	{ 0x00000177, 0x0680 }, /* R375 (0x177) - FLL1 Control 7 */
-+	{ 0x00000178, 0x21f0 }, /* R376 (0x178) - FLL1 Control 8 */
-+	{ 0x00000179, 0x0000 }, /* R377 (0x179) - FLL1 Control 9 */
-+	{ 0x0000017a, 0x0000 }, /* R378 (0x17a) - FLL1 Control 10 */
-+	{ 0x0000017b, 0x0011 }, /* R379 (0x17b) - FLL1 Control 11 */
-+	{ 0x0000017d, 0x33e8 }, /* R381 (0x17d) - FLL1 Digital Test 1 */
-+	{ 0x00000181, 0x7000 }, /* R385 (0x181) - FLL1 Synchroniser 1 */
-+	{ 0x00000182, 0x0004 }, /* R386 (0x182) - FLL1 Synchroniser 2 */
++	{ 0x00000171, 0x0002 }, /* R369 (0x171) - FLL1 Control 1 */
++	{ 0x00000172, 0x0008 }, /* R370 (0x172) - FLL1 Control 2 */
++	{ 0x00000173, 0x0018 }, /* R371 (0x173) - FLL1 Control 3 */
++	{ 0x00000174, 0x007d }, /* R372 (0x174) - FLL1 Control 4 */
++	{ 0x00000175, 0x0000 }, /* R373 (0x175) - FLL1 Control 5 */
++	{ 0x00000176, 0x0000 }, /* R374 (0x176) - FLL1 Control 6 */
++	{ 0x00000177, 0x0281 }, /* R375 (0x177) - FLL1 Loop Filter Test 1 */
++	{ 0x00000179, 0x0000 }, /* R377 (0x179) - FLL1 Control 7 */
++	{ 0x0000017a, 0x2906 }, /* R378 (0x17A) - FLL1 EFS 2 */
++	{ 0x00000181, 0x0000 }, /* R385 (0x181) - FLL1 Synchroniser 1 */
++	{ 0x00000182, 0x0000 }, /* R386 (0x182) - FLL1 Synchroniser 2 */
 +	{ 0x00000183, 0x0000 }, /* R387 (0x183) - FLL1 Synchroniser 3 */
 +	{ 0x00000184, 0x0000 }, /* R388 (0x184) - FLL1 Synchroniser 4 */
-+	{ 0x00000185, 0x0001 }, /* R389 (0x185) - FLL1 Synchroniser 5 */
++	{ 0x00000185, 0x0000 }, /* R389 (0x185) - FLL1 Synchroniser 5 */
 +	{ 0x00000186, 0x0000 }, /* R390 (0x186) - FLL1 Synchroniser 6 */
-+	{ 0x0000018e, 0x0c04 }, /* R398 (0x18e) - FLL1 GPIO Clock */
-+	{ 0x00000191, 0x7000 }, /* R401 (0x191) - FLL2 Control 1 */
-+	{ 0x00000192, 0x0004 }, /* R402 (0x192) - FLL2 Control 2 */
-+	{ 0x00000193, 0x0000 }, /* R403 (0x193) - FLL2 Control 3 */
-+	{ 0x00000194, 0x0000 }, /* R404 (0x194) - FLL2 Control 4 */
-+	{ 0x00000195, 0x0001 }, /* R405 (0x195) - FLL2 Control 5 */
-+	{ 0x00000196, 0x8000 }, /* R406 (0x196) - FLL2 Control 6 */
-+	{ 0x00000197, 0x0680 }, /* R407 (0x197) - FLL2 Control 7 */
-+	{ 0x00000198, 0x21f0 }, /* R408 (0x198) - FLL2 Control 8 */
-+	{ 0x00000199, 0x0000 }, /* R409 (0x199) - FLL2 Control 9 */
-+	{ 0x0000019a, 0x0000 }, /* R410 (0x19a) - FLL2 Control 10 */
-+	{ 0x0000019b, 0x0011 }, /* R411 (0x19b) - FLL2 Control 11 */
-+	{ 0x0000019d, 0x33e8 }, /* R413 (0x19d) - FLL2 Digital Test 1 */
-+	{ 0x000001a1, 0x7000 }, /* R417 (0x1a1) - FLL2 Synchroniser 1 */
-+	{ 0x000001a2, 0x0004 }, /* R418 (0x1a2) - FLL2 Synchroniser 2 */
-+	{ 0x000001a3, 0x0000 }, /* R419 (0x1a3) - FLL2 Synchroniser 3 */
-+	{ 0x000001a4, 0x0000 }, /* R420 (0x1a4) - FLL2 Synchroniser 4 */
-+	{ 0x000001a5, 0x0001 }, /* R421 (0x1a5) - FLL2 Synchroniser 5 */
-+	{ 0x000001a6, 0x0000 }, /* R422 (0x1a6) - FLL2 Synchroniser 6 */
-+	{ 0x000001ae, 0x0c04 }, /* R430 (0x1ae) - FLL2 GPIO Clock */
-+	{ 0x00000200, 0x0006 }, /* R512 (0x200) - Mic Charge Pump 1 */
-+	{ 0x00000213, 0x03e4 }, /* R531 (0x213) - LDO2 Control 1 */
++	{ 0x00000187, 0x0001 }, /* R391 (0x187) - FLL1 Synchroniser 7 */
++	{ 0x00000189, 0x0000 }, /* R393 (0x189) - FLL1 Spread Spectrum */
++	{ 0x0000018a, 0x0004 }, /* R394 (0x18A) - FLL1 GPIO Clock */
++	{ 0x000001d1, 0x0004 }, /* R465 (0x1D1) - FLL AO Control 1 */
++	{ 0x000001d2, 0x0004 }, /* R466 (0x1D2) - FLL AO Control 2 */
++	{ 0x000001d3, 0x0000 }, /* R467 (0x1D3) - FLL AO Control 3 */
++	{ 0x000001d4, 0x0000 }, /* R468 (0x1D4) - FLL AO Control 4 */
++	{ 0x000001d5, 0x0001 }, /* R469 (0x1D5) - FLL AO Control 5 */
++	{ 0x000001d6, 0x8004 }, /* R470 (0x1D6) - FLL AO Control 6 */
++	{ 0x000001d8, 0x0000 }, /* R472 (0x1D8) - FLL AO Control 7 */
++	{ 0x000001da, 0x0077 }, /* R474 (0x1DA) - FLL AO Control 8 */
++	{ 0x000001db, 0x0000 }, /* R475 (0x1DB) - FLL AO Control 9 */
++	{ 0x000001dc, 0x06da }, /* R476 (0x1DC) - FLL AO Control 10 */
++	{ 0x000001dd, 0x0011 }, /* R477 (0x1DD) - FLL AO Control 11 */
 +	{ 0x00000218, 0x00e6 }, /* R536 (0x218) - Mic Bias Ctrl 1 */
-+	{ 0x00000219, 0x00e6 }, /* R537 (0x219) - Mic Bias Ctrl 2 */
-+	{ 0x0000021c, 0x2222 }, /* R540 (0x21c) - Mic Bias Ctrl 5 */
-+	{ 0x0000021e, 0x0022 }, /* R542 (0x21e) - Mic Bias Ctrl 6 */
-+	{ 0x00000293, 0x0080 }, /* R659 (0x293) - Accessory Detect Mode 1 */
++	{ 0x0000021c, 0x0222 }, /* R540 (0x21C) - Mic Bias Ctrl 5 */
 +	{ 0x00000299, 0x0000 }, /* R665 (0x299) - Headphone Detect 0 */
-+	{ 0x0000029b, 0x0000 }, /* R667 (0x29b) - Headphone Detect 1 */
-+	{ 0x000002a2, 0x0010 }, /* R674 (0x2a2) - Mic Detect 1 Control 0 */
-+	{ 0x000002a3, 0x1102 }, /* R675 (0x2a3) - Mic Detect 1 Control 1 */
-+	{ 0x000002a4, 0x009f }, /* R676 (0x2a4) - Mic Detect 1 Control 2 */
-+	{ 0x000002a6, 0x3d3d }, /* R678 (0x2a6) - Mic Detect 1 Level 1 */
-+	{ 0x000002a7, 0x3d3d }, /* R679 (0x2a7) - Mic Detect 1 Level 2 */
-+	{ 0x000002a8, 0x333d }, /* R680 (0x2a8) - Mic Detect 1 Level 3 */
-+	{ 0x000002a9, 0x202d }, /* R681 (0x2a9) - Mic Detect 1 Level 4 */
-+	{ 0x000002b2, 0x0010 }, /* R690 (0x2b2) - Mic Detect 2 Control 0 */
-+	{ 0x000002b3, 0x1102 }, /* R691 (0x2b3) - Mic Detect 2 Control 1 */
-+	{ 0x000002b4, 0x009f }, /* R692 (0x2b4) - Mic Detect 2 Control 2 */
-+	{ 0x000002b6, 0x3d3d }, /* R694 (0x2b6) - Mic Detect 2 Level 1 */
-+	{ 0x000002b7, 0x3d3d }, /* R695 (0x2b7) - Mic Detect 2 Level 2 */
-+	{ 0x000002b8, 0x333d }, /* R696 (0x2b8) - Mic Detect 2 Level 3 */
-+	{ 0x000002b9, 0x202d }, /* R697 (0x2b9) - Mic Detect 2 Level 4 */
-+	{ 0x000002c6, 0x0210 }, /* R710 (0x2c6) - Micd Clamp control */
-+	{ 0x000002c8, 0x0000 }, /* R712 (0x2c8) - GP Switch 1 */
-+	{ 0x000002d3, 0x0000 }, /* R723 (0x2d3) - Jack Detect Analogue */
++	{ 0x0000029b, 0x0000 }, /* R667 (0x29B) - Headphone Detect 1 */
++	{ 0x000002a2, 0x0010 }, /* R674 (0x2A2) - Mic Detect 1 Control 0 */
++	{ 0x000002a3, 0x1102 }, /* R675 (0x2A3) - Mic Detect 1 Control 1 */
++	{ 0x000002a4, 0x009f }, /* R676 (0x2A4) - Mic Detect 1 Control 2 */
++	{ 0x000002a6, 0x3d3d }, /* R678 (0x2A6) - Mic Detect 1 Level 1 */
++	{ 0x000002a7, 0x3d3d }, /* R679 (0x2A7) - Mic Detect 1 Level 2 */
++	{ 0x000002a8, 0x333d }, /* R680 (0x2A8) - Mic Detect 1 Level 3 */
++	{ 0x000002a9, 0x202d }, /* R681 (0x2A9) - Mic Detect 1 Level 4 */
++	{ 0x000002c6, 0x0010 }, /* R710 (0x2C6) - Micd Clamp Control */
++	{ 0x000002c8, 0x0000 }, /* R712 (0x2C8) - GP Switch 1 */
++	{ 0x000002d3, 0x0000 }, /* R723 (0x2D3) - Jack Detect Analogue */
 +	{ 0x00000300, 0x0000 }, /* R768 (0x300) - Input Enables */
-+	{ 0x00000308, 0x0400 }, /* R776 (0x308) - Input Rate */
++	{ 0x00000308, 0x0000 }, /* R776 (0x308) - Input Rate */
 +	{ 0x00000309, 0x0022 }, /* R777 (0x309) - Input Volume Ramp */
-+	{ 0x0000030c, 0x0002 }, /* R780 (0x30c) - HPF Control */
++	{ 0x0000030c, 0x0002 }, /* R780 (0x30C) - HPF Control */
 +	{ 0x00000310, 0x0080 }, /* R784 (0x310) - IN1L Control */
 +	{ 0x00000311, 0x0180 }, /* R785 (0x311) - ADC Digital Volume 1L */
 +	{ 0x00000312, 0x0500 }, /* R786 (0x312) - DMIC1L Control */
@@ -360,54 +266,30 @@ index 0000000000000..3dc1fefe68f59
 +	{ 0x00000315, 0x0180 }, /* R789 (0x315) - ADC Digital Volume 1R */
 +	{ 0x00000316, 0x0000 }, /* R790 (0x316) - DMIC1R Control */
 +	{ 0x00000317, 0x0000 }, /* R791 (0x317) - IN1R Rate Control */
-+	{ 0x00000318, 0x0080 }, /* R792 (0x318) - IN2L Control */
++	{ 0x00000318, 0x0000 }, /* R792 (0x318) - IN2L Control */
 +	{ 0x00000319, 0x0180 }, /* R793 (0x319) - ADC Digital Volume 2L */
-+	{ 0x0000031a, 0x0500 }, /* R794 (0x31a) - DMIC2L Control */
-+	{ 0x0000031b, 0x0000 }, /* R795 (0x31b) - IN2L Rate Control */
-+	{ 0x0000031c, 0x0080 }, /* R796 (0x31c) - IN2R Control */
-+	{ 0x0000031d, 0x0180 }, /* R797 (0x31d) - ADC Digital Volume 2R */
-+	{ 0x0000031e, 0x0000 }, /* R798 (0x31e) - DMIC2R Control */
-+	{ 0x0000031f, 0x0000 }, /* R799 (0x31f) - IN2R Rate Control */
-+	{ 0x00000320, 0x0000 }, /* R800 (0x320) - IN3L Control */
-+	{ 0x00000321, 0x0180 }, /* R801 (0x321) - ADC Digital Volume 3L */
-+	{ 0x00000322, 0x0500 }, /* R802 (0x322) - DMIC3L Control */
-+	{ 0x00000323, 0x0000 }, /* R803 (0x323) - IN3L Rate Control */
-+	{ 0x00000324, 0x0000 }, /* R804 (0x324) - IN3R Control */
-+	{ 0x00000325, 0x0180 }, /* R805 (0x325) - ADC Digital Volume 3R */
-+	{ 0x00000326, 0x0000 }, /* R806 (0x326) - DMIC3R Control */
-+	{ 0x00000327, 0x0000 }, /* R807 (0x327) - IN3R Rate Control */
-+	{ 0x00000328, 0x0000 }, /* R808 (0x328) - IN4L Control */
-+	{ 0x00000329, 0x0180 }, /* R809 (0x329) - ADC Digital Volume 4L */
-+	{ 0x0000032a, 0x0500 }, /* R810 (0x32a) - DMIC4L Control */
-+	{ 0x0000032b, 0x0000 }, /* R811 (0x32b) - IN4L Rate Control */
-+	{ 0x0000032c, 0x0000 }, /* R812 (0x32c) - IN4R Control */
-+	{ 0x0000032d, 0x0180 }, /* R813 (0x32d) - ADC Digital Volume 4R */
-+	{ 0x0000032e, 0x0000 }, /* R814 (0x32e) - DMIC4R Control */
-+	{ 0x0000032f, 0x0000 }, /* R815 (0x32f) - IN4R Rate Control */
++	{ 0x0000031a, 0x0500 }, /* R794 (0x31A) - DMIC2L Control */
++	{ 0x0000031b, 0x0000 }, /* R795 (0x31B) - IN2L Rate Control */
++	{ 0x0000031c, 0x0800 }, /* R796 (0x31C) - IN2R Control */
++	{ 0x0000031d, 0x0180 }, /* R797 (0x31D) - ADC Digital Volume 2R */
++	{ 0x0000031e, 0x0000 }, /* R798 (0x31E) - DMIC2R Control */
++	{ 0x0000031f, 0x0000 }, /* R799 (0x31F) - IN2R Rate Control */
++	{ 0x000003a8, 0x2000 }, /* R936 (0x3A8) - CS47L15 ADC Int Bias */
++	{ 0x000003c4, 0x0000 }, /* R964 (0x3C4) - CS47L15 PGA Bias Sel */
 +	{ 0x00000400, 0x0000 }, /* R1024 (0x400) - Output Enables 1 */
-+	{ 0x00000408, 0x0040 }, /* R1032 (0x408) - Output Rate 1 */
++	{ 0x00000408, 0x0000 }, /* R1032 (0x408) - Output Rate 1 */
 +	{ 0x00000409, 0x0022 }, /* R1033 (0x409) - Output Volume Ramp */
 +	{ 0x00000410, 0x0080 }, /* R1040 (0x410) - Output Path Config 1L */
 +	{ 0x00000411, 0x0180 }, /* R1041 (0x411) - DAC Digital Volume 1L */
-+	{ 0x00000412, 0x0005 }, /* R1042 (0x412) - Output Path Config 1 */
++	{ 0x00000412, 0x0000 }, /* R1042 (0x412) - Output Path Config 1 */
 +	{ 0x00000413, 0x0001 }, /* R1043 (0x413) - Noise Gate Select 1L */
 +	{ 0x00000414, 0x0080 }, /* R1044 (0x414) - Output Path Config 1R */
 +	{ 0x00000415, 0x0180 }, /* R1045 (0x415) - DAC Digital Volume 1R */
 +	{ 0x00000417, 0x0002 }, /* R1047 (0x417) - Noise Gate Select 1R */
-+	{ 0x00000418, 0x0080 }, /* R1048 (0x418) - Output Path Config 2L */
-+	{ 0x00000419, 0x0180 }, /* R1049 (0x419) - DAC Digital Volume 2L */
-+	{ 0x0000041a, 0x0005 }, /* R1050 (0x41a) - Output Path Config 2 */
-+	{ 0x0000041b, 0x0004 }, /* R1051 (0x41b) - Noise Gate Select 2L */
-+	{ 0x0000041c, 0x0080 }, /* R1052 (0x41c) - Output Path Config 2R */
-+	{ 0x0000041d, 0x0180 }, /* R1053 (0x41d) - DAC Digital Volume 2R */
-+	{ 0x0000041f, 0x0008 }, /* R1055 (0x41f) - Noise Gate Select 2R */
-+	{ 0x00000420, 0x0080 }, /* R1056 (0x420) - Output Path Config 3L */
-+	{ 0x00000421, 0x0180 }, /* R1057 (0x421) - DAC Digital Volume 3L */
-+	{ 0x00000422, 0x0005 }, /* R1058 (0x422) - Output Path Config 3 */
-+	{ 0x00000423, 0x0010 }, /* R1059 (0x423) - Noise Gate Select 3L */
-+	{ 0x00000424, 0x0080 }, /* R1060 (0x424) - Output Path Config 3R */
-+	{ 0x00000425, 0x0180 }, /* R1061 (0x425) - DAC Digital Volume 3R */
-+	{ 0x00000427, 0x0020 }, /* R1063 (0x427) - Noise Gate Select 3R */
++	{ 0x0000041a, 0x0600 }, /* R1050 (0x41A) - Output Path Config 2 */
++	{ 0x00000428, 0x0000 }, /* R1064 (0x428) - Output Path Config 4L */
++	{ 0x00000429, 0x0180 }, /* R1065 (0x429) - DAC Digital Volume 4L */
++	{ 0x0000042b, 0x0040 }, /* R1067 (0x42B) - Noise Gate Select 4L */
 +	{ 0x00000430, 0x0000 }, /* R1072 (0x430) - Output Path Config 5L */
 +	{ 0x00000431, 0x0180 }, /* R1073 (0x431) - DAC Digital Volume 5L */
 +	{ 0x00000433, 0x0100 }, /* R1075 (0x433) - Noise Gate Select 5L */
@@ -419,9 +301,9 @@ index 0000000000000..3dc1fefe68f59
 +	{ 0x00000458, 0x0000 }, /* R1112 (0x458) - Noise Gate Control */
 +	{ 0x00000490, 0x0069 }, /* R1168 (0x490) - PDM SPK1 Ctrl 1 */
 +	{ 0x00000491, 0x0000 }, /* R1169 (0x491) - PDM SPK1 Ctrl 2 */
-+	{ 0x000004a0, 0x0080 }, /* R1184 (0x4a0) - HP1 Short Circuit Ctrl */
-+	{ 0x000004a1, 0x0000 }, /* R1185 (0x4a1) - HP2 Short Circuit Ctrl */
-+	{ 0x000004a2, 0x0000 }, /* R1186 (0x4a2) - HP3 Short Circuit Ctrl */
++	{ 0x000004a0, 0x3080 }, /* R1184 (0x4A0) - HP1 Short Circuit Ctrl */
++	{ 0x000004a8, 0x6023 }, /* R1192 (0x4A8) - HP Test Ctrl 5 */
++	{ 0x000004a9, 0x6023 }, /* R1193 (0x4A9) - HP Test Ctrl 6 */
 +	{ 0x00000500, 0x000c }, /* R1280 (0x500) - AIF1 BCLK Ctrl */
 +	{ 0x00000501, 0x0000 }, /* R1281 (0x501) - AIF1 Tx Pin Ctrl */
 +	{ 0x00000502, 0x0000 }, /* R1282 (0x502) - AIF1 Rx Pin Ctrl */
@@ -431,23 +313,19 @@ index 0000000000000..3dc1fefe68f59
 +	{ 0x00000507, 0x1818 }, /* R1287 (0x507) - AIF1 Frame Ctrl 1 */
 +	{ 0x00000508, 0x1818 }, /* R1288 (0x508) - AIF1 Frame Ctrl 2 */
 +	{ 0x00000509, 0x0000 }, /* R1289 (0x509) - AIF1 Frame Ctrl 3 */
-+	{ 0x0000050a, 0x0001 }, /* R1290 (0x50a) - AIF1 Frame Ctrl 4 */
-+	{ 0x0000050b, 0x0002 }, /* R1291 (0x50b) - AIF1 Frame Ctrl 5 */
-+	{ 0x0000050c, 0x0003 }, /* R1292 (0x50c) - AIF1 Frame Ctrl 6 */
-+	{ 0x0000050d, 0x0004 }, /* R1293 (0x50d) - AIF1 Frame Ctrl 7 */
-+	{ 0x0000050e, 0x0005 }, /* R1294 (0x50e) - AIF1 Frame Ctrl 8 */
-+	{ 0x0000050f, 0x0006 }, /* R1295 (0x50f) - AIF1 Frame Ctrl 9 */
-+	{ 0x00000510, 0x0007 }, /* R1296 (0x510) - AIF1 Frame Ctrl 10 */
++	{ 0x0000050a, 0x0001 }, /* R1290 (0x50A) - AIF1 Frame Ctrl 4 */
++	{ 0x0000050b, 0x0002 }, /* R1291 (0x50B) - AIF1 Frame Ctrl 5 */
++	{ 0x0000050c, 0x0003 }, /* R1292 (0x50C) - AIF1 Frame Ctrl 6 */
++	{ 0x0000050d, 0x0004 }, /* R1293 (0x50D) - AIF1 Frame Ctrl 7 */
++	{ 0x0000050e, 0x0005 }, /* R1294 (0x50E) - AIF1 Frame Ctrl 8 */
 +	{ 0x00000511, 0x0000 }, /* R1297 (0x511) - AIF1 Frame Ctrl 11 */
 +	{ 0x00000512, 0x0001 }, /* R1298 (0x512) - AIF1 Frame Ctrl 12 */
 +	{ 0x00000513, 0x0002 }, /* R1299 (0x513) - AIF1 Frame Ctrl 13 */
 +	{ 0x00000514, 0x0003 }, /* R1300 (0x514) - AIF1 Frame Ctrl 14 */
 +	{ 0x00000515, 0x0004 }, /* R1301 (0x515) - AIF1 Frame Ctrl 15 */
 +	{ 0x00000516, 0x0005 }, /* R1302 (0x516) - AIF1 Frame Ctrl 16 */
-+	{ 0x00000517, 0x0006 }, /* R1303 (0x517) - AIF1 Frame Ctrl 17 */
-+	{ 0x00000518, 0x0007 }, /* R1304 (0x518) - AIF1 Frame Ctrl 18 */
 +	{ 0x00000519, 0x0000 }, /* R1305 (0x519) - AIF1 Tx Enables */
-+	{ 0x0000051a, 0x0000 }, /* R1306 (0x51a) - AIF1 Rx Enables */
++	{ 0x0000051a, 0x0000 }, /* R1306 (0x51A) - AIF1 Rx Enables */
 +	{ 0x00000540, 0x000c }, /* R1344 (0x540) - AIF2 BCLK Ctrl */
 +	{ 0x00000541, 0x0000 }, /* R1345 (0x541) - AIF2 Tx Pin Ctrl */
 +	{ 0x00000542, 0x0000 }, /* R1346 (0x542) - AIF2 Rx Pin Ctrl */
@@ -457,23 +335,15 @@ index 0000000000000..3dc1fefe68f59
 +	{ 0x00000547, 0x1818 }, /* R1351 (0x547) - AIF2 Frame Ctrl 1 */
 +	{ 0x00000548, 0x1818 }, /* R1352 (0x548) - AIF2 Frame Ctrl 2 */
 +	{ 0x00000549, 0x0000 }, /* R1353 (0x549) - AIF2 Frame Ctrl 3 */
-+	{ 0x0000054a, 0x0001 }, /* R1354 (0x54a) - AIF2 Frame Ctrl 4 */
-+	{ 0x0000054b, 0x0002 }, /* R1355 (0x54b) - AIF2 Frame Ctrl 5 */
-+	{ 0x0000054c, 0x0003 }, /* R1356 (0x54c) - AIF2 Frame Ctrl 6 */
-+	{ 0x0000054d, 0x0004 }, /* R1357 (0x54d) - AIF2 Frame Ctrl 7 */
-+	{ 0x0000054e, 0x0005 }, /* R1358 (0x54e) - AIF2 Frame Ctrl 8 */
-+	{ 0x0000054f, 0x0006 }, /* R1359 (0x54f) - AIF2 Frame Ctrl 9 */
-+	{ 0x00000550, 0x0007 }, /* R1360 (0x550) - AIF2 Frame Ctrl 10 */
++	{ 0x0000054a, 0x0001 }, /* R1354 (0x54A) - AIF2 Frame Ctrl 4 */
++	{ 0x0000054b, 0x0002 }, /* R1355 (0x54B) - AIF2 Frame Ctrl 5 */
++	{ 0x0000054c, 0x0003 }, /* R1356 (0x54C) - AIF2 Frame Ctrl 6 */
 +	{ 0x00000551, 0x0000 }, /* R1361 (0x551) - AIF2 Frame Ctrl 11 */
 +	{ 0x00000552, 0x0001 }, /* R1362 (0x552) - AIF2 Frame Ctrl 12 */
 +	{ 0x00000553, 0x0002 }, /* R1363 (0x553) - AIF2 Frame Ctrl 13 */
 +	{ 0x00000554, 0x0003 }, /* R1364 (0x554) - AIF2 Frame Ctrl 14 */
-+	{ 0x00000555, 0x0004 }, /* R1365 (0x555) - AIF2 Frame Ctrl 15 */
-+	{ 0x00000556, 0x0005 }, /* R1366 (0x556) - AIF2 Frame Ctrl 16 */
-+	{ 0x00000557, 0x0006 }, /* R1367 (0x557) - AIF2 Frame Ctrl 17 */
-+	{ 0x00000558, 0x0007 }, /* R1368 (0x558) - AIF2 Frame Ctrl 18 */
 +	{ 0x00000559, 0x0000 }, /* R1369 (0x559) - AIF2 Tx Enables */
-+	{ 0x0000055a, 0x0000 }, /* R1370 (0x55a) - AIF2 Rx Enables */
++	{ 0x0000055a, 0x0000 }, /* R1370 (0x55A) - AIF2 Rx Enables */
 +	{ 0x00000580, 0x000c }, /* R1408 (0x580) - AIF3 BCLK Ctrl */
 +	{ 0x00000581, 0x0000 }, /* R1409 (0x581) - AIF3 Tx Pin Ctrl */
 +	{ 0x00000582, 0x0000 }, /* R1410 (0x582) - AIF3 Rx Pin Ctrl */
@@ -483,35 +353,12 @@ index 0000000000000..3dc1fefe68f59
 +	{ 0x00000587, 0x1818 }, /* R1415 (0x587) - AIF3 Frame Ctrl 1 */
 +	{ 0x00000588, 0x1818 }, /* R1416 (0x588) - AIF3 Frame Ctrl 2 */
 +	{ 0x00000589, 0x0000 }, /* R1417 (0x589) - AIF3 Frame Ctrl 3 */
-+	{ 0x0000058a, 0x0001 }, /* R1418 (0x58a) - AIF3 Frame Ctrl 4 */
-+	{ 0x0000058b, 0x0002 }, /* R1419 (0x58b) - AIF3 Frame Ctrl 5 */
-+	{ 0x0000058c, 0x0003 }, /* R1420 (0x58c) - AIF3 Frame Ctrl 6 */
-+	{ 0x0000058d, 0x0004 }, /* R1421 (0x58d) - AIF3 Frame Ctrl 7 */
-+	{ 0x0000058e, 0x0005 }, /* R1422 (0x58e) - AIF3 Frame Ctrl 8 */
-+	{ 0x0000058f, 0x0006 }, /* R1423 (0x58f) - AIF3 Frame Ctrl 9 */
-+	{ 0x00000590, 0x0007 }, /* R1424 (0x590) - AIF3 Frame Ctrl 10 */
++	{ 0x0000058a, 0x0001 }, /* R1418 (0x58A) - AIF3 Frame Ctrl 4 */
 +	{ 0x00000591, 0x0000 }, /* R1425 (0x591) - AIF3 Frame Ctrl 11 */
 +	{ 0x00000592, 0x0001 }, /* R1426 (0x592) - AIF3 Frame Ctrl 12 */
-+	{ 0x00000593, 0x0002 }, /* R1427 (0x593) - AIF3 Frame Ctrl 13 */
-+	{ 0x00000594, 0x0003 }, /* R1428 (0x594) - AIF3 Frame Ctrl 14 */
-+	{ 0x00000595, 0x0004 }, /* R1429 (0x595) - AIF3 Frame Ctrl 15 */
-+	{ 0x00000596, 0x0005 }, /* R1430 (0x596) - AIF3 Frame Ctrl 16 */
-+	{ 0x00000597, 0x0006 }, /* R1431 (0x597) - AIF3 Frame Ctrl 17 */
-+	{ 0x00000598, 0x0007 }, /* R1432 (0x598) - AIF3 Frame Ctrl 18 */
 +	{ 0x00000599, 0x0000 }, /* R1433 (0x599) - AIF3 Tx Enables */
-+	{ 0x0000059a, 0x0000 }, /* R1434 (0x59a) - AIF3 Rx Enables */
-+	{ 0x000005c2, 0x0000 }, /* R1474 (0x5c2) - SPD1 Tx Control */
-+	{ 0x000005e3, 0x0000 }, /* R1507 (0x5e3) - SLIMBus Framer Ref Gear */
-+	{ 0x000005e5, 0x0000 }, /* R1509 (0x5e5) - SLIMBus Rates 1 */
-+	{ 0x000005e6, 0x0000 }, /* R1510 (0x5e6) - SLIMBus Rates 2 */
-+	{ 0x000005e7, 0x0000 }, /* R1511 (0x5e7) - SLIMBus Rates 3 */
-+	{ 0x000005e8, 0x0000 }, /* R1512 (0x5e8) - SLIMBus Rates 4 */
-+	{ 0x000005e9, 0x0000 }, /* R1513 (0x5e9) - SLIMBus Rates 5 */
-+	{ 0x000005ea, 0x0000 }, /* R1514 (0x5ea) - SLIMBus Rates 6 */
-+	{ 0x000005eb, 0x0000 }, /* R1515 (0x5eb) - SLIMBus Rates 7 */
-+	{ 0x000005ec, 0x0000 }, /* R1516 (0x5ec) - SLIMBus Rates 8 */
-+	{ 0x000005f5, 0x0000 }, /* R1525 (0x5f5) - SLIMBus RX Channel Enable */
-+	{ 0x000005f6, 0x0000 }, /* R1526 (0x5f6) - SLIMBus TX Channel Enable */
++	{ 0x0000059a, 0x0000 }, /* R1434 (0x59A) - AIF3 Rx Enables */
++	{ 0x000005c2, 0x0000 }, /* R1474 (0x5C2) - SPD1 Tx Control */
 +	{ 0x00000640, 0x0000 }, /* R1600 (0x640) - PWM1MIX Input 1 Source */
 +	{ 0x00000641, 0x0080 }, /* R1601 (0x641) - PWM1MIX Input 1 Volume */
 +	{ 0x00000642, 0x0000 }, /* R1602 (0x642) - PWM1MIX Input 2 Source */
@@ -522,12 +369,12 @@ index 0000000000000..3dc1fefe68f59
 +	{ 0x00000647, 0x0080 }, /* R1607 (0x647) - PWM1MIX Input 4 Volume */
 +	{ 0x00000648, 0x0000 }, /* R1608 (0x648) - PWM2MIX Input 1 Source */
 +	{ 0x00000649, 0x0080 }, /* R1609 (0x649) - PWM2MIX Input 1 Volume */
-+	{ 0x0000064a, 0x0000 }, /* R1610 (0x64a) - PWM2MIX Input 2 Source */
-+	{ 0x0000064b, 0x0080 }, /* R1611 (0x64b) - PWM2MIX Input 2 Volume */
-+	{ 0x0000064c, 0x0000 }, /* R1612 (0x64c) - PWM2MIX Input 3 Source */
-+	{ 0x0000064d, 0x0080 }, /* R1613 (0x64d) - PWM2MIX Input 3 Volume */
-+	{ 0x0000064e, 0x0000 }, /* R1614 (0x64e) - PWM2MIX Input 4 Source */
-+	{ 0x0000064f, 0x0080 }, /* R1615 (0x64f) - PWM2MIX Input 4 Volume */
++	{ 0x0000064a, 0x0000 }, /* R1610 (0x64A) - PWM2MIX Input 2 Source */
++	{ 0x0000064b, 0x0080 }, /* R1611 (0x64B) - PWM2MIX Input 2 Volume */
++	{ 0x0000064c, 0x0000 }, /* R1612 (0x64C) - PWM2MIX Input 3 Source */
++	{ 0x0000064d, 0x0080 }, /* R1613 (0x64D) - PWM2MIX Input 3 Volume */
++	{ 0x0000064e, 0x0000 }, /* R1614 (0x64E) - PWM2MIX Input 4 Source */
++	{ 0x0000064f, 0x0080 }, /* R1615 (0x64F) - PWM2MIX Input 4 Volume */
 +	{ 0x00000680, 0x0000 }, /* R1664 (0x680) - OUT1LMIX Input 1 Source */
 +	{ 0x00000681, 0x0080 }, /* R1665 (0x681) - OUT1LMIX Input 1 Volume */
 +	{ 0x00000682, 0x0000 }, /* R1666 (0x682) - OUT1LMIX Input 2 Source */
@@ -538,60 +385,36 @@ index 0000000000000..3dc1fefe68f59
 +	{ 0x00000687, 0x0080 }, /* R1671 (0x687) - OUT1LMIX Input 4 Volume */
 +	{ 0x00000688, 0x0000 }, /* R1672 (0x688) - OUT1RMIX Input 1 Source */
 +	{ 0x00000689, 0x0080 }, /* R1673 (0x689) - OUT1RMIX Input 1 Volume */
-+	{ 0x0000068a, 0x0000 }, /* R1674 (0x68a) - OUT1RMIX Input 2 Source */
-+	{ 0x0000068b, 0x0080 }, /* R1675 (0x68b) - OUT1RMIX Input 2 Volume */
-+	{ 0x0000068c, 0x0000 }, /* R1676 (0x68c) - OUT1RMIX Input 3 Source */
-+	{ 0x0000068d, 0x0080 }, /* R1677 (0x68d) - OUT1RMIX Input 3 Volume */
-+	{ 0x0000068e, 0x0000 }, /* R1678 (0x68e) - OUT1RMIX Input 4 Source */
-+	{ 0x0000068f, 0x0080 }, /* R1679 (0x68f) - OUT1RMIX Input 4 Volume */
-+	{ 0x00000690, 0x0000 }, /* R1680 (0x690) - OUT2LMIX Input 1 Source */
-+	{ 0x00000691, 0x0080 }, /* R1681 (0x691) - OUT2LMIX Input 1 Volume */
-+	{ 0x00000692, 0x0000 }, /* R1682 (0x692) - OUT2LMIX Input 2 Source */
-+	{ 0x00000693, 0x0080 }, /* R1683 (0x693) - OUT2LMIX Input 2 Volume */
-+	{ 0x00000694, 0x0000 }, /* R1684 (0x694) - OUT2LMIX Input 3 Source */
-+	{ 0x00000695, 0x0080 }, /* R1685 (0x695) - OUT2LMIX Input 3 Volume */
-+	{ 0x00000696, 0x0000 }, /* R1686 (0x696) - OUT2LMIX Input 4 Source */
-+	{ 0x00000697, 0x0080 }, /* R1687 (0x697) - OUT2LMIX Input 4 Volume */
-+	{ 0x00000698, 0x0000 }, /* R1688 (0x698) - OUT2RMIX Input 1 Source */
-+	{ 0x00000699, 0x0080 }, /* R1689 (0x699) - OUT2RMIX Input 1 Volume */
-+	{ 0x0000069a, 0x0000 }, /* R1690 (0x69a) - OUT2RMIX Input 2 Source */
-+	{ 0x0000069b, 0x0080 }, /* R1691 (0x69b) - OUT2RMIX Input 2 Volume */
-+	{ 0x0000069c, 0x0000 }, /* R1692 (0x69c) - OUT2RMIX Input 3 Source */
-+	{ 0x0000069d, 0x0080 }, /* R1693 (0x69d) - OUT2RMIX Input 3 Volume */
-+	{ 0x0000069e, 0x0000 }, /* R1694 (0x69e) - OUT2RMIX Input 4 Source */
-+	{ 0x0000069f, 0x0080 }, /* R1695 (0x69f) - OUT2RMIX Input 4 Volume */
-+	{ 0x000006a0, 0x0000 }, /* R1696 (0x6a0) - OUT3LMIX Input 1 Source */
-+	{ 0x000006a1, 0x0080 }, /* R1697 (0x6a1) - OUT3LMIX Input 1 Volume */
-+	{ 0x000006a2, 0x0000 }, /* R1698 (0x6a2) - OUT3LMIX Input 2 Source */
-+	{ 0x000006a3, 0x0080 }, /* R1699 (0x6a3) - OUT3LMIX Input 2 Volume */
-+	{ 0x000006a4, 0x0000 }, /* R1700 (0x6a4) - OUT3LMIX Input 3 Source */
-+	{ 0x000006a5, 0x0080 }, /* R1701 (0x6a5) - OUT3LMIX Input 3 Volume */
-+	{ 0x000006a6, 0x0000 }, /* R1702 (0x6a6) - OUT3LMIX Input 4 Source */
-+	{ 0x000006a7, 0x0080 }, /* R1703 (0x6a7) - OUT3LMIX Input 4 Volume */
-+	{ 0x000006a8, 0x0000 }, /* R1704 (0x6a8) - OUT3RMIX Input 1 Source */
-+	{ 0x000006a9, 0x0080 }, /* R1705 (0x6a9) - OUT3RMIX Input 1 Volume */
-+	{ 0x000006aa, 0x0000 }, /* R1706 (0x6aa) - OUT3RMIX Input 2 Source */
-+	{ 0x000006ab, 0x0080 }, /* R1707 (0x6ab) - OUT3RMIX Input 2 Volume */
-+	{ 0x000006ac, 0x0000 }, /* R1708 (0x6ac) - OUT3RMIX Input 3 Source */
-+	{ 0x000006ad, 0x0080 }, /* R1709 (0x6ad) - OUT3RMIX Input 3 Volume */
-+	{ 0x000006ae, 0x0000 }, /* R1710 (0x6ae) - OUT3RMIX Input 4 Source */
-+	{ 0x000006af, 0x0080 }, /* R1711 (0x6af) - OUT3RMIX Input 4 Volume */
-+	{ 0x000006c0, 0x0000 }, /* R1728 (0x6c0) - OUT5LMIX Input 1 Source */
-+	{ 0x000006c1, 0x0080 }, /* R1729 (0x6c1) - OUT5LMIX Input 1 Volume */
-+	{ 0x000006c2, 0x0000 }, /* R1730 (0x6c2) - OUT5LMIX Input 2 Source */
-+	{ 0x000006c3, 0x0080 }, /* R1731 (0x6c3) - OUT5LMIX Input 2 Volume */
-+	{ 0x000006c4, 0x0000 }, /* R1732 (0x6c4) - OUT5LMIX Input 3 Source */
-+	{ 0x000006c5, 0x0080 }, /* R1733 (0x6c5) - OUT5LMIX Input 3 Volume */
-+	{ 0x000006c6, 0x0000 }, /* R1734 (0x6c6) - OUT5LMIX Input 4 Source */
-+	{ 0x000006c7, 0x0080 }, /* R1735 (0x6c7) - OUT5LMIX Input 4 Volume */
-+	{ 0x000006c8, 0x0000 }, /* R1736 (0x6c8) - OUT5RMIX Input 1 Source */
-+	{ 0x000006c9, 0x0080 }, /* R1737 (0x6c9) - OUT5RMIX Input 1 Volume */
-+	{ 0x000006ca, 0x0000 }, /* R1738 (0x6ca) - OUT5RMIX Input 2 Source */
-+	{ 0x000006cb, 0x0080 }, /* R1739 (0x6cb) - OUT5RMIX Input 2 Volume */
-+	{ 0x000006cc, 0x0000 }, /* R1740 (0x6cc) - OUT5RMIX Input 3 Source */
-+	{ 0x000006cd, 0x0080 }, /* R1741 (0x6cd) - OUT5RMIX Input 3 Volume */
-+	{ 0x000006ce, 0x0000 }, /* R1742 (0x6ce) - OUT5RMIX Input 4 Source */
-+	{ 0x000006cf, 0x0080 }, /* R1743 (0x6cf) - OUT5RMIX Input 4 Volume */
++	{ 0x0000068a, 0x0000 }, /* R1674 (0x68A) - OUT1RMIX Input 2 Source */
++	{ 0x0000068b, 0x0080 }, /* R1675 (0x68B) - OUT1RMIX Input 2 Volume */
++	{ 0x0000068c, 0x0000 }, /* R1676 (0x68C) - OUT1RMIX Input 3 Source */
++	{ 0x0000068d, 0x0080 }, /* R1677 (0x68D) - OUT1RMIX Input 3 Volume */
++	{ 0x0000068e, 0x0000 }, /* R1678 (0x68E) - OUT1RMIX Input 4 Source */
++	{ 0x0000068f, 0x0080 }, /* R1679 (0x68F) - OUT1RMIX Input 4 Volume */
++	{ 0x000006b0, 0x0000 }, /* R1712 (0x6B0) - OUT4LMIX Input 1 Source */
++	{ 0x000006b1, 0x0080 }, /* R1713 (0x6B1) - OUT4LMIX Input 1 Volume */
++	{ 0x000006b2, 0x0000 }, /* R1714 (0x6B2) - OUT4LMIX Input 2 Source */
++	{ 0x000006b3, 0x0080 }, /* R1715 (0x6B3) - OUT4LMIX Input 2 Volume */
++	{ 0x000006b4, 0x0000 }, /* R1716 (0x6B4) - OUT4LMIX Input 3 Source */
++	{ 0x000006b5, 0x0080 }, /* R1717 (0x6B5) - OUT4LMIX Input 3 Volume */
++	{ 0x000006b6, 0x0000 }, /* R1718 (0x6B6) - OUT4LMIX Input 4 Source */
++	{ 0x000006b7, 0x0080 }, /* R1719 (0x6B7) - OUT4LMIX Input 4 Volume */
++	{ 0x000006c0, 0x0000 }, /* R1728 (0x6C0) - OUT5LMIX Input 1 Source */
++	{ 0x000006c1, 0x0080 }, /* R1729 (0x6C1) - OUT5LMIX Input 1 Volume */
++	{ 0x000006c2, 0x0000 }, /* R1730 (0x6C2) - OUT5LMIX Input 2 Source */
++	{ 0x000006c3, 0x0080 }, /* R1731 (0x6C3) - OUT5LMIX Input 2 Volume */
++	{ 0x000006c4, 0x0000 }, /* R1732 (0x6C4) - OUT5LMIX Input 3 Source */
++	{ 0x000006c5, 0x0080 }, /* R1733 (0x6C5) - OUT5LMIX Input 3 Volume */
++	{ 0x000006c6, 0x0000 }, /* R1734 (0x6C6) - OUT5LMIX Input 4 Source */
++	{ 0x000006c7, 0x0080 }, /* R1735 (0x6C7) - OUT5LMIX Input 4 Volume */
++	{ 0x000006c8, 0x0000 }, /* R1736 (0x6C8) - OUT5RMIX Input 1 Source */
++	{ 0x000006c9, 0x0080 }, /* R1737 (0x6C9) - OUT5RMIX Input 1 Volume */
++	{ 0x000006ca, 0x0000 }, /* R1738 (0x6CA) - OUT5RMIX Input 2 Source */
++	{ 0x000006cb, 0x0080 }, /* R1739 (0x6CB) - OUT5RMIX Input 2 Volume */
++	{ 0x000006cc, 0x0000 }, /* R1740 (0x6CC) - OUT5RMIX Input 3 Source */
++	{ 0x000006cd, 0x0080 }, /* R1741 (0x6CD) - OUT5RMIX Input 3 Volume */
++	{ 0x000006ce, 0x0000 }, /* R1742 (0x6CE) - OUT5RMIX Input 4 Source */
++	{ 0x000006cf, 0x0080 }, /* R1743 (0x6CF) - OUT5RMIX Input 4 Volume */
 +	{ 0x00000700, 0x0000 }, /* R1792 (0x700) - AIF1TX1MIX Input 1 Source */
 +	{ 0x00000701, 0x0080 }, /* R1793 (0x701) - AIF1TX1MIX Input 1 Volume */
 +	{ 0x00000702, 0x0000 }, /* R1794 (0x702) - AIF1TX1MIX Input 2 Source */
@@ -602,12 +425,12 @@ index 0000000000000..3dc1fefe68f59
 +	{ 0x00000707, 0x0080 }, /* R1799 (0x707) - AIF1TX1MIX Input 4 Volume */
 +	{ 0x00000708, 0x0000 }, /* R1800 (0x708) - AIF1TX2MIX Input 1 Source */
 +	{ 0x00000709, 0x0080 }, /* R1801 (0x709) - AIF1TX2MIX Input 1 Volume */
-+	{ 0x0000070a, 0x0000 }, /* R1802 (0x70a) - AIF1TX2MIX Input 2 Source */
-+	{ 0x0000070b, 0x0080 }, /* R1803 (0x70b) - AIF1TX2MIX Input 2 Volume */
-+	{ 0x0000070c, 0x0000 }, /* R1804 (0x70c) - AIF1TX2MIX Input 3 Source */
-+	{ 0x0000070d, 0x0080 }, /* R1805 (0x70d) - AIF1TX2MIX Input 3 Volume */
-+	{ 0x0000070e, 0x0000 }, /* R1806 (0x70e) - AIF1TX2MIX Input 4 Source */
-+	{ 0x0000070f, 0x0080 }, /* R1807 (0x70f) - AIF1TX2MIX Input 4 Volume */
++	{ 0x0000070a, 0x0000 }, /* R1802 (0x70A) - AIF1TX2MIX Input 2 Source */
++	{ 0x0000070b, 0x0080 }, /* R1803 (0x70B) - AIF1TX2MIX Input 2 Volume */
++	{ 0x0000070c, 0x0000 }, /* R1804 (0x70C) - AIF1TX2MIX Input 3 Source */
++	{ 0x0000070d, 0x0080 }, /* R1805 (0x70D) - AIF1TX2MIX Input 3 Volume */
++	{ 0x0000070e, 0x0000 }, /* R1806 (0x70E) - AIF1TX2MIX Input 4 Source */
++	{ 0x0000070f, 0x0080 }, /* R1807 (0x70F) - AIF1TX2MIX Input 4 Volume */
 +	{ 0x00000710, 0x0000 }, /* R1808 (0x710) - AIF1TX3MIX Input 1 Source */
 +	{ 0x00000711, 0x0080 }, /* R1809 (0x711) - AIF1TX3MIX Input 1 Volume */
 +	{ 0x00000712, 0x0000 }, /* R1810 (0x712) - AIF1TX3MIX Input 2 Source */
@@ -618,12 +441,12 @@ index 0000000000000..3dc1fefe68f59
 +	{ 0x00000717, 0x0080 }, /* R1815 (0x717) - AIF1TX3MIX Input 4 Volume */
 +	{ 0x00000718, 0x0000 }, /* R1816 (0x718) - AIF1TX4MIX Input 1 Source */
 +	{ 0x00000719, 0x0080 }, /* R1817 (0x719) - AIF1TX4MIX Input 1 Volume */
-+	{ 0x0000071a, 0x0000 }, /* R1818 (0x71a) - AIF1TX4MIX Input 2 Source */
-+	{ 0x0000071b, 0x0080 }, /* R1819 (0x71b) - AIF1TX4MIX Input 2 Volume */
-+	{ 0x0000071c, 0x0000 }, /* R1820 (0x71c) - AIF1TX4MIX Input 3 Source */
-+	{ 0x0000071d, 0x0080 }, /* R1821 (0x71d) - AIF1TX4MIX Input 3 Volume */
-+	{ 0x0000071e, 0x0000 }, /* R1822 (0x71e) - AIF1TX4MIX Input 4 Source */
-+	{ 0x0000071f, 0x0080 }, /* R1823 (0x71f) - AIF1TX4MIX Input 4 Volume */
++	{ 0x0000071a, 0x0000 }, /* R1818 (0x71A) - AIF1TX4MIX Input 2 Source */
++	{ 0x0000071b, 0x0080 }, /* R1819 (0x71B) - AIF1TX4MIX Input 2 Volume */
++	{ 0x0000071c, 0x0000 }, /* R1820 (0x71C) - AIF1TX4MIX Input 3 Source */
++	{ 0x0000071d, 0x0080 }, /* R1821 (0x71D) - AIF1TX4MIX Input 3 Volume */
++	{ 0x0000071e, 0x0000 }, /* R1822 (0x71E) - AIF1TX4MIX Input 4 Source */
++	{ 0x0000071f, 0x0080 }, /* R1823 (0x71F) - AIF1TX4MIX Input 4 Volume */
 +	{ 0x00000720, 0x0000 }, /* R1824 (0x720) - AIF1TX5MIX Input 1 Source */
 +	{ 0x00000721, 0x0080 }, /* R1825 (0x721) - AIF1TX5MIX Input 1 Volume */
 +	{ 0x00000722, 0x0000 }, /* R1826 (0x722) - AIF1TX5MIX Input 2 Source */
@@ -634,28 +457,12 @@ index 0000000000000..3dc1fefe68f59
 +	{ 0x00000727, 0x0080 }, /* R1831 (0x727) - AIF1TX5MIX Input 4 Volume */
 +	{ 0x00000728, 0x0000 }, /* R1832 (0x728) - AIF1TX6MIX Input 1 Source */
 +	{ 0x00000729, 0x0080 }, /* R1833 (0x729) - AIF1TX6MIX Input 1 Volume */
-+	{ 0x0000072a, 0x0000 }, /* R1834 (0x72a) - AIF1TX6MIX Input 2 Source */
-+	{ 0x0000072b, 0x0080 }, /* R1835 (0x72b) - AIF1TX6MIX Input 2 Volume */
-+	{ 0x0000072c, 0x0000 }, /* R1836 (0x72c) - AIF1TX6MIX Input 3 Source */
-+	{ 0x0000072d, 0x0080 }, /* R1837 (0x72d) - AIF1TX6MIX Input 3 Volume */
-+	{ 0x0000072e, 0x0000 }, /* R1838 (0x72e) - AIF1TX6MIX Input 4 Source */
-+	{ 0x0000072f, 0x0080 }, /* R1839 (0x72f) - AIF1TX6MIX Input 4 Volume */
-+	{ 0x00000730, 0x0000 }, /* R1840 (0x730) - AIF1TX7MIX Input 1 Source */
-+	{ 0x00000731, 0x0080 }, /* R1841 (0x731) - AIF1TX7MIX Input 1 Volume */
-+	{ 0x00000732, 0x0000 }, /* R1842 (0x732) - AIF1TX7MIX Input 2 Source */
-+	{ 0x00000733, 0x0080 }, /* R1843 (0x733) - AIF1TX7MIX Input 2 Volume */
-+	{ 0x00000734, 0x0000 }, /* R1844 (0x734) - AIF1TX7MIX Input 3 Source */
-+	{ 0x00000735, 0x0080 }, /* R1845 (0x735) - AIF1TX7MIX Input 3 Volume */
-+	{ 0x00000736, 0x0000 }, /* R1846 (0x736) - AIF1TX7MIX Input 4 Source */
-+	{ 0x00000737, 0x0080 }, /* R1847 (0x737) - AIF1TX7MIX Input 4 Volume */
-+	{ 0x00000738, 0x0000 }, /* R1848 (0x738) - AIF1TX8MIX Input 1 Source */
-+	{ 0x00000739, 0x0080 }, /* R1849 (0x739) - AIF1TX8MIX Input 1 Volume */
-+	{ 0x0000073a, 0x0000 }, /* R1850 (0x73a) - AIF1TX8MIX Input 2 Source */
-+	{ 0x0000073b, 0x0080 }, /* R1851 (0x73b) - AIF1TX8MIX Input 2 Volume */
-+	{ 0x0000073c, 0x0000 }, /* R1852 (0x73c) - AIF1TX8MIX Input 3 Source */
-+	{ 0x0000073d, 0x0080 }, /* R1853 (0x73d) - AIF1TX8MIX Input 3 Volume */
-+	{ 0x0000073e, 0x0000 }, /* R1854 (0x73e) - AIF1TX8MIX Input 4 Source */
-+	{ 0x0000073f, 0x0080 }, /* R1855 (0x73f) - AIF1TX8MIX Input 4 Volume */
++	{ 0x0000072a, 0x0000 }, /* R1834 (0x72A) - AIF1TX6MIX Input 2 Source */
++	{ 0x0000072b, 0x0080 }, /* R1835 (0x72B) - AIF1TX6MIX Input 2 Volume */
++	{ 0x0000072c, 0x0000 }, /* R1836 (0x72C) - AIF1TX6MIX Input 3 Source */
++	{ 0x0000072d, 0x0080 }, /* R1837 (0x72D) - AIF1TX6MIX Input 3 Volume */
++	{ 0x0000072e, 0x0000 }, /* R1838 (0x72E) - AIF1TX6MIX Input 4 Source */
++	{ 0x0000072f, 0x0080 }, /* R1839 (0x72F) - AIF1TX6MIX Input 4 Volume */
 +	{ 0x00000740, 0x0000 }, /* R1856 (0x740) - AIF2TX1MIX Input 1 Source */
 +	{ 0x00000741, 0x0080 }, /* R1857 (0x741) - AIF2TX1MIX Input 1 Volume */
 +	{ 0x00000742, 0x0000 }, /* R1858 (0x742) - AIF2TX1MIX Input 2 Source */
@@ -666,12 +473,12 @@ index 0000000000000..3dc1fefe68f59
 +	{ 0x00000747, 0x0080 }, /* R1863 (0x747) - AIF2TX1MIX Input 4 Volume */
 +	{ 0x00000748, 0x0000 }, /* R1864 (0x748) - AIF2TX2MIX Input 1 Source */
 +	{ 0x00000749, 0x0080 }, /* R1865 (0x749) - AIF2TX2MIX Input 1 Volume */
-+	{ 0x0000074a, 0x0000 }, /* R1866 (0x74a) - AIF2TX2MIX Input 2 Source */
-+	{ 0x0000074b, 0x0080 }, /* R1867 (0x74b) - AIF2TX2MIX Input 2 Volume */
-+	{ 0x0000074c, 0x0000 }, /* R1868 (0x74c) - AIF2TX2MIX Input 3 Source */
-+	{ 0x0000074d, 0x0080 }, /* R1869 (0x74d) - AIF2TX2MIX Input 3 Volume */
-+	{ 0x0000074e, 0x0000 }, /* R1870 (0x74e) - AIF2TX2MIX Input 4 Source */
-+	{ 0x0000074f, 0x0080 }, /* R1871 (0x74f) - AIF2TX2MIX Input 4 Volume */
++	{ 0x0000074a, 0x0000 }, /* R1866 (0x74A) - AIF2TX2MIX Input 2 Source */
++	{ 0x0000074b, 0x0080 }, /* R1867 (0x74B) - AIF2TX2MIX Input 2 Volume */
++	{ 0x0000074c, 0x0000 }, /* R1868 (0x74C) - AIF2TX2MIX Input 3 Source */
++	{ 0x0000074d, 0x0080 }, /* R1869 (0x74D) - AIF2TX2MIX Input 3 Volume */
++	{ 0x0000074e, 0x0000 }, /* R1870 (0x74E) - AIF2TX2MIX Input 4 Source */
++	{ 0x0000074f, 0x0080 }, /* R1871 (0x74F) - AIF2TX2MIX Input 4 Volume */
 +	{ 0x00000750, 0x0000 }, /* R1872 (0x750) - AIF2TX3MIX Input 1 Source */
 +	{ 0x00000751, 0x0080 }, /* R1873 (0x751) - AIF2TX3MIX Input 1 Volume */
 +	{ 0x00000752, 0x0000 }, /* R1874 (0x752) - AIF2TX3MIX Input 2 Source */
@@ -682,44 +489,12 @@ index 0000000000000..3dc1fefe68f59
 +	{ 0x00000757, 0x0080 }, /* R1879 (0x757) - AIF2TX3MIX Input 4 Volume */
 +	{ 0x00000758, 0x0000 }, /* R1880 (0x758) - AIF2TX4MIX Input 1 Source */
 +	{ 0x00000759, 0x0080 }, /* R1881 (0x759) - AIF2TX4MIX Input 1 Volume */
-+	{ 0x0000075a, 0x0000 }, /* R1882 (0x75a) - AIF2TX4MIX Input 2 Source */
-+	{ 0x0000075b, 0x0080 }, /* R1883 (0x75b) - AIF2TX4MIX Input 2 Volume */
-+	{ 0x0000075c, 0x0000 }, /* R1884 (0x75c) - AIF2TX4MIX Input 3 Source */
-+	{ 0x0000075d, 0x0080 }, /* R1885 (0x75d) - AIF2TX4MIX Input 3 Volume */
-+	{ 0x0000075e, 0x0000 }, /* R1886 (0x75e) - AIF2TX4MIX Input 4 Source */
-+	{ 0x0000075f, 0x0080 }, /* R1887 (0x75f) - AIF2TX4MIX Input 4 Volume */
-+	{ 0x00000760, 0x0000 }, /* R1888 (0x760) - AIF2TX5MIX Input 1 Source */
-+	{ 0x00000761, 0x0080 }, /* R1889 (0x761) - AIF2TX5MIX Input 1 Volume */
-+	{ 0x00000762, 0x0000 }, /* R1890 (0x762) - AIF2TX5MIX Input 2 Source */
-+	{ 0x00000763, 0x0080 }, /* R1891 (0x763) - AIF2TX5MIX Input 2 Volume */
-+	{ 0x00000764, 0x0000 }, /* R1892 (0x764) - AIF2TX5MIX Input 3 Source */
-+	{ 0x00000765, 0x0080 }, /* R1893 (0x765) - AIF2TX5MIX Input 3 Volume */
-+	{ 0x00000766, 0x0000 }, /* R1894 (0x766) - AIF2TX5MIX Input 4 Source */
-+	{ 0x00000767, 0x0080 }, /* R1895 (0x767) - AIF2TX5MIX Input 4 Volume */
-+	{ 0x00000768, 0x0000 }, /* R1896 (0x768) - AIF2TX6MIX Input 1 Source */
-+	{ 0x00000769, 0x0080 }, /* R1897 (0x769) - AIF2TX6MIX Input 1 Volume */
-+	{ 0x0000076a, 0x0000 }, /* R1898 (0x76a) - AIF2TX6MIX Input 2 Source */
-+	{ 0x0000076b, 0x0080 }, /* R1899 (0x76b) - AIF2TX6MIX Input 2 Volume */
-+	{ 0x0000076c, 0x0000 }, /* R1900 (0x76c) - AIF2TX6MIX Input 3 Source */
-+	{ 0x0000076d, 0x0080 }, /* R1901 (0x76d) - AIF2TX6MIX Input 3 Volume */
-+	{ 0x0000076e, 0x0000 }, /* R1902 (0x76e) - AIF2TX6MIX Input 4 Source */
-+	{ 0x0000076f, 0x0080 }, /* R1903 (0x76f) - AIF2TX6MIX Input 4 Volume */
-+	{ 0x00000770, 0x0000 }, /* R1904 (0x770) - AIF2TX7MIX Input 1 Source */
-+	{ 0x00000771, 0x0080 }, /* R1905 (0x771) - AIF2TX7MIX Input 1 Volume */
-+	{ 0x00000772, 0x0000 }, /* R1906 (0x772) - AIF2TX7MIX Input 2 Source */
-+	{ 0x00000773, 0x0080 }, /* R1907 (0x773) - AIF2TX7MIX Input 2 Volume */
-+	{ 0x00000774, 0x0000 }, /* R1908 (0x774) - AIF2TX7MIX Input 3 Source */
-+	{ 0x00000775, 0x0080 }, /* R1909 (0x775) - AIF2TX7MIX Input 3 Volume */
-+	{ 0x00000776, 0x0000 }, /* R1910 (0x776) - AIF2TX7MIX Input 4 Source */
-+	{ 0x00000777, 0x0080 }, /* R1911 (0x777) - AIF2TX7MIX Input 4 Volume */
-+	{ 0x00000778, 0x0000 }, /* R1912 (0x778) - AIF2TX8MIX Input 1 Source */
-+	{ 0x00000779, 0x0080 }, /* R1913 (0x779) - AIF2TX8MIX Input 1 Volume */
-+	{ 0x0000077a, 0x0000 }, /* R1914 (0x77a) - AIF2TX8MIX Input 2 Source */
-+	{ 0x0000077b, 0x0080 }, /* R1915 (0x77b) - AIF2TX8MIX Input 2 Volume */
-+	{ 0x0000077c, 0x0000 }, /* R1916 (0x77c) - AIF2TX8MIX Input 3 Source */
-+	{ 0x0000077d, 0x0080 }, /* R1917 (0x77d) - AIF2TX8MIX Input 3 Volume */
-+	{ 0x0000077e, 0x0000 }, /* R1918 (0x77e) - AIF2TX8MIX Input 4 Source */
-+	{ 0x0000077f, 0x0080 }, /* R1919 (0x77f) - AIF2TX8MIX Input 4 Volume */
++	{ 0x0000075a, 0x0000 }, /* R1882 (0x75A) - AIF2TX4MIX Input 2 Source */
++	{ 0x0000075b, 0x0080 }, /* R1883 (0x75B) - AIF2TX4MIX Input 2 Volume */
++	{ 0x0000075c, 0x0000 }, /* R1884 (0x75C) - AIF2TX4MIX Input 3 Source */
++	{ 0x0000075d, 0x0080 }, /* R1885 (0x75D) - AIF2TX4MIX Input 3 Volume */
++	{ 0x0000075e, 0x0000 }, /* R1886 (0x75E) - AIF2TX4MIX Input 4 Source */
++	{ 0x0000075f, 0x0080 }, /* R1887 (0x75F) - AIF2TX4MIX Input 4 Volume */
 +	{ 0x00000780, 0x0000 }, /* R1920 (0x780) - AIF3TX1MIX Input 1 Source */
 +	{ 0x00000781, 0x0080 }, /* R1921 (0x781) - AIF3TX1MIX Input 1 Volume */
 +	{ 0x00000782, 0x0000 }, /* R1922 (0x782) - AIF3TX1MIX Input 2 Source */
@@ -730,124 +505,12 @@ index 0000000000000..3dc1fefe68f59
 +	{ 0x00000787, 0x0080 }, /* R1927 (0x787) - AIF3TX1MIX Input 4 Volume */
 +	{ 0x00000788, 0x0000 }, /* R1928 (0x788) - AIF3TX2MIX Input 1 Source */
 +	{ 0x00000789, 0x0080 }, /* R1929 (0x789) - AIF3TX2MIX Input 1 Volume */
-+	{ 0x0000078a, 0x0000 }, /* R1930 (0x78a) - AIF3TX2MIX Input 2 Source */
-+	{ 0x0000078b, 0x0080 }, /* R1931 (0x78b) - AIF3TX2MIX Input 2 Volume */
-+	{ 0x0000078c, 0x0000 }, /* R1932 (0x78c) - AIF3TX2MIX Input 3 Source */
-+	{ 0x0000078d, 0x0080 }, /* R1933 (0x78d) - AIF3TX2MIX Input 3 Volume */
-+	{ 0x0000078e, 0x0000 }, /* R1934 (0x78e) - AIF3TX2MIX Input 4 Source */
-+	{ 0x0000078f, 0x0080 }, /* R1935 (0x78f) - AIF3TX2MIX Input 4 Volume */
-+	{ 0x00000790, 0x0000 }, /* R1936 (0x790) - AIF3TX3MIX Input 1 Source */
-+	{ 0x00000791, 0x0080 }, /* R1937 (0x791) - AIF3TX3MIX Input 1 Volume */
-+	{ 0x00000792, 0x0000 }, /* R1938 (0x792) - AIF3TX3MIX Input 2 Source */
-+	{ 0x00000793, 0x0080 }, /* R1939 (0x793) - AIF3TX3MIX Input 2 Volume */
-+	{ 0x00000794, 0x0000 }, /* R1940 (0x794) - AIF3TX3MIX Input 3 Source */
-+	{ 0x00000795, 0x0080 }, /* R1941 (0x795) - AIF3TX3MIX Input 3 Volume */
-+	{ 0x00000796, 0x0000 }, /* R1942 (0x796) - AIF3TX3MIX Input 4 Source */
-+	{ 0x00000797, 0x0080 }, /* R1943 (0x797) - AIF3TX3MIX Input 4 Volume */
-+	{ 0x00000798, 0x0000 }, /* R1944 (0x798) - AIF3TX4MIX Input 1 Source */
-+	{ 0x00000799, 0x0080 }, /* R1945 (0x799) - AIF3TX4MIX Input 1 Volume */
-+	{ 0x0000079a, 0x0000 }, /* R1946 (0x79a) - AIF3TX4MIX Input 2 Source */
-+	{ 0x0000079b, 0x0080 }, /* R1947 (0x79b) - AIF3TX4MIX Input 2 Volume */
-+	{ 0x0000079c, 0x0000 }, /* R1948 (0x79c) - AIF3TX4MIX Input 3 Source */
-+	{ 0x0000079d, 0x0080 }, /* R1949 (0x79d) - AIF3TX4MIX Input 3 Volume */
-+	{ 0x0000079e, 0x0000 }, /* R1950 (0x79e) - AIF3TX4MIX Input 4 Source */
-+	{ 0x0000079f, 0x0080 }, /* R1951 (0x79f) - AIF3TX4MIX Input 4 Volume */
-+	{ 0x000007a0, 0x0000 }, /* R1952 (0x7a0) - AIF3TX5MIX Input 1 Source */
-+	{ 0x000007a1, 0x0080 }, /* R1953 (0x7a1) - AIF3TX5MIX Input 1 Volume */
-+	{ 0x000007a2, 0x0000 }, /* R1954 (0x7a2) - AIF3TX5MIX Input 2 Source */
-+	{ 0x000007a3, 0x0080 }, /* R1955 (0x7a3) - AIF3TX5MIX Input 2 Volume */
-+	{ 0x000007a4, 0x0000 }, /* R1956 (0x7a4) - AIF3TX5MIX Input 3 Source */
-+	{ 0x000007a5, 0x0080 }, /* R1957 (0x7a5) - AIF3TX5MIX Input 3 Volume */
-+	{ 0x000007a6, 0x0000 }, /* R1958 (0x7a6) - AIF3TX5MIX Input 4 Source */
-+	{ 0x000007a7, 0x0080 }, /* R1959 (0x7a7) - AIF3TX5MIX Input 4 Volume */
-+	{ 0x000007a8, 0x0000 }, /* R1960 (0x7a8) - AIF3TX6MIX Input 1 Source */
-+	{ 0x000007a9, 0x0080 }, /* R1961 (0x7a9) - AIF3TX6MIX Input 1 Volume */
-+	{ 0x000007aa, 0x0000 }, /* R1962 (0x7aa) - AIF3TX6MIX Input 2 Source */
-+	{ 0x000007ab, 0x0080 }, /* R1963 (0x7ab) - AIF3TX6MIX Input 2 Volume */
-+	{ 0x000007ac, 0x0000 }, /* R1964 (0x7ac) - AIF3TX6MIX Input 3 Source */
-+	{ 0x000007ad, 0x0080 }, /* R1965 (0x7ad) - AIF3TX6MIX Input 3 Volume */
-+	{ 0x000007ae, 0x0000 }, /* R1966 (0x7ae) - AIF3TX6MIX Input 4 Source */
-+	{ 0x000007af, 0x0080 }, /* R1967 (0x7af) - AIF3TX6MIX Input 4 Volume */
-+	{ 0x000007b0, 0x0000 }, /* R1968 (0x7b0) - AIF3TX7MIX Input 1 Source */
-+	{ 0x000007b1, 0x0080 }, /* R1969 (0x7b1) - AIF3TX7MIX Input 1 Volume */
-+	{ 0x000007b2, 0x0000 }, /* R1970 (0x7b2) - AIF3TX7MIX Input 2 Source */
-+	{ 0x000007b3, 0x0080 }, /* R1971 (0x7b3) - AIF3TX7MIX Input 2 Volume */
-+	{ 0x000007b4, 0x0000 }, /* R1972 (0x7b4) - AIF3TX7MIX Input 3 Source */
-+	{ 0x000007b5, 0x0080 }, /* R1973 (0x7b5) - AIF3TX7MIX Input 3 Volume */
-+	{ 0x000007b6, 0x0000 }, /* R1974 (0x7b6) - AIF3TX7MIX Input 4 Source */
-+	{ 0x000007b7, 0x0080 }, /* R1975 (0x7b7) - AIF3TX7MIX Input 4 Volume */
-+	{ 0x000007b8, 0x0000 }, /* R1976 (0x7b8) - AIF3TX8MIX Input 1 Source */
-+	{ 0x000007b9, 0x0080 }, /* R1977 (0x7b9) - AIF3TX8MIX Input 1 Volume */
-+	{ 0x000007ba, 0x0000 }, /* R1978 (0x7ba) - AIF3TX8MIX Input 2 Source */
-+	{ 0x000007bb, 0x0080 }, /* R1979 (0x7bb) - AIF3TX8MIX Input 2 Volume */
-+	{ 0x000007bc, 0x0000 }, /* R1980 (0x7bc) - AIF3TX8MIX Input 3 Source */
-+	{ 0x000007bd, 0x0080 }, /* R1981 (0x7bd) - AIF3TX8MIX Input 3 Volume */
-+	{ 0x000007be, 0x0000 }, /* R1982 (0x7be) - AIF3TX8MIX Input 4 Source */
-+	{ 0x000007bf, 0x0080 }, /* R1983 (0x7bf) - AIF3TX8MIX Input 4 Volume */
-+	{ 0x000007c0, 0x0000 }, /* R1984 (0x7c0) - SLIMTX1MIX Input 1 Source */
-+	{ 0x000007c1, 0x0080 }, /* R1985 (0x7c1) - SLIMTX1MIX Input 1 Volume */
-+	{ 0x000007c2, 0x0000 }, /* R1986 (0x7c2) - SLIMTX1MIX Input 2 Source */
-+	{ 0x000007c3, 0x0080 }, /* R1987 (0x7c3) - SLIMTX1MIX Input 2 Volume */
-+	{ 0x000007c4, 0x0000 }, /* R1988 (0x7c4) - SLIMTX1MIX Input 3 Source */
-+	{ 0x000007c5, 0x0080 }, /* R1989 (0x7c5) - SLIMTX1MIX Input 3 Volume */
-+	{ 0x000007c6, 0x0000 }, /* R1990 (0x7c6) - SLIMTX1MIX Input 4 Source */
-+	{ 0x000007c7, 0x0080 }, /* R1991 (0x7c7) - SLIMTX1MIX Input 4 Volume */
-+	{ 0x000007c8, 0x0000 }, /* R1992 (0x7c8) - SLIMTX2MIX Input 1 Source */
-+	{ 0x000007c9, 0x0080 }, /* R1993 (0x7c9) - SLIMTX2MIX Input 1 Volume */
-+	{ 0x000007ca, 0x0000 }, /* R1994 (0x7ca) - SLIMTX2MIX Input 2 Source */
-+	{ 0x000007cb, 0x0080 }, /* R1995 (0x7cb) - SLIMTX2MIX Input 2 Volume */
-+	{ 0x000007cc, 0x0000 }, /* R1996 (0x7cc) - SLIMTX2MIX Input 3 Source */
-+	{ 0x000007cd, 0x0080 }, /* R1997 (0x7cd) - SLIMTX2MIX Input 3 Volume */
-+	{ 0x000007ce, 0x0000 }, /* R1998 (0x7ce) - SLIMTX2MIX Input 4 Source */
-+	{ 0x000007cf, 0x0080 }, /* R1999 (0x7cf) - SLIMTX2MIX Input 4 Volume */
-+	{ 0x000007d0, 0x0000 }, /* R2000 (0x7d0) - SLIMTX3MIX Input 1 Source */
-+	{ 0x000007d1, 0x0080 }, /* R2001 (0x7d1) - SLIMTX3MIX Input 1 Volume */
-+	{ 0x000007d2, 0x0000 }, /* R2002 (0x7d2) - SLIMTX3MIX Input 2 Source */
-+	{ 0x000007d3, 0x0080 }, /* R2003 (0x7d3) - SLIMTX3MIX Input 2 Volume */
-+	{ 0x000007d4, 0x0000 }, /* R2004 (0x7d4) - SLIMTX3MIX Input 3 Source */
-+	{ 0x000007d5, 0x0080 }, /* R2005 (0x7d5) - SLIMTX3MIX Input 3 Volume */
-+	{ 0x000007d6, 0x0000 }, /* R2006 (0x7d6) - SLIMTX3MIX Input 4 Source */
-+	{ 0x000007d7, 0x0080 }, /* R2007 (0x7d7) - SLIMTX3MIX Input 4 Volume */
-+	{ 0x000007d8, 0x0000 }, /* R2008 (0x7d8) - SLIMTX4MIX Input 1 Source */
-+	{ 0x000007d9, 0x0080 }, /* R2009 (0x7d9) - SLIMTX4MIX Input 1 Volume */
-+	{ 0x000007da, 0x0000 }, /* R2010 (0x7da) - SLIMTX4MIX Input 2 Source */
-+	{ 0x000007db, 0x0080 }, /* R2011 (0x7db) - SLIMTX4MIX Input 2 Volume */
-+	{ 0x000007dc, 0x0000 }, /* R2012 (0x7dc) - SLIMTX4MIX Input 3 Source */
-+	{ 0x000007dd, 0x0080 }, /* R2013 (0x7dd) - SLIMTX4MIX Input 3 Volume */
-+	{ 0x000007de, 0x0000 }, /* R2014 (0x7de) - SLIMTX4MIX Input 4 Source */
-+	{ 0x000007df, 0x0080 }, /* R2015 (0x7df) - SLIMTX4MIX Input 4 Volume */
-+	{ 0x000007e0, 0x0000 }, /* R2016 (0x7e0) - SLIMTX5MIX Input 1 Source */
-+	{ 0x000007e1, 0x0080 }, /* R2017 (0x7e1) - SLIMTX5MIX Input 1 Volume */
-+	{ 0x000007e2, 0x0000 }, /* R2018 (0x7e2) - SLIMTX5MIX Input 2 Source */
-+	{ 0x000007e3, 0x0080 }, /* R2019 (0x7e3) - SLIMTX5MIX Input 2 Volume */
-+	{ 0x000007e4, 0x0000 }, /* R2020 (0x7e4) - SLIMTX5MIX Input 3 Source */
-+	{ 0x000007e5, 0x0080 }, /* R2021 (0x7e5) - SLIMTX5MIX Input 3 Volume */
-+	{ 0x000007e6, 0x0000 }, /* R2022 (0x7e6) - SLIMTX5MIX Input 4 Source */
-+	{ 0x000007e7, 0x0080 }, /* R2023 (0x7e7) - SLIMTX5MIX Input 4 Volume */
-+	{ 0x000007e8, 0x0000 }, /* R2024 (0x7e8) - SLIMTX6MIX Input 1 Source */
-+	{ 0x000007e9, 0x0080 }, /* R2025 (0x7e9) - SLIMTX6MIX Input 1 Volume */
-+	{ 0x000007ea, 0x0000 }, /* R2026 (0x7ea) - SLIMTX6MIX Input 2 Source */
-+	{ 0x000007eb, 0x0080 }, /* R2027 (0x7eb) - SLIMTX6MIX Input 2 Volume */
-+	{ 0x000007ec, 0x0000 }, /* R2028 (0x7ec) - SLIMTX6MIX Input 3 Source */
-+	{ 0x000007ed, 0x0080 }, /* R2029 (0x7ed) - SLIMTX6MIX Input 3 Volume */
-+	{ 0x000007ee, 0x0000 }, /* R2030 (0x7ee) - SLIMTX6MIX Input 4 Source */
-+	{ 0x000007ef, 0x0080 }, /* R2031 (0x7ef) - SLIMTX6MIX Input 4 Volume */
-+	{ 0x000007f0, 0x0000 }, /* R2032 (0x7f0) - SLIMTX7MIX Input 1 Source */
-+	{ 0x000007f1, 0x0080 }, /* R2033 (0x7f1) - SLIMTX7MIX Input 1 Volume */
-+	{ 0x000007f2, 0x0000 }, /* R2034 (0x7f2) - SLIMTX7MIX Input 2 Source */
-+	{ 0x000007f3, 0x0080 }, /* R2035 (0x7f3) - SLIMTX7MIX Input 2 Volume */
-+	{ 0x000007f4, 0x0000 }, /* R2036 (0x7f4) - SLIMTX7MIX Input 3 Source */
-+	{ 0x000007f5, 0x0080 }, /* R2037 (0x7f5) - SLIMTX7MIX Input 3 Volume */
-+	{ 0x000007f6, 0x0000 }, /* R2038 (0x7f6) - SLIMTX7MIX Input 4 Source */
-+	{ 0x000007f7, 0x0080 }, /* R2039 (0x7f7) - SLIMTX7MIX Input 4 Volume */
-+	{ 0x000007f8, 0x0000 }, /* R2040 (0x7f8) - SLIMTX8MIX Input 1 Source */
-+	{ 0x000007f9, 0x0080 }, /* R2041 (0x7f9) - SLIMTX8MIX Input 1 Volume */
-+	{ 0x000007fa, 0x0000 }, /* R2042 (0x7fa) - SLIMTX8MIX Input 2 Source */
-+	{ 0x000007fb, 0x0080 }, /* R2043 (0x7fb) - SLIMTX8MIX Input 2 Volume */
-+	{ 0x000007fc, 0x0000 }, /* R2044 (0x7fc) - SLIMTX8MIX Input 3 Source */
-+	{ 0x000007fd, 0x0080 }, /* R2045 (0x7fd) - SLIMTX8MIX Input 3 Volume */
-+	{ 0x000007fe, 0x0000 }, /* R2046 (0x7fe) - SLIMTX8MIX Input 4 Source */
-+	{ 0x000007ff, 0x0080 }, /* R2047 (0x7ff) - SLIMTX8MIX Input 4 Volume */
++	{ 0x0000078a, 0x0000 }, /* R1930 (0x78A) - AIF3TX2MIX Input 2 Source */
++	{ 0x0000078b, 0x0080 }, /* R1931 (0x78B) - AIF3TX2MIX Input 2 Volume */
++	{ 0x0000078c, 0x0000 }, /* R1932 (0x78C) - AIF3TX2MIX Input 3 Source */
++	{ 0x0000078d, 0x0080 }, /* R1933 (0x78D) - AIF3TX2MIX Input 3 Volume */
++	{ 0x0000078e, 0x0000 }, /* R1934 (0x78E) - AIF3TX2MIX Input 4 Source */
++	{ 0x0000078f, 0x0080 }, /* R1935 (0x78F) - AIF3TX2MIX Input 4 Volume */
 +	{ 0x00000800, 0x0000 }, /* R2048 (0x800) - SPDIF1TX1MIX Input 1 Source */
 +	{ 0x00000801, 0x0080 }, /* R2049 (0x801) - SPDIF1TX1MIX Input 1 Volume */
 +	{ 0x00000808, 0x0000 }, /* R2056 (0x808) - SPDIF1TX2MIX Input 1 Source */
@@ -862,12 +525,12 @@ index 0000000000000..3dc1fefe68f59
 +	{ 0x00000887, 0x0080 }, /* R2183 (0x887) - EQ1MIX Input 4 Volume */
 +	{ 0x00000888, 0x0000 }, /* R2184 (0x888) - EQ2MIX Input 1 Source */
 +	{ 0x00000889, 0x0080 }, /* R2185 (0x889) - EQ2MIX Input 1 Volume */
-+	{ 0x0000088a, 0x0000 }, /* R2186 (0x88a) - EQ2MIX Input 2 Source */
-+	{ 0x0000088b, 0x0080 }, /* R2187 (0x88b) - EQ2MIX Input 2 Volume */
-+	{ 0x0000088c, 0x0000 }, /* R2188 (0x88c) - EQ2MIX Input 3 Source */
-+	{ 0x0000088d, 0x0080 }, /* R2189 (0x88d) - EQ2MIX Input 3 Volume */
-+	{ 0x0000088e, 0x0000 }, /* R2190 (0x88e) - EQ2MIX Input 4 Source */
-+	{ 0x0000088f, 0x0080 }, /* R2191 (0x88f) - EQ2MIX Input 4 Volume */
++	{ 0x0000088a, 0x0000 }, /* R2186 (0x88A) - EQ2MIX Input 2 Source */
++	{ 0x0000088b, 0x0080 }, /* R2187 (0x88B) - EQ2MIX Input 2 Volume */
++	{ 0x0000088c, 0x0000 }, /* R2188 (0x88C) - EQ2MIX Input 3 Source */
++	{ 0x0000088d, 0x0080 }, /* R2189 (0x88D) - EQ2MIX Input 3 Volume */
++	{ 0x0000088e, 0x0000 }, /* R2190 (0x88E) - EQ2MIX Input 4 Source */
++	{ 0x0000088f, 0x0080 }, /* R2191 (0x88F) - EQ2MIX Input 4 Volume */
 +	{ 0x00000890, 0x0000 }, /* R2192 (0x890) - EQ3MIX Input 1 Source */
 +	{ 0x00000891, 0x0080 }, /* R2193 (0x891) - EQ3MIX Input 1 Volume */
 +	{ 0x00000892, 0x0000 }, /* R2194 (0x892) - EQ3MIX Input 2 Source */
@@ -878,44 +541,44 @@ index 0000000000000..3dc1fefe68f59
 +	{ 0x00000897, 0x0080 }, /* R2199 (0x897) - EQ3MIX Input 4 Volume */
 +	{ 0x00000898, 0x0000 }, /* R2200 (0x898) - EQ4MIX Input 1 Source */
 +	{ 0x00000899, 0x0080 }, /* R2201 (0x899) - EQ4MIX Input 1 Volume */
-+	{ 0x0000089a, 0x0000 }, /* R2202 (0x89a) - EQ4MIX Input 2 Source */
-+	{ 0x0000089b, 0x0080 }, /* R2203 (0x89b) - EQ4MIX Input 2 Volume */
-+	{ 0x0000089c, 0x0000 }, /* R2204 (0x89c) - EQ4MIX Input 3 Source */
-+	{ 0x0000089d, 0x0080 }, /* R2205 (0x89d) - EQ4MIX Input 3 Volume */
-+	{ 0x0000089e, 0x0000 }, /* R2206 (0x89e) - EQ4MIX Input 4 Source */
-+	{ 0x0000089f, 0x0080 }, /* R2207 (0x89f) - EQ4MIX Input 4 Volume */
-+	{ 0x000008c0, 0x0000 }, /* R2240 (0x8c0) - DRC1LMIX Input 1 Source */
-+	{ 0x000008c1, 0x0080 }, /* R2241 (0x8c1) - DRC1LMIX Input 1 Volume */
-+	{ 0x000008c2, 0x0000 }, /* R2242 (0x8c2) - DRC1LMIX Input 2 Source */
-+	{ 0x000008c3, 0x0080 }, /* R2243 (0x8c3) - DRC1LMIX Input 2 Volume */
-+	{ 0x000008c4, 0x0000 }, /* R2244 (0x8c4) - DRC1LMIX Input 3 Source */
-+	{ 0x000008c5, 0x0080 }, /* R2245 (0x8c5) - DRC1LMIX Input 3 Volume */
-+	{ 0x000008c6, 0x0000 }, /* R2246 (0x8c6) - DRC1LMIX Input 4 Source */
-+	{ 0x000008c7, 0x0080 }, /* R2247 (0x8c7) - DRC1LMIX Input 4 Volume */
-+	{ 0x000008c8, 0x0000 }, /* R2248 (0x8c8) - DRC1RMIX Input 1 Source */
-+	{ 0x000008c9, 0x0080 }, /* R2249 (0x8c9) - DRC1RMIX Input 1 Volume */
-+	{ 0x000008ca, 0x0000 }, /* R2250 (0x8ca) - DRC1RMIX Input 2 Source */
-+	{ 0x000008cb, 0x0080 }, /* R2251 (0x8cb) - DRC1RMIX Input 2 Volume */
-+	{ 0x000008cc, 0x0000 }, /* R2252 (0x8cc) - DRC1RMIX Input 3 Source */
-+	{ 0x000008cd, 0x0080 }, /* R2253 (0x8cd) - DRC1RMIX Input 3 Volume */
-+	{ 0x000008ce, 0x0000 }, /* R2254 (0x8ce) - DRC1RMIX Input 4 Source */
-+	{ 0x000008cf, 0x0080 }, /* R2255 (0x8cf) - DRC1RMIX Input 4 Volume */
-+	{ 0x000008d0, 0x0000 }, /* R2256 (0x8d0) - DRC2LMIX Input 1 Source */
-+	{ 0x000008d1, 0x0080 }, /* R2257 (0x8d1) - DRC2LMIX Input 1 Volume */
-+	{ 0x000008d2, 0x0000 }, /* R2258 (0x8d2) - DRC2LMIX Input 2 Source */
-+	{ 0x000008d3, 0x0080 }, /* R2259 (0x8d3) - DRC2LMIX Input 2 Volume */
-+	{ 0x000008d4, 0x0000 }, /* R2260 (0x8d4) - DRC2LMIX Input 3 Source */
-+	{ 0x000008d5, 0x0080 }, /* R2261 (0x8d5) - DRC2LMIX Input 3 Volume */
-+	{ 0x000008d6, 0x0000 }, /* R2262 (0x8d6) - DRC2LMIX Input 4 Source */
-+	{ 0x000008d7, 0x0080 }, /* R2263 (0x8d7) - DRC2LMIX Input 4 Volume */
-+	{ 0x000008d8, 0x0000 }, /* R2264 (0x8d8) - DRC2RMIX Input 1 Source */
-+	{ 0x000008d9, 0x0080 }, /* R2265 (0x8d9) - DRC2RMIX Input 1 Volume */
-+	{ 0x000008da, 0x0000 }, /* R2266 (0x8da) - DRC2RMIX Input 2 Source */
-+	{ 0x000008db, 0x0080 }, /* R2267 (0x8db) - DRC2RMIX Input 2 Volume */
-+	{ 0x000008dc, 0x0000 }, /* R2268 (0x8dc) - DRC2RMIX Input 3 Source */
-+	{ 0x000008dd, 0x0080 }, /* R2269 (0x8dd) - DRC2RMIX Input 3 Volume */
-+	{ 0x000008de, 0x0000 }, /* R2270 (0x8de) - DRC2RMIX Input 4 Source */
-+	{ 0x000008df, 0x0080 }, /* R2271 (0x8df) - DRC2RMIX Input 4 Volume */
++	{ 0x0000089a, 0x0000 }, /* R2202 (0x89A) - EQ4MIX Input 2 Source */
++	{ 0x0000089b, 0x0080 }, /* R2203 (0x89B) - EQ4MIX Input 2 Volume */
++	{ 0x0000089c, 0x0000 }, /* R2204 (0x89C) - EQ4MIX Input 3 Source */
++	{ 0x0000089d, 0x0080 }, /* R2205 (0x89D) - EQ4MIX Input 3 Volume */
++	{ 0x0000089e, 0x0000 }, /* R2206 (0x89E) - EQ4MIX Input 4 Source */
++	{ 0x0000089f, 0x0080 }, /* R2207 (0x89F) - EQ4MIX Input 4 Volume */
++	{ 0x000008c0, 0x0000 }, /* R2240 (0x8C0) - DRC1LMIX Input 1 Source */
++	{ 0x000008c1, 0x0080 }, /* R2241 (0x8C1) - DRC1LMIX Input 1 Volume */
++	{ 0x000008c2, 0x0000 }, /* R2242 (0x8C2) - DRC1LMIX Input 2 Source */
++	{ 0x000008c3, 0x0080 }, /* R2243 (0x8C3) - DRC1LMIX Input 2 Volume */
++	{ 0x000008c4, 0x0000 }, /* R2244 (0x8C4) - DRC1LMIX Input 3 Source */
++	{ 0x000008c5, 0x0080 }, /* R2245 (0x8C5) - DRC1LMIX Input 3 Volume */
++	{ 0x000008c6, 0x0000 }, /* R2246 (0x8C6) - DRC1LMIX Input 4 Source */
++	{ 0x000008c7, 0x0080 }, /* R2247 (0x8C7) - DRC1LMIX Input 4 Volume */
++	{ 0x000008c8, 0x0000 }, /* R2248 (0x8C8) - DRC1RMIX Input 1 Source */
++	{ 0x000008c9, 0x0080 }, /* R2249 (0x8C9) - DRC1RMIX Input 1 Volume */
++	{ 0x000008ca, 0x0000 }, /* R2250 (0x8CA) - DRC1RMIX Input 2 Source */
++	{ 0x000008cb, 0x0080 }, /* R2251 (0x8CB) - DRC1RMIX Input 2 Volume */
++	{ 0x000008cc, 0x0000 }, /* R2252 (0x8CC) - DRC1RMIX Input 3 Source */
++	{ 0x000008cd, 0x0080 }, /* R2253 (0x8CD) - DRC1RMIX Input 3 Volume */
++	{ 0x000008ce, 0x0000 }, /* R2254 (0x8CE) - DRC1RMIX Input 4 Source */
++	{ 0x000008cf, 0x0080 }, /* R2255 (0x8CF) - DRC1RMIX Input 4 Volume */
++	{ 0x000008d0, 0x0000 }, /* R2256 (0x8D0) - DRC2LMIX Input 1 Source */
++	{ 0x000008d1, 0x0080 }, /* R2257 (0x8D1) - DRC2LMIX Input 1 Volume */
++	{ 0x000008d2, 0x0000 }, /* R2258 (0x8D2) - DRC2LMIX Input 2 Source */
++	{ 0x000008d3, 0x0080 }, /* R2259 (0x8D3) - DRC2LMIX Input 2 Volume */
++	{ 0x000008d4, 0x0000 }, /* R2260 (0x8D4) - DRC2LMIX Input 3 Source */
++	{ 0x000008d5, 0x0080 }, /* R2261 (0x8D5) - DRC2LMIX Input 3 Volume */
++	{ 0x000008d6, 0x0000 }, /* R2262 (0x8D6) - DRC2LMIX Input 4 Source */
++	{ 0x000008d7, 0x0080 }, /* R2263 (0x8D7) - DRC2LMIX Input 4 Volume */
++	{ 0x000008d8, 0x0000 }, /* R2264 (0x8D8) - DRC2RMIX Input 1 Source */
++	{ 0x000008d9, 0x0080 }, /* R2265 (0x8D9) - DRC2RMIX Input 1 Volume */
++	{ 0x000008da, 0x0000 }, /* R2266 (0x8DA) - DRC2RMIX Input 2 Source */
++	{ 0x000008db, 0x0080 }, /* R2267 (0x8DB) - DRC2RMIX Input 2 Volume */
++	{ 0x000008dc, 0x0000 }, /* R2268 (0x8DC) - DRC2RMIX Input 3 Source */
++	{ 0x000008dd, 0x0080 }, /* R2269 (0x8DD) - DRC2RMIX Input 3 Volume */
++	{ 0x000008de, 0x0000 }, /* R2270 (0x8DE) - DRC2RMIX Input 4 Source */
++	{ 0x000008df, 0x0080 }, /* R2271 (0x8DF) - DRC2RMIX Input 4 Volume */
 +	{ 0x00000900, 0x0000 }, /* R2304 (0x900) - HPLP1MIX Input 1 Source */
 +	{ 0x00000901, 0x0080 }, /* R2305 (0x901) - HPLP1MIX Input 1 Volume */
 +	{ 0x00000902, 0x0000 }, /* R2306 (0x902) - HPLP1MIX Input 2 Source */
@@ -926,12 +589,12 @@ index 0000000000000..3dc1fefe68f59
 +	{ 0x00000907, 0x0080 }, /* R2311 (0x907) - HPLP1MIX Input 4 Volume */
 +	{ 0x00000908, 0x0000 }, /* R2312 (0x908) - HPLP2MIX Input 1 Source */
 +	{ 0x00000909, 0x0080 }, /* R2313 (0x909) - HPLP2MIX Input 1 Volume */
-+	{ 0x0000090a, 0x0000 }, /* R2314 (0x90a) - HPLP2MIX Input 2 Source */
-+	{ 0x0000090b, 0x0080 }, /* R2315 (0x90b) - HPLP2MIX Input 2 Volume */
-+	{ 0x0000090c, 0x0000 }, /* R2316 (0x90c) - HPLP2MIX Input 3 Source */
-+	{ 0x0000090d, 0x0080 }, /* R2317 (0x90d) - HPLP2MIX Input 3 Volume */
-+	{ 0x0000090e, 0x0000 }, /* R2318 (0x90e) - HPLP2MIX Input 4 Source */
-+	{ 0x0000090f, 0x0080 }, /* R2319 (0x90f) - HPLP2MIX Input 4 Volume */
++	{ 0x0000090a, 0x0000 }, /* R2314 (0x90A) - HPLP2MIX Input 2 Source */
++	{ 0x0000090b, 0x0080 }, /* R2315 (0x90B) - HPLP2MIX Input 2 Volume */
++	{ 0x0000090c, 0x0000 }, /* R2316 (0x90C) - HPLP2MIX Input 3 Source */
++	{ 0x0000090d, 0x0080 }, /* R2317 (0x90D) - HPLP2MIX Input 3 Volume */
++	{ 0x0000090e, 0x0000 }, /* R2318 (0x90E) - HPLP2MIX Input 4 Source */
++	{ 0x0000090f, 0x0080 }, /* R2319 (0x90F) - HPLP2MIX Input 4 Volume */
 +	{ 0x00000910, 0x0000 }, /* R2320 (0x910) - HPLP3MIX Input 1 Source */
 +	{ 0x00000911, 0x0080 }, /* R2321 (0x911) - HPLP3MIX Input 1 Volume */
 +	{ 0x00000912, 0x0000 }, /* R2322 (0x912) - HPLP3MIX Input 2 Source */
@@ -942,12 +605,12 @@ index 0000000000000..3dc1fefe68f59
 +	{ 0x00000917, 0x0080 }, /* R2327 (0x917) - HPLP3MIX Input 4 Volume */
 +	{ 0x00000918, 0x0000 }, /* R2328 (0x918) - HPLP4MIX Input 1 Source */
 +	{ 0x00000919, 0x0080 }, /* R2329 (0x919) - HPLP4MIX Input 1 Volume */
-+	{ 0x0000091a, 0x0000 }, /* R2330 (0x91a) - HPLP4MIX Input 2 Source */
-+	{ 0x0000091b, 0x0080 }, /* R2331 (0x91b) - HPLP4MIX Input 2 Volume */
-+	{ 0x0000091c, 0x0000 }, /* R2332 (0x91c) - HPLP4MIX Input 3 Source */
-+	{ 0x0000091d, 0x0080 }, /* R2333 (0x91d) - HPLP4MIX Input 3 Volume */
-+	{ 0x0000091e, 0x0000 }, /* R2334 (0x91e) - HPLP4MIX Input 4 Source */
-+	{ 0x0000091f, 0x0080 }, /* R2335 (0x91f) - HPLP4MIX Input 4 Volume */
++	{ 0x0000091a, 0x0000 }, /* R2330 (0x91A) - HPLP4MIX Input 2 Source */
++	{ 0x0000091b, 0x0080 }, /* R2331 (0x91B) - HPLP4MIX Input 2 Volume */
++	{ 0x0000091c, 0x0000 }, /* R2332 (0x91C) - HPLP4MIX Input 3 Source */
++	{ 0x0000091d, 0x0080 }, /* R2333 (0x91D) - HPLP4MIX Input 3 Volume */
++	{ 0x0000091e, 0x0000 }, /* R2334 (0x91E) - HPLP4MIX Input 4 Source */
++	{ 0x0000091f, 0x0080 }, /* R2335 (0x91F) - HPLP4MIX Input 4 Volume */
 +	{ 0x00000940, 0x0000 }, /* R2368 (0x940) - DSP1LMIX Input 1 Source */
 +	{ 0x00000941, 0x0080 }, /* R2369 (0x941) - DSP1LMIX Input 1 Volume */
 +	{ 0x00000942, 0x0000 }, /* R2370 (0x942) - DSP1LMIX Input 2 Source */
@@ -958,251 +621,215 @@ index 0000000000000..3dc1fefe68f59
 +	{ 0x00000947, 0x0080 }, /* R2375 (0x947) - DSP1LMIX Input 4 Volume */
 +	{ 0x00000948, 0x0000 }, /* R2376 (0x948) - DSP1RMIX Input 1 Source */
 +	{ 0x00000949, 0x0080 }, /* R2377 (0x949) - DSP1RMIX Input 1 Volume */
-+	{ 0x0000094a, 0x0000 }, /* R2378 (0x94a) - DSP1RMIX Input 2 Source */
-+	{ 0x0000094b, 0x0080 }, /* R2379 (0x94b) - DSP1RMIX Input 2 Volume */
-+	{ 0x0000094c, 0x0000 }, /* R2380 (0x94c) - DSP1RMIX Input 3 Source */
-+	{ 0x0000094d, 0x0080 }, /* R2381 (0x94d) - DSP1RMIX Input 3 Volume */
-+	{ 0x0000094e, 0x0000 }, /* R2382 (0x94e) - DSP1RMIX Input 4 Source */
-+	{ 0x0000094f, 0x0080 }, /* R2383 (0x94f) - DSP1RMIX Input 4 Volume */
++	{ 0x0000094a, 0x0000 }, /* R2378 (0x94A) - DSP1RMIX Input 2 Source */
++	{ 0x0000094b, 0x0080 }, /* R2379 (0x94B) - DSP1RMIX Input 2 Volume */
++	{ 0x0000094c, 0x0000 }, /* R2380 (0x94C) - DSP1RMIX Input 3 Source */
++	{ 0x0000094d, 0x0080 }, /* R2381 (0x94D) - DSP1RMIX Input 3 Volume */
++	{ 0x0000094e, 0x0000 }, /* R2382 (0x94E) - DSP1RMIX Input 4 Source */
++	{ 0x0000094f, 0x0080 }, /* R2383 (0x94F) - DSP1RMIX Input 4 Volume */
 +	{ 0x00000950, 0x0000 }, /* R2384 (0x950) - DSP1AUX1MIX Input 1 Source */
 +	{ 0x00000958, 0x0000 }, /* R2392 (0x958) - DSP1AUX2MIX Input 1 Source */
 +	{ 0x00000960, 0x0000 }, /* R2400 (0x960) - DSP1AUX3MIX Input 1 Source */
 +	{ 0x00000968, 0x0000 }, /* R2408 (0x968) - DSP1AUX4MIX Input 1 Source */
 +	{ 0x00000970, 0x0000 }, /* R2416 (0x970) - DSP1AUX5MIX Input 1 Source */
 +	{ 0x00000978, 0x0000 }, /* R2424 (0x978) - DSP1AUX6MIX Input 1 Source */
-+	{ 0x00000a80, 0x0000 }, /* R2688 (0xa80) - ASRC1 1LMIX Input 1 Source */
-+	{ 0x00000a88, 0x0000 }, /* R2696 (0xa88) - ASRC1 1RMIX Input 1 Source */
-+	{ 0x00000a90, 0x0000 }, /* R2704 (0xa90) - ASRC1 2LMIX Input 1 Source */
-+	{ 0x00000a98, 0x0000 }, /* R2712 (0xa98) - ASRC1 2RMIX Input 1 Source */
-+	{ 0x00000b00, 0x0000 }, /* R2816 (0xb00) - ISRC1DEC1MIX Input 1 Source */
-+	{ 0x00000b08, 0x0000 }, /* R2824 (0xb08) - ISRC1DEC2MIX Input 1 Source */
-+	{ 0x00000b20, 0x0000 }, /* R2848 (0xb20) - ISRC1INT1MIX Input 1 Source */
-+	{ 0x00000b28, 0x0000 }, /* R2856 (0xb28) - ISRC1INT2MIX Input 1 Source */
-+	{ 0x00000b40, 0x0000 }, /* R2880 (0xb40) - ISRC2DEC1MIX Input 1 Source */
-+	{ 0x00000b48, 0x0000 }, /* R2888 (0xb48) - ISRC2DEC2MIX Input 1 Source */
-+	{ 0x00000b60, 0x0000 }, /* R2912 (0xb60) - ISRC2INT1MIX Input 1 Source */
-+	{ 0x00000b68, 0x0000 }, /* R2920 (0xb68) - ISRC2INT2MIX Input 1 Source */
-+	{ 0x00000dc0, 0x0000 }, /* R3520 (0xdc0) - DFC1MIX Input 1 Source */
-+	{ 0x00000dc8, 0x0000 }, /* R3528 (0xdc8) - DFC2MIX Input 1 Source */
-+	{ 0x00000dd0, 0x0000 }, /* R3536 (0xdd0) - DFC3MIX Input 1 Source */
-+	{ 0x00000dd8, 0x0000 }, /* R3544 (0xdd8) - DFC4MIX Input 1 Source */
-+	{ 0x00000de0, 0x0000 }, /* R3552 (0xde0) - DFC5MIX Input 1 Source */
-+	{ 0x00000de8, 0x0000 }, /* R3560 (0xde8) - DFC6MIX Input 1 Source */
-+	{ 0x00000df0, 0x0000 }, /* R3568 (0xdf0) - DFC7MIX Input 1 Source */
-+	{ 0x00000df8, 0x0000 }, /* R3576 (0xdf8) - DFC8MIX Input 1 Source */
-+	{ 0x00000e00, 0x0000 }, /* R3584 (0xe00) - FX Ctrl 1 */
-+	{ 0x00000e10, 0x6318 }, /* R3600 (0xe10) - EQ1 1 */
-+	{ 0x00000e11, 0x6300 }, /* R3601 (0xe11) - EQ1 2 */
-+	{ 0x00000e12, 0x0fc8 }, /* R3602 (0xe12) - EQ1 3 */
-+	{ 0x00000e13, 0x03fe }, /* R3603 (0xe13) - EQ1 4 */
-+	{ 0x00000e14, 0x00e0 }, /* R3604 (0xe14) - EQ1 5 */
-+	{ 0x00000e15, 0x1ec4 }, /* R3605 (0xe15) - EQ1 6 */
-+	{ 0x00000e16, 0xf136 }, /* R3606 (0xe16) - EQ1 7 */
-+	{ 0x00000e17, 0x0409 }, /* R3607 (0xe17) - EQ1 8 */
-+	{ 0x00000e18, 0x04cc }, /* R3608 (0xe18) - EQ1 9 */
-+	{ 0x00000e19, 0x1c9b }, /* R3609 (0xe19) - EQ1 10 */
-+	{ 0x00000e1a, 0xf337 }, /* R3610 (0xe1a) - EQ1 11 */
-+	{ 0x00000e1b, 0x040b }, /* R3611 (0xe1b) - EQ1 12 */
-+	{ 0x00000e1c, 0x0cbb }, /* R3612 (0xe1c) - EQ1 13 */
-+	{ 0x00000e1d, 0x16f8 }, /* R3613 (0xe1d) - EQ1 14 */
-+	{ 0x00000e1e, 0xf7d9 }, /* R3614 (0xe1e) - EQ1 15 */
-+	{ 0x00000e1f, 0x040a }, /* R3615 (0xe1f) - EQ1 16 */
-+	{ 0x00000e20, 0x1f14 }, /* R3616 (0xe20) - EQ1 17 */
-+	{ 0x00000e21, 0x058c }, /* R3617 (0xe21) - EQ1 18 */
-+	{ 0x00000e22, 0x0563 }, /* R3618 (0xe22) - EQ1 19 */
-+	{ 0x00000e23, 0x4000 }, /* R3619 (0xe23) - EQ1 20 */
-+	{ 0x00000e24, 0x0b75 }, /* R3620 (0xe24) - EQ1 21 */
-+	{ 0x00000e26, 0x6318 }, /* R3622 (0xe26) - EQ2 1 */
-+	{ 0x00000e27, 0x6300 }, /* R3623 (0xe27) - EQ2 2 */
-+	{ 0x00000e28, 0x0fc8 }, /* R3624 (0xe28) - EQ2 3 */
-+	{ 0x00000e29, 0x03fe }, /* R3625 (0xe29) - EQ2 4 */
-+	{ 0x00000e2a, 0x00e0 }, /* R3626 (0xe2a) - EQ2 5 */
-+	{ 0x00000e2b, 0x1ec4 }, /* R3627 (0xe2b) - EQ2 6 */
-+	{ 0x00000e2c, 0xf136 }, /* R3628 (0xe2c) - EQ2 7 */
-+	{ 0x00000e2d, 0x0409 }, /* R3629 (0xe2d) - EQ2 8 */
-+	{ 0x00000e2e, 0x04cc }, /* R3630 (0xe2e) - EQ2 9 */
-+	{ 0x00000e2f, 0x1c9b }, /* R3631 (0xe2f) - EQ2 10 */
-+	{ 0x00000e30, 0xf337 }, /* R3632 (0xe30) - EQ2 11 */
-+	{ 0x00000e31, 0x040b }, /* R3633 (0xe31) - EQ2 12 */
-+	{ 0x00000e32, 0x0cbb }, /* R3634 (0xe32) - EQ2 13 */
-+	{ 0x00000e33, 0x16f8 }, /* R3635 (0xe33) - EQ2 14 */
-+	{ 0x00000e34, 0xf7d9 }, /* R3636 (0xe34) - EQ2 15 */
-+	{ 0x00000e35, 0x040a }, /* R3637 (0xe35) - EQ2 16 */
-+	{ 0x00000e36, 0x1f14 }, /* R3638 (0xe36) - EQ2 17 */
-+	{ 0x00000e37, 0x058c }, /* R3639 (0xe37) - EQ2 18 */
-+	{ 0x00000e38, 0x0563 }, /* R3640 (0xe38) - EQ2 19 */
-+	{ 0x00000e39, 0x4000 }, /* R3641 (0xe39) - EQ2 20 */
-+	{ 0x00000e3a, 0x0b75 }, /* R3642 (0xe3a) - EQ2 21 */
-+	{ 0x00000e3c, 0x6318 }, /* R3644 (0xe3c) - EQ3 1 */
-+	{ 0x00000e3d, 0x6300 }, /* R3645 (0xe3d) - EQ3 2 */
-+	{ 0x00000e3e, 0x0fc8 }, /* R3646 (0xe3e) - EQ3 3 */
-+	{ 0x00000e3f, 0x03fe }, /* R3647 (0xe3f) - EQ3 4 */
-+	{ 0x00000e40, 0x00e0 }, /* R3648 (0xe40) - EQ3 5 */
-+	{ 0x00000e41, 0x1ec4 }, /* R3649 (0xe41) - EQ3 6 */
-+	{ 0x00000e42, 0xf136 }, /* R3650 (0xe42) - EQ3 7 */
-+	{ 0x00000e43, 0x0409 }, /* R3651 (0xe43) - EQ3 8 */
-+	{ 0x00000e44, 0x04cc }, /* R3652 (0xe44) - EQ3 9 */
-+	{ 0x00000e45, 0x1c9b }, /* R3653 (0xe45) - EQ3 10 */
-+	{ 0x00000e46, 0xf337 }, /* R3654 (0xe46) - EQ3 11 */
-+	{ 0x00000e47, 0x040b }, /* R3655 (0xe47) - EQ3 12 */
-+	{ 0x00000e48, 0x0cbb }, /* R3656 (0xe48) - EQ3 13 */
-+	{ 0x00000e49, 0x16f8 }, /* R3657 (0xe49) - EQ3 14 */
-+	{ 0x00000e4a, 0xf7d9 }, /* R3658 (0xe4a) - EQ3 15 */
-+	{ 0x00000e4b, 0x040a }, /* R3659 (0xe4b) - EQ3 16 */
-+	{ 0x00000e4c, 0x1f14 }, /* R3660 (0xe4c) - EQ3 17 */
-+	{ 0x00000e4d, 0x058c }, /* R3661 (0xe4d) - EQ3 18 */
-+	{ 0x00000e4e, 0x0563 }, /* R3662 (0xe4e) - EQ3 19 */
-+	{ 0x00000e4f, 0x4000 }, /* R3663 (0xe4f) - EQ3 20 */
-+	{ 0x00000e50, 0x0b75 }, /* R3664 (0xe50) - EQ3 21 */
-+	{ 0x00000e52, 0x6318 }, /* R3666 (0xe52) - EQ4 1 */
-+	{ 0x00000e53, 0x6300 }, /* R3667 (0xe53) - EQ4 2 */
-+	{ 0x00000e54, 0x0fc8 }, /* R3668 (0xe54) - EQ4 3 */
-+	{ 0x00000e55, 0x03fe }, /* R3669 (0xe55) - EQ4 4 */
-+	{ 0x00000e56, 0x00e0 }, /* R3670 (0xe56) - EQ4 5 */
-+	{ 0x00000e57, 0x1ec4 }, /* R3671 (0xe57) - EQ4 6 */
-+	{ 0x00000e58, 0xf136 }, /* R3672 (0xe58) - EQ4 7 */
-+	{ 0x00000e59, 0x0409 }, /* R3673 (0xe59) - EQ4 8 */
-+	{ 0x00000e5a, 0x04cc }, /* R3674 (0xe5a) - EQ4 9 */
-+	{ 0x00000e5b, 0x1c9b }, /* R3675 (0xe5b) - EQ4 10 */
-+	{ 0x00000e5c, 0xf337 }, /* R3676 (0xe5c) - EQ4 11 */
-+	{ 0x00000e5d, 0x040b }, /* R3677 (0xe5d) - EQ4 12 */
-+	{ 0x00000e5e, 0x0cbb }, /* R3678 (0xe5e) - EQ4 13 */
-+	{ 0x00000e5f, 0x16f8 }, /* R3679 (0xe5f) - EQ4 14 */
-+	{ 0x00000e60, 0xf7d9 }, /* R3680 (0xe60) - EQ4 15 */
-+	{ 0x00000e61, 0x040a }, /* R3681 (0xe61) - EQ4 16 */
-+	{ 0x00000e62, 0x1f14 }, /* R3682 (0xe62) - EQ4 17 */
-+	{ 0x00000e63, 0x058c }, /* R3683 (0xe63) - EQ4 18 */
-+	{ 0x00000e64, 0x0563 }, /* R3684 (0xe64) - EQ4 19 */
-+	{ 0x00000e65, 0x4000 }, /* R3685 (0xe65) - EQ4 20 */
-+	{ 0x00000e66, 0x0b75 }, /* R3686 (0xe66) - EQ4 21 */
-+	{ 0x00000e80, 0x0018 }, /* R3712 (0xe80) - DRC1 Ctrl 1 */
-+	{ 0x00000e81, 0x0933 }, /* R3713 (0xe81) - DRC1 Ctrl 2 */
-+	{ 0x00000e82, 0x0018 }, /* R3714 (0xe82) - DRC1 Ctrl 3 */
-+	{ 0x00000e83, 0x0000 }, /* R3715 (0xe83) - DRC1 Ctrl 4 */
-+	{ 0x00000e84, 0x0000 }, /* R3716 (0xe84) - DRC1 Ctrl 5 */
-+	{ 0x00000e88, 0x0018 }, /* R3720 (0xe88) - DRC2 Ctrl 1 */
-+	{ 0x00000e89, 0x0933 }, /* R3721 (0xe89) - DRC2 Ctrl 2 */
-+	{ 0x00000e8a, 0x0018 }, /* R3722 (0xe8a) - DRC2 Ctrl 3 */
-+	{ 0x00000e8b, 0x0000 }, /* R3723 (0xe8b) - DRC2 Ctrl 4 */
-+	{ 0x00000e8c, 0x0000 }, /* R3724 (0xe8c) - DRC2 Ctrl 5 */
-+	{ 0x00000ec0, 0x0000 }, /* R3776 (0xec0) - HPLPF1 1 */
-+	{ 0x00000ec1, 0x0000 }, /* R3777 (0xec1) - HPLPF1 2 */
-+	{ 0x00000ec4, 0x0000 }, /* R3780 (0xec4) - HPLPF2 1 */
-+	{ 0x00000ec5, 0x0000 }, /* R3781 (0xec5) - HPLPF2 2 */
-+	{ 0x00000ec8, 0x0000 }, /* R3784 (0xec8) - HPLPF3 1 */
-+	{ 0x00000ec9, 0x0000 }, /* R3785 (0xec9) - HPLPF3 2 */
-+	{ 0x00000ecc, 0x0000 }, /* R3788 (0xecc) - HPLPF4 1 */
-+	{ 0x00000ecd, 0x0000 }, /* R3789 (0xecd) - HPLPF4 2 */
-+	{ 0x00000ee0, 0x0000 }, /* R3808 (0xee0) - ASRC1 Enable */
-+	{ 0x00000ee2, 0x0000 }, /* R3810 (0xee2) - ASRC1 Rate 1 */
-+	{ 0x00000ee3, 0x4000 }, /* R3811 (0xee3) - ASRC1 Rate 2 */
-+	{ 0x00000ef0, 0x0000 }, /* R3824 (0xef0) - ISRC1 Ctrl 1 */
-+	{ 0x00000ef1, 0x0001 }, /* R3825 (0xef1) - ISRC1 Ctrl 2 */
-+	{ 0x00000ef2, 0x0000 }, /* R3826 (0xef2) - ISRC1 Ctrl 3 */
-+	{ 0x00000ef3, 0x0000 }, /* R3827 (0xef3) - ISRC2 Ctrl 1 */
-+	{ 0x00000ef4, 0x0001 }, /* R3828 (0xef4) - ISRC2 Ctrl 2 */
-+	{ 0x00000ef5, 0x0000 }, /* R3829 (0xef5) - ISRC2 Ctrl 3 */
-+	{ 0x000010c0, 0x0008 }, /* R4288 (0x10c0) - AUXPDM1 Ctrl 0 */
-+	{ 0x000010c1, 0x4000 }, /* R4289 (0x10c1) - AUXPDM1 Ctrl 1 */
-+	{ 0x00001480, 0x0000 }, /* R5248 (0x1480) - DFC1 Ctrl W0 */
-+	{ 0x00001482, 0x1f00 }, /* R5250 (0x1482) - DFC1 Rx W0 */
-+	{ 0x00001484, 0x1f00 }, /* R5252 (0x1484) - DFC1 Tx W0 */
-+	{ 0x00001486, 0x0000 }, /* R5254 (0x1486) - DFC2 Ctrl W0 */
-+	{ 0x00001488, 0x1f00 }, /* R5256 (0x1488) - DFC2 Rx W0 */
-+	{ 0x0000148a, 0x1f00 }, /* R5258 (0x148a) - DFC2 Tx W0 */
-+	{ 0x0000148c, 0x0000 }, /* R5260 (0x148c) - DFC3 Ctrl W0 */
-+	{ 0x0000148e, 0x1f00 }, /* R5262 (0x148e) - DFC3 Rx W0 */
-+	{ 0x00001490, 0x1f00 }, /* R5264 (0x1490) - DFC3 Tx W0 */
-+	{ 0x00001492, 0x0000 }, /* R5266 (0x1492) - DFC4 Ctrl W0 */
-+	{ 0x00001494, 0x1f00 }, /* R5268 (0x1494) - DFC4 Rx W0 */
-+	{ 0x00001496, 0x1f00 }, /* R5270 (0x1496) - DFC4 Tx W0 */
-+	{ 0x00001498, 0x0000 }, /* R5272 (0x1498) - DFC5 Ctrl W0 */
-+	{ 0x0000149a, 0x1f00 }, /* R5274 (0x149a) - DFC5 Rx W0 */
-+	{ 0x0000149c, 0x1f00 }, /* R5276 (0x149c) - DFC5 Tx W0 */
-+	{ 0x0000149e, 0x0000 }, /* R5278 (0x149e) - DFC6 Ctrl W0 */
-+	{ 0x000014a0, 0x1f00 }, /* R5280 (0x14a0) - DFC6 Rx W0 */
-+	{ 0x000014a2, 0x1f00 }, /* R5282 (0x14a2) - DFC6 Tx W0 */
-+	{ 0x000014a4, 0x0000 }, /* R5284 (0x14a4) - DFC7 Ctrl W0 */
-+	{ 0x000014a6, 0x1f00 }, /* R5286 (0x14a6) - DFC7 Rx W0 */
-+	{ 0x000014a8, 0x1f00 }, /* R5288 (0x14a8) - DFC7 Tx W0 */
-+	{ 0x000014aa, 0x0000 }, /* R5290 (0x14aa) - DFC8 Ctrl W0 */
-+	{ 0x000014ac, 0x1f00 }, /* R5292 (0x14ac) - DFC8 Rx W0 */
-+	{ 0x000014ae, 0x1f00 }, /* R5294 (0x14ae) - DFC8 Tx W0 */
-+	{ 0x00001700, 0x2001 }, /* R5888 (0x1700) - GPIO1 Ctrl 1 */
-+	{ 0x00001701, 0xf000 }, /* R5889 (0x1701) - GPIO1 Ctrl 2 */
-+	{ 0x00001702, 0x2001 }, /* R5890 (0x1702) - GPIO2 Ctrl 1 */
-+	{ 0x00001703, 0xf000 }, /* R5891 (0x1703) - GPIO2 Ctrl 2 */
-+	{ 0x00001704, 0x2001 }, /* R5892 (0x1704) - GPIO3 Ctrl 1 */
-+	{ 0x00001705, 0xf000 }, /* R5893 (0x1705) - GPIO3 Ctrl 2 */
-+	{ 0x00001706, 0x2001 }, /* R5894 (0x1706) - GPIO4 Ctrl 1 */
-+	{ 0x00001707, 0xf000 }, /* R5895 (0x1707) - GPIO4 Ctrl 2 */
-+	{ 0x00001708, 0x2001 }, /* R5896 (0x1708) - GPIO5 Ctrl 1 */
-+	{ 0x00001709, 0xf000 }, /* R5897 (0x1709) - GPIO5 Ctrl 2 */
-+	{ 0x0000170a, 0x2001 }, /* R5898 (0x170a) - GPIO6 Ctrl 1 */
-+	{ 0x0000170b, 0xf000 }, /* R5899 (0x170b) - GPIO6 Ctrl 2 */
-+	{ 0x0000170c, 0x2001 }, /* R5900 (0x170c) - GPIO7 Ctrl 1 */
-+	{ 0x0000170d, 0xf000 }, /* R5901 (0x170d) - GPIO7 Ctrl 2 */
-+	{ 0x0000170e, 0x2001 }, /* R5902 (0x170e) - GPIO8 Ctrl 1 */
-+	{ 0x0000170f, 0xf000 }, /* R5903 (0x170f) - GPIO8 Ctrl 2 */
-+	{ 0x00001710, 0x2001 }, /* R5904 (0x1710) - GPIO9 Ctrl 1 */
-+	{ 0x00001711, 0xf000 }, /* R5905 (0x1711) - GPIO9 Ctrl 2 */
-+	{ 0x00001712, 0x2001 }, /* R5906 (0x1712) - GPIO10 Ctrl 1 */
-+	{ 0x00001713, 0xf000 }, /* R5907 (0x1713) - GPIO10 Ctrl 2 */
-+	{ 0x00001714, 0x2001 }, /* R5908 (0x1714) - GPIO11 Ctrl 1 */
-+	{ 0x00001715, 0xf000 }, /* R5909 (0x1715) - GPIO11 Ctrl 2 */
-+	{ 0x00001716, 0x2001 }, /* R5910 (0x1716) - GPIO12 Ctrl 1 */
-+	{ 0x00001717, 0xf000 }, /* R5911 (0x1717) - GPIO12 Ctrl 2 */
-+	{ 0x00001718, 0x2001 }, /* R5912 (0x1718) - GPIO13 Ctrl 1 */
-+	{ 0x00001719, 0xf000 }, /* R5913 (0x1719) - GPIO13 Ctrl 2 */
-+	{ 0x0000171a, 0x2001 }, /* R5914 (0x171a) - GPIO14 Ctrl 1 */
-+	{ 0x0000171b, 0xf000 }, /* R5915 (0x171b) - GPIO14 Ctrl 2 */
-+	{ 0x0000171c, 0x2001 }, /* R5916 (0x171c) - GPIO15 Ctrl 1 */
-+	{ 0x0000171d, 0xf000 }, /* R5917 (0x171d) - GPIO15 Ctrl 2 */
-+	{ 0x0000171e, 0x2001 }, /* R5918 (0x171e) - GPIO16 Ctrl 1 */
-+	{ 0x0000171f, 0xf000 }, /* R5919 (0x171f) - GPIO16 Ctrl 2 */
-+	{ 0x00001840, 0x1200 }, /* R6208 (0x1840) - IRQ1 Mask 1 */
-+	{ 0x00001841, 0x77e0 }, /* R6209 (0x1841) - IRQ1 Mask 2 */
++	{ 0x00000b00, 0x0000 }, /* R2816 (0xB00) - ISRC1DEC1MIX Input 1 Source */
++	{ 0x00000b08, 0x0000 }, /* R2824 (0xB08) - ISRC1DEC2MIX Input 1 Source */
++	{ 0x00000b10, 0x0000 }, /* R2832 (0xB10) - ISRC1DEC3MIX Input 1 Source */
++	{ 0x00000b18, 0x0000 }, /* R2840 (0xB18) - ISRC1DEC4MIX Input 1 Source */
++	{ 0x00000b20, 0x0000 }, /* R2848 (0xB20) - ISRC1INT1MIX Input 1 Source */
++	{ 0x00000b28, 0x0000 }, /* R2856 (0xB28) - ISRC1INT2MIX Input 1 Source */
++	{ 0x00000b30, 0x0000 }, /* R2864 (0xB30) - ISRC1INT3MIX Input 1 Source */
++	{ 0x00000b38, 0x0000 }, /* R2872 (0xB38) - ISRC1INT4MIX Input 1 Source */
++	{ 0x00000b40, 0x0000 }, /* R2880 (0xB40) - ISRC2DEC1MIX Input 1 Source */
++	{ 0x00000b48, 0x0000 }, /* R2888 (0xB48) - ISRC2DEC2MIX Input 1 Source */
++	{ 0x00000b50, 0x0000 }, /* R2896 (0xB50) - ISRC2DEC3MIX Input 1 Source */
++	{ 0x00000b58, 0x0000 }, /* R2904 (0xB58) - ISRC2DEC4MIX Input 1 Source */
++	{ 0x00000b60, 0x0000 }, /* R2912 (0xB60) - ISRC2INT1MIX Input 1 Source */
++	{ 0x00000b68, 0x0000 }, /* R2920 (0xB68) - ISRC2INT2MIX Input 1 Source */
++	{ 0x00000b70, 0x0000 }, /* R2928 (0xB70) - ISRC2INT3MIX Input 1 Source */
++	{ 0x00000b78, 0x0000 }, /* R2936 (0xB78) - ISRC2INT4MIX Input 1 Source */
++	{ 0x00000e00, 0x0000 }, /* R3584 (0xE00) - FX Ctrl 1 */
++	{ 0x00000e10, 0x6318 }, /* R3600 (0xE10) - EQ1 1 */
++	{ 0x00000e11, 0x6300 }, /* R3601 (0xE11) - EQ1 2 */
++	{ 0x00000e12, 0x0fc8 }, /* R3602 (0xE12) - EQ1 3 */
++	{ 0x00000e13, 0x03fe }, /* R3603 (0xE13) - EQ1 4 */
++	{ 0x00000e14, 0x00e0 }, /* R3604 (0xE14) - EQ1 5 */
++	{ 0x00000e15, 0x1ec4 }, /* R3605 (0xE15) - EQ1 6 */
++	{ 0x00000e16, 0xf136 }, /* R3606 (0xE16) - EQ1 7 */
++	{ 0x00000e17, 0x0409 }, /* R3607 (0xE17) - EQ1 8 */
++	{ 0x00000e18, 0x04cc }, /* R3608 (0xE18) - EQ1 9 */
++	{ 0x00000e19, 0x1c9b }, /* R3609 (0xE19) - EQ1 10 */
++	{ 0x00000e1a, 0xf337 }, /* R3610 (0xE1A) - EQ1 11 */
++	{ 0x00000e1b, 0x040b }, /* R3611 (0xE1B) - EQ1 12 */
++	{ 0x00000e1c, 0x0cbb }, /* R3612 (0xE1C) - EQ1 13 */
++	{ 0x00000e1d, 0x16f8 }, /* R3613 (0xE1D) - EQ1 14 */
++	{ 0x00000e1e, 0xf7d9 }, /* R3614 (0xE1E) - EQ1 15 */
++	{ 0x00000e1f, 0x040a }, /* R3615 (0xE1F) - EQ1 16 */
++	{ 0x00000e20, 0x1f14 }, /* R3616 (0xE20) - EQ1 17 */
++	{ 0x00000e21, 0x058c }, /* R3617 (0xE21) - EQ1 18 */
++	{ 0x00000e22, 0x0563 }, /* R3618 (0xE22) - EQ1 19 */
++	{ 0x00000e23, 0x4000 }, /* R3619 (0xE23) - EQ1 20 */
++	{ 0x00000e24, 0x0b75 }, /* R3620 (0xE24) - EQ1 21 */
++	{ 0x00000e26, 0x6318 }, /* R3622 (0xE26) - EQ2 1 */
++	{ 0x00000e27, 0x6300 }, /* R3623 (0xE27) - EQ2 2 */
++	{ 0x00000e28, 0x0fc8 }, /* R3624 (0xE28) - EQ2 3 */
++	{ 0x00000e29, 0x03fe }, /* R3625 (0xE29) - EQ2 4 */
++	{ 0x00000e2a, 0x00e0 }, /* R3626 (0xE2A) - EQ2 5 */
++	{ 0x00000e2b, 0x1ec4 }, /* R3627 (0xE2B) - EQ2 6 */
++	{ 0x00000e2c, 0xf136 }, /* R3628 (0xE2C) - EQ2 7 */
++	{ 0x00000e2d, 0x0409 }, /* R3629 (0xE2D) - EQ2 8 */
++	{ 0x00000e2e, 0x04cc }, /* R3630 (0xE2E) - EQ2 9 */
++	{ 0x00000e2f, 0x1c9b }, /* R3631 (0xE2F) - EQ2 10 */
++	{ 0x00000e30, 0xf337 }, /* R3632 (0xE30) - EQ2 11 */
++	{ 0x00000e31, 0x040b }, /* R3633 (0xE31) - EQ2 12 */
++	{ 0x00000e32, 0x0cbb }, /* R3634 (0xE32) - EQ2 13 */
++	{ 0x00000e33, 0x16f8 }, /* R3635 (0xE33) - EQ2 14 */
++	{ 0x00000e34, 0xf7d9 }, /* R3636 (0xE34) - EQ2 15 */
++	{ 0x00000e35, 0x040a }, /* R3637 (0xE35) - EQ2 16 */
++	{ 0x00000e36, 0x1f14 }, /* R3638 (0xE36) - EQ2 17 */
++	{ 0x00000e37, 0x058c }, /* R3639 (0xE37) - EQ2 18 */
++	{ 0x00000e38, 0x0563 }, /* R3640 (0xE38) - EQ2 19 */
++	{ 0x00000e39, 0x4000 }, /* R3641 (0xE39) - EQ2 20 */
++	{ 0x00000e3a, 0x0b75 }, /* R3642 (0xE3A) - EQ2 21 */
++	{ 0x00000e3c, 0x6318 }, /* R3644 (0xE3C) - EQ3 1 */
++	{ 0x00000e3d, 0x6300 }, /* R3645 (0xE3D) - EQ3 2 */
++	{ 0x00000e3e, 0x0fc8 }, /* R3646 (0xE3E) - EQ3 3 */
++	{ 0x00000e3f, 0x03fe }, /* R3647 (0xE3F) - EQ3 4 */
++	{ 0x00000e40, 0x00e0 }, /* R3648 (0xE40) - EQ3 5 */
++	{ 0x00000e41, 0x1ec4 }, /* R3649 (0xE41) - EQ3 6 */
++	{ 0x00000e42, 0xf136 }, /* R3650 (0xE42) - EQ3 7 */
++	{ 0x00000e43, 0x0409 }, /* R3651 (0xE43) - EQ3 8 */
++	{ 0x00000e44, 0x04cc }, /* R3652 (0xE44) - EQ3 9 */
++	{ 0x00000e45, 0x1c9b }, /* R3653 (0xE45) - EQ3 10 */
++	{ 0x00000e46, 0xf337 }, /* R3654 (0xE46) - EQ3 11 */
++	{ 0x00000e47, 0x040b }, /* R3655 (0xE47) - EQ3 12 */
++	{ 0x00000e48, 0x0cbb }, /* R3656 (0xE48) - EQ3 13 */
++	{ 0x00000e49, 0x16f8 }, /* R3657 (0xE49) - EQ3 14 */
++	{ 0x00000e4a, 0xf7d9 }, /* R3658 (0xE4A) - EQ3 15 */
++	{ 0x00000e4b, 0x040a }, /* R3659 (0xE4B) - EQ3 16 */
++	{ 0x00000e4c, 0x1f14 }, /* R3660 (0xE4C) - EQ3 17 */
++	{ 0x00000e4d, 0x058c }, /* R3661 (0xE4D) - EQ3 18 */
++	{ 0x00000e4e, 0x0563 }, /* R3662 (0xE4E) - EQ3 19 */
++	{ 0x00000e4f, 0x4000 }, /* R3663 (0xE4F) - EQ3 20 */
++	{ 0x00000e50, 0x0b75 }, /* R3664 (0xE50) - EQ3 21 */
++	{ 0x00000e52, 0x6318 }, /* R3666 (0xE52) - EQ4 1 */
++	{ 0x00000e53, 0x6300 }, /* R3667 (0xE53) - EQ4 2 */
++	{ 0x00000e54, 0x0fc8 }, /* R3668 (0xE54) - EQ4 3 */
++	{ 0x00000e55, 0x03fe }, /* R3669 (0xE55) - EQ4 4 */
++	{ 0x00000e56, 0x00e0 }, /* R3670 (0xE56) - EQ4 5 */
++	{ 0x00000e57, 0x1ec4 }, /* R3671 (0xE57) - EQ4 6 */
++	{ 0x00000e58, 0xf136 }, /* R3672 (0xE58) - EQ4 7 */
++	{ 0x00000e59, 0x0409 }, /* R3673 (0xE59) - EQ4 8 */
++	{ 0x00000e5a, 0x04cc }, /* R3674 (0xE5A) - EQ4 9 */
++	{ 0x00000e5b, 0x1c9b }, /* R3675 (0xE5B) - EQ4 10 */
++	{ 0x00000e5c, 0xf337 }, /* R3676 (0xE5C) - EQ4 11 */
++	{ 0x00000e5d, 0x040b }, /* R3677 (0xE5D) - EQ4 12 */
++	{ 0x00000e5e, 0x0cbb }, /* R3678 (0xE5E) - EQ4 13 */
++	{ 0x00000e5f, 0x16f8 }, /* R3679 (0xE5F) - EQ4 14 */
++	{ 0x00000e60, 0xf7d9 }, /* R3680 (0xE60) - EQ4 15 */
++	{ 0x00000e61, 0x040a }, /* R3681 (0xE61) - EQ4 16 */
++	{ 0x00000e62, 0x1f14 }, /* R3682 (0xE62) - EQ4 17 */
++	{ 0x00000e63, 0x058c }, /* R3683 (0xE63) - EQ4 18 */
++	{ 0x00000e64, 0x0563 }, /* R3684 (0xE64) - EQ4 19 */
++	{ 0x00000e65, 0x4000 }, /* R3685 (0xE65) - EQ4 20 */
++	{ 0x00000e66, 0x0b75 }, /* R3686 (0xE66) - EQ4 21 */
++	{ 0x00000e80, 0x0018 }, /* R3712 (0xE80) - DRC1 Ctrl 1 */
++	{ 0x00000e81, 0x0933 }, /* R3713 (0xE81) - DRC1 Ctrl 2 */
++	{ 0x00000e82, 0x0018 }, /* R3714 (0xE82) - DRC1 Ctrl 3 */
++	{ 0x00000e83, 0x0000 }, /* R3715 (0xE83) - DRC1 Ctrl 4 */
++	{ 0x00000e84, 0x0000 }, /* R3716 (0xE84) - DRC1 Ctrl 5 */
++	{ 0x00000e88, 0x0018 }, /* R3720 (0xE88) - DRC2 Ctrl 1 */
++	{ 0x00000e89, 0x0933 }, /* R3721 (0xE89) - DRC2 Ctrl 2 */
++	{ 0x00000e8a, 0x0018 }, /* R3722 (0xE8A) - DRC2 Ctrl 3 */
++	{ 0x00000e8b, 0x0000 }, /* R3723 (0xE8B) - DRC2 Ctrl 4 */
++	{ 0x00000e8c, 0x0000 }, /* R3724 (0xE8C) - DRC2 Ctrl 5 */
++	{ 0x00000ec0, 0x0000 }, /* R3776 (0xEC0) - HPLPF1 1 */
++	{ 0x00000ec1, 0x0000 }, /* R3777 (0xEC1) - HPLPF1 2 */
++	{ 0x00000ec4, 0x0000 }, /* R3780 (0xEC4) - HPLPF2 1 */
++	{ 0x00000ec5, 0x0000 }, /* R3781 (0xEC5) - HPLPF2 2 */
++	{ 0x00000ec8, 0x0000 }, /* R3784 (0xEC8) - HPLPF3 1 */
++	{ 0x00000ec9, 0x0000 }, /* R3785 (0xEC9) - HPLPF3 2 */
++	{ 0x00000ecc, 0x0000 }, /* R3788 (0xECC) - HPLPF4 1 */
++	{ 0x00000ecd, 0x0000 }, /* R3789 (0xECD) - HPLPF4 2 */
++	{ 0x00000ef0, 0x0000 }, /* R3824 (0xEF0) - ISRC1 Ctrl 1 */
++	{ 0x00000ef1, 0x0001 }, /* R3825 (0xEF1) - ISRC1 Ctrl 2 */
++	{ 0x00000ef2, 0x0000 }, /* R3826 (0xEF2) - ISRC1 Ctrl 3 */
++	{ 0x00000ef3, 0x0000 }, /* R3827 (0xEF3) - ISRC2 Ctrl 1 */
++	{ 0x00000ef4, 0x0001 }, /* R3828 (0xEF4) - ISRC2 Ctrl 2 */
++	{ 0x00000ef5, 0x0000 }, /* R3829 (0xEF5) - ISRC2 Ctrl 3 */
++	{ 0x00001700, 0x2801 }, /* R5888 (0x1700) - GPIO1 Ctrl 1 */
++	{ 0x00001701, 0xe800 }, /* R5889 (0x1701) - GPIO1 Ctrl 2 */
++	{ 0x00001702, 0x2801 }, /* R5890 (0x1702) - GPIO2 Ctrl 1 */
++	{ 0x00001703, 0xe800 }, /* R5891 (0x1703) - GPIO2 Ctrl 2 */
++	{ 0x00001704, 0x2801 }, /* R5892 (0x1704) - GPIO3 Ctrl 1 */
++	{ 0x00001705, 0xe800 }, /* R5893 (0x1705) - GPIO3 Ctrl 2 */
++	{ 0x00001706, 0x2801 }, /* R5894 (0x1706) - GPIO4 Ctrl 1 */
++	{ 0x00001707, 0xe800 }, /* R5895 (0x1707) - GPIO4 Ctrl 2 */
++	{ 0x00001708, 0x2801 }, /* R5896 (0x1708) - GPIO5 Ctrl 1 */
++	{ 0x00001709, 0xe800 }, /* R5897 (0x1709) - GPIO5 Ctrl 2 */
++	{ 0x0000170a, 0x2801 }, /* R5898 (0x170A) - GPIO6 Ctrl 1 */
++	{ 0x0000170b, 0xe800 }, /* R5899 (0x170B) - GPIO6 Ctrl 2 */
++	{ 0x0000170c, 0x2801 }, /* R5900 (0x170C) - GPIO7 Ctrl 1 */
++	{ 0x0000170d, 0xe800 }, /* R5901 (0x170D) - GPIO7 Ctrl 2 */
++	{ 0x0000170e, 0x2801 }, /* R5902 (0x170E) - GPIO8 Ctrl 1 */
++	{ 0x0000170f, 0xe800 }, /* R5903 (0x170F) - GPIO8 Ctrl 2 */
++	{ 0x00001710, 0x2801 }, /* R5904 (0x1710) - GPIO9 Ctrl 1 */
++	{ 0x00001711, 0xe800 }, /* R5905 (0x1711) - GPIO9 Ctrl 2 */
++	{ 0x00001712, 0x2801 }, /* R5906 (0x1712) - GPIO10 Ctrl 1 */
++	{ 0x00001713, 0xe800 }, /* R5907 (0x1713) - GPIO10 Ctrl 2 */
++	{ 0x00001714, 0x2801 }, /* R5908 (0x1714) - GPIO11 Ctrl 1 */
++	{ 0x00001715, 0xe800 }, /* R5909 (0x1715) - GPIO11 Ctrl 2 */
++	{ 0x00001716, 0x2801 }, /* R5910 (0x1716) - GPIO12 Ctrl 1 */
++	{ 0x00001717, 0xe800 }, /* R5911 (0x1717) - GPIO12 Ctrl 2 */
++	{ 0x00001718, 0x2801 }, /* R5912 (0x1718) - GPIO13 Ctrl 1 */
++	{ 0x00001719, 0xe800 }, /* R5913 (0x1719) - GPIO13 Ctrl 2 */
++	{ 0x0000171a, 0x2801 }, /* R5914 (0x171A) - GPIO14 Ctrl 1 */
++	{ 0x0000171b, 0xe800 }, /* R5915 (0x171B) - GPIO14 Ctrl 2 */
++	{ 0x0000171c, 0x2801 }, /* R5916 (0x171C) - GPIO15 Ctrl 1 */
++	{ 0x0000171d, 0xe800 }, /* R5917 (0x171D) - GPIO15 Ctrl 2 */
++	{ 0x00001840, 0xffff }, /* R6208 (0x1840) - IRQ1 Mask 1 */
++	{ 0x00001841, 0xffff }, /* R6209 (0x1841) - IRQ1 Mask 2 */
 +	{ 0x00001842, 0xffff }, /* R6210 (0x1842) - IRQ1 Mask 3 */
 +	{ 0x00001843, 0xffff }, /* R6211 (0x1843) - IRQ1 Mask 4 */
 +	{ 0x00001844, 0xffff }, /* R6212 (0x1844) - IRQ1 Mask 5 */
-+	{ 0x00001845, 0x0301 }, /* R6213 (0x1845) - IRQ1 Mask 6 */
-+	{ 0x00001846, 0x0f3f }, /* R6214 (0x1846) - IRQ1 Mask 7 */
++	{ 0x00001845, 0xffff }, /* R6213 (0x1845) - IRQ1 Mask 6 */
++	{ 0x00001846, 0xffff }, /* R6214 (0x1846) - IRQ1 Mask 7 */
 +	{ 0x00001847, 0xffff }, /* R6215 (0x1847) - IRQ1 Mask 8 */
-+	{ 0x00001848, 0x031f }, /* R6216 (0x1848) - IRQ1 Mask 9 */
-+	{ 0x00001849, 0x031f }, /* R6217 (0x1849) - IRQ1 Mask 10 */
-+	{ 0x0000184a, 0xffff }, /* R6218 (0x184a) - IRQ1 Mask 11 */
-+	{ 0x0000184b, 0x033f }, /* R6219 (0x184b) - IRQ1 Mask 12 */
-+	{ 0x0000184c, 0x003f }, /* R6220 (0x184c) - IRQ1 Mask 13 */
-+	{ 0x0000184d, 0x003f }, /* R6221 (0x184d) - IRQ1 Mask 14 */
-+	{ 0x0000184e, 0x1000 }, /* R6222 (0x184e) - IRQ1 Mask 15 */
-+	{ 0x0000184f, 0xffff }, /* R6223 (0x184f) - IRQ1 Mask 16 */
++	{ 0x00001848, 0xffff }, /* R6216 (0x1848) - IRQ1 Mask 9 */
++	{ 0x00001849, 0xffff }, /* R6217 (0x1849) - IRQ1 Mask 10 */
++	{ 0x0000184a, 0xffff }, /* R6218 (0x184A) - IRQ1 Mask 11 */
++	{ 0x0000184b, 0xffff }, /* R6219 (0x184B) - IRQ1 Mask 12 */
++	{ 0x0000184c, 0xffff }, /* R6220 (0x184C) - IRQ1 Mask 13 */
++	{ 0x0000184d, 0xffff }, /* R6221 (0x184D) - IRQ1 Mask 14 */
++	{ 0x0000184e, 0xffff }, /* R6222 (0x184E) - IRQ1 Mask 15 */
++	{ 0x0000184f, 0xffff }, /* R6223 (0x184F) - IRQ1 Mask 16 */
 +	{ 0x00001850, 0xffff }, /* R6224 (0x1850) - IRQ1 Mask 17 */
 +	{ 0x00001851, 0xffff }, /* R6225 (0x1851) - IRQ1 Mask 18 */
 +	{ 0x00001852, 0xffff }, /* R6226 (0x1852) - IRQ1 Mask 19 */
 +	{ 0x00001853, 0xffff }, /* R6227 (0x1853) - IRQ1 Mask 20 */
-+	{ 0x00001854, 0x0001 }, /* R6228 (0x1854) - IRQ1 Mask 21 */
-+	{ 0x00001855, 0x0001 }, /* R6229 (0x1855) - IRQ1 Mask 22 */
-+	{ 0x00001856, 0x0001 }, /* R6230 (0x1856) - IRQ1 Mask 23 */
-+	{ 0x00001857, 0x0001 }, /* R6231 (0x1857) - IRQ1 Mask 24 */
-+	{ 0x00001858, 0x0001 }, /* R6232 (0x1858) - IRQ1 Mask 25 */
++	{ 0x00001854, 0xffff }, /* R6228 (0x1854) - IRQ1 Mask 21 */
++	{ 0x00001855, 0xffff }, /* R6229 (0x1855) - IRQ1 Mask 22 */
++	{ 0x00001856, 0xffff }, /* R6230 (0x1856) - IRQ1 Mask 23 */
++	{ 0x00001857, 0xffff }, /* R6231 (0x1857) - IRQ1 Mask 24 */
++	{ 0x00001858, 0xffff }, /* R6232 (0x1858) - IRQ1 Mask 25 */
 +	{ 0x00001859, 0xffff }, /* R6233 (0x1859) - IRQ1 Mask 26 */
-+	{ 0x0000185a, 0x0001 }, /* R6234 (0x185a) - IRQ1 Mask 27 */
-+	{ 0x0000185b, 0x0001 }, /* R6235 (0x185b) - IRQ1 Mask 28 */
-+	{ 0x0000185c, 0xffff }, /* R6236 (0x185c) - IRQ1 Mask 29 */
-+	{ 0x0000185d, 0x0001 }, /* R6237 (0x185d) - IRQ1 Mask 30 */
-+	{ 0x0000185e, 0xffff }, /* R6238 (0x185e) - IRQ1 Mask 31 */
-+	{ 0x0000185f, 0xffff }, /* R6239 (0x185f) - IRQ1 Mask 32 */
-+	{ 0x00001860, 0x0001 }, /* R6240 (0x1860) - IRQ1 Mask 33 */
-+	{ 0x00001948, 0x031f }, /* R6472 (0x1948) - IRQ2 Mask 9 */
-+	{ 0x00001a06, 0x0000 }, /* R6662 (0x1a06) - Interrupt Debounce 7 */
-+	{ 0x00001a80, 0x4400 }, /* R6784 (0x1a80) - IRQ1 Ctrl */
++	{ 0x0000185a, 0xffff }, /* R6234 (0x185A) - IRQ1 Mask 27 */
++	{ 0x0000185b, 0xffff }, /* R6235 (0x185B) - IRQ1 Mask 28 */
++	{ 0x0000185c, 0xffff }, /* R6236 (0x185C) - IRQ1 Mask 29 */
++	{ 0x0000185d, 0xffff }, /* R6237 (0x185D) - IRQ1 Mask 30 */
++	{ 0x0000185e, 0xffff }, /* R6238 (0x185E) - IRQ1 Mask 31 */
++	{ 0x0000185f, 0xffff }, /* R6239 (0x185F) - IRQ1 Mask 32 */
++	{ 0x00001860, 0xffff }, /* R6240 (0x1860) - IRQ1 Mask 33 */
++	{ 0x00001a06, 0x0000 }, /* R6662 (0x1A06) - Interrupt Debounce 7 */
++	{ 0x00001a80, 0x4400 }, /* R6784 (0x1A80) - IRQ1 Ctrl */
 +};
 +
-+static bool cs47l92_is_adsp_memory(unsigned int reg)
++static bool cs47l15_is_adsp_memory(struct device *dev, unsigned int reg)
 +{
 +	switch (reg) {
-+	case 0x080000 ... 0x082ffe:
-+	case 0x0a0000 ... 0x0a1ffe:
++	case 0x080000 ... 0x088ffe:
++	case 0x0a0000 ... 0x0a9ffe:
 +	case 0x0c0000 ... 0x0c1ffe:
 +	case 0x0e0000 ... 0x0e1ffe:
 +		return true;
@@ -1211,7 +838,7 @@ index 0000000000000..3dc1fefe68f59
 +	}
 +}
 +
-+static bool cs47l92_16bit_readable_register(struct device *dev,
++static bool cs47l15_16bit_readable_register(struct device *dev,
 +					    unsigned int reg)
 +{
 +	switch (reg) {
@@ -1224,6 +851,8 @@ index 0000000000000..3dc1fefe68f59
 +	case MADERA_SAMPLE_RATE_SEQUENCE_SELECT_2:
 +	case MADERA_SAMPLE_RATE_SEQUENCE_SELECT_3:
 +	case MADERA_SAMPLE_RATE_SEQUENCE_SELECT_4:
++	case MADERA_ALWAYS_ON_TRIGGERS_SEQUENCE_SELECT_1:
++	case MADERA_ALWAYS_ON_TRIGGERS_SEQUENCE_SELECT_2:
 +	case MADERA_HAPTICS_CONTROL_1 ... MADERA_HAPTICS_CONTROL_2:
 +	case MADERA_HAPTICS_PHASE_1_INTENSITY:
 +	case MADERA_HAPTICS_PHASE_1_DURATION:
@@ -1239,40 +868,32 @@ index 0000000000000..3dc1fefe68f59
 +	case MADERA_SAMPLE_RATE_1_STATUS:
 +	case MADERA_SAMPLE_RATE_2_STATUS:
 +	case MADERA_SAMPLE_RATE_3_STATUS:
-+	case MADERA_ASYNC_CLOCK_1:
-+	case MADERA_ASYNC_SAMPLE_RATE_1:
-+	case MADERA_ASYNC_SAMPLE_RATE_1_STATUS:
-+	case MADERA_ASYNC_SAMPLE_RATE_2:
-+	case MADERA_ASYNC_SAMPLE_RATE_2_STATUS:
 +	case MADERA_DSP_CLOCK_1:
 +	case MADERA_DSP_CLOCK_2:
 +	case MADERA_OUTPUT_SYSTEM_CLOCK:
-+	case MADERA_OUTPUT_ASYNC_CLOCK:
-+	case MADERA_RATE_ESTIMATOR_1 ...  MADERA_RATE_ESTIMATOR_5:
++	case MADERA_RATE_ESTIMATOR_1 ... MADERA_RATE_ESTIMATOR_5:
 +	case MADERA_FLL1_CONTROL_1 ... MADERA_FLL1_CONTROL_6:
-+	case CS47L92_FLL1_CONTROL_7 ...  CS47L92_FLL1_CONTROL_10:
-+	case MADERA_FLL1_CONTROL_11:
-+	case MADERA_FLL1_DIGITAL_TEST_1:
-+	case MADERA_FLL1_SYNCHRONISER_1 ... MADERA_FLL1_SYNCHRONISER_6:
-+	case CS47L92_FLL1_GPIO_CLOCK:
-+	case MADERA_FLL2_CONTROL_1 ... MADERA_FLL2_CONTROL_6:
-+	case CS47L92_FLL2_CONTROL_7 ... CS47L92_FLL2_CONTROL_10:
-+	case MADERA_FLL2_CONTROL_11:
-+	case MADERA_FLL2_DIGITAL_TEST_1:
-+	case MADERA_FLL2_SYNCHRONISER_1 ... MADERA_FLL2_SYNCHRONISER_6:
-+	case CS47L92_FLL2_GPIO_CLOCK:
-+	case MADERA_MIC_CHARGE_PUMP_1:
-+	case MADERA_LDO2_CONTROL_1:
++	case MADERA_FLL1_CONTROL_7:
++	case MADERA_FLL1_EFS_2:
++	case MADERA_FLL1_LOOP_FILTER_TEST_1:
++	case MADERA_FLL1_SYNCHRONISER_1 ... MADERA_FLL1_SYNCHRONISER_7:
++	case MADERA_FLL1_SPREAD_SPECTRUM:
++	case MADERA_FLL1_GPIO_CLOCK:
++	case MADERA_FLLAO_CONTROL_1:
++	case MADERA_FLLAO_CONTROL_2:
++	case MADERA_FLLAO_CONTROL_3:
++	case MADERA_FLLAO_CONTROL_4:
++	case MADERA_FLLAO_CONTROL_5:
++	case MADERA_FLLAO_CONTROL_6:
++	case MADERA_FLLAO_CONTROL_7:
++	case MADERA_FLLAO_CONTROL_8:
++	case MADERA_FLLAO_CONTROL_9:
++	case MADERA_FLLAO_CONTROL_10:
++	case MADERA_FLLAO_CONTROL_11:
 +	case MADERA_MIC_BIAS_CTRL_1:
-+	case MADERA_MIC_BIAS_CTRL_2:
 +	case MADERA_MIC_BIAS_CTRL_5:
-+	case MADERA_MIC_BIAS_CTRL_6:
 +	case MADERA_HP_CTRL_1L:
 +	case MADERA_HP_CTRL_1R:
-+	case MADERA_HP_CTRL_2L:
-+	case MADERA_HP_CTRL_2R:
-+	case MADERA_HP_CTRL_3L:
-+	case MADERA_HP_CTRL_3R:
 +	case MADERA_ACCESSORY_DETECT_MODE_1:
 +	case MADERA_HEADPHONE_DETECT_0:
 +	case MADERA_HEADPHONE_DETECT_1:
@@ -1284,14 +905,8 @@ index 0000000000000..3dc1fefe68f59
 +	case MADERA_MIC_DETECT_1_CONTROL_1:
 +	case MADERA_MIC_DETECT_1_CONTROL_2:
 +	case MADERA_MIC_DETECT_1_CONTROL_3:
-+	case MADERA_MIC_DETECT_1_CONTROL_4:
 +	case MADERA_MIC_DETECT_1_LEVEL_1 ... MADERA_MIC_DETECT_1_LEVEL_4:
-+	case MADERA_MIC_DETECT_2_CONTROL_0:
-+	case MADERA_MIC_DETECT_2_CONTROL_1:
-+	case MADERA_MIC_DETECT_2_CONTROL_2:
-+	case MADERA_MIC_DETECT_2_CONTROL_3:
-+	case MADERA_MIC_DETECT_2_CONTROL_4:
-+	case MADERA_MIC_DETECT_2_LEVEL_1 ... MADERA_MIC_DETECT_2_LEVEL_4:
++	case MADERA_MIC_DETECT_1_CONTROL_4:
 +	case MADERA_GP_SWITCH_1:
 +	case MADERA_JACK_DETECT_ANALOGUE:
 +	case MADERA_INPUT_ENABLES:
@@ -1315,22 +930,8 @@ index 0000000000000..3dc1fefe68f59
 +	case MADERA_ADC_DIGITAL_VOLUME_2R:
 +	case MADERA_DMIC2R_CONTROL:
 +	case MADERA_IN2R_RATE_CONTROL:
-+	case MADERA_IN3L_CONTROL:
-+	case MADERA_ADC_DIGITAL_VOLUME_3L:
-+	case MADERA_DMIC3L_CONTROL:
-+	case MADERA_IN3L_RATE_CONTROL:
-+	case MADERA_IN3R_CONTROL:
-+	case MADERA_ADC_DIGITAL_VOLUME_3R:
-+	case MADERA_DMIC3R_CONTROL:
-+	case MADERA_IN3R_RATE_CONTROL:
-+	case MADERA_IN4L_CONTROL:
-+	case MADERA_ADC_DIGITAL_VOLUME_4L:
-+	case MADERA_DMIC4L_CONTROL:
-+	case MADERA_IN4L_RATE_CONTROL:
-+	case MADERA_IN4R_CONTROL:
-+	case MADERA_ADC_DIGITAL_VOLUME_4R:
-+	case MADERA_DMIC4R_CONTROL:
-+	case MADERA_IN4R_RATE_CONTROL:
++	case CS47L15_ADC_INT_BIAS:
++	case CS47L15_PGA_BIAS_SEL:
 +	case MADERA_OUTPUT_ENABLES_1:
 +	case MADERA_OUTPUT_STATUS_1:
 +	case MADERA_RAW_OUTPUT_STATUS_1:
@@ -1343,39 +944,31 @@ index 0000000000000..3dc1fefe68f59
 +	case MADERA_OUTPUT_PATH_CONFIG_1R:
 +	case MADERA_DAC_DIGITAL_VOLUME_1R:
 +	case MADERA_NOISE_GATE_SELECT_1R:
-+	case MADERA_OUTPUT_PATH_CONFIG_2L:
-+	case MADERA_DAC_DIGITAL_VOLUME_2L:
 +	case MADERA_OUTPUT_PATH_CONFIG_2:
-+	case MADERA_NOISE_GATE_SELECT_2L:
-+	case MADERA_OUTPUT_PATH_CONFIG_2R:
-+	case MADERA_DAC_DIGITAL_VOLUME_2R:
-+	case MADERA_NOISE_GATE_SELECT_2R:
-+	case MADERA_OUTPUT_PATH_CONFIG_3L:
-+	case MADERA_DAC_DIGITAL_VOLUME_3L:
-+	case MADERA_OUTPUT_PATH_CONFIG_3:
-+	case MADERA_NOISE_GATE_SELECT_3L:
-+	case MADERA_OUTPUT_PATH_CONFIG_3R:
-+	case MADERA_DAC_DIGITAL_VOLUME_3R:
-+	case MADERA_NOISE_GATE_SELECT_3R:
++	case MADERA_OUTPUT_PATH_CONFIG_4L:
++	case MADERA_DAC_DIGITAL_VOLUME_4L:
++	case MADERA_NOISE_GATE_SELECT_4L:
 +	case MADERA_OUTPUT_PATH_CONFIG_5L:
 +	case MADERA_DAC_DIGITAL_VOLUME_5L:
 +	case MADERA_NOISE_GATE_SELECT_5L:
 +	case MADERA_OUTPUT_PATH_CONFIG_5R:
 +	case MADERA_DAC_DIGITAL_VOLUME_5R:
 +	case MADERA_NOISE_GATE_SELECT_5R:
-+	case MADERA_DAC_AEC_CONTROL_1 ...  MADERA_DAC_AEC_CONTROL_2:
++	case MADERA_DAC_AEC_CONTROL_1:
++	case MADERA_DAC_AEC_CONTROL_2:
 +	case MADERA_NOISE_GATE_CONTROL:
 +	case MADERA_PDM_SPK1_CTRL_1 ... MADERA_PDM_SPK1_CTRL_2:
 +	case MADERA_HP1_SHORT_CIRCUIT_CTRL:
-+	case MADERA_HP2_SHORT_CIRCUIT_CTRL:
-+	case MADERA_HP3_SHORT_CIRCUIT_CTRL:
++	case MADERA_HP_TEST_CTRL_5:
++	case MADERA_HP_TEST_CTRL_6:
 +	case MADERA_AIF1_BCLK_CTRL:
 +	case MADERA_AIF1_TX_PIN_CTRL:
 +	case MADERA_AIF1_RX_PIN_CTRL:
 +	case MADERA_AIF1_RATE_CTRL:
 +	case MADERA_AIF1_FORMAT:
 +	case MADERA_AIF1_RX_BCLK_RATE:
-+	case MADERA_AIF1_FRAME_CTRL_1 ... MADERA_AIF1_FRAME_CTRL_18:
++	case MADERA_AIF1_FRAME_CTRL_1 ... MADERA_AIF1_FRAME_CTRL_8:
++	case MADERA_AIF1_FRAME_CTRL_11 ... MADERA_AIF1_FRAME_CTRL_16:
 +	case MADERA_AIF1_TX_ENABLES:
 +	case MADERA_AIF1_RX_ENABLES:
 +	case MADERA_AIF2_BCLK_CTRL:
@@ -1384,7 +977,8 @@ index 0000000000000..3dc1fefe68f59
 +	case MADERA_AIF2_RATE_CTRL:
 +	case MADERA_AIF2_FORMAT:
 +	case MADERA_AIF2_RX_BCLK_RATE:
-+	case MADERA_AIF2_FRAME_CTRL_1 ... MADERA_AIF2_FRAME_CTRL_18:
++	case MADERA_AIF2_FRAME_CTRL_1 ... MADERA_AIF2_FRAME_CTRL_6:
++	case MADERA_AIF2_FRAME_CTRL_11 ... MADERA_AIF2_FRAME_CTRL_14:
 +	case MADERA_AIF2_TX_ENABLES:
 +	case MADERA_AIF2_RX_ENABLES:
 +	case MADERA_AIF3_BCLK_CTRL:
@@ -1393,19 +987,14 @@ index 0000000000000..3dc1fefe68f59
 +	case MADERA_AIF3_RATE_CTRL:
 +	case MADERA_AIF3_FORMAT:
 +	case MADERA_AIF3_RX_BCLK_RATE:
-+	case MADERA_AIF3_FRAME_CTRL_1 ... MADERA_AIF3_FRAME_CTRL_18:
++	case MADERA_AIF3_FRAME_CTRL_1 ... MADERA_AIF3_FRAME_CTRL_4:
++	case MADERA_AIF3_FRAME_CTRL_11 ... MADERA_AIF3_FRAME_CTRL_12:
 +	case MADERA_AIF3_TX_ENABLES:
 +	case MADERA_AIF3_RX_ENABLES:
 +	case MADERA_SPD1_TX_CONTROL:
 +	case MADERA_SPD1_TX_CHANNEL_STATUS_1:
 +	case MADERA_SPD1_TX_CHANNEL_STATUS_2:
 +	case MADERA_SPD1_TX_CHANNEL_STATUS_3:
-+	case MADERA_SLIMBUS_FRAMER_REF_GEAR:
-+	case MADERA_SLIMBUS_RATES_1 ... MADERA_SLIMBUS_RATES_8:
-+	case MADERA_SLIMBUS_RX_CHANNEL_ENABLE:
-+	case MADERA_SLIMBUS_TX_CHANNEL_ENABLE:
-+	case MADERA_SLIMBUS_RX_PORT_STATUS:
-+	case MADERA_SLIMBUS_TX_PORT_STATUS:
 +	case MADERA_PWM1MIX_INPUT_1_SOURCE:
 +	case MADERA_PWM1MIX_INPUT_1_VOLUME:
 +	case MADERA_PWM1MIX_INPUT_2_SOURCE:
@@ -1438,38 +1027,14 @@ index 0000000000000..3dc1fefe68f59
 +	case MADERA_OUT1RMIX_INPUT_3_VOLUME:
 +	case MADERA_OUT1RMIX_INPUT_4_SOURCE:
 +	case MADERA_OUT1RMIX_INPUT_4_VOLUME:
-+	case MADERA_OUT2LMIX_INPUT_1_SOURCE:
-+	case MADERA_OUT2LMIX_INPUT_1_VOLUME:
-+	case MADERA_OUT2LMIX_INPUT_2_SOURCE:
-+	case MADERA_OUT2LMIX_INPUT_2_VOLUME:
-+	case MADERA_OUT2LMIX_INPUT_3_SOURCE:
-+	case MADERA_OUT2LMIX_INPUT_3_VOLUME:
-+	case MADERA_OUT2LMIX_INPUT_4_SOURCE:
-+	case MADERA_OUT2LMIX_INPUT_4_VOLUME:
-+	case MADERA_OUT2RMIX_INPUT_1_SOURCE:
-+	case MADERA_OUT2RMIX_INPUT_1_VOLUME:
-+	case MADERA_OUT2RMIX_INPUT_2_SOURCE:
-+	case MADERA_OUT2RMIX_INPUT_2_VOLUME:
-+	case MADERA_OUT2RMIX_INPUT_3_SOURCE:
-+	case MADERA_OUT2RMIX_INPUT_3_VOLUME:
-+	case MADERA_OUT2RMIX_INPUT_4_SOURCE:
-+	case MADERA_OUT2RMIX_INPUT_4_VOLUME:
-+	case MADERA_OUT3LMIX_INPUT_1_SOURCE:
-+	case MADERA_OUT3LMIX_INPUT_1_VOLUME:
-+	case MADERA_OUT3LMIX_INPUT_2_SOURCE:
-+	case MADERA_OUT3LMIX_INPUT_2_VOLUME:
-+	case MADERA_OUT3LMIX_INPUT_3_SOURCE:
-+	case MADERA_OUT3LMIX_INPUT_3_VOLUME:
-+	case MADERA_OUT3LMIX_INPUT_4_SOURCE:
-+	case MADERA_OUT3LMIX_INPUT_4_VOLUME:
-+	case MADERA_OUT3RMIX_INPUT_1_SOURCE:
-+	case MADERA_OUT3RMIX_INPUT_1_VOLUME:
-+	case MADERA_OUT3RMIX_INPUT_2_SOURCE:
-+	case MADERA_OUT3RMIX_INPUT_2_VOLUME:
-+	case MADERA_OUT3RMIX_INPUT_3_SOURCE:
-+	case MADERA_OUT3RMIX_INPUT_3_VOLUME:
-+	case MADERA_OUT3RMIX_INPUT_4_SOURCE:
-+	case MADERA_OUT3RMIX_INPUT_4_VOLUME:
++	case MADERA_OUT4LMIX_INPUT_1_SOURCE:
++	case MADERA_OUT4LMIX_INPUT_1_VOLUME:
++	case MADERA_OUT4LMIX_INPUT_2_SOURCE:
++	case MADERA_OUT4LMIX_INPUT_2_VOLUME:
++	case MADERA_OUT4LMIX_INPUT_3_SOURCE:
++	case MADERA_OUT4LMIX_INPUT_3_VOLUME:
++	case MADERA_OUT4LMIX_INPUT_4_SOURCE:
++	case MADERA_OUT4LMIX_INPUT_4_VOLUME:
 +	case MADERA_OUT5LMIX_INPUT_1_SOURCE:
 +	case MADERA_OUT5LMIX_INPUT_1_VOLUME:
 +	case MADERA_OUT5LMIX_INPUT_2_SOURCE:
@@ -1534,22 +1099,6 @@ index 0000000000000..3dc1fefe68f59
 +	case MADERA_AIF1TX6MIX_INPUT_3_VOLUME:
 +	case MADERA_AIF1TX6MIX_INPUT_4_SOURCE:
 +	case MADERA_AIF1TX6MIX_INPUT_4_VOLUME:
-+	case MADERA_AIF1TX7MIX_INPUT_1_SOURCE:
-+	case MADERA_AIF1TX7MIX_INPUT_1_VOLUME:
-+	case MADERA_AIF1TX7MIX_INPUT_2_SOURCE:
-+	case MADERA_AIF1TX7MIX_INPUT_2_VOLUME:
-+	case MADERA_AIF1TX7MIX_INPUT_3_SOURCE:
-+	case MADERA_AIF1TX7MIX_INPUT_3_VOLUME:
-+	case MADERA_AIF1TX7MIX_INPUT_4_SOURCE:
-+	case MADERA_AIF1TX7MIX_INPUT_4_VOLUME:
-+	case MADERA_AIF1TX8MIX_INPUT_1_SOURCE:
-+	case MADERA_AIF1TX8MIX_INPUT_1_VOLUME:
-+	case MADERA_AIF1TX8MIX_INPUT_2_SOURCE:
-+	case MADERA_AIF1TX8MIX_INPUT_2_VOLUME:
-+	case MADERA_AIF1TX8MIX_INPUT_3_SOURCE:
-+	case MADERA_AIF1TX8MIX_INPUT_3_VOLUME:
-+	case MADERA_AIF1TX8MIX_INPUT_4_SOURCE:
-+	case MADERA_AIF1TX8MIX_INPUT_4_VOLUME:
 +	case MADERA_AIF2TX1MIX_INPUT_1_SOURCE:
 +	case MADERA_AIF2TX1MIX_INPUT_1_VOLUME:
 +	case MADERA_AIF2TX1MIX_INPUT_2_SOURCE:
@@ -1582,38 +1131,6 @@ index 0000000000000..3dc1fefe68f59
 +	case MADERA_AIF2TX4MIX_INPUT_3_VOLUME:
 +	case MADERA_AIF2TX4MIX_INPUT_4_SOURCE:
 +	case MADERA_AIF2TX4MIX_INPUT_4_VOLUME:
-+	case MADERA_AIF2TX5MIX_INPUT_1_SOURCE:
-+	case MADERA_AIF2TX5MIX_INPUT_1_VOLUME:
-+	case MADERA_AIF2TX5MIX_INPUT_2_SOURCE:
-+	case MADERA_AIF2TX5MIX_INPUT_2_VOLUME:
-+	case MADERA_AIF2TX5MIX_INPUT_3_SOURCE:
-+	case MADERA_AIF2TX5MIX_INPUT_3_VOLUME:
-+	case MADERA_AIF2TX5MIX_INPUT_4_SOURCE:
-+	case MADERA_AIF2TX5MIX_INPUT_4_VOLUME:
-+	case MADERA_AIF2TX6MIX_INPUT_1_SOURCE:
-+	case MADERA_AIF2TX6MIX_INPUT_1_VOLUME:
-+	case MADERA_AIF2TX6MIX_INPUT_2_SOURCE:
-+	case MADERA_AIF2TX6MIX_INPUT_2_VOLUME:
-+	case MADERA_AIF2TX6MIX_INPUT_3_SOURCE:
-+	case MADERA_AIF2TX6MIX_INPUT_3_VOLUME:
-+	case MADERA_AIF2TX6MIX_INPUT_4_SOURCE:
-+	case MADERA_AIF2TX6MIX_INPUT_4_VOLUME:
-+	case MADERA_AIF2TX7MIX_INPUT_1_SOURCE:
-+	case MADERA_AIF2TX7MIX_INPUT_1_VOLUME:
-+	case MADERA_AIF2TX7MIX_INPUT_2_SOURCE:
-+	case MADERA_AIF2TX7MIX_INPUT_2_VOLUME:
-+	case MADERA_AIF2TX7MIX_INPUT_3_SOURCE:
-+	case MADERA_AIF2TX7MIX_INPUT_3_VOLUME:
-+	case MADERA_AIF2TX7MIX_INPUT_4_SOURCE:
-+	case MADERA_AIF2TX7MIX_INPUT_4_VOLUME:
-+	case MADERA_AIF2TX8MIX_INPUT_1_SOURCE:
-+	case MADERA_AIF2TX8MIX_INPUT_1_VOLUME:
-+	case MADERA_AIF2TX8MIX_INPUT_2_SOURCE:
-+	case MADERA_AIF2TX8MIX_INPUT_2_VOLUME:
-+	case MADERA_AIF2TX8MIX_INPUT_3_SOURCE:
-+	case MADERA_AIF2TX8MIX_INPUT_3_VOLUME:
-+	case MADERA_AIF2TX8MIX_INPUT_4_SOURCE:
-+	case MADERA_AIF2TX8MIX_INPUT_4_VOLUME:
 +	case MADERA_AIF3TX1MIX_INPUT_1_SOURCE:
 +	case MADERA_AIF3TX1MIX_INPUT_1_VOLUME:
 +	case MADERA_AIF3TX1MIX_INPUT_2_SOURCE:
@@ -1630,118 +1147,6 @@ index 0000000000000..3dc1fefe68f59
 +	case MADERA_AIF3TX2MIX_INPUT_3_VOLUME:
 +	case MADERA_AIF3TX2MIX_INPUT_4_SOURCE:
 +	case MADERA_AIF3TX2MIX_INPUT_4_VOLUME:
-+	case MADERA_AIF3TX3MIX_INPUT_1_SOURCE:
-+	case MADERA_AIF3TX3MIX_INPUT_1_VOLUME:
-+	case MADERA_AIF3TX3MIX_INPUT_2_SOURCE:
-+	case MADERA_AIF3TX3MIX_INPUT_2_VOLUME:
-+	case MADERA_AIF3TX3MIX_INPUT_3_SOURCE:
-+	case MADERA_AIF3TX3MIX_INPUT_3_VOLUME:
-+	case MADERA_AIF3TX3MIX_INPUT_4_SOURCE:
-+	case MADERA_AIF3TX3MIX_INPUT_4_VOLUME:
-+	case MADERA_AIF3TX4MIX_INPUT_1_SOURCE:
-+	case MADERA_AIF3TX4MIX_INPUT_1_VOLUME:
-+	case MADERA_AIF3TX4MIX_INPUT_2_SOURCE:
-+	case MADERA_AIF3TX4MIX_INPUT_2_VOLUME:
-+	case MADERA_AIF3TX4MIX_INPUT_3_SOURCE:
-+	case MADERA_AIF3TX4MIX_INPUT_3_VOLUME:
-+	case MADERA_AIF3TX4MIX_INPUT_4_SOURCE:
-+	case MADERA_AIF3TX4MIX_INPUT_4_VOLUME:
-+	case CS47L92_AIF3TX5MIX_INPUT_1_SOURCE:
-+	case CS47L92_AIF3TX5MIX_INPUT_1_VOLUME:
-+	case CS47L92_AIF3TX5MIX_INPUT_2_SOURCE:
-+	case CS47L92_AIF3TX5MIX_INPUT_2_VOLUME:
-+	case CS47L92_AIF3TX5MIX_INPUT_3_SOURCE:
-+	case CS47L92_AIF3TX5MIX_INPUT_3_VOLUME:
-+	case CS47L92_AIF3TX5MIX_INPUT_4_SOURCE:
-+	case CS47L92_AIF3TX5MIX_INPUT_4_VOLUME:
-+	case CS47L92_AIF3TX6MIX_INPUT_1_SOURCE:
-+	case CS47L92_AIF3TX6MIX_INPUT_1_VOLUME:
-+	case CS47L92_AIF3TX6MIX_INPUT_2_SOURCE:
-+	case CS47L92_AIF3TX6MIX_INPUT_2_VOLUME:
-+	case CS47L92_AIF3TX6MIX_INPUT_3_SOURCE:
-+	case CS47L92_AIF3TX6MIX_INPUT_3_VOLUME:
-+	case CS47L92_AIF3TX6MIX_INPUT_4_SOURCE:
-+	case CS47L92_AIF3TX6MIX_INPUT_4_VOLUME:
-+	case CS47L92_AIF3TX7MIX_INPUT_1_SOURCE:
-+	case CS47L92_AIF3TX7MIX_INPUT_1_VOLUME:
-+	case CS47L92_AIF3TX7MIX_INPUT_2_SOURCE:
-+	case CS47L92_AIF3TX7MIX_INPUT_2_VOLUME:
-+	case CS47L92_AIF3TX7MIX_INPUT_3_SOURCE:
-+	case CS47L92_AIF3TX7MIX_INPUT_3_VOLUME:
-+	case CS47L92_AIF3TX7MIX_INPUT_4_SOURCE:
-+	case CS47L92_AIF3TX7MIX_INPUT_4_VOLUME:
-+	case CS47L92_AIF3TX8MIX_INPUT_1_SOURCE:
-+	case CS47L92_AIF3TX8MIX_INPUT_1_VOLUME:
-+	case CS47L92_AIF3TX8MIX_INPUT_2_SOURCE:
-+	case CS47L92_AIF3TX8MIX_INPUT_2_VOLUME:
-+	case CS47L92_AIF3TX8MIX_INPUT_3_SOURCE:
-+	case CS47L92_AIF3TX8MIX_INPUT_3_VOLUME:
-+	case CS47L92_AIF3TX8MIX_INPUT_4_SOURCE:
-+	case CS47L92_AIF3TX8MIX_INPUT_4_VOLUME:
-+	case MADERA_SLIMTX1MIX_INPUT_1_SOURCE:
-+	case MADERA_SLIMTX1MIX_INPUT_1_VOLUME:
-+	case MADERA_SLIMTX1MIX_INPUT_2_SOURCE:
-+	case MADERA_SLIMTX1MIX_INPUT_2_VOLUME:
-+	case MADERA_SLIMTX1MIX_INPUT_3_SOURCE:
-+	case MADERA_SLIMTX1MIX_INPUT_3_VOLUME:
-+	case MADERA_SLIMTX1MIX_INPUT_4_SOURCE:
-+	case MADERA_SLIMTX1MIX_INPUT_4_VOLUME:
-+	case MADERA_SLIMTX2MIX_INPUT_1_SOURCE:
-+	case MADERA_SLIMTX2MIX_INPUT_1_VOLUME:
-+	case MADERA_SLIMTX2MIX_INPUT_2_SOURCE:
-+	case MADERA_SLIMTX2MIX_INPUT_2_VOLUME:
-+	case MADERA_SLIMTX2MIX_INPUT_3_SOURCE:
-+	case MADERA_SLIMTX2MIX_INPUT_3_VOLUME:
-+	case MADERA_SLIMTX2MIX_INPUT_4_SOURCE:
-+	case MADERA_SLIMTX2MIX_INPUT_4_VOLUME:
-+	case MADERA_SLIMTX3MIX_INPUT_1_SOURCE:
-+	case MADERA_SLIMTX3MIX_INPUT_1_VOLUME:
-+	case MADERA_SLIMTX3MIX_INPUT_2_SOURCE:
-+	case MADERA_SLIMTX3MIX_INPUT_2_VOLUME:
-+	case MADERA_SLIMTX3MIX_INPUT_3_SOURCE:
-+	case MADERA_SLIMTX3MIX_INPUT_3_VOLUME:
-+	case MADERA_SLIMTX3MIX_INPUT_4_SOURCE:
-+	case MADERA_SLIMTX3MIX_INPUT_4_VOLUME:
-+	case MADERA_SLIMTX4MIX_INPUT_1_SOURCE:
-+	case MADERA_SLIMTX4MIX_INPUT_1_VOLUME:
-+	case MADERA_SLIMTX4MIX_INPUT_2_SOURCE:
-+	case MADERA_SLIMTX4MIX_INPUT_2_VOLUME:
-+	case MADERA_SLIMTX4MIX_INPUT_3_SOURCE:
-+	case MADERA_SLIMTX4MIX_INPUT_3_VOLUME:
-+	case MADERA_SLIMTX4MIX_INPUT_4_SOURCE:
-+	case MADERA_SLIMTX4MIX_INPUT_4_VOLUME:
-+	case MADERA_SLIMTX5MIX_INPUT_1_SOURCE:
-+	case MADERA_SLIMTX5MIX_INPUT_1_VOLUME:
-+	case MADERA_SLIMTX5MIX_INPUT_2_SOURCE:
-+	case MADERA_SLIMTX5MIX_INPUT_2_VOLUME:
-+	case MADERA_SLIMTX5MIX_INPUT_3_SOURCE:
-+	case MADERA_SLIMTX5MIX_INPUT_3_VOLUME:
-+	case MADERA_SLIMTX5MIX_INPUT_4_SOURCE:
-+	case MADERA_SLIMTX5MIX_INPUT_4_VOLUME:
-+	case MADERA_SLIMTX6MIX_INPUT_1_SOURCE:
-+	case MADERA_SLIMTX6MIX_INPUT_1_VOLUME:
-+	case MADERA_SLIMTX6MIX_INPUT_2_SOURCE:
-+	case MADERA_SLIMTX6MIX_INPUT_2_VOLUME:
-+	case MADERA_SLIMTX6MIX_INPUT_3_SOURCE:
-+	case MADERA_SLIMTX6MIX_INPUT_3_VOLUME:
-+	case MADERA_SLIMTX6MIX_INPUT_4_SOURCE:
-+	case MADERA_SLIMTX6MIX_INPUT_4_VOLUME:
-+	case MADERA_SLIMTX7MIX_INPUT_1_SOURCE:
-+	case MADERA_SLIMTX7MIX_INPUT_1_VOLUME:
-+	case MADERA_SLIMTX7MIX_INPUT_2_SOURCE:
-+	case MADERA_SLIMTX7MIX_INPUT_2_VOLUME:
-+	case MADERA_SLIMTX7MIX_INPUT_3_SOURCE:
-+	case MADERA_SLIMTX7MIX_INPUT_3_VOLUME:
-+	case MADERA_SLIMTX7MIX_INPUT_4_SOURCE:
-+	case MADERA_SLIMTX7MIX_INPUT_4_VOLUME:
-+	case MADERA_SLIMTX8MIX_INPUT_1_SOURCE:
-+	case MADERA_SLIMTX8MIX_INPUT_1_VOLUME:
-+	case MADERA_SLIMTX8MIX_INPUT_2_SOURCE:
-+	case MADERA_SLIMTX8MIX_INPUT_2_VOLUME:
-+	case MADERA_SLIMTX8MIX_INPUT_3_SOURCE:
-+	case MADERA_SLIMTX8MIX_INPUT_3_VOLUME:
-+	case MADERA_SLIMTX8MIX_INPUT_4_SOURCE:
-+	case MADERA_SLIMTX8MIX_INPUT_4_VOLUME:
 +	case MADERA_SPDIF1TX1MIX_INPUT_1_SOURCE:
 +	case MADERA_SPDIF1TX1MIX_INPUT_1_VOLUME:
 +	case MADERA_SPDIF1TX2MIX_INPUT_1_SOURCE:
@@ -1864,26 +1269,22 @@ index 0000000000000..3dc1fefe68f59
 +	case MADERA_DSP1AUX4MIX_INPUT_1_SOURCE:
 +	case MADERA_DSP1AUX5MIX_INPUT_1_SOURCE:
 +	case MADERA_DSP1AUX6MIX_INPUT_1_SOURCE:
-+	case MADERA_ASRC1_1LMIX_INPUT_1_SOURCE:
-+	case MADERA_ASRC1_1RMIX_INPUT_1_SOURCE:
-+	case MADERA_ASRC1_2LMIX_INPUT_1_SOURCE:
-+	case MADERA_ASRC1_2RMIX_INPUT_1_SOURCE:
 +	case MADERA_ISRC1DEC1MIX_INPUT_1_SOURCE:
 +	case MADERA_ISRC1DEC2MIX_INPUT_1_SOURCE:
++	case MADERA_ISRC1DEC3MIX_INPUT_1_SOURCE:
++	case MADERA_ISRC1DEC4MIX_INPUT_1_SOURCE:
 +	case MADERA_ISRC1INT1MIX_INPUT_1_SOURCE:
 +	case MADERA_ISRC1INT2MIX_INPUT_1_SOURCE:
++	case MADERA_ISRC1INT3MIX_INPUT_1_SOURCE:
++	case MADERA_ISRC1INT4MIX_INPUT_1_SOURCE:
 +	case MADERA_ISRC2DEC1MIX_INPUT_1_SOURCE:
 +	case MADERA_ISRC2DEC2MIX_INPUT_1_SOURCE:
++	case MADERA_ISRC2DEC3MIX_INPUT_1_SOURCE:
++	case MADERA_ISRC2DEC4MIX_INPUT_1_SOURCE:
 +	case MADERA_ISRC2INT1MIX_INPUT_1_SOURCE:
 +	case MADERA_ISRC2INT2MIX_INPUT_1_SOURCE:
-+	case MADERA_DFC1MIX_INPUT_1_SOURCE:
-+	case MADERA_DFC2MIX_INPUT_1_SOURCE:
-+	case MADERA_DFC3MIX_INPUT_1_SOURCE:
-+	case MADERA_DFC4MIX_INPUT_1_SOURCE:
-+	case MADERA_DFC5MIX_INPUT_1_SOURCE:
-+	case MADERA_DFC6MIX_INPUT_1_SOURCE:
-+	case MADERA_DFC7MIX_INPUT_1_SOURCE:
-+	case MADERA_DFC8MIX_INPUT_1_SOURCE:
++	case MADERA_ISRC2INT3MIX_INPUT_1_SOURCE:
++	case MADERA_ISRC2INT4MIX_INPUT_1_SOURCE:
 +	case MADERA_FX_CTRL1 ... MADERA_FX_CTRL2:
 +	case MADERA_EQ1_1 ... MADERA_EQ1_21:
 +	case MADERA_EQ2_1 ... MADERA_EQ2_21:
@@ -1895,38 +1296,9 @@ index 0000000000000..3dc1fefe68f59
 +	case MADERA_HPLPF2_1 ... MADERA_HPLPF2_2:
 +	case MADERA_HPLPF3_1 ... MADERA_HPLPF3_2:
 +	case MADERA_HPLPF4_1 ... MADERA_HPLPF4_2:
-+	case MADERA_ASRC1_ENABLE:
-+	case MADERA_ASRC1_STATUS:
-+	case MADERA_ASRC1_RATE1 ... MADERA_ASRC1_RATE2:
 +	case MADERA_ISRC_1_CTRL_1 ... MADERA_ISRC_1_CTRL_3:
 +	case MADERA_ISRC_2_CTRL_1 ... MADERA_ISRC_2_CTRL_3:
-+	case MADERA_AUXPDM1_CTRL_0 ... MADERA_AUXPDM1_CTRL_1:
-+	case MADERA_DFC1_CTRL:
-+	case MADERA_DFC1_RX:
-+	case MADERA_DFC1_TX:
-+	case MADERA_DFC2_CTRL:
-+	case MADERA_DFC2_RX:
-+	case MADERA_DFC2_TX:
-+	case MADERA_DFC3_CTRL:
-+	case MADERA_DFC3_RX:
-+	case MADERA_DFC3_TX:
-+	case MADERA_DFC4_CTRL:
-+	case MADERA_DFC4_RX:
-+	case MADERA_DFC4_TX:
-+	case MADERA_DFC5_CTRL:
-+	case MADERA_DFC5_RX:
-+	case MADERA_DFC5_TX:
-+	case MADERA_DFC6_CTRL:
-+	case MADERA_DFC6_RX:
-+	case MADERA_DFC6_TX:
-+	case MADERA_DFC7_CTRL:
-+	case MADERA_DFC7_RX:
-+	case MADERA_DFC7_TX:
-+	case MADERA_DFC8_CTRL:
-+	case MADERA_DFC8_RX:
-+	case MADERA_DFC8_TX:
-+	case MADERA_DFC_STATUS:
-+	case MADERA_GPIO1_CTRL_1 ... MADERA_GPIO16_CTRL_2:
++	case MADERA_GPIO1_CTRL_1 ... MADERA_GPIO15_CTRL_2:
 +	case MADERA_IRQ1_STATUS_1 ... MADERA_IRQ1_STATUS_33:
 +	case MADERA_IRQ1_MASK_1 ... MADERA_IRQ1_MASK_33:
 +	case MADERA_IRQ1_RAW_STATUS_1 ... MADERA_IRQ1_RAW_STATUS_33:
@@ -1938,7 +1310,7 @@ index 0000000000000..3dc1fefe68f59
 +	}
 +}
 +
-+static bool cs47l92_16bit_volatile_register(struct device *dev,
++static bool cs47l15_16bit_volatile_register(struct device *dev,
 +					    unsigned int reg)
 +{
 +	switch (reg) {
@@ -1949,18 +1321,10 @@ index 0000000000000..3dc1fefe68f59
 +	case MADERA_SAMPLE_RATE_1_STATUS:
 +	case MADERA_SAMPLE_RATE_2_STATUS:
 +	case MADERA_SAMPLE_RATE_3_STATUS:
-+	case MADERA_ASYNC_SAMPLE_RATE_1_STATUS:
-+	case MADERA_ASYNC_SAMPLE_RATE_2_STATUS:
 +	case MADERA_HP_CTRL_1L:
 +	case MADERA_HP_CTRL_1R:
-+	case MADERA_HP_CTRL_2L:
-+	case MADERA_HP_CTRL_2R:
-+	case MADERA_HP_CTRL_3L:
-+	case MADERA_HP_CTRL_3R:
 +	case MADERA_MIC_DETECT_1_CONTROL_3:
 +	case MADERA_MIC_DETECT_1_CONTROL_4:
-+	case MADERA_MIC_DETECT_2_CONTROL_3:
-+	case MADERA_MIC_DETECT_2_CONTROL_4:
 +	case MADERA_HEADPHONE_DETECT_2:
 +	case MADERA_HEADPHONE_DETECT_3:
 +	case MADERA_HEADPHONE_DETECT_5:
@@ -1970,11 +1334,7 @@ index 0000000000000..3dc1fefe68f59
 +	case MADERA_SPD1_TX_CHANNEL_STATUS_1:
 +	case MADERA_SPD1_TX_CHANNEL_STATUS_2:
 +	case MADERA_SPD1_TX_CHANNEL_STATUS_3:
-+	case MADERA_SLIMBUS_RX_PORT_STATUS:
-+	case MADERA_SLIMBUS_TX_PORT_STATUS:
 +	case MADERA_FX_CTRL2:
-+	case MADERA_ASRC1_STATUS:
-+	case MADERA_DFC_STATUS:
 +	case MADERA_IRQ1_STATUS_1 ... MADERA_IRQ1_STATUS_33:
 +	case MADERA_IRQ1_RAW_STATUS_1 ... MADERA_IRQ1_RAW_STATUS_33:
 +		return true;
@@ -1983,627 +1343,303 @@ index 0000000000000..3dc1fefe68f59
 +	}
 +}
 +
-+static bool cs47l92_32bit_readable_register(struct device *dev,
++static bool cs47l15_32bit_readable_register(struct device *dev,
 +					    unsigned int reg)
 +{
 +	switch (reg) {
-+	case MADERA_WSEQ_SEQUENCE_1 ... MADERA_WSEQ_SEQUENCE_508:
++	case MADERA_WSEQ_SEQUENCE_1 ... MADERA_WSEQ_SEQUENCE_225:
 +	case MADERA_OTP_HPDET_CAL_1 ... MADERA_OTP_HPDET_CAL_2:
 +	case MADERA_DSP1_CONFIG_1 ... MADERA_DSP1_PMEM_ERR_ADDR___XMEM_ERR_ADDR:
 +		return true;
 +	default:
-+		return cs47l92_is_adsp_memory(reg);
++		return cs47l15_is_adsp_memory(dev, reg);
 +	}
 +}
 +
-+static bool cs47l92_32bit_volatile_register(struct device *dev,
++static bool cs47l15_32bit_volatile_register(struct device *dev,
 +					    unsigned int reg)
 +{
 +	switch (reg) {
-+	case MADERA_WSEQ_SEQUENCE_1 ... MADERA_WSEQ_SEQUENCE_508:
++	case MADERA_WSEQ_SEQUENCE_1 ... MADERA_WSEQ_SEQUENCE_225:
 +	case MADERA_OTP_HPDET_CAL_1 ... MADERA_OTP_HPDET_CAL_2:
 +	case MADERA_DSP1_CONFIG_1 ... MADERA_DSP1_PMEM_ERR_ADDR___XMEM_ERR_ADDR:
 +		return true;
 +	default:
-+		return cs47l92_is_adsp_memory(reg);
++		return cs47l15_is_adsp_memory(dev, reg);
 +	}
 +}
 +
-+const struct regmap_config cs47l92_16bit_spi_regmap = {
-+	.name = "cs47l92_16bit",
++const struct regmap_config cs47l15_16bit_spi_regmap = {
++	.name = "cs47l15_16bit",
 +	.reg_bits = 32,
 +	.pad_bits = 16,
 +	.val_bits = 16,
-+	.reg_format_endian = REGMAP_ENDIAN_BIG,
-+	.val_format_endian = REGMAP_ENDIAN_BIG,
 +
 +	.max_register = MADERA_INTERRUPT_RAW_STATUS_1,
-+	.readable_reg = &cs47l92_16bit_readable_register,
-+	.volatile_reg = &cs47l92_16bit_volatile_register,
++	.readable_reg = &cs47l15_16bit_readable_register,
++	.volatile_reg = &cs47l15_16bit_volatile_register,
 +
 +	.cache_type = REGCACHE_RBTREE,
-+	.reg_defaults = cs47l92_reg_default,
-+	.num_reg_defaults = ARRAY_SIZE(cs47l92_reg_default),
++	.reg_defaults = cs47l15_reg_default,
++	.num_reg_defaults = ARRAY_SIZE(cs47l15_reg_default),
 +};
-+EXPORT_SYMBOL_GPL(cs47l92_16bit_spi_regmap);
++EXPORT_SYMBOL_GPL(cs47l15_16bit_spi_regmap);
 +
-+const struct regmap_config cs47l92_16bit_i2c_regmap = {
-+	.name = "cs47l92_16bit",
++const struct regmap_config cs47l15_16bit_i2c_regmap = {
++	.name = "cs47l15_16bit",
 +	.reg_bits = 32,
 +	.val_bits = 16,
-+	.reg_format_endian = REGMAP_ENDIAN_BIG,
-+	.val_format_endian = REGMAP_ENDIAN_BIG,
 +
 +	.max_register = MADERA_INTERRUPT_RAW_STATUS_1,
-+	.readable_reg = &cs47l92_16bit_readable_register,
-+	.volatile_reg = &cs47l92_16bit_volatile_register,
++	.readable_reg = &cs47l15_16bit_readable_register,
++	.volatile_reg = &cs47l15_16bit_volatile_register,
 +
 +	.cache_type = REGCACHE_RBTREE,
-+	.reg_defaults = cs47l92_reg_default,
-+	.num_reg_defaults = ARRAY_SIZE(cs47l92_reg_default),
++	.reg_defaults = cs47l15_reg_default,
++	.num_reg_defaults = ARRAY_SIZE(cs47l15_reg_default),
 +};
-+EXPORT_SYMBOL_GPL(cs47l92_16bit_i2c_regmap);
++EXPORT_SYMBOL_GPL(cs47l15_16bit_i2c_regmap);
 +
-+const struct regmap_config cs47l92_32bit_spi_regmap = {
-+	.name = "cs47l92_32bit",
++const struct regmap_config cs47l15_32bit_spi_regmap = {
++	.name = "cs47l15_32bit",
 +	.reg_bits = 32,
 +	.reg_stride = 2,
 +	.pad_bits = 16,
 +	.val_bits = 32,
-+	.reg_format_endian = REGMAP_ENDIAN_BIG,
-+	.val_format_endian = REGMAP_ENDIAN_BIG,
 +
 +	.max_register = MADERA_DSP1_PMEM_ERR_ADDR___XMEM_ERR_ADDR,
-+	.readable_reg = &cs47l92_32bit_readable_register,
-+	.volatile_reg = &cs47l92_32bit_volatile_register,
++	.readable_reg = &cs47l15_32bit_readable_register,
++	.volatile_reg = &cs47l15_32bit_volatile_register,
 +
 +	.cache_type = REGCACHE_RBTREE,
 +};
-+EXPORT_SYMBOL_GPL(cs47l92_32bit_spi_regmap);
++EXPORT_SYMBOL_GPL(cs47l15_32bit_spi_regmap);
 +
-+const struct regmap_config cs47l92_32bit_i2c_regmap = {
-+	.name = "cs47l92_32bit",
++const struct regmap_config cs47l15_32bit_i2c_regmap = {
++	.name = "cs47l15_32bit",
 +	.reg_bits = 32,
 +	.reg_stride = 2,
 +	.val_bits = 32,
-+	.reg_format_endian = REGMAP_ENDIAN_BIG,
-+	.val_format_endian = REGMAP_ENDIAN_BIG,
 +
 +	.max_register = MADERA_DSP1_PMEM_ERR_ADDR___XMEM_ERR_ADDR,
-+	.readable_reg = &cs47l92_32bit_readable_register,
-+	.volatile_reg = &cs47l92_32bit_volatile_register,
++	.readable_reg = &cs47l15_32bit_readable_register,
++	.volatile_reg = &cs47l15_32bit_volatile_register,
 +
 +	.cache_type = REGCACHE_RBTREE,
 +};
-+EXPORT_SYMBOL_GPL(cs47l92_32bit_i2c_regmap);
++EXPORT_SYMBOL_GPL(cs47l15_32bit_i2c_regmap);
 diff --git a/drivers/mfd/madera-core.c b/drivers/mfd/madera-core.c
-index 7f72a833ba65a..07c3208a180df 100644
+index 2a77988d04625..7f72a833ba65a 100644
 --- a/drivers/mfd/madera-core.c
 +++ b/drivers/mfd/madera-core.c
-@@ -35,6 +35,7 @@
+@@ -31,6 +31,7 @@
+ 
+ #include "madera.h"
+ 
++#define CS47L15_SILICON_ID	0x6370
  #define CS47L35_SILICON_ID	0x6360
  #define CS47L85_SILICON_ID	0x6338
  #define CS47L90_SILICON_ID	0x6364
-+#define CS47L92_SILICON_ID	0x6371
- 
- #define MADERA_32KZ_MCLK2	1
- 
-@@ -136,6 +137,29 @@ static const struct mfd_cell cs47l90_devs[] = {
- 	},
+@@ -46,6 +47,28 @@ static const struct mfd_cell madera_ldo1_devs[] = {
+ 	{ .name = "madera-ldo1" },
  };
  
-+static const char * const cs47l92_supplies[] = {
++static const char * const cs47l15_supplies[] = {
 +	"MICVDD",
 +	"CPVDD1",
-+	"CPVDD2",
++	"SPKVDD",
 +};
 +
-+static const struct mfd_cell cs47l92_devs[] = {
-+	{ .name = "madera-pinctrl" },
-+	{ .name = "madera-irq", },
-+	{ .name = "madera-micsupp", },
++static const struct mfd_cell cs47l15_devs[] = {
++	{ .name = "madera-pinctrl", },
++	{ .name = "madera-irq" },
 +	{ .name = "madera-gpio" },
 +	{
 +		.name = "madera-extcon",
-+		.parent_supplies = cs47l92_supplies,
++		.parent_supplies = cs47l15_supplies,
 +		.num_parent_supplies = 1, /* We only need MICVDD */
 +	},
 +	{
-+		.name = "cs47l92-codec",
-+		.parent_supplies = cs47l92_supplies,
-+		.num_parent_supplies = ARRAY_SIZE(cs47l92_supplies),
++		.name = "cs47l15-codec",
++		.parent_supplies = cs47l15_supplies,
++		.num_parent_supplies = ARRAY_SIZE(cs47l15_supplies),
 +	},
 +};
 +
- /* Used by madera-i2c and madera-spi drivers */
+ static const char * const cs47l35_supplies[] = {
+ 	"MICVDD",
+ 	"DBVDD2",
+@@ -117,6 +140,8 @@ static const struct mfd_cell cs47l90_devs[] = {
  const char *madera_name_from_type(enum madera_type type)
  {
-@@ -150,6 +174,12 @@ const char *madera_name_from_type(enum madera_type type)
- 		return "CS47L90";
- 	case CS47L91:
- 		return "CS47L91";
-+	case CS42L92:
-+		return "CS42L92";
-+	case CS47L92:
-+		return "CS47L92";
-+	case CS47L93:
-+		return "CS47L93";
- 	case WM1840:
- 		return "WM1840";
- 	default:
-@@ -309,6 +339,9 @@ const struct of_device_id madera_of_match[] = {
+ 	switch (type) {
++	case CS47L15:
++		return "CS47L15";
+ 	case CS47L35:
+ 		return "CS47L35";
+ 	case CS47L85:
+@@ -279,6 +304,7 @@ const struct dev_pm_ops madera_pm_ops = {
+ EXPORT_SYMBOL_GPL(madera_pm_ops);
+ 
+ const struct of_device_id madera_of_match[] = {
++	{ .compatible = "cirrus,cs47l15", .data = (void *)CS47L15 },
+ 	{ .compatible = "cirrus,cs47l35", .data = (void *)CS47L35 },
  	{ .compatible = "cirrus,cs47l85", .data = (void *)CS47L85 },
  	{ .compatible = "cirrus,cs47l90", .data = (void *)CS47L90 },
- 	{ .compatible = "cirrus,cs47l91", .data = (void *)CS47L91 },
-+	{ .compatible = "cirrus,cs42l92", .data = (void *)CS42L92 },
-+	{ .compatible = "cirrus,cs47l92", .data = (void *)CS47L92 },
-+	{ .compatible = "cirrus,cs47l93", .data = (void *)CS47L93 },
- 	{ .compatible = "cirrus,wm1840", .data = (void *)WM1840 },
- 	{}
- };
-@@ -372,6 +405,13 @@ static void madera_set_micbias_info(struct madera *madera)
- 		madera->num_childbias[0] = 4;
- 		madera->num_childbias[1] = 4;
- 		return;
-+	case CS42L92:
-+	case CS47L92:
-+	case CS47L93:
-+		madera->num_micbias = 2;
-+		madera->num_childbias[0] = 4;
-+		madera->num_childbias[1] = 2;
+@@ -326,6 +352,10 @@ static void madera_set_micbias_info(struct madera *madera)
+ 	 * childbiases for each micbias. Unspecified values default to 0.
+ 	 */
+ 	switch (madera->type) {
++	case CS47L15:
++		madera->num_micbias = 1;
++		madera->num_childbias[0] = 3;
 +		return;
- 	default:
- 		return;
- 	}
-@@ -423,6 +463,9 @@ int madera_dev_init(struct madera *madera)
+ 	case CS47L35:
+ 		madera->num_micbias = 2;
+ 		madera->num_childbias[0] = 2;
+@@ -389,6 +419,7 @@ int madera_dev_init(struct madera *madera)
+ 	 * No devm_ because we need to control shutdown order of children.
+ 	 */
+ 	switch (madera->type) {
++	case CS47L15:
  	case CS47L35:
  	case CS47L90:
  	case CS47L91:
-+	case CS42L92:
-+	case CS47L92:
-+	case CS47L93:
- 		break;
- 	case CS47L85:
- 	case WM1840:
-@@ -543,6 +586,21 @@ int madera_dev_init(struct madera *madera)
- 			}
- 		}
- 		break;
-+	case CS47L92_SILICON_ID:
-+		if (IS_ENABLED(CONFIG_MFD_CS47L92)) {
+@@ -458,6 +489,19 @@ int madera_dev_init(struct madera *madera)
+ 	}
+ 
+ 	switch (hwid) {
++	case CS47L15_SILICON_ID:
++		if (IS_ENABLED(CONFIG_MFD_CS47L15)) {
 +			switch (madera->type) {
-+			case CS42L92:
-+			case CS47L92:
-+			case CS47L93:
-+				patch_fn = cs47l92_patch;
-+				mfd_devs = cs47l92_devs;
-+				n_devs = ARRAY_SIZE(cs47l92_devs);
++			case CS47L15:
++				patch_fn = &cs47l15_patch;
++				mfd_devs = cs47l15_devs;
++				n_devs = ARRAY_SIZE(cs47l15_devs);
 +				break;
 +			default:
 +				break;
 +			}
 +		}
 +		break;
- 	default:
- 		dev_err(madera->dev, "Unknown device ID: %x\n", hwid);
- 		ret = -EINVAL;
+ 	case CS47L35_SILICON_ID:
+ 		if (IS_ENABLED(CONFIG_MFD_CS47L35)) {
+ 			switch (madera->type) {
 diff --git a/drivers/mfd/madera-i2c.c b/drivers/mfd/madera-i2c.c
-index bd868459cedbd..3f4ab5dcf5c3d 100644
+index 05ae94be01d8a..bd868459cedbd 100644
 --- a/drivers/mfd/madera-i2c.c
 +++ b/drivers/mfd/madera-i2c.c
-@@ -65,6 +65,14 @@ static int madera_i2c_probe(struct i2c_client *i2c,
- 			regmap_32bit_config = &cs47l90_32bit_i2c_regmap;
- 		}
- 		break;
-+	case CS42L92:
-+	case CS47L92:
-+	case CS47L93:
-+		if (IS_ENABLED(CONFIG_MFD_CS47L92)) {
-+			regmap_16bit_config = &cs47l92_16bit_i2c_regmap;
-+			regmap_32bit_config = &cs47l92_32bit_i2c_regmap;
+@@ -39,6 +39,12 @@ static int madera_i2c_probe(struct i2c_client *i2c,
+ 		type = id->driver_data;
+ 
+ 	switch (type) {
++	case CS47L15:
++		if (IS_ENABLED(CONFIG_MFD_CS47L15)) {
++			regmap_16bit_config = &cs47l15_16bit_i2c_regmap;
++			regmap_32bit_config = &cs47l15_32bit_i2c_regmap;
 +		}
 +		break;
- 	default:
- 		dev_err(&i2c->dev,
- 			"Unknown Madera I2C device type %ld\n", type);
-@@ -124,6 +132,9 @@ static const struct i2c_device_id madera_i2c_id[] = {
+ 	case CS47L35:
+ 		if (IS_ENABLED(CONFIG_MFD_CS47L35)) {
+ 			regmap_16bit_config = &cs47l35_16bit_i2c_regmap;
+@@ -113,6 +119,7 @@ static int madera_i2c_remove(struct i2c_client *i2c)
+ }
+ 
+ static const struct i2c_device_id madera_i2c_id[] = {
++	{ "cs47l15", CS47L15 },
+ 	{ "cs47l35", CS47L35 },
  	{ "cs47l85", CS47L85 },
  	{ "cs47l90", CS47L90 },
- 	{ "cs47l91", CS47L91 },
-+	{ "cs42l92", CS42L92 },
-+	{ "cs47l92", CS47L92 },
-+	{ "cs47l93", CS47L93 },
- 	{ "wm1840", WM1840 },
- 	{ }
- };
 diff --git a/drivers/mfd/madera-spi.c b/drivers/mfd/madera-spi.c
-index a36741b73c252..d76c7e7376d7c 100644
+index 4c398b278bba7..a36741b73c252 100644
 --- a/drivers/mfd/madera-spi.c
 +++ b/drivers/mfd/madera-spi.c
-@@ -65,6 +65,14 @@ static int madera_spi_probe(struct spi_device *spi)
- 			regmap_32bit_config = &cs47l90_32bit_spi_regmap;
- 		}
- 		break;
-+	case CS42L92:
-+	case CS47L92:
-+	case CS47L93:
-+		if (IS_ENABLED(CONFIG_MFD_CS47L92)) {
-+			regmap_16bit_config = &cs47l92_16bit_spi_regmap;
-+			regmap_32bit_config = &cs47l92_32bit_spi_regmap;
+@@ -39,6 +39,12 @@ static int madera_spi_probe(struct spi_device *spi)
+ 		type = id->driver_data;
+ 
+ 	switch (type) {
++	case CS47L15:
++		if (IS_ENABLED(CONFIG_MFD_CS47L15)) {
++			regmap_16bit_config = &cs47l15_16bit_spi_regmap;
++			regmap_32bit_config = &cs47l15_32bit_spi_regmap;
 +		}
 +		break;
- 	default:
- 		dev_err(&spi->dev,
- 			"Unknown Madera SPI device type %ld\n", type);
-@@ -123,6 +131,9 @@ static const struct spi_device_id madera_spi_ids[] = {
+ 	case CS47L35:
+ 		if (IS_ENABLED(CONFIG_MFD_CS47L35)) {
+ 			regmap_16bit_config = &cs47l35_16bit_spi_regmap;
+@@ -112,6 +118,7 @@ static int madera_spi_remove(struct spi_device *spi)
+ }
+ 
+ static const struct spi_device_id madera_spi_ids[] = {
++	{ "cs47l15", CS47L15 },
+ 	{ "cs47l35", CS47L35 },
  	{ "cs47l85", CS47L85 },
  	{ "cs47l90", CS47L90 },
- 	{ "cs47l91", CS47L91 },
-+	{ "cs42l92", CS42L92 },
-+	{ "cs47l92", CS47L92 },
-+	{ "cs47l93", CS47L93 },
- 	{ "wm1840", WM1840 },
- 	{ }
- };
 diff --git a/drivers/mfd/madera.h b/drivers/mfd/madera.h
-index ccc16f2a12886..69a40aba7e69f 100644
+index 891b84efb9a73..ccc16f2a12886 100644
 --- a/drivers/mfd/madera.h
 +++ b/drivers/mfd/madera.h
-@@ -47,4 +47,11 @@ extern const struct regmap_config cs47l90_32bit_spi_regmap;
- extern const struct regmap_config cs47l90_16bit_i2c_regmap;
- extern const struct regmap_config cs47l90_32bit_i2c_regmap;
- int cs47l90_patch(struct madera *madera);
+@@ -24,6 +24,12 @@ int madera_dev_exit(struct madera *madera);
+ 
+ const char *madera_name_from_type(enum madera_type type);
+ 
++extern const struct regmap_config cs47l15_16bit_spi_regmap;
++extern const struct regmap_config cs47l15_32bit_spi_regmap;
++extern const struct regmap_config cs47l15_16bit_i2c_regmap;
++extern const struct regmap_config cs47l15_32bit_i2c_regmap;
++int cs47l15_patch(struct madera *madera);
 +
-+extern const struct regmap_config cs47l92_16bit_spi_regmap;
-+extern const struct regmap_config cs47l92_32bit_spi_regmap;
-+extern const struct regmap_config cs47l92_16bit_i2c_regmap;
-+extern const struct regmap_config cs47l92_32bit_i2c_regmap;
-+int cs47l92_patch(struct madera *madera);
-+
- #endif
+ extern const struct regmap_config cs47l35_16bit_spi_regmap;
+ extern const struct regmap_config cs47l35_32bit_spi_regmap;
+ extern const struct regmap_config cs47l35_16bit_i2c_regmap;
 diff --git a/include/linux/mfd/madera/core.h b/include/linux/mfd/madera/core.h
-index 98dd3cb5e84de..7b87f9a02ecc2 100644
+index 4d5d51a9c8a68..98dd3cb5e84de 100644
 --- a/include/linux/mfd/madera/core.h
 +++ b/include/linux/mfd/madera/core.h
-@@ -26,8 +26,11 @@ enum madera_type {
- 	CS47L85 = 2,
+@@ -27,11 +27,13 @@ enum madera_type {
  	CS47L90 = 3,
  	CS47L91 = 4,
-+	CS47L92 = 5,
-+	CS47L93 = 6,
  	WM1840 = 7,
- 	CS47L15 = 8,
-+	CS42L92 = 9,
++	CS47L15 = 8,
  };
  
  #define MADERA_MAX_CORE_SUPPLIES	2
-@@ -37,6 +40,7 @@ enum madera_type {
+ #define MADERA_MAX_GPIOS		40
+ 
++#define CS47L15_NUM_GPIOS		15
  #define CS47L35_NUM_GPIOS		16
  #define CS47L85_NUM_GPIOS		40
  #define CS47L90_NUM_GPIOS		38
-+#define CS47L92_NUM_GPIOS		16
- 
- #define MADERA_MAX_MICBIAS		4
- 
 diff --git a/include/linux/mfd/madera/registers.h b/include/linux/mfd/madera/registers.h
-index 5b054d511c6a5..6439c0282ac68 100644
+index 977e061017117..5b054d511c6a5 100644
 --- a/include/linux/mfd/madera/registers.h
 +++ b/include/linux/mfd/madera/registers.h
-@@ -77,9 +77,15 @@
- #define MADERA_FLL1_CONTROL_5				0x175
- #define MADERA_FLL1_CONTROL_6				0x176
- #define MADERA_FLL1_LOOP_FILTER_TEST_1			0x177
-+#define CS47L92_FLL1_CONTROL_7				0x177
- #define MADERA_FLL1_NCO_TEST_0				0x178
-+#define CS47L92_FLL1_CONTROL_8				0x178
- #define MADERA_FLL1_CONTROL_7				0x179
-+#define CS47L92_FLL1_CONTROL_9				0x179
- #define MADERA_FLL1_EFS_2				0x17A
-+#define CS47L92_FLL1_CONTROL_10				0x17A
-+#define MADERA_FLL1_CONTROL_11				0x17B
-+#define MADERA_FLL1_DIGITAL_TEST_1			0x17D
- #define CS47L35_FLL1_SYNCHRONISER_1			0x17F
- #define CS47L35_FLL1_SYNCHRONISER_2			0x180
- #define CS47L35_FLL1_SYNCHRONISER_3			0x181
-@@ -98,6 +104,7 @@
- #define MADERA_FLL1_SYNCHRONISER_7			0x187
- #define MADERA_FLL1_SPREAD_SPECTRUM			0x189
- #define MADERA_FLL1_GPIO_CLOCK				0x18A
-+#define CS47L92_FLL1_GPIO_CLOCK				0x18E
- #define MADERA_FLL2_CONTROL_1				0x191
- #define MADERA_FLL2_CONTROL_2				0x192
- #define MADERA_FLL2_CONTROL_3				0x193
-@@ -105,9 +112,15 @@
- #define MADERA_FLL2_CONTROL_5				0x195
- #define MADERA_FLL2_CONTROL_6				0x196
- #define MADERA_FLL2_LOOP_FILTER_TEST_1			0x197
-+#define CS47L92_FLL2_CONTROL_7				0x197
- #define MADERA_FLL2_NCO_TEST_0				0x198
-+#define CS47L92_FLL2_CONTROL_8				0x198
- #define MADERA_FLL2_CONTROL_7				0x199
-+#define CS47L92_FLL2_CONTROL_9				0x199
- #define MADERA_FLL2_EFS_2				0x19A
-+#define CS47L92_FLL2_CONTROL_10				0x19A
-+#define MADERA_FLL2_CONTROL_11				0x19B
-+#define MADERA_FLL2_DIGITAL_TEST_1			0x19D
- #define MADERA_FLL2_SYNCHRONISER_1			0x1A1
- #define MADERA_FLL2_SYNCHRONISER_2			0x1A2
- #define MADERA_FLL2_SYNCHRONISER_3			0x1A3
-@@ -117,6 +130,7 @@
- #define MADERA_FLL2_SYNCHRONISER_7			0x1A7
- #define MADERA_FLL2_SPREAD_SPECTRUM			0x1A9
- #define MADERA_FLL2_GPIO_CLOCK				0x1AA
-+#define CS47L92_FLL2_GPIO_CLOCK				0x1AE
- #define MADERA_FLL3_CONTROL_1				0x1B1
- #define MADERA_FLL3_CONTROL_2				0x1B2
- #define MADERA_FLL3_CONTROL_3				0x1B3
-@@ -267,6 +281,7 @@
- #define MADERA_NOISE_GATE_SELECT_2R			0x41F
- #define MADERA_OUTPUT_PATH_CONFIG_3L			0x420
- #define MADERA_DAC_DIGITAL_VOLUME_3L			0x421
-+#define MADERA_OUTPUT_PATH_CONFIG_3			0x422
- #define MADERA_NOISE_GATE_SELECT_3L			0x423
- #define MADERA_OUTPUT_PATH_CONFIG_3R			0x424
- #define MADERA_DAC_DIGITAL_VOLUME_3R			0x425
-@@ -369,8 +384,20 @@
- #define MADERA_AIF3_FRAME_CTRL_2			0x588
- #define MADERA_AIF3_FRAME_CTRL_3			0x589
- #define MADERA_AIF3_FRAME_CTRL_4			0x58A
-+#define MADERA_AIF3_FRAME_CTRL_5			0x58B
-+#define MADERA_AIF3_FRAME_CTRL_6			0x58C
-+#define MADERA_AIF3_FRAME_CTRL_7			0x58D
-+#define MADERA_AIF3_FRAME_CTRL_8			0x58E
-+#define MADERA_AIF3_FRAME_CTRL_9			0x58F
-+#define MADERA_AIF3_FRAME_CTRL_10			0x590
- #define MADERA_AIF3_FRAME_CTRL_11			0x591
- #define MADERA_AIF3_FRAME_CTRL_12			0x592
-+#define MADERA_AIF3_FRAME_CTRL_13			0x593
-+#define MADERA_AIF3_FRAME_CTRL_14			0x594
-+#define MADERA_AIF3_FRAME_CTRL_15			0x595
-+#define MADERA_AIF3_FRAME_CTRL_16			0x596
-+#define MADERA_AIF3_FRAME_CTRL_17			0x597
-+#define MADERA_AIF3_FRAME_CTRL_18			0x598
- #define MADERA_AIF3_TX_ENABLES				0x599
- #define MADERA_AIF3_RX_ENABLES				0x59A
- #define MADERA_AIF3_FORCE_WRITE				0x59B
-@@ -662,6 +689,54 @@
- #define MADERA_AIF3TX2MIX_INPUT_3_VOLUME		0x78D
- #define MADERA_AIF3TX2MIX_INPUT_4_SOURCE		0x78E
- #define MADERA_AIF3TX2MIX_INPUT_4_VOLUME		0x78F
-+#define MADERA_AIF3TX3MIX_INPUT_1_SOURCE		0x790
-+#define MADERA_AIF3TX3MIX_INPUT_1_VOLUME		0x791
-+#define MADERA_AIF3TX3MIX_INPUT_2_SOURCE		0x792
-+#define MADERA_AIF3TX3MIX_INPUT_2_VOLUME		0x793
-+#define MADERA_AIF3TX3MIX_INPUT_3_SOURCE		0x794
-+#define MADERA_AIF3TX3MIX_INPUT_3_VOLUME		0x795
-+#define MADERA_AIF3TX3MIX_INPUT_4_SOURCE		0x796
-+#define MADERA_AIF3TX3MIX_INPUT_4_VOLUME		0x797
-+#define MADERA_AIF3TX4MIX_INPUT_1_SOURCE		0x798
-+#define MADERA_AIF3TX4MIX_INPUT_1_VOLUME		0x799
-+#define MADERA_AIF3TX4MIX_INPUT_2_SOURCE		0x79A
-+#define MADERA_AIF3TX4MIX_INPUT_2_VOLUME		0x79B
-+#define MADERA_AIF3TX4MIX_INPUT_3_SOURCE		0x79C
-+#define MADERA_AIF3TX4MIX_INPUT_3_VOLUME		0x79D
-+#define MADERA_AIF3TX4MIX_INPUT_4_SOURCE		0x79E
-+#define MADERA_AIF3TX4MIX_INPUT_4_VOLUME		0x79F
-+#define CS47L92_AIF3TX5MIX_INPUT_1_SOURCE		0x7A0
-+#define CS47L92_AIF3TX5MIX_INPUT_1_VOLUME		0x7A1
-+#define CS47L92_AIF3TX5MIX_INPUT_2_SOURCE		0x7A2
-+#define CS47L92_AIF3TX5MIX_INPUT_2_VOLUME		0x7A3
-+#define CS47L92_AIF3TX5MIX_INPUT_3_SOURCE		0x7A4
-+#define CS47L92_AIF3TX5MIX_INPUT_3_VOLUME		0x7A5
-+#define CS47L92_AIF3TX5MIX_INPUT_4_SOURCE		0x7A6
-+#define CS47L92_AIF3TX5MIX_INPUT_4_VOLUME		0x7A7
-+#define CS47L92_AIF3TX6MIX_INPUT_1_SOURCE		0x7A8
-+#define CS47L92_AIF3TX6MIX_INPUT_1_VOLUME		0x7A9
-+#define CS47L92_AIF3TX6MIX_INPUT_2_SOURCE		0x7AA
-+#define CS47L92_AIF3TX6MIX_INPUT_2_VOLUME		0x7AB
-+#define CS47L92_AIF3TX6MIX_INPUT_3_SOURCE		0x7AC
-+#define CS47L92_AIF3TX6MIX_INPUT_3_VOLUME		0x7AD
-+#define CS47L92_AIF3TX6MIX_INPUT_4_SOURCE		0x7AE
-+#define CS47L92_AIF3TX6MIX_INPUT_4_VOLUME		0x7AF
-+#define CS47L92_AIF3TX7MIX_INPUT_1_SOURCE		0x7B0
-+#define CS47L92_AIF3TX7MIX_INPUT_1_VOLUME		0x7B1
-+#define CS47L92_AIF3TX7MIX_INPUT_2_SOURCE		0x7B2
-+#define CS47L92_AIF3TX7MIX_INPUT_2_VOLUME		0x7B3
-+#define CS47L92_AIF3TX7MIX_INPUT_3_SOURCE		0x7B4
-+#define CS47L92_AIF3TX7MIX_INPUT_3_VOLUME		0x7B5
-+#define CS47L92_AIF3TX7MIX_INPUT_4_SOURCE		0x7B6
-+#define CS47L92_AIF3TX7MIX_INPUT_4_VOLUME		0x7B7
-+#define CS47L92_AIF3TX8MIX_INPUT_1_SOURCE		0x7B8
-+#define CS47L92_AIF3TX8MIX_INPUT_1_VOLUME		0x7B9
-+#define CS47L92_AIF3TX8MIX_INPUT_2_SOURCE		0x7BA
-+#define CS47L92_AIF3TX8MIX_INPUT_2_VOLUME		0x7BB
-+#define CS47L92_AIF3TX8MIX_INPUT_3_SOURCE		0x7BC
-+#define CS47L92_AIF3TX8MIX_INPUT_3_VOLUME		0x7BD
-+#define CS47L92_AIF3TX8MIX_INPUT_4_SOURCE		0x7BE
-+#define CS47L92_AIF3TX8MIX_INPUT_4_VOLUME		0x7BF
- #define MADERA_AIF4TX1MIX_INPUT_1_SOURCE		0x7A0
- #define MADERA_AIF4TX1MIX_INPUT_1_VOLUME		0x7A1
- #define MADERA_AIF4TX1MIX_INPUT_2_SOURCE		0x7A2
-@@ -1105,6 +1180,8 @@
- #define MADERA_FCR_ADC_REFORMATTER_CONTROL		0xF73
- #define MADERA_FCR_COEFF_START				0xF74
- #define MADERA_FCR_COEFF_END				0xFC5
-+#define MADERA_AUXPDM1_CTRL_0				0x10C0
-+#define MADERA_AUXPDM1_CTRL_1				0x10C1
- #define MADERA_DAC_COMP_1				0x1300
- #define MADERA_DAC_COMP_2				0x1302
- #define MADERA_FRF_COEFFICIENT_1L_1			0x1380
-@@ -1446,6 +1523,12 @@
- #define MADERA_OPCLK_ASYNC_SEL_WIDTH			     3
- 
- /* (0x0171)  FLL1_Control_1 */
-+#define CS47L92_FLL1_REFCLK_SRC_MASK			0xF000
-+#define CS47L92_FLL1_REFCLK_SRC_SHIFT			    12
-+#define CS47L92_FLL1_REFCLK_SRC_WIDTH			     4
-+#define MADERA_FLL1_HOLD_MASK				0x0004
-+#define MADERA_FLL1_HOLD_SHIFT				     2
-+#define MADERA_FLL1_HOLD_WIDTH				     1
- #define MADERA_FLL1_FREERUN				0x0002
- #define MADERA_FLL1_FREERUN_MASK			0x0002
- #define MADERA_FLL1_FREERUN_SHIFT			     1
-@@ -1478,6 +1561,9 @@
- #define MADERA_FLL1_FRATIO_MASK				0x0F00
- #define MADERA_FLL1_FRATIO_SHIFT			     8
- #define MADERA_FLL1_FRATIO_WIDTH			     4
-+#define MADERA_FLL1_FB_DIV_MASK				0x03FF
-+#define MADERA_FLL1_FB_DIV_SHIFT			     0
-+#define MADERA_FLL1_FB_DIV_WIDTH			    10
- 
- /* (0x0176)  FLL1_Control_6 */
- #define MADERA_FLL1_REFCLK_DIV_MASK			0x00C0
-@@ -1509,6 +1595,30 @@
- #define MADERA_FLL1_PHASE_ENA_SHIFT			    11
- #define MADERA_FLL1_PHASE_ENA_WIDTH			     1
- 
-+/* (0x017A)  FLL1_Control_10 */
-+#define MADERA_FLL1_HP_MASK				0xC000
-+#define MADERA_FLL1_HP_SHIFT				    14
-+#define MADERA_FLL1_HP_WIDTH				     2
-+#define MADERA_FLL1_PHASEDET_ENA_MASK			0x1000
-+#define MADERA_FLL1_PHASEDET_ENA_SHIFT			    12
-+#define MADERA_FLL1_PHASEDET_ENA_WIDTH			     1
-+
-+/* (0x017B)  FLL1_Control_11 */
-+#define MADERA_FLL1_LOCKDET_THR_MASK			0x001E
-+#define MADERA_FLL1_LOCKDET_THR_SHIFT			     1
-+#define MADERA_FLL1_LOCKDET_THR_WIDTH			     4
-+#define MADERA_FLL1_LOCKDET_MASK			0x0001
-+#define MADERA_FLL1_LOCKDET_SHIFT			     0
-+#define MADERA_FLL1_LOCKDET_WIDTH			     1
-+
-+/* (0x017D)  FLL1_Digital_Test_1 */
-+#define MADERA_FLL1_SYNC_EFS_ENA_MASK			0x0100
-+#define MADERA_FLL1_SYNC_EFS_ENA_SHIFT			     8
-+#define MADERA_FLL1_SYNC_EFS_ENA_WIDTH			     1
-+#define MADERA_FLL1_CLK_VCO_FAST_SRC_MASK		0x0003
-+#define MADERA_FLL1_CLK_VCO_FAST_SRC_SHIFT		     0
-+#define MADERA_FLL1_CLK_VCO_FAST_SRC_WIDTH		     2
-+
- /* (0x0181)  FLL1_Synchroniser_1 */
- #define MADERA_FLL1_SYNC_ENA				0x0001
- #define MADERA_FLL1_SYNC_ENA_MASK			0x0001
-@@ -1630,6 +1740,13 @@
- #define MADERA_LDO2_ENA_WIDTH				     1
- 
- /* (0x0218)  Mic_Bias_Ctrl_1 */
-+#define MADERA_MICB1_EXT_CAP				0x8000
-+#define MADERA_MICB1_EXT_CAP_MASK			0x8000
-+#define MADERA_MICB1_EXT_CAP_SHIFT			    15
-+#define MADERA_MICB1_EXT_CAP_WIDTH			     1
-+#define MADERA_MICB1_LVL_MASK				0x01E0
-+#define MADERA_MICB1_LVL_SHIFT				     5
-+#define MADERA_MICB1_LVL_WIDTH				     4
- #define MADERA_MICB1_ENA				0x0001
- #define MADERA_MICB1_ENA_MASK				0x0001
- #define MADERA_MICB1_ENA_SHIFT				     0
-@@ -2313,6 +2430,17 @@
- #define MADERA_OUT1R_ENA_SHIFT				     0
- #define MADERA_OUT1R_ENA_WIDTH				     1
- 
-+/* (0x0408)  Output_Rate_1 */
-+#define MADERA_CP_DAC_MODE_MASK				0x0040
-+#define MADERA_CP_DAC_MODE_SHIFT			     6
-+#define MADERA_CP_DAC_MODE_WIDTH			     1
-+#define MADERA_OUT_EXT_CLK_DIV_MASK			0x0030
-+#define MADERA_OUT_EXT_CLK_DIV_SHIFT			     4
-+#define MADERA_OUT_EXT_CLK_DIV_WIDTH			     2
-+#define MADERA_OUT_CLK_SRC_MASK				0x0007
-+#define MADERA_OUT_CLK_SRC_SHIFT			     0
-+#define MADERA_OUT_CLK_SRC_WIDTH			     3
-+
- /* (0x0409)  Output_Volume_Ramp */
- #define MADERA_OUT_VD_RAMP_MASK				0x0070
- #define MADERA_OUT_VD_RAMP_SHIFT			     4
-@@ -2834,6 +2962,30 @@
- #define MADERA_AIF2RX1_ENA_WIDTH			     1
- 
- /* (0x0599)  AIF3_Tx_Enables */
-+#define MADERA_AIF3TX8_ENA				0x0080
-+#define MADERA_AIF3TX8_ENA_MASK				0x0080
-+#define MADERA_AIF3TX8_ENA_SHIFT			     7
-+#define MADERA_AIF3TX8_ENA_WIDTH			     1
-+#define MADERA_AIF3TX7_ENA				0x0040
-+#define MADERA_AIF3TX7_ENA_MASK				0x0040
-+#define MADERA_AIF3TX7_ENA_SHIFT			     6
-+#define MADERA_AIF3TX7_ENA_WIDTH			     1
-+#define MADERA_AIF3TX6_ENA				0x0020
-+#define MADERA_AIF3TX6_ENA_MASK				0x0020
-+#define MADERA_AIF3TX6_ENA_SHIFT			     5
-+#define MADERA_AIF3TX6_ENA_WIDTH			     1
-+#define MADERA_AIF3TX5_ENA				0x0010
-+#define MADERA_AIF3TX5_ENA_MASK				0x0010
-+#define MADERA_AIF3TX5_ENA_SHIFT			     4
-+#define MADERA_AIF3TX5_ENA_WIDTH			     1
-+#define MADERA_AIF3TX4_ENA				0x0008
-+#define MADERA_AIF3TX4_ENA_MASK				0x0008
-+#define MADERA_AIF3TX4_ENA_SHIFT			     3
-+#define MADERA_AIF3TX4_ENA_WIDTH			     1
-+#define MADERA_AIF3TX3_ENA				0x0004
-+#define MADERA_AIF3TX3_ENA_MASK				0x0004
-+#define MADERA_AIF3TX3_ENA_SHIFT			     2
-+#define MADERA_AIF3TX3_ENA_WIDTH			     1
- #define MADERA_AIF3TX2_ENA				0x0002
- #define MADERA_AIF3TX2_ENA_MASK				0x0002
- #define MADERA_AIF3TX2_ENA_SHIFT			     1
-@@ -2844,6 +2996,30 @@
- #define MADERA_AIF3TX1_ENA_WIDTH			     1
- 
- /* (0x059A)  AIF3_Rx_Enables */
-+#define MADERA_AIF3RX8_ENA				0x0080
-+#define MADERA_AIF3RX8_ENA_MASK				0x0080
-+#define MADERA_AIF3RX8_ENA_SHIFT			     7
-+#define MADERA_AIF3RX8_ENA_WIDTH			     1
-+#define MADERA_AIF3RX7_ENA				0x0040
-+#define MADERA_AIF3RX7_ENA_MASK				0x0040
-+#define MADERA_AIF3RX7_ENA_SHIFT			     6
-+#define MADERA_AIF3RX7_ENA_WIDTH			     1
-+#define MADERA_AIF3RX6_ENA				0x0020
-+#define MADERA_AIF3RX6_ENA_MASK				0x0020
-+#define MADERA_AIF3RX6_ENA_SHIFT			     5
-+#define MADERA_AIF3RX6_ENA_WIDTH			     1
-+#define MADERA_AIF3RX5_ENA				0x0010
-+#define MADERA_AIF3RX5_ENA_MASK				0x0010
-+#define MADERA_AIF3RX5_ENA_SHIFT			     4
-+#define MADERA_AIF3RX5_ENA_WIDTH			     1
-+#define MADERA_AIF3RX4_ENA				0x0008
-+#define MADERA_AIF3RX4_ENA_MASK				0x0008
-+#define MADERA_AIF3RX4_ENA_SHIFT			     3
-+#define MADERA_AIF3RX4_ENA_WIDTH			     1
-+#define MADERA_AIF3RX3_ENA				0x0004
-+#define MADERA_AIF3RX3_ENA_MASK				0x0004
-+#define MADERA_AIF3RX3_ENA_SHIFT			     2
-+#define MADERA_AIF3RX3_ENA_WIDTH			     1
- #define MADERA_AIF3RX2_ENA				0x0002
- #define MADERA_AIF3RX2_ENA_MASK				0x0002
- #define MADERA_AIF3RX2_ENA_SHIFT			     1
-@@ -3458,6 +3634,25 @@
- #define MADERA_FCR_MIC_MODE_SEL_SHIFT			     2
- #define MADERA_FCR_MIC_MODE_SEL_WIDTH			     2
- 
-+/* (0x10C0)  AUXPDM1_CTRL_0 */
-+#define MADERA_AUXPDM1_SRC_MASK				0x0F00
-+#define MADERA_AUXPDM1_SRC_SHIFT			     8
-+#define MADERA_AUXPDM1_SRC_WIDTH			     4
-+#define MADERA_AUXPDM1_TXEDGE_MASK			0x0010
-+#define MADERA_AUXPDM1_TXEDGE_SHIFT			     4
-+#define MADERA_AUXPDM1_TXEDGE_WIDTH			     1
-+#define MADERA_AUXPDM1_MSTR_MASK			0x0008
-+#define MADERA_AUXPDM1_MSTR_SHIFT			     3
-+#define MADERA_AUXPDM1_MSTR_WIDTH			     1
-+#define MADERA_AUXPDM1_ENABLE_MASK			0x0001
-+#define MADERA_AUXPDM1_ENABLE_SHIFT			     0
-+#define MADERA_AUXPDM1_ENABLE_WIDTH			     1
-+
-+/* (0x10C1)  AUXPDM1_CTRL_1 */
-+#define MADERA_AUXPDM1_CLK_FREQ_MASK			0xC000
-+#define MADERA_AUXPDM1_CLK_FREQ_SHIFT			    14
-+#define MADERA_AUXPDM1_CLK_FREQ_WIDTH			     2
-+
- /* (0x1480)  DFC1_CTRL_W0 */
- #define MADERA_DFC1_RATE_MASK				0x007C
- #define MADERA_DFC1_RATE_SHIFT				     2
+@@ -244,6 +244,8 @@
+ #define MADERA_IN6R_CONTROL				0x33C
+ #define MADERA_ADC_DIGITAL_VOLUME_6R			0x33D
+ #define MADERA_DMIC6R_CONTROL				0x33E
++#define CS47L15_ADC_INT_BIAS				0x3A8
++#define CS47L15_PGA_BIAS_SEL				0x3C4
+ #define MADERA_OUTPUT_ENABLES_1				0x400
+ #define MADERA_OUTPUT_STATUS_1				0x401
+ #define MADERA_RAW_OUTPUT_STATUS_1			0x406
+@@ -1202,6 +1204,8 @@
+ #define MADERA_GPIO1_CTRL_2				0x1701
+ #define MADERA_GPIO2_CTRL_1				0x1702
+ #define MADERA_GPIO2_CTRL_2				0x1703
++#define MADERA_GPIO15_CTRL_1				0x171C
++#define MADERA_GPIO15_CTRL_2				0x171D
+ #define MADERA_GPIO16_CTRL_1				0x171E
+ #define MADERA_GPIO16_CTRL_2				0x171F
+ #define MADERA_GPIO38_CTRL_1				0x174A
+@@ -1232,6 +1236,7 @@
+ #define MADERA_IRQ2_CTRL				0x1A82
+ #define MADERA_INTERRUPT_RAW_STATUS_1			0x1AA0
+ #define MADERA_WSEQ_SEQUENCE_1				0x3000
++#define MADERA_WSEQ_SEQUENCE_225			0x31C0
+ #define MADERA_WSEQ_SEQUENCE_252			0x31F6
+ #define CS47L35_OTP_HPDET_CAL_1				0x31F8
+ #define CS47L35_OTP_HPDET_CAL_2				0x31FA
 -- 
 2.11.0
 
