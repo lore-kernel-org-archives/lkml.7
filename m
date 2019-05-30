@@ -5,52 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C9ECC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C820DC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06EE62522D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1B7E25224
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:15:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189719;
-	bh=20NGHh9hI3pUhV5NSLVTioijjfVOpQ0vS7J9QaqBhV4=;
+	s=default; t=1559189721;
+	bh=N/3hW5YVkBiCmLjr5gvgKOpjsPY0yFTpOC2RZ9XndCw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WMI9SF8zH3wXdKA6YTuWzjKGssYNt6AMB0J7t7HowDGFJgUa85wkG2VJf5BkrC6MN
-	 ZDwUZxZx0pXfnctYszyKjcwsQFqtA1RWvvskoFrJPzcnSH92+ivKHXagyuXoQ6D+t8
-	 JLinXO5ikXiENxLBMT0UsOjPVhU4+zgjRhShFV1c=
+	b=wX7P4/PwGB4EnDaLU3PuxWn9It/ZKKDVWr/RcCxEZxg+F7MgyZ4uEAFz6gJAV+pX2
+	 JKgMa0O7IWFJR8RZILFDXjqYuIU9mfREMOWQti60h0opZKaDfNqGdIt8D00tVZbTrj
+	 Y8sXbHsz0p7y1iKHFbDDc1zJPWn+Ps0v/f2TF9/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731094AbfE3EPS (ORCPT
+        id S1731123AbfE3EPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:15:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40996 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:15:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730563AbfE3DQB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730555AbfE3DQB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:16:01 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17E5D245C1;
-        Thu, 30 May 2019 03:16:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83B9824595;
+        Thu, 30 May 2019 03:15:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186161;
-        bh=20NGHh9hI3pUhV5NSLVTioijjfVOpQ0vS7J9QaqBhV4=;
+        s=default; t=1559186159;
+        bh=N/3hW5YVkBiCmLjr5gvgKOpjsPY0yFTpOC2RZ9XndCw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UywvA7QHTbDSYpMbZIjBUHIv664sXm6AMkFu8ONfBTAmgIiz7Dh1CFtvrBq7VUTmG
-         e+4z+JGDZqgitqpWeo88YjUGghtDQLW2mYy52TfBR42P+LEhUypSG/JOHvkUQuuOqb
-         ji2SaB5zFl5AC2ogB4w42XNzq2PTC08nkrmDal58=
+        b=lEfoClvdKyMDl92it7YvPMjfjuoaaMLywJn0kZ9gUyLjxq/Px2NTnl/JDKmr/qfNs
+         +UEf2PJUD/2J2hYS79SqG2gZ/35zHKo44eJIeUDiAGMfIZ+BnsexNNLImUTMw5H4Fr
+         ekS8oZtiEfOa1IAIMu1gBL5ryw0iYQTGpfs8LaW0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Murton Liu <murton.liu@amd.com>,
-        Aric Cyr <Aric.Cyr@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Sivapiriyan Kumarasamy <Sivapiriyan.Kumarasamy@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 302/346] drm/amd/display: Fix Divide by 0 in memory calculations
-Date:   Wed, 29 May 2019 20:06:15 -0700
-Message-Id: <20190530030556.144657707@linuxfoundation.org>
+Subject: [PATCH 5.0 309/346] media: vim2m: replace devm_kzalloc by kzalloc
+Date:   Wed, 29 May 2019 20:06:22 -0700
+Message-Id: <20190530030556.485290591@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -63,55 +61,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 59979bf8be1784ebfc44215031c6c88ca22ae65d ]
+[ Upstream commit ea6c7e34f3b28e165988aa7391310752969842e8 ]
 
-Check if we get any values equal to 0, and set to 1 if so.
+It is not possible to use devm_kzalloc since that memory is
+freed immediately when the device instance is unbound.
 
-Signed-off-by: Murton Liu <murton.liu@amd.com>
-Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
-Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Acked-by: Sivapiriyan Kumarasamy <Sivapiriyan.Kumarasamy@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Various objects like the video device may still be in use
+since someone has the device node open, and when that is closed
+it expects the memory to be around.
+
+So use kzalloc and release it at the appropriate time.
+
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../drm/amd/display/dc/dcn10/dcn10_dpp_dscl.c | 20 ++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
+ drivers/media/platform/vim2m.c | 35 +++++++++++++++++++++-------------
+ 1 file changed, 22 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_dpp_dscl.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_dpp_dscl.c
-index 4a863a5dab417..321af9af95e86 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_dpp_dscl.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_dpp_dscl.c
-@@ -406,15 +406,25 @@ void dpp1_dscl_calc_lb_num_partitions(
- 		int *num_part_y,
- 		int *num_part_c)
- {
-+	int lb_memory_size, lb_memory_size_c, lb_memory_size_a, num_partitions_a,
-+	lb_bpc, memory_line_size_y, memory_line_size_c, memory_line_size_a;
-+
- 	int line_size = scl_data->viewport.width < scl_data->recout.width ?
- 			scl_data->viewport.width : scl_data->recout.width;
- 	int line_size_c = scl_data->viewport_c.width < scl_data->recout.width ?
- 			scl_data->viewport_c.width : scl_data->recout.width;
--	int lb_bpc = dpp1_dscl_get_lb_depth_bpc(scl_data->lb_params.depth);
--	int memory_line_size_y = (line_size * lb_bpc + 71) / 72; /* +71 to ceil */
--	int memory_line_size_c = (line_size_c * lb_bpc + 71) / 72; /* +71 to ceil */
--	int memory_line_size_a = (line_size + 5) / 6; /* +5 to ceil */
--	int lb_memory_size, lb_memory_size_c, lb_memory_size_a, num_partitions_a;
-+
-+	if (line_size == 0)
-+		line_size = 1;
-+
-+	if (line_size_c == 0)
-+		line_size_c = 1;
-+
-+
-+	lb_bpc = dpp1_dscl_get_lb_depth_bpc(scl_data->lb_params.depth);
-+	memory_line_size_y = (line_size * lb_bpc + 71) / 72; /* +71 to ceil */
-+	memory_line_size_c = (line_size_c * lb_bpc + 71) / 72; /* +71 to ceil */
-+	memory_line_size_a = (line_size + 5) / 6; /* +5 to ceil */
+diff --git a/drivers/media/platform/vim2m.c b/drivers/media/platform/vim2m.c
+index 89d9c4c21037e..333bd34e47c41 100644
+--- a/drivers/media/platform/vim2m.c
++++ b/drivers/media/platform/vim2m.c
+@@ -984,6 +984,15 @@ static int vim2m_release(struct file *file)
+ 	return 0;
+ }
  
- 	if (lb_config == LB_MEMORY_CONFIG_1) {
- 		lb_memory_size = 816;
++static void vim2m_device_release(struct video_device *vdev)
++{
++	struct vim2m_dev *dev = container_of(vdev, struct vim2m_dev, vfd);
++
++	v4l2_device_unregister(&dev->v4l2_dev);
++	v4l2_m2m_release(dev->m2m_dev);
++	kfree(dev);
++}
++
+ static const struct v4l2_file_operations vim2m_fops = {
+ 	.owner		= THIS_MODULE,
+ 	.open		= vim2m_open,
+@@ -999,7 +1008,7 @@ static const struct video_device vim2m_videodev = {
+ 	.fops		= &vim2m_fops,
+ 	.ioctl_ops	= &vim2m_ioctl_ops,
+ 	.minor		= -1,
+-	.release	= video_device_release_empty,
++	.release	= vim2m_device_release,
+ 	.device_caps	= V4L2_CAP_VIDEO_M2M | V4L2_CAP_STREAMING,
+ };
+ 
+@@ -1020,7 +1029,7 @@ static int vim2m_probe(struct platform_device *pdev)
+ 	struct video_device *vfd;
+ 	int ret;
+ 
+-	dev = devm_kzalloc(&pdev->dev, sizeof(*dev), GFP_KERNEL);
++	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
+ 	if (!dev)
+ 		return -ENOMEM;
+ 
+@@ -1028,7 +1037,7 @@ static int vim2m_probe(struct platform_device *pdev)
+ 
+ 	ret = v4l2_device_register(&pdev->dev, &dev->v4l2_dev);
+ 	if (ret)
+-		return ret;
++		goto error_free;
+ 
+ 	atomic_set(&dev->num_inst, 0);
+ 	mutex_init(&dev->dev_mutex);
+@@ -1042,7 +1051,7 @@ static int vim2m_probe(struct platform_device *pdev)
+ 	ret = video_register_device(vfd, VFL_TYPE_GRABBER, 0);
+ 	if (ret) {
+ 		v4l2_err(&dev->v4l2_dev, "Failed to register video device\n");
+-		goto unreg_v4l2;
++		goto error_v4l2;
+ 	}
+ 
+ 	video_set_drvdata(vfd, dev);
+@@ -1055,7 +1064,7 @@ static int vim2m_probe(struct platform_device *pdev)
+ 	if (IS_ERR(dev->m2m_dev)) {
+ 		v4l2_err(&dev->v4l2_dev, "Failed to init mem2mem device\n");
+ 		ret = PTR_ERR(dev->m2m_dev);
+-		goto unreg_dev;
++		goto error_dev;
+ 	}
+ 
+ #ifdef CONFIG_MEDIA_CONTROLLER
+@@ -1069,27 +1078,29 @@ static int vim2m_probe(struct platform_device *pdev)
+ 			vfd, MEDIA_ENT_F_PROC_VIDEO_SCALER);
+ 	if (ret) {
+ 		v4l2_err(&dev->v4l2_dev, "Failed to init mem2mem media controller\n");
+-		goto unreg_m2m;
++		goto error_m2m;
+ 	}
+ 
+ 	ret = media_device_register(&dev->mdev);
+ 	if (ret) {
+ 		v4l2_err(&dev->v4l2_dev, "Failed to register mem2mem media device\n");
+-		goto unreg_m2m_mc;
++		goto error_m2m_mc;
+ 	}
+ #endif
+ 	return 0;
+ 
+ #ifdef CONFIG_MEDIA_CONTROLLER
+-unreg_m2m_mc:
++error_m2m_mc:
+ 	v4l2_m2m_unregister_media_controller(dev->m2m_dev);
+-unreg_m2m:
++error_m2m:
+ 	v4l2_m2m_release(dev->m2m_dev);
+ #endif
+-unreg_dev:
++error_dev:
+ 	video_unregister_device(&dev->vfd);
+-unreg_v4l2:
++error_v4l2:
+ 	v4l2_device_unregister(&dev->v4l2_dev);
++error_free:
++	kfree(dev);
+ 
+ 	return ret;
+ }
+@@ -1105,9 +1116,7 @@ static int vim2m_remove(struct platform_device *pdev)
+ 	v4l2_m2m_unregister_media_controller(dev->m2m_dev);
+ 	media_device_cleanup(&dev->mdev);
+ #endif
+-	v4l2_m2m_release(dev->m2m_dev);
+ 	video_unregister_device(&dev->vfd);
+-	v4l2_device_unregister(&dev->v4l2_dev);
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
