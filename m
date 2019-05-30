@@ -4,55 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCA9C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2843EC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFACE24FBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E589C24FBE
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:02:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188931;
-	bh=ezxrnQ1NzkHpQFx72zDTFDyGqdmHZoV15V176/RZO2E=;
+	s=default; t=1559188935;
+	bh=688BSSCjm1VH0CTrn3FpYfvI2i1PqdHOIh0iUUQkLaU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KObzMJPbebfY+CWT2dXoe9uCbUEdCQIcaWnUFIQy4En/P4DpZGu4eqT4jQ+IeBbKG
-	 ID8EPdlGbGLfkImzgh0V9qcnxJGsZ685VlBBXgcpfhT6uKBskKQPIA9R98GiOH0g9W
-	 3ausD5ukyAQmaJGVBUC6shJzbfyJPmUJlZjWrSw4=
+	b=plKxmSKkHf/DM2wS4eryjOrBCpl/1YUw2G2ciZrKvqJP5idxv1/3rzBkEDB/+QtF8
+	 t2N7NfRXf0KxPysvWFIhVO1XqTY7pDhqgSuVFOnbeakF2wh0Bi/A25+TUCbVy73EI8
+	 sf8qsxuc6Jm05+CB8W/HFbm6byQ5TEPWs75jtFMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731396AbfE3DSC (ORCPT
+        id S1732051AbfE3ECO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:18:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34174 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:02:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729847AbfE3DOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:23 -0400
+        id S1731393AbfE3DSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:02 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C254924547;
-        Thu, 30 May 2019 03:14:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10A5124733;
+        Thu, 30 May 2019 03:18:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186062;
-        bh=ezxrnQ1NzkHpQFx72zDTFDyGqdmHZoV15V176/RZO2E=;
+        s=default; t=1559186282;
+        bh=688BSSCjm1VH0CTrn3FpYfvI2i1PqdHOIh0iUUQkLaU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=utVwj4zpLuHMVM7owQxiXVysSpe6yOQyL6dP7JrMdunvzUJY3AoP//gmclaTxbwYO
-         Pg75Kk4pRuG1E2fGhfgRczUzjc/30HCF+GHp07SyOUuPPLKqPBaGtT/9wgR6e9o2P+
-         r6bxvNfmsxOP6SgeXEQQ3mwKawADNYe1OOlJFMaY=
+        b=P34Zv68LFL3/cYDXPVYwafE860h8YKS9vUxxkVBjEs7s+Re3M04xA2q67BJS/EgU4
+         3WljBeo7XzIiHjVtT6YKMXIfSL8oBpdiuMDshBt0W45IUFOnk1YcoFvF+r3V1Qz/yC
+         Qpd0+MdWO4ov/BDq48uzynMKfXSkBt3ebZMty/zc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Adam Ludkiewicz <adam.ludkiewicz@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, "Paul E. McKenney" <paulmck@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 171/346] i40e: Able to add up to 16 MAC filters on an untrusted VF
-Date:   Wed, 29 May 2019 20:04:04 -0700
-Message-Id: <20190530030549.819725947@linuxfoundation.org>
+Subject: [PATCH 4.19 234/276] rcuperf: Fix cleanup path for invalid perf_type strings
+Date:   Wed, 29 May 2019 20:06:32 -0700
+Message-Id: <20190530030539.764604914@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
-References: <20190530030540.363386121@linuxfoundation.org>
+In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
+References: <20190530030523.133519668@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,39 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 06b6e2a2333eb3581567a7ac43ca465ef45f4daa ]
+[ Upstream commit ad092c027713a68a34168942a5ef422e42e039f4 ]
 
-This patch fixes the problem with the driver being able to add only 7
-multicast MAC address filters instead of 16. The problem is fixed by
-changing the maximum number of MAC address filters to 16+1+1 (two extra
-are needed because the driver uses 1 for unicast MAC address and 1 for
-broadcast).
+If the specified rcuperf.perf_type is not in the rcu_perf_init()
+function's perf_ops[] array, rcuperf prints some console messages and
+then invokes rcu_perf_cleanup() to set state so that a future torture
+test can run.  However, rcu_perf_cleanup() also attempts to end the
+test that didn't actually start, and in doing so relies on the value
+of cur_ops, a value that is not particularly relevant in this case.
+This can result in confusing output or even follow-on failures due to
+attempts to use facilities that have not been properly initialized.
 
-Signed-off-by: Adam Ludkiewicz <adam.ludkiewicz@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+This commit therefore sets the value of cur_ops to NULL in this case and
+inserts a check near the beginning of rcu_perf_cleanup(), thus avoiding
+relying on an irrelevant cur_ops value.
+
+Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ kernel/rcu/rcuperf.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-index 2ac23ebfbf31b..715c6a9f30f9f 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-@@ -2449,8 +2449,10 @@ static int i40e_vc_get_stats_msg(struct i40e_vf *vf, u8 *msg)
- 				      (u8 *)&stats, sizeof(stats));
- }
+diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
+index 34244523550e1..19249b86fb33e 100644
+--- a/kernel/rcu/rcuperf.c
++++ b/kernel/rcu/rcuperf.c
+@@ -561,6 +561,10 @@ rcu_perf_cleanup(void)
  
--/* If the VF is not trusted restrict the number of MAC/VLAN it can program */
--#define I40E_VC_MAX_MAC_ADDR_PER_VF 12
-+/* If the VF is not trusted restrict the number of MAC/VLAN it can program
-+ * MAC filters: 16 for multicast, 1 for MAC, 1 for broadcast
-+ */
-+#define I40E_VC_MAX_MAC_ADDR_PER_VF (16 + 1 + 1)
- #define I40E_VC_MAX_VLAN_PER_VF 8
+ 	if (torture_cleanup_begin())
+ 		return;
++	if (!cur_ops) {
++		torture_cleanup_end();
++		return;
++	}
  
- /**
+ 	if (reader_tasks) {
+ 		for (i = 0; i < nrealreaders; i++)
+@@ -681,6 +685,7 @@ rcu_perf_init(void)
+ 			pr_cont(" %s", perf_ops[i]->name);
+ 		pr_cont("\n");
+ 		firsterr = -EINVAL;
++		cur_ops = NULL;
+ 		goto unwind;
+ 	}
+ 	if (cur_ops->init)
 -- 
 2.20.1
 
