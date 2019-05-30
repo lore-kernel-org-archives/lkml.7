@@ -7,62 +7,64 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC059C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9489C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B151E25166
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:11:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 795A125180
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:11:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189483;
-	bh=xtfGhJxCISmQEIAzY9UNuJPijIzOmphvj3fYTog3FJs=;
+	s=default; t=1559189486;
+	bh=n+mQP6Ot/bSNwz8Z1NLu1w72gjU1a7QBXhVgmvvJSEs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=loUlBpOxn2ACaXsXmJDcCn9o/T74PW88Mjs6PSGQTLkmAFS4t6698xQnFRP0Igmpa
-	 jxY8cV4jKOQyhzDf9tIEHa0Pr69zfs5G43HigDix3LyptTS0QQAd/fG433NadO2R8p
-	 zCKDJKU31g6aba5ecqfBufDH0KNvP9mrooCXxU8A=
+	b=OTTCQluJqfV/OZ9skN4GEfY7BW/9XjXqs7TNkQcicJXEPWLJcZiq4sXXRc/dsMbUO
+	 jEgYauJFyyzwOIZoSapOdhXN1aUF4ZqleGaaSD/z4AsUQzsnBNGTwbwHaqORudKOct
+	 vo5QRvC3LUme8phQ9VeHmZlZazMzf4beqZXdoCt4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730836AbfE3DQu (ORCPT
+        id S1727195AbfE3ELZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:16:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59154 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:11:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728611AbfE3DNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:13:35 -0400
+        id S1730821AbfE3DQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:16:49 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB98A23D14;
-        Thu, 30 May 2019 03:13:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A876024628;
+        Thu, 30 May 2019 03:16:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186014;
-        bh=xtfGhJxCISmQEIAzY9UNuJPijIzOmphvj3fYTog3FJs=;
+        s=default; t=1559186207;
+        bh=n+mQP6Ot/bSNwz8Z1NLu1w72gjU1a7QBXhVgmvvJSEs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nDWpWhd63FDgWNiYB8Lk7WK65shUKzzzR4UPmeula6IHJ/OW1rBDzAV0+UDYAHTrC
-         gUKGraD/ypEXA8C7RNGhpdogNPwNFCWPjkNocl9GzkhlLTi67VdVyWkYnvJY21N6Mb
-         Ye3YlCLFBg2VzKOc80qHOY25mm0tYP3vUiWH8q7M=
+        b=atqCpRwY9Yc7Gg4jFZ0ruHrpfDw5TrJVNIIxX3mvPome4YrCwW6Z1BCsMm0ltYUrd
+         pLyT3UUTAtP0WcdKd20qo92HXe96LC+c0vRa+lZ0nJbx9J6h3lOzmdpIc34XKLNZwg
+         wJiyXesycslhSFDM9Jp8ybVSfP5vrQegcHudJVpE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nadav Amit <namit@vmware.com>,
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Nadav Amit <namit@vmware.com>,
         Rick Edgecombe <rick.p.edgecombe@intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
         akpm@linux-foundation.org, ard.biesheuvel@linaro.org,
         deneen.t.dock@intel.com, kernel-hardening@lists.openwall.com,
         kristen@linux.intel.com, linux_dti@icloud.com, will.deacon@arm.com,
         Andy Lutomirski <luto@kernel.org>,
         Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jessica Yu <jeyu@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
         Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 079/346] x86/ftrace: Set trampoline pages as executable
-Date:   Wed, 29 May 2019 20:02:32 -0700
-Message-Id: <20190530030545.129961442@linuxfoundation.org>
+Subject: [PATCH 4.19 079/276] x86/modules: Avoid breaking W^X while loading modules
+Date:   Wed, 29 May 2019 20:03:57 -0700
+Message-Id: <20190530030531.331779845@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
-References: <20190530030540.363386121@linuxfoundation.org>
+In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
+References: <20190530030523.133519668@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -72,18 +74,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3c0dab44e22782359a0a706cbce72de99a22aa75 ]
+[ Upstream commit f2c65fb3221adc6b73b0549fc7ba892022db9797 ]
 
-Since alloc_module() will not set the pages as executable soon, set
-ftrace trampoline pages as executable after they are allocated.
+When modules and BPF filters are loaded, there is a time window in
+which some memory is both writable and executable. An attacker that has
+already found another vulnerability (e.g., a dangling pointer) might be
+able to exploit this behavior to overwrite kernel code. Prevent having
+writable executable PTEs in this stage.
 
-For the time being, do not change ftrace to use the text_poke()
-interface. As a result, ftrace still breaks W^X.
+In addition, avoiding having W+X mappings can also slightly simplify the
+patching of modules code on initialization (e.g., by alternatives and
+static-key), as would be done in the next patch. This was actually the
+main motivation for this patch.
 
+To avoid having W+X mappings, set them initially as RW (NX) and after
+they are set as RO set them as X as well. Setting them as executable is
+done as a separate step to avoid one core in which the old PTE is cached
+(hence writable), and another which sees the updated PTE (executable),
+which would break the W^X protection.
+
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Suggested-by: Andy Lutomirski <luto@amacapital.net>
 Signed-off-by: Nadav Amit <namit@vmware.com>
 Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Cc: <akpm@linux-foundation.org>
 Cc: <ard.biesheuvel@linaro.org>
 Cc: <deneen.t.dock@intel.com>
@@ -93,51 +107,107 @@ Cc: <linux_dti@icloud.com>
 Cc: <will.deacon@arm.com>
 Cc: Andy Lutomirski <luto@kernel.org>
 Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
 Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Jessica Yu <jeyu@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Rik van Riel <riel@surriel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190426001143.4983-10-namit@vmware.com
+Link: https://lkml.kernel.org/r/20190426001143.4983-12-namit@vmware.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/ftrace.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/x86/kernel/alternative.c | 28 +++++++++++++++++++++-------
+ arch/x86/kernel/module.c      |  2 +-
+ include/linux/filter.h        |  1 +
+ kernel/module.c               |  5 +++++
+ 4 files changed, 28 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-index 2ee4b12a70e80..becb075954aa9 100644
---- a/arch/x86/kernel/ftrace.c
-+++ b/arch/x86/kernel/ftrace.c
-@@ -748,6 +748,7 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
- 	unsigned long end_offset;
- 	unsigned long op_offset;
- 	unsigned long offset;
-+	unsigned long npages;
- 	unsigned long size;
- 	unsigned long retq;
- 	unsigned long *ptr;
-@@ -780,6 +781,7 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
- 		return 0;
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index b9d5e7c9ef43e..918a23704c0c5 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -662,15 +662,29 @@ void __init alternative_instructions(void)
+  * handlers seeing an inconsistent instruction while you patch.
+  */
+ void *__init_or_module text_poke_early(void *addr, const void *opcode,
+-					      size_t len)
++				       size_t len)
+ {
+ 	unsigned long flags;
+-	local_irq_save(flags);
+-	memcpy(addr, opcode, len);
+-	local_irq_restore(flags);
+-	sync_core();
+-	/* Could also do a CLFLUSH here to speed up CPU recovery; but
+-	   that causes hangs on some VIA CPUs. */
++
++	if (boot_cpu_has(X86_FEATURE_NX) &&
++	    is_module_text_address((unsigned long)addr)) {
++		/*
++		 * Modules text is marked initially as non-executable, so the
++		 * code cannot be running and speculative code-fetches are
++		 * prevented. Just change the code.
++		 */
++		memcpy(addr, opcode, len);
++	} else {
++		local_irq_save(flags);
++		memcpy(addr, opcode, len);
++		local_irq_restore(flags);
++		sync_core();
++
++		/*
++		 * Could also do a CLFLUSH here to speed up CPU recovery; but
++		 * that causes hangs on some VIA CPUs.
++		 */
++	}
+ 	return addr;
+ }
  
- 	*tramp_size = size + RET_SIZE + sizeof(void *);
-+	npages = DIV_ROUND_UP(*tramp_size, PAGE_SIZE);
+diff --git a/arch/x86/kernel/module.c b/arch/x86/kernel/module.c
+index f58336af095c9..6645f123419c6 100644
+--- a/arch/x86/kernel/module.c
++++ b/arch/x86/kernel/module.c
+@@ -87,7 +87,7 @@ void *module_alloc(unsigned long size)
+ 	p = __vmalloc_node_range(size, MODULE_ALIGN,
+ 				    MODULES_VADDR + get_module_load_offset(),
+ 				    MODULES_END, GFP_KERNEL,
+-				    PAGE_KERNEL_EXEC, 0, NUMA_NO_NODE,
++				    PAGE_KERNEL, 0, NUMA_NO_NODE,
+ 				    __builtin_return_address(0));
+ 	if (p && (kasan_module_alloc(p, size) < 0)) {
+ 		vfree(p);
+diff --git a/include/linux/filter.h b/include/linux/filter.h
+index 6ecef32fd8bcd..d52a7484aeb2d 100644
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@ -684,6 +684,7 @@ static inline void bpf_prog_unlock_ro(struct bpf_prog *fp)
+ static inline void bpf_jit_binary_lock_ro(struct bpf_binary_header *hdr)
+ {
+ 	set_memory_ro((unsigned long)hdr, hdr->pages);
++	set_memory_x((unsigned long)hdr, hdr->pages);
+ }
  
- 	/* Copy ftrace_caller onto the trampoline memory */
- 	ret = probe_kernel_read(trampoline, (void *)start_offset, size);
-@@ -824,6 +826,12 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
- 	/* ALLOC_TRAMP flags lets us know we created it */
- 	ops->flags |= FTRACE_OPS_FL_ALLOC_TRAMP;
+ static inline void bpf_jit_binary_unlock_ro(struct bpf_binary_header *hdr)
+diff --git a/kernel/module.c b/kernel/module.c
+index 38bf28b5cc202..f797c6ace7121 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -1949,8 +1949,13 @@ void module_enable_ro(const struct module *mod, bool after_init)
+ 		return;
  
-+	/*
-+	 * Module allocation needs to be completed by making the page
-+	 * executable. The page is still writable, which is a security hazard,
-+	 * but anyhow ftrace breaks W^X completely.
-+	 */
-+	set_memory_x((unsigned long)trampoline, npages);
- 	return (unsigned long)trampoline;
- fail:
- 	tramp_free(trampoline, *tramp_size);
+ 	frob_text(&mod->core_layout, set_memory_ro);
++	frob_text(&mod->core_layout, set_memory_x);
++
+ 	frob_rodata(&mod->core_layout, set_memory_ro);
++
+ 	frob_text(&mod->init_layout, set_memory_ro);
++	frob_text(&mod->init_layout, set_memory_x);
++
+ 	frob_rodata(&mod->init_layout, set_memory_ro);
+ 
+ 	if (after_init)
 -- 
 2.20.1
 
