@@ -2,57 +2,56 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6909C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D76C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:36:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76A4424B64
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF06724B70
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:36:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187367;
-	bh=LAJXpkRKKZdaqI33F52nGjF/SAynE/Sw/WCxWOSgagw=;
+	s=default; t=1559187370;
+	bh=8gRQZ733zbroR7nLj5wr3+V5DHtMrt2aYomVG95miOY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L/40fd2Xl5gREBktklCH/qO5XV5InPvmykJXDd1jOrL1VtL9tjgBz5Qd2iPDI491W
-	 wyDzV1V2GQ44HArTKrEXQVSOpHu90vq/q8atDmi6v66SzxKtgkijkH1IPIeoY77NIi
-	 H4gLsSkzbcFAOiyCeLtmQryTX6DVknsao2I8sTu8=
+	b=K67mvvqSEqt5vGWVYmty1qfSvSQYh8krqBytmWf+cosa2ELC0ltwJhbnjZEL/7p05
+	 yf4m/0IMCWn8BeVhpScDOqUmYer8qK7nNHJGw+3lVCUc4w/QIgW8ksM1L+NG2Jt+AL
+	 1wCU0Bd8cNFVkodHRYABvH+vfHg4V2EMWFf7FBNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387569AbfE3DZc (ORCPT
+        id S2387557AbfE3DZc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 29 May 2019 23:25:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51548 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:50856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731570AbfE3DSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731566AbfE3DSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:18:30 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23CAF247DB;
-        Thu, 30 May 2019 03:18:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B72622472C;
+        Thu, 30 May 2019 03:18:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186310;
-        bh=LAJXpkRKKZdaqI33F52nGjF/SAynE/Sw/WCxWOSgagw=;
+        s=default; t=1559186309;
+        bh=8gRQZ733zbroR7nLj5wr3+V5DHtMrt2aYomVG95miOY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FkYyUDFQ77wtdX9aAz6vtYMYqn3youYGvf571OQeWuM5BWGIkbnJiip0W6NORZoH4
-         hs6f0itKcAxnqEZQP4aF7YEEAMbFJ5oQURS1y7Iv6tzXLy1YzADI4rkRoBDexbSPB7
-         eroUetU9qopdtJbYr77HQJaYysJp8CasTh/xRbbY=
+        b=0hOrIda8REVcbtSlduRMmOzECRvumE/hIwduBdcXRnv30VaW0eORJKq21M95KQi5S
+         Iaouj0K3UpNZQLZInt2KMQ/ixzKXP4C78plfl5PvkQ88CdsCFBrogkEwEPp3uoKD4d
+         tTGXSCMy9MJuVk7ACofeeORaBSKrzp7gwfZeKEQQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.14 001/193] x86: Hide the int3_emulate_call/jmp functions from UML
-Date:   Wed, 29 May 2019 20:04:15 -0700
-Message-Id: <20190530030447.114638092@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Anholt <eric@anholt.net>,
+        Dave Emett <david.emett@broadcom.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 270/276] drm/v3d: Handle errors from IRQ setup.
+Date:   Wed, 29 May 2019 20:07:08 -0700
+Message-Id: <20190530030542.094351553@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
-References: <20190530030446.953835040@linuxfoundation.org>
+In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
+References: <20190530030523.133519668@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,41 +60,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+[ Upstream commit fc22771547e7e8a63679f0218e943d72b107de65 ]
 
-commit 693713cbdb3a4bda5a8a678c31f06560bbb14657 upstream.
+Noted in review by Dave Emett for V3D 4.2 support.
 
-User Mode Linux does not have access to the ip or sp fields of the pt_regs,
-and accessing them causes UML to fail to build. Hide the int3_emulate_jmp()
-and int3_emulate_call() instructions from UML, as it doesn't need them
-anyway.
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Eric Anholt <eric@anholt.net>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190308174336.7866-1-eric@anholt.net
+Reviewed-by: Dave Emett <david.emett@broadcom.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/text-patching.h |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/v3d/v3d_drv.c |  8 ++++++--
+ drivers/gpu/drm/v3d/v3d_drv.h |  2 +-
+ drivers/gpu/drm/v3d/v3d_irq.c | 13 +++++++++++--
+ 3 files changed, 18 insertions(+), 5 deletions(-)
 
---- a/arch/x86/include/asm/text-patching.h
-+++ b/arch/x86/include/asm/text-patching.h
-@@ -38,6 +38,7 @@ extern void *text_poke(void *addr, const
- extern int poke_int3_handler(struct pt_regs *regs);
- extern void *text_poke_bp(void *addr, const void *opcode, size_t len, void *handler);
+diff --git a/drivers/gpu/drm/v3d/v3d_drv.c b/drivers/gpu/drm/v3d/v3d_drv.c
+index 2a85fa68ffea5..2a4c6187e675f 100644
+--- a/drivers/gpu/drm/v3d/v3d_drv.c
++++ b/drivers/gpu/drm/v3d/v3d_drv.c
+@@ -305,14 +305,18 @@ static int v3d_platform_drm_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto dev_destroy;
  
-+#ifndef CONFIG_UML_X86
- static inline void int3_emulate_jmp(struct pt_regs *regs, unsigned long ip)
- {
- 	regs->ip = ip;
-@@ -64,6 +65,7 @@ static inline void int3_emulate_call(str
- 	int3_emulate_push(regs, regs->ip - INT3_INSN_SIZE + CALL_INSN_SIZE);
- 	int3_emulate_jmp(regs, func);
+-	v3d_irq_init(v3d);
++	ret = v3d_irq_init(v3d);
++	if (ret)
++		goto gem_destroy;
+ 
+ 	ret = drm_dev_register(drm, 0);
+ 	if (ret)
+-		goto gem_destroy;
++		goto irq_disable;
+ 
+ 	return 0;
+ 
++irq_disable:
++	v3d_irq_disable(v3d);
+ gem_destroy:
+ 	v3d_gem_destroy(drm);
+ dev_destroy:
+diff --git a/drivers/gpu/drm/v3d/v3d_drv.h b/drivers/gpu/drm/v3d/v3d_drv.h
+index e6fed696ad869..0ad73f4b7509a 100644
+--- a/drivers/gpu/drm/v3d/v3d_drv.h
++++ b/drivers/gpu/drm/v3d/v3d_drv.h
+@@ -284,7 +284,7 @@ void v3d_invalidate_caches(struct v3d_dev *v3d);
+ void v3d_flush_caches(struct v3d_dev *v3d);
+ 
+ /* v3d_irq.c */
+-void v3d_irq_init(struct v3d_dev *v3d);
++int v3d_irq_init(struct v3d_dev *v3d);
+ void v3d_irq_enable(struct v3d_dev *v3d);
+ void v3d_irq_disable(struct v3d_dev *v3d);
+ void v3d_irq_reset(struct v3d_dev *v3d);
+diff --git a/drivers/gpu/drm/v3d/v3d_irq.c b/drivers/gpu/drm/v3d/v3d_irq.c
+index e07514eb11b51..22be0f2dff99c 100644
+--- a/drivers/gpu/drm/v3d/v3d_irq.c
++++ b/drivers/gpu/drm/v3d/v3d_irq.c
+@@ -137,7 +137,7 @@ v3d_hub_irq(int irq, void *arg)
+ 	return status;
  }
--#endif
-+#endif /* CONFIG_X86_64 */
-+#endif /* !CONFIG_UML_X86 */
  
- #endif /* _ASM_X86_TEXT_PATCHING_H */
+-void
++int
+ v3d_irq_init(struct v3d_dev *v3d)
+ {
+ 	int ret, core;
+@@ -154,13 +154,22 @@ v3d_irq_init(struct v3d_dev *v3d)
+ 	ret = devm_request_irq(v3d->dev, platform_get_irq(v3d->pdev, 0),
+ 			       v3d_hub_irq, IRQF_SHARED,
+ 			       "v3d_hub", v3d);
++	if (ret)
++		goto fail;
++
+ 	ret = devm_request_irq(v3d->dev, platform_get_irq(v3d->pdev, 1),
+ 			       v3d_irq, IRQF_SHARED,
+ 			       "v3d_core0", v3d);
+ 	if (ret)
+-		dev_err(v3d->dev, "IRQ setup failed: %d\n", ret);
++		goto fail;
+ 
+ 	v3d_irq_enable(v3d);
++	return 0;
++
++fail:
++	if (ret != -EPROBE_DEFER)
++		dev_err(v3d->dev, "IRQ setup failed: %d\n", ret);
++	return ret;
+ }
+ 
+ void
+-- 
+2.20.1
+
 
 
