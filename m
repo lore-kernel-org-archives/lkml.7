@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA192C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8DAEC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2992245A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 931922459C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:16:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186158;
-	bh=ecFYmclGr4Ma+CSqI+4aEMpcsPaqhZ/WD2pBQ7Jm9GI=;
+	s=default; t=1559186162;
+	bh=4kiLYyGmLgH7uW8Cb3XYZ+VS8QuZe6vKKHMPAZ1o7NU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GqmA9JvtrwPK0NFij2V6Yr9Zsg7+hLk6HhEFTTco+dh4zbhEe+nEV+A/SErR+NqJ8
-	 /faeoUJOfWXcj0K5JwUbVh8dptkWlzNrj+DO3A8MWko5qXmDaZwiAVzdWrIOMaXx3T
-	 43516EGu9c0HBNlZpjgDtlZn2acFm5S+YP6qTkIU=
+	b=pd7+FJ8wz6VN1+uOUQ7zF4LZfrxUIhqNHgvcEQFXKJZdLunuab5k/Bw/ZRS51K/lU
+	 mo/EysUp77UveMigCwW8xnzQKvkGdH6yUTbDf1OYWmugsKCv49Hlst5LpgIUkl0fv/
+	 64OFpE6rlJ9RHAI3A2lkLT8rUxBuAjh5HuRJpkRE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730547AbfE3DP5 (ORCPT
+        id S1730567AbfE3DQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:15:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57784 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:16:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729365AbfE3DNM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:13:12 -0400
+        id S1728521AbfE3DNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:14 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27A1F23F4C;
-        Thu, 30 May 2019 03:13:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58B5123D83;
+        Thu, 30 May 2019 03:13:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185992;
-        bh=ecFYmclGr4Ma+CSqI+4aEMpcsPaqhZ/WD2pBQ7Jm9GI=;
+        s=default; t=1559185993;
+        bh=4kiLYyGmLgH7uW8Cb3XYZ+VS8QuZe6vKKHMPAZ1o7NU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SljYIdwuG55wAbC7HHgdciNVmGM+DRVO2ghVMp7tY/PueIEPncfGkgJdBlLNcpp0a
-         aBxtmNqQQeWuI5I+RjXmPNcn93DOyfSHCBOdEmXETDASEhfXU76id0rD2/6bulG96C
-         T1CDfUotIDZIph0owLv3Qv8lADHymQGT76aAv2I8=
+        b=wR+3rk9bJ83OWKP7LsAk3ykdkNyzDZUjNykC7/Z7FKwJ1BrY9JlymlZyW/ppdDEX+
+         V9gVEWXg24LgQlAztQxZQt0y+1UdjBqiX1Sykaa4cyNmE+aPbmfX2m8ezNziQc03J8
+         y9vp6gQNG+9FNyam+9SknF+l4vxqkEq2TWndNHNY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot+457d3e2ffbcf31aee5c0@syzkaller.appspotmail.com,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: [PATCH 5.0 036/346] bpf: devmap: fix use-after-free Read in __dev_map_entry_free
-Date:   Wed, 29 May 2019 20:01:49 -0700
-Message-Id: <20190530030542.664181305@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.0 038/346] at76c50x-usb: Dont register led_trigger if usb_register_driver failed
+Date:   Wed, 29 May 2019 20:01:51 -0700
+Message-Id: <20190530030542.766352426@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -62,120 +60,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-commit 2baae3545327632167c0180e9ca1d467416f1919 upstream.
+commit 09ac2694b0475f96be895848687ebcbba97eeecf upstream.
 
-synchronize_rcu() is fine when the rcu callbacks only need
-to free memory (kfree_rcu() or direct kfree() call rcu call backs)
+Syzkaller report this:
 
-__dev_map_entry_free() is a bit more complex, so we need to make
-sure that call queued __dev_map_entry_free() callbacks have completed.
+[ 1213.468581] BUG: unable to handle kernel paging request at fffffbfff83bf338
+[ 1213.469530] #PF error: [normal kernel read fault]
+[ 1213.469530] PGD 237fe4067 P4D 237fe4067 PUD 237e60067 PMD 1c868b067 PTE 0
+[ 1213.473514] Oops: 0000 [#1] SMP KASAN PTI
+[ 1213.473514] CPU: 0 PID: 6321 Comm: syz-executor.0 Tainted: G         C        5.1.0-rc3+ #8
+[ 1213.473514] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+[ 1213.473514] RIP: 0010:strcmp+0x31/0xa0
+[ 1213.473514] Code: 00 00 00 00 fc ff df 55 53 48 83 ec 08 eb 0a 84 db 48 89 ef 74 5a 4c 89 e6 48 89 f8 48 89 fa 48 8d 6f 01 48 c1 e8 03 83 e2 07 <42> 0f b6 04 28 38 d0 7f 04 84 c0 75 50 48 89 f0 48 89 f2 0f b6 5d
+[ 1213.473514] RSP: 0018:ffff8881f2b7f950 EFLAGS: 00010246
+[ 1213.473514] RAX: 1ffffffff83bf338 RBX: ffff8881ea6f7240 RCX: ffffffff825350c6
+[ 1213.473514] RDX: 0000000000000000 RSI: ffffffffc1ee19c0 RDI: ffffffffc1df99c0
+[ 1213.473514] RBP: ffffffffc1df99c1 R08: 0000000000000001 R09: 0000000000000004
+[ 1213.473514] R10: 0000000000000000 R11: ffff8881de353f00 R12: ffff8881ee727900
+[ 1213.473514] R13: dffffc0000000000 R14: 0000000000000001 R15: ffffffffc1eeaaf0
+[ 1213.473514] FS:  00007fa66fa01700(0000) GS:ffff8881f7200000(0000) knlGS:0000000000000000
+[ 1213.473514] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1213.473514] CR2: fffffbfff83bf338 CR3: 00000001ebb9e005 CR4: 00000000007606f0
+[ 1213.473514] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[ 1213.473514] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[ 1213.473514] PKRU: 55555554
+[ 1213.473514] Call Trace:
+[ 1213.473514]  led_trigger_register+0x112/0x3f0
+[ 1213.473514]  led_trigger_register_simple+0x7a/0x110
+[ 1213.473514]  ? 0xffffffffc1c10000
+[ 1213.473514]  at76_mod_init+0x77/0x1000 [at76c50x_usb]
+[ 1213.473514]  do_one_initcall+0xbc/0x47d
+[ 1213.473514]  ? perf_trace_initcall_level+0x3a0/0x3a0
+[ 1213.473514]  ? kasan_unpoison_shadow+0x30/0x40
+[ 1213.473514]  ? kasan_unpoison_shadow+0x30/0x40
+[ 1213.473514]  do_init_module+0x1b5/0x547
+[ 1213.473514]  load_module+0x6405/0x8c10
+[ 1213.473514]  ? module_frob_arch_sections+0x20/0x20
+[ 1213.473514]  ? kernel_read_file+0x1e6/0x5d0
+[ 1213.473514]  ? find_held_lock+0x32/0x1c0
+[ 1213.473514]  ? cap_capable+0x1ae/0x210
+[ 1213.473514]  ? __do_sys_finit_module+0x162/0x190
+[ 1213.473514]  __do_sys_finit_module+0x162/0x190
+[ 1213.473514]  ? __ia32_sys_init_module+0xa0/0xa0
+[ 1213.473514]  ? __mutex_unlock_slowpath+0xdc/0x690
+[ 1213.473514]  ? wait_for_completion+0x370/0x370
+[ 1213.473514]  ? vfs_write+0x204/0x4a0
+[ 1213.473514]  ? do_syscall_64+0x18/0x450
+[ 1213.473514]  do_syscall_64+0x9f/0x450
+[ 1213.473514]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[ 1213.473514] RIP: 0033:0x462e99
+[ 1213.473514] Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+[ 1213.473514] RSP: 002b:00007fa66fa00c58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+[ 1213.473514] RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
+[ 1213.473514] RDX: 0000000000000000 RSI: 0000000020000300 RDI: 0000000000000003
+[ 1213.473514] RBP: 00007fa66fa00c70 R08: 0000000000000000 R09: 0000000000000000
+[ 1213.473514] R10: 0000000000000000 R11: 0000000000000246 R12: 00007fa66fa016bc
+[ 1213.473514] R13: 00000000004bcefa R14: 00000000006f6fb0 R15: 0000000000000004
 
-sysbot report:
+If usb_register failed, no need to call led_trigger_register_simple.
 
-BUG: KASAN: use-after-free in dev_map_flush_old kernel/bpf/devmap.c:365
-[inline]
-BUG: KASAN: use-after-free in __dev_map_entry_free+0x2a8/0x300
-kernel/bpf/devmap.c:379
-Read of size 8 at addr ffff8801b8da38c8 by task ksoftirqd/1/18
-
-CPU: 1 PID: 18 Comm: ksoftirqd/1 Not tainted 4.17.0+ #39
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x1b9/0x294 lib/dump_stack.c:113
-  print_address_description+0x6c/0x20b mm/kasan/report.c:256
-  kasan_report_error mm/kasan/report.c:354 [inline]
-  kasan_report.cold.7+0x242/0x2fe mm/kasan/report.c:412
-  __asan_report_load8_noabort+0x14/0x20 mm/kasan/report.c:433
-  dev_map_flush_old kernel/bpf/devmap.c:365 [inline]
-  __dev_map_entry_free+0x2a8/0x300 kernel/bpf/devmap.c:379
-  __rcu_reclaim kernel/rcu/rcu.h:178 [inline]
-  rcu_do_batch kernel/rcu/tree.c:2558 [inline]
-  invoke_rcu_callbacks kernel/rcu/tree.c:2818 [inline]
-  __rcu_process_callbacks kernel/rcu/tree.c:2785 [inline]
-  rcu_process_callbacks+0xe9d/0x1760 kernel/rcu/tree.c:2802
-  __do_softirq+0x2e0/0xaf5 kernel/softirq.c:284
-  run_ksoftirqd+0x86/0x100 kernel/softirq.c:645
-  smpboot_thread_fn+0x417/0x870 kernel/smpboot.c:164
-  kthread+0x345/0x410 kernel/kthread.c:240
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:412
-
-Allocated by task 6675:
-  save_stack+0x43/0xd0 mm/kasan/kasan.c:448
-  set_track mm/kasan/kasan.c:460 [inline]
-  kasan_kmalloc+0xc4/0xe0 mm/kasan/kasan.c:553
-  kmem_cache_alloc_trace+0x152/0x780 mm/slab.c:3620
-  kmalloc include/linux/slab.h:513 [inline]
-  kzalloc include/linux/slab.h:706 [inline]
-  dev_map_alloc+0x208/0x7f0 kernel/bpf/devmap.c:102
-  find_and_alloc_map kernel/bpf/syscall.c:129 [inline]
-  map_create+0x393/0x1010 kernel/bpf/syscall.c:453
-  __do_sys_bpf kernel/bpf/syscall.c:2351 [inline]
-  __se_sys_bpf kernel/bpf/syscall.c:2328 [inline]
-  __x64_sys_bpf+0x303/0x510 kernel/bpf/syscall.c:2328
-  do_syscall_64+0x1b1/0x800 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 26:
-  save_stack+0x43/0xd0 mm/kasan/kasan.c:448
-  set_track mm/kasan/kasan.c:460 [inline]
-  __kasan_slab_free+0x11a/0x170 mm/kasan/kasan.c:521
-  kasan_slab_free+0xe/0x10 mm/kasan/kasan.c:528
-  __cache_free mm/slab.c:3498 [inline]
-  kfree+0xd9/0x260 mm/slab.c:3813
-  dev_map_free+0x4fa/0x670 kernel/bpf/devmap.c:191
-  bpf_map_free_deferred+0xba/0xf0 kernel/bpf/syscall.c:262
-  process_one_work+0xc64/0x1b70 kernel/workqueue.c:2153
-  worker_thread+0x181/0x13a0 kernel/workqueue.c:2296
-  kthread+0x345/0x410 kernel/kthread.c:240
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:412
-
-The buggy address belongs to the object at ffff8801b8da37c0
-  which belongs to the cache kmalloc-512 of size 512
-The buggy address is located 264 bytes inside of
-  512-byte region [ffff8801b8da37c0, ffff8801b8da39c0)
-The buggy address belongs to the page:
-page:ffffea0006e368c0 count:1 mapcount:0 mapping:ffff8801da800940
-index:0xffff8801b8da3540
-flags: 0x2fffc0000000100(slab)
-raw: 02fffc0000000100 ffffea0007217b88 ffffea0006e30cc8 ffff8801da800940
-raw: ffff8801b8da3540 ffff8801b8da3040 0000000100000004 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8801b8da3780: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
-  ffff8801b8da3800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff8801b8da3880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                               ^
-  ffff8801b8da3900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8801b8da3980: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-
-Fixes: 546ac1ffb70d ("bpf: add devmap, a map for storing net device references")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot+457d3e2ffbcf31aee5c0@syzkaller.appspotmail.com
-Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 1264b951463a ("at76c50x-usb: add driver")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/bpf/devmap.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/wireless/atmel/at76c50x-usb.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/kernel/bpf/devmap.c
-+++ b/kernel/bpf/devmap.c
-@@ -164,6 +164,9 @@ static void dev_map_free(struct bpf_map
- 	bpf_clear_redirect_map(map);
- 	synchronize_rcu();
+--- a/drivers/net/wireless/atmel/at76c50x-usb.c
++++ b/drivers/net/wireless/atmel/at76c50x-usb.c
+@@ -2585,8 +2585,8 @@ static int __init at76_mod_init(void)
+ 	if (result < 0)
+ 		printk(KERN_ERR DRIVER_NAME
+ 		       ": usb_register failed (status %d)\n", result);
+-
+-	led_trigger_register_simple("at76_usb-tx", &ledtrig_tx);
++	else
++		led_trigger_register_simple("at76_usb-tx", &ledtrig_tx);
+ 	return result;
+ }
  
-+	/* Make sure prior __dev_map_entry_free() have completed. */
-+	rcu_barrier();
-+
- 	/* To ensure all pending flush operations have completed wait for flush
- 	 * bitmap to indicate all flush_needed bits to be zero on _all_ cpus.
- 	 * Because the above synchronize_rcu() ensures the map is disconnected
 
 
