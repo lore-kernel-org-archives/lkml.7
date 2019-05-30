@@ -2,249 +2,74 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F276C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A914C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DCEB25F49
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DE4725F4C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:19:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ldmRqpsU"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="cOO6KmAp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbfE3SQq (ORCPT
+        id S1726550AbfE3STe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 14:16:46 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:58358 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726280AbfE3SQp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 14:16:45 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4UIGVXa119476;
-        Thu, 30 May 2019 13:16:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559240191;
-        bh=n5CWcuE9+ctR+DAwBJYtfbZT8XJJET44y5TBhMAnNIA=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ldmRqpsUxMYEzje8WCgUGWkjZkNCMDZGIBa/oO4V8usY+yq0fDEShNdjdc3OMuvW2
-         uww3pZEqgtCeaFJVfqTgsJoPRJnld71wo2DMfVRd8nm/qmDzs89iieYbwAqHPu6Vt+
-         69dsS/mSU39ClwezlMA6bDm3fwYJX1fXb3gxoyrs=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4UIGVGR094020
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 30 May 2019 13:16:31 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 30
- May 2019 13:16:31 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 30 May 2019 13:16:31 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4UIGVTM054264;
-        Thu, 30 May 2019 13:16:31 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v4 2/2] documention: leds: Add multicolor class documentation
-Date:   Thu, 30 May 2019 13:16:29 -0500
-Message-ID: <20190530181630.30373-2-dmurphy@ti.com>
-X-Mailer: git-send-email 2.21.0.5.gaeb582a983
-In-Reply-To: <20190530181630.30373-1-dmurphy@ti.com>
-References: <20190530181630.30373-1-dmurphy@ti.com>
+        Thu, 30 May 2019 14:19:34 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:35080 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725961AbfE3STe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 14:19:34 -0400
+Received: from [172.20.8.77] (unknown [207.225.69.115])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id F1E911EC033F;
+        Thu, 30 May 2019 20:19:31 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1559240372;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+FySjQvkw3gub2985lSwYfwdxjK48qhJJdaawn7bwWw=;
+        b=cOO6KmApd03PNn2XMw3Tn6baTYU4r7UAS1R913nuS0nHijjQ6j8BDkFWp6voJjGQEy3tgO
+        3fs7DJOfmS6pj8ZteGTAFM2et+0JKArhtHQvmGZi3eS3W4vzKN4WQoBTZmnac5oF95KgHh
+        IiUG2E6k9av3XSOGh2eYfXobE1A7Tr4=
+Date:   Thu, 30 May 2019 11:19:27 -0700
+User-Agent: K-9 Mail for Android
+In-Reply-To: <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
+References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com> <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+To:     Hanna Hawa <hhhawa@amazon.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, mchehab@kernel.org, james.morse@arm.com,
+        davem@davemloft.net, gregkh@linuxfoundation.org,
+        nicolas.ferre@microchip.com, paulmck@linux.ibm.com,
+        dwmw@amazon.co.uk, benh@amazon.com
+CC:     ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com,
+        hanochu@amazon.com, hhhawa@amazon.com, linux-edac@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Boris Petkov <bp@alien8.de>
+Message-ID: <DB09EE2A-7397-4063-B925-66658D0105A5@alien8.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the support documentation on the multicolor LED framework.
-This document defines the directores and file generated by the
-multicolor framework.  It also documents usage.
+On May 30, 2019 3:15:29 AM PDT, Hanna Hawa <hhhawa@amazon=2Ecom> wrote:
+>Add support for error detection and correction for Amazon's Annapurna
+>Labs SoCs for L1/L2 caches=2E
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
 
-v4 - Add LED class parent brightness description - https://lore.kernel.org/patchwork/patch/1078398/
+So this should be a driver for the whole annapurna platform and not only a=
+bout the RAS functionality in an IP like the caches=2E See other ARM EDAC d=
+rivers in drivers/edac/ for an example=2E
 
- Documentation/leds/leds-class-multicolor.txt | 159 +++++++++++++++++++
- 1 file changed, 159 insertions(+)
- create mode 100644 Documentation/leds/leds-class-multicolor.txt
+Thx=2E
 
-diff --git a/Documentation/leds/leds-class-multicolor.txt b/Documentation/leds/leds-class-multicolor.txt
-new file mode 100644
-index 000000000000..c8658a068361
---- /dev/null
-+++ b/Documentation/leds/leds-class-multicolor.txt
-@@ -0,0 +1,159 @@
-+
-+Multi Color LED handling under Linux
-+=================================================
-+
-+Author: Dan Murphy <dmurphy@ti.com>
-+
-+Description
-+-----------
-+There are varying monochrome LED colors available for application.  These
-+LEDs can be used as a single use case LED or can be mixed with other color
-+LEDs to produce the full spectrum of color.  Color LEDs that are grouped
-+can be presented under a single LED node with individual color control.
-+The multicolor class groups these LEDs and allows dynamically setting the value
-+of a single LED or setting the brightness values of the LEDs in the group and
-+updating the LEDs virtually simultaneously.
-+
-+Multicolor Class Control
-+-------------------------
-+The multicolor class presents the LED groups under a directory called "colors".
-+This directory is a child under the LED parent node created by the led_class
-+framework.  The led_class framework is documented in led-class.txt within this
-+documentation directory.
-+
-+Each colored LED is given its own directory.  These directories can be, but not
-+limited to red, green, blue, white, amber, yellow and violet.  Under these
-+directories the brightness and max_brightness files are presented for each LED.
-+
-+Under the "colors" directory there are two files created: "sync" and
-+"sync_enable". The sync_enable file controls whether the LED brightness
-+value is set real time or if the LED brightness value setting is deferred until
-+the "sync" file is written.  If sync_enable is set then writing to each LED
-+"brightness" file will store the brightness value.  Once the "sync" file is
-+written then each LED color defined in the node will write the brightness of
-+the LED in the device driver.
-+
-+If "sync_enable" is not set then writing the brightness value of the LED to the
-+device driver is done immediately.  Writing the "sync" file has no affect.
-+
-+Directory Layout Example
-+------------------------
-+root:/sys/class/leds/rgb:grouped_leds# ls -lR colors/
-+colors/:
-+drwxr-xr-x    2 root     root             0 Jun 28 20:21 blue
-+drwxr-xr-x    2 root     root             0 Jun 28 20:21 green
-+drwxr-xr-x    2 root     root             0 Jun 28 20:21 red
-+--w-------    1 root     root          4096 Jun 28 20:21 sync
-+-rw-------    1 root     root          4096 Jun 28 20:22 sync_enable
-+
-+colors/blue:
-+-rw-------    1 root     root          4096 Jun 28 20:21 brightness
-+-r--------    1 root     root          4096 Jun 28 20:27 max_brightness
-+
-+colors/green:
-+-rw-------    1 root     root          4096 Jun 28 20:22 brightness
-+-r--------    1 root     root          4096 Jun 28 20:27 max_brightness
-+
-+colors/red:
-+-rw-------    1 root     root          4096 Jun 28 20:21 brightness
-+-r--------    1 root     root          4096 Jun 28 20:27 max_brightness
-+
-+Example of Writing LEDs with Sync Enabled
-+-----------------------------------------
-+Below the red, green and blue LEDs are set to corresponding values.  These
-+values are stored and not written until the sync file is written.
-+
-+cd /sys/class/leds/rgb:grouped_leds/colors
-+
-+echo 1 > sync_enable
-+
-+echo 100 > red/brightness
-+echo 80 > green/brightness
-+echo 180 > blue/brightness
-+
-+* LED device driver has not been updated and the LED states have not changed.
-+* Writing the LED brightness files again will only change the stored value and
-+* not the device driver value.
-+
-+echo 1 > sync
-+
-+* LED device driver has been updated; the LEDs should present the brightness
-+* levels that have been set.  Since sync_enable is still enabled writing to the
-+* LED brightness files will not change the current brightnesses.
-+
-+Example of Writing LEDs with Sync Disabled
-+------------------------------------------
-+Below the values of each LED are written to the device driver immediately upon
-+request.
-+
-+cd /sys/class/leds/rgb:grouped_leds/colors
-+
-+echo 0 > sync_enable
-+
-+echo 100 > red/brightness // Red LED should be on with the current brightness
-+echo 80 > green/brightness // Green LED should be on with the current brightness
-+echo 180 > blue/brightness // Blue LED should be on with the current brightness
-+.
-+.
-+.
-+echo 0 > green/brightness // Green LED should be off
-+
-+Multicolor Class Brightness Control
-+-----------------------------------
-+The multicolor class will redirect the device drivers call back
-+function for brightness control to the multicolor class brightness
-+control function.
-+
-+The brightness level for each LED is calculated based on the color LED
-+brightness setting divided by the color LED max brightness setting multiplied by
-+the requested value.
-+
-+led_brightness = requested_value*(led_color_brightness/led_color_max_brightness)
-+
-+Example:
-+Three LEDs are present in the group as defined in "Directory Layout Example"
-+within this document.
-+
-+A user first writes the color LED brightness file with the brightness level that
-+is neccesary to achieve a blueish violet output from the RGB LED group.
-+
-+echo 138 > /sys/class/leds/rgb:grouped_leds/red/brightness
-+echo 43 > /sys/class/leds/rgb:grouped_leds/green/brightness
-+echo 226 > /sys/class/leds/rgb:grouped_leds/blue/brightness
-+
-+red -
-+	brightness = 138
-+	max_brightness = 255
-+green -
-+	brightness = 43
-+	max_brightness = 255
-+blue -
-+	brightness = 226
-+	max_brightness = 255
-+
-+The user can control the brightness of that RGB group by writing the parent
-+'brightness' control.  Assuming a parent max_brightness of 255 the user may want
-+to dim the LED color group to half.  The user would write a value of 128 to the
-+parent brightness file then the values written to each LED will be adjusted
-+base on this value
-+
-+cat /sys/class/leds/rgb:grouped_leds/max_brightness
-+255
-+echo 128 > /sys/class/leds/rgb:grouped_leds/brightness
-+
-+adjusted_red_value = 128 * (138/255) = 69
-+adjusted_green_value = 128 * (43/255) = 21
-+adjusted_blue_value = 128 * (226/255) = 113
-+
-+Reading the parent brightness file will return the current brightness value of
-+the color LED group.
-+
-+cat /sys/class/leds/rgb:grouped_leds/max_brightness
-+255
-+
-+echo 128 > /sys/class/leds/rgb:grouped_leds/brightness
-+
-+cat /sys/class/leds/rgb:grouped_leds/max_brightness
-+128
-+
-+
--- 
-2.21.0.5.gaeb582a983
-
+--=20
+Sent from a small device: formatting sux and brevity is inevitable=2E 
