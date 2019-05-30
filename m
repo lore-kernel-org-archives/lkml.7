@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7AE0C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2669C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B193725518
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8E1622DA7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:27:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190472;
-	bh=ViJJxfwoeOoIKdA6xR1sJeWRkJkUY+x4Dz0tnOwqoZ8=;
+	s=default; t=1559190476;
+	bh=Kk169pAbbcX7z6Btstk81E+FvhtTvb7zc2UpRbJBs74=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x76aDD0zR9KUyeZvk4V3csGV/wA6QRLPkDK4ipJtF5shQKRjPn+tlK7r/Fd0RhrQc
-	 5pw3FAAGmVXMCRg2KuprkdJTlr5ZdK9b7GHOPJVn41sWqrzQ+KWg0EkMVAA/DBR0JI
-	 v7zonpat+4DJpqUdFdaOPdkPrzxDmaovYZdhxulg=
+	b=LPzfT5STceY423EQSAXzKm8ezBrnH/4hKd4mD+SOgSfSw+DhemDnLETd5H89KHs31
+	 ZdkHwez2wtMTb1d0/+AJWRmRzz4jl5T6p/MsVMX4h+ULWXHfzfCnv4Roy9fOiWBvI5
+	 7vXNwpAHmMu5h7qCYS5eIe6iQrlppplVkDet0LCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732123AbfE3E1w (ORCPT
+        id S2388030AbfE3E1z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:27:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33692 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:27:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729809AbfE3DOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728932AbfE3DOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:14:18 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 886A124575;
-        Thu, 30 May 2019 03:14:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFE2724569;
+        Thu, 30 May 2019 03:14:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186058;
-        bh=ViJJxfwoeOoIKdA6xR1sJeWRkJkUY+x4Dz0tnOwqoZ8=;
+        bh=Kk169pAbbcX7z6Btstk81E+FvhtTvb7zc2UpRbJBs74=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HfUcD8923I8xM5Wz96kNlugKg57FuctTdbVR0p/LMKbcUbxCckH5+bl8q/YKo6uJx
-         2Kt0/4NbVh6b1gFjYXIrNs4ckTtQ8wNEU/tZIwSBeaKdf6e6GCiazZEmZWEqpZjbRW
-         LwdlYAHxVBwjbU7OnH/vm6+OUNkQ1HmTN/4D+Wu4=
+        b=mg49cbPKrk5fN66IT79Sf7/Fzm8rWNcxpaTtfOVMSUk6eX/uI/4Sl9bNQnlDyZ1yh
+         5MwnkEb9gOE6ISVN+Xs0ibAhFyDEsjHE2G9IZnkemi+/tzzfwKOVCXNkiyXjc5dpV+
+         ChwuMtq9hDy3sfLaehLrYynQclXXOQ2ojcZqR4ik=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Hannes Reinecke <hare@suse.com>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org, Shenghui Wang <shhuiw@foxmail.com>,
+        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 117/346] bcache: return error immediately in bch_journal_replay()
-Date:   Wed, 29 May 2019 20:03:10 -0700
-Message-Id: <20190530030547.009338546@linuxfoundation.org>
+Subject: [PATCH 5.0 116/346] bcache: avoid potential memleak of list of journal_replay(s) in the CACHE_SYNC branch of run_cache_set
+Date:   Wed, 29 May 2019 20:03:09 -0700
+Message-Id: <20190530030546.959592924@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -60,50 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 68d10e6979a3b59e3cd2e90bfcafed79c4cf180a ]
+[ Upstream commit 95f18c9d1310730d075499a75aaf13bcd60405a7 ]
 
-When failure happens inside bch_journal_replay(), calling
-cache_set_err_on() and handling the failure in async way is not a good
-idea. Because after bch_journal_replay() returns, registering code will
-continue to execute following steps, and unregistering code triggered
-by cache_set_err_on() is running in same time. First it is unnecessary
-to handle failure and unregister cache set in an async way, second there
-might be potential race condition to run register and unregister code
-for same cache set.
+In the CACHE_SYNC branch of run_cache_set(), LIST_HEAD(journal) is used
+to collect journal_replay(s) and filled by bch_journal_read().
 
-So in this patch, if failure happens in bch_journal_replay(), we don't
-call cache_set_err_on(), and just print out the same error message to
-kernel message buffer, then return -EIO immediately caller. Then caller
-can detect such failure and handle it in synchrnozied way.
+If all goes well, bch_journal_replay() will release the list of
+jounal_replay(s) at the end of the branch.
 
+If something goes wrong, code flow will jump to the label "err:" and leave
+the list unreleased.
+
+This patch will release the list of journal_replay(s) in the case of
+error detected.
+
+v1 -> v2:
+* Move the release code to the location after label 'err:' to
+  simply the change.
+
+Signed-off-by: Shenghui Wang <shhuiw@foxmail.com>
 Signed-off-by: Coly Li <colyli@suse.de>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/journal.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/md/bcache/super.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/md/bcache/journal.c b/drivers/md/bcache/journal.c
-index d3725c17ce3a6..9e557164209c1 100644
---- a/drivers/md/bcache/journal.c
-+++ b/drivers/md/bcache/journal.c
-@@ -330,9 +330,12 @@ int bch_journal_replay(struct cache_set *s, struct list_head *list)
- 	list_for_each_entry(i, list, list) {
- 		BUG_ON(i->pin && atomic_read(i->pin) != 1);
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index ee36e6b3bcad3..acf8e2e3890c7 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -1782,6 +1782,8 @@ static void run_cache_set(struct cache_set *c)
+ 	struct cache *ca;
+ 	struct closure cl;
+ 	unsigned int i;
++	LIST_HEAD(journal);
++	struct journal_replay *l;
  
--		cache_set_err_on(n != i->j.seq, s,
--"bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
--				 n, i->j.seq - 1, start, end);
-+		if (n != i->j.seq) {
-+			pr_err("bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
-+			n, i->j.seq - 1, start, end);
-+			ret = -EIO;
-+			goto err;
-+		}
+ 	closure_init_stack(&cl);
  
- 		for (k = i->j.start;
- 		     k < bset_bkey_last(&i->j);
+@@ -1939,6 +1941,12 @@ static void run_cache_set(struct cache_set *c)
+ 	set_bit(CACHE_SET_RUNNING, &c->flags);
+ 	return;
+ err:
++	while (!list_empty(&journal)) {
++		l = list_first_entry(&journal, struct journal_replay, list);
++		list_del(&l->list);
++		kfree(l);
++	}
++
+ 	closure_sync(&cl);
+ 	/* XXX: test this, it's broken */
+ 	bch_cache_set_error(c, "%s", err);
 -- 
 2.20.1
 
