@@ -7,48 +7,53 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C5CEC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A697FC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55F4723CE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80A7B24B3B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187265;
-	bh=AKYKhN37l1ofoSY5p/TrruqFDqSsGXnhr/5Ei12xz9M=;
+	s=default; t=1559187267;
+	bh=OxCAIHPoH18e4bJyXWJl8c54vD7RQRBMGt1OQmZG0A4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s9I43btiLbaRKC7m22jkPQOp4GTi4XCdvTIiuuqU5uOqYiaDZFEiWwaXHTQXLcqBQ
-	 A6YHdNPDHU34G4aqRe9ITEI4NBBaPwTNOpE69sFZJpuhP0J9E90EAAt1mg1Kjdzb6L
-	 1wIX9ueApBlAUaKpsiCMwaE0HKkLbnLmLnLbfEDE=
+	b=Lylk6zahSTZOsrryqwxTiJU4+1sd4r+RChChv/QOwvTOEYq22/l73fXmTNCqspOrN
+	 yVdxvzXL7cOfVzMTXUTr27b22lRNmwmthAyJjxULCpuI7du+UtLUM6hf6rezpFXJct
+	 IrFrSuuerg13D1MKnQbHeX/AmoMSGmtcuYSFFeWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387980AbfE3D1T (ORCPT
+        id S1733010AbfE3D1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:27:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54748 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:27:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731872AbfE3DTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:22 -0400
+        id S1731864AbfE3DTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:21 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13E6C24818;
-        Thu, 30 May 2019 03:19:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1BE824871;
+        Thu, 30 May 2019 03:19:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186362;
-        bh=AKYKhN37l1ofoSY5p/TrruqFDqSsGXnhr/5Ei12xz9M=;
+        s=default; t=1559186359;
+        bh=OxCAIHPoH18e4bJyXWJl8c54vD7RQRBMGt1OQmZG0A4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DSS4CeOr5Si5NlW+lf2F6bQ7N+2P0NDiHIDFfAB+hSuam0aWx9yPfhbQ9lJjqgQdw
-         VChOnpohTNiWs0uqyutwxbh5AZ0W1eln7h7jcgxb+4WGs2U8FiNjwN53epBqFniZNn
-         Sp02kGtdVGrN2+vh4AplMH1QRIO9pnNWULyJlxgE=
+        b=UCtIS8QHlwpjBNxR2kh9vJ1KLM1pBCth8+/zx+4z5YVmR8qwGXUni/Aaqr74dGxsh
+         KUKMUJimUDDbDOIBqKwrzCEieyT3Pn4/W0KVKyMEH//Z8I5BDSs65Y342KxN5Gkec+
+         bVeKpgDgEB4fKOIseV7+sf1H7Pd5OhoFQV6m6A74=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 109/193] arm64: vdso: Fix clock_getres() for CLOCK_REALTIME
-Date:   Wed, 29 May 2019 20:06:03 -0700
-Message-Id: <20190530030503.987263643@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@suse.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Mitsuo Hayasaka <mitsuo.hayasaka.hu@hitachi.com>,
+        Nicolai Stange <nstange@suse.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 105/193] x86/irq/64: Limit IST stack overflow check to #DB stack
+Date:   Wed, 29 May 2019 20:05:59 -0700
+Message-Id: <20190530030503.464322165@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -61,104 +66,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 81fb8736dd81da3fe94f28968dac60f392ec6746 ]
+[ Upstream commit 7dbcf2b0b770eeb803a416ee8dcbef78e6389d40 ]
 
-clock_getres() in the vDSO library has to preserve the same behaviour
-of posix_get_hrtimer_res().
+Commit
 
-In particular, posix_get_hrtimer_res() does:
+  37fe6a42b343 ("x86: Check stack overflow in detail")
 
-    sec = 0;
-    ns = hrtimer_resolution;
+added a broad check for the full exception stack area, i.e. it considers
+the full exception stack area as valid.
 
-where 'hrtimer_resolution' depends on whether or not high resolution
-timers are enabled, which is a runtime decision.
+That's wrong in two aspects:
 
-The vDSO incorrectly returns the constant CLOCK_REALTIME_RES. Fix this
-by exposing 'hrtimer_resolution' in the vDSO datapage and returning that
-instead.
+ 1) It does not check the individual areas one by one
 
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-[will: Use WRITE_ONCE(), move adr off COARSE path, renumber labels, use 'w' reg]
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+ 2) #DF, NMI and #MCE are not enabling interrupts which means that a
+    regular device interrupt cannot happen in their context. In fact if a
+    device interrupt hits one of those IST stacks that's a bug because some
+    code path enabled interrupts while handling the exception.
+
+Limit the check to the #DB stack and consider all other IST stacks as
+'overflow' or invalid.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Mitsuo Hayasaka <mitsuo.hayasaka.hu@hitachi.com>
+Cc: Nicolai Stange <nstange@suse.de>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190414160143.682135110@linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/vdso_datapage.h | 1 +
- arch/arm64/kernel/asm-offsets.c        | 2 +-
- arch/arm64/kernel/vdso.c               | 3 +++
- arch/arm64/kernel/vdso/gettimeofday.S  | 7 +++----
- 4 files changed, 8 insertions(+), 5 deletions(-)
+ arch/x86/kernel/irq_64.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/include/asm/vdso_datapage.h b/arch/arm64/include/asm/vdso_datapage.h
-index 2b9a63771eda8..f89263c8e11af 100644
---- a/arch/arm64/include/asm/vdso_datapage.h
-+++ b/arch/arm64/include/asm/vdso_datapage.h
-@@ -38,6 +38,7 @@ struct vdso_data {
- 	__u32 tz_minuteswest;	/* Whacky timezone stuff */
- 	__u32 tz_dsttime;
- 	__u32 use_syscall;
-+	__u32 hrtimer_res;
- };
+diff --git a/arch/x86/kernel/irq_64.c b/arch/x86/kernel/irq_64.c
+index 0469cd078db15..b50ac9c7397bb 100644
+--- a/arch/x86/kernel/irq_64.c
++++ b/arch/x86/kernel/irq_64.c
+@@ -26,9 +26,18 @@ int sysctl_panic_on_stackoverflow;
+ /*
+  * Probabilistic stack overflow check:
+  *
+- * Only check the stack in process context, because everything else
+- * runs on the big interrupt stacks. Checking reliably is too expensive,
+- * so we just check from interrupts.
++ * Regular device interrupts can enter on the following stacks:
++ *
++ * - User stack
++ *
++ * - Kernel task stack
++ *
++ * - Interrupt stack if a device driver reenables interrupts
++ *   which should only happen in really old drivers.
++ *
++ * - Debug IST stack
++ *
++ * All other contexts are invalid.
+  */
+ static inline void stack_overflow_check(struct pt_regs *regs)
+ {
+@@ -53,8 +62,8 @@ static inline void stack_overflow_check(struct pt_regs *regs)
+ 		return;
  
- #endif /* !__ASSEMBLY__ */
-diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
-index b5e43b01b396c..b4a0f4ab770ab 100644
---- a/arch/arm64/kernel/asm-offsets.c
-+++ b/arch/arm64/kernel/asm-offsets.c
-@@ -95,7 +95,7 @@ int main(void)
-   DEFINE(CLOCK_REALTIME,	CLOCK_REALTIME);
-   DEFINE(CLOCK_MONOTONIC,	CLOCK_MONOTONIC);
-   DEFINE(CLOCK_MONOTONIC_RAW,	CLOCK_MONOTONIC_RAW);
--  DEFINE(CLOCK_REALTIME_RES,	MONOTONIC_RES_NSEC);
-+  DEFINE(CLOCK_REALTIME_RES,	offsetof(struct vdso_data, hrtimer_res));
-   DEFINE(CLOCK_REALTIME_COARSE,	CLOCK_REALTIME_COARSE);
-   DEFINE(CLOCK_MONOTONIC_COARSE,CLOCK_MONOTONIC_COARSE);
-   DEFINE(CLOCK_COARSE_RES,	LOW_RES_NSEC);
-diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
-index 2d419006ad433..ec0bb588d7553 100644
---- a/arch/arm64/kernel/vdso.c
-+++ b/arch/arm64/kernel/vdso.c
-@@ -232,6 +232,9 @@ void update_vsyscall(struct timekeeper *tk)
- 	vdso_data->wtm_clock_sec		= tk->wall_to_monotonic.tv_sec;
- 	vdso_data->wtm_clock_nsec		= tk->wall_to_monotonic.tv_nsec;
+ 	oist = this_cpu_ptr(&orig_ist);
+-	estack_top = (u64)oist->ist[0] - EXCEPTION_STKSZ + STACK_TOP_MARGIN;
+-	estack_bottom = (u64)oist->ist[N_EXCEPTION_STACKS - 1];
++	estack_bottom = (u64)oist->ist[DEBUG_STACK];
++	estack_top = estack_bottom - DEBUG_STKSZ + STACK_TOP_MARGIN;
+ 	if (regs->sp >= estack_top && regs->sp <= estack_bottom)
+ 		return;
  
-+	/* Read without the seqlock held by clock_getres() */
-+	WRITE_ONCE(vdso_data->hrtimer_res, hrtimer_resolution);
-+
- 	if (!use_syscall) {
- 		/* tkr_mono.cycle_last == tkr_raw.cycle_last */
- 		vdso_data->cs_cycle_last	= tk->tkr_mono.cycle_last;
-diff --git a/arch/arm64/kernel/vdso/gettimeofday.S b/arch/arm64/kernel/vdso/gettimeofday.S
-index 76320e9209651..df829c4346fac 100644
---- a/arch/arm64/kernel/vdso/gettimeofday.S
-+++ b/arch/arm64/kernel/vdso/gettimeofday.S
-@@ -301,13 +301,14 @@ ENTRY(__kernel_clock_getres)
- 	ccmp	w0, #CLOCK_MONOTONIC_RAW, #0x4, ne
- 	b.ne	1f
- 
--	ldr	x2, 5f
-+	adr	vdso_data, _vdso_data
-+	ldr	w2, [vdso_data, #CLOCK_REALTIME_RES]
- 	b	2f
- 1:
- 	cmp	w0, #CLOCK_REALTIME_COARSE
- 	ccmp	w0, #CLOCK_MONOTONIC_COARSE, #0x4, ne
- 	b.ne	4f
--	ldr	x2, 6f
-+	ldr	x2, 5f
- 2:
- 	cbz	w1, 3f
- 	stp	xzr, x2, [x1]
-@@ -321,8 +322,6 @@ ENTRY(__kernel_clock_getres)
- 	svc	#0
- 	ret
- 5:
--	.quad	CLOCK_REALTIME_RES
--6:
- 	.quad	CLOCK_COARSE_RES
- 	.cfi_endproc
- ENDPROC(__kernel_clock_getres)
 -- 
 2.20.1
 
