@@ -4,61 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA0A5C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0100C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF28B2578A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:35:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 957B725799
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:35:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190907;
-	bh=B8VpFPkIPkWKz9v+KqmrEzAmj71mIytpEi7xojvd7bc=;
+	s=default; t=1559190910;
+	bh=Y3bVksjnQh7k/rJJ4G1pwP/+ZO+2G9N/Aan3epLQxaQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pZKxfdF3R786SYJCmNXmVQDca+o7Ccq6+/UEZKeEQtNQY7BdTa2cZ6HsDJZDEnCHe
-	 LDzjMMqlBAmD2k7U13nc0XfVQ4WemJBubuYxpRh4PJas63hotCcWfLn8GFhzwe6VP+
-	 Boe8SkoXpRiFwtUciKDv5R/rBnQv/LjEVLpR9f0U=
+	b=KaWGd0AbGlJcZ/haELCcF5LyFm9tV/h7fXOY1CjNVfIPghlIQ251Z0k1AZta1K3Qa
+	 jyeVVGSp4d9lLfJLRZwzD6rcqxzRJodykm04VQUHJxJfbHyEVOrriB/qaX9//aEMe7
+	 R4XODfNlzlcbCTzya2iimPjawecsmqBYEfSmN0RE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729386AbfE3DNQ (ORCPT
+        id S2388420AbfE3EfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:13:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50644 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:35:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728093AbfE3DLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:11:25 -0400
+        id S1727715AbfE3DNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:16 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1781F244FC;
-        Thu, 30 May 2019 03:11:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A26BD2449A;
+        Thu, 30 May 2019 03:13:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185885;
-        bh=B8VpFPkIPkWKz9v+KqmrEzAmj71mIytpEi7xojvd7bc=;
+        s=default; t=1559185995;
+        bh=Y3bVksjnQh7k/rJJ4G1pwP/+ZO+2G9N/Aan3epLQxaQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yFNkYynbGu/W0nDZWvRXL/02GEhA7wrlUV7HFpe4xeVdE2JxeNzkx3J9fIvitekWO
-         w1IrahFlYj/cATxJYOhHhxEsLV9aM6sgx6/kAettqjTqzfMZp7//e9LtfI2D5SJvRe
-         8PUeguKNN8VwYEg3nRnrNTgTmvQ3QKzqTcl2vALQ=
+        b=mD+kEz26h+Hc11r8xNUDCTv/Qg3dIkK7cI4PukoIKPwi/pplhfzL216ZrGzuAB8jb
+         ppYgl9QiCaPn+WFPHDxxOy6mT+dJFGst/853cexjDHcW0Vc6c6nqWRaI3B02PEsL5r
+         nwm04XXIKeYbGrAoIm4C5R351Q/huUFtJa7VI57o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>, acme@kernel.org,
-        jolsa@kernel.org, Ingo Molnar <mingo@kernel.org>,
+        stable@vger.kernel.org, Ross Lagerwall <ross.lagerwall@citrix.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 195/405] perf/x86/intel/cstate: Add Icelake support
-Date:   Wed, 29 May 2019 20:03:13 -0700
-Message-Id: <20190530030550.868369852@linuxfoundation.org>
+Subject: [PATCH 5.0 042/346] gfs2: Fix lru_count going negative
+Date:   Wed, 29 May 2019 20:01:55 -0700
+Message-Id: <20190530030542.990551051@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
-References: <20190530030540.291644921@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -68,42 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f08c47d1f86c6dc666c7e659d94bf6d4492aa9d7 ]
+[ Upstream commit 7881ef3f33bb80f459ea6020d1e021fc524a6348 ]
 
-Icelake uses the same C-state residency events as Sandy Bridge.
+Under certain conditions, lru_count may drop below zero resulting in
+a large amount of log spam like this:
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: acme@kernel.org
-Cc: jolsa@kernel.org
-Link: https://lkml.kernel.org/r/20190402194509.2832-10-kan.liang@linux.intel.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+vmscan: shrink_slab: gfs2_dump_glock+0x3b0/0x630 [gfs2] \
+    negative objects to delete nr=-1
+
+This happens as follows:
+1) A glock is moved from lru_list to the dispose list and lru_count is
+   decremented.
+2) The dispose function calls cond_resched() and drops the lru lock.
+3) Another thread takes the lru lock and tries to add the same glock to
+   lru_list, checking if the glock is on an lru list.
+4) It is on a list (actually the dispose list) and so it avoids
+   incrementing lru_count.
+5) The glock is moved to lru_list.
+5) The original thread doesn't dispose it because it has been re-added
+   to the lru list but the lru_count has still decreased by one.
+
+Fix by checking if the LRU flag is set on the glock rather than checking
+if the glock is on some list and rearrange the code so that the LRU flag
+is added/removed precisely when the glock is added/removed from lru_list.
+
+Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/intel/cstate.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/gfs2/glock.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
-index d41de9af7a39b..6072f92cb8eaf 100644
---- a/arch/x86/events/intel/cstate.c
-+++ b/arch/x86/events/intel/cstate.c
-@@ -578,6 +578,8 @@ static const struct x86_cpu_id intel_cstates_match[] __initconst = {
- 	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_GOLDMONT_X, glm_cstates),
+diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
+index 4b038f25f2564..2d25d89e77f9b 100644
+--- a/fs/gfs2/glock.c
++++ b/fs/gfs2/glock.c
+@@ -183,15 +183,19 @@ static int demote_ok(const struct gfs2_glock *gl)
  
- 	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_GOLDMONT_PLUS, glm_cstates),
+ void gfs2_glock_add_to_lru(struct gfs2_glock *gl)
+ {
++	if (!(gl->gl_ops->go_flags & GLOF_LRU))
++		return;
 +
-+	X86_CSTATES_MODEL(INTEL_FAM6_ICELAKE_MOBILE, snb_cstates),
- 	{ },
- };
- MODULE_DEVICE_TABLE(x86cpu, intel_cstates_match);
+ 	spin_lock(&lru_lock);
+ 
+-	if (!list_empty(&gl->gl_lru))
+-		list_del_init(&gl->gl_lru);
+-	else
++	list_del(&gl->gl_lru);
++	list_add_tail(&gl->gl_lru, &lru_list);
++
++	if (!test_bit(GLF_LRU, &gl->gl_flags)) {
++		set_bit(GLF_LRU, &gl->gl_flags);
+ 		atomic_inc(&lru_count);
++	}
+ 
+-	list_add_tail(&gl->gl_lru, &lru_list);
+-	set_bit(GLF_LRU, &gl->gl_flags);
+ 	spin_unlock(&lru_lock);
+ }
+ 
+@@ -201,7 +205,7 @@ static void gfs2_glock_remove_from_lru(struct gfs2_glock *gl)
+ 		return;
+ 
+ 	spin_lock(&lru_lock);
+-	if (!list_empty(&gl->gl_lru)) {
++	if (test_bit(GLF_LRU, &gl->gl_flags)) {
+ 		list_del_init(&gl->gl_lru);
+ 		atomic_dec(&lru_count);
+ 		clear_bit(GLF_LRU, &gl->gl_flags);
+@@ -1159,8 +1163,7 @@ void gfs2_glock_dq(struct gfs2_holder *gh)
+ 		    !test_bit(GLF_DEMOTE, &gl->gl_flags))
+ 			fast_path = 1;
+ 	}
+-	if (!test_bit(GLF_LFLUSH, &gl->gl_flags) && demote_ok(gl) &&
+-	    (glops->go_flags & GLOF_LRU))
++	if (!test_bit(GLF_LFLUSH, &gl->gl_flags) && demote_ok(gl))
+ 		gfs2_glock_add_to_lru(gl);
+ 
+ 	trace_gfs2_glock_queue(gh, 0);
+@@ -1456,6 +1459,7 @@ __acquires(&lru_lock)
+ 		if (!spin_trylock(&gl->gl_lockref.lock)) {
+ add_back_to_lru:
+ 			list_add(&gl->gl_lru, &lru_list);
++			set_bit(GLF_LRU, &gl->gl_flags);
+ 			atomic_inc(&lru_count);
+ 			continue;
+ 		}
+@@ -1463,7 +1467,6 @@ __acquires(&lru_lock)
+ 			spin_unlock(&gl->gl_lockref.lock);
+ 			goto add_back_to_lru;
+ 		}
+-		clear_bit(GLF_LRU, &gl->gl_flags);
+ 		gl->gl_lockref.count++;
+ 		if (demote_ok(gl))
+ 			handle_callback(gl, LM_ST_UNLOCKED, 0, false);
+@@ -1498,6 +1501,7 @@ static long gfs2_scan_glock_lru(int nr)
+ 		if (!test_bit(GLF_LOCK, &gl->gl_flags)) {
+ 			list_move(&gl->gl_lru, &dispose);
+ 			atomic_dec(&lru_count);
++			clear_bit(GLF_LRU, &gl->gl_flags);
+ 			freed++;
+ 			continue;
+ 		}
 -- 
 2.20.1
 
