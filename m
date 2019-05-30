@@ -5,54 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4134C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:23:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E18B2C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFBA325375
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:23:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B546025284
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:23:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190200;
-	bh=N70H1+R5SeViVNqndvuL3AyU8G493F/y+Q0HGRBG2lk=;
+	s=default; t=1559190205;
+	bh=P3JTk7xVOJNuPEoVcNeajWlhbZPMJjIyXv67yz0Vxn8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RHgMK0Nx+vf6nf1sn9hgjAfuL0t7hexO7ZUJ3Mwa+uily5EwW13vn63+7oIJuEZ/f
-	 oO6Dq7VytfcSbvyBrfUPv92ISoCLLpYJOV9qsXBuoUc4o2x61zt9J6sL0r1dNcQLYw
-	 RkTRJlgSqaR93ORq1cHGUDkW46F0AGQxiQLZTx3k=
+	b=R9MjaapGtYbJ5ecnADuHI0WY3BI2XbQkNrJLroR4Ijh62XpsE4DbmzYvXlTWZOFYS
+	 AQyQOMrluXy8EWGC8cU8deHA9ARp+0WKX9w5Kjn79ULP+bbzR/777rG/ketVOvsFCP
+	 4n80m7u/bhqyy0qM3geXCSVWlLqwitleJ33Ewmv8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732260AbfE3EXL (ORCPT
+        id S1731833AbfE3EXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:23:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36638 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:23:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730066AbfE3DPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728935AbfE3DPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:15:02 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3172F24569;
-        Thu, 30 May 2019 03:15:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33608244EF;
+        Thu, 30 May 2019 03:15:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186102;
-        bh=N70H1+R5SeViVNqndvuL3AyU8G493F/y+Q0HGRBG2lk=;
+        s=default; t=1559186101;
+        bh=P3JTk7xVOJNuPEoVcNeajWlhbZPMJjIyXv67yz0Vxn8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cXnl4vYcKm2WG5S/RVNYf+BrneYDwLWDVYAZ2s3RpKHNUpb1lnmunXFTVmsduMBD6
-         BK4BJnr/qN0XKZazyWUtVa532cnOz7NXgCsVfoadibNOaQJbEHTrcQ9AoWRBPTa8Ke
-         bAREKh8hJNd9wY7OnSiMX13Bxs3orbSwRs3eRwAI=
+        b=PKnfivbfpdYz8zLlG2jMVyqJn+GeFRoCP+Cg5h2ThZvXub3F2nG0Uihz2CfEe801f
+         i88N8cGdCay/58mFAWuvC3QwMTq3+LCrsRVcKQBsLsMLzsPFtGQl/rv7uozt4I+TUO
+         w+s6l7ddrCq8gi9wsURtnQ5DBUOZA42Pu/0/Af2o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>, ard.biesheuvel@linaro.org,
+        oss-drivers@netronome.com, pbonzini@redhat.com,
         Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 240/346] x86/uaccess, ftrace: Fix ftrace_likely_update() vs. SMAP
-Date:   Wed, 29 May 2019 20:05:13 -0700
-Message-Id: <20190530030553.190825923@linuxfoundation.org>
+Subject: [PATCH 5.0 238/346] locking/static_key: Fix false positive warnings on concurrent dec/inc
+Date:   Wed, 29 May 2019 20:05:11 -0700
+Message-Id: <20190530030553.094255091@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -65,49 +67,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4a6c91fbdef846ec7250b82f2eeeb87ac5f18cf9 ]
+[ Upstream commit a1247d06d01045d7ab2882a9c074fbf21137c690 ]
 
-For CONFIG_TRACE_BRANCH_PROFILING=y the likely/unlikely things get
-overloaded and generate callouts to this code, and thus also when
-AC=1.
+Even though the atomic_dec_and_mutex_lock() in
+__static_key_slow_dec_cpuslocked() can never see a negative value in
+key->enabled the subsequent sanity check is re-reading key->enabled, which may
+have been set to -1 in the meantime by static_key_slow_inc_cpuslocked().
 
-Make it safe.
+                CPU  A                               CPU B
 
+ __static_key_slow_dec_cpuslocked():          static_key_slow_inc_cpuslocked():
+                               # enabled = 1
+   atomic_dec_and_mutex_lock()
+                               # enabled = 0
+                                              atomic_read() == 0
+                                              atomic_set(-1)
+                               # enabled = -1
+   val = atomic_read()
+   # Oops - val == -1!
+
+The test case is TCP's clean_acked_data_enable() / clean_acked_data_disable()
+as tickled by KTLS (net/ktls).
+
+Suggested-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reported-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Tested-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: ard.biesheuvel@linaro.org
+Cc: oss-drivers@netronome.com
+Cc: pbonzini@redhat.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace_branch.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ kernel/jump_label.c | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
 
-diff --git a/kernel/trace/trace_branch.c b/kernel/trace/trace_branch.c
-index 4ad967453b6fb..3ea65cdff30d5 100644
---- a/kernel/trace/trace_branch.c
-+++ b/kernel/trace/trace_branch.c
-@@ -205,6 +205,8 @@ void trace_likely_condition(struct ftrace_likely_data *f, int val, int expect)
- void ftrace_likely_update(struct ftrace_likely_data *f, int val,
- 			  int expect, int is_constant)
+diff --git a/kernel/jump_label.c b/kernel/jump_label.c
+index bad96b476eb6e..a799b1ac6b2fe 100644
+--- a/kernel/jump_label.c
++++ b/kernel/jump_label.c
+@@ -206,6 +206,8 @@ static void __static_key_slow_dec_cpuslocked(struct static_key *key,
+ 					   unsigned long rate_limit,
+ 					   struct delayed_work *work)
  {
-+	unsigned long flags = user_access_save();
++	int val;
 +
- 	/* A constant is always correct */
- 	if (is_constant) {
- 		f->constant++;
-@@ -223,6 +225,8 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
- 		f->data.correct++;
- 	else
- 		f->data.incorrect++;
-+
-+	user_access_restore(flags);
- }
- EXPORT_SYMBOL(ftrace_likely_update);
+ 	lockdep_assert_cpus_held();
  
+ 	/*
+@@ -215,17 +217,20 @@ static void __static_key_slow_dec_cpuslocked(struct static_key *key,
+ 	 * returns is unbalanced, because all other static_key_slow_inc()
+ 	 * instances block while the update is in progress.
+ 	 */
+-	if (!atomic_dec_and_mutex_lock(&key->enabled, &jump_label_mutex)) {
+-		WARN(atomic_read(&key->enabled) < 0,
+-		     "jump label: negative count!\n");
++	val = atomic_fetch_add_unless(&key->enabled, -1, 1);
++	if (val != 1) {
++		WARN(val < 0, "jump label: negative count!\n");
+ 		return;
+ 	}
+ 
+-	if (rate_limit) {
+-		atomic_inc(&key->enabled);
+-		schedule_delayed_work(work, rate_limit);
+-	} else {
+-		jump_label_update(key);
++	jump_label_lock();
++	if (atomic_dec_and_test(&key->enabled)) {
++		if (rate_limit) {
++			atomic_inc(&key->enabled);
++			schedule_delayed_work(work, rate_limit);
++		} else {
++			jump_label_update(key);
++		}
+ 	}
+ 	jump_label_unlock();
+ }
 -- 
 2.20.1
 
