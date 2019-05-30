@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E5CDC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBCE0C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54F1D24C53
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:44:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0C6824C69
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:44:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187846;
-	bh=wo7KJCLYN64lUMeRiuI5l/Ol11RFSGVvd64QwJiY/4o=;
+	s=default; t=1559187850;
+	bh=HkH4ufft1e+AwPuafmpxUftWAu+HKVxTA7Pt6dpLcFE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CARcUApzpHtNhJk6Mn/X17tEZyRMiLC1+M8pOIQy5hh+Kqh3pU2YugACIHgNvNHlc
-	 X7dCKYShznqOG3FRagI/fheUWLLvuSVbBywUB0R1s1c1xx+xiGfVA9IA8y8huHws/m
-	 k6CkFvAJmx9UNW8q7QX3ytrARS8tW+yWhsFQnGvU=
+	b=SJtNkeOXL9+W3ufTTMN8QQ7uVRZKyUWyrAj0ySYdvhWGCgma8D1GD1EPfLHf4oZjb
+	 o6MOeARLqPNP1+5xESbTt2d6eS921N1lfCS1nv1s5qAVfD1xsbSoReVUbtj+L/6pir
+	 8dYuiaphLboO3Wr4vPSxk4BAMbK6uJt15Ga3beQs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732623AbfE3DoF (ORCPT
+        id S1732829AbfE3DoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:44:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60788 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:44:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732401AbfE3DVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:21:00 -0400
+        id S1732399AbfE3DU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:20:59 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B493248FC;
+        by mail.kernel.org (Postfix) with ESMTPSA id 076D2249A3;
         Thu, 30 May 2019 03:20:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186459;
-        bh=wo7KJCLYN64lUMeRiuI5l/Ol11RFSGVvd64QwJiY/4o=;
+        bh=HkH4ufft1e+AwPuafmpxUftWAu+HKVxTA7Pt6dpLcFE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I817d4i0ti8EEro01hUbKhCpONkYU91h2Eseeyuidfo1Dq0STA1YZuYHL+L7izoLP
-         0iT9NXPV47ybR7ttSpl+W1ePvRYDnWMNA2nB5rnYc3eJr5umrlDQbKAGgcr8LCMPNy
-         E9C0EpolMRUCkoQxjskSDEOFTqE5DeMEfv6Y3dZg=
+        b=IivxnyFWr3jCXPf3+7IEiNIu3CACVBOvr9F1n2lfcwzSIgWLpIxxxEsiyhw2Yhdxs
+         Hy1G5UKV716GJA+Mx3ZGDPT2eWeoK8bvbdnScHPYi6j21RE/IdgdFuZi7TaBvC9316
+         DI5B8xPiB5LHILQuLVhBhxXEk0G+iEJ7bhpDm+9A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        Guenter Roeck <linux@roeck-us.net>,
+        stable@vger.kernel.org, Mariusz Bialonczyk <manio@skyboo.net>,
+        Jean-Francois Dagenais <jeff.dagenais@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 075/128] hwmon: (pc87427) Use request_muxed_region for Super-IO accesses
-Date:   Wed, 29 May 2019 20:06:47 -0700
-Message-Id: <20190530030448.157699409@linuxfoundation.org>
+Subject: [PATCH 4.9 039/128] w1: fix the resume command API
+Date:   Wed, 29 May 2019 20:06:11 -0700
+Message-Id: <20190530030441.183162785@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -61,67 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 755a9b0f8aaa5639ba5671ca50080852babb89ce ]
+[ Upstream commit 62909da8aca048ecf9fbd7e484e5100608f40a63 ]
 
-Super-IO accesses may fail on a system with no or unmapped LPC bus.
+>From the DS2408 datasheet [1]:
+"Resume Command function checks the status of the RC flag and, if it is set,
+ directly transfers control to the control functions, similar to a Skip ROM
+ command. The only way to set the RC flag is through successfully executing
+ the Match ROM, Search ROM, Conditional Search ROM, or Overdrive-Match ROM
+ command"
 
-Also, other drivers may attempt to access the LPC bus at the same time,
-resulting in undefined behavior.
+The function currently works perfectly fine in a multidrop bus, but when we
+have only a single slave connected, then only a Skip ROM is used and Match
+ROM is not called at all. This is leading to problems e.g. with single one
+DS2408 connected, as the Resume Command is not working properly and the
+device is responding with failing results after the Resume Command.
 
-Use request_muxed_region() to ensure that IO access on the requested
-address space is supported, and to ensure that access by multiple drivers
-is synchronized.
+This commit is fixing this by using a Skip ROM instead in those cases.
+The bandwidth / performance advantage is exactly the same.
 
-Fixes: ba224e2c4f0a7 ("hwmon: New PC87427 hardware monitoring driver")
-Reported-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Reported-by: John Garry <john.garry@huawei.com>
-Cc: John Garry <john.garry@huawei.com>
-Acked-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Refs:
+[1] https://datasheets.maximintegrated.com/en/ds/DS2408.pdf
+
+Signed-off-by: Mariusz Bialonczyk <manio@skyboo.net>
+Reviewed-by: Jean-Francois Dagenais <jeff.dagenais@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/pc87427.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ drivers/w1/w1_io.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/hwmon/pc87427.c b/drivers/hwmon/pc87427.c
-index cb9fdd37bd0d9..2b5b8c3de8fce 100644
---- a/drivers/hwmon/pc87427.c
-+++ b/drivers/hwmon/pc87427.c
-@@ -106,6 +106,13 @@ static const char *logdev_str[2] = { DRVNAME " FMC", DRVNAME " HMC" };
- #define LD_IN		1
- #define LD_TEMP		1
+diff --git a/drivers/w1/w1_io.c b/drivers/w1/w1_io.c
+index f4bc8c100a01b..a3ac582420ec4 100644
+--- a/drivers/w1/w1_io.c
++++ b/drivers/w1/w1_io.c
+@@ -437,8 +437,7 @@ int w1_reset_resume_command(struct w1_master *dev)
+ 	if (w1_reset_bus(dev))
+ 		return -1;
  
-+static inline int superio_enter(int sioaddr)
-+{
-+	if (!request_muxed_region(sioaddr, 2, DRVNAME))
-+		return -EBUSY;
-+	return 0;
-+}
-+
- static inline void superio_outb(int sioaddr, int reg, int val)
- {
- 	outb(reg, sioaddr);
-@@ -122,6 +129,7 @@ static inline void superio_exit(int sioaddr)
- {
- 	outb(0x02, sioaddr);
- 	outb(0x02, sioaddr + 1);
-+	release_region(sioaddr, 2);
+-	/* This will make only the last matched slave perform a skip ROM. */
+-	w1_write_8(dev, W1_RESUME_CMD);
++	w1_write_8(dev, dev->slave_count > 1 ? W1_RESUME_CMD : W1_SKIP_ROM);
+ 	return 0;
  }
- 
- /*
-@@ -1220,7 +1228,11 @@ static int __init pc87427_find(int sioaddr, struct pc87427_sio_data *sio_data)
- {
- 	u16 val;
- 	u8 cfg, cfg_b;
--	int i, err = 0;
-+	int i, err;
-+
-+	err = superio_enter(sioaddr);
-+	if (err)
-+		return err;
- 
- 	/* Identify device */
- 	val = force_id ? force_id : superio_inb(sioaddr, SIOREG_DEVID);
+ EXPORT_SYMBOL_GPL(w1_reset_resume_command);
 -- 
 2.20.1
 
