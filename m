@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B3CC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 596BBC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:22:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C706625337
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:22:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C64925332
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:22:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190120;
-	bh=vACxFoaRYP5jpW6GY39AcU0tnRCiSOhoxjkhWlv5gfI=;
+	s=default; t=1559190128;
+	bh=1rPMMUnAEw/PbwAbQkw+rWsgCAavxUsZNbw2R/Ydn20=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IeYuqBWwEhx/IFwh1/85pF3Khq6LhNJNCCDib+EvKuPYrIHnZK9qPSxYzEIb9kx67
-	 IuqT0ZiPIU+NWOnsKPM7hPCxN2vnSN2OSc242ZmPSwCrYXCLZbLmiDcChp3Njo5Pum
-	 ii0FNfJOsEBwYViwSpyfnSRv1/WB5ualD9AzIscA=
+	b=gJpqmV8M6SdFax+BuFgoqNM2B3TPWT/HI0GV+uyElyy+C+7sQlj+2xHKn5klip7cz
+	 votKuznFaazkys5mIJnj/HnK5GG2InMzgkjshn0BPwAZlFDjpsvk1UXez3HhJ9vQaO
+	 S66NdWJE0/wXvCYnO26bVelVZzcP1ZOk92Y9X1QA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731819AbfE3EV7 (ORCPT
+        id S1730753AbfE3EWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:21:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37528 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:22:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730148AbfE3DPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:15:11 -0400
+        id S1730142AbfE3DPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:10 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56DC124598;
-        Thu, 30 May 2019 03:15:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D974E24597;
+        Thu, 30 May 2019 03:15:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186110;
-        bh=vACxFoaRYP5jpW6GY39AcU0tnRCiSOhoxjkhWlv5gfI=;
+        bh=1rPMMUnAEw/PbwAbQkw+rWsgCAavxUsZNbw2R/Ydn20=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oYBlAdloHa+UkHc3oh00fQdRiSbtCPVtfrszgFvfsZ1u0YcxoHCo8L2rd8tMACUxL
-         7um2EOsUiUjmdKKfTxkL9WlmloSdfyrfS0vdIMTQHqKl4vy/knoS1viH4RiQOx2ui3
-         H7JZ4ngjSoGvPD0sst6fAlLJ4ZgMdQ3w6jpALmL0=
+        b=0TttKYMYSeVoXw5BuWQs1JvM0kr1nZDWAfR0od0FxviJ/D6SHc2KHzPEnPylafDhV
+         XVrFVyMHR7LcnGczlO5q7kOb4Z2oAbDlXR46dnqa/D5iQD3lZJpB7+YjSJIekvKlpi
+         6Wmw+yVRv0NudipMfe3FrWm0npKVUy3BJBFUHK54=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 212/346] samples/bpf: fix build with new clang
-Date:   Wed, 29 May 2019 20:04:45 -0700
-Message-Id: <20190530030551.859624705@linuxfoundation.org>
+        stable@vger.kernel.org, Jon Derrick <jonathan.derrick@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Scott Bauer <sbauer@plzdonthack.me>,
+        David Kozub <zub@linux.fjfi.cvut.cz>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 211/346] block: sed-opal: fix IOC_OPAL_ENABLE_DISABLE_MBR
+Date:   Wed, 29 May 2019 20:04:44 -0700
+Message-Id: <20190530030551.814037894@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -60,52 +62,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 636e78b1cdb40b77a79b143dbd9d94847b360efa ]
+[ Upstream commit 78bf47353b0041865564deeed257a54f047c2fdc ]
 
-clang started to error on invalid asm clobber usage in x86 headers
-and many bpf program samples failed to build with the message:
+The implementation of IOC_OPAL_ENABLE_DISABLE_MBR handled the value
+opal_mbr_data.enable_disable incorrectly: enable_disable is expected
+to be one of OPAL_MBR_ENABLE(0) or OPAL_MBR_DISABLE(1). enable_disable
+was passed directly to set_mbr_done and set_mbr_enable_disable where
+is was interpreted as either OPAL_TRUE(1) or OPAL_FALSE(0). The end
+result was that calling IOC_OPAL_ENABLE_DISABLE_MBR with OPAL_MBR_ENABLE
+actually disabled the shadow MBR and vice versa.
 
-  CLANG-bpf  /data/users/ast/bpf-next/samples/bpf/xdp_redirect_kern.o
-In file included from /data/users/ast/bpf-next/samples/bpf/xdp_redirect_kern.c:14:
-In file included from ../include/linux/in.h:23:
-In file included from ../include/uapi/linux/in.h:24:
-In file included from ../include/linux/socket.h:8:
-In file included from ../include/linux/uio.h:14:
-In file included from ../include/crypto/hash.h:16:
-In file included from ../include/linux/crypto.h:26:
-In file included from ../include/linux/uaccess.h:5:
-In file included from ../include/linux/sched.h:15:
-In file included from ../include/linux/sem.h:5:
-In file included from ../include/uapi/linux/sem.h:5:
-In file included from ../include/linux/ipc.h:9:
-In file included from ../include/linux/refcount.h:72:
-../arch/x86/include/asm/refcount.h:72:36: error: asm-specifier for input or output variable conflicts with asm clobber list
-                                         r->refs.counter, e, "er", i, "cx");
-                                                                      ^
-../arch/x86/include/asm/refcount.h:86:27: error: asm-specifier for input or output variable conflicts with asm clobber list
-                                         r->refs.counter, e, "cx");
-                                                             ^
-2 errors generated.
+This patch adds correct conversion from OPAL_MBR_DISABLE/ENABLE to
+OPAL_FALSE/TRUE. The change affects existing programs using
+IOC_OPAL_ENABLE_DISABLE_MBR but this is typically used only once when
+setting up an Opal drive.
 
-Override volatile() to workaround the problem.
-
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Jon Derrick <jonathan.derrick@intel.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Scott Bauer <sbauer@plzdonthack.me>
+Signed-off-by: David Kozub <zub@linux.fjfi.cvut.cz>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- samples/bpf/asm_goto_workaround.h | 1 +
- 1 file changed, 1 insertion(+)
+ block/sed-opal.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/samples/bpf/asm_goto_workaround.h b/samples/bpf/asm_goto_workaround.h
-index 5cd7c1d1a5d56..7409722727ca1 100644
---- a/samples/bpf/asm_goto_workaround.h
-+++ b/samples/bpf/asm_goto_workaround.h
-@@ -13,4 +13,5 @@
- #define asm_volatile_goto(x...) asm volatile("invalid use of asm_volatile_goto")
- #endif
+diff --git a/block/sed-opal.c b/block/sed-opal.c
+index e0de4dd448b3c..1196408972937 100644
+--- a/block/sed-opal.c
++++ b/block/sed-opal.c
+@@ -2095,13 +2095,16 @@ static int opal_erase_locking_range(struct opal_dev *dev,
+ static int opal_enable_disable_shadow_mbr(struct opal_dev *dev,
+ 					  struct opal_mbr_data *opal_mbr)
+ {
++	u8 enable_disable = opal_mbr->enable_disable == OPAL_MBR_ENABLE ?
++		OPAL_TRUE : OPAL_FALSE;
++
+ 	const struct opal_step mbr_steps[] = {
+ 		{ opal_discovery0, },
+ 		{ start_admin1LSP_opal_session, &opal_mbr->key },
+-		{ set_mbr_done, &opal_mbr->enable_disable },
++		{ set_mbr_done, &enable_disable },
+ 		{ end_opal_session, },
+ 		{ start_admin1LSP_opal_session, &opal_mbr->key },
+-		{ set_mbr_enable_disable, &opal_mbr->enable_disable },
++		{ set_mbr_enable_disable, &enable_disable },
+ 		{ end_opal_session, },
+ 		{ NULL, }
+ 	};
+@@ -2221,7 +2224,7 @@ static int __opal_lock_unlock(struct opal_dev *dev,
  
-+#define volatile(x...) volatile("")
- #endif
+ static int __opal_set_mbr_done(struct opal_dev *dev, struct opal_key *key)
+ {
+-	u8 mbr_done_tf = 1;
++	u8 mbr_done_tf = OPAL_TRUE;
+ 	const struct opal_step mbrdone_step [] = {
+ 		{ opal_discovery0, },
+ 		{ start_admin1LSP_opal_session, key },
 -- 
 2.20.1
 
