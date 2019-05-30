@@ -2,124 +2,95 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D20C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA113C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12675243F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:39:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 769C3243F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:39:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="1u4HEthO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727415AbfE3BjT (ORCPT
+        id S1727433AbfE3Bjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 21:39:19 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:8208 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726527AbfE3BjS (ORCPT
+        Wed, 29 May 2019 21:39:53 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:50616 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbfE3Bjx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 21:39:18 -0400
-X-UUID: eb0d16995d464ece951d8d337d91a496-20190530
-X-UUID: eb0d16995d464ece951d8d337d91a496-20190530
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <biao.huang@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1220763986; Thu, 30 May 2019 09:39:13 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
- (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 30 May
- 2019 09:39:11 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 30 May 2019 09:39:10 +0800
-Message-ID: <1559180349.24897.72.camel@mhfsdcap03>
-Subject: RE: [v5, PATCH] net: stmmac: add support for hash table size
- 128/256 in dwmac4
-From:   biao huang <biao.huang@mediatek.com>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "yt.shen@mediatek.com" <yt.shen@mediatek.com>,
-        "jianguo.zhang@mediatek.com" <jianguo.zhang@mediatek.com>,
-        "boon.leong.ong@intel.com" <boon.leong.ong@intel.com>,
-        "andrew@lunn.ch" <andrew@lunn.ch>
-Date:   Thu, 30 May 2019 09:39:09 +0800
-In-Reply-To: <78EB27739596EE489E55E81C33FEC33A0B9334CE@DE02WEMBXB.internal.synopsys.com>
-References: <1559122268-22545-1-git-send-email-biao.huang@mediatek.com>
-         <1559122268-22545-2-git-send-email-biao.huang@mediatek.com>
-         <78EB27739596EE489E55E81C33FEC33A0B9334CE@DE02WEMBXB.internal.synopsys.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Wed, 29 May 2019 21:39:53 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4U1delr164126;
+        Thu, 30 May 2019 01:39:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=IZPrG6xlR4Ydk7vCH2hpd9rccanpG/y7YlNcsJ0kAW8=;
+ b=1u4HEthO7kP3Vr9Bjjh9lGVa+OV5oFCvfl7FZNTv4aGeT40UUP0dj5DR0ijJWkmioKfR
+ bF+dIJ0m/HropatcDzNzOtEY48Lg3bCdwBTInO34++Oc3suxzGEvzqb9ocRK+I7+CSC4
+ MzECfHyZNk1ff/eN8f1mMrNR3ybZYAE5WNrtOozkl/81juITpBiG1u2FrNc8ZpZig1rU
+ 5+moqnaTvunxRGBgn2t4TfQ5UUflYJ3SBMT2P3Z8ZyBDGQfIgtOLRe8mt1T5dfP+Malv
+ Dezlhf2gAg2RrC3cmnTvWQdFX080fZAsdc5++FiR/eMLe1V3cyXw5BjYllmreNOI9HVl 9g== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2spw4tn98h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 May 2019 01:39:48 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4U1c6h8146064;
+        Thu, 30 May 2019 01:39:48 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2sr31vk9md-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 May 2019 01:39:48 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4U1djDq005700;
+        Thu, 30 May 2019 01:39:46 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 29 May 2019 18:39:45 -0700
+To:     Ondrej Zary <linux@zary.sk>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fdomain: Add PCMCIA support
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190527201947.6475-1-linux@zary.sk>
+Date:   Wed, 29 May 2019 21:39:43 -0400
+In-Reply-To: <20190527201947.6475-1-linux@zary.sk> (Ondrej Zary's message of
+        "Mon, 27 May 2019 22:19:47 +0200")
+Message-ID: <yq1tvdczpnk.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-X-MTK:  N
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=748
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905300011
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=787 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905300011
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jose,
-	Flow control is disabled in v5 commit.
 
-	I tried "insmod stmmac flow_ctrl=1", and the output log shows self test
-pass:
-	ethtool -t eth0                                    
-	The test result is PASS
- 	The test extra info:
- 	 1. MAC Loopback                 0
- 	 2. PHY Loopback                 -95
- 	 3. MMC Counters                 0
- 	 4. EEE                          -95
- 	 5. Hash Filter MC               0
- 	 6. Perfect Filter UC            0
- 	 7. MC Filter                    0
- 	 8. UC Filter                    0
-	 9. Flow Control                 0
+Ondrej,
 
-	Is v5 OK? Should I resend a v6?
+> Add PCMCIA card support to Future Domain SCSI driver.
+>
+> Tested with IBM SCSI PCMCIA Adapter 40G1890.
 
-On Wed, 2019-05-29 at 10:30 +0000, Jose Abreu wrote:
-> From: Biao Huang <biao.huang@mediatek.com>
-> Date: Wed, May 29, 2019 at 10:31:08
-> 
-> > 1. get hash table size in hw feature reigster, and add support
-> > for taller hash table(128/256) in dwmac4.
-> > 2. only clear GMAC_PACKET_FILTER bits used in this function,
-> > to avoid side effect to functions of other bits.
-> > 
-> > stmmac selftests output log:
-> > 	ethtool -t eth0
-> > 	The test result is FAIL
-> > 	The test extra info:
-> > 	 1. MAC Loopback                 0
-> > 	 2. PHY Loopback                 -95
-> > 	 3. MMC Counters                 0
-> > 	 4. EEE                          -95
-> > 	 5. Hash Filter MC               0
-> > 	 6. Perfect Filter UC            0
-> > 	 7. MC Filter                    0
-> > 	 8. UC Filter                    0
-> > 	 9. Flow Control                 1
-> 
-> Thanks for testing, this patch looks good to me.
-> 
-> Do you want to check why Flow Control selftest is failing ?
-> 
-> 
-> Thanks,
-> Jose Miguel Abreu
+Applied to 5.3/scsi-queue, thanks!
 
-Thanks,
-Biao
-
-
+-- 
+Martin K. Petersen	Oracle Linux Engineering
