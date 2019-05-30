@@ -3,171 +3,125 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1F0C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 10:04:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08414C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 10:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCDA1256D0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 10:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7150256D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 10:06:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbfE3KEu (ORCPT
+        id S1727836AbfE3KGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 06:04:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54148 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725440AbfE3KEt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 06:04:49 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 846329D0F7;
-        Thu, 30 May 2019 10:04:42 +0000 (UTC)
-Received: from kasong-rh-laptop.pek2.redhat.com (wlc-trust-154.pek2.redhat.com [10.72.3.154])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 32A497D54C;
-        Thu, 30 May 2019 10:04:35 +0000 (UTC)
-From:   Kairui Song <kasong@redhat.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Dave Young <dyoung@redhat.com>,
-        Bhupesh Sharma <bhsharma@redhat.com>,
-        Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org,
-        Kairui Song <kasong@redhat.com>
-Subject: [PATCH v5] vmcore: Add a kernel parameter novmcoredd
-Date:   Thu, 30 May 2019 18:03:39 +0800
-Message-Id: <20190530100339.3089-1-kasong@redhat.com>
+        Thu, 30 May 2019 06:06:22 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:4465 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725440AbfE3KGV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 06:06:21 -0400
+X-UUID: 9a8d72f3862a478f86143f7e43f8ea8f-20190530
+X-UUID: 9a8d72f3862a478f86143f7e43f8ea8f-20190530
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 697089773; Thu, 30 May 2019 18:06:11 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 30 May 2019 18:06:10 +0800
+Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 30 May 2019 18:06:10 +0800
+Message-ID: <1559210770.12373.0.camel@mtksdaap41>
+Subject: Re: [PATCH v4] gpu/drm: mediatek: call mtk_dsi_stop() after
+ mtk_drm_crtc_atomic_disable()
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Thu, 30 May 2019 18:06:10 +0800
+In-Reply-To: <20190530091847.90263-1-hsinyi@chromium.org>
+References: <20190530091847.90263-1-hsinyi@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Thu, 30 May 2019 10:04:49 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 2724273e8fd0 ("vmcore: add API to collect hardware dump in
-second kernel"), drivers is allowed to add device related dump data to
-vmcore as they want by using the device dump API. This have a potential
-issue, the data is stored in memory, drivers may append too much data
-and use too much memory. The vmcore is typically used in a kdump kernel
-which runs in a pre-reserved small chunk of memory. So as a result it
-will make kdump unusable at all due to OOM issues.
+Hi, Hsin-Yi:
 
-So introduce new 'novmcoredd' command line option. User can disable
-device dump to reduce memory usage. This is helpful if device dump is
-using too much memory, disabling device dump could make sure a regular
-vmcore without device dump data is still available.
+On Thu, 2019-05-30 at 17:18 +0800, Hsin-Yi Wang wrote:
+> mtk_dsi_stop() should be called after mtk_drm_crtc_atomic_disable(), which needs
+> ovl irq for drm_crtc_wait_one_vblank(), since after mtk_dsi_stop() is called,
+> ovl irq will be disabled. If drm_crtc_wait_one_vblank() is called after last
+> irq, it will timeout with this message: "vblank wait timed out on crtc 0". This
+> happens sometimes when turning off the screen.
+> 
+> In drm_atomic_helper.c#disable_outputs(),
+> the calling sequence when turning off the screen is:
+> 
+> 1. mtk_dsi_encoder_disable()
+>      --> mtk_output_dsi_disable()
+>        --> mtk_dsi_stop();  // sometimes make vblank timeout in atomic_disable
+>        --> mtk_dsi_poweroff();
+> 2. mtk_drm_crtc_atomic_disable()
+>      --> drm_crtc_wait_one_vblank();
+>      ...
+>        --> mtk_dsi_ddp_stop()
+>          --> mtk_dsi_poweroff();
+> 
+> mtk_dsi_poweroff() has reference count design, change to make mtk_dsi_stop()
+> called in mtk_dsi_poweroff() when refcount is 0.
 
-Signed-off-by: Kairui Song <kasong@redhat.com>
-Reviewed-by: Bhupesh Sharma <bhsharma@redhat.com>
-Acked-by: Dave Young <dyoung@redhat.com>
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
 
----
+> 
+> Fixes: 0707632b5bac ("drm/mediatek: update DSI sub driver flow for sending commands to panel")
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> ---
+> change log v3->v4:
+> * add comment in code.
+> ---
+>  drivers/gpu/drm/mediatek/mtk_dsi.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> index b00eb2d2e086..730594a91440 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> @@ -630,6 +630,15 @@ static void mtk_dsi_poweroff(struct mtk_dsi *dsi)
+>  	if (--dsi->refcount != 0)
+>  		return;
+>  
+> +	/* 
+> +	 * mtk_dsi_stop() and mtk_dsi_start() is asymmetric, since
+> +	 * mtk_dsi_stop() should be called after mtk_drm_crtc_atomic_disable(),
+> +	 * which needs irq for vblank, and mtk_dsi_stop() will disable irq.
+> +	 * mtk_dsi_start() needs to be called in mtk_output_dsi_enable(),
+> +	 * after dsi is fully set.
+> +	 */
+> +	mtk_dsi_stop(dsi);
+> +
+>  	if (!mtk_dsi_switch_to_cmd_mode(dsi, VM_DONE_INT_FLAG, 500)) {
+>  		if (dsi->panel) {
+>  			if (drm_panel_unprepare(dsi->panel)) {
+> @@ -696,7 +705,6 @@ static void mtk_output_dsi_disable(struct mtk_dsi *dsi)
+>  		}
+>  	}
+>  
+> -	mtk_dsi_stop(dsi);
+>  	mtk_dsi_poweroff(dsi);
+>  
+>  	dsi->enabled = false;
 
-Hi Andrew, sorry for the trouble but could you help pick up this one
-instead for "vmcore: Add a kernel parameter novmcoredd" patch? Previous
-one is in mm tree but failed compile when CONFIG_MODULES is not set, I
-fixed this issue and carried something else like your doc fix, thanks!
-
- Update from V4:
-  - Document adjust by Andrew Morton, also move the text to a better
-    position
-  - Fix compile error when CONFIG_MODULES is not set
-  - Return EPERM instead of EINVAL when device dump is disabled as
-    suggested by Dave Young
-
- Update from V3:
-  - Use novmcoredd instead of vmcore_device_dump. Use
-    vmcore_device_dump and make it off by default is confusing,
-    novmcoredd is a cleaner way to let user space be able to disable
-    device dump to save memory.
-
- Update from V2:
-  - Improve related docs
-
- Update from V1:
-  - Use bool parameter to turn it on/off instead of letting user give
-    the size limit. Size of device dump is hard to determine.
-
- Documentation/admin-guide/kernel-parameters.txt | 11 +++++++++++
- fs/proc/Kconfig                                 |  3 ++-
- fs/proc/vmcore.c                                |  9 +++++++++
- 3 files changed, 22 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 138f6664b2e2..90b25234d965 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3088,6 +3088,17 @@
- 
- 	nosync		[HW,M68K] Disables sync negotiation for all devices.
- 
-+	novmcoredd	[KNL,KDUMP]
-+			Disable device dump. Device dump allows drivers to
-+			append dump data to vmcore so you can collect driver
-+			specified debug info.  Drivers can append the data
-+			without any limit and this data is stored in memory,
-+			so this may cause significant memory stress.  Disabling
-+			device dump can help save memory but the driver debug
-+			data will be no longer available.  This parameter
-+			is only available when CONFIG_PROC_VMCORE_DEVICE_DUMP
-+			is set.
-+
- 	nowatchdog	[KNL] Disable both lockup detectors, i.e.
- 			soft-lockup and NMI watchdog (hard-lockup).
- 
-diff --git a/fs/proc/Kconfig b/fs/proc/Kconfig
-index 62ee41b4bbd0..b74ea844abd5 100644
---- a/fs/proc/Kconfig
-+++ b/fs/proc/Kconfig
-@@ -58,7 +58,8 @@ config PROC_VMCORE_DEVICE_DUMP
- 	  snapshot.
- 
- 	  If you say Y here, the collected device dumps will be added
--	  as ELF notes to /proc/vmcore.
-+	  as ELF notes to /proc/vmcore. You can still disable device
-+	  dump using the kernel command line option 'novmcoredd'.
- 
- config PROC_SYSCTL
- 	bool "Sysctl support (/proc/sys)" if EXPERT
-diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index 7bb96fdd38ad..936e9dbbfbec 100644
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -26,6 +26,7 @@
- #include <linux/pagemap.h>
- #include <linux/uaccess.h>
- #include <linux/mem_encrypt.h>
-+#include <linux/moduleparam.h>
- #include <asm/pgtable.h>
- #include <asm/io.h>
- #include "internal.h"
-@@ -54,6 +55,9 @@ static struct proc_dir_entry *proc_vmcore;
- /* Device Dump list and mutex to synchronize access to list */
- static LIST_HEAD(vmcoredd_list);
- static DEFINE_MUTEX(vmcoredd_mutex);
-+
-+static bool vmcoredd_disabled;
-+core_param(novmcoredd, vmcoredd_disabled, bool, 0);
- #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
- 
- /* Device Dump Size */
-@@ -1452,6 +1456,11 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
- 	size_t data_size;
- 	int ret;
- 
-+	if (vmcoredd_disabled) {
-+		pr_err_once("Device dump is disabled\n");
-+		return -EPERM;
-+	}
-+
- 	if (!data || !strlen(data->dump_name) ||
- 	    !data->vmcoredd_callback || !data->size)
- 		return -EINVAL;
--- 
-2.21.0
 
