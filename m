@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52510C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3648C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:48:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CB8F25C4D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:48:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A1E425C65
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:48:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191721;
-	bh=vbT6JzcrqgZfDANvgbazIhs61L2kvqOjhh2SjOsVIHQ=;
+	s=default; t=1559191729;
+	bh=T+vGrf3RvbzG7P4iTgiRGSVNNHZqkLdV/nNoR5UX7dg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1cRxXRrYZEBoJTY8B+5/G6bCK7mfc+C3UpoQsxNaw19OURiO2Md4GBhpIGBAJiBrN
-	 yFi8zfxjibjxAcVSVTavRhBlky86PaRT2zELwr4Q/81MlFL7X8wSip2NEohsfq0uP3
-	 PW9AT0EYqaER9cZTT1GwkErz4hmgbk6FftDRFlsE=
+	b=cNCVddfZD8VT9skC/XXqSC3qTaBNUW07plaBrb+Jg+WCR5xy+YAQD0l163bwlpVhe
+	 zFs6nrQ6MIiDM8aa6KmNJtk0Dom4KG0WUHfyXkpGit/+GOIAgUTAZ3tSumIkuNkMRl
+	 Tbo77dWcaW5c5RxVwgxTRKYoeVRmUfioZel4GVsQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388889AbfE3Esj (ORCPT
+        id S2388861AbfE3Ess (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:48:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50514 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:48:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728471AbfE3DLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:11:19 -0400
+        id S1728460AbfE3DLS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:18 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31D63244D8;
-        Thu, 30 May 2019 03:11:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35B3A244B0;
+        Thu, 30 May 2019 03:11:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185878;
-        bh=vbT6JzcrqgZfDANvgbazIhs61L2kvqOjhh2SjOsVIHQ=;
+        s=default; t=1559185877;
+        bh=T+vGrf3RvbzG7P4iTgiRGSVNNHZqkLdV/nNoR5UX7dg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ibRDU68BlWrKGkuahRr8mGUnis8eoXitYwFOe1Ik7h9DUEPZgdfoigkrVX5VotT0H
-         oiU13IpP2tAl5ZE7CVSB5L/HzJnDd1uzwWCQROnpG3P+cRaMKddlwNwbi1rCFkiacY
-         xoLJwYWjWXCBmGo8WoERI9IDg21rMRbL4Mpbs8F4=
+        b=mfL+oOICgD9Q5f/SnShRqtZLdAnGB1OFNCUpoDb4zILoozI1DdGPVvjr7PhcZNbNh
+         f26E+WUIOR9AmskZjcPkkEFdzXDbty86DSVGiqI3kqiFMhHP5w9Ba5rJpaZRaOXX6X
+         lJR08jmCu5U5GNeI1l6eHJ9yWtK6PP9ucGl4gUSw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-pm@vger.kernel.org,
+        stable@vger.kernel.org, Huazhong Tan <tanhuazhong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 226/405] cpufreq/pasemi: fix possible object reference leak
-Date:   Wed, 29 May 2019 20:03:44 -0700
-Message-Id: <20190530030552.481103910@linuxfoundation.org>
+Subject: [PATCH 5.1 224/405] net: hns3: add error handler for initializing command queue
+Date:   Wed, 29 May 2019 20:03:42 -0700
+Message-Id: <20190530030552.386055830@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -62,40 +61,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a9acc26b75f652f697e02a9febe2ab0da648a571 ]
+[ Upstream commit 4339ef396ab65a61f7f22f36d7ba94b6e9e0939b ]
 
-The call to of_get_cpu_node returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+This patch adds error handler for the failure of command queue
+initialization both PF and VF.
 
-Detected by coccinelle with the following warnings:
-./drivers/cpufreq/pasemi-cpufreq.c:212:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 147, but without a corresponding object release within this function.
-./drivers/cpufreq/pasemi-cpufreq.c:220:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 147, but without a corresponding object release within this function.
-
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-pm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/pasemi-cpufreq.c | 1 +
- 1 file changed, 1 insertion(+)
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c    | 11 ++++++++---
+ .../net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c  | 11 ++++++++---
+ 2 files changed, 16 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/cpufreq/pasemi-cpufreq.c b/drivers/cpufreq/pasemi-cpufreq.c
-index 75dfbd2a58ea6..c7710c149de85 100644
---- a/drivers/cpufreq/pasemi-cpufreq.c
-+++ b/drivers/cpufreq/pasemi-cpufreq.c
-@@ -146,6 +146,7 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
+index 3a093a92eac51..d92e4af11b1fe 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
+@@ -373,21 +373,26 @@ int hclge_cmd_init(struct hclge_dev *hdev)
+ 	 * reset may happen when lower level reset is being processed.
+ 	 */
+ 	if ((hclge_is_reset_pending(hdev))) {
+-		set_bit(HCLGE_STATE_CMD_DISABLE, &hdev->state);
+-		return -EBUSY;
++		ret = -EBUSY;
++		goto err_cmd_init;
+ 	}
  
- 	cpu = of_get_cpu_node(policy->cpu, NULL);
+ 	ret = hclge_cmd_query_firmware_version(&hdev->hw, &version);
+ 	if (ret) {
+ 		dev_err(&hdev->pdev->dev,
+ 			"firmware version query failed %d\n", ret);
+-		return ret;
++		goto err_cmd_init;
+ 	}
+ 	hdev->fw_version = version;
  
-+	of_node_put(cpu);
- 	if (!cpu)
- 		goto out;
+ 	dev_info(&hdev->pdev->dev, "The firmware version is %08x\n", version);
  
+ 	return 0;
++
++err_cmd_init:
++	set_bit(HCLGE_STATE_CMD_DISABLE, &hdev->state);
++
++	return ret;
+ }
+ 
+ static void hclge_cmd_uninit_regs(struct hclge_hw *hw)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
+index 9a0a501908aec..382ecb15e7435 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
+@@ -344,8 +344,8 @@ int hclgevf_cmd_init(struct hclgevf_dev *hdev)
+ 	 * reset may happen when lower level reset is being processed.
+ 	 */
+ 	if (hclgevf_is_reset_pending(hdev)) {
+-		set_bit(HCLGEVF_STATE_CMD_DISABLE, &hdev->state);
+-		return -EBUSY;
++		ret = -EBUSY;
++		goto err_cmd_init;
+ 	}
+ 
+ 	/* get firmware version */
+@@ -353,13 +353,18 @@ int hclgevf_cmd_init(struct hclgevf_dev *hdev)
+ 	if (ret) {
+ 		dev_err(&hdev->pdev->dev,
+ 			"failed(%d) to query firmware version\n", ret);
+-		return ret;
++		goto err_cmd_init;
+ 	}
+ 	hdev->fw_version = version;
+ 
+ 	dev_info(&hdev->pdev->dev, "The firmware version is %08x\n", version);
+ 
+ 	return 0;
++
++err_cmd_init:
++	set_bit(HCLGEVF_STATE_CMD_DISABLE, &hdev->state);
++
++	return ret;
+ }
+ 
+ static void hclgevf_cmd_uninit_regs(struct hclgevf_hw *hw)
 -- 
 2.20.1
 
