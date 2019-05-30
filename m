@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7BA6C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D530C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77B8B24AF2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A30424AF6
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187036;
-	bh=ak71Aucl9FyBhLKERAW+kEL4RcM/O7VdZR2gd6LUDIY=;
+	s=default; t=1559187039;
+	bh=rHRYoMxf+3+xCzC0iUQ9wehSRgMHzUgWyR+/TDKu0MY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gUfSpzVbIzsUAoGHWZ5I8JSeYSp4C2ElfD1XrMxC/7QQ1blOHI43lCmfzHroJON60
-	 1I6gGrVtgxyvQ7zBPooovKkOi+dOY0RJV5LO0blQ5CYhnuWTucuip9a+XV3GNyPYvj
-	 3fT305+/NE7HyvJzIfJm0W/VvSFLEkMsv3xleh+U=
+	b=WHIUR36yRI1ptlyin9El1SwuI2CjeGZNSRxsrqpt/AAFX4fqbE6iOee6J/WV8HsFV
+	 4os7oUvnZEH0/tA5di9hJt77P1LL/SuX+UKXYl7OQ1SZ9MpxDBmVowR5v6uJZnDjQr
+	 TTo7cEgzkFptl8LA+Q609u8/kkrTTbbGZMjHUWTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388642AbfE3Daf (ORCPT
+        id S1733183AbfE3Dai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:30:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48910 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:30:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388631AbfE3Dad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:30:33 -0400
+        id S2388433AbfE3Dae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:30:34 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F40A24AFC;
+        by mail.kernel.org (Postfix) with ESMTPSA id CD33F24AF9;
         Thu, 30 May 2019 03:30:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559187033;
-        bh=ak71Aucl9FyBhLKERAW+kEL4RcM/O7VdZR2gd6LUDIY=;
+        bh=rHRYoMxf+3+xCzC0iUQ9wehSRgMHzUgWyR+/TDKu0MY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nMwLBQPFPZXor6vGER+iKokikuiCPyfXzE9a1v0Xu3KPQMcKM3Q7BLFk5GV9Sm4+F
-         JgYxhVqwDci2xp14rK8oyERQcbP+NgHwtF7cyUFxeQbplfaSsOKyiCK3dQlL6updre
-         f+ZGVmrjErYzr63MdEUfrUM4lL3NV5jehR/kgmCs=
+        b=tOXhY2/GTqYF9bscholl+lTA34iQYphvUT0wghvJu05c/GuCQaEPFkwDZES1EXndq
+         iE0kB7poukphleUCT0RsKjENGJxxeg0cZgCitqsTpIvQgTn8gK/tHEEGJLxCsl6RWl
+         5VCfzicdqtKsn/PVCloW4Ed9LMYeIJAhx80pea38=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -48,12 +48,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 091/193] media: ov2659: make S_FMT succeed even if requested format doesnt match
-Date:   Wed, 29 May 2019 20:05:45 -0700
-Message-Id: <20190530030501.728903646@linuxfoundation.org>
+Subject: [PATCH 4.9 060/128] media: ov2659: make S_FMT succeed even if requested format doesnt match
+Date:   Wed, 29 May 2019 20:06:32 -0700
+Message-Id: <20190530030445.565807220@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
-References: <20190530030446.953835040@linuxfoundation.org>
+In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
+References: <20190530030432.977908967@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -89,7 +89,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-index 122dd6c5eb389..ce23f436e130d 100644
+index 1f999e9c0118e..3554eea77e04c 100644
 --- a/drivers/media/i2c/ov2659.c
 +++ b/drivers/media/i2c/ov2659.c
 @@ -1117,8 +1117,10 @@ static int ov2659_set_fmt(struct v4l2_subdev *sd,
@@ -104,7 +104,7 @@ index 122dd6c5eb389..ce23f436e130d 100644
 +	}
  
  	mf->colorspace = V4L2_COLORSPACE_SRGB;
- 	mf->field = V4L2_FIELD_NONE;
+ 	mf->code = ov2659_formats[index].code;
 -- 
 2.20.1
 
