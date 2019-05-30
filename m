@@ -2,193 +2,757 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE4CC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07DF3C28CC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C970524ABF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1AD024B4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:53:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="DPYTALj8";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="D/KxKyX3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DOnx4J9r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbfE3Sw3 (ORCPT
+        id S1726587AbfE3SxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 14:52:29 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:42064 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725961AbfE3Sw2 (ORCPT
+        Thu, 30 May 2019 14:53:02 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:44144 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725961AbfE3SxB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 14:52:28 -0400
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UIgqWN014213;
-        Thu, 30 May 2019 11:51:55 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=4lwpY0UpCkg4dF4t8bE6bT2nMZnLuatgYxY/VL5Q5NQ=;
- b=DPYTALj8/XqhbNSnYwVCbCPC65eGehOL7/B1T/v3VEEdsMS3TFbvbdyjQ5p8hyIWWwfr
- IwX903kQX/9ACyO858Q0zopzQWpGpNNukpDzKxf/0DhoR7lhZ6EiABFSqhub2oyQx/qR
- zJtyfxidJxFI9XI4nv/95ER2QdZu5xKxDGM= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2stj9w8kym-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 30 May 2019 11:51:55 -0700
-Received: from prn-hub05.TheFacebook.com (2620:10d:c081:35::129) by
- prn-hub02.TheFacebook.com (2620:10d:c081:35::126) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Thu, 30 May 2019 11:51:54 -0700
-Received: from NAM05-DM3-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.29) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Thu, 30 May 2019 11:51:54 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4lwpY0UpCkg4dF4t8bE6bT2nMZnLuatgYxY/VL5Q5NQ=;
- b=D/KxKyX3ndrnAZMvJANHH/eZqtT7GMdarg1gu6ZtwsSP6OtuBcaYCl3HAq8HbfL2HtJGXzv8ewyo40rtNHlPFQcwh1d9EUVkYq3drgGVm9BJDmkbq36ySY6ccvbTEpE5k9pTcqe8ev7XperB/E0duELPfmWxV2mopR0kkdhls74=
-Received: from CY4PR15MB1269.namprd15.prod.outlook.com (10.172.177.11) by
- CY4PR15MB1287.namprd15.prod.outlook.com (10.172.181.8) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.17; Thu, 30 May 2019 18:51:53 +0000
-Received: from CY4PR15MB1269.namprd15.prod.outlook.com
- ([fe80::c026:bca5:3f4e:9b1f]) by CY4PR15MB1269.namprd15.prod.outlook.com
- ([fe80::c026:bca5:3f4e:9b1f%3]) with mapi id 15.20.1922.021; Thu, 30 May 2019
- 18:51:53 +0000
-From:   Vijay Khemka <vijaykhemka@fb.com>
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Jean Delvare <jdelvare@suse.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "joel@jms.id.au" <joel@jms.id.au>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        Sai Dasari <sdasari@fb.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 2/2] Docs: hwmon: pmbus: Add PXE1610 driver
-Thread-Topic: [PATCH 2/2] Docs: hwmon: pmbus: Add PXE1610 driver
-Thread-Index: AQHVFm7e3AOrc7hTMUGa4T8fWo+OPKaC2pWAgAC0sQA=
-Date:   Thu, 30 May 2019 18:51:52 +0000
-Message-ID: <27E78CF3-FAE7-4B6F-ABD7-77F4AE1CD633@fb.com>
-References: <20190529223511.4059120-1-vijaykhemka@fb.com>
- <20190529223511.4059120-2-vijaykhemka@fb.com>
- <0a94e784-41a0-4f2d-f9f8-6b365a1e755e@roeck-us.net>
-In-Reply-To: <0a94e784-41a0-4f2d-f9f8-6b365a1e755e@roeck-us.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [2620:10d:c090:200::2:3b87]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d8769346-1b3f-4284-2353-08d6e52fe1ae
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CY4PR15MB1287;
-x-ms-traffictypediagnostic: CY4PR15MB1287:
-x-microsoft-antispam-prvs: <CY4PR15MB12878661FDCA1D6834A13A49DD180@CY4PR15MB1287.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 00531FAC2C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(199004)(189003)(66446008)(66476007)(64756008)(66556008)(66946007)(76116006)(91956017)(73956011)(2501003)(82746002)(33656002)(11346002)(446003)(2906002)(6116002)(99286004)(68736007)(5660300002)(53936002)(186003)(76176011)(102836004)(6506007)(53546011)(25786009)(46003)(81156014)(81166006)(6436002)(83716004)(8676002)(2201001)(4326008)(8936002)(6512007)(86362001)(6246003)(7736002)(305945005)(6486002)(486006)(36756003)(2616005)(476003)(14454004)(229853002)(256004)(71190400001)(498600001)(110136005)(54906003)(71200400001);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR15MB1287;H:CY4PR15MB1269.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: VHBY5wt7qSzSrGTq+nm9edr5hvpHxpBJSzyCAbxI2503XP30u2lGbDf24M5IkU8ZZtKwDysAwlpD5uQjukefHPOFMGv8GyU16A5fgC1O7UYBPCc756CIvR9m2STOHhSAZ+tJUAKPcdWLJtgWJidWZQKPhPHgUOgY6ITi7w9o9WukU7U/BQGqk8FLv37JTaZLeMT8AtLpyhiOn8tMeRal8uUHN9IvhmmL4Hr9NojbCMti8NDX1CU9x0ub46Dj6hW5jpD0g88HETKYOO6spqqzTMt+iQpOk5Pl9/3caYa6HNCq4aqdQ3wbe8MFGcJGnfTjvw/ptXRZfO3sc8fWg6o5Qrx3nd2GQ3CGWcGeqZCXHOFIcxfsAl154Wj1inKDPF05z5kL9w5jsE4pHFW2wwwZ2+6W010f7P3Q4fh0Qd5JAoY=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F3049E1786BD0A489B9CD348B1EE668E@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 30 May 2019 14:53:01 -0400
+Received: by mail-qt1-f194.google.com with SMTP id x47so4903196qtk.11;
+        Thu, 30 May 2019 11:53:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ufEnnC0QRwuADzG3Q2nrGGAA2QyOXL+Tox8dJ0i/io4=;
+        b=DOnx4J9rMvVIxz3FqsZ9qBFcScLm2Yiz4qrovmA/LVGb2M15JfyPMHT1XySGb4oKD+
+         ekHAprHL++F8CEc6ACPtQPDrXmo0CbAnLkvVaUtiJsR/bGoR0Guy9UZssPWilP9QgasP
+         BQU6H0mP9tms+J4dk5T3uBoyl+fKsb+0W6PAhI6cyIoeI7Hz4MiOHnkiMudABB+7May5
+         rS4+lIs4WiN3e6TrzXEZAswh6JGyQS6/oWr4zYPcJ0LTY0dTPJanogxnNGvPWz63IR6E
+         J6yuR4CyFrb+DEzA9XZTNAvpgbgJoeEhsZcJ/P/iKdJzjGEwZ43A6BgdAfIBHLOo6qwF
+         VZSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ufEnnC0QRwuADzG3Q2nrGGAA2QyOXL+Tox8dJ0i/io4=;
+        b=ep2/Uq2Hu9dywQo7cvTUF5SbmULhmTpuPE+dtFAtxTAY0XVeQUIsgtY1hCONXDrlyv
+         vP4/t4GXDN55bvXPJwf/c9accv4Slehak6tnFVD7rf/JbOSvzQ+q7pgc1OBdfXdIvdLM
+         jQHaSjeGXaektmdjklTzK1gffQDojOHUilp+zx9ezEb93irIR36uqYLcTRh86qFujevO
+         n1WE7Dadw5EiikWQgcdDayVDtFaqHv6bA0kT/Q9M7ib9A2pNQpaCAcgpJhdkPe5CUy3s
+         QNjgYqY5kTmY+PzdAtKzXw0jRtDVmmNa/l/B6jhyDaGZ96bBD3f+N4olSSJnMdBL4NEP
+         jeag==
+X-Gm-Message-State: APjAAAV90FPEosQSpgWswNW7fFYz/36H96j4llPFP+xY9+TY3Ew9PEaO
+        i+1xGQS75yZc8V/Xd0FxrMwTiM03v8wu5DwoZ20=
+X-Google-Smtp-Source: APXvYqzezhnuOTlMseh+BGXt6nnMcQEKm9aEf2qY23bov0hmfl9U0gcOH57KRAilPBbxJOnPICicf7bN3L6MlhGr9ao=
+X-Received: by 2002:a0c:986e:: with SMTP id e43mr4912032qvd.78.1559242379711;
+ Thu, 30 May 2019 11:52:59 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: d8769346-1b3f-4284-2353-08d6e52fe1ae
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 May 2019 18:51:53.1002
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vijaykhemka@fb.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR15MB1287
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-30_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905300131
-X-FB-Internal: deliver
+References: <20190530010359.2499670-1-guro@fb.com> <20190530010359.2499670-5-guro@fb.com>
+In-Reply-To: <20190530010359.2499670-5-guro@fb.com>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Thu, 30 May 2019 11:52:48 -0700
+Message-ID: <CAPhsuW5trTZZJ7asB6j+LD7Kx7omxtqBPKGN11-wpm8V6hNCgA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 4/5] bpf: rework memlock-based memory accounting
+ for maps
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        bpf <bpf@vger.kernel.org>, Kernel Team <kernel-team@fb.com>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCu+7v09uIDUvMjkvMTksIDY6MDUgUE0sICJHdWVudGVyIFJvZWNrIiA8Z3JvZWNrN0BnbWFp
-bC5jb20gb24gYmVoYWxmIG9mIGxpbnV4QHJvZWNrLXVzLm5ldD4gd3JvdGU6DQoNCiAgICBPbiA1
-LzI5LzE5IDM6MzUgUE0sIFZpamF5IEtoZW1rYSB3cm90ZToNCiAgICA+IEFkZGVkIHN1cHBvcnQg
-Zm9yIEluZmVuaW9uIFBYRTE2MTAgZHJpdmVyDQogICAgPiANCiAgICA+IFNpZ25lZC1vZmYtYnk6
-IFZpamF5IEtoZW1rYSA8dmlqYXlraGVta2FAZmIuY29tPg0KICAgID4gLS0tDQogICAgPiAgIERv
-Y3VtZW50YXRpb24vaHdtb24vcHhlMTYxMCB8IDg0ICsrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysNCiAgICA+ICAgMSBmaWxlIGNoYW5nZWQsIDg0IGluc2VydGlvbnMoKykNCiAg
-ICA+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vaHdtb24vcHhlMTYxMA0KICAg
-ID4gDQogICAgPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9od21vbi9weGUxNjEwIGIvRG9j
-dW1lbnRhdGlvbi9od21vbi9weGUxNjEwDQogICAgPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KICAg
-ID4gaW5kZXggMDAwMDAwMDAwMDAwLi5iNWM4M2VkZjAyN2ENCiAgICA+IC0tLSAvZGV2L251bGwN
-CiAgICA+ICsrKyBiL0RvY3VtZW50YXRpb24vaHdtb24vcHhlMTYxMA0KICAgID4gQEAgLTAsMCAr
-MSw4NCBAQA0KICAgID4gK0tlcm5lbCBkcml2ZXIgcHhlMTYxMA0KICAgID4gKz09PT09PT09PT09
-PT09PT09PT09PQ0KICAgID4gKw0KICAgID4gK1N1cHBvcnRlZCBjaGlwczoNCiAgICA+ICsgICog
-SW5maW5pb24gUFhFMTYxMA0KICAgID4gKyAgICBQcmVmaXg6ICdweGUxNjEwJw0KICAgID4gKyAg
-ICBBZGRyZXNzZXMgc2Nhbm5lZDogLQ0KICAgID4gKyAgICBEYXRhc2hlZXQ6IERhdGFzaGVldCBp
-cyBub3QgcHVibGljbHkgYXZhaWxhYmxlLg0KICAgID4gKw0KICAgID4gKyAgKiBJbmZpbmlvbiBQ
-WEUxMTEwDQogICAgPiArICAgIFByZWZpeDogJ3B4ZTExMTAnDQogICAgPiArICAgIEFkZHJlc3Nl
-cyBzY2FubmVkOiAtDQogICAgPiArICAgIERhdGFzaGVldDogRGF0YXNoZWV0IGlzIG5vdCBwdWJs
-aWNseSBhdmFpbGFibGUuDQogICAgPiArDQogICAgPiArICAqIEluZmluaW9uIFBYTTEzMTANCiAg
-ICA+ICsgICAgUHJlZml4OiAncHhtMTMxMCcNCiAgICA+ICsgICAgQWRkcmVzc2VzIHNjYW5uZWQ6
-IC0NCiAgICA+ICsgICAgRGF0YXNoZWV0OiBEYXRhc2hlZXQgaXMgbm90IHB1YmxpY2x5IGF2YWls
-YWJsZS4NCiAgICA+ICsNCiAgICA+ICtBdXRob3I6IFZpamF5IEtoZW1rYSA8dmlqYXlraGVta2FA
-ZmIuY29tPg0KICAgID4gKw0KICAgID4gKw0KICAgID4gK0Rlc2NyaXB0aW9uDQogICAgPiArLS0t
-LS0tLS0tLS0NCiAgICA+ICsNCiAgICA+ICtQWEUxNjEwIGlzIGEgTXVsdGktcmFpbC9NdWx0aXBo
-YXNlIERpZ2l0YWwgQ29udHJvbGxlcnMgYW5kDQogICAgPiAraXQgaXMgY29tcGxpYW50IHRvIElu
-dGVsIFZSMTMgREMtREMgY29udmVydGVyIHNwZWNpZmljYXRpb25zLg0KICAgID4gKw0KICAgIA0K
-ICAgIEFuZCB0aGUgb3RoZXJzID8NClRoaXMgc3VwcG9ydHMgVlIxMiBhcyB3ZWxsIGFuZCBJIGRv
-bid0IHNlZSB0aGlzIGNvbnRyb2xsZXIgc3VwcG9ydHMgYW55IG90aGVyIFZSIHZlcnNpb25zLg0K
-ICAgIA0KICAgID4gKw0KICAgID4gK1VzYWdlIE5vdGVzDQogICAgPiArLS0tLS0tLS0tLS0NCiAg
-ICA+ICsNCiAgICA+ICtUaGlzIGRyaXZlciBjYW4gYmUgZW5hYmxlZCB3aXRoIGtlcm5lbCBjb25m
-aWcgQ09ORklHX1NFTlNPUlNfUFhFMTYxMA0KICAgID4gK3NldCB0byAneScgb3IgJ20nKGZvciBt
-b2R1bGUpLg0KICAgID4gKw0KICAgIFRoZSBhYm92ZSBkb2VzIG5vdCByZWFsbHkgYWRkIHZhbHVl
-Lg0KT2ssIEkgd2lsbCByZW1vdmUgaXQuDQogICAgDQogICAgPiArVGhpcyBkcml2ZXIgZG9lcyBu
-b3QgcHJvYmUgZm9yIFBNQnVzIGRldmljZXMuIFlvdSB3aWxsIGhhdmUNCiAgICA+ICt0byBpbnN0
-YW50aWF0ZSBkZXZpY2VzIGV4cGxpY2l0bHkuDQogICAgPiArDQogICAgPiArRXhhbXBsZTogdGhl
-IGZvbGxvd2luZyBjb21tYW5kcyB3aWxsIGxvYWQgdGhlIGRyaXZlciBmb3IgYW4gUFhFMTYxMA0K
-ICAgID4gK2F0IGFkZHJlc3MgMHg3MCBvbiBJMkMgYnVzICM0Og0KICAgID4gKw0KICAgID4gKyMg
-bW9kcHJvYmUgcHhlMTYxMA0KICAgID4gKyMgZWNobyBweGUxNjEwIDB4NzAgPiAvc3lzL2J1cy9p
-MmMvZGV2aWNlcy9pMmMtNC9uZXdfZGV2aWNlDQogICAgPiArDQogICAgPiArSXQgY2FuIGFsc28g
-YmUgaW5zdGFudGlhdGVkIGJ5IGRlY2xhcmluZyBpbiBkZXZpY2UgdHJlZSBpZiBpdCBpcw0KICAg
-ID4gK2J1aWx0IGFzIGEga2VybmVsIG5vdCBhcyBhIG1vZHVsZS4NCiAgICA+ICsNCiAgICANCiAg
-ICBJIGFzc3VtZSB5b3UgbWVhbiAiYnVpbHQgaW50byB0aGUga2VybmVsIi4NCiAgICBXaHkgd291
-bGQgZGV2aWNldHJlZSBiYXNlZCBpbnN0YW50aWF0aW9uIG5vdCB3b3JrIGlmIHRoZSBkcml2ZXIg
-aXMgYnVpbHQNCiAgICBhcyBtb2R1bGUgPw0KV2lsbCBjb3JyZWN0IHN0YXRlbWVudCBoZXJlLg0K
-ICAgIA0KICAgID4gKw0KICAgID4gK1N5c2ZzIGF0dHJpYnV0ZXMNCiAgICA+ICstLS0tLS0tLS0t
-LS0tLS0tDQogICAgPiArDQogICAgPiArY3VycjFfbGFiZWwJCSJpaW4iDQogICAgPiArY3VycjFf
-aW5wdXQJCU1lYXN1cmVkIGlucHV0IGN1cnJlbnQNCiAgICA+ICtjdXJyMV9hbGFybQkJQ3VycmVu
-dCBoaWdoIGFsYXJtDQogICAgPiArDQogICAgPiArY3VyclsyLTRdX2xhYmVsCQkiaW91dFsxLTNd
-Ig0KICAgID4gK2N1cnJbMi00XV9pbnB1dAkJTWVhc3VyZWQgb3V0cHV0IGN1cnJlbnQNCiAgICA+
-ICtjdXJyWzItNF1fY3JpdAkJQ3JpdGljYWwgbWF4aW11bSBjdXJyZW50DQogICAgPiArY3Vyclsy
-LTRdX2NyaXRfYWxhcm0JQ3VycmVudCBjcml0aWNhbCBoaWdoIGFsYXJtDQogICAgPiArDQogICAg
-PiAraW4xX2xhYmVsCQkidmluIg0KICAgID4gK2luMV9pbnB1dAkJTWVhc3VyZWQgaW5wdXQgdm9s
-dGFnZQ0KICAgID4gK2luMV9jcml0CQlDcml0aWNhbCBtYXhpbXVtIGlucHV0IHZvbHRhZ2UNCiAg
-ICA+ICtpbjFfY3JpdF9hbGFybQkJSW5wdXQgdm9sdGFnZSBjcml0aWNhbCBoaWdoIGFsYXJtDQog
-ICAgPiArDQogICAgPiAraW5bMi00XV9sYWJlbAkJInZvdXRbMS0zXSINCiAgICA+ICtpblsyLTRd
-X2lucHV0CQlNZWFzdXJlZCBvdXRwdXQgdm9sdGFnZQ0KICAgID4gK2luWzItNF1fbGNyaXQJCUNy
-aXRpY2FsIG1pbmltdW0gb3V0cHV0IHZvbHRhZ2UNCiAgICA+ICtpblsyLTRdX2xjcml0X2FsYXJt
-CU91dHB1dCB2b2x0YWdlIGNyaXRpY2FsIGxvdyBhbGFybQ0KICAgID4gK2luWzItNF1fY3JpdAkJ
-Q3JpdGljYWwgbWF4aW11bSBvdXRwdXQgdm9sdGFnZQ0KICAgID4gK2luWzItNF1fY3JpdF9hbGFy
-bQlPdXRwdXQgdm9sdGFnZSBjcml0aWNhbCBoaWdoIGFsYXJtDQogICAgPiArDQogICAgPiArcG93
-ZXIxX2xhYmVsCQkicGluIg0KICAgID4gK3Bvd2VyMV9pbnB1dAkJTWVhc3VyZWQgaW5wdXQgcG93
-ZXINCiAgICA+ICtwb3dlcjFfYWxhcm0JCUlucHV0IHBvd2VyIGhpZ2ggYWxhcm0NCiAgICA+ICsN
-CiAgICA+ICtwb3dlclsyLTRdX2xhYmVsCSJwb3V0WzEtM10iDQogICAgPiArcG93ZXJbMi00XV9p
-bnB1dAlNZWFzdXJlZCBvdXRwdXQgcG93ZXINCiAgICA+ICsNCiAgICA+ICt0ZW1wWzEtM11faW5w
-dXQJCU1lYXN1cmVkIHRlbXBlcmF0dXJlDQogICAgPiArdGVtcFsxLTNdX2NyaXQJCUNyaXRpY2Fs
-IGhpZ2ggdGVtcGVyYXR1cmUNCiAgICA+ICt0ZW1wWzEtM11fY3JpdF9hbGFybQlDaGlwIHRlbXBl
-cmF0dXJlIGNyaXRpY2FsIGhpZ2ggYWxhcm0NCiAgICA+ICt0ZW1wWzEtM11fbWF4CQlNYXhpbXVt
-IHRlbXBlcmF0dXJlDQogICAgPiArdGVtcFsxLTNdX21heF9hbGFybQlDaGlwIHRlbXBlcmF0dXJl
-IGhpZ2ggYWxhcm0NCiAgICA+IA0KICAgIA0KICAgIA0KDQo=
+On Wed, May 29, 2019 at 6:05 PM Roman Gushchin <guro@fb.com> wrote:
+>
+> In order to unify the existing memlock charging code with the
+> memcg-based memory accounting, which will be added later, let's
+> rework the current scheme.
+>
+> Currently the following design is used:
+>   1) .alloc() callback optionally checks if the allocation will likely
+>      succeed using bpf_map_precharge_memlock()
+>   2) .alloc() performs actual allocations
+>   3) .alloc() callback calculates map cost and sets map.memory.pages
+>   4) map_create() calls bpf_map_init_memlock() which sets map.memory.user
+>      and performs actual charging; in case of failure the map is
+>      destroyed
+>   <map is in use>
+>   1) bpf_map_free_deferred() calls bpf_map_release_memlock(), which
+>      performs uncharge and releases the user
+>   2) .map_free() callback releases the memory
+>
+> The scheme can be simplified and made more robust:
+>   1) .alloc() calculates map cost and calls bpf_map_charge_init()
+>   2) bpf_map_charge_init() sets map.memory.user and performs actual
+>     charge
+>   3) .alloc() performs actual allocations
+>   <map is in use>
+>   1) .map_free() callback releases the memory
+>   2) bpf_map_charge_finish() performs uncharge and releases the user
+>
+> The new scheme also allows to reuse bpf_map_charge_init()/finish()
+> functions for memcg-based accounting. Because charges are performed
+> before actual allocations and uncharges after freeing the memory,
+> no bogus memory pressure can be created.
+>
+> In cases when the map structure is not available (e.g. it's not
+> created yet, or is already destroyed), on-stack bpf_map_memory
+> structure is used. The charge can be transferred with the
+> bpf_map_charge_move() function.
+>
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+
+Looks good.
+
+Acked-by: Song Liu <songliubraving@fb.com>
+
+> ---
+>  include/linux/bpf.h           |  5 ++-
+>  kernel/bpf/arraymap.c         | 10 +++--
+>  kernel/bpf/cpumap.c           |  8 ++--
+>  kernel/bpf/devmap.c           | 13 ++++---
+>  kernel/bpf/hashtab.c          | 11 +++---
+>  kernel/bpf/local_storage.c    |  9 +++--
+>  kernel/bpf/lpm_trie.c         |  5 +--
+>  kernel/bpf/queue_stack_maps.c |  9 +++--
+>  kernel/bpf/reuseport_array.c  |  9 +++--
+>  kernel/bpf/stackmap.c         | 30 ++++++++-------
+>  kernel/bpf/syscall.c          | 69 +++++++++++++++++------------------
+>  kernel/bpf/xskmap.c           |  9 +++--
+>  net/core/bpf_sk_storage.c     |  8 ++--
+>  net/core/sock_map.c           |  5 ++-
+>  14 files changed, 112 insertions(+), 88 deletions(-)
+>
+> diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+> index 980b7a9bdd21..6187203b0414 100644
+> --- a/include/linux/bpf.h
+> +++ b/include/linux/bpf.h
+> @@ -600,9 +600,12 @@ struct bpf_map *__bpf_map_get(struct fd f);
+>  struct bpf_map * __must_check bpf_map_inc(struct bpf_map *map, bool uref);
+>  void bpf_map_put_with_uref(struct bpf_map *map);
+>  void bpf_map_put(struct bpf_map *map);
+> -int bpf_map_precharge_memlock(u32 pages);
+>  int bpf_map_charge_memlock(struct bpf_map *map, u32 pages);
+>  void bpf_map_uncharge_memlock(struct bpf_map *map, u32 pages);
+> +int bpf_map_charge_init(struct bpf_map_memory *mem, u32 pages);
+> +void bpf_map_charge_finish(struct bpf_map_memory *mem);
+> +void bpf_map_charge_move(struct bpf_map_memory *dst,
+> +                        struct bpf_map_memory *src);
+>  void *bpf_map_area_alloc(size_t size, int numa_node);
+>  void bpf_map_area_free(void *base);
+>  void bpf_map_init_from_attr(struct bpf_map *map, union bpf_attr *attr);
+> diff --git a/kernel/bpf/arraymap.c b/kernel/bpf/arraymap.c
+> index 8fda24e78193..3552da4407d9 100644
+> --- a/kernel/bpf/arraymap.c
+> +++ b/kernel/bpf/arraymap.c
+> @@ -83,6 +83,7 @@ static struct bpf_map *array_map_alloc(union bpf_attr *attr)
+>         u32 elem_size, index_mask, max_entries;
+>         bool unpriv = !capable(CAP_SYS_ADMIN);
+>         u64 cost, array_size, mask64;
+> +       struct bpf_map_memory mem;
+>         struct bpf_array *array;
+>
+>         elem_size = round_up(attr->value_size, 8);
+> @@ -125,23 +126,26 @@ static struct bpf_map *r(union bpf_attr *attr)
+
+>         }
+>         cost = round_up(cost, PAGE_SIZE) >> PAGE_SHIFT;
+>
+> -       ret = bpf_map_precharge_memlock(cost);
+> +       ret = bpf_map_charge_init(&mem, cost);
+>         if (ret < 0)
+>                 return ERR_PTR(ret);
+>
+>         /* allocate all map elements and zero-initialize them */
+>         array = bpf_map_area_alloc(array_size, numa_node);
+> -       if (!array)
+> +       if (!array) {
+> +               bpf_map_charge_finish(&mem);
+>                 return ERR_PTR(-ENOMEM);
+> +       }
+>         array->index_mask = index_mask;
+>         array->map.unpriv_array = unpriv;
+>
+>         /* copy mandatory map attributes */
+>         bpf_map_init_from_attr(&array->map, attr);
+> -       array->map.memory.pages = cost;
+> +       bpf_map_charge_move(&array->map.memory, &mem);
+>         array->elem_size = elem_size;
+>
+>         if (percpu && bpf_array_alloc_percpu(array)) {
+> +               bpf_map_charge_finish(&array->map.memory);
+>                 bpf_map_area_free(array);
+>                 return ERR_PTR(-ENOMEM);
+>         }
+> diff --git a/kernel/bpf/cpumap.c b/kernel/bpf/cpumap.c
+> index 035268add724..c633c8d68023 100644
+> --- a/kernel/bpf/cpumap.c
+> +++ b/kernel/bpf/cpumap.c
+> @@ -108,10 +108,10 @@ static struct bpf_map *cpu_map_alloc(union bpf_attr *attr)
+>         cost += cpu_map_bitmap_size(attr) * num_possible_cpus();
+>         if (cost >= U32_MAX - PAGE_SIZE)
+>                 goto free_cmap;
+> -       cmap->map.memory.pages = round_up(cost, PAGE_SIZE) >> PAGE_SHIFT;
+>
+>         /* Notice returns -EPERM on if map size is larger than memlock limit */
+> -       ret = bpf_map_precharge_memlock(cmap->map.memory.pages);
+> +       ret = bpf_map_charge_init(&cmap->map.memory,
+> +                                 round_up(cost, PAGE_SIZE) >> PAGE_SHIFT);
+>         if (ret) {
+>                 err = ret;
+>                 goto free_cmap;
+> @@ -121,7 +121,7 @@ static struct bpf_map *cpu_map_alloc(union bpf_attr *attr)
+>         cmap->flush_needed = __alloc_percpu(cpu_map_bitmap_size(attr),
+>                                             __alignof__(unsigned long));
+>         if (!cmap->flush_needed)
+> -               goto free_cmap;
+> +               goto free_charge;
+>
+>         /* Alloc array for possible remote "destination" CPUs */
+>         cmap->cpu_map = bpf_map_area_alloc(cmap->map.max_entries *
+> @@ -133,6 +133,8 @@ static struct bpf_map *cpu_map_alloc(union bpf_attr *attr)
+>         return &cmap->map;
+>  free_percpu:
+>         free_percpu(cmap->flush_needed);
+> +free_charge:
+> +       bpf_map_charge_finish(&cmap->map.memory);
+>  free_cmap:
+>         kfree(cmap);
+>         return ERR_PTR(err);
+> diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
+> index f6c57efb1d0d..371bd880ed58 100644
+> --- a/kernel/bpf/devmap.c
+> +++ b/kernel/bpf/devmap.c
+> @@ -111,10 +111,9 @@ static struct bpf_map *dev_map_alloc(union bpf_attr *attr)
+>         if (cost >= U32_MAX - PAGE_SIZE)
+>                 goto free_dtab;
+>
+> -       dtab->map.memory.pages = round_up(cost, PAGE_SIZE) >> PAGE_SHIFT;
+> -
+> -       /* if map size is larger than memlock limit, reject it early */
+> -       err = bpf_map_precharge_memlock(dtab->map.memory.pages);
+> +       /* if map size is larger than memlock limit, reject it */
+> +       err = bpf_map_charge_init(&dtab->map.memory,
+> +                                 round_up(cost, PAGE_SIZE) >> PAGE_SHIFT);
+>         if (err)
+>                 goto free_dtab;
+>
+> @@ -125,19 +124,21 @@ static struct bpf_map *dev_map_alloc(union bpf_attr *attr)
+>                                                 __alignof__(unsigned long),
+>                                                 GFP_KERNEL | __GFP_NOWARN);
+>         if (!dtab->flush_needed)
+> -               goto free_dtab;
+> +               goto free_charge;
+>
+>         dtab->netdev_map = bpf_map_area_alloc(dtab->map.max_entries *
+>                                               sizeof(struct bpf_dtab_netdev *),
+>                                               dtab->map.numa_node);
+>         if (!dtab->netdev_map)
+> -               goto free_dtab;
+> +               goto free_charge;
+>
+>         spin_lock(&dev_map_lock);
+>         list_add_tail_rcu(&dtab->list, &dev_map_list);
+>         spin_unlock(&dev_map_lock);
+>
+>         return &dtab->map;
+> +free_charge:
+> +       bpf_map_charge_finish(&dtab->map.memory);
+>  free_dtab:
+>         free_percpu(dtab->flush_needed);
+>         kfree(dtab);
+> diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
+> index 15bf228d2e98..b0bdc7b040ad 100644
+> --- a/kernel/bpf/hashtab.c
+> +++ b/kernel/bpf/hashtab.c
+> @@ -364,10 +364,9 @@ static struct bpf_map *htab_map_alloc(union bpf_attr *attr)
+>                 /* make sure page count doesn't overflow */
+>                 goto free_htab;
+>
+> -       htab->map.memory.pages = round_up(cost, PAGE_SIZE) >> PAGE_SHIFT;
+> -
+> -       /* if map size is larger than memlock limit, reject it early */
+> -       err = bpf_map_precharge_memlock(htab->map.memory.pages);
+> +       /* if map size is larger than memlock limit, reject it */
+> +       err = bpf_map_charge_init(&htab->map.memory,
+> +                                 round_up(cost, PAGE_SIZE) >> PAGE_SHIFT);
+>         if (err)
+>                 goto free_htab;
+>
+> @@ -376,7 +375,7 @@ static struct bpf_map *htab_map_alloc(union bpf_attr *attr)
+>                                            sizeof(struct bucket),
+>                                            htab->map.numa_node);
+>         if (!htab->buckets)
+> -               goto free_htab;
+> +               goto free_charge;
+>
+>         if (htab->map.map_flags & BPF_F_ZERO_SEED)
+>                 htab->hashrnd = 0;
+> @@ -409,6 +408,8 @@ static struct bpf_map *htab_map_alloc(union bpf_attr *attr)
+>         prealloc_destroy(htab);
+>  free_buckets:
+>         bpf_map_area_free(htab->buckets);
+> +free_charge:
+> +       bpf_map_charge_finish(&htab->map.memory);
+>  free_htab:
+>         kfree(htab);
+>         return ERR_PTR(err);
+> diff --git a/kernel/bpf/local_storage.c b/kernel/bpf/local_storage.c
+> index 574325276650..e49bfd4f4f6d 100644
+> --- a/kernel/bpf/local_storage.c
+> +++ b/kernel/bpf/local_storage.c
+> @@ -272,6 +272,7 @@ static struct bpf_map *cgroup_storage_map_alloc(union bpf_attr *attr)
+>  {
+>         int numa_node = bpf_map_attr_numa_node(attr);
+>         struct bpf_cgroup_storage_map *map;
+> +       struct bpf_map_memory mem;
+>         u32 pages;
+>         int ret;
+>
+> @@ -294,16 +295,18 @@ static struct bpf_map *cgroup_storage_map_alloc(union bpf_attr *attr)
+>
+>         pages = round_up(sizeof(struct bpf_cgroup_storage_map), PAGE_SIZE) >>
+>                 PAGE_SHIFT;
+> -       ret = bpf_map_precharge_memlock(pages);
+> +       ret = bpf_map_charge_init(&mem, pages);
+>         if (ret < 0)
+>                 return ERR_PTR(ret);
+>
+>         map = kmalloc_node(sizeof(struct bpf_cgroup_storage_map),
+>                            __GFP_ZERO | GFP_USER, numa_node);
+> -       if (!map)
+> +       if (!map) {
+> +               bpf_map_charge_finish(&mem);
+>                 return ERR_PTR(-ENOMEM);
+> +       }
+>
+> -       map->map.memory.pages = pages;
+> +       bpf_map_charge_move(&map->map.memory, &mem);
+>
+>         /* copy mandatory map attributes */
+>         bpf_map_init_from_attr(&map->map, attr);
+> diff --git a/kernel/bpf/lpm_trie.c b/kernel/bpf/lpm_trie.c
+> index 8e423a582760..6345a8d2dcd0 100644
+> --- a/kernel/bpf/lpm_trie.c
+> +++ b/kernel/bpf/lpm_trie.c
+> @@ -578,9 +578,8 @@ static struct bpf_map *trie_alloc(union bpf_attr *attr)
+>                 goto out_err;
+>         }
+>
+> -       trie->map.memory.pages = round_up(cost, PAGE_SIZE) >> PAGE_SHIFT;
+> -
+> -       ret = bpf_map_precharge_memlock(trie->map.memory.pages);
+> +       ret = bpf_map_charge_init(&trie->map.memory,
+> +                                 round_up(cost, PAGE_SIZE) >> PAGE_SHIFT);
+>         if (ret)
+>                 goto out_err;
+>
+> diff --git a/kernel/bpf/queue_stack_maps.c b/kernel/bpf/queue_stack_maps.c
+> index 8a510e71d486..224cb0fd8f03 100644
+> --- a/kernel/bpf/queue_stack_maps.c
+> +++ b/kernel/bpf/queue_stack_maps.c
+> @@ -67,6 +67,7 @@ static int queue_stack_map_alloc_check(union bpf_attr *attr)
+>  static struct bpf_map *queue_stack_map_alloc(union bpf_attr *attr)
+>  {
+>         int ret, numa_node = bpf_map_attr_numa_node(attr);
+> +       struct bpf_map_memory mem = {0};
+>         struct bpf_queue_stack *qs;
+>         u64 size, queue_size, cost;
+>
+> @@ -77,19 +78,21 @@ static struct bpf_map *queue_stack_map_alloc(union bpf_attr *attr)
+>
+>         cost = round_up(cost, PAGE_SIZE) >> PAGE_SHIFT;
+>
+> -       ret = bpf_map_precharge_memlock(cost);
+> +       ret = bpf_map_charge_init(&mem, cost);
+>         if (ret < 0)
+>                 return ERR_PTR(ret);
+>
+>         qs = bpf_map_area_alloc(queue_size, numa_node);
+> -       if (!qs)
+> +       if (!qs) {
+> +               bpf_map_charge_finish(&mem);
+>                 return ERR_PTR(-ENOMEM);
+> +       }
+>
+>         memset(qs, 0, sizeof(*qs));
+>
+>         bpf_map_init_from_attr(&qs->map, attr);
+>
+> -       qs->map.memory.pages = cost;
+> +       bpf_map_charge_move(&qs->map.memory, &mem);
+>         qs->size = size;
+>
+>         raw_spin_lock_init(&qs->lock);
+> diff --git a/kernel/bpf/reuseport_array.c b/kernel/bpf/reuseport_array.c
+> index 819515242739..5c6e25b1b9b1 100644
+> --- a/kernel/bpf/reuseport_array.c
+> +++ b/kernel/bpf/reuseport_array.c
+> @@ -151,6 +151,7 @@ static struct bpf_map *reuseport_array_alloc(union bpf_attr *attr)
+>  {
+>         int err, numa_node = bpf_map_attr_numa_node(attr);
+>         struct reuseport_array *array;
+> +       struct bpf_map_memory mem;
+>         u64 cost, array_size;
+>
+>         if (!capable(CAP_SYS_ADMIN))
+> @@ -165,18 +166,20 @@ static struct bpf_map *reuseport_array_alloc(union bpf_attr *attr)
+>                 return ERR_PTR(-ENOMEM);
+>         cost = round_up(cost, PAGE_SIZE) >> PAGE_SHIFT;
+>
+> -       err = bpf_map_precharge_memlock(cost);
+> +       err = bpf_map_charge_init(&mem, cost);
+>         if (err)
+>                 return ERR_PTR(err);
+>
+>         /* allocate all map elements and zero-initialize them */
+>         array = bpf_map_area_alloc(array_size, numa_node);
+> -       if (!array)
+> +       if (!array) {
+> +               bpf_map_charge_finish(&mem);
+>                 return ERR_PTR(-ENOMEM);
+> +       }
+>
+>         /* copy mandatory map attributes */
+>         bpf_map_init_from_attr(&array->map, attr);
+> -       array->map.memory.pages = cost;
+> +       bpf_map_charge_move(&array->map.memory, &mem);
+>
+>         return &array->map;
+>  }
+> diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
+> index 08d4efff73ac..8da24ca65d97 100644
+> --- a/kernel/bpf/stackmap.c
+> +++ b/kernel/bpf/stackmap.c
+> @@ -89,6 +89,7 @@ static struct bpf_map *stack_map_alloc(union bpf_attr *attr)
+>  {
+>         u32 value_size = attr->value_size;
+>         struct bpf_stack_map *smap;
+> +       struct bpf_map_memory mem;
+>         u64 cost, n_buckets;
+>         int err;
+>
+> @@ -116,40 +117,43 @@ static struct bpf_map *stack_map_alloc(union bpf_attr *attr)
+>         n_buckets = roundup_pow_of_two(attr->max_entries);
+>
+>         cost = n_buckets * sizeof(struct stack_map_bucket *) + sizeof(*smap);
+> +       if (cost >= U32_MAX - PAGE_SIZE)
+> +               return ERR_PTR(-E2BIG);
+> +       cost += n_buckets * (value_size + sizeof(struct stack_map_bucket));
+>         if (cost >= U32_MAX - PAGE_SIZE)
+>                 return ERR_PTR(-E2BIG);
+>
+> +       err = bpf_map_charge_init(&mem,
+> +                                 round_up(cost, PAGE_SIZE) >> PAGE_SHIFT);
+> +       if (err)
+> +               return ERR_PTR(err);
+> +
+>         smap = bpf_map_area_alloc(cost, bpf_map_attr_numa_node(attr));
+> -       if (!smap)
+> +       if (!smap) {
+> +               bpf_map_charge_finish(&mem);
+>                 return ERR_PTR(-ENOMEM);
+> -
+> -       err = -E2BIG;
+> -       cost += n_buckets * (value_size + sizeof(struct stack_map_bucket));
+> -       if (cost >= U32_MAX - PAGE_SIZE)
+> -               goto free_smap;
+> +       }
+>
+>         bpf_map_init_from_attr(&smap->map, attr);
+>         smap->map.value_size = value_size;
+>         smap->n_buckets = n_buckets;
+> -       smap->map.memory.pages = round_up(cost, PAGE_SIZE) >> PAGE_SHIFT;
+> -
+> -       err = bpf_map_precharge_memlock(smap->map.memory.pages);
+> -       if (err)
+> -               goto free_smap;
+>
+>         err = get_callchain_buffers(sysctl_perf_event_max_stack);
+>         if (err)
+> -               goto free_smap;
+> +               goto free_charge;
+>
+>         err = prealloc_elems_and_freelist(smap);
+>         if (err)
+>                 goto put_buffers;
+>
+> +       bpf_map_charge_move(&smap->map.memory, &mem);
+> +
+>         return &smap->map;
+>
+>  put_buffers:
+>         put_callchain_buffers();
+> -free_smap:
+> +free_charge:
+> +       bpf_map_charge_finish(&mem);
+>         bpf_map_area_free(smap);
+>         return ERR_PTR(err);
+>  }
+> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+> index df14e63806c8..351cc434c4ad 100644
+> --- a/kernel/bpf/syscall.c
+> +++ b/kernel/bpf/syscall.c
+> @@ -188,19 +188,6 @@ void bpf_map_init_from_attr(struct bpf_map *map, union bpf_attr *attr)
+>         map->numa_node = bpf_map_attr_numa_node(attr);
+>  }
+>
+> -int bpf_map_precharge_memlock(u32 pages)
+> -{
+> -       struct user_struct *user = get_current_user();
+> -       unsigned long memlock_limit, cur;
+> -
+> -       memlock_limit = rlimit(RLIMIT_MEMLOCK) >> PAGE_SHIFT;
+> -       cur = atomic_long_read(&user->locked_vm);
+> -       free_uid(user);
+> -       if (cur + pages > memlock_limit)
+> -               return -EPERM;
+> -       return 0;
+> -}
+> -
+>  static int bpf_charge_memlock(struct user_struct *user, u32 pages)
+>  {
+>         unsigned long memlock_limit = rlimit(RLIMIT_MEMLOCK) >> PAGE_SHIFT;
+> @@ -214,29 +201,40 @@ static int bpf_charge_memlock(struct user_struct *user, u32 pages)
+>
+>  static void bpf_uncharge_memlock(struct user_struct *user, u32 pages)
+>  {
+> -       atomic_long_sub(pages, &user->locked_vm);
+> +       if (user)
+> +               atomic_long_sub(pages, &user->locked_vm);
+>  }
+>
+> -static int bpf_map_init_memlock(struct bpf_map *map)
+> +int bpf_map_charge_init(struct bpf_map_memory *mem, u32 pages)
+>  {
+>         struct user_struct *user = get_current_user();
+>         int ret;
+>
+> -       ret = bpf_charge_memlock(user, map->memory.pages);
+> +       ret = bpf_charge_memlock(user, pages);
+>         if (ret) {
+>                 free_uid(user);
+>                 return ret;
+>         }
+> -       map->memory.user = user;
+> -       return ret;
+> +
+> +       mem->pages = pages;
+> +       mem->user = user;
+> +
+> +       return 0;
+>  }
+>
+> -static void bpf_map_release_memlock(struct bpf_map *map)
+> +void bpf_map_charge_finish(struct bpf_map_memory *mem)
+>  {
+> -       struct user_struct *user = map->memory.user;
+> +       bpf_uncharge_memlock(mem->user, mem->pages);
+> +       free_uid(mem->user);
+> +}
+>
+> -       bpf_uncharge_memlock(user, map->memory.pages);
+> -       free_uid(user);
+> +void bpf_map_charge_move(struct bpf_map_memory *dst,
+> +                        struct bpf_map_memory *src)
+> +{
+> +       *dst = *src;
+> +
+> +       /* Make sure src will not be used for the redundant uncharging. */
+> +       memset(src, 0, sizeof(struct bpf_map_memory));
+>  }
+>
+>  int bpf_map_charge_memlock(struct bpf_map *map, u32 pages)
+> @@ -304,11 +302,13 @@ void bpf_map_free_id(struct bpf_map *map, bool do_idr_lock)
+>  static void bpf_map_free_deferred(struct work_struct *work)
+>  {
+>         struct bpf_map *map = container_of(work, struct bpf_map, work);
+> +       struct bpf_map_memory mem;
+>
+> -       bpf_map_release_memlock(map);
+> +       bpf_map_charge_move(&mem, &map->memory);
+>         security_bpf_map_free(map);
+>         /* implementation dependent freeing */
+>         map->ops->map_free(map);
+> +       bpf_map_charge_finish(&mem);
+>  }
+>
+>  static void bpf_map_put_uref(struct bpf_map *map)
+> @@ -550,6 +550,7 @@ static int map_check_btf(struct bpf_map *map, const struct btf *btf,
+>  static int map_create(union bpf_attr *attr)
+>  {
+>         int numa_node = bpf_map_attr_numa_node(attr);
+> +       struct bpf_map_memory mem;
+>         struct bpf_map *map;
+>         int f_flags;
+>         int err;
+> @@ -574,7 +575,7 @@ static int map_create(union bpf_attr *attr)
+>
+>         err = bpf_obj_name_cpy(map->name, attr->map_name);
+>         if (err)
+> -               goto free_map_nouncharge;
+> +               goto free_map;
+>
+>         atomic_set(&map->refcnt, 1);
+>         atomic_set(&map->usercnt, 1);
+> @@ -584,20 +585,20 @@ static int map_create(union bpf_attr *attr)
+>
+>                 if (!attr->btf_value_type_id) {
+>                         err = -EINVAL;
+> -                       goto free_map_nouncharge;
+> +                       goto free_map;
+>                 }
+>
+>                 btf = btf_get_by_fd(attr->btf_fd);
+>                 if (IS_ERR(btf)) {
+>                         err = PTR_ERR(btf);
+> -                       goto free_map_nouncharge;
+> +                       goto free_map;
+>                 }
+>
+>                 err = map_check_btf(map, btf, attr->btf_key_type_id,
+>                                     attr->btf_value_type_id);
+>                 if (err) {
+>                         btf_put(btf);
+> -                       goto free_map_nouncharge;
+> +                       goto free_map;
+>                 }
+>
+>                 map->btf = btf;
+> @@ -609,15 +610,11 @@ static int map_create(union bpf_attr *attr)
+>
+>         err = security_bpf_map_alloc(map);
+>         if (err)
+> -               goto free_map_nouncharge;
+> -
+> -       err = bpf_map_init_memlock(map);
+> -       if (err)
+> -               goto free_map_sec;
+> +               goto free_map;
+>
+>         err = bpf_map_alloc_id(map);
+>         if (err)
+> -               goto free_map;
+> +               goto free_map_sec;
+>
+>         err = bpf_map_new_fd(map, f_flags);
+>         if (err < 0) {
+> @@ -633,13 +630,13 @@ static int map_create(union bpf_attr *attr)
+>
+>         return err;
+>
+> -free_map:
+> -       bpf_map_release_memlock(map);
+>  free_map_sec:
+>         security_bpf_map_free(map);
+> -free_map_nouncharge:
+> +free_map:
+>         btf_put(map->btf);
+> +       bpf_map_charge_move(&mem, &map->memory);
+>         map->ops->map_free(map);
+> +       bpf_map_charge_finish(&mem);
+>         return err;
+>  }
+>
+> diff --git a/kernel/bpf/xskmap.c b/kernel/bpf/xskmap.c
+> index f816ee1a0fa0..a329dab7c7a4 100644
+> --- a/kernel/bpf/xskmap.c
+> +++ b/kernel/bpf/xskmap.c
+> @@ -40,10 +40,9 @@ static struct bpf_map *xsk_map_alloc(union bpf_attr *attr)
+>         if (cost >= U32_MAX - PAGE_SIZE)
+>                 goto free_m;
+>
+> -       m->map.memory.pages = round_up(cost, PAGE_SIZE) >> PAGE_SHIFT;
+> -
+>         /* Notice returns -EPERM on if map size is larger than memlock limit */
+> -       err = bpf_map_precharge_memlock(m->map.memory.pages);
+> +       err = bpf_map_charge_init(&m->map.memory,
+> +                                 round_up(cost, PAGE_SIZE) >> PAGE_SHIFT);
+>         if (err)
+>                 goto free_m;
+>
+> @@ -51,7 +50,7 @@ static struct bpf_map *xsk_map_alloc(union bpf_attr *attr)
+>
+>         m->flush_list = alloc_percpu(struct list_head);
+>         if (!m->flush_list)
+> -               goto free_m;
+> +               goto free_charge;
+>
+>         for_each_possible_cpu(cpu)
+>                 INIT_LIST_HEAD(per_cpu_ptr(m->flush_list, cpu));
+> @@ -65,6 +64,8 @@ static struct bpf_map *xsk_map_alloc(union bpf_attr *attr)
+>
+>  free_percpu:
+>         free_percpu(m->flush_list);
+> +free_charge:
+> +       bpf_map_charge_finish(&m->map.memory);
+>  free_m:
+>         kfree(m);
+>         return ERR_PTR(err);
+> diff --git a/net/core/bpf_sk_storage.c b/net/core/bpf_sk_storage.c
+> index 92581c3ff220..621a0b07ff11 100644
+> --- a/net/core/bpf_sk_storage.c
+> +++ b/net/core/bpf_sk_storage.c
+> @@ -640,13 +640,16 @@ static struct bpf_map *bpf_sk_storage_map_alloc(union bpf_attr *attr)
+>         cost = sizeof(*smap->buckets) * nbuckets + sizeof(*smap);
+>         pages = round_up(cost, PAGE_SIZE) >> PAGE_SHIFT;
+>
+> -       ret = bpf_map_precharge_memlock(pages);
+> -       if (ret < 0)
+> +       ret = bpf_map_charge_init(&smap->map.memory, pages);
+> +       if (ret < 0) {
+> +               kfree(smap);
+>                 return ERR_PTR(ret);
+> +       }
+>
+>         smap->buckets = kvcalloc(sizeof(*smap->buckets), nbuckets,
+>                                  GFP_USER | __GFP_NOWARN);
+>         if (!smap->buckets) {
+> +               bpf_map_charge_finish(&smap->map.memory);
+>                 kfree(smap);
+>                 return ERR_PTR(-ENOMEM);
+>         }
+> @@ -659,7 +662,6 @@ static struct bpf_map *bpf_sk_storage_map_alloc(union bpf_attr *attr)
+>         smap->elem_size = sizeof(struct bpf_sk_storage_elem) + attr->value_size;
+>         smap->cache_idx = (unsigned int)atomic_inc_return(&cache_idx) %
+>                 BPF_SK_STORAGE_CACHE_SIZE;
+> -       smap->map.memory.pages = pages;
+>
+>         return &smap->map;
+>  }
+> diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+> index 4eb5b6a1b29f..1028c922a149 100644
+> --- a/net/core/sock_map.c
+> +++ b/net/core/sock_map.c
+> @@ -49,8 +49,8 @@ static struct bpf_map *sock_map_alloc(union bpf_attr *attr)
+>                 goto free_stab;
+>         }
+>
+> -       stab->map.memory.pages = round_up(cost, PAGE_SIZE) >> PAGE_SHIFT;
+> -       err = bpf_map_precharge_memlock(stab->map.memory.pages);
+> +       err = bpf_map_charge_init(&stab->map.memory,
+> +                                 round_up(cost, PAGE_SIZE) >> PAGE_SHIFT);
+>         if (err)
+>                 goto free_stab;
+>
+> @@ -60,6 +60,7 @@ static struct bpf_map *sock_map_alloc(union bpf_attr *attr)
+>         if (stab->sks)
+>                 return &stab->map;
+>         err = -ENOMEM;
+> +       bpf_map_charge_finish(&stab->map.memory);
+>  free_stab:
+>         kfree(stab);
+>         return ERR_PTR(err);
+> --
+> 2.20.1
+>
