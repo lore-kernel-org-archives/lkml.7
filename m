@@ -2,93 +2,134 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A691C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 280DCC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE62324E0D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:53:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tPv1I7Ai"
+	by mail.kernel.org (Postfix) with ESMTP id F1CA724E0D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:53:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559188418;
+	bh=WGJhJ+4pPLDW89M17rh9ZMB5imz0kOh66AkNRrNHTAc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=UPBcaHvduXYrjwM+p65yLJDn9Y0/ErbKFKziP/+HNleK+g+IxJ5/+SqxCt5kfmZQl
+	 KM2KukQ/OlnT5tHD6urhfeWQMo7LpReU4XqQJBX3mL+1a75ks++EHTrcALKQphzjTF
+	 nxZiYbbf0g+/GoVdrc7kHxD/I+s+EtxgNgSQKwiQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387711AbfE3Dxe (ORCPT
+        id S1731474AbfE3Dxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:53:34 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34226 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730214AbfE3Dx3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:53:29 -0400
-Received: by mail-pl1-f194.google.com with SMTP id w7so1967875plz.1;
-        Wed, 29 May 2019 20:53:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=PVfUudKZSSRsgWLDDlu5rIq5+aEI9z+7kir93gGSu98=;
-        b=tPv1I7AiMzaxAGH4/ZoChIkGQ3P2y1P/f01B88UfmUpt5K4YIFhOL/2QXthU21+tjP
-         cJT1BX2t2CxeGhzfwtQv2i58rjBM3dbgtdfWH10Zw8wlVMOV1REPIelee09FG4UfU4Pd
-         aNtAShasXOBXpsArZArkGPuakpdvt2bHU83plT3kdJh6/euluuYf5vraJ6167kodvBUt
-         34gpl3HAPza+zE1Wn0wabvnqYsIDwLWTu8Zoh9EJAaWLoaYvrdJbq1oXXJmWU6Urb5Vl
-         sWcLuvS3sf+GLl/ZbqnVvoyiR6ANXlhn6wVtjd2v5B2qFXzJBZYtJpOHtS2PpAvVaAPM
-         ZSnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=PVfUudKZSSRsgWLDDlu5rIq5+aEI9z+7kir93gGSu98=;
-        b=NJ1U7z2mbbmYsOUIpFem3bXXJ0EQnDORjKIl/ZsV6dxkBqVgBjvJWyqtNx3iIXu70N
-         e0nYZtnye6xzJ02+Ltp5fiK1JAq87EyGL2Sn01ENgE+502egTPnraJILJs6z8SMT6Csw
-         rgyd85lCQMXPAXneCQ5YR1dJQkNWhD9OqzxJ+W2Q3k9psbZHKSlWNNpcNMJMeoeylmhW
-         PAoNmTobJmwzTpWODiuwdcB9Fr7J1PlxE6SoXD+c1FcurPdTlml36ciH065Uol0kp1Ry
-         UPaXn8rgD4qesGMSli0TESVN3SRsmvFDaK7fU1nplY0ZCqDfjQb4L9NeRf06lyXNM4tw
-         J3JQ==
-X-Gm-Message-State: APjAAAW1U8+Tu+ROwy6hEH0d2DvM490SMf26eMC2ggr28fzwe+YLH7ij
-        Cg8XwrDYQPgfON6qcvf6xZc=
-X-Google-Smtp-Source: APXvYqwDN5x7+LKfvN4qyptzzHadmPubjlm09Mj0UgbtZAc95XvDBB8w+2Kwu03lAHVtqh5lm2OCAA==
-X-Received: by 2002:a17:902:b204:: with SMTP id t4mr1747622plr.285.1559188408845;
-        Wed, 29 May 2019 20:53:28 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([66.42.35.75])
-        by smtp.gmail.com with ESMTPSA id m2sm745431pgq.48.2019.05.29.20.53.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 20:53:28 -0700 (PDT)
-Date:   Thu, 30 May 2019 11:53:10 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     paul@paul-moore.com, tony.luck@intel.com, sds@tycho.nsa.gov,
-        eparis@parisplace.org
-Cc:     selinux@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH] hooks: fix a missing-check bug in selinux_sb_eat_lsm_opts()
-Message-ID: <20190530035310.GA9127@zhanggen-UX430UQ>
+        Wed, 29 May 2019 23:53:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55366 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730914AbfE3DT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:29 -0400
+Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D3EB24890;
+        Thu, 30 May 2019 03:19:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559186368;
+        bh=WGJhJ+4pPLDW89M17rh9ZMB5imz0kOh66AkNRrNHTAc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RKSioTI7TL3cdr8DXa+SAz06fmI/C0GTJ08Ufd1sfSKlZDK4XW3VFa7hYvBy8L7V/
+         w4bkInPkBTs3m3qrxKIzpgmUYBl8N04PBODYELtZPk95fgCalxW9xCMHNC9pkipfcI
+         UVK/yvZGHPLk7trJ3KxCT7h/F99CNlQRUGHp0f2s=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 076/193] bcache: avoid clang -Wunintialized warning
+Date:   Wed, 29 May 2019 20:05:30 -0700
+Message-Id: <20190530030459.724674358@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
+References: <20190530030446.953835040@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In selinux_sb_eat_lsm_opts(), 'arg' is allocated by kmemdup_nul(). It
-returns NULL when fails. So 'arg' should be checked.
+[ Upstream commit 78d4eb8ad9e1d413449d1b7a060f50b6efa81ebd ]
 
-Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+clang has identified a code path in which it thinks a
+variable may be unused:
+
+drivers/md/bcache/alloc.c:333:4: error: variable 'bucket' is used uninitialized whenever 'if' condition is false
+      [-Werror,-Wsometimes-uninitialized]
+                        fifo_pop(&ca->free_inc, bucket);
+                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/md/bcache/util.h:219:27: note: expanded from macro 'fifo_pop'
+ #define fifo_pop(fifo, i)       fifo_pop_front(fifo, (i))
+                                ^~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/md/bcache/util.h:189:6: note: expanded from macro 'fifo_pop_front'
+        if (_r) {                                                       \
+            ^~
+drivers/md/bcache/alloc.c:343:46: note: uninitialized use occurs here
+                        allocator_wait(ca, bch_allocator_push(ca, bucket));
+                                                                  ^~~~~~
+drivers/md/bcache/alloc.c:287:7: note: expanded from macro 'allocator_wait'
+                if (cond)                                               \
+                    ^~~~
+drivers/md/bcache/alloc.c:333:4: note: remove the 'if' if its condition is always true
+                        fifo_pop(&ca->free_inc, bucket);
+                        ^
+drivers/md/bcache/util.h:219:27: note: expanded from macro 'fifo_pop'
+ #define fifo_pop(fifo, i)       fifo_pop_front(fifo, (i))
+                                ^
+drivers/md/bcache/util.h:189:2: note: expanded from macro 'fifo_pop_front'
+        if (_r) {                                                       \
+        ^
+drivers/md/bcache/alloc.c:331:15: note: initialize the variable 'bucket' to silence this warning
+                        long bucket;
+                                   ^
+
+This cannot happen in practice because we only enter the loop
+if there is at least one element in the list.
+
+Slightly rearranging the code makes this clearer to both the
+reader and the compiler, which avoids the warning.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index 3ec702c..5a9e959 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -2635,6 +2635,8 @@ static int selinux_sb_eat_lsm_opts(char *options, void **mnt_opts)
- 						*q++ = c;
- 				}
- 				arg = kmemdup_nul(arg, q - arg, GFP_KERNEL);
-+				if (!arg)
-+					return 0;
- 			}
- 			rc = selinux_add_opt(token, arg, mnt_opts);
- 			if (unlikely(rc)) {
+ drivers/md/bcache/alloc.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/md/bcache/alloc.c b/drivers/md/bcache/alloc.c
+index 8c13a9036d07f..ada94a01e1423 100644
+--- a/drivers/md/bcache/alloc.c
++++ b/drivers/md/bcache/alloc.c
+@@ -325,10 +325,11 @@ static int bch_allocator_thread(void *arg)
+ 		 * possibly issue discards to them, then we add the bucket to
+ 		 * the free list:
+ 		 */
+-		while (!fifo_empty(&ca->free_inc)) {
++		while (1) {
+ 			long bucket;
+ 
+-			fifo_pop(&ca->free_inc, bucket);
++			if (!fifo_pop(&ca->free_inc, bucket))
++				break;
+ 
+ 			if (ca->discard) {
+ 				mutex_unlock(&ca->set->bucket_lock);
+-- 
+2.20.1
+
+
+
