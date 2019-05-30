@@ -2,177 +2,285 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C71C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 312C4C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E62A26288
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1E6A2628E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:31:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jrtHBOj3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Na05WTbb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbfE3W3g (ORCPT
+        id S1726558AbfE3WbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 18:29:36 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45204 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbfE3W3f (ORCPT
+        Thu, 30 May 2019 18:31:21 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:44464 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbfE3WbV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 18:29:35 -0400
-Received: by mail-pf1-f195.google.com with SMTP id s11so4832048pfm.12;
-        Thu, 30 May 2019 15:29:35 -0700 (PDT)
+        Thu, 30 May 2019 18:31:21 -0400
+Received: by mail-ed1-f67.google.com with SMTP id b8so11343472edm.11
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 15:31:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XFIS/ATJWf8i+rx5RZgt8pFQOptsz9ozO1zSHeC1TwM=;
-        b=jrtHBOj3ok1f/xowAmtE0Z0q/wl92RhCPkKm0zNzy3xyEh9KoBDXCQwtq+ffNwM/k0
-         xoJfQDV6ndJ/UBTJuyqMXa+z0K6MM5T3+N/+z1g+DGaU46uWvI1oiRcDvOEOMVgVc4KM
-         gg7XKnvGxbS9Gn8P9wYQeQnQ/t7kgrMlHgKyeFze4N91ZU5k8y2eLRCuvzHVSE5uqcqa
-         o/i2fe+DLMrj7Z7iCtjRRi/q3L9YCgPNXe+necSyZ3DHkoo7NXRPgzpzit3YBFbzPmxD
-         fB4WvBLELDFtrpCjuv08DBKQoJNaqjAYVwuH1DD0atxRgZlM1ze5Wq/3HKJ1blmcTpOx
-         H40w==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=doIN73qoxEAhanza5GxdbSOYZQ8yzsT8VbpSFVXMRKo=;
+        b=Na05WTbburdeIzLk8lZXQGmQi2KyCV850nl+uvRei+4g2tVD05HZ4W6lQL/EA9vQ6C
+         EK0hLpYWxz4IRVVcNdFyPS77UlSoPCSnBxFaS9fasgUtWzF1zZCbiSsFhEzIY6n6ZiNl
+         Eb8XxVre0az3muSMBXpQHb0Z1Aq65T7qHrtjklCJ/KnwZpjaEoFz89mxQeTP76PdBJFy
+         RervTaCOG/Lz2A2qsBT67fKoxY/PWVlRVdOxeNdqtlhLN6tsQrivuskQLPJXS8qYIFeb
+         Ls7pY9b9hm0yZbEnI92wa3/RIgw1foX92UMasAlisUSTCh8L0u3kOtHMSdCqAN5LrHUC
+         8Zpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XFIS/ATJWf8i+rx5RZgt8pFQOptsz9ozO1zSHeC1TwM=;
-        b=gxueC7ugHyyR6iE0FNeYpVz//IiFc16KdipP1Lb2uQd51RGUn1pdU74cjYMP4wUMYa
-         6Gv/AaQsDcI1/wtyfcH/gLd3Z3j43irI71ygyjjN14v3+Yt9+vS9nz/XSi1nyOFobqlF
-         17/UxCWcjAhFU1x/2fLrGhfNTSLaeaw/xOKHR5yg2cdJ1p1hQ8l6cXrSg6i+apdthU0Q
-         NIFA3lYb21WiMPTvCpVxgSTqyuEi53SvxAo5GiOqdzCcGMB98UhT278QCAmpEIdHMtsw
-         ZNMlVfObT6UWl6XrbbFKtUBd7/7WW4jHA07uofUu0zn9bNUI+cgcAItlQ4WBEzW+swpM
-         aXNQ==
-X-Gm-Message-State: APjAAAUcHbOkv5ZuLT7BJbbzNsH4oCo2y8ixcayDcyhto2hCElBCktcW
-        KDk/aPRvMMoRRcJEEwXvNJU=
-X-Google-Smtp-Source: APXvYqw2EYd2FcvKbUNMNOciWItMzYs8P3TF+IEhZUZ3ULjwC7KuQfnSofumg0Xp/zG+s8Wy4IAb2g==
-X-Received: by 2002:a62:7a8e:: with SMTP id v136mr5940404pfc.208.1559255375149;
-        Thu, 30 May 2019 15:29:35 -0700 (PDT)
-Received: from kaby.cs.washington.edu ([2607:4000:200:15:61cb:56f1:2c08:844e])
-        by smtp.gmail.com with ESMTPSA id a5sm2310568pjo.29.2019.05.30.15.29.34
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=doIN73qoxEAhanza5GxdbSOYZQ8yzsT8VbpSFVXMRKo=;
+        b=oq/h9y3SZCVEmKtP8T6V/UdITkbrBxbe4Kyt+Et/S1IWIZMNT0QH0JO1qMEC5c5GVq
+         4Ho+GzylQy/sC+PwtHLZ8CmSOwuwj6XFI0agrQTptTXPJDCg+V+y31j3WfDGR9wC3Not
+         pWkRyXOB6HeyNToP/6aayp9hVwdkFGCrhzfjeDcr/Pysi3WDDVk9l3viZFPM9tATGR5J
+         iC/7c/cLDpFnXCmePxGyWzTPlD8/GPaCz5TTrS2Wjm0LJwljZeKrblKGq6cPgTlRrxeq
+         QHz4ebIHEnhHmUpy7re8QcJCCjQh5LAFGl/SBL9d2T/wHBGF/s8itEheFkIEaIJy89DK
+         K4Ig==
+X-Gm-Message-State: APjAAAXb1MFZuzEfGnzYya4G9i2YfVbf9oKuxVRhQcYSyVYrluVEpl/b
+        hapnIdhvWBtf9llpRAYvxqts9cPy
+X-Google-Smtp-Source: APXvYqyl9f50kyZTktpnwAxwR9mkPiTo6qe70Ybd3W9BiEUUKydljzpbthY71amBhM6pIQ6x6vBkUA==
+X-Received: by 2002:a50:ce06:: with SMTP id y6mr7262339edi.160.1559251277367;
+        Thu, 30 May 2019 14:21:17 -0700 (PDT)
+Received: from mail.broadcom.com ([192.19.231.250])
+        by smtp.gmail.com with ESMTPSA id h25sm597082ejz.10.2019.05.30.14.21.15
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 15:29:34 -0700 (PDT)
-From:   Luke Nelson <luke.r.nels@gmail.com>
-Cc:     Luke Nelson <luke.r.nels@gmail.com>, Xi Wang <xi.wang@gmail.com>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@gmail.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        netdev@vger.kernel.org, linux-riscv@lists.infradead.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH bpf v2] bpf, riscv: clear high 32 bits for ALU32 add/sub/neg/lsh/rsh/arsh
-Date:   Thu, 30 May 2019 15:29:22 -0700
-Message-Id: <20190530222922.4269-1-luke.r.nels@gmail.com>
-X-Mailer: git-send-email 2.19.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Thu, 30 May 2019 14:21:16 -0700 (PDT)
+From:   Kamal Dasu <kdasu.kdev@gmail.com>
+To:     linux-mtd@lists.infradead.org
+Cc:     bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Subject: [PATCH 2/3] mtd: nand: raw: brcmnand: Add support for v7.3 controller
+Date:   Thu, 30 May 2019 17:20:36 -0400
+Message-Id: <1559251257-12383-2-git-send-email-kdasu.kdev@gmail.com>
+X-Mailer: git-send-email 1.9.0.138.g2de3478
+In-Reply-To: <1559251257-12383-1-git-send-email-kdasu.kdev@gmail.com>
+References: <1559251257-12383-1-git-send-email-kdasu.kdev@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In BPF, 32-bit ALU operations should zero-extend their results into
-the 64-bit registers.
+This change adds support for brcm NAND v7.3 controller. This controller
+uses a newer version of flash_dma engine and change mostly implements
+these differences.
 
-The current BPF JIT on RISC-V emits incorrect instructions that perform
-sign extension only (e.g., addw, subw) on 32-bit add, sub, lsh, rsh,
-arsh, and neg. This behavior diverges from the interpreter and JITs
-for other architectures.
-
-This patch fixes the bugs by performing zero extension on the destination
-register of 32-bit ALU operations.
-
-Fixes: 2353ecc6f91f ("bpf, riscv: add BPF JIT for RV64G")
-Cc: Xi Wang <xi.wang@gmail.com>
-Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
+Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
 ---
-The original patch is
-https://lkml.org/lkml/2019/5/30/1370
+ drivers/mtd/nand/raw/brcmnand/brcmnand.c | 102 ++++++++++++++++++++++++-------
+ 1 file changed, 80 insertions(+), 22 deletions(-)
 
-This version is rebased against the bpf tree.
----
- arch/riscv/net/bpf_jit_comp.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
-diff --git a/arch/riscv/net/bpf_jit_comp.c b/arch/riscv/net/bpf_jit_comp.c
-index e5c8d675bd6e..426d5c33ea90 100644
---- a/arch/riscv/net/bpf_jit_comp.c
-+++ b/arch/riscv/net/bpf_jit_comp.c
-@@ -751,10 +751,14 @@ static int emit_insn(const struct bpf_insn *insn, struct rv_jit_context *ctx,
- 	case BPF_ALU | BPF_ADD | BPF_X:
- 	case BPF_ALU64 | BPF_ADD | BPF_X:
- 		emit(is64 ? rv_add(rd, rd, rs) : rv_addw(rd, rd, rs), ctx);
-+		if (!is64)
-+			emit_zext_32(rd, ctx);
- 		break;
- 	case BPF_ALU | BPF_SUB | BPF_X:
- 	case BPF_ALU64 | BPF_SUB | BPF_X:
- 		emit(is64 ? rv_sub(rd, rd, rs) : rv_subw(rd, rd, rs), ctx);
-+		if (!is64)
-+			emit_zext_32(rd, ctx);
- 		break;
- 	case BPF_ALU | BPF_AND | BPF_X:
- 	case BPF_ALU64 | BPF_AND | BPF_X:
-@@ -795,14 +799,20 @@ static int emit_insn(const struct bpf_insn *insn, struct rv_jit_context *ctx,
- 	case BPF_ALU | BPF_LSH | BPF_X:
- 	case BPF_ALU64 | BPF_LSH | BPF_X:
- 		emit(is64 ? rv_sll(rd, rd, rs) : rv_sllw(rd, rd, rs), ctx);
-+		if (!is64)
-+			emit_zext_32(rd, ctx);
- 		break;
- 	case BPF_ALU | BPF_RSH | BPF_X:
- 	case BPF_ALU64 | BPF_RSH | BPF_X:
- 		emit(is64 ? rv_srl(rd, rd, rs) : rv_srlw(rd, rd, rs), ctx);
-+		if (!is64)
-+			emit_zext_32(rd, ctx);
- 		break;
- 	case BPF_ALU | BPF_ARSH | BPF_X:
- 	case BPF_ALU64 | BPF_ARSH | BPF_X:
- 		emit(is64 ? rv_sra(rd, rd, rs) : rv_sraw(rd, rd, rs), ctx);
-+		if (!is64)
-+			emit_zext_32(rd, ctx);
- 		break;
+diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+index 77b7850..544088f 100644
+--- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
++++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+@@ -92,6 +92,12 @@ struct brcm_nand_dma_desc {
+ #define FLASH_DMA_ECC_ERROR	(1 << 8)
+ #define FLASH_DMA_CORR_ERROR	(1 << 9)
  
- 	/* dst = -dst */
-@@ -810,6 +820,8 @@ static int emit_insn(const struct bpf_insn *insn, struct rv_jit_context *ctx,
- 	case BPF_ALU64 | BPF_NEG:
- 		emit(is64 ? rv_sub(rd, RV_REG_ZERO, rd) :
- 		     rv_subw(rd, RV_REG_ZERO, rd), ctx);
-+		if (!is64)
-+			emit_zext_32(rd, ctx);
- 		break;
++/* Bitfields for DMA_MODE */
++#define FLASH_DMA_MODE_STOP_ON_ERROR	BIT(1) /* stop in Uncorr ECC error */
++#define FLASH_DMA_MODE_MODE		BIT(0) /* link list */
++#define FLASH_DMA_MODE_MASK		(FLASH_DMA_MODE_STOP_ON_ERROR |	\
++						FLASH_DMA_MODE_MODE)
++
+ /* 512B flash cache in the NAND controller HW */
+ #define FC_SHIFT		9U
+ #define FC_BYTES		512U
+@@ -104,6 +110,51 @@ struct brcm_nand_dma_desc {
+ #define NAND_CTRL_RDY			(INTFC_CTLR_READY | INTFC_FLASH_READY)
+ #define NAND_POLL_STATUS_TIMEOUT_MS	100
  
- 	/* dst = BSWAP##imm(dst) */
-@@ -964,14 +976,20 @@ static int emit_insn(const struct bpf_insn *insn, struct rv_jit_context *ctx,
- 	case BPF_ALU | BPF_LSH | BPF_K:
- 	case BPF_ALU64 | BPF_LSH | BPF_K:
- 		emit(is64 ? rv_slli(rd, rd, imm) : rv_slliw(rd, rd, imm), ctx);
-+		if (!is64)
-+			emit_zext_32(rd, ctx);
- 		break;
- 	case BPF_ALU | BPF_RSH | BPF_K:
- 	case BPF_ALU64 | BPF_RSH | BPF_K:
- 		emit(is64 ? rv_srli(rd, rd, imm) : rv_srliw(rd, rd, imm), ctx);
-+		if (!is64)
-+			emit_zext_32(rd, ctx);
- 		break;
- 	case BPF_ALU | BPF_ARSH | BPF_K:
- 	case BPF_ALU64 | BPF_ARSH | BPF_K:
- 		emit(is64 ? rv_srai(rd, rd, imm) : rv_sraiw(rd, rd, imm), ctx);
-+		if (!is64)
-+			emit_zext_32(rd, ctx);
- 		break;
++/* flash_dma registers */
++enum flash_dma_reg {
++	FLASH_DMA_REVISION = 0,
++	FLASH_DMA_FIRST_DESC,
++	FLASH_DMA_FIRST_DESC_EXT,
++	FLASH_DMA_CTRL,
++	FLASH_DMA_MODE,
++	FLASH_DMA_STATUS,
++	FLASH_DMA_INTERRUPT_DESC,
++	FLASH_DMA_INTERRUPT_DESC_EXT,
++	FLASH_DMA_ERROR_STATUS,
++	FLASH_DMA_CURRENT_DESC,
++	FLASH_DMA_CURRENT_DESC_EXT,
++};
++
++/* flash_dma registers v1*/
++static const u16 flash_dma_regs_v1[] = {
++	[FLASH_DMA_REVISION]		= 0x00,
++	[FLASH_DMA_FIRST_DESC]		= 0x04,
++	[FLASH_DMA_FIRST_DESC_EXT]	= 0x08,
++	[FLASH_DMA_CTRL]		= 0x0c,
++	[FLASH_DMA_MODE]		= 0x10,
++	[FLASH_DMA_STATUS]		= 0x14,
++	[FLASH_DMA_INTERRUPT_DESC]	= 0x18,
++	[FLASH_DMA_INTERRUPT_DESC_EXT]	= 0x1c,
++	[FLASH_DMA_ERROR_STATUS]	= 0x20,
++	[FLASH_DMA_CURRENT_DESC]	= 0x24,
++	[FLASH_DMA_CURRENT_DESC_EXT]	= 0x28,
++};
++
++/* flash_dma registers v4 */
++static const u16 flash_dma_regs_v4[] = {
++	[FLASH_DMA_REVISION]		= 0x00,
++	[FLASH_DMA_FIRST_DESC]		= 0x08,
++	[FLASH_DMA_FIRST_DESC_EXT]	= 0x0c,
++	[FLASH_DMA_CTRL]		= 0x10,
++	[FLASH_DMA_MODE]		= 0x14,
++	[FLASH_DMA_STATUS]		= 0x18,
++	[FLASH_DMA_INTERRUPT_DESC]	= 0x20,
++	[FLASH_DMA_INTERRUPT_DESC_EXT]	= 0x24,
++	[FLASH_DMA_ERROR_STATUS]	= 0x28,
++	[FLASH_DMA_CURRENT_DESC]	= 0x30,
++	[FLASH_DMA_CURRENT_DESC_EXT]	= 0x34,
++};
++
+ /* Controller feature flags */
+ enum {
+ 	BRCMNAND_HAS_1K_SECTORS			= BIT(0),
+@@ -136,6 +187,8 @@ struct brcmnand_controller {
+ 	/* List of NAND hosts (one for each chip-select) */
+ 	struct list_head host_list;
  
- 	/* JUMP off */
++	/* flash_dma reg */
++	const u16		*flash_dma_offsets;
+ 	struct brcm_nand_dma_desc *dma_desc;
+ 	dma_addr_t		dma_pa;
+ 
+@@ -470,7 +523,7 @@ static int brcmnand_revision_init(struct brcmnand_controller *ctrl)
+ 	/* Register offsets */
+ 	if (ctrl->nand_version >= 0x0702)
+ 		ctrl->reg_offsets = brcmnand_regs_v72;
+-	else if (ctrl->nand_version >= 0x0701)
++	else if (ctrl->nand_version == 0x0701)
+ 		ctrl->reg_offsets = brcmnand_regs_v71;
+ 	else if (ctrl->nand_version >= 0x0600)
+ 		ctrl->reg_offsets = brcmnand_regs_v60;
+@@ -515,7 +568,7 @@ static int brcmnand_revision_init(struct brcmnand_controller *ctrl)
+ 	}
+ 
+ 	/* Maximum spare area sector size (per 512B) */
+-	if (ctrl->nand_version >= 0x0702)
++	if (ctrl->nand_version == 0x0702)
+ 		ctrl->max_oob = 128;
+ 	else if (ctrl->nand_version >= 0x0600)
+ 		ctrl->max_oob = 64;
+@@ -546,6 +599,15 @@ static int brcmnand_revision_init(struct brcmnand_controller *ctrl)
+ 	return 0;
+ }
+ 
++static void brcmnand_flash_dma_revision_init(struct brcmnand_controller *ctrl)
++{
++	/* flash_dma register offsets */
++	if (ctrl->nand_version >= 0x0703)
++		ctrl->flash_dma_offsets = flash_dma_regs_v4;
++	else
++		ctrl->flash_dma_offsets = flash_dma_regs_v1;
++}
++
+ static inline u32 brcmnand_read_reg(struct brcmnand_controller *ctrl,
+ 		enum brcmnand_reg reg)
+ {
+@@ -668,7 +730,7 @@ static void brcmnand_wr_corr_thresh(struct brcmnand_host *host, u8 val)
+ 	enum brcmnand_reg reg = BRCMNAND_CORR_THRESHOLD;
+ 	int cs = host->cs;
+ 
+-	if (ctrl->nand_version >= 0x0702)
++	if (ctrl->nand_version == 0x0702)
+ 		bits = 7;
+ 	else if (ctrl->nand_version >= 0x0600)
+ 		bits = 6;
+@@ -722,7 +784,7 @@ enum {
+ 
+ static inline u32 brcmnand_spare_area_mask(struct brcmnand_controller *ctrl)
+ {
+-	if (ctrl->nand_version >= 0x0702)
++	if (ctrl->nand_version == 0x0702)
+ 		return GENMASK(7, 0);
+ 	else if (ctrl->nand_version >= 0x0600)
+ 		return GENMASK(6, 0);
+@@ -852,20 +914,6 @@ static inline void brcmnand_set_wp(struct brcmnand_controller *ctrl, bool en)
+  * Flash DMA
+  ***********************************************************************/
+ 
+-enum flash_dma_reg {
+-	FLASH_DMA_REVISION		= 0x00,
+-	FLASH_DMA_FIRST_DESC		= 0x04,
+-	FLASH_DMA_FIRST_DESC_EXT	= 0x08,
+-	FLASH_DMA_CTRL			= 0x0c,
+-	FLASH_DMA_MODE			= 0x10,
+-	FLASH_DMA_STATUS		= 0x14,
+-	FLASH_DMA_INTERRUPT_DESC	= 0x18,
+-	FLASH_DMA_INTERRUPT_DESC_EXT	= 0x1c,
+-	FLASH_DMA_ERROR_STATUS		= 0x20,
+-	FLASH_DMA_CURRENT_DESC		= 0x24,
+-	FLASH_DMA_CURRENT_DESC_EXT	= 0x28,
+-};
+-
+ static inline bool has_flash_dma(struct brcmnand_controller *ctrl)
+ {
+ 	return ctrl->flash_dma_base;
+@@ -877,14 +925,19 @@ static inline bool flash_dma_buf_ok(const void *buf)
+ 		likely(IS_ALIGNED((uintptr_t)buf, 4));
+ }
+ 
+-static inline void flash_dma_writel(struct brcmnand_controller *ctrl, u8 offs,
+-				    u32 val)
++static inline void flash_dma_writel(struct brcmnand_controller *ctrl,
++				    enum flash_dma_reg dma_reg, u32 val)
+ {
++	u16 offs = ctrl->flash_dma_offsets[dma_reg];
++
+ 	brcmnand_writel(val, ctrl->flash_dma_base + offs);
+ }
+ 
+-static inline u32 flash_dma_readl(struct brcmnand_controller *ctrl, u8 offs)
++static inline u32 flash_dma_readl(struct brcmnand_controller *ctrl,
++				  enum flash_dma_reg dma_reg)
+ {
++	u16 offs = ctrl->flash_dma_offsets[dma_reg];
++
+ 	return brcmnand_readl(ctrl->flash_dma_base + offs);
+ }
+ 
+@@ -2427,6 +2480,7 @@ static int brcmnand_resume(struct device *dev)
+ 	{ .compatible = "brcm,brcmnand-v7.0" },
+ 	{ .compatible = "brcm,brcmnand-v7.1" },
+ 	{ .compatible = "brcm,brcmnand-v7.2" },
++	{ .compatible = "brcm,brcmnand-v7.3" },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, brcmnand_of_match);
+@@ -2513,7 +2567,11 @@ int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
+ 			goto err;
+ 		}
+ 
+-		flash_dma_writel(ctrl, FLASH_DMA_MODE, 1); /* linked-list */
++		/* initialize the dma version */
++		brcmnand_flash_dma_revision_init(ctrl);
++
++		/* linked-list and stop on error */
++		flash_dma_writel(ctrl, FLASH_DMA_MODE, FLASH_DMA_MODE_MASK);
+ 		flash_dma_writel(ctrl, FLASH_DMA_ERROR_STATUS, 0);
+ 
+ 		/* Allocate descriptor(s) */
 -- 
-2.19.1
+1.9.0.138.g2de3478
 
