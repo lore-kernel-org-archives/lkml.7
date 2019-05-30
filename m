@@ -2,60 +2,59 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF171C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABE6C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B597825077
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:06:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67A1D25079
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:06:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189176;
-	bh=pVWxZxbNvKqIRiN5qwRTrLrmotdfRvBhYgFWEWGfkok=;
+	s=default; t=1559189179;
+	bh=a7LZHAGSnn7a+kd0ARbVNsTrdcYFhfOU/2ik8HLnMxU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WfSqHucogyFBuojFU5e3Chejq65fs5QFzRKHleirME6UQxnzSFZj+OeRRSlnATl/0
-	 eW0x7nxHmBWHz2ChQ3XD7CUq2weQtxkRJOjc9HeWbmsKBjLKwy8KiLHL4D5cY/phfe
-	 dmVfw7d9u/+b3/xzJBe76jvz/+SN19WefCBG4uEA=
+	b=A/M9jm3NUzOnQ1OaDU9NsAjGL+Yt7SOIbJbsLJdnC2wDrvdcgbhbb0I9TSwlQWOtn
+	 ed8eEb+jmffFjcsBuiA45ue5leMswPISUwtGn3XDeCVK3rOafnQ6P8UNcDb4UVl/nu
+	 mDIbFXq/Sp8nySGoVD8bYpp9WaxAkq4CLZyxafe0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731185AbfE3DRh (ORCPT
+        id S1726984AbfE3EGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:17:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32924 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:06:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728760AbfE3DOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:03 -0400
+        id S1731181AbfE3DRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:17:36 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21AB124557;
-        Thu, 30 May 2019 03:14:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2FFD246F4;
+        Thu, 30 May 2019 03:17:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186043;
-        bh=pVWxZxbNvKqIRiN5qwRTrLrmotdfRvBhYgFWEWGfkok=;
+        s=default; t=1559186255;
+        bh=a7LZHAGSnn7a+kd0ARbVNsTrdcYFhfOU/2ik8HLnMxU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VmwfPrhgLGujd47vAC2h9li5bz++ZPEm+sOVseiDUyC640ZltbTSugdywWSWL0FaN
-         s3PHL5MPUFnvpJd5qbWI8J6nRQlS2fHab9uqYJA7YpWwWH3ucjeVD0/7YtYtivbIVg
-         iVyFwzGC5AnQs6mSq7C2Ypv0G1Uc/q3JhiaTj0yE=
+        b=2BJdFEnzgJRByjOK42sZaJegtWTtPhbNWf4uBRVVseK1NRPYOkppWjbOY6g7Dq6/S
+         vegZdZo2VqwHC4TvWh9mMEXMU2pw0d+PuPfnCR7g5pDeB3ClFyS0a4ZbYZFzyhCWU8
+         XPUfHt91IiNBu/eVUkJVB/jDrxaipMpt4jWBNFjs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        clang-built-linux@googlegroups.com, x86-ml <x86@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 134/346] pinctrl: samsung: fix leaked of_node references
-Date:   Wed, 29 May 2019 20:03:27 -0700
-Message-Id: <20190530030547.903130825@linuxfoundation.org>
+Subject: [PATCH 4.19 184/276] x86/build: Keep local relocations with ld.lld
+Date:   Wed, 29 May 2019 20:05:42 -0700
+Message-Id: <20190530030536.752838183@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
-References: <20190530030540.363386121@linuxfoundation.org>
+In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
+References: <20190530030523.133519668@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -65,43 +64,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 44b9f86cd41db6c522effa5aec251d664a52fbc0 ]
+[ Upstream commit 7c21383f3429dd70da39c0c7f1efa12377a47ab6 ]
 
-The call to of_find_compatible_node returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+The LLVM linker (ld.lld) defaults to removing local relocations, which
+causes KASLR boot failures. ld.bfd and ld.gold already handle this
+correctly. This adds the explicit instruction "--discard-none" during
+the link phase. There is no change in output for ld.bfd and ld.gold,
+but ld.lld now produces an image with all the needed relocations.
 
-Detected by coccinelle with the following warnings:
-./drivers/pinctrl/samsung/pinctrl-exynos-arm.c:76:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 66, but without a corresponding object release within this function.
-./drivers/pinctrl/samsung/pinctrl-exynos-arm.c:82:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 66, but without a corresponding object release within this function.
-
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Kukjin Kim <kgene@kernel.org>
-Cc: linux-samsung-soc@vger.kernel.org
-Cc: linux-gpio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: clang-built-linux@googlegroups.com
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190404214027.GA7324@beast
+Link: https://github.com/ClangBuiltLinux/linux/issues/404
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/samsung/pinctrl-exynos-arm.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/samsung/pinctrl-exynos-arm.c b/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
-index 44c6b753f692a..85ddf49a51885 100644
---- a/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
-@@ -71,6 +71,7 @@ s5pv210_retention_init(struct samsung_pinctrl_drv_data *drvdata,
- 	}
+diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+index ffc823a8312fb..ab2071e40efe3 100644
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -47,7 +47,7 @@ export REALMODE_CFLAGS
+ export BITS
  
- 	clk_base = of_iomap(np, 0);
-+	of_node_put(np);
- 	if (!clk_base) {
- 		pr_err("%s: failed to map clock registers\n", __func__);
- 		return ERR_PTR(-EINVAL);
+ ifdef CONFIG_X86_NEED_RELOCS
+-        LDFLAGS_vmlinux := --emit-relocs
++        LDFLAGS_vmlinux := --emit-relocs --discard-none
+ endif
+ 
+ #
 -- 
 2.20.1
 
