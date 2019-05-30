@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1978C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A3CBC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D81123CCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D59F245B9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:22:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186544;
-	bh=0CbJ8rpWm3HT9n56a02/4rzdQVexT5uxY+2zHGbKtZc=;
+	s=default; t=1559186548;
+	bh=L8niNnImYyoZkkl53mLLIkJHC8fq5SUYuuXMq03gDWQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ST4kSzA30n8oAIW9NxWq6TKztFfHiQWCWitIEUwIFAjAaYMhgs6LSOzTugbk0P/8h
-	 3GpLZ5+umDKw/8w3Zh6epEgh92Clwfqu6NlFhZeZwnx21I+pxKWTLZfnb4KyYUEP39
-	 F5qFwaGHxbc24uTGskU5o4X3SmvlUDyidh9jaSZ4=
+	b=lsgefGpBlBEhn7JiMPRGfj9o0W2KI5B/1RP8vt4PTK2pzyweZLkxBVNVYm/5nU5b5
+	 Yo+I/8WKucg/o/OHKKesgteL2HWJdxQ2BolDmXSHIz8Pr7D8RPxLEC9ljfPEQph9rk
+	 kPRcKh+sEyjUEaocH0K3cyFfDSp8P85+LzNgaS9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732834AbfE3DWX (ORCPT
+        id S1732840AbfE3DW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:22:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43666 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:22:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729583AbfE3DQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:43 -0400
+        id S1730793AbfE3DQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:16:45 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C697E245DA;
-        Thu, 30 May 2019 03:16:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A269245F8;
+        Thu, 30 May 2019 03:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186202;
-        bh=0CbJ8rpWm3HT9n56a02/4rzdQVexT5uxY+2zHGbKtZc=;
+        s=default; t=1559186205;
+        bh=L8niNnImYyoZkkl53mLLIkJHC8fq5SUYuuXMq03gDWQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ntcn1jHYC9VVXoIa2ptZCZdIdy30OQDxpPOnnLAN2/B7RfVxFwzcq4osEZZft1DAm
-         hOabBOYOxazxRPbbz8yF9O4Wx+2ARDAT0bNt2I+sjB/YeJDdpDVstbB+9tKA6bFJFA
-         OoBLw6ijXxQVggg80PnxGfaZEOPQWKwVc7b7Udpk=
+        b=qqnVB0rJVtYJaZthvRAQiv3+5yGT7Ed/QRxDd1UCOAHCwvQNFru24AkZFrCIS1yq0
+         Vo7JZuqbFgwtovfBUX/2pbAtbDahABLvNkvpnIaDcWIDsU0ULVpeI+dv3KOR6N8tSB
+         DhupXe5o1n7Ur0yPJDYPLryfZpMLE4p6tpsGlouQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Philipp Rudo <prudo@linux.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 087/276] s390/kexec_file: Fix detection of text segment in ELF loader
-Date:   Wed, 29 May 2019 20:04:05 -0700
-Message-Id: <20190530030531.697773045@linuxfoundation.org>
+        stable@vger.kernel.org, Sugar Zhang <sugar.zhang@rock-chips.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 091/276] dmaengine: pl330: _stop: clear interrupt status
+Date:   Wed, 29 May 2019 20:04:09 -0700
+Message-Id: <20190530030531.898865677@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -60,51 +59,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 729829d775c9a5217abc784b2f16087d79c4eec8 ]
+[ Upstream commit 2da254cc7908105a60a6bb219d18e8dced03dcb9 ]
 
-To register data for the next kernel (command line, oldmem_base, etc.) the
-current kernel needs to find the ELF segment that contains head.S. This is
-currently done by checking ifor 'phdr->p_paddr == 0'. This works fine for
-the current kernel build but in theory the first few pages could be
-skipped. Make the detection more robust by checking if the entry point lies
-within the segment.
+This patch kill instructs the DMAC to immediately terminate
+execution of a thread. and then clear the interrupt status,
+at last, stop generating interrupts for DMA_SEV. to guarantee
+the next dma start is clean. otherwise, one interrupt maybe leave
+to next start and make some mistake.
 
-Signed-off-by: Philipp Rudo <prudo@linux.ibm.com>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+we can reporduce the problem as follows:
+
+DMASEV: modify the event-interrupt resource, and if the INTEN sets
+function as interrupt, the DMAC will set irq<event_num> HIGH to
+generate interrupt. write INTCLR to clear interrupt.
+
+	DMA EXECUTING INSTRUCTS		DMA TERMINATE
+		|				|
+		|				|
+	       ...			      _stop
+		|				|
+		|			spin_lock_irqsave
+	     DMASEV				|
+		|				|
+		|			    mask INTEN
+		|				|
+		|			     DMAKILL
+		|				|
+		|			spin_unlock_irqrestore
+
+in above case, a interrupt was left, and if we unmask INTEN, the DMAC
+will set irq<event_num> HIGH to generate interrupt.
+
+to fix this, do as follows:
+
+	DMA EXECUTING INSTRUCTS		DMA TERMINATE
+		|				|
+		|				|
+	       ...			      _stop
+		|				|
+		|			spin_lock_irqsave
+	     DMASEV				|
+		|				|
+		|			     DMAKILL
+		|				|
+		|			   clear INTCLR
+		|			    mask INTEN
+		|				|
+		|			spin_unlock_irqrestore
+
+Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/kexec_elf.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/dma/pl330.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/arch/s390/kernel/kexec_elf.c b/arch/s390/kernel/kexec_elf.c
-index 5a286b012043b..602e7cc26d118 100644
---- a/arch/s390/kernel/kexec_elf.c
-+++ b/arch/s390/kernel/kexec_elf.c
-@@ -19,10 +19,15 @@ static int kexec_file_add_elf_kernel(struct kimage *image,
- 	struct kexec_buf buf;
- 	const Elf_Ehdr *ehdr;
- 	const Elf_Phdr *phdr;
-+	Elf_Addr entry;
- 	int i, ret;
+diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
+index 88750a34e8598..bc8050c025b7b 100644
+--- a/drivers/dma/pl330.c
++++ b/drivers/dma/pl330.c
+@@ -961,6 +961,7 @@ static void _stop(struct pl330_thread *thrd)
+ {
+ 	void __iomem *regs = thrd->dmac->base;
+ 	u8 insn[6] = {0, 0, 0, 0, 0, 0};
++	u32 inten = readl(regs + INTEN);
  
- 	ehdr = (Elf_Ehdr *)kernel;
- 	buf.image = image;
-+	if (image->type == KEXEC_TYPE_CRASH)
-+		entry = STARTUP_KDUMP_OFFSET;
-+	else
-+		entry = ehdr->e_entry;
+ 	if (_state(thrd) == PL330_STATE_FAULT_COMPLETING)
+ 		UNTIL(thrd, PL330_STATE_FAULTING | PL330_STATE_KILLING);
+@@ -973,10 +974,13 @@ static void _stop(struct pl330_thread *thrd)
  
- 	phdr = (void *)ehdr + ehdr->e_phoff;
- 	for (i = 0; i < ehdr->e_phnum; i++, phdr++) {
-@@ -35,7 +40,7 @@ static int kexec_file_add_elf_kernel(struct kimage *image,
- 		buf.mem = ALIGN(phdr->p_paddr, phdr->p_align);
- 		buf.memsz = phdr->p_memsz;
+ 	_emit_KILL(0, insn);
  
--		if (phdr->p_paddr == 0) {
-+		if (entry - phdr->p_paddr < phdr->p_memsz) {
- 			data->kernel_buf = buf.buffer;
- 			data->memsz += STARTUP_NORMAL_OFFSET;
+-	/* Stop generating interrupts for SEV */
+-	writel(readl(regs + INTEN) & ~(1 << thrd->ev), regs + INTEN);
+-
+ 	_execute_DBGINSN(thrd, insn, is_manager(thrd));
++
++	/* clear the event */
++	if (inten & (1 << thrd->ev))
++		writel(1 << thrd->ev, regs + INTCLR);
++	/* Stop generating interrupts for SEV */
++	writel(inten & ~(1 << thrd->ev), regs + INTEN);
+ }
  
+ /* Start doing req 'idx' of thread 'thrd' */
 -- 
 2.20.1
 
