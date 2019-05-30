@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D64A1C28CC1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0D0C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE0E624B80
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:36:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ED0124B80
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:36:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187362;
-	bh=WEkxGOTOrldUFzewf8WLDqXHSWnnWqn7UaLHQjhoE0o=;
+	s=default; t=1559187364;
+	bh=08yPMXvX6Vggu36cK+hjFz+G6AYDSqGXrMEMxqNi2Ac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MTPOoptY3kVWsHZKVomi9uFJOV5yWxs/uk/sGAg3Vsl9HhsZUnsyMT6Jw8/fkKTTd
-	 PLcSlJA+a5mDVxibNxYZnUlbCM0UydVX2WH19X7bMIp98I7+8PuevwZTCXslkrlhLj
-	 rpdzMGordsT2p7OCVAaCNHwjA7CtnasT9xecd08o=
+	b=QsLQqWqNdkqepfeDglEnwGNbzIDsUDegZWI6LlHcED4dQv6lxf09N0WSom9WxTBM1
+	 iEuE1kAmD2UPfT3sDmZv3/vIl9h4I3gmCA1i74C0CVmz6SKDyed2faUyGS79ou66xU
+	 wEr8GR/0Vt5tnT4yk21VHOvBGyRfvh6DBXxhDqT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387585AbfE3DZg (ORCPT
+        id S2387580AbfE3DZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:25:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51796 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:25:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731587AbfE3DSe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:34 -0400
+        id S1731572AbfE3DSb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:31 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DD2A247CF;
-        Thu, 30 May 2019 03:18:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8559424790;
+        Thu, 30 May 2019 03:18:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186313;
-        bh=WEkxGOTOrldUFzewf8WLDqXHSWnnWqn7UaLHQjhoE0o=;
+        s=default; t=1559186310;
+        bh=08yPMXvX6Vggu36cK+hjFz+G6AYDSqGXrMEMxqNi2Ac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hIKsAqTwo1BbOpmFENLd+2yInOV8ZLDAIlNiVtO12b8rB5UIF+Z1IDmO1mvMjnhjT
-         fZCFCs6xCWm1OVc9jJHB7/TGSLmNYi+MtwiMy2Uj/z/wDL7eOaS3hXbfiTZevtOqzp
-         /DBbZ2Og3lHIsy6KiXnPQdrofenmaB2RXWpDrKXk=
+        b=YIaWTc/56qE4vXjzvprByRMOPxKCaAHkrR8WGQioRAIdB3fB1oWAkp/XMLI48ukSF
+         5CIUlyS6Q4blhPbRihcZj5OFqBu6s+dChMvjJDerAZaA3Ta6YXc1Fii9rRdE58/7HP
+         extZWm02Wfq8M4ollFIzIqzV8VOKj07eRwS1QQYA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Anand Jain <anand.jain@oracle.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 016/193] Btrfs: do not abort transaction at btrfs_update_root() after failure to COW path
-Date:   Wed, 29 May 2019 20:04:30 -0700
-Message-Id: <20190530030450.301586277@linuxfoundation.org>
+        stable@vger.kernel.org, Trac Hoang <trac.hoang@broadcom.com>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.14 010/193] mmc: sdhci-iproc: Set NO_HISPD bit to fix HS50 data hold time problem
+Date:   Wed, 29 May 2019 20:04:24 -0700
+Message-Id: <20190530030448.838388806@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -60,54 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Trac Hoang <trac.hoang@broadcom.com>
 
-commit 72bd2323ec87722c115a5906bc6a1b31d11e8f54 upstream.
+commit ec0970e0a1b2c807c908d459641a9f9a1be3e130 upstream.
 
-Currently when we fail to COW a path at btrfs_update_root() we end up
-always aborting the transaction. However all the current callers of
-btrfs_update_root() are able to deal with errors returned from it, many do
-end up aborting the transaction themselves (directly or not, such as the
-transaction commit path), other BUG_ON() or just gracefully cancel whatever
-they were doing.
+The iproc host eMMC/SD controller hold time does not meet the
+specification in the HS50 mode.  This problem can be mitigated
+by disabling the HISPD bit; thus forcing the controller output
+data to be driven on the falling clock edges rather than the
+rising clock edges.
 
-When syncing the fsync log, we call btrfs_update_root() through
-tree-log.c:update_log_root(), and if it returns an -ENOSPC error, the log
-sync code does not abort the transaction, instead it gracefully handles
-the error and returns -EAGAIN to the fsync handler, so that it falls back
-to a transaction commit. Any other error different from -ENOSPC, makes the
-log sync code abort the transaction.
+Stable tag (v4.12+) chosen to assist stable kernel maintainers so that
+the change does not produce merge conflicts backporting to older kernel
+versions. In reality, the timing bug existed since the driver was first
+introduced but there is no need for this driver to be supported in kernel
+versions that old.
 
-So remove the transaction abort from btrfs_update_log() when we fail to
-COW a path to update the root item, so that if an -ENOSPC failure happens
-we avoid aborting the current transaction and have a chance of the fsync
-succeeding after falling back to a transaction commit.
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203413
-Fixes: 79787eaab46121 ("btrfs: replace many BUG_ONs with proper error handling")
-Cc: stable@vger.kernel.org # 4.4+
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: Anand Jain <anand.jain@oracle.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Cc: stable@vger.kernel.org # v4.12+
+Signed-off-by: Trac Hoang <trac.hoang@broadcom.com>
+Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/root-tree.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/mmc/host/sdhci-iproc.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/btrfs/root-tree.c
-+++ b/fs/btrfs/root-tree.c
-@@ -145,10 +145,8 @@ int btrfs_update_root(struct btrfs_trans
- 		return -ENOMEM;
+--- a/drivers/mmc/host/sdhci-iproc.c
++++ b/drivers/mmc/host/sdhci-iproc.c
+@@ -209,7 +209,8 @@ static const struct sdhci_iproc_data ipr
  
- 	ret = btrfs_search_slot(trans, root, key, path, 0, 1);
--	if (ret < 0) {
--		btrfs_abort_transaction(trans, ret);
-+	if (ret < 0)
- 		goto out;
--	}
- 
- 	if (ret != 0) {
- 		btrfs_print_leaf(path->nodes[0]);
+ static const struct sdhci_pltfm_data sdhci_iproc_pltfm_data = {
+ 	.quirks = SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK |
+-		  SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12,
++		  SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12 |
++		  SDHCI_QUIRK_NO_HISPD_BIT,
+ 	.quirks2 = SDHCI_QUIRK2_ACMD23_BROKEN,
+ 	.ops = &sdhci_iproc_ops,
+ };
 
 
