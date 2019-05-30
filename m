@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB48C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38083C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5971725CE1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 079FB25CCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:49:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191787;
-	bh=W6hhyP4Sz0xsqJqXoWMUMQRgHBcyX134EWeoywxxvPQ=;
+	s=default; t=1559191792;
+	bh=wAoKdH08sGvXUO6NMdS4L0VCg3tFUqAm5C0tAAGgYXQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dDsKWRRKEW75c6xBmjK+cE9Dv4MBkSj70BQ9TyUfk8Vy5L3ZQm0ledStX+mH7bmqa
-	 gnUOD2YdPgJAOSPsrqGp6p8eKEbLioKxuo00rV1WFSSdRfIH/zdUo5UaQPSOORzuIN
-	 2DvwzmEI8TO/a25WLdGmR7+yULS6kQzExYfvIYDw=
+	b=IRZPwEEoQRfzJuhSekcz81wClpVF2FepfgrIZo8BzOs1IdCD9V83X5jSZrG6glMQW
+	 rPobKjRpIdfRkS9Yw92HmGVnh+/eFNeSvl94GIknvXoJ2W3DCKnPbraoc49KJE0Dbq
+	 nWuUmxf0ouUeRPxH3WcBRbhfPACIzZ9mMC/jXSkk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388792AbfE3Etl (ORCPT
+        id S1729722AbfE3Etu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:49:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49964 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:49:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728405AbfE3DLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:11:11 -0400
+        id S1728392AbfE3DLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:10 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B1BA244E8;
-        Thu, 30 May 2019 03:11:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 556E3244E6;
+        Thu, 30 May 2019 03:11:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185870;
-        bh=W6hhyP4Sz0xsqJqXoWMUMQRgHBcyX134EWeoywxxvPQ=;
+        s=default; t=1559185869;
+        bh=wAoKdH08sGvXUO6NMdS4L0VCg3tFUqAm5C0tAAGgYXQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0SrL00fr7XvQk3VkjOJeeqHHLSV2kcCIgR8q16rCSBb/KbY9yyqcRcO6fZDin2oug
-         pbJuxaHLZYuxI3h6P5fGDMltH+MXTmuWqrODEPOj0bLnDLPgbZW1tmxSCBTaWzMSR+
-         Kg+zbeGy9gWG/siGSP2UR6plNew8GBFaCuy1OIeo=
+        b=vMn8CuwzGNI+IFTO3bgEKdi0QIWrcbKakDZsqqb+DEE8sEr8p8U/ufxafO5q6Zu4O
+         anThEJtqGr0SyYVSWi7zWZNzEGUgg7znkmvi8J8ciQoGTqkoJXSl+spFU7Ov2SGVNU
+         aozIF7HKrL1xogCHdtD4+a/cbrfSjXZmxUxQUzHQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
+        stable@vger.kernel.org, Loic Pallardy <loic.pallardy@st.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 212/405] extcon: arizona: Disable mic detect if running when driver is removed
-Date:   Wed, 29 May 2019 20:03:30 -0700
-Message-Id: <20190530030551.833718362@linuxfoundation.org>
+Subject: [PATCH 5.1 210/405] PM / core: Propagate dev->power.wakeup_path when no callbacks
+Date:   Wed, 29 May 2019 20:03:28 -0700
+Message-Id: <20190530030551.739793139@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,46 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 00053de52231117ddc154042549f2256183ffb86 ]
+[ Upstream commit dc351d4c5f4fe4d0f274d6d660227be0c3a03317 ]
 
-Microphone detection provides the button detection features on the
-Arizona CODECs as such it will be running if the jack is currently
-inserted. If the driver is unbound whilst the jack is still inserted
-this will cause warnings from the regulator framework as the MICVDD
-regulator is put but was never disabled.
+The dev->power.direct_complete flag may become set in device_prepare() in
+case the device don't have any PM callbacks (dev->power.no_pm_callbacks is
+set). This leads to a broken behaviour, when there is child having wakeup
+enabled and relies on its parent to be used in the wakeup path.
 
-Correct this by disabling microphone detection on driver removal and if
-the microphone detection was running disable the regulator and put the
-runtime reference that was currently held.
+More precisely, when the direct complete path becomes selected for the
+child in __device_suspend(), the propagation of the dev->power.wakeup_path
+becomes skipped as well.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Let's address this problem, by checking if the device is a part the wakeup
+path or has wakeup enabled, then prevent the direct complete path from
+being used.
+
+Reported-by: Loic Pallardy <loic.pallardy@st.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+[ rjw: Comment cleanup ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/extcon/extcon-arizona.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/base/power/main.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
-index da0e9bc4262fa..9327479c719c2 100644
---- a/drivers/extcon/extcon-arizona.c
-+++ b/drivers/extcon/extcon-arizona.c
-@@ -1726,6 +1726,16 @@ static int arizona_extcon_remove(struct platform_device *pdev)
- 	struct arizona_extcon_info *info = platform_get_drvdata(pdev);
- 	struct arizona *arizona = info->arizona;
- 	int jack_irq_rise, jack_irq_fall;
-+	bool change;
-+
-+	regmap_update_bits_check(arizona->regmap, ARIZONA_MIC_DETECT_1,
-+				 ARIZONA_MICD_ENA, 0,
-+				 &change);
-+
-+	if (change) {
-+		regulator_disable(info->micvdd);
-+		pm_runtime_put(info->dev);
-+	}
+diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
+index f80d298de3fa4..8ad20ed0cb7c3 100644
+--- a/drivers/base/power/main.c
++++ b/drivers/base/power/main.c
+@@ -1747,6 +1747,10 @@ static int __device_suspend(struct device *dev, pm_message_t state, bool async)
+ 	if (dev->power.syscore)
+ 		goto Complete;
  
- 	gpiod_put(info->micd_pol_gpio);
- 
++	/* Avoid direct_complete to let wakeup_path propagate. */
++	if (device_may_wakeup(dev) || dev->power.wakeup_path)
++		dev->power.direct_complete = false;
++
+ 	if (dev->power.direct_complete) {
+ 		if (pm_runtime_status_suspended(dev)) {
+ 			pm_runtime_disable(dev);
 -- 
 2.20.1
 
