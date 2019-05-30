@@ -2,130 +2,91 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4CBC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 387F9C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90F3725D30
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:57:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FBC825D36
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:57:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbfE3P5p (ORCPT
+        id S1727458AbfE3P5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 11:57:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52440 "EHLO mx1.redhat.com"
+        Thu, 30 May 2019 11:57:53 -0400
+Received: from foss.arm.com ([217.140.101.70]:39026 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726045AbfE3P5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 11:57:45 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id ABA9830C1FEB;
-        Thu, 30 May 2019 15:57:22 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 4847E7A026;
-        Thu, 30 May 2019 15:57:17 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Thu, 30 May 2019 17:57:22 +0200 (CEST)
-Date:   Thu, 30 May 2019 17:57:16 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Deepa Dinamani <deepa.kernel@gmail.com>,
-        Al Viro <viro@ZenIV.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        arnd@arndb.de, dbueso@suse.de, axboe@kernel.dk, dave@stgolabs.net,
-        e@80x24.org, jbaron@akamai.com, linux-fsdevel@vger.kernel.org,
-        linux-aio@kvack.org, omar.kilani@gmail.com, tglx@linutronix.de,
-        stable@vger.kernel.org
-Subject: Re: pselect/etc semantics
-Message-ID: <20190530155715.GH22536@redhat.com>
-References: <20190522032144.10995-1-deepa.kernel@gmail.com>
- <20190529161157.GA27659@redhat.com>
- <87woi8rt96.fsf@xmission.com>
+        id S1725961AbfE3P5w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 11:57:52 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3B1E0341;
+        Thu, 30 May 2019 08:57:52 -0700 (PDT)
+Received: from eglon.cambridge.arm.com (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 909743F59C;
+        Thu, 30 May 2019 08:57:50 -0700 (PDT)
+From:   James Morse <james.morse@arm.com>
+To:     linux-kernel@vger.kernel.org, x86@kernel.org
+Cc:     Fenghua Yu <fenghua.yu@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Avin <hpa@zytor.com>,
+        James Morse <james.morse@arm.com>
+Subject: [PATCH] x86/resctrl: Don't stop walking closids when a locksetup group is found
+Date:   Thu, 30 May 2019 16:57:42 +0100
+Message-Id: <20190530155742.84547-1-james.morse@arm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87woi8rt96.fsf@xmission.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 30 May 2019 15:57:45 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/30, Eric W. Biederman wrote:
->
-> Oleg Nesterov <oleg@redhat.com> writes:
->
-> > Al, Linus, Eric, please help.
-> >
-> > The previous discussion was very confusing, we simply can not understand each
-> > other.
-> >
-> > To me everything looks very simple and clear, but perhaps I missed something
-> > obvious? Please correct me.
->
-> If I have read this thread correctly the core issue is that ther is a
-> program that used to work and that fails now.  The question is why.
+When a new control group is created __init_one_rdt_domain() walks all
+the other closids to calculate the sets of used and unused bits.
 
-I didn't even try to investigate, I wasn't cc'ed initially and I then I had
-enough confusion when I started to look at the patch.
+If it discovers a pseudo_locksetup group, it breaks out of the loop.
+This means any later closid doesn't get its used bits added to used_b.
+These bits will then get set in unused_b, and added to the new
+control group's configuration, even if they were marked as exclusive
+for a later closid.
 
-However, 854a6ed56839a40f6 obviously introduced the user-visible change so
-I am not surprised it breaks something. And yes, personally I think this
-change is not right.
+When encountering a pseudo_locksetup group, we should continue. This
+is because "a resource group enters 'pseudo-locked' mode after the
+schemata is written while the resource group is in 'pseudo-locksetup'
+mode." When we find a pseudo_locksetup group, its configuration is
+expected to be overwritten, we can skip it.
 
-> Which means I believe we have a semantically valid change in behavior
-> that is causing a regression.
+Fixes: dfe9674b04ff6 ("x86/intel_rdt: Enable entering of pseudo-locksetup mode")
+Signed-off-by: James Morse <james.morse@arm.com>
+---
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-See below,
-
-> void restore_user_sigmask(const void __user *usigmask, sigset_t *sigsaved)
-> {
->
-> 	if (!usigmask)
-> 		return;
-> 	/*
-> 	 * When signals are pending, do not restore them here.
-> 	 * Restoring sigmask here can lead to delivering signals that the above
-> 	 * syscalls are intended to block because of the sigmask passed in.
-> 	 */
-> 	if (signal_pending(current)) {
-> 		current->saved_sigmask = *sigsaved;
-> 		set_restore_sigmask();
-> 		return;
-> 	}
->
-> 	/*
-> 	 * This is needed because the fast syscall return path does not restore
-> 	 * saved_sigmask when signals are not pending.
-> 	 */
-> 	set_current_blocked(sigsaved);
-> }
->
-> Which has been reported results in a return value of 0,
-
-0 or success
-
-> and a signal
-> delivered, where previously that did not happen.
-
-Yes.
-
-And to me this doesn't look right. OK, OK, probably this is because I never
-read the docs, only the source code in fs/select.c. But to me pselect() should
-either return success/timeout or deliver a signal. Not both. Even if the signal
-was already pending before pselect() was called.
-
-To clarify, "a signal" means a signal which was blocked before pselect(sigmask)
-and temporary unblocked in this syscall.
-
-And even if this doesn't violate posix, I see no reason to change the historic
-behaviour. And this regression probably means we can't ;)
-
-Oleg.
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index 333c177a2471..049ccb709957 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -2541,8 +2541,15 @@ static int __init_one_rdt_domain(struct rdt_domain *d, struct rdt_resource *r,
+ 	for (i = 0; i < closids_supported(); i++, ctrl++) {
+ 		if (closid_allocated(i) && i != closid) {
+ 			mode = rdtgroup_mode_by_closid(i);
+-			if (mode == RDT_MODE_PSEUDO_LOCKSETUP)
+-				break;
++			if (mode == RDT_MODE_PSEUDO_LOCKSETUP) {
++				/*
++				 * ctrl values for locksetup aren't relevant
++				 * until the schemata is written, and the mode
++				 * becomes RDT_MODE_PSEUDO_LOCKED.
++				 */
++				continue;
++			}
++
+ 			/*
+ 			 * If CDP is active include peer domain's
+ 			 * usage to ensure there is no overlap
+-- 
+2.20.1
 
