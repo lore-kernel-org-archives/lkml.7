@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5948C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5252C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C82424F18
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:59:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E79D24F1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:59:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188759;
-	bh=nyfPIe0u8n8KIQrrASxE206fImnENFxIy8VAiZmQtcA=;
+	s=default; t=1559188766;
+	bh=zZUEUR7MHqIXZruyeWmGbOLnjfwhXe3hcr2a0Mc43Mc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pCwIPaT2TUyvwZQSArhv5D5aSFJqFQ6XEv0JzjPiili1YtXQ2glUamCNohXn3KUw9
-	 BKUBt77PaVsLGqRm8YZEbjtD4zTIJ81hKAV2Vrxbqkjka3SVuGW/H3CYuuFw72Y5ot
-	 7iNuzA42kOS7cJbEqS5fsXTDntg8Kr4N0YWlbunI=
+	b=nylx+onjsAnuYjF0rvIH1+Q8zaPHVTgMueHmZsRmFUqkEfon7+wAbIPwFIxfF7Zku
+	 AVfhHkj0T32XxQndeCcQi8X6BktLTQvIoO0EFZ28yuuVktMMxu+58GKuANdDRVNGrB
+	 18YRqdjMcJZwxFyoJbqeoXY6xFnSR0nxWxvJ3g3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732659AbfE3D7R (ORCPT
+        id S2387947AbfE3D7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:59:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51920 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:59:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730552AbfE3DSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:36 -0400
+        id S1731589AbfE3DSe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:34 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C79102471D;
-        Thu, 30 May 2019 03:18:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C23392471D;
+        Thu, 30 May 2019 03:18:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186315;
-        bh=nyfPIe0u8n8KIQrrASxE206fImnENFxIy8VAiZmQtcA=;
+        s=default; t=1559186313;
+        bh=zZUEUR7MHqIXZruyeWmGbOLnjfwhXe3hcr2a0Mc43Mc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rZ3R7BzRgO59XWEofAyzhKJE6bngPyWE0U9ooxMnUbgyyR7Z7zZAPNjy4BQrTmJUA
-         nwuh2y6iGPps3OuPKSSfzO42G0tBpxmGqvV2GJtHk4c/YhDTmMSAZ7QFYIfgk8SqhT
-         KQSNfov1PkIrLB1+SamRRNf4Mp+MXxis8KTvhUSA=
+        b=yDhzYZ8m2hew1HkZliBh9qYMrgTuwpixh7LYgISa72Q/PFB9bfqoIBlQogGy0c8h5
+         zWpzRDadXfl/+i7VF0PJLSLOK58tqPZrE8ddceGfGEPpcVv6JYLXVHNvVRGtnbWouv
+         6k22lInfQUI0nQ/C4VzMl7u0zVIvZyptBGmJeJ+U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Tobin C. Harding" <tobin@kernel.org>,
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Filipe Manana <fdmanana@suse.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 020/193] btrfs: sysfs: dont leak memory when failing add fsid
-Date:   Wed, 29 May 2019 20:04:34 -0700
-Message-Id: <20190530030451.543837359@linuxfoundation.org>
+Subject: [PATCH 4.14 017/193] Btrfs: avoid fallback to transaction commit during fsync of files with holes
+Date:   Wed, 29 May 2019 20:04:31 -0700
+Message-Id: <20190530030450.700719072@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -59,53 +60,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tobin C. Harding <tobin@kernel.org>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit e32773357d5cc271b1d23550b3ed026eb5c2a468 upstream.
+commit ebb929060aeb162417b4c1307e63daee47b208d9 upstream.
 
-A failed call to kobject_init_and_add() must be followed by a call to
-kobject_put().  Currently in the error path when adding fs_devices we
-are missing this call.  This could be fixed by calling
-btrfs_sysfs_remove_fsid() if btrfs_sysfs_add_fsid() returns an error or
-by adding a call to kobject_put() directly in btrfs_sysfs_add_fsid().
-Here we choose the second option because it prevents the slightly
-unusual error path handling requirements of kobject from leaking out
-into btrfs functions.
+When we are doing a full fsync (bit BTRFS_INODE_NEEDS_FULL_SYNC set) of a
+file that has holes and has file extent items spanning two or more leafs,
+we can end up falling to back to a full transaction commit due to a logic
+bug that leads to failure to insert a duplicate file extent item that is
+meant to represent a hole between the last file extent item of a leaf and
+the first file extent item in the next leaf. The failure (EEXIST error)
+leads to a transaction commit (as most errors when logging an inode do).
 
-Add a call to kobject_put() in the error path of kobject_add_and_init().
-This causes the release method to be called if kobject_init_and_add()
-fails.  open_tree() is the function that calls btrfs_sysfs_add_fsid()
-and the error code in this function is already written with the
-assumption that the release method is called during the error path of
-open_tree() (as seen by the call to btrfs_sysfs_remove_fsid() under the
-fail_fsdev_sysfs label).
+For example, we have the two following leafs:
 
-Cc: stable@vger.kernel.org # v4.4+
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-Reviewed-by: David Sterba <dsterba@suse.com>
+Leaf N:
+
+  -----------------------------------------------
+  | ..., ..., ..., (257, FILE_EXTENT_ITEM, 64K) |
+  -----------------------------------------------
+  The file extent item at the end of leaf N has a length of 4Kb,
+  representing the file range from 64K to 68K - 1.
+
+Leaf N + 1:
+
+  -----------------------------------------------
+  | (257, FILE_EXTENT_ITEM, 72K), ..., ..., ... |
+  -----------------------------------------------
+  The file extent item at the first slot of leaf N + 1 has a length of
+  4Kb too, representing the file range from 72K to 76K - 1.
+
+During the full fsync path, when we are at tree-log.c:copy_items() with
+leaf N as a parameter, after processing the last file extent item, that
+represents the extent at offset 64K, we take a look at the first file
+extent item at the next leaf (leaf N + 1), and notice there's a 4K hole
+between the two extents, and therefore we insert a file extent item
+representing that hole, starting at file offset 68K and ending at offset
+72K - 1. However we don't update the value of *last_extent, which is used
+to represent the end offset (plus 1, non-inclusive end) of the last file
+extent item inserted in the log, so it stays with a value of 68K and not
+with a value of 72K.
+
+Then, when copy_items() is called for leaf N + 1, because the value of
+*last_extent is smaller then the offset of the first extent item in the
+leaf (68K < 72K), we look at the last file extent item in the previous
+leaf (leaf N) and see it there's a 4K gap between it and our first file
+extent item (again, 68K < 72K), so we decide to insert a file extent item
+representing the hole, starting at file offset 68K and ending at offset
+72K - 1, this insertion will fail with -EEXIST being returned from
+btrfs_insert_file_extent() because we already inserted a file extent item
+representing a hole for this offset (68K) in the previous call to
+copy_items(), when processing leaf N.
+
+The -EEXIST error gets propagated to the fsync callback, btrfs_sync_file(),
+which falls back to a full transaction commit.
+
+Fix this by adjusting *last_extent after inserting a hole when we had to
+look at the next leaf.
+
+Fixes: 4ee3fad34a9c ("Btrfs: fix fsync after hole punching when using no-holes feature")
+Cc: stable@vger.kernel.org # 4.14+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/sysfs.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ fs/btrfs/tree-log.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/btrfs/sysfs.c
-+++ b/fs/btrfs/sysfs.c
-@@ -794,7 +794,12 @@ int btrfs_sysfs_add_fsid(struct btrfs_fs
- 	fs_devs->fsid_kobj.kset = btrfs_kset;
- 	error = kobject_init_and_add(&fs_devs->fsid_kobj,
- 				&btrfs_ktype, parent, "%pU", fs_devs->fsid);
--	return error;
-+	if (error) {
-+		kobject_put(&fs_devs->fsid_kobj);
-+		return error;
-+	}
-+
-+	return 0;
- }
- 
- int btrfs_sysfs_add_mounted(struct btrfs_fs_info *fs_info)
+--- a/fs/btrfs/tree-log.c
++++ b/fs/btrfs/tree-log.c
+@@ -4012,6 +4012,7 @@ fill_holes:
+ 							       *last_extent, 0,
+ 							       0, len, 0, len,
+ 							       0, 0, 0);
++				*last_extent += len;
+ 			}
+ 		}
+ 	}
 
 
