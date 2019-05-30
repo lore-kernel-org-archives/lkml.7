@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33136C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63FF2C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 086F525AE7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F5B925B35
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:45:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191510;
-	bh=SXHFiI9uoBadf8i39ZALRGAweCgd7bRUCy53s1u3XBA=;
+	s=default; t=1559191516;
+	bh=61rT1CV4mXZHJmbRbNi/SAhsPS3Jn7ms7XsvZb6geZ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jak0ZisQUZHktBBr9gqQNiP1IgmCQIOO4f1f/f8bry42O2Ar17WrrtFTXb81GhTQN
-	 VID0lAmuvaFTRSL9WbFzeAKCQwUxQoNTAItTeopWZmuugXqkXBgzMQxb8jgZI9BIFC
-	 ggHYZPi2Eh8fe/iUvoT2/3vZWl6nHWF41hKJ7oko=
+	b=tXJUk0M/LDlge3srxtCZSL7HyZra9+GAUSFPdWXEEBZJu0Wuz8fiC/phMfVeZzd6Q
+	 1/hBZ1jQq/L4780sUe4v/GGZbvmL0h/zzBEIU2gJ96Ha8fAxx9TuLZQeLVG0XCIpPS
+	 J4Tw8OjShDKfS6I69BxcJkvpCJjpZeMTDx+B1Gmo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388577AbfE3EpI (ORCPT
+        id S2388645AbfE3EpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:45:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52788 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:45:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728746AbfE3DL4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728743AbfE3DL4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:11:56 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 365D3244F6;
-        Thu, 30 May 2019 03:11:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8B8324481;
+        Thu, 30 May 2019 03:11:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185916;
-        bh=SXHFiI9uoBadf8i39ZALRGAweCgd7bRUCy53s1u3XBA=;
+        s=default; t=1559185915;
+        bh=61rT1CV4mXZHJmbRbNi/SAhsPS3Jn7ms7XsvZb6geZ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s6mXyDuohO0kNoOMm9HDX9XhFt7VHDE0r0CuDJ6P7nQEtzRLJgZVbNFz42l/Me/Wr
-         Ms0KG8DsYmRk4vGeBVc0HuoU2o2Q/7XxkA+qTOpNIPqgdoXeyzhwbFsrnH4EtvuzO/
-         G/S5+E0IEGA7qIuEavrRZCxk4RMyGSp5S6fHUit0=
+        b=hyftvF3F82i7gqfv1ipENU2boQ/O6DURI0rCJTpxhEAAbMB/oir7B08rSkCtnQIcV
+         quDmBgwzGNBXDlP7qZrusXFcsgeLNy2pv8GaeAnlvchTpCLhEtAMTNBOtgeyY9e9bh
+         MzxzMXN/qQ5DIshv6ilyHt3MHcqtANQe4HhZl8uA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 299/405] misc: fastrpc: make sure memory read and writes are visible
-Date:   Wed, 29 May 2019 20:04:57 -0700
-Message-Id: <20190530030555.959311227@linuxfoundation.org>
+Subject: [PATCH 5.1 298/405] misc: fastrpc: consider address offset before sending to DSP
+Date:   Wed, 29 May 2019 20:04:56 -0700
+Message-Id: <20190530030555.917034721@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -60,43 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 415a0729bd1225f0ffbc0ba82888dd65772554f7 ]
+[ Upstream commit 80f3afd72bd4149c57daf852905476b43bb47647 ]
 
-dma_alloc_coherent buffers could have writes queued in store buffers so
-commit them before sending buffer to DSP using correct dma barriers.
-Same with vice-versa.
+While passing address phy address to DSP, take care of the offset
+calculated from virtual address vma.
 
 Fixes: c68cfb718c8f ("misc: fastrpc: Add support for context Invoke method")
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/fastrpc.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/misc/fastrpc.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
-index 9996c83ba5cb9..a10937652ca73 100644
+index 36d0d5c9cfbad..9996c83ba5cb9 100644
 --- a/drivers/misc/fastrpc.c
 +++ b/drivers/misc/fastrpc.c
-@@ -790,6 +790,9 @@ static int fastrpc_internal_invoke(struct fastrpc_user *fl,  u32 kernel,
- 		if (err)
- 			goto bail;
- 	}
-+
-+	/* make sure that all CPU memory writes are seen by DSP */
-+	dma_wmb();
- 	/* Send invoke buffer to remote dsp */
- 	err = fastrpc_invoke_send(fl->sctx, ctx, kernel, handle);
- 	if (err)
-@@ -806,6 +809,8 @@ static int fastrpc_internal_invoke(struct fastrpc_user *fl,  u32 kernel,
- 		goto bail;
+@@ -667,8 +667,16 @@ static int fastrpc_get_args(u32 kernel, struct fastrpc_invoke_ctx *ctx)
+ 		pages[i].size = roundup(len, PAGE_SIZE);
  
- 	if (ctx->nscalars) {
-+		/* make sure that all memory writes by DSP are seen by CPU */
-+		dma_rmb();
- 		/* populate all the output buffers with results */
- 		err = fastrpc_put_args(ctx, kernel);
- 		if (err)
+ 		if (ctx->maps[i]) {
++			struct vm_area_struct *vma = NULL;
++
+ 			rpra[i].pv = (u64) ctx->args[i].ptr;
+ 			pages[i].addr = ctx->maps[i]->phys;
++
++			vma = find_vma(current->mm, ctx->args[i].ptr);
++			if (vma)
++				pages[i].addr += ctx->args[i].ptr -
++						 vma->vm_start;
++
+ 		} else {
+ 			rlen -= ALIGN(args, FASTRPC_ALIGN) - args;
+ 			args = ALIGN(args, FASTRPC_ALIGN);
 -- 
 2.20.1
 
