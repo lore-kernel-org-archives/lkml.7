@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB05C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58100C28CC1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7104023CE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30F6523CE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187230;
-	bh=CyIcZPQHOgjIo3Ni7LFoeAxlzrAmKxGH3TFcgoGOEgc=;
+	s=default; t=1559187232;
+	bh=/yWJP0rcANcNhtnq/8KxUj2EE2aniIXHmsQP1TEQToo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wKSALGWTZZ/9sJf4BlscIhTM7YmbSmOCftcectbaKXui45q8y2MAnfiSi6PkVm/vs
-	 MnU3w4Fe8mEF51C+W/UU71ON4VcCcK/KRA5Cri//TTKUOc5ueD62ke8oV9TjhIgP6e
-	 R/cVDV7z+CNEKAv1PWlrQjkZ2FI4hvsk6Cdg8X/w=
+	b=vAIplyEmZeu8gxkgxVcrv+2qIuxK+dwt/kKrWdH5YUP3MNeuSEbmV7B3+vDiEcgil
+	 wmXw/KCCZi1VKEgfZrKggh+Lh26sQW3bPIkt1lQNIIWDAyqEFdfHuZIo2wnwNSXRlr
+	 vaeZ2TsVz1k38D8QBhHJ1kUnNPKxyJcxAZekHHxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388108AbfE3D2B (ORCPT
+        id S2388101AbfE3D17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:28:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56394 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:27:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732012AbfE3DTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:44 -0400
+        id S1731078AbfE3DTp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:45 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D8E024839;
-        Thu, 30 May 2019 03:19:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A427248AE;
+        Thu, 30 May 2019 03:19:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186383;
-        bh=CyIcZPQHOgjIo3Ni7LFoeAxlzrAmKxGH3TFcgoGOEgc=;
+        s=default; t=1559186384;
+        bh=/yWJP0rcANcNhtnq/8KxUj2EE2aniIXHmsQP1TEQToo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CvgTTwSrQUeWsMt1ebopiCaNNepI86TeiXZVfvvccp0bZ1XeAvyZ1w9fTA1Lk3//B
-         F2+Qdoo2xo+JIODWV9K/Gjxm2V4Qw15TazdM7DtRjQ575gDBtJtnD3XXhAL+Tmrxkl
-         BXGKG7Md5f48pnyEmEDXcbehnwJ1/yYNJTM7+V7A=
+        b=tp99IVbYddypPJQ4nA9XirYJd6uoiTbrmaS4cJAw4e4e0zYvGFJvPx+tW37m9XQvf
+         g3x/GydJe/BLhWu/Nx0Syf0t2rtVdP5VATyuNbA+JAYqFYb7m0zX7zoG0nwd/YUq06
+         XHCoUeHE8G8CsFTh5QIQR4yVpctwUnj8/HosQmM8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Alim Akhtar <alim.akhtar@samsung.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 149/193] scsi: ufs: Fix regulator load and icc-level configuration
-Date:   Wed, 29 May 2019 20:06:43 -0700
-Message-Id: <20190530030508.999171624@linuxfoundation.org>
+Subject: [PATCH 4.14 150/193] scsi: ufs: Avoid configuring regulator with undefined voltage range
+Date:   Wed, 29 May 2019 20:06:44 -0700
+Message-Id: <20190530030509.112113839@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -62,21 +62,22 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0487fff76632ec023d394a05b82e87a971db8c03 ]
+[ Upstream commit 3b141e8cfd54ba3e5c610717295b2a02aab26a05 ]
 
-Currently if a regulator has "<name>-fixed-regulator" property in device
-tree, it will skip current limit initialization.  This lead to a zero
-"max_uA" value in struct ufs_vreg.
+For regulators used by UFS, vcc, vccq and vccq2 will have voltage range
+initialized by ufshcd_populate_vreg(), however other regulators may have
+undefined voltage range if dt-bindings have no such definition.
 
-However, "regulator_set_load" operation shall be required on regulators
-which have valid current limits, otherwise a zero "max_uA" set by
-"regulator_set_load" may cause unexpected behavior when this regulator is
-enabled or set as high power mode.
+In above undefined case, both "min_uV" and "max_uV" fields in ufs_vreg
+struct will be zero values and these values will be configured on
+regulators in different power modes.
 
-Similarly, in device's icc_level configuration flow, the target icc_level
-shall be updated if regulator also has valid current limit, otherwise a
-wrong icc_level will be calculated by zero "max_uA" and thus causes
-unexpected results after it is written to device.
+Currently this may have no harm if both "min_uV" and "max_uV" always keep
+"zero values" because regulator_set_voltage() will always bypass such
+invalid values and return "good" results.
+
+However improper values shall be fixed to avoid potential bugs.  Simply
+bypass voltage configuration if voltage range is not defined.
 
 Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
 Reviewed-by: Avri Altman <avri.altman@wdc.com>
@@ -84,52 +85,34 @@ Acked-by: Alim Akhtar <alim.akhtar@samsung.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/scsi/ufs/ufshcd.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 581571de24614..c2395b8e72894 100644
+index c2395b8e72894..d8f0a1ccd9b19 100644
 --- a/drivers/scsi/ufs/ufshcd.c
 +++ b/drivers/scsi/ufs/ufshcd.c
-@@ -5911,19 +5911,19 @@ static u32 ufshcd_find_max_sup_active_icc_level(struct ufs_hba *hba,
- 		goto out;
- 	}
+@@ -6580,12 +6580,15 @@ static int ufshcd_config_vreg(struct device *dev,
+ 	name = vreg->name;
  
--	if (hba->vreg_info.vcc)
-+	if (hba->vreg_info.vcc && hba->vreg_info.vcc->max_uA)
- 		icc_level = ufshcd_get_max_icc_level(
- 				hba->vreg_info.vcc->max_uA,
- 				POWER_DESC_MAX_ACTV_ICC_LVLS - 1,
- 				&desc_buf[PWR_DESC_ACTIVE_LVLS_VCC_0]);
+ 	if (regulator_count_voltages(reg) > 0) {
+-		min_uV = on ? vreg->min_uV : 0;
+-		ret = regulator_set_voltage(reg, min_uV, vreg->max_uV);
+-		if (ret) {
+-			dev_err(dev, "%s: %s set voltage failed, err=%d\n",
++		if (vreg->min_uV && vreg->max_uV) {
++			min_uV = on ? vreg->min_uV : 0;
++			ret = regulator_set_voltage(reg, min_uV, vreg->max_uV);
++			if (ret) {
++				dev_err(dev,
++					"%s: %s set voltage failed, err=%d\n",
+ 					__func__, name, ret);
+-			goto out;
++				goto out;
++			}
+ 		}
  
--	if (hba->vreg_info.vccq)
-+	if (hba->vreg_info.vccq && hba->vreg_info.vccq->max_uA)
- 		icc_level = ufshcd_get_max_icc_level(
- 				hba->vreg_info.vccq->max_uA,
- 				icc_level,
- 				&desc_buf[PWR_DESC_ACTIVE_LVLS_VCCQ_0]);
- 
--	if (hba->vreg_info.vccq2)
-+	if (hba->vreg_info.vccq2 && hba->vreg_info.vccq2->max_uA)
- 		icc_level = ufshcd_get_max_icc_level(
- 				hba->vreg_info.vccq2->max_uA,
- 				icc_level,
-@@ -6525,6 +6525,15 @@ static int ufshcd_config_vreg_load(struct device *dev, struct ufs_vreg *vreg,
- 	if (!vreg)
- 		return 0;
- 
-+	/*
-+	 * "set_load" operation shall be required on those regulators
-+	 * which specifically configured current limitation. Otherwise
-+	 * zero max_uA may cause unexpected behavior when regulator is
-+	 * enabled or set as high power mode.
-+	 */
-+	if (!vreg->max_uA)
-+		return 0;
-+
- 	ret = regulator_set_load(vreg->reg, ua);
- 	if (ret < 0) {
- 		dev_err(dev, "%s: %s set load (ua=%d) failed, err=%d\n",
+ 		uA_load = on ? vreg->max_uA : 0;
 -- 
 2.20.1
 
