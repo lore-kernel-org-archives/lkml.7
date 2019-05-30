@@ -2,127 +2,165 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 127CEC28CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E80DC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E91AC25FC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:37:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F7A925FC1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:39:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jfae/Of5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726649AbfE3Shr (ORCPT
+        id S1726462AbfE3Sjj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 14:37:47 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46379 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfE3Shq (ORCPT
+        Thu, 30 May 2019 14:39:39 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38510 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725961AbfE3Sji (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 14:37:46 -0400
-Received: by mail-qt1-f195.google.com with SMTP id z19so8178917qtz.13;
-        Thu, 30 May 2019 11:37:46 -0700 (PDT)
+        Thu, 30 May 2019 14:39:38 -0400
+Received: by mail-wr1-f66.google.com with SMTP id d18so4852194wrs.5
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 11:39:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FAK9MrenSlPC8C/iHgrsmDrbWNiFudxPoXTBF+kuvuo=;
+        b=Jfae/Of59+yIXNUVWWoF71kdiFFUziUO4kmL/VbMl0NWzrR3TNzEjT29tv88FaTXhx
+         W4SM5uod1CVFAcIB8TLoextBz2N39q7Jtun0clozoHgqtyGzDngQKvXA07NkOiZQ/AKm
+         e8/RDIY+rrJQYAw1TxysdHlWo8tpI2tSRkZUN11O5htG95FYIxgKaEZVhAvsRhbKEal1
+         YkEOLM3Say9oQt3qeCNy/MSyU/Wv9l8RZBiWCzlwsW69OY3TODpGJRnCZdjdNSJq8DfX
+         arzonaPQq6EzdefbjpD4x2IyXi3w4dty+GwqN5HRtsdLNTDAoZDpS8Oh1vzHbdhkl3du
+         lPFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QtDItTOKG0oEuYgA/AzlL7vWHCZCAXyrTV6+oZdO3RI=;
-        b=t4LTECWexeRis1nwkZ4ukEbdTcRKcXleNUuqEq7EshDhHwCiajhu0cTM9A9slqP9JB
-         RlnKUOQBQC3OQ+vqwmV4ijb2LgJAdATVDGNfBqHuoLuelsvb+StTTSlRxnTrNC5nNMXc
-         qGS/TbOVRJCNuGdmwF2wPAqXEDhVG3Vb0Y6OcR3/ES2xhXKJkxRD8ZWiaKNS7+Yu5SHz
-         u3ZcBbff3Uo9ZecUCrJXm1TX7n7obIggVD4yapVBk+kuWEuGNB1Bo8bYVxgEsqBhpdWH
-         pu3ZnROIt8DHJToHhg+WLlEBhLqx8Nmx9X6l0XqTm9MDEls/SfcEi/evW+3qh3xIRNAj
-         iaTg==
-X-Gm-Message-State: APjAAAXj0VaWuvJSUq/ZdEmSsKK8BXCJpQjzsx6ByoA8RHp+2ZGOVe/s
-        0/+yIQJ3gMcuAbb7ccc+Q4ICgBPL6CrRzJXznFU=
-X-Google-Smtp-Source: APXvYqzLTIr9hnY4VamvBbGXgDqhOWM+DId1eEn9j5p3MUoL2aeyzJLJmTc3J4WjWBULvqEaQSjsTb5gGB8bLa2FTjk=
-X-Received: by 2002:a0c:e78b:: with SMTP id x11mr1178890qvn.93.1559241465438;
- Thu, 30 May 2019 11:37:45 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FAK9MrenSlPC8C/iHgrsmDrbWNiFudxPoXTBF+kuvuo=;
+        b=YOOo6rZUh3niZYif/kfeQrF1BFoY4lpsSfT4s/1EO0TTTIAaHzGpyK/y04ijNnXBKZ
+         pJg+uAF4fXn4NMdOTFvjODVv6vNoF30R6jLKUzUlkJbhZIbSdZ/AHzjz5NBZTD2IP22w
+         uRfpa+VSPxHmYuR6YNTMdUyp/SFG2FCorLhmGWQYPgG5Gx9sufQiFBaAGdZU80+rV6W3
+         ByT+pTySXCPE4Eac4CTHDNfDVDZK43XQy95OYHP+a2AnwFHEYTeiESrtNifGWZIPMoyn
+         eLvtOl3Rw28QuLmM7mtO2OklIjUjtH+Vx5UlPgdcoxSiAUklSz4g4lGx0I4s+u+rY1Nf
+         JyJQ==
+X-Gm-Message-State: APjAAAWlLdZsieawzBL3Wu3H3fdz6ndL7F+nmo9ARrNQ7T5UwVqMmB5a
+        TymWa8RyZSMmVyYSThOohxPLxFv2I38=
+X-Google-Smtp-Source: APXvYqyMDhfBNqRWiXBoU9dEGkDWEBjMmw7g+FzvfkXbOpVBds8XlAECsA5/ZO/zQhTNMFrP+U9Vdg==
+X-Received: by 2002:adf:e9ca:: with SMTP id l10mr3359952wrn.47.1559241577128;
+        Thu, 30 May 2019 11:39:37 -0700 (PDT)
+Received: from localhost.localdomain (catv-89-135-96-219.catv.broadband.hu. [89.135.96.219])
+        by smtp.gmail.com with ESMTPSA id l8sm2097012wrw.56.2019.05.30.11.39.35
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 30 May 2019 11:39:36 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Mike Lockwood <lockwood@google.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH] extcon: gpio: Request reasonable interrupts
+Date:   Thu, 30 May 2019 20:39:32 +0200
+Message-Id: <20190530183932.4132-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190522032144.10995-1-deepa.kernel@gmail.com>
- <20190529161157.GA27659@redhat.com> <CAK8P3a1fsrz6kAB1z-mqcaNvXL4Hf3XMiN=Q5rzAJ3rLGPK_Yg@mail.gmail.com>
- <20190530144044.GG22536@redhat.com>
-In-Reply-To: <20190530144044.GG22536@redhat.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 30 May 2019 20:37:29 +0200
-Message-ID: <CAK8P3a2g_58+n6+T6rspcp_kvYiyjB0WqtxoYfshwQ7vXMmdWw@mail.gmail.com>
-Subject: Re: pselect/etc semantics (Was: [PATCH v2] signal: Adjust error codes
- according to restore_user_sigmask())
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Deepa Dinamani <deepa.kernel@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>, dbueso@suse.de,
-        Jens Axboe <axboe@kernel.dk>,
-        Davidlohr Bueso <dave@stgolabs.net>, e@80x24.org,
-        Jason Baron <jbaron@akamai.com>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-aio <linux-aio@kvack.org>, omar.kilani@gmail.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "# 3.4.x" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 4:41 PM Oleg Nesterov <oleg@redhat.com> wrote:
-> On 05/30, Arnd Bergmann wrote:
-> Plus every file touched by this patch asks for more cleanups. Say, do_poll()
-> should return -ERESTARTNOHAND, not -EINTR, after that we can remove the ugly
-> EINTR->ERESTARTNOHAND in its callers. And more.
->
-> > For the stable
-> > kernels, I think we want just the addition of the 'bool interrupted' argument
-> > to restore_user_sigmask()
->
-> or simply revert this patch. I will check if this is possible today... At first
-> glance 854a6ed56839a40f6 fixed another bug by accident, do_pselect() did
-> "ret == -ERESTARTNOHAND" after "ret = poll_select_copy_remaining()" which can
-> turn ERESTARTNOHAND into EINTR, but this is simple. I'll check tomorrow.
+The only thing that makes sense is to request a falling edge interrupt
+if the line is active low and a rising edge interrupt if the line is
+active high, so just do that and get rid of the assignment from
+platform data. The GPIO descriptor knows if the line is active high
+or low.
 
-Right, there were several differences between the system calls
-that Deepa's original change got rid of. I don't know if any ones besides
-the do_pselect() return code can be observed in practice.
+Also make irq a local variable in probe(), it's not used anywhere else.
 
-> > > -       ret = set_user_sigmask(ksig.sigmask, &ksigmask, &sigsaved, ksig.sigsetsize);
-> > > +       ret = set_xxx(ksig.sigmask, ksig.sigsetsize);
-> > >         if (ret)
-> > >                 return ret;
-> > >
-> > >         ret = do_io_getevents(ctx_id, min_nr, nr, events, timeout ? &ts : NULL);
-> > > -       restore_user_sigmask(ksig.sigmask, &sigsaved);
-> > > -       if (signal_pending(current) && !ret)
-> > > +
-> > > +       interrupted = signal_pending(current);
-> > > +       update_xxx(interrupted);
-> >
-> > Maybe name this
-> >
-> >            restore_saved_sigmask_if(!interrupted);
->
-> Yes, I thought about restore_if(), but to me
->
->                 restore_saved_sigmask_if(ret != -EINTR);
->
-> doesn't look readable... May be
->
->                 restore_saved_sigmask_unless(ret == -EINTR);
->
-> ? but actually I agree with any naming.
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/extcon/extcon-gpio.c | 27 ++++++++++++++++++---------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
 
-Yes, restore_saved_sigmask_unless() probably better.
+diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gpio.c
+index 13ba3a6e81d5..a0674f1f3849 100644
+--- a/drivers/extcon/extcon-gpio.c
++++ b/drivers/extcon/extcon-gpio.c
+@@ -30,26 +30,22 @@
+ /**
+  * struct gpio_extcon_data - A simple GPIO-controlled extcon device state container.
+  * @edev:		Extcon device.
+- * @irq:		Interrupt line for the external connector.
+  * @work:		Work fired by the interrupt.
+  * @debounce_jiffies:	Number of jiffies to wait for the GPIO to stabilize, from the debounce
+  *			value.
+  * @gpiod:		GPIO descriptor for this external connector.
+  * @extcon_id:		The unique id of specific external connector.
+  * @debounce:		Debounce time for GPIO IRQ in ms.
+- * @irq_flags:		IRQ Flags (e.g., IRQF_TRIGGER_LOW).
+  * @check_on_resume:	Boolean describing whether to check the state of gpio
+  *			while resuming from sleep.
+  */
+ struct gpio_extcon_data {
+ 	struct extcon_dev *edev;
+-	int irq;
+ 	struct delayed_work work;
+ 	unsigned long debounce_jiffies;
+ 	struct gpio_desc *gpiod;
+ 	unsigned int extcon_id;
+ 	unsigned long debounce;
+-	unsigned long irq_flags;
+ 	bool check_on_resume;
+ };
+ 
+@@ -77,6 +73,8 @@ static int gpio_extcon_probe(struct platform_device *pdev)
+ {
+ 	struct gpio_extcon_data *data;
+ 	struct device *dev = &pdev->dev;
++	unsigned long irq_flags;
++	int irq;
+ 	int ret;
+ 
+ 	data = devm_kzalloc(dev, sizeof(struct gpio_extcon_data), GFP_KERNEL);
+@@ -96,9 +94,20 @@ static int gpio_extcon_probe(struct platform_device *pdev)
+ 	data->gpiod = devm_gpiod_get(dev, "extcon", GPIOD_IN);
+ 	if (IS_ERR(data->gpiod))
+ 		return PTR_ERR(data->gpiod);
+-	data->irq = gpiod_to_irq(data->gpiod);
+-	if (data->irq <= 0)
+-		return data->irq;
++	irq = gpiod_to_irq(data->gpiod);
++	if (irq <= 0)
++		return irq;
++
++	/*
++	 * It is unlikely that this is an acknowledged interrupt that goes
++	 * away after handling, what we are looking for are falling edges
++	 * if the signal is active low, and rising edges if the signal is
++	 * active high.
++	 */
++	if (gpiod_is_active_low(data->gpiod))
++		irq_flags = IRQF_TRIGGER_FALLING;
++	else
++		irq_flags = IRQF_TRIGGER_RISING;
+ 
+ 	/* Allocate the memory of extcon devie and register extcon device */
+ 	data->edev = devm_extcon_dev_allocate(dev, &data->extcon_id);
+@@ -117,8 +126,8 @@ static int gpio_extcon_probe(struct platform_device *pdev)
+ 	 * Request the interrupt of gpio to detect whether external connector
+ 	 * is attached or detached.
+ 	 */
+-	ret = devm_request_any_context_irq(dev, data->irq,
+-					gpio_irq_handler, data->irq_flags,
++	ret = devm_request_any_context_irq(dev, irq,
++					gpio_irq_handler, irq_flags,
+ 					pdev->name, data);
+ 	if (ret < 0)
+ 		return ret;
+-- 
+2.20.1
 
-> > With some of the recent discussions about compat syscall handling,
-> > I now think that we want to just fold set_compat_user_sigmask()
-> > into set_user_sigmask()
->
-> agreed, and I thought about this too. But again, I'd prefer to do this
-> and other cleanups later, on top of this patch.
-
-Ok, fair enough. I don't care much about the order as long as the
-regression fix comes first.
-
-     Arnd
