@@ -2,160 +2,123 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68413C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF432C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CF9825A09
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:04:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EA4B25A13
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:05:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sfi+lGdK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E9Bzcez5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbfE3OEx (ORCPT
+        id S1726851AbfE3OFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 10:04:53 -0400
-Received: from mail-lf1-f52.google.com ([209.85.167.52]:35473 "EHLO
-        mail-lf1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbfE3OEx (ORCPT
+        Thu, 30 May 2019 10:05:22 -0400
+Received: from mail-oi1-f173.google.com ([209.85.167.173]:38372 "EHLO
+        mail-oi1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbfE3OFW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 10:04:53 -0400
-Received: by mail-lf1-f52.google.com with SMTP id a25so5142996lfg.2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 07:04:51 -0700 (PDT)
+        Thu, 30 May 2019 10:05:22 -0400
+Received: by mail-oi1-f173.google.com with SMTP id 18so4228502oij.5
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 07:05:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HBdd1+Yx5uNDMN7i6EJlgqNqno6FViEqIgRf/X7lmfA=;
-        b=Sfi+lGdKQh0pEl3l/DONlJsn5sLKbsEf0Z+cH/597Fj0avHk0ONmAu7m9OAz4ZHj/w
-         b0vAvLD3PdJUjrzcEQmM2d2T6Ax1BQ27yfaWUVSRCvoISiIw0L6ztt3DDzOa+GMbEKP7
-         ga3rQPriZPdkv5NKdMt1BojCubcP3akpwJS94F+++TFv8aTjiFrAaMOCc1C68GM83o4b
-         e2IzrlQuiM0skP0ekGERvKtw6q1XLV7MwlUYs88znewi8GjEMU/aGgBGKa/rXSlKTlYU
-         NRRLuET7RASglq0ErmUQhB2KVzohJIviR4JW9b7eKIfw5XYi8yuPTZhyDnLKR8aCIcdj
-         zUWQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=yfJhpIBmP3V4Tl4EX4Jelv6NLwOKkheXMCrhBu7VOTA=;
+        b=E9Bzcez5oSqTtC7TKP5JPoELL7dyh8FUmPIOPzDW8RV3k5XvIAC6rM31/cespOXyGb
+         hXa/8bLhBWz1AyEo75KfwJqvjVhPQrFDFTv0SsGTv2EDEcjYYQF2p9UQiKsz1geRQdul
+         /TGKLyRIa82C0QQYCg6LjbxqnmnGsA4ngxpCMyZKYJashrE3KQAPYgDco/hHhu7lg7Eo
+         +KEebgNnogx3zjh9b+DAzaYaqJ/toha57F3CmU0ZhlSsXC+MLPvYcADNTRxjH5W5y3be
+         NKVRmLUaehdG8mmCmt5zePATsfWjGX1e/yitfjFpoPlYEjPFbSXdynrjoNggUTXgBxyW
+         mjQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HBdd1+Yx5uNDMN7i6EJlgqNqno6FViEqIgRf/X7lmfA=;
-        b=m0FUOTrL0gS2JcffatucuBxaXqRfbdDW1yIH8JYyw35rdsNG0A5sCXIwnS6hTxQJBO
-         Nx5q/Iihj4D/SX6BPvBFi9PEeIr00FGmSn8tH5DCLQuxb3J2kcWfI4dAAoUebFDng52o
-         Kemit14UOsRY7mV27x8HQlrXcEqv/SE1RP6T+PFmXT8dr6xbQkidEZRGZj2T7pDB4BwZ
-         m3w+oK4jVb9dKZVirDnGqF3nvsRtEGwLBQyDhiH+uSBg8tS3ju0tvU0bWKOHm8PaR8Yd
-         9a1OoRj5aYY9ibR1B2VZZHg2JUMC3bTlLiiLUttqB4R+bIBvd/VKzUs5Xq2Klcw0anLc
-         rdmA==
-X-Gm-Message-State: APjAAAWmdjTwYk9aquMkq+pSIhh9YitMVV8xScP7YPet6PU7kjNQr2hq
-        Yak0MOM+rkLs4u27hov2SpoLK/ivR/p+HSvZafc=
-X-Google-Smtp-Source: APXvYqxGR7wR9DFqMnC0sZGTPTVcEuS0mjCBcJNalnS7NYQt5+TwgC1aWCbdMpBPO5Yv/OsgZ97tGbBX/BlJSYDhq1g=
-X-Received: by 2002:a19:2045:: with SMTP id g66mr2236457lfg.132.1559225091000;
- Thu, 30 May 2019 07:04:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1559129225.git.vpillai@digitalocean.com>
-In-Reply-To: <cover.1559129225.git.vpillai@digitalocean.com>
-From:   Aubrey Li <aubrey.intel@gmail.com>
-Date:   Thu, 30 May 2019 22:04:39 +0800
-Message-ID: <CAERHkruDE-7R5K=2yRqCJRCpV87HkHzDYbQA2WQkruVYpG7t7Q@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
-To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>
-Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yfJhpIBmP3V4Tl4EX4Jelv6NLwOKkheXMCrhBu7VOTA=;
+        b=nTFj1PpvDq/Bun5GaIi1wWjSwUGh/tVqHWDQWLehb2ZAk/7j5SCFtS+MyLXmJKeY/R
+         Rbq50oeydFx6KhB24a16SaDvVuZUhIT3NPr7WgIvsFgGL9pj2dWzngmGJSMDN6BkvUgz
+         sHjCCGcHSuG6aOAQI3tMxFq2xVf32eLDv/zohulG2icjNICfcf+Ju5QHkrmjgrAvXHV3
+         LO5LHH6/3SJo6yLOp+mBTdRdKamoA53YMAmUVdyL/Rl7da64UKjBTl8aRFBTiWlV69JX
+         VAfCgAiEhWjwff7QwSYBVtNX8oThy3b0iUOQ69CyEyEsHlX0jAf3Ys923TWIc8UTEPQa
+         uB5g==
+X-Gm-Message-State: APjAAAVCijk1DsmLKlgTWr6vgxSVojnRiwlwa1tqYaZNADuZTB4Ffqlz
+        8McoRQTUHsJtiUFF/u8misakMRhL9hdo7g==
+X-Google-Smtp-Source: APXvYqwmvR5hxpjuV+RiVqLPUL3Gx2r1d/6z/vzZcYn2Ai2TwWjNMS5d95KkUrbqBq2Pf4c35+WgPA==
+X-Received: by 2002:aca:1c0c:: with SMTP id c12mr2438865oic.7.1559225121406;
+        Thu, 30 May 2019 07:05:21 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (li808-42.members.linode.com. [104.237.132.42])
+        by smtp.gmail.com with ESMTPSA id j8sm979339otl.54.2019.05.30.07.05.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 30 May 2019 07:05:20 -0700 (PDT)
+Date:   Thu, 30 May 2019 22:05:10 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        lkml <linux-kernel@vger.kernel.org>,
         Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Stanislav Fomichev <sdf@fomichev.me>,
+        Song Liu <songliubraving@fb.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCHv3 00/12] perf tools: Display eBPF code in intel_pt trace
+Message-ID: <20190530140510.GD5927@leoy-ThinkPad-X240s>
+References: <20190508132010.14512-1-jolsa@kernel.org>
+ <20190530105439.GA5927@leoy-ThinkPad-X240s>
+ <20190530120709.GA3669@krava>
+ <20190530125709.GB5927@leoy-ThinkPad-X240s>
+ <20190530133645.GC21962@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190530133645.GC21962@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 4:36 AM Vineeth Remanan Pillai
-<vpillai@digitalocean.com> wrote:
->
-> Third iteration of the Core-Scheduling feature.
->
-> This version fixes mostly correctness related issues in v2 and
-> addresses performance issues. Also, addressed some crashes related
-> to cgroups and cpu hotplugging.
->
-> We have tested and verified that incompatible processes are not
-> selected during schedule. In terms of performance, the impact
-> depends on the workload:
-> - on CPU intensive applications that use all the logical CPUs with
->   SMT enabled, enabling core scheduling performs better than nosmt.
-> - on mixed workloads with considerable io compared to cpu usage,
->   nosmt seems to perform better than core scheduling.
+Hi Arnaldo,
 
-My testing scripts can not be completed on this version. I figured out the
-number of cpu utilization report entry didn't reach my minimal requirement.
-Then I wrote a simple script to verify.
-====================
-$ cat test.sh
-#!/bin/sh
+On Thu, May 30, 2019 at 10:36:45AM -0300, Arnaldo Carvalho de Melo wrote:
 
-for i in `seq 1 10`
-do
-    echo `date`, $i
-    sleep 1
-done
-====================
+[...]
 
-Normally it works as below:
+> One other way of testing this:
+> 
+> I used perf trace's use of BPF, using:
+> 
+> [root@quaco ~]# cat ~/.perfconfig
+> [llvm]
+> 	dump-obj = true
+> 	clang-opt = -g
+> [trace]
+> 	add_events = /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.c
+> 	show_zeros = yes
+> 	show_duration = no
+> 	no_inherit = yes
+> 	show_timestamp = no
+> 	show_arg_names = no
+> 	args_alignment = 40
+> 	show_prefix = yes
+> 
+> For arm64 this needs fixing, tools/perf/examples/bpf/augmented_raw_syscalls.c
+> (its in the kernel sources) is still hard coded for x86_64 syscall numbers :-\
 
-Thu May 30 14:13:40 CST 2019, 1
-Thu May 30 14:13:41 CST 2019, 2
-Thu May 30 14:13:42 CST 2019, 3
-Thu May 30 14:13:43 CST 2019, 4
-Thu May 30 14:13:44 CST 2019, 5
-Thu May 30 14:13:45 CST 2019, 6
-Thu May 30 14:13:46 CST 2019, 7
-Thu May 30 14:13:47 CST 2019, 8
-Thu May 30 14:13:48 CST 2019, 9
-Thu May 30 14:13:49 CST 2019, 10
+Thanks a lot for sharing this, I will test with this method and let you
+and Jiri know the result in tomorrow.
 
-When the system was running 32 sysbench threads and
-32 gemmbench threads, it worked as below(the system
-has ~38% idle time)
-Thu May 30 14:14:20 CST 2019, 1
-Thu May 30 14:14:21 CST 2019, 2
-Thu May 30 14:14:22 CST 2019, 3
-Thu May 30 14:14:24 CST 2019, 4 <=======x=
-Thu May 30 14:14:25 CST 2019, 5
-Thu May 30 14:14:26 CST 2019, 6
-Thu May 30 14:14:28 CST 2019, 7 <=======x=
-Thu May 30 14:14:29 CST 2019, 8
-Thu May 30 14:14:31 CST 2019, 9 <=======x=
-Thu May 30 14:14:34 CST 2019, 10 <=======x=
-
-And it got worse when the system was running 64/64 case,
-the system still had ~3% idle time
-Thu May 30 14:26:40 CST 2019, 1
-Thu May 30 14:26:46 CST 2019, 2
-Thu May 30 14:26:53 CST 2019, 3
-Thu May 30 14:27:01 CST 2019, 4
-Thu May 30 14:27:03 CST 2019, 5
-Thu May 30 14:27:11 CST 2019, 6
-Thu May 30 14:27:31 CST 2019, 7
-Thu May 30 14:27:32 CST 2019, 8
-Thu May 30 14:27:41 CST 2019, 9
-Thu May 30 14:27:56 CST 2019, 10
-
-Any thoughts?
+[...]
 
 Thanks,
--Aubrey
+Leo Yan
