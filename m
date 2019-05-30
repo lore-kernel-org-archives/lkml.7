@@ -2,130 +2,118 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14AB2C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB58C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D916426213
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:55:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="DLH2JYbe"
+	by mail.kernel.org (Postfix) with ESMTP id 423AE26213
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:55:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbfE3VzN (ORCPT
+        id S1727119AbfE3Vzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 17:55:13 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:49572 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726986AbfE3VzK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 17:55:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=cMVlGTvXkUveUITBldNsm2wqtZ0vfwdSAKndguUBaOQ=; b=DLH2JYbeHwq/YpEbWMtT0JGBL
-        spO2pEc/2hmPltlibpNfKJ2Ih/2Rm4G0phN5i2XSKks3aWtbDZz/GjR3JOGCj0DN/EFFNJYoQcgdY
-        KCaXkwyYwGjN4/dPWIvnF995pitZOxwUX3cRQdPGcd08tJMbDelcgzPTaceo+3xiEu6bQ9l0KxDmW
-        A6ERMXUYjHd+RHWZrpMMqsX0zPrTCj1eb0FZ12RnJMUJ3c1CbH3/iBVkW/k/nJ87VxzdpYmPFA/Bj
-        w8HefDp2VNcdyksBGBu0eg9AnsJHYltB0rlhwyOs9x/BKnj7EROswpX3bRDMtwawd5XTsxhzCT215
-        893fQ6/Cw==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:56076)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hWSpD-0005E4-3f; Thu, 30 May 2019 22:43:03 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hWSp5-0005jk-2U; Thu, 30 May 2019 22:42:55 +0100
-Date:   Thu, 30 May 2019 22:42:54 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Morten Rasmussen <morten.rasmussen@arm.com>
-Cc:     "Andrew F. Davis" <afd@ti.com>, Atish Patra <atish.patra@wdc.com>,
-        linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <anup@brainfault.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-riscv@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Otto Sabart <ottosabart@seberm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v6 1/7] Documentation: DT: arm: add support for sockets
- defining package boundaries
-Message-ID: <20190530214254.tuxsnyv52a2fyhck@shell.armlinux.org.uk>
-References: <20190529211340.17087-1-atish.patra@wdc.com>
- <20190529211340.17087-2-atish.patra@wdc.com>
- <49f41e62-5354-a674-d95f-5f63851a0ca6@ti.com>
- <20190530115103.GA10919@e105550-lin.cambridge.arm.com>
+        Thu, 30 May 2019 17:55:45 -0400
+Received: from mga17.intel.com ([192.55.52.151]:2131 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726701AbfE3Vzp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 17:55:45 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 14:46:34 -0700
+X-ExtLoop1: 1
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga007.jf.intel.com with ESMTP; 30 May 2019 14:46:33 -0700
+Date:   Thu, 30 May 2019 14:47:26 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Pingfan Liu <kernelfans@gmail.com>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Keith Busch <keith.busch@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/gup: fix omission of check on FOLL_LONGTERM in
+ get_user_pages_fast()
+Message-ID: <20190530214726.GA14000@iweiny-DESK2.sc.intel.com>
+References: <1559170444-3304-1-git-send-email-kernelfans@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190530115103.GA10919@e105550-lin.cambridge.arm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <1559170444-3304-1-git-send-email-kernelfans@gmail.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 12:51:03PM +0100, Morten Rasmussen wrote:
-> On Wed, May 29, 2019 at 07:39:17PM -0400, Andrew F. Davis wrote:
-> > On 5/29/19 5:13 PM, Atish Patra wrote:
-> > >From: Sudeep Holla <sudeep.holla@arm.com>
-> > >
-> > >The current ARM DT topology description provides the operating system
-> > >with a topological view of the system that is based on leaf nodes
-> > >representing either cores or threads (in an SMT system) and a
-> > >hierarchical set of cluster nodes that creates a hierarchical topology
-> > >view of how those cores and threads are grouped.
-> > >
-> > >However this hierarchical representation of clusters does not allow to
-> > >describe what topology level actually represents the physical package or
-> > >the socket boundary, which is a key piece of information to be used by
-> > >an operating system to optimize resource allocation and scheduling.
-> > >
-> > 
-> > Are physical package descriptions really needed? What does "socket" imply
-> > that a higher layer "cluster" node grouping does not? It doesn't imply a
-> > different NUMA distance and the definition of "socket" is already not well
-> > defined, is a dual chiplet processor not just a fancy dual "socket" or are
-> > dual "sockets" on a server board "slotket" card, will we need new names for
-> > those too..
+On Thu, May 30, 2019 at 06:54:04AM +0800, Pingfan Liu wrote:
+> As for FOLL_LONGTERM, it is checked in the slow path
+> __gup_longterm_unlocked(). But it is not checked in the fast path, which
+> means a possible leak of CMA page to longterm pinned requirement through
+> this crack.
 > 
-> Socket (or package) just implies what you suggest, a grouping of CPUs
-> based on the physical socket (or package). Some resources might be
-> associated with packages and more importantly socket information is
-> exposed to user-space. At the moment clusters are being exposed to
-> user-space as sockets which is less than ideal for some topologies.
+> Place a check in the fast path.
+> 
+> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Mike Rapoport <rppt@linux.ibm.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+> Cc: Keith Busch <keith.busch@intel.com>
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  mm/gup.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/mm/gup.c b/mm/gup.c
+> index f173fcb..00feab3 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -2235,6 +2235,18 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
+>  		local_irq_enable();
+>  		ret = nr;
+>  	}
+> +#if defined(CONFIG_CMA)
+> +	if (unlikely(gup_flags & FOLL_LONGTERM)) {
+> +		int i, j;
+> +
+> +		for (i = 0; i < nr; i++)
+> +			if (is_migrate_cma_page(pages[i])) {
+> +				for (j = i; j < nr; j++)
+> +					put_page(pages[j]);
 
-Please point out a 32-bit ARM system that has multiple "socket"s.
+Should be put_user_page() now.  For now that just calls put_page() but it is
+slated to change soon.
 
-As far as I'm aware, all 32-bit systems do not have socketed CPUs
-(modern ARM CPUs are part of a larger SoC), and the CPUs are always
-in one package.
+I also wonder if this would be more efficient as a check as we are walking the
+page tables and bail early.
 
-Even the test systems I've seen do not have socketed CPUs.
+Perhaps the code complexity is not worth it?
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+> +				nr = i;
+
+Why not just break from the loop here?
+
+Or better yet just use 'i' in the inner loop...
+
+Ira
+
+> +			}
+> +	}
+> +#endif
+>  
+>  	if (nr < nr_pages) {
+>  		/* Try to get the remaining pages with get_user_pages */
+> -- 
+> 2.7.5
+> 
