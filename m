@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4947C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF008C28CC1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:35:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B37924B6B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:35:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ED5824B65
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:35:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187352;
-	bh=rv5if2l3gNjgyAH3kUXe/2/t602g1RWczu0J51e8890=;
+	s=default; t=1559187353;
+	bh=vUwoCXXgdDLk3S2NI1Tmabx7bEvLVVaEtEzlHmhdtj0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WKTXrvVFTTgzeQRfLzb1fEdbTp9B2IRansmjBE9j7D4N2l3RGsDWSuM3S3FKPjClB
-	 WBxUMibkDk3mOBGGIVRz8FhDIQAQ8KdPIhICvFbXZD/lxT5peCUVYbOnLq+ZJcnDya
-	 fuiQNCWnDV6noAlpgnt7nyuACUNQj3VAYHjAXxAA=
+	b=I6P+WdBV1DSB20QTfQBkehlN/5ZU7wtWYwyTGDPN3gi9mFUf3o7US4DyaDSI2s97e
+	 u4HAecUx9YWiX2iRfxujkZGiOiMDZmqCbSKb4dxRcCaXNoZqqumYAAecPozkqeN7w/
+	 6sZBkmLDgFHWEjwBh4lN+HvJ4N2wYRVt/EyHrH6k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387622AbfE3DZr (ORCPT
+        id S2387612AbfE3DZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:25:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52070 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:25:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729697AbfE3DSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:38 -0400
+        id S1730243AbfE3DSj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:39 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3633F24713;
+        by mail.kernel.org (Postfix) with ESMTPSA id 9729F2474C;
         Thu, 30 May 2019 03:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186318;
-        bh=rv5if2l3gNjgyAH3kUXe/2/t602g1RWczu0J51e8890=;
+        bh=vUwoCXXgdDLk3S2NI1Tmabx7bEvLVVaEtEzlHmhdtj0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U5lENxZ8Xhyu9KnDyGlQoGrI9mId7T2nFXByr7br//OoM4xAOEewP7arb+MIJN2CG
-         0CTink8+V/e5Tnr2l+6lOTn8bxd36+tZ7gE9db+wrde4LgWQU33DFByKH4UbUv2ecu
-         xzPfBD+Mrw4cIumbkoG+G7Fm0RRzren0BIpW1iKQ=
+        b=jT9OCUZaCymDRVRmabKgYo7wnlytyHlEa2CvtzOvT4daPGMKceAOWrkn3Q30yOz6E
+         toYp0cpJetmcGO630DrZ2ftVKu7O2pRAofMVSe0x7s+009To5RVJwx4YVMwBYS8vEV
+         JHaIQTbiI8gRr/HuPY2ssD0T9zXtCK+brBV7IXvk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        Omar Sandoval <osandov@fb.com>, linux-block@vger.kernel.org
-Subject: [PATCH 4.14 006/193] sbitmap: fix improper use of smp_mb__before_atomic()
-Date:   Wed, 29 May 2019 20:04:20 -0700
-Message-Id: <20190530030447.957289087@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.14 007/193] Revert "scsi: sd: Keep disk read-only when re-reading partition"
+Date:   Wed, 29 May 2019 20:04:21 -0700
+Message-Id: <20190530030448.172157799@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -62,44 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Parri <andrea.parri@amarulasolutions.com>
+From: Martin K. Petersen <martin.petersen@oracle.com>
 
-commit a0934fd2b1208458e55fc4b48f55889809fce666 upstream.
+commit 8acf608e602f6ec38b7cc37b04c80f1ce9a1a6cc upstream.
 
-This barrier only applies to the read-modify-write operations; in
-particular, it does not apply to the atomic_set() primitive.
+This reverts commit 20bd1d026aacc5399464f8328f305985c493cde3.
 
-Replace the barrier with an smp_mb().
+This patch introduced regressions for devices that come online in
+read-only state and subsequently switch to read-write.
 
-Fixes: 6c0ca7ae292ad ("sbitmap: fix wakeup hang after sbq resize")
-Cc: stable@vger.kernel.org
-Reported-by: "Paul E. McKenney" <paulmck@linux.ibm.com>
-Reported-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Omar Sandoval <osandov@fb.com>
-Cc: Ming Lei <ming.lei@redhat.com>
-Cc: linux-block@vger.kernel.org
-Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Given how the partition code is currently implemented it is not
+possible to persist the read-only flag across a device revalidate
+call. This may need to get addressed in the future since it is common
+for user applications to proactively call BLKRRPART.
+
+Reverting this commit will re-introduce a regression where a
+device-initiated revalidate event will cause the admin state to be
+forgotten. A separate patch will address this issue.
+
+Fixes: 20bd1d026aac ("scsi: sd: Keep disk read-only when re-reading partition")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- lib/sbitmap.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/sd.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/lib/sbitmap.c
-+++ b/lib/sbitmap.c
-@@ -338,7 +338,7 @@ void sbitmap_queue_resize(struct sbitmap
- 		 * Pairs with the memory barrier in sbq_wake_up() to ensure that
- 		 * the batch size is updated before the wait counts.
- 		 */
--		smp_mb__before_atomic();
-+		smp_mb();
- 		for (i = 0; i < SBQ_WAIT_QUEUES; i++)
- 			atomic_set(&sbq->ws[i].wait_cnt, 1);
- 	}
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -2616,7 +2616,6 @@ sd_read_write_protect_flag(struct scsi_d
+ 	int res;
+ 	struct scsi_device *sdp = sdkp->device;
+ 	struct scsi_mode_data data;
+-	int disk_ro = get_disk_ro(sdkp->disk);
+ 	int old_wp = sdkp->write_prot;
+ 
+ 	set_disk_ro(sdkp->disk, 0);
+@@ -2657,7 +2656,7 @@ sd_read_write_protect_flag(struct scsi_d
+ 			  "Test WP failed, assume Write Enabled\n");
+ 	} else {
+ 		sdkp->write_prot = ((data.device_specific & 0x80) != 0);
+-		set_disk_ro(sdkp->disk, sdkp->write_prot || disk_ro);
++		set_disk_ro(sdkp->disk, sdkp->write_prot);
+ 		if (sdkp->first_scan || old_wp != sdkp->write_prot) {
+ 			sd_printk(KERN_NOTICE, sdkp, "Write Protect is %s\n",
+ 				  sdkp->write_prot ? "on" : "off");
 
 
