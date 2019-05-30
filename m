@@ -2,72 +2,97 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2930EC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F242FC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 098BB2497D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBBC425D3E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:59:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XLLCbKfw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727603AbfE3P6C (ORCPT
+        id S1727610AbfE3P7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 11:58:02 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:51272 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725961AbfE3P6B (ORCPT
+        Thu, 30 May 2019 11:59:19 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37051 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbfE3P7R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 11:58:01 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hWNRC-0000U8-AQ; Thu, 30 May 2019 15:57:54 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] nexthop: remove redundant assignment to err
-Date:   Thu, 30 May 2019 16:57:54 +0100
-Message-Id: <20190530155754.31634-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        Thu, 30 May 2019 11:59:17 -0400
+Received: by mail-pf1-f196.google.com with SMTP id a23so4247821pff.4;
+        Thu, 30 May 2019 08:59:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Y8nAAbKBo+GsjR2wR8X+b6EMGLV2z628Qb4JzCYHIQ4=;
+        b=XLLCbKfwDGtQAZawpyoKQffPiR9Xf8Q7jYF7Uvvmr/cWUh74ThmPXC6oZCk7/PEAyF
+         YzSquNHpQc7JGFV+Zp/4c/pAJWiRbSJdJU0n9zOTE8zsei+hjeIKCMEJcKyz+rShlXV7
+         eZd0TKAe2c/GRvS6wBM/gDKpUDkY4bCUygPCwMrebyFAS1StIUXwGMvAkZ1rlWZv3eLM
+         xp3FZbOLNED3XSOgQp1xOFe6THUw3PwQDIk4DSriRXwadZDES0iwTFnTPLJwhvaIJrjI
+         FVpE3afKn+WFYW4Fyg1/STsHGL20fYxsSWuc126MZOyrruTOiQxsI0iIoGNmk7vWFAdd
+         8wpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Y8nAAbKBo+GsjR2wR8X+b6EMGLV2z628Qb4JzCYHIQ4=;
+        b=Ib+mQ2DEvJCEvzRFj7ffOsj9uMg96ltMB/+ihxfTia8aWA/o0uFdTbXLu9WdI7chi+
+         ZivmM09KQU4rn7TQ2tV6rEIfmltbeM9Sm/tv0QDEYT1ihMm3r7Fjst4cA/g/hbyLmxnT
+         etlsfS1EyZfvENOhFRee8IkQo0Y5IOuMaacJ4Z6wk8cXPAx7y2FDvLaflaXekMwS8T7X
+         cV/ZbNL9mEXyCY5GF9c+eTY1QiPdAV+7apYGnl+n5bn+fTBsDkcN+zywz6PU0wh8YfH3
+         awLw8Q1DTOSIZq6GogCAOdQV4G4yBuxP4AjJgTO8P/rea+gJnEb+rsC6c0zGlYMeVIYw
+         5v7A==
+X-Gm-Message-State: APjAAAX85xH6k+dFNXaIMq3v0zRWGVAqyrRBORBi477FKkcuAJlFww8X
+        13ygyt8q/g78eERVQ3L5njE=
+X-Google-Smtp-Source: APXvYqwr8GMJVp3pLyVMxK1wV0ENCJ3tZpw/SGabGJp9Pyp7Pfnzkhra0qVRagJdDgUjO9dbrjeSig==
+X-Received: by 2002:a63:c20c:: with SMTP id b12mr4155982pgd.3.1559231957162;
+        Thu, 30 May 2019 08:59:17 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id e184sm4213045pfa.169.2019.05.30.08.59.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 May 2019 08:59:16 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     robdclark@gmail.com, sean@poorly.run, airlied@linux.ie,
+        daniel@ffwll.ch, robh+dt@kernel.org, mark.rutland@arm.com,
+        sibis@codeaurora.org, chandanu@codeaurora.org,
+        abhinavk@codeaurora.org, bjorn.andersson@linaro.org,
+        marc.w.gonzalez@free.fr, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH 0/4] MSM8998 DSI support
+Date:   Thu, 30 May 2019 08:59:09 -0700
+Message-Id: <20190530155909.2718-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Enabling DSI support for the MSM8998 SoC is another step to getting end
+to end display going.  This will allow the SoC to drive panels that are
+integraded on the device (ie not a HDMI port), but won't do much until
+we have the display processor feeding the DSI blocks with lines to
+scanout.
 
-The variable err is initialized with a value that is never read
-and err is reassigned a few statements later. This initialization
-is redundant and can be removed.
+Jeffrey Hugo (4):
+  dt-bindings: msm/dsi: Add 10nm phy for msm8998 compatible
+  drm/msm/dsi: Add support for MSM8998 10nm dsi phy
+  drm/msm/dsi: Add old timings quirk for 10nm phy
+  drm/msm/dsi: Add support for MSM8998 DSI controller
 
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- net/ipv4/nexthop.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../devicetree/bindings/display/msm/dsi.txt   |  1 +
+ drivers/gpu/drm/msm/dsi/dsi_cfg.c             | 21 +++++++++++++
+ drivers/gpu/drm/msm/dsi/dsi_cfg.h             |  1 +
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy.c         |  2 ++
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy.h         |  5 ++++
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c    | 30 +++++++++++++++++--
+ 6 files changed, 57 insertions(+), 3 deletions(-)
 
-diff --git a/net/ipv4/nexthop.c b/net/ipv4/nexthop.c
-index 1af8a329dacb..7a5a3d08fec3 100644
---- a/net/ipv4/nexthop.c
-+++ b/net/ipv4/nexthop.c
-@@ -836,7 +836,7 @@ static int nh_create_ipv6(struct net *net,  struct nexthop *nh,
- 		.fc_encap = cfg->nh_encap,
- 		.fc_encap_type = cfg->nh_encap_type,
- 	};
--	int err = -EINVAL;
-+	int err;
- 
- 	if (!ipv6_addr_any(&cfg->gw.ipv6))
- 		fib6_cfg.fc_flags |= RTF_GATEWAY;
 -- 
-2.20.1
+2.17.1
 
