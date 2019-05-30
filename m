@@ -2,52 +2,52 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E79C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B78C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9F1926003
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA8DD2600A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:58:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192309;
-	bh=SJxAlDVuFAv8bWtusgdrlGlrI8X7tedSS3c/ZX5tGcc=;
+	s=default; t=1559192314;
+	bh=iYzo/VRtevKekWWggl+QIhG1PwDIUuE4DzWTR6nh2n0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xVBOeflUBMUrgWlj7NUWBuibiqwxZ71C/Zs45yl45CxUFJTkLVHG8c584kdapYwcD
-	 eFkNcWHybarESOP2k6ZiVCqhACAHs2+vqXMSRWVFaI8PvO/ykeqkQzsp4YPaG5R1Wm
-	 8ZNCIOtbkJUSrR+16uj5V1CBoJaY/DwRGKPM7jXc=
+	b=UGq4mi0JrJh4DH7yoVRJWMTEQB1F8WInWe33MVO5SvV5JKN7Gzx1ovwAP8QZJYngU
+	 XEQg9scMkh2/iCtBh8dQch2pI5N8MLeaLXVUcoED91Uu9tU+aZZ18vYonm35AB0mpU
+	 3KelPuvt/0Z940S3fmzwsAU45V1KTheVXO5vqy5g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbfE3DJt (ORCPT
+        id S2388954AbfE3E6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:09:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44640 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:58:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727675AbfE3DJj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:09:39 -0400
+        id S1727769AbfE3DJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:09:48 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F23B12447A;
-        Thu, 30 May 2019 03:09:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDE9124494;
+        Thu, 30 May 2019 03:09:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185778;
-        bh=SJxAlDVuFAv8bWtusgdrlGlrI8X7tedSS3c/ZX5tGcc=;
+        s=default; t=1559185788;
+        bh=iYzo/VRtevKekWWggl+QIhG1PwDIUuE4DzWTR6nh2n0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LT6bAfIWf9Ox6zeBwHIb70TOjkQTLvcjjeX49mdO/seWMwWaTctdJD2IBvOXlbiob
-         QwMjmPYRQpyW9GsTf6Z1ToBXDlwBUtjBRASdFxAcZexe9pqpBPBro6pD4M79vmdK1m
-         wqlOT03fCluW5JA49mjxSbPxwzgKBYMMWWlqjeV4=
+        b=HrafJyIS3neoYnHPejYj65GJU+r4DN5enzJe+XdzDegTmkvDyaoDCpGJmqxPXMRDk
+         owG0mD7/d600ay6S+aJZDo04cBI6YZfbF6b+UfLn3PKYeMW+nkuOFPztoX11IuELQd
+         Glu6sTUL122kdxmnA/IEV8TfPVNJixZLrFA/oezU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 5.1 035/405] media: serial_ir: Fix use-after-free in serial_ir_init_module
-Date:   Wed, 29 May 2019 20:00:33 -0700
-Message-Id: <20190530030542.529219035@linuxfoundation.org>
+        stable@vger.kernel.org, Yonghong Song <yhs@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 057/405] selftests/bpf: set RLIMIT_MEMLOCK properly for test_libbpf_open.c
+Date:   Wed, 29 May 2019 20:00:55 -0700
+Message-Id: <20190530030543.759081513@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -60,140 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+[ Upstream commit 6cea33701eb024bc6c920ab83940ee22afd29139 ]
 
-commit 56cd26b618855c9af48c8301aa6754ced8dd0beb upstream.
+Test test_libbpf.sh failed on my development server with failure
+  -bash-4.4$ sudo ./test_libbpf.sh
+  [0] libbpf: Error in bpf_object__probe_name():Operation not permitted(1).
+      Couldn't load basic 'r0 = 0' BPF program.
+  test_libbpf: failed at file test_l4lb.o
+  selftests: test_libbpf [FAILED]
+  -bash-4.4$
 
-Syzkaller report this:
+The reason is because my machine has 64KB locked memory by default which
+is not enough for this program to get locked memory.
+Similar to other bpf selftests, let us increase RLIMIT_MEMLOCK
+to infinity, which fixed the issue.
 
-BUG: KASAN: use-after-free in sysfs_remove_file_ns+0x5f/0x70 fs/sysfs/file.c:468
-Read of size 8 at addr ffff8881dc7ae030 by task syz-executor.0/6249
-
-CPU: 1 PID: 6249 Comm: syz-executor.0 Not tainted 5.0.0-rc8+ #3
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xfa/0x1ce lib/dump_stack.c:113
- print_address_description+0x65/0x270 mm/kasan/report.c:187
- kasan_report+0x149/0x18d mm/kasan/report.c:317
- ? 0xffffffffc1728000
- sysfs_remove_file_ns+0x5f/0x70 fs/sysfs/file.c:468
- sysfs_remove_file include/linux/sysfs.h:519 [inline]
- driver_remove_file+0x40/0x50 drivers/base/driver.c:122
- remove_bind_files drivers/base/bus.c:585 [inline]
- bus_remove_driver+0x186/0x220 drivers/base/bus.c:725
- driver_unregister+0x6c/0xa0 drivers/base/driver.c:197
- serial_ir_init_module+0x169/0x1000 [serial_ir]
- do_one_initcall+0xfa/0x5ca init/main.c:887
- do_init_module+0x204/0x5f6 kernel/module.c:3460
- load_module+0x66b2/0x8570 kernel/module.c:3808
- __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x462e99
-Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f9450132c58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-RDX: 0000000000000000 RSI: 0000000020000100 RDI: 0000000000000003
-RBP: 00007f9450132c70 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f94501336bc
-R13: 00000000004bcefa R14: 00000000006f6fb0 R15: 0000000000000004
-
-Allocated by task 6249:
- set_track mm/kasan/common.c:85 [inline]
- __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:495
- kmalloc include/linux/slab.h:545 [inline]
- kzalloc include/linux/slab.h:740 [inline]
- bus_add_driver+0xc0/0x610 drivers/base/bus.c:651
- driver_register+0x1bb/0x3f0 drivers/base/driver.c:170
- serial_ir_init_module+0xe8/0x1000 [serial_ir]
- do_one_initcall+0xfa/0x5ca init/main.c:887
- do_init_module+0x204/0x5f6 kernel/module.c:3460
- load_module+0x66b2/0x8570 kernel/module.c:3808
- __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 6249:
- set_track mm/kasan/common.c:85 [inline]
- __kasan_slab_free+0x130/0x180 mm/kasan/common.c:457
- slab_free_hook mm/slub.c:1430 [inline]
- slab_free_freelist_hook mm/slub.c:1457 [inline]
- slab_free mm/slub.c:3005 [inline]
- kfree+0xe1/0x270 mm/slub.c:3957
- kobject_cleanup lib/kobject.c:662 [inline]
- kobject_release lib/kobject.c:691 [inline]
- kref_put include/linux/kref.h:67 [inline]
- kobject_put+0x146/0x240 lib/kobject.c:708
- bus_remove_driver+0x10e/0x220 drivers/base/bus.c:732
- driver_unregister+0x6c/0xa0 drivers/base/driver.c:197
- serial_ir_init_module+0x14c/0x1000 [serial_ir]
- do_one_initcall+0xfa/0x5ca init/main.c:887
- do_init_module+0x204/0x5f6 kernel/module.c:3460
- load_module+0x66b2/0x8570 kernel/module.c:3808
- __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff8881dc7ae000
- which belongs to the cache kmalloc-256 of size 256
-The buggy address is located 48 bytes inside of
- 256-byte region [ffff8881dc7ae000, ffff8881dc7ae100)
-The buggy address belongs to the page:
-page:ffffea000771eb80 count:1 mapcount:0 mapping:ffff8881f6c02e00 index:0x0
-flags: 0x2fffc0000000200(slab)
-raw: 02fffc0000000200 ffffea0007d14800 0000000400000002 ffff8881f6c02e00
-raw: 0000000000000000 00000000800c000c 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8881dc7adf00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff8881dc7adf80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->ffff8881dc7ae000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                     ^
- ffff8881dc7ae080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8881dc7ae100: fc fc fc fc fc fc fc fc 00 00 00 00 00 00 00 00
-
-There are already cleanup handlings in serial_ir_init error path,
-no need to call serial_ir_exit do it again in serial_ir_init_module,
-otherwise will trigger a use-after-free issue.
-
-Fixes: fa5dc29c1fcc ("[media] lirc_serial: move out of staging and rename to serial_ir")
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Yonghong Song <yhs@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/rc/serial_ir.c |    9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+ tools/testing/selftests/bpf/test_libbpf_open.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/media/rc/serial_ir.c
-+++ b/drivers/media/rc/serial_ir.c
-@@ -773,8 +773,6 @@ static void serial_ir_exit(void)
+diff --git a/tools/testing/selftests/bpf/test_libbpf_open.c b/tools/testing/selftests/bpf/test_libbpf_open.c
+index 65cbd30704b5a..9e9db202d218a 100644
+--- a/tools/testing/selftests/bpf/test_libbpf_open.c
++++ b/tools/testing/selftests/bpf/test_libbpf_open.c
+@@ -11,6 +11,8 @@ static const char *__doc__ =
+ #include <bpf/libbpf.h>
+ #include <getopt.h>
  
- static int __init serial_ir_init_module(void)
- {
--	int result;
--
- 	switch (type) {
- 	case IR_HOMEBREW:
- 	case IR_IRDEO:
-@@ -802,12 +800,7 @@ static int __init serial_ir_init_module(
- 	if (sense != -1)
- 		sense = !!sense;
- 
--	result = serial_ir_init();
--	if (!result)
--		return 0;
--
--	serial_ir_exit();
--	return result;
-+	return serial_ir_init();
- }
- 
- static void __exit serial_ir_exit_module(void)
++#include "bpf_rlimit.h"
++
+ static const struct option long_options[] = {
+ 	{"help",	no_argument,		NULL, 'h' },
+ 	{"debug",	no_argument,		NULL, 'D' },
+-- 
+2.20.1
+
 
 
