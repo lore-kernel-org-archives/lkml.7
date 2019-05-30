@@ -2,95 +2,93 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC8D5C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D205C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B919D25F2E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:12:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fortuneproleads-com.20150623.gappssmtp.com header.i=@fortuneproleads-com.20150623.gappssmtp.com header.b="KaTcjzr7"
+	by mail.kernel.org (Postfix) with ESMTP id 3F7E225F32
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:13:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbfE3SM4 (ORCPT
+        id S1726722AbfE3SNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 14:12:56 -0400
-Received: from mail-pl1-f176.google.com ([209.85.214.176]:36586 "EHLO
-        mail-pl1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725961AbfE3SMz (ORCPT
+        Thu, 30 May 2019 14:13:33 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:36849 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726328AbfE3SNc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 14:12:55 -0400
-Received: by mail-pl1-f176.google.com with SMTP id d21so2893354plr.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 11:12:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fortuneproleads-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:references:in-reply-to:subject:date:message-id:mime-version
-         :content-transfer-encoding:thread-index:content-language;
-        bh=FtcZFLtCFY9iWybUxhzgJqd7gGygMM22zI+PAShbE9g=;
-        b=KaTcjzr7LpxuGDxbmfugGTdNQUwN/yztLHJ7gPdnb7jd6AwlgmabqHlpGAavt8ESyJ
-         wGOuWVxRfJqUFYjwTILiLORhH4qLIAM6F6/4GpsEYi9fiB9FAeJHWtMg8YjlPdzDeUvX
-         pbcZkh0OD5B8kpMBhGwkoNPX4eiG2WlIy8JnGF9Udfa0GmB57puczYLBlB9biNoHHzUY
-         hLv99/YuuvMF168k9CLT1ZiXcbiHEUvmpLcvASeW6bo4Fcgvt3fDxtKeRBlH/BW2wiOw
-         0QeukD0l7WxtS/jM8zMA0WjKx6k7nYprSZvq45wuQZEyxhMAaF8KhUH1hStGyaAX/uWc
-         E19A==
+        Thu, 30 May 2019 14:13:32 -0400
+Received: by mail-qt1-f193.google.com with SMTP id u12so8141839qth.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 11:13:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:thread-index
-         :content-language;
-        bh=FtcZFLtCFY9iWybUxhzgJqd7gGygMM22zI+PAShbE9g=;
-        b=JtC4uL2XnNBdR5i3A13RrxW0nNb7+yP0MqL7mBa/EKafagiY8SB5XfHKI0SEXKmM86
-         RFyr0Eu59N1f05nO7+RpyWwd5uqqdv3CoWg1W2JDprVKlRm8b0SHE24W/Icoih6qKk/1
-         YvjWDwrgmPBCR6q80Og1UYYYUWkouA3F1GOSAg8ngseyB4IQDlgZBtMEn9hnourHiejD
-         Y2TMv6RUamp7olN1knIGGH1ulRfIDotTmlbs+dRpEEkhB5Hj09njH9NVQ9yLSzwTyYmQ
-         ngmq6QqBp9qNjyD6UVwkOxkMDaj5FYIyjx0pVVP4+RGnZZQ7SSG1jqXIFfXaiAPz4LMs
-         4C6w==
-X-Gm-Message-State: APjAAAXf63twkF0q39lOf+hCZfajBkJETJfgUJoe4C+5GxjIlmpftifW
-        VUKneZKbJrzE7LhfHzlx2jsOS6PH9ow=
-X-Google-Smtp-Source: APXvYqz/m/hT1DBXSL07TGxLGVUCeN8B0kAJzvdzlJkaG2NHwbcJ+hS/VHnhk3sUO46ymfu8PHmxgw==
-X-Received: by 2002:a17:902:20eb:: with SMTP id v40mr4867576plg.239.1559239974085;
-        Thu, 30 May 2019 11:12:54 -0700 (PDT)
-Received: from adminPC ([27.7.15.150])
-        by smtp.gmail.com with ESMTPSA id r185sm3757373pfc.167.2019.05.30.11.12.52
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 30 May 2019 11:12:53 -0700 (PDT)
-From:   Cynthia Higgins <cynthia.higgins@fortuneproleads.com>
-X-Google-Original-From: "Cynthia Higgins" <Cynthia.Higgins@fortuneproleads.com>
-To:     <linux-kernel@vger.kernel.org>
-References: 
-In-Reply-To: 
-Subject: Attendees Data Base of DAC 2019
-Date:   Thu, 30 May 2019 13:12:29 -0500
-Message-ID: <0e1c01d51713$4c08a4b0$e419ee10$@fortuneproleads.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=swUKp54FsABaRx/HQxckmg32aK739BKT6ewItuokNDk=;
+        b=mCnm3c9V+AUiXWu72CRiDG1lDftKWC0WYItdzS+nEAZ/TTkdtF9aaczm5EVhyDFBUz
+         QVQ3UtueqzGuyPvF99YP9tEfiG9SSBt94wDCI85CSmsyoLUW6ecJc+CmzpXl43xcH+8L
+         65FUXzWZFFsfB30dF0m7JYOsqi8PVL+DJNiuxjdbcNqx+SsHJ3GKRYW/mFXFWwZy4PC0
+         HWnG3wfAAHH13wx2jZNw6mRcAEKq6TEF0ACehlWLbic8FJzyuY1VFgv7wnbGYK1Yj4Jm
+         IEVNA0s4Fme90AUirhQWO0TKerIAhTx7c+KvygP0esafrZA1LHY8CrAkG/DICBfmKUzd
+         AslA==
+X-Gm-Message-State: APjAAAVWQrDZoKDyTVWBa2Pb9pUXkjyrDJL8GfZI/K183PBef99ZUMF9
+        LbrhyL0p49k9NPMTCIj+vJJr6A==
+X-Google-Smtp-Source: APXvYqyndgU/JBNxGTz081BydLXYPXGN+1/yzyTBopwAP5jF6DEPVUhyIlMc188XrJEeCGJfnA2k0g==
+X-Received: by 2002:aed:2494:: with SMTP id t20mr4813376qtc.135.1559240011968;
+        Thu, 30 May 2019 11:13:31 -0700 (PDT)
+Received: from redhat.com (pool-100-0-197-103.bstnma.fios.verizon.net. [100.0.197.103])
+        by smtp.gmail.com with ESMTPSA id k9sm1894099qki.20.2019.05.30.11.13.30
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 30 May 2019 11:13:31 -0700 (PDT)
+Date:   Thu, 30 May 2019 14:13:28 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     David Miller <davem@davemloft.net>
+Cc:     jasowang@redhat.com, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, peterx@redhat.com,
+        James.Bottomley@hansenpartnership.com, hch@infradead.org,
+        jglisse@redhat.com, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org,
+        christophe.de.dinechin@gmail.com, jrdr.linux@gmail.com
+Subject: Re: [PATCH net-next 0/6] vhost: accelerate metadata access
+Message-ID: <20190530141243-mutt-send-email-mst@kernel.org>
+References: <20190524081218.2502-1-jasowang@redhat.com>
+ <20190530.110730.2064393163616673523.davem@davemloft.net>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 14.0
-Thread-Index: AdUXCKSdpnJXd4gNRVCNq5WNxqSy1AACn3LAAAAAFfAAAAADUAAAAASAAAAAA7AAAAAF4AAAAANAAAAABIAAAAADsAAAAAQQAAAABEAAAAAEoAAAAATgAAAABEAAAAADcAAAAAXQAAAAAwAAAAAEcAAAAATQAAAABAAAAAAEYAAAAATQAAAABTAAAAAEkAAAAATwAAAABGA=
-Content-Language: en-us
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190530.110730.2064393163616673523.davem@davemloft.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-I am following up to check if you are interested in acquiring Design
-Automation Conference & Exhibition 2019	
-Let me know if you would like to acquire Attendees Data Base?
+On Thu, May 30, 2019 at 11:07:30AM -0700, David Miller wrote:
+> From: Jason Wang <jasowang@redhat.com>
+> Date: Fri, 24 May 2019 04:12:12 -0400
+> 
+> > This series tries to access virtqueue metadata through kernel virtual
+> > address instead of copy_user() friends since they had too much
+> > overheads like checks, spec barriers or even hardware feature
+> > toggling like SMAP. This is done through setup kernel address through
+> > direct mapping and co-opreate VM management with MMU notifiers.
+> > 
+> > Test shows about 23% improvement on TX PPS. TCP_STREAM doesn't see
+> > obvious improvement.
+> 
+> I'm still waiting for some review from mst.
+> 
+> If I don't see any review soon I will just wipe these changes from
+> patchwork as it serves no purpose to just let them rot there.
+> 
+> Thank you.
 
-Attendees List:  Designers, Researchers, Tool developers, Vendors And Many
-More ...
-Each record in the data base contains: - Contact Name, Job Title,
-Company/Business Name, Email, Tel Number, Website/URL etc.
-If you are interested, please let me know your thoughts, so that I can send
-you the no of contacts available and the pricing for it.
-Awaiting Your Reply
-Thanks & Regards,
-Cynthia Higgins
-Marketing Executive
+I thought we agreed I'm merging this through my tree, not net-next.
+So you can safely wipe it.
 
+Thanks!
 
+-- 
+MST
