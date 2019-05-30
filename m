@@ -2,298 +2,201 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73956C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF316C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40492243C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56DA4243C7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:03:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UhutMmwV"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="SWUmxFsF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbfE3BAe (ORCPT
+        id S1727197AbfE3BDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 21:00:34 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44078 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbfE3BAe (ORCPT
+        Wed, 29 May 2019 21:03:52 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:40298 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbfE3BDv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 21:00:34 -0400
-Received: by mail-pf1-f194.google.com with SMTP id g9so2764823pfo.11;
-        Wed, 29 May 2019 18:00:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Vw6ROn6nwvHNofKrf/iVLUbmXE65pyhQ9L1aja1o048=;
-        b=UhutMmwVItArx2/GzYypUcXt4iDc6LPvIFfXTMcS2OqrYkyVyeNbY7fFH97L81JqKD
-         AdwGy2Kb1U+cnXt7el14YyV4uSE0oMVH3sgGYK03H8bzaQAH+gZjXrZNigu7tfbRqhkR
-         XprvNjb8F5S1jMWzYhNQq/HfoQPzDcxCbky5YvN2gaSBy92j9YR+gPw6LWaXXTjfC7nW
-         Vm4fzeTlI33Pc9J5IMIVjtKD2E6Pi5DFzaGIAkLHplikaPBfNdNZ7BS/qIjNM+JJa/l0
-         jwKXRoZEib7GpYmjrDkm6MutcAoIeZKgQl3jENFLWfbJ6V07ZgnoIyB8gRsS6itjcDpb
-         7Q4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Vw6ROn6nwvHNofKrf/iVLUbmXE65pyhQ9L1aja1o048=;
-        b=KFlSnmGm7rkOhQvV45TKgB9bFJ6zWL370g+SBf4HXQiLBEVBQp4/twIodW7fNKxffi
-         5rNzuXqp4XV9l5mP97g96B0Pt/UTr+Eyp5PCgi399bVBKG3xv8woJP1wSqhq57mtSAd/
-         Lrs/0SbPWKzVn+QRhcUwbJXczPL3aqm5wmROkuIKbu/c4bMwtcCK93Im1r7F4LdoFvsh
-         gooNnJZ6PBnnyW0qmmRokodUlzVineqgNNdmdwnlcF4vpppOYwAJiph7qodUpgG+B2o2
-         md3HBA0xHKHlIqa1k+AhaxBNw9Rp4Pc0tQHz4esK+XjQZj3vWvgDThasw9KXytLmVpQu
-         TPlQ==
-X-Gm-Message-State: APjAAAWvwyMIT0piw0BH55UJtztf/1EY0Q1S3vDFzAhgKPjQJc56hv42
-        pD8fEXIDmRMaR0L8VUsu5ARelHtq
-X-Google-Smtp-Source: APXvYqwfAEpkoaWJ+x7E3jJg0ppuKnN9XJnSt86gxW+B4emkQ2pXb2LYUqUiEGdYvZY2UxSFtg5MqA==
-X-Received: by 2002:aa7:8d43:: with SMTP id s3mr671248pfe.5.1559178033031;
-        Wed, 29 May 2019 18:00:33 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id g8sm511268pgq.33.2019.05.29.18.00.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 18:00:31 -0700 (PDT)
-Subject: Re: [PATCH 1/2] hwmon: pmbus: Add Infineon PXE1610 VR driver
-To:     Vijay Khemka <vijaykhemka@fb.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     joel@jms.id.au, linux-aspeed@lists.ozlabs.org, sdasari@fb.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20190529223511.4059120-1-vijaykhemka@fb.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <e72ae680-e8b7-455a-fdde-af79d429dd8c@roeck-us.net>
-Date:   Wed, 29 May 2019 18:00:28 -0700
+        Wed, 29 May 2019 21:03:51 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190530010349epoutp03f667d6e7da35a3ecafdfca1039f47104~jUFam3U8N1181611816epoutp035
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 01:03:49 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190530010349epoutp03f667d6e7da35a3ecafdfca1039f47104~jUFam3U8N1181611816epoutp035
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1559178229;
+        bh=WU7NjXvms7IJ51rdPPyc3YgEvtiF8en+bDubhF/CN+w=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=SWUmxFsFNjBxp7P19xFuOxP0Ct71gdErtAYDuDGARkmsSoaGTFEHV2HSPch6PHdyZ
+         aFM/vwu4yKuLrtKCD4AgvkxP/PVY09/Q7VK2NZaJHAowqpu28Nn3qobHw6Oe0wzGPy
+         zt/e4A7Vx6Dc28gKI/Qxs+cAFL2Het1urULYryZM=
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.157]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20190530010346epcas1p440541c66431e5b7bb49d00c8e3d6bcb9~jUFX4Y77k0805908059epcas1p4F;
+        Thu, 30 May 2019 01:03:46 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D5.60.04143.EEB2FEC5; Thu, 30 May 2019 10:03:42 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20190530010342epcas1p35c4fb5686a2f124e43b651afa2cd0efd~jUFUCXkAn1055610556epcas1p3Q;
+        Thu, 30 May 2019 01:03:42 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190530010342epsmtrp294e0fea086653ae83c2dd0cf786f0aa6~jUFUBk-Me2307923079epsmtrp2W;
+        Thu, 30 May 2019 01:03:42 +0000 (GMT)
+X-AuditID: b6c32a37-f19ff7000000102f-fa-5cef2beeb685
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        EE.39.03692.DEB2FEC5; Thu, 30 May 2019 10:03:41 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190530010341epsmtip1a43dcab5cf6582820ee829c1c341b378~jUFT3QDKj0633606336epsmtip1x;
+        Thu, 30 May 2019 01:03:41 +0000 (GMT)
+Subject: Re: [PATCH v2] extcon: arizona: Correct error handling on
+ regmap_update_bits_check
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     myungjoo.ham@samsung.com, patches@opensource.cirrus.com,
+        linux-kernel@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <a67dc2eb-a8ce-9720-3cf9-fe179aa8c8a1@samsung.com>
+Date:   Thu, 30 May 2019 10:05:39 +0900
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190529223511.4059120-1-vijaykhemka@fb.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190529094605.9838-1-ckeepax@opensource.cirrus.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTURzHOXtcr+byNl8/RdRdicgyvW6zlQ/CSgYZGdKDUtdFTyruxe4m
+        WQSWZTqijAjJrKSXZkWyTEuK1bLEQZFokJoVNOhF01pmL6jdXSP/+5zf+ZzzO99zDimWNxKx
+        ZKXRii1GVk8TIZKeB4tTU7xLJovSHIMKzchBB9IM97USmvF9HYTGN+mUrpJom1v/IO2R7k6k
+        9TniC8TbqrIqMFuGLYnYWGoqqzSWZ9PrCnWrdeqMNCaFWaFZTicaWQPOptfkF6TkVer93ejE
+        alZv85cKWI6jU3OyLCabFSdWmDhrNo3NZXrzCvMyjjVwNmP5slKTYSWTlpau9os7qiquXWwK
+        Mj+O2vXSfUVai/bL7YgkgVLBGXehHQWTcuoWgk/uLDsK8fMXBFebvUHCxDcEk700z7zvOjcl
+        EqS7CKZudEqEwSSCrw+9BG+FU8Xws3cG8RxBpcPngTERz2JqO7T5LgUcgkoG57vnAQ6jFPDs
+        +5uAL6Ny4EDPUMCXUAvh98wxKc+R1FZ49ahLKjgLYPCkR8JzMJUL7on3s/tHw5jn7CwnQN3N
+        U2L+cED1E9DsGw8SIq+BvuEaIU04fBjoDhI4Fnzeu4TAe+DyYD8hrG1A0O18KhUmlOC8eFzE
+        7yOmFsP1vlShrIDbv04joe988E4flgqtZNBQLxeUJBh+PSESOAbOH2okmhDdMidNy5wELXMS
+        tPxv1oYknSgKmzlDOeYYs3LuUztQ4BsmL7+Fup7kuxBFIjpU1mTyFsmlbDVXY3AhIMV0hOxH
+        u78kK2NrdmOLSWex6THnQmr/ZR8Tx0aWmvyf2mjVMep0pVKpUTEZaoaho2W6eaNFcqqcteIq
+        jM3Y8m+diAyOrUVJI+EqlfP8xIbQhEX18W/thSfaVFf31g/XbYifjpoJ3kR4bUTxUjYmTKFe
+        u+VCbqO7ObMyA48mRYfEcR+rXt7uOLXRcf91aEluXMO89T+b0h/bj1p6FDaM8zzO/JTB6pj2
+        OxqPYYloiIwO3XO0ZKf2Rdbqe3HvWjNnrBGpns0uWsJVsEyy2MKxfwHorHQpnAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrGLMWRmVeSWpSXmKPExsWy7bCSnO5b7fcxBqeOW1pcad3EaHF51xw2
+        i9uNK9gsPr/fz+rA4jF9zn9Gj74tqxg9Pm+SC2CO4rJJSc3JLEst0rdL4MpYu3QCe8FZsYp7
+        p1azNjA2CXUxcnJICJhIHFr0gQnEFhLYzShxdZohRFxSYtrFo8xdjBxAtrDE4cPFXYxcQCVv
+        gUoufGAEqREWiJX4tf07mC0iYCTx8fgtsDnMAtESl/q/skA0TGWUOL7gCFiCTUBLYv+LG2wg
+        Nr+AosTVH4/BmnkF7CRatl0Eq2ERUJX4830iK4gtKhAhceb9ChaIGkGJkzOfgNmcAk4Sp+6+
+        hFqmLvFn3iVmCFtc4taT+VBxeYnmrbOZJzAKz0LSPgtJyywkLbOQtCxgZFnFKJlaUJybnlts
+        WGCYl1quV5yYW1yal66XnJ+7iREcG1qaOxgvL4k/xCjAwajEwzsh/12MEGtiWXFl7iFGCQ5m
+        JRHen8uBQrwpiZVVqUX58UWlOanFhxilOViUxHmf5h2LFBJITyxJzU5NLUgtgskycXBKNTDm
+        b9z0LqfRsi8lbu2HpR5/7v/6sc5xR0RW/4mDd7cf2xFyKJr19jqmx3K6cRo+PzJVmDcvFghU
+        zd1x6L6FXofe244y9eObn75efrbJZ+a8DQ9ZQyRNf/65/Cray2Gp78Pgou0/p/oEp7nHCxxT
+        r9vd9X/edDfv+4umJJlHLAlrl552/kM1m7mZEktxRqKhFnNRcSIA6X8QzYkCAAA=
+X-CMS-MailID: 20190530010342epcas1p35c4fb5686a2f124e43b651afa2cd0efd
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190529094610epcas5p35754e16753663dfa2ecadf0e410d619a
+References: <CGME20190529094610epcas5p35754e16753663dfa2ecadf0e410d619a@epcas5p3.samsung.com>
+        <20190529094605.9838-1-ckeepax@opensource.cirrus.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/29/19 3:35 PM, Vijay Khemka wrote:
-> Added pmbus driver for the new device Infineon pxe1610
-> voltage regulator. It also supports similar family device
-> PXE1110 and PXM1310.
+Hi Charles,
+
+On 19. 5. 29. 오후 6:46, Charles Keepax wrote:
+> Ensure the case when regmap_update_bits_check fails and the change
+> variable is not updated is handled correctly.
 > 
-> Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 > ---
->   drivers/hwmon/pmbus/Kconfig   |   9 +++
->   drivers/hwmon/pmbus/Makefile  |   1 +
->   drivers/hwmon/pmbus/pxe1610.c | 119 ++++++++++++++++++++++++++++++++++
->   3 files changed, 129 insertions(+)
->   create mode 100644 drivers/hwmon/pmbus/pxe1610.c
 > 
-> diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
-> index 30751eb9550a..338ef9b5a395 100644
-> --- a/drivers/hwmon/pmbus/Kconfig
-> +++ b/drivers/hwmon/pmbus/Kconfig
-> @@ -154,6 +154,15 @@ config SENSORS_MAX8688
->   	  This driver can also be built as a module. If so, the module will
->   	  be called max8688.
->   
-> +config SENSORS_PXE1610
-> +	tristate "Infineon PXE1610"
-> +	help
-> +	  If you say yes here you get hardware monitoring support for Infineon
-> +	  PXE1610.
-> +
-> +	  This driver can also be built as a module. If so, the module will
-> +	  be called pxe1610.
-> +
->   config SENSORS_TPS40422
->   	tristate "TI TPS40422"
->   	help
-> diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
-> index 2219b9300316..b0fbd017a91a 100644
-> --- a/drivers/hwmon/pmbus/Makefile
-> +++ b/drivers/hwmon/pmbus/Makefile
-> @@ -18,6 +18,7 @@ obj-$(CONFIG_SENSORS_MAX20751)	+= max20751.o
->   obj-$(CONFIG_SENSORS_MAX31785)	+= max31785.o
->   obj-$(CONFIG_SENSORS_MAX34440)	+= max34440.o
->   obj-$(CONFIG_SENSORS_MAX8688)	+= max8688.o
-> +obj-$(CONFIG_SENSORS_PXE1610)	+= pxe1610.o
->   obj-$(CONFIG_SENSORS_TPS40422)	+= tps40422.o
->   obj-$(CONFIG_SENSORS_TPS53679)	+= tps53679.o
->   obj-$(CONFIG_SENSORS_UCD9000)	+= ucd9000.o
-> diff --git a/drivers/hwmon/pmbus/pxe1610.c b/drivers/hwmon/pmbus/pxe1610.c
-> new file mode 100644
-> index 000000000000..01e267944df5
-> --- /dev/null
-> +++ b/drivers/hwmon/pmbus/pxe1610.c
-> @@ -0,0 +1,119 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Hardware monitoring driver for Infineon PXE1610
-> + *
-> + * Copyright (c) 2019 Facebook Inc
-> + *
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/i2c.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include "pmbus.h"
-> +
-> +/*
-> + * Identify chip parameters.
-> + */
-> +static int pxe1610_identify(struct i2c_client *client,
-> +			  struct pmbus_driver_info *info)
-
-Please align continuation lines with '('.
-
-> +{
-> +	if (pmbus_check_byte_register(client, 0, PMBUS_VOUT_MODE)) {
-> +		int vout_mode;
-> +
-> +		vout_mode = pmbus_read_byte_data(client, 0, PMBUS_VOUT_MODE);
-
-pmbus_read_byte_data() can return an error. Calling pmbus_check_byte_register()
-doesn't really add any value here, since the second call can still fail,
-which needs to be checked.
-
-> +		switch (vout_mode & 0x1f) {
-> +		case 1:
-> +			info->vrm_version = vr12;
-> +		break;
-
-Alignment is off.
-
-> +		case 2:
-> +			info->vrm_version = vr13;
-> +		break;
-
-Same here.
-
-> +		default:
-> +			return -ENODEV;
-> +		}
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int pxe1610_probe(struct i2c_client *client,
-> +			 const struct i2c_device_id *id)
-> +{
-> +	struct pmbus_driver_info *info;
-> +	u8 buf[I2C_SMBUS_BLOCK_MAX];
-> +	int ret;
-> +
-> +	if (!i2c_check_functionality(client->adapter,
-> +				     I2C_FUNC_SMBUS_READ_BYTE_DATA
-> +				| I2C_FUNC_SMBUS_READ_WORD_DATA
-> +				| I2C_FUNC_SMBUS_READ_BLOCK_DATA))
-> +		return -ENODEV;
-> +
-> +	/* By default this device doesn't boot to page 0, so set page 0
-> +	 * to access all pmbus registers.
-> +	 */
-
-Please use standard multi-line comments.
-
-> +	i2c_smbus_write_byte_data(client, 0, 0);
-> +
-
-Please use the PMBUS_PAGE command definition.
-
-I wonder if it would make sense to initialize currpage in the core to an unreasonable
-number for multi-page chips, but I guess that is a different question.
-
-> +	/* Read Manufacturer id */
-> +	ret = i2c_smbus_read_block_data(client, PMBUS_MFR_ID, buf);
+> Changes since v1:
+>  - Print error message in driver remove
+> 
+> Thanks,
+> Charles
+> 
+>  drivers/extcon/extcon-arizona.c | 33 ++++++++++++++++++++-------------
+>  1 file changed, 20 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
+> index 9327479c719c2..519e89aedd4a0 100644
+> --- a/drivers/extcon/extcon-arizona.c
+> +++ b/drivers/extcon/extcon-arizona.c
+> @@ -335,10 +335,12 @@ static void arizona_start_mic(struct arizona_extcon_info *info)
+>  
+>  	arizona_extcon_pulse_micbias(info);
+>  
+> -	regmap_update_bits_check(arizona->regmap, ARIZONA_MIC_DETECT_1,
+> -				 ARIZONA_MICD_ENA, ARIZONA_MICD_ENA,
+> -				 &change);
+> -	if (!change) {
+> +	ret = regmap_update_bits_check(arizona->regmap, ARIZONA_MIC_DETECT_1,
+> +				       ARIZONA_MICD_ENA, ARIZONA_MICD_ENA,
+> +				       &change);
 > +	if (ret < 0) {
-> +		dev_err(&client->dev, "Failed to read PMBUS_MFR_ID\n");
-> +		return ret;
-> +	}
-> +	if (ret != 2 || strncmp(buf, "XP", strlen("XP"))) {
-
-The strlen() is really unnecessary here. Just use 2 (and a define
-for it if you like).
-
-> +		dev_err(&client->dev, "MFR_ID unrecognised\n");
-
-unrecognized. Oh well, turns out unrecognised is the British spelling and
-just as valid, so feel free to keep it if you like.
-
-> +		return -ENODEV;
-> +	}
-> +
-> +	info = devm_kzalloc(&client->dev, sizeof(struct pmbus_driver_info),
-> +			    GFP_KERNEL);
-> +	if (!info)
-> +		return -ENOMEM;
-> +
-> +	info->format[PSC_VOLTAGE_IN] = linear;
-> +	info->format[PSC_VOLTAGE_OUT] = vid;
-> +	info->format[PSC_CURRENT_IN] = linear;
-> +	info->format[PSC_CURRENT_OUT] = linear;
-> +	info->format[PSC_POWER] = linear;
-> +	info->format[PSC_TEMPERATURE] = linear;
-> +
-> +	info->func[0] = PMBUS_HAVE_VIN
-> +		| PMBUS_HAVE_VOUT | PMBUS_HAVE_IIN
-> +		| PMBUS_HAVE_IOUT | PMBUS_HAVE_PIN
-> +		| PMBUS_HAVE_POUT | PMBUS_HAVE_TEMP
-> +		| PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_STATUS_IOUT
-> +		| PMBUS_HAVE_STATUS_INPUT | PMBUS_HAVE_STATUS_TEMP;
-> +	info->func[1] = info->func[0];
-> +	info->func[2] = info->func[0];
-> +
-> +	info->pages = id->driver_data;
-> +	info->identify = pxe1610_identify;
-> +
-
-It doesn't really add value to initialize all these parameters manually.
-I would suggest to use the approach from tps53679.c, ie have a static
-structure and use devm_kmemdup() to pass a copy to pmbus_do_probe().
-
-> +	return pmbus_do_probe(client, id, info);
-> +}
-> +
-> +static const struct i2c_device_id pxe1610_id[] = {
-> +	{"pxe1610", 3},
-> +	{"pxe1110", 3},
-> +	{"pxm1310", 3},
-
-Unless there are chips with different page counts in the queue, using
-driver_data to pass the number of pages does not add any value. Just
-set num_pages to 3.
-
-If you like, feel free to use a define instead of a constant.
-
-> +	{}
-> +};
-> +
-> +MODULE_DEVICE_TABLE(i2c, pxe1610_id);
-> +
-> +/* This is the driver that will be inserted */
-
-This comment does not add any value.
-
-> +static struct i2c_driver pxe1610_driver = {
-> +	.driver = {
-> +		   .name = "pxe1610",
-> +		   },
-> +	.probe = pxe1610_probe,
-> +	.remove = pmbus_do_remove,
-> +	.id_table = pxe1610_id,
-> +};
-> +
-> +module_i2c_driver(pxe1610_driver);
-> +
-> +MODULE_AUTHOR("Vijay Khemka <vijaykhemka@fb.com>");
-> +MODULE_DESCRIPTION("PMBus driver for Infineon PXE1610, PXE1110 and PXM1310");
-> +MODULE_LICENSE("GPL");
+> +		dev_err(arizona->dev, "Failed to enable micd: %d\n", ret);
+> +	} else if (!change) {
+>  		regulator_disable(info->micvdd);
+>  		pm_runtime_put_autosuspend(info->dev);
+>  	}
+> @@ -350,12 +352,14 @@ static void arizona_stop_mic(struct arizona_extcon_info *info)
+>  	const char *widget = arizona_extcon_get_micbias(info);
+>  	struct snd_soc_dapm_context *dapm = arizona->dapm;
+>  	struct snd_soc_component *component = snd_soc_dapm_to_component(dapm);
+> -	bool change;
+> +	bool change = false;
+>  	int ret;
+>  
+> -	regmap_update_bits_check(arizona->regmap, ARIZONA_MIC_DETECT_1,
+> -				 ARIZONA_MICD_ENA, 0,
+> -				 &change);
+> +	ret = regmap_update_bits_check(arizona->regmap, ARIZONA_MIC_DETECT_1,
+> +				       ARIZONA_MICD_ENA, 0,
+> +				       &change);
+> +	if (ret < 0)
+> +		dev_err(arizona->dev, "Failed to disable micd: %d\n", ret);
+>  
+>  	ret = snd_soc_component_disable_pin(component, widget);
+>  	if (ret != 0)
+> @@ -1727,12 +1731,15 @@ static int arizona_extcon_remove(struct platform_device *pdev)
+>  	struct arizona *arizona = info->arizona;
+>  	int jack_irq_rise, jack_irq_fall;
+>  	bool change;
+> +	int ret;
+>  
+> -	regmap_update_bits_check(arizona->regmap, ARIZONA_MIC_DETECT_1,
+> -				 ARIZONA_MICD_ENA, 0,
+> -				 &change);
+> -
+> -	if (change) {
+> +	ret = regmap_update_bits_check(arizona->regmap, ARIZONA_MIC_DETECT_1,
+> +				       ARIZONA_MICD_ENA, 0,
+> +				       &change);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "Failed to disable micd on remove: %d\n",
+> +			ret);
+> +	} else if (change) {
+>  		regulator_disable(info->micvdd);
+>  		pm_runtime_put(info->dev);
+>  	}
 > 
 
+Applied it. Thanks.
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
