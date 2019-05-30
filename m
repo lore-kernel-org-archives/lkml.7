@@ -2,90 +2,122 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DDDC28CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB28C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:22:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12A31204FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2077524459
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:22:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559254944;
-	bh=8MgfUmuzxK42VbrpBBlF+a1Qa90gCAfIPee+BPMwH0g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nFpiJrlNFGzsL2ybzSDNOvPFyTt+aFHMchiPjVnET0pg51mN80ZnwIul2R+dMg1iO
-	 lm2D23i36j9zdFAfUuj+qFJ9i81A0HirHoyPkgZXXgttAUGCWF0S8sAADn5OV4/tPZ
-	 NmOw4eUMcXP1C/tU2HTzN3Lr7ip8TxYhKnvDzE3A=
+	s=default; t=1559254947;
+	bh=oq8IWdqTe7Bw3zkTzFHzZXXeKKTFiHHCQoJ8FlQJtDA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=G19vzDCr7JT7m2+6lzzvaQft3+75quuXNsODK9mp1YLAv84otCcFQ8Idch4GQUXoM
+	 5KhlkrdB4Vsv/KGxLY+0I5JhnAMElbufZs7QHYh27KfO/nhZhgLlnZahomJNZWCMVg
+	 WrKcnTTI9Hq+4UGM0/DMzyTmNI4qWJYab5ETri+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfE3WWX (ORCPT
+        id S1726678AbfE3WW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 18:22:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33618 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 18:22:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726326AbfE3WWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726355AbfE3WWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 May 2019 18:22:23 -0400
-Received: from localhost (unknown [207.225.69.115])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D466D261CE;
-        Thu, 30 May 2019 21:25:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AC82261D7
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 21:23:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559251519;
-        bh=8MgfUmuzxK42VbrpBBlF+a1Qa90gCAfIPee+BPMwH0g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bTrx5JrjxtNwuKsaVAT9K/1RrgMVFBIenItMO5BOMSzvJU9P1CAz/WBuRx5AfdZSH
-         wX2LpcE0cIxf5inzF8M5ObUtMjHuoydajrV41G7huwSI/xBHKSHQdXe4/ftXs/i1p0
-         Kn5DQsClgmyWtlFYfFBX3OpkCZRX9udwzlWgOQ3c=
-Date:   Thu, 30 May 2019 14:25:19 -0700
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Cc:     devel@driverdev.osuosl.org, code@wizofe.uk,
-        linux-kernel@vger.kernel.org, hans.verkuil@cisco.com,
-        mchehab@kernel.org, ezequiel@collabora.com,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH] staging: media: davinci_vpfe: Remove variable vpfe_dev
-Message-ID: <20190530212519.GB18779@kroah.com>
-References: <20190530204718.29892-1-nishkadg.linux@gmail.com>
- <20190530205540.GA5308@kroah.com>
- <9b870baa-4d15-cb72-0579-6bb6ca57cadd@gmail.com>
+        s=default; t=1559251401;
+        bh=oq8IWdqTe7Bw3zkTzFHzZXXeKKTFiHHCQoJ8FlQJtDA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=sO+/27uEIYIVD27JT/3qbo5sArzvjKlEGCApT/NRFm8PZUybMSDNtYcCNE9AKE3dg
+         R0SKX00e65Gnt+OTdg4kxYHTKeMgLxiF3jt4Es+nxN12WHDXEclud4mVoQ4pXA0M9l
+         uKy0uqC+kwlmx87W2DHQSPEVOwGRRcRCibMJy/WU=
+Received: by mail-wm1-f44.google.com with SMTP id t5so4642260wmh.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 14:23:21 -0700 (PDT)
+X-Gm-Message-State: APjAAAUMKyBWXvDlF4zxewLvcjpSwhq3nd12vyt2Z1FtUqXcIr0OagJQ
+        /E62t394f7VLBJKVP9ge322qNfwnGgKfA4exg5a/5g==
+X-Google-Smtp-Source: APXvYqzqp2zMLoO2RDdQMQlKBb7HWmxN353ZRZxh55Vp7c/ony/bJntaxeyf8uLUEQzVh/OwZRtPY3VzT8ksz9FPz1Q=
+X-Received: by 2002:a05:600c:489:: with SMTP id d9mr3262525wme.173.1559251399871;
+ Thu, 30 May 2019 14:23:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9b870baa-4d15-cb72-0579-6bb6ca57cadd@gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+References: <960B34DE67B9E140824F1DCDEC400C0F654E9824@ORSMSX116.amr.corp.intel.com>
+ <20190528202407.GB13158@linux.intel.com> <285f279f-b500-27f0-ab42-fb1dbcc5ab18@tycho.nsa.gov>
+ <960B34DE67B9E140824F1DCDEC400C0F654EB487@ORSMSX116.amr.corp.intel.com>
+ <678a37af-797d-7bd5-a406-32548a270e3d@tycho.nsa.gov> <CALCETrWXB9fNNDH7gZxPTx05F78Og6K=ZtAr2aA++BDwY09Wbg@mail.gmail.com>
+ <c1135352-0b5e-4694-b1a9-105876095877@tycho.nsa.gov> <CALCETrWsEXzUC33eJpGCpdMCBO4aYVviZLRD-CLMNaG5Jv-TCA@mail.gmail.com>
+ <20190530180110.GB23930@linux.intel.com> <CALCETrX2PgUc_jetXHqp85aaS0a0jHB8E7=T1rsW+5vyRgwnUA@mail.gmail.com>
+ <20190530211645.GB27551@linux.intel.com>
+In-Reply-To: <20190530211645.GB27551@linux.intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 30 May 2019 14:23:07 -0700
+X-Gmail-Original-Message-ID: <CALCETrVAoDppmdJzkpwagt3q64M-QpNajXbKGR1yQdqyofeANQ@mail.gmail.com>
+Message-ID: <CALCETrVAoDppmdJzkpwagt3q64M-QpNajXbKGR1yQdqyofeANQ@mail.gmail.com>
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        William Roberts <bill.c.roberts@gmail.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 02:39:23AM +0530, Nishka Dasgupta wrote:
-> On 31/05/19 2:25 AM, Greg KH wrote:
-> > On Fri, May 31, 2019 at 02:17:18AM +0530, Nishka Dasgupta wrote:
-> > > Remove variable vpfe_dev and replace it with its value (since the
-> > > function otherwise uses values directly instead of local variables).
-> > 
-> > This says _what_ you do.  But we can see that in the patch itself.
-> > 
-> > You need to say _why_ you are doing this.
-> > 
-> > There's no need for this change at all.  Again, as I have said before,
-> > we write code for developers to read first, the compiler second.  By
-> > making these types of changes you are making it harder to
-> > read/understand by a developer, and providing absolutely no benifit to
-> > the compiler at all.
-> > 
-> > So it's actually making the code worse!
-> > 
-> > not good at all.
-> > 
-> > Please reconsider this type of change, as I keep asking you to.
-> 
-> Okay. In this case I thought it wouldn't make it worse since the function is
-> low on local variables anyway? Clearly I was wrong, so I won't count this
-> case as an exception in future.
+On Thu, May 30, 2019 at 2:16 PM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> On Thu, May 30, 2019 at 12:20:45PM -0700, Andy Lutomirski wrote:
+> > On Thu, May 30, 2019 at 11:01 AM Sean Christopherson
+> > <sean.j.christopherson@intel.com> wrote:
+> > >
+> > > On Thu, May 30, 2019 at 09:14:10AM -0700, Andy Lutomirski wrote:
+> > > > Enclave file -- that is, the file backing the vma from which the data is loaded.
+> > >
+> > > It wasn't explicitly called out in Andy's proposal(s), but the idea is
+> > > that the SGX driver would effectively inherit permissions from the source
+> > > VMA (EADD needs a source for the initial value of the encave page).
+> >
+> > I actually meant for it to *not* work like this.  I don't want the
+> > source VMA to have to be VM_EXEC.  I think the LSM should just check
+> > permissions on ->vm_file.
+>
+> But if ->vm_file is NULL, i.e. the enclave is not backed by a file,
+> then PROCESS__EXECMEM is required (or more likely, ENCLAVE__EXECMEM).
+>
 
-Did you check the object file output to verify this?  Try it and see :)
-
+If ->vm_file is NULL, then I think some privilege is needed.  I
+suppose the policy could have a new lesser permission EXECUNTRUSTED
+which is like EXECMOD but you can't modify it.  I'm not convinced this
+is particular important.
