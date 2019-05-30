@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13062C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A77C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D02A021734
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45A5D24607
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:02:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188958;
-	bh=rUom6fya4qpqz8Hi67+pvk/A3ZVJMOFfbtAwZZ1KJUE=;
+	s=default; t=1559188961;
+	bh=x52xSQcRLnHEtP7iS+OxBtvzLr/KCfJjhMr/CA3AdOg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jLronDCtPXi7DVwxQ3HPjWbg25UkOh/l/gYYmvQp5zGOJ6HOnB3tp15rQODmD//hh
-	 eFvH0gRkKWiQRQ++yFgru6xtB7Gpeem3kD1W+4rkPdcuW2OytYwM8WwVfRhzdLfazj
-	 aqCTwW1bvWxmAuv0Sft0abJCiXULNlUGzFOV5oSk=
+	b=GfEIXX+CxNgZPm4pkQ8PZ4PwN3GHT745Du/P9T0UZygNK3jV9/peRfmR+Hpn9TYvm
+	 obHGMWPiOSA9TSrwEbuOMDSuwjzFrw1YIboRotl3dKWPmDp3setvDVZ/o8b7TMC9mT
+	 h2Yed6TNa3KkbDD2x0DNmbvFnypPhfp2+c5z2Quc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387534AbfE3ECh (ORCPT
+        id S1731384AbfE3DSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:02:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49640 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730465AbfE3DSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:18:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33692 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728765AbfE3DOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:23 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 186F624760;
-        Thu, 30 May 2019 03:18:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 343FA2455A;
+        Thu, 30 May 2019 03:14:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186281;
-        bh=rUom6fya4qpqz8Hi67+pvk/A3ZVJMOFfbtAwZZ1KJUE=;
+        s=default; t=1559186063;
+        bh=x52xSQcRLnHEtP7iS+OxBtvzLr/KCfJjhMr/CA3AdOg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EmVAV1cMlDWU6q/wzOCu1Ee9lRtTlSi6YORCrEL9bLDNXhEnzZ48F9V+XIATexTxe
-         6NT6mMwx8y4A/0Rk2jP5E5KBE8h+s3evebrd5Rfh89gQiMq8VC4A60O1Fg7+b27fcW
-         sCewo2WUtKb9Uy3bFr6thx5errvtBSvFd/Zm1SjI=
+        b=HnXxYUFl6DSALuys9FnsLdkQaCIQ3xh/nzhbDGXaR/l97o5yYDJ/pvhCFNrnSHMC4
+         00v1rWVU2s+yDNwuqZHDn8hQgkAzXanBUsC+a7TvU7mcqxG0g+kdxlulEYizMSjLvb
+         uH9rmJFybv1Hb57EvtvxnU5IDusF9aICE216ty3Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <rong.a.chen@intel.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        stable@vger.kernel.org,
+        Nicholas Nunley <nicholas.d.nunley@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 232/276] rcutorture: Fix cleanup path for invalid torture_type strings
-Date:   Wed, 29 May 2019 20:06:30 -0700
-Message-Id: <20190530030539.640331172@linuxfoundation.org>
+Subject: [PATCH 5.0 172/346] i40e: dont allow changes to HW VLAN stripping on active port VLANs
+Date:   Wed, 29 May 2019 20:04:05 -0700
+Message-Id: <20190530030549.873841495@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
-References: <20190530030523.133519668@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,51 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b813afae7ab6a5e91b4e16cc567331d9c2ae1f04 ]
+[ Upstream commit bfb0ebed53857cfc57f11c63fa3689940d71c1c8 ]
 
-If the specified rcutorture.torture_type is not in the rcu_torture_init()
-function's torture_ops[] array, rcutorture prints some console messages
-and then invokes rcu_torture_cleanup() to set state so that a future
-torture test can run.  However, rcu_torture_cleanup() also attempts to
-end the test that didn't actually start, and in doing so relies on the
-value of cur_ops, a value that is not particularly relevant in this case.
-This can result in confusing output or even follow-on failures due to
-attempts to use facilities that have not been properly initialized.
+Modifying the VLAN stripping options when a port VLAN is configured
+will break traffic for the VSI, and conceptually doesn't make sense,
+so don't allow this.
 
-This commit therefore sets the value of cur_ops to NULL in this case
-and inserts a check near the beginning of rcu_torture_cleanup(),
-thus avoiding relying on an irrelevant cur_ops value.
-
-Reported-by: kernel test robot <rong.a.chen@intel.com>
-Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+Signed-off-by: Nicholas Nunley <nicholas.d.nunley@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/rcu/rcutorture.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/ethernet/intel/i40e/i40e_main.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index c596c6f1e4571..0b7af7e2bcbb1 100644
---- a/kernel/rcu/rcutorture.c
-+++ b/kernel/rcu/rcutorture.c
-@@ -1826,6 +1826,10 @@ rcu_torture_cleanup(void)
- 			cur_ops->cb_barrier();
- 		return;
- 	}
-+	if (!cur_ops) {
-+		torture_cleanup_end();
-+		return;
-+	}
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
+index e4ff531db14a9..3a3382613263e 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_main.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
+@@ -2654,6 +2654,10 @@ void i40e_vlan_stripping_enable(struct i40e_vsi *vsi)
+ 	struct i40e_vsi_context ctxt;
+ 	i40e_status ret;
  
- 	rcu_torture_barrier_cleanup();
- 	torture_stop_kthread(rcu_torture_stall, stall_task);
-@@ -1964,6 +1968,7 @@ rcu_torture_init(void)
- 			pr_cont(" %s", torture_ops[i]->name);
- 		pr_cont("\n");
- 		firsterr = -EINVAL;
-+		cur_ops = NULL;
- 		goto unwind;
- 	}
- 	if (cur_ops->fqs == NULL && fqs_duration != 0) {
++	/* Don't modify stripping options if a port VLAN is active */
++	if (vsi->info.pvid)
++		return;
++
+ 	if ((vsi->info.valid_sections &
+ 	     cpu_to_le16(I40E_AQ_VSI_PROP_VLAN_VALID)) &&
+ 	    ((vsi->info.port_vlan_flags & I40E_AQ_VSI_PVLAN_MODE_MASK) == 0))
+@@ -2684,6 +2688,10 @@ void i40e_vlan_stripping_disable(struct i40e_vsi *vsi)
+ 	struct i40e_vsi_context ctxt;
+ 	i40e_status ret;
+ 
++	/* Don't modify stripping options if a port VLAN is active */
++	if (vsi->info.pvid)
++		return;
++
+ 	if ((vsi->info.valid_sections &
+ 	     cpu_to_le16(I40E_AQ_VSI_PROP_VLAN_VALID)) &&
+ 	    ((vsi->info.port_vlan_flags & I40E_AQ_VSI_PVLAN_EMOD_MASK) ==
 -- 
 2.20.1
 
