@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A3EC28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B34FC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE6CF2590B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8FF625919
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:38:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191136;
-	bh=wCSwVXjdOLI6nyJgiCgO9fwcnCb+fHP6vdUDUQCEPHI=;
+	s=default; t=1559191138;
+	bh=GwjazmCCMDLs4UDj2hm2Q+Zgfm4SPh7LP4nDmQvjz5M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bDukSBPE6aT81e/yqP3KyC40jOGOvSGQyJ9qkEUmcw+SMEOsQXIKS2Hi9TYf0J9Nj
-	 X6EOmP5mYHK4c/s/aF7j9wOvVZey2IlGHWQNKHRTlh8AArobFxD1i5sLwq3IqnIb61
-	 t+RGtxOpilxPutfvGNYbwBAAEx8Hk02bQjhSfS88=
+	b=GXjO6gME+YDzhSWgNahwkkGw5ph6VaAL4eAYD/auDjNIEO9Q/82F6OYeb0I+agiLv
+	 Ykwu2afgISqLrm9+q8VQzubNWEn9miZH2JH5r7ajVDLT6rGxrdvAzaUbqliSIRNltc
+	 JLlPfYHlFKQnzPT+91PELgpQ1ijfnpQzjVlIs86s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729175AbfE3DMm (ORCPT
+        id S2388624AbfE3Ei5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:12:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50026 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:38:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728380AbfE3DLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:11:08 -0400
+        id S1729165AbfE3DMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:12:41 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DF5D24482;
-        Thu, 30 May 2019 03:11:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DCB323F4C;
+        Thu, 30 May 2019 03:12:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185868;
-        bh=wCSwVXjdOLI6nyJgiCgO9fwcnCb+fHP6vdUDUQCEPHI=;
+        s=default; t=1559185961;
+        bh=GwjazmCCMDLs4UDj2hm2Q+Zgfm4SPh7LP4nDmQvjz5M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NlYZokVqtRenJ98UH3M/QtF2SytrubIPU6bKlFLE3JNFWpq7Tl6nlfDS/BD5QEP/0
-         5PIp6G9tojfNWY9CiiOAZjRv048QGrkQnixM8srKzAngayDPwr4P601T8SBacBwbFm
-         qbyRCaqciNkQqcfRd41qdcarc9kxbYTuraBRY5TE=
+        b=jqlFhrNMi5TYTJWhShZ18XB35tqbrIt/RH6e5j5nr6Nii2ziPS+iYSu1hQQmWXY2r
+         I61ZfFVeD+zBvsc7j5S3ik3o1ioWEcmD+EYeTwMt+3Vgxm6zsRjuyDYZWVAUzw7Qal
+         1T1S2mN5nHX6dD+9EjSGM0Sh4u4WXHyZYYNaQcO0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peng Li <lipeng321@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 208/405] net: hns3: free the pending skb when clean RX ring
-Date:   Wed, 29 May 2019 20:03:26 -0700
-Message-Id: <20190530030551.653211198@linuxfoundation.org>
+Subject: [PATCH 5.1 337/405] media: staging/intel-ipu3: mark PM function as __maybe_unused
+Date:   Wed, 29 May 2019 20:05:35 -0700
+Message-Id: <20190530030557.752739722@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,41 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cc5ff6e90f808f9a4c8229bf2f1de0dfe5d7931c ]
+[ Upstream commit 948dff7cfa1d7653e7828e7b905863bd24ca5c02 ]
 
-If there is pending skb in RX flow when close the port, and the
-pending buffer is not cleaned, the new packet will be added to
-the pending skb when the port opens again, and the first new
-packet has error data.
+The imgu_rpm_dummy_cb() looks like an API misuse that is explained
+in the comment above it. Aside from that, it also causes a warning
+when power management support is disabled:
 
-This patch cleans the pending skb when clean RX ring.
+drivers/staging/media/ipu3/ipu3.c:794:12: error: 'imgu_rpm_dummy_cb' defined but not used [-Werror=unused-function]
 
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The warning is at least easy to fix by marking the function as
+__maybe_unused.
+
+Fixes: 7fc7af649ca7 ("media: staging/intel-ipu3: Add imgu top level pci device driver")
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/staging/media/ipu3/ipu3.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 0208efe282775..d6b488c2de332 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -3851,6 +3851,13 @@ static int hns3_clear_rx_ring(struct hns3_enet_ring *ring)
- 		ring_ptr_move_fw(ring, next_to_use);
- 	}
- 
-+	/* Free the pending skb in rx ring */
-+	if (ring->skb) {
-+		dev_kfree_skb_any(ring->skb);
-+		ring->skb = NULL;
-+		ring->pending_buf = 0;
-+	}
-+
+diff --git a/drivers/staging/media/ipu3/ipu3.c b/drivers/staging/media/ipu3/ipu3.c
+index d575ac78c8f0b..d00d26264c37d 100644
+--- a/drivers/staging/media/ipu3/ipu3.c
++++ b/drivers/staging/media/ipu3/ipu3.c
+@@ -791,7 +791,7 @@ static int __maybe_unused imgu_resume(struct device *dev)
+  * PCI rpm framework checks the existence of driver rpm callbacks.
+  * Place a dummy callback here to avoid rpm going into error state.
+  */
+-static int imgu_rpm_dummy_cb(struct device *dev)
++static __maybe_unused int imgu_rpm_dummy_cb(struct device *dev)
+ {
  	return 0;
  }
- 
 -- 
 2.20.1
 
