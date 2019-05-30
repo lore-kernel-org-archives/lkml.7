@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65959C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F37C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AFD62533C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9B3C25329
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:21:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190099;
-	bh=xBU2hhLJSBFB5kZNSkrZObsIKiSrJiUa1t5WuCZg3jo=;
+	s=default; t=1559190107;
+	bh=MW5D2uh7zRmh+cMkEfpL0WmmlnseGbkq8Ewuoau7USw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IZg8jaOF+vrBQwT/6gIdqdXfSbTl1uYhiV007bIQ3YggTbXW+XsdHBO7+LRvaKZOh
-	 AUoF/iD1blLKidQxk5sVAthqmXryr+M27iyy+10/FAAHn4JPqnhMnql3mwicu/Ovpx
-	 Q4qJveRz6/d4dgITaqrGQb9iOjVnIq8rPulw6zsc=
+	b=vHIgPnj2n5vOC9wgavteFHHQheldm25O3K/5oKWnYihWp5UvO2jFWjh57daPys6aH
+	 CAOmqXMj2uYJMKbo/3Q3lg74Z4MNlwGGQKflB9idMc9msVKXDYdbEyv9nG+1r2cC8f
+	 5V93P4lGxZpZ7Py2qsps1m0iINFhDpGgzEC7wCzU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731786AbfE3EVi (ORCPT
+        id S1731241AbfE3EVq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:21:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37724 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:21:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730162AbfE3DPN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:15:13 -0400
+        id S1727382AbfE3DPM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:12 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98703245AD;
+        by mail.kernel.org (Postfix) with ESMTPSA id 0ACA624590;
         Thu, 30 May 2019 03:15:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186112;
-        bh=xBU2hhLJSBFB5kZNSkrZObsIKiSrJiUa1t5WuCZg3jo=;
+        bh=MW5D2uh7zRmh+cMkEfpL0WmmlnseGbkq8Ewuoau7USw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1lfa3IwC2CxxuYEF3FeEVmN/MYJZUk5AXcZ+KLc48i9jXkDOcXSNTfFlSxiIZ9w7F
-         a5Y7UgBlSz/H6kJziA8VWFsYG0p/7v8pCGAQWHqsO63SHmdx7Oeu0ghxv9D4Y7shOL
-         uLnAQNcED8igXiuJKX6XAiy8XVnk6TDa/srfvERk=
+        b=yUXK9bCrv96zu2lV8sOOZ78P8C1K90qPxDnJv5MOoKwNe28Plf5S3FxO2OQFNzTm0
+         d/x8s70P+eYHj6Ulq+hl/p8AcuCNcuRmaitLaxoAOHb6fkPq2Zw4qxvXDzYHh0NKSE
+         DMOvuMWJ2CzwkyNvFEg8kQt09IzIVyhrEvkFj9GE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 254/346] HID: logitech-hidpp: change low battery level threshold from 31 to 30 percent
-Date:   Wed, 29 May 2019 20:05:27 -0700
-Message-Id: <20190530030553.872780633@linuxfoundation.org>
+        stable@vger.kernel.org, Huazhong Tan <tanhuazhong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 205/346] net: hns3: add error handler for initializing command queue
+Date:   Wed, 29 May 2019 20:04:38 -0700
+Message-Id: <20190530030551.539697911@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -59,49 +61,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1f87b0cd32b3456d7efdfb017fcf74d0bfe3ec29 ]
+[ Upstream commit 4339ef396ab65a61f7f22f36d7ba94b6e9e0939b ]
 
-According to hidpp20_batterylevel_get_battery_info my Logitech K270
-keyboard reports only 2 battery levels. This matches with what I've seen
-after testing with batteries at varying level of fullness, it always
-reports either 5% or 30%.
+This patch adds error handler for the failure of command queue
+initialization both PF and VF.
 
-Windows reports "battery good" for the 30% level. I've captured an USB
-trace of Windows reading the battery and it is getting the same info
-as the Linux hidpp code gets.
-
-Now that Linux handles these devices as hidpp devices, it reports the
-battery as being low as it treats anything under 31% as low, this leads
-to the user constantly getting a "Keyboard battery is low" warning from
-GNOME3, which is very annoying.
-
-This commit fixes this by changing the low threshold to anything under
-30%, which I assume is what Windows does.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-logitech-hidpp.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c    | 11 ++++++++---
+ .../net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c  | 11 ++++++++---
+ 2 files changed, 16 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
-index ffd30c7492df8..e74fa990ba133 100644
---- a/drivers/hid/hid-logitech-hidpp.c
-+++ b/drivers/hid/hid-logitech-hidpp.c
-@@ -1021,7 +1021,11 @@ static int hidpp_map_battery_level(int capacity)
- {
- 	if (capacity < 11)
- 		return POWER_SUPPLY_CAPACITY_LEVEL_CRITICAL;
--	else if (capacity < 31)
-+	/*
-+	 * The spec says this should be < 31 but some devices report 30
-+	 * with brand new batteries and Windows reports 30 as "Good".
-+	 */
-+	else if (capacity < 30)
- 		return POWER_SUPPLY_CAPACITY_LEVEL_LOW;
- 	else if (capacity < 81)
- 		return POWER_SUPPLY_CAPACITY_LEVEL_NORMAL;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
+index e483a6e730e64..87fa4787bb761 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
+@@ -359,21 +359,26 @@ int hclge_cmd_init(struct hclge_dev *hdev)
+ 	 * reset may happen when lower level reset is being processed.
+ 	 */
+ 	if ((hclge_is_reset_pending(hdev))) {
+-		set_bit(HCLGE_STATE_CMD_DISABLE, &hdev->state);
+-		return -EBUSY;
++		ret = -EBUSY;
++		goto err_cmd_init;
+ 	}
+ 
+ 	ret = hclge_cmd_query_firmware_version(&hdev->hw, &version);
+ 	if (ret) {
+ 		dev_err(&hdev->pdev->dev,
+ 			"firmware version query failed %d\n", ret);
+-		return ret;
++		goto err_cmd_init;
+ 	}
+ 	hdev->fw_version = version;
+ 
+ 	dev_info(&hdev->pdev->dev, "The firmware version is %08x\n", version);
+ 
+ 	return 0;
++
++err_cmd_init:
++	set_bit(HCLGE_STATE_CMD_DISABLE, &hdev->state);
++
++	return ret;
+ }
+ 
+ static void hclge_destroy_queue(struct hclge_cmq_ring *ring)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
+index b39ff5555a30e..1e7df81c95ade 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
+@@ -344,8 +344,8 @@ int hclgevf_cmd_init(struct hclgevf_dev *hdev)
+ 	 * reset may happen when lower level reset is being processed.
+ 	 */
+ 	if (hclgevf_is_reset_pending(hdev)) {
+-		set_bit(HCLGEVF_STATE_CMD_DISABLE, &hdev->state);
+-		return -EBUSY;
++		ret = -EBUSY;
++		goto err_cmd_init;
+ 	}
+ 
+ 	/* get firmware version */
+@@ -353,13 +353,18 @@ int hclgevf_cmd_init(struct hclgevf_dev *hdev)
+ 	if (ret) {
+ 		dev_err(&hdev->pdev->dev,
+ 			"failed(%d) to query firmware version\n", ret);
+-		return ret;
++		goto err_cmd_init;
+ 	}
+ 	hdev->fw_version = version;
+ 
+ 	dev_info(&hdev->pdev->dev, "The firmware version is %08x\n", version);
+ 
+ 	return 0;
++
++err_cmd_init:
++	set_bit(HCLGEVF_STATE_CMD_DISABLE, &hdev->state);
++
++	return ret;
+ }
+ 
+ void hclgevf_cmd_uninit(struct hclgevf_dev *hdev)
 -- 
 2.20.1
 
