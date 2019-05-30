@@ -2,52 +2,52 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36142C46460
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4291CC28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D66D25E73
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:54:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C5F625E93
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:54:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192057;
-	bh=F5SjXWFP/MCO38KNM1YvGGxVRtvKdVTkdH3h+7Hp3rY=;
+	s=default; t=1559192060;
+	bh=dRaay6V38ZQBoS8zKbaAnrP+HlvFnkld7aAPcWP7vLc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o7agWnRZX+FuLyls0fwOzT6GIH5lOzQcEYCSbcTxszBMKQvxHDj5UbBFBu+GKWvW8
-	 ta7abQmJmtRzIpCeDyhRxPsyMzk7BUkjU2XrqCUFAMlnS781X3rjPdCZDz5BLTLsK8
-	 fwO5kMIRXKi9vUSjmRQhIFK0VgYX9f8wkh1kiH4I=
+	b=PRBKIQEfGVS3mP8hTu8pvAuO2Ynp0RXIaa6WuaP2bvdywxyMvGlhzizt9rYhYSJJi
+	 nT+Qgn2DsbAOG9G1JEaEmx1wDGKXgjm8p7yQNu9dvorEXOYwFhfLxuYhdljI0Quap1
+	 cEO4ShUjBDV4L1/Rex7rj2vtPlty6KLSrGtkF1gI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728113AbfE3DK3 (ORCPT
+        id S1728091AbfE3DK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:10:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45216 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:10:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727854AbfE3DJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:09:55 -0400
+        id S1727824AbfE3DJv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:09:51 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0293A244A6;
-        Thu, 30 May 2019 03:09:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10CB62447C;
+        Thu, 30 May 2019 03:09:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185795;
-        bh=F5SjXWFP/MCO38KNM1YvGGxVRtvKdVTkdH3h+7Hp3rY=;
+        s=default; t=1559185791;
+        bh=dRaay6V38ZQBoS8zKbaAnrP+HlvFnkld7aAPcWP7vLc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UtXkrjR76ju9b9EuirCzpr/tpATsno03kNrkvz6X4bmNMRzwZyNCpeeZ1ccMatsLs
-         iubLd613TfOKJlTyKralqW6Z4TY4DmYKi9GZTytiT8nT1sD/6zH7oHpdzoc99uYe1G
-         35spHIognNpUZi0cO8+Z0NFgNfMdRkcrvVtzJE3s=
+        b=BeTGa269w6xvblCLUkQFD+dNtBeHGXB8RFu9D2WABYUOK+5VnhqehEzNKF2rQh8S0
+         U5CeEqNb6LDOaAN2UFyghaghW8POlNMmwpTjVXYznfB0tdst8CLVuMnj6upnArLv1I
+         KjL5pkWRtjBewKDFohPDfqG3Pf4e3yUwAQAcDASY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Minas Harutyunyan <hminas@synopsys.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        stable@vger.kernel.org, Ross Lagerwall <ross.lagerwall@citrix.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 070/405] usb: dwc2: gadget: Increase descriptors count for ISOCs
-Date:   Wed, 29 May 2019 20:01:08 -0700
-Message-Id: <20190530030544.467965406@linuxfoundation.org>
+Subject: [PATCH 5.1 045/405] gfs2: Fix lru_count going negative
+Date:   Wed, 29 May 2019 20:00:43 -0700
+Message-Id: <20190530030543.087811743@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -60,104 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 54f37f56631747075f1f9a2f0edf6ba405e3e66c ]
+[ Upstream commit 7881ef3f33bb80f459ea6020d1e021fc524a6348 ]
 
-Some function drivers queueing more than 128 ISOC requests at a time.
-To avoid "descriptor chain full" cases, increasing descriptors count
-from MAX_DMA_DESC_NUM_GENERIC to MAX_DMA_DESC_NUM_HS_ISOC for ISOC's
-only.
+Under certain conditions, lru_count may drop below zero resulting in
+a large amount of log spam like this:
 
-Signed-off-by: Minas Harutyunyan <hminas@synopsys.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+vmscan: shrink_slab: gfs2_dump_glock+0x3b0/0x630 [gfs2] \
+    negative objects to delete nr=-1
+
+This happens as follows:
+1) A glock is moved from lru_list to the dispose list and lru_count is
+   decremented.
+2) The dispose function calls cond_resched() and drops the lru lock.
+3) Another thread takes the lru lock and tries to add the same glock to
+   lru_list, checking if the glock is on an lru list.
+4) It is on a list (actually the dispose list) and so it avoids
+   incrementing lru_count.
+5) The glock is moved to lru_list.
+5) The original thread doesn't dispose it because it has been re-added
+   to the lru list but the lru_count has still decreased by one.
+
+Fix by checking if the LRU flag is set on the glock rather than checking
+if the glock is on some list and rearrange the code so that the LRU flag
+is added/removed precisely when the glock is added/removed from lru_list.
+
+Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc2/gadget.c | 27 +++++++++++++++------------
- 1 file changed, 15 insertions(+), 12 deletions(-)
+ fs/gfs2/glock.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
-index 6812a8a3a98ba..a749de7604c62 100644
---- a/drivers/usb/dwc2/gadget.c
-+++ b/drivers/usb/dwc2/gadget.c
-@@ -714,13 +714,11 @@ static unsigned int dwc2_gadget_get_chain_limit(struct dwc2_hsotg_ep *hs_ep)
- 	unsigned int maxsize;
+diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
+index d32964cd11176..e4f6d39500bcc 100644
+--- a/fs/gfs2/glock.c
++++ b/fs/gfs2/glock.c
+@@ -183,15 +183,19 @@ static int demote_ok(const struct gfs2_glock *gl)
  
- 	if (is_isoc)
--		maxsize = hs_ep->dir_in ? DEV_DMA_ISOC_TX_NBYTES_LIMIT :
--					   DEV_DMA_ISOC_RX_NBYTES_LIMIT;
-+		maxsize = (hs_ep->dir_in ? DEV_DMA_ISOC_TX_NBYTES_LIMIT :
-+					   DEV_DMA_ISOC_RX_NBYTES_LIMIT) *
-+					   MAX_DMA_DESC_NUM_HS_ISOC;
- 	else
--		maxsize = DEV_DMA_NBYTES_LIMIT;
--
--	/* Above size of one descriptor was chosen, multiple it */
--	maxsize *= MAX_DMA_DESC_NUM_GENERIC;
-+		maxsize = DEV_DMA_NBYTES_LIMIT * MAX_DMA_DESC_NUM_GENERIC;
- 
- 	return maxsize;
- }
-@@ -932,7 +930,7 @@ static int dwc2_gadget_fill_isoc_desc(struct dwc2_hsotg_ep *hs_ep,
- 
- 	/* Update index of last configured entry in the chain */
- 	hs_ep->next_desc++;
--	if (hs_ep->next_desc >= MAX_DMA_DESC_NUM_GENERIC)
-+	if (hs_ep->next_desc >= MAX_DMA_DESC_NUM_HS_ISOC)
- 		hs_ep->next_desc = 0;
- 
- 	return 0;
-@@ -964,7 +962,7 @@ static void dwc2_gadget_start_isoc_ddma(struct dwc2_hsotg_ep *hs_ep)
- 	}
- 
- 	/* Initialize descriptor chain by Host Busy status */
--	for (i = 0; i < MAX_DMA_DESC_NUM_GENERIC; i++) {
-+	for (i = 0; i < MAX_DMA_DESC_NUM_HS_ISOC; i++) {
- 		desc = &hs_ep->desc_list[i];
- 		desc->status = 0;
- 		desc->status |= (DEV_DMA_BUFF_STS_HBUSY
-@@ -2162,7 +2160,7 @@ static void dwc2_gadget_complete_isoc_request_ddma(struct dwc2_hsotg_ep *hs_ep)
- 		dwc2_hsotg_complete_request(hsotg, hs_ep, hs_req, 0);
- 
- 		hs_ep->compl_desc++;
--		if (hs_ep->compl_desc > (MAX_DMA_DESC_NUM_GENERIC - 1))
-+		if (hs_ep->compl_desc > (MAX_DMA_DESC_NUM_HS_ISOC - 1))
- 			hs_ep->compl_desc = 0;
- 		desc_sts = hs_ep->desc_list[hs_ep->compl_desc].status;
- 	}
-@@ -3899,6 +3897,7 @@ static int dwc2_hsotg_ep_enable(struct usb_ep *ep,
- 	unsigned int i, val, size;
- 	int ret = 0;
- 	unsigned char ep_type;
-+	int desc_num;
- 
- 	dev_dbg(hsotg->dev,
- 		"%s: ep %s: a 0x%02x, attr 0x%02x, mps 0x%04x, intr %d\n",
-@@ -3945,11 +3944,15 @@ static int dwc2_hsotg_ep_enable(struct usb_ep *ep,
- 	dev_dbg(hsotg->dev, "%s: read DxEPCTL=0x%08x from 0x%08x\n",
- 		__func__, epctrl, epctrl_reg);
- 
-+	if (using_desc_dma(hsotg) && ep_type == USB_ENDPOINT_XFER_ISOC)
-+		desc_num = MAX_DMA_DESC_NUM_HS_ISOC;
-+	else
-+		desc_num = MAX_DMA_DESC_NUM_GENERIC;
+ void gfs2_glock_add_to_lru(struct gfs2_glock *gl)
+ {
++	if (!(gl->gl_ops->go_flags & GLOF_LRU))
++		return;
 +
- 	/* Allocate DMA descriptor chain for non-ctrl endpoints */
- 	if (using_desc_dma(hsotg) && !hs_ep->desc_list) {
- 		hs_ep->desc_list = dmam_alloc_coherent(hsotg->dev,
--			MAX_DMA_DESC_NUM_GENERIC *
--			sizeof(struct dwc2_dma_desc),
-+			desc_num * sizeof(struct dwc2_dma_desc),
- 			&hs_ep->desc_list_dma, GFP_ATOMIC);
- 		if (!hs_ep->desc_list) {
- 			ret = -ENOMEM;
-@@ -4092,7 +4095,7 @@ static int dwc2_hsotg_ep_enable(struct usb_ep *ep,
+ 	spin_lock(&lru_lock);
  
- error2:
- 	if (ret && using_desc_dma(hsotg) && hs_ep->desc_list) {
--		dmam_free_coherent(hsotg->dev, MAX_DMA_DESC_NUM_GENERIC *
-+		dmam_free_coherent(hsotg->dev, desc_num *
- 			sizeof(struct dwc2_dma_desc),
- 			hs_ep->desc_list, hs_ep->desc_list_dma);
- 		hs_ep->desc_list = NULL;
+-	if (!list_empty(&gl->gl_lru))
+-		list_del_init(&gl->gl_lru);
+-	else
++	list_del(&gl->gl_lru);
++	list_add_tail(&gl->gl_lru, &lru_list);
++
++	if (!test_bit(GLF_LRU, &gl->gl_flags)) {
++		set_bit(GLF_LRU, &gl->gl_flags);
+ 		atomic_inc(&lru_count);
++	}
+ 
+-	list_add_tail(&gl->gl_lru, &lru_list);
+-	set_bit(GLF_LRU, &gl->gl_flags);
+ 	spin_unlock(&lru_lock);
+ }
+ 
+@@ -201,7 +205,7 @@ static void gfs2_glock_remove_from_lru(struct gfs2_glock *gl)
+ 		return;
+ 
+ 	spin_lock(&lru_lock);
+-	if (!list_empty(&gl->gl_lru)) {
++	if (test_bit(GLF_LRU, &gl->gl_flags)) {
+ 		list_del_init(&gl->gl_lru);
+ 		atomic_dec(&lru_count);
+ 		clear_bit(GLF_LRU, &gl->gl_flags);
+@@ -1159,8 +1163,7 @@ void gfs2_glock_dq(struct gfs2_holder *gh)
+ 		    !test_bit(GLF_DEMOTE, &gl->gl_flags))
+ 			fast_path = 1;
+ 	}
+-	if (!test_bit(GLF_LFLUSH, &gl->gl_flags) && demote_ok(gl) &&
+-	    (glops->go_flags & GLOF_LRU))
++	if (!test_bit(GLF_LFLUSH, &gl->gl_flags) && demote_ok(gl))
+ 		gfs2_glock_add_to_lru(gl);
+ 
+ 	trace_gfs2_glock_queue(gh, 0);
+@@ -1456,6 +1459,7 @@ __acquires(&lru_lock)
+ 		if (!spin_trylock(&gl->gl_lockref.lock)) {
+ add_back_to_lru:
+ 			list_add(&gl->gl_lru, &lru_list);
++			set_bit(GLF_LRU, &gl->gl_flags);
+ 			atomic_inc(&lru_count);
+ 			continue;
+ 		}
+@@ -1463,7 +1467,6 @@ __acquires(&lru_lock)
+ 			spin_unlock(&gl->gl_lockref.lock);
+ 			goto add_back_to_lru;
+ 		}
+-		clear_bit(GLF_LRU, &gl->gl_flags);
+ 		gl->gl_lockref.count++;
+ 		if (demote_ok(gl))
+ 			handle_callback(gl, LM_ST_UNLOCKED, 0, false);
+@@ -1498,6 +1501,7 @@ static long gfs2_scan_glock_lru(int nr)
+ 		if (!test_bit(GLF_LOCK, &gl->gl_flags)) {
+ 			list_move(&gl->gl_lru, &dispose);
+ 			atomic_dec(&lru_count);
++			clear_bit(GLF_LRU, &gl->gl_flags);
+ 			freed++;
+ 			continue;
+ 		}
 -- 
 2.20.1
 
