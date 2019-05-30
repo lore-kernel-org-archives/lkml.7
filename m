@@ -2,206 +2,176 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E9CDC28CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DD3C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 472BE25AF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:31:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZMmhaKbW"
+	by mail.kernel.org (Postfix) with ESMTP id 68FA925B26
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:31:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559226690;
+	bh=t9FNMyuHdKiRj7lNbCFjHjSQ+ossF6GJx2uNN/K/Nqk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=c5jZyXFWz9yUAIY0YaOMGamwTwQ+iypZcrFFqG7R2l7gJP+bWVcIgEKmVUdJhEdPW
+	 7NlgPAavSXxY2dTau0yVBuyOEo3IW9kl3vpw2hF0T8wX1VcABszArZ4RJMfRrFj1XE
+	 fG+7wdwWQgEfaeiVETpdzbLOI11ZHlOOvjYAC2T8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbfE3ObX (ORCPT
+        id S1727041AbfE3Ob3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 10:31:23 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:45260 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726640AbfE3ObX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 10:31:23 -0400
-Received: by mail-io1-f66.google.com with SMTP id e3so5200522ioc.12
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 07:31:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d9z/WdVRRf6vdfFIoG1dq2l7RwLG3vNFiWTkrU7D/nk=;
-        b=ZMmhaKbW4Cn70U73eCpnJ5yejbxfst26fJzumTLlslyElxjp9fcBkEGZMScFosMuxt
-         zMqAo9SQrjNXO8KxO2H+kxjnhJcY3+kkQYiVcuxufFL7Br8UIF0OwfjgyL3cnUKajLhO
-         kPVG1au5pp50+mX1/xRxiYbNt/wgI04qCbadJs17CI0/TW7wWEnxAZCuG0L5giUOMJ8O
-         kqzTB/SZRhWy1++ixHA48Ev+SNsjJCQIUT6oDhK8GjehQl04JmiS2VTiNwVJJjIM89jh
-         +YXHQgdHpTxC+L7J7BE7ir3kiMivB1cSlkY+dyxYxDJ9vq+uVwWEKU45lzb3RN6QqEaI
-         ug+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d9z/WdVRRf6vdfFIoG1dq2l7RwLG3vNFiWTkrU7D/nk=;
-        b=pHHkSN3/v9ErvOn+Qf0Mc7NygOvMuGfWUbHxwzSJALPFyxPDsDZc3g7IAEeCX8aJCU
-         0AnAZ2DSCBQMW5kPLj4JxR6TX2IkKWIuoh93aO2cI6BsH6F3MFimwFoxCdczoaUxZvQq
-         2SeSIWmFtyi6NYFk5GVBNlOkg7jo+5tKSBbHcCZtQeT3DWAoDPGSlC8SzM1B3Jx+BeLx
-         4Zmp9kv/YsIjvGIJ2DKOl/8dQdSe+Q40LG7LccbKtomsmDOHEO66Y15yvn+T4ewWUDp5
-         ZRWyJahVPspDDWtW51CuuQT2/n+yLA/NLlecJ2g4DO3DmQpVJnxDiUpBbcHbBAJq6Oq5
-         OsuA==
-X-Gm-Message-State: APjAAAXbKY6N5b99n4HUp5Bh4F/H7RKiDgrTFrn1j2eolavIfanIEy87
-        dy6vkSORMhUrEW0mnDAaUHpQwWtKYdDFfCzCHlsDJg==
-X-Google-Smtp-Source: APXvYqw2ZOeAk7/M9AocUjdj8Q8DzEH6NvT4LDK/kImOQw6jI/g3st7gLmFsFKinsTrKkizGVdQsp1Aah7WCK7DFWdg=
-X-Received: by 2002:a5d:9402:: with SMTP id v2mr2780864ion.128.1559226682223;
- Thu, 30 May 2019 07:31:22 -0700 (PDT)
+        Thu, 30 May 2019 10:31:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43950 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726640AbfE3Ob2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 10:31:28 -0400
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F36F825AF8
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 14:31:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559226688;
+        bh=t9FNMyuHdKiRj7lNbCFjHjSQ+ossF6GJx2uNN/K/Nqk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TanxQO2eHs1jPHFF+ujiL9pPGiOw95ZuR5Jw7GbGZDBmPGvKg79QrhOPYwjJpAmng
+         PtMth2Fx9PdPORT4hPl2E7d5uXJgqsrnQ7hrg1bYALSH368KM2xJ2LQojfMc+xL+DP
+         Wo16AAsUzlwoqhqdLm8zOLdmPi4jeJYk2N2rmrXs=
+Received: by mail-wm1-f42.google.com with SMTP id u78so4115685wmu.5
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 07:31:27 -0700 (PDT)
+X-Gm-Message-State: APjAAAWNrehOtFVTrPf0/r2c3LVyHmpBqnonzTXlfiyUt5HVoOwOVTu9
+        Qn0i8U0IrbM4M4SYz3AFau/rqId40zoQiBud+6WCGg==
+X-Google-Smtp-Source: APXvYqwORgGGojbciIM4fBZHz5YhRKo/2ULQ4NI80rS2FJvcS6cz6SrRTtIjmZI7sCvf88uhtvJhxWljXytA/bz2Lfc=
+X-Received: by 2002:a7b:c450:: with SMTP id l16mr2110219wmi.0.1559226686610;
+ Thu, 30 May 2019 07:31:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <1559149856-7938-1-git-send-email-iuliana.prodan@nxp.com>
- <20190529202728.GA35103@gmail.com> <CAKv+Gu-4KqcY=WhwY98JigTzeXaL5ggYEcu7+kNzNtpO2FLQXg@mail.gmail.com>
- <VI1PR04MB44459EEF7BCD3458BB3D143D8C180@VI1PR04MB4445.eurprd04.prod.outlook.com>
- <20190530133427.qrwjzctac2x6nsby@gondor.apana.org.au> <VI1PR04MB444562A2352FE4BAD7F681258C180@VI1PR04MB4445.eurprd04.prod.outlook.com>
- <CAKv+Gu-jTWQP0Zp=QpuzX41v8Eb5Bvd0O9ajwSnFkDO-ijBf_A@mail.gmail.com>
- <CAKv+Gu9JoC+GKJ6mMAE25mr_k2gbznh-83jApT4=FZsAW=jd8w@mail.gmail.com>
- <20190530142734.qlhgzeal22zxfhk5@gondor.apana.org.au> <CAKv+Gu8jJQCZwiHFORUJUzRaAizWzBQ95EAgYe36sFrcvzb6vg@mail.gmail.com>
-In-Reply-To: <CAKv+Gu8jJQCZwiHFORUJUzRaAizWzBQ95EAgYe36sFrcvzb6vg@mail.gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Thu, 30 May 2019 16:31:09 +0200
-Message-ID: <CAKv+Gu-KBgiyNY2Dypx6vqtmpTXNfOxxWxJf50BTiF2rCOFqnw@mail.gmail.com>
-Subject: Re: [PATCH] crypto: gcm - fix cacheline sharing
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
+References: <20190524175458.GB365@linux.intel.com> <960B34DE67B9E140824F1DCDEC400C0F654E8E1D@ORSMSX116.amr.corp.intel.com>
+ <CALCETrUw5sEr-MHPMU4CzEzkrejDs-JOThHB9Buhoxo5-rdpRw@mail.gmail.com>
+ <20190524200333.GF365@linux.intel.com> <CALCETrUyAAhnQ+RUeN1L41TKj-vcD2CNt-FJ9siO=Zo6gvH1Aw@mail.gmail.com>
+ <20190524224107.GJ365@linux.intel.com> <683B5E3D-AFB6-4B45-8D39-B00847312209@amacapital.net>
+ <960B34DE67B9E140824F1DCDEC400C0F654E965F@ORSMSX116.amr.corp.intel.com>
+ <CALCETrXXVMutX8eZk6nnkOAeS+Tj0sQd0FkW+wk6Rx8hQxCe6w@mail.gmail.com>
+ <960B34DE67B9E140824F1DCDEC400C0F654E9824@ORSMSX116.amr.corp.intel.com>
+ <20190528202407.GB13158@linux.intel.com> <285f279f-b500-27f0-ab42-fb1dbcc5ab18@tycho.nsa.gov>
+ <960B34DE67B9E140824F1DCDEC400C0F654EB487@ORSMSX116.amr.corp.intel.com> <678a37af-797d-7bd5-a406-32548a270e3d@tycho.nsa.gov>
+In-Reply-To: <678a37af-797d-7bd5-a406-32548a270e3d@tycho.nsa.gov>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 30 May 2019 07:31:14 -0700
+X-Gmail-Original-Message-ID: <CALCETrWXB9fNNDH7gZxPTx05F78Og6K=ZtAr2aA++BDwY09Wbg@mail.gmail.com>
+Message-ID: <CALCETrWXB9fNNDH7gZxPTx05F78Og6K=ZtAr2aA++BDwY09Wbg@mail.gmail.com>
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+To:     Stephen Smalley <sds@tycho.nsa.gov>
+Cc:     "Xing, Cedric" <cedric.xing@intel.com>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        William Roberts <bill.c.roberts@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 May 2019 at 16:28, Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
->
-> On Thu, 30 May 2019 at 16:27, Herbert Xu <herbert@gondor.apana.org.au> wrote:
-> >
-> > On Thu, May 30, 2019 at 03:55:07PM +0200, Ard Biesheuvel wrote:
-> > >
-> > > > Would this work?
-> >
-> > I see.  You need to preserve the original IV.
-> >
-> > > > diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
-> > > > index c0ece44f303b..2ef2f76a3cb8 100644
-> > > > --- a/drivers/crypto/caam/caamalg.c
-> > > > +++ b/drivers/crypto/caam/caamalg.c
-> > > > @@ -1832,22 +1832,25 @@ static int skcipher_decrypt(struct
-> > > > skcipher_request *req)
-> > > >         struct caam_ctx *ctx = crypto_skcipher_ctx(skcipher);
-> > > >         int ivsize = crypto_skcipher_ivsize(skcipher);
-> > > >         struct device *jrdev = ctx->jrdev;
-> > > > +       u8 out_iv[AES_BLOCK_SIZE];
-> > > >         u32 *desc;
-> > > >         int ret = 0;
-> > > >
-> > > > -       /* allocate extended descriptor */
-> > > > -       edesc = skcipher_edesc_alloc(req, DESC_JOB_IO_LEN * CAAM_CMD_SZ);
-> > > > -       if (IS_ERR(edesc))
-> > > > -               return PTR_ERR(edesc);
-> > > > -
-> > > >         /*
-> > > >          * The crypto API expects us to set the IV (req->iv) to the last
-> > > >          * ciphertext block.
-> > > >          */
-> > > >         if (ivsize)
-> > > > -               scatterwalk_map_and_copy(req->iv, req->src, req->cryptlen -
-> > > > +               scatterwalk_map_and_copy(out_iv, req->src, req->cryptlen -
-> > > >                                          ivsize, ivsize, 0);
-> > > >
-> > > > +       /* allocate extended descriptor */
-> > > > +       edesc = skcipher_edesc_alloc(req, DESC_JOB_IO_LEN * CAAM_CMD_SZ);
-> > > > +       if (IS_ERR(edesc))
-> > > > +               return PTR_ERR(edesc);
-> > > > +
-> > > > +       memcpy(req->iv, out_iv, ivsize);
-> > > > +
-> > > >         /* Create and submit job descriptor*/
-> > > >         init_skcipher_job(req, edesc, false);
-> > > >         desc = edesc->hw_desc;
-> > >
-> > > Umm never mind
-> > >
-> > > /me hides in shame
-> >
-> > So why doesn't this work?
-> >
->
-> Because the memcpy() occurs while the buffer is mapped for DMA, so it
-> suffers from the exact same problem.
+Hi all-
 
-This might work:
+After an offline discussion with Sean yesterday, here are some updates
+to the user API parts of my proposal.
 
-diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
-index c0ece44f303b..3d313d2a279a 100644
---- a/drivers/crypto/caam/caamalg.c
-+++ b/drivers/crypto/caam/caamalg.c
-@@ -1661,7 +1661,8 @@ static int aead_decrypt(struct aead_request *req)
-  * allocate and map the skcipher extended descriptor for skcipher
-  */
- static struct skcipher_edesc *skcipher_edesc_alloc(struct
-skcipher_request *req,
--                                                  int desc_bytes)
-+                                                  int desc_bytes,
-+                                                  u8 const *input_iv)
- {
-        struct crypto_skcipher *skcipher = crypto_skcipher_reqtfm(req);
-        struct caam_ctx *ctx = crypto_skcipher_ctx(skcipher);
-@@ -1745,7 +1746,7 @@ static struct skcipher_edesc
-*skcipher_edesc_alloc(struct skcipher_request *req,
-        /* Make sure IV is located in a DMAable area */
-        if (ivsize) {
-                iv = (u8 *)edesc->hw_desc + desc_bytes + sec4_sg_bytes;
--               memcpy(iv, req->iv, ivsize);
-+               memcpy(iv, input_iv, ivsize);
+Unfortunately, Sean convinced me that MAXPERM doesn't work the way I
+described it because, for SGX2, the enclave loader won't know at load
+time whether a given EAUG-ed page will ever be executed.  So here's an
+update.
 
-                iv_dma = dma_map_single(jrdev, iv, ivsize, DMA_TO_DEVICE);
-                if (dma_mapping_error(jrdev, iv_dma)) {
-@@ -1801,7 +1802,8 @@ static int skcipher_encrypt(struct skcipher_request *req)
-        int ret = 0;
+First, here are the requrements as I see them, where EXECUTE, EXECMOD,
+and EXECMEM could be substituted with other rules at the LSM's
+discretion:
 
-        /* allocate extended descriptor */
--       edesc = skcipher_edesc_alloc(req, DESC_JOB_IO_LEN * CAAM_CMD_SZ);
-+       edesc = skcipher_edesc_alloc(req, DESC_JOB_IO_LEN * CAAM_CMD_SZ,
-+                                    req->iv);
-        if (IS_ERR(edesc))
-                return PTR_ERR(edesc);
+ - You can create a WX or RWX mapping if and only if you have EXECMEM.
 
-@@ -1832,13 +1834,11 @@ static int skcipher_decrypt(struct
-skcipher_request *req)
-        struct caam_ctx *ctx = crypto_skcipher_ctx(skcipher);
-        int ivsize = crypto_skcipher_ivsize(skcipher);
-        struct device *jrdev = ctx->jrdev;
-+       u8 in_iv[AES_BLOCK_SIZE];
-        u32 *desc;
-        int ret = 0;
+ - To create an X mapping of an enclave page that has ever been W, you
+need EXECMOD.
 
--       /* allocate extended descriptor */
--       edesc = skcipher_edesc_alloc(req, DESC_JOB_IO_LEN * CAAM_CMD_SZ);
--       if (IS_ERR(edesc))
--               return PTR_ERR(edesc);
-+       memcpy(in_iv, req->iv, ivsize);
+ - To create an X mapping of an enclave page that came from EADD, you
+need EXECUTE on the source file.  Optionally, we could also permit
+this if you have EXECMOD.
 
-        /*
-         * The crypto API expects us to set the IV (req->iv) to the last
-@@ -1848,6 +1848,11 @@ static int skcipher_decrypt(struct skcipher_request *req)
-                scatterwalk_map_and_copy(req->iv, req->src, req->cryptlen -
-                                         ivsize, ivsize, 0);
+And I have two design proposals.  One is static and one is dynamic.
+To implement either one, we will probably need a new .may_mprotect vm
+operation, and that operation can call an LSM hook.  Or we can give
+LSMs a way to detect that a given vm_area_struct is an enclave.  As I
+see it, this is an implementation detail that is certainly solveable.
 
-+       /* allocate extended descriptor */
-+       edesc = skcipher_edesc_alloc(req, DESC_JOB_IO_LEN * CAAM_CMD_SZ, in_iv);
-+       if (IS_ERR(edesc))
-+               return PTR_ERR(edesc);
-+
-        /* Create and submit job descriptor*/
-        init_skcipher_job(req, edesc, false);
-        desc = edesc->hw_desc;
+
+Static proposal:
+
+
+EADD takes an execute_intent flag.  It calls a new hook:
+
+  int security_enclave_load(struct vm_area_struct *source, bool execute_intent);
+
+This hook will fail if execute_intent==true and the caller has neither
+EXECUTE, EXECMOD, nor EXECMEM.
+
+EAUG sets execute_intent = false.
+
+EINIT takes a sigstruct pointer.  SGX can (when initially upstreamed
+or later on once there's demand) call a new hook:
+
+  security_enclave_init(struct sigstruct *sigstruct, struct
+vm_area_struct *source);
+
+mmap() and mprotect() will require EXECMEM to create WX or RWX
+mappings.  They will require EXECMOD to create RX or X mappings of an
+execute_intent==false page.  They require no permissions in the other
+cases.
+
+
+Dynamic proposal:
+
+
+EADD does not take any special flags.  It does something like this internally:
+
+  bool execute_intent = true;
+  int security_enclave_load(struct vm_area_struct *source, bool
+*execute_intent);
+
+The implementation of security_enclave_load() may set *execute_intent to false.
+The driver records execute_intent after the LSM is done.
+
+mmap() and mprotect() will require EXECMEM to create WX or RWX
+mappings.  They will require EXECMOD to create RX or X mappings of an
+execute_intent==false page.  They require no permissions in the other
+cases.
+
+
+
+A benefit of the static proposal is that audit failures due to a lack
+of EXECUTE permission are easy to implement and to understand in the
+lods.  With the dynamic model, we can only really audit the lack of
+EXECMOD or EXECMEM.  A benefit of the dynamic model is that we hide
+what is arguably a decently large wart from the API.
