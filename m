@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 655DFC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FEFFC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EF3A24EDC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03E5F23F9A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:57:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188632;
-	bh=UT5ptIzvBWmArzRHvLDDWZswCaWyxEW9/R4B4KcsSDk=;
+	s=default; t=1559188648;
+	bh=H25aJgLQ/KbWNjKJDaAHjukjQRU0S1M6wpaGkl+fp5A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JL4dcb1w0louQWePkIiEtw0GsHSvpb9rJTJz2VmqBWr45JfPOa586nZzZZl0eWjnG
-	 xtClUfVbEVF9v5nVVNjPW4sAGV69o0bAIqFtsR2bGAKr0E61PI9axSUnB+JGecNITS
-	 p8gVs+1r+ua+XRTeP1RRPw6CY5k33VxLLaG1WJjQ=
+	b=raZoT7NndZnH5zmS8fKYn/6waLvpmgOXqeSStx56VlJQhnJtIUOhPz/tgAnm7aE+W
+	 Pt/Rvc24c08z9prhnsR2LIZ0ne9V5PvVFTKfe6NKVBWyQ5Q4dq943EO4V8/phOJUam
+	 0rLylI6yriAViD7Dz/08t+yohqpkF7wg+9c8dcGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387982AbfE3D5L (ORCPT
+        id S1733238AbfE3D50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:57:11 -0400
+        Wed, 29 May 2019 23:57:26 -0400
 Received: from mail.kernel.org ([198.145.29.99]:52718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731730AbfE3DSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:50 -0400
+        id S1731726AbfE3DSt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:49 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56A8624713;
-        Thu, 30 May 2019 03:18:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3276247F7;
+        Thu, 30 May 2019 03:18:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186330;
-        bh=UT5ptIzvBWmArzRHvLDDWZswCaWyxEW9/R4B4KcsSDk=;
+        s=default; t=1559186328;
+        bh=H25aJgLQ/KbWNjKJDaAHjukjQRU0S1M6wpaGkl+fp5A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mg7YZTkZFLxu/2r36Q+SLDioCipFa1ltr86vhE/ADoBKCdOQTFv1hvoxOeZXLrVhO
-         zBSeJdD1MN24PE6cW1ZidSCGAsQZ+iMkRgNdsUvwGG9JE/DbeiUt5Hr8klpi6Z/3MM
-         0GNCl6080uuVzZ8kMv4O4jFLsR8u4m2iR/0IsICk=
+        b=XgdoPim23HoI+jCI+gPXoEiui1zDGalIUwlVHlU8tByPqQ9DrhM6HtqNMnyb3RSlm
+         ghMA6bheq6fDyHwThM6R/xrBMJrXm1Yi6mECqwvDOrkrfXjLAs6MmBmGvIGFHLX6Ba
+         vPV5tXDSROCbuDJihZAAdJ5/p6y/OSpgFZDvWf5A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bo YU <tsu.yubo@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jun Nie <jun.nie@linaro.org>, linux-gpio@vger.kernel.org,
+        Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 048/193] powerpc/boot: Fix missing check of lseek() return value
-Date:   Wed, 29 May 2019 20:05:02 -0700
-Message-Id: <20190530030456.337330423@linuxfoundation.org>
+Subject: [PATCH 4.14 045/193] pinctrl: zte: fix leaked of_node references
+Date:   Wed, 29 May 2019 20:04:59 -0700
+Message-Id: <20190530030455.922021445@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -60,34 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5d085ec04a000fefb5182d3b03ee46ca96d8389b ]
+[ Upstream commit 02d15f0d80720545f1f4922a1550ea4aaad4e152 ]
 
-This is detected by Coverity scan: CID: 1440481
+The call to of_parse_phandle returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Signed-off-by: Bo YU <tsu.yubo@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Detected by coccinelle with the following warnings:
+./drivers/pinctrl/zte/pinctrl-zx.c:415:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
+./drivers/pinctrl/zte/pinctrl-zx.c:422:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
+./drivers/pinctrl/zte/pinctrl-zx.c:436:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
+./drivers/pinctrl/zte/pinctrl-zx.c:444:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
+./drivers/pinctrl/zte/pinctrl-zx.c:448:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
+
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Jun Nie <jun.nie@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Acked-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/boot/addnote.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/pinctrl/zte/pinctrl-zx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/powerpc/boot/addnote.c b/arch/powerpc/boot/addnote.c
-index 9d9f6f334d3cc..3da3e2b1b51bc 100644
---- a/arch/powerpc/boot/addnote.c
-+++ b/arch/powerpc/boot/addnote.c
-@@ -223,7 +223,11 @@ main(int ac, char **av)
- 	PUT_16(E_PHNUM, np + 2);
+diff --git a/drivers/pinctrl/zte/pinctrl-zx.c b/drivers/pinctrl/zte/pinctrl-zx.c
+index ded366bb6564d..91955e770236e 100644
+--- a/drivers/pinctrl/zte/pinctrl-zx.c
++++ b/drivers/pinctrl/zte/pinctrl-zx.c
+@@ -411,6 +411,7 @@ int zx_pinctrl_init(struct platform_device *pdev,
+ 	}
  
- 	/* write back */
--	lseek(fd, (long) 0, SEEK_SET);
-+	i = lseek(fd, (long) 0, SEEK_SET);
-+	if (i < 0) {
-+		perror("lseek");
-+		exit(1);
-+	}
- 	i = write(fd, buf, n);
- 	if (i < 0) {
- 		perror("write");
+ 	zpctl->aux_base = of_iomap(np, 0);
++	of_node_put(np);
+ 	if (!zpctl->aux_base)
+ 		return -ENOMEM;
+ 
 -- 
 2.20.1
 
