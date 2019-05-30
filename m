@@ -2,135 +2,104 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 772D8C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC652C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A27825933
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:58:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72E1225925
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:01:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gZ0kUco2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WphGl1Sf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727131AbfE3M6q (ORCPT
+        id S1726430AbfE3NB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 08:58:46 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36406 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbfE3M6p (ORCPT
+        Thu, 30 May 2019 09:01:29 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:37027 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbfE3NB3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 08:58:45 -0400
-Received: by mail-pf1-f195.google.com with SMTP id u22so3930210pfm.3;
-        Thu, 30 May 2019 05:58:45 -0700 (PDT)
+        Thu, 30 May 2019 09:01:29 -0400
+Received: by mail-it1-f193.google.com with SMTP id s16so9189525ita.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 06:01:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GvIkFSS6zYb3I2dgFnSydPQ6jC4jn1KdG+v4VePYDQk=;
-        b=gZ0kUco2TbQiQDQDexJBvPdg0HouSZLKePsOfYv6pLG+qWJ0GrIa4KS0xDHzq7Njp1
-         JVX6Yd55JBSYaL22fwI4u7uzTEp4gJcZqLcB73bkSZlzEjKFp8dDB5P7Tk6X/kaB1YHn
-         QfAC/0xUHvqisTK71ekwrUFYQyTNhCU6wOjlTvrB8tX7crU4DR8FV65k4FyheSikFYjv
-         KJASKPKyS3NfhgHPlOcoDys4WcuH/Mm67Qie62B23Y+m20R7rZKGS5EALfq3AP2zT5HX
-         5VC1IujrphDhnuTa9lxmASESCmScK/wXSsufBZX9TIBVC9ofCknRuN8wwtquBNt3PU71
-         YTog==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7k26iPE69aDeRJ/TfJMi2xpp92kbi0U4xCxUWiVs7as=;
+        b=WphGl1Sf6fzQ5jmCKxG+7grtN+HSI+I2CbYW3nTKyyRsxXivZY3CbJstwRN2lW1Hpg
+         Q1euynYgPCjNhWdkiFlZMHJCbIvQK+nuZMSl6u14Ua/WM1W32n89KbzpA3Ji/bKS0WVx
+         pS8bh9XPnx90axfb1lbtb+/Rh4qC1QLre71ZMO/JpT1OscgelytRHiKDNwLTnclG7iB8
+         CPsDxnl/ZQuNrRm8bCEzRTC3mi0h/gfUMzKyOWBBK19ArcgQaoC3wb/YrZan7+arWkhB
+         9vtBDJsnoo3Bz8xs5JDGvrnvbd9KXs7sprcxdh6aiQJAJP4rJ5O5uFtiwn8Q6oVK72fL
+         UNbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GvIkFSS6zYb3I2dgFnSydPQ6jC4jn1KdG+v4VePYDQk=;
-        b=jEOwsIAKsxbW4dRBMBAWVHr4R4se60MMXpJND2XaZRHxkH+BryxrS5h3R/2ysMTyng
-         hvMDzxF7kG/kp97/kaV/ysspCnH15ReW0M3F38OdgVv0HfDUI/Rr3V8sVBuGGINuRNrW
-         lkQjFFXT8oi5P/ZMhjQablfHHRxk8bc4tZM16tstQEeh2wVGspKdZ6+4AvaSNEJg9TxZ
-         OXm0s//ArtBv/RicDZ7ZwocVA92YHTaMhYBxntPkMtJ4tcoKIWSwNmg8S2ymnTh2BoSy
-         RQcmo57TuhUCAl5qpuREdlFYwF1dA168oFfqsGHs24zVGtBqw8siZoQowoeLJ9xm4T9c
-         P5Ow==
-X-Gm-Message-State: APjAAAXxZGFO9EXZU8nwnN2tTEXexbnBWiPWJbhB15+Jz8nfQsXBpoTa
-        WjrMo4Qc0HiPXaIZhU+mKpo=
-X-Google-Smtp-Source: APXvYqzU0QjvBVCx0ssrUfq8kLh4g1PKTBBj2qaRjGJOAuYeog+j57yeoXYuz55utK4trv6oBJIKWw==
-X-Received: by 2002:a63:8ac3:: with SMTP id y186mr3590817pgd.22.1559221124817;
-        Thu, 30 May 2019 05:58:44 -0700 (PDT)
-Received: from localhost.localdomain ([45.114.62.35])
-        by smtp.gmail.com with ESMTPSA id j13sm2928912pfh.13.2019.05.30.05.58.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 05:58:44 -0700 (PDT)
-From:   Anand Moon <linux.amoon@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: rockchip: Add missing PCIe pwr amd rst configuration
-Date:   Thu, 30 May 2019 12:58:37 +0000
-Message-Id: <20190530125837.730-1-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7k26iPE69aDeRJ/TfJMi2xpp92kbi0U4xCxUWiVs7as=;
+        b=EsKPmhlJoGrkYBnAE2jUYRM2OQ7BKXaG8HLLHTurEEWrQYTyIQTdvDci6CxENrfuYC
+         3awfrGf8fgyJihT/Urx/9voI8rL63PxM3XhbLsFuSDr0Ato6uTI7g3jRykuOmW1z6ze/
+         C2SFPp2TUUD5TzqmjWBge7pKBJWZSDwqQObL+OwL94oz6o0joZ7b0kVNQ+2IXzTT6v0m
+         JoRel5qBAc0sKCJa6UiqG3fYhC6T98t9vZiblF4TWlLl+kWOvyse6eWL8iPV1s7xGPIR
+         Hzar3KjyTAm/FsX8tdblw8HQrSAZZm2KlO4SoNxa5B3B+tlA55gLO+ImBfwy3S1XGBkM
+         RNjw==
+X-Gm-Message-State: APjAAAUUq6/MBBZUI161DgLWBQPNodqbJLuTXkIXbWd4BmtHuyhpDWfy
+        Tu3T++To3zUyxTNf0ktChi7o5nAV9c6w74jRSA==
+X-Google-Smtp-Source: APXvYqyrXRL7AXGoD/ei/cr9ondS6PAG0j2w5hheO9H6XuZGbphAwizf1ReoGOh5ZnhOWsEZ1sVstzZSDvcfJ7z40js=
+X-Received: by 2002:a24:5095:: with SMTP id m143mr2653331itb.68.1559221287791;
+ Thu, 30 May 2019 06:01:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190512054829.11899-1-cai@lca.pw> <20190513124112.GH24036@dhcp22.suse.cz>
+ <1557755039.6132.23.camel@lca.pw> <20190513140448.GJ24036@dhcp22.suse.cz>
+ <1557760846.6132.25.camel@lca.pw> <20190513153143.GK24036@dhcp22.suse.cz>
+ <CAFgQCTt9XA9_Y6q8wVHkE9_i+b0ZXCAj__zYU0DU9XUkM3F4Ew@mail.gmail.com>
+ <20190522111655.GA4374@dhcp22.suse.cz> <CAFgQCTuKVif9gPTsbNdAqLGQyQpQ+gC2D1BQT99d0yDYHj4_mA@mail.gmail.com>
+ <CAFgQCTvKZU1B0e4Bg3hQedMJ4Oq2uiOshnsBQCjKinmrGdKcYg@mail.gmail.com> <20190528182132.GH1658@dhcp22.suse.cz>
+In-Reply-To: <20190528182132.GH1658@dhcp22.suse.cz>
+From:   Pingfan Liu <kernelfans@gmail.com>
+Date:   Thu, 30 May 2019 21:01:16 +0800
+Message-ID: <CAFgQCTsJgVjB-Bf22tZOM2fzKEdd0W0vmMdnZE5FxEYfV0p4Mg@mail.gmail.com>
+Subject: Re: [PATCH -next v2] mm/hotplug: fix a null-ptr-deref during NUMA boot
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
+        Barret Rhoden <brho@google.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Ingo Molnar <mingo@elte.hu>,
+        Oscar Salvador <osalvador@suse.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add missing PCIe gpio and pinctrl for power (#PCIE_PWR)
-also add PCIe gpio and pinctrl for reset (#PCIE_PERST_L).
+On Wed, May 29, 2019 at 2:21 AM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Thu 23-05-19 12:00:46, Pingfan Liu wrote:
+> [...]
+> > > Yes, but maybe it will pay great effort on it.
+> > >
+> > And as a first step, we can find a way to fix the bug reported by me
+> > and the one reported by Barret
+>
+> Can we try http://lkml.kernel.org/r/20190513140448.GJ24036@dhcp22.suse.cz
+> for starter?
+If it turns out that the changing of for_each_online_node() will not
+break functions in scheduler like task_numa_migrate(), I think it will
+be a good starter. On the other hand, if it does, then I think it only
+requires a slight adjustment of your patch to meet the aim.
 
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
-Tested on Rock960 Model A
----
- arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-index c7d48d41e184..f5bef6b0fe89 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-@@ -55,9 +55,10 @@
- 
- 	vcc3v3_pcie: vcc3v3-pcie-regulator {
- 		compatible = "regulator-fixed";
-+		gpio = <&gpio2 RK_PA2 GPIO_ACTIVE_HIGH>;
- 		enable-active-high;
- 		pinctrl-names = "default";
--		pinctrl-0 = <&pcie_drv>;
-+		pinctrl-0 = <&pcie_drv &pcie_pwr>;
- 		regulator-boot-on;
- 		regulator-name = "vcc3v3_pcie";
- 		regulator-min-microvolt = <3300000>;
-@@ -381,9 +382,10 @@
- };
- 
- &pcie0 {
-+	ep-gpio = <&gpio2 RK_PD4 GPIO_ACTIVE_HIGH>;
- 	num-lanes = <4>;
- 	pinctrl-names = "default";
--	pinctrl-0 = <&pcie_clkreqn_cpm>;
-+	pinctrl-0 = <&pcie_clkreqn_cpm &pcie_perst_l>;
- 	vpcie3v3-supply = <&vcc3v3_pcie>;
- 	status = "okay";
- };
-@@ -408,6 +410,16 @@
- 		};
- 	};
- 
-+	pcie {
-+		pcie_pwr: pcie-pwr {
-+			rockchip,pins = <2 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		pcie_perst_l:pcie-perst-l {
-+			rockchip,pins = <2 RK_PD4 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
- 	sdmmc {
- 		sdmmc_bus1: sdmmc-bus1 {
- 			rockchip,pins =
--- 
-2.21.0
-
+Thanks,
+  Pingfan
+> --
+> Michal Hocko
+> SUSE Labs
