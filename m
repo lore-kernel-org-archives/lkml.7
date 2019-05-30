@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF5FFC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AEA9C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E52324AC6
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 109F824AD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187021;
-	bh=R1Y/Uxnl9zCkAKdG+RQhuidqwjK17ZPDNJ3eFv/YJNc=;
+	s=default; t=1559187024;
+	bh=sdK1Xn6v9YbWQEGAiClWqejKazMG/VXN5F69IhQH0JM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rim5v2yYIkVluK6teiLQOgzjQe27xvGHaZpe5Oe4V89JJ+NHuKuOe1DbNzs79DiC2
-	 aPySSrb//AKB+n7pt9E1r9Y2sSu8kUkAsd7DlV+f3v6RlOXWFU50Aiyg+iBxU0W+Z+
-	 hNDhfmo5Yfs3FPRPPgWtoQa1nZdWRIxsYjdTAIX8=
+	b=ggdFIH2gK+dxIk/ENWQa8oNCKkSnsuMkeNxCMZaRdAcgT6dFevNSi0bBEqv6EQAtP
+	 jWeVmqMEH5iwCvc+X6gPt8F9zlqK1b082nj3kEUVYwEjzlqpKMGQC6Um1HrSPKRIex
+	 x3YpwmCZCG8yJ1GWffYEvMAFpjMRYYdQgDIJViLQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388535AbfE3DaV (ORCPT
+        id S2388228AbfE3DaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:30:21 -0400
+        Wed, 29 May 2019 23:30:23 -0400
 Received: from mail.kernel.org ([198.145.29.99]:34358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732527AbfE3DVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:21:22 -0400
+        id S1732546AbfE3DVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:21:24 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C36DB2499E;
-        Thu, 30 May 2019 03:21:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A45D224A0A;
+        Thu, 30 May 2019 03:21:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186479;
-        bh=R1Y/Uxnl9zCkAKdG+RQhuidqwjK17ZPDNJ3eFv/YJNc=;
+        s=default; t=1559186483;
+        bh=sdK1Xn6v9YbWQEGAiClWqejKazMG/VXN5F69IhQH0JM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ARmSnt3GBPZd4znfD1cTPpH+auovG+29d+RN08XN9cWfGFeHoqmV3Hkw/KQdgXsob
-         KFKcMaHfX2kH5rmis4xOFWF8j86TwdE5/yD1k3dtwCyIJ49XZ0Xk/CG4LvsIWxiWBt
-         Y3K/jNISJGiHLV6yzgvjeKOFIbGHUg2YF4MWRxKc=
+        b=bv8ImWOx9MIMAzmur6E1+rIVM+SiAtwDL6ZJscR09QjJ/Vou9YhSaMbCPw8Ymz2QC
+         5db6DVVDtUNM1eaWVte8GQNnYAnjKVm9pc7FQJ/OYyOy+Z7dp8GNSA5nWRcSLq2hwN
+         QXDGUzB5SNAeNawsrkWEED7EcUI9q3AAv84DAbTM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-pm@vger.kernel.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 115/128] rcuperf: Fix cleanup path for invalid perf_type strings
-Date:   Wed, 29 May 2019 20:07:27 -0700
-Message-Id: <20190530030455.194275136@linuxfoundation.org>
+Subject: [PATCH 4.9 086/128] cpufreq/pasemi: fix possible object reference leak
+Date:   Wed, 29 May 2019 20:06:58 -0700
+Message-Id: <20190530030450.275356015@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -59,50 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ad092c027713a68a34168942a5ef422e42e039f4 ]
+[ Upstream commit a9acc26b75f652f697e02a9febe2ab0da648a571 ]
 
-If the specified rcuperf.perf_type is not in the rcu_perf_init()
-function's perf_ops[] array, rcuperf prints some console messages and
-then invokes rcu_perf_cleanup() to set state so that a future torture
-test can run.  However, rcu_perf_cleanup() also attempts to end the
-test that didn't actually start, and in doing so relies on the value
-of cur_ops, a value that is not particularly relevant in this case.
-This can result in confusing output or even follow-on failures due to
-attempts to use facilities that have not been properly initialized.
+The call to of_get_cpu_node returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-This commit therefore sets the value of cur_ops to NULL in this case and
-inserts a check near the beginning of rcu_perf_cleanup(), thus avoiding
-relying on an irrelevant cur_ops value.
+Detected by coccinelle with the following warnings:
+./drivers/cpufreq/pasemi-cpufreq.c:212:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 147, but without a corresponding object release within this function.
+./drivers/cpufreq/pasemi-cpufreq.c:220:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 147, but without a corresponding object release within this function.
 
-Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-pm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/rcu/rcuperf.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/cpufreq/pasemi-cpufreq.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
-index 123ccbd224492..2b8579d5a5445 100644
---- a/kernel/rcu/rcuperf.c
-+++ b/kernel/rcu/rcuperf.c
-@@ -453,6 +453,10 @@ rcu_perf_cleanup(void)
+diff --git a/drivers/cpufreq/pasemi-cpufreq.c b/drivers/cpufreq/pasemi-cpufreq.c
+index 35dd4d7ffee08..58c933f483004 100644
+--- a/drivers/cpufreq/pasemi-cpufreq.c
++++ b/drivers/cpufreq/pasemi-cpufreq.c
+@@ -146,6 +146,7 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
  
- 	if (torture_cleanup_begin())
- 		return;
-+	if (!cur_ops) {
-+		torture_cleanup_end();
-+		return;
-+	}
+ 	cpu = of_get_cpu_node(policy->cpu, NULL);
  
- 	if (reader_tasks) {
- 		for (i = 0; i < nrealreaders; i++)
-@@ -574,6 +578,7 @@ rcu_perf_init(void)
- 			pr_alert(" %s", perf_ops[i]->name);
- 		pr_alert("\n");
- 		firsterr = -EINVAL;
-+		cur_ops = NULL;
- 		goto unwind;
- 	}
- 	if (cur_ops->init)
++	of_node_put(cpu);
+ 	if (!cpu)
+ 		goto out;
+ 
 -- 
 2.20.1
 
