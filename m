@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F953C28CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E48C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E544E25F62
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C87825F5C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:21:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uhOmPRjv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GxvvJPDK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbfE3SVA (ORCPT
+        id S1726804AbfE3SU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 14:21:00 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35422 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726748AbfE3SU5 (ORCPT
+        Thu, 30 May 2019 14:20:58 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37146 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726563AbfE3SUz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 14:20:57 -0400
-Received: by mail-lj1-f196.google.com with SMTP id h11so7043705ljb.2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 11:20:55 -0700 (PDT)
+        Thu, 30 May 2019 14:20:55 -0400
+Received: by mail-lj1-f194.google.com with SMTP id h19so7014608ljj.4
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 11:20:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=7Z+hJ2xpe6chUPepscBLPDGl6ohx6IXf3hvf84qy8k8=;
-        b=uhOmPRjvEPSqocDDlrLrJvOMrG4BmMTmoKHMBhVYAOxkMPgQwKo8MLA+oUcoZpnE73
-         dmiFzXl+QuZrAp0Lgucvbbs/79sKAtpwEPKLe+oVyi9gpnJmlqdmQWFthozqsJ7vAlib
-         O5ziXaNoSYxVerDq2kopFdPMRnnstnvVV+oXSSGa8KaD2zcWoIZqMQTCOKKkN2oZxBYH
-         QXagZkmO/GrHY+9MvwRB2j/wtFTdc9VllDwFrNei7AQgikvYzJ4CyR3Aqnd1qkd/6ahV
-         PUicArdA8GgZMhQv7A5UXBQJCzMMl0d5wd3whOjnjuW8jmjn5lApMHzCIAyDszBD+YcR
-         T0hg==
+        bh=ksgNqXYuq7eYRSzBEvTxTsDgmGrsQMBHFwlmQvvNPkE=;
+        b=GxvvJPDKMnF2Hc4YuIT4oM82YGKw8EcaMBLqKbLD6yc2xy1Jwtfbwfeyw6rJBMcxpP
+         /8u5FHFV1Sy3qbcFK5Wmocu4voUWgTi5jFxXDOxc+ngyfsy4lqfvlE7oHUr+L6qZH+eX
+         ueuXJk6RvJCOHnaTzXvc+TlemnLRktzO0mQfYVU9yC3NpOn2npdhCibuxqDZHEu55r80
+         3ZvBQY3uUcxW/C9LniDNuWN/a3zoHFJ2gJI3hYCe/2Td//7W/9ecVrlJaVueUFNuH3iF
+         nCFCRSOlgR596k+Vvo6qoZ/d/mlLBZ1dEtqBninfkrngveooWNd17Db8p+jox/7w0ASv
+         o/Xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=7Z+hJ2xpe6chUPepscBLPDGl6ohx6IXf3hvf84qy8k8=;
-        b=JqaaOVS/0V27lS7J3TEuiOPunUK5Y8BAvrPBRZ2BnvxR2Y5Xnt6pVnhVKQUNnxpVwW
-         5INzQumy2KKrv9QJQUy50k1ZvB3OP2S1FWXj2nzmLNJGZR5Gla0vK+bfbFKkk3mToFBH
-         HJ/fzWH3O5QN2b5erXPet8gsieeRjiQtcAOy9tLzZdATq6gKicfLUNklGXWz+YRZW69K
-         DWaZctQsVYH9dxeH97N+tdp2+spssDS0keYl1biIuLhqM1JvXkP5xNjsatSGORN5r5gh
-         IBw9TPS4LuoviLyJWRZOJeSdJlKxhcquE7/jrAKSYXB4LDsm9s5xAvoG0ijaL0rXv+IV
-         4o3w==
-X-Gm-Message-State: APjAAAUhMunzFtNXCt0PMGyK43wCApWvKkIUOD2H8M2R2V5XpTg07QWI
-        nZQ6yXw/pSpCN8KtZZ8MGu3bQw==
-X-Google-Smtp-Source: APXvYqwqZIOoXCsEeTno321JHOUaxvSb9pUFwirU22e1UX6ErOyOq9neJwpkmyIFY2XvP7TweKdhLw==
-X-Received: by 2002:a05:651c:93:: with SMTP id 19mr2944496ljq.213.1559240455046;
-        Thu, 30 May 2019 11:20:55 -0700 (PDT)
+        bh=ksgNqXYuq7eYRSzBEvTxTsDgmGrsQMBHFwlmQvvNPkE=;
+        b=kmGB2EHT3toJ28yH793Iq2JZCHpL82yNdt7QI3r6pR0OnTIrmtH5OTkcsi8jT/umyn
+         clwbwD7/m+bFTeO47YQQRHuuvADqw2hbF2478AiZ1fo5SdxH1Hsu6heeQ4jKczel5DCq
+         Rrh59tND4fSCsF02p38S8HpM03yHjBKKmQY9uufMI8ZYVRzQ+MjavvwHwb/Yf+FHaqzb
+         u/PYdWTe19+TlroZCO1YxgL8uOE85LnGcuzSMAZ3wE+RF70KbhLGWCw7cuyIZq8OF+n3
+         M/Hs5mofL97wzfXedUKLAQDIwchWRCDTEuK33cZZpT3ctaoUOGiSgJpK2dxdSeHka4BB
+         9fwA==
+X-Gm-Message-State: APjAAAUomEYhOoUbT8/z6jRKIXkoDglyopx8216cl4U9DQcSqueSjZgK
+        Uf//pwGjuvJt9tKi1OOKSLLZng==
+X-Google-Smtp-Source: APXvYqy7hb7ALHTHh96K5zrKV05mrOIrhkcfG5OPW6qXfaO6Jy/BSI/AMhpabp61GGx5Y2leoIFiTA==
+X-Received: by 2002:a2e:88c7:: with SMTP id a7mr2713139ljk.118.1559240453797;
+        Thu, 30 May 2019 11:20:53 -0700 (PDT)
 Received: from localhost.localdomain (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
-        by smtp.gmail.com with ESMTPSA id v7sm388946lfe.11.2019.05.30.11.20.53
+        by smtp.gmail.com with ESMTPSA id v7sm388946lfe.11.2019.05.30.11.20.52
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 11:20:54 -0700 (PDT)
+        Thu, 30 May 2019 11:20:53 -0700 (PDT)
 From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 To:     grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net
 Cc:     ast@kernel.org, linux-kernel@vger.kernel.org,
@@ -63,9 +63,9 @@ Cc:     ast@kernel.org, linux-kernel@vger.kernel.org,
         daniel@iogearbox.net, jakub.kicinski@netronome.com,
         john.fastabend@gmail.com,
         Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Subject: [PATCH v2 net-next 4/7] net: ethernet: ti: cpsw_ethtool: simplify slave loops
-Date:   Thu, 30 May 2019 21:20:36 +0300
-Message-Id: <20190530182039.4945-5-ivan.khoronzhuk@linaro.org>
+Subject: [PATCH v2 net-next 3/7] net: ethernet: ti: cpsw: use cpsw as drv data
+Date:   Thu, 30 May 2019 21:20:35 +0300
+Message-Id: <20190530182039.4945-4-ivan.khoronzhuk@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190530182039.4945-1-ivan.khoronzhuk@linaro.org>
 References: <20190530182039.4945-1-ivan.khoronzhuk@linaro.org>
@@ -74,113 +74,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Only for consistency reasons, do it like in main cpsw.c module
-and use ndev reference but not by means of slave.
+No need to set ndev for drvdata when mainly cpsw reference is needed,
+so correct this legacy decision.
 
 Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 ---
- drivers/net/ethernet/ti/cpsw_ethtool.c | 40 ++++++++++++++------------
- 1 file changed, 21 insertions(+), 19 deletions(-)
+ drivers/net/ethernet/ti/cpsw.c | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/ethernet/ti/cpsw_ethtool.c b/drivers/net/ethernet/ti/cpsw_ethtool.c
-index a4a7ec0d2531..c260bb32aacf 100644
---- a/drivers/net/ethernet/ti/cpsw_ethtool.c
-+++ b/drivers/net/ethernet/ti/cpsw_ethtool.c
-@@ -458,7 +458,6 @@ int cpsw_nway_reset(struct net_device *ndev)
- static void cpsw_suspend_data_pass(struct net_device *ndev)
+diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
+index 6d3f1f3f90cb..3430503e1053 100644
+--- a/drivers/net/ethernet/ti/cpsw.c
++++ b/drivers/net/ethernet/ti/cpsw.c
+@@ -2265,8 +2265,7 @@ static int cpsw_probe_dt(struct cpsw_platform_data *data,
+ 
+ static void cpsw_remove_dt(struct platform_device *pdev)
  {
- 	struct cpsw_common *cpsw = ndev_to_cpsw(ndev);
--	struct cpsw_slave *slave;
- 	int i;
- 
- 	/* Disable NAPI scheduling */
-@@ -467,12 +466,13 @@ static void cpsw_suspend_data_pass(struct net_device *ndev)
- 	/* Stop all transmit queues for every network device.
- 	 * Disable re-using rx descriptors with dormant_on.
- 	 */
--	for (i = cpsw->data.slaves, slave = cpsw->slaves; i; i--, slave++) {
--		if (!(slave->ndev && netif_running(slave->ndev)))
-+	for (i = 0; i < cpsw->data.slaves; i++) {
-+		ndev = cpsw->slaves[i].ndev;
-+		if (!(ndev && netif_running(ndev)))
- 			continue;
- 
--		netif_tx_stop_all_queues(slave->ndev);
--		netif_dormant_on(slave->ndev);
-+		netif_tx_stop_all_queues(ndev);
-+		netif_dormant_on(ndev);
+-	struct net_device *ndev = platform_get_drvdata(pdev);
+-	struct cpsw_common *cpsw = ndev_to_cpsw(ndev);
++	struct cpsw_common *cpsw = platform_get_drvdata(pdev);
+ 	struct cpsw_platform_data *data = &cpsw->data;
+ 	struct device_node *node = pdev->dev.of_node;
+ 	struct device_node *slave_node;
+@@ -2477,7 +2476,7 @@ static int cpsw_probe(struct platform_device *pdev)
+ 		goto clean_cpts;
  	}
  
- 	/* Handle rest of tx packets and stop cpdma channels */
-@@ -483,13 +483,14 @@ static int cpsw_resume_data_pass(struct net_device *ndev)
+-	platform_set_drvdata(pdev, ndev);
++	platform_set_drvdata(pdev, cpsw);
+ 	priv = netdev_priv(ndev);
+ 	priv->cpsw = cpsw;
+ 	priv->ndev = ndev;
+@@ -2570,9 +2569,8 @@ static int cpsw_probe(struct platform_device *pdev)
+ 
+ static int cpsw_remove(struct platform_device *pdev)
  {
- 	struct cpsw_priv *priv = netdev_priv(ndev);
- 	struct cpsw_common *cpsw = priv->cpsw;
--	struct cpsw_slave *slave;
- 	int i, ret;
+-	struct net_device *ndev = platform_get_drvdata(pdev);
+-	struct cpsw_common *cpsw = ndev_to_cpsw(ndev);
+-	int ret;
++	struct cpsw_common *cpsw = platform_get_drvdata(pdev);
++	int i, ret;
  
- 	/* Allow rx packets handling */
--	for (i = cpsw->data.slaves, slave = cpsw->slaves; i; i--, slave++)
--		if (slave->ndev && netif_running(slave->ndev))
--			netif_dormant_off(slave->ndev);
-+	for (i = 0; i < cpsw->data.slaves; i++) {
-+		ndev = cpsw->slaves[i].ndev;
-+		if (ndev && netif_running(ndev))
-+			netif_dormant_off(ndev);
-+	}
- 
- 	/* After this receive is started */
- 	if (cpsw->usage_count) {
-@@ -502,9 +503,11 @@ static int cpsw_resume_data_pass(struct net_device *ndev)
+ 	ret = pm_runtime_get_sync(&pdev->dev);
+ 	if (ret < 0) {
+@@ -2580,9 +2578,9 @@ static int cpsw_remove(struct platform_device *pdev)
+ 		return ret;
  	}
  
- 	/* Resume transmit for every affected interface */
--	for (i = cpsw->data.slaves, slave = cpsw->slaves; i; i--, slave++)
--		if (slave->ndev && netif_running(slave->ndev))
--			netif_tx_start_all_queues(slave->ndev);
-+	for (i = 0; i < cpsw->data.slaves; i++) {
-+		ndev = cpsw->slaves[i].ndev;
-+		if (ndev && netif_running(ndev))
-+			netif_tx_start_all_queues(ndev);
-+	}
+-	if (cpsw->data.dual_emac)
+-		unregister_netdev(cpsw->slaves[1].ndev);
+-	unregister_netdev(ndev);
++	for (i = 0; i < cpsw->data.slaves; i++)
++		if (cpsw->slaves[i].ndev)
++			unregister_netdev(cpsw->slaves[i].ndev);
  
- 	return 0;
- }
-@@ -587,7 +590,6 @@ int cpsw_set_channels_common(struct net_device *ndev,
- {
- 	struct cpsw_priv *priv = netdev_priv(ndev);
- 	struct cpsw_common *cpsw = priv->cpsw;
--	struct cpsw_slave *slave;
- 	int i, ret;
- 
- 	ret = cpsw_check_ch_settings(cpsw, chs);
-@@ -604,20 +606,20 @@ int cpsw_set_channels_common(struct net_device *ndev,
- 	if (ret)
- 		goto err;
- 
--	for (i = cpsw->data.slaves, slave = cpsw->slaves; i; i--, slave++) {
--		if (!(slave->ndev && netif_running(slave->ndev)))
-+	for (i = 0; i < cpsw->data.slaves; i++) {
-+		struct net_device *ndev = cpsw->slaves[i].ndev;
-+
-+		if (!(ndev && netif_running(ndev)))
- 			continue;
- 
- 		/* Inform stack about new count of queues */
--		ret = netif_set_real_num_tx_queues(slave->ndev,
--						   cpsw->tx_ch_num);
-+		ret = netif_set_real_num_tx_queues(ndev, cpsw->tx_ch_num);
- 		if (ret) {
- 			dev_err(priv->dev, "cannot set real number of tx queues\n");
- 			goto err;
- 		}
- 
--		ret = netif_set_real_num_rx_queues(slave->ndev,
--						   cpsw->rx_ch_num);
-+		ret = netif_set_real_num_rx_queues(ndev, cpsw->rx_ch_num);
- 		if (ret) {
- 			dev_err(priv->dev, "cannot set real number of rx queues\n");
- 			goto err;
+ 	cpts_release(cpsw->cpts);
+ 	cpdma_ctlr_destroy(cpsw->dma);
 -- 
 2.17.1
 
