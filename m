@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 748E6C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B05ABC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40BDA20717
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:27:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A57324498
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:27:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186844;
-	bh=J4uwusvLtrICANSHTWdP5KgOtyuG4ox8q63z/IbzCHk=;
+	s=default; t=1559186847;
+	bh=s4kCazaRSWnzkH+QoFib8l1lxFponnhzdXNy2kqfGz0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rCncZ6UEiy79CmWab7E9flqokSEVB5K+wimE35U2jhrmAFECqGgIXlNpvbW5QPbsM
-	 olpid6KqrkuL4o5Fwyk4vpBXTSjJYAC258xRscISm7YLVS13/UpC7i5OFZvajIK+Ez
-	 muiMMWU17xUVNg2zBqHoHtVkEaqjs3XfjMpPA5S0=
+	b=ML6vHccqCc+TUN2mQ0ovK7WTTnpBGRLo3EV1cyLu/Dq7TbjfXSOq+0vnBOT1UfTAP
+	 9mt/7NnAiL+2u2bhE+HWuwfEuqGSlAvUTJ3KLl171fmtI/+1RgqZOTdS7Scf5kgy9o
+	 gZtoh+lwYuI9RoP5yvgtH9eSCvv3nGfDQhr7KNjU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387999AbfE3D1X (ORCPT
+        id S2388008AbfE3D10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:27:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54748 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:27:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731878AbfE3DTY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:24 -0400
+        id S1731891AbfE3DT0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:26 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C818B2484B;
-        Thu, 30 May 2019 03:19:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B473524865;
+        Thu, 30 May 2019 03:19:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186363;
-        bh=J4uwusvLtrICANSHTWdP5KgOtyuG4ox8q63z/IbzCHk=;
+        s=default; t=1559186365;
+        bh=s4kCazaRSWnzkH+QoFib8l1lxFponnhzdXNy2kqfGz0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jZosiTMfQJZb1lK5qEQCeOi5gqunvpIxEjEygWJjcmCc9jUGoGZjseTTao/rgnzVG
-         NekBs778vAZUk/QaAG9lnqbxm2CHSE0OyiFSBhQq5x3jy/NH5hkRjxSzMadQUzkGuA
-         Uzb4oqyf0kX7vIMoIyrkHQbWcqQ/CRzN00Su+TMU=
+        b=BCJokbUUoD1gfdKic9AhpbsjfkppNqxjr3+2EAr5+ykzWS8DFkgAyX5FRVeBaMhLW
+         JZ7eHFnux+COv/Jm80hcMO0P+1rmPZruOBoI/YwL7hh4L5A/68qYNG9/4JcAxxSkKm
+         JESUWGm0CIMT850qyH5n+JdWC/so+DRWGUEs/76I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        stable@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 111/193] hwmon: (vt1211) Use request_muxed_region for Super-IO accesses
-Date:   Wed, 29 May 2019 20:06:05 -0700
-Message-Id: <20190530030504.249468936@linuxfoundation.org>
+Subject: [PATCH 4.14 114/193] hwmon: (pc87427) Use request_muxed_region for Super-IO accesses
+Date:   Wed, 29 May 2019 20:06:08 -0700
+Message-Id: <20190530030504.716177193@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -59,7 +61,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 14b97ba5c20056102b3dd22696bf17b057e60976 ]
+[ Upstream commit 755a9b0f8aaa5639ba5671ca50080852babb89ce ]
 
 Super-IO accesses may fail on a system with no or unmapped LPC bus.
 
@@ -70,57 +72,56 @@ Use request_muxed_region() to ensure that IO access on the requested
 address space is supported, and to ensure that access by multiple drivers
 is synchronized.
 
-Fixes: 2219cd81a6cd ("hwmon/vt1211: Add probing of alternate config index port")
+Fixes: ba224e2c4f0a7 ("hwmon: New PC87427 hardware monitoring driver")
+Reported-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Reported-by: John Garry <john.garry@huawei.com>
+Cc: John Garry <john.garry@huawei.com>
+Acked-by: John Garry <john.garry@huawei.com>
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/vt1211.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/hwmon/pc87427.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hwmon/vt1211.c b/drivers/hwmon/vt1211.c
-index 3a6bfa51cb94f..95d5e8ec8b7fc 100644
---- a/drivers/hwmon/vt1211.c
-+++ b/drivers/hwmon/vt1211.c
-@@ -226,15 +226,21 @@ static inline void superio_select(int sio_cip, int ldn)
- 	outb(ldn, sio_cip + 1);
- }
+diff --git a/drivers/hwmon/pc87427.c b/drivers/hwmon/pc87427.c
+index dc5a9d5ada516..81a05cd1a5121 100644
+--- a/drivers/hwmon/pc87427.c
++++ b/drivers/hwmon/pc87427.c
+@@ -106,6 +106,13 @@ static const char *logdev_str[2] = { DRVNAME " FMC", DRVNAME " HMC" };
+ #define LD_IN		1
+ #define LD_TEMP		1
  
--static inline void superio_enter(int sio_cip)
-+static inline int superio_enter(int sio_cip)
- {
-+	if (!request_muxed_region(sio_cip, 2, DRVNAME))
++static inline int superio_enter(int sioaddr)
++{
++	if (!request_muxed_region(sioaddr, 2, DRVNAME))
 +		return -EBUSY;
-+
- 	outb(0x87, sio_cip);
- 	outb(0x87, sio_cip);
-+
 +	return 0;
++}
++
+ static inline void superio_outb(int sioaddr, int reg, int val)
+ {
+ 	outb(reg, sioaddr);
+@@ -122,6 +129,7 @@ static inline void superio_exit(int sioaddr)
+ {
+ 	outb(0x02, sioaddr);
+ 	outb(0x02, sioaddr + 1);
++	release_region(sioaddr, 2);
  }
  
- static inline void superio_exit(int sio_cip)
+ /*
+@@ -1220,7 +1228,11 @@ static int __init pc87427_find(int sioaddr, struct pc87427_sio_data *sio_data)
  {
- 	outb(0xaa, sio_cip);
-+	release_region(sio_cip, 2);
- }
- 
- /* ---------------------------------------------------------------------
-@@ -1282,11 +1288,14 @@ static int __init vt1211_device_add(unsigned short address)
- 
- static int __init vt1211_find(int sio_cip, unsigned short *address)
- {
--	int err = -ENODEV;
-+	int err;
- 	int devid;
- 
--	superio_enter(sio_cip);
-+	err = superio_enter(sio_cip);
+ 	u16 val;
+ 	u8 cfg, cfg_b;
+-	int i, err = 0;
++	int i, err;
++
++	err = superio_enter(sioaddr);
 +	if (err)
 +		return err;
  
-+	err = -ENODEV;
- 	devid = force_id ? force_id : superio_inb(sio_cip, SIO_VT1211_DEVID);
- 	if (devid != SIO_VT1211_ID)
- 		goto EXIT;
+ 	/* Identify device */
+ 	val = force_id ? force_id : superio_inb(sioaddr, SIOREG_DEVID);
 -- 
 2.20.1
 
