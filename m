@@ -5,54 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AEC0C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA87BC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AEE825281
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:23:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FD5D25285
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:23:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190214;
-	bh=n5kjA7fjbOwqd5N27ytYvPLS2ALxClmy4UA9vMmx6Oc=;
+	s=default; t=1559190216;
+	bh=UJiPpQOR8Dhm936UzxmqRdc9QwzhXyAeIt40ybzJZ4E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jdvQRL7RXYjeyvPHHm6hsKPjE80ZSaNtdzsx29WgoBfuYOZ4Z6Edf31jK5Xd2CuRE
-	 9in8EkoGuIiYkVVDXk43rkNXtCvWIIcVbw0LAO4nC2Gr60FgGqnyGa+LPDZomdjaOd
-	 +oUe0lKmp7MLJISkJHzPVVhKUesyUB4zYkjZLZwg=
+	b=fz0NVr/S302wdR/JbN1fUsqbHuMHs+R9Sp3GxenjCmM470sWfJlsmTPQv1DKqVbVL
+	 Wcuhyuj7Nq9knllXbzuyD+4kuIYAJte48f0x9l3pjdERPcq8UFqSzLKt956cTlvlqb
+	 A4aYmA8laUVuK6M5txCvcT6CK5a1WK14RhTUmYZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730058AbfE3DPB (ORCPT
+        id S1731482AbfE3EXg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:15:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54138 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:23:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728935AbfE3DMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:18 -0400
+        id S1730049AbfE3DPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:01 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 856A7244D4;
-        Thu, 30 May 2019 03:12:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4CFF2449A;
+        Thu, 30 May 2019 03:15:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185937;
-        bh=n5kjA7fjbOwqd5N27ytYvPLS2ALxClmy4UA9vMmx6Oc=;
+        s=default; t=1559186100;
+        bh=UJiPpQOR8Dhm936UzxmqRdc9QwzhXyAeIt40ybzJZ4E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IwB42shWgQqL01jbE5OMNPkTBM37wxqSEBJ22y2gvjeoTUYMUOxEdYD8ZBd3e6b4V
-         NuayEhYKwHLwp6VyeO5uxt5VTd07fvi7ICUoz5meb5n9dmVY6ExKD3CH1XlwXggKcF
-         lkIDlPueMSims2Pqr2rAoqH/pjw9c5Hdz9HOlPRY=
+        b=ytKUHtUY8lL+PNk7Ai9eOrZaDiEGrcRwve6zghWvTU6e9q+eiFYSMLxc7cabePBeI
+         xIwGXNZsksGXp75vf9qFac2XEjQ1hHnLsodS5oeVMRYgVv4Og9YBpZeEvR/65NmM7B
+         WBfShro8bXWPmyxlqgJxzqhWDvDJTBWQV9kQSCpg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Francis <David.Francis@amd.com>,
-        Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 332/405] drm/amd/display: Update ABM crtc state on non-modeset
-Date:   Wed, 29 May 2019 20:05:30 -0700
-Message-Id: <20190530030557.522308546@linuxfoundation.org>
+Subject: [PATCH 5.0 237/346] arm64: cpu_ops: fix a leaked reference by adding missing of_node_put
+Date:   Wed, 29 May 2019 20:05:10 -0700
+Message-Id: <20190530030553.042815312@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
-References: <20190530030540.291644921@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,40 +63,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b05e2c5e81f9a0be4a145e0926b1dfe62f6347d4 ]
+[ Upstream commit 92606ec9285fb84cd9b5943df23f07d741384bfc ]
 
-[Why]
-Somewhere in the atomic check reshuffle ABM got lost.
-ABM is a crtc property (copied from a connector property).
-It can change without a modeset, just like underscan.
+The call to of_get_next_child returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-[How]
-In the skip_modeset branch of atomic check crtc updates,
-copy over the abm property.
+Detected by coccinelle with the following warnings:
+  ./arch/arm64/kernel/cpu_ops.c:102:1-7: ERROR: missing of_node_put;
+  acquired a node pointer with refcount incremented on line 69, but
+  without a corresponding object release within this function.
 
-Signed-off-by: David Francis <David.Francis@amd.com>
-Reviewed-by: Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>
-Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/kernel/cpu_ops.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index 66f19d1864b17..c212bff457eec 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -5661,6 +5661,9 @@ static int dm_update_crtc_state(struct amdgpu_display_manager *dm,
- 		update_stream_scaling_settings(
- 			&new_crtc_state->mode, dm_new_conn_state, dm_new_crtc_state->stream);
- 
-+	/* ABM settings */
-+	dm_new_crtc_state->abm_level = dm_new_conn_state->abm_level;
-+
- 	/*
- 	 * Color management settings. We also update color properties
- 	 * when a modeset is needed, to ensure it gets reprogrammed.
+diff --git a/arch/arm64/kernel/cpu_ops.c b/arch/arm64/kernel/cpu_ops.c
+index ea001241bdd47..00f8b8612b69f 100644
+--- a/arch/arm64/kernel/cpu_ops.c
++++ b/arch/arm64/kernel/cpu_ops.c
+@@ -85,6 +85,7 @@ static const char *__init cpu_read_enable_method(int cpu)
+ 				pr_err("%pOF: missing enable-method property\n",
+ 					dn);
+ 		}
++		of_node_put(dn);
+ 	} else {
+ 		enable_method = acpi_get_enable_method(cpu);
+ 		if (!enable_method) {
 -- 
 2.20.1
 
