@@ -2,182 +2,124 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CA5C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2095C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A11AB2556B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:58:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="SqciTApf"
+	by mail.kernel.org (Postfix) with ESMTP id C060025574
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:00:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbfE3I67 (ORCPT
+        id S1727036AbfE3JAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 04:58:59 -0400
-Received: from mail-eopbgr50083.outbound.protection.outlook.com ([40.107.5.83]:3406
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726442AbfE3I66 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 04:58:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w5v8tFLnqMyXICxDdVIkWXhQnGXr3zFo1jHvIDv/WNY=;
- b=SqciTApf4KF76TpTRKp5ln2wqAN1/nAF9iXs1Hy6798Tl1Ziv0WbMCV7DVqjTxsmUjw0FbGiqMVIxYoFhDdpXieSOGW1A+sz2L3+0rEkNMxlM3UwXNsHRm/VhT+KZ7jL/qx+LwZm2qz3RtNHgekjPAtb0p+5D2Sscr/QSRk5cmk=
-Received: from VI1PR0501MB2271.eurprd05.prod.outlook.com (10.169.134.149) by
- VI1PR0501MB2784.eurprd05.prod.outlook.com (10.172.12.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.16; Thu, 30 May 2019 08:58:54 +0000
-Received: from VI1PR0501MB2271.eurprd05.prod.outlook.com
- ([fe80::a0a7:7e01:762e:58e0]) by VI1PR0501MB2271.eurprd05.prod.outlook.com
- ([fe80::a0a7:7e01:762e:58e0%6]) with mapi id 15.20.1922.021; Thu, 30 May 2019
- 08:58:54 +0000
-From:   Parav Pandit <parav@mellanox.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "cjia@nvidia.com" <cjia@nvidia.com>
-Subject: RE: [PATCHv4 3/3] vfio/mdev: Synchronize device create/remove with
- parent removal
-Thread-Topic: [PATCHv4 3/3] vfio/mdev: Synchronize device create/remove with
- parent removal
-Thread-Index: AQHVEjiyuDv6ObZt1k6QmGEdbbkCeKaCOPeAgAEtoOA=
-Date:   Thu, 30 May 2019 08:58:54 +0000
-Message-ID: <VI1PR0501MB22713FD54711E482C8627614D1180@VI1PR0501MB2271.eurprd05.prod.outlook.com>
-References: <20190524135738.54862-1-parav@mellanox.com>
-        <20190524135738.54862-4-parav@mellanox.com> <20190529085633.7fcdf7d2@x1.home>
-In-Reply-To: <20190529085633.7fcdf7d2@x1.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=parav@mellanox.com; 
-x-originating-ip: [122.179.25.149]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7ac645ef-82c3-4ac8-bac1-08d6e4dd0afc
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0501MB2784;
-x-ms-traffictypediagnostic: VI1PR0501MB2784:
-x-microsoft-antispam-prvs: <VI1PR0501MB2784BCDD2CBB6B5F07589F1FD1180@VI1PR0501MB2784.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 00531FAC2C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(396003)(346002)(366004)(136003)(376002)(13464003)(199004)(189003)(6506007)(316002)(81166006)(66446008)(66476007)(33656002)(2906002)(14444005)(73956011)(8936002)(7696005)(86362001)(76116006)(76176011)(5660300002)(4326008)(81156014)(53936002)(25786009)(99286004)(102836004)(6246003)(54906003)(64756008)(66946007)(66556008)(8676002)(6116002)(68736007)(26005)(478600001)(71200400001)(66066001)(71190400001)(14454004)(256004)(11346002)(55016002)(446003)(74316002)(229853002)(186003)(6436002)(9686003)(3846002)(305945005)(6916009)(476003)(52536014)(7736002)(486006);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0501MB2784;H:VI1PR0501MB2271.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: lukaKy0BHjZ5osDal/MVZ+9HCtoKvHRTk+pCQmMaEJmab0BNOS5FqQAbnT0lyyX+dRcxumnGfyLaWQdIk+YWINLAnYWiEdX0qt6HEsJGi/kfCMWA5Jszc5gdrhvEiSeI63Gl5LDDao6LuU2QcQ0lZ4t8PiXI7zlh6WfIBOxEb2Q/yO4A+7o2ADB6/RojLSA5GP2nvu5ZNl/9TvexMZHR1bVPqqZYdm1ZibdhoANjAruWFJOyAo+qFBm3wsrxqIn52JI3YmtlA7W3upheqsHLR/SaywluFuljbVjORHY4ncuynnlsSoyuBs9vsB+49Ntg//NLAHcNkE15UgUdk9rdLbPvl1EWoE8dmnK+LNFV2PzRbrmIzIuXr87KVG7b6bwrIFwZLU374mZoolVlqgXAD8KAQQ0NGlG+TCQd/S3swO4=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 30 May 2019 05:00:45 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:59076 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbfE3JAo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 05:00:44 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: andrewsh)
+        with ESMTPSA id 8201A2808DE
+Subject: Re: [PATCH] [trivial] HID: Typo s/to back 0/back to 0/
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190527122532.6084-1-geert+renesas@glider.be>
+From:   Andrej Shadura <andrew.shadura@collabora.co.uk>
+Openpgp: preference=signencrypt
+Autocrypt: addr=andrew.shadura@collabora.co.uk; prefer-encrypt=mutual;
+ keydata=
+ mQINBFqJnRkBEAC2yVgL0QLFfM9I5j5dPNdp0iqQppWcqYUIW9z26tvFgg1kPBD0HXi3wQVo
+ sTsW/rMxwgrSGalQqIE4ytNgs6DUv0qQo8hMWaiS3k2gt+4zy7Pt7S6oieSw2aaAMz24ul2x
+ 98d2RSzEJ10CirTRcjVM2rsYyGfZ4Vd2Gvn4SuUkVsT9hMtdx8vFs4oqUBslbxBDZxQ9BmBh
+ tRdBEkUrPZN6T93A7rkbTeckC7fX1PsFwDE6jX5Mo11In6/Mw6Q4wMFKjBF6hzqpJbW2ZI8h
+ FA3FN2XNQv9ztGDgs+3dmqJKBpmv/OXbii6GxDiDZc7vq/Y430DMalQFwo1Pm2CDh2BeQEGh
+ LxdYvo46P8Aq55DY2FhZB5iisueu4/yQRdk3Bo+sghAiFL65e7VY4mYFcnjMB2k0Vupn140S
+ zFR3fI973Vl98FPigl8vKn0gFTjZADgzJ7PfJWWfPHIezRBTiuspyUgdBrKCfhgVEDduJ78J
+ 4pfeWyWPaHkOVlYjHqedlc1LwjGJx+tN3EMBs4xYNE9lARAtF8VVcGfvTA8VAimvDq6BGzQM
+ UVtACLAwK2mZ2UNpR2wGSRMuL10CgfbTl/lb0QjChzX+v8HDcvfL+rgZb0UBEvr3cHoAc8WZ
+ M0LUy3PJ1q2mQbsbisJaR4HKmNVD2Xa5CkpiHgQL8EHDO39l4wARAQABtC9BbmRyZWogU2hh
+ ZHVyYSA8YW5kcmV3LnNoYWR1cmFAY29sbGFib3JhLmNvLnVrPokCVwQTAQgAQQIbAwULCQgH
+ AgYVCAkKCwIEFgIDAQIeAQIXgAIZARYhBOO1e+BeAljD+oIc17ZHtP9A7GMDBQJcasbpBQkD
+ wl1QAAoJELZHtP9A7GMD8bQP/3nzYRWHKIx8zWG8UeLZLXIibiZVsnd+QK7MCVkWTmsMDr1C
+ 29j98Ey0ljREt3sQ5BtpzDZBTi34BjJI4gI7aBriIHIeABkZe1z0IU1vM9icE5aAQkn0nwt2
+ +ssGu7MQRinK09cXn7s3Bi3NT48K1Du0Wyz5Q+yUWqGE5N61JkZug9YjtTlch1LboxMVhgYv
+ s+paZdV22CwWItKg/WRy7bJg81bAj8EtuyFzwQ7toxGwhJdcN2lzmqpd184jhFCgLw/Jv3ig
+ ZOBelx80X7i6SEb1JdJRmgJVhnWWvhmFhKoJ5KiSMAM/yddVS8rtQJSgfqb/6j85gc+5caC/
+ kdM16RzTlOz/+v2CIfjainkVXVOJKruEtaiKChX8TPA2iz57qJbIqBRXzWvt528leqL20W27
+ sh+REHsJIs2Iq36Mk3lub//gDE0OzkxX4zzH+az/t/KUuEW/t/fbFr7dLrrgkov4lFiROkVK
+ own7Vq074poKFhxKwVXqM7iOCM1Lm1lkhJSSOX5hbZdRJe0qyYa7RK0MwhEFqFdFW7GHkygR
+ IqFyOafPsYnLun9O7Umf4q/x+P/9Px6XII6VfSmqtC/X58e4n04lVB2aui+iQQbN/kaz/um0
+ 8UpHgdXOp0hMOtNGcceUXwYn7BryDiPcGTtJWQatHYTPl2yQJZj8vMy5uYWhuQINBFqJnRkB
+ EADAuvzbAg5gwd1qx85wzb++ZXIE+HA4CD9BfFOw16szVHkUgMGfZX7VpaRnWu9iOozeCo26
+ jUyUejAMQgaHW4Q5bPBwOp2u0auOdPlJp4KElRWhVZdZ+NVd42vzQUGFvDtigUxYsVHtL/sO
+ W47dwvF6BZ4olQd9LswIdSmIGpvf+1wtezy1DWCgC2oVrTRsdF1KCa+pzVPGaHUnWDvBDDh6
+ iOYOAU9xgmwNamZ2z7Z1PkgXtwkXSUP+ipa52qm0HsHqpCK2Em8aC2xff5Pam6cWK1hocj/F
+ Z25G/THpLeLrl6SzcSgTuFww72koCbRoWvlpGQoEOvr1D2S5aWhRk7TubpRryoD8c/UBi0Iq
+ FlaBvJ9KFf6keDNWefQ4tSxnvZl+Z6Xv8Kjz61/Ac+Uixey+M7R2Z8sTiYNf2aX6ZieWPsgZ
+ 2P9A7sBucIkHxZXvxCXT+yZkzEWs45BuQ8mPIEpghybNsJkOCiy+0BbJn1aA3ll5FnRyMne4
+ t2xKmAWLff79GHH8nXinb0S7AwiOOWSaq8VjbYNhf4Bn9HJio8q0P5jgTRpSsyUFqOHM0aFc
+ ynCL1T1fb6NjQiTBMmvU6NRfILA1fhFOv5YRVLC1Hqi9cEu5BVsjJtoAYMa+8DoFBSoeDfyI
+ 8xfxgqDLmqn6wh69zGT2wwg8wHW5sPjV4dtxoQARAQABiQI8BBgBCAAmAhsMFiEE47V74F4C
+ WMP6ghzXtke0/0DsYwMFAlxqx2EFCQPCXcgACgkQtke0/0DsYwPvsw/+PWcUBH3zdLtqzmRK
+ OLwJ1RTJ40n8FCfbHXjx23cjci7UyYXfCX8+BVVghh+N5ChHARMjsnhi8vy5kKt7fP016SAF
+ hy4LazKj8w8KmBngmUhNiiedzsQ+F+LKhZhYA2R1KmPHnWIvoxOyvVaVhhJFZkRTml2yxtHg
+ 0jo/xEh7HEaSccgY11xiUii4MxBchHRLAS4t6kybp3fYpTVL/TgZEcelCnNHK1/YJoXAn29o
+ 3Jwpewp8q8dRFFP04fH9iawmc0VECwQ0yyloNima1caVd9KQ5dcuTeOSQp8jERI2a2ucD405
+ gH4eumW1UVA5OA/7I7uWkLL22i7jpDO+W+FUgYrSN/i6EQjcQMaWzjqd3oBVgyb55xBJ74SI
+ rIYlqFphk7AyElIfMU19wy3Z9IouI1kCPmPn9eNjtHTOl/hwm6PejIRSEeFn9k9H84lTMNZv
+ UvWSUfDNVWHL4NQJix6/VhvJ37Bz9r0E6ManGHRLn2hBzL10ultWZokb9v9/fET/4KQmbd/e
+ Fz3xFr1jFwnFwA9efXY/8RdrqSKlY6y9FS9xhrz9X630oT+tzVcioIfs8yJRnwGUnmZaiyAi
+ y+hejSVcXWYizc7pP827TjSLuzjzFgwGwHoHAmhAJgS5qUXJrOVFWWVdkeFba4KK+NB05p/j
+ Ooa/yj03j5gtPgECL7c=
+Organization: Collabora
+Message-ID: <7c4d1462-4cf0-7d2a-177b-4d47698fd9cb@collabora.co.uk>
+Date:   Thu, 30 May 2019 11:00:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7ac645ef-82c3-4ac8-bac1-08d6e4dd0afc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 May 2019 08:58:54.1263
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: parav@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0501MB2784
+In-Reply-To: <20190527122532.6084-1-geert+renesas@glider.be>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+On 27/05/2019 14:25, Geert Uytterhoeven wrote:
+> Fix a silly word ordering typo.
+> 
+> Fixes: 42337b9d4d958daa ("HID: add driver for U2F Zero built-in LED and RNG")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  drivers/hid/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
+> index c3c390ca369022f0..735223f90035b2bf 100644
+> --- a/drivers/hid/Kconfig
+> +++ b/drivers/hid/Kconfig
+> @@ -1028,7 +1028,7 @@ config HID_U2FZERO
+>  
+>  	  U2F Zero only supports blinking its LED, so this driver doesn't
+>  	  allow setting the brightness to anything but 1, which will
+> -	  trigger a single blink and immediately reset to back 0.
+> +	  trigger a single blink and immediately reset back to 0.
+>  
+>  config HID_WACOM
+>  	tristate "Wacom Intuos/Graphire tablet support (USB)"
 
-> -----Original Message-----
-> From: Alex Williamson <alex.williamson@redhat.com>
-> Sent: Wednesday, May 29, 2019 8:27 PM
+That was a silly typo indeed :D
 
-[..]
-> >
-> > diff --git a/drivers/vfio/mdev/mdev_core.c
-> > b/drivers/vfio/mdev/mdev_core.c index 0bef0cae1d4b..c5401a8c6843
-> > 100644
-> > --- a/drivers/vfio/mdev/mdev_core.c
-> > +++ b/drivers/vfio/mdev/mdev_core.c
-> > @@ -102,11 +102,36 @@ static void mdev_put_parent(struct mdev_parent
-> *parent)
-> >  		kref_put(&parent->ref, mdev_release_parent);  }
-> >
->=20
-> Some sort of locking semantics comment would be useful here, ex:
->=20
-> /* Caller holds parent unreg_sem read or write lock */
->=20
-Added.
+Not sure this is needed, but just in case:
 
-> > +
-> >  static int mdev_device_remove_cb(struct device *dev, void *data)  {
-> > -	if (dev_is_mdev(dev))
-> > -		mdev_device_remove(dev);
-> > +	struct mdev_parent *parent;
-> > +	struct mdev_device *mdev;
-> >
-> > +	if (!dev_is_mdev(dev))
-> > +		return 0;
-> > +
-> > +	mdev =3D to_mdev_device(dev);
-> > +	parent =3D mdev->parent;
-> > +	mdev_device_remove_common(mdev);
->=20
-> 'parent' is unused here and we only use mdev once, so we probably don't n=
-eed
-> to put it in a local variable.
->=20
-Right left out from previous code.
-Removed and refactored the code now.
+Acked-by: Andrej Shadura <andrew.shadura@collabora.co.uk>
 
-> >  	return 0;
-> >  }
-> >
-> > @@ -148,6 +173,7 @@ int mdev_register_device(struct device *dev, const
-> struct mdev_parent_ops *ops)
-> >  	}
-> >
-> >  	kref_init(&parent->ref);
-> > +	init_rwsem(&parent->unreg_sem);
-> >
-> >  	parent->dev =3D dev;
-> >  	parent->ops =3D ops;
-> > @@ -206,13 +232,17 @@ void mdev_unregister_device(struct device *dev)
-> >  	dev_info(dev, "MDEV: Unregistering\n");
-> >
-> >  	list_del(&parent->next);
-> > +	mutex_unlock(&parent_list_lock);
-> > +
-> > +	down_write(&parent->unreg_sem);
-> > +
-> >  	class_compat_remove_link(mdev_bus_compat_class, dev, NULL);
-> >
-> >  	device_for_each_child(dev, NULL, mdev_device_remove_cb);
-> >
-> >  	parent_remove_sysfs_files(parent);
-> > +	up_write(&parent->unreg_sem);
-> >
-> > -	mutex_unlock(&parent_list_lock);
-> >  	mdev_put_parent(parent);
-> >  }
-> >  EXPORT_SYMBOL(mdev_unregister_device);
-> > @@ -265,6 +295,12 @@ int mdev_device_create(struct kobject *kobj,
-> >
-> >  	mdev->parent =3D parent;
-> >
-> > +	ret =3D down_read_trylock(&parent->unreg_sem);
-> > +	if (!ret) {
-> > +		ret =3D -ENODEV;
->=20
-> I would have expected -EAGAIN or -EBUSY here, but I guess that since we
-> consider the lock-out to deterministically be the parent going away that =
--
-> ENODEV makes sense.  Ok.
->=20
-Yeah, I agree that ENODEV is more accurate error code as we don't want to t=
-ell user to retry so EAGAIN is less appropriate.
-Sending v5.
+-- 
+Cheers,
+  Andrej
