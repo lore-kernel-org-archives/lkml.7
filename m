@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C078BC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2DD6C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 902D925650
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87A482562E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:31:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190665;
-	bh=IxlLU21AYF8lNGgu0aEl00aZGtBAT2KobApAnq5506E=;
+	s=default; t=1559190672;
+	bh=3KyZwOyAYs33K6saAGlXC5W9EG7P+Hcz6KixGR+0cMI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EuTt/kWVt/vBg0TY30olQh9DHdTuD21WSp5vXC8bKDbRXpC9bwze7FSWq44/dq0vF
-	 QhwpMerodqlT7seLav8rTzO2YOXVam5Ntnt7croZON5d5wFEmy6xYaCmTgi6QB2SE4
-	 MQuUFlin+grC4/KRtT5d/HlIU6JPMVS03HkDSmFg=
+	b=zjKHGKtqovZ9Dh6+o4A5Sn8qbKlbiqMlsrUNujq9ZhMJQ3cndUs8jMOl/jzkbjVbn
+	 ptYcN0u/aBx5MvA2/1+yHGoHvL6cghBH+jGyfSy+fbXjfpWCYhFE/X9zsaJEPKi1SE
+	 6Co4WD4jLaRXmQWizzaDMkz1Egk0ne7eZRRoL418=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730451AbfE3EbF (ORCPT
+        id S1730388AbfE3EbL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:31:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60280 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:31:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727936AbfE3DNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:13:50 -0400
+        id S1729588AbfE3DNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:48 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39A4524556;
-        Thu, 30 May 2019 03:13:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B2682455A;
+        Thu, 30 May 2019 03:13:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186030;
-        bh=IxlLU21AYF8lNGgu0aEl00aZGtBAT2KobApAnq5506E=;
+        s=default; t=1559186027;
+        bh=3KyZwOyAYs33K6saAGlXC5W9EG7P+Hcz6KixGR+0cMI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G7dlawYlPhvRp+KytxWecVd9Qkx15LAKRmma8Ap51oRjDYZvGjpRJSQUxcowT/WhZ
-         pgqnaNhreoz2R4Ng7G6Znn+wryh0MhRghmwkeDkROGxcrpvfb4hCSoAMOx8HHRCv0E
-         i35Jb73byRzvQsjT4AZQihmxLIP/jYIrWqpdwbuQ=
+        b=m2KHSXh7WcGrC+7y7BXqexmIe2+xej5vdWF17kc9c+SzJwSqcsGaUAeFtT/9vCpTZ
+         ZD3n33HF+tFkdtD/WS0/LEgR3G6/jZT0X7uDv9CM/aOXjCitihOoeLS8mNv1RGkmac
+         F3f3vg7DrfAvbKYkGfJUuhBozgyLHz6Yxdfv4xxI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Baluta <daniel.baluta@nxp.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Huazhong Tan <tanhuazhong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 107/346] ASoC: fsl_sai: Update is_slave_mode with correct value
-Date:   Wed, 29 May 2019 20:03:00 -0700
-Message-Id: <20190530030546.531273720@linuxfoundation.org>
+Subject: [PATCH 5.0 102/346] net: hns3: use atomic_t replace u32 for arqs count
+Date:   Wed, 29 May 2019 20:02:55 -0700
+Message-Id: <20190530030546.309878016@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -61,45 +61,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ddb351145a967ee791a0fb0156852ec2fcb746ba ]
+[ Upstream commit 30780a8b1677e7409b32ae52a9a84f7d41ae6b43 ]
 
-is_slave_mode defaults to false because sai structure
-that contains it is kzalloc'ed.
+Since irq handler and mailbox task will both update arq's count,
+so arq's count should use atomic_t instead of u32, otherwise
+its value may go wrong finally.
 
-Anyhow, if we decide to set the following configuration
-SAI slave -> SAI master, is_slave_mode will remain set on true
-although SAI being master it should be set to false.
-
-Fix this by updating is_slave_mode for each call of
-fsl_sai_set_dai_fmt.
-
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 07a0556a3a73 ("net: hns3: Changes to support ARQ(Asynchronous Receive Queue)")
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/fsl_sai.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h          | 2 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c | 2 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c | 7 ++++---
+ 3 files changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-index 4163f2cfc06fc..bfc5b21d0c3f9 100644
---- a/sound/soc/fsl/fsl_sai.c
-+++ b/sound/soc/fsl/fsl_sai.c
-@@ -268,12 +268,14 @@ static int fsl_sai_set_dai_fmt_tr(struct snd_soc_dai *cpu_dai,
- 	case SND_SOC_DAIFMT_CBS_CFS:
- 		val_cr2 |= FSL_SAI_CR2_BCD_MSTR;
- 		val_cr4 |= FSL_SAI_CR4_FSD_MSTR;
-+		sai->is_slave_mode = false;
- 		break;
- 	case SND_SOC_DAIFMT_CBM_CFM:
- 		sai->is_slave_mode = true;
- 		break;
- 	case SND_SOC_DAIFMT_CBS_CFM:
- 		val_cr2 |= FSL_SAI_CR2_BCD_MSTR;
-+		sai->is_slave_mode = false;
- 		break;
- 	case SND_SOC_DAIFMT_CBM_CFS:
- 		val_cr4 |= FSL_SAI_CR4_FSD_MSTR;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
+index 691d12174902c..3c7a26bb83222 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
+@@ -102,7 +102,7 @@ struct hclgevf_mbx_arq_ring {
+ 	struct hclgevf_dev *hdev;
+ 	u32 head;
+ 	u32 tail;
+-	u32 count;
++	atomic_t count;
+ 	u16 msg_q[HCLGE_MBX_MAX_ARQ_MSG_NUM][HCLGE_MBX_MAX_ARQ_MSG_SIZE];
+ };
+ 
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
+index 4e78e8812a045..b39ff5555a30e 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
+@@ -327,7 +327,7 @@ int hclgevf_cmd_init(struct hclgevf_dev *hdev)
+ 	hdev->arq.hdev = hdev;
+ 	hdev->arq.head = 0;
+ 	hdev->arq.tail = 0;
+-	hdev->arq.count = 0;
++	atomic_set(&hdev->arq.count, 0);
+ 	hdev->hw.cmq.csq.next_to_clean = 0;
+ 	hdev->hw.cmq.csq.next_to_use = 0;
+ 	hdev->hw.cmq.crq.next_to_clean = 0;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
+index 84653f58b2d10..fbba8b83b36c9 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
+@@ -207,7 +207,8 @@ void hclgevf_mbx_handler(struct hclgevf_dev *hdev)
+ 			/* we will drop the async msg if we find ARQ as full
+ 			 * and continue with next message
+ 			 */
+-			if (hdev->arq.count >= HCLGE_MBX_MAX_ARQ_MSG_NUM) {
++			if (atomic_read(&hdev->arq.count) >=
++			    HCLGE_MBX_MAX_ARQ_MSG_NUM) {
+ 				dev_warn(&hdev->pdev->dev,
+ 					 "Async Q full, dropping msg(%d)\n",
+ 					 req->msg[1]);
+@@ -219,7 +220,7 @@ void hclgevf_mbx_handler(struct hclgevf_dev *hdev)
+ 			memcpy(&msg_q[0], req->msg,
+ 			       HCLGE_MBX_MAX_ARQ_MSG_SIZE * sizeof(u16));
+ 			hclge_mbx_tail_ptr_move_arq(hdev->arq);
+-			hdev->arq.count++;
++			atomic_inc(&hdev->arq.count);
+ 
+ 			hclgevf_mbx_task_schedule(hdev);
+ 
+@@ -296,7 +297,7 @@ void hclgevf_mbx_async_handler(struct hclgevf_dev *hdev)
+ 		}
+ 
+ 		hclge_mbx_head_ptr_move_arq(hdev->arq);
+-		hdev->arq.count--;
++		atomic_dec(&hdev->arq.count);
+ 		msg_q = hdev->arq.msg_q[hdev->arq.head];
+ 	}
+ }
 -- 
 2.20.1
 
