@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99981C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6490AC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6896424B53
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3175D24C20
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:42:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187757;
-	bh=35VzWg7XzJEd309TcxEQUOQeVMVEZlIgONPaFW+jbAY=;
+	s=default; t=1559187763;
+	bh=nI1hJSSzPMF0V+a9RjsHDvr2N4Iii0c5mwQkd5roz+k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p7bAtcAjEU/flUJIlrC9kQWp7BhjaXJ+SjvLI1t0CTp62Y0O99Sfuz1E8ExtSybrx
-	 oq+pe82r7W2pZseT4tOldNxOJIBGcJv4qvbKjxVoQvtfu5idzvyiYpu5sRErOVWD3F
-	 ZLwCauANn5MV/QMXw7LH9OO8pRW3mCcFp7+ut0+Q=
+	b=Z6frXmtAwrU9CTLLFtBR3D+5Kuu1vd9Tr0TzMzleqP2G8fOz+v5HH+mIzedBxI3sH
+	 neDVowcGC8YzVWnyipoviQGsPABWh6ePyfVZzLiNfmvEzE9tmveUMZ1XoiOjav3CiW
+	 VoUfL36Gr96iA40x/p8wYj1jvA0W927o+lJnJV4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732618AbfE3Dmg (ORCPT
+        id S1732630AbfE3Dml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:42:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33118 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:42:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732454AbfE3DVH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732451AbfE3DVH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:21:07 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBC9A2496D;
+        by mail.kernel.org (Postfix) with ESMTPSA id 5438C24987;
         Thu, 30 May 2019 03:21:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186467;
-        bh=35VzWg7XzJEd309TcxEQUOQeVMVEZlIgONPaFW+jbAY=;
+        s=default; t=1559186466;
+        bh=nI1hJSSzPMF0V+a9RjsHDvr2N4Iii0c5mwQkd5roz+k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p+FT1DSSqAxrZeBaFFHgPNzsehPntMpZkYFPncKlueiLoXcJmp1KSXCVotxSe1nQ5
-         fRg1ZZ5b0jNJbxcfqGOfwW+2DZ2AWSrjYW/PU/sfGTB7bOBuJ713s+8UahJedsn+mg
-         jeMru5iBpM+TWCkxRYAgIZQDJE1cMNWvwDdC6LRY=
+        b=EJ88WhOF4zZTRpaaMpGywPjLGxvWyd3bYRpHZ4rBRh4b63qbOMLpHkkKqOFKKMGd/
+         nAW2gzF8+dIYHirZnWMsq6qpdx/ymmpZbXtjm4xB2emMiSMR3bZu7MJsC5QcMRga9g
+         /gKpTLIFBGSW2yqtoDgjwkTmm+qenhSNAy5OCCPg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 092/128] rtlwifi: fix a potential NULL pointer dereference
-Date:   Wed, 29 May 2019 20:07:04 -0700
-Message-Id: <20190530030451.285057779@linuxfoundation.org>
+Subject: [PATCH 4.9 083/128] extcon: arizona: Disable mic detect if running when driver is removed
+Date:   Wed, 29 May 2019 20:06:55 -0700
+Message-Id: <20190530030449.707847284@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -60,34 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 765976285a8c8db3f0eb7f033829a899d0c2786e ]
+[ Upstream commit 00053de52231117ddc154042549f2256183ffb86 ]
 
-In case alloc_workqueue fails, the fix reports the error and
-returns to avoid NULL pointer dereference.
+Microphone detection provides the button detection features on the
+Arizona CODECs as such it will be running if the jack is currently
+inserted. If the driver is unbound whilst the jack is still inserted
+this will cause warnings from the regulator framework as the MICVDD
+regulator is put but was never disabled.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Correct this by disabling microphone detection on driver removal and if
+the microphone detection was running disable the regulator and put the
+runtime reference that was currently held.
+
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtlwifi/base.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/extcon/extcon-arizona.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/base.c b/drivers/net/wireless/realtek/rtlwifi/base.c
-index 4ac928bf1f8e6..7de18ed10db8e 100644
---- a/drivers/net/wireless/realtek/rtlwifi/base.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/base.c
-@@ -466,6 +466,11 @@ static void _rtl_init_deferred_work(struct ieee80211_hw *hw)
- 	/* <2> work queue */
- 	rtlpriv->works.hw = hw;
- 	rtlpriv->works.rtl_wq = alloc_workqueue("%s", 0, 0, rtlpriv->cfg->name);
-+	if (unlikely(!rtlpriv->works.rtl_wq)) {
-+		pr_err("Failed to allocate work queue\n");
-+		return;
-+	}
+diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
+index 56e6c4c7c60d2..4c0b6df8b5ddb 100644
+--- a/drivers/extcon/extcon-arizona.c
++++ b/drivers/extcon/extcon-arizona.c
+@@ -1684,6 +1684,16 @@ static int arizona_extcon_remove(struct platform_device *pdev)
+ 	struct arizona_extcon_info *info = platform_get_drvdata(pdev);
+ 	struct arizona *arizona = info->arizona;
+ 	int jack_irq_rise, jack_irq_fall;
++	bool change;
 +
- 	INIT_DELAYED_WORK(&rtlpriv->works.watchdog_wq,
- 			  (void *)rtl_watchdog_wq_callback);
- 	INIT_DELAYED_WORK(&rtlpriv->works.ips_nic_off_wq,
++	regmap_update_bits_check(arizona->regmap, ARIZONA_MIC_DETECT_1,
++				 ARIZONA_MICD_ENA, 0,
++				 &change);
++
++	if (change) {
++		regulator_disable(info->micvdd);
++		pm_runtime_put(info->dev);
++	}
+ 
+ 	gpiod_put(info->micd_pol_gpio);
+ 
 -- 
 2.20.1
 
