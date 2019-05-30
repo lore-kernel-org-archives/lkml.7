@@ -5,57 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F38C3C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A240EC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:08:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBA70250CF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:08:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70273250CF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:08:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189305;
-	bh=i//CKohb3ZNdiLHFXsidC0nCrriCmgp4KxQfe9bIMmA=;
+	s=default; t=1559189311;
+	bh=FjfK/RamjqEShfTjBAQ5NavTeA4udxDVHYeDtM2xaqg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0iYdXBKiSq/QFwr4TwPp92YrFSGv37txLS1rrAtfgKCTM+owFEKbY66OaqySU9LMa
-	 ixlwQMHGfzZLHFym3iY2fEt86HDruvOPZltV12cfLCaymCUzvimKLwzrWrwWjHhHbS
-	 NoKpIMeSwL0Zo8MuhopD5RB6hN+c1BCEyOUoIY/M=
+	b=syhAnLt0IzkRP0Sm5nkZuiRVTZIIxCnJvXPMjx6CSh2eKaE5a86T21INSNKhP2Ei9
+	 reXr0WRTXSI+kgwA5VyRzg7+i4vUyJObLmLxwMWiwVjgungIbTv9FTDMinl5r3KKb2
+	 Ckd9pxVcqOGZWbINpN+0I/7Wl93CSJUB0oK0tqGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727333AbfE3EIQ (ORCPT
+        id S1726937AbfE3EIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:08:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45782 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:08:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730229AbfE3DRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:17:21 -0400
+        id S1731074AbfE3DRT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:17:19 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 510932469D;
-        Thu, 30 May 2019 03:17:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D4AE246BE;
+        Thu, 30 May 2019 03:17:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186241;
-        bh=i//CKohb3ZNdiLHFXsidC0nCrriCmgp4KxQfe9bIMmA=;
+        s=default; t=1559186239;
+        bh=FjfK/RamjqEShfTjBAQ5NavTeA4udxDVHYeDtM2xaqg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gkesNESp0IJvhRpMN3Hk3CezFEBvu5DWTFlM1F3mwVkm0OpMj/hb1uAbRPktLJqet
-         p150eGXH2VOQH55IiF6o2l0Ucq6DDO90fZTaLlYkyjE5aCVayGLTtleZC3RnDyiJtN
-         UeQFcMY47NQdMfAikW8BBHpZGKSxVm3A0zFZW0+4=
+        b=idGxML0pZvkP0we+6tl4DJRqw937Jec2qy15Rb4gpdGT7y2phSvcTa1xrFJZ3oDhY
+         A8M9LuxtCTwXabY1fNyr8FvHVJLLwmvW8gez2A/z99Op9LKgFz5B1pivRARjx5A/RA
+         pZliycdHZXcyujJcpPWGzm9tHejes+zW0XCAOrmY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>, acme@kernel.org,
-        jolsa@kernel.org, Ingo Molnar <mingo@kernel.org>,
+        stable@vger.kernel.org,
+        Nicholas Nunley <nicholas.d.nunley@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 154/276] perf/x86/msr: Add Icelake support
-Date:   Wed, 29 May 2019 20:05:12 -0700
-Message-Id: <20190530030535.184687483@linuxfoundation.org>
+Subject: [PATCH 4.19 150/276] i40e: dont allow changes to HW VLAN stripping on active port VLANs
+Date:   Wed, 29 May 2019 20:05:08 -0700
+Message-Id: <20190530030534.974271194@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -68,41 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cf50d79a8cfe5adae37fec026220b009559bbeed ]
+[ Upstream commit bfb0ebed53857cfc57f11c63fa3689940d71c1c8 ]
 
-Icelake is the same as the existing Skylake parts.
+Modifying the VLAN stripping options when a port VLAN is configured
+will break traffic for the VSI, and conceptually doesn't make sense,
+so don't allow this.
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: acme@kernel.org
-Cc: jolsa@kernel.org
-Link: https://lkml.kernel.org/r/20190402194509.2832-12-kan.liang@linux.intel.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Nicholas Nunley <nicholas.d.nunley@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/msr.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/intel/i40e/i40e_main.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/x86/events/msr.c b/arch/x86/events/msr.c
-index 1b9f85abf9bc1..ace6c1e752fb1 100644
---- a/arch/x86/events/msr.c
-+++ b/arch/x86/events/msr.c
-@@ -89,6 +89,7 @@ static bool test_intel(int idx)
- 	case INTEL_FAM6_SKYLAKE_X:
- 	case INTEL_FAM6_KABYLAKE_MOBILE:
- 	case INTEL_FAM6_KABYLAKE_DESKTOP:
-+	case INTEL_FAM6_ICELAKE_MOBILE:
- 		if (idx == PERF_MSR_SMI || idx == PERF_MSR_PPERF)
- 			return true;
- 		break;
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
+index f81ad0aa8b095..df8808cd7e114 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_main.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
+@@ -2654,6 +2654,10 @@ void i40e_vlan_stripping_enable(struct i40e_vsi *vsi)
+ 	struct i40e_vsi_context ctxt;
+ 	i40e_status ret;
+ 
++	/* Don't modify stripping options if a port VLAN is active */
++	if (vsi->info.pvid)
++		return;
++
+ 	if ((vsi->info.valid_sections &
+ 	     cpu_to_le16(I40E_AQ_VSI_PROP_VLAN_VALID)) &&
+ 	    ((vsi->info.port_vlan_flags & I40E_AQ_VSI_PVLAN_MODE_MASK) == 0))
+@@ -2684,6 +2688,10 @@ void i40e_vlan_stripping_disable(struct i40e_vsi *vsi)
+ 	struct i40e_vsi_context ctxt;
+ 	i40e_status ret;
+ 
++	/* Don't modify stripping options if a port VLAN is active */
++	if (vsi->info.pvid)
++		return;
++
+ 	if ((vsi->info.valid_sections &
+ 	     cpu_to_le16(I40E_AQ_VSI_PROP_VLAN_VALID)) &&
+ 	    ((vsi->info.port_vlan_flags & I40E_AQ_VSI_PVLAN_EMOD_MASK) ==
 -- 
 2.20.1
 
