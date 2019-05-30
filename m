@@ -2,84 +2,69 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 815C8C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1238EC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60E9A25E71
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AAEE25E7D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:29:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="gvl402Oz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbfE3R2g (ORCPT
+        id S1726668AbfE3R3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 13:28:36 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44276 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726423AbfE3R2f (ORCPT
+        Thu, 30 May 2019 13:29:52 -0400
+Received: from mail-40136.protonmail.ch ([185.70.40.136]:45235 "EHLO
+        mail-40136.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725961AbfE3R3w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 13:28:35 -0400
-Received: by mail-pg1-f193.google.com with SMTP id n2so2387988pgp.11;
-        Thu, 30 May 2019 10:28:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BflUr6rKdpr90b/xnrg7SuYvVoPW3SrHX1BWPnESWU4=;
-        b=dVIQnWhekN3xb7mGXiHWYSLwp6AEBqjSOXmHi79/5hf8vjisVnhUwH1xh8s7/KPgNu
-         by19n277vaZJWrPPuDBZ7S0RE6YkdLC8ydooKu3CZtSBGGAlEQa6Ltumqa1DbXyDw58Z
-         u989d75UlWYPFd5+RssnO4AMcynn5g4WPZn+lhvH9GndfznsZEE8eJvJ1pt1DPenXpJg
-         2omyZTwE2KkQjQ5U8XJSr8Lfrdu3sdQtXsAIz+6VmA8lf3UhL7MispcVFbIQLkCRPQ0K
-         DlxFERvVy2/ebtI7D3FFehWC1X5MQ0Sd68aQgc8NkcNU37GkOKA+sVYUbQG0N68i7bd6
-         2zOw==
-X-Gm-Message-State: APjAAAXqum33M9oExcJUzIN15iXiPa3kLFDvlrztMi6vTD85zk4q/Kpy
-        vH0Ws6zc9+EGuNFrYT/+fkQ=
-X-Google-Smtp-Source: APXvYqxYwulWOdqze7jLG0lDh0QFnMWrHijpHoWBnnsxuObzIyHqBOgmKbOybUmS8t7zEPvLNx5Fqg==
-X-Received: by 2002:a63:e708:: with SMTP id b8mr4809033pgi.168.1559237314488;
-        Thu, 30 May 2019 10:28:34 -0700 (PDT)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id q7sm3405191pjb.0.2019.05.30.10.28.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 10:28:33 -0700 (PDT)
-Subject: Re: [PATCH 2/2] virtio_scsi: implement request batching
-To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, stefanha@redhat.com
-References: <20190530112811.3066-1-pbonzini@redhat.com>
- <20190530112811.3066-3-pbonzini@redhat.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <79490df1-0145-5b40-027a-7e8fb96854d4@acm.org>
-Date:   Thu, 30 May 2019 10:28:32 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 30 May 2019 13:29:52 -0400
+Date:   Thu, 30 May 2019 17:29:48 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=default; t=1559237390;
+        bh=M8YyTOkgVMTajh8KGkpA9X36l6Wgi1U0JaasE6Ezk6I=;
+        h=Date:To:From:Reply-To:Subject:Feedback-ID:From;
+        b=gvl402OznC1mp1iITEqh9zggYvtgCL+z3e21E5YcX89R3rsg7Li06WeOPFDdAJ2de
+         FwafvUmYTKclEaBdM9X1IGFLvWQ5DzSiuBFmfdPkyM9m32Qu1CeDg+2oPLbDa+5VW8
+         Aqy8shkOLp3kPTnD7mpCD+kcUmLzbl/U3SM/DEow=
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   zvuln <zvuln@protonmail.com>
+Reply-To: zvuln <zvuln@protonmail.com>
+Subject: Question about mitigating Zombieload
+Message-ID: <0YYNF4UDAi1NJOBtzDhwqt1FJ_3NzTYIvtu2ApVMMPsEH0cfm9OMgYJpVHd8w0pfmeQCScYO5x-PlvdbNnnERNKiYMhEw1z3hQPaFRwvVOM=@protonmail.com>
+Feedback-ID: 349QC9di8fDcOs3pJ4oYTiFYdRqFoOjDYGmPCPnc1iXIhR0GW-SA3Emdze7698kkP1aBvTGF5giegN950lNFYA==:Ext:ProtonMail
 MIME-Version: 1.0
-In-Reply-To: <20190530112811.3066-3-pbonzini@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/30/19 4:28 AM, Paolo Bonzini wrote:
-> @@ -531,7 +547,8 @@ static int virtscsi_queuecommand(struct Scsi_Host *shost,
->   		req_size = sizeof(cmd->req.cmd);
->   	}
->   
-> -	ret = virtscsi_kick_cmd(req_vq, cmd, req_size, sizeof(cmd->resp.cmd));
-> +	kick = (sc->flags & SCMD_LAST) != 0;
-> +	ret = virtscsi_add_cmd(req_vq, cmd, req_size, sizeof(cmd->resp.cmd), kick);
+It seems the x86 architecture is once again
+afflicted with a flaw that arises out of
+unsafely implemented accelerations, namely
+the just-releaved Zombieload vulnerability.
 
-Have you considered to have the SCSI core call commit_rqs() if bd->last 
-is true? I think that would avoid that we need to introduce the 
-SCMD_LAST flag and that would also avoid that every SCSI LLD that 
-supports a commit_rqs callback has to introduce code to test the 
-SCMD_LAST flag.
+We know that Zombieload is possible when
+Hyperthreading is enabled. Here is a question:
 
-Thanks,
+Is it possible to disable Hyperthreading
+not for all cores in the BIOS but rather
+on a per-core basis programmatically from
+the OS or from the bootloader?
 
-Bart.
+I ask because if this were possible, then
+it would be reasonable to segregate the sensitive
+code i.e. the kernel and the major daemons
+into one core that has Hyperthreading enabled,
+and then run all other (risky) user processes
+on the other cores, which have Hyperthreading
+disabled.
+
+Cheers.
+
