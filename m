@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B637C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A3BEC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4511A26006
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0003626018
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:59:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192342;
-	bh=abn3KPBKo2qCIsra1vlSiSXXwMXs7kTg20znn22MDr0=;
+	s=default; t=1559192349;
+	bh=5csleT8ghslY0fWFB+ZwY/DX6vuencMblx5MN3WuJ6Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JzbAz0VY/4CB5TWAwOhMNGQCOmdpVOQ3O/coZmvLCC9EYytkmEIRM0627ufvz8KLo
-	 Wa/CofZaIuolAUdPcngiNgy+hvh3g0RoYfJkyTixek8jEPvh1s4+KM0ycsUd0pYs9W
-	 kUWTZ9i5eJwTXrIX7Pvs3ixK7EVxOqycQx/IN1iE=
+	b=Ss+JAboDmV6WUEtmf01srAqAR3OMaRikggOxg6ph4+cUxGejZNy8EE3QSN4LUyqhs
+	 oS/iKx5zJYdzmF6DF48JfCwrZok2nxYkK2H4EMTlmqjrZbIqCN+U6BU3uzacHk87Vr
+	 wkjnDs65sHOiNpqwR7vjlqYpzgjo6Logkxglq+6U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389324AbfE3E6x (ORCPT
+        id S1727730AbfE3DJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:58:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45216 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:09:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727755AbfE3DJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:09:46 -0400
+        id S1727628AbfE3DJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:09:34 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0C0D24494;
-        Thu, 30 May 2019 03:09:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E5222447A;
+        Thu, 30 May 2019 03:09:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185785;
-        bh=abn3KPBKo2qCIsra1vlSiSXXwMXs7kTg20znn22MDr0=;
+        s=default; t=1559185773;
+        bh=5csleT8ghslY0fWFB+ZwY/DX6vuencMblx5MN3WuJ6Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kKyPDGIByBBXfIjMSd0pP9I7KXuh6nk5qz6W2gBZovWBdIF7bxktOTiljlYfvYpsp
-         1ME6TneSbcTSmkEoWxe0Wvgd0KqYED1Z9u1AkyzmjOJ2STnu2ASufNzZo0bJKHBPj7
-         WCP3EqN2I5Tl/bUBURTjTJkGcooe0zjgBByavh4Q=
+        b=CN8D9iW8HgtpRlIY4Sjs1HFPxHYw43h8SfCuZAwDDFTH+wW7hCFGPLIme1etvclgY
+         UMJQm4aYeUOxTbI3Z2l3UVLcwKX5SDNd5erO9Se7LzF/2OkVEWcuiTe5DqIX4uk4l9
+         WqVKmdEYaFGmZkNNCY2uHxo5wdMF0Pn2Vta/U1ig=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Filipe Manana <fdmanana@suse.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.1 044/405] Revert "btrfs: Honour FITRIM range constraints during free space trim"
-Date:   Wed, 29 May 2019 20:00:42 -0700
-Message-Id: <20190530030543.025644816@linuxfoundation.org>
+Subject: [PATCH 5.1 026/405] Btrfs: avoid fallback to transaction commit during fsync of files with holes
+Date:   Wed, 29 May 2019 20:00:24 -0700
+Message-Id: <20190530030541.995801841@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -58,93 +60,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Sterba <dsterba@suse.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-This reverts commit eb432217d775a90c061681c0dfa3c7abfba75123.
+commit ebb929060aeb162417b4c1307e63daee47b208d9 upstream.
 
-There is currently no corresponding patch in master due to additional
-changes that would be significantly different from plain revert in the
-respective stable branch.
+When we are doing a full fsync (bit BTRFS_INODE_NEEDS_FULL_SYNC set) of a
+file that has holes and has file extent items spanning two or more leafs,
+we can end up falling to back to a full transaction commit due to a logic
+bug that leads to failure to insert a duplicate file extent item that is
+meant to represent a hole between the last file extent item of a leaf and
+the first file extent item in the next leaf. The failure (EEXIST error)
+leads to a transaction commit (as most errors when logging an inode do).
 
-The range argument was not handled correctly and could cause trim to
-overlap allocated areas or reach beyond the end of the device. The
-address space that fitrim normally operates on is in logical
-coordinates, while the discards are done on the physical device extents.
-This distinction cannot be made with the current ioctl interface and
-caused the confusion.
+For example, we have the two following leafs:
 
-The bug depends on the layout of block groups and does not always
-happen. The whole-fs trim (run by default by the fstrim tool) is not
-affected.
+Leaf N:
 
+  -----------------------------------------------
+  | ..., ..., ..., (257, FILE_EXTENT_ITEM, 64K) |
+  -----------------------------------------------
+  The file extent item at the end of leaf N has a length of 4Kb,
+  representing the file range from 64K to 68K - 1.
+
+Leaf N + 1:
+
+  -----------------------------------------------
+  | (257, FILE_EXTENT_ITEM, 72K), ..., ..., ... |
+  -----------------------------------------------
+  The file extent item at the first slot of leaf N + 1 has a length of
+  4Kb too, representing the file range from 72K to 76K - 1.
+
+During the full fsync path, when we are at tree-log.c:copy_items() with
+leaf N as a parameter, after processing the last file extent item, that
+represents the extent at offset 64K, we take a look at the first file
+extent item at the next leaf (leaf N + 1), and notice there's a 4K hole
+between the two extents, and therefore we insert a file extent item
+representing that hole, starting at file offset 68K and ending at offset
+72K - 1. However we don't update the value of *last_extent, which is used
+to represent the end offset (plus 1, non-inclusive end) of the last file
+extent item inserted in the log, so it stays with a value of 68K and not
+with a value of 72K.
+
+Then, when copy_items() is called for leaf N + 1, because the value of
+*last_extent is smaller then the offset of the first extent item in the
+leaf (68K < 72K), we look at the last file extent item in the previous
+leaf (leaf N) and see it there's a 4K gap between it and our first file
+extent item (again, 68K < 72K), so we decide to insert a file extent item
+representing the hole, starting at file offset 68K and ending at offset
+72K - 1, this insertion will fail with -EEXIST being returned from
+btrfs_insert_file_extent() because we already inserted a file extent item
+representing a hole for this offset (68K) in the previous call to
+copy_items(), when processing leaf N.
+
+The -EEXIST error gets propagated to the fsync callback, btrfs_sync_file(),
+which falls back to a full transaction commit.
+
+Fix this by adjusting *last_extent after inserting a hole when we had to
+look at the next leaf.
+
+Fixes: 4ee3fad34a9c ("Btrfs: fix fsync after hole punching when using no-holes feature")
+Cc: stable@vger.kernel.org # 4.14+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- fs/btrfs/extent-tree.c |   25 ++++++-------------------
- 1 file changed, 6 insertions(+), 19 deletions(-)
 
---- a/fs/btrfs/extent-tree.c
-+++ b/fs/btrfs/extent-tree.c
-@@ -11314,9 +11314,9 @@ int btrfs_error_unpin_extent_range(struc
-  * held back allocations.
-  */
- static int btrfs_trim_free_extents(struct btrfs_device *device,
--				   struct fstrim_range *range, u64 *trimmed)
-+				   u64 minlen, u64 *trimmed)
- {
--	u64 start = range->start, len = 0;
-+	u64 start = 0, len = 0;
- 	int ret;
- 
- 	*trimmed = 0;
-@@ -11359,8 +11359,8 @@ static int btrfs_trim_free_extents(struc
- 		if (!trans)
- 			up_read(&fs_info->commit_root_sem);
- 
--		ret = find_free_dev_extent_start(trans, device, range->minlen,
--						 start, &start, &len);
-+		ret = find_free_dev_extent_start(trans, device, minlen, start,
-+						 &start, &len);
- 		if (trans) {
- 			up_read(&fs_info->commit_root_sem);
- 			btrfs_put_transaction(trans);
-@@ -11373,16 +11373,6 @@ static int btrfs_trim_free_extents(struc
- 			break;
+---
+ fs/btrfs/tree-log.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/fs/btrfs/tree-log.c
++++ b/fs/btrfs/tree-log.c
+@@ -4169,6 +4169,7 @@ fill_holes:
+ 							       *last_extent, 0,
+ 							       0, len, 0, len,
+ 							       0, 0, 0);
++				*last_extent += len;
+ 			}
  		}
- 
--		/* If we are out of the passed range break */
--		if (start > range->start + range->len - 1) {
--			mutex_unlock(&fs_info->chunk_mutex);
--			ret = 0;
--			break;
--		}
--
--		start = max(range->start, start);
--		len = min(range->len, len);
--
- 		ret = btrfs_issue_discard(device->bdev, start, len, &bytes);
- 		mutex_unlock(&fs_info->chunk_mutex);
- 
-@@ -11392,10 +11382,6 @@ static int btrfs_trim_free_extents(struc
- 		start += len;
- 		*trimmed += bytes;
- 
--		/* We've trimmed enough */
--		if (*trimmed >= range->len)
--			break;
--
- 		if (fatal_signal_pending(current)) {
- 			ret = -ERESTARTSYS;
- 			break;
-@@ -11479,7 +11465,8 @@ int btrfs_trim_fs(struct btrfs_fs_info *
- 	mutex_lock(&fs_info->fs_devices->device_list_mutex);
- 	devices = &fs_info->fs_devices->devices;
- 	list_for_each_entry(device, devices, dev_list) {
--		ret = btrfs_trim_free_extents(device, range, &group_trimmed);
-+		ret = btrfs_trim_free_extents(device, range->minlen,
-+					      &group_trimmed);
- 		if (ret) {
- 			dev_failed++;
- 			dev_ret = ret;
+ 	}
 
 
