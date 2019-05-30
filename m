@@ -2,231 +2,208 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C751DC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B0CC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AE3C24AEF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:31:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EA0524AEB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:31:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187082;
-	bh=DdLwdqSSRhtuBrsjGhPCyUJFVKGv7nEHu7Igw3L85AA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=WCwdmTzGb8KXlZqYR65QzV3VqCme3uwd/19L0TcAGw9vE9eNtO3/njuMU09sSUDtS
-	 LzbxKZyQZPAEoS/89wICaf3tcXi2cykgNIy1ksfnhWPOZVRHJgygOQsSLuP7pNaw7d
-	 IQz7VMzg+ajMseIfIyVM/LLe+4olfmRUYYysbG58=
+	s=default; t=1559187092;
+	bh=QxmXPB/OVVlcaVi3NnQoldDaqOW7u/rn7JLO0Jh6XrQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=N/2ALN7IkxoVXaBMpw4HkquilvXG9NmQKYjgo1DPAAP3Wi0Owfar++7gVC9I/hQ0I
+	 +glLBNDy1pFzAXvTRgteaGoW2cIxKoWCVJTEjQDqDU51bVw5hTeJF91jr6GFqR9TU3
+	 +4zHElPP55Z1iFSwX6R4lGmChqpH31WhbwF2VnnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733053AbfE3DbV (ORCPT
+        id S2388521AbfE3DaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:31:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49556 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:30:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727454AbfE3DbT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:31:19 -0400
-Received: from localhost (unknown [104.132.1.68])
+        id S1731334AbfE3DVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:21:15 -0400
+Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D92F24ACF;
-        Thu, 30 May 2019 03:31:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14E29249DE;
+        Thu, 30 May 2019 03:21:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559187078;
-        bh=DdLwdqSSRhtuBrsjGhPCyUJFVKGv7nEHu7Igw3L85AA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=qOPnTp4wTIEUEgwFxPgxGDlYe0bp9jjcwifpoEewmo9nhl5CbzBbXeNPeOLbWZwgP
-         xRBtOHDqjT3pbeKuSFzP87NG3XXWsl//H92kK+5/B4o6bzUaSFe2VNgQMFra6mqoyP
-         MstvJkJn99vIkhVNQLHGRV2YMuI4fzMkmpKQuhzQ=
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>
-Subject: [PATCH] f2fs: add a rw_sem to cover quota flag changes
-Date:   Wed, 29 May 2019 20:31:15 -0700
-Message-Id: <20190530033115.16853-1-jaegeuk@kernel.org>
-X-Mailer: git-send-email 2.19.0.605.g01d371f741-goog
+        s=default; t=1559186474;
+        bh=QxmXPB/OVVlcaVi3NnQoldDaqOW7u/rn7JLO0Jh6XrQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tbREkdn0UUmTPkRN2corsIPleeiyEM1FPmGiNIA/48B+3+oz4BDok1nK9AjKUWTyI
+         jb7du+TWm7ZYO/HhMYoBsXRA9HWYQxnovqHejnxmcgpjD7Dtgnq7HKjptE1J0JNeLX
+         jAK6V6Fy04j8jWX7oXlA41UL5Jk32lMv8FjywwvE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Terry Junge <terry.junge@poly.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 105/128] HID: core: move Usage Page concatenation to Main item
+Date:   Wed, 29 May 2019 20:07:17 -0700
+Message-Id: <20190530030453.456154649@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
+References: <20190530030432.977908967@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-thread 1:                        thread 2:
-writeback                        checkpoint
-set QUOTA_NEED_FLUSH
-                                 clear QUOTA_NEED_FLUSH
-f2fs_dquot_commit
-dquot_commit
-clear_dquot_dirty
-                                 f2fs_quota_sync
-                                 dquot_writeback_dquots
-				 nothing to commit
-commit_dqblk
-quota_write
-f2fs_quota_write
-waiting for f2fs_lock_op()
-				 pass __need_flush_quota
-                                 (no F2FS_DIRTY_QDATA)
+[ Upstream commit 58e75155009cc800005629955d3482f36a1e0eec ]
 
--> up-to-date quota is not written
+As seen on some USB wireless keyboards manufactured by Primax, the HID
+parser was using some assumptions that are not always true. In this case
+it's s the fact that, inside the scope of a main item, an Usage Page
+will always precede an Usage.
 
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+The spec is not pretty clear as 6.2.2.7 states "Any usage that follows
+is interpreted as a Usage ID and concatenated with the Usage Page".
+While 6.2.2.8 states "When the parser encounters a main item it
+concatenates the last declared Usage Page with a Usage to form a
+complete usage value." Being somewhat contradictory it was decided to
+match Window's implementation, which follows 6.2.2.8.
+
+In summary, the patch moves the Usage Page concatenation from the local
+item parsing function to the main item parsing function.
+
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Reviewed-by: Terry Junge <terry.junge@poly.com>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/checkpoint.c | 26 ++++++++++++++++----------
- fs/f2fs/f2fs.h       |  1 +
- fs/f2fs/super.c      | 27 ++++++++++++++++++++++-----
- 3 files changed, 39 insertions(+), 15 deletions(-)
+ drivers/hid/hid-core.c | 36 ++++++++++++++++++++++++------------
+ include/linux/hid.h    |  1 +
+ 2 files changed, 25 insertions(+), 12 deletions(-)
 
-diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-index 89825261d474..cf3b15c963d2 100644
---- a/fs/f2fs/checkpoint.c
-+++ b/fs/f2fs/checkpoint.c
-@@ -1131,17 +1131,23 @@ static void __prepare_cp_block(struct f2fs_sb_info *sbi)
+diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
+index 70597854397fc..ceb4df96e0d55 100644
+--- a/drivers/hid/hid-core.c
++++ b/drivers/hid/hid-core.c
+@@ -200,13 +200,14 @@ static unsigned hid_lookup_collection(struct hid_parser *parser, unsigned type)
+  * Add a usage to the temporary parser table.
+  */
  
- static bool __need_flush_quota(struct f2fs_sb_info *sbi)
+-static int hid_add_usage(struct hid_parser *parser, unsigned usage)
++static int hid_add_usage(struct hid_parser *parser, unsigned usage, u8 size)
  {
-+	bool ret = false;
-+
-+	down_write(&sbi->quota_sem);
- 	if (!is_journalled_quota(sbi))
--		return false;
--	if (is_sbi_flag_set(sbi, SBI_QUOTA_SKIP_FLUSH))
--		return false;
--	if (is_sbi_flag_set(sbi, SBI_QUOTA_NEED_REPAIR))
--		return false;
--	if (is_sbi_flag_set(sbi, SBI_QUOTA_NEED_FLUSH))
--		return true;
--	if (get_pages(sbi, F2FS_DIRTY_QDATA))
--		return true;
--	return false;
-+		ret = false;
-+	else if (is_sbi_flag_set(sbi, SBI_QUOTA_SKIP_FLUSH))
-+		ret = false;
-+	else if (is_sbi_flag_set(sbi, SBI_QUOTA_NEED_REPAIR))
-+		ret = false;
-+	else if (is_sbi_flag_set(sbi, SBI_QUOTA_NEED_FLUSH))
-+		ret = true;
-+	else if (get_pages(sbi, F2FS_DIRTY_QDATA))
-+		ret = true;
-+	else
-+		ret = false;
-+	up_write(&sbi->quota_sem);
-+	return ret;
- }
- 
- /*
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 9b3d9977cd1e..692c0922f5b2 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -1250,6 +1250,7 @@ struct f2fs_sb_info {
- 	block_t unusable_block_count;		/* # of blocks saved by last cp */
- 
- 	unsigned int nquota_files;		/* # of quota sysfile */
-+	struct rw_semaphore quota_sem;		/* blocking cp for flags */
- 
- 	/* # of pages, see count_type */
- 	atomic_t nr_pages[NR_COUNT_TYPE];
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 912e2619d581..5ddf5e97ee60 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -1944,7 +1944,10 @@ int f2fs_quota_sync(struct super_block *sb, int type)
- 	int cnt;
- 	int ret;
- 
-+	down_read(&sbi->quota_sem);
- 	ret = dquot_writeback_dquots(sb, type);
-+	up_read(&sbi->quota_sem);
-+
- 	if (ret)
- 		goto out;
- 
-@@ -2074,32 +2077,40 @@ static void f2fs_truncate_quota_inode_pages(struct super_block *sb)
- 
- static int f2fs_dquot_commit(struct dquot *dquot)
- {
-+	struct f2fs_sb_info *sbi = F2FS_SB(dquot->dq_sb);
- 	int ret;
- 
-+	down_read(&sbi->quota_sem);
- 	ret = dquot_commit(dquot);
- 	if (ret < 0)
--		set_sbi_flag(F2FS_SB(dquot->dq_sb), SBI_QUOTA_NEED_REPAIR);
-+		set_sbi_flag(sbi, SBI_QUOTA_NEED_REPAIR);
-+	up_read(&sbi->quota_sem);
- 	return ret;
- }
- 
- static int f2fs_dquot_acquire(struct dquot *dquot)
- {
-+	struct f2fs_sb_info *sbi = F2FS_SB(dquot->dq_sb);
- 	int ret;
- 
-+	down_read(&sbi->quota_sem);
- 	ret = dquot_acquire(dquot);
- 	if (ret < 0)
--		set_sbi_flag(F2FS_SB(dquot->dq_sb), SBI_QUOTA_NEED_REPAIR);
--
-+		set_sbi_flag(sbi, SBI_QUOTA_NEED_REPAIR);
-+	up_read(&sbi->quota_sem);
- 	return ret;
- }
- 
- static int f2fs_dquot_release(struct dquot *dquot)
- {
-+	struct f2fs_sb_info *sbi = F2FS_SB(dquot->dq_sb);
- 	int ret;
- 
-+	down_read(&sbi->quota_sem);
- 	ret = dquot_release(dquot);
- 	if (ret < 0)
--		set_sbi_flag(F2FS_SB(dquot->dq_sb), SBI_QUOTA_NEED_REPAIR);
-+		set_sbi_flag(sbi, SBI_QUOTA_NEED_REPAIR);
-+	up_read(&sbi->quota_sem);
- 	return ret;
- }
- 
-@@ -2109,22 +2120,27 @@ static int f2fs_dquot_mark_dquot_dirty(struct dquot *dquot)
- 	struct f2fs_sb_info *sbi = F2FS_SB(sb);
- 	int ret;
- 
-+	down_read(&sbi->quota_sem);
- 	ret = dquot_mark_dquot_dirty(dquot);
- 
- 	/* if we are using journalled quota */
- 	if (is_journalled_quota(sbi))
- 		set_sbi_flag(sbi, SBI_QUOTA_NEED_FLUSH);
- 
-+	up_read(&sbi->quota_sem);
- 	return ret;
- }
- 
- static int f2fs_dquot_commit_info(struct super_block *sb, int type)
- {
-+	struct f2fs_sb_info *sbi = F2FS_SB(sb);
- 	int ret;
- 
-+	down_read(&sbi->quota_sem);
- 	ret = dquot_commit_info(sb, type);
- 	if (ret < 0)
--		set_sbi_flag(F2FS_SB(sb), SBI_QUOTA_NEED_REPAIR);
-+		set_sbi_flag(sbi, SBI_QUOTA_NEED_REPAIR);
-+	up_read(&sbi->quota_sem);
- 	return ret;
- }
- 
-@@ -3233,6 +3249,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+ 	if (parser->local.usage_index >= HID_MAX_USAGES) {
+ 		hid_err(parser->device, "usage index exceeded\n");
+ 		return -1;
  	}
+ 	parser->local.usage[parser->local.usage_index] = usage;
++	parser->local.usage_size[parser->local.usage_index] = size;
+ 	parser->local.collection_index[parser->local.usage_index] =
+ 		parser->collection_stack_ptr ?
+ 		parser->collection_stack[parser->collection_stack_ptr - 1] : 0;
+@@ -463,10 +464,7 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
+ 			return 0;
+ 		}
  
- 	init_rwsem(&sbi->cp_rwsem);
-+	init_rwsem(&sbi->quota_sem);
- 	init_waitqueue_head(&sbi->cp_wait);
- 	init_sb_info(sbi);
+-		if (item->size <= 2)
+-			data = (parser->global.usage_page << 16) + data;
+-
+-		return hid_add_usage(parser, data);
++		return hid_add_usage(parser, data, item->size);
  
+ 	case HID_LOCAL_ITEM_TAG_USAGE_MINIMUM:
+ 
+@@ -475,9 +473,6 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
+ 			return 0;
+ 		}
+ 
+-		if (item->size <= 2)
+-			data = (parser->global.usage_page << 16) + data;
+-
+ 		parser->local.usage_minimum = data;
+ 		return 0;
+ 
+@@ -488,9 +483,6 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
+ 			return 0;
+ 		}
+ 
+-		if (item->size <= 2)
+-			data = (parser->global.usage_page << 16) + data;
+-
+ 		count = data - parser->local.usage_minimum;
+ 		if (count + parser->local.usage_index >= HID_MAX_USAGES) {
+ 			/*
+@@ -510,7 +502,7 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
+ 		}
+ 
+ 		for (n = parser->local.usage_minimum; n <= data; n++)
+-			if (hid_add_usage(parser, n)) {
++			if (hid_add_usage(parser, n, item->size)) {
+ 				dbg_hid("hid_add_usage failed\n");
+ 				return -1;
+ 			}
+@@ -524,6 +516,22 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
+ 	return 0;
+ }
+ 
++/*
++ * Concatenate Usage Pages into Usages where relevant:
++ * As per specification, 6.2.2.8: "When the parser encounters a main item it
++ * concatenates the last declared Usage Page with a Usage to form a complete
++ * usage value."
++ */
++
++static void hid_concatenate_usage_page(struct hid_parser *parser)
++{
++	int i;
++
++	for (i = 0; i < parser->local.usage_index; i++)
++		if (parser->local.usage_size[i] <= 2)
++			parser->local.usage[i] += parser->global.usage_page << 16;
++}
++
+ /*
+  * Process a main item.
+  */
+@@ -533,6 +541,8 @@ static int hid_parser_main(struct hid_parser *parser, struct hid_item *item)
+ 	__u32 data;
+ 	int ret;
+ 
++	hid_concatenate_usage_page(parser);
++
+ 	data = item_udata(item);
+ 
+ 	switch (item->tag) {
+@@ -746,6 +756,8 @@ static int hid_scan_main(struct hid_parser *parser, struct hid_item *item)
+ 	__u32 data;
+ 	int i;
+ 
++	hid_concatenate_usage_page(parser);
++
+ 	data = item_udata(item);
+ 
+ 	switch (item->tag) {
+diff --git a/include/linux/hid.h b/include/linux/hid.h
+index fab65b61d6d4e..04bdf5477ec51 100644
+--- a/include/linux/hid.h
++++ b/include/linux/hid.h
+@@ -374,6 +374,7 @@ struct hid_global {
+ 
+ struct hid_local {
+ 	unsigned usage[HID_MAX_USAGES]; /* usage array */
++	u8 usage_size[HID_MAX_USAGES]; /* usage size array */
+ 	unsigned collection_index[HID_MAX_USAGES]; /* collection index array */
+ 	unsigned usage_index;
+ 	unsigned usage_minimum;
 -- 
-2.19.0.605.g01d371f741-goog
+2.20.1
+
+
 
