@@ -2,56 +2,55 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB477C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6688C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 815E324A65
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:25:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B9D924A63
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:25:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186727;
-	bh=0Yf7YGQ/sEpb1kMylafb/6YPgn3HoZ7N3cN3eq1HrTs=;
+	s=default; t=1559186743;
+	bh=oAxXuymPmuidvsgEn2m/qqwU03WCP9EmRkFFh9OyPYA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WdoHcMXlUp6FSjJ3QMDEePLRJyeSmVSrTyF/09W/HkFemvBUXxFpiwS8cV7Pfhaaz
-	 ABBG+dAFlqs2TUEfEWCT3mWDjBnW8Q6VvMPRMas6OqUqHMbg1L1bh/CjbT/3MNTFnz
-	 zv8pK7l5XFZX6E1ydEAd5MseY4X77FobwGuBumes=
+	b=ChN8ksQPDyfv3mqSURpkKMPEurr0NGb2Ic/Ac4fezfS5HvUOl6HbC2LTbiLtnhwx4
+	 ov2P2LFgBXwIRhmxb1Gz1BQ/o8kMQhDEql9Lksf0BAgiacEBG8TIsR6Hh/UHZg9yG9
+	 6zpuPhD/tRFZI7OllBFNpurDKlYoxNAPhepnPbzU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732868AbfE3DZ0 (ORCPT
+        id S1728509AbfE3DZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:25:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51336 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:25:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731549AbfE3DS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:28 -0400
+        id S1731604AbfE3DSh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:37 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42419247C9;
-        Thu, 30 May 2019 03:18:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F7D02479B;
+        Thu, 30 May 2019 03:18:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186307;
-        bh=0Yf7YGQ/sEpb1kMylafb/6YPgn3HoZ7N3cN3eq1HrTs=;
+        s=default; t=1559186317;
+        bh=oAxXuymPmuidvsgEn2m/qqwU03WCP9EmRkFFh9OyPYA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hCogC67faGCcET/7J7GXCV7w3Em/aNIANPz9LUCqtK3s1MA6DuSvcQCUri5B7aSW7
-         wmubR0gxjag0sdFSRNPQbx3fjX3JEh63SE3CXtCrsjDKn6JY3YtpWI9vE6qjarT+ND
-         Zbh7uOwCtzoG7hLg4/iheBFyNG5MBGiYJgCW6lig=
+        b=bBA7EFzYemanAl4f3XuKnaCC5h4yRnbR//UQYu5L6A8eB2Iz57OCVJJGwffSOrQBm
+         zHsabpGPUY2FNy6n2dWQ/l+yyuQVa/q+FppEIT+wCO8rTAcC9SIz+gEIhaPt7BJIPq
+         zDC/BDlp5JhtQFVB4M5NcYbsS6xHwhSTChIY+uxs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 272/276] drm: Wake up next in drm_read() chain if we are forced to putback the event
-Date:   Wed, 29 May 2019 20:07:10 -0700
-Message-Id: <20190530030542.215922846@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Machek <pavel@denx.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.14 004/193] KVM: x86: fix return value for reserved EFER
+Date:   Wed, 29 May 2019 20:04:18 -0700
+Message-Id: <20190530030447.601169202@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
-References: <20190530030523.133519668@linuxfoundation.org>
+In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
+References: <20190530030446.953835040@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,39 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 60b801999c48b6c1dd04e653a38e2e613664264e ]
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-After an event is sent, we try to copy it into the user buffer of the
-first waiter in drm_read() and if the user buffer doesn't have enough
-room we put it back onto the list. However, we didn't wake up any
-subsequent waiter, so that event may sit on the list until either a new
-vblank event is sent or a new waiter appears. Rare, but in the worst
-case may lead to a stuck process.
+commit 66f61c92889ff3ca365161fb29dd36d6354682ba upstream.
 
-Testcase: igt/drm_read/short-buffer-wakeup
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20170804082328.17173-1-chris@chris-wilson.co.uk
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Commit 11988499e62b ("KVM: x86: Skip EFER vs. guest CPUID checks for
+host-initiated writes", 2019-04-02) introduced a "return false" in a
+function returning int, and anyway set_efer has a "nonzero on error"
+conventon so it should be returning 1.
+
+Reported-by: Pavel Machek <pavel@denx.de>
+Fixes: 11988499e62b ("KVM: x86: Skip EFER vs. guest CPUID checks for host-initiated writes")
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpu/drm/drm_file.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kvm/x86.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_file.c b/drivers/gpu/drm/drm_file.c
-index e4ccb52c67ea4..334addaca9c54 100644
---- a/drivers/gpu/drm/drm_file.c
-+++ b/drivers/gpu/drm/drm_file.c
-@@ -567,6 +567,7 @@ ssize_t drm_read(struct file *filp, char __user *buffer,
- 				file_priv->event_space -= length;
- 				list_add(&e->link, &file_priv->event_list);
- 				spin_unlock_irq(&dev->event_lock);
-+				wake_up_interruptible(&file_priv->event_wait);
- 				break;
- 			}
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -1133,7 +1133,7 @@ static int set_efer(struct kvm_vcpu *vcp
+ 	u64 efer = msr_info->data;
  
--- 
-2.20.1
-
+ 	if (efer & efer_reserved_bits)
+-		return false;
++		return 1;
+ 
+ 	if (!msr_info->host_initiated) {
+ 		if (!__kvm_valid_efer(vcpu, efer))
 
 
