@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11EBBC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A59C0C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFD4F258E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7351424B05
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:47:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191659;
-	bh=nyhqGap/iyJMPD77u2UuwgDx27f3z3dDq4hCBzjurb0=;
+	s=default; t=1559191665;
+	bh=fNIicfzKqgNknvOL8kafg05oEuWLA66QXO1DUGfYGHg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B9crUWaNBzKaSPtlDFxK1oGElbXZyawBugpb4qgjZi24paqdjUL3frhRog17f0xRn
-	 RcxdRsajuAEDUEph5di/bigBLBJnGToROTRfCZB7Ox0qIf5tIY+Mz/3kXGCHz8DZV3
-	 6zJYkav/wueBaWFqZWHp0gK7yl0va6uGKCcfG0C8=
+	b=kPaEW9WIYY66s2DYKGAs1c3rFUg5CH+yHDVxsYLCzZQnfXqXq5TUIQl5OIBov9gux
+	 RRlUtZ2r4HTaq/VO1B8C/Ofwr80T+Yd9cBx2LSU99mNMXj9rPuOj1Ni1IlbvB+mtzj
+	 ffnXn/0PE3mMzucvhOC1x2qTammoloSSXcGliMdg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388808AbfE3Eri (ORCPT
+        id S1727793AbfE3Er1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:47:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51072 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:47:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728562AbfE3DL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:11:28 -0400
+        id S1728593AbfE3DLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:33 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E81E24482;
-        Thu, 30 May 2019 03:11:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAEB82449A;
+        Thu, 30 May 2019 03:11:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185888;
-        bh=nyhqGap/iyJMPD77u2UuwgDx27f3z3dDq4hCBzjurb0=;
+        s=default; t=1559185893;
+        bh=fNIicfzKqgNknvOL8kafg05oEuWLA66QXO1DUGfYGHg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uSq/31tMFpItNmjRKZB81yuy9i2X7BUbK1ZblS3pB+ySvvQQgF/vQnPyWnJ62TaTH
-         ZfirzvMeX4VjkYo9HNfppaxGZzruhOo9Lgv0fvW2WTBuLfcz4g78f1rUxqCIbhPZFJ
-         klLwZJNuCAATiqxoJQxVchZd/qJTj6CFvMR/mByo=
+        b=O+JD9dI+MZI7FextB6lsqaqRMA5joo51f/d9tL37qRcF5e8dcy8Rhfkbbu+8AjWAQ
+         WHp1bjwZjBftr35Nz//wZZQ2KHxe53dAg/H4TUXieeTfh33Q1HNEp5DxaSzhJSz984
+         8/kD1ectpqbi0XiM6uKuuDlYxZwbWj/gQQI/4KBI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 247/405] rtlwifi: fix a potential NULL pointer dereference
-Date:   Wed, 29 May 2019 20:04:05 -0700
-Message-Id: <20190530030553.485242665@linuxfoundation.org>
+Subject: [PATCH 5.1 255/405] rtc: xgene: fix possible race condition
+Date:   Wed, 29 May 2019 20:04:13 -0700
+Message-Id: <20190530030553.877766892@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -60,34 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 765976285a8c8db3f0eb7f033829a899d0c2786e ]
+[ Upstream commit a652e00ee1233e251a337c28e18a1da59224e5ce ]
 
-In case alloc_workqueue fails, the fix reports the error and
-returns to avoid NULL pointer dereference.
+The IRQ is requested before the struct rtc is allocated and registered, but
+this struct is used in the IRQ handler. This may lead to a NULL pointer
+dereference.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Switch to devm_rtc_allocate_device/rtc_register_device to allocate the rtc
+struct before requesting the IRQ.
+
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtlwifi/base.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/rtc/rtc-xgene.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/base.c b/drivers/net/wireless/realtek/rtlwifi/base.c
-index 217d2a7a43c74..ac746c322554b 100644
---- a/drivers/net/wireless/realtek/rtlwifi/base.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/base.c
-@@ -448,6 +448,11 @@ static void _rtl_init_deferred_work(struct ieee80211_hw *hw)
- 	/* <2> work queue */
- 	rtlpriv->works.hw = hw;
- 	rtlpriv->works.rtl_wq = alloc_workqueue("%s", 0, 0, rtlpriv->cfg->name);
-+	if (unlikely(!rtlpriv->works.rtl_wq)) {
-+		pr_err("Failed to allocate work queue\n");
-+		return;
-+	}
+diff --git a/drivers/rtc/rtc-xgene.c b/drivers/rtc/rtc-xgene.c
+index 153820876a820..2f741f455c30a 100644
+--- a/drivers/rtc/rtc-xgene.c
++++ b/drivers/rtc/rtc-xgene.c
+@@ -168,6 +168,10 @@ static int xgene_rtc_probe(struct platform_device *pdev)
+ 	if (IS_ERR(pdata->csr_base))
+ 		return PTR_ERR(pdata->csr_base);
+ 
++	pdata->rtc = devm_rtc_allocate_device(&pdev->dev);
++	if (IS_ERR(pdata->rtc))
++		return PTR_ERR(pdata->rtc);
 +
- 	INIT_DELAYED_WORK(&rtlpriv->works.watchdog_wq,
- 			  (void *)rtl_watchdog_wq_callback);
- 	INIT_DELAYED_WORK(&rtlpriv->works.ips_nic_off_wq,
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq < 0) {
+ 		dev_err(&pdev->dev, "No IRQ resource\n");
+@@ -198,15 +202,15 @@ static int xgene_rtc_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	pdata->rtc = devm_rtc_device_register(&pdev->dev, pdev->name,
+-					 &xgene_rtc_ops, THIS_MODULE);
+-	if (IS_ERR(pdata->rtc)) {
+-		clk_disable_unprepare(pdata->clk);
+-		return PTR_ERR(pdata->rtc);
+-	}
+-
+ 	/* HW does not support update faster than 1 seconds */
+ 	pdata->rtc->uie_unsupported = 1;
++	pdata->rtc->ops = &xgene_rtc_ops;
++
++	ret = rtc_register_device(pdata->rtc);
++	if (ret) {
++		clk_disable_unprepare(pdata->clk);
++		return ret;
++	}
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
