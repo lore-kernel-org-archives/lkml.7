@@ -7,48 +7,55 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A04C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:26:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CAEC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:26:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 436CC254BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:26:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A279B25482
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:26:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190408;
-	bh=zabL5YfqfgkOhrTRcXafw5T08OQA8mRkWoJ70DYQGDc=;
+	s=default; t=1559190413;
+	bh=0tLTZClcKKFgPoH9shh1EIWhEETmj6LdTSvdImpzG/Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RKYxtyguJjMqQerAVcnOsJm7YgDaKG+XwRX2AV0MEa8K9h+zOhs2zYSNO7hz8a62X
-	 dUbWp3/BwXV0RqD2E23kywTORktZW7VSc3UyQqfyHk5Ma7l7o0ITQKU+iM54uxxMBD
-	 e3zt2Cwmk/HGNvu2EeJuwfXGVuB0wnrNSkF3EKQI=
+	b=ySvkv4acX96na17jeJZrtb7bgTWbYotB+ewqLwG6uMMzpS/ickf7PdaDm6PZBJEcP
+	 Hv9hukPL/7vrx4DJi5zk0P/6QsEWQzE5Haw4RB5NCQeTrnPFcE44+af2/zvBI/m8yD
+	 qZYBYuNcBdM2Bqfl4kQyIf1rL6aThABK7vopgQs8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387726AbfE3E0r (ORCPT
+        id S2387739AbfE3E0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:26:47 -0400
+        Thu, 30 May 2019 00:26:52 -0400
 Received: from mail.kernel.org ([198.145.29.99]:33692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729875AbfE3DO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:29 -0400
+        id S1729029AbfE3DO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:27 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CC5B2455E;
-        Thu, 30 May 2019 03:14:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3AB224547;
+        Thu, 30 May 2019 03:14:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186069;
-        bh=zabL5YfqfgkOhrTRcXafw5T08OQA8mRkWoJ70DYQGDc=;
+        s=default; t=1559186066;
+        bh=0tLTZClcKKFgPoH9shh1EIWhEETmj6LdTSvdImpzG/Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0YT7oZBVFszm5EBJpsSJDc4YlzSpr+pcM+uo1wM2EOj5HKpNsHBmaZfnNPIwl/TP/
-         1s9PoZWUCWa98c+OpXYLqfbKT0YQ6RcBux5eFQfDMbv+u25j5fkPLDfrcYxtnplzw7
-         5RHg+6KBqL7um/SxzfDbzGQ/b4D7LHphNsV535o8=
+        b=U3j464NqV94C+ocHgGp0gvuasvLq/Elxk4hbvBqXurugKrYN9Tl9v2/qtbAmMoMSX
+         kKHjnlwwro+t26+QPpt+drWDYU84MFI3N/V58G+c2js1gM1MznBtMtiS791yaYK7Wr
+         l62YrohzRiR5XD32JA2gaDWyavOoBHyt5cfVODL0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        Guenter Roeck <linux@roeck-us.net>,
+        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>, acme@kernel.org,
+        jolsa@kernel.org, Ingo Molnar <mingo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 182/346] hwmon: (smsc47b397) Use request_muxed_region for Super-IO accesses
-Date:   Wed, 29 May 2019 20:04:15 -0700
-Message-Id: <20190530030550.332532730@linuxfoundation.org>
+Subject: [PATCH 5.0 177/346] perf/x86/intel/rapl: Add Icelake support
+Date:   Wed, 29 May 2019 20:04:10 -0700
+Message-Id: <20190530030550.101261928@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -61,67 +68,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8c0826756744c0ac1df600a5e4cca1a341b13101 ]
+[ Upstream commit b3377c3acb9e54cf86efcfe25f2e792bca599ed4 ]
 
-Super-IO accesses may fail on a system with no or unmapped LPC bus.
+Icelake support the same RAPL counters as Skylake.
 
-Also, other drivers may attempt to access the LPC bus at the same time,
-resulting in undefined behavior.
-
-Use request_muxed_region() to ensure that IO access on the requested
-address space is supported, and to ensure that access by multiple drivers
-is synchronized.
-
-Fixes: 8d5d45fb1468 ("I2C: Move hwmon drivers (2/3)")
-Reported-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Reported-by: John Garry <john.garry@huawei.com>
-Cc: John Garry <john.garry@huawei.com>
-Acked-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: acme@kernel.org
+Cc: jolsa@kernel.org
+Link: https://lkml.kernel.org/r/20190402194509.2832-11-kan.liang@linux.intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/smsc47b397.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ arch/x86/events/intel/rapl.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/hwmon/smsc47b397.c b/drivers/hwmon/smsc47b397.c
-index 6bd2007565603..cbdb5c4991ae3 100644
---- a/drivers/hwmon/smsc47b397.c
-+++ b/drivers/hwmon/smsc47b397.c
-@@ -72,14 +72,19 @@ static inline void superio_select(int ld)
- 	superio_outb(0x07, ld);
- }
+diff --git a/arch/x86/events/intel/rapl.c b/arch/x86/events/intel/rapl.c
+index 91039ffed6333..2413169ce3627 100644
+--- a/arch/x86/events/intel/rapl.c
++++ b/arch/x86/events/intel/rapl.c
+@@ -780,6 +780,8 @@ static const struct x86_cpu_id rapl_cpu_match[] __initconst = {
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ATOM_GOLDMONT_X, hsw_rapl_init),
  
--static inline void superio_enter(void)
-+static inline int superio_enter(void)
- {
-+	if (!request_muxed_region(REG, 2, DRVNAME))
-+		return -EBUSY;
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ATOM_GOLDMONT_PLUS, hsw_rapl_init),
 +
- 	outb(0x55, REG);
-+	return 0;
- }
++	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ICELAKE_MOBILE,  skl_rapl_init),
+ 	{},
+ };
  
- static inline void superio_exit(void)
- {
- 	outb(0xAA, REG);
-+	release_region(REG, 2);
- }
- 
- #define SUPERIO_REG_DEVID	0x20
-@@ -300,8 +305,12 @@ static int __init smsc47b397_find(void)
- 	u8 id, rev;
- 	char *name;
- 	unsigned short addr;
-+	int err;
-+
-+	err = superio_enter();
-+	if (err)
-+		return err;
- 
--	superio_enter();
- 	id = force_id ? force_id : superio_inb(SUPERIO_REG_DEVID);
- 
- 	switch (id) {
 -- 
 2.20.1
 
