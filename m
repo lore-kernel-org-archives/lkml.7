@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6DC2C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8876EC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B545E24B3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DA1F23C7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187222;
-	bh=DVF2BsjhTgYxFfpTkGy6e03bpwNSrsgVjaDEudMpCwE=;
+	s=default; t=1559187226;
+	bh=QHHJzmGmENwLd9+4/6BGh0e0DWoeRUnT3nr0VX28p8E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YAI/KMhS9UBDoU8svo3h2nY94/Jfwcw8LaVWzThH+uiFtgXf0J+FImJBjVNB7hKoD
-	 TP+kGHMebwVfuwXNUaK23WlL8Qs7hqHYjuJTd07Mj4zoxrDDr+rO3vE33sNVkXeO6V
-	 7Dyql2mjbYLGp5oABtdFLfGDN6yS6qj316tT2ICU=
+	b=OnVuJsz/Gk4IOj43oHnoGlNH8mZz32VyTG4VnkPS/uCoG0agX54Cu7NfEbqhQs/Fh
+	 z+RNFiDaQVC3gDXpCpijssTKFEM4jIQ31KCSmt8UPY/4OckuOqNIx7rRAPtFCvZ4vK
+	 +WxNsO3MnHL6utiZ9P/yRM2KpYZncfpsPJfaDOLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388136AbfE3D2L (ORCPT
+        id S1732883AbfE3D2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:28:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56740 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:28:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732046AbfE3DTu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:50 -0400
+        id S1732040AbfE3DTt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:49 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E91FC248E0;
-        Thu, 30 May 2019 03:19:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8611248CF;
+        Thu, 30 May 2019 03:19:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186390;
-        bh=DVF2BsjhTgYxFfpTkGy6e03bpwNSrsgVjaDEudMpCwE=;
+        s=default; t=1559186389;
+        bh=QHHJzmGmENwLd9+4/6BGh0e0DWoeRUnT3nr0VX28p8E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nVm4ZFYKf3v0AHXbFiS6QIt+wJrXsLRfIv7nM2Py2q5di2ooNvR7z5hGnD9uoYXd5
-         1fIsoUvIE9XeIkkDRBFI/zRM25ytotk4p5gjQGwCIBcJiaq4Wwexemuis173bn3cx1
-         kcoyHXmlC/XNOLFGr8yqSBR68/x+CCaZUKIRVvQQ=
+        b=pvROQc4hPQcTFqy0ajb1SeIvavvwLnTLKy/K7foUKO9JflFeITnKN+zwSb6v4eeeS
+         yZ5C3unv0CjSZI1HY1aoSP7Y29FbwJeL6zb4l3GbzVJ9uJ0QvfQz767+BWlLFct1O+
+         +aMm1tFvQBlFDJVLFoh5wug7SVT+RLP7JnskoYLE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 160/193] cxgb3/l2t: Fix undefined behaviour
-Date:   Wed, 29 May 2019 20:06:54 -0700
-Message-Id: <20190530030510.392048626@linuxfoundation.org>
+Subject: [PATCH 4.14 158/193] ASoC: eukrea-tlv320: fix a leaked reference by adding missing of_node_put
+Date:   Wed, 29 May 2019 20:06:52 -0700
+Message-Id: <20190530030510.126576297@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -61,47 +63,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 76497732932f15e7323dc805e8ea8dc11bb587cf ]
+[ Upstream commit b820d52e7eed7b30b2dfef5f4213a2bc3cbea6f3 ]
 
-The use of zero-sized array causes undefined behaviour when it is not
-the last member in a structure. As it happens to be in this case.
+The call to of_parse_phandle returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Also, the current code makes use of a language extension to the C90
-standard, but the preferred mechanism to declare variable-length
-types such as this one is a flexible array member, introduced in
-C99:
+Detected by coccinelle with the following warnings:
+./sound/soc/fsl/eukrea-tlv320.c:121:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 102, but without a correspo    nding object release within this function.
+./sound/soc/fsl/eukrea-tlv320.c:127:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 102, but without a correspo    nding object release within this function.
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
-
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last. Which is beneficial
-to cultivate a high-quality code.
-
-Fixes: e48f129c2f20 ("[SCSI] cxgb3i: convert cdev->l2opt to use rcu to prevent NULL dereference")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: alsa-devel@alsa-project.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb3/l2t.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/fsl/eukrea-tlv320.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb3/l2t.h b/drivers/net/ethernet/chelsio/cxgb3/l2t.h
-index c2fd323c40782..ea75f275023ff 100644
---- a/drivers/net/ethernet/chelsio/cxgb3/l2t.h
-+++ b/drivers/net/ethernet/chelsio/cxgb3/l2t.h
-@@ -75,8 +75,8 @@ struct l2t_data {
- 	struct l2t_entry *rover;	/* starting point for next allocation */
- 	atomic_t nfree;		/* number of free entries */
- 	rwlock_t lock;
--	struct l2t_entry l2tab[0];
- 	struct rcu_head rcu_head;	/* to handle rcu cleanup */
-+	struct l2t_entry l2tab[];
- };
+diff --git a/sound/soc/fsl/eukrea-tlv320.c b/sound/soc/fsl/eukrea-tlv320.c
+index 84ef6385736cd..4c6f19ef98b25 100644
+--- a/sound/soc/fsl/eukrea-tlv320.c
++++ b/sound/soc/fsl/eukrea-tlv320.c
+@@ -119,13 +119,13 @@ static int eukrea_tlv320_probe(struct platform_device *pdev)
+ 		if (ret) {
+ 			dev_err(&pdev->dev,
+ 				"fsl,mux-int-port node missing or invalid.\n");
+-			return ret;
++			goto err;
+ 		}
+ 		ret = of_property_read_u32(np, "fsl,mux-ext-port", &ext_port);
+ 		if (ret) {
+ 			dev_err(&pdev->dev,
+ 				"fsl,mux-ext-port node missing or invalid.\n");
+-			return ret;
++			goto err;
+ 		}
  
- typedef void (*arp_failure_handler_func)(struct t3cdev * dev,
+ 		/*
 -- 
 2.20.1
 
