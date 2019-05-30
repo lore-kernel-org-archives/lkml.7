@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A7DEC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 05:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B0A2C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 05:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8702260B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 05:00:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14896260B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 05:00:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192439;
-	bh=D22WBElfsfKcrJroUrR87y58gP39ciTL7nqz0YFONb0=;
+	s=default; t=1559192442;
+	bh=SbTFFUuSRSP005lrWiHb6QE2jPtSQRfWODw8nUneGEI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oVtDnv+OzTVEMxqsyO8ovG2yU9+f0Y+DooSsnzYpuTKde+IkeIgUB25/WLl43meEa
-	 ZltpIb7iluDn/5/ZFPQxbWPyoovzyp2WxO3n4fTxQ2tjqEwvWw8rFNWFlGK0RNpiYd
-	 qX+AFw7DmZhzVQtQtW7pKYo64wX2y83uLkZ4kGQI=
+	b=eDkWlVjwi6uzzfGJlW5Lv1IzUFFSoVbLCYrsEwiF0QVOKmAiD6M5VbqLsVaiA+jZl
+	 fvwihu7JCLufARwwh/xLSXV9VJgn/QGeuOXEnVUz014JtK5TMhmFzPJ8ez7lN7qSvP
+	 2AD6ZoV7w6lAn5v2LyrTvLBBrb/GieQuUCMRtTws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728340AbfE3FAi (ORCPT
+        id S1727945AbfE3FAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 01:00:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44064 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 01:00:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727593AbfE3DJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:09:30 -0400
+        id S1727577AbfE3DJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:09:29 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3399024485;
-        Thu, 30 May 2019 03:09:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B89F32447E;
+        Thu, 30 May 2019 03:09:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185770;
-        bh=D22WBElfsfKcrJroUrR87y58gP39ciTL7nqz0YFONb0=;
+        s=default; t=1559185768;
+        bh=SbTFFUuSRSP005lrWiHb6QE2jPtSQRfWODw8nUneGEI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BfhsxlQm6qwOvsCoHHyNQzD71SocWn9Cmb40ovdPWDWfBEGCjChj6WckNpMLSeZlM
-         xVJx2Irw0pAGtPi4K2PZMYiiUxhb8lwuDfBR5TLcxWLmbgJ3ax1hBlnCaXZINmGCov
-         0p1f1E6IjIswsx+Cbd3SbpRqIfA+ePncWbqXKYjU=
+        b=2AjFhBt6E9tX4Z/cERk+zEPnpSY7dRTraalO1ywGYS/bQ5lbeCKUt7rUSXC0e2zcm
+         7T7A16ZPMUMcnrFNmfcTs/dbiHnkEEWlCF+1xmr7y1GHbIAKO0eWMlGvSggPTqN16k
+         wR9brZ5bpIWZbX/arW/U1ti0ACnMkiNRL2gnbqeg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
+        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@arm.com>,
         Will Deacon <will.deacon@arm.com>
-Subject: [PATCH 5.1 021/405] arm64/iommu: handle non-remapped addresses in ->mmap and ->get_sgtable
-Date:   Wed, 29 May 2019 20:00:19 -0700
-Message-Id: <20190530030541.674075690@linuxfoundation.org>
+Subject: [PATCH 5.1 019/405] arm64/kernel: kaslr: reduce module randomization range to 2 GB
+Date:   Wed, 29 May 2019 20:00:17 -0700
+Message-Id: <20190530030541.544807094@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,51 +59,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Ard Biesheuvel <ard.biesheuvel@arm.com>
 
-commit a98d9ae937d256ed679a935fc82d9deaa710d98e upstream.
+commit b2eed9b58811283d00fa861944cb75797d4e52a7 upstream.
 
-DMA allocations that can't sleep may return non-remapped addresses, but
-we do not properly handle them in the mmap and get_sgtable methods.
-Resolve non-vmalloc addresses using virt_to_page to handle this corner
-case.
+The following commit
 
-Cc: <stable@vger.kernel.org>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+  7290d5809571 ("module: use relative references for __ksymtab entries")
+
+updated the ksymtab handling of some KASLR capable architectures
+so that ksymtab entries are emitted as pairs of 32-bit relative
+references. This reduces the size of the entries, but more
+importantly, it gets rid of statically assigned absolute
+addresses, which require fixing up at boot time if the kernel
+is self relocating (which takes a 24 byte RELA entry for each
+member of the ksymtab struct).
+
+Since ksymtab entries are always part of the same module as the
+symbol they export, it was assumed at the time that a 32-bit
+relative reference is always sufficient to capture the offset
+between a ksymtab entry and its target symbol.
+
+Unfortunately, this is not always true: in the case of per-CPU
+variables, a per-CPU variable's base address (which usually differs
+from the actual address of any of its per-CPU copies) is allocated
+in the vicinity of the ..data.percpu section in the core kernel
+(i.e., in the per-CPU reserved region which follows the section
+containing the core kernel's statically allocated per-CPU variables).
+
+Since we randomize the module space over a 4 GB window covering
+the core kernel (based on the -/+ 4 GB range of an ADRP/ADD pair),
+we may end up putting the core kernel out of the -/+ 2 GB range of
+32-bit relative references of module ksymtab entries that refer to
+per-CPU variables.
+
+So reduce the module randomization range a bit further. We lose
+1 bit of randomization this way, but this is something we can
+tolerate.
+
+Cc: <stable@vger.kernel.org> # v4.19+
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@arm.com>
 Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/mm/dma-mapping.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm64/kernel/kaslr.c  |    6 +++---
+ arch/arm64/kernel/module.c |    2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
---- a/arch/arm64/mm/dma-mapping.c
-+++ b/arch/arm64/mm/dma-mapping.c
-@@ -249,6 +249,11 @@ static int __iommu_mmap_attrs(struct dev
- 	if (dma_mmap_from_dev_coherent(dev, vma, cpu_addr, size, &ret))
- 		return ret;
+--- a/arch/arm64/kernel/kaslr.c
++++ b/arch/arm64/kernel/kaslr.c
+@@ -145,15 +145,15 @@ u64 __init kaslr_early_init(u64 dt_phys)
  
-+	if (!is_vmalloc_addr(cpu_addr)) {
-+		unsigned long pfn = page_to_pfn(virt_to_page(cpu_addr));
-+		return __swiotlb_mmap_pfn(vma, pfn, size);
-+	}
-+
- 	if (attrs & DMA_ATTR_FORCE_CONTIGUOUS) {
+ 	if (IS_ENABLED(CONFIG_RANDOMIZE_MODULE_REGION_FULL)) {
  		/*
- 		 * DMA_ATTR_FORCE_CONTIGUOUS allocations are always remapped,
-@@ -272,6 +277,11 @@ static int __iommu_get_sgtable(struct de
- 	unsigned int count = PAGE_ALIGN(size) >> PAGE_SHIFT;
- 	struct vm_struct *area = find_vm_area(cpu_addr);
+-		 * Randomize the module region over a 4 GB window covering the
++		 * Randomize the module region over a 2 GB window covering the
+ 		 * kernel. This reduces the risk of modules leaking information
+ 		 * about the address of the kernel itself, but results in
+ 		 * branches between modules and the core kernel that are
+ 		 * resolved via PLTs. (Branches between modules will be
+ 		 * resolved normally.)
+ 		 */
+-		module_range = SZ_4G - (u64)(_end - _stext);
+-		module_alloc_base = max((u64)_end + offset - SZ_4G,
++		module_range = SZ_2G - (u64)(_end - _stext);
++		module_alloc_base = max((u64)_end + offset - SZ_2G,
+ 					(u64)MODULES_VADDR);
+ 	} else {
+ 		/*
+--- a/arch/arm64/kernel/module.c
++++ b/arch/arm64/kernel/module.c
+@@ -56,7 +56,7 @@ void *module_alloc(unsigned long size)
+ 		 * can simply omit this fallback in that case.
+ 		 */
+ 		p = __vmalloc_node_range(size, MODULE_ALIGN, module_alloc_base,
+-				module_alloc_base + SZ_4G, GFP_KERNEL,
++				module_alloc_base + SZ_2G, GFP_KERNEL,
+ 				PAGE_KERNEL_EXEC, 0, NUMA_NO_NODE,
+ 				__builtin_return_address(0));
  
-+	if (!is_vmalloc_addr(cpu_addr)) {
-+		struct page *page = virt_to_page(cpu_addr);
-+		return __swiotlb_get_sgtable_page(sgt, page, size);
-+	}
-+
- 	if (attrs & DMA_ATTR_FORCE_CONTIGUOUS) {
- 		/*
- 		 * DMA_ATTR_FORCE_CONTIGUOUS allocations are always remapped,
 
 
