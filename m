@@ -5,48 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9EFC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53758C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D90B24DAE
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2173224DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:51:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188300;
-	bh=z2r8VEfhDv9zNBaQYC726fsNdOFlBHXcU//bG1jCdYE=;
+	s=default; t=1559188307;
+	bh=dCp0h2DdH+O+tnf+wAbxxMstflMLuTau8QyZNyzbPqU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UWWDuRuohCUKcT5bS68/q0noUKbVqnrw2GqJsNiMslXIB8IHl3hezP3iQVkmoq4Ti
-	 n4Lm1prdHuIySHx8XfYSkygSjxsoSrlatI+nf0eQ6A6ccR+vEijmRGZUQANGLHi8vz
-	 WxMR+gW9EXU6mp8+h2KMEhsr3ffHRYzCmqg/mdeA=
+	b=2u+q5AGMfwtBH0WemAVW+oFexsWnmq5MDNNP7p5jd4vEEgY7YDakRk13zq1fENOFF
+	 ZclRktYpNl2B0SgslV6aiQuqYtko5ao/UatuLnzM2hJuSsn+XTtYATrdTt/YOfhFZY
+	 K6Zc/iBL7ED/ACz4yVk1JJhrIEa6dgHUoI55tfvI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387507AbfE3Dve (ORCPT
+        id S1732285AbfE3Dvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:51:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56670 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:51:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732020AbfE3DTq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732019AbfE3DTq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:19:46 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83B3F247F7;
+        by mail.kernel.org (Postfix) with ESMTPSA id 201EE24725;
         Thu, 30 May 2019 03:19:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186386;
-        bh=z2r8VEfhDv9zNBaQYC726fsNdOFlBHXcU//bG1jCdYE=;
+        bh=dCp0h2DdH+O+tnf+wAbxxMstflMLuTau8QyZNyzbPqU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MfPizdvP4UAHgtRHWyG1Oczp4te5rQcvgZvSawVMZn9BEY5E05UpTnYjQJ40TZTDh
-         3aMlATm6URksF37YrDx9V0lC4HPqGqxQqEzim5czL1ho6EA1qYR7nWX/l0NDJMcDlj
-         nkxUnSrRFWFv2HWt/178UpjT4LuPmTzztNshflPY=
+        b=EI78iex/x1+TRcE0rn9QvJfHbVP+ShPusUnFqa+uw90X6R7f17xCL5qhHAHoDqZNo
+         jJeUqQ26xO8NLCNthYx9VMm6lYnkDXPZCBkavEZO4jpI63aVfGrmA/GQZfngb/UEIC
+         piMejwD5PXE7ezgry3RrCGRl6uymMQLLMMmWp8qE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chengguang Xu <cgxu519@gmx.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 155/193] chardev: add additional check for minor range overlap
-Date:   Wed, 29 May 2019 20:06:49 -0700
-Message-Id: <20190530030509.856072918@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 154/193] x86/ia32: Fix ia32_restore_sigcontext() AC leak
+Date:   Wed, 29 May 2019 20:06:48 -0700
+Message-Id: <20190530030509.806039767@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -59,36 +64,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit de36e16d1557a0b6eb328bc3516359a12ba5c25c ]
+[ Upstream commit 67a0514afdbb8b2fc70b771b8c77661a9cb9d3a9 ]
 
-Current overlap checking cannot correctly handle
-a case which is baseminor < existing baseminor &&
-baseminor + minorct > existing baseminor + minorct.
+Objtool spotted that we call native_load_gs_index() with AC set.
+Re-arrange the code to avoid that.
 
-Signed-off-by: Chengguang Xu <cgxu519@gmx.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/char_dev.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/x86/ia32/ia32_signal.c | 29 +++++++++++++++++------------
+ 1 file changed, 17 insertions(+), 12 deletions(-)
 
-diff --git a/fs/char_dev.c b/fs/char_dev.c
-index a65e4a56318ca..20ce45c7c57c7 100644
---- a/fs/char_dev.c
-+++ b/fs/char_dev.c
-@@ -159,6 +159,12 @@ __register_chrdev_region(unsigned int major, unsigned int baseminor,
- 			ret = -EBUSY;
- 			goto out;
- 		}
-+
-+		if (new_min < old_min && new_max > old_max) {
-+			ret = -EBUSY;
-+			goto out;
-+		}
-+
- 	}
+diff --git a/arch/x86/ia32/ia32_signal.c b/arch/x86/ia32/ia32_signal.c
+index 41c671854642f..789284d19b558 100644
+--- a/arch/x86/ia32/ia32_signal.c
++++ b/arch/x86/ia32/ia32_signal.c
+@@ -62,9 +62,8 @@
+ } while (0)
  
- 	cd->next = *cp;
+ #define RELOAD_SEG(seg)		{		\
+-	unsigned int pre = GET_SEG(seg);	\
++	unsigned int pre = (seg) | 3;		\
+ 	unsigned int cur = get_user_seg(seg);	\
+-	pre |= 3;				\
+ 	if (pre != cur)				\
+ 		set_user_seg(seg, pre);		\
+ }
+@@ -73,6 +72,7 @@ static int ia32_restore_sigcontext(struct pt_regs *regs,
+ 				   struct sigcontext_32 __user *sc)
+ {
+ 	unsigned int tmpflags, err = 0;
++	u16 gs, fs, es, ds;
+ 	void __user *buf;
+ 	u32 tmp;
+ 
+@@ -80,16 +80,10 @@ static int ia32_restore_sigcontext(struct pt_regs *regs,
+ 	current->restart_block.fn = do_no_restart_syscall;
+ 
+ 	get_user_try {
+-		/*
+-		 * Reload fs and gs if they have changed in the signal
+-		 * handler.  This does not handle long fs/gs base changes in
+-		 * the handler, but does not clobber them at least in the
+-		 * normal case.
+-		 */
+-		RELOAD_SEG(gs);
+-		RELOAD_SEG(fs);
+-		RELOAD_SEG(ds);
+-		RELOAD_SEG(es);
++		gs = GET_SEG(gs);
++		fs = GET_SEG(fs);
++		ds = GET_SEG(ds);
++		es = GET_SEG(es);
+ 
+ 		COPY(di); COPY(si); COPY(bp); COPY(sp); COPY(bx);
+ 		COPY(dx); COPY(cx); COPY(ip); COPY(ax);
+@@ -107,6 +101,17 @@ static int ia32_restore_sigcontext(struct pt_regs *regs,
+ 		buf = compat_ptr(tmp);
+ 	} get_user_catch(err);
+ 
++	/*
++	 * Reload fs and gs if they have changed in the signal
++	 * handler.  This does not handle long fs/gs base changes in
++	 * the handler, but does not clobber them at least in the
++	 * normal case.
++	 */
++	RELOAD_SEG(gs);
++	RELOAD_SEG(fs);
++	RELOAD_SEG(ds);
++	RELOAD_SEG(es);
++
+ 	err |= fpu__restore_sig(buf, 1);
+ 
+ 	force_iret();
 -- 
 2.20.1
 
