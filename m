@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F8AC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C7CC28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DFCD248DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:19:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6485F248F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:19:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186391;
-	bh=PjcI6j3JVgIlgjdTsXLDxlehs3jes36s+UDL4rG7FDM=;
+	s=default; t=1559186396;
+	bh=PYS5Datf5pZZIG36tQdTDk0Mop6H0RA4WAcw/qUerck=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j3x6vwopVYM2rrsp33HAeLBfQQsQGGkwu7bs8AaYOOZj7QZl9XwwVt41GjWP2A4Hb
-	 1GPNwOo9Y7x05dR6qgXk6kXeOPzT2N3prZrKe13ZiI40AwdoJGI9m8SxuMf0PcOU4e
-	 kPypyY4PXjqIPKGrHa14/KKnUKiGOyT5A7fL1j6g=
+	b=XgyciZxlJkTaFm+TkkO2Fbpd31tUDFjGrzFbr0bmisOfQmrE8AyqCnmVN5ce13jZc
+	 i2SndfVBuSDjrwEaZlBrfP49Ung1WI552v9C43aUQPbfeXrMEtGs+8Veagi9na+Qfp
+	 1eN4iGGup6YNCEkODRRMFM9jh1n9DrovY8peJTVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732044AbfE3DTt (ORCPT
+        id S1732073AbfE3DTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:19:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39062 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:19:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730430AbfE3DPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:15:41 -0400
+        id S1730454AbfE3DPn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:43 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06AA524595;
-        Thu, 30 May 2019 03:15:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 944AA24598;
+        Thu, 30 May 2019 03:15:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186141;
-        bh=PjcI6j3JVgIlgjdTsXLDxlehs3jes36s+UDL4rG7FDM=;
+        s=default; t=1559186142;
+        bh=PYS5Datf5pZZIG36tQdTDk0Mop6H0RA4WAcw/qUerck=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GAlyNgeLuzNUTn3JiynS+VHmPYCMXjZeK18i/Sh+LqfXAK2R5tqWlinCLmZZJS7DJ
-         M9IYpIqmLxcxg0vkM/ph1DgC9+3H8QtYb19MbOgDXGxPzXqQtZAMI20AjP0WDRhM/o
-         UIoIbqyWDM+HKxJnUwLAPw6w/qnZsVNr8I5Ahwvg=
+        b=G2p0qPCZvBb2vMwauJquyIg7QwZkk6omrPelOiNiZk4XNi2de4ZfYiU1J2qSSFWML
+         kF3Iw26BmCyZrcVJ3h7zKIK1xjGVz4kWgByZYwD/cLk4zsE7MHAz86OellSQfKPNfk
+         Q61JYa0PGA0RAkR2W8G1jdctuA5EQO8Q7Y9UHOSo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhang Yu <zhangyu31@baidu.com>,
-        Li RongQing <lirongqing@baidu.com>,
-        Paul Moore <paul@paul-moore.com>,
+        stable@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 316/346] audit: fix a memleak caused by auditing load module
-Date:   Wed, 29 May 2019 20:06:29 -0700
-Message-Id: <20190530030556.823676683@linuxfoundation.org>
+Subject: [PATCH 5.0 319/346] drm/omap: dsi: Fix PM for display blank with paired dss_pll calls
+Date:   Wed, 29 May 2019 20:06:32 -0700
+Message-Id: <20190530030556.960466235@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -61,78 +60,165 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 95e0b46fcebd7dbf6850dee96046e4c4ddc7f69c ]
+[ Upstream commit fe4ed1b457943113ee1138c939fbdeede4af6cf3 ]
 
-module.name will be allocated unconditionally when auditing load
-module, and audit_log_start() can fail with other reasons, or
-audit_log_exit maybe not called, caused module.name is not freed
+Currently dsi_display_init_dsi() calls dss_pll_enable() but it is not
+paired with dss_pll_disable() in dsi_display_uninit_dsi(). This leaves
+the DSS clocks enabled when the display is blanked wasting about extra
+5mW of power while idle.
 
-so free module.name in audit_free_context and __audit_syscall_exit
+The clock that is left on by not calling dss_pll_disable() is
+DSS_CLKCTRL bit 10 OPTFCLKEN_SYS_CLK that is the source clock for
+DSI PLL.
 
-unreferenced object 0xffff88af90837d20 (size 8):
-  comm "modprobe", pid 1036, jiffies 4294704867 (age 3069.138s)
-  hex dump (first 8 bytes):
-    69 78 67 62 65 00 ff ff                          ixgbe...
-  backtrace:
-    [<0000000008da28fe>] __audit_log_kern_module+0x33/0x80
-    [<00000000c1491e61>] load_module+0x64f/0x3850
-    [<000000007fc9ae3f>] __do_sys_init_module+0x218/0x250
-    [<0000000000d4a478>] do_syscall_64+0x117/0x400
-    [<000000004924ded8>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    [<000000007dc331dd>] 0xffffffffffffffff
+We can fix this issue by by making the current dsi_pll_uninit() into
+dsi_pll_disable(). This way we can just call dss_pll_disable() from
+dsi_display_uninit_dsi() and the code becomes a bit easier to follow.
 
-Fixes: ca86cad7380e3 ("audit: log module name on init_module")
-Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
-[PM: manual merge fixup in __audit_syscall_exit()]
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+However, we need to also consider that DSI PLL can be muxed for DVI too
+as pointed out by Tomi Valkeinen <tomi.valkeinen@ti.com>. In the DVI
+case, we want to unconditionally disable the clocks. To get around this
+issue, we separate out the DSI lane handling from dsi_pll_enable() and
+dsi_pll_disable() as suggested by Tomi in an earlier experimental patch.
+
+So we must only toggle the DSI regulator based on the vdds_dsi_enabled
+flag from dsi_display_init_dsi() and dsi_display_uninit_dsi().
+
+We need to make these two changes together to avoid breaking things
+for DVI when fixing the DSI clock handling. And this all causes a
+slight renumbering of the error path for dsi_display_init_dsi().
+
+Suggested-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/auditsc.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/omapdrm/dss/dsi.c | 60 ++++++++++++++++---------------
+ 1 file changed, 31 insertions(+), 29 deletions(-)
 
-diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-index b585ceb2f7a2c..71e7377746110 100644
---- a/kernel/auditsc.c
-+++ b/kernel/auditsc.c
-@@ -837,6 +837,13 @@ static inline void audit_proctitle_free(struct audit_context *context)
- 	context->proctitle.len = 0;
+diff --git a/drivers/gpu/drm/omapdrm/dss/dsi.c b/drivers/gpu/drm/omapdrm/dss/dsi.c
+index 64fb788b66474..f0fe975ed46c7 100644
+--- a/drivers/gpu/drm/omapdrm/dss/dsi.c
++++ b/drivers/gpu/drm/omapdrm/dss/dsi.c
+@@ -1342,12 +1342,9 @@ static int dsi_pll_enable(struct dss_pll *pll)
+ 	 */
+ 	dsi_enable_scp_clk(dsi);
+ 
+-	if (!dsi->vdds_dsi_enabled) {
+-		r = regulator_enable(dsi->vdds_dsi_reg);
+-		if (r)
+-			goto err0;
+-		dsi->vdds_dsi_enabled = true;
+-	}
++	r = regulator_enable(dsi->vdds_dsi_reg);
++	if (r)
++		goto err0;
+ 
+ 	/* XXX PLL does not come out of reset without this... */
+ 	dispc_pck_free_enable(dsi->dss->dispc, 1);
+@@ -1372,36 +1369,25 @@ static int dsi_pll_enable(struct dss_pll *pll)
+ 
+ 	return 0;
+ err1:
+-	if (dsi->vdds_dsi_enabled) {
+-		regulator_disable(dsi->vdds_dsi_reg);
+-		dsi->vdds_dsi_enabled = false;
+-	}
++	regulator_disable(dsi->vdds_dsi_reg);
+ err0:
+ 	dsi_disable_scp_clk(dsi);
+ 	dsi_runtime_put(dsi);
+ 	return r;
  }
  
-+static inline void audit_free_module(struct audit_context *context)
-+{
-+	if (context->type == AUDIT_KERN_MODULE) {
-+		kfree(context->module.name);
-+		context->module.name = NULL;
+-static void dsi_pll_uninit(struct dsi_data *dsi, bool disconnect_lanes)
++static void dsi_pll_disable(struct dss_pll *pll)
+ {
++	struct dsi_data *dsi = container_of(pll, struct dsi_data, pll);
++
+ 	dsi_pll_power(dsi, DSI_PLL_POWER_OFF);
+-	if (disconnect_lanes) {
+-		WARN_ON(!dsi->vdds_dsi_enabled);
+-		regulator_disable(dsi->vdds_dsi_reg);
+-		dsi->vdds_dsi_enabled = false;
+-	}
++
++	regulator_disable(dsi->vdds_dsi_reg);
+ 
+ 	dsi_disable_scp_clk(dsi);
+ 	dsi_runtime_put(dsi);
+ 
+-	DSSDBG("PLL uninit done\n");
+-}
+-
+-static void dsi_pll_disable(struct dss_pll *pll)
+-{
+-	struct dsi_data *dsi = container_of(pll, struct dsi_data, pll);
+-
+-	dsi_pll_uninit(dsi, true);
++	DSSDBG("PLL disable done\n");
+ }
+ 
+ static int dsi_dump_dsi_clocks(struct seq_file *s, void *p)
+@@ -4096,11 +4082,11 @@ static int dsi_display_init_dsi(struct dsi_data *dsi)
+ 
+ 	r = dss_pll_enable(&dsi->pll);
+ 	if (r)
+-		goto err0;
++		return r;
+ 
+ 	r = dsi_configure_dsi_clocks(dsi);
+ 	if (r)
+-		goto err1;
++		goto err0;
+ 
+ 	dss_select_dsi_clk_source(dsi->dss, dsi->module_id,
+ 				  dsi->module_id == 0 ?
+@@ -4108,6 +4094,14 @@ static int dsi_display_init_dsi(struct dsi_data *dsi)
+ 
+ 	DSSDBG("PLL OK\n");
+ 
++	if (!dsi->vdds_dsi_enabled) {
++		r = regulator_enable(dsi->vdds_dsi_reg);
++		if (r)
++			goto err1;
++
++		dsi->vdds_dsi_enabled = true;
 +	}
-+}
- static inline void audit_free_names(struct audit_context *context)
- {
- 	struct audit_names *n, *next;
-@@ -920,6 +927,7 @@ int audit_alloc(struct task_struct *tsk)
++
+ 	r = dsi_cio_init(dsi);
+ 	if (r)
+ 		goto err2;
+@@ -4136,10 +4130,13 @@ static int dsi_display_init_dsi(struct dsi_data *dsi)
+ err3:
+ 	dsi_cio_uninit(dsi);
+ err2:
+-	dss_select_dsi_clk_source(dsi->dss, dsi->module_id, DSS_CLK_SRC_FCK);
++	regulator_disable(dsi->vdds_dsi_reg);
++	dsi->vdds_dsi_enabled = false;
+ err1:
+-	dss_pll_disable(&dsi->pll);
++	dss_select_dsi_clk_source(dsi->dss, dsi->module_id, DSS_CLK_SRC_FCK);
+ err0:
++	dss_pll_disable(&dsi->pll);
++
+ 	return r;
+ }
  
- static inline void audit_free_context(struct audit_context *context)
- {
-+	audit_free_module(context);
- 	audit_free_names(context);
- 	unroll_tree_refs(context, NULL, 0);
- 	free_tree_refs(context);
-@@ -1237,7 +1245,6 @@ static void show_special(struct audit_context *context, int *call_panic)
- 		audit_log_format(ab, "name=");
- 		if (context->module.name) {
- 			audit_log_untrustedstring(ab, context->module.name);
--			kfree(context->module.name);
- 		} else
- 			audit_log_format(ab, "(null)");
+@@ -4158,7 +4155,12 @@ static void dsi_display_uninit_dsi(struct dsi_data *dsi, bool disconnect_lanes,
  
-@@ -1574,6 +1581,7 @@ void __audit_syscall_exit(int success, long return_code)
- 	context->in_syscall = 0;
- 	context->prio = context->state == AUDIT_RECORD_CONTEXT ? ~0ULL : 0;
+ 	dss_select_dsi_clk_source(dsi->dss, dsi->module_id, DSS_CLK_SRC_FCK);
+ 	dsi_cio_uninit(dsi);
+-	dsi_pll_uninit(dsi, disconnect_lanes);
++	dss_pll_disable(&dsi->pll);
++
++	if (disconnect_lanes) {
++		regulator_disable(dsi->vdds_dsi_reg);
++		dsi->vdds_dsi_enabled = false;
++	}
+ }
  
-+	audit_free_module(context);
- 	audit_free_names(context);
- 	unroll_tree_refs(context, NULL, 0);
- 	audit_free_aux(context);
+ static int dsi_display_enable(struct omap_dss_device *dssdev)
 -- 
 2.20.1
 
