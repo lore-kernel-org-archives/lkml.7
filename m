@@ -2,97 +2,125 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A862C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7CBC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6072D25B2D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:40:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bod9phgB"
+	by mail.kernel.org (Postfix) with ESMTP id ACA8625B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:40:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727145AbfE3Okd (ORCPT
+        id S1727199AbfE3Ok6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 10:40:33 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41268 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726079AbfE3Okd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 10:40:33 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q17so4102744pfq.8;
-        Thu, 30 May 2019 07:40:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kTJ8ArZPwoTe/kc7tRSB1MJFUVvoMiPQO4L8f7dIrOQ=;
-        b=bod9phgBa5JtqUmKiyoDSFx3HrcoPp763LLeiGf5nIvNkt44bgVAX74OFWaqYtgzjh
-         Exn7fgHzMEQMa9tGabi9N7dnmaBfRUXP5TUfQcZLsSpm1H1TEL+XzCPODmB/DOzubsGY
-         4Hp7H7t7UKHY+6FRIgUGAxkpZ1FXk85WwTRiAXITeguxejLc+W/wDoY/CtaYCUrr+RzU
-         k/A486Lw+4GCNjvouEwV7wP1WEYtdZFO9fGrEr2UPjsL39HlgXtGhN/AkjzcKc8yzvbw
-         /vIvC7iQApcrwkJZGsPcZwlKWudmXaxE7m3hdN4GcoGrQKhjXCJnjW30HCbBiRMKXWWl
-         IL0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kTJ8ArZPwoTe/kc7tRSB1MJFUVvoMiPQO4L8f7dIrOQ=;
-        b=q3cNdSvXpV+AuI7yFQ0rBvA4af5NpoDfcFsYWfQ+C8y38L78Loj5FnInDBl7rv2DHb
-         AIrea1yoeL7ShoCmli2LxwJIIIatCn0nsIVFmlZfJc9CsqkAlblrzFIeMbEMX54CCbA8
-         aP/MvPc1X+cULL9NLcfI9d9jYDn3zcyf3L5YnqL3WvOxQa2IFZNPhLkxgRU5iwnjlmip
-         aJ4c4UMUdG+QWt/S+ygvWmrJWBJadQ24u4sCSbGQFP/Lr7NyAsEIwQvlFB9UVa2VZGaI
-         CeiBeGkhat2x5x6+3lXAAKc1eR2t8QZDPl1eXAFbkBVTCVSt1k02Ue3D3WhQ7+GWOIcg
-         /uRA==
-X-Gm-Message-State: APjAAAVoIH2U3gPiUnXllyj3cAT1AWzvGxwe+cXCr2oNlofsOwalX4BI
-        6Cgc9EYxNZurFTEDCeSny8ve9Kz2
-X-Google-Smtp-Source: APXvYqy+jGwyjdT7xv3z4MeNxisnvbzp/p+LwQXtxYIeSPxt+RBiZpFYgDCtTyzGSlETNENf/kPR/A==
-X-Received: by 2002:aa7:9dc9:: with SMTP id g9mr4081079pfq.228.1559227232508;
-        Thu, 30 May 2019 07:40:32 -0700 (PDT)
-Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
-        by smtp.gmail.com with ESMTPSA id j7sm3192837pfa.184.2019.05.30.07.40.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 30 May 2019 07:40:31 -0700 (PDT)
-Date:   Thu, 30 May 2019 07:40:29 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        John Stultz <john.stultz@linaro.org>,
+        Thu, 30 May 2019 10:40:58 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38970 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725961AbfE3Ok6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 10:40:58 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AF0D5C04FFF6;
+        Thu, 30 May 2019 14:40:51 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 655AE611A1;
+        Thu, 30 May 2019 14:40:46 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Thu, 30 May 2019 16:40:51 +0200 (CEST)
+Date:   Thu, 30 May 2019 16:40:45 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Deepa Dinamani <deepa.kernel@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>, dbueso@suse.de,
+        Jens Axboe <axboe@kernel.dk>,
+        Davidlohr Bueso <dave@stgolabs.net>, e@80x24.org,
+        Jason Baron <jbaron@akamai.com>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        linux-aio <linux-aio@kvack.org>, omar.kilani@gmail.com,
         Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Subject: Re: [PATCH net-next 3/5] net: dsa: mv88e6xxx: Let taggers specify a
- can_timestamp function
-Message-ID: <20190530144029.r7ziskwqq7vurf43@localhost>
-References: <20190528235627.1315-1-olteanv@gmail.com>
- <20190528235627.1315-4-olteanv@gmail.com>
- <20190529044912.cyg44rqvdo73oeiu@localhost>
- <CA+h21hoNrhcpAONTvJra5Ekk+yJ6xP0VAaPSygaLOw31qsGPTg@mail.gmail.com>
- <20190530035112.qbn3nnoxrgum7anz@localhost>
- <CA+h21hqko57LB0BB2TSGSr4p9_czPM-g9krO+wnU7PgvaMdSDA@mail.gmail.com>
- <20190530142356.vxkhsjalxfytvx2c@localhost>
+        "# 3.4.x" <stable@vger.kernel.org>
+Subject: Re: pselect/etc semantics (Was: [PATCH v2] signal: Adjust error
+ codes according to restore_user_sigmask())
+Message-ID: <20190530144044.GG22536@redhat.com>
+References: <20190522032144.10995-1-deepa.kernel@gmail.com>
+ <20190529161157.GA27659@redhat.com>
+ <CAK8P3a1fsrz6kAB1z-mqcaNvXL4Hf3XMiN=Q5rzAJ3rLGPK_Yg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190530142356.vxkhsjalxfytvx2c@localhost>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <CAK8P3a1fsrz6kAB1z-mqcaNvXL4Hf3XMiN=Q5rzAJ3rLGPK_Yg@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 30 May 2019 14:40:57 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 07:23:56AM -0700, Richard Cochran wrote:
-> I recommend forgetting about these meta frames.  Instead, read out the
-> time stamps over MDIO.
+On 05/30, Arnd Bergmann wrote:
+>
+> I think this is a nice simplification, but it would help not to mix up the
+> minimal regression fix with the rewrite of those functions.
 
-Or SPI.  It appears you use that for Tx time stamps already.
- 
-Thanks,
-Richard
+Yes, yes, agreed.
+
+Plus every file touched by this patch asks for more cleanups. Say, do_poll()
+should return -ERESTARTNOHAND, not -EINTR, after that we can remove the ugly
+EINTR->ERESTARTNOHAND in its callers. And more.
+
+> For the stable
+> kernels, I think we want just the addition of the 'bool interrupted' argument
+> to restore_user_sigmask()
+
+or simply revert this patch. I will check if this is possible today... At first
+glance 854a6ed56839a40f6 fixed another bug by accident, do_pselect() did
+"ret == -ERESTARTNOHAND" after "ret = poll_select_copy_remaining()" which can
+turn ERESTARTNOHAND into EINTR, but this is simple. I'll check tomorrow.
+
+
+> > -       ret = set_user_sigmask(ksig.sigmask, &ksigmask, &sigsaved, ksig.sigsetsize);
+> > +       ret = set_xxx(ksig.sigmask, ksig.sigsetsize);
+> >         if (ret)
+> >                 return ret;
+> >
+> >         ret = do_io_getevents(ctx_id, min_nr, nr, events, timeout ? &ts : NULL);
+> > -       restore_user_sigmask(ksig.sigmask, &sigsaved);
+> > -       if (signal_pending(current) && !ret)
+> > +
+> > +       interrupted = signal_pending(current);
+> > +       update_xxx(interrupted);
+>
+> Maybe name this
+>
+>            restore_saved_sigmask_if(!interrupted);
+
+Yes, I thought about restore_if(), but to me
+
+		restore_saved_sigmask_if(ret != -EINTR);
+
+doesn't look readable... May be
+
+		restore_saved_sigmask_unless(ret == -EINTR);
+
+? but actually I agree with any naming.
+
+> and make restore_saved_sigmask_if() an inline function
+> next to restore_saved_sigmask()?
+
+agreed,
+
+> With some of the recent discussions about compat syscall handling,
+> I now think that we want to just fold set_compat_user_sigmask()
+> into set_user_sigmask()
+
+agreed, and I thought about this too. But again, I'd prefer to do this
+and other cleanups later, on top of this patch.
+
+Oleg.
+
