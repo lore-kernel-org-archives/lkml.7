@@ -5,56 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60925C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC665C28CC1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3505624A73
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:25:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A67C824A5E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:25:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186718;
-	bh=u0X3vofVZHNouzsi4oNBsFqNyrgfzDzmW2l8HFU641k=;
+	s=default; t=1559186721;
+	bh=0BK1sgaU5LR/sd1M8lx0WjOwW1JgDyFaTY3j81AsQKM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OcMqFQ/EUDfcMsIr2l0PawKGv1mdnNu8f6CQdK3YSrtf1UnczKM0DCB0icmyglnd5
-	 amEx7Gb1jFKYVa0npdmHWH42siQWz4dBMBApJzFwMP9ywuQqiDQfcb/qL5GEmrZ0ak
-	 PnOzC/azIvrugboFCSxaZvYTohPW8cHmxUzA5tCA=
+	b=t6CyiStGgOLAYd1AgeCbBxMMJTqQOTtMulUPV9iv9ulZYMZG+Sz7Tgt/DZRA/84+5
+	 aixAN7pus4NrC4wdQknbFvsVUA1NkWNSBZ9CiHdkPJPOmIGzRNPNqWh3J9DegMvTNK
+	 +sZxrvZRTFSkOff0cSD20jK+phzlrFohi9PPVgZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733022AbfE3DZR (ORCPT
+        id S2387512AbfE3DZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:25:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50966 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:25:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731527AbfE3DSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:23 -0400
+        id S1731535AbfE3DSZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:25 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 256D624713;
-        Thu, 30 May 2019 03:18:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 716282479B;
+        Thu, 30 May 2019 03:18:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186303;
-        bh=u0X3vofVZHNouzsi4oNBsFqNyrgfzDzmW2l8HFU641k=;
+        s=default; t=1559186304;
+        bh=0BK1sgaU5LR/sd1M8lx0WjOwW1JgDyFaTY3j81AsQKM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bV97JuEjlG7UqNPaWngsiv/jd7/4czklkpzIgzyyreh4ugZP9K7mbO+HwxQKaf//J
-         BVYQHKUH7Lc8krjw7wrPIx4jaDy+wnSf0KJ6Z+ZSoAOn0HSfqW9HReLBDHS7ZHNRhN
-         2tjqTd4L7+ki+j34T39LoGAaDpKPVZ21pFYrTG1w=
+        b=b58sU1oWAf4t95IbV9yYFl1RbyZC6dbqtTro3mlYefI70qWQ839tmGlOaYPuCXX65
+         axuNOF9+JRBjwb8hUhymKOwpCqThKHvPDiuqQx9Zqthedwu0dIJpHXuWNTNbstZTZW
+         646Q/mnV61P5nrmWyoz74x8HWOUG17uStbZBBJCY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        Hongbo Yao <yaohongbo@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Miroslav Lichvar <mlichvar@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        stable@vger.kernel.org, siliu@redhat.com,
+        Pankaj Gupta <pagupta@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 226/276] timekeeping: Force upper bound for setting CLOCK_REALTIME
-Date:   Wed, 29 May 2019 20:06:24 -0700
-Message-Id: <20190530030539.240750842@linuxfoundation.org>
+Subject: [PATCH 4.19 228/276] virtio_console: initialize vtermno value for ports
+Date:   Wed, 29 May 2019 20:06:26 -0700
+Message-Id: <20190530030539.365627657@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -67,129 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7a8e61f8478639072d402a26789055a4a4de8f77 ]
+[ Upstream commit 4b0a2c5ff7215206ea6135a405f17c5f6fca7d00 ]
 
-Several people reported testing failures after setting CLOCK_REALTIME close
-to the limits of the kernel internal representation in nanoseconds,
-i.e. year 2262.
+For regular serial ports we do not initialize value of vtermno
+variable. A garbage value is assigned for non console ports.
+The value can be observed as a random integer with [1].
 
-The failures are exposed in subsequent operations, i.e. when arming timers
-or when the advancing CLOCK_MONOTONIC makes the calculation of
-CLOCK_REALTIME overflow into negative space.
+[1] vim /sys/kernel/debug/virtio-ports/vport*p*
 
-Now people start to paper over the underlying problem by clamping
-calculations to the valid range, but that's just wrong because such
-workarounds will prevent detection of real issues as well.
+This patch initialize the value of vtermno for console serial
+ports to '1' and regular serial ports are initiaized to '0'.
 
-It is reasonable to force an upper bound for the various methods of setting
-CLOCK_REALTIME. Year 2262 is the absolute upper bound. Assume a maximum
-uptime of 30 years which is plenty enough even for esoteric embedded
-systems. That results in an upper bound of year 2232 for setting the time.
-
-Once that limit is reached in reality this limit is only a small part of
-the problem space. But until then this stops people from trying to paper
-over the problem at the wrong places.
-
-Reported-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Reported-by: Hongbo Yao <yaohongbo@huawei.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: John Stultz <john.stultz@linaro.org>
-Cc: Stephen Boyd <sboyd@kernel.org>
-Cc: Miroslav Lichvar <mlichvar@redhat.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Richard Cochran <richardcochran@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1903231125480.2157@nanos.tec.linutronix.de
+Reported-by: siliu@redhat.com
+Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/time64.h    | 21 +++++++++++++++++++++
- kernel/time/time.c        |  2 +-
- kernel/time/timekeeping.c |  6 +++---
- 3 files changed, 25 insertions(+), 4 deletions(-)
+ drivers/char/virtio_console.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/time64.h b/include/linux/time64.h
-index 05634afba0db6..4a45aea0f96e9 100644
---- a/include/linux/time64.h
-+++ b/include/linux/time64.h
-@@ -41,6 +41,17 @@ struct itimerspec64 {
- #define KTIME_MAX			((s64)~((u64)1 << 63))
- #define KTIME_SEC_MAX			(KTIME_MAX / NSEC_PER_SEC)
+diff --git a/drivers/char/virtio_console.c b/drivers/char/virtio_console.c
+index 5b5b5d72eab7f..c55f6aeb4227a 100644
+--- a/drivers/char/virtio_console.c
++++ b/drivers/char/virtio_console.c
+@@ -75,7 +75,7 @@ struct ports_driver_data {
+ 	/* All the console devices handled by this driver */
+ 	struct list_head consoles;
+ };
+-static struct ports_driver_data pdrvdata;
++static struct ports_driver_data pdrvdata = { .next_vtermno = 1};
  
-+/*
-+ * Limits for settimeofday():
-+ *
-+ * To prevent setting the time close to the wraparound point time setting
-+ * is limited so a reasonable uptime can be accomodated. Uptime of 30 years
-+ * should be really sufficient, which means the cutoff is 2232. At that
-+ * point the cutoff is just a small part of the larger problem.
-+ */
-+#define TIME_UPTIME_SEC_MAX		(30LL * 365 * 24 *3600)
-+#define TIME_SETTOD_SEC_MAX		(KTIME_SEC_MAX - TIME_UPTIME_SEC_MAX)
-+
- static inline int timespec64_equal(const struct timespec64 *a,
- 				   const struct timespec64 *b)
- {
-@@ -108,6 +119,16 @@ static inline bool timespec64_valid_strict(const struct timespec64 *ts)
- 	return true;
- }
+ static DEFINE_SPINLOCK(pdrvdata_lock);
+ static DECLARE_COMPLETION(early_console_added);
+@@ -1405,6 +1405,7 @@ static int add_port(struct ports_device *portdev, u32 id)
+ 	port->async_queue = NULL;
  
-+static inline bool timespec64_valid_settod(const struct timespec64 *ts)
-+{
-+	if (!timespec64_valid(ts))
-+		return false;
-+	/* Disallow values which cause overflow issues vs. CLOCK_REALTIME */
-+	if ((unsigned long long)ts->tv_sec >= TIME_SETTOD_SEC_MAX)
-+		return false;
-+	return true;
-+}
-+
- /**
-  * timespec64_to_ns - Convert timespec64 to nanoseconds
-  * @ts:		pointer to the timespec64 variable to be converted
-diff --git a/kernel/time/time.c b/kernel/time/time.c
-index ccdb351277eec..be057d6579f13 100644
---- a/kernel/time/time.c
-+++ b/kernel/time/time.c
-@@ -172,7 +172,7 @@ int do_sys_settimeofday64(const struct timespec64 *tv, const struct timezone *tz
- 	static int firsttime = 1;
- 	int error = 0;
+ 	port->cons.ws.ws_row = port->cons.ws.ws_col = 0;
++	port->cons.vtermno = 0;
  
--	if (tv && !timespec64_valid(tv))
-+	if (tv && !timespec64_valid_settod(tv))
- 		return -EINVAL;
- 
- 	error = security_settime64(tv, tz);
-diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
-index 7846ce24ecc03..9a6bfcd22dc66 100644
---- a/kernel/time/timekeeping.c
-+++ b/kernel/time/timekeeping.c
-@@ -1242,7 +1242,7 @@ int do_settimeofday64(const struct timespec64 *ts)
- 	unsigned long flags;
- 	int ret = 0;
- 
--	if (!timespec64_valid_strict(ts))
-+	if (!timespec64_valid_settod(ts))
- 		return -EINVAL;
- 
- 	raw_spin_lock_irqsave(&timekeeper_lock, flags);
-@@ -1299,7 +1299,7 @@ static int timekeeping_inject_offset(const struct timespec64 *ts)
- 	/* Make sure the proposed value is valid */
- 	tmp = timespec64_add(tk_xtime(tk), *ts);
- 	if (timespec64_compare(&tk->wall_to_monotonic, ts) > 0 ||
--	    !timespec64_valid_strict(&tmp)) {
-+	    !timespec64_valid_settod(&tmp)) {
- 		ret = -EINVAL;
- 		goto error;
- 	}
-@@ -1556,7 +1556,7 @@ void __init timekeeping_init(void)
- 	unsigned long flags;
- 
- 	read_persistent_wall_and_boot_offset(&wall_time, &boot_offset);
--	if (timespec64_valid_strict(&wall_time) &&
-+	if (timespec64_valid_settod(&wall_time) &&
- 	    timespec64_to_ns(&wall_time) > 0) {
- 		persistent_clock_exists = true;
- 	} else if (timespec64_to_ns(&wall_time) != 0) {
+ 	port->host_connected = port->guest_connected = false;
+ 	port->stats = (struct port_stats) { 0 };
 -- 
 2.20.1
 
