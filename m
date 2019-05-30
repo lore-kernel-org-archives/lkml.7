@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DAFC28CC0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F9AC46470
 	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1A8524590
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A92F6245B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186115;
-	bh=G0WwxCGxWt8M2yPclyrVs6do+B1idp9xfogDxJogi1U=;
+	s=default; t=1559186116;
+	bh=D8NeDsDCGki/plG0B/KUBbUnl5h68jP1rmdpkkXmm5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DnJ2xcg4xnBEO7W/tRz/1r12v3InKetHonQqHB+H+3vwlYnWusuUqMeHZQqpGrngM
-	 Oq6CxQeRYoZXacxviZgS3az9q2ZL4u8+Qp0Qf1IP0DE1cnWQFhHPh2J4NlTVQpVtf/
-	 HJcuPTbPQeL8+aYoieY5ju+fV6euUXonlpjwutUI=
+	b=QF8ztFNlKXxD2ARqOCEhbFPv4RIkrwuu9zQ5BfNsT6M8ba6aWo2QLbuLQgAU0JBnk
+	 ZCrKf7czPSr9qkRWXyqq6lAMt+iWTpJVEX/CvtgroRHmZLUodYxRbcvCFR1sdowZaD
+	 tgk6XubEk3/swjAhWZUV4g0D7Lpz7M5Ka6YKMRz8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729382AbfE3DPP (ORCPT
+        id S1730198AbfE3DPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:15:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55566 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:15:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729095AbfE3DMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:34 -0400
+        id S1729133AbfE3DMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:12:39 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5DDC23DE3;
-        Thu, 30 May 2019 03:12:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A046F23F4C;
+        Thu, 30 May 2019 03:12:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185952;
-        bh=G0WwxCGxWt8M2yPclyrVs6do+B1idp9xfogDxJogi1U=;
+        s=default; t=1559185958;
+        bh=D8NeDsDCGki/plG0B/KUBbUnl5h68jP1rmdpkkXmm5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B8TLKDQrTv0jTBy0zDTk+eZoLeQTYb0L+DqVsgSuyHw/2RAZGZEusz292Fi5NrYFi
-         YR6g9Bj2oOgo4zBq1atVAHwsAVVG+55M4LPHVlfh0Smif2HyRV5fp+WuUEQgcF8LyY
-         /+vernLuXWFeVmYP5S8472e7w/bEadyaMLY3ePzA=
+        b=lvLnpvC0xCd5y0deFZKhujKNRWkoj/0rchpejeMFH8LYPnKbE41KAtL1puLjL0f4P
+         iOcXcZv5FMwGU9xwFAR/FmtAeWFT11FaSMcIKHFbtbdEcSVgcAWaKUgB2l3nGJD5GY
+         vNIp/GYVtRbDFWcOJ3pexDM9Fc50rr/OL1l8P8QQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 367/405] scsi: lpfc: Fix mailbox hang on adapter init
-Date:   Wed, 29 May 2019 20:06:05 -0700
-Message-Id: <20190530030559.267293822@linuxfoundation.org>
+Subject: [PATCH 5.1 376/405] spi: rspi: Fix sequencer reset during initialization
+Date:   Wed, 29 May 2019 20:06:14 -0700
+Message-Id: <20190530030559.758566924@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,68 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e8869f5b0a7273fcf20ef99066fd8129e58ba5b7 ]
+[ Upstream commit 26843bb128590edd7eba1ad7ce22e4b9f1066ce3 ]
 
-The adapter initialization sequence enables interrupts, initializes the
-adapter link_state to LINK_DOWN, then issues commands to initialize the
-adapter. The interrupt handler on the adapter validates the link_state (has
-to be at least LINK_DOWN) and if invalid, will discard the interrupting
-event.
+While the sequencer is reset after each SPI message since commit
+880c6d114fd79a69 ("spi: rspi: Add support for Quad and Dual SPI
+Transfers on QSPI"), it was never reset for the first message, thus
+relying on reset state or bootloader settings.
 
-In most cases, there is not a command completion, thus an interrupt until
-the initialization commands have been sent which is post the setting of
-state to LINK_DOWN.  However, in cases of firmware reset, the reset will
-modify the link_state to an invalid value (indicating a reset of the
-adapter) and there occasionally are cases where the adapter will generate
-an asynchronous event which shares the eq/cq used for mailbox commands. In
-the failure case, an interrupt is generated immediately after enabling them
-due to the async event.  As link_state is invalid, the eq is list and the
-CQ not serviced.  At this point link_state is initialized and the mailbox
-command sent.  As the CQ has not been serviced, it is not armed, so no
-interrupt event is generated when the mailbox command completes.
+Fix this by initializing it explicitly during configuration.
 
-Modify the initialization sequence so that interrupts are enabled after
-link_state is properly initialized, which avoids the race condition with
-the async event.
-
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 0b2182ddac4b8837 ("spi: add support for Renesas RSPI")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_sli.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/spi/spi-rspi.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index 57b4a463b5892..7d2abb70cf093 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -7652,12 +7652,6 @@ lpfc_sli4_hba_setup(struct lpfc_hba *phba)
- 		phba->cfg_xri_rebalancing = 0;
- 	}
+diff --git a/drivers/spi/spi-rspi.c b/drivers/spi/spi-rspi.c
+index 556870dcdf799..5d35a82945cd1 100644
+--- a/drivers/spi/spi-rspi.c
++++ b/drivers/spi/spi-rspi.c
+@@ -271,7 +271,8 @@ static int rspi_set_config_register(struct rspi_data *rspi, int access_size)
+ 	/* Sets parity, interrupt mask */
+ 	rspi_write8(rspi, 0x00, RSPI_SPCR2);
  
--	/* Arm the CQs and then EQs on device */
--	lpfc_sli4_arm_cqeq_intr(phba);
--
--	/* Indicate device interrupt mode */
--	phba->sli4_hba.intr_enable = 1;
--
- 	/* Allow asynchronous mailbox command to go through */
- 	spin_lock_irq(&phba->hbalock);
- 	phba->sli.sli_flag &= ~LPFC_SLI_ASYNC_MBX_BLK;
-@@ -7726,6 +7720,12 @@ lpfc_sli4_hba_setup(struct lpfc_hba *phba)
- 		phba->trunk_link.link3.state = LPFC_LINK_DOWN;
- 	spin_unlock_irq(&phba->hbalock);
+-	/* Sets SPCMD */
++	/* Resets sequencer */
++	rspi_write8(rspi, 0, RSPI_SPSCR);
+ 	rspi->spcmd |= SPCMD_SPB_8_TO_16(access_size);
+ 	rspi_write16(rspi, rspi->spcmd, RSPI_SPCMD0);
  
-+	/* Arm the CQs and then EQs on device */
-+	lpfc_sli4_arm_cqeq_intr(phba);
-+
-+	/* Indicate device interrupt mode */
-+	phba->sli4_hba.intr_enable = 1;
-+
- 	if (!(phba->hba_flag & HBA_FCOE_MODE) &&
- 	    (phba->hba_flag & LINK_DISABLED)) {
- 		lpfc_printf_log(phba, KERN_ERR, LOG_INIT | LOG_SLI,
+@@ -315,7 +316,8 @@ static int rspi_rz_set_config_register(struct rspi_data *rspi, int access_size)
+ 	rspi_write8(rspi, 0x00, RSPI_SSLND);
+ 	rspi_write8(rspi, 0x00, RSPI_SPND);
+ 
+-	/* Sets SPCMD */
++	/* Resets sequencer */
++	rspi_write8(rspi, 0, RSPI_SPSCR);
+ 	rspi->spcmd |= SPCMD_SPB_8_TO_16(access_size);
+ 	rspi_write16(rspi, rspi->spcmd, RSPI_SPCMD0);
+ 
+@@ -366,7 +368,8 @@ static int qspi_set_config_register(struct rspi_data *rspi, int access_size)
+ 	/* Sets buffer to allow normal operation */
+ 	rspi_write8(rspi, 0x00, QSPI_SPBFCR);
+ 
+-	/* Sets SPCMD */
++	/* Resets sequencer */
++	rspi_write8(rspi, 0, RSPI_SPSCR);
+ 	rspi_write16(rspi, rspi->spcmd, RSPI_SPCMD0);
+ 
+ 	/* Sets RSPI mode */
 -- 
 2.20.1
 
