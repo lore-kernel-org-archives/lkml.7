@@ -5,52 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A3AC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1374C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DEE824677
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1C8B2469A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:17:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186229;
-	bh=qIatg2w5rVRztpZGU8uf42VZ0u7YextTtWcAnW0OJtU=;
+	s=default; t=1559186235;
+	bh=/xgXLdIZmQ6E5ax/uAchCoFzvE9UX2jP7h3ZiscHh/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EBuPLDC2ND4XBzsDhMgS74uYtINY+YNd/t+NeQz1wOdwIz0tHd1ajXEXwfkVp5MWd
-	 U2Bs5bFhsGirsQWW7+j6Xl8DP7qlTDz0bM/s3uIS/8wCRlTSkTJmwAXPIk9uDMllfh
-	 wtuoZbe63k7XkclYwOqqpdfET4fRBhGZzS+StkxM=
+	b=S+GzcUEZ32z3vjY6ydK5vN4UsugujtdepMJ19cIEN8pMR9Ptuzj2QT3m7+pMTnZr2
+	 T7plHB6PidfH0VqzW5NkvvJ9eWSm9Q2rTyo5AmcshVVxcP40XSeoJXQq/Muqb7eQP7
+	 zstVxwrbVjVfpAIqexKj+GufPFQAPPEnnIBu2GDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730933AbfE3DRI (ORCPT
+        id S1731003AbfE3DRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:17:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59634 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:17:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728626AbfE3DNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:13:46 -0400
+        id S1729604AbfE3DNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:50 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D6FE24556;
-        Thu, 30 May 2019 03:13:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B607124558;
+        Thu, 30 May 2019 03:13:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186026;
-        bh=qIatg2w5rVRztpZGU8uf42VZ0u7YextTtWcAnW0OJtU=;
+        s=default; t=1559186029;
+        bh=/xgXLdIZmQ6E5ax/uAchCoFzvE9UX2jP7h3ZiscHh/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FDMeW/y1fDpzCVZ+UsYEvfprfiOb05BAEgASi2ukeAPH/YEr16AqnHfXPmVzMcTtF
-         Y7XCxYzB8EtxOfJKI9rP3CAmV6YAv75W3qc/7fVfIgxvrkAx2GLPOVL0SDwJEjD7yS
-         ijWsINi1iJ9q7q1crDMiB3VhFkWVxLDl/LRcGJV4=
+        b=z00pKlAjaGgIP9GIzxHIOxs7ilDA5/q/C1grZ16DF412uBz9s9Mu0c3PPlv6TS5qy
+         tiCsxTKHdrT39EnMSVkTE7XNrNluqzxG7PBucDxp5Ny3kxEmNQXHIGJhTG87PA+Dov
+         4xQ6fVJ5FJA90seJqrhUCr02ZOzfMYCo9Q34aL2A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 101/346] s390: qeth: address type mismatch warning
-Date:   Wed, 29 May 2019 20:02:54 -0700
-Message-Id: <20190530030546.266102240@linuxfoundation.org>
+Subject: [PATCH 5.0 106/346] slimbus: fix a potential NULL pointer dereference in of_qcom_slim_ngd_register
+Date:   Wed, 29 May 2019 20:02:59 -0700
+Message-Id: <20190530030546.488815341@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -63,60 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 46b83629dede262315aa82179d105581f11763b6 ]
+[ Upstream commit 06d5d6b7f9948a89543e1160ef852d57892c750d ]
 
-clang produces a harmless warning for each use for the qeth_adp_supported
-macro:
+In case platform_device_alloc fails, the fix returns an error
+code to avoid the NULL pointer dereference.
 
-drivers/s390/net/qeth_l2_main.c:559:31: warning: implicit conversion from enumeration type 'enum qeth_ipa_setadp_cmd' to
-      different enumeration type 'enum qeth_ipa_funcs' [-Wenum-conversion]
-        if (qeth_adp_supported(card, IPA_SETADP_SET_PROMISC_MODE))
-            ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/s390/net/qeth_core.h:179:41: note: expanded from macro 'qeth_adp_supported'
-        qeth_is_ipa_supported(&c->options.adp, f)
-        ~~~~~~~~~~~~~~~~~~~~~                  ^
-
-Add a version of this macro that uses the correct types, and
-remove the unused qeth_adp_enabled() macro that has the same
-problem.
-
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_core.h | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/slimbus/qcom-ngd-ctrl.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/s390/net/qeth_core.h b/drivers/s390/net/qeth_core.h
-index 122059ecad848..614bb0f34e8e2 100644
---- a/drivers/s390/net/qeth_core.h
-+++ b/drivers/s390/net/qeth_core.h
-@@ -215,6 +215,12 @@ struct qeth_vnicc_info {
- 	bool rx_bcast_enabled;
- };
+diff --git a/drivers/slimbus/qcom-ngd-ctrl.c b/drivers/slimbus/qcom-ngd-ctrl.c
+index 71f094c9ec684..f3585777324cf 100644
+--- a/drivers/slimbus/qcom-ngd-ctrl.c
++++ b/drivers/slimbus/qcom-ngd-ctrl.c
+@@ -1342,6 +1342,10 @@ static int of_qcom_slim_ngd_register(struct device *parent,
+ 			return -ENOMEM;
  
-+static inline int qeth_is_adp_supported(struct qeth_ipa_info *ipa,
-+		enum qeth_ipa_setadp_cmd func)
-+{
-+	return (ipa->supported_funcs & func);
-+}
-+
- static inline int qeth_is_ipa_supported(struct qeth_ipa_info *ipa,
- 		enum qeth_ipa_funcs func)
- {
-@@ -228,9 +234,7 @@ static inline int qeth_is_ipa_enabled(struct qeth_ipa_info *ipa,
- }
- 
- #define qeth_adp_supported(c, f) \
--	qeth_is_ipa_supported(&c->options.adp, f)
--#define qeth_adp_enabled(c, f) \
--	qeth_is_ipa_enabled(&c->options.adp, f)
-+	qeth_is_adp_supported(&c->options.adp, f)
- #define qeth_is_supported(c, f) \
- 	qeth_is_ipa_supported(&c->options.ipa4, f)
- #define qeth_is_enabled(c, f) \
+ 		ngd->pdev = platform_device_alloc(QCOM_SLIM_NGD_DRV_NAME, id);
++		if (!ngd->pdev) {
++			kfree(ngd);
++			return -ENOMEM;
++		}
+ 		ngd->id = id;
+ 		ngd->pdev->dev.parent = parent;
+ 		ngd->pdev->driver_override = QCOM_SLIM_NGD_DRV_NAME;
 -- 
 2.20.1
 
