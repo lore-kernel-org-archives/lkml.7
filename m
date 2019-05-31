@@ -2,85 +2,74 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4660DC28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 02:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC7F8C28CC0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 02:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 299E026210
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 02:42:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB17E26242
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 02:47:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbfEaCmi (ORCPT
+        id S1726658AbfEaCr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 22:42:38 -0400
-Received: from mga01.intel.com ([192.55.52.88]:61451 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726512AbfEaCmh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 22:42:37 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 19:42:37 -0700
-X-ExtLoop1: 1
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.29])
-  by fmsmga001.fm.intel.com with ESMTP; 30 May 2019 19:42:35 -0700
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     <akpm@linux-foundation.org>, <broonie@kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-next@vger.kernel.org>,
-        <mhocko@suse.cz>, <mm-commits@vger.kernel.org>,
-        <sfr@canb.auug.org.au>
-Subject: Re: mmotm 2019-05-29-20-52 uploaded
-References: <20190530035339.hJr4GziBa%akpm@linux-foundation.org>
-        <fac5f029-ef20-282e-b0d2-2357589839e8@oracle.com>
-        <87lfyn5rgu.fsf@yhuang-dev.intel.com>
-Date:   Fri, 31 May 2019 10:42:35 +0800
-In-Reply-To: <87lfyn5rgu.fsf@yhuang-dev.intel.com> (Ying Huang's message of
-        "Fri, 31 May 2019 09:43:13 +0800")
-Message-ID: <87h89b5opw.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 30 May 2019 22:47:59 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:45926 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726512AbfEaCr6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 22:47:58 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 682805B63DFC80789401;
+        Fri, 31 May 2019 10:47:55 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Fri, 31 May 2019
+ 10:47:46 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <pablo@netfilter.org>, <kadlec@blackhole.kfki.hu>, <fw@strlen.de>
+CC:     <linux-kernel@vger.kernel.org>, <coreteam@netfilter.org>,
+        <netfilter-devel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH net-next] netfilter: nf_conntrack_bridge: Fix build error without IPV6
+Date:   Fri, 31 May 2019 10:46:43 +0800
+Message-ID: <20190531024643.3840-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Huang, Ying" <ying.huang@intel.com> writes:
+Fix gcc build error while CONFIG_IPV6 is not set
 
-> Hi, Mike,
->
-> Mike Kravetz <mike.kravetz@oracle.com> writes:
->
->> On 5/29/19 8:53 PM, akpm@linux-foundation.org wrote:
->>> The mm-of-the-moment snapshot 2019-05-29-20-52 has been uploaded to
->>> 
->>>    http://www.ozlabs.org/~akpm/mmotm/
->>> 
->>
->> With this kernel, I seem to get many messages such as:
->>
->> get_swap_device: Bad swap file entry 1400000000000001
->>
->> It would seem to be related to commit 3e2c19f9bef7e
->>> * mm-swap-fix-race-between-swapoff-and-some-swap-operations.patch
->
-> Hi, Mike,
->
-> Thanks for reporting!  I find an issue in my patch and I can reproduce
-> your problem now.  The reason is total_swapcache_pages() will call
-> get_swap_device() for invalid swap device.  So we need to find a way to
-> silence the warning.  I will post a fix ASAP.
+In file included from net/netfilter/core.c:19:0:
+./include/linux/netfilter_ipv6.h: In function 'nf_ipv6_br_defrag':
+./include/linux/netfilter_ipv6.h:110:9: error: implicit declaration of function 'nf_ct_frag6_gather' [-Werror=implicit-function-declaration]
 
-I have sent out a fix patch in another thread with title
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 764dd163ac92 ("netfilter: nf_conntrack_bridge: add support for IPv6")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ include/linux/netfilter_ipv6.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-"[PATCH -mm] mm, swap: Fix bad swap file entry warning"
+diff --git a/include/linux/netfilter_ipv6.h b/include/linux/netfilter_ipv6.h
+index a21b8c9..4ea97fd 100644
+--- a/include/linux/netfilter_ipv6.h
++++ b/include/linux/netfilter_ipv6.h
+@@ -96,6 +96,8 @@ static inline int nf_ip6_route(struct net *net, struct dst_entry **dst,
+ #endif
+ }
+ 
++int nf_ct_frag6_gather(struct net *net, struct sk_buff *skb, u32 user);
++
+ static inline int nf_ipv6_br_defrag(struct net *net, struct sk_buff *skb,
+ 				    u32 user)
+ {
+-- 
+2.7.4
 
-Can you try it?
-
-Best Regards,
-Huang, Ying
 
