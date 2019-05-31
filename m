@@ -2,75 +2,141 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D92C28CC0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 719F8C28CC0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C648B26191
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:43:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4716926191
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:45:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JnWtYVGH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbfEaBnQ (ORCPT
+        id S1726813AbfEaBpq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 21:43:16 -0400
-Received: from mga17.intel.com ([192.55.52.151]:42754 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726372AbfEaBnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 21:43:16 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 18:43:15 -0700
-X-ExtLoop1: 1
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.29])
-  by fmsmga001.fm.intel.com with ESMTP; 30 May 2019 18:43:14 -0700
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     <akpm@linux-foundation.org>, <broonie@kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-next@vger.kernel.org>,
-        <mhocko@suse.cz>, <mm-commits@vger.kernel.org>,
-        <sfr@canb.auug.org.au>
-Subject: Re: mmotm 2019-05-29-20-52 uploaded
-References: <20190530035339.hJr4GziBa%akpm@linux-foundation.org>
-        <fac5f029-ef20-282e-b0d2-2357589839e8@oracle.com>
-Date:   Fri, 31 May 2019 09:43:13 +0800
-In-Reply-To: <fac5f029-ef20-282e-b0d2-2357589839e8@oracle.com> (Mike Kravetz's
-        message of "Thu, 30 May 2019 13:54:07 -0700")
-Message-ID: <87lfyn5rgu.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 30 May 2019 21:45:46 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:46462 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726576AbfEaBpq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 21:45:46 -0400
+Received: by mail-ot1-f65.google.com with SMTP id j49so7594991otc.13
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 18:45:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1kzmeVVPqkiMo/xI5ELAii6GxtReXpmBzBpH3mrY8QU=;
+        b=JnWtYVGH0MFiUg+7spw56SogTuH9sew5/6iuwbW1odSs5B/8yLAMh+Noi5XLF8Qts3
+         B+j9J29T2N0pVYGuMcnd9+s24dbSagFCVD1TwJHj5mrL2IOcoR1ZxWf8BkZza+PLwRCd
+         YbxipGZyJV3h/9fVfBXeU8ZrATwVF9Epm0gWFrEv96de2Z+PMnc8sY7ZKQoZMsKZ0t1v
+         3WYtwJBtAZcy2osKwkklfLnCOQL5xFHRiR3x1Q2dkOFJKaMUTapHODEYnnGXoFz1ZoGF
+         eLJJg0jth+9D5EXrdoHrGLOar4Gcy8ebtgknbk4wuXi8k/m4qYpCQ3A/YKTKdwpuuvt4
+         bTwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1kzmeVVPqkiMo/xI5ELAii6GxtReXpmBzBpH3mrY8QU=;
+        b=R+vlP8FpTbpquLzj38/aFrtxsKg5fxJJ3kx9Y/Is6GpOdAku5wNsYUbUouSFuOeyfq
+         YP8M5whZbZvKNrgWxCOVxiOLDopFMXO7j4JKwTTjNz6iBxtrJqnIx50cRkAzMVLoDgZ7
+         bFqydHRmB+JuKiXJIKRzdbd0wZpD7z525qp7BkQUOO7d3BjvWH8solVB0/52G5MrzfK7
+         s8/+ac0VKDabI8XGOOT1oxYdQwOuWrtoZLBMh8nxiMSaNNmpnNrRCh0b6W2WjeeMyvsQ
+         OAMMTIp80fHPT4lIdO1AKccpDV41hZEbUvjM984gxH2NJSVKKSKgjET75xoKJuKLAJ4w
+         xHbg==
+X-Gm-Message-State: APjAAAVhRSLOHt0R0ZBYW1g47uig7NynhxTDK0YtChAuVumuJoWGPflh
+        KsFcZ6kl15tDvXv2Xy+qZcbT3Q==
+X-Google-Smtp-Source: APXvYqzHtAYjCMIod0bhKOJww4qG12+Qf8STmxFDDlC7pPYrFiOYhNjiqNLvyq8J2M50S3f7WEnMdQ==
+X-Received: by 2002:a9d:7c85:: with SMTP id q5mr4621731otn.31.1559267145525;
+        Thu, 30 May 2019 18:45:45 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (li808-42.members.linode.com. [104.237.132.42])
+        by smtp.gmail.com with ESMTPSA id n2sm1525287otl.7.2019.05.30.18.45.39
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 30 May 2019 18:45:43 -0700 (PDT)
+Date:   Fri, 31 May 2019 09:45:34 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, suzuki.poulose@arm.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        coresight@lists.linaro.org
+Subject: Re: [PATCH v2 00/17] perf tools: Coresight: Add CPU-wide trace
+ support
+Message-ID: <20190531014534.GA5121@leoy-ThinkPad-X240s>
+References: <20190524173508.29044-1-mathieu.poirier@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190524173508.29044-1-mathieu.poirier@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Mike,
+On Fri, May 24, 2019 at 11:34:51AM -0600, Mathieu Poirier wrote:
+> This patchset adds support for CoreSight CPU-wide trace scenarios.  More 
+> specifically it extends the work that was done for per thread scenarios to
+> handle more than a single trace ID.  It also temporally correlate traces
+> based on timestamp generated by the tracers so that rendering by the perf
+> mechanic is ordered.
+> 
+> Everything is based on Arnaldo's perf/core branch (46d4c9a05285).  I will
+> send another revision when it is rebased to a 5.2 rc candidate.
+> 
+> Before this set:
+> 	# root@juno:/home/linaro# perf record -e cs_etm/@20070000.etr/ -C 2,3 sleep 1
+> 	failed to mmap with 12 (Cannot allocate memory)
+> 
+> After this set:
+> 	# root@juno:/home/linaro# perf record -e cs_etm/@20070000.etr/ -C 2,3 sleep 1
+> 	[ perf record: Captured and wrote 1.352 MB perf.data ]
 
-Mike Kravetz <mike.kravetz@oracle.com> writes:
+I have tested this patch set on Juno and DB410c boards, FWIW:
 
-> On 5/29/19 8:53 PM, akpm@linux-foundation.org wrote:
->> The mm-of-the-moment snapshot 2019-05-29-20-52 has been uploaded to
->> 
->>    http://www.ozlabs.org/~akpm/mmotm/
->> 
->
-> With this kernel, I seem to get many messages such as:
->
-> get_swap_device: Bad swap file entry 1400000000000001
->
-> It would seem to be related to commit 3e2c19f9bef7e
->> * mm-swap-fix-race-between-swapoff-and-some-swap-operations.patch
+Tested-by: Leo Yan <leo.yan@linaro.org>
 
-Hi, Mike,
-
-Thanks for reporting!  I find an issue in my patch and I can reproduce
-your problem now.  The reason is total_swapcache_pages() will call
-get_swap_device() for invalid swap device.  So we need to find a way to
-silence the warning.  I will post a fix ASAP.
-
-Best Regards,
-Huang, Ying
+> Regards,
+> Mathieu
+> 
+> Changes for V2:
+> * Fixed error condition in function cs_etm_set_option() (Leo)
+> * Fixed changelog spelling error (Leo).
+> * Moved from calloc() to malloc() in cs_etm__etmq_get_traceid_queue()
+> * Got rid of CS_ETM_PACKET_QUEUE_NR macro
+> * Fixed indentation problem in function cs_etm__process_traceid_queue() (Leo).
+> 
+> Mathieu Poirier (17):
+>   perf tools: Configure contextID tracing in CPU-wide mode
+>   perf tools: Configure timestsamp generation in CPU-wide mode
+>   perf tools: Configure SWITCH_EVENTS in CPU-wide mode
+>   perf tools: Add handling of itrace start events
+>   perf tools: Add handling of switch-CPU-wide events
+>   perf tools: Refactor error path in cs_etm_decoder__new()
+>   perf tools: Move packet queue out of decoder structure
+>   perf tools: Fix indentation in function
+>     cs_etm__process_decoder_queue()
+>   perf tools: Introduce the concept of trace ID queues
+>   perf tools: Get rid of unused cpu in struct cs_etm_queue
+>   perf tools: Move thread to traceid_queue
+>   perf tools: Move tid/pid to traceid_queue
+>   perf tools: Use traceID aware memory callback API
+>   perf tools: Add support for multiple traceID queues
+>   perf tools: Linking PE contextID with perf thread mechanic
+>   perf tools: Add notion of time to decoding code
+>   perf tools: Add support for CPU-wide trace scenarios
+> 
+>  tools/perf/Makefile.config                    |    3 +
+>  tools/perf/arch/arm/util/cs-etm.c             |  186 ++-
+>  .../perf/util/cs-etm-decoder/cs-etm-decoder.c |  269 +++--
+>  .../perf/util/cs-etm-decoder/cs-etm-decoder.h |   39 +-
+>  tools/perf/util/cs-etm.c                      | 1026 +++++++++++++----
+>  tools/perf/util/cs-etm.h                      |  103 ++
+>  6 files changed, 1252 insertions(+), 374 deletions(-)
+> 
+> -- 
+> 2.17.1
+> 
