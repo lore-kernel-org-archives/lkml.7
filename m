@@ -6,80 +6,73 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6264C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E93B1C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B778D26BAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C585C26B77
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:28:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726816AbfEaP07 (ORCPT
+        id S1726879AbfEaP2D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 11:26:59 -0400
-Received: from relay1.mentorg.com ([192.94.38.131]:48418 "EHLO
-        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbfEaP07 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 11:26:59 -0400
-Received: from svr-orw-mbx-01.mgc.mentorg.com ([147.34.90.201])
-        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
-        id 1hWjQl-0007CM-Nl from George_Davis@mentor.com ; Fri, 31 May 2019 08:26:55 -0700
-Received: from localhost (147.34.91.1) by svr-orw-mbx-01.mgc.mentorg.com
- (147.34.90.201) with Microsoft SMTP Server (TLS) id 15.0.1320.4; Fri, 31 May
- 2019 08:26:53 -0700
-From:   "George G. Davis" <george_davis@mentor.com>
-To:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        <linux-kbuild@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-CC:     "George G. Davis" <george_davis@mentor.com>
-Subject: [RFC][PATCH] Makefile: Fix checkstack.pl arm64 wrong or unknown architecture
-Date:   Fri, 31 May 2019 11:26:11 -0400
-Message-ID: <1559316388-19565-1-git-send-email-george_davis@mentor.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 31 May 2019 11:28:03 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:18066 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726418AbfEaP2C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 11:28:02 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id CF5FD3F2C15E38F35514;
+        Fri, 31 May 2019 23:27:57 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Fri, 31 May 2019
+ 23:27:48 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <james.smart@broadcom.com>, <dick.kennedy@broadcom.com>,
+        <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
+        <jsmart2021@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] scsi: lpfc: Remove set but not used variables 'qp'
+Date:   Fri, 31 May 2019 23:27:45 +0800
+Message-ID: <20190531152745.7928-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
-X-ClientProxiedBy: SVR-ORW-MBX-05.mgc.mentorg.com (147.34.90.205) To
- svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following error occurs for the `make ARCH=arm64 checkstack` case:
+Fixes gcc '-Wunused-but-set-variable' warnings:
 
-aarch64-linux-gnu-objdump -d vmlinux $(find . -name '*.ko') | \
-perl ./scripts/checkstack.pl arm64
-wrong or unknown architecture "arm64"
+drivers/scsi/lpfc/lpfc_init.c: In function lpfc_setup_cq_lookup:
+drivers/scsi/lpfc/lpfc_init.c:9359:30: warning: variable qp set but not used [-Wunused-but-set-variable]
 
-Fix the above error by setting `CHECKSTACK_ARCH := aarch64` for the
-ARCH=arm64 case.
+It's not used since commit e70596a60f88 ("scsi: lpfc: Fix
+poor use of hardware queues if fewer irq vectors")
 
-Signed-off-by: George G. Davis <george_davis@mentor.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- Makefile | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/scsi/lpfc/lpfc_init.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index 11358153d8f2..3e615e8553c0 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1695,7 +1695,11 @@ PHONY += checkstack kernelrelease kernelversion image_name
- ifeq ($(ARCH), um)
- CHECKSTACK_ARCH := $(SUBARCH)
- else
--CHECKSTACK_ARCH := $(ARCH)
-+	ifeq ($(ARCH), arm64)
-+		CHECKSTACK_ARCH := aarch64
-+	else
-+		CHECKSTACK_ARCH := $(ARCH)
-+	endif
- endif
- checkstack:
- 	$(OBJDUMP) -d vmlinux $$(find . -name '*.ko') | \
+diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
+index 24965a06f55d..cd8e47544d07 100644
+--- a/drivers/scsi/lpfc/lpfc_init.c
++++ b/drivers/scsi/lpfc/lpfc_init.c
+@@ -9356,10 +9356,8 @@ static void
+ lpfc_setup_cq_lookup(struct lpfc_hba *phba)
+ {
+ 	struct lpfc_queue *eq, *childq;
+-	struct lpfc_sli4_hdw_queue *qp;
+ 	int qidx;
+ 
+-	qp = phba->sli4_hba.hdwq;
+ 	memset(phba->sli4_hba.cq_lookup, 0,
+ 	       (sizeof(struct lpfc_queue *) * (phba->sli4_hba.cq_max + 1)));
+ 	/* Loop thru all IRQ vectors */
 -- 
-2.7.4
+2.17.1
+
 
