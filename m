@@ -2,79 +2,100 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 329A2C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD9F6C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06FEB23D8C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:21:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81C1F268C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:24:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aQKXDnGd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727351AbfEaMVq (ORCPT
+        id S1727287AbfEaMX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 08:21:46 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:46946 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726330AbfEaMVp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 08:21:45 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 93BADFC6077132208A13;
-        Fri, 31 May 2019 20:21:42 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Fri, 31 May 2019
- 20:21:33 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <ard.biesheuvel@linaro.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH v2 -next] crypto: atmel-i2c - Fix build error while CRC16 set to m
-Date:   Fri, 31 May 2019 20:17:49 +0800
-Message-ID: <20190531121749.9144-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-In-Reply-To: <20190531094900.12708-1-yuehaibing@huawei.com>
-References: <20190531094900.12708-1-yuehaibing@huawei.com>
+        Fri, 31 May 2019 08:23:59 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:36056 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726403AbfEaMX7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 08:23:59 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4VCNZIo115859;
+        Fri, 31 May 2019 07:23:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559305415;
+        bh=s5BHi330exWmUynpqb3iUBypm5V6BAHHNT54lxakjVA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=aQKXDnGdpv2gEhPpPuFA0HXuKGGuRolwmTMAlhjUjJKl71A2mXvmPJOWIl1PSpTpS
+         0b0Xeka1tz5O/qnoglvbWwln2l4EEzQe8W+vnbe4WWTAoe1WKWHWsR5U4Cna/fMajp
+         LhLdga4wdStzbDyMxcEgka0AmK59q9CuxvcwZJUA=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4VCNZpr039855
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 31 May 2019 07:23:35 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 31
+ May 2019 07:23:34 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 31 May 2019 07:23:34 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4VCNWQC031859;
+        Fri, 31 May 2019 07:23:33 -0500
+Subject: Re: [PATCHv6 3/4] drm/omap: add framedone interrupt support
+To:     Sebastian Reichel <sre@kernel.org>
+CC:     Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        <dri-devel@lists.freedesktop.org>, <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kernel@collabora.com>
+References: <20190523200756.25314-1-sebastian.reichel@collabora.com>
+ <20190523200756.25314-4-sebastian.reichel@collabora.com>
+ <9eb23a5d-438e-7b25-e7cb-8b734a150e43@ti.com>
+ <20190529215530.mi3fjlsaziq22mw5@earth.universe>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <bbe14265-4499-4a55-ef94-9def2df365d7@ti.com>
+Date:   Fri, 31 May 2019 15:23:32 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190529215530.mi3fjlsaziq22mw5@earth.universe>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CRYPTO_DEV_ATMEL_ECC is set m, which select CRC16 to m,
-while CRYPTO_DEV_ATMEL_SHA204A is set to y, building fails.
+On 30/05/2019 00:55, Sebastian Reichel wrote:
 
-drivers/crypto/atmel-i2c.o: In function 'atmel_i2c_checksum':
-atmel-i2c.c:(.text+0x16): undefined reference to 'crc16'
+> Oh sorry, I missed the part that omap_irq_wait_init() actually
+> enables the framedone irq. It should be enough to just drop the
+> warning (and the curly brackets) to keep existing behaviour. The
+> code exits early with the above warning for any existing code (since
+> that does not register a framedone handler). DSI on the other hand
+> does not reach the omap_irq_wait_init() part. Regarding combining
+> the logic: I don't think there is anything to combine right now.
+> It should be possible to simplify the logic after DSI has been
+> converted to drm_panel style, since this will move the update logic
+> for the screen content from the panel driver to DSI core.
+> 
+> TLDR: It's enough to remove the warning. Do you need a new
+> submission for this?
 
-Add CRC16 dependency to CRYPTO_DEV_ATMEL_SHA204A
+Ok. No, I can edit the patch.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: da001fb651b0 ("crypto: atmel-i2c - add support for SHA204A random number generator")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
-v2：use 'select' instead of 'depends on'
----
- drivers/crypto/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+Nikolaus, are you able to test DSI videomode with these patches?
 
-diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
-index fe01a99..603413f 100644
---- a/drivers/crypto/Kconfig
-+++ b/drivers/crypto/Kconfig
-@@ -542,6 +542,7 @@ config CRYPTO_DEV_ATMEL_SHA204A
- 	depends on I2C
- 	select CRYPTO_DEV_ATMEL_I2C
- 	select HW_RANDOM
-+	select CRC16
- 	help
- 	  Microhip / Atmel SHA accelerator and RNG.
- 	  Select this if you want to use the Microchip / Atmel SHA204A
+  Tomi
+
 -- 
-2.7.4
-
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
