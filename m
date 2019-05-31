@@ -2,130 +2,85 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F1EC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 06:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AED9C28CC2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 06:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F771264BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 06:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 436BA25D8A
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 06:57:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbfEaGye (ORCPT
+        id S1726697AbfEaG53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 02:54:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34226 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725963AbfEaGye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 02:54:34 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C1C6FAF8D;
-        Fri, 31 May 2019 06:54:32 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id 28191E00E3; Fri, 31 May 2019 08:54:32 +0200 (CEST)
-Date:   Fri, 31 May 2019 08:54:32 +0200
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     Vivien Didelot <vivien.didelot@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, linville@redhat.com,
-        f.fainelli@gmail.com
-Subject: Re: [PATCH net-next] ethtool: do not use regs->len after
- ops->get_regs
-Message-ID: <20190531065432.GB15954@unicorn.suse.cz>
-References: <20190530235450.11824-1-vivien.didelot@gmail.com>
+        Fri, 31 May 2019 02:57:29 -0400
+Received: from smtp2.provo.novell.com ([137.65.250.81]:46203 "EHLO
+        smtp2.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbfEaG53 (ORCPT
+        <rfc822;groupwise-linux-kernel@vger.kernel.org:0:0>);
+        Fri, 31 May 2019 02:57:29 -0400
+Received: from linux-8mug.suse.de (prva10-snat226-1.provo.novell.com [137.65.226.35])
+        by smtp2.provo.novell.com with ESMTP (TLS encrypted); Fri, 31 May 2019 00:57:24 -0600
+From:   Chester Lin <clin@suse.com>
+To:     rjw@rjwysocki.net, lenb@kernel.org, gregkh@linuxfoundation.org
+Cc:     jlee@suse.com, mhocko@suse.com, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chester Lin <clin@suse.com>
+Subject: [PATCH 0/3] ACPI: New eject flow to remove devices cautiously
+Date:   Fri, 31 May 2019 14:56:39 +0800
+Message-Id: <20190531065642.13254-1-clin@suse.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190530235450.11824-1-vivien.didelot@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 07:54:50PM -0400, Vivien Didelot wrote:
-> The kernel allocates a buffer of size ops->get_regs_len(), and pass
-> it to the kernel driver via ops->get_regs() for filling.
-> 
-> There is no restriction about what the kernel drivers can or cannot
-> do with the regs->len member. Drivers usually ignore it or set
-> the same size again. However, ethtool_get_regs() must not use this
-> value when copying the buffer back to the user, because userspace may
-> have allocated a smaller buffer. For instance ethtool does that when
-> dumping the raw registers directly into a fixed-size file.
-> 
-> Software may still make use of the regs->len value updated by the
-> kernel driver, but ethtool_get_regs() must use the original regs->len
-> given by userspace, up to ops->get_regs_len(), when copying the buffer.
-> 
-> Also no need to check regbuf twice.
-> 
-> Signed-off-by: Vivien Didelot <vivien.didelot@gmail.com>
-> ---
->  net/core/ethtool.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/net/core/ethtool.c b/net/core/ethtool.c
-> index 4a593853cbf2..8f95c7b7cafe 100644
-> --- a/net/core/ethtool.c
-> +++ b/net/core/ethtool.c
-> @@ -1338,38 +1338,40 @@ static noinline_for_stack int ethtool_set_rxfh(struct net_device *dev,
->  static int ethtool_get_regs(struct net_device *dev, char __user *useraddr)
->  {
->  	struct ethtool_regs regs;
->  	const struct ethtool_ops *ops = dev->ethtool_ops;
->  	void *regbuf;
->  	int reglen, ret;
->  
->  	if (!ops->get_regs || !ops->get_regs_len)
->  		return -EOPNOTSUPP;
->  
->  	if (copy_from_user(&regs, useraddr, sizeof(regs)))
->  		return -EFAULT;
->  
->  	reglen = ops->get_regs_len(dev);
->  	if (reglen <= 0)
->  		return reglen;
->  
->  	if (regs.len > reglen)
->  		regs.len = reglen;
-> +	else
-> +		reglen = regs.len;
+Currently there are two ways to handle ACPI device ejection. When an eject
+event happens on a container, the kernel just sends KOBJ_CHANGE to
+userland and userland should handle offline operation. For other device
+types, acpi_scan_try_to_offline() is called and it tries to put target
+device(s) offline and then removes all nodes once they are all offline.
 
-This seems wrong. Most drivers do not check regs.len in their get_regs()
-handler (I'm not sure if there are any that do) and simply write as much
-data as they have. Thus if userspace passes too short regs.len, this
-would replace overflow of a userspace buffer for few drivers by overflow
-of a kernel buffer for (almost) all drivers.
+However we found that sometimes applications could intensively access
+resources on ejectable devices therefore they could have risk if ejection
+suddenly happens and removes devices without any notification. In stead
+of executing the offline callbakcs directly, we want to introduce a new
+approach, which sends change events to notify all target nodes beforehand
+and hands over offline handling to userland so that userland can have a
+chance to schedule an offline task based on current workload. The online
+function to recover from failure is also changed, it follows the same
+approach to send change events rather than putting devices online directly
+, which means userland will also need to take care of online handling.
 
-So while we should use the original regs.len from userspace for final
-copy_to_user(), we have to allocate the buffer for driver ->get_regs()
-callback with size returned by its ->get_regs_len() callback.
+To ensure that eject function can work properly since normal users might
+not have their own offline/online handling, we will submit a generic udev
+rule to systemd upstream as default in order to deal with change events
+and take [offline/online] action accordingly. But the Hot-Removing part
+still remains so the hotplug function can run to it once target nodes are
+all offline.
 
-Michal Kubecek
+To easily monitor eject status and start over an eject process, there's a
+status trace mechanism in this eject flow, which helps to count current
+online devices under the ejectable target, and it can reschedule an eject
+event when all nodes within the device tree have been put offline.
 
->  
->  	regbuf = vzalloc(reglen);
->  	if (!regbuf)
->  		return -ENOMEM;
->  
->  	ops->get_regs(dev, &regs, regbuf);
->  
->  	ret = -EFAULT;
->  	if (copy_to_user(useraddr, &regs, sizeof(regs)))
->  		goto out;
->  	useraddr += offsetof(struct ethtool_regs, data);
-> -	if (regbuf && copy_to_user(useraddr, regbuf, regs.len))
-> +	if (copy_to_user(useraddr, regbuf, reglen))
->  		goto out;
->  	ret = 0;
->  
->   out:
->  	vfree(regbuf);
->  	return ret;
->  }
-> -- 
-> 2.21.0
-> 
+Chester Lin (3):
+  ACPI / hotplug: Send change events for offline/online requests when
+    eject is triggered
+  ACPI / hotplug: Eject status trace and auto-remove approach
+  ACPI / device_sysfs: Add eject show attr to monitor eject status
+
+ drivers/acpi/container.c    |   2 +-
+ drivers/acpi/device_sysfs.c |  20 ++-
+ drivers/acpi/glue.c         |  81 ++++++++++
+ drivers/acpi/internal.h     |  31 +++-
+ drivers/acpi/scan.c         | 298 ++++++++++++++++++++++++++----------
+ drivers/base/core.c         |   2 +
+ include/acpi/acpi_bus.h     |   3 +-
+ 7 files changed, 356 insertions(+), 81 deletions(-)
+
+-- 
+2.20.1
+
