@@ -2,123 +2,110 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 429F1C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F22C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1509526B1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:09:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AgBCH0mF"
+	by mail.kernel.org (Postfix) with ESMTP id 08A6026B9A
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:10:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbfEaQJO (ORCPT
+        id S1726911AbfEaQKB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 12:09:14 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37791 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726774AbfEaQJN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 12:09:13 -0400
-Received: by mail-pf1-f193.google.com with SMTP id a23so6492629pff.4;
-        Fri, 31 May 2019 09:09:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=z/RgCzJSEHMAir5ujFpg5rPcb9HWXDTiA2qf/D1dWKs=;
-        b=AgBCH0mF8vGGY3a4ElXuzBF5oJFQxIVCYpQKgewAzxF/VKnOJd4nHqAD6+WhZLHuUP
-         zFdIcjKkMai+c34XKv3eceJcR2fYf0m4wzLJTibA8LWyRkuXuovkSQYMHOB/Pot5HRKk
-         SPF+wqNgs+NyQsBon2j+Kw3/4WRp+NYQo3SEdoKanzQiUN0PiTQN2teFD0muUiZZQHPw
-         24pTEkxYBRgGZMxgzYCJA7/qmLtADPGQXcD2jSGhp/YA5NPULXWzh12t8yDd1a/PY92A
-         XmhluJYx6Wkt66KwzIAfph7d6p5AC2iU0gWtu3F50V+L30AAOyv6arEhaMam2e2BT5tM
-         IU0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=z/RgCzJSEHMAir5ujFpg5rPcb9HWXDTiA2qf/D1dWKs=;
-        b=V702skxRVusinHZN+L2Dz2NmJCNmYG/sycc6kS8oo0l9qUF1rdQMo0HMyjcOaKcYjB
-         CmbC0PeI6J0+L6lQl9kurGBPFvr61k3Xbc4e9QPQTXXUl4qtX93yXMCJ5F4+NJ9JMRSO
-         M701HAHfpOzrU2fH4DjkqY+8YFRraE3zV23FvNcHFwCtv12d59EdT+uWm8qzar469U34
-         3ZXJgriwvueevCeVSx9WBjJD52/WG76wzSIDwriiORi079cHnosOn6HOOKBmi9cRJN36
-         DxVqRKiZmKedOeqKKgzT0Jce1QCV726VmfPC9MrQNjVue9gVaFqXD0aSX0h887KBOeHm
-         VGtA==
-X-Gm-Message-State: APjAAAXmtcw3K6n8iVsL9STzdlyM2Ht88r2BZyjmAPUfAApGuOchtt/Y
-        ptNPepK8I3RYzemAHSBPg7g=
-X-Google-Smtp-Source: APXvYqw7B8ATADxnQAQTD6Z6CyqYTv+plBt1DoWcOXcq8ws+P7duyIFver5dQNrUF8Y9qFK5nymAlg==
-X-Received: by 2002:a63:205b:: with SMTP id r27mr10323216pgm.330.1559318953074;
-        Fri, 31 May 2019 09:09:13 -0700 (PDT)
-Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
-        by smtp.gmail.com with ESMTPSA id x18sm7423076pfo.8.2019.05.31.09.09.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 31 May 2019 09:09:12 -0700 (PDT)
-Date:   Fri, 31 May 2019 09:09:09 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Subject: Re: [PATCH net-next 0/5] PTP support for the SJA1105 DSA driver
-Message-ID: <20190531160909.jh43saqvichukv7p@localhost>
-References: <20190530143037.iky5kk3h4ssmec3f@localhost>
- <CA+h21hpp68AEEykxr8bJB=uJ+b0tg881Z7Ao_OfbTAXNxS8WgQ@mail.gmail.com>
- <20190530150557.iur7fruhyf5bs3qw@localhost>
- <CA+h21hrBwR4Sow7q0_rS1u2md1M4bSAJt8FO5+VLFiu9UGnvjA@mail.gmail.com>
- <20190531043417.6phscbpmo6krvxam@localhost>
- <CA+h21hp9DfW3wFy4YbHMU31rBHyrnUTdF4kKwX36h9vHOW2COw@mail.gmail.com>
- <20190531140841.j4f72rlojmaayqr5@localhost>
- <CA+h21hroywaij3gyO0u6v+GFVO2Fv_dP_a+L3oMGpQH8mQgJ5g@mail.gmail.com>
- <20190531151151.k3a2wdf5f334qmqh@localhost>
- <CA+h21hpHKbTc8toPZf0iprW1b4v6ErnRaSM=C6vk-GCiXM8NvA@mail.gmail.com>
+        Fri, 31 May 2019 12:10:01 -0400
+Received: from foss.arm.com ([217.140.101.70]:53860 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726037AbfEaQKB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 12:10:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9CA07341;
+        Fri, 31 May 2019 09:10:00 -0700 (PDT)
+Received: from redmoon (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 459BB3F59C;
+        Fri, 31 May 2019 09:09:59 -0700 (PDT)
+Date:   Fri, 31 May 2019 17:09:56 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        rgummal@xilinx.com, marc.zyngier@arm.com
+Subject: Re: [PATCH v3] PCI: xilinx-nwl: Fix Multi MSI data programming
+Message-ID: <20190531160956.GB9356@redmoon>
+References: <1559133469-11981-1-git-send-email-bharat.kumar.gogada@xilinx.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+h21hpHKbTc8toPZf0iprW1b4v6ErnRaSM=C6vk-GCiXM8NvA@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <1559133469-11981-1-git-send-email-bharat.kumar.gogada@xilinx.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 06:23:34PM +0300, Vladimir Oltean wrote:
-> You mean to queue it and subvert DSA's own RX timestamping callback?
+[+Marc]
 
-No, use the callback.
+On Wed, May 29, 2019 at 06:07:49PM +0530, Bharat Kumar Gogada wrote:
+> The current Multi MSI data programming fails if multiple end points
+> requesting MSI and multi MSI are connected with switch, i.e the current
+> multi MSI data being given is not considering the number of vectors
+> being requested in case of multi MSI.
+> Ex: Two EP's connected via switch, EP1 requesting single MSI first,
+> EP2 requesting Multi MSI of count four. The current code gives
+> MSI data 0x0 to EP1 and 0x1 to EP2, but EP2 can modify lower two bits
+> due to which EP2 also sends interrupt with MSI data 0x0 which results
+> in always invoking virq of EP1 due to which EP2 MSI interrupt never
+> gets handled.
 
-> Why would I do that? Just so as not to introduce my .can_timestamp
-> callback?
+If this is a problem it is not the only driver where it should be fixed
+it seems. CC'ed Marc in case I have missed something in relation to MSI
+IRQs but AFAIU it looks like HW is allowed to toggled bits (according to
+bits[6:4] in Message Control for MSI) in the MSI data, given that the
+data written is the hwirq number (in this specific MSI controller)
+it ought to be fixed.
 
-Right, the .can_timestamp is unneeded, AFAICT.
- 
-> > Now I'm starting to understand your series.  I think it can be done in
-> > simpler way...
-> >
-> > sja1105_rcv_meta_state_machine - can and should be at the driver level
-> > and not at the port level.
-> >
+The commit log and patch should be rewritten (I will do that) but
+first I would like to understand if there are more drivers to be
+updated.
+
+Lorenzo
+
+> Fix Multi MSI data programming with required alignment by
+> using number of vectors being requested.
 > 
-> Can: yes. Should: why?
-
-To keep it simple and robust.
- 
-> One important aspect makes this need be a little bit more complicated:
-> reconstructing these RX timestamps.
-> You see, there is a mutex on the SPI bus, so in practice I do need the
-> sja1105_port_rxtstamp_work for exactly this purpose - to read the
-> timestamping clock over SPI.
-
-Sure.  But you schedule the work after a META frame.  And no busy
-waiting is needed.
- 
-Thanks,
-Richard
+> Fixes: ab597d35ef11 ("PCI: xilinx-nwl: Add support for Xilinx NWL PCIe
+> Host Controller")
+> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+> ---
+> V3:
+>  - Added example description of the issue
+> ---
+>  drivers/pci/controller/pcie-xilinx-nwl.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
+> index 81538d7..8efcb8a 100644
+> --- a/drivers/pci/controller/pcie-xilinx-nwl.c
+> +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
+> @@ -483,7 +483,16 @@ static int nwl_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+>  	int i;
+>  
+>  	mutex_lock(&msi->lock);
+> -	bit = bitmap_find_next_zero_area(msi->bitmap, INT_PCI_MSI_NR, 0,
+> +
+> +	/*
+> +	 * Multi MSI count is requested in power of two
+> +	 * Check if multi msi is requested
+> +	 */
+> +	if (nr_irqs % 2 == 0)
+> +		bit = bitmap_find_next_zero_area(msi->bitmap, INT_PCI_MSI_NR, 0,
+> +					 nr_irqs, nr_irqs - 1);
+> +	else
+> +		bit = bitmap_find_next_zero_area(msi->bitmap, INT_PCI_MSI_NR, 0,
+>  					 nr_irqs, 0);
+>  	if (bit >= INT_PCI_MSI_NR) {
+>  		mutex_unlock(&msi->lock);
+> -- 
+> 2.7.4
+> 
