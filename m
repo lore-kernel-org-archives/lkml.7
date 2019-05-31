@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 335D5C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BDAC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEA9F26378
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F30F26387
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:55:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BR9ktqiy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wN+D8g8j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbfEaDzG (ORCPT
+        id S1726883AbfEaDyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 23:55:06 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:40799 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726939AbfEaDyL (ORCPT
+        Thu, 30 May 2019 23:54:09 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:50494 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726791AbfEaDyF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 23:54:11 -0400
-Received: by mail-io1-f68.google.com with SMTP id n5so7017548ioc.7
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 20:54:11 -0700 (PDT)
+        Thu, 30 May 2019 23:54:05 -0400
+Received: by mail-it1-f195.google.com with SMTP id a186so13602151itg.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 20:54:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=n9vDD3Jfc66TNCOaDCzcBm5exj2keDdJZBnw5RzUKQQ=;
-        b=BR9ktqiycYFlSF34OpURC2Dc8hB357FeqpzW4RYV68ZQS3SGcwHzd3JRrs+vhYRY3I
-         pm8WXGB1L4RnEh+l4UCP6vm5oC/kbSB+KBr7JTX8HA/QoryLYpFrYRNOiGTYsllgD95A
-         46a8x5KCYY2KneCZW2Lc7EuHfYT4mudIdh6YLBFl4GyPc9UvPsCJuQ68XzLKRHUZmVGA
-         knm+ljF9qiUvUbjyybjsUGmWzVC7+Y3E/wmo8YrEWMEB/ou2ZAZl7qHnDP5fWZWJRQdb
-         gMHmNxH+9N2Uo7WwUMYyABOcSYlnNaRqr6tD+jo4JaDW85xLOpz5vURZxXtommdH9R2r
-         dNdg==
+        bh=z6hkJmMf8qtiwvP4+iR9vyBYr7u1fX1hzLkLMLwIWRM=;
+        b=wN+D8g8js2XEisYQvkeRXQyiudL2LOGxdjA6s3gBd3JT7xGJ4KaoGwGeKO3Z7Dy7w6
+         yzE99/Z6KpE+IpuoRCd2NoNhpmRZa66jvWpbDkVqD6K01Gvfwmn7NPO7slvfRWGJn5bO
+         kVB9+nk6uZyMHpD5kym1spUnMEAGoGLIrT5Hr8pH+xj3qxm2NtmvvDtU0/JrPDJreVhD
+         x5jMIZe6Du7Np9fy06y/Ovem90Cf9ekTySYP5Y/oI7+F450Erw7g9N6T9kpo5wduuVYB
+         PW2A8y1zWvH9t/5xHxAhpejmVqntLlAXzT6WWMK0ZkThSVnHvRYW9zRFkqY2b+yDhI7k
+         Pvpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=n9vDD3Jfc66TNCOaDCzcBm5exj2keDdJZBnw5RzUKQQ=;
-        b=GqVLJeQ0/NKRGtruLm2DEr/iQmfp83zQM9gHmV9T5N+735GUUrzVopHt+YHDF4YPeq
-         v7Yj6n6KZd+ibIZklnxl+PvBXjHZNhKIijvWWF9j12N6V6qNNZ13mRr4gm5sEVmyyoeM
-         FGQnOP9ExHRymWcxi1MWVZWcWn8QVHybJNJ3bPVmDQJvfbW5Zj9IOwLPJC49glNCilaH
-         J6rDnD3G6xDzmD40F6OPfcoqmOle3waM7Tcp96J6cGFbcil0Ht+Iot3nWyKwAN1YFA5M
-         5Yc28ibngoRSbwgIzoYAz9AMNz82IAURYFUTN8sPGW6oAAIGgaXq8deOefmu0tqa5W/W
-         VCgg==
-X-Gm-Message-State: APjAAAVLi5nIg7qFxfKXFpIKwDBHiF5e/bGGGghtIea9cw3dRma9HI6q
-        w6LLDS7gap3DkVyC87ORlj6zAw==
-X-Google-Smtp-Source: APXvYqwXTdW2ZfmvzR3xAkDbew9bxIw1ENi559vd+t6+3VzNVdO/UH4T9xuIpoC8IiDI1dNvbjr9UQ==
-X-Received: by 2002:a05:6602:44:: with SMTP id z4mr4495779ioz.180.1559274850612;
-        Thu, 30 May 2019 20:54:10 -0700 (PDT)
+        bh=z6hkJmMf8qtiwvP4+iR9vyBYr7u1fX1hzLkLMLwIWRM=;
+        b=N4mtfj7wmxRD+inrapCQ+H/v7kLdYLszgFEGQkistkgrMyd2ifva8eRcfuLnrbsIOJ
+         kFJTbVLu7u2oSlXrnGt6hgP2Jx1tmeJ83zLhsP1AGEue0z+dkR5DhH/k4M9Q6sdxZZug
+         LCzBXCrMF82+2dMWP3zAdk3QbQVxPzKoG/6gtHOWDO4n3wCXYNgUgToVmCoHbQ5rdXHV
+         +J/ujMbow6RKH2wTDtM7uqlhTkT9jI6tlyBCI6xZPpqOX1ZxGMJAM3EBB8JdM2FGeIWE
+         sokaEqFRVcgrlSaDVQ1Tke4JasOqQjLmXVkCFBEUVTRJGzsWV0I3kyqYQqz05Zs2GfY8
+         0LYg==
+X-Gm-Message-State: APjAAAVFbNZjxzZnOGUmOoaUv5Wr/v2fn24XxOruhC2q2q9SAnanlMpx
+        +5GSCUR6oxMqeSbSlbuDEArfwQ==
+X-Google-Smtp-Source: APXvYqx9RDeuEcDH6yMlb3paYNoy6N9tU8gTrpR8s3fvcsTb1+uQBTG4QNVvcqoz/PnBQLHsphhsOw==
+X-Received: by 2002:a24:ed03:: with SMTP id r3mr6249612ith.47.1559274843847;
+        Thu, 30 May 2019 20:54:03 -0700 (PDT)
 Received: from localhost.localdomain (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
-        by smtp.gmail.com with ESMTPSA id q15sm1626947ioi.15.2019.05.30.20.54.09
+        by smtp.gmail.com with ESMTPSA id q15sm1626947ioi.15.2019.05.30.20.54.02
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 20:54:10 -0700 (PDT)
+        Thu, 30 May 2019 20:54:03 -0700 (PDT)
 From:   Alex Elder <elder@linaro.org>
 To:     davem@davemloft.net, arnd@arndb.de, bjorn.andersson@linaro.org,
         ilias.apalodimas@linaro.org
@@ -65,9 +65,9 @@ Cc:     evgreen@chromium.org, benchan@google.com, ejcaruso@google.com,
         netdev@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
-Subject: [PATCH v2 11/17] soc: qcom: ipa: immediate commands
-Date:   Thu, 30 May 2019 22:53:42 -0500
-Message-Id: <20190531035348.7194-12-elder@linaro.org>
+Subject: [PATCH v2 06/17] soc: qcom: ipa: GSI headers
+Date:   Thu, 30 May 2019 22:53:37 -0500
+Message-Id: <20190531035348.7194-7-elder@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190531035348.7194-1-elder@linaro.org>
 References: <20190531035348.7194-1-elder@linaro.org>
@@ -78,530 +78,826 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One TX endpoint (per EE) is used for issuing immediate commands to
-the IPA.  These commands request activites beyond simple data
-transfers to be done by the IPA hardware.  For example, the IPA is
-able to manage routing packets among endpoints, and immediate commands
-are used to configure tables used for that routing.
+The Generic Software Interface is a layer of the IPA driver that
+abstracts the underlying hardware.  The next patch includes the
+main code for GSI (including some additional documentation).  This
+patch just includes three GSI header files.
 
-Immediate commands are built on top of GSI transactions.  They are
-different from normal transfers (in that they use a special endpoint,
-and their "payload" is interpreted differently), so separate functions
-are used to issue immediate command transactions.
+  - "gsi.h" is the top-level GSI header file.  There is one of these
+    associated with the IPA structure; in fact, it is embedded within
+    the IPA structure.  (Were it not embedded this way, many of the
+    definitions structures defined here could be private to GSI code.)
+    The main abstraction implemented by the GSI code is the channel,
+    and this header exposes several operations that can be performed
+    on a GSI channel.
+
+  - "gsi_private.h" exposes some definitions that are intended to be
+    private, used only by the main GSI code and the GSI transaction
+    code (defined in an upcoming patch).
+
+  - Like "ipa_reg.h", "gsi_reg.h" defines the offsets of the 32-bit
+    registers used by the GSI layer, along with masks that define the
+    position and width of fields less than 32 bits located within
+    these registers.
 
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- drivers/net/ipa/ipa_cmd.c | 377 ++++++++++++++++++++++++++++++++++++++
- drivers/net/ipa/ipa_cmd.h | 116 ++++++++++++
- 2 files changed, 493 insertions(+)
- create mode 100644 drivers/net/ipa/ipa_cmd.c
- create mode 100644 drivers/net/ipa/ipa_cmd.h
+ drivers/net/ipa/gsi.h         | 246 ++++++++++++++++++++++
+ drivers/net/ipa/gsi_private.h | 148 +++++++++++++
+ drivers/net/ipa/gsi_reg.h     | 376 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 770 insertions(+)
+ create mode 100644 drivers/net/ipa/gsi.h
+ create mode 100644 drivers/net/ipa/gsi_private.h
+ create mode 100644 drivers/net/ipa/gsi_reg.h
 
-diff --git a/drivers/net/ipa/ipa_cmd.c b/drivers/net/ipa/ipa_cmd.c
+diff --git a/drivers/net/ipa/gsi.h b/drivers/net/ipa/gsi.h
 new file mode 100644
-index 000000000000..32b11941436d
+index 000000000000..872ca682853a
 --- /dev/null
-+++ b/drivers/net/ipa/ipa_cmd.c
-@@ -0,0 +1,377 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
-+ * Copyright (C) 2019 Linaro Ltd.
-+ */
-+
-+#include <linux/types.h>
-+#include <linux/device.h>
-+#include <linux/slab.h>
-+#include <linux/bitfield.h>
-+
-+#include "gsi.h"
-+#include "gsi_trans.h"
-+#include "ipa.h"
-+#include "ipa_endpoint.h"
-+#include "ipa_cmd.h"
-+#include "ipa_mem.h"
-+
-+/**
-+ * DOC:  IPA Immediate Commands
-+ *
-+ * The AP command TX endpoint is used to issue immediate commands to the IPA.
-+ * An immediate command is generally used to request the IPA do something
-+ * other than data transfer to another endpoint.
-+ *
-+ * Immediate commands are represented by GSI transactions just like other
-+ * transfer requests, represented by a single GSI TRE.  Each immediate
-+ * command has a well-defined format, having a payload of a known length.
-+ * This allows the transfer element's length field to be used to hold an
-+ * immediate command's opcode.  The payload for a command resides in DRAM
-+ * and is described by a single scatterlist entry in its transaction.
-+ * Commands do not require a transaction completion callback.  To commit
-+ * an immediate command transaction, either gsi_trans_commit_command() or
-+ * gsi_trans_commit_command_timeout() is used.
-+ */
-+
-+#define IPA_GSI_DMA_TASK_TIMEOUT	15	/* milliseconds */
-+
-+/**
-+ * __ipa_cmd_timeout() - Send an immediate command with timeout
-+ * @ipa:	IPA structure
-+ * @opcode:	Immediate command opcode (must not be IPA_CMD_NONE)
-+ * @payload:	Pointer to command payload
-+ * @size:	Size of payload
-+ * @timeout:	Milliseconds to wait for completion (0 waits indefinitely)
-+ *
-+ * This common function implements ipa_cmd() and ipa_cmd_timeout().  It
-+ * allocates, initializes, and commits a transaction for the immediate
-+ * command.  The transaction is committed using gsi_trans_commit_command(),
-+ * or if a non-zero timeout is supplied, gsi_trans_commit_command_timeout().
-+ *
-+ * @Return:	0 if successful, or a negative error code
-+ */
-+static int __ipa_cmd_timeout(struct ipa *ipa, enum ipa_cmd_opcode opcode,
-+			     void *payload, size_t size, u32 timeout)
-+{
-+	struct ipa_endpoint *endpoint = ipa->command_endpoint;
-+	struct gsi_trans *trans;
-+	int ret;
-+
-+	/* assert(opcode != IPA_CMD_NONE) */
-+	trans = gsi_channel_trans_alloc(&ipa->gsi, endpoint->channel_id, 1);
-+	if (!trans)
-+		return -EBUSY;
-+
-+	sg_init_one(trans->sgl, payload, size);
-+
-+	if (timeout)
-+		ret = gsi_trans_commit_command_timeout(trans, opcode, timeout);
-+	else
-+		ret = gsi_trans_commit_command(trans, opcode);
-+	if (ret)
-+		goto err_trans_free;
-+
-+	return 0;
-+
-+err_trans_free:
-+	gsi_trans_free(trans);
-+
-+	return ret;
-+}
-+
-+static int
-+ipa_cmd(struct ipa *ipa, enum ipa_cmd_opcode opcode, void *payload, size_t size)
-+{
-+	return __ipa_cmd_timeout(ipa, opcode, payload, size, 0);
-+}
-+
-+static int ipa_cmd_timeout(struct ipa *ipa, enum ipa_cmd_opcode opcode,
-+			   void *payload, size_t size)
-+{
-+	return __ipa_cmd_timeout(ipa, opcode, payload, size,
-+				 IPA_GSI_DMA_TASK_TIMEOUT);
-+}
-+
-+/* Field masks for ipa_imm_cmd_hw_hdr_init_local structure fields */
-+#define IPA_CMD_HDR_INIT_FLAGS_TABLE_SIZE_FMASK	GENMASK(11, 0)
-+#define IPA_CMD_HDR_INIT_FLAGS_HDR_ADDR_FMASK	GENMASK(27, 12)
-+#define IPA_CMD_HDR_INIT_FLAGS_RESERVED_FMASK	GENMASK(28, 31)
-+
-+struct ipa_imm_cmd_hw_hdr_init_local {
-+	u64 hdr_table_addr;
-+	u32 flags;
-+	u32 reserved;
-+};
-+
-+/* Initialize header space in IPA-local memory */
-+int ipa_cmd_hdr_init_local(struct ipa *ipa, u32 offset, u32 size)
-+{
-+	struct ipa_imm_cmd_hw_hdr_init_local *payload;
-+	struct device *dev = &ipa->pdev->dev;
-+	dma_addr_t addr;
-+	void *virt;
-+	u32 flags;
-+	u32 max;
-+	int ret;
-+
-+	if (size > field_max(IPA_CMD_HDR_INIT_FLAGS_TABLE_SIZE_FMASK))
-+		return -EINVAL;
-+
-+	max = field_max(IPA_CMD_HDR_INIT_FLAGS_HDR_ADDR_FMASK);
-+	if (offset > max || ipa->shared_offset > max - offset)
-+		return -EINVAL;
-+	offset += ipa->shared_offset;
-+
-+	/* With this command we tell the IPA where in its local memory the
-+	 * header tables reside.  We also supply a (host) buffer whose
-+	 * content is copied via DMA into that table space.  We just want
-+	 * to zero fill it, so a zeroed DMA buffer is all that's required
-+	 * The IPA owns the table, but the AP must initialize it.
-+	 */
-+	virt = dma_alloc_coherent(dev, size, &addr, GFP_KERNEL);
-+	if (!virt)
-+		return -ENOMEM;
-+
-+	payload = kzalloc(sizeof(*payload), GFP_KERNEL);
-+	if (!payload) {
-+		ret = -ENOMEM;
-+		goto out_dma_free;
-+	}
-+
-+	payload->hdr_table_addr = addr;
-+	flags = u32_encode_bits(size, IPA_CMD_HDR_INIT_FLAGS_TABLE_SIZE_FMASK);
-+	flags |= u32_encode_bits(offset, IPA_CMD_HDR_INIT_FLAGS_HDR_ADDR_FMASK);
-+	payload->flags = flags;
-+
-+	ret = ipa_cmd(ipa, IPA_CMD_HDR_INIT_LOCAL, payload, sizeof(*payload));
-+
-+	kfree(payload);
-+out_dma_free:
-+	dma_free_coherent(dev, size, virt, addr);
-+
-+	return ret;
-+}
-+
-+enum ipahal_pipeline_clear_option {
-+	IPAHAL_HPS_CLEAR		= 0,
-+	IPAHAL_SRC_GRP_CLEAR		= 1,
-+	IPAHAL_FULL_PIPELINE_CLEAR	= 2,
-+};
-+
-+/* Field masks for ipa_imm_cmd_hw_dma_shared_mem structure fields */
-+#define IPA_CMD_DMA_SHARED_FLAGS_DIRECTION_FMASK	GENMASK(0, 0)
-+#define IPA_CMD_DMA_SHARED_FLAGS_SKIP_CLEAR_FMASK	GENMASK(1, 1)
-+#define IPA_CMD_DMA_SHARED_FLAGS_CLEAR_OPTIONS_FMASK	GENMASK(3, 2)
-+
-+struct ipa_imm_cmd_hw_dma_shared_mem {
-+	u16 sw_reserved;
-+	u16 size;
-+	u16 local_addr;
-+	u16 flags;
-+	u64 system_addr;
-+};
-+
-+/* Use a DMA command to zero a block of memory */
-+int ipa_cmd_smem_dma_zero(struct ipa *ipa, u32 offset, u32 size)
-+{
-+	struct ipa_imm_cmd_hw_dma_shared_mem *payload;
-+	struct device *dev = &ipa->pdev->dev;
-+	dma_addr_t addr;
-+	void *virt;
-+	u32 val;
-+	int ret;
-+
-+	/* size must be non-zero, and must fit in a 16 bit field */
-+	if (!size || size > U16_MAX)
-+		return -EINVAL;
-+
-+	/* offset must fit in a 16 bit local_addr field */
-+	if (offset > U16_MAX || ipa->shared_offset > U16_MAX - offset)
-+		return -EINVAL;
-+	offset += ipa->shared_offset;
-+
-+	/* A zero-filled buffer of the right size is all that's required */
-+	virt = dma_alloc_coherent(dev, size, &addr, GFP_KERNEL);
-+	if (!virt)
-+		return -ENOMEM;
-+
-+	payload = kzalloc(sizeof(*payload), GFP_KERNEL);
-+	if (!payload) {
-+		ret = -ENOMEM;
-+		goto out_dma_free;
-+	}
-+
-+	payload->size = size;
-+	payload->local_addr = offset;
-+	/* direction: 0 = write to IPA; skip clear: 0 = don't wait */
-+	val = u16_encode_bits(IPAHAL_HPS_CLEAR,
-+			      IPA_CMD_DMA_SHARED_FLAGS_CLEAR_OPTIONS_FMASK);
-+	payload->flags = val;
-+	payload->system_addr = addr;
-+
-+	ret = ipa_cmd(ipa, IPA_CMD_DMA_SHARED_MEM, payload, sizeof(*payload));
-+
-+	kfree(payload);
-+out_dma_free:
-+	dma_free_coherent(dev, size, virt, addr);
-+
-+	return ret;
-+}
-+
-+/* Field masks for ipa_imm_cmd_hw_ip_fltrt_init structure fields */
-+#define IPA_CMD_IP_FLTRT_FLAGS_HASH_SIZE_FMASK	GENMASK_ULL(11, 0)
-+#define IPA_CMD_IP_FLTRT_FLAGS_HASH_ADDR_FMASK	GENMASK_ULL(27, 12)
-+#define IPA_CMD_IP_FLTRT_FLAGS_NHASH_SIZE_FMASK	GENMASK_ULL(39, 28)
-+#define IPA_CMD_IP_FLTRT_FLAGS_NHASH_ADDR_FMASK	GENMASK_ULL(55, 40)
-+
-+struct ipa_imm_cmd_hw_ip_fltrt_init {
-+	u64 hash_rules_addr;
-+	u64 flags;
-+	u64 nhash_rules_addr;
-+};
-+
-+/* Configure a routing or filter table, for IPv4 or IPv6 */
-+static int ipa_cmd_table_config(struct ipa *ipa, enum ipa_cmd_opcode opcode,
-+				dma_addr_t addr, size_t size, u32 hash_offset,
-+				u32 nhash_offset)
-+{
-+	struct ipa_imm_cmd_hw_ip_fltrt_init *payload;
-+	u64 val;
-+	u32 max;
-+	int ret;
-+
-+	if (size > field_max(IPA_CMD_IP_FLTRT_FLAGS_HASH_SIZE_FMASK))
-+		return -EINVAL;
-+	if (size > field_max(IPA_CMD_IP_FLTRT_FLAGS_NHASH_SIZE_FMASK))
-+		return -EINVAL;
-+
-+	max = field_max(IPA_CMD_IP_FLTRT_FLAGS_HASH_ADDR_FMASK);
-+	if (hash_offset > max || ipa->shared_offset > max - hash_offset)
-+		return -EINVAL;
-+	hash_offset += ipa->shared_offset;
-+
-+	max = field_max(IPA_CMD_IP_FLTRT_FLAGS_NHASH_ADDR_FMASK);
-+	if (nhash_offset > max || ipa->shared_offset > max - nhash_offset)
-+		return -EINVAL;
-+	nhash_offset += ipa->shared_offset;
-+
-+	payload = kzalloc(sizeof(*payload), GFP_KERNEL);
-+	if (!payload)
-+		return -ENOMEM;
-+
-+	payload->hash_rules_addr = addr;
-+	val = u64_encode_bits(size, IPA_CMD_IP_FLTRT_FLAGS_HASH_SIZE_FMASK);
-+	val |= u64_encode_bits(hash_offset,
-+			       IPA_CMD_IP_FLTRT_FLAGS_HASH_ADDR_FMASK);
-+	val |= u64_encode_bits(size, IPA_CMD_IP_FLTRT_FLAGS_NHASH_SIZE_FMASK);
-+	val |= u64_encode_bits(nhash_offset,
-+			       IPA_CMD_IP_FLTRT_FLAGS_NHASH_ADDR_FMASK);
-+	payload->flags = val;
-+	payload->nhash_rules_addr = addr;
-+
-+	ret = ipa_cmd(ipa, opcode, payload, sizeof(*payload));
-+
-+	kfree(payload);
-+
-+	return ret;
-+}
-+
-+/* Configure IPv4 routing table */
-+int ipa_cmd_route_config_ipv4(struct ipa *ipa, size_t size)
-+{
-+	enum ipa_cmd_opcode opcode = IPA_CMD_IP_V4_ROUTING_INIT;
-+	u32 nhash_offset = IPA_SMEM_V4_RT_NHASH_OFFSET;
-+	u32 hash_offset = IPA_SMEM_V4_RT_HASH_OFFSET;
-+	dma_addr_t addr = ipa->route_addr;
-+
-+	return ipa_cmd_table_config(ipa, opcode, addr, size, hash_offset,
-+				    nhash_offset);
-+}
-+
-+/* Configure IPv6 routing table */
-+int ipa_cmd_route_config_ipv6(struct ipa *ipa, size_t size)
-+{
-+	enum ipa_cmd_opcode opcode = IPA_CMD_IP_V6_ROUTING_INIT;
-+	u32 nhash_offset = IPA_SMEM_V6_RT_NHASH_OFFSET;
-+	u32 hash_offset = IPA_SMEM_V6_RT_HASH_OFFSET;
-+	dma_addr_t addr = ipa->route_addr;
-+
-+	return ipa_cmd_table_config(ipa, opcode, addr, size, hash_offset,
-+				    nhash_offset);
-+}
-+
-+/* Configure IPv4 filter table */
-+int ipa_cmd_filter_config_ipv4(struct ipa *ipa, size_t size)
-+{
-+	enum ipa_cmd_opcode opcode = IPA_CMD_IP_V4_FILTER_INIT;
-+	u32 nhash_offset = IPA_SMEM_V4_FLT_NHASH_OFFSET;
-+	u32 hash_offset = IPA_SMEM_V4_FLT_HASH_OFFSET;
-+	dma_addr_t addr = ipa->filter_addr;
-+
-+	return ipa_cmd_table_config(ipa, opcode, addr, size, hash_offset,
-+				    nhash_offset);
-+}
-+
-+/* Configure IPv6 filter table */
-+int ipa_cmd_filter_config_ipv6(struct ipa *ipa, size_t size)
-+{
-+	enum ipa_cmd_opcode opcode = IPA_CMD_IP_V6_FILTER_INIT;
-+	u32 nhash_offset = IPA_SMEM_V6_FLT_NHASH_OFFSET;
-+	u32 hash_offset = IPA_SMEM_V6_FLT_HASH_OFFSET;
-+	dma_addr_t addr = ipa->filter_addr;
-+
-+	return ipa_cmd_table_config(ipa, opcode, addr, size, hash_offset,
-+				    nhash_offset);
-+}
-+
-+/* Field masks for ipa_imm_cmd_hw_dma_task_32b_addr structure fields */
-+#define IPA_CMD_DMA32_TASK_SW_RSVD_FMASK	GENMASK(10, 0)
-+#define IPA_CMD_DMA32_TASK_CMPLT_FMASK		GENMASK(11, 11)
-+#define IPA_CMD_DMA32_TASK_EOF_FMASK		GENMASK(12, 12)
-+#define IPA_CMD_DMA32_TASK_FLSH_FMASK		GENMASK(13, 13)
-+#define IPA_CMD_DMA32_TASK_LOCK_FMASK		GENMASK(14, 14)
-+#define IPA_CMD_DMA32_TASK_UNLOCK_FMASK		GENMASK(15, 15)
-+#define IPA_CMD_DMA32_SIZE1_FMASK		GENMASK(31, 16)
-+#define IPA_CMD_DMA32_PACKET_SIZE_FMASK		GENMASK(15, 0)
-+
-+struct ipa_imm_cmd_hw_dma_task_32b_addr {
-+	u32 size1_flags;
-+	u32 addr1;
-+	u32 packet_size;
-+	u32 reserved;
-+};
-+
-+/* Use a 32-bit DMA command to zero a block of memory */
-+int ipa_cmd_dma_task_32(struct ipa *ipa, size_t size, dma_addr_t addr)
-+{
-+	struct ipa_imm_cmd_hw_dma_task_32b_addr *payload;
-+	u32 size1_flags;
-+	int ret;
-+
-+	if (size > field_max(IPA_CMD_DMA32_SIZE1_FMASK))
-+		return -EINVAL;
-+	if (size > field_max(IPA_CMD_DMA32_PACKET_SIZE_FMASK))
-+		return -EINVAL;
-+
-+	payload = kzalloc(sizeof(*payload), GFP_KERNEL);
-+	if (!payload)
-+		return -ENOMEM;
-+
-+	/* complete: 0 = don't interrupt; eof: 0 = don't assert eot */
-+	size1_flags = IPA_CMD_DMA32_TASK_FLSH_FMASK;
-+	/* lock: 0 = don't lock endpoint; unlock: 0 = don't unlock */
-+	size1_flags |= u32_encode_bits(size, IPA_CMD_DMA32_SIZE1_FMASK);
-+
-+	payload->size1_flags = size1_flags;
-+	payload->addr1 = addr;
-+	payload->packet_size =
-+			u32_encode_bits(size, IPA_CMD_DMA32_PACKET_SIZE_FMASK);
-+
-+	ret = ipa_cmd_timeout(ipa, IPA_CMD_DMA_TASK_32B_ADDR, payload,
-+			      sizeof(payload));
-+
-+	kfree(payload);
-+
-+	return ret;
-+}
-diff --git a/drivers/net/ipa/ipa_cmd.h b/drivers/net/ipa/ipa_cmd.h
-new file mode 100644
-index 000000000000..f69d2eaddd53
---- /dev/null
-+++ b/drivers/net/ipa/ipa_cmd.h
-@@ -0,0 +1,116 @@
++++ b/drivers/net/ipa/gsi.h
+@@ -0,0 +1,246 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +
-+/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
-+ * Copyright (C) 2019 Linaro Ltd.
++/* Copyright (c) 2015-2018, The Linux Foundation. All rights reserved.
++ * Copyright (C) 2018-2019 Linaro Ltd.
 + */
-+#ifndef _IPA_CMD_H_
-+#define _IPA_CMD_H_
++#ifndef _GSI_H_
++#define _GSI_H_
 +
 +#include <linux/types.h>
++#include <linux/spinlock.h>
++#include <linux/mutex.h>
++#include <linux/completion.h>
++#include <linux/platform_device.h>
++#include <linux/netdevice.h>
 +
-+struct sk_buff;
++#define GSI_CHANNEL_MAX		14
++#define GSI_EVT_RING_MAX	10
 +
-+struct ipa;
++struct device;
++struct scatterlist;
++struct platform_device;
 +
-+/**
-+ * enum ipa_cmd_opcode:	IPA immediate commands
-+ *
-+ * All immediate commands are issued using the AP command TX endpoint.
-+ * The numeric values here are the opcodes for IPA v3.5.1 hardware.
-+ *
-+ * IPA_CMD_NONE is a special (invalid) value that's used to indicate
-+ * a request is *not* an immediate command.
-+ */
-+enum ipa_cmd_opcode {
-+	IPA_CMD_NONE			= 0,
-+	IPA_CMD_IP_V4_FILTER_INIT	= 3,
-+	IPA_CMD_IP_V6_FILTER_INIT	= 4,
-+	IPA_CMD_IP_V4_ROUTING_INIT	= 7,
-+	IPA_CMD_IP_V6_ROUTING_INIT	= 8,
-+	IPA_CMD_HDR_INIT_LOCAL		= 9,
-+	IPA_CMD_DMA_TASK_32B_ADDR	= 17,
-+	IPA_CMD_DMA_SHARED_MEM		= 19,
++struct gsi;
++struct gsi_trans;
++struct gsi_channel_data;
++struct gsi_ipa_endpoint_data;
++
++/* Execution environment IDs */
++enum gsi_ee_id {
++	GSI_EE_AP	= 0,
++	GSI_EE_MODEM	= 1,
++	GSI_EE_UC	= 2,
++	GSI_EE_TZ	= 3,
++};
++
++/* Channel operation statistics, aggregated across all channels */
++struct gsi_channel_stats {
++	u64 allocate;
++	u64 start;
++	u64 stop;
++	u64 reset;
++	u64 free;
++};
++
++struct gsi_ring {
++	void *virt;			/* ring array base address */
++	dma_addr_t addr;		/* primarily low 32 bits used */
++	u32 count;			/* number of elements in ring */
++
++	/* The ring index value indicates the next "open" entry in the ring.
++	 *
++	 * A channel ring consists of TRE entries filled by the AP and passed
++	 * to the hardware for processing.  For a channel ring, the ring index
++	 * identifies the next unused entry to be filled by the AP.
++	 *
++	 * An event ring consists of event structures filled by the hardware
++	 * and passed to the AP.  For event rings, the ring index identifies
++	 * the next ring entry that is not known to have been filled by the
++	 * hardware.
++	 */
++	u32 index;
++};
++
++struct gsi_trans_info {
++	struct gsi_trans **map;		/* TRE -> transaction map */
++	u32 pool_count;			/* # transactions in the pool */
++	struct gsi_trans *pool;		/* transaction allocation pool */
++	u32 pool_free;			/* next free trans in pool (modulo) */
++	u32 sg_pool_count;		/* # SGs in the allocation pool */
++	struct scatterlist *sg_pool;	/* SG allocation pool */
++	u32 sg_pool_free;		/* next free SG pool entry */
++
++	atomic_t tre_avail;		/* # unallocated TREs in ring */
++	spinlock_t spinlock;		/* protects updates to the lists */
++	struct list_head alloc;		/* allocated, not committed */
++	struct list_head pending;	/* committed, awaiting completion */
++	struct list_head complete;	/* completed, awaiting poll */
++	struct list_head polled;	/* returned by gsi_channel_poll_one() */
++};
++
++/* Hardware values signifying the state of a channel */
++enum gsi_channel_state {
++	GSI_CHANNEL_STATE_NOT_ALLOCATED	= 0x0,
++	GSI_CHANNEL_STATE_ALLOCATED	= 0x1,
++	GSI_CHANNEL_STATE_STARTED	= 0x2,
++	GSI_CHANNEL_STATE_STOPPED	= 0x3,
++	GSI_CHANNEL_STATE_STOP_IN_PROC	= 0x4,
++	GSI_CHANNEL_STATE_ERROR		= 0xf,
++};
++
++/* We only care about channels between IPA and AP */
++struct gsi_channel {
++	struct gsi *gsi;
++	u32 toward_ipa;			/* 0: IPA->AP; 1: AP->IPA */
++
++	const struct gsi_channel_data *data;	/* initialization data */
++
++	struct completion completion;	/* signals channel state changes */
++	enum gsi_channel_state state;
++
++	struct gsi_ring tre_ring;
++	u32 evt_ring_id;
++
++	u64 byte_count;			/* total # bytes transferred */
++	u64 trans_count;		/* total # transactions */
++	/* The following counts are used only for TX endpoints */
++	u64 queued_byte_count;		/* last reported queued byte count */
++	u64 queued_trans_count;		/* ...and queued trans count */
++	u64 compl_byte_count;		/* last reported completed byte count */
++	u64 compl_trans_count;		/* ...and completed trans count */
++
++	struct gsi_trans_info trans_info;
++
++	struct napi_struct napi;
++};
++
++/* Hardware values signifying the state of an event ring */
++enum gsi_evt_ring_state {
++	GSI_EVT_RING_STATE_NOT_ALLOCATED	= 0x0,
++	GSI_EVT_RING_STATE_ALLOCATED		= 0x1,
++	GSI_EVT_RING_STATE_ERROR		= 0xf,
++};
++
++struct gsi_evt_ring {
++	struct gsi_channel *channel;
++	struct completion completion;	/* signals event ring state changes */
++	enum gsi_evt_ring_state state;
++	struct gsi_ring ring;
++};
++
++struct gsi {
++	struct device *dev;		/* Same as IPA device */
++	struct net_device dummy_dev;	/* needed for NAPI */
++	void __iomem *virt;
++	u32 irq;
++	u32 irq_wake_enabled;		/* 1: irq wake was enabled */
++	struct gsi_channel channel[GSI_CHANNEL_MAX];
++	struct gsi_channel_stats channel_stats;
++	struct gsi_evt_ring evt_ring[GSI_EVT_RING_MAX];
++	u32 event_bitmap;
++	u32 event_enable_bitmap;
++	struct mutex mutex;		/* protects commands, programming */
 +};
 +
 +/**
-+ * ipa_cmd_hdr_init_local() - Initialize header space in IPA-local memory
-+ * @ipa:	IPA structure
-+ * @offset:	Offset of memory to be initialized
-+ * @size:	Size of memory to be initialized
++ * gsi_setup() - Set up the GSI subsystem
++ * @gsi:	Address of GSI structure embedded in an IPA structure
 + *
 + * @Return:	0 if successful, or a negative error code
 + *
-+ * Defines the location of a block of local memory to use for
-+ * headers and fills it with zeroes.
++ * Performs initialization that must wait until the GSI hardware is
++ * ready (including firmware loaded).
 + */
-+int ipa_cmd_hdr_init_local(struct ipa *ipa, u32 offset, u32 size);
++int gsi_setup(struct gsi *gsi);
 +
 +/**
-+ * ipa_cmd_smem_dma_zero() - Use a DMA command to zero a block of memory
-+ * @ipa:	IPA structure
-+ * @offset:	Offset of memory to be zeroed
-+ * @size:	Size in bytes of memory to be zeroed
-+ *
-+ * @Return:	0 if successful, or a negative error code
++ * gsi_teardown() - Tear down GSI subsystem
++ * @gsi:	GSI address previously passed to a successful gsi_setup() call
 + */
-+int ipa_cmd_smem_dma_zero(struct ipa *ipa, u32 offset, u32 size);
++void gsi_teardown(struct gsi *gsi);
 +
 +/**
-+ * ipa_cmd_route_config_ipv4() - Configure IPv4 routing table
-+ * @ipa:	IPA structure
-+ * @size:	Size in bytes of table
++ * gsi_channel_trans_max() - Channel maximum number of transactions
++ * @gsi:	GSI pointer
++ * @channel_id:	Channel whose limit is to be returned
 + *
-+ * @Return:	0 if successful, or a negative error code
-+ *
-+ * Defines the location and size of the IPv4 routing table and
-+ * zeroes its content.
++ * @Return:	 The maximum number of pending transactions on the channel
 + */
-+int ipa_cmd_route_config_ipv4(struct ipa *ipa, size_t size);
++u32 gsi_channel_trans_max(struct gsi *gsi, u32 channel_id);
 +
 +/**
-+ * ipa_cmd_route_config_ipv6() - Configure IPv6 routing table
-+ * @ipa:	IPA structure
-+ * @size:	Size in bytes of table
++ * gsi_channel_trans_tre_max() - Return the maximum TREs per transaction
++ * @gsi:	GSI pointer
++ * @channel_id:	Channel whose limit is to be returned
 + *
-+ * @Return:	0 if successful, or a negative error code
-+ *
-+ * Defines the location and size of the IPv6 routing table and
-+ * zeroes its content.
++ * @Return:	 The maximum TRE count per transaction on the channel
 + */
-+int ipa_cmd_route_config_ipv6(struct ipa *ipa, size_t size);
++u32 gsi_channel_trans_tre_max(struct gsi *gsi, u32 channel_id);
 +
 +/**
-+ * ipa_cmd_filter_config_ipv4() - Configure IPv4 filter table
-+ * @ipa:	IPA structure
-+ * @size:	Size in bytes of table
++ * gsi_channel_trans_quiesce() - Wait for channel transactions to complete
++ * @gsi:	GSI pointer
++ * @channel_id:	Channel to quiesce
 + *
-+ * @Return:	0 if successful, or a negative error code
++ * Wait for all of a channel's currently-allocated transactions to
++ * be committed, complete, and be freed.
 + *
-+ * Defines the location and size of the IPv4 filter table and
-+ * zeroes its content.
++ * NOTE:  Assumes no new transactions will be issued before it returns.
 + */
-+int ipa_cmd_filter_config_ipv4(struct ipa *ipa, size_t size);
++void gsi_channel_trans_quiesce(struct gsi *gsi, u32 channel_id);
 +
 +/**
-+ * ipa_cmd_filter_config_ipv6() - Configure IPv6 filter table
-+ * @ipa:	IPA structure
-+ * @size:	Size in bytes of table
++ * gsi_channel_start() - Make a GSI channel operational
++ * @gsi:	GSI pointer
++ * @channel_id:	Channel to start
 + *
 + * @Return:	0 if successful, or a negative error code
-+ *
-+ * Defines the location and size of the IPv6 filter table and
-+ * zeroes its content.
 + */
-+int ipa_cmd_filter_config_ipv6(struct ipa *ipa, size_t size);
++int gsi_channel_start(struct gsi *gsi, u32 channel_id);
 +
 +/**
-+ * ipa_cmd_dma_task_32() - Use a 32-bit DMA command to zero a block of memory
-+ * @ipa:	IPA structure
-+ * @size:	Size of memory to be zeroed
-+ * @addr:	DMA address defining start of range to be zeroed
++ * gsi_channel_stop() - Stop an operational GSI channel
++ * @gsi:	GSI pointer returned by gsi_setup()
++ * @channel_id:	Channel to stop
 + *
 + * @Return:	0 if successful, or a negative error code
 + */
-+int ipa_cmd_dma_task_32(struct ipa *ipa, size_t size, dma_addr_t addr);
++int gsi_channel_stop(struct gsi *gsi, u32 channel_id);
 +
-+#endif /* _IPA_CMD_H_ */
++/**
++ * gsi_channel_reset() - Reset a GSI channel
++ * @gsi:	GSI pointer
++ * @channel_id:	Channel to be reset
++ * @db_enable:	Whether doorbell engine should be enabled
++ *
++ * @Return:	0 if successful, or a negative error code
++ *
++ * Reset a channel and reconfigure it.  The @db_enable flag indicates
++ * whether the doorbell engine will be enabled following reconfiguration.
++ *
++ * GSI hardware relinquishes ownership of all pending receive buffer
++ * transactions as a result of reset.  They will be completed with
++ * result code -ECANCELED.
++ */
++int gsi_channel_reset(struct gsi *gsi, u32 channel_id, bool db_enable);
++
++/**
++ * gsi_init() - Initialize the GSI subsystem
++ * @gsi:	Address of GSI structure embedded in an IPA structure
++ * @pdev:	IPA platform device
++ *
++ * @Return:	0 if successful, or a negative error code
++ *
++ * Early stage initialization of the GSI subsystem, performing tasks
++ * that can be done before the GSI hardware is ready to use.
++ */
++int gsi_init(struct gsi *gsi, struct platform_device *pdev, u32 data_count,
++	     const struct gsi_ipa_endpoint_data *data);
++
++/**
++ * gsi_exit() - Exit the GSI subsystem
++ * @gsi:	GSI address previously passed to a successful gsi_init() call
++ */
++void gsi_exit(struct gsi *gsi);
++
++#endif /* _GSI_H_ */
+diff --git a/drivers/net/ipa/gsi_private.h b/drivers/net/ipa/gsi_private.h
+new file mode 100644
+index 000000000000..778e2dcb5b2b
+--- /dev/null
++++ b/drivers/net/ipa/gsi_private.h
+@@ -0,0 +1,148 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++/* Copyright (c) 2015-2018, The Linux Foundation. All rights reserved.
++ * Copyright (C) 2018-2019 Linaro Ltd.
++ */
++#ifndef _GSI_PRIVATE_H_
++#define _GSI_PRIVATE_H_
++
++/* === Only "gsi.c" and "gsi_trans.c" should include this file === */
++
++#include <linux/types.h>
++
++struct gsi_trans;
++struct gsi_ring;
++struct gsi_channel;
++
++/* An entry in an event ring */
++struct gsi_xfer_compl_evt {
++	__le64 xfer_ptr;
++	__le16 len;
++	u8 reserved1;
++	u8 code;
++	__le16 reserved2;
++	u8 type;
++	u8 chid;
++};
++
++/* An entry in a channel ring */
++struct gsi_tre {
++	__le64 addr;		/* DMA address */
++	__le16 len_opcode;	/* length in bytes or enum IPA_CMD_* */
++	__le16 reserved;
++	__le32 flags;		/* GSI_TRE_FLAGS_* */
++};
++
++/**
++ * gsi_trans_move_complete() - Mark a GSI transaction completed
++ * @trans:	Transaction to commit
++ */
++void gsi_trans_move_complete(struct gsi_trans *trans);
++
++/**
++ * gsi_trans_move_polled() - Mark a transaction polled
++ * @trans:	Transaction to update
++ */
++void gsi_trans_move_polled(struct gsi_trans *trans);
++
++/**
++ * gsi_channel_trans_last() - Get channel's last allocated transaction
++ * @gsi:	GSI pointer
++ * @channel_id:	Channel whose transaction is to be returned
++ *
++ * @Return:	Channel's last GSI transaction pointer allocated (or NULL)
++ *
++ * Returns a pointer to the last transaction allocated on a channel.
++ * That transaction could be in any state:  allocated; pending;
++ * complete; or polled.  A null pointer is returned if all allocated
++ * transactions have been freed.
++ *
++ * NOTE:  Caller is responsible for supplying the returned pointer
++ *	  to gsi_trans_free() if it is non-null.
++ */
++struct gsi_trans *gsi_channel_trans_last(struct gsi *gsi, u32 channel_id);
++
++/**
++ * gsi_trans_complete() - Complete a GSI transaction
++ * @trans:	Transaction to complete
++ *
++ * Marks a transaction complete (including freeing it).
++ */
++void gsi_trans_complete(struct gsi_trans *trans);
++
++/**
++ * gsi_channel_trans_mapped() - Return a transaction mapped to a TRE index
++ * @channel:	Channel associated with the transaction
++ * @index:	Index of the TRE having a transaction
++ *
++ * @Return:	The GSI transaction pointer associated with the TRE index
++ */
++struct gsi_trans *gsi_channel_trans_mapped(struct gsi_channel *channel,
++					   u32 index);
++
++/**
++ * gsi_channel_trans_complete() - Return a channel's next completed transaction
++ * @channel:	Channel whose next transaction is to be returned
++ *
++ * @Return:	The next completed transaction, or NULL if nothing new
++ */
++struct gsi_trans *gsi_channel_trans_complete(struct gsi_channel *channel);
++
++/**
++ * gsi_channel_trans_cancel_pending() - Cancel pending transactions
++ * @channel:	Channel whose pending transactions should be cancelled
++ *
++ * Cancel all pending transactions on a channel.  These are
++ * transactions that have been comitted but not yet completed.  This
++ * is required when the channel gets reset.  At that time all
++ * pending transactions will be completed with a result -ECANCELED.
++ *
++ * NOTE:  Transactions already complete at the time of this call are
++ *	  unaffected.
++ */
++void gsi_channel_trans_cancel_pending(struct gsi_channel *channel);
++
++/**
++ * gsi_channel_trans_init() - Initialize a channel's GSI transaction info
++ * @channel:	The channel whose transaction info is to be set up
++ *
++ * @Return:	0 if successful, or -ENOMEM on allocation failure
++ *
++ * Creates and sets up information for managing transactions on a channel
++ */
++int gsi_channel_trans_init(struct gsi_channel *channel);
++
++/**
++ * gsi_channel_trans_exit() - Inverse of gsi_channel_trans_init()
++ * @channel:	Channel whose transaction information is to be cleaned up
++ */
++void gsi_channel_trans_exit(struct gsi_channel *channel);
++
++/**
++ * gsi_channel_doorbell() - Ring a channel's doorbell
++ * @channel:	Channel whose doorbell should be rung
++ *
++ * Rings a channel's doorbell to inform the GSI hardware that new
++ * transactions (TREs, really) are available for it to process.
++ */
++void gsi_channel_doorbell(struct gsi_channel *channel);
++
++/**
++ * gsi_ring_virt() - Return virtual address for a ring entry
++ * @ring:	Ring whose address is to be translated
++ * @addr:	Index (slot number) of entry
++ */
++void *gsi_ring_virt(struct gsi_ring *ring, u32 index);
++
++/**
++ * gsi_channel_tx_queued() - Report the number of bytes queued to hardware
++ * @channel:	Channel whose bytes have been queued
++ *
++ * This arranges for the the number of transactions and bytes for
++ * transfer that have been queued to hardware to be reported.  It
++ * passes this information up the network stack so it can be used to
++ * throttle transmissions.
++ */
++void gsi_channel_tx_queued(struct gsi_channel *channel);
++
++#endif /* _GSI_PRIVATE_H_ */
+diff --git a/drivers/net/ipa/gsi_reg.h b/drivers/net/ipa/gsi_reg.h
+new file mode 100644
+index 000000000000..c6e68933b011
+--- /dev/null
++++ b/drivers/net/ipa/gsi_reg.h
+@@ -0,0 +1,376 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++/* Copyright (c) 2015-2018, The Linux Foundation. All rights reserved.
++ * Copyright (C) 2018-2019 Linaro Ltd.
++ */
++#ifndef _GSI_REG_H_
++#define _GSI_REG_H_
++
++/* === Only "gsi.c" should include this file === */
++
++#include <linux/bits.h>
++
++/**
++ * DOC: GSI Registers
++ *
++ * GSI registers are located within the "gsi" address space defined by Device
++ * Tree.  The offset of each register within that space is specified by
++ * symbols defined below.  The GSI address space is mapped to virtual memory
++ * space in gsi_init().  All GSI registers are 32 bits wide.
++ *
++ * Each register type is duplicated for a number of instances of something.
++ * For example, each GSI channel has its own set of registers defining its
++ * configuration.  The offset to a channel's set of registers is computed
++ * based on a "base" offset plus an additional "stride" amount computed
++ * from the channel's ID.  For such registers, the offset is computed by a
++ * function-like macro that takes a parameter used in the computation.
++ *
++ * The offset of a register dependent on execution environment is computed
++ * by a macro that is supplied a parameter "ee".  The "ee" value is a member
++ * of the gsi_ee enumerated type.
++ *
++ * The offset of a channel register is computed by a macro that is supplied a
++ * parameter "ch".  The "ch" value is a channel id whose maximum value is 30
++ * (though the actual limit is hardware-dependent).
++ *
++ * The offset of an event register is computed by a macro that is supplied a
++ * parameter "ev".  The "ev" value is an event id whose maximum value is 15
++ * (though the actual limit is hardware-dependent).
++ */
++
++#define GSI_INTER_EE_SRC_CH_IRQ_OFFSET \
++			GSI_INTER_EE_N_SRC_CH_IRQ_OFFSET(GSI_EE_AP)
++#define GSI_INTER_EE_N_SRC_CH_IRQ_OFFSET(ee) \
++			(0x0000c018 + 0x1000 * (ee))
++
++#define GSI_INTER_EE_SRC_EV_CH_IRQ_OFFSET \
++			GSI_INTER_EE_N_SRC_EV_CH_IRQ_OFFSET(GSI_EE_AP)
++#define GSI_INTER_EE_N_SRC_EV_CH_IRQ_OFFSET(ee) \
++			(0x0000c01c + 0x1000 * (ee))
++
++#define GSI_INTER_EE_SRC_CH_IRQ_CLR_OFFSET \
++			GSI_INTER_EE_N_SRC_CH_IRQ_CLR_OFFSET(GSI_EE_AP)
++#define GSI_INTER_EE_N_SRC_CH_IRQ_CLR_OFFSET(ee) \
++			(0x0000c028 + 0x1000 * (ee))
++
++#define GSI_INTER_EE_SRC_EV_CH_IRQ_CLR_OFFSET \
++			GSI_INTER_EE_N_SRC_EV_CH_IRQ_CLR_OFFSET(GSI_EE_AP)
++#define GSI_INTER_EE_N_SRC_EV_CH_IRQ_CLR_OFFSET(ee) \
++			(0x0000c02c + 0x1000 * (ee))
++
++#define GSI_CH_C_CNTXT_0_OFFSET(ch) \
++		GSI_EE_N_CH_C_CNTXT_0_OFFSET((ch), GSI_EE_AP)
++#define GSI_EE_N_CH_C_CNTXT_0_OFFSET(ch, ee) \
++		(0x0001c000 + 0x4000 * (ee) + 0x80 * (ch))
++#define CHTYPE_PROTOCOL_FMASK		GENMASK(2, 0)
++#define CHTYPE_DIR_FMASK		GENMASK(3, 3)
++#define EE_FMASK			GENMASK(7, 4)
++#define CHID_FMASK			GENMASK(12, 8)
++#define ERINDEX_FMASK			GENMASK(18, 14)
++#define CHSTATE_FMASK			GENMASK(23, 20)
++#define ELEMENT_SIZE_FMASK		GENMASK(31, 24)
++
++#define GSI_CH_C_CNTXT_1_OFFSET(ch) \
++		GSI_EE_N_CH_C_CNTXT_1_OFFSET((ch), GSI_EE_AP)
++#define GSI_EE_N_CH_C_CNTXT_1_OFFSET(ch, ee) \
++		(0x0001c004 + 0x4000 * (ee) + 0x80 * (ch))
++#define R_LENGTH_FMASK			GENMASK(15, 0)
++
++#define GSI_CH_C_CNTXT_2_OFFSET(ch) \
++		GSI_EE_N_CH_C_CNTXT_2_OFFSET((ch), GSI_EE_AP)
++#define GSI_EE_N_CH_C_CNTXT_2_OFFSET(ch, ee) \
++		(0x0001c008 + 0x4000 * (ee) + 0x80 * (ch))
++
++#define GSI_CH_C_CNTXT_3_OFFSET(ch) \
++		GSI_EE_N_CH_C_CNTXT_3_OFFSET((ch), GSI_EE_AP)
++#define GSI_EE_N_CH_C_CNTXT_3_OFFSET(ch, ee) \
++		(0x0001c00c + 0x4000 * (ee) + 0x80 * (ch))
++
++#define GSI_CH_C_QOS_OFFSET(ch) \
++		GSI_EE_N_CH_C_QOS_OFFSET((ch), GSI_EE_AP)
++#define GSI_EE_N_CH_C_QOS_OFFSET(ch, ee) \
++		(0x0001c05c + 0x4000 * (ee) + 0x80 * (ch))
++#define WRR_WEIGHT_FMASK		GENMASK(3, 0)
++#define MAX_PREFETCH_FMASK		GENMASK(8, 8)
++#define USE_DB_ENG_FMASK		GENMASK(9, 9)
++
++#define GSI_CH_C_SCRATCH_0_OFFSET(ch) \
++		GSI_EE_N_CH_C_SCRATCH_0_OFFSET((ch), GSI_EE_AP)
++#define GSI_EE_N_CH_C_SCRATCH_0_OFFSET(ch, ee) \
++		(0x0001c060 + 0x4000 * (ee) + 0x80 * (ch))
++
++#define GSI_CH_C_SCRATCH_1_OFFSET(ch) \
++		GSI_EE_N_CH_C_SCRATCH_1_OFFSET((ch), GSI_EE_AP)
++#define GSI_EE_N_CH_C_SCRATCH_1_OFFSET(ch, ee) \
++		(0x0001c064 + 0x4000 * (ee) + 0x80 * (ch))
++
++#define GSI_CH_C_SCRATCH_2_OFFSET(ch) \
++		GSI_EE_N_CH_C_SCRATCH_2_OFFSET((ch), GSI_EE_AP)
++#define GSI_EE_N_CH_C_SCRATCH_2_OFFSET(ch, ee) \
++		(0x0001c068 + 0x4000 * (ee) + 0x80 * (ch))
++
++#define GSI_CH_C_SCRATCH_3_OFFSET(ch) \
++		GSI_EE_N_CH_C_SCRATCH_3_OFFSET((ch), GSI_EE_AP)
++#define GSI_EE_N_CH_C_SCRATCH_3_OFFSET(ch, ee) \
++		(0x0001c06c + 0x4000 * (ee) + 0x80 * (ch))
++
++#define GSI_EV_CH_E_CNTXT_0_OFFSET(ev) \
++		GSI_EE_N_EV_CH_E_CNTXT_0_OFFSET((ev), GSI_EE_AP)
++#define GSI_EE_N_EV_CH_E_CNTXT_0_OFFSET(ev, ee) \
++		(0x0001d000 + 0x4000 * (ee) + 0x80 * (ev))
++#define EV_CHTYPE_FMASK			GENMASK(3, 0)
++#define EV_EE_FMASK			GENMASK(7, 4)
++#define EV_EVCHID_FMASK			GENMASK(15, 8)
++#define EV_INTYPE_FMASK			GENMASK(16, 16)
++#define EV_CHSTATE_FMASK		GENMASK(23, 20)
++#define EV_ELEMENT_SIZE_FMASK		GENMASK(31, 24)
++
++#define GSI_EV_CH_E_CNTXT_1_OFFSET(ev) \
++		GSI_EE_N_EV_CH_E_CNTXT_1_OFFSET((ev), GSI_EE_AP)
++#define GSI_EE_N_EV_CH_E_CNTXT_1_OFFSET(ev, ee) \
++		(0x0001d004 + 0x4000 * (ee) + 0x80 * (ev))
++#define EV_R_LENGTH_FMASK		GENMASK(15, 0)
++
++#define GSI_EV_CH_E_CNTXT_2_OFFSET(ev) \
++		GSI_EE_N_EV_CH_E_CNTXT_2_OFFSET((ev), GSI_EE_AP)
++#define GSI_EE_N_EV_CH_E_CNTXT_2_OFFSET(ev, ee) \
++		(0x0001d008 + 0x4000 * (ee) + 0x80 * (ev))
++
++#define GSI_EV_CH_E_CNTXT_3_OFFSET(ev) \
++		GSI_EE_N_EV_CH_E_CNTXT_3_OFFSET((ev), GSI_EE_AP)
++#define GSI_EE_N_EV_CH_E_CNTXT_3_OFFSET(ev, ee) \
++		(0x0001d00c + 0x4000 * (ee) + 0x80 * (ev))
++
++#define GSI_EV_CH_E_CNTXT_4_OFFSET(ev) \
++		GSI_EE_N_EV_CH_E_CNTXT_4_OFFSET((ev), GSI_EE_AP)
++#define GSI_EE_N_EV_CH_E_CNTXT_4_OFFSET(ev, ee) \
++		(0x0001d010 + 0x4000 * (ee) + 0x80 * (ev))
++
++#define GSI_EV_CH_E_CNTXT_8_OFFSET(ev) \
++		GSI_EE_N_EV_CH_E_CNTXT_8_OFFSET((ev), GSI_EE_AP)
++#define GSI_EE_N_EV_CH_E_CNTXT_8_OFFSET(ev, ee) \
++		(0x0001d020 + 0x4000 * (ee) + 0x80 * (ev))
++#define MODT_FMASK			GENMASK(15, 0)
++#define MODC_FMASK			GENMASK(23, 16)
++#define MOD_CNT_FMASK			GENMASK(31, 24)
++
++#define GSI_EV_CH_E_CNTXT_9_OFFSET(ev) \
++		GSI_EE_N_EV_CH_E_CNTXT_9_OFFSET((ev), GSI_EE_AP)
++#define GSI_EE_N_EV_CH_E_CNTXT_9_OFFSET(ev, ee) \
++		(0x0001d024 + 0x4000 * (ee) + 0x80 * (ev))
++
++#define GSI_EV_CH_E_CNTXT_10_OFFSET(ev) \
++		GSI_EE_N_EV_CH_E_CNTXT_10_OFFSET((ev), GSI_EE_AP)
++#define GSI_EE_N_EV_CH_E_CNTXT_10_OFFSET(ev, ee) \
++		(0x0001d028 + 0x4000 * (ee) + 0x80 * (ev))
++
++#define GSI_EV_CH_E_CNTXT_11_OFFSET(ev) \
++		GSI_EE_N_EV_CH_E_CNTXT_11_OFFSET((ev), GSI_EE_AP)
++#define GSI_EE_N_EV_CH_E_CNTXT_11_OFFSET(ev, ee) \
++		(0x0001d02c + 0x4000 * (ee) + 0x80 * (ev))
++
++#define GSI_EV_CH_E_CNTXT_12_OFFSET(ev) \
++		GSI_EE_N_EV_CH_E_CNTXT_12_OFFSET((ev), GSI_EE_AP)
++#define GSI_EE_N_EV_CH_E_CNTXT_12_OFFSET(ev, ee) \
++		(0x0001d030 + 0x4000 * (ee) + 0x80 * (ev))
++
++#define GSI_EV_CH_E_CNTXT_13_OFFSET(ev) \
++		GSI_EE_N_EV_CH_E_CNTXT_13_OFFSET((ev), GSI_EE_AP)
++#define GSI_EE_N_EV_CH_E_CNTXT_13_OFFSET(ev, ee) \
++		(0x0001d034 + 0x4000 * (ee) + 0x80 * (ev))
++
++#define GSI_EV_CH_E_SCRATCH_0_OFFSET(ev) \
++		GSI_EE_N_EV_CH_E_SCRATCH_0_OFFSET((ev), GSI_EE_AP)
++#define GSI_EE_N_EV_CH_E_SCRATCH_0_OFFSET(ev, ee) \
++		(0x0001d048 + 0x4000 * (ee) + 0x80 * (ev))
++
++#define GSI_EV_CH_E_SCRATCH_1_OFFSET(ev) \
++		GSI_EE_N_EV_CH_E_SCRATCH_1_OFFSET((ev), GSI_EE_AP)
++#define GSI_EE_N_EV_CH_E_SCRATCH_1_OFFSET(ev, ee) \
++		(0x0001d04c + 0x4000 * (ee) + 0x80 * (ev))
++
++#define GSI_CH_C_DOORBELL_0_OFFSET(ch) \
++		GSI_EE_N_CH_C_DOORBELL_0_OFFSET((ch), GSI_EE_AP)
++#define GSI_EE_N_CH_C_DOORBELL_0_OFFSET(ch, ee) \
++			(0x0001e000 + 0x4000 * (ee) + 0x08 * (ch))
++
++#define GSI_EV_CH_E_DOORBELL_0_OFFSET(ev) \
++			GSI_EE_N_EV_CH_E_DOORBELL_0_OFFSET((ev), GSI_EE_AP)
++#define GSI_EE_N_EV_CH_E_DOORBELL_0_OFFSET(ev, ee) \
++			(0x0001e100 + 0x4000 * (ee) + 0x08 * (ev))
++
++#define GSI_GSI_STATUS_OFFSET \
++			GSI_EE_N_GSI_STATUS_OFFSET(GSI_EE_AP)
++#define GSI_EE_N_GSI_STATUS_OFFSET(ee) \
++			(0x0001f000 + 0x4000 * (ee))
++#define ENABLED_FMASK			GENMASK(0, 0)
++
++#define GSI_CH_CMD_OFFSET \
++			GSI_EE_N_CH_CMD_OFFSET(GSI_EE_AP)
++#define GSI_EE_N_CH_CMD_OFFSET(ee) \
++			(0x0001f008 + 0x4000 * (ee))
++#define CH_CHID_FMASK			GENMASK(7, 0)
++#define CH_OPCODE_FMASK			GENMASK(31, 24)
++
++#define GSI_EV_CH_CMD_OFFSET \
++			GSI_EE_N_EV_CH_CMD_OFFSET(GSI_EE_AP)
++#define GSI_EE_N_EV_CH_CMD_OFFSET(ee) \
++			(0x0001f010 + 0x4000 * (ee))
++#define EV_CHID_FMASK			GENMASK(7, 0)
++#define EV_OPCODE_FMASK			GENMASK(31, 24)
++
++#define GSI_GSI_HW_PARAM_2_OFFSET \
++			GSI_EE_N_GSI_HW_PARAM_2_OFFSET(GSI_EE_AP)
++#define GSI_EE_N_GSI_HW_PARAM_2_OFFSET(ee) \
++			(0x0001f040 + 0x4000 * (ee))
++#define IRAM_SIZE_FMASK			GENMASK(2, 0)
++#define NUM_CH_PER_EE_FMASK		GENMASK(7, 3)
++#define NUM_EV_PER_EE_FMASK		GENMASK(12, 8)
++#define GSI_CH_PEND_TRANSLATE_FMASK	GENMASK(13, 13)
++#define GSI_CH_FULL_LOGIC_FMASK		GENMASK(14, 14)
++#define IRAM_SIZE_ONE_KB_FVAL			0
++#define IRAM_SIZE_TWO_KB_FVAL			1
++
++#define GSI_CNTXT_TYPE_IRQ_OFFSET \
++			GSI_EE_N_CNTXT_TYPE_IRQ_OFFSET(GSI_EE_AP)
++#define GSI_EE_N_CNTXT_TYPE_IRQ_OFFSET(ee) \
++			(0x0001f080 + 0x4000 * (ee))
++#define CH_CTRL_FMASK			GENMASK(0, 0)
++#define EV_CTRL_FMASK			GENMASK(1, 1)
++#define GLOB_EE_FMASK			GENMASK(2, 2)
++#define IEOB_FMASK			GENMASK(3, 3)
++#define INTER_EE_CH_CTRL_FMASK		GENMASK(4, 4)
++#define INTER_EE_EV_CTRL_FMASK		GENMASK(5, 5)
++#define GENERAL_FMASK			GENMASK(6, 6)
++
++#define GSI_CNTXT_TYPE_IRQ_MSK_OFFSET \
++			GSI_EE_N_CNTXT_TYPE_IRQ_MSK_OFFSET(GSI_EE_AP)
++#define GSI_EE_N_CNTXT_TYPE_IRQ_MSK_OFFSET(ee) \
++			(0x0001f088 + 0x4000 * (ee))
++#define MSK_CH_CTRL_FMASK		GENMASK(0, 0)
++#define MSK_EV_CTRL_FMASK		GENMASK(1, 1)
++#define MSK_GLOB_EE_FMASK		GENMASK(2, 2)
++#define MSK_IEOB_FMASK			GENMASK(3, 3)
++#define MSK_INTER_EE_CH_CTRL_FMASK	GENMASK(4, 4)
++#define MSK_INTER_EE_EV_CTRL_FMASK	GENMASK(5, 5)
++#define MSK_GENERAL_FMASK		GENMASK(6, 6)
++#define GSI_CNTXT_TYPE_IRQ_MSK_ALL	GENMASK(6, 0)
++
++#define GSI_CNTXT_SRC_CH_IRQ_OFFSET \
++			GSI_EE_N_CNTXT_SRC_CH_IRQ_OFFSET(GSI_EE_AP)
++#define GSI_EE_N_CNTXT_SRC_CH_IRQ_OFFSET(ee) \
++			(0x0001f090 + 0x4000 * (ee))
++
++#define GSI_CNTXT_SRC_EV_CH_IRQ_OFFSET \
++			GSI_EE_N_CNTXT_SRC_EV_CH_IRQ_OFFSET(GSI_EE_AP)
++#define GSI_EE_N_CNTXT_SRC_EV_CH_IRQ_OFFSET(ee) \
++			(0x0001f094 + 0x4000 * (ee))
++
++#define GSI_CNTXT_SRC_CH_IRQ_MSK_OFFSET \
++			GSI_EE_N_CNTXT_SRC_CH_IRQ_MSK_OFFSET(GSI_EE_AP)
++#define GSI_EE_N_CNTXT_SRC_CH_IRQ_MSK_OFFSET(ee) \
++			(0x0001f098 + 0x4000 * (ee))
++
++#define GSI_CNTXT_SRC_EV_CH_IRQ_MSK_OFFSET \
++			GSI_EE_N_CNTXT_SRC_EV_CH_IRQ_MSK_OFFSET(GSI_EE_AP)
++#define GSI_EE_N_CNTXT_SRC_EV_CH_IRQ_MSK_OFFSET(ee) \
++			(0x0001f09c + 0x4000 * (ee))
++
++#define GSI_CNTXT_SRC_CH_IRQ_CLR_OFFSET \
++			GSI_EE_N_CNTXT_SRC_CH_IRQ_CLR_OFFSET(GSI_EE_AP)
++#define GSI_EE_N_CNTXT_SRC_CH_IRQ_CLR_OFFSET(ee) \
++			(0x0001f0a0 + 0x4000 * (ee))
++
++#define GSI_CNTXT_SRC_EV_CH_IRQ_CLR_OFFSET \
++			GSI_EE_N_CNTXT_SRC_EV_CH_IRQ_CLR_OFFSET(GSI_EE_AP)
++#define GSI_EE_N_CNTXT_SRC_EV_CH_IRQ_CLR_OFFSET(ee) \
++			(0x0001f0a4 + 0x4000 * (ee))
++
++#define GSI_CNTXT_SRC_IEOB_IRQ_OFFSET \
++			GSI_EE_N_CNTXT_SRC_IEOB_IRQ_OFFSET(GSI_EE_AP)
++#define GSI_EE_N_CNTXT_SRC_IEOB_IRQ_OFFSET(ee) \
++			(0x0001f0b0 + 0x4000 * (ee))
++
++#define GSI_CNTXT_SRC_IEOB_IRQ_MSK_OFFSET \
++			GSI_EE_N_CNTXT_SRC_IEOB_IRQ_MSK_OFFSET(GSI_EE_AP)
++#define GSI_EE_N_CNTXT_SRC_IEOB_IRQ_MSK_OFFSET(ee) \
++			(0x0001f0b8 + 0x4000 * (ee))
++
++#define GSI_CNTXT_SRC_IEOB_IRQ_CLR_OFFSET \
++			GSI_EE_N_CNTXT_SRC_IEOB_IRQ_CLR_OFFSET(GSI_EE_AP)
++#define GSI_EE_N_CNTXT_SRC_IEOB_IRQ_CLR_OFFSET(ee) \
++			(0x0001f0c0 + 0x4000 * (ee))
++
++#define GSI_CNTXT_GLOB_IRQ_STTS_OFFSET \
++			GSI_EE_N_CNTXT_GLOB_IRQ_STTS_OFFSET(GSI_EE_AP)
++#define GSI_EE_N_CNTXT_GLOB_IRQ_STTS_OFFSET(ee) \
++			(0x0001f100 + 0x4000 * (ee))
++#define ERROR_INT_FMASK			GENMASK(0, 0)
++#define GP_INT1_FMASK			GENMASK(1, 1)
++#define GP_INT2_FMASK			GENMASK(2, 2)
++#define GP_INT3_FMASK			GENMASK(3, 3)
++
++#define GSI_CNTXT_GLOB_IRQ_EN_OFFSET \
++			GSI_EE_N_CNTXT_GLOB_IRQ_EN_OFFSET(GSI_EE_AP)
++#define GSI_EE_N_CNTXT_GLOB_IRQ_EN_OFFSET(ee) \
++			(0x0001f108 + 0x4000 * (ee))
++#define EN_ERROR_INT_FMASK		GENMASK(0, 0)
++#define EN_GP_INT1_FMASK		GENMASK(1, 1)
++#define EN_GP_INT2_FMASK		GENMASK(2, 2)
++#define EN_GP_INT3_FMASK		GENMASK(3, 3)
++#define GSI_CNTXT_GLOB_IRQ_ALL		GENMASK(3, 0)
++
++#define GSI_CNTXT_GLOB_IRQ_CLR_OFFSET \
++			GSI_EE_N_CNTXT_GLOB_IRQ_CLR_OFFSET(GSI_EE_AP)
++#define GSI_EE_N_CNTXT_GLOB_IRQ_CLR_OFFSET(ee) \
++			(0x0001f110 + 0x4000 * (ee))
++#define CLR_ERROR_INT_FMASK		GENMASK(0, 0)
++#define CLR_GP_INT1_FMASK		GENMASK(1, 1)
++#define CLR_GP_INT2_FMASK		GENMASK(2, 2)
++#define CLR_GP_INT3_FMASK		GENMASK(3, 3)
++
++#define GSI_CNTXT_GSI_IRQ_STTS_OFFSET \
++			GSI_EE_N_CNTXT_GSI_IRQ_STTS_OFFSET(GSI_EE_AP)
++#define GSI_EE_N_CNTXT_GSI_IRQ_STTS_OFFSET(ee) \
++			(0x0001f118 + 0x4000 * (ee))
++#define BREAK_POINT_FMASK		GENMASK(0, 0)
++#define BUS_ERROR_FMASK			GENMASK(1, 1)
++#define CMD_FIFO_OVRFLOW_FMASK		GENMASK(2, 2)
++#define MCS_STACK_OVRFLOW_FMASK		GENMASK(3, 3)
++
++#define GSI_CNTXT_GSI_IRQ_EN_OFFSET \
++			GSI_EE_N_CNTXT_GSI_IRQ_EN_OFFSET(GSI_EE_AP)
++#define GSI_EE_N_CNTXT_GSI_IRQ_EN_OFFSET(ee) \
++			(0x0001f120 + 0x4000 * (ee))
++#define EN_BREAK_POINT_FMASK		GENMASK(0, 0)
++#define EN_BUS_ERROR_FMASK		GENMASK(1, 1)
++#define EN_CMD_FIFO_OVRFLOW_FMASK	GENMASK(2, 2)
++#define EN_MCS_STACK_OVRFLOW_FMASK	GENMASK(3, 3)
++#define GSI_CNTXT_GSI_IRQ_ALL		GENMASK(3, 0)
++
++#define GSI_CNTXT_GSI_IRQ_CLR_OFFSET \
++			GSI_EE_N_CNTXT_GSI_IRQ_CLR_OFFSET(GSI_EE_AP)
++#define GSI_EE_N_CNTXT_GSI_IRQ_CLR_OFFSET(ee) \
++			(0x0001f128 + 0x4000 * (ee))
++#define CLR_BREAK_POINT_FMASK		GENMASK(0, 0)
++#define CLR_BUS_ERROR_FMASK		GENMASK(1, 1)
++#define CLR_CMD_FIFO_OVRFLOW_FMASK	GENMASK(2, 2)
++#define CLR_MCS_STACK_OVRFLOW_FMASK	GENMASK(3, 3)
++
++#define GSI_CNTXT_INTSET_OFFSET \
++			GSI_EE_N_CNTXT_INTSET_OFFSET(GSI_EE_AP)
++#define GSI_EE_N_CNTXT_INTSET_OFFSET(ee) \
++			(0x0001f180 + 0x4000 * (ee))
++#define INTYPE_FMASK			GENMASK(0, 0)
++
++#define GSI_ERROR_LOG_OFFSET \
++			GSI_EE_N_ERROR_LOG_OFFSET(GSI_EE_AP)
++#define GSI_EE_N_ERROR_LOG_OFFSET(ee) \
++			(0x0001f200 + 0x4000 * (ee))
++
++#define GSI_ERROR_LOG_CLR_OFFSET \
++			GSI_EE_N_ERROR_LOG_CLR_OFFSET(GSI_EE_AP)
++#define GSI_EE_N_ERROR_LOG_CLR_OFFSET(ee) \
++			(0x0001f210 + 0x4000 * (ee))
++
++#endif	/* _GSI_REG_H_ */
 -- 
 2.20.1
 
