@@ -2,220 +2,130 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8053C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDF3C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A59B2597F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:47:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDC4F25FFC
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:48:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="QDxzsc8+";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="nmTfIHMw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbfEaOrd (ORCPT
+        id S1726860AbfEaOsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 10:47:33 -0400
-Received: from foss.arm.com ([217.140.101.70]:52792 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726421AbfEaOrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 10:47:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE3AC341;
-        Fri, 31 May 2019 07:47:31 -0700 (PDT)
-Received: from redmoon (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5DA8D3F5AF;
-        Fri, 31 May 2019 07:47:28 -0700 (PDT)
-Date:   Fri, 31 May 2019 15:47:18 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        ingoo Han <jingoohan1@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Yue Wang <yue.wang@amlogic.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: Re: [PATCH] drivers/pci/controller: fix warning PTR_ERR_OR_ZERO can
- be used
-Message-ID: <20190531144710.GA9356@redmoon>
-References: <20190525085748.GA10926@hari-Inspiron-1545>
- <20190527140952.GB7202@ulmo>
+        Fri, 31 May 2019 10:48:15 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:37600 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726421AbfEaOsO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 10:48:14 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4VEdpwS016780;
+        Fri, 31 May 2019 07:48:04 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=U+VTOLi62++/P+5+dOiLWkqPfvWpwHavVIbdAQTx3nE=;
+ b=QDxzsc8+ghXWKY2+S4FkwuaWgM9/YyaG8ZXG08ryGCNjZqxo9kLt+NVNSWZ0/w8jfSXI
+ v0q5TS4wzefMVPVRVqCPpeVOvOREKu4xfC0i1qYGucUUvUcefF+rvy+HwCPeFp3qcDsc
+ EKa03UfuuW5/Vf/gjyKlSrX/jPeZq90dMUyIA113do6L170OmYPfPWT10RLfXXGtAFXS
+ kMxfHDRbjbBtkfItFzY9RgB7WiBxIaq5R+EMbC8gfpgy7pthPuhA98qYSL+VQvkbS22D
+ 5BOlWka0JknLbk0L7cvoXNes1AJ6b7lCkPpyv/IGrxeXU+pENCzkPemWgRmV8W/0h87i 6g== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0b-0016f401.pphosted.com with ESMTP id 2su5xh031c-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Fri, 31 May 2019 07:48:04 -0700
+Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Fri, 31 May
+ 2019 07:48:03 -0700
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (104.47.46.50) by
+ SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Fri, 31 May 2019 07:48:03 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U+VTOLi62++/P+5+dOiLWkqPfvWpwHavVIbdAQTx3nE=;
+ b=nmTfIHMwhaBJJseQDZExzNrQMV+4d2v/ALaajw9wz4Q3X3+orBqWkpWnRRTPP/gIvHot5IwTZSed6VQkQ87MAVoXD2+SUo+q+D5QWpw/HKeb14Y+sNLaZnBv8zFRvqPdBUrb6gcHSD+SugKvVqOTtktlOcWvrLLrr+qMAG0vvAM=
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.238.217) by
+ MN2PR18MB2879.namprd18.prod.outlook.com (20.179.22.207) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.18; Fri, 31 May 2019 14:48:00 +0000
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::7c9a:f3bf:fe2e:fe4a]) by MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::7c9a:f3bf:fe2e:fe4a%4]) with mapi id 15.20.1922.024; Fri, 31 May 2019
+ 14:48:00 +0000
+From:   Robert Richter <rrichter@marvell.com>
+To:     Borislav Petkov <bp@alien8.de>
+CC:     Tony Luck <tony.luck@intel.com>, James Morse <james.morse@arm.com>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 00/21] EDAC, mc, ghes: Fixes and updates to improve memory
+ error reporting
+Thread-Topic: [PATCH 00/21] EDAC, mc, ghes: Fixes and updates to improve
+ memory error reporting
+Thread-Index: AQHVF7/XDwOnfM4wekmLEuzXf39PQg==
+Date:   Fri, 31 May 2019 14:48:00 +0000
+Message-ID: <20190531144753.weodygruvgzgzjth@rric.localdomain>
+References: <20190529084344.28562-1-rrichter@marvell.com>
+ <20190529145452.GD2951@cz.tnic>
+In-Reply-To: <20190529145452.GD2951@cz.tnic>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM6PR04CA0003.eurprd04.prod.outlook.com
+ (2603:10a6:20b:92::16) To MN2PR18MB3408.namprd18.prod.outlook.com
+ (2603:10b6:208:16c::25)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [77.11.73.49]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 89e2300b-49e4-48b7-6186-08d6e5d6fa42
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MN2PR18MB2879;
+x-ms-traffictypediagnostic: MN2PR18MB2879:
+x-microsoft-antispam-prvs: <MN2PR18MB2879A4AFAE05457497422411D9190@MN2PR18MB2879.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-forefront-prvs: 00540983E2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(346002)(136003)(376002)(39850400004)(366004)(199004)(189003)(86362001)(3846002)(6486002)(3716004)(6116002)(102836004)(6512007)(9686003)(6436002)(8936002)(73956011)(81166006)(66946007)(8676002)(81156014)(53936002)(7736002)(6246003)(2906002)(6916009)(26005)(53546011)(6506007)(229853002)(76176011)(52116002)(186003)(386003)(66476007)(66446008)(64756008)(66556008)(476003)(446003)(11346002)(486006)(316002)(256004)(5660300002)(68736007)(305945005)(54906003)(478600001)(14454004)(99286004)(1076003)(4326008)(71190400001)(25786009)(4744005)(66066001)(71200400001)(25903002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2879;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Dv+BIq6+yWbPBTpw00uaWpp0QMzRxAyXj+ITqS03r6cmLB4NhrKLdxP/O43qd/zsX8xu39TmZyOn9NxZV/sZkR9KW2EBXiRzYg9dIm98w5w8Tmx0r9+OuZEQh5/O8ZJZxo5p2c38B34Wsg4iKQhVilSDE4Vm1Tj5HSyPSAUuUQ06X9ozPqx/9KSrMPIL7oSyW4awz7p80RGWd8W91hWahQZEvbzPIeJey1XGsgA8S8DqNNAayg1CB3IQe1OGbS9gUPoIXy471/1w4PBPHpNAKYuTRaeDgjCJXF+dA/2SGQ0eFjbRf4mUBH8p5vHrErW0GCmACr2cDTS8zXsWnkN2iJHGirQ6YG1bxgXsI+/LMtM24fwPmZrXowW1tPAvLcz+3V6ecf9pIuAxCPbfksJTS8f4kYeOzYC5i5S8FDBJlWQ=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <683C7E7B2C71FB41ADB6FA27DECFD8BB@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190527140952.GB7202@ulmo>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 89e2300b-49e4-48b7-6186-08d6e5d6fa42
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 May 2019 14:48:00.6832
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: rrichter@marvell.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2879
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-31_09:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 27, 2019 at 04:09:52PM +0200, Thierry Reding wrote:
-> On Sat, May 25, 2019 at 02:27:48PM +0530, Hariprasad Kelam wrote:
-> > fix below warnings reported by coccichek
-> > 
-> > /drivers/pci/controller/pci-tegra.c:1132:1-3: WARNING: PTR_ERR_OR_ZERO
-> > can be used
-> 
-> This has been discussed many times before, but PTR_ERR_OR_ZERO is not
-> liked by everybody. Most of these are actually in place on purpose. One
-> of the reasons I hear most frequently cited in opposition to this macro
-> is that it complicates things when you need to add some new code in, so
-> PTR_ERR_OR_ZERO() becomes wrong and has to be changed. The original,
-> with the "return 0;" being explicit doesn't have that problem and you
-> can easily add things in between.
-> 
-> It's obviously up to Bjorn to decide whether he wants this, but I
-> vaguely remember discussing this particular instance with him before and
-> we both agreed that we didn't think this was worth it.
+On 29.05.19 16:54:52, Borislav Petkov wrote:
+> On Wed, May 29, 2019 at 08:44:01AM +0000, Robert Richter wrote:
+> > Patch #1: Repost of an already accepted patch sent to the ml. Adding
+> > it here for completeness as I did not find it in a repository yet.
+>=20
+> Try mainline:
+>=20
+> 29a0c843973b ("EDAC/mc: Fix edac_mc_find() in case no device is found")
+>=20
+> :-)
 
-+1, patch dropped, thanks Hariprasad for reporting it anyway.
+Ah, right. Will rebase.
 
-Lorenzo
-
-> Perhaps it's time to make checkpatch not complain about this anymore? Or
-> at least make this not a WARNING.
-> 
-> Thierry
-> 
-> > ./drivers/pci/controller/dwc/pcie-qcom.c:703:1-3: WARNING:
-> > PTR_ERR_OR_ZERO can be used
-> > ./drivers/pci/controller/dwc/pci-meson.c:185:1-3: WARNING:
-> > PTR_ERR_OR_ZERO can be used
-> > ./drivers/pci/controller/dwc/pci-meson.c:262:1-3: WARNING:
-> > PTR_ERR_OR_ZERO can be used
-> > ./drivers/pci/controller/dwc/pcie-kirin.c:141:1-3: WARNING:
-> > PTR_ERR_OR_ZERO can be used
-> > ./drivers/pci/controller/dwc/pcie-kirin.c:177:1-3: WARNING:
-> > PTR_ERR_OR_ZERO can be used
-> > ./drivers/pci/controller/dwc/pci-exynos.c:95:1-3: WARNING:
-> > PTR_ERR_OR_ZERO can be used
-> > 
-> > Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-> > ---
-> >  drivers/pci/controller/dwc/pci-exynos.c | 4 +---
-> >  drivers/pci/controller/dwc/pci-meson.c  | 8 ++------
-> >  drivers/pci/controller/dwc/pcie-kirin.c | 8 ++------
-> >  drivers/pci/controller/dwc/pcie-qcom.c  | 4 +---
-> >  drivers/pci/controller/pci-tegra.c      | 4 +---
-> >  5 files changed, 7 insertions(+), 21 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
-> > index cee5f2f..b0b4849 100644
-> > --- a/drivers/pci/controller/dwc/pci-exynos.c
-> > +++ b/drivers/pci/controller/dwc/pci-exynos.c
-> > @@ -92,10 +92,8 @@ static int exynos5440_pcie_get_mem_resources(struct platform_device *pdev,
-> >  
-> >  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> >  	ep->mem_res->elbi_base = devm_ioremap_resource(dev, res);
-> > -	if (IS_ERR(ep->mem_res->elbi_base))
-> > -		return PTR_ERR(ep->mem_res->elbi_base);
-> >  
-> > -	return 0;
-> > +	return PTR_ERR_OR_ZERO(ep->mem_res->elbi_base);
-> >  }
-> >  
-> >  static int exynos5440_pcie_get_clk_resources(struct exynos_pcie *ep)
-> > diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
-> > index e35e9ea..1ca78c2 100644
-> > --- a/drivers/pci/controller/dwc/pci-meson.c
-> > +++ b/drivers/pci/controller/dwc/pci-meson.c
-> > @@ -182,10 +182,8 @@ static int meson_pcie_get_mems(struct platform_device *pdev,
-> >  
-> >  	/* Meson SoC has two PCI controllers use same phy register*/
-> >  	mp->mem_res.phy_base = meson_pcie_get_mem_shared(pdev, mp, "phy");
-> > -	if (IS_ERR(mp->mem_res.phy_base))
-> > -		return PTR_ERR(mp->mem_res.phy_base);
-> >  
-> > -	return 0;
-> > +	return PTR_ERR_OR_ZERO(mp->mem_res.phy_base);
-> >  }
-> >  
-> >  static void meson_pcie_power_on(struct meson_pcie *mp)
-> > @@ -259,10 +257,8 @@ static int meson_pcie_probe_clocks(struct meson_pcie *mp)
-> >  		return PTR_ERR(res->general_clk);
-> >  
-> >  	res->clk = meson_pcie_probe_clock(dev, "pcie", 0);
-> > -	if (IS_ERR(res->clk))
-> > -		return PTR_ERR(res->clk);
-> >  
-> > -	return 0;
-> > +	return PTR_ERR_OR_ZERO(res->clk);
-> >  }
-> >  
-> >  static inline void meson_elb_writel(struct meson_pcie *mp, u32 val, u32 reg)
-> > diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
-> > index 9b59929..87cfdb4 100644
-> > --- a/drivers/pci/controller/dwc/pcie-kirin.c
-> > +++ b/drivers/pci/controller/dwc/pcie-kirin.c
-> > @@ -138,10 +138,8 @@ static long kirin_pcie_get_clk(struct kirin_pcie *kirin_pcie,
-> >  		return PTR_ERR(kirin_pcie->apb_sys_clk);
-> >  
-> >  	kirin_pcie->pcie_aclk = devm_clk_get(dev, "pcie_aclk");
-> > -	if (IS_ERR(kirin_pcie->pcie_aclk))
-> > -		return PTR_ERR(kirin_pcie->pcie_aclk);
-> >  
-> > -	return 0;
-> > +	return PTR_ERR_OR_ZERO(kirin_pcie->pcie_aclk);
-> >  }
-> >  
-> >  static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
-> > @@ -174,10 +172,8 @@ static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
-> >  
-> >  	kirin_pcie->sysctrl =
-> >  		syscon_regmap_lookup_by_compatible("hisilicon,hi3660-sctrl");
-> > -	if (IS_ERR(kirin_pcie->sysctrl))
-> > -		return PTR_ERR(kirin_pcie->sysctrl);
-> >  
-> > -	return 0;
-> > +	return PTR_ERR_OR_ZERO(kirin_pcie->sysctrl);
-> >  }
-> >  
-> >  static int kirin_pcie_phy_init(struct kirin_pcie *kirin_pcie)
-> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > index 0ed235d..6c421e6 100644
-> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > @@ -700,10 +700,8 @@ static int qcom_pcie_get_resources_2_4_0(struct qcom_pcie *pcie)
-> >  		return PTR_ERR(res->ahb_reset);
-> >  
-> >  	res->phy_ahb_reset = devm_reset_control_get_exclusive(dev, "phy_ahb");
-> > -	if (IS_ERR(res->phy_ahb_reset))
-> > -		return PTR_ERR(res->phy_ahb_reset);
-> >  
-> > -	return 0;
-> > +	return PTR_ERR_OR_ZERO(res->phy_ahb_reset);
-> >  }
-> >  
-> >  static void qcom_pcie_deinit_2_4_0(struct qcom_pcie *pcie)
-> > diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-> > index 464ba25..3cd5069 100644
-> > --- a/drivers/pci/controller/pci-tegra.c
-> > +++ b/drivers/pci/controller/pci-tegra.c
-> > @@ -1129,10 +1129,8 @@ static int tegra_pcie_resets_get(struct tegra_pcie *pcie)
-> >  		return PTR_ERR(pcie->afi_rst);
-> >  
-> >  	pcie->pcie_xrst = devm_reset_control_get_exclusive(dev, "pcie_x");
-> > -	if (IS_ERR(pcie->pcie_xrst))
-> > -		return PTR_ERR(pcie->pcie_xrst);
-> >  
-> > -	return 0;
-> > +	return PTR_ERR_OR_ZERO(pcie->pcie_xrst);
-> >  }
-> >  
-> >  static int tegra_pcie_phys_get_legacy(struct tegra_pcie *pcie)
-> > -- 
-> > 2.7.4
-> > 
-
-
+-Robert
