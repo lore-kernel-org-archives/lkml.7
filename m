@@ -2,141 +2,139 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 719F8C28CC0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64AA4C28CC0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4716926191
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:45:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JnWtYVGH"
+	by mail.kernel.org (Postfix) with ESMTP id 2D53426195
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:46:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559267200;
+	bh=KpPDgF37BI8PGuzKi/AA8C9Gf/dJFMJfPiiskVuyFmU=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=U9o4ablljaPZBJC6VbwYqzk04QvlScWbqpdvSiwRuAYnRRnTM5Yg+SclMbb8tjivl
+	 9BtA+h4jMffhCa43BoQJXh+D3Xuru9gpVYpEcy9rtZVraj65T/iPGJnz2fPsGMMQlf
+	 FlK3S//iqTKYW6Ix0jKhNcR/Js/DijJGNwfcU+nw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbfEaBpq (ORCPT
+        id S1726832AbfEaBqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 21:45:46 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46462 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726576AbfEaBpq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 21:45:46 -0400
-Received: by mail-ot1-f65.google.com with SMTP id j49so7594991otc.13
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 18:45:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1kzmeVVPqkiMo/xI5ELAii6GxtReXpmBzBpH3mrY8QU=;
-        b=JnWtYVGH0MFiUg+7spw56SogTuH9sew5/6iuwbW1odSs5B/8yLAMh+Noi5XLF8Qts3
-         B+j9J29T2N0pVYGuMcnd9+s24dbSagFCVD1TwJHj5mrL2IOcoR1ZxWf8BkZza+PLwRCd
-         YbxipGZyJV3h/9fVfBXeU8ZrATwVF9Epm0gWFrEv96de2Z+PMnc8sY7ZKQoZMsKZ0t1v
-         3WYtwJBtAZcy2osKwkklfLnCOQL5xFHRiR3x1Q2dkOFJKaMUTapHODEYnnGXoFz1ZoGF
-         eLJJg0jth+9D5EXrdoHrGLOar4Gcy8ebtgknbk4wuXi8k/m4qYpCQ3A/YKTKdwpuuvt4
-         bTwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1kzmeVVPqkiMo/xI5ELAii6GxtReXpmBzBpH3mrY8QU=;
-        b=R+vlP8FpTbpquLzj38/aFrtxsKg5fxJJ3kx9Y/Is6GpOdAku5wNsYUbUouSFuOeyfq
-         YP8M5whZbZvKNrgWxCOVxiOLDopFMXO7j4JKwTTjNz6iBxtrJqnIx50cRkAzMVLoDgZ7
-         bFqydHRmB+JuKiXJIKRzdbd0wZpD7z525qp7BkQUOO7d3BjvWH8solVB0/52G5MrzfK7
-         s8/+ac0VKDabI8XGOOT1oxYdQwOuWrtoZLBMh8nxiMSaNNmpnNrRCh0b6W2WjeeMyvsQ
-         OAMMTIp80fHPT4lIdO1AKccpDV41hZEbUvjM984gxH2NJSVKKSKgjET75xoKJuKLAJ4w
-         xHbg==
-X-Gm-Message-State: APjAAAVhRSLOHt0R0ZBYW1g47uig7NynhxTDK0YtChAuVumuJoWGPflh
-        KsFcZ6kl15tDvXv2Xy+qZcbT3Q==
-X-Google-Smtp-Source: APXvYqzHtAYjCMIod0bhKOJww4qG12+Qf8STmxFDDlC7pPYrFiOYhNjiqNLvyq8J2M50S3f7WEnMdQ==
-X-Received: by 2002:a9d:7c85:: with SMTP id q5mr4621731otn.31.1559267145525;
-        Thu, 30 May 2019 18:45:45 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (li808-42.members.linode.com. [104.237.132.42])
-        by smtp.gmail.com with ESMTPSA id n2sm1525287otl.7.2019.05.30.18.45.39
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 30 May 2019 18:45:43 -0700 (PDT)
-Date:   Fri, 31 May 2019 09:45:34 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, suzuki.poulose@arm.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        coresight@lists.linaro.org
-Subject: Re: [PATCH v2 00/17] perf tools: Coresight: Add CPU-wide trace
- support
-Message-ID: <20190531014534.GA5121@leoy-ThinkPad-X240s>
-References: <20190524173508.29044-1-mathieu.poirier@linaro.org>
+        Thu, 30 May 2019 21:46:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51140 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726576AbfEaBqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 21:46:39 -0400
+Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFC7126191;
+        Fri, 31 May 2019 01:46:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559267198;
+        bh=KpPDgF37BI8PGuzKi/AA8C9Gf/dJFMJfPiiskVuyFmU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=EQXrIQVgFRXMTKfCDtHfH6Z409V3726d91GnWJ39dPSVwItU2MTlOxUbfgCG+sMYc
+         ldq5L2QiPYaF1vl22AhQSFd2Fz0R4svZAqvKHo1Ad+bceFXXtMpCBBBE0EQDgfpkn8
+         pClP1k7b10PYDw029XOG0kiPPAilEGcz3b8vZ9/0=
+Date:   Thu, 30 May 2019 18:46:37 -0700
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: [GIT PULL] USB fixes for 5.2-rc3
+Message-ID: <20190531014637.GA30613@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190524173508.29044-1-mathieu.poirier@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 11:34:51AM -0600, Mathieu Poirier wrote:
-> This patchset adds support for CoreSight CPU-wide trace scenarios.  More 
-> specifically it extends the work that was done for per thread scenarios to
-> handle more than a single trace ID.  It also temporally correlate traces
-> based on timestamp generated by the tracers so that rendering by the perf
-> mechanic is ordered.
-> 
-> Everything is based on Arnaldo's perf/core branch (46d4c9a05285).  I will
-> send another revision when it is rebased to a 5.2 rc candidate.
-> 
-> Before this set:
-> 	# root@juno:/home/linaro# perf record -e cs_etm/@20070000.etr/ -C 2,3 sleep 1
-> 	failed to mmap with 12 (Cannot allocate memory)
-> 
-> After this set:
-> 	# root@juno:/home/linaro# perf record -e cs_etm/@20070000.etr/ -C 2,3 sleep 1
-> 	[ perf record: Captured and wrote 1.352 MB perf.data ]
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
 
-I have tested this patch set on Juno and DB410c boards, FWIW:
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
 
-Tested-by: Leo Yan <leo.yan@linaro.org>
+are available in the Git repository at:
 
-> Regards,
-> Mathieu
-> 
-> Changes for V2:
-> * Fixed error condition in function cs_etm_set_option() (Leo)
-> * Fixed changelog spelling error (Leo).
-> * Moved from calloc() to malloc() in cs_etm__etmq_get_traceid_queue()
-> * Got rid of CS_ETM_PACKET_QUEUE_NR macro
-> * Fixed indentation problem in function cs_etm__process_traceid_queue() (Leo).
-> 
-> Mathieu Poirier (17):
->   perf tools: Configure contextID tracing in CPU-wide mode
->   perf tools: Configure timestsamp generation in CPU-wide mode
->   perf tools: Configure SWITCH_EVENTS in CPU-wide mode
->   perf tools: Add handling of itrace start events
->   perf tools: Add handling of switch-CPU-wide events
->   perf tools: Refactor error path in cs_etm_decoder__new()
->   perf tools: Move packet queue out of decoder structure
->   perf tools: Fix indentation in function
->     cs_etm__process_decoder_queue()
->   perf tools: Introduce the concept of trace ID queues
->   perf tools: Get rid of unused cpu in struct cs_etm_queue
->   perf tools: Move thread to traceid_queue
->   perf tools: Move tid/pid to traceid_queue
->   perf tools: Use traceID aware memory callback API
->   perf tools: Add support for multiple traceID queues
->   perf tools: Linking PE contextID with perf thread mechanic
->   perf tools: Add notion of time to decoding code
->   perf tools: Add support for CPU-wide trace scenarios
-> 
->  tools/perf/Makefile.config                    |    3 +
->  tools/perf/arch/arm/util/cs-etm.c             |  186 ++-
->  .../perf/util/cs-etm-decoder/cs-etm-decoder.c |  269 +++--
->  .../perf/util/cs-etm-decoder/cs-etm-decoder.h |   39 +-
->  tools/perf/util/cs-etm.c                      | 1026 +++++++++++++----
->  tools/perf/util/cs-etm.h                      |  103 ++
->  6 files changed, 1252 insertions(+), 374 deletions(-)
-> 
-> -- 
-> 2.17.1
-> 
+  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.2-rc3
+
+for you to fetch changes up to 3ea3091f1bd8586125848c62be295910e9802af0:
+
+  usbip: usbip_host: fix stub_dev lock context imbalance regression (2019-05-29 13:26:32 -0700)
+
+----------------------------------------------------------------
+USB fixes for 5.2-rc3
+
+Here are some tiny USB fixes for a number of reported issues for
+5.2-rc3.
+
+Nothing huge here, just a small collection of xhci and other driver bugs
+that syzbot has been finding in some drivers.  There is also a usbip fix
+and a fix for the usbip fix in here :)
+
+All have been in linux-next with no reported issues.
+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+----------------------------------------------------------------
+Alan Stern (3):
+      USB: Fix slab-out-of-bounds write in usb_get_bos_descriptor
+      media: usb: siano: Fix general protection fault in smsusb
+      media: usb: siano: Fix false-positive "uninitialized variable" warning
+
+Andrey Smirnov (1):
+      xhci: Convert xhci_handshake() to use readl_poll_timeout_atomic()
+
+Carsten Schmid (1):
+      usb: xhci: avoid null pointer deref when bos field is NULL
+
+Chunfeng Yun (1):
+      usb: mtu3: fix up undefined reference to usb_debug_root
+
+Fabio Estevam (1):
+      xhci: Use %zu for printing size_t type
+
+Henry Lin (1):
+      xhci: update bounce buffer with correct sg num
+
+Jia-Ju Bai (1):
+      usb: xhci: Fix a potential null pointer dereference in xhci_debugfs_create_endpoint()
+
+Mathias Nyman (1):
+      xhci: Fix immediate data transfer if buffer is already DMA mapped
+
+Mauro Carvalho Chehab (1):
+      media: smsusb: better handle optional alignment
+
+Maximilian Luz (1):
+      USB: Add LPM quirk for Surface Dock GigE adapter
+
+Oliver Neukum (5):
+      USB: sisusbvga: fix oops in error path of sisusb_probe
+      USB: rio500: refuse more than one device at a time
+      USB: rio500: fix memory leak in close after disconnect
+      USB: rio500: simplify locking
+      USB: rio500: update Documentation
+
+Shuah Khan (2):
+      usbip: usbip_host: fix BUG: sleeping function called from invalid context
+      usbip: usbip_host: fix stub_dev lock context imbalance regression
+
+ Documentation/usb/rio.txt           | 66 ++++++------------------------
+ drivers/media/usb/siano/smsusb.c    | 33 +++++++++------
+ drivers/usb/core/config.c           |  4 +-
+ drivers/usb/core/quirks.c           |  3 ++
+ drivers/usb/host/xhci-debugfs.c     |  3 ++
+ drivers/usb/host/xhci-ring.c        | 26 ++++++++----
+ drivers/usb/host/xhci.c             | 24 +++++------
+ drivers/usb/host/xhci.h             |  3 +-
+ drivers/usb/misc/rio500.c           | 80 ++++++++++++++++++++++---------------
+ drivers/usb/misc/sisusbvga/sisusb.c | 15 +++----
+ drivers/usb/mtu3/mtu3_debugfs.c     |  3 +-
+ drivers/usb/usbip/stub_dev.c        | 75 ++++++++++++++++++++++++----------
+ 12 files changed, 182 insertions(+), 153 deletions(-)
