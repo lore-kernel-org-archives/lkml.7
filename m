@@ -2,162 +2,161 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF9C9C28CC2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 06:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 373E1C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 06:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B052A2645D
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 06:32:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559284373;
-	bh=oFP/SAJV+4Vb3UNWlxHUzFHUMIdfilBJY3UrKlBzR5o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VBJ6149Gvl2Un7ECnev2eoAZ7AnQGBEJVGOoTbdfvs+WfM8YNwMEbhoispy2io8n9
-	 z8pn7wlp73AJYkaFM9amAAj4XcS6b/y43Log8TEZUSig2+RhaCZRw/LDuElEvwUOWD
-	 A+TSEecTWpJMOiJh2npAroh4wAgSBWc3is3/m+UI=
+	by mail.kernel.org (Postfix) with ESMTP id 1662626469
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 06:37:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbfEaGcx (ORCPT
+        id S1726535AbfEaGg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 02:32:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42164 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725955AbfEaGcw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 02:32:52 -0400
-Received: from localhost (unknown [106.201.101.143])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51F4826455;
-        Fri, 31 May 2019 06:32:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559284371;
-        bh=oFP/SAJV+4Vb3UNWlxHUzFHUMIdfilBJY3UrKlBzR5o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GToR4zeeVAd2EKPmME5kECg0EgfRINrTh6m1b1OFxqVCb/u5f7mwd7iPF/E+sQWEQ
-         Wc8/8NL+Jf1Ibhv7sPBcaC8szot64JsZk7cY6sSTnkNgVOCXBMYj/dh7hfY2t330+i
-         5R0HdYVc8bFjSuohKnVhv4Wns1WYghfoMNF/YYxg=
-Date:   Fri, 31 May 2019 12:02:47 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Alan Mikhak <alan.mikhak@sifive.com>,
-        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "wen.yang99@zte.com.cn" <wen.yang99@zte.com.cn>,
-        "kjlu@umn.edu" <kjlu@umn.edu>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "palmer@sifive.com" <palmer@sifive.com>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
-Subject: Re: [PATCH] PCI: endpoint: Add DMA to Linux PCI EP Framework
-Message-ID: <20190531063247.GP15118@vkoul-mobl>
-References: <1558650258-15050-1-git-send-email-alan.mikhak@sifive.com>
- <305100E33629484CBB767107E4246BBB0A6FAFFD@DE02WEMBXB.internal.synopsys.com>
- <CABEDWGxsQ9NXrN7W_8HVrXQBb9HiBd+d1dNfv+cXmoBpXQnLwA@mail.gmail.com>
- <305100E33629484CBB767107E4246BBB0A6FC308@DE02WEMBXB.internal.synopsys.com>
- <CABEDWGxL-WYz1BY7yXJ6eKULgVtKeo67XhgHZjvtm5Ka5foKiA@mail.gmail.com>
- <192e3a19-8b69-dfaf-aa5c-45c7087548cc@ti.com>
- <20190531050727.GO15118@vkoul-mobl>
- <d2d8a904-d796-f9f2-8f4a-61e857355a4f@ti.com>
+        Fri, 31 May 2019 02:36:59 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42548 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfEaGg6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 02:36:58 -0400
+Received: by mail-pf1-f195.google.com with SMTP id r22so5548861pfh.9
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 23:36:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3Xfx4FpzFal1JVbe0hIZsssk5cDjneCfnDqzDXKu6Fw=;
+        b=SD6Qb4JT08g/0jpD54WflpmVGAork7vzicvIQcvFrtp3NnnaeRfixJeODx3RJ2Jx4Z
+         iDpdFHOqVLPhh4GDwfYVJN/eNAoiC3Cl9jhiNwthIXiLJFqZ5lLHgu0/PGIg2bGuaorJ
+         nzGrUowXHe2s0HffizPngRh2ZQv7LZgMwEsAIHAVeQqLmUtNmYlTOWjvflOkIAvBEPHC
+         6rjjRs+yFgqcyzRIbrthFiCZ2mS0fSTLCbn7yCw98kkNsT1NRred/gjWQ1i1GxAy3Kxh
+         IJCKUUXYZEHGsAQaNM12aBYl2W9kvPrO+iM7p3DgOKtz/O8qiVhk6ha7JJ+lp/Uv8ez5
+         YJnQ==
+X-Gm-Message-State: APjAAAVK2Y/vHouJWk6QEa61/DVBNmzNTa/cJP3BRzY8RGN619MORWUL
+        4Y1tH+NV4Jdwm0lGnH0q8cE=
+X-Google-Smtp-Source: APXvYqwmLwR5wY1FgNqtnQR7hiU/n9+Ommcyx4lbFe48W+Hvw9z8HhoK/t57syK16hmmWH9MoGtMmA==
+X-Received: by 2002:a63:e04:: with SMTP id d4mr3899507pgl.331.1559284617776;
+        Thu, 30 May 2019 23:36:57 -0700 (PDT)
+Received: from htb-2n-eng-dhcp405.eng.vmware.com ([66.170.99.1])
+        by smtp.gmail.com with ESMTPSA id g17sm9256429pfk.55.2019.05.30.23.36.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 May 2019 23:36:56 -0700 (PDT)
+From:   Nadav Amit <namit@vmware.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Nadav Amit <namit@vmware.com>
+Subject: [RFC PATCH v2 00/12] x86: Flush remote TLBs concurrently and async
+Date:   Thu, 30 May 2019 23:36:33 -0700
+Message-Id: <20190531063645.4697-1-namit@vmware.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d2d8a904-d796-f9f2-8f4a-61e857355a4f@ti.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31-05-19, 10:50, Kishon Vijay Abraham I wrote:
-> Hi Vinod,
-> 
-> On 31/05/19 10:37 AM, Vinod Koul wrote:
-> > Hi Kishon,
-> > 
-> > On 30-05-19, 11:16, Kishon Vijay Abraham I wrote:
-> >> +Vinod Koul
-> >>
-> >> Hi,
-> >>
-> >> On 30/05/19 4:07 AM, Alan Mikhak wrote:
-> >>> On Mon, May 27, 2019 at 2:09 AM Gustavo Pimentel
-> >>> <Gustavo.Pimentel@synopsys.com> wrote:
-> >>>>
-> >>>> On Fri, May 24, 2019 at 20:42:43, Alan Mikhak <alan.mikhak@sifive.com>
-> >>>> wrote:
-> >>>>
-> >>>> Hi Alan,
-> >>>>
-> >>>>> On Fri, May 24, 2019 at 1:59 AM Gustavo Pimentel
-> >>>>> <Gustavo.Pimentel@synopsys.com> wrote:
-> >>>>>>
-> >>>>>> Hi Alan,
-> >>>>>>
-> >>>>>> This patch implementation is very HW implementation dependent and
-> >>>>>> requires the DMA to exposed through PCIe BARs, which aren't always the
-> >>>>>> case. Besides, you are defining some control bits on
-> >>>>>> include/linux/pci-epc.h that may not have any meaning to other types of
-> >>>>>> DMA.
-> >>>>>>
-> >>>>>> I don't think this was what Kishon had in mind when he developed the
-> >>>>>> pcitest, but let see what Kishon was to say about it.
-> >>>>>>
-> >>>>>> I've developed a DMA driver for DWC PCI using Linux Kernel DMAengine API
-> >>>>>> and which I submitted some days ago.
-> >>>>>> By having a DMA driver which implemented using DMAengine API, means the
-> >>>>>> pcitest can use the DMAengine client API, which will be completely
-> >>>>>> generic to any other DMA implementation.
-> >>
-> >> right, my initial thought process was to use only dmaengine APIs in
-> >> pci-epf-test so that the system DMA or DMA within the PCIe controller can be
-> >> used transparently. But can we register DMA within the PCIe controller to the
-> >> DMA subsystem? AFAIK only system DMA should register with the DMA subsystem.
-> >> (ADMA in SDHCI doesn't use dmaengine). Vinod Koul can confirm.
-> > 
-> > So would this DMA be dedicated for PCI and all PCI devices on the bus?
-> 
-> Yes, this DMA will be used only by PCI ($patch is w.r.t PCIe device mode. So
-> all endpoint functions both physical and virtual functions will use the DMA in
-> the controller).
-> > If so I do not see a reason why this cannot be using dmaengine. The use
-> 
-> Thanks for clarifying. I was under the impression any DMA within a peripheral
-> controller shouldn't use DMAengine.
+Currently, local and remote TLB flushes are not performed concurrently,
+which introduces unnecessary overhead - each INVLPG can take 100s of
+cycles. This patch-set allows TLB flushes to be run concurrently: first
+request the remote CPUs to initiate the flush, then run it locally, and
+finally wait for the remote CPUs to finish their work.
 
-That is indeed a correct assumption. The dmaengine helps in cases where
-we have a dma controller with multiple users, for a single user case it
-might be overhead to setup dma driver and then use it thru framework.
+In addition, this patch-set performs remote TLB shootdowns of userspace
+mappings asynchronously. It inlines the info that describes what to
+flush with the SMP information (which also reduces cache coherency
+traffic), and the initiator continues to run after the IPI is received
+before the actual flush. This is only possible if page tables were not
+removed as otherwise speculative page-walks might lead to machine
+checks. Access to userspace is prevented from NMI handlers and kprobes
+until the flush is actually carried. Arguably, this should be safe.
 
-Someone needs to see the benefit and cost of using the framework and
-decide.
+Finally, there are various small optimizations to avoid unwarranted
+false-sharing and atomic operations.
 
-> > case would be memcpy for DMA right or mem to device (vice versa) transfers?
-> 
-> The device is memory mapped so it would be only memcopy.
-> > 
-> > Btw many driver in sdhci do use dmaengine APIs and yes we are missing
-> > support in framework than individual drivers
-> 
-> I think dmaengine APIs is used only when the platform uses system DMA and not
-> ADMA within the SDHCI controller. IOW there is no dma_async_device_register()
-> to register ADMA in SDHCI with DMA subsystem.
+The proposed changes should also improve the performance of other
+invocations of on_each_cpu(). Hopefully, no one has relied on the
+behavior of on_each_cpu() that functions were first executed remotely
+and only then locally.
 
-We are looking it from the different point of view. You are looking for
-dmaengine drivers in that (which would be in drivers/dma/) and I am
-pointing to users of dmaengine in that.
+On my Haswell machine (bare-metal), running a TLB flush microbenchmark
+(MADV_DONTNEED/touch for a single page on one thread in a loop, others
+perform busy-wait loop), takes the following time (ns per iteration) on
+the thread the invokes the TLB shootdown:
 
-So the users in mmc would be ones using dmaengine APIs:
-$git grep -l dmaengine_prep_* drivers/mmc/
+	n_threads	before		after
+	---------	------		-----
+	1		661		663
+	2		1436		923 (-36%)
+	4		1571		1070 (-32%)
 
-which tells me 17 drivers!
+Note that since the benchmark also causes page-faults, the actual
+speedup of TLB shootdowns is actually greater. Also note the higher
+improvement in performance with 2 thread (a single remote TLB flush
+target). This seems to be a side-effect of holding synchronization
+data-structures (csd) off the stack, unlike the way it is currently done
+(in smp_call_function_single()).
 
-HTH
+This microbenchmark only measures the time of the thread that invokes
+the TLB shootdown. Running sysbench on dax w/emulated-pmem:
+
+  sysbench fileio --file-total-size=3G --file-test-mode=rndwr \
+   --file-io-mode=mmap --threads=4 --file-fsync-mode=fdatasync run
+
+Shows a performance improvement of 5% (607k vs 575k events).
+
+Patch 1 does small cleanup. Patches 3-5 implement the concurrent
+execution of TLB flushes. Patch 6-8 deals with false-sharing and
+unnecassary atomic operations. Patches 9-12 perform async TLB flushes
+when possible and inline the data on IPIs.
+
+RFC v1 -> RFC v2:
+- Removed a patch which did not improve performance
+- Patches 6-8: false-sharing and atomic operation optimizations
+- Patches 9-12: asynchronous TLB flushes
+
+Nadav Amit (12):
+  smp: Remove smp_call_function() and on_each_cpu() return values
+  smp: Run functions concurrently in smp_call_function_many()
+  x86/mm/tlb: Refactor common code into flush_tlb_on_cpus()
+  x86/mm/tlb: Flush remote and local TLBs concurrently
+  x86/mm/tlb: Optimize local TLB flushes
+  KVM: x86: Provide paravirtualized flush_tlb_multi()
+  smp: Do not mark call_function_data as shared
+  x86/tlb: Privatize cpu_tlbstate
+  x86/apic: Use non-atomic operations when possible
+  smp: Enable data inlining for inter-processor function call
+  x86/mm/tlb: Use async and inline messages for flushing
+  x86/mm/tlb: Reverting the removal of flush_tlb_info from stack
+
+ arch/alpha/kernel/smp.c               |  19 +--
+ arch/alpha/oprofile/common.c          |   6 +-
+ arch/ia64/kernel/perfmon.c            |  12 +-
+ arch/ia64/kernel/uncached.c           |   8 +-
+ arch/x86/hyperv/mmu.c                 |   2 +
+ arch/x86/include/asm/paravirt.h       |   8 +
+ arch/x86/include/asm/paravirt_types.h |   6 +
+ arch/x86/include/asm/tlbflush.h       |  58 ++++---
+ arch/x86/kernel/apic/apic_flat_64.c   |   4 +-
+ arch/x86/kernel/apic/x2apic_cluster.c |   2 +-
+ arch/x86/kernel/kvm.c                 |  11 +-
+ arch/x86/kernel/paravirt.c            |   3 +
+ arch/x86/kernel/smp.c                 |   2 +-
+ arch/x86/lib/cache-smp.c              |   3 +-
+ arch/x86/mm/init.c                    |   2 +-
+ arch/x86/mm/tlb.c                     | 204 +++++++++++++++++--------
+ arch/x86/xen/mmu_pv.c                 |   2 +
+ drivers/char/agp/generic.c            |   3 +-
+ include/linux/smp.h                   |  45 ++++--
+ kernel/smp.c                          | 210 ++++++++++++++++----------
+ kernel/up.c                           |   3 +-
+ 21 files changed, 397 insertions(+), 216 deletions(-)
+
 -- 
-~Vinod
+2.20.1
+
