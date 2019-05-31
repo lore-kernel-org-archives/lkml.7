@@ -2,97 +2,166 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4779EC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 04:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C82AEC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 04:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12CE925363
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 04:55:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89650263D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 04:57:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LsFyPSmJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kfoYhZkf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbfEaEzn (ORCPT
+        id S1726531AbfEaE5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 00:55:43 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:44394 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbfEaEzm (ORCPT
+        Fri, 31 May 2019 00:57:35 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:39499 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfEaE5f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 00:55:42 -0400
-Received: by mail-lf1-f65.google.com with SMTP id r15so6796414lfm.11
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 21:55:41 -0700 (PDT)
+        Fri, 31 May 2019 00:57:35 -0400
+Received: by mail-it1-f193.google.com with SMTP id j204so7894228ite.4;
+        Thu, 30 May 2019 21:57:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=wtczSeucUoHeYtIiYUJky9w29yvcYMkcpiT/47ZO0RE=;
-        b=LsFyPSmJ03t3UE7s46qhpMX3JDLFjR+QS84P1/WvHBkfcUQhLDMjqHAVPl/nu0cePc
-         n5V4RiqwpI69g8DGAb0X9YxZRfSYFQZrbJS8nK0tHMZu5Qr7lzh8VfB/OFBQXz+JtF80
-         7IgLlVP4rgrI05Z4yAkFYQNwlhqsyj6NbckkGzRNU0/0wGOJHZW/tqT7VpZR2mvwFd0w
-         +lL48O7kEdcdf2zhBysIr+BPnDMNxy729hFOlBVINBdJv5yE6NwJj+/v8OcvbCAVnXRI
-         jEN6088isurTNqUkVSpfp5JgWjBHD2GALP1EfkWZFEQ3V0UWVOOLdr4iCOS/FPC0GSlV
-         9cvQ==
+        bh=pYMrn55kLH2S++DFur1WFLWOoxAYXbVwA77jHVN56K0=;
+        b=kfoYhZkf6QrrWJKyrfZm2jySez/Ob1PR92nLjbtbCIkwApTrJE8LqKlBo+hOLDWtzm
+         Kbtq5RETimAdVvyEQlSWLCxb9FxX67p4RfrZmKYTPVmM/7a66eqQt8supqC5Jl68mjXl
+         3g0meLrU3kkQS2nIBulztcE8EsYVtq5Zt3yldQON/t2fiIgLNmGmq0iW9TjOf3cb8HRV
+         hQUCSI48LvaJU4wgAQw6+tTPUsfGbpYE1FTI8IlM24vtiVxgkCJdT3er1u/dmKP5v9xo
+         6pn8gVndXm6lkx/pDiVVkcj0Aqz42IxHdM3Zo+vXVJjOCDvwGBRmjTKMTNy21DiMmG6H
+         FnfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wtczSeucUoHeYtIiYUJky9w29yvcYMkcpiT/47ZO0RE=;
-        b=RdB7fO5apNgcJFRHsMxhtCeRlNw7Mvx1J+WXUocwckwZyRzPkULs80/w3+7gOLc2A/
-         Z/YTnbL8tmINmsLRR4ipZBifaZn4SpQ0mpp7bPl1QAZUAnzAcWqumP1u1MOf22KY2KTz
-         42LumCiFG0JRAQUlkcGF5OTNuI8i87MzkkvBSPl4XjZ24XRSgjySwU3wz39uKbCXQfpc
-         pqOSSB3VQfvCfEbyJMimYtsle++9Nfb7uwmP4Df9kO6+t6BpZUE3NqE0AgWoCueKOlK8
-         NfwNFUxlMGe8OZd9TftHRvmujQDfVCJXC4TtoN3FFww6SBfAtF7VFr+fXPTWRc/hb8Bi
-         0JzA==
-X-Gm-Message-State: APjAAAWqEV7pSY9n0SE+57SQXMs6ickGdcT4YrSsgWa5anyq/hqD4G9T
-        9ZAuK9ilBlmyo9tua5hTBnLOzQeLs3pAGGQD3ls=
-X-Google-Smtp-Source: APXvYqzgHzTHOlOpxNFOabvhzsir+AGzMDROYdjP3rpSYVbgqe7YzHBgwdjpViixNa0/WeXhyeKB9GkghyIl/EilXHo=
-X-Received: by 2002:ac2:42cb:: with SMTP id n11mr3987145lfl.179.1559278541220;
- Thu, 30 May 2019 21:55:41 -0700 (PDT)
+        bh=pYMrn55kLH2S++DFur1WFLWOoxAYXbVwA77jHVN56K0=;
+        b=Ehn4b8YkAqvu/76XT3bfWlGQHzij9YfL3YhqVanRYndsmpwlAW2VUK9Subjnt1jsGC
+         WJrQCfPdunCEJTN5TMU8vtqMfqxg1Pqxnqql2FePz1PSP1YOt4+LtLBpU1rKnvHfRJe3
+         GOWl0PQMf0ULSsTu9rmsDod9pjmw1CmHIRpSBVt0h6Y+nJ5tNPR6DfCfQllsRTElwOBW
+         fKBixJ6oJcIS22u9AonnItThbccT3UnQKdw7Bqn6ZZR1H5+ON9yIyQfMiou6+wLlmXn7
+         yZQB/RsO0xoaatRK2lob4+LQEEp5nyZtA8nuVwgq+F5ZcZJf8JxddQGDXmdyi9xH3wkW
+         Iq6Q==
+X-Gm-Message-State: APjAAAXGaDBlxpHPU+gIFKyRmWaJcXAwQd5toJ95Dtb7k2jNlesf5hzY
+        q365fps38mrkSR5lKRbj3DepxYqQq6PYRAdrM7KOhyvp
+X-Google-Smtp-Source: APXvYqyrNSflW/4/Z9Kt+shMt+wzrH+meKU5Uw8V7PnnqJVcWdQXyvi3s2unKfCvSA99bkG0l1jdlkupXL3T+WefGeQ=
+X-Received: by 2002:a24:4acd:: with SMTP id k196mr5575395itb.157.1559278654178;
+ Thu, 30 May 2019 21:57:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1559129225.git.vpillai@digitalocean.com>
- <CAERHkruDE-7R5K=2yRqCJRCpV87HkHzDYbQA2WQkruVYpG7t7Q@mail.gmail.com> <20190530141725.GA15172@sinkpad>
-In-Reply-To: <20190530141725.GA15172@sinkpad>
-From:   Aubrey Li <aubrey.intel@gmail.com>
-Date:   Fri, 31 May 2019 12:55:28 +0800
-Message-ID: <CAERHkrtVKQjkv_R4cj8Szt3fcJAhY1YLXNbL_EnBjUA7Pp8s-Q@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
-To:     Julien Desfossez <jdesfossez@digitalocean.com>
-Cc:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
+References: <20190530125837.730-1-linux.amoon@gmail.com> <20190531040222.GB9641@Mani-XPS-13-9360>
+In-Reply-To: <20190531040222.GB9641@Mani-XPS-13-9360>
+From:   Anand Moon <linux.amoon@gmail.com>
+Date:   Fri, 31 May 2019 10:27:22 +0530
+Message-ID: <CANAwSgQ13PizDuNEVF5JMM=byt-HELCmZFhLAa3RS6kvxmXuhw@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: rockchip: Add missing PCIe pwr amd rst configuration
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-rockchip@lists.infradead.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 10:17 PM Julien Desfossez
-<jdesfossez@digitalocean.com> wrote:
+Hi Manivannan,
+
+On Fri, 31 May 2019 at 09:32, Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
 >
-> Interesting, could you detail a bit more your test setup (commands used,
-> type of machine, any cgroup/pinning configuration, etc) ? I would like
-> to reproduce it and investigate.
+> Hi,
+>
+> On Thu, May 30, 2019 at 12:58:37PM +0000, Anand Moon wrote:
+> > This patch add missing PCIe gpio and pinctrl for power (#PCIE_PWR)
+> > also add PCIe gpio and pinctrl for reset (#PCIE_PERST_L).
+> >
+> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> > ---
+> > Tested on Rock960 Model A
+> > ---
+> >  arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi | 16 ++++++++++++++--
+> >  1 file changed, 14 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
+> > index c7d48d41e184..f5bef6b0fe89 100644
+> > --- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
+> > +++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
+> > @@ -55,9 +55,10 @@
+> >
+> >       vcc3v3_pcie: vcc3v3-pcie-regulator {
+> >               compatible = "regulator-fixed";
+> > +             gpio = <&gpio2 RK_PA2 GPIO_ACTIVE_HIGH>;
+> >               enable-active-high;
+> >               pinctrl-names = "default";
+> > -             pinctrl-0 = <&pcie_drv>;
+> > +             pinctrl-0 = <&pcie_drv &pcie_pwr>;
+> >               regulator-boot-on;
+> >               regulator-name = "vcc3v3_pcie";
+> >               regulator-min-microvolt = <3300000>;
+> > @@ -381,9 +382,10 @@
+> >  };
+> >
+> >  &pcie0 {
+> > +     ep-gpio = <&gpio2 RK_PD4 GPIO_ACTIVE_HIGH>;
+> >       num-lanes = <4>;
+> >       pinctrl-names = "default";
+> > -     pinctrl-0 = <&pcie_clkreqn_cpm>;
+> > +     pinctrl-0 = <&pcie_clkreqn_cpm &pcie_perst_l>;
+> >       vpcie3v3-supply = <&vcc3v3_pcie>;
+> >       status = "okay";
+> >  };
+> > @@ -408,6 +410,16 @@
+> >               };
+> >       };
+> >
+> > +     pcie {
+> > +             pcie_pwr: pcie-pwr {
+> > +                     rockchip,pins = <2 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
+> > +             };
+> > +
+> > +             pcie_perst_l:pcie-perst-l {
+> > +                     rockchip,pins = <2 RK_PD4 RK_FUNC_GPIO &pcfg_pull_none>;
+> > +             };
+>
+> Which schematics did you refer? According to Rock960 v2.1 schematics [1], below
+> is the pin mapping for PCI-E PWR and PERST:
+>
+> PCIE_PERST - GPIO2_A2
+> PCIE_PWR - GPIO2_A5
+>
 
-Let me see if I can simply my test to reproduce it.
+Opps, I have referred the wrong schematics *RK3399_Rock960_V1.0.pdf*
+may be old version.
+Thanks for pointing out the correct schematics.
 
-Thanks,
--Aubrey
+> Above mapping holds true for Rock960 version 1.1, 1.2 and 1.3. Also,
+> rk3399-rock960.dtsi is common for both Rock960 and Ficus boards, so the board
+> specific parts should go to rk3399-rock960.dts and rk3399-ficus.dts.
+>
+> Thanks,
+> Mani
+
+I have ROCK960-V 1.2 (Model A) for testing so. I will be sending patch
+v2 the relevant
+node update in rk3399-rock960.dts and rk3399-ficus.dts if below common
+for both the boards.
+
+PCIE_PERST - GPIO2_A2
+PCIE_PWR - GPIO2_A5
+
+>
+> [1] https://dl.vamrs.com/products/rock960/docs/hw/rock960_sch_v12_20180314.pdf
+
+Best Regards
+-Anand
