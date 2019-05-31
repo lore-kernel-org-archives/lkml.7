@@ -2,216 +2,78 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE9E5C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4420CC28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C76872675F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:13:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C3EE26763
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:16:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559297802;
+	bh=7WcP7geRnCdillAQ5KdZSxTQZjeTSwXA+zJ2pR9Vmew=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=QOZjvtrLrqBKALr4qr2Yt3lkxapS41MOHEvayiCUulZUlfplsRU1RCd6reV9c1DB0
+	 GL/Nlcnj/dUznQR29LrZIVt7dtj7nMh7JI9ht9oycGBSCCnIky+jgArLzSJQqv5v9b
+	 f6aquriUUxDE6uJCoMYvSy5dzQxEHZ+gSIAk8Hmg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbfEaKNn (ORCPT
+        id S1726520AbfEaKQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 06:13:43 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:62714 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbfEaKNm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 06:13:42 -0400
-Received: from 79.184.255.225.ipv4.supernova.orange.pl (79.184.255.225) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
- id 950d3e566dff9670; Fri, 31 May 2019 12:13:40 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Furquan Shaikh <furquan@google.com>
-Cc:     Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rajatja@google.com,
-        dlaurie@google.com
-Subject: Re: [PATCH] drivers/acpi: Turn off power resources while entering S5
-Date:   Fri, 31 May 2019 12:13:39 +0200
-Message-ID: <26443804.PuBNBtcb44@kreacher>
-In-Reply-To: <20190423233904.195842-1-furquan@google.com>
-References: <20190423233904.195842-1-furquan@google.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Fri, 31 May 2019 06:16:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40544 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726002AbfEaKQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 06:16:41 -0400
+Received: from localhost.localdomain (unknown [223.93.147.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65E5C24B7D;
+        Fri, 31 May 2019 10:16:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559297800;
+        bh=7WcP7geRnCdillAQ5KdZSxTQZjeTSwXA+zJ2pR9Vmew=;
+        h=From:To:Cc:Subject:Date:From;
+        b=A7a7vIvf/+gzll8Xx18yAaIBbUUAgYxWuegrvHa7Zgs22w00QHcMmLSIK8FfCxCjc
+         UmJgWKGHmQQZlprtrRYoPeAIWgV2sdRvabvd8CVmHSJE3NBuLzJdfyR53REErd/u6v
+         nBDjNmVLEmUiQ4CfZO+9cRPkbLgIBhW6PgiuMnR8=
+From:   guoren@kernel.org
+To:     arnd@arndb.de, torvalds@linux-foundation.org
+Cc:     linux-csky@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Guo Ren <ren_guo@c-sky.com>
+Subject: [PATCH] MAINTAINERS: Add mailing list for csky architecture
+Date:   Fri, 31 May 2019 18:16:10 +0800
+Message-Id: <1559297770-11633-1-git-send-email-guoren@kernel.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday, April 24, 2019 1:39:04 AM CEST Furquan Shaikh wrote:
-> During boot-up, ACPI bus scan enables all power resources
-> so that respective device drivers can talk to their device. This causes acpi
-> ref_count for the power resource to be incremented to 1. When system
-> suspends (S3/S0ix) or hibernates(S4), DPM is responsible for calling
-> power off on all power resources whose ref_count is 1 i.e. no other
-> user of this power resource and thus resulting in _OFF routine being
-> called for it.
-> 
-> However, in case of poweroff, DPM is not involved and so the power
-> resources are left on when the system is entering S5. This results in
-> the violation of power down sequencing for certain devices
-> e.g. touchscreen or digitizer I2C devices.
+From: Guo Ren <ren_guo@c-sky.com>
 
-I'm not sure I can follow you here.  Any details?
+Add the newly created linux-csky@vger.kernel.org mailing list for patch
+reviews and discussions.
 
-> In order to ensure that the
-> power down sequencing does the right thing, it is necessary for ACPI
-> to disable all power resources while preparing for S5.
+Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-Well, I would say that this is not just about power resources.  ACPI PM methods should be
-invoked for the devices as well, so generally there should be subject to the normal PM
-during S5 transitions.
-
-Generally speaking, S5 should follow the code flow of the last phase of hibernation.
-
-> This change updates the function acpi_turn_off_unused_power_resources
-> to accept a parameter acpi_system_state, This function turns off power
-> resources according to the targeted system ACPI state:
-> 1. For S0: Unused power resources are turned off i.e. power resources
-> whose ref_count is already 0.
-> 2. For S5: ref_count is decremented first to undo the increment
-> performed during ACPI bus scan and then power resources with ref_count
-> 0 are turned off.
-> 3. All other suspend/hibernate states: No action is required since DPM
-> takes care of turning off power resources.
-> 
-> This change should not affect the wake capable devices since:
-> 1. If wake capable devices are enabled before this call, their
-> refcount should be greater than 1. Thus, they won't be turned off.
-> 2. If wake capable devices are not enabled yet when this call is made,
-> they would eventually get turned on by call to
-> acpi_enable_wakeup_devices.
-
-Quite frankly, this looks like a hack causing a particular platform to behave
-as expected, but it very well may not be applicable to other platforms.
-
-> Signed-off-by: Furquan Shaikh <furquan@google.com>
-> ---
->  drivers/acpi/power.c | 47 ++++++++++++++++++++++++++++++++++++++------
->  drivers/acpi/sleep.c |  5 ++++-
->  drivers/acpi/sleep.h |  2 +-
->  3 files changed, 46 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/acpi/power.c b/drivers/acpi/power.c
-> index 665e93ca0b40f..945db762861a3 100644
-> --- a/drivers/acpi/power.c
-> +++ b/drivers/acpi/power.c
-> @@ -889,10 +889,42 @@ void acpi_resume_power_resources(void)
->  
->  	mutex_unlock(&power_resource_list_lock);
->  }
-> +#endif
->  
-> -void acpi_turn_off_unused_power_resources(void)
-> +/**
-> + * acpi_turn_off_power_resources: This function is used to turn off power
-> + * resources in provided ACPI system state.
-> + *
-> + * Behavior differs based on the target system state:
-> + * ACPI_STATE_S0: Turn off unused power resources i.e. turn off power resources
-> + *                with ref_count zero.
-> + * ACPI_STATE_S5: Decrement ref_count first and turn off power resources with
-> + *                ref_count zero. This is done to ensure that the ref_count
-> + *                incremented during ACPI bus scan is undone and any power
-> + *                resources that are not required during S5 are turned off.
-> + * ACPI_STATE_Sx: No action required. DPM is responsible for turning off power
-> + *                resources while suspending/hibernating.
-> + */
-> +void acpi_turn_off_power_resources(int acpi_system_state)
->  {
->  	struct acpi_power_resource *resource;
-> +	int decrement;
-> +
-> +	if (acpi_system_state == ACPI_STATE_S0) {
-> +		/*
-> +		 * In case of ACPI_STATE_S0, turn off only unused power
-> +		 * resources. So, no need to decrement ref_count.
-> +		 */
-> +		decrement = 0;
-> +	} else if (acpi_system_state == ACPI_STATE_S5) {
-> +		/*
-> +		 * In case of ACPI_STATE_S5, ref_count needs to be decremented
-> +		 * first before checking if it is okay to power off the
-> +		 * resource.
-> +		 */
-> +		decrement = 1;
-
-Instead of doing this you could add a routing decrementing the recfount for all of
-the power resources in the ON state and call that, before the original
-acpi_turn_off_unused_power_resources(), in acpi_power_off_prepare().
-
-That said I don't think the approach is valid in general as stated above.
-
-> +	} else
-> +		return;
->  
->  	mutex_lock(&power_resource_list_lock);
->  
-> @@ -907,10 +939,14 @@ void acpi_turn_off_unused_power_resources(void)
->  			continue;
->  		}
->  
-> -		if (state == ACPI_POWER_RESOURCE_STATE_ON
-> -		    && !resource->ref_count) {
-> -			dev_info(&resource->device.dev, "Turning OFF\n");
-> -			__acpi_power_off(resource);
-> +		if (state == ACPI_POWER_RESOURCE_STATE_ON) {
-> +			if (resource->ref_count)
-> +				resource->ref_count -= decrement;
-> +
-> +			if (!resource->ref_count) {
-> +				dev_info(&resource->device.dev, "Turning OFF\n");
-> +				__acpi_power_off(resource);
-> +			}
->  		}
->  
->  		mutex_unlock(&resource->resource_lock);
-> @@ -918,4 +954,3 @@ void acpi_turn_off_unused_power_resources(void)
->  
->  	mutex_unlock(&power_resource_list_lock);
->  }
-> -#endif
-> diff --git a/drivers/acpi/sleep.c b/drivers/acpi/sleep.c
-> index 403c4ff153498..fb6b3ca0eeb91 100644
-> --- a/drivers/acpi/sleep.c
-> +++ b/drivers/acpi/sleep.c
-> @@ -75,6 +75,9 @@ static int acpi_sleep_prepare(u32 acpi_state)
->  	printk(KERN_INFO PREFIX "Preparing to enter system sleep state S%d\n",
->  		acpi_state);
->  	acpi_enable_wakeup_devices(acpi_state);
-> +
-> +	acpi_turn_off_power_resources(acpi_state);
-> +
->  	acpi_enter_sleep_state_prep(acpi_state);
->  	return 0;
->  }
-> @@ -524,7 +527,7 @@ static void acpi_pm_start(u32 acpi_state)
->   */
->  static void acpi_pm_end(void)
->  {
-> -	acpi_turn_off_unused_power_resources();
-> +	acpi_turn_off_power_resources(ACPI_STATE_S0);
->  	acpi_scan_lock_release();
->  	/*
->  	 * This is necessary in case acpi_pm_finish() is not called during a
-> diff --git a/drivers/acpi/sleep.h b/drivers/acpi/sleep.h
-> index 41675d24a9bc0..a495c91e2bf3b 100644
-> --- a/drivers/acpi/sleep.h
-> +++ b/drivers/acpi/sleep.h
-> @@ -7,7 +7,7 @@ extern struct list_head acpi_wakeup_device_list;
->  extern struct mutex acpi_device_lock;
->  
->  extern void acpi_resume_power_resources(void);
-> -extern void acpi_turn_off_unused_power_resources(void);
-> +extern void acpi_turn_off_power_resources(int acpi_system_state);
->  
->  static inline acpi_status acpi_set_waking_vector(u32 wakeup_address)
->  {
-> 
-
-
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5cfbea4..b5fadcc 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3474,6 +3474,7 @@ F:	sound/pci/oxygen/
+ 
+ C-SKY ARCHITECTURE
+ M:	Guo Ren <guoren@kernel.org>
++L:	linux-csky@vger.kernel.org
+ T:	git https://github.com/c-sky/csky-linux.git
+ S:	Supported
+ F:	arch/csky/
+-- 
+2.7.4
 
