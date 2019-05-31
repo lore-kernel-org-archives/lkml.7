@@ -7,105 +7,175 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F11AC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 06:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C905C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 06:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7D622642C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 06:07:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40CA726431
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 06:08:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="wD9JZsv4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bY1OiOlZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbfEaGHg (ORCPT
+        id S1726713AbfEaGIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 02:07:36 -0400
-Received: from mta-01.yadro.com ([89.207.88.251]:36086 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725955AbfEaGHf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 02:07:35 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 4B3A44196A;
-        Fri, 31 May 2019 06:07:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        user-agent:in-reply-to:content-disposition:content-type
-        :content-type:mime-version:references:message-id:subject:subject
-        :from:from:date:date:received:received:received; s=mta-01; t=
-        1559282853; x=1561097254; bh=aP/v8Ti3LcvTQfv2gGn+BqK/Tdgk+/cwBCm
-        +uXIEhhs=; b=wD9JZsv4lyaVNK+ct7ZaeDLknftLzxvLWSIqh8Diw6IZ2YuMo/y
-        a2i4VZPvDOpFEEWNxtI7dIQZ0ooZDHHVi9w78KLhbKH4jzaXPBuMbnQzMt0SEvAD
-        vkDSPRD64FzunuFWpunrW9UqNzIE2IAPSbptqxYOBlKKj+4vD+QS60IE=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id vd6-wKmfLZdQ; Fri, 31 May 2019 09:07:33 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 64D7741860;
-        Fri, 31 May 2019 09:07:32 +0300 (MSK)
-Received: from localhost (172.17.14.115) by T-EXCH-02.corp.yadro.com
- (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Fri, 31
- May 2019 09:07:32 +0300
-Date:   Fri, 31 May 2019 09:07:31 +0300
-From:   "Alexander A. Filippov" <a.filippov@yadro.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     Alexander Filippov <a.filippov@yadro.com>,
-        <linux-aspeed@lists.ozlabs.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>, Andrew Jeffery <andrew@aj.id.au>,
-        <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Joel Stanley <joel@jms.id.au>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2] ARM: dts: aspeed: Add YADRO VESNIN BMC
-Message-ID: <20190531060731.GA22597@bbwork.lan>
-References: <20190530143933.25414-1-a.filippov@yadro.com>
- <20190530203653.GD1561@lunn.ch>
+        Fri, 31 May 2019 02:08:44 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46360 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbfEaGIo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 02:08:44 -0400
+Received: by mail-pl1-f195.google.com with SMTP id e5so1814485pls.13
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 23:08:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XwfqNiumqbGzIIC/RNtiSYns0HQ4qYSUZptMwlc/kUo=;
+        b=bY1OiOlZBhPceUCRbkGtku9P7C5GJFH3r7S5acpROqVkrL05YeRY2a4qN5z6EKQJM8
+         HBr9g7zmWxowRUXVStXMxAg7dVUlRxYdxmpE3sq/QqbaeswrsfMCUXyBpRLNp/ujYKBB
+         5EPPuzwHc4Hbp+qHmZ8J3FbgxJ6JE+JGCoE86hVtf0xv8uoeM7UaskO0HZPG3P4kn+lb
+         NjdnZUF0HuHXT3b5htg14CKa8jsYNHWJ9ZyIjpEe5+s+WFsg8xPObN4EIvF5jWb+9Tcd
+         f3l/CMowGFQt1LUp0RHBs4IxDNYz7EF1K4+2NUKO41PdKjF90Abagopk8qQLg6a+VcmE
+         PjvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XwfqNiumqbGzIIC/RNtiSYns0HQ4qYSUZptMwlc/kUo=;
+        b=cKzOE5AysvVFpXbQG3kyn2Elk3AMa/6gvWiSL/rn7Jir01w/tNaNSonZrMqG1Vv7D+
+         VnVoXE5oFLeI8WimIiIsEX6ywlSv6gQpW2knDhUOB9xM9Ol1hrNwHshjfJ6lzq7Yu1Na
+         LxUxRKQKB56hnD2y31C1I/ocStzy1kQ1stvkHrUFn7AHEM5c5zcDKuxxf1JfzXYMLryV
+         jjs9fX3k6hjqQlbW5sVsoyEMDSWPpVizWAJkw3JA2D2BI7/832C0fmegf659NEs9uFCr
+         zaeTX6s0yv3W9Lw0KBw0D+7h8kP4BieioxLDniDI+r0dNxUVoO/t3IaCkXwBrlU7aPFG
+         fshQ==
+X-Gm-Message-State: APjAAAU6I55pCqNvW5a3QfAX2QoqYh6INMBpKBav/v4BLEeO5ZxCaE04
+        EiB7eCwXk+J7mNXrSObjOv9uNJp0Xw==
+X-Google-Smtp-Source: APXvYqzrAfkfqti29DEdzisOmgSYSBFSIKUocZpAqFeqT3IHD3Tat99veY4H0d3/uwy4LsUUxMGAYA==
+X-Received: by 2002:a17:902:e00a:: with SMTP id ca10mr7527559plb.18.1559282923093;
+        Thu, 30 May 2019 23:08:43 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2405:204:72cb:ebf2:a51d:3877:feab:5634])
+        by smtp.gmail.com with ESMTPSA id j64sm11527264pfb.126.2019.05.30.23.08.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 30 May 2019 23:08:42 -0700 (PDT)
+Date:   Fri, 31 May 2019 11:38:34 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Anand Moon <linux.amoon@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-rockchip@lists.infradead.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arm64: dts: rockchip: Add missing PCIe pwr amd rst
+ configuration
+Message-ID: <20190531060834.GA23771@Mani-XPS-13-9360>
+References: <20190530125837.730-1-linux.amoon@gmail.com>
+ <20190531040222.GB9641@Mani-XPS-13-9360>
+ <CANAwSgQ13PizDuNEVF5JMM=byt-HELCmZFhLAa3RS6kvxmXuhw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190530203653.GD1561@lunn.ch>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Originating-IP: [172.17.14.115]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
+In-Reply-To: <CANAwSgQ13PizDuNEVF5JMM=byt-HELCmZFhLAa3RS6kvxmXuhw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 10:36:53PM +0200, Andrew Lunn wrote:
-> On Thu, May 30, 2019 at 05:39:33PM +0300, Alexander Filippov wrote:
-> > VESNIN is an OpenPower machine with an Aspeed 2400 BMC SoC manufactured
-> > by YADRO.
-> > 
-> > Signed-off-by: Alexander Filippov <a.filippov@yadro.com>
-> > ---
-> >  arch/arm/boot/dts/Makefile                  |   1 +
-> >  arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts | 234 ++++++++++++++++++++
-> >  2 files changed, 235 insertions(+)
-> >  create mode 100644 arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
-> > 
-> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> > index 834cce80d1b8..811e9312cf22 100644
-> > --- a/arch/arm/boot/dts/Makefile
-> > +++ b/arch/arm/boot/dts/Makefile
-> > @@ -1259,6 +1259,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
-> >  	aspeed-bmc-microsoft-olympus.dtb \
-> >  	aspeed-bmc-opp-lanyang.dtb \
-> >  	aspeed-bmc-opp-palmetto.dtb \
-> > +	aspeed-bmc-opp-vesnin.dtb \
-> >  	aspeed-bmc-opp-romulus.dtb \
-> >  	aspeed-bmc-opp-swift.dtb \
-> >  	aspeed-bmc-opp-witherspoon.dtb \
+On Fri, May 31, 2019 at 10:27:22AM +0530, Anand Moon wrote:
+> Hi Manivannan,
 > 
-> Hi Alexander
+> On Fri, 31 May 2019 at 09:32, Manivannan Sadhasivam
+> <manivannan.sadhasivam@linaro.org> wrote:
+> >
+> > Hi,
+> >
+> > On Thu, May 30, 2019 at 12:58:37PM +0000, Anand Moon wrote:
+> > > This patch add missing PCIe gpio and pinctrl for power (#PCIE_PWR)
+> > > also add PCIe gpio and pinctrl for reset (#PCIE_PERST_L).
+> > >
+> > > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> > > ---
+> > > Tested on Rock960 Model A
+> > > ---
+> > >  arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi | 16 ++++++++++++++--
+> > >  1 file changed, 14 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
+> > > index c7d48d41e184..f5bef6b0fe89 100644
+> > > --- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
+> > > +++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
+> > > @@ -55,9 +55,10 @@
+> > >
+> > >       vcc3v3_pcie: vcc3v3-pcie-regulator {
+> > >               compatible = "regulator-fixed";
+> > > +             gpio = <&gpio2 RK_PA2 GPIO_ACTIVE_HIGH>;
+> > >               enable-active-high;
+> > >               pinctrl-names = "default";
+> > > -             pinctrl-0 = <&pcie_drv>;
+> > > +             pinctrl-0 = <&pcie_drv &pcie_pwr>;
+> > >               regulator-boot-on;
+> > >               regulator-name = "vcc3v3_pcie";
+> > >               regulator-min-microvolt = <3300000>;
+> > > @@ -381,9 +382,10 @@
+> > >  };
+> > >
+> > >  &pcie0 {
+> > > +     ep-gpio = <&gpio2 RK_PD4 GPIO_ACTIVE_HIGH>;
+> > >       num-lanes = <4>;
+> > >       pinctrl-names = "default";
+> > > -     pinctrl-0 = <&pcie_clkreqn_cpm>;
+> > > +     pinctrl-0 = <&pcie_clkreqn_cpm &pcie_perst_l>;
+> > >       vpcie3v3-supply = <&vcc3v3_pcie>;
+> > >       status = "okay";
+> > >  };
+> > > @@ -408,6 +410,16 @@
+> > >               };
+> > >       };
+> > >
+> > > +     pcie {
+> > > +             pcie_pwr: pcie-pwr {
+> > > +                     rockchip,pins = <2 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
+> > > +             };
+> > > +
+> > > +             pcie_perst_l:pcie-perst-l {
+> > > +                     rockchip,pins = <2 RK_PD4 RK_FUNC_GPIO &pcfg_pull_none>;
+> > > +             };
+> >
+> > Which schematics did you refer? According to Rock960 v2.1 schematics [1], below
+> > is the pin mapping for PCI-E PWR and PERST:
+> >
+> > PCIE_PERST - GPIO2_A2
+> > PCIE_PWR - GPIO2_A5
+> >
+> 
+> Opps, I have referred the wrong schematics *RK3399_Rock960_V1.0.pdf*
+> may be old version.
+> Thanks for pointing out the correct schematics.
+> 
+> > Above mapping holds true for Rock960 version 1.1, 1.2 and 1.3. Also,
+> > rk3399-rock960.dtsi is common for both Rock960 and Ficus boards, so the board
+> > specific parts should go to rk3399-rock960.dts and rk3399-ficus.dts.
+> >
+> > Thanks,
+> > Mani
+> 
+> I have ROCK960-V 1.2 (Model A) for testing so. I will be sending patch
+> v2 the relevant
+> node update in rk3399-rock960.dts and rk3399-ficus.dts if below common
+> for both the boards.
 
-Hi Andrew,
+Both boards are different in terms of pin mapping!
+
+-Mani
 
 > 
-> Still not correctly sorted.
+> PCIE_PERST - GPIO2_A2
+> PCIE_PWR - GPIO2_A5
 > 
-
-Thanks, I've fixed it in V3
-
->       Andrew
+> >
+> > [1] https://dl.vamrs.com/products/rock960/docs/hw/rock960_sch_v12_20180314.pdf
+> 
+> Best Regards
+> -Anand
