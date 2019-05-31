@@ -2,168 +2,183 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85340C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 22:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC22BC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 22:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4546126F9A
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 22:08:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7546E26F93
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 22:08:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="Xkl2M46O"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RoAJZNVM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbfEaWIU (ORCPT
+        id S1726826AbfEaWIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 18:08:20 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37210 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725913AbfEaWIU (ORCPT
+        Fri, 31 May 2019 18:08:44 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:35373 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbfEaWIo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 18:08:20 -0400
-Received: by mail-wr1-f66.google.com with SMTP id h1so7428777wro.4
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 15:08:19 -0700 (PDT)
+        Fri, 31 May 2019 18:08:44 -0400
+Received: by mail-it1-f194.google.com with SMTP id u186so17754856ith.0
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 15:08:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Ko+Wfyi0i3W9WpJFYljQ2csSgtbI9KzNY6clfhR9vIY=;
-        b=Xkl2M46O4ONXQoKukrh9dDHZI44Fdkjsyy2ix0AyrV4jZZTexqNuY0GkXgSG/30iRD
-         iOWtIkxPnFM0RQTqKRl+cMC5qPNoPscKekDEP9DpSpIApMr+2krumjnPat8cZOX3rYCD
-         25cI9u4R3ddTTb455a4bxxTbr+kZH/3GL9qKoawUxCRxVZ08atYeitfzLosAQq4QYmOT
-         Ra9TE2EjDPC5KpRYYV9YJaNzWPd4fQvboEveN3PiK8IM7tkZsg0EDwSPeY7vvK429s2J
-         wt4WtbY52JJ7VfHMXO8LDbULlJ6LcEie+x2CcEJMvhz/SufHgqQrqcEwPKVoBtRJgacV
-         TWWg==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=rk8vi2GT1Kz6DVRVbKN7nB2fCQvo4oUTFPvog4etFog=;
+        b=RoAJZNVM9UNtsbDZIxdhytc/h/nYGp4cX/w7asLBFt+LL3YGdpSFVdLJ/u8wre27ep
+         Zc72jhZEh9jdHPOl1iKQZqxVWeScamm/sKR1VLGzQx1nnXuZI+0MZf4kU+I8mYs+b6aU
+         0reiCICEaCdyO23EgeaBnKv2ESrzeKJv8FFJmVeneKkyZKYZjb41UYFYC3JxzhU0ZMM7
+         mLAEUPHlWqUQcTH3HrhRi39Dwvdc2zpwscy8iKNdbA6tJrTqOdtBEbVvoizFMbfRjwcl
+         RcsfdbcOMjq7AKJqPUOpZehjtHVamaPcM26USwWACHuapHEqvJjFXNLfN3dULvKiJkcX
+         SNdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Ko+Wfyi0i3W9WpJFYljQ2csSgtbI9KzNY6clfhR9vIY=;
-        b=o52pqViBb3kLIy1Ox4YfnM/kKheZ4eKYUysg3qiJ6FVw+Lp4RR4lGmG2mMwhNX2ib2
-         6LRLJBylCxKHs0R6U/MYAUslGtbGahox1QOZ28UOl+MD6SqIkghqLsKeKrs1Kn6VMpXk
-         HdViRDu5ZPlr8RvJSYvULqr2eetYjiMImWSAJSgJK0vQ0dnixxkuTD9PuoQxK08+RlOK
-         p13e3GjeUn6IrfJ3FOxkqsRrlnExqZDZqOh8riXvQdHYpQ918jPF9JOn5NGGM5E6l33S
-         os5YKjFs1VSdc0rlTQ3Zu+VNzjE3PWaV2QsFM1jV22w7XgyhvDrU4fLupIc/iF40OL+J
-         8sVw==
-X-Gm-Message-State: APjAAAWuYbU4hWMqVVLUrMuoHFF+5OXm0aXGsrTwn8shY1h4ipgoJqJD
-        QCwhk9L3NpHDIvYtd+FVFsu6FA==
-X-Google-Smtp-Source: APXvYqzFdnv3qzEAIcXHR3zG4OGdyoA5rAUUUsYFs30nC2YlkL1BuHJpjp4kIfaRFe2SEJMKXHNsfg==
-X-Received: by 2002:a05:6000:1149:: with SMTP id d9mr2285752wrx.154.1559340498233;
-        Fri, 31 May 2019 15:08:18 -0700 (PDT)
-Received: from brauner.io (93-32-55-82.ip32.fastwebnet.it. [93.32.55.82])
-        by smtp.gmail.com with ESMTPSA id 65sm14341721wro.85.2019.05.31.15.08.16
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 31 May 2019 15:08:17 -0700 (PDT)
-Date:   Sat, 1 Jun 2019 00:08:16 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Yann Droneaud <ydroneaud@opteya.com>
-Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
-        torvalds@linux-foundation.org, jannh@google.com,
-        fweimer@redhat.com, oleg@redhat.com, arnd@arndb.de,
-        dhowells@redhat.com, Pavel Emelyanov <xemul@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@gmail.com>, linux-api@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] fork: add clone3
-Message-ID: <20190531220815.owrc5kbbdemmwdhs@brauner.io>
-References: <20190529152237.10719-1-christian@brauner.io>
- <1058006e0df4b52b3e53c7b3202c04140899aeb5.camel@opteya.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rk8vi2GT1Kz6DVRVbKN7nB2fCQvo4oUTFPvog4etFog=;
+        b=ZFNhrPKL530yTiz7CSA8hBymzm5qoTMKWtjLYIlN04PKdKjbbKQ2fZtc1ZkzPR2W6Q
+         Llvpp+IYOaMKxlN2UXd7nbvN2EmVpgMXd9UcjjD/DHmYSunk293IW2HozeDgJ9QDUdBg
+         KSb6N1018nUiGu1MJGR+bCRp7RJGUeC7BbdH3ruZHhEiQTm5F7ovd11WfwwL/da6rjd4
+         0NqzQzXIWMa+3WzGWEGcWmgI/1tQMLQxdh5vzsmWfQTn4h0+DZuS9da3IeVviKWQteWc
+         3S8qPMgWtjXUqrbQ8dDH56oqFME6SLi41latPoVuUFN8oVLaTWy83zx0rjQOeuibuq6j
+         yqMQ==
+X-Gm-Message-State: APjAAAWSI7CHVKsMmwN+pUT4Gwc8VNKF05G8R+swpRcgnfcgs3cbb6i7
+        cSnkLdSH67dLkkXR5t7zLu8CRQ==
+X-Google-Smtp-Source: APXvYqzH+EMg6SX+BlsymH4Hq994bzynu2+kAA7hlzRr88AMlhERcDm6qIxgsjuFesiRwjur1MEYsA==
+X-Received: by 2002:a02:b817:: with SMTP id o23mr8340150jam.134.1559340522683;
+        Fri, 31 May 2019 15:08:42 -0700 (PDT)
+Received: from [172.22.22.26] (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
+        by smtp.googlemail.com with ESMTPSA id p11sm3398687itc.2.2019.05.31.15.08.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 31 May 2019 15:08:42 -0700 (PDT)
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Dan Williams <dcbw@redhat.com>, David Miller <davem@davemloft.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        evgreen@chromium.org, Ben Chan <benchan@google.com>,
+        Eric Caruso <ejcaruso@google.com>, cpratapa@codeaurora.org,
+        syadagir@codeaurora.org,
+        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
+        abhishek.esse@gmail.com, Networking <netdev@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-soc@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm@vger.kernel.org
+References: <20190531035348.7194-1-elder@linaro.org>
+ <e75cd1c111233fdc05f47017046a6b0f0c97673a.camel@redhat.com>
+ <065c95a8-7b17-495d-f225-36c46faccdd7@linaro.org>
+ <CAK8P3a05CevRBV3ym+pnKmxv+A0_T+AtURW2L4doPAFzu3QcJw@mail.gmail.com>
+ <a28c5e13-59bc-144d-4153-9d104cfa9188@linaro.org>
+ <CAK8P3a2rkQd3t-yNdNGePW8E7rhObjAvUpW6Ga9AM6rJJ27BOw@mail.gmail.com>
+From:   Alex Elder <elder@linaro.org>
+Message-ID: <5ebccdbe-479d-2b7d-693c-0c412060d687@linaro.org>
+Date:   Fri, 31 May 2019 17:08:40 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <CAK8P3a2rkQd3t-yNdNGePW8E7rhObjAvUpW6Ga9AM6rJJ27BOw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1058006e0df4b52b3e53c7b3202c04140899aeb5.camel@opteya.com>
-User-Agent: NeoMutt/20180716
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 05:42:14PM +0200, Yann Droneaud wrote:
-> Le mercredi 29 mai 2019 à 17:22 +0200, Christian Brauner a écrit :
-> > This adds the clone3 system call.
-> > 
-> > 
-> > diff --git a/kernel/fork.c b/kernel/fork.c
-> > index b4cba953040a..6bc3e3d17150 100644
-> > --- a/kernel/fork.c
-> > +++ b/kernel/fork.c
-> > @@ -2472,7 +2475,96 @@ SYSCALL_DEFINE5(clone, unsigned long, clone_flags, unsigned long, newsp,
-> >  		 unsigned long, tls)
-> >  #endif
-> >  {
-> > -	return _do_fork(clone_flags, newsp, 0, parent_tidptr, child_tidptr, tls);
-> > +	struct kernel_clone_args args = {
-> > +		.flags = clone_flags,
-> > +		.stack = newsp,
-> > +		.pidfd = parent_tidptr,
-> > +		.parent_tidptr = parent_tidptr,
-> > +		.tls = tls,
-> > +		.child_tidptr = child_tidptr,
-> > +	};
-> > +
-> > +	/* clone(CLONE_PIDFD) uses parent_tidptr to return a pidfd */
-> > +	if ((clone_flags & CLONE_PIDFD) && (clone_flags & CLONE_PARENT_SETTID))
-> > +		return -EINVAL;
-> > +
-> > +	return _do_fork(&args);
-> > +}
-> > +
-> > +static bool clone3_flags_valid(u64 flags)
-> > +{
-> > +	if (flags & CLONE_DETACHED)
-> > +		return false;
-> > +
-> > +	if (flags & ~CLONE_MAX)
-> > +		return false;
-> > +
-> > +	return true;
-> > +}
-> > +
-> > +static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
-> > +				     struct clone_args __user *uargs,
-> > +				     size_t size)
-> > +{
-> > +	struct clone_args args;
-> > +
-> > +	if (unlikely(size > PAGE_SIZE))
-> > +		return -E2BIG;
-> > +
-> > +	if (unlikely(size < sizeof(struct clone_args)))
-> > +		return -EINVAL;
-> > +
-> > +	if (unlikely(!access_ok(uargs, size)))
-> > +		return -EFAULT;
-> > +
-> > +	if (size > sizeof(struct clone_args)) {
-> > +		unsigned char __user *addr;
-> > +		unsigned char __user *end;
-> > +		unsigned char val;
-> > +
-> > +		addr = (void __user *)uargs + sizeof(struct clone_args);
-> > +		end = (void __user *)uargs + size;
-> > +
-> > +		for (; addr < end; addr++) {
-> > +			if (get_user(val, addr))
-> > +				return -EFAULT;
-> > +			if (val)
-> > +				return -E2BIG;
+On 5/31/19 4:12 PM, Arnd Bergmann wrote:
+> On Fri, May 31, 2019 at 10:47 PM Alex Elder <elder@linaro.org> wrote:
+>> On 5/31/19 2:19 PM, Arnd Bergmann wrote:
+>>> On Fri, May 31, 2019 at 6:36 PM Alex Elder <elder@linaro.org> wrote:
+>>>> On 5/31/19 9:58 AM, Dan Williams wrote:
+>>>>> On Thu, 2019-05-30 at 22:53 -0500, Alex Elder wrote:
+>>>
+>>> Does this mean that IPA can only be used to back rmnet, and rmnet
+>>> can only be used on top of IPA, or can or both of them be combined
+>>> with another driver to talk to instead?
+>>
+>> No it does not mean that.
+>>
+>> As I understand it, one reason for the rmnet layer was to abstract
+>> the back end, which would allow using a modem, or using something
+>> else (a LAN?), without exposing certain details of the hardware.
+>> (Perhaps to support multiplexing, etc. without duplicating that
+>> logic in two "back-end" drivers?)
+>>
+>> To be perfectly honest, at first I thought having IPA use rmnet
+>> was a cargo cult thing like Dan suggested, because I didn't see
+>> the benefit.  I now see why one would use that pass-through layer
+>> to handle the QMAP features.
+>>
+>> But back to your question.  The other thing is that I see no
+>> reason the IPA couldn't present a "normal" (non QMAP) interface
+>> for a modem.  It's something I'd really like to be able to do,
+>> but I can't do it without having the modem firmware change its
+>> configuration for these endpoints.  My access to the people who
+>> implement the modem firmware has been very limited (something
+>> I hope to improve), and unless and until I can get corresponding
+>> changes on the modem side to implement connections that don't
+>> use QMAP, I can't implement such a thing.
 > 
-> Should be -EINVAL: having something after the structure should be
-> handled just like an invalid flags, while still allowing future
-> userspace program to probe for support for newer feature.
+> Why would that require firmware changes? What I was thinking
+> here is to turn the bits of the rmnet driver that actually do anything
+> interesting on the headers into a library module (or a header file
+> with inline functions) that can be called directly by the ipa driver,
+> keeping the protocol unchanged.
 
-(Traveling until Monday, so sorry for delayed responses.)
+You know, it's possible you're right about not needing
+firmware changes.  But it has always been my impression
+they would be needed.  Here's why.
 
-This copies what:
+It looks like this:
 
-kernel/sched/core.c:sched_copy_attr()
-kernel/event/core.c:perf_copy_attr()
+           GSI Channel   GSI Channel
+               |             |         
+  ----------   v   -------   v   -------------
+  | AP (ep)|=======| IPA |=======|(ep) Modem |
+  ----------       -------       -------------
 
-are already doing. Consistency might be good here but, I think.
+The AP and Modem each have IPA endpoints (ep), which use GSI channels,
+to communicate with the IPA. Each endpoint has configuration options
+(such as checksum offload).  I *thought* that the configurations of
+the two endpoints need to be compatible (e.g., they need to agree on
+whether they're aggregating).  But with your questioning I now think
+you may be right, that only the local endpoint's configuration matters.
 
-Christian
+I will inquire further on this.  I *know* that the AP and modem
+exchange some information about IPA configuration, but looking more
+closely that looks like it's all about the configuration of shared
+IPA resources, not endpoints.
+
+That said, the broader design (including the user space code)
+surely assumes rmnet, and I don't have any sense of what impact
+changing that would make.  I am sure that changing it would not
+be well received.
+
+					-Alex
+
+>>> Always passing data from one netdev to another both ways
+>>> sounds like it introduces both direct CPU overhead, and
+>>> problems with flow control when data gets buffered inbetween.
+>>
+>> My impression is the rmnet driver is a pretty thin layer,
+>> so the CPU overhead is probably not that great (though
+>> deaggregating a message is expensive).  I agree with you
+>> on the flow control.
+> 
+> The CPU overhead I mean is not from executing code in the
+> rmnet driver, but from passing packets through the network
+> stack between the two drivers, i.e. adding each frame to
+> a queue and taking it back out. I'm not sure how this ends
+> up working in reality but from a first look it seems like
+> we might bounce in an out of the softirq handler inbetween.
+> 
+>           Arnd
+> 
+
