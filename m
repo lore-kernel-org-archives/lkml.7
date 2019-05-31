@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0F6C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A855C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F21126BA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:19:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2982E26BA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:20:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559315995;
-	bh=j3MJSP4jENoyEXuW0b5eN/KBy8+NvrnljBgllrbjJHo=;
+	s=default; t=1559316006;
+	bh=btA/z5308vWoUlNe3FXH+Xg+ydtCOcukS3mZsJaB0YQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fdL9e3qh6XctiLjDZM40tiGAGZxDv+UbtcFM0Xgn2cwPD+uA9xHIGpON11N2/9bXG
-	 VkeaAnAP0ScCVPD61tII/MKhFSQ8IaQHeQuPZbCJ8fKNa/Mkf8+dI9fjXb/66805y2
-	 gukHxSV8ouh/VjPzGL0+GpQzqAetZKXA4lXpru1I=
+	b=WRaQcYRCoT7v+DMFn/ZpLwg+cVhsmz3CwQ7hhL7rUbh9F2vQYMKoere3yDG/lqtAQ
+	 Nnwm/qMTwqOw5iZNBOeGZe36p52HPWnPVgoImQXgfjPKUnGClkaDn2/RnwcHpmKz8J
+	 f0KpA4YyF6WEIJjg+jHKWrgwxdGauXVfaVKo+xJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbfEaPTy (ORCPT
+        id S1726909AbfEaPUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 11:19:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36918 "EHLO mail.kernel.org"
+        Fri, 31 May 2019 11:20:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726515AbfEaPTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 11:19:54 -0400
+        id S1726418AbfEaPUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 11:20:05 -0400
 Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E51FA26B9B;
-        Fri, 31 May 2019 15:19:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4847F23DD8;
+        Fri, 31 May 2019 15:20:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559315993;
-        bh=j3MJSP4jENoyEXuW0b5eN/KBy8+NvrnljBgllrbjJHo=;
+        s=default; t=1559316004;
+        bh=btA/z5308vWoUlNe3FXH+Xg+ydtCOcukS3mZsJaB0YQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W+MnYozEhZGvjTmwnkWPIB2FIf3F7wp+DTE1/hS87l45NN0+Dj4SfTeG2sfeG9rMi
-         RQT7QUQLVOYul4W02QNlFtgimZhLvgXkPer05hw00COX7lzMArmL28RQH1UMZ3gAVE
-         t6yIe0P+HOYSEQcujF3doneoikI0z4rPHRNhQJ+M=
+        b=U3FVgv/lDchFUcfbwrCXK34btToM9Ncd3pNIBac4OXEpBZ9UP9DcR1WEZRnAmcGJ8
+         g8T5L+3WE+9V6hEliOWGQpZal43wki4K0TIqha+zc76C+IZ1B2kZxv0Hzi1qUNbG0A
+         /d41U68DNxVpPXlvzDltRjM06PaCuxOjqSl8hm8Q=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
@@ -47,9 +47,9 @@ Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
         Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 19/21] selftests/ftrace: Add a testcase for kprobe multiprobe event
-Date:   Sat,  1 Jun 2019 00:19:49 +0900
-Message-Id: <155931598924.28323.10582408553302432697.stgit@devnote2>
+Subject: [PATCH 20/21] selftests/ftrace: Add syntax error test for immediates
+Date:   Sat,  1 Jun 2019 00:19:59 +0900
+Message-Id: <155931599918.28323.6899374683842385090.stgit@devnote2>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <155931578555.28323.16360245959211149678.stgit@devnote2>
 References: <155931578555.28323.16360245959211149678.stgit@devnote2>
@@ -62,53 +62,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a testcase for kprobe event with multi-probe.
+Add syntax error test cases for immediate value and
+immediate string.
 
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- .../ftrace/test.d/kprobe/kprobe_multiprobe.tc      |   35 ++++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_multiprobe.tc
+ .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_multiprobe.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_multiprobe.tc
-new file mode 100644
-index 000000000000..44494bac86d1
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_multiprobe.tc
-@@ -0,0 +1,35 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Create/delete multiprobe on kprobe event
+diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
+index 29faaec942c6..aa59944bcace 100644
+--- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
++++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
+@@ -41,6 +41,11 @@ check_error 'p vfs_read ^%none_reg'	# BAD_REG_NAME
+ check_error 'p vfs_read ^@12345678abcde'	# BAD_MEM_ADDR
+ check_error 'p vfs_read ^@+10'		# FILE_ON_KPROBE
+ 
++grep -q "imm-value" README && \
++check_error 'p vfs_read arg1=\^x'	# BAD_IMM
++grep -q "imm-string" README && \
++check_error 'p vfs_read arg1=\"abcd^'	# IMMSTR_NO_CLOSE
 +
-+[ -f kprobe_events ] || exit_unsupported
-+
-+grep -q "Create/append/" README || exit_unsupported
-+
-+# Choose 2 symbols for target
-+SYM1=_do_fork
-+SYM2=do_exit
-+EVENT_NAME=kprobes/testevent
-+
-+DEF1="p:$EVENT_NAME $SYM1"
-+DEF2="p:$EVENT_NAME $SYM2"
-+
-+:;: "Define an event which has 2 probes" ;:
-+echo $DEF1 >> kprobe_events
-+echo $DEF2 >> kprobe_events
-+cat kprobe_events | grep "$DEF1"
-+cat kprobe_events | grep "$DEF2"
-+
-+:;: "Remove the event by name (should remove both)" ;:
-+echo "-:$EVENT_NAME" >> kprobe_events
-+test `cat kprobe_events | wc -l` -eq 0
-+
-+:;: "Remove just 1 event" ;:
-+echo $DEF1 >> kprobe_events
-+echo $DEF2 >> kprobe_events
-+echo "-:$EVENT_NAME $SYM1" >> kprobe_events
-+! cat kprobe_events | grep "$DEF1"
-+cat kprobe_events | grep "$DEF2"
-+
-+:;: "Appending different type must fail" ;:
-+! echo "$DEF1 \$stack" >> kprobe_events
+ check_error 'p vfs_read ^+0@0)'		# DEREF_NEED_BRACE
+ check_error 'p vfs_read ^+0ab1(@0)'	# BAD_DEREF_OFFS
+ check_error 'p vfs_read +0(+0(@0^)'	# DEREF_OPEN_BRACE
 
