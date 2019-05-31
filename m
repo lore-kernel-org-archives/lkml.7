@@ -2,181 +2,130 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C88FC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5833C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12F9926F79
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:53:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABFB026F79
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:54:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bdjWp/ki"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="jIC5Q2Lt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726693AbfEaVxj (ORCPT
+        id S1726738AbfEaVyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 17:53:39 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39237 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725913AbfEaVxj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 17:53:39 -0400
-Received: by mail-pl1-f193.google.com with SMTP id g9so4513365plm.6
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 14:53:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=vkQlzDYXQfdlyaR7cXRKh8gwxLwxcbwPkOEJ9vq2Omw=;
-        b=bdjWp/kiI8K61vLYJBNVyXD1yeRzAm4c/wU9YQtJWhHmI8leAG9bCnI91R0z7T0tHX
-         GCyr3CgTdhkf4ZV0AY4Sz3NmS/0hXLzi/1oZhKXNyuhgaySUzZBJ1VTJXPTJ18GzFJ30
-         10nxiGkYjq05vLmbERivCyrBl6cf6LOEvSRM4mgS89cXN3G+3T2kmb1HRnKqpBrWW3A8
-         GxmWxVsR5GJHVAjmPaZ5Lusg/iJ0NFkK7y8s9yEpN4RcPSUcx9mzJYe3eCdwDY8mPrPH
-         OfnbL46FwfeAzooJcCsROwAT0aHyYJMi3mUNJGP+fFAC9RlPLEj9OKzIbm5ifj39NFyg
-         Qrug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=vkQlzDYXQfdlyaR7cXRKh8gwxLwxcbwPkOEJ9vq2Omw=;
-        b=f5xMoZ4P7xqD467Ct10LYwraVATrgA/4UDXFMC6j0Hm5ZefFBRuguM2dq1feDBjrmK
-         JYEqhe74Pj8qSSak4Mi7uXUZI8G1bCq5NuEju9OqhiSvFCBDWkP9IzrJS5fiRp48nNFP
-         /PsqIXsUm3bmHf6MkKT0BjPMUHq99eCd9o2a5Jnt4oJwhKTE9vUaJ99OLu/RCLsYTTuX
-         6j9tCcIXs67VJjVRuce/nIyub0f577kTa0zG1s4O9okfkjjHcEhu4uB5yxIDFKdhCnHT
-         zOd6Vv6MS5SneZ2gKV5GIhZEpNmH2NtSTnrBoBmte+z4VK2bnMkR8EyvJcpZgXuj0+sl
-         Zp+Q==
-X-Gm-Message-State: APjAAAXEGmbpcpoZtfROBF8iF4jJPzm/5JF9WDIIbW+YnxKdwEMOKfFJ
-        8RCVxPZfrxV9ylEbUUcKmgZSqw==
-X-Google-Smtp-Source: APXvYqxYVmQOSY28vQy91Z6Gv+2Wri+vDWxcTNI4gXySvvI3CViUkGjCkCpWvTLvqaaDYXQQ/VXHeg==
-X-Received: by 2002:a17:902:2ba9:: with SMTP id l38mr5596385plb.300.1559339617730;
-        Fri, 31 May 2019 14:53:37 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id e123sm6685235pgc.29.2019.05.31.14.53.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 31 May 2019 14:53:35 -0700 (PDT)
-Date:   Fri, 31 May 2019 14:53:35 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Michal Hocko <mhocko@kernel.org>
-cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Zi Yan <zi.yan@cs.rutgers.edu>,
-        Stefan Priebe - Profihost AG <s.priebe@profihost.ag>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] Revert "mm, thp: restore node-local hugepage
- allocations"
-In-Reply-To: <20190531092236.GM6896@dhcp22.suse.cz>
-Message-ID: <alpine.DEB.2.21.1905311430120.92278@chino.kir.corp.google.com>
-References: <20190503223146.2312-1-aarcange@redhat.com> <20190503223146.2312-3-aarcange@redhat.com> <alpine.DEB.2.21.1905151304190.203145@chino.kir.corp.google.com> <20190520153621.GL18914@techsingularity.net> <alpine.DEB.2.21.1905201018480.96074@chino.kir.corp.google.com>
- <20190523175737.2fb5b997df85b5d117092b5b@linux-foundation.org> <alpine.DEB.2.21.1905281907060.86034@chino.kir.corp.google.com> <20190531092236.GM6896@dhcp22.suse.cz>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Fri, 31 May 2019 17:54:02 -0400
+Received: from mout.web.de ([212.227.17.12]:60965 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725913AbfEaVyC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 17:54:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1559339632;
+        bh=4PnwSzytXpwFC3XqLknN/leQqVZx0q9UvCEseQqQS+4=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=jIC5Q2LtJwYGaPixV8SgrlD6n2xlnLUZMrjXre6okDNzFH+EcIRIKtX5dyJHJ1zr2
+         F6jum7nSXJ4DBw+y0Syq1NWQEevxMmbJofzIMQtNHzcKgwGX1CYErJdzhakDVanY3a
+         VLDQ+QsiFssVg6PlZXF47PWm/TObLqPCm6VhFatU=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from platinum.office.videantis.de ([89.15.238.249]) by smtp.web.de
+ (mrweb103 [213.165.67.124]) with ESMTPSA (Nemesis) id
+ 0MIN2h-1haPpo39vr-00489n; Fri, 31 May 2019 23:53:51 +0200
+From:   Soeren Moch <smoch@web.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Soeren Moch <smoch@web.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: [PATCH] Revert "usb: core: remove local_irq_save() around ->complete() handler"
+Date:   Fri, 31 May 2019 23:53:40 +0200
+Message-Id: <20190531215340.24539-1-smoch@web.de>
+X-Mailer: git-send-email 2.17.1
+X-Provags-ID: V03:K1:4pki4c77cO/q+Q4fp+esI/7+IHZntp6ARk7ufrkg7lwd/BtNRwG
+ ZONH+X9My05hiGQTV64d6W5tSdlWE7RbotPQYA10uJpTdHeFjQTmo+y0465WGOkacVVpfO3
+ SMdhpb4JQd03rlXmKdIMRNJLlxlJ9T+wkpg7CaPLHbHa06VLqBwVpleYOXMnLX7qthLmmW0
+ RKSTX2erEBTfeSGII/HMw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:00Fs/HKfJpE=:uEzYaepEDBH2thRnu2t4VM
+ j3m7F9bB23oQqaxPeOsMPIZXoRwYHT/Xx/9zyE1+38jrJGrEH9Xwy78d6Gd38G/SUXU84tRjJ
+ C7EDAmc1FacNELDuF9ZjM9bF62PKthxcQQ9Pvuw3L/R491xeA9d4lW73/+tMtilFK4EqyHTNd
+ UB9dKEnm9AuSroRSUUXZpeblMr4zyrffr8BhT5GGLiUjsceMdWJvkr32tonOUR2I4/dC8vDJZ
+ lKZ0FeaRGX1uNaCwqVgvClEaze/3L7LnExqjIhIQ7VQrv0/8EOAI48HnmlKN5YV20JxQ/tmQj
+ BG+8EBkK4AK8rRaJ0WTBgmWLvRukhdXiK4ynEAOsGqQ4tt4IJ80rh8OrhsP+hEKEcOZ5qlxUK
+ 4Z+iOCAwlA9OwEzsHLUxZCHMoUjI5KPJGVj2EBY1oDozymJ//dr0vGCxYxalqG3uyeCTE74FB
+ 6SjpJrWDjbslzR85yLp2w+qXoatdqi1hpD9N6QcHygmKBXwVHK8luzO7jFLjOjoseLkT1O8XC
+ B4alIAk+rNgLZjCbjJs/9ZV0E8RVY3SX77ZfuH/OBr57qVxeosqImw0QATlURPT4UhIE2IxEG
+ 1F0twVmQvsDK7MVe4b/gO5r5Dnz0Dv+ano6aZCFa2RVvjjl3lAbQnGpdinPpXSjsy7NXyKK6G
+ F2xO4X6aU5Y+dqArnrnqIBpwtHrdE+CZC4/U6C5e+/hxldZ91bWGAyb4hCV48+LnytHDRJWyV
+ wwsh5yiKKJ0y+KffV7aCGbIFEZuuli5wRr3IXVItqOV8G64E4AeZbzyUHpCdkg5RiokklrsBM
+ /DPbA90EZ9CbdyVmIjXhJJIDDkmxADqdXkPV0h2W7zICp93rDqilW7gA6zQwgRsqbKcsA4c2o
+ hco2JeHF34+EqpgHlRKppY5vAiy/Yooc6PxjdSn8LNH4LbHzYO4PNbJMBuhYCVy84ZWAoQuNS
+ EUK1xnNxqxODuKXF+HPc6DloRvvV0hBg=
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 May 2019, Michal Hocko wrote:
+This reverts commit ed194d1367698a0872a2b75bbe06b3932ce9df3a.
 
-> > The problem which this patch addresses has apparently gone unreported for 
-> > 4+ years since
-> 
-> Can we finaly stop considering the time and focus on the what is the
-> most reasonable behavior in general case please? Conserving mistakes
-> based on an argument that we have them for many years is just not
-> productive. It is very well possible that workloads that suffer from
-> this simply run on older distribution kernels which are moving towards
-> newer kernels very slowly.
-> 
+In contrast to the original patch description, apparently not all handlers
+were audited properly. E.g. my RT5370 based USB WIFI adapter (driver in
+drivers/net/wireless/ralink/rt2x00) hangs after a while under heavy load.
+This revert fixes this.
 
-That's fine, but we also must be mindful of users who have used 
-MADV_HUGEPAGE over the past four years based on its hard-coded behavior 
-that would now regress as a result.
+Also revert the follow-up patch d6142b91e9cc249b3aa22c90fade67e2e2d52cdb
+("usb: core: remove flags variable in __usb_hcd_giveback_urb()"), since no=
+w
+we need the flags variable again.
 
-> > commit 077fcf116c8c2bd7ee9487b645aa3b50368db7e1
-> > Author: Aneesh Kumar K.V <aneesh.kumar@linux.vnet.ibm.com>
-> > Date:   Wed Feb 11 15:27:12 2015 -0800
-> > 
-> >     mm/thp: allocate transparent hugepages on local node
-> 
-> Let me quote the commit message to the full lenght
-> "
->     This make sure that we try to allocate hugepages from local node if
->     allowed by mempolicy.  If we can't, we fallback to small page allocation
->     based on mempolicy.  This is based on the observation that allocating
->     pages on local node is more beneficial than allocating hugepages on remote
->     node.
-> 
->     With this patch applied we may find transparent huge page allocation
->     failures if the current node doesn't have enough freee hugepages.  Before
->     this patch such failures result in us retrying the allocation on other
->     nodes in the numa node mask.
-> "
-> 
-> I do not see any single numbers backing those claims or any mention of a
-> workload that would benefit from the change. Besides that, we have seen
-> that THP on a remote (but close) node might be performing better per
-> Andrea's numbers. So those claims do not apply in general.
-> 
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org # 4.20+
+Signed-off-by: Soeren Moch <smoch@web.de>
+=2D--
+ drivers/usb/core/hcd.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-I confirm that on every platform I have tested that the access latency to 
-local pages of the native page size has been less than hugepages on any 
-remote node.  I think it's generally accepted that NUMA-ness is more 
-important than huge-ness in terms of access latency and this is not the 
-reason why the revert is being proposed.  Certainly if the argument is to 
-be made that the default behavior should be what is in the best interest 
-of Linux users in totality, preferring remote hugepages over local pages 
-of the native page size would not be anywhere close.  I agree with 
-Aneesh's commit message 100%.
+diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
+index 94d22551fc1b..08d25fcf8b8e 100644
+=2D-- a/drivers/usb/core/hcd.c
++++ b/drivers/usb/core/hcd.c
+@@ -1739,6 +1739,7 @@ static void __usb_hcd_giveback_urb(struct urb *urb)
+ 	struct usb_hcd *hcd =3D bus_to_hcd(urb->dev->bus);
+ 	struct usb_anchor *anchor =3D urb->anchor;
+ 	int status =3D urb->unlinked;
++	unsigned long flags;
 
-> > My goal is to reach a solution that does not cause anybody to incur 
-> > performance penalties as a result of it.
-> 
-> That is certainly appreciated and I can offer my help there as well. But
-> I believe we should start with a code base that cannot generate a
-> swapping storm by a trivial code as demonstrated by Mel. A general idea
-> on how to approve the situation has been already outlined for a default
-> case and a new memory policy has been mentioned as well but we need
-> something to start with and neither of the two is compatible with the
-> __GFP_THISNODE behavior.
-> 
+ 	urb->hcpriv =3D NULL;
+ 	if (unlikely((urb->transfer_flags & URB_SHORT_NOT_OK) &&
+@@ -1755,7 +1756,20 @@ static void __usb_hcd_giveback_urb(struct urb *urb)
 
-Thus far, I haven't seen anybody engage in discussion on how to address 
-the issue other than proposed reverts that readily acknowledge they cause 
-other users to regress.  If all nodes are fragmented, the swap storms that 
-are currently reported for the local node would be made worse by the 
-revert -- if remote hugepages cannot be faulted quickly then it's only 
-compounded the problem.
+ 	/* pass ownership to the completion handler */
+ 	urb->status =3D status;
++
++	/*
++	 * We disable local IRQs here avoid possible deadlock because
++	 * drivers may call spin_lock() to hold lock which might be
++	 * acquired in one hard interrupt handler.
++	 *
++	 * The local_irq_save()/local_irq_restore() around complete()
++	 * will be removed if current USB drivers have been cleaned up
++	 * and no one may trigger the above deadlock situation when
++	 * running complete() in tasklet.
++	 */
++	local_irq_save(flags);
+ 	urb->complete(urb);
++	local_irq_restore(flags);
 
-The hugepage aware mempolicy idea is one way that could describe what 
-should be done for these allocations, we could also perhaps consider 
-heuristics that consider the memory pressure of the local node: just as 
-I've never seen a platform where remote hugepages have better access 
-latency than local pages, I've never seen a platform where remote 
-hugepages aren't a win over remote pages.  This, however, is more delicate 
-on 4 socket and 8 socket platforms but I think a general rule that a 
-hugepage is better, if readily allocatable, than a page on the same node.  
-(I've seen cross socket latency for hugepages match the latency for pages, 
-so not always a win: better to leave the hugepage available remotely for 
-something running on that node.)  If the local node has a workingset that 
-reaches its capacity, then it makes sense to fault a remote hugepage 
-instead because otherwise we are thrashing the local node.
+ 	usb_anchor_resume_wakeups(anchor);
+ 	atomic_dec(&urb->use_count);
+=2D-
+2.17.1
 
-That's not a compaction problem, though, it's a reclaim problem.  If 
-compaction fails and it's because we can't allocate target pages, it's 
-under memory pressure and it's uncertain if reclaim will help: it may fail 
-after expensive swap, the reclaimed pages could be grabbed by somebody 
-else and we loop, or the compaction freeing scanner can't find it.  Worst 
-case is we thrash the local node in a swap storm.  So the argument I've 
-made when the removal of __GFP_THISNODE was first proposed is that local 
-hugepage allocation should be the preference including direct compaction 
-for users of MADV_HUGEPAGE (or thp enabled=always) but reclaim should 
-never be done locally.  I'd very much like to engage with anybody who 
-would be willing to discuss fixes that work for everybody rather than only 
-propose reverts and leave others to deal with new performance regressions.
