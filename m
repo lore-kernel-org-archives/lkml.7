@@ -3,87 +3,157 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65482C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 20:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E6FC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 20:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BBA226EEF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 20:35:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="bt2atdtE"
+	by mail.kernel.org (Postfix) with ESMTP id CF1EA26E4A
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 20:37:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559335074;
+	bh=7Z8b3ulgUG2hjwYgp+tfD2PLBiXl3+OabT5960Wi2Vc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ppFedy1Rgjc36ONpOZVfc6O052Uc0+HTlKgTc5YVxe9u3B5PT8z4aFBZnLAkX2/xp
+	 5WgWpiJ/6f2Ognw75JiUTXNr6vx0vSUQ+JHSCCrFXfbthxCeWWW8hBSYM36n2GVvzO
+	 PCh8g1rIsr4kIH/LED57/FeraNxShTgnThFKvJfs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbfEaUfn (ORCPT
+        id S1727354AbfEaUhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 16:35:43 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33640 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbfEaUfn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 16:35:43 -0400
-Received: by mail-pf1-f195.google.com with SMTP id x10so1757054pfi.0
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 13:35:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bkHPoc5lC5mW7wR1FrM44fNwP3Z1d5MLik27r7NZcj4=;
-        b=bt2atdtE4k6OMppdFqAhmK/USH9XSeZWrsrRZq6i50JOXfbnxCoW50vFJGVRI7gDXD
-         hzYHx23O3lK6EyC7T+pr+vU9GR5eASj5urGbI1YeN8qNBo9fOM2RJkcIZFkr/axPGzYE
-         RMiViv869M/Y8ipTA+gg8M5NY1vennR5o2EE0bwC72cL8pE1KDJ6sL9UZTYVqvB7zRQ2
-         kZpYqTkg1rvIEEILOBUEySytnpd0c+JCZnkIjZl4O4Mv2wIrVWNj+0Vspdn4OrJXlsRn
-         HawvmZKVF4CFWyZwN+HeViDSEDfgiSf8bItEzJQMBfBok5UjSepb5mt49w2685BwUIhc
-         bTnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=bkHPoc5lC5mW7wR1FrM44fNwP3Z1d5MLik27r7NZcj4=;
-        b=YzCXL12PXULqhc2kgONKWRHdQbsq/cWNCJXqgMlMn/7eQjduARYEldBmCSx6oOLP/o
-         X6tSTGMb789Ub2hTTvMcKWlTtzB6fP5TaMJp/tHh2K6Bz+SC+R2DpYPl0tGYINM0DEJz
-         N9CW/1w3k9bdDfd/vzwgOKJCaIZmyWwhR1d2ccOJaz5k/MMTkFpgv+bllyTRPOX+jpHV
-         X4rINaUO8VYrMHhrTN8QOI+/s5ooCrF/ep86AdjQoR6Lhhha90RjpEapfxPoqG9iHyk9
-         pMGDiTYalnMub3wUAHlCA8I48ljb0itLlKAUEUfbZSV1QFAH35mdYwWirT0LQyvouThw
-         rnXw==
-X-Gm-Message-State: APjAAAXa5dTPwYMrqCSDdPvwe236bh1CcHTjD7Qk2I7IsGuNqu4SC1AZ
-        fgulc+dAOlTF17NLFxVU0WYANA==
-X-Google-Smtp-Source: APXvYqwkwhkqir+dMhYXAG70FpSw4GwU+es7vuPNj1W5tYEbhjZ2VubCjYq4QiP6LRydAmYkVQvEew==
-X-Received: by 2002:aa7:90ce:: with SMTP id k14mr12487802pfk.239.1559334942443;
-        Fri, 31 May 2019 13:35:42 -0700 (PDT)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id d2sm5841218pfh.115.2019.05.31.13.35.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 31 May 2019 13:35:41 -0700 (PDT)
-Date:   Fri, 31 May 2019 13:35:41 -0700 (PDT)
-X-Google-Original-Date: Fri, 31 May 2019 13:31:53 PDT (-0700)
-Subject:     Re: [PATCH] RISC-V: defconfig: Enable NO_HZ_IDLE and HIGH_RES_TIMERS
-In-Reply-To: <mvm8supd718.fsf@suse.de>
-CC:     anup@brainfault.org, Paul Walmsley <paul.walmsley@sifive.com>,
-        Anup.Patel@wdc.com, aou@eecs.berkeley.edu,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     schwab@suse.de
-Message-ID: <mhng-faba08ec-69a7-43b1-b2d7-c2e996751506@palmer-si-x1c4>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Fri, 31 May 2019 16:37:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54706 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726548AbfEaUhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 16:37:53 -0400
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D4DA26EAA
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 20:37:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559335071;
+        bh=7Z8b3ulgUG2hjwYgp+tfD2PLBiXl3+OabT5960Wi2Vc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=WJqyQ7nEcKF4lBMX7Y+w5R90kNOc/zbpWXVyN/8NqYOdaBm+2iA8npdce4nneH/Xq
+         Y97oxiyxNDxUiBKauDOtFDM2oeesKBIoxPxAdaNgINuOvaRKCJTIZfNQMwB4tMaqlT
+         uO4T20bY5KExo2s409AXlhrHISWhgZLvT9bQUmJQ=
+Received: by mail-wr1-f45.google.com with SMTP id n4so4254773wrs.3
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 13:37:51 -0700 (PDT)
+X-Gm-Message-State: APjAAAXx4moBQQpBd8FMrinOh4XDTzdWD60Zml+o3VhYObx+1nEdTS3w
+        ZJFl0NVAkgsKmzqbF4jLKTXuXq0BEQ6p/uM9/H+PvA==
+X-Google-Smtp-Source: APXvYqwKFdNbqdHqanZ067WEP/gQBT/D13C8/wcy08PIHMLM+3nGbRJh8aaRDyhNNAaioQnYvA+ruDN9rlguZuCtclY=
+X-Received: by 2002:adf:fe90:: with SMTP id l16mr7730253wrr.221.1559335070012;
+ Fri, 31 May 2019 13:37:50 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190531063645.4697-1-namit@vmware.com> <20190531063645.4697-12-namit@vmware.com>
+ <20190531105758.GO2623@hirez.programming.kicks-ass.net> <16D8E001-98A0-4ABC-AFE8-0F230B869027@amacapital.net>
+ <82DB7035-D7BE-4D79-BBC0-B271FB4BF740@vmware.com> <4e0ed5a5-0e5e-3481-e646-3f032f17ac60@intel.com>
+In-Reply-To: <4e0ed5a5-0e5e-3481-e646-3f032f17ac60@intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 31 May 2019 13:37:38 -0700
+X-Gmail-Original-Message-ID: <CALCETrVf9dh4GxEXsHbP65x6YuzOBf+7HWqOgBBjUma+7nB6Nw@mail.gmail.com>
+Message-ID: <CALCETrVf9dh4GxEXsHbP65x6YuzOBf+7HWqOgBBjUma+7nB6Nw@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 11/12] x86/mm/tlb: Use async and inline messages
+ for flushing
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Nadav Amit <namit@vmware.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 May 2019 01:00:35 PDT (-0700), schwab@suse.de wrote:
-> On Mai 28 2019, Palmer Dabbelt <palmer@sifive.com> wrote:
+On Fri, May 31, 2019 at 1:13 PM Dave Hansen <dave.hansen@intel.com> wrote:
 >
->> My only issue here is testing: IIRC last time we tried this it ended up causing
->> trouble.
+> On 5/31/19 12:31 PM, Nadav Amit wrote:
+> >> On May 31, 2019, at 11:44 AM, Andy Lutomirski <luto@amacapital.net> wrote:
+> >>
+> >>
+> >>
+> >>> On May 31, 2019, at 3:57 AM, Peter Zijlstra <peterz@infradead.org> wrote:
+> >>>
+> >>>> On Thu, May 30, 2019 at 11:36:44PM -0700, Nadav Amit wrote:
+> >>>> When we flush userspace mappings, we can defer the TLB flushes, as long
+> >>>> the following conditions are met:
+> >>>>
+> >>>> 1. No tables are freed, since otherwise speculative page walks might
+> >>>>  cause machine-checks.
+> >>>>
+> >>>> 2. No one would access userspace before flush takes place. Specifically,
+> >>>>  NMI handlers and kprobes would avoid accessing userspace.
+> >>>>
+> >>>> Use the new SMP support to execute remote function calls with inlined
+> >>>> data for the matter. The function remote TLB flushing function would be
+> >>>> executed asynchronously and the local CPU would continue execution as
+> >>>> soon as the IPI was delivered, before the function was actually
+> >>>> executed. Since tlb_flush_info is copied, there is no risk it would
+> >>>> change before the TLB flush is actually executed.
+> >>>>
+> >>>> Change nmi_uaccess_okay() to check whether a remote TLB flush is
+> >>>> currently in progress on this CPU by checking whether the asynchronously
+> >>>> called function is the remote TLB flushing function. The current
+> >>>> implementation disallows access in such cases, but it is also possible
+> >>>> to flush the entire TLB in such case and allow access.
+> >>>
+> >>> ARGGH, brain hurt. I'm not sure I fully understand this one. How is it
+> >>> different from today, where the NMI can hit in the middle of the TLB
+> >>> invalidation?
+> >>>
+> >>> Also; since we're not waiting on the IPI, what prevents us from freeing
+> >>> the user pages before the remote CPU is 'done' with them? Currently the
+> >>> synchronous IPI is like a sync point where we *know* the remote CPU is
+> >>> completely done accessing the page.
+> >>>
+> >>> Where getting an IPI stops speculation, speculation again restarts
+> >>> inside the interrupt handler, and until we've passed the INVLPG/MOV CR3,
+> >>> speculation can happen on that TLB entry, even though we've already
+> >>> freed and re-used the user-page.
+> >>>
+> >>> Also, what happens if the TLB invalidation IPI is stuck behind another
+> >>> smp_function_call IPI that is doing user-access?
+> >>>
+> >>> As said,.. brain hurts.
+> >>
+> >> Speculation aside, any code doing dirty tracking needs the flush to happen
+> >> for real before it reads the dirty bit.
+> >>
+> >> How does this patch guarantee that the flush is really done before someone
+> >> depends on it?
+> >
+> > I was always under the impression that the dirty-bit is pass-through - the
+> > A/D-assist walks the tables and sets the dirty bit upon access. Otherwise,
+> > what happens when you invalidate the PTE, and have already marked the PTE as
+> > non-present? Would the CPU set the dirty-bit at this point?
 >
-> I've been running kernels with these settings since the beginning, and
-> never seen any trouble.
+> Modulo bugs^Werrata...  No.  What actually happens is that a
+> try-to-set-dirty-bit page table walk acts just like a TLB miss.  The old
+> contents of the TLB are discarded and only the in-memory contents matter
+> for forward progress.  If Present=0 when the PTE is reached, you'll get
+> a normal Present=0 page fault.
 
-OK, I'm happy with it.
+Wait, does that mean that you can do a lock cmpxchg or similar to
+clear the dirty and writable bits together and, if the dirty bit was
+clear, skip the TLB flush?  If so, nifty!  Modulo errata, of course.
+And I seem to remember some exceptions relating to CET shadow stack
+involving the dirty bit being set on not-present pages.
 
-Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
+>
+> > In this regard, I remember this thread of Dave Hansen [1], which also seems
+> > to me as supporting the notion the dirty-bit is set on write and not on
+> > INVLPG.
+>
+> ... and that's the erratum I was hoping you wouldn't mention. :)
+>
+> But, yeah, I don't think it's possible to set the Dirty bit on INVLPG.
+> The bits are set on establishing TLB entries, not on evicting or
+> flushing them.
+>
+> I hope that clears it up.
