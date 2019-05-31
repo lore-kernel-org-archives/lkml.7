@@ -2,102 +2,111 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CC1C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3995FC28CC2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACE952609B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:14:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 133752609F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:15:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qZsN93pw"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="o1iYe1RC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbfEaBOe (ORCPT
+        id S1726793AbfEaBPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 21:14:34 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38223 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726430AbfEaBOe (ORCPT
+        Thu, 30 May 2019 21:15:43 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:29020 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726430AbfEaBPm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 21:14:34 -0400
-Received: by mail-pl1-f193.google.com with SMTP id f97so3279127plb.5;
-        Thu, 30 May 2019 18:14:34 -0700 (PDT)
+        Thu, 30 May 2019 21:15:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=yp6vwmQ3UFg1RpTqex0tXos3VmAEaOYrUMRIMtSICN0=;
-        b=qZsN93pwjg7V6N/NY7PV07aDyLaI9nzUvIhSPYgt/NlMTnkBvCERqLbEfq5iBP+IBx
-         7h3lx+OJf+SRWXgrQjqfpn/Zk0t9WSh+PrcTZgIz1g3RbmIza70KnUzmY09lodiJRkY5
-         ZVIhoHB3GUoVdDZe4W7HKGjXjjlDF5lBnFwLnOo+0vzirtByWnCh9Gk994M91ALLhpKG
-         JA/iVZGTNSglz5kYTbjI05UFwWMzI0gtMAbA7nt0d+moAXz12OlKx7SKjht13VTIcx1Y
-         gELxjdvjlKkc3pIqLhO1I26MuoFGV/ci5FX7TFBnvcyMedcDZMiUfeSOeeP/+phsbifx
-         34Ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=yp6vwmQ3UFg1RpTqex0tXos3VmAEaOYrUMRIMtSICN0=;
-        b=ubFCZD5KwFCEB1f9NIioLr8VUVhvTYgSd0DGDR+XdIyM2z9PqDmU56UZaUoEqv+spR
-         8PubMVjb6Mj1UraTMMGxaYbmjbXRv3QRomJ+qeNy6+aHzHdB8Yo62zBqO/EdHnLiTQPJ
-         pJ+pysRZnNsWc90rQoXd812C0a+wfP9LtN2ZwaIrbBqfdDvCpii60xAhck9yn0K0aeMh
-         uCV3o8aiOZ31xroQDO6TjBgSfkq640WWPCHmk2NFYov3OwEhrpeS4c61TsIuYV687tXO
-         RCsWNRkoJhr3f6hzaSPNl3TaBHlmyUS4U+D9UxLSdoQLzFxRkOAKLbH1UkPOGuPUCQSh
-         ZrFQ==
-X-Gm-Message-State: APjAAAUjjqxjg0Igl29euNOcuYYSwBY9fQRRJAEqRopQ4Glt9aBWIT4L
-        GJm38Kefq/uCaSoUbRCwsEw=
-X-Google-Smtp-Source: APXvYqwI5ZUlEfNeQUTFSSdnkiKoDQGizVzIkKhm4FHz44k07OLvM6sJ9IGMvekxUddYWftfdCc/tg==
-X-Received: by 2002:a17:902:ab97:: with SMTP id f23mr6500325plr.237.1559265273866;
-        Thu, 30 May 2019 18:14:33 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([66.42.35.75])
-        by smtp.gmail.com with ESMTPSA id j97sm3747107pje.5.2019.05.30.18.14.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 18:14:33 -0700 (PDT)
-Date:   Fri, 31 May 2019 09:14:24 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     mturquette@baylibre.com, sboyd@kernel.org
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] clk: fix a missing-free bug in clk_cpy_name()
-Message-ID: <20190531011424.GA4374@zhanggen-UX430UQ>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1559265342; x=1590801342;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=3dcPHAI0Gvq/CrzqlflWGQYcqDQGvQfO4+LTuOCZQf0=;
+  b=o1iYe1RCH25ehBM/bk0HZxbeiV7gS9nmkZA8FO7NcKAlEp4S9T1BWZ6+
+   DJutdo6TCH8cj0jZFvQkFJNbotDEPntqmxsjXSNfiztNmffFrRYCqW5sk
+   7Kg+zTCXDRrjwCkxXY1UGLuRuzMz12UApqnPdiaFK0RPya0cNug7zD8rQ
+   M=;
+X-IronPort-AV: E=Sophos;i="5.60,533,1549929600"; 
+   d="scan'208";a="677322120"
+Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com) ([10.47.22.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 31 May 2019 01:15:38 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com (Postfix) with ESMTPS id CD7CAA22BA;
+        Fri, 31 May 2019 01:15:34 +0000 (UTC)
+Received: from EX13D13UWB002.ant.amazon.com (10.43.161.21) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Fri, 31 May 2019 01:15:34 +0000
+Received: from EX13D21UWB003.ant.amazon.com (10.43.161.212) by
+ EX13D13UWB002.ant.amazon.com (10.43.161.21) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Fri, 31 May 2019 01:15:33 +0000
+Received: from EX13D21UWB003.ant.amazon.com ([10.43.161.212]) by
+ EX13D21UWB003.ant.amazon.com ([10.43.161.212]) with mapi id 15.00.1367.000;
+ Fri, 31 May 2019 01:15:33 +0000
+From:   "Herrenschmidt, Benjamin" <benh@amazon.com>
+To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "Hawa, Hanna" <hhhawa@amazon.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "Shenhar, Talel" <talel@amazon.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Chocron, Jonathan" <jonnyc@amazon.com>,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "Hanoch, Uri" <hanochu@amazon.com>
+Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+Thread-Topic: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+Thread-Index: AQHVFtCyWJ5GzFYeVU2EkxX7Kqkx+qaD+syAgAB0QoA=
+Date:   Fri, 31 May 2019 01:15:33 +0000
+Message-ID: <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
+References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
+         <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
+         <DB09EE2A-7397-4063-B925-66658D0105A5@alien8.de>
+In-Reply-To: <DB09EE2A-7397-4063-B925-66658D0105A5@alien8.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.160.73]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B3A23C2C906B5342B0BC7E950DEA5E92@amazon.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In clk_cpy_name(), '*dst_p'('parent->name'and 'parent->fw_name') and 
-'dst' are allcoted by kstrdup_const(). According to doc: "Strings 
-allocated by kstrdup_const should be freed by kfree_const". So 
-'parent->name', 'parent->fw_name' and 'dst' should be freed.
-
-Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
----
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index aa51756..85c4d3f 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -3435,6 +3435,7 @@ static int clk_cpy_name(const char **dst_p, const char *src, bool must_exist)
- 	if (!dst)
- 		return -ENOMEM;
- 
-+	kfree_const(dst);
- 	return 0;
- }
- 
-@@ -3491,6 +3492,8 @@ static int clk_core_populate_parent_map(struct clk_core *core)
- 				kfree_const(parents[i].name);
- 				kfree_const(parents[i].fw_name);
- 			} while (--i >= 0);
-+			kfree_const(parent->name);
-+			kfree_const(parent->fw_name);
- 			kfree(parents);
- 
- 			return ret;
----
+T24gVGh1LCAyMDE5LTA1LTMwIGF0IDExOjE5IC0wNzAwLCBCb3JpcyBQZXRrb3Ygd3JvdGU6DQo+
+IE9uIE1heSAzMCwgMjAxOSAzOjE1OjI5IEFNIFBEVCwgSGFubmEgSGF3YSA8aGhoYXdhQGFtYXpv
+bi5jb20+IHdyb3RlOg0KPiA+IEFkZCBzdXBwb3J0IGZvciBlcnJvciBkZXRlY3Rpb24gYW5kIGNv
+cnJlY3Rpb24gZm9yIEFtYXpvbidzDQo+ID4gQW5uYXB1cm5hDQo+ID4gTGFicyBTb0NzIGZvciBM
+MS9MMiBjYWNoZXMuDQo+IA0KPiANCj4gU28gdGhpcyBzaG91bGQgYmUgYSBkcml2ZXIgZm9yIHRo
+ZSB3aG9sZSBhbm5hcHVybmEgcGxhdGZvcm0gYW5kIG5vdA0KPiBvbmx5IGFib3V0IHRoZSBSQVMg
+ZnVuY3Rpb25hbGl0eSBpbiBhbiBJUCBsaWtlIHRoZSBjYWNoZXMuIFNlZSBvdGhlcg0KPiBBUk0g
+RURBQyBkcml2ZXJzIGluIGRyaXZlcnMvZWRhYy8gZm9yIGFuIGV4YW1wbGUuDQoNClRoaXMgaXNu
+J3QgdGVycmlibHkgaGVscGZ1bCwgdGhlcmUncyBub3RoaW5nIHRlbGxpbmcgYW55Ym9keSB3aGlj
+aCBvZg0KdGhvc2UgZmlsZXMgY29ycmVzcG9uZHMgdG8gYW4gQVJNIFNvQyA6LSkNCg0KVGhhdCBz
+YWlkIC4uLg0KDQpZb3UgcmVhbGx5IHdhbnQgYSBzaW5nbGUgRURBQyBkcml2ZXIgdGhhdCBjb250
+YWlucyBhbGwgdGhlIHN0dWZmIGZvcg0KdGhlIGNhY2hlcywgdGhlIG1lbW9yeSBjb250cm9sbGVy
+LCBldGMuLi4gPw0KDQpUaGUgaWRlYSBoZXJlIHdhcyB0byBzZXBhcmF0ZSB0aGUgY29yZSBMMS9M
+MiBFREFDIGZyb20gdGhlIG1lbW9yeQ0KY29udHJvbGxlciBFREFDIEkgdGhpbmsgLi4uIFJvYmVu
+LCBIYW5uYSwgY2FuIHlvdSBkZXNjcmliZSB0aGUgbG9uZyBydW4NCnN0cmF0ZWd5IGhlcmUgPw0K
+DQpDaGVlcnMsDQpCZW4uDQoNCg==
