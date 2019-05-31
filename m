@@ -2,136 +2,201 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE87C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC42C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEE4826256
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:24:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="shygk1Ey"
+	by mail.kernel.org (Postfix) with ESMTP id 78ABE26256
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:27:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbfEaDYL (ORCPT
+        id S1726640AbfEaD1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 23:24:11 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38531 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbfEaDYK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 23:24:10 -0400
-Received: by mail-pg1-f193.google.com with SMTP id v11so3198529pgl.5
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 20:24:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Y0WMcpWfoXbnuMiOdOcy4f4+mdeXgK7Hsp1gRkSwmjI=;
-        b=shygk1EyQfcMXGh963h1m75rbQl//nbJkYNuSkZIN9eHEnqkOPNfpMxY7xEIJhi1jT
-         Iu1k+ZB/8NLCHx+0bgWxMwOHQPQi7AUg3JcScD4qsPF+vRh31tZl9RgXox4mSa8paq41
-         /5VBucDtOkXbg+n//LsBjLXGwBa6+CTvvgyhutw3hX/nUEdopWsZ8LEWT/1IrJyIH8Mv
-         WD4YjL//KgX5SMH6i0ENRY1ZPlojG0GAN10VEx8QAGRebHQ6j873cLx6tT8N4eg6zFNd
-         hrPsH3Kr4cfeh6lyRB90AoFKazWLYFegSuqatjsKwZ0EO1n8VjbQOMh2t6ctrytK+Vu7
-         RTjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Y0WMcpWfoXbnuMiOdOcy4f4+mdeXgK7Hsp1gRkSwmjI=;
-        b=de8KOPQGDH3d2Zxie0D5eun/eb8RIVOSahajlzbzc7rGJ00LegXPx5ifD22Zs4BHxq
-         9JXazwYu+/GuMje12dbBF4hoO2qU155m+v7BzMwM1O67aUUEbfkvSd9aPxMD7yfE7Dhy
-         JWm3afSsNkvwLI+fxFE8v6kpveMIUoCnw8y+48mBpjMzTr/kX7W8insiZvZ3q4tyqF5u
-         3EF7z8GH4/RJ4UB72CZrcQ5iw+Xz7yRbRP4fzVtKJlBAi7mqUMh3plLUjBmC5I6XhQ/4
-         f+w7TWSU8UXnqxnU3tRUOq4kAmXyFAhH/T700l8VD+i3FU0N1IeAIR15cuqlv27RhF8L
-         4Q8Q==
-X-Gm-Message-State: APjAAAXRIrnoLuBlB7bQqOJ4zuXhQIa+20ZDfvRh+lSkYSAIfyiAG8a3
-        fgoHlNgZPy2wTtlFWO3sDpId
-X-Google-Smtp-Source: APXvYqy234vuH9P3R1wJOZtHjpQSL9DPwJjmp2FbbRFLPm8wCMxrM6uNPF1nuywg4K99t7ajF1hGdg==
-X-Received: by 2002:a17:90a:62cb:: with SMTP id k11mr6556683pjs.26.1559273049926;
-        Thu, 30 May 2019 20:24:09 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2405:204:72cb:ebf2:a51d:3877:feab:5634])
-        by smtp.gmail.com with ESMTPSA id s66sm3864501pgs.87.2019.05.30.20.24.05
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 30 May 2019 20:24:08 -0700 (PDT)
-Date:   Fri, 31 May 2019 08:54:02 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Jianqun Xu <jay.xu@rock-chips.com>
-Cc:     heiko@sntech.de, mark.rutland@arm.com, robh+dt@kernel.org,
-        zhangzj@rock-chips.com, linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 1/1] arm64: dts: rockchip: add core dtsi file for
- RK3399Pro SoCs
-Message-ID: <20190531032402.GA9641@Mani-XPS-13-9360>
-References: <20190529074752.19388-1-jay.xu@rock-chips.com>
- <20190530000848.28106-1-jay.xu@rock-chips.com>
+        Thu, 30 May 2019 23:27:15 -0400
+Received: from mga14.intel.com ([192.55.52.115]:35846 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726418AbfEaD1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 23:27:15 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 20:27:15 -0700
+X-ExtLoop1: 1
+Received: from xingzhen-mobl1.ccr.corp.intel.com (HELO [10.255.30.215]) ([10.255.30.215])
+  by fmsmga008.fm.intel.com with ESMTP; 30 May 2019 20:27:13 -0700
+Subject: Re: [LKP] [SUNRPC] 0472e47660: fsmark.app_overhead 16.0% regression
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        "rong.a.chen@intel.com" <rong.a.chen@intel.com>
+Cc:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "lkp@01.org" <lkp@01.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190520055434.GZ31424@shao2-debian>
+ <f1abba58-5fd2-5f26-74cc-f72724cfa13f@linux.intel.com>
+ <9a07c589f955e5af5acc0fa09a16a3256089e764.camel@hammerspace.com>
+ <d796ac23-d5d6-cdfa-89c8-536e9496b551@linux.intel.com>
+ <9753a9a4a82943f6aacc2bfb0f93efc5f96bcaa5.camel@hammerspace.com>
+From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
+Message-ID: <2bbe636a-14f1-4592-d1f9-a9f765a02939@linux.intel.com>
+Date:   Fri, 31 May 2019 11:27:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190530000848.28106-1-jay.xu@rock-chips.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <9753a9a4a82943f6aacc2bfb0f93efc5f96bcaa5.camel@hammerspace.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 08:08:48AM +0800, Jianqun Xu wrote:
-> This patch adds core dtsi file for Rockchip RK3399Pro SoCs,
-> include rk3399.dtsi. Also enable pciei0/pcie_phy for AP to
-> talk to NPU part inside SoC.
-> 
-> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
-> ---
-> changes since v2:
-> - only enable pcie0 and pcie_phy nodes, thanks for Heiko and manivannan
-> 
-> changes since v1:
-> - remove dfi and dmc
-> 
->  arch/arm64/boot/dts/rockchip/rk3399pro.dtsi | 22 +++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399pro.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro.dtsi b/arch/arm64/boot/dts/rockchip/rk3399pro.dtsi
-> new file mode 100644
-> index 000000000000..bb5ebf6608b9
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399pro.dtsi
-> @@ -0,0 +1,22 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +// Copyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd.
-> +
-> +#include "rk3399.dtsi"
-> +
-> +/ {
-> +	compatible = "rockchip,rk3399pro";
-> +};
-> +
-> +/* Default to enabled since AP talk to NPU part over pcie */
-> +&pcie_phy {
-> +	status = "okay";
-> +};
-> +
-> +/* Default to enabled since AP talk to NPU part over pcie */
-> +&pcie0 {
-> +	ep-gpios = <&gpio0 RK_PB4 GPIO_ACTIVE_HIGH>;
-> +	num-lanes = <4>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pcie_clkreqn_cpm>;
 
-No pinctrl config for ep-gpio? Other than that, it looks good to me.
 
-Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+On 5/31/2019 3:10 AM, Trond Myklebust wrote:
+> On Thu, 2019-05-30 at 15:20 +0800, Xing Zhengjun wrote:
+>>
+>> On 5/30/2019 10:00 AM, Trond Myklebust wrote:
+>>> Hi Xing,
+>>>
+>>> On Thu, 2019-05-30 at 09:35 +0800, Xing Zhengjun wrote:
+>>>> Hi Trond,
+>>>>
+>>>> On 5/20/2019 1:54 PM, kernel test robot wrote:
+>>>>> Greeting,
+>>>>>
+>>>>> FYI, we noticed a 16.0% improvement of fsmark.app_overhead due
+>>>>> to
+>>>>> commit:
+>>>>>
+>>>>>
+>>>>> commit: 0472e476604998c127f3c80d291113e77c5676ac ("SUNRPC:
+>>>>> Convert
+>>>>> socket page send code to use iov_iter()")
+>>>>> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git
+>>>>> master
+>>>>>
+>>>>> in testcase: fsmark
+>>>>> on test machine: 40 threads Intel(R) Xeon(R) CPU E5-2690 v2 @
+>>>>> 3.00GHz with 384G memory
+>>>>> with following parameters:
+>>>>>
+>>>>> 	iterations: 1x
+>>>>> 	nr_threads: 64t
+>>>>> 	disk: 1BRD_48G
+>>>>> 	fs: xfs
+>>>>> 	fs2: nfsv4
+>>>>> 	filesize: 4M
+>>>>> 	test_size: 40G
+>>>>> 	sync_method: fsyncBeforeClose
+>>>>> 	cpufreq_governor: performance
+>>>>>
+>>>>> test-description: The fsmark is a file system benchmark to test
+>>>>> synchronous write workloads, for example, mail servers
+>>>>> workload.
+>>>>> test-url: https://sourceforge.net/projects/fsmark/
+>>>>>
+>>>>>
+>>>>>
+>>>>> Details are as below:
+>>>>> -------------------------------------------------------------
+>>>>> ----
+>>>>> --------------------------------->
+>>>>>
+>>>>>
+>>>>> To reproduce:
+>>>>>
+>>>>>            git clone https://github.com/intel/lkp-tests.git
+>>>>>            cd lkp-tests
+>>>>>            bin/lkp install job.yaml  # job file is attached in
+>>>>> this
+>>>>> email
+>>>>>            bin/lkp run     job.yaml
+>>>>>
+>>>>> ===============================================================
+>>>>> ====
+>>>>> ======================
+>>>>> compiler/cpufreq_governor/disk/filesize/fs2/fs/iterations/kconf
+>>>>> ig/n
+>>>>> r_threads/rootfs/sync_method/tbox_group/test_size/testcase:
+>>>>>      gcc-7/performance/1BRD_48G/4M/nfsv4/xfs/1x/x86_64-rhel-
+>>>>> 7.6/64t/debian-x86_64-2018-04-03.cgz/fsyncBeforeClose/lkp-ivb-
+>>>>> ep01/40G/fsmark
+>>>>>
+>>>>> commit:
+>>>>>      e791f8e938 ("SUNRPC: Convert xs_send_kvec() to use
+>>>>> iov_iter_kvec()")
+>>>>>      0472e47660 ("SUNRPC: Convert socket page send code to use
+>>>>> iov_iter()")
+>>>>>
+>>>>> e791f8e9380d945e 0472e476604998c127f3c80d291
+>>>>> ---------------- ---------------------------
+>>>>>           fail:runs  %reproduction    fail:runs
+>>>>>               |             |             |
+>>>>>               :4           50%           2:4     dmesg.WARNING:a
+>>>>> t#for
+>>>>> _ip_interrupt_entry/0x
+>>>>>             %stddev     %change         %stddev
+>>>>>                 \          |                \
+>>>>>      15118573
+>>>>> ±  2%     +16.0%   17538083        fsmark.app_overhead
+>>>>>        510.93           -
+>>>>> 22.7%     395.12        fsmark.files_per_sec
+>>>>>         24.90           +22.8%      30.57        fsmark.time.ela
+>>>>> psed_
+>>>>> time
+>>>>>         24.90           +22.8%      30.57        fsmark.time.ela
+>>>>> psed_
+>>>>> time.max
+>>>>>        288.00 ±  2%     -
+>>>>> 27.8%     208.00        fsmark.time.percent_of_cpu_this_job_got
+>>>>>         70.03 ±  2%     -
+>>>>> 11.3%      62.14        fsmark.time.system_time
+>>>>>
+>>>>
+>>>> Do you have time to take a look at this regression?
+>>>
+>>>   From your stats, it looks to me as if the problem is increased
+>>> NUMA
+>>> overhead. Pretty much everything else appears to be the same or
+>>> actually performing better than previously. Am I interpreting that
+>>> correctly?
+>> The real regression is the throughput(fsmark.files_per_sec) is
+>> decreased
+>> by 22.7%.
+> 
+> Understood, but I'm trying to make sense of why. I'm not able to
+> reproduce this, so I have to rely on your performance stats to
+> understand where the 22.7% regression is coming from. As far as I can
+> see, the only numbers in the stats you published that are showing a
+> performance regression (other than the fsmark number itself), are the
+> NUMA numbers. Is that a correct interpretation?
+> 
+We re-test the case yesterday, the test result almost is the same.
+we will do more test and also check the test case itself, if you need
+more information, please let me know, thanks.
 
-Thanks,
-Mani
-> +	status = "okay";
-> +};
-> -- 
-> 2.17.1
-> 
-> 
-> 
+>>> If my interpretation above is correct, then I'm not seeing where
+>>> this
+>>> patch would be introducing new NUMA regressions. It is just
+>>> converting
+>>> from using one method of doing socket I/O to another. Could it
+>>> perhaps
+>>> be a memory artefact due to your running the NFS client and server
+>>> on
+>>> the same machine?
+>>>
+>>> Apologies for pushing back a little, but I just don't have the
+>>> hardware available to test NUMA configurations, so I'm relying on
+>>> external testing for the above kind of scenario.
+>>>
+>> Thanks for looking at this.  If you need more information, please let
+>> me
+>> know.
+>>> Thanks
+>>>     Trond
+>>>
+
+-- 
+Zhengjun Xing
