@@ -2,326 +2,121 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B782C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7754DC28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EA0326678
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:10:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="MtgyKXpn"
+	by mail.kernel.org (Postfix) with ESMTP id 5A19F26678
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:10:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbfEaJKJ (ORCPT
+        id S1727042AbfEaJKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 05:10:09 -0400
-Received: from mta-01.yadro.com ([89.207.88.251]:46506 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726002AbfEaJKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 05:10:08 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 742CE41908;
-        Fri, 31 May 2019 09:10:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-type:content-type:content-transfer-encoding:mime-version
-        :x-mailer:message-id:date:date:subject:subject:from:from
-        :received:received:received; s=mta-01; t=1559293805; x=
-        1561108206; bh=XdggJuNI87v3norq47XBx2lNXy+o2Et1QZHyTn+TLOE=; b=M
-        tgyKXpn4aZ21VFsCF1YEWjRswBh1RxApo6mOV9N1lkTj9JQKygGqzSJvFMI69Ii9
-        ZiWbQ6EgRTWddP3PzrptQBC2+EUr6cTK6gwyxT3pNF0GRjEziSIy3uTxqbzsoZxN
-        k+2dZo7KODYNwLjUWyTRs5LCsKcQ0g8J0HaPAj6Qyo=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Etf4PeSS29vb; Fri, 31 May 2019 12:10:05 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id D390241860;
-        Fri, 31 May 2019 12:10:03 +0300 (MSK)
-Received: from bbwork.com (172.17.14.115) by T-EXCH-02.corp.yadro.com
- (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Fri, 31
- May 2019 12:10:03 +0300
-From:   Alexander Filippov <a.filippov@yadro.com>
-To:     <linux-aspeed@lists.ozlabs.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, Andrew Jeffery <andrew@aj.id.au>,
-        Joel Stanley <joel@jms.id.au>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Alexander Filippov <a.filippov@yadro.com>
-Subject: [PATCH v4] ARM: dts: aspeed: Add YADRO VESNIN BMC
-Date:   Fri, 31 May 2019 12:09:50 +0300
-Message-ID: <20190531090950.13466-1-a.filippov@yadro.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 31 May 2019 05:10:34 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:48528 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbfEaJKe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 05:10:34 -0400
+Received: from 79.184.255.225.ipv4.supernova.orange.pl (79.184.255.225) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
+ id c2b0c10174bd02aa; Fri, 31 May 2019 11:10:31 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v4 13/16] platform/x86: intel_cht_int33fe: Provide software nodes for the devices
+Date:   Fri, 31 May 2019 11:10:31 +0200
+Message-ID: <9821910.95WSKUoubE@kreacher>
+In-Reply-To: <7468b83c-3d75-b43f-559b-68b3140a89e9@redhat.com>
+References: <20190522105113.11153-1-heikki.krogerus@linux.intel.com> <20190522105113.11153-14-heikki.krogerus@linux.intel.com> <7468b83c-3d75-b43f-559b-68b3140a89e9@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [172.17.14.115]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VESNIN is an OpenPower machine with an Aspeed 2400 BMC SoC manufactured
-by YADRO.
+On Wednesday, May 29, 2019 11:30:58 AM CEST Hans de Goede wrote:
+> Hi,
+> 
+> On 5/22/19 12:51 PM, Heikki Krogerus wrote:
+> > Software nodes provide two features that we will need later.
+> > 1) Software nodes can have references to other software nodes.
+> > 2) Software nodes can exist before a device entry is created.
+> > 
+> > Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > ---
+> >   drivers/platform/x86/intel_cht_int33fe.c | 53 ++++++++++++++++++++----
+> >   1 file changed, 45 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
+> > index 4ab47d6df413..a4ebd1d6b5b6 100644
+> > --- a/drivers/platform/x86/intel_cht_int33fe.c
+> > +++ b/drivers/platform/x86/intel_cht_int33fe.c
+> > @@ -27,6 +27,13 @@
+> >   
+> >   #define EXPECTED_PTYPE		4
+> >   
+> > +enum {
+> > +	INT33FE_NODE_FUSB302,
+> > +	INT33FE_NODE_MAX17047,
+> > +	INT33FE_NODE_PI3USB30532,
+> > +	INT33FE_NODE_MAX,
+> > +};
+> > +
+> >   struct cht_int33fe_data {
+> >   	struct i2c_client *max17047;
+> >   	struct i2c_client *fusb302;
+> > @@ -72,8 +79,13 @@ static const struct property_entry max17047_props[] = {
+> >   
+> >   static const struct property_entry fusb302_props[] = {
+> >   	PROPERTY_ENTRY_STRING("linux,extcon-name", "cht_wcove_pwrsrc"),
+> > -	PROPERTY_ENTRY_U32("fcs,max-sink-microvolt", 12000000),
+> > -	PROPERTY_ENTRY_U32("fcs,max-sink-microamp",   3000000),
+> > +	{ }
+> > +};
+> > +
+> > +static const struct software_node nodes[] = {
+> > +	{ "fusb302", NULL, fusb302_props },
+> > +	{ "max17047", NULL, max17047_props },
+> > +	{ "pi3usb30532" },
+> >   	{ }
+> >   };
+> >   
+> > @@ -82,14 +94,17 @@ cht_int33fe_register_max17047(struct device *dev, struct cht_int33fe_data *data)
+> >   {
+> >   	struct i2c_client *max17047 = NULL;
+> >   	struct i2c_board_info board_info;
+> > +	struct fwnode_handle *fwnode;
+> >   	int ret;
+> >   
+> > +	fwnode = software_node_fwnode(&nodes[INT33FE_NODE_MAX17047]);
+> > +	if (!fwnode)
+> > +		return -ENODEV;
+> > +
+> >   	i2c_for_each_dev(&max17047, cht_int33fe_check_for_max17047);
+> >   	if (max17047) {
+> >   		/* Pre-existing i2c-client for the max17047, add device-props */
+> > -		ret = device_add_properties(&max17047->dev, max17047_props);
+> > -		if (ret)
+> > -			return ret;
+> > +		max17047->dev.fwnode->secondary = fwnode;
+> 
+> I believe that you should do:
+> 		fwnode->secondary = ERR_PTR(-ENODEV);
+> cht_int33fe_setup_dp
+> Before this call, as you are doing in the cht_int33fe_setup_dp function.
 
-Signed-off-by: Alexander Filippov <a.filippov@yadro.com>
----
- arch/arm/boot/dts/Makefile                  |   1 +
- arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts | 224 ++++++++++++++++++++
- 2 files changed, 225 insertions(+)
- create mode 100644 arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
+So I'm inclined to defer this patch until it is improved and queue up the rest of the series.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index dab2914fa293..64a956372fe1 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1272,6 +1272,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
- 	aspeed-bmc-opp-lanyang.dtb \
- 	aspeed-bmc-opp-palmetto.dtb \
- 	aspeed-bmc-opp-romulus.dtb \
-+	aspeed-bmc-opp-vesnin.dtb \
- 	aspeed-bmc-opp-witherspoon.dtb \
- 	aspeed-bmc-opp-zaius.dtb \
- 	aspeed-bmc-portwell-neptune.dtb \
-diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts b/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
-new file mode 100644
-index 000000000000..0b9e29c3212e
---- /dev/null
-+++ b/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
-@@ -0,0 +1,224 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+// Copyright 2019 YADRO
-+/dts-v1/;
-+
-+#include "aspeed-g4.dtsi"
-+#include <dt-bindings/gpio/aspeed-gpio.h>
-+
-+/ {
-+	model = "Vesnin BMC";
-+	compatible = "yadro,vesnin-bmc", "aspeed,ast2400";
-+
-+	chosen {
-+		stdout-path = &uart5;
-+		bootargs = "console=ttyS4,115200 earlyprintk";
-+	};
-+
-+	memory {
-+		reg = <0x40000000 0x20000000>;
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		vga_memory: framebuffer@5f000000 {
-+			no-map;
-+			reg = <0x5f000000 0x01000000>; /* 16MB */
-+		};
-+		flash_memory: region@5c000000 {
-+			no-map;
-+			reg = <0x5c000000 0x02000000>; /* 32M */
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		heartbeat {
-+			gpios = <&gpio ASPEED_GPIO(R, 4) GPIO_ACTIVE_LOW>;
-+		};
-+		power_red {
-+			gpios = <&gpio ASPEED_GPIO(N, 1) GPIO_ACTIVE_LOW>;
-+		};
-+
-+		id_blue {
-+			gpios = <&gpio ASPEED_GPIO(O, 0) GPIO_ACTIVE_LOW>;
-+		};
-+
-+		alarm_red {
-+			gpios = <&gpio ASPEED_GPIO(N, 6) GPIO_ACTIVE_LOW>;
-+		};
-+
-+		alarm_yel {
-+			gpios = <&gpio ASPEED_GPIO(N, 7) GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		button_checkstop {
-+			label = "checkstop";
-+			linux,code = <74>;
-+			gpios = <&gpio ASPEED_GPIO(P, 5) GPIO_ACTIVE_LOW>;
-+		};
-+
-+		button_identify {
-+			label = "identify";
-+			linux,code = <152>;
-+			gpios = <&gpio ASPEED_GPIO(O, 7) GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+};
-+
-+&fmc {
-+	status = "okay";
-+	flash@0 {
-+		status = "okay";
-+		m25p,fast-read;
-+        label = "bmc";
-+#include "openbmc-flash-layout.dtsi"
-+	};
-+};
-+
-+&spi {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_spi1debug_default>;
-+
-+	flash@0 {
-+		status = "okay";
-+		label = "pnor";
-+		m25p,fast-read;
-+	};
-+};
-+
-+&mac0 {
-+	status = "okay";
-+
-+	use-ncsi;
-+	no-hw-checksum;
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_rmii1_default>;
-+};
-+
-+
-+&uart5 {
-+	status = "okay";
-+};
-+
-+&lpc_ctrl {
-+	status = "okay";
-+	memory-region = <&flash_memory>;
-+	flash = <&spi>;
-+};
-+
-+&ibt {
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_txd2_default &pinctrl_rxd2_default>;
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+
-+	eeprom@50 {
-+		compatible = "atmel,24c256";
-+		reg = <0x50>;
-+		pagesize = <64>;
-+	};
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+
-+	tmp75@49 {
-+		compatible = "ti,tmp75";
-+		reg = <0x49>;
-+	};
-+};
-+
-+&i2c2 {
-+	status = "okay";
-+};
-+
-+&i2c3 {
-+	status = "okay";
-+};
-+
-+&i2c4 {
-+	status = "okay";
-+
-+	occ-hwmon@50 {
-+		compatible = "ibm,p8-occ-hwmon";
-+		reg = <0x50>;
-+	};
-+};
-+
-+&i2c5 {
-+	status = "okay";
-+
-+	occ-hwmon@51 {
-+		compatible = "ibm,p8-occ-hwmon";
-+		reg = <0x51>;
-+	};
-+};
-+
-+&i2c6 {
-+	status = "okay";
-+
-+	w83795g@2f {
-+		compatible = "nuvoton,w83795g";
-+		reg = <0x2f>;
-+	};
-+};
-+
-+&i2c7 {
-+	status = "okay";
-+
-+	occ-hwmon@56 {
-+		compatible = "ibm,p8-occ-hwmon";
-+		reg = <0x56>;
-+	};
-+};
-+
-+&i2c9 {
-+	status = "okay";
-+};
-+
-+&i2c10 {
-+	status = "okay";
-+};
-+
-+&i2c11 {
-+	status = "okay";
-+
-+	occ-hwmon@57 {
-+		compatible = "ibm,p8-occ-hwmon";
-+		reg = <0x57>;
-+	};
-+};
-+
-+&i2c12 {
-+	status = "okay";
-+
-+	rtc@68 {
-+		compatible = "maxim,ds3231";
-+		reg = <0x68>;
-+	};
-+};
-+
-+&i2c13 {
-+	status = "okay";
-+};
-+
-+&vuart {
-+	status = "okay";
-+};
--- 
-2.20.1
+I can fix up the typo in the [15/16] while handling it.
+
+
 
