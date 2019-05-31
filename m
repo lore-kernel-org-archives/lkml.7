@@ -2,118 +2,115 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB714C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 528FDC28CC2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96D88269FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:00:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qveRJQgk"
+	by mail.kernel.org (Postfix) with ESMTP id 29257269F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:00:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559311257;
+	bh=CJrzlzhg50T+Ztm9mZ3NVQXrrTb54XS8+0pIiXUrQC8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pkA/2blLLimGqKE5JBaLWMuITFzEPoGTDJY7f41zNaiRHx13ug+c96DwigrduI7xc
+	 VIO6GT2Khjsfp1JpBjxuakx9h9PoGj6uQaE4ZqMrw9b7V36J0kqqTWfoCxkev0WfHP
+	 Y3qF8OUQ1nXEYx7XfrkrnuuSxnh+xBdSv6O57P5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbfEaOAS (ORCPT
+        id S1726700AbfEaOA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 10:00:18 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40656 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726386AbfEaOAS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 10:00:18 -0400
-Received: by mail-wm1-f66.google.com with SMTP id u16so779485wmc.5;
-        Fri, 31 May 2019 07:00:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=reply-to:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=NOwlld2o61g53ikPgtNne2HrK56iyMC4CudXWPFjlEI=;
-        b=qveRJQgkceN4UUmgq0oCfgIJbTH/rwzmiKyj6+6zZ+Z/+INOpKfHZtlqrMuwzYWNEr
-         yuDOcjIp+yL3QACa5tvGJBfnFbIv2026MCLU0lvV/NUSg2V9wIpAO+5uFv3CI50k6Zsy
-         wTjh1Ad6538/Uvph9MtBwzFXJRNCAx+zgnqHlQsLdhnH7Nsqgd7r6vm6H83g9mDE3FDU
-         H43egHgKX7QO75MZT5w+PDvZssLHmpR+WGzTqcQlE0+zZCa0iBSYMwB6JqJvR7bxYTVE
-         sGj3/Z3Nbe1IASdWqBWRMoLI186S0LiHV+xtpldRQYOigYphkmoat/FdD+/CV/TG4Hl7
-         8VhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-transfer-encoding:content-language;
-        bh=NOwlld2o61g53ikPgtNne2HrK56iyMC4CudXWPFjlEI=;
-        b=O2yAzuCuIJ6xx90QrHFsKZr6M2CzVv2jVSo7Hx4PX22ufWjiZ/niEyuDG1bf0hfhWT
-         EJwMt/WWmxMORZE6zDX4XnyvqgM+iOhn7bkRt8o+KTYhQ+eqtTBi4vKhwKo9JwiGI09a
-         2+pcpvB1U/lLQJCbiQ0dIZbbQKG1H3xDKJyrpsM8nnX36ea0OMTdpwxwWOlDaAXjHFNe
-         mwVInUOUhlVsYg8DbPg/o+v+9YvBqksy1xzXF6YQJQSYZgQ9sCkBKOYbqAmq/kW+QNTT
-         EktTwOPNdkElXq+tCVOAMULDvWv3KaATM5F7UluGHDPu0HpPmulwYFnZhDEmMBn2ERMT
-         hk1w==
-X-Gm-Message-State: APjAAAVcFMADlVXXft8JT2j/i5dSWzTB96wXsxj3cAWCGSQeuOEFjZ4x
-        pKUvrA6PCZdtiqVrQ+TqbKs=
-X-Google-Smtp-Source: APXvYqzfNlf2DdFt2bxxDUMP+V68qs+JPCXOL1YaLFWxOZHmPbWlk1oJQADBFWBwjnMzpnbK4bKxyg==
-X-Received: by 2002:a05:600c:506:: with SMTP id i6mr5968967wmc.57.1559311216221;
-        Fri, 31 May 2019 07:00:16 -0700 (PDT)
-Received: from ?IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7? ([2a02:908:1252:fb60:be8a:bd56:1f94:86e7])
-        by smtp.gmail.com with ESMTPSA id p3sm3387244wrd.47.2019.05.31.07.00.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 31 May 2019 07:00:15 -0700 (PDT)
-Reply-To: christian.koenig@amd.com
-Subject: Re: [PATCH 11/22] gpu: amdgpu: fix broken amdgpu_dma_buf.c references
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>, David Airlie <airlied@linux.ie>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>
-References: <cover.1559171394.git.mchehab+samsung@kernel.org>
- <f7378a751557277eab6f37f3f5692cf5f1aff8c6.1559171394.git.mchehab+samsung@kernel.org>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>
-Message-ID: <bf8163be-eb1f-f060-1c5a-405bc6d4c8c5@gmail.com>
-Date:   Fri, 31 May 2019 16:00:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 31 May 2019 10:00:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55234 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726386AbfEaOAz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 10:00:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C44A5AFD1;
+        Fri, 31 May 2019 14:00:52 +0000 (UTC)
+Date:   Fri, 31 May 2019 16:00:50 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>, jannh@google.com,
+        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
+        hdanton@sina.com
+Subject: Re: [RFCv2 5/6] mm: introduce external memory hinting API
+Message-ID: <20190531140050.GS6896@dhcp22.suse.cz>
+References: <20190531064313.193437-1-minchan@kernel.org>
+ <20190531064313.193437-6-minchan@kernel.org>
+ <20190531083757.GH6896@dhcp22.suse.cz>
+ <20190531131859.GB195463@google.com>
 MIME-Version: 1.0
-In-Reply-To: <f7378a751557277eab6f37f3f5692cf5f1aff8c6.1559171394.git.mchehab+samsung@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190531131859.GB195463@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 30.05.19 um 01:23 schrieb Mauro Carvalho Chehab:
-> This file was renamed, but docs weren't updated accordingly.
->
-> 	WARNING: kernel-doc './scripts/kernel-doc -rst -enable-lineno -function PRIME Buffer Sharing ./drivers/gpu/drm/amd/amdgpu/amdgpu_prime.c' failed with return code 1
-> 	WARNING: kernel-doc './scripts/kernel-doc -rst -enable-lineno -internal ./drivers/gpu/drm/amd/amdgpu/amdgpu_prime.c' failed with return code 2
->
-> Fixes: 988076cd8c5c ("drm/amdgpu: rename amdgpu_prime.[ch] into amdgpu_dma_buf.[ch]")
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+On Fri 31-05-19 22:19:00, Minchan Kim wrote:
+> On Fri, May 31, 2019 at 10:37:57AM +0200, Michal Hocko wrote:
+> > On Fri 31-05-19 15:43:12, Minchan Kim wrote:
+> > > There is some usecase that centralized userspace daemon want to give
+> > > a memory hint like MADV_[COLD|PAGEEOUT] to other process. Android's
+> > > ActivityManagerService is one of them.
+> > > 
+> > > It's similar in spirit to madvise(MADV_WONTNEED), but the information
+> > > required to make the reclaim decision is not known to the app. Instead,
+> > > it is known to the centralized userspace daemon(ActivityManagerService),
+> > > and that daemon must be able to initiate reclaim on its own without
+> > > any app involvement.
+> > > 
+> > > To solve the issue, this patch introduces new syscall process_madvise(2).
+> > > It could give a hint to the exeternal process of pidfd.
+> > > 
+> > >  int process_madvise(int pidfd, void *addr, size_t length, int advise,
+> > > 			unsigned long cookie, unsigned long flag);
+> > > 
+> > > Since it could affect other process's address range, only privileged
+> > > process(CAP_SYS_PTRACE) or something else(e.g., being the same UID)
+> > > gives it the right to ptrace the process could use it successfully.
+> > > 
+> > > The syscall has a cookie argument to privode atomicity(i.e., detect
+> > > target process's address space change since monitor process has parsed
+> > > the address range of target process so the operaion could fail in case
+> > > of happening race). Although there is no interface to get a cookie
+> > > at this moment, it could be useful to consider it as argument to avoid
+> > > introducing another new syscall in future. It could support *atomicity*
+> > > for disruptive hint(e.g., MADV_DONTNEED|FREE).
+> > > flag argument is reserved for future use if we need to extend the API.
+> > 
+> > Providing an API that is incomplete will not fly. Really. As this really
+> > begs for much more discussion and it would be good to move on with the
+> > core idea of the pro active memory memory management from userspace
+> > usecase. Could you split out the core change so that we can move on and
+> > leave the external for a later discussion. I believe this would lead to
+> > a smoother integration.
+> 
+> No problem but I need to understand what you want a little bit more because
+> I thought this patchset is already step by step so if we reach the agreement
+> of part of them like [1-5/6], it could be merged first.
+> 
+> Could you say how you want to split the patchset for forward progress?
 
-Reviewed-by: Christian König <christian.koenig@amd.com>
-
-> ---
->   Documentation/gpu/amdgpu.rst | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/gpu/amdgpu.rst b/Documentation/gpu/amdgpu.rst
-> index a740e491dfcc..a15199b1b02e 100644
-> --- a/Documentation/gpu/amdgpu.rst
-> +++ b/Documentation/gpu/amdgpu.rst
-> @@ -37,10 +37,10 @@ Buffer Objects
->   PRIME Buffer Sharing
->   --------------------
->   
-> -.. kernel-doc:: drivers/gpu/drm/amd/amdgpu/amdgpu_prime.c
-> +.. kernel-doc:: drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
->      :doc: PRIME Buffer Sharing
->   
-> -.. kernel-doc:: drivers/gpu/drm/amd/amdgpu/amdgpu_prime.c
-> +.. kernel-doc:: drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
->      :internal:
->   
->   MMU Notifier
-
+I would start with new madvise modes and once they are in a shape to be
+merged then we can start the remote madvise API. I believe that even
+local process reclaim modes are interesting and useful. I haven't heard
+anybody objecting to them without having a remote API so far.
+-- 
+Michal Hocko
+SUSE Labs
