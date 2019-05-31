@@ -4,110 +4,109 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C78A1C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A982C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 803A626C64
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:47:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5465B24774
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:47:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="CfkE4HLl"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="WE8aLIMg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfEaQrC (ORCPT
+        id S1727160AbfEaQra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 12:47:02 -0400
-Received: from mail-eopbgr80077.outbound.protection.outlook.com ([40.107.8.77]:46902
+        Fri, 31 May 2019 12:47:30 -0400
+Received: from mail-eopbgr80059.outbound.protection.outlook.com ([40.107.8.59]:56017
         "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726550AbfEaQrC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 12:47:02 -0400
+        id S1727105AbfEaQr2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 12:47:28 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oX44ziWmEph5ufOyRc7xIddIakQ4mqQV5NsPkZ0UQUo=;
- b=CfkE4HLlmpdY330PqqAV6tF4t/sFd55XUvMgJoOCQoyMPyW0KvrKXqX9NvMr7xLax4GAWrOOTXAu3PRfV/uiO+PnVlN6tG3QZ+xsIUuBvzp1sho87CFRz4LjxPnm6FTmMjJCSB29OADadzZqsthaqB+t12LAoMyI7ZRMGOyZPrY=
-Received: from VI1PR04MB5134.eurprd04.prod.outlook.com (20.177.50.159) by
- VI1PR04MB6254.eurprd04.prod.outlook.com (20.179.25.18) with Microsoft SMTP
+ bh=0PNB+iX0JXfIC0kbo7QRgW+BBwqfUl6yy2PWjiq0550=;
+ b=WE8aLIMgkT6+mj+1pimOxRgKud4Nsu+0perqEnBGYI6mvtLqm64hBvV7ImBQuq8aQwGi0w9IRa+qpiAGhIyPHwKvl0z1+g6NBZIDK0dIPrry9vM1A+6ppJ+5evvfe4Kzd2CgMDsou5zv41/n9BwXro7z5ZMHzrO1KcH0kxz/DpE=
+Received: from AM0PR04MB3971.eurprd04.prod.outlook.com (52.134.90.16) by
+ AM0PR04MB4212.eurprd04.prod.outlook.com (52.134.95.142) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.20; Fri, 31 May 2019 16:46:57 +0000
-Received: from VI1PR04MB5134.eurprd04.prod.outlook.com
- ([fe80::8d0e:de86:9b49:b40]) by VI1PR04MB5134.eurprd04.prod.outlook.com
- ([fe80::8d0e:de86:9b49:b40%7]) with mapi id 15.20.1922.024; Fri, 31 May 2019
- 16:46:57 +0000
-From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
-To:     =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Madalin-cristian Bucur <madalin.bucur@nxp.com>,
-        Roy Pledge <roy.pledge@nxp.com>,
-        Camelia Alexandra Groza <camelia.groza@nxp.com>,
-        Leo Li <leoyang.li@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jocke@infinera.com" <joakim.tjernlund@infinera.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Mian Yousaf Kaukab <yousaf.kaukab@suse.com>
-Subject: RE: [PATCH v3 0/6] Prerequisites for NXP LS104xA SMMU enablement
-Thread-Topic: [PATCH v3 0/6] Prerequisites for NXP LS104xA SMMU enablement
-Thread-Index: AQHVFvLAUsVmmx2jaE2ZHLZY1pGN66aFajIAgAAH5dA=
-Date:   Fri, 31 May 2019 16:46:57 +0000
-Message-ID: <VI1PR04MB5134BFA391D8FF013762882FEC190@VI1PR04MB5134.eurprd04.prod.outlook.com>
-References: <20190530141951.6704-1-laurentiu.tudor@nxp.com>
- <d086216f-f3fc-c88a-3891-81e84e8bdb01@suse.de>
-In-Reply-To: <d086216f-f3fc-c88a-3891-81e84e8bdb01@suse.de>
+ 15.20.1922.18; Fri, 31 May 2019 16:47:24 +0000
+Received: from AM0PR04MB3971.eurprd04.prod.outlook.com
+ ([fe80::3df6:6e48:cc6d:71c6]) by AM0PR04MB3971.eurprd04.prod.outlook.com
+ ([fe80::3df6:6e48:cc6d:71c6%5]) with mapi id 15.20.1922.021; Fri, 31 May 2019
+ 16:47:24 +0000
+From:   York Sun <york.sun@nxp.com>
+To:     Radu Nicolae Pirea <radu_nicolae.pirea@upb.ro>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+CC:     Mike Turquette <mturquette@baylibre.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Andrey Filippov <andrey@elphel.com>,
+        Paul Bolle <pebolle@tiscali.nl>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [EXT] Re: [Patch v9] driver/clk/clk-si5338: Add common clock
+ framework driver for si5338
+Thread-Topic: [EXT] Re: [Patch v9] driver/clk/clk-si5338: Add common clock
+ framework driver for si5338
+Thread-Index: AQHVF7oG6C1le8DQ9Euu7t2xmZzbwg==
+Date:   Fri, 31 May 2019 16:47:24 +0000
+Message-ID: <AM0PR04MB3971799F379795FE812D6D529A190@AM0PR04MB3971.eurprd04.prod.outlook.com>
+References: <1472247978-29312-1-git-send-email-york.sun@nxp.com>
+ <96cb1e730ea5afd651d4c79f20f365df5fe8a29b.camel@upb.ro>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=laurentiu.tudor@nxp.com; 
-x-originating-ip: [192.88.166.1]
+ smtp.mailfrom=york.sun@nxp.com; 
+x-originating-ip: [66.235.24.83]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 61349436-142e-4e7d-a13f-08d6e5e79876
+x-ms-office365-filtering-correlation-id: cd73a39a-1f28-46d9-5be2-08d6e5e7a84f
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB6254;
-x-ms-traffictypediagnostic: VI1PR04MB6254:
-x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-x-microsoft-antispam-prvs: <VI1PR04MB6254BEEDEEE9619A3981F5D9EC190@VI1PR04MB6254.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB4212;
+x-ms-traffictypediagnostic: AM0PR04MB4212:
+x-microsoft-antispam-prvs: <AM0PR04MB421265AE67A1B5B3CF01E64D9A190@AM0PR04MB4212.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:862;
 x-forefront-prvs: 00540983E2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(39860400002)(376002)(346002)(366004)(199004)(189003)(13464003)(26005)(66556008)(6506007)(81166006)(8676002)(5660300002)(68736007)(8936002)(14444005)(102836004)(64756008)(446003)(76116006)(81156014)(6246003)(229853002)(7736002)(66476007)(33656002)(14454004)(66446008)(66946007)(73956011)(99286004)(9686003)(71190400001)(305945005)(71200400001)(6436002)(76176011)(7696005)(6116002)(3846002)(53936002)(25786009)(54906003)(86362001)(2906002)(66574012)(55016002)(486006)(11346002)(74316002)(316002)(186003)(44832011)(52536014)(476003)(478600001)(4326008)(256004)(4744005)(66066001)(6916009);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB6254;H:VI1PR04MB5134.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(346002)(376002)(396003)(366004)(199004)(189003)(3846002)(7736002)(52536014)(76116006)(54906003)(4744005)(2906002)(64756008)(6116002)(7696005)(6436002)(26005)(73956011)(86362001)(229853002)(33656002)(478600001)(91956017)(110136005)(66476007)(66446008)(74316002)(25786009)(316002)(66556008)(66946007)(5660300002)(305945005)(2501003)(186003)(7416002)(44832011)(446003)(8936002)(68736007)(55016002)(486006)(76176011)(6506007)(9686003)(71190400001)(99286004)(81156014)(102836004)(8676002)(53936002)(53546011)(71200400001)(66066001)(4326008)(14454004)(6246003)(81166006)(256004)(476003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4212;H:AM0PR04MB3971.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: F+XQXjwWCSXRL+zgQQnOITyfdHhqKI/LUALGucfpyAjYQ1qx2g3wUTQ3Ya9utXqc3Dbr9ct1QcfVS62ew4CGtpUiv0THWt4Lt33n5Bt2e9lOx1CZ8cRfTXAkFXBdAbaBDm65SS65FoL2180jgrXe5gjzqfTY9SHXda8pGNNgxcgt7HQWqULgQtO/Xj3s3a23t8hHBVtA3BhXVW156Uur3y0buBI/4mznXJXmnCercBNr6s3nLzb57LPmLmB8k3JzlG/UGGvJU2BNSn4c2ShUhFD+nALd2QuB22ElP7PxlwvW09HqXnoMui5cp7GjBd5oDqoQ/aIDl5+nW3qSIBR5BMDFhQ7jBX7YRu/jF+1V8InSrPSP6684mgP2b0UieT0nvXjjLnCiT4s6F80cfql4aUQFdV/e/SbDQiSi4wMTCuk=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: GRCqxB4sHejEnDciYNjolrqYJCNdiN/+9H5QD6Eyh1dY/VJuOiw+IYHg+jJbH2KGaaz+INqmQ9CmmuJGP70PLaHtmaqDcIYGFl6Ap4cSI8hDj2DIol1ocasPu9LhC4VCd5GLMZ3MnLOooAhGiwiVqpQUMIqweThVFaeNn6YxLzKUjGi60Ku5NFCBmxt3J5ymcK1Ur40XodzoPP8nM62zk4s43d/+H5p+7J4HLomqqlec0VawHQXbYanYXfcBisC/2aF8Jnlo/zlpZkjj2Pc1jXsX1WpjaiGQrC7IrzS7uze9JCtyWThVvnCKxTDv0KtE3pQuJekEBL6gQdP4947nOf0jUBYxnCzTnnS0kzMQ16C4DwBY5sLFdbT0fylnyU7w/qC1q1TSptdbUyH86cgobvgqf+JDuUVbuAFPIMWlhFQ=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 61349436-142e-4e7d-a13f-08d6e5e79876
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 May 2019 16:46:57.4732
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd73a39a-1f28-46d9-5be2-08d6e5e7a84f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 May 2019 16:47:24.2653
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: laurentiu.tudor@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6254
+X-MS-Exchange-CrossTenant-userprincipalname: york.sun@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4212
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gQW5kcmVhcywNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBB
-bmRyZWFzIEbDpHJiZXIgPGFmYWVyYmVyQHN1c2UuZGU+DQo+IFNlbnQ6IEZyaWRheSwgTWF5IDMx
-LCAyMDE5IDc6MTUgUE0NCj4gDQo+IEhpIExhdXJlbnRpdSwNCj4gDQo+IEFtIDMwLjA1LjE5IHVt
-IDE2OjE5IHNjaHJpZWIgbGF1cmVudGl1LnR1ZG9yQG54cC5jb206DQo+ID4gVGhpcyBwYXRjaCBz
-ZXJpZXMgY29udGFpbnMgc2V2ZXJhbCBmaXhlcyBpbiBwcmVwYXJhdGlvbiBmb3IgU01NVQ0KPiA+
-IHN1cHBvcnQgb24gTlhQIExTMTA0M0EgYW5kIExTMTA0NkEgY2hpcHMuIE9uY2UgdGhlc2UgZ2V0
-IHBpY2tlZCB1cCwNCj4gPiBJJ2xsIHN1Ym1pdCB0aGUgYWN0dWFsIFNNTVUgZW5hYmxlbWVudCBw
-YXRjaGVzIGNvbnNpc3RpbmcgaW4gdGhlDQo+ID4gcmVxdWlyZWQgZGV2aWNlIHRyZWUgY2hhbmdl
-cy4NCj4gDQo+IEhhdmUgeW91IHRob3VnaHQgdGhyb3VnaCB3aGF0IHdpbGwgaGFwcGVuIGlmIHRo
-aXMgcGF0Y2ggb3JkZXJpbmcgaXMgbm90DQo+IHByZXNlcnZlZD8gSW4gcGFydGljdWxhciwgYSB1
-c2VyIGluc3RhbGxpbmcgYSBmdXR1cmUgVS1Cb290IHVwZGF0ZSB3aXRoDQo+IHRoZSBEVEIgYml0
-cyBidXQgYm9vdGluZyBhIHN0YWJsZSBrZXJuZWwgd2l0aG91dCB0aGlzIHBhdGNoIHNlcmllcyAt
-DQo+IHdvdWxkbid0IHRoYXQgcmVncmVzcyBkcGFhIHRoZW4gZm9yIG91ciBjdXN0b21lcnM/DQo+
-IA0KDQpUaGVzZSBhcmUgZml4ZXMgZm9yIGlzc3VlcyB0aGF0IHBvcHBlZCBvdXQgYWZ0ZXIgZW5h
-YmxpbmcgU01NVS4gDQpJIGRvIG5vdCBleHBlY3QgdGhlbSB0byBicmVhayBhbnl0aGluZy4NCg0K
-LS0tDQpCZXN0IFJlZ2FyZHMsIExhdXJlbnRpdQ0K
+On 5/31/19 7:06 AM, Radu Nicolae Pirea wrote:=0A=
+> Caution: EXT Email=0A=
+> =0A=
+> Hi,=0A=
+> =0A=
+> @York I want to continue the work on this driver and I want to upstream=
+=0A=
+> it. Are you OK with this?=0A=
+> =0A=
+> I saw later improvement suggestions related to the bindings and I will=0A=
+> make the changes.=0A=
+=0A=
+Radu,=0A=
+=0A=
+You are welcome to improve this driver.=0A=
+=0A=
+York=0A=
