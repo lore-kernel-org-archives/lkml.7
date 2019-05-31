@@ -2,229 +2,97 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE5FC28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 04:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4779EC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 04:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8344263C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 04:50:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12CE925363
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 04:55:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LsFyPSmJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbfEaEt7 (ORCPT
+        id S1726546AbfEaEzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 00:49:59 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:50255 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbfEaEt7 (ORCPT
+        Fri, 31 May 2019 00:55:43 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:44394 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfEaEzm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 00:49:59 -0400
-Received: from [192.168.0.12] (127.19.86.79.rev.sfr.net [79.86.19.127])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 18921100004;
-        Fri, 31 May 2019 04:49:29 +0000 (UTC)
-Subject: Re: [PATCH v4 08/14] arm: Use generic mmap top-down layout and brk
- randomization
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-References: <20190526134746.9315-1-alex@ghiti.fr>
- <20190526134746.9315-9-alex@ghiti.fr> <201905291222.595685C3F0@keescook>
-From:   Alex Ghiti <alex@ghiti.fr>
-Message-ID: <b8c0c2e4-4d58-1d6e-5458-f0af3eb86d7c@ghiti.fr>
-Date:   Fri, 31 May 2019 00:49:29 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 31 May 2019 00:55:42 -0400
+Received: by mail-lf1-f65.google.com with SMTP id r15so6796414lfm.11
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 21:55:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wtczSeucUoHeYtIiYUJky9w29yvcYMkcpiT/47ZO0RE=;
+        b=LsFyPSmJ03t3UE7s46qhpMX3JDLFjR+QS84P1/WvHBkfcUQhLDMjqHAVPl/nu0cePc
+         n5V4RiqwpI69g8DGAb0X9YxZRfSYFQZrbJS8nK0tHMZu5Qr7lzh8VfB/OFBQXz+JtF80
+         7IgLlVP4rgrI05Z4yAkFYQNwlhqsyj6NbckkGzRNU0/0wGOJHZW/tqT7VpZR2mvwFd0w
+         +lL48O7kEdcdf2zhBysIr+BPnDMNxy729hFOlBVINBdJv5yE6NwJj+/v8OcvbCAVnXRI
+         jEN6088isurTNqUkVSpfp5JgWjBHD2GALP1EfkWZFEQ3V0UWVOOLdr4iCOS/FPC0GSlV
+         9cvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wtczSeucUoHeYtIiYUJky9w29yvcYMkcpiT/47ZO0RE=;
+        b=RdB7fO5apNgcJFRHsMxhtCeRlNw7Mvx1J+WXUocwckwZyRzPkULs80/w3+7gOLc2A/
+         Z/YTnbL8tmINmsLRR4ipZBifaZn4SpQ0mpp7bPl1QAZUAnzAcWqumP1u1MOf22KY2KTz
+         42LumCiFG0JRAQUlkcGF5OTNuI8i87MzkkvBSPl4XjZ24XRSgjySwU3wz39uKbCXQfpc
+         pqOSSB3VQfvCfEbyJMimYtsle++9Nfb7uwmP4Df9kO6+t6BpZUE3NqE0AgWoCueKOlK8
+         NfwNFUxlMGe8OZd9TftHRvmujQDfVCJXC4TtoN3FFww6SBfAtF7VFr+fXPTWRc/hb8Bi
+         0JzA==
+X-Gm-Message-State: APjAAAWqEV7pSY9n0SE+57SQXMs6ickGdcT4YrSsgWa5anyq/hqD4G9T
+        9ZAuK9ilBlmyo9tua5hTBnLOzQeLs3pAGGQD3ls=
+X-Google-Smtp-Source: APXvYqzgHzTHOlOpxNFOabvhzsir+AGzMDROYdjP3rpSYVbgqe7YzHBgwdjpViixNa0/WeXhyeKB9GkghyIl/EilXHo=
+X-Received: by 2002:ac2:42cb:: with SMTP id n11mr3987145lfl.179.1559278541220;
+ Thu, 30 May 2019 21:55:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <201905291222.595685C3F0@keescook>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: sv-FI
+References: <cover.1559129225.git.vpillai@digitalocean.com>
+ <CAERHkruDE-7R5K=2yRqCJRCpV87HkHzDYbQA2WQkruVYpG7t7Q@mail.gmail.com> <20190530141725.GA15172@sinkpad>
+In-Reply-To: <20190530141725.GA15172@sinkpad>
+From:   Aubrey Li <aubrey.intel@gmail.com>
+Date:   Fri, 31 May 2019 12:55:28 +0800
+Message-ID: <CAERHkrtVKQjkv_R4cj8Szt3fcJAhY1YLXNbL_EnBjUA7Pp8s-Q@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
+To:     Julien Desfossez <jdesfossez@digitalocean.com>
+Cc:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/29/19 3:26 PM, Kees Cook wrote:
-> On Sun, May 26, 2019 at 09:47:40AM -0400, Alexandre Ghiti wrote:
->> arm uses a top-down mmap layout by default that exactly fits the generic
->> functions, so get rid of arch specific code and use the generic version
->> by selecting ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT.
->> As ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT selects ARCH_HAS_ELF_RANDOMIZE,
->> use the generic version of arch_randomize_brk since it also fits.
->> Note that this commit also removes the possibility for arm to have elf
->> randomization and no MMU: without MMU, the security added by randomization
->> is worth nothing.
->>
->> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
-> Acked-by: Kees Cook <keescook@chromium.org>
+On Thu, May 30, 2019 at 10:17 PM Julien Desfossez
+<jdesfossez@digitalocean.com> wrote:
 >
-> It may be worth noting that STACK_RND_MASK is safe to remove here
-> because it matches the default that now exists in mm/util.c.
+> Interesting, could you detail a bit more your test setup (commands used,
+> type of machine, any cgroup/pinning configuration, etc) ? I would like
+> to reproduce it and investigate.
 
-
-Yes, thanks for pointing that.
-
+Let me see if I can simply my test to reproduce it.
 
 Thanks,
-
-
-Alex
-
-
->
-> -Kees
->
->> ---
->>   arch/arm/Kconfig                 |  2 +-
->>   arch/arm/include/asm/processor.h |  2 --
->>   arch/arm/kernel/process.c        |  5 ---
->>   arch/arm/mm/mmap.c               | 62 --------------------------------
->>   4 files changed, 1 insertion(+), 70 deletions(-)
->>
->> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
->> index 8869742a85df..27687a8c9fb5 100644
->> --- a/arch/arm/Kconfig
->> +++ b/arch/arm/Kconfig
->> @@ -6,7 +6,6 @@ config ARM
->>   	select ARCH_CLOCKSOURCE_DATA
->>   	select ARCH_HAS_DEBUG_VIRTUAL if MMU
->>   	select ARCH_HAS_DEVMEM_IS_ALLOWED
->> -	select ARCH_HAS_ELF_RANDOMIZE
->>   	select ARCH_HAS_FORTIFY_SOURCE
->>   	select ARCH_HAS_KEEPINITRD
->>   	select ARCH_HAS_KCOV
->> @@ -29,6 +28,7 @@ config ARM
->>   	select ARCH_SUPPORTS_ATOMIC_RMW
->>   	select ARCH_USE_BUILTIN_BSWAP
->>   	select ARCH_USE_CMPXCHG_LOCKREF
->> +	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
->>   	select ARCH_WANT_IPC_PARSE_VERSION
->>   	select BUILDTIME_EXTABLE_SORT if MMU
->>   	select CLONE_BACKWARDS
->> diff --git a/arch/arm/include/asm/processor.h b/arch/arm/include/asm/processor.h
->> index 5d06f75ffad4..95b7688341c5 100644
->> --- a/arch/arm/include/asm/processor.h
->> +++ b/arch/arm/include/asm/processor.h
->> @@ -143,8 +143,6 @@ static inline void prefetchw(const void *ptr)
->>   #endif
->>   #endif
->>   
->> -#define HAVE_ARCH_PICK_MMAP_LAYOUT
->> -
->>   #endif
->>   
->>   #endif /* __ASM_ARM_PROCESSOR_H */
->> diff --git a/arch/arm/kernel/process.c b/arch/arm/kernel/process.c
->> index 72cc0862a30e..19a765db5f7f 100644
->> --- a/arch/arm/kernel/process.c
->> +++ b/arch/arm/kernel/process.c
->> @@ -322,11 +322,6 @@ unsigned long get_wchan(struct task_struct *p)
->>   	return 0;
->>   }
->>   
->> -unsigned long arch_randomize_brk(struct mm_struct *mm)
->> -{
->> -	return randomize_page(mm->brk, 0x02000000);
->> -}
->> -
->>   #ifdef CONFIG_MMU
->>   #ifdef CONFIG_KUSER_HELPERS
->>   /*
->> diff --git a/arch/arm/mm/mmap.c b/arch/arm/mm/mmap.c
->> index 0b94b674aa91..b8d912ac9e61 100644
->> --- a/arch/arm/mm/mmap.c
->> +++ b/arch/arm/mm/mmap.c
->> @@ -17,43 +17,6 @@
->>   	((((addr)+SHMLBA-1)&~(SHMLBA-1)) +	\
->>   	 (((pgoff)<<PAGE_SHIFT) & (SHMLBA-1)))
->>   
->> -/* gap between mmap and stack */
->> -#define MIN_GAP		(128*1024*1024UL)
->> -#define MAX_GAP		((STACK_TOP)/6*5)
->> -#define STACK_RND_MASK	(0x7ff >> (PAGE_SHIFT - 12))
->> -
->> -static int mmap_is_legacy(struct rlimit *rlim_stack)
->> -{
->> -	if (current->personality & ADDR_COMPAT_LAYOUT)
->> -		return 1;
->> -
->> -	if (rlim_stack->rlim_cur == RLIM_INFINITY)
->> -		return 1;
->> -
->> -	return sysctl_legacy_va_layout;
->> -}
->> -
->> -static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
->> -{
->> -	unsigned long gap = rlim_stack->rlim_cur;
->> -	unsigned long pad = stack_guard_gap;
->> -
->> -	/* Account for stack randomization if necessary */
->> -	if (current->flags & PF_RANDOMIZE)
->> -		pad += (STACK_RND_MASK << PAGE_SHIFT);
->> -
->> -	/* Values close to RLIM_INFINITY can overflow. */
->> -	if (gap + pad > gap)
->> -		gap += pad;
->> -
->> -	if (gap < MIN_GAP)
->> -		gap = MIN_GAP;
->> -	else if (gap > MAX_GAP)
->> -		gap = MAX_GAP;
->> -
->> -	return PAGE_ALIGN(STACK_TOP - gap - rnd);
->> -}
->> -
->>   /*
->>    * We need to ensure that shared mappings are correctly aligned to
->>    * avoid aliasing issues with VIPT caches.  We need to ensure that
->> @@ -181,31 +144,6 @@ arch_get_unmapped_area_topdown(struct file *filp, const unsigned long addr0,
->>   	return addr;
->>   }
->>   
->> -unsigned long arch_mmap_rnd(void)
->> -{
->> -	unsigned long rnd;
->> -
->> -	rnd = get_random_long() & ((1UL << mmap_rnd_bits) - 1);
->> -
->> -	return rnd << PAGE_SHIFT;
->> -}
->> -
->> -void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
->> -{
->> -	unsigned long random_factor = 0UL;
->> -
->> -	if (current->flags & PF_RANDOMIZE)
->> -		random_factor = arch_mmap_rnd();
->> -
->> -	if (mmap_is_legacy(rlim_stack)) {
->> -		mm->mmap_base = TASK_UNMAPPED_BASE + random_factor;
->> -		mm->get_unmapped_area = arch_get_unmapped_area;
->> -	} else {
->> -		mm->mmap_base = mmap_base(random_factor, rlim_stack);
->> -		mm->get_unmapped_area = arch_get_unmapped_area_topdown;
->> -	}
->> -}
->> -
->>   /*
->>    * You really shouldn't be using read() or write() on /dev/mem.  This
->>    * might go away in the future.
->> -- 
->> 2.20.1
->>
+-Aubrey
