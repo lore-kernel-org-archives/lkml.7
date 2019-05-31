@@ -2,174 +2,169 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 195CDC46460
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA24BC28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F041826A74
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:16:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C309B26A46
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:16:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ick3A2YQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbfEaOQE (ORCPT
+        id S1727141AbfEaOQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 10:16:04 -0400
-Received: from mga05.intel.com ([192.55.52.43]:8345 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726889AbfEaOQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 10:16:02 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 May 2019 07:16:01 -0700
-X-ExtLoop1: 1
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 31 May 2019 07:15:59 -0700
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH v5 05/16] software node: Add software_node_get_reference_args()
-Date:   Fri, 31 May 2019 17:15:36 +0300
-Message-Id: <20190531141547.22728-6-heikki.krogerus@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190531141547.22728-1-heikki.krogerus@linux.intel.com>
-References: <20190531141547.22728-1-heikki.krogerus@linux.intel.com>
+        Fri, 31 May 2019 10:16:59 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:53106 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726546AbfEaOQ5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 10:16:57 -0400
+Received: by mail-it1-f196.google.com with SMTP id t184so15941985itf.2
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 07:16:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=YXFGxKHnIt74cwR50mQuZdQqAZNrljv5y9/ydG0VpUM=;
+        b=Ick3A2YQjusIIX2ylpMC6LTqkhj7doGXFDMptbRguvlBDPEBquMti9bPZMMiVtL9WO
+         eDTgSqvl2vP+YbReBjGguL+vBbXylKNCQZb0TISqX65NZwlMRbUzCtYf19ETXmbZ7NVt
+         82OAMU26Rd0ol+RuJSc8T50CKOXwEkey92ohPLrLCsoBzqZ6PdBCz7V0RZSb/VIvK/NB
+         jj4RWQ2Znf0oVqvJHaiSt/IWolynIOnFjw6P62nHPQnJV098BAKxgSQaKK5hUdaS700E
+         5pxV8ZKB6ppKzoGy2oO1QiTwyiENcf/FOUscCcZ25t//jrR/lsrWJ/iXAA4Di+hqOcGL
+         ohAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=YXFGxKHnIt74cwR50mQuZdQqAZNrljv5y9/ydG0VpUM=;
+        b=fKWIinyFCf02diPlkPsDm1chVPHujBIkpgoL1LL4dHHUo5urcjNQXkt4xqlFIP7OpC
+         tbeubxxk3GGhT08J6/kTGXIPteAGzvib1JWR1oQeeOMrEi4xQC9PA+0y+HT0tLmgLn49
+         4HHPGPgJM1c0xgxTo/vrhWEbxjWS0kEc9mZdqqLjpEHM8B57zNYIctH9NYJ1VY4DIAuy
+         Yd4hdjsOimRuz/rMoF8asxxRNVPc8VLry7uXunN5+MiIDRokdZoLcAB2YQvxmmPKnUtH
+         6d6meMKqv52IE4vqv2GUiywfwSDf/nmNPo3/9BR9NZYefDUgoI8v9tvW9Ru4uTi4xYkC
+         R4wg==
+X-Gm-Message-State: APjAAAV2URZ4Qt7m8lgIuxbHwKuRPm74imUMRPvkAm8P8ECtSHzyeFNW
+        oWcNlOgnynsIfsjkZ1qh0tGCww==
+X-Google-Smtp-Source: APXvYqy4tYc+0TdDvWpiSglvXNSo29C9YlkQ1lVbn7HkiKD8226/TFOvunlgELn5F3jYJdHPTbBWFg==
+X-Received: by 2002:a05:6638:3d6:: with SMTP id r22mr6739735jaq.71.1559312216989;
+        Fri, 31 May 2019 07:16:56 -0700 (PDT)
+Received: from localhost (c-75-72-120-115.hsd1.mn.comcast.net. [75.72.120.115])
+        by smtp.gmail.com with ESMTPSA id q142sm2478054itb.17.2019.05.31.07.16.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 31 May 2019 07:16:56 -0700 (PDT)
+Date:   Fri, 31 May 2019 09:16:55 -0500
+From:   Dan Rue <dan.rue@linaro.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.1 000/405] 5.1.6-stable review
+Message-ID: <20190531141655.wgqtz6n6jdxb5m5y@xps.therub.org>
+Mail-Followup-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+References: <20190530030540.291644921@linuxfoundation.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This makes it possible to support drivers that use
-fwnode_property_get_reference_args() function.
+On Wed, May 29, 2019 at 07:59:58PM -0700, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.1.6 release.
+> There are 405 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat 01 Jun 2019 03:01:59 AM UTC.
+> Anything received after that time might be too late.
 
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Tested-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/base/swnode.c    | 47 ++++++++++++++++++++++++++++++++++++++++
- include/linux/property.h | 28 ++++++++++++++++++++++++
- 2 files changed, 75 insertions(+)
+Results from Linaro’s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index 2d925fc2255f..e7b3aa3bd55a 100644
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -560,6 +560,52 @@ software_node_get_named_child_node(const struct fwnode_handle *fwnode,
- 	return NULL;
- }
- 
-+static int
-+software_node_get_reference_args(const struct fwnode_handle *fwnode,
-+				 const char *propname, const char *nargs_prop,
-+				 unsigned int nargs, unsigned int index,
-+				 struct fwnode_reference_args *args)
-+{
-+	struct swnode *swnode = to_swnode(fwnode);
-+	const struct software_node_reference *ref;
-+	const struct property_entry *prop;
-+	struct fwnode_handle *refnode;
-+	int i;
-+
-+	if (!swnode || !swnode->node->references)
-+		return -ENOENT;
-+
-+	for (ref = swnode->node->references; ref->name; ref++)
-+		if (!strcmp(ref->name, propname))
-+			break;
-+
-+	if (!ref->name || index > (ref->nrefs - 1))
-+		return -ENOENT;
-+
-+	refnode = software_node_fwnode(ref->refs[index].node);
-+	if (!refnode)
-+		return -ENOENT;
-+
-+	if (nargs_prop) {
-+		prop = property_entry_get(swnode->node->properties, nargs_prop);
-+		if (!prop)
-+			return -EINVAL;
-+
-+		nargs = prop->value.u32_data;
-+	}
-+
-+	if (nargs > NR_FWNODE_REFERENCE_ARGS)
-+		return -EINVAL;
-+
-+	args->fwnode = software_node_get(refnode);
-+	args->nargs = nargs;
-+
-+	for (i = 0; i < nargs; i++)
-+		args->args[i] = ref->refs[index].args[i];
-+
-+	return 0;
-+}
-+
- static const struct fwnode_operations software_node_ops = {
- 	.get = software_node_get,
- 	.put = software_node_put,
-@@ -569,6 +615,7 @@ static const struct fwnode_operations software_node_ops = {
- 	.get_parent = software_node_get_parent,
- 	.get_next_child_node = software_node_get_next_child,
- 	.get_named_child_node = software_node_get_named_child_node,
-+	.get_reference_args = software_node_get_reference_args
- };
- 
- /* -------------------------------------------------------------------------- */
-diff --git a/include/linux/property.h b/include/linux/property.h
-index a3813ded52ea..abcde2f236a0 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -332,16 +332,44 @@ int fwnode_graph_parse_endpoint(const struct fwnode_handle *fwnode,
- /* -------------------------------------------------------------------------- */
- /* Software fwnode support - when HW description is incomplete or missing */
- 
-+struct software_node;
-+
-+/**
-+ * struct software_node_ref_args - Reference with additional arguments
-+ * @node: Reference to a software node
-+ * @nargs: Number of elements in @args array
-+ * @args: Integer arguments
-+ */
-+struct software_node_ref_args {
-+	const struct software_node *node;
-+	unsigned int nargs;
-+	u64 args[NR_FWNODE_REFERENCE_ARGS];
-+};
-+
-+/**
-+ * struct software_node_reference - Named software node reference property
-+ * @name: Name of the property
-+ * @nrefs: Number of elements in @refs array
-+ * @refs: Array of references with optional arguments
-+ */
-+struct software_node_reference {
-+	const char *name;
-+	unsigned int nrefs;
-+	const struct software_node_ref_args *refs;
-+};
-+
- /**
-  * struct software_node - Software node description
-  * @name: Name of the software node
-  * @parent: Parent of the software node
-  * @properties: Array of device properties
-+ * @references: Array of software node reference properties
-  */
- struct software_node {
- 	const char *name;
- 	const struct software_node *parent;
- 	const struct property_entry *properties;
-+	const struct software_node_reference *references;
- };
- 
- bool is_software_node(const struct fwnode_handle *fwnode);
+Summary
+------------------------------------------------------------------------
+
+kernel: 5.1.6-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+git branch: linux-5.1.y
+git commit: 6df8e06907e10b03bfeb68d794def0a11133a8a3
+git describe: v5.1.5-406-g6df8e06907e1
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.1-oe/build/v5.1.5-406-g6df8e06907e1
+
+No regressions (compared to build v5.1.5)
+
+No fixes (compared to build v5.1.5)
+
+Ran 23969 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libgpiod
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* network-basic-tests
+* ltp-fs-tests
+* ltp-open-posix-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* ssuite
+
 -- 
-2.20.1
-
+Linaro LKFT
+https://lkft.linaro.org
