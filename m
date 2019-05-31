@@ -2,85 +2,74 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61DBFC46470
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18243C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E1602479C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:50:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559292649;
-	bh=H0YCCBLkpQqYTU6X2HPTeAEMFw+WsFm9xFJghDfbqg0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ramHkrLFYf69DXMTzkbu3mpLhigmylnFYXvDbjL5V1AUYaA4y5GSnvPfS4vFlicVC
-	 Q9yK/wQpcPYIJjGoxeccIBCT5tbk2BYfn7rVOb39hsdw1Yv53arBHCPdpJdm/6mB38
-	 9UD17gUzJfalzJVes1wdPkRy4vpUOyvlAy+E5mc0=
+	by mail.kernel.org (Postfix) with ESMTP id E49ED24F28
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:52:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbfEaIus (ORCPT
+        id S1726799AbfEaIwM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 04:50:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56026 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726158AbfEaIur (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 04:50:47 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2BDD5AF55;
-        Fri, 31 May 2019 08:50:46 +0000 (UTC)
-Date:   Fri, 31 May 2019 10:50:44 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, jannh@google.com,
-        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
-        hdanton@sina.com
-Subject: Re: [RFCv2 3/6] mm: introduce MADV_PAGEOUT
-Message-ID: <20190531085044.GJ6896@dhcp22.suse.cz>
-References: <20190531064313.193437-1-minchan@kernel.org>
- <20190531064313.193437-4-minchan@kernel.org>
+        Fri, 31 May 2019 04:52:12 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:50246 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbfEaIwM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 04:52:12 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id C6B4F80233; Fri, 31 May 2019 10:52:00 +0200 (CEST)
+Date:   Fri, 31 May 2019 10:52:10 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     kernel list <linux-kernel@vger.kernel.org>,
+        dmitry.torokhov@gmail.com, gregkh@linuxfoundation.org,
+        teheo@suse.de, sre@kernel.org
+Subject: devm_* vs. PROBE_DEFFER: memory leaks?
+Message-ID: <20190531085209.GA20964@amd>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="rwEMma7ioTxnRzrJ"
 Content-Disposition: inline
-In-Reply-To: <20190531064313.193437-4-minchan@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 31-05-19 15:43:10, Minchan Kim wrote:
-> When a process expects no accesses to a certain memory range
-> for a long time, it could hint kernel that the pages can be
-> reclaimed instantly but data should be preserved for future use.
-> This could reduce workingset eviction so it ends up increasing
-> performance.
-> 
-> This patch introduces the new MADV_PAGEOUT hint to madvise(2)
-> syscall. MADV_PAGEOUT can be used by a process to mark a memory
-> range as not expected to be used for a long time so that kernel
-> reclaims the memory instantly. The hint can help kernel in deciding
-> which pages to evict proactively.
 
-Again, are there any restictions on what kind of memory can be paged out?
-Private/Shared, anonymous/file backed. Any restrictions on mapping type.
-Etc. Please make sure all that is in the changelog.
+--rwEMma7ioTxnRzrJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-What are the failure modes? E.g. what if the swap is full, does the call
-fails or it silently ignores the error?
+Hi!
 
-Thanks!
--- 
-Michal Hocko
-SUSE Labs
+Is devm_ supposed to work with EPROBE_DEFFER?
+
+Probe function is now called multiple times; is memory freed between
+calling probe()? Will allocations from failed probe()s remain after
+the driver is inserted successfully, leaking memory?
+
+Thanks,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--rwEMma7ioTxnRzrJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlzw6zkACgkQMOfwapXb+vL0igCeJvVsNfBl8H8xvikYrAeaSVJm
+t2oAn360LyefEazCKa/r0oLjLL+fhRNn
+=dPKe
+-----END PGP SIGNATURE-----
+
+--rwEMma7ioTxnRzrJ--
