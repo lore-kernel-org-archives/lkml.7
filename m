@@ -2,157 +2,143 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD44C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB17C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E95E22684B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 760862685F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:48:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727216AbfEaLpn (ORCPT
+        id S1727231AbfEaLsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 07:45:43 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56860 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726158AbfEaLpm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 07:45:42 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4VBR4OQ024985
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 07:45:41 -0400
-Received: from e17.ny.us.ibm.com (e17.ny.us.ibm.com [129.33.205.207])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2su220brb1-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 07:45:40 -0400
-Received: from localhost
-        by e17.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Fri, 31 May 2019 12:45:40 +0100
-Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
-        by e17.ny.us.ibm.com (146.89.104.204) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 31 May 2019 12:45:36 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4VBiKap41353694
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 31 May 2019 11:44:20 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BA546B2065;
-        Fri, 31 May 2019 11:44:20 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9DD40B2064;
-        Fri, 31 May 2019 11:44:20 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 31 May 2019 11:44:20 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 98B2B16C5D81; Fri, 31 May 2019 04:44:21 -0700 (PDT)
-Date:   Fri, 31 May 2019 04:44:21 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     "'Vineet Gupta'" <Vineet.Gupta1@synopsys.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <Will.Deacon@arm.com>,
-        arcml <linux-snps-arc@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Subject: Re: single copy atomicity for double load/stores on 32-bit systems
-Reply-To: paulmck@linux.ibm.com
-References: <2fd3a455-6267-5d21-c530-41964a4f6ce9@synopsys.com>
- <895ec12746c246579aed5dd98ace6e38@AcuMS.aculab.com>
+        Fri, 31 May 2019 07:48:42 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55768 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726403AbfEaLsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 07:48:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id F1702AD4E;
+        Fri, 31 May 2019 11:48:39 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <895ec12746c246579aed5dd98ace6e38@AcuMS.aculab.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19053111-0040-0000-0000-000004F6FBE0
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011190; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01211199; UDB=6.00636407; IPR=6.00992235;
- MB=3.00027130; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-31 11:45:38
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19053111-0041-0000-0000-0000090316D9
-Message-Id: <20190531114421.GJ28207@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-31_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905310076
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 31 May 2019 13:48:39 +0200
+From:   Roman Penyaev <rpenyaev@suse.de>
+To:     Renzo Davoli <renzo@cs.unibo.it>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Davide Libenzi <davidel@xmailserver.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCH 1/1] eventfd new tag EFD_VPOLL: generate epoll events
+In-Reply-To: <20190531104502.GE3661@cs.unibo.it>
+References: <20190526142521.GA21842@cs.unibo.it>
+ <20190527073332.GA13782@kroah.com> <20190527133621.GC26073@cs.unibo.it>
+ <480f1bda66b67f740f5da89189bbfca3@suse.de>
+ <20190531104502.GE3661@cs.unibo.it>
+Message-ID: <cd20672aaf13f939b4f798d0839d2438@suse.de>
+X-Sender: rpenyaev@suse.de
+User-Agent: Roundcube Webmail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 09:41:17AM +0000, David Laight wrote:
-> From: Vineet Gupta
-> > Sent: 30 May 2019 19:23
-> ...
-> > While it seems reasonable form hardware pov to not implement such atomicity by
-> > default it seems there's an additional burden on application writers. They could
-> > be happily using a lockless algorithm with just a shared flag between 2 threads
-> > w/o need for any explicit synchronization. But upgrade to a new compiler which
-> > aggressively "packs" struct rendering long long 32-bit aligned (vs. 64-bit before)
-> > causing the code to suddenly stop working. Is the onus on them to declare such
-> > memory as c11 atomic or some such.
+On 2019-05-31 12:45, Renzo Davoli wrote:
+> HI Roman,
 > 
-> A 'new' compiler can't suddenly change the alignment rules for structure elements.
-> The alignment rules will be part of the ABI.
+> On Fri, May 31, 2019 at 11:34:08AM +0200, Roman Penyaev wrote:
+>> On 2019-05-27 15:36, Renzo Davoli wrote:
+>> > Unfortunately this approach cannot be applied to
+>> > poll/select/ppoll/pselect/epoll.
+>> 
+>> If you have to override other systemcalls, what is the problem to 
+>> override
+>> poll family?  It will add, let's say, 50 extra code lines complexity 
+>> to your
+>> userspace code.  All you need is to be woken up by *any* event and 
+>> check
+>> one mask variable, in order to understand what you need to do: read or
+>> write,
+>> basically exactly what you do in your eventfd modification, but only 
+>> in
+>> userspace.
 > 
-> More likely is that the structure itself is unexpectedly allocated on
-> an 8n+4 boundary due to code changes elsewhere.
+> This approach would not scale. If I want to use both a (user-space)
+> network stack
+> and a (emulated) device (or more stacks and devices) which
+> (overridden) poll would I use?
 > 
-> It is also worth noting that for complete portability only writes to
-> 'full words' can be assumed atomic.
-> Some old Alpha's did RMW cycles for byte writes.
-> (Although I suspect Linux doesn't support those any more.)
+> The poll of the first stack is not able to to deal with the third 
+> device.
 
-Any C11 or later compiler needs to generate the atomic RMW cycles if
-needed in cases like this.  To see this, consider the following code:
+Since each such a stack has a set of read/write/etc functions you always
+can extend you stack with another call which returns you event mask,
+specifying what exactly you have to do, e.g.:
 
-	spinlock_t l1;
-	spinlock_t l2;
-	struct foo {
-		char c1; // Protected by l1
-		char c2; // Protected by l2
-	}
+     nfds = epoll_wait(epollfd, events, MAX_EVENTS, -1);
+     for (n = 0; n < nfds; ++n) {
+          struct sock *sock;
 
-	...
+          sock = events[n].data.ptr;
+          events = sock->get_events(sock, &events[n]);
 
-	spin_lock(&l1);
-	fp->c1 = 42;
-	do_somthing_protected_by_l1();
-	spin_unlock(&l1);
+          if (events & EPOLLIN)
+              sock->read(sock);
+          if (events & EPOLLOUT)
+              sock->write(sock);
+     }
 
-	...
 
-	spin_lock(&l2);
-	fp->c2 = 206;
-	do_somthing_protected_by_l2();
-	spin_unlock(&l2);
+With such a virtual table you can mix all userspace stacks and even
+with normal sockets, for which 'get_events' function can be declared as
 
-A compiler that failed to generate atomic RMW code sequences for those
-stores to ->c1 and ->c2 would be generating a data race in the object
-code when there was no such race in the source code.  Kudos to Hans Boehm
-for having browbeat compiler writers into accepting this restriction,
-which was not particularly popular -- they wanted to be able to use
-vector units and such.  ;-)
+static poll_t kernel_sock_get_events(struct sock *sock, struct 
+epoll_event *ev)
+{
+     return ev->events;
+}
 
-> Even x86 can catch you out.
-> The bit operations will do wider RMW cycles than you expect.
+Do I miss something?
 
-But does the compiler automatically generate these?
 
-							Thanx, Paul
-
-> 	David
+>> > > Why can it not be less than 64?
+>> > This is the imeplementation of 'write'. The 64 bits include the
+>> > 'command'
+>> > EFD_VPOLL_ADDEVENTS, EFD_VPOLL_DELEVENTS or EFD_VPOLL_MODEVENTS (in the
+>> > most
+>> > significant 32 bits) and the set of events (in the lowest 32 bits).
+>> 
+>> Do you really need add/del/mod semantics?  Userspace still has to keep 
+>> mask
+>> somewhere, so you can have one simple command, which does:
+>>    ctx->count = events;
+>> in kernel, so no masks and this games with bits are needed.  That will
+>> simplify API.
 > 
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> Registration No: 1397386 (Wales)
+> It is true, at the price to have more complex code in user space.
+> Other system calls could have beeen implemented as "set the value",
+> instead there are
+> ADD/DEL modification flags.
+> I mean for example sigprocmask (SIG_BLOCK, SIG_UNBLOCK, SIG_SETMASK),
+> or even epoll_ctl.
+> While poll requires the program to keep the struct pollfd array stored
+> somewhere,
+> epoll is more powerful and flexible as different file descriptors can 
+> be added
+> and deleted by different modules/components.
+> 
+> If I have two threads implementing the send and receive path of a
+> socket in a user-space
 
+Eventually you come up with such a lock to protect your tcp or whatever
+state machine.  Or you have a real example where read and write paths
+can work completely independently?
+
+--
+Roman
