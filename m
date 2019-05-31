@@ -2,101 +2,121 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B115FC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D5E1C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E4C924826
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:38:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 313142685A
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:40:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bvbFz7kI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727194AbfEaLiO (ORCPT
+        id S1727251AbfEaLkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 07:38:14 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54162 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726158AbfEaLiO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 07:38:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 365EFABD4;
-        Fri, 31 May 2019 11:38:12 +0000 (UTC)
-Subject: Re: [PATCH v2 3/3] xen/swiotlb: remember having called
- xen_create_contiguous_region()
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org
-References: <20190529090407.1225-1-jgross@suse.com>
- <20190529090407.1225-4-jgross@suse.com>
- <20190530090409.GB30428@infradead.org>
- <eebb0275-9418-717f-97d7-5e55917f46fd@oracle.com>
-From:   Juergen Gross <jgross@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <2fbfc6a7-572c-1ce2-3323-802f9a77500e@suse.com>
-Date:   Fri, 31 May 2019 13:38:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 31 May 2019 07:40:01 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:35152 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726158AbfEaLkA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 07:40:00 -0400
+Received: by mail-lj1-f193.google.com with SMTP id h11so9322648ljb.2;
+        Fri, 31 May 2019 04:39:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1nPmul1q9AAucCoI9yY3uJOYKaMzqR7bEf/iEX/aqjE=;
+        b=bvbFz7kIlrTImz4Is9rlZJVgVwodHyMIKxGHokBpzd3jyqtrT+N3NzxY7rOqC0jweG
+         DSMZZjQ+lcwWYldWhwcDc6MDUtSmWwU3lgIaW3V5IyaiIDgkEjIvhuCYGUTr8M0RXuNc
+         O0fzNTX5I8oSooPoLDLs8veC2SMwcgA6oTQ+UL8SCdBdiEoIVyFPp0IdTRROhpyNeEUv
+         A412MMiyx1SG8fEtAf6TQL1kE94zOSIAiATRg50MnYQ2Ik19C6EtVxcBkBP8ZtR7diXt
+         L9XnCkcFed8oQ1GOfN+jt5Xvm9HOqpOQ6rHsp4ZVcmffoJmFb6KLq7aIIXjJo1M84mUf
+         Waxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1nPmul1q9AAucCoI9yY3uJOYKaMzqR7bEf/iEX/aqjE=;
+        b=DXmctQ/mUZ5nusAS6ZR28aP0A2G2+YM9Ta2vQNS/FtOrH3pMxdmo1pcKm7C1+EG+cB
+         MLffxEltpQV0RZmO333LJFBF08e7Yytn6YFJ1x4tjO8EbKVYN/KqdKtKy7uFXbzQ3ifu
+         Lt+51ZmyNxXSE9HdOmrXRq+Z3wVfMnqlTYBf0OIPu8xRy1Gyxo4yxwQCDh+4AsHl5KcR
+         z+Y63LCkI2kuecRp9DtaCBye+aUQ7iq2zD8lnGGTPdlgZbh3bpUB3nzMuQaOKAvTNNqk
+         9sYQaI6uAFMEPs768yMAFo6iB/gF8Pgq6PMvvZVdK2o0K4Q8PYhiOQLVUv+wRqVLe/cC
+         WTyQ==
+X-Gm-Message-State: APjAAAUXouDIqFENC7G0/9T73Rz11XQH2XROeH03ZTfC7yngH/fnshBR
+        zfflQgottKmqym+/+ufgVYVd5tDN+tjlIiXAGQU=
+X-Google-Smtp-Source: APXvYqyCAo8ow6MnnWWOBWsq1Cm0GTfIZYIH3tTY29CEmrrLVa3t2AA8hrgydqxU4pH85ptW2LRQNyKxfPY6IS4halk=
+X-Received: by 2002:a2e:890c:: with SMTP id d12mr5463170lji.107.1559302798500;
+ Fri, 31 May 2019 04:39:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <eebb0275-9418-717f-97d7-5e55917f46fd@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190530094706.865-1-Anson.Huang@nxp.com> <20190530094706.865-2-Anson.Huang@nxp.com>
+In-Reply-To: <20190530094706.865-2-Anson.Huang@nxp.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Fri, 31 May 2019 08:39:49 -0300
+Message-ID: <CAOMZO5D1B1tKs8eu_a8hXs193+TukHAYHiCEyk5g63p1S-cnbg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] arm64: dts: freescale: Add i.MX8MN dtsi support
+To:     Yongcai Huang <Anson.Huang@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Bruno Thomsen <bruno.thomsen@gmail.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Ping Bai <ping.bai@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>, pankaj.bansal@nxp.com,
+        Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>,
+        Pramod Kumar <pramod.kumar_1@nxp.com>,
+        Vabhav Sharma <vabhav.sharma@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        NXP Linux Team <Linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/05/2019 14:46, Boris Ostrovsky wrote:
-> On 5/30/19 5:04 AM, Christoph Hellwig wrote:
->> Please don't add your private flag to page-flags.h.  The whole point of
->> the private flag is that you can use it in any way you want withou
->> touching the common code.
-> 
-> 
-> There is already a bunch of aliases for various sub-components
-> (including Xen) in page-flags.h for private flags, which is why I
-> suggested we do the same for the new use case. Adding this new alias
-> will keep flag usage consistent.
+On Thu, May 30, 2019 at 6:45 AM <Anson.Huang@nxp.com> wrote:
 
-What about me adding another patch moving those Xen private aliases
-into arch/x86/include/asm/xen/page.h ?
+> +                       gpio1: gpio@30200000 {
+> +                               compatible = "fsl,imx8mn-gpio", "fsl,imx35-gpio";
+> +                               reg = <0x30200000 0x10000>;
+> +                               interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>,
+> +                                            <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
 
+No GPIO clocks entries?
 
-Juergen
+> +                       usbphynop1: usbphynop1 {
+> +                               compatible = "usb-nop-xceiv";
+> +                               clocks = <&clk IMX8MN_CLK_USB_PHY_REF>;
+> +                               assigned-clocks = <&clk IMX8MN_CLK_USB_PHY_REF>;
+> +                               assigned-clock-parents = <&clk IMX8MN_SYS_PLL1_100M>;
+> +                               clock-names = "main_clk";
+> +                       };
 
+ usbphynop1 does not have any registers associated, so it should be
+placed outside the soc.
+
+Building with W=1 should warn you about that.
+
+> +                       usbphynop2: usbphynop2 {
+> +                               compatible = "usb-nop-xceiv";
+> +                               clocks = <&clk IMX8MN_CLK_USB_PHY_REF>;
+> +                               assigned-clocks = <&clk IMX8MN_CLK_USB_PHY_REF>;
+> +                               assigned-clock-parents = <&clk IMX8MN_SYS_PLL1_100M>;
+> +                               clock-names = "main_clk";
+> +                       };
+> +
+
+Ditto
