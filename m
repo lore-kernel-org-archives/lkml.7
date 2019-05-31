@@ -2,145 +2,83 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0326AC28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 18:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43346C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 18:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC73426E1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 18:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1226C244D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 18:52:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="i/2HIvcs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727191AbfEaSuq (ORCPT
+        id S1727187AbfEaSwh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 14:50:46 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48200 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726589AbfEaSup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 14:50:45 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7375AAD3B;
-        Fri, 31 May 2019 18:50:44 +0000 (UTC)
+        Fri, 31 May 2019 14:52:37 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:46120 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727053AbfEaSwg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 14:52:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=JHV9B7CY5P1AY/d5DQgFTyOMLZPxcZGMAdD3jQYerfs=; b=i/2HIvcsXchx7C8zTCPQ/Fq3j7
+        5tUu25qWV2Y/a+nH3xwPGi1ADK/loAoXwxU/vXGkapjhN1/Lufi53N1UzC3LvMRd9EgTrPrtuIkO/
+        HqGtIUrpTQPz0Kdc0Gpc0Lr6uXBxXEyDvrwk6yDksPAkvp1LolxXy47nHPiN+aazrgsA=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hWmdX-00007Y-O6; Fri, 31 May 2019 20:52:19 +0200
+Date:   Fri, 31 May 2019 20:52:19 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com,
+        palmer@sifive.com, paul.walmsley@sifive.com,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH REPOST v8 3/3] i2c-ocores: sifive: add polling mode
+ workaround for FU540-C000 SoC.
+Message-ID: <20190531185219.GD23821@lunn.ch>
+References: <1559327423-13001-1-git-send-email-sagar.kadam@sifive.com>
+ <1559327423-13001-4-git-send-email-sagar.kadam@sifive.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 31 May 2019 20:50:44 +0200
-From:   Roman Penyaev <rpenyaev@suse.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     azat@libevent.org, akpm@linux-foundation.org,
-        viro@zeniv.linux.org.uk, torvalds@linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/13] epoll: support pollable epoll from userspace
-In-Reply-To: <20190531163312.GW2650@hirez.programming.kicks-ass.net>
-References: <20190516085810.31077-1-rpenyaev@suse.de>
- <20190531163312.GW2650@hirez.programming.kicks-ass.net>
-Message-ID: <327c990a4418b3d9c5c94787a37350bb@suse.de>
-X-Sender: rpenyaev@suse.de
-User-Agent: Roundcube Webmail
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1559327423-13001-4-git-send-email-sagar.kadam@sifive.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-05-31 18:33, Peter Zijlstra wrote:
-> On Thu, May 16, 2019 at 10:57:57AM +0200, Roman Penyaev wrote:
->> When new event comes for some epoll item kernel does the following:
->> 
->>  struct epoll_uitem *uitem;
->> 
->>  /* Each item has a bit (index in user items array), discussed later 
->> */
->>  uitem = user_header->items[epi->bit];
->> 
->>  if (!atomic_fetch_or(uitem->ready_events, pollflags)) {
->>      i = atomic_add(&ep->user_header->tail, 1);
+On Sat, Jun 01, 2019 at 12:00:23AM +0530, Sagar Shrikant Kadam wrote:
+> The i2c-ocore driver already has a polling mode interface.But it needs
+> a workaround for FU540 Chipset on HiFive unleashed board (RevA00).
+> There is an erratum in FU540 chip that prevents interrupt driven i2c
+> transfers from working, and also the I2C controller's interrupt bit
+> cannot be cleared if set, due to this the existing i2c polling mode
+> interface added in mainline earlier doesn't work, and CPU stall's
+> infinitely, when-ever i2c transfer is initiated.
 > 
-> So this is where you increment tail
+> Ref:
+> 	commit dd7dbf0eb090 ("i2c: ocores: refactor setup for polling")
 > 
->> 
->>      item_idx = &user_index[i & index_mask];
->> 
->>      /* Signal with a bit, user spins on index expecting value > 0 */
->>      *item_idx = idx + 1;
+> The workaround / fix under OCORES_FLAG_BROKEN_IRQ is particularly for
+> FU540-COOO SoC.
 > 
-> IUC, this is where you write the idx into shared memory, which is
-> _after_ tail has already been incremented.
+> The polling function identifies a SiFive device based on the device node
+> and enables the workaround.
 > 
->>  }
->> 
->> Important thing here is that ring can't infinitely grow and corrupt 
->> other
->> elements, because kernel always checks that item was marked as ready, 
->> so
->> userspace has to clear ready_events field.
->> 
->> On userside events the following code should be used in order to 
->> consume
->> events:
->> 
->>  tail = READ_ONCE(header->tail);
->>  for (i = 0; header->head != tail; header->head++) {
->>      item_idx_ptr = &index[idx & indeces_mask];
->> 
->>      /*
->>       * Spin here till we see valid index
->>       */
->>      while (!(idx = __atomic_load_n(item_idx_ptr, __ATOMIC_ACQUIRE)))
->>          ;
-> 
-> Which you then try and fix up by busy waiting for @idx to become !0 ?!
-> 
-> Why not write the idx first, then increment the ->tail, such that when
-> we see ->tail, we already know idx must be correct?
-> 
->> 
->>      item = &header->items[idx - 1];
->> 
->>      /*
->>       * Mark index as invalid, that is for userspace only, kernel does 
->> not care
->>       * and will refill this pointer only when observes that event is 
->> cleared,
->>       * which happens below.
->>       */
->>      *item_idx_ptr = 0;
-> 
-> That avoids this store too.
-> 
->> 
->>      /*
->>       * Fetch data first, if event is cleared by the kernel we drop 
->> the data
->>       * returning false.
->>       */
->>      event->data = item->event.data;
->>      event->events = __atomic_exchange_n(&item->ready_events, 0,
->>                          __ATOMIC_RELEASE);
->> 
->>  }
-> 
-> Aside from that, you have to READ/WRITE_ONCE() on ->head, to avoid
-> load/store tearing.
+> Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+> Acked-by: Andrew Lunn <andrew@lunn.ch>
 
-Yes, clear. Thanks.
+Please read:
 
-> 
-> 
-> That would give something like:
-> 
-> kernel:
-> 
-> 	slot = atomic_fetch_inc(&ep->slot);
-> 	item_idx = &user_index[slot & idx_mask];
-> 	WRITE_ONCE(*item_idx, idx);
-> 	smp_store_release(&ep->user_header->tail, slot);
+https://lkml.org/lkml/2019/5/22/954
 
-This can't be called from many cpus,  tail can be overwritten with "old"
-value.  That what I try to solve.
-
---
-Roman
-
+	Andrew
