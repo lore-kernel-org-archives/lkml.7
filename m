@@ -2,82 +2,85 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A507EC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 467E7C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 796CC2663C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:01:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C63524C41
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:02:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbfEaJBs (ORCPT
+        id S1727066AbfEaJCm convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 05:01:48 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55841 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbfEaJBr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 05:01:47 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 16so1115340wmg.5
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 02:01:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DTiQsLTxPV2jXrLH/uO3q/GEu7ETuQg2TOaV62LmCWk=;
-        b=SKvI7eIeNrFc7TT4Yz9tR7hpzXhzO1XD8DJG5ulCujnUQDNK3yYYWHAQUElQUPtb5M
-         Ai8+Q47Dn4dCAcmTKskSyqJMYR1BqPFEQnK6x6eEaz9FEKukyW9bSsBtFHbnNSgIU9zI
-         /43F3lekczaavaxGOYnyy6RCe43O7nNsSMqPtEEZaMtgDpjlqZ1iMcQiq7eD0bfTWBZC
-         s2xTctqqY7kj4xqmfPm2Qtxx6PMFSOTZH4x1Q3/4bLhgNVZBPUC3WKnjj74uDeA/9BTe
-         YViSebmYEQaP7srz09RYo3camOTZALehGoLkd3foIjLZAROly0Jt3CU+mBMSRX+lBU+k
-         KTeQ==
-X-Gm-Message-State: APjAAAVp9Y6RxNDP5FcILGomfAuVy79xH/IhmgVQW4GSdCOce+qwPJAh
-        NmhI78tetUgZMay1Ay7tvt+8pQ==
-X-Google-Smtp-Source: APXvYqwPM3bx3DRCNnTfMZ6u9wtiYG9PJ9DNHMH+x0DpAEt/eeZaB2JcBrDF6jH6+F1OyKZC4/zIzA==
-X-Received: by 2002:a05:600c:240e:: with SMTP id 14mr4902900wmp.133.1559293305650;
-        Fri, 31 May 2019 02:01:45 -0700 (PDT)
-Received: from [192.168.10.150] ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id k184sm10942021wmk.0.2019.05.31.02.01.44
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 31 May 2019 02:01:44 -0700 (PDT)
-Subject: Re: [PATCH 1/2] KVM: LAPIC: Optimize timer latency consider world
- switch time
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <kernellwp@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-References: <1558585131-1321-1-git-send-email-wanpengli@tencent.com>
- <20190530193653.GA27551@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <754c46dd-3ead-2c27-1bcc-52db26418390@redhat.com>
-Date:   Fri, 31 May 2019 11:01:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 31 May 2019 05:02:42 -0400
+Received: from mga11.intel.com ([192.55.52.93]:46260 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726275AbfEaJCl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 05:02:41 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 May 2019 02:02:41 -0700
+X-ExtLoop1: 1
+Received: from jlahtine-desk.ger.corp.intel.com (HELO localhost) ([10.251.94.174])
+  by fmsmga006.fm.intel.com with ESMTP; 31 May 2019 02:02:37 -0700
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20190530193653.GA27551@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+From:   Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <5ecde05364284f6845b651297fd9ce8225af2bcd.1559171394.git.mchehab+samsung@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, intel-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+References: <cover.1559171394.git.mchehab+samsung@kernel.org>
+ <5ecde05364284f6845b651297fd9ce8225af2bcd.1559171394.git.mchehab+samsung@kernel.org>
+Message-ID: <155929335645.5971.17921116065895204577@jlahtine-desk.ger.corp.intel.com>
+User-Agent: alot/0.7
+Subject: Re: [PATCH 12/22] gpu: i915.rst: Fix references to renamed files
+Date:   Fri, 31 May 2019 12:02:36 +0300
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/05/19 21:36, Sean Christopherson wrote:
->> +u32 __read_mostly vmentry_lapic_timer_advance_ns = 0;
->> +module_param(vmentry_lapic_timer_advance_ns, uint, S_IRUGO | S_IWUSR);
-> Hmm, an interesting idea would be to have some way to "lock" this param,
-> e.g. setting bit 0 locks the param.  That would allow KVM to calculate the
-> cycles value to avoid the function call and the MUL+DIV.  If I'm not
-> mistaken, vcpu->arch.virtual_tsc_khz is set only in kvm_set_tsc_khz().
+Quoting Mauro Carvalho Chehab (2019-05-30 02:23:43)
+> WARNING: kernel-doc './scripts/kernel-doc -rst -enable-lineno -function Hardware workarounds ./drivers/gpu/drm/i915/intel_workarounds.c' failed with return code 1
+> WARNING: kernel-doc './scripts/kernel-doc -rst -enable-lineno -function Logical Rings, Logical Ring Contexts and Execlists ./drivers/gpu/drm/i915/intel_lrc.c' failed with return code 1
+> WARNING: kernel-doc './scripts/kernel-doc -rst -enable-lineno -internal ./drivers/gpu/drm/i915/intel_lrc.c' failed with return code 2
+> 
+> Fixes: 112ed2d31a46 ("drm/i915: Move GraphicsTechnology files under gt/")
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> ---
+>  Documentation/gpu/i915.rst | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/gpu/i915.rst b/Documentation/gpu/i915.rst
+> index 055df45596c1..38fefeb99bba 100644
+> --- a/Documentation/gpu/i915.rst
+> +++ b/Documentation/gpu/i915.rst
+> @@ -61,7 +61,7 @@ Intel GVT-g Host Support(vGPU device model)
+>  Workarounds
+>  -----------
+>  
+> -.. kernel-doc:: drivers/gpu/drm/i915/intel_workarounds.c
+> +.. kernel-doc:: drivers/gpu/drm/i915/gt/selftest_workarounds.c
 
-I would just make it read-only.  But I'm afraid we're entering somewhat
-dangerous territory.  There is a risk that the guest ends up entering
-the interrupt handler before the TSC deadline has actually expired, and
-there would be no way to know what would happen; even guest hangs are
-possible.
+This should be gt/intel_workarounds.c
 
-Paolo
+Do you want me to merge this, or do you plan on merging through
+documentation tree?
+
+Regards, Joonas
