@@ -2,102 +2,137 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10AB3C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5655AC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2AF726EA7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28AE226E93
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:51:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="a7egaLOL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727483AbfEaTvS (ORCPT
+        id S1727494AbfEaTvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 15:51:18 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:43802 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727199AbfEaTvR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 15:51:17 -0400
-Received: by mail-qt1-f196.google.com with SMTP id z24so2332567qtj.10;
-        Fri, 31 May 2019 12:51:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Xsy7KltLXxbW0BgIu9F6NiZrWo9L3TAjqu6dUK3uAPQ=;
-        b=HKiKcAe9NTvT7jlqURubrv6AeE+r3LE2+ofsKjOLjlU0ld0Pi3r+5W07WAc3VTxYm/
-         5wrIZtFRKGTy2rH60ru5gu6eOl/YzHfcZSENVMsY8hGuobbDe4O1sp/TxLr5Xtsr4Dl0
-         dwdKN9ROAl13qXJcOMT007U4IWvdTWmffPs1e/NuDc2RCbGRUSJHKyvb2Ua41NmLi8G1
-         EhPapRhPY4RVQXaXXLgkI1YZG/BcMmh5QvS0t30z3V25fLVbsq6/fspHUsKpvJ5a4hme
-         +UQJfWQiDpAbWQZ3HSdJDulMjntf/kxRd4eh+RUPfIwyjA0FaD9D0kqAasz8h5U5CYIq
-         Ph5g==
-X-Gm-Message-State: APjAAAUm+OEZ/7YxeQJx+zOKF7n1s+UtucC9RQHHqU7lyIRYoURhthq4
-        lFcldEooRRjhXGvtLlCoJhz/ZuU5uw2YIIyBzTU=
-X-Google-Smtp-Source: APXvYqy5TLpyp1w9fDgzU51O06QTfSxUvNh0UTj3TiR4JGC7+S/GTS9DUNmT2pYJmAL1ZIsCzMU5oyvll93f7R/CrRg=
-X-Received: by 2002:a0c:e78b:: with SMTP id x11mr6666549qvn.93.1559332276507;
- Fri, 31 May 2019 12:51:16 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190531191204.4044-1-palmer@sifive.com> <20190531191204.4044-3-palmer@sifive.com>
-In-Reply-To: <20190531191204.4044-3-palmer@sifive.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 31 May 2019 21:51:00 +0200
-Message-ID: <CAK8P3a3HPeVq29k3Zk5rSk4bddiUQFrdEgDZUgdNnYZK+8QpGw@mail.gmail.com>
-Subject: Re: [PATCH 2/5] Add fchmodat4(), a new syscall
-To:     Palmer Dabbelt <palmer@sifive.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
+        Fri, 31 May 2019 15:51:49 -0400
+Received: from mail-eopbgr770089.outbound.protection.outlook.com ([40.107.77.89]:36741
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727409AbfEaTvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 15:51:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0/cGAMvhRe3DX4Z097orKMHDXrlzraUENiWr6IumeO4=;
+ b=a7egaLOL/uTo3ybDQ719VyHQrInaHn3x+r7ubt3kTuEwJNP3oycO+7RNn7RxjF/j6SL4BGATV+iq83jrx2GuutBML48SQ+GrMSDmsIcp90sh4UXB5Vl8QKszcrSN+hoegVTtB4QyLFsgdD4hbsB0//3YJnT7W48cr+HeXGwko1U=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB6694.namprd05.prod.outlook.com (20.178.235.204) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.13; Fri, 31 May 2019 19:51:45 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::2cb6:a3d1:f675:ced8]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::2cb6:a3d1:f675:ced8%3]) with mapi id 15.20.1943.016; Fri, 31 May 2019
+ 19:51:45 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Matt Mullins <mmullins@fb.com>
+CC:     Borislav Petkov <bp@alien8.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Content-Type: text/plain; charset="UTF-8"
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Douglas Anderson <dianders@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] x86/kgdb: return 0 from kgdb_arch_set_breakpoint
+Thread-Topic: [PATCH] x86/kgdb: return 0 from kgdb_arch_set_breakpoint
+Thread-Index: AQHVF+nqHaBESOu01Eao/K0uaC2yhaaFpLcA
+Date:   Fri, 31 May 2019 19:51:44 +0000
+Message-ID: <F51E9CDD-6936-46B8-967D-13F6BFEF8CE0@vmware.com>
+References: <20190531194755.6320-1-mmullins@fb.com>
+In-Reply-To: <20190531194755.6320-1-mmullins@fb.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [66.170.99.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7171af25-0e5e-4530-499b-08d6e60168fe
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BYAPR05MB6694;
+x-ms-traffictypediagnostic: BYAPR05MB6694:
+x-microsoft-antispam-prvs: <BYAPR05MB66942F0A007348B553EA90C1D0190@BYAPR05MB6694.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 00540983E2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(39860400002)(346002)(136003)(396003)(366004)(199004)(189003)(11346002)(486006)(446003)(53546011)(76176011)(229853002)(66066001)(476003)(7416002)(81156014)(6506007)(6512007)(14454004)(8676002)(2616005)(8936002)(81166006)(53936002)(36756003)(86362001)(478600001)(7736002)(102836004)(186003)(6436002)(305945005)(6116002)(3846002)(82746002)(6486002)(83716004)(71200400001)(26005)(71190400001)(14444005)(256004)(6916009)(54906003)(25786009)(5660300002)(66946007)(33656002)(99286004)(6246003)(66446008)(76116006)(66556008)(68736007)(4326008)(73956011)(2906002)(316002)(64756008)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB6694;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: yTLq37VXBqd+lOou7r1HWeYc0qDbXtuU+C7GC7awMli7OTUpyOKhnbMjXgJZhUnuRhA0m04Jv/n8taCsqI7l3e39UGuT8ABX8EcdTBA6y2thG0bxjU6CSAbwKPSurhFEIpDkPLggzRyd+hUCd/xxcfklSmcVj/FGATQdG2VWqzuETNPu0IC9652v/qv8wBcyxr3zyjIdeSRrd/WpgjmgU15P9rSZoFuQDl173LMCUrEidayOp0Q6o+tWdr3CD51B3QoGLJpJuu6jDHV4nayRL7w4aT9X72OwifkDO1xY0wTeO1PUtoZFKaqIY2tfPwLVOo3Nbi/cjLfv9h3GcfQ7eUogpWfjVyi0KTaazu8S6T6oWnRzNaVbd0jhl+rSMc62oafWeOdzXZYczx5CStQ/LLoW1ZEn6RAwxGddwHuie88=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <67A289241FE6E5448742D8623564083E@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7171af25-0e5e-4530-499b-08d6e60168fe
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 May 2019 19:51:44.9225
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB6694
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 9:23 PM Palmer Dabbelt <palmer@sifive.com> wrote:
->
-> man 3p says that fchmodat() takes a flags argument, but the Linux
-> syscall does not.  There doesn't appear to be a good userspace
-> workaround for this issue but the implementation in the kernel is pretty
-> straight-forward.  The specific use case where the missing flags came up
-> was WRT a fuse filesystem implemenation, but the functionality is pretty
-> generic so I'm assuming there would be other use cases.
->
-> Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
+> On May 31, 2019, at 12:47 PM, Matt Mullins <mmullins@fb.com> wrote:
+>=20
+> err must be nonzero in order to reach text_poke(), which caused kgdb to
+> fail to set breakpoints:
+>=20
+> 	(gdb) break __x64_sys_sync
+> 	Breakpoint 1 at 0xffffffff81288910: file ../fs/sync.c, line 124.
+> 	(gdb) c
+> 	Continuing.
+> 	Warning:
+> 	Cannot insert breakpoint 1.
+> 	Cannot access memory at address 0xffffffff81288910
+>=20
+> 	Command aborted.
+>=20
+> Fixes: 86a22057127d ("x86/kgdb: Avoid redundant comparison of patched cod=
+e")
+> Signed-off-by: Matt Mullins <mmullins@fb.com>
 > ---
->  fs/open.c                | 21 +++++++++++++++++++--
->  include/linux/syscalls.h |  5 +++++
->  2 files changed, 24 insertions(+), 2 deletions(-)
->
-> diff --git a/fs/open.c b/fs/open.c
-> index a00350018a47..cfad7684e8d3 100644
-> --- a/fs/open.c
-> +++ b/fs/open.c
-> @@ -568,11 +568,17 @@ SYSCALL_DEFINE2(fchmod, unsigned int, fd, umode_t, mode)
->         return ksys_fchmod(fd, mode);
->  }
->
-> -int do_fchmodat(int dfd, const char __user *filename, umode_t mode)
-> +int do_fchmodat4(int dfd, const char __user *filename, umode_t mode, int flags)
-...
-> +
-> +int do_fchmodat(int dfd, const char __user *filename, umode_t mode)
-> +{
-> +       return do_fchmodat4(dfd, filename, mode, 0);
-> +}
-> +
+> arch/x86/kernel/kgdb.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/arch/x86/kernel/kgdb.c b/arch/x86/kernel/kgdb.c
+> index 9a8c1648fc9a..6690c5652aeb 100644
+> --- a/arch/x86/kernel/kgdb.c
+> +++ b/arch/x86/kernel/kgdb.c
+> @@ -758,7 +758,7 @@ int kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt)
+> 		       BREAK_INSTR_SIZE);
+> 	bpt->type =3D BP_POKE_BREAKPOINT;
+>=20
+> -	return err;
+> +	return 0;
+> }
+>=20
+> int kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt)
+> --=20
+> 2.17.1
 
-There is only one external caller of do_fchmodat(), so just change that
-to pass the extra argument here, and keep a single do_fchmodat()
-function used by the sys_fchmod(), sys_fchmod4(), sys_chmod()
-and ksys_chmod().
+My bad. Thanks for fixing it.
 
-        Arnd
+Reviewed-by: Nadav Amit <namit@vmware.com>
+
