@@ -2,177 +2,201 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7367EC28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 20:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06091C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 20:42:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BA4926EF7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 20:40:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBF2626E5F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 20:42:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="m+sB14Yo"
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="sS2Kwh94"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbfEaUkh (ORCPT
+        id S1727477AbfEaUmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 16:40:37 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40247 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727455AbfEaUkh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 16:40:37 -0400
-Received: by mail-pg1-f196.google.com with SMTP id d30so4648490pgm.7
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 13:40:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=L9DdyCtjUjmQm6BTqIghH9AyiE8Bj0FZDxV/U7xA1V0=;
-        b=m+sB14YoMKD0En6Ta1jguYQojAS5qLFbQotT+YNGILgTJGeqwJGD4s/f/rbm2iH7fu
-         uL/Puewkgm9o8a+YhgF4KSzecl0+KRcZ5bFpnn6R0gBxZ05SMmCvyVXtqA+3kLUKngOo
-         O9AiG/tILOp2WJEGwSRJ3n56HGnMhkUyurCCUlj7H9LaLrx7icNhelYOl337LGrD7dq6
-         5MRFjT0pqpaEsSicSzRDqdDiv07JC0R2M9vcWKR+wim16AUTL3NRgr9wipNWpbKpIWmF
-         r8mszFJ8lwToWogOXRC4Tg5M0PnLSLrmlPxfRC2m1Szk15lbD7qTLEqrsQquM4QKf1PE
-         Ar0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=L9DdyCtjUjmQm6BTqIghH9AyiE8Bj0FZDxV/U7xA1V0=;
-        b=JWvBEo6dsRTQC4W2dSje1nM/m/1xgTcx98c1M1Dsu0At4/kKCKLA025g4Vv0QJlGDu
-         o1YHv5Giw7P1nbsOEDS4y4e7zlK1rIAyfPAfkpFmfc+Ed6JU1TigkaD8FvdV50qZgGBU
-         2leRcN1bUSHPJe7yvuKxvL73aeoJ3jVeflZM/1flF19H6T6WfepJyrPsO4wOSU5CH94U
-         PAKZa0bo/139RDHrP0d44TqdeFsoPw8qk33FOuoBfoNtI6qaFi6u8oDGJvFDI1Uw5kFT
-         4sUx+kl2r8i0/H9OvAEFK8yfP23RM7wYpwO6+Fmofem9oQof0GciYb/X1QhbnrSQX9me
-         nc6Q==
-X-Gm-Message-State: APjAAAX3XoZVgOVApFD0TvOki3nEMn+1hYKNymY7g2B93WU6U2wxRSf5
-        X2Xqs0TYJfYAkTh/+taPKA2SmA==
-X-Google-Smtp-Source: APXvYqz4SQR8SyNvYw/RbVYq9J75OHRdEl+vxzGoZ1hj8lWeH/sIaNdK7fANnH7Zay6JrXmUtrIdGA==
-X-Received: by 2002:a63:2ace:: with SMTP id q197mr11342665pgq.102.1559335236450;
-        Fri, 31 May 2019 13:40:36 -0700 (PDT)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id s27sm18341537pfd.18.2019.05.31.13.40.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 31 May 2019 13:40:35 -0700 (PDT)
-Date:   Fri, 31 May 2019 13:40:35 -0700 (PDT)
-X-Google-Original-Date: Fri, 31 May 2019 13:39:54 PDT (-0700)
-Subject:     Re: [PATCH bpf v2] bpf, riscv: clear high 32 bits for ALU32 add/sub/neg/lsh/rsh/arsh
-In-Reply-To: <20190530222922.4269-1-luke.r.nels@gmail.com>
-CC:     xi.wang@gmail.com, bjorn.topel@gmail.com, aou@eecs.berkeley.edu,
-        ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, netdev@vger.kernel.org,
-        linux-riscv@lists.infradead.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     luke.r.nels@gmail.com
-Message-ID: <mhng-b4ce883e-9ec7-4098-9acc-18eb140f93e0@palmer-si-x1c4>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Fri, 31 May 2019 16:42:47 -0400
+Received: from mail-eopbgr770051.outbound.protection.outlook.com ([40.107.77.51]:28039
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726593AbfEaUmr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 16:42:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oepn0buGdc4j2wZ8Zz75FF2ZN76RlMoQrQn210D61rE=;
+ b=sS2Kwh94rp3DYLAxEFkBsQyNxaeHCc/H/M5E78VOwLYugxJpygofjuQn/ChDUjjsShVxbo4g9rkTAJ+J//ShjK9JMdVx763ioKVP57EOF1VDZW4GTUqJgp0kuizLc/LKVN+AUD1+r/NAeHUWGlTGfFzvOURbmwM+PpZYHrTsz8g=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB5430.namprd05.prod.outlook.com (20.177.185.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.9; Fri, 31 May 2019 20:42:43 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::2cb6:a3d1:f675:ced8]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::2cb6:a3d1:f675:ced8%3]) with mapi id 15.20.1943.016; Fri, 31 May 2019
+ 20:42:43 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Andy Lutomirski <luto@kernel.org>
+CC:     Dave Hansen <dave.hansen@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: Re: [RFC PATCH v2 11/12] x86/mm/tlb: Use async and inline messages
+ for flushing
+Thread-Topic: [RFC PATCH v2 11/12] x86/mm/tlb: Use async and inline messages
+ for flushing
+Thread-Index: AQHVF3tKnfrC/xKd0kyiVp6wMVDUEqaFEHMAgACCTICAAA0WgIAAC7yAgAAG1wCAAAFqAA==
+Date:   Fri, 31 May 2019 20:42:43 +0000
+Message-ID: <F2F9A98B-2496-41D3-80ED-748078D21943@vmware.com>
+References: <20190531063645.4697-1-namit@vmware.com>
+ <20190531063645.4697-12-namit@vmware.com>
+ <20190531105758.GO2623@hirez.programming.kicks-ass.net>
+ <16D8E001-98A0-4ABC-AFE8-0F230B869027@amacapital.net>
+ <82DB7035-D7BE-4D79-BBC0-B271FB4BF740@vmware.com>
+ <4e0ed5a5-0e5e-3481-e646-3f032f17ac60@intel.com>
+ <CALCETrVf9dh4GxEXsHbP65x6YuzOBf+7HWqOgBBjUma+7nB6Nw@mail.gmail.com>
+In-Reply-To: <CALCETrVf9dh4GxEXsHbP65x6YuzOBf+7HWqOgBBjUma+7nB6Nw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [66.170.99.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a299729c-2d04-4baf-bdaf-08d6e608882b
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB5430;
+x-ms-traffictypediagnostic: BYAPR05MB5430:
+x-microsoft-antispam-prvs: <BYAPR05MB543085AD9193DFDD118A690FD0190@BYAPR05MB5430.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 00540983E2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39860400002)(136003)(396003)(346002)(376002)(189003)(199004)(316002)(26005)(14454004)(6916009)(6246003)(66556008)(64756008)(86362001)(305945005)(25786009)(5660300002)(99286004)(14444005)(66066001)(66476007)(6512007)(66446008)(73956011)(66946007)(476003)(2906002)(186003)(2616005)(68736007)(76116006)(102836004)(486006)(53936002)(82746002)(229853002)(256004)(4326008)(6116002)(3846002)(6486002)(33656002)(7736002)(478600001)(54906003)(8676002)(76176011)(53546011)(81156014)(36756003)(81166006)(71190400001)(8936002)(6436002)(446003)(71200400001)(6506007)(83716004)(11346002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB5430;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 8LUCc7k6KYZ8IoMF3ar6wP/S1qyrxcqcpuXq6nOqUSl4IhYvTmiUDIGQsuXEfCPFRC7C8hnvsx7fSbLE20/mJZ0abYVNCePHqSKVBv+T0o8kFrLC2B+VsQa89CGaLf/AKXiJnq2gLGIpSbJ4VsAIUyT6EOJpjh2lnnDn6joDPII9cWOVvMSVDiMMXqwPBgvoQX4tCVzZhn9O29iHXLD/Z6oQrEaXyigpIrKtjmybGqTZxN44PBbHRdxiDojvCf8mIebQH8gLXoJO9KJADc73Nq4SxllhQuF/hoNNC/sajNjlDRv5LJixI6mccREBmC0RqZxqSw+VcCdkizZ5ZtV9giIskfUH68IfsBb/48gg52h7jXJaq4HA9W9SjqlVa/On5E0uGK0X0EK+jN8zq0LlQCg658ORTao7Uf1dKJrYTIU=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <9F14E46CE2A5CD429B863BC7B44EB1A8@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a299729c-2d04-4baf-bdaf-08d6e608882b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 May 2019 20:42:43.7179
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB5430
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 May 2019 15:29:22 PDT (-0700), luke.r.nels@gmail.com wrote:
-> In BPF, 32-bit ALU operations should zero-extend their results into
-> the 64-bit registers.
->
-> The current BPF JIT on RISC-V emits incorrect instructions that perform
-> sign extension only (e.g., addw, subw) on 32-bit add, sub, lsh, rsh,
-> arsh, and neg. This behavior diverges from the interpreter and JITs
-> for other architectures.
->
-> This patch fixes the bugs by performing zero extension on the destination
-> register of 32-bit ALU operations.
->
-> Fixes: 2353ecc6f91f ("bpf, riscv: add BPF JIT for RV64G")
-> Cc: Xi Wang <xi.wang@gmail.com>
-> Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
+> On May 31, 2019, at 1:37 PM, Andy Lutomirski <luto@kernel.org> wrote:
+>=20
+> On Fri, May 31, 2019 at 1:13 PM Dave Hansen <dave.hansen@intel.com> wrote=
+:
+>> On 5/31/19 12:31 PM, Nadav Amit wrote:
+>>>> On May 31, 2019, at 11:44 AM, Andy Lutomirski <luto@amacapital.net> wr=
+ote:
+>>>>=20
+>>>>=20
+>>>>=20
+>>>>> On May 31, 2019, at 3:57 AM, Peter Zijlstra <peterz@infradead.org> wr=
+ote:
+>>>>>=20
+>>>>>> On Thu, May 30, 2019 at 11:36:44PM -0700, Nadav Amit wrote:
+>>>>>> When we flush userspace mappings, we can defer the TLB flushes, as l=
+ong
+>>>>>> the following conditions are met:
+>>>>>>=20
+>>>>>> 1. No tables are freed, since otherwise speculative page walks might
+>>>>>> cause machine-checks.
+>>>>>>=20
+>>>>>> 2. No one would access userspace before flush takes place. Specifica=
+lly,
+>>>>>> NMI handlers and kprobes would avoid accessing userspace.
+>>>>>>=20
+>>>>>> Use the new SMP support to execute remote function calls with inline=
+d
+>>>>>> data for the matter. The function remote TLB flushing function would=
+ be
+>>>>>> executed asynchronously and the local CPU would continue execution a=
+s
+>>>>>> soon as the IPI was delivered, before the function was actually
+>>>>>> executed. Since tlb_flush_info is copied, there is no risk it would
+>>>>>> change before the TLB flush is actually executed.
+>>>>>>=20
+>>>>>> Change nmi_uaccess_okay() to check whether a remote TLB flush is
+>>>>>> currently in progress on this CPU by checking whether the asynchrono=
+usly
+>>>>>> called function is the remote TLB flushing function. The current
+>>>>>> implementation disallows access in such cases, but it is also possib=
+le
+>>>>>> to flush the entire TLB in such case and allow access.
+>>>>>=20
+>>>>> ARGGH, brain hurt. I'm not sure I fully understand this one. How is i=
+t
+>>>>> different from today, where the NMI can hit in the middle of the TLB
+>>>>> invalidation?
+>>>>>=20
+>>>>> Also; since we're not waiting on the IPI, what prevents us from freei=
+ng
+>>>>> the user pages before the remote CPU is 'done' with them? Currently t=
+he
+>>>>> synchronous IPI is like a sync point where we *know* the remote CPU i=
+s
+>>>>> completely done accessing the page.
+>>>>>=20
+>>>>> Where getting an IPI stops speculation, speculation again restarts
+>>>>> inside the interrupt handler, and until we've passed the INVLPG/MOV C=
+R3,
+>>>>> speculation can happen on that TLB entry, even though we've already
+>>>>> freed and re-used the user-page.
+>>>>>=20
+>>>>> Also, what happens if the TLB invalidation IPI is stuck behind anothe=
+r
+>>>>> smp_function_call IPI that is doing user-access?
+>>>>>=20
+>>>>> As said,.. brain hurts.
+>>>>=20
+>>>> Speculation aside, any code doing dirty tracking needs the flush to ha=
+ppen
+>>>> for real before it reads the dirty bit.
+>>>>=20
+>>>> How does this patch guarantee that the flush is really done before som=
+eone
+>>>> depends on it?
+>>>=20
+>>> I was always under the impression that the dirty-bit is pass-through - =
+the
+>>> A/D-assist walks the tables and sets the dirty bit upon access. Otherwi=
+se,
+>>> what happens when you invalidate the PTE, and have already marked the P=
+TE as
+>>> non-present? Would the CPU set the dirty-bit at this point?
+>>=20
+>> Modulo bugs^Werrata...  No.  What actually happens is that a
+>> try-to-set-dirty-bit page table walk acts just like a TLB miss.  The old
+>> contents of the TLB are discarded and only the in-memory contents matter
+>> for forward progress.  If Present=3D0 when the PTE is reached, you'll ge=
+t
+>> a normal Present=3D0 page fault.
+>=20
+> Wait, does that mean that you can do a lock cmpxchg or similar to
+> clear the dirty and writable bits together and, if the dirty bit was
+> clear, skip the TLB flush?  If so, nifty!  Modulo errata, of course.
+> And I seem to remember some exceptions relating to CET shadow stack
+> involving the dirty bit being set on not-present pages.
 
-Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
+I did something similar with the access-bit in the past.
 
-Thanks!  I'm assuming this is going in through a BPF tree and not the RISC-V
-tree, but LMK if that's not the case.
+Anyhow, I have a bug here - the code does not wait for the indication that
+the IPI was received. I need to rerun performance measurements again once I
+fix it.
 
-> ---
-> The original patch is
-> https://lkml.org/lkml/2019/5/30/1370
->
-> This version is rebased against the bpf tree.
-> ---
->  arch/riscv/net/bpf_jit_comp.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->
-> diff --git a/arch/riscv/net/bpf_jit_comp.c b/arch/riscv/net/bpf_jit_comp.c
-> index e5c8d675bd6e..426d5c33ea90 100644
-> --- a/arch/riscv/net/bpf_jit_comp.c
-> +++ b/arch/riscv/net/bpf_jit_comp.c
-> @@ -751,10 +751,14 @@ static int emit_insn(const struct bpf_insn *insn, struct rv_jit_context *ctx,
->  	case BPF_ALU | BPF_ADD | BPF_X:
->  	case BPF_ALU64 | BPF_ADD | BPF_X:
->  		emit(is64 ? rv_add(rd, rd, rs) : rv_addw(rd, rd, rs), ctx);
-> +		if (!is64)
-> +			emit_zext_32(rd, ctx);
->  		break;
->  	case BPF_ALU | BPF_SUB | BPF_X:
->  	case BPF_ALU64 | BPF_SUB | BPF_X:
->  		emit(is64 ? rv_sub(rd, rd, rs) : rv_subw(rd, rd, rs), ctx);
-> +		if (!is64)
-> +			emit_zext_32(rd, ctx);
->  		break;
->  	case BPF_ALU | BPF_AND | BPF_X:
->  	case BPF_ALU64 | BPF_AND | BPF_X:
-> @@ -795,14 +799,20 @@ static int emit_insn(const struct bpf_insn *insn, struct rv_jit_context *ctx,
->  	case BPF_ALU | BPF_LSH | BPF_X:
->  	case BPF_ALU64 | BPF_LSH | BPF_X:
->  		emit(is64 ? rv_sll(rd, rd, rs) : rv_sllw(rd, rd, rs), ctx);
-> +		if (!is64)
-> +			emit_zext_32(rd, ctx);
->  		break;
->  	case BPF_ALU | BPF_RSH | BPF_X:
->  	case BPF_ALU64 | BPF_RSH | BPF_X:
->  		emit(is64 ? rv_srl(rd, rd, rs) : rv_srlw(rd, rd, rs), ctx);
-> +		if (!is64)
-> +			emit_zext_32(rd, ctx);
->  		break;
->  	case BPF_ALU | BPF_ARSH | BPF_X:
->  	case BPF_ALU64 | BPF_ARSH | BPF_X:
->  		emit(is64 ? rv_sra(rd, rd, rs) : rv_sraw(rd, rd, rs), ctx);
-> +		if (!is64)
-> +			emit_zext_32(rd, ctx);
->  		break;
->
->  	/* dst = -dst */
-> @@ -810,6 +820,8 @@ static int emit_insn(const struct bpf_insn *insn, struct rv_jit_context *ctx,
->  	case BPF_ALU64 | BPF_NEG:
->  		emit(is64 ? rv_sub(rd, RV_REG_ZERO, rd) :
->  		     rv_subw(rd, RV_REG_ZERO, rd), ctx);
-> +		if (!is64)
-> +			emit_zext_32(rd, ctx);
->  		break;
->
->  	/* dst = BSWAP##imm(dst) */
-> @@ -964,14 +976,20 @@ static int emit_insn(const struct bpf_insn *insn, struct rv_jit_context *ctx,
->  	case BPF_ALU | BPF_LSH | BPF_K:
->  	case BPF_ALU64 | BPF_LSH | BPF_K:
->  		emit(is64 ? rv_slli(rd, rd, imm) : rv_slliw(rd, rd, imm), ctx);
-> +		if (!is64)
-> +			emit_zext_32(rd, ctx);
->  		break;
->  	case BPF_ALU | BPF_RSH | BPF_K:
->  	case BPF_ALU64 | BPF_RSH | BPF_K:
->  		emit(is64 ? rv_srli(rd, rd, imm) : rv_srliw(rd, rd, imm), ctx);
-> +		if (!is64)
-> +			emit_zext_32(rd, ctx);
->  		break;
->  	case BPF_ALU | BPF_ARSH | BPF_K:
->  	case BPF_ALU64 | BPF_ARSH | BPF_K:
->  		emit(is64 ? rv_srai(rd, rd, imm) : rv_sraiw(rd, rd, imm), ctx);
-> +		if (!is64)
-> +			emit_zext_32(rd, ctx);
->  		break;
->
->  	/* JUMP off */
