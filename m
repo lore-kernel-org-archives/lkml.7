@@ -2,97 +2,169 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD745C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 04:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8B7C28CC4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 04:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ECA1263C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 04:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94D77255EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 04:37:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VZQtV7CV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbfEaEg1 (ORCPT
+        id S1726718AbfEaEh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 00:36:27 -0400
-Received: from mga09.intel.com ([134.134.136.24]:62066 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725955AbfEaEg1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 00:36:27 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 21:36:26 -0700
-X-ExtLoop1: 1
-Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
-  by orsmga006.jf.intel.com with ESMTP; 30 May 2019 21:36:26 -0700
-Received: from orsmsx112.amr.corp.intel.com ([169.254.3.79]) by
- ORSMSX110.amr.corp.intel.com ([169.254.10.7]) with mapi id 14.03.0415.000;
- Thu, 30 May 2019 21:36:26 -0700
-From:   "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "mroos@linux.ee" <mroos@linux.ee>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "jeyu@kernel.org" <jeyu@kernel.org>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "ard.biesheuvel@arm.com" <ard.biesheuvel@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "namit@vmware.com" <namit@vmware.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "Hansen, Dave" <dave.hansen@intel.com>
-Subject: Re: [PATCH] vmalloc: Don't use flush flag when no exec perm
-Thread-Topic: [PATCH] vmalloc: Don't use flush flag when no exec perm
-Thread-Index: AQHVFeKXsxy+QkOKqU23zfNpAWli4aaDgIiAgABAJ4CAAV2zgA==
-Date:   Fri, 31 May 2019 04:36:25 +0000
-Message-ID: <120f658d6f34c99a72e82c993ec380109f7aef2c.camel@intel.com>
-References: <20190529055104.6822-1-rick.p.edgecombe@intel.com>
-         <89d6dee949e4418f0cca4cc6c4c9b526c1a5c497.camel@intel.com>
-         <67241836-621c-6933-1278-f04aedcefcb3@linux.ee>
-In-Reply-To: <67241836-621c-6933-1278-f04aedcefcb3@linux.ee>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.30.1 (3.30.1-1.fc29) 
-x-originating-ip: [10.252.134.167]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B1A8C0F763855B4D836A965D3C862A13@intel.com>
-Content-Transfer-Encoding: base64
+        Fri, 31 May 2019 00:37:27 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:39350 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfEaEh1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 00:37:27 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4V4b9V1008149;
+        Thu, 30 May 2019 23:37:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559277429;
+        bh=WmWlIV0MNd4gzmwUDi38bv+85fSO0B2C0fC2Y7XqFgQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=VZQtV7CVk40P+SqfrjetVBWMBXU6OixEQsfU3qmxzTwLFEfnjJXVl3K7F9KUyetYy
+         4khN71oykyO2SuPwRhDNeTTtQbtuI/l//WYiQ+Mc2ZVetGdPd8ehUQmegEEL6GqeXk
+         tzGn2V0573j25PmVruYlQHiByUK3kC7S7E5KazOI=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4V4b9Ja019839
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 30 May 2019 23:37:09 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 30
+ May 2019 23:37:09 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 30 May 2019 23:37:09 -0500
+Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4V4b4So084582;
+        Thu, 30 May 2019 23:37:06 -0500
+Subject: Re: [PATCH v2] PCI: endpoint: Skip odd BAR when skipping 64bit BAR
+To:     Alan Mikhak <alan.mikhak@sifive.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <lorenzo.pieralisi@arm.com>, <linux-riscv@lists.infradead.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <gustavo.pimentel@synopsys.com>, <wen.yang99@zte.com.cn>,
+        <kjlu@umn.edu>
+References: <1558648540-14239-1-git-send-email-alan.mikhak@sifive.com>
+ <CABEDWGzHkt4p_byEihOAs9g97t450h9-Z0Qu2b2-O1pxCNPX+A@mail.gmail.com>
+ <baa68439-f703-a453-34a2-24387bb9112d@ti.com>
+ <CABEDWGyJpfX=DzBgXAGwu29rEwmY3s_P9QPC0eJOJ3KBysRWtA@mail.gmail.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <96365941-512b-dfb2-05b7-0780e8961f6c@ti.com>
+Date:   Fri, 31 May 2019 10:05:45 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <CABEDWGyJpfX=DzBgXAGwu29rEwmY3s_P9QPC0eJOJ3KBysRWtA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTA1LTMwIGF0IDEwOjQ0ICswMzAwLCBNZWVsaXMgUm9vcyB3cm90ZToNCj4g
-PiA+IFRoZSBhZGRpdGlvbiBvZiBWTV9GTFVTSF9SRVNFVF9QRVJNUyBmb3IgQlBGIEpJVCBhbGxv
-Y2F0aW9ucyB3YXMNCj4gPiA+IGJpc2VjdGVkIHRvIHByZXZlbnQgYm9vdCBvbiBhbiBVbHRyYVNw
-YXJjIElJSSBtYWNoaW5lLiBJdCB3YXMNCj4gPiA+IGZvdW5kDQo+ID4gPiB0aGF0DQo+ID4gPiBz
-b21ldGltZSBzaG9ydGx5IGFmdGVyIHRoZSBUTEIgZmx1c2ggdGhpcyBmbGFnIGRvZXMgb24gdmZy
-ZWUgb2YNCj4gPiA+IHRoZQ0KPiA+ID4gQlBGDQo+ID4gPiBwcm9ncmFtLCB0aGUgbWFjaGluZSBo
-dW5nLiBGdXJ0aGVyIGludmVzdGlnYXRpb24gc2hvd2VkIHRoYXQNCj4gPiA+IGJlZm9yZQ0KPiA+
-ID4gYW55IG9mDQo+ID4gPiB0aGUgY2hhbmdlcyBmb3IgdGhpcyBmbGFnIHdlcmUgaW50cm9kdWNl
-ZCwgd2l0aA0KPiA+ID4gQ09ORklHX0RFQlVHX1BBR0VBTExPQw0KPiA+ID4gY29uZmlndXJlZCAo
-d2hpY2ggZG9lcyBhIHNpbWlsYXIgVExCIGZsdXNoIG9mIHRoZSB2bWFsbG9jIHJhbmdlDQo+ID4g
-PiBvbg0KPiA+ID4gZXZlcnkgdmZyZWUpLCB0aGlzIG1hY2hpbmUgYWxzbyBodW5nIHNob3J0bHkg
-YWZ0ZXIgdGhlIGZpcnN0DQo+ID4gPiB2bWFsbG9jDQo+ID4gPiB1bm1hcC9mcmVlLg0KPiA+ID4g
-DQo+ID4gPiBTbyB0aGUgZXZpZGVuY2UgcG9pbnRzIHRvIHRoZXJlIGJlaW5nIHNvbWUgZXhpc3Rp
-bmcgaXNzdWUgd2l0aA0KPiA+ID4gdGhlDQo+ID4gPiB2bWFsbG9jIFRMQiBmbHVzaGVzLCBidXQg
-aXQncyBzdGlsbCB1bmtub3duIGV4YWN0bHkgd2h5IHRoZXNlDQo+ID4gPiBoYW5ncw0KPiA+ID4g
-YXJlDQo+ID4gPiBoYXBwZW5pbmcgb24gc3BhcmMuIEl0IGlzIGFsc28gdW5rbm93biB3aGVuIHNv
-bWVvbmUgd2l0aCB0aGlzDQo+ID4gPiBoYXJkd2FyZQ0KPiA+ID4gY291bGQgcmVzb2x2ZSB0aGlz
-LCBhbmQgaW4gdGhlIG1lYW50aW1lIHVzaW5nIHRoaXMgZmxhZyBvbiBpdA0KPiA+ID4gdHVybnMg
-YQ0KPiA+ID4gbHVya2luZyBiZWhhdmlvciBpbnRvIHNvbWV0aGluZyB0aGF0IHByZXZlbnRzIGJv
-b3QuDQo+ID4gDQo+ID4gVGhlIHNwYXJjIFRMQiBmbHVzaCBpc3N1ZSBoYXMgYmVlbiBiaXNlY3Rl
-ZCBhbmQgaXMgYmVpbmcgd29ya2VkIG9uDQo+ID4gbm93LA0KPiA+IHNvIGhvcGVmdWxseSB3ZSB3
-b24ndCBuZWVkIHRoaXMgcGF0Y2g6DQo+ID4gaHR0cHM6Ly9tYXJjLmluZm8vP2w9bGludXgtc3Bh
-cmMmbT0xNTU5MTU2OTQzMDQxMTgmdz0yDQo+IA0KPiBBbmQgdGhlIHNwYXJjNjQgcGF0Y2ggdGhh
-dCBmaXhlcyBDT05GSUdfREVCVUdfUEFHRUFMTE9DIGFsc28gZml4ZXMNCj4gYm9vdGluZw0KPiBv
-ZiB0aGUgbGF0ZXN0IGdpdCBrZXJuZWwgb24gU3VuIFY0NDUgd2hlcmUgbXkgcHJvYmxlbSBpbml0
-aWFsbHkNCj4gaGFwcGVuZWQuDQo+IA0KVGhhbmtzIE1lZWxpcy4gU28gdGhlIFRMQiBmbHVzaCBv
-biB0aGlzIHBsYXRmb3JtIHdpbGwgYmUgZml4ZWQgYW5kIHdlDQp3b24ndCBuZWVkIHRoaXMgcGF0
-Y2guDQo=
+Hi Alan,
+
+On 25/05/19 12:20 AM, Alan Mikhak wrote:
+> Hi Kishon,
+> 
+> Yes. This change is still applicable even when the platform specifies
+> that it only supports 64-bit BARs by setting the bar_fixed_64bit
+> member of epc_features.
+> 
+> The issue being fixed is this: If the 'continue' statement is executed
+> within the loop, the loop index 'bar' needs to advanced by two, not
+> one, when the BAR is 64-bit. Otherwise the next loop iteration will be
+> on an odd BAR which doesn't exist.
+
+IIUC you are fixing the case where the BAR is "reserved" (specified in
+epc_features) and is also a 64-bit BAR?
+
+If 2 consecutive BARs are marked as reserved in reserved_bar of epc_features,
+the result should be the same right?
+
+Thanks
+Kishon
+
+> 
+> The PCI_BASE_ADDRESS_MEM_TYPE_64 flag in epf_bar->flag reflects the
+> value set by the platform in the bar_fixed_64bit member of
+> epc_features.
+> 
+> This patch moves the checking of  PCI_BASE_ADDRESS_MEM_TYPE_64 in
+> epf_bar->flags to before the 'continue' statement to advance the 'bar'
+> loop index accordingly. The comment you see about 'pci_epc_set_bar()'
+> preceding the moved code is the original comment and was also moved
+> along with the code.
+> 
+> Regards,
+> Alan Mikhak
+> 
+> On Fri, May 24, 2019 at 1:51 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>
+>> Hi,
+>>
+>> On 24/05/19 5:25 AM, Alan Mikhak wrote:
+>>> +Bjorn Helgaas, +Gustavo Pimentel, +Wen Yang, +Kangjie Lu
+>>>
+>>> On Thu, May 23, 2019 at 2:55 PM Alan Mikhak <alan.mikhak@sifive.com> wrote:
+>>>>
+>>>> Always skip odd bar when skipping 64bit BARs in pci_epf_test_set_bar()
+>>>> and pci_epf_test_alloc_space().
+>>>>
+>>>> Otherwise, pci_epf_test_set_bar() will call pci_epc_set_bar() on odd loop
+>>>> index when skipping reserved 64bit BAR. Moreover, pci_epf_test_alloc_space()
+>>>> will call pci_epf_alloc_space() on bind for odd loop index when BAR is 64bit
+>>>> but leaks on subsequent unbind by not calling pci_epf_free_space().
+>>>>
+>>>> Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+>>>> Reviewed-by: Paul Walmsley <paul.walmsley@sifive.com>
+>>>> ---
+>>>>  drivers/pci/endpoint/functions/pci-epf-test.c | 25 ++++++++++++-------------
+>>>>  1 file changed, 12 insertions(+), 13 deletions(-)
+>>>>
+>>>> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+>>>> index 27806987e93b..96156a537922 100644
+>>>> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+>>>> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+>>>> @@ -389,7 +389,7 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
+>>>>
+>>>>  static int pci_epf_test_set_bar(struct pci_epf *epf)
+>>>>  {
+>>>> -       int bar;
+>>>> +       int bar, add;
+>>>>         int ret;
+>>>>         struct pci_epf_bar *epf_bar;
+>>>>         struct pci_epc *epc = epf->epc;
+>>>> @@ -400,8 +400,14 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
+>>>>
+>>>>         epc_features = epf_test->epc_features;
+>>>>
+>>>> -       for (bar = BAR_0; bar <= BAR_5; bar++) {
+>>>> +       for (bar = BAR_0; bar <= BAR_5; bar += add) {
+>>>>                 epf_bar = &epf->bar[bar];
+>>>> +               /*
+>>>> +                * pci_epc_set_bar() sets PCI_BASE_ADDRESS_MEM_TYPE_64
+>>>> +                * if the specific implementation required a 64-bit BAR,
+>>>> +                * even if we only requested a 32-bit BAR.
+>>>> +                */
+>>
+>> set_bar shouldn't set PCI_BASE_ADDRESS_MEM_TYPE_64. If a platform supports only
+>> 64-bit BAR, that should be specified in epc_features bar_fixed_64bit member.
+>>
+>> Thanks
+>> Kishon
