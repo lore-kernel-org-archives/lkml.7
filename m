@@ -2,96 +2,128 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14AD2C46470
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59202C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E26A52479C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:47:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559292477;
-	bh=D+yLBKqr975QJsixWB4wyv6wZEEE6jqGqlntHmrGCi8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0IqT3aE4+ab+W5Tz5GHKdyq44xYeMQ87bHr9ugdul4boLvSGVKEYDmw/gncX3EVk2
-	 9Ss5TaU1oQZSttjYGCUSMK5dNvk9hX4997HSgM1aqAIBrDiDe1Ww3P9bXrj4eLgMHa
-	 nK9WIaD5yJ+FCpgXt7yV76h8VO9MiiQEovqKszDk=
+	by mail.kernel.org (Postfix) with ESMTP id 3AC0F24895
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:49:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbfEaIrz (ORCPT
+        id S1726922AbfEaItG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 04:47:55 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55688 "EHLO mx1.suse.de"
+        Fri, 31 May 2019 04:49:06 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55838 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727058AbfEaIrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 04:47:55 -0400
+        id S1726002AbfEaItF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 04:49:05 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CF1F3AF55;
-        Fri, 31 May 2019 08:47:53 +0000 (UTC)
-Date:   Fri, 31 May 2019 10:47:52 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, jannh@google.com,
-        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
-        hdanton@sina.com
-Subject: Re: [RFCv2 1/6] mm: introduce MADV_COLD
-Message-ID: <20190531084752.GI6896@dhcp22.suse.cz>
-References: <20190531064313.193437-1-minchan@kernel.org>
- <20190531064313.193437-2-minchan@kernel.org>
+        by mx1.suse.de (Postfix) with ESMTP id BDDB7AF55;
+        Fri, 31 May 2019 08:49:03 +0000 (UTC)
+Date:   Fri, 31 May 2019 10:49:02 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Jiri Kosina <jikos@kernel.org>, Petr Mladek <pmladek@suse.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        Johannes Erdfelt <johannes@erdfelt.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH] livepatch: Fix ftrace module text permissions race
+In-Reply-To: <bb69d4ac34111bbd9cb16180a6fafe471a88d80b.1559156299.git.jpoimboe@redhat.com>
+Message-ID: <alpine.LSU.2.21.1905311045040.742@pobox.suse.cz>
+References: <bb69d4ac34111bbd9cb16180a6fafe471a88d80b.1559156299.git.jpoimboe@redhat.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190531064313.193437-2-minchan@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 31-05-19 15:43:08, Minchan Kim wrote:
-> When a process expects no accesses to a certain memory range, it could
-> give a hint to kernel that the pages can be reclaimed when memory pressure
-> happens but data should be preserved for future use.  This could reduce
-> workingset eviction so it ends up increasing performance.
+On Wed, 29 May 2019, Josh Poimboeuf wrote:
+
+> It's possible for livepatch and ftrace to be toggling a module's text
+> permissions at the same time, resulting in the following panic:
 > 
-> This patch introduces the new MADV_COLD hint to madvise(2) syscall.
-> MADV_COLD can be used by a process to mark a memory range as not expected
-> to be used in the near future. The hint can help kernel in deciding which
-> pages to evict early during memory pressure.
+>   BUG: unable to handle page fault for address: ffffffffc005b1d9
+>   #PF: supervisor write access in kernel mode
+>   #PF: error_code(0x0003) - permissions violation
+>   PGD 3ea0c067 P4D 3ea0c067 PUD 3ea0e067 PMD 3cc13067 PTE 3b8a1061
+>   Oops: 0003 [#1] PREEMPT SMP PTI
+>   CPU: 1 PID: 453 Comm: insmod Tainted: G           O  K   5.2.0-rc1-a188339ca5 #1
+>   Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-20181126_142135-anatol 04/01/2014
+>   RIP: 0010:apply_relocate_add+0xbe/0x14c
+>   Code: fa 0b 74 21 48 83 fa 18 74 38 48 83 fa 0a 75 40 eb 08 48 83 38 00 74 33 eb 53 83 38 00 75 4e 89 08 89 c8 eb 0a 83 38 00 75 43 <89> 08 48 63 c1 48 39 c8 74 2e eb 48 83 38 00 75 32 48 29 c1 89 08
+>   RSP: 0018:ffffb223c00dbb10 EFLAGS: 00010246
+>   RAX: ffffffffc005b1d9 RBX: 0000000000000000 RCX: ffffffff8b200060
+>   RDX: 000000000000000b RSI: 0000004b0000000b RDI: ffff96bdfcd33000
+>   RBP: ffffb223c00dbb38 R08: ffffffffc005d040 R09: ffffffffc005c1f0
+>   R10: ffff96bdfcd33c40 R11: ffff96bdfcd33b80 R12: 0000000000000018
+>   R13: ffffffffc005c1f0 R14: ffffffffc005e708 R15: ffffffff8b2fbc74
+>   FS:  00007f5f447beba8(0000) GS:ffff96bdff900000(0000) knlGS:0000000000000000
+>   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>   CR2: ffffffffc005b1d9 CR3: 000000003cedc002 CR4: 0000000000360ea0
+>   DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>   DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>   Call Trace:
+>    klp_init_object_loaded+0x10f/0x219
+>    ? preempt_latency_start+0x21/0x57
+>    klp_enable_patch+0x662/0x809
+>    ? virt_to_head_page+0x3a/0x3c
+>    ? kfree+0x8c/0x126
+>    patch_init+0x2ed/0x1000 [livepatch_test02]
+>    ? 0xffffffffc0060000
+>    do_one_initcall+0x9f/0x1c5
+>    ? kmem_cache_alloc_trace+0xc4/0xd4
+>    ? do_init_module+0x27/0x210
+>    do_init_module+0x5f/0x210
+>    load_module+0x1c41/0x2290
+>    ? fsnotify_path+0x3b/0x42
+>    ? strstarts+0x2b/0x2b
+>    ? kernel_read+0x58/0x65
+>    __do_sys_finit_module+0x9f/0xc3
+>    ? __do_sys_finit_module+0x9f/0xc3
+>    __x64_sys_finit_module+0x1a/0x1c
+>    do_syscall_64+0x52/0x61
+>    entry_SYSCALL_64_after_hwframe+0x44/0xa9
 > 
-> Internally, it works via deactivating pages from active list to inactive's
-> head if the page is private because inactive list could be full of
-> used-once pages which are first candidate for the reclaiming and that's a
-> reason why MADV_FREE move pages to head of inactive LRU list. Therefore,
-> if the memory pressure happens, they will be reclaimed earlier than other
-> active pages unless there is no access until the time.
+> The above panic occurs when loading two modules at the same time with
+> ftrace enabled, where at least one of the modules is a livepatch module:
+> 
+> CPU0					CPU1
+> klp_enable_patch()
+>   klp_init_object_loaded()
+>     module_disable_ro()
+>     					ftrace_module_enable()
+> 					  ftrace_arch_code_modify_post_process()
+> 				    	    set_all_modules_text_ro()
+>       klp_write_object_relocations()
+>         apply_relocate_add()
+> 	  *patches read-only code* - BOOM
+> 
+> A similar race exists when toggling ftrace while loading a livepatch
+> module.
+> 
+> Fix it by ensuring that the livepatch and ftrace code patching
+> operations -- and their respective permissions changes -- are protected
+> by the text_mutex.
+> 
+> Reported-by: Johannes Erdfelt <johannes@erdfelt.com>
+> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 
-[I am intentionally not looking at the implementation because below
-points should be clear from the changelog - sorry about nagging ;)]
+For the code
 
-What kind of pages can be deactivated? Anonymous/File backed.
-Private/shared? If shared, are there any restrictions?
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
 
-Are there any restrictions on mappings? E.g. what would be an effect of
-this operation on hugetlbfs mapping?
+However, shouldn't the patch be split in two? One adding text_mutex 
+protection to livepatch and ftrace. The other adding lockdep_assert_held() 
+and __module_enable_ro()? The current changelog does not mention lockdep 
+changes at all.
 
-Also you are talking about inactive LRU but what kind of LRU is that? Is
-it the anonymous LRU? If yes, don't we have the same problem as with the
-early MADV_FREE implementation when enough page cache causes that
-deactivated anonymous memory doesn't get reclaimed anytime soon. Or
-worse never when there is no swap available?
--- 
-Michal Hocko
-SUSE Labs
+Miroslav
+
