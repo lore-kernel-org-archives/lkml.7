@@ -2,104 +2,106 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBB6C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB741C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F18826561
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:35:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C934265DE
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:35:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IcV+NfVF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbfEaIfR (ORCPT
+        id S1726989AbfEaIfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 04:35:17 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:36259 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbfEaIfR (ORCPT
+        Fri, 31 May 2019 04:35:48 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:50224 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbfEaIfs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 04:35:17 -0400
-Received: by mail-qt1-f193.google.com with SMTP id u12so10398196qth.3;
-        Fri, 31 May 2019 01:35:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6IAGTJ1uN3QgaPB0JEyQM4jANte20b3cD0wECnCP0+4=;
-        b=n4dNxHkho9p36ijPunDYFCbKnuTSzDXRzM6VfR3VtuYRkQ5sqpjHkr3imVWxIv4Oxw
-         gdmOC1B5RnOiK9UQSvHnPkZCdtShNip/BCTEH0/MuQmlF/TobDTCeJlJOH6nSE1oEc5Y
-         g8NdCCk6xrIZdqPTn+5SK47VyOCovnvEX1t5+1QzP3bCJBIrqEiGUUi3YTZklCvSgjxD
-         7+eGF/YAdanOuAvtt9+x0m32NpNcPsrozsoCuhQiCejq7tbOGJO2XA6yoB0l9pEhEkG6
-         oKuDAFKwLbrkx8F/qGPFONHCScCOJit7RcLRzmW5eY17T3b2bVF3XFmLP9788so9Gaf7
-         D6hg==
-X-Gm-Message-State: APjAAAVp8cmCMkT7z2OqCBJ14Tyz2h69ZkisJVVX0Ocq5uS9TBcOLOC7
-        5la64MfGXgnNMgqAE55z0rsen5xpZ6CKEG1dV+Y=
-X-Google-Smtp-Source: APXvYqwJnDx5Tq81xAUY+isfpEB8HE2a5+TeAN3eO+1/XlqybT+dn9X3SVzRZ6Qq/cvLrjWF8XAcIqH+slSq4FlW4JU=
-X-Received: by 2002:aed:2bc1:: with SMTP id e59mr7134581qtd.7.1559291715239;
- Fri, 31 May 2019 01:35:15 -0700 (PDT)
+        Fri, 31 May 2019 04:35:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=NYSXgtyp6qFIdURiXa8bdXnjz75azFUheeU4NBYX14M=; b=IcV+NfVF6AYcyTf2poTfMuQeD
+        XryTcYrTrHAMk4reMf3GJ1IXzhpOk5ITbYSlFEcvrlNo8ZFaIg2sZKFIOUqrbCNAmd0LHYC490hVh
+        LAWqsrB2u9lfZTNJQZr3tUWVGIS1gt6ATDEdOBeU+cC330I+4/SLe9Yh/UmxRTvqLHBirg4fDOsLq
+        AlIdc1zlzH9wXoiVlyQgW1Tx2p7tlGu4DUbRf/gy16GxsMAX/KPe2dqge5gIojO4f9IpUlNg8cdM9
+        wwdQk8f4N3qOcxbmcIMMqG5+HZp9Wiw6rL3K9N8zlD/vehFQitIuSxWpXIBS1R9MS3PQ9I5aE/mDJ
+        nhTrQLwWA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hWd0p-0003pt-W9; Fri, 31 May 2019 08:35:44 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4BECC201B8CFE; Fri, 31 May 2019 10:35:42 +0200 (CEST)
+Date:   Fri, 31 May 2019 10:35:42 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Andrea Parri <andrea.parri@amarulasolutions.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        David Howells <dhowells@redhat.com>, viro@zeniv.linux.org.uk,
+        raven@themaw.net, linux-fsdevel@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-block@vger.kernel.org,
+        keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/7] General notification queue with user mmap()'able
+ ring buffer
+Message-ID: <20190531083542.GL2623@hirez.programming.kicks-ass.net>
+References: <20190528231218.GA28384@kroah.com>
+ <20190528162603.GA24097@kroah.com>
+ <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
+ <155905931502.7587.11705449537368497489.stgit@warthog.procyon.org.uk>
+ <4031.1559064620@warthog.procyon.org.uk>
+ <31936.1559146000@warthog.procyon.org.uk>
+ <20190529231112.GB3164@kroah.com>
+ <20190530095039.GA5137@andrea>
 MIME-Version: 1.0
-References: <20190530141531.43462-1-vincenzo.frascino@arm.com> <20190530141531.43462-18-vincenzo.frascino@arm.com>
-In-Reply-To: <20190530141531.43462-18-vincenzo.frascino@arm.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 31 May 2019 10:34:59 +0200
-Message-ID: <CAK8P3a29QXCP8nw7po06GeYEGvJ_y2GxjAvswFk3=Y6YCjbdDg@mail.gmail.com>
-Subject: Re: [PATCH v6 17/19] mips: Add support for generic vDSO
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mips@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Huw Davies <huw@codeweavers.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190530095039.GA5137@andrea>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 4:16 PM Vincenzo Frascino
-<vincenzo.frascino@arm.com> wrote:
+On Thu, May 30, 2019 at 11:50:39AM +0200, Andrea Parri wrote:
+> > > Looking at the perf ring buffer, there appears to be a missing barrier in
+> > > perf_aux_output_end():
+> > > 
+> > > 	rb->user_page->aux_head = rb->aux_head;
+> > > 
+> > > should be:
+> > > 
+> > > 	smp_store_release(&rb->user_page->aux_head, rb->aux_head);
+> > > 
+> > > It should also be using smp_load_acquire().  See
+> > > Documentation/core-api/circular-buffers.rst
+> > > 
+> > > And a (partial) patch has been proposed: https://lkml.org/lkml/2018/5/10/249
+> > 
+> > So, if that's all that needs to be fixed, can you use the same
+> > buffer/code if that patch is merged?
+> 
+> That's about one year old...: let me add the usual suspects in Cc:  ;-)
+> since I'm not sure what the plan was (or if I'm missing something) ...
 
-> --- a/arch/mips/vdso/vdso.lds.S
-> +++ b/arch/mips/vdso/vdso.lds.S
-> @@ -99,6 +99,10 @@ VERSION
->         global:
->                 __vdso_clock_gettime;
->                 __vdso_gettimeofday;
-> +               __vdso_clock_getres;
-> +#if _MIPS_SIM != _MIPS_SIM_ABI64
-> +               __vdso_clock_gettime64;
-> +#endif
->  #endif
->         local: *;
->         };
+The AUX crud is 'special' and smp_store_release() doesn't really help in
+many cases. Notable, AUX is typically used in combination with a
+hardware writer. The driver is in charge of odering here, the generic
+code doesn't know what the appropriate barrier (if any) is and would
+have to resort to the most expensive/heavy one available.
 
-Same comment as for the corresponding arm change: I'd leave the ABI
-changes to a separate patch, and probably not add __vdso_clock_getres
-at all.
+Also see the comment right above this function:
 
-Also, you seem to have a typo here:
+ "It is the
+  pmu driver's responsibility to observe ordering rules of the hardware,
+  so that all the data is externally visible before this is called."
 
-> +notrace int __vdso_clock_gettime_time64(clockid_t clock,
-> +                                struct __kernel_timespec *ts)
-> +{
-> +       return __cvdso_clock_gettime(clock, ts);
-> +}
 
-This should be __vdso_clock_gettime64, not __vdso_clock_gettime_time64 I think.
-
-       Arnd
