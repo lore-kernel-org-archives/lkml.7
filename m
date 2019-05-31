@@ -2,53 +2,51 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A0EC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DBB3C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B4ED26F38
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:18:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74FB226F3D
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:18:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727699AbfEaVSH (ORCPT
+        id S1727075AbfEaVSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 17:18:07 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:42330 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726749AbfEaVSH (ORCPT
+        Fri, 31 May 2019 17:18:11 -0400
+Received: from mail-it1-f199.google.com ([209.85.166.199]:54766 "EHLO
+        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727585AbfEaVSH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 31 May 2019 17:18:07 -0400
-Received: by mail-io1-f71.google.com with SMTP id v187so8622392ioe.9
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 14:18:06 -0700 (PDT)
+Received: by mail-it1-f199.google.com with SMTP id k8so9283514itd.4
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 14:18:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=9vJ5p7g65WszXpcgdHNrhcEVIXylvGJSGHu7KxUMRl0=;
-        b=GjZCYpL0MtNOcebeRLhgiLryElqqAjy9bX8yBUJ02py6Gvald72ogF4kqugb9skj3U
-         GmcZzzY8qGumK3mGION2Ggp0pLbd3l8TwU7eFLHBqiNwb0qFs1Z7EAZ5sT0ocmYHPxsE
-         fLfyfg6xYQd+RjoN6Rjv6LxP6pHHpYhtVfQPtyztApf1QYpLYvv7ssq92Pt82sV4thJp
-         rp8szy8C5X64QjuTF8mpJiPTsXebsYbeSLVyf0ONujKI2ejjgEsB77odQz48zudROwCz
-         1yt1gBvMjVQNzzIy0oTUELleQn7Rbvj00fFc3eUgYP33qkkAdu/GCsfVhsSNqF/hTDAS
-         85kg==
-X-Gm-Message-State: APjAAAWYT23VQsOIbj5XuiKEUwQNp5H7PkOE/o9F6PrZ3KXxGP/dxDGQ
-        F4f/NIKLNUc927y4kSEqK/JK6yDg0dMOBj8edzVAKYHSzueM
-X-Google-Smtp-Source: APXvYqyQthWYZkYEzHAw27Fklkf9ijpz/D7EU/qN25ZeTvfoP8xszP9EdDcihQRxiZOU0u7xwOU77U09S102kJHodTHCUDVE0ATP
+        bh=isy/jIJwPd6VHnKckEuFUtsTDm5Rvv7z/w34KMToNWc=;
+        b=VRGAt8LHGOvongcMMqqdxtUjuwLRraSv/yYSzLQwzfGB7jwGSFj5CYOHtfXHYRrsdw
+         sKnSbA6qMNRi+Jrvb4MhqFX1w7yXz63FTk8TtsobgXtHamWtbHOzej6Vx5LBh66QJzSr
+         hoXgOxpMgzLgRRy1DeVn5iEvAkmKCxP8VGBgKKITp7Qn9W/49ZwiOsg+XZGzi0UXpum3
+         GE1G1zgUBjyFlW5S8UtLhVvjnFQLSN2JFWRDHcp1MzxGO1saKMkII4dnrVoPQsXBD/+F
+         H7vZn2Sde3awrx7bHYJ0I05wHOaLcFlKoTaRtPAn0B9tFLZAPNjC4Rp7UJIPdNH0znJa
+         nV1w==
+X-Gm-Message-State: APjAAAW7ZkPm4JgVXOw+xkFjvIDQ3jTP7UfDyi6CX7wACSQO4XKSqNkL
+        iqCGfqd5dZRJICjPoaug6rF2w7+J0IVbZoEidByaV0C87ezg
+X-Google-Smtp-Source: APXvYqzEXs79XyHRPP6NMZR02QjtOzL2veFSEW7TC2XM5AukiOY+51CD5mOX15G0I/3GMFAQJrsfK7muVBs1XQoLuI/LlwsGYx34
 MIME-Version: 1.0
-X-Received: by 2002:a05:660c:6c1:: with SMTP id z1mr9492253itk.126.1559337486489;
+X-Received: by 2002:a24:1416:: with SMTP id 22mr8613868itg.144.1559337486682;
  Fri, 31 May 2019 14:18:06 -0700 (PDT)
 Date:   Fri, 31 May 2019 14:18:06 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f7a443058a358cb4@google.com>
-Subject: memory leak in sctp_send_reset_streams
-From:   syzbot <syzbot+6ad9c3bd0a218a2ab41d@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, linux-kernel@vger.kernel.org,
-        linux-sctp@vger.kernel.org, marcelo.leitner@gmail.com,
-        netdev@vger.kernel.org, nhorman@tuxdriver.com,
-        syzkaller-bugs@googlegroups.com, vyasevich@gmail.com
+Message-ID: <000000000000fa91e1058a358cd5@google.com>
+Subject: possible deadlock in __do_page_fault (2)
+From:   syzbot <syzbot+606e524a3ca9617cf8c0@syzkaller.appspotmail.com>
+To:     adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        tytso@mit.edu
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -59,85 +57,154 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    036e3431 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=153cff12a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8f0f63a62bb5b13c
-dashboard link: https://syzkaller.appspot.com/bug?extid=6ad9c3bd0a218a2ab41d
+HEAD commit:    3c09c195 Add linux-next specific files for 20190531
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=100a5f26a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6cfb24468280cd5c
+dashboard link: https://syzkaller.appspot.com/bug?extid=606e524a3ca9617cf8c0
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12561c86a00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15b76fd8a00000
+
+Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+6ad9c3bd0a218a2ab41d@syzkaller.appspotmail.com
+Reported-by: syzbot+606e524a3ca9617cf8c0@syzkaller.appspotmail.com
 
-executing program
-executing program
-executing program
-executing program
-executing program
-BUG: memory leak
-unreferenced object 0xffff888123894820 (size 32):
-   comm "syz-executor045", pid 7267, jiffies 4294943559 (age 13.660s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000c7e71c69>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:55 [inline]
-     [<00000000c7e71c69>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000c7e71c69>] slab_alloc mm/slab.c:3326 [inline]
-     [<00000000c7e71c69>] __do_kmalloc mm/slab.c:3658 [inline]
-     [<00000000c7e71c69>] __kmalloc+0x161/0x2c0 mm/slab.c:3669
-     [<000000003250ed8e>] kmalloc_array include/linux/slab.h:670 [inline]
-     [<000000003250ed8e>] kcalloc include/linux/slab.h:681 [inline]
-     [<000000003250ed8e>] sctp_send_reset_streams+0x1ab/0x5a0  
-net/sctp/stream.c:302
-     [<00000000cd899c6e>] sctp_setsockopt_reset_streams  
-net/sctp/socket.c:4314 [inline]
-     [<00000000cd899c6e>] sctp_setsockopt net/sctp/socket.c:4765 [inline]
-     [<00000000cd899c6e>] sctp_setsockopt+0xc23/0x2bf0 net/sctp/socket.c:4608
-     [<00000000ff3a21a2>] sock_common_setsockopt+0x38/0x50  
-net/core/sock.c:3130
-     [<000000009eb87ae7>] __sys_setsockopt+0x98/0x120 net/socket.c:2078
-     [<00000000e0ede6ca>] __do_sys_setsockopt net/socket.c:2089 [inline]
-     [<00000000e0ede6ca>] __se_sys_setsockopt net/socket.c:2086 [inline]
-     [<00000000e0ede6ca>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2086
-     [<00000000c61155f5>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<00000000e540958c>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+======================================================
+WARNING: possible circular locking dependency detected
+5.2.0-rc2-next-20190531 #4 Not tainted
+------------------------------------------------------
+syz-executor.1/28460 is trying to acquire lock:
+000000007749dcbb (&mm->mmap_sem#2){++++}, at: do_user_addr_fault  
+arch/x86/mm/fault.c:1407 [inline]
+000000007749dcbb (&mm->mmap_sem#2){++++}, at: __do_page_fault+0x9e9/0xda0  
+arch/x86/mm/fault.c:1522
 
-BUG: memory leak
-unreferenced object 0xffff888123894980 (size 32):
-   comm "syz-executor045", pid 7268, jiffies 4294944145 (age 7.800s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000c7e71c69>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:55 [inline]
-     [<00000000c7e71c69>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000c7e71c69>] slab_alloc mm/slab.c:3326 [inline]
-     [<00000000c7e71c69>] __do_kmalloc mm/slab.c:3658 [inline]
-     [<00000000c7e71c69>] __kmalloc+0x161/0x2c0 mm/slab.c:3669
-     [<000000003250ed8e>] kmalloc_array include/linux/slab.h:670 [inline]
-     [<000000003250ed8e>] kcalloc include/linux/slab.h:681 [inline]
-     [<000000003250ed8e>] sctp_send_reset_streams+0x1ab/0x5a0  
-net/sctp/stream.c:302
-     [<00000000cd899c6e>] sctp_setsockopt_reset_streams  
-net/sctp/socket.c:4314 [inline]
-     [<00000000cd899c6e>] sctp_setsockopt net/sctp/socket.c:4765 [inline]
-     [<00000000cd899c6e>] sctp_setsockopt+0xc23/0x2bf0 net/sctp/socket.c:4608
-     [<00000000ff3a21a2>] sock_common_setsockopt+0x38/0x50  
-net/core/sock.c:3130
-     [<000000009eb87ae7>] __sys_setsockopt+0x98/0x120 net/socket.c:2078
-     [<00000000e0ede6ca>] __do_sys_setsockopt net/socket.c:2089 [inline]
-     [<00000000e0ede6ca>] __se_sys_setsockopt net/socket.c:2086 [inline]
-     [<00000000e0ede6ca>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2086
-     [<00000000c61155f5>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<00000000e540958c>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+but task is already holding lock:
+000000000005b591 (&sb->s_type->i_mutex_key#10){++++}, at: inode_trylock  
+include/linux/fs.h:798 [inline]
+000000000005b591 (&sb->s_type->i_mutex_key#10){++++}, at:  
+ext4_file_write_iter+0x246/0x1070 fs/ext4/file.c:232
 
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #1 (&sb->s_type->i_mutex_key#10){++++}:
+        down_write+0x38/0xa0 kernel/locking/rwsem.c:66
+        inode_lock include/linux/fs.h:778 [inline]
+        process_measurement+0x15ae/0x15e0  
+security/integrity/ima/ima_main.c:228
+        ima_file_mmap+0x11a/0x130 security/integrity/ima/ima_main.c:370
+        security_file_mprotect+0xd5/0x100 security/security.c:1430
+        do_mprotect_pkey+0x537/0xa30 mm/mprotect.c:550
+        __do_sys_pkey_mprotect mm/mprotect.c:590 [inline]
+        __se_sys_pkey_mprotect mm/mprotect.c:587 [inline]
+        __x64_sys_pkey_mprotect+0x97/0xf0 mm/mprotect.c:587
+        do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+-> #0 (&mm->mmap_sem#2){++++}:
+        lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4300
+        down_read+0x3f/0x1e0 kernel/locking/rwsem.c:24
+        do_user_addr_fault arch/x86/mm/fault.c:1407 [inline]
+        __do_page_fault+0x9e9/0xda0 arch/x86/mm/fault.c:1522
+        do_page_fault+0x71/0x57d arch/x86/mm/fault.c:1553
+        page_fault+0x1e/0x30 arch/x86/entry/entry_64.S:1156
+        fault_in_pages_readable include/linux/pagemap.h:600 [inline]
+        iov_iter_fault_in_readable+0x377/0x450 lib/iov_iter.c:426
+        generic_perform_write+0x186/0x520 mm/filemap.c:3197
+        __generic_file_write_iter+0x25e/0x630 mm/filemap.c:3336
+        ext4_file_write_iter+0x332/0x1070 fs/ext4/file.c:266
+        call_write_iter include/linux/fs.h:1870 [inline]
+        new_sync_write+0x4d3/0x770 fs/read_write.c:483
+        __vfs_write+0xe1/0x110 fs/read_write.c:496
+        vfs_write+0x268/0x5d0 fs/read_write.c:558
+        ksys_write+0x14f/0x290 fs/read_write.c:611
+        __do_sys_write fs/read_write.c:623 [inline]
+        __se_sys_write fs/read_write.c:620 [inline]
+        __x64_sys_write+0x73/0xb0 fs/read_write.c:620
+        do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+other info that might help us debug this:
+
+  Possible unsafe locking scenario:
+
+        CPU0                    CPU1
+        ----                    ----
+   lock(&sb->s_type->i_mutex_key#10);
+                                lock(&mm->mmap_sem#2);
+                                lock(&sb->s_type->i_mutex_key#10);
+   lock(&mm->mmap_sem#2);
+
+  *** DEADLOCK ***
+
+3 locks held by syz-executor.1/28460:
+  #0: 00000000f0dc03f3 (&f->f_pos_lock){+.+.}, at: __fdget_pos+0xee/0x110  
+fs/file.c:801
+  #1: 000000001d3176fb (sb_writers#3){.+.+}, at: file_start_write  
+include/linux/fs.h:2836 [inline]
+  #1: 000000001d3176fb (sb_writers#3){.+.+}, at: vfs_write+0x485/0x5d0  
+fs/read_write.c:557
+  #2: 000000000005b591 (&sb->s_type->i_mutex_key#10){++++}, at:  
+inode_trylock include/linux/fs.h:798 [inline]
+  #2: 000000000005b591 (&sb->s_type->i_mutex_key#10){++++}, at:  
+ext4_file_write_iter+0x246/0x1070 fs/ext4/file.c:232
+
+stack backtrace:
+CPU: 1 PID: 28460 Comm: syz-executor.1 Not tainted 5.2.0-rc2-next-20190531  
+#4
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_circular_bug.cold+0x1cc/0x28f kernel/locking/lockdep.c:1566
+  check_prev_add kernel/locking/lockdep.c:2311 [inline]
+  check_prevs_add kernel/locking/lockdep.c:2419 [inline]
+  validate_chain kernel/locking/lockdep.c:2801 [inline]
+  __lock_acquire+0x3755/0x5490 kernel/locking/lockdep.c:3790
+  lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4300
+  down_read+0x3f/0x1e0 kernel/locking/rwsem.c:24
+  do_user_addr_fault arch/x86/mm/fault.c:1407 [inline]
+  __do_page_fault+0x9e9/0xda0 arch/x86/mm/fault.c:1522
+  do_page_fault+0x71/0x57d arch/x86/mm/fault.c:1553
+  page_fault+0x1e/0x30 arch/x86/entry/entry_64.S:1156
+RIP: 0010:fault_in_pages_readable include/linux/pagemap.h:600 [inline]
+RIP: 0010:iov_iter_fault_in_readable+0x377/0x450 lib/iov_iter.c:426
+Code: 89 f6 41 88 57 e0 e8 48 e5 3c fe 45 85 f6 74 c1 e9 70 fe ff ff e8 b9  
+e3 3c fe 0f 1f 00 0f ae e8 44 89 f0 48 8b 8d 68 ff ff ff <8a> 11 89 c3 0f  
+1f 00 41 88 57 d0 31 ff 89 de e8 15 e5 3c fe 85 db
+RSP: 0018:ffff88803dde7918 EFLAGS: 00010212
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 000000002008a17f
+RDX: 000000000003eb3f RSI: ffffffff833406b7 RDI: 0000000000000007
+RBP: ffff88803dde79b8 R08: ffff8880a83d03c0 R09: 0000000000000004
+R10: ffffed1015d26be7 R11: ffff8880ae935f3b R12: 0000000000001000
+R13: 0000000000001000 R14: 0000000000000000 R15: ffff88803dde7990
+  generic_perform_write+0x186/0x520 mm/filemap.c:3197
+  __generic_file_write_iter+0x25e/0x630 mm/filemap.c:3336
+  ext4_file_write_iter+0x332/0x1070 fs/ext4/file.c:266
+  call_write_iter include/linux/fs.h:1870 [inline]
+  new_sync_write+0x4d3/0x770 fs/read_write.c:483
+  __vfs_write+0xe1/0x110 fs/read_write.c:496
+  vfs_write+0x268/0x5d0 fs/read_write.c:558
+  ksys_write+0x14f/0x290 fs/read_write.c:611
+  __do_sys_write fs/read_write.c:623 [inline]
+  __se_sys_write fs/read_write.c:620 [inline]
+  __x64_sys_write+0x73/0xb0 fs/read_write.c:620
+  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x459279
+Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f506babec78 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459279
+RDX: 00000000fffffcad RSI: 0000000020000180 RDI: 0000000000000004
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f506babf6d4
+R13: 00000000004c8838 R14: 00000000004df120 R15: 00000000ffffffff
 
 
 ---
@@ -147,5 +214,3 @@ syzbot engineers can be reached at syzkaller@googlegroups.com.
 
 syzbot will keep track of this bug report. See:
 https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
