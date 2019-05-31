@@ -4,23 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DF8C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B13A9C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC29024953
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:57:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88C7A249BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:57:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727330AbfEaI52 (ORCPT
+        id S1727341AbfEaI5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 04:57:28 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:39564 "EHLO huawei.com"
+        Fri, 31 May 2019 04:57:32 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:39562 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726944AbfEaI4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727126AbfEaI4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 31 May 2019 04:56:39 -0400
 Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 3B04956F9E58EF8E01CB;
+        by Forcepoint Email with ESMTP id 372E4B5D05C47E712E04;
         Fri, 31 May 2019 16:56:37 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
@@ -32,9 +33,9 @@ CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linuxarm@huawei.com>, Weihang Li <liweihang@hisilicon.com>,
         Peng Li <lipeng321@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 05/12] net: hns3: add a check to pointer in error_detected and slot_reset
-Date:   Fri, 31 May 2019 16:54:51 +0800
-Message-ID: <1559292898-64090-6-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 06/12] net: hns3: set ops to null when unregister ad_dev
+Date:   Fri, 31 May 2019 16:54:52 +0800
+Message-ID: <1559292898-64090-7-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1559292898-64090-1-git-send-email-tanhuazhong@huawei.com>
 References: <1559292898-64090-1-git-send-email-tanhuazhong@huawei.com>
@@ -49,47 +50,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Weihang Li <liweihang@hisilicon.com>
 
-If we add a VF without loading hclgevf.ko and then there is a RAS error
-occurs, PCIe AER will call error_detected and slot_reset of all functions,
-and will get a NULL pointer when we check ad_dev->ops->handle_hw_ras_error.
-This will cause a call trace and failures on handling of follow-up RAS
-errors.
+The hclge/hclgevf and hns3 module can be unloaded independently,
+when hclge/hclgevf unloaded firstly, the ops of ae_dev should
+be set to NULL, otherwise it will cause an use-after-free problem.
 
-This patch check ae_dev and ad_dev->ops at first to solve above issues.
-
+Fixes: 38caee9d3ee8 ("net: hns3: Add support of the HNAE3 framework")
 Signed-off-by: Weihang Li <liweihang@hisilicon.com>
 Signed-off-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hnae3.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 1e68bcb..0501b78 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -1920,9 +1920,9 @@ static pci_ers_result_t hns3_error_detected(struct pci_dev *pdev,
- 	if (state == pci_channel_io_perm_failure)
- 		return PCI_ERS_RESULT_DISCONNECT;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.c b/drivers/net/ethernet/hisilicon/hns3/hnae3.c
+index fa8b850..738e013 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hnae3.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.c
+@@ -251,6 +251,7 @@ void hnae3_unregister_ae_algo(struct hnae3_ae_algo *ae_algo)
  
--	if (!ae_dev) {
-+	if (!ae_dev || !ae_dev->ops) {
- 		dev_err(&pdev->dev,
--			"Can't recover - error happened during device init\n");
-+			"Can't recover - error happened before device initialized\n");
- 		return PCI_ERS_RESULT_NONE;
+ 		ae_algo->ops->uninit_ae_dev(ae_dev);
+ 		hnae3_set_bit(ae_dev->flag, HNAE3_DEV_INITED_B, 0);
++		ae_dev->ops = NULL;
  	}
  
-@@ -1941,6 +1941,9 @@ static pci_ers_result_t hns3_slot_reset(struct pci_dev *pdev)
+ 	list_del(&ae_algo->node);
+@@ -351,6 +352,7 @@ void hnae3_unregister_ae_dev(struct hnae3_ae_dev *ae_dev)
  
- 	dev_info(dev, "requesting reset due to PCI error\n");
+ 		ae_algo->ops->uninit_ae_dev(ae_dev);
+ 		hnae3_set_bit(ae_dev->flag, HNAE3_DEV_INITED_B, 0);
++		ae_dev->ops = NULL;
+ 	}
  
-+	if (!ae_dev || !ae_dev->ops)
-+		return PCI_ERS_RESULT_NONE;
-+
- 	/* request the reset */
- 	if (ae_dev->ops->reset_event) {
- 		if (!ae_dev->override_pci_need_reset)
+ 	list_del(&ae_dev->node);
 -- 
 2.7.4
 
