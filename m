@@ -4,144 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6321BC28CC2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB83C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45D33266A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:21:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D82A266A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:21:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbfEaJVO (ORCPT
+        id S1727086AbfEaJVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 05:21:14 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:42122 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbfEaJVK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 05:21:10 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hWdif-0004HD-I0; Fri, 31 May 2019 09:21:01 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Lijun Ou <oulijun@huawei.com>, Wei Hu <xavier.huwei@huawei.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2][next] RDMA/hns: fix comparison of unsigned long variable 'end' with less than zero
-Date:   Fri, 31 May 2019 10:21:00 +0100
-Message-Id: <20190531092101.28772-1-colin.king@canonical.com>
+        Fri, 31 May 2019 05:21:18 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:17635 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726232AbfEaJVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 05:21:17 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 1E44ABCCF2B6157DC235;
+        Fri, 31 May 2019 17:21:14 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 31 May 2019 17:21:08 +0800
+From:   Kefeng Wang <wangkefeng.wang@huawei.com>
+To:     Steffen Klassert <steffen.klassert@secunet.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+CC:     <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Kefeng Wang" <wangkefeng.wang@huawei.com>,
+        Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH] crypto: pcrypt: Fix possible deadlock in padata_sysfs_release
+Date:   Fri, 31 May 2019 17:29:23 +0800
+Message-ID: <20190531092923.4874-1-wangkefeng.wang@huawei.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+There is a deadlock issue in pcrypt_init_padata(),
 
-Currently the comparison of end with less than zero is always false
-because end is an unsigned long.  Also, replace checks of end with
-non-zero with end > 0 as it is possible that the #defined decrement
-may be changed in the future causing end to step over zero and go
-negative.
+pcrypt_init_padata()
+    cpus_read_lock()
+      padata_free()
+        padata_sysfs_release()
+          cpus_read_lock()
 
-The initialization of end with 0 is also redundant as this value is
-never read and is later set to HW_SYNC_TIMEOUT_MSECS, so fix this by
-initializing it with this value to begin with.
+Narrow rcu_read_lock/unlock() and move put_online_cpus()
+before padata_free() to fix it.
 
-Addresses-Coverity: ("Unsigned compared against 0")
-Fixes: 669cefb654cb ("RDMA/hns: Remove jiffies operation in disable interrupt context")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
 ---
- drivers/infiniband/hw/hns/hns_roce_hem.c   |  4 ++--
- drivers/infiniband/hw/hns/hns_roce_hw_v1.c | 12 ++++++------
- 2 files changed, 8 insertions(+), 8 deletions(-)
+ crypto/pcrypt.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hem.c b/drivers/infiniband/hw/hns/hns_roce_hem.c
-index 157c84a1f55f..b3641aeff27a 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hem.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_hem.c
-@@ -326,7 +326,7 @@ static int hns_roce_set_hem(struct hns_roce_dev *hr_dev,
- {
- 	spinlock_t *lock = &hr_dev->bt_cmd_lock;
- 	struct device *dev = hr_dev->dev;
--	unsigned long end = 0;
-+	long end;
- 	unsigned long flags;
- 	struct hns_roce_hem_iter iter;
- 	void __iomem *bt_cmd;
-@@ -377,7 +377,7 @@ static int hns_roce_set_hem(struct hns_roce_dev *hr_dev,
- 		bt_cmd = hr_dev->reg_base + ROCEE_BT_CMD_H_REG;
+diff --git a/crypto/pcrypt.c b/crypto/pcrypt.c
+index 0e9ce329fd47..662228b48b70 100644
+--- a/crypto/pcrypt.c
++++ b/crypto/pcrypt.c
+@@ -407,13 +407,14 @@ static int pcrypt_init_padata(struct padata_pcrypt *pcrypt,
+ 	int ret = -ENOMEM;
+ 	struct pcrypt_cpumask *mask;
  
- 		end = HW_SYNC_TIMEOUT_MSECS;
--		while (end) {
-+		while (end > 0) {
- 			if (!readl(bt_cmd) >> BT_CMD_SYNC_SHIFT)
- 				break;
+-	get_online_cpus();
  
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v1.c b/drivers/infiniband/hw/hns/hns_roce_hw_v1.c
-index 1fc77b1f2c6d..e13fea71bcb8 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hw_v1.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_hw_v1.c
-@@ -966,7 +966,7 @@ static int hns_roce_v1_recreate_lp_qp(struct hns_roce_dev *hr_dev)
- 	struct hns_roce_free_mr *free_mr;
- 	struct hns_roce_v1_priv *priv;
- 	struct completion comp;
--	unsigned long end = HNS_ROCE_V1_RECREATE_LP_QP_TIMEOUT_MSECS;
-+	long end = HNS_ROCE_V1_RECREATE_LP_QP_TIMEOUT_MSECS;
+ 	pcrypt->wq = alloc_workqueue("%s", WQ_MEM_RECLAIM | WQ_CPU_INTENSIVE,
+ 				     1, name);
+ 	if (!pcrypt->wq)
+ 		goto err;
  
- 	priv = (struct hns_roce_v1_priv *)hr_dev->priv;
- 	free_mr = &priv->free_mr;
-@@ -986,7 +986,7 @@ static int hns_roce_v1_recreate_lp_qp(struct hns_roce_dev *hr_dev)
++	get_online_cpus();
++
+ 	pcrypt->pinst = padata_alloc_possible(pcrypt->wq);
+ 	if (!pcrypt->pinst)
+ 		goto err_destroy_workqueue;
+@@ -448,12 +449,11 @@ static int pcrypt_init_padata(struct padata_pcrypt *pcrypt,
+ 	free_cpumask_var(mask->mask);
+ 	kfree(mask);
+ err_free_padata:
++	put_online_cpus();
+ 	padata_free(pcrypt->pinst);
+ err_destroy_workqueue:
+ 	destroy_workqueue(pcrypt->wq);
+ err:
+-	put_online_cpus();
+-
+ 	return ret;
+ }
  
- 	queue_work(free_mr->free_mr_wq, &(lp_qp_work->work));
- 
--	while (end) {
-+	while (end > 0) {
- 		if (try_wait_for_completion(&comp))
- 			return 0;
- 		msleep(HNS_ROCE_V1_RECREATE_LP_QP_WAIT_VALUE);
-@@ -1104,7 +1104,7 @@ static int hns_roce_v1_dereg_mr(struct hns_roce_dev *hr_dev,
- 	struct hns_roce_free_mr *free_mr;
- 	struct hns_roce_v1_priv *priv;
- 	struct completion comp;
--	unsigned long end = HNS_ROCE_V1_FREE_MR_TIMEOUT_MSECS;
-+	long end = HNS_ROCE_V1_FREE_MR_TIMEOUT_MSECS;
- 	unsigned long start = jiffies;
- 	int npages;
- 	int ret = 0;
-@@ -1134,7 +1134,7 @@ static int hns_roce_v1_dereg_mr(struct hns_roce_dev *hr_dev,
- 
- 	queue_work(free_mr->free_mr_wq, &(mr_work->work));
- 
--	while (end) {
-+	while (end > 0) {
- 		if (try_wait_for_completion(&comp))
- 			goto free_mr;
- 		msleep(HNS_ROCE_V1_FREE_MR_WAIT_VALUE);
-@@ -2425,7 +2425,8 @@ static int hns_roce_v1_clear_hem(struct hns_roce_dev *hr_dev,
- {
- 	struct device *dev = &hr_dev->pdev->dev;
- 	struct hns_roce_v1_priv *priv;
--	unsigned long end = 0, flags = 0;
-+	unsigned long flags = 0;
-+	long end = HW_SYNC_TIMEOUT_MSECS;
- 	__le32 bt_cmd_val[2] = {0};
- 	void __iomem *bt_cmd;
- 	u64 bt_ba = 0;
-@@ -2463,7 +2464,6 @@ static int hns_roce_v1_clear_hem(struct hns_roce_dev *hr_dev,
- 
- 	bt_cmd = hr_dev->reg_base + ROCEE_BT_CMD_H_REG;
- 
--	end = HW_SYNC_TIMEOUT_MSECS;
- 	while (1) {
- 		if (readl(bt_cmd) >> BT_CMD_SYNC_SHIFT) {
- 			if (end < 0) {
 -- 
 2.20.1
 
