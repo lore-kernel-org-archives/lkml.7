@@ -2,136 +2,85 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD60C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45639C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCFDB26702
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:41:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23B2D26708
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:41:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbfEaJlR (ORCPT
+        id S1727072AbfEaJlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 05:41:17 -0400
-Received: from foss.arm.com ([217.140.101.70]:48990 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726330AbfEaJlQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 05:41:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A8520341;
-        Fri, 31 May 2019 02:41:15 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 44C313F59C;
-        Fri, 31 May 2019 02:41:11 -0700 (PDT)
-Date:   Fri, 31 May 2019 10:41:08 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     "Andrew F. Davis" <afd@ti.com>
-Cc:     Morten Rasmussen <morten.rasmussen@arm.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <anup@brainfault.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-riscv@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Otto Sabart <ottosabart@seberm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v6 1/7] Documentation: DT: arm: add support for sockets
- defining package boundaries
-Message-ID: <20190531094108.GC18292@e107155-lin>
-References: <20190529211340.17087-1-atish.patra@wdc.com>
- <20190529211340.17087-2-atish.patra@wdc.com>
- <49f41e62-5354-a674-d95f-5f63851a0ca6@ti.com>
- <20190530115103.GA10919@e105550-lin.cambridge.arm.com>
- <70639181-09d1-4644-f062-b19e06db7471@ti.com>
+        Fri, 31 May 2019 05:41:22 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:58413 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726330AbfEaJlV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 05:41:21 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-124-usbqQbBcPxeULja3PdvRQw-1; Fri, 31 May 2019 10:41:18 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
+ (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri,
+ 31 May 2019 10:41:17 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 31 May 2019 10:41:17 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Vineet Gupta' <Vineet.Gupta1@synopsys.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <Will.Deacon@arm.com>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
+CC:     arcml <linux-snps-arc@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: RE: single copy atomicity for double load/stores on 32-bit systems
+Thread-Topic: single copy atomicity for double load/stores on 32-bit systems
+Thread-Index: AQHVFxS3Hu02PtbnOkCuZb4nroftBaaE+VYw
+Date:   Fri, 31 May 2019 09:41:17 +0000
+Message-ID: <895ec12746c246579aed5dd98ace6e38@AcuMS.aculab.com>
+References: <2fd3a455-6267-5d21-c530-41964a4f6ce9@synopsys.com>
+In-Reply-To: <2fd3a455-6267-5d21-c530-41964a4f6ce9@synopsys.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <70639181-09d1-4644-f062-b19e06db7471@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-MC-Unique: usbqQbBcPxeULja3PdvRQw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 08:56:03AM -0400, Andrew F. Davis wrote:
-> On 5/30/19 7:51 AM, Morten Rasmussen wrote:
-> > On Wed, May 29, 2019 at 07:39:17PM -0400, Andrew F. Davis wrote:
-> > > On 5/29/19 5:13 PM, Atish Patra wrote:
-> > > > From: Sudeep Holla <sudeep.holla@arm.com>
-> > > >
-> > > > The current ARM DT topology description provides the operating system
-> > > > with a topological view of the system that is based on leaf nodes
-> > > > representing either cores or threads (in an SMT system) and a
-> > > > hierarchical set of cluster nodes that creates a hierarchical topology
-> > > > view of how those cores and threads are grouped.
-> > > >
-> > > > However this hierarchical representation of clusters does not allow to
-> > > > describe what topology level actually represents the physical package or
-> > > > the socket boundary, which is a key piece of information to be used by
-> > > > an operating system to optimize resource allocation and scheduling.
-> > > >
-> > >
-> > > Are physical package descriptions really needed? What does "socket" imply
-> > > that a higher layer "cluster" node grouping does not? It doesn't imply a
-> > > different NUMA distance and the definition of "socket" is already not well
-> > > defined, is a dual chiplet processor not just a fancy dual "socket" or are
-> > > dual "sockets" on a server board "slotket" card, will we need new names for
-> > > those too..
-> >
-> > Socket (or package) just implies what you suggest, a grouping of CPUs
-> > based on the physical socket (or package). Some resources might be
-> > associated with packages and more importantly socket information is
-> > exposed to user-space. At the moment clusters are being exposed to
-> > user-space as sockets which is less than ideal for some topologies.
-> >
->
-> I see the benefit of reporting the physical layout and packaging information
-> to user-space for tracking reasons, but from software perspective this
-> doesn't matter, and the resource partitioning should be described elsewhere
-> (NUMA nodes being the go to example).
->
-> > At the moment user-space is only told about hw threads, cores, and
-> > sockets. In the very near future it is going to be told about dies too
-> > (look for Len Brown's multi-die patch set).
-> >
->
-> Seems my hypothetical case is already in the works :(
->
-> > I don't see how we can provide correct information to user-space based
-> > on the current information in DT. I'm not convinced it was a good idea
-> > to expose this information to user-space to begin with but that is
-> > another discussion.
-> >
->
-> Fair enough, it's a little late now to un-expose this info to userspace so
-> we should at least present it correctly. My worry was this getting out of
-> hand with layering, for instance what happens when we need to add die nodes
-> in-between cluster and socket?
->
+RnJvbTogVmluZWV0IEd1cHRhDQo+IFNlbnQ6IDMwIE1heSAyMDE5IDE5OjIzDQouLi4NCj4gV2hp
+bGUgaXQgc2VlbXMgcmVhc29uYWJsZSBmb3JtIGhhcmR3YXJlIHBvdiB0byBub3QgaW1wbGVtZW50
+IHN1Y2ggYXRvbWljaXR5IGJ5DQo+IGRlZmF1bHQgaXQgc2VlbXMgdGhlcmUncyBhbiBhZGRpdGlv
+bmFsIGJ1cmRlbiBvbiBhcHBsaWNhdGlvbiB3cml0ZXJzLiBUaGV5IGNvdWxkDQo+IGJlIGhhcHBp
+bHkgdXNpbmcgYSBsb2NrbGVzcyBhbGdvcml0aG0gd2l0aCBqdXN0IGEgc2hhcmVkIGZsYWcgYmV0
+d2VlbiAyIHRocmVhZHMNCj4gdy9vIG5lZWQgZm9yIGFueSBleHBsaWNpdCBzeW5jaHJvbml6YXRp
+b24uIEJ1dCB1cGdyYWRlIHRvIGEgbmV3IGNvbXBpbGVyIHdoaWNoDQo+IGFnZ3Jlc3NpdmVseSAi
+cGFja3MiIHN0cnVjdCByZW5kZXJpbmcgbG9uZyBsb25nIDMyLWJpdCBhbGlnbmVkICh2cy4gNjQt
+Yml0IGJlZm9yZSkNCj4gY2F1c2luZyB0aGUgY29kZSB0byBzdWRkZW5seSBzdG9wIHdvcmtpbmcu
+IElzIHRoZSBvbnVzIG9uIHRoZW0gdG8gZGVjbGFyZSBzdWNoDQo+IG1lbW9yeSBhcyBjMTEgYXRv
+bWljIG9yIHNvbWUgc3VjaC4NCg0KQSAnbmV3JyBjb21waWxlciBjYW4ndCBzdWRkZW5seSBjaGFu
+Z2UgdGhlIGFsaWdubWVudCBydWxlcyBmb3Igc3RydWN0dXJlIGVsZW1lbnRzLg0KVGhlIGFsaWdu
+bWVudCBydWxlcyB3aWxsIGJlIHBhcnQgb2YgdGhlIEFCSS4NCg0KTW9yZSBsaWtlbHkgaXMgdGhh
+dCB0aGUgc3RydWN0dXJlIGl0c2VsZiBpcyB1bmV4cGVjdGVkbHkgYWxsb2NhdGVkIG9uDQphbiA4
+bis0IGJvdW5kYXJ5IGR1ZSB0byBjb2RlIGNoYW5nZXMgZWxzZXdoZXJlLg0KDQpJdCBpcyBhbHNv
+IHdvcnRoIG5vdGluZyB0aGF0IGZvciBjb21wbGV0ZSBwb3J0YWJpbGl0eSBvbmx5IHdyaXRlcyB0
+bw0KJ2Z1bGwgd29yZHMnIGNhbiBiZSBhc3N1bWVkIGF0b21pYy4NClNvbWUgb2xkIEFscGhhJ3Mg
+ZGlkIFJNVyBjeWNsZXMgZm9yIGJ5dGUgd3JpdGVzLg0KKEFsdGhvdWdoIEkgc3VzcGVjdCBMaW51
+eCBkb2Vzbid0IHN1cHBvcnQgdGhvc2UgYW55IG1vcmUuKQ0KDQpFdmVuIHg4NiBjYW4gY2F0Y2gg
+eW91IG91dC4NClRoZSBiaXQgb3BlcmF0aW9ucyB3aWxsIGRvIHdpZGVyIFJNVyBjeWNsZXMgdGhh
+biB5b3UgZXhwZWN0Lg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRl
+LCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpS
+ZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
 
-We may have to, if there's a similar requirement on ARM64 as the one
-addressed by Len Brown's multi-die patch set. But for now, no one has
-asked for it.
-
---
-Regards,
-Sudeep
