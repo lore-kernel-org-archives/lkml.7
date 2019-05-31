@@ -2,74 +2,130 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18243C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E167BC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E49ED24F28
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:52:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5B4D265FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:53:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbfEaIwM (ORCPT
+        id S1726887AbfEaIx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 04:52:12 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:50246 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbfEaIwM (ORCPT
+        Fri, 31 May 2019 04:53:57 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:37964 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbfEaIx4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 04:52:12 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id C6B4F80233; Fri, 31 May 2019 10:52:00 +0200 (CEST)
-Date:   Fri, 31 May 2019 10:52:10 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     kernel list <linux-kernel@vger.kernel.org>,
-        dmitry.torokhov@gmail.com, gregkh@linuxfoundation.org,
-        teheo@suse.de, sre@kernel.org
-Subject: devm_* vs. PROBE_DEFFER: memory leaks?
-Message-ID: <20190531085209.GA20964@amd>
+        Fri, 31 May 2019 04:53:56 -0400
+Received: by mail-qt1-f195.google.com with SMTP id l3so10448081qtj.5;
+        Fri, 31 May 2019 01:53:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PLETH2OB3IxfKN1eggOuRioC9EOnLLXN9MFUnFFew5s=;
+        b=sUN03/0C+hMfoQOP6ZAjoEeEQifClVYy2S6TWneDAJ5QdQyBkIgzcSZWQR0WSR8Iki
+         pp2QmTbaCo70vduP2EVL51XRLgZYCsZ+PoRC74vNatvcPLRw4D+i+5NDMLEZInyIi0kz
+         zkZXlATQiq5h0fd6GneSufHqHYEIAiTTDxhGHpir+y0iK2qnvvG42qRLwJjb2P4zqRbY
+         h1i6AxXl4nzwW9fuUBLLXLWYDYpS4CoX+4nZVHvlI/YoSVqpWsvFondqvpK9gJY64JQy
+         iPwnR+6BbrDjUbL4jLgzJ81sqCxf4M1fBq7XlQ707HY+9+58m0OyrEOGa6/yYbJ9l6vz
+         larw==
+X-Gm-Message-State: APjAAAV35WBhXvJTPyULaJb7pxdJkd5WKb/32zeL3Jfdss7hk2gZIrm6
+        5KE6cfLOZjpQX8b9hH5JkxKclT+ebRNtS7g7K/Y=
+X-Google-Smtp-Source: APXvYqzU7iWArqELb2azzCaYfon35mBi7acUgoO6bIp937zY6y9ykUj3bD/yvsjRGY3UDM715ORpT4Efor58s/vfKbs=
+X-Received: by 2002:a0c:9e0f:: with SMTP id p15mr7638581qve.176.1559292835687;
+ Fri, 31 May 2019 01:53:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="rwEMma7ioTxnRzrJ"
-Content-Disposition: inline
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20190530141531.43462-1-vincenzo.frascino@arm.com> <20190530141531.43462-20-vincenzo.frascino@arm.com>
+In-Reply-To: <20190530141531.43462-20-vincenzo.frascino@arm.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 31 May 2019 10:53:39 +0200
+Message-ID: <CAK8P3a3Z=wWQDu4aqV73J5PR2jNb3GzyWzYGT3dUp-F81H8mzQ@mail.gmail.com>
+Subject: Re: [PATCH v6 19/19] kselftest: Extend vDSO selftest
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mips@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Huw Davies <huw@codeweavers.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 30, 2019 at 4:16 PM Vincenzo Frascino
+<vincenzo.frascino@arm.com> wrote:
 
---rwEMma7ioTxnRzrJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> +/*
+> + * ARM64's vDSO exports its vDSO implementation with different names and
+> + * a different version from other architectures, so we need to handle it
+> + * as a special case.
+> + */
+> +#if defined(__aarch64__)
+> +const char *version = "LINUX_2.6.39";
+> +const char *name[4] = {
+> +       "__kernel_gettimeofday",
+> +       "__kernel_clock_gettime",
+> +       "__kernel_time",
+> +       "__kernel_clock_getres",
+> +};
+> +#else
+> +/* Tested on x86, arm, mips */
+> +const char *version = "LINUX_2.6";
+> +const char *name[4] = {
+> +       "__vdso_gettimeofday",
+> +       "__vdso_clock_gettime",
+> +       "__vdso_time",
+> +       "__vdso_clock_getres",
+> +};
+> +#endif
 
-Hi!
+I see the __kernel_* name used on arm64, powerpc and s390, whiel the __vdso_*
+name is used on arm, mips, nds32, riscv, sparc, and x86.
 
-Is devm_ supposed to work with EPROBE_DEFFER?
+Also the versions have more variants:
 
-Probe function is now called multiple times; is memory freed between
-calling probe()? Will allocations from failed probe()s remain after
-the driver is inserted successfully, leaking memory?
+$ git ls-files arch | grep vdso | xargs grep
+'\(LINUX_[2345]\|VDSO_VERSION_STRING\)'
+arch/arm/vdso/vdso.lds.S:    LINUX_2.6 {
+arch/arm64/kernel/vdso/vdso.lds.S:    LINUX_2.6.39 {
+arch/mips/vdso/vdso.lds.S:    LINUX_2.6 {
+arch/nds32/kernel/vdso/vdso.lds.S:    LINUX_4 {
+arch/powerpc/include/asm/vdso.h:#define VDSO_VERSION_STRING    LINUX_2.6.15
+arch/powerpc/kernel/vdso32/vdso32.lds.S:    VDSO_VERSION_STRING {
+arch/powerpc/kernel/vdso64/vdso64.lds.S:    VDSO_VERSION_STRING {
+arch/riscv/kernel/vdso/vdso.lds.S:    LINUX_4.15 {
+arch/s390/include/asm/vdso.h:#define VDSO_VERSION_STRING    LINUX_2.6.29
+arch/s390/kernel/vdso32/vdso32.lds.S:    VDSO_VERSION_STRING {
+arch/s390/kernel/vdso64/vdso64.lds.S:    VDSO_VERSION_STRING {
+arch/sparc/vdso/vdso.lds.S:    LINUX_2.6 {
+arch/sparc/vdso/vdso32/vdso32.lds.S:    LINUX_2.6 {
+arch/x86/entry/vdso/vdso.lds.S:    LINUX_2.6 {
+arch/x86/entry/vdso/vdso32/vdso32.lds.S:    LINUX_2.6 {
+arch/x86/entry/vdso/vdso32/vdso32.lds.S:    LINUX_2.5 {
+arch/x86/entry/vdso/vdsox32.lds.S:    LINUX_2.6 {
+arch/x86/um/vdso/vdso.lds.S:    LINUX_2.6 {
 
-Thanks,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Maybe change the test case to just try all combinations of the
+above (and __vdso_clock_gettime64 as well) and stop checking
+the architecture?
 
---rwEMma7ioTxnRzrJ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlzw6zkACgkQMOfwapXb+vL0igCeJvVsNfBl8H8xvikYrAeaSVJm
-t2oAn360LyefEazCKa/r0oLjLL+fhRNn
-=dPKe
------END PGP SIGNATURE-----
-
---rwEMma7ioTxnRzrJ--
+       Arnd
