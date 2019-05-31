@@ -2,99 +2,111 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18524C28CC0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 00:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D0EC28CC0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 00:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5E75262F7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 00:11:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559261518;
-	bh=BkaAkAYsINjPVicGtwZ4jKcRDAQKYbJITXtawe8Ms1c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sSXzajfr+S3lTBOaMwTWEvD7fqeQEb32A/P3s9wSD7dXLCiN8E0wh0arhHFGmeyaN
-	 ANTKGAoeuTiUPzLkcEzoP54Rb2IX7fPRRyIt4A4kTqQ8QQTMc3AQEVxSHBtrHaXKPj
-	 Jq7fXBKAXzcWvDpoyVp9b4nR7UiOQUfIbraVO5MI=
+	by mail.kernel.org (Postfix) with ESMTP id CF4C9262F7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 00:17:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="UYD6a11T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726543AbfEaAL5 (ORCPT
+        id S1726566AbfEaARg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 20:11:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54814 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726045AbfEaAL5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 20:11:57 -0400
-Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7230262F7;
-        Fri, 31 May 2019 00:11:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559261516;
-        bh=BkaAkAYsINjPVicGtwZ4jKcRDAQKYbJITXtawe8Ms1c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TVN6SLSzV1E834OCk47mM45jcIm9bLRoI24rvMu01vyyCnjkWaiHvED1NnjdAwXxC
-         VuQr4GqaR8Ia9HoR7Kw2/j6UFGentX1Yr3PK1MkGLQcsu9pK/jUgxbHtrL40TABbaf
-         ClQTV4i08DGeKAEbxLpn13N7I1R4k27yuY9ME9iQ=
-Date:   Thu, 30 May 2019 17:11:56 -0700
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Matt Sickler <Matt.Sickler@daktronics.com>
-Cc:     Simon =?iso-8859-1?Q?Sandstr=F6m?= <simon@nikanor.nu>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/4] staging: kpc2000: add spaces around operators in
- core.c
-Message-ID: <20190531001156.GA25210@kroah.com>
-References: <20190524110802.2953-1-simon@nikanor.nu>
- <20190524110802.2953-2-simon@nikanor.nu>
- <20190530210558.GA21455@kroah.com>
- <SN6PR02MB4016139989144F6C08CD4BDAEE180@SN6PR02MB4016.namprd02.prod.outlook.com>
+        Thu, 30 May 2019 20:17:36 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:42754 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbfEaARf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 20:17:35 -0400
+Received: by mail-ed1-f67.google.com with SMTP id g24so2096226eds.9
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 17:17:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=KilQgTmnb5nYWh7a+i+EYwFVHm8qNkHvjaIrcsYy+bQ=;
+        b=UYD6a11T0faxUH6FuHYRubUy66uwhxQIFEQHBDNi6Hm0rsKXch8bTe4qbEogjYXF12
+         +tAXmYQJ2h0kxzyQiD4t336y85hpXCAo42Kpxvof+f9lePbWvaCcWzpiUJcAHGhnIRYb
+         0uJU5TwEMlTC8awpUo4J5raGlGPbw6sNU0C0o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KilQgTmnb5nYWh7a+i+EYwFVHm8qNkHvjaIrcsYy+bQ=;
+        b=kAVclDGmM3YzTewjw8Ebin2ZnX7leX5NvMda+amFGUfR+wyDQMzf0ktq0hhUTnV/CK
+         +mYbgwzGqXifHhk0LaY8tZUGJWWldy/P5u3CaX/v1n6msyJf5nzMKNisJt4jl6BwiZ3Q
+         LzeiKy4+vzZVJNsvB+C1zXMb8AiNneLfCkJ7Djv6s6TyfcaG+8UuKfUsMmpf7q2ujgvh
+         KXb5rdfXvr5GOoi1wPEoxwljhCw5RbbHYTbgZC9SCtb7jzUPloFXbE3DGWla9gZWjt7Q
+         cqBlgNTkBc/rJMGVHVlhR060HbChbWb4KsV2uBKfByXTM5Qw15K7VPTMRhCiaXoZXCpD
+         QP4Q==
+X-Gm-Message-State: APjAAAWc/IPQ20RfSztwsO44nJwdbfhQuj4R7pKDMGXHX4xUi825YY1/
+        OGJTuzOOd6ia7v0YLY1QTfc976z/EpNBVOZjJpYbSrY+PngI6toIOJl6aNpFedM4eHZ6S3ffTzV
+        tK9GCJCIZOxca9JHTcVC4md9YrOsrsceh1WUX2+BRk6gQkm7RIwgWRjuQMQIffrtLxZjMPqdU33
+        MvAmM=
+X-Google-Smtp-Source: APXvYqxpHaDuapqKKB2H8FRfUx2YJNboFSFW9NVWgRnsRiE5ANLJDWfQM9va4NxyzqJDXI1k3Rd8FQ==
+X-Received: by 2002:a17:906:843:: with SMTP id f3mr6346472ejd.70.1559261853687;
+        Thu, 30 May 2019 17:17:33 -0700 (PDT)
+Received: from [10.136.8.252] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id o2sm684618ejz.22.2019.05.30.17.17.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 May 2019 17:17:32 -0700 (PDT)
+Subject: Re: [PATCH] pinctrl: ns2: Fix potential NULL dereference
+To:     Young Xiao <92siuyang@gmail.com>, rjui@broadcom.com,
+        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1559097838-26070-1-git-send-email-92siuyang@gmail.com>
+From:   Ray Jui <ray.jui@broadcom.com>
+Message-ID: <ace57d13-6194-df8e-d2e8-fbc85d9ce21a@broadcom.com>
+Date:   Thu, 30 May 2019 17:17:28 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <SN6PR02MB4016139989144F6C08CD4BDAEE180@SN6PR02MB4016.namprd02.prod.outlook.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <1559097838-26070-1-git-send-email-92siuyang@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 10:57:09PM +0000, Matt Sickler wrote:
-> >From: devel <driverdev-devel-bounces@linuxdriverproject.org> On Behalf Of
-> >Greg KH
-> >On Fri, May 24, 2019 at 01:07:59PM +0200, Simon Sandström wrote:
-> >> --- a/drivers/staging/kpc2000/kpc2000/core.c
-> >> +++ b/drivers/staging/kpc2000/kpc2000/core.c
-> >> @@ -276,18 +276,18 @@ static ssize_t kp2000_cdev_read(struct file *filp,
-> >
-> >This whole function just needs to be deleted, it's a horrible hack.
+
+
+On 5/28/2019 7:43 PM, Young Xiao wrote:
+> platform_get_resource() may fail and return NULL, so we should
+> better check it's return value to avoid a NULL pointer dereference
+> a bit later in the code.
 > 
-> >From the outside, I would definitely agree with you.  On the inside though, we
-> rely on this function to quickly identify what kind and version is running on
-> a given piece of hardware.  Since that same information is provided by an ioctl,
-> I could be convinced to remove this API and write a userspace application that
-> uses the ioctl to get the information and pretty prints it.
+> Signed-off-by: Young Xiao <92siuyang@gmail.com>
+> ---
+>  drivers/pinctrl/bcm/pinctrl-ns2-mux.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/pinctrl/bcm/pinctrl-ns2-mux.c b/drivers/pinctrl/bcm/pinctrl-ns2-mux.c
+> index 4b5cf0e..2bf6af7 100644
+> --- a/drivers/pinctrl/bcm/pinctrl-ns2-mux.c
+> +++ b/drivers/pinctrl/bcm/pinctrl-ns2-mux.c
+> @@ -1048,6 +1048,8 @@ static int ns2_pinmux_probe(struct platform_device *pdev)
+>  		return PTR_ERR(pinctrl->base0);
+>  
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +	if (!res)
+> +		return -EINVAL;
 
-The ioctl needs to die as well, just use the sysfs entries instead, as
-you already have them :)
+Right, usually not needed if devm_ioremap_resource is used since it was
+checked there. But in this case, I do think it needs to be checked. This
+change looks good to me. Thanks.
 
-> I'd be more inclined to agree with the deletion if it means the whole char dev
-> interface can be removed from the kpc2000 driver.  That won't be straightforward
-> as the ioctl is exposed through this interface.  We could remove the ioctl, but
-> we'd need to ensure that all the same information is exposed via sysfs.
+>  	pinctrl->base1 = devm_ioremap_nocache(&pdev->dev, res->start,
+>  					resource_size(res));
+>  	if (!pinctrl->base1) {
+> 
 
-I think you are there already, what is missing?
-
-> Our userspace side is all funneled through a single class, so changing
-> it to use sysfs wouldn't be too difficult.  I'd support that change if
-> someone wants to make it.
-
-I will be glad to do that, it's always nice to delete code :)
-
-thanks,
-
-greg k-h
+Reviewed-by: Ray Jui <ray.jui@broadcom.com>
