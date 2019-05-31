@@ -2,109 +2,157 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41CF2C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD44C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D9642684B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:43:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E95E22684B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:45:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727186AbfEaLnD (ORCPT
+        id S1727216AbfEaLpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 07:43:03 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:48320 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726158AbfEaLnC (ORCPT
+        Fri, 31 May 2019 07:45:43 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56860 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726158AbfEaLpm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 07:43:02 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 538F7634C7B;
-        Fri, 31 May 2019 14:42:58 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.89)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1hWfw2-0000Ju-F9; Fri, 31 May 2019 14:42:58 +0300
-Date:   Fri, 31 May 2019 14:42:58 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 4/5] media: ov6650: Fix frame scaling not reset on
- crop
-Message-ID: <20190531114258.6bvsqzlexqnelu5u@valkosipuli.retiisi.org.uk>
-References: <20190526204758.1904-1-jmkrzyszt@gmail.com>
- <20190526204758.1904-5-jmkrzyszt@gmail.com>
+        Fri, 31 May 2019 07:45:42 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4VBR4OQ024985
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 07:45:41 -0400
+Received: from e17.ny.us.ibm.com (e17.ny.us.ibm.com [129.33.205.207])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2su220brb1-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 07:45:40 -0400
+Received: from localhost
+        by e17.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Fri, 31 May 2019 12:45:40 +0100
+Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
+        by e17.ny.us.ibm.com (146.89.104.204) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 31 May 2019 12:45:36 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4VBiKap41353694
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 31 May 2019 11:44:20 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BA546B2065;
+        Fri, 31 May 2019 11:44:20 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9DD40B2064;
+        Fri, 31 May 2019 11:44:20 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 31 May 2019 11:44:20 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 98B2B16C5D81; Fri, 31 May 2019 04:44:21 -0700 (PDT)
+Date:   Fri, 31 May 2019 04:44:21 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     "'Vineet Gupta'" <Vineet.Gupta1@synopsys.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <Will.Deacon@arm.com>,
+        arcml <linux-snps-arc@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: Re: single copy atomicity for double load/stores on 32-bit systems
+Reply-To: paulmck@linux.ibm.com
+References: <2fd3a455-6267-5d21-c530-41964a4f6ce9@synopsys.com>
+ <895ec12746c246579aed5dd98ace6e38@AcuMS.aculab.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190526204758.1904-5-jmkrzyszt@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <895ec12746c246579aed5dd98ace6e38@AcuMS.aculab.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19053111-0040-0000-0000-000004F6FBE0
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011190; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01211199; UDB=6.00636407; IPR=6.00992235;
+ MB=3.00027130; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-31 11:45:38
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19053111-0041-0000-0000-0000090316D9
+Message-Id: <20190531114421.GJ28207@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-31_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905310076
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Janusz,
-
-On Sun, May 26, 2019 at 10:47:57PM +0200, Janusz Krzysztofik wrote:
-> According to V4L2 subdevice interface specification, frame scaling
-> factors should be reset to default values on modification of input frame
-> format.  Assuming that requirement also applies in case of crop
-> rectangle modification unless V4L2_SEL_FLAG_KEEP_CONFIG is requested,
-> the driver now does not respect it.
+On Fri, May 31, 2019 at 09:41:17AM +0000, David Laight wrote:
+> From: Vineet Gupta
+> > Sent: 30 May 2019 19:23
+> ...
+> > While it seems reasonable form hardware pov to not implement such atomicity by
+> > default it seems there's an additional burden on application writers. They could
+> > be happily using a lockless algorithm with just a shared flag between 2 threads
+> > w/o need for any explicit synchronization. But upgrade to a new compiler which
+> > aggressively "packs" struct rendering long long 32-bit aligned (vs. 64-bit before)
+> > causing the code to suddenly stop working. Is the onus on them to declare such
+> > memory as c11 atomic or some such.
 > 
-> The KEEP_CONFIG case is already implemented, fix the other path.
+> A 'new' compiler can't suddenly change the alignment rules for structure elements.
+> The alignment rules will be part of the ABI.
 > 
-> Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-> ---
->  drivers/media/i2c/ov6650.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+> More likely is that the structure itself is unexpectedly allocated on
+> an 8n+4 boundary due to code changes elsewhere.
 > 
-> diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
-> index 47590cd51190..cc70d8952999 100644
-> --- a/drivers/media/i2c/ov6650.c
-> +++ b/drivers/media/i2c/ov6650.c
-> @@ -472,6 +472,8 @@ static int ov6650_get_selection(struct v4l2_subdev *sd,
->  	}
->  }
->  
-> +static int ov6650_s_fmt(struct v4l2_subdev *sd, u32 code, bool half_scale);
-> +
+> It is also worth noting that for complete portability only writes to
+> 'full words' can be assumed atomic.
+> Some old Alpha's did RMW cycles for byte writes.
+> (Although I suspect Linux doesn't support those any more.)
 
-Would it be possible to rearrange the functions in the file so you wouldn't
-need extra prototypes? Preferrably that'd be a new patch.
+Any C11 or later compiler needs to generate the atomic RMW cycles if
+needed in cases like this.  To see this, consider the following code:
 
->  static int ov6650_set_selection(struct v4l2_subdev *sd,
->  		struct v4l2_subdev_pad_config *cfg,
->  		struct v4l2_subdev_selection *sel)
-> @@ -515,7 +517,13 @@ static int ov6650_set_selection(struct v4l2_subdev *sd,
->  	}
->  	if (!ret)
->  		priv->rect.height = sel->r.height;
-> +	else
-> +		return ret;
+	spinlock_t l1;
+	spinlock_t l2;
+	struct foo {
+		char c1; // Protected by l1
+		char c2; // Protected by l2
+	}
 
-if (ret)
-	return ret;
+	...
 
-...
+	spin_lock(&l1);
+	fp->c1 = 42;
+	do_somthing_protected_by_l1();
+	spin_unlock(&l1);
 
->  
-> +	if (priv->half_scale) {
-> +		/* turn off half scaling, preserve media bus format */
-> +		ret = ov6650_s_fmt(sd, priv->code, false);
-> +	}
->  	return ret;
->  }
->  
+	...
 
--- 
-Regards,
+	spin_lock(&l2);
+	fp->c2 = 206;
+	do_somthing_protected_by_l2();
+	spin_unlock(&l2);
 
-Sakari Ailus
+A compiler that failed to generate atomic RMW code sequences for those
+stores to ->c1 and ->c2 would be generating a data race in the object
+code when there was no such race in the source code.  Kudos to Hans Boehm
+for having browbeat compiler writers into accepting this restriction,
+which was not particularly popular -- they wanted to be able to use
+vector units and such.  ;-)
+
+> Even x86 can catch you out.
+> The bit operations will do wider RMW cycles than you expect.
+
+But does the compiler automatically generate these?
+
+							Thanx, Paul
+
+> 	David
+> 
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+> Registration No: 1397386 (Wales)
+
