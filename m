@@ -2,126 +2,158 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F326C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8015DC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6354126A28
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:14:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5756626A35
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:15:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="sDh0Te3J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HzoyLoY6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbfEaOOf (ORCPT
+        id S1726808AbfEaOPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 10:14:35 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:44738 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726037AbfEaOOf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 10:14:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=lQ/kbfhYvDZZPBwmLwZieU5H7NxDWSHEMyqN5A9/ir0=; b=sDh0Te3JJY58duHLHfjcHd6tYB
-        x91CLNMhNV866aKk1fwqb2vadMt5bnFloCs0wURWTxTnX9F91uj1k4ZGjRbXnSov42pTZr6qJ4MBe
-        dkwb8lBCwoirtD3XKfy0lxLRbuUvN2z//HCVfW+IP7sLpMxuKGiJ+h+o91bZyB0zNrh0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hWiIN-0006Mk-Qx; Fri, 31 May 2019 16:14:11 +0200
-Date:   Fri, 31 May 2019 16:14:11 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Paul Menzel <pmenzel@molgen.mpg.de>
-Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Realtek linux nic maintainers <nic_swsd@realtek.com>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Decreasing time to get link up to below 3 s
-Message-ID: <20190531141411.GA23821@lunn.ch>
-References: <87cb341b-1c32-04be-9309-489354ef8065@molgen.mpg.de>
+        Fri, 31 May 2019 10:15:04 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:33574 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbfEaOPE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 10:15:04 -0400
+Received: by mail-qt1-f195.google.com with SMTP id 14so1053705qtf.0;
+        Fri, 31 May 2019 07:15:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:message-id:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-disposition:content-transfer-encoding;
+        bh=+we0rEnollOzHDZRaFs+7oQEsf4okdwYqHNgTuYpojo=;
+        b=HzoyLoY6Q/unT73ZNSJo7xswlOPng81Pi3JnGP5sJQLih/0rGLjKsR2UQfqpybyvVx
+         ytaO1HSmiOMn9VRtxvnGjCNo3BYYfqrbCUk0QJzf+n/QdsGCNxSIQ+rpfxt8bySmvdwe
+         w7Ft77iI4+OAHCcdWr4ROjNROyaKiLSkK7gM4toabq5nMX//x+kMA1dVXhQWTcJFq3PK
+         WiwQ1krsmx1o2vcdW3P+VhVCdg1gpvxANLWcQ6pceS0bpZnyB9pL/vWgnxACa3ameSfO
+         6NOUr2hdNo6sH5ZkGuNDG/NUSD/RL1GGyuHnOtCl4xKzrBzpdB4KonXVcoO0AhVR7hS1
+         jiSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding;
+        bh=+we0rEnollOzHDZRaFs+7oQEsf4okdwYqHNgTuYpojo=;
+        b=uHvfTLcGCxdu06TL+8WVlR6ok+kJHIYNlLtv1ww+BPLLjnzeSjoAMl5uY4oXCsC1Fy
+         NAcnxkrvE50K+GhNqBXtQygB6GsreTRfs5G5OdtVL12X/B7XjWFm2Ffn+5/Hy5HMwe/V
+         xwDnI5UmnQE6D6gKFj7bNh1c0mRNTHwP0ZOW8SvKaiIRhDv+dVMrr6Ey1dYX5BIpIR/5
+         zBvi5Y0bO8gzdyHXjEWAoBADy5ZdH4xke7gh4dFKyzER/kc3SwzFC1TaDyWuRyB7lT6B
+         kaAF+YON00DTgyKLjPaA1t0cee/STjKRINxBdjGw8QXxAu3vb+ZJNjqumrmRTwg1OjGM
+         PuBw==
+X-Gm-Message-State: APjAAAWr00iM0U4DszoaZ3fq9/P9mso9DqXvqYWLLOgvKWZ96/VD4Uek
+        djjLB7XFPetXkF0m3R4eJeM=
+X-Google-Smtp-Source: APXvYqzr4qmadMuyFHKk+Snq02K/E9QOHtxIv1CJU+kRspuJBZgseKReRXYpBzVLPE73QxiJN40NKw==
+X-Received: by 2002:ac8:4982:: with SMTP id f2mr8533662qtq.213.1559312102835;
+        Fri, 31 May 2019 07:15:02 -0700 (PDT)
+Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
+        by smtp.gmail.com with ESMTPSA id z12sm2701994qkl.66.2019.05.31.07.15.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 31 May 2019 07:15:02 -0700 (PDT)
+Date:   Fri, 31 May 2019 10:15:01 -0400
+Message-ID: <20190531101501.GB23464@t480s.localdomain>
+From:   Vivien Didelot <vivien.didelot@gmail.com>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, linville@redhat.com,
+        f.fainelli@gmail.com
+Subject: Re: [PATCH net-next] ethtool: do not use regs->len after
+ ops->get_regs
+In-Reply-To: <20190531065432.GB15954@unicorn.suse.cz>
+References: <20190530235450.11824-1-vivien.didelot@gmail.com>
+ <20190531065432.GB15954@unicorn.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <87cb341b-1c32-04be-9309-489354ef8065@molgen.mpg.de>
-User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 03:19:20PM +0200, Paul Menzel wrote:
-> Dear Linux folks,
+Hi Michal,
+
+On Fri, 31 May 2019 08:54:32 +0200, Michal Kubecek <mkubecek@suse.cz> wrote:
+> On Thu, May 30, 2019 at 07:54:50PM -0400, Vivien Didelot wrote:
+> > The kernel allocates a buffer of size ops->get_regs_len(), and pass
+> > it to the kernel driver via ops->get_regs() for filling.
+> > 
+> > There is no restriction about what the kernel drivers can or cannot
+> > do with the regs->len member. Drivers usually ignore it or set
+> > the same size again. However, ethtool_get_regs() must not use this
+> > value when copying the buffer back to the user, because userspace may
+> > have allocated a smaller buffer. For instance ethtool does that when
+> > dumping the raw registers directly into a fixed-size file.
+> > 
+> > Software may still make use of the regs->len value updated by the
+> > kernel driver, but ethtool_get_regs() must use the original regs->len
+> > given by userspace, up to ops->get_regs_len(), when copying the buffer.
+> > 
+> > Also no need to check regbuf twice.
+> > 
+> > Signed-off-by: Vivien Didelot <vivien.didelot@gmail.com>
+> > ---
+> >  net/core/ethtool.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/net/core/ethtool.c b/net/core/ethtool.c
+> > index 4a593853cbf2..8f95c7b7cafe 100644
+> > --- a/net/core/ethtool.c
+> > +++ b/net/core/ethtool.c
+> > @@ -1338,38 +1338,40 @@ static noinline_for_stack int ethtool_set_rxfh(struct net_device *dev,
+> >  static int ethtool_get_regs(struct net_device *dev, char __user *useraddr)
+> >  {
+> >  	struct ethtool_regs regs;
+> >  	const struct ethtool_ops *ops = dev->ethtool_ops;
+> >  	void *regbuf;
+> >  	int reglen, ret;
+> >  
+> >  	if (!ops->get_regs || !ops->get_regs_len)
+> >  		return -EOPNOTSUPP;
+> >  
+> >  	if (copy_from_user(&regs, useraddr, sizeof(regs)))
+> >  		return -EFAULT;
+> >  
+> >  	reglen = ops->get_regs_len(dev);
+> >  	if (reglen <= 0)
+> >  		return reglen;
+> >  
+> >  	if (regs.len > reglen)
+> >  		regs.len = reglen;
+> > +	else
+> > +		reglen = regs.len;
 > 
+> This seems wrong. Most drivers do not check regs.len in their get_regs()
+> handler (I'm not sure if there are any that do) and simply write as much
+> data as they have. Thus if userspace passes too short regs.len, this
+> would replace overflow of a userspace buffer for few drivers by overflow
+> of a kernel buffer for (almost) all drivers.
 > 
-> On several systems with different network devices and drivers (e1000e, r8169, tg3)
-> it looks like getting the link up takes over three seconds.
-> 
-> ### e1000e ###
-> 
-> [    1.999678] e1000e: Intel(R) PRO/1000 Network Driver - 3.2.6-k
-> [    2.000374] e1000e: Copyright(c) 1999 - 2015 Intel Corporation.
-> [    2.001206] e1000e 0000:00:1f.6: Interrupt Throttling Rate (ints/sec) set to dynamic conservative mode
-> [    2.412096] e1000e 0000:00:1f.6 0000:00:1f.6 (uninitialized): registered PHC clock
-> [    2.495295] e1000e 0000:00:1f.6 eth0: (PCI Express:2.5GT/s:Width x1) 64:00:6a:2c:10:c1
-> [    2.496204] e1000e 0000:00:1f.6 eth0: Intel(R) PRO/1000 Network Connection
-> [    2.497024] e1000e 0000:00:1f.6 eth0: MAC: 12, PHY: 12, PBA No: FFFFFF-0FF
-> [   15.614031] e1000e 0000:00:1f.6 net00: renamed from eth0
-> [   18.679325] e1000e: net00 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: None
+> So while we should use the original regs.len from userspace for final
+> copy_to_user(), we have to allocate the buffer for driver ->get_regs()
+> callback with size returned by its ->get_regs_len() callback.
 
-Hi Paul
+Either I've completely screwed my patch, or you have misread it. This patch
+actually just stores the original value of regs.len passed by userspace to
+the kernel into reglen, before calling ops->get_regs().
 
-All the Intel drivers do there own PHY handling, so i cannot speak for them.
+But the kernel still allocates ops->get_regs_len() and passes that to the
+kernel drivers, as this is the only size drivers must care about.
 
-> 
-> ### r8169 ###
-> 
-> [   33.433103] r8169 0000:18:00.0: enabling device (0000 -> 0003)
-> [   33.453834] libphy: r8169: probed
-> [   33.456629] r8169 0000:18:00.0 eth0: RTL8168h/8111h, 30:9c:23:04:d6:98, XID 541, IRQ 52
-> [   33.456631] r8169 0000:18:00.0 eth0: jumbo features [frames: 9200 bytes, tx checksumming: ko]
-> [   33.607384] r8169 0000:18:00.0 enp24s0: renamed from eth0
-> [   34.134035] Generic Realtek PHY r8169-1800:00: attached PHY driver [Generic Realtek PHY] (mii_bus:phy_addr=r8169-1800:00, irq=IGNORE)
-> [   34.215244] r8169 0000:18:00.0 enp24s0: Link is Down
-> [   37.822536] r8169 0000:18:00.0 enp24s0: Link is Up - 1Gbps/Full - flow control rx/tx
+Then the kernel only copies what the userspace (originally) requested,
+up to ops->get_regs_len().
 
-This is using the generic PHY framework and drivers.
-
-You can see here irq=IGNORE. This implies interrupts are not being
-used. So it will poll the PHY once per second. If you can get
-interrupts working, you can save 1/2 second on average.
+In other words, if userspace requested a bigger buffer only ops->get_regs_len()
+get copied, if the userspace requested a smaller buffer only that length
+get copied.
 
 
-> ### tg3 ###
-> 
-> [    2.015604] tg3.c:v3.137 (May 11, 2014)
-> [    2.025613] tg3 0000:04:00.0 eth0: Tigon3 [partno(BCM95762) rev 5762100] (PCI Express) MAC address 54:bf:64:70:a5:f9
-> [    2.026955] tg3 0000:04:00.0 eth0: attached PHY is 5762C (10/100/1000Base-T Ethernet) (WireSpeed[1], EEE[1])
-> [    2.028252] tg3 0000:04:00.0 eth0: RXcsums[1] LinkChgREG[0] MIirq[0] ASF[1] TSOcap[1]
-> [    2.029462] tg3 0000:04:00.0 eth0: dma_rwctrl[00000001] dma_mask[64-bit]
-> [    6.376904] tg3 0000:04:00.0 net00: renamed from eth0
-> [   10.240411] tg3 0000:04:00.0 net00: Link is up at 1000 Mbps, full duplex
-> [   10.240412] tg3 0000:04:00.0 net00: Flow control is on for TX and on for RX
-> [   10.240413] tg3 0000:04:00.0 net00: EEE is disabled
-> 
-
-Another MAC driver which does not use the generic framework.
-
-> If the time cannot be decreased, are there alternative strategies to get a link
-> up as fast as possible? For fast boot systems, it’d be interesting if first
-> a slower speed could be negotiated and later it would be changed.
-
-You can use ethtool to set the modes it will offer for auto-neg. So
-you could offer 10/half and see if that comes up faster.
-
-ethtool -s eth0 advertise 0x001
-
-But you are still going to have to wait the longer time when you
-decide it is time to swap to the full bandwidth.
-
-       Andrew
+Thanks,
+Vivien
