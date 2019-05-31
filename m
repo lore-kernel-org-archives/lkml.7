@@ -2,103 +2,169 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2AACC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61683C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2D6D26BA8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:24:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="L7RaHhsS"
+	by mail.kernel.org (Postfix) with ESMTP id 3B73326BA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:25:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbfEaPYC (ORCPT
+        id S1726713AbfEaPZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 11:24:02 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34170 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbfEaPYB (ORCPT
+        Fri, 31 May 2019 11:25:33 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:54883 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbfEaPZd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 11:24:01 -0400
-Received: by mail-ot1-f65.google.com with SMTP id l17so9580902otq.1
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 08:24:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=digitalocean.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=j8Vb8qpSXm8bzNNepx05WgAIFrGuf3VkeLRTzDWN0Po=;
-        b=L7RaHhsSKsXosswu3wXdWufSUUg3CfskpN/TaYgjCvSi7EvOCG9A99xw2q6b9ZjdTa
-         Xt7EJ/0lEOrBZ6TgD4elQYq3YpXCce8p9eOjo6eRZt6ML8pqgA2iLfGokwYjk04odybC
-         EwFYNbiCbs0gVHqED/E906ddHHzY0RhbuIoXs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=j8Vb8qpSXm8bzNNepx05WgAIFrGuf3VkeLRTzDWN0Po=;
-        b=ZE3qujcO9lhZtElrtS5tenaYmpPo4NCHQjzx5d3iEPOcZE86AUSBKRlyAdRWaYotxH
-         xdDv73xxPGHeFzukhAzbafnBhSCtqIHX2EyqUG1EDKvfbyDGvjPtoAHXbBKYFFhEoy/p
-         W0KCn4HBSXeWe1RG4DzbLHXIHjKdzApXV/1pXKX1u0vp3m2fBjuTJJAilaBhJUVZiOO/
-         iUML03ipuZA7V5BlNSGkZgXdh8rHCRcVS7BfRXjgtXySBbDhUEkN9xeqkW554VvcIofX
-         VffskJao122+JSHT7sFFoQ/r8QcQTTakNLd4guDVZVkUciPXgGYV3nO6Z7C4AOEu+FOV
-         A8BQ==
-X-Gm-Message-State: APjAAAUdAuJvy497uI5scYGnt53r7GA8aT+vNw1JOvwOFDY/CDXH2zvS
-        B+wf7p4o+SR5Tx6ogA/dAM0rmyO9eg9x/52xrKkyog==
-X-Google-Smtp-Source: APXvYqzceGFjArRnoeJHnuX4OEFDzzPJuFPFXVCB5sHuc4jX9G20ZUyeENpQbE3oYvL5aXyhnj2TKRFedR8im7K5tbs=
-X-Received: by 2002:a9d:5788:: with SMTP id q8mr2137440oth.237.1559316240561;
- Fri, 31 May 2019 08:24:00 -0700 (PDT)
+        Fri, 31 May 2019 11:25:33 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id E99063C0149;
+        Fri, 31 May 2019 17:25:29 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id JaAOyY00n-fj; Fri, 31 May 2019 17:25:23 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 06FB03C0022;
+        Fri, 31 May 2019 17:25:23 +0200 (CEST)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 31 May
+ 2019 17:25:22 +0200
+Date:   Fri, 31 May 2019 17:25:22 +0200
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>,
+        Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tobias Franzen <tfranzen@de.adit-jv.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [PATCH] arm64: dts: ulcb-kf: Add support for TI WL1837
+Message-ID: <20190531152522.GB28755@vmlxhi-102.adit-jv.com>
+References: <20190411124102.22442-1-spapageorgiou@de.adit-jv.com>
+ <CAMuHMdVfDd_1gHnX=WvkHnF33fG2sWy7F5bTh-DghoKSt-vLCA@mail.gmail.com>
 MIME-Version: 1.0
-References: <cover.1559129225.git.vpillai@digitalocean.com>
- <a03795e66ed45469ac5b3c1b1d01c8ed33be299f.1559129225.git.vpillai@digitalocean.com>
- <20190531110820.GP2623@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190531110820.GP2623@hirez.programming.kicks-ass.net>
-From:   Vineeth Pillai <vpillai@digitalocean.com>
-Date:   Fri, 31 May 2019 11:23:48 -0400
-Message-ID: <CANaguZCxqsxmsF3pSvgT78bD9KC_qzqU1m2D6tg3KPUNJijdsw@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 10/16] sched: Core-wide rq->lock
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVfDd_1gHnX=WvkHnF33fG2sWy7F5bTh-DghoKSt-vLCA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Originating-IP: [10.72.93.184]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->
-> I'm confused, how doesn't this break the invariant above?
->
-> That is, all CPUs must at all times agree on the value of rq_lockp(),
-> and I'm not seeing how that is true with the above changes.
->
-While fixing the crash in cpu online/offline, I was focusing on
-maintaining the invariance
-of all online cpus to agree on the value of rq_lockp(). Would it be
-safe to assume that
-rq and rq_lock would be used only after a cpu is onlined(sched:active)?.
+Hi Geert,
 
-To maintain the strict invariance, the sibling should also disable
-core scheduling, but
-we need to empty the rbtree before disabling it. I am trying to see
-how to empty the
-rbtree safely in the offline context.
+We appreciate your review comments.
 
-Thanks,
-Vineeth
+On Tue, May 28, 2019 at 11:19:04AM +0200, Geert Uytterhoeven wrote:
+[..]
+> > +       wlan_en: regulator-wlan_en {
+> > +               compatible = "regulator-fixed";
+> > +               regulator-name = "wlan-en-regulator";
+> > +
+> > +               regulator-min-microvolt = <3300000>;
+> > +               regulator-max-microvolt = <3300000>;
+> 
+> So this is a 3.3V regulator...
+> 
+> > +
+> > +               gpio = <&gpio_exp_74 4 GPIO_ACTIVE_HIGH>;
+> > +               startup-delay-us = <70000>;
+> > +               enable-active-high;
+> > +       };
+> >  };
+> >
+> >  &can0 {
+> 
+> > @@ -273,6 +298,30 @@
+> >         status = "okay";
+> >  };
+> >
+> > +&sdhi3 {
+> > +       pinctrl-0 = <&sdhi3_pins>;
+> > +       pinctrl-names = "default";
+> > +
+> > +       vmmc-supply = <&wlan_en>;
+> > +       vqmmc-supply = <&wlan_en>;
+> 
+> ... used for both card and I/O line power...
+> 
+> > +       bus-width = <4>;
+> > +       no-1-8-v;
+> 
+> ... hence no 1.8V I/O.
+> 
+> However, VIO of WL1837 is provided by W1.8V of regulator U55,
+> which is 1.8V?
+
+Looking at the KF-M06 schematics, it seems like the SDIO-relevant lines
+of WL1837 (U52) are interfaced with the SoC via TXS0108EPWR (U57) which
+is there to level-translate from 3.3v (SoC) to 1.8v (WL1837). So,
+from SoC perspective, it looks like the lines are 3.3v-powered.
+
+FTR, the test results are independent on the 'no-1-8-v' property.
+
+> > +       non-removable;
+> > +       cap-power-off-card;
+> > +       keep-power-in-suspend;
+> > +       max-frequency = <26000000>;
+> > +       status = "okay";
+> > +
+> > +       #address-cells = <1>;
+> > +       #size-cells = <0>;
+> > +       wlcore: wlcore@2 {
+> > +               compatible = "ti,wl1837";
+> > +               reg = <2>;
+> > +               interrupt-parent = <&gpio1>;
+> > +               interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
+> 
+> I'm also a bit puzzled by the interrupt type.
+> On Cat 874, it's IRQ_TYPE_LEVEL_HIGH, cfr.
+> https://lore.kernel.org/linux-renesas-soc/1557997166-63351-2-git-send-email-biju.das@bp.renesas.com/
+> 
+> On Kingfisher, the IRQ signal is inverted by U104, so I'd expect
+> IRQ_TYPE_LEVEL_LOW instead of IRQ_TYPE_EDGE_FALLING?
+
+That's an insightful comment, if it simply arose from code review.
+I guess we mistakenly relied on [1] during our testing on linux/master.
+So, we definitely have to re-spin the patch to make it independent
+on [1]. The problem is that by dropping [1] and switching from
+IRQ_TYPE_EDGE_FALLING to IRQ_TYPE_LEVEL_LOW, the wifi testing
+(particularly 'iwlist wlan0 scan') doesn't pass. We have to give
+another thought how to best tackle it.
+
+[1] https://github.com/CogentEmbedded/meta-rcar/blob/289fbd4f8354/meta-rcar-gen3-adas/recipes-kernel/linux/linux-renesas/0024-wl18xx-do-not-invert-IRQ-on-WLxxxx-side.patch
+
+Thank you.
+
+> 
+> Apart from the above two comments:
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> -- 
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+
+-- 
+Best Regards,
+Eugeniu.
