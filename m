@@ -2,122 +2,201 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DBDC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD1CC28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8DCE26B91
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:29:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D6D326B94
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:30:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="jeBzRVb3";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="hQP8tiZA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbfEaP3a (ORCPT
+        id S1726911AbfEaPaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 11:29:30 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:17640 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726421AbfEaP33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 11:29:29 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 7764E844F282E0077772;
-        Fri, 31 May 2019 23:29:26 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Fri, 31 May 2019
- 23:29:20 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <james.smart@broadcom.com>, <dick.kennedy@broadcom.com>,
-        <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
-        <jsmart2021@gmail.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] scsi: lpfc: Make some symbols static
-Date:   Fri, 31 May 2019 23:28:41 +0800
-Message-ID: <20190531152841.13684-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Fri, 31 May 2019 11:30:18 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:49794 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726421AbfEaPaR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 11:30:17 -0400
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4VFO3SC026799;
+        Fri, 31 May 2019 08:25:31 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=facebook;
+ bh=v2od4TWNAt1+tHWyh84uoVuXpsfyxugtVZnF+Zq49p0=;
+ b=jeBzRVb3QGellsffHBT1f1F7YJF934k4A0Gp+P3DBqXGrtFbul9O+mG2uiGtWIrhrHx9
+ w7cOVX/w6In+bY2to3UzpNZqvHRcAhSTgZPvsw5bKNEVqndM1n1EcciHSU67j3gBSAoI
+ ToliVbJyUbvvxeWdAJqyLy8flWAU0SF2WZ8= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2su0hr16k8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 31 May 2019 08:25:31 -0700
+Received: from ash-exopmbx201.TheFacebook.com (2620:10d:c0a8:83::8) by
+ ash-exhub202.TheFacebook.com (2620:10d:c0a8:83::6) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 31 May 2019 08:25:29 -0700
+Received: from ash-exhub103.TheFacebook.com (2620:10d:c0a8:82::c) by
+ ash-exopmbx201.TheFacebook.com (2620:10d:c0a8:83::8) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 31 May 2019 08:25:29 -0700
+Received: from NAM03-BY2-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Fri, 31 May 2019 08:25:29 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=v2od4TWNAt1+tHWyh84uoVuXpsfyxugtVZnF+Zq49p0=;
+ b=hQP8tiZABGR2jh0T+VUF3xl/QoE8GykC68TIEEBKabJDGIJ5pdnO0C5tQJvDf7SwbDJeG3/IYH4+nlzJOOSDDe+R6Tpc8Q4abKI473Wv3CjMdut1J3OngyWuTzGt9w0au0e+dfJsbabltuwcjMJzgNQ5ZUwFhPzF9T7ybwzEjWk=
+Received: from DM5PR15MB1290.namprd15.prod.outlook.com (10.173.212.17) by
+ DM5PR15MB1578.namprd15.prod.outlook.com (10.173.222.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.16; Fri, 31 May 2019 15:25:26 +0000
+Received: from DM5PR15MB1290.namprd15.prod.outlook.com
+ ([fe80::69f8:55e8:1759:8a93]) by DM5PR15MB1290.namprd15.prod.outlook.com
+ ([fe80::69f8:55e8:1759:8a93%10]) with mapi id 15.20.1922.021; Fri, 31 May
+ 2019 15:25:26 +0000
+From:   Chris Mason <clm@fb.com>
+To:     Kris Van Hees <kris.van.hees@oracle.com>
+CC:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "dtrace-devel@oss.oracle.com" <dtrace-devel@oss.oracle.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "mhiramat@kernel.org" <mhiramat@kernel.org>,
+        "acme@kernel.org" <acme@kernel.org>,
+        "ast@kernel.org" <ast@kernel.org>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        "peterz@infradead.org" <peterz@infradead.org>
+Subject: Re: [RFC PATCH 00/11] bpf, trace, dtrace: DTrace BPF program type
+ implementation and sample use
+Thread-Topic: [RFC PATCH 00/11] bpf, trace, dtrace: DTrace BPF program type
+ implementation and sample use
+Thread-Index: AQHVD2aSHt9N3RjmOE6c7Suri9irRqZ13i0AgAAMqoCAACVtAIAAC4aAgAAemICAAFARgIABDTWAgACWzACAAP76AIAKuaGAgAGEQwA=
+Date:   Fri, 31 May 2019 15:25:25 +0000
+Message-ID: <5AD44AC7-F88F-4068-B122-962839F968B2@fb.com>
+References: <201905202347.x4KNl0cs030532@aserv0121.oracle.com>
+ <20190521175617.ipry6ue7o24a2e6n@ast-mbp.dhcp.thefacebook.com>
+ <20190521184137.GH2422@oracle.com>
+ <20190521205533.evfszcjvdouby7vp@ast-mbp.dhcp.thefacebook.com>
+ <20190521213648.GK2422@oracle.com>
+ <20190521232618.xyo6w3e6nkwu3h5v@ast-mbp.dhcp.thefacebook.com>
+ <20190522041253.GM2422@oracle.com>
+ <20190522201624.eza3pe2v55sn2t2w@ast-mbp.dhcp.thefacebook.com>
+ <20190523051608.GP2422@oracle.com>
+ <20190523202842.ij2quhpmem3nabii@ast-mbp.dhcp.thefacebook.com>
+ <20190530161543.GA1835@oracle.com>
+In-Reply-To: <20190530161543.GA1835@oracle.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: MailMate (1.12.5r5635)
+x-clientproxiedby: MN2PR12CA0004.namprd12.prod.outlook.com
+ (2603:10b6:208:a8::17) To DM5PR15MB1290.namprd15.prod.outlook.com
+ (2603:10b6:3:b8::17)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c091:480::1ea3]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6f217613-9d3e-4bba-7ccc-08d6e5dc3489
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM5PR15MB1578;
+x-ms-traffictypediagnostic: DM5PR15MB1578:
+x-microsoft-antispam-prvs: <DM5PR15MB15780AC1D7109E1E153CD8A0D3190@DM5PR15MB1578.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 00540983E2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(136003)(376002)(396003)(366004)(39860400002)(189003)(199004)(46003)(5660300002)(54906003)(486006)(6436002)(83716004)(6246003)(478600001)(186003)(256004)(50226002)(446003)(2906002)(6512007)(33656002)(11346002)(2616005)(6916009)(6486002)(229853002)(4326008)(5024004)(25786009)(36756003)(68736007)(71200400001)(8676002)(71190400001)(81156014)(82746002)(66476007)(102836004)(66556008)(76176011)(81166006)(386003)(305945005)(316002)(8936002)(99286004)(7736002)(66946007)(53546011)(52116002)(6506007)(66446008)(53936002)(14454004)(73956011)(476003)(86362001)(6116002)(64756008)(7416002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR15MB1578;H:DM5PR15MB1290.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: stoqxbeJ/TKNSEtQy3i58QcqNGg7H1OhI7TTiieH6kfBzlqDOMxAHzqN5audbvoYx/rjsz19qbY21XkOMwPKJxL39CfCFTs5JWOEEsFLC+sYPHVO+mrOo5g2uuZpkdUa97Eut9hUk0GAPWs7aUS15+PhDLv2Q8uWQ9ehnj41FUD1VzsfUZatEXpFiJE8Poa5ucJjJv2YEWgmDoB3sA3kP/gaQUw6ugk4cnutuldL8dHPXffFwTxJO7AV8ewrS811/S4LZ4p8GvcBU3VlRZ7BevDT44lDKiewOETLIDWSdjvo6K+tWWhDrgLr1r0erA3V1AT8kmgcr7Lhd8H3z0J2KWvf5BuxzAkdLxDqyT3yaB81bsZF4FapWBdOQVjor0cusUbm38c6B+FKsjkWOUvLG/fNOddZdSFJcoELvOfTwmk=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6f217613-9d3e-4bba-7ccc-08d6e5dc3489
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 May 2019 15:25:25.9667
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: clm@fb.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR15MB1578
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-31_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905310096
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix sparse warnings:
-
-drivers/scsi/lpfc/lpfc_sli.c:115:1: warning: symbol 'lpfc_sli4_pcimem_bcopy' was not declared. Should it be static?
-drivers/scsi/lpfc/lpfc_sli.c:7854:1: warning: symbol 'lpfc_sli4_process_missed_mbox_completions' was not declared. Should it be static?
-drivers/scsi/lpfc/lpfc_nvmet.c:223:27: warning: symbol 'lpfc_nvmet_get_ctx_for_xri' was not declared. Should it be static?
-drivers/scsi/lpfc/lpfc_nvmet.c:245:27: warning: symbol 'lpfc_nvmet_get_ctx_for_oxid' was not declared. Should it be static?
-drivers/scsi/lpfc/lpfc_init.c:75:10: warning: symbol 'lpfc_present_cpu' was not declared. Should it be static?
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/scsi/lpfc/lpfc_init.c  | 2 +-
- drivers/scsi/lpfc/lpfc_nvmet.c | 4 ++--
- drivers/scsi/lpfc/lpfc_sli.c   | 4 ++--
- 3 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
-index cd8e47544d07..faf43b1d3dbe 100644
---- a/drivers/scsi/lpfc/lpfc_init.c
-+++ b/drivers/scsi/lpfc/lpfc_init.c
-@@ -72,7 +72,7 @@ unsigned long _dump_buf_dif_order;
- spinlock_t _dump_buf_lock;
- 
- /* Used when mapping IRQ vectors in a driver centric manner */
--uint32_t lpfc_present_cpu;
-+static uint32_t lpfc_present_cpu;
- 
- static void lpfc_get_hba_model_desc(struct lpfc_hba *, uint8_t *, uint8_t *);
- static int lpfc_post_rcv_buf(struct lpfc_hba *);
-diff --git a/drivers/scsi/lpfc/lpfc_nvmet.c b/drivers/scsi/lpfc/lpfc_nvmet.c
-index eb93189f4544..e471bbcca838 100644
---- a/drivers/scsi/lpfc/lpfc_nvmet.c
-+++ b/drivers/scsi/lpfc/lpfc_nvmet.c
-@@ -220,7 +220,7 @@ lpfc_nvmet_cmd_template(void)
- 	/* Word 12, 13, 14, 15 - is zero */
- }
- 
--struct lpfc_nvmet_rcv_ctx *
-+static struct lpfc_nvmet_rcv_ctx *
- lpfc_nvmet_get_ctx_for_xri(struct lpfc_hba *phba, u16 xri)
- {
- 	struct lpfc_nvmet_rcv_ctx *ctxp;
-@@ -242,7 +242,7 @@ lpfc_nvmet_get_ctx_for_xri(struct lpfc_hba *phba, u16 xri)
- 	return NULL;
- }
- 
--struct lpfc_nvmet_rcv_ctx *
-+static struct lpfc_nvmet_rcv_ctx *
- lpfc_nvmet_get_ctx_for_oxid(struct lpfc_hba *phba, u16 oxid, u32 sid)
- {
- 	struct lpfc_nvmet_rcv_ctx *ctxp;
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index 081c4357958e..dea8b9df27c0 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -108,7 +108,7 @@ lpfc_get_iocb_from_iocbq(struct lpfc_iocbq *iocbq)
-  * endianness. This function can be called with or without
-  * lock.
-  **/
--void
-+static void
- lpfc_sli4_pcimem_bcopy(void *srcp, void *destp, uint32_t cnt)
- {
- 	uint64_t *src = srcp;
-@@ -7882,7 +7882,7 @@ lpfc_sli4_mbox_completions_pending(struct lpfc_hba *phba)
-  * and will process all the completions associated with the eq for the
-  * mailbox completion queue.
-  **/
--bool
-+static bool
- lpfc_sli4_process_missed_mbox_completions(struct lpfc_hba *phba)
- {
- 	struct lpfc_sli4_hba *sli4_hba = &phba->sli4_hba;
--- 
-2.17.1
-
-
+DQpJJ20gYmVpbmcgcHJldHR5IGxpYmVyYWwgd2l0aCBjaG9wcGluZyBkb3duIHF1b3RlZCBtYXRl
+cmlhbCB0byBoZWxwIA0KZW1waGFzaXplIGEgcGFydGljdWxhciBvcGluaW9uIGFib3V0IGhvdyB0
+byBib290c3RyYXAgZXhpc3RpbmcgDQpvdXQtb2YtdHJlZSBwcm9qZWN0cyBpbnRvIHRoZSBrZXJu
+ZWwuICBNeSBnb2FsIGhlcmUgaXMgdG8gdGFsayBtb3JlIA0KYWJvdXQgdGhlIHByb2Nlc3MgYW5k
+IGxlc3MgYWJvdXQgdGhlIHRlY2huaWNhbCBkZXRhaWxzLCBzbyBwbGVhc2UgDQpmb3JnaXZlIG1l
+IGlmIEkndmUgaWdub3JlZCBvciBjaGFuZ2VkIHRoZSB0ZWNobmljYWwgbWVhbmluZyBvZiBhbnl0
+aGluZyANCmJlbG93Lg0KDQpPbiAzMCBNYXkgMjAxOSwgYXQgMTI6MTUsIEtyaXMgVmFuIEhlZXMg
+d3JvdGU6DQoNCj4gT24gVGh1LCBNYXkgMjMsIDIwMTkgYXQgMDE6Mjg6NDRQTSAtMDcwMCwgQWxl
+eGVpIFN0YXJvdm9pdG92IHdyb3RlOg0KPg0KPiAuLi4gSSBiZWxpZXZlIHRoYXQgdGhlIGRpc2N1
+c3Npb24gdGhhdCBoYXMgYmVlbiBnb2luZyBvbiBpbiBvdGhlcg0KPiBlbWFpbHMgaGFzIHNob3du
+IHRoYXQgd2hpbGUgaW50cm9kdWNpbmcgYSBwcm9ncmFtIHR5cGUgdGhhdCBwcm92aWRlcyBhDQo+
+IGdlbmVyaWMgKGFic3RyYWN0ZWQpIGNvbnRleHQgaXMgYSBkaWZmZXJlbnQgYXBwcm9hY2ggZnJv
+bSB3aGF0IGhhcyANCj4gYmVlbiBkb25lDQo+IHNvIGZhciwgaXQgaXMgYSBuZXcgdXNlIGNhc2Ug
+dGhhdCBwcm92aWRlcyBmb3IgYWRkaXRpb25hbCB3YXlzIGluIA0KPiB3aGljaCBCUEYNCj4gY2Fu
+IGJlIHVzZWQuDQo+DQoNClsgLi4uIF0NCg0KPg0KPiBZZXMgYW5kIG5vLiAgSXQgZGVwZW5kcyBv
+biB3aGF0IHlvdSBhcmUgdHJ5aW5nIHRvIGRvIHdpdGggdGhlIEJQRiANCj4gcHJvZ3JhbSB0aGF0
+DQo+IGlzIGF0dGFjaGVkIHRvIHRoZSBkaWZmZXJlbnQgZXZlbnRzLiAgRnJvbSBhIHRyYWNpbmcg
+cGVyc3BlY3RpdmUsIA0KPiBwcm92aWRpbmcgYQ0KPiBzaW5nbGUgQlBGIHByb2dyYW0gd2l0aCBh
+biBhYnN0cmFjdCBjb250ZXh0IHdvdWxkIC4uLg0KDQpbIC4uLiBdDQoNCj4NCj4gSW4gdGhpcyBt
+b2RlbCBrcHJvYmUva3N5c193cml0ZSBhbmQgDQo+IHRyYWNlcG9pbnQvc3lzY2FsbHMvc3lzX2Vu
+dGVyX3dyaXRlIGFyZQ0KPiBlcXVpdmFsZW50IGZvciBtb3N0IHRyYWNpbmcgcHVycG9zZXMgLi4u
+DQoNClsgLi4uIF0NCg0KPg0KPiBJIGFncmVlIHdpdGggd2hhdCB5b3UgYXJlIHNheWluZyBidXQg
+SSBhbSBwcmVzZW50aW5nIGFuIGFkZGl0aW9uYWwgdXNlIA0KPiBjYXNlDQoNClsgLi4uIF0NCg0K
+Pj4NCj4+IEFsbCB0aGF0IGFzaWRlIHRoZSBrZXJuZWwgc3VwcG9ydCBmb3Igc2hhcmVkIGxpYnJh
+cmllcyBpcyBhbiBhd2Vzb21lDQo+PiBmZWF0dXJlIHRvIGhhdmUgYW5kIGEgYnVuY2ggb2YgZm9s
+a3Mgd2FudCB0byBzZWUgaXQgaGFwcGVuLCBidXQNCj4+IGl0J3Mgbm90IGEgYmxvY2tlciBmb3Ig
+J2R0cmFjZSB0byBicGYnIHVzZXIgc3BhY2Ugd29yay4NCj4+IGxpYmJwZiBjYW4gYmUgdGF1Z2h0
+IHRvIGRvIHRoaXMgJ3BzZXVkbyBzaGFyZWQgbGlicmFyeScgZmVhdHVyZQ0KPj4gd2hpbGUgJ2R0
+cmFjZSB0byBicGYnIHNpZGUgZG9lc24ndCBuZWVkIHRvIGRvIGFueXRoaW5nIHNwZWNpYWwuDQoN
+ClsgLi4uIF0NCg0KVGhpcyB0aHJlYWQgaW50ZXJtaXhlcyBzb21lIGFic3RyYWN0IGNvbmNlcHR1
+YWwgY2hhbmdlcyB3aXRoIHNtYWxsZXIgDQp0ZWNobmljYWwgaW1wcm92ZW1lbnRzLCBhbmQgaW4g
+Z2VuZXJhbCBpdCBmb2xsb3dzIGEgZmFtaWxpYXIgcGF0dGVybiANCm90aGVyIG91dC1vZi10cmVl
+IHByb2plY3RzIGhhdmUgaGl0IHdoaWxlIHRyeWluZyB0byBhZGFwdCB0aGUga2VybmVsIHRvIA0K
+dGhlaXIgZXhpc3RpbmcgY29kZS4gIEp1c3QgZnJvbSB0aGlzIG9uZSBlbWFpbCwgSSBxdW90ZWQg
+dGhlIGFic3RyYWN0IA0KbW9kZWxzIHdpdGggdXNlIGNhc2VzIGV0YywgYW5kIHRoaXMgaXMgb2Z0
+ZW4gd2hlcmUgdGhlIGRpc2N1c3Npb25zIHNpZGUgDQp0cmFjayBpbnRvIGxlc3MgcHJvZHVjdGl2
+ZSBhcmVhcy4NCg0KPg0KPiBTbyB5b3UgYXJlIGJhc2ljYWxseSBzYXlpbmcgdGhhdCBJIHNob3Vs
+ZCByZWRlc2lnbiBEVHJhY2U/DQoNCkluIHlvdXIgcGxhY2UsIEkgd291bGQgaGF2ZSByZW1vdmVk
+IGZlYXR1cmVzIGFuZCBhZGFwdGVkIGR0cmFjZSBhcyBtdWNoIA0KYXMgcG9zc2libGUgdG8gcmVx
+dWlyZSB0aGUgYWJzb2x1dGUgbWluaW11bSBvZiBrZXJuZWwgcGF0Y2hlcywgb3IgZXZlbiANCmJl
+dHRlciwgbm8gcGF0Y2hlcyBhdCBhbGwuICBJJ2QgZG9jdW1lbnQgYWxsIG9mIHRoZSBmZWF0dXJl
+cyB0aGF0IHdvcmtlZCANCmFzIGV4cGVjdGVkLCBhbmQgdW5kZXJsaW5lIGFueXRoaW5nIGVpdGhl
+ciBtaXNzaW5nIG9yIHN1Ym9wdGltYWwgdGhhdCANCm5lZWRlZCBhZGRpdGlvbmFsIGtlcm5lbCBj
+aGFuZ2VzLiAgVGhlbiBJJ2QgZm9jdXMgb24gZXhwYW5kaW5nIHRoZSANCmNvbW11bml0eSBvZiBw
+ZW9wbGUgdXNpbmcgZHRyYWNlIGFnYWluc3QgdGhlIG1haW5saW5lIGtlcm5lbCwgYW5kIHdvcmsg
+DQp0aHJvdWdoIHRoZSBzZXJpZXMgZmVhdHVyZXMgYW5kIGltcHJvdmVtZW50cyBvbmUgYnkgb25l
+IHVwc3RyZWFtIG92ZXIgDQp0aW1lLg0KDQpZb3VyIGN1cnJlbnQgYXBwcm9hY2ggcmVsaWVzIG9u
+IGFuIGFsbC1vci1ub3RoaW5nIGxhbmRpbmcgb2YgcGF0Y2hlcyANCnVwc3RyZWFtLCBhbmQgdGhp
+cyBjb25zaXN0ZW50bHkgbGVhZHMgdG8gY29uZmxpY3QgZXZlcnkgdGltZSBhIHByb2plY3QgDQp0
+cmllcyBpdC4gIEEgbW9yZSBpbmNyZW1lbnRhbCBhcHByb2FjaCB3aWxsIHJlcXVpcmUgYmlnZ2Vy
+IGNoYW5nZXMgb24gDQp0aGUgZHRyYWNlIGFwcGxpY2F0aW9uIHNpZGUsIGJ1dCBvdmVyIHRpbWUg
+aXQnbGwgYmUgbXVjaCBlYXNpZXIgdG8gDQpqdXN0aWZ5IHlvdXIga2VybmVsIGNoYW5nZXMuICBZ
+b3Ugd29uJ3QgaGF2ZSB0byB0YWxrIGluIGFic3RyYWN0IG1vZGVscywgDQphbmQgeW91J2xsIGhh
+dmUgbWFueSBtb3JlIGNvbmNyZXRlIGV4YW1wbGVzIG9mIHBlb3BsZSBhc2tpbmcgZm9yIGR0cmFj
+ZSANCmZlYXR1cmVzIGFnYWluc3QgbWFpbmxpbmUuICBNb3N0IGltcG9ydGFudGx5LCB5b3UnbGwg
+bWFrZSBkdHJhY2UgDQphdmFpbGFibGUgb24gbW9yZSBrZXJuZWxzIHRoYW4ganVzdCB0aGUgYWJz
+b2x1dGUgbGF0ZXN0IG1haW5saW5lLCBhbmQgDQpyZW1vdmluZyBkZXBlbmRlbmNpZXMgbWFrZXMg
+dGhlIHByb2plY3QgbXVjaCBlYXNpZXIgZm9yIG5ldyB1c2VycyB0byANCnRyeS4NCg0KLWNocmlz
+DQo=
