@@ -1,132 +1,138 @@
 Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF1EC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1691C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E0C725FAB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:19:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA74B26049
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:19:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559308753;
+	bh=kMyhomH0mgMXjkS1dJuoramSsI2Wu9ZujUCXYeB4BoU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=h0AfVqgz7IXf4wyDSGsoAaMEJGup3XTogcXwIi6bbXiRmMp6LwvL6hsICQjzaPSjK
+	 6JiWXaxQon13EU3Q7cVdSgnDGqf+9Olvc/9vYZun4j+PqNnfH6R5vlHmyCJsTLTSBB
+	 o2DNS3yWdm1bZCKvtO+2cEMY3yQ7JaUqzgwJ99l8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727255AbfEaNTJ (ORCPT
+        id S1727327AbfEaNTN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 09:19:09 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46098 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726330AbfEaNTJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 09:19:09 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 278B6AED7;
-        Fri, 31 May 2019 13:19:07 +0000 (UTC)
-Date:   Fri, 31 May 2019 15:19:06 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] livepatch: Remove duplicate warning about missing
- reliable stacktrace support
-Message-ID: <20190531131906.lkhrfgpze57pqrcg@pathway.suse.cz>
-References: <20190531074147.27616-1-pmladek@suse.com>
- <20190531074147.27616-3-pmladek@suse.com>
- <alpine.LSU.2.21.1905311425450.742@pobox.suse.cz>
+        Fri, 31 May 2019 09:19:13 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38854 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726330AbfEaNTL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 09:19:11 -0400
+Received: by mail-pf1-f196.google.com with SMTP id a186so5509979pfa.5;
+        Fri, 31 May 2019 06:19:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NGbXt3/IQA1b49aRJS6BBAi0DW9ybOJRqUfZBPY09dA=;
+        b=A3WPnRqnTUdG3crEHGBb/NpBr+tWmhd8IyhewWKj1R4bjxJzKPyXLzw5G3U9Lnteyl
+         S36wH0W0+2k1njFZy2Ds2f/9kFql5X0DZRwamUx250rLJpRwx19xr3wuHqAOJBBYxLq9
+         D5yvDqjjRPT9mniegqhTMI69xTfamzNzmqGuYDQC27qaWbbK2U1nrf6NWOVP/AQgAVed
+         27HAfAIiBEc/pMFVtc2MGWrATM8vpC7OKdA/xorvzdMTJRgsu4MAyOAQ07qRReLzaC1m
+         vS3W5pSSEa4XJdth4E3PvyqmD9aT/s5qNUBsNMohsGUqNgFntqIxkqkXVq7VroDVR9nb
+         xcZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NGbXt3/IQA1b49aRJS6BBAi0DW9ybOJRqUfZBPY09dA=;
+        b=Bf794g/fKtpcOFKaBaI/yDB3dac5tTlWFL3ZHSFogPoiv8uwpOEEY03gu7hIToEd9e
+         WjxKA1QlEzavJoiZ8Wy6V/LBpvru82RbwVVl5i3jj+NaoAs2embXRTRdc09MgLpD/K+8
+         FYCzXpFuMQie9CpNi3fn+d/s5KBRvHKHhkt4yaIaGYzcRKknQhCyG0/SrMfRUz8bLcIG
+         Kh3zY94gPdaLsP+zmPEH4NYLqWuSC9qE3L4Qlq9Mtedw7zOvunO9xuAPhau2wjpOjhSx
+         J0zeNp+8idW3IWdUN9JQyLLwR8j9EJ4Vlmw/ygM8kyLOpDTUkIZNruTSxqiY24GI0/ZK
+         Mpbg==
+X-Gm-Message-State: APjAAAUtqyDWQyAwfE+yw551v7ULeQM0KV2GulZJ7MytN/pKNCBZaCn6
+        jZYNyps3Ory4xxJtvFDPYq8=
+X-Google-Smtp-Source: APXvYqwfmPTYrU4YNg70+w+fekZWbolWXYkyOovH8OK5qnvs6Xh/v3zPDoIKALH3CJn/NV3nmmscEA==
+X-Received: by 2002:a63:6884:: with SMTP id d126mr9237347pgc.154.1559308750486;
+        Fri, 31 May 2019 06:19:10 -0700 (PDT)
+Received: from google.com ([122.38.223.241])
+        by smtp.gmail.com with ESMTPSA id d186sm5485008pgc.58.2019.05.31.06.19.02
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 31 May 2019 06:19:09 -0700 (PDT)
+Date:   Fri, 31 May 2019 22:19:00 +0900
+From:   Minchan Kim <minchan@kernel.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>, jannh@google.com,
+        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
+        hdanton@sina.com
+Subject: Re: [RFCv2 5/6] mm: introduce external memory hinting API
+Message-ID: <20190531131859.GB195463@google.com>
+References: <20190531064313.193437-1-minchan@kernel.org>
+ <20190531064313.193437-6-minchan@kernel.org>
+ <20190531083757.GH6896@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.21.1905311425450.742@pobox.suse.cz>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <20190531083757.GH6896@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 2019-05-31 14:32:34, Miroslav Benes wrote:
-> On Fri, 31 May 2019, Petr Mladek wrote:
-> 
-> > WARN_ON_ONCE() could not be called safely under rq lock because
-> > of console deadlock issues.
+On Fri, May 31, 2019 at 10:37:57AM +0200, Michal Hocko wrote:
+> On Fri 31-05-19 15:43:12, Minchan Kim wrote:
+> > There is some usecase that centralized userspace daemon want to give
+> > a memory hint like MADV_[COLD|PAGEEOUT] to other process. Android's
+> > ActivityManagerService is one of them.
 > > 
-> > It can be simply removed. A better descriptive message is written
-> > in klp_enable_patch() when klp_have_reliable_stack() fails.
-> > The remaining debug message is good enough.
+> > It's similar in spirit to madvise(MADV_WONTNEED), but the information
+> > required to make the reclaim decision is not known to the app. Instead,
+> > it is known to the centralized userspace daemon(ActivityManagerService),
+> > and that daemon must be able to initiate reclaim on its own without
+> > any app involvement.
 > > 
-> > Signed-off-by: Petr Mladek <pmladek@suse.com>
-> > ---
-> >  kernel/livepatch/transition.c | 1 -
-> >  1 file changed, 1 deletion(-)
+> > To solve the issue, this patch introduces new syscall process_madvise(2).
+> > It could give a hint to the exeternal process of pidfd.
 > > 
-> > diff --git a/kernel/livepatch/transition.c b/kernel/livepatch/transition.c
-> > index abb2a4a2cbb2..1bf362df76e1 100644
-> > --- a/kernel/livepatch/transition.c
-> > +++ b/kernel/livepatch/transition.c
-> > @@ -247,7 +247,6 @@ static int klp_check_stack(struct task_struct *task, char *err_buf)
-> >  	int ret, nr_entries;
-> >  
-> >  	ret = stack_trace_save_tsk_reliable(task, entries, ARRAY_SIZE(entries));
-> > -	WARN_ON_ONCE(ret == -ENOSYS);
-> >  	if (ret < 0) {
-> >  		snprintf(err_buf, STACK_ERR_BUF_SIZE,
-> >  			 "%s: %s:%d has an unreliable stack\n",
+> >  int process_madvise(int pidfd, void *addr, size_t length, int advise,
+> > 			unsigned long cookie, unsigned long flag);
+> > 
+> > Since it could affect other process's address range, only privileged
+> > process(CAP_SYS_PTRACE) or something else(e.g., being the same UID)
+> > gives it the right to ptrace the process could use it successfully.
+> > 
+> > The syscall has a cookie argument to privode atomicity(i.e., detect
+> > target process's address space change since monitor process has parsed
+> > the address range of target process so the operaion could fail in case
+> > of happening race). Although there is no interface to get a cookie
+> > at this moment, it could be useful to consider it as argument to avoid
+> > introducing another new syscall in future. It could support *atomicity*
+> > for disruptive hint(e.g., MADV_DONTNEED|FREE).
+> > flag argument is reserved for future use if we need to extend the API.
 > 
-> The current situation is not the best, but I think the patch improves it 
-> only slightly. I see two possible solutions.
-> 
-> 1. we either revert commit 1d98a69e5cef ("livepatch: Remove reliable 
-> stacktrace check in klp_try_switch_task()"), so that klp_check_stack() 
-> returns right away.
-> 
-> 2. or we test ret from stack_trace_save_tsk_reliable() for ENOSYS and 
-> return.
-> 
-> In my opinion either of them is better than what we have now (and what we 
-> would have with the patch), because klp_check_stack() returns, but it 
-> prints out that a task has an unreliable stack. Yes, it is pr_debug() only 
-> in the end, but still.
+> Providing an API that is incomplete will not fly. Really. As this really
+> begs for much more discussion and it would be good to move on with the
+> core idea of the pro active memory memory management from userspace
+> usecase. Could you split out the core change so that we can move on and
+> leave the external for a later discussion. I believe this would lead to
+> a smoother integration.
 
-IMHO, any extra check will not improve the situation much. Quiet
-return is as useless as the misleading pr_debug() that will
-not normally get printed anyway.
+No problem but I need to understand what you want a little bit more because
+I thought this patchset is already step by step so if we reach the agreement
+of part of them like [1-5/6], it could be merged first.
 
-Adding a warning is complicated because we would need to pass it via
-the temporary buffer. It is not worth the complexity.
+Could you say how you want to split the patchset for forward progress?
 
-IMHO, it does not make sense to complicate the code because of
-a corner case situation that would hit only people adding
-livepatch support for new architecture.
-
-
-> I don't have a preference and my understanding is that Petr does not want 
-> to do v4. I can prepare a patch, but it would be nice to choose now. Josh? 
-> Anyone else?
-
-Exactly. Fell free to take over the patches.
-
-I do not want to spend more time on endless discussions about this
-corner case.
-
-I made the 1st and 2nd patch only because of ideas mentioned when switching
-klp_have_reliable_stack() from error to warning, namely:
-
-  https://lkml.kernel.org/r/20190418135858.n3lzq2oxkj52m6bi@treble
-  https://lkml.kernel.org/r/alpine.LSU.2.21.1904231041500.19172@pobox.suse.cz
-
-I have never expected that it would need several more respins.
-
-Note that there is no good solution. We would need to choose between
-a complicated code or an imperfect error handling. Anything in between
-is just a compromise. Choosing between all the variants looks like
-a bikeshedding to me.
-
-I sent what I preferred and what looked acceptable. I am not going
-to block other approaches unless they make the code too complicated.
-
-Best Regards,
-Petr
+Thanks.
