@@ -2,171 +2,119 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 453FEC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 17:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB571C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 17:35:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15BCB26D41
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 17:35:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 931D626D41
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 17:35:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eJOgNfoh"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XkRXGO8r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726816AbfEaRfY (ORCPT
+        id S1726955AbfEaRfd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 13:35:24 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36640 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725913AbfEaRfX (ORCPT
+        Fri, 31 May 2019 13:35:33 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:38528 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726862AbfEaRfd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 13:35:23 -0400
-Received: by mail-pg1-f196.google.com with SMTP id a3so4424637pgb.3;
-        Fri, 31 May 2019 10:35:23 -0700 (PDT)
+        Fri, 31 May 2019 13:35:33 -0400
+Received: by mail-vs1-f65.google.com with SMTP id b10so7220042vsp.5
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 10:35:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wMCuYwpMjG1YZSXNE/hDJ22AreM7u72wA8DYLemzKlM=;
-        b=eJOgNfohAy+su0elwDRNsmjVxZ2dQ6AIhVVafMCZlge+eT3le4uN2IcoULLocJvEj/
-         qace1DpCnhZj7sPQYFENG2bp0doFbbgQg2uMk4MimAo5uvI2dNrZORF/MmhRYDhui9IT
-         wa1WDlOabqaUxkRcL0Cg29OkPG/jql5w7fk0KkeZrOyJORV5VLTN5T3bG/uU7lN7axyW
-         IviZywZZb3Kjar6oujFAiD4QNmqPZq2PNIC9M5+jwkPbSV3MrklbyBtKXNCJBOplbvSh
-         6bCpUlKbQ598wJUMK5dK5GBOKGL+J5xm16bUqV94U0f7frRM7rPs8U1eYua9GMdRcC95
-         c39w==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UT95TGe8i+iSc4Mrslq2c6bgkkgpf7MqKUVEvywS9rQ=;
+        b=XkRXGO8rGh8TZ4EUzxfokC5808K1dz1UcgRHXk5nSZXjzX7ByJ9OOS3VUfLxIGGAe4
+         tBJOQ41tQiTrAGL8Vqh+uDVv6x0PoGvSasP0vc6fBcPf9wEekZyVRoXaNo1xuJ2Fn5wJ
+         Mdw2jJZ25WDo6I4uz8vJmqlZY84v/5BJKw6tSscV26kE59k4+mPTnBO54Ga2JiQ3fF49
+         9f36MMHIrDv6UDicgzKbwCc4KmUky3yRfA6nB2SCVng6BOkS7L2+dNFKBJmEgZK6JRI0
+         aOaHXvY0eVS+UnHvlhi71Ao0kSR18YVuOC0awHBXNUVnRpG6nJezGgjBM5MLoZEwisfe
+         er5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wMCuYwpMjG1YZSXNE/hDJ22AreM7u72wA8DYLemzKlM=;
-        b=DRvf1X2RRI/lhh1GSWOp5r6q86DQfSIR+N/MafQzp2zzbR3RGyG37gxLMX5IPZVp2c
-         jH+sqPs5mXLjOMP2J71DeYFbnQe0MkImSDOaelzFNwFYFG88WQ1O34InM6Xr5DtqHm4u
-         isdFYFQ4sCx4SPcs6WEWb/aczuaBtG9PCaFpb2c5JOywyS1jEkBZDpwgY9PInyf5mmFP
-         rWg/8rYH/vC8YPzJ1KdWr42gWrnWSaPU6hKkao9Tl6kYUGoClKwnDHRQIrq9qeJ/plXN
-         pXPxKLNrGLJtkIJ44eUZ88eP+dMzx3CMsrOqXWh2ufR/Cl9gXyq8h8By19hrzJjmiwqs
-         piIQ==
-X-Gm-Message-State: APjAAAVN8qRzeWcYH+LTRTDfF88uyuYjm2s6y07maVs+V5HD5Lhx4I/g
-        xnyMqcQE1iZSGHRdI2XVgXz+gz1v
-X-Google-Smtp-Source: APXvYqy4/eIf5sk/vkYcZ/Sr7bqBMW2sH1G3WtD8rZ6hb475weubXu+2aBC3oKtm8jAdAgAcdQX+sA==
-X-Received: by 2002:a17:90a:207:: with SMTP id c7mr10587815pjc.82.1559324122844;
-        Fri, 31 May 2019 10:35:22 -0700 (PDT)
-Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
-        by smtp.gmail.com with ESMTPSA id d3sm688307pfa.176.2019.05.31.10.35.21
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 31 May 2019 10:35:22 -0700 (PDT)
-Subject: Re: [PATCH] ipv6: Prevent overrun when parsing v6 header options
-To:     Yang Xiao <92siuyang@gmail.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-References: <1559230098-1543-1-git-send-email-92siuyang@gmail.com>
- <c83f8777-f6be-029b-980d-9f974b4e28ce@gmail.com>
- <CAKgHYH1=aqmOEsbH-OuSjK4CJ=9FmocjuOg6tsyJNPLEOWVB-g@mail.gmail.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <a0f08b20-41ef-db53-48df-4d8f5333b6af@gmail.com>
-Date:   Fri, 31 May 2019 10:35:20 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UT95TGe8i+iSc4Mrslq2c6bgkkgpf7MqKUVEvywS9rQ=;
+        b=gMyhVM4OOOF24+h8/4vL7DXeS5Mvq77/yIY5yiiCNqm1u5f3j7xlvttzsNJg9dU+BL
+         oJQ0JuS5jALkuTkxBYbdFcbifxGpEV2qMkRcdSIhRCuzSV6IFUqwE5kBZwVFqFZHLTgn
+         NqvBN+x+YvmGOyu9RgshHuneW4coqMwA3DHCA5fFy6qoy+xnlhz8ARlWQiB3dMeFY4XG
+         Ecqx5b8pR8mb05dYwiDVDdEsQRPxNMy1dZtR3IyG6MkPF97CRzoAeIEOlhsuUwLV23Z3
+         VAYsWEWqbMdSg2Gg/6KBWdBqn9crihCOre0b+dgiAuL+QYLRqUszZeAoW6EhFAf8eD2S
+         B52Q==
+X-Gm-Message-State: APjAAAVjkAmkMt5NfzlRAXP2BF9o1XrLrMtLUjqSdF/StWofHzhrNPbY
+        MGwf51h1EqZW7gJCvMDOg7MTzOVH6yzhka6szeMhMg==
+X-Google-Smtp-Source: APXvYqwXzH1wOrhlClP+4XIXhtYESdkaXQctuZZmUpL+byNkQuwIQh6PWl6WuJPpoo7fr6T7kU+2n6RwqkoaZfzW3Nw=
+X-Received: by 2002:a67:2084:: with SMTP id g126mr6137960vsg.114.1559324131824;
+ Fri, 31 May 2019 10:35:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAKgHYH1=aqmOEsbH-OuSjK4CJ=9FmocjuOg6tsyJNPLEOWVB-g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190531064313.193437-1-minchan@kernel.org> <20190531064313.193437-6-minchan@kernel.org>
+In-Reply-To: <20190531064313.193437-6-minchan@kernel.org>
+From:   Daniel Colascione <dancol@google.com>
+Date:   Fri, 31 May 2019 10:35:20 -0700
+Message-ID: <CAKOZuevswVxZjffQcwjqJFa5V4Vv2jxq=mq6hWhd1SpNrGAGkg@mail.gmail.com>
+Subject: Re: [RFCv2 5/6] mm: introduce external memory hinting API
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        Christian Brauner <christian@brauner.io>, oleksandr@redhat.com,
+        hdanton@sina.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 30, 2019 at 11:43 PM Minchan Kim <minchan@kernel.org> wrote:
+>
+> There is some usecase that centralized userspace daemon want to give
+> a memory hint like MADV_[COLD|PAGEEOUT] to other process. Android's
+> ActivityManagerService is one of them.
+>
+> It's similar in spirit to madvise(MADV_WONTNEED), but the information
+> required to make the reclaim decision is not known to the app. Instead,
+> it is known to the centralized userspace daemon(ActivityManagerService),
+> and that daemon must be able to initiate reclaim on its own without
+> any app involvement.
+>
+> To solve the issue, this patch introduces new syscall process_madvise(2).
+> It could give a hint to the exeternal process of pidfd.
+>
+>  int process_madvise(int pidfd, void *addr, size_t length, int advise,
+>                         unsigned long cookie, unsigned long flag);
+>
+> Since it could affect other process's address range, only privileged
+> process(CAP_SYS_PTRACE) or something else(e.g., being the same UID)
+> gives it the right to ptrace the process could use it successfully.
+>
+> The syscall has a cookie argument to privode atomicity(i.e., detect
+> target process's address space change since monitor process has parsed
+> the address range of target process so the operaion could fail in case
+> of happening race). Although there is no interface to get a cookie
+> at this moment, it could be useful to consider it as argument to avoid
+> introducing another new syscall in future. It could support *atomicity*
+> for disruptive hint(e.g., MADV_DONTNEED|FREE).
+> flag argument is reserved for future use if we need to extend the API.
 
-
-On 5/30/19 8:04 PM, Yang Xiao wrote:
-> On Fri, May 31, 2019 at 1:17 AM Eric Dumazet <eric.dumazet@gmail.com> wrote:
->>
->>
->>
->> On 5/30/19 8:28 AM, Young Xiao wrote:
->>> The fragmentation code tries to parse the header options in order
->>> to figure out where to insert the fragment option.  Since nexthdr points
->>> to an invalid option, the calculation of the size of the network header
->>> can made to be much larger than the linear section of the skb and data
->>> is read outside of it.
->>>
->>> This vulnerability is similar to CVE-2017-9074.
->>>
->>> Signed-off-by: Young Xiao <92siuyang@gmail.com>
->>> ---
->>>  net/ipv6/mip6.c | 24 ++++++++++++++----------
->>>  1 file changed, 14 insertions(+), 10 deletions(-)
->>>
->>> diff --git a/net/ipv6/mip6.c b/net/ipv6/mip6.c
->>> index 64f0f7b..30ed1c5 100644
->>> --- a/net/ipv6/mip6.c
->>> +++ b/net/ipv6/mip6.c
->>> @@ -263,8 +263,6 @@ static int mip6_destopt_offset(struct xfrm_state *x, struct sk_buff *skb,
->>>                              u8 **nexthdr)
->>>  {
->>>       u16 offset = sizeof(struct ipv6hdr);
->>> -     struct ipv6_opt_hdr *exthdr =
->>> -                                (struct ipv6_opt_hdr *)(ipv6_hdr(skb) + 1);
->>>       const unsigned char *nh = skb_network_header(skb);
->>>       unsigned int packet_len = skb_tail_pointer(skb) -
->>>               skb_network_header(skb);
->>> @@ -272,7 +270,8 @@ static int mip6_destopt_offset(struct xfrm_state *x, struct sk_buff *skb,
->>>
->>>       *nexthdr = &ipv6_hdr(skb)->nexthdr;
->>>
->>> -     while (offset + 1 <= packet_len) {
->>> +     while (offset <= packet_len) {
->>> +             struct ipv6_opt_hdr *exthdr;
->>>
->>>               switch (**nexthdr) {
->>>               case NEXTHDR_HOP:
->>> @@ -299,12 +298,15 @@ static int mip6_destopt_offset(struct xfrm_state *x, struct sk_buff *skb,
->>>                       return offset;
->>>               }
->>>
->>> +             if (offset + sizeof(struct ipv6_opt_hdr) > packet_len)
->>> +                     return -EINVAL;
->>> +
->>> +             exthdr = (struct ipv6_opt_hdr *)(nh + offset);
->>>               offset += ipv6_optlen(exthdr);
->>>               *nexthdr = &exthdr->nexthdr;
->>> -             exthdr = (struct ipv6_opt_hdr *)(nh + offset);
->>>       }
->>>
->>> -     return offset;
->>> +     return -EINVAL;
->>>  }
->>>
->>
->>
->> Ok, but have you checked that callers have been fixed ?
-> 
-> I've checked the callers. There are two callers:
-> xfrm6_transport_output() and xfrm6_ro_output(). There are checks in
-> both function.
-> 
-> ------------------------------------------------------------------------------
->         hdr_len = x->type->hdr_offset(x, skb, &prevhdr);
->         if (hdr_len < 0)
->                 return hdr_len;
-> ------------------------------------------------------------------------------
->>
->> xfrm6_transport_output() seems buggy as well,
->> unless the skbs are linearized before entering these functions ?
-> I can not understand what you mean about this comment.
-> Could you explain it in more detail.
-
-
-If we had a problem, then the memmove(ipv6_hdr(skb), iph, hdr_len);
- in xfrm6_transport_output() would be buggy, since iph could also point to freed memory.
-
-
-
+How about a compromise? Let's allow all madvise hints if the process
+is calling process_madvise *on itself* (which will be useful once we
+wire up the atomicity cookie) and restrict the cross-process case to
+the hints you've mentioned. This way, the restriction on madvise hints
+isn't tied to the specific API, but to the relationship between hinter
+and hintee.
