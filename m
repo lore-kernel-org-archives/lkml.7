@@ -2,63 +2,102 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E77CFC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5684FC28CC2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C61A3269DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:56:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FDE6269DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:56:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559310985;
+	bh=0KfI7mpirsDEQB4YFaw+9JpeAIyIdzCLmeys0V7RWDI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Q3o4gICpJQV0lDh4iCQyeoBEn0iDnU6pDkiRdeFfluqggXxbHM70zX85QpgyDFcgT
+	 gYlInuinEq0z/fhm15nDbh3WT9urDYBug0LPbSdkQRqy/RlJg00OPL2qxY8kZokl5f
+	 60xr0UMe1SppJ6Ykw7jlzGcBPp0R7oyfWA7P0b3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbfEaN4H (ORCPT
+        id S1726652AbfEaN4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 09:56:07 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54286 "EHLO mx1.suse.de"
+        Fri, 31 May 2019 09:56:24 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54376 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726386AbfEaN4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 09:56:07 -0400
+        id S1726386AbfEaN4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 09:56:23 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 576FCAF10;
-        Fri, 31 May 2019 13:56:06 +0000 (UTC)
-From:   Juergen Gross <jgross@suse.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
-        boris.ostrovsky@oracle.com
-Subject: [GIT PULL] xen: fixes for 5.2-rc3
-Date:   Fri, 31 May 2019 15:56:03 +0200
-Message-Id: <20190531135603.3403-1-jgross@suse.com>
-X-Mailer: git-send-email 2.16.4
+        by mx1.suse.de (Postfix) with ESMTP id 98465AF21;
+        Fri, 31 May 2019 13:56:22 +0000 (UTC)
+Date:   Fri, 31 May 2019 15:56:21 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     Mel Gorman <mgorman@techsingularity.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [HELP] How to get task_struct from mm
+Message-ID: <20190531135621.GR6896@dhcp22.suse.cz>
+References: <5cf71366-ba01-8ef0-3dbd-c9fec8a2b26f@linux.alibaba.com>
+ <20190530154119.GF6703@dhcp22.suse.cz>
+ <352de468-9091-9866-ccbd-10d80c25ebb4@linux.alibaba.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <352de468-9091-9866-ccbd-10d80c25ebb4@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Fri 31-05-19 20:51:05, Yang Shi wrote:
+> 
+> 
+> On 5/30/19 11:41 PM, Michal Hocko wrote:
+> > On Thu 30-05-19 14:57:46, Yang Shi wrote:
+> > > Hi folks,
+> > > 
+> > > 
+> > > As what we discussed about page demotion for PMEM at LSF/MM, the demotion
+> > > should respect to the mempolicy and allowed mems of the process which the
+> > > page (anonymous page only for now) belongs to.
+> > cpusets memory mask (aka mems_allowed) is indeed tricky and somehow
+> > awkward.  It is inherently an address space property and I never
+> > understood why we have it per _thread_. This just doesn't make any
+> > sense to me. This just leads to weird corner cases. What should happen
+> > if different threads disagree about the allocation affinity while
+> > working on a shared address space?
+> 
+> I'm supposed (just my guess) such restriction should just apply for the
+> first allocation. Just like memcg charge, who does it first, whose policy
+> gets applied.
 
-Please git pull the following tag:
+I am not really sure that was the deliberate design choice. Maybe
+somebody has a different recollection though.
 
- git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git for-linus-5.2b-rc3-tag
+> > > The vma that the page is mapped to can be retrieved from rmap walk easily,
+> > > but we need know the task_struct that the vma belongs to. It looks there is
+> > > not such API, and container_of seems not work with pointer member.
+> > I do not think this is a good idea. As you point out in the reply we
+> > have that for memcgs but we really hope to get rid of mm->owner there
+> > as well. It is just more tricky there. Moreover such a reverse mapping
+> > would be incorrect. Just think of a disagreeing yet overlapping cpusets
+> > for different threads mapping the same page.
+> > 
+> > Is it such a big deal to document that the node migrate is not
+> > compatible with cpusets?
+> 
+> Not only cpuset, but get_vma_policy() also needs find task_struct from vma.
+> Currently, get_vma_policy() just uses "current", so it just returns the
+> current process's mempolicy if the vma doesn't have mempolicy. For the node
+> migrate case, "current" is definitely not correct.
+>
+> It looks there is not an easy way to workaround it unless we claim node
+> migrate is not compatible with both cpusets and mempolicy.
 
-xen: fixes for 5.2-rc3
-
-It contains one minor cleanup patch and a fix for handling of live
-migration when running as Xen guest.
-
-Thanks.
-
-Juergen
-
- drivers/xen/pvcalls-front.c              |  4 ----
- drivers/xen/xenbus/xenbus.h              |  3 +++
- drivers/xen/xenbus/xenbus_dev_frontend.c | 18 ++++++++++++++++++
- drivers/xen/xenbus/xenbus_xs.c           |  7 +++++--
- 4 files changed, 26 insertions(+), 6 deletions(-)
-
-Ross Lagerwall (1):
-      xenbus: Avoid deadlock during suspend due to open transactions
-
-YueHaibing (1):
-      xen/pvcalls: Remove set but not used variable
+yep, it seems so.
+-- 
+Michal Hocko
+SUSE Labs
