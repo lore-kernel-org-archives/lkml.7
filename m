@@ -2,134 +2,150 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B76CC28CC2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A0EC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2950826F48
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:16:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559337412;
-	bh=c2pv3UGEvPHler4RZI9AO4XMMtkbISSMYlJ167PAtPE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2h7IRiXuCxVoAx64+73Oj/uzLqizPHPS28l6HNE1SVfkK4OeQuV1xa9Dlyc4H0y/y
-	 MfJcAstKmIf5LGTqpp9ZEGhSvdzU0zDS1BBJW33BZpf/zQtoSlOeAy/Qa/5dSI+edO
-	 BYbVh1z6p3MONc97YlgU5fF8ugfMU/1Bt5SvXu1E=
+	by mail.kernel.org (Postfix) with ESMTP id 9B4ED26F38
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:18:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727628AbfEaVQv (ORCPT
+        id S1727699AbfEaVSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 17:16:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58608 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726719AbfEaVQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 17:16:51 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C017926F38;
-        Fri, 31 May 2019 21:16:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559337410;
-        bh=c2pv3UGEvPHler4RZI9AO4XMMtkbISSMYlJ167PAtPE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LdBjFu6KfciYCDWWmv+DuahF7VCnvl9Odv8PL7Kuy3LLohhYqw2h1hmvEo7l35v9H
-         XbrSSTcz5TCAN5taXh0JwSvcrqspZYxIZgF+qItCAPe3XV9qm8svY7UoKYiwMsEW3v
-         sWGFOkmBMAerGoooJXv92W12ZYlUkNmBBVuKNClU=
-Date:   Fri, 31 May 2019 16:16:48 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI: PM: Avoid resuming devices in D3hot during system
- suspend
-Message-ID: <20190531211648.GB58810@google.com>
-References: <4561083.VtDMOnK5Me@kreacher>
+        Fri, 31 May 2019 17:18:07 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:42330 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726749AbfEaVSH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 17:18:07 -0400
+Received: by mail-io1-f71.google.com with SMTP id v187so8622392ioe.9
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 14:18:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=9vJ5p7g65WszXpcgdHNrhcEVIXylvGJSGHu7KxUMRl0=;
+        b=GjZCYpL0MtNOcebeRLhgiLryElqqAjy9bX8yBUJ02py6Gvald72ogF4kqugb9skj3U
+         GmcZzzY8qGumK3mGION2Ggp0pLbd3l8TwU7eFLHBqiNwb0qFs1Z7EAZ5sT0ocmYHPxsE
+         fLfyfg6xYQd+RjoN6Rjv6LxP6pHHpYhtVfQPtyztApf1QYpLYvv7ssq92Pt82sV4thJp
+         rp8szy8C5X64QjuTF8mpJiPTsXebsYbeSLVyf0ONujKI2ejjgEsB77odQz48zudROwCz
+         1yt1gBvMjVQNzzIy0oTUELleQn7Rbvj00fFc3eUgYP33qkkAdu/GCsfVhsSNqF/hTDAS
+         85kg==
+X-Gm-Message-State: APjAAAWYT23VQsOIbj5XuiKEUwQNp5H7PkOE/o9F6PrZ3KXxGP/dxDGQ
+        F4f/NIKLNUc927y4kSEqK/JK6yDg0dMOBj8edzVAKYHSzueM
+X-Google-Smtp-Source: APXvYqyQthWYZkYEzHAw27Fklkf9ijpz/D7EU/qN25ZeTvfoP8xszP9EdDcihQRxiZOU0u7xwOU77U09S102kJHodTHCUDVE0ATP
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4561083.VtDMOnK5Me@kreacher>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a05:660c:6c1:: with SMTP id z1mr9492253itk.126.1559337486489;
+ Fri, 31 May 2019 14:18:06 -0700 (PDT)
+Date:   Fri, 31 May 2019 14:18:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f7a443058a358cb4@google.com>
+Subject: memory leak in sctp_send_reset_streams
+From:   syzbot <syzbot+6ad9c3bd0a218a2ab41d@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, linux-kernel@vger.kernel.org,
+        linux-sctp@vger.kernel.org, marcelo.leitner@gmail.com,
+        netdev@vger.kernel.org, nhorman@tuxdriver.com,
+        syzkaller-bugs@googlegroups.com, vyasevich@gmail.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 11:49:30AM +0200, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> The current code resumes devices in D3hot during system suspend if
-> the target power state for them is D3cold, but that is not necessary
-> in general.  It only is necessary to do that if the platform firmware
-> requires the device to be resumed, but that should be covered by
-> the platform_pci_need_resume() check anyway, so rework
-> pci_dev_keep_suspended() to avoid returning 'false' for devices
-> in D3hot which need not be resumed due to platform firmware
-> requirements.
-> 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->  drivers/pci/pci.c |   15 ++++++++++++---
->  1 file changed, 12 insertions(+), 3 deletions(-)
-> 
-> Index: linux-pm/drivers/pci/pci.c
-> ===================================================================
-> --- linux-pm.orig/drivers/pci/pci.c
-> +++ linux-pm/drivers/pci/pci.c
-> @@ -2474,10 +2474,19 @@ bool pci_dev_keep_suspended(struct pci_d
->  {
->  	struct device *dev = &pci_dev->dev;
->  	bool wakeup = device_may_wakeup(dev);
-> +	pci_power_t target_state;
->  
-> -	if (!pm_runtime_suspended(dev)
-> -	    || pci_target_state(pci_dev, wakeup) != pci_dev->current_state
-> -	    || platform_pci_need_resume(pci_dev))
-> +	if (!pm_runtime_suspended(dev) || platform_pci_need_resume(pci_dev))
-> +		return false;
-> +
-> +	target_state = pci_target_state(pci_dev, wakeup);
+Hello,
 
-Nit, add a blank line here.
+syzbot found the following crash on:
 
-> +	/*
-> +	 * If the earlier platform check has not triggered, D3cold is just power
-> +	 * removal on top of D3hot, so no need to resume the device in that
-> +	 * case.
-> +	 */
-> +	if (target_state != pci_dev->current_state &&
-> +	    target_state != PCI_D3cold && pci_dev->current_state != PCI_D3hot)
->  		return false;
+HEAD commit:    036e3431 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=153cff12a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8f0f63a62bb5b13c
+dashboard link: https://syzkaller.appspot.com/bug?extid=6ad9c3bd0a218a2ab41d
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12561c86a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15b76fd8a00000
 
-This is more a comment on the existing code than on this particular
-patch, but I find this whole function hard to understand, and I think
-one reason is that there are a lot of negative conditions, both in
-this function and in its callers.  This "target_state != ... &&
-target_state != ...  && current_state != ..." is one example.  Another
-is the function name itself.  It might be easier to read as something
-like this:
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+6ad9c3bd0a218a2ab41d@syzkaller.appspotmail.com
 
-  bool pci_dev_need_resume(...)
-  {
-    if (!pm_runtime_suspended(...))
-      return true;
+executing program
+executing program
+executing program
+executing program
+executing program
+BUG: memory leak
+unreferenced object 0xffff888123894820 (size 32):
+   comm "syz-executor045", pid 7267, jiffies 4294943559 (age 13.660s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+   backtrace:
+     [<00000000c7e71c69>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:55 [inline]
+     [<00000000c7e71c69>] slab_post_alloc_hook mm/slab.h:439 [inline]
+     [<00000000c7e71c69>] slab_alloc mm/slab.c:3326 [inline]
+     [<00000000c7e71c69>] __do_kmalloc mm/slab.c:3658 [inline]
+     [<00000000c7e71c69>] __kmalloc+0x161/0x2c0 mm/slab.c:3669
+     [<000000003250ed8e>] kmalloc_array include/linux/slab.h:670 [inline]
+     [<000000003250ed8e>] kcalloc include/linux/slab.h:681 [inline]
+     [<000000003250ed8e>] sctp_send_reset_streams+0x1ab/0x5a0  
+net/sctp/stream.c:302
+     [<00000000cd899c6e>] sctp_setsockopt_reset_streams  
+net/sctp/socket.c:4314 [inline]
+     [<00000000cd899c6e>] sctp_setsockopt net/sctp/socket.c:4765 [inline]
+     [<00000000cd899c6e>] sctp_setsockopt+0xc23/0x2bf0 net/sctp/socket.c:4608
+     [<00000000ff3a21a2>] sock_common_setsockopt+0x38/0x50  
+net/core/sock.c:3130
+     [<000000009eb87ae7>] __sys_setsockopt+0x98/0x120 net/socket.c:2078
+     [<00000000e0ede6ca>] __do_sys_setsockopt net/socket.c:2089 [inline]
+     [<00000000e0ede6ca>] __se_sys_setsockopt net/socket.c:2086 [inline]
+     [<00000000e0ede6ca>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2086
+     [<00000000c61155f5>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:301
+     [<00000000e540958c>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-    if (platform_pci_need_resume(...))
-      return true;
+BUG: memory leak
+unreferenced object 0xffff888123894980 (size 32):
+   comm "syz-executor045", pid 7268, jiffies 4294944145 (age 7.800s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+   backtrace:
+     [<00000000c7e71c69>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:55 [inline]
+     [<00000000c7e71c69>] slab_post_alloc_hook mm/slab.h:439 [inline]
+     [<00000000c7e71c69>] slab_alloc mm/slab.c:3326 [inline]
+     [<00000000c7e71c69>] __do_kmalloc mm/slab.c:3658 [inline]
+     [<00000000c7e71c69>] __kmalloc+0x161/0x2c0 mm/slab.c:3669
+     [<000000003250ed8e>] kmalloc_array include/linux/slab.h:670 [inline]
+     [<000000003250ed8e>] kcalloc include/linux/slab.h:681 [inline]
+     [<000000003250ed8e>] sctp_send_reset_streams+0x1ab/0x5a0  
+net/sctp/stream.c:302
+     [<00000000cd899c6e>] sctp_setsockopt_reset_streams  
+net/sctp/socket.c:4314 [inline]
+     [<00000000cd899c6e>] sctp_setsockopt net/sctp/socket.c:4765 [inline]
+     [<00000000cd899c6e>] sctp_setsockopt+0xc23/0x2bf0 net/sctp/socket.c:4608
+     [<00000000ff3a21a2>] sock_common_setsockopt+0x38/0x50  
+net/core/sock.c:3130
+     [<000000009eb87ae7>] __sys_setsockopt+0x98/0x120 net/socket.c:2078
+     [<00000000e0ede6ca>] __do_sys_setsockopt net/socket.c:2089 [inline]
+     [<00000000e0ede6ca>] __se_sys_setsockopt net/socket.c:2086 [inline]
+     [<00000000e0ede6ca>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2086
+     [<00000000c61155f5>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:301
+     [<00000000e540958c>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-    if (target_state != current_state)
-      return true;
 
-    ...
 
-Another reason I think it's hard to read is that
-"pci_dev_keep_suspended" suggests that this is a pure boolean function
-without side-effects, but in fact it also fiddles with the PME state
-in some cases.  I don't have any ideas for that part.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Bjorn
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
