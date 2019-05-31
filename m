@@ -2,148 +2,92 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 190C7C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53EFFC28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCEE926AA8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:31:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vwf8b76q"
+	by mail.kernel.org (Postfix) with ESMTP id 23BB126AAA
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:32:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559313123;
+	bh=BJaq/gCxh2F9IzWlqp5lUeCK+g1V/HOJkpE9nZ5AYdw=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=sy4zSSroFjnmCl5mcWHf0p51mLII/CS9vECrx9I82GUpkJuXJw2hXhSleuMqDj0UO
+	 ctsEr0oOuRmV/WpVkkOFJhY5W9e70CM+shYAxi8PJCDZGDVFrwbH2KZpJ8CcYZ7jnq
+	 UgRHOcfHzRUXdWmXoLCzu00/sVdf2Q5ptwMKOhEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbfEaObI (ORCPT
+        id S1726793AbfEaOcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 10:31:08 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:45381 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbfEaObH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 10:31:07 -0400
-Received: by mail-qk1-f196.google.com with SMTP id s22so4347019qkj.12;
-        Fri, 31 May 2019 07:31:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:message-id:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-disposition:content-transfer-encoding;
-        bh=cHmYMcyPT4LeGIh0Ry8Hqj+hkM7migYAn5F5J48Ga48=;
-        b=Vwf8b76qkCN9sdHahlt1M5OkP+ZT5jyv6XlwBiwK8s8Pgd2tnJ7uH41RZx/SsXJjrB
-         /XJf6Xi/P1KlufM3m9WWqkyEOE7dvMnCIWQGcHo/4xx3Oa7C9lSl1mHp7R8bIOzibC3n
-         QPUguTrwyxg3NYLYmA2lGE1pCK2R/O/4xFEYYJdEeveIm6nFjz138kvZfwKtM1HaaI7t
-         53eFvtu1W9Zum4osgCLnIhjT1An5UndzIyqcmCirMyuoeCtaceOLHv59PRSbocsHO45n
-         4RbBW2I+w2HEZ51tii3hOMWfq5FBKFFIy4Fkhir99hIyL2eLZsMpZT78eDolkCH8vGHD
-         lW3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding;
-        bh=cHmYMcyPT4LeGIh0Ry8Hqj+hkM7migYAn5F5J48Ga48=;
-        b=M/5M57+40HxIDd8VRRNE45DRp6t0UWUE7yHxEBzIzV1aJR8Q0LiGFUBzUT5VRxXwt/
-         iqWs8T4Wm302FMu4ap9KqxSk45Dxx5TKPOV4Xd9FGw3hDpgis77MOqG7eK0X3bFi5BK0
-         eQLcodyyK3faLXhusHd/3MGxue4vcmBDqDF3FmNzX25NgInptXDTVxl4AOh/CO/LOl9Q
-         92gEXngIuTiT6ccz7AxURWatecDKEw3wx6LzRGkQlQg5Lb2HXNBRLxkET23lrq1Owugg
-         Atm4YhIcugBGiboviHy1npsR4o1O3kPTqtBX44ys9yjChGSdZgy1H1n3y73R6fi8WncG
-         ePfQ==
-X-Gm-Message-State: APjAAAVl+S9ZGSl4e+WqdacatMk84U2ROx4a5HGWcauWcH5jWeLwmRUD
-        cIO1SuyIdGdCe6Z6zuu26K49jExsrHQ=
-X-Google-Smtp-Source: APXvYqxxRvO/pVcQYwOM3CsHb7jeD6WBgdX0yQ7Hifb7OaiG8XLaTy0pG9FCwDh3Pd12QnOCgxaShw==
-X-Received: by 2002:ae9:de81:: with SMTP id s123mr5370333qkf.339.1559313066834;
-        Fri, 31 May 2019 07:31:06 -0700 (PDT)
-Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
-        by smtp.gmail.com with ESMTPSA id f67sm3594643qtb.68.2019.05.31.07.31.05
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 31 May 2019 07:31:06 -0700 (PDT)
-Date:   Fri, 31 May 2019 10:31:05 -0400
-Message-ID: <20190531103105.GE23464@t480s.localdomain>
-From:   Vivien Didelot <vivien.didelot@gmail.com>
-To:     Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Marek =?UTF-8?B?QmVow7pu?= <marek.behun@nic.cz>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chris Healy <cphealy@gmail.com>,
-        Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Subject: Re: [PATCH] net: dsa: mv88e6xxx: avoid error message on remove from
- VLAN 0
-In-Reply-To: <20190531073514.2171-1-nikita.yoush@cogentembedded.com>
-References: <20190531073514.2171-1-nikita.yoush@cogentembedded.com>
+        Fri, 31 May 2019 10:32:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50248 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726418AbfEaOcB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 10:32:01 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3A0526AA4;
+        Fri, 31 May 2019 14:31:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559313121;
+        bh=BJaq/gCxh2F9IzWlqp5lUeCK+g1V/HOJkpE9nZ5AYdw=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=dFv1PZB+n6hJGe+t4cqnp6mVtrYdBvkOqT/OVfG9dO3JxZk8GuQymNIIeWfcYKEEr
+         V+Vay3NAquyI+exdd/LJCoi/TQ2JEuG6uSoT7FRuMeRkfHThGv7lpCVOwnfICZrVlP
+         /OlQ3rUqKGcGKzn2hpqJzv9+HXkRpxX5+ygMSKls=
+Date:   Fri, 31 May 2019 16:31:56 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Andy Lutomirski <luto@kernel.org>
+cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4] x86/power: Fix 'nosmt' vs. hibernation triple fault
+ during resume
+In-Reply-To: <CALCETrUpseta+NrhVwzzVFTe-BkBHtDUJBO22ci3mAsVR+XOog@mail.gmail.com>
+Message-ID: <nycvar.YFH.7.76.1905311628330.1962@cbobk.fhfr.pm>
+References: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm> <20190531051456.fzkvn62qlkf6wqra@treble> <nycvar.YFH.7.76.1905311045240.1962@cbobk.fhfr.pm> <5564116.e9OFvgDRbB@kreacher> <CALCETrUpseta+NrhVwzzVFTe-BkBHtDUJBO22ci3mAsVR+XOog@mail.gmail.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nikita,
+On Fri, 31 May 2019, Andy Lutomirski wrote:
 
-On Fri, 31 May 2019 10:35:14 +0300, Nikita Yushchenko <nikita.yoush@cogentembedded.com> wrote:
-> When non-bridged, non-vlan'ed mv88e6xxx port is moving down, error
-> message is logged:
+> 2. Put the CPU all the way to sleep by sending it an INIT IPI.
 > 
-> failed to kill vid 0081/0 for device eth_cu_1000_4
+> Version 2 seems very simple and robust.  Is there a reason we can't do
+> it?  We obviously don't want to do it for normal offline because it
+> might be a high-power state, but a cpu in the wait-for-SIPI state is
+> not going to exit that state all by itself.
 > 
-> This is caused by call from __vlan_vid_del() with vin set to zero, over
-> call chain this results into _mv88e6xxx_port_vlan_del() called with
-> vid=0, and mv88e6xxx_vtu_get() called from there returns -EINVAL.
-> 
-> On symmetric path moving port up, call goes through
-> mv88e6xxx_port_vlan_prepare() that calls mv88e6xxx_port_check_hw_vlan()
-> that returns -EOPNOTSUPP for zero vid.
-> 
-> This patch changes mv88e6xxx_vtu_get() to also return -EOPNOTSUPP for
-> zero vid, then this error code is explicitly cleared in
-> dsa_slave_vlan_rx_kill_vid() and error message is no longer logged.
-> 
-> Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-> ---
->  drivers/net/dsa/mv88e6xxx/chip.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
-> index 28414db979b0..6b77fde5f0e4 100644
-> --- a/drivers/net/dsa/mv88e6xxx/chip.c
-> +++ b/drivers/net/dsa/mv88e6xxx/chip.c
-> @@ -1392,7 +1392,7 @@ static int mv88e6xxx_vtu_get(struct mv88e6xxx_chip *chip, u16 vid,
->  	int err;
->  
->  	if (!vid)
-> -		return -EINVAL;
-> +		return -EOPNOTSUPP;
->  
->  	entry->vid = vid - 1;
->  	entry->valid = false;
+> The patch to implement #2 should be short and sweet as long as we are
+> careful to only put genuine APs to sleep like this.  The only downside
+> I can see is that an new kernel resuming and old kernel that was
+> booted with nosmt is going to waste power, but I don't think that's a
+> showstopper.
 
-I'm not sure that I like the semantic of it, because the driver can actually
-support VID 0 per-se, only the kernel does not use VLAN 0. Thus I would avoid
-calling the port_vlan_del() ops for VID 0, directly into the upper DSA layer.
+Well, if *that* is not an issue, than the original 3-liner that just 
+forces them to 'hlt' [1] would be good enough as well.
 
-Florian, Andrew, wouldn't the following patch be more adequate?
-
-    diff --git a/net/dsa/slave.c b/net/dsa/slave.c
-    index 1e2ae9d59b88..80f228258a92 100644
-    --- a/net/dsa/slave.c
-    +++ b/net/dsa/slave.c
-    @@ -1063,6 +1063,10 @@ static int dsa_slave_vlan_rx_kill_vid(struct net_device *dev, __be16 proto,
-            struct bridge_vlan_info info;
-            int ret;
-     
-    +       /* VID 0 has a special meaning and is never programmed in hardware */
-    +       if (!vid)
-    +               return 0;
-    +
-            /* Check for a possible bridge VLAN entry now since there is no
-             * need to emulate the switchdev prepare + commit phase.
-             */
-
+[1] https://lore.kernel.org/lkml/nycvar.YFH.7.76.1905291230130.1962@cbobk.fhfr.pm/
 
 Thanks,
-Vivien
+
+-- 
+Jiri Kosina
+SUSE Labs
+
