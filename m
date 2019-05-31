@@ -2,156 +2,216 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20692C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE9E5C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECE082075B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:12:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="hAeTSCig"
+	by mail.kernel.org (Postfix) with ESMTP id C76872675F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:13:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbfEaKMj (ORCPT
+        id S1726998AbfEaKNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 06:12:39 -0400
-Received: from mail-eopbgr140137.outbound.protection.outlook.com ([40.107.14.137]:39399
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726002AbfEaKMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 06:12:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
- s=selector1-nokia-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pqeTImFFf4i/bc1dGTvqHx46bQCjhNR+wAJfGNK5vM8=;
- b=hAeTSCig4/icri35goTlfxvJapiXdSdvmHuLJT4tCLcacjJNMRFzFtardWXv62iRBNiQCYavEQG+oPQbNbIFdEsTsvNSguM6Llj7yVPWi6P4+USD/BZF4aeY9uR5j0ZnMb3apGsfGcKndtFx1sDJ+EK8rcpf52tQwkwtT/XCe1M=
-Received: from DB6PR07MB3336.eurprd07.prod.outlook.com (10.170.223.150) by
- DB6PR07MB3206.eurprd07.prod.outlook.com (10.170.220.27) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.15; Fri, 31 May 2019 10:12:35 +0000
-Received: from DB6PR07MB3336.eurprd07.prod.outlook.com
- ([fe80::8c1c:dbc5:e07b:2cf9]) by DB6PR07MB3336.eurprd07.prod.outlook.com
- ([fe80::8c1c:dbc5:e07b:2cf9%6]) with mapi id 15.20.1943.016; Fri, 31 May 2019
- 10:12:35 +0000
-From:   "Adamski, Krzysztof (Nokia - PL/Wroclaw)" 
-        <krzysztof.adamski@nokia.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-CC:     Jean Delvare <jdelvare@suse.com>,
-        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] hwmon: pmbus: protect read-modify-write with lock
-Thread-Topic: [PATCH] hwmon: pmbus: protect read-modify-write with lock
-Thread-Index: AQHVFwwdZFrZN6Tas0+vUHeunvtgIKaFBHOA
-Date:   Fri, 31 May 2019 10:12:35 +0000
-Message-ID: <20190531091531.GA10821@localhost.localdomain>
-References: <20190530172120.GA22145@roeck-us.net>
-In-Reply-To: <20190530172120.GA22145@roeck-us.net>
-Accept-Language: pl-PL, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR05CA0341.eurprd05.prod.outlook.com
- (2603:10a6:7:92::36) To DB6PR07MB3336.eurprd07.prod.outlook.com
- (2603:10a6:6:1f::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=krzysztof.adamski@nokia.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [131.228.32.190]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b250ead7-b3c4-4b83-0781-08d6e5b08056
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB6PR07MB3206;
-x-ms-traffictypediagnostic: DB6PR07MB3206:
-x-microsoft-antispam-prvs: <DB6PR07MB320665261FBBEE38E180F949EF190@DB6PR07MB3206.eurprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 00540983E2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(396003)(346002)(39860400002)(376002)(136003)(189003)(199004)(1076003)(486006)(8676002)(316002)(9686003)(5660300002)(6512007)(81166006)(508600001)(33656002)(4326008)(52116002)(81156014)(66066001)(476003)(86362001)(11346002)(14454004)(61506002)(99286004)(305945005)(446003)(54906003)(7736002)(8936002)(6246003)(186003)(76176011)(73956011)(6436002)(66946007)(386003)(229853002)(6486002)(66556008)(6116002)(6916009)(26005)(64756008)(2906002)(14444005)(25786009)(71200400001)(6506007)(53936002)(68736007)(256004)(66476007)(102836004)(66446008)(71190400001)(3846002);DIR:OUT;SFP:1102;SCL:1;SRVR:DB6PR07MB3206;H:DB6PR07MB3336.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nokia.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: VUknB35yhhWsFzIcRTJftEpAv5tky6Jc5AVbzjAgjMOsyePVk9fVN7whMKoIHO90BuhgiPLiaoqdj8TNjB1CqvoGBPJO5vsxz6rHXBmobdFWygy3f1PPwSINRi+Y7d4ucw9SSfYw8ChqAixRrmRQ5DKuqs3jRLBsJDNy7OK+7bYWPL+P6m8pJdh2dZCf+lsIY3drV8S57AKO8NX8LKvE6EgTqGnJm1nPNJvJg50a9yRhpMxLJ+rAS78ytCferWRhOeNXlNPpvLxjSevCKgM0ij7xpB1EjLwQEikEjN2DEKOCuEVTFb6mugj2Isg9Tu7snbxmTIrjdb2wLhoJ3oA8AT9++md4rwrPaqbTFRUwh+YuWPIcYtIwnhAC6F9RIr5ujjC+mPhzknQjTUnC2C7xleHGwtd4Mm/mqkXjx5Ay4jI=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <624C1B792687DF42A750D67C4D778AD3@eurprd07.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 31 May 2019 06:13:43 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:62714 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbfEaKNm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 06:13:42 -0400
+Received: from 79.184.255.225.ipv4.supernova.orange.pl (79.184.255.225) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
+ id 950d3e566dff9670; Fri, 31 May 2019 12:13:40 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Furquan Shaikh <furquan@google.com>
+Cc:     Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rajatja@google.com,
+        dlaurie@google.com
+Subject: Re: [PATCH] drivers/acpi: Turn off power resources while entering S5
+Date:   Fri, 31 May 2019 12:13:39 +0200
+Message-ID: <26443804.PuBNBtcb44@kreacher>
+In-Reply-To: <20190423233904.195842-1-furquan@google.com>
+References: <20190423233904.195842-1-furquan@google.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nokia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b250ead7-b3c4-4b83-0781-08d6e5b08056
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 May 2019 10:12:35.1799
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: krzysztof.adamski@nokia.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR07MB3206
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 10:21:20AM -0700, Guenter Roeck wrote:
->Hi,
->
->On Thu, May 30, 2019 at 06:45:48AM +0000, Adamski, Krzysztof (Nokia - PL/W=
-roclaw) wrote:
->> The operation done in the pmbus_update_fan() function is a
->> read-modify-write operation but it lacks any kind of lock protection
->> which may cause problems if run more than once simultaneously. This
->> patch uses an existing update_lock mutex to fix this problem.
->>
->> Signed-off-by: Krzysztof Adamski <krzysztof.adamski@nokia.com>
->> ---
->>
->> I'm resending this patch to proper recipients this time. Sorry if the
->> previous submission confused anybody.
->>
->>  drivers/hwmon/pmbus/pmbus_core.c | 11 ++++++++---
->>  1 file changed, 8 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbu=
-s_core.c
->> index ef7ee90ee785..94adbede7912 100644
->> --- a/drivers/hwmon/pmbus/pmbus_core.c
->> +++ b/drivers/hwmon/pmbus/pmbus_core.c
->> @@ -268,6 +268,7 @@ int pmbus_update_fan(struct i2c_client *client, int =
-page, int id,
->>  	int rv;
->>  	u8 to;
->>
->> +	mutex_lock(&data->update_lock);
->>  	from =3D pmbus_read_byte_data(client, page,
->>  				    pmbus_fan_config_registers[id]);
->>  	if (from < 0)
->> @@ -278,11 +279,15 @@ int pmbus_update_fan(struct i2c_client *client, in=
-t page, int id,
->>  		rv =3D pmbus_write_byte_data(client, page,
->>  					   pmbus_fan_config_registers[id], to);
->>  		if (rv < 0)
->> -			return rv;
->> +			goto out;
->>  	}
->>
->> -	return _pmbus_write_word_data(client, page,
->> -				      pmbus_fan_command_registers[id], command);
->> +	rv =3D _pmbus_write_word_data(client, page,
->> +				    pmbus_fan_command_registers[id], command);
->> +
->> +out:
->> +	mutex_lock(&data->update_lock);
->
->Should be mutex_unlock(), meaning you have not tested this ;-).
->
->Either case, I think this is unnecessary. The function is (or should be)
->always called with the lock already taken (ie with pmbus_set_sensor()
->in the call path). If not, we would need a locked and an unlocked version
->of this function to avoid lock recursion.
+On Wednesday, April 24, 2019 1:39:04 AM CEST Furquan Shaikh wrote:
+> During boot-up, ACPI bus scan enables all power resources
+> so that respective device drivers can talk to their device. This causes acpi
+> ref_count for the power resource to be incremented to 1. When system
+> suspends (S3/S0ix) or hibernates(S4), DPM is responsible for calling
+> power off on all power resources whose ref_count is 1 i.e. no other
+> user of this power resource and thus resulting in _OFF routine being
+> called for it.
+> 
+> However, in case of poweroff, DPM is not involved and so the power
+> resources are left on when the system is entering S5. This results in
+> the violation of power down sequencing for certain devices
+> e.g. touchscreen or digitizer I2C devices.
 
-You've got me :) I did not test that as I do not have a workflow using
-this. I just stumbled opon this when looking at the code related to my
-other patches. So it was more like a - "hey, shouldn't there be a lock
-here?". But I was wrong, thanks.
+I'm not sure I can follow you here.  Any details?
 
-Krzysztof
+> In order to ensure that the
+> power down sequencing does the right thing, it is necessary for ACPI
+> to disable all power resources while preparing for S5.
+
+Well, I would say that this is not just about power resources.  ACPI PM methods should be
+invoked for the devices as well, so generally there should be subject to the normal PM
+during S5 transitions.
+
+Generally speaking, S5 should follow the code flow of the last phase of hibernation.
+
+> This change updates the function acpi_turn_off_unused_power_resources
+> to accept a parameter acpi_system_state, This function turns off power
+> resources according to the targeted system ACPI state:
+> 1. For S0: Unused power resources are turned off i.e. power resources
+> whose ref_count is already 0.
+> 2. For S5: ref_count is decremented first to undo the increment
+> performed during ACPI bus scan and then power resources with ref_count
+> 0 are turned off.
+> 3. All other suspend/hibernate states: No action is required since DPM
+> takes care of turning off power resources.
+> 
+> This change should not affect the wake capable devices since:
+> 1. If wake capable devices are enabled before this call, their
+> refcount should be greater than 1. Thus, they won't be turned off.
+> 2. If wake capable devices are not enabled yet when this call is made,
+> they would eventually get turned on by call to
+> acpi_enable_wakeup_devices.
+
+Quite frankly, this looks like a hack causing a particular platform to behave
+as expected, but it very well may not be applicable to other platforms.
+
+> Signed-off-by: Furquan Shaikh <furquan@google.com>
+> ---
+>  drivers/acpi/power.c | 47 ++++++++++++++++++++++++++++++++++++++------
+>  drivers/acpi/sleep.c |  5 ++++-
+>  drivers/acpi/sleep.h |  2 +-
+>  3 files changed, 46 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/acpi/power.c b/drivers/acpi/power.c
+> index 665e93ca0b40f..945db762861a3 100644
+> --- a/drivers/acpi/power.c
+> +++ b/drivers/acpi/power.c
+> @@ -889,10 +889,42 @@ void acpi_resume_power_resources(void)
+>  
+>  	mutex_unlock(&power_resource_list_lock);
+>  }
+> +#endif
+>  
+> -void acpi_turn_off_unused_power_resources(void)
+> +/**
+> + * acpi_turn_off_power_resources: This function is used to turn off power
+> + * resources in provided ACPI system state.
+> + *
+> + * Behavior differs based on the target system state:
+> + * ACPI_STATE_S0: Turn off unused power resources i.e. turn off power resources
+> + *                with ref_count zero.
+> + * ACPI_STATE_S5: Decrement ref_count first and turn off power resources with
+> + *                ref_count zero. This is done to ensure that the ref_count
+> + *                incremented during ACPI bus scan is undone and any power
+> + *                resources that are not required during S5 are turned off.
+> + * ACPI_STATE_Sx: No action required. DPM is responsible for turning off power
+> + *                resources while suspending/hibernating.
+> + */
+> +void acpi_turn_off_power_resources(int acpi_system_state)
+>  {
+>  	struct acpi_power_resource *resource;
+> +	int decrement;
+> +
+> +	if (acpi_system_state == ACPI_STATE_S0) {
+> +		/*
+> +		 * In case of ACPI_STATE_S0, turn off only unused power
+> +		 * resources. So, no need to decrement ref_count.
+> +		 */
+> +		decrement = 0;
+> +	} else if (acpi_system_state == ACPI_STATE_S5) {
+> +		/*
+> +		 * In case of ACPI_STATE_S5, ref_count needs to be decremented
+> +		 * first before checking if it is okay to power off the
+> +		 * resource.
+> +		 */
+> +		decrement = 1;
+
+Instead of doing this you could add a routing decrementing the recfount for all of
+the power resources in the ON state and call that, before the original
+acpi_turn_off_unused_power_resources(), in acpi_power_off_prepare().
+
+That said I don't think the approach is valid in general as stated above.
+
+> +	} else
+> +		return;
+>  
+>  	mutex_lock(&power_resource_list_lock);
+>  
+> @@ -907,10 +939,14 @@ void acpi_turn_off_unused_power_resources(void)
+>  			continue;
+>  		}
+>  
+> -		if (state == ACPI_POWER_RESOURCE_STATE_ON
+> -		    && !resource->ref_count) {
+> -			dev_info(&resource->device.dev, "Turning OFF\n");
+> -			__acpi_power_off(resource);
+> +		if (state == ACPI_POWER_RESOURCE_STATE_ON) {
+> +			if (resource->ref_count)
+> +				resource->ref_count -= decrement;
+> +
+> +			if (!resource->ref_count) {
+> +				dev_info(&resource->device.dev, "Turning OFF\n");
+> +				__acpi_power_off(resource);
+> +			}
+>  		}
+>  
+>  		mutex_unlock(&resource->resource_lock);
+> @@ -918,4 +954,3 @@ void acpi_turn_off_unused_power_resources(void)
+>  
+>  	mutex_unlock(&power_resource_list_lock);
+>  }
+> -#endif
+> diff --git a/drivers/acpi/sleep.c b/drivers/acpi/sleep.c
+> index 403c4ff153498..fb6b3ca0eeb91 100644
+> --- a/drivers/acpi/sleep.c
+> +++ b/drivers/acpi/sleep.c
+> @@ -75,6 +75,9 @@ static int acpi_sleep_prepare(u32 acpi_state)
+>  	printk(KERN_INFO PREFIX "Preparing to enter system sleep state S%d\n",
+>  		acpi_state);
+>  	acpi_enable_wakeup_devices(acpi_state);
+> +
+> +	acpi_turn_off_power_resources(acpi_state);
+> +
+>  	acpi_enter_sleep_state_prep(acpi_state);
+>  	return 0;
+>  }
+> @@ -524,7 +527,7 @@ static void acpi_pm_start(u32 acpi_state)
+>   */
+>  static void acpi_pm_end(void)
+>  {
+> -	acpi_turn_off_unused_power_resources();
+> +	acpi_turn_off_power_resources(ACPI_STATE_S0);
+>  	acpi_scan_lock_release();
+>  	/*
+>  	 * This is necessary in case acpi_pm_finish() is not called during a
+> diff --git a/drivers/acpi/sleep.h b/drivers/acpi/sleep.h
+> index 41675d24a9bc0..a495c91e2bf3b 100644
+> --- a/drivers/acpi/sleep.h
+> +++ b/drivers/acpi/sleep.h
+> @@ -7,7 +7,7 @@ extern struct list_head acpi_wakeup_device_list;
+>  extern struct mutex acpi_device_lock;
+>  
+>  extern void acpi_resume_power_resources(void);
+> -extern void acpi_turn_off_unused_power_resources(void);
+> +extern void acpi_turn_off_power_resources(int acpi_system_state);
+>  
+>  static inline acpi_status acpi_set_waking_vector(u32 wakeup_address)
+>  {
+> 
+
+
+
 
