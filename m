@@ -4,25 +4,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F685C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 23:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15397C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 23:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 358C225725
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 23:32:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBBFA25725
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 23:32:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfEaXcp (ORCPT
+        id S1726925AbfEaXcl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 19:32:45 -0400
+        Fri, 31 May 2019 19:32:41 -0400
 Received: from mga07.intel.com ([134.134.136.100]:59346 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726735AbfEaXci (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 19:32:38 -0400
+        id S1726816AbfEaXcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 19:32:33 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 May 2019 16:32:31 -0700
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 May 2019 16:32:30 -0700
 X-ExtLoop1: 1
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.36])
   by orsmga008.jf.intel.com with ESMTP; 31 May 2019 16:32:30 -0700
@@ -54,9 +55,9 @@ Cc:     Andy Lutomirski <luto@kernel.org>,
         David Rientjes <rientjes@google.com>,
         William Roberts <william.c.roberts@intel.com>,
         Philip Tricca <philip.b.tricca@intel.com>
-Subject: [RFC PATCH 5/9] x86/sgx: Restrict mapping without an enclave page to PROT_NONE
-Date:   Fri, 31 May 2019 16:31:55 -0700
-Message-Id: <20190531233159.30992-6-sean.j.christopherson@intel.com>
+Subject: [RFC PATCH 4/9] mm: Introduce vm_ops->mprotect()
+Date:   Fri, 31 May 2019 16:31:54 -0700
+Message-Id: <20190531233159.30992-5-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190531233159.30992-1-sean.j.christopherson@intel.com>
 References: <20190531233159.30992-1-sean.j.christopherson@intel.com>
@@ -67,98 +68,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To support LSM integration, SGX will require userspace to explicitly
-specify the allowed protections for each page.  The allowed protections
-will be supplied to and modified by LSMs (based on their policies).
-To prevent userspace from circumventing the allowed protections, do not
-allow PROT_{READ,WRITE,EXEC} mappings to an enclave without an
-associated enclave page (which will track the allowed protections).
+SGX will use the mprotect() hook to prevent userspace from circumventing
+various security checks, i.e. Linux Security Modules.
+
+Enclaves are built by copying data from normal memory into the Enclave
+Page Cache (EPC).  Due to the nature of SGX, the EPC is represented by a
+single file that must be MAP_SHARED, i.e. mprotect() only ever sees a
+single MAP_SHARED vm_file.  Furthermore, all enclaves will need read,
+write and execute pages in the EPC.
+
+As a result, LSM policies cannot be meaningfully applied, e.g. an LSM
+can deny access to the EPC as a whole, but can't deny PROT_EXEC on page
+that originated in a non-EXECUTE file (which is long gone by the time
+mprotect() is called).
+
+By hooking mprotect(), SGX can make explicit LSM upcalls while an
+enclave is being built, i.e. when the kernel has a handle to origin of
+each enclave page, and enforce the result of the LSM policy whenever
+userspace maps the enclave page in the future.
+
+Alternatively, SGX could play games with MAY_{READ,WRITE,EXEC}, but
+that approach is quite ugly, e.g. would require userspace to call an
+SGX ioctl() prior to using mprotect() to extend a page's protections.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kernel/cpu/sgx/driver/main.c |  5 +++++
- arch/x86/kernel/cpu/sgx/encl.c        | 30 +++++++++++++++++++++++++++
- arch/x86/kernel/cpu/sgx/encl.h        |  3 +++
- 3 files changed, 38 insertions(+)
+ include/linux/mm.h |  2 ++
+ mm/mprotect.c      | 15 +++++++++++----
+ 2 files changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/sgx/driver/main.c b/arch/x86/kernel/cpu/sgx/driver/main.c
-index 129d356aff30..65a87c2fdf02 100644
---- a/arch/x86/kernel/cpu/sgx/driver/main.c
-+++ b/arch/x86/kernel/cpu/sgx/driver/main.c
-@@ -63,6 +63,11 @@ static long sgx_compat_ioctl(struct file *filep, unsigned int cmd,
- static int sgx_mmap(struct file *file, struct vm_area_struct *vma)
- {
- 	struct sgx_encl *encl = file->private_data;
-+	int ret;
-+
-+	ret = sgx_map_allowed(encl, vma->vm_start, vma->vm_end, vma->vm_flags);
-+	if (ret)
-+		return ret;
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 0e8834ac32b7..50a42364a885 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -458,6 +458,8 @@ struct vm_operations_struct {
+ 	void (*close)(struct vm_area_struct * area);
+ 	int (*split)(struct vm_area_struct * area, unsigned long addr);
+ 	int (*mremap)(struct vm_area_struct * area);
++	int (*mprotect)(struct vm_area_struct * area, unsigned long start,
++			unsigned long end, unsigned long prot);
+ 	vm_fault_t (*fault)(struct vm_fault *vmf);
+ 	vm_fault_t (*huge_fault)(struct vm_fault *vmf,
+ 			enum page_entry_size pe_size);
+diff --git a/mm/mprotect.c b/mm/mprotect.c
+index bf38dfbbb4b4..e466ca5e4fe0 100644
+--- a/mm/mprotect.c
++++ b/mm/mprotect.c
+@@ -547,13 +547,20 @@ static int do_mprotect_pkey(unsigned long start, size_t len,
+ 			goto out;
+ 		}
  
- 	vma->vm_ops = &sgx_vm_ops;
- 	vma->vm_flags |= VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP | VM_IO;
-diff --git a/arch/x86/kernel/cpu/sgx/encl.c b/arch/x86/kernel/cpu/sgx/encl.c
-index f23ea0fbaa47..955d4f430adc 100644
---- a/arch/x86/kernel/cpu/sgx/encl.c
-+++ b/arch/x86/kernel/cpu/sgx/encl.c
-@@ -235,6 +235,35 @@ static void sgx_vma_close(struct vm_area_struct *vma)
- 	kref_put(&encl->refcount, sgx_encl_release);
- }
- 
-+int sgx_map_allowed(struct sgx_encl *encl, unsigned long start,
-+		    unsigned long end, unsigned long prot)
-+{
-+	struct sgx_encl_page *page;
-+	unsigned long addr;
+-		error = security_file_mprotect(vma, reqprot, prot);
+-		if (error)
+-			goto out;
+-
+ 		tmp = vma->vm_end;
+ 		if (tmp > end)
+ 			tmp = end;
 +
-+	prot &= (VM_READ | VM_WRITE | VM_EXEC);
-+	if (!prot || !encl)
-+		return 0;
++		if (vma->vm_ops && vma->vm_ops->mprotect) {
++			error = vma->vm_ops->mprotect(vma, nstart, tmp, prot);
++			if (error)
++				goto out;
++		}
 +
-+	mutex_lock(&encl->lock);
++		error = security_file_mprotect(vma, reqprot, prot);
++		if (error)
++			goto out;
 +
-+	for (addr = start; addr < end; addr += PAGE_SIZE) {
-+		page = radix_tree_lookup(&encl->page_tree, addr >> PAGE_SHIFT);
-+		if (!page)
-+			return -EACCES;
-+	}
-+
-+	mutex_unlock(&encl->lock);
-+
-+	return 0;
-+}
-+
-+static int sgx_vma_mprotect(struct vm_area_struct *vma, unsigned long start,
-+			    unsigned long end, unsigned long prot)
-+{
-+	return sgx_map_allowed(vma->vm_private_data, start, end, prot);
-+}
-+
- static unsigned int sgx_vma_fault(struct vm_fault *vmf)
- {
- 	unsigned long addr = (unsigned long)vmf->address;
-@@ -372,6 +401,7 @@ static int sgx_vma_access(struct vm_area_struct *vma, unsigned long addr,
- const struct vm_operations_struct sgx_vm_ops = {
- 	.close = sgx_vma_close,
- 	.open = sgx_vma_open,
-+	.mprotect = sgx_vma_mprotect,
- 	.fault = sgx_vma_fault,
- 	.access = sgx_vma_access,
- };
-diff --git a/arch/x86/kernel/cpu/sgx/encl.h b/arch/x86/kernel/cpu/sgx/encl.h
-index c557f0374d74..6e310e3b3fff 100644
---- a/arch/x86/kernel/cpu/sgx/encl.h
-+++ b/arch/x86/kernel/cpu/sgx/encl.h
-@@ -106,6 +106,9 @@ static inline unsigned long sgx_pcmd_offset(pgoff_t page_index)
- 	       sizeof(struct sgx_pcmd);
- }
- 
-+int sgx_map_allowed(struct sgx_encl *encl, unsigned long start,
-+		    unsigned long end, unsigned long prot);
-+
- enum sgx_encl_mm_iter {
- 	SGX_ENCL_MM_ITER_DONE		= 0,
- 	SGX_ENCL_MM_ITER_NEXT		= 1,
+ 		error = mprotect_fixup(vma, &prev, nstart, tmp, newflags);
+ 		if (error)
+ 			goto out;
 -- 
 2.21.0
 
