@@ -2,84 +2,137 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-14.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F88C28CC2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2485C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E55C24F1F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:50:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90B9726767
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:51:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726566AbfEaNuI (ORCPT
+        id S1726652AbfEaNvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 09:50:08 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:54467 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbfEaNuH (ORCPT
+        Fri, 31 May 2019 09:51:35 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:44855 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726330AbfEaNve (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 09:50:07 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 0CC603C014A;
-        Fri, 31 May 2019 15:50:05 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id CkYQQFDmMpHh; Fri, 31 May 2019 15:49:58 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 71AAC3C0022;
-        Fri, 31 May 2019 15:49:58 +0200 (CEST)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 31 May
- 2019 15:49:58 +0200
-Date:   Fri, 31 May 2019 15:49:55 +0200
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Simon Horman <horms@verge.net.au>
-CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tobias Franzen <tfranzen@de.adit-jv.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [PATCH] arm64: dts: ulcb-kf: Add support for TI WL1837
-Message-ID: <20190531134955.GA28755@vmlxhi-102.adit-jv.com>
-References: <20190411124102.22442-1-spapageorgiou@de.adit-jv.com>
- <CAMuHMdVfDd_1gHnX=WvkHnF33fG2sWy7F5bTh-DghoKSt-vLCA@mail.gmail.com>
- <20190531093702.4pdbamghomqdhhuq@verge.net.au>
+        Fri, 31 May 2019 09:51:34 -0400
+Received: by mail-lf1-f65.google.com with SMTP id r15so7947923lfm.11;
+        Fri, 31 May 2019 06:51:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0L8KmLgJiSpT3aD4m8sLrFeMla61B+JDJj6vkONUe8A=;
+        b=R3m6B6V9mU8OmLilY5NoPijnSisRDIZwm9BomSlpbjGpNnAcKRvlEJgyalDDjCakjy
+         JTSiBWzZk6YXU7TzCu+TSQfxxYlteU2aCl4Lg/c5786hCW2dOYQ9raEYYdvtjq8GFcdA
+         wMYbsCpcJyz9ksco6/durKAHWAO4wQG2JOjoISP+3paw8o9hUoYaYcH2LRZgMFceW48J
+         s0AWgB27ghxUvtxozDksvThgjbW+HdEGuC31vm4rWAlKOKu5bX99IwuWsuVihOi/6w2c
+         UZHdwgUfeDFnBdsVj1A3FWXyb7yoXlB00S/C9n8meohH8XRFJ0MqlmjJ5QibdkwYTEs0
+         D4bw==
+X-Gm-Message-State: APjAAAUur/FAZDbdSQXPpeckEYNMPTh5MFFYIqZqxYHIvh118PA4VfGZ
+        h0z6McRDGWh+ZRd9jHqo/n+x/teDTVjfxZwZLc1VSv60
+X-Google-Smtp-Source: APXvYqwp3rEAeo+I40mze9M/2USK8Lp6ZU6EDq72UeQ86eyUJznslCOjN2hUZnvE25ICHWwy7I5qef6ONjGL2w1LrFs=
+X-Received: by 2002:ac2:5467:: with SMTP id e7mr5606332lfn.23.1559310692420;
+ Fri, 31 May 2019 06:51:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190531093702.4pdbamghomqdhhuq@verge.net.au>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Originating-IP: [10.72.93.184]
+References: <20190531014808.GA30932@kroah.com> <CAMuHMdV=95sKB+h_pf45DiYeiJzrk1L=014Tj8Y04_hPyRMBNQ@mail.gmail.com>
+ <20190531132400.GA5518@kroah.com>
+In-Reply-To: <20190531132400.GA5518@kroah.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 31 May 2019 15:51:18 +0200
+Message-ID: <CAMuHMdX3vQN5tF4-_vGjRQGdbxpPC+u4g-QU45=qykNZgwSj_w@mail.gmail.com>
+Subject: Re: [GIT PULL] SPDX update for 5.2-rc3 - round 1
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spdx@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Simon,
+Hi Greg,
 
-On Fri, May 31, 2019 at 11:37:02AM +0200, Simon Horman wrote:
-> Hi Spyridon,
-> 
-> please respond to Geert's review below and
-> if appropriate provide an incremental patch.
-> 
-> Thanks in advance,
-> Simon
-> 
+On Fri, May 31, 2019 at 3:24 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> On Fri, May 31, 2019 at 09:17:06AM +0200, Geert Uytterhoeven wrote:
+> > On Fri, May 31, 2019 at 3:49 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > The following changes since commit cd6c84d8f0cdc911df435bb075ba22ce3c605b07:
+> > >
+> > >   Linux 5.2-rc2 (2019-05-26 16:49:19 -0700)
+> > >
+> > > are available in the Git repository at:
+> > >
+> > >   git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git tags/spdx-5.2-rc3-1
+> > >
+> > > for you to fetch changes up to 96ac6d435100450f0565708d9b885ea2a7400e0a:
+> > >
+> > >   treewide: Add SPDX license identifier - Kbuild (2019-05-30 11:32:33 -0700)
+> > >
+> > > ----------------------------------------------------------------
+> > > SPDX update for 5.2-rc3, round 1
+> > >
+> > > Here is another set of reviewed patches that adds SPDX tags to different
+> > > kernel files, based on a set of rules that are being used to parse the
+> > > comments to try to determine that the license of the file is
+> > > "GPL-2.0-or-later" or "GPL-2.0-only".  Only the "obvious" versions of
+> > > these matches are included here, a number of "non-obvious" variants of
+> > > text have been found but those have been postponed for later review and
+> > > analysis.
+> > >
+> > > There is also a patch in here to add the proper SPDX header to a bunch
+> > > of Kbuild files that we have missed in the past due to new files being
+> > > added and forgetting that Kbuild uses two different file names for
+> > > Makefiles.  This issue was reported by the Kbuild maintainer.
+> > >
+> > > These patches have been out for review on the linux-spdx@vger mailing
+> > > list, and while they were created by automatic tools, they were
+> > > hand-verified by a bunch of different people, all whom names are on the
+> > > patches are reviewers.
+> > >
+> > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >
+> > I'm sorry, but as long[*] as this does not conform to
+> > Documentation/process/license-rules.rst, I have to provide my:
+> > NAked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> >
+> > [*] The obvious solution is to update Documentation/process/license-rules.rst,
+> >     as people have asked before.
+>
+> I don't understand, what does not conform?  We are trying _to_ conform
+> to that file, what did we do wrong?
 
-Spyridon is on vacation, so I will handle the open points.
+The new "-or-later" and "-only" variants are not (yet) documented in that file.
+
+   File format examples::
+
+      Valid-License-Identifier: GPL-2.0
+      Valid-License-Identifier: GPL-2.0+
+      SPDX-URL: https://spdx.org/licenses/GPL-2.0.html
+      Usage-Guide:
+        To use this license in source code, put one of the following SPDX
+        tag/value pairs into a comment according to the placement
+        guidelines in the licensing rules documentation.
+        For 'GNU General Public License (GPL) version 2 only' use:
+          SPDX-License-Identifier: GPL-2.0
+        For 'GNU General Public License (GPL) version 2 or any later
+version' use:
+          SPDX-License-Identifier: GPL-2.0+
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Best Regards,
-Eugeniu.
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
