@@ -2,78 +2,48 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4FF6C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 18:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D4BC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 18:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AA5E26E10
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 18:44:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="J5vAQEVK"
+	by mail.kernel.org (Postfix) with ESMTP id 88C5B26E11
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 18:44:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727153AbfEaSoW (ORCPT
+        id S1727179AbfEaSol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 14:44:22 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46851 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727016AbfEaSoW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 14:44:22 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y11so6688361pfm.13
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 11:44:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=JtOPz7Fd+4iciKonmNz8DuFoN9jGg9zWNkBBKxD/nT0=;
-        b=J5vAQEVK88rYR6eiuj3C3oXJoViXiBtB7SmOEb7DZbr8Ovn0KFe8lJ0+n9hCs0jMWF
-         XgKx/pfVVYnYrRKlIhNfKG6dadRMOICrmmnZFdE7jXl53QYdXwgZwG2uyluZ7ZYbOei0
-         dHhqOdE3k4od92mqxvxGB6eFJMUvC0eBHk0GnnjsAdJ4xC6MawxRQfIn2DIGrY7t2F1g
-         LE9rSSp5bBVHT9X0L8Do+Oj81y8wrytXS0RuWaTq1LLnyOFgT+5TWXI/Tc+DnEPcb6D/
-         s141bdNg6WjAGjBoE4b4e0ZK160AEbkQ2EXrAGL4HMXvLLyHwQSWBwUF8g0aIhHsdC3c
-         OLZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=JtOPz7Fd+4iciKonmNz8DuFoN9jGg9zWNkBBKxD/nT0=;
-        b=InO1TecXjW58mC1OoYnLpLG7JlwwfOZNltJvJOX5Arfhf7Znu5aqJgjPjsXifB81Th
-         44Jtu3YVK6w+lH2czqW6WcdFgeL35Er1jwKJi0MDJ/JGlpQglErAjn4baXRQcMIpJPwZ
-         ou9bjOB7oXnrzFxbQEaDmWFFAipTSUi8xlK0z8/hGxBlUHx5iDCsWW6sIdRrsFMkuOol
-         W2eu/a3l7bgaTFIcGhAJfD6+bKeddA/aP0oxwD0XCNBajwgRqvqhc7B8C/JVZmpZQACT
-         tgWttJc93aVhU3UOeMHkMFBWtJ/WP4SkbwVBRK9+ZdDenkSTiZsOL9TXip9FqD14kFw4
-         P7xg==
-X-Gm-Message-State: APjAAAXulSuVJdfnEHZbL4Xj7snujD7u7zBu/KA21gHofUxJsJyQvMuE
-        XEitttJb26ILXBZqSS/uxmcnOrTZLXFCBA==
-X-Google-Smtp-Source: APXvYqyVAJJucpyS3amASTGYAfV2qT9FEj4E41JAXhoaG1owsdvywYVXfOsOsA/r9dpMSlABBc3c5g==
-X-Received: by 2002:a17:90a:26a9:: with SMTP id m38mr11008051pje.50.1559328261455;
-        Fri, 31 May 2019 11:44:21 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:4d40:e377:cfa4:3246? ([2601:646:c200:1ef2:4d40:e377:cfa4:3246])
-        by smtp.gmail.com with ESMTPSA id w1sm5603317pgh.9.2019.05.31.11.44.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 31 May 2019 11:44:20 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (1.0)
-Subject: Re: [RFC PATCH v2 11/12] x86/mm/tlb: Use async and inline messages for flushing
-From:   Andy Lutomirski <luto@amacapital.net>
-X-Mailer: iPhone Mail (16E227)
-In-Reply-To: <20190531105758.GO2623@hirez.programming.kicks-ass.net>
-Date:   Fri, 31 May 2019 11:44:19 -0700
-Cc:     Nadav Amit <namit@vmware.com>, Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <16D8E001-98A0-4ABC-AFE8-0F230B869027@amacapital.net>
-References: <20190531063645.4697-1-namit@vmware.com> <20190531063645.4697-12-namit@vmware.com> <20190531105758.GO2623@hirez.programming.kicks-ass.net>
-To:     Peter Zijlstra <peterz@infradead.org>
+        Fri, 31 May 2019 14:44:41 -0400
+Received: from mga04.intel.com ([192.55.52.120]:36381 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726967AbfEaSol (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 14:44:41 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 May 2019 11:44:40 -0700
+X-ExtLoop1: 1
+Received: from gpanchal-mobl.amr.corp.intel.com (HELO [10.254.189.1]) ([10.254.189.1])
+  by fmsmga008.fm.intel.com with ESMTP; 31 May 2019 11:44:40 -0700
+Subject: Re: [alsa-devel] [PATCH] ASoC: SOF: Intel: hda: Fix COMPILE_TEST
+ build error
+To:     Takashi Iwai <tiwai@suse.de>, YueHaibing <yuehaibing@huawei.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        lgirdwood@gmail.com, broonie@kernel.org,
+        yingjiang.zhu@linux.intel.com
+References: <20190531142526.12712-1-yuehaibing@huawei.com>
+ <s5hlfymsnfa.wl-tiwai@suse.de>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <e20ff9a0-0928-2864-c451-a24d86ccfc5c@linux.intel.com>
+Date:   Fri, 31 May 2019 13:44:40 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <s5hlfymsnfa.wl-tiwai@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -81,52 +51,87 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-> On May 31, 2019, at 3:57 AM, Peter Zijlstra <peterz@infradead.org> wrote:
->=20
->> On Thu, May 30, 2019 at 11:36:44PM -0700, Nadav Amit wrote:
->> When we flush userspace mappings, we can defer the TLB flushes, as long
->> the following conditions are met:
->>=20
->> 1. No tables are freed, since otherwise speculative page walks might
->>   cause machine-checks.
->>=20
->> 2. No one would access userspace before flush takes place. Specifically,
->>   NMI handlers and kprobes would avoid accessing userspace.
->>=20
->> Use the new SMP support to execute remote function calls with inlined
->> data for the matter. The function remote TLB flushing function would be
->> executed asynchronously and the local CPU would continue execution as
->> soon as the IPI was delivered, before the function was actually
->> executed. Since tlb_flush_info is copied, there is no risk it would
->> change before the TLB flush is actually executed.
->>=20
->> Change nmi_uaccess_okay() to check whether a remote TLB flush is
->> currently in progress on this CPU by checking whether the asynchronously
->> called function is the remote TLB flushing function. The current
->> implementation disallows access in such cases, but it is also possible
->> to flush the entire TLB in such case and allow access.
->=20
-> ARGGH, brain hurt. I'm not sure I fully understand this one. How is it
-> different from today, where the NMI can hit in the middle of the TLB
-> invalidation?
->=20
-> Also; since we're not waiting on the IPI, what prevents us from freeing
-> the user pages before the remote CPU is 'done' with them? Currently the
-> synchronous IPI is like a sync point where we *know* the remote CPU is
-> completely done accessing the page.
->=20
-> Where getting an IPI stops speculation, speculation again restarts
-> inside the interrupt handler, and until we've passed the INVLPG/MOV CR3,
-> speculation can happen on that TLB entry, even though we've already
-> freed and re-used the user-page.
->=20
-> Also, what happens if the TLB invalidation IPI is stuck behind another
-> smp_function_call IPI that is doing user-access?
->=20
-> As said,.. brain hurts.
+On 5/31/19 9:34 AM, Takashi Iwai wrote:
+> On Fri, 31 May 2019 16:25:26 +0200,
+> YueHaibing wrote:
+>>
+>> while building without PCI:
+>>
+>> sound/soc/sof/intel/hda.o: In function `hda_dsp_probe':
+>> hda.c:(.text+0x79c): undefined reference to `pci_ioremap_bar'
+>> hda.c:(.text+0x79c): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `pci_ioremap_bar'
+>> hda.c:(.text+0x7c4): undefined reference to `pci_ioremap_bar'
+>> hda.c:(.text+0x7c4): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `pci_ioremap_bar'
+>>
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Fixes: e13ef82a9ab8 ("ASoC: SOF: add COMPILE_TEST for PCI options")
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>> ---
+>>   sound/soc/sof/intel/hda.c | 4 ++++
+>>   1 file changed, 4 insertions(+)
+>>
+>> diff --git a/sound/soc/sof/intel/hda.c b/sound/soc/sof/intel/hda.c
+>> index 68db2ac..c1703c4 100644
+>> --- a/sound/soc/sof/intel/hda.c
+>> +++ b/sound/soc/sof/intel/hda.c
+>> @@ -231,7 +231,9 @@ static int hda_init(struct snd_sof_dev *sdev)
+>>   
+>>   	/* initialise hdac bus */
+>>   	bus->addr = pci_resource_start(pci, 0);
+>> +#if IS_ENABLED(CONFIG_PCI)
+>>   	bus->remap_addr = pci_ioremap_bar(pci, 0);
+>> +#endif
+>>   	if (!bus->remap_addr) {
+>>   		dev_err(bus->dev, "error: ioremap error\n");
+>>   		return -ENXIO;
+>> @@ -458,7 +460,9 @@ int hda_dsp_probe(struct snd_sof_dev *sdev)
+>>   		goto hdac_bus_unmap;
+>>   
+>>   	/* DSP base */
+>> +#if IS_ENABLED(CONFIG_PCI)
+>>   	sdev->bar[HDA_DSP_BAR] = pci_ioremap_bar(pci, HDA_DSP_BAR);
+>> +#endif
+>>   	if (!sdev->bar[HDA_DSP_BAR]) {
+>>   		dev_err(sdev->dev, "error: ioremap error\n");
+>>   		ret = -ENXIO;
+> 
+> IMO, this should be better addressed by fixing in linux/pci.h
+> instead, something like below (totally untested).
 
-Speculation aside, any code doing dirty tracking needs the flush to happen f=
-or real before it reads the dirty bit.
+Indeed. I wanted to first enable COMPILE_TEST for SOF and do a PCI 
+cleanup in a second stage. It might take a while to synchronize those 
+changes and check if there are additional functions needed by others.
 
-How does this patch guarantee that the flush is really done before someone d=
-epends on it?=
+> 
+> 
+> thanks,
+> 
+> Takashi
+> 
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -2005,8 +2005,19 @@ static inline void pci_mmcfg_late_init(void) { }
+>   
+>   int pci_ext_cfg_avail(void);
+>   
+> +#ifdef CONFIG_PCI
+>   void __iomem *pci_ioremap_bar(struct pci_dev *pdev, int bar);
+>   void __iomem *pci_ioremap_wc_bar(struct pci_dev *pdev, int bar);
+> +#else
+> +static inline void __iomem *pci_ioremap_bar(struct pci_dev *pdev, int bar)
+> +{
+> +	return NULL;
+> +}
+> +static inline void __iomem *pci_ioremap_wc_bar(struct pci_dev *pdev, int bar)
+> +{
+> +	return NULL;
+> +}
+> +#endif
+>   
+>   #ifdef CONFIG_PCI_IOV
+>   int pci_iov_virtfn_bus(struct pci_dev *dev, int id);
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+> 
