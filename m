@@ -6,114 +6,87 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D42EC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7343EC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2070424744
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47B332681C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:15:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xu2eMCvp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TZRqiz+e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727145AbfEaLJZ (ORCPT
+        id S1727141AbfEaLPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 07:09:25 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:59738 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbfEaLJY (ORCPT
+        Fri, 31 May 2019 07:15:03 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42694 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbfEaLPC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 07:09:24 -0400
+        Fri, 31 May 2019 07:15:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8FodIdoRggqYpcfQ8IzxUymg8eKDtRxFytfKCu5DB9o=; b=xu2eMCvpPsW5sOGQjGrgPouad
-        Sj/Oj86A4dMjx7iMebMebAizyuYOW3QMwVmGxrADtL2Ca/k+dY2rlO9NreoOLfg95LpG0bYGsIxI8
-        CtEthcD7L40SrBvDIPy7L86mY3aoR31mettwPQ3wtTwTXKcv0bRlxbsGMeh8miik97qACtRR7PDEy
-        JIeEw+wg4hhqM0nHEFK0LBcbUIivq8qfkg7Z3grUK4IzYHufz8NpSJNEtj3gsFV/H4HFfVZDwTorf
-        G55cTnOMWKf0rF5VrbJ7s88OpckRH77nPbe3Wx7IvuxaJZrSPM8M8RXvIsGXtWMzabjrGmcCvUQo1
-        ITJRfMwvA==;
+         bh=0bzCcEeHXEwR7c+WQ7EMhHPHTFa6pRbMCfQNYRgGQ50=; b=TZRqiz+eB19FKOviEbwMF50eL
+        tkVinge7hG7nufh2+jXjJimy3MX8tBcxRj3YQ//UpQYvtJgMfKOhWXOXbYLoPoseaA8GM16AkT9se
+        Jngp47DXJ0z8Aw/MuS1HRC8U73Vd1LivUdfY5v/tC0ZNDKoBOdj6+6VODUmz8iT2gJDy2a+4tpMBx
+        VO+5A3Gl8tI5ZU5dfFyOOeE7KYOq4wxlJF67H2SjwQSOphmha3VHx2Fo9JYu9EsuOvlTOySnke9tM
+        z2Nkt7Oukx13QfyTJ/CxJdaCY4q6AKkM/OC82uZli8h02Sua/xANMZ4b54zPgJGxij2HRdkFUR5Ql
+        hCLOaznLw==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hWfOZ-0004hP-FW; Fri, 31 May 2019 11:08:24 +0000
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hWfUl-0002gF-9Z; Fri, 31 May 2019 11:14:47 +0000
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A7B55201B8CFE; Fri, 31 May 2019 13:08:20 +0200 (CEST)
-Date:   Fri, 31 May 2019 13:08:20 +0200
+        id BA181201D5AB1; Fri, 31 May 2019 13:14:45 +0200 (CEST)
+Date:   Fri, 31 May 2019 13:14:45 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
-To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>
-Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
-        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
-        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
-        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH v3 10/16] sched: Core-wide rq->lock
-Message-ID: <20190531110820.GP2623@hirez.programming.kicks-ass.net>
-References: <cover.1559129225.git.vpillai@digitalocean.com>
- <a03795e66ed45469ac5b3c1b1d01c8ed33be299f.1559129225.git.vpillai@digitalocean.com>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Jann Horn <jannh@google.com>, Greg KH <gregkh@linuxfoundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>
+Subject: Re: [PATCH 1/7] General notification queue with user mmap()'able
+ ring buffer
+Message-ID: <20190531111445.GO2677@hirez.programming.kicks-ass.net>
+References: <CAG48ez0R-R3Xs+3Xg9T9qcV3Xv6r4pnx1Z2y=Ltx7RGOayte_w@mail.gmail.com>
+ <20190528162603.GA24097@kroah.com>
+ <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
+ <155905931502.7587.11705449537368497489.stgit@warthog.procyon.org.uk>
+ <4031.1559064620@warthog.procyon.org.uk>
+ <20190528231218.GA28384@kroah.com>
+ <31936.1559146000@warthog.procyon.org.uk>
+ <16193.1559163763@warthog.procyon.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a03795e66ed45469ac5b3c1b1d01c8ed33be299f.1559129225.git.vpillai@digitalocean.com>
+In-Reply-To: <16193.1559163763@warthog.procyon.org.uk>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 08:36:46PM +0000, Vineeth Remanan Pillai wrote:
+On Wed, May 29, 2019 at 10:02:43PM +0100, David Howells wrote:
+> Jann Horn <jannh@google.com> wrote:
+> 
+> > Does this mean that refcount_read() isn't sufficient for what you want
+> > to do with tracing (because for some reason you actually need to know
+> > the values atomically at the time of increment/decrement)?
+> 
+> Correct.  There's a gap and if an interrupt or something occurs, it's
+> sufficiently big for the refcount trace to go weird.
+> 
+> I've seen it in afs/rxrpc where the incoming network packets that are part of
+> the rxrpc call flow disrupt the refcounts noted in trace lines.
 
-> + * The static-key + stop-machine variable are needed such that:
-> + *
-> + *	spin_lock(rq_lockp(rq));
-> + *	...
-> + *	spin_unlock(rq_lockp(rq));
-> + *
-> + * ends up locking and unlocking the _same_ lock, and all CPUs
-> + * always agree on what rq has what lock.
+Can you re-iterate the exact problem? I konw we talked about this in the
+past, but I seem to have misplaced those memories :/
 
-> @@ -5790,8 +5854,15 @@ int sched_cpu_activate(unsigned int cpu)
->  	/*
->  	 * When going up, increment the number of cores with SMT present.
->  	 */
-> -	if (cpumask_weight(cpu_smt_mask(cpu)) == 2)
-> +	if (cpumask_weight(cpu_smt_mask(cpu)) == 2) {
->  		static_branch_inc_cpuslocked(&sched_smt_present);
-> +#ifdef CONFIG_SCHED_CORE
-> +		if (static_branch_unlikely(&__sched_core_enabled)) {
-> +			rq->core_enabled = true;
-> +		}
-> +#endif
-> +	}
-> +
->  #endif
->  	set_cpu_active(cpu, true);
->  
-> @@ -5839,8 +5910,16 @@ int sched_cpu_deactivate(unsigned int cpu)
->  	/*
->  	 * When going down, decrement the number of cores with SMT present.
->  	 */
-> -	if (cpumask_weight(cpu_smt_mask(cpu)) == 2)
-> +	if (cpumask_weight(cpu_smt_mask(cpu)) == 2) {
-> +#ifdef CONFIG_SCHED_CORE
-> +		struct rq *rq = cpu_rq(cpu);
-> +		if (static_branch_unlikely(&__sched_core_enabled)) {
-> +			rq->core_enabled = false;
-> +		}
-> +#endif
->  		static_branch_dec_cpuslocked(&sched_smt_present);
-> +
-> +	}
->  #endif
-
-I'm confused, how doesn't this break the invariant above?
-
-That is, all CPUs must at all times agree on the value of rq_lockp(),
-and I'm not seeing how that is true with the above changes.
+FWIW I agree that kref is useless fluff, but I've long ago given up on
+that fight.
