@@ -2,169 +2,92 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61683C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70831C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B73326BA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:25:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A54C26BAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:26:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfEaPZd (ORCPT
+        id S1726768AbfEaP0m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 11:25:33 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:54883 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbfEaPZd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 11:25:33 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id E99063C0149;
-        Fri, 31 May 2019 17:25:29 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id JaAOyY00n-fj; Fri, 31 May 2019 17:25:23 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        Fri, 31 May 2019 11:26:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54706 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726037AbfEaP0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 11:26:42 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 06FB03C0022;
-        Fri, 31 May 2019 17:25:23 +0200 (CEST)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 31 May
- 2019 17:25:22 +0200
-Date:   Fri, 31 May 2019 17:25:22 +0200
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tobias Franzen <tfranzen@de.adit-jv.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [PATCH] arm64: dts: ulcb-kf: Add support for TI WL1837
-Message-ID: <20190531152522.GB28755@vmlxhi-102.adit-jv.com>
-References: <20190411124102.22442-1-spapageorgiou@de.adit-jv.com>
- <CAMuHMdVfDd_1gHnX=WvkHnF33fG2sWy7F5bTh-DghoKSt-vLCA@mail.gmail.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 9BD09307D9D0;
+        Fri, 31 May 2019 15:26:36 +0000 (UTC)
+Received: from treble (ovpn-124-142.rdu2.redhat.com [10.10.124.142])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5B6A95DE84;
+        Fri, 31 May 2019 15:26:28 +0000 (UTC)
+Date:   Fri, 31 May 2019 10:26:26 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4] x86/power: Fix 'nosmt' vs. hibernation triple fault
+ during resume
+Message-ID: <20190531152626.4nmyc7lj6mjwuo2v@treble>
+References: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm>
+ <20190531051456.fzkvn62qlkf6wqra@treble>
+ <nycvar.YFH.7.76.1905311045240.1962@cbobk.fhfr.pm>
+ <5564116.e9OFvgDRbB@kreacher>
+ <CALCETrUpseta+NrhVwzzVFTe-BkBHtDUJBO22ci3mAsVR+XOog@mail.gmail.com>
+ <nycvar.YFH.7.76.1905311628330.1962@cbobk.fhfr.pm>
+ <B7AC83ED-3F11-42B9-8506-C842A5937B50@amacapital.net>
+ <nycvar.YFH.7.76.1905311651450.1962@cbobk.fhfr.pm>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdVfDd_1gHnX=WvkHnF33fG2sWy7F5bTh-DghoKSt-vLCA@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Originating-IP: [10.72.93.184]
+In-Reply-To: <nycvar.YFH.7.76.1905311651450.1962@cbobk.fhfr.pm>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Fri, 31 May 2019 15:26:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+On Fri, May 31, 2019 at 04:54:20PM +0200, Jiri Kosina wrote:
+> On Fri, 31 May 2019, Andy Lutomirski wrote:
+> 
+> > For that matter, what actually happens if we get an SMI while halted?  
+> > Does RSM go directly to sleep or does it re-fetch the HLT?
+> 
+> Our mails just crossed, I replied to Josh's mwait() proposal patch a 
+> minute ago.
 
-We appreciate your review comments.
+Good catch.  I agree that mwait seems unsafe across resume and my patch
+is bogus.
 
-On Tue, May 28, 2019 at 11:19:04AM +0200, Geert Uytterhoeven wrote:
-[..]
-> > +       wlan_en: regulator-wlan_en {
-> > +               compatible = "regulator-fixed";
-> > +               regulator-name = "wlan-en-regulator";
-> > +
-> > +               regulator-min-microvolt = <3300000>;
-> > +               regulator-max-microvolt = <3300000>;
-> 
-> So this is a 3.3V regulator...
-> 
-> > +
-> > +               gpio = <&gpio_exp_74 4 GPIO_ACTIVE_HIGH>;
-> > +               startup-delay-us = <70000>;
-> > +               enable-active-high;
-> > +       };
-> >  };
-> >
-> >  &can0 {
-> 
-> > @@ -273,6 +298,30 @@
-> >         status = "okay";
-> >  };
-> >
-> > +&sdhi3 {
-> > +       pinctrl-0 = <&sdhi3_pins>;
-> > +       pinctrl-names = "default";
-> > +
-> > +       vmmc-supply = <&wlan_en>;
-> > +       vqmmc-supply = <&wlan_en>;
-> 
-> ... used for both card and I/O line power...
-> 
-> > +       bus-width = <4>;
-> > +       no-1-8-v;
-> 
-> ... hence no 1.8V I/O.
-> 
-> However, VIO of WL1837 is provided by W1.8V of regulator U55,
-> which is 1.8V?
+Andy, in the short term it sounds like you're proposing to make
+native_play_dead() use hlt_play_dead() unconditionally.  Right?
 
-Looking at the KF-M06 schematics, it seems like the SDIO-relevant lines
-of WL1837 (U52) are interfaced with the SoC via TXS0108EPWR (U57) which
-is there to level-translate from 3.3v (SoC) to 1.8v (WL1837). So,
-from SoC perspective, it looks like the lines are 3.3v-powered.
+That would simplify things and also would fix Jiri's bug I think.  The
+only question I'd have is if we have data on the power savings
+difference between hlt and mwait.  mwait seems to wake up on a lot of
+different conditions which might negate its deeper sleep state.
 
-FTR, the test results are independent on the 'no-1-8-v' property.
-
-> > +       non-removable;
-> > +       cap-power-off-card;
-> > +       keep-power-in-suspend;
-> > +       max-frequency = <26000000>;
-> > +       status = "okay";
-> > +
-> > +       #address-cells = <1>;
-> > +       #size-cells = <0>;
-> > +       wlcore: wlcore@2 {
-> > +               compatible = "ti,wl1837";
-> > +               reg = <2>;
-> > +               interrupt-parent = <&gpio1>;
-> > +               interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-> 
-> I'm also a bit puzzled by the interrupt type.
-> On Cat 874, it's IRQ_TYPE_LEVEL_HIGH, cfr.
-> https://lore.kernel.org/linux-renesas-soc/1557997166-63351-2-git-send-email-biju.das@bp.renesas.com/
-> 
-> On Kingfisher, the IRQ signal is inverted by U104, so I'd expect
-> IRQ_TYPE_LEVEL_LOW instead of IRQ_TYPE_EDGE_FALLING?
-
-That's an insightful comment, if it simply arose from code review.
-I guess we mistakenly relied on [1] during our testing on linux/master.
-So, we definitely have to re-spin the patch to make it independent
-on [1]. The problem is that by dropping [1] and switching from
-IRQ_TYPE_EDGE_FALLING to IRQ_TYPE_LEVEL_LOW, the wifi testing
-(particularly 'iwlist wlan0 scan') doesn't pass. We have to give
-another thought how to best tackle it.
-
-[1] https://github.com/CogentEmbedded/meta-rcar/blob/289fbd4f8354/meta-rcar-gen3-adas/recipes-kernel/linux/linux-renesas/0024-wl18xx-do-not-invert-IRQ-on-WLxxxx-side.patch
-
-Thank you.
-
-> 
-> Apart from the above two comments:
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> -- 
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+Andy, for your long term idea to use INIT IPI, I wonder if that would
+work with SMT siblings?  Specifically I wonder about the Intel issue
+that requires siblings to have CR4.MCE set.
 
 -- 
-Best Regards,
-Eugeniu.
+Josh
