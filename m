@@ -2,48 +2,51 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC24C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B58E6C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:46:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F21B42670E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7994726715
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:46:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="JjgJkYvy"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="JKVOa9SA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbfEaJqc (ORCPT
+        id S1727120AbfEaJqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 05:46:32 -0400
-Received: from onstation.org ([52.200.56.107]:51312 "EHLO onstation.org"
+        Fri, 31 May 2019 05:46:38 -0400
+Received: from onstation.org ([52.200.56.107]:51364 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726002AbfEaJqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 05:46:31 -0400
+        id S1726998AbfEaJqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 05:46:33 -0400
 Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id CC0903E80A;
-        Fri, 31 May 2019 09:46:29 +0000 (UTC)
+        by onstation.org (Postfix) with ESMTPSA id 96F1E45087;
+        Fri, 31 May 2019 09:46:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1559295990;
-        bh=49G1eU+yZvHTYQpvw1OvAZKYIN/9I7PCg4V7MtIDuUM=;
-        h=From:To:Subject:Date:From;
-        b=JjgJkYvyX+wyle7H5K28przJBTDMqMIgNsBfeQZMW9a3y0UQkixhNt+tPfbNTRMnW
-         deqCVPa9vPZZG247IE4oQ3kHzKA7ZK7jTqMoyP8E4Svvw3e7OecfYhxS95ZFuuUZCg
-         C4z6RV0NPyh653u7214LdpwuaHQaRA7+P9amzKMM=
+        s=default; t=1559295992;
+        bh=P7el3Xz8wlBT8PxKKUD6xEjlNmXFaxsNrW/042rvrXc=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=JKVOa9SAa7kA2Lli3+GkWmtyF8MNZPxXaea7LmxpPJnge8YifcrGodkFsm8APowey
+         Gf7GreekdN/kCh7UNbAXSlfs0p6N7JyTLs1oif1tKegAr9Pe6YhkQK1Nb+gXSyWLqZ
+         B/wxNfa1E+rVqfIeHzxq7wcMu7mq2yC05inAeVIA=
 From:   Brian Masney <masneyb@onstation.org>
 To:     robdclark@gmail.com, sean@poorly.run,
         dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
         freedreno@lists.freedesktop.org, airlied@linux.ie, daniel@ffwll.ch,
         linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
         jonathan@marek.ca, robh@kernel.org, jeffrey.l.hugo@gmail.com
-Subject: [PATCH v3 0/6] ARM: qcom: working Nexus 5 display support
-Date:   Fri, 31 May 2019 05:46:13 -0400
-Message-Id: <20190531094619.31704-1-masneyb@onstation.org>
+Subject: [PATCH v3 6/6] ARM: dts: qcom: msm8974-hammerhead: add support for display
+Date:   Fri, 31 May 2019 05:46:19 -0400
+Message-Id: <20190531094619.31704-7-masneyb@onstation.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190531094619.31704-1-masneyb@onstation.org>
+References: <20190531094619.31704-1-masneyb@onstation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,50 +54,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series adds working display support to the LG Nexus 5
-(hammerhead) phone.
+Add initial support for the display found on the LG Nexus 5 (hammerhead)
+phone. This is based on work from Jonathan Marek.
 
-Changes since v2:
-- Dropped two drm/msm bug fix patches that have been merged separately.
-- New patch: 'add support for per-CRTC max_vblank_count on mdp5'.
-  Special thanks to Jeffrey Hugo for helping to track down this issue.
-- Add panel_pin to msm8974-hammerhead device tree. Dropped Linus
-  Walleij's reviewed-by on this patch due to this change.
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+---
+ .../qcom-msm8974-lge-nexus5-hammerhead.dts    | 58 +++++++++++++++++++
+ 1 file changed, 58 insertions(+)
 
-Changes since v1:
-- Shortened problem description above. I'll reply to this email and send
-  a full dmesg with the boot log with debugging turned on.
-- Dropped patch 'fix null pointer dereference in
-  msm_atomic_prepare_fb()'
-- New patch: Remove resv fields from msm_gem_object struct that was
-  incorrectly being referenced by the prepare_fb callbacks.
-- Add drm_plane_enable_fb_damage_clips() to plane init for mdp4, mdp5,
-  and dpu1.
-- Add Linus Walleij's reviewed-by to patches 3-6
-
-My status page at https://masneyb.github.io/nexus-5-upstream/
-describes what is working so far with the upstream kernel on the Nexus
-5.
-
-Brian Masney (6):
-  drm/msm: add dirty framebuffer helper
-  drm/msm: add support for per-CRTC max_vblank_count on mdp5
-  ARM: qcom_defconfig: add display-related options
-  ARM: dts: qcom: msm8974-hammerhead: add support for backlight
-  ARM: dts: msm8974: add display support
-  ARM: dts: qcom: msm8974-hammerhead: add support for display
-
- .../qcom-msm8974-lge-nexus5-hammerhead.dts    |  92 ++++++++++++
- arch/arm/boot/dts/qcom-msm8974.dtsi           | 132 ++++++++++++++++++
- arch/arm/configs/qcom_defconfig               |   5 +
- drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c     |   3 +
- drivers/gpu/drm/msm/disp/mdp4/mdp4_plane.c    |   3 +
- drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c     |  16 ++-
- drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c      |   2 +-
- drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c    |   3 +
- drivers/gpu/drm/msm/msm_fb.c                  |   2 +
- 9 files changed, 256 insertions(+), 2 deletions(-)
-
+diff --git a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
+index 51889d66b55a..4776f01f492c 100644
+--- a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
++++ b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
+@@ -332,6 +332,16 @@
+ 				function = "gpio";
+ 			};
+ 		};
++
++		panel_pin: panel {
++			te {
++				pins = "gpio12";
++				function = "mdp_vsync";
++
++				drive-strength = <2>;
++				bias-disable;
++			};
++		};
+ 	};
+ 
+ 	vibrator@fd8c3450 {
+@@ -531,6 +541,54 @@
+ 			};
+ 		};
+ 	};
++
++	mdss@fd900000 {
++		status = "ok";
++
++		mdp@fd900000 {
++			status = "ok";
++		};
++
++		dsi@fd922800 {
++			status = "ok";
++
++			vdda-supply = <&pm8941_l2>;
++			vdd-supply = <&pm8941_lvs3>;
++			vddio-supply = <&pm8941_l12>;
++
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			ports {
++				port@1 {
++					endpoint {
++						remote-endpoint = <&panel_in>;
++						data-lanes = <0 1 2 3>;
++					};
++				};
++			};
++
++			panel: panel@0 {
++				reg = <0>;
++				compatible = "lg,acx467akm-7";
++
++				pinctrl-names = "default";
++				pinctrl-0 = <&panel_pin>;
++
++				port {
++					panel_in: endpoint {
++						remote-endpoint = <&dsi0_out>;
++					};
++				};
++			};
++		};
++
++		dsi-phy@fd922a00 {
++			status = "ok";
++
++			vddio-supply = <&pm8941_l12>;
++		};
++	};
+ };
+ 
+ &spmi_bus {
 -- 
 2.20.1
 
