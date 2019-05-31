@@ -2,75 +2,50 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D7DC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B36C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F8D026660
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:04:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="VUwuo3eu"
+	by mail.kernel.org (Postfix) with ESMTP id B432526660
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:05:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727182AbfEaJEZ (ORCPT
+        id S1727048AbfEaJFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 05:04:25 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:9171 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbfEaJEY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 05:04:24 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cf0ee0d0000>; Fri, 31 May 2019 02:04:13 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 31 May 2019 02:04:23 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 31 May 2019 02:04:23 -0700
-Received: from [10.19.65.14] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 May
- 2019 09:04:20 +0000
-Subject: Re: [PATCH V2] drivers: i2c: tegra: fix checkpatch defects
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1559196850-7007-1-git-send-email-bbiswas@nvidia.com>
- <e9e3d8b0-a76a-81a9-1110-2d07ba1c787f@gmail.com>
- <911e52ed-8f3c-583a-7610-e38723219eca@gmail.com>
-From:   Bitan Biswas <bbiswas@nvidia.com>
-Message-ID: <b86b9104-1754-531f-70b9-3c1a5d347b9b@nvidia.com>
-Date:   Fri, 31 May 2019 02:04:17 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 31 May 2019 05:05:12 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:48266 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726240AbfEaJFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 05:05:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 93933341;
+        Fri, 31 May 2019 02:05:11 -0700 (PDT)
+Received: from [10.162.42.223] (p8cg001049571a15.blr.arm.com [10.162.42.223])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 143BB3F59C;
+        Fri, 31 May 2019 02:05:08 -0700 (PDT)
+Subject: Re: [PATCH 4/4] arm64/mm: Drop vm_fault_t argument from
+ __do_page_fault()
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>
+References: <1559133285-27986-1-git-send-email-anshuman.khandual@arm.com>
+ <1559133285-27986-5-git-send-email-anshuman.khandual@arm.com>
+ <20190529151134.GH31777@lakrids.cambridge.arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <5e565fd3-0d2b-31a5-8644-c91ccc5fb05e@arm.com>
+Date:   Fri, 31 May 2019 14:35:23 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <911e52ed-8f3c-583a-7610-e38723219eca@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20190529151134.GH31777@lakrids.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559293453; bh=SOqJI+EZ5Db2ZI9zhzesDEizdcdTJUo9u2vKd2K8Ybc=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=VUwuo3eubu7zXKhOddS0+xUHK+pIZqRk1ytHUuVta019Jlps/++VHCOZulHeCNoXR
-         ty6lcK/T6zxbkrPUk2p9thjjgTECf1jrmcw9tSZ7z78+avkfj+LtDUAYQhLf//vYqo
-         Zu1QTNa55JHcvrv2pxj18VHSqe6L3zR/j4bH84EMz7MxlcEv2ZcOyuv9fwak7fx5g1
-         ukYurq8rqZ+HcVroE5VMO+a1OHXt6Fu2neMPYqqco+7LyxQjSeuAP+xCnIoLKylRiI
-         E5G9w4WTX8AEybdu6ZF0DnbW4BKh9XWjXuUtwkeua5MeU5JoupWFx9YAFHA7GemwTP
-         2N9WZHWU6cShg==
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -78,39 +53,108 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 5/30/19 4:43 AM, Dmitry Osipenko wrote:
-> 30.05.2019 14:36, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> 30.05.2019 9:14, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> Fix checkpatch.pl warning(s)/error(s)/check(s) in i2c-tegra.c
->>> except for BUG/BUG_ON checks
+On 05/29/2019 08:41 PM, Mark Rutland wrote:
+> On Wed, May 29, 2019 at 06:04:45PM +0530, Anshuman Khandual wrote:
+>> __do_page_fault() is over complicated with multiple goto statements. This
+>> cleans up code flow and while there drops the vm_fault_t argument.
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 >>
->> Please turn the BUG_ON's into WARN_ON's. The machine won't go on fire,
->> hence there is absolutely no good reason in making system unusable on a
->> software bug. BUG_ON may be more useful for development, but not for a
->> casual daily usage.
-I shall update the patch to remove the BUG/BUG_ON calls.
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will.deacon@arm.com>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: James Morse <james.morse@arm.com> 
+>> Cc: Andrey Konovalov <andreyknvl@google.com>
+>> ---
+>>  arch/arm64/mm/fault.c | 38 ++++++++++++++++----------------------
+>>  1 file changed, 16 insertions(+), 22 deletions(-)
+>>
+>> diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+>> index 170c71f..a53a30e 100644
+>> --- a/arch/arm64/mm/fault.c
+>> +++ b/arch/arm64/mm/fault.c
+>> @@ -397,37 +397,31 @@ static void do_bad_area(unsigned long addr, unsigned int esr, struct pt_regs *re
+>>  static vm_fault_t __do_page_fault(struct mm_struct *mm, unsigned long addr,
+>>  			   unsigned int mm_flags, unsigned long vm_flags)
+>>  {
+>> -	struct vm_area_struct *vma;
+>> -	vm_fault_t fault;
+>> +	struct vm_area_struct *vma = find_vma(mm, addr);
+>>  
+>> -	vma = find_vma(mm, addr);
+>> -	fault = VM_FAULT_BADMAP;
+>>  	if (unlikely(!vma))
+>> -		goto out;
+>> -	if (unlikely(vma->vm_start > addr))
+>> -		goto check_stack;
+>> +		return VM_FAULT_BADMAP;
+>>  
+>>  	/*
+>> -	 * Ok, we have a good vm_area for this memory access, so we can handle
+>> -	 * it.
+>> +	 * Check if the VMA has got the required permssion with respect
+>> +	 * to the access fault here.
+>>  	 */
+> 
+> We already had a perfectly good comment for this check:
+> 
+> 	/*
+> 	 * Check that the permissions on the VMA allow for the fault which
+> 	 * occurred.
+> 	 */
+> 
+> ... so please keep that and minimize the diff.
 
->>
->>> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
->>> ---
->>
->>> @@ -1034,7 +1038,7 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_de=
-v *i2c_dev,
->>>   	u32 *buffer =3D NULL;
->>>   	int err =3D 0;
->>>   	bool dma;
->>> -	u16 xfer_time =3D 100;
->>> +	u16 xfer_tm =3D 100;
->>
->> What's wrong with the "time"? I'm finding the "xfer_tm" as a very
->> unintuitive naming.
->>
->=20
-> Also, please don't version patch as v2 if v1 was never sent out.
->=20
-I marked the patch version as V2 incorrectly. Sorry. I shall be careful=20
-about the patch version sequence from now on.
+Sure, will keep all the existing comments here.
 
--regards,
-  Bitan
+> 
+>> -good_area:
+>> +	if (!(vma->vm_flags & vm_flags))
+>> +		return VM_FAULT_BADACCESS;
+>> +
+>>  	/*
+>> -	 * Check that the permissions on the VMA allow for the fault which
+>> -	 * occurred.
+>> +	 * There is a valid VMA for this access. But before proceeding
+>> +	 * make sure that it has required flags if there is an attempt
+>> +	 * to expand the stack downwards.
+>>  	 */
+> 
+> I think we can drop this comment, given we didn't have it previously.
 
+Okay.
+
+> 
+>> -	if (!(vma->vm_flags & vm_flags)) {
+>> -		fault = VM_FAULT_BADACCESS;
+>> -		goto out;
+>> -	}
+>> +	if (unlikely(vma->vm_start > addr)) {
+>> +		if (!(vma->vm_flags & VM_GROWSDOWN))
+>> +			return VM_FAULT_BADMAP;
+>>  
+>> +		if (expand_stack(vma, addr))
+>> +			return VM_FAULT_BADMAP;
+> 
+> You can drop the line space between these two if statements.
+
+Will do.
+
+> 
+>> +	}
+>>  	return handle_mm_fault(vma, addr & PAGE_MASK, mm_flags);
+>> -
+>> -check_stack:
+>> -	if (vma->vm_flags & VM_GROWSDOWN && !expand_stack(vma, addr))
+>> -		goto good_area;
+>> -out:
+>> -	return fault;
+> 
+> We used to check the stack before the checknig the rest of the vm_flags,
+> so this changes the precedence of the VM_FAULT_BADMAP and
+> VM_FAULT_BADACCESS return codes.
+> 
+> Please check the stack before checking the other vm_flags.
+
+Though it makes some sense to move VMA permission check earlier in the function as it
+is the quicker one but I understand need to maintain the existing code flow in a clean
+up patch like this. Will retain the existing flow.
