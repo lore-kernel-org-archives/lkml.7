@@ -2,124 +2,111 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E93DC28CC0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 02:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2150FC28CC0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 02:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF3B825898
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 02:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7A02261E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 02:15:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m3wzQz5v"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="i1iz3ubo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbfEaCEi (ORCPT
+        id S1726610AbfEaCPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 22:04:38 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:32887 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726372AbfEaCEh (ORCPT
+        Thu, 30 May 2019 22:15:17 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59782 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbfEaCPQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 22:04:37 -0400
-Received: by mail-pg1-f194.google.com with SMTP id h17so3105948pgv.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 19:04:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=TL52Gmz6SngGLbkmOVeJjIMB//nPEreA8+KZe6jZL2E=;
-        b=m3wzQz5v9QbCfV14C68ip2i+UQ6JIrVLE0AyruLAuUG1goBSkvvyFwL+XF154+9ach
-         G4OhLOuESbU3ejVGt5EJJoxx9Ojaej/rZLoFXVZwMjLEoSgsVnimom6v/ruCHKJyW8Hu
-         vTiHn6WvJQPW2zALLs91xf81yx0UjHlG0u/yo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TL52Gmz6SngGLbkmOVeJjIMB//nPEreA8+KZe6jZL2E=;
-        b=C5XLQ9qvKYWDkNXVW3IUiLsY1b9KaFeIdj3LO1wDBecZROM7ma7bXSaBT+btSzOATt
-         bIc95s4HIB6V6g4kFXR6B8cgJGuVXiisWn3XOn7BoxdoI4qkn+kxBLWCq9SKKkjWD4zV
-         ybcCOMJOxOi5Vv6sbh0VVmPXvbJapwaMlkLwF0wNQ++ZkhH7AtoZzw3s0nBNp0qZZ+gt
-         Uo/QnShfCWk2W/MKNBxhRl6Cuj8qubrv5zpu1tJ685WOBCV+wa5vA84iBsMiCVdYKuXc
-         Y3o51IRzsGbWYghrdDJSQG02HJJiwUY40NzdEW0hHpFLsg2YcgkYszvucjdvPKYKdliC
-         giAw==
-X-Gm-Message-State: APjAAAW9ONpGA40tMs44ZuSPUbBpjTg9Ny/jb1pk8Z+/9XdInqNWFxhZ
-        5hRecmd40r/s3ssP8AHYUy6jag==
-X-Google-Smtp-Source: APXvYqx9Bj53LGeQyS7ZljShu2NWqejgsPdXSGw/3IvUj1juYLbm+ON5ujQnjt4elN7fVHreM1NhAw==
-X-Received: by 2002:a17:90a:c38a:: with SMTP id h10mr6436167pjt.124.1559268276841;
-        Thu, 30 May 2019 19:04:36 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id x18sm6485774pfj.17.2019.05.30.19.04.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 30 May 2019 19:04:35 -0700 (PDT)
-Date:   Thu, 30 May 2019 19:04:34 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Andy Whitcroft <apw@canonical.com>,
-        Joe Perches <joe@perches.com>,
-        Aaron Tomlin <atomlin@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v2] checkpatch.pl: Warn on duplicate sysctl local variable
-Message-ID: <201905301904.D8D90210@keescook>
-References: <20190531011227.21181-1-mcroce@redhat.com>
+        Thu, 30 May 2019 22:15:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=zCkx6eSXnZ5ux9ABK0SMiffXGoJkIH1FMytbxhPwmkU=; b=i1iz3ubo+pzo8/9rIiWcX2DwK
+        C7MRIRw6XgI3dAcNwe6iJ3JFfyE5x5uwKayo5I7AM1n8rtegbdZlBxSXCl0lrHv/cpKaKe9WEb0er
+        IMf1FiuMGHipO3As5n0TPYiqoU88k/e+NIkH0x1pzYRUsNeIqxgvBbLaeMG72gxmX7a1FTx/s8zuO
+        OmRZn3sOamfVtTsE9aOQUM7wDeLfDKb85i0flHh/lLXvNpeuiCGUM61VUMXM9cl++Ic7meaXfYDGe
+        kkRTbH9WfBxXoxcpqiStPA1NkNTBOqwQ1SfgrzjuX3PRTu76x9/FAi31tO7uUsIagsai5iPbdj7Cz
+        9+FQKpOiQ==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hWX4e-0006u3-1T; Fri, 31 May 2019 02:15:16 +0000
+Subject: Re: [PATCH] firmware_loader: fix build without sysctl
+To:     Matteo Croce <mcroce@redhat.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+References: <20190531012649.31797-1-mcroce@redhat.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <dbc00eaa-c6e9-45b2-7232-5af35fdea113@infradead.org>
+Date:   Thu, 30 May 2019 19:15:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190531011227.21181-1-mcroce@redhat.com>
+In-Reply-To: <20190531012649.31797-1-mcroce@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 03:12:27AM +0200, Matteo Croce wrote:
-> Commit 6a33853c5773 ("proc/sysctl: add shared variables for range check")
-> adds some shared const variables to be used instead of a local copy in
-> each source file.
-> Warn when a chunk duplicates one of these values in a ctl_table struct:
+On 5/30/19 6:26 PM, Matteo Croce wrote:
+> firmware_config_table has references to the sysctl code which
+> triggers a build failure when CONFIG_PROC_SYSCTL is not set:
 > 
->     $ scripts/checkpatch.pl 0001-test-commit.patch
->     WARNING: duplicated sysctl range checking value 'zero', consider using the shared one in include/linux/sysctl.h
->     #27: FILE: arch/arm/kernel/isa.c:48:
->     +               .extra1         = &zero,
+>     ld: drivers/base/firmware_loader/fallback_table.o:(.data+0x30): undefined reference to `sysctl_vals'
+>     ld: drivers/base/firmware_loader/fallback_table.o:(.data+0x38): undefined reference to `sysctl_vals'
+>     ld: drivers/base/firmware_loader/fallback_table.o:(.data+0x70): undefined reference to `sysctl_vals'
+>     ld: drivers/base/firmware_loader/fallback_table.o:(.data+0x78): undefined reference to `sysctl_vals'
 > 
->     WARNING: duplicated sysctl range checking value 'int_max', consider using the shared one in include/linux/sysctl.h
->     #28: FILE: arch/arm/kernel/isa.c:49:
->     +               .extra2         = &int_max,
+> Put the firmware_config_table struct under #ifdef CONFIG_PROC_SYSCTL.
 > 
->     total: 0 errors, 2 warnings, 14 lines checked
-> 
+> Fixes: 6a33853c5773 ("proc/sysctl: add shared variables for range check")
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
 > Signed-off-by: Matteo Croce <mcroce@redhat.com>
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Works for me.
 
--Kees
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+
+Thanks.
 
 > ---
->  scripts/checkpatch.pl | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  drivers/base/firmware_loader/fallback_table.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index 342c7c781ba5..629c31435487 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -6639,6 +6639,12 @@ sub process {
->  				     "unknown module license " . $extracted_string . "\n" . $herecurr);
->  			}
->  		}
-> +
-> +# check for sysctl duplicate constants
-> +		if ($line =~ /\.extra[12]\s*=\s*&(zero|one|int_max|max_int)\b/) {
-> +			WARN("DUPLICATED_SYSCTL_CONST",
-> +				"duplicated sysctl range checking value '$1', consider using the shared one in include/linux/sysctl.h\n" . $herecurr);
-> +		}
->  	}
+> diff --git a/drivers/base/firmware_loader/fallback_table.c b/drivers/base/firmware_loader/fallback_table.c
+> index 58d4a1263480..18d646777fb9 100644
+> --- a/drivers/base/firmware_loader/fallback_table.c
+> +++ b/drivers/base/firmware_loader/fallback_table.c
+> @@ -23,6 +23,8 @@ struct firmware_fallback_config fw_fallback_config = {
+>  };
+>  EXPORT_SYMBOL_GPL(fw_fallback_config);
 >  
->  	# If we have no input at all, then there is nothing to report on
-> -- 
-> 2.21.0
+> +#ifdef CONFIG_PROC_SYSCTL
+> +
+>  struct ctl_table firmware_config_table[] = {
+>  	{
+>  		.procname	= "force_sysfs_fallback",
+> @@ -45,3 +47,5 @@ struct ctl_table firmware_config_table[] = {
+>  	{ }
+>  };
+>  EXPORT_SYMBOL_GPL(firmware_config_table);
+> +
+> +#endif
 > 
 
+
 -- 
-Kees Cook
+~Randy
