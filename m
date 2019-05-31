@@ -2,90 +2,105 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF2AC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E6EEC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E25226BCA
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 133DF26BD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:12:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S3GztADF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbfEaQLr (ORCPT
+        id S1726835AbfEaQM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 12:11:47 -0400
-Received: from smtprz14.163.net ([106.3.154.247]:36482 "EHLO smtp.tom.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726037AbfEaQLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 12:11:47 -0400
-Received: from my-app01.tom.com (my-app01.tom.com [127.0.0.1])
-        by freemail01.tom.com (Postfix) with ESMTP id 38A5B1C81BB1
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 23:50:59 +0800 (CST)
-Received: from my-app01.tom.com (HELO smtp.tom.com) ([127.0.0.1])
-          by my-app01 (TOM SMTP Server) with SMTP ID 390728459
-          for <linux-kernel@vger.kernel.org>;
-          Fri, 31 May 2019 23:50:59 +0800 (CST)
-Received: from antispam1.tom.com (unknown [172.25.16.55])
-        by freemail01.tom.com (Postfix) with ESMTP id 5CFC71C81B97
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 23:50:58 +0800 (CST)
-Received: from antispam1.tom.com (antispam1.tom.com [127.0.0.1])
-        by antispam1.tom.com (Postfix) with ESMTP id 583E510018B7
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 23:50:58 +0800 (CST)
-X-Virus-Scanned: Debian amavisd-new at antispam1.tom.com
-Received: from antispam1.tom.com ([127.0.0.1])
-        by antispam1.tom.com (antispam1.tom.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id PcrpKDZU1KxI for <linux-kernel@vger.kernel.org>;
-        Fri, 31 May 2019 23:50:57 +0800 (CST)
-Received: from localhost (unknown [222.209.18.96])
-        by antispam1.tom.com (Postfix) with ESMTPA id 317E3100112A;
-        Fri, 31 May 2019 23:50:57 +0800 (CST)
-From:   Liu Xiang <liu.xiang6@zte.com.cn>
-To:     viro@zeniv.linux.org.uk
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        liuxiang_1999@126.com, Liu Xiang <liu.xiang6@zte.com.cn>
-Subject: [PATCH v2] fs: buffer: fix fully_mapped reset in block_read_full_page()
-Date:   Fri, 31 May 2019 23:50:51 +0800
-Message-Id: <1559317851-3861-1-git-send-email-liu.xiang6@zte.com.cn>
-X-Mailer: git-send-email 1.9.1
+        Fri, 31 May 2019 12:12:57 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:34566 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbfEaQM4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 12:12:56 -0400
+Received: by mail-vs1-f67.google.com with SMTP id q64so7057461vsd.1;
+        Fri, 31 May 2019 09:12:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2FrzY2ydP6cRNV+r5FtjF3XxLGeE0yW0UZ3D62L58K8=;
+        b=S3GztADFEAoU+iw/DnAiHFJ3lrTsPcmRSrKsm/LzCege+lnNoRkyVn/FELbj4RaZuI
+         m1jwpfvPsd6GEv2I+N6KmXzxt7p59N5Yax/hj4JVDhA7OtPXVm1avoeqMZZXy8rKePup
+         fxPb+68HFJLF7c5/upjWaYPIGfg6BgVQfewJO6HIoBXRTpihL9NEJRE0WEpPBxjzRQ6Y
+         UGYbiORtjNwxie/uELHw9dOY06/YsERdaU/eaVhF4rA7C+Fpr1yFqJmRUPaSlwWBkaq9
+         Zv6sUldoUN9qmIclWOz12WHQOp4V65Jsz9DpvE0W6vg0d4ut+3TM4ftdhn4111umrPAr
+         MwxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2FrzY2ydP6cRNV+r5FtjF3XxLGeE0yW0UZ3D62L58K8=;
+        b=cqoEm2LePBt7guTkKjLnTnDCCIfYWGjMpNW5Ldkd7aWwFX/XEb28Q7zPA6j9+HSonP
+         GnQQtlKcEuEXMP8PJ72iVWv4KR4R9t72FcK0O/gHXrzpeZfsxm9u/kFmxNSGEHnwzuFY
+         vA9iPux0qLSFUq3GtQw2HN6sfqimlM7E0hQPXd0D9cPg4sW6entckxhhQHbYoMt2XrdT
+         rZpWPfr7FOUXqVo36qgeKv71i3OVmgRq4p3/wbVUK4B8Hq4OX5wQfobRJUVJOScx4nLe
+         LSs9Y5kphGRLwE0ONyGU4eTTNkCS77uf8BgQYpXMaECz/RLx+cUTirvlgk6+tgv1UxTo
+         4KEQ==
+X-Gm-Message-State: APjAAAUACi237cK9vJ4RoQRrLmAfk9e9D7pB98jZJf9hmMk0/baUQ/sY
+        ORxmBs/GG1O4+bTAyk5ITL9cIAdFjyGlQJfTNbE=
+X-Google-Smtp-Source: APXvYqzpClzX/KpZ2ht67YbTaKY+nKDPKhMXtzGMq+1rT3NpFl0F8uttTZW6AktbeDItrcpGTvJGLINAhxENtCRIxoY=
+X-Received: by 2002:a67:d68e:: with SMTP id o14mr6221973vsj.140.1559319175577;
+ Fri, 31 May 2019 09:12:55 -0700 (PDT)
+MIME-Version: 1.0
+References: <1559230098-1543-1-git-send-email-92siuyang@gmail.com>
+ <c83f8777-f6be-029b-980d-9f974b4e28ce@gmail.com> <20190531062911.c6jusfbzgozqk2cu@gondor.apana.org.au>
+ <727c4b18-0d7b-b3c6-e0bb-41b3fe5902d3@gmail.com> <20190531145428.ngwrgbnk2a7us5cy@gondor.apana.org.au>
+ <56a41977-6f9e-08dd-e4e2-07207324d536@gmail.com>
+In-Reply-To: <56a41977-6f9e-08dd-e4e2-07207324d536@gmail.com>
+From:   Yang Xiao <92siuyang@gmail.com>
+Date:   Sat, 1 Jun 2019 00:12:19 +0800
+Message-ID: <CAKgHYH0nocPY5NBu-5Bmp8WMv2-mf-1Hj+_1=7ixzdGCm0XSqw@mail.gmail.com>
+Subject: Re: [PATCH] ipv6: Prevent overrun when parsing v6 header options
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        David Miller <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Because get_block() might set the buffer mapped, fully_mapped reset 
-should be done according to the result of buffer_mapped(bh) 
-which check the buffer mapped attribute again after get_block().
+On Fri, May 31, 2019 at 11:57 PM Eric Dumazet <eric.dumazet@gmail.com> wrote:
+>
+>
+>
+> On 5/31/19 7:54 AM, Herbert Xu wrote:
+> > On Fri, May 31, 2019 at 07:50:06AM -0700, Eric Dumazet wrote:
+> >>
+> >> What do you mean by should ?
+> >>
+> >> Are they currently already linearized before the function is called,
+> >> or is it missing and a bug needs to be fixed ?
+> >
+> > AFAICS this is the code-path for locally generated outbound packets.
+> > Under what circumstances can the IPv6 header be not in the head?
+> >
+> >
+>
+> I guess this means we had yet another random submission from Young Xiao :/
 
-Signed-off-by: Liu Xiang <liu.xiang6@zte.com.cn>
----
+Excuse me, what do you mean about random submission from Young?
+A month ago, I submitted the patch, and I was told that the format
+should be correct.
+Then, I resubmitted again.
 
-Changes in v2:
- change comment
 
- fs/buffer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/buffer.c b/fs/buffer.c
-index e450c55..987aadb 100644
---- a/fs/buffer.c
-+++ b/fs/buffer.c
-@@ -2243,7 +2243,6 @@ int block_read_full_page(struct page *page, get_block_t *get_block)
- 		if (!buffer_mapped(bh)) {
- 			int err = 0;
- 
--			fully_mapped = 0;
- 			if (iblock < lblock) {
- 				WARN_ON(bh->b_size != blocksize);
- 				err = get_block(inode, iblock, bh, 0);
-@@ -2251,6 +2250,7 @@ int block_read_full_page(struct page *page, get_block_t *get_block)
- 					SetPageError(page);
- 			}
- 			if (!buffer_mapped(bh)) {
-+				fully_mapped = 0;
- 				zero_user(page, i * blocksize, blocksize);
- 				if (!err)
- 					set_buffer_uptodate(bh);
--- 
-1.9.1
-
+>
+> Thanks.
+>
