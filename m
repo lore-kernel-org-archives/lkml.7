@@ -2,98 +2,132 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1DDAC46460
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A8DCC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A4BA23774
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C55225468
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:03:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="J0mJR0rY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nOS3Ecqn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbfEaPCW (ORCPT
+        id S1726799AbfEaPDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 11:02:22 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45528 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726547AbfEaPCW (ORCPT
+        Fri, 31 May 2019 11:03:24 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:44126 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726501AbfEaPDX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 11:02:22 -0400
-Received: by mail-wr1-f65.google.com with SMTP id b18so6712680wrq.12
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 08:02:21 -0700 (PDT)
+        Fri, 31 May 2019 11:03:23 -0400
+Received: by mail-yw1-f65.google.com with SMTP id e74so4232926ywe.11;
+        Fri, 31 May 2019 08:03:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=yhVi3GTFCQvvTIxl5mOOdrJTPKmESuh+XsvZuHIBFUA=;
-        b=J0mJR0rYbu7nLXSjhS2+ZbFJdnv5aUwWyTszsu5dt3yPf3YX8TrJVy8ES8a3v/0JBD
-         2wL+73E34KfUz2DwRGECSq9Rk6kRsnZzQTtn5nrhxO5c7CcidX6RvoD3B1Rv/iuiF8Un
-         tsWUNKFY/AOEstNJVHdihksOAFNs9HR78/tM3IqeTLkx4WKxHNTf1J4wCLzSZ8QAGm/y
-         uM9XwSon/jIun8o1gzwHxRHjqODnKlqzsnyezjtyGnN4wHP0xdvzfBlLvmlcLFbtOnuw
-         mg2fGVxQVRzLNKjEafr3tWV/vi8fSDiZDqrY3Dh7xOmco0bJShp89adqEpQimpA65kRI
-         ue2Q==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ab4Nh0FZkrZQCQChzSfnebh5p0VEbtuG5pXGGr0tef0=;
+        b=nOS3EcqnXLPrMLW6+22jRFGGaRQwwdCB/1abNj75WPFLIRLjChddHEySgEYPQXe9JX
+         p0FwzrOeuV94MZd/n0FBYFK7l41UQNumuusNoqyNL27LJyksNahNFySC36sqq689t4HS
+         8/U+1ce19isNXjqktokyPRJNOyIDfVswImh66/uJ+2yv+GKO2ICQEfYlEa69+cBtfciH
+         JJ8IQNd+OBwKRSB0JfOgJS6iSScpHS2UstEGxBgeKfCMbGZcKp/ytuj4E50pGT8zqde4
+         8b5DQjmSjJIJLA51+bevM0UIs9E/ZMnZt9YD06X8L4dc6AZ65p0blxRwAiCzM0mxCr8P
+         RWMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yhVi3GTFCQvvTIxl5mOOdrJTPKmESuh+XsvZuHIBFUA=;
-        b=n0BG/Z0V4iYFHzxdZ67muaHJbM14NGfgW9x2gp+iiDFMMjfvcJb5uCkk+8scALmOAl
-         e1pcjKwLpcOc4Gq1A36VOdzQ74xkPE1HwIOEu0O6VuK9X82KEOO7UAXyhwnvvBeZhX59
-         dSn8NNSAUmbsrZmUVJCreRSYwOxgTYbspLYGmHyab8WdhewFAzvTFYbkLTar71/COywQ
-         srRSIHlBbxUT9z+1I7jLJdR66JpEEKzkJtfo06Pkmykl72dDVGHe9MVJb/Ev+ig0oXea
-         OWHHxb3W5Gv9cs4e8SEZVQlRQSAwWhDutoCRk1xWmAsKG47rteIaQ4OGvtzKB84Uss1M
-         RoUg==
-X-Gm-Message-State: APjAAAV6vboGJ8gm5cELTOyAZsww7TWyFlf8ZYDQVWRiJxgRYmwaynXA
-        ZpP+vyjwlmrNn+ugAeLRTTo1QA==
-X-Google-Smtp-Source: APXvYqys8NqsVcs78h+7pzuMj6F9INb4P295nbS8UFgQK4YSDSuwHD81dGbsvau2gG921pNHh+h4rA==
-X-Received: by 2002:adf:b643:: with SMTP id i3mr7333639wre.284.1559314940594;
-        Fri, 31 May 2019 08:02:20 -0700 (PDT)
-Received: from [192.168.112.17] (nikaet.starlink.ru. [94.141.168.29])
-        by smtp.gmail.com with ESMTPSA id u205sm7254690wmu.47.2019.05.31.08.02.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 31 May 2019 08:02:20 -0700 (PDT)
-Subject: Re: [PATCH] net: dsa: mv88e6xxx: avoid error message on remove from
- VLAN 0
-To:     Vivien Didelot <vivien.didelot@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        =?UTF-8?Q?Marek_Beh=c3=ban?= <marek.behun@nic.cz>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chris Healy <cphealy@gmail.com>
-References: <20190531073514.2171-1-nikita.yoush@cogentembedded.com>
- <20190531103105.GE23464@t480s.localdomain> <20190531143758.GB23821@lunn.ch>
- <422482dc-8887-0f92-c8c9-f9d639882c77@cogentembedded.com>
- <20190531110017.GB2075@t480s.localdomain>
-From:   Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Message-ID: <6dd8f8d5-9453-ab94-3aae-18eb5e35b051@cogentembedded.com>
-Date:   Fri, 31 May 2019 18:02:18 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ab4Nh0FZkrZQCQChzSfnebh5p0VEbtuG5pXGGr0tef0=;
+        b=dSBy3xiAZdIW6E+xXyb2581yOU9c5vcu/QQMHvUimE7X1LWbZ10ZIrJOpd0owacwZg
+         rJfIX+P32dhHIPybVoVOSq5uglVStaTcP5H1DaL1PRCktBWQq2m14/pdX+Ej7BxWYVmF
+         8loVGXqtsEhybDPrqW7POL/SHLoY/pq5dvUWUrzNbigvXBG0+zuZ6VEaOdfCy9PE4ZAl
+         hLPyw7Ik38vcJJUlTy/a4J/2kQt6pb3Pe8u2smnt/+oXUdbjLvG/63oA/O4809oj4Adw
+         QFvjDRXvR9pkU33O6WRKN+27Ue/vAdfBaRS6uUnvDwvTWCv0uvKubhoeMiDuVoxiIkQt
+         mr9A==
+X-Gm-Message-State: APjAAAXpdJudw8rhURUVDp2GX9FCbdSvVzLyL29AQx5+NaeXgY3LaNvX
+        vuVYbgaz3/VK1NS96VlnwnkQj0iWCNMCOEo+fP8=
+X-Google-Smtp-Source: APXvYqybMv6mcv53VLj6NtwjvPaXw2yuyOGNGxF8jSVmrF9SkBpO0tit0PBZ0tyPsIc8DdWX2gvUIvKgVeFchLXX/u8=
+X-Received: by 2002:a81:3411:: with SMTP id b17mr5553993ywa.280.1559315002885;
+ Fri, 31 May 2019 08:03:22 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190531110017.GB2075@t480s.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.1559171394.git.mchehab+samsung@kernel.org>
+ <f7378a751557277eab6f37f3f5692cf5f1aff8c6.1559171394.git.mchehab+samsung@kernel.org>
+ <bf8163be-eb1f-f060-1c5a-405bc6d4c8c5@gmail.com>
+In-Reply-To: <bf8163be-eb1f-f060-1c5a-405bc6d4c8c5@gmail.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Fri, 31 May 2019 11:03:11 -0400
+Message-ID: <CADnq5_O8Dh-6Mpz=_+5iTOz+UuVUid44=S-SrHenoVzFB77u-A@mail.gmail.com>
+Subject: Re: [PATCH 11/22] gpu: amdgpu: fix broken amdgpu_dma_buf.c references
+To:     Christian Koenig <christian.koenig@amd.com>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        David Airlie <airlied@linux.ie>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> Kernel currently does, but it is caught in
->> mv88e6xxx_port_check_hw_vlan() and returns -ENOTSUPP from there.
-> 
-> But VID 0 has a special meaning for the kernel, it means the port's private
-> database (when it is isolated, non-bridged), it is not meant to be programmed
-> in the switch. That's why I would've put that knowledge into the DSA layer,
-> which job is to translate the kernel operations to the (dumb) DSA drivers.
-> 
-> I hope I'm seeing things correctly here.
+On Fri, May 31, 2019 at 10:00 AM Christian K=C3=B6nig
+<ckoenig.leichtzumerken@gmail.com> wrote:
+>
+> Am 30.05.19 um 01:23 schrieb Mauro Carvalho Chehab:
+> > This file was renamed, but docs weren't updated accordingly.
+> >
+> >       WARNING: kernel-doc './scripts/kernel-doc -rst -enable-lineno -fu=
+nction PRIME Buffer Sharing ./drivers/gpu/drm/amd/amdgpu/amdgpu_prime.c' fa=
+iled with return code 1
+> >       WARNING: kernel-doc './scripts/kernel-doc -rst -enable-lineno -in=
+ternal ./drivers/gpu/drm/amd/amdgpu/amdgpu_prime.c' failed with return code=
+ 2
+> >
+> > Fixes: 988076cd8c5c ("drm/amdgpu: rename amdgpu_prime.[ch] into amdgpu_=
+dma_buf.[ch]")
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+>
+> Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
+>
 
-I'm ok with either solution.
+Applied.  thanks!
+
+Alex
+
+> > ---
+> >   Documentation/gpu/amdgpu.rst | 4 ++--
+> >   1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/Documentation/gpu/amdgpu.rst b/Documentation/gpu/amdgpu.rs=
+t
+> > index a740e491dfcc..a15199b1b02e 100644
+> > --- a/Documentation/gpu/amdgpu.rst
+> > +++ b/Documentation/gpu/amdgpu.rst
+> > @@ -37,10 +37,10 @@ Buffer Objects
+> >   PRIME Buffer Sharing
+> >   --------------------
+> >
+> > -.. kernel-doc:: drivers/gpu/drm/amd/amdgpu/amdgpu_prime.c
+> > +.. kernel-doc:: drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
+> >      :doc: PRIME Buffer Sharing
+> >
+> > -.. kernel-doc:: drivers/gpu/drm/amd/amdgpu/amdgpu_prime.c
+> > +.. kernel-doc:: drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
+> >      :internal:
+> >
+> >   MMU Notifier
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
