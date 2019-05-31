@@ -2,106 +2,99 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D29CEC28CC0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 00:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18524C28CC0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 00:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A96032634A
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 00:06:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JycNenuP"
+	by mail.kernel.org (Postfix) with ESMTP id D5E75262F7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 00:11:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559261518;
+	bh=BkaAkAYsINjPVicGtwZ4jKcRDAQKYbJITXtawe8Ms1c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sSXzajfr+S3lTBOaMwTWEvD7fqeQEb32A/P3s9wSD7dXLCiN8E0wh0arhHFGmeyaN
+	 ANTKGAoeuTiUPzLkcEzoP54Rb2IX7fPRRyIt4A4kTqQ8QQTMc3AQEVxSHBtrHaXKPj
+	 Jq7fXBKAXzcWvDpoyVp9b4nR7UiOQUfIbraVO5MI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbfEaAGt (ORCPT
+        id S1726543AbfEaAL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 20:06:49 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:33131 "EHLO ozlabs.org"
+        Thu, 30 May 2019 20:11:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726045AbfEaAGt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 20:06:49 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726045AbfEaAL5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 20:11:57 -0400
+Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45FPrQ741xz9sBr;
-        Fri, 31 May 2019 10:06:46 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1559261207;
-        bh=rqK0tbfdK3qtwdDFZ6cLkkqkVj6eNvUQSUM12vFYfEc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JycNenuPjdnS7XVwCmkOFbDhkEw5+7BiLZxhqROb5ILi5678i9m1GBlu+j+KIxZL6
-         bUKsRpmQ7XBMJXtBZrhZs8mUK3lldYrSf+KVwK1+Vl4RNWaR5/cMNepyVfejGHIQ3+
-         tVSwRtwttdf/D71Hw9WiSa3ItUSPjzAcTFj2GiVMf7HZt43H5lsjEhwdnTDEHtdoQA
-         iMy972YrMRbiEmV82zitrO0xl9Y9tvtoTHLJnhKCRz/gYptuP4bLmj0Oqltngdinv/
-         G6Eud8TBUwzmKAhzDbmfx0PSbZbuszCU2zVrZuVa7zVwLDOqKM27oyfhkPW/sGEAIK
-         ATVQIGng5uRJA==
-Date:   Fri, 31 May 2019 10:06:46 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: linux-next: Tree for May 30 (firmware_loader)
-Message-ID: <20190531100646.212b065f@canb.auug.org.au>
-In-Reply-To: <28716a14-772d-bc82-5111-34cd38cfda54@infradead.org>
-References: <20190530162132.6081d246@canb.auug.org.au>
-        <28716a14-772d-bc82-5111-34cd38cfda54@infradead.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id C7230262F7;
+        Fri, 31 May 2019 00:11:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559261516;
+        bh=BkaAkAYsINjPVicGtwZ4jKcRDAQKYbJITXtawe8Ms1c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TVN6SLSzV1E834OCk47mM45jcIm9bLRoI24rvMu01vyyCnjkWaiHvED1NnjdAwXxC
+         VuQr4GqaR8Ia9HoR7Kw2/j6UFGentX1Yr3PK1MkGLQcsu9pK/jUgxbHtrL40TABbaf
+         ClQTV4i08DGeKAEbxLpn13N7I1R4k27yuY9ME9iQ=
+Date:   Thu, 30 May 2019 17:11:56 -0700
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Matt Sickler <Matt.Sickler@daktronics.com>
+Cc:     Simon =?iso-8859-1?Q?Sandstr=F6m?= <simon@nikanor.nu>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/4] staging: kpc2000: add spaces around operators in
+ core.c
+Message-ID: <20190531001156.GA25210@kroah.com>
+References: <20190524110802.2953-1-simon@nikanor.nu>
+ <20190524110802.2953-2-simon@nikanor.nu>
+ <20190530210558.GA21455@kroah.com>
+ <SN6PR02MB4016139989144F6C08CD4BDAEE180@SN6PR02MB4016.namprd02.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/PWONkdadaEC6ybOc1SCPBQ4"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <SN6PR02MB4016139989144F6C08CD4BDAEE180@SN6PR02MB4016.namprd02.prod.outlook.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/PWONkdadaEC6ybOc1SCPBQ4
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, May 30, 2019 at 10:57:09PM +0000, Matt Sickler wrote:
+> >From: devel <driverdev-devel-bounces@linuxdriverproject.org> On Behalf Of
+> >Greg KH
+> >On Fri, May 24, 2019 at 01:07:59PM +0200, Simon Sandström wrote:
+> >> --- a/drivers/staging/kpc2000/kpc2000/core.c
+> >> +++ b/drivers/staging/kpc2000/kpc2000/core.c
+> >> @@ -276,18 +276,18 @@ static ssize_t kp2000_cdev_read(struct file *filp,
+> >
+> >This whole function just needs to be deleted, it's a horrible hack.
+> 
+> >From the outside, I would definitely agree with you.  On the inside though, we
+> rely on this function to quickly identify what kind and version is running on
+> a given piece of hardware.  Since that same information is provided by an ioctl,
+> I could be convinced to remove this API and write a userspace application that
+> uses the ioctl to get the information and pretty prints it.
 
-Hi all,
+The ioctl needs to die as well, just use the sysfs entries instead, as
+you already have them :)
 
-On Thu, 30 May 2019 09:10:13 -0700 Randy Dunlap <rdunlap@infradead.org> wro=
-te:
->
-> on i386 or x86_64:
-> when CONFIG_PROC_SYSCTL is not set/enabled:
->=20
-> ld: drivers/base/firmware_loader/fallback_table.o:(.data+0x1c): undefined=
- reference to `sysctl_vals'
-> ld: drivers/base/firmware_loader/fallback_table.o:(.data+0x20): undefined=
- reference to `sysctl_vals'
-> ld: drivers/base/firmware_loader/fallback_table.o:(.data+0x40): undefined=
- reference to `sysctl_vals'
-> ld: drivers/base/firmware_loader/fallback_table.o:(.data+0x44): undefined=
- reference to `sysctl_vals'
+> I'd be more inclined to agree with the deletion if it means the whole char dev
+> interface can be removed from the kpc2000 driver.  That won't be straightforward
+> as the ioctl is exposed through this interface.  We could remove the ioctl, but
+> we'd need to ensure that all the same information is exposed via sysfs.
 
-Caused by commit
+I think you are there already, what is missing?
 
-  6a33853c5773 ("proc/sysctl: add shared variables for range check")
+> Our userspace side is all funneled through a single class, so changing
+> it to use sysfs wouldn't be too difficult.  I'd support that change if
+> someone wants to make it.
 
-Added some more cc's
---=20
-Cheers,
-Stephen Rothwell
+I will be glad to do that, it's always nice to delete code :)
 
---Sig_/PWONkdadaEC6ybOc1SCPBQ4
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+thanks,
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzwcBYACgkQAVBC80lX
-0Gxtegf/Qph5FzdyfJGZyjn0oChmSq959oJsCpiVzFEHiCERPRIauHX+L1OQL9nD
-ByRaXZejxUJsK0zNqICBwPlvhKGVZ7sxl7h6JVLCAZS4SEF3CuMa5tTU2WFHfPbB
-7EKPBiE+3elRLHEsCrI71UVwPIDJR7/ryul/7k85tU5qXq6i83JQpRjyURBDemue
-cqG6sYrRI+o55scQjkQR6lwIIsadcSvajgr/cGNsUvl5HRzhvwXQvksOtY28C1lR
-+x//HM4rx8Gjog4iSlnqOf3/+fTtlxaC0yr+ZixACNCSX9bfJpTyNO645NkHKODu
-WKAkI3bxb1uSz2JOwmORRm4KUUpQtw==
-=uahV
------END PGP SIGNATURE-----
-
---Sig_/PWONkdadaEC6ybOc1SCPBQ4--
+greg k-h
