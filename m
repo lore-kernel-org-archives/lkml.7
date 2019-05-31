@@ -2,107 +2,97 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B75C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 04:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD745C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 04:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1870F263CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 04:34:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Y9MvmrlR"
+	by mail.kernel.org (Postfix) with ESMTP id 9ECA1263C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 04:36:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbfEaEez (ORCPT
+        id S1726725AbfEaEg1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 00:34:55 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:12072 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbfEaEey (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 00:34:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1559277294; x=1590813294;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=4KissP6CMHlJHUEfDn3Ulh/jhmUATHtnEKo07Th9Pjo=;
-  b=Y9MvmrlRQyLDz4ISkyFk/TbXAq1vFY19M4KWuBT7gyIHhwAaKhaS4X6Y
-   NENcge8QmjOmkvg8zxdAyPrd/TjaW625fnwja9rLnUrZn82fteivSrLcM
-   H1GQ+m7957nr1O9202n1kWeH43KIciDQh8czwf7lIVvlpbcFGoyBTuGgu
-   s=;
-X-IronPort-AV: E=Sophos;i="5.60,533,1549929600"; 
-   d="scan'208";a="404446461"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-9ec21598.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 31 May 2019 04:34:53 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-9ec21598.us-east-1.amazon.com (Postfix) with ESMTPS id 01A85A247F;
-        Fri, 31 May 2019 04:34:49 +0000 (UTC)
-Received: from EX13D05UWB001.ant.amazon.com (10.43.161.181) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 31 May 2019 04:34:29 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
- EX13D05UWB001.ant.amazon.com (10.43.161.181) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 31 May 2019 04:34:29 +0000
-Received: from localhost (10.85.16.145) by mail-relay.amazon.com
- (10.43.160.118) with Microsoft SMTP Server id 15.0.1367.3 via Frontend
- Transport; Fri, 31 May 2019 04:34:29 +0000
-From:   Eduardo Valentin <eduval@amazon.com>
-To:     Wolfram Sang <wsa@the-dreams.de>
-CC:     Haiyue Wang <haiyue.wang@linux.intel.com>,
-        <jarkko.nikula@linux.intel.com>, <andriy.shevchenko@intel.com>,
-        <brendanhiggins@google.com>, Eduardo Valentin <eduval@amazon.com>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH 3/3] Documentation: ABI: Add i2c-slave-mqueue sysfs documentation
-Date:   Thu, 30 May 2019 21:33:47 -0700
-Message-ID: <20190531043347.4196-4-eduval@amazon.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190531043347.4196-1-eduval@amazon.com>
-References: <20190531043347.4196-1-eduval@amazon.com>
+        Fri, 31 May 2019 00:36:27 -0400
+Received: from mga09.intel.com ([134.134.136.24]:62066 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725955AbfEaEg1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 00:36:27 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 21:36:26 -0700
+X-ExtLoop1: 1
+Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
+  by orsmga006.jf.intel.com with ESMTP; 30 May 2019 21:36:26 -0700
+Received: from orsmsx112.amr.corp.intel.com ([169.254.3.79]) by
+ ORSMSX110.amr.corp.intel.com ([169.254.10.7]) with mapi id 14.03.0415.000;
+ Thu, 30 May 2019 21:36:26 -0700
+From:   "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "mroos@linux.ee" <mroos@linux.ee>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        "jeyu@kernel.org" <jeyu@kernel.org>,
+        "ast@kernel.org" <ast@kernel.org>,
+        "ard.biesheuvel@arm.com" <ard.biesheuvel@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "namit@vmware.com" <namit@vmware.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "Hansen, Dave" <dave.hansen@intel.com>
+Subject: Re: [PATCH] vmalloc: Don't use flush flag when no exec perm
+Thread-Topic: [PATCH] vmalloc: Don't use flush flag when no exec perm
+Thread-Index: AQHVFeKXsxy+QkOKqU23zfNpAWli4aaDgIiAgABAJ4CAAV2zgA==
+Date:   Fri, 31 May 2019 04:36:25 +0000
+Message-ID: <120f658d6f34c99a72e82c993ec380109f7aef2c.camel@intel.com>
+References: <20190529055104.6822-1-rick.p.edgecombe@intel.com>
+         <89d6dee949e4418f0cca4cc6c4c9b526c1a5c497.camel@intel.com>
+         <67241836-621c-6933-1278-f04aedcefcb3@linux.ee>
+In-Reply-To: <67241836-621c-6933-1278-f04aedcefcb3@linux.ee>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.30.1 (3.30.1-1.fc29) 
+x-originating-ip: [10.252.134.167]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B1A8C0F763855B4D836A965D3C862A13@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document the slave-mqueue sysfs attribute used by
-the i2c-slave-mqueue driver.
-
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>
-Cc: linux-i2c@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Eduardo Valentin <eduval@amazon.com>
----
- .../ABI/testing/sysfs-bus-i2c-devices-slave-mqueue     | 10 ++++++++++
- 1 file changed, 10 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-i2c-devices-slave-mqueue
-
-diff --git a/Documentation/ABI/testing/sysfs-bus-i2c-devices-slave-mqueue b/Documentation/ABI/testing/sysfs-bus-i2c-devices-slave-mqueue
-new file mode 100644
-index 000000000000..28318108ce85
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-i2c-devices-slave-mqueue
-@@ -0,0 +1,10 @@
-+What:		/sys/bus/i2c/devices/*/slave-mqueue
-+Date:		May 2019
-+KernelVersion:	5.2
-+Contact:	Eduardo Valentin <eduval@amazon.com>
-+Description:
-+		Reading to this file will return exactly one message,
-+		when available, of the i2c-slave-mqueue device attached
-+		to that bus. Userspace can also poll on this file to
-+		get notified when new messages are available.
-+Users:		i2c-slave-mqueue driver
--- 
-2.21.0
-
+T24gVGh1LCAyMDE5LTA1LTMwIGF0IDEwOjQ0ICswMzAwLCBNZWVsaXMgUm9vcyB3cm90ZToNCj4g
+PiA+IFRoZSBhZGRpdGlvbiBvZiBWTV9GTFVTSF9SRVNFVF9QRVJNUyBmb3IgQlBGIEpJVCBhbGxv
+Y2F0aW9ucyB3YXMNCj4gPiA+IGJpc2VjdGVkIHRvIHByZXZlbnQgYm9vdCBvbiBhbiBVbHRyYVNw
+YXJjIElJSSBtYWNoaW5lLiBJdCB3YXMNCj4gPiA+IGZvdW5kDQo+ID4gPiB0aGF0DQo+ID4gPiBz
+b21ldGltZSBzaG9ydGx5IGFmdGVyIHRoZSBUTEIgZmx1c2ggdGhpcyBmbGFnIGRvZXMgb24gdmZy
+ZWUgb2YNCj4gPiA+IHRoZQ0KPiA+ID4gQlBGDQo+ID4gPiBwcm9ncmFtLCB0aGUgbWFjaGluZSBo
+dW5nLiBGdXJ0aGVyIGludmVzdGlnYXRpb24gc2hvd2VkIHRoYXQNCj4gPiA+IGJlZm9yZQ0KPiA+
+ID4gYW55IG9mDQo+ID4gPiB0aGUgY2hhbmdlcyBmb3IgdGhpcyBmbGFnIHdlcmUgaW50cm9kdWNl
+ZCwgd2l0aA0KPiA+ID4gQ09ORklHX0RFQlVHX1BBR0VBTExPQw0KPiA+ID4gY29uZmlndXJlZCAo
+d2hpY2ggZG9lcyBhIHNpbWlsYXIgVExCIGZsdXNoIG9mIHRoZSB2bWFsbG9jIHJhbmdlDQo+ID4g
+PiBvbg0KPiA+ID4gZXZlcnkgdmZyZWUpLCB0aGlzIG1hY2hpbmUgYWxzbyBodW5nIHNob3J0bHkg
+YWZ0ZXIgdGhlIGZpcnN0DQo+ID4gPiB2bWFsbG9jDQo+ID4gPiB1bm1hcC9mcmVlLg0KPiA+ID4g
+DQo+ID4gPiBTbyB0aGUgZXZpZGVuY2UgcG9pbnRzIHRvIHRoZXJlIGJlaW5nIHNvbWUgZXhpc3Rp
+bmcgaXNzdWUgd2l0aA0KPiA+ID4gdGhlDQo+ID4gPiB2bWFsbG9jIFRMQiBmbHVzaGVzLCBidXQg
+aXQncyBzdGlsbCB1bmtub3duIGV4YWN0bHkgd2h5IHRoZXNlDQo+ID4gPiBoYW5ncw0KPiA+ID4g
+YXJlDQo+ID4gPiBoYXBwZW5pbmcgb24gc3BhcmMuIEl0IGlzIGFsc28gdW5rbm93biB3aGVuIHNv
+bWVvbmUgd2l0aCB0aGlzDQo+ID4gPiBoYXJkd2FyZQ0KPiA+ID4gY291bGQgcmVzb2x2ZSB0aGlz
+LCBhbmQgaW4gdGhlIG1lYW50aW1lIHVzaW5nIHRoaXMgZmxhZyBvbiBpdA0KPiA+ID4gdHVybnMg
+YQ0KPiA+ID4gbHVya2luZyBiZWhhdmlvciBpbnRvIHNvbWV0aGluZyB0aGF0IHByZXZlbnRzIGJv
+b3QuDQo+ID4gDQo+ID4gVGhlIHNwYXJjIFRMQiBmbHVzaCBpc3N1ZSBoYXMgYmVlbiBiaXNlY3Rl
+ZCBhbmQgaXMgYmVpbmcgd29ya2VkIG9uDQo+ID4gbm93LA0KPiA+IHNvIGhvcGVmdWxseSB3ZSB3
+b24ndCBuZWVkIHRoaXMgcGF0Y2g6DQo+ID4gaHR0cHM6Ly9tYXJjLmluZm8vP2w9bGludXgtc3Bh
+cmMmbT0xNTU5MTU2OTQzMDQxMTgmdz0yDQo+IA0KPiBBbmQgdGhlIHNwYXJjNjQgcGF0Y2ggdGhh
+dCBmaXhlcyBDT05GSUdfREVCVUdfUEFHRUFMTE9DIGFsc28gZml4ZXMNCj4gYm9vdGluZw0KPiBv
+ZiB0aGUgbGF0ZXN0IGdpdCBrZXJuZWwgb24gU3VuIFY0NDUgd2hlcmUgbXkgcHJvYmxlbSBpbml0
+aWFsbHkNCj4gaGFwcGVuZWQuDQo+IA0KVGhhbmtzIE1lZWxpcy4gU28gdGhlIFRMQiBmbHVzaCBv
+biB0aGlzIHBsYXRmb3JtIHdpbGwgYmUgZml4ZWQgYW5kIHdlDQp3b24ndCBuZWVkIHRoaXMgcGF0
+Y2guDQo=
