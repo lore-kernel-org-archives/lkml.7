@@ -2,124 +2,174 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7093C28CC2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6516DC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCD6726E87
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:44:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="ipKZwRiU"
+	by mail.kernel.org (Postfix) with ESMTP id 4308226E8B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:45:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727436AbfEaToq (ORCPT
+        id S1727454AbfEaTpF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 15:44:46 -0400
-Received: from mail-eopbgr720066.outbound.protection.outlook.com ([40.107.72.66]:51090
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        Fri, 31 May 2019 15:45:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55000 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727147AbfEaTop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 15:44:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Fhf9yg12FYwPe3trfsjjhu4+MxOB+vRFhpqtdNhWi8k=;
- b=ipKZwRiUyYBdAvKtxV9TBNrqnmqAzQhF2KGzWhK8G3aNB7PD/Je1lEFQIwvXEeeKuRqSBawmyjVQWTRWu4a5mWLnOJEvyW+FLCYF+pH0/gM2oij6T33gSEcRt+MNkid9t4ph1bQY1TunTAYKDiY9CD6nXZdu8sAxm7YRyRc30Q8=
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
- BYAPR05MB6694.namprd05.prod.outlook.com (20.178.235.204) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.13; Fri, 31 May 2019 19:44:41 +0000
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::2cb6:a3d1:f675:ced8]) by BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::2cb6:a3d1:f675:ced8%3]) with mapi id 15.20.1943.016; Fri, 31 May 2019
- 19:44:41 +0000
-From:   Nadav Amit <namit@vmware.com>
-To:     Juergen Gross <jgross@suse.com>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
-Subject: Re: [RFC PATCH v2 04/12] x86/mm/tlb: Flush remote and local TLBs
- concurrently
-Thread-Topic: [RFC PATCH v2 04/12] x86/mm/tlb: Flush remote and local TLBs
- concurrently
-Thread-Index: AQHVF3tF8UKMn76vfUO/W6G8mcgAUaaFHqkAgACE8gA=
-Date:   Fri, 31 May 2019 19:44:41 +0000
-Message-ID: <1DEA29A7-D033-4816-876C-05E7D77F0437@vmware.com>
-References: <20190531063645.4697-1-namit@vmware.com>
- <20190531063645.4697-5-namit@vmware.com>
- <a847ee9c-4faf-c8b4-43bb-cc30e0980796@suse.com>
-In-Reply-To: <a847ee9c-4faf-c8b4-43bb-cc30e0980796@suse.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=namit@vmware.com; 
-x-originating-ip: [66.170.99.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5ff6d24d-760f-4cf1-93a5-08d6e6006cb9
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BYAPR05MB6694;
-x-ms-traffictypediagnostic: BYAPR05MB6694:
-x-microsoft-antispam-prvs: <BYAPR05MB6694A02D23273C4945DC9657D0190@BYAPR05MB6694.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2582;
-x-forefront-prvs: 00540983E2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(136003)(346002)(39860400002)(376002)(199004)(189003)(5660300002)(6246003)(33656002)(66946007)(4744005)(99286004)(25786009)(54906003)(316002)(2906002)(66476007)(64756008)(66446008)(76116006)(73956011)(68736007)(66556008)(4326008)(7416002)(476003)(66066001)(229853002)(8936002)(14454004)(6512007)(6506007)(2616005)(8676002)(53546011)(446003)(76176011)(11346002)(486006)(81156014)(82746002)(305945005)(6436002)(186003)(6116002)(3846002)(71190400001)(26005)(71200400001)(6916009)(256004)(83716004)(6486002)(81166006)(7736002)(102836004)(478600001)(53936002)(86362001)(36756003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB6694;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 8vzZaIBhzD6qajL16JVgIzMw6d4O8dWiIxREAOQKbgqx7lEuupRTbVsCWDWGr93Cy3VSBBjH9syRZNtEOL2Zn3yu900mPiwa0bKgWpELQ92Kgd+f+yFap9jSai30Wt6Rrty57+qNsl1IxGpoSlhyf2+xWjes0o+DnUjIaSZ98myWf1POpTCv7F33sZvFvqqdwRs0v7NUGH4nU5wNF3zlFeLEkI6JZazDoVWpK8Nue3QyZSGFKToCmGgBGgJCd23hd5SE1uycaK+bcxzgfV7IKBe3+pEjxkkzXyZGsVlqdwMnDt6WsLZhRG0ykA2UQBHZ2hbrzyyPJNDOstW+Ts7fvhlKEIrwSC0yzt47CNLxFXisPrf0Sw1xRTXcchSxXACzzDoEiPd97LOyc/Ym/LvwpxmDnM3oKBVb5zbXtveRK2I=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <498DEB6111D0B64C9D5657F78CFDD0EF@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        id S1727147AbfEaTpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 15:45:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D2426AE76;
+        Fri, 31 May 2019 19:45:02 +0000 (UTC)
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5ff6d24d-760f-4cf1-93a5-08d6e6006cb9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 May 2019 19:44:41.6564
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB6694
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 31 May 2019 21:45:02 +0200
+From:   Roman Penyaev <rpenyaev@suse.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Azat Khuzhin <azat@libevent.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 00/13] epoll: support pollable epoll from userspace
+In-Reply-To: <e552262b-2069-075e-f7db-cec19a12a363@kernel.dk>
+References: <20190516085810.31077-1-rpenyaev@suse.de>
+ <a2a88f4f-d104-f565-4d6e-1dddc7f79a05@kernel.dk>
+ <1d47ee76735f25ae5e91e691195f7aa5@suse.de>
+ <e552262b-2069-075e-f7db-cec19a12a363@kernel.dk>
+Message-ID: <8b3bade3c5fffdd8f1ab24940258d4e1@suse.de>
+X-Sender: rpenyaev@suse.de
+User-Agent: Roundcube Webmail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On May 31, 2019, at 4:48 AM, Juergen Gross <jgross@suse.com> wrote:
->=20
-> On 31/05/2019 08:36, Nadav Amit wrote:
->>=20
->> --- a/arch/x86/include/asm/paravirt_types.h
->> +++ b/arch/x86/include/asm/paravirt_types.h
->> @@ -211,6 +211,12 @@ struct pv_mmu_ops {
->> 	void (*flush_tlb_user)(void);
->> 	void (*flush_tlb_kernel)(void);
->> 	void (*flush_tlb_one_user)(unsigned long addr);
->> +	/*
->> +	 * flush_tlb_multi() is the preferred interface. When it is used,
->> +	 * flush_tlb_others() should return false.
->=20
-> Didn't you want to remove/change this comment?
+On 2019-05-31 18:54, Jens Axboe wrote:
+> On 5/31/19 10:02 AM, Roman Penyaev wrote:
+>> On 2019-05-31 16:48, Jens Axboe wrote:
+>>> On 5/16/19 2:57 AM, Roman Penyaev wrote:
+>>>> Hi all,
+>>>> 
+>>>> This is v3 which introduces pollable epoll from userspace.
+>>>> 
+>>>> v3:
+>>>>    - Measurements made, represented below.
+>>>> 
+>>>>    - Fix alignment for epoll_uitem structure on all 64-bit archs 
+>>>> except
+>>>>      x86-64. epoll_uitem should be always 16 bit, proper 
+>>>> BUILD_BUG_ON
+>>>>      is added. (Linus)
+>>>> 
+>>>>    - Check pollflags explicitly on 0 inside work callback, and do
+>>>> nothing
+>>>>      if 0.
+>>>> 
+>>>> v2:
+>>>>    - No reallocations, the max number of items (thus size of the 
+>>>> user
+>>>> ring)
+>>>>      is specified by the caller.
+>>>> 
+>>>>    - Interface is simplified: -ENOSPC is returned on attempt to add 
+>>>> a
+>>>> new
+>>>>      epoll item if number is reached the max, nothing more.
+>>>> 
+>>>>    - Alloced pages are accounted using user->locked_vm and limited 
+>>>> to
+>>>>      RLIMIT_MEMLOCK value.
+>>>> 
+>>>>    - EPOLLONESHOT is handled.
+>>>> 
+>>>> This series introduces pollable epoll from userspace, i.e. user
+>>>> creates
+>>>> epfd with a new EPOLL_USERPOLL flag, mmaps epoll descriptor, gets
+>>>> header
+>>>> and ring pointers and then consumes ready events from a ring, 
+>>>> avoiding
+>>>> epoll_wait() call.  When ring is empty, user has to call 
+>>>> epoll_wait()
+>>>> in order to wait for new events.  epoll_wait() returns -ESTALE if 
+>>>> user
+>>>> ring has events in the ring (kind of indication, that user has to
+>>>> consume
+>>>> events from the user ring first, I could not invent anything better
+>>>> than
+>>>> returning -ESTALE).
+>>>> 
+>>>> For user header and user ring allocation I used vmalloc_user().  I
+>>>> found
+>>>> that it is much easy to reuse remap_vmalloc_range_partial() instead 
+>>>> of
+>>>> dealing with page cache (like aio.c does).  What is also nice is 
+>>>> that
+>>>> virtual address is properly aligned on SHMLBA, thus there should not
+>>>> be
+>>>> any d-cache aliasing problems on archs with vivt or vipt caches.
+>>> 
+>>> Why aren't we just adding support to io_uring for this instead? Then 
+>>> we
+>>> don't need yet another entirely new ring, that's is just a little
+>>> different from what we have.
+>>> 
+>>> I haven't looked into the details of your implementation, just 
+>>> curious
+>>> if there's anything that makes using io_uring a non-starter for this
+>>> purpose?
+>> 
+>> Afaict the main difference is that you do not need to recharge an fd
+>> (submit new poll request in terms of io_uring): once fd has been added
+>> to
+>> epoll with epoll_ctl() - we get events.  When you have thousands of 
+>> fds
+>> -
+>> that should matter.
+>> 
+>> Also interesting question is how difficult to modify existing event
+>> loops
+>> in event libraries in order to support recharging (EPOLLONESHOT in 
+>> terms
+>> of epoll).
+>> 
+>> Maybe Azat who maintains libevent can shed light on this (currently I
+>> see
+>> that libevent does not support "EPOLLONESHOT" logic).
+> 
+> In terms of existing io_uring poll support, which is what I'm guessing
+> you're referring to, it is indeed just one-shot.
 
-Yes! Sorry for that. Fixed now.
+Yes, yes.
+
+> But there's no reason  why we can't have it persist until explicitly
+> canceled with POLL_REMOVE.
+
+It seems not so easy.  The main problem is that with only a ring it is
+impossible to figure out on kernel side what event bits have been 
+already
+seen by the userspace and what bits are new.  So every new cqe has to
+be added to a completion ring on each wake_up_interruptible() call.
+(I mean when fd wants to report that something is ready).
+
+IMO that can lead to many duplicate events (tens? hundreds? honestly no
+idea), which userspace has to handle with subsequent read/write calls.
+It can kill all performance benefits of a uring.
+
+In uepoll this is solved with another piece of shared memory, where
+userspace atomically clears bits and kernel side sets bits.  If kernel
+observes that bits were set (i.e. userspace has not seen this event)
+- new index is added to a ring.
+
+Can we extend the io_uring API to support this behavior?  Also would
+be great if we can make event path lockless.  On a big number of fds
+and frequent events - this matters, please take a look, recently I
+did some measurements:  https://lkml.org/lkml/2018/12/12/305
+
+--
+Roman
+
