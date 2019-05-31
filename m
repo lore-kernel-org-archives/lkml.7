@@ -2,154 +2,140 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14128C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1566C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB37F268FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EAE2268F6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:48:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="r7SNqaIw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tz/bmVgg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727371AbfEaMqf (ORCPT
+        id S1727281AbfEaMr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 08:46:35 -0400
-Received: from vps.xff.cz ([195.181.215.36]:49248 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726403AbfEaMqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 08:46:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1559306791; bh=Vq6PHN+aRiKBxc4hddRHLSZfiSd9bUvG627zPC4o9vY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=r7SNqaIwNqwOb9guoWHE+5kcqm8Eu7YcYIULLPtYivZ8AwmvJo/eJZGEmRO1PppSD
-         sTdI0zKF207BU/1eEZQuURPmnPPtCk//a5UQlBB0RqHTU9jsBnN14mUimA6O4If6tq
-         3YsMz2n2ah8SkyCqn84s9ElTauLkHFeD0Xypwu1E=
-Date:   Fri, 31 May 2019 14:46:30 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-media@vger.kernel.org
-Subject: Re: [linux-sunxi] Re: [PATCH v3 10/12] arm64: dts: allwinner: h6:
- Add IR receiver node
-Message-ID: <20190531124630.q2guo54kjfzr7rkn@core.my.home>
-Mail-Followup-To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-media@vger.kernel.org
-References: <20190528161440.27172-1-peron.clem@gmail.com>
- <20190528161440.27172-11-peron.clem@gmail.com>
- <20190530145550.amalnxmx7kpokykv@core.my.home>
- <CAJiuCce7nHSktVsDKcR8GLRpD3WrN5yP3Nb_Hbu_Q9NjUQbSMw@mail.gmail.com>
+        Fri, 31 May 2019 08:47:59 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46461 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726403AbfEaMr7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 08:47:59 -0400
+Received: by mail-pg1-f193.google.com with SMTP id v9so3989681pgr.13
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 05:47:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=mrOvROKkD6rEtKj8wt1DbcS2uRCJ3D/8JqzJE6LAZsI=;
+        b=Tz/bmVgg+/llAxfI4JKND90fWUcOivF2HhnGibjeZarDNFSasZgVY8nSO1NWp/QGVq
+         Cv1dYM51wKg++UR1jbh1/EuEKhV8SBL32Wz30rcr0vHi765piUJLR6zAWCwJJnVOGQ1n
+         n0pHVSNjw3OWjwdMaBeetNsjmwe85cMWRirG5NiAX3sGPmqfRzHvZwbzOyHrqmF6RQsm
+         JsXDmAawjHvHTUHJw0QWneRhH5U6ioVjGTWDbYdP267LS993J4hEj+RZNPNltTIM4aTG
+         5ZeOTrSNGFQBXQCBEhW+hjDpboaU321kcz1hgNUtTzXjRr07HEG8zW/YdwQolBi6O8aU
+         Tcbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mrOvROKkD6rEtKj8wt1DbcS2uRCJ3D/8JqzJE6LAZsI=;
+        b=Ap7xgUFYiqstx1umhSbVp5bwD0MhQoSmucgVdy11fUgoxqbDtVWwSK2E/ssb66u2nT
+         drA9c8CKbN1A5yF68RKjnJTrGS0mPsJbUNoSStRk6ispppqRC7Rn85lTuF6aDhlzVa19
+         90l3ov7/2TaFhEOnZZuBRA0Vrv0EfB6r11zxsSl0mF8fXT8Uu0w8FaRM+SnYtADZUOZC
+         0cbDdRKzQCtMdoJ1R+GJdAXRtg5nTe0YOPs+7OsNv30MbxDTGb/4qS0sov8HWB/uvrP6
+         zNXvcizqKUPKXkBdaKCDzaA+T3UaeuR/Hvg8CsMKnQI94jCe8Jxp6GxPLCLiV0UblYsI
+         sBUA==
+X-Gm-Message-State: APjAAAU5xTg35TeK95qIU+Y4DJpnfkTnwKTaQgxYMJQXL1ldAt6iC+n3
+        F1I13/acplMLyO/uno+i6lOfxKgz
+X-Google-Smtp-Source: APXvYqzB6F7GVc2P/vdc99tPiND53CNErHrnx/6SB9dA9xIarGsroG8GHVpNUdhbPwiRTCuWtmIlSA==
+X-Received: by 2002:a17:90a:5d15:: with SMTP id s21mr8923444pji.125.1559306878540;
+        Fri, 31 May 2019 05:47:58 -0700 (PDT)
+Received: from [10.0.2.15] ([157.40.69.0])
+        by smtp.gmail.com with ESMTPSA id q7sm10413838pjb.0.2019.05.31.05.47.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 31 May 2019 05:47:57 -0700 (PDT)
+Subject: Re: [PATCH] staging: comedi: Remove variable runflags
+To:     Ian Abbott <abbotti@mev.co.uk>, hsweeten@visionengravers.com,
+        gregkh@linuxfoundation.org, olsonse@umich.edu, jkhasdev@gmail.com,
+        giulio.benetti@micronovasrl.com, nishadkamdar@gmail.com,
+        kas.sandesh@gmail.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+References: <20190530205131.29955-1-nishkadg.linux@gmail.com>
+ <8292224d-9c4a-d29e-4a86-d3352fcd2be1@mev.co.uk>
+From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
+Message-ID: <ceb54997-3057-81df-f3f0-e04b36e950c4@gmail.com>
+Date:   Fri, 31 May 2019 18:17:47 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <8292224d-9c4a-d29e-4a86-d3352fcd2be1@mev.co.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJiuCce7nHSktVsDKcR8GLRpD3WrN5yP3Nb_Hbu_Q9NjUQbSMw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Clément,
+On 31/05/19 3:55 PM, Ian Abbott wrote:
+> On 30/05/2019 21:51, Nishka Dasgupta wrote:
+>> Remove variable runflags and use its value directly. Issue found with
+>> checkpatch.
+>>
+>> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+>> ---
+>>   drivers/staging/comedi/comedi_fops.c | 8 ++------
+>>   1 file changed, 2 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/staging/comedi/comedi_fops.c 
+>> b/drivers/staging/comedi/comedi_fops.c
+>> index f6d1287c7b83..b84ee9293903 100644
+>> --- a/drivers/staging/comedi/comedi_fops.c
+>> +++ b/drivers/staging/comedi/comedi_fops.c
+>> @@ -676,16 +676,12 @@ EXPORT_SYMBOL_GPL(comedi_is_subdevice_running);
+>>   static bool __comedi_is_subdevice_running(struct comedi_subdevice *s)
+>>   {
+>> -    unsigned int runflags = __comedi_get_subdevice_runflags(s);
+>> -
+>> -    return comedi_is_runflags_running(runflags);
+>> +    return 
+>> comedi_is_runflags_running(__comedi_get_subdevice_runflags(s));
+>>   }
+>>   bool comedi_can_auto_free_spriv(struct comedi_subdevice *s)
+>>   {
+>> -    unsigned int runflags = __comedi_get_subdevice_runflags(s);
+>> -
+>> -    return runflags & COMEDI_SRF_FREE_SPRIV;
+>> +    return __comedi_get_subdevice_runflags(s) & COMEDI_SRF_FREE_SPRIV;
+>>   }
+>>   /**
+>>
+> 
+> I couldn't reproduce this checkpatch issue, even with '--subjective'.
 
-On Fri, May 31, 2019 at 12:25:32AM +0200, Clément Péron wrote:
-> Hi Ondrej,
-> 
-> On Thu, 30 May 2019 at 16:55, Ondřej Jirman <megous@megous.com> wrote:
-> >
-> > Hello Clément,
-> >
-> > On Tue, May 28, 2019 at 06:14:38PM +0200, Clément Péron wrote:
-> > > Allwinner H6 IR is similar to A31 and can use same driver.
-> > >
-> > > Add support for it.
-> > >
-> > > Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> > > ---
-> > >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 19 +++++++++++++++++++
-> > >  1 file changed, 19 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > > index 16c5c3d0fd81..649cbdfe452e 100644
-> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > > @@ -647,6 +647,25 @@
-> > >                               pins = "PL0", "PL1";
-> > >                               function = "s_i2c";
-> > >                       };
-> > > +
-> > > +                     r_ir_rx_pin: r-ir-rx-pin {
-> > > +                             pins = "PL9";
-> > > +                             function = "s_cir_rx";
-> > > +                     };
-> > > +             };
-> > > +
-> > > +             r_ir: ir@7040000 {
-> > > +                             compatible = "allwinner,sun50i-h6-ir",
-> > > +                                          "allwinner,sun6i-a31-ir";
-> > > +                             reg = <0x07040000 0x400>;
-> > > +                             interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
-> > > +                             clocks = <&r_ccu CLK_R_APB1_IR>,
-> > > +                                      <&r_ccu CLK_IR>;
-> > > +                             clock-names = "apb", "ir";
-> > > +                             resets = <&r_ccu RST_R_APB1_IR>;
-> > > +                             pinctrl-names = "default";
-> > > +                             pinctrl-0 = <&r_ir_rx_pin>;
-> > > +                             status = "disabled";
-> > >               };
-> >
-> > Please make a comment here, that this is known broken on some boards and may
-> > result IRQ flood if enabled. Otherwise noone will know.
-> 
-> I'm planning to send a v4 next week with the IRQ_NONE return as Maxime
-> suggested it.
-> https://github.com/clementperon/linux/tree/h6_ir_v4
-> 
-> But maybe we could also use the bit 5 of the IRQ status.
+I'm sorry, that was extremely careless of me. I used Coccinelle to find 
+this, not Checkpatch.
+Here is the Coccinelle script I used:
 
-Thanks, that's nice, but that will not make the HW work. That will just disable
-it. The comment is still necessary.
+@@identifier i1, i2, f1, f2; type T; expression e1, e2; statement S1, S2;@@
+(
+- T i1 = f1(...);
+|
+- T i1 = e1;
+)
+... when != e2 = <+...i1...+>
+     when != if (<+...i1...+>) S1 else S2
+     when != f2(...,<+...i1...+>,...)
+     when != i1->i2
+     when != i2[<+...i1...+>]
+     when != while(<+...i1...+>) S1
+     when != for(...;<+...i1...+>;...) S1
 
-thank you,
-	o.
+Again, I'm sorry for the confusion; I don't know why it happened, but it 
+won't happen again.
 
-> Regards, Clement
-> 
-> >
-> > thanks,
-> >         o.
-> >
-> > >               r_i2c: i2c@7081400 {
-> > > --
-> > > 2.20.1
-> > >
-> > >
-> > > _______________________________________________
-> > > linux-arm-kernel mailing list
-> > > linux-arm-kernel@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-> -- 
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/CAJiuCce7nHSktVsDKcR8GLRpD3WrN5yP3Nb_Hbu_Q9NjUQbSMw%40mail.gmail.com.
-> For more options, visit https://groups.google.com/d/optout.
+Nishka
+
