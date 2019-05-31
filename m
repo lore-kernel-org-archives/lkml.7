@@ -6,34 +6,35 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0B0C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A80C28CC2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83B5026620
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:56:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 450B52661F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:56:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbfEaI4o (ORCPT
+        id S1727215AbfEaI4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 04:56:44 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:37044 "EHLO huawei.com"
+        Fri, 31 May 2019 04:56:46 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:39634 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726485AbfEaI4f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 04:56:35 -0400
+        id S1727149AbfEaI4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 04:56:43 -0400
 Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 2E185DFFA0789037CEC9;
-        Fri, 31 May 2019 16:56:32 +0800 (CST)
+        by Forcepoint Email with ESMTP id 511C2EDFA917BDB055C1;
+        Fri, 31 May 2019 16:56:37 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 31 May 2019 16:56:26 +0800
+ 14.3.439.0; Fri, 31 May 2019 16:56:28 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Jian Shen <shenjian15@huawei.com>,
+        <linuxarm@huawei.com>, Weihang Li <liweihang@hisilicon.com>,
+        Peng Li <lipeng321@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 03/12] net: hns3: fix VLAN filter restore issue after reset
-Date:   Fri, 31 May 2019 16:54:49 +0800
-Message-ID: <1559292898-64090-4-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 09/12] net: hns3: add opcode about query and clear RAS & MSI-X to special opcode
+Date:   Fri, 31 May 2019 16:54:55 +0800
+Message-ID: <1559292898-64090-10-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1559292898-64090-1-git-send-email-tanhuazhong@huawei.com>
 References: <1559292898-64090-1-git-send-email-tanhuazhong@huawei.com>
@@ -46,194 +47,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian Shen <shenjian15@huawei.com>
+From: Weihang Li <liweihang@hisilicon.com>
 
-In orginal codes, the driver only restore VLAN filter entries
-for PF after reset, the VLAN entries of VF will lose in this
-case.
+There are four commands being used to query and clear RAS and MSI-X
+interrupts status. They should be contained in array of special opcodes
+because these commands have several descriptors, and we need to judge
+return value in the first descriptor rather than the last one as other
+opcodes. In addition, we shouldn't set the NEXT_FLAG of first descriptor.
 
-This patch fixes it by recording VLAN IDs for each function
-when add VLAN, and restore the VLAN IDs after reset.
+This patch fixes above issues.
 
-Fixes: 681ec3999b3d ("net: hns3: fix for vlan table lost problem when resetting")
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
+Signed-off-by: Weihang Li <liweihang@hisilicon.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hnae3.h        |  3 ++
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    | 34 ++----------------
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.h    |  1 -
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 42 +++++++++++++++++++---
- 4 files changed, 43 insertions(+), 37 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c |  6 +++++-
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c | 16 ----------------
+ 2 files changed, 5 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-index 51c2ff1..2e478d9 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-@@ -338,6 +338,8 @@ struct hnae3_ae_dev {
-  *   Set vlan filter config of Ports
-  * set_vf_vlan_filter()
-  *   Set vlan filter config of vf
-+ * restore_vlan_table()
-+ *   Restore vlan filter entries after reset
-  * enable_hw_strip_rxvtag()
-  *   Enable/disable hardware strip vlan tag of packets received
-  * set_gro_en
-@@ -505,6 +507,7 @@ struct hnae3_ae_ops {
- 	void (*set_timer_task)(struct hnae3_handle *handle, bool enable);
- 	int (*mac_connect_phy)(struct hnae3_handle *handle);
- 	void (*mac_disconnect_phy)(struct hnae3_handle *handle);
-+	void (*restore_vlan_table)(struct hnae3_handle *handle);
- };
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
+index e532905..7a3bde7 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
+@@ -173,7 +173,11 @@ static bool hclge_is_special_opcode(u16 opcode)
+ 			     HCLGE_OPC_STATS_MAC,
+ 			     HCLGE_OPC_STATS_MAC_ALL,
+ 			     HCLGE_OPC_QUERY_32_BIT_REG,
+-			     HCLGE_OPC_QUERY_64_BIT_REG};
++			     HCLGE_OPC_QUERY_64_BIT_REG,
++			     HCLGE_QUERY_CLEAR_MPF_RAS_INT,
++			     HCLGE_QUERY_CLEAR_PF_RAS_INT,
++			     HCLGE_QUERY_CLEAR_ALL_MPF_MSIX_INT,
++			     HCLGE_QUERY_CLEAR_ALL_PF_MSIX_INT};
+ 	int i;
  
- struct hnae3_dcb_ops {
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index f6dc305..1e68bcb 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -1548,15 +1548,11 @@ static int hns3_vlan_rx_add_vid(struct net_device *netdev,
- 				__be16 proto, u16 vid)
- {
- 	struct hnae3_handle *h = hns3_get_handle(netdev);
--	struct hns3_nic_priv *priv = netdev_priv(netdev);
- 	int ret = -EIO;
- 
- 	if (h->ae_algo->ops->set_vlan_filter)
- 		ret = h->ae_algo->ops->set_vlan_filter(h, proto, vid, false);
- 
--	if (!ret)
--		set_bit(vid, priv->active_vlans);
+ 	for (i = 0; i < ARRAY_SIZE(spec_opcode); i++) {
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
+index 83b07ce..b4a7e6a 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
+@@ -1098,8 +1098,6 @@ static int hclge_handle_mpf_ras_error(struct hclge_dev *hdev,
+ 	/* query all main PF RAS errors */
+ 	hclge_cmd_setup_basic_desc(&desc[0], HCLGE_QUERY_CLEAR_MPF_RAS_INT,
+ 				   true);
+-	desc[0].flag |= cpu_to_le16(HCLGE_CMD_FLAG_NEXT);
 -
- 	return ret;
- }
+ 	ret = hclge_cmd_send(&hdev->hw, &desc[0], num);
+ 	if (ret) {
+ 		dev_err(dev, "query all mpf ras int cmd failed (%d)\n", ret);
+@@ -1262,8 +1260,6 @@ static int hclge_handle_mpf_ras_error(struct hclge_dev *hdev,
  
-@@ -1564,33 +1560,11 @@ static int hns3_vlan_rx_kill_vid(struct net_device *netdev,
- 				 __be16 proto, u16 vid)
- {
- 	struct hnae3_handle *h = hns3_get_handle(netdev);
--	struct hns3_nic_priv *priv = netdev_priv(netdev);
- 	int ret = -EIO;
- 
- 	if (h->ae_algo->ops->set_vlan_filter)
- 		ret = h->ae_algo->ops->set_vlan_filter(h, proto, vid, true);
- 
--	if (!ret)
--		clear_bit(vid, priv->active_vlans);
+ 	/* clear all main PF RAS errors */
+ 	hclge_cmd_reuse_desc(&desc[0], false);
+-	desc[0].flag |= cpu_to_le16(HCLGE_CMD_FLAG_NEXT);
 -
--	return ret;
--}
+ 	ret = hclge_cmd_send(&hdev->hw, &desc[0], num);
+ 	if (ret)
+ 		dev_err(dev, "clear all mpf ras int cmd failed (%d)\n", ret);
+@@ -1293,8 +1289,6 @@ static int hclge_handle_pf_ras_error(struct hclge_dev *hdev,
+ 	/* query all PF RAS errors */
+ 	hclge_cmd_setup_basic_desc(&desc[0], HCLGE_QUERY_CLEAR_PF_RAS_INT,
+ 				   true);
+-	desc[0].flag |= cpu_to_le16(HCLGE_CMD_FLAG_NEXT);
 -
--static int hns3_restore_vlan(struct net_device *netdev)
--{
--	struct hns3_nic_priv *priv = netdev_priv(netdev);
--	int ret = 0;
--	u16 vid;
+ 	ret = hclge_cmd_send(&hdev->hw, &desc[0], num);
+ 	if (ret) {
+ 		dev_err(dev, "query all pf ras int cmd failed (%d)\n", ret);
+@@ -1348,8 +1342,6 @@ static int hclge_handle_pf_ras_error(struct hclge_dev *hdev,
+ 
+ 	/* clear all PF RAS errors */
+ 	hclge_cmd_reuse_desc(&desc[0], false);
+-	desc[0].flag |= cpu_to_le16(HCLGE_CMD_FLAG_NEXT);
 -
--	for_each_set_bit(vid, priv->active_vlans, VLAN_N_VID) {
--		ret = hns3_vlan_rx_add_vid(netdev, htons(ETH_P_8021Q), vid);
--		if (ret) {
--			netdev_err(netdev, "Restore vlan: %d filter, ret:%d\n",
--				   vid, ret);
--			return ret;
--		}
--	}
+ 	ret = hclge_cmd_send(&hdev->hw, &desc[0], num);
+ 	if (ret)
+ 		dev_err(dev, "clear all pf ras int cmd failed (%d)\n", ret);
+@@ -1667,8 +1659,6 @@ int hclge_handle_hw_msix_error(struct hclge_dev *hdev,
+ 	/* query all main PF MSIx errors */
+ 	hclge_cmd_setup_basic_desc(&desc[0], HCLGE_QUERY_CLEAR_ALL_MPF_MSIX_INT,
+ 				   true);
+-	desc[0].flag |= cpu_to_le16(HCLGE_CMD_FLAG_NEXT);
 -
- 	return ret;
- }
+ 	ret = hclge_cmd_send(&hdev->hw, &desc[0], mpf_bd_num);
+ 	if (ret) {
+ 		dev_err(dev, "query all mpf msix int cmd failed (%d)\n",
+@@ -1700,8 +1690,6 @@ int hclge_handle_hw_msix_error(struct hclge_dev *hdev,
  
-@@ -4301,12 +4275,8 @@ static int hns3_reset_notify_restore_enet(struct hnae3_handle *handle)
- 	vlan_filter_enable = netdev->flags & IFF_PROMISC ? false : true;
- 	hns3_enable_vlan_filter(netdev, vlan_filter_enable);
- 
--	/* Hardware table is only clear when pf resets */
--	if (!(handle->flags & HNAE3_SUPPORT_VF)) {
--		ret = hns3_restore_vlan(netdev);
--		if (ret)
--			return ret;
--	}
-+	if (handle->ae_algo->ops->restore_vlan_table)
-+		handle->ae_algo->ops->restore_vlan_table(handle);
- 
- 	return hns3_restore_fd_rules(netdev);
- }
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-index 408efd5..efab15f 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-@@ -550,7 +550,6 @@ struct hns3_nic_priv {
- 	struct notifier_block notifier_block;
- 	/* Vxlan/Geneve information */
- 	struct hns3_udp_tunnel udp_tnl[HNS3_UDP_TNL_MAX];
--	unsigned long active_vlans[BITS_TO_LONGS(VLAN_N_VID)];
- 	struct hns3_enet_coalesce tx_coal;
- 	struct hns3_enet_coalesce rx_coal;
- };
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 1215455..4873a8e 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -7401,10 +7401,6 @@ static void hclge_add_vport_vlan_table(struct hclge_vport *vport, u16 vlan_id,
- {
- 	struct hclge_vport_vlan_cfg *vlan;
- 
--	/* vlan 0 is reserved */
--	if (!vlan_id)
--		return;
+ 	/* clear all main PF MSIx errors */
+ 	hclge_cmd_reuse_desc(&desc[0], false);
+-	desc[0].flag |= cpu_to_le16(HCLGE_CMD_FLAG_NEXT);
 -
- 	vlan = kzalloc(sizeof(*vlan), GFP_KERNEL);
- 	if (!vlan)
- 		return;
-@@ -7499,6 +7495,43 @@ void hclge_uninit_vport_vlan_table(struct hclge_dev *hdev)
- 	mutex_unlock(&hdev->vport_cfg_mutex);
- }
+ 	ret = hclge_cmd_send(&hdev->hw, &desc[0], mpf_bd_num);
+ 	if (ret) {
+ 		dev_err(dev, "clear all mpf msix int cmd failed (%d)\n",
+@@ -1713,8 +1701,6 @@ int hclge_handle_hw_msix_error(struct hclge_dev *hdev,
+ 	memset(desc, 0, bd_num * sizeof(struct hclge_desc));
+ 	hclge_cmd_setup_basic_desc(&desc[0], HCLGE_QUERY_CLEAR_ALL_PF_MSIX_INT,
+ 				   true);
+-	desc[0].flag |= cpu_to_le16(HCLGE_CMD_FLAG_NEXT);
+-
+ 	ret = hclge_cmd_send(&hdev->hw, &desc[0], pf_bd_num);
+ 	if (ret) {
+ 		dev_err(dev, "query all pf msix int cmd failed (%d)\n",
+@@ -1753,8 +1739,6 @@ int hclge_handle_hw_msix_error(struct hclge_dev *hdev,
  
-+static void hclge_restore_vlan_table(struct hnae3_handle *handle)
-+{
-+	struct hclge_vport *vport = hclge_get_vport(handle);
-+	struct hclge_vport_vlan_cfg *vlan, *tmp;
-+	struct hclge_dev *hdev = vport->back;
-+	u16 vlan_proto, qos;
-+	u16 state, vlan_id;
-+	int i;
-+
-+	mutex_lock(&hdev->vport_cfg_mutex);
-+	for (i = 0; i < hdev->num_alloc_vport; i++) {
-+		vport = &hdev->vport[i];
-+		vlan_proto = vport->port_base_vlan_cfg.vlan_info.vlan_proto;
-+		vlan_id = vport->port_base_vlan_cfg.vlan_info.vlan_tag;
-+		qos = vport->port_base_vlan_cfg.vlan_info.qos;
-+		state = vport->port_base_vlan_cfg.state;
-+
-+		if (state != HNAE3_PORT_BASE_VLAN_DISABLE) {
-+			hclge_set_vlan_filter_hw(hdev, htons(vlan_proto),
-+						 vport->vport_id, vlan_id, qos,
-+						 false);
-+			continue;
-+		}
-+
-+		list_for_each_entry_safe(vlan, tmp, &vport->vlan_list, node) {
-+			if (vlan->hd_tbl_status)
-+				hclge_set_vlan_filter_hw(hdev,
-+							 htons(ETH_P_8021Q),
-+							 vport->vport_id,
-+							 vlan->vlan_id, 0,
-+							 false);
-+		}
-+	}
-+
-+	mutex_unlock(&hdev->vport_cfg_mutex);
-+}
-+
- int hclge_en_hw_strip_rxvtag(struct hnae3_handle *handle, bool enable)
- {
- 	struct hclge_vport *vport = hclge_get_vport(handle);
-@@ -9206,6 +9239,7 @@ static const struct hnae3_ae_ops hclge_ops = {
- 	.set_timer_task = hclge_set_timer_task,
- 	.mac_connect_phy = hclge_mac_connect_phy,
- 	.mac_disconnect_phy = hclge_mac_disconnect_phy,
-+	.restore_vlan_table = hclge_restore_vlan_table,
- };
- 
- static struct hnae3_ae_algo ae_algo = {
+ 	/* clear all PF MSIx errors */
+ 	hclge_cmd_reuse_desc(&desc[0], false);
+-	desc[0].flag |= cpu_to_le16(HCLGE_CMD_FLAG_NEXT);
+-
+ 	ret = hclge_cmd_send(&hdev->hw, &desc[0], pf_bd_num);
+ 	if (ret) {
+ 		dev_err(dev, "clear all pf msix int cmd failed (%d)\n",
 -- 
 2.7.4
 
