@@ -6,85 +6,106 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A52C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44431C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82AEB268C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:25:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17E56268CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:27:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbfEaMZR (ORCPT
+        id S1727316AbfEaM1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 08:25:17 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33508 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726330AbfEaMZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 08:25:17 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 42AA4AD76;
-        Fri, 31 May 2019 12:25:16 +0000 (UTC)
-Date:   Fri, 31 May 2019 14:25:15 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Petr Mladek <pmladek@suse.com>
-cc:     Jiri Kosina <jikos@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] stacktrace: Remove superfluous WARN_ONCE() from
- save_stack_trace_tsk_reliable()
-In-Reply-To: <20190531074147.27616-2-pmladek@suse.com>
-Message-ID: <alpine.LSU.2.21.1905311418120.742@pobox.suse.cz>
-References: <20190531074147.27616-1-pmladek@suse.com> <20190531074147.27616-2-pmladek@suse.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Fri, 31 May 2019 08:27:48 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:45493 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726415AbfEaM1r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 08:27:47 -0400
+Received: from [192.168.1.110] ([77.7.63.28]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MMoXE-1hGFi146Q0-00Il8N; Fri, 31 May 2019 14:27:30 +0200
+Subject: Re: [PATCH -next] x86: apuv2: Make two symbols static
+To:     YueHaibing <yuehaibing@huawei.com>, info@metux.net,
+        dvhart@infradead.org, andy@infradead.org, linus.walleij@linaro.org
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+References: <20190529143844.23084-1-yuehaibing@huawei.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <abbb799c-07d1-1c8e-dac0-259678f53a20@metux.net>
+Date:   Fri, 31 May 2019 14:27:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190529143844.23084-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:9EgrzZs0sVlzNy1LbqYZBr4fsjC/c0wL4kwv8y8gUl+ppMRDt/N
+ /Tl9/jXG828zpp9Q6XVDpIoHj3NKDMi8HVhsSftaZSnO0fvDNF/MEmykYzy09URxMho1JdS
+ FQ/Lagz4RFiFs8CZVgHYuUPabctTlJ61WKy815SAh7l4QFCJguHJwbnY1dM71yxyRFg9PFl
+ 8NDvRNPvQ3cTXo+XouDzw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1RAZlWEqpOk=:ZHh41jLhluryaRA021Cpdu
+ yLgCVf1xRyPN4VVCEHQWZ/gWtqTTgMVohjN52ZjKgOyZZdnRg/+LfZEaRkUHQy1WB18ZOqjja
+ /6m3yRDGV279qBsDHmFPaHlQ1PNRJZz7jj1AL78Te5ycExrax4eEVguTlE+RkSDDnmh3Do+9G
+ Cz4awr374VzRt3ykEzm4HgzktTgDFHYYpiRCsT1f9cARJthTa+qGAP1amEXBlaYFLYTRA82CG
+ kuwRt9mdwO905KXMo5du3YEovC1Hketk3UCgCSTttKBAJJ0qvxqmw2vkQbJwKRRCxv5PyfpAD
+ SgY5vejr5o0NBMEy21ZhbUEXPx+iJZtFM1PgzGNwy3BpkEs4gAW4EfZ/aTfpG/022f34Yvrag
+ SofuX3pcKpKQY2m4A13mM5objPps2B05mV8nJSAvWB4bwcn4u3AI1/+tktfFump2BUt3kc2Yx
+ USnECAXXyRDv8916QxYBRCUj6HCyl5V+ZvHDkxgBBPdUhlEdLkmF5iwMCZxaNXehHjMMLwQSX
+ UJUansj64azhcnw67ml1pa2ipS/iiHIzvBbpjLSkxXDHdFR47ZGHk9P2ohlbg3MKvqumPi5lc
+ kaHx1smnR1o5Qjwk/XDzvaCPS+nyXj0EcDKykDn/tEUpF+XPahB2Tn9O6zmSKbgAtnvMeUscg
+ g6BXU7FuWQjYG0Dre1M+V73TekRFLb1Vw4HDbuvbYysGvNreI1tqGaszlfImyBxEAILL95g5+
+ XD2e/mE729RD2DMSiRAl8HAzkMZBf5t1RfQwaD84gkcEoNv+2TWnmdO0QSU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 May 2019, Petr Mladek wrote:
-
-> WARN_ONCE() in the generic save_stack_trace_tsk_reliable() is superfluous.
+On 29.05.19 16:38, YueHaibing wrote:
+> Fix sparse warnings:
 > 
-> The information is passed also via the return value. The only current
-> user klp_check_stack() writes its own warning when the reliable stack
-> traces are not supported. Other eventual users might want its own error
-> handling as well.
+> drivers/platform/x86/pcengines-apuv2.c:80:27: warning: symbol 'gpios_led_table' was not declared. Should it be static?
+> drivers/platform/x86/pcengines-apuv2.c:113:27: warning: symbol 'gpios_key_table' was not declared. Should it be static?
 > 
-> Signed-off-by: Petr Mladek <pmladek@suse.com>
-> Acked-by: Miroslav Benes <mbenes@suse.cz>
-> Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 > ---
->  kernel/stacktrace.c | 1 -
->  1 file changed, 1 deletion(-)
+>  drivers/platform/x86/pcengines-apuv2.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/kernel/stacktrace.c b/kernel/stacktrace.c
-> index 5667f1da3ede..8d088408928d 100644
-> --- a/kernel/stacktrace.c
-> +++ b/kernel/stacktrace.c
-> @@ -259,7 +259,6 @@ __weak int
->  save_stack_trace_tsk_reliable(struct task_struct *tsk,
->  			      struct stack_trace *trace)
->  {
-> -	WARN_ONCE(1, KERN_INFO "save_stack_tsk_reliable() not implemented yet.\n");
->  	return -ENOSYS;
->  }
+> diff --git a/drivers/platform/x86/pcengines-apuv2.c b/drivers/platform/x86/pcengines-apuv2.c
+> index c1ca931e1fab..b0d3110ae378 100644
+> --- a/drivers/platform/x86/pcengines-apuv2.c
+> +++ b/drivers/platform/x86/pcengines-apuv2.c
+> @@ -77,7 +77,7 @@ static const struct gpio_led_platform_data apu2_leds_pdata = {
+>  	.leds		= apu2_leds,
+>  };
+>  
+> -struct gpiod_lookup_table gpios_led_table = {
+> +static struct gpiod_lookup_table gpios_led_table = {
+>  	.dev_id = "leds-gpio",
+>  	.table = {
+>  		GPIO_LOOKUP_IDX(AMD_FCH_GPIO_DRIVER_NAME, APU2_GPIO_LINE_LED1,
+> @@ -110,7 +110,7 @@ static const struct gpio_keys_platform_data apu2_keys_pdata = {
+>  	.name		= "apu2-keys",
+>  };
+>  
+> -struct gpiod_lookup_table gpios_key_table = {
+> +static struct gpiod_lookup_table gpios_key_table = {
+>  	.dev_id = "gpio-keys-polled",
+>  	.table = {
+>  		GPIO_LOOKUP_IDX(AMD_FCH_GPIO_DRIVER_NAME, APU2_GPIO_LINE_MODESW,
+> 
 
-Do we even need the weak function now after Thomas' changes to 
-kernel/stacktrace.c?
+thanks.
 
-- livepatch is the only user and it calls stack_trace_save_tsk_reliable()
-- x86 defines CONFIG_ARCH_STACKWALK and CONFIG_HAVE_RELIABLE_STACKTRACE, 
-  so it has stack_trace_save_tsk_reliable() implemented and it calls 
-  arch_stack_walk_reliable()
-- powerpc defines CONFIG_HAVE_RELIABLE_STACKTRACE and does not have 
-  CONFIG_ARCH_STACKWALK. It also has stack_trace_save_tsk_reliable() 
-  implemented and it calls save_stack_trace_tsk_reliable(), which is 
-  implemented in arch/powerpc/
-- all other archs do not have CONFIG_HAVE_RELIABLE_STACKTRACE and there is 
-  stack_trace_save_tsk_reliable() returning ENOSYS for these cases in 
-  include/linux/stacktrace.c
 
-Miroslav
+Acked-By: Enrico Weigelt, metux IT consult <info@metux.net>
+
+
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
