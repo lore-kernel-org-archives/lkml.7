@@ -2,102 +2,99 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F26C28CC0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 00:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F95C28CC0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 00:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FC2D2635A
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 00:50:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31D3E2635B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 00:51:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726649AbfEaAur (ORCPT
+        id S1726716AbfEaAvP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 20:50:47 -0400
-Received: from mga12.intel.com ([192.55.52.136]:42235 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726131AbfEaAur (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 20:50:47 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 17:50:46 -0700
-X-ExtLoop1: 1
-Received: from joy-optiplex-7040.sh.intel.com ([10.239.13.9])
-  by orsmga001.jf.intel.com with ESMTP; 30 May 2019 17:50:40 -0700
-From:   Yan Zhao <yan.y.zhao@intel.com>
-To:     intel-gvt-dev@lists.freedesktop.org
-Cc:     aik@ozlabs.ru, Zhengxiao.zx@alibaba-inc.com,
-        shuangtai.tst@alibaba-inc.com, qemu-devel@nongnu.org,
-        eauger@redhat.com, yi.l.liu@intel.com, ziye.yang@intel.com,
-        mlevitsk@redhat.com, pasic@linux.ibm.com, felipe@nutanix.com,
-        changpeng.liu@intel.com, Ken.Xue@amd.com,
-        jonathan.davies@nutanix.com, shaopeng.he@intel.com,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        libvir-list@redhat.com, alex.williamson@redhat.com,
-        eskultet@redhat.com, dgilbert@redhat.com, cohuck@redhat.com,
-        kevin.tian@intel.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, cjia@nvidia.com, kwankhede@nvidia.com,
-        berrange@redhat.com, dinechin@redhat.com,
-        Yan Zhao <yan.y.zhao@intel.com>
-Subject: [PATCH v4 0/2] introduction of migration_version attribute for VFIO live migration
-Date:   Thu, 30 May 2019 20:44:38 -0400
-Message-Id: <20190531004438.24528-1-yan.y.zhao@intel.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 30 May 2019 20:51:15 -0400
+Received: from mail1.windriver.com ([147.11.146.13]:52631 "EHLO
+        mail1.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726131AbfEaAvO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 20:51:14 -0400
+Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
+        by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id x4V0owUw022099
+        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+        Thu, 30 May 2019 17:50:58 -0700 (PDT)
+Received: from [128.224.155.90] (128.224.155.90) by ALA-HCA.corp.ad.wrs.com
+ (147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 30 May
+ 2019 17:50:58 -0700
+Subject: Re: Userspace woes with 5.1.5 due to TIPC
+To:     Mihai Moldovan <ionic@ionic.de>,
+        Jon Maloy <jon.maloy@ericsson.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <4ad776cb-c597-da1d-7d5e-af39ded17c40@ionic.de>
+ <CH2PR15MB3575BD29C90539022364B8719A180@CH2PR15MB3575.namprd15.prod.outlook.com>
+ <1780dd6a-9546-0df5-7fb2-44b78643b079@ionic.de>
+From:   Ying Xue <ying.xue@windriver.com>
+Message-ID: <3cc60b11-2b63-3bfc-2be8-569f2b0ce7cf@windriver.com>
+Date:   Fri, 31 May 2019 08:41:06 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1780dd6a-9546-0df5-7fb2-44b78643b079@ionic.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [128.224.155.90]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset introduces a migration_version attribute under sysfs of VFIO
-Mediated devices.
+On 5/31/19 4:47 AM, Mihai Moldovan wrote:
+> * On 5/30/19 9:51 PM, Jon Maloy wrote:
+>> Make sure the following three commits are present in TIPC *after* the offending commit:
+>>
+>> commit 532b0f7ece4c "tipc: fix modprobe tipc failed after switch order of device registration"
+> 
+> This *is* the offending commit, as far as I understand. Merely rebased in
+> linux-stable, and hence having a different SHA, but mentioning the original SHA
+> (i.e., 532b0f7ece4c) in its commit message.
+> 
+> 
+>> Since that patch one was flawed it had to be reverted:
+>> commit 5593530e5694  ""Revert tipc: fix modprobe tipc failed after switch order of device registration"
+>>
+>> It was then replaced with this one: 
+>> commit 526f5b851a96 "tipc: fix modprobe tipc failed after switch order of device registration"
+> 
+> Okay, these two are not part of 5.1.5. I've backported them (and only these two)
+> to 5.1.5 and the issue(s) seem to be gone. Definitely something that should be
+> backported to/included in 5.1.6.
+> 
+> 
+> Thanks for pointing all that out! Unfortunately I didn't add anything useful but
+> noise, since you obviously already knew, that this commit was broken. I'd urge
+> Greg to release a new stable version including the fixes soon, if possible,
+> though, for not being able to start/use userspace browsers sounds like a pretty
+> bad regression to me.
+> 
 
-This migration_version attribute is used to check migration compatibility
-between two mdev devices of the same mdev type.
+Not only commit 526f5b851a96 )("tipc: fix modprobe tipc failed after
+switch order of device registration") has to be reverted, but also I
+found commit 7e27e8d6130c ("tipc: switch order of device registration to
+fix a crash") introduced a serious regression which makes tipc internal
+topology service server failed to be created.
 
-Patch 1 defines migration_version attribute in
-Documentation/vfio-mediated-device.txt
+Today I will fix it with the following approaches:
+1. Revert commit 7e27e8d6130c ("tipc: switch order of device
+registration to fix a crash")
+2. Use another method to solve the problem that commit 7e27e8d6130c
+tries to fix.
 
-Patch 2 uses GVT as an example to show how to expose migration_version
-attribute and check migration compatibility in vendor driver.
+Thanks,
+Ying
 
-v4:
-1. fixed indentation/spell errors, reworded several error messages
-2. added a missing memory free for error handling in patch 2
-
-v3:
-1. renamed version to migration_version
-2. let errno to be freely defined by vendor driver
-3. let checking mdev_type be prerequisite of migration compatibility check
-4. reworded most part of patch 1
-5. print detailed error log in patch 2 and generate migration_version
-string at init time
-
-v2:
-1. renamed patched 1
-2. made definition of device version string completely private to vendor
-driver
-3. reverted changes to sample mdev drivers
-4. described intent and usage of version attribute more clearly.
-
-
-Yan Zhao (2):
-  vfio/mdev: add migration_version attribute for mdev device
-  drm/i915/gvt: export migration_version to mdev sysfs for Intel vGPU
-
- Documentation/vfio-mediated-device.txt       | 113 +++++++++++++
- drivers/gpu/drm/i915/gvt/Makefile            |   2 +-
- drivers/gpu/drm/i915/gvt/gvt.c               |  39 +++++
- drivers/gpu/drm/i915/gvt/gvt.h               |   5 +
- drivers/gpu/drm/i915/gvt/migration_version.c | 168 +++++++++++++++++++
- drivers/gpu/drm/i915/gvt/vgpu.c              |  13 +-
- 6 files changed, 337 insertions(+), 3 deletions(-)
- create mode 100644 drivers/gpu/drm/i915/gvt/migration_version.c
-
--- 
-2.17.1
-
+> 
+> 
+> Mihai
+> 
