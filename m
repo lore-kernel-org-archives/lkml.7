@@ -2,186 +2,131 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7D3C46460
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:15:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF1EC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4343126947
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:15:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559308530;
-	bh=OgKPGc7+OoH/SRPexPayA7UcwAFIbJVMYZmUK8QT29g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=t5XokgWagW0bJcC3jc3BkAYUP/7u0P1WdQxISSc0cksByO/ea/ehLlVKBeuMYB+In
-	 szBKKiiYOLxMMARWZxzqwlvsiItlP3gidp5cQMSAfZdgEA30z4SmQqsZUYYNXwZZwp
-	 UIChbvJD9WCd9l+aM0tWhp2JuleZx1XR4EpV3pts=
+	by mail.kernel.org (Postfix) with ESMTP id 7E0C725FAB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:19:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727366AbfEaNP3 (ORCPT
+        id S1727255AbfEaNTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 09:15:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35400 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726518AbfEaNP3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 09:15:29 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0225326704;
-        Fri, 31 May 2019 13:15:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559308528;
-        bh=OgKPGc7+OoH/SRPexPayA7UcwAFIbJVMYZmUK8QT29g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KQ31J/hCD3WC34+MU8p7o36eHsB1D5g9x9i3CzYhhs58si5g2aerIrm4c4jkF6Z2a
-         EFNN3OkF8vc+5OSgiDI87lKIA5e/yNUFoa7XXJUxdrKMikKQH1SpQZ6TiCQNKG+QOc
-         yJdamv86rRYQLb0RBWHwYLhM465t0eBoDWFD/hAM=
-Date:   Fri, 31 May 2019 08:15:26 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com
-Subject: Re: [PATCH v3 2/5] PCI/DPC: Allow dpc_probe() even if DPC is handled
- in firmware
-Message-ID: <20190531131526.GP28250@google.com>
-References: <cover.1557870869.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <0713d993b40bed6deac3968c2bba5a5ab3d80a7e.1557870869.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+        Fri, 31 May 2019 09:19:09 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46098 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726330AbfEaNTJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 09:19:09 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 278B6AED7;
+        Fri, 31 May 2019 13:19:07 +0000 (UTC)
+Date:   Fri, 31 May 2019 15:19:06 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] livepatch: Remove duplicate warning about missing
+ reliable stacktrace support
+Message-ID: <20190531131906.lkhrfgpze57pqrcg@pathway.suse.cz>
+References: <20190531074147.27616-1-pmladek@suse.com>
+ <20190531074147.27616-3-pmladek@suse.com>
+ <alpine.LSU.2.21.1905311425450.742@pobox.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0713d993b40bed6deac3968c2bba5a5ab3d80a7e.1557870869.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <alpine.LSU.2.21.1905311425450.742@pobox.suse.cz>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 03:18:14PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+On Fri 2019-05-31 14:32:34, Miroslav Benes wrote:
+> On Fri, 31 May 2019, Petr Mladek wrote:
 > 
-> Error Disconnect Recover (EDR) support allows OS to handle the error
-> recovery even when DPC configuration is handled by firmware. So allow
-> dpc_probe() to continue even if firmware first mode is enabed. This is
-> a prepratory patch for adding EDR support.
-
-I assume this code is based on some language in the spec, and it needs
-to be tied back to it.  The only mention of EDR I'm aware of is in
-ACPI v6.3, sec 5.6.6 and 6.3.5.2, so it needs at least a citation.
-
-I don't see any specific reference to firmware-first there, so please
-also connect the dots about how we conclude that we need DPC even when
-firmware-first is enabled.
-
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> ---
->  drivers/pci/pcie/dpc.c | 49 +++++++++++++++++++++++++++++++-----------
->  1 file changed, 36 insertions(+), 13 deletions(-)
+> > WARN_ON_ONCE() could not be called safely under rq lock because
+> > of console deadlock issues.
+> > 
+> > It can be simply removed. A better descriptive message is written
+> > in klp_enable_patch() when klp_have_reliable_stack() fails.
+> > The remaining debug message is good enough.
+> > 
+> > Signed-off-by: Petr Mladek <pmladek@suse.com>
+> > ---
+> >  kernel/livepatch/transition.c | 1 -
+> >  1 file changed, 1 deletion(-)
+> > 
+> > diff --git a/kernel/livepatch/transition.c b/kernel/livepatch/transition.c
+> > index abb2a4a2cbb2..1bf362df76e1 100644
+> > --- a/kernel/livepatch/transition.c
+> > +++ b/kernel/livepatch/transition.c
+> > @@ -247,7 +247,6 @@ static int klp_check_stack(struct task_struct *task, char *err_buf)
+> >  	int ret, nr_entries;
+> >  
+> >  	ret = stack_trace_save_tsk_reliable(task, entries, ARRAY_SIZE(entries));
+> > -	WARN_ON_ONCE(ret == -ENOSYS);
+> >  	if (ret < 0) {
+> >  		snprintf(err_buf, STACK_ERR_BUF_SIZE,
+> >  			 "%s: %s:%d has an unreliable stack\n",
 > 
-> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> index 7b77754a82de..0c9ce876e450 100644
-> --- a/drivers/pci/pcie/dpc.c
-> +++ b/drivers/pci/pcie/dpc.c
-> @@ -20,6 +20,8 @@ struct dpc_dev {
->  	u16			cap_pos;
->  	bool			rp_extensions;
->  	u8			rp_log_size;
-> +	/* Set True if DPC is handled in firmware */
-> +	bool			firmware_dpc;
->  };
->  
->  static const char * const rp_pio_error_string[] = {
-> @@ -67,6 +69,9 @@ void pci_save_dpc_state(struct pci_dev *dev)
->  	if (!dpc)
->  		return;
->  
-> +	if (dpc->firmware_dpc)
-> +		return;
-> +
->  	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_DPC);
->  	if (!save_state)
->  		return;
-> @@ -88,6 +93,9 @@ void pci_restore_dpc_state(struct pci_dev *dev)
->  	if (!dpc)
->  		return;
->  
-> +	if (dpc->firmware_dpc)
-> +		return;
-> +
->  	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_DPC);
->  	if (!save_state)
->  		return;
-> @@ -292,9 +300,6 @@ static int dpc_probe(struct pcie_device *dev)
->  	int status;
->  	u16 ctl, cap;
->  
-> -	if (pcie_aer_get_firmware_first(pdev))
-> -		return -ENOTSUPP;
-> -
->  	dpc = devm_kzalloc(device, sizeof(*dpc), GFP_KERNEL);
->  	if (!dpc)
->  		return -ENOMEM;
-> @@ -303,13 +308,25 @@ static int dpc_probe(struct pcie_device *dev)
->  	dpc->dev = dev;
->  	set_service_data(dev, dpc);
->  
-> -	status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
-> -					   dpc_handler, IRQF_SHARED,
-> -					   "pcie-dpc", dpc);
-> -	if (status) {
-> -		dev_warn(device, "request IRQ%d failed: %d\n", dev->irq,
-> -			 status);
-> -		return status;
-> +	if (pcie_aer_get_firmware_first(pdev))
-> +		dpc->firmware_dpc = 1;
-> +
-> +	/*
-> +	 * If DPC is handled in firmware and ACPI support is not enabled in OS,
-> +	 * then its not useful to proceed with probe. So, return error.
-> +	 */
-> +	if (dpc->firmware_dpc && !IS_ENABLED(CONFIG_ACPI))
-> +		return -ENODEV;
-> +
-> +	if (!dpc->firmware_dpc) {
-> +		status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
-> +						   dpc_handler, IRQF_SHARED,
-> +						   "pcie-dpc", dpc);
-> +		if (status) {
-> +			dev_warn(device, "request IRQ%d failed: %d\n", dev->irq,
-> +				 status);
-> +			return status;
-> +		}
->  	}
->  
->  	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CAP, &cap);
-> @@ -324,9 +341,12 @@ static int dpc_probe(struct pcie_device *dev)
->  			dpc->rp_log_size = 0;
->  		}
->  	}
-> -
-> -	ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
-> -	pci_write_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, ctl);
-> +	if (!dpc->firmware_dpc) {
-> +		ctl = (ctl & 0xfff4) |
-> +			(PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN);
-> +		pci_write_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL,
-> +				      ctl);
-> +	}
->  
->  	dev_info(device, "DPC error containment capabilities: Int Msg #%d, RPExt%c PoisonedTLP%c SwTrigger%c RP PIO Log %d, DL_ActiveErr%c\n",
->  		cap & PCI_EXP_DPC_IRQ, FLAG(cap, PCI_EXP_DPC_CAP_RP_EXT),
-> @@ -344,6 +364,9 @@ static void dpc_remove(struct pcie_device *dev)
->  	struct pci_dev *pdev = dev->port;
->  	u16 ctl;
->  
-> +	if (dpc->firmware_dpc)
-> +		return;
-> +
->  	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, &ctl);
->  	ctl &= ~(PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN);
->  	pci_write_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, ctl);
-> -- 
-> 2.20.1
+> The current situation is not the best, but I think the patch improves it 
+> only slightly. I see two possible solutions.
 > 
+> 1. we either revert commit 1d98a69e5cef ("livepatch: Remove reliable 
+> stacktrace check in klp_try_switch_task()"), so that klp_check_stack() 
+> returns right away.
+> 
+> 2. or we test ret from stack_trace_save_tsk_reliable() for ENOSYS and 
+> return.
+> 
+> In my opinion either of them is better than what we have now (and what we 
+> would have with the patch), because klp_check_stack() returns, but it 
+> prints out that a task has an unreliable stack. Yes, it is pr_debug() only 
+> in the end, but still.
+
+IMHO, any extra check will not improve the situation much. Quiet
+return is as useless as the misleading pr_debug() that will
+not normally get printed anyway.
+
+Adding a warning is complicated because we would need to pass it via
+the temporary buffer. It is not worth the complexity.
+
+IMHO, it does not make sense to complicate the code because of
+a corner case situation that would hit only people adding
+livepatch support for new architecture.
+
+
+> I don't have a preference and my understanding is that Petr does not want 
+> to do v4. I can prepare a patch, but it would be nice to choose now. Josh? 
+> Anyone else?
+
+Exactly. Fell free to take over the patches.
+
+I do not want to spend more time on endless discussions about this
+corner case.
+
+I made the 1st and 2nd patch only because of ideas mentioned when switching
+klp_have_reliable_stack() from error to warning, namely:
+
+  https://lkml.kernel.org/r/20190418135858.n3lzq2oxkj52m6bi@treble
+  https://lkml.kernel.org/r/alpine.LSU.2.21.1904231041500.19172@pobox.suse.cz
+
+I have never expected that it would need several more respins.
+
+Note that there is no good solution. We would need to choose between
+a complicated code or an imperfect error handling. Anything in between
+is just a compromise. Choosing between all the variants looks like
+a bikeshedding to me.
+
+I sent what I preferred and what looked acceptable. I am not going
+to block other approaches unless they make the code too complicated.
+
+Best Regards,
+Petr
