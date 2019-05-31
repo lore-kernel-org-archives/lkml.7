@@ -2,110 +2,141 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2277C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F0AC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:16:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE53926569
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:14:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 226F226583
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:16:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbfEaIO6 (ORCPT
+        id S1727084AbfEaIQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 04:14:58 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:39751 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726386AbfEaIO6 (ORCPT
+        Fri, 31 May 2019 04:16:03 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:18895 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726158AbfEaIQC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 04:14:58 -0400
-Received: by mail-qt1-f193.google.com with SMTP id i34so10347514qta.6;
-        Fri, 31 May 2019 01:14:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qz9y4gFluxzPwJy3KPISqVXROmvinNnPW5jrOuJybTo=;
-        b=Tm5ewF/wi6xIdUKsIkZdEGqPXXKlR882rY6T5MTG1DHJVvlwP0o9cTJDqcudqGhlFR
-         fKEhX4v13F7muxAOKwHJKK9rrnB+4+jOyD/RXIU5YIiJ3XobZdyvS0xV+3+H/Mz6lSr5
-         ZEaQ3i9oBK3LkpMPoFdWKmLffTKbEkw3C2QMl830DwWBw+OXg/x8GemOkZOZlRFU8UVK
-         SVFeBG9fKp86GgLhwcdBOUuy5mAo1yIt1X5rwxOE4Ml7eL0xnR19fKNv8Xz7I7bDaZZ5
-         4ALrZJCEN/QuwPzm+wMySnzAOZcjyVECdT0fb8vnfluWr4h7DFB4u6wqt769i+QQXMeO
-         1xdA==
-X-Gm-Message-State: APjAAAW+gdazBPq7iQyBbQXa4/1xblRqpHKbCZvUgga3ZaSUnWTT9S8O
-        EntfxlkNp/gu7n5VOP6yhgXgm/0T55o1W9Fx814=
-X-Google-Smtp-Source: APXvYqw6R6nQclsyVadJZQRr3GlWli/1GXaaSeZb7dxTTe/GAXqX/9X+vcmpy0O5aG8/euC5SLkSQaGiK9/5s8DtIcc=
-X-Received: by 2002:aed:3e7c:: with SMTP id m57mr2760555qtf.204.1559290496946;
- Fri, 31 May 2019 01:14:56 -0700 (PDT)
+        Fri, 31 May 2019 04:16:02 -0400
+X-UUID: 9ad1d9bef1af45659057c62165ebfa50-20190531
+X-UUID: 9ad1d9bef1af45659057c62165ebfa50-20190531
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        (envelope-from <ryder.lee@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1983522807; Fri, 31 May 2019 16:15:58 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 31 May 2019 16:15:56 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 31 May 2019 16:15:56 +0800
+From:   Ryder Lee <ryder.lee@mediatek.com>
+To:     Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+CC:     Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
+        Yiwei Chung <yiwei.chung@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Chih-Min Chen <chih-min.Chen@mediatek.com>,
+        <linux-wireless@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Ryder Lee <ryder.lee@mediatek.com>
+Subject: [PATCH 2/2] mt76: mt7615: fix slow performance when enable encryption
+Date:   Fri, 31 May 2019 16:15:52 +0800
+Message-ID: <ec57059abc83d7a73bcb4e6cd7f8eccca8d8517e.1559287432.git.ryder.lee@mediatek.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <7f167d09736652f81383991c971506630bbedacc.1559287432.git.ryder.lee@mediatek.com>
+References: <7f167d09736652f81383991c971506630bbedacc.1559287432.git.ryder.lee@mediatek.com>
 MIME-Version: 1.0
-References: <20190529152237.10719-1-christian@brauner.io> <20190530132012.GS16415@port70.net>
-In-Reply-To: <20190530132012.GS16415@port70.net>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 31 May 2019 10:14:40 +0200
-Message-ID: <CAK8P3a1zAk1qAkpmevO-AS6zxKdJneDe0ADouhZLW5SEUqoTuw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] fork: add clone3
-To:     Szabolcs Nagy <nsz@port70.net>
-Cc:     Christian Brauner <christian@brauner.io>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jann Horn <jannh@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@gmail.com>,
-        Linux API <linux-api@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-SNTS-SMTP: BB14C576678B5C5AE4F32363CE403502738AE4B0DBB9114DD60A2EB84725A24E2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 3:20 PM Szabolcs Nagy <nsz@port70.net> wrote:
-> * Christian Brauner <christian@brauner.io> [2019-05-29 17:22:36 +0200]:
+Fix wrong WCID assignment and add RKV (RX Key of this entry is valid)
+flag to check if peer uses the same configuration with previous
+handshaking.
 
-> > /* uapi */
-> > struct clone_args {
-> >         __aligned_u64 flags;
-> >         __aligned_u64 pidfd;
-> >         __aligned_u64 parent_tidptr;
-> >         __aligned_u64 child_tidptr;
-> >         __aligned_u64 stack;
-> >         __aligned_u64 stack_size;
-> >         __aligned_u64 tls;
-> > };
->
-> is this new linux syscall api style to pass pointers as u64?
+If the configuration is mismatch, WTBL indicates a “cipher mismatch”
+to stop SEC decryption to prevent the packet from damage.
 
-This is common for ioctls passing structures now. I don't think
-we've had many system calls with structures containing pointers,
-but the idea is the same, i.e. we want structures to be identical
-on 32-bit and 64-bit architectures.
+Suggested-by: YF Luo <yf.luo@mediatek.com>
+Suggested-by: Yiwei Chung <yiwei.chung@mediatek.com>
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+---
+ drivers/net/wireless/mediatek/mt76/mt7615/init.c | 15 +++++++++------
+ drivers/net/wireless/mediatek/mt76/mt7615/main.c |  2 +-
+ drivers/net/wireless/mediatek/mt76/mt7615/mcu.c  |  1 +
+ 3 files changed, 11 insertions(+), 7 deletions(-)
 
-> i think it will look a bit ugly in userspace where cast
-> to u64 would signextend pointers on most 32bit targets, so
-> user code would have to do something like
->
-> arg.ptr = (uint64_t)(uintptr_t)ptr;
->
-> such ugliness can be hidden by the libc with a different
-> struct definition, but it will require bigendian and alignment
-> hackery (or translation in libc, but that does not really work
-> when user calls raw syscall).
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/init.c b/drivers/net/wireless/mediatek/mt76/mt7615/init.c
+index f860af6a42da..b96c753b7532 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7615/init.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7615/init.c
+@@ -62,16 +62,11 @@ static void mt7615_mac_init(struct mt7615_dev *dev)
+ 		 MT_AGG_ARCR_RATE_DOWN_RATIO_EN |
+ 		 FIELD_PREP(MT_AGG_ARCR_RATE_DOWN_RATIO, 1) |
+ 		 FIELD_PREP(MT_AGG_ARCR_RATE_UP_EXTRA_TH, 4)));
+-
+-	dev->mt76.global_wcid.idx = MT7615_WTBL_RESERVED;
+-	dev->mt76.global_wcid.hw_key_idx = -1;
+-	rcu_assign_pointer(dev->mt76.wcid[MT7615_WTBL_RESERVED],
+-			   &dev->mt76.global_wcid);
+ }
+ 
+ static int mt7615_init_hardware(struct mt7615_dev *dev)
+ {
+-	int ret;
++	int ret, idx;
+ 
+ 	mt76_wr(dev, MT_INT_SOURCE_CSR, ~0);
+ 
+@@ -98,6 +93,14 @@ static int mt7615_init_hardware(struct mt7615_dev *dev)
+ 	mt7615_mcu_ctrl_pm_state(dev, 0);
+ 	mt7615_mcu_del_wtbl_all(dev);
+ 
++	/* Beacon and mgmt frames should occupy wcid 0 */
++	idx = mt76_wcid_alloc(dev->mt76.wcid_mask, MT7615_WTBL_STA - 1);
++	if (idx)
++		return -ENOSPC;
++
++	dev->mt76.global_wcid.idx = idx;
++	dev->mt76.global_wcid.hw_key_idx = -1;
++	rcu_assign_pointer(dev->mt76.wcid[idx], &dev->mt76.global_wcid);
+ 	return 0;
+ }
+ 
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/main.c b/drivers/net/wireless/mediatek/mt76/mt7615/main.c
+index 585e67fa2728..2cdd339453c8 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7615/main.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7615/main.c
+@@ -95,7 +95,7 @@ static int mt7615_add_interface(struct ieee80211_hw *hw,
+ 
+ 	dev->vif_mask |= BIT(mvif->idx);
+ 	dev->omac_mask |= BIT(mvif->omac_idx);
+-	idx = MT7615_WTBL_RESERVED - 1 - mvif->idx;
++	idx = MT7615_WTBL_RESERVED - mvif->idx;
+ 	mvif->sta.wcid.idx = idx;
+ 	mvif->sta.wcid.hw_key_idx = -1;
+ 
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+index 8b8db526cb16..5f38741e7366 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+@@ -882,6 +882,7 @@ int mt7615_mcu_set_wtbl_key(struct mt7615_dev *dev, int wcid,
+ 		if (cipher == MT_CIPHER_NONE && key)
+ 			return -EOPNOTSUPP;
+ 
++		req.key.rkv = 1;
+ 		req.key.cipher_id = cipher;
+ 		req.key.key_id = key->keyidx;
+ 		req.key.key_len = key->keylen;
+-- 
+2.18.0
 
-Right. Note also that user space should do zero-extension
-of the variables in order for the kernel to not care about
-what called it. Just leaving padding fields in the structure
-is not enough here.
-
-User space that calls the raw syscall certainly has to
-go through the uintptr_t cast, but I would also expect that
-applications don't normally do that, and instead call a
-library function that has regular C calling conventions
-with individual arguments instead of a structure.
-
-      Arnd
