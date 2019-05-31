@@ -2,136 +2,124 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F4FC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 513F6C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE69D26F31
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:12:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="M6TMkH/V"
+	by mail.kernel.org (Postfix) with ESMTP id 251B826F2C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:12:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727674AbfEaVMT (ORCPT
+        id S1727689AbfEaVMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 17:12:19 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40381 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727005AbfEaVMS (ORCPT
+        Fri, 31 May 2019 17:12:39 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:46256 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727005AbfEaVMi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 17:12:18 -0400
-Received: by mail-pf1-f196.google.com with SMTP id u17so6916250pfn.7
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 14:12:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vDJef47SRIxwZUsIMJgjK6VVpboiCh9ge6fzV5aK/tc=;
-        b=M6TMkH/V/9mT6dRs3J9b/JX5LzJWuFXwJmueAM3sFtd48jYZrEMxKZSv61IH/51s0a
-         nBZAEcv60nMTWMfp4GQDDaqmB9pOQpAhc6Gg5T25v0x74DlyNydXHlrxtiS50ajmVpWg
-         95Z/dxMhkgG+H4Gz67L0EKh6cK2k8iKq8odbqr31YkMCLCtJ2f2DQQFTQAHEdrETDDaL
-         0oa/gJtEwSbqmF86SPddenJQcgV14RIcVDvmz66a6qkISFfQHbRsN9Lt8gS76lz66TSl
-         yZrzWqJ7UAwcjk34iWYo1d6KQsFShDEbppxXU88JXpCKwek+zRC93Le8s1LeAPy/Wlaw
-         7gRw==
+        Fri, 31 May 2019 17:12:38 -0400
+Received: by mail-qt1-f196.google.com with SMTP id z19so2594676qtz.13;
+        Fri, 31 May 2019 14:12:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vDJef47SRIxwZUsIMJgjK6VVpboiCh9ge6fzV5aK/tc=;
-        b=DSU8TvxMvNDv8d+OtCFi4a7PmMzbinC8RJ1BsuMH5Gqsu5bFuGSbZORAInokQuQb4j
-         R5Oz0UoiDzdtPIbw4f0KhbzpPLvS7rsqQLOexVtGR/uPINKxS2ylYCepSTqoHuNfjuJv
-         jNVADQ7JV/9cg7VIM1gFnX85uDL4j3EC/LFFrnz7MwUBr/pSnUo/dbhhnV2a39zWgNq3
-         kDGoXYVp614HAuYAAbqlX8MmJ2lK+CFp8eXDqdRQ8bu/LXXOI9M0ldPzvCsbVB/Nc4GR
-         EpvICP3gNH0B4lSeOMThCbVH4FszzHPtbzmzwV1DE5Y2awR722iO3EaCx3HUGzlYgvsL
-         wi1Q==
-X-Gm-Message-State: APjAAAXJXYItbTc2H9JaUm2Oeme5+2zCvC3zeOSyTcBp9TmX3tUsi4r4
-        QYlTEoNB3c8TK19tVb7AjuC8WwV1GKL0CA==
-X-Google-Smtp-Source: APXvYqzFrYv4eNgkP3NdKIFIT6J0jMYWieRpMIm6g5Q7gBVb0g3hjSNbYusIqUdd86VOSVu+kOlqQA==
-X-Received: by 2002:a65:52c3:: with SMTP id z3mr11512270pgp.56.1559337137443;
-        Fri, 31 May 2019 14:12:17 -0700 (PDT)
-Received: from [192.168.1.121] (66.29.164.166.static.utbb.net. [66.29.164.166])
-        by smtp.gmail.com with ESMTPSA id i7sm7285747pfo.19.2019.05.31.14.12.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 31 May 2019 14:12:16 -0700 (PDT)
-Subject: Re: [PATCH] block: fix a crash in do_task_dead()
-To:     Peter Zijlstra <peterz@infradead.org>, Qian Cai <cai@lca.pw>
-Cc:     akpm@linux-foundation.org, hch@lst.de, oleg@redhat.com,
-        gkohli@codeaurora.org, mingo@redhat.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <1559161526-618-1-git-send-email-cai@lca.pw>
- <20190530080358.GG2623@hirez.programming.kicks-ass.net>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <82e88482-1b53-9423-baad-484312957e48@kernel.dk>
-Date:   Fri, 31 May 2019 15:12:13 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AZptDCZbtMb0PQHhtVnS/aF9UysKMAzgtneB0+7FC+I=;
+        b=fXeIVN34xckBCndWGV5hGmm7h9qaopS1ztQocf+iEL8dlB9iQt0WrO6Yqw1j2BjNb4
+         Av4aWOR5F3XWolPuq/+zl1aGyfviRFwmvriCnSiYMdSsYpAepBkUg1CvBsHjU3NogKRk
+         qywUvfnhntKZcKN3oIjEAq25M2rGaUwdJGIs2IlUg71Y9whAuZRB1Lbi6HT1mGMfh9um
+         8fT6i35u7AqX3tfVpPvDwIvNbvC7gecbUp7fn7dATjugICJY9ql6Sd0egP9WZlRWBs5f
+         Vumh8D/d/eG5WKMOCvGfk/S5wmyGuCgK+Ipl9NoCjOiviCIl3VE5SEPhB+3YecFl9vag
+         Y1LQ==
+X-Gm-Message-State: APjAAAWs2RUKSTHYkiK0O9znTh8lDDX2DraweKL+E6uhqk/KxX2xvOgT
+        MLs2idA2MFdU6ks31xBK3743tMAen4Q9tIs8RjR3Jm9i
+X-Google-Smtp-Source: APXvYqzHvUnfa6x/YLh/Fjn3Tw3E+yBquiW3NroCyGZFdVC85oGAnHKEDZucf7nAm9xpQNUD3gkU2OGRWDNqkRg6xhY=
+X-Received: by 2002:aed:3e7c:: with SMTP id m57mr6159988qtf.204.1559337157081;
+ Fri, 31 May 2019 14:12:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190530080358.GG2623@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190531035348.7194-1-elder@linaro.org> <e75cd1c111233fdc05f47017046a6b0f0c97673a.camel@redhat.com>
+ <065c95a8-7b17-495d-f225-36c46faccdd7@linaro.org> <CAK8P3a05CevRBV3ym+pnKmxv+A0_T+AtURW2L4doPAFzu3QcJw@mail.gmail.com>
+ <a28c5e13-59bc-144d-4153-9d104cfa9188@linaro.org>
+In-Reply-To: <a28c5e13-59bc-144d-4153-9d104cfa9188@linaro.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 31 May 2019 23:12:20 +0200
+Message-ID: <CAK8P3a2rkQd3t-yNdNGePW8E7rhObjAvUpW6Ga9AM6rJJ27BOw@mail.gmail.com>
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+To:     Alex Elder <elder@linaro.org>
+Cc:     Dan Williams <dcbw@redhat.com>, David Miller <davem@davemloft.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        evgreen@chromium.org, Ben Chan <benchan@google.com>,
+        Eric Caruso <ejcaruso@google.com>, cpratapa@codeaurora.org,
+        syadagir@codeaurora.org,
+        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
+        abhishek.esse@gmail.com, Networking <netdev@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-soc@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/30/19 2:03 AM, Peter Zijlstra wrote:
-> On Wed, May 29, 2019 at 04:25:26PM -0400, Qian Cai wrote:
-> 
->> Fixes: 0619317ff8ba ("block: add polled wakeup task helper")
-> 
-> What is the purpose of that patch ?! The Changelog doesn't mention any
-> benefit or performance gain. So why not revert that?
+On Fri, May 31, 2019 at 10:47 PM Alex Elder <elder@linaro.org> wrote:
+> On 5/31/19 2:19 PM, Arnd Bergmann wrote:
+> > On Fri, May 31, 2019 at 6:36 PM Alex Elder <elder@linaro.org> wrote:
+> >> On 5/31/19 9:58 AM, Dan Williams wrote:
+> >>> On Thu, 2019-05-30 at 22:53 -0500, Alex Elder wrote:
+> >
+> > Does this mean that IPA can only be used to back rmnet, and rmnet
+> > can only be used on top of IPA, or can or both of them be combined
+> > with another driver to talk to instead?
+>
+> No it does not mean that.
+>
+> As I understand it, one reason for the rmnet layer was to abstract
+> the back end, which would allow using a modem, or using something
+> else (a LAN?), without exposing certain details of the hardware.
+> (Perhaps to support multiplexing, etc. without duplicating that
+> logic in two "back-end" drivers?)
+>
+> To be perfectly honest, at first I thought having IPA use rmnet
+> was a cargo cult thing like Dan suggested, because I didn't see
+> the benefit.  I now see why one would use that pass-through layer
+> to handle the QMAP features.
+>
+> But back to your question.  The other thing is that I see no
+> reason the IPA couldn't present a "normal" (non QMAP) interface
+> for a modem.  It's something I'd really like to be able to do,
+> but I can't do it without having the modem firmware change its
+> configuration for these endpoints.  My access to the people who
+> implement the modem firmware has been very limited (something
+> I hope to improve), and unless and until I can get corresponding
+> changes on the modem side to implement connections that don't
+> use QMAP, I can't implement such a thing.
 
-Yeah that is actually pretty weak. There are substantial performance
-gains for small IOs using this trick, the changelog should have
-included those. I guess that was left on the list...
+Why would that require firmware changes? What I was thinking
+here is to turn the bits of the rmnet driver that actually do anything
+interesting on the headers into a library module (or a header file
+with inline functions) that can be called directly by the ipa driver,
+keeping the protocol unchanged.
 
->> Signed-off-by: Qian Cai <cai@lca.pw>
->> ---
->>   include/linux/blkdev.h | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
->> index 592669bcc536..290eb7528f54 100644
->> --- a/include/linux/blkdev.h
->> +++ b/include/linux/blkdev.h
->> @@ -1803,7 +1803,7 @@ static inline void blk_wake_io_task(struct task_struct *waiter)
->>   	 * that case, we don't need to signal a wakeup, it's enough to just
->>   	 * mark us as RUNNING.
->>   	 */
->> -	if (waiter == current)
->> +	if (waiter == current && in_task())
->>   		__set_current_state(TASK_RUNNING);
-> 
-> NAK, No that's broken too.
-> 
-> The right fix is something like:
-> 
-> 	if (waiter == current) {
-> 		barrier();
-> 		if (current->state & TASK_NORAL)
-> 			__set_current_state(TASK_RUNNING);
-> 	}
-> 
-> But even that is yuck to do outside of the scheduler code, as it looses
-> tracepoints and stats.
-> 
-> So can we please just revert that original patch and start over -- if
-> needed?
+> > Always passing data from one netdev to another both ways
+> > sounds like it introduces both direct CPU overhead, and
+> > problems with flow control when data gets buffered inbetween.
+>
+> My impression is the rmnet driver is a pretty thin layer,
+> so the CPU overhead is probably not that great (though
+> deaggregating a message is expensive).  I agree with you
+> on the flow control.
 
-How about we just use your above approach? It looks fine to me (except
-the obvious typo). I'd hate to give up this gain, in the realm of
-fighting against stupid kernel offload solutions we need every cycle we
-can get.
+The CPU overhead I mean is not from executing code in the
+rmnet driver, but from passing packets through the network
+stack between the two drivers, i.e. adding each frame to
+a queue and taking it back out. I'm not sure how this ends
+up working in reality but from a first look it seems like
+we might bounce in an out of the softirq handler inbetween.
 
-I know it's not super kosher, your patch, but I don't think it's that
-bad hidden in a generic helper.
-
--- 
-Jens Axboe
-
+          Arnd
