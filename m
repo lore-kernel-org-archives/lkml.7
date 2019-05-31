@@ -2,97 +2,84 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 938BAC28CC2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F88C28CC2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68C0F258C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:47:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sHCqvooD"
+	by mail.kernel.org (Postfix) with ESMTP id 7E55C24F1F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:50:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbfEaNrc (ORCPT
+        id S1726566AbfEaNuI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 09:47:32 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:41564 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbfEaNrb (ORCPT
+        Fri, 31 May 2019 09:50:08 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:54467 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbfEaNuH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 09:47:31 -0400
-Received: by mail-lf1-f67.google.com with SMTP id 136so7944234lfa.8
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 06:47:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=DiLJ6JnRCJJ3neCk5RdmZrESJ3I9QLujeCJngur/rJE=;
-        b=sHCqvooDv0728QzeNQ1TedqmihQUeuFTkHyBB6ZslHvYDAeqSvTbKX7zsghL88Sz5r
-         CXmKtLjoM+fsXBob4SGzSK9wKa9V9mo1gY3Bemb2T3r2q3zubXW18qQRRE1lH5rl5jRT
-         IWSk7/hkb/UgSvczaG4qG1J70uBFM/w4kXU+WM6kNN+yvAjNV+N/S9GyGuaH4bihmDU1
-         uzA/0uI9Qkk6lCTUJA1tEg3ocjLfox5qpAhXMhzcJqjCFCEflgCK0DJrjavwTkE/IQx7
-         IlaIDGkNutbTyTrzLklrfkYdcF1+vAmuCv+hSoAF9ezEr0XR5cGr8rpvOX7RwlaN5ucV
-         1YqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=DiLJ6JnRCJJ3neCk5RdmZrESJ3I9QLujeCJngur/rJE=;
-        b=FDFv/bKMmLgTKkBZ4yLpel47m82Bi5Fn/2rh0Mvve6mM0qIRRevJH2JlHCimhEiEvE
-         zag8Jpl9Ku1P3tE4XClVbKELuA0EjMQ1IA4QY3ic2s8UeKMfdXq91897b/TCOFHNMnrD
-         KJqM2FosZ2ZL80PvMenByidpWRB1wSp/Nt/uN2WN5Zpp61XlQviAg99m8zNWI8WnjJfX
-         kjXg7B9PknuTaoTREqm9jAYlV3LicnlPI9cSCl9OFpOEnTSksZGDLw9aypH3x+tkeUCZ
-         dKNE5TpNnFr7ulAyvg24s2QR1aQl5WgU2/ByAW1Ior3WhZKEB5Rt5lbC3vwOS0Wqhx3Q
-         8zpg==
-X-Gm-Message-State: APjAAAVfGrcuWiniHPAe9BFXJJyR9h6pBt/8AMeGtQ8IvljwCKELeepZ
-        3cMikPY/PiVEx3WGBSJLIOb/mA==
-X-Google-Smtp-Source: APXvYqwC1pymNebqSNI5Xz7H904bYIZfvu4+23N51FSzNZ2bfFeqLsCF8jO7esorxvBZxziQI2RVjA==
-X-Received: by 2002:a19:3f16:: with SMTP id m22mr5601760lfa.104.1559310449908;
-        Fri, 31 May 2019 06:47:29 -0700 (PDT)
-Received: from localhost.localdomain (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
-        by smtp.gmail.com with ESMTPSA id s20sm763312lfb.95.2019.05.31.06.47.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 31 May 2019 06:47:29 -0700 (PDT)
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     grygorii.strashko@ti.com, davem@davemloft.net
-Cc:     linux-omap@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Subject: [PATCH v2] net: ethernet: ti: cpsw_ethtool: fix ethtool ring param set
-Date:   Fri, 31 May 2019 16:47:25 +0300
-Message-Id: <20190531134725.2054-1-ivan.khoronzhuk@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Fri, 31 May 2019 09:50:07 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 0CC603C014A;
+        Fri, 31 May 2019 15:50:05 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id CkYQQFDmMpHh; Fri, 31 May 2019 15:49:58 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 71AAC3C0022;
+        Fri, 31 May 2019 15:49:58 +0200 (CEST)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 31 May
+ 2019 15:49:58 +0200
+Date:   Fri, 31 May 2019 15:49:55 +0200
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Simon Horman <horms@verge.net.au>
+CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tobias Franzen <tfranzen@de.adit-jv.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [PATCH] arm64: dts: ulcb-kf: Add support for TI WL1837
+Message-ID: <20190531134955.GA28755@vmlxhi-102.adit-jv.com>
+References: <20190411124102.22442-1-spapageorgiou@de.adit-jv.com>
+ <CAMuHMdVfDd_1gHnX=WvkHnF33fG2sWy7F5bTh-DghoKSt-vLCA@mail.gmail.com>
+ <20190531093702.4pdbamghomqdhhuq@verge.net.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190531093702.4pdbamghomqdhhuq@verge.net.au>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Originating-IP: [10.72.93.184]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix ability to set RX descriptor number, the reason - initially
-"tx_max_pending" was set incorrectly, but the issue appears after
-adding sanity check, so fix is for "sanity" patch.
+Hi Simon,
 
-Fixes: 37e2d99b59c476 ("ethtool: Ensure new ring parameters are within bounds during SRINGPARAM")
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
----
-Based on net/master
+On Fri, May 31, 2019 at 11:37:02AM +0200, Simon Horman wrote:
+> Hi Spyridon,
+> 
+> please respond to Geert's review below and
+> if appropriate provide an incremental patch.
+> 
+> Thanks in advance,
+> Simon
+> 
 
- drivers/net/ethernet/ti/cpsw_ethtool.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Spyridon is on vacation, so I will handle the open points.
 
-diff --git a/drivers/net/ethernet/ti/cpsw_ethtool.c b/drivers/net/ethernet/ti/cpsw_ethtool.c
-index a4a7ec0d2531..6d1c9ebae7cc 100644
---- a/drivers/net/ethernet/ti/cpsw_ethtool.c
-+++ b/drivers/net/ethernet/ti/cpsw_ethtool.c
-@@ -643,7 +643,7 @@ void cpsw_get_ringparam(struct net_device *ndev,
- 	struct cpsw_common *cpsw = priv->cpsw;
- 
- 	/* not supported */
--	ering->tx_max_pending = 0;
-+	ering->tx_max_pending = cpsw->descs_pool_size - CPSW_MAX_QUEUES;
- 	ering->tx_pending = cpdma_get_num_tx_descs(cpsw->dma);
- 	ering->rx_max_pending = cpsw->descs_pool_size - CPSW_MAX_QUEUES;
- 	ering->rx_pending = cpdma_get_num_rx_descs(cpsw->dma);
 -- 
-2.17.1
-
+Best Regards,
+Eugeniu.
