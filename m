@@ -2,158 +2,139 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8015DC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52061C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5756626A35
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:15:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HzoyLoY6"
+	by mail.kernel.org (Postfix) with ESMTP id 3078C26A36
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:15:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbfEaOPE (ORCPT
+        id S1726816AbfEaOPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 10:15:04 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:33574 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbfEaOPE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 10:15:04 -0400
-Received: by mail-qt1-f195.google.com with SMTP id 14so1053705qtf.0;
-        Fri, 31 May 2019 07:15:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:message-id:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-disposition:content-transfer-encoding;
-        bh=+we0rEnollOzHDZRaFs+7oQEsf4okdwYqHNgTuYpojo=;
-        b=HzoyLoY6Q/unT73ZNSJo7xswlOPng81Pi3JnGP5sJQLih/0rGLjKsR2UQfqpybyvVx
-         ytaO1HSmiOMn9VRtxvnGjCNo3BYYfqrbCUk0QJzf+n/QdsGCNxSIQ+rpfxt8bySmvdwe
-         w7Ft77iI4+OAHCcdWr4ROjNROyaKiLSkK7gM4toabq5nMX//x+kMA1dVXhQWTcJFq3PK
-         WiwQ1krsmx1o2vcdW3P+VhVCdg1gpvxANLWcQ6pceS0bpZnyB9pL/vWgnxACa3ameSfO
-         6NOUr2hdNo6sH5ZkGuNDG/NUSD/RL1GGyuHnOtCl4xKzrBzpdB4KonXVcoO0AhVR7hS1
-         jiSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding;
-        bh=+we0rEnollOzHDZRaFs+7oQEsf4okdwYqHNgTuYpojo=;
-        b=uHvfTLcGCxdu06TL+8WVlR6ok+kJHIYNlLtv1ww+BPLLjnzeSjoAMl5uY4oXCsC1Fy
-         NAcnxkrvE50K+GhNqBXtQygB6GsreTRfs5G5OdtVL12X/B7XjWFm2Ffn+5/Hy5HMwe/V
-         xwDnI5UmnQE6D6gKFj7bNh1c0mRNTHwP0ZOW8SvKaiIRhDv+dVMrr6Ey1dYX5BIpIR/5
-         zBvi5Y0bO8gzdyHXjEWAoBADy5ZdH4xke7gh4dFKyzER/kc3SwzFC1TaDyWuRyB7lT6B
-         kaAF+YON00DTgyKLjPaA1t0cee/STjKRINxBdjGw8QXxAu3vb+ZJNjqumrmRTwg1OjGM
-         PuBw==
-X-Gm-Message-State: APjAAAWr00iM0U4DszoaZ3fq9/P9mso9DqXvqYWLLOgvKWZ96/VD4Uek
-        djjLB7XFPetXkF0m3R4eJeM=
-X-Google-Smtp-Source: APXvYqzr4qmadMuyFHKk+Snq02K/E9QOHtxIv1CJU+kRspuJBZgseKReRXYpBzVLPE73QxiJN40NKw==
-X-Received: by 2002:ac8:4982:: with SMTP id f2mr8533662qtq.213.1559312102835;
-        Fri, 31 May 2019 07:15:02 -0700 (PDT)
-Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
-        by smtp.gmail.com with ESMTPSA id z12sm2701994qkl.66.2019.05.31.07.15.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 31 May 2019 07:15:02 -0700 (PDT)
-Date:   Fri, 31 May 2019 10:15:01 -0400
-Message-ID: <20190531101501.GB23464@t480s.localdomain>
-From:   Vivien Didelot <vivien.didelot@gmail.com>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, linville@redhat.com,
-        f.fainelli@gmail.com
-Subject: Re: [PATCH net-next] ethtool: do not use regs->len after
- ops->get_regs
-In-Reply-To: <20190531065432.GB15954@unicorn.suse.cz>
-References: <20190530235450.11824-1-vivien.didelot@gmail.com>
- <20190531065432.GB15954@unicorn.suse.cz>
+        Fri, 31 May 2019 10:15:52 -0400
+Received: from mga05.intel.com ([192.55.52.43]:8345 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726576AbfEaOPw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 10:15:52 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 May 2019 07:15:50 -0700
+X-ExtLoop1: 1
+Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 31 May 2019 07:15:48 -0700
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH v5 00/16] Software fwnode references
+Date:   Fri, 31 May 2019 17:15:31 +0300
+Message-Id: <20190531141547.22728-1-heikki.krogerus@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michal,
+Hi,
 
-On Fri, 31 May 2019 08:54:32 +0200, Michal Kubecek <mkubecek@suse.cz> wrote:
-> On Thu, May 30, 2019 at 07:54:50PM -0400, Vivien Didelot wrote:
-> > The kernel allocates a buffer of size ops->get_regs_len(), and pass
-> > it to the kernel driver via ops->get_regs() for filling.
-> > 
-> > There is no restriction about what the kernel drivers can or cannot
-> > do with the regs->len member. Drivers usually ignore it or set
-> > the same size again. However, ethtool_get_regs() must not use this
-> > value when copying the buffer back to the user, because userspace may
-> > have allocated a smaller buffer. For instance ethtool does that when
-> > dumping the raw registers directly into a fixed-size file.
-> > 
-> > Software may still make use of the regs->len value updated by the
-> > kernel driver, but ethtool_get_regs() must use the original regs->len
-> > given by userspace, up to ops->get_regs_len(), when copying the buffer.
-> > 
-> > Also no need to check regbuf twice.
-> > 
-> > Signed-off-by: Vivien Didelot <vivien.didelot@gmail.com>
-> > ---
-> >  net/core/ethtool.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/net/core/ethtool.c b/net/core/ethtool.c
-> > index 4a593853cbf2..8f95c7b7cafe 100644
-> > --- a/net/core/ethtool.c
-> > +++ b/net/core/ethtool.c
-> > @@ -1338,38 +1338,40 @@ static noinline_for_stack int ethtool_set_rxfh(struct net_device *dev,
-> >  static int ethtool_get_regs(struct net_device *dev, char __user *useraddr)
-> >  {
-> >  	struct ethtool_regs regs;
-> >  	const struct ethtool_ops *ops = dev->ethtool_ops;
-> >  	void *regbuf;
-> >  	int reglen, ret;
-> >  
-> >  	if (!ops->get_regs || !ops->get_regs_len)
-> >  		return -EOPNOTSUPP;
-> >  
-> >  	if (copy_from_user(&regs, useraddr, sizeof(regs)))
-> >  		return -EFAULT;
-> >  
-> >  	reglen = ops->get_regs_len(dev);
-> >  	if (reglen <= 0)
-> >  		return reglen;
-> >  
-> >  	if (regs.len > reglen)
-> >  		regs.len = reglen;
-> > +	else
-> > +		reglen = regs.len;
-> 
-> This seems wrong. Most drivers do not check regs.len in their get_regs()
-> handler (I'm not sure if there are any that do) and simply write as much
-> data as they have. Thus if userspace passes too short regs.len, this
-> would replace overflow of a userspace buffer for few drivers by overflow
-> of a kernel buffer for (almost) all drivers.
-> 
-> So while we should use the original regs.len from userspace for final
-> copy_to_user(), we have to allocate the buffer for driver ->get_regs()
-> callback with size returned by its ->get_regs_len() callback.
+This is the fourth, and hopefully the final version, of my proposal to
+make it possible to use fwnode_property_get_reference_args() also with
+software nodes. The two issues reported by Hans in v4 are now fixed,
+which were a typo in a comment, and the fwnode->secondary->secondary
+of max17074 needs to have value ERR_PTR(-ENODEV).
 
-Either I've completely screwed my patch, or you have misread it. This patch
-actually just stores the original value of regs.len passed by userspace to
-the kernel into reglen, before calling ops->get_regs().
+v4 cover letter:
 
-But the kernel still allocates ops->get_regs_len() and passes that to the
-kernel drivers, as this is the only size drivers must care about.
+I'm not splitting this series in two after all. After thinking about
+this for some time, I decided to add support for static software
+nodes. I did not want to support them because I don't want to make it
+easy to maintain board files, but in end they make the use of the
+software nodes so much more easier compared to if we always had to
+dynamically allocate them that it's a no-brainer. The references can
+now be also described statically. Actually, those can now only be
+described statically.
 
-Then the kernel only copies what the userspace (originally) requested,
-up to ops->get_regs_len().
+Hans! I applied (hopefully) all of the fixes you proposed in v3. I
+hope you have time to test these.
 
-In other words, if userspace requested a bigger buffer only ops->get_regs_len()
-get copied, if the userspace requested a smaller buffer only that length
-get copied.
+v3 cover letter:
 
+This is the third version of my proposal to add reference handling to
+the software node code. In this version I renamed ACPI_NAME_SIZE to
+ACPI_NAMESEG_SIZE in 6/13, and slit patch 9/13 in two separate patches
+(9/13 and 10/13) as suggested by Andy. Patch 9/13 will now only move
+the registration of max17047 out of probe, and 10/13 will introduce
+the software nodes.
 
-Thanks,
-Vivien
+v2 cover letter:
+
+This is the second version of this series. In this version I'm
+introducing a new helper device_find_child_by_name() as proposed
+by Andy. Andy requested also another helper that could be used for
+chaining the fwnodes, but I decided not to add that now. I would like
+to still think about how we should handle exceptions like if there
+already is a secondary node assigned for a node.
+
+v1 cover letter:
+
+This series adds support for software fwnode reference handling. In
+practice it means making fwnode_property_get_reference_args() function
+usable in the drivers also with software nodes. I send the series
+originally as RFC [1].
+
+As the first user for the software node references, I'm converting
+intel_cht_int33fe.c to use them as part of the series.
+
+[1] https://lkml.org/lkml/2019/3/15/457
+
+thanks,
+
+Heikki Krogerus (16):
+  software node: Allow node creation without properties
+  software node: Simplify software_node_release() function
+  software node: Add support for static node descriptors
+  software node: Use kobject name when finding child nodes by name
+  software node: Add software_node_get_reference_args()
+  driver core: Add helper device_find_child_by_name()
+  ACPI / property: Don't limit named child node matching to data nodes
+  device property: Introduce fwnode_find_reference()
+  device connection: Find connections also by checking the references
+  usb: typec: Registering real device entries for the muxes
+  platform/x86: intel_cht_int33fe: Register max17047 in its own function
+  platform/x86: intel_cht_int33fe: Remove unused fusb302 device property
+  platform/x86: intel_cht_int33fe: Provide software nodes for the
+    devices
+  platform/x86: intel_cht_int33fe: Provide fwnode for the USB connector
+  platform/x86: intel_cht_int33fe: Supply fwnodes for the external
+    dependencies
+  platform/x86: intel_cht_int33fe: Replacing the old connections with
+    references
+
+ drivers/acpi/property.c                  |  26 +-
+ drivers/base/core.c                      |  28 ++
+ drivers/base/devcon.c                    |  26 ++
+ drivers/base/property.c                  |  24 ++
+ drivers/base/swnode.c                    | 324 +++++++++++++++++------
+ drivers/platform/x86/intel_cht_int33fe.c | 291 ++++++++++++++++----
+ drivers/usb/roles/class.c                |   2 +-
+ drivers/usb/typec/bus.h                  |  15 ++
+ drivers/usb/typec/class.c                |  17 +-
+ drivers/usb/typec/mux.c                  | 238 ++++++++++++-----
+ drivers/usb/typec/mux/pi3usb30532.c      |  46 ++--
+ include/linux/device.h                   |   2 +
+ include/linux/property.h                 |  51 ++++
+ include/linux/usb/typec_mux.h            |  62 ++---
+ 14 files changed, 903 insertions(+), 249 deletions(-)
+
+-- 
+2.20.1
+
