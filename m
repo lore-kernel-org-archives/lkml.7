@@ -2,109 +2,134 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3352AC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B76CC28CC2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 029B626F34
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:15:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2950826F48
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:16:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559337304;
-	bh=gKgYNLBpeOOMUpEUJl708y2vi02Rzrqk2Rf+7SqGFoQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=MGz7+LcYQmzvtgSppwWMKcPmmaLHLfHR7XuVTfRpczQY1BxYxv8tglDGI1LzZPgdo
-	 XrNVOb2rGdnxNiynil5uXAPqkWxGyEGN/NwMlERuv4VFHDM7u2bBchPO50ELAJohea
-	 ZodpaVand5jxrgCy1oDHR1AfPfeCZth48yjXq2Nw=
+	s=default; t=1559337412;
+	bh=c2pv3UGEvPHler4RZI9AO4XMMtkbISSMYlJ167PAtPE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2h7IRiXuCxVoAx64+73Oj/uzLqizPHPS28l6HNE1SVfkK4OeQuV1xa9Dlyc4H0y/y
+	 MfJcAstKmIf5LGTqpp9ZEGhSvdzU0zDS1BBJW33BZpf/zQtoSlOeAy/Qa/5dSI+edO
+	 BYbVh1z6p3MONc97YlgU5fF8ugfMU/1Bt5SvXu1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727695AbfEaVPC (ORCPT
+        id S1727628AbfEaVQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 17:15:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57938 "EHLO mail.kernel.org"
+        Fri, 31 May 2019 17:16:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727605AbfEaVPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 17:15:02 -0400
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726719AbfEaVQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 17:16:51 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C092D26F3A
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 21:15:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C017926F38;
+        Fri, 31 May 2019 21:16:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559337302;
-        bh=gKgYNLBpeOOMUpEUJl708y2vi02Rzrqk2Rf+7SqGFoQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=W9h3QmtxYVFfKyGjxKV1kw7bQbisE5CwjZlEyxDo29IaBbYLLEUapXI/8I4VE/BbX
-         rDO5MuObKn3SLMgQghdhuq6N3Fdjs/xtVteJnJL64uWlkOVwQ/mT2rez3marqg4WR9
-         Patymlv2TB0sF5Jbj4IY3c20acNrlTdqppRb0N7A=
-Received: by mail-wr1-f50.google.com with SMTP id h1so7360736wro.4
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 14:15:01 -0700 (PDT)
-X-Gm-Message-State: APjAAAXq5gogHDp9E/mVKGOsDv45vRdZ8xgo556XyOPFrSJT6X0eKTbA
-        nTXVtqPZXCN8X2TGO33NHpAa3nKx1bEAeqPZteGDhQ==
-X-Google-Smtp-Source: APXvYqwXwuWopX6mQo+6kLuUg/7ghxmPwAoAls8+UMozk4xNmr28ndE2vp7IeSCLGjgzv+PEEwUB7NaFrwcDe4AEu5E=
-X-Received: by 2002:adf:e9ca:: with SMTP id l10mr7529012wrn.47.1559337300326;
- Fri, 31 May 2019 14:15:00 -0700 (PDT)
+        s=default; t=1559337410;
+        bh=c2pv3UGEvPHler4RZI9AO4XMMtkbISSMYlJ167PAtPE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LdBjFu6KfciYCDWWmv+DuahF7VCnvl9Odv8PL7Kuy3LLohhYqw2h1hmvEo7l35v9H
+         XbrSSTcz5TCAN5taXh0JwSvcrqspZYxIZgF+qItCAPe3XV9qm8svY7UoKYiwMsEW3v
+         sWGFOkmBMAerGoooJXv92W12ZYlUkNmBBVuKNClU=
+Date:   Fri, 31 May 2019 16:16:48 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] PCI: PM: Avoid resuming devices in D3hot during system
+ suspend
+Message-ID: <20190531211648.GB58810@google.com>
+References: <4561083.VtDMOnK5Me@kreacher>
 MIME-Version: 1.0
-References: <20190531063645.4697-1-namit@vmware.com> <20190531063645.4697-12-namit@vmware.com>
-In-Reply-To: <20190531063645.4697-12-namit@vmware.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 31 May 2019 14:14:49 -0700
-X-Gmail-Original-Message-ID: <CALCETrU0=BpGy5OQezQ7or33n-EFgBVDNe5g8prSUjL2SoRAwA@mail.gmail.com>
-Message-ID: <CALCETrU0=BpGy5OQezQ7or33n-EFgBVDNe5g8prSUjL2SoRAwA@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 11/12] x86/mm/tlb: Use async and inline messages
- for flushing
-To:     Nadav Amit <namit@vmware.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4561083.VtDMOnK5Me@kreacher>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 11:37 PM Nadav Amit <namit@vmware.com> wrote:
->
-> When we flush userspace mappings, we can defer the TLB flushes, as long
-> the following conditions are met:
->
-> 1. No tables are freed, since otherwise speculative page walks might
->    cause machine-checks.
->
-> 2. No one would access userspace before flush takes place. Specifically,
->    NMI handlers and kprobes would avoid accessing userspace.
->
+On Fri, May 31, 2019 at 11:49:30AM +0200, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> The current code resumes devices in D3hot during system suspend if
+> the target power state for them is D3cold, but that is not necessary
+> in general.  It only is necessary to do that if the platform firmware
+> requires the device to be resumed, but that should be covered by
+> the platform_pci_need_resume() check anyway, so rework
+> pci_dev_keep_suspended() to avoid returning 'false' for devices
+> in D3hot which need not be resumed due to platform firmware
+> requirements.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  drivers/pci/pci.c |   15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
+> 
+> Index: linux-pm/drivers/pci/pci.c
+> ===================================================================
+> --- linux-pm.orig/drivers/pci/pci.c
+> +++ linux-pm/drivers/pci/pci.c
+> @@ -2474,10 +2474,19 @@ bool pci_dev_keep_suspended(struct pci_d
+>  {
+>  	struct device *dev = &pci_dev->dev;
+>  	bool wakeup = device_may_wakeup(dev);
+> +	pci_power_t target_state;
+>  
+> -	if (!pm_runtime_suspended(dev)
+> -	    || pci_target_state(pci_dev, wakeup) != pci_dev->current_state
+> -	    || platform_pci_need_resume(pci_dev))
+> +	if (!pm_runtime_suspended(dev) || platform_pci_need_resume(pci_dev))
+> +		return false;
+> +
+> +	target_state = pci_target_state(pci_dev, wakeup);
 
-I think I need to ask the big picture question.  When someone calls
-flush_tlb_mm_range() (or the other entry points), if no page tables
-were freed, they want the guarantee that future accesses (initiated
-observably after the flush returns) will not use paging entries that
-were replaced by stores ordered before flush_tlb_mm_range().  We also
-need the guarantee that any effects from any memory access using the
-old paging entries will become globally visible before
-flush_tlb_mm_range().
+Nit, add a blank line here.
 
-I'm wondering if receipt of an IPI is enough to guarantee any of this.
-If CPU 1 sets a dirty bit and CPU 2 writes to the APIC to send an IPI
-to CPU 1, at what point is CPU 2 guaranteed to be able to observe the
-dirty bit?  An interrupt entry today is fully serializing by the time
-it finishes, but interrupt entries are epicly slow, and I don't know
-if the APIC waits long enough.  Heck, what if IRQs are off on the
-remote CPU?  There are a handful of places where we touch user memory
-with IRQs off, and it's (sadly) possible for user code to turn off
-IRQs with iopl().
+> +	/*
+> +	 * If the earlier platform check has not triggered, D3cold is just power
+> +	 * removal on top of D3hot, so no need to resume the device in that
+> +	 * case.
+> +	 */
+> +	if (target_state != pci_dev->current_state &&
+> +	    target_state != PCI_D3cold && pci_dev->current_state != PCI_D3hot)
+>  		return false;
 
-I *think* that Intel has stated recently that SMT siblings are
-guaranteed to stop speculating when you write to the APIC ICR to poke
-them, but SMT is very special.
+This is more a comment on the existing code than on this particular
+patch, but I find this whole function hard to understand, and I think
+one reason is that there are a lot of negative conditions, both in
+this function and in its callers.  This "target_state != ... &&
+target_state != ...  && current_state != ..." is one example.  Another
+is the function name itself.  It might be easier to read as something
+like this:
 
-My general conclusion is that I think the code needs to document what
-is guaranteed and why.
+  bool pci_dev_need_resume(...)
+  {
+    if (!pm_runtime_suspended(...))
+      return true;
 
---Andy
+    if (platform_pci_need_resume(...))
+      return true;
+
+    if (target_state != current_state)
+      return true;
+
+    ...
+
+Another reason I think it's hard to read is that
+"pci_dev_keep_suspended" suggests that this is a pure boolean function
+without side-effects, but in fact it also fiddles with the PME state
+in some cases.  I don't have any ideas for that part.
+
+Bjorn
