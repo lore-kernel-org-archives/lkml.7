@@ -2,95 +2,87 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F9DDC28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D57A1C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3788026B0C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:52:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="j/GsBEIA"
+	by mail.kernel.org (Postfix) with ESMTP id ABFBB26B18
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:54:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559314466;
+	bh=ut6HGUXoVdKpKxWkBmLKfiQdl1KWbFSfImiaNPxTLes=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=BkM/PhnGZ0Lx4GCBkEPmLXy/nTcsl4QieGhlsbNJzLESaxfGCGQJHWhqqOrbgGKKz
+	 kPAlS5YPapUHhUEFn4IwZ8K7C21A6P4AHxaUdS/bB3A5/dppsMVLn2TBIEsBFqzvem
+	 XceGMX7h8sEBRtNt1mh+8LvH+dk7B1XY5Dw9iD4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbfEaOwh (ORCPT
+        id S1726693AbfEaOyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 10:52:37 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:44065 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbfEaOwg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 10:52:36 -0400
-Received: by mail-ot1-f66.google.com with SMTP id g18so9406204otj.11
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 07:52:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dazNgH0WSo6RBdntgfM2itxBiI4ct6zLibwem/T/a7w=;
-        b=j/GsBEIAjVbZy5Y3mimHxH4kZFIlLlKkT8Acinmv2sLTumtJSAz4+K45i94HMcU8B5
-         5vuoBjVllo8eLWfIEEGmSHN3y18C2+WtOf2ld9xfh/eBfNzfI08ywejx6/WFhh2Qh1Js
-         U/xC31+TIvuIg3zpSPwdusI6fAgBAbuf9ZVsZWxcMq9qesaxUCnyu+Jm/j/acoKaQrVk
-         /xZ6KTMGmaqDluJACKDkBZki6qenzP6ucLDP6nqi5PMISHPe9me9sBfBu16SCQ9MmPmY
-         x6x0pxCLwDJjV9HwPASaVKILGYScIoM8oWLKnlfoOZ9C4wOlTg6towcaz/+2kExeQ+Ur
-         a5bQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dazNgH0WSo6RBdntgfM2itxBiI4ct6zLibwem/T/a7w=;
-        b=b1iasGN7yernW9ghYXDO1824Bgge4/n3odSkamXb6n9wX9+RfFTbMGngIwHb3KrNEM
-         /YTceIo5SNzy5f6/sn21X2tQ4FBFS+5Dt96AKLpoSwxBgYwnv87OiVE8ws2CDnXQb+Bl
-         wi06Op+Wu9u5c5t9gzxIJcpjgRSp1KsyAszm1P+so6QYRIvu6f9hf8juPkF2TRFNmG1U
-         BjiVCjJg1NLOaDKlgDfGzQNNMQUzn6U8jZUi69cfWFAZqArVpp6ArW1RUzRpyplS0Hso
-         NZgGYOiCKeY/J9iV/bdfhSOsBb3nnU2C04QecdaeA5PCKK7e23wooMstnG1OJqmvTKRM
-         ATmA==
-X-Gm-Message-State: APjAAAWPgiTndFbjnEei2xI25xgIIve3PzdcPXOerdDk3jqlgDGE7LUW
-        fpf+mUMBZCMdQQEkAKTKw6i0QBKU4ZR+l3y80RypDg==
-X-Google-Smtp-Source: APXvYqz4eQwsdM8n+GXsG5v0XO/vAmXg8NEkFxvIGNZys/6jEKVlKq5wCfwFwo8AbFTYskZ23wp82lAK4anye2kHMfM=
-X-Received: by 2002:a05:6830:1417:: with SMTP id v23mr1948581otp.71.1559314356156;
- Fri, 31 May 2019 07:52:36 -0700 (PDT)
+        Fri, 31 May 2019 10:54:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45414 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726418AbfEaOyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 10:54:25 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78D9326B11;
+        Fri, 31 May 2019 14:54:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559314464;
+        bh=ut6HGUXoVdKpKxWkBmLKfiQdl1KWbFSfImiaNPxTLes=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=dtMoYgEbe/Pum8dAabX3qtFT9mAjn3HZSFuHy0mwILYh9Ui1Y+W/JhgzAE4Nfq2ku
+         YOvaYRm/5M9b6O9Is8whzrh2+SS0zwG6yLEfcalSeD/TRsG11SNpvMlN8vsuoAVFPZ
+         g4pOv/CJ07M/7HJItd7xbthrqoy0BCAmv7KHlC7Q=
+Date:   Fri, 31 May 2019 16:54:20 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Andy Lutomirski <luto@amacapital.net>
+cc:     Andy Lutomirski <luto@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4] x86/power: Fix 'nosmt' vs. hibernation triple fault
+ during resume
+In-Reply-To: <B7AC83ED-3F11-42B9-8506-C842A5937B50@amacapital.net>
+Message-ID: <nycvar.YFH.7.76.1905311651450.1962@cbobk.fhfr.pm>
+References: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm> <20190531051456.fzkvn62qlkf6wqra@treble> <nycvar.YFH.7.76.1905311045240.1962@cbobk.fhfr.pm> <5564116.e9OFvgDRbB@kreacher> <CALCETrUpseta+NrhVwzzVFTe-BkBHtDUJBO22ci3mAsVR+XOog@mail.gmail.com>
+ <nycvar.YFH.7.76.1905311628330.1962@cbobk.fhfr.pm> <B7AC83ED-3F11-42B9-8506-C842A5937B50@amacapital.net>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-References: <155925716254.3775979.16716824941364738117.stgit@dwillia2-desk3.amr.corp.intel.com>
- <155925716783.3775979.13301455166290564145.stgit@dwillia2-desk3.amr.corp.intel.com>
- <4965161.Uu1Nigf0I0@kreacher>
-In-Reply-To: <4965161.Uu1Nigf0I0@kreacher>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 31 May 2019 07:52:24 -0700
-Message-ID: <CAPcyv4ib1twvDBz6W=JU18JyvtYmyHeAU4iOruRGHf_cY+3Yvg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/8] acpi: Drop drivers/acpi/hmat/ directory
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     linux-efi@vger.kernel.org, Len Brown <lenb@kernel.org>,
-        Keith Busch <keith.busch@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        X86 ML <x86@kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 1:24 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
->
-> On Friday, May 31, 2019 12:59:27 AM CEST Dan Williams wrote:
-> > As a single source file object there is no need for the hmat enabling to
-> > have its own directory.
->
-> Well, I asked Keith to add that directory as the code in hmat.c is more related to mm than to
-> the rest of the ACPI subsystem.
+On Fri, 31 May 2019, Andy Lutomirski wrote:
 
-...but hmat/hmat.c does not say anything about mm?
+> For that matter, what actually happens if we get an SMI while halted?  
+> Does RSM go directly to sleep or does it re-fetch the HLT?
 
-> Is there any problem with retaining it?
+Our mails just crossed, I replied to Josh's mwait() proposal patch a 
+minute ago.
 
-It feels redundant for no benefit to type hmat/hmat.c. How about create:
+HLT is guaranteed to be re-entered if SMM interrupted it, while MWAIT is 
+not.
 
-    drivers/acpi/numa/ or drivers/acpi/mm/
+So as a short-term fix for 5.2, I still believe in v4 of my patch that 
+does the mwait->hlt->mwait transition across hibernate/resume, and for 5.3 
+I can look into forcing it to wait-for-SIPI proper.
 
-...and move numa.c and hmat.c there if you want to separate mm
-concerns from the rest of drivers/acpi/?
+-- 
+Jiri Kosina
+SUSE Labs
+
