@@ -2,123 +2,107 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C0FC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B26C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 931DB26E3C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:19:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D222326E3E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:20:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="stM7yT+/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbfEaTTh (ORCPT
+        id S1727223AbfEaTUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 15:19:37 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:35042 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727147AbfEaTTg (ORCPT
+        Fri, 31 May 2019 15:20:48 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:39167 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727147AbfEaTUs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 15:19:36 -0400
-Received: by mail-qt1-f193.google.com with SMTP id d23so2279847qto.2;
-        Fri, 31 May 2019 12:19:35 -0700 (PDT)
+        Fri, 31 May 2019 15:20:48 -0400
+Received: by mail-oi1-f195.google.com with SMTP id v2so8553655oie.6
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 12:20:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=GTX5Cgdck8YyB6MHi5KkfMWFB3KE2P2EVJB/MkSYzRc=;
+        b=stM7yT+/Mh1mRi0NzQUr3s1Y1nNgecbCv440WRhAFcd/gPsu76bApuH7dxU+uoTOAg
+         q/Oh3LCRItAgarMUU4qsqfHs4W424oGdtbCtnGL+KNwyyios3qtE0O90XAHM8CMM5fx9
+         GqCHFduaKx4ulL4x5XZvwWsq+S6Jca8v+8jp22+oY/JHXkJslGCPJ2OnJjESi1rxC8+O
+         Ovg6jJaW4Ce4dIj4mPHTgHi/RAMSpA8Nyii7tPEVm9gzAIxQ+FfgIXPAAc8gmxLL4PF5
+         U011AEywn6Cp7UYj+RoP3WM/cMhR2c4yCKSsH5n0fMfcI0DSkK0atBgUdxKbwcAWiu5C
+         +I8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZasN1uMb6LWNr3Bdl17/Az/Guny0XVTL4T4x9/AydIU=;
-        b=UM7nM38a4xI4mDFTwnvkJ5uHeKUmW5NKf3JRUxdTvVLKyk3lfgeHGBlEUqaNm+x6op
-         udiG16NB4a4/8mD1sYtFKZj/e7GY+WmzrZiVg4lYlWN6zFfd09RrCx+R5Nje6ghN1QRn
-         yzoAa+Wq1me6pdGv2h8OPve/9ubJP1LKN1/8Mou1YDKNckcjjPjTsoeez9gkCeLQg5Wu
-         IHlT2IDcB04iwimQNvzsqyVAMTK4lyHaW4eeBLEAETEPKj/W/hbbXZWcwrRlmPgg1b0k
-         9uYspbGfFV+zqceCU0Yq1ECpOIInlGicyj+yOgHlAgwNQQVz0hsmVsYOjC/Xwp5HwSke
-         o2uQ==
-X-Gm-Message-State: APjAAAVtt06/JdcWU2abaK4ocDsg948NoQUaRlUX/fjoihElVyrWttft
-        UV8Bh8u5tk7Ns+rvlNcoBA579DL7o8wLYjIN204=
-X-Google-Smtp-Source: APXvYqwTzyt4WCkVVX3Qulyt1v2QQMhca2JE7R2nPL+bbYIIgogHgkLIhe92uxEulcPWL7paeV3/6XiyNu5oc8Epn44=
-X-Received: by 2002:aed:3e7c:: with SMTP id m57mr5706705qtf.204.1559330374999;
- Fri, 31 May 2019 12:19:34 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=GTX5Cgdck8YyB6MHi5KkfMWFB3KE2P2EVJB/MkSYzRc=;
+        b=XVvia15jYktV67635MfHy2XiEGcto3ZLx9vzDIR4XNOkWV4UHFg04qAZsr9mVraY0E
+         v8rRagss43q7EPJ/CUzh98UHMTa1xZ+tgEpfpw55PtAkgxsSbnza43XfuEI5mi3KDrRY
+         UG213uO6j8J+mw6NXs0xpJpeo46ZVVUdyjABLbVcsA6yA2cRMgDOXlcFtLa7a+14kaJ1
+         WV4CF2SwBIpRNEWvYfs7RofHvezR1oNdSIWHZIPDxNjRMTUqlof+oa7hO9TkbutIM+c4
+         OFeuvjaHgqL52ZMCvpSxPbu41SRQq3Ifp6aBSoM85qp7jSDHqLoI6NwXVWhm9lE2UuuX
+         yD7g==
+X-Gm-Message-State: APjAAAXviJ5U3U3l9TgSw/YEbxkYltam3h+XgzatYvU3FoNfxbjWjC5k
+        50S8qiEPbaUWGdMBTdO7uDwp/YAmFAt+k1umEB83JQ==
+X-Google-Smtp-Source: APXvYqxYaf/p6HU3oJAMhRuIUUDaR+Bg/cFfJEsDf+zGjzfM0iPxluV0fkzJB9Jf9ImRAi+m8j4i2A77AVLu23Xf1q8=
+X-Received: by 2002:aca:e0d6:: with SMTP id x205mr190997oig.47.1559330447322;
+ Fri, 31 May 2019 12:20:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190531035348.7194-1-elder@linaro.org> <e75cd1c111233fdc05f47017046a6b0f0c97673a.camel@redhat.com>
- <065c95a8-7b17-495d-f225-36c46faccdd7@linaro.org>
-In-Reply-To: <065c95a8-7b17-495d-f225-36c46faccdd7@linaro.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 31 May 2019 21:19:18 +0200
-Message-ID: <CAK8P3a05CevRBV3ym+pnKmxv+A0_T+AtURW2L4doPAFzu3QcJw@mail.gmail.com>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-To:     Alex Elder <elder@linaro.org>
-Cc:     Dan Williams <dcbw@redhat.com>, David Miller <davem@davemloft.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        evgreen@chromium.org, Ben Chan <benchan@google.com>,
-        Eric Caruso <ejcaruso@google.com>, cpratapa@codeaurora.org,
-        syadagir@codeaurora.org,
-        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
-        abhishek.esse@gmail.com, Networking <netdev@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-soc@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org
+References: <20190531063645.4697-1-namit@vmware.com> <20190531063645.4697-12-namit@vmware.com>
+ <20190531105758.GO2623@hirez.programming.kicks-ass.net> <82791CFA-3748-4881-9F01-53F677108FC3@vmware.com>
+In-Reply-To: <82791CFA-3748-4881-9F01-53F677108FC3@vmware.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Fri, 31 May 2019 21:20:21 +0200
+Message-ID: <CAG48ez1LxU_swf30Ndj=vjZLeSKg83Oi4f2Kd+wSUygPXA0cGg@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 11/12] x86/mm/tlb: Use async and inline messages
+ for flushing
+To:     Nadav Amit <namit@vmware.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 6:36 PM Alex Elder <elder@linaro.org> wrote:
-> On 5/31/19 9:58 AM, Dan Williams wrote:
-> > On Thu, 2019-05-30 at 22:53 -0500, Alex Elder wrote:
+On Fri, May 31, 2019 at 8:29 PM Nadav Amit <namit@vmware.com> wrote:
+>
+> [ +Jann Horn ]
+>
+> > On May 31, 2019, at 3:57 AM, Peter Zijlstra <peterz@infradead.org> wrot=
+e:
 > >
-> > My question from the Nov 2018 IPA rmnet driver still stands; how does
-> > this relate to net/ethernet/qualcomm/rmnet/ if at all? And if this is
-> > really just a netdev talking to the IPA itself and unrelated to
-> > net/ethernet/qualcomm/rmnet, let's call it "ipa%d" and stop cargo-
-> > culting rmnet around just because it happens to be a net driver for a
-> > QC SoC.
->
-> First, the relationship between the IPA driver and the rmnet driver
-> is that the IPA driver is assumed to sit between the rmnet driver
-> and the hardware.
+> > On Thu, May 30, 2019 at 11:36:44PM -0700, Nadav Amit wrote:
+> >> When we flush userspace mappings, we can defer the TLB flushes, as lon=
+g
+> >> the following conditions are met:
+> >>
+> >> 1. No tables are freed, since otherwise speculative page walks might
+> >>   cause machine-checks.
+> >>
+> >> 2. No one would access userspace before flush takes place. Specificall=
+y,
+> >>   NMI handlers and kprobes would avoid accessing userspace.
+[...]
+> A #MC might be caused. I tried to avoid it by not allowing freeing of
+> page-tables in such way. Did I miss something else? Some interaction with
+> MTRR changes? I=E2=80=99ll think about it some more, but I don=E2=80=99t =
+see how.
 
-Does this mean that IPA can only be used to back rmnet, and rmnet
-can only be used on top of IPA, or can or both of them be combined
-with another driver to talk to instead?
-
-> Currently the modem is assumed to use QMAP protocol.  This means
-> each packet is prefixed by a (struct rmnet_map_header) structure
-> that allows the IPA connection to be multiplexed for several logical
-> connections.  The rmnet driver parses such messages and implements
-> the multiplexed network interfaces.
->
-> QMAP protocol can also be used for aggregating many small packets
-> into a larger message.  The rmnet driver implements de-aggregation
-> of such messages (and could probably aggregate them for TX as well).
->
-> Finally, the IPA can support checksum offload, and the rmnet
-> driver handles providing a prepended header (for TX) and
-> interpreting the appended trailer (for RX) if these features
-> are enabled.
->
-> So basically, the purpose of the rmnet driver is to handle QMAP
-> protocol connections, and right now that's what the modem provides.
-
-Do you have any idea why this particular design was picked?
-
-My best guess is that it evolved organically with multiple
-generations of hardware and software, rather than being thought
-out as a nice abstraction layer. If the two are tightly connected,
-this might mean that what we actually want here is to reintegrate
-the two components into a single driver with a much simpler
-RX and TX path that handles the checksumming and aggregation
-of data packets directly as it passes them from the network
-stack into the hardware.
-
-Always passing data from one netdev to another both ways
-sounds like it introduces both direct CPU overhead, and
-problems with flow control when data gets buffered inbetween.
-The intermediate buffer here acts like a router that must
-pass data along or randomly drop packets when the consumer
-can't keep up with the producer.
-
-        Arnd
+I don't really know much about this topic, but here's a random comment
+since you cc'ed me: If the physical memory range was freed and
+reallocated, could you end up with speculatively executed cached
+memory reads from I/O memory? (And if so, would that be bad?)
