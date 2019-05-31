@@ -2,108 +2,297 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F489C28CC0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 636AEC28CC0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24EE923F9F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:37:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14DEB23E91
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:39:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VjGPoJuw"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Jt5+Nigs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbfEaBhZ (ORCPT
+        id S1726800AbfEaBjw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 21:37:25 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:56425 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726372AbfEaBhZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 21:37:25 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45FRry1SPdz9sBr;
-        Fri, 31 May 2019 11:37:22 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1559266642;
-        bh=S0ENzl/Ee55wERjVPiHzUWaptttCKuyFophDewYeipw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=VjGPoJuwIlkoKno7ryVKpuo70oDy30++9jyRH491yiA8B31LyHh+uHXavh45qd+Kl
-         wJMr9zuhqL08bFGY0KHGP2sKv4pwaTniI4ApUqvfSiS5A5lJ9Cf/GvncpZ2O07buXs
-         nvC4P8i/tLXHmMMZYlnoJzWH/OF3R/LZ3DoHkfv7xLJ5LcSYhfCj2bwFZhHyQq5OFj
-         XraYQ6RGNY5hM49nGlyEdiiZnAHJEf+7Mpz4Ej+z1he7Ax2yf3sUVz0BHJd3PIUzL5
-         eaUm3B79Kzt4dKR0Co5GSokuF+XGFOA/v3ymy5AZuPUzeJ+GK7LRZTmB8eZE5VNL0K
-         2+iP3vbN+jPJQ==
-Date:   Fri, 31 May 2019 11:37:21 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] firmware_loader: fix build without sysctl
-Message-ID: <20190531113721.5057ce05@canb.auug.org.au>
-In-Reply-To: <20190531012649.31797-1-mcroce@redhat.com>
-References: <20190531012649.31797-1-mcroce@redhat.com>
+        Thu, 30 May 2019 21:39:52 -0400
+Received: from mail-eopbgr10064.outbound.protection.outlook.com ([40.107.1.64]:2790
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726372AbfEaBjv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 21:39:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TTNhtGYhPPJuhqHryhWsl4UxIu51hGi1bhHDVlxWVZs=;
+ b=Jt5+NigsheRAWNKyDjrqpkSUxdakp4dsTD+S2MtJRPfoKw/VKL/9ya8Uq++W3+oZYxLMcDl+3xkk48GV8y8opFv9bbpptiKPDmENJznVX0e6MBPMibIxhYdDV1NLY80qHEOCKw3NlKhlXMsInimmvkxQr3Foc1u/LJUFiLuQMTc=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB4419.eurprd04.prod.outlook.com (52.135.152.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.19; Fri, 31 May 2019 01:39:46 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::3173:24:d401:2378]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::3173:24:d401:2378%6]) with mapi id 15.20.1922.021; Fri, 31 May 2019
+ 01:39:46 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Andre Przywara <andre.przywara@arm.com>
+CC:     Florian Fainelli <f.fainelli@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "van.freenix@gmail.com" <van.freenix@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH 0/2] mailbox: arm: introduce smc triggered mailbox
+Thread-Topic: [PATCH 0/2] mailbox: arm: introduce smc triggered mailbox
+Thread-Index: AQHVESt7O8zUR8j7k0mzGFqyu7YBg6Z4+DAAgAVHW8CABVJUgIAA7cKA
+Date:   Fri, 31 May 2019 01:39:45 +0000
+Message-ID: <AM0PR04MB4481C97696C68ECF5E6D4A7988190@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <20190523060437.11059-1-peng.fan@nxp.com>
+        <4ba2b243-5622-bb27-6fc3-cd9457430e54@gmail.com>
+        <AM0PR04MB4481C44F9B5EFCDD076EF728881D0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <20190530122329.235d13c7@donnerap.cambridge.arm.com>
+In-Reply-To: <20190530122329.235d13c7@donnerap.cambridge.arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 786c4c99-cd19-4c30-f99b-08d6e568dcb5
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB4419;
+x-ms-traffictypediagnostic: AM0PR04MB4419:
+x-ms-exchange-purlcount: 2
+x-microsoft-antispam-prvs: <AM0PR04MB44199DA2C5EA75D91654B1E588190@AM0PR04MB4419.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 00540983E2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(376002)(39860400002)(396003)(366004)(189003)(199004)(229853002)(3846002)(54906003)(6116002)(6306002)(6246003)(4326008)(8676002)(14444005)(44832011)(256004)(476003)(25786009)(14454004)(71190400001)(99286004)(71200400001)(5660300002)(55016002)(6436002)(8936002)(81156014)(81166006)(53936002)(26005)(76116006)(7696005)(7736002)(33656002)(53546011)(73956011)(76176011)(478600001)(305945005)(66946007)(6506007)(446003)(186003)(66556008)(64756008)(66446008)(86362001)(74316002)(15650500001)(11346002)(66476007)(45080400002)(68736007)(316002)(7416002)(6916009)(66066001)(52536014)(486006)(9686003)(102836004)(2906002)(966005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4419;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: T5Q75JgpGJuwx5PbjB+x2jtIPe9AZoiB4HAME/qoB2gHCZ3vJHeNayYZnfaRjKMCJcy3o2SY0TLUogW3i6oiaTBKZxD+1H8kyxE7/Njo7otniBpH6aOdTUYYnpR026Jzx5MLpqviE/yOs2339hpSSuKOufpDZ/8W3niNMBSdonSyVfLnPsRum/zn0tvyLTfFw3aUNyf1+nOffW8G+1KVTEmuoEnSxg4dL0y/9oZW90JY1Yp1XEF8MZelFgkjF2BuiB2XPYhZklBRIhFIpuouFXcBsTb/BSsHgmqqwfwv7m1fzjYfPvWJcEXohJXxHdSL80aofCmJXWUvbzN6LJ0mEJ205qppU/F4gA/1urS/84N0nQnpC4lKLCdmR88mv8l+dXC3OeWcG64aGXelHUO4/5skHgevjCTalLp1t1AL7/o=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/YyaG.RCnm+UzpDnp7pcS2.k"; protocol="application/pgp-signature"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 786c4c99-cd19-4c30-f99b-08d6e568dcb5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 May 2019 01:39:46.0737
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: peng.fan@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4419
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/YyaG.RCnm+UzpDnp7pcS2.k
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
-
-On Fri, 31 May 2019 03:26:49 +0200 Matteo Croce <mcroce@redhat.com> wrote:
->
-> firmware_config_table has references to the sysctl code which
-> triggers a build failure when CONFIG_PROC_SYSCTL is not set:
 >=20
->     ld: drivers/base/firmware_loader/fallback_table.o:(.data+0x30): undef=
-ined reference to `sysctl_vals'
->     ld: drivers/base/firmware_loader/fallback_table.o:(.data+0x38): undef=
-ined reference to `sysctl_vals'
->     ld: drivers/base/firmware_loader/fallback_table.o:(.data+0x70): undef=
-ined reference to `sysctl_vals'
->     ld: drivers/base/firmware_loader/fallback_table.o:(.data+0x78): undef=
-ined reference to `sysctl_vals'
+> > > Subject: Re: [PATCH 0/2] mailbox: arm: introduce smc triggered
+> > > mailbox
+> > >
+> > > Hi,
+> > >
+> > > On 5/22/19 10:50 PM, Peng Fan wrote:
+> > > > This is a modified version from Andre Przywara's patch series
+> > > >
+> > > https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fl=
+o
+> > > re.ke
+> rnel.org%2Fpatchwork%2Fcover%2F812997%2F&amp;data=3D02%7C01%7Cpe
+> > >
+> ng.fan%40nxp.com%7C010c9ddd5df645c9c66b08d6dfa46cb2%7C686ea1d3b
+> > >
+> c2b4c6fa92cd99c5c301635%7C0%7C0%7C636942294631442665&amp;sdat
+> > >
+> a=3DBbS5ZQtzMANSwaKRDJ62NKrPrAyaED1%2BvymQaT6Qr8E%3D&amp;rese
+> > > rved=3D0.
+> > > > [1] is a draft implementation of i.MX8MM SCMI ATF implementation
+> > > > that use smc as mailbox, power/clk is included, but only part of
+> > > > clk has been implemented to work with hardware, power domain only
+> > > > supports get name for now.
+> > > >
+> > > > The traditional Linux mailbox mechanism uses some kind of
+> > > > dedicated hardware IP to signal a condition to some other
+> > > > processing unit, typically a dedicated management processor.
+> > > > This mailbox feature is used for instance by the SCMI protocol to
+> > > > signal a request for some action to be taken by the management
+> processor.
+> > > > However some SoCs does not have a dedicated management core to
+> > > provide
+> > > > those services. In order to service TEE and to avoid linux
+> > > > shutdown power and clock that used by TEE, need let firmware to
+> > > > handle power and clock, the firmware here is ARM Trusted Firmware
+> > > > that could also run SCMI service.
+> > > >
+> > > > The existing SCMI implementation uses a rather flexible shared
+> > > > memory region to communicate commands and their parameters, it
+> > > > still requires a mailbox to actually trigger the action.
+> > >
+> > > We have had something similar done internally with a couple of minor
+> > > differences:
+> > >
+> > > - a SGI is used to send SCMI notifications/delayed replies to
+> > > support asynchronism (patches are in the works to actually add that
+> > > to the Linux SCMI framework). There is no good support for SGI in
+> > > the kernel right now so we hacked up something from the existing SMP
+> > > code and adding the ability to register our own IPI handlers
+> > > (SHAME!). Using a PPI should work and should allow for using request_=
+irq()
+> AFAICT.
+> >
+> > So you are also implementing a firmware inside ATF for SCMI usecase, ri=
+ght?
+> >
+> > Introducing SGI in ATF to notify Linux will introduce complexity,
+> > there is no good framework inside ATF for SCMI, and I use
+> > synchronization call for simplicity for now.
 >=20
-> Put the firmware_config_table struct under #ifdef CONFIG_PROC_SYSCTL.
+> I think we don't disagree, but just to clarify on one thing:
 >=20
-> Fixes: 6a33853c5773 ("proc/sysctl: add shared variables for range check")
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Matteo Croce <mcroce@redhat.com>
+> I think we should avoid tying this driver to specific protocol or softwar=
+e on the
+> other end, be it ATF or SCMI. After all it's just a mailbox driver, meant=
+ to signal
+> some event (and parameters) to some external entity. Yes, SCMI (or SCPI b=
+ack
+> then) was the reason to push for this, but it should be independent from =
+that.
 
-I have added this to linux-next today.
+Thanks, I agree.
 
---=20
-Cheers,
-Stephen Rothwell
+> I am not even sure we should mention it too much in the documentation.
 
---Sig_/YyaG.RCnm+UzpDnp7pcS2.k
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+I think we need a usecase here, so it should be fine.
 
------BEGIN PGP SIGNATURE-----
+>=20
+> So whether the receiving end is ATF or something else it irrelevant, I th=
+ink. For
+> instance we have had discussions in Xen to provide guests some virtualise=
+d
+> device management support, and using an HVC mailbox seems like a neat
+> solution. This could be using the SCMI (or SCPI) protocol, but that's not=
+ a
+> requirement. In this case the Xen hypervisor would be the one to pick up =
+the
+> mailbox trigger, probably forwarding the request to something else (Dom0 =
+in
+> this case).
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzwhVEACgkQAVBC80lX
-0GwXtAf/S0gkgBJMzuh2Ig4QUVdg74lBXrsaAPi3F20gk7QSZnVwk+UQa8GE0prZ
-ULNovrs71Kuf7/ITaDF1fT6RCzMA7wU3GV9I1z+mXJOEYC1ZnccNorh5P6nmWCk8
-seXGo/UnYsNq1ysN9HYWr6rJySXrX0A4Ad7/iLX9FaVH3P3r7f8iSDVWxGmSkzoV
-VOhnc7OKhnvvoLn9xAkjvh2yIFZnU47ZdOaTx/KwAu8rWHjXMMPzwpV8t445Q6UF
-cxKnHqkz9sFDcdwc2KgHOgv3ZtqSL8ZPOBcAiD6F9JweUSLEkA9K02LSHma8cblO
-2njQcBgiDA+TGAr4Ot9NTYLWVktQFg==
-=W7pE
------END PGP SIGNATURE-----
+I do not get the point "forwarding the request", DomU HVC will trap to Xen,
+so how to forward to Dom0?
 
---Sig_/YyaG.RCnm+UzpDnp7pcS2.k--
+Thanks,
+Peng.
+
+> Also having a generic SMC mailbox could avoid having the actual hardware
+> mailbox drivers in the kernel, so EL3 firmware could forward the request =
+to an
+> external management processor, and Linux would just work, without the nee=
+d
+> to describe the actual hardware mailbox device in some firmware tables. T=
+his
+> might help ACPI on those devices.
+>=20
+> Cheers,
+> Andre.
+>=20
+> > >
+> > > - the mailbox identifier is indicated as part of the SMC call such
+> > > that we can have multiple SCMI mailboxes serving both standard
+> > > protocols and non-standard (in the 0x80 and above) range, also they
+> > > may have different throughput (in hindsight, these could simply be
+> > > different channels)
+> > >
+> > > Your patch series looks both good and useful to me, I would just put
+> > > a provision in the binding to support an optional interrupt such
+> > > that asynchronism gets reasonably easy to plug in when it is
+> > > available (and desirable).
+> >
+> > Ok. Let me think about and add that in new version patch.
+> >
+> > Thanks,
+> > Peng.
+> >
+> > >
+> > > >
+> > > > This patch series provides a Linux mailbox compatible service
+> > > > which uses smc calls to invoke firmware code, for instance taking
+> > > > care of SCMI
+> > > requests.
+> > > > The actual requests are still communicated using the standard SCMI
+> > > > way of shared memory regions, but a dedicated mailbox hardware IP
+> > > > can be replaced via this new driver.
+> > > >
+> > > > This simple driver uses the architected SMC calling convention to
+> > > > trigger firmware services, also allows for using "HVC" calls to
+> > > > call into hypervisors or firmware layers running in the EL2 excepti=
+on
+> level.
+> > > >
+> > > > Patch 1 contains the device tree binding documentation, patch 2
+> > > > introduces the actual mailbox driver.
+> > > >
+> > > > Please note that this driver just provides a generic mailbox
+> > > > mechanism, though this is synchronous and one-way only (triggered
+> > > > by the OS only, without providing an asynchronous way of
+> > > > triggering request from the firmware).
+> > > > And while providing SCMI services was the reason for this
+> > > > exercise, this driver is in no way bound to this use case, but can
+> > > > be used generically where the OS wants to signal a mailbox
+> > > > condition to firmware or a hypervisor.
+> > > > Also the driver is in no way meant to replace any existing
+> > > > firmware interface, but actually to complement existing interfaces.
+> > > >
+> > > > [1]
+> > > > https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2=
+F
+> > > > gith
+> > > >
+> > >
+> ub.com%2FMrVan%2Farm-trusted-firmware%2Ftree%2Fscmi&amp;data=3D02
+> > > %7C01%7
+> > > >
+> > >
+> Cpeng.fan%40nxp.com%7C010c9ddd5df645c9c66b08d6dfa46cb2%7C686ea1
+> > > d3bc2b4
+> > > >
+> > >
+> c6fa92cd99c5c301635%7C0%7C0%7C636942294631442665&amp;sdata=3DkN
+> > > 9bEFFcsZA
+> > > > 1ePeNLLfHmONpVaG6O5ajVQvKMuaBXyk%3D&amp;reserved=3D0
+> > > >
+> > > > Peng Fan (2):
+> > > >   DT: mailbox: add binding doc for the ARM SMC mailbox
+> > > >   mailbox: introduce ARM SMC based mailbox
+> > > >
+> > > >  .../devicetree/bindings/mailbox/arm-smc.txt        |  96
+> > > +++++++++++++
+> > > >  drivers/mailbox/Kconfig                            |   7 +
+> > > >  drivers/mailbox/Makefile                           |   2 +
+> > > >  drivers/mailbox/arm-smc-mailbox.c                  | 154
+> > > +++++++++++++++++++++
+> > > >  include/linux/mailbox/arm-smc-mailbox.h            |  10 ++
+> > > >  5 files changed, 269 insertions(+)  create mode 100644
+> > > > Documentation/devicetree/bindings/mailbox/arm-smc.txt
+> > > >  create mode 100644 drivers/mailbox/arm-smc-mailbox.c  create
+> mode
+> > > > 100644 include/linux/mailbox/arm-smc-mailbox.h
+> > > >
+> > >
+> > >
+> > > --
+> > > Florian
+
