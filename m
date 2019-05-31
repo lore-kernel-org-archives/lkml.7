@@ -2,93 +2,84 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A99FC28CC2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D4EC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:34:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 749DA26AC2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:33:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559313238;
-	bh=1nBozZjo2hDOp1xXAXOBbApH4GiAlFWbKx6C42s2Cks=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=kJO10V3YKI7zEfzeFVEvbVloyj8C3Q8vmE6vzijEPCiiIQcLTORn69ipGcrgKdvOB
-	 87OA6elpAsEb8nnkhPSER85RfIDDOcvCZk+OX7TiZzWkx0WzQmVpEj9o4hHOTu47C+
-	 8LBJf28QkTNqKyfxv0onWZaEKEHu7gOUGgDW0vcA=
+	by mail.kernel.org (Postfix) with ESMTP id 323B626ABD
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:34:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbfEaOd5 (ORCPT
+        id S1726829AbfEaOdn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 10:33:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53692 "EHLO mail.kernel.org"
+        Fri, 31 May 2019 10:33:43 -0400
+Received: from foss.arm.com ([217.140.101.70]:52452 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726559AbfEaOd4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 10:33:56 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 730B326AB4;
-        Fri, 31 May 2019 14:33:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559313235;
-        bh=1nBozZjo2hDOp1xXAXOBbApH4GiAlFWbKx6C42s2Cks=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=PkxOkx58565Eq22i/BEn1YC29YYECsCDhoKy3ADpy8tiE60wXcfiYgCIIk+9ihLx4
-         ydGw3fjzOieA1GAArshst6SzTAx5aoVVnxWdnrY0j/UDwm0unnfcJou5l/HbMpGtR1
-         mwgDJ/P6xMrt84IqVzvkzUfweKpX6JaZniDThWJ8=
-Date:   Fri, 31 May 2019 16:33:51 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Andy Lutomirski <luto@kernel.org>
-cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4] x86/power: Fix 'nosmt' vs. hibernation triple fault
- during resume
-In-Reply-To: <nycvar.YFH.7.76.1905311628330.1962@cbobk.fhfr.pm>
-Message-ID: <nycvar.YFH.7.76.1905311633310.1962@cbobk.fhfr.pm>
-References: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm> <20190531051456.fzkvn62qlkf6wqra@treble> <nycvar.YFH.7.76.1905311045240.1962@cbobk.fhfr.pm> <5564116.e9OFvgDRbB@kreacher> <CALCETrUpseta+NrhVwzzVFTe-BkBHtDUJBO22ci3mAsVR+XOog@mail.gmail.com>
- <nycvar.YFH.7.76.1905311628330.1962@cbobk.fhfr.pm>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        id S1726808AbfEaOdk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 10:33:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 61CED165C;
+        Fri, 31 May 2019 07:33:40 -0700 (PDT)
+Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8AFE53F5AF;
+        Fri, 31 May 2019 07:33:38 -0700 (PDT)
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: [PATCH 2/6] mailbox: arm_mhu: reorder header inclusion and drop unneeded ones
+Date:   Fri, 31 May 2019 15:33:16 +0100
+Message-Id: <20190531143320.8895-3-sudeep.holla@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190531143320.8895-1-sudeep.holla@arm.com>
+References: <20190531143320.8895-1-sudeep.holla@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 May 2019, Jiri Kosina wrote:
+This patch just re-orders some of the headers includes and also drop
+the ones that are unnecessary.
 
-> On Fri, 31 May 2019, Andy Lutomirski wrote:
-> 
-> > 2. Put the CPU all the way to sleep by sending it an INIT IPI.
-> > 
-> > Version 2 seems very simple and robust.  Is there a reason we can't do
-> > it?  We obviously don't want to do it for normal offline because it
-> > might be a high-power state, but a cpu in the wait-for-SIPI state is
-> > not going to exit that state all by itself.
-> > 
-> > The patch to implement #2 should be short and sweet as long as we are
-> > careful to only put genuine APs to sleep like this.  The only downside
-> > I can see is that an new kernel resuming and old kernel that was
-> > booted with nosmt is going to waste power, but I don't think that's a
-> > showstopper.
-> 
-> Well, if *that* is not an issue, than the original 3-liner that just 
-> forces them to 'hlt' [1] would be good enough as well.
+Cc: Jassi Brar <jaswinder.singh@linaro.org>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+---
+ drivers/mailbox/arm_mhu.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-Actually no, scratch that, I misunderstood your proposal, sorry.
-
+diff --git a/drivers/mailbox/arm_mhu.c b/drivers/mailbox/arm_mhu.c
+index 64d85c6a2bdf..747cab1090ff 100644
+--- a/drivers/mailbox/arm_mhu.c
++++ b/drivers/mailbox/arm_mhu.c
+@@ -13,16 +13,13 @@
+  * GNU General Public License for more details.
+  */
+ 
+-#include <linux/interrupt.h>
+-#include <linux/spinlock.h>
+-#include <linux/mutex.h>
+-#include <linux/delay.h>
+-#include <linux/slab.h>
++#include <linux/amba/bus.h>
++#include <linux/device.h>
+ #include <linux/err.h>
++#include <linux/interrupt.h>
+ #include <linux/io.h>
+-#include <linux/module.h>
+-#include <linux/amba/bus.h>
+ #include <linux/mailbox_controller.h>
++#include <linux/module.h>
+ 
+ #define INTR_STAT_OFS	0x0
+ #define INTR_SET_OFS	0x8
 -- 
-Jiri Kosina
-SUSE Labs
+2.17.1
 
