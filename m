@@ -2,67 +2,67 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15FA1C28CC2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87901C28CC0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBA4D26142
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5456A262A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:18:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rpNJZzSF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="migBA7G0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbfEaBSC (ORCPT
+        id S1726976AbfEaBSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 21:18:02 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35404 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbfEaBSB (ORCPT
+        Thu, 30 May 2019 21:18:09 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38923 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726902AbfEaBSD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 21:18:01 -0400
-Received: by mail-pf1-f196.google.com with SMTP id d126so5093329pfd.2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 18:18:00 -0700 (PDT)
+        Thu, 30 May 2019 21:18:03 -0400
+Received: by mail-pf1-f195.google.com with SMTP id j2so5074090pfe.6
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 18:18:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=nJd7utTcuGxgb7dSskEJaX31zJV6idHmDZghQAynF00=;
-        b=rpNJZzSFFR4m29xwb8hL+xkPQjt4v6fVSgGkpZ9XLILWEKeq7LM2xJBRqR/eTb5NPT
-         Of6ouPRIvtLYZ91J6JnyiusETp3+jCcH+d7LVDQimJoL1vjJbjAdpGxE6qrNK37B2993
-         wEPuJ+rm28+EsoVLvKnH4LIRoX3tIz2sUiZDIbyY4MJcIOBhu4RzlMxg8Duw7YLylUi8
-         hLT51GqFTzsrJa9Xy8TCIsIfJ5hxXn2U9DrE/Ua2PtbyY8aJ1C8FcxdTLsqcDByfbOqS
-         G0F3luFh8bBLZAJznqO/9NhXtrLh81JxOq4Lvy6ZYSrKNyLv8dmqMZFd21qVaYSfGSfr
-         yDDg==
+        bh=4uHEAa5GeZzr2h0opAabsUuB1kTv1SagFVuFPuo6Vy4=;
+        b=migBA7G0X8TRyWt+AlogD9HOesTE9MlGY/VHdPuOv2b4R05pmowj823gTs5tiG2Pov
+         sSM2x9XvzPtsJczvx912e+oBwNoeY01DDuG3j1RTintQIw2Z9zKUXgRya/xSQ3WAfMA/
+         mz9V6ymLT0qqERhwb6SQDuwBuWSZmUFu23sOd+OfIGIM2E1HKn1jxxJoUSIEytKr0Sm4
+         6rKrQhG8WyFbNg6SsnzSfWvGTpgn4kRZRqxjg9Cz+Si6LvJBNtliij/XI3FjAmHk9+xs
+         q6SB7k1FJaoPMpQ7Xk71ak8xHKrI/uWpJv3i6+MtXEV5OABRTwdwkHziRE60+tfrSbzA
+         xdOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=nJd7utTcuGxgb7dSskEJaX31zJV6idHmDZghQAynF00=;
-        b=cD09gUwJcwt6diNp0lFGPJEXoLD2aISJ3Gu5k8n5hkUHtXd2O4tu4/u1jYuQS1K2cL
-         eq/LB2Nt6XukoTfbLu6I6KELrLtpNYgaMgmuli+OprqVoV9DFYOrEmeMULFjsoILab0y
-         rITk1PzfJZlFbuIh9vCu1ZeazXTyafgkc2oKPFhDVJVRjkgD9/Cc2vNlJCbiHosrz+8V
-         CPa8c7p2hP5uaPJYhU5C6M/YXHOkDCKJf+GOijp+ynrjPaY7B74GXR4y3PSvOvfCQ+tB
-         hCu925Pz0gTw9wsOVZAD+WOWVKIzlt06lIev/20gF0m6wsg0X7sKUEFVJZsZApYcqWyW
-         yZ3Q==
-X-Gm-Message-State: APjAAAXyun6EAKevGDKzV+GT9UElTNsgVJEIBpuTFAKG7MyYqPBsLnVq
-        giMLII2wEEbizz2rqFc9Pb+zoQ==
-X-Google-Smtp-Source: APXvYqxVBMtdrQdkk0ctbvAUwN9rPykb3uniLF5dDitJQtq0DLC0S8NsZ7qcg5jpaLqjqOzBgsHm0A==
-X-Received: by 2002:a65:4c84:: with SMTP id m4mr6405725pgt.382.1559265480353;
-        Thu, 30 May 2019 18:18:00 -0700 (PDT)
+        bh=4uHEAa5GeZzr2h0opAabsUuB1kTv1SagFVuFPuo6Vy4=;
+        b=WeiyGOc1EUhbUd+zVh/pVg5Tdpj+eb9SoIIeBqQY1jK3GwDeKKmgEDGI4YDW4DcNss
+         uXXNAgSZLSTciKV649mulOpgM2imc1C69R89EBJ/+uKkscoiS6cY12g9HK3zFNNS9qYd
+         gThm99CJpJUR7qj/n96K82d8/nq6RRWthoWa0h6A2DR8obTXLX4TsWQ63Kkwe+P6xCR3
+         gmRCzs2TNANcirMRHENTzLsfGJ8c4xfi3tbcVWJzMHJKoYePe9m07jjjr2QztAu9Iw+j
+         UeTeW0yhyQiMbf3JQo8k2+GpYgX7ogPXqg06JAeQnJW+BkCMkWnJlU0XrZSCqK0mDGCO
+         x1sQ==
+X-Gm-Message-State: APjAAAW9VEAb3nZ0PRyZv8gX5Rs1urw4T6hoiQ3TPu2EqR3GwcvjVOjI
+        d9s/ANDEAi/UyzhDUlIG37EBgw==
+X-Google-Smtp-Source: APXvYqyzIj6Pm1KfV/B4BT/7El4cJiSWB3kByoiUQxMfNJ3vK96ay9Q4JTPnEheGYvM+SrTLPr/mRg==
+X-Received: by 2002:a63:ea42:: with SMTP id l2mr5875093pgk.19.1559265482268;
+        Thu, 30 May 2019 18:18:02 -0700 (PDT)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id j20sm1819042pff.183.2019.05.30.18.17.59
+        by smtp.gmail.com with ESMTPSA id j20sm1819042pff.183.2019.05.30.18.18.01
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 18:17:59 -0700 (PDT)
+        Thu, 30 May 2019 18:18:01 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     Arun Kumar Neelakantam <aneela@codeaurora.org>,
         Chris Lew <clew@codeaurora.org>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: [PATCH v2 3/5] net: qrtr: Migrate node lookup tree to spinlock
-Date:   Thu, 30 May 2019 18:17:51 -0700
-Message-Id: <20190531011753.11840-4-bjorn.andersson@linaro.org>
+Subject: [PATCH v2 5/5] net: qrtr: Remove receive worker
+Date:   Thu, 30 May 2019 18:17:53 -0700
+Message-Id: <20190531011753.11840-6-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20190531011753.11840-1-bjorn.andersson@linaro.org>
 References: <20190531011753.11840-1-bjorn.andersson@linaro.org>
@@ -71,9 +71,14 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move operations on the qrtr_nodes radix tree under a separate spinlock
-and make the qrtr_nodes tree GFP_ATOMIC, to allow operation from atomic
-context in a subsequent patch.
+Rather than enqueuing messages and scheduling a worker to deliver them
+to the individual sockets we can now, thanks to the previous work, move
+this directly into the endpoint callback.
+
+This saves us a context switch per incoming message and removes the
+possibility of an opportunistic suspend to happen between the message is
+coming from the endpoint until it ends up in the socket's receive
+buffer.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
@@ -81,82 +86,102 @@ Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Changes since v1:
 - None
 
- net/qrtr/qrtr.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+ net/qrtr/qrtr.c | 54 ++++++++++++++++---------------------------------
+ 1 file changed, 17 insertions(+), 37 deletions(-)
 
 diff --git a/net/qrtr/qrtr.c b/net/qrtr/qrtr.c
-index 38cc052b7a31..fdee32b979fe 100644
+index 7f048b9e02fb..782a3e8c5f93 100644
 --- a/net/qrtr/qrtr.c
 +++ b/net/qrtr/qrtr.c
-@@ -16,6 +16,7 @@
- #include <linux/qrtr.h>
- #include <linux/termios.h>	/* For TIOCINQ/OUTQ */
- #include <linux/numa.h>
-+#include <linux/spinlock.h>
- #include <linux/wait.h>
+@@ -165,6 +165,8 @@ static int qrtr_local_enqueue(struct qrtr_node *node, struct sk_buff *skb,
+ static int qrtr_bcast_enqueue(struct qrtr_node *node, struct sk_buff *skb,
+ 			      int type, struct sockaddr_qrtr *from,
+ 			      struct sockaddr_qrtr *to);
++static struct qrtr_sock *qrtr_port_lookup(int port);
++static void qrtr_port_put(struct qrtr_sock *ipc);
  
- #include <net/sock.h>
-@@ -106,10 +107,11 @@ static inline struct qrtr_sock *qrtr_sk(struct sock *sk)
- static unsigned int qrtr_local_nid = NUMA_NO_NODE;
+ /* Release node resources and free the node.
+  *
+@@ -429,6 +431,7 @@ int qrtr_endpoint_post(struct qrtr_endpoint *ep, const void *data, size_t len)
+ 	struct qrtr_node *node = ep->node;
+ 	const struct qrtr_hdr_v1 *v1;
+ 	const struct qrtr_hdr_v2 *v2;
++	struct qrtr_sock *ipc;
+ 	struct sk_buff *skb;
+ 	struct qrtr_cb *cb;
+ 	unsigned int size;
+@@ -493,8 +496,20 @@ int qrtr_endpoint_post(struct qrtr_endpoint *ep, const void *data, size_t len)
  
- /* for node ids */
--static RADIX_TREE(qrtr_nodes, GFP_KERNEL);
-+static RADIX_TREE(qrtr_nodes, GFP_ATOMIC);
-+static DEFINE_SPINLOCK(qrtr_nodes_lock);
- /* broadcast list */
- static LIST_HEAD(qrtr_all_nodes);
--/* lock for qrtr_nodes, qrtr_all_nodes and node reference */
-+/* lock for qrtr_all_nodes and node reference */
- static DEFINE_MUTEX(qrtr_node_lock);
+ 	skb_put_data(skb, data + hdrlen, size);
  
- /* local port allocation management */
-@@ -173,10 +175,13 @@ static void __qrtr_node_release(struct kref *kref)
- {
- 	struct radix_tree_iter iter;
- 	struct qrtr_node *node = container_of(kref, struct qrtr_node, ref);
-+	unsigned long flags;
- 	void __rcu **slot;
- 
-+	spin_lock_irqsave(&qrtr_nodes_lock, flags);
- 	if (node->nid != QRTR_EP_NID_AUTO)
- 		radix_tree_delete(&qrtr_nodes, node->nid);
-+	spin_unlock_irqrestore(&qrtr_nodes_lock, flags);
- 
- 	list_del(&node->item);
- 	mutex_unlock(&qrtr_node_lock);
-@@ -383,11 +388,12 @@ static int qrtr_node_enqueue(struct qrtr_node *node, struct sk_buff *skb,
- static struct qrtr_node *qrtr_node_lookup(unsigned int nid)
- {
- 	struct qrtr_node *node;
-+	unsigned long flags;
- 
--	mutex_lock(&qrtr_node_lock);
-+	spin_lock_irqsave(&qrtr_nodes_lock, flags);
- 	node = radix_tree_lookup(&qrtr_nodes, nid);
- 	node = qrtr_node_acquire(node);
--	mutex_unlock(&qrtr_node_lock);
-+	spin_unlock_irqrestore(&qrtr_nodes_lock, flags);
- 
- 	return node;
- }
-@@ -399,13 +405,15 @@ static struct qrtr_node *qrtr_node_lookup(unsigned int nid)
-  */
- static void qrtr_node_assign(struct qrtr_node *node, unsigned int nid)
- {
-+	unsigned long flags;
+-	skb_queue_tail(&node->rx_queue, skb);
+-	schedule_work(&node->work);
++	qrtr_node_assign(node, cb->src_node);
 +
- 	if (node->nid != QRTR_EP_NID_AUTO || nid == QRTR_EP_NID_AUTO)
- 		return;
++	if (cb->type == QRTR_TYPE_RESUME_TX) {
++		qrtr_tx_resume(node, skb);
++	} else {
++		ipc = qrtr_port_lookup(cb->dst_port);
++		if (!ipc)
++			goto err;
++
++		if (sock_queue_rcv_skb(&ipc->sk, skb))
++			goto err;
++
++		qrtr_port_put(ipc);
++	}
  
--	mutex_lock(&qrtr_node_lock);
-+	spin_lock_irqsave(&qrtr_nodes_lock, flags);
- 	radix_tree_insert(&qrtr_nodes, nid, node);
- 	node->nid = nid;
--	mutex_unlock(&qrtr_node_lock);
-+	spin_unlock_irqrestore(&qrtr_nodes_lock, flags);
+ 	return 0;
+ 
+@@ -529,40 +544,6 @@ static struct sk_buff *qrtr_alloc_ctrl_packet(struct qrtr_ctrl_pkt **pkt)
+ 	return skb;
  }
  
+-static struct qrtr_sock *qrtr_port_lookup(int port);
+-static void qrtr_port_put(struct qrtr_sock *ipc);
+-
+-/* Handle and route a received packet.
+- *
+- * This will auto-reply with resume-tx packet as necessary.
+- */
+-static void qrtr_node_rx_work(struct work_struct *work)
+-{
+-	struct qrtr_node *node = container_of(work, struct qrtr_node, work);
+-	struct sk_buff *skb;
+-
+-	while ((skb = skb_dequeue(&node->rx_queue)) != NULL) {
+-		struct qrtr_sock *ipc;
+-		struct qrtr_cb *cb = (struct qrtr_cb *)skb->cb;
+-
+-		qrtr_node_assign(node, cb->src_node);
+-
+-		if (cb->type == QRTR_TYPE_RESUME_TX) {
+-			qrtr_tx_resume(node, skb);
+-		} else {
+-			ipc = qrtr_port_lookup(cb->dst_port);
+-			if (!ipc) {
+-				kfree_skb(skb);
+-			} else {
+-				if (sock_queue_rcv_skb(&ipc->sk, skb))
+-					kfree_skb(skb);
+-
+-				qrtr_port_put(ipc);
+-			}
+-		}
+-	}
+-}
+-
  /**
+  * qrtr_endpoint_register() - register a new endpoint
+  * @ep: endpoint to register
+@@ -582,7 +563,6 @@ int qrtr_endpoint_register(struct qrtr_endpoint *ep, unsigned int nid)
+ 	if (!node)
+ 		return -ENOMEM;
+ 
+-	INIT_WORK(&node->work, qrtr_node_rx_work);
+ 	kref_init(&node->ref);
+ 	mutex_init(&node->ep_lock);
+ 	skb_queue_head_init(&node->rx_queue);
 -- 
 2.18.0
 
