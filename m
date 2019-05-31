@@ -2,126 +2,180 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3104FC28CC0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 00:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6101CC28CC0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 00:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0685826374
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 00:57:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A5AD26374
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 00:59:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbfEaA5m (ORCPT
+        id S1726718AbfEaA7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 20:57:42 -0400
-Received: from mga05.intel.com ([192.55.52.43]:27659 "EHLO mga05.intel.com"
+        Thu, 30 May 2019 20:59:24 -0400
+Received: from namei.org ([65.99.196.166]:35662 "EHLO namei.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726128AbfEaA5m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 20:57:42 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 17:57:41 -0700
-X-ExtLoop1: 1
-Received: from unknown (HELO [10.239.13.7]) ([10.239.13.7])
-  by fmsmga006.fm.intel.com with ESMTP; 30 May 2019 17:57:40 -0700
-Message-ID: <5CF07D37.9090805@intel.com>
-Date:   Fri, 31 May 2019 09:02:47 +0800
-From:   Wei Wang <wei.w.wang@intel.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Thunderbird/31.7.0
+        id S1726131AbfEaA7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 20:59:24 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id x4V0xGOY017048;
+        Fri, 31 May 2019 00:59:16 GMT
+Date:   Fri, 31 May 2019 10:59:16 +1000 (AEST)
+From:   James Morris <jmorris@namei.org>
+To:     Kees Cook <keescook@chromium.org>
+cc:     Ke Wu <mikewu@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        "Serge E. Hallyn" <serge@hallyn.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
+Subject: Re: [PATCH v2] Allow to exclude specific file types in LoadPin
+In-Reply-To: <201905301440.1DC01275@keescook>
+Message-ID: <alpine.LRH.2.21.1905311058560.16993@namei.org>
+References: <20190529224350.6460-1-mikewu@google.com> <20190530192208.99773-1-mikewu@google.com> <201905301440.1DC01275@keescook>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-To:     Eric Hankland <ehankland@google.com>
-CC:     pbonzini@redhat.com, rkrcmar@redhat.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH v1] KVM: x86: PMU Whitelist
-References: <CAOyeoRWfPNmaWY6Lifdkdj3KPPM654vzDO+s3oduEMCJP+Asow@mail.gmail.com> <5CEC9667.30100@intel.com> <CAOyeoRWhfyuuYdguE6Wrzd7GOdow9qRE4MZ4OKkMc5cdhDT53g@mail.gmail.com> <5CEE3AC4.3020904@intel.com> <CAOyeoRW85jV=TW_xwSj0ZYwPj_L+G9wu+QPGEF3nBmPbWGX4_g@mail.gmail.com>
-In-Reply-To: <CAOyeoRW85jV=TW_xwSj0ZYwPj_L+G9wu+QPGEF3nBmPbWGX4_g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/30/2019 01:11 AM, Eric Hankland wrote:
-> On Wed, May 29, 2019 at 12:49 AM Wei Wang <wei.w.wang@intel.com> wrote:
->> On 05/29/2019 02:14 AM, Eric Hankland wrote:
->>> On Mon, May 27, 2019 at 6:56 PM Wei Wang <wei.w.wang@intel.com> wrote:
->>>> On 05/23/2019 06:23 AM, Eric Hankland wrote:
->>>>> - Add a VCPU ioctl that can control which events the guest can monitor.
->>>>>
->>>>> Signed-off-by: ehankland <ehankland@google.com>
->>>>> ---
->>>>> Some events can provide a guest with information about other guests or the
->>>>> host (e.g. L3 cache stats); providing the capability to restrict access
->>>>> to a "safe" set of events would limit the potential for the PMU to be used
->>>>> in any side channel attacks. This change introduces a new vcpu ioctl that
->>>>> sets an event whitelist. If the guest attempts to program a counter for
->>>>> any unwhitelisted event, the kernel counter won't be created, so any
->>>>> RDPMC/RDMSR will show 0 instances of that event.
->>>> The general idea sounds good to me :)
->>>>
->>>> For the implementation, I would have the following suggestions:
->>>>
->>>> 1) Instead of using a whitelist, it would be better to use a blacklist to
->>>> forbid the guest from counting any core level information. So by default,
->>>> kvm maintains a list of those core level events, which are not supported to
->>>> the guest.
->>>>
->>>> The userspace ioctl removes the related events from the blacklist to
->>>> make them usable by the guest.
->>>>
->>>> 2) Use vm ioctl, instead of vcpu ioctl. The blacklist-ed events can be
->>>> VM wide
->>>> (unnecessary to make each CPU to maintain the same copy).
->>>> Accordingly, put the pmu event blacklist into kvm->arch.
->>>>
->>>> 3) Returning 1 when the guest tries to set the evetlsel msr to count an
->>>> event which is on the blacklist.
->>>>
->>>> Best,
->>>> Wei
->>> Thanks for the feedback. I have a couple concerns with a KVM
->>> maintained blacklist. First, I'm worried it will be difficult to keep
->>> such a list up to date and accurate (both coming up with the initial
->>> list since there are so many events, and updating it whenever any new
->>> events are published or vulnerabilities are discovered).
->> Not sure about "so many" above. I think there should be much
->> fewer events that may need to be blacklisted.
->>
->> For example the event table 19-3 from SDM 19.2 shows hundreds of
->> events, how many of them would you think that need to be blacklisted?
->>
->>> Second, users
->>> may want to differentiate between whole-socket and sub-socket VMs
->>> (some events may be fine for the whole-socket case) - keeping a single
->>> blacklist wouldn't allow for this.
->> Why wouldn't?
->> In any case (e.g. the whole socket dedicated to the single VM) we
->> want to unlock the blacklisted events, we can have the userspace
->> (e.g. qemu command line options "+event1, +event2") do ioctl to
->> have KVM do that.
->>
->> Btw, for the L3 cache stats event example, I'm not sure if that could
->> be an issue if we have "AnyThread=0". I'll double confirm with
->> someone.
->>
->> Best,
->> Wei
->> Not sure about "so many" above. I think there should be much
->> fewer events that may need to be blacklisted.
-> I think you're right that there are not as many events that seem like
-> they could leak info as events that seem like they won't, but I think
-> the work to validate that they definitely don't could be expensive;
-> with a whitelist it's easy to start with a smaller set and
-> incrementally add to it without having to evaluate all the events
-> right away.
+On Thu, 30 May 2019, Kees Cook wrote:
 
-Before going that whitelist/blacklist direction, do you have an event
-example that couldn't be solved by setting "AnyThread=0"?
+> On Thu, May 30, 2019 at 12:22:08PM -0700, Ke Wu wrote:
+> > Linux kernel already provide MODULE_SIG and KEXEC_VERIFY_SIG to
+> > make sure loaded kernel module and kernel image are trusted. This
+> > patch adds a kernel command line option "loadpin.exclude" which
+> > allows to exclude specific file types from LoadPin. This is useful
+> > when people want to use different mechanisms to verify module and
+> > kernel image while still use LoadPin to protect the integrity of
+> > other files kernel loads.
+> > 
+> > Signed-off-by: Ke Wu <mikewu@google.com>
+> 
+> Thanks for the updates!
+> 
+> Acked-by: Kees Cook <keescook@chromium.org>
+> 
+> James, I don't have anything else planned for loadpin this cycle. Do you
+> want me to push this to Linus in the next cycle, or do you want to take
+> it into one of your trees?
 
-If no, I think we could simply gate guest's setting of "AnyThread=0".
+You should push it directly to Linus.
 
-Best,
-Wei
+
+> 
+> Thanks!
+> 
+> -Kees
+> 
+> > ---
+> > Changelog since v1:
+> > - Mark ignore_read_file_id with __ro_after_init.
+> > - Mark parse_exclude() with __init.
+> > - Use ARRAY_SIZE(ignore_read_file_id) instead of READING_MAX_ID.
+> > 
+> > 
+> >  Documentation/admin-guide/LSM/LoadPin.rst | 10 ++++++
+> >  security/loadpin/loadpin.c                | 38 +++++++++++++++++++++++
+> >  2 files changed, 48 insertions(+)
+> > 
+> > diff --git a/Documentation/admin-guide/LSM/LoadPin.rst b/Documentation/admin-guide/LSM/LoadPin.rst
+> > index 32070762d24c..716ad9b23c9a 100644
+> > --- a/Documentation/admin-guide/LSM/LoadPin.rst
+> > +++ b/Documentation/admin-guide/LSM/LoadPin.rst
+> > @@ -19,3 +19,13 @@ block device backing the filesystem is not read-only, a sysctl is
+> >  created to toggle pinning: ``/proc/sys/kernel/loadpin/enabled``. (Having
+> >  a mutable filesystem means pinning is mutable too, but having the
+> >  sysctl allows for easy testing on systems with a mutable filesystem.)
+> > +
+> > +It's also possible to exclude specific file types from LoadPin using kernel
+> > +command line option "``loadpin.exclude``". By default, all files are
+> > +included, but they can be excluded using kernel command line option such
+> > +as "``loadpin.exclude=kernel-module,kexec-image``". This allows to use
+> > +different mechanisms such as ``CONFIG_MODULE_SIG`` and
+> > +``CONFIG_KEXEC_VERIFY_SIG`` to verify kernel module and kernel image while
+> > +still use LoadPin to protect the integrity of other files kernel loads. The
+> > +full list of valid file types can be found in ``kernel_read_file_str``
+> > +defined in ``include/linux/fs.h``.
+> > diff --git a/security/loadpin/loadpin.c b/security/loadpin/loadpin.c
+> > index 055fb0a64169..d5f064644c54 100644
+> > --- a/security/loadpin/loadpin.c
+> > +++ b/security/loadpin/loadpin.c
+> > @@ -45,6 +45,8 @@ static void report_load(const char *origin, struct file *file, char *operation)
+> >  }
+> >  
+> >  static int enforce = IS_ENABLED(CONFIG_SECURITY_LOADPIN_ENFORCE);
+> > +static char *exclude_read_files[READING_MAX_ID];
+> > +static int ignore_read_file_id[READING_MAX_ID] __ro_after_init;
+> >  static struct super_block *pinned_root;
+> >  static DEFINE_SPINLOCK(pinned_root_spinlock);
+> >  
+> > @@ -129,6 +131,13 @@ static int loadpin_read_file(struct file *file, enum kernel_read_file_id id)
+> >  	struct super_block *load_root;
+> >  	const char *origin = kernel_read_file_id_str(id);
+> >  
+> > +	/* If the file id is excluded, ignore the pinning. */
+> > +	if ((unsigned int)id < ARRAY_SIZE(ignore_read_file_id) &&
+> > +	    ignore_read_file_id[id]) {
+> > +		report_load(origin, file, "pinning-excluded");
+> > +		return 0;
+> > +	}
+> > +
+> >  	/* This handles the older init_module API that has a NULL file. */
+> >  	if (!file) {
+> >  		if (!enforce) {
+> > @@ -187,10 +196,37 @@ static struct security_hook_list loadpin_hooks[] __lsm_ro_after_init = {
+> >  	LSM_HOOK_INIT(kernel_load_data, loadpin_load_data),
+> >  };
+> >  
+> > +static void __init parse_exclude(void)
+> > +{
+> > +	int i, j;
+> > +	char *cur;
+> > +
+> > +	for (i = 0; i < ARRAY_SIZE(exclude_read_files); i++) {
+> > +		cur = exclude_read_files[i];
+> > +		if (!cur)
+> > +			break;
+> > +		if (*cur == '\0')
+> > +			continue;
+> > +
+> > +		for (j = 0; j < ARRAY_SIZE(kernel_read_file_str); j++) {
+> > +			if (strcmp(cur, kernel_read_file_str[j]) == 0) {
+> > +				pr_info("excluding: %s\n",
+> > +					kernel_read_file_str[j]);
+> > +				ignore_read_file_id[j] = 1;
+> > +				/*
+> > +				 * Can not break, because one read_file_str
+> > +				 * may map to more than on read_file_id.
+> > +				 */
+> > +			}
+> > +		}
+> > +	}
+> > +}
+> > +
+> >  static int __init loadpin_init(void)
+> >  {
+> >  	pr_info("ready to pin (currently %senforcing)\n",
+> >  		enforce ? "" : "not ");
+> > +	parse_exclude();
+> >  	security_add_hooks(loadpin_hooks, ARRAY_SIZE(loadpin_hooks), "loadpin");
+> >  	return 0;
+> >  }
+> > @@ -203,3 +239,5 @@ DEFINE_LSM(loadpin) = {
+> >  /* Should not be mutable after boot, so not listed in sysfs (perm == 0). */
+> >  module_param(enforce, int, 0);
+> >  MODULE_PARM_DESC(enforce, "Enforce module/firmware pinning");
+> > +module_param_array_named(exclude, exclude_read_files, charp, NULL, 0);
+> > +MODULE_PARM_DESC(exclude, "Exclude pinning specific read file types");
+> > -- 
+> > 2.22.0.rc1.257.g3120a18244-goog
+> > 
+> 
+> 
+
+-- 
+James Morris
+<jmorris@namei.org>
+
