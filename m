@@ -2,82 +2,101 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB737C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4078EC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AADFA26B6E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:15:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FDA226B6F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:15:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbfEaPPd (ORCPT
+        id S1726762AbfEaPPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 11:15:33 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:51828 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726418AbfEaPPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 11:15:33 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id D5854712A6994FC3F9D2;
-        Fri, 31 May 2019 23:15:26 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 31 May 2019 23:15:16 +0800
-From:   Kefeng Wang <wangkefeng.wang@huawei.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Sudeep Dutt <sudeep.dutt@intel.com>,
-        Ashutosh Dixit <ashutosh.dixit@intel.com>,
-        "Arnd Bergmann" <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH] misc: mic: scif: fix double free of scif_dev
-Date:   Fri, 31 May 2019 23:23:24 +0800
-Message-ID: <20190531152324.20534-1-wangkefeng.wang@huawei.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+        Fri, 31 May 2019 11:15:39 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44088 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726683AbfEaPPi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 11:15:38 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4VFCLK4053371
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 11:15:37 -0400
+Received: from e33.co.us.ibm.com (e33.co.us.ibm.com [32.97.110.151])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2su6nmr8k8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 11:15:37 -0400
+Received: from localhost
+        by e33.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <jejb@linux.ibm.com>;
+        Fri, 31 May 2019 16:15:36 +0100
+Received: from b03cxnp07029.gho.boulder.ibm.com (9.17.130.16)
+        by e33.co.us.ibm.com (192.168.1.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 31 May 2019 16:15:31 +0100
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4VFFUN811665728
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 31 May 2019 15:15:30 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A89616A047;
+        Fri, 31 May 2019 15:15:30 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F36C56A051;
+        Fri, 31 May 2019 15:15:25 +0000 (GMT)
+Received: from jarvis.ext.hansenpartnership.com (unknown [9.85.204.144])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri, 31 May 2019 15:15:25 +0000 (GMT)
+Subject: Re: clean some unneeded #ifdef MODULE
+From:   James Bottomley <jejb@linux.ibm.com>
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel@vger.kernel.org
+Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org, jdelvare@suse.com,
+        linux@roeck-us.net, khalid@gonehiking.org,
+        martin.petersen@oracle.com, aacraid@microsemi.com,
+        linux-pm@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-scsi@vger.kernel.org
+Date:   Fri, 31 May 2019 18:15:24 +0300
+In-Reply-To: <1559315344-10384-1-git-send-email-info@metux.net>
+References: <1559315344-10384-1-git-send-email-info@metux.net>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19053115-0036-0000-0000-00000AC5467E
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011191; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01211268; UDB=6.00636449; IPR=6.00992305;
+ MB=3.00027133; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-31 15:15:34
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19053115-0037-0000-0000-00004C032C0B
+Message-Id: <1559315724.2878.7.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-31_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=943 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905310095
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-_scif_init() free scif_dev in the free_sdev erro path,
-but _scif_exit will free it again when module exit, it
-cause BUG_ON issue,
+On Fri, 2019-05-31 at 17:09 +0200, Enrico Weigelt, metux IT consult
+wrote:
+> Hi folks,
+> 
+> here're some patches that clean up uncessary cases of #ifdef MODULE.
+> These ifdef's just exlude MODULE_DEVICE_TABLE's when the kernel is
+> built w/o module support. As MODULE_DEVICE_TABLE() macro already
+> checks for that, these extra #ifdef's shouldn't be necessary.
 
-  kernel BUG at mm/slub.c:3944!
-  invalid opcode: 0000 [#1] SMP KASAN PTI
+Isn't the problem the #ifdefs are trying to solve a complaint about an
+unused variable in the non-module case? if so, is that fixed some other
+way?
 
-Set scif_dev to NULL in scif_destroy_scifdev() to fix it.
-
-Cc: Sudeep Dutt <sudeep.dutt@intel.com>
-Cc: Ashutosh Dixit <ashutosh.dixit@intel.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
----
- drivers/misc/mic/scif/scif_main.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/misc/mic/scif/scif_main.c b/drivers/misc/mic/scif/scif_main.c
-index 36d847af1209..7f9ce0fe1e24 100644
---- a/drivers/misc/mic/scif/scif_main.c
-+++ b/drivers/misc/mic/scif/scif_main.c
-@@ -142,6 +142,7 @@ static int scif_setup_scifdev(void)
- static void scif_destroy_scifdev(void)
- {
- 	kfree(scif_dev);
-+	scif_dev = NULL;
- }
- 
- static int scif_probe(struct scif_hw_dev *sdev)
--- 
-2.20.1
+James
 
