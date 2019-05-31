@@ -2,201 +2,165 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC42C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A33CC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78ABE26256
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:27:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1984E262E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:28:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GrvkN6pr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbfEaD1P (ORCPT
+        id S1726694AbfEaD2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 23:27:15 -0400
-Received: from mga14.intel.com ([192.55.52.115]:35846 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726418AbfEaD1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 23:27:15 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 20:27:15 -0700
-X-ExtLoop1: 1
-Received: from xingzhen-mobl1.ccr.corp.intel.com (HELO [10.255.30.215]) ([10.255.30.215])
-  by fmsmga008.fm.intel.com with ESMTP; 30 May 2019 20:27:13 -0700
-Subject: Re: [LKP] [SUNRPC] 0472e47660: fsmark.app_overhead 16.0% regression
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        "rong.a.chen@intel.com" <rong.a.chen@intel.com>
-Cc:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "lkp@01.org" <lkp@01.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190520055434.GZ31424@shao2-debian>
- <f1abba58-5fd2-5f26-74cc-f72724cfa13f@linux.intel.com>
- <9a07c589f955e5af5acc0fa09a16a3256089e764.camel@hammerspace.com>
- <d796ac23-d5d6-cdfa-89c8-536e9496b551@linux.intel.com>
- <9753a9a4a82943f6aacc2bfb0f93efc5f96bcaa5.camel@hammerspace.com>
-From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
-Message-ID: <2bbe636a-14f1-4592-d1f9-a9f765a02939@linux.intel.com>
-Date:   Fri, 31 May 2019 11:27:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 30 May 2019 23:28:08 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46841 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbfEaD2I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 23:28:08 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n4so226082wrw.13;
+        Thu, 30 May 2019 20:28:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cdoYxYQXllz6fT2zV23F9oA4lywNBkDt8+j3yf5Nll4=;
+        b=GrvkN6pr6W34zjzkdaAI+fJ7LQwQIYEEkeIxXRy9sk+35SIx9ySeflmUxcvIt3lZT1
+         Gr52S1zdOY5KvgANjNLmCCDjrFrzMBJTt2p8y4sYgjxSvf6AQPaU8815u61Sso/+gh93
+         uI6hyLDYjN2fyZ9N+aEy+KjILLPrKc8WPFGLfy7lPfvo4n7RmjIIYeGkO0NZ+S8zZp9G
+         /uN2mOC3T1ur1EJUqg7s3HhQ7Vhg0BA4vq1ozRDdt3ZxbADy6oP5UkLuM1B/i3E8/cN5
+         cs69ZEeaDbozCcDo+ZbKBDJRMQC0b2l5dzqBKnEMI4XGHoamuiDfw2V1oHnIY18qw93a
+         3oxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cdoYxYQXllz6fT2zV23F9oA4lywNBkDt8+j3yf5Nll4=;
+        b=jOGkBuHwsydRrwsNlbmofwQDH5povdecuqozIoU3tTqTmSB4+E1dpcmFmCFmkbfeG3
+         aOM6lAElQFQBpqPRgb+mD9+9dPbBZKlrVZqqTPqV0xQt7agJ0pBhYlJR9AYFjU6wRO+Q
+         LlN+DjQvg+NZwhpO7vkO3z9lpA+8y5nyN8WbmGbFuaO7dPOSnFRjohj0D8GMmZB1iaT3
+         yZyIe2iLhpfNxcUV8jlLw1LxnT2AV88ukdHZrGg0pLsFH+xd1/5wWiznEt4IwiGqwqiS
+         QX/tQINuWofIsuKE6VoCkaMuC1EWlQgISjb4aQS14SZy7yqerI9oB03x7OJ69aOiitHS
+         Sy/Q==
+X-Gm-Message-State: APjAAAWEfBMtpMg8DZWGNFmUuqAXiXXdMAwY95vRLvJschNpYMtkO2Ps
+        sJks5+g5PERTJUmrpH666Vdoh7k6lsxpJYMY8aI=
+X-Google-Smtp-Source: APXvYqzL5LExQSerZyFlXgXDv4tTzhO6UGwA+xmIbrT/jan5FG8C7J7iIe1JE7NeuDx/5WlgPUTRDBjq9AvQqqFjj7o=
+X-Received: by 2002:a5d:68cd:: with SMTP id p13mr4703190wrw.0.1559273286083;
+ Thu, 30 May 2019 20:28:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <9753a9a4a82943f6aacc2bfb0f93efc5f96bcaa5.camel@hammerspace.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190530112811.3066-1-pbonzini@redhat.com> <20190530112811.3066-2-pbonzini@redhat.com>
+In-Reply-To: <20190530112811.3066-2-pbonzini@redhat.com>
+From:   Ming Lei <tom.leiming@gmail.com>
+Date:   Fri, 31 May 2019 11:27:54 +0800
+Message-ID: <CACVXFVP-B7uKUGn75rZdu0e4QxUOsSqv8FL0vY2ubmuucvxqjQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] scsi_host: add support for request batching
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KVM General <kvm@vger.kernel.org>, jejb@linux.ibm.com,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Linux SCSI List <linux-scsi@vger.kernel.org>,
+        Stefan Hajnoczi <stefanha@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 30, 2019 at 7:28 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> This allows a list of requests to be issued, with the LLD only writing
+> the hardware doorbell when necessary, after the last request was prepared.
+> This is more efficient if we have lists of requests to issue, particularly
+> on virtualized hardware, where writing the doorbell is more expensive than
+> on real hardware.
+>
+> The use case for this is plugged IO, where blk-mq flushes a batch of
+> requests all at once.
+>
+> The API is the same as for blk-mq, just with blk-mq concepts tweaked to
+> fit the SCSI subsystem API: the "last" flag in blk_mq_queue_data becomes
+> a flag in scsi_cmnd, while the queue_num in the commit_rqs callback is
+> extracted from the hctx and passed as a parameter.
+>
+> The only complication is that blk-mq uses different plugging heuristics
+> depending on whether commit_rqs is present or not.  So we have two
+> different sets of blk_mq_ops and pick one depending on whether the
+> scsi_host template uses commit_rqs or not.
+>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  drivers/scsi/scsi_lib.c  | 37 ++++++++++++++++++++++++++++++++++---
+>  include/scsi/scsi_cmnd.h |  1 +
+>  include/scsi/scsi_host.h | 16 ++++++++++++++--
+>  3 files changed, 49 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+> index 601b9f1de267..eb4e67d02bfe 100644
+> --- a/drivers/scsi/scsi_lib.c
+> +++ b/drivers/scsi/scsi_lib.c
+> @@ -1673,10 +1673,11 @@ static blk_status_t scsi_queue_rq(struct blk_mq_hw_ctx *hctx,
+>                 blk_mq_start_request(req);
+>         }
+>
+> +       cmd->flags &= SCMD_PRESERVED_FLAGS;
+>         if (sdev->simple_tags)
+>                 cmd->flags |= SCMD_TAGGED;
+> -       else
+> -               cmd->flags &= ~SCMD_TAGGED;
+> +       if (bd->last)
+> +               cmd->flags |= SCMD_LAST;
+>
+>         scsi_init_cmd_errh(cmd);
+>         cmd->scsi_done = scsi_mq_done;
+> @@ -1807,10 +1808,37 @@ void __scsi_init_queue(struct Scsi_Host *shost, struct request_queue *q)
+>  }
+>  EXPORT_SYMBOL_GPL(__scsi_init_queue);
+>
+> +static const struct blk_mq_ops scsi_mq_ops_no_commit = {
+> +       .get_budget     = scsi_mq_get_budget,
+> +       .put_budget     = scsi_mq_put_budget,
+> +       .queue_rq       = scsi_queue_rq,
+> +       .complete       = scsi_softirq_done,
+> +       .timeout        = scsi_timeout,
+> +#ifdef CONFIG_BLK_DEBUG_FS
+> +       .show_rq        = scsi_show_rq,
+> +#endif
+> +       .init_request   = scsi_mq_init_request,
+> +       .exit_request   = scsi_mq_exit_request,
+> +       .initialize_rq_fn = scsi_initialize_rq,
+> +       .busy           = scsi_mq_lld_busy,
+> +       .map_queues     = scsi_map_queues,
+> +};
+> +
+> +
+> +static void scsi_commit_rqs(struct blk_mq_hw_ctx *hctx)
+> +{
+> +       struct request_queue *q = hctx->queue;
+> +       struct scsi_device *sdev = q->queuedata;
+> +       struct Scsi_Host *shost = sdev->host;
+> +
+> +       shost->hostt->commit_rqs(shost, hctx->queue_num);
+> +}
 
+It should be fine to implement scsi_commit_rqs() as:
 
-On 5/31/2019 3:10 AM, Trond Myklebust wrote:
-> On Thu, 2019-05-30 at 15:20 +0800, Xing Zhengjun wrote:
->>
->> On 5/30/2019 10:00 AM, Trond Myklebust wrote:
->>> Hi Xing,
->>>
->>> On Thu, 2019-05-30 at 09:35 +0800, Xing Zhengjun wrote:
->>>> Hi Trond,
->>>>
->>>> On 5/20/2019 1:54 PM, kernel test robot wrote:
->>>>> Greeting,
->>>>>
->>>>> FYI, we noticed a 16.0% improvement of fsmark.app_overhead due
->>>>> to
->>>>> commit:
->>>>>
->>>>>
->>>>> commit: 0472e476604998c127f3c80d291113e77c5676ac ("SUNRPC:
->>>>> Convert
->>>>> socket page send code to use iov_iter()")
->>>>> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git
->>>>> master
->>>>>
->>>>> in testcase: fsmark
->>>>> on test machine: 40 threads Intel(R) Xeon(R) CPU E5-2690 v2 @
->>>>> 3.00GHz with 384G memory
->>>>> with following parameters:
->>>>>
->>>>> 	iterations: 1x
->>>>> 	nr_threads: 64t
->>>>> 	disk: 1BRD_48G
->>>>> 	fs: xfs
->>>>> 	fs2: nfsv4
->>>>> 	filesize: 4M
->>>>> 	test_size: 40G
->>>>> 	sync_method: fsyncBeforeClose
->>>>> 	cpufreq_governor: performance
->>>>>
->>>>> test-description: The fsmark is a file system benchmark to test
->>>>> synchronous write workloads, for example, mail servers
->>>>> workload.
->>>>> test-url: https://sourceforge.net/projects/fsmark/
->>>>>
->>>>>
->>>>>
->>>>> Details are as below:
->>>>> -------------------------------------------------------------
->>>>> ----
->>>>> --------------------------------->
->>>>>
->>>>>
->>>>> To reproduce:
->>>>>
->>>>>            git clone https://github.com/intel/lkp-tests.git
->>>>>            cd lkp-tests
->>>>>            bin/lkp install job.yaml  # job file is attached in
->>>>> this
->>>>> email
->>>>>            bin/lkp run     job.yaml
->>>>>
->>>>> ===============================================================
->>>>> ====
->>>>> ======================
->>>>> compiler/cpufreq_governor/disk/filesize/fs2/fs/iterations/kconf
->>>>> ig/n
->>>>> r_threads/rootfs/sync_method/tbox_group/test_size/testcase:
->>>>>      gcc-7/performance/1BRD_48G/4M/nfsv4/xfs/1x/x86_64-rhel-
->>>>> 7.6/64t/debian-x86_64-2018-04-03.cgz/fsyncBeforeClose/lkp-ivb-
->>>>> ep01/40G/fsmark
->>>>>
->>>>> commit:
->>>>>      e791f8e938 ("SUNRPC: Convert xs_send_kvec() to use
->>>>> iov_iter_kvec()")
->>>>>      0472e47660 ("SUNRPC: Convert socket page send code to use
->>>>> iov_iter()")
->>>>>
->>>>> e791f8e9380d945e 0472e476604998c127f3c80d291
->>>>> ---------------- ---------------------------
->>>>>           fail:runs  %reproduction    fail:runs
->>>>>               |             |             |
->>>>>               :4           50%           2:4     dmesg.WARNING:a
->>>>> t#for
->>>>> _ip_interrupt_entry/0x
->>>>>             %stddev     %change         %stddev
->>>>>                 \          |                \
->>>>>      15118573
->>>>> ±  2%     +16.0%   17538083        fsmark.app_overhead
->>>>>        510.93           -
->>>>> 22.7%     395.12        fsmark.files_per_sec
->>>>>         24.90           +22.8%      30.57        fsmark.time.ela
->>>>> psed_
->>>>> time
->>>>>         24.90           +22.8%      30.57        fsmark.time.ela
->>>>> psed_
->>>>> time.max
->>>>>        288.00 ±  2%     -
->>>>> 27.8%     208.00        fsmark.time.percent_of_cpu_this_job_got
->>>>>         70.03 ±  2%     -
->>>>> 11.3%      62.14        fsmark.time.system_time
->>>>>
->>>>
->>>> Do you have time to take a look at this regression?
->>>
->>>   From your stats, it looks to me as if the problem is increased
->>> NUMA
->>> overhead. Pretty much everything else appears to be the same or
->>> actually performing better than previously. Am I interpreting that
->>> correctly?
->> The real regression is the throughput(fsmark.files_per_sec) is
->> decreased
->> by 22.7%.
-> 
-> Understood, but I'm trying to make sense of why. I'm not able to
-> reproduce this, so I have to rely on your performance stats to
-> understand where the 22.7% regression is coming from. As far as I can
-> see, the only numbers in the stats you published that are showing a
-> performance regression (other than the fsmark number itself), are the
-> NUMA numbers. Is that a correct interpretation?
-> 
-We re-test the case yesterday, the test result almost is the same.
-we will do more test and also check the test case itself, if you need
-more information, please let me know, thanks.
+ if (shost->hostt->commit_rqs)
+       shost->hostt->commit_rqs(shost, hctx->queue_num);
 
->>> If my interpretation above is correct, then I'm not seeing where
->>> this
->>> patch would be introducing new NUMA regressions. It is just
->>> converting
->>> from using one method of doing socket I/O to another. Could it
->>> perhaps
->>> be a memory artefact due to your running the NFS client and server
->>> on
->>> the same machine?
->>>
->>> Apologies for pushing back a little, but I just don't have the
->>> hardware available to test NUMA configurations, so I'm relying on
->>> external testing for the above kind of scenario.
->>>
->> Thanks for looking at this.  If you need more information, please let
->> me
->> know.
->>> Thanks
->>>     Trond
->>>
+then scsi_mq_ops_no_commit can be saved.
 
--- 
-Zhengjun Xing
+Because .commit_rqs() is only called when BLK_STS_*_RESOURCE is
+returned from scsi_queue_rq(), at that time shost->hostt->commit_rqs should
+have been hit from cache given .queuecommand is called via
+host->hostt->queuecommand.
+
+Not mention BLK_STS_*_RESOURCE is just often returned for small queue depth
+device.
+
+Thanks,
+Ming Lei
