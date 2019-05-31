@@ -2,248 +2,180 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF587C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 22:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6D6C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 23:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7743D26FC6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 22:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 836C226FD4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 23:00:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VyCw3u/X"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UdqZ6v0x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbfEaWlL (ORCPT
+        id S1726738AbfEaXAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 18:41:11 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:51794 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbfEaWlL (ORCPT
+        Fri, 31 May 2019 19:00:16 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:37637 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726520AbfEaXAQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 18:41:11 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4VMf22U072625;
-        Fri, 31 May 2019 17:41:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559342462;
-        bh=dmoE4M0CTzyryOAw5KKnOnMqVJcoPAZlf090WEgbfc4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=VyCw3u/X4N3qN87DWOnHQ3H9jZTEQM0N/9HJQjbqXtVFCaV1skj0c55rvRkdorGD2
-         YzNpeABuJ6Kt3HhlW9+s8lelG580Pxo3SVK1+ui44s+rxRj3clGoZ3FBnHZPZyOsqK
-         G6uZgg04i8Hu7KkfIclnhKaFBUpOqvAKU+1k0gqI=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4VMf278092962
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 31 May 2019 17:41:02 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 31
- May 2019 17:41:02 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 31 May 2019 17:41:02 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4VMf1hQ070306;
-        Fri, 31 May 2019 17:41:01 -0500
-Subject: Re: [RESEND PATCH v4 6/6] leds: lm36274: Introduce the TI LM36274 LED
- driver
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>
-CC:     Pavel Machek <pavel@ucw.cz>, <broonie@kernel.org>,
-        <lgirdwood@gmail.com>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190522192733.13422-1-dmurphy@ti.com>
- <20190522192733.13422-7-dmurphy@ti.com> <20190523125012.GB20354@amd>
- <0c2bd6af-92c5-2458-dc41-1ea413545347@ti.com>
- <89a80aa8-66ee-d0ec-fa54-c55ca8de06af@gmail.com> <20190529135821.GK4574@dell>
- <afff7c24-bb68-e9dc-295e-4449f9729cc9@gmail.com> <20190530073827.GL4574@dell>
- <c75025f5-a984-78fa-2737-d10027e5741c@gmail.com> <20190531062312.GP4574@dell>
- <8b4cfc12-284d-6daf-c82d-4c8e487cc203@gmail.com>
- <ec1066ec-c68b-c1ee-dd70-6be7f71924eb@ti.com>
- <c21fa7c4-3b3c-f35d-348c-311469496d9d@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <37baf1d4-388f-e87d-df42-9d2713f4b799@ti.com>
-Date:   Fri, 31 May 2019 17:41:01 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 31 May 2019 19:00:16 -0400
+Received: by mail-lj1-f193.google.com with SMTP id h19so11083817ljj.4
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 16:00:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=R6AakFEfT07RKGQjtU57G+Mi06fjxrW46LtUHEWscX4=;
+        b=UdqZ6v0xW/ZPZI7rfZNyoQWpFuu/Dvj8IN2xtnDAPTX97Ifm9GE29ZZGLxyqa/iYZ4
+         rcW2doIiMnJjEYD8YHPZeBmeYw+/pF+7ufxy43Ajo6/T1K3jr+2pVZMH3vAfYHucEpi5
+         8KaToYGMYAnolAxiqpavrhqxAujTLEgOy5wYLdGxZU6GLfatAVHJQ2Tg01q8q0X6qGNd
+         cvMdOyIrYD4kp5dHSVPpHRvmnPayZKvtxCSI1aZfKMsjl1X/eLrDLMuyr0pSD8N/+0W1
+         /DJb6GKmvK2DjPvRgAoWeRBJylaxDlUW6HBWawCb3DzMx8wad8MxyX9f6zHog+XwZFvd
+         oQtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=R6AakFEfT07RKGQjtU57G+Mi06fjxrW46LtUHEWscX4=;
+        b=A/JxJEG1Oxb96oKUrrYybYYWNyaPEQPoXnzDd/akwS+GTGzQQQUbfxW0/X3JIDEmWJ
+         fseMqP+3pnWNrUy0KRoL84R0NOUUtM3OA4rIQnXbHKE6TX8+PdUOEsWjMezPma3uYh/w
+         bmBpVGlhs8O7t2d/Q6kNJ9P/wftoCOKaObHB564d2PDYjOBdQ3I08PiGtIUXKEXrsOVH
+         xyVxvsrh0sB/3zWa5qEv+23v3hLNGU7MuWgBzbLZYRG7IQ0W988VZwcLQ5Ocip5ydK1l
+         tbbTdrsHevk+sSLr2Q8t07xoHXnuh6ipLF02W48vYEJSlseHL4OQX2UHVKpvGPEBPkQR
+         wBgA==
+X-Gm-Message-State: APjAAAUdbR465ZW3eeJA7dGlesmXi3rjqsuUzoxnwlT4VuIcRYTw3X1H
+        sbGoBPuj0tOYw1YqhG7iXfCc2w==
+X-Google-Smtp-Source: APXvYqwADy+ePnz+6LSmTnDgiozSJUl6IJ2AdwyOS/QcPm0Gp1mY0/Eivedv8uAM3H8DjK98nJn7WQ==
+X-Received: by 2002:a2e:2b8d:: with SMTP id r13mr7429874ljr.162.1559343613223;
+        Fri, 31 May 2019 16:00:13 -0700 (PDT)
+Received: from khorivan (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
+        by smtp.gmail.com with ESMTPSA id r14sm1468168lff.44.2019.05.31.16.00.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 31 May 2019 16:00:12 -0700 (PDT)
+Date:   Sat, 1 Jun 2019 02:00:10 +0300
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Saeed Mahameed <saeedm@mellanox.com>
+Cc:     "brouer@redhat.com" <brouer@redhat.com>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+        "ilias.apalodimas@linaro.org" <ilias.apalodimas@linaro.org>,
+        "grygorii.strashko@ti.com" <grygorii.strashko@ti.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
+        "ast@kernel.org" <ast@kernel.org>,
+        "hawk@kernel.org" <hawk@kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>
+Subject: Re: [PATCH v2 net-next 7/7] net: ethernet: ti: cpsw: add XDP support
+Message-ID: <20190531230008.GA15675@khorivan>
+Mail-Followup-To: Saeed Mahameed <saeedm@mellanox.com>,
+        "brouer@redhat.com" <brouer@redhat.com>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+        "ilias.apalodimas@linaro.org" <ilias.apalodimas@linaro.org>,
+        "grygorii.strashko@ti.com" <grygorii.strashko@ti.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
+        "ast@kernel.org" <ast@kernel.org>,
+        "hawk@kernel.org" <hawk@kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>
+References: <20190530182039.4945-1-ivan.khoronzhuk@linaro.org>
+ <20190530182039.4945-8-ivan.khoronzhuk@linaro.org>
+ <20190531174643.4be8b27f@carbon>
+ <20190531162523.GA3694@khorivan>
+ <20190531183241.255293bc@carbon>
+ <20190531170332.GB3694@khorivan>
+ <a65de3a257ab5ebec83e817c092f074b58b9ae47.camel@mellanox.com>
 MIME-Version: 1.0
-In-Reply-To: <c21fa7c4-3b3c-f35d-348c-311469496d9d@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <a65de3a257ab5ebec83e817c092f074b58b9ae47.camel@mellanox.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
-
-On 5/31/19 4:57 PM, Jacek Anaszewski wrote:
-> Dan,
->
-> On 5/31/19 11:07 PM, Dan Murphy wrote:
->> Hello
+On Fri, May 31, 2019 at 10:08:03PM +0000, Saeed Mahameed wrote:
+>On Fri, 2019-05-31 at 20:03 +0300, Ivan Khoronzhuk wrote:
+>> On Fri, May 31, 2019 at 06:32:41PM +0200, Jesper Dangaard Brouer
+>> wrote:
+>> > On Fri, 31 May 2019 19:25:24 +0300 Ivan Khoronzhuk <
+>> > ivan.khoronzhuk@linaro.org> wrote:
+>> >
+>> > > On Fri, May 31, 2019 at 05:46:43PM +0200, Jesper Dangaard Brouer
+>> > > wrote:
+>> > > > From below code snippets, it looks like you only allocated 1
+>> > > > page_pool
+>> > > > and sharing it with several RX-queues, as I don't have the full
+>> > > > context
+>> > > > and don't know this driver, I might be wrong?
+>> > > >
+>> > > > To be clear, a page_pool object is needed per RX-queue, as it
+>> > > > is
+>> > > > accessing a small RX page cache (which protected by
+>> > > > NAPI/softirq).
+>> > >
+>> > > There is one RX interrupt and one RX NAPI for all rx channels.
+>> >
+>> > So, what are you saying?
+>> >
+>> > You _are_ sharing the page_pool between several RX-channels, but it
+>> > is
+>> > safe because this hardware only have one RX interrupt + NAPI
+>> > instance??
 >>
->> On 5/31/19 2:44 PM, Jacek Anaszewski wrote:
->>> On 5/31/19 8:23 AM, Lee Jones wrote:
->>>> On Thu, 30 May 2019, Jacek Anaszewski wrote:
->>>>
->>>>> On 5/30/19 9:38 AM, Lee Jones wrote:
->>>>>> On Wed, 29 May 2019, Jacek Anaszewski wrote:
->>>>>>
->>>>>>> On 5/29/19 3:58 PM, Lee Jones wrote:
->>>>>>>> On Fri, 24 May 2019, Jacek Anaszewski wrote:
->>>>>>>>
->>>>>>>>> Hi,
->>>>>>>>>
->>>>>>>>> On 5/23/19 9:09 PM, Dan Murphy wrote:
->>>>>>>>>> Pavel
->>>>>>>>>>
->>>>>>>>>> Thanks for the review
->>>>>>>>>>
->>>>>>>>>> On 5/23/19 7:50 AM, Pavel Machek wrote:
->>>>>>>>>>> Hi!
->>>>>>>>>>>
->>>>>>>>>>>> +++ b/drivers/leds/leds-lm36274.c
->>>>>>>>>>>
->>>>>>>>>>>> +static int lm36274_parse_dt(struct lm36274 *lm36274_data)
->>>>>>>>>>>> +{
->>>>>>>>>>>> +    struct fwnode_handle *child = NULL;
->>>>>>>>>>>> +    char label[LED_MAX_NAME_SIZE];
->>>>>>>>>>>> +    struct device *dev = &lm36274_data->pdev->dev;
->>>>>>>>>>>> +    const char *name;
->>>>>>>>>>>> +    int child_cnt;
->>>>>>>>>>>> +    int ret = -EINVAL;
->>>>>>>>>>>> +
->>>>>>>>>>>> +    /* There should only be 1 node */
->>>>>>>>>>>> +    child_cnt = device_get_child_node_count(dev);
->>>>>>>>>>>> +    if (child_cnt != 1)
->>>>>>>>>>>> +        return ret;
->>>>>>>>>>>
->>>>>>>>>>> I'd do explicit "return -EINVAL" here.
->>>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> ACK
->>>>>>>>>>
->>>>>>>>>>>> +static int lm36274_probe(struct platform_device *pdev)
->>>>>>>>>>>> +{
->>>>>>>>>>>> +    struct ti_lmu *lmu = dev_get_drvdata(pdev->dev.parent);
->>>>>>>>>>>> +    struct lm36274 *lm36274_data;
->>>>>>>>>>>> +    int ret;
->>>>>>>>>>>> +
->>>>>>>>>>>> +    lm36274_data = devm_kzalloc(&pdev->dev, 
->>>>>>>>>>>> sizeof(*lm36274_data),
->>>>>>>>>>>> +                    GFP_KERNEL);
->>>>>>>>>>>> +    if (!lm36274_data) {
->>>>>>>>>>>> +        ret = -ENOMEM;
->>>>>>>>>>>> +        return ret;
->>>>>>>>>>>> +    }
->>>>>>>>>>>
->>>>>>>>>>> And certainly do "return -ENOMEM" explicitly here.
->>>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> ACK
->>>>>>>>>>
->>>>>>>>>>> Acked-by: Pavel Machek <pavel@ucw.cz>
->>>>>>>>>
->>>>>>>>> I've done all amendments requested by Pavel and updated branch
->>>>>>>>> ib-leds-mfd-regulator on linux-leds.git, but in the same time
->>>>>>>>
->>>>>>>> What do you mean by updated?  You cannot update an 'ib' (immutable
->>>>>>>> branch).  Immutable means that it cannot change, by definition.
->>>>>>>
->>>>>>> We have already talked about that. Nobody has pulled so the branch
->>>>>>> could have been safely updated.
->>>>>>
->>>>>> You have no sure way to know that.  And since I have no way to know,
->>>>>> or faith that you won't update it again, pulling it now/at all would
->>>>>> seem like a foolish thing to do.
->>>>>
->>>>> Sorry, but you are simply unjust. You're pretending to portray the
->>>>> situation as if I have been notoriously causing merge conflicts in
->>>>> linux-next which did not take place.
->>>>>
->>>>> Just to recap what this discussion is about:
->>>>>
->>>>> On 7 Apr 2019:
->>>>>
->>>>> 1. I sent pull request [0].
->>>>> 2. 45 minutes later I updated it after discovering one omission [1].
->>>>>     It was rather small chance for it to be pulled as quickly as 
->>>>> that.
->>>>>     And even if it happened it wouldn't have been much harmful - we
->>>>>     wouldn't have lost e.g. weeks of testing in linux-next due to 
->>>>> that
->>>>>     fact.
->>>>>
->>>>> On 21 May 2019:
->>>>>
->>>>> 3. I sent another pull request [2] to you and REGULATOR maintainers.
->>>>>     After it turned out that lack of feedback from REGULATOR 
->>>>> maintainers
->>>>>     was caused by failing to send them the exact copies of patches to
->>>>>     review, I informed you about possible need for updating the 
->>>>> branch.
->>>>>     Afterwards I received a reply from you saying that you hadn't 
->>>>> pulled
->>>>>     the branch anyway. At that point I was sure that neither MFD nor
->>>>>     REGULATOR tree contains the patches. And only after that I 
->>>>> updated
->>>>>     the branch.
->>>>
->>>> Here are 2 examples where you have changed immutable branches, which
->>>> is 100% of the Pull Requests I have received from you. Using that
->>>> record as a benchmark, the situation hardly seems unjust.
->>>>
->>>>>> Until you can provide me with an assurance that you will not keep
->>>>>> updating/changing the supposedly immutable pull-requests you send 
->>>>>> out,
->>>>>> I won't be pulling any more in.
->>>>>
->>>>> I can just uphold the assurance which is implicitly assumed for 
->>>>> anyone
->>>>> who has never broken acclaimed rules. As justified above.
->>>>
->>>> You have broken the rules every (100% of the) time.
->>>
->>> Yes, I admit, I would lose in court.
->>>
->>>>> [0] https://lore.kernel.org/patchwork/patch/1059075/
->>>>> [1] https://lore.kernel.org/patchwork/patch/1059080/
->>>>> [2] https://lore.kernel.org/patchwork/patch/1077066/
->>>>
->>>> So we have 2 choices moving forward; you can either provide me with
->>>> assurance that you have learned from this experience and will never
->>>> change an *immutable* branch again, or I can continue to handle them,
->>>> which has been the preference for some years.
->>>>
->>>> If you choose the former and adaptions need to be made in the future,
->>>> the correct thing to do is create a *new*, different pull-request
->>>> which has its own *new*, different tag, but uses the original tag as a
->>>> base.
->>>
->>> I choose the former. That being said:
->>>
->>> Hereby I solemnly declare never ever change an immutable branch again.
->>>
->> So how do I proceed with the requested change by Mark B on the 
->> LM36274 driver.
+>> I can miss smth but in case of cpsw technically it means:
+>> 1) RX interrupts are disabled while NAPI is scheduled,
+>>    not for particular CPU or channel, but at all, for whole cpsw
+>> module.
+>> 2) RX channels are handled one by one by priority.
+>
+>Hi Ivan, I got a silly question..
+>
+>What is the reason behind having multiple RX rings and one CPU/NAPI
+>handling all of them ? priority ? how do you priorities ?
+Several.
+One of the reason, from what I know, it can handle for several cpus/napi but
+because of errata on some SoCs or for all of them it was discarded, but idea was
+it can. Second it uses same davinci_cpdma API as tx channels that can be rate
+limited, and it's used not only by cpsw but also by other driver, so can't be
+modified easily and no reason. And third one, h/w has ability to steer some
+filtered traffic to rx queues and can be potentially configured with ethtool
+ntuples or so, but it's not implemented....yet.
+
+>
+>> 3) After all of them handled and no more in budget - interrupts are
+>> enabled.
+>> 4) If page is returned to the pool, and it's within NAPI, no races as
+>> it's
+>>    returned protected by softirq. If it's returned not in softirq
+>> it's protected
+>>    by producer lock of the ring.
 >>
->> Do I add a patch on top?
+>> Probably it's not good example for others how it should be used, not
+>> a big
+>> problem to move it to separate pools.., even don't remember why I
+>> decided to
+>> use shared pool, there was some more reasons... need search in
+>> history.
 >>
->> Or do I submit a patch to the regulator tree once the PR is pulled?
->
-> Won't the change be a dependency for [PATCH v4 1/6] ?
->
-Yes thats why I am asking as we would need to change the branch.
+>> > --
+>> > Best regards,
+>> >  Jesper Dangaard Brouer
+>> >  MSc.CS, Principal Kernel Engineer at Red Hat
+>> >  LinkedIn: http://www.linkedin.com/in/brouer
 
-
-Dan
-
-> In each case, having all the commits in one set (and branch) should
-> simplify the integration.
->
+-- 
+Regards,
+Ivan Khoronzhuk
