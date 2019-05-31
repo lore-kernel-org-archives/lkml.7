@@ -2,128 +2,163 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59202C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19575C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AC0F24895
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:49:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DECC8246B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:50:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="OyH3mAtS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbfEaItG (ORCPT
+        id S1726874AbfEaIuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 04:49:06 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55838 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726002AbfEaItF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 04:49:05 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id BDDB7AF55;
-        Fri, 31 May 2019 08:49:03 +0000 (UTC)
-Date:   Fri, 31 May 2019 10:49:02 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Jiri Kosina <jikos@kernel.org>, Petr Mladek <pmladek@suse.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        Johannes Erdfelt <johannes@erdfelt.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH] livepatch: Fix ftrace module text permissions race
-In-Reply-To: <bb69d4ac34111bbd9cb16180a6fafe471a88d80b.1559156299.git.jpoimboe@redhat.com>
-Message-ID: <alpine.LSU.2.21.1905311045040.742@pobox.suse.cz>
-References: <bb69d4ac34111bbd9cb16180a6fafe471a88d80b.1559156299.git.jpoimboe@redhat.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Fri, 31 May 2019 04:50:37 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:19981 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726158AbfEaIug (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 04:50:36 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cf0eadb0000>; Fri, 31 May 2019 01:50:35 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 31 May 2019 01:50:35 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 31 May 2019 01:50:35 -0700
+Received: from [10.19.65.14] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 May
+ 2019 08:50:32 +0000
+Subject: Re: [PATCH V1] i2c: busses: tegra: Add suspend-resume support
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>
+References: <1559195718-6693-1-git-send-email-bbiswas@nvidia.com>
+ <c8bad04b-67ef-bcdf-04df-4aa61271e81c@gmail.com>
+From:   Bitan Biswas <bbiswas@nvidia.com>
+Message-ID: <9142282b-ab76-53a0-13ce-c43b8adc575f@nvidia.com>
+Date:   Fri, 31 May 2019 01:50:29 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <c8bad04b-67ef-bcdf-04df-4aa61271e81c@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559292635; bh=gwf39AOYTh9QTv4U3hBy8Ry+efkLynIwOdktjp72GYQ=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=OyH3mAtSqXJg7DM81lTRF9F8cR7j833s1uNnWgtMm2oSKeG8WS48JWkCk0hmEs0Hc
+         V+xH7/PnTmRi+T0u5d+I2U43sKgdez4Y1ROzjVa6pAlWyAVJ6MaC9uESPgPWks+6E9
+         0ciZNRdXUf2rtgnUNnlKESNg97zQqboGgIKjXFtKsPiWdyVHpIG9bVrVjqgv3bcTyc
+         fecPgFJ3N4F989E+ep6HRRQHrLeLwe93oCb16s8j0cNBo8EUpI1JrB241S4cwPrLTL
+         /jumfEXbFQx9J18Jh+Lx3jZw64cN03ZTkHK2Ieooez4hQvVOACrfxYkSC6fQVfFCfU
+         RgvZDw5vXgHog==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 May 2019, Josh Poimboeuf wrote:
 
-> It's possible for livepatch and ftrace to be toggling a module's text
-> permissions at the same time, resulting in the following panic:
-> 
->   BUG: unable to handle page fault for address: ffffffffc005b1d9
->   #PF: supervisor write access in kernel mode
->   #PF: error_code(0x0003) - permissions violation
->   PGD 3ea0c067 P4D 3ea0c067 PUD 3ea0e067 PMD 3cc13067 PTE 3b8a1061
->   Oops: 0003 [#1] PREEMPT SMP PTI
->   CPU: 1 PID: 453 Comm: insmod Tainted: G           O  K   5.2.0-rc1-a188339ca5 #1
->   Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-20181126_142135-anatol 04/01/2014
->   RIP: 0010:apply_relocate_add+0xbe/0x14c
->   Code: fa 0b 74 21 48 83 fa 18 74 38 48 83 fa 0a 75 40 eb 08 48 83 38 00 74 33 eb 53 83 38 00 75 4e 89 08 89 c8 eb 0a 83 38 00 75 43 <89> 08 48 63 c1 48 39 c8 74 2e eb 48 83 38 00 75 32 48 29 c1 89 08
->   RSP: 0018:ffffb223c00dbb10 EFLAGS: 00010246
->   RAX: ffffffffc005b1d9 RBX: 0000000000000000 RCX: ffffffff8b200060
->   RDX: 000000000000000b RSI: 0000004b0000000b RDI: ffff96bdfcd33000
->   RBP: ffffb223c00dbb38 R08: ffffffffc005d040 R09: ffffffffc005c1f0
->   R10: ffff96bdfcd33c40 R11: ffff96bdfcd33b80 R12: 0000000000000018
->   R13: ffffffffc005c1f0 R14: ffffffffc005e708 R15: ffffffff8b2fbc74
->   FS:  00007f5f447beba8(0000) GS:ffff96bdff900000(0000) knlGS:0000000000000000
->   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->   CR2: ffffffffc005b1d9 CR3: 000000003cedc002 CR4: 0000000000360ea0
->   DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->   DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->   Call Trace:
->    klp_init_object_loaded+0x10f/0x219
->    ? preempt_latency_start+0x21/0x57
->    klp_enable_patch+0x662/0x809
->    ? virt_to_head_page+0x3a/0x3c
->    ? kfree+0x8c/0x126
->    patch_init+0x2ed/0x1000 [livepatch_test02]
->    ? 0xffffffffc0060000
->    do_one_initcall+0x9f/0x1c5
->    ? kmem_cache_alloc_trace+0xc4/0xd4
->    ? do_init_module+0x27/0x210
->    do_init_module+0x5f/0x210
->    load_module+0x1c41/0x2290
->    ? fsnotify_path+0x3b/0x42
->    ? strstarts+0x2b/0x2b
->    ? kernel_read+0x58/0x65
->    __do_sys_finit_module+0x9f/0xc3
->    ? __do_sys_finit_module+0x9f/0xc3
->    __x64_sys_finit_module+0x1a/0x1c
->    do_syscall_64+0x52/0x61
->    entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> The above panic occurs when loading two modules at the same time with
-> ftrace enabled, where at least one of the modules is a livepatch module:
-> 
-> CPU0					CPU1
-> klp_enable_patch()
->   klp_init_object_loaded()
->     module_disable_ro()
->     					ftrace_module_enable()
-> 					  ftrace_arch_code_modify_post_process()
-> 				    	    set_all_modules_text_ro()
->       klp_write_object_relocations()
->         apply_relocate_add()
-> 	  *patches read-only code* - BOOM
-> 
-> A similar race exists when toggling ftrace while loading a livepatch
-> module.
-> 
-> Fix it by ensuring that the livepatch and ftrace code patching
-> operations -- and their respective permissions changes -- are protected
-> by the text_mutex.
-> 
-> Reported-by: Johannes Erdfelt <johannes@erdfelt.com>
-> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 
-For the code
+On 5/30/19 4:27 AM, Dmitry Osipenko wrote:
+> 30.05.2019 8:55, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> Post suspend I2C registers have power on reset values. Before any
+>> transfer initialize I2C registers to prevent I2C transfer timeout
+>> and implement suspend and resume callbacks needed. Fix below errors
+>> post suspend:
+>>
+>> 1) Tegra I2C transfer timeout during jetson tx2 resume:
+>>
+>> [   27.520613] pca953x 1-0074: calling pca953x_resume+0x0/0x1b0 @ 2939, =
+parent: i2c-1
+>> [   27.633623] tegra-i2c 3160000.i2c: i2c transfer timed out
+>> [   27.639162] pca953x 1-0074: Unable to sync registers 0x3-0x5. -110
+>> [   27.645336] pca953x 1-0074: Failed to sync GPIO dir registers: -110
+>> [   27.651596] PM: dpm_run_callback(): pca953x_resume+0x0/0x1b0 returns =
+-110
+>> [   27.658375] pca953x 1-0074: pca953x_resume+0x0/0x1b0 returned -110 af=
+ter 127152 usecs
+>> [   27.666194] PM: Device 1-0074 failed to resume: error -110
+>>
+>> 2) Tegra I2C transfer timeout error on jetson Xavier post resume.
+>>
+>> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+>> ---
+>>   drivers/i2c/busses/i2c-tegra.c | 24 ++++++++++++++++++++++++
+>>   1 file changed, 24 insertions(+)
+>>
+>> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-teg=
+ra.c
+>> index ebaa78d..f6a377f 100644
+>> --- a/drivers/i2c/busses/i2c-tegra.c
+>> +++ b/drivers/i2c/busses/i2c-tegra.c
+>> @@ -1687,9 +1687,33 @@ static int tegra_i2c_remove(struct platform_devic=
+e *pdev)
+>>   }
+>>  =20
+>>   #ifdef CONFIG_PM_SLEEP
+>> +static int tegra_i2c_suspend(struct device *dev)
+>> +{
+>> +	struct tegra_i2c_dev *i2c_dev =3D dev_get_drvdata(dev);
+>> +
+>> +	i2c_mark_adapter_suspended(&i2c_dev->adapter);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int tegra_i2c_resume(struct device *dev)
+>> +{
+>> +	struct tegra_i2c_dev *i2c_dev =3D dev_get_drvdata(dev);
+>> +	int ret;
+>> +
+>> +	i2c_lock_bus(&i2c_dev->adapter, I2C_LOCK_ROOT_ADAPTER);
+>> +	ret =3D tegra_i2c_init(i2c_dev, false);
+>> +	i2c_unlock_bus(&i2c_dev->adapter, I2C_LOCK_ROOT_ADAPTER);
+>=20
+> Why the locking is needed here?
 
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+async resume could result in stress test issues if some client accesses=20
+the i2c instance. This ensures the i2c instance is locked till the=20
+initialization is complete.
 
-However, shouldn't the patch be split in two? One adding text_mutex 
-protection to livepatch and ftrace. The other adding lockdep_assert_held() 
-and __module_enable_ro()? The current changelog does not mention lockdep 
-changes at all.
+>=20
+>> +	if (!ret)
+>> +		i2c_mark_adapter_resumed(&i2c_dev->adapter);
+>> +
+>> +       return ret;
+>=20
+> A very minor nit.. will be a bit more straightforward to write this as:
+>=20
+> 	int err;
+>=20
+> 	err =3D tegra_i2c_init(i2c_dev, false);
+> 	if (err)
+> 		return err;
+>=20
+> 	i2c_mark_adapter_resumed(&i2c_dev->adapter);
+>=20
+> 	return 0;
+>=20
+> It is always cleaner to return 0 on success.
+Thanks. I shall update the section in patch as per this suggestion.
 
-Miroslav
+-regards,
+  Bitan
 
