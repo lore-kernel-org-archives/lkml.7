@@ -2,166 +2,172 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-14.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D41C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D5DAC28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B504526B24
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00E1F26B2F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:58:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbfEaO6P (ORCPT
+        id S1726816AbfEaO6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 10:58:15 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:38795 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbfEaO6H (ORCPT
+        Fri, 31 May 2019 10:58:37 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38922 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726515AbfEaO6g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 10:58:07 -0400
-Received: by mail-io1-f69.google.com with SMTP id w3so7828170iot.5
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 07:58:06 -0700 (PDT)
+        Fri, 31 May 2019 10:58:36 -0400
+Received: by mail-oi1-f196.google.com with SMTP id v2so7924856oie.6;
+        Fri, 31 May 2019 07:58:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=VAWNQSWXRFPjqWqvcnCxEWc2vR3xbR4pd4DDjFUHobY=;
-        b=L8gllNKQdwrP8J4BKTm7kYrjV2WP4hPgFfZen/A0wiAWjnMI6WoBs70fpAJGhnB/uX
-         KpMqq+cM3w6EjBvuNJ8gbYrEW8Z9SqDpHOehFkbYJw3EYxesDpbE13Ga8xG+TGrDoOGt
-         yrCaTE7E9LBVZgmFIgeg4n4TiWPwN5nwoWKpfC60ADnJuqcNEY8qL7VyRRgYaRLJP6tr
-         XeDL+rpjoJedw6ocglLfQjd0zfQwG6JeD7XBEp0j4msJ4tj3yrxgWZPr+QUnVhwCDavk
-         6PE+v9SFxjIkgWRw2LdFLgUKTWAF1QNlRYj2b77ggCCzv+5NB6WhGBqoVi3Tz9u1pwvb
-         p1mg==
-X-Gm-Message-State: APjAAAVSxXmrji7Ervv1J9sECrydEIxMO4NeN/I1blA8F+EQBmTihivH
-        Ry+4RrCiUwMHI9UvylBoQWgxW+28YxaabX867uBgJYPHfIt9
-X-Google-Smtp-Source: APXvYqy2LGeUvc5Dv4FGMjjqAoqP0NyUOjJt4CyFzayeTo7kbBilfa4tIw/mJKkyGhkh2Se+kWhGagFiaeOjWEqSVURBSe8Ui2Fy
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=m/iSMyUL9SEWCc7wCGYyJ//UVZgPKdoeEpVnczdvNmU=;
+        b=W9HwAwtvY100ISNn0PkFcr+IGKqqVMjTPzUR4nStUn16q0a4EHCaeSGN8ZFPOhmBa+
+         Fd6MPYMm1g7kRtDo9GXgFBP9ZIVD0N1eCzoVk5YJc6BxkOHzR0ulEPbY+MIQlQ/w/eOX
+         JaN0MeKA+8yrCmWvuOk0RHw0NOHyw2Bab7xO668ndAGNAw7LbAG8BRx68Z76J9s/JJaR
+         7FIAjIv6ooEuLoEWq+Clwv7LRyY7A2QXGdE1pHZ8rfUqSOgXxl8r72SmOt3/bANrrTYS
+         oRncZ7xyO+/lbFo4mbKNCmBu+8C48yReHWZ9WP9ndfzZ2IV4eT9Oaqg+is4PbEb91Jjk
+         TkHg==
+X-Gm-Message-State: APjAAAWIG3sQGl1f56d78OqofakkUUcwqlksj49FMDfiCL0+Z3XpMWI5
+        V7TPD7nLpTawjbZx1DEuNOx4x/dP/WzZkQNCf3o=
+X-Google-Smtp-Source: APXvYqyylVFIBBoiDTwyq6KIWTkz8i/otAPKvGPy+gU590207yj550TEgKwx+0JL1pKqEcybwJxIrw1BX+8V2ddH/+Q=
+X-Received: by 2002:aca:330b:: with SMTP id z11mr6124109oiz.148.1559314715666;
+ Fri, 31 May 2019 07:58:35 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a05:660c:444:: with SMTP id d4mr7089633itl.158.1559314685827;
- Fri, 31 May 2019 07:58:05 -0700 (PDT)
-Date:   Fri, 31 May 2019 07:58:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f122ab058a303d94@google.com>
-Subject: memory leak in sctp_stream_init_ext
-From:   syzbot <syzbot+7f3b6b106be8dcdcdeec@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, linux-kernel@vger.kernel.org,
-        linux-sctp@vger.kernel.org, marcelo.leitner@gmail.com,
-        netdev@vger.kernel.org, nhorman@tuxdriver.com,
-        syzkaller-bugs@googlegroups.com, vyasevich@gmail.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20190531014808.GA30932@kroah.com> <CAMuHMdV=95sKB+h_pf45DiYeiJzrk1L=014Tj8Y04_hPyRMBNQ@mail.gmail.com>
+ <20190531132400.GA5518@kroah.com> <CAMuHMdX3vQN5tF4-_vGjRQGdbxpPC+u4g-QU45=qykNZgwSj_w@mail.gmail.com>
+ <20190531140209.GA31961@kroah.com>
+In-Reply-To: <20190531140209.GA31961@kroah.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 31 May 2019 16:58:22 +0200
+Message-ID: <CAMuHMdUYTaDS+bJpchsUyc+xNPJeYoxQ3vozQUPH=gacFEcdFw@mail.gmail.com>
+Subject: Re: [GIT PULL] SPDX update for 5.2-rc3 - round 1
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spdx@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Greg,
 
-syzbot found the following crash on:
+On Fri, May 31, 2019 at 4:02 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> On Fri, May 31, 2019 at 03:51:18PM +0200, Geert Uytterhoeven wrote:
+> > On Fri, May 31, 2019 at 3:24 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > On Fri, May 31, 2019 at 09:17:06AM +0200, Geert Uytterhoeven wrote:
+> > > > On Fri, May 31, 2019 at 3:49 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > > > The following changes since commit cd6c84d8f0cdc911df435bb075ba22ce3c605b07:
+> > > > >
+> > > > >   Linux 5.2-rc2 (2019-05-26 16:49:19 -0700)
+> > > > >
+> > > > > are available in the Git repository at:
+> > > > >
+> > > > >   git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git tags/spdx-5.2-rc3-1
+> > > > >
+> > > > > for you to fetch changes up to 96ac6d435100450f0565708d9b885ea2a7400e0a:
+> > > > >
+> > > > >   treewide: Add SPDX license identifier - Kbuild (2019-05-30 11:32:33 -0700)
+> > > > >
+> > > > > ----------------------------------------------------------------
+> > > > > SPDX update for 5.2-rc3, round 1
+> > > > >
+> > > > > Here is another set of reviewed patches that adds SPDX tags to different
+> > > > > kernel files, based on a set of rules that are being used to parse the
+> > > > > comments to try to determine that the license of the file is
+> > > > > "GPL-2.0-or-later" or "GPL-2.0-only".  Only the "obvious" versions of
+> > > > > these matches are included here, a number of "non-obvious" variants of
+> > > > > text have been found but those have been postponed for later review and
+> > > > > analysis.
+> > > > >
+> > > > > There is also a patch in here to add the proper SPDX header to a bunch
+> > > > > of Kbuild files that we have missed in the past due to new files being
+> > > > > added and forgetting that Kbuild uses two different file names for
+> > > > > Makefiles.  This issue was reported by the Kbuild maintainer.
+> > > > >
+> > > > > These patches have been out for review on the linux-spdx@vger mailing
+> > > > > list, and while they were created by automatic tools, they were
+> > > > > hand-verified by a bunch of different people, all whom names are on the
+> > > > > patches are reviewers.
+> > > > >
+> > > > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > >
+> > > > I'm sorry, but as long[*] as this does not conform to
+> > > > Documentation/process/license-rules.rst, I have to provide my:
+> > > > NAked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> > > >
+> > > > [*] The obvious solution is to update Documentation/process/license-rules.rst,
+> > > >     as people have asked before.
+> > >
+> > > I don't understand, what does not conform?  We are trying _to_ conform
+> > > to that file, what did we do wrong?
+> >
+> > The new "-or-later" and "-only" variants are not (yet) documented in that file.
+> >
+> >    File format examples::
+> >
+> >       Valid-License-Identifier: GPL-2.0
+> >       Valid-License-Identifier: GPL-2.0+
+> >       SPDX-URL: https://spdx.org/licenses/GPL-2.0.html
+> >       Usage-Guide:
+> >         To use this license in source code, put one of the following SPDX
+> >         tag/value pairs into a comment according to the placement
+> >         guidelines in the licensing rules documentation.
+> >         For 'GNU General Public License (GPL) version 2 only' use:
+> >           SPDX-License-Identifier: GPL-2.0
+> >         For 'GNU General Public License (GPL) version 2 or any later
+> > version' use:
+> >           SPDX-License-Identifier: GPL-2.0+
+>
+>
+> They do not have to be documented in that file.  As what you quoted
+> said, "File format examples::"
 
-HEAD commit:    bec7550c Merge tag 'docs-5.2-fixes2' of git://git.lwn.net/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=152a0916a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=64479170dcaf0e11
-dashboard link: https://syzkaller.appspot.com/bug?extid=7f3b6b106be8dcdcdeec
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1142cd4ca00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10f81d72a00000
+My bad, I should have quoted the syntax rule:
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+7f3b6b106be8dcdcdeec@syzkaller.appspotmail.com
+   License identifiers for licenses like [L]GPL with the 'or later' option
+   are constructed by using a "+" for indicating the 'or later' option.::
 
-executing program
-executing program
-executing program
-executing program
-executing program
-BUG: memory leak
-unreferenced object 0xffff8881114f5d80 (size 96):
-   comm "syz-executor934", pid 7160, jiffies 4294993058 (age 31.950s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000ce7a1326>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:55 [inline]
-     [<00000000ce7a1326>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000ce7a1326>] slab_alloc mm/slab.c:3326 [inline]
-     [<00000000ce7a1326>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<000000007abb7ac9>] kmalloc include/linux/slab.h:547 [inline]
-     [<000000007abb7ac9>] kzalloc include/linux/slab.h:742 [inline]
-     [<000000007abb7ac9>] sctp_stream_init_ext+0x2b/0xa0  
-net/sctp/stream.c:157
-     [<0000000048ecb9c1>] sctp_sendmsg_to_asoc+0x946/0xa00  
-net/sctp/socket.c:1882
-     [<000000004483ca2b>] sctp_sendmsg+0x2a8/0x990 net/sctp/socket.c:2102
-     [<0000000094bdc32e>] inet_sendmsg+0x64/0x120 net/ipv4/af_inet.c:802
-     [<0000000022d1c2a5>] sock_sendmsg_nosec net/socket.c:652 [inline]
-     [<0000000022d1c2a5>] sock_sendmsg+0x54/0x70 net/socket.c:671
-     [<000000006ab53119>] sock_write_iter+0xb6/0x130 net/socket.c:1000
-     [<00000000973772ef>] call_write_iter include/linux/fs.h:1872 [inline]
-     [<00000000973772ef>] new_sync_write+0x1ad/0x260 fs/read_write.c:483
-     [<0000000033f2491b>] __vfs_write+0x87/0xa0 fs/read_write.c:496
-     [<00000000372fbd56>] vfs_write fs/read_write.c:558 [inline]
-     [<00000000372fbd56>] vfs_write+0xee/0x210 fs/read_write.c:542
-     [<000000007ccb2ea5>] ksys_write+0x7c/0x130 fs/read_write.c:611
-     [<000000001c29b8c7>] __do_sys_write fs/read_write.c:623 [inline]
-     [<000000001c29b8c7>] __se_sys_write fs/read_write.c:620 [inline]
-     [<000000001c29b8c7>] __x64_sys_write+0x1e/0x30 fs/read_write.c:620
-     [<0000000014d9243b>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<0000000059f6e9a8>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+      // SPDX-License-Identifier: GPL-2.0+
+      // SPDX-License-Identifier: LGPL-2.1+
 
-BUG: memory leak
-unreferenced object 0xffff8881114f5d80 (size 96):
-   comm "syz-executor934", pid 7160, jiffies 4294993058 (age 33.160s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000ce7a1326>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:55 [inline]
-     [<00000000ce7a1326>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000ce7a1326>] slab_alloc mm/slab.c:3326 [inline]
-     [<00000000ce7a1326>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<000000007abb7ac9>] kmalloc include/linux/slab.h:547 [inline]
-     [<000000007abb7ac9>] kzalloc include/linux/slab.h:742 [inline]
-     [<000000007abb7ac9>] sctp_stream_init_ext+0x2b/0xa0  
-net/sctp/stream.c:157
-     [<0000000048ecb9c1>] sctp_sendmsg_to_asoc+0x946/0xa00  
-net/sctp/socket.c:1882
-     [<000000004483ca2b>] sctp_sendmsg+0x2a8/0x990 net/sctp/socket.c:2102
-     [<0000000094bdc32e>] inet_sendmsg+0x64/0x120 net/ipv4/af_inet.c:802
-     [<0000000022d1c2a5>] sock_sendmsg_nosec net/socket.c:652 [inline]
-     [<0000000022d1c2a5>] sock_sendmsg+0x54/0x70 net/socket.c:671
-     [<000000006ab53119>] sock_write_iter+0xb6/0x130 net/socket.c:1000
-     [<00000000973772ef>] call_write_iter include/linux/fs.h:1872 [inline]
-     [<00000000973772ef>] new_sync_write+0x1ad/0x260 fs/read_write.c:483
-     [<0000000033f2491b>] __vfs_write+0x87/0xa0 fs/read_write.c:496
-     [<00000000372fbd56>] vfs_write fs/read_write.c:558 [inline]
-     [<00000000372fbd56>] vfs_write+0xee/0x210 fs/read_write.c:542
-     [<000000007ccb2ea5>] ksys_write+0x7c/0x130 fs/read_write.c:611
-     [<000000001c29b8c7>] __do_sys_write fs/read_write.c:623 [inline]
-     [<000000001c29b8c7>] __se_sys_write fs/read_write.c:620 [inline]
-     [<000000001c29b8c7>] __x64_sys_write+0x1e/0x30 fs/read_write.c:620
-     [<0000000014d9243b>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<0000000059f6e9a8>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Yes, this also predates the notion of "-only", so that is not documented
+there.
 
-executing program
-executing program
-executing program
-executing program
-executing program
-executing program
+> Please look in the files in the LICENSES directory for what all of the
+> documented identifiers should look like:
+>         $ head -n 4 LICENSES/preferred/GPL-2.0
+>         Valid-License-Identifier: GPL-2.0
+>         Valid-License-Identifier: GPL-2.0-only
+>         Valid-License-Identifier: GPL-2.0+
+>         Valid-License-Identifier: GPL-2.0-or-later
 
+Oh, so we can no longer look it up in a single place :-(
+I'm used to grepping in Documentation/process/license-rules.rst,
+as I don't know the exact syntax by heart.
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> If you want, please send a patch to fix up the documentation example,
+> but it is not incorrect :)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+May do, when I find a hole in my time/space continuum...
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
