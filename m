@@ -2,156 +2,194 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 628B2C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F00CC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 335772674F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:02:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559296931;
-	bh=ZfRv0Yrgp+Zd8xGJN40ArXNdaxOgATDzT4hykN3QQJs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ydVtsR48vdAQG7+OvA3NGgJfKjkL0SwljOVBd6oz9PlIGDw/FaB3sRjgc9UnPMezA
-	 gi+RRWjVE2XTzXl07dRhlbkDZuD1Rqxab0NjR6d5vi5YF1GsrFSukSnavU591ijfjW
-	 PiLMam6DajosmrXZ7nW2jJZWDXA8fTDPwqOhh7go=
+	by mail.kernel.org (Postfix) with ESMTP id 0F23C26748
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:03:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbfEaKCK (ORCPT
+        id S1726945AbfEaKDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 06:02:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59286 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726002AbfEaKCK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 06:02:10 -0400
-Received: from localhost.localdomain (nat-pool-mxp-t.redhat.com [149.6.153.186])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A714726748;
-        Fri, 31 May 2019 10:02:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559296929;
-        bh=ZfRv0Yrgp+Zd8xGJN40ArXNdaxOgATDzT4hykN3QQJs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ACH+Tw7vIyV0rlXKYRfqQ1cbiCIGHPIqfXHltfSFrCgExnxiBmQBCWIbU2kbUmEUg
-         MjwxNpGjZeHzza3xx3EfCsClyJACURIDexq5rzy2wXNxyBaxhsN1coZJc1AEMD3fm7
-         sMRYh5T79vi47/5gymd7Dxol6fYQUUIOlEuCvD40=
-Date:   Fri, 31 May 2019 12:02:03 +0200
-From:   Lorenzo Bianconi <lorenzo@kernel.org>
-To:     Ryder Lee <ryder.lee@mediatek.com>
-Cc:     Felix Fietkau <nbd@nbd.name>,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
-        Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
-        Yiwei Chung <yiwei.chung@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Chih-Min Chen <chih-min.Chen@mediatek.com>,
-        linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] mt76: mt7615: enable support for mesh
-Message-ID: <20190531100201.GA3527@localhost.localdomain>
-References: <7f167d09736652f81383991c971506630bbedacc.1559287432.git.ryder.lee@mediatek.com>
+        Fri, 31 May 2019 06:03:39 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:58086 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726002AbfEaKDj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 06:03:39 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 9BBDB1EFB9AB272BF3AF;
+        Fri, 31 May 2019 18:03:36 +0800 (CST)
+Received: from [127.0.0.1] (10.133.215.186) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Fri, 31 May 2019
+ 18:03:29 +0800
+Subject: Re: [PATCH v8 1/7] iommu: enhance IOMMU default DMA mode build
+ options
+To:     John Garry <john.garry@huawei.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "Will Deacon" <will.deacon@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "Michael Ellerman" <mpe@ellerman.id.au>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        iommu <iommu@lists.linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>
+CC:     Hanjun Guo <guohanjun@huawei.com>, Linuxarm <linuxarm@huawei.com>
+References: <20190530034831.4184-1-thunder.leizhen@huawei.com>
+ <20190530034831.4184-2-thunder.leizhen@huawei.com>
+ <645bd526-4eb0-4a36-2dda-023f009247ab@huawei.com>
+From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Message-ID: <030bafab-58f5-8bb1-0533-2977d6e138b2@huawei.com>
+Date:   Fri, 31 May 2019 18:03:16 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="envbJBWh7q8WU6mo"
-Content-Disposition: inline
-In-Reply-To: <7f167d09736652f81383991c971506630bbedacc.1559287432.git.ryder.lee@mediatek.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <645bd526-4eb0-4a36-2dda-023f009247ab@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.133.215.186]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---envbJBWh7q8WU6mo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-> Enable NL80211_IFTYPE_MESH_POINT and add its path.
->=20
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> ---
->  drivers/net/wireless/mediatek/mt76/mt7615/init.c | 6 ++++++
->  drivers/net/wireless/mediatek/mt76/mt7615/main.c | 1 +
->  drivers/net/wireless/mediatek/mt76/mt7615/mcu.c  | 5 ++++-
->  3 files changed, 11 insertions(+), 1 deletion(-)
->=20
+On 2019/5/30 20:20, John Garry wrote:
+> On 30/05/2019 04:48, Zhen Lei wrote:
+>> First, add build option IOMMU_DEFAULT_{LAZY|STRICT}, so that we have the
+>> opportunity to set {lazy|strict} mode as default at build time. Then put
+>> the three config options in an choice, make people can only choose one of
+>> the three at a time.
+>>
+> 
+> Since this was not picked up, but modulo (somtimes same) comments below:
+> 
+> Reviewed-by: John Garry <john.garry@huawei.com>
+> 
+>> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+>> ---
+>>  drivers/iommu/Kconfig | 42 +++++++++++++++++++++++++++++++++++-------
+>>  drivers/iommu/iommu.c |  3 ++-
+>>  2 files changed, 37 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+>> index 83664db5221df02..d6a1a45f80ffbf5 100644
+>> --- a/drivers/iommu/Kconfig
+>> +++ b/drivers/iommu/Kconfig
+>> @@ -75,17 +75,45 @@ config IOMMU_DEBUGFS
+>>        debug/iommu directory, and then populate a subdirectory with
+>>        entries as required.
+>>
+>> -config IOMMU_DEFAULT_PASSTHROUGH
+>> -    bool "IOMMU passthrough by default"
+>> +choice
+>> +    prompt "IOMMU default DMA mode"
+>>      depends on IOMMU_API
+>> -        help
+>> -      Enable passthrough by default, removing the need to pass in
+>> -      iommu.passthrough=on or iommu=pt through command line. If this
+>> -      is enabled, you can still disable with iommu.passthrough=off
+>> -      or iommu=nopt depending on the architecture.
+>> +    default IOMMU_DEFAULT_STRICT
+>> +    help
+>> +      This option allows IOMMU DMA mode to be chose at build time, to
+> 
+> As before:
+> /s/chose/chosen/, /s/allows IOMMU/allows an IOMMU/
+I'm sorry that the previous version was not modified.
 
-[...]
+> 
+>> +      override the default DMA mode of each ARCHs, removing the need to
+> 
+> Again, as before:
+> ARCHs should be singular
+OK
 
-> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/main.c b/drivers/n=
-et/wireless/mediatek/mt76/mt7615/main.c
-> index b0bb7cc12385..585e67fa2728 100644
-> --- a/drivers/net/wireless/mediatek/mt76/mt7615/main.c
-> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/main.c
-> @@ -37,6 +37,7 @@ static int get_omac_idx(enum nl80211_iftype type, u32 m=
-ask)
-> =20
->  	switch (type) {
->  	case NL80211_IFTYPE_AP:
-> +	case NL80211_IFTYPE_MESH_POINT:
->  		/* ap use hw bssid 0 and ext bssid */
->  		if (~mask & BIT(HW_BSSID_0))
->  			return HW_BSSID_0;
-> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c b/drivers/ne=
-t/wireless/mediatek/mt76/mt7615/mcu.c
-> index 43f70195244c..8b8db526cb16 100644
-> --- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-> @@ -754,6 +754,7 @@ int mt7615_mcu_set_bss_info(struct mt7615_dev *dev,
-> =20
->  	switch (vif->type) {
->  	case NL80211_IFTYPE_AP:
-> +	case NL80211_IFTYPE_MESH_POINT:
->  		tx_wlan_idx =3D mvif->sta.wcid.idx;
->  		conn_type =3D CONNECTION_INFRA_AP;
+> 
+>> +      pass in kernel parameters through command line. You can still use
+>> +      ARCHs specific boot options to override this option again.
+>> +
+>> +config IOMMU_DEFAULT_PASSTHROUGH
+>> +    bool "passthrough"
+>> +    help
+>> +      In this mode, the DMA access through IOMMU without any addresses
+>> +      translation. That means, the wrong or illegal DMA access can not
+>> +      be caught, no error information will be reported.
+>>
+>>        If unsure, say N here.
+>>
+>> +config IOMMU_DEFAULT_LAZY
+>> +    bool "lazy"
+>> +    help
+>> +      Support lazy mode, where for every IOMMU DMA unmap operation, the
+>> +      flush operation of IOTLB and the free operation of IOVA are deferred.
+>> +      They are only guaranteed to be done before the related IOVA will be
+>> +      reused.
+> 
+> why no advisory on how to set if unsure?
+Because the LAZY and STRICT have their own advantages and disadvantages.
 
-Just out of curiosity, why not using CONNECTION_MESH_{AP,STA} here?
-why not NETWORK_MESH?
+Should I say: If unsure, keep the default。
 
->  		break;
-> @@ -968,7 +969,8 @@ int mt7615_mcu_add_wtbl(struct mt7615_dev *dev, struc=
-t ieee80211_vif *vif,
->  		.rx_wtbl =3D {
->  			.tag =3D cpu_to_le16(WTBL_RX),
->  			.len =3D cpu_to_le16(sizeof(struct wtbl_rx)),
-> -			.rca1 =3D vif->type !=3D NL80211_IFTYPE_AP,
-> +			.rca1 =3D vif->type !=3D (NL80211_IFTYPE_AP ||
-> +					      NL80211_IFTYPE_MESH_POINT),
->  			.rca2 =3D 1,
->  			.rv =3D 1,
->  		},
-> @@ -1042,6 +1044,7 @@ static void sta_rec_convert_vif_type(enum nl80211_i=
-ftype type, u32 *conn_type)
->  {
->  	switch (type) {
->  	case NL80211_IFTYPE_AP:
-> +	case NL80211_IFTYPE_MESH_POINT:
->  		if (conn_type)
->  			*conn_type =3D CONNECTION_INFRA_STA;
->  		break;
+> 
+>> +
+>> +config IOMMU_DEFAULT_STRICT
+>> +    bool "strict"
+>> +    help
+>> +      For every IOMMU DMA unmap operation, the flush operation of IOTLB and
+>> +      the free operation of IOVA are guaranteed to be done in the unmap
+>> +      function.
+>> +
+>> +      This mode is safer than the two above, but it maybe slower in some
+>> +      high performace scenarios.
+> 
+> and here?
+> 
+>> +
+>> +endchoice
+>> +
+>>  config OF_IOMMU
+>>         def_bool y
+>>         depends on OF && IOMMU_API
+>> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+>> index 67ee6623f9b2a4d..56bce221285b15f 100644
+>> --- a/drivers/iommu/iommu.c
+>> +++ b/drivers/iommu/iommu.c
+>> @@ -43,7 +43,8 @@
+>>  #else
+>>  static unsigned int iommu_def_domain_type = IOMMU_DOMAIN_DMA;
+>>  #endif
+>> -static bool iommu_dma_strict __read_mostly = true;
+>> +static bool iommu_dma_strict __read_mostly =
+>> +            IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
+>>
+>>  struct iommu_group {
+>>      struct kobject kobj;
+>>
+> 
+> 
+> 
+> .
+> 
 
-same here.
-
-Regards,
-Lorenzo
-
-> --=20
-> 2.18.0
->=20
-
---envbJBWh7q8WU6mo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCXPD7lgAKCRA6cBh0uS2t
-rFA6AP9xl4wUemuHlJ2lNcCI2smmKaZNi4KmXW4gSR0kGjaB3wEAsww6TO6o9pAq
-PI3sKVdjK8j31EW9B+ekCKNxFmSPBgA=
-=w7DQ
------END PGP SIGNATURE-----
-
---envbJBWh7q8WU6mo--
