@@ -2,114 +2,106 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71920C28CC0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 862F8C28CC0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 519D326191
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:46:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52E3F26264
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:47:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559267225;
+	bh=OecpYtWJnFERvx0LdGFbAcYZk21QqOLhh8bV8JHhD/4=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=T1hC9cRX68zJN9P5twH/33zCod2DkvschGm7DzXc963+5vUZ04j937RpCH0Q8TEyF
+	 c+KRRZbJ47M2fggqSECIhvL126nVCDGpZ0AiQhT9u46znyocvcADU7hsl772FSKOgg
+	 WTfcFmWj4pFwhngcx4WUgAfxPyb+4fQQsSgfL3iM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbfEaBq4 (ORCPT
+        id S1726888AbfEaBrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 21:46:56 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:9264 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726372AbfEaBq4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 21:46:56 -0400
-X-UUID: 05a641429e3146f69f07f2838f987952-20190531
-X-UUID: 05a641429e3146f69f07f2838f987952-20190531
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <biao.huang@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 578061618; Fri, 31 May 2019 09:46:50 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
- (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 31 May
- 2019 09:46:47 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 31 May 2019 09:46:44 +0800
-Message-ID: <1559267203.24897.101.camel@mhfsdcap03>
-Subject: Re: [PATCH 3/4] net: stmmac: modify default value of tx-frames
-From:   biao huang <biao.huang@mediatek.com>
-To:     Andrew Lunn <andrew@lunn.ch>, Jose Abreu <joabreu@synopsys.com>
-CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <netdev@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <yt.shen@mediatek.com>,
-        <jianguo.zhang@mediatek.com>, <boon.leong.ong@intel.com>
-Date:   Fri, 31 May 2019 09:46:43 +0800
-In-Reply-To: <20190530125832.GB22727@lunn.ch>
-References: <1559206484-1825-1-git-send-email-biao.huang@mediatek.com>
-         <1559206484-1825-4-git-send-email-biao.huang@mediatek.com>
-         <20190530125832.GB22727@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Thu, 30 May 2019 21:47:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51298 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726372AbfEaBrD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 21:47:03 -0400
+Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FBA02626B;
+        Fri, 31 May 2019 01:47:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559267223;
+        bh=OecpYtWJnFERvx0LdGFbAcYZk21QqOLhh8bV8JHhD/4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=KbyMfS4DMpDbYh9RO4X/dFNooozYWz70zWAEAuOZ1Y1OzZPRyZbcjVR0vWEpwieI7
+         Tgsatk8hS0o11M2o52Mc69wueIHlHMOLZYClrl7syVKEu16IBGpKZrK/fFhl8XZHVj
+         9Kek0Q83/P/sbTis6J9jpnO/SwJA0wjdDcwqIyIU=
+Date:   Thu, 30 May 2019 18:47:02 -0700
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Jiri Slaby <jslaby@suse.cz>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: [GIT PULL] TTY/Serial fixes for 5.2-rc3
+Message-ID: <20190531014702.GA30713@kroah.com>
 MIME-Version: 1.0
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
 
-On Thu, 2019-05-30 at 14:58 +0200, Andrew Lunn wrote:
-> On Thu, May 30, 2019 at 04:54:43PM +0800, Biao Huang wrote:
-> > the default value of tx-frames is 25, it's too late when
-> > passing tstamp to stack, then the ptp4l will fail:
-> > 
-> > ptp4l -i eth0 -f gPTP.cfg -m
-> > ptp4l: selected /dev/ptp0 as PTP clock
-> > ptp4l: port 1: INITIALIZING to LISTENING on INITIALIZE
-> > ptp4l: port 0: INITIALIZING to LISTENING on INITIALIZE
-> > ptp4l: port 1: link up
-> > ptp4l: timed out while polling for tx timestamp
-> > ptp4l: increasing tx_timestamp_timeout may correct this issue,
-> >        but it is likely caused by a driver bug
-> > ptp4l: port 1: send peer delay response failed
-> > ptp4l: port 1: LISTENING to FAULTY on FAULT_DETECTED (FT_UNSPECIFIED)
-> > 
-> > ptp4l tests pass when changing the tx-frames from 25 to 1 with
-> > ethtool -C option.
-> > It should be fine to set tx-frames default value to 1, so ptp4l will pass
-> > by default.
-> 
-> Hi Biao
-> 
-> What does this do to the number of interrupts? Do we get 25 times more
-> interrupts? Have you done any performance tests to see if this causes
-> performance regressions?
-Yes, it seems tx-frames=25 can reduce interrupts.
-But the tx interrupt is handled in napi now, which will disable/enable
-tx interrupts at the beginning/ending of napi flow.
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
 
-Here is the test result on our platform:
-		tx-frames=1		tx-frames=25		
-irq number	478514			393750	
-performance	904Mbits/sec		902Mbits/sec
+are available in the Git repository at:
 
-commands for test:
-	"cat /proc/interrupts | grep eth0"
-	"iperf3 -c ipaddress -w 256K -t 60"
+  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tags/tty-5.2-rc3
 
-Thanks to napi, the interrupts will not grow 25 times more(almost the
-same level), and no obvious performance degradation.
+for you to fetch changes up to a1ad1cc9704f64c169261a76e1aee1cf1ae51832:
 
-Is there anybody can double check the performance with tx-frames = 0 or
-25?
-> 
-> 	    Andrew
-Thanks.
-Biao
+  vt/fbcon: deinitialize resources in visual_init() after failed memory allocation (2019-05-24 17:08:18 +0200)
 
+----------------------------------------------------------------
+TTY/Serial driver fixes for 5.2-rc3
 
+Here are some small serial and TTY driver fixes for 5.2-rc3.
+
+Nothing major, just a number of fixes for reported issues.  The fbcon
+core fix also resolves an issue, and was acked by the relevant
+maintainer to go through this tree.
+
+All of these have been in linux-next with no reported issues.
+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+----------------------------------------------------------------
+George G. Davis (1):
+      serial: sh-sci: disable DMA for uart_console
+
+Grzegorz Halat (1):
+      vt/fbcon: deinitialize resources in visual_init() after failed memory allocation
+
+Joe Burmeister (1):
+      tty: max310x: Fix external crystal register setup
+
+Jorge Ramirez-Ortiz (1):
+      tty: serial: msm_serial: Fix XON/XOFF
+
+Sascha Hauer (1):
+      serial: imx: remove log spamming error message
+
+ drivers/tty/serial/imx.c         |  1 -
+ drivers/tty/serial/max310x.c     |  2 +-
+ drivers/tty/serial/msm_serial.c  |  5 ++++-
+ drivers/tty/serial/sh-sci.c      |  7 +++++++
+ drivers/tty/vt/vt.c              | 11 +++++++++--
+ drivers/video/fbdev/core/fbcon.c |  2 +-
+ 6 files changed, 22 insertions(+), 6 deletions(-)
