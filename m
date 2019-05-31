@@ -2,134 +2,95 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D08EC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 05:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18896C28CC2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 05:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7176B263D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 05:00:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IJ77GkHS"
+	by mail.kernel.org (Postfix) with ESMTP id E5564263E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 05:05:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbfEaFA4 (ORCPT
+        id S1726616AbfEaFFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 01:00:56 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:8866 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbfEaFAx (ORCPT
+        Fri, 31 May 2019 01:05:17 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:33523 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfEaFFQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 01:00:53 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cf0b5030000>; Thu, 30 May 2019 22:00:51 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 30 May 2019 22:00:52 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 30 May 2019 22:00:52 -0700
-Received: from localhost.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 May
- 2019 05:00:50 +0000
-From:   Abhishek Sahu <abhsahu@nvidia.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Abhishek Sahu <abhsahu@nvidia.com>
-Subject: [PATCH 2/2] PCI: Create device link for NVIDIA GPU
-Date:   Fri, 31 May 2019 10:31:09 +0530
-Message-ID: <20190531050109.16211-3-abhsahu@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190531050109.16211-1-abhsahu@nvidia.com>
-References: <20190531050109.16211-1-abhsahu@nvidia.com>
-X-NVConfidentiality: public
+        Fri, 31 May 2019 01:05:16 -0400
+X-Originating-IP: 79.86.19.127
+Received: from [192.168.0.12] (127.19.86.79.rev.sfr.net [79.86.19.127])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 6BA8020002;
+        Fri, 31 May 2019 05:04:56 +0000 (UTC)
+Subject: Re: [PATCH v4 00/14] Provide generic top-down mmap layout functions
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+References: <20190526134746.9315-1-alex@ghiti.fr>
+ <201905291313.1E6BD2DFB@keescook>
+From:   Alex Ghiti <alex@ghiti.fr>
+Message-ID: <d4e04178-e6f3-6d11-4ab8-9be7cf8ae87a@ghiti.fr>
+Date:   Fri, 31 May 2019 01:04:55 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559278852; bh=X9Kjg+2IaxMtapTnBZhXu4pRG7RuEQMor0d4RRehUic=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type;
-        b=IJ77GkHSy4VdQXAZeFLwUarWDrzuu1tdnTUw/Ji9VMVhm8qclmOjJUjZmi9H50s8K
-         HbGanXpJdCP/33gIfJvNmBMgBFlBkpJgMStV1TdVzZrtePScJfeYTOg45BzaBZPjk9
-         eRLCpfVtfgDH3xBD6D1TXVcoo4xRWDmmtdDjd6+fy8Dk7NwfcuOPgShOKh1SxLwAi+
-         1GrG9MHmngXdqnfmYA/FxLmK2WjLKHVa7hLrY4dHZQOFZiIpBegA+mZ/PcgipB7GZz
-         CzlG5mcwFuNWFDwhmS6YBzaJRbdjcrrrpKKmrL89e9Wsy8UbaZSYCurFYPjun6cwAe
-         5hBiYoVeKGYHg==
+In-Reply-To: <201905291313.1E6BD2DFB@keescook>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: sv-FI
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-NVIDIA Turing GPUs include hardware support for USB Type-C and
-VirtualLink. It helps in delivering the power, display, and data
-required to power VR headsets through a single USB Type-C connector.
-The Turing GPU is a multi-function PCI device has the following
-four functions:
+On 5/29/19 4:16 PM, Kees Cook wrote:
+> On Sun, May 26, 2019 at 09:47:32AM -0400, Alexandre Ghiti wrote:
+>> This series introduces generic functions to make top-down mmap layout
+>> easily accessible to architectures, in particular riscv which was
+>> the initial goal of this series.
+>> The generic implementation was taken from arm64 and used successively
+>> by arm, mips and finally riscv.
+> As I've mentioned before, I think this is really great. Making this
+> common has long been on my TODO list. Thank you for the work! (I've sent
+> separate review emails for individual patches where my ack wasn't
+> already present...)
 
-	- VGA display controller (Function 0)
-	- Audio controller (Function 1)
-	- USB xHCI Host controller (Function 2)
-	- USB Type-C USCI controller (Function 3)
 
-The function 0 is tightly coupled with other functions in the
-hardware. When function 0 goes in runtime suspended state,
-then it will do power gating for most of the hardware blocks.
-Some of these hardware blocks are used by other functions which
-leads to functional failure. So if any of these functions (1/2/3)
-are active, then function 0 should also be in active state.
-'commit 07f4f97d7b4b ("vga_switcheroo: Use device link for
-HDA controller")' creates the device link from function 1 to
-function 0. A similar kind of device link needs to be created
-between function 0 and functions 2 and 3 for NVIDIA Turing GPU.
+Thanks :)
 
-This patch does the same and create the required device links. It
-will make function 0 to be runtime PM active if other functions
-are still active.
 
-Signed-off-by: Abhishek Sahu <abhsahu@nvidia.com>
----
- drivers/pci/quirks.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+>>    - There is no common API to determine if a process is 32b, so I came up with
+>>      !IS_ENABLED(CONFIG_64BIT) || is_compat_task() in [PATCH v4 12/14].
+> Do we need a common helper for this idiom? (Note that I don't think it's
+> worth blocking the series for this.)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index a20f7771a323..afdbc199efc5 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4967,6 +4967,29 @@ DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMD, PCI_ANY_ID,
- DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
- 			      PCI_CLASS_MULTIMEDIA_HD_AUDIO, 8, quirk_gpu_hda);
- 
-+/* Create device link for NVIDIA GPU with integrated USB controller to VGA. */
-+static void quirk_gpu_usb(struct pci_dev *usb)
-+{
-+	pci_create_device_link_with_vga(usb, 2);
-+}
-+DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
-+			      PCI_CLASS_SERIAL_USB, 8, quirk_gpu_usb);
-+
-+/*
-+ * Create device link for NVIDIA GPU with integrated Type-C UCSI controller
-+ * to VGA. Currently there is no class code defined for UCSI device over PCI
-+ * so using UNKNOWN class for now and it will be updated when UCSI
-+ * over PCI gets a class code.
-+ */
-+#define PCI_CLASS_SERIAL_UNKNOWN	0x0c80
-+static void quirk_gpu_usb_typec_ucsi(struct pci_dev *ucsi)
-+{
-+	pci_create_device_link_with_vga(ucsi, 3);
-+}
-+DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
-+			      PCI_CLASS_SERIAL_UNKNOWN, 8,
-+			      quirk_gpu_usb_typec_ucsi);
-+
- /*
-  * Some IDT switches incorrectly flag an ACS Source Validation error on
-  * completions for config read requests even though PCIe r4.0, sec
--- 
-2.17.1
 
+Each architecture has its own way of finding that out, it might be 
+interesting if there are other
+places in generic code to propose something in that sense.
+I will search for such places if they exist and come back with something.
+
+Thanks Kees for your time,
+
+Alex
+
+
+>
+> -Kees
+>
