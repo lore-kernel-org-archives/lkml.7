@@ -2,129 +2,114 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42250C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8194EC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1606526B5B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5744026B5B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:12:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tkGBxzHr"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nXGiYMKO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbfEaPL4 (ORCPT
+        id S1726965AbfEaPMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 11:11:56 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35265 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726576AbfEaPLy (ORCPT
+        Fri, 31 May 2019 11:12:16 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:44672 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726547AbfEaPMQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 11:11:54 -0400
-Received: by mail-pg1-f195.google.com with SMTP id t1so691492pgc.2;
-        Fri, 31 May 2019 08:11:54 -0700 (PDT)
+        Fri, 31 May 2019 11:12:16 -0400
+Received: by mail-oi1-f193.google.com with SMTP id e189so1228434oib.11
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 08:12:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XQFgCSgBXdly7Jwoud0ulr5doGwTC08ZXMU22H/Fyy4=;
-        b=tkGBxzHrA6ZDvVbAj49mnNeXHv/h18Avk7DFUK35QgHe/I3CRs1s74PzpJdVsgP34E
-         mB2DekUdQ+50mRYh70bNT2Y8pr/rhpRsPgZYlW5b9YzZBBFrxhIj/dL4r3kywJNH6DGe
-         O82QDJs38Oge0NJnXnvgFE7R0KrQDh8JGlvA7NmHkhZcwNl4t/R1DOPVUSf5m7RTm5fV
-         4bhTwxBSBnHwRlfBqemQOPXBErYLLSS+DpJamzySjlWZPgXGS4bIx1TeqG5u3VunASZw
-         uJX7f2Rc7lLVWm8dSAuWnsyNKXGFft9i+1wxx/goKQoUM0KBFHen/8qyJsEY+rocVgVc
-         e5Wg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3Qecf3R/ylaKOMr7DmXC4K+hYJVpsjs/jTI03UY5jdQ=;
+        b=nXGiYMKOLA7YGgplBCRIJzpPWLDIZmGlt9K/TwWZDoSmIE/xQoxoZfIXKz4vHURMoI
+         rFjo5oJuFv90ZQpZy3iSNNRnvbwKqzrNOjUdM8MNHpP0eyrAEsLzQZFxd91a4t0d7szi
+         7b2+8Hk3lvVFDPLYe3C6Lt4GXeBISmr+cs40tDKOsMU893Q4nDV6nDyx87nsOvsgrQ9V
+         dT4HOBylvnvTVmlbms02uM9BzQvQi0k20BIF+ujGx31brk+Y2rsuPdrauCAV5FdqxiJ2
+         8FCKq83x/1gThxBVLdDMSuRRQC6vxWyrz+OcdkOjkNiDLZXADVqgAd5kfmIXdOtPqvuY
+         CMJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XQFgCSgBXdly7Jwoud0ulr5doGwTC08ZXMU22H/Fyy4=;
-        b=dTSaNxmKGzGaxr6er/oMs9yEMvvpww3qeAfQJnnlVSwGulvBInfh8Cg04D/TqpEv8V
-         P5mWcnD37VTT4gLVekWk4s4hMS5MZuNuUz4lycU0SgV9ULYvjkPS443DL+lOJ96hIF3z
-         MllNybjtrvXEtsKBwePwu6IqeIEtEN942KTRunBWs/hnbQb8IHjZ73HjzLxhGfT8XIY5
-         gAAQt18JHMZzFhU/GuOaJYdz0UJQiDnzgZ1X11e6mWOCc+IfINNi8Z2pdddwShPc3sEQ
-         3RX3d8fhA3blS+TB0qL+bDhGloSX5XDsVlOdjPa1RRxAeFRUpnqsVsmtBvfR8MpRUZ+j
-         fdTw==
-X-Gm-Message-State: APjAAAWMkTogwF65FxTNggmQJ7tBSRiqEZT3jBmum7mGZpCu1z5qkIe9
-        nUvZO/UGQsYKY6Z8Xbhq8eI=
-X-Google-Smtp-Source: APXvYqz/1OrAOHSHucIJeec4D1yn1g1/8uOEE2bgzF4H8FNz0Y8vZiRpYnTxT5CU9CiWPgTBCZnqXA==
-X-Received: by 2002:a62:5e42:: with SMTP id s63mr10359349pfb.78.1559315514384;
-        Fri, 31 May 2019 08:11:54 -0700 (PDT)
-Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
-        by smtp.gmail.com with ESMTPSA id d2sm5342870pfh.115.2019.05.31.08.11.52
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 31 May 2019 08:11:53 -0700 (PDT)
-Date:   Fri, 31 May 2019 08:11:51 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Subject: Re: [PATCH net-next 0/5] PTP support for the SJA1105 DSA driver
-Message-ID: <20190531151151.k3a2wdf5f334qmqh@localhost>
-References: <20190530034555.wv35efen3igwwzjq@localhost>
- <CA+h21hpjsC=ie5G7Gx3EcPpazyxze6X_k+8eC+vw7JBvEO2zNg@mail.gmail.com>
- <20190530143037.iky5kk3h4ssmec3f@localhost>
- <CA+h21hpp68AEEykxr8bJB=uJ+b0tg881Z7Ao_OfbTAXNxS8WgQ@mail.gmail.com>
- <20190530150557.iur7fruhyf5bs3qw@localhost>
- <CA+h21hrBwR4Sow7q0_rS1u2md1M4bSAJt8FO5+VLFiu9UGnvjA@mail.gmail.com>
- <20190531043417.6phscbpmo6krvxam@localhost>
- <CA+h21hp9DfW3wFy4YbHMU31rBHyrnUTdF4kKwX36h9vHOW2COw@mail.gmail.com>
- <20190531140841.j4f72rlojmaayqr5@localhost>
- <CA+h21hroywaij3gyO0u6v+GFVO2Fv_dP_a+L3oMGpQH8mQgJ5g@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3Qecf3R/ylaKOMr7DmXC4K+hYJVpsjs/jTI03UY5jdQ=;
+        b=Nekz+vIuMyWr1soRr6jjJ1FoeCUIT4TOkdE/gKQ1HrkOf4jXmus28FP7slRRVo0Bkc
+         lUTBVM2rgdDRSkRZLaZABdwd5VMwox4RgFb2U0yp0x+7K18jsoQNN5twbN7EFoeGvuPq
+         qpq86mAwp9wqZoC6/JUtuQGQWEUx2jG7+9TB21KxfvS/l9HpRVx/aiiW51y5GhW9MYMe
+         1owiGSD/n0PNf0K3sQkWqs8/8qjpuDICDbHJldm2u9Md25bby6ADeJFHXA3cdfJo5na6
+         Q8jHVdaEgZxvHphZb/80NflrEDVJWOh3hrrwbWJ7+tATik1cEFm1Nq/Zygg82uUq4M+w
+         sDSw==
+X-Gm-Message-State: APjAAAWpkriX7yNBfaSVHKuof4d4ZS/MFFXsbcF597iRkeYlJXng/Yso
+        2H++SOsHcL2P1kJ77vgSUDS8hQlr6DhXTY4IqiFMsg==
+X-Google-Smtp-Source: APXvYqz2u/BFQpedb+wPDZ0V+HO0iENm7b7iW0qYSXm5W7S4qdLUCWpDFuo2g4YKBqRxd03ZFgRnvyjAy0IrgDzGoZs=
+X-Received: by 2002:aca:e044:: with SMTP id x65mr6446367oig.70.1559315535037;
+ Fri, 31 May 2019 08:12:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+h21hroywaij3gyO0u6v+GFVO2Fv_dP_a+L3oMGpQH8mQgJ5g@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20190529141500.193390-1-elver@google.com>
+In-Reply-To: <20190529141500.193390-1-elver@google.com>
+From:   Marco Elver <elver@google.com>
+Date:   Fri, 31 May 2019 17:12:03 +0200
+Message-ID: <CANpmjNNH2e5YpxKymXE0sTgcrrW0z0EP+dEsPJOfTQJ19yS_Yg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] Bitops instrumentation for KASAN
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 05:27:15PM +0300, Vladimir Oltean wrote:
-> On Fri, 31 May 2019 at 17:08, Richard Cochran <richardcochran@gmail.com> wrote:
-> > This can be done simply using a data structure in the driver with an
-> > appropriate locking mechanism.  Then you don't have to worry which
-> > core the driver code runs on.
-> >
-> 
-> Actually you do. DSA is special because it is not the first net device
-> in the RX path that processes the frames. Something needs to be done
-> on the master port.
+Addressed comments, and sent v3:
+http://lkml.kernel.org/r/20190531150828.157832-1-elver@google.com
 
-Before you said,
+Many thanks!
 
-	the switch in its great wisdom mangles bytes 01-1B-19-xx-xx-00
-	of the DMAC to place the switch id and source port there (a
-	rudimentary tagging mechanism).
+-- Marco
 
-So why not simply save each frame in a per-switch/port data structure?
-
-Now I'm starting to understand your series.  I think it can be done in
-simpler way...
-
-sja1105_rcv_meta_state_machine - can and should be at the driver level
-and not at the port level.
-
-sja1105_port_rxtstamp_work - isn't needed at all.
-
-How about this?
-
-1. When the driver receives a deferred PTP frame, save it into a
-   per-switch,port slot at the driver (not port) level.
-
-2. When the driver receives a META frame, match it to the
-   per-switch,port slot.  If there is a PTP frame in that slot, then
-   deliver it with the time stamp from the META frame.
-
-Thanks,
-Richard
+On Wed, 29 May 2019 at 16:23, Marco Elver <elver@google.com> wrote:
+>
+> The previous version of this patch series and discussion can be found
+> here:  https://lkml.org/lkml/2019/5/28/769
+>
+> The most significant change is the change of the instrumented access
+> size to cover the entire word of a bit.
+>
+> Marco Elver (3):
+>   lib/test_kasan: Add bitops tests
+>   x86: Move CPU feature test out of uaccess region
+>   asm-generic, x86: Add bitops instrumentation for KASAN
+>
+>  Documentation/core-api/kernel-api.rst     |   2 +-
+>  arch/x86/ia32/ia32_signal.c               |   9 +-
+>  arch/x86/include/asm/bitops.h             | 210 ++++----------
+>  include/asm-generic/bitops-instrumented.h | 317 ++++++++++++++++++++++
+>  lib/test_kasan.c                          |  75 ++++-
+>  5 files changed, 450 insertions(+), 163 deletions(-)
+>  create mode 100644 include/asm-generic/bitops-instrumented.h
+>
+> --
+> 2.22.0.rc1.257.g3120a18244-goog
+>
