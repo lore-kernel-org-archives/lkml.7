@@ -2,107 +2,90 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B26C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 126DCC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D222326E3E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:20:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="stM7yT+/"
+	by mail.kernel.org (Postfix) with ESMTP id E1BC326E3F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:21:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727223AbfEaTUs (ORCPT
+        id S1727228AbfEaTVb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 15:20:48 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:39167 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727147AbfEaTUs (ORCPT
+        Fri, 31 May 2019 15:21:31 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36449 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726808AbfEaTVa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 15:20:48 -0400
-Received: by mail-oi1-f195.google.com with SMTP id v2so8553655oie.6
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 12:20:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=GTX5Cgdck8YyB6MHi5KkfMWFB3KE2P2EVJB/MkSYzRc=;
-        b=stM7yT+/Mh1mRi0NzQUr3s1Y1nNgecbCv440WRhAFcd/gPsu76bApuH7dxU+uoTOAg
-         q/Oh3LCRItAgarMUU4qsqfHs4W424oGdtbCtnGL+KNwyyios3qtE0O90XAHM8CMM5fx9
-         GqCHFduaKx4ulL4x5XZvwWsq+S6Jca8v+8jp22+oY/JHXkJslGCPJ2OnJjESi1rxC8+O
-         Ovg6jJaW4Ce4dIj4mPHTgHi/RAMSpA8Nyii7tPEVm9gzAIxQ+FfgIXPAAc8gmxLL4PF5
-         U011AEywn6Cp7UYj+RoP3WM/cMhR2c4yCKSsH5n0fMfcI0DSkK0atBgUdxKbwcAWiu5C
-         +I8A==
+        Fri, 31 May 2019 15:21:30 -0400
+Received: by mail-qt1-f195.google.com with SMTP id u12so2288081qth.3
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 12:21:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=GTX5Cgdck8YyB6MHi5KkfMWFB3KE2P2EVJB/MkSYzRc=;
-        b=XVvia15jYktV67635MfHy2XiEGcto3ZLx9vzDIR4XNOkWV4UHFg04qAZsr9mVraY0E
-         v8rRagss43q7EPJ/CUzh98UHMTa1xZ+tgEpfpw55PtAkgxsSbnza43XfuEI5mi3KDrRY
-         UG213uO6j8J+mw6NXs0xpJpeo46ZVVUdyjABLbVcsA6yA2cRMgDOXlcFtLa7a+14kaJ1
-         WV4CF2SwBIpRNEWvYfs7RofHvezR1oNdSIWHZIPDxNjRMTUqlof+oa7hO9TkbutIM+c4
-         OFeuvjaHgqL52ZMCvpSxPbu41SRQq3Ifp6aBSoM85qp7jSDHqLoI6NwXVWhm9lE2UuuX
-         yD7g==
-X-Gm-Message-State: APjAAAXviJ5U3U3l9TgSw/YEbxkYltam3h+XgzatYvU3FoNfxbjWjC5k
-        50S8qiEPbaUWGdMBTdO7uDwp/YAmFAt+k1umEB83JQ==
-X-Google-Smtp-Source: APXvYqxYaf/p6HU3oJAMhRuIUUDaR+Bg/cFfJEsDf+zGjzfM0iPxluV0fkzJB9Jf9ImRAi+m8j4i2A77AVLu23Xf1q8=
-X-Received: by 2002:aca:e0d6:: with SMTP id x205mr190997oig.47.1559330447322;
- Fri, 31 May 2019 12:20:47 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=M/Axm/7nwcI4RwJavi+sPMZhETGsmjoJsyzXG1wGn6A=;
+        b=Oa769bV0E57o/mFwm4rFI6VesZYTPFlBeqxErtPkLpIKz2lD4B4olOfEECo9pwj5oe
+         bfaPfP2QcMn7dBXg1aFjqM8KqsJ4mDBA5HWTItjp2kjmSq7YHdrIRNLgGd3isihYMbnR
+         snIvyUjthS41VCeIp19Hdio0Mhcn23fhJEz9JNE1d1o5d9TE7BqDrdMCUTTGRDqorhEY
+         8PyowO3EUEkiB9LQpF54ZccGwgvHZYBfvjiG9GqF4nz5vmX4fQmyuDogGD09pT5Bysk6
+         jJzLIiZwj49uvkf/SQhI9hO0yhTtOufs8UqpTYVHpsaU8kLVihQjUrRiBxBTVZhTxMr7
+         t9sw==
+X-Gm-Message-State: APjAAAX+msaovHPKy/VGbrlk+YAZBKE2H5/PG7jN/OtQDO/uUC6XTlro
+        5XYI6rD1aj+yvciO2egBS4tmjGYyzxGm5VsWI/A=
+X-Google-Smtp-Source: APXvYqyS23Wu08rwAwTAr7AC8VlLnPp9u0Vb33101ni/Pz03jgR03uZyOBHxcpJpF5Jqjr3IrXxtdoc2pUBXgXv8QRI=
+X-Received: by 2002:ac8:2433:: with SMTP id c48mr10515168qtc.18.1559330489729;
+ Fri, 31 May 2019 12:21:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190531063645.4697-1-namit@vmware.com> <20190531063645.4697-12-namit@vmware.com>
- <20190531105758.GO2623@hirez.programming.kicks-ass.net> <82791CFA-3748-4881-9F01-53F677108FC3@vmware.com>
-In-Reply-To: <82791CFA-3748-4881-9F01-53F677108FC3@vmware.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Fri, 31 May 2019 21:20:21 +0200
-Message-ID: <CAG48ez1LxU_swf30Ndj=vjZLeSKg83Oi4f2Kd+wSUygPXA0cGg@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 11/12] x86/mm/tlb: Use async and inline messages
- for flushing
-To:     Nadav Amit <namit@vmware.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>
+References: <20190528235742.105510-1-natechancellor@gmail.com>
+ <CAK8P3a0a0hMsZDkqKsfsyCWpdvDni72tjAxCz2VeAaU56zqrXg@mail.gmail.com> <20190531183227.GA34102@archlinux-epyc>
+In-Reply-To: <20190531183227.GA34102@archlinux-epyc>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 31 May 2019 21:21:13 +0200
+Message-ID: <CAK8P3a1-_KRvoeK4w0b8775izox8fRm=NGJC=yicDRn7J5UW2Q@mail.gmail.com>
+Subject: Re: [PATCH] ARM: xor-neon: Replace __GNUC__ checks with CONFIG_CC_IS_GCC
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Stefan Agner <stefan@agner.ch>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 8:29 PM Nadav Amit <namit@vmware.com> wrote:
+On Fri, May 31, 2019 at 8:32 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
 >
-> [ +Jann Horn ]
->
-> > On May 31, 2019, at 3:57 AM, Peter Zijlstra <peterz@infradead.org> wrot=
-e:
+> On Fri, May 31, 2019 at 10:05:22AM +0200, Arnd Bergmann wrote:
+> > If I remember correctly, we also had the same issue with older versions
+> > of clang, possibly even newer ones. Shouldn't we check for a minimum
+> > compiler version when building with clang to ensure that the code is
+> > really vectorized?
 > >
-> > On Thu, May 30, 2019 at 11:36:44PM -0700, Nadav Amit wrote:
-> >> When we flush userspace mappings, we can defer the TLB flushes, as lon=
-g
-> >> the following conditions are met:
-> >>
-> >> 1. No tables are freed, since otherwise speculative page walks might
-> >>   cause machine-checks.
-> >>
-> >> 2. No one would access userspace before flush takes place. Specificall=
-y,
-> >>   NMI handlers and kprobes would avoid accessing userspace.
-[...]
-> A #MC might be caused. I tried to avoid it by not allowing freeing of
-> page-tables in such way. Did I miss something else? Some interaction with
-> MTRR changes? I=E2=80=99ll think about it some more, but I don=E2=80=99t =
-see how.
+> >        Arnd
+>
+> Even on tip of tree, it doesn't look like vectorization happens
+> properly. With -S -Rpass-missed='.*' added to the xor-neon.c command:
+>
+> /home/nathan/cbl/linux-next/include/asm-generic/xor.h:15:2: remark: the cost-model indicates that interleaving is not beneficial [-Rpass-missed=loop-vectorize]
+> /home/nathan/cbl/linux-next/include/asm-generic/xor.h:11:1: remark: List vectorization was possible but not beneficial with cost 0 >= 0 [-Rpass-missed=slp-vectorizer]
+> xor_8regs_2(unsigned long bytes, unsigned long *p1, unsigned long *p2)
+> ^
+>
+> So right now, it doesn't look like there is a minimum version for clang
+> and I don't think adding a warning for clang is productive (what is a
+> user supposed to do?)
 
-I don't really know much about this topic, but here's a random comment
-since you cc'ed me: If the physical memory range was freed and
-reallocated, could you end up with speculatively executed cached
-memory reads from I/O memory? (And if so, would that be bad?)
+I see. If we don't have a vectorized version of the xor module with
+clang, I would suggest dropping your patch then, and instead adding
+a Kconfig dependency on CC_IS_GCC, until clang is able to do it right.
+
+       Arnd
