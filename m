@@ -2,113 +2,182 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4131AC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32EFCC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 145F526747
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:56:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GVEIhX3i"
+	by mail.kernel.org (Postfix) with ESMTP id 0679626742
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:56:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727217AbfEaJ4W (ORCPT
+        id S1727239AbfEaJ4u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 05:56:22 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44530 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbfEaJ4V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 05:56:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=T/f6xtXjUGNf45hEkflxN0bquHarry9NS4GCdXw6I0M=; b=GVEIhX3ihMVMz7nHk3GGeL09f
-        HpIxgJJZhhrAKwMZ4dijsJ8DMeE6iK95J1jTSmWa5qSQIlILadqiYaMe4n8iGKQpz/HMnaEw3+AtV
-        1ayEHsRH7QaTKuAaqUbkq2r18KHKCbI+BzcKF6M5oQDvRWeDd9zHfeWdOMA7Ug4bMUK2nZwEUFfyb
-        Cm577lhPr/B+QDoV6qDDG5JjstK9TmJRXpgp4TcStnBmAXKYvLPRmcU2Cnnxdl8OxfyDHwM3Ct6nJ
-        zm6fAlJckmI4XHnZZfgWA3WXjTbI0g+LSb6Vu16/NbAXRuqL8P0eg2CH7iJRf1aKUg7I/vY0+d9RY
-        cOuWieZ1w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hWeGo-0002Vc-O9; Fri, 31 May 2019 09:56:18 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 511FA201D5AB1; Fri, 31 May 2019 11:56:16 +0200 (CEST)
-Date:   Fri, 31 May 2019 11:56:16 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Roman Penyaev <rpenyaev@suse.de>
-Cc:     azat@libevent.org, akpm@linux-foundation.org,
-        viro@zeniv.linux.org.uk, torvalds@linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 07/13] epoll: call ep_add_event_to_uring() from
- ep_poll_callback()
-Message-ID: <20190531095616.GD17637@hirez.programming.kicks-ass.net>
-References: <20190516085810.31077-1-rpenyaev@suse.de>
- <20190516085810.31077-8-rpenyaev@suse.de>
+        Fri, 31 May 2019 05:56:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41582 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726002AbfEaJ4t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 05:56:49 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C24539FFDA;
+        Fri, 31 May 2019 09:56:48 +0000 (UTC)
+Received: from [10.72.12.182] (ovpn-12-182.pek2.redhat.com [10.72.12.182])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2743A5DA34;
+        Fri, 31 May 2019 09:56:40 +0000 (UTC)
+Subject: Re: [PATCH 3/4] vsock/virtio: fix flush of works during the .remove()
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     "Michael S . Tsirkin" <mst@redhat.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+References: <20190528105623.27983-1-sgarzare@redhat.com>
+ <20190528105623.27983-4-sgarzare@redhat.com>
+ <9ac9fc4b-5c39-2503-dfbb-660a7bdcfbfd@redhat.com>
+ <20190529105832.oz3sagbne5teq3nt@steredhat>
+ <8c9998c8-1b9c-aac6-42eb-135fcb966187@redhat.com>
+ <20190530101036.wnjphmajrz6nz6zc@steredhat.homenet.telecomitalia.it>
+ <4c881585-8fee-0a53-865c-05d41ffb8ed1@redhat.com>
+ <20190531081824.p6ylsgvkrbckhqpx@steredhat>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <dbc9964c-65b1-0993-488b-cb44aea55e90@redhat.com>
+Date:   Fri, 31 May 2019 17:56:39 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190516085810.31077-8-rpenyaev@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190531081824.p6ylsgvkrbckhqpx@steredhat>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Fri, 31 May 2019 09:56:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 10:58:04AM +0200, Roman Penyaev wrote:
-> Each ep_poll_callback() is called when fd calls wakeup() on epfd.
-> So account new event in user ring.
-> 
-> The tricky part here is EPOLLONESHOT.  Since we are lockless we
-> have to be deal with ep_poll_callbacks() called in paralle, thus
-> use cmpxchg to clear public event bits and filter out concurrent
-> call from another cpu.
-> 
-> Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: linux-fsdevel@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> 
-> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-> index 2f551c005640..55612da9651e 100644
-> --- a/fs/eventpoll.c
-> +++ b/fs/eventpoll.c
-> @@ -1407,6 +1407,29 @@ struct file *get_epoll_tfile_raw_ptr(struct file *file, int tfd,
->  }
->  #endif /* CONFIG_CHECKPOINT_RESTORE */
->  
-> +/**
-> + * Atomically clear public event bits and return %true if the old value has
-> + * public event bits set.
-> + */
-> +static inline bool ep_clear_public_event_bits(struct epitem *epi)
-> +{
-> +	__poll_t old, flags;
-> +
-> +	/*
-> +	 * Here we race with ourselves and with ep_modify(), which can
-> +	 * change the event bits.  In order not to override events updated
-> +	 * by ep_modify() we have to do cmpxchg.
-> +	 */
-> +
-> +	old = epi->event.events;
-> +	do {
-> +		flags = old;
-> +	} while ((old = cmpxchg(&epi->event.events, flags,
-> +				flags & EP_PRIVATE_BITS)) != flags);
-> +
-> +	return flags & ~EP_PRIVATE_BITS;
-> +}
 
-AFAICT epi->event.events also has normal writes to it, eg. in
-ep_modify(). A number of architectures cannot handle concurrent normal
-writes and cmpxchg() to the same variable.
+On 2019/5/31 下午4:18, Stefano Garzarella wrote:
+> On Thu, May 30, 2019 at 07:59:14PM +0800, Jason Wang wrote:
+>> On 2019/5/30 下午6:10, Stefano Garzarella wrote:
+>>> On Thu, May 30, 2019 at 05:46:18PM +0800, Jason Wang wrote:
+>>>> On 2019/5/29 下午6:58, Stefano Garzarella wrote:
+>>>>> On Wed, May 29, 2019 at 11:22:40AM +0800, Jason Wang wrote:
+>>>>>> On 2019/5/28 下午6:56, Stefano Garzarella wrote:
+>>>>>>> @@ -690,6 +693,9 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
+>>>>>>>      	vsock->event_run = false;
+>>>>>>>      	mutex_unlock(&vsock->event_lock);
+>>>>>>> +	/* Flush all pending works */
+>>>>>>> +	virtio_vsock_flush_works(vsock);
+>>>>>>> +
+>>>>>>>      	/* Flush all device writes and interrupts, device will not use any
+>>>>>>>      	 * more buffers.
+>>>>>>>      	 */
+>>>>>>> @@ -726,6 +732,11 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
+>>>>>>>      	/* Delete virtqueues and flush outstanding callbacks if any */
+>>>>>>>      	vdev->config->del_vqs(vdev);
+>>>>>>> +	/* Other works can be queued before 'config->del_vqs()', so we flush
+>>>>>>> +	 * all works before to free the vsock object to avoid use after free.
+>>>>>>> +	 */
+>>>>>>> +	virtio_vsock_flush_works(vsock);
+>>>>>> Some questions after a quick glance:
+>>>>>>
+>>>>>> 1) It looks to me that the work could be queued from the path of
+>>>>>> vsock_transport_cancel_pkt() . Is that synchronized here?
+>>>>>>
+>>>>> Both virtio_transport_send_pkt() and vsock_transport_cancel_pkt() can
+>>>>> queue work from the upper layer (socket).
+>>>>>
+>>>>> Setting the_virtio_vsock to NULL, should synchronize, but after a careful look
+>>>>> a rare issue could happen:
+>>>>> we are setting the_virtio_vsock to NULL at the start of .remove() and we
+>>>>> are freeing the object pointed by it at the end of .remove(), so
+>>>>> virtio_transport_send_pkt() or vsock_transport_cancel_pkt() may still be
+>>>>> running, accessing the object that we are freed.
+>>>> Yes, that's my point.
+>>>>
+>>>>
+>>>>> Should I use something like RCU to prevent this issue?
+>>>>>
+>>>>>        virtio_transport_send_pkt() and vsock_transport_cancel_pkt()
+>>>>>        {
+>>>>>            rcu_read_lock();
+>>>>>            vsock = rcu_dereference(the_virtio_vsock_mutex);
+>>>> RCU is probably a way to go. (Like what vhost_transport_send_pkt() did).
+>>>>
+>>> Okay, I'm going this way.
+>>>
+>>>>>            ...
+>>>>>            rcu_read_unlock();
+>>>>>        }
+>>>>>
+>>>>>        virtio_vsock_remove()
+>>>>>        {
+>>>>>            rcu_assign_pointer(the_virtio_vsock_mutex, NULL);
+>>>>>            synchronize_rcu();
+>>>>>
+>>>>>            ...
+>>>>>
+>>>>>            free(vsock);
+>>>>>        }
+>>>>>
+>>>>> Could there be a better approach?
+>>>>>
+>>>>>
+>>>>>> 2) If we decide to flush after dev_vqs(), is tx_run/rx_run/event_run still
+>>>>>> needed? It looks to me we've already done except that we need flush rx_work
+>>>>>> in the end since send_pkt_work can requeue rx_work.
+>>>>> The main reason of tx_run/rx_run/event_run is to prevent that a worker
+>>>>> function is running while we are calling config->reset().
+>>>>>
+>>>>> E.g. if an interrupt comes between virtio_vsock_flush_works() and
+>>>>> config->reset(), it can queue new works that can access the device while
+>>>>> we are in config->reset().
+>>>>>
+>>>>> IMHO they are still needed.
+>>>>>
+>>>>> What do you think?
+>>>> I mean could we simply do flush after reset once and without tx_rx/rx_run
+>>>> tricks?
+>>>>
+>>>> rest();
+>>>>
+>>>> virtio_vsock_flush_work();
+>>>>
+>>>> virtio_vsock_free_buf();
+>>> My only doubt is:
+>>> is it safe to call config->reset() while a worker function could access
+>>> the device?
+>>>
+>>> I had this doubt reading the Michael's advice[1] and looking at
+>>> virtnet_remove() where there are these lines before the config->reset():
+>>>
+>>> 	/* Make sure no work handler is accessing the device. */
+>>> 	flush_work(&vi->config_work);
+>>>
+>>> Thanks,
+>>> Stefano
+>>>
+>>> [1] https://lore.kernel.org/netdev/20190521055650-mutt-send-email-mst@kernel.org
+>>
+>> Good point. Then I agree with you. But if we can use the RCU to detect the
+>> detach of device from socket for these, it would be even better.
+>>
+> What about checking 'the_virtio_vsock' in the worker functions in a RCU
+> critical section?
+> In this way, I can remove the rx_run/tx_run/event_run.
+>
+> Do you think it's cleaner?
 
+
+Yes, I think so.
+
+Thanks
+
+
+>
+> Thank you very much,
+> Stefano
