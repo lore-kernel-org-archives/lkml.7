@@ -2,102 +2,107 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D6EC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 23:36:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CCCFC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 23:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBDEC259B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 23:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0045727028
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 23:45:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="DCMLWwRm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbfEaXgn (ORCPT
+        id S1726963AbfEaXpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 19:36:43 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43227 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbfEaXgn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 19:36:43 -0400
-Received: by mail-pg1-f196.google.com with SMTP id f25so4849373pgv.10
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 16:36:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=ETJ6ykBl1LYGxegwTN6YGSCsMcqD6BFzZek270Zuebk=;
-        b=IgmLv/Xs176W/ck+Ol/au9faCGFs0O+oyMm8rtkZifVmVhiECGa40A0IJIehQKXM5G
-         kAxZCqVTvwzjJOGRg93FzjNN+JHLnNEPDldPdrv5FoW04RAPwD5Tw+bljOL7e3dDXe56
-         tiTpfIGL6tY9GTs+7Wq++1vsYBfcFZXywnCMhWxv7iZ9wZJsAThPmhWwc2/8OYPmY394
-         sd8vEIyqt9MbO35cxHpIdhKnwfC/zBT/F32jeQUHSi7axGAWuQrGVu0O6s4Xy3tpLX0o
-         R40H6BTbppvstsx+QDZnFsMZKvJ+8w+qM5ETSc4/McFUh/tElMunTSKjP1WWmnPJkYDQ
-         cSWQ==
-X-Gm-Message-State: APjAAAW+m6I57JKLlP3JLIcEsz2/NTyJmNUIH3FFTJzalnHJuz1P19jV
-        z5Y8ZbLnhGs4wEC7unjmPekvMA==
-X-Google-Smtp-Source: APXvYqwoLUrSF2L9O78QIaOKl9xWjaJYrvRMSYuFqnbqJmbAXL60kkJQDOuqKH/g+FbeaN2B66BGeQ==
-X-Received: by 2002:a17:90a:207:: with SMTP id c7mr12479237pjc.94.1559345802001;
-        Fri, 31 May 2019 16:36:42 -0700 (PDT)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id t187sm7656787pfb.64.2019.05.31.16.36.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 31 May 2019 16:36:41 -0700 (PDT)
-Date:   Fri, 31 May 2019 16:36:41 -0700 (PDT)
-X-Google-Original-Date: Fri, 31 May 2019 16:23:50 PDT (-0700)
-Subject:     Re: [PATCH 2/5] Add fchmodat4(), a new syscall
-In-Reply-To: <CAK8P3a3HPeVq29k3Zk5rSk4bddiUQFrdEgDZUgdNnYZK+8QpGw@mail.gmail.com>
-CC:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-arch@vger.kernel.org, x86@kernel.org, luto@kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Message-ID: <mhng-234d2802-9483-43be-af69-5bd04721b932@palmer-si-x1e>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Fri, 31 May 2019 19:45:24 -0400
+Received: from mail-eopbgr680089.outbound.protection.outlook.com ([40.107.68.89]:10724
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726856AbfEaXpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 19:45:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YXW8gx1LfT3qRS4Qi3YJiiN5fSVyTc43mfnFv7sMBvo=;
+ b=DCMLWwRmQtIIw/WXF+ulCvHZhBb58R4GhOLyv5s7HuScpxIj6MnIY9mIul1i7nGvpfbDSvylZrXMPH5RUfpsgWfE87XOx12U31epRFnAxDQCSMD/x6+BGcRcF5nQb/agPEZHNHL2TP5KZi2yH2ZnxNkyxyjBlqgflJ25XYJ71CE=
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
+ SN6PR12MB2671.namprd12.prod.outlook.com (52.135.103.24) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.17; Fri, 31 May 2019 23:45:11 +0000
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::69b5:19ac:b63d:2b82]) by SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::69b5:19ac:b63d:2b82%3]) with mapi id 15.20.1922.021; Fri, 31 May 2019
+ 23:45:11 +0000
+From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+To:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+CC:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bp@alien8.de" <bp@alien8.de>
+Subject: [PATCH 0/8] AMD64 EDAC fixes for v5.2
+Thread-Topic: [PATCH 0/8] AMD64 EDAC fixes for v5.2
+Thread-Index: AQHVGAriIzsx/roGdE+8t90RFk6RUw==
+Date:   Fri, 31 May 2019 23:45:11 +0000
+Message-ID: <20190531234501.32826-1-Yazen.Ghannam@amd.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN6PR05CA0032.namprd05.prod.outlook.com
+ (2603:10b6:805:de::45) To SN6PR12MB2639.namprd12.prod.outlook.com
+ (2603:10b6:805:6f::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Yazen.Ghannam@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [165.204.78.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fac2f83d-da41-45e2-139a-08d6e6220519
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR12MB2671;
+x-ms-traffictypediagnostic: SN6PR12MB2671:
+x-microsoft-antispam-prvs: <SN6PR12MB26716246DC8E93A9AB7454C1F8190@SN6PR12MB2671.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3826;
+x-forefront-prvs: 00540983E2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(346002)(376002)(136003)(366004)(396003)(189003)(199004)(5640700003)(25786009)(6506007)(256004)(72206003)(2906002)(54906003)(6512007)(14454004)(186003)(86362001)(3846002)(6116002)(486006)(2501003)(71200400001)(6486002)(386003)(2351001)(478600001)(71190400001)(52116002)(36756003)(6436002)(26005)(68736007)(6916009)(99286004)(66476007)(476003)(4744005)(73956011)(66066001)(66946007)(2616005)(81156014)(305945005)(81166006)(1076003)(8936002)(316002)(7736002)(4326008)(8676002)(66446008)(64756008)(50226002)(53936002)(5660300002)(66556008)(102836004);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2671;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: wAUsVyJ+62W65mJ/4fl1TNoO01owN7FItsA86U65PIxAgUYb/FsrX7gTrFORSoTk/Y0H9jMX8yXWIajdcHP8lmZpEDWk+nJnqceiyls/Dn63KDhRLqsHrJrw4TNFxgByH5VDPDgDRzodOFLpBHb93bPIM4glhR40CIycMw9VQpczThPnjamRhElToIJeHNgMh75ArwiEpVMeE80La6Kf7s5ZwVlmROKOstBx/ZOHIC5kofVDtwCjrrDyI+bIsjy0F8dJ4+Z+m96pxySWO/QWbFJfGwOn6BZaaBYPrsmOL07LJaITA+lcSU7AjAZRRab+DGOssDKMB860TFd+AdwMCgMcY6WFwETShtPNeH/x8H2Z6TUEZj3PmEMpkkpqjnCsWG5orb4rqyyMLQgO1JqivNDZ+bVSqyoOrrDoxaEbW5o=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fac2f83d-da41-45e2-139a-08d6e6220519
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 May 2019 23:45:11.1298
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yghannam@amd.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2671
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 May 2019 12:51:00 PDT (-0700), Arnd Bergmann wrote:
-> On Fri, May 31, 2019 at 9:23 PM Palmer Dabbelt <palmer@sifive.com> wrote:
->>
->> man 3p says that fchmodat() takes a flags argument, but the Linux
->> syscall does not.  There doesn't appear to be a good userspace
->> workaround for this issue but the implementation in the kernel is pretty
->> straight-forward.  The specific use case where the missing flags came up
->> was WRT a fuse filesystem implemenation, but the functionality is pretty
->> generic so I'm assuming there would be other use cases.
->>
->> Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
->> ---
->>  fs/open.c                | 21 +++++++++++++++++++--
->>  include/linux/syscalls.h |  5 +++++
->>  2 files changed, 24 insertions(+), 2 deletions(-)
->>
->> diff --git a/fs/open.c b/fs/open.c
->> index a00350018a47..cfad7684e8d3 100644
->> --- a/fs/open.c
->> +++ b/fs/open.c
->> @@ -568,11 +568,17 @@ SYSCALL_DEFINE2(fchmod, unsigned int, fd, umode_t, mode)
->>         return ksys_fchmod(fd, mode);
->>  }
->>
->> -int do_fchmodat(int dfd, const char __user *filename, umode_t mode)
->> +int do_fchmodat4(int dfd, const char __user *filename, umode_t mode, int flags)
-> ...
->> +
->> +int do_fchmodat(int dfd, const char __user *filename, umode_t mode)
->> +{
->> +       return do_fchmodat4(dfd, filename, mode, 0);
->> +}
->> +
->
-> There is only one external caller of do_fchmodat(), so just change that
-> to pass the extra argument here, and keep a single do_fchmodat()
-> function used by the sys_fchmod(), sys_fchmod4(), sys_chmod()
-> and ksys_chmod().
-
-OK, I'll roll that up into a v2.
+RnJvbTogWWF6ZW4gR2hhbm5hbSA8eWF6ZW4uZ2hhbm5hbUBhbWQuY29tPg0KDQpIaSBCb3JpcywN
+Cg0KVGhpcyBzZXQgY29udGFpbnMgYSBmZXcgZml4ZXMgZm9yIHNvbWUgY2hhbmdlcyBtZXJnZWQg
+aW4gdjUuMi4gVGhlcmUNCmFyZSBhbHNvIGEgY291cGxlIG9mIGZpeGVzIGZvciBvbGRlciBpc3N1
+ZXMuIEluIGFkZGl0aW9uLCB0aGVyZSBhcmUgYQ0KY291cGxlIG9mIHBhdGNoZXMgdG8gYWRkIHN1
+cHBvcnQgZm9yIEFzeW1tZXRyaWMgRHVhbC1SYW5rIERJTU1zLg0KDQpUaGFua3MsDQpZYXplbg0K
+DQpZYXplbiBHaGFubmFtICg4KToNCiAgRURBQy9hbWQ2NDogRml4IG51bWJlciBvZiBESU1NcyBh
+bmQgQ2hpcCBTZWxlY3QgYmFzZXMvbWFza3Mgb24NCiAgICBGYW1pbHkxN2gNCiAgRURBQy9hbWQ2
+NDogU3VwcG9ydCBtb3JlIHRoYW4gdHdvIGNvbnRyb2xsZXJzIGZvciBjaGlwIHNlbGVjdHMNCiAg
+ICBoYW5kbGluZw0KICBFREFDL2FtZDY0OiBSZWNvZ25pemUgRFJBTSBkZXZpY2UgdHlwZSB3aXRo
+IEVEQUNfQ1RMX0NBUA0KICBFREFDL2FtZDY0OiBJbml0aWFsaXplIERJTU0gaW5mbyBmb3Igc3lz
+dGVtcyB3aXRoIG1vcmUgdGhhbiB0d28NCiAgICBjaGFubmVscw0KICBFREFDL2FtZDY0OiBGaW5k
+IENoaXAgU2VsZWN0IG1lbW9yeSBzaXplIHVzaW5nIEFkZHJlc3MgTWFzaw0KICBFREFDL2FtZDY0
+OiBEZWNvZGUgc3luZHJvbWUgYmVmb3JlIHRyYW5zbGF0aW5nIGFkZHJlc3MNCiAgRURBQy9hbWQ2
+NDogQ2FjaGUgc2Vjb25kYXJ5IENoaXAgU2VsZWN0IHJlZ2lzdGVycw0KICBFREFDL2FtZDY0OiBT
+dXBwb3J0IEFzeW1tZXRyaWMgRHVhbC1SYW5rIERJTU1zDQoNCiBkcml2ZXJzL2VkYWMvYW1kNjRf
+ZWRhYy5jIHwgMzQ4ICsrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tDQogZHJp
+dmVycy9lZGFjL2FtZDY0X2VkYWMuaCB8ICAgOSArLQ0KIDIgZmlsZXMgY2hhbmdlZCwgMjMyIGlu
+c2VydGlvbnMoKyksIDEyNSBkZWxldGlvbnMoLSkNCg0KLS0gDQoyLjE3LjENCg0K
