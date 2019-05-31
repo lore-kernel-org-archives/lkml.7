@@ -4,47 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8F8C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBDCC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F19626E48
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:24:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34D3E26E48
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:24:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727370AbfEaTYI (ORCPT
+        id S1727382AbfEaTYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 15:24:08 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44408 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727295AbfEaTXy (ORCPT
+        Fri, 31 May 2019 15:24:16 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38541 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727186AbfEaTXv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 15:23:54 -0400
-Received: by mail-pf1-f196.google.com with SMTP id x3so1249784pff.11
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 12:23:53 -0700 (PDT)
+        Fri, 31 May 2019 15:23:51 -0400
+Received: by mail-pg1-f195.google.com with SMTP id v11so4556955pgl.5
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 12:23:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding:cc:from:to;
-        bh=09OzKsWEH6pa0xbQSX5bdUX7ramAnBw1m5XpBBMtl8s=;
-        b=JGvnbxSQAPPTJJvs7FYKN7+BYz7tmH4Mfbf9rQHcuHBlmDCuhCnbR+J0xw3HkJflva
-         tJwp0yC1FtVNH0cUbFj7HzTW13vKph1qHcM98E+Fhu1E2DZz8dZJnDODT8XaGN9y2Lap
-         isSWXzNfF/KrU2k+Uk+VRn+lmUiqvpeg3wtnfFHhmgTQoQbwduVWWUh7E0t3wfvm3KCN
-         zKoDMUN6z4v+mRAGIX4z8SNpd55jcKoo2eNg9CAq6PVBzPmobB/ElBFP5PMQGcDAMV3+
-         zv/Bhf70x1KMlKnPjQ+onFVp0rwriUFT1ath02VSiAkQuBMOE86hWw+CoFSDlZzRwYun
-         qcSw==
-X-Gm-Message-State: APjAAAU3Dkif3+ZxjGmGwdTbKJO3eGbXPqNwxQkO4c195+i5mp/iWcc+
-        fB7wfV90UwawsfYOaQi9AqsynA==
-X-Google-Smtp-Source: APXvYqxvwP9LM12Xj44vBpACJtjdlNkpDxKvsKPHlpq7EZ6IL5RMgGPU0jVOgflGjcQSa2MLBHPa4g==
-X-Received: by 2002:a17:90a:204a:: with SMTP id n68mr11635594pjc.31.1559330632786;
-        Fri, 31 May 2019 12:23:52 -0700 (PDT)
+        bh=hoDa1EoVZiT7Wkw8tpQ8ZdnhUm/f8Zh3zGc2U04HgkQ=;
+        b=KFWneBTdbmX0fwiOSCsAODsOeDEtS23sqL7ewaBpa+Ow7fw+hZrn2HZHJSze8QkXkF
+         rNAXrrONonmt2+bbJ/yuivBSBNWENERoPmFa3NPWTqqLoQlDdLbUhbzGwHdKcdQo0aI9
+         2eju54+8pGpRWQDnfgyYIFIZdmzNRMecM4DtkLgHN5Z25jalif4mEgPti0EmsnUTtthr
+         mfwF2KGPtbDdrDLL8kBLhdvMGJsLHH6n6w43tBwOKprp/CuQg0WNOOONXHdP2wZDXD1N
+         /wqdMy0phvhB55oimG3jfk5x4rQtIFmZ+AN4yXhJyvwRP/wdBRxOjToCfvcbBDt9M1Of
+         SbFg==
+X-Gm-Message-State: APjAAAVInDnpOLek/d1RciXTm6nz4XeBgNmViR39JoH/Uhd0i0ubj8hZ
+        UNWwMYjmui55MN7n+4ObYSssfTChTgw=
+X-Google-Smtp-Source: APXvYqwDdSFL7PzpLwvQOw94atoCEpoQ4xG/ZVsYwEVets4vEXAhhAUnBPue1jzZcGz3S4VsZQtyqQ==
+X-Received: by 2002:a63:31d8:: with SMTP id x207mr10539257pgx.403.1559330630266;
+        Fri, 31 May 2019 12:23:50 -0700 (PDT)
 Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id e6sm2346642pfi.42.2019.05.31.12.23.51
+        by smtp.gmail.com with ESMTPSA id o2sm5753489pgm.51.2019.05.31.12.23.49
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 31 May 2019 12:23:52 -0700 (PDT)
-Subject: [PATCH 3/5] asm-generic: Register fchmodat4 as syscall 428
-Date:   Fri, 31 May 2019 12:12:02 -0700
-Message-Id: <20190531191204.4044-4-palmer@sifive.com>
+        Fri, 31 May 2019 12:23:49 -0700 (PDT)
+Subject: [PATCH 1/5] Non-functional cleanup of a "__user * filename"
+Date:   Fri, 31 May 2019 12:12:00 -0700
+Message-Id: <20190531191204.4044-2-palmer@sifive.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190531191204.4044-1-palmer@sifive.com>
 References: <20190531191204.4044-1-palmer@sifive.com>
@@ -62,28 +63,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The next patch defines a very similar interface, which I copied from
+this definition.  Since I'm touching it anyway I don't see any reason
+not to just go fix this one up.
+
 Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
 ---
- include/uapi/asm-generic/unistd.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ include/linux/syscalls.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
-index dee7292e1df6..f0f4cad4c416 100644
---- a/include/uapi/asm-generic/unistd.h
-+++ b/include/uapi/asm-generic/unistd.h
-@@ -833,8 +833,11 @@ __SYSCALL(__NR_io_uring_enter, sys_io_uring_enter)
- #define __NR_io_uring_register 427
- __SYSCALL(__NR_io_uring_register, sys_io_uring_register)
- 
-+#define __NR_fchmodat4 428
-+__SYSCALL(__NR_fchmodat4, sys_fchmodat4)
-+
- #undef __NR_syscalls
--#define __NR_syscalls 428
-+#define __NR_syscalls 429
- 
- /*
-  * 32 bit systems traditionally used different
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index e446806a561f..396871b218f4 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -433,7 +433,7 @@ asmlinkage long sys_chdir(const char __user *filename);
+ asmlinkage long sys_fchdir(unsigned int fd);
+ asmlinkage long sys_chroot(const char __user *filename);
+ asmlinkage long sys_fchmod(unsigned int fd, umode_t mode);
+-asmlinkage long sys_fchmodat(int dfd, const char __user * filename,
++asmlinkage long sys_fchmodat(int dfd, const char __user *filename,
+ 			     umode_t mode);
+ asmlinkage long sys_fchownat(int dfd, const char __user *filename, uid_t user,
+ 			     gid_t group, int flag);
 -- 
 2.21.0
 
