@@ -2,363 +2,150 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 424EDC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FD2C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01D37265BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:12:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559308358;
-	bh=6WjRnAkWkfthZDCMHvpAtqUoFh0fmjjLRJdwO85AR2U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hpY1mOU+/9U9QveHym1CddYNeY9FGrVb7Yl750VmwcQmu5kK8y5M5+2I7BBoyVR6q
-	 tBHDPs+BMM+8lv6z+KagawwYN7AJN1VI1mIKS+HK1s2hcB9GWltNPYBWaLo7dR/H8k
-	 rfzG6xqsRq92keNJrxyO6ZpJgxyir8mLzC0JV5Uw=
+	by mail.kernel.org (Postfix) with ESMTP id 8A4C3265BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:13:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727401AbfEaNMh (ORCPT
+        id S1727406AbfEaNNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 09:12:37 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:40813 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726330AbfEaNMg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 09:12:36 -0400
-Received: by mail-pl1-f195.google.com with SMTP id g69so4009860plb.7;
-        Fri, 31 May 2019 06:12:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9KHsRNI4q1qCWnGmPczkdOM0myR1vhuW2pTdzPAj/o4=;
-        b=B/E7Iah5xOzd7kUYA0Hf89CcQEzyaC9ErJ573MnRH8e/jxbRg315RYZAHLrnqa7jED
-         wqHs1v4dcqHGN1tDdzO5aT9I8gOiLyA+N8Zs/0P0RmHBDdulH69roqZKEltlb3cBKXa/
-         khIa+e6HJ2Q6oUUJ/45dFLs1hZA9ylVu2yd2HiIL/YX6DhA+a89GkJc3USu8TIJ0QoT4
-         2DV3F1pMkl81uU/XLN4bCFMk4V8OUo4rSJaqbxWsV9XhjhiaT2IYIkFkxPMhMs0Fw3zU
-         +TDSAqbU7R4xGSaM1QoMvRNakPgW0zZ9yDLSR1FOUdc/ry3XYGeb+RTbdD4Id5tCiie6
-         9xig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9KHsRNI4q1qCWnGmPczkdOM0myR1vhuW2pTdzPAj/o4=;
-        b=Ilk1WvMN3+fayIOFyKtLbMzc4ohvuflSXYq7dtk0LuPXukvj9H44KBC4UAfLAD4dQv
-         3BRMu2N+J8NvLrZAzDQhtpZUCbB8mOrzp3VA6SPqmLhL2TebCxoM5u60uKe+GdQEBkvs
-         fJn2dcjlqmQCJbRrQAdsHXVicVPxL9DZvaqukg5ZF4wUJkVlkeVr9XjLnxCjpYA3sRex
-         SE7XbynNv+lE4dq0MmbT2fpj8gXSuYLi316mHmSEqVO1QAgwA0yI2B3P3TolLFXRSesC
-         GVmnY/dqwbmbds+qu9bHgaBjlBC4sYzLI+yYEulfj8KdwDyY4SVnGKqlPCT3u74PsLk6
-         JLGQ==
-X-Gm-Message-State: APjAAAVpWnMXDovHMHKSb3ObPn+si5axL/nk3fkBRBuh7BoYdnZtVJtb
-        cC9toZRcl6gisCvsmkN6O/k=
-X-Google-Smtp-Source: APXvYqy7Jgf27DPChwbcQAGQ8nsn/N8QFLKkuC0cBK7/8I3xRLMf23jBQpdMMIkVgJqWw+CCHy38gw==
-X-Received: by 2002:a17:902:2983:: with SMTP id h3mr9458413plb.267.1559308355443;
-        Fri, 31 May 2019 06:12:35 -0700 (PDT)
-Received: from google.com ([122.38.223.241])
-        by smtp.gmail.com with ESMTPSA id x24sm705609pfa.52.2019.05.31.06.12.29
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 31 May 2019 06:12:33 -0700 (PDT)
-Date:   Fri, 31 May 2019 22:12:26 +0900
-From:   Minchan Kim <minchan@kernel.org>
-To:     Oleksandr Natalenko <oleksandr@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, jannh@google.com,
-        oleg@redhat.com, christian@brauner.io, hdanton@sina.com
-Subject: Re: [RFCv2 4/6] mm: factor out madvise's core functionality
-Message-ID: <20190531131226.GA195463@google.com>
-References: <20190531064313.193437-1-minchan@kernel.org>
- <20190531064313.193437-5-minchan@kernel.org>
- <20190531070420.m7sxybbzzayig44o@butterfly.localdomain>
+        Fri, 31 May 2019 09:13:32 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41400 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726442AbfEaNNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 09:13:32 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4E0EA30C1214;
+        Fri, 31 May 2019 13:13:24 +0000 (UTC)
+Received: from krava (unknown [10.43.17.136])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2C5E75DA34;
+        Fri, 31 May 2019 13:13:22 +0000 (UTC)
+Date:   Fri, 31 May 2019 15:13:21 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ben Gainey <ben.gainey@arm.com>,
+        Stephane Eranian <eranian@google.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>
+Subject: [PATCHv2] perf jvmti: Fix gcc string overflow warning
+Message-ID: <20190531131321.GB1281@krava>
+References: <20190531080307.22628-1-jolsa@kernel.org>
+ <20190531120530.GB17152@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190531070420.m7sxybbzzayig44o@butterfly.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190531120530.GB17152@kernel.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Fri, 31 May 2019 13:13:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 09:04:20AM +0200, Oleksandr Natalenko wrote:
-> On Fri, May 31, 2019 at 03:43:11PM +0900, Minchan Kim wrote:
-> > This patch factor out madvise's core functionality so that upcoming
-> > patch can reuse it without duplication. It shouldn't change any behavior.
-> > 
-> > Signed-off-by: Minchan Kim <minchan@kernel.org>
-> > ---
-> >  mm/madvise.c | 188 +++++++++++++++++++++++++++------------------------
-> >  1 file changed, 101 insertions(+), 87 deletions(-)
-> > 
-> > diff --git a/mm/madvise.c b/mm/madvise.c
-> > index 9d749a1420b4..466623ea8c36 100644
-> > --- a/mm/madvise.c
-> > +++ b/mm/madvise.c
-> > @@ -425,9 +425,10 @@ static int madvise_pageout_pte_range(pmd_t *pmd, unsigned long addr,
-> >  	struct page *page;
-> >  	int isolated = 0;
-> >  	struct vm_area_struct *vma = walk->vma;
-> > +	struct task_struct *task = walk->private;
-> >  	unsigned long next;
-> >  
-> > -	if (fatal_signal_pending(current))
-> > +	if (fatal_signal_pending(task))
-> >  		return -EINTR;
-> >  
-> >  	next = pmd_addr_end(addr, end);
-> > @@ -505,12 +506,14 @@ static int madvise_pageout_pte_range(pmd_t *pmd, unsigned long addr,
-> >  }
-> >  
-> >  static void madvise_pageout_page_range(struct mmu_gather *tlb,
-> > -			     struct vm_area_struct *vma,
-> > -			     unsigned long addr, unsigned long end)
-> > +				struct task_struct *task,
-> > +				struct vm_area_struct *vma,
-> > +				unsigned long addr, unsigned long end)
-> >  {
-> >  	struct mm_walk warm_walk = {
-> >  		.pmd_entry = madvise_pageout_pte_range,
-> >  		.mm = vma->vm_mm,
-> > +		.private = task,
-> >  	};
-> >  
-> >  	tlb_start_vma(tlb, vma);
-> > @@ -519,9 +522,9 @@ static void madvise_pageout_page_range(struct mmu_gather *tlb,
-> >  }
-> >  
-> >  
-> > -static long madvise_pageout(struct vm_area_struct *vma,
-> > -			struct vm_area_struct **prev,
-> > -			unsigned long start_addr, unsigned long end_addr)
-> > +static long madvise_pageout(struct task_struct *task,
-> > +		struct vm_area_struct *vma, struct vm_area_struct **prev,
-> > +		unsigned long start_addr, unsigned long end_addr)
-> >  {
-> >  	struct mm_struct *mm = vma->vm_mm;
-> >  	struct mmu_gather tlb;
-> > @@ -532,7 +535,7 @@ static long madvise_pageout(struct vm_area_struct *vma,
-> >  
-> >  	lru_add_drain();
-> >  	tlb_gather_mmu(&tlb, mm, start_addr, end_addr);
-> > -	madvise_pageout_page_range(&tlb, vma, start_addr, end_addr);
-> > +	madvise_pageout_page_range(&tlb, task, vma, start_addr, end_addr);
-> >  	tlb_finish_mmu(&tlb, start_addr, end_addr);
-> >  
-> >  	return 0;
-> > @@ -744,7 +747,8 @@ static long madvise_dontneed_single_vma(struct vm_area_struct *vma,
-> >  	return 0;
-> >  }
-> >  
-> > -static long madvise_dontneed_free(struct vm_area_struct *vma,
-> > +static long madvise_dontneed_free(struct mm_struct *mm,
-> > +				  struct vm_area_struct *vma,
-> >  				  struct vm_area_struct **prev,
-> >  				  unsigned long start, unsigned long end,
-> >  				  int behavior)
-> > @@ -756,8 +760,8 @@ static long madvise_dontneed_free(struct vm_area_struct *vma,
-> >  	if (!userfaultfd_remove(vma, start, end)) {
-> >  		*prev = NULL; /* mmap_sem has been dropped, prev is stale */
-> >  
-> > -		down_read(&current->mm->mmap_sem);
-> > -		vma = find_vma(current->mm, start);
-> > +		down_read(&mm->mmap_sem);
-> > +		vma = find_vma(mm, start);
-> >  		if (!vma)
-> >  			return -ENOMEM;
-> >  		if (start < vma->vm_start) {
-> > @@ -804,7 +808,8 @@ static long madvise_dontneed_free(struct vm_area_struct *vma,
-> >   * Application wants to free up the pages and associated backing store.
-> >   * This is effectively punching a hole into the middle of a file.
-> >   */
-> > -static long madvise_remove(struct vm_area_struct *vma,
-> > +static long madvise_remove(struct mm_struct *mm,
-> > +				struct vm_area_struct *vma,
-> >  				struct vm_area_struct **prev,
-> >  				unsigned long start, unsigned long end)
-> >  {
-> > @@ -838,13 +843,13 @@ static long madvise_remove(struct vm_area_struct *vma,
-> >  	get_file(f);
-> >  	if (userfaultfd_remove(vma, start, end)) {
-> >  		/* mmap_sem was not released by userfaultfd_remove() */
-> > -		up_read(&current->mm->mmap_sem);
-> > +		up_read(&mm->mmap_sem);
-> >  	}
-> >  	error = vfs_fallocate(f,
-> >  				FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE,
-> >  				offset, end - start);
-> >  	fput(f);
-> > -	down_read(&current->mm->mmap_sem);
-> > +	down_read(&mm->mmap_sem);
-> >  	return error;
-> >  }
-> >  
-> > @@ -918,21 +923,23 @@ static int madvise_inject_error(int behavior,
-> >  #endif
-> >  
-> >  static long
-> > -madvise_vma(struct vm_area_struct *vma, struct vm_area_struct **prev,
-> > +madvise_vma(struct task_struct *task, struct mm_struct *mm,
-> > +		struct vm_area_struct *vma, struct vm_area_struct **prev,
-> >  		unsigned long start, unsigned long end, int behavior)
-> >  {
-> >  	switch (behavior) {
-> >  	case MADV_REMOVE:
-> > -		return madvise_remove(vma, prev, start, end);
-> > +		return madvise_remove(mm, vma, prev, start, end);
-> >  	case MADV_WILLNEED:
-> >  		return madvise_willneed(vma, prev, start, end);
-> >  	case MADV_COLD:
-> >  		return madvise_cold(vma, prev, start, end);
-> >  	case MADV_PAGEOUT:
-> > -		return madvise_pageout(vma, prev, start, end);
-> > +		return madvise_pageout(task, vma, prev, start, end);
-> >  	case MADV_FREE:
-> >  	case MADV_DONTNEED:
-> > -		return madvise_dontneed_free(vma, prev, start, end, behavior);
-> > +		return madvise_dontneed_free(mm, vma, prev, start,
-> > +						end, behavior);
-> >  	default:
-> >  		return madvise_behavior(vma, prev, start, end, behavior);
-> >  	}
-> > @@ -976,68 +983,8 @@ madvise_behavior_valid(int behavior)
-> >  	}
-> >  }
-> >  
-> > -/*
-> > - * The madvise(2) system call.
-> > - *
-> > - * Applications can use madvise() to advise the kernel how it should
-> > - * handle paging I/O in this VM area.  The idea is to help the kernel
-> > - * use appropriate read-ahead and caching techniques.  The information
-> > - * provided is advisory only, and can be safely disregarded by the
-> > - * kernel without affecting the correct operation of the application.
-> > - *
-> > - * behavior values:
-> > - *  MADV_NORMAL - the default behavior is to read clusters.  This
-> > - *		results in some read-ahead and read-behind.
-> > - *  MADV_RANDOM - the system should read the minimum amount of data
-> > - *		on any access, since it is unlikely that the appli-
-> > - *		cation will need more than what it asks for.
-> > - *  MADV_SEQUENTIAL - pages in the given range will probably be accessed
-> > - *		once, so they can be aggressively read ahead, and
-> > - *		can be freed soon after they are accessed.
-> > - *  MADV_WILLNEED - the application is notifying the system to read
-> > - *		some pages ahead.
-> > - *  MADV_DONTNEED - the application is finished with the given range,
-> > - *		so the kernel can free resources associated with it.
-> > - *  MADV_FREE - the application marks pages in the given range as lazy free,
-> > - *		where actual purges are postponed until memory pressure happens.
-> > - *  MADV_REMOVE - the application wants to free up the given range of
-> > - *		pages and associated backing store.
-> > - *  MADV_DONTFORK - omit this area from child's address space when forking:
-> > - *		typically, to avoid COWing pages pinned by get_user_pages().
-> > - *  MADV_DOFORK - cancel MADV_DONTFORK: no longer omit this area when forking.
-> > - *  MADV_WIPEONFORK - present the child process with zero-filled memory in this
-> > - *              range after a fork.
-> > - *  MADV_KEEPONFORK - undo the effect of MADV_WIPEONFORK
-> > - *  MADV_HWPOISON - trigger memory error handler as if the given memory range
-> > - *		were corrupted by unrecoverable hardware memory failure.
-> > - *  MADV_SOFT_OFFLINE - try to soft-offline the given range of memory.
-> > - *  MADV_MERGEABLE - the application recommends that KSM try to merge pages in
-> > - *		this area with pages of identical content from other such areas.
-> > - *  MADV_UNMERGEABLE- cancel MADV_MERGEABLE: no longer merge pages with others.
-> > - *  MADV_HUGEPAGE - the application wants to back the given range by transparent
-> > - *		huge pages in the future. Existing pages might be coalesced and
-> > - *		new pages might be allocated as THP.
-> > - *  MADV_NOHUGEPAGE - mark the given range as not worth being backed by
-> > - *		transparent huge pages so the existing pages will not be
-> > - *		coalesced into THP and new pages will not be allocated as THP.
-> > - *  MADV_DONTDUMP - the application wants to prevent pages in the given range
-> > - *		from being included in its core dump.
-> > - *  MADV_DODUMP - cancel MADV_DONTDUMP: no longer exclude from core dump.
-> > - *
-> > - * return values:
-> > - *  zero    - success
-> > - *  -EINVAL - start + len < 0, start is not page-aligned,
-> > - *		"behavior" is not a valid value, or application
-> > - *		is attempting to release locked or shared pages,
-> > - *		or the specified address range includes file, Huge TLB,
-> > - *		MAP_SHARED or VMPFNMAP range.
-> > - *  -ENOMEM - addresses in the specified range are not currently
-> > - *		mapped, or are outside the AS of the process.
-> > - *  -EIO    - an I/O error occurred while paging in data.
-> > - *  -EBADF  - map exists, but area maps something that isn't a file.
-> > - *  -EAGAIN - a kernel resource was temporarily unavailable.
-> > - */
-> > -SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
-> > +static int madvise_core(struct task_struct *task, struct mm_struct *mm,
-> > +			unsigned long start, size_t len_in, int behavior)
-> 
-> Just a minor nitpick, but can we please have it named madvise_common,
-> not madvise_core? This would follow a usual naming scheme, when some
-> common functionality is factored out (like, for mutexes, semaphores
-> etc), and within the kernel "core" usually means something completely
-> different.
+On Fri, May 31, 2019 at 09:05:30AM -0300, Arnaldo Carvalho de Melo wrote:
 
-Sure.
+SNIP
 
+> The kernel folks moved beyond that and in lib/string.c we have:
 > 
-> >  {
-> >  	unsigned long end, tmp;
-> >  	struct vm_area_struct *vma, *prev;
-> > @@ -1068,15 +1015,16 @@ SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
-> >  
-> >  #ifdef CONFIG_MEMORY_FAILURE
-> >  	if (behavior == MADV_HWPOISON || behavior == MADV_SOFT_OFFLINE)
-> > -		return madvise_inject_error(behavior, start, start + len_in);
-> > +		return madvise_inject_error(behavior,
-> > +					start, start + len_in);
+> /**
+>  * strscpy - Copy a C-string into a sized buffer
+>  * @dest: Where to copy the string to
+>  * @src: Where to copy the string from
+>  * @count: Size of destination buffer
+>  *
+>  * Copy the string, or as much of it as fits, into the dest buffer.  The
+>  * behavior is undefined if the string buffers overlap.  The destination
+>  * buffer is always NUL terminated, unless it's zero-sized.
+>  *
+>  * Preferred to strlcpy() since the API doesn't require reading memory
+>  * from the src string beyond the specified "count" bytes, and since
+>  * the return value is easier to error-check than strlcpy()'s.
+>  * In addition, the implementation is robust to the string changing out
+>  * from underneath it, unlike the current strlcpy() implementation.
+>  *
+>  * Preferred to strncpy() since it always returns a valid string, and
+>  * doesn't unnecessarily force the tail of the destination buffer to be
+>  * zeroed.  If zeroing is desired please use strscpy_pad().
+>  *
+>  * Return: The number of characters copied (not including the trailing
+>  *         %NUL) or -E2BIG if the destination buffer wasn't big enough.
+>  */
+> ssize_t strscpy(char *dest, const char *src, size_t count)
 > 
-> Not sure what this change is about except changing the line length.
-> Note, madvise_inject_error() still operates on "current" through
-> get_user_pages_fast() and gup_pgd_range(), but that was not changed
-> here. I Know you've filtered out this hint later, so technically this
-> is not an issue, but, maybe, this needs some attention too since we've
-> already spotted it?
+> 
+> 
+> I think for these needs flipping that 'n' into a 'l' is good enough.
 
-It is leftover I had done. I actually modified it to handle remote
-task but changed my mind not to fix it because process_madvise
-will not support it at this moment. I'm not sure it's a good idea
-to change it for *might-be-done-in-future* at this moment even though
-we have spotted.
+ok, I forgot there's strlcpy.. v2 attached
 
-> 
-> >  #endif
-> >  
-> >  	write = madvise_need_mmap_write(behavior);
-> >  	if (write) {
-> > -		if (down_write_killable(&current->mm->mmap_sem))
-> > +		if (down_write_killable(&mm->mmap_sem))
-> >  			return -EINTR;
-> 
-> Do you still need that trick with mmget_still_valid() here?
-> Something like:
+thanks,
+jirka
 
-Since MADV_COLD|PAGEOUT doesn't change address space layout or
-vma->vm_flags, technically, we don't need it if I understand
-correctly. Right?
 
-> 
-> if (current->mm != mm && !mmget_still_valid(mm))
->    goto skip_mm;
-> 
-> and that skip_mm label would be before
-> 
-> if (write)
->    up_write(&mm->mmap_sem);
-> 
-> below.
-> 
-> (see 04f5866e41fb70690e28397487d8bd8eea7d712a for details on this)
+---
+We are getting fake gcc warning when we compile with gcc9 (9.1.1):
+
+     CC       jvmti/libjvmti.o
+   In file included from /usr/include/string.h:494,
+                    from jvmti/libjvmti.c:5:
+   In function ‘strncpy’,
+       inlined from ‘copy_class_filename.constprop’ at jvmti/libjvmti.c:166:3:
+   /usr/include/bits/string_fortified.h:106:10: error: ‘__builtin_strncpy’ specified bound depends on the length of the source argument [-Werror=stringop-overflow=]
+     106 |   return __builtin___strncpy_chk (__dest, __src, __len, __bos (__dest));
+         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   jvmti/libjvmti.c: In function ‘copy_class_filename.constprop’:
+   jvmti/libjvmti.c:165:26: note: length computed here
+     165 |   size_t file_name_len = strlen(file_name);
+         |                          ^~~~~~~~~~~~~~~~~
+   cc1: all warnings being treated as errors
+
+As per Arnaldo's suggestion using strlcpy, which does
+the same thing and keeps gcc silent.
+
+Cc: Ben Gainey <ben.gainey@arm.com>
+Cc: Stephane Eranian <eranian@google.com>
+Suggested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Link: http://lkml.kernel.org/n/tip-sve3b63c550wr907e6ui6gx5@git.kernel.org
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ tools/perf/jvmti/libjvmti.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/jvmti/libjvmti.c b/tools/perf/jvmti/libjvmti.c
+index aea7b1fe85aa..c441a34cb1c0 100644
+--- a/tools/perf/jvmti/libjvmti.c
++++ b/tools/perf/jvmti/libjvmti.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/compiler.h>
++#include <linux/string.h>
+ #include <sys/types.h>
+ #include <stdio.h>
+ #include <string.h>
+@@ -162,8 +163,7 @@ copy_class_filename(const char * class_sign, const char * file_name, char * resu
+ 		result[i] = '\0';
+ 	} else {
+ 		/* fallback case */
+-		size_t file_name_len = strlen(file_name);
+-		strncpy(result, file_name, file_name_len < max_length ? file_name_len : max_length);
++		strlcpy(result, file_name, max_length);
+ 	}
+ }
+ 
+-- 
+2.21.0
+
