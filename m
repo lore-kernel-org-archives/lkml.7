@@ -2,143 +2,118 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A775C46470
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDD2C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:42:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DD17268E9
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:42:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3C5B268E9
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:42:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KJJG6Jst"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727249AbfEaMmd convert rfc822-to-8bit (ORCPT
+        id S1727326AbfEaMms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 08:42:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:24302 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726330AbfEaMmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 08:42:32 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DCFCF3179B6E;
-        Fri, 31 May 2019 12:42:31 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 211B85C21A;
-        Fri, 31 May 2019 12:42:26 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20190529230954.GA3164@kroah.com>
-References: <20190529230954.GA3164@kroah.com> <20190528231218.GA28384@kroah.com> <20190528162603.GA24097@kroah.com> <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk> <155905931502.7587.11705449537368497489.stgit@warthog.procyon.org.uk> <4031.1559064620@warthog.procyon.org.uk> <31936.1559146000@warthog.procyon.org.uk>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk, raven@themaw.net,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/7] General notification queue with user mmap()'able ring buffer
+        Fri, 31 May 2019 08:42:48 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:46188 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726330AbfEaMmr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 08:42:47 -0400
+Received: by mail-qt1-f194.google.com with SMTP id z19so566673qtz.13;
+        Fri, 31 May 2019 05:42:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=geKl/13b2BVq2WZuH+jtOS2GrdFzU8dWzNHM7JMs9Fs=;
+        b=KJJG6JstMzDKdPrLJ9ax5XAiPXVeC9mUtrk0dl5dqUITIboQr66+88OY0XE+H4xwTc
+         sIGfGlFbb458vliPv/yttt8TCJ128hOWeAvCcY58Bnnxe5pxG+2qfkXNNCx1BWquvGtl
+         uz+zy8p7Vyz/kGo7nKGZkfH+Uops7DNy1tF43V57wpeLN6EPltCmfxH89ImXFz1ne0Qo
+         v/q+IdhOwKpD/Vg0ouG5+0CB8sZHvJ13Bb9WjVCw/Fs3BDRLHoEyj7RatP1bBw3e40Gx
+         xePs4/FueO6YsqdbLl4+jHpDJ7/om+dnuSiJoXH/LFXbSYwFaQ5uGsSL4FnvS2SaCI/x
+         vkPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=geKl/13b2BVq2WZuH+jtOS2GrdFzU8dWzNHM7JMs9Fs=;
+        b=QJZUPk5ZTTztXTlZQRTHTvWIKsMsWD5JjieNRCNHMy5vdxVr4o6UNQxMUPwPNy3dLa
+         QzQvv2pUHBFzsv2Irxvh0oqjeeFF9BI697EahFS7Wqa0JdAb6VRbVx/acoJqqbKTYmGV
+         VG9+n6z7TsTvVGKMeZtymDPsbCKav8odg/8wPYhvP2GNiGpqexi8i7i7CmY22sqGKOTJ
+         hDZNVaHLPLz6UTMtEP6fCWtfqpNEJ1O3DICM/41X3BeuOMWqwcy4Y3yYfkH44aX9+IIw
+         VJ538WmJLZE1XxwPIPFILSqDiRrJF4S0Z+3b5JwdZG6OKrMvDVKq2U0fh2Pr6EXn6Wm+
+         AkSg==
+X-Gm-Message-State: APjAAAUhGiHIqbgV6rc+fqeokDe8HOT+ahscuGLawYRD9ORw7vnR/wTe
+        JIY32a/tGIA9xVJx4hfq6CM8XC14dtk=
+X-Google-Smtp-Source: APXvYqxqBl45Ss9D1ff4GpE8LtsRAB09vITnennPVNYNDky66pmdjU0thOlIUFl8fkwkLhnd6BTarA==
+X-Received: by 2002:ac8:3fb3:: with SMTP id d48mr8986621qtk.290.1559306566509;
+        Fri, 31 May 2019 05:42:46 -0700 (PDT)
+Received: from localhost.localdomain ([2001:1284:f016:d534:113c:6e5f:4426:2d54])
+        by smtp.gmail.com with ESMTPSA id c9sm4414125qtc.39.2019.05.31.05.42.44
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 31 May 2019 05:42:45 -0700 (PDT)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+        id 54983C085E; Fri, 31 May 2019 09:42:42 -0300 (-03)
+Date:   Fri, 31 May 2019 09:42:42 -0300
+From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+To:     Neil Horman <nhorman@tuxdriver.com>
+Cc:     syzbot <syzbot+f7e9153b037eac9b1df8@syzkaller.appspotmail.com>,
+        davem@davemloft.net, linux-kernel@vger.kernel.org,
+        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, vyasevich@gmail.com
+Subject: Re: memory leak in sctp_process_init
+Message-ID: <20190531124242.GE3713@localhost.localdomain>
+References: <00000000000097abb90589e804fd@google.com>
+ <20190528013600.GM5506@localhost.localdomain>
+ <20190528111550.GA4658@hmswarspite.think-freely.org>
+ <20190529190709.GE31099@hmswarspite.think-freely.org>
+ <20190529233757.GC3713@localhost.localdomain>
+ <20190530142011.GC1966@hmswarspite.think-freely.org>
+ <20190530151705.GD3713@localhost.localdomain>
+ <20190530195634.GD1966@hmswarspite.think-freely.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <24719.1559306541.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: 8BIT
-Date:   Fri, 31 May 2019 13:42:21 +0100
-Message-ID: <24720.1559306541@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Fri, 31 May 2019 12:42:32 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190530195634.GD1966@hmswarspite.think-freely.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greg KH <gregkh@linuxfoundation.org> wrote:
+On Thu, May 30, 2019 at 03:56:34PM -0400, Neil Horman wrote:
+> On Thu, May 30, 2019 at 12:17:05PM -0300, Marcelo Ricardo Leitner wrote:
+...
+> > --- a/net/sctp/sm_sideeffect.c
+> > +++ b/net/sctp/sm_sideeffect.c
+> > @@ -898,6 +898,11 @@ static void sctp_cmd_new_state(struct sctp_cmd_seq *cmds,
+> >  						asoc->rto_initial;
+> >  	}
+> >  
+> > +	if (sctp_state(asoc, ESTABLISHED)) {
+> > +		kfree(asoc->peer.cookie);
+> > +		asoc->peer.cookie = NULL;
+> > +	}
+> > +
+> Not sure I follow why this is needed.  It doesn't hurt anything of course, but
+> if we're freeing in sctp_association_free, we don't need to duplicate the
+> operation here, do we?
 
-> > kref_put() enforces a very specific destructor signature.  I know of places
-> > where that doesn't work because the destructor takes more than one argument
-> > (granted that this is not the case here).  So why does kref_put() exist at
-> > all?  Why not kref_dec_and_test()?
->
-> The destructor only takes one object pointer as you are finally freeing
-> that object.  What more do you need/want to "know" at that point in
-> time?
+This one would be to avoid storing the cookie throughout the entire
+association lifetime, as the cookie is only needed during the
+handshake.
+While the free in sctp_association_free will handle the freeing in
+case the association never enters established state.
 
-Imagine that I have an object that's on a list rooted in a namespace and that
-I have a lot of these objects.  Imagine further that any time I want to put a
-ref on one of these objects, it's in a context that has the namespace pinned.
-I therefore don't need to store a pointer to the namespace in every object
-because I can pass that in to the put function
-
-Indeed, I can still access the namespace even after the decrement didn't
-reduce the usage count to 0 - say for doing statistics.
-
-> What would kref_dec_and_test() be needed for?
-
-Why do you need kref_put() to take a destructor function pointer?  Why cannot
-that be replaced with, say:
-
-	static inline bool __kref_put(struct kref *k)
-	{
-		return refcount_dec_and_test(&k->refcount);
-	}
-
-and then one could do:
-
-	void put_foo(struct foo_net *ns, struct foo *f)
-	{
-		if (__kref_put(&f->refcount)) {
-			// destroy foo
-		}
-	}
-
-that way the destruction code does not have to be offloaded into its own
-function and you still have your pattern to look for.
-
-For tracing purposes, I could live with something like:
-
-	static inline
-	bool __kref_put_return(struct kref *k, unsigned int *_usage)
-	{
-		return refcount_dec_and_test_return(&k->refcount, _usage);
-	}
-
-and then I could do:
-
-	void put_foo(struct foo_net *ns, struct foo *f)
-	{
-		unsigned int u;
-		bool is_zero = __kref_put_return(&f->refcount, &u);
-
-		trace_foo_refcount(f, u);
-		if (is_zero) {
-			// destroy foo
-		}
-	}
-
-then it could be made such that you can disable the ability of
-refcount_dec_and_test_return() to pass back a useful refcount value if you
-want a bit of extra speed.
-
-Or even if refcount_dec_return() is guaranteed to return 0 if the count hits
-the floor and non-zero otherwise and there's a config switch to impose a
-stronger guarantee that it will return a value that's appropriately
-transformed to look as if I was using atomic_dec_return().
-
-Similarly for refcount_inc_return() - it could just return gibberish unless
-the same config switch is enabled.
-
-Question for AMD/Intel guys: I'm curious if LOCK DECL faster than LOCK XADD -1
-on x86_64?
-
-> > Why doesn't refcount_t get merged into kref, or vice versa?  Having both
-> > would seem redundant.
->
-> kref uses refcount_t and provides a different functionality on top of
-> it.  Not all uses of a refcount in the kernel is for object lifecycle
-> reference counting, as you know :)
-
-I do?  I can't think of one offhand.  Not that I'm saying you're wrong on
-that - there's an awful lot of kernel.
-
-David
+> >  	if (sctp_state(asoc, ESTABLISHED) ||
+> >  	    sctp_state(asoc, CLOSED) ||
+> >  	    sctp_state(asoc, SHUTDOWN_RECEIVED)) {
+> > 
+> > Also untested, just sharing the idea.
+> > 
+> >   Marcelo
+> > 
