@@ -2,77 +2,100 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8750CC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D505C46460
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 690E2257C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 357D0265EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:38:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559291882;
+	bh=+9Vd1G8ZdOPNmbD6ZzlbZDKb0rsh/VxoQrDuUaPfWag=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=u8iZAdRfOM76qdCeuBi+D2XzZujW95WWF8eCMgleYhldBJ0HQjszPtBQBMxS98sbj
+	 JvFbXEvMecTfvrGue/r6VqjPd1JoRamSSNRuxu3jEVPqycES798ur2iDDNiAMbaRJh
+	 wddfs4oGMN+G6und2Bp3PmH2xMN/CNWroq+8ViUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbfEaIhr (ORCPT
+        id S1727025AbfEaIiB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 04:37:47 -0400
-Received: from kirsty.vergenet.net ([202.4.237.240]:41224 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbfEaIhq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 04:37:46 -0400
-Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id D0BED25AE77;
-        Fri, 31 May 2019 18:37:43 +1000 (AEST)
-Received: by reginn.horms.nl (Postfix, from userid 7100)
-        id C0941940461; Fri, 31 May 2019 10:37:41 +0200 (CEST)
-Date:   Fri, 31 May 2019 10:37:41 +0200
-From:   Simon Horman <horms@verge.net.au>
-To:     Julian Anastasov <ja@ssi.bg>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Cc:     Jacky Hu <hengqing.hu@gmail.com>, jacky.hu@walmart.com,
-        jason.niesz@walmart.com, Wensong Zhang <wensong@linux-vs.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org,
-        lvs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org
-Subject: Re: [PATCH v4] ipvs: add checksum support for gue encapsulation
-Message-ID: <20190531083741.dxsat27bnsy72wdv@verge.net.au>
-References: <20190530001641.504-1-hengqing.hu@gmail.com>
- <alpine.LFD.2.21.1905301008470.4257@ja.home.ssi.bg>
+        Fri, 31 May 2019 04:38:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53698 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726002AbfEaIiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 04:38:00 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id AD507AC2E;
+        Fri, 31 May 2019 08:37:58 +0000 (UTC)
+Date:   Fri, 31 May 2019 10:37:57 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>, jannh@google.com,
+        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
+        hdanton@sina.com
+Subject: Re: [RFCv2 5/6] mm: introduce external memory hinting API
+Message-ID: <20190531083757.GH6896@dhcp22.suse.cz>
+References: <20190531064313.193437-1-minchan@kernel.org>
+ <20190531064313.193437-6-minchan@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.LFD.2.21.1905301008470.4257@ja.home.ssi.bg>
-Organisation: Horms Solutions BV
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190531064313.193437-6-minchan@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 10:10:15AM +0300, Julian Anastasov wrote:
+On Fri 31-05-19 15:43:12, Minchan Kim wrote:
+> There is some usecase that centralized userspace daemon want to give
+> a memory hint like MADV_[COLD|PAGEEOUT] to other process. Android's
+> ActivityManagerService is one of them.
 > 
-> 	Hello,
+> It's similar in spirit to madvise(MADV_WONTNEED), but the information
+> required to make the reclaim decision is not known to the app. Instead,
+> it is known to the centralized userspace daemon(ActivityManagerService),
+> and that daemon must be able to initiate reclaim on its own without
+> any app involvement.
 > 
-> On Thu, 30 May 2019, Jacky Hu wrote:
+> To solve the issue, this patch introduces new syscall process_madvise(2).
+> It could give a hint to the exeternal process of pidfd.
 > 
-> > Add checksum support for gue encapsulation with the tun_flags parameter,
-> > which could be one of the values below:
-> > IP_VS_TUNNEL_ENCAP_FLAG_NOCSUM
-> > IP_VS_TUNNEL_ENCAP_FLAG_CSUM
-> > IP_VS_TUNNEL_ENCAP_FLAG_REMCSUM
-> > 
-> > Signed-off-by: Jacky Hu <hengqing.hu@gmail.com>
+>  int process_madvise(int pidfd, void *addr, size_t length, int advise,
+> 			unsigned long cookie, unsigned long flag);
 > 
-> 	Looks good to me, thanks!
+> Since it could affect other process's address range, only privileged
+> process(CAP_SYS_PTRACE) or something else(e.g., being the same UID)
+> gives it the right to ptrace the process could use it successfully.
 > 
-> Signed-off-by: Julian Anastasov <ja@ssi.bg>
+> The syscall has a cookie argument to privode atomicity(i.e., detect
+> target process's address space change since monitor process has parsed
+> the address range of target process so the operaion could fail in case
+> of happening race). Although there is no interface to get a cookie
+> at this moment, it could be useful to consider it as argument to avoid
+> introducing another new syscall in future. It could support *atomicity*
+> for disruptive hint(e.g., MADV_DONTNEED|FREE).
+> flag argument is reserved for future use if we need to extend the API.
 
-Likewise, thanks.
-
-Pablo, pleas consider applying this to nf-next.
-
-Signed-off-by: Simon Horman <horms@verge.net.au>
+Providing an API that is incomplete will not fly. Really. As this really
+begs for much more discussion and it would be good to move on with the
+core idea of the pro active memory memory management from userspace
+usecase. Could you split out the core change so that we can move on and
+leave the external for a later discussion. I believe this would lead to
+a smoother integration.
+-- 
+Michal Hocko
+SUSE Labs
