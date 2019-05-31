@@ -2,87 +2,78 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C89A8C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 06:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0E8C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 06:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A04BF264BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 06:48:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1322126446
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 06:52:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbfEaGsq (ORCPT
+        id S1726634AbfEaGwH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 02:48:46 -0400
-Received: from sauhun.de ([88.99.104.3]:39252 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726330AbfEaGsp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 02:48:45 -0400
-Received: from localhost (unknown [91.64.182.124])
-        by pokefinder.org (Postfix) with ESMTPSA id 3B15F2C2761;
-        Fri, 31 May 2019 08:48:43 +0200 (CEST)
-Date:   Fri, 31 May 2019 08:48:42 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>, Ruslan Babayev <ruslan@babayev.com>,
-        linux@armlinux.org.uk, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: Re: [net-next,v4 0/2] Enable SFP on ACPI based systems
-Message-ID: <20190531064842.GA1058@kunai>
-References: <20190528230233.26772-1-ruslan@babayev.com>
- <20190529094818.GF2781@lahna.fi.intel.com>
- <20190529155132.GZ18059@lunn.ch>
- <20190531062740.GQ2781@lahna.fi.intel.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="6c2NcOVqGQ03X4Wi"
-Content-Disposition: inline
-In-Reply-To: <20190531062740.GQ2781@lahna.fi.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 31 May 2019 02:52:07 -0400
+Received: from alexa-out-tai-01.qualcomm.com ([103.229.16.226]:42773 "EHLO
+        alexa-out-tai-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726002AbfEaGwH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 02:52:07 -0400
+Received: from ironmsg02-tai.qualcomm.com ([10.249.140.7])
+  by alexa-out-tai-01.qualcomm.com with ESMTP; 31 May 2019 14:52:04 +0800
+X-IronPort-AV: E=McAfee;i="5900,7806,9273"; a="30797288"
+Received: from c-fan-gv.ap.qualcomm.com (HELO c-fan-gv) ([10.231.253.105])
+  by ironmsg02-tai.qualcomm.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 31 May 2019 14:51:55 +0800
+From:   Tengfei Fan <tengfeif@codeaurora.org>
+To:     bjorn.andersson@linaro.org, andy.gross@linaro.org,
+        david.brown@linaro.org, linus.walleij@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Tengfei Fan <tengfeif@codeaurora.org>
+Subject: [PATCH] pinctrl: qcom: Clear status bit on irq_unmask
+Date:   Fri, 31 May 2019 14:51:52 +0800
+Message-Id: <1559285512-27784-1-git-send-email-tengfeif@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The gpio interrupt status bit is getting set after the
+irq is disabled and causing an immediate interrupt after
+enablling the irq, so clear status bit on irq_unmask.
 
---6c2NcOVqGQ03X4Wi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Tengfei Fan <tengfeif@codeaurora.org>
+---
+ drivers/pinctrl/qcom/pinctrl-msm.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index ee81198..7283c50 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -740,6 +740,7 @@ static void msm_gpio_irq_mask(struct irq_data *d)
+ static void msm_gpio_irq_unmask(struct irq_data *d)
+ {
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
++	uint32_t irqtype = irqd_get_trigger_type(d);
+ 	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
+ 	const struct msm_pingroup *g;
+ 	unsigned long flags;
+@@ -749,6 +750,12 @@ static void msm_gpio_irq_unmask(struct irq_data *d)
+ 
+ 	raw_spin_lock_irqsave(&pctrl->lock, flags);
+ 
++	if (irqtype & (IRQF_TRIGGER_HIGH | IRQF_TRIGGER_LOW)) {
++		val = readl_relaxed(pctrl->regs + g->intr_status_reg);
++		val &= ~BIT(g->intr_status_bit);
++		 writel_relaxed(val, pctrl->regs + g->intr_status_reg);
++	}
++
+ 	val = msm_readl_intr_cfg(pctrl, g);
+ 	val |= BIT(g->intr_raw_status_bit);
+ 	val |= BIT(g->intr_enable_bit);
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-> > Are you happy for the i2c patch to be merged via net-next?
->=20
-> Yes, that's fine my me.
->=20
-> Wolfram do you have any objections?
-
-That's fine with me, I'd like an immutable branch, though. There are
-likely other changes to i2c.h coming and that would avoid merge
-conflicts.
-
-
---6c2NcOVqGQ03X4Wi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlzwzkYACgkQFA3kzBSg
-KbYLThAAj7STTMVCIs8F5pQc2CL/VG7m9jE8g45Y2UsC2GalXogsowIOtAJydg9l
-Ix5+g9neYnFPj6Kvct20SxzQPtjxZXhn+hStBHTx6AN30pXXywAA1QisHNp4LLSk
-6eSsE57svbMqOTtF7HGZeEheocvcDDr8NbTLWFuUOuHJnumSWWSOFtHFGIynZEa6
-agL05yQJ2mWQ33ydA6mq8JqB/kYaajsuAPmM4YxaxReshoRxOXOCduvkWk7q8QqI
-SlcJZCmccTypcIUxsp1gETxbBScYdcVtd/ZKR5sdxApbWW6OFJMq6DYfg2Cp1ZOw
-dSoQBesfighJL0cI0/M291OLRZeJFi4rzJW5ZT0zGadCFiSsGDoJVag5EWVsfl9L
-8dkW7eEusUeUk7rwMFNqEa/0ZZanN+DwgDEgEbQI2Si06neTiSflRBtwvWNjDF7i
-Wey4mpYZkl4Gem46VPzOk0PbVnnvy3jwXtuMMB61C8jX+sDfI/ESHNWBiADvDkgH
-TPdBhRheUUeJZnxDQc8rbqyeZU6URG+AO6gaDNBozJr/GNKRpGHz1iciPUl60rE+
-2tfFqWnEgEkWuEwUqFw9e+ZdayGV1bEiIt3r77g4UdzldwS/JzfubncU5XmZX04R
-7MrWtxJYl3zXkvlRh+K1xgdN+Ys8L/WJxPq3OdybHR3lBsaBEc4=
-=la6d
------END PGP SIGNATURE-----
-
---6c2NcOVqGQ03X4Wi--
