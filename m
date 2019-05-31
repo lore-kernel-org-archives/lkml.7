@@ -2,99 +2,133 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BFDC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7190C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 723BC262FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:36:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fjvlcbES"
+	by mail.kernel.org (Postfix) with ESMTP id 90F5D2632A
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:38:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfEaDgQ (ORCPT
+        id S1726628AbfEaDim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 23:36:16 -0400
-Received: from ozlabs.org ([203.11.71.1]:36757 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726531AbfEaDgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 23:36:16 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45FVV51C8pz9sMM;
-        Fri, 31 May 2019 13:36:12 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1559273773;
-        bh=GVBSMbC4SJ1Xq7zVF1fMW78OfSLanI+1kYwS3klSklw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=fjvlcbESrEuMItiqT18jaueVoLBlVyEWqbdZvrlJbM+oOVfatjQMe83eOMwPbI7Pj
-         VqvvRmLAIglOXJDFVEJBRSOxVlGflYUGn/3Xb8zOhg7iJoQUczhFRGoj2hekEekegV
-         8uTkGIg2QcZE/1UwcOYMIaw+03hFatftQ0Pd73lJIfbu95c0pzHgMoqHipL6drRrfg
-         VAKRFmfGALSuSaKrii33KdOsSGd6nQeRsKDp2iPdtJeMs9PL0YWNEEQszwba4VlSBn
-         JOvuWokyTQzQc/5P20KoYjmGDuVB4s//tK3RjiAx5DorAAqw1PdzXH1ABwTXBQlD/D
-         9ktjF3bwkjwHw==
-Date:   Fri, 31 May 2019 13:36:12 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: linux-next: build warning after merge of the scsi tree
-Message-ID: <20190531133612.35276ad9@canb.auug.org.au>
+        Thu, 30 May 2019 23:38:42 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:34524 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726535AbfEaDil (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 23:38:41 -0400
+X-UUID: 197e5f7b1ea54b33b595da9b0eedba51-20190531
+X-UUID: 197e5f7b1ea54b33b595da9b0eedba51-20190531
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 312294267; Fri, 31 May 2019 11:38:31 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ MTKMBS33DR.mediatek.inc (172.27.6.106) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 31 May 2019 11:38:28 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 31 May 2019 11:38:29 +0800
+Message-ID: <1559273908.9102.2.camel@mtksdaap41>
+Subject: Re: [v3 3/7] drm/mediatek: add dsi reg commit disable control
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        Kumar Gala <galak@codeaurora.org>, <linux-pwm@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        "Ajay Kumar" <ajaykumar.rs@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        "Rahul Sharma" <rahul.sharma@samsung.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "Russell King" <rmk+kernel@arm.linux.org.uk>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
+        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
+        <stonea168@163.com>
+Date:   Fri, 31 May 2019 11:38:28 +0800
+In-Reply-To: <20190519092537.69053-4-jitao.shi@mediatek.com>
+References: <20190519092537.69053-1-jitao.shi@mediatek.com>
+         <20190519092537.69053-4-jitao.shi@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/PzGjbrYAwJiDIyGlEKhqImh"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/PzGjbrYAwJiDIyGlEKhqImh
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi, Jitao:
 
-Hi all,
+On Sun, 2019-05-19 at 17:25 +0800, Jitao Shi wrote:
+> New DSI IP has shadow register and working reg. The register
+> values are writen to shadow register. And then trigger with
+> commit reg, the register values will be moved working register.
+> 
+> This fucntion is defualt on. But this driver doesn't use this
+> function. So add the disable control.
+> 
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_dsi.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> index a48db056df6c..fd367985c7fd 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> @@ -131,6 +131,10 @@
+>  #define VM_CMD_EN			BIT(0)
+>  #define TS_VFP_EN			BIT(5)
+>  
+> +#define DSI_SHADOW_DEBUG	0x190U
+> +#define FORCE_COMMIT		BIT(0)
+> +#define BYPASS_SHADOW		BIT(1)
 
-After merging the scsi tree, today's linux-next build (powerpc
-ppc64_defconfig) produced this warning:
+One more 'tab' for bitwise definition.
 
-drivers/scsi/ibmvscsi/ibmvscsi.c: In function 'ibmvscsi_work':
-drivers/scsi/ibmvscsi/ibmvscsi.c:2151:5: warning: 'rc' may be used uninitia=
-lized in this function [-Wmaybe-uninitialized]
-  if (rc) {
-     ^
-drivers/scsi/ibmvscsi/ibmvscsi.c:2121:6: note: 'rc' was declared here
-  int rc;
-      ^~
+Regards,
+CK
 
-Introduced by commit
+> +
+>  #define CONFIG				(0xff << 0)
+>  #define SHORT_PACKET			0
+>  #define LONG_PACKET			2
+> @@ -157,6 +161,7 @@ struct phy;
+>  
+>  struct mtk_dsi_driver_data {
+>  	const u32 reg_cmdq_off;
+> +	bool has_shadow_ctl;
+>  };
+>  
+>  struct mtk_dsi {
+> @@ -594,6 +599,11 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
+>  	}
+>  
+>  	mtk_dsi_enable(dsi);
+> +
+> +	if (dsi->driver_data->has_shadow_ctl)
+> +		writel(FORCE_COMMIT | BYPASS_SHADOW,
+> +		       dsi->regs + DSI_SHADOW_DEBUG);
+> +
+>  	mtk_dsi_reset_engine(dsi);
+>  	mtk_dsi_phy_timconfig(dsi);
+>  
 
-  035a3c4046b5 ("scsi: ibmvscsi: redo driver work thread to use enum action=
- states")
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/PzGjbrYAwJiDIyGlEKhqImh
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzwoSwACgkQAVBC80lX
-0Gxn/gf9FlLUU9ikAUgDlMtJ/iwMNIAVIgV/ln5dZu9OiAVUwZVt27mSHvggZT15
-xNVKD7BbzI5wRt3KbdEDXgvWRlmIYwwMR4ZmlqItLrEi4iYPIRE+pI0pBgfF5/hu
-WTedkH1L8OG4Yt45Ty3kgLxkH2U2gdx0MM4lxa5FWtgkqwUOh+vXVTKB/MrpX2Kx
-i369MQwbSdR+EFD2TPJokBqxrYjsQeHN+YYSTgCtldW/idNP4fxMuYkbcaLxF4yS
-X4cuTQwC77E8h/eMhIEC6avEkoY4HYda4vIlHSjFycZ5CnoBw29d+O5YGJ0Py0/5
-AeN1N0+/LHFXX3evKKzYPWPT+4rjKw==
-=a1s0
------END PGP SIGNATURE-----
-
---Sig_/PzGjbrYAwJiDIyGlEKhqImh--
