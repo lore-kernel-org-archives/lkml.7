@@ -4,151 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F51C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7D5C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEF4B25B65
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:33:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8F6225B65
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:33:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CC3+ByM0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kOSaHrM1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbfEaQdV (ORCPT
+        id S1726985AbfEaQdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 12:33:21 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:34174 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726826AbfEaQdV (ORCPT
+        Fri, 31 May 2019 12:33:52 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35344 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726563AbfEaQdv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 12:33:21 -0400
+        Fri, 31 May 2019 12:33:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=KV0jjAa5lUPCjWIg0Oa5mDgaofJfRMrPmuwua04KAn8=; b=CC3+ByM0wwBCFhXK6eduay6nx
-        n8flDWadU4FWbC+r4dmlcdWyt2bqdVJ1RtMrKL8I/Y7yHXk85GlXCacwxu+jHc71i6Er59HfnNdJH
-        Il+MX1qVMsis7S0ZmMK4I4Z+kbhJadskUrG19lD6bSHKyE6eHhaRPJLVF1QOEHrQxx5dZZ9sLh4nG
-        2BUwMch14n4MbxSHz//hIewFmnKmmwEkFOWUYnGo4U4AEPmQUspc5OAjM5pPl/LUBZsnazk/lFeJS
-        rEDN7oh95LxqLH3wD9nOls0bokD9yOwIoYr4NKz2YTctuop4znaws7UTRreJbkFRPWLa+CvvYBTVN
-        5+sQn6+zA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hWkSw-0001dM-T3; Fri, 31 May 2019 16:33:15 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 0FC89201CF1CB; Fri, 31 May 2019 18:33:12 +0200 (CEST)
-Date:   Fri, 31 May 2019 18:33:12 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Roman Penyaev <rpenyaev@suse.de>
-Cc:     azat@libevent.org, rpenyaev@suse.de, akpm@linux-foundation.org,
-        viro@zeniv.linux.org.uk, torvalds@linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/13] epoll: support pollable epoll from userspace
-Message-ID: <20190531163312.GW2650@hirez.programming.kicks-ass.net>
-References: <20190516085810.31077-1-rpenyaev@suse.de>
+         bh=WTUY7NBoeWu3HANU6zgkoF6y+9haCI+guBTHb7hiLQ4=; b=kOSaHrM1/+3xoN7VP+2/XAyIb
+        e2QtjGyy6cSvbl/o1vYjkLd9UlvTqQ3mm0osfb8rbpd5JocxX/TJ8slNK25rmAkmmpzM7HgwR2+eh
+        WhiVeFQoAkEXli0htbkyT8C4xqyupYhtfraT2e/HuM2PihzxLv41Zp/zyI/Twlegfm0D7EkDYyPFc
+        Urxd8U+ppSjxaKeq3usHNtKhUFV8ynCvX2UTJrF1qyctEahR+7/X5xVCn33Z77FGT0ffmDGH/67fg
+        rnXrVyphgRP2hQou3fjvugCONiaJ4p08WN3boxSUPDHssbhRpPHHGrTaR8l/9CC6dZn1vzu17VZpc
+        lgdC359cQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hWkTW-00044S-Uo; Fri, 31 May 2019 16:33:50 +0000
+Date:   Fri, 31 May 2019 09:33:50 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     David Miller <davem@davemloft.net>
+Cc:     laurentiu.tudor@nxp.com, madalin.bucur@nxp.com,
+        netdev@vger.kernel.org, roy.pledge@nxp.com,
+        linux-kernel@vger.kernel.org, leoyang.li@nxp.com,
+        Joakim.Tjernlund@infinera.com, iommu@lists.linux-foundation.org,
+        camelia.groza@nxp.com, linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 0/6] Prerequisites for NXP LS104xA SMMU enablement
+Message-ID: <20190531163350.GB8708@infradead.org>
+References: <20190530141951.6704-1-laurentiu.tudor@nxp.com>
+ <20190530.150844.1826796344374758568.davem@davemloft.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190516085810.31077-1-rpenyaev@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190530.150844.1826796344374758568.davem@davemloft.net>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 10:57:57AM +0200, Roman Penyaev wrote:
-> When new event comes for some epoll item kernel does the following:
+On Thu, May 30, 2019 at 03:08:44PM -0700, David Miller wrote:
+> From: laurentiu.tudor@nxp.com
+> Date: Thu, 30 May 2019 17:19:45 +0300
 > 
->  struct epoll_uitem *uitem;
+> > Depends on this pull request:
+> > 
+> >  http://lists.infradead.org/pipermail/linux-arm-kernel/2019-May/653554.html
 > 
->  /* Each item has a bit (index in user items array), discussed later */
->  uitem = user_header->items[epi->bit];
-> 
->  if (!atomic_fetch_or(uitem->ready_events, pollflags)) {
->      i = atomic_add(&ep->user_header->tail, 1);
+> I'm not sure how you want me to handle this.
 
-So this is where you increment tail
-
-> 
->      item_idx = &user_index[i & index_mask];
-> 
->      /* Signal with a bit, user spins on index expecting value > 0 */
->      *item_idx = idx + 1;
-
-IUC, this is where you write the idx into shared memory, which is
-_after_ tail has already been incremented.
-
->  }
-> 
-> Important thing here is that ring can't infinitely grow and corrupt other
-> elements, because kernel always checks that item was marked as ready, so
-> userspace has to clear ready_events field.
-> 
-> On userside events the following code should be used in order to consume
-> events:
-> 
->  tail = READ_ONCE(header->tail);
->  for (i = 0; header->head != tail; header->head++) {
->      item_idx_ptr = &index[idx & indeces_mask];
-> 
->      /*
->       * Spin here till we see valid index
->       */
->      while (!(idx = __atomic_load_n(item_idx_ptr, __ATOMIC_ACQUIRE)))
->          ;
-
-Which you then try and fix up by busy waiting for @idx to become !0 ?!
-
-Why not write the idx first, then increment the ->tail, such that when
-we see ->tail, we already know idx must be correct?
-
-> 
->      item = &header->items[idx - 1];
-> 
->      /*
->       * Mark index as invalid, that is for userspace only, kernel does not care
->       * and will refill this pointer only when observes that event is cleared,
->       * which happens below.
->       */
->      *item_idx_ptr = 0;
-
-That avoids this store too.
-
-> 
->      /*
->       * Fetch data first, if event is cleared by the kernel we drop the data
->       * returning false.
->       */
->      event->data = item->event.data;
->      event->events = __atomic_exchange_n(&item->ready_events, 0,
->                          __ATOMIC_RELEASE);
-> 
->  }
-
-Aside from that, you have to READ/WRITE_ONCE() on ->head, to avoid
-load/store tearing.
-
-
-That would give something like:
-
-kernel:
-
-	slot = atomic_fetch_inc(&ep->slot);
-	item_idx = &user_index[slot & idx_mask];
-	WRITE_ONCE(*item_idx, idx);
-	smp_store_release(&ep->user_header->tail, slot);
-
-userspace:
-
-	tail = smp_load_acquire(&header->tail);
-	for (head = READ_ONCE(header->head); head != tail; head++) {
-		idx = READ_ONCE(index[head & idx_mask]);
-		itemp = &header->items[idx];
-
-		...
-	}
-	smp_store_release(&header->head, head);
-
-
+The thing needs to be completely redone as it abuses parts of the
+iommu API in a completely unacceptable way.
