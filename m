@@ -2,172 +2,166 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB93C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0B4C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AFCD26A5D
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:21:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3186B26A5D
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:22:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZKOkIMzc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbfEaOVd (ORCPT
+        id S1726800AbfEaOWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 10:21:33 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58328 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726550AbfEaOVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 10:21:33 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2621AAF79;
-        Fri, 31 May 2019 14:21:31 +0000 (UTC)
+        Fri, 31 May 2019 10:22:01 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34123 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726716AbfEaOWA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 10:22:00 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c14so3904728pfi.1
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 07:22:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lqGZhr1OXDcqw01dRW7YMwNNKArDZmNdR/78N+BPrn4=;
+        b=ZKOkIMzc1OQGbUNPHq03h99fyCedWbnebo6E2bMji4A+DRTaVEdXjsJpjrPcnu5SSA
+         zIZPDWUgCW5bi+5Hm5xJN08EHp1zrtJRB8hJr+lkARmCPVryFs490LA/D4jT6SugJib6
+         WuyNVM4Q2N7HAjjpa7DOBEdYU4LyBiJDJK5zMqDY/W6JkYNX16roPrVOH81h+nxoiBDb
+         7B2l5NwJlc5O9XzC5yHflmTOv3KCBSLqmkKFOBx9Ekz6rnZxWiAE8V0PArN5B+OlAW0s
+         TvC0lLDPHMJfSpKtEQaVcV+QmrjEmlTv3Oh20DkNgRQ4hUDHUKfXsDqAzpdAzgsjCOV+
+         IttQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lqGZhr1OXDcqw01dRW7YMwNNKArDZmNdR/78N+BPrn4=;
+        b=Pby0lpFqNSPKKqN2UuOGYeBsPNFK7Vd3Lq1A3StxwYXCpLenB8JElWkyd5he/C4J6u
+         eVWx1GEIqxy8bePlYyHmIzF7DzBz6jCgfxm2wk8wuPp5ZVucazu4P5rlmnLgbYCKCBLI
+         Yd+RhLDKfwseLcc0XaPMdB4E3hY7yB8wCj+VufN2y2EuJWEZKjhz5j0bCN/KjWOOccc3
+         4JE1d0ff/TLwSOgXfxBIUxtsHcaBVVm0ELcMetRg9V683HVlJrmJxfauCwWXs0uSl/8O
+         rGlHCPZJZ1k4kUiW1S1J7Wdlvy+euWB8NaPd0vf/uz4V82JYbkCaRhkpZeGR0MKZkwND
+         ZazQ==
+X-Gm-Message-State: APjAAAU2UsUBzGroNaWHV8hGegpQqbm2BH29ecnd2nj3TmpXBNBWPLBH
+        s8vkP40jWxjrMC2wAb2Nfy1z8woSOf/KrGD7rRUkjHv8EeA=
+X-Google-Smtp-Source: APXvYqyJDYvC63I4W5Lhta3XMIDWbZrlVf994VbGlX5pPuRIANXUx7mxbvFt5+YOh/Wqr0oXVm0H7EASqzCT8eMwsG4=
+X-Received: by 2002:a65:64d9:: with SMTP id t25mr9532741pgv.130.1559312519598;
+ Fri, 31 May 2019 07:21:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 31 May 2019 16:21:30 +0200
-From:   Roman Penyaev <rpenyaev@suse.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     azat@libevent.org, akpm@linux-foundation.org,
-        viro@zeniv.linux.org.uk, torvalds@linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 06/13] epoll: introduce helpers for adding/removing
- events to uring
-In-Reply-To: <20190531125636.GZ2606@hirez.programming.kicks-ass.net>
-References: <20190516085810.31077-1-rpenyaev@suse.de>
- <20190516085810.31077-7-rpenyaev@suse.de>
- <20190531095607.GC17637@hirez.programming.kicks-ass.net>
- <274e29d102133f3be1f309c66cb0af36@suse.de>
- <20190531125636.GZ2606@hirez.programming.kicks-ass.net>
-Message-ID: <98e74ceeefdffc9b50fb33e597d270f7@suse.de>
-X-Sender: rpenyaev@suse.de
-User-Agent: Roundcube Webmail
+References: <cover.1557160186.git.andreyknvl@google.com> <e31d9364eb0c2eba8ce246a558422e811d82d21b.1557160186.git.andreyknvl@google.com>
+ <20190522141612.GA28122@arrakis.emea.arm.com>
+In-Reply-To: <20190522141612.GA28122@arrakis.emea.arm.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Fri, 31 May 2019 16:21:48 +0200
+Message-ID: <CAAeHK+wUerHQOV2PuaTwTxcCucZHZodLwg48228SB+ymxEqT2A@mail.gmail.com>
+Subject: Re: [PATCH v15 17/17] selftests, arm64: add a selftest for passing
+ tagged pointers to kernel
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-05-31 14:56, Peter Zijlstra wrote:
-> On Fri, May 31, 2019 at 01:15:21PM +0200, Roman Penyaev wrote:
->> On 2019-05-31 11:56, Peter Zijlstra wrote:
->> > On Thu, May 16, 2019 at 10:58:03AM +0200, Roman Penyaev wrote:
->> > > +static inline bool ep_add_event_to_uring(struct epitem *epi,
->> > > __poll_t pollflags)
->> > > +{
->> > > +	struct eventpoll *ep = epi->ep;
->> > > +	struct epoll_uitem *uitem;
->> > > +	bool added = false;
->> > > +
->> > > +	if (WARN_ON(!pollflags))
->> > > +		return false;
->> > > +
->> > > +	uitem = &ep->user_header->items[epi->bit];
->> > > +	/*
->> > > +	 * Can be represented as:
->> > > +	 *
->> > > +	 *    was_ready = uitem->ready_events;
->> > > +	 *    uitem->ready_events &= ~EPOLLREMOVED;
->> > > +	 *    uitem->ready_events |= pollflags;
->> > > +	 *    if (!was_ready) {
->> > > +	 *         // create index entry
->> > > +	 *    }
->> > > +	 *
->> > > +	 * See the big comment inside ep_remove_user_item(), why it is
->> > > +	 * important to mask EPOLLREMOVED.
->> > > +	 */
->> > > +	if (!atomic_or_with_mask(&uitem->ready_events,
->> > > +				 pollflags, EPOLLREMOVED)) {
->> > > +		unsigned int i, *item_idx, index_mask;
->> > > +
->> > > +		/*
->> > > +		 * Item was not ready before, thus we have to insert
->> > > +		 * new index to the ring.
->> > > +		 */
->> > > +
->> > > +		index_mask = ep_max_index_nr(ep) - 1;
->> > > +		i = __atomic_fetch_add(&ep->user_header->tail, 1,
->> > > +				       __ATOMIC_ACQUIRE);
->> > > +		item_idx = &ep->user_index[i & index_mask];
->> > > +
->> > > +		/* Signal with a bit, which is > 0 */
->> > > +		*item_idx = epi->bit + 1;
->> >
->> > Did you just increment the user visible tail pointer before you filled
->> > the data? That is, can the concurrent userspace observe the increment
->> > before you put credible data in its place?
->> 
->> No, the "data" is the "ready_events" mask, which was updated before,
->> using cmpxchg, atomic_or_with_mask() call.  All I need is to put an
->> index of just updated item to the uring.
->> 
->> Userspace, in its turn, gets the index from the ring and then checks
->> the mask.
-> 
-> But where do you write the index into the shared memory? That index
-> should be written before you publish the new tail.
+On Wed, May 22, 2019 at 4:16 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
+>
+> On Mon, May 06, 2019 at 06:31:03PM +0200, Andrey Konovalov wrote:
+> > This patch is a part of a series that extends arm64 kernel ABI to allow to
+> > pass tagged user pointers (with the top byte set to something else other
+> > than 0x00) as syscall arguments.
+> >
+> > This patch adds a simple test, that calls the uname syscall with a
+> > tagged user pointer as an argument. Without the kernel accepting tagged
+> > user pointers the test fails with EFAULT.
+>
+> That's probably sufficient for a simple example. Something we could add
+> to Documentation maybe is a small library that can be LD_PRELOAD'ed so
+> that you can run a lot more tests like LTP.
 
-The ep_add_event_to_uring() is lockless, thus I can't increase tail 
-after,
-I need to reserve the index slot, where to write to.  I can use shadow 
-tail,
-which is not seen by userspace, but I have to guarantee that tail is 
-updated
-with shadow tail *after* all callers of ep_add_event_to_uring() are 
-left.
-That is possible, please see the code below, but it adds more 
-complexity:
+Should I add this into this series, or should this go into Vincenzo's patchset?
 
-(code was tested on user side, thus has c11 atomics)
-
-static inline void add_event__kernel(struct ring *ring, unsigned bit)
-{
-         unsigned i, cntr, commit_cntr, *item_idx, tail, old;
-
-         i = __atomic_fetch_add(&ring->cntr, 1, __ATOMIC_ACQUIRE);
-         item_idx = &ring->user_itemsindex[i % ring->nr];
-
-         /* Update data */
-         *item_idx = bit;
-
-         commit_cntr = __atomic_add_fetch(&ring->commit_cntr, 1, 
-__ATOMIC_RELEASE);
-
-         tail = ring->user_header->tail;
-         rmb();
-         do {
-                 cntr = ring->cntr;
-                 if (cntr != commit_cntr)
-                         /* Someone else will advance tail */
-                         break;
-
-                 old = tail;
-
-         } while ((tail = 
-__sync_val_compare_and_swap(&ring->user_header->tail, old, cntr)) != 
-old);
-}
-
-Another way (current solution) is to spin on userspace side in order to 
-get
-index > 0 (valid index is always > 0), i.e.:
-
-	item_idx_ptr = &index[idx & indeces_mask];
-
-	/*
-	 * Spin here till we see valid index
-	 */
-	while (!(idx = __atomic_load_n(item_idx_ptr, __ATOMIC_ACQUIRE)))
-		;
-
-
-
-So of course tail can be updated after, like you mentioned, but then I 
-have
-to introduce locks.  I want to keep it lockless on hot event path.
-
---
-Roman
-
-
+>
+> We could add this to selftests but I think it's too glibc specific.
+>
+> --------------------8<------------------------------------
+> #include <stdlib.h>
+>
+> #define TAG_SHIFT       (56)
+> #define TAG_MASK        (0xffUL << TAG_SHIFT)
+>
+> void *__libc_malloc(size_t size);
+> void __libc_free(void *ptr);
+> void *__libc_realloc(void *ptr, size_t size);
+> void *__libc_calloc(size_t nmemb, size_t size);
+>
+> static void *tag_ptr(void *ptr)
+> {
+>         unsigned long tag = rand() & 0xff;
+>         if (!ptr)
+>                 return ptr;
+>         return (void *)((unsigned long)ptr | (tag << TAG_SHIFT));
+> }
+>
+> static void *untag_ptr(void *ptr)
+> {
+>         return (void *)((unsigned long)ptr & ~TAG_MASK);
+> }
+>
+> void *malloc(size_t size)
+> {
+>         return tag_ptr(__libc_malloc(size));
+> }
+>
+> void free(void *ptr)
+> {
+>         __libc_free(untag_ptr(ptr));
+> }
+>
+> void *realloc(void *ptr, size_t size)
+> {
+>         return tag_ptr(__libc_realloc(untag_ptr(ptr), size));
+> }
+>
+> void *calloc(size_t nmemb, size_t size)
+> {
+>         return tag_ptr(__libc_calloc(nmemb, size));
+> }
