@@ -2,181 +2,112 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89870C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 245B9C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68D1326E74
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC76326E7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:42:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="VKCBl5md"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727390AbfEaTlT (ORCPT
+        id S1727395AbfEaTmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 15:41:19 -0400
-Received: from smtprelay0192.hostedemail.com ([216.40.44.192]:36847 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726808AbfEaTlT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 15:41:19 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id C6BDE1801BD6A;
-        Fri, 31 May 2019 19:41:17 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: cork99_626698073144d
-X-Filterd-Recvd-Size: 5611
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf12.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 31 May 2019 19:41:16 +0000 (UTC)
-Message-ID: <b4cb2a0c12110b6e47900926551c81cd9652e3c4.camel@perches.com>
-Subject: Re: [PATCH] rtlwifi: remove redundant assignment to variable k
-From:   Joe Perches <joe@perches.com>
-To:     Larry Finger <Larry.Finger@lwfinger.net>,
-        Colin King <colin.king@canonical.com>,
-        Ping-Ke Shih <pkshih@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 31 May 2019 12:41:14 -0700
-In-Reply-To: <14372bed-6522-d81c-7d68-04adc0d71193@lwfinger.net>
-References: <20190531141412.18632-1-colin.king@canonical.com>
-         <14372bed-6522-d81c-7d68-04adc0d71193@lwfinger.net>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 31 May 2019 15:42:46 -0400
+Received: from mail-eopbgr800050.outbound.protection.outlook.com ([40.107.80.50]:62784
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727147AbfEaTmp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 15:42:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+FJ6yIu446RimK/MgW5vUH5uXSiWWvzd5jvEPpTqqa8=;
+ b=VKCBl5mdJ6HxL42+XDG6vNqGiIgKus3qoTAUI0rl78yP/S4wYKw2CiMt1KVLQpx5YlY3+gtmkWGrhG2R5LJ3/oeBbngATpMxD/v9XGqi9XMHo3YCntt93HrEikk/eEG6o7JKLGQ2jICU7WUTpq+/z7R/LfxhcWTeSB52HbJPGf8=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB6694.namprd05.prod.outlook.com (20.178.235.204) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.13; Fri, 31 May 2019 19:42:42 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::2cb6:a3d1:f675:ced8]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::2cb6:a3d1:f675:ced8%3]) with mapi id 15.20.1943.016; Fri, 31 May 2019
+ 19:42:42 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Andy Lutomirski <luto@amacapital.net>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: Re: [RFC PATCH v2 08/12] x86/tlb: Privatize cpu_tlbstate
+Thread-Topic: [RFC PATCH v2 08/12] x86/tlb: Privatize cpu_tlbstate
+Thread-Index: AQHVF3tHJuVGo9qk1UuvNMqOR/qV8KaFk+mAgAAPJIA=
+Date:   Fri, 31 May 2019 19:42:42 +0000
+Message-ID: <63172D88-998F-43F1-AB6F-F4A13B90AD9D@vmware.com>
+References: <20190531063645.4697-1-namit@vmware.com>
+ <20190531063645.4697-9-namit@vmware.com>
+ <933D5C14-5948-48FC-9379-167F59BD1FA1@amacapital.net>
+In-Reply-To: <933D5C14-5948-48FC-9379-167F59BD1FA1@amacapital.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [66.170.99.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 718db763-2039-4bd3-d40d-08d6e600259b
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BYAPR05MB6694;
+x-ms-traffictypediagnostic: BYAPR05MB6694:
+x-microsoft-antispam-prvs: <BYAPR05MB6694BD0F0882239FD9550CA6D0190@BYAPR05MB6694.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 00540983E2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(136003)(346002)(39860400002)(376002)(199004)(189003)(5660300002)(6246003)(33656002)(66946007)(4744005)(99286004)(25786009)(54906003)(316002)(2906002)(66476007)(64756008)(66446008)(76116006)(73956011)(68736007)(66556008)(4326008)(7416002)(476003)(66066001)(229853002)(8936002)(14454004)(6512007)(6506007)(2616005)(8676002)(53546011)(446003)(76176011)(11346002)(486006)(81156014)(82746002)(305945005)(6436002)(186003)(6116002)(3846002)(71190400001)(26005)(71200400001)(6916009)(256004)(83716004)(6486002)(81166006)(7736002)(102836004)(478600001)(53936002)(86362001)(36756003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB6694;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: mqmUUpG/k/iJIr0sHYo2G+dQDFHxdq+F9t/bZiAXNvx1jZOZ0jNoHrAoERBVbZ7bNdpvelhBpcrHusrAKB628RAea7BTO1KORPQfUhU5PyhTZsmBd66w+s+AY+ucXQjGwDtcMPUTR6c3hmUYiBDi06BN3d8AFb9ZRV6iw9gmD7N7d4Ou4Akt1mV4R5SqM+jXi6hjV0cHi9SD2plITiEs9xThsEtFv/DsIjyHpkxPF8BLtU8sp+aWkSg2ntbhoQIniVYxePDGAB+7rNht0TrEWmaZuZMtmBniHNUmi7zxPsp3HN9fnyjI0DzVLHtghEdgv9erMGGU6rBwGYFLPM2ldgo4bMX4JXXm5PtjDnRS0v8sV5VX496QSmzMfgfZQwhSGBkY7kQlXnkUWcaP1OSBp+WqiwMc/NVuqtuPXvbjMyk=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <181ECD975D5A6B43938314CD3FF6D040@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 718db763-2039-4bd3-d40d-08d6e600259b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 May 2019 19:42:42.3532
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB6694
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-05-31 at 12:29 -0500, Larry Finger wrote:
-> On 5/31/19 9:14 AM, Colin King wrote:
-> > From: Colin Ian King <colin.king@canonical.com>
-> > 
-> > The assignment of 0 to variable k is never read once we break out of
-> > the loop, so the assignment is redundant and can be removed.
-> > 
-> > Addresses-Coverity: ("Unused value")
-> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> > ---
-> >   drivers/net/wireless/realtek/rtlwifi/efuse.c | 4 +---
-> >   1 file changed, 1 insertion(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/net/wireless/realtek/rtlwifi/efuse.c b/drivers/net/wireless/realtek/rtlwifi/efuse.c
-> > index e68340dfd980..83e5318ca04f 100644
-> > --- a/drivers/net/wireless/realtek/rtlwifi/efuse.c
-> > +++ b/drivers/net/wireless/realtek/rtlwifi/efuse.c
-> > @@ -117,10 +117,8 @@ u8 efuse_read_1byte(struct ieee80211_hw *hw, u16 address)
-> >   						 rtlpriv->cfg->
-> >   						 maps[EFUSE_CTRL] + 3);
-> >   			k++;
-> > -			if (k == 1000) {
-> > -				k = 0;
-> > +			if (k == 1000)
-> >   				break;
-> > -			}
-> >   		}
-> >   		data = rtl_read_byte(rtlpriv, rtlpriv->cfg->maps[EFUSE_CTRL]);
-> >   		return data;
-> 
-> Colin,
-> 
-> Your patch is not wrong, but it fails to address a basic deficiency of this code 
-> snippet - when an error is detected, there is no attempt to either fix the 
-> problem or report it upstream. As the data returned will be garbage if this 
-> condition happens, we might as well replace the "break" with "return 0xFF", as 
-> well as deleting the "k = 0" line. Most of the callers of efuse_read_1byte() 
-> ignore the returned result when bits 0 and 4 are set, thus returning all 8 bits 
-> is not a bad fixup.
-> 
-> My suspicion is that this test is in the code merely to prevent an potential 
-> unterminated "while" loop, and that this condition is extremely unlikely to happen.
-> 
-> Larry
-
-The function is also overly verbose with many
-unnecessary rtlpriv->cfg->maps dereferences.
-
-I'd've written it more like:
----
- drivers/net/wireless/realtek/rtlwifi/efuse.c | 57 +++++++++++-----------------
- 1 file changed, 22 insertions(+), 35 deletions(-)
-
-diff --git a/drivers/net/wireless/realtek/rtlwifi/efuse.c b/drivers/net/wireless/realtek/rtlwifi/efuse.c
-index e68340dfd980..db253f45e87d 100644
---- a/drivers/net/wireless/realtek/rtlwifi/efuse.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/efuse.c
-@@ -87,46 +87,33 @@ void efuse_initialize(struct ieee80211_hw *hw)
- u8 efuse_read_1byte(struct ieee80211_hw *hw, u16 address)
- {
- 	struct rtl_priv *rtlpriv = rtl_priv(hw);
--	u8 data;
- 	u8 bytetemp;
- 	u8 temp;
--	u32 k = 0;
--	const u32 efuse_len =
--		rtlpriv->cfg->maps[EFUSE_REAL_CONTENT_SIZE];
--
--	if (address < efuse_len) {
--		temp = address & 0xFF;
--		rtl_write_byte(rtlpriv, rtlpriv->cfg->maps[EFUSE_CTRL] + 1,
--			       temp);
--		bytetemp = rtl_read_byte(rtlpriv,
--					 rtlpriv->cfg->maps[EFUSE_CTRL] + 2);
--		temp = ((address >> 8) & 0x03) | (bytetemp & 0xFC);
--		rtl_write_byte(rtlpriv, rtlpriv->cfg->maps[EFUSE_CTRL] + 2,
--			       temp);
--
--		bytetemp = rtl_read_byte(rtlpriv,
--					 rtlpriv->cfg->maps[EFUSE_CTRL] + 3);
--		temp = bytetemp & 0x7F;
--		rtl_write_byte(rtlpriv, rtlpriv->cfg->maps[EFUSE_CTRL] + 3,
--			       temp);
-+	int k = 0;
-+	u32 *maps = rtlpriv->cfg->maps;
-+	const u32 efuse_len = maps[EFUSE_REAL_CONTENT_SIZE];
- 
--		bytetemp = rtl_read_byte(rtlpriv,
--					 rtlpriv->cfg->maps[EFUSE_CTRL] + 3);
--		while (!(bytetemp & 0x80)) {
--			bytetemp = rtl_read_byte(rtlpriv,
--						 rtlpriv->cfg->
--						 maps[EFUSE_CTRL] + 3);
--			k++;
--			if (k == 1000) {
--				k = 0;
--				break;
--			}
--		}
--		data = rtl_read_byte(rtlpriv, rtlpriv->cfg->maps[EFUSE_CTRL]);
--		return data;
--	} else
-+	if (address >= efuse_len)
- 		return 0xFF;
- 
-+	temp = address & 0xFF;
-+	rtl_write_byte(rtlpriv, maps[EFUSE_CTRL] + 1, temp);
-+	bytetemp = rtl_read_byte(rtlpriv, maps[EFUSE_CTRL] + 2);
-+	temp = ((address >> 8) & 0x03) | (bytetemp & 0xFC);
-+	rtl_write_byte(rtlpriv, maps[EFUSE_CTRL] + 2, temp);
-+
-+	bytetemp = rtl_read_byte(rtlpriv, maps[EFUSE_CTRL] + 3);
-+	temp = bytetemp & 0x7F;
-+	rtl_write_byte(rtlpriv, maps[EFUSE_CTRL] + 3, temp);
-+
-+	bytetemp = rtl_read_byte(rtlpriv, maps[EFUSE_CTRL] + 3);
-+	while (!(bytetemp & 0x80)) {
-+		bytetemp = rtl_read_byte(rtlpriv, maps[EFUSE_CTRL] + 3);
-+		if (++k >= 1000)
-+			return 0xFF;	/* Likely defect */
-+	}
-+
-+	return rtl_read_byte(rtlpriv, maps[EFUSE_CTRL]);
- }
- EXPORT_SYMBOL(efuse_read_1byte);
- 
-
+PiBPbiBNYXkgMzEsIDIwMTksIGF0IDExOjQ4IEFNLCBBbmR5IEx1dG9taXJza2kgPGx1dG9AYW1h
+Y2FwaXRhbC5uZXQ+IHdyb3RlOg0KPiANCj4gDQo+PiBPbiBNYXkgMzAsIDIwMTksIGF0IDExOjM2
+IFBNLCBOYWRhdiBBbWl0IDxuYW1pdEB2bXdhcmUuY29tPiB3cm90ZToNCj4+IA0KPj4gY3B1X3Rs
+YnN0YXRlIGlzIG1vc3RseSBwcml2YXRlIGFuZCBvbmx5IHRoZSB2YXJpYWJsZSBpc19sYXp5IGlz
+IHNoYXJlZC4NCj4+IFRoaXMgY2F1c2VzIHNvbWUgZmFsc2Utc2hhcmluZyB3aGVuIFRMQiBmbHVz
+aGVzIGFyZSBwZXJmb3JtZWQuDQo+PiANCj4+IEJyZWFrIGNwdV90bGJzdGF0ZSBpbnRybyBjcHVf
+dGxic3RhdGUgYW5kIGNwdV90bGJzdGF0ZV9zaGFyZWQsIGFuZCBtYXJrDQo+PiBlYWNoIG9uZSBh
+Y2NvcmRpbmdseS4NCj4gDQo+IEF0IHNvbWUgcG9pbnQgd2XigJlsbCB3YW50IHRvIGRvIGEgYmV0
+dGVyIGpvYiB3aXRoIG91ciBQViBmbHVzaCBjb2RlLCBhbmQgSQ0KPiBzdXNwZWN0IHdl4oCZbGwg
+ZW5kIHVwIHdpdGggbW9yZSBvZiB0aGlzIHNoYXJlZCBhZ2Fpbi4NCg0KSW4gdGhlIHVzdWFsIHVz
+ZS1jYXNlLCB3aGVuIHlvdSBmbHVzaCB0aGUgVExCLCB3aWxsIHlvdSB3cml0ZSBzb21ldGhpbmcg
+dG8NCmNwdV90bGJzdGF0ZSB0aGF0IHNob3VsZCBiZSB2aXNpYmxlIHRvIG90aGVyIGNvcmVzPyBJ
+IGRvbuKAmXQgc2VlIHdoeSwgZXZlbiBpZg0KUFYgaXMgdXNlZC4NCg0KQW55aG93LCBJIHdhcyBh
+bHdheXMgdW5kZXIgdGhlIGltcHJlc3Npb24gdGhhdCBQViBzaG91bGQgbm90IHB1bmlzaA0KYmFy
+ZS1tZXRhbC4NCg0KVGhlIG90aGVyIG9wdGlvbiBpcyB0byB0YWtlIGNwdV90bGJzdGF0ZSBhbmQg
+cmVhcnJhbmdlIGl0IHNvIHRoZSBzaGFyZWQNCnN0dWZmIHdpbGwgbm90IGJlIG5leHQgdG8gdGhl
+IHByaXZhdGUuIEkganVzdCBkb27igJl0IGtub3cgaG93IHRvIGRvIGl0DQp3aXRob3V0IG1ha2lu
+ZyBhbiBhc3N1bXB0aW9uIG9mIHRoZSBjYWNoZWxpbmUgc2l6ZS4=
