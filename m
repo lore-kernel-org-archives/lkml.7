@@ -2,103 +2,154 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBEEC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14128C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80AA6268EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB37F268FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:46:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zv/Zj9UW"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="r7SNqaIw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727321AbfEaMqQ (ORCPT
+        id S1727371AbfEaMqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 08:46:16 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39339 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbfEaMqQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 08:46:16 -0400
-Received: by mail-lj1-f193.google.com with SMTP id a10so6264954ljf.6;
-        Fri, 31 May 2019 05:46:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7U/vllzeRGoDUSqNH2O6vtCvwbIbsyISBbyc9R5lGXI=;
-        b=Zv/Zj9UWstKjDWB/X3qKfz4kr5pyDkK9IzR5eo/kkqqHuoFoTMGTBsrnQoI5gB7mXm
-         X83RIBzfPQFr2ygu5IDJIHg9l7t9+ankLHbczoJ16RHB/J5HBrdrihDkicBX+o/q4ReQ
-         BDULxbzzaiu1Q1Vvo24NfWZqlA/pi4eMjJ2cC2TiyeL0+eQWM4CE1UXdAvFDr6NRBF+Q
-         kxE8XYrkqtbhGrOMmBx3X6Jg1C4MWo90pL1Zw3gkJ0VAVd8kUASyOhIci+DeueSZOnNe
-         5KchYf3uo5Ms8BFRUI2/6IMtDCSkK5ZQapRQhMoUuEyqUvnv543DA33owZ39+zXcayj6
-         UNRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7U/vllzeRGoDUSqNH2O6vtCvwbIbsyISBbyc9R5lGXI=;
-        b=RWwUn7gx4txZZH/RnPNMs+L2TbNq+4LpnuO/BwPbvXkuaMM49ah3zv53oxpT8fx/d4
-         Jpti90x6mjcijcdLr5xtCHYZ43uq19kIKqCnOwZTcLv3rS5VGj+40Wf2MyYeAARljl0E
-         TurYVdt4tnr5Ue/0c/xsB9okAMR45KCr0DUijGbde8C/kaDQqqfEryaPS1FoymYJUook
-         LLxDeEqPLGQho5r2IB47AZp/B9NdIfWwUd1jfpu7C+YM2tjGNFlZrcq0ma4GwhVSnoJH
-         OzBwhVH+RIElI9qMyzoMqqSVm3yLQ3530unOA+JneBVkOKgUtqo4xukPq53sPCVKyAzV
-         E7CA==
-X-Gm-Message-State: APjAAAUU8tGzTYd/2Wg5Az6iNfXSKrC1ZjZSBNCown+nSenjxOu8Twxa
-        uDAQP2LtcwHqcZU2tJEgwrMGnCmo
-X-Google-Smtp-Source: APXvYqz1JzGq7x9Q+0+jYp9r4eBCRmz5OsVKb9/7kw292QmWKtEySx3VGA7zk5mW/9KqkICOIKZUng==
-X-Received: by 2002:a2e:249:: with SMTP id 70mr5320344ljc.178.1559306774051;
-        Fri, 31 May 2019 05:46:14 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.35.141])
-        by smtp.googlemail.com with ESMTPSA id i21sm407469ljh.12.2019.05.31.05.46.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 31 May 2019 05:46:13 -0700 (PDT)
-Subject: Re: [PATCH V2] drivers: i2c: tegra: fix checkpatch defects
-To:     Bitan Biswas <bbiswas@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1559196850-7007-1-git-send-email-bbiswas@nvidia.com>
- <e9e3d8b0-a76a-81a9-1110-2d07ba1c787f@gmail.com>
- <911e52ed-8f3c-583a-7610-e38723219eca@gmail.com>
- <b86b9104-1754-531f-70b9-3c1a5d347b9b@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <2d83ad21-b012-1b3e-fc9a-741972ee3ba9@gmail.com>
-Date:   Fri, 31 May 2019 15:45:06 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 31 May 2019 08:46:35 -0400
+Received: from vps.xff.cz ([195.181.215.36]:49248 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726403AbfEaMqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 08:46:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1559306791; bh=Vq6PHN+aRiKBxc4hddRHLSZfiSd9bUvG627zPC4o9vY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=r7SNqaIwNqwOb9guoWHE+5kcqm8Eu7YcYIULLPtYivZ8AwmvJo/eJZGEmRO1PppSD
+         sTdI0zKF207BU/1eEZQuURPmnPPtCk//a5UQlBB0RqHTU9jsBnN14mUimA6O4If6tq
+         3YsMz2n2ah8SkyCqn84s9ElTauLkHFeD0Xypwu1E=
+Date:   Fri, 31 May 2019 14:46:30 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-media@vger.kernel.org
+Subject: Re: [linux-sunxi] Re: [PATCH v3 10/12] arm64: dts: allwinner: h6:
+ Add IR receiver node
+Message-ID: <20190531124630.q2guo54kjfzr7rkn@core.my.home>
+Mail-Followup-To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-media@vger.kernel.org
+References: <20190528161440.27172-1-peron.clem@gmail.com>
+ <20190528161440.27172-11-peron.clem@gmail.com>
+ <20190530145550.amalnxmx7kpokykv@core.my.home>
+ <CAJiuCce7nHSktVsDKcR8GLRpD3WrN5yP3Nb_Hbu_Q9NjUQbSMw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <b86b9104-1754-531f-70b9-3c1a5d347b9b@nvidia.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJiuCce7nHSktVsDKcR8GLRpD3WrN5yP3Nb_Hbu_Q9NjUQbSMw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-31.05.2019 12:04, Bitan Biswas пишет:
-> 
-> 
-> On 5/30/19 4:43 AM, Dmitry Osipenko wrote:
->> 30.05.2019 14:36, Dmitry Osipenko пишет:
->>> 30.05.2019 9:14, Bitan Biswas пишет:
->>>> Fix checkpatch.pl warning(s)/error(s)/check(s) in i2c-tegra.c
->>>> except for BUG/BUG_ON checks
->>>
->>> Please turn the BUG_ON's into WARN_ON's. The machine won't go on fire,
->>> hence there is absolutely no good reason in making system unusable on a
->>> software bug. BUG_ON may be more useful for development, but not for a
->>> casual daily usage.
-> I shall update the patch to remove the BUG/BUG_ON calls.
+Hello Clément,
 
-Please replace them with WARN_ON_ONCE.
+On Fri, May 31, 2019 at 12:25:32AM +0200, Clément Péron wrote:
+> Hi Ondrej,
+> 
+> On Thu, 30 May 2019 at 16:55, Ondřej Jirman <megous@megous.com> wrote:
+> >
+> > Hello Clément,
+> >
+> > On Tue, May 28, 2019 at 06:14:38PM +0200, Clément Péron wrote:
+> > > Allwinner H6 IR is similar to A31 and can use same driver.
+> > >
+> > > Add support for it.
+> > >
+> > > Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> > > ---
+> > >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 19 +++++++++++++++++++
+> > >  1 file changed, 19 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > index 16c5c3d0fd81..649cbdfe452e 100644
+> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > @@ -647,6 +647,25 @@
+> > >                               pins = "PL0", "PL1";
+> > >                               function = "s_i2c";
+> > >                       };
+> > > +
+> > > +                     r_ir_rx_pin: r-ir-rx-pin {
+> > > +                             pins = "PL9";
+> > > +                             function = "s_cir_rx";
+> > > +                     };
+> > > +             };
+> > > +
+> > > +             r_ir: ir@7040000 {
+> > > +                             compatible = "allwinner,sun50i-h6-ir",
+> > > +                                          "allwinner,sun6i-a31-ir";
+> > > +                             reg = <0x07040000 0x400>;
+> > > +                             interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
+> > > +                             clocks = <&r_ccu CLK_R_APB1_IR>,
+> > > +                                      <&r_ccu CLK_IR>;
+> > > +                             clock-names = "apb", "ir";
+> > > +                             resets = <&r_ccu RST_R_APB1_IR>;
+> > > +                             pinctrl-names = "default";
+> > > +                             pinctrl-0 = <&r_ir_rx_pin>;
+> > > +                             status = "disabled";
+> > >               };
+> >
+> > Please make a comment here, that this is known broken on some boards and may
+> > result IRQ flood if enabled. Otherwise noone will know.
+> 
+> I'm planning to send a v4 next week with the IRQ_NONE return as Maxime
+> suggested it.
+> https://github.com/clementperon/linux/tree/h6_ir_v4
+> 
+> But maybe we could also use the bit 5 of the IRQ status.
+
+Thanks, that's nice, but that will not make the HW work. That will just disable
+it. The comment is still necessary.
+
+thank you,
+	o.
+
+> Regards, Clement
+> 
+> >
+> > thanks,
+> >         o.
+> >
+> > >               r_i2c: i2c@7081400 {
+> > > --
+> > > 2.20.1
+> > >
+> > >
+> > > _______________________________________________
+> > > linux-arm-kernel mailing list
+> > > linux-arm-kernel@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+> -- 
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/CAJiuCce7nHSktVsDKcR8GLRpD3WrN5yP3Nb_Hbu_Q9NjUQbSMw%40mail.gmail.com.
+> For more options, visit https://groups.google.com/d/optout.
