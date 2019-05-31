@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60581C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4355EC28CC2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 441EF26AB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E13E26AB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:33:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726849AbfEaOdo (ORCPT
+        id S1726874AbfEaOdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 10:33:44 -0400
-Received: from foss.arm.com ([217.140.101.70]:52470 "EHLO foss.arm.com"
+        Fri, 31 May 2019 10:33:46 -0400
+Received: from foss.arm.com ([217.140.101.70]:52484 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726823AbfEaOdm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 10:33:42 -0400
+        id S1726823AbfEaOdo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 10:33:44 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8FD911684;
-        Fri, 31 May 2019 07:33:42 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9AE08341;
+        Fri, 31 May 2019 07:33:44 -0700 (PDT)
 Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9FB433F5AF;
-        Fri, 31 May 2019 07:33:40 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id CE21A3F5AF;
+        Fri, 31 May 2019 07:33:42 -0700 (PDT)
 From:   Sudeep Holla <sudeep.holla@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Jassi Brar <jassisinghbrar@gmail.com>,
@@ -34,11 +34,10 @@ Cc:     Sudeep Holla <sudeep.holla@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Brown <broonie@kernel.org>,
         Cristian Marussi <cristian.marussi@arm.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH 3/6] dt-bindings: mailbox: add bindings to support ARM MHU doorbells
-Date:   Fri, 31 May 2019 15:33:17 +0100
-Message-Id: <20190531143320.8895-4-sudeep.holla@arm.com>
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: [PATCH 4/6] mailbox: arm_mhu: migrate to threaded irq handler
+Date:   Fri, 31 May 2019 15:33:18 +0100
+Message-Id: <20190531143320.8895-5-sudeep.holla@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190531143320.8895-1-sudeep.holla@arm.com>
 References: <20190531143320.8895-1-sudeep.holla@arm.com>
@@ -47,92 +46,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ARM MHU has mechanism to assert interrupt signals to facilitate
-inter-processor message based communication. It drives the signal using
-a 32-bit register, with all 32-bits logically ORed together. It also
-enables software to set, clear and check the status of each of the bits
-of this register independently. Each bit of the register can be
-associated with a type of event that can contribute to raising the
-interrupt thereby allowing it to be used as independent doorbells.
+In preparation to introduce support for doorbells which require the
+interrupt handlers to be threaded, this patch moves the existing
+interrupt handler to threaded handler.
 
-Since the first version of this binding can't support doorbells,
-this patch extends the existing binding to support them by allowing
-"#mbox-cells" to be 2.
+Also it moves out the registering and freeing of the handlers from
+the mailbox startup and shutdown methods. This also is required to
+support doorbells.
 
 Cc: Jassi Brar <jaswinder.singh@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- .../devicetree/bindings/mailbox/arm-mhu.txt   | 39 ++++++++++++++++++-
- 1 file changed, 37 insertions(+), 2 deletions(-)
+ drivers/mailbox/arm_mhu.c | 46 +++++++++++++++++++--------------------
+ 1 file changed, 22 insertions(+), 24 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
-index 4971f03f0b33..ba659bcc7109 100644
---- a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
-+++ b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
-@@ -10,6 +10,15 @@ STAT register and the remote clears it after having read the data.
- The last channel is specified to be a 'Secure' resource, hence can't be
- used by Linux running NS.
+diff --git a/drivers/mailbox/arm_mhu.c b/drivers/mailbox/arm_mhu.c
+index 747cab1090ff..98838d5ae108 100644
+--- a/drivers/mailbox/arm_mhu.c
++++ b/drivers/mailbox/arm_mhu.c
+@@ -84,33 +84,16 @@ static int mhu_startup(struct mbox_chan *chan)
+ {
+ 	struct mhu_link *mlink = chan->con_priv;
+ 	u32 val;
+-	int ret;
  
-+The MHU drives the interrupt signal using a 32-bit register, with all
-+32-bits logically ORed together. It provides a set of registers to
-+enable software to set, clear and check the status of each of the bits
-+of this register independently. The use of 32 bits per interrupt line
-+enables software to provide more information about the source of the
-+interrupt. For example, each bit of the register can be associated with
-+a type of event that can contribute to raising the interrupt. Each of
-+the 32-bits can be used as "doorbell" to alert the remote processor.
-+
- Mailbox Device Node:
- ====================
+ 	val = readl_relaxed(mlink->tx_reg + INTR_STAT_OFS);
+ 	writel_relaxed(val, mlink->tx_reg + INTR_CLR_OFS);
  
-@@ -18,13 +27,21 @@ used by Linux running NS.
- - compatible:		Shall be "arm,mhu" & "arm,primecell"
- - reg:			Contains the mailbox register address range (base
- 			address and length)
--- #mbox-cells		Shall be 1 - the index of the channel needed.
-+- #mbox-cells		Shall be 1 - the index of the channel needed when
-+			not used as set of doorbell bits.
-+			Shall be 2 - the index of the channel needed, and
-+			the index of the doorbell bit within the channel
-+			when used in doorbell mode.
- - interrupts:		Contains the interrupt information corresponding to
--			each of the 3 links of MHU.
-+			each of the 3 physical channels of MHU namely low
-+			priority non-secure, high priority non-secure and
-+			secure channels.
+-	ret = request_irq(mlink->irq, mhu_rx_interrupt,
+-			  IRQF_SHARED, "mhu_link", chan);
+-	if (ret) {
+-		dev_err(chan->mbox->dev,
+-			"Unable to acquire IRQ %d\n", mlink->irq);
+-		return ret;
+-	}
+-
+ 	return 0;
+ }
  
- Example:
- --------
+-static void mhu_shutdown(struct mbox_chan *chan)
+-{
+-	struct mhu_link *mlink = chan->con_priv;
+-
+-	free_irq(mlink->irq, chan);
+-}
+-
+ static const struct mbox_chan_ops mhu_ops = {
+ 	.send_data = mhu_send_data,
+ 	.startup = mhu_startup,
+-	.shutdown = mhu_shutdown,
+ 	.last_tx_done = mhu_last_tx_done,
+ };
  
-+1. Controller which doesn't support doorbells
+@@ -132,13 +115,6 @@ static int mhu_probe(struct amba_device *adev, const struct amba_id *id)
+ 		return PTR_ERR(mhu->base);
+ 	}
+ 
+-	for (i = 0; i < MHU_CHANS; i++) {
+-		mhu->chan[i].con_priv = &mhu->mlink[i];
+-		mhu->mlink[i].irq = adev->irq[i];
+-		mhu->mlink[i].rx_reg = mhu->base + mhu_reg[i];
+-		mhu->mlink[i].tx_reg = mhu->mlink[i].rx_reg + TX_REG_OFFSET;
+-	}
+-
+ 	mhu->mbox.dev = dev;
+ 	mhu->mbox.chans = &mhu->chan[0];
+ 	mhu->mbox.num_chans = MHU_CHANS;
+@@ -155,6 +131,28 @@ static int mhu_probe(struct amba_device *adev, const struct amba_id *id)
+ 		return err;
+ 	}
+ 
++	for (i = 0; i < MHU_CHANS; i++) {
++		int irq = mhu->mlink[i].irq = adev->irq[i];
 +
- 	mhu: mailbox@2b1f0000 {
- 		#mbox-cells = <1>;
- 		compatible = "arm,mhu", "arm,primecell";
-@@ -41,3 +58,21 @@ used by Linux running NS.
- 		reg = <0 0x2e000000 0x4000>;
- 		mboxes = <&mhu 1>; /* HP-NonSecure */
- 	};
++		if (irq <= 0) {
++			dev_dbg(dev, "No IRQ found for Channel %d\n", i);
++			continue;
++		}
 +
-+2. Controller which supports doorbells
++		mhu->chan[i].con_priv = &mhu->mlink[i];
++		mhu->mlink[i].rx_reg = mhu->base + mhu_reg[i];
++		mhu->mlink[i].tx_reg = mhu->mlink[i].rx_reg + TX_REG_OFFSET;
 +
-+	mhu: mailbox@2b1f0000 {
-+		#mbox-cells = <2>;
-+		compatible = "arm,mhu", "arm,primecell";
-+		reg = <0 0x2b1f0000 0x1000>;
-+		interrupts = <0 36 4>, /* LP-NonSecure */
-+			     <0 35 4>; /* HP-NonSecure */
-+		clocks = <&clock 0 2 1>;
-+		clock-names = "apb_pclk";
-+	};
++		err = devm_request_threaded_irq(dev, irq, NULL,
++						mhu_rx_interrupt, IRQF_ONESHOT,
++						"mhu_link", &mhu->chan[i]);
++		if (err) {
++			dev_err(dev, "Can't claim IRQ %d\n", irq);
++			mbox_controller_unregister(&mhu->mbox);
++			return err;
++		}
++	}
 +
-+	mhu_client: scb@2e000000 {
-+		compatible = "arm,scpi";
-+		reg = <0 0x2e000000 0x200>;
-+		mboxes = <&mhu 1 4>; /* HP-NonSecure 5th doorbell bit */
-+	};
+ 	dev_info(dev, "ARM MHU Mailbox registered\n");
+ 	return 0;
+ }
 -- 
 2.17.1
 
