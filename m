@@ -2,126 +2,98 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC28C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1DDAC46460
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9329C26B30
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A4BA23774
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:02:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YCv4XGjT"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="J0mJR0rY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbfEaPAT (ORCPT
+        id S1726798AbfEaPCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 11:00:19 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:33588 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbfEaPAT (ORCPT
+        Fri, 31 May 2019 11:02:22 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45528 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726547AbfEaPCW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 11:00:19 -0400
-Received: by mail-qt1-f193.google.com with SMTP id 14so1251940qtf.0;
-        Fri, 31 May 2019 08:00:18 -0700 (PDT)
+        Fri, 31 May 2019 11:02:22 -0400
+Received: by mail-wr1-f65.google.com with SMTP id b18so6712680wrq.12
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 08:02:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:message-id:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-disposition:content-transfer-encoding;
-        bh=Pt2gM/5yUncpxKqP4ypDT20BNXPN0OQd5ycdgB0cHWQ=;
-        b=YCv4XGjTPMN6Vp4EFQYMlpQ3Wy7Krff9/cJZptLmQq+Wpq5AYXbBa0saN2rxEIFMj/
-         vB6jZgIkHXRG9uAzI+uge3egzEXm6W6vCbG0Roa0/r2qDAUkQUZq5/O2jzdaAc+/WPwF
-         MeYTvAsDESCKWTQJQwFBnWtfcrRGx2qH3UKivaCE23WGV7wzuw0HrOo+sWwYWWHR1kQ7
-         wOik6vD6KjK4V7DBq6RmRfrVkQiOVZ0CeYynEBbLVoXjVFkljOTYdXLW676kfdFcXT5L
-         IMWj7kINabjW79YwJe69r0OejQ+jys2AdmC8Ms5Y+Vh0djyoMG+4x6mPAy07/FWeDsvW
-         K+2A==
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yhVi3GTFCQvvTIxl5mOOdrJTPKmESuh+XsvZuHIBFUA=;
+        b=J0mJR0rYbu7nLXSjhS2+ZbFJdnv5aUwWyTszsu5dt3yPf3YX8TrJVy8ES8a3v/0JBD
+         2wL+73E34KfUz2DwRGECSq9Rk6kRsnZzQTtn5nrhxO5c7CcidX6RvoD3B1Rv/iuiF8Un
+         tsWUNKFY/AOEstNJVHdihksOAFNs9HR78/tM3IqeTLkx4WKxHNTf1J4wCLzSZ8QAGm/y
+         uM9XwSon/jIun8o1gzwHxRHjqODnKlqzsnyezjtyGnN4wHP0xdvzfBlLvmlcLFbtOnuw
+         mg2fGVxQVRzLNKjEafr3tWV/vi8fSDiZDqrY3Dh7xOmco0bJShp89adqEpQimpA65kRI
+         ue2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
-         :references:mime-version:content-disposition
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Pt2gM/5yUncpxKqP4ypDT20BNXPN0OQd5ycdgB0cHWQ=;
-        b=aHEHHWXcEkzbuvQIgdX4Wo7QKo6zwu7YczlnxaV4+MARRGmvnCaj+O8O3WbP2gp9qJ
-         WNrvKsZ9gC3feF5pTjUkg2BJg9raIHGmBFOCQ8gqSG7Thg3WE9oTOTWeTXEXIdeeI1/v
-         vcEwio5SCtZGKGBt7LX55K03auZBoGb9aG2PRLqcUlFEf2E2Xyt6fhqNuENXn+1SlCs0
-         JEnOw9KXqBI49M9PkX3tTAZ4/RkEw8UBvO49BLFy6yO3/NDwP5n30Seib5MlOKq+P/Fu
-         fIz31dIfr66251KSiImrnhMwjkDy2eyiDEKCaU94Qm+3xPGbjBqzMaR8gR+knSc5TDkO
-         /aXA==
-X-Gm-Message-State: APjAAAWMDRFoRz0PL8LixAyCfcY8t9H5vZkJihTVIkG8Wf7goPpvZ0Yv
-        YBI5waE7iL1q6CTNEOB2gMY=
-X-Google-Smtp-Source: APXvYqyw0R4cVUkGKx3ApE3NZSYOIzQAoQk107EtCqLDlzgCmhfB0q5yLhibAaWs+eMagzT6pXlspw==
-X-Received: by 2002:a0c:b50b:: with SMTP id d11mr9064245qve.98.1559314818254;
-        Fri, 31 May 2019 08:00:18 -0700 (PDT)
-Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
-        by smtp.gmail.com with ESMTPSA id s125sm3157675qkc.43.2019.05.31.08.00.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 31 May 2019 08:00:17 -0700 (PDT)
-Date:   Fri, 31 May 2019 11:00:17 -0400
-Message-ID: <20190531110017.GB2075@t480s.localdomain>
-From:   Vivien Didelot <vivien.didelot@gmail.com>
-To:     Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+        bh=yhVi3GTFCQvvTIxl5mOOdrJTPKmESuh+XsvZuHIBFUA=;
+        b=n0BG/Z0V4iYFHzxdZ67muaHJbM14NGfgW9x2gp+iiDFMMjfvcJb5uCkk+8scALmOAl
+         e1pcjKwLpcOc4Gq1A36VOdzQ74xkPE1HwIOEu0O6VuK9X82KEOO7UAXyhwnvvBeZhX59
+         dSn8NNSAUmbsrZmUVJCreRSYwOxgTYbspLYGmHyab8WdhewFAzvTFYbkLTar71/COywQ
+         srRSIHlBbxUT9z+1I7jLJdR66JpEEKzkJtfo06Pkmykl72dDVGHe9MVJb/Ev+ig0oXea
+         OWHHxb3W5Gv9cs4e8SEZVQlRQSAwWhDutoCRk1xWmAsKG47rteIaQ4OGvtzKB84Uss1M
+         RoUg==
+X-Gm-Message-State: APjAAAV6vboGJ8gm5cELTOyAZsww7TWyFlf8ZYDQVWRiJxgRYmwaynXA
+        ZpP+vyjwlmrNn+ugAeLRTTo1QA==
+X-Google-Smtp-Source: APXvYqys8NqsVcs78h+7pzuMj6F9INb4P295nbS8UFgQK4YSDSuwHD81dGbsvau2gG921pNHh+h4rA==
+X-Received: by 2002:adf:b643:: with SMTP id i3mr7333639wre.284.1559314940594;
+        Fri, 31 May 2019 08:02:20 -0700 (PDT)
+Received: from [192.168.112.17] (nikaet.starlink.ru. [94.141.168.29])
+        by smtp.gmail.com with ESMTPSA id u205sm7254690wmu.47.2019.05.31.08.02.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 31 May 2019 08:02:20 -0700 (PDT)
+Subject: Re: [PATCH] net: dsa: mv88e6xxx: avoid error message on remove from
+ VLAN 0
+To:     Vivien Didelot <vivien.didelot@gmail.com>
 Cc:     Andrew Lunn <andrew@lunn.ch>,
         Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Heiner Kallweit <hkallweit1@gmail.com>,
-        Marek =?UTF-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        =?UTF-8?Q?Marek_Beh=c3=ban?= <marek.behun@nic.cz>,
         Russell King <rmk+kernel@armlinux.org.uk>,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Chris Healy <cphealy@gmail.com>
-Subject: Re: [PATCH] net: dsa: mv88e6xxx: avoid error message on remove from
- VLAN 0
-In-Reply-To: <422482dc-8887-0f92-c8c9-f9d639882c77@cogentembedded.com>
 References: <20190531073514.2171-1-nikita.yoush@cogentembedded.com>
  <20190531103105.GE23464@t480s.localdomain> <20190531143758.GB23821@lunn.ch>
  <422482dc-8887-0f92-c8c9-f9d639882c77@cogentembedded.com>
+ <20190531110017.GB2075@t480s.localdomain>
+From:   Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Message-ID: <6dd8f8d5-9453-ab94-3aae-18eb5e35b051@cogentembedded.com>
+Date:   Fri, 31 May 2019 18:02:18 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190531110017.GB2075@t480s.localdomain>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nikita,
-
-On Fri, 31 May 2019 17:46:29 +0300, Nikita Yushchenko <nikita.yoush@cogentembedded.com> wrote:
+>> Kernel currently does, but it is caught in
+>> mv88e6xxx_port_check_hw_vlan() and returns -ENOTSUPP from there.
 > 
+> But VID 0 has a special meaning for the kernel, it means the port's private
+> database (when it is isolated, non-bridged), it is not meant to be programmed
+> in the switch. That's why I would've put that knowledge into the DSA layer,
+> which job is to translate the kernel operations to the (dumb) DSA drivers.
 > 
-> 31.05.2019 17:37, Andrew Lunn wrote:
-> >> I'm not sure that I like the semantic of it, because the driver can actually
-> >> support VID 0 per-se, only the kernel does not use VLAN 0. Thus I would avoid
-> >> calling the port_vlan_del() ops for VID 0, directly into the upper DSA layer.
-> >>
-> >> Florian, Andrew, wouldn't the following patch be more adequate?
-> >>
-> >>     diff --git a/net/dsa/slave.c b/net/dsa/slave.c
-> >>     index 1e2ae9d59b88..80f228258a92 100644
-> >>     --- a/net/dsa/slave.c
-> >>     +++ b/net/dsa/slave.c
-> >>     @@ -1063,6 +1063,10 @@ static int dsa_slave_vlan_rx_kill_vid(struct net_device *dev, __be16 proto,
-> >>             struct bridge_vlan_info info;
-> >>             int ret;
-> >>      
-> >>     +       /* VID 0 has a special meaning and is never programmed in hardware */
-> >>     +       if (!vid)
-> >>     +               return 0;
-> >>     +
-> >>             /* Check for a possible bridge VLAN entry now since there is no
-> >>              * need to emulate the switchdev prepare + commit phase.
-> >>              */
-> >  
-> Kernel currently does, but it is caught in
-> mv88e6xxx_port_check_hw_vlan() and returns -ENOTSUPP from there.
+> I hope I'm seeing things correctly here.
 
-But VID 0 has a special meaning for the kernel, it means the port's private
-database (when it is isolated, non-bridged), it is not meant to be programmed
-in the switch. That's why I would've put that knowledge into the DSA layer,
-which job is to translate the kernel operations to the (dumb) DSA drivers.
-
-I hope I'm seeing things correctly here.
-
-
-Thanks,
-Vivien
+I'm ok with either solution.
