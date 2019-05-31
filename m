@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3346FC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F7AC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 067F82635C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B7A02635C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:54:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dwV6lcEW"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aVaU2Uk/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727013AbfEaDyR (ORCPT
+        id S1727036AbfEaDyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 23:54:17 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:32785 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726977AbfEaDyP (ORCPT
+        Thu, 30 May 2019 23:54:20 -0400
+Received: from mail-it1-f182.google.com ([209.85.166.182]:55228 "EHLO
+        mail-it1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727001AbfEaDyR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 23:54:15 -0400
-Received: by mail-it1-f196.google.com with SMTP id j17so9844533itk.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 20:54:14 -0700 (PDT)
+        Thu, 30 May 2019 23:54:17 -0400
+Received: by mail-it1-f182.google.com with SMTP id h20so13557882itk.4
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 20:54:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=hqFf2+cwBc4XPU/wNoeNiXzq2lmzHpPCTPDaeLdQu4s=;
-        b=dwV6lcEWrxc5B6DJHcpq3zyz85EXyb7kFr66i80SndfVrNSU4O6J2BhCuq4xE9YuzG
-         QJEmlxKobURV1wOZvw/c6rRePWj08be/9fs9y2H4V4dAqvoWGBzKvPWGy3M/GlkBE0dG
-         fB0+1S4FXZaI2IcfQfZRZVtRvdl6d9HBSKFx7wjh0vvlKTQbnW0gnMSsdPc4JZbOEZxZ
-         9+ldXNVSP69hgIFuV09GrO8sJw5L3I7P9UL2lk12RFXNAOLaRkF4zItXR5B1Uy4SSQ5S
-         2lnj0k2mR9SfKdIkG9tTaENn3hV+GHxRfykjUcndTjGzcKr5Fj37FZl1j9/iwIRDGMNH
-         /bvQ==
+        bh=kagssQd3QuWugHezIJ6doapoPYga+HnLQRv+8NMyX9g=;
+        b=aVaU2Uk/PSvFOR2ZTUEkpLv50UR082xEm5HsKlrw7QgZckzEHtXA7yO/Wn/WOBbJvJ
+         Dc+RwCg9LLpK+kEt8JnxklzRSCovp7PitZw296lYP8Jd1UwgpjL6wVVrUTMb+9Bc9n+N
+         t3Maw5oZUPapO1nFVOsnDqMKzA6i4fmK+kL1wanbzG8ogV628MK9QBHGEZKqK77sc8Wg
+         gEHiQzbr0xcVtCqK6elbQQ1PkYtX5ZPymVlQtCfCogAJWOQT7ZhIg+V/xQd8Q9pgDbYZ
+         zifSkJyuzPAChGKjgwm6JomDh11WZ8yM0/5ykVmjJzQLsMFc391cvHSKIpBnUCPJl/x6
+         CBFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=hqFf2+cwBc4XPU/wNoeNiXzq2lmzHpPCTPDaeLdQu4s=;
-        b=VO6r+PLwk98BBVc4J4wD18L4eVD3Z5LPjj2kSHZVgl6lNDtypI1m8pX7kl33j6EJ+C
-         1KCwnXAziaxyJA9iR4pmLDW6rXLcGksrVypGXGFa0vVXBTs+vsYzcTHzY7P6Z0Mq7DTC
-         Ec/MoHux066jzRIZu4Ad7s+96nv35oMfiiS9NloIS7R+74w45XJpA7/EEZPYcO3EHtdj
-         yPGaWdFOsBv1v+Xz3uDygOyCd8X2X/+qnRugzHXoluZYUv3DEMaXoMBZ7DxCROj905kW
-         z9Nh9Cl0w/Yqya+nkqej6W95YspcdtWMt4snTUw7rmlHpRV3+NlBSPNQuk6qYKt+1ow3
-         0X4Q==
-X-Gm-Message-State: APjAAAV/+qxs48FZtdmQ4XDG8tILXPPltSZ8+iYl7j+LdUckuIRmUT5X
-        Q9ItGGUwOvAq83sNqNtJUmE7Sg==
-X-Google-Smtp-Source: APXvYqwWD8aa4VUIefG8yGQZZRSCg34qIIIGxgQIp1ineTqYUGxgNceXvUOJ1ILtPXFr+A14j81EGw==
-X-Received: by 2002:a24:a09:: with SMTP id 9mr5343497itw.146.1559274854371;
-        Thu, 30 May 2019 20:54:14 -0700 (PDT)
+        bh=kagssQd3QuWugHezIJ6doapoPYga+HnLQRv+8NMyX9g=;
+        b=XG2O495XXv1bvkCZc9jHWsxpSBda4KDVpcSi7G03CfiAzfMNKRB9EjvIqyBXt/EUrk
+         FQoCa9qSTF2QtxUnmsK4vBRn1hnRIdngbZu/sP4MkwG8srr9LR8Z2IA1hFwNLOkLSV3T
+         nu4LoYXx2Fw0/i++/MQ8SdkzO/OOOXeh6YeaWmqhpe/kLMzaHb9+jawX9w70hn9MFnW6
+         2rPYwUeB5Ug4uCoA8Gwx0UBoz1GRiRE6mGxD4/Lmc8YiAUQU6XBQfDETA2OoGOgCcm7n
+         aFoy8Soym3h2kFoRH5VbY9MUNXBdBec9OO+K7pSE5IbRXY8ouWKPD/qOjRdOH0pcCNcf
+         aX3A==
+X-Gm-Message-State: APjAAAVdutHjcqnkZUigJoVfWSqILA7Ga+86vZOeZZMbdWmuX4/6OmNW
+        lqLR0l3MFi9jGyBmmZspV2mMww==
+X-Google-Smtp-Source: APXvYqwU/ZRoDGo6axXL+D8tg1NufQkmrF7bSAtLkJC7p296STpfjSogYdgLZwKpdUbt2XAzDoRcpA==
+X-Received: by 2002:a24:5095:: with SMTP id m143mr5427071itb.68.1559274856806;
+        Thu, 30 May 2019 20:54:16 -0700 (PDT)
 Received: from localhost.localdomain (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
-        by smtp.gmail.com with ESMTPSA id q15sm1626947ioi.15.2019.05.30.20.54.13
+        by smtp.gmail.com with ESMTPSA id q15sm1626947ioi.15.2019.05.30.20.54.15
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 20:54:13 -0700 (PDT)
+        Thu, 30 May 2019 20:54:16 -0700 (PDT)
 From:   Alex Elder <elder@linaro.org>
 To:     davem@davemloft.net, arnd@arndb.de, bjorn.andersson@linaro.org,
         ilias.apalodimas@linaro.org
@@ -65,9 +65,9 @@ Cc:     evgreen@chromium.org, benchan@google.com, ejcaruso@google.com,
         netdev@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
-Subject: [PATCH v2 14/17] soc: qcom: ipa: support build of IPA code
-Date:   Thu, 30 May 2019 22:53:45 -0500
-Message-Id: <20190531035348.7194-15-elder@linaro.org>
+Subject: [PATCH v2 16/17] arm64: dts: sdm845: add IPA information
+Date:   Thu, 30 May 2019 22:53:47 -0500
+Message-Id: <20190531035348.7194-17-elder@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190531035348.7194-1-elder@linaro.org>
 References: <20190531035348.7194-1-elder@linaro.org>
@@ -78,78 +78,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add build and Kconfig support for the Qualcomm IPA driver.
+Add IPA-related nodes and definitions to "sdm845.dtsi".
 
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- drivers/net/Kconfig      |  2 ++
- drivers/net/Makefile     |  1 +
- drivers/net/ipa/Kconfig  | 16 ++++++++++++++++
- drivers/net/ipa/Makefile |  7 +++++++
- 4 files changed, 26 insertions(+)
- create mode 100644 drivers/net/ipa/Kconfig
- create mode 100644 drivers/net/ipa/Makefile
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 51 ++++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
-diff --git a/drivers/net/Kconfig b/drivers/net/Kconfig
-index 48e209e55843..d87fe174eb9f 100644
---- a/drivers/net/Kconfig
-+++ b/drivers/net/Kconfig
-@@ -388,6 +388,8 @@ source "drivers/net/fddi/Kconfig"
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index fcb93300ca62..985479925af8 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -20,6 +20,7 @@
+ #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+ #include <dt-bindings/clock/qcom,gcc-sdm845.h>
+ #include <dt-bindings/thermal/thermal.h>
++#include <dt-bindings/interconnect/qcom,sdm845.h>
  
- source "drivers/net/hippi/Kconfig"
+ / {
+ 	interrupt-parent = <&intc>;
+@@ -517,6 +518,17 @@
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+ 		};
++
++		ipa_smp2p_out: ipa-ap-to-modem {
++			qcom,entry-name = "ipa";
++			#qcom,smem-state-cells = <1>;
++		};
++
++		ipa_smp2p_in: ipa-modem-to-ap {
++			qcom,entry-name = "ipa";
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
+ 	};
  
-+source "drivers/net/ipa/Kconfig"
+ 	smp2p-slpi {
+@@ -1268,6 +1280,45 @@
+ 			};
+ 		};
+ 
++		ipa@1e40000 {
++			compatible = "qcom,sdm845-ipa";
 +
- config NET_SB1000
- 	tristate "General Instruments Surfboard 1000"
- 	depends on PNP
-diff --git a/drivers/net/Makefile b/drivers/net/Makefile
-index 0d3ba056cda3..ff8918fe09b0 100644
---- a/drivers/net/Makefile
-+++ b/drivers/net/Makefile
-@@ -45,6 +45,7 @@ obj-$(CONFIG_ETHERNET) += ethernet/
- obj-$(CONFIG_FDDI) += fddi/
- obj-$(CONFIG_HIPPI) += hippi/
- obj-$(CONFIG_HAMRADIO) += hamradio/
-+obj-$(CONFIG_IPA) += ipa/
- obj-$(CONFIG_PLIP) += plip/
- obj-$(CONFIG_PPP) += ppp/
- obj-$(CONFIG_PPP_ASYNC) += ppp/
-diff --git a/drivers/net/ipa/Kconfig b/drivers/net/ipa/Kconfig
-new file mode 100644
-index 000000000000..b1e3f7405992
---- /dev/null
-+++ b/drivers/net/ipa/Kconfig
-@@ -0,0 +1,16 @@
-+config IPA
-+	tristate "Qualcomm IPA support"
-+	depends on NET
-+	select QCOM_QMI_HELPERS
-+	select QCOM_MDT_LOADER
-+	default n
-+	help
-+	  Choose Y here to include support for the Qualcomm IP Accelerator
-+	  (IPA), a hardware block present in some Qualcomm SoCs.  The IPA
-+	  is a programmable protocol processor that is capable of generic
-+	  hardware handling of IP packets, including routing, filtering,
-+	  and NAT.  Currently the IPA driver supports only basic transport
-+	  of network traffic between the AP and modem, on the Qualcomm
-+	  SDM845 SoC.
++			modem-init;
 +
-+	  If unsure, say N.
-diff --git a/drivers/net/ipa/Makefile b/drivers/net/ipa/Makefile
-new file mode 100644
-index 000000000000..a43039c09a25
---- /dev/null
-+++ b/drivers/net/ipa/Makefile
-@@ -0,0 +1,7 @@
-+obj-$(CONFIG_IPA)	+=	ipa.o
++			reg = <0 0x1e40000 0 0x7000>,
++			      <0 0x1e47000 0 0x2000>,
++			      <0 0x1e04000 0 0x2c000>;
++			reg-names = "ipa-reg",
++				    "ipa-shared",
++				    "gsi";
 +
-+ipa-y			:=	ipa_main.o ipa_clock.o ipa_mem.o \
-+				ipa_interrupt.o gsi.o gsi_trans.o \
-+				ipa_gsi.o ipa_smp2p.o ipa_uc.o \
-+				ipa_endpoint.o ipa_cmd.o ipa_netdev.o \
-+				ipa_qmi.o ipa_qmi_msg.o ipa_data-sdm845.o
++			interrupts-extended =
++					<&intc 0 311 IRQ_TYPE_EDGE_RISING>,
++					<&intc 0 432 IRQ_TYPE_LEVEL_HIGH>,
++					<&ipa_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
++					<&ipa_smp2p_in 1 IRQ_TYPE_EDGE_RISING>;
++			interrupt-names = "ipa",
++					  "gsi",
++					  "ipa-clock-query",
++					  "ipa-setup-ready";
++
++			clocks = <&rpmhcc RPMH_IPA_CLK>;
++			clock-names = "core";
++
++			interconnects =
++				<&rsc_hlos MASTER_IPA &rsc_hlos SLAVE_EBI1>,
++				<&rsc_hlos MASTER_IPA &rsc_hlos SLAVE_IMEM>,
++				<&rsc_hlos MASTER_APPSS_PROC &rsc_hlos SLAVE_IPA_CFG>;
++			interconnect-names = "memory",
++					     "imem",
++					     "config";
++
++			qcom,smem-states = <&ipa_smp2p_out 0>,
++					   <&ipa_smp2p_out 1>;
++			qcom,smem-state-names = "ipa-clock-enabled-valid",
++						"ipa-clock-enabled";
++		};
++
+ 		tcsr_mutex_regs: syscon@1f40000 {
+ 			compatible = "syscon";
+ 			reg = <0 0x01f40000 0 0x40000>;
 -- 
 2.20.1
 
