@@ -2,189 +2,384 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFDBC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B236C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A728426670
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34D012666D
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:07:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="GWmhBh1E"
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="ZWXV53Rs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727175AbfEaJGW (ORCPT
+        id S1726992AbfEaJHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 05:06:22 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:53594 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726797AbfEaJGW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 05:06:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1559293581; x=1590829581;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=IUMbb8sG3OoGniCTVKK5CLJC3zT+OvvZpa9d+vLzxDc=;
-  b=GWmhBh1EqDB4YNTE9mKCS3afHxFFUVasT1HgblRnGrEG4DnDDWMqPD1C
-   iJm/O8j1RQf5KwQGxQK5sq24SV2u54eAgb+EE9ngHFlyrBsev/LpqKgdu
-   TBkH7ewLw06Cg7/xPXwlMS4J6RtlRlK6BBYjRV+wBQCPhwXm1NF11/Aar
-   Q=;
-X-IronPort-AV: E=Sophos;i="5.60,534,1549929600"; 
-   d="scan'208";a="735510243"
-Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-22cc717f.us-west-2.amazon.com) ([10.124.125.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 31 May 2019 09:06:19 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
-        by email-inbound-relay-2a-22cc717f.us-west-2.amazon.com (Postfix) with ESMTPS id AFEBFA2211;
-        Fri, 31 May 2019 09:06:18 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 31 May 2019 09:06:18 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.162.74) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 31 May 2019 09:06:15 +0000
-Subject: Re: [PATCH v2 1/2] KVM: Start populating /sys/hypervisor with KVM
- entries
-To:     "Sironi, Filippo" <sironi@amazon.de>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "Marc Zyngier" <Marc.Zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@linaro.org>
-References: <1539078879-4372-1-git-send-email-sironi@amazon.de>
- <1557847002-23519-1-git-send-email-sironi@amazon.de>
- <1557847002-23519-2-git-send-email-sironi@amazon.de>
- <e976f31b-2ccd-29ba-6a32-2edde49f867f@amazon.com>
- <3D2C4EE3-1C2E-4032-9964-31A066E542AA@amazon.de>
-From:   Alexander Graf <graf@amazon.com>
-Message-ID: <6b3dadf9-6240-6440-b784-50bec605bf2c@amazon.com>
-Date:   Fri, 31 May 2019 11:06:13 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.0
+        Fri, 31 May 2019 05:07:08 -0400
+Received: from mta-01.yadro.com ([89.207.88.251]:46386 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726002AbfEaJHI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 05:07:08 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id 3F5C941908;
+        Fri, 31 May 2019 09:07:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        user-agent:in-reply-to:content-disposition:content-type
+        :content-type:mime-version:references:message-id:subject:subject
+        :from:from:date:date:received:received:received; s=mta-01; t=
+        1559293624; x=1561108025; bh=V2JYksw1ZpPn49A8Zy8oL1DLxXqIFwPGBxx
+        0ZykK3RM=; b=ZWXV53Rs0HjRaijj7GccsS27X91FsXvdCKAEkgTbszlF1SNFbNu
+        Recqa8xL9JFDzJdRk3eJxRKLci3VsBho2OKC8FptW7OC7vYdPcFzgSYGEaysKFa/
+        uK7ox0LWLrCaYusGi/w5tqL6QflmSBAJeZPP3j2nCnQuwBn4Ul8TRqDs=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id FeODQLn3iRyt; Fri, 31 May 2019 12:07:04 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 7E16D41860;
+        Fri, 31 May 2019 12:07:02 +0300 (MSK)
+Received: from localhost (172.17.14.115) by T-EXCH-02.corp.yadro.com
+ (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Fri, 31
+ May 2019 12:07:01 +0300
+Date:   Fri, 31 May 2019 12:07:01 +0300
+From:   "Alexander A. Filippov" <a.filippov@yadro.com>
+To:     Andrew Jeffery <andrew@aj.id.au>
+CC:     "Alexander A. Filippov" <a.filippov@yadro.com>,
+        <linux-aspeed@lists.ozlabs.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, Joel Stanley <joel@jms.id.au>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] ARM: dts: aspeed: Add YADRO VESNIN BMC
+Message-ID: <20190531090701.GA12476@bbwork.lan>
+References: <20190531061207.23079-1-a.filippov@yadro.com>
+ <2966b961-77ca-4371-949c-195b623e344b@www.fastmail.com>
 MIME-Version: 1.0
-In-Reply-To: <3D2C4EE3-1C2E-4032-9964-31A066E542AA@amazon.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.43.162.74]
-X-ClientProxiedBy: EX13D02UWB001.ant.amazon.com (10.43.161.240) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <2966b961-77ca-4371-949c-195b623e344b@www.fastmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Originating-IP: [172.17.14.115]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 31, 2019 at 04:02:37PM +0930, Andrew Jeffery wrote:
+> Hello Alexander,
 
-On 17.05.19 17:41, Sironi, Filippo wrote:
->> On 16. May 2019, at 15:50, Graf, Alexander <graf@amazon.com> wrote:
->>
->> On 14.05.19 08:16, Filippo Sironi wrote:
->>> Start populating /sys/hypervisor with KVM entries when we're running on
->>> KVM. This is to replicate functionality that's available when we're
->>> running on Xen.
->>>
->>> Start with /sys/hypervisor/uuid, which users prefer over
->>> /sys/devices/virtual/dmi/id/product_uuid as a way to recognize a virtual
->>> machine, since it's also available when running on Xen HVM and on Xen PV
->>> and, on top of that doesn't require root privileges by default.
->>> Let's create arch-specific hooks so that different architectures can
->>> provide different implementations.
->>>
->>> Signed-off-by: Filippo Sironi <sironi@amazon.de>
->> I think this needs something akin to
->>
->>   https://www.kernel.org/doc/Documentation/ABI/stable/sysfs-hypervisor-xen
->>
->> to document which files are available.
->>
->>> ---
->>> v2:
->>> * move the retrieval of the VM UUID out of uuid_show and into
->>>   kvm_para_get_uuid, which is a weak function that can be overwritten
->>>
->>> drivers/Kconfig              |  2 ++
->>> drivers/Makefile             |  2 ++
->>> drivers/kvm/Kconfig          | 14 ++++++++++++++
->>> drivers/kvm/Makefile         |  1 +
->>> drivers/kvm/sys-hypervisor.c | 30 ++++++++++++++++++++++++++++++
->>> 5 files changed, 49 insertions(+)
->>> create mode 100644 drivers/kvm/Kconfig
->>> create mode 100644 drivers/kvm/Makefile
->>> create mode 100644 drivers/kvm/sys-hypervisor.c
->>>
->> [...]
->>
->>> +
->>> +__weak const char *kvm_para_get_uuid(void)
->>> +{
->>> +	return NULL;
->>> +}
->>> +
->>> +static ssize_t uuid_show(struct kobject *obj,
->>> +			 struct kobj_attribute *attr,
->>> +			 char *buf)
->>> +{
->>> +	const char *uuid = kvm_para_get_uuid();
->>> +	return sprintf(buf, "%s\n", uuid);
->> The usual return value for the Xen /sys/hypervisor interface is
->> "<denied>". Wouldn't it make sense to follow that pattern for the KVM
->> one too? Currently, if we can not determine the UUID this will just
->> return (null).
->>
->> Otherwise, looks good to me. Are you aware of any other files we should
->> provide? Also, is there any reason not to implement ARM as well while at it?
->>
->> Alex
-> This originated from a customer request that was using /sys/hypervisor/uuid.
-> My guess is that we would want to expose "type" and "version" moving
-> forward and that's when we hypervisor hooks will be useful on top
-> of arch hooks.
->
-> On a different note, any idea how to check whether the OS is running
-> virtualized on KVM on ARM and ARM64?  kvm_para_available() isn't an
+Hi Andrew,
 
+> 
+> On Fri, 31 May 2019, at 15:42, Alexander Filippov wrote:
+> > VESNIN is an OpenPower machine with an Aspeed 2400 BMC SoC manufactured
+> > by YADRO.
+> > 
+> > Signed-off-by: Alexander Filippov <a.filippov@yadro.com>
+> > ---
+> >  arch/arm/boot/dts/Makefile                  |   1 +
+> >  arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts | 234 ++++++++++++++++++++
+> >  2 files changed, 235 insertions(+)
+> >  create mode 100644 arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
+> > 
+> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> > index 834cce80d1b8..09a851a4705c 100644
+> > --- a/arch/arm/boot/dts/Makefile
+> > +++ b/arch/arm/boot/dts/Makefile
+> > @@ -1261,6 +1261,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
+> >  	aspeed-bmc-opp-palmetto.dtb \
+> >  	aspeed-bmc-opp-romulus.dtb \
+> >  	aspeed-bmc-opp-swift.dtb \
+> > +	aspeed-bmc-opp-vesnin.dtb \
+> 
+> The patch doesn't apply to upstream - the Swift machine only exists in the
+> OpenBMC kernel tree. Please rebase the patch onto upstream and resend.
 
-Yeah, ARM doesn't have any KVM PV FWIW. I also can't find any explicit 
-hint passed into guests that we are indeed running in KVM. The closest 
-thing I can see is the SMBIOS product identifier in QEMU which gets 
-patched to "KVM Virtual Machine". Maybe we'll have to do with that for 
-the sake of backwards compatibility ...
+Done.
 
+> 
+> >  	aspeed-bmc-opp-witherspoon.dtb \
+> >  	aspeed-bmc-opp-zaius.dtb \
+> >  	aspeed-bmc-portwell-neptune.dtb \
+> > diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts 
+> > b/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
+> > new file mode 100644
+> > index 000000000000..20f07f5bb4f4
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
+> > @@ -0,0 +1,234 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +// Copyright 2019 YADRO
+> > +/dts-v1/;
+> > +
+> > +#include "aspeed-g4.dtsi"
+> > +#include <dt-bindings/gpio/aspeed-gpio.h>
+> > +
+> > +/ {
+> > +	model = "Vesnin BMC";
+> > +	compatible = "yadro,vesnin-bmc", "aspeed,ast2400";
+> > +
+> > +	chosen {
+> > +		stdout-path = &uart5;
+> > +		bootargs = "console=ttyS4,115200 earlyprintk";
+> > +	};
+> > +
+> > +	memory {
+> > +		reg = <0x40000000 0x20000000>;
+> > +	};
+> > +
+> > +	reserved-memory {
+> > +		#address-cells = <1>;
+> > +		#size-cells = <1>;
+> > +		ranges;
+> > +
+> > +		vga_memory: framebuffer@5f000000 {
+> > +			no-map;
+> > +			reg = <0x5f000000 0x01000000>; /* 16MB */
+> > +		};
+> > +		flash_memory: region@5c000000 {
+> > +			no-map;
+> > +			reg = <0x5c000000 0x02000000>; /* 32M */
+> > +		};
+> > +	};
+> > +
+> > +	leds {
+> > +		compatible = "gpio-leds";
+> > +
+> > +		heartbeat {
+> > +			gpios = <&gpio ASPEED_GPIO(R, 4) GPIO_ACTIVE_LOW>;
+> > +		};
+> > +		power_red {
+> > +			gpios = <&gpio ASPEED_GPIO(N, 1) GPIO_ACTIVE_LOW>;
+> > +		};
+> > +
+> > +		id_blue {
+> > +			gpios = <&gpio ASPEED_GPIO(O, 0) GPIO_ACTIVE_LOW>;
+> > +		};
+> > +
+> > +		alarm_red {
+> > +			gpios = <&gpio ASPEED_GPIO(N, 6) GPIO_ACTIVE_LOW>;
+> > +		};
+> > +
+> > +		alarm_yel {
+> > +			gpios = <&gpio ASPEED_GPIO(N, 7) GPIO_ACTIVE_HIGH>;
+> > +		};
+> > +	};
+> > +
+> > +	gpio-keys {
+> > +		compatible = "gpio-keys";
+> > +
+> > +		button_checkstop {
+> > +			label = "checkstop";
+> > +			linux,code = <74>;
+> > +			gpios = <&gpio ASPEED_GPIO(P, 5) GPIO_ACTIVE_LOW>;
+> > +		};
+> > +
+> > +		button_identify {
+> > +			label = "identify";
+> > +			linux,code = <152>;
+> > +			gpios = <&gpio ASPEED_GPIO(O, 7) GPIO_ACTIVE_LOW>;
+> > +		};
+> > +	};
+> > +};
+> > +
+> > +&fmc {
+> > +	status = "okay";
+> > +	flash@0 {
+> > +		status = "okay";
+> > +		m25p,fast-read;
+> > +        label = "bmc";
+> > +#include "openbmc-flash-layout.dtsi"
+> > +	};
+> > +};
+> > +
+> > +&spi {
+> > +	status = "okay";
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_spi1debug_default>;
+> 
+> Is this how the board is strapped? I'm asking in case it's just copy/paste
+> from Palmetto, which was (unfortunately) strapped this way.
 
-> option and the same is true for S390 where kvm_para_available()
-> always returns true and it would even if a KVM enabled kernel would
-> be running on bare metal.
+Yes, the board is strapped in such manner.
+I guess it was brought from barreleye which was a prototype for vesnin.
 
+Setting this pin to &pinctrl_spi1_default leads to warning:
+  kernel: aspeed-smc 1e630000.spi: Error applying setting, reverse things back
 
-For s390, you can figure the topology out using the sthyi instruction. 
-I'm not sure if there is a nice in-kernel API to leverage that though. 
-In fact, kvm_para_available() probably should check sthyi output to 
-determine whether we really can use it, no? Christian?
+> 
+> > +
+> > +	flash@0 {
+> > +		status = "okay";
+> > +		label = "pnor";
+> > +		m25p,fast-read;
+> > +	};
+> > +};
+> > +
+> > +&mac0 {
+> > +	status = "okay";
+> > +
+> > +	use-ncsi;
+> > +	no-hw-checksum;
+> > +
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_rmii1_default>;
+> > +};
+> > +
+> > +
+> > +&uart5 {
+> > +	status = "okay";
+> > +};
+> > +
+> > +&lpc_ctrl {
+> > +	status = "okay";
+> > +	memory-region = <&flash_memory>;
+> > +	flash = <&spi>;
+> > +};
+> > +
+> > +&ibt {
+> > +	status = "okay";
+> > +};
+> > +
+> > +&lpc_host {
+> > +    sio_regs: regs {
+> > +        compatible = "aspeed,bmc-misc";
+> 
+> The patches for this are not upstream, and won't make it in their current
+> form. Please drop this node from the patch.
+> 
 
+Done.
 
-Alex
+> > +    };
+> > +};
+> > +
+> > +&mbox {
+> > +	status = "okay";
+> 
+> This driver is not upstream either, and we plan on dropping it from the
+> OpenBMC tree too. Please remove this node from the patch.
 
+Done.
 
->
-> I think we will need another arch hook to call a function that says
-> whether the OS is running virtualized on KVM.
->
->>> +}
->>> +
->>> +static struct kobj_attribute uuid = __ATTR_RO(uuid);
->>> +
->>> +static int __init uuid_init(void)
->>> +{
->>> +	if (!kvm_para_available())
->>> +		return 0;
->>> +	return sysfs_create_file(hypervisor_kobj, &uuid.attr);
->>> +}
->>> +
->>> +device_initcall(uuid_init);
+> 
+> Cheers,
+> 
+> Andrew
+> 
+> > +};
+> > +
+> > +&uart3 {
+> > +	status = "okay";
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_txd2_default &pinctrl_rxd2_default>;
+> > +};
+> > +
+> > +&i2c0 {
+> > +	status = "okay";
+> > +
+> > +	eeprom@50 {
+> > +		compatible = "atmel,24c256";
+> > +		reg = <0x50>;
+> > +		pagesize = <64>;
+> > +	};
+> > +};
+> > +
+> > +&i2c1 {
+> > +	status = "okay";
+> > +
+> > +	tmp75@49 {
+> > +		compatible = "ti,tmp75";
+> > +		reg = <0x49>;
+> > +	};
+> > +};
+> > +
+> > +&i2c2 {
+> > +	status = "okay";
+> > +};
+> > +
+> > +&i2c3 {
+> > +	status = "okay";
+> > +};
+> > +
+> > +&i2c4 {
+> > +	status = "okay";
+> > +
+> > +	occ-hwmon@50 {
+> > +		compatible = "ibm,p8-occ-hwmon";
+> > +		reg = <0x50>;
+> > +	};
+> > +};
+> > +
+> > +&i2c5 {
+> > +	status = "okay";
+> > +
+> > +	occ-hwmon@51 {
+> > +		compatible = "ibm,p8-occ-hwmon";
+> > +		reg = <0x51>;
+> > +	};
+> > +};
+> > +
+> > +&i2c6 {
+> > +	status = "okay";
+> > +
+> > +	w83795g@2f {
+> > +		compatible = "nuvoton,w83795g";
+> > +		reg = <0x2f>;
+> > +	};
+> > +};
+> > +
+> > +&i2c7 {
+> > +	status = "okay";
+> > +
+> > +	occ-hwmon@56 {
+> > +		compatible = "ibm,p8-occ-hwmon";
+> > +		reg = <0x56>;
+> > +	};
+> > +};
+> > +
+> > +&i2c9 {
+> > +	status = "okay";
+> > +};
+> > +
+> > +&i2c10 {
+> > +	status = "okay";
+> > +};
+> > +
+> > +&i2c11 {
+> > +	status = "okay";
+> > +
+> > +	occ-hwmon@57 {
+> > +		compatible = "ibm,p8-occ-hwmon";
+> > +		reg = <0x57>;
+> > +	};
+> > +};
+> > +
+> > +&i2c12 {
+> > +	status = "okay";
+> > +
+> > +	rtc@68 {
+> > +		compatible = "maxim,ds3231";
+> > +		reg = <0x68>;
+> > +	};
+> > +};
+> > +
+> > +&i2c13 {
+> > +	status = "okay";
+> > +};
+> > +
+> > +&vuart {
+> > +	status = "okay";
+> > +};
+> > -- 
+> > 2.20.1
+> > 
+> >
