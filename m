@@ -2,374 +2,157 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A9FDC46470
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8582BC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 650E926AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:35:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5894D21670
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:37:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FJSBML7v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbfEaOfu (ORCPT
+        id S1726658AbfEaOh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 10:35:50 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42340 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbfEaOfu (ORCPT
+        Fri, 31 May 2019 10:37:56 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:59768 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbfEaOh4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 10:35:50 -0400
-Received: by mail-wr1-f65.google.com with SMTP id l2so6679905wrb.9
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 07:35:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zpYdOZQYJjx2RGRv+QzRgK0D+4PdqDlz+L4dxBHjF0Y=;
-        b=RdtDx3SjOgyagNyERH5vL+v0qSUavijgth9xoLSOga8iNQxVXbeX4T8Rp8vfYstBa2
-         LmvxNIDmz01nunLafr7NElkbwQyKXZcNQuPeAPu57RXH/jQwpz/BcoqoDlQKaQ2e1akV
-         lFpflKU+Xe7pnXUNh+UZB/qKwnGyXwBOsG9xDmS4dihdE+rCQ1MQe9VjKAqxT1tqwO7n
-         Y5kVlapMycTIboWWdnge5nuRuHLOQtXvgN9uGW9jOYUXkygo1riOf791xjCtU8pVRufg
-         8bTSvkS0TAzWtDbqAV+c0Yk1WVAdCr7HyDdiwZ4mA68+BKpazaqISjyk2yYuDGxeLG8W
-         S4Gw==
-X-Gm-Message-State: APjAAAUYWxn62o1LJ7/3K04EralSamtHhzgaaiyTjkKTlxi6HEqCmwPG
-        xsZQxgcnYloGzlPDD7RxgVTSMA==
-X-Google-Smtp-Source: APXvYqyYxA1f0O8QDJdCWzXpTmGREOKGjJG0yza9e84WRp11d75K1jo6aXZCj0Id9Xo5x72tF3PgPw==
-X-Received: by 2002:a5d:45c4:: with SMTP id b4mr7125690wrs.291.1559313347765;
-        Fri, 31 May 2019 07:35:47 -0700 (PDT)
-Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id s9sm5649892wmc.1.2019.05.31.07.35.46
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 31 May 2019 07:35:46 -0700 (PDT)
-Date:   Fri, 31 May 2019 16:35:45 +0200
-From:   Oleksandr Natalenko <oleksandr@redhat.com>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, jannh@google.com,
-        oleg@redhat.com, christian@brauner.io, hdanton@sina.com
-Subject: Re: [RFCv2 4/6] mm: factor out madvise's core functionality
-Message-ID: <20190531143545.jwmgzaigd4rbw2wy@butterfly.localdomain>
-References: <20190531064313.193437-1-minchan@kernel.org>
- <20190531064313.193437-5-minchan@kernel.org>
- <20190531070420.m7sxybbzzayig44o@butterfly.localdomain>
- <20190531131226.GA195463@google.com>
+        Fri, 31 May 2019 10:37:56 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4VEbplN017657;
+        Fri, 31 May 2019 09:37:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559313471;
+        bh=zZgQ70nXbR7VQXN97IAfQFiWqnaeO/F+zfJEbFVW/qc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=FJSBML7vdqyGPKRY8PjpPy5WX/LhKShKt50DkSD1S88xlTjLxD3tnrAKs8IOHSViI
+         TlVoBHxIhoh92erINraWh7PLohZS1TgJsrssjO1RtUZ92PwZYEg6xFSqm/p1wlcCM1
+         vTgpGXUlYf2GTq9CnI3QAvUx4+GlDdeVRiAvo/fo=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4VEbojt063709
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 31 May 2019 09:37:51 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 31
+ May 2019 09:37:50 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 31 May 2019 09:37:50 -0500
+Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4VEbmh4103596;
+        Fri, 31 May 2019 09:37:49 -0500
+Subject: Re: [PATCH] phy: meson-g12a-usb3-pcie: disable locking for cr_regmap
+To:     Neil Armstrong <narmstrong@baylibre.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-amlogic@lists.infradead.org>
+References: <20190531103137.14901-1-narmstrong@baylibre.com>
+ <4dc22a2e-66ca-0556-3aa3-4ed8887c2b1b@ti.com>
+ <2a354f12-61a8-6b4e-8006-e442245a92ec@baylibre.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <84bdde38-96a5-6ba0-dc81-e157202a4c52@ti.com>
+Date:   Fri, 31 May 2019 20:06:29 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190531131226.GA195463@google.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <2a354f12-61a8-6b4e-8006-e442245a92ec@baylibre.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 10:12:26PM +0900, Minchan Kim wrote:
-> On Fri, May 31, 2019 at 09:04:20AM +0200, Oleksandr Natalenko wrote:
-> > On Fri, May 31, 2019 at 03:43:11PM +0900, Minchan Kim wrote:
-> > > This patch factor out madvise's core functionality so that upcoming
-> > > patch can reuse it without duplication. It shouldn't change any behavior.
-> > > 
-> > > Signed-off-by: Minchan Kim <minchan@kernel.org>
-> > > ---
-> > >  mm/madvise.c | 188 +++++++++++++++++++++++++++------------------------
-> > >  1 file changed, 101 insertions(+), 87 deletions(-)
-> > > 
-> > > diff --git a/mm/madvise.c b/mm/madvise.c
-> > > index 9d749a1420b4..466623ea8c36 100644
-> > > --- a/mm/madvise.c
-> > > +++ b/mm/madvise.c
-> > > @@ -425,9 +425,10 @@ static int madvise_pageout_pte_range(pmd_t *pmd, unsigned long addr,
-> > >  	struct page *page;
-> > >  	int isolated = 0;
-> > >  	struct vm_area_struct *vma = walk->vma;
-> > > +	struct task_struct *task = walk->private;
-> > >  	unsigned long next;
-> > >  
-> > > -	if (fatal_signal_pending(current))
-> > > +	if (fatal_signal_pending(task))
-> > >  		return -EINTR;
-> > >  
-> > >  	next = pmd_addr_end(addr, end);
-> > > @@ -505,12 +506,14 @@ static int madvise_pageout_pte_range(pmd_t *pmd, unsigned long addr,
-> > >  }
-> > >  
-> > >  static void madvise_pageout_page_range(struct mmu_gather *tlb,
-> > > -			     struct vm_area_struct *vma,
-> > > -			     unsigned long addr, unsigned long end)
-> > > +				struct task_struct *task,
-> > > +				struct vm_area_struct *vma,
-> > > +				unsigned long addr, unsigned long end)
-> > >  {
-> > >  	struct mm_walk warm_walk = {
-> > >  		.pmd_entry = madvise_pageout_pte_range,
-> > >  		.mm = vma->vm_mm,
-> > > +		.private = task,
-> > >  	};
-> > >  
-> > >  	tlb_start_vma(tlb, vma);
-> > > @@ -519,9 +522,9 @@ static void madvise_pageout_page_range(struct mmu_gather *tlb,
-> > >  }
-> > >  
-> > >  
-> > > -static long madvise_pageout(struct vm_area_struct *vma,
-> > > -			struct vm_area_struct **prev,
-> > > -			unsigned long start_addr, unsigned long end_addr)
-> > > +static long madvise_pageout(struct task_struct *task,
-> > > +		struct vm_area_struct *vma, struct vm_area_struct **prev,
-> > > +		unsigned long start_addr, unsigned long end_addr)
-> > >  {
-> > >  	struct mm_struct *mm = vma->vm_mm;
-> > >  	struct mmu_gather tlb;
-> > > @@ -532,7 +535,7 @@ static long madvise_pageout(struct vm_area_struct *vma,
-> > >  
-> > >  	lru_add_drain();
-> > >  	tlb_gather_mmu(&tlb, mm, start_addr, end_addr);
-> > > -	madvise_pageout_page_range(&tlb, vma, start_addr, end_addr);
-> > > +	madvise_pageout_page_range(&tlb, task, vma, start_addr, end_addr);
-> > >  	tlb_finish_mmu(&tlb, start_addr, end_addr);
-> > >  
-> > >  	return 0;
-> > > @@ -744,7 +747,8 @@ static long madvise_dontneed_single_vma(struct vm_area_struct *vma,
-> > >  	return 0;
-> > >  }
-> > >  
-> > > -static long madvise_dontneed_free(struct vm_area_struct *vma,
-> > > +static long madvise_dontneed_free(struct mm_struct *mm,
-> > > +				  struct vm_area_struct *vma,
-> > >  				  struct vm_area_struct **prev,
-> > >  				  unsigned long start, unsigned long end,
-> > >  				  int behavior)
-> > > @@ -756,8 +760,8 @@ static long madvise_dontneed_free(struct vm_area_struct *vma,
-> > >  	if (!userfaultfd_remove(vma, start, end)) {
-> > >  		*prev = NULL; /* mmap_sem has been dropped, prev is stale */
-> > >  
-> > > -		down_read(&current->mm->mmap_sem);
-> > > -		vma = find_vma(current->mm, start);
-> > > +		down_read(&mm->mmap_sem);
-> > > +		vma = find_vma(mm, start);
-> > >  		if (!vma)
-> > >  			return -ENOMEM;
-> > >  		if (start < vma->vm_start) {
-> > > @@ -804,7 +808,8 @@ static long madvise_dontneed_free(struct vm_area_struct *vma,
-> > >   * Application wants to free up the pages and associated backing store.
-> > >   * This is effectively punching a hole into the middle of a file.
-> > >   */
-> > > -static long madvise_remove(struct vm_area_struct *vma,
-> > > +static long madvise_remove(struct mm_struct *mm,
-> > > +				struct vm_area_struct *vma,
-> > >  				struct vm_area_struct **prev,
-> > >  				unsigned long start, unsigned long end)
-> > >  {
-> > > @@ -838,13 +843,13 @@ static long madvise_remove(struct vm_area_struct *vma,
-> > >  	get_file(f);
-> > >  	if (userfaultfd_remove(vma, start, end)) {
-> > >  		/* mmap_sem was not released by userfaultfd_remove() */
-> > > -		up_read(&current->mm->mmap_sem);
-> > > +		up_read(&mm->mmap_sem);
-> > >  	}
-> > >  	error = vfs_fallocate(f,
-> > >  				FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE,
-> > >  				offset, end - start);
-> > >  	fput(f);
-> > > -	down_read(&current->mm->mmap_sem);
-> > > +	down_read(&mm->mmap_sem);
-> > >  	return error;
-> > >  }
-> > >  
-> > > @@ -918,21 +923,23 @@ static int madvise_inject_error(int behavior,
-> > >  #endif
-> > >  
-> > >  static long
-> > > -madvise_vma(struct vm_area_struct *vma, struct vm_area_struct **prev,
-> > > +madvise_vma(struct task_struct *task, struct mm_struct *mm,
-> > > +		struct vm_area_struct *vma, struct vm_area_struct **prev,
-> > >  		unsigned long start, unsigned long end, int behavior)
-> > >  {
-> > >  	switch (behavior) {
-> > >  	case MADV_REMOVE:
-> > > -		return madvise_remove(vma, prev, start, end);
-> > > +		return madvise_remove(mm, vma, prev, start, end);
-> > >  	case MADV_WILLNEED:
-> > >  		return madvise_willneed(vma, prev, start, end);
-> > >  	case MADV_COLD:
-> > >  		return madvise_cold(vma, prev, start, end);
-> > >  	case MADV_PAGEOUT:
-> > > -		return madvise_pageout(vma, prev, start, end);
-> > > +		return madvise_pageout(task, vma, prev, start, end);
-> > >  	case MADV_FREE:
-> > >  	case MADV_DONTNEED:
-> > > -		return madvise_dontneed_free(vma, prev, start, end, behavior);
-> > > +		return madvise_dontneed_free(mm, vma, prev, start,
-> > > +						end, behavior);
-> > >  	default:
-> > >  		return madvise_behavior(vma, prev, start, end, behavior);
-> > >  	}
-> > > @@ -976,68 +983,8 @@ madvise_behavior_valid(int behavior)
-> > >  	}
-> > >  }
-> > >  
-> > > -/*
-> > > - * The madvise(2) system call.
-> > > - *
-> > > - * Applications can use madvise() to advise the kernel how it should
-> > > - * handle paging I/O in this VM area.  The idea is to help the kernel
-> > > - * use appropriate read-ahead and caching techniques.  The information
-> > > - * provided is advisory only, and can be safely disregarded by the
-> > > - * kernel without affecting the correct operation of the application.
-> > > - *
-> > > - * behavior values:
-> > > - *  MADV_NORMAL - the default behavior is to read clusters.  This
-> > > - *		results in some read-ahead and read-behind.
-> > > - *  MADV_RANDOM - the system should read the minimum amount of data
-> > > - *		on any access, since it is unlikely that the appli-
-> > > - *		cation will need more than what it asks for.
-> > > - *  MADV_SEQUENTIAL - pages in the given range will probably be accessed
-> > > - *		once, so they can be aggressively read ahead, and
-> > > - *		can be freed soon after they are accessed.
-> > > - *  MADV_WILLNEED - the application is notifying the system to read
-> > > - *		some pages ahead.
-> > > - *  MADV_DONTNEED - the application is finished with the given range,
-> > > - *		so the kernel can free resources associated with it.
-> > > - *  MADV_FREE - the application marks pages in the given range as lazy free,
-> > > - *		where actual purges are postponed until memory pressure happens.
-> > > - *  MADV_REMOVE - the application wants to free up the given range of
-> > > - *		pages and associated backing store.
-> > > - *  MADV_DONTFORK - omit this area from child's address space when forking:
-> > > - *		typically, to avoid COWing pages pinned by get_user_pages().
-> > > - *  MADV_DOFORK - cancel MADV_DONTFORK: no longer omit this area when forking.
-> > > - *  MADV_WIPEONFORK - present the child process with zero-filled memory in this
-> > > - *              range after a fork.
-> > > - *  MADV_KEEPONFORK - undo the effect of MADV_WIPEONFORK
-> > > - *  MADV_HWPOISON - trigger memory error handler as if the given memory range
-> > > - *		were corrupted by unrecoverable hardware memory failure.
-> > > - *  MADV_SOFT_OFFLINE - try to soft-offline the given range of memory.
-> > > - *  MADV_MERGEABLE - the application recommends that KSM try to merge pages in
-> > > - *		this area with pages of identical content from other such areas.
-> > > - *  MADV_UNMERGEABLE- cancel MADV_MERGEABLE: no longer merge pages with others.
-> > > - *  MADV_HUGEPAGE - the application wants to back the given range by transparent
-> > > - *		huge pages in the future. Existing pages might be coalesced and
-> > > - *		new pages might be allocated as THP.
-> > > - *  MADV_NOHUGEPAGE - mark the given range as not worth being backed by
-> > > - *		transparent huge pages so the existing pages will not be
-> > > - *		coalesced into THP and new pages will not be allocated as THP.
-> > > - *  MADV_DONTDUMP - the application wants to prevent pages in the given range
-> > > - *		from being included in its core dump.
-> > > - *  MADV_DODUMP - cancel MADV_DONTDUMP: no longer exclude from core dump.
-> > > - *
-> > > - * return values:
-> > > - *  zero    - success
-> > > - *  -EINVAL - start + len < 0, start is not page-aligned,
-> > > - *		"behavior" is not a valid value, or application
-> > > - *		is attempting to release locked or shared pages,
-> > > - *		or the specified address range includes file, Huge TLB,
-> > > - *		MAP_SHARED or VMPFNMAP range.
-> > > - *  -ENOMEM - addresses in the specified range are not currently
-> > > - *		mapped, or are outside the AS of the process.
-> > > - *  -EIO    - an I/O error occurred while paging in data.
-> > > - *  -EBADF  - map exists, but area maps something that isn't a file.
-> > > - *  -EAGAIN - a kernel resource was temporarily unavailable.
-> > > - */
-> > > -SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
-> > > +static int madvise_core(struct task_struct *task, struct mm_struct *mm,
-> > > +			unsigned long start, size_t len_in, int behavior)
-> > 
-> > Just a minor nitpick, but can we please have it named madvise_common,
-> > not madvise_core? This would follow a usual naming scheme, when some
-> > common functionality is factored out (like, for mutexes, semaphores
-> > etc), and within the kernel "core" usually means something completely
-> > different.
-> 
-> Sure.
-> 
-> > 
-> > >  {
-> > >  	unsigned long end, tmp;
-> > >  	struct vm_area_struct *vma, *prev;
-> > > @@ -1068,15 +1015,16 @@ SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
-> > >  
-> > >  #ifdef CONFIG_MEMORY_FAILURE
-> > >  	if (behavior == MADV_HWPOISON || behavior == MADV_SOFT_OFFLINE)
-> > > -		return madvise_inject_error(behavior, start, start + len_in);
-> > > +		return madvise_inject_error(behavior,
-> > > +					start, start + len_in);
-> > 
-> > Not sure what this change is about except changing the line length.
-> > Note, madvise_inject_error() still operates on "current" through
-> > get_user_pages_fast() and gup_pgd_range(), but that was not changed
-> > here. I Know you've filtered out this hint later, so technically this
-> > is not an issue, but, maybe, this needs some attention too since we've
-> > already spotted it?
-> 
-> It is leftover I had done. I actually modified it to handle remote
-> task but changed my mind not to fix it because process_madvise
-> will not support it at this moment. I'm not sure it's a good idea
-> to change it for *might-be-done-in-future* at this moment even though
-> we have spotted.
 
-I'd expect to have at least some comments in code on why other hints
-are disabled, so if we already know some shortcomings, this information
-would not be lost.
 
-Of course, I don't care much about memory poisoning, but if it can be
-addressed now, let's address it now.
+On 31/05/19 7:52 PM, Neil Armstrong wrote:
+> On 31/05/2019 12:35, Kishon Vijay Abraham I wrote:
+>> Hi,
+>>
+>> On 31/05/19 4:01 PM, Neil Armstrong wrote:
+>>> Fix the following BUG by disabling locking for the cr_regmap config.
+>>
+>> What caused the BUG in the first place? The commit log needs more details or
+>> else this looks like a workaround to mask a BUG.
+> 
+> I thought it was pretty explicit, phy_g12a_usb3_pcie_cr_bus_read() sleeps
+> with regmap_read_poll_timeout() while ran in spinlock_irq, caused by regmap fast_io = true
+> 
+> Locking is not needed in our case, this regmap is only used by the PHY init() callback.
+> 
+> Should I send a v2 with such explanation ?
+
+yes, should atleast mention locking is not needed here.
+
+-Kishon
 
 > 
-> > 
-> > >  #endif
-> > >  
-> > >  	write = madvise_need_mmap_write(behavior);
-> > >  	if (write) {
-> > > -		if (down_write_killable(&current->mm->mmap_sem))
-> > > +		if (down_write_killable(&mm->mmap_sem))
-> > >  			return -EINTR;
-> > 
-> > Do you still need that trick with mmget_still_valid() here?
-> > Something like:
+> Neil
 > 
-> Since MADV_COLD|PAGEOUT doesn't change address space layout or
-> vma->vm_flags, technically, we don't need it if I understand
-> correctly. Right?
-
-I'd expect so, yes. But.
-
-Since we want this interface to be universal and to be able to cover
-various needs, and since my initial intention with working in this
-direction involved KSM, I'd ask you to enable KSM hints too, and once
-(and if) that happens, the work there is done under write lock, and
-you'll need this trick to be applied.
-
-Of course, I can do that myself later in a subsequent patch series once
-(and, again, if) your series is merged, but, maybe, we can cover this
-already especially given the fact that KSM hinting is a relatively easy
-task in this pile. I did some preliminary tests with it, and so far no
-dragons have started to roar.
-
+>>
+>> Thanks
+>> Kishon
+>>
+>>>
+>>> BUG: sleeping function called from invalid context at drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c:85
+>>> in_atomic(): 1, irqs_disabled(): 128, pid: 60, name: kworker/3:1
+>>> [snip]
+>>> Workqueue: events deferred_probe_work_func
+>>> Call trace:
+>>>  dump_backtrace+0x0/0x190
+>>>  show_stack+0x14/0x20
+>>>  dump_stack+0x90/0xb4
+>>>  ___might_sleep+0xec/0x110
+>>>  __might_sleep+0x50/0x88
+>>>  phy_g12a_usb3_pcie_cr_bus_addr.isra.0+0x80/0x1a8
+>>>  phy_g12a_usb3_pcie_cr_bus_read+0x34/0x1d8
+>>>  _regmap_read+0x60/0xe0
+>>>  _regmap_update_bits+0xc4/0x110
+>>>  regmap_update_bits_base+0x60/0x90
+>>>  phy_g12a_usb3_pcie_init+0xdc/0x210
+>>>  phy_init+0x74/0xd0
+>>>  dwc3_meson_g12a_probe+0x2cc/0x4d0
+>>>  platform_drv_probe+0x50/0xa0
+>>>  really_probe+0x20c/0x3b8
+>>>  driver_probe_device+0x68/0x150
+>>>  __device_attach_driver+0xa8/0x170
+>>>  bus_for_each_drv+0x64/0xc8
+>>>  __device_attach+0xd8/0x158
+>>>  device_initial_probe+0x10/0x18
+>>>  bus_probe_device+0x90/0x98
+>>>  deferred_probe_work_func+0x94/0xe8
+>>>  process_one_work+0x1e0/0x338
+>>>  worker_thread+0x230/0x458
+>>>  kthread+0x134/0x138
+>>>  ret_from_fork+0x10/0x1c
+>>>
+>>> Fixes: 36077e16c050 ("phy: amlogic: Add Amlogic G12A USB3 + PCIE Combo PHY Driver")
+>>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>>> ---
+>>>  drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c b/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c
+>>> index 6233a7979a93..ac322d643c7a 100644
+>>> --- a/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c
+>>> +++ b/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c
+>>> @@ -188,7 +188,7 @@ static const struct regmap_config phy_g12a_usb3_pcie_cr_regmap_conf = {
+>>>  	.reg_read = phy_g12a_usb3_pcie_cr_bus_read,
+>>>  	.reg_write = phy_g12a_usb3_pcie_cr_bus_write,
+>>>  	.max_register = 0xffff,
+>>> -	.fast_io = true,
+>>> +	.disable_locking = true,
+>>>  };
+>>>  
+>>>  static int phy_g12a_usb3_init(struct phy *phy)
+>>>
 > 
-> > 
-> > if (current->mm != mm && !mmget_still_valid(mm))
-> >    goto skip_mm;
-> > 
-> > and that skip_mm label would be before
-> > 
-> > if (write)
-> >    up_write(&mm->mmap_sem);
-> > 
-> > below.
-> > 
-> > (see 04f5866e41fb70690e28397487d8bd8eea7d712a for details on this)
-
--- 
-  Best regards,
-    Oleksandr Natalenko (post-factum)
-    Senior Software Maintenance Engineer
