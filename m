@@ -2,159 +2,159 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F33C28CC2
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E64C04AB6
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 01:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9B0C2708F
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 274C226CAF
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 01:14:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fFR8Yoea"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Afsfgv0m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbfFAAbZ (ORCPT
+        id S1727015AbfFABOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 20:31:25 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:46350 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726748AbfFAAbZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 20:31:25 -0400
-Received: by mail-ua1-f65.google.com with SMTP id a95so4479225uaa.13
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 17:31:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4Kd7/+kr4jxVkBeK6chb/uAQy3afbVih/qTqLzH6YXg=;
-        b=fFR8Yoeaj7rQIWQWlq5wNouI2OAxcAVIV3ViDHmGepDRlaAgLcyqpr8Iz7xvqv9yY5
-         KJmkoV7EiKoPljy47wPqBEY60yV3btg78qOiRyIpUHSX0g63rNFdXWGeuMwWQMMpOOh2
-         a4i5ZjgFDQtwHDCayYIL8rsqq5gfw9tPM6UkI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4Kd7/+kr4jxVkBeK6chb/uAQy3afbVih/qTqLzH6YXg=;
-        b=H2mRod2myLs+LWPHsQKgXmfC8NvMlXKDMbA26PIzX4sgGsoCHeyNo4yuqHkuYUoxCj
-         QUToZsplgeddJqmOgsqcUkO5vxrKvVBjO53/pr3h98mwVpFjCx4i2ya6LE8WJ+Chot0B
-         MTZmIRRTa5IQ1aHLG/YdmIlPXDDcV2tmv2jizFTVhvNHiqTIg1ZRFqgYz42xmxArO7Nb
-         UkSFML21XuzAiGKeWYYNgt07IUjJc0F4Vv+8cUY/xSBprDCoW/+AMSmI9JcPGsETk3th
-         F9DOGP0TfYPkly9UJhHSJqt2EDUgL5Ppw+TPT5Ne5rVhevaAjtccdgpQ/GqhgJBb915r
-         Zetg==
-X-Gm-Message-State: APjAAAUVSXCvUY1iUBF6EZXQ72C13YJ8y6n+A/mo7ratzxWIBJweLxZS
-        wUMkyuSmM6ePvTzyOjFOIVdGYbQh/9I=
-X-Google-Smtp-Source: APXvYqyyv9TAoEyO+7ZVWry+PL1bztSf5+cx607W2fLfy5OqGYigPZX3aExrPw5K69NIyGpPC/w/Zg==
-X-Received: by 2002:ab0:4d67:: with SMTP id k39mr6956463uag.59.1559349084129;
-        Fri, 31 May 2019 17:31:24 -0700 (PDT)
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
-        by smtp.gmail.com with ESMTPSA id c3sm1066672vso.2.2019.05.31.17.31.22
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 31 May 2019 17:31:22 -0700 (PDT)
-Received: by mail-ua1-f45.google.com with SMTP id l3so4375899uad.4
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 17:31:22 -0700 (PDT)
-X-Received: by 2002:ab0:670c:: with SMTP id q12mr6641706uam.106.1559349081772;
- Fri, 31 May 2019 17:31:21 -0700 (PDT)
+        Fri, 31 May 2019 21:14:19 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:33931 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726901AbfFABOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 21:14:18 -0400
+Received: from [IPv6:2607:fb90:3627:8679:c06a:8bb1:5a73:12ff] ([IPv6:2607:fb90:3627:8679:c06a:8bb1:5a73:12ff])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x511DX2t3668045
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Fri, 31 May 2019 18:13:34 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com x511DX2t3668045
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019051801; t=1559351616;
+        bh=CuGVe8YH5AlNt8m91Od8n8Cr+8ORd3+2zjg1HKvHIqA=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=Afsfgv0m4+6nQxKJuvaCREopIJhg9RquRuWXyShM9f4gSzVKBGcGZjyzmgEfgFlj0
+         mcUniwOsDbu16hpWSYQUE1wK1C58Mh/WrErLuP5lijCcS5KLiY/22+XUHVQH+PJgch
+         VoA+Le5ADa09H73d4upQ2g41TzL8LBvO0bPI2T/wE0exTFdyxnMVoe8ihAAvJj/72X
+         klPaRjEsJ2LR5SsmHXzLqqfm3kx3F1N+7awmYfLl0FvbrypOXDvP+mPx5sVFdlFEn7
+         pSE5cWaKyAOabuY+3m0gKKaWSBp6W1hTGm3c82BukTCNJl+4snoq0aPDBsF8sguVM9
+         ZUnpB7cZS/vkA==
+Date:   Fri, 31 May 2019 16:41:46 -0700
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CANpmjNOsPnVd50cTzUW8UYXPGqpSnRLcjj=JbZraTYVq1n18Fw@mail.gmail.com>
+References: <20190529141500.193390-1-elver@google.com> <20190529141500.193390-3-elver@google.com> <EE911EC6-344B-4EB2-90A4-B11E8D96BEDC@zytor.com> <CANpmjNOsPnVd50cTzUW8UYXPGqpSnRLcjj=JbZraTYVq1n18Fw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190531030057.18328-1-bjorn.andersson@linaro.org>
- <20190531030057.18328-3-bjorn.andersson@linaro.org> <CAD=FV=V=_ozPiTvT-Fnrc1a+qfHYi3ynNn8cbw9ibqfKk7Am_w@mail.gmail.com>
- <20190601000917.GE25597@minitux>
-In-Reply-To: <20190601000917.GE25597@minitux>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 31 May 2019 17:31:14 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VDtMgEeFsG9NxzsY1tEcCOTDShMe50J=5wNWQ095uejw@mail.gmail.com>
-Message-ID: <CAD=FV=VDtMgEeFsG9NxzsY1tEcCOTDShMe50J=5wNWQ095uejw@mail.gmail.com>
-Subject: Re: [PATCH v8 2/4] soc: qcom: Add AOSS QMP driver
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 2/3] x86: Move CPU feature test out of uaccess region
+To:     Marco Elver <elver@google.com>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Arun Kumar Neelakantam <aneela@codeaurora.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>
+From:   hpa@zytor.com
+Message-ID: <3B49EF08-147F-451C-AA5B-FC4E1B8568EE@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Fri, May 31, 2019 at 5:09 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
+On May 31, 2019 2:57:36 AM PDT, Marco Elver <elver@google=2Ecom> wrote:
+>On Wed, 29 May 2019 at 16:29, <hpa@zytor=2Ecom> wrote:
+>>
+>> On May 29, 2019 7:15:00 AM PDT, Marco Elver <elver@google=2Ecom> wrote:
+>> >This patch is a pre-requisite for enabling KASAN bitops
+>> >instrumentation:
+>> >moves boot_cpu_has feature test out of the uaccess region, as
+>> >boot_cpu_has uses test_bit=2E With instrumentation, the KASAN check
+>would
+>> >otherwise be flagged by objtool=2E
+>> >
+>> >This approach is preferred over adding the explicit kasan_check_*
+>> >functions to the uaccess whitelist of objtool, as the case here
+>appears
+>> >to be the only one=2E
+>> >
+>> >Signed-off-by: Marco Elver <elver@google=2Ecom>
+>> >---
+>> >v1:
+>> >* This patch replaces patch: 'tools/objtool: add kasan_check_* to
+>> >  uaccess whitelist'
+>> >---
+>> > arch/x86/ia32/ia32_signal=2Ec | 9 ++++++++-
+>> > 1 file changed, 8 insertions(+), 1 deletion(-)
+>> >
+>> >diff --git a/arch/x86/ia32/ia32_signal=2Ec
+>b/arch/x86/ia32/ia32_signal=2Ec
+>> >index 629d1ee05599=2E=2E12264e3c9c43 100644
+>> >--- a/arch/x86/ia32/ia32_signal=2Ec
+>> >+++ b/arch/x86/ia32/ia32_signal=2Ec
+>> >@@ -333,6 +333,7 @@ int ia32_setup_rt_frame(int sig, struct ksignal
+>> >*ksig,
+>> >       void __user *restorer;
+>> >       int err =3D 0;
+>> >       void __user *fpstate =3D NULL;
+>> >+      bool has_xsave;
+>> >
+>> >       /* __copy_to_user optimizes that into a single 8 byte store
+>*/
+>> >       static const struct {
+>> >@@ -352,13 +353,19 @@ int ia32_setup_rt_frame(int sig, struct
+>ksignal
+>> >*ksig,
+>> >       if (!access_ok(frame, sizeof(*frame)))
+>> >               return -EFAULT;
+>> >
+>> >+      /*
+>> >+       * Move non-uaccess accesses out of uaccess region if not
+>strictly
+>> >+       * required; this also helps avoid objtool flagging these
+>accesses
+>> >with
+>> >+       * instrumentation enabled=2E
+>> >+       */
+>> >+      has_xsave =3D boot_cpu_has(X86_FEATURE_XSAVE);
+>> >       put_user_try {
+>> >               put_user_ex(sig, &frame->sig);
+>> >               put_user_ex(ptr_to_compat(&frame->info),
+>&frame->pinfo);
+>> >               put_user_ex(ptr_to_compat(&frame->uc), &frame->puc);
+>> >
+>> >               /* Create the ucontext=2E  */
+>> >-              if (boot_cpu_has(X86_FEATURE_XSAVE))
+>> >+              if (has_xsave)
+>> >                       put_user_ex(UC_FP_XSTATE,
+>&frame->uc=2Euc_flags);
+>> >               else
+>> >                       put_user_ex(0, &frame->uc=2Euc_flags);
+>>
+>> This was meant to use static_cpu_has()=2E Why did that get dropped?
 >
-> On Fri 31 May 15:24 PDT 2019, Doug Anderson wrote:
+>I couldn't find any mailing list thread referring to why this doesn't
+>use static_cpu_has, do you have any background?
 >
-> > Hi,
-> >
-> > On Thu, May 30, 2019 at 8:01 PM Bjorn Andersson
-> > <bjorn.andersson@linaro.org> wrote:
-> > >
-> > > +/**
-> > > + * qmp_send() - send a message to the AOSS
-> > > + * @qmp: qmp context
-> > > + * @data: message to be sent
-> > > + * @len: length of the message
-> > > + *
-> > > + * Transmit @data to AOSS and wait for the AOSS to acknowledge the message.
-> > > + * @len must be a multiple of 4 and not longer than the mailbox size. Access is
-> > > + * synchronized by this implementation.
-> > > + *
-> > > + * Return: 0 on success, negative errno on failure
-> > > + */
-> > > +static int qmp_send(struct qmp *qmp, const void *data, size_t len)
-> > > +{
-> > > +       int ret;
-> > > +
-> > > +       if (WARN_ON(len + sizeof(u32) > qmp->size))
-> > > +               return -EINVAL;
-> > > +
-> > > +       if (WARN_ON(len % sizeof(u32)))
-> > > +               return -EINVAL;
-> > > +
-> > > +       mutex_lock(&qmp->tx_lock);
-> > > +
-> > > +       /* The message RAM only implements 32-bit accesses */
-> > > +       __iowrite32_copy(qmp->msgram + qmp->offset + sizeof(u32),
-> > > +                        data, len / sizeof(u32));
-> > > +       writel(len, qmp->msgram + qmp->offset);
-> > > +       qmp_kick(qmp);
-> > > +
-> > > +       ret = wait_event_interruptible_timeout(qmp->event,
-> > > +                                              qmp_message_empty(qmp), HZ);
-> > > +       if (!ret) {
-> > > +               dev_err(qmp->dev, "ucore did not ack channel\n");
-> > > +               ret = -ETIMEDOUT;
-> > > +
-> > > +               /* Clear message from buffer */
-> > > +               writel(0, qmp->msgram + qmp->offset);
-> > > +       } else {
-> > > +               ret = 0;
-> > > +       }
-> >
-> > Just like Vinod said in in v7, the "ret = 0" is redundant.
-> >
+>static_cpu_has also solves the UACCESS warning=2E
 >
-> If the condition passed to wait_event_interruptible_timeout() evaluates
-> true the remote side has consumed the message and ret will be 1. We end
-> up in the else block (i.e. not timeout) and we want the function to
-> return 0, so we set ret to 0.
+>If you confirm it is safe to change to static_cpu_has(), I will change
+>this patch=2E Note that I should then also change
+>arch/x86/kernel/signal=2Ec to mirror the change for 32bit  (although
+>KASAN is not supported for 32bit x86)=2E
 >
-> Please let me know if I'm reading this wrong.
+>Thanks,
+>-- Marco
 
-Ah, it's me that's confused.  I missed the "!" on ret.  Maybe it'd be
-less confusing if you did:
-
-time_left = wait_event_interruptible_timeout(...)
-if (!time_left)
-
-Even though you _can_ use "ret", it's less confusing to use a
-different variable since (often) ret is an error code.
-
-Speaking of which: do you actually handle the case where you get an
-interrupt?  Should the above just be wait_event_timeout()?
+I believe at some point the intent was that boot_cpu_has() was safer and c=
+ould be used everywhere=2E
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
