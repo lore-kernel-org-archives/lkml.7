@@ -2,125 +2,129 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6EBC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E013C28CC2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EF6226C86
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:53:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="N8Nt/z6r"
+	by mail.kernel.org (Postfix) with ESMTP id 5AAD326C8F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:53:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbfEaQxY (ORCPT
+        id S1727085AbfEaQxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 12:53:24 -0400
-Received: from mail-eopbgr20055.outbound.protection.outlook.com ([40.107.2.55]:59717
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726531AbfEaQxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 12:53:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Jk+CL3jdhs9SpcJK5Lwm3NSvKgj9hpI6fynSFgJuYW4=;
- b=N8Nt/z6r0imTy6YKEDHrR5tpDwZ0tqA8aCJZn9/n1ouF8YOeChlbVo55Kt5MJGIUJ0Eh+BTjgmCfmd2Od0TCDRS59RsO6VjytwgQsleEZZEbmG4TBS6Tj1uwM8Goh7e8mGByPGXtaIAQrQtzpaz0fOV4APkTUdXJkWIhh/DCmmk=
-Received: from VI1PR04MB5134.eurprd04.prod.outlook.com (20.177.50.159) by
- VI1PR04MB5424.eurprd04.prod.outlook.com (20.178.121.78) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.18; Fri, 31 May 2019 16:53:16 +0000
-Received: from VI1PR04MB5134.eurprd04.prod.outlook.com
- ([fe80::8d0e:de86:9b49:b40]) by VI1PR04MB5134.eurprd04.prod.outlook.com
- ([fe80::8d0e:de86:9b49:b40%7]) with mapi id 15.20.1922.024; Fri, 31 May 2019
- 16:53:16 +0000
-From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
-To:     Christoph Hellwig <hch@infradead.org>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Madalin-cristian Bucur <madalin.bucur@nxp.com>,
-        Roy Pledge <roy.pledge@nxp.com>,
-        Camelia Alexandra Groza <camelia.groza@nxp.com>,
-        Leo Li <leoyang.li@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jocke@infinera.com" <joakim.tjernlund@infinera.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH v3 5/6] dpaa_eth: fix iova handling for contiguous frames
-Thread-Topic: [PATCH v3 5/6] dpaa_eth: fix iova handling for contiguous frames
-Thread-Index: AQHVFvLDgVVLsICrz0e/ErKUP7YXHqaFbvqAgAAETAA=
-Date:   Fri, 31 May 2019 16:53:16 +0000
-Message-ID: <VI1PR04MB5134F5E31B993B2DC5275BB3EC190@VI1PR04MB5134.eurprd04.prod.outlook.com>
-References: <20190530141951.6704-1-laurentiu.tudor@nxp.com>
- <20190530141951.6704-6-laurentiu.tudor@nxp.com>
- <20190531163229.GA8708@infradead.org>
-In-Reply-To: <20190531163229.GA8708@infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=laurentiu.tudor@nxp.com; 
-x-originating-ip: [192.88.166.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2344736f-baa7-4d5a-28ab-08d6e5e87a3c
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR04MB5424;
-x-ms-traffictypediagnostic: VI1PR04MB5424:
-x-ms-exchange-purlcount: 1
-x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-x-microsoft-antispam-prvs: <VI1PR04MB5424420CD622D8111EBC24A7EC190@VI1PR04MB5424.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 00540983E2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(39860400002)(366004)(136003)(396003)(189003)(199004)(13464003)(6116002)(7736002)(7696005)(66066001)(86362001)(74316002)(71200400001)(3846002)(6246003)(4326008)(76116006)(55016002)(52536014)(8936002)(76176011)(54906003)(25786009)(26005)(102836004)(33656002)(476003)(71190400001)(305945005)(6916009)(99286004)(486006)(44832011)(6506007)(6306002)(316002)(68736007)(11346002)(2906002)(81156014)(81166006)(53936002)(186003)(966005)(478600001)(446003)(14454004)(5660300002)(256004)(6436002)(4744005)(8676002)(66556008)(9686003)(66446008)(64756008)(66946007)(73956011)(66476007)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5424;H:VI1PR04MB5134.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: e+NCxI4BguB88QjxXUwOvRmeWulMM6zwS6B1T+zcO66WfdoiZt+BndN9L3qGnItxJM2JPIsl2zoW5qwmIswVBjUyoZMA22IcBpMM69LWkuAya5rTfOEY+DFV4q85WslmGukWMXhHcG+aQiLd/BN4Pd0XHZR77Sx6u5gOHPMwsGaw4ZRSwcepwJ0Q8ZXr0PElPw5Us6ngO93sF25FSm0OPwXEkg3curWJjrpqPJm/WL8vRv3TlPDT54V1SxDORNZSVLq02ayP83KGn/VCREHjdK69msFslBvMVsEOCZ5DOpcZ0UVIJw2FhhZ6WnAVXWkSVVVabMxqNF5U6ktof5HvJWwXQz4Msv+Wvl4D5IGK95/Jm71+VUDU3pJ8BE+HfFpMpS0z4CvAb6veSNtxb+CiZwp4uy7YtlCnMVqt2Okhi/o=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 31 May 2019 12:53:36 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:54696 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726518AbfEaQxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 12:53:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 893B3A78;
+        Fri, 31 May 2019 09:53:35 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E00553F59C;
+        Fri, 31 May 2019 09:53:33 -0700 (PDT)
+Date:   Fri, 31 May 2019 17:53:26 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Jassi Brar <jassisinghbrar@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 0/6] mailbox: arm_mhu: add support to use in doorbell mode
+Message-ID: <20190531165326.GA18115@e107155-lin>
+References: <20190531143320.8895-1-sudeep.holla@arm.com>
+ <CABb+yY1u5zdocgV=HhQcHWQa_R7ArtFqndU5_T=NsPHJ=jwseA@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2344736f-baa7-4d5a-28ab-08d6e5e87a3c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 May 2019 16:53:16.3621
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: laurentiu.tudor@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5424
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABb+yY1u5zdocgV=HhQcHWQa_R7ArtFqndU5_T=NsPHJ=jwseA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+On Fri, May 31, 2019 at 11:21:08AM -0500, Jassi Brar wrote:
+> Hi Sudeep,
+>
+> On Fri, May 31, 2019 at 9:33 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
+> >
+> > This is my another attempt to extend mailbox framework to support
+> > doorbell mode mailbox hardware. It also adds doorbell support to ARM
+> > MHU driver.
+> >
+> Nothing has really changed since the last time we discussed many months ago.
+> MHU remains same, and so are my points.
+>
 
-> -----Original Message-----
-> From: Christoph Hellwig <hch@infradead.org>
-> Sent: Friday, May 31, 2019 7:32 PM
->=20
-> On Thu, May 30, 2019 at 05:19:50PM +0300, laurentiu.tudor@nxp.com wrote:
-> > +static phys_addr_t dpaa_iova_to_phys(const struct dpaa_priv *priv,
-> > +				     dma_addr_t addr)
-> > +{
-> > +	return priv->domain ? iommu_iova_to_phys(priv->domain, addr) : addr;
-> > +}
->=20
-> Again, a driver using the iommu API must not call iommu_* APIs.
->=20
-> This chane is not acceptable.
+Yes, I understand your concern.
 
-Unfortunately due to our hardware particularities we do not have alternativ=
-es. This is also the case for our next generation of ethernet drivers [1]. =
-I'll let my colleagues that work on the ethernet drivers to comment more on=
- this.
+But as mentioned in the cover letter I did try the suggestions and have
+detailed reasoning why that's still an issue. In short I ended up
+re-inventing mailbox framework with all the queuing and similar APIs
+for this. Worse, we can't even add an extra node for that in DT to
+describe that. It can't be simple shim as we need to allow multiple
+users to access one physical channel at a time. We have use case
+where we can this for CPU DVFS fast switching in scheduler context.
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c#n37
+> >
+> > Brief hardware description about MHU
+> > ====================================
+> >
+> > For each of the interrupt signals, the MHU drives the signal using a 32-bit
+> > register, with all 32 bits logically ORed together. The MHU provides a set of
+> > registers to enable software to SET, CLEAR, and check the STATUS of each of
+> > the bits of this register independently. The use of 32 bits for each interrupt
+> > line enables software to provide more information about the source of the
+> > interrupt.
+> >
+> "32 bits for each interrupt line"  =>  32 virtual channels or 32bit
+> data over one physical channel. And that is how the driver is
+> currently written.
+>
 
----
-Best Regards, Laurentiu
+Yes, I understand.
+
+> > For example, each bit of the register can be associated with a type
+> > of event that can contribute to raising the interrupt.
+> >
+> Sure there can be a usecase where each bit is associated with an event
+> (virtual channel). As you said, this is just one example of how MHU
+> can be used. There are other ways MHU is used already.
+>
+
+Agreed and I am not saying that's incorrect or asking to remove
+support for that. Future versions of MHU are making it more complex
+and the specification classify the 3 modes of transport protocol in which
+the new controller can be configured and used.
+
+The choice is left to platform based on use case to get best/optimal
+results. That's the reason I am trying to convince you that we need to
+support all those configurations/transport protocols in the Linux
+mailbox controller driver. As you mention one use-case of MHU, the word
+transfer with 2^32 - 1 options is optimal for IoT use-case where as
+doorbell mode is optimal for heavy payloads. The newer versions of
+MHU are designed keeping both configurations in mind and the same is
+suggested by h/w teams to
+various vendors.
+
+
+Arnd has similar suggestions(something like patch 1) to deal with such
+configurations/transport protocols. Please note I am referring to
+different transport protocols and not message protocols(SCPI/SCMI fall
+under this category)
+
+> Patch-2/6 looks good though. I will pick that up.
+>
+
+Thanks.
+
+--
+Regards,
+Sudeep
