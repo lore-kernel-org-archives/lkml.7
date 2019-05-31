@@ -2,127 +2,314 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8913CC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 20:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA49C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 20:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6188724314
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 20:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E712A25F1B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 20:04:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="FS9kfrOm"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XxlXQ2LA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727405AbfEaUEX (ORCPT
+        id S1727454AbfEaUEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 16:04:23 -0400
-Received: from mail-eopbgr710080.outbound.protection.outlook.com ([40.107.71.80]:23044
-        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727282AbfEaUEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 16:04:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=D1u3cvrM+bp9Jx8KsAm/tulzwKsb5KjQfTyXUMbFK4A=;
- b=FS9kfrOmqbXMuUf0peOkqrr8KREXh+a4nR4KiRaREgRbG/tPuGGcmgWpzG7DUya4WTClVlmOpcMdHn8wAJ4wzBAtBoh7yXz380zDMmzXzel+LkrDPszRqAwyykc5wTSNDE+8tvmktpW4tyHOUwVejeLAacZAsjj902zL9Konux8=
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
- BYAPR05MB4166.namprd05.prod.outlook.com (52.135.200.33) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.15; Fri, 31 May 2019 20:04:19 +0000
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::2cb6:a3d1:f675:ced8]) by BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::2cb6:a3d1:f675:ced8%3]) with mapi id 15.20.1943.016; Fri, 31 May 2019
- 20:04:19 +0000
-From:   Nadav Amit <namit@vmware.com>
-To:     Jann Horn <jannh@google.com>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: [RFC PATCH v2 11/12] x86/mm/tlb: Use async and inline messages
- for flushing
-Thread-Topic: [RFC PATCH v2 11/12] x86/mm/tlb: Use async and inline messages
- for flushing
-Thread-Index: AQHVF3tKnfrC/xKd0kyiVp6wMVDUEqaFEHMAgAB+LICAAA4xgIAADEgA
-Date:   Fri, 31 May 2019 20:04:19 +0000
-Message-ID: <6331796E-8925-4426-A0A6-5CB342178202@vmware.com>
-References: <20190531063645.4697-1-namit@vmware.com>
- <20190531063645.4697-12-namit@vmware.com>
- <20190531105758.GO2623@hirez.programming.kicks-ass.net>
- <82791CFA-3748-4881-9F01-53F677108FC3@vmware.com>
- <CAG48ez1LxU_swf30Ndj=vjZLeSKg83Oi4f2Kd+wSUygPXA0cGg@mail.gmail.com>
-In-Reply-To: <CAG48ez1LxU_swf30Ndj=vjZLeSKg83Oi4f2Kd+wSUygPXA0cGg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=namit@vmware.com; 
-x-originating-ip: [66.170.99.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 30c596e5-44b6-4060-034f-08d6e6032a9c
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BYAPR05MB4166;
-x-ms-traffictypediagnostic: BYAPR05MB4166:
-x-microsoft-antispam-prvs: <BYAPR05MB4166FAFE6FF990B3F5129D8CD0190@BYAPR05MB4166.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 00540983E2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(396003)(366004)(376002)(39860400002)(199004)(189003)(4326008)(2906002)(76116006)(7736002)(53546011)(86362001)(6512007)(33656002)(66946007)(6436002)(6246003)(2616005)(73956011)(66556008)(305945005)(82746002)(14444005)(76176011)(99286004)(25786009)(6116002)(3846002)(478600001)(53936002)(66446008)(81156014)(8936002)(26005)(64756008)(7416002)(256004)(81166006)(6486002)(14454004)(229853002)(102836004)(6506007)(66476007)(6916009)(186003)(476003)(446003)(71200400001)(66066001)(71190400001)(8676002)(5660300002)(36756003)(68736007)(486006)(54906003)(11346002)(316002)(83716004);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB4166;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: mJMcSWqVTQwPOurOJlPkvp8Vd0IzSx6sWL9iqukWCE6L/eqP4JS4zMWTj9d8u9WrQC+EqFVANNmgOTQD7CqM1b3Az4xob09SM0ObIa7hyiZH2UX0SIlIjRUwrLqAWJChwg9pKrovsWJ5+CeL9TqOMiDbE8cLM5eeSBZm1ObjtMTGAoTqE3FhotHfazykCr5mOg+lLjq2pnxdZ5rZmtgFvpF/hJx0VVy15Ud9/KkVRBGs3vvfNDqkJStGAjfNDpcc9/mzmTob+w1R8lIea6Gfz8X/bnloBCKoFwpl3lXPSpBxscMoziuDqH2YOAv5iYx7u/FCDkCUS5ZQbopE4seKVKGlCQSqyWOHn75xTlWJ+XQTumn9xXoYvWAtJ2fj9zcXzZAKUZce1NS4fQVji0VVl+7g4KlQV8qDRFw5z70Y6Fc=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6DAE826C7207C041AAE35556749C842E@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 31 May 2019 16:04:51 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41977 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727287AbfEaUEv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 16:04:51 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q17so6831434pfq.8
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 13:04:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=112Zovjtx8ZJr1t4s7LUgNI3HCAGsmSvfOjQRnyMJCU=;
+        b=XxlXQ2LA/Fd9NkSesPvODwD6A3tksGsqrm9lVeOG5pHiO8te7bj9+Wr9ALiY1LHYhc
+         kfp/43WLVOLMo+N8RMOwetkmI60RcS4TH5h1vGced56vFH3ZHuCo9C0hTL920OCrQE8Z
+         gKTi52cWIJxbFcnl6g8BP21BCKYbdUciAUYB0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=112Zovjtx8ZJr1t4s7LUgNI3HCAGsmSvfOjQRnyMJCU=;
+        b=smB7WzT1NPskoCMFF/pzQ5RAb1LsDxlFbCkzvJ5JAAubWIa899+5gykT4wGJCjTGEh
+         UMJQoLF5o5weTxZr9z0FhStug7weUzn4wuxIPc8BIYtuHPdbTKN90UlhztuVBYKS6UpD
+         H1sKS3OTlY8YlC+wXzvUvQYeJNLbiYB1KqKgNgPbgac9djd/dIeOBDHGEsi/bNCPHASf
+         MeHAZ0mJLM5LloN1qdHNG3TF8C16rjcOPgvMkn7w8Fzg4iJTo4k0ZSbDW4seXGiROXXe
+         Es/vt/B6Gvhfxd2bbIt0XRah7Pb5mmvKpQPNA7Z4j7HWwWwwQiv7Y2CvhA6+5WtsFICz
+         iUjQ==
+X-Gm-Message-State: APjAAAUSiA7HUm2fX85g+C8+GW+kA9jXTS9UKPHvHQBpBiDI/LHuDACL
+        ZKcB15b01Jq0sM/uokchBzEOYg==
+X-Google-Smtp-Source: APXvYqxeTGnGGkTjihI9uH7d87T5xK7nlJC61qOLzE4WGy41v83odHoZijRIrqBW0NIFX0gqq5wJVw==
+X-Received: by 2002:a62:3287:: with SMTP id y129mr7161023pfy.101.1559333089720;
+        Fri, 31 May 2019 13:04:49 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id z4sm6856910pfa.142.2019.05.31.13.04.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 31 May 2019 13:04:49 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Minas Harutyunyan <hminas@synopsys.com>
+Cc:     linux-rockchip@lists.infradead.org,
+        Stefan Wahren <stefan.wahren@i2se.com>, tfiga@chromium.org,
+        mka@chromium.org, groeck@chromium.org,
+        Martin Schiller <ms@dev.tdt.de>,
+        Douglas Anderson <dianders@chromium.org>,
+        stable@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] usb: dwc2: host: Fix wMaxPacketSize handling (fix webcam regression)
+Date:   Fri, 31 May 2019 13:04:12 -0700
+Message-Id: <20190531200412.129429-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.22.0.rc1.311.g5d7573a151-goog
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 30c596e5-44b6-4060-034f-08d6e6032a9c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 May 2019 20:04:19.2442
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4166
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiBNYXkgMzEsIDIwMTksIGF0IDEyOjIwIFBNLCBKYW5uIEhvcm4gPGphbm5oQGdvb2dsZS5j
-b20+IHdyb3RlOg0KPiANCj4gT24gRnJpLCBNYXkgMzEsIDIwMTkgYXQgODoyOSBQTSBOYWRhdiBB
-bWl0IDxuYW1pdEB2bXdhcmUuY29tPiB3cm90ZToNCj4+IFsgK0phbm4gSG9ybiBdDQo+PiANCj4+
-PiBPbiBNYXkgMzEsIDIwMTksIGF0IDM6NTcgQU0sIFBldGVyIFppamxzdHJhIDxwZXRlcnpAaW5m
-cmFkZWFkLm9yZz4gd3JvdGU6DQo+Pj4gDQo+Pj4gT24gVGh1LCBNYXkgMzAsIDIwMTkgYXQgMTE6
-MzY6NDRQTSAtMDcwMCwgTmFkYXYgQW1pdCB3cm90ZToNCj4+Pj4gV2hlbiB3ZSBmbHVzaCB1c2Vy
-c3BhY2UgbWFwcGluZ3MsIHdlIGNhbiBkZWZlciB0aGUgVExCIGZsdXNoZXMsIGFzIGxvbmcNCj4+
-Pj4gdGhlIGZvbGxvd2luZyBjb25kaXRpb25zIGFyZSBtZXQ6DQo+Pj4+IA0KPj4+PiAxLiBObyB0
-YWJsZXMgYXJlIGZyZWVkLCBzaW5jZSBvdGhlcndpc2Ugc3BlY3VsYXRpdmUgcGFnZSB3YWxrcyBt
-aWdodA0KPj4+PiAgY2F1c2UgbWFjaGluZS1jaGVja3MuDQo+Pj4+IA0KPj4+PiAyLiBObyBvbmUg
-d291bGQgYWNjZXNzIHVzZXJzcGFjZSBiZWZvcmUgZmx1c2ggdGFrZXMgcGxhY2UuIFNwZWNpZmlj
-YWxseSwNCj4+Pj4gIE5NSSBoYW5kbGVycyBhbmQga3Byb2JlcyB3b3VsZCBhdm9pZCBhY2Nlc3Np
-bmcgdXNlcnNwYWNlLg0KPiBbLi4uXQ0KPj4gQSAjTUMgbWlnaHQgYmUgY2F1c2VkLiBJIHRyaWVk
-IHRvIGF2b2lkIGl0IGJ5IG5vdCBhbGxvd2luZyBmcmVlaW5nIG9mDQo+PiBwYWdlLXRhYmxlcyBp
-biBzdWNoIHdheS4gRGlkIEkgbWlzcyBzb21ldGhpbmcgZWxzZT8gU29tZSBpbnRlcmFjdGlvbiB3
-aXRoDQo+PiBNVFJSIGNoYW5nZXM/IEnigJlsbCB0aGluayBhYm91dCBpdCBzb21lIG1vcmUsIGJ1
-dCBJIGRvbuKAmXQgc2VlIGhvdy4NCj4gDQo+IEkgZG9uJ3QgcmVhbGx5IGtub3cgbXVjaCBhYm91
-dCB0aGlzIHRvcGljLCBidXQgaGVyZSdzIGEgcmFuZG9tIGNvbW1lbnQNCj4gc2luY2UgeW91IGNj
-J2VkIG1lOiBJZiB0aGUgcGh5c2ljYWwgbWVtb3J5IHJhbmdlIHdhcyBmcmVlZCBhbmQNCj4gcmVh
-bGxvY2F0ZWQsIGNvdWxkIHlvdSBlbmQgdXAgd2l0aCBzcGVjdWxhdGl2ZWx5IGV4ZWN1dGVkIGNh
-Y2hlZA0KPiBtZW1vcnkgcmVhZHMgZnJvbSBJL08gbWVtb3J5PyAoQW5kIGlmIHNvLCB3b3VsZCB0
-aGF0IGJlIGJhZD8pDQoNClRoYW5rcy4gSSB0aG91Z2h0IHRoYXQgeW91ciBleHBlcmllbmNlIHdp
-dGggVExCIHBhZ2UtZnJlZWluZyBidWdzIG1heQ0KYmUgdmFsdWFibGUsIGFuZCB5b3UgZnJlcXVl
-bnRseSBmaW5kIG15IG1pc3Rha2VzLiA7LSkNCg0KWWVzLCBzcGVjdWxhdGl2ZWx5IGV4ZWN1dGVk
-IGNhY2hlZCByZWFkcyBmcm9tIHRoZSBJL08gbWVtb3J5IGFyZSBhIGNvbmNlcm4uDQpJSVJDIHRo
-ZXkgY2F1c2VkICNNQyBvbiBBTUQuIElmIHBhZ2UtdGFibGVzIGFyZSBub3QgY2hhbmdlcywgYnV0
-IG9ubHkgUFRFcw0KYXJlIGNoYW5nZWQsIEkgZG9u4oCZdCBzZWUgaG93IGl0IGNhbiBiZSBhIHBy
-b2JsZW0uIEkgYWxzbyBsb29rZWQgYXQgdGhlIE1UUlINCnNldHRpbmcgY29kZSwgYnV0IEkgZG9u
-4oCZdCBzZWUgYSBjb25jcmV0ZSBwcm9ibGVtLg0KDQo=
+In commit abb621844f6a ("usb: ch9: make usb_endpoint_maxp() return
+only packet size") the API to usb_endpoint_maxp() changed.  It used to
+just return wMaxPacketSize but after that commit it returned
+wMaxPacketSize with the high bits (the multiplier) masked off.  If you
+wanted to get the multiplier it was now up to your code to call the
+new usb_endpoint_maxp_mult() which was introduced in
+commit 541b6fe63023 ("usb: add helper to extract bits 12:11 of
+wMaxPacketSize").
+
+Prior to the API change most host drivers were updated, but no update
+was made to dwc2.  Presumably it was assumed that dwc2 was too
+simplistic to use the multiplier and thus just didn't support a
+certain class of USB devices.  However, it turns out that dwc2 did use
+the multiplier and many devices using it were working quite nicely.
+That means that many USB devices have been broken since the API
+change.  One such device is a Logitech HD Pro Webcam C920.
+
+Specifically, though dwc2 didn't directly call usb_endpoint_maxp(), it
+did call usb_maxpacket() which in turn called usb_endpoint_maxp().
+
+Let's update dwc2 to work properly with the new API.
+
+Fixes: abb621844f6a ("usb: ch9: make usb_endpoint_maxp() return only packet size")
+Cc: stable@vger.kernel.org
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+
+ drivers/usb/dwc2/hcd.c       | 29 +++++++++++++++++------------
+ drivers/usb/dwc2/hcd.h       | 20 +++++++++++---------
+ drivers/usb/dwc2/hcd_intr.c  |  5 +++--
+ drivers/usb/dwc2/hcd_queue.c | 10 ++++++----
+ 4 files changed, 37 insertions(+), 27 deletions(-)
+
+diff --git a/drivers/usb/dwc2/hcd.c b/drivers/usb/dwc2/hcd.c
+index b50ec3714fd8..5c51bf5506d1 100644
+--- a/drivers/usb/dwc2/hcd.c
++++ b/drivers/usb/dwc2/hcd.c
+@@ -2608,7 +2608,7 @@ static int dwc2_assign_and_init_hc(struct dwc2_hsotg *hsotg, struct dwc2_qh *qh)
+ 	chan->dev_addr = dwc2_hcd_get_dev_addr(&urb->pipe_info);
+ 	chan->ep_num = dwc2_hcd_get_ep_num(&urb->pipe_info);
+ 	chan->speed = qh->dev_speed;
+-	chan->max_packet = dwc2_max_packet(qh->maxp);
++	chan->max_packet = qh->maxp;
+ 
+ 	chan->xfer_started = 0;
+ 	chan->halt_status = DWC2_HC_XFER_NO_HALT_STATUS;
+@@ -2686,7 +2686,7 @@ static int dwc2_assign_and_init_hc(struct dwc2_hsotg *hsotg, struct dwc2_qh *qh)
+ 		 * This value may be modified when the transfer is started
+ 		 * to reflect the actual transfer length
+ 		 */
+-		chan->multi_count = dwc2_hb_mult(qh->maxp);
++		chan->multi_count = qh->maxp_mult;
+ 
+ 	if (hsotg->params.dma_desc_enable) {
+ 		chan->desc_list_addr = qh->desc_list_dma;
+@@ -3806,19 +3806,21 @@ static struct dwc2_hcd_urb *dwc2_hcd_urb_alloc(struct dwc2_hsotg *hsotg,
+ 
+ static void dwc2_hcd_urb_set_pipeinfo(struct dwc2_hsotg *hsotg,
+ 				      struct dwc2_hcd_urb *urb, u8 dev_addr,
+-				      u8 ep_num, u8 ep_type, u8 ep_dir, u16 mps)
++				      u8 ep_num, u8 ep_type, u8 ep_dir,
++				      u16 maxp, u16 maxp_mult)
+ {
+ 	if (dbg_perio() ||
+ 	    ep_type == USB_ENDPOINT_XFER_BULK ||
+ 	    ep_type == USB_ENDPOINT_XFER_CONTROL)
+ 		dev_vdbg(hsotg->dev,
+-			 "addr=%d, ep_num=%d, ep_dir=%1x, ep_type=%1x, mps=%d\n",
+-			 dev_addr, ep_num, ep_dir, ep_type, mps);
++			 "addr=%d, ep_num=%d, ep_dir=%1x, ep_type=%1x, maxp=%d (%d mult)\n",
++			 dev_addr, ep_num, ep_dir, ep_type, maxp, maxp_mult);
+ 	urb->pipe_info.dev_addr = dev_addr;
+ 	urb->pipe_info.ep_num = ep_num;
+ 	urb->pipe_info.pipe_type = ep_type;
+ 	urb->pipe_info.pipe_dir = ep_dir;
+-	urb->pipe_info.mps = mps;
++	urb->pipe_info.maxp = maxp;
++	urb->pipe_info.maxp_mult = maxp_mult;
+ }
+ 
+ /*
+@@ -3909,8 +3911,9 @@ void dwc2_hcd_dump_state(struct dwc2_hsotg *hsotg)
+ 					dwc2_hcd_is_pipe_in(&urb->pipe_info) ?
+ 					"IN" : "OUT");
+ 				dev_dbg(hsotg->dev,
+-					"      Max packet size: %d\n",
+-					dwc2_hcd_get_mps(&urb->pipe_info));
++					"      Max packet size: %d (%d mult)\n",
++					dwc2_hcd_get_maxp(&urb->pipe_info),
++					dwc2_hcd_get_maxp_mult(&urb->pipe_info));
+ 				dev_dbg(hsotg->dev,
+ 					"      transfer_buffer: %p\n",
+ 					urb->buf);
+@@ -4510,8 +4513,10 @@ static void dwc2_dump_urb_info(struct usb_hcd *hcd, struct urb *urb,
+ 	}
+ 
+ 	dev_vdbg(hsotg->dev, "  Speed: %s\n", speed);
+-	dev_vdbg(hsotg->dev, "  Max packet size: %d\n",
+-		 usb_maxpacket(urb->dev, urb->pipe, usb_pipeout(urb->pipe)));
++	dev_vdbg(hsotg->dev, "  Max packet size: %d (%d mult)\n",
++		 usb_endpoint_maxp(&urb->ep->desc),
++		 usb_endpoint_maxp_mult(&urb->ep->desc));
++
+ 	dev_vdbg(hsotg->dev, "  Data buffer length: %d\n",
+ 		 urb->transfer_buffer_length);
+ 	dev_vdbg(hsotg->dev, "  Transfer buffer: %p, Transfer DMA: %08lx\n",
+@@ -4594,8 +4599,8 @@ static int _dwc2_hcd_urb_enqueue(struct usb_hcd *hcd, struct urb *urb,
+ 	dwc2_hcd_urb_set_pipeinfo(hsotg, dwc2_urb, usb_pipedevice(urb->pipe),
+ 				  usb_pipeendpoint(urb->pipe), ep_type,
+ 				  usb_pipein(urb->pipe),
+-				  usb_maxpacket(urb->dev, urb->pipe,
+-						!(usb_pipein(urb->pipe))));
++				  usb_endpoint_maxp(&ep->desc),
++				  usb_endpoint_maxp_mult(&ep->desc));
+ 
+ 	buf = urb->transfer_buffer;
+ 
+diff --git a/drivers/usb/dwc2/hcd.h b/drivers/usb/dwc2/hcd.h
+index c089ffa1f0a8..ce6445a06588 100644
+--- a/drivers/usb/dwc2/hcd.h
++++ b/drivers/usb/dwc2/hcd.h
+@@ -171,7 +171,8 @@ struct dwc2_hcd_pipe_info {
+ 	u8 ep_num;
+ 	u8 pipe_type;
+ 	u8 pipe_dir;
+-	u16 mps;
++	u16 maxp;
++	u16 maxp_mult;
+ };
+ 
+ struct dwc2_hcd_iso_packet_desc {
+@@ -264,6 +265,7 @@ struct dwc2_hs_transfer_time {
+  *                       - USB_ENDPOINT_XFER_ISOC
+  * @ep_is_in:           Endpoint direction
+  * @maxp:               Value from wMaxPacketSize field of Endpoint Descriptor
++ * @maxp_mult:          Multiplier for maxp
+  * @dev_speed:          Device speed. One of the following values:
+  *                       - USB_SPEED_LOW
+  *                       - USB_SPEED_FULL
+@@ -340,6 +342,7 @@ struct dwc2_qh {
+ 	u8 ep_type;
+ 	u8 ep_is_in;
+ 	u16 maxp;
++	u16 maxp_mult;
+ 	u8 dev_speed;
+ 	u8 data_toggle;
+ 	u8 ping_state;
+@@ -503,9 +506,14 @@ static inline u8 dwc2_hcd_get_pipe_type(struct dwc2_hcd_pipe_info *pipe)
+ 	return pipe->pipe_type;
+ }
+ 
+-static inline u16 dwc2_hcd_get_mps(struct dwc2_hcd_pipe_info *pipe)
++static inline u16 dwc2_hcd_get_maxp(struct dwc2_hcd_pipe_info *pipe)
++{
++	return pipe->maxp;
++}
++
++static inline u16 dwc2_hcd_get_maxp_mult(struct dwc2_hcd_pipe_info *pipe)
+ {
+-	return pipe->mps;
++	return pipe->maxp_mult;
+ }
+ 
+ static inline u8 dwc2_hcd_get_dev_addr(struct dwc2_hcd_pipe_info *pipe)
+@@ -620,12 +628,6 @@ static inline bool dbg_urb(struct urb *urb)
+ static inline bool dbg_perio(void) { return false; }
+ #endif
+ 
+-/* High bandwidth multiplier as encoded in highspeed endpoint descriptors */
+-#define dwc2_hb_mult(wmaxpacketsize) (1 + (((wmaxpacketsize) >> 11) & 0x03))
+-
+-/* Packet size for any kind of endpoint descriptor */
+-#define dwc2_max_packet(wmaxpacketsize) ((wmaxpacketsize) & 0x07ff)
+-
+ /*
+  * Returns true if frame1 index is greater than frame2 index. The comparison
+  * is done modulo FRLISTEN_64_SIZE. This accounts for the rollover of the
+diff --git a/drivers/usb/dwc2/hcd_intr.c b/drivers/usb/dwc2/hcd_intr.c
+index 88b5dcf3aefc..a052d39b4375 100644
+--- a/drivers/usb/dwc2/hcd_intr.c
++++ b/drivers/usb/dwc2/hcd_intr.c
+@@ -1617,8 +1617,9 @@ static void dwc2_hc_ahberr_intr(struct dwc2_hsotg *hsotg,
+ 
+ 	dev_err(hsotg->dev, "  Speed: %s\n", speed);
+ 
+-	dev_err(hsotg->dev, "  Max packet size: %d\n",
+-		dwc2_hcd_get_mps(&urb->pipe_info));
++	dev_err(hsotg->dev, "  Max packet size: %d (mult %d)\n",
++		dwc2_hcd_get_maxp(&urb->pipe_info),
++		dwc2_hcd_get_maxp_mult(&urb->pipe_info));
+ 	dev_err(hsotg->dev, "  Data buffer length: %d\n", urb->length);
+ 	dev_err(hsotg->dev, "  Transfer buffer: %p, Transfer DMA: %08lx\n",
+ 		urb->buf, (unsigned long)urb->dma);
+diff --git a/drivers/usb/dwc2/hcd_queue.c b/drivers/usb/dwc2/hcd_queue.c
+index ea3aa640c15c..68bbac64b753 100644
+--- a/drivers/usb/dwc2/hcd_queue.c
++++ b/drivers/usb/dwc2/hcd_queue.c
+@@ -708,7 +708,7 @@ static void dwc2_hs_pmap_unschedule(struct dwc2_hsotg *hsotg,
+ static int dwc2_uframe_schedule_split(struct dwc2_hsotg *hsotg,
+ 				      struct dwc2_qh *qh)
+ {
+-	int bytecount = dwc2_hb_mult(qh->maxp) * dwc2_max_packet(qh->maxp);
++	int bytecount = qh->maxp_mult * qh->maxp;
+ 	int ls_search_slice;
+ 	int err = 0;
+ 	int host_interval_in_sched;
+@@ -1332,7 +1332,7 @@ static int dwc2_check_max_xfer_size(struct dwc2_hsotg *hsotg,
+ 	u32 max_channel_xfer_size;
+ 	int status = 0;
+ 
+-	max_xfer_size = dwc2_max_packet(qh->maxp) * dwc2_hb_mult(qh->maxp);
++	max_xfer_size = qh->maxp * qh->maxp_mult;
+ 	max_channel_xfer_size = hsotg->params.max_transfer_size;
+ 
+ 	if (max_xfer_size > max_channel_xfer_size) {
+@@ -1517,8 +1517,9 @@ static void dwc2_qh_init(struct dwc2_hsotg *hsotg, struct dwc2_qh *qh,
+ 	u32 prtspd = (hprt & HPRT0_SPD_MASK) >> HPRT0_SPD_SHIFT;
+ 	bool do_split = (prtspd == HPRT0_SPD_HIGH_SPEED &&
+ 			 dev_speed != USB_SPEED_HIGH);
+-	int maxp = dwc2_hcd_get_mps(&urb->pipe_info);
+-	int bytecount = dwc2_hb_mult(maxp) * dwc2_max_packet(maxp);
++	int maxp = dwc2_hcd_get_maxp(&urb->pipe_info);
++	int maxp_mult = dwc2_hcd_get_maxp_mult(&urb->pipe_info);
++	int bytecount = maxp_mult * maxp;
+ 	char *speed, *type;
+ 
+ 	/* Initialize QH */
+@@ -1531,6 +1532,7 @@ static void dwc2_qh_init(struct dwc2_hsotg *hsotg, struct dwc2_qh *qh,
+ 
+ 	qh->data_toggle = DWC2_HC_PID_DATA0;
+ 	qh->maxp = maxp;
++	qh->maxp_mult = maxp_mult;
+ 	INIT_LIST_HEAD(&qh->qtd_list);
+ 	INIT_LIST_HEAD(&qh->qh_list_entry);
+ 
+-- 
+2.22.0.rc1.311.g5d7573a151-goog
+
