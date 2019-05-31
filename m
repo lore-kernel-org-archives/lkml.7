@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86ACAC28CC0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:01:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD37C28CC0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C38126274
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:01:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4AA226274
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:01:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AThpnQT7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qsAugKex"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbfEaDBI (ORCPT
+        id S1726858AbfEaDBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 23:01:08 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42236 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726786AbfEaDBF (ORCPT
+        Thu, 30 May 2019 23:01:09 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46649 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726816AbfEaDBH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 23:01:05 -0400
-Received: by mail-pf1-f195.google.com with SMTP id r22so5210604pfh.9
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 20:01:05 -0700 (PDT)
+        Thu, 30 May 2019 23:01:07 -0400
+Received: by mail-pf1-f193.google.com with SMTP id y11so5195306pfm.13
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 20:01:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=YgKfMwz7QEcU1FSD56lQNrLc7UNemus3Exm2ro4+YNU=;
-        b=AThpnQT7lOL4lIzaJBXgzesfe4WbhqyJCN319kKrfRbfeLsSOOyQKJhbMknPnPxj67
-         sOsmzOS+c7HrIkuboFE4o/7RdThXax4OFGeIur380ikyBnhSjsBAmiw7dxPB/aHgq2qa
-         yn4vz0zRCyCNs0QnJtGdfoLHPkK6Xlsh+ZWxg4M9fb1QG4FBg2tUXyMw7lGCpstAtVVu
-         KrDFcFnqm1GZj+8jKvxqdI0MPy37eq9ouIaffQSbCSx59mHTQucO6koj5lKGuk0YA7bF
-         06xc/cjPKF44vrPQmKRhgMqjwez+3cJQa1fcoK3YWGpF2brpbnizQqhPmU4qyKhEh3+q
-         FABw==
+        bh=9oOs0PxskGic5/b7RTQxcSk0/t3lEcqZGj07P5otHq8=;
+        b=qsAugKex9pTeXPylDLyCfPWEn5qgXavR8GgzLC8UoUgRLxKALJvN8kOs8Eo26U4cz8
+         EEGILf5qHnDVR9odU6omKYCjSGE5tW9LNJgaoSc1JxAglOLlDqq3s/BLtEjYgdQBi1Yc
+         DIBVezOpjlK5Lgi6k8FC7L0WQrNFsIRpkD8GSuopMc7njgTpXuRcmGSeri1S1ADXhdHJ
+         87YALectKjjH+Sp/Zxpms6dMYCf8VJ0WmIy39GwgQipD9m/66jiPu+QdMBZQGWSMqzgc
+         UgcoH2gfLsTo2ZQACZkHnP5b5S5WR4tlXGKBZ5rkGGzRFq5D3spsK+FSryHtXhXHGsGj
+         Dm6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=YgKfMwz7QEcU1FSD56lQNrLc7UNemus3Exm2ro4+YNU=;
-        b=DB8Bo7Gbu1WTmG71s5/FYdQBCV8mKTKw+WW2+8Rhzq4JLCirsFrqFMZwFKcvU6kTQH
-         AcYCG57fcys0InMFpfbUlSrhWpATZuUiJyi8QJjUuZOfmqHm8Qyymnn0Km7hx8aNMGLr
-         mbkjfxSPCTalxTRm6gPeQK4RTrx8qlSwq5n+0rLkDa1sttl5OsV4DazrpSKF5IHbcve8
-         fBJxjFBMPnhoiV72EeKkS/kmTBtqGdTKlki+WTtwKFJs7sIeiCHJIVMG/bt8IlWKX1Bp
-         7BiH/yAJGEDzs3SAMFLOrAr9rghxcexDek2vR0GTxs676G5k1kMbXszDZPVKgeg2HWdu
-         wTsw==
-X-Gm-Message-State: APjAAAXvV24Vk+Pky8Un2R/SBTvUlGkzZ6xxEE2SKyEn/k5WSlItXJ0D
-        rJ/wqWhFqir8XtNs5nUVBw8OLQ==
-X-Google-Smtp-Source: APXvYqzs8mX4E5LLFeZ/zhwCrc8qPNkYCajy/kL2bwCKS9Hm2J7SE0BT3uzcGR8/L1UlzAzBaz9J7w==
-X-Received: by 2002:a65:5203:: with SMTP id o3mr6551231pgp.379.1559271665014;
-        Thu, 30 May 2019 20:01:05 -0700 (PDT)
+        bh=9oOs0PxskGic5/b7RTQxcSk0/t3lEcqZGj07P5otHq8=;
+        b=kxFOWjeqJq6pjc59qaLAGsfEjmiFgZNGNBSmDWiU8G62IYGZfMqTgxS178lWIn64g+
+         PtWqbxMWuqoYLIMH1H6NZu6ZqYej3f66qkUhZ6th6HYiCVAx3gbEKU5xIWROGKoG5NMS
+         k7NCEArfQUGuPGcSlanS7Rvqu8jCC8W7Zp9mQ1EYHmhf5OJvSgapmx3UcVnrw9oodtme
+         D6fRn/qFMOFsHpDJdzNK/dr5QG7c8VFO8OH6OrfKthCNaYxB4GeODuWeEVSemHfKVMcO
+         9R+KQ0L0SedMjrlswLu2hcfeAykrYBJhwrAVVSMYfOCt7f/FbfHfIVlOdo+hYKG/SlEz
+         r/xg==
+X-Gm-Message-State: APjAAAUESCy1X7HxzTfoWzJmo49JQxa+8r9kr2MLwa9C7zN1IUvP5luo
+        RAIZ43Oal8yWpdOgxs1SUFis9A==
+X-Google-Smtp-Source: APXvYqyCJHRGfPuE7i7mQ60SXgUVFTvJNFmajEQIQuHvG/1GR5NKyMsxFJSfrXyyjMhagJamkQOUCA==
+X-Received: by 2002:a63:2d0:: with SMTP id 199mr6615078pgc.188.1559271666672;
+        Thu, 30 May 2019 20:01:06 -0700 (PDT)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id m8sm6991549pff.137.2019.05.30.20.01.04
+        by smtp.gmail.com with ESMTPSA id m8sm6991549pff.137.2019.05.30.20.01.05
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 20:01:04 -0700 (PDT)
+        Thu, 30 May 2019 20:01:05 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Andy Gross <agross@kernel.org>
 Cc:     David Brown <david.brown@linaro.org>,
@@ -64,9 +64,9 @@ Cc:     David Brown <david.brown@linaro.org>,
         Arun Kumar Neelakantam <aneela@codeaurora.org>,
         Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v8 3/4] arm64: dts: qcom: Add AOSS QMP node
-Date:   Thu, 30 May 2019 20:00:56 -0700
-Message-Id: <20190531030057.18328-4-bjorn.andersson@linaro.org>
+Subject: [PATCH v8 4/4] arm64: dts: qcom: sdm845: Add Q6V5 MSS node
+Date:   Thu, 30 May 2019 20:00:57 -0700
+Message-Id: <20190531030057.18328-5-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20190531030057.18328-1-bjorn.andersson@linaro.org>
 References: <20190531030057.18328-1-bjorn.andersson@linaro.org>
@@ -75,42 +75,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The AOSS QMP provides a number of power domains, used for QDSS and
-PIL, add the node for this.
+From: Sibi Sankar <sibis@codeaurora.org>
 
-Tested-by: Sibi Sankar <sibis@codeaurora.org>
-Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
+This patch adds Q6V5 MSS remoteproc node for SDM845 SoCs.
+
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
 Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
 
 Changes since v7:
 - None
 
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 58 ++++++++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index fcb93300ca62..b25c251b6503 100644
+index b25c251b6503..978ceaec78cb 100644
 --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
 +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -2142,6 +2142,16 @@
- 			#reset-cells = <1>;
+@@ -1671,6 +1671,64 @@
+ 			};
  		};
  
-+		aoss_qmp: qmp@c300000 {
-+			compatible = "qcom,sdm845-aoss-qmp";
-+			reg = <0 0x0c300000 0 0x100000>;
-+			interrupts = <GIC_SPI 389 IRQ_TYPE_EDGE_RISING>;
-+			mboxes = <&apss_shared 0>;
++		mss_pil: remoteproc@4080000 {
++			compatible = "qcom,sdm845-mss-pil";
++			reg = <0 0x04080000 0 0x408>, <0 0x04180000 0 0x48>;
++			reg-names = "qdsp6", "rmb";
 +
-+			#clock-cells = <0>;
-+			#power-domain-cells = <1>;
++			interrupts-extended =
++				<&intc GIC_SPI 266 IRQ_TYPE_EDGE_RISING>,
++				<&modem_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
++				<&modem_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
++				<&modem_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
++				<&modem_smp2p_in 3 IRQ_TYPE_EDGE_RISING>,
++				<&modem_smp2p_in 7 IRQ_TYPE_EDGE_RISING>;
++			interrupt-names = "wdog", "fatal", "ready",
++					  "handover", "stop-ack",
++					  "shutdown-ack";
++
++			clocks = <&gcc GCC_MSS_CFG_AHB_CLK>,
++				 <&gcc GCC_MSS_Q6_MEMNOC_AXI_CLK>,
++				 <&gcc GCC_BOOT_ROM_AHB_CLK>,
++				 <&gcc GCC_MSS_GPLL0_DIV_CLK_SRC>,
++				 <&gcc GCC_MSS_SNOC_AXI_CLK>,
++				 <&gcc GCC_MSS_MFAB_AXIS_CLK>,
++				 <&gcc GCC_PRNG_AHB_CLK>,
++				 <&rpmhcc RPMH_CXO_CLK>;
++			clock-names = "iface", "bus", "mem", "gpll0_mss",
++				      "snoc_axi", "mnoc_axi", "prng", "xo";
++
++			qcom,smem-states = <&modem_smp2p_out 0>;
++			qcom,smem-state-names = "stop";
++
++			resets = <&aoss_reset AOSS_CC_MSS_RESTART>,
++				 <&pdc_reset PDC_MODEM_SYNC_RESET>;
++			reset-names = "mss_restart", "pdc_reset";
++
++			qcom,halt-regs = <&tcsr_mutex_regs 0x23000 0x25000 0x24000>;
++
++			power-domains = <&aoss_qmp 2>,
++					<&rpmhpd SDM845_CX>,
++					<&rpmhpd SDM845_MX>,
++					<&rpmhpd SDM845_MSS>;
++			power-domain-names = "load_state", "cx", "mx", "mss";
++
++			mba {
++				memory-region = <&mba_region>;
++			};
++
++			mpss {
++				memory-region = <&mpss_region>;
++			};
++
++			glink-edge {
++				interrupts = <GIC_SPI 449 IRQ_TYPE_EDGE_RISING>;
++				label = "modem";
++				qcom,remote-pid = <1>;
++				mboxes = <&apss_shared 12>;
++			};
 +		};
 +
- 		spmi_bus: spmi@c440000 {
- 			compatible = "qcom,spmi-pmic-arb";
- 			reg = <0 0x0c440000 0 0x1100>,
+ 		gpucc: clock-controller@5090000 {
+ 			compatible = "qcom,sdm845-gpucc";
+ 			reg = <0 0x05090000 0 0x9000>;
 -- 
 2.18.0
 
