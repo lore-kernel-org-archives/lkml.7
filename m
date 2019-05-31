@@ -2,261 +2,248 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE78C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 22:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF587C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 22:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E4AB26803
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 22:38:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7743D26FC6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 22:41:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="gN3apRhP"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VyCw3u/X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbfEaWii (ORCPT
+        id S1726744AbfEaWlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 18:38:38 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:56710 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726446AbfEaWih (ORCPT
+        Fri, 31 May 2019 18:41:11 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:51794 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbfEaWlL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 18:38:37 -0400
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4VMOrc7003247;
-        Fri, 31 May 2019 15:37:48 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=vyABID+kZojQHooTMHL8Mq7VmrGS7PzW4XMZp/EOHR4=;
- b=gN3apRhPMyoT9mh8MGSLp25iWUoJTh+nrrZBSeWLzWX6xfI3r2Wu4TKC7Z0P3iUeaTXh
- f6CjswR5wEz5kf2o+44e2Pe7w64cK+S/wbIOI4Glo3ijI66R3kUqxF7xc4YCqGMwC2jJ
- 8WF6iPoKU3QFLc8jlO6ECmcKQ7TIT25nb7M= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2subm50au8-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 31 May 2019 15:37:48 -0700
-Received: from mmullins-1.thefacebook.com (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::130) with Microsoft SMTP Server id
- 15.1.1713.5; Fri, 31 May 2019 15:37:47 -0700
-From:   Matt Mullins <mmullins@fb.com>
-To:     <hall@fb.com>, <mmullins@fb.com>, <ast@kernel.org>,
-        <bpf@vger.kernel.org>, <netdev@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, "Yonghong Song" <yhs@fb.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: [PATCH bpf v2] bpf: preallocate a perf_sample_data per event fd
-Date:   Fri, 31 May 2019 15:37:34 -0700
-Message-ID: <20190531223735.4998-1-mmullins@fb.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 31 May 2019 18:41:11 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4VMf22U072625;
+        Fri, 31 May 2019 17:41:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559342462;
+        bh=dmoE4M0CTzyryOAw5KKnOnMqVJcoPAZlf090WEgbfc4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=VyCw3u/X4N3qN87DWOnHQ3H9jZTEQM0N/9HJQjbqXtVFCaV1skj0c55rvRkdorGD2
+         YzNpeABuJ6Kt3HhlW9+s8lelG580Pxo3SVK1+ui44s+rxRj3clGoZ3FBnHZPZyOsqK
+         G6uZgg04i8Hu7KkfIclnhKaFBUpOqvAKU+1k0gqI=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4VMf278092962
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 31 May 2019 17:41:02 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 31
+ May 2019 17:41:02 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 31 May 2019 17:41:02 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4VMf1hQ070306;
+        Fri, 31 May 2019 17:41:01 -0500
+Subject: Re: [RESEND PATCH v4 6/6] leds: lm36274: Introduce the TI LM36274 LED
+ driver
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>
+CC:     Pavel Machek <pavel@ucw.cz>, <broonie@kernel.org>,
+        <lgirdwood@gmail.com>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190522192733.13422-1-dmurphy@ti.com>
+ <20190522192733.13422-7-dmurphy@ti.com> <20190523125012.GB20354@amd>
+ <0c2bd6af-92c5-2458-dc41-1ea413545347@ti.com>
+ <89a80aa8-66ee-d0ec-fa54-c55ca8de06af@gmail.com> <20190529135821.GK4574@dell>
+ <afff7c24-bb68-e9dc-295e-4449f9729cc9@gmail.com> <20190530073827.GL4574@dell>
+ <c75025f5-a984-78fa-2737-d10027e5741c@gmail.com> <20190531062312.GP4574@dell>
+ <8b4cfc12-284d-6daf-c82d-4c8e487cc203@gmail.com>
+ <ec1066ec-c68b-c1ee-dd70-6be7f71924eb@ti.com>
+ <c21fa7c4-3b3c-f35d-348c-311469496d9d@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <37baf1d4-388f-e87d-df42-9d2713f4b799@ti.com>
+Date:   Fri, 31 May 2019 17:41:01 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [2620:10d:c081:10::13]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-31_15:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905310138
-X-FB-Internal: deliver
+In-Reply-To: <c21fa7c4-3b3c-f35d-348c-311469496d9d@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is possible that a BPF program can be called while another BPF
-program is executing bpf_perf_event_output.  This has been observed with
-I/O completion occurring as a result of an interrupt:
+Jacek
 
-	bpf_prog_247fd1341cddaea4_trace_req_end+0x8d7/0x1000
-	? trace_call_bpf+0x82/0x100
-	? sch_direct_xmit+0xe2/0x230
-	? blk_mq_end_request+0x1/0x100
-	? blk_mq_end_request+0x5/0x100
-	? kprobe_perf_func+0x19b/0x240
-	? __qdisc_run+0x86/0x520
-	? blk_mq_end_request+0x1/0x100
-	? blk_mq_end_request+0x5/0x100
-	? kprobe_ftrace_handler+0x90/0xf0
-	? ftrace_ops_assist_func+0x6e/0xe0
-	? ip6_input_finish+0xbf/0x460
-	? 0xffffffffa01e80bf
-	? nbd_dbg_flags_show+0xc0/0xc0 [nbd]
-	? blkdev_issue_zeroout+0x200/0x200
-	? blk_mq_end_request+0x1/0x100
-	? blk_mq_end_request+0x5/0x100
-	? flush_smp_call_function_queue+0x6c/0xe0
-	? smp_call_function_single_interrupt+0x32/0xc0
-	? call_function_single_interrupt+0xf/0x20
-	? call_function_single_interrupt+0xa/0x20
-	? swiotlb_map_page+0x140/0x140
-	? refcount_sub_and_test+0x1a/0x50
-	? tcp_wfree+0x20/0xf0
-	? skb_release_head_state+0x62/0xc0
-	? skb_release_all+0xe/0x30
-	? napi_consume_skb+0xb5/0x100
-	? mlx5e_poll_tx_cq+0x1df/0x4e0
-	? mlx5e_poll_tx_cq+0x38c/0x4e0
-	? mlx5e_napi_poll+0x58/0xc30
-	? mlx5e_napi_poll+0x232/0xc30
-	? net_rx_action+0x128/0x340
-	? __do_softirq+0xd4/0x2ad
-	? irq_exit+0xa5/0xb0
-	? do_IRQ+0x7d/0xc0
-	? common_interrupt+0xf/0xf
-	</IRQ>
-	? __rb_free_aux+0xf0/0xf0
-	? perf_output_sample+0x28/0x7b0
-	? perf_prepare_sample+0x54/0x4a0
-	? perf_event_output+0x43/0x60
-	? bpf_perf_event_output_raw_tp+0x15f/0x180
-	? blk_mq_start_request+0x1/0x120
-	? bpf_prog_411a64a706fc6044_should_trace+0xad4/0x1000
-	? bpf_trace_run3+0x2c/0x80
-	? nbd_send_cmd+0x4c2/0x690 [nbd]
+On 5/31/19 4:57 PM, Jacek Anaszewski wrote:
+> Dan,
+>
+> On 5/31/19 11:07 PM, Dan Murphy wrote:
+>> Hello
+>>
+>> On 5/31/19 2:44 PM, Jacek Anaszewski wrote:
+>>> On 5/31/19 8:23 AM, Lee Jones wrote:
+>>>> On Thu, 30 May 2019, Jacek Anaszewski wrote:
+>>>>
+>>>>> On 5/30/19 9:38 AM, Lee Jones wrote:
+>>>>>> On Wed, 29 May 2019, Jacek Anaszewski wrote:
+>>>>>>
+>>>>>>> On 5/29/19 3:58 PM, Lee Jones wrote:
+>>>>>>>> On Fri, 24 May 2019, Jacek Anaszewski wrote:
+>>>>>>>>
+>>>>>>>>> Hi,
+>>>>>>>>>
+>>>>>>>>> On 5/23/19 9:09 PM, Dan Murphy wrote:
+>>>>>>>>>> Pavel
+>>>>>>>>>>
+>>>>>>>>>> Thanks for the review
+>>>>>>>>>>
+>>>>>>>>>> On 5/23/19 7:50 AM, Pavel Machek wrote:
+>>>>>>>>>>> Hi!
+>>>>>>>>>>>
+>>>>>>>>>>>> +++ b/drivers/leds/leds-lm36274.c
+>>>>>>>>>>>
+>>>>>>>>>>>> +static int lm36274_parse_dt(struct lm36274 *lm36274_data)
+>>>>>>>>>>>> +{
+>>>>>>>>>>>> +    struct fwnode_handle *child = NULL;
+>>>>>>>>>>>> +    char label[LED_MAX_NAME_SIZE];
+>>>>>>>>>>>> +    struct device *dev = &lm36274_data->pdev->dev;
+>>>>>>>>>>>> +    const char *name;
+>>>>>>>>>>>> +    int child_cnt;
+>>>>>>>>>>>> +    int ret = -EINVAL;
+>>>>>>>>>>>> +
+>>>>>>>>>>>> +    /* There should only be 1 node */
+>>>>>>>>>>>> +    child_cnt = device_get_child_node_count(dev);
+>>>>>>>>>>>> +    if (child_cnt != 1)
+>>>>>>>>>>>> +        return ret;
+>>>>>>>>>>>
+>>>>>>>>>>> I'd do explicit "return -EINVAL" here.
+>>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> ACK
+>>>>>>>>>>
+>>>>>>>>>>>> +static int lm36274_probe(struct platform_device *pdev)
+>>>>>>>>>>>> +{
+>>>>>>>>>>>> +    struct ti_lmu *lmu = dev_get_drvdata(pdev->dev.parent);
+>>>>>>>>>>>> +    struct lm36274 *lm36274_data;
+>>>>>>>>>>>> +    int ret;
+>>>>>>>>>>>> +
+>>>>>>>>>>>> +    lm36274_data = devm_kzalloc(&pdev->dev, 
+>>>>>>>>>>>> sizeof(*lm36274_data),
+>>>>>>>>>>>> +                    GFP_KERNEL);
+>>>>>>>>>>>> +    if (!lm36274_data) {
+>>>>>>>>>>>> +        ret = -ENOMEM;
+>>>>>>>>>>>> +        return ret;
+>>>>>>>>>>>> +    }
+>>>>>>>>>>>
+>>>>>>>>>>> And certainly do "return -ENOMEM" explicitly here.
+>>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> ACK
+>>>>>>>>>>
+>>>>>>>>>>> Acked-by: Pavel Machek <pavel@ucw.cz>
+>>>>>>>>>
+>>>>>>>>> I've done all amendments requested by Pavel and updated branch
+>>>>>>>>> ib-leds-mfd-regulator on linux-leds.git, but in the same time
+>>>>>>>>
+>>>>>>>> What do you mean by updated?  You cannot update an 'ib' (immutable
+>>>>>>>> branch).  Immutable means that it cannot change, by definition.
+>>>>>>>
+>>>>>>> We have already talked about that. Nobody has pulled so the branch
+>>>>>>> could have been safely updated.
+>>>>>>
+>>>>>> You have no sure way to know that.  And since I have no way to know,
+>>>>>> or faith that you won't update it again, pulling it now/at all would
+>>>>>> seem like a foolish thing to do.
+>>>>>
+>>>>> Sorry, but you are simply unjust. You're pretending to portray the
+>>>>> situation as if I have been notoriously causing merge conflicts in
+>>>>> linux-next which did not take place.
+>>>>>
+>>>>> Just to recap what this discussion is about:
+>>>>>
+>>>>> On 7 Apr 2019:
+>>>>>
+>>>>> 1. I sent pull request [0].
+>>>>> 2. 45 minutes later I updated it after discovering one omission [1].
+>>>>>     It was rather small chance for it to be pulled as quickly as 
+>>>>> that.
+>>>>>     And even if it happened it wouldn't have been much harmful - we
+>>>>>     wouldn't have lost e.g. weeks of testing in linux-next due to 
+>>>>> that
+>>>>>     fact.
+>>>>>
+>>>>> On 21 May 2019:
+>>>>>
+>>>>> 3. I sent another pull request [2] to you and REGULATOR maintainers.
+>>>>>     After it turned out that lack of feedback from REGULATOR 
+>>>>> maintainers
+>>>>>     was caused by failing to send them the exact copies of patches to
+>>>>>     review, I informed you about possible need for updating the 
+>>>>> branch.
+>>>>>     Afterwards I received a reply from you saying that you hadn't 
+>>>>> pulled
+>>>>>     the branch anyway. At that point I was sure that neither MFD nor
+>>>>>     REGULATOR tree contains the patches. And only after that I 
+>>>>> updated
+>>>>>     the branch.
+>>>>
+>>>> Here are 2 examples where you have changed immutable branches, which
+>>>> is 100% of the Pull Requests I have received from you. Using that
+>>>> record as a benchmark, the situation hardly seems unjust.
+>>>>
+>>>>>> Until you can provide me with an assurance that you will not keep
+>>>>>> updating/changing the supposedly immutable pull-requests you send 
+>>>>>> out,
+>>>>>> I won't be pulling any more in.
+>>>>>
+>>>>> I can just uphold the assurance which is implicitly assumed for 
+>>>>> anyone
+>>>>> who has never broken acclaimed rules. As justified above.
+>>>>
+>>>> You have broken the rules every (100% of the) time.
+>>>
+>>> Yes, I admit, I would lose in court.
+>>>
+>>>>> [0] https://lore.kernel.org/patchwork/patch/1059075/
+>>>>> [1] https://lore.kernel.org/patchwork/patch/1059080/
+>>>>> [2] https://lore.kernel.org/patchwork/patch/1077066/
+>>>>
+>>>> So we have 2 choices moving forward; you can either provide me with
+>>>> assurance that you have learned from this experience and will never
+>>>> change an *immutable* branch again, or I can continue to handle them,
+>>>> which has been the preference for some years.
+>>>>
+>>>> If you choose the former and adaptions need to be made in the future,
+>>>> the correct thing to do is create a *new*, different pull-request
+>>>> which has its own *new*, different tag, but uses the original tag as a
+>>>> base.
+>>>
+>>> I choose the former. That being said:
+>>>
+>>> Hereby I solemnly declare never ever change an immutable branch again.
+>>>
+>> So how do I proceed with the requested change by Mark B on the 
+>> LM36274 driver.
+>>
+>> Do I add a patch on top?
+>>
+>> Or do I submit a patch to the regulator tree once the PR is pulled?
+>
+> Won't the change be a dependency for [PATCH v4 1/6] ?
+>
+Yes thats why I am asking as we would need to change the branch.
 
-This also cannot be alleviated by further splitting the per-cpu
-perf_sample_data structs (as in commit 283ca526a9bd ("bpf: fix
-corruption on concurrent perf_event_output calls")), as a raw_tp could
-be attached to the block:block_rq_complete tracepoint and execute during
-another raw_tp.  Instead, keep a pre-allocated perf_sample_data
-structure per perf_event_array element and fail a bpf_perf_event_output
-if that element is concurrently being used.
 
-Fixes: 20b9d7ac4852 ("bpf: avoid excessive stack usage for perf_sample_data")
-Signed-off-by: Matt Mullins <mmullins@fb.com>
----
-v1->v2:
-	keep a pointer to the struct perf_sample_data rather than directly
-	embedding it in the structure, avoiding the circular include and
-	removing the need for in_use.  Suggested by Song.
+Dan
 
- include/linux/bpf.h      |  1 +
- kernel/bpf/arraymap.c    |  3 ++-
- kernel/trace/bpf_trace.c | 29 ++++++++++++++++-------------
- 3 files changed, 19 insertions(+), 14 deletions(-)
-
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index 4fb3aa2dc975..47fd85cfbbaf 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -472,6 +472,7 @@ struct bpf_event_entry {
- 	struct file *perf_file;
- 	struct file *map_file;
- 	struct rcu_head rcu;
-+	struct perf_sample_data *sd;
- };
- 
- bool bpf_prog_array_compatible(struct bpf_array *array, const struct bpf_prog *fp);
-diff --git a/kernel/bpf/arraymap.c b/kernel/bpf/arraymap.c
-index 584636c9e2eb..c7f5d593e04f 100644
---- a/kernel/bpf/arraymap.c
-+++ b/kernel/bpf/arraymap.c
-@@ -654,11 +654,12 @@ static struct bpf_event_entry *bpf_event_entry_gen(struct file *perf_file,
- {
- 	struct bpf_event_entry *ee;
- 
--	ee = kzalloc(sizeof(*ee), GFP_ATOMIC);
-+	ee = kzalloc(sizeof(*ee) + sizeof(struct perf_sample_data), GFP_ATOMIC);
- 	if (ee) {
- 		ee->event = perf_file->private_data;
- 		ee->perf_file = perf_file;
- 		ee->map_file = map_file;
-+		ee->sd = (void *)ee + sizeof(*ee);
- 	}
- 
- 	return ee;
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index f92d6ad5e080..076f8e987355 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -410,17 +410,17 @@ static const struct bpf_func_proto bpf_perf_event_read_value_proto = {
- 	.arg4_type	= ARG_CONST_SIZE,
- };
- 
--static DEFINE_PER_CPU(struct perf_sample_data, bpf_trace_sd);
--
- static __always_inline u64
- __bpf_perf_event_output(struct pt_regs *regs, struct bpf_map *map,
--			u64 flags, struct perf_sample_data *sd)
-+			u64 flags, struct perf_raw_record *raw)
- {
- 	struct bpf_array *array = container_of(map, struct bpf_array, map);
- 	unsigned int cpu = smp_processor_id();
- 	u64 index = flags & BPF_F_INDEX_MASK;
- 	struct bpf_event_entry *ee;
- 	struct perf_event *event;
-+	struct perf_sample_data *sd;
-+	u64 ret;
- 
- 	if (index == BPF_F_CURRENT_CPU)
- 		index = cpu;
-@@ -439,13 +439,22 @@ __bpf_perf_event_output(struct pt_regs *regs, struct bpf_map *map,
- 	if (unlikely(event->oncpu != cpu))
- 		return -EOPNOTSUPP;
- 
--	return perf_event_output(event, sd, regs);
-+	sd = xchg(&ee->sd, NULL);
-+	if (!sd)
-+		return -EBUSY;
-+
-+	perf_sample_data_init(sd, 0, 0);
-+	sd->raw = raw;
-+
-+	ret = perf_event_output(event, sd, regs);
-+
-+	xchg(&ee->sd, sd);
-+	return ret;
- }
- 
- BPF_CALL_5(bpf_perf_event_output, struct pt_regs *, regs, struct bpf_map *, map,
- 	   u64, flags, void *, data, u64, size)
- {
--	struct perf_sample_data *sd = this_cpu_ptr(&bpf_trace_sd);
- 	struct perf_raw_record raw = {
- 		.frag = {
- 			.size = size,
-@@ -456,10 +465,8 @@ BPF_CALL_5(bpf_perf_event_output, struct pt_regs *, regs, struct bpf_map *, map,
- 	if (unlikely(flags & ~(BPF_F_INDEX_MASK)))
- 		return -EINVAL;
- 
--	perf_sample_data_init(sd, 0, 0);
--	sd->raw = &raw;
- 
--	return __bpf_perf_event_output(regs, map, flags, sd);
-+	return __bpf_perf_event_output(regs, map, flags, &raw);
- }
- 
- static const struct bpf_func_proto bpf_perf_event_output_proto = {
-@@ -474,12 +481,10 @@ static const struct bpf_func_proto bpf_perf_event_output_proto = {
- };
- 
- static DEFINE_PER_CPU(struct pt_regs, bpf_pt_regs);
--static DEFINE_PER_CPU(struct perf_sample_data, bpf_misc_sd);
- 
- u64 bpf_event_output(struct bpf_map *map, u64 flags, void *meta, u64 meta_size,
- 		     void *ctx, u64 ctx_size, bpf_ctx_copy_t ctx_copy)
- {
--	struct perf_sample_data *sd = this_cpu_ptr(&bpf_misc_sd);
- 	struct pt_regs *regs = this_cpu_ptr(&bpf_pt_regs);
- 	struct perf_raw_frag frag = {
- 		.copy		= ctx_copy,
-@@ -497,10 +502,8 @@ u64 bpf_event_output(struct bpf_map *map, u64 flags, void *meta, u64 meta_size,
- 	};
- 
- 	perf_fetch_caller_regs(regs);
--	perf_sample_data_init(sd, 0, 0);
--	sd->raw = &raw;
- 
--	return __bpf_perf_event_output(regs, map, flags, sd);
-+	return __bpf_perf_event_output(regs, map, flags, &raw);
- }
- 
- BPF_CALL_0(bpf_get_current_task)
--- 
-2.17.1
-
+> In each case, having all the commits in one set (and branch) should
+> simplify the integration.
+>
