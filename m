@@ -2,106 +2,137 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB741C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E13C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C934265DE
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:35:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 012402555B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:37:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IcV+NfVF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="fLRznBU+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbfEaIfs (ORCPT
+        id S1726828AbfEaIhe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 04:35:48 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50224 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbfEaIfs (ORCPT
+        Fri, 31 May 2019 04:37:34 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:56896 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbfEaIhd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 04:35:48 -0400
+        Fri, 31 May 2019 04:37:33 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=NYSXgtyp6qFIdURiXa8bdXnjz75azFUheeU4NBYX14M=; b=IcV+NfVF6AYcyTf2poTfMuQeD
-        XryTcYrTrHAMk4reMf3GJ1IXzhpOk5ITbYSlFEcvrlNo8ZFaIg2sZKFIOUqrbCNAmd0LHYC490hVh
-        LAWqsrB2u9lfZTNJQZr3tUWVGIS1gt6ATDEdOBeU+cC330I+4/SLe9Yh/UmxRTvqLHBirg4fDOsLq
-        AlIdc1zlzH9wXoiVlyQgW1Tx2p7tlGu4DUbRf/gy16GxsMAX/KPe2dqge5gIojO4f9IpUlNg8cdM9
-        wwdQk8f4N3qOcxbmcIMMqG5+HZp9Wiw6rL3K9N8zlD/vehFQitIuSxWpXIBS1R9MS3PQ9I5aE/mDJ
-        nhTrQLwWA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hWd0p-0003pt-W9; Fri, 31 May 2019 08:35:44 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4BECC201B8CFE; Fri, 31 May 2019 10:35:42 +0200 (CEST)
-Date:   Fri, 31 May 2019 10:35:42 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andrea Parri <andrea.parri@amarulasolutions.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        David Howells <dhowells@redhat.com>, viro@zeniv.linux.org.uk,
-        raven@themaw.net, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-block@vger.kernel.org,
-        keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/7] General notification queue with user mmap()'able
- ring buffer
-Message-ID: <20190531083542.GL2623@hirez.programming.kicks-ass.net>
-References: <20190528231218.GA28384@kroah.com>
- <20190528162603.GA24097@kroah.com>
- <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
- <155905931502.7587.11705449537368497489.stgit@warthog.procyon.org.uk>
- <4031.1559064620@warthog.procyon.org.uk>
- <31936.1559146000@warthog.procyon.org.uk>
- <20190529231112.GB3164@kroah.com>
- <20190530095039.GA5137@andrea>
+         bh=aD3U7N/s0lwF+/SYuqBwQeQwlIeOJ1o/iBWxkc0TtmA=; b=fLRznBU+sBWjub6ytJS5zqE3H
+        r+vhsP6RHXhKgEAnci111laadWQiVtg7PNfpY6qmAitP/O1cJfaOzL1EBdSOXLJyebmRpqUGjsOXM
+        EvTQimWdYku6ZHhuzqlYow+WDeYt5qIBUQHWNxRzIOBZ23RFj6oPLp0Mc2H7OusFVGK46CAj/B5rr
+        uTICFtdV91+X0m2U7Pt0JmkcyCTPpXUDDAHDiXoPiqnH3pN9c3QMDuua8TrXhsSR4xDa+zQ+/y3rB
+        7djHQKNBy6sarZjVWT/U+KUABnNCax+91YcasFUZkoZsH+c8ABlOON10Q2CyHCK63UfBHGGUv68UI
+        pzCyysAeA==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:38394)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1hWd2V-00088P-32; Fri, 31 May 2019 09:37:27 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1hWd2T-00068p-1y; Fri, 31 May 2019 09:37:25 +0100
+Date:   Fri, 31 May 2019 09:37:24 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: Re: [PATCH] arm: vdso: pass --be8 to linker if necessary
+Message-ID: <20190531083724.uc32co24qxfodlty@shell.armlinux.org.uk>
+References: <20190529182324.8140-1-Jason@zx2c4.com>
+ <CAK7LNARFUaaJH+g3oGzwFyKnELum72nOzxnvUfMKYBaAoGVkug@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190530095039.GA5137@andrea>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAK7LNARFUaaJH+g3oGzwFyKnELum72nOzxnvUfMKYBaAoGVkug@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 11:50:39AM +0200, Andrea Parri wrote:
-> > > Looking at the perf ring buffer, there appears to be a missing barrier in
-> > > perf_aux_output_end():
-> > > 
-> > > 	rb->user_page->aux_head = rb->aux_head;
-> > > 
-> > > should be:
-> > > 
-> > > 	smp_store_release(&rb->user_page->aux_head, rb->aux_head);
-> > > 
-> > > It should also be using smp_load_acquire().  See
-> > > Documentation/core-api/circular-buffers.rst
-> > > 
-> > > And a (partial) patch has been proposed: https://lkml.org/lkml/2018/5/10/249
-> > 
-> > So, if that's all that needs to be fixed, can you use the same
-> > buffer/code if that patch is merged?
+On Fri, May 31, 2019 at 11:01:23AM +0900, Masahiro Yamada wrote:
+> Hi Jason,
 > 
-> That's about one year old...: let me add the usual suspects in Cc:  ;-)
-> since I'm not sure what the plan was (or if I'm missing something) ...
+> Thanks for catching this.
+> 
+> On Thu, May 30, 2019 at 3:26 AM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+> >
+> > The commit fe00e50b2db8 ("ARM: 8858/1: vdso: use $(LD) instead of $(CC)
+> > to link VDSO") removed the passing of CFLAGS, since ld doesn't take
+> > those directly. However, prior, big-endian ARM was relying on gcc to
+> > translate its -mbe8 option into ld's --be8 option. Lacking this, ld
+> 
+> 
+> 'git grep -- -mbe8' has no hit.
 
-The AUX crud is 'special' and smp_store_release() doesn't really help in
-many cases. Notable, AUX is typically used in combination with a
-hardware writer. The driver is in charge of odering here, the generic
-code doesn't know what the appropriate barrier (if any) is and would
-have to resort to the most expensive/heavy one available.
+It isn't -mbe8, it is --be8
 
-Also see the comment right above this function:
+$ arm-linux-gcc --target-help
+...
+  --be8                       Output BE8 format image
 
- "It is the
-  pmu driver's responsibility to observe ordering rules of the hardware,
-  so that all the data is externally visible before this is called."
+> 
+> Is it a toolchain internal flag?
+> 
+> 
+> 
+> > generated be32 code, making the VDSO generate SIGILL when called by
+> > userspace.
+> >
+> > This commit passes --be8 if CONFIG_CPU_ENDIAN_BE8 is enabled.
+> >
+> > Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+> > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > Cc: Russell King <rmk+kernel@armlinux.org.uk>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > ---
+> >  arch/arm/vdso/Makefile | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/arm/vdso/Makefile b/arch/arm/vdso/Makefile
+> > index fadf554d9391..1f5ec9741e6d 100644
+> > --- a/arch/arm/vdso/Makefile
+> > +++ b/arch/arm/vdso/Makefile
+> > @@ -10,9 +10,10 @@ obj-vdso := $(addprefix $(obj)/, $(obj-vdso))
+> >  ccflags-y := -fPIC -fno-common -fno-builtin -fno-stack-protector
+> >  ccflags-y += -DDISABLE_BRANCH_PROFILING
+> >
+> > -ldflags-y = -Bsymbolic --no-undefined -soname=linux-vdso.so.1 \
+> > +ldflags-$(CONFIG_CPU_ENDIAN_BE8) := --be8
+> > +ldflags-y := -Bsymbolic --no-undefined -soname=linux-vdso.so.1 \
+> >             -z max-page-size=4096 -z common-page-size=4096 \
+> > -           -nostdlib -shared \
+> > +           -nostdlib -shared $(ldflags-y) \
+> >             $(call ld-option, --hash-style=sysv) \
+> >             $(call ld-option, --build-id) \
+> >             -T
+> > --
+> > 2.21.0
+> >
+> 
+> 
+> --
+> Best Regards
+> Masahiro Yamada
+> 
 
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
