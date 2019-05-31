@@ -2,146 +2,107 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78211C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 23:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B93C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 23:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42AFC259B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 23:33:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sUFNLE70"
+	by mail.kernel.org (Postfix) with ESMTP id DA89A26550
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 23:33:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbfEaXdN (ORCPT
+        id S1727108AbfEaXd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 19:33:13 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:43996 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727034AbfEaXdK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 19:33:10 -0400
-Received: by mail-pg1-f193.google.com with SMTP id f25so4845989pgv.10
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 16:33:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zzddG9Gjm8AXO9IHzYUM1VDR0CHwahQe8D71s9hFu/c=;
-        b=sUFNLE70qFuM1j32iqPxE2N82dVJJzFJaig1Wc2IOUGvkXLZBJWeWXEnUpoER7ZDH5
-         lmPoYejl4nkgIgnY4RVJpWC4DbOXHt4cuJn3rNDITsEMmuHlooOoGM8q0p6UsN22WV3r
-         nsI1V8f9K77o0rjLcWUEgQj2DtJF5B2CAgykzgCf4yXUgSsJNINJozSXCUelfZYikR0t
-         vY2DgytSi3PGwSkp748aqkLh23FuFSagcBfJmDMaSw1brMGuZAZXdz+2y75ZfA+d4Aqj
-         UPpnZFpNufpYERlc5isr4RxlVC7tXskMUL9Rc1IH1UTus0aA98hA1TKSQvlLnNB7znCx
-         3pIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zzddG9Gjm8AXO9IHzYUM1VDR0CHwahQe8D71s9hFu/c=;
-        b=lqABF520suDnh1Vm93zbtBTFglW98Dw43nCxlbAidJCoIasf6XvVLcUYLQFaORJ6rm
-         xTWkN3ibQq6hA60IuCdTy3SgbjLRYkWZb7HclP2vE3vdkAhzSqjpSBKuF0isfAOZC6EB
-         kjVJkyMONniarSSMCFpeTDuix+jryUU7JymGNScrix+QqrUKN89qz3Pb5a+7iTXsnMJb
-         OUPLgxpkU8dtkXqJMNIAjZ0RJlx/pFhtSWNndAdZkZbHmWl/mPQxv4X5lAanugGI2IbM
-         OYFhZ3QEjJczZei2sMKI79ntW0sRcIwV+oUrjXkKXiskDVubMGEnoVSRKKPxwe0OYd6T
-         Fujw==
-X-Gm-Message-State: APjAAAU3OPgcU2v6B8vez8xOLcPK9KTFiGfiWmoh1GIlUI1Wlb0J64LC
-        pKFgvpy4yZrH9ieS7a7jWGneIg==
-X-Google-Smtp-Source: APXvYqyJ7gQmtzmeiKPbNeIHflsw1vNpFtYMs7bzVo3F+1S7RJ+MFhz+r8ETLxFyxFKwyQDGRT1VaQ==
-X-Received: by 2002:aa7:8b12:: with SMTP id f18mr13286126pfd.178.1559345589344;
-        Fri, 31 May 2019 16:33:09 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id c17sm7733229pfo.114.2019.05.31.16.33.07
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 31 May 2019 16:33:08 -0700 (PDT)
-Date:   Fri, 31 May 2019 16:33:06 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Alex Elder <elder@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Dan Williams <dcbw@redhat.com>,
-        David Miller <davem@davemloft.net>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        evgreen@chromium.org, Ben Chan <benchan@google.com>,
-        Eric Caruso <ejcaruso@google.com>, cpratapa@codeaurora.org,
-        syadagir@codeaurora.org,
-        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
-        abhishek.esse@gmail.com, Networking <netdev@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-soc@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-Message-ID: <20190531233306.GB25597@minitux>
-References: <20190531035348.7194-1-elder@linaro.org>
- <e75cd1c111233fdc05f47017046a6b0f0c97673a.camel@redhat.com>
- <065c95a8-7b17-495d-f225-36c46faccdd7@linaro.org>
- <CAK8P3a05CevRBV3ym+pnKmxv+A0_T+AtURW2L4doPAFzu3QcJw@mail.gmail.com>
- <a28c5e13-59bc-144d-4153-9d104cfa9188@linaro.org>
+        Fri, 31 May 2019 19:33:27 -0400
+Received: from mga07.intel.com ([134.134.136.100]:59345 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726635AbfEaXcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 19:32:31 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 May 2019 16:32:30 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.36])
+  by orsmga008.jf.intel.com with ESMTP; 31 May 2019 16:32:30 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Cedric Xing <cedric.xing@intel.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Jethro Beekman <jethro@fortanix.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        linux-sgx@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, nhorman@redhat.com,
+        npmccallum@redhat.com, Serge Ayoun <serge.ayoun@intel.com>,
+        Shay Katz-zamir <shay.katz-zamir@intel.com>,
+        Haitao Huang <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kai Svahn <kai.svahn@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Kai Huang <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        William Roberts <william.c.roberts@intel.com>,
+        Philip Tricca <philip.b.tricca@intel.com>
+Subject: [RFC PATCH 2/9] x86/sgx: Do not naturally align MAP_FIXED address
+Date:   Fri, 31 May 2019 16:31:52 -0700
+Message-Id: <20190531233159.30992-3-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190531233159.30992-1-sean.j.christopherson@intel.com>
+References: <20190531233159.30992-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a28c5e13-59bc-144d-4153-9d104cfa9188@linaro.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 31 May 13:47 PDT 2019, Alex Elder wrote:
+SGX enclaves have an associated Enclave Linear Range (ELRANGE) that is
+tracked and enforced by the CPU using a base+mask approach, similar to
+how hardware range registers such as the variable MTRRs.  As a result,
+the ELRANGE must be naturally sized and aligned.
 
-> On 5/31/19 2:19 PM, Arnd Bergmann wrote:
-> > On Fri, May 31, 2019 at 6:36 PM Alex Elder <elder@linaro.org> wrote:
-> >> On 5/31/19 9:58 AM, Dan Williams wrote:
-> >>> On Thu, 2019-05-30 at 22:53 -0500, Alex Elder wrote:
-> >>>
-> >>> My question from the Nov 2018 IPA rmnet driver still stands; how does
-> >>> this relate to net/ethernet/qualcomm/rmnet/ if at all? And if this is
-> >>> really just a netdev talking to the IPA itself and unrelated to
-> >>> net/ethernet/qualcomm/rmnet, let's call it "ipa%d" and stop cargo-
-> >>> culting rmnet around just because it happens to be a net driver for a
-> >>> QC SoC.
-> >>
-> >> First, the relationship between the IPA driver and the rmnet driver
-> >> is that the IPA driver is assumed to sit between the rmnet driver
-> >> and the hardware.
-> > 
-> > Does this mean that IPA can only be used to back rmnet, and rmnet
-> > can only be used on top of IPA, or can or both of them be combined
-> > with another driver to talk to instead?
-> 
-> No it does not mean that.
-> 
-> As I understand it, one reason for the rmnet layer was to abstract
-> the back end, which would allow using a modem, or using something
-> else (a LAN?), without exposing certain details of the hardware.
-> (Perhaps to support multiplexing, etc. without duplicating that
-> logic in two "back-end" drivers?)
-> 
-> To be perfectly honest, at first I thought having IPA use rmnet
-> was a cargo cult thing like Dan suggested, because I didn't see
-> the benefit.  I now see why one would use that pass-through layer
-> to handle the QMAP features.
-> 
-> But back to your question.  The other thing is that I see no
-> reason the IPA couldn't present a "normal" (non QMAP) interface
-> for a modem.  It's something I'd really like to be able to do,
-> but I can't do it without having the modem firmware change its
-> configuration for these endpoints.  My access to the people who
-> implement the modem firmware has been very limited (something
-> I hope to improve), and unless and until I can get corresponding
-> changes on the modem side to implement connections that don't
-> use QMAP, I can't implement such a thing.
-> 
+To reduce boilerplate code that would be needed in every userspace
+enclave loader, the SGX driver naturally aligns the mmap() address and
+also requires the range to be naturally sized.  Unfortunately, SGX fails
+to grant a waiver to the MAP_FIXED case, e.g. incorrectly rejects mmap()
+if userspace is attempting to map a small slice of an existing enclave.
 
-But any such changes would either be years into the future or for
-specific devices and as such not applicable to any/most of devices on
-the market now or in the coming years.
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ arch/x86/kernel/cpu/sgx/driver/main.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
+diff --git a/arch/x86/kernel/cpu/sgx/driver/main.c b/arch/x86/kernel/cpu/sgx/driver/main.c
+index afe844aa81d6..129d356aff30 100644
+--- a/arch/x86/kernel/cpu/sgx/driver/main.c
++++ b/arch/x86/kernel/cpu/sgx/driver/main.c
+@@ -79,7 +79,13 @@ static unsigned long sgx_get_unmapped_area(struct file *file,
+ 					   unsigned long pgoff,
+ 					   unsigned long flags)
+ {
+-	if (len < 2 * PAGE_SIZE || len & (len - 1) || flags & MAP_PRIVATE)
++	if (flags & MAP_PRIVATE)
++		return -EINVAL;
++
++	if (flags & MAP_FIXED)
++		return addr;
++
++	if (len < 2 * PAGE_SIZE || len & (len - 1))
+ 		return -EINVAL;
+ 
+ 	addr = current->mm->get_unmapped_area(file, addr, 2 * len, pgoff,
+-- 
+2.21.0
 
-But as Arnd points out, if the software split between IPA and rmnet is
-suboptimal your are encouraged to fix that.
-
-Regards,
-Bjorn
