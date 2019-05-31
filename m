@@ -2,149 +2,202 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A90CC28CC2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EAD9C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7CEA26591
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:16:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE82B26595
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:17:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FW/qqnwd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KVxYFlKZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbfEaIQ4 (ORCPT
+        id S1727113AbfEaIRB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 04:16:56 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:42823 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726874AbfEaIQz (ORCPT
+        Fri, 31 May 2019 04:17:01 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:35697 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726515AbfEaIRB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 04:16:55 -0400
-Received: by mail-io1-f68.google.com with SMTP id g16so7459043iom.9
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 01:16:55 -0700 (PDT)
+        Fri, 31 May 2019 04:17:01 -0400
+Received: by mail-qt1-f195.google.com with SMTP id d23so1154342qto.2;
+        Fri, 31 May 2019 01:17:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TyU1z8yaq1bO5gAC7lJ3UvtvJG+4a0ROhgbK2ALXN8o=;
-        b=FW/qqnwdQpjp6KMKEf6nJ1JbhZZ1Gru4BFb3xt0G/ys9qonneCpXnHW4xCtmIehQln
-         /9z4/prGn9WDiKxcPRdExWbHI5VnR8T4pWIVSXGdB+JRnoF6e5Clgo4Sy88kU5XuvvcD
-         AA1Xx1sgEO7qrRZC+Iybk5fGtKo2XcDRC0DfL64MfExnBZRIFvAUgF+C6X5Hcn4VXwGs
-         PX4Qb2CSJ3Ni0kRyNSsYM3+0i5zRhHQUIpCX+n+eSlaQiktsu8nRn1MmxaGxCT/hldwy
-         YlMolgk+sjJiGyQkjMAVrhKdMAtRXo4y9+F/MsJyvRypwvlsbglOXfQUprlXbUaa3gcY
-         NnfA==
+         :cc:content-transfer-encoding;
+        bh=zG49i3fFvaE3LptqoAqK8TJQLWdwVR/TrQVf7eDZNuQ=;
+        b=KVxYFlKZmYMCR8k3PdItitufjGxL2weHvtHHNuZXE403k77bS0zWvd7VWj+ACSf93p
+         pxkRJ/CyCa/Jfr6fhleMAoKFhfXFb/ENp7jq+t+niIGkMbrd5ixtFGB+mE2p8zAC58RO
+         yJeVomclIfsYuVMW4cWD9V+e9v2wtjgEHK2i9FDultVcfzbCD5fY+BBeF67V5s8yimdo
+         xpeDGXVbHhH/J/pjROkk4K7BeYdxGHx6MhpG2uWGzCaPe+xpB9NHnG99VxgIUZYdovqX
+         k66awXZhb5cTu7otQ6Jx21gjNbuEkmn+U9zs8kH2YWFrVtKLU5fC2ELR4aPMBb/mnfEh
+         W8Rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TyU1z8yaq1bO5gAC7lJ3UvtvJG+4a0ROhgbK2ALXN8o=;
-        b=pbjztfb+P8l6p5qRjXXC/fw8Y1DzF9feOj+1Lob9IlFNSbnb52T7HBidMK9reW5sLp
-         W4dveE76gPo1zVHSXnNOzCfvuC1dN8UjezKQlhFthP+9+qpjRn/bJ+Pf/AuTM1/zTvDY
-         MFiyylj1JrhhwA3+aC+/1cjCqgAOQ5/iS5aqEZEa/ZrEm+FEmMsni0OB3Qv6+NzwTUZs
-         BjA7L3w8A/FpDdqhP1cZGb45IYssfajZK54GWA+p9dYLsFZCkRHgdRnXZ5fO5fX0Z6wy
-         4UEgt7xZLfe8/ZpN7nZF4y+pH1vpcMDCHQpR0pXmFBYFCDmo32zDmX9WUtCCqZ4QMNA9
-         C9rA==
-X-Gm-Message-State: APjAAAUI4QxITamx5hcRZGJV12Wp6W6p1NXvZ77/ZDr+0SfNPI38kj/Q
-        PWvyGBK48TzmvwL4ghLPhIg+ryzWIv+WYjvc9FfZrQ==
-X-Google-Smtp-Source: APXvYqzLw5Kn1dmC2QWi7Vjf8M5tDzYUEjQgKCiGeLOt/yNhsIg2SGsHLvoWOmr0SYc+/Q0q/zBirv0DBGLcuXCQvYg=
-X-Received: by 2002:a5d:9402:: with SMTP id v2mr5590698ion.128.1559290614556;
- Fri, 31 May 2019 01:16:54 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=zG49i3fFvaE3LptqoAqK8TJQLWdwVR/TrQVf7eDZNuQ=;
+        b=WdYKqGbxhv3A3rEqK3p5jfGL4jl443PrOn3CqJvY9h+srb5xtnhIQqTF6DM4W5TBLB
+         rFBvM4h9sLz/hYemuvk0hOY0tH3azZFu0kZF/WuWSiXnfSZYIad2vaWPYHhpeNsGT7hn
+         jK2Svp7gyv8UP2qKnrANgnEKmkmVWrmxI7OuiuxCCNFZWKp1GrF1qkVKQufU86FmqXHV
+         AcOB4KdJFQpKN+ge9C8ZkYNLNuEd0/lb5Xl+sR9PQxtxlGtUrodXbg45S6HvmUOtrsVc
+         5Zr17ewcGk1JnRNDHfWLtA9sZW3TG7JQECZ7XDwSBZ/ZLmK0fEAVtD6ZvvRqapKjHl5a
+         2Q7A==
+X-Gm-Message-State: APjAAAWeW8EQ4TtCHe6VT22XkMLQET+m8jCXh9YHxirNG6zOYcZ8C0gV
+        qFqw7mDgX4eWJC4e8mAKfq59LCdwSnHUDvBUC1M=
+X-Google-Smtp-Source: APXvYqypiJYBUTpH4bwam0exPDV9u17o9bC+HcgbWkIpk1rkN2AfaQyFZtt5i6HZe5ZhCkqZFAl1OZlVJmiZ4r7OSjM=
+X-Received: by 2002:ac8:4442:: with SMTP id m2mr8021337qtn.107.1559290619388;
+ Fri, 31 May 2019 01:16:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <155925716254.3775979.16716824941364738117.stgit@dwillia2-desk3.amr.corp.intel.com>
- <155925717803.3775979.14412010256191901040.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <155925717803.3775979.14412010256191901040.stgit@dwillia2-desk3.amr.corp.intel.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Fri, 31 May 2019 10:16:39 +0200
-Message-ID: <CAKv+Gu8S8DaywCdEzQoZvSoE5by87+tBPPDeiVOVzr8naRstyA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/8] efi: Enumerate EFI_MEMORY_SP
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
+References: <20190530222922.4269-1-luke.r.nels@gmail.com> <CAPhsuW4JXN65P4b_uXdJX12RZFU0HyuREZuwrm+tEQ0rq8-oRA@mail.gmail.com>
+In-Reply-To: <CAPhsuW4JXN65P4b_uXdJX12RZFU0HyuREZuwrm+tEQ0rq8-oRA@mail.gmail.com>
+From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
+Date:   Fri, 31 May 2019 10:16:48 +0200
+Message-ID: <CAJ+HfNi8ioZyMjbXGP=G3F_ZUmqO=CXMy6vzpL_rK6jn+hUpXw@mail.gmail.com>
+Subject: Re: [PATCH bpf v2] bpf, riscv: clear high 32 bits for ALU32 add/sub/neg/lsh/rsh/arsh
+To:     Song Liu <liu.song.a23@gmail.com>
+Cc:     Luke Nelson <luke.r.nels@gmail.com>, Xi Wang <xi.wang@gmail.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Networking <netdev@vger.kernel.org>,
+        linux-riscv@lists.infradead.org, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 May 2019 at 01:13, Dan Williams <dan.j.williams@intel.com> wrote:
+On Fri, 31 May 2019 at 01:08, Song Liu <liu.song.a23@gmail.com> wrote:
 >
-> UEFI 2.8 defines an EFI_MEMORY_SP attribute bit to augment the
-> interpretation of the EFI Memory Types as "reserved for a specific
-> purpose". The intent of this bit is to allow the OS to identify precious
-> or scarce memory resources and optionally manage it separately from
-> EfiConventionalMemory. As defined older OSes that do not know about this
-> attribute are permitted to ignore it and the memory will be handled
-> according to the OS default policy for the given memory type.
+> On Thu, May 30, 2019 at 3:30 PM Luke Nelson <luke.r.nels@gmail.com> wrote=
+:
+> >
+> > In BPF, 32-bit ALU operations should zero-extend their results into
+> > the 64-bit registers.
+> >
+> > The current BPF JIT on RISC-V emits incorrect instructions that perform
+> > sign extension only (e.g., addw, subw) on 32-bit add, sub, lsh, rsh,
+> > arsh, and neg. This behavior diverges from the interpreter and JITs
+> > for other architectures.
+> >
+> > This patch fixes the bugs by performing zero extension on the destinati=
+on
+> > register of 32-bit ALU operations.
+> >
+> > Fixes: 2353ecc6f91f ("bpf, riscv: add BPF JIT for RV64G")
+> > Cc: Xi Wang <xi.wang@gmail.com>
+> > Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
 >
-> In other words, this "specific purpose" hint is deliberately weaker than
-> EfiReservedMemoryType in that the system continues to operate if the OS
-> takes no action on the attribute. The risk of taking no action is
-> potentially unwanted / unmovable kernel allocations from the designated
-> resource that prevent the full realization of the "specific purpose".
-> For example, consider a system with a high-bandwidth memory pool. Older
-> kernels are permitted to boot and consume that memory as conventional
-> "System-RAM" newer kernels may arrange for that memory to be set aside
-> by the system administrator for a dedicated high-bandwidth memory aware
-> application to consume.
+> Acked-by: Song Liu <songliubraving@fb.com>
 >
-> Specifically, this mechanism allows for the elimination of scenarios
-> where platform firmware tries to game OS policy by lying about ACPI SLIT
-> values, i.e. claiming that a precious memory resource has a high
-> distance to trigger the OS to avoid it by default.
->
-> Implement simple detection of the bit for EFI memory table dumps and
-> save the kernel policy for a follow-on change.
->
-> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Luke, thanks for fixing this! Nice work!
 
-> ---
->  drivers/firmware/efi/efi.c |    5 +++--
->  include/linux/efi.h        |    1 +
->  2 files changed, 4 insertions(+), 2 deletions(-)
+Acked-by: Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.com>
+
 >
-> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-> index 55b77c576c42..81db09485881 100644
-> --- a/drivers/firmware/efi/efi.c
-> +++ b/drivers/firmware/efi/efi.c
-> @@ -848,15 +848,16 @@ char * __init efi_md_typeattr_format(char *buf, size_t size,
->         if (attr & ~(EFI_MEMORY_UC | EFI_MEMORY_WC | EFI_MEMORY_WT |
->                      EFI_MEMORY_WB | EFI_MEMORY_UCE | EFI_MEMORY_RO |
->                      EFI_MEMORY_WP | EFI_MEMORY_RP | EFI_MEMORY_XP |
-> -                    EFI_MEMORY_NV |
-> +                    EFI_MEMORY_NV | EFI_MEMORY_SP |
->                      EFI_MEMORY_RUNTIME | EFI_MEMORY_MORE_RELIABLE))
->                 snprintf(pos, size, "|attr=0x%016llx]",
->                          (unsigned long long)attr);
->         else
->                 snprintf(pos, size,
-> -                        "|%3s|%2s|%2s|%2s|%2s|%2s|%2s|%3s|%2s|%2s|%2s|%2s]",
-> +                        "|%3s|%2s|%2s|%2s|%2s|%2s|%2s|%2s|%3s|%2s|%2s|%2s|%2s]",
->                          attr & EFI_MEMORY_RUNTIME ? "RUN" : "",
->                          attr & EFI_MEMORY_MORE_RELIABLE ? "MR" : "",
-> +                        attr & EFI_MEMORY_SP      ? "SP"  : "",
->                          attr & EFI_MEMORY_NV      ? "NV"  : "",
->                          attr & EFI_MEMORY_XP      ? "XP"  : "",
->                          attr & EFI_MEMORY_RP      ? "RP"  : "",
-> diff --git a/include/linux/efi.h b/include/linux/efi.h
-> index 6ebc2098cfe1..91368f5ce114 100644
-> --- a/include/linux/efi.h
-> +++ b/include/linux/efi.h
-> @@ -112,6 +112,7 @@ typedef     struct {
->  #define EFI_MEMORY_MORE_RELIABLE \
->                                 ((u64)0x0000000000010000ULL)    /* higher reliability */
->  #define EFI_MEMORY_RO          ((u64)0x0000000000020000ULL)    /* read-only */
-> +#define EFI_MEMORY_SP          ((u64)0x0000000000040000ULL)    /* special purpose */
->  #define EFI_MEMORY_RUNTIME     ((u64)0x8000000000000000ULL)    /* range requires runtime mapping */
->  #define EFI_MEMORY_DESCRIPTOR_VERSION  1
->
->
+> > ---
+> > The original patch is
+> > https://lkml.org/lkml/2019/5/30/1370
+> >
+> > This version is rebased against the bpf tree.
+> > ---
+> >  arch/riscv/net/bpf_jit_comp.c | 18 ++++++++++++++++++
+> >  1 file changed, 18 insertions(+)
+> >
+> > diff --git a/arch/riscv/net/bpf_jit_comp.c b/arch/riscv/net/bpf_jit_com=
+p.c
+> > index e5c8d675bd6e..426d5c33ea90 100644
+> > --- a/arch/riscv/net/bpf_jit_comp.c
+> > +++ b/arch/riscv/net/bpf_jit_comp.c
+> > @@ -751,10 +751,14 @@ static int emit_insn(const struct bpf_insn *insn,=
+ struct rv_jit_context *ctx,
+> >         case BPF_ALU | BPF_ADD | BPF_X:
+> >         case BPF_ALU64 | BPF_ADD | BPF_X:
+> >                 emit(is64 ? rv_add(rd, rd, rs) : rv_addw(rd, rd, rs), c=
+tx);
+> > +               if (!is64)
+> > +                       emit_zext_32(rd, ctx);
+> >                 break;
+> >         case BPF_ALU | BPF_SUB | BPF_X:
+> >         case BPF_ALU64 | BPF_SUB | BPF_X:
+> >                 emit(is64 ? rv_sub(rd, rd, rs) : rv_subw(rd, rd, rs), c=
+tx);
+> > +               if (!is64)
+> > +                       emit_zext_32(rd, ctx);
+> >                 break;
+> >         case BPF_ALU | BPF_AND | BPF_X:
+> >         case BPF_ALU64 | BPF_AND | BPF_X:
+> > @@ -795,14 +799,20 @@ static int emit_insn(const struct bpf_insn *insn,=
+ struct rv_jit_context *ctx,
+> >         case BPF_ALU | BPF_LSH | BPF_X:
+> >         case BPF_ALU64 | BPF_LSH | BPF_X:
+> >                 emit(is64 ? rv_sll(rd, rd, rs) : rv_sllw(rd, rd, rs), c=
+tx);
+> > +               if (!is64)
+> > +                       emit_zext_32(rd, ctx);
+> >                 break;
+> >         case BPF_ALU | BPF_RSH | BPF_X:
+> >         case BPF_ALU64 | BPF_RSH | BPF_X:
+> >                 emit(is64 ? rv_srl(rd, rd, rs) : rv_srlw(rd, rd, rs), c=
+tx);
+> > +               if (!is64)
+> > +                       emit_zext_32(rd, ctx);
+> >                 break;
+> >         case BPF_ALU | BPF_ARSH | BPF_X:
+> >         case BPF_ALU64 | BPF_ARSH | BPF_X:
+> >                 emit(is64 ? rv_sra(rd, rd, rs) : rv_sraw(rd, rd, rs), c=
+tx);
+> > +               if (!is64)
+> > +                       emit_zext_32(rd, ctx);
+> >                 break;
+> >
+> >         /* dst =3D -dst */
+> > @@ -810,6 +820,8 @@ static int emit_insn(const struct bpf_insn *insn, s=
+truct rv_jit_context *ctx,
+> >         case BPF_ALU64 | BPF_NEG:
+> >                 emit(is64 ? rv_sub(rd, RV_REG_ZERO, rd) :
+> >                      rv_subw(rd, RV_REG_ZERO, rd), ctx);
+> > +               if (!is64)
+> > +                       emit_zext_32(rd, ctx);
+> >                 break;
+> >
+> >         /* dst =3D BSWAP##imm(dst) */
+> > @@ -964,14 +976,20 @@ static int emit_insn(const struct bpf_insn *insn,=
+ struct rv_jit_context *ctx,
+> >         case BPF_ALU | BPF_LSH | BPF_K:
+> >         case BPF_ALU64 | BPF_LSH | BPF_K:
+> >                 emit(is64 ? rv_slli(rd, rd, imm) : rv_slliw(rd, rd, imm=
+), ctx);
+> > +               if (!is64)
+> > +                       emit_zext_32(rd, ctx);
+> >                 break;
+> >         case BPF_ALU | BPF_RSH | BPF_K:
+> >         case BPF_ALU64 | BPF_RSH | BPF_K:
+> >                 emit(is64 ? rv_srli(rd, rd, imm) : rv_srliw(rd, rd, imm=
+), ctx);
+> > +               if (!is64)
+> > +                       emit_zext_32(rd, ctx);
+> >                 break;
+> >         case BPF_ALU | BPF_ARSH | BPF_K:
+> >         case BPF_ALU64 | BPF_ARSH | BPF_K:
+> >                 emit(is64 ? rv_srai(rd, rd, imm) : rv_sraiw(rd, rd, imm=
+), ctx);
+> > +               if (!is64)
+> > +                       emit_zext_32(rd, ctx);
+> >                 break;
+> >
+> >         /* JUMP off */
+> > --
+> > 2.19.1
+> >
