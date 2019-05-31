@@ -2,141 +2,178 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DE6C46460
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 05:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 954EBC28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 05:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 638FF263B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 05:15:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EBB4263FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 05:16:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KKQ0U9L1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfEaFPC (ORCPT
+        id S1726700AbfEaFQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 01:15:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33948 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725955AbfEaFPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 01:15:02 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8824D30832C2;
-        Fri, 31 May 2019 05:15:01 +0000 (UTC)
-Received: from treble (ovpn-124-142.rdu2.redhat.com [10.10.124.142])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DB2EA60CA7;
-        Fri, 31 May 2019 05:14:58 +0000 (UTC)
-Date:   Fri, 31 May 2019 00:14:56 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Jiri Kosina <jikos@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH v4] x86/power: Fix 'nosmt' vs. hibernation triple fault
- during resume
-Message-ID: <20190531051456.fzkvn62qlkf6wqra@treble>
-References: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm>
- <nycvar.YFH.7.76.1905300007470.1962@cbobk.fhfr.pm>
- <CAJZ5v0ja5sQ73zMvUtV+w79LC_d+g6UdomL36rV-EpVDxEzbhA@mail.gmail.com>
- <alpine.DEB.2.21.1905301425330.2265@nanos.tec.linutronix.de>
- <CAJZ5v0go1g9KhE=mc19VCFrBuEERzFZCoRD4xt=tF=EnMjfH=A@mail.gmail.com>
- <20190530233804.syv4brpe3ndslyvo@treble>
- <nycvar.YFH.7.76.1905310139380.1962@cbobk.fhfr.pm>
+        Fri, 31 May 2019 01:16:45 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:38098 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfEaFQp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 01:16:45 -0400
+Received: by mail-lj1-f194.google.com with SMTP id o13so8292459lji.5
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 22:16:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=HcRZV1e7O6QUh/fBGMV8+j9NxW4Zg9BBnZO33APYf8o=;
+        b=KKQ0U9L18071MLZsb6TZBxWXaWJynKYo/j3qau11Wp2TH15k6uAUiwKD9Coh3ijO3E
+         WkkxCF1x38QM50onuqB+uMZmnLY5HykfRztE3BHX7uH5N86Lg6kavxxthF2ONdLnhYMf
+         ATBN/T/xkwwmb5emICHbMpJ9TjGHF+qvvm69yrKBiemSdpfs3NFKPSRpGtUenKY6T+FY
+         6kU51Am4t+lUd5J5nA++ewIZ3FcpRcQd5AIb5EtU7jbGLrxdGluDrGOY4Uh3I7aqbCF8
+         ntuT2I63XUcBM7/7Lrz8aX9dSGs7si3bqgJOjl9ZRcDMem5Pr/Uvbh3oXg4nb4x5mU3Q
+         pl/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=HcRZV1e7O6QUh/fBGMV8+j9NxW4Zg9BBnZO33APYf8o=;
+        b=bYUiNV09S24zYZKn0O6EDIWQiYFaV3NBKYv0D8PkE891POmctP70jiPqQ3+yWJZr8H
+         6MvknOPcEbIFQmPbyZx/sKz6rOVOYZ6DueTNzFFDg7ZApai92yuUcmYP0WCdXpQDO9gM
+         n/iI8Oi08t4ybhWR5nwJeyAWz5RUCxp7Wp99jVkZBHUP+nU71J4EGF6iCHCWWJ7H3AkP
+         O7TyRnbCOECCLdlbBXsum2ocC1fxgz93ivoYEUPYGOV5pHL4e51+h3QhIpojoV/5uLxX
+         84DGMFCgULRtl5AmTs8ppNWsOgnj2hNT+lPfYS11nJIkeMziDaU6TNFEDNgW9+CuGczN
+         QbIA==
+X-Gm-Message-State: APjAAAU2LJhOY6+bpX/kSCyz78wj83CGBg+Z38qGuRPhaJx/hPyzvkWg
+        8pFf1YcAsEnNaIVKoRGck34GDL7oycvtD03lUaZ+O1DzB9c=
+X-Google-Smtp-Source: APXvYqyzERQENey5Tx0RCNIrTmwDq1eVkkq7X/mDPE6csApvwIpMDAEjwky99bNmwPoirFQ4VrjewIeeKIr0kPg2BRM=
+X-Received: by 2002:a2e:90d1:: with SMTP id o17mr4506969ljg.187.1559279803130;
+ Thu, 30 May 2019 22:16:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <nycvar.YFH.7.76.1905310139380.1962@cbobk.fhfr.pm>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 31 May 2019 05:15:01 +0000 (UTC)
+References: <20190530030446.953835040@linuxfoundation.org>
+In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 31 May 2019 10:46:30 +0530
+Message-ID: <CA+G9fYtFwFFtbfeAFwUOSMzFLDiOxfjApD96-aWzytO6HUJ5Nw@mail.gmail.com>
+Subject: Re: [PATCH 4.14 000/193] 4.14.123-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 01:42:02AM +0200, Jiri Kosina wrote:
-> On Thu, 30 May 2019, Josh Poimboeuf wrote:
-> 
-> > > >     Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-> > > 
-> > > Yes, it is, thanks!
-> > 
-> > I still think changing monitor/mwait to use a fixmap address would be a
-> > much cleaner way to fix this.  I can try to work up a patch tomorrow.
-> 
-> I disagree with that from the backwards compatibility point of view.
-> 
-> I personally am quite frequently using differnet combinations of 
-> resumer/resumee kernels, and I've never been biten by it so far. I'd guess 
-> I am not the only one.
-> Fixmap sort of breaks that invariant.
+On Thu, 30 May 2019 at 08:55, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.14.123 release.
+> There are 193 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat 01 Jun 2019 03:02:04 AM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.14.123-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.14.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
-Right now there is no backwards compatibility because nosmt resume is
-already broken.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-For "future" backwards compatibility we could just define a hard-coded
-reserved fixmap page address, adjacent to the vsyscall reserved address.
+Summary
+------------------------------------------------------------------------
 
-Something like this (not yet tested)?  Maybe we could also remove the
-resume_play_dead() hack?
+kernel: 4.14.123-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.14.y
+git commit: 0352fa2fdaa68f3e27866e6f6a5125aa9efcefe4
+git describe: v4.14.122-194-g0352fa2fdaa6
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
+ild/v4.14.122-194-g0352fa2fdaa6
 
-diff --git a/arch/x86/include/asm/fixmap.h b/arch/x86/include/asm/fixmap.h
-index 9da8cccdf3fb..1c328624162c 100644
---- a/arch/x86/include/asm/fixmap.h
-+++ b/arch/x86/include/asm/fixmap.h
-@@ -80,6 +80,7 @@ enum fixed_addresses {
- #ifdef CONFIG_X86_VSYSCALL_EMULATION
- 	VSYSCALL_PAGE = (FIXADDR_TOP - VSYSCALL_ADDR) >> PAGE_SHIFT,
- #endif
-+	FIX_MWAIT = (FIXADDR_TOP - VSYSCALL_ADDR - 1) >> PAGE_SHIFT,
- #endif
- 	FIX_DBGP_BASE,
- 	FIX_EARLYCON_MEM_BASE,
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index 73e69aaaa117..9804fbe25d03 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -108,6 +108,8 @@ int __read_mostly __max_smt_threads = 1;
- /* Flag to indicate if a complete sched domain rebuild is required */
- bool x86_topology_update;
- 
-+static char __mwait_page[PAGE_SIZE];
-+
- int arch_update_cpu_topology(void)
- {
- 	int retval = x86_topology_update;
-@@ -1319,6 +1321,8 @@ void __init native_smp_prepare_cpus(unsigned int max_cpus)
- 	smp_quirk_init_udelay();
- 
- 	speculative_store_bypass_ht_init();
-+
-+	set_fixmap(FIX_MWAIT, __pa_symbol(&__mwait_page));
- }
- 
- void arch_enable_nonboot_cpus_begin(void)
-@@ -1631,11 +1635,12 @@ static inline void mwait_play_dead(void)
- 	}
- 
- 	/*
--	 * This should be a memory location in a cache line which is
--	 * unlikely to be touched by other processors.  The actual
--	 * content is immaterial as it is not actually modified in any way.
-+	 * This memory location is never actually written to.  It's mapped at a
-+	 * reserved fixmap address to ensure the monitored address remains
-+	 * valid across a hibernation resume operation.  Otherwise a triple
-+	 * fault can occur.
- 	 */
--	mwait_ptr = &current_thread_info()->flags;
-+	mwait_ptr = (void *)fix_to_virt(FIX_MWAIT);
- 
- 	wbinvd();
- 
+
+No regressions (compared to build v4.14.122)
+
+No fixes (compared to build v4.14.122)
+
+
+Ran 22398 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* libhugetlbfs
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fs-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-sched-tests
+* ltp-timers-tests
+* spectre-meltdown-checker-test
+* kselftest
+* ltp-cap_bounds-tests
+* ltp-cpuhotplug-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* perf
+* v4l2-compliance
+* ltp-open-posix-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* ssuite
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
