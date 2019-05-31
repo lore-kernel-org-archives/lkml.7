@@ -2,121 +2,109 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D5E1C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41CF2C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 313142685A
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:40:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bvbFz7kI"
+	by mail.kernel.org (Postfix) with ESMTP id 0D9642684B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:43:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727251AbfEaLkB (ORCPT
+        id S1727186AbfEaLnD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 07:40:01 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:35152 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726158AbfEaLkA (ORCPT
+        Fri, 31 May 2019 07:43:03 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:48320 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726158AbfEaLnC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 07:40:00 -0400
-Received: by mail-lj1-f193.google.com with SMTP id h11so9322648ljb.2;
-        Fri, 31 May 2019 04:39:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1nPmul1q9AAucCoI9yY3uJOYKaMzqR7bEf/iEX/aqjE=;
-        b=bvbFz7kIlrTImz4Is9rlZJVgVwodHyMIKxGHokBpzd3jyqtrT+N3NzxY7rOqC0jweG
-         DSMZZjQ+lcwWYldWhwcDc6MDUtSmWwU3lgIaW3V5IyaiIDgkEjIvhuCYGUTr8M0RXuNc
-         O0fzNTX5I8oSooPoLDLs8veC2SMwcgA6oTQ+UL8SCdBdiEoIVyFPp0IdTRROhpyNeEUv
-         A412MMiyx1SG8fEtAf6TQL1kE94zOSIAiATRg50MnYQ2Ik19C6EtVxcBkBP8ZtR7diXt
-         L9XnCkcFed8oQ1GOfN+jt5Xvm9HOqpOQ6rHsp4ZVcmffoJmFb6KLq7aIIXjJo1M84mUf
-         Waxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1nPmul1q9AAucCoI9yY3uJOYKaMzqR7bEf/iEX/aqjE=;
-        b=DXmctQ/mUZ5nusAS6ZR28aP0A2G2+YM9Ta2vQNS/FtOrH3pMxdmo1pcKm7C1+EG+cB
-         MLffxEltpQV0RZmO333LJFBF08e7Yytn6YFJ1x4tjO8EbKVYN/KqdKtKy7uFXbzQ3ifu
-         Lt+51ZmyNxXSE9HdOmrXRq+Z3wVfMnqlTYBf0OIPu8xRy1Gyxo4yxwQCDh+4AsHl5KcR
-         z+Y63LCkI2kuecRp9DtaCBye+aUQ7iq2zD8lnGGTPdlgZbh3bpUB3nzMuQaOKAvTNNqk
-         9sYQaI6uAFMEPs768yMAFo6iB/gF8Pgq6PMvvZVdK2o0K4Q8PYhiOQLVUv+wRqVLe/cC
-         WTyQ==
-X-Gm-Message-State: APjAAAUXouDIqFENC7G0/9T73Rz11XQH2XROeH03ZTfC7yngH/fnshBR
-        zfflQgottKmqym+/+ufgVYVd5tDN+tjlIiXAGQU=
-X-Google-Smtp-Source: APXvYqyCAo8ow6MnnWWOBWsq1Cm0GTfIZYIH3tTY29CEmrrLVa3t2AA8hrgydqxU4pH85ptW2LRQNyKxfPY6IS4halk=
-X-Received: by 2002:a2e:890c:: with SMTP id d12mr5463170lji.107.1559302798500;
- Fri, 31 May 2019 04:39:58 -0700 (PDT)
+        Fri, 31 May 2019 07:43:02 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 538F7634C7B;
+        Fri, 31 May 2019 14:42:58 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.89)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1hWfw2-0000Ju-F9; Fri, 31 May 2019 14:42:58 +0300
+Date:   Fri, 31 May 2019 14:42:58 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 4/5] media: ov6650: Fix frame scaling not reset on
+ crop
+Message-ID: <20190531114258.6bvsqzlexqnelu5u@valkosipuli.retiisi.org.uk>
+References: <20190526204758.1904-1-jmkrzyszt@gmail.com>
+ <20190526204758.1904-5-jmkrzyszt@gmail.com>
 MIME-Version: 1.0
-References: <20190530094706.865-1-Anson.Huang@nxp.com> <20190530094706.865-2-Anson.Huang@nxp.com>
-In-Reply-To: <20190530094706.865-2-Anson.Huang@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Fri, 31 May 2019 08:39:49 -0300
-Message-ID: <CAOMZO5D1B1tKs8eu_a8hXs193+TukHAYHiCEyk5g63p1S-cnbg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] arm64: dts: freescale: Add i.MX8MN dtsi support
-To:     Yongcai Huang <Anson.Huang@nxp.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Bruno Thomsen <bruno.thomsen@gmail.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Ping Bai <ping.bai@nxp.com>, Li Yang <leoyang.li@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>, pankaj.bansal@nxp.com,
-        Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>,
-        Pramod Kumar <pramod.kumar_1@nxp.com>,
-        Vabhav Sharma <vabhav.sharma@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        NXP Linux Team <Linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190526204758.1904-5-jmkrzyszt@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 6:45 AM <Anson.Huang@nxp.com> wrote:
+Hi Janusz,
 
-> +                       gpio1: gpio@30200000 {
-> +                               compatible = "fsl,imx8mn-gpio", "fsl,imx35-gpio";
-> +                               reg = <0x30200000 0x10000>;
-> +                               interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>,
-> +                                            <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
-
-No GPIO clocks entries?
-
-> +                       usbphynop1: usbphynop1 {
-> +                               compatible = "usb-nop-xceiv";
-> +                               clocks = <&clk IMX8MN_CLK_USB_PHY_REF>;
-> +                               assigned-clocks = <&clk IMX8MN_CLK_USB_PHY_REF>;
-> +                               assigned-clock-parents = <&clk IMX8MN_SYS_PLL1_100M>;
-> +                               clock-names = "main_clk";
-> +                       };
-
- usbphynop1 does not have any registers associated, so it should be
-placed outside the soc.
-
-Building with W=1 should warn you about that.
-
-> +                       usbphynop2: usbphynop2 {
-> +                               compatible = "usb-nop-xceiv";
-> +                               clocks = <&clk IMX8MN_CLK_USB_PHY_REF>;
-> +                               assigned-clocks = <&clk IMX8MN_CLK_USB_PHY_REF>;
-> +                               assigned-clock-parents = <&clk IMX8MN_SYS_PLL1_100M>;
-> +                               clock-names = "main_clk";
-> +                       };
+On Sun, May 26, 2019 at 10:47:57PM +0200, Janusz Krzysztofik wrote:
+> According to V4L2 subdevice interface specification, frame scaling
+> factors should be reset to default values on modification of input frame
+> format.  Assuming that requirement also applies in case of crop
+> rectangle modification unless V4L2_SEL_FLAG_KEEP_CONFIG is requested,
+> the driver now does not respect it.
+> 
+> The KEEP_CONFIG case is already implemented, fix the other path.
+> 
+> Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+> ---
+>  drivers/media/i2c/ov6650.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
+> index 47590cd51190..cc70d8952999 100644
+> --- a/drivers/media/i2c/ov6650.c
+> +++ b/drivers/media/i2c/ov6650.c
+> @@ -472,6 +472,8 @@ static int ov6650_get_selection(struct v4l2_subdev *sd,
+>  	}
+>  }
+>  
+> +static int ov6650_s_fmt(struct v4l2_subdev *sd, u32 code, bool half_scale);
 > +
 
-Ditto
+Would it be possible to rearrange the functions in the file so you wouldn't
+need extra prototypes? Preferrably that'd be a new patch.
+
+>  static int ov6650_set_selection(struct v4l2_subdev *sd,
+>  		struct v4l2_subdev_pad_config *cfg,
+>  		struct v4l2_subdev_selection *sel)
+> @@ -515,7 +517,13 @@ static int ov6650_set_selection(struct v4l2_subdev *sd,
+>  	}
+>  	if (!ret)
+>  		priv->rect.height = sel->r.height;
+> +	else
+> +		return ret;
+
+if (ret)
+	return ret;
+
+...
+
+>  
+> +	if (priv->half_scale) {
+> +		/* turn off half scaling, preserve media bus format */
+> +		ret = ov6650_s_fmt(sd, priv->code, false);
+> +	}
+>  	return ret;
+>  }
+>  
+
+-- 
+Regards,
+
+Sakari Ailus
