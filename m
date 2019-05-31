@@ -2,132 +2,98 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D692CC28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF0BC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC3D026AEC
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:46:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45BE626AF0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:46:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="ow1qafi/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NqsDcGgP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfEaOqs (ORCPT
+        id S1726842AbfEaOqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 10:46:48 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:36799 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbfEaOqr (ORCPT
+        Fri, 31 May 2019 10:46:52 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40853 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726515AbfEaOqv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 10:46:47 -0400
-Received: by mail-pl1-f195.google.com with SMTP id d21so4119635plr.3
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 07:46:47 -0700 (PDT)
+        Fri, 31 May 2019 10:46:51 -0400
+Received: by mail-wm1-f67.google.com with SMTP id u16so877461wmc.5
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 07:46:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=+oLbiZHvRS3KJUUhvyJO8fvkgdbxNQmutC3j5WyUYO0=;
-        b=ow1qafi/yDoy8hGQWMfwkPT9Czm8xE8VCHegc942/JfVLkxWoeAZTJ/r/KQszB4j79
-         lRAOGX/CGV0r7ulIhOSHWJ6PcOYCv+8EwodLCDnazKRw87eZoPFce7ssEr2Pohve5f1p
-         IiDGn6AWl6hxoL2jnoCm4qWaGJHEdkqnwZ0yZ+bjWFwxXZJbpkhJv+qDssNFzcEvkTzB
-         Bx8VVtmQhhuzpVLbCh4YGFTCq16QL2z+bfqzP4QzbkOPXDDLyrfMEb6s6tDf1nl7Td6c
-         Ou1To2DqffD5NV1BPsd1JpPLWaa70yEf/j1Uy+nQe7SqxZ9mklc5axPnkhAsewU4h9MT
-         Rkvg==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HIhSvs2DPNa6pwhyPdTAckU0464fTVxVs7zCZ8vky70=;
+        b=NqsDcGgPdxWylte/nrdudw12e2+Lm9TK+16YOs/Xt7XNSRBfKmr1cSde/9z6YrLsqW
+         qvy5SdwAE1oNTb2/Aw5EI9qwCXSrgrYHBXY2H3cNvfYX+azTYlDkSH5oOZXLUb7y9vwb
+         MLLKoaxvYUsZEtDR5kA4DyRdw64SrVjDBfI23SaBLa+RK9OodhW6geypt3wpvkkq8liW
+         VerDWaNO1aoyDCoeChV3PoAsQIg/rFZpZ1Qh7bgRHhz/EyrwIEH6tEG84umRDECnY+b4
+         1nAoqj01kBPcL8cHQkfgg0+VF1zGFrnY2yJS5BBi4APh0k0tWijNZyavtlrohOIE9HeB
+         0Y9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=+oLbiZHvRS3KJUUhvyJO8fvkgdbxNQmutC3j5WyUYO0=;
-        b=LovITmzhGfl8rOw8thcLgs739gqwyc2IuKlMo/dwRyZmwxlmZaHjlzJ/zIoLFgJPaK
-         bQbylkIf1Je6HDsQ53IkwEf7ynt28gQ6PRi5vWU6UIborxVPGzW6D4yGNeZyUxyeTWQh
-         /fsILJOuFRJbjUeR4k1PuymXStQoEKoMgNXCj0sjbUhgxBHJzKoWMxCDJbJ5/QV8t+RC
-         D7KL890H+scpA67P2TE0qd+H/hjQpffiIU4LK4joOsorHS8/xAJbuLVFZd0KRKku3ren
-         U95oPJJTbQG7eRJpNRejd1mAGHdgK9ONAHHinvzjt2PdqY0YDAHq6aIz1ORPruHBLl36
-         nmkg==
-X-Gm-Message-State: APjAAAWldpHExd8xOB26nj5EuW3JxAS/3QR0s1psvN+TwzG9Jbv224cD
-        wHPM4bNPbihrbnS2jkFau4OH7w==
-X-Google-Smtp-Source: APXvYqzgoVSATQWDxNKRHe+afQfSmp5S9GRT8jp3eK9h/gSeWzk5chGnKqzOJHwgZoZ+tfKJObuDEA==
-X-Received: by 2002:a17:902:7c15:: with SMTP id x21mr9799142pll.311.1559314006938;
-        Fri, 31 May 2019 07:46:46 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:40a6:bfd8:6bf:bfbe? ([2601:646:c200:1ef2:40a6:bfd8:6bf:bfbe])
-        by smtp.gmail.com with ESMTPSA id l141sm13355299pfd.24.2019.05.31.07.46.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 31 May 2019 07:46:45 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v4] x86/power: Fix 'nosmt' vs. hibernation triple fault during resume
-From:   Andy Lutomirski <luto@amacapital.net>
-X-Mailer: iPhone Mail (16E227)
-In-Reply-To: <nycvar.YFH.7.76.1905311628330.1962@cbobk.fhfr.pm>
-Date:   Fri, 31 May 2019 07:46:44 -0700
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <B7AC83ED-3F11-42B9-8506-C842A5937B50@amacapital.net>
-References: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm> <20190531051456.fzkvn62qlkf6wqra@treble> <nycvar.YFH.7.76.1905311045240.1962@cbobk.fhfr.pm> <5564116.e9OFvgDRbB@kreacher> <CALCETrUpseta+NrhVwzzVFTe-BkBHtDUJBO22ci3mAsVR+XOog@mail.gmail.com> <nycvar.YFH.7.76.1905311628330.1962@cbobk.fhfr.pm>
-To:     Jiri Kosina <jikos@kernel.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HIhSvs2DPNa6pwhyPdTAckU0464fTVxVs7zCZ8vky70=;
+        b=RgCv0XzgXuADV0rSSOUAm43zLC1nNuUhY75JkIaxr1awnZN+/yDw53sjUa69Yducnm
+         KTDcvV6c0SzO075/bEXDxdu9xwKatHD11sNvVST698anbBucs9a1wJuAPCmGefWOq4RK
+         6QIIN//wehDFR+dQLru9eZB8tM0c/gJtdqBzJ8Fg/Sa9/nBos+vKUE3/N1tKefE1FzZx
+         baCnzfk0ajR7e+0XIrAJSnhOh0onsQK7auQApPo41tqvFxbE+5AKJJrgqoyuFKPtCbjU
+         UoTd9OyMhUSdtP+kGBZdpmTUxCiXJ5G2mj9NQq72Fin3S7wDNK7M1acBkPjCFZk9ocWX
+         n2XQ==
+X-Gm-Message-State: APjAAAU1wqvjzfYDWinNf5bD6LsY5qhpefCsx5MfKZVdCS8WUhrgW1SJ
+        T4knxZ7sFcmcDYU2eOpeAwPPeOEVY6w=
+X-Google-Smtp-Source: APXvYqwI8n2+PwrOnHJByfCo543Na2TAdtFA/adEgwqWRwyrJZLjkqUNX2TJsQI7YW8gPuN6N0EwFw==
+X-Received: by 2002:a1c:a387:: with SMTP id m129mr2075250wme.15.1559314009130;
+        Fri, 31 May 2019 07:46:49 -0700 (PDT)
+Received: from localhost.localdomain (233.red-79-146-84.dynamicip.rima-tde.net. [79.146.84.233])
+        by smtp.gmail.com with ESMTPSA id k185sm12752374wma.3.2019.05.31.07.46.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 31 May 2019 07:46:48 -0700 (PDT)
+From:   Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+To:     jorge.ramirez-ortiz@linaro.org, agross@kernel.org,
+        david.brown@linaro.org, broonie@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] spi: qup: remove unnecessary goto
+Date:   Fri, 31 May 2019 16:46:36 +0200
+Message-Id: <20190531144636.27843-1-jorge.ramirez-ortiz@linaro.org>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Remove unnecessary condition check and associated goto.
 
+Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+---
+ drivers/spi/spi-qup.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-> On May 31, 2019, at 7:31 AM, Jiri Kosina <jikos@kernel.org> wrote:
->=20
->> On Fri, 31 May 2019, Andy Lutomirski wrote:
->>=20
->> 2. Put the CPU all the way to sleep by sending it an INIT IPI.
->>=20
->> Version 2 seems very simple and robust.  Is there a reason we can't do
->> it?  We obviously don't want to do it for normal offline because it
->> might be a high-power state, but a cpu in the wait-for-SIPI state is
->> not going to exit that state all by itself.
->>=20
->> The patch to implement #2 should be short and sweet as long as we are
->> careful to only put genuine APs to sleep like this.  The only downside
->> I can see is that an new kernel resuming and old kernel that was
->> booted with nosmt is going to waste power, but I don't think that's a
->> showstopper.
->=20
-> Well, if *that* is not an issue, than the original 3-liner that just=20
-> forces them to 'hlt' [1] would be good enough as well.
->=20
->=20
+diff --git a/drivers/spi/spi-qup.c b/drivers/spi/spi-qup.c
+index 974a8ce58b68..314d91b95a16 100644
+--- a/drivers/spi/spi-qup.c
++++ b/drivers/spi/spi-qup.c
+@@ -842,10 +842,6 @@ static int spi_qup_transfer_one(struct spi_master *master,
+ 	else
+ 		ret = spi_qup_do_pio(spi, xfer, timeout);
+ 
+-	if (ret)
+-		goto exit;
+-
+-exit:
+ 	spi_qup_set_state(controller, QUP_STATE_RESET);
+ 	spin_lock_irqsave(&controller->lock, flags);
+ 	if (!ret)
+-- 
+2.21.0
 
-Seems okay to me as long as we=E2=80=99re confident we won=E2=80=99t get a s=
-purious interrupt.
-
-In general, I don=E2=80=99t think we=E2=80=99re ever suppose to rely on mwai=
-t *staying* asleep.  As I understand it, mwait can wake up whenever it wants=
-, and the only real guarantee we have is that the CPU makes some effort to s=
-tay asleep until an interrupt is received or the monitor address is poked.
-
-As a trivial example, if we are in a VM and we get scheduled out at any poin=
-t between MONITOR and the eventual intentional wakeup, we=E2=80=99re toast. S=
-ame if we get an SMI due to bad luck or due to a thermal event happening sho=
-rtly after pushing the power button to resume from hibernate.
-
-For that matter, what actually happens if we get an SMI while halted?  Does R=
-SM go directly to sleep or does it re-fetch the HLT?
-
-It seems to me that we should just avoid the scenario where we have IP point=
-ed to a bogus address and we just cross our fingers and hope the CPU doesn=E2=
-=80=99t do anything.
-
-I think that, as a short term fix, we should use HLT and, as a long term fix=
-, we should either keep the CPU state fully valid or we should hard-offline t=
-he CPU using documented mechanisms, e.g. the WAIT-for-SIPI state.=
