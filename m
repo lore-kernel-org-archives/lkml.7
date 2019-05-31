@@ -2,119 +2,103 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFF6C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0FB4C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B4F42443D
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:13:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 833A326691
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:18:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="rvbek+Dq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727160AbfEaJNS (ORCPT
+        id S1726689AbfEaJSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 05:13:18 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:37626 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726233AbfEaJNR (ORCPT
+        Fri, 31 May 2019 05:18:47 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:46958 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726002AbfEaJSr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 05:13:17 -0400
-Received: by mail-lj1-f193.google.com with SMTP id h19so8882970ljj.4
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 02:13:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vS7g8P/NY7dhNfYhpibp7ySBNkV6CxXTbUCyow6hlKE=;
-        b=FEctBwY+WhxwCRXglA+TAKQ5gqACEkl2pLYdNnDlagogYOE5abperwrPE9gq8eCt+a
-         sBCbkWEIEZVyLzb3F5pEduefM3J6ZNK0wfjQuYFYeRLfEzBGF++tu6SRYFvvqSKm6P/9
-         QoJ7ajfFJtcfPJElBcSo8qpjtXEmkjIlzrKaWTzUTKjfV7LSJwG+wTZP27XnD6xQVaVv
-         LKp+8OCnNCt9OdC4VoRnASLXV8Mvz71bXST7rE4aRq5hgcXZEnQEvAm8KOij1vcBOFv/
-         tM+MIDgvf0E3A5wLnP6nmP1VlNl7z7r+bJjZzQfP7eJqnIFPf/RLGv5tLu8fX4ZqPTAU
-         XfpQ==
-X-Gm-Message-State: APjAAAVBShK3SMp3VYDUr22AAxO4oLZIARJ3/IqJi8VMa4NeKPePmaDy
-        NVvFei56bmtDnOJLwt8ilY/EDGLIJSn+PUb3xaCHU3CtuWU=
-X-Google-Smtp-Source: APXvYqzDmSgwAxYiSHZDtl77YC64ZrWXBQnM+m64BL9AIETUQqlw2+6d7QSUlUGrbOV5Q41I4RirlX3zWXAUarEj208=
-X-Received: by 2002:a2e:249:: with SMTP id 70mr4703468ljc.178.1559293995678;
- Fri, 31 May 2019 02:13:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190531012649.31797-1-mcroce@redhat.com> <dbc00eaa-c6e9-45b2-7232-5af35fdea113@infradead.org>
-In-Reply-To: <dbc00eaa-c6e9-45b2-7232-5af35fdea113@infradead.org>
-From:   Matteo Croce <mcroce@redhat.com>
-Date:   Fri, 31 May 2019 11:12:39 +0200
-Message-ID: <CAGnkfhwJm0N2WvLv9o+DZeL9JjDsDp3-TB-G6iS_6mhTyzYRHQ@mail.gmail.com>
-Subject: Re: [PATCH] firmware_loader: fix build without sysctl
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
+        Fri, 31 May 2019 05:18:47 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4V97nqd018680;
+        Fri, 31 May 2019 11:18:31 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=rz5GP3p1X72UWRAxSNm3DrASQ+E4MaPT9C6RQHCpmq0=;
+ b=rvbek+Dq2ug8amgrE3UQvq+FhSycEB2bRCB8U9vs4DAkatMPUGr6eKLpSgp9rDmrw/v2
+ ZXOf+CtoinI3KWqDKUQ+hpqVdz2b5sjivjjN50b+hboktcNsV8bg8uT9j786apCqsC5K
+ 2wMmOra0jHuYTEBGK2XNUFDUSvqLZUrxNcqyyXQGWG3mRac7D0Fpq8+m+66m8+UHMr9P
+ SQvviH4fe/eIEjxCN9/myCtgtQ7JFMBRW3kDogi8oXZz+yeZRLBOcI+Sbdxu3mcOR73Z
+ shBWFBRB/yXCf2Oe9s991wLAH5hM8FSrmb/OgCKBu+QwwX96q5GWWJCh8PmhmvN4pDk3 vA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2spvkhk772-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 31 May 2019 11:18:31 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D1D5C31;
+        Fri, 31 May 2019 09:18:28 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A14272476;
+        Fri, 31 May 2019 09:18:28 +0000 (GMT)
+Received: from SAFEX1HUBCAS21.st.com (10.75.90.45) by SAFEX1HUBCAS23.st.com
+ (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 31 May
+ 2019 11:18:28 +0200
+Received: from localhost (10.201.23.25) by Webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 31 May 2019 11:18:28
+ +0200
+From:   Fabien Dessenne <fabien.dessenne@st.com>
+To:     Hugues Fruchet <hugues.fruchet@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "Alexandre Torgue" <alexandre.torgue@st.com>,
+        Pavel Machek <pavel@denx.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        <linux-media@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Fabien Dessenne <fabien.dessenne@st.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH] media: stm32-dcmi: fix irq = 0 case
+Date:   Fri, 31 May 2019 11:18:15 +0200
+Message-ID: <1559294295-20573-1-git-send-email-fabien.dessenne@st.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.201.23.25]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-31_05:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 4:15 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> On 5/30/19 6:26 PM, Matteo Croce wrote:
-> > firmware_config_table has references to the sysctl code which
-> > triggers a build failure when CONFIG_PROC_SYSCTL is not set:
-> >
-> >     ld: drivers/base/firmware_loader/fallback_table.o:(.data+0x30): undefined reference to `sysctl_vals'
-> >     ld: drivers/base/firmware_loader/fallback_table.o:(.data+0x38): undefined reference to `sysctl_vals'
-> >     ld: drivers/base/firmware_loader/fallback_table.o:(.data+0x70): undefined reference to `sysctl_vals'
-> >     ld: drivers/base/firmware_loader/fallback_table.o:(.data+0x78): undefined reference to `sysctl_vals'
-> >
-> > Put the firmware_config_table struct under #ifdef CONFIG_PROC_SYSCTL.
-> >
-> > Fixes: 6a33853c5773 ("proc/sysctl: add shared variables for range check")
-> > Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> > Signed-off-by: Matteo Croce <mcroce@redhat.com>
->
-> Works for me.
->
-> Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
->
-> Thanks.
->
-> > ---
-> >  drivers/base/firmware_loader/fallback_table.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/drivers/base/firmware_loader/fallback_table.c b/drivers/base/firmware_loader/fallback_table.c
-> > index 58d4a1263480..18d646777fb9 100644
-> > --- a/drivers/base/firmware_loader/fallback_table.c
-> > +++ b/drivers/base/firmware_loader/fallback_table.c
-> > @@ -23,6 +23,8 @@ struct firmware_fallback_config fw_fallback_config = {
-> >  };
-> >  EXPORT_SYMBOL_GPL(fw_fallback_config);
-> >
-> > +#ifdef CONFIG_PROC_SYSCTL
-> > +
-> >  struct ctl_table firmware_config_table[] = {
-> >       {
-> >               .procname       = "force_sysfs_fallback",
-> > @@ -45,3 +47,5 @@ struct ctl_table firmware_config_table[] = {
-> >       { }
-> >  };
-> >  EXPORT_SYMBOL_GPL(firmware_config_table);
-> > +
-> > +#endif
-> >
->
->
-> --
-> ~Randy
+Manage the irq = 0 case, where we shall return an error.
 
-Hi,
+Fixes: b5b5a27bee58 ("media: stm32-dcmi: return appropriate error codes during probe")
+Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+---
+ drivers/media/platform/stm32/stm32-dcmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-please correct the Fixes tag if possible.
-It seems that the hash of the offending commit now is d91bff3011cf
-
-Regards,
+diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
+index b9dad0a..d855e9c 100644
+--- a/drivers/media/platform/stm32/stm32-dcmi.c
++++ b/drivers/media/platform/stm32/stm32-dcmi.c
+@@ -1702,7 +1702,7 @@ static int dcmi_probe(struct platform_device *pdev)
+ 	if (irq <= 0) {
+ 		if (irq != -EPROBE_DEFER)
+ 			dev_err(&pdev->dev, "Could not get irq\n");
+-		return irq;
++		return irq ? irq : -ENXIO;
+ 	}
+ 
+ 	dcmi->res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 -- 
-Matteo Croce
-per aspera ad upstream
+2.7.4
+
