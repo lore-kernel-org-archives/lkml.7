@@ -2,119 +2,166 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D75C6C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9E2C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4F72266FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:37:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F4C6266FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:38:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbfEaJhw (ORCPT
+        id S1726867AbfEaJiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 05:37:52 -0400
-Received: from foss.arm.com ([217.140.101.70]:48884 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726280AbfEaJhv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 05:37:51 -0400
+        Fri, 31 May 2019 05:38:46 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:48932 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726002AbfEaJiq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 05:38:46 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 735ED341;
-        Fri, 31 May 2019 02:37:50 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 106B93F59C;
-        Fri, 31 May 2019 02:37:45 -0700 (PDT)
-Date:   Fri, 31 May 2019 10:37:43 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Morten Rasmussen <morten.rasmussen@arm.com>,
-        "Andrew F. Davis" <afd@ti.com>, Atish Patra <atish.patra@wdc.com>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <anup@brainfault.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-riscv@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Otto Sabart <ottosabart@seberm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v6 1/7] Documentation: DT: arm: add support for sockets
- defining package boundaries
-Message-ID: <20190531093743.GB18292@e107155-lin>
-References: <20190529211340.17087-1-atish.patra@wdc.com>
- <20190529211340.17087-2-atish.patra@wdc.com>
- <49f41e62-5354-a674-d95f-5f63851a0ca6@ti.com>
- <20190530115103.GA10919@e105550-lin.cambridge.arm.com>
- <20190530214254.tuxsnyv52a2fyhck@shell.armlinux.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190530214254.tuxsnyv52a2fyhck@shell.armlinux.org.uk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C554341;
+        Fri, 31 May 2019 02:38:45 -0700 (PDT)
+Received: from big-swifty.misterjones.org (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E33F13F59C;
+        Fri, 31 May 2019 02:38:42 -0700 (PDT)
+Date:   Fri, 31 May 2019 10:38:40 +0100
+Message-ID: <86muj36k0v.wl-marc.zyngier@arm.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+To:     "Raslan, KarimAllah" <karahmed@amazon.de>
+Cc:     "Sironi, Filippo" <sironi@amazon.de>,
+        "Graf, Alexander" <graf@amazon.com>,
+        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "borntraeger@de.ibm.com" <borntraeger@de.ibm.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        Christoffer Dall <Christoffer.Dall@arm.com>
+Subject: Re: [PATCH v2 1/2] KVM: Start populating /sys/hypervisor with KVM entries
+In-Reply-To: <1559293922.14762.2.camel@amazon.de>
+References: <1539078879-4372-1-git-send-email-sironi@amazon.de>
+        <1557847002-23519-1-git-send-email-sironi@amazon.de>
+        <1557847002-23519-2-git-send-email-sironi@amazon.de>
+        <e976f31b-2ccd-29ba-6a32-2edde49f867f@amazon.com>
+        <3D2C4EE3-1C2E-4032-9964-31A066E542AA@amazon.de>
+        <6b3dadf9-6240-6440-b784-50bec605bf2c@amazon.com>
+        <1559293922.14762.2.camel@amazon.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Organization: ARM Ltd
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 10:42:54PM +0100, Russell King - ARM Linux admin wrote:
-> On Thu, May 30, 2019 at 12:51:03PM +0100, Morten Rasmussen wrote:
-> > On Wed, May 29, 2019 at 07:39:17PM -0400, Andrew F. Davis wrote:
-> > > On 5/29/19 5:13 PM, Atish Patra wrote:
-> > > >From: Sudeep Holla <sudeep.holla@arm.com>
-> > > >
-> > > >The current ARM DT topology description provides the operating system
-> > > >with a topological view of the system that is based on leaf nodes
-> > > >representing either cores or threads (in an SMT system) and a
-> > > >hierarchical set of cluster nodes that creates a hierarchical topology
-> > > >view of how those cores and threads are grouped.
-> > > >
-> > > >However this hierarchical representation of clusters does not allow to
-> > > >describe what topology level actually represents the physical package or
-> > > >the socket boundary, which is a key piece of information to be used by
-> > > >an operating system to optimize resource allocation and scheduling.
-> > > >
-> > >
-> > > Are physical package descriptions really needed? What does "socket" imply
-> > > that a higher layer "cluster" node grouping does not? It doesn't imply a
-> > > different NUMA distance and the definition of "socket" is already not well
-> > > defined, is a dual chiplet processor not just a fancy dual "socket" or are
-> > > dual "sockets" on a server board "slotket" card, will we need new names for
-> > > those too..
-> >
-> > Socket (or package) just implies what you suggest, a grouping of CPUs
-> > based on the physical socket (or package). Some resources might be
-> > associated with packages and more importantly socket information is
-> > exposed to user-space. At the moment clusters are being exposed to
-> > user-space as sockets which is less than ideal for some topologies.
->
-> Please point out a 32-bit ARM system that has multiple "socket"s.
->
-> As far as I'm aware, all 32-bit systems do not have socketed CPUs
-> (modern ARM CPUs are part of a larger SoC), and the CPUs are always
-> in one package.
->
-> Even the test systems I've seen do not have socketed CPUs.
->
+On Fri, 31 May 2019 10:12:03 +0100,
+"Raslan, KarimAllah" <karahmed@amazon.de> wrote:
+> 
+> On Fri, 2019-05-31 at 11:06 +0200, Alexander Graf wrote:
+> > On 17.05.19 17:41, Sironi, Filippo wrote:
+> > > 
+> > > > 
+> > > > On 16. May 2019, at 15:50, Graf, Alexander <graf@amazon.com> wrote:
+> > > > 
+> > > > On 14.05.19 08:16, Filippo Sironi wrote:
+> > > > > 
+> > > > > Start populating /sys/hypervisor with KVM entries when we're running on
+> > > > > KVM. This is to replicate functionality that's available when we're
+> > > > > running on Xen.
+> > > > > 
+> > > > > Start with /sys/hypervisor/uuid, which users prefer over
+> > > > > /sys/devices/virtual/dmi/id/product_uuid as a way to recognize a virtual
+> > > > > machine, since it's also available when running on Xen HVM and on Xen PV
+> > > > > and, on top of that doesn't require root privileges by default.
+> > > > > Let's create arch-specific hooks so that different architectures can
+> > > > > provide different implementations.
+> > > > > 
+> > > > > Signed-off-by: Filippo Sironi <sironi@amazon.de>
+> > > > I think this needs something akin to
+> > > > 
+> > > >   https://www.kernel.org/doc/Documentation/ABI/stable/sysfs-hypervisor-xen
+> > > > 
+> > > > to document which files are available.
+> > > > 
+> > > > > 
+> > > > > ---
+> > > > > v2:
+> > > > > * move the retrieval of the VM UUID out of uuid_show and into
+> > > > >   kvm_para_get_uuid, which is a weak function that can be overwritten
+> > > > > 
+> > > > > drivers/Kconfig              |  2 ++
+> > > > > drivers/Makefile             |  2 ++
+> > > > > drivers/kvm/Kconfig          | 14 ++++++++++++++
+> > > > > drivers/kvm/Makefile         |  1 +
+> > > > > drivers/kvm/sys-hypervisor.c | 30 ++++++++++++++++++++++++++++++
+> > > > > 5 files changed, 49 insertions(+)
+> > > > > create mode 100644 drivers/kvm/Kconfig
+> > > > > create mode 100644 drivers/kvm/Makefile
+> > > > > create mode 100644 drivers/kvm/sys-hypervisor.c
+> > > > > 
+> > > > [...]
+> > > > 
+> > > > > 
+> > > > > +
+> > > > > +__weak const char *kvm_para_get_uuid(void)
+> > > > > +{
+> > > > > +	return NULL;
+> > > > > +}
+> > > > > +
+> > > > > +static ssize_t uuid_show(struct kobject *obj,
+> > > > > +			 struct kobj_attribute *attr,
+> > > > > +			 char *buf)
+> > > > > +{
+> > > > > +	const char *uuid = kvm_para_get_uuid();
+> > > > > +	return sprintf(buf, "%s\n", uuid);
+> > > > The usual return value for the Xen /sys/hypervisor interface is
+> > > > "<denied>". Wouldn't it make sense to follow that pattern for the KVM
+> > > > one too? Currently, if we can not determine the UUID this will just
+> > > > return (null).
+> > > > 
+> > > > Otherwise, looks good to me. Are you aware of any other files we should
+> > > > provide? Also, is there any reason not to implement ARM as well while at it?
+> > > > 
+> > > > Alex
+> > > This originated from a customer request that was using /sys/hypervisor/uuid.
+> > > My guess is that we would want to expose "type" and "version" moving
+> > > forward and that's when we hypervisor hooks will be useful on top
+> > > of arch hooks.
+> > > 
+> > > On a different note, any idea how to check whether the OS is running
+> > > virtualized on KVM on ARM and ARM64?  kvm_para_available() isn't an
+> > 
+> > 
+> > Yeah, ARM doesn't have any KVM PV FWIW. I also can't find any explicit 
+> > hint passed into guests that we are indeed running in KVM. The closest 
+> > thing I can see is the SMBIOS product identifier in QEMU which gets 
+> > patched to "KVM Virtual Machine". Maybe we'll have to do with that for 
+> > the sake of backwards compatibility ...
+> 
+> How about "psci_ops.conduit" (PSCI_CONDUIT_HVC vs PSCI_CONDUIT_SMC)?
 
-As far as we know, there's none. So we simply have to assume all
-those systems are single socket(IOW all CPUs reside inside a single
-SoC package) system.
+[changing Christoffer address for one that actually]
 
---
-Regards,
-Sudeep
+That's not enough. HVC only tells you about the fact that you are
+running under a hypervisor without telling you which one, and doesn't
+cater for nested virt. It doesn't tell you anything about a hypervisor
+that doesn't use HVC at all (it could only advertise SMC, for example).
+
+If you want to identify the hypervisor, don't guess. Use the SMCCC
+discovery mechanism, and make KVM identify itself as the hypervisor. I
+have some code for that stashed at [1] as part of an unrelated series,
+which I may post at some point.
+
+Thanks,
+
+	M.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/log/?h=kvm-arm64/pvcy
+
+-- 
+Jazz is not dead, it just smell funny.
