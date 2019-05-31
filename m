@@ -2,139 +2,154 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE09C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F546C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1023A26BF8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:23:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559319837;
-	bh=efAbtd2ephq3ZJ+e75edZWXg5Ub9SkPbKyfyY9Hh5qU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=yO117m3UA6+U0eBYYBfNnhFEaUaN4ORNZ45fuP2DPgyN5mRSQHJJ76FrC5HVGBDZ1
-	 s0ESPQrsZDhcuw/0OK/Y9h2X/mLaefCx+RvVgPGlaa4u/TZUHgp/JdBcytYlYadfyV
-	 2LnfPhuLzJ6i8mkE2yQdXYG2FEe1o1jp8lHwcahs=
+	by mail.kernel.org (Postfix) with ESMTP id 516BE26BFA
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:24:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WkbNgEwA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfEaQX4 (ORCPT
+        id S1726901AbfEaQYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 12:23:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35218 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726546AbfEaQXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 12:23:55 -0400
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C78B326BF8
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 16:23:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559319835;
-        bh=efAbtd2ephq3ZJ+e75edZWXg5Ub9SkPbKyfyY9Hh5qU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=1GTjQ4bKBpUZNLYNxsYoMB6gOI4xxNtlEBdDQatSNiGr5QltCyAtTw7ocauWoJQMc
-         B2j4PF8Ub8RR61CwnLkYYYy+MwlnhexTDkEs0i+NJoVNFJdiGBas5sDhjrYbPhjpbO
-         Haai5dz1o04iuV8JD9BE9hlgNbWGd0rg5yjc5MXU=
-Received: by mail-wm1-f49.google.com with SMTP id 16so1987338wmg.5
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 09:23:54 -0700 (PDT)
-X-Gm-Message-State: APjAAAVBaoZ4kO/U396LUBkPBXW//D0HTNMLPcaUXxT8AyQzJjewe/5Z
-        sRhMrLW9dBn+pziLcgf/+dWnMyw019x1jI0ZC6dhVQ==
-X-Google-Smtp-Source: APXvYqxZXzo/x+zipl4hnTwPXUOZvfyifCyETHcTpGpWwjYJHutyX2v/KLKuwXvBoO8UfHzJFsNQifVW3kxN18t73zk=
-X-Received: by 2002:a7b:cd84:: with SMTP id y4mr6365439wmj.79.1559319833382;
- Fri, 31 May 2019 09:23:53 -0700 (PDT)
+        Fri, 31 May 2019 12:24:20 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42792 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726563AbfEaQYU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 12:24:20 -0400
+Received: by mail-pf1-f194.google.com with SMTP id r22so6494161pfh.9
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 09:24:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=h/x2RsdaGEeomdfj9zckwm1ZuXHc7ti1LUsxVKWauDI=;
+        b=WkbNgEwAtHoOpsgf2n/OOj9tvUzmqxkk0wFQPqMbZDhKXrycKmph8DKGky42GC+koN
+         LJDEln958wkwnmRH28ZEap3NrGgf1V1D0g9IZCcP3z1+J4jMqALHLTOUy5KwiFNCWFFp
+         J5Vof1T/5pKxOH0N8kkgt3VneNxkghx7TLiVO3NO5Dfw0XE9zLDEnv4oejnEpiTXZOeJ
+         tDxDbRBsv0ZCYRogl5V2uwQD8iTi3aUBJXQrVEho7perE1vFrdRi0BvQ0ve9Pq7qowuL
+         FRZuY21tQBRvNHvnsPyF6is+8mWCTar820ssvKvNtiwoTjNWK3ZyaVAaR6TMz/HMowZi
+         esrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=h/x2RsdaGEeomdfj9zckwm1ZuXHc7ti1LUsxVKWauDI=;
+        b=hxebn/x2rk7wTOjJ2pbgwgb+ygcRZZQbsAKUn/UP2C11vRhe6nud0oVzsekUcCrMu2
+         +DoNycghxj24s4K3fx9mLE2y/QHB+WfBhDRibTbKAGb9MAyxEJl+MnJ6XvtyVKRQYZTZ
+         zNKJjUKhGgJQhGMJLRbY1KnZwpxUFbp0cGodqsBNdMmXngR0AxJzRIYu3e2YWO0gzuym
+         Uyg6+jvlRzPS0lQGwu7TxtvE2Qg7qkMat+rVXrOykHrQPdr4ESSjW7CG1LvZHRjs7tCx
+         GsPcl4yTv3hbAplPPySzJQ+3rmxROV+1xboQd6zkgfbJ4fWWerf0YABmDtABaXamdxb/
+         vulg==
+X-Gm-Message-State: APjAAAWoIevuK/RsDNYZ0cG2tMVD2gUlfDBj8iSoR+ZUwjv0Yz+ldVQu
+        wAhKqbPEXVYb/aQax1FIrHAT42a4iAkpyIPNMmkpHA==
+X-Google-Smtp-Source: APXvYqxuY1CYuxd04Kewq/lINHwhx4xTvJLFZIhJ6+qsHKD7HtPQ0W1vOSTfUsi9VyOoypjJcb2qINRGGNrlijbQeNg=
+X-Received: by 2002:a62:2c17:: with SMTP id s23mr11223321pfs.51.1559319859023;
+ Fri, 31 May 2019 09:24:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm>
- <20190531051456.fzkvn62qlkf6wqra@treble> <nycvar.YFH.7.76.1905311045240.1962@cbobk.fhfr.pm>
- <5564116.e9OFvgDRbB@kreacher> <CALCETrUpseta+NrhVwzzVFTe-BkBHtDUJBO22ci3mAsVR+XOog@mail.gmail.com>
- <nycvar.YFH.7.76.1905311628330.1962@cbobk.fhfr.pm> <B7AC83ED-3F11-42B9-8506-C842A5937B50@amacapital.net>
- <nycvar.YFH.7.76.1905311651450.1962@cbobk.fhfr.pm>
-In-Reply-To: <nycvar.YFH.7.76.1905311651450.1962@cbobk.fhfr.pm>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 31 May 2019 09:23:41 -0700
-X-Gmail-Original-Message-ID: <CALCETrUQzZTRnvmOS09UvRM9UCGEDvSdbJtkeeEa2foMf+hF2w@mail.gmail.com>
-Message-ID: <CALCETrUQzZTRnvmOS09UvRM9UCGEDvSdbJtkeeEa2foMf+hF2w@mail.gmail.com>
-Subject: Re: [PATCH v4] x86/power: Fix 'nosmt' vs. hibernation triple fault
- during resume
-To:     Jiri Kosina <jikos@kernel.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190521182932.sm4vxweuwo5ermyd@mbp> <201905211633.6C0BF0C2@keescook>
+ <6049844a-65f5-f513-5b58-7141588fef2b@oracle.com> <20190523201105.oifkksus4rzcwqt4@mbp>
+ <ffe58af3-7c70-d559-69f6-1f6ebcb0fec6@oracle.com> <20190524101139.36yre4af22bkvatx@mbp>
+ <c6dd53d8-142b-3d8d-6a40-d21c5ee9d272@oracle.com> <CAAeHK+yAUsZWhp6xPAbWewX5Nbw+-G3svUyPmhXu5MVeEDKYvA@mail.gmail.com>
+ <20190530171540.GD35418@arrakis.emea.arm.com> <CAAeHK+y34+SNz3Vf+_378bOxrPaj_3GaLCeC2Y2rHAczuaSz1A@mail.gmail.com>
+ <20190531161954.GA3568@arrakis.emea.arm.com>
+In-Reply-To: <20190531161954.GA3568@arrakis.emea.arm.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Fri, 31 May 2019 18:24:06 +0200
+Message-ID: <CAAeHK+zRDD7ZPPUA9cpwHOdgTRrJLWAby8Wg9oPgmhqMpHwvFw@mail.gmail.com>
+Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Evgenii Stepanov <eugenis@google.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        Elliott Hughes <enh@google.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 7:54 AM Jiri Kosina <jikos@kernel.org> wrote:
+On Fri, May 31, 2019 at 6:20 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
 >
-> On Fri, 31 May 2019, Andy Lutomirski wrote:
+> On Fri, May 31, 2019 at 04:29:10PM +0200, Andrey Konovalov wrote:
+> > On Thu, May 30, 2019 at 7:15 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > > On Tue, May 28, 2019 at 04:14:45PM +0200, Andrey Konovalov wrote:
+> > > > Thanks for a lot of valuable input! I've read through all the replies
+> > > > and got somewhat lost. What are the changes I need to do to this
+> > > > series?
+> > > >
+> > > > 1. Should I move untagging for memory syscalls back to the generic
+> > > > code so other arches would make use of it as well, or should I keep
+> > > > the arm64 specific memory syscalls wrappers and address the comments
+> > > > on that patch?
+> > >
+> > > Keep them generic again but make sure we get agreement with Khalid on
+> > > the actual ABI implications for sparc.
+> >
+> > OK, will do. I find it hard to understand what the ABI implications
+> > are. I'll post the next version without untagging in brk, mmap,
+> > munmap, mremap (for new_address), mmap_pgoff, remap_file_pages, shmat
+> > and shmdt.
 >
-> > For that matter, what actually happens if we get an SMI while halted?
-> > Does RSM go directly to sleep or does it re-fetch the HLT?
+> It's more about not relaxing the ABI to accept non-zero top-byte unless
+> we have a use-case for it. For mmap() etc., I don't think that's needed
+> but if you think otherwise, please raise it.
 >
-> Our mails just crossed, I replied to Josh's mwait() proposal patch a
-> minute ago.
+> > > > 2. Should I make untagging opt-in and controlled by a command line argument?
+> > >
+> > > Opt-in, yes, but per task rather than kernel command line option.
+> > > prctl() is a possibility of opting in.
+> >
+> > OK. Should I store a flag somewhere in task_struct? Should it be
+> > inheritable on clone?
 >
-> HLT is guaranteed to be re-entered if SMM interrupted it, while MWAIT is
-> not.
+> A TIF flag would do but I'd say leave it out for now (default opted in)
+> until we figure out the best way to do this (can be a patch on top of
+> this series).
+
+You mean leave the whole opt-in/prctl part out? So the only change
+would be to move untagging for memory syscalls into generic code?
+
 >
-> So as a short-term fix for 5.2, I still believe in v4 of my patch that
-> does the mwait->hlt->mwait transition across hibernate/resume, and for 5.=
-3
-> I can look into forcing it to wait-for-SIPI proper.
+> Thanks.
 >
-
-How sure are you?  From http://www.rcollins.org/ddj/Mar97/Mar97.html I see:
-
-In general, the AutoHALT field directs the microprocessor whether or
-not to restart the HLT instruction upon exit of SMM. This is
-accomplished by decrementing EIP and executing whatever instruction
-resides at that position. AutoHALT restart behavior is consistent,
-regardless of whether or not EIP-1 contains a HLT instruction. If the
-SMM handler set Auto HALT[bit0]=3D1 when the interrupted instruction was
-not a HLT instruction(AutoHALT[bit0]=3D 0 upon entrance), they would run
-the risk of resuming execution at an undesired location. The RSM
-microcode doesn=E2=80=99t know the length of the interrupted instruction.
-Therefore when AutoHALT[bit0]=3D1 upon exit, the RSM microcode blindly
-decrements the EIP register by 1 and resumes execution. This explains
-why Intel warns that unpredictable behavior may result from setting
-this field to restart a HLT instruction when the microprocessor wasn=E2=80=
-=99t
-in a HALT state upon entrance. Listing One presents an algorithm that
-describes the AutoHALT Restart feature.
-
-The AMD APM says:
-
-If the return from SMM takes the processor back to the halt state, the
-HLT instruction is not re-
-executed. However, the halt special bus-cycle is driven on the
-processor bus after the RSM instruction
-executes.
-
-The Intel SDM Vol 3 34.10 says:
-
-If the HLT instruction is restarted, the processor will generate a
-memory access to fetch the HLT instruction (if it is
-not in the internal cache), and execute a HLT bus transaction. This
-behavior results in multiple HLT bus transactions
-for the same HLT instruction.
-
-And the SDM is very clear that one should *not* do RSM with auto-halt
-set if the instruction that was interrupted wasn't HLT.
-
-It sounds to me like Intel does not architecturally guarantee that
-it's okay to do HLT from one CPU and then remove the HLT instruction
-out from under it on another CPU.
+> --
+> Catalin
