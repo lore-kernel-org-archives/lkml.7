@@ -2,138 +2,226 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6A1C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 180F4C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24AFC26F19
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEBCB26F20
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:07:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zDxr9MwX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727649AbfEaVGM (ORCPT
+        id S1727661AbfEaVHU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 17:06:12 -0400
-Received: from mga09.intel.com ([134.134.136.24]:16314 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726558AbfEaVGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 17:06:12 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 May 2019 14:06:11 -0700
-X-ExtLoop1: 1
-Received: from ray.jf.intel.com (HELO [10.7.198.156]) ([10.7.198.156])
-  by orsmga008.jf.intel.com with ESMTP; 31 May 2019 14:06:11 -0700
-Subject: Re: [RFC PATCH v2 11/12] x86/mm/tlb: Use async and inline messages
- for flushing
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Nadav Amit <namit@vmware.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-References: <20190531063645.4697-1-namit@vmware.com>
- <20190531063645.4697-12-namit@vmware.com>
- <20190531105758.GO2623@hirez.programming.kicks-ass.net>
- <16D8E001-98A0-4ABC-AFE8-0F230B869027@amacapital.net>
- <82DB7035-D7BE-4D79-BBC0-B271FB4BF740@vmware.com>
- <4e0ed5a5-0e5e-3481-e646-3f032f17ac60@intel.com>
- <CALCETrVf9dh4GxEXsHbP65x6YuzOBf+7HWqOgBBjUma+7nB6Nw@mail.gmail.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <90a891a2-6be4-bfa2-5de1-5e36d1bc0b48@intel.com>
-Date:   Fri, 31 May 2019 14:06:11 -0700
+        Fri, 31 May 2019 17:07:20 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:44540 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727196AbfEaVHU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 17:07:20 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4VL7DbR108552;
+        Fri, 31 May 2019 16:07:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559336833;
+        bh=kUuiyLNO9I7AX8rnyIlR6E0SbWaESymz+6qSpyhOkzQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=zDxr9MwXWjuG8jRobkaS70rVQmNov+QE6CtHnoeW+aaEV60YFj3Z8VgC3hV4sJsed
+         SZ7mFXTk7HApsghjv3ogjfIZFJWheZOTvZyhipkrIG8QsKJ63PZbDVUDFh5AEtexq5
+         1HeoyqoTGYOzVlqrgRzZETvflktH7Bj8HsLMLnho=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4VL7DoW117869
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 31 May 2019 16:07:13 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 31
+ May 2019 16:07:12 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 31 May 2019 16:07:12 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4VL7Cmf124175;
+        Fri, 31 May 2019 16:07:12 -0500
+Subject: Re: [RESEND PATCH v4 6/6] leds: lm36274: Introduce the TI LM36274 LED
+ driver
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>
+CC:     Pavel Machek <pavel@ucw.cz>, <broonie@kernel.org>,
+        <lgirdwood@gmail.com>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190522192733.13422-1-dmurphy@ti.com>
+ <20190522192733.13422-7-dmurphy@ti.com> <20190523125012.GB20354@amd>
+ <0c2bd6af-92c5-2458-dc41-1ea413545347@ti.com>
+ <89a80aa8-66ee-d0ec-fa54-c55ca8de06af@gmail.com> <20190529135821.GK4574@dell>
+ <afff7c24-bb68-e9dc-295e-4449f9729cc9@gmail.com> <20190530073827.GL4574@dell>
+ <c75025f5-a984-78fa-2737-d10027e5741c@gmail.com> <20190531062312.GP4574@dell>
+ <8b4cfc12-284d-6daf-c82d-4c8e487cc203@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <ec1066ec-c68b-c1ee-dd70-6be7f71924eb@ti.com>
+Date:   Fri, 31 May 2019 16:07:12 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <CALCETrVf9dh4GxEXsHbP65x6YuzOBf+7HWqOgBBjUma+7nB6Nw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <8b4cfc12-284d-6daf-c82d-4c8e487cc203@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/31/19 1:37 PM, Andy Lutomirski wrote:
->> Modulo bugs^Werrata...  No.  What actually happens is that a
->> try-to-set-dirty-bit page table walk acts just like a TLB miss.  The old
->> contents of the TLB are discarded and only the in-memory contents matter
->> for forward progress.  If Present=0 when the PTE is reached, you'll get
->> a normal Present=0 page fault.
-> Wait, does that mean that you can do a lock cmpxchg or similar to
-> clear the dirty and writable bits together and, if the dirty bit was
-> clear, skip the TLB flush?
+Hello
 
-Yeah, in the case that you're going from R/W->R/O, you can be assured
-that no writable TLB entries were established if D=0.
+On 5/31/19 2:44 PM, Jacek Anaszewski wrote:
+> On 5/31/19 8:23 AM, Lee Jones wrote:
+>> On Thu, 30 May 2019, Jacek Anaszewski wrote:
+>>
+>>> On 5/30/19 9:38 AM, Lee Jones wrote:
+>>>> On Wed, 29 May 2019, Jacek Anaszewski wrote:
+>>>>
+>>>>> On 5/29/19 3:58 PM, Lee Jones wrote:
+>>>>>> On Fri, 24 May 2019, Jacek Anaszewski wrote:
+>>>>>>
+>>>>>>> Hi,
+>>>>>>>
+>>>>>>> On 5/23/19 9:09 PM, Dan Murphy wrote:
+>>>>>>>> Pavel
+>>>>>>>>
+>>>>>>>> Thanks for the review
+>>>>>>>>
+>>>>>>>> On 5/23/19 7:50 AM, Pavel Machek wrote:
+>>>>>>>>> Hi!
+>>>>>>>>>
+>>>>>>>>>> +++ b/drivers/leds/leds-lm36274.c
+>>>>>>>>>
+>>>>>>>>>> +static int lm36274_parse_dt(struct lm36274 *lm36274_data)
+>>>>>>>>>> +{
+>>>>>>>>>> +    struct fwnode_handle *child = NULL;
+>>>>>>>>>> +    char label[LED_MAX_NAME_SIZE];
+>>>>>>>>>> +    struct device *dev = &lm36274_data->pdev->dev;
+>>>>>>>>>> +    const char *name;
+>>>>>>>>>> +    int child_cnt;
+>>>>>>>>>> +    int ret = -EINVAL;
+>>>>>>>>>> +
+>>>>>>>>>> +    /* There should only be 1 node */
+>>>>>>>>>> +    child_cnt = device_get_child_node_count(dev);
+>>>>>>>>>> +    if (child_cnt != 1)
+>>>>>>>>>> +        return ret;
+>>>>>>>>>
+>>>>>>>>> I'd do explicit "return -EINVAL" here.
+>>>>>>>>>
+>>>>>>>>
+>>>>>>>> ACK
+>>>>>>>>
+>>>>>>>>>> +static int lm36274_probe(struct platform_device *pdev)
+>>>>>>>>>> +{
+>>>>>>>>>> +    struct ti_lmu *lmu = dev_get_drvdata(pdev->dev.parent);
+>>>>>>>>>> +    struct lm36274 *lm36274_data;
+>>>>>>>>>> +    int ret;
+>>>>>>>>>> +
+>>>>>>>>>> +    lm36274_data = devm_kzalloc(&pdev->dev, 
+>>>>>>>>>> sizeof(*lm36274_data),
+>>>>>>>>>> +                    GFP_KERNEL);
+>>>>>>>>>> +    if (!lm36274_data) {
+>>>>>>>>>> +        ret = -ENOMEM;
+>>>>>>>>>> +        return ret;
+>>>>>>>>>> +    }
+>>>>>>>>>
+>>>>>>>>> And certainly do "return -ENOMEM" explicitly here.
+>>>>>>>>>
+>>>>>>>>
+>>>>>>>> ACK
+>>>>>>>>
+>>>>>>>>> Acked-by: Pavel Machek <pavel@ucw.cz>
+>>>>>>>
+>>>>>>> I've done all amendments requested by Pavel and updated branch
+>>>>>>> ib-leds-mfd-regulator on linux-leds.git, but in the same time
+>>>>>>
+>>>>>> What do you mean by updated?  You cannot update an 'ib' (immutable
+>>>>>> branch).  Immutable means that it cannot change, by definition.
+>>>>>
+>>>>> We have already talked about that. Nobody has pulled so the branch
+>>>>> could have been safely updated.
+>>>>
+>>>> You have no sure way to know that.  And since I have no way to know,
+>>>> or faith that you won't update it again, pulling it now/at all would
+>>>> seem like a foolish thing to do.
+>>>
+>>> Sorry, but you are simply unjust. You're pretending to portray the
+>>> situation as if I have been notoriously causing merge conflicts in
+>>> linux-next which did not take place.
+>>>
+>>> Just to recap what this discussion is about:
+>>>
+>>> On 7 Apr 2019:
+>>>
+>>> 1. I sent pull request [0].
+>>> 2. 45 minutes later I updated it after discovering one omission [1].
+>>>     It was rather small chance for it to be pulled as quickly as that.
+>>>     And even if it happened it wouldn't have been much harmful - we
+>>>     wouldn't have lost e.g. weeks of testing in linux-next due to that
+>>>     fact.
+>>>
+>>> On 21 May 2019:
+>>>
+>>> 3. I sent another pull request [2] to you and REGULATOR maintainers.
+>>>     After it turned out that lack of feedback from REGULATOR 
+>>> maintainers
+>>>     was caused by failing to send them the exact copies of patches to
+>>>     review, I informed you about possible need for updating the branch.
+>>>     Afterwards I received a reply from you saying that you hadn't 
+>>> pulled
+>>>     the branch anyway. At that point I was sure that neither MFD nor
+>>>     REGULATOR tree contains the patches. And only after that I updated
+>>>     the branch.
+>>
+>> Here are 2 examples where you have changed immutable branches, which
+>> is 100% of the Pull Requests I have received from you.  Using that
+>> record as a benchmark, the situation hardly seems unjust.
+>>
+>>>> Until you can provide me with an assurance that you will not keep
+>>>> updating/changing the supposedly immutable pull-requests you send out,
+>>>> I won't be pulling any more in.
+>>>
+>>> I can just uphold the assurance which is implicitly assumed for anyone
+>>> who has never broken acclaimed rules. As justified above.
+>>
+>> You have broken the rules every (100% of the) time.
+>
+> Yes, I admit, I would lose in court.
+>
+>>> [0] https://lore.kernel.org/patchwork/patch/1059075/
+>>> [1] https://lore.kernel.org/patchwork/patch/1059080/
+>>> [2] https://lore.kernel.org/patchwork/patch/1077066/
+>>
+>> So we have 2 choices moving forward; you can either provide me with
+>> assurance that you have learned from this experience and will never
+>> change an *immutable* branch again, or I can continue to handle them,
+>> which has been the preference for some years.
+>>
+>> If you choose the former and adaptions need to be made in the future,
+>> the correct thing to do is create a *new*, different pull-request
+>> which has its own *new*, different tag, but uses the original tag as a
+>> base.
+>
+> I choose the former. That being said:
+>
+> Hereby I solemnly declare never ever change an immutable branch again.
+>
+So how do I proceed with the requested change by Mark B on the LM36274 
+driver.
 
-Is it totally safe against other things?  Hell if I know. :)
+Do I add a patch on top?
 
-I'd want to go look very closely at software things like GUP-for-write
-before we went and actually did this.  But I can't think of any hardware
-reasons off the top of my head why it wouldn't work.
+Or do I submit a patch to the regulator tree once the PR is pulled?
 
-A quick perusal of the SDM didn't have any slam dunks do support doing
-this.  It's a bit cagey about exactly what can be cached and when.  The
-supporting reasoning might have escaped my quick scan, though.
+Dan
 
-> If so, nifty!  Modulo errata, of course. And I seem to remember some
-> exceptions relating to CET shadow stack involving the dirty bit being
-> set on not-present pages.
-
-Yeah: "no processor that supports CET will ever set the dirty flag in a
-paging-structure entry in which the R/W flag is 0"
-
-> https://software.intel.com/sites/default/files/managed/4d/2a/control-flow-enforcement-technology-preview.pdf
-
-Which probably means that the things we were saying above are
-technically only architectural on CET-enabled processors.  I think the
-behavior is actually much more widespread than that, though.
