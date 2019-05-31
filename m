@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97630C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31578C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CC1A26B96
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:19:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06BC326B96
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:19:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559315963;
-	bh=PPA77UhfqwfqV9DRVF6HwkKX2nvySm7IR28fGmthLwg=;
+	s=default; t=1559315976;
+	bh=URfSMtDYi+N/C9oylQ4TkXoqD24ZlG4i98jqimuvqKU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aYYBb+3TPrFOKybYoL+C2NVwIojKys1y+bwpDhcaE89RQ1OrLrKvvUNyyi5KTXF+h
-	 g0/LMaBeRWng4csO20uyFO2Su8tbodc9RGA6OQlvPSquF7Q3CkSzc9rMLSSEjTi2eN
-	 aYi+HIFuinXQfrD0V3vcFvsZlUJB61Kx4sGTXMgk=
+	b=k+XE3/q7XFJg8n78Nn8WU0ujUjp7EeUwyr8MModWMuB1sGrFfr3nK9OqM9dhEheHh
+	 pmZJ3FxbM63u96YtPlKTyaIVq7CkCJu47D2XS/7fJ+BlIn+oaHALeu5YCAR7CzNaOJ
+	 b9b3UUpQc5xo0oVa1xfyM5BmEZ4wj85QkQTH3H1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbfEaPTW (ORCPT
+        id S1727083AbfEaPTe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 11:19:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36444 "EHLO mail.kernel.org"
+        Fri, 31 May 2019 11:19:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726515AbfEaPTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 11:19:21 -0400
+        id S1726515AbfEaPTd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 11:19:33 -0400
 Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69BBC26B9B;
-        Fri, 31 May 2019 15:19:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADAD726B93;
+        Fri, 31 May 2019 15:19:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559315961;
-        bh=PPA77UhfqwfqV9DRVF6HwkKX2nvySm7IR28fGmthLwg=;
+        s=default; t=1559315972;
+        bh=URfSMtDYi+N/C9oylQ4TkXoqD24ZlG4i98jqimuvqKU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S101Pz4s2vhCyW9Gz3LEgkAefnGs8vuUYuoMq24jpkS+lfvnbcWOiydtf6N80/Oso
-         myvceZjOOGMejpHFAYTBuD9fCf+g2bKuNcOJVkZsy+R2ayA5BtkTNgIMUM2BEm7w++
-         MR6BV7fkqhy9RbqVflDW5wbVSCulRH8Oga27lG58=
+        b=JA0wYwjWpWBbt2zWiNYrl1DQECM+PbU+YZYDjC79gFh+xAh81bcxmcCYHQ+mzcrlo
+         qF4AjbLljJFiDDajnCj2ZeDE92wkEap/eNg3xFJDHA1bzvyuWgNXjrU4FDYOvSktKH
+         A7qlLPV9pF3UE6JAm48QhZOPHY5zVLqvSyiGnRps=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
@@ -47,9 +47,9 @@ Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
         Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 16/21] tracing/uprobe: Add per-probe delete from event
-Date:   Sat,  1 Jun 2019 00:19:17 +0900
-Message-Id: <155931595698.28323.17594202275209962525.stgit@devnote2>
+Subject: [PATCH 17/21] tracing/probe: Add immediate parameter support
+Date:   Sat,  1 Jun 2019 00:19:27 +0900
+Message-Id: <155931596691.28323.8021073968189476540.stgit@devnote2>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <155931578555.28323.16360245959211149678.stgit@devnote2>
 References: <155931578555.28323.16360245959211149678.stgit@devnote2>
@@ -62,61 +62,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add per-probe delete method from one event passing the head of
-definition. In other words, the events which match the head
-N parameters are deleted.
+Add immediate value parameter (\1234) support to
+probe events. This allows you to specify an immediate
+(or dummy) parameter instead of fetching from memory
+or register.
+
+This feature looks odd, but imagine when you put a probe
+on a code to trace some data. If the code is compiled into
+2 instructions and 1 instruction has a value but other has
+nothing since it is optimized out.
+In that case, you can not fold those into one event, even
+if ftrace supported multiple probes on one event.
+With this feature, you can set a dummy value like
+foo=\deadbeef instead of something like foo=%di.
 
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- kernel/trace/trace_uprobe.c |   31 ++++++++++++++++++++++++++++++-
- 1 file changed, 30 insertions(+), 1 deletion(-)
+ Documentation/trace/kprobetrace.rst  |    1 +
+ Documentation/trace/uprobetracer.rst |    1 +
+ kernel/trace/trace.c                 |    2 +-
+ kernel/trace/trace_probe.c           |   18 ++++++++++++++++++
+ kernel/trace/trace_probe.h           |    1 +
+ 5 files changed, 22 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index 1bd6c29cc0f3..d2e200729c23 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -284,13 +284,42 @@ static bool trace_uprobe_is_busy(struct dyn_event *ev)
- 	return trace_probe_is_enabled(&tu->tp);
+diff --git a/Documentation/trace/kprobetrace.rst b/Documentation/trace/kprobetrace.rst
+index af776989caca..772467f65a36 100644
+--- a/Documentation/trace/kprobetrace.rst
++++ b/Documentation/trace/kprobetrace.rst
+@@ -52,6 +52,7 @@ Synopsis of kprobe_events
+   $retval	: Fetch return value.(\*2)
+   $comm		: Fetch current task comm.
+   +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS address.(\*3)(\*4)
++  \IMM		: Store an immediate value to the argument.
+   NAME=FETCHARG : Set NAME as the argument name of FETCHARG.
+   FETCHARG:TYPE : Set TYPE as the type of FETCHARG. Currently, basic types
+ 		  (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal types
+diff --git a/Documentation/trace/uprobetracer.rst b/Documentation/trace/uprobetracer.rst
+index ab13319c66ac..2b4697c0bed7 100644
+--- a/Documentation/trace/uprobetracer.rst
++++ b/Documentation/trace/uprobetracer.rst
+@@ -45,6 +45,7 @@ Synopsis of uprobe_tracer
+    $retval	: Fetch return value.(\*1)
+    $comm	: Fetch current task comm.
+    +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS address.(\*2)(\*3)
++   \IMM		: Store an immediate value to the argument.
+    NAME=FETCHARG     : Set NAME as the argument name of FETCHARG.
+    FETCHARG:TYPE     : Set TYPE as the type of FETCHARG. Currently, basic types
+ 		       (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal types
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 73fbe3b0dd08..3608535f1935 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -4846,7 +4846,7 @@ static const char readme_msg[] =
+ #else
+ 	"\t           $stack<index>, $stack, $retval, $comm,\n"
+ #endif
+-	"\t           +|-[u]<offset>(<fetcharg>)\n"
++	"\t           +|-[u]<offset>(<fetcharg>), \\imm-value\n"
+ 	"\t     type: s8/16/32/64, u8/16/32/64, x8/16/32/64, string, symbol,\n"
+ 	"\t           b<bit-width>@<bit-offset>/<container-size>, ustring,\n"
+ 	"\t           <type>\\[<array-size>\\]\n"
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index f8c3c65c035d..fb90baec3cd8 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -316,6 +316,17 @@ static int parse_probe_vars(char *arg, const struct fetch_type *t,
+ 	return -EINVAL;
  }
  
-+static bool trace_uprobe_match_command_head(struct trace_uprobe *tu,
-+					    int argc, const char **argv)
++static int str_to_immediate(char *str, unsigned long *imm)
 +{
-+	char buf[MAX_ARGSTR_LEN + 1];
-+	int len;
-+
-+	if (!argc)
-+		return true;
-+
-+	len = strlen(tu->filename);
-+	if (argv[0][len] != ':' || strncmp(tu->filename, argv[0], len))
-+		return false;
-+
-+	if (tu->ref_ctr_offset == 0)
-+		snprintf(buf, sizeof(buf), "0x%0*lx",
-+				(int)(sizeof(void *) * 2), tu->offset);
-+	else
-+		snprintf(buf, sizeof(buf), "0x%0*lx(0x%lx)",
-+				(int)(sizeof(void *) * 2), tu->offset,
-+				tu->ref_ctr_offset);
-+	if (strcmp(buf, &argv[0][len + 1]))
-+		return false;
-+
-+	argc--; argv++;
-+
-+	return trace_probe_match_command_args(&tu->tp, argc, argv);
++	if (isdigit(str[0]))
++		return kstrtoul(str, 0, imm);
++	else if (str[0] == '-')
++		return kstrtol(str, 0, (long *)imm);
++	else if (str[0] == '+')
++		return kstrtol(str + 1, 0, (long *)imm);
++	return -EINVAL;
 +}
 +
- static bool trace_uprobe_match(const char *system, const char *event,
- 			int argc, const char **argv, struct dyn_event *ev)
- {
- 	struct trace_uprobe *tu = to_trace_uprobe(ev);
- 
- 	return strcmp(trace_probe_name(&tu->tp), event) == 0 &&
--	    (!system || strcmp(trace_probe_group_name(&tu->tp), system) == 0);
-+	   (!system || strcmp(trace_probe_group_name(&tu->tp), system) == 0) &&
-+	   trace_uprobe_match_command_head(tu, argc, argv);
- }
- 
- static nokprobe_inline struct trace_uprobe *
+ /* Recursive argument parser */
+ static int
+ parse_probe_arg(char *arg, const struct fetch_type *type,
+@@ -444,6 +455,13 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
+ 			code->offset = offset;
+ 		}
+ 		break;
++	case '\\':	/* Immediate value */
++		ret = str_to_immediate(arg + 1, &code->immediate);
++		if (ret)
++			trace_probe_log_err(offs + 1, BAD_IMM);
++		else
++			code->op = FETCH_OP_IMM;
++		break;
+ 	}
+ 	if (!ret && code->op == FETCH_OP_NOP) {
+ 		/* Parsed, but do not find fetch method */
+diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+index 2dcc4e317787..cc113b82a4ce 100644
+--- a/kernel/trace/trace_probe.h
++++ b/kernel/trace/trace_probe.h
+@@ -408,6 +408,7 @@ extern int traceprobe_define_arg_fields(struct trace_event_call *event_call,
+ 	C(BAD_VAR,		"Invalid $-valiable specified"),	\
+ 	C(BAD_REG_NAME,		"Invalid register name"),		\
+ 	C(BAD_MEM_ADDR,		"Invalid memory address"),		\
++	C(BAD_IMM,		"Invalid immediate value"),		\
+ 	C(FILE_ON_KPROBE,	"File offset is not available with kprobe"), \
+ 	C(BAD_FILE_OFFS,	"Invalid file offset value"),		\
+ 	C(SYM_ON_UPROBE,	"Symbol is not available with uprobe"),	\
 
