@@ -2,175 +2,182 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DDBC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 595BBC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 20:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A706226E9B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0803426E9C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 20:00:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u+WzyLtE"
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="C1B4JLYG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727427AbfEaT7i (ORCPT
+        id S1727457AbfEaUAh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 15:59:38 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:41531 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727282AbfEaT7i (ORCPT
+        Fri, 31 May 2019 16:00:37 -0400
+Received: from forward104j.mail.yandex.net ([5.45.198.247]:55548 "EHLO
+        forward104j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727282AbfEaUAg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 15:59:38 -0400
-Received: by mail-ed1-f65.google.com with SMTP id x25so4018783eds.8
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 12:59:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3SkRaYCGnq1C8VvlqaJ8i8zblsitHZj5v7WamNGN6H8=;
-        b=u+WzyLtECMcbvjVI27nPUY/f1sNnnGQ4v95OEd2FRD+2RIN3aj6jzGAF/2PTtZkWbl
-         IsTT3rCeorqDEpWXIuiNbgTjlGHWnHUr/D/sOZSUHeY0xjsMN9HKVI7kH6G0gclx6jkl
-         B82MHaosoGQikbSAqSxEEk2TDrSJO/hPcw3taZ9jfyFUJ4ANImCDvahXr9qfh8f2T5BE
-         FHCu+ECupVFYxp5GFBf5w0hdhwEUn3OgrWM+Py/pRkyzEODGAZgWcZ81VdDKzxCOPVfN
-         6nLxbxuIKeaZTg+ce2C7SPKFLQaUE7po1agK96jvrVl4UCS91D4hCsJWwk8pQ0eJ7d9+
-         0WLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3SkRaYCGnq1C8VvlqaJ8i8zblsitHZj5v7WamNGN6H8=;
-        b=JBiQX/fKL0ClC49lS+LC3VteK6fc9+adXDKk5+M3zQU0hDe/O3qYDBziq8Yosx7oR5
-         bL9nc8iRgjmSQPAg9e3cJYc7NBNvGKZcTZx3hxQ1iRdPAc6TVa96H1B9syvwQCc42Wrs
-         G+lh3FseWZt7KckS9GDERMBzsFTJdteTNftLDhIpwz2qleAzRi7UiCUXf1hTNB/cARY+
-         tEIL0LOHEEh+EvIv4klKf6fyTuENyEsu50V723gVs/YRohUNOTm9OteZJ51wA5TRR7lV
-         lLz0WiEai7e5Gz2unpnsKZaWElLncp+XrQ3hS8ITP9g2neeDUu17ma6awMMrVl0XyJ7L
-         OJ2g==
-X-Gm-Message-State: APjAAAWY+JcrMXslh394iUPxzej1MpWQsST4+awyRaFvPaJIbVZ7ONw2
-        Ab36ra7G1VmNnOkeUqoBQz1DyiRS/tsoqhRJzFYb6Q==
-X-Google-Smtp-Source: APXvYqwCViODZUf7+K8dCeviTHiMP+R9s9zcehJqctp1p3kVpVxvg6odZUTsjoHWEEexh9KnE9DVXLpFwc9HMKyIdjU=
-X-Received: by 2002:a17:906:2922:: with SMTP id v2mr10871610ejd.115.1559332775551;
- Fri, 31 May 2019 12:59:35 -0700 (PDT)
+        Fri, 31 May 2019 16:00:36 -0400
+X-Greylist: delayed 401 seconds by postgrey-1.27 at vger.kernel.org; Fri, 31 May 2019 16:00:35 EDT
+Received: from mxback16j.mail.yandex.net (mxback16j.mail.yandex.net [IPv6:2a02:6b8:0:1619::92])
+        by forward104j.mail.yandex.net (Yandex) with ESMTP id 005A34A0413;
+        Fri, 31 May 2019 22:53:53 +0300 (MSK)
+Received: from smtp3o.mail.yandex.net (smtp3o.mail.yandex.net [2a02:6b8:0:1a2d::27])
+        by mxback16j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id d5NH6O2W6Q-rq10wlFj;
+        Fri, 31 May 2019 22:53:52 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1559332432;
+        bh=5LPGI2g/Pppy4VTLsIsroNZrvadc1PssQ7CE756xPVY=;
+        h=Subject:To:From:Message-Id:Cc:Date;
+        b=C1B4JLYGly9KmpERhIjPTdLL2l+F3MVcts0MaZ0pYdvA3YA/OCYtYtO9phRCcIBv6
+         dGuWCd5QtEWAQN/P4lAfKV5SLLDgDxtSGWHE1+jCPRWWnE7/JnRRJ14EwOkoX8AJ8u
+         nWtqmJ4p6YnhbbDQzVsTihsr3BTxpRYvzoqwYJLI=
+Authentication-Results: mxback16j.mail.yandex.net; dkim=pass header.i=@yandex.ru
+Received: by smtp3o.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id aBebW1wM4V-rphi5q2w;
+        Fri, 31 May 2019 22:53:51 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+From:   Andrey Abramov <st5pub@yandex.ru>
+To:     clm@fb.com, josef@toxicpanda.com, dsterba@suse.com
+Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        st5pub@yandex.ru
+Subject: [PATCH] btrfs: Fix -Wunused-but-set-variable warnings
+Date:   Fri, 31 May 2019 22:53:49 +0300
+Message-Id: <20190531195349.31129-1-st5pub@yandex.ru>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <CAOyeoRWfPNmaWY6Lifdkdj3KPPM654vzDO+s3oduEMCJP+Asow@mail.gmail.com>
- <5CEC9667.30100@intel.com> <CAOyeoRWhfyuuYdguE6Wrzd7GOdow9qRE4MZ4OKkMc5cdhDT53g@mail.gmail.com>
- <5CEE3AC4.3020904@intel.com> <CAOyeoRW85jV=TW_xwSj0ZYwPj_L+G9wu+QPGEF3nBmPbWGX4_g@mail.gmail.com>
- <5CF07D37.9090805@intel.com>
-In-Reply-To: <5CF07D37.9090805@intel.com>
-From:   Eric Hankland <ehankland@google.com>
-Date:   Fri, 31 May 2019 12:59:24 -0700
-Message-ID: <CAOyeoRXWQaVYZSVL_LTTdAwJOEr+eCzhp1=_JcOX3i6_CJiD_g@mail.gmail.com>
-Subject: Re: [PATCH v1] KVM: x86: PMU Whitelist
-To:     Wei Wang <wei.w.wang@intel.com>
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 5:57 PM Wei Wang <wei.w.wang@intel.com> wrote:
->
-> On 05/30/2019 01:11 AM, Eric Hankland wrote:
-> > On Wed, May 29, 2019 at 12:49 AM Wei Wang <wei.w.wang@intel.com> wrote:
-> >> On 05/29/2019 02:14 AM, Eric Hankland wrote:
-> >>> On Mon, May 27, 2019 at 6:56 PM Wei Wang <wei.w.wang@intel.com> wrote:
-> >>>> On 05/23/2019 06:23 AM, Eric Hankland wrote:
-> >>>>> - Add a VCPU ioctl that can control which events the guest can monitor.
-> >>>>>
-> >>>>> Signed-off-by: ehankland <ehankland@google.com>
-> >>>>> ---
-> >>>>> Some events can provide a guest with information about other guests or the
-> >>>>> host (e.g. L3 cache stats); providing the capability to restrict access
-> >>>>> to a "safe" set of events would limit the potential for the PMU to be used
-> >>>>> in any side channel attacks. This change introduces a new vcpu ioctl that
-> >>>>> sets an event whitelist. If the guest attempts to program a counter for
-> >>>>> any unwhitelisted event, the kernel counter won't be created, so any
-> >>>>> RDPMC/RDMSR will show 0 instances of that event.
-> >>>> The general idea sounds good to me :)
-> >>>>
-> >>>> For the implementation, I would have the following suggestions:
-> >>>>
-> >>>> 1) Instead of using a whitelist, it would be better to use a blacklist to
-> >>>> forbid the guest from counting any core level information. So by default,
-> >>>> kvm maintains a list of those core level events, which are not supported to
-> >>>> the guest.
-> >>>>
-> >>>> The userspace ioctl removes the related events from the blacklist to
-> >>>> make them usable by the guest.
-> >>>>
-> >>>> 2) Use vm ioctl, instead of vcpu ioctl. The blacklist-ed events can be
-> >>>> VM wide
-> >>>> (unnecessary to make each CPU to maintain the same copy).
-> >>>> Accordingly, put the pmu event blacklist into kvm->arch.
-> >>>>
-> >>>> 3) Returning 1 when the guest tries to set the evetlsel msr to count an
-> >>>> event which is on the blacklist.
-> >>>>
-> >>>> Best,
-> >>>> Wei
-> >>> Thanks for the feedback. I have a couple concerns with a KVM
-> >>> maintained blacklist. First, I'm worried it will be difficult to keep
-> >>> such a list up to date and accurate (both coming up with the initial
-> >>> list since there are so many events, and updating it whenever any new
-> >>> events are published or vulnerabilities are discovered).
-> >> Not sure about "so many" above. I think there should be much
-> >> fewer events that may need to be blacklisted.
-> >>
-> >> For example the event table 19-3 from SDM 19.2 shows hundreds of
-> >> events, how many of them would you think that need to be blacklisted?
-> >>
-> >>> Second, users
-> >>> may want to differentiate between whole-socket and sub-socket VMs
-> >>> (some events may be fine for the whole-socket case) - keeping a single
-> >>> blacklist wouldn't allow for this.
-> >> Why wouldn't?
-> >> In any case (e.g. the whole socket dedicated to the single VM) we
-> >> want to unlock the blacklisted events, we can have the userspace
-> >> (e.g. qemu command line options "+event1, +event2") do ioctl to
-> >> have KVM do that.
-> >>
-> >> Btw, for the L3 cache stats event example, I'm not sure if that could
-> >> be an issue if we have "AnyThread=0". I'll double confirm with
-> >> someone.
-> >>
-> >> Best,
-> >> Wei
-> >> Not sure about "so many" above. I think there should be much
-> >> fewer events that may need to be blacklisted.
-> > I think you're right that there are not as many events that seem like
-> > they could leak info as events that seem like they won't, but I think
-> > the work to validate that they definitely don't could be expensive;
-> > with a whitelist it's easy to start with a smaller set and
-> > incrementally add to it without having to evaluate all the events
-> > right away.
->
-> Before going that whitelist/blacklist direction, do you have an event
-> example that couldn't be solved by setting "AnyThread=0"?
->
-> If no, I think we could simply gate guest's setting of "AnyThread=0".
->
-> Best,
-> Wei
+Fix -Wunused-but-set-variable warnings in raid56.c and sysfs.c files
 
-With anythread=0, I'm not aware of any events that directly give info
-about other VMs, but monitoring events related to shared resources
-(e.g. LLC References and LLC Misses) could indirectly give you info
-about how heavily other users are using that resource.
+Signed-off-by: Andrey Abramov <st5pub@yandex.ru>
+---
+ fs/btrfs/raid56.c | 32 +++++++++++---------------------
+ fs/btrfs/sysfs.c  |  5 +----
+ 2 files changed, 12 insertions(+), 25 deletions(-)
 
-I tried returning 1 when the guest tries to write the eventsel msr for
-a disallowed event - the behavior on modern guest kernels looks
-reasonable (warns once about an unchecked MSR access error), but it
-looks like guests using older kernels (older than 2016) might panic
-due to the gpfault (not to mention I'm not sure about the behavior on
-non-linux kernels). So I'm hesitant to return 1 - what do you think?
+diff --git a/fs/btrfs/raid56.c b/fs/btrfs/raid56.c
+index f3d0576dd327..4ab29eacfdf3 100644
+--- a/fs/btrfs/raid56.c
++++ b/fs/btrfs/raid56.c
+@@ -1182,22 +1182,17 @@ static noinline void finish_rmw(struct btrfs_raid_bio *rbio)
+ 	int nr_data = rbio->nr_data;
+ 	int stripe;
+ 	int pagenr;
+-	int p_stripe = -1;
+-	int q_stripe = -1;
++	int is_q_stripe = 0;
+ 	struct bio_list bio_list;
+ 	struct bio *bio;
+ 	int ret;
+ 
+ 	bio_list_init(&bio_list);
+ 
+-	if (rbio->real_stripes - rbio->nr_data == 1) {
+-		p_stripe = rbio->real_stripes - 1;
+-	} else if (rbio->real_stripes - rbio->nr_data == 2) {
+-		p_stripe = rbio->real_stripes - 2;
+-		q_stripe = rbio->real_stripes - 1;
+-	} else {
++	if (rbio->real_stripes - rbio->nr_data == 2)
++		is_q_stripe = 1;
++	else if (rbio->real_stripes - rbio->nr_data != 1)
+ 		BUG();
+-	}
+ 
+ 	/* at this point we either have a full stripe,
+ 	 * or we've read the full stripe from the drive.
+@@ -1241,7 +1236,7 @@ static noinline void finish_rmw(struct btrfs_raid_bio *rbio)
+ 		SetPageUptodate(p);
+ 		pointers[stripe++] = kmap(p);
+ 
+-		if (q_stripe != -1) {
++		if (is_q_stripe) {
+ 
+ 			/*
+ 			 * raid6, add the qstripe and call the
+@@ -2340,8 +2335,7 @@ static noinline void finish_parity_scrub(struct btrfs_raid_bio *rbio,
+ 	int nr_data = rbio->nr_data;
+ 	int stripe;
+ 	int pagenr;
+-	int p_stripe = -1;
+-	int q_stripe = -1;
++	int is_q_stripe = 0;
+ 	struct page *p_page = NULL;
+ 	struct page *q_page = NULL;
+ 	struct bio_list bio_list;
+@@ -2351,14 +2345,10 @@ static noinline void finish_parity_scrub(struct btrfs_raid_bio *rbio,
+ 
+ 	bio_list_init(&bio_list);
+ 
+-	if (rbio->real_stripes - rbio->nr_data == 1) {
+-		p_stripe = rbio->real_stripes - 1;
+-	} else if (rbio->real_stripes - rbio->nr_data == 2) {
+-		p_stripe = rbio->real_stripes - 2;
+-		q_stripe = rbio->real_stripes - 1;
+-	} else {
++	if (rbio->real_stripes - rbio->nr_data == 2)
++		is_q_stripe = 1;
++	else if (rbio->real_stripes - rbio->nr_data != 1)
+ 		BUG();
+-	}
+ 
+ 	if (bbio->num_tgtdevs && bbio->tgtdev_map[rbio->scrubp]) {
+ 		is_replace = 1;
+@@ -2380,7 +2370,7 @@ static noinline void finish_parity_scrub(struct btrfs_raid_bio *rbio,
+ 		goto cleanup;
+ 	SetPageUptodate(p_page);
+ 
+-	if (q_stripe != -1) {
++	if (is_q_stripe) {
+ 		q_page = alloc_page(GFP_NOFS | __GFP_HIGHMEM);
+ 		if (!q_page) {
+ 			__free_page(p_page);
+@@ -2403,7 +2393,7 @@ static noinline void finish_parity_scrub(struct btrfs_raid_bio *rbio,
+ 		/* then add the parity stripe */
+ 		pointers[stripe++] = kmap(p_page);
+ 
+-		if (q_stripe != -1) {
++		if (is_q_stripe) {
+ 
+ 			/*
+ 			 * raid6, add the qstripe and call the
+diff --git a/fs/btrfs/sysfs.c b/fs/btrfs/sysfs.c
+index 2f078b77fe14..514b75dec4a9 100644
+--- a/fs/btrfs/sysfs.c
++++ b/fs/btrfs/sysfs.c
+@@ -887,13 +887,10 @@ void btrfs_sysfs_feature_update(struct btrfs_fs_info *fs_info,
+ {
+ 	struct btrfs_fs_devices *fs_devs;
+ 	struct kobject *fsid_kobj;
+-	u64 features;
+-	int ret;
+ 
+ 	if (!fs_info)
+ 		return;
+ 
+-	features = get_features(fs_info, set);
+ 	ASSERT(bit & supported_feature_masks[set]);
+ 
+ 	fs_devs = fs_info->fs_devices;
+@@ -907,7 +904,7 @@ void btrfs_sysfs_feature_update(struct btrfs_fs_info *fs_info,
+ 	 * to use sysfs_update_group but some refactoring is needed first.
+ 	 */
+ 	sysfs_remove_group(fsid_kobj, &btrfs_feature_attr_group);
+-	ret = sysfs_create_group(fsid_kobj, &btrfs_feature_attr_group);
++	sysfs_create_group(fsid_kobj, &btrfs_feature_attr_group);
+ }
+ 
+ static int btrfs_init_debugfs(void)
+-- 
+2.20.1
 
-I also looked into moving from a vcpu ioctl to a vm ioctl - I can send
-out a version of the patch with this change once we settle on the
-other issues. It will involve some extra locking every time the
-counters are programmed to ensure the whitelist or blacklist isn't
-removed during access.
-
-Eric
