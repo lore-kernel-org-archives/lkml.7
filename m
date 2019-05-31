@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C70DFC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 07:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8A7C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 07:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87DBB264E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 07:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F667264E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 07:10:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ZT3pn2ik"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="mSXDop0s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbfEaHKS (ORCPT
+        id S1726817AbfEaHKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 03:10:18 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43632 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbfEaHKS (ORCPT
+        Fri, 31 May 2019 03:10:37 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:42675 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfEaHKh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 03:10:18 -0400
-Received: by mail-ot1-f68.google.com with SMTP id i8so8170370oth.10
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 00:10:17 -0700 (PDT)
+        Fri, 31 May 2019 03:10:37 -0400
+Received: by mail-oi1-f194.google.com with SMTP id v25so6405200oic.9
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 00:10:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=SOmVWYigVGsToAZpGfMDTQAnehJ0f9re7zn6YJSQLfU=;
-        b=ZT3pn2ikV0jHN4MRBiHkiYL3yJyW5FsKEpezrCbovLUh9a6uA6vZ4QV6bC9OnQjq7L
-         O5kZ1nnU8f5Rx6CQZiKSMH+rP4AK23uv5ZoxI1giu6dIBVV1SoZiPhF+ieImzqn3sujy
-         dPTLCtHFrwbLzSxetRbpLhsGR5JjOv9v6sInLDSTns8bZpGLF0utWrjelvG8fi0CVzwr
-         BiM0e+Pq6hJQ4DOiCWOQOMdwaK0k2ZZI7LUDVvPs80wMPDqO9Bs0GaFvNOsuZz6yZx84
-         MiG+/MA3ul/j77G/90TiTEWxgCRNO/nezpetzB9fLv3HCSMv6siUAfltRqQVvtvpkYlx
-         vm8g==
+        bh=1I0X96D3v1HYQYxv798SWRpkNTAm3dJbfOYoFu1vcjc=;
+        b=mSXDop0s5jN9NAe1GtBRtMt2K1Xz8vR4sOEqaJjRU0qsqm+fGGNcJY4sW6OFh3g4+M
+         z+Ka+XE9L9QeSAnO8qPi0FRJV7b5YoM6dbLCIOBz2UluV16H1LVVUx9EPHd7mvpxzsLE
+         iyR0itn1OLelG55R8FoUg4ETdeaZxCjcPemNEeTCXpyUnTk9w6j9s11T+TufKbFFcmO8
+         owyBKDuikuu13vU2pfMpR5dxvsixreNuXplAG5v18FwnUzDGkYHtZmkBSG8v3WCEctm9
+         rs0rBYchC4Y28raKI51OL/9Q67GE4tObzU87TzN8Qpq14dapwtjDUOkvhvWqniB985/W
+         GDOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=SOmVWYigVGsToAZpGfMDTQAnehJ0f9re7zn6YJSQLfU=;
-        b=Dmsimb7ghAI0jmrZ+jrWb2HU6i01R8YFfpq1+Pj7nD1PUMAZwUnEJjCON+X8p97pcW
-         4+SQtWNvEWqgRYPE2zEs+jsKhCSiA6wwq5dwhYLY/5wRw0et8+5yiPbDG6aBdLZRQqLN
-         l+kFeIWc2ocaEfasykQkYjlqX66CQ1IXRntoPOcgX//3hZuRcXU7ySRofixNcUZmiZIb
-         SgHldV80da34HQKY34va1GfGtLG1KvyrLVuFSpBxxfswh51mb5DMu7YCL6bmz8pfC1Xp
-         SzE6oCesg4gK99A7c1eJgkcGs160HdJsA65RfxTSmbkXnzP30b4uZO595lg3M4fHixf+
-         QdJA==
-X-Gm-Message-State: APjAAAU2EpbY/C24tUEunT6kiLfw685zNIhJtzDyD6mEnEYP/HruQrva
-        9oYx/KtOkhPrjddbZJn7tSg0pN6vW+QwWrBarlZtCdUo
-X-Google-Smtp-Source: APXvYqyRXwcncc9wKbYIrRZ44NAbKVsWaJ0j9o3Ps+2zQPp0tmPC5rbaCeAv9MpbLcmDl4VcxeUoZ+6MRXl9Scj9iCs=
-X-Received: by 2002:a9d:5cb:: with SMTP id 69mr684652otd.292.1559286617625;
- Fri, 31 May 2019 00:10:17 -0700 (PDT)
+        bh=1I0X96D3v1HYQYxv798SWRpkNTAm3dJbfOYoFu1vcjc=;
+        b=li/fd577AIDOmePwVAygjMB00wTUpiC/5tfxYz9W1YOe/0/1aIW0uLMxOGNTJ8onFg
+         gjEKf/CzSIhISB5DgwBMMCn/5sEVtw+/FQvIWhiXllUzreaDUAr7K/TII1MTOFM6a8PU
+         7DJx7dDYD9CUGNgypb25xKtD2DHAUUDfAmBGkJKM507GDYaCX+KGwmrpH1eW6DmjBs+c
+         gLYMyzwUkXzr+XaOqctuQFpgbYxM9x2AGP3GiFBzyAnr2RDYf+sr3T9YqsZ8/7TNZ084
+         O/t5uc413Kvjk41FBTfMbrZx/HQoq4JHyF2tzM/McVr+6lUQfOvKo7WZqIf6+N5t7F4V
+         Lr2Q==
+X-Gm-Message-State: APjAAAXQPl4zj02kfOvu6odSihPg2RgONeu+NqM8nABhIzKOQ/yjYQob
+        riJkggtXRjH6t8VPoK3bdGf28oKOyV2oDq/WQ1xlyQ==
+X-Google-Smtp-Source: APXvYqx7dnoXyXJ7rtNWycS5fX8T7GoEYq1ka5JDOo1LDAyBzDixHD27yR05izUVitFa1RBQW0H6BNO3Z7yPSCqiUio=
+X-Received: by 2002:aca:6cc1:: with SMTP id h184mr370801oic.170.1559286636457;
+ Fri, 31 May 2019 00:10:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190529163052.GA29158@embeddedor>
-In-Reply-To: <20190529163052.GA29158@embeddedor>
+References: <20190529145954.14500-1-yuehaibing@huawei.com>
+In-Reply-To: <20190529145954.14500-1-yuehaibing@huawei.com>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 31 May 2019 09:10:06 +0200
-Message-ID: <CAMpxmJV_RQ-V8DMfsOSqRjY_HAys4cpmppUCffCwDWCrFchmLQ@mail.gmail.com>
-Subject: Re: [PATCH] eeprom: at24: use struct_size() in devm_kzalloc()
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Date:   Fri, 31 May 2019 09:10:25 +0200
+Message-ID: <CAMpxmJVDk1whp+YJXJO7QZKOR0e_EkU4TakJqRei0xF5Ay_Log@mail.gmail.com>
+Subject: Re: [PATCH -next] eeprom: at24: Remove set but not used variable 'addr'
+To:     YueHaibing <yuehaibing@huawei.com>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Greg KH <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -71,64 +71,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C5=9Br., 29 maj 2019 o 18:30 Gustavo A. R. Silva <gustavo@embeddedor.com>
-napisa=C5=82(a):
+=C5=9Br., 29 maj 2019 o 17:00 YueHaibing <yuehaibing@huawei.com> napisa=C5=
+=82(a):
 >
-> One of the more common cases of allocation size calculations is finding
-> the size of a structure that has a zero-sized array at the end, along
-> with memory for some number of elements for that array. For example:
+> Fixes gcc '-Wunused-but-set-variable' warning:
 >
-> struct foo {
->     int stuff;
->     struct boo entry[];
-> };
+> drivers/misc/eeprom/at24.c: In function at24_make_dummy_client:
+> drivers/misc/eeprom/at24.c:514:21: warning: variable addr set but not use=
+d [-Wunused-but-set-variable]
 >
-> size =3D sizeof(struct foo) + count * sizeof(struct boo);
-> instance =3D devm_kzalloc(dev, size, GFP_KERNEL);
+> It's not used since commit e7308628d0ae ("eeprom:
+> at24: use devm_i2c_new_dummy_device()")
 >
-> Instead of leaving these open-coded and prone to type mistakes, we can
-> now use the new struct_size() helper:
->
-> instance =3D devm_kzalloc(dev, struct_size(instance, entry, count), GFP_K=
-ERNEL);
->
-> Notice that, in this case, variable at24_size is not necessary, hence it
-> is removed.
->
-> This code was detected with the help of Coccinelle.
->
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 > ---
->  drivers/misc/eeprom/at24.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
+>  drivers/misc/eeprom/at24.c | 2 --
+>  1 file changed, 2 deletions(-)
 >
 > diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
-> index ba8e73812644..78ba6b1917a8 100644
+> index ba8e73812644..fa730bb342e8 100644
 > --- a/drivers/misc/eeprom/at24.c
 > +++ b/drivers/misc/eeprom/at24.c
-> @@ -568,7 +568,6 @@ static int at24_probe(struct i2c_client *client)
->         unsigned int i, num_addresses;
->         struct at24_data *at24;
+> @@ -511,13 +511,11 @@ static int at24_make_dummy_client(struct at24_data =
+*at24, unsigned int index,
+>                                   struct regmap_config *regmap_config)
+>  {
+>         struct i2c_client *base_client, *dummy_client;
+> -       unsigned short int addr;
 >         struct regmap *regmap;
-> -       size_t at24_size;
->         bool writable;
->         u8 test_byte;
->         int err;
-> @@ -652,8 +651,8 @@ static int at24_probe(struct i2c_client *client)
->         if (IS_ERR(regmap))
->                 return PTR_ERR(regmap);
+>         struct device *dev;
 >
-> -       at24_size =3D sizeof(*at24) + num_addresses * sizeof(struct at24_=
-client);
-> -       at24 =3D devm_kzalloc(dev, at24_size, GFP_KERNEL);
-> +       at24 =3D devm_kzalloc(dev, struct_size(at24, client, num_addresse=
-s),
-> +                           GFP_KERNEL);
->         if (!at24)
->                 return -ENOMEM;
+>         base_client =3D at24->client[0].client;
+>         dev =3D &base_client->dev;
+> -       addr =3D base_client->addr + index;
 >
+>         dummy_client =3D devm_i2c_new_dummy_device(dev, base_client->adap=
+ter,
+>                                                  base_client->addr + inde=
+x);
 > --
-> 2.21.0
+> 2.17.1
+>
 >
 
 Applied, thanks!
