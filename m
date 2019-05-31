@@ -2,66 +2,70 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72099C28CC0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4111BC28CC0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AE5A26163
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:17:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04CB42615A
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:18:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AXivDdUX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KUV8E1vj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbfEaBR6 (ORCPT
+        id S1726944AbfEaBSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 21:17:58 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36517 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726741AbfEaBR6 (ORCPT
+        Thu, 30 May 2019 21:18:03 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38917 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726870AbfEaBSA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 21:17:58 -0400
-Received: by mail-pg1-f193.google.com with SMTP id a3so3031366pgb.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 18:17:57 -0700 (PDT)
+        Thu, 30 May 2019 21:18:00 -0400
+Received: by mail-pf1-f196.google.com with SMTP id j2so5074014pfe.6
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 18:17:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=lqXIB5VYrvs6jzaa1g5z58dzubUn6chXga4pIoclBMk=;
-        b=AXivDdUXnwZ3DRv77pdpJFBVOOGHV1N7WPHdh9KEJTOWB3mZHDRvAnvsgTK02YurLB
-         vnM1t3CvOCRY5Bk/K9EAvON7MrmcrcdjRV8WyVkSRwh1QVtmWXEbTPR/LuREG/7IRHNM
-         vizi3cLSebt1yXXSvgW3YrJmFYDVya3Pdf0EvelPlIUSvOX9dVqYrvRyiIGXkmqd1CEl
-         HtLEqvoVqfMhZrpIx/ReMAgY0822LS5+V6sOYtSSsfN/G2aviSY/y7laA2a/zM20uOwF
-         wnBVbIq4UFV22XROuPjXI1gQ20y+6FC1nBDuha4RERDo8jynH7+WXL4Dk6xvNWWmCvmL
-         zI6w==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=8FbJXWm7IwNwmHEAYW2wS/GK5+Jrpw3917WQc7Xc8o0=;
+        b=KUV8E1vjIxI4xbCkx96493AfVDnh3FIvDgdBaO0Y9QSxHAxJnMtLzIE+5uDUPEIvfb
+         Azp5QMda5p5MWjM9WSMpLN1vphUiHA9bsfxFcu6GnJjYnqctOWFxkiMSDyfoP8PJeAdn
+         bLoYdSuLicoyPE4Fp/BeLtO8xdUKR+H3OiUQVhc8KWfx6Mrcrb+UKadD7dCcmntWbxPo
+         bYdiqgMASjoK+ysKsOEg+dKJa9+mYlUEZ1Hvt2wTvnSSzxadHZ04FHXIEHhoE5F+uxTd
+         K+JbxOWM4LYWOAMBn18Qe0BXcr+//b+H2A17a9pJJZ5j2yCoITRDel0Wjuk+f8QCDxQF
+         USGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=lqXIB5VYrvs6jzaa1g5z58dzubUn6chXga4pIoclBMk=;
-        b=oz2UeNWXDcS6PK2cHtzLo/Yy0LJ3OlIikhBvUBIFiCSj9T3oKBM6867QmN2XaSGG/S
-         tO/Z/Vp7EzDuAHgPit3CYsznQ+LOlxrpx6sIujo13qhavjVe7wiLmOtuWi7NBKJGQ4vt
-         z8/VcdpWmHStSzgv29zfQwEyqF+s9lqPKNUhFPUMAtwlraQYeqIGjEhMAyxGOJqhxYp0
-         7uvZNwT3mVzv/Yz3YW7XlIUYPC/AT2/2xfwdJnJry0BTrZXRwjuR9m3Q23zaJ9IYl79q
-         qahmpqX1WxSwEIxAmucXu71PjYxJA0nWmkgh2krKvfCMEb/d0tkqpwWfuqNBT43w9JY6
-         bjgA==
-X-Gm-Message-State: APjAAAWK4Vl9gvElXd1OgLnFa+a7gfjMIfB83ToBvy4IguyaKFbAWuDP
-        lGhUkFVNz5/q9qiSmjQuSQTG6A==
-X-Google-Smtp-Source: APXvYqwhmKCBjnssnPJFBip10hmLkNMYYCUmPPrBrlyQG6qHzxD+sqJ+lptQQWwYUYt4XCmVMKfY/A==
-X-Received: by 2002:a63:ed16:: with SMTP id d22mr6374376pgi.35.1559265477220;
-        Thu, 30 May 2019 18:17:57 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=8FbJXWm7IwNwmHEAYW2wS/GK5+Jrpw3917WQc7Xc8o0=;
+        b=azkAbOAtrh4+zfqdRjgUSZG6GIw6HY2+FVGv8cFfXi9b8UUCEVI2MjQa8dRZQ1NBPf
+         Hx/w463pGePmM7nikI0vxiMF7+xYoOxT5n4XjJVL4M197NgAUbqek41Xa5mVn4lzXitc
+         JBvoiQn29FGcmQmkU7ZQXVZFpsw2v+ma1RNn4JjchAjtZtILGcjRmG8p57k3qEvNfYyM
+         JaKMOjL2Zmfuc9DGeQK4fzolpv7rr3hTv8jp+8ICi4UlwDIRUvSU5xll16kxZv9gIazc
+         fuOVGK3j5Ynv+1d6upmyfCiJdgczNrZmVz0Hxb5WBsMnX+2U8YsPK0stXKSkcrBoFOvV
+         sidQ==
+X-Gm-Message-State: APjAAAVuQOvOPzgaomdz3WVKcGzMxYU0nnN5wskZgmnPIygvxw6dnW/7
+        Y1BrJjkgNyVBJ0LSNmRuypnrtA==
+X-Google-Smtp-Source: APXvYqxfIidRP+aT2xTzXM31gLcNoPwt9qFnLcvWG2vjWtkI2FLuVrXK56Bz+ldq271X84tT15Lp2g==
+X-Received: by 2002:a63:1854:: with SMTP id 20mr6173820pgy.366.1559265479240;
+        Thu, 30 May 2019 18:17:59 -0700 (PDT)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id j20sm1819042pff.183.2019.05.30.18.17.56
+        by smtp.gmail.com with ESMTPSA id j20sm1819042pff.183.2019.05.30.18.17.58
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 18:17:56 -0700 (PDT)
+        Thu, 30 May 2019 18:17:58 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     Arun Kumar Neelakantam <aneela@codeaurora.org>,
         Chris Lew <clew@codeaurora.org>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: [PATCH v2 0/5] QRTR flow control improvements
-Date:   Thu, 30 May 2019 18:17:48 -0700
-Message-Id: <20190531011753.11840-1-bjorn.andersson@linaro.org>
+Subject: [PATCH v2 2/5] net: qrtr: Implement outgoing flow control
+Date:   Thu, 30 May 2019 18:17:50 -0700
+Message-Id: <20190531011753.11840-3-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20190531011753.11840-1-bjorn.andersson@linaro.org>
+References: <20190531011753.11840-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -70,23 +74,320 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 In order to prevent overconsumption of resources on the remote side QRTR
 implements a flow control mechanism.
 
-Move the handling of the incoming confirm_rx to the receiving process to
-ensure incoming flow is controlled. Then implement outgoing flow
-control, using the recommended algorithm of counting outstanding
-non-confirmed messages and blocking when hitting a limit. The last three
-patches refactors the node assignment and port lookup, in order to
-remove the worker in the receive path.
+The mechanism works by the sender keeping track of the number of
+outstanding unconfirmed messages that has been transmitted to a
+particular node/port pair.
 
-Bjorn Andersson (5):
-  net: qrtr: Move resume-tx transmission to recvmsg
-  net: qrtr: Implement outgoing flow control
-  net: qrtr: Migrate node lookup tree to spinlock
-  net: qrtr: Make qrtr_port_lookup() use RCU
-  net: qrtr: Remove receive worker
+Upon count reaching a low watermark (L) the confirm_rx bit is set in the
+outgoing message and when the count reaching a high watermark (H)
+transmission will be blocked upon the reception of a resume_tx message
+from the remote, that resets the counter to 0.
 
- net/qrtr/qrtr.c | 308 +++++++++++++++++++++++++++++++++++++-----------
- 1 file changed, 239 insertions(+), 69 deletions(-)
+This guarantees that there will be at most 2H - L messages in flight.
+Values chosen for L and H are 5 and 10 respectively.
 
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+
+Changes since v1:
+- Tidy up the x-mas tree
+- Don't dereference NULL "flow" if kzalloc fails
+- Ensure that the next message picks up the confirm_rx flag if a flagged
+  message failed to be transmitted by the underlaying transport
+
+ net/qrtr/qrtr.c | 186 ++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 179 insertions(+), 7 deletions(-)
+
+diff --git a/net/qrtr/qrtr.c b/net/qrtr/qrtr.c
+index 89fb846cc244..38cc052b7a31 100644
+--- a/net/qrtr/qrtr.c
++++ b/net/qrtr/qrtr.c
+@@ -16,6 +16,7 @@
+ #include <linux/qrtr.h>
+ #include <linux/termios.h>	/* For TIOCINQ/OUTQ */
+ #include <linux/numa.h>
++#include <linux/wait.h>
+ 
+ #include <net/sock.h>
+ 
+@@ -121,6 +122,9 @@ static DEFINE_MUTEX(qrtr_port_lock);
+  * @ep: endpoint
+  * @ref: reference count for node
+  * @nid: node id
++ * @qrtr_tx_flow: tree with tx counts per flow
++ * @resume_tx: waiters for a resume tx from the remote
++ * @qrtr_tx_lock: lock for qrtr_tx_flow
+  * @rx_queue: receive queue
+  * @work: scheduled work struct for recv work
+  * @item: list item for broadcast list
+@@ -131,11 +135,28 @@ struct qrtr_node {
+ 	struct kref ref;
+ 	unsigned int nid;
+ 
++	struct radix_tree_root qrtr_tx_flow;
++	struct wait_queue_head resume_tx;
++	struct mutex qrtr_tx_lock; /* for qrtr_tx_flow */
++
+ 	struct sk_buff_head rx_queue;
+ 	struct work_struct work;
+ 	struct list_head item;
+ };
+ 
++/**
++ * struct qrtr_tx_flow - tx flow control
++ * @pending: number of waiting senders
++ * @tx_failed: indicates that a message with confirm_rx flag was lost
++ */
++struct qrtr_tx_flow {
++	atomic_t pending;
++	int tx_failed;
++};
++
++#define QRTR_TX_FLOW_HIGH	10
++#define QRTR_TX_FLOW_LOW	5
++
+ static int qrtr_local_enqueue(struct qrtr_node *node, struct sk_buff *skb,
+ 			      int type, struct sockaddr_qrtr *from,
+ 			      struct sockaddr_qrtr *to);
+@@ -150,7 +171,9 @@ static int qrtr_bcast_enqueue(struct qrtr_node *node, struct sk_buff *skb,
+  */
+ static void __qrtr_node_release(struct kref *kref)
+ {
++	struct radix_tree_iter iter;
+ 	struct qrtr_node *node = container_of(kref, struct qrtr_node, ref);
++	void __rcu **slot;
+ 
+ 	if (node->nid != QRTR_EP_NID_AUTO)
+ 		radix_tree_delete(&qrtr_nodes, node->nid);
+@@ -158,6 +181,12 @@ static void __qrtr_node_release(struct kref *kref)
+ 	list_del(&node->item);
+ 	mutex_unlock(&qrtr_node_lock);
+ 
++	/* Free tx flow counters */
++	radix_tree_for_each_slot(slot, &node->qrtr_tx_flow, &iter, 0) {
++		radix_tree_iter_delete(&node->qrtr_tx_flow, &iter, slot);
++		kfree(*slot);
++	}
++
+ 	skb_queue_purge(&node->rx_queue);
+ 	kfree(node);
+ }
+@@ -178,6 +207,126 @@ static void qrtr_node_release(struct qrtr_node *node)
+ 	kref_put_mutex(&node->ref, __qrtr_node_release, &qrtr_node_lock);
+ }
+ 
++/**
++ * qrtr_tx_resume() - reset flow control counter
++ * @node:	qrtr_node that the QRTR_TYPE_RESUME_TX packet arrived on
++ * @skb:	resume_tx packet
++ */
++static void qrtr_tx_resume(struct qrtr_node *node, struct sk_buff *skb)
++{
++	struct qrtr_ctrl_pkt *pkt = (struct qrtr_ctrl_pkt *)skb->data;
++	u64 remote_node = le32_to_cpu(pkt->client.node);
++	u32 remote_port = le32_to_cpu(pkt->client.port);
++	struct qrtr_tx_flow *flow;
++	unsigned long key;
++
++	key = remote_node << 32 | remote_port;
++
++	flow = radix_tree_lookup(&node->qrtr_tx_flow, key);
++	if (flow)
++		atomic_set(&flow->pending, 0);
++
++	wake_up_interruptible_all(&node->resume_tx);
++
++	consume_skb(skb);
++}
++
++/**
++ * qrtr_tx_wait() - flow control for outgoing packets
++ * @node:	qrtr_node that the packet is to be send to
++ * @dest_node:	node id of the destination
++ * @dest_port:	port number of the destination
++ * @type:	type of message
++ *
++ * The flow control scheme is based around the low and high "watermarks". When
++ * the low watermark is passed the confirm_rx flag is set on the outgoing
++ * message, which will trigger the remote to send a control message of the type
++ * QRTR_TYPE_RESUME_TX to reset the counter. If the high watermark is hit
++ * further transmision should be paused.
++ *
++ * Return: 1 if confirm_rx should be set, 0 otherwise or errno failure
++ */
++static int qrtr_tx_wait(struct qrtr_node *node, int dest_node, int dest_port,
++			int type)
++{
++	unsigned long key = (u64)dest_node << 32 | dest_port;
++	struct qrtr_tx_flow *flow;
++	int confirm_rx = 0;
++	int ret;
++
++	/* Never set confirm_rx on non-data packets */
++	if (type != QRTR_TYPE_DATA)
++		return 0;
++
++	mutex_lock(&node->qrtr_tx_lock);
++	flow = radix_tree_lookup(&node->qrtr_tx_flow, key);
++	if (!flow) {
++		flow = kzalloc(sizeof(*flow), GFP_KERNEL);
++		if (flow)
++			radix_tree_insert(&node->qrtr_tx_flow, key, flow);
++	}
++	mutex_unlock(&node->qrtr_tx_lock);
++
++	/* Set confirm_rx if we where unable to find and allocate a flow */
++	if (!flow)
++		return 1;
++
++	for (;;) {
++		ret = wait_event_interruptible(node->resume_tx,
++					       atomic_read(&flow->pending) < QRTR_TX_FLOW_HIGH ||
++					       !node->ep ||
++					       READ_ONCE(flow->tx_failed));
++		if (ret)
++			return ret;
++
++		if (!node->ep)
++			return -EPIPE;
++
++		mutex_lock(&node->qrtr_tx_lock);
++		if (READ_ONCE(flow->tx_failed)) {
++			WRITE_ONCE(flow->tx_failed, 0);
++			confirm_rx = 1;
++			mutex_unlock(&node->qrtr_tx_lock);
++			break;
++		}
++
++		if (atomic_read(&flow->pending) < QRTR_TX_FLOW_HIGH) {
++			confirm_rx = atomic_inc_return(&flow->pending) == QRTR_TX_FLOW_LOW;
++			mutex_unlock(&node->qrtr_tx_lock);
++			break;
++		}
++		mutex_unlock(&node->qrtr_tx_lock);
++	}
++
++	return confirm_rx;
++}
++
++/**
++ * qrtr_tx_flow_failed() - flag that tx of confirm_rx flagged messages failed
++ * @node:	qrtr_node that the packet is to be send to
++ * @dest_node:	node id of the destination
++ * @dest_port:	port number of the destination
++ *
++ * Signal that the transmission of a message with confirm_rx flag failed. The
++ * flow's "pending" counter will keep incrementing towards QRTR_TX_FLOW_HIGH,
++ * at which point transmission would stall forever waiting for the resume TX
++ * message associated with the dropped confirm_rx message.
++ * Work around this by marking the flow as having a failed transmission and
++ * cause the next transmission attempt to be sent with the confirm_rx.
++ */
++static void qrtr_tx_flow_failed(struct qrtr_node *node, int dest_node,
++				int dest_port)
++{
++	unsigned long key = (u64)dest_node << 32 | dest_port;
++	struct qrtr_tx_flow *flow;
++
++	mutex_lock(&node->qrtr_tx_lock);
++	flow = radix_tree_lookup(&node->qrtr_tx_flow, key);
++	if (flow)
++		WRITE_ONCE(flow->tx_failed, 1);
++	mutex_unlock(&node->qrtr_tx_lock);
++}
++
+ /* Pass an outgoing packet socket buffer to the endpoint driver. */
+ static int qrtr_node_enqueue(struct qrtr_node *node, struct sk_buff *skb,
+ 			     int type, struct sockaddr_qrtr *from,
+@@ -186,6 +335,13 @@ static int qrtr_node_enqueue(struct qrtr_node *node, struct sk_buff *skb,
+ 	struct qrtr_hdr_v1 *hdr;
+ 	size_t len = skb->len;
+ 	int rc = -ENODEV;
++	int confirm_rx;
++
++	confirm_rx = qrtr_tx_wait(node, to->sq_node, to->sq_port, type);
++	if (confirm_rx < 0) {
++		kfree_skb(skb);
++		return confirm_rx;
++	}
+ 
+ 	hdr = skb_push(skb, sizeof(*hdr));
+ 	hdr->version = cpu_to_le32(QRTR_PROTO_VER_1);
+@@ -201,7 +357,7 @@ static int qrtr_node_enqueue(struct qrtr_node *node, struct sk_buff *skb,
+ 	}
+ 
+ 	hdr->size = cpu_to_le32(len);
+-	hdr->confirm_rx = 0;
++	hdr->confirm_rx = !!confirm_rx;
+ 
+ 	skb_put_padto(skb, ALIGN(len, 4));
+ 
+@@ -212,6 +368,11 @@ static int qrtr_node_enqueue(struct qrtr_node *node, struct sk_buff *skb,
+ 		kfree_skb(skb);
+ 	mutex_unlock(&node->ep_lock);
+ 
++	/* Need to ensure that a subsequent message carries the otherwise lost
++	 * confirm_rx flag if we dropped this one */
++	if (rc && confirm_rx)
++		qrtr_tx_flow_failed(node, to->sq_node, to->sq_port);
++
+ 	return rc;
+ }
+ 
+@@ -318,7 +479,8 @@ int qrtr_endpoint_post(struct qrtr_endpoint *ep, const void *data, size_t len)
+ 	if (len != ALIGN(size, 4) + hdrlen)
+ 		goto err;
+ 
+-	if (cb->dst_port != QRTR_PORT_CTRL && cb->type != QRTR_TYPE_DATA)
++	if (cb->dst_port != QRTR_PORT_CTRL && cb->type != QRTR_TYPE_DATA &&
++	    cb->type != QRTR_TYPE_RESUME_TX)
+ 		goto err;
+ 
+ 	skb_put_data(skb, data + hdrlen, size);
+@@ -377,14 +539,18 @@ static void qrtr_node_rx_work(struct work_struct *work)
+ 
+ 		qrtr_node_assign(node, cb->src_node);
+ 
+-		ipc = qrtr_port_lookup(cb->dst_port);
+-		if (!ipc) {
+-			kfree_skb(skb);
++		if (cb->type == QRTR_TYPE_RESUME_TX) {
++			qrtr_tx_resume(node, skb);
+ 		} else {
+-			if (sock_queue_rcv_skb(&ipc->sk, skb))
++			ipc = qrtr_port_lookup(cb->dst_port);
++			if (!ipc) {
+ 				kfree_skb(skb);
++			} else {
++				if (sock_queue_rcv_skb(&ipc->sk, skb))
++					kfree_skb(skb);
+ 
+-			qrtr_port_put(ipc);
++				qrtr_port_put(ipc);
++			}
+ 		}
+ 	}
+ }
+@@ -415,6 +581,9 @@ int qrtr_endpoint_register(struct qrtr_endpoint *ep, unsigned int nid)
+ 	node->nid = QRTR_EP_NID_AUTO;
+ 	node->ep = ep;
+ 
++	INIT_RADIX_TREE(&node->qrtr_tx_flow, GFP_KERNEL);
++	init_waitqueue_head(&node->resume_tx);
++
+ 	qrtr_node_assign(node, nid);
+ 
+ 	mutex_lock(&qrtr_node_lock);
+@@ -449,6 +618,9 @@ void qrtr_endpoint_unregister(struct qrtr_endpoint *ep)
+ 		qrtr_local_enqueue(NULL, skb, QRTR_TYPE_BYE, &src, &dst);
+ 	}
+ 
++	/* Wake up any transmitters waiting for resume-tx from the node */
++	wake_up_interruptible_all(&node->resume_tx);
++
+ 	qrtr_node_release(node);
+ 	ep->node = NULL;
+ }
 -- 
 2.18.0
 
