@@ -2,78 +2,116 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA28FC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF04C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A58C726C95
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:55:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 204A026CA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:59:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cS9UwfMY"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vaNEY3xb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbfEaQzb (ORCPT
+        id S1726748AbfEaQ7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 12:55:31 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52010 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfEaQzb (ORCPT
+        Fri, 31 May 2019 12:59:25 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:47260 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbfEaQ7Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 12:55:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=De7Bses8KtQ4UCCGrlZlsMVjWfSmMqmTDqL2Xo4mbUI=; b=cS9UwfMYzYIoWV6P1j1LQXz3b
-        MCMYRFGHasjGiyO2sMvplAxpyv1Cx0AOBN9+a+E9Hc33G4PV+vRZB9F2/UeOG1S5vzebYHfcaR3f5
-        GCk4OpCMaQxHCIqYJWn7+831dtpCsw/e0SGg9Ucy42YB+tn6FXPFQkZznTxGDqJ82/hBOftG6BslA
-        UW0L5ed7oyvE4/w0R7bbrOO84IME9uy7Heim/UfUmwbJbsOFbYPbDsSSdCfpj323dTq8r5GEWSnOX
-        lwE0YPZnrupOzdNzMhTgECxLZa532EvDTK9V8UCG/yJjnVfkaib8B9Y3v+9WvLpU53kSe0Mv0Ar9G
-        I+MSsvqNQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hWkoU-0005W4-Et; Fri, 31 May 2019 16:55:30 +0000
-Date:   Fri, 31 May 2019 09:55:30 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Madalin-cristian Bucur <madalin.bucur@nxp.com>,
-        Roy Pledge <roy.pledge@nxp.com>,
-        Camelia Alexandra Groza <camelia.groza@nxp.com>,
-        Leo Li <leoyang.li@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jocke@infinera.com" <joakim.tjernlund@infinera.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 5/6] dpaa_eth: fix iova handling for contiguous frames
-Message-ID: <20190531165530.GA16487@infradead.org>
-References: <20190530141951.6704-1-laurentiu.tudor@nxp.com>
- <20190530141951.6704-6-laurentiu.tudor@nxp.com>
- <20190531163229.GA8708@infradead.org>
- <VI1PR04MB5134F5E31B993B2DC5275BB3EC190@VI1PR04MB5134.eurprd04.prod.outlook.com>
+        Fri, 31 May 2019 12:59:24 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4VGmkRa037317;
+        Fri, 31 May 2019 16:59:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=G82jjtVPtIBiymxHtt3594fMUhRhOyCXS9qt0zROSRs=;
+ b=vaNEY3xbHbsmFj4uuy58MnSzoYNnmBWMZ1uHLJz4TFgQS3PDxWUY7uo0/yb+5cHLLCQI
+ GPx/XnsFEsPnQn9U1wJYM1XDXZtZkBSA5i9qKO+NWK5gGJBFA5LeeSsgb1/2jPXiKqU0
+ Ifu/u2p8g04sYFmK5eV0CPPxOFSlT7KCzWSvdKifcZ/8RR8VLBpEs73OSYPVr4kfC81D
+ EveRMMmF5HRn9+TFQXc35gdIgha+aTQqi2X0T3LXHfMzmagOchgedP58kzYQlVlkeBk/
+ tsbLdCCdJQ0krqpBY9ZVH3eytgUQRnKCKvtp05KQHOSWorDRSYve3FvE//mlmiRGkTEc Ig== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2spw4tyn5e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 31 May 2019 16:59:05 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4VGvdh1084819;
+        Fri, 31 May 2019 16:59:05 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2ss1fprjt9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 31 May 2019 16:59:05 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4VGx2Fc009144;
+        Fri, 31 May 2019 16:59:02 GMT
+Received: from [192.168.1.222] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 31 May 2019 09:59:01 -0700
+Subject: Re: [PATCH -mm] mm, swap: Fix bad swap file entry warning
+To:     "Huang, Ying" <ying.huang@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Hugh Dickins <hughd@google.com>
+References: <20190531024102.21723-1-ying.huang@intel.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <2d8e1195-e0f1-4fa8-b0bd-b9ea69032b51@oracle.com>
+Date:   Fri, 31 May 2019 09:59:00 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <VI1PR04MB5134F5E31B993B2DC5275BB3EC190@VI1PR04MB5134.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190531024102.21723-1-ying.huang@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9273 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905310104
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9273 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905310104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 04:53:16PM +0000, Laurentiu Tudor wrote:
-> Unfortunately due to our hardware particularities we do not have alternatives. This is also the case for our next generation of ethernet drivers [1]. I'll let my colleagues that work on the ethernet drivers to comment more on this.
+On 5/30/19 7:41 PM, Huang, Ying wrote:
+> From: Huang Ying <ying.huang@intel.com>
+> 
+> Mike reported the following warning messages
+> 
+>   get_swap_device: Bad swap file entry 1400000000000001
+> 
+> This is produced by
+> 
+> - total_swapcache_pages()
+>   - get_swap_device()
+> 
+> Where get_swap_device() is used to check whether the swap device is
+> valid and prevent it from being swapoff if so.  But get_swap_device()
+> may produce warning message as above for some invalid swap devices.
+> This is fixed via calling swp_swap_info() before get_swap_device() to
+> filter out the swap devices that may cause warning messages.
+> 
+> Fixes: 6a946753dbe6 ("mm/swap_state.c: simplify total_swapcache_pages() with get_swap_device()")
+> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
 
-Then you need to enhance the DMA API to support your use case instead
-of using an API only supported for two specific IOMMU implementations.
+Thank you, this eliminates the messages for me:
 
-Remember in Linux you can should improve core code and not hack around
-it in crappy ways making lots of assumptions in your drivers.
+Tested-by: Mike Kravetz <mike.kravetz@oracle.com>
+
+-- 
+Mike Kravetz
