@@ -2,108 +2,111 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0080C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69387C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4963265F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CB2821871
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:47:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oLrLydqE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbfEaIrB (ORCPT
+        id S1726957AbfEaIrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 04:47:01 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:35926 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbfEaIrB (ORCPT
+        Fri, 31 May 2019 04:47:23 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:58674 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbfEaIrX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 04:47:01 -0400
-Received: by mail-qt1-f196.google.com with SMTP id u12so10426447qth.3;
-        Fri, 31 May 2019 01:47:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=musdmvMfmuFle9U6pm5zoVH2cKv9Sr+Vl2GKNkM9WAw=;
-        b=gYqtS2HG6ZQRVl7/7pdr+r5ZBPMQxniM2Cbc069KZAktOKdkXWhS6/sU8bMDvk/Z7s
-         4IUuWYQVt3ci0/8uONbSCA6yxzttN9mvGKZgc3HjQ0gMahbLPQwQuAKjOpm4hG7c+362
-         dn+440liUtymlQHhT8iaPCOTXUEMV4Afad9YBArh4ru+1fbmEls4X4RMbl8BdeB/W90I
-         jZB+Fl0IuZGkoNtgwVD+KFWp28umuCO/VC/pm0y73o4cAfWUDYGU/Yn20QG4qWoPm3TQ
-         0qtUrzbz4LSubxqzhW4AR31b+7vvT0NiBq/Q6nQa/8ao29xJbdQA1FAUCVrMnyXvMSBi
-         m0Rg==
-X-Gm-Message-State: APjAAAVaszc0EsFeQs67waBEife+V4tcRYFzhBHEq0ZKyhK69UBJbR9u
-        aUPHvGXjVa3vWz4BwbB9h2KJykuHhOfCt13b0gE=
-X-Google-Smtp-Source: APXvYqxSrOECMcfl+h+gsYyFe6RMvJn3OIE0E1mWVu+ZeZ78o7tzQsJyOmKpAbm439V51yw3EWIWq4QnzKJ/LfAWdno=
-X-Received: by 2002:aed:3e7c:: with SMTP id m57mr2866079qtf.204.1559292419933;
- Fri, 31 May 2019 01:46:59 -0700 (PDT)
+        Fri, 31 May 2019 04:47:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=bOMlPYuwhgNbgzcW47Xzr7NLkqTLvvZFQzwh9Q0CgQ0=; b=oLrLydqEYkud8wnFoaqc9lIXF
+        HGHM28f+TVN8TeRcewuei7Mcw5lGYTzy2Rx6epTJDzc3urw5N/6Kq+tnjPgQSVAlSLDspniCQ5QBg
+        SDULeC//qqu3DLv5JTOcAKzx6Zxks2E9qg3/sBmYp2KeYDDYtrjLl0dJsOkJ/eSCIgtSrdc2uMZSI
+        pS8Z3FMlDMidlUyLDDNFdJz5SebER8isgaZjADqbUDCi/eptpU3U+7CwBH9nbN1LMU/uewFD5ioy1
+        It/OotQLeY9DmPDyLLRItNsIYUvnyn35xP5U5ER3PzSk6eTukrsH5UZcaqn/qgODJwFXcZ4dXtg2C
+        b+OJmkpOQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hWdC1-0002qV-63; Fri, 31 May 2019 08:47:17 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9109F201B8CFE; Fri, 31 May 2019 10:47:14 +0200 (CEST)
+Date:   Fri, 31 May 2019 10:47:14 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, viro@zeniv.linux.org.uk,
+        raven@themaw.net, linux-fsdevel@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-block@vger.kernel.org,
+        keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/7] General notification queue with user mmap()'able
+ ring buffer
+Message-ID: <20190531084714.GL2677@hirez.programming.kicks-ass.net>
+References: <20190528231218.GA28384@kroah.com>
+ <20190528162603.GA24097@kroah.com>
+ <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
+ <155905931502.7587.11705449537368497489.stgit@warthog.procyon.org.uk>
+ <4031.1559064620@warthog.procyon.org.uk>
+ <31936.1559146000@warthog.procyon.org.uk>
 MIME-Version: 1.0
-References: <20190530141531.43462-1-vincenzo.frascino@arm.com>
-In-Reply-To: <20190530141531.43462-1-vincenzo.frascino@arm.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 31 May 2019 10:46:43 +0200
-Message-ID: <CAK8P3a11DE0sXteZoaP_N=mDhx3tXitGKddn1ogtFqJBYO-SCA@mail.gmail.com>
-Subject: Re: [PATCH v6 00/19] Unify vDSOs across more architectures
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mips@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Huw Davies <huw@codeweavers.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <31936.1559146000@warthog.procyon.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 4:15 PM Vincenzo Frascino
-<vincenzo.frascino@arm.com> wrote:
->
-> vDSO (virtual dynamic shared object) is a mechanism that the Linux
-> kernel provides as an alternative to system calls to reduce where
-> possible the costs in terms of cycles.
-> This is possible because certain syscalls like gettimeofday() do
-> not write any data and return one or more values that are stored
-> in the kernel, which makes relatively safe calling them directly
-> as a library function.
+On Wed, May 29, 2019 at 05:06:40PM +0100, David Howells wrote:
 
-Hi Vincento,
+> Looking at the perf ring buffer, there appears to be a missing barrier in
+> perf_aux_output_end():
+> 
+> 	rb->user_page->aux_head = rb->aux_head;
+> 
+> should be:
+> 
+> 	smp_store_release(&rb->user_page->aux_head, rb->aux_head);
 
-I've very happy with how this turned out overall, and as far as I can
-tell you have addressed all my previous comments. I had another
-look through the series and only noticed a few very minor issues.
+I've answered that in another email; the aux bit is 'magic'.
 
-I hope Thomas can have another look soon, he probably also finds
-a few things, and then it should be ready for inclusion in linux-next
-and the coming merge window.
+> It should also be using smp_load_acquire().  See
+> Documentation/core-api/circular-buffers.rst
 
-One open question I touched in my review is whether we want to
-have a vdso version of clock_getres() in all architectures or not.
-I'd prefer to leave it out because there is very little advantage to
-it over the system call (the results don't change at runtime and
-can easily be cached by libc if performance ever matters), and
-it takes up a small amount of memory for the implementation.
+We use the control dependency instead, as described in the comment of
+perf_output_put_handle():
 
-We shouldn't just need it for consistency because all callers
-would require implementing a fallback to the system call
-anyway, to deal with old kernels.
+	 *   kernel				user
+	 *
+	 *   if (LOAD ->data_tail) {		LOAD ->data_head
+	 *			(A)		smp_rmb()	(C)
+	 *	STORE $data			LOAD $data
+	 *	smp_wmb()	(B)		smp_mb()	(D)
+	 *	STORE ->data_head		STORE ->data_tail
+	 *   }
+	 *
+	 * Where A pairs with D, and B pairs with C.
+	 *
+	 * In our case (A) is a control dependency that separates the load of
+	 * the ->data_tail and the stores of $data. In case ->data_tail
+	 * indicates there is no room in the buffer to store $data we do not.
+	 *
+	 * D needs to be a full barrier since it separates the data READ
+	 * from the tail WRITE.
+	 *
+	 * For B a WMB is sufficient since it separates two WRITEs, and for C
+	 * an RMB is sufficient since it separates two READs.
 
-If anyone comes up with a good reason why it should be added
-after all, let me know and I'll stop mentioning it.
-
-      Arnd
+Userspace can choose to use smp_load_acquire() over the first smp_rmb()
+if that is efficient for the architecture (for w ahole bunch of archs
+load-acquire would end up using mb() while rmb() is adequate and
+cheaper).
