@@ -2,198 +2,163 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F605C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:45:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA56C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0F77268EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:45:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71620268FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:45:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="Oh5evWeB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JCIQQzF2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727335AbfEaMpB (ORCPT
+        id S1727360AbfEaMpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 08:45:01 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36886 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726555AbfEaMpA (ORCPT
+        Fri, 31 May 2019 08:45:07 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42018 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbfEaMpG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 08:45:00 -0400
-Received: by mail-lj1-f196.google.com with SMTP id h19so9483273ljj.4
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 05:44:57 -0700 (PDT)
+        Fri, 31 May 2019 08:45:06 -0400
+Received: by mail-lj1-f193.google.com with SMTP id y15so6266085ljd.9;
+        Fri, 31 May 2019 05:45:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZXDOKwkAEMBmiYSeMHCXxPtDvLwnxyJqoeUB0a+jAg8=;
-        b=Oh5evWeBS0FQ5+SDSVIYDoDosmFdUraAVQSeP13wAG0FfkUCyvKQpzKYfoQx/Fc9jG
-         lSaXqIOqwzoUzI3o8vBwZqtrK4OfHuaXvwJgEezHSUYUzDIRs8JkI5NH1zlR4cxWyQme
-         Jfit8Diw2UqqiuTc+FH74c11TZCrrrdmpj/o5+9/QDcaiVnDEyYq21nnWSIA465u/MU4
-         +qSUnOUm6rmASeEsGsXm0RP0/aMO/Wsm45X36MGxa7H5G8PkA5ZCJKY5x4qvxmWuxnO8
-         Qn1PWZvVAf7u20A+XXfB5qKWG2QcdBuOAtm661NoEzPCdGshFZqYQtHFr/60ieylKxGT
-         GHFA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Qv8Gl69nP262ZkQFCl6BnDomj+l1WagsjrnxTyxwFmo=;
+        b=JCIQQzF2pbauh1aXmVxIwQBz8di8WN+wWx8fOFZ8KZt0IAKUhsPYQD4E9UNf+R608x
+         77GfrCT/ZvCAmMbYjjck7h0ugNJbFOSZiMUhTU8S+luENk+d73cjvC3BDb+02VcIshh6
+         ydeBCd4zAw3NLt3bpWVTjM3v84rJSqVvU5p7v+QVUu84gvWt+VctQDkr6tNRT0DL5jbS
+         Ld1lGFDj+fEgVqHaiGtXFhqgOe7EpNZM5HtlO5SH5R/JeEitjEkxg6AcE+v/QDHCWTP+
+         7b69UhEsvbNVe3vGAISuMmePN4PWLwhX1Igffux6TefoV+MZh+YrN0FmGRerBFyZxQ9W
+         7kZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZXDOKwkAEMBmiYSeMHCXxPtDvLwnxyJqoeUB0a+jAg8=;
-        b=DSrhNdPHxEoJtlvJGEhBmRRLEU9zBLausXxCcjI9Sy7VvMKOyA29/xh4YW8tu+4YyN
-         rVHCrSWJGis0emQn18GmEBv9qJpYT5p7mJrxFvaDETG6s0zTt+J4MldtkNCwW1tTuVmu
-         53AGoM22VzJy1zXWVXjmC9gvrZkyst5lqj+fGrSScpPhCH/3gG1iAVdT59McX9Q88T41
-         Z/dpMMd6tAkBrMKf8URwkERsGMUkRpLUBY80xc5p0mhwWcmIueZI8WugjYSLNBy2rgeT
-         Rvon2fHLtE6WS7Nmylc79hLGf8ff2145SxUQDbjvRJ9QMklfnG4jGcitX4TCwgasKeCX
-         LHsg==
-X-Gm-Message-State: APjAAAVF6WBuswH93MqM1EXujYD7fd+49D3P04TVBntuj0ASlkgFghS1
-        cW6343Bqo1Oi09inntgstFYUuLvLBsIog0UkO4BQ
-X-Google-Smtp-Source: APXvYqwRVVnGpDVdSGCj6R4r22cAjZvnCnlNYusSiD/sCSGkEdAyXXFr+krFA2m6K8I0tlJghON4fRG9yXZG4071sxQ=
-X-Received: by 2002:a2e:3e14:: with SMTP id l20mr5891599lja.40.1559306696964;
- Fri, 31 May 2019 05:44:56 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Qv8Gl69nP262ZkQFCl6BnDomj+l1WagsjrnxTyxwFmo=;
+        b=mACvh+DDxBgmgXsvEQ9rGErPsaSOuXiJUChkk0qRZkKuNd0RV10737uq9bHBAkEIG2
+         WMGLU2qsLa0rs/oXtUnlS0fVOMlx5ZP17POgoEBLVGZ7nMa+Ui3ITFepFr36U9eG/oLw
+         ZffEKqbNdft15dkhRB1RxgJgYiphcCe/1dLCAnbfYu3wrVj4V/Kipr+PVzr1RY2sDaxR
+         6rwQZT6VuP14vibzeflApSQ2zXXfK/ROdk8eMwuCD8BNZmfi0Wq8cyov7TdZtxjYsszh
+         /pSn+GcdbpHgrq2C5gURO7hnQtCgTZmLAy88sHTOzToiYgyrRYqks0ib7vRPoG/TaE9v
+         eqSg==
+X-Gm-Message-State: APjAAAVpjP9mFLlBjR8aVah8IFqh627M9IHtbEl/0JYm1ntfaba5CdzZ
+        l3FcKKDIyEmEIhYdfRtGPin3xl9T
+X-Google-Smtp-Source: APXvYqwuXyCSIZ4g7NUoXwjG2Qc4/ojYG9JoWbNV4+FDSGoVQy4Hineu+W0O8JH3tysDD+l1cmbVYg==
+X-Received: by 2002:a2e:9112:: with SMTP id m18mr5961730ljg.181.1559306704152;
+        Fri, 31 May 2019 05:45:04 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.35.141])
+        by smtp.googlemail.com with ESMTPSA id r3sm1201949ljr.76.2019.05.31.05.45.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 31 May 2019 05:45:03 -0700 (PDT)
+Subject: Re: [PATCH V1] i2c: busses: tegra: Add suspend-resume support
+To:     Bitan Biswas <bbiswas@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>
+References: <1559195718-6693-1-git-send-email-bbiswas@nvidia.com>
+ <c8bad04b-67ef-bcdf-04df-4aa61271e81c@gmail.com>
+ <9142282b-ab76-53a0-13ce-c43b8adc575f@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <4f14a218-332c-0263-c6c5-73a13b2446f0@gmail.com>
+Date:   Fri, 31 May 2019 15:43:56 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190529145742.GA8959@cisco> <CAHC9VhR4fudQanvZGYWMvCf7k2CU3q7e7n1Pi7hzC3v_zpVEdw@mail.gmail.com>
- <20190529153427.GB8959@cisco> <CAHC9VhSF3AjErX37+eeusJ7+XRw8yuPsmqBTRwc9EVoRBh_3Tw@mail.gmail.com>
- <20190529222835.GD8959@cisco> <CAHC9VhRS66VGtug3fq3RTGHDvfGmBJG6yRJ+iMxm3cxnNF-zJw@mail.gmail.com>
- <20190530170913.GA16722@mail.hallyn.com> <CAHC9VhThLiQzGYRUWmSuVfOC6QCDmA75BDB7Eg7V8HX4x7ymQg@mail.gmail.com>
- <20190530212900.GC5739@cisco> <CAHC9VhT5HPt9rCJoDutdvA3r1Y1GOHfpXe2eJ54atNC1=Vd8LA@mail.gmail.com>
- <20190531002058.tsddah4edcazkuzs@madcap2.tricolour.ca>
-In-Reply-To: <20190531002058.tsddah4edcazkuzs@madcap2.tricolour.ca>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Fri, 31 May 2019 08:44:45 -0400
-Message-ID: <CAHC9VhTrM1op_EH=YAn9pU8dMOr=jB-Ph4SxFeqGFskwLmFnCA@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V6 02/10] audit: add container id
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     Tycho Andersen <tycho@tycho.ws>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
-        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
-        ebiederm@xmission.com, nhorman@tuxdriver.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <9142282b-ab76-53a0-13ce-c43b8adc575f@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 8:21 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> On 2019-05-30 19:26, Paul Moore wrote:
-> > On Thu, May 30, 2019 at 5:29 PM Tycho Andersen <tycho@tycho.ws> wrote:
-> > > On Thu, May 30, 2019 at 03:29:32PM -0400, Paul Moore wrote:
-> > > >
-> > > > [REMINDER: It is an "*audit* container ID" and not a general
-> > > > "container ID" ;)  Smiley aside, I'm not kidding about that part.]
-> > >
-> > > This sort of seems like a distinction without a difference; presumably
-> > > audit is going to want to differentiate between everything that people
-> > > in userspace call a container. So you'll have to support all this
-> > > insanity anyway, even if it's "not a container ID".
-> >
-> > That's not quite right.  Audit doesn't care about what a container is,
-> > or is not, it also doesn't care if the "audit container ID" actually
-> > matches the ID used by the container engine in userspace and I think
-> > that is a very important line to draw.  Audit is simply given a value
-> > which it calls the "audit container ID", it ensures that the value is
-> > inherited appropriately (e.g. children inherit their parent's audit
-> > container ID), and it uses the value in audit records to provide some
-> > additional context for log analysis.  The distinction isn't limited to
-> > the value itself, but also to how it is used; it is an "audit
-> > container ID" and not a "container ID" because this value is
-> > exclusively for use by the audit subsystem.  We are very intentionally
-> > not adding a generic container ID to the kernel.  If the kernel does
-> > ever grow a general purpose container ID we will be one of the first
-> > ones in line to make use of it, but we are not going to be the ones to
-> > generically add containers to the kernel.  Enough people already hate
-> > audit ;)
-> >
-> > > > I'm not interested in supporting/merging something that isn't useful;
-> > > > if this doesn't work for your use case then we need to figure out what
-> > > > would work.  It sounds like nested containers are much more common in
-> > > > the lxc world, can you elaborate a bit more on this?
-> > > >
-> > > > As far as the possible solutions you mention above, I'm not sure I
-> > > > like the per-userns audit container IDs, I'd much rather just emit the
-> > > > necessary tracking information via the audit record stream and let the
-> > > > log analysis tools figure it out.  However, the bigger question is how
-> > > > to limit (re)setting the audit container ID when you are in a non-init
-> > > > userns.  For reasons already mentioned, using capable() is a non
-> > > > starter for everything but the initial userns, and using ns_capable()
-> > > > is equally poor as it essentially allows any userns the ability to
-> > > > munge it's audit container ID (obviously not good).  It appears we
-> > > > need a different method for controlling access to the audit container
-> > > > ID.
-> > >
-> > > One option would be to make it a string, and have it be append only.
-> > > That should be safe with no checks.
-> > >
-> > > I know there was a long thread about what type to make this thing. I
-> > > think you could accomplish the append-only-ness with a u64 if you had
-> > > some rule about only allowing setting lower order bits than those that
-> > > are already set. With 4 bits for simplicity:
-> > >
-> > > 1100         # initial container id
-> > > 1100 -> 1011 # not allowed
-> > > 1100 -> 1101 # allowed, but now 1101 is set in stone since there are
-> > >              # no lower order bits left
-> > >
-> > > There are probably fancier ways to do it if you actually understand
-> > > math :)
-> >
-> >  ;)
-> >
-> > > Since userns nesting is limited to 32 levels (right now, IIRC), and
-> > > you have 64 bits, this might be reasonable. You could just teach
-> > > container engines to use the first say N bits for themselves, with a 1
-> > > bit for the barrier at the end.
-> >
-> > I like the creativity, but I worry that at some point these
-> > limitations are going to be raised (limits have a funny way of doing
-> > that over time) and we will be in trouble.  I say "trouble" because I
-> > want to be able to quickly do an audit container ID comparison and
-> > we're going to pay a penalty for these larger values (we'll need this
-> > when we add multiple auditd support and the requisite record routing).
-> >
-> > Thinking about this makes me also realize we probably need to think a
-> > bit longer about audit container ID conflicts between orchestrators.
-> > Right now we just take the value that is given to us by the
-> > orchestrator, but if we want to allow multiple container orchestrators
-> > to work without some form of cooperation in userspace (I think we have
-> > to assume the orchestrators will not talk to each other) we likely
-> > need to have some way to block reuse of an audit container ID.  We
-> > would either need to prevent the orchestrator from explicitly setting
-> > an audit container ID to a currently in use value, or instead generate
-> > the audit container ID in the kernel upon an event triggered by the
-> > orchestrator (e.g. a write to a /proc file).  I suspect we should
-> > start looking at the idr code, I think we will need to make use of it.
->
-> My first reaction to using the IDR code is that once an idr is given up,
-> it can be reused.  I suppose we request IDRs and then never give them up
-> to avoid reuse...
+31.05.2019 11:50, Bitan Biswas пишет:
+> 
+> 
+> On 5/30/19 4:27 AM, Dmitry Osipenko wrote:
+>> 30.05.2019 8:55, Bitan Biswas пишет:
+>>> Post suspend I2C registers have power on reset values. Before any
+>>> transfer initialize I2C registers to prevent I2C transfer timeout
+>>> and implement suspend and resume callbacks needed. Fix below errors
+>>> post suspend:
+>>>
+>>> 1) Tegra I2C transfer timeout during jetson tx2 resume:
+>>>
+>>> [   27.520613] pca953x 1-0074: calling pca953x_resume+0x0/0x1b0 @
+>>> 2939, parent: i2c-1
+>>> [   27.633623] tegra-i2c 3160000.i2c: i2c transfer timed out
+>>> [   27.639162] pca953x 1-0074: Unable to sync registers 0x3-0x5. -110
+>>> [   27.645336] pca953x 1-0074: Failed to sync GPIO dir registers: -110
+>>> [   27.651596] PM: dpm_run_callback(): pca953x_resume+0x0/0x1b0
+>>> returns -110
+>>> [   27.658375] pca953x 1-0074: pca953x_resume+0x0/0x1b0 returned -110
+>>> after 127152 usecs
+>>> [   27.666194] PM: Device 1-0074 failed to resume: error -110
+>>>
+>>> 2) Tegra I2C transfer timeout error on jetson Xavier post resume.
+>>>
+>>> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+>>> ---
+>>>   drivers/i2c/busses/i2c-tegra.c | 24 ++++++++++++++++++++++++
+>>>   1 file changed, 24 insertions(+)
+>>>
+>>> diff --git a/drivers/i2c/busses/i2c-tegra.c
+>>> b/drivers/i2c/busses/i2c-tegra.c
+>>> index ebaa78d..f6a377f 100644
+>>> --- a/drivers/i2c/busses/i2c-tegra.c
+>>> +++ b/drivers/i2c/busses/i2c-tegra.c
+>>> @@ -1687,9 +1687,33 @@ static int tegra_i2c_remove(struct
+>>> platform_device *pdev)
+>>>   }
+>>>     #ifdef CONFIG_PM_SLEEP
+>>> +static int tegra_i2c_suspend(struct device *dev)
+>>> +{
+>>> +    struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
+>>> +
+>>> +    i2c_mark_adapter_suspended(&i2c_dev->adapter);
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +static int tegra_i2c_resume(struct device *dev)
+>>> +{
+>>> +    struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
+>>> +    int ret;
+>>> +
+>>> +    i2c_lock_bus(&i2c_dev->adapter, I2C_LOCK_ROOT_ADAPTER);
+>>> +    ret = tegra_i2c_init(i2c_dev, false);
+>>> +    i2c_unlock_bus(&i2c_dev->adapter, I2C_LOCK_ROOT_ADAPTER);
+>>
+>> Why the locking is needed here?
+> 
+> async resume could result in stress test issues if some client accesses
+> the i2c instance. This ensures the i2c instance is locked till the
+> initialization is complete.
 
-I'm not sure we ever what to guarantee that an audit container ID
-won't be reused during the lifetime of the system, it is a discrete
-integer after all.  What I think we do want to guarantee is that we
-won't allow an unintentional audit container ID collision between
-different orchestrators; if a single orchestrator wants to reuse an
-audit container ID then that is its choice.
+1) This doesn't make much sense.. if client could access I2C during of
+tegra_i2c_init execution, then what stops it to perform the access
+before the lock is taken?
 
-> I already had some ideas of preventing an existing ID from being reused,
+2) The whole point of the i2c_mark_adapter_* API is to catch those
+faulty clients that have a broken suspend-resume sequence. Client will
+get a -ESHUTDOWN on trying to issue I2C transfer while controller is
+marked as suspended.
 
-Cool.  I only made the idr suggestion since it is used for PIDs and
-solves a very similar problem.
+3) Please don't use async suspend-resume where it doesn't make sense.
 
-> but that makes the practice of some container engines injecting
-> processes into existing containers difficult if not impossible.
-
-Yes, we'll need some provision to indicate which orchestrator
-"controls" that particular audit container ID, and allow that
-orchestrator to reuse that particular audit container ID (until all
-those containers disappear and the audit container ID is given back to
-the pool).
-
--- 
-paul moore
-www.paul-moore.com
+Corollary: you should drop the locking because it doesn't do anything
+useful.
