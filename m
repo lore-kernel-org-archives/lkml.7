@@ -4,24 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78FFBC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69FD4C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53D4D25D30
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4005726616
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:56:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbfEaI4f (ORCPT
+        id S1727163AbfEaI4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 04:56:35 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:37046 "EHLO huawei.com"
+        Fri, 31 May 2019 04:56:42 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:39560 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726240AbfEaI4e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 04:56:34 -0400
+        id S1726997AbfEaI4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 04:56:39 -0400
 Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 3302A275146300A9EDBE;
-        Fri, 31 May 2019 16:56:32 +0800 (CST)
+        by Forcepoint Email with ESMTP id 334522267A92A517B435;
+        Fri, 31 May 2019 16:56:37 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
  14.3.439.0; Fri, 31 May 2019 16:56:26 +0800
@@ -29,12 +29,12 @@ From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Jian Shen <shenjian15@huawei.com>,
+        <linuxarm@huawei.com>, Yunsheng Lin <linyunsheng@huawei.com>,
         Peng Li <lipeng321@huawei.com>,
-        "Huazhong Tan" <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 02/12] net: hns3: don't configure new VLAN ID into VF VLAN table when it's full
-Date:   Fri, 31 May 2019 16:54:48 +0800
-Message-ID: <1559292898-64090-3-git-send-email-tanhuazhong@huawei.com>
+        Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH net-next 04/12] net: hns3: set the port shaper according to MAC speed
+Date:   Fri, 31 May 2019 16:54:50 +0800
+Message-ID: <1559292898-64090-5-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1559292898-64090-1-git-send-email-tanhuazhong@huawei.com>
 References: <1559292898-64090-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,71 +47,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian Shen <shenjian15@huawei.com>
+From: Yunsheng Lin <linyunsheng@huawei.com>
 
-VF VLAN table can only support no more than 256 VLANs. When user
-adds too many VLANs, the VF VLAN table will be full, and firmware
-will close the VF VLAN table for the function. When VF VLAN table
-is full, and user keeps adding new VLANs, it's unnecessary to
-configure the VF VLAN table, because it will always fail, and print
-warning message. The worst case is adding 4K VLANs, and doing reset,
-it will take much time to restore these VLANs, which may cause VF
-reset fail by timeout.
+This patch sets the port shaper according to the MAC speed as
+suggested by hardware user manual.
 
-Fixes: 6c251711b37f ("net: hns3: Disable vf vlan filter when vf vlan table is full")
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 Signed-off-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 8 ++++++++
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h | 1 +
- 2 files changed, 9 insertions(+)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index f0f618d..1215455 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -7025,6 +7025,12 @@ static int hclge_set_vf_vlan_common(struct hclge_dev *hdev, int vfid,
- 	u8 vf_byte_off;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
+index a7bbb6d..fac5193 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
+@@ -397,7 +397,7 @@ static int hclge_tm_port_shaper_cfg(struct hclge_dev *hdev)
+ 	u8 ir_u, ir_b, ir_s;
  	int ret;
  
-+	/* if vf vlan table is full, firmware will close vf vlan filter, it
-+	 * is unable and unnecessary to add new vlan id to vf vlan filter
-+	 */
-+	if (test_bit(vfid, hdev->vf_vlan_full) && !is_kill)
-+		return 0;
-+
- 	hclge_cmd_setup_basic_desc(&desc[0],
- 				   HCLGE_OPC_VLAN_FILTER_VF_CFG, false);
- 	hclge_cmd_setup_basic_desc(&desc[1],
-@@ -7060,6 +7066,7 @@ static int hclge_set_vf_vlan_common(struct hclge_dev *hdev, int vfid,
- 			return 0;
- 
- 		if (req0->resp_code == HCLGE_VF_VLAN_NO_ENTRY) {
-+			set_bit(vfid, hdev->vf_vlan_full);
- 			dev_warn(&hdev->pdev->dev,
- 				 "vf vlan table is full, vf vlan filter is disabled\n");
- 			return 0;
-@@ -8621,6 +8628,7 @@ static int hclge_reset_ae_dev(struct hnae3_ae_dev *ae_dev)
- 
- 	hclge_stats_clear(hdev);
- 	memset(hdev->vlan_table, 0, sizeof(hdev->vlan_table));
-+	memset(hdev->vf_vlan_full, 0, sizeof(hdev->vf_vlan_full));
- 
- 	ret = hclge_cmd_init(hdev);
- 	if (ret) {
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-index 2b3bc95..414f7db 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-@@ -820,6 +820,7 @@ struct hclge_dev {
- 	struct hclge_vlan_type_cfg vlan_type_cfg;
- 
- 	unsigned long vlan_table[VLAN_N_VID][BITS_TO_LONGS(HCLGE_VPORT_NUM)];
-+	unsigned long vf_vlan_full[BITS_TO_LONGS(HCLGE_VPORT_NUM)];
- 
- 	struct hclge_fd_cfg fd_cfg;
- 	struct hlist_head fd_rule_list;
+-	ret = hclge_shaper_para_calc(HCLGE_ETHER_MAX_RATE,
++	ret = hclge_shaper_para_calc(hdev->hw.mac.speed,
+ 				     HCLGE_SHAPER_LVL_PORT,
+ 				     &ir_b, &ir_u, &ir_s);
+ 	if (ret)
 -- 
 2.7.4
 
