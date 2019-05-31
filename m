@@ -2,116 +2,94 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02AEBC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:34:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 503D6C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D52D124339
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:34:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A9A8266F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:36:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbfEaJeL (ORCPT
+        id S1726934AbfEaJgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 05:34:11 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34428 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726233AbfEaJeK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 05:34:10 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 21D74AE5A;
-        Fri, 31 May 2019 09:34:09 +0000 (UTC)
+        Fri, 31 May 2019 05:36:33 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57114 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726232AbfEaJgc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 05:36:32 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BA36C30C120A;
+        Fri, 31 May 2019 09:36:32 +0000 (UTC)
+Received: from t460s.redhat.com (ovpn-116-233.ams2.redhat.com [10.36.116.233])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1E29A1017E33;
+        Fri, 31 May 2019 09:36:28 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-s390@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: [PATCH v1] s390/pkey: Use -ENODEV instead of -EOPNOTSUPP
+Date:   Fri, 31 May 2019 11:36:28 +0200
+Message-Id: <20190531093628.14766-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 31 May 2019 11:34:08 +0200
-From:   Roman Penyaev <rpenyaev@suse.de>
-To:     Renzo Davoli <renzo@cs.unibo.it>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Davide Libenzi <davidel@xmailserver.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCH 1/1] eventfd new tag EFD_VPOLL: generate epoll events
-In-Reply-To: <20190527133621.GC26073@cs.unibo.it>
-References: <20190526142521.GA21842@cs.unibo.it>
- <20190527073332.GA13782@kroah.com> <20190527133621.GC26073@cs.unibo.it>
-Message-ID: <480f1bda66b67f740f5da89189bbfca3@suse.de>
-X-Sender: rpenyaev@suse.de
-User-Agent: Roundcube Webmail
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Fri, 31 May 2019 09:36:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Renzo,
+systemd-modules-load.service automatically tries to load the pkey module
+on systems that have MSA.
 
-On 2019-05-27 15:36, Renzo Davoli wrote:
-> On Mon, May 27, 2019 at 09:33:32AM +0200, Greg KH wrote:
->> On Sun, May 26, 2019 at 04:25:21PM +0200, Renzo Davoli wrote:
->> > This patch implements an extension of eventfd to define file descriptors
->> > whose I/O events can be generated at user level. These file descriptors
->> > trigger notifications for [p]select/[p]poll/epoll.
->> >
->> > This feature is useful for user-level implementations of network stacks
->> > or virtual device drivers as libraries.
->> 
->> How can this be used to create a "virtual device driver"?  Do you have
->> any examples of this new interface being used anywhere?
-> 
-> Networking programs use system calls implementing the Berkeley sockets 
-> API:
-> socket, accept, connect, listen, recv*, send* etc.  Programs dealing 
-> with a
-> device use system calls like open, read, write, ioctl etc.
-> 
-> When somebody wants to write a library able to behave like a network 
-> stack (say
-> lwipv6, picotcp) or a device, they can implement functions like 
-> my_socket,
-> my_accept, my_open or my_ioctl, as drop-in replacement of their system
-> call counterpart.  (It is also possible to use dynamic library magic to
-> rename/divert the system call requests to use their 'virtual'
-> implementation provided by the library: socket maps to my_socket, recv
-> to my_recv etc).
-> 
-> In this way portability and compatibility is easier, using a well known 
-> API
-> instead of inventing new ones.
-> 
-> Unfortunately this approach cannot be applied to
-> poll/select/ppoll/pselect/epoll.
+Pkey also requires the MSA3 facility and a bunch of subfunctions.
+Failing with -EOPNOTSUPP makes "systemd-modules-load.service" fail on
+any system that does not have all needed subfunctions. For example,
+when running under QEMU TCG (but also on systems where protected keys
+are disabled via the HMC).
 
-If you have to override other systemcalls, what is the problem to 
-override
-poll family?  It will add, let's say, 50 extra code lines complexity to 
-your
-userspace code.  All you need is to be woken up by *any* event and check
-one mask variable, in order to understand what you need to do: read or 
-write,
-basically exactly what you do in your eventfd modification, but only in
-userspace.
+Let's use -ENODEV, so systemd-modules-load.service properly ignores
+failing to load the pkey module because of missing HW functionality.
 
+Cc: Harald Freudenberger <freude@linux.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Cornelia Huck <cohuck@redhat.com>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ drivers/s390/crypto/pkey_api.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
->> Why can it not be less than 64?
-> This is the imeplementation of 'write'. The 64 bits include the 
-> 'command'
-> EFD_VPOLL_ADDEVENTS, EFD_VPOLL_DELEVENTS or EFD_VPOLL_MODEVENTS (in the 
-> most
-> significant 32 bits) and the set of events (in the lowest 32 bits).
-
-Do you really need add/del/mod semantics?  Userspace still has to keep 
-mask
-somewhere, so you can have one simple command, which does:
-
-    ctx->count = events;
-
-in kernel, so no masks and this games with bits are needed.  That will
-simplify API.
-
---
-Roman
+diff --git a/drivers/s390/crypto/pkey_api.c b/drivers/s390/crypto/pkey_api.c
+index 45eb0c14b880..ddfcefb47284 100644
+--- a/drivers/s390/crypto/pkey_api.c
++++ b/drivers/s390/crypto/pkey_api.c
+@@ -1695,15 +1695,15 @@ static int __init pkey_init(void)
+ 	 * are able to work with protected keys.
+ 	 */
+ 	if (!cpacf_query(CPACF_PCKMO, &pckmo_functions))
+-		return -EOPNOTSUPP;
++		return -ENODEV;
+ 
+ 	/* check for kmc instructions available */
+ 	if (!cpacf_query(CPACF_KMC, &kmc_functions))
+-		return -EOPNOTSUPP;
++		return -ENODEV;
+ 	if (!cpacf_test_func(&kmc_functions, CPACF_KMC_PAES_128) ||
+ 	    !cpacf_test_func(&kmc_functions, CPACF_KMC_PAES_192) ||
+ 	    !cpacf_test_func(&kmc_functions, CPACF_KMC_PAES_256))
+-		return -EOPNOTSUPP;
++		return -ENODEV;
+ 
+ 	pkey_debug_init();
+ 
+-- 
+2.20.1
 
