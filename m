@@ -2,110 +2,103 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B30C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CC3C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7B4F26BE0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:21:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="avkpptgN"
+	by mail.kernel.org (Postfix) with ESMTP id A938F24ADE
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:22:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbfEaQVV (ORCPT
+        id S1726998AbfEaQWP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 12:21:21 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:46406 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726689AbfEaQVV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 12:21:21 -0400
-Received: by mail-io1-f65.google.com with SMTP id u25so8628319iot.13
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 09:21:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hhzUzcK+D+x0PoR8QoOOO0vIELyXq5qCJQReWwEd68k=;
-        b=avkpptgN30TGCHK1XGlzNzBfHRpn6OXiAXMYSQjo1mMKGC0YWM0fQDIi/HI3fldW0B
-         vUdNL4NJ/dSpcY6P2E8h3eYXHIO1WTZXyaltmZdtL9pnF9xKadr+RVpDRSWCsAlWcsjQ
-         +fPgx9hzSwPVG2/qCaSbCzlw6ZiBtn3frTTW++3CfLkiyrIzm7pHCIjbn/e6AlisMBJs
-         +xEWhR8qtnXAe4EPvZIxo4BPTmuXaN46HJEwcH9LiJLS/RtvSAX03FG5jr5caf1/7N9M
-         4hB0viKAivOLyEDpWzoDjlcxHd7r5u9TsXcVtUKuAl2t4i6Mtikky5lj6gG95+bc9q7V
-         +YIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hhzUzcK+D+x0PoR8QoOOO0vIELyXq5qCJQReWwEd68k=;
-        b=nR6/Z485vJ+xEmw0SNF2nynf2Yi7mPUg8pFDVIiw2eZWMEdpUO4wNzsK8MNp4Gdwez
-         g/jxEr00hBd3dWXaZnqmLzQiOBicCc00CT3tV1HmUUnFMzQol+mGONGyZttN92YJUvhs
-         nIN5kEbaquBxM5ajSIgdatZQ0xgnmXw4y3z/GZfe6sevt1l8ppZ88/26teMMbBdmBIfL
-         Twe1FvI5WvD4y9YMdVUDzG8sf9KSQRWTJRT4UsaFRvZDa71GWYiwC1Jg0iROJN4mdAvy
-         b7PCSH/0y68hV3xZmqbxycDJDuH4RYmTBdjndRy+03YHpqyy0Z/FkyPGFYg6gEe0siwO
-         xC9A==
-X-Gm-Message-State: APjAAAUCcTrp8EYPuqtmTbuPyNfUkM+P7MWsmWD6N64mr4Ed5GWeOfWI
-        6NwcWSXBqC9VQ+TT4IptFyuUqnvvKZNNNcfFL9k=
-X-Google-Smtp-Source: APXvYqyOTbkf5uG2siRLrdE23h185dSngIKc8wsDjAlb6RyZEh9XEpe4nzXaFLzGOZnH3RtV3azlZDTBHwilrML5lE0=
-X-Received: by 2002:a5d:8c81:: with SMTP id g1mr7320119ion.239.1559319680310;
- Fri, 31 May 2019 09:21:20 -0700 (PDT)
+        Fri, 31 May 2019 12:22:15 -0400
+Received: from foss.arm.com ([217.140.101.70]:54096 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726649AbfEaQWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 12:22:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 72A16341;
+        Fri, 31 May 2019 09:22:14 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D9D693F59C;
+        Fri, 31 May 2019 09:22:08 -0700 (PDT)
+Date:   Fri, 31 May 2019 17:22:06 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Subject: Re: [PATCH v15 17/17] selftests, arm64: add a selftest for passing
+ tagged pointers to kernel
+Message-ID: <20190531162206.GB3568@arrakis.emea.arm.com>
+References: <cover.1557160186.git.andreyknvl@google.com>
+ <e31d9364eb0c2eba8ce246a558422e811d82d21b.1557160186.git.andreyknvl@google.com>
+ <20190522141612.GA28122@arrakis.emea.arm.com>
+ <CAAeHK+wUerHQOV2PuaTwTxcCucZHZodLwg48228SB+ymxEqT2A@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190531143320.8895-1-sudeep.holla@arm.com>
-In-Reply-To: <20190531143320.8895-1-sudeep.holla@arm.com>
-From:   Jassi Brar <jassisinghbrar@gmail.com>
-Date:   Fri, 31 May 2019 11:21:08 -0500
-Message-ID: <CABb+yY1u5zdocgV=HhQcHWQa_R7ArtFqndU5_T=NsPHJ=jwseA@mail.gmail.com>
-Subject: Re: [PATCH 0/6] mailbox: arm_mhu: add support to use in doorbell mode
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Cristian Marussi <cristian.marussi@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAeHK+wUerHQOV2PuaTwTxcCucZHZodLwg48228SB+ymxEqT2A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sudeep,
+On Fri, May 31, 2019 at 04:21:48PM +0200, Andrey Konovalov wrote:
+> On Wed, May 22, 2019 at 4:16 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > On Mon, May 06, 2019 at 06:31:03PM +0200, Andrey Konovalov wrote:
+> > > This patch is a part of a series that extends arm64 kernel ABI to allow to
+> > > pass tagged user pointers (with the top byte set to something else other
+> > > than 0x00) as syscall arguments.
+> > >
+> > > This patch adds a simple test, that calls the uname syscall with a
+> > > tagged user pointer as an argument. Without the kernel accepting tagged
+> > > user pointers the test fails with EFAULT.
+> >
+> > That's probably sufficient for a simple example. Something we could add
+> > to Documentation maybe is a small library that can be LD_PRELOAD'ed so
+> > that you can run a lot more tests like LTP.
+> 
+> Should I add this into this series, or should this go into Vincenzo's patchset?
 
-On Fri, May 31, 2019 at 9:33 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
->
-> This is my another attempt to extend mailbox framework to support
-> doorbell mode mailbox hardware. It also adds doorbell support to ARM
-> MHU driver.
->
-Nothing has really changed since the last time we discussed many months ago.
-MHU remains same, and so are my points.
+If you can tweak the selftest Makefile to build a library and force it
+with LD_PRELOAD, you can keep it with this patch. It would be easier to
+extend to other syscall tests, signal handling etc.
 
->
-> Brief hardware description about MHU
-> ====================================
->
-> For each of the interrupt signals, the MHU drives the signal using a 32-bit
-> register, with all 32 bits logically ORed together. The MHU provides a set of
-> registers to enable software to SET, CLEAR, and check the STATUS of each of
-> the bits of this register independently. The use of 32 bits for each interrupt
-> line enables software to provide more information about the source of the
-> interrupt.
->
-"32 bits for each interrupt line"  =>  32 virtual channels or 32bit
-data over one physical channel. And that is how the driver is
-currently written.
-
-> For example, each bit of the register can be associated with a type
-> of event that can contribute to raising the interrupt.
->
-Sure there can be a usecase where each bit is associated with an event
-(virtual channel). As you said, this is just one example of how MHU
-can be used. There are other ways MHU is used already.
-
-Patch-2/6 looks good though. I will pick that up.
-
-Thanks.
+-- 
+Catalin
