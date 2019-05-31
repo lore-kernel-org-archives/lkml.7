@@ -2,251 +2,117 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE95C28CC2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44470C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B09926B34
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:59:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17AE326B2E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:59:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="wuALX1ds"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbfEaO7O (ORCPT
+        id S1726874AbfEaO7l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 10:59:14 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39442 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726515AbfEaO7O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 10:59:14 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 57F013078AAE;
-        Fri, 31 May 2019 14:59:10 +0000 (UTC)
-Received: from ovpn-112-17.rdu2.redhat.com (ovpn-112-17.rdu2.redhat.com [10.10.112.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D8202891B0;
-        Fri, 31 May 2019 14:58:59 +0000 (UTC)
-Message-ID: <e75cd1c111233fdc05f47017046a6b0f0c97673a.camel@redhat.com>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-From:   Dan Williams <dcbw@redhat.com>
-To:     Alex Elder <elder@linaro.org>, davem@davemloft.net, arnd@arndb.de,
-        bjorn.andersson@linaro.org, ilias.apalodimas@linaro.org
-Cc:     evgreen@chromium.org, benchan@google.com, ejcaruso@google.com,
-        cpratapa@codeaurora.org, syadagir@codeaurora.org,
-        subashab@codeaurora.org, abhishek.esse@gmail.com,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
-Date:   Fri, 31 May 2019 09:58:58 -0500
-In-Reply-To: <20190531035348.7194-1-elder@linaro.org>
-References: <20190531035348.7194-1-elder@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Fri, 31 May 2019 10:59:41 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:39594 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726515AbfEaO7k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 10:59:40 -0400
+Received: by mail-ot1-f68.google.com with SMTP id k24so4340108otn.6
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 07:59:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gkjgr9yAq+VhnnIt5t0RaPzTkMpIeWNJYrEuBA5bAY4=;
+        b=wuALX1dsEVY6xCVhPDDDGuSpN6wnECHReOyE/T6CGO5EOwmGiJJwGPmhE7Ls/LTmZj
+         k9a53MPPnTG2Xl3DCJuMUQTLVWZ0MTaq91bcxe2buFfCgv4m4p73z0cN+T9o4RExfzEI
+         PVmANmnSmNdsXekO7tYe2xfPJMWkEXOduZ4LfbZq5hFqAN5oQv7TsVMsLaWjzCTTkXIk
+         qpjBBB70swa9i43eULEvRpovxAhGjq3moOMow2nluRvxO2o8BhSmAi6m5qRSfbVBG5+p
+         TdhvwucQ/LfYApSKBBASABxtO+MCKfSA9XJEFlpOa+/e4ECKHx2souc8xpsDSEV8WsBh
+         IVRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gkjgr9yAq+VhnnIt5t0RaPzTkMpIeWNJYrEuBA5bAY4=;
+        b=nOGBTSmjjGqLto4/uK7NtcwsUAZOQNKLM8hkwOVKhKvEibz4lDcjOXsXdBtOioEUzY
+         gTFFRRbwZAi9YId3TdqIFaOPf/GwDcB+O5T69AvbdExl1Tg6aL/byXpx0r7j9L4gsyWW
+         IhGhuNWumKucCFIBj+MY99bJeD5KcRxjU6oeG7JNAfLvDTLMN0ssZ45L0K/j5mv8Bwnk
+         6tgYM3hfa/pi+dwFx2p4/o6gqg76bAxtPQuQAIdOJrbCJSBc5NRtoiVMNBGjFr6HmT26
+         khb2ltOVJsBWeHvJL4GucfBGgMeM6vRqvve+qpsR+MnnoJJbZKpXePns/qYIFH1aBwPn
+         56iw==
+X-Gm-Message-State: APjAAAUZn2/c8uDFXgwl7ZO96MT6H0NsPp0oKJ0bWx3BMuvpLhFJ6jbO
+        F44nXu5xHHl8ofzB+MiG54vgcw3bZt09FoKCNB5bXA==
+X-Google-Smtp-Source: APXvYqyEy2uoSeMif4klObB48qoPaiK9up6/IKR3TQTeJ3zBAsdV8u4dmVPKTkeVoooxLhERezABZp9xoq24sg44nUc=
+X-Received: by 2002:a9d:2963:: with SMTP id d90mr2134041otb.126.1559314780136;
+ Fri, 31 May 2019 07:59:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Fri, 31 May 2019 14:59:13 +0000 (UTC)
+References: <154899811208.3165233.17623209031065121886.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <154899811738.3165233.12325692939590944259.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <cddd43de-62f6-6a91-83aa-da02ff17254d@suse.cz>
+In-Reply-To: <cddd43de-62f6-6a91-83aa-da02ff17254d@suse.cz>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 31 May 2019 07:59:28 -0700
+Message-ID: <CAPcyv4g-g=Gyf0T1rENCEH_2KyLtt74kiLydxO=__tM71_bYww@mail.gmail.com>
+Subject: Re: [PATCH v10 1/3] mm: Shuffle initial free memory to improve
+ memory-side-cache utilization
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Keith Busch <keith.busch@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-05-30 at 22:53 -0500, Alex Elder wrote:
-> This series presents the driver for the Qualcomm IP Accelerator
-> (IPA).
-> 
-> This is version 2 of the series.  This version has addressed almost
-> all of the feedback received in the first version:
->   
-> https://lore.kernel.org/lkml/20190512012508.10608-1-elder@linaro.org/
-> More detail is included in the individual patches, but here is a
-> high-level summary of what's changed since then:
->   - Two spinlocks have been removed.
->       - The code for enabling and disabling endpoint interrupts has
->         been simplified considerably, and the spinlock is no longer
-> 	required
->       - A spinlock used when updating ring buffer pointers is no
->         longer needed.  Integers indexing the ring are used instead
-> 	(and they don't even have to be atomic).
->   - One spinlock remains to protect list updates, but it is always
->     acquired using spin_lock_bh() (no more irqsave).
->   - Information about the queueing and completion of messages is now
->     supplied to the network stack in batches rather than one at a
->     time.
->   - I/O completion handling has been simplified, with the IRQ
->     handler now consisting mainly of disabling the interrupt and
->     calling napi_schedule().
->   - Some comments have been updated and improved througout.
-> 
-> What follows is the introduction supplied with v1 of the series.
-> 
-> -----
-> 
-> The IPA is a component present in some Qualcomm SoCs that allows
-> network functions such as aggregation, filtering, routing, and NAT
-> to be performed without active involvement of the main application
-> processor (AP).
-> 
-> Initially, these advanced features are disabled; the IPA driver
-> simply provides a network interface that makes the modem's LTE
-> network available to the AP.  In addition, only support for the
-> IPA found in the Qualcomm SDM845 SoC is provided.
+On Fri, May 31, 2019 at 12:33 AM Vlastimil Babka <vbabka@suse.cz> wrote:
+>
+> On 2/1/19 6:15 AM, Dan Williams wrote:
+> > --- a/init/Kconfig
+> > +++ b/init/Kconfig
+> > @@ -1714,6 +1714,29 @@ config SLAB_FREELIST_HARDENED
+> >         sacrifies to harden the kernel slab allocator against common
+> >         freelist exploit methods.
+> >
+> > +config SHUFFLE_PAGE_ALLOCATOR
+> > +     bool "Page allocator randomization"
+> > +     default SLAB_FREELIST_RANDOM && ACPI_NUMA
+> > +     help
+> > +       Randomization of the page allocator improves the average
+> > +       utilization of a direct-mapped memory-side-cache. See section
+> > +       5.2.27 Heterogeneous Memory Attribute Table (HMAT) in the ACPI
+> > +       6.2a specification for an example of how a platform advertises
+> > +       the presence of a memory-side-cache. There are also incidental
+> > +       security benefits as it reduces the predictability of page
+> > +       allocations to compliment SLAB_FREELIST_RANDOM, but the
+> > +       default granularity of shuffling on 4MB (MAX_ORDER) pages is
+> > +       selected based on cache utilization benefits.
+> > +
+> > +       While the randomization improves cache utilization it may
+> > +       negatively impact workloads on platforms without a cache. For
+> > +       this reason, by default, the randomization is enabled only
+> > +       after runtime detection of a direct-mapped memory-side-cache.
+> > +       Otherwise, the randomization may be force enabled with the
+> > +       'page_alloc.shuffle' kernel command line parameter.
+> > +
+> > +       Say Y if unsure.
+>
+> It says "Say Y if unsure", yet if I run make oldconfig, the default is
+> N. Does that make sense?
 
-My question from the Nov 2018 IPA rmnet driver still stands; how does
-this relate to net/ethernet/qualcomm/rmnet/ if at all? And if this is
-really just a netdev talking to the IPA itself and unrelated to
-net/ethernet/qualcomm/rmnet, let's call it "ipa%d" and stop cargo-
-culting rmnet around just because it happens to be a net driver for a
-QC SoC.
-
-Is the firmware that the driver loads already in linux-firmware or
-going to be there soon?
-
-How does the driver support multiple PDNs (eg PDP or EPS contexts) that
-are enabled through the control plane via QMI messages? I couldn't
-quite find that out.
-
-Thanks,
-Dan
-
-> This code is derived from a driver developed internally by Qualcomm.
-> A version of the original source can be seen here:
->   https://source.codeaurora.org/quic/la/kernel/msm-4.9/tree
-> in the "drivers/platform/msm/ipa" directory.  Many were involved in
-> developing this, but the following individuals deserve explicit
-> acknowledgement for their substantial contributions:
-> 
->     Abhishek Choubey
->     Ady Abraham
->     Chaitanya Pratapa
->     David Arinzon
->     Ghanim Fodi
->     Gidon Studinski
->     Ravi Gummadidala
->     Shihuan Liu
->     Skylar Chang
-> 
-> A version of this code was posted in November 2018 as an RFC.
->   
-> https://lore.kernel.org/lkml/20181107003250.5832-1-elder@linaro.org/
-> All feedback received was addressed.  The code has undergone
-> considerable further rework since that time, and most of the
-> "future work" described then has now been completed.
-> 
-> This code is available in buildable form here, based on kernel
-> v5.2-rc1:
->   remote: ssh://git@git.linaro.org/people/alex.elder/linux.git
->   branch: ipa-v2_kernel-v5.2-rc2
->     75adf2ac1266 arm64: defconfig: enable build of IPA code
-> 
-> The branch depends on a commit now found in in net-next.  It has
-> been cherry-picked, and (in this branch) has this commit ID:
->   13c627b5a078 net: qualcomm: rmnet: Move common struct definitions
-> to include
-> by 
-> 
-> 					-Alex
-> 
-> Alex Elder (17):
->   bitfield.h: add FIELD_MAX() and field_max()
->   dt-bindings: soc: qcom: add IPA bindings
->   soc: qcom: ipa: main code
->   soc: qcom: ipa: configuration data
->   soc: qcom: ipa: clocking, interrupts, and memory
->   soc: qcom: ipa: GSI headers
->   soc: qcom: ipa: the generic software interface
->   soc: qcom: ipa: GSI transactions
->   soc: qcom: ipa: IPA interface to GSI
->   soc: qcom: ipa: IPA endpoints
->   soc: qcom: ipa: immediate commands
->   soc: qcom: ipa: IPA network device and microcontroller
->   soc: qcom: ipa: AP/modem communications
->   soc: qcom: ipa: support build of IPA code
->   MAINTAINERS: add entry for the Qualcomm IPA driver
->   arm64: dts: sdm845: add IPA information
->   arm64: defconfig: enable build of IPA code
-> 
->  .../devicetree/bindings/net/qcom,ipa.yaml     |  180 ++
->  MAINTAINERS                                   |    6 +
->  arch/arm64/boot/dts/qcom/sdm845.dtsi          |   51 +
->  arch/arm64/configs/defconfig                  |    1 +
->  drivers/net/Kconfig                           |    2 +
->  drivers/net/Makefile                          |    1 +
->  drivers/net/ipa/Kconfig                       |   16 +
->  drivers/net/ipa/Makefile                      |    7 +
->  drivers/net/ipa/gsi.c                         | 1635
-> +++++++++++++++++
->  drivers/net/ipa/gsi.h                         |  246 +++
->  drivers/net/ipa/gsi_private.h                 |  148 ++
->  drivers/net/ipa/gsi_reg.h                     |  376 ++++
->  drivers/net/ipa/gsi_trans.c                   |  624 +++++++
->  drivers/net/ipa/gsi_trans.h                   |  116 ++
->  drivers/net/ipa/ipa.h                         |  131 ++
->  drivers/net/ipa/ipa_clock.c                   |  297 +++
->  drivers/net/ipa/ipa_clock.h                   |   52 +
->  drivers/net/ipa/ipa_cmd.c                     |  377 ++++
->  drivers/net/ipa/ipa_cmd.h                     |  116 ++
->  drivers/net/ipa/ipa_data-sdm845.c             |  245 +++
->  drivers/net/ipa/ipa_data.h                    |  267 +++
->  drivers/net/ipa/ipa_endpoint.c                | 1283 +++++++++++++
->  drivers/net/ipa/ipa_endpoint.h                |   97 +
->  drivers/net/ipa/ipa_gsi.c                     |   48 +
->  drivers/net/ipa/ipa_gsi.h                     |   49 +
->  drivers/net/ipa/ipa_interrupt.c               |  279 +++
->  drivers/net/ipa/ipa_interrupt.h               |   53 +
->  drivers/net/ipa/ipa_main.c                    |  921 ++++++++++
->  drivers/net/ipa/ipa_mem.c                     |  234 +++
->  drivers/net/ipa/ipa_mem.h                     |   83 +
->  drivers/net/ipa/ipa_netdev.c                  |  251 +++
->  drivers/net/ipa/ipa_netdev.h                  |   24 +
->  drivers/net/ipa/ipa_qmi.c                     |  402 ++++
->  drivers/net/ipa/ipa_qmi.h                     |   35 +
->  drivers/net/ipa/ipa_qmi_msg.c                 |  583 ++++++
->  drivers/net/ipa/ipa_qmi_msg.h                 |  238 +++
->  drivers/net/ipa/ipa_reg.h                     |  279 +++
->  drivers/net/ipa/ipa_smp2p.c                   |  304 +++
->  drivers/net/ipa/ipa_smp2p.h                   |   47 +
->  drivers/net/ipa/ipa_uc.c                      |  208 +++
->  drivers/net/ipa/ipa_uc.h                      |   32 +
->  include/linux/bitfield.h                      |   14 +
->  42 files changed, 10358 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/net/qcom,ipa.yaml
->  create mode 100644 drivers/net/ipa/Kconfig
->  create mode 100644 drivers/net/ipa/Makefile
->  create mode 100644 drivers/net/ipa/gsi.c
->  create mode 100644 drivers/net/ipa/gsi.h
->  create mode 100644 drivers/net/ipa/gsi_private.h
->  create mode 100644 drivers/net/ipa/gsi_reg.h
->  create mode 100644 drivers/net/ipa/gsi_trans.c
->  create mode 100644 drivers/net/ipa/gsi_trans.h
->  create mode 100644 drivers/net/ipa/ipa.h
->  create mode 100644 drivers/net/ipa/ipa_clock.c
->  create mode 100644 drivers/net/ipa/ipa_clock.h
->  create mode 100644 drivers/net/ipa/ipa_cmd.c
->  create mode 100644 drivers/net/ipa/ipa_cmd.h
->  create mode 100644 drivers/net/ipa/ipa_data-sdm845.c
->  create mode 100644 drivers/net/ipa/ipa_data.h
->  create mode 100644 drivers/net/ipa/ipa_endpoint.c
->  create mode 100644 drivers/net/ipa/ipa_endpoint.h
->  create mode 100644 drivers/net/ipa/ipa_gsi.c
->  create mode 100644 drivers/net/ipa/ipa_gsi.h
->  create mode 100644 drivers/net/ipa/ipa_interrupt.c
->  create mode 100644 drivers/net/ipa/ipa_interrupt.h
->  create mode 100644 drivers/net/ipa/ipa_main.c
->  create mode 100644 drivers/net/ipa/ipa_mem.c
->  create mode 100644 drivers/net/ipa/ipa_mem.h
->  create mode 100644 drivers/net/ipa/ipa_netdev.c
->  create mode 100644 drivers/net/ipa/ipa_netdev.h
->  create mode 100644 drivers/net/ipa/ipa_qmi.c
->  create mode 100644 drivers/net/ipa/ipa_qmi.h
->  create mode 100644 drivers/net/ipa/ipa_qmi_msg.c
->  create mode 100644 drivers/net/ipa/ipa_qmi_msg.h
->  create mode 100644 drivers/net/ipa/ipa_reg.h
->  create mode 100644 drivers/net/ipa/ipa_smp2p.c
->  create mode 100644 drivers/net/ipa/ipa_smp2p.h
->  create mode 100644 drivers/net/ipa/ipa_uc.c
->  create mode 100644 drivers/net/ipa/ipa_uc.h
-> 
-
+The default is due to the general policy of not forcing users into new
+kernel functionality (i.e. the common Linus objection when a new
+config symbol is default 'y') . However, if someone is actively
+considering whether to enable it I think there's no harm in
+recommending 'y' because the facility currently needs to be paired
+with the page_alloc.shuffle=1 command line option.
