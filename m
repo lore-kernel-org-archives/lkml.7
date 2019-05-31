@@ -2,118 +2,102 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 355A5C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10AB3C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1B0C26E97
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:50:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JR1AMqG+"
+	by mail.kernel.org (Postfix) with ESMTP id E2AF726EA7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:51:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbfEaTub (ORCPT
+        id S1727483AbfEaTvS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 15:50:31 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38208 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727199AbfEaTu1 (ORCPT
+        Fri, 31 May 2019 15:51:18 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:43802 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727199AbfEaTvR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 15:50:27 -0400
-Received: by mail-wr1-f66.google.com with SMTP id d18so7245079wrs.5;
-        Fri, 31 May 2019 12:50:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=RVkr0XInUNyl73v5Q20EHBEIvHgWD0JChBEkwLcMlCU=;
-        b=JR1AMqG+gsNO6iUVE9pphCh47QKqXSCYN0IjqRX5/+KgaVtfK81iDB5c3Z3zNBt3MF
-         y2UGPZT38xPel/Ce7mzrpSADLEQbBcbi0Q+45dHgPwbf9WG7VH9EjOhvQ1auCCkDoOzi
-         DB+h1uQfNrPq30KPXK1w3JlNdh4aCpmoBblrUX8A5Y7vJ/LZkOrqUbD7QQ4dOPWrKvIy
-         oO8h5jGGY3cNRjtXWWO0tk/qAxYL2ubzf1z8OOgZnyuJidlUQsgGCfYguArKw4zJ1UJf
-         ALOdKTnUsGTVurCpcgUlOUlwVntLPfGjgRidYF9s9GpOoMZ1fhXyU+ERx8pMdgTRF2l3
-         FB0A==
+        Fri, 31 May 2019 15:51:17 -0400
+Received: by mail-qt1-f196.google.com with SMTP id z24so2332567qtj.10;
+        Fri, 31 May 2019 12:51:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=RVkr0XInUNyl73v5Q20EHBEIvHgWD0JChBEkwLcMlCU=;
-        b=PuZD0bCqylW/XZPBngF2R5gmntzxBe7vYhSAUfPqv3ke9vt/8bJN1F1BNjGQuDSIHN
-         TyRfHKHhrOdYilFm7f9wwvL/7Zg28Z+KMtQCvn5jwHwo/zD6PVK8Q2rzrqyXF+gtFnx7
-         k/4apD2ii4Qin64+nvsBcCD8ojvwRqG9+8FTGTfD4BqMo0b64oWykdfxjwdvb/yMlSU/
-         G7TPFaupS0DMHwSPhZqr6GfuxM3zDF/V8ch+Kz7YOaXpc3K5zsJcluEYIhAFubpVT2ll
-         LAm28Yh8CnzsjK4H5POztUhMvAfEIVLqotU8eHpWb2A2FTh1ff997S88DxzQNYPD8cil
-         9x5w==
-X-Gm-Message-State: APjAAAWiFWtkUjW2/rLUj11LJpKbSLWLKFlTKu9L0iYn8j+xst0Ilzae
-        1Vc1g2/JOZT32RnwDvjq0gc=
-X-Google-Smtp-Source: APXvYqxUDh2jM8Hk8W5ZA3ySnBjYUfvxJ8bKkV8tPpVjwyasAXZcuqS0jVWOwC7DNv7oDH6tzZAQmA==
-X-Received: by 2002:adf:c606:: with SMTP id n6mr7619911wrg.62.1559332225543;
-        Fri, 31 May 2019 12:50:25 -0700 (PDT)
-Received: from Thor.lan (89.red-2-139-173.staticip.rima-tde.net. [2.139.173.89])
-        by smtp.gmail.com with ESMTPSA id y1sm4716107wma.14.2019.05.31.12.50.24
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 31 May 2019 12:50:24 -0700 (PDT)
-From:   Albert Vaca Cintora <albertvaka@gmail.com>
-To:     albertvaka@gmail.com, akpm@linux-foundation.org,
-        rdunlap@infradead.org, mingo@kernel.org, jack@suse.cz,
-        ebiederm@xmission.com, nsaenzjulienne@suse.de,
-        linux-kernel@vger.kernel.org, corbet@lwn.net,
-        linux-doc@vger.kernel.org, mbrugger@suse.com
-Subject: [PATCH v3 3/3] Documentation for /proc/sys/user/*_inotify_*
-Date:   Fri, 31 May 2019 21:50:16 +0200
-Message-Id: <20190531195016.4430-3-albertvaka@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190531195016.4430-1-albertvaka@gmail.com>
-References: <20190531195016.4430-1-albertvaka@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Xsy7KltLXxbW0BgIu9F6NiZrWo9L3TAjqu6dUK3uAPQ=;
+        b=HKiKcAe9NTvT7jlqURubrv6AeE+r3LE2+ofsKjOLjlU0ld0Pi3r+5W07WAc3VTxYm/
+         5wrIZtFRKGTy2rH60ru5gu6eOl/YzHfcZSENVMsY8hGuobbDe4O1sp/TxLr5Xtsr4Dl0
+         dwdKN9ROAl13qXJcOMT007U4IWvdTWmffPs1e/NuDc2RCbGRUSJHKyvb2Ua41NmLi8G1
+         EhPapRhPY4RVQXaXXLgkI1YZG/BcMmh5QvS0t30z3V25fLVbsq6/fspHUsKpvJ5a4hme
+         +UQJfWQiDpAbWQZ3HSdJDulMjntf/kxRd4eh+RUPfIwyjA0FaD9D0kqAasz8h5U5CYIq
+         Ph5g==
+X-Gm-Message-State: APjAAAUm+OEZ/7YxeQJx+zOKF7n1s+UtucC9RQHHqU7lyIRYoURhthq4
+        lFcldEooRRjhXGvtLlCoJhz/ZuU5uw2YIIyBzTU=
+X-Google-Smtp-Source: APXvYqy5TLpyp1w9fDgzU51O06QTfSxUvNh0UTj3TiR4JGC7+S/GTS9DUNmT2pYJmAL1ZIsCzMU5oyvll93f7R/CrRg=
+X-Received: by 2002:a0c:e78b:: with SMTP id x11mr6666549qvn.93.1559332276507;
+ Fri, 31 May 2019 12:51:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190531191204.4044-1-palmer@sifive.com> <20190531191204.4044-3-palmer@sifive.com>
+In-Reply-To: <20190531191204.4044-3-palmer@sifive.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 31 May 2019 21:51:00 +0200
+Message-ID: <CAK8P3a3HPeVq29k3Zk5rSk4bddiUQFrdEgDZUgdNnYZK+8QpGw@mail.gmail.com>
+Subject: Re: [PATCH 2/5] Add fchmodat4(), a new syscall
+To:     Palmer Dabbelt <palmer@sifive.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added docs for the existing and new inotify-related files
+On Fri, May 31, 2019 at 9:23 PM Palmer Dabbelt <palmer@sifive.com> wrote:
+>
+> man 3p says that fchmodat() takes a flags argument, but the Linux
+> syscall does not.  There doesn't appear to be a good userspace
+> workaround for this issue but the implementation in the kernel is pretty
+> straight-forward.  The specific use case where the missing flags came up
+> was WRT a fuse filesystem implemenation, but the functionality is pretty
+> generic so I'm assuming there would be other use cases.
+>
+> Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
+> ---
+>  fs/open.c                | 21 +++++++++++++++++++--
+>  include/linux/syscalls.h |  5 +++++
+>  2 files changed, 24 insertions(+), 2 deletions(-)
+>
+> diff --git a/fs/open.c b/fs/open.c
+> index a00350018a47..cfad7684e8d3 100644
+> --- a/fs/open.c
+> +++ b/fs/open.c
+> @@ -568,11 +568,17 @@ SYSCALL_DEFINE2(fchmod, unsigned int, fd, umode_t, mode)
+>         return ksys_fchmod(fd, mode);
+>  }
+>
+> -int do_fchmodat(int dfd, const char __user *filename, umode_t mode)
+> +int do_fchmodat4(int dfd, const char __user *filename, umode_t mode, int flags)
+...
+> +
+> +int do_fchmodat(int dfd, const char __user *filename, umode_t mode)
+> +{
+> +       return do_fchmodat4(dfd, filename, mode, 0);
+> +}
+> +
 
-Signed-off-by: Albert Vaca Cintora <albertvaka@gmail.com>
----
- Documentation/sysctl/user.txt | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+There is only one external caller of do_fchmodat(), so just change that
+to pass the extra argument here, and keep a single do_fchmodat()
+function used by the sys_fchmod(), sys_fchmod4(), sys_chmod()
+and ksys_chmod().
 
-diff --git a/Documentation/sysctl/user.txt b/Documentation/sysctl/user.txt
-index a5882865836e..99c288d39cf6 100644
---- a/Documentation/sysctl/user.txt
-+++ b/Documentation/sysctl/user.txt
-@@ -30,11 +30,26 @@ user namespace does not allow a user to escape their current limits.
- 
- Currently, these files are in /proc/sys/user:
- 
-+- current_inotify_watches
-+
-+  The number of inotify watches in use in the current user namespace.
-+  Calling inotify_add_watch() increases this.
-+
- - max_cgroup_namespaces
- 
-   The maximum number of cgroup namespaces that any user in the current
-   user namespace may create.
- 
-+- max_inotify_instances
-+
-+  The maximum number of inotify instances that any user in the current
-+  user namespace may create. Calling inotify_init() uses an instance.
-+
-+- max_inotify_watches
-+
-+  The maximum number of inotify watches that any user in the current
-+  user namespace may create. Calling inotify_add_watch() uses a watch.
-+
- - max_ipc_namespaces
- 
-   The maximum number of ipc namespaces that any user in the current
--- 
-2.21.0
-
+        Arnd
