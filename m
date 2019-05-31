@@ -2,174 +2,105 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6516DC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED283C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4308226E8B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B841926E8D
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:49:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="H06IvE9G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727454AbfEaTpF (ORCPT
+        id S1727403AbfEaTtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 15:45:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55000 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727147AbfEaTpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 15:45:05 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D2426AE76;
-        Fri, 31 May 2019 19:45:02 +0000 (UTC)
+        Fri, 31 May 2019 15:49:07 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:45126 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727343AbfEaTtG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 15:49:06 -0400
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4VJf8tH024565;
+        Fri, 31 May 2019 12:48:25 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=F3AqsJcah4GIcgPT0/+5kExX5tqdoxZ29ByRG5iNwTw=;
+ b=H06IvE9GRDH1sOBESJGfJPtR4GCttSqBbUFjXedIfRujx5SlWjAT2S6sz1quRn5b6xu7
+ qhxCAOFGT1wJBiSQ1WyzDlCCAhn/iJRoOHmTHrJJR4JsQn0V1e0WM/Fg8Yb4AKXlQJX/
+ Xb1WA1NKEleU3o2YfcyFnfD5+nM1jQ1kpTA= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2su10ka05j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 31 May 2019 12:48:24 -0700
+Received: from mmullins-1.thefacebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::7) with Microsoft SMTP Server id
+ 15.1.1713.5; Fri, 31 May 2019 12:48:21 -0700
+From:   Matt Mullins <mmullins@fb.com>
+To:     <mmullins@fb.com>, <bp@alien8.de>, <mingo@redhat.com>,
+        <luto@kernel.org>, <namit@vmware.com>, <peterz@infradead.org>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, <x86@kernel.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        "Rick Edgecombe" <rick.p.edgecombe@intel.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Douglas Anderson <dianders@chromium.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] x86/kgdb: return 0 from kgdb_arch_set_breakpoint
+Date:   Fri, 31 May 2019 12:47:54 -0700
+Message-ID: <20190531194755.6320-1-mmullins@fb.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 31 May 2019 21:45:02 +0200
-From:   Roman Penyaev <rpenyaev@suse.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Azat Khuzhin <azat@libevent.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/13] epoll: support pollable epoll from userspace
-In-Reply-To: <e552262b-2069-075e-f7db-cec19a12a363@kernel.dk>
-References: <20190516085810.31077-1-rpenyaev@suse.de>
- <a2a88f4f-d104-f565-4d6e-1dddc7f79a05@kernel.dk>
- <1d47ee76735f25ae5e91e691195f7aa5@suse.de>
- <e552262b-2069-075e-f7db-cec19a12a363@kernel.dk>
-Message-ID: <8b3bade3c5fffdd8f1ab24940258d4e1@suse.de>
-X-Sender: rpenyaev@suse.de
-User-Agent: Roundcube Webmail
+Content-Type: text/plain
+X-Originating-IP: [2620:10d:c0a8:1b::d]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-31_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905310119
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-05-31 18:54, Jens Axboe wrote:
-> On 5/31/19 10:02 AM, Roman Penyaev wrote:
->> On 2019-05-31 16:48, Jens Axboe wrote:
->>> On 5/16/19 2:57 AM, Roman Penyaev wrote:
->>>> Hi all,
->>>> 
->>>> This is v3 which introduces pollable epoll from userspace.
->>>> 
->>>> v3:
->>>>    - Measurements made, represented below.
->>>> 
->>>>    - Fix alignment for epoll_uitem structure on all 64-bit archs 
->>>> except
->>>>      x86-64. epoll_uitem should be always 16 bit, proper 
->>>> BUILD_BUG_ON
->>>>      is added. (Linus)
->>>> 
->>>>    - Check pollflags explicitly on 0 inside work callback, and do
->>>> nothing
->>>>      if 0.
->>>> 
->>>> v2:
->>>>    - No reallocations, the max number of items (thus size of the 
->>>> user
->>>> ring)
->>>>      is specified by the caller.
->>>> 
->>>>    - Interface is simplified: -ENOSPC is returned on attempt to add 
->>>> a
->>>> new
->>>>      epoll item if number is reached the max, nothing more.
->>>> 
->>>>    - Alloced pages are accounted using user->locked_vm and limited 
->>>> to
->>>>      RLIMIT_MEMLOCK value.
->>>> 
->>>>    - EPOLLONESHOT is handled.
->>>> 
->>>> This series introduces pollable epoll from userspace, i.e. user
->>>> creates
->>>> epfd with a new EPOLL_USERPOLL flag, mmaps epoll descriptor, gets
->>>> header
->>>> and ring pointers and then consumes ready events from a ring, 
->>>> avoiding
->>>> epoll_wait() call.  When ring is empty, user has to call 
->>>> epoll_wait()
->>>> in order to wait for new events.  epoll_wait() returns -ESTALE if 
->>>> user
->>>> ring has events in the ring (kind of indication, that user has to
->>>> consume
->>>> events from the user ring first, I could not invent anything better
->>>> than
->>>> returning -ESTALE).
->>>> 
->>>> For user header and user ring allocation I used vmalloc_user().  I
->>>> found
->>>> that it is much easy to reuse remap_vmalloc_range_partial() instead 
->>>> of
->>>> dealing with page cache (like aio.c does).  What is also nice is 
->>>> that
->>>> virtual address is properly aligned on SHMLBA, thus there should not
->>>> be
->>>> any d-cache aliasing problems on archs with vivt or vipt caches.
->>> 
->>> Why aren't we just adding support to io_uring for this instead? Then 
->>> we
->>> don't need yet another entirely new ring, that's is just a little
->>> different from what we have.
->>> 
->>> I haven't looked into the details of your implementation, just 
->>> curious
->>> if there's anything that makes using io_uring a non-starter for this
->>> purpose?
->> 
->> Afaict the main difference is that you do not need to recharge an fd
->> (submit new poll request in terms of io_uring): once fd has been added
->> to
->> epoll with epoll_ctl() - we get events.  When you have thousands of 
->> fds
->> -
->> that should matter.
->> 
->> Also interesting question is how difficult to modify existing event
->> loops
->> in event libraries in order to support recharging (EPOLLONESHOT in 
->> terms
->> of epoll).
->> 
->> Maybe Azat who maintains libevent can shed light on this (currently I
->> see
->> that libevent does not support "EPOLLONESHOT" logic).
-> 
-> In terms of existing io_uring poll support, which is what I'm guessing
-> you're referring to, it is indeed just one-shot.
+err must be nonzero in order to reach text_poke(), which caused kgdb to
+fail to set breakpoints:
 
-Yes, yes.
+	(gdb) break __x64_sys_sync
+	Breakpoint 1 at 0xffffffff81288910: file ../fs/sync.c, line 124.
+	(gdb) c
+	Continuing.
+	Warning:
+	Cannot insert breakpoint 1.
+	Cannot access memory at address 0xffffffff81288910
 
-> But there's no reason  why we can't have it persist until explicitly
-> canceled with POLL_REMOVE.
+	Command aborted.
 
-It seems not so easy.  The main problem is that with only a ring it is
-impossible to figure out on kernel side what event bits have been 
-already
-seen by the userspace and what bits are new.  So every new cqe has to
-be added to a completion ring on each wake_up_interruptible() call.
-(I mean when fd wants to report that something is ready).
+Fixes: 86a22057127d ("x86/kgdb: Avoid redundant comparison of patched code")
+Signed-off-by: Matt Mullins <mmullins@fb.com>
+---
+ arch/x86/kernel/kgdb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-IMO that can lead to many duplicate events (tens? hundreds? honestly no
-idea), which userspace has to handle with subsequent read/write calls.
-It can kill all performance benefits of a uring.
-
-In uepoll this is solved with another piece of shared memory, where
-userspace atomically clears bits and kernel side sets bits.  If kernel
-observes that bits were set (i.e. userspace has not seen this event)
-- new index is added to a ring.
-
-Can we extend the io_uring API to support this behavior?  Also would
-be great if we can make event path lockless.  On a big number of fds
-and frequent events - this matters, please take a look, recently I
-did some measurements:  https://lkml.org/lkml/2018/12/12/305
-
---
-Roman
+diff --git a/arch/x86/kernel/kgdb.c b/arch/x86/kernel/kgdb.c
+index 9a8c1648fc9a..6690c5652aeb 100644
+--- a/arch/x86/kernel/kgdb.c
++++ b/arch/x86/kernel/kgdb.c
+@@ -758,7 +758,7 @@ int kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt)
+ 		       BREAK_INSTR_SIZE);
+ 	bpt->type = BP_POKE_BREAKPOINT;
+ 
+-	return err;
++	return 0;
+ }
+ 
+ int kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt)
+-- 
+2.17.1
 
