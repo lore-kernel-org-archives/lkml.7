@@ -2,176 +2,96 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F66C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 465BAC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2638F26678
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:09:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YC7v+rg1"
+	by mail.kernel.org (Postfix) with ESMTP id 1C15C26678
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:10:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbfEaJJ6 (ORCPT
+        id S1726579AbfEaJKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 05:09:58 -0400
-Received: from mail-ot1-f44.google.com ([209.85.210.44]:38915 "EHLO
-        mail-ot1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbfEaJJ5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 05:09:57 -0400
-Received: by mail-ot1-f44.google.com with SMTP id k24so3358538otn.6
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 02:09:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=eOoyuE6GZ0/N5LfXMgRy4lFPmyiN4GqePwZ9hhxKx7c=;
-        b=YC7v+rg1saI7e5IllQqsAPxsWgrNv2T/HquEKBQtpLdsRkixDv/kZVpskTBdkyXlOC
-         RYo1G9JYsxa8EGUbp9eBd3+m+OOzVLIAzUETNgcMoiQuVjl9VeCtpLRxmGjLaw+LMd5m
-         G/tfpCYiriKJIRJ+KFp01GDriRMlIqH5WjvJuMSmyX17sI5pNSh3ApIh3L/LfJXduayZ
-         88WEK6B8NB3gWs7j8TpLoEEu3WCjURrwTyPHLLLhCbm4+etZXcRLYarNoEo503Oz5S9t
-         rpkT6yHrLoiNkv2+7fz/oYpFeL6iZvKFYkPOvLNtcAN+8V3ot7h5qhjbud6a2yWvcN6w
-         qQKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eOoyuE6GZ0/N5LfXMgRy4lFPmyiN4GqePwZ9hhxKx7c=;
-        b=Dv04TXHWL1FEv8Y1iggKF4kA47QBHibaglrlPdMgXrF9iFq5R+jnnj2Ae3/YEvrJ8O
-         3rpSWYYOMHxGxZyM7w6mRqqO55B63xsK11nxMkXzbR3GPsmoqhu6XilmwjpSB+YZNHU+
-         qZwVu+Xfp4S25fpCqcMWdZqOvMDRioqWR4is4zuhE2UPGvWSOxUMaz+VqUs/JwQWUoSd
-         i9rqn/EZKpigz7lolx+u2iVcqi8nKlrumiEXXRS4rUkCAbmSqchJ73pC0tD7vQXEi+TC
-         amd090fvKQ9ozI0lDWGP+7PVi4c6xo5/dcv6nUhOeRuzMw6pucYA8zB5fOxJr4N5DrrI
-         G1+g==
-X-Gm-Message-State: APjAAAW9HXTyL9j1pWhuRkfA6ZNAbIjK1V0c3ccPIGhuAfimFO3zSfsJ
-        lH98G0J6XFm6mrCf8zTc6bEWow==
-X-Google-Smtp-Source: APXvYqwIKQZ/SptkBhQGTE75KY3E0ymdrnY1VCnZIW2PHsWdDzVviZjkbrPDCMhHoJ9w1OIIuXZOPg==
-X-Received: by 2002:a9d:481a:: with SMTP id c26mr989834otf.267.1559293796647;
-        Fri, 31 May 2019 02:09:56 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (li808-42.members.linode.com. [104.237.132.42])
-        by smtp.gmail.com with ESMTPSA id o203sm1966255oia.15.2019.05.31.02.09.44
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 31 May 2019 02:09:50 -0700 (PDT)
-Date:   Fri, 31 May 2019 17:09:41 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Stanislav Fomichev <sdf@fomichev.me>,
-        Song Liu <songliubraving@fb.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCHv3 00/12] perf tools: Display eBPF code in intel_pt trace
-Message-ID: <20190531090940.GA9580@leoy-ThinkPad-X240s>
-References: <20190508132010.14512-1-jolsa@kernel.org>
- <20190530105439.GA5927@leoy-ThinkPad-X240s>
- <20190530120709.GA3669@krava>
- <20190530125709.GB5927@leoy-ThinkPad-X240s>
- <20190530133645.GC21962@kernel.org>
+        Fri, 31 May 2019 05:10:02 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:48354 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726002AbfEaJKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 05:10:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ACD39341;
+        Fri, 31 May 2019 02:10:01 -0700 (PDT)
+Received: from [10.162.42.223] (p8cg001049571a15.blr.arm.com [10.162.42.223])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2CF433F59C;
+        Fri, 31 May 2019 02:09:58 -0700 (PDT)
+Subject: Re: [PATCH 3/4] arm64/mm: Consolidate page fault information capture
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>
+References: <1559133285-27986-1-git-send-email-anshuman.khandual@arm.com>
+ <1559133285-27986-4-git-send-email-anshuman.khandual@arm.com>
+ <20190529145312.GG31777@lakrids.cambridge.arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <4d799bda-dfde-8ba5-9aeb-aa38550f6103@arm.com>
+Date:   Fri, 31 May 2019 14:40:13 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190530133645.GC21962@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190529145312.GG31777@lakrids.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnaldo,
 
-On Thu, May 30, 2019 at 10:36:45AM -0300, Arnaldo Carvalho de Melo wrote:
 
-[...]
-
-> One other way of testing this:
+On 05/29/2019 08:23 PM, Mark Rutland wrote:
+> On Wed, May 29, 2019 at 06:04:44PM +0530, Anshuman Khandual wrote:
+>> This consolidates page fault information capture and move them bit earlier.
+>> While here it also adds an wrapper is_write_abort(). It also saves some
+>> cycles by replacing multiple user_mode() calls into a single one earlier
+>> during the fault.
 > 
-> I used perf trace's use of BPF, using:
+> To be honest, I doubt this has any measureable impact, but I agree that
+> using variables _may_ make the flow control easier to understand.
 > 
-> [root@quaco ~]# cat ~/.perfconfig
-> [llvm]
-> 	dump-obj = true
-> 	clang-opt = -g
-> [trace]
-> 	add_events = /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.c
-> 	show_zeros = yes
-> 	show_duration = no
-> 	no_inherit = yes
-> 	show_timestamp = no
-> 	show_arg_names = no
-> 	args_alignment = 40
-> 	show_prefix = yes
+>>
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will.deacon@arm.com>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: James Morse <james.morse@arm.com> 
+>> Cc: Andrey Konovalov <andreyknvl@google.com>
+>> ---
+>>  arch/arm64/mm/fault.c | 22 +++++++++++++++-------
+>>  1 file changed, 15 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+>> index da02678..170c71f 100644
+>> --- a/arch/arm64/mm/fault.c
+>> +++ b/arch/arm64/mm/fault.c
+>> @@ -435,6 +435,11 @@ static bool is_el0_instruction_abort(unsigned int esr)
+>>  	return ESR_ELx_EC(esr) == ESR_ELx_EC_IABT_LOW;
+>>  }
+>>  
+>> +static bool is_write_abort(unsigned int esr)
+>> +{
+>> +	return (esr & ESR_ELx_WNR) && !(esr & ESR_ELx_CM);
+>> +}
 > 
-> For arm64 this needs fixing, tools/perf/examples/bpf/augmented_raw_syscalls.c
-> (its in the kernel sources) is still hard coded for x86_64 syscall numbers :-\
-
-I changed the system call numbers for arm64 respectively in
-augmented_raw_syscalls.s; so this if fine.
-
-> Use some other BPF workload, one that has its programs being hit so that
-> we get samples in it, in my case running:
+> In off-list review, I mentioned that this isn't true for EL1, and I
+> think that we should name this 'is_el0_write_abort()' or add a comment
+> explaining the caveats if factored into a helper.
 > 
->     # perf trace
+> Thanks,
+> Mark.
 
-After I run 'perf trace' command it reports the building failure when
-generate eBPF object file, as shown in below log.  I saw the eBPF code
-includes the header files unistd.h and pid_filter.h which cannot be
-found when clang compiled it.
-
-These two header files are stored in the folder
-$linux/tools/perf/include/bpf so I tried to use below command to
-specify header path, but still failed:
-
-# clang-7 -target bpf -O2 -I./include/bpf -I./include \
-  -I../../usr/include -I../../include \
-  -I../../tools/testing/selftests/bpf/ \
-  -I../../tools/lib/ \
-  -c examples/bpf/augmented_raw_syscalls.c
-
-So now I am stuck for eBPF program building.  Do I miss some
-configurations for headers pathes for llvm/clang?
-
-BTW, I notice another potential issue is even the eBPF bytecode
-building failed, 'perf trace' command still can continue its work;
-after read the code [1], the flow is:
-  trace__config();
-    `-> parse_events_option();
-
-When building eBPF object failure, parse_events_option() returns 1; for
-this case trace__config() needs to detect the erro and return -1 rather
-than directly return 1 to caller function.
-
-
----8<---
-
-# perf trace
-/mnt/linux-kernel/linux-cs-dev/tools/perf/examples/bpf/augmented_raw_syscalls.c:17:10: fatal error: 'unistd.h' file not found
-#include <unistd.h>
-         ^~~~~~~~~~
-1 error generated.
-ERROR:  unable to compile /mnt/linux-kernel/linux-cs-dev/tools/perf/examples/bpf/augmented_raw_syscalls.c
-Hint:   Check error message shown above.
-Hint:   You can also pre-compile it into .o using:
-                clang -target bpf -O2 -c /mnt/linux-kernel/linux-cs-dev/tools/perf/examples/bpf/augmented_raw_syscalls.c
-        with proper -I and -D options.
-event syntax error: '/mnt/linux-kernel/linux-cs-dev/tools/perf/examples/bpf/augmented_raw_syscalls.c'
-                     \___ Failed to load /mnt/linux-kernel/linux-cs-dev/tools/perf/examples/bpf/augmented_raw_syscalls.c from source: Error when compiling BPF scriptlet
-
-(add -v to see detail)
-Run 'perf list' for a list of valid events
-
-Thanks a lot for help!
-
-Leo.
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/builtin-trace.c?h=v5.2-rc2#n3631
+Okay will change the wrapper name to is_el0_write_abort() and add a comment
+explaining how this is only applicable to aborts originating from EL0.
