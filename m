@@ -2,115 +2,137 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA4EC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F39C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A87AB2695F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:24:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559309042;
-	bh=PdF02o/rD3t+wyvNrxQLq41/UX2h2s4D+ejyI1/rASw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GJGui0JhW/DyPIFL+rcMUzCWVhU9SsrUOeJ++154+wUEep+qvlImEvuOiDICy6oGV
-	 7tRYRgJz7KVpmUg4wy85kLKRlNzRRRacNTNTdtiZgscRJojjNeB+pLau/WJW7d1jBd
-	 FFYBqpNcho4yPNLrpAAQL5Yunbf2mxO9gX5hu2h0=
+	by mail.kernel.org (Postfix) with ESMTP id 3146226963
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:26:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oMieT2ho"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfEaNYC (ORCPT
+        id S1726634AbfEaN0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 09:24:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43342 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726037AbfEaNYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 09:24:01 -0400
-Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE85B26958;
-        Fri, 31 May 2019 13:24:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559309040;
-        bh=PdF02o/rD3t+wyvNrxQLq41/UX2h2s4D+ejyI1/rASw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SfnWinhd9ehkso9a/1g8DKmRW3Alz36ju+PDqIVhVGE1tCmb4Qxk5jHdc9jY+QRXY
-         2ka5ZfCmJxcfdP4tuqEzOuXr/iSTldqv3ye/bIBJyhBdxcCUuWbB005baLbg9LK0I4
-         9VjeyhuKy9kLL5j6kbKcSjE/loqyMVS8FUPsV1E0=
-Date:   Fri, 31 May 2019 06:24:00 -0700
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spdx@vger.kernel.org
-Subject: Re: [GIT PULL] SPDX update for 5.2-rc3 - round 1
-Message-ID: <20190531132400.GA5518@kroah.com>
-References: <20190531014808.GA30932@kroah.com>
- <CAMuHMdV=95sKB+h_pf45DiYeiJzrk1L=014Tj8Y04_hPyRMBNQ@mail.gmail.com>
+        Fri, 31 May 2019 09:26:47 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:60612 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726485AbfEaN0q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 09:26:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=8n09TENg//rbgbzsGXRPd289l+d2UZWCH+fGg2NaHa4=; b=oMieT2howrG7WS9bOvNKdCmiR
+        jX6TmxtTHoTJ6p19NQ7BG0HE7FY04HsI5/nyRw+Aq42dtfLxVH85f/Oo1wrKHZiXHSYILXb6bYx6K
+        yhA1rgynmCx8lfqGcZssXNV6HHnn7atgrynyvL/+8MltoPvEPtws/8cz6hOIaknzrE3S4stP3RQCA
+        +MPBd2PAi7l2iU3fhSRgYTaCLKkRqUgtXi6eiRPa1g0WJHp8m2WPOXwF9+0/y9HLU+804TTCeG+yR
+        KtRFcgaXX9U1NowGmovnO8AyDivrrgn/IpW9UKTGwPivpjuRU9V2uX1aDiIUIutXoeABwDttquviR
+        2s09w9mqg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hWhY5-0007pO-9M; Fri, 31 May 2019 13:26:21 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 158FF201822CC; Fri, 31 May 2019 15:26:20 +0200 (CEST)
+Date:   Fri, 31 May 2019 15:26:20 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Jann Horn <jannh@google.com>, Greg KH <gregkh@linuxfoundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>
+Subject: Re: [PATCH 1/7] General notification queue with user mmap()'able
+ ring buffer
+Message-ID: <20190531132620.GC2606@hirez.programming.kicks-ass.net>
+References: <20190531111445.GO2677@hirez.programming.kicks-ass.net>
+ <CAG48ez0R-R3Xs+3Xg9T9qcV3Xv6r4pnx1Z2y=Ltx7RGOayte_w@mail.gmail.com>
+ <20190528162603.GA24097@kroah.com>
+ <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
+ <155905931502.7587.11705449537368497489.stgit@warthog.procyon.org.uk>
+ <4031.1559064620@warthog.procyon.org.uk>
+ <20190528231218.GA28384@kroah.com>
+ <31936.1559146000@warthog.procyon.org.uk>
+ <16193.1559163763@warthog.procyon.org.uk>
+ <21942.1559304135@warthog.procyon.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdV=95sKB+h_pf45DiYeiJzrk1L=014Tj8Y04_hPyRMBNQ@mail.gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <21942.1559304135@warthog.procyon.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 09:17:06AM +0200, Geert Uytterhoeven wrote:
-> Hi Greg, Thomas,
+On Fri, May 31, 2019 at 01:02:15PM +0100, David Howells wrote:
+> Peter Zijlstra <peterz@infradead.org> wrote:
 > 
-> On Fri, May 31, 2019 at 3:49 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > The following changes since commit cd6c84d8f0cdc911df435bb075ba22ce3c605b07:
-> >
-> >   Linux 5.2-rc2 (2019-05-26 16:49:19 -0700)
-> >
-> > are available in the Git repository at:
-> >
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git tags/spdx-5.2-rc3-1
-> >
-> > for you to fetch changes up to 96ac6d435100450f0565708d9b885ea2a7400e0a:
-> >
-> >   treewide: Add SPDX license identifier - Kbuild (2019-05-30 11:32:33 -0700)
-> >
-> > ----------------------------------------------------------------
-> > SPDX update for 5.2-rc3, round 1
-> >
-> > Here is another set of reviewed patches that adds SPDX tags to different
-> > kernel files, based on a set of rules that are being used to parse the
-> > comments to try to determine that the license of the file is
-> > "GPL-2.0-or-later" or "GPL-2.0-only".  Only the "obvious" versions of
-> > these matches are included here, a number of "non-obvious" variants of
-> > text have been found but those have been postponed for later review and
-> > analysis.
-> >
-> > There is also a patch in here to add the proper SPDX header to a bunch
-> > of Kbuild files that we have missed in the past due to new files being
-> > added and forgetting that Kbuild uses two different file names for
-> > Makefiles.  This issue was reported by the Kbuild maintainer.
-> >
-> > These patches have been out for review on the linux-spdx@vger mailing
-> > list, and while they were created by automatic tools, they were
-> > hand-verified by a bunch of different people, all whom names are on the
-> > patches are reviewers.
-> >
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Can you re-iterate the exact problem? I konw we talked about this in the
+> > past, but I seem to have misplaced those memories :/
 > 
-> I'm sorry, but as long[*] as this does not conform to
-> Documentation/process/license-rules.rst, I have to provide my:
-> NAked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Take this for example:
 > 
-> [*] The obvious solution is to update Documentation/process/license-rules.rst,
->     as people have asked before.
+> 	void afs_put_call(struct afs_call *call)
+> 	{
+> 		struct afs_net *net = call->net;
+> 		int n = atomic_dec_return(&call->usage);
+> 		int o = atomic_read(&net->nr_outstanding_calls);
+> 
+> 		trace_afs_call(call, afs_call_trace_put, n + 1, o,
+> 			       __builtin_return_address(0));
+> 
+> 		ASSERTCMP(n, >=, 0);
+> 		if (n == 0) {
+> 			...
+> 		}
+> 	}
+> 
+> I am printing the usage count in the afs_call tracepoint so that I can use it
+> to debug refcount bugs.  If I do it like this:
+> 
+> 	void afs_put_call(struct afs_call *call)
+> 	{
+> 		int n = refcount_read(&call->usage);
+> 		int o = atomic_read(&net->nr_outstanding_calls);
+> 
+> 		trace_afs_call(call, afs_call_trace_put, n, o,
+> 			       __builtin_return_address(0));
+> 
+> 		if (refcount_dec_and_test(&call->usage)) {
+> 			...
+> 		}
+> 	}
+> 
+> then there's a temporal gap between the usage count being read and the actual
+> atomic decrement in which another CPU can alter the count.  This can be
+> exacerbated by an interrupt occurring, a softirq occurring or someone enabling
+> the tracepoint.
+> 
+> I can't do the tracepoint after the decrement if refcount_dec_and_test()
+> returns false unless I save all the values from the object that I might need
+> as the object could be destroyed any time from that point on.
 
-I don't understand, what does not conform?  We are trying _to_ conform
-to that file, what did we do wrong?
+Is it not the responsibility of the task that affects the 1->0
+transition to actually free the memory?
 
-thanks,
+That is, I'm expecting the '...' in both cases above the include the
+actual freeing of the object. If this is not the case, then @usage is
+not a reference count.
 
-greg k-h
+(and it has already been established that refcount_t doesn't work for
+usage count scenarios)
+
+Aside from that, is the problem that refcount_dec_and_test() returns a
+boolean (true - last put, false - not last) instead of the refcount
+value? This does indeed make it hard to print the exact count value for
+the event.
