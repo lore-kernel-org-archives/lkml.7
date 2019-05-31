@@ -5,45 +5,45 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1ED2C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5449C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 873402671F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:46:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 798762671F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:46:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="DwfwVIzV"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="cmkYbBTl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727153AbfEaJqp (ORCPT
+        id S1727193AbfEaJq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 05:46:45 -0400
-Received: from onstation.org ([52.200.56.107]:51402 "EHLO onstation.org"
+        Fri, 31 May 2019 05:46:56 -0400
+Received: from onstation.org ([52.200.56.107]:51350 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726945AbfEaJqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 05:46:33 -0400
+        id S1726376AbfEaJqc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 05:46:32 -0400
 Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 34FC245030;
-        Fri, 31 May 2019 09:46:32 +0000 (UTC)
+        by onstation.org (Postfix) with ESMTPSA id 0A4BB45087;
+        Fri, 31 May 2019 09:46:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1559295992;
-        bh=/xNgrwMdwsn2EL5BENmTORbJ1tzBkVSX2GrMxt86540=;
+        s=default; t=1559295991;
+        bh=khceW3oTDnZuJ9pCQ9vj4791T1g33OkiuYlCSUfX8j0=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=DwfwVIzVRKxCHHcKREBvcFgit5hRi5i7OWJgqz7Ku4KxPD8I8xxvEVhR5jzFqM4J3
-         vBnCQZxGyjeObydQJ8ViCVw1y6GwoxkZom1ZO4fS5iz1ZgfBmwMkNXNT0/YWzW3XE2
-         B0OlXy8NJIr3jFbuq9O0r9+RY2Pz/L7MBG7Ca8bY=
+        b=cmkYbBTl/UKUQ9orp1TlisQmqA+INlPv1u7NEMek2qgo2vUe+eoSaZafx4it1+KuN
+         rs9EHcIADyUERvSQI1OkEwNU0ILrrEtm1/OM152c/KM0QrrCzqCQ2xE1uY8eZo+Nlc
+         n28P7b4v5O+dPfwhkszVxukIDoKfETYyIfev66yA=
 From:   Brian Masney <masneyb@onstation.org>
 To:     robdclark@gmail.com, sean@poorly.run,
         dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
         freedreno@lists.freedesktop.org, airlied@linux.ie, daniel@ffwll.ch,
         linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
         jonathan@marek.ca, robh@kernel.org, jeffrey.l.hugo@gmail.com
-Subject: [PATCH v3 5/6] ARM: dts: msm8974: add display support
-Date:   Fri, 31 May 2019 05:46:18 -0400
-Message-Id: <20190531094619.31704-6-masneyb@onstation.org>
+Subject: [PATCH v3 2/6] drm/msm: add support for per-CRTC max_vblank_count on mdp5
+Date:   Fri, 31 May 2019 05:46:15 -0400
+Message-Id: <20190531094619.31704-3-masneyb@onstation.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190531094619.31704-1-masneyb@onstation.org>
 References: <20190531094619.31704-1-masneyb@onstation.org>
@@ -54,166 +54,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the MDP5, DSI and DSI PHY blocks for the display found on the
-msm8974 SoCs. This is based on work from msm8916.dtsi and Jonathan
-Marek.
+The mdp5 drm/kms driver currently does not work on command-mode DSI
+panels due to 'vblank wait timed out' errors. This causes a latency
+of seconds, or tens of seconds in some cases, before content is shown
+on the panel. This hardware does not have the something that we can use
+as a frame counter available when running in command mode, so we need to
+fall back to using timestamps by setting the max_vblank_count to zero.
+This can be done on a per-CRTC basis, so the convert mdp5 to use
+drm_crtc_set_max_vblank_count().
+
+This change was tested on a LG Nexus 5 (hammerhead) phone.
 
 Signed-off-by: Brian Masney <masneyb@onstation.org>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Suggested-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 ---
- arch/arm/boot/dts/qcom-msm8974.dtsi | 132 ++++++++++++++++++++++++++++
- 1 file changed, 132 insertions(+)
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c | 16 +++++++++++++++-
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c  |  2 +-
+ 2 files changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-index 45b5c8ef0374..3f613c5b95a1 100644
---- a/arch/arm/boot/dts/qcom-msm8974.dtsi
-+++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-@@ -3,6 +3,7 @@
+diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
+index c3751c95b452..6fde1097844f 100644
+--- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
++++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
+@@ -450,6 +450,18 @@ static void mdp5_crtc_atomic_disable(struct drm_crtc *crtc,
+ 	mdp5_crtc->enabled = false;
+ }
  
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/qcom,gcc-msm8974.h>
-+#include <dt-bindings/clock/qcom,mmcc-msm8974.h>
- #include <dt-bindings/clock/qcom,rpmcc.h>
- #include <dt-bindings/reset/qcom,gcc-msm8974.h>
- #include <dt-bindings/gpio/gpio.h>
-@@ -1085,6 +1086,137 @@
- 				};
- 			};
- 		};
++static void mdp5_crtc_vblank_on(struct drm_crtc *crtc)
++{
++	struct mdp5_crtc_state *mdp5_cstate = to_mdp5_crtc_state(crtc->state);
++	struct mdp5_interface *intf = mdp5_cstate->pipeline.intf;
++	u32 count;
 +
-+		mdss: mdss@fd900000 {
-+			status = "disabled";
++	count = intf->mode == MDP5_INTF_DSI_MODE_COMMAND ? 0 : 0xffffffff;
++	drm_crtc_set_max_vblank_count(crtc, count);
 +
-+			compatible = "qcom,mdss";
-+			reg = <0xfd900000 0x100>,
-+			      <0xfd924000 0x1000>;
-+			reg-names = "mdss_phys",
-+			            "vbif_phys";
++	drm_crtc_vblank_on(crtc);
++}
 +
-+			power-domains = <&mmcc MDSS_GDSC>;
-+
-+			clocks = <&mmcc MDSS_AHB_CLK>,
-+			         <&mmcc MDSS_AXI_CLK>,
-+			         <&mmcc MDSS_VSYNC_CLK>;
-+			clock-names = "iface",
-+			              "bus",
-+			              "vsync";
-+
-+			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+
-+			mdp: mdp@fd900000 {
-+				status = "disabled";
-+
-+				compatible = "qcom,mdp5";
-+				reg = <0xfd900100 0x22000>;
-+				reg-names = "mdp_phys";
-+
-+				interrupt-parent = <&mdss>;
-+				interrupts = <0 0>;
-+
-+				clocks = <&mmcc MDSS_AHB_CLK>,
-+					 <&mmcc MDSS_AXI_CLK>,
-+					 <&mmcc MDSS_MDP_CLK>,
-+					 <&mmcc MDSS_VSYNC_CLK>;
-+				clock-names = "iface",
-+				              "bus",
-+				              "core",
-+				              "vsync";
-+
-+				ports {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					port@0 {
-+						reg = <0>;
-+						mdp5_intf1_out: endpoint {
-+							remote-endpoint = <&dsi0_in>;
-+						};
-+					};
-+				};
-+			};
-+
-+			dsi0: dsi@fd922800 {
-+				status = "disabled";
-+
-+				compatible = "qcom,mdss-dsi-ctrl";
-+				reg = <0xfd922800 0x1f8>;
-+				reg-names = "dsi_ctrl";
-+
-+				interrupt-parent = <&mdss>;
-+				interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
-+
-+				assigned-clocks = <&mmcc BYTE0_CLK_SRC>,
-+				                  <&mmcc PCLK0_CLK_SRC>;
-+				assigned-clock-parents = <&dsi_phy0 0>,
-+				                         <&dsi_phy0 1>;
-+
-+				clocks = <&mmcc MDSS_MDP_CLK>,
-+				         <&mmcc MDSS_AHB_CLK>,
-+				         <&mmcc MDSS_AXI_CLK>,
-+				         <&mmcc MDSS_BYTE0_CLK>,
-+				         <&mmcc MDSS_PCLK0_CLK>,
-+				         <&mmcc MDSS_ESC0_CLK>,
-+				         <&mmcc MMSS_MISC_AHB_CLK>;
-+				clock-names = "mdp_core",
-+				              "iface",
-+				              "bus",
-+				              "byte",
-+				              "pixel",
-+				              "core",
-+				              "core_mmss";
-+
-+				phys = <&dsi_phy0>;
-+				phy-names = "dsi-phy";
-+
-+				ports {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					port@0 {
-+						reg = <0>;
-+						dsi0_in: endpoint {
-+							remote-endpoint = <&mdp5_intf1_out>;
-+						};
-+					};
-+
-+					port@1 {
-+						reg = <1>;
-+						dsi0_out: endpoint {
-+						};
-+					};
-+				};
-+			};
-+
-+			dsi_phy0: dsi-phy@fd922a00 {
-+				status = "disabled";
-+
-+				compatible = "qcom,dsi-phy-28nm-hpm";
-+				reg = <0xfd922a00 0xd4>,
-+				      <0xfd922b00 0x280>,
-+				      <0xfd922d80 0x30>;
-+				reg-names = "dsi_pll",
-+				            "dsi_phy",
-+				            "dsi_phy_regulator";
-+
-+				#clock-cells = <1>;
-+				#phy-cells = <0>;
-+				qcom,dsi-phy-index = <0>;
-+
-+				clocks = <&mmcc MDSS_AHB_CLK>;
-+				clock-names = "iface";
-+			};
-+		};
- 	};
+ static void mdp5_crtc_atomic_enable(struct drm_crtc *crtc,
+ 				    struct drm_crtc_state *old_state)
+ {
+@@ -486,7 +498,7 @@ static void mdp5_crtc_atomic_enable(struct drm_crtc *crtc,
+ 	}
  
- 	smd {
+ 	/* Restore vblank irq handling after power is enabled */
+-	drm_crtc_vblank_on(crtc);
++	mdp5_crtc_vblank_on(crtc);
+ 
+ 	mdp5_crtc_mode_set_nofb(crtc);
+ 
+@@ -1039,6 +1051,8 @@ static void mdp5_crtc_reset(struct drm_crtc *crtc)
+ 		mdp5_crtc_destroy_state(crtc, crtc->state);
+ 
+ 	__drm_atomic_helper_crtc_reset(crtc, &mdp5_cstate->base);
++
++	drm_crtc_vblank_reset(crtc);
+ }
+ 
+ static const struct drm_crtc_funcs mdp5_crtc_funcs = {
+diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+index 97179bec8902..fcb0b0455abe 100644
+--- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
++++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+@@ -750,7 +750,7 @@ struct msm_kms *mdp5_kms_init(struct drm_device *dev)
+ 	dev->driver->get_vblank_timestamp = drm_calc_vbltimestamp_from_scanoutpos;
+ 	dev->driver->get_scanout_position = mdp5_get_scanoutpos;
+ 	dev->driver->get_vblank_counter = mdp5_get_vblank_counter;
+-	dev->max_vblank_count = 0xffffffff;
++	dev->max_vblank_count = 0; /* max_vblank_count is set on each CRTC */
+ 	dev->vblank_disable_immediate = true;
+ 
+ 	return kms;
 -- 
 2.20.1
 
