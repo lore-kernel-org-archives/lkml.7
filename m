@@ -2,135 +2,73 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A413DC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 06:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89DB8C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 06:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 807FB264D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 06:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 643BA26159
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 06:58:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbfEaG5x (ORCPT
+        id S1726875AbfEaG6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 02:57:53 -0400
-Received: from smtp2.provo.novell.com ([137.65.250.81]:47235 "EHLO
-        smtp2.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbfEaG5t (ORCPT
-        <rfc822;groupwise-linux-kernel@vger.kernel.org:0:0>);
-        Fri, 31 May 2019 02:57:49 -0400
-Received: from linux-8mug.suse.de (prva10-snat226-1.provo.novell.com [137.65.226.35])
-        by smtp2.provo.novell.com with ESMTP (TLS encrypted); Fri, 31 May 2019 00:57:40 -0600
-From:   Chester Lin <clin@suse.com>
-To:     rjw@rjwysocki.net, lenb@kernel.org, gregkh@linuxfoundation.org
-Cc:     jlee@suse.com, mhocko@suse.com, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chester Lin <clin@suse.com>
-Subject: [PATCH 3/3] ACPI / device_sysfs: Add eject show attr to monitor eject status
-Date:   Fri, 31 May 2019 14:56:42 +0800
-Message-Id: <20190531065642.13254-4-clin@suse.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190531065642.13254-1-clin@suse.com>
-References: <20190531065642.13254-1-clin@suse.com>
+        Fri, 31 May 2019 02:58:17 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:51235 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbfEaG6R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 02:58:17 -0400
+X-Originating-IP: 90.89.68.76
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 1EA1060004;
+        Fri, 31 May 2019 06:58:07 +0000 (UTC)
+Date:   Fri, 31 May 2019 08:58:06 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        devicetree@vger.kernel.org, linux-sunxi@googlegroups.com,
+        linux-amarula@amarulasolutions.com,
+        Sergey Suloev <ssuloev@orpaltech.com>,
+        Ryan Pannell <ryan@osukl.com>, bshah@mykolab.com
+Subject: Re: [PATCH v9 0/9] drm/sun4i: Allwinner A64 MIPI-DSI support
+Message-ID: <20190531065806.fl4y2kex427qtysz@flea>
+References: <20190529105615.14027-1-jagan@amarulasolutions.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190529105615.14027-1-jagan@amarulasolutions.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-An acpi_eject_show attribute for users to monitor current status because
-sometimes it might take time to finish an ejection so we need to know
-whether it is still in progress or not.
+Hi,
 
-Signed-off-by: Chester Lin <clin@suse.com>
----
- drivers/acpi/device_sysfs.c | 20 +++++++++++++++++++-
- drivers/acpi/internal.h     |  1 +
- drivers/acpi/scan.c         | 27 +++++++++++++++++++++++++++
- 3 files changed, 47 insertions(+), 1 deletion(-)
+On Wed, May 29, 2019 at 04:26:06PM +0530, Jagan Teki wrote:
+> This is v9 version for Allwinner A64 MIPI-DSI support
+> and here is the previous version set[1].
+>
+> This depends on dsi host controller fixes which were
+> supported in this series[2].
+>
+> All these changes are tested in Allwinner A64 with
+> 2, 4 lanes devices and whose pixel clocks are 27.5 MHz,
+> 30MHz, 55MHz and 147MHz.
 
-diff --git a/drivers/acpi/device_sysfs.c b/drivers/acpi/device_sysfs.c
-index 78c2653bf020..70b22eec6bbc 100644
---- a/drivers/acpi/device_sysfs.c
-+++ b/drivers/acpi/device_sysfs.c
-@@ -403,7 +403,25 @@ acpi_eject_store(struct device *d, struct device_attribute *attr,
- 	return status == AE_NO_MEMORY ? -ENOMEM : -EAGAIN;
- }
- 
--static DEVICE_ATTR(eject, 0200, NULL, acpi_eject_store);
-+static ssize_t acpi_eject_show(struct device *d,
-+				struct device_attribute *attr, char *buf)
-+{
-+	struct acpi_device *acpi_device = to_acpi_device(d);
-+	acpi_object_type not_used;
-+	acpi_status status;
-+
-+	if ((!acpi_device->handler || !acpi_device->handler->hotplug.enabled)
-+	    && !acpi_device->driver)
-+		return -ENODEV;
-+
-+	status = acpi_get_type(acpi_device->handle, &not_used);
-+	if (ACPI_FAILURE(status) || !acpi_device->flags.ejectable)
-+		return -ENODEV;
-+
-+	return sprintf(buf, "%s\n", acpi_eject_status_string(acpi_device));
-+}
-+
-+static DEVICE_ATTR(eject, 0644, acpi_eject_show, acpi_eject_store);
- 
- static ssize_t
- acpi_device_hid_show(struct device *dev, struct device_attribute *attr, char *buf)
-diff --git a/drivers/acpi/internal.h b/drivers/acpi/internal.h
-index 0dcec4243b23..e7037d68c3d9 100644
---- a/drivers/acpi/internal.h
-+++ b/drivers/acpi/internal.h
-@@ -293,5 +293,6 @@ struct eject_data {
- };
- 
- void acpi_eject_retry(struct acpi_device *adev);
-+char *acpi_eject_status_string(struct acpi_device *adev);
- 
- #endif /* _ACPI_INTERNAL_H_ */
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index c60110db1cd6..27c4c1148879 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -370,6 +370,33 @@ static int acpi_scan_offline_check(struct acpi_device *device)
- 	return ret;
- }
- 
-+char *acpi_eject_status_string(struct acpi_device *adev)
-+{
-+	struct eject_data *eject_obj;
-+	char *status_string = "none";
-+
-+	mutex_lock(&acpi_scan_lock);
-+	eject_obj = (struct eject_data *) adev->eject_stat;
-+
-+	if (eject_obj) {
-+		switch (eject_obj->status) {
-+		case ACPI_EJECT_STATUS_NONE:
-+			break;
-+		case ACPI_EJECT_STATUS_GOING_OFFLINE:
-+			status_string = "going offline";
-+			break;
-+		case ACPI_EJECT_STATUS_FAIL:
-+			status_string = "failure";
-+			break;
-+		default:
-+			status_string = "(unknown)";
-+		}
-+	}
-+
-+	mutex_unlock(&acpi_scan_lock);
-+	return status_string;
-+}
-+
- static int acpi_scan_hot_remove(struct acpi_device *device)
- {
- 	acpi_handle handle = device->handle;
--- 
-2.20.1
+I wanted to apply this, but it wouldn't apply, can you send it without
+dependencies?
 
+Thanks!
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
