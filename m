@@ -2,90 +2,109 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDE6C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3352AC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E011E26F37
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:14:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fj3dqAqv"
+	by mail.kernel.org (Postfix) with ESMTP id 029B626F34
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:15:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559337304;
+	bh=gKgYNLBpeOOMUpEUJl708y2vi02Rzrqk2Rf+7SqGFoQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=MGz7+LcYQmzvtgSppwWMKcPmmaLHLfHR7XuVTfRpczQY1BxYxv8tglDGI1LzZPgdo
+	 XrNVOb2rGdnxNiynil5uXAPqkWxGyEGN/NwMlERuv4VFHDM7u2bBchPO50ELAJohea
+	 ZodpaVand5jxrgCy1oDHR1AfPfeCZth48yjXq2Nw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727670AbfEaVOU (ORCPT
+        id S1727695AbfEaVPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 17:14:20 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:37912 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726818AbfEaVOT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 17:14:19 -0400
-Received: by mail-pl1-f193.google.com with SMTP id f97so4491541plb.5
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 14:14:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=N5VBbSDZXCG+FOI8GYS2ku3sBeJ+EZTRC3ZX2yAfkRQ=;
-        b=fj3dqAqvGIC2JeWNLeqwvsSGzDYdILD9Tsteak9wAz2iwFC+WPLXoePw4kAuOE7IdS
-         43W00Wn1BlP/h5RanltBT7IsUEBe7CtzthCb8h5rG5Eoc7+EJC8dKTkHRTF2TCZjwXb5
-         EMqg6jfah9ulpADLvgg1kXKbnXTtgbKful5KQb4HSoTFdlU4NzLi3D1OXjuwrybO7DCS
-         nUUmSyIpuper88cWMmvVkdO4XSB5u5jfs+l6wBn6E0rDJP7QdSmO/w9Jz4yL1a5dNNHx
-         IW7Es+TAMuoJ8ZwsMIn97UzbuXY3sy+/GO+3cqS4RNGUP8ZyNfSDc2s/RYfLhx5AZCqo
-         SJtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=N5VBbSDZXCG+FOI8GYS2ku3sBeJ+EZTRC3ZX2yAfkRQ=;
-        b=sXvwcBPz+99cKERBpFrJme9LhKruVA0l0FHTWDRrCUEK9C1IDeNHXnlCKsRFYhUAlc
-         Sq9UIum0QKuSdvuWfDYzpT8Fxqgh/P+5ZRYIGATNyIZR0Nv99UfOhlCB5tTH35mX6wLW
-         2rREFQ2UfaAgala3Tg9K78fgFbQ26/LU+AbDLjKQtyMAllZlzSYWDk0NELoCota3We+z
-         wdeS9iAV4Qi6KARzo6gWmVSjdhD/S8S75LcphwMB+aomwDeop2IcowpXSh/nT9Mquy/O
-         ZWxgbdza7MhZhtPGSp32A6Z/iE31qvG/T126atcJJjGC45TxYlZsUTf/98DkfeNMDkyC
-         aGoQ==
-X-Gm-Message-State: APjAAAWUjLV/eQK10agMFgblKrXbcaEdp+xHwtgKwr8Mk16lDw41E2jf
-        LHQLBdw4OqUnhvMhQ0x35nc1+g==
-X-Google-Smtp-Source: APXvYqwv+jZp8UCB4UL+JeIxlGPnPgk6wAfg5gBTl9hII57RjtxDKJiNGgCX1CAeTwZzlCkTlcFgiQ==
-X-Received: by 2002:a17:902:9a4c:: with SMTP id x12mr11295810plv.298.1559337258592;
-        Fri, 31 May 2019 14:14:18 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id u4sm51903pfn.144.2019.05.31.14.14.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 31 May 2019 14:14:17 -0700 (PDT)
-Date:   Fri, 31 May 2019 14:14:17 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Jonathan Corbet <corbet@lwn.net>
-cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org
-Subject: Re: [PATCH RFC] Rough draft document on merging and rebasing
-In-Reply-To: <20190530135317.3c8d0d7b@lwn.net>
-Message-ID: <alpine.DEB.2.21.1905311412310.81065@chino.kir.corp.google.com>
-References: <20190530135317.3c8d0d7b@lwn.net>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 31 May 2019 17:15:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57938 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727605AbfEaVPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 17:15:02 -0400
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C092D26F3A
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 21:15:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559337302;
+        bh=gKgYNLBpeOOMUpEUJl708y2vi02Rzrqk2Rf+7SqGFoQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=W9h3QmtxYVFfKyGjxKV1kw7bQbisE5CwjZlEyxDo29IaBbYLLEUapXI/8I4VE/BbX
+         rDO5MuObKn3SLMgQghdhuq6N3Fdjs/xtVteJnJL64uWlkOVwQ/mT2rez3marqg4WR9
+         Patymlv2TB0sF5Jbj4IY3c20acNrlTdqppRb0N7A=
+Received: by mail-wr1-f50.google.com with SMTP id h1so7360736wro.4
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 14:15:01 -0700 (PDT)
+X-Gm-Message-State: APjAAAXq5gogHDp9E/mVKGOsDv45vRdZ8xgo556XyOPFrSJT6X0eKTbA
+        nTXVtqPZXCN8X2TGO33NHpAa3nKx1bEAeqPZteGDhQ==
+X-Google-Smtp-Source: APXvYqwXwuWopX6mQo+6kLuUg/7ghxmPwAoAls8+UMozk4xNmr28ndE2vp7IeSCLGjgzv+PEEwUB7NaFrwcDe4AEu5E=
+X-Received: by 2002:adf:e9ca:: with SMTP id l10mr7529012wrn.47.1559337300326;
+ Fri, 31 May 2019 14:15:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20190531063645.4697-1-namit@vmware.com> <20190531063645.4697-12-namit@vmware.com>
+In-Reply-To: <20190531063645.4697-12-namit@vmware.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 31 May 2019 14:14:49 -0700
+X-Gmail-Original-Message-ID: <CALCETrU0=BpGy5OQezQ7or33n-EFgBVDNe5g8prSUjL2SoRAwA@mail.gmail.com>
+Message-ID: <CALCETrU0=BpGy5OQezQ7or33n-EFgBVDNe5g8prSUjL2SoRAwA@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 11/12] x86/mm/tlb: Use async and inline messages
+ for flushing
+To:     Nadav Amit <namit@vmware.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 May 2019, Jonathan Corbet wrote:
+On Thu, May 30, 2019 at 11:37 PM Nadav Amit <namit@vmware.com> wrote:
+>
+> When we flush userspace mappings, we can defer the TLB flushes, as long
+> the following conditions are met:
+>
+> 1. No tables are freed, since otherwise speculative page walks might
+>    cause machine-checks.
+>
+> 2. No one would access userspace before flush takes place. Specifically,
+>    NMI handlers and kprobes would avoid accessing userspace.
+>
 
-> docs: Add a document on repository management
-> 
-> Every merge window seems to involve at least one episode where subsystem
-> maintainers don't manage their trees as Linus would like.  Document the
-> expectations so that at least he has something to point people to.
-> 
-> Signed-off-by: Jonathan Corbet <corbet@lwn.net>
+I think I need to ask the big picture question.  When someone calls
+flush_tlb_mm_range() (or the other entry points), if no page tables
+were freed, they want the guarantee that future accesses (initiated
+observably after the flush returns) will not use paging entries that
+were replaced by stores ordered before flush_tlb_mm_range().  We also
+need the guarantee that any effects from any memory access using the
+old paging entries will become globally visible before
+flush_tlb_mm_range().
 
-We're in the process of defining the pros and cons of merging vs rebasing 
-as part of our workflows internally and this is a great doc that does that 
-with less words and more clarity than I did it, so very happy to add
+I'm wondering if receipt of an IPI is enough to guarantee any of this.
+If CPU 1 sets a dirty bit and CPU 2 writes to the APIC to send an IPI
+to CPU 1, at what point is CPU 2 guaranteed to be able to observe the
+dirty bit?  An interrupt entry today is fully serializing by the time
+it finishes, but interrupt entries are epicly slow, and I don't know
+if the APIC waits long enough.  Heck, what if IRQs are off on the
+remote CPU?  There are a handful of places where we touch user memory
+with IRQs off, and it's (sadly) possible for user code to turn off
+IRQs with iopl().
 
-Acked-by: David Rientjes <rientjes@google.com>
+I *think* that Intel has stated recently that SMT siblings are
+guaranteed to stop speculating when you write to the APIC ICR to poke
+them, but SMT is very special.
+
+My general conclusion is that I think the code needs to document what
+is guaranteed and why.
+
+--Andy
