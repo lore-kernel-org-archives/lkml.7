@@ -3,78 +3,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6286C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6540C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A36BE26F21
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79B2A26F22
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:10:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="dqyfdWbV"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="LqZW7pl7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727650AbfEaVJl (ORCPT
+        id S1727652AbfEaVKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 17:09:41 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42896 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727468AbfEaVJj (ORCPT
+        Fri, 31 May 2019 17:10:23 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33894 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726719AbfEaVKX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 17:09:39 -0400
-Received: by mail-pl1-f193.google.com with SMTP id go2so4463979plb.9
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 14:09:39 -0700 (PDT)
+        Fri, 31 May 2019 17:10:23 -0400
+Received: by mail-pg1-f194.google.com with SMTP id h2so1455001pgg.1
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 14:10:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dO4b0Jp0PAPX/8YUaQN0RC3aXSyMNZtm7Ul3iq4PzlE=;
-        b=dqyfdWbVJW5eMbZMo7HGSDAryK0AbH+eXxdIP0w9NXUvpRHvgO5FOd0cxhVYOC7s2d
-         KG66wviS3pXwDvOMl7gh/LKZfG6P9mG4x2lN5zeuDvu6ymMqucal7vw0/XhcONv3uQUd
-         NiY8HZHoCv/wLAl3BOMOvKVZkwfXxSJOe2SYnUXMqCPyLXuZPz/Ldv6vaBBPwJSgPSTU
-         JhudhcjFCprkoFVYMX1kmUvZflPJ2OYhwfGEYqfhxMs2S1GOcKeL2qVIzOJIqmplFUw2
-         +acjYKJT6+QM2QF2DJzDyb+FHtyvmlqCBab5DqRZRub4g0dPoJokJYVP0CZqFyvOqoP2
-         6L2A==
+        bh=Lz8j2/GbsW7Epn3mLuVGGGiuS0I0e80KoxHyK1juyRw=;
+        b=LqZW7pl7C6E00mgNMN1ho8hI4UVvhCJZGEuOsCAdWrw5uvLmdqaIlXsc+gBgPCEGhD
+         Cniz1BMS+RNh++lSJfAH/nfipOfqZzd4zDrqAv9RSi04X+HM8PLtBOZR7tFf00XQiMp7
+         IF7KQFvcQO4skMBvKq/aqQuCxCChPaqMgZPtbUCMVJEVXXrdSxER+iIo6DXoAH3/VS+J
+         QuggoEynarJHVRC/XJSRQ45Whcf4KAOg/cv95SNKai023Beuy887DUi9wVVjWCpXBetJ
+         0PnyvSd4pQOyiXkXQpHlXC7CzXVM4YtPVLpAUjG8ZQPs1jvg/v9gwxRzH46aeJHSMXqz
+         TLEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=dO4b0Jp0PAPX/8YUaQN0RC3aXSyMNZtm7Ul3iq4PzlE=;
-        b=NgSjymCt6QjQ/OtoyNV8ApGF3RrSoLr1pDXRJmU0v2DrUTg9O+3XxO3CSmBcfvTMze
-         GBep2L4GfoMkN71FYcdL1XKQWoL4OcKJKqecoQb9UdA2tif964EazXh0RExT6NC1z09n
-         +DFaHOtm13dtXSq+Bpzhvzmeq8KqVL/MKxMv8e6SXi9I2w5F4teUKM6wutQJJEPtjcyn
-         WUSLpbAXKOTIHtVgMDHRyLSZUGSlODNR6zzl1AGUtYhlGFrwt2s3WtdbO2QLwbF1FNs/
-         0ValDe0ve+vA66NmO5eAwePQ74jQ5412E3lfLC1GYgpyud6oOdGgj+v602aB7Uz0gIc9
-         BsXQ==
-X-Gm-Message-State: APjAAAVt3184VqmB9WOf+47/BKPaiPIlQ6vSZGb8rrqapkDHkGZyjc6f
-        JmPllfrGbYJwd4HX0iZxFb9szjiNaghGvg==
-X-Google-Smtp-Source: APXvYqw25t6gmSYHTkzKO8jEtYSd48opknxFRnhZHwhQhbZu/F33LYz6pHZILzc/gPaEhOvlbBFugw==
-X-Received: by 2002:a17:902:868a:: with SMTP id g10mr11933709plo.205.1559336978417;
-        Fri, 31 May 2019 14:09:38 -0700 (PDT)
+        bh=Lz8j2/GbsW7Epn3mLuVGGGiuS0I0e80KoxHyK1juyRw=;
+        b=um9Gubr6P6lB6OYiD/FFXHWPQ1yHGGOR9kZjk999CIOa2f65cgPscsG9I88Rg4EnY1
+         w1OzSSf+9dDhYpThyIlA6fckjYqh8DkaLwI2lVzkB0pH4JGZSruB0bMDcQGdxAnBcTQ1
+         954KntaTSPe+b9EnYZqH5nBxypPZHjhcAmhvWPWHPo2Q9+I1vYrlCg6It+etO9jz+Z/w
+         N+OU1YO0OiPsjYqLCtO9O0/2/MDa0EBZ8YS53BsDM51CUm+6qacY6y38im8btw5d65JI
+         yj9WiNxskqXG+gIcNi7nPNadN239+7fSB7bxP+VLqKCoRqjKfGbX8MLTPNHHT2ePYfFP
+         rBoQ==
+X-Gm-Message-State: APjAAAVYs9+ZZ296kVL0N5Q1THSMq8fv+KDdyRScnvW9/jIYEVRwgvnh
+        Tj6K9wEJ/LzDTC+VyXrzJYSL9WRQa3vrCw==
+X-Google-Smtp-Source: APXvYqzHASPiXHgBhr4WbEqYBLUvnzBLNIBhrlzvnblg1WeM7e9QFmzQtnjD/q7x0YnhNkl7kKrx3Q==
+X-Received: by 2002:a63:ef56:: with SMTP id c22mr11484982pgk.13.1559337021857;
+        Fri, 31 May 2019 14:10:21 -0700 (PDT)
 Received: from [192.168.1.121] (66.29.164.166.static.utbb.net. [66.29.164.166])
-        by smtp.gmail.com with ESMTPSA id c129sm9811608pfg.178.2019.05.31.14.09.36
+        by smtp.gmail.com with ESMTPSA id x23sm8329971pfn.160.2019.05.31.14.10.19
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 31 May 2019 14:09:37 -0700 (PDT)
-Subject: Re: [PATCH v3 00/13] epoll: support pollable epoll from userspace
-To:     Roman Penyaev <rpenyaev@suse.de>
-Cc:     Azat Khuzhin <azat@libevent.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190516085810.31077-1-rpenyaev@suse.de>
- <a2a88f4f-d104-f565-4d6e-1dddc7f79a05@kernel.dk>
- <1d47ee76735f25ae5e91e691195f7aa5@suse.de>
- <e552262b-2069-075e-f7db-cec19a12a363@kernel.dk>
- <8b3bade3c5fffdd8f1ab24940258d4e1@suse.de>
+        Fri, 31 May 2019 14:10:20 -0700 (PDT)
+Subject: Re: [PATCH] block: fix a crash in do_task_dead()
+To:     Oleg Nesterov <oleg@redhat.com>, Qian Cai <cai@lca.pw>
+Cc:     akpm@linux-foundation.org, hch@lst.de, peterz@infradead.org,
+        gkohli@codeaurora.org, mingo@redhat.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1559161526-618-1-git-send-email-cai@lca.pw>
+ <20190530111519.GC22536@redhat.com>
 From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <3d9903f6-ebf8-6b8b-6251-b3a305dc9f19@kernel.dk>
-Date:   Fri, 31 May 2019 15:09:35 -0600
+Message-ID: <52fc81e0-b6d4-3c29-8250-9da336aaa62a@kernel.dk>
+Date:   Fri, 31 May 2019 15:10:18 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <8b3bade3c5fffdd8f1ab24940258d4e1@suse.de>
+In-Reply-To: <20190530111519.GC22536@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -83,133 +78,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/31/19 1:45 PM, Roman Penyaev wrote:
-> On 2019-05-31 18:54, Jens Axboe wrote:
->> On 5/31/19 10:02 AM, Roman Penyaev wrote:
->>> On 2019-05-31 16:48, Jens Axboe wrote:
->>>> On 5/16/19 2:57 AM, Roman Penyaev wrote:
->>>>> Hi all,
->>>>>
->>>>> This is v3 which introduces pollable epoll from userspace.
->>>>>
->>>>> v3:
->>>>>     - Measurements made, represented below.
->>>>>
->>>>>     - Fix alignment for epoll_uitem structure on all 64-bit archs
->>>>> except
->>>>>       x86-64. epoll_uitem should be always 16 bit, proper
->>>>> BUILD_BUG_ON
->>>>>       is added. (Linus)
->>>>>
->>>>>     - Check pollflags explicitly on 0 inside work callback, and do
->>>>> nothing
->>>>>       if 0.
->>>>>
->>>>> v2:
->>>>>     - No reallocations, the max number of items (thus size of the
->>>>> user
->>>>> ring)
->>>>>       is specified by the caller.
->>>>>
->>>>>     - Interface is simplified: -ENOSPC is returned on attempt to add
->>>>> a
->>>>> new
->>>>>       epoll item if number is reached the max, nothing more.
->>>>>
->>>>>     - Alloced pages are accounted using user->locked_vm and limited
->>>>> to
->>>>>       RLIMIT_MEMLOCK value.
->>>>>
->>>>>     - EPOLLONESHOT is handled.
->>>>>
->>>>> This series introduces pollable epoll from userspace, i.e. user
->>>>> creates
->>>>> epfd with a new EPOLL_USERPOLL flag, mmaps epoll descriptor, gets
->>>>> header
->>>>> and ring pointers and then consumes ready events from a ring,
->>>>> avoiding
->>>>> epoll_wait() call.  When ring is empty, user has to call
->>>>> epoll_wait()
->>>>> in order to wait for new events.  epoll_wait() returns -ESTALE if
->>>>> user
->>>>> ring has events in the ring (kind of indication, that user has to
->>>>> consume
->>>>> events from the user ring first, I could not invent anything better
->>>>> than
->>>>> returning -ESTALE).
->>>>>
->>>>> For user header and user ring allocation I used vmalloc_user().  I
->>>>> found
->>>>> that it is much easy to reuse remap_vmalloc_range_partial() instead
->>>>> of
->>>>> dealing with page cache (like aio.c does).  What is also nice is
->>>>> that
->>>>> virtual address is properly aligned on SHMLBA, thus there should not
->>>>> be
->>>>> any d-cache aliasing problems on archs with vivt or vipt caches.
->>>>
->>>> Why aren't we just adding support to io_uring for this instead? Then
->>>> we
->>>> don't need yet another entirely new ring, that's is just a little
->>>> different from what we have.
->>>>
->>>> I haven't looked into the details of your implementation, just
->>>> curious
->>>> if there's anything that makes using io_uring a non-starter for this
->>>> purpose?
->>>
->>> Afaict the main difference is that you do not need to recharge an fd
->>> (submit new poll request in terms of io_uring): once fd has been added
->>> to
->>> epoll with epoll_ctl() - we get events.  When you have thousands of
->>> fds
->>> -
->>> that should matter.
->>>
->>> Also interesting question is how difficult to modify existing event
->>> loops
->>> in event libraries in order to support recharging (EPOLLONESHOT in
->>> terms
->>> of epoll).
->>>
->>> Maybe Azat who maintains libevent can shed light on this (currently I
->>> see
->>> that libevent does not support "EPOLLONESHOT" logic).
+On 5/30/19 5:15 AM, Oleg Nesterov wrote:
+> On 05/29, Qian Cai wrote:
 >>
->> In terms of existing io_uring poll support, which is what I'm guessing
->> you're referring to, it is indeed just one-shot.
+>> The commit 0619317ff8ba ("block: add polled wakeup task helper")
+>> replaced wake_up_process() with blk_wake_io_task() in
+>> end_swap_bio_read() which triggers a crash when running heavy swapping
+>> workloads.
+>>
+>> [T114538] kernel BUG at kernel/sched/core.c:3462!
+>> [T114538] Process oom01 (pid: 114538, stack limit = 0x000000004f40e0c1)
+>> [T114538] Call trace:
+>> [T114538]  do_task_dead+0xf0/0xf8
+>> [T114538]  do_exit+0xd5c/0x10fc
+>> [T114538]  do_group_exit+0xf4/0x110
+>> [T114538]  get_signal+0x280/0xdd8
+>> [T114538]  do_notify_resume+0x720/0x968
+>> [T114538]  work_pending+0x8/0x10
+>>
+>> This is because shortly after set_special_state(TASK_DEAD),
+>> end_swap_bio_read() is called from an interrupt handler that revive the
+>> task state to TASK_RUNNING causes __schedule() to return and trip the
+>> BUG() later.
+>>
+>> [  C206] Call trace:
+>> [  C206]  dump_backtrace+0x0/0x268
+>> [  C206]  show_stack+0x20/0x2c
+>> [  C206]  dump_stack+0xb4/0x108
+>> [  C206]  blk_wake_io_task+0x7c/0x80
+>> [  C206]  end_swap_bio_read+0x22c/0x31c
+>> [  C206]  bio_endio+0x3d8/0x414
+>> [  C206]  dec_pending+0x280/0x378 [dm_mod]
+>> [  C206]  clone_endio+0x128/0x2ac [dm_mod]
+>> [  C206]  bio_endio+0x3d8/0x414
+>> [  C206]  blk_update_request+0x3ac/0x924
+>> [  C206]  scsi_end_request+0x54/0x350
+>> [  C206]  scsi_io_completion+0xf0/0x6f4
+>> [  C206]  scsi_finish_command+0x214/0x228
+>> [  C206]  scsi_softirq_done+0x170/0x1a4
+>> [  C206]  blk_done_softirq+0x100/0x194
+>> [  C206]  __do_softirq+0x350/0x790
+>> [  C206]  irq_exit+0x200/0x26c
+>> [  C206]  handle_IPI+0x2e8/0x514
+>> [  C206]  gic_handle_irq+0x224/0x228
+>> [  C206]  el1_irq+0xb8/0x140
+>> [  C206]  _raw_spin_unlock_irqrestore+0x3c/0x74
+>> [  C206]  do_task_dead+0x88/0xf8
+>> [  C206]  do_exit+0xd5c/0x10fc
+>> [  C206]  do_group_exit+0xf4/0x110
+>> [  C206]  get_signal+0x280/0xdd8
+>> [  C206]  do_notify_resume+0x720/0x968
+>> [  C206]  work_pending+0x8/0x10
+>>
+>> Before the offensive commit, wake_up_process() will prevent this from
+>> happening by taking the pi_lock and bail out immediately if TASK_DEAD is
+>> set.
+>>
+>> if (!(p->state & TASK_NORMAL))
+>> 	goto out;
 > 
-> Yes, yes.
+> I don't understand this code at all but I am just curious, can we do
+> something like incomplete patch below ?
 > 
->> But there's no reason  why we can't have it persist until explicitly
->> canceled with POLL_REMOVE.
+> Oleg.
 > 
-> It seems not so easy.  The main problem is that with only a ring it is
-> impossible to figure out on kernel side what event bits have been
-> already
-> seen by the userspace and what bits are new.  So every new cqe has to
-> be added to a completion ring on each wake_up_interruptible() call.
-> (I mean when fd wants to report that something is ready).
-> 
-> IMO that can lead to many duplicate events (tens? hundreds? honestly no
-> idea), which userspace has to handle with subsequent read/write calls.
-> It can kill all performance benefits of a uring.
-> 
-> In uepoll this is solved with another piece of shared memory, where
-> userspace atomically clears bits and kernel side sets bits.  If kernel
-> observes that bits were set (i.e. userspace has not seen this event)
-> - new index is added to a ring.
+> --- x/mm/page_io.c
+> +++ x/mm/page_io.c
+> @@ -140,8 +140,10 @@ int swap_readpage(struct page *page, bool synchronous)
+>   	unlock_page(page);
+>   	WRITE_ONCE(bio->bi_private, NULL);
+>   	bio_put(bio);
+> -	blk_wake_io_task(waiter);
+> -	put_task_struct(waiter);
+> +	if (waiter) {
+> +		blk_wake_io_task(waiter);
+> +		put_task_struct(waiter);
+> +	}
+>   }
+>   
+>   int generic_swapfile_activate(struct swap_info_struct *sis,
+> @@ -398,11 +400,12 @@ int swap_readpage(struct page *page, boo
+>   	 * Keep this task valid during swap readpage because the oom killer may
+>   	 * attempt to access it in the page fault retry time check.
+>   	 */
+> -	get_task_struct(current);
+> -	bio->bi_private = current;
+>   	bio_set_op_attrs(bio, REQ_OP_READ, 0);
+> -	if (synchronous)
+> +	if (synchronous) {
+>   		bio->bi_opf |= REQ_HIPRI;
+> +		get_task_struct(current);
+> +		bio->bi_private = current;
+> +	}
+>   	count_vm_event(PSWPIN);
+>   	bio_get(bio);
+>   	qc = submit_bio(bio);
 
-Those are good points.
-
-> Can we extend the io_uring API to support this behavior?  Also would
-> be great if we can make event path lockless.  On a big number of fds
-> and frequent events - this matters, please take a look, recently I
-> did some measurements:  https://lkml.org/lkml/2018/12/12/305
-
-Yeah, I'd be happy to entertain that idea, and lockless completions as
-well. We already do that for polled IO, but consider any "normal"
-completion to be IRQ driven and hence need locking.
+I think this would solve it for swap.
 
 -- 
 Jens Axboe
