@@ -2,129 +2,115 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31593C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FDE8C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 103D52648F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:02:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7529221E6D
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:03:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="j1vS3Fo2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbfEaQCP (ORCPT
+        id S1726876AbfEaQDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 12:02:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50474 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726037AbfEaQCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 12:02:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 80981B00B;
-        Fri, 31 May 2019 16:02:13 +0000 (UTC)
+        Fri, 31 May 2019 12:03:34 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:61157 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbfEaQDe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 12:03:34 -0400
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x4VG3EhX028961;
+        Sat, 1 Jun 2019 01:03:14 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x4VG3EhX028961
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1559318595;
+        bh=kJBHRLcXvbaLbs7VdY0urin0KXZb9MB5irbTDQDFLsM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=j1vS3Fo2SbSSGk5hgSGlnZE18MPfhXToy+JQX6djnAMb6PqS6sC4G7WD9736s6PKJ
+         10F7vqeJS79+DJ3knYjdpChTvE8N3V/W8R2ucksMjuF+TaC4SdSt0kZLnju2TAE0bC
+         6iPMC/O0QIKHMtdipBy3dEZE3I/P7kGA5MVv93o33/CfeKA+8yXp0HFEFXAKCC5eFU
+         jaSJ8AyNJ2yXiV5udyXAMvodL0Mlig+DC4VoI8tNbFgtrWvZZ6Lf0w7HZVzD/qxmeh
+         DxonV1qKs//TvOYzk/X7inuTOqsRnVlloS6Slk5lzFmX4lIxctELld9i11NGF6Jx5N
+         MCtiwYF/17xZg==
+X-Nifty-SrcIP: [209.85.222.47]
+Received: by mail-ua1-f47.google.com with SMTP id n7so4011412uap.12;
+        Fri, 31 May 2019 09:03:14 -0700 (PDT)
+X-Gm-Message-State: APjAAAW8/oxIZn50opiYrHKzyAXy6B7j9nznEs0VRvCjdIIMXaxD0MCL
+        UvgN+Izb5Jgdy8Xa85vGVZ14f/0FvSXBxDfwUvI=
+X-Google-Smtp-Source: APXvYqwHQqFZ9e5//lG3X8WUAgLmWN6ZzV4dNJBRrUjKgJtyQq6oBEdOAFsk02L/Yu/qZJbj3cpHf8ZTPT/71l3++hs=
+X-Received: by 2002:a9f:3381:: with SMTP id p1mr5953024uab.40.1559318593421;
+ Fri, 31 May 2019 09:03:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 31 May 2019 18:02:13 +0200
-From:   Roman Penyaev <rpenyaev@suse.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Azat Khuzhin <azat@libevent.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/13] epoll: support pollable epoll from userspace
-In-Reply-To: <a2a88f4f-d104-f565-4d6e-1dddc7f79a05@kernel.dk>
-References: <20190516085810.31077-1-rpenyaev@suse.de>
- <a2a88f4f-d104-f565-4d6e-1dddc7f79a05@kernel.dk>
-Message-ID: <1d47ee76735f25ae5e91e691195f7aa5@suse.de>
-X-Sender: rpenyaev@suse.de
-User-Agent: Roundcube Webmail
+References: <1559316388-19565-1-git-send-email-george_davis@mentor.com>
+In-Reply-To: <1559316388-19565-1-git-send-email-george_davis@mentor.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sat, 1 Jun 2019 01:02:37 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATXzLzttF_gLA4wdfE1ue+bLPhvDZVsTKbB5K3nrN3jng@mail.gmail.com>
+Message-ID: <CAK7LNATXzLzttF_gLA4wdfE1ue+bLPhvDZVsTKbB5K3nrN3jng@mail.gmail.com>
+Subject: Re: [RFC][PATCH] Makefile: Fix checkstack.pl arm64 wrong or unknown architecture
+To:     "George G. Davis" <george_davis@mentor.com>
+Cc:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-05-31 16:48, Jens Axboe wrote:
-> On 5/16/19 2:57 AM, Roman Penyaev wrote:
->> Hi all,
->> 
->> This is v3 which introduces pollable epoll from userspace.
->> 
->> v3:
->>   - Measurements made, represented below.
->> 
->>   - Fix alignment for epoll_uitem structure on all 64-bit archs except
->>     x86-64. epoll_uitem should be always 16 bit, proper BUILD_BUG_ON
->>     is added. (Linus)
->> 
->>   - Check pollflags explicitly on 0 inside work callback, and do 
->> nothing
->>     if 0.
->> 
->> v2:
->>   - No reallocations, the max number of items (thus size of the user 
->> ring)
->>     is specified by the caller.
->> 
->>   - Interface is simplified: -ENOSPC is returned on attempt to add a 
->> new
->>     epoll item if number is reached the max, nothing more.
->> 
->>   - Alloced pages are accounted using user->locked_vm and limited to
->>     RLIMIT_MEMLOCK value.
->> 
->>   - EPOLLONESHOT is handled.
->> 
->> This series introduces pollable epoll from userspace, i.e. user 
->> creates
->> epfd with a new EPOLL_USERPOLL flag, mmaps epoll descriptor, gets 
->> header
->> and ring pointers and then consumes ready events from a ring, avoiding
->> epoll_wait() call.  When ring is empty, user has to call epoll_wait()
->> in order to wait for new events.  epoll_wait() returns -ESTALE if user
->> ring has events in the ring (kind of indication, that user has to 
->> consume
->> events from the user ring first, I could not invent anything better 
->> than
->> returning -ESTALE).
->> 
->> For user header and user ring allocation I used vmalloc_user().  I 
->> found
->> that it is much easy to reuse remap_vmalloc_range_partial() instead of
->> dealing with page cache (like aio.c does).  What is also nice is that
->> virtual address is properly aligned on SHMLBA, thus there should not 
->> be
->> any d-cache aliasing problems on archs with vivt or vipt caches.
-> 
-> Why aren't we just adding support to io_uring for this instead? Then we
-> don't need yet another entirely new ring, that's is just a little
-> different from what we have.
-> 
-> I haven't looked into the details of your implementation, just curious
-> if there's anything that makes using io_uring a non-starter for this
-> purpose?
-
-Afaict the main difference is that you do not need to recharge an fd
-(submit new poll request in terms of io_uring): once fd has been added 
-to
-epoll with epoll_ctl() - we get events.  When you have thousands of fds 
--
-that should matter.
-
-Also interesting question is how difficult to modify existing event 
-loops
-in event libraries in order to support recharging (EPOLLONESHOT in terms
-of epoll).
-
-Maybe Azat who maintains libevent can shed light on this (currently I 
-see
-that libevent does not support "EPOLLONESHOT" logic).
+On Sat, Jun 1, 2019 at 12:27 AM George G. Davis <george_davis@mentor.com> wrote:
+>
+> The following error occurs for the `make ARCH=arm64 checkstack` case:
+>
+> aarch64-linux-gnu-objdump -d vmlinux $(find . -name '*.ko') | \
+> perl ./scripts/checkstack.pl arm64
+> wrong or unknown architecture "arm64"
+>
+> Fix the above error by setting `CHECKSTACK_ARCH := aarch64` for the
+> ARCH=arm64 case.
+>
+> Signed-off-by: George G. Davis <george_davis@mentor.com>
 
 
---
-Roman
+Why don't you fix scripts/checkstack.pl ?
 
 
+
+> ---
+>  Makefile | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/Makefile b/Makefile
+> index 11358153d8f2..3e615e8553c0 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1695,7 +1695,11 @@ PHONY += checkstack kernelrelease kernelversion image_name
+>  ifeq ($(ARCH), um)
+>  CHECKSTACK_ARCH := $(SUBARCH)
+>  else
+> -CHECKSTACK_ARCH := $(ARCH)
+> +       ifeq ($(ARCH), arm64)
+> +               CHECKSTACK_ARCH := aarch64
+> +       else
+> +               CHECKSTACK_ARCH := $(ARCH)
+> +       endif
+>  endif
+>  checkstack:
+>         $(OBJDUMP) -d vmlinux $$(find . -name '*.ko') | \
+> --
+> 2.7.4
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
