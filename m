@@ -2,130 +2,209 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F38C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE10DC46460
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AABB3267EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:02:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BAB6267F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:05:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ericsson.com header.i=@ericsson.com header.b="MI181h4z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a4mRQqxd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbfEaLCJ (ORCPT
+        id S1726845AbfEaLFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 07:02:09 -0400
-Received: from mail-eopbgr700056.outbound.protection.outlook.com ([40.107.70.56]:21839
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726233AbfEaLCJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 07:02:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ericsson.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=v3IENQ41Tvhoq/AxS/JuaDICZdOdJwVA5mzBHZY1Dcc=;
- b=MI181h4zONm7BxuZfTOtkOiRQhfAYCRt+F4OPwQbxrXCUBJIDSxA3j0uUdzrURSTkWaZo7rRVBWYLLhfJmLcj+D9fLemm1+sjuTzmpKY/3GcGtNe4JNFOmbQzz672n1dwt/bMsZISxqAkhPfOz8t/ie7wjl34nnLN7iEyybQaec=
-Received: from CH2PR15MB3575.namprd15.prod.outlook.com (52.132.228.77) by
- CH2PR15MB3576.namprd15.prod.outlook.com (52.132.228.78) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.18; Fri, 31 May 2019 11:02:04 +0000
-Received: from CH2PR15MB3575.namprd15.prod.outlook.com
- ([fe80::8d6a:e759:6fd:5ee0]) by CH2PR15MB3575.namprd15.prod.outlook.com
- ([fe80::8d6a:e759:6fd:5ee0%7]) with mapi id 15.20.1943.018; Fri, 31 May 2019
- 11:02:04 +0000
-From:   Jon Maloy <jon.maloy@ericsson.com>
-To:     Ying Xue <ying.xue@windriver.com>, Mihai Moldovan <ionic@ionic.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: Userspace woes with 5.1.5 due to TIPC
-Thread-Topic: Userspace woes with 5.1.5 due to TIPC
-Thread-Index: AQHVFx6rf0Q3NUZ4q0Cvx22vAuNEcKaEEfNQgAARi4CAAEFUAIAArCcQ
-Date:   Fri, 31 May 2019 11:02:04 +0000
-Message-ID: <CH2PR15MB3575E1402F1FF4418C8C67139A190@CH2PR15MB3575.namprd15.prod.outlook.com>
-References: <4ad776cb-c597-da1d-7d5e-af39ded17c40@ionic.de>
- <CH2PR15MB3575BD29C90539022364B8719A180@CH2PR15MB3575.namprd15.prod.outlook.com>
- <1780dd6a-9546-0df5-7fb2-44b78643b079@ionic.de>
- <3cc60b11-2b63-3bfc-2be8-569f2b0ce7cf@windriver.com>
-In-Reply-To: <3cc60b11-2b63-3bfc-2be8-569f2b0ce7cf@windriver.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jon.maloy@ericsson.com; 
-x-originating-ip: [24.225.233.31]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: af2806c2-d514-49be-e35b-08d6e5b76a76
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:CH2PR15MB3576;
-x-ms-traffictypediagnostic: CH2PR15MB3576:
-x-microsoft-antispam-prvs: <CH2PR15MB3576711843A23A3C4C7C5B389A190@CH2PR15MB3576.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2043;
-x-forefront-prvs: 00540983E2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(136003)(39860400002)(396003)(346002)(199004)(189003)(13464003)(6436002)(316002)(9686003)(110136005)(55016002)(229853002)(3846002)(2906002)(2501003)(8936002)(5660300002)(81166006)(81156014)(476003)(486006)(53936002)(68736007)(446003)(11346002)(44832011)(8676002)(52536014)(66446008)(64756008)(66556008)(66476007)(66946007)(73956011)(76116006)(186003)(86362001)(33656002)(66066001)(74316002)(6116002)(305945005)(6246003)(99286004)(7736002)(14454004)(478600001)(25786009)(6506007)(53546011)(71190400001)(71200400001)(102836004)(256004)(76176011)(14444005)(26005)(7696005);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR15MB3576;H:CH2PR15MB3575.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: ericsson.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 8/Nc0HUIsUSQvx4sQ64dLfuzh9s1JRqUDnhbpRb8adoSk0UTjeBDmUvcvgUKbLhyq0+GimXao/f/ecenKdmYVeqh6U3lMtB4ux0tq93UbWDrm/u8l41KsGlubY8GfJ8X+rSd1XMd/Df61V0j64wu1tF6sRzeQuxcHZCFTnz9y7JzltZogZJz8hAKtVvAbNk7EuDIygCtMRSxLue0UQ2sEtDg6ZJU6Zv/Bup+1ePwzPYOnn0Vm27mmygPbsyFc9nLvwFby3YVViqDEo6DwbbOccRx47spNUykppFfxJXVH2ZzPcNhvLpj6dEkz/EZNGHc3pho8rCmFOPBgIifxGaZ+bNIJBsUeojF19w2pLyfVNd8i12AMHz4l6KwOmHms/4yxeE3LTiPL6a9euNh3gdKfXBeR5yY9ChaTAvV4sBeRM8=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 31 May 2019 07:05:40 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:42365 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726280AbfEaLFj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 07:05:39 -0400
+Received: by mail-io1-f65.google.com with SMTP id g16so7801032iom.9
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 04:05:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=60Qw700xF164wG7p5BsIJw5jAg3eroN4jWr2z/QxvPU=;
+        b=a4mRQqxdQjhQGZEE+NmBCzyeQc+ZVPtaxK/OqZYYdmzyZw/ms7KnKg28+WenzXoqQ9
+         RbLiH8SECZHXZl8On7zljNcq9ZbjamcvHSHwwyZoYdNkt+LT5GrkwRdWOLKBNdrnV38S
+         RIaZKQbm0SF/w7k8E3L2VoTpXgVwf/PDydUHQ0xZuEeua1Mhz9MrrMT3PGQXVYhjCk7h
+         d5oDC2ML2yXo7Y4seRpm1X93vpVz2nzjRDhFxdO/Vjt+gUWgXQF1zdHCTqGhA6XRTLTq
+         ikGo2JCpjGG+ey24sLxCJYHy6LbiQnz9qnul40bEzX/emxK25pjJC0HHewOFr6oTYZfM
+         gRbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=60Qw700xF164wG7p5BsIJw5jAg3eroN4jWr2z/QxvPU=;
+        b=fKQ8FgHavAWDtxFUxkmJWP/EjqF/O6F3bOP1Ju6Kv8icxS7P8pIdQXsh6RQMunxx5Q
+         eu/DRqg3NF8EeJq+W/I0Gxm/wsTtNZ85daMMCQIeTTcCBOt+fYHH+ZfugD4XEicAb/xj
+         kyD+y24C2W3TYeqbfDpY4bmcK+PmBjzJlTkgGsNbp0s75ewWUrKUM3m/nAfh5pliGB+9
+         aCc5n2oOPQxUgy2iEdL5I3VV6oW066yETc9ECF2XfnXLEizgnQJuiQPhIy0r1ur0IYzv
+         x5AuomBViuUjowBjc99MBLtmdL7/eyG72Txi2ywPmFrXzjkDrUX25fsiyCHpu0iJ2cjd
+         VWPQ==
+X-Gm-Message-State: APjAAAVX4CP7HVLIs7FsvIzEuH2gcnDSUmDJUNOje8ImuBL+OjCLfq8B
+        rM/EITzfZWw/f4MbSq8LVcDQEIUEV+vkPvKMeQ==
+X-Google-Smtp-Source: APXvYqwMU5rDEa406o+bbKgj0fzapXZvu0xsaWzm/rjJr4JCcUTfVdJypAB9+uofzpooHKyOjABQcmADHK211MgFzNE=
+X-Received: by 2002:a5e:d70c:: with SMTP id v12mr5592967iom.12.1559300738725;
+ Fri, 31 May 2019 04:05:38 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: ericsson.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: af2806c2-d514-49be-e35b-08d6e5b76a76
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 May 2019 11:02:04.5017
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 92e84ceb-fbfd-47ab-be52-080c6b87953f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jon.maloy@ericsson.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR15MB3576
+References: <1559170444-3304-1-git-send-email-kernelfans@gmail.com>
+ <20190530214726.GA14000@iweiny-DESK2.sc.intel.com> <1497636a-8658-d3ff-f7cd-05230fdead19@nvidia.com>
+In-Reply-To: <1497636a-8658-d3ff-f7cd-05230fdead19@nvidia.com>
+From:   Pingfan Liu <kernelfans@gmail.com>
+Date:   Fri, 31 May 2019 19:05:27 +0800
+Message-ID: <CAFgQCTtVcmLUdua_nFwif_TbzeX5wp31GfTpL6CWmXXviYYLyw@mail.gmail.com>
+Subject: Re: [PATCH] mm/gup: fix omission of check on FOLL_LONGTERM in get_user_pages_fast()
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Keith Busch <keith.busch@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogWWluZyBYdWUgPHlpbmcu
-eHVlQHdpbmRyaXZlci5jb20+DQo+IFNlbnQ6IDMwLU1heS0xOSAyMDo0MQ0KPiBUbzogTWloYWkg
-TW9sZG92YW4gPGlvbmljQGlvbmljLmRlPjsgSm9uIE1hbG95DQo+IDxqb24ubWFsb3lAZXJpY3Nz
-b24uY29tPjsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogVXNl
-cnNwYWNlIHdvZXMgd2l0aCA1LjEuNSBkdWUgdG8gVElQQw0KPiANCj4gT24gNS8zMS8xOSA0OjQ3
-IEFNLCBNaWhhaSBNb2xkb3ZhbiB3cm90ZToNCj4gPiAqIE9uIDUvMzAvMTkgOTo1MSBQTSwgSm9u
-IE1hbG95IHdyb3RlOg0KPiA+PiBNYWtlIHN1cmUgdGhlIGZvbGxvd2luZyB0aHJlZSBjb21taXRz
-IGFyZSBwcmVzZW50IGluIFRJUEMgKmFmdGVyKiB0aGUNCj4gb2ZmZW5kaW5nIGNvbW1pdDoNCj4g
-Pj4NCj4gPj4gY29tbWl0IDUzMmIwZjdlY2U0YyAidGlwYzogZml4IG1vZHByb2JlIHRpcGMgZmFp
-bGVkIGFmdGVyIHN3aXRjaCBvcmRlciBvZg0KPiBkZXZpY2UgcmVnaXN0cmF0aW9uIg0KPiA+DQo+
-ID4gVGhpcyAqaXMqIHRoZSBvZmZlbmRpbmcgY29tbWl0LCBhcyBmYXIgYXMgSSB1bmRlcnN0YW5k
-LiBNZXJlbHkgcmViYXNlZA0KPiA+IGluIGxpbnV4LXN0YWJsZSwgYW5kIGhlbmNlIGhhdmluZyBh
-IGRpZmZlcmVudCBTSEEsIGJ1dCBtZW50aW9uaW5nIHRoZQ0KPiA+IG9yaWdpbmFsIFNIQSAoaS5l
-LiwgNTMyYjBmN2VjZTRjKSBpbiBpdHMgY29tbWl0IG1lc3NhZ2UuDQo+ID4NCj4gPg0KPiA+PiBT
-aW5jZSB0aGF0IHBhdGNoIG9uZSB3YXMgZmxhd2VkIGl0IGhhZCB0byBiZSByZXZlcnRlZDoNCj4g
-Pj4gY29tbWl0IDU1OTM1MzBlNTY5NCAgIiJSZXZlcnQgdGlwYzogZml4IG1vZHByb2JlIHRpcGMg
-ZmFpbGVkIGFmdGVyIHN3aXRjaA0KPiBvcmRlciBvZiBkZXZpY2UgcmVnaXN0cmF0aW9uIg0KPiA+
-Pg0KPiA+PiBJdCB3YXMgdGhlbiByZXBsYWNlZCB3aXRoIHRoaXMgb25lOg0KPiA+PiBjb21taXQg
-NTI2ZjViODUxYTk2ICJ0aXBjOiBmaXggbW9kcHJvYmUgdGlwYyBmYWlsZWQgYWZ0ZXIgc3dpdGNo
-IG9yZGVyIG9mDQo+IGRldmljZSByZWdpc3RyYXRpb24iDQo+ID4NCj4gPiBPa2F5LCB0aGVzZSB0
-d28gYXJlIG5vdCBwYXJ0IG9mIDUuMS41LiBJJ3ZlIGJhY2twb3J0ZWQgdGhlbSAoYW5kIG9ubHkN
-Cj4gPiB0aGVzZSB0d28pIHRvIDUuMS41IGFuZCB0aGUgaXNzdWUocykgc2VlbSB0byBiZSBnb25l
-LiBEZWZpbml0ZWx5DQo+ID4gc29tZXRoaW5nIHRoYXQgc2hvdWxkIGJlIGJhY2twb3J0ZWQgdG8v
-aW5jbHVkZWQgaW4gNS4xLjYuDQo+ID4NCj4gPg0KPiA+IFRoYW5rcyBmb3IgcG9pbnRpbmcgYWxs
-IHRoYXQgb3V0ISBVbmZvcnR1bmF0ZWx5IEkgZGlkbid0IGFkZCBhbnl0aGluZw0KPiA+IHVzZWZ1
-bCBidXQgbm9pc2UsIHNpbmNlIHlvdSBvYnZpb3VzbHkgYWxyZWFkeSBrbmV3LCB0aGF0IHRoaXMg
-Y29tbWl0DQo+ID4gd2FzIGJyb2tlbi4gSSdkIHVyZ2UgR3JlZyB0byByZWxlYXNlIGEgbmV3IHN0
-YWJsZSB2ZXJzaW9uIGluY2x1ZGluZw0KPiA+IHRoZSBmaXhlcyBzb29uLCBpZiBwb3NzaWJsZSwg
-dGhvdWdoLCBmb3Igbm90IGJlaW5nIGFibGUgdG8gc3RhcnQvdXNlDQo+ID4gdXNlcnNwYWNlIGJy
-b3dzZXJzIHNvdW5kcyBsaWtlIGEgcHJldHR5IGJhZCByZWdyZXNzaW9uIHRvIG1lLg0KPiA+DQo+
-IA0KPiBOb3Qgb25seSBjb21taXQgNTI2ZjViODUxYTk2ICkoInRpcGM6IGZpeCBtb2Rwcm9iZSB0
-aXBjIGZhaWxlZCBhZnRlciBzd2l0Y2gNCj4gb3JkZXIgb2YgZGV2aWNlIHJlZ2lzdHJhdGlvbiIp
-IGhhcyB0byBiZSByZXZlcnRlZCwgYnV0IGFsc28gSSBmb3VuZCBjb21taXQNCj4gN2UyN2U4ZDYx
-MzBjICgidGlwYzogc3dpdGNoIG9yZGVyIG9mIGRldmljZSByZWdpc3RyYXRpb24gdG8gZml4IGEg
-Y3Jhc2giKQ0KPiBpbnRyb2R1Y2VkIGEgc2VyaW91cyByZWdyZXNzaW9uIHdoaWNoIG1ha2VzIHRp
-cGMgaW50ZXJuYWwgdG9wb2xvZ3kgc2VydmljZQ0KPiBzZXJ2ZXIgZmFpbGVkIHRvIGJlIGNyZWF0
-ZWQuDQoNClRoaXMgd2FzIHRoZSB2ZXJ5IHJlYXNvbiB0aGUgYnJva2VuIHBhdGNoIHdhcyBpbnRy
-b2R1Y2VkLiBBRkFJSyB0aGVyZSBpcyBubyBwcm9ibGVtIGFmdGVyIHRoZSBjb3JyZWN0ZWQgdmVy
-c2lvbiBvZiB0aGF0IHBhdGNoIHdhcyBhcHBsaWVkLg0KDQovLy9qb24NCg0KPiANCj4gVG9kYXkg
-SSB3aWxsIGZpeCBpdCB3aXRoIHRoZSBmb2xsb3dpbmcgYXBwcm9hY2hlczoNCj4gMS4gUmV2ZXJ0
-IGNvbW1pdCA3ZTI3ZThkNjEzMGMgKCJ0aXBjOiBzd2l0Y2ggb3JkZXIgb2YgZGV2aWNlIHJlZ2lz
-dHJhdGlvbiB0bw0KPiBmaXggYSBjcmFzaCIpIDIuIFVzZSBhbm90aGVyIG1ldGhvZCB0byBzb2x2
-ZSB0aGUgcHJvYmxlbSB0aGF0IGNvbW1pdA0KPiA3ZTI3ZThkNjEzMGMgdHJpZXMgdG8gZml4Lg0K
-PiANCj4gVGhhbmtzLA0KPiBZaW5nDQo+IA0KPiA+DQo+ID4NCj4gPiBNaWhhaQ0KPiA+DQo=
+On Fri, May 31, 2019 at 7:21 AM John Hubbard <jhubbard@nvidia.com> wrote:
+>
+> On 5/30/19 2:47 PM, Ira Weiny wrote:
+> > On Thu, May 30, 2019 at 06:54:04AM +0800, Pingfan Liu wrote:
+> [...]
+> >> +                            for (j = i; j < nr; j++)
+> >> +                                    put_page(pages[j]);
+> >
+> > Should be put_user_page() now.  For now that just calls put_page() but it is
+> > slated to change soon.
+> >
+> > I also wonder if this would be more efficient as a check as we are walking the
+> > page tables and bail early.
+> >
+> > Perhaps the code complexity is not worth it?
+>
+> Good point, it might be worth it. Because now we've got two loops that
+> we run, after the interrupts-off page walk, and it's starting to look like
+> a potential performance concern.
+>
+> >
+> >> +                            nr = i;
+> >
+> > Why not just break from the loop here?
+> >
+> > Or better yet just use 'i' in the inner loop...
+> >
+>
+> ...but if you do end up putting in the after-the-fact check, then we can
+> go one or two steps further in cleaning it up, by:
+>
+>     * hiding the visible #ifdef that was slicing up gup_fast,
+>
+>     * using put_user_pages() instead of either put_page or put_user_page,
+>       thus getting rid of j entirely, and
+>
+>     * renaming an ancient minor confusion: nr --> nr_pinned),
+>
+> we could have this, which is looks cleaner and still does the same thing:
+>
+> diff --git a/mm/gup.c b/mm/gup.c
+> index f173fcbaf1b2..0c1f36be1863 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -1486,6 +1486,33 @@ static __always_inline long __gup_longterm_locked(struct task_struct *tsk,
+>  }
+>  #endif /* CONFIG_FS_DAX || CONFIG_CMA */
+>
+> +#ifdef CONFIG_CMA
+> +/*
+> + * Returns the number of pages that were *not* rejected. This makes it
+> + * exactly compatible with its callers.
+> + */
+> +static int reject_cma_pages(int nr_pinned, unsigned gup_flags,
+> +                           struct page **pages)
+> +{
+> +       int i = 0;
+> +       if (unlikely(gup_flags & FOLL_LONGTERM)) {
+> +
+> +               for (i = 0; i < nr_pinned; i++)
+> +                       if (is_migrate_cma_page(pages[i])) {
+> +                               put_user_pages(&pages[i], nr_pinned - i);
+> +                               break;
+> +                       }
+> +       }
+> +       return i;
+> +}
+> +#else
+> +static int reject_cma_pages(int nr_pinned, unsigned gup_flags,
+> +                           struct page **pages)
+> +{
+> +       return nr_pinned;
+> +}
+> +#endif
+> +
+>  /*
+>   * This is the same as get_user_pages_remote(), just with a
+>   * less-flexible calling convention where we assume that the task
+> @@ -2216,7 +2243,7 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
+>                         unsigned int gup_flags, struct page **pages)
+>  {
+>         unsigned long addr, len, end;
+> -       int nr = 0, ret = 0;
+> +       int nr_pinned = 0, ret = 0;
+>
+>         start &= PAGE_MASK;
+>         addr = start;
+> @@ -2231,25 +2258,27 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
+>
+>         if (gup_fast_permitted(start, nr_pages)) {
+>                 local_irq_disable();
+> -               gup_pgd_range(addr, end, gup_flags, pages, &nr);
+> +               gup_pgd_range(addr, end, gup_flags, pages, &nr_pinned);
+>                 local_irq_enable();
+> -               ret = nr;
+> +               ret = nr_pinned;
+>         }
+>
+> -       if (nr < nr_pages) {
+> +       nr_pinned = reject_cma_pages(nr_pinned, gup_flags, pages);
+> +
+> +       if (nr_pinned < nr_pages) {
+>                 /* Try to get the remaining pages with get_user_pages */
+> -               start += nr << PAGE_SHIFT;
+> -               pages += nr;
+> +               start += nr_pinned << PAGE_SHIFT;
+> +               pages += nr_pinned;
+>
+> -               ret = __gup_longterm_unlocked(start, nr_pages - nr,
+> +               ret = __gup_longterm_unlocked(start, nr_pages - nr_pinned,
+>                                               gup_flags, pages);
+>
+>                 /* Have to be a bit careful with return values */
+> -               if (nr > 0) {
+> +               if (nr_pinned > 0) {
+>                         if (ret < 0)
+> -                               ret = nr;
+> +                               ret = nr_pinned;
+>                         else
+> -                               ret += nr;
+> +                               ret += nr_pinned;
+>                 }
+>         }
+>
+>
+> Rather lightly tested...I've compile-tested with CONFIG_CMA and !CONFIG_CMA,
+> and boot tested with CONFIG_CMA, but could use a second set of eyes on whether
+> I've added any off-by-one errors, or worse. :)
+>
+Do you mind I send V2 based on your above patch? Anyway, it is a simple bug fix.
+
+Thanks,
+  Pingfan
