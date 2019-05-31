@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B86C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D5BBC28CC4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 202D32633F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:54:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5C6726381
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:54:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LdLXbxUx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pUg7g9Gw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbfEaDyp (ORCPT
+        id S1726972AbfEaDyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 23:54:45 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:43399 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726969AbfEaDyP (ORCPT
+        Thu, 30 May 2019 23:54:14 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:45349 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726873AbfEaDyI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 23:54:15 -0400
-Received: by mail-io1-f67.google.com with SMTP id k20so6997486ios.10
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 20:54:14 -0700 (PDT)
+        Thu, 30 May 2019 23:54:08 -0400
+Received: by mail-io1-f66.google.com with SMTP id e3so6998685ioc.12
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 20:54:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=P/pdOsY/niyZRmGETxNerH6dJjcttG53YSsCa7ifoY0=;
-        b=LdLXbxUxV/IrXn4d1i/vGdienEoZXb6BsYFxIL5VpNAARTTGVluKaA6MGSJ4HEGwmK
-         aLKqU/vlN6B8wanswPX59AUkIA92XKC976uKcxKb4QFoe/+yYvne3gQycN9GvcP/iJ25
-         sL4jj4nfvf4SAtWPqfJzmLRVzV5nP+XX4qCSQj4fArc1fgXTTmFkW9mTIh2bICl8TjtI
-         E+RjoaGd7oPTbfy22IAVGy6/ZVePyFgXwYIqVsf7aixl3ziURXrNxVoWHH+9D/5TUczZ
-         +yOfQK7CAChVB5l34hJ9D4ZauMfJ9nfyrP1kk6zBxq/Bl8RiouWy+cWfS8ooBeS2Jbc+
-         Ouhg==
+        bh=heqGQKaiqjnGfnQxAhpeIlMm25793VV3ODq8AUARHOI=;
+        b=pUg7g9GwuRyqe5RfpSeAHR0wym9RwDCZzsQcESgPydMY2m5sNQ14kfF7IsmvAxBUG0
+         H8JOkhYiw7RVbiMdAv8UtgIGKhA9jukxJHakWYQe1Deindb7OIh9DGviMi6NIW1eWL/L
+         scwk5otxRQPLdLQh9oWh71ZJ97nrqOgXSSsK4TjToAscvOS7S8tniqCk4oHmQ+vA42GX
+         RmuPFRDTgCHbSaA06ny0O6JltXzgeVrwp2U8PFJK/c9i2Zb23LJ2tC6VDYtGMXzYfVny
+         n0UYMtiN6c9yRxvm8z9++pN+G2llDrUzQK2VhyGySmUpPGtQ5Qo7yqwrqYpI4QUscSAG
+         mzWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=P/pdOsY/niyZRmGETxNerH6dJjcttG53YSsCa7ifoY0=;
-        b=swr2hT5pnQ59uKR9aHMUjJPi7hz+h0R7PZ2EjD0qq1h/LRAD0t7zJjZ9lz2ODlYbUm
-         tY5iTWtnhhAN+QR7ygvv/16b9U3ItvVaoPWM1aUR25p9YniST0EbVR1w7sGoevbi7GjS
-         hoLujJWPuKGDfDiElojJvuAT7912lfEqksfj1Ehxncc/SpmTNrwb4hnkCMzqQ6+fJEpd
-         o0vCs3MYQoEp5XcHUSVGRGqcOcLBwa1P4F6ORce9iTgYCyoYyYPfTRYcZ8p5eCVjwM3N
-         ZFBx238lJEfhHH1ZJsI9yrEjuPKRIaEzYlbcB3IsvlKxTYuu20dSpKYMLraOyh8OhODU
-         mU4g==
-X-Gm-Message-State: APjAAAUeV7cJKaqSXy+sd3pqd6wGCm4XEWtxNdJsZFrAhE9BFFeIrSKX
-        QPVTwS+Eai0uLVsXnLiDs9XU2w==
-X-Google-Smtp-Source: APXvYqyw1bxBazDS9xdd5Yr6U/DRZA7zOSrNfezkhmrAo1aPM/nKFMpw7mOYi1fYX4ZuYxbTSsmRgA==
-X-Received: by 2002:a5d:8712:: with SMTP id u18mr4719446iom.18.1559274853194;
-        Thu, 30 May 2019 20:54:13 -0700 (PDT)
+        bh=heqGQKaiqjnGfnQxAhpeIlMm25793VV3ODq8AUARHOI=;
+        b=IBLfc6cUO0SrAlYTNgi3ZnKWBwefO0gHJopm3V+mBfMQClccnfuct7Xibvzz9iGFYf
+         0TAfx6ED2pdal/bfaLZeYqBq/GIB+7k81k/iQK7ohFgY1/Mk0ml2M+bk+wi+n+kILt12
+         6osGX3JpHB4ChGVSGShLch/kqnTn0vg9xBOgHl/BqpyR97vWpCsYjkSlxD4TKYqW+C/h
+         N3bv3FAIn3C7y3QHI67Aok5j79JrZ1yRtTH6crvonDhIlbwCcdbzRoegwJnj/8/abO9G
+         W3xFmJrvYuYFFLyW1u7tXbqYWVYmc74941jRhl14OaywPFQR3zRVcQVCOigqMMYtAH0y
+         lgGg==
+X-Gm-Message-State: APjAAAWQPMm1lPTaSnzpT7FPVPFOEIBU1BPb+IT+BJr2nhpUXTuInKyD
+        3qvlS8DfUkhzK9lvToeE1ilQnA==
+X-Google-Smtp-Source: APXvYqyeCCZczR+KhFVmlE1nT0wKRSnVci7DSU4+uHfL7nQ7D+Jr2oxYX74RBUjd9UoFNuRJ960m1w==
+X-Received: by 2002:a05:6602:220a:: with SMTP id n10mr5713733ion.205.1559274846594;
+        Thu, 30 May 2019 20:54:06 -0700 (PDT)
 Received: from localhost.localdomain (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
-        by smtp.gmail.com with ESMTPSA id q15sm1626947ioi.15.2019.05.30.20.54.11
+        by smtp.gmail.com with ESMTPSA id q15sm1626947ioi.15.2019.05.30.20.54.05
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 20:54:12 -0700 (PDT)
+        Thu, 30 May 2019 20:54:06 -0700 (PDT)
 From:   Alex Elder <elder@linaro.org>
 To:     davem@davemloft.net, arnd@arndb.de, bjorn.andersson@linaro.org,
         ilias.apalodimas@linaro.org
@@ -65,9 +65,9 @@ Cc:     evgreen@chromium.org, benchan@google.com, ejcaruso@google.com,
         netdev@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
-Subject: [PATCH v2 13/17] soc: qcom: ipa: AP/modem communications
-Date:   Thu, 30 May 2019 22:53:44 -0500
-Message-Id: <20190531035348.7194-14-elder@linaro.org>
+Subject: [PATCH v2 08/17] soc: qcom: ipa: GSI transactions
+Date:   Thu, 30 May 2019 22:53:39 -0500
+Message-Id: <20190531035348.7194-9-elder@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190531035348.7194-1-elder@linaro.org>
 References: <20190531035348.7194-1-elder@linaro.org>
@@ -78,1686 +78,789 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch implements two forms of out-of-band communication between
-the AP and modem.
+This patch implements GSI transactions.  A GSI transaction is a
+structure that represents a single request (consisting of one or
+more TREs) sent to the GSI hardware.  The last TRE in a transaction
+includes a flag requesting that the GSI interrupt the AP to notify
+that it has completed.
 
-  - QMI is a mechanism that allows clients running on the AP
-    interact with services running on the modem (and vice-versa).
-    The AP IPA driver uses QMI to communicate with the corresponding
-    IPA driver resident on the modem, to agree on parameters used
-    with the IPA hardware and to ensure both sides are ready before
-    entering operational mode.
+TREs are executed and completed strictly in order.  For this reason,
+the completion of a single TRE implies that all previous TREs (in
+particular all of those "earlier" in a transaction) have completed.
 
-  - SMP2P is a more primitive mechanism available for the modem and
-    AP to communicate with each other.  It provides a means for either
-    the AP or modem to interrupt the other, and furthermore, to provide
-    32 bits worth of information.  The IPA driver uses SMP2P to tell
-    the modem what the state of the IPA clock was in the event of a
-    crash.  This allows the modem to safely access the IPA hardware
-    (or avoid doing so) when a crash occurs, for example, to access
-    information within the IPA hardware.
+Whenever there is a need to send a request (a set of TREs) to the
+IPA, a GSI transaction is allocated, specifying the number of TREs
+that will be required.  Details of the request (e.g. transfer offsets
+and length) are represented by in a Linux scatterlist array that is
+incorporated in the transaction structure.
+
+Once "filled," the transaction is committed.  The GSI transaction
+layer performs all needed mapping (and unmapping) for DMA, and
+issues the request to the hardware.  When the hardware signals
+that the request has completed, a callback function allows for
+cleanup or followup activity to be performed before the transaction
+is freed.
 
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- drivers/net/ipa/ipa_qmi.c     | 402 +++++++++++++++++++++++
- drivers/net/ipa/ipa_qmi.h     |  35 ++
- drivers/net/ipa/ipa_qmi_msg.c | 583 ++++++++++++++++++++++++++++++++++
- drivers/net/ipa/ipa_qmi_msg.h | 238 ++++++++++++++
- drivers/net/ipa/ipa_smp2p.c   | 304 ++++++++++++++++++
- drivers/net/ipa/ipa_smp2p.h   |  47 +++
- 6 files changed, 1609 insertions(+)
- create mode 100644 drivers/net/ipa/ipa_qmi.c
- create mode 100644 drivers/net/ipa/ipa_qmi.h
- create mode 100644 drivers/net/ipa/ipa_qmi_msg.c
- create mode 100644 drivers/net/ipa/ipa_qmi_msg.h
- create mode 100644 drivers/net/ipa/ipa_smp2p.c
- create mode 100644 drivers/net/ipa/ipa_smp2p.h
+ drivers/net/ipa/gsi_trans.c | 624 ++++++++++++++++++++++++++++++++++++
+ drivers/net/ipa/gsi_trans.h | 116 +++++++
+ 2 files changed, 740 insertions(+)
+ create mode 100644 drivers/net/ipa/gsi_trans.c
+ create mode 100644 drivers/net/ipa/gsi_trans.h
 
-diff --git a/drivers/net/ipa/ipa_qmi.c b/drivers/net/ipa/ipa_qmi.c
+diff --git a/drivers/net/ipa/gsi_trans.c b/drivers/net/ipa/gsi_trans.c
 new file mode 100644
-index 000000000000..e94437508f6c
+index 000000000000..267e33093554
 --- /dev/null
-+++ b/drivers/net/ipa/ipa_qmi.c
-@@ -0,0 +1,402 @@
++++ b/drivers/net/ipa/gsi_trans.c
+@@ -0,0 +1,624 @@
 +// SPDX-License-Identifier: GPL-2.0
 +
-+/* Copyright (c) 2013-2018, The Linux Foundation. All rights reserved.
-+ * Copyright (C) 2018-2019 Linaro Ltd.
++/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
++ * Copyright (C) 2019 Linaro Ltd.
 + */
 +
 +#include <linux/types.h>
-+#include <linux/string.h>
-+#include <linux/slab.h>
-+#include <linux/qrtr.h>
-+#include <linux/soc/qcom/qmi.h>
++#include <linux/bits.h>
++#include <linux/bitfield.h>
++#include <linux/refcount.h>
++#include <linux/scatterlist.h>
 +
-+#include "ipa.h"
-+#include "ipa_endpoint.h"
-+#include "ipa_mem.h"
-+#include "ipa_qmi_msg.h"
-+
-+#define QMI_INIT_DRIVER_TIMEOUT	60000	/* A minute in milliseconds */
++#include "gsi.h"
++#include "gsi_private.h"
++#include "gsi_trans.h"
++#include "ipa_gsi.h"
++#include "ipa_data.h"
++#include "ipa_cmd.h"
 +
 +/**
-+ * DOC: AP/Modem QMI Handshake
++ * DOC: GSI Transactions
 + *
-+ * The AP and modem perform a "handshake" at initialization time to ensure
-+ * each side knows the other side is ready.  Two QMI handles (endpoints) are
-+ * used for this; one provides service on the modem for AP requests, and the
-+ * other is on the AP to service modem requests (and to supply an indication
-+ * from the AP).
++ * A GSI transaction abstracts the behavior of a GSI channel by representing
++ * everything about a related group of data transfers in a single structure.
++ * Most details of interaction with the GSI hardware are managed by the GSI
++ * transaction core, allowing users to simply describe transfers to be
++ * performed.  When a transaction has completed a callback function
++ * (dependent on the type of endpoint associated with the channel) allows
++ * cleanup of resources associated with the transaction.
 + *
-+ * The QMI service on the modem expects to receive an INIT_DRIVER request from
-+ * the AP, which contains parameters used by the modem during initialization.
-+ * The AP sends this request using the client handle as soon as it is knows
-+ * the modem side service is available.  The modem responds to this request
-+ * immediately.
++ * To perform a data transfer (or a related set of them), a user of the GSI
++ * transaction interface allocates a transaction, indicating the number of
++ * TREs required (one per data transfer).  If sufficient TREs are available,
++ * they are reserved for use in the transaction and the allocation succeeds.
++ * This way exhaustion of the available TREs in a channel ring is detected
++ * as early as possible.  All resources required to complete a transaction
++ * are allocated at transaction allocation time.
 + *
-+ * When the modem learns the AP service is available, it is able to
-+ * communicate its status to the AP.  The modem uses this to tell
-+ * the AP when it is ready to receive an indication, sending an
-+ * INDICATION_REGISTER request to the handle served by the AP.  This
-+ * is independent of the modem's initialization of its driver.
++ * Transfers performed as part of a transaction are represented in an array
++ * of Linux scatterlist structures.  This array is allocated with the
++ * transaction, and its entries must be initialized using standard
++ * scatterlist functions (such as sg_init_one() or skb_to_sgvec()).
 + *
-+ * When the modem has completed the driver initialization requested by the
-+ * AP, it sends a DRIVER_INIT_COMPLETE request to the AP.   This request
-+ * could arrive at the AP either before or after the INDICATION_REGISTER
-+ * request.
++ * Once a transaction's scatterlist structures have been initialized, the
++ * transaction is committed.  The GSI transaction layer is responsible for
++ * DMA mapping (and unmapping) memory described in the transaction's
++ * scatterlist array.  The only way committing a transaction fails is if
++ * this DMA mapping step returns an error.  Otherwise, ownership of the
++ * entire transaction is transferred to the GSI transaction core.  The GSI
++ * transaction code formats the content of the scatterlist array into the
++ * channel ring buffer and informs the hardware that new TREs are available
++ * to process.
 + *
-+ * The final step in the handshake occurs after the AP has received both
-+ * requests from the modem.  The AP completes the handshake by sending an
-+ * INIT_COMPLETE_IND indication message to the modem.
++ * The last TRE in each transaction is marked to interrupt the AP when the
++ * GSI hardware has completed it.  Because transfers described by TREs are
++ * performed strictly in order, signaling the completion of just the last
++ * TRE in the transaction is sufficient to indicate the full transaction
++ * is complete.
++ *
++ * When a transaction is complete, ipa_gsi_trans_complete() is called by the
++ * GSI code into the IPA layer, allowing it to perform any final cleanup
++ * required before the transaction is freed.
 + */
 +
-+#define IPA_HOST_SERVICE_SVC_ID		0x31
-+#define IPA_HOST_SVC_VERS		1
-+#define IPA_HOST_SERVICE_INS_ID		1
++/* gsi_tre->flags mask values (in CPU byte order) */
++#define GSI_TRE_FLAGS_CHAIN_FMASK	GENMASK(0, 0)
++#define GSI_TRE_FLAGS_IEOB_FMASK	GENMASK(8, 8)
++#define GSI_TRE_FLAGS_IEOT_FMASK	GENMASK(9, 9)
++#define GSI_TRE_FLAGS_BEI_FMASK		GENMASK(10, 10)
++#define GSI_TRE_FLAGS_TYPE_FMASK	GENMASK(23, 16)
 +
-+#define IPA_MODEM_SERVICE_SVC_ID	0x31
-+#define IPA_MODEM_SERVICE_INS_ID	2
-+#define IPA_MODEM_SVC_VERS		1
++/* Hardware values representing a transfer element type */
++enum gsi_tre_type {
++	GSI_RE_XFER	= 0x2,
++	GSI_RE_IMMD_CMD	= 0x3,
++	GSI_RE_NOP	= 0x4,
++};
 +
-+/* Send an INIT_COMPLETE_IND indication message to the modem */
-+static int ipa_send_master_driver_init_complete_ind(struct qmi_handle *qmi,
-+						    struct sockaddr_qrtr *sq)
++/* Map a given ring entry index to the transaction associated with it */
++static void gsi_channel_trans_map(struct gsi_channel *channel, u32 index,
++				  struct gsi_trans *trans)
 +{
-+	struct ipa_init_complete_ind ind = { };
-+
-+	ind.status.result = QMI_RESULT_SUCCESS_V01;
-+	ind.status.error = QMI_ERR_NONE_V01;
-+
-+	return qmi_send_indication(qmi, sq, IPA_QMI_INIT_COMPLETE_IND,
-+				   IPA_QMI_INIT_COMPLETE_IND_SZ,
-+				   ipa_init_complete_ind_ei, &ind);
++	/* Note: index *must* be used modulo the ring count here */
++	channel->trans_info.map[index % channel->tre_ring.count] = trans;
 +}
 +
-+/* This function is called to determine whether to complete the handshake by
-+ * sending an INIT_COMPLETE_IND indication message to the modem.  The
-+ * "init_driver" parameter is false when we've received an INDICATION_REGISTER
-+ * request message from the modem, or true when we've received the response
-+ * from the INIT_DRIVER request message we send.  If this function decides the
-+ * message should be sent, it calls ipa_send_master_driver_init_complete_ind()
-+ * to send it.
-+ */
-+static void ipa_handshake_complete(struct qmi_handle *qmi,
-+				   struct sockaddr_qrtr *sq, bool init_driver)
++/* Return the transaction mapped to a given ring entry */
++struct gsi_trans *
++gsi_channel_trans_mapped(struct gsi_channel *channel, u32 index)
 +{
-+	struct ipa *ipa;
-+	bool send_it;
-+	int ret;
++	/* Note: index *must* be used modulo the ring count here */
++	return channel->trans_info.map[index % channel->tre_ring.count];
++}
 +
-+	if (init_driver) {
-+		ipa = container_of(qmi, struct ipa, qmi.client_handle);
-+		ipa->qmi.init_driver_response_received = true;
-+		send_it = !!ipa->qmi.indication_register_received;
++/* Return the oldest completed transaction for a channel (or null) */
++struct gsi_trans *gsi_channel_trans_complete(struct gsi_channel *channel)
++{
++	return list_first_entry_or_null(&channel->trans_info.complete,
++					struct gsi_trans, links);
++}
++
++/* Move a transaction from the allocated list to the pending list */
++static void gsi_trans_move_pending(struct gsi_trans *trans)
++{
++	struct gsi_channel *channel = &trans->gsi->channel[trans->channel_id];
++	struct gsi_trans_info *trans_info = &channel->trans_info;
++
++	spin_lock_bh(&trans_info->spinlock);
++
++	list_move_tail(&trans->links, &trans_info->pending);
++
++	spin_unlock_bh(&trans_info->spinlock);
++}
++
++/* Move a transaction and all of its predecessors from the pending list
++ * to the completed list.
++ */
++void gsi_trans_move_complete(struct gsi_trans *trans)
++{
++	struct gsi_channel *channel = &trans->gsi->channel[trans->channel_id];
++	struct gsi_trans_info *trans_info = &channel->trans_info;
++	struct list_head list;
++
++	spin_lock_bh(&trans_info->spinlock);
++
++	/* Move this transaction and all predecessors to completed list */
++	list_cut_position(&list, &trans_info->pending, &trans->links);
++	list_splice_tail(&list, &trans_info->complete);
++
++	spin_unlock_bh(&trans_info->spinlock);
++}
++
++/* Move a transaction from the completed list to the polled list */
++void gsi_trans_move_polled(struct gsi_trans *trans)
++{
++	struct gsi_channel *channel = &trans->gsi->channel[trans->channel_id];
++	struct gsi_trans_info *trans_info = &channel->trans_info;
++
++	spin_lock_bh(&trans_info->spinlock);
++
++	list_move_tail(&trans->links, &trans_info->polled);
++
++	spin_unlock_bh(&trans_info->spinlock);
++}
++
++/* Return the last (most recent) transaction allocated on a channel */
++struct gsi_trans *gsi_channel_trans_last(struct gsi *gsi, u32 channel_id)
++{
++	struct gsi_trans_info *trans_info;
++	struct gsi_trans *trans;
++	struct list_head *list;
++
++	trans_info = &gsi->channel[channel_id].trans_info;
++
++	spin_lock_bh(&trans_info->spinlock);
++
++	/* Find the last list to which a transaction was added */
++	if (!list_empty(&trans_info->alloc))
++		list = &trans_info->alloc;
++	else if (!list_empty(&trans_info->pending))
++		list = &trans_info->pending;
++	else if (!list_empty(&trans_info->complete))
++		list = &trans_info->complete;
++	else if (!list_empty(&trans_info->polled))
++		list = &trans_info->polled;
++	else
++		list = NULL;
++
++	if (list) {
++		/* The last entry on this list is the last one allocated.
++		 * Grab a reference so it can be waited for.
++		 */
++		trans = list_last_entry(list, struct gsi_trans, links);
++		refcount_inc(&trans->refcount);
 +	} else {
-+		ipa = container_of(qmi, struct ipa, qmi.server_handle);
-+		ipa->qmi.indication_register_received = 1;
-+		send_it = !!ipa->qmi.init_driver_response_received;
++		trans = NULL;
 +	}
-+	if (!send_it)
++
++	spin_unlock_bh(&trans_info->spinlock);
++
++	return trans;
++}
++
++/* Reserve some number of TREs on a channel.  Returns true if successful */
++static bool
++gsi_trans_tre_reserve(struct gsi_trans_info *trans_info, u32 tre_count)
++{
++	int avail = atomic_read(&trans_info->tre_avail);
++	int new;
++
++	do {
++		new = avail - (int)tre_count;
++		if (unlikely(new < 0))
++			return false;
++	} while (!atomic_try_cmpxchg(&trans_info->tre_avail, &avail, new));
++
++	return true;
++}
++
++/* Release previously-reserved TRE entries to a channel */
++static void
++gsi_trans_tre_release(struct gsi_trans_info *trans_info, u32 tre_count)
++{
++	atomic_add(tre_count, &trans_info->tre_avail);
++}
++
++/* Allocate a GSI transaction on a channel */
++struct gsi_trans *
++gsi_channel_trans_alloc(struct gsi *gsi, u32 channel_id, u32 tre_count)
++{
++	struct gsi_channel *channel = &gsi->channel[channel_id];
++	struct gsi_trans_info *trans_info;
++	struct gsi_trans *trans;
++	u32 which;
++
++	/* Caller should know the limit is gsi_channel_trans_max() */
++	if (WARN_ON(tre_count > channel->data->tlv_count))
++		return NULL;
++
++	trans_info = &channel->trans_info;
++
++	/* We reserve the TREs now, but consume them at commit time.
++	 * If there aren't enough available, we're done.
++	 */
++	if (!gsi_trans_tre_reserve(trans_info, tre_count))
++		return NULL;
++
++	/* Allocate the transaction and initialize it */
++	which = trans_info->pool_free++ % trans_info->pool_count;
++	trans = &trans_info->pool[which];
++
++	trans->gsi = gsi;
++	trans->channel_id = channel_id;
++	refcount_set(&trans->refcount, 1);
++	trans->tre_count = tre_count;
++	init_completion(&trans->completion);
++
++	/* We're reusing, so make sure all fields are reinitialized */
++	trans->dev = gsi->dev;
++	trans->result = 0;	/* Success assumed unless overwritten */
++	trans->data = NULL;
++
++	/* Allocate the scatter/gather entries it will use.  If what's
++	 * needed would cross the end-of-pool boundary, allocate them
++	 * from the beginning of the pool.
++	 */
++	if (tre_count > trans_info->sg_pool_count - trans_info->sg_pool_free)
++		trans_info->sg_pool_free = 0;
++	trans->sgl = &trans_info->sg_pool[trans_info->sg_pool_free];
++	trans->sgc = tre_count;
++	trans_info->sg_pool_free += tre_count;
++
++	spin_lock_bh(&trans_info->spinlock);
++
++	list_add_tail(&trans->links, &trans_info->alloc);
++
++	spin_unlock_bh(&trans_info->spinlock);
++
++	return trans;
++}
++
++/* Free a previously-allocated transaction (used only in case of error) */
++void gsi_trans_free(struct gsi_trans *trans)
++{
++	struct gsi_trans_info *trans_info;
++
++	if (!refcount_dec_and_test(&trans->refcount))
 +		return;
 +
-+	ret = ipa_send_master_driver_init_complete_ind(qmi, sq);
-+	WARN(ret, "error %d sending init complete indication\n", ret);
++	trans_info = &trans->gsi->channel[trans->channel_id].trans_info;
++
++	spin_lock_bh(&trans_info->spinlock);
++
++	list_del(&trans->links);
++
++	spin_unlock_bh(&trans_info->spinlock);
++
++	gsi_trans_tre_release(trans_info, trans->tre_count);
 +}
 +
-+/* Callback function to handle an INDICATION_REGISTER request message from the
-+ * modem.  This informs the AP that the modem is now ready to receive the
-+ * INIT_COMPLETE_IND indication message.
-+ */
-+static void ipa_indication_register_fn(struct qmi_handle *qmi,
-+				       struct sockaddr_qrtr *sq,
-+				       struct qmi_txn *txn,
-+				       const void *decoded)
++/* Compute the length/opcode value to use for a TRE */
++static __le16 gsi_tre_len_opcode(enum ipa_cmd_opcode opcode, u32 len)
 +{
-+	struct ipa_indication_register_rsp rsp = { };
++	return opcode == IPA_CMD_NONE ? cpu_to_le16((u16)len)
++				      : cpu_to_le16((u16)opcode);
++}
++
++/* Compute the flags value to use for a given TRE */
++static __le32 gsi_tre_flags(bool last_tre, bool bei, enum ipa_cmd_opcode opcode)
++{
++	enum gsi_tre_type tre_type;
++	u32 tre_flags;
++
++	tre_type = opcode == IPA_CMD_NONE ? GSI_RE_XFER : GSI_RE_IMMD_CMD;
++	tre_flags = u32_encode_bits(tre_type, GSI_TRE_FLAGS_TYPE_FMASK);
++
++	/* Last TRE contains interrupt flags */
++	if (last_tre) {
++		/* All transactions end in a transfer completion interrupt */
++		tre_flags |= GSI_TRE_FLAGS_IEOT_FMASK;
++		/* Don't interrupt when outbound commands are acknowledged */
++		if (bei)
++			tre_flags |= GSI_TRE_FLAGS_BEI_FMASK;
++	} else {	/* All others indicate there's more to come */
++		tre_flags |= GSI_TRE_FLAGS_CHAIN_FMASK;
++	}
++
++	return cpu_to_le32(tre_flags);
++}
++
++static void gsi_trans_tre_fill(struct gsi_tre *dest_tre, dma_addr_t addr,
++			       u32 len, bool last_tre, bool bei,
++			       enum ipa_cmd_opcode opcode)
++{
++	struct gsi_tre tre;
++
++	tre.addr = cpu_to_le64(addr);
++	tre.len_opcode = gsi_tre_len_opcode(opcode, len);
++	tre.reserved = 0;
++	tre.flags = gsi_tre_flags(last_tre, bei, opcode);
++
++	/* ARM64 can write 16 bytes as a unit with a single instruction.
++	 * Doing the assignment this way is an attempt to make that happen.
++	 */
++	*dest_tre = tre;
++}
++
++/* Issue a command to read a single byte from a channel */
++int gsi_trans_read_byte(struct gsi *gsi, u32 channel_id, dma_addr_t addr)
++{
++	struct gsi_channel *channel = &gsi->channel[channel_id];
++	struct gsi_trans_info *trans_info;
++	struct gsi_ring *tre_ring;
++	struct gsi_tre *dest_tre;
++	struct gsi_ring *ring;
++
++	trans_info = &channel->trans_info;
++
++	/* First reserve the TRE, if possible */
++	if (!gsi_trans_tre_reserve(trans_info, 1))
++		return -EBUSY;
++
++	/* Now allocate the next TRE, fill it, and tell the hardware */
++	tre_ring = &channel->tre_ring;
++	ring = &gsi->evt_ring[channel->evt_ring_id].ring;
++
++	dest_tre = gsi_ring_virt(tre_ring, tre_ring->index);
++	gsi_trans_tre_fill(dest_tre, addr, 1, true, false, IPA_CMD_NONE);
++
++	tre_ring->index++;
++	gsi_channel_doorbell(channel);
++
++	return 0;
++}
++
++/* Mark a gsi_trans_read_byte() request done */
++void gsi_trans_read_byte_done(struct gsi *gsi, u32 channel_id)
++{
++	struct gsi_channel *channel = &gsi->channel[channel_id];
++
++	gsi_trans_tre_release(&channel->trans_info, 1);
++}
++
++/**
++ * __gsi_trans_commit() - Common GSI transaction commit code
++ * @trans:	Transaction to commit
++ * @opcode:	Immediate command opcode, or IPA_CMD_NONE
++ * @ring_db:	Whether to tell the hardware about these queued transfers
++ *
++ * @Return:	0 if successful, or a negative error code
++ *
++ * Maps the transactions's scatterlist array for DMA, and returns -ENOMEM
++ * if that fails.  Formats channel ring TRE entries based on the content of
++ * the scatterlist.  Maps a transaction pointer to the last ring entry used
++ * for the transaction, so it can be recovered when it completes.  Moves
++ * the transaction to the pending list.  Finally, updates the channel ring
++ * pointer and optionally rings the doorbell.
++ */
++static int __gsi_trans_commit(struct gsi_trans *trans,
++			      enum ipa_cmd_opcode opcode, bool ring_db)
++{
++	struct gsi_channel *channel = &trans->gsi->channel[trans->channel_id];
++	struct gsi_ring *tre_ring = &channel->tre_ring;
++	enum dma_data_direction direction;
++	bool bei = channel->toward_ipa;
++	struct gsi_tre *dest_tre;
++	struct scatterlist *sg;
++	struct gsi_ring *ring;
++	u32 byte_count = 0;
++	u32 avail;
 +	int ret;
++	u32 i;
 +
-+	rsp.rsp.result = QMI_RESULT_SUCCESS_V01;
-+	rsp.rsp.error = QMI_ERR_NONE_V01;
-+
-+	ret = qmi_send_response(qmi, sq, txn, IPA_QMI_INDICATION_REGISTER,
-+				IPA_QMI_INDICATION_REGISTER_RSP_SZ,
-+				ipa_indication_register_rsp_ei, &rsp);
-+	if (!WARN(ret, "error %d sending response\n", ret))
-+		ipa_handshake_complete(qmi, sq, false);
-+}
-+
-+/* Callback function to handle a DRIVER_INIT_COMPLETE request message from the
-+ * modem.  This informs the AP that the modem has completed the initializion
-+ * of its driver.
-+ */
-+static void ipa_driver_init_complete_fn(struct qmi_handle *qmi,
-+					struct sockaddr_qrtr *sq,
-+					struct qmi_txn *txn,
-+					const void *decoded)
-+{
-+	struct ipa_driver_init_complete_rsp rsp = { };
-+	int ret;
-+
-+	rsp.rsp.result = QMI_RESULT_SUCCESS_V01;
-+	rsp.rsp.error = QMI_ERR_NONE_V01;
-+
-+	ret = qmi_send_response(qmi, sq, txn, IPA_QMI_DRIVER_INIT_COMPLETE,
-+				IPA_QMI_DRIVER_INIT_COMPLETE_RSP_SZ,
-+				ipa_driver_init_complete_rsp_ei, &rsp);
-+
-+	WARN(ret, "error %d sending response\n", ret);
-+}
-+
-+/* The server handles two request message types sent by the modem. */
-+static struct qmi_msg_handler ipa_server_msg_handlers[] = {
-+	{
-+		.type		= QMI_REQUEST,
-+		.msg_id		= IPA_QMI_INDICATION_REGISTER,
-+		.ei		= ipa_indication_register_req_ei,
-+		.decoded_size	= IPA_QMI_INDICATION_REGISTER_REQ_SZ,
-+		.fn		= ipa_indication_register_fn,
-+	},
-+	{
-+		.type		= QMI_REQUEST,
-+		.msg_id		= IPA_QMI_DRIVER_INIT_COMPLETE,
-+		.ei		= ipa_driver_init_complete_req_ei,
-+		.decoded_size	= IPA_QMI_DRIVER_INIT_COMPLETE_REQ_SZ,
-+		.fn		= ipa_driver_init_complete_fn,
-+	},
-+};
-+
-+/* Callback function to handle an IPA_QMI_INIT_DRIVER response message from
-+ * the modem.  This only acknowledges that the modem received the request.
-+ * The modem will eventually report that it has completed its modem
-+ * initialization by sending a IPA_QMI_DRIVER_INIT_COMPLETE request.
-+ */
-+static void ipa_init_driver_rsp_fn(struct qmi_handle *qmi,
-+				   struct sockaddr_qrtr *sq,
-+				   struct qmi_txn *txn,
-+				   const void *decoded)
-+{
-+	txn->result = 0;	/* IPA_QMI_INIT_DRIVER request was successful */
-+	complete(&txn->completion);
-+
-+	ipa_handshake_complete(qmi, sq, true);
-+}
-+
-+/* The client handles one response message type sent by the modem. */
-+static struct qmi_msg_handler ipa_client_msg_handlers[] = {
-+	{
-+		.type		= QMI_RESPONSE,
-+		.msg_id		= IPA_QMI_INIT_DRIVER,
-+		.ei		= ipa_init_modem_driver_rsp_ei,
-+		.decoded_size	= IPA_QMI_INIT_DRIVER_RSP_SZ,
-+		.fn		= ipa_init_driver_rsp_fn,
-+	},
-+};
-+
-+/* Return a pointer to an init modem driver request structure, which contains
-+ * configuration parameters for the modem.  The modem may be started multiple
-+ * times, but generally these parameters don't change so we can reuse the
-+ * request structure once it's initialized.  The only exception is the
-+ * skip_uc_load field, which will be set only after the microcontroller has
-+ * reported it has completed its initialization.
-+ */
-+static const struct ipa_init_modem_driver_req *
-+init_modem_driver_req(struct ipa_qmi *ipa_qmi)
-+{
-+	struct ipa *ipa = container_of(ipa_qmi, struct ipa, qmi);
-+	static struct ipa_init_modem_driver_req req;
-+
-+	/* This is not the first boot if the microcontroller is loaded */
-+	req.skip_uc_load = ipa->uc_loaded;
-+	req.skip_uc_load_valid = true;
-+
-+	/* We only have to initialize most of it once */
-+	if (req.platform_type_valid)
-+		return &req;
-+
-+	req.platform_type_valid = true;
-+	req.platform_type = IPA_QMI_PLATFORM_TYPE_MSM_ANDROID;
-+
-+	req.hdr_tbl_info_valid = IPA_SMEM_MODEM_HDR_SIZE ? 1 : 0;
-+	req.hdr_tbl_info.start = ipa_qmi->base + IPA_SMEM_MODEM_HDR_OFFSET;
-+	req.hdr_tbl_info.end = req.hdr_tbl_info.start +
-+					IPA_SMEM_MODEM_HDR_SIZE - 1;
-+
-+	req.v4_route_tbl_info_valid = true;
-+	req.v4_route_tbl_info.start =
-+			ipa_qmi->base + IPA_SMEM_V4_RT_NHASH_OFFSET;
-+	req.v4_route_tbl_info.count = IPA_SMEM_MODEM_RT_COUNT;
-+
-+	req.v6_route_tbl_info_valid = true;
-+	req.v6_route_tbl_info.start =
-+			ipa_qmi->base + IPA_SMEM_V6_RT_NHASH_OFFSET;
-+	req.v6_route_tbl_info.count = IPA_SMEM_MODEM_RT_COUNT;
-+
-+	req.v4_filter_tbl_start_valid = true;
-+	req.v4_filter_tbl_start = ipa_qmi->base + IPA_SMEM_V4_FLT_NHASH_OFFSET;
-+
-+	req.v6_filter_tbl_start_valid = true;
-+	req.v6_filter_tbl_start = ipa_qmi->base + IPA_SMEM_V6_FLT_NHASH_OFFSET;
-+
-+	req.modem_mem_info_valid = IPA_SMEM_MODEM_SIZE ? 1 : 0;
-+	req.modem_mem_info.start = ipa_qmi->base + IPA_SMEM_MODEM_OFFSET;
-+	req.modem_mem_info.size = IPA_SMEM_MODEM_SIZE;
-+
-+	req.ctrl_comm_dest_end_pt_valid = true;
-+	req.ctrl_comm_dest_end_pt = IPA_ENDPOINT_AP_MODEM_RX;
-+
-+	req.hdr_proc_ctx_tbl_info_valid =
-+			IPA_SMEM_MODEM_HDR_PROC_CTX_SIZE ? 1 : 0;
-+	req.hdr_proc_ctx_tbl_info.start =
-+			ipa_qmi->base + IPA_SMEM_MODEM_HDR_PROC_CTX_OFFSET;
-+	req.hdr_proc_ctx_tbl_info.end = req.hdr_proc_ctx_tbl_info.start +
-+			IPA_SMEM_MODEM_HDR_PROC_CTX_SIZE - 1;
-+
-+	req.v4_hash_route_tbl_info_valid = true;
-+	req.v4_hash_route_tbl_info.start =
-+			ipa_qmi->base + IPA_SMEM_V4_RT_HASH_OFFSET;
-+	req.v4_hash_route_tbl_info.count = IPA_SMEM_MODEM_RT_COUNT;
-+
-+	req.v6_hash_route_tbl_info_valid = true;
-+	req.v6_hash_route_tbl_info.start =
-+			ipa_qmi->base + IPA_SMEM_V6_RT_HASH_OFFSET;
-+	req.v6_hash_route_tbl_info.count = IPA_SMEM_MODEM_RT_COUNT;
-+
-+	req.v4_hash_filter_tbl_start_valid = true;
-+	req.v4_hash_filter_tbl_start =
-+			ipa_qmi->base + IPA_SMEM_V4_FLT_HASH_OFFSET;
-+
-+	req.v6_hash_filter_tbl_start_valid = true;
-+	req.v6_hash_filter_tbl_start =
-+			ipa_qmi->base + IPA_SMEM_V6_FLT_HASH_OFFSET;
-+
-+	return &req;
-+}
-+
-+/* The modem service we requested is now available via the client handle.
-+ * Send an INIT_DRIVER request to the modem.
-+ */
-+static int
-+ipa_client_new_server(struct qmi_handle *qmi, struct qmi_service *svc)
-+{
-+	const struct ipa_init_modem_driver_req *req;
-+	struct ipa *ipa;
-+	struct sockaddr_qrtr sq;
-+	struct qmi_txn *txn;
-+	int ret;
-+
-+	ipa = container_of(qmi, struct ipa, qmi.client_handle);
-+	req = init_modem_driver_req(&ipa->qmi);
-+
-+	txn = kzalloc(sizeof(*txn), GFP_KERNEL);
-+	if (!txn)
++	direction = channel->toward_ipa ? DMA_TO_DEVICE : DMA_FROM_DEVICE;
++	ret = dma_map_sg(trans->dev, trans->sgl, trans->sgc, direction);
++	if (!ret)
 +		return -ENOMEM;
 +
-+	ret = qmi_txn_init(qmi, txn, NULL, NULL);
-+	if (ret) {
-+		kfree(txn);
-+		return ret;
++	ring = &channel->gsi->evt_ring[channel->evt_ring_id].ring;
++
++	/* Consume the entries.  If we cross the end of the ring while
++	 * filling them we'll switch to the beginning to finish.
++	 */
++	avail = ring->count - tre_ring->index % tre_ring->count;
++	dest_tre = gsi_ring_virt(tre_ring, tre_ring->index);
++	for_each_sg(trans->sgl, sg, trans->sgc, i) {
++		bool last_tre = i == trans->tre_count - 1;
++		dma_addr_t addr = sg_dma_address(sg);
++		u32 len = sg_dma_len(sg);
++
++		byte_count += len;
++		if (!avail--)
++			dest_tre = gsi_ring_virt(tre_ring, 0);
++
++		gsi_trans_tre_fill(dest_tre, addr, len, last_tre, bei, opcode);
++		dest_tre++;
++	}
++	tre_ring->index += trans->tre_count;
++
++	if (channel->toward_ipa) {
++		/* We record TX bytes when they are sent */
++		trans->len = byte_count;
++		trans->trans_count = channel->trans_count;
++		trans->byte_count = channel->byte_count;
++		channel->trans_count++;
++		channel->byte_count += byte_count;
 +	}
 +
-+	sq.sq_family = AF_QIPCRTR;
-+	sq.sq_node = svc->node;
-+	sq.sq_port = svc->port;
++	/* Associate the last TRE with the transaction */
++	gsi_channel_trans_map(channel, tre_ring->index - 1, trans);
 +
-+	ret = qmi_send_request(qmi, &sq, txn, IPA_QMI_INIT_DRIVER,
-+			       IPA_QMI_INIT_DRIVER_REQ_SZ,
-+			       ipa_init_modem_driver_req_ei, req);
-+	if (!ret)
-+		ret = qmi_txn_wait(txn, MAX_SCHEDULE_TIMEOUT);
-+	if (ret)
-+		qmi_txn_cancel(txn);
-+	kfree(txn);
++	gsi_trans_move_pending(trans);
 +
-+	return ret;
++	/* Ring doorbell if requested, or if all TREs are allocated */
++	if (ring_db || !atomic_read(&channel->trans_info.tre_avail)) {
++		/* Report what we're handing off to hardware for TX channels */
++		if (channel->toward_ipa)
++			gsi_channel_tx_queued(channel);
++		gsi_channel_doorbell(channel);
++	}
++
++	return 0;
 +}
 +
-+/* The only callback we supply for the client handle is notification that the
-+ * service on the modem has become available.
-+ */
-+static struct qmi_ops ipa_client_ops = {
-+	.new_server	= ipa_client_new_server,
-+};
-+
-+static int ipa_qmi_initialize(struct ipa *ipa)
++/* Commit a GSI transaction */
++int gsi_trans_commit(struct gsi_trans *trans, bool ring_db)
 +{
-+	struct ipa_qmi *ipa_qmi = &ipa->qmi;
++	return __gsi_trans_commit(trans, IPA_CMD_NONE, ring_db);
++}
++
++/* Commit a GSI command transaction and wait for it to complete */
++int gsi_trans_commit_command(struct gsi_trans *trans,
++			     enum ipa_cmd_opcode opcode)
++{
 +	int ret;
 +
-+	/* The only handle operation that might be interesting for the server
-+	 * would be del_client, to find out when the modem side client has
-+	 * disappeared.  But other than reporting the event, we wouldn't do
-+	 * anything about that.  So we just pass a null pointer for its handle
-+	 * operations.  All the real work is done by the message handlers.
-+	 */
-+	ret = qmi_handle_init(&ipa_qmi->server_handle,
-+			      IPA_QMI_SERVER_MAX_RCV_SZ, NULL,
-+			      ipa_server_msg_handlers);
++	refcount_inc(&trans->refcount);
++
++	ret = __gsi_trans_commit(trans, opcode, true);
 +	if (ret)
-+		return ret;
++		goto out_free_trans;
 +
-+	ret = qmi_add_server(&ipa_qmi->server_handle, IPA_HOST_SERVICE_SVC_ID,
-+			     IPA_HOST_SVC_VERS, IPA_HOST_SERVICE_INS_ID);
-+	if (ret)
-+		goto err_release_server_handle;
++	wait_for_completion(&trans->completion);
 +
-+	/* The client handle is only used for sending an INIT_DRIVER request
-+	 * to the modem, and receiving its response message.
-+	 */
-+	ret = qmi_handle_init(&ipa_qmi->client_handle,
-+			      IPA_QMI_CLIENT_MAX_RCV_SZ, &ipa_client_ops,
-+			      ipa_client_msg_handlers);
-+	if (ret)
-+		goto err_release_server_handle;
-+
-+	ret = qmi_add_lookup(&ipa_qmi->client_handle, IPA_MODEM_SERVICE_SVC_ID,
-+			     IPA_MODEM_SVC_VERS, IPA_MODEM_SERVICE_INS_ID);
-+	if (ret)
-+		goto err_release_client_handle;
-+
-+	/* All QMI offsets are relative to the start of IPA shared memory */
-+	ipa_qmi->base = ipa->shared_offset;
-+	ipa_qmi->initialized = 1;
-+
-+	return 0;
-+
-+err_release_client_handle:
-+	/* Releasing the handle also removes registered lookups */
-+	qmi_handle_release(&ipa_qmi->client_handle);
-+	memset(&ipa_qmi->client_handle, 0, sizeof(ipa_qmi->client_handle));
-+err_release_server_handle:
-+	/* Releasing the handle also removes registered services */
-+	qmi_handle_release(&ipa_qmi->server_handle);
-+	memset(&ipa_qmi->server_handle, 0, sizeof(ipa_qmi->server_handle));
++out_free_trans:
++	gsi_trans_free(trans);
 +
 +	return ret;
 +}
 +
-+/* This is called by ipa_netdev_setup().  We can be informed via remoteproc
-+ * that the modem has shut down, in which case this function will be called
-+ * again to prepare for it coming back up again.
-+ */
-+int ipa_qmi_setup(struct ipa *ipa)
++/* Commit a GSI command transaction, wait for it to complete, with timeout */
++int gsi_trans_commit_command_timeout(struct gsi_trans *trans,
++				     enum ipa_cmd_opcode opcode,
++				     unsigned long timeout)
 +{
-+	ipa->qmi.init_driver_response_received = 0;
-+	ipa->qmi.indication_register_received = 0;
++	unsigned long timeout_jiffies = msecs_to_jiffies(timeout);
++	unsigned long remaining;
++	int ret;
 +
-+	if (!ipa->qmi.initialized)
-+		return ipa_qmi_initialize(ipa);
++	refcount_inc(&trans->refcount);
 +
-+	return 0;
++	ret = __gsi_trans_commit(trans, opcode, true);
++	if (ret)
++		goto out_free_trans;
++
++	remaining = wait_for_completion_timeout(&trans->completion,
++						timeout_jiffies);
++out_free_trans:
++	gsi_trans_free(trans);
++
++	return ret ? ret : remaining ? 0 : -ETIMEDOUT;
 +}
 +
-+void ipa_qmi_teardown(struct ipa *ipa)
++/* Return a channel's next completed transaction (or NULL) */
++void gsi_trans_complete(struct gsi_trans *trans)
 +{
-+	if (!ipa->qmi.initialized)
-+		return;
++	struct gsi_channel *channel = &trans->gsi->channel[trans->channel_id];
++	enum dma_data_direction direction;
 +
-+	qmi_handle_release(&ipa->qmi.client_handle);
-+	memset(&ipa->qmi.client_handle, 0, sizeof(ipa->qmi.client_handle));
++	direction = channel->toward_ipa ? DMA_TO_DEVICE : DMA_FROM_DEVICE;
 +
-+	qmi_handle_release(&ipa->qmi.server_handle);
-+	memset(&ipa->qmi.server_handle, 0, sizeof(ipa->qmi.server_handle));
++	dma_unmap_sg(trans->dev, trans->sgl, trans->sgc, direction);
 +
-+	ipa->qmi.initialized = 0;
++	ipa_gsi_trans_complete(trans);
++
++	complete(&trans->completion);
++
++	gsi_trans_free(trans);
 +}
-diff --git a/drivers/net/ipa/ipa_qmi.h b/drivers/net/ipa/ipa_qmi.h
-new file mode 100644
-index 000000000000..cfdafa23cf8f
---- /dev/null
-+++ b/drivers/net/ipa/ipa_qmi.h
-@@ -0,0 +1,35 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
 +
-+/* Copyright (c) 2018, The Linux Foundation. All rights reserved.
-+ * Copyright (C) 2018-2019 Linaro Ltd.
-+ */
-+#ifndef _IPA_QMI_H_
-+#define _IPA_QMI_H_
++/* Cancel a channel's pending transactions */
++void gsi_channel_trans_cancel_pending(struct gsi_channel *channel)
++{
++	struct gsi_trans_info *trans_info = &channel->trans_info;
++	u32 evt_ring_id = channel->evt_ring_id;
++	struct gsi *gsi = channel->gsi;
++	struct gsi_trans *trans;
++	struct gsi_ring *ring;
 +
-+#include <linux/types.h>
-+#include <linux/soc/qcom/qmi.h>
++	ring = &gsi->evt_ring[evt_ring_id].ring;
 +
-+struct ipa;
++	spin_lock_bh(&trans_info->spinlock);
 +
-+/**
-+ * struct ipa_qmi - QMI state associated with an IPA
-+ * @initialized		- whether QMI initialization has completed
-+ * @client_handle	- used to send an QMI requests to the modem
-+ * @server_handle	- used to handle QMI requests from the modem
-+ * @indication_register_received - tracks modem request receipt
-+ * @init_driver_response_received - tracks modem response receipt
-+ */
-+struct ipa_qmi {
-+	u32 initialized;
-+	u32 base;
-+	struct qmi_handle client_handle;
-+	struct qmi_handle server_handle;
-+	u32 indication_register_received;
-+	u32 init_driver_response_received;
++	list_for_each_entry(trans, &trans_info->pending, links)
++		trans->result = -ECANCELED;
 +
-+};
++	list_splice_tail_init(&trans_info->pending, &trans_info->complete);
 +
-+int ipa_qmi_setup(struct ipa *ipa);
-+void ipa_qmi_teardown(struct ipa *ipa);
++	spin_unlock_bh(&trans_info->spinlock);
 +
-+#endif /* !_IPA_QMI_H_ */
-diff --git a/drivers/net/ipa/ipa_qmi_msg.c b/drivers/net/ipa/ipa_qmi_msg.c
-new file mode 100644
-index 000000000000..b6b278dff6fb
---- /dev/null
-+++ b/drivers/net/ipa/ipa_qmi_msg.c
-@@ -0,0 +1,583 @@
-+// SPDX-License-Identifier: GPL-2.0
++	/* Schedule NAPI polling to complete the cancelled transactions */
++	napi_schedule(&channel->napi);
++}
 +
-+/* Copyright (c) 2018, The Linux Foundation. All rights reserved.
-+ * Copyright (C) 2018-2019 Linaro Ltd.
-+ */
-+#include <linux/stddef.h>
-+#include <linux/soc/qcom/qmi.h>
++/* Initialize a channel's GSI transaction info */
++int gsi_channel_trans_init(struct gsi_channel *channel)
++{
++	struct gsi_trans_info *trans_info = &channel->trans_info;
++	u32 tre_count = channel->data->tre_count;
 +
-+#include "ipa_qmi_msg.h"
++	trans_info->map = kcalloc(tre_count, sizeof(*trans_info->map),
++				  GFP_KERNEL);
++	if (!trans_info->map)
++		return -ENOMEM;
 +
-+/* QMI message structure definition for struct ipa_indication_register_req */
-+struct qmi_elem_info ipa_indication_register_req_ei[] = {
-+	{
-+		.data_type	= QMI_OPT_FLAG,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_indication_register_req,
-+				     master_driver_init_complete_valid),
-+		.tlv_type	= 0x10,
-+		.offset		= offsetof(struct ipa_indication_register_req,
-+					   master_driver_init_complete_valid),
-+	},
-+	{
-+		.data_type	= QMI_UNSIGNED_1_BYTE,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_indication_register_req,
-+				     master_driver_init_complete),
-+		.tlv_type	= 0x10,
-+		.offset		= offsetof(struct ipa_indication_register_req,
-+					   master_driver_init_complete),
-+	},
-+	{
-+		.data_type	= QMI_OPT_FLAG,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_indication_register_req,
-+				     data_usage_quota_reached_valid),
-+		.tlv_type	= 0x11,
-+		.offset		= offsetof(struct ipa_indication_register_req,
-+					   data_usage_quota_reached_valid),
-+	},
-+	{
-+		.data_type	= QMI_UNSIGNED_1_BYTE,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_indication_register_req,
-+				     data_usage_quota_reached),
-+		.tlv_type	= 0x11,
-+		.offset		= offsetof(struct ipa_indication_register_req,
-+					   data_usage_quota_reached),
-+	},
-+	{
-+		.data_type	= QMI_EOTI,
-+	},
-+};
-+
-+/* QMI message structure definition for struct ipa_indication_register_rsp */
-+struct qmi_elem_info ipa_indication_register_rsp_ei[] = {
-+	{
-+		.data_type	= QMI_STRUCT,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_indication_register_rsp,
-+				     rsp),
-+		.tlv_type	= 0x02,
-+		.offset		= offsetof(struct ipa_indication_register_rsp,
-+					   rsp),
-+		.ei_array	= qmi_response_type_v01_ei,
-+	},
-+	{
-+		.data_type	= QMI_EOTI,
-+	},
-+};
-+
-+/* QMI message structure definition for struct ipa_driver_init_complete_req */
-+struct qmi_elem_info ipa_driver_init_complete_req_ei[] = {
-+	{
-+		.data_type	= QMI_UNSIGNED_1_BYTE,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_driver_init_complete_req,
-+				     status),
-+		.tlv_type	= 0x01,
-+		.offset		= offsetof(struct ipa_driver_init_complete_req,
-+					   status),
-+	},
-+	{
-+		.data_type	= QMI_EOTI,
-+	},
-+};
-+
-+/* QMI message structure definition for struct ipa_driver_init_complete_rsp */
-+struct qmi_elem_info ipa_driver_init_complete_rsp_ei[] = {
-+	{
-+		.data_type	= QMI_STRUCT,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_driver_init_complete_rsp,
-+				     rsp),
-+		.tlv_type	= 0x02,
-+		.elem_size	= offsetof(struct ipa_driver_init_complete_rsp,
-+					   rsp),
-+		.ei_array	= qmi_response_type_v01_ei,
-+	},
-+	{
-+		.data_type	= QMI_EOTI,
-+	},
-+};
-+
-+/* QMI message structure definition for struct ipa_init_complete_ind */
-+struct qmi_elem_info ipa_init_complete_ind_ei[] = {
-+	{
-+		.data_type	= QMI_STRUCT,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_complete_ind,
-+				     status),
-+		.tlv_type	= 0x02,
-+		.elem_size	= offsetof(struct ipa_init_complete_ind,
-+					   status),
-+		.ei_array	= qmi_response_type_v01_ei,
-+	},
-+	{
-+		.data_type	= QMI_EOTI,
-+	},
-+};
-+
-+/* QMI message structure definition for struct ipa_mem_bounds */
-+struct qmi_elem_info ipa_mem_bounds_ei[] = {
-+	{
-+		.data_type	= QMI_UNSIGNED_4_BYTE,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_mem_bounds, start),
-+		.offset		= offsetof(struct ipa_mem_bounds, start),
-+	},
-+	{
-+		.data_type	= QMI_UNSIGNED_4_BYTE,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_mem_bounds, end),
-+		.offset		= offsetof(struct ipa_mem_bounds, end),
-+	},
-+	{
-+		.data_type	= QMI_EOTI,
-+	},
-+};
-+
-+/* QMI message structure definition for struct ipa_mem_array */
-+struct qmi_elem_info ipa_mem_array_ei[] = {
-+	{
-+		.data_type	= QMI_UNSIGNED_4_BYTE,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_mem_array, start),
-+		.offset		= offsetof(struct ipa_mem_array, start),
-+	},
-+	{
-+		.data_type	= QMI_UNSIGNED_4_BYTE,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_mem_array, count),
-+		.offset		= offsetof(struct ipa_mem_array, count),
-+	},
-+	{
-+		.data_type	= QMI_EOTI,
-+	},
-+};
-+
-+/* QMI message structure definition for struct ipa_mem_range */
-+struct qmi_elem_info ipa_mem_range_ei[] = {
-+	{
-+		.data_type	= QMI_UNSIGNED_4_BYTE,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_mem_range, start),
-+		.offset		= offsetof(struct ipa_mem_range, start),
-+	},
-+	{
-+		.data_type	= QMI_UNSIGNED_4_BYTE,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_mem_range, size),
-+		.offset		= offsetof(struct ipa_mem_range, size),
-+	},
-+	{
-+		.data_type	= QMI_EOTI,
-+	},
-+};
-+
-+/* QMI message structure definition for struct ipa_init_modem_driver_req */
-+struct qmi_elem_info ipa_init_modem_driver_req_ei[] = {
-+	{
-+		.data_type	= QMI_OPT_FLAG,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_req,
-+				     platform_type_valid),
-+		.tlv_type	= 0x10,
-+		.elem_size	= offsetof(struct ipa_init_modem_driver_req,
-+					   platform_type_valid),
-+	},
-+	{
-+		.data_type	= QMI_SIGNED_4_BYTE_ENUM,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_req,
-+				     platform_type),
-+		.tlv_type	= 0x10,
-+		.offset		= offsetof(struct ipa_init_modem_driver_req,
-+					   platform_type),
-+	},
-+	{
-+		.data_type	= QMI_OPT_FLAG,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_req,
-+				     hdr_tbl_info_valid),
-+		.tlv_type	= 0x11,
-+		.offset		= offsetof(struct ipa_init_modem_driver_req,
-+					   hdr_tbl_info_valid),
-+	},
-+	{
-+		.data_type	= QMI_STRUCT,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_req,
-+				     hdr_tbl_info),
-+		.tlv_type	= 0x11,
-+		.offset		= offsetof(struct ipa_init_modem_driver_req,
-+					   hdr_tbl_info),
-+		.ei_array	= ipa_mem_bounds_ei,
-+	},
-+	{
-+		.data_type	= QMI_OPT_FLAG,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_req,
-+				     v4_route_tbl_info_valid),
-+		.tlv_type	= 0x12,
-+		.offset		= offsetof(struct ipa_init_modem_driver_req,
-+					   v4_route_tbl_info_valid),
-+	},
-+	{
-+		.data_type	= QMI_STRUCT,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_req,
-+				     v4_route_tbl_info),
-+		.tlv_type	= 0x12,
-+		.offset		= offsetof(struct ipa_init_modem_driver_req,
-+					   v4_route_tbl_info),
-+		.ei_array	= ipa_mem_array_ei,
-+	},
-+	{
-+		.data_type	= QMI_OPT_FLAG,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_req,
-+				     v6_route_tbl_info_valid),
-+		.tlv_type	= 0x13,
-+		.offset		= offsetof(struct ipa_init_modem_driver_req,
-+					   v6_route_tbl_info_valid),
-+	},
-+	{
-+		.data_type	= QMI_STRUCT,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_req,
-+				     v6_route_tbl_info),
-+		.tlv_type	= 0x13,
-+		.offset		= offsetof(struct ipa_init_modem_driver_req,
-+					   v6_route_tbl_info),
-+		.ei_array	= ipa_mem_array_ei,
-+	},
-+	{
-+		.data_type	= QMI_OPT_FLAG,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_req,
-+				     v4_filter_tbl_start_valid),
-+		.tlv_type	= 0x14,
-+		.offset		= offsetof(struct ipa_init_modem_driver_req,
-+					   v4_filter_tbl_start_valid),
-+	},
-+	{
-+		.data_type	= QMI_UNSIGNED_4_BYTE,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_req,
-+				     v4_filter_tbl_start),
-+		.tlv_type	= 0x14,
-+		.offset		= offsetof(struct ipa_init_modem_driver_req,
-+					   v4_filter_tbl_start),
-+	},
-+	{
-+		.data_type	= QMI_OPT_FLAG,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_req,
-+				     v6_filter_tbl_start_valid),
-+		.tlv_type	= 0x15,
-+		.offset		= offsetof(struct ipa_init_modem_driver_req,
-+					   v6_filter_tbl_start_valid),
-+	},
-+	{
-+		.data_type	= QMI_UNSIGNED_4_BYTE,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_req,
-+				     v6_filter_tbl_start),
-+		.tlv_type	= 0x15,
-+		.offset		= offsetof(struct ipa_init_modem_driver_req,
-+					   v6_filter_tbl_start),
-+	},
-+	{
-+		.data_type	= QMI_OPT_FLAG,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_req,
-+				     modem_mem_info_valid),
-+		.tlv_type	= 0x16,
-+		.offset		= offsetof(struct ipa_init_modem_driver_req,
-+					   modem_mem_info_valid),
-+	},
-+	{
-+		.data_type	= QMI_STRUCT,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_req,
-+				     modem_mem_info),
-+		.tlv_type	= 0x16,
-+		.offset		= offsetof(struct ipa_init_modem_driver_req,
-+					   modem_mem_info),
-+		.ei_array	= ipa_mem_range_ei,
-+	},
-+	{
-+		.data_type	= QMI_OPT_FLAG,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_req,
-+				     ctrl_comm_dest_end_pt_valid),
-+		.tlv_type	= 0x17,
-+		.offset		= offsetof(struct ipa_init_modem_driver_req,
-+					   ctrl_comm_dest_end_pt_valid),
-+	},
-+	{
-+		.data_type	= QMI_UNSIGNED_4_BYTE,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_req,
-+				     ctrl_comm_dest_end_pt),
-+		.tlv_type	= 0x17,
-+		.offset		= offsetof(struct ipa_init_modem_driver_req,
-+					   ctrl_comm_dest_end_pt),
-+	},
-+	{
-+		.data_type	= QMI_OPT_FLAG,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_req,
-+				     skip_uc_load_valid),
-+		.tlv_type	= 0x18,
-+		.offset		= offsetof(struct ipa_init_modem_driver_req,
-+					   skip_uc_load_valid),
-+	},
-+	{
-+		.data_type	= QMI_UNSIGNED_1_BYTE,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_req,
-+				     skip_uc_load),
-+		.tlv_type	= 0x18,
-+		.offset		= offsetof(struct ipa_init_modem_driver_req,
-+					   skip_uc_load),
-+	},
-+	{
-+		.data_type	= QMI_OPT_FLAG,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_req,
-+				     hdr_proc_ctx_tbl_info_valid),
-+		.tlv_type	= 0x19,
-+		.offset		= offsetof(struct ipa_init_modem_driver_req,
-+					   hdr_proc_ctx_tbl_info_valid),
-+	},
-+	{
-+		.data_type	= QMI_STRUCT,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_req,
-+				     hdr_proc_ctx_tbl_info),
-+		.tlv_type	= 0x19,
-+		.offset		= offsetof(struct ipa_init_modem_driver_req,
-+					   hdr_proc_ctx_tbl_info),
-+		.ei_array	= ipa_mem_bounds_ei,
-+	},
-+	{
-+		.data_type	= QMI_OPT_FLAG,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_req,
-+				     zip_tbl_info_valid),
-+		.tlv_type	= 0x1a,
-+		.offset		= offsetof(struct ipa_init_modem_driver_req,
-+					   zip_tbl_info_valid),
-+	},
-+	{
-+		.data_type	= QMI_STRUCT,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_req,
-+				     zip_tbl_info),
-+		.tlv_type	= 0x1a,
-+		.offset		= offsetof(struct ipa_init_modem_driver_req,
-+					   zip_tbl_info),
-+		.ei_array	= ipa_mem_bounds_ei,
-+	},
-+	{
-+		.data_type	= QMI_OPT_FLAG,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_req,
-+				     v4_hash_route_tbl_info_valid),
-+		.tlv_type	= 0x1b,
-+		.offset		= offsetof(struct ipa_init_modem_driver_req,
-+					   v4_hash_route_tbl_info_valid),
-+	},
-+	{
-+		.data_type	= QMI_STRUCT,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_req,
-+				     v4_hash_route_tbl_info),
-+		.tlv_type	= 0x1b,
-+		.offset		= offsetof(struct ipa_init_modem_driver_req,
-+					   v4_hash_route_tbl_info),
-+		.ei_array	= ipa_mem_array_ei,
-+	},
-+	{
-+		.data_type	= QMI_OPT_FLAG,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_req,
-+				     v6_hash_route_tbl_info_valid),
-+		.tlv_type	= 0x1c,
-+		.offset		= offsetof(struct ipa_init_modem_driver_req,
-+					   v6_hash_route_tbl_info_valid),
-+	},
-+	{
-+		.data_type	= QMI_STRUCT,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_req,
-+				     v6_hash_route_tbl_info),
-+		.tlv_type	= 0x1c,
-+		.offset		= offsetof(struct ipa_init_modem_driver_req,
-+					   v6_hash_route_tbl_info),
-+		.ei_array	= ipa_mem_array_ei,
-+	},
-+	{
-+		.data_type	= QMI_OPT_FLAG,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_req,
-+				     v4_hash_filter_tbl_start_valid),
-+		.tlv_type	= 0x1d,
-+		.offset		= offsetof(struct ipa_init_modem_driver_req,
-+					   v4_hash_filter_tbl_start_valid),
-+	},
-+	{
-+		.data_type	= QMI_UNSIGNED_4_BYTE,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_req,
-+				     v4_hash_filter_tbl_start),
-+		.tlv_type	= 0x1d,
-+		.offset		= offsetof(struct ipa_init_modem_driver_req,
-+					   v4_hash_filter_tbl_start),
-+	},
-+	{
-+		.data_type	= QMI_OPT_FLAG,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_req,
-+				     v6_hash_filter_tbl_start_valid),
-+		.tlv_type	= 0x1e,
-+		.offset		= offsetof(struct ipa_init_modem_driver_req,
-+					   v6_hash_filter_tbl_start_valid),
-+	},
-+	{
-+		.data_type	= QMI_UNSIGNED_4_BYTE,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_req,
-+				     v6_hash_filter_tbl_start),
-+		.tlv_type	= 0x1e,
-+		.offset		= offsetof(struct ipa_init_modem_driver_req,
-+					   v6_hash_filter_tbl_start),
-+	},
-+	{
-+		.data_type	= QMI_EOTI,
-+	},
-+};
-+
-+/* QMI message structure definition for struct ipa_init_modem_driver_rsp */
-+struct qmi_elem_info ipa_init_modem_driver_rsp_ei[] = {
-+	{
-+		.data_type	= QMI_STRUCT,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_rsp,
-+				     rsp),
-+		.tlv_type	= 0x02,
-+		.offset		= offsetof(struct ipa_init_modem_driver_rsp,
-+					   rsp),
-+		.ei_array	= qmi_response_type_v01_ei,
-+	},
-+	{
-+		.data_type	= QMI_OPT_FLAG,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_rsp,
-+				     ctrl_comm_dest_end_pt_valid),
-+		.tlv_type	= 0x10,
-+		.offset		= offsetof(struct ipa_init_modem_driver_rsp,
-+					   ctrl_comm_dest_end_pt_valid),
-+	},
-+	{
-+		.data_type	= QMI_UNSIGNED_4_BYTE,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_rsp,
-+				     ctrl_comm_dest_end_pt),
-+		.tlv_type	= 0x10,
-+		.offset		= offsetof(struct ipa_init_modem_driver_rsp,
-+					   ctrl_comm_dest_end_pt),
-+	},
-+	{
-+		.data_type	= QMI_OPT_FLAG,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_rsp,
-+				     default_end_pt_valid),
-+		.tlv_type	= 0x11,
-+		.offset		= offsetof(struct ipa_init_modem_driver_rsp,
-+					   default_end_pt_valid),
-+	},
-+	{
-+		.data_type	= QMI_UNSIGNED_4_BYTE,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_rsp,
-+				     default_end_pt),
-+		.tlv_type	= 0x11,
-+		.offset		= offsetof(struct ipa_init_modem_driver_rsp,
-+					   default_end_pt),
-+	},
-+	{
-+		.data_type	= QMI_OPT_FLAG,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_rsp,
-+				     modem_driver_init_pending_valid),
-+		.tlv_type	= 0x12,
-+		.offset		= offsetof(struct ipa_init_modem_driver_rsp,
-+					   modem_driver_init_pending_valid),
-+	},
-+	{
-+		.data_type	= QMI_UNSIGNED_1_BYTE,
-+		.elem_len	= 1,
-+		.elem_size	=
-+			sizeof_field(struct ipa_init_modem_driver_rsp,
-+				     modem_driver_init_pending),
-+		.tlv_type	= 0x12,
-+		.offset		= offsetof(struct ipa_init_modem_driver_rsp,
-+					   modem_driver_init_pending),
-+	},
-+	{
-+		.data_type	= QMI_EOTI,
-+	},
-+};
-diff --git a/drivers/net/ipa/ipa_qmi_msg.h b/drivers/net/ipa/ipa_qmi_msg.h
-new file mode 100644
-index 000000000000..cf3cda3bddae
---- /dev/null
-+++ b/drivers/net/ipa/ipa_qmi_msg.h
-@@ -0,0 +1,238 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/* Copyright (c) 2018, The Linux Foundation. All rights reserved.
-+ * Copyright (C) 2018-2019 Linaro Ltd.
-+ */
-+#ifndef _IPA_QMI_MSG_H_
-+#define _IPA_QMI_MSG_H_
-+
-+/* === Only "ipa_qmi" and "ipa_qmi_msg.c" should include this file === */
-+
-+#include <linux/types.h>
-+#include <linux/soc/qcom/qmi.h>
-+
-+/* Request/response/indication QMI message ids used for IPA.  Receiving
-+ * end issues a response for requests; indications require no response.
-+ */
-+#define IPA_QMI_INDICATION_REGISTER	0x20	/* modem -> AP request */
-+#define IPA_QMI_INIT_DRIVER		0x21	/* AP -> modem request */
-+#define IPA_QMI_INIT_COMPLETE_IND	0x22	/* AP -> modem indication */
-+#define IPA_QMI_DRIVER_INIT_COMPLETE	0x35	/* modem -> AP request */
-+
-+/* The maximum size required for message types.  These sizes include
-+ * the message data, along with type (1 byte) and length (2 byte)
-+ * information for each field.  The qmi_send_*() interfaces require
-+ * the message size to be provided.
-+ */
-+#define IPA_QMI_INDICATION_REGISTER_REQ_SZ	8	/* -> server handle */
-+#define IPA_QMI_INDICATION_REGISTER_RSP_SZ	7	/* <- server handle */
-+#define IPA_QMI_INIT_DRIVER_REQ_SZ		134	/* client handle -> */
-+#define IPA_QMI_INIT_DRIVER_RSP_SZ		25	/* client handle <- */
-+#define IPA_QMI_INIT_COMPLETE_IND_SZ		7	/* server handle -> */
-+#define IPA_QMI_DRIVER_INIT_COMPLETE_REQ_SZ	4	/* -> server handle */
-+#define IPA_QMI_DRIVER_INIT_COMPLETE_RSP_SZ	7	/* <- server handle */
-+
-+/* Maximum size of messages we expect the AP to receive (max of above) */
-+#define IPA_QMI_SERVER_MAX_RCV_SZ		8
-+#define IPA_QMI_CLIENT_MAX_RCV_SZ		25
-+
-+/* Request message for the IPA_QMI_INDICATION_REGISTER request */
-+struct ipa_indication_register_req {
-+	u8 master_driver_init_complete_valid;
-+	u8 master_driver_init_complete;
-+	u8 data_usage_quota_reached_valid;
-+	u8 data_usage_quota_reached;
-+};
-+
-+/* The response to a IPA_QMI_INDICATION_REGISTER request consists only of
-+ * a standard QMI response.
-+ */
-+struct ipa_indication_register_rsp {
-+	struct qmi_response_type_v01 rsp;
-+};
-+
-+/* Request message for the IPA_QMI_DRIVER_INIT_COMPLETE request */
-+struct ipa_driver_init_complete_req {
-+	u8 status;
-+};
-+
-+/* The response to a IPA_QMI_DRIVER_INIT_COMPLETE request consists only
-+ * of a standard QMI response.
-+ */
-+struct ipa_driver_init_complete_rsp {
-+	struct qmi_response_type_v01 rsp;
-+};
-+
-+/* The message for the IPA_QMI_INIT_COMPLETE_IND indication consists
-+ * only of a standard QMI response.
-+ */
-+struct ipa_init_complete_ind {
-+	struct qmi_response_type_v01 status;
-+};
-+
-+/* The AP tells the modem its platform type.  We assume Android. */
-+enum ipa_platform_type {
-+	IPA_QMI_PLATFORM_TYPE_INVALID		= 0,	/* Invalid */
-+	IPA_QMI_PLATFORM_TYPE_TN		= 1,	/* Data card */
-+	IPA_QMI_PLATFORM_TYPE_LE		= 2,	/* Data router */
-+	IPA_QMI_PLATFORM_TYPE_MSM_ANDROID	= 3,	/* Android MSM */
-+	IPA_QMI_PLATFORM_TYPE_MSM_WINDOWS	= 4,	/* Windows MSM */
-+	IPA_QMI_PLATFORM_TYPE_MSM_QNX_V01	= 5,	/* QNX MSM */
-+};
-+
-+/* This defines the start and end offset of a range of memory.  Both
-+ * fields are offsets relative to the start of IPA shared memory.
-+ * The end value is the last addressable byte *within* the range.
-+ */
-+struct ipa_mem_bounds {
-+	u32 start;
-+	u32 end;
-+};
-+
-+/* This defines the location and size of an array.  The start value
-+ * is an offset relative to the start of IPA shared memory.  The
-+ * size of the array is implied by the number of entries (the entry
-+ * size is assumed to be known).
-+ */
-+struct ipa_mem_array {
-+	u32 start;
-+	u32 count;
-+};
-+
-+/* This defines the location and size of a range of memory.  The
-+ * start is an offset relative to the start of IPA shared memory.
-+ * This differs from the ipa_mem_bounds structure in that the size
-+ * (in bytes) of the memory region is specified rather than the
-+ * offset of its last byte.
-+ */
-+struct ipa_mem_range {
-+	u32 start;
-+	u32 size;
-+};
-+
-+/* The message for the IPA_QMI_INIT_DRIVER request contains information
-+ * from the AP that affects modem initialization.
-+ */
-+struct ipa_init_modem_driver_req {
-+	u8			platform_type_valid;
-+	u32			platform_type;	/* enum ipa_platform_type */
-+
-+	/* Modem header table information.  This defines the IPA shared
-+	 * memory in which the modem may insert header table entries.
++	/* We will never need more transactions than there are TRE
++	 * entries in the transfer ring.  For that reason, we can
++	 * preallocate an array of (at least) that many transactions,
++	 * and use a single free index to determine the next one
++	 * available for allocation.
 +	 */
-+	u8			hdr_tbl_info_valid;
-+	struct ipa_mem_bounds	hdr_tbl_info;
++	trans_info->pool_count = tre_count;
++	trans_info->pool = kcalloc(trans_info->pool_count,
++				   sizeof(*trans_info->pool), GFP_KERNEL);
++	if (!trans_info->pool)
++		goto err_free_map;
++	/* If we get extra memory from the allocator, use it */
++	trans_info->pool_count =
++		ksize(trans_info->pool) / sizeof(*trans_info->pool);
++	trans_info->pool_free = 0;
 +
-+	/* Routing table information.  These define the location and size of
-+	 * non-hashable IPv4 and IPv6 filter tables.  The start values are
-+	 * offsets relative to the start of IPA shared memory.
-+	 */
-+	u8			v4_route_tbl_info_valid;
-+	struct ipa_mem_array	v4_route_tbl_info;
-+	u8			v6_route_tbl_info_valid;
-+	struct ipa_mem_array	v6_route_tbl_info;
-+
-+	/* Filter table information.  These define the location and size of
-+	 * non-hashable IPv4 and IPv6 filter tables.  The start values are
-+	 * offsets relative to the start of IPA shared memory.
-+	 */
-+	u8			v4_filter_tbl_start_valid;
-+	u32			v4_filter_tbl_start;
-+	u8			v6_filter_tbl_start_valid;
-+	u32			v6_filter_tbl_start;
-+
-+	/* Modem memory information.  This defines the location and
-+	 * size of memory available for the modem to use.
-+	 */
-+	u8			modem_mem_info_valid;
-+	struct ipa_mem_range	modem_mem_info;
-+
-+	/* This defines the destination endpoint on the AP to which
-+	 * the modem driver can send control commands.  IPA supports
-+	 * 20 endpoints, so this must be 19 or less.
-+	 */
-+	u8			ctrl_comm_dest_end_pt_valid;
-+	u32			ctrl_comm_dest_end_pt;
-+
-+	/* This defines whether the modem should load the microcontroller
-+	 * or not.  It is unnecessary to reload it if the modem is being
-+	 * restarted.
++	/* While transactions are allocated one at a time, a transaction
++	 * can have multiple TREs.  The number of TRE entries in a single
++	 * transaction is limited by the number of TLV FIFO entries the
++	 * channel has.  We reserve TREs when a transaction is allocated,
++	 * but we don't actually use/fill them until the transaction is
++	 * committed.
 +	 *
-+	 * NOTE: this field is named "is_ssr_bootup" elsewhere.
++	 * A transaction uses a scatterlist array to represent the data
++	 * transfers implemented by the transaction.  Each scatterlist
++	 * element is used to fill a single TRE when the transaction is
++	 * committed.  As a result, we need the same number of scatterlist
++	 * elements as there are TREs in the transfer ring, and we can
++	 * preallocate them in a pool.
++	 *
++	 * If we allocate a few (tlv_count - 1) extra entries in our pool,
++	 * we can always satisfy requests without ever worrying about
++	 * straddling the end of the array.  If there aren't enough
++	 * entries starting at the free index, we just allocate free
++	 * entries from the beginning of the pool.
 +	 */
-+	u8			skip_uc_load_valid;
-+	u8			skip_uc_load;
++	trans_info->sg_pool_count = tre_count + channel->data->tlv_count - 1;
++	trans_info->sg_pool = kcalloc(trans_info->sg_pool_count,
++				      sizeof(*trans_info->sg_pool), GFP_KERNEL);
++	if (!trans_info->sg_pool)
++		goto err_free_pool;
++	/* Use any extra memory we get from the allocator */
++	trans_info->sg_pool_count =
++		ksize(trans_info->sg_pool) / sizeof(*trans_info->sg_pool);
++	trans_info->sg_pool_free = 0;
 +
-+	/* Processing context memory information.  This defines the memory in
-+	 * which the modem may insert header processing context table entries.
++	/* The tre_avail field limits the number of outstanding transactions.
++	 * In theory we should be able use all of the TREs in the ring.  But
++	 * in practice, doing that caused the hardware to report running out
++	 * of event ring slots for writing completion information.  So give
++	 * the poor hardware a break, and allow one less than the maximum.
 +	 */
-+	u8			hdr_proc_ctx_tbl_info_valid;
-+	struct ipa_mem_bounds	hdr_proc_ctx_tbl_info;
++	atomic_set(&trans_info->tre_avail, tre_count - 1);
 +
-+	/* Compression command memory information.  This defines the memory
-+	 * in which the modem may insert compression/decompression commands.
-+	 */
-+	u8			zip_tbl_info_valid;
-+	struct ipa_mem_bounds	zip_tbl_info;
++	spin_lock_init(&trans_info->spinlock);
++	INIT_LIST_HEAD(&trans_info->alloc);
++	INIT_LIST_HEAD(&trans_info->pending);
++	INIT_LIST_HEAD(&trans_info->complete);
++	INIT_LIST_HEAD(&trans_info->polled);
 +
-+	/* Routing table information.  These define the location and size
-+	 * of hashable IPv4 and IPv6 filter tables.  The start values are
-+	 * offsets relative to the start of IPA shared memory.
-+	 */
-+	u8			v4_hash_route_tbl_info_valid;
-+	struct ipa_mem_array	v4_hash_route_tbl_info;
-+	u8			v6_hash_route_tbl_info_valid;
-+	struct ipa_mem_array	v6_hash_route_tbl_info;
++	return 0;
 +
-+	/* Filter table information.  These define the location and size
-+	 * of hashable IPv4 and IPv6 filter tables.  The start values are
-+	 * offsets relative to the start of IPA shared memory.
-+	 */
-+	u8			v4_hash_filter_tbl_start_valid;
-+	u32			v4_hash_filter_tbl_start;
-+	u8			v6_hash_filter_tbl_start_valid;
-+	u32			v6_hash_filter_tbl_start;
-+};
++err_free_pool:
++	kfree(trans_info->pool);
++err_free_map:
++	kfree(trans_info->map);
 +
-+/* The response to a IPA_QMI_INIT_DRIVER request begins with a standard
-+ * QMI response, but contains other information as well.  Currently we
-+ * simply wait for the the INIT_DRIVER transaction to complete and
-+ * ignore any other data that might be returned.
-+ */
-+struct ipa_init_modem_driver_rsp {
-+	struct qmi_response_type_v01	rsp;
++	return -ENOMEM;
++}
 +
-+	/* This defines the destination endpoint on the modem to which
-+	 * the AP driver can send control commands.  IPA supports
-+	 * 20 endpoints, so this must be 19 or less.
-+	 */
-+	u8				ctrl_comm_dest_end_pt_valid;
-+	u32				ctrl_comm_dest_end_pt;
++/* Inverse of gsi_channel_trans_init() */
++void gsi_channel_trans_exit(struct gsi_channel *channel)
++{
++	struct gsi_trans_info *trans_info = &channel->trans_info;
 +
-+	/* This defines the default endpoint.  The AP driver is not
-+	 * required to configure the hardware with this value.  IPA
-+	 * supports 20 endpoints, so this must be 19 or less.
-+	 */
-+	u8				default_end_pt_valid;
-+	u32				default_end_pt;
-+
-+	/* This defines whether a second handshake is required to complete
-+	 * initialization.
-+	 */
-+	u8				modem_driver_init_pending_valid;
-+	u8				modem_driver_init_pending;
-+};
-+
-+/* Message structure definitions defined in "ipa_qmi_msg.c" */
-+extern struct qmi_elem_info ipa_indication_register_req_ei[];
-+extern struct qmi_elem_info ipa_indication_register_rsp_ei[];
-+extern struct qmi_elem_info ipa_driver_init_complete_req_ei[];
-+extern struct qmi_elem_info ipa_driver_init_complete_rsp_ei[];
-+extern struct qmi_elem_info ipa_init_complete_ind_ei[];
-+extern struct qmi_elem_info ipa_mem_bounds_ei[];
-+extern struct qmi_elem_info ipa_mem_array_ei[];
-+extern struct qmi_elem_info ipa_mem_range_ei[];
-+extern struct qmi_elem_info ipa_init_modem_driver_req_ei[];
-+extern struct qmi_elem_info ipa_init_modem_driver_rsp_ei[];
-+
-+#endif /* !_IPA_QMI_MSG_H_ */
-diff --git a/drivers/net/ipa/ipa_smp2p.c b/drivers/net/ipa/ipa_smp2p.c
++	kfree(trans_info->sg_pool);
++	kfree(trans_info->pool);
++	kfree(trans_info->map);
++}
+diff --git a/drivers/net/ipa/gsi_trans.h b/drivers/net/ipa/gsi_trans.h
 new file mode 100644
-index 000000000000..c59f358b44b4
+index 000000000000..2d5a199e4396
 --- /dev/null
-+++ b/drivers/net/ipa/ipa_smp2p.c
-@@ -0,0 +1,304 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
-+ * Copyright (C) 2019 Linaro Ltd.
-+ */
-+
-+#include <linux/types.h>
-+#include <linux/device.h>
-+#include <linux/interrupt.h>
-+#include <linux/notifier.h>
-+#include <linux/soc/qcom/smem.h>
-+#include <linux/soc/qcom/smem_state.h>
-+
-+#include "ipa_smp2p.h"
-+#include "ipa.h"
-+#include "ipa_uc.h"
-+#include "ipa_clock.h"
-+
-+/**
-+ * DOC: IPA SMP2P communication with the modem
-+ *
-+ * SMP2P is a primitive communication mechanism available between the AP and
-+ * the modem.  The IPA driver uses this for two purposes:  to enable the modem
-+ * to state that the GSI hardware is ready to use; and to communicate the
-+ * state of the IPA clock in the event of a crash.
-+ *
-+ * GSI needs to have early initialization completed before it can be used.
-+ * This initialization is done either by Trust Zone or by the modem.  In the
-+ * latter case, the modem uses an SMP2P interrupt to tell the AP IPA driver
-+ * when the GSI is ready to use.
-+ *
-+ * The modem is also able to inquire about the current state of the IPA
-+ * clock by trigging another SMP2P interrupt to the AP.  We communicate
-+ * whether the clock is enabled using two SMP2P state bits--one to
-+ * indicate the clock state (on or off), and a second to indicate the
-+ * clock state bit is valid.  The modem will poll the valid bit until it
-+ * is set, and at that time records whether the AP has the IPA clock enabled.
-+ *
-+ * Finally, if the AP kernel panics, we update the SMP2P state bits even if
-+ * we never receive an interrupt from the modem requesting this.
-+ */
-+
-+/**
-+ * struct ipa_smp2p - IPA SMP2P information
-+ * @ipa:		IPA pointer
-+ * @valid_state:	SMEM state indicating enabled state is valid
-+ * @enabled_state:	SMEM state to indicate clock is enabled
-+ * @valid_bit:		Valid bit in 32-bit SMEM state mask
-+ * @enabled_bit:	Enabled bit in 32-bit SMEM state mask
-+ * @enabled_bit:	Enabled bit in 32-bit SMEM state mask
-+ * @clock_query_irq:	IPA interrupt triggered by modem for clock query
-+ * @setup_ready_irq:	IPA interrupt triggered by modem to signal GSI ready
-+ * @clock_on:		Whether IPA clock is on
-+ * @notified:		Whether modem has been notified of clock state
-+ * @disabled:		Whether setup ready interrupt handling is disabled
-+ * @mutex mutex:	Motex protecting ready interrupt/shutdown interlock
-+ * @panic_notifier:	Panic notifier structure
-+*/
-+struct ipa_smp2p {
-+	struct ipa *ipa;
-+	struct qcom_smem_state *valid_state;
-+	struct qcom_smem_state *enabled_state;
-+	u32 valid_bit;
-+	u32 enabled_bit;
-+	u32 clock_query_irq;
-+	u32 setup_ready_irq;
-+	u32 clock_on;
-+	u32 notified;
-+	u32 disabled;
-+	struct mutex mutex;
-+	struct notifier_block panic_notifier;
-+};
-+
-+/**
-+ * ipa_smp2p_notify() - use SMP2P to tell modem about IPA clock state
-+ * @smp2p:	SMP2P information
-+ *
-+ * This is called either when the modem has requested it (by triggering
-+ * the modem clock query IPA interrupt) or whenever the AP is shutting down
-+ * (via a panic notifier).  It sets the two SMP2P state bits--one saying
-+ * whether the IPA clock is running, and the other indicating the first bit
-+ * is valid.
-+ */
-+static void ipa_smp2p_notify(struct ipa_smp2p *smp2p)
-+{
-+	u32 value;
-+	u32 mask;
-+
-+	if (smp2p->notified)
-+		return;
-+
-+	smp2p->clock_on = ipa_clock_get_additional(smp2p->ipa->clock) ? 1 : 0;
-+
-+	/* Signal whether the clock is enabled */
-+	mask = BIT(smp2p->enabled_bit);
-+	value = smp2p->clock_on ? mask : 0;
-+	qcom_smem_state_update_bits(smp2p->enabled_state, mask, value);
-+
-+	/* Now indicate that the enabled flag is valid */
-+	mask = BIT(smp2p->valid_bit);
-+	value = mask;
-+	qcom_smem_state_update_bits(smp2p->valid_state, mask, value);
-+
-+	smp2p->notified = 1;
-+}
-+
-+/* Threaded IRQ handler for modem "ipa-clock-query" SMP2P interrupt */
-+static irqreturn_t ipa_smp2p_modem_clk_query_isr(int irq, void *dev_id)
-+{
-+	struct ipa_smp2p *smp2p = dev_id;
-+
-+	ipa_smp2p_notify(smp2p);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int ipa_smp2p_panic_notifier(struct notifier_block *nb,
-+				    unsigned long action, void *data)
-+{
-+	struct ipa_smp2p *smp2p;
-+
-+	smp2p = container_of(nb, struct ipa_smp2p, panic_notifier);
-+
-+	ipa_smp2p_notify(smp2p);
-+
-+	if (smp2p->clock_on)
-+		ipa_uc_panic_notifier(smp2p->ipa);
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static int ipa_smp2p_panic_notifier_register(struct ipa_smp2p *smp2p)
-+{
-+	/* IPA panic handler needs to run before modem shuts down */
-+	smp2p->panic_notifier.notifier_call = ipa_smp2p_panic_notifier;
-+	smp2p->panic_notifier.priority = INT_MAX;	/* Do it early */
-+
-+	return atomic_notifier_chain_register(&panic_notifier_list,
-+					      &smp2p->panic_notifier);
-+}
-+
-+static void ipa_smp2p_panic_notifier_unregister(struct ipa_smp2p *smp2p)
-+{
-+	atomic_notifier_chain_unregister(&panic_notifier_list,
-+					 &smp2p->panic_notifier);
-+}
-+
-+/* Threaded IRQ handler for modem "ipa-setup-ready" SMP2P interrupt */
-+static irqreturn_t ipa_smp2p_modem_setup_ready_isr(int irq, void *dev_id)
-+{
-+	struct ipa_smp2p *smp2p = dev_id;
-+	int ret;
-+
-+	mutex_lock(&smp2p->mutex);
-+	if (!smp2p->disabled) {
-+		ret = ipa_setup(smp2p->ipa);
-+		WARN(ret, "error %d from IPA setup\n", ret);
-+	}
-+	mutex_unlock(&smp2p->mutex);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+/* Initialize SMP2P interrupts */
-+static int ipa_smp2p_irq_init(struct ipa_smp2p *smp2p, const char *name,
-+			      irq_handler_t handler)
-+{
-+	unsigned int irq;
-+	int ret;
-+
-+	ret = platform_get_irq_byname(smp2p->ipa->pdev, name);
-+	if (ret < 0)
-+		return ret;
-+	if (!ret)
-+		return -EINVAL;		/* IRQ mapping failure */
-+	irq = ret;
-+
-+	ret = request_threaded_irq(irq, NULL, handler, 0, name, smp2p);
-+	if (ret)
-+		return ret;
-+
-+	return irq;
-+}
-+
-+static void ipa_smp2p_irq_exit(struct ipa_smp2p *smp2p, u32 irq)
-+{
-+	free_irq(irq, smp2p);
-+}
-+
-+/* Initialize the IPA SMP2P subsystem */
-+struct ipa_smp2p *ipa_smp2p_init(struct ipa *ipa, bool modem_init)
-+{
-+	struct qcom_smem_state *enabled_state;
-+	struct device *dev = &ipa->pdev->dev;
-+	struct qcom_smem_state *valid_state;
-+	struct ipa_smp2p *smp2p;
-+	u32 enabled_bit;
-+	u32 valid_bit;
-+	int ret;
-+
-+	valid_state = qcom_smem_state_get(dev, "ipa-clock-enabled-valid",
-+					  &valid_bit);
-+	if (IS_ERR(valid_state))
-+		return ERR_CAST(valid_state);
-+	if (valid_bit >= BITS_PER_LONG)
-+		return ERR_PTR(-EINVAL);
-+
-+	enabled_state = qcom_smem_state_get(dev, "ipa-clock-enabled",
-+					    &enabled_bit);
-+	if (IS_ERR(enabled_state))
-+		return ERR_CAST(enabled_state);
-+	if (enabled_bit >= BITS_PER_LONG)
-+		return ERR_PTR(-EINVAL);
-+
-+	smp2p = kzalloc(sizeof(*smp2p), GFP_KERNEL);
-+	if (!smp2p)
-+		return ERR_PTR(-ENOMEM);
-+
-+	smp2p->ipa = ipa;
-+
-+	/* These fields are needed by the clock query interrupt
-+	 * handler, so initialize them now.
-+	 */
-+	mutex_init(&smp2p->mutex);
-+	smp2p->valid_state = valid_state;
-+	smp2p->valid_bit = valid_bit;
-+	smp2p->enabled_state = enabled_state;
-+	smp2p->enabled_bit = enabled_bit;
-+
-+	ret = ipa_smp2p_irq_init(smp2p, "ipa-clock-query",
-+				 ipa_smp2p_modem_clk_query_isr);
-+	if (ret < 0)
-+		goto err_mutex_destroy;
-+	smp2p->clock_query_irq = ret;
-+
-+	ret = ipa_smp2p_panic_notifier_register(smp2p);
-+	if (ret)
-+		goto err_irq_exit;
-+
-+	if (modem_init) {
-+		/* Result will be non-zero (negative for error) */
-+		ret = ipa_smp2p_irq_init(smp2p, "ipa-setup-ready",
-+					 ipa_smp2p_modem_setup_ready_isr);
-+		if (ret < 0)
-+			goto err_notifier_unregister;
-+		smp2p->setup_ready_irq = ret;
-+	}
-+
-+	return smp2p;
-+
-+err_notifier_unregister:
-+	ipa_smp2p_panic_notifier_unregister(smp2p);
-+err_irq_exit:
-+	ipa_smp2p_irq_exit(smp2p, smp2p->clock_query_irq);
-+err_mutex_destroy:
-+	mutex_destroy(&smp2p->mutex);
-+	kfree(smp2p);
-+
-+	return ERR_PTR(ret);
-+}
-+
-+void ipa_smp2p_exit(struct ipa_smp2p *smp2p)
-+{
-+	if (smp2p->setup_ready_irq)
-+		ipa_smp2p_irq_exit(smp2p, smp2p->setup_ready_irq);
-+	ipa_smp2p_panic_notifier_unregister(smp2p);
-+	ipa_smp2p_irq_exit(smp2p, smp2p->clock_query_irq);
-+	mutex_destroy(&smp2p->mutex);
-+	kfree(smp2p);
-+}
-+
-+void ipa_smp2p_disable(struct ipa_smp2p *smp2p)
-+{
-+	if (smp2p->setup_ready_irq) {
-+		mutex_lock(&smp2p->mutex);
-+		smp2p->disabled = 1;
-+		mutex_unlock(&smp2p->mutex);
-+	}
-+}
-+
-+/* Reset state tracking whether we have notified the modem */
-+void ipa_smp2p_notify_reset(struct ipa_smp2p *smp2p)
-+{
-+	u32 mask;
-+
-+	if (!smp2p->notified)
-+		return;
-+
-+	/* Drop the clock reference if it was taken above */
-+	if (smp2p->clock_on) {
-+		ipa_clock_put(smp2p->ipa->clock);
-+		smp2p->clock_on = 0;
-+	}
-+
-+	/* Reset the clock enabled valid flag */
-+	mask = BIT(smp2p->valid_bit);
-+	qcom_smem_state_update_bits(smp2p->valid_state, mask, 0);
-+
-+	/* Mark the clock disabled for good measure... */
-+	mask = BIT(smp2p->enabled_bit);
-+	qcom_smem_state_update_bits(smp2p->enabled_state, mask, 0);
-+
-+	smp2p->notified = 0;
-+}
-diff --git a/drivers/net/ipa/ipa_smp2p.h b/drivers/net/ipa/ipa_smp2p.h
-new file mode 100644
-index 000000000000..9c7e4339a7b0
---- /dev/null
-+++ b/drivers/net/ipa/ipa_smp2p.h
-@@ -0,0 +1,47 @@
++++ b/drivers/net/ipa/gsi_trans.h
+@@ -0,0 +1,116 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +
 +/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
 + * Copyright (C) 2019 Linaro Ltd.
 + */
-+#ifndef _IPA_SMP2P_H_
-+#define _IPA_SMP2P_H_
++#ifndef _GSI_TRANS_H_
++#define _GSI_TRANS_H_
 +
 +#include <linux/types.h>
++#include <linux/refcount.h>
++#include <linux/completion.h>
 +
-+struct ipa;
++struct scatterlist;
++struct device;
++
++struct gsi;
++struct gsi_trans;
++enum ipa_cmd_opcode;
++
++struct gsi_trans {
++	struct list_head links;		/* gsi_channel lists */
++
++	struct gsi *gsi;
++	u32 channel_id;
++
++	u32 tre_count;			/* # TREs requested */
++	u32 len;			/* total # bytes in sgl */
++	struct scatterlist *sgl;
++	u32 sgc;			/* # entries in sgl[] */
++
++	struct completion completion;
++	refcount_t refcount;
++
++	/* fields above are internal only */
++
++	struct device *dev;		/* Use this for DMA mapping */
++	long result;			/* RX count, 0, or error code */
++
++	u64 byte_count;			/* channel byte_count when committed */
++	u64 trans_count;		/* channel trans_count when committed */
++
++	void *data;
++};
 +
 +/**
-+ * ipa_smp2p_init() - Initialize the IPA SMP2P subsystem
-+ * @ipa:	IPA pointer
-+ * @modem_init:	Whether the modem is responsible for GSI initialization
++ * gsi_channel_trans_alloc() - Allocate a GSI transaction on a channel
++ * @gsi:	GSI pointer
++ * @channel_id:	Channel the transaction is associated with
++ * @tre_count:	Number of elements in the transaction
 + *
-+ * @Return:	Pointer to IPA SMP2P info, or a pointer-coded error
++ * @Return:	A GSI transaction structure, or a null pointer if all
++ *		available transactions are in use
 + */
-+struct ipa_smp2p *ipa_smp2p_init(struct ipa *ipa, bool modem_init);
++struct gsi_trans *gsi_channel_trans_alloc(struct gsi *gsi, u32 channel_id,
++					  u32 tre_count);
 +
 +/**
-+ * ipa_smp2p_exit() - Inverse of ipa_smp2p_init()
-+ * @smp2p:	SMP2P information pointer
-+ */
-+void ipa_smp2p_exit(struct ipa_smp2p *smp2p);
-+
-+/**
-+ * ipa_smp2p_disable() - Prevent "ipa-setup-ready" interrupt handling
-+ * @smp2p:	SMP2P information pointer
++ * gsi_trans_free() - Free a previously-allocated GSI transaction
++ * @trans:	Transaction to be freed
 + *
-+ * Prevent handling of the "setup ready" interrupt from the modem.
-+ * This is used before initiating shutdown of the driver.
++ * Note: this should only be used in error paths, before the transaction is
++ * committed or in the event committing the transaction produces an error.
++ * Successfully committing a transaction passes ownership of the structure
++ * to the core transaction code.
 + */
-+void ipa_smp2p_disable(struct ipa_smp2p *smp2p);
++void gsi_trans_free(struct gsi_trans *trans);
 +
 +/**
-+ * ipa_smp2p_notify_reset() - Reset modem notification state
-+ * @smp2p:	SMP2P information pointer
-+ *
-+ * If the modem crashes it queries the IPA clock state.  In cleaning
-+ * up after such a crash this is used to reset some state maintained
-+ * for managing this notification.
++ * gsi_trans_commit() - Commit a GSI transaction
++ * @trans:	Transaction to commit
++ * @ring_db:	Whether to tell the hardware about these queued transfers
++ * @callback:	Function called when transaction has completed.
 + */
-+void ipa_smp2p_notify_reset(struct ipa_smp2p *smp2p);
++int gsi_trans_commit(struct gsi_trans *trans, bool ring_db);
 +
-+#endif /* _IPA_SMP2P_H_ */
++/**
++ * gsi_trans_commit_command() - Commit a GSI command transaction and wait
++ *				wait for it to complete
++ * @trans:	Transaction to commit
++ */
++int gsi_trans_commit_command(struct gsi_trans *trans,
++			     enum ipa_cmd_opcode opcode);
++
++/**
++ * gsi_trans_commit_command_timeout() - Commit a GSI command transaction,
++ *					wait for it to complete, with timeout
++ * @trans:	Transaction to commit
++ * @ring_db:	Whether to tell the hardware about these queued transfers
++ * @timeout:	Timeout period (in milliseconds)
++ */
++int gsi_trans_commit_command_timeout(struct gsi_trans *trans,
++				     enum ipa_cmd_opcode opcode,
++				     unsigned long timeout);
++
++/**
++ * gsi_trans_read_byte() - Issue a single byte read TRE on a channel
++ * @gsi:	GSI pointer
++ * @channel_id:	Channel on which to read a byte
++ * @addr:	DMA address into which to transfer the one byte
++ *
++ * This is not a transaction operation at all.  It's defined here because
++ * it needs to be done in coordination with other transaction activity.
++ */
++int gsi_trans_read_byte(struct gsi *gsi, u32 channel_id, dma_addr_t addr);
++
++/**
++ * gsi_trans_read_byte_done() - Clean up after a single byte read TRE
++ * @gsi:	GSI pointer
++ * @channel_id:	Channel on which byte was read
++ *
++ * This function needs to be called to signal that the work related
++ * to reading a byte initiated by gsi_trans_read_byte() is complete.
++ */
++void gsi_trans_read_byte_done(struct gsi *gsi, u32 channel_id);
++
++#endif /* _GSI_TRANS_H_ */
 -- 
 2.20.1
 
