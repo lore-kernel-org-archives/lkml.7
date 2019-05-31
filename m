@@ -4,153 +4,117 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A75C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 05:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8257C46470
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 05:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A9AD26403
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 05:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B170C26409
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 05:22:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WZsYambQ"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="C7ROTWir"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbfEaFWE (ORCPT
+        id S1726748AbfEaFWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 01:22:04 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:43506 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbfEaFWE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 01:22:04 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4V5LmBK017777;
-        Fri, 31 May 2019 00:21:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559280108;
-        bh=wEaJhMMubWFkpq8YfzgR85AF7zR7zSlj50b9HPP93n0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=WZsYambQ3Wns9Fyeq1XUDuXwId7RYlTK7wN7jTga3/YcBXkiBjKqxLAOumbeIs5h8
-         7e+P2PekR1//92dJ9N7evrTBdh1J+Tuy+A84ZguFucTRViwGgogvzdCNSgl7ftefl3
-         lo0G4+GOIF8vKQoWrgdcP22RM+eNC4jAPTBaz1NQ=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4V5LmMA069860
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 31 May 2019 00:21:48 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 31
- May 2019 00:21:48 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 31 May 2019 00:21:47 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4V5Lgln015283;
-        Fri, 31 May 2019 00:21:43 -0500
-Subject: Re: [PATCH] PCI: endpoint: Add DMA to Linux PCI EP Framework
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     Alan Mikhak <alan.mikhak@sifive.com>,
-        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Fri, 31 May 2019 01:22:55 -0400
+Received: from mail-eopbgr00040.outbound.protection.outlook.com ([40.107.0.40]:19173
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725955AbfEaFWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 01:22:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cNSW2W2IBW6qOqSspZzlI4/HnOUsOpeZusH+vOpm54E=;
+ b=C7ROTWirApeHmQBs90qH+92AylcHh5xrInTaJQKLmlCx31P/zsgGBDGSf1l9Uy15IGAQEzwsO/VtGUXHbVLQBEymxIwKlB28G8dvMNaK0ve6lY+0I/s1sJt78yYssKTI/YcUSrSq5AX5Yi5xD39/Qz8x6qh6dQanPPB5pFp05Vo=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB2863.eurprd04.prod.outlook.com (10.175.20.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.18; Fri, 31 May 2019 05:22:50 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::ccaf:f4a1:704a:e745]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::ccaf:f4a1:704a:e745%4]) with mapi id 15.20.1922.021; Fri, 31 May 2019
+ 05:22:50 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+CC:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "wen.yang99@zte.com.cn" <wen.yang99@zte.com.cn>,
-        "kjlu@umn.edu" <kjlu@umn.edu>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "palmer@sifive.com" <palmer@sifive.com>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
-References: <1558650258-15050-1-git-send-email-alan.mikhak@sifive.com>
- <305100E33629484CBB767107E4246BBB0A6FAFFD@DE02WEMBXB.internal.synopsys.com>
- <CABEDWGxsQ9NXrN7W_8HVrXQBb9HiBd+d1dNfv+cXmoBpXQnLwA@mail.gmail.com>
- <305100E33629484CBB767107E4246BBB0A6FC308@DE02WEMBXB.internal.synopsys.com>
- <CABEDWGxL-WYz1BY7yXJ6eKULgVtKeo67XhgHZjvtm5Ka5foKiA@mail.gmail.com>
- <192e3a19-8b69-dfaf-aa5c-45c7087548cc@ti.com>
- <20190531050727.GO15118@vkoul-mobl>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <d2d8a904-d796-f9f2-8f4a-61e857355a4f@ti.com>
-Date:   Fri, 31 May 2019 10:50:23 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190531050727.GO15118@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH] crypto: gcm - fix cacheline sharing
+Thread-Topic: [PATCH] crypto: gcm - fix cacheline sharing
+Thread-Index: AQHVFkF+dOvdDzZqYUSH856vNqfARw==
+Date:   Fri, 31 May 2019 05:22:50 +0000
+Message-ID: <VI1PR0402MB3485D7664F87D8C38FA8FD5C98190@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <1559149856-7938-1-git-send-email-iuliana.prodan@nxp.com>
+ <20190529202728.GA35103@gmail.com>
+ <20190530053421.keesqb54yu5w7hgk@gondor.apana.org.au>
+ <VI1PR0402MB3485ADA3C4410D61191582A498180@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+ <CAKv+Gu84HndAnkn7DU=ykjCokw_+bAHEcF0Rm12-hnXhVy2u_Q@mail.gmail.com>
+ <VI1PR0402MB34859577A96645E890BD8F3198180@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+ <20190530132623.4h3y2bymv4uvfnms@gondor.apana.org.au>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5204a36d-7f14-4f9e-e7ac-08d6e5880682
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR0402MB2863;
+x-ms-traffictypediagnostic: VI1PR0402MB2863:
+x-microsoft-antispam-prvs: <VI1PR0402MB286387D77F94757340DE627098190@VI1PR0402MB2863.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 00540983E2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(376002)(396003)(136003)(39860400002)(346002)(189003)(199004)(81156014)(81166006)(8676002)(305945005)(7736002)(99286004)(4744005)(316002)(8936002)(186003)(9686003)(26005)(476003)(66066001)(446003)(486006)(14444005)(256004)(52536014)(71200400001)(71190400001)(3846002)(6116002)(5660300002)(2906002)(86362001)(66446008)(64756008)(53546011)(6506007)(4326008)(478600001)(66946007)(66556008)(66476007)(73956011)(76116006)(33656002)(44832011)(6246003)(53936002)(7696005)(55016002)(74316002)(6436002)(14454004)(6916009)(54906003)(229853002)(25786009)(102836004)(76176011)(68736007);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2863;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: HxjhNHwiAS16SFq5HHoTtIotQdZs8DFhb9CoXgzwZ7Idh+hO9Gh8Tb4Spc6319YnDeT1vVD0R4oPK9SYuVtGK9t6okj3eSFwFOxkSwBoBxhwdbLT+DPBa3ADOmg9SqWHSJMCu7xPL/RDO2yYT2VuL3uqzRLg7rLv2rapDZESYyH2o9peeoQH3sm3o3tcnDkrD+QCbwv8dCrkDiTPSYpltsZM6O5qy9NFUjEONRIDe3Rx1RPpj89WEyOHNDvO51ztcTpkmbBqRXzJpLqCksuhc/tyzVCCPmdhiFPuwqKhP/YMy2mwQjhNpjA7u9qE2cZ29HfeDOxn2+F0tpDOCUgrGxy8bydpBI5qX2Kv3SQDLEX4T8JhImkJDDELBI5tQI9HVkXL/UXATnUTegJhLGb3H3zXPjhRDGsWVvMF37iq2x0=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5204a36d-7f14-4f9e-e7ac-08d6e5880682
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 May 2019 05:22:50.5110
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: horia.geanta@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2863
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinod,
-
-On 31/05/19 10:37 AM, Vinod Koul wrote:
-> Hi Kishon,
-> 
-> On 30-05-19, 11:16, Kishon Vijay Abraham I wrote:
->> +Vinod Koul
->>
->> Hi,
->>
->> On 30/05/19 4:07 AM, Alan Mikhak wrote:
->>> On Mon, May 27, 2019 at 2:09 AM Gustavo Pimentel
->>> <Gustavo.Pimentel@synopsys.com> wrote:
->>>>
->>>> On Fri, May 24, 2019 at 20:42:43, Alan Mikhak <alan.mikhak@sifive.com>
->>>> wrote:
->>>>
->>>> Hi Alan,
->>>>
->>>>> On Fri, May 24, 2019 at 1:59 AM Gustavo Pimentel
->>>>> <Gustavo.Pimentel@synopsys.com> wrote:
->>>>>>
->>>>>> Hi Alan,
->>>>>>
->>>>>> This patch implementation is very HW implementation dependent and
->>>>>> requires the DMA to exposed through PCIe BARs, which aren't always the
->>>>>> case. Besides, you are defining some control bits on
->>>>>> include/linux/pci-epc.h that may not have any meaning to other types of
->>>>>> DMA.
->>>>>>
->>>>>> I don't think this was what Kishon had in mind when he developed the
->>>>>> pcitest, but let see what Kishon was to say about it.
->>>>>>
->>>>>> I've developed a DMA driver for DWC PCI using Linux Kernel DMAengine API
->>>>>> and which I submitted some days ago.
->>>>>> By having a DMA driver which implemented using DMAengine API, means the
->>>>>> pcitest can use the DMAengine client API, which will be completely
->>>>>> generic to any other DMA implementation.
->>
->> right, my initial thought process was to use only dmaengine APIs in
->> pci-epf-test so that the system DMA or DMA within the PCIe controller can be
->> used transparently. But can we register DMA within the PCIe controller to the
->> DMA subsystem? AFAIK only system DMA should register with the DMA subsystem.
->> (ADMA in SDHCI doesn't use dmaengine). Vinod Koul can confirm.
-> 
-> So would this DMA be dedicated for PCI and all PCI devices on the bus?
-
-Yes, this DMA will be used only by PCI ($patch is w.r.t PCIe device mode. So
-all endpoint functions both physical and virtual functions will use the DMA in
-the controller).
-> If so I do not see a reason why this cannot be using dmaengine. The use
-
-Thanks for clarifying. I was under the impression any DMA within a peripheral
-controller shouldn't use DMAengine.
-> case would be memcpy for DMA right or mem to device (vice versa) transfers?
-
-The device is memory mapped so it would be only memcopy.
-> 
-> Btw many driver in sdhci do use dmaengine APIs and yes we are missing
-> support in framework than individual drivers
-
-I think dmaengine APIs is used only when the platform uses system DMA and not
-ADMA within the SDHCI controller. IOW there is no dma_async_device_register()
-to register ADMA in SDHCI with DMA subsystem.
-
-Thanks
-Kishon
+On 5/30/2019 4:26 PM, Herbert Xu wrote:=0A=
+> On Thu, May 30, 2019 at 01:18:34PM +0000, Horia Geanta wrote:=0A=
+>>=0A=
+>> I guess there are only two options:=0A=
+>> -either cache line sharing is avoided OR=0A=
+>> -users need to be *aware* they are sharing the cache line and some rules=
+ /=0A=
+>> assumptions are in place on how to safely work on the data=0A=
+> =0A=
+> No there is a third option and it's very simple:=0A=
+> =0A=
+I see this as the 2nd option.=0A=
+=0A=
+> You must only access the virtual addresses given to you before DMA=0A=
+> mapping or after DMA unmapping.=0A=
+> =0A=
+Unless it's clearly defined *which* virtual addresses mustn't be accessed,=
+=0A=
+things won't work properly.=0A=
+In theory, any two objects could share a cache line. We can't just stop all=
+=0A=
+memory accesses from CPU while a peripheral is busy.=0A=
+=0A=
+Thanks,=0A=
+Horia=0A=
