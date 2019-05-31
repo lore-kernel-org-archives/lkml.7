@@ -2,157 +2,61 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCFA3C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C98EAC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FC4A25035
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:37:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A67732679C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:40:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727132AbfEaKhe (ORCPT
+        id S1727068AbfEaKke convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 06:37:34 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:52882 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbfEaKhd (ORCPT
+        Fri, 31 May 2019 06:40:34 -0400
+Received: from mail.fireflyinternet.com ([109.228.58.192]:54113 "EHLO
+        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726002AbfEaKkd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 06:37:33 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 4283F8021E; Fri, 31 May 2019 12:37:20 +0200 (CEST)
-Date:   Fri, 31 May 2019 12:37:30 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Nadav Amit <namit@vmware.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        akpm@linux-foundation.org, ard.biesheuvel@linaro.org,
-        deneen.t.dock@intel.com, kernel-hardening@lists.openwall.com,
-        kristen@linux.intel.com, linux_dti@icloud.com, will.deacon@arm.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Jessica Yu <jeyu@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 079/276] x86/modules: Avoid breaking W^X while
- loading modules
-Message-ID: <20190531103730.GB9685@amd>
-References: <20190530030523.133519668@linuxfoundation.org>
- <20190530030531.331779845@linuxfoundation.org>
+        Fri, 31 May 2019 06:40:33 -0400
+X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
+Received: from localhost (unverified [78.156.65.138]) 
+        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 16746809-1500050 
+        for multiple; Fri, 31 May 2019 11:40:31 +0100
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="kORqDWCi7qDJ0mEj"
-Content-Disposition: inline
-In-Reply-To: <20190530030531.331779845@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8BIT
+To:     Colin King <colin.king@canonical.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Matthew Auld <matthew.auld@intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
+From:   Chris Wilson <chris@chris-wilson.co.uk>
+In-Reply-To: <20190531103201.10124-1-colin.king@canonical.com>
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190531103201.10124-1-colin.king@canonical.com>
+Message-ID: <155929922781.27302.13050993726222660588@skylake-alporthouse-com>
+User-Agent: alot/0.6
+Subject: Re: [PATCH][next] drm/i915: fix use of uninitialized pointer vaddr
+Date:   Fri, 31 May 2019 11:40:27 +0100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting Colin King (2019-05-31 11:32:01)
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The assignment of err is using the incorrect pointer vaddr that has
+> not been initialized. Fix this by using the correct pointer obj instead.
+> 
+> Addresses-Coverity: ("Uninitialized pointer read")
+> Fixes: 6501aa4e3a45 ("drm/i915: add in-kernel blitter client")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
---kORqDWCi7qDJ0mEj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> [ Upstream commit f2c65fb3221adc6b73b0549fc7ba892022db9797 ]
->=20
-> When modules and BPF filters are loaded, there is a time window in
-> which some memory is both writable and executable. An attacker that has
-> already found another vulnerability (e.g., a dangling pointer) might be
-> able to exploit this behavior to overwrite kernel code. Prevent having
-> writable executable PTEs in this stage.
->=20
-> In addition, avoiding having W+X mappings can also slightly simplify the
-> patching of modules code on initialization (e.g., by alternatives and
-> static-key), as would be done in the next patch. This was actually the
-> main motivation for this patch.
->=20
-> To avoid having W+X mappings, set them initially as RW (NX) and after
-> they are set as RO set them as X as well. Setting them as executable is
-> done as a separate step to avoid one core in which the old PTE is cached
-> (hence writable), and another which sees the updated PTE (executable),
-> which would break the W^X protection.
-
-First, is this stable material? Yes, it changes something.
-
-But if you assume attacker can write into kernel memory during module
-load, what prevents him to change the module as he sees fit while it
-is not executable, simply waiting for system to execute it?
-
-I don't see security benefit here.
-
-> +++ b/arch/x86/kernel/alternative.c
-> @@ -662,15 +662,29 @@ void __init alternative_instructions(void)
->   * handlers seeing an inconsistent instruction while you patch.
->   */
->  void *__init_or_module text_poke_early(void *addr, const void *opcode,
-> -					      size_t len)
-> +				       size_t len)
->  {
->  	unsigned long flags;
-> -	local_irq_save(flags);
-> -	memcpy(addr, opcode, len);
-> -	local_irq_restore(flags);
-> -	sync_core();
-> -	/* Could also do a CLFLUSH here to speed up CPU recovery; but
-> -	   that causes hangs on some VIA CPUs. */
-> +
-> +	if (boot_cpu_has(X86_FEATURE_NX) &&
-> +	    is_module_text_address((unsigned long)addr)) {
-> +		/*
-> +		 * Modules text is marked initially as non-executable, so the
-> +		 * code cannot be running and speculative code-fetches are
-> +		 * prevented. Just change the code.
-> +		 */
-> +		memcpy(addr, opcode, len);
-> +	} else {
-> +		local_irq_save(flags);
-> +		memcpy(addr, opcode, len);
-> +		local_irq_restore(flags);
-> +		sync_core();
-> +
-> +		/*
-> +		 * Could also do a CLFLUSH here to speed up CPU recovery; but
-> +		 * that causes hangs on some VIA CPUs.
-> +		 */
-
-I don't get it. If code can not be running here, it can not be running
-in the !NX case, either, and we are free to just change
-it. Speculative execution should not be a problem, either, as CPUs are
-supposed to mask it, and there are no known bugs in that area. (Plus,
-I'd not be surprise if speculative execution ignored NX... just saying
-:-) )
-
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---kORqDWCi7qDJ0mEj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlzxA+oACgkQMOfwapXb+vLr3ACfXR35weobKMdqgY0y0BNSOmZy
-/aQAn0UtRPHtQSj7n1zWV39kDx1eOTVE
-=nkcI
------END PGP SIGNATURE-----
-
---kORqDWCi7qDJ0mEj--
+Reviewed and pushed, thanks for the fix!
+-Chris
