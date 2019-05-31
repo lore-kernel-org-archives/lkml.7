@@ -2,111 +2,116 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A99C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02AEBC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F36B266EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:31:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="MLOrSTV7"
+	by mail.kernel.org (Postfix) with ESMTP id D52D124339
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:34:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727248AbfEaJb5 (ORCPT
+        id S1726885AbfEaJeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 05:31:57 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38749 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727075AbfEaJbh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 05:31:37 -0400
-Received: by mail-wm1-f65.google.com with SMTP id t5so5475886wmh.3
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 02:31:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4XUFa5U6isWZ7sY5b7KzRU7MZCM9RrE7vyQt7fpmtT4=;
-        b=MLOrSTV7dTXzxU49x4bDt+i4tkXD7kzAQpmwQ9bfTBv/B0cg9fAvuxgqkLXRIjEr9c
-         aFSbGbkA3xaQsc40nPleliurFUDWlHuT4f5hb74t2arP26m0Nf0g7fBCgMJY42OYRBJd
-         KDUmnjhPwj9+0aeWInVRsHpjkRC3ymeKr2WmduIQMk2YS97ZOmrx0mk3OKc+iQunLVp0
-         hNifdZ6j4EsjCbskrCt5DYr9K6H3ODgVt43y27Xnqa5Y0ShU5EgUTr/DJ09GhQVB81cU
-         z/QrhG3bjKA0sP5isGkvTkti38x+V22BYt6RfBT1cNnjXVEoqa3L/iOhEsK2v4nSW1YA
-         LcwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4XUFa5U6isWZ7sY5b7KzRU7MZCM9RrE7vyQt7fpmtT4=;
-        b=hP/pZcLMMewoeOuMGQzI97pxsN+5MYOhCaZroWziCzXT4IL8mrrZfkAJvClixxmqV9
-         q+ydjhaYqZbSjYVsIyuEwEmDwUHobLZ+pN9W4Js+hX6edev770pAZgcZ9oujZtCaM/23
-         jO7cr/s5so+ZnJ9KS++2WLSdCxWr7GXwcULccOnQPwE26I/DnutFv2osTiXssGde4ZVY
-         uWL59QucANq22/pWe70cQQM/eU01N6xpkxRvDILN+0S2APPV53vixGA4ltaKoiPgl3Wk
-         1SvHoZh/Esq7OUaiRXeSUrn3SoCEiBWvJgh6e4t7sDS7k8AJqCyhFOfZJCK2OH3hHqQS
-         Ax5g==
-X-Gm-Message-State: APjAAAXbCA8KTKkhVjJE5PvLJME93aaFePCTp5LVWVbNd1JNqcubMW0I
-        1CSoWLDl8Ct2k0PQjOKQUxq/zQ==
-X-Google-Smtp-Source: APXvYqzgrqYZPxkbQY0KTYLUCn3TpwKRSYfNypkhzNaTip4VP3njQzLsn0of+r+EUNCcWFHL4ErJtw==
-X-Received: by 2002:a1c:4083:: with SMTP id n125mr4896062wma.54.1559295095233;
-        Fri, 31 May 2019 02:31:35 -0700 (PDT)
-Received: from mjourdan-pc.numericable.fr (abo-99-183-68.mtp.modulonet.fr. [85.68.183.99])
-        by smtp.gmail.com with ESMTPSA id b136sm7187023wme.30.2019.05.31.02.31.34
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 31 May 2019 02:31:34 -0700 (PDT)
-From:   Maxime Jourdan <mjourdan@baylibre.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>
-Cc:     Maxime Jourdan <mjourdan@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH v7 4/4] MAINTAINERS: Add meson video decoder
-Date:   Fri, 31 May 2019 11:31:26 +0200
-Message-Id: <20190531093126.26956-5-mjourdan@baylibre.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190531093126.26956-1-mjourdan@baylibre.com>
-References: <20190531093126.26956-1-mjourdan@baylibre.com>
+        Fri, 31 May 2019 05:34:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34428 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726233AbfEaJeK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 05:34:10 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 21D74AE5A;
+        Fri, 31 May 2019 09:34:09 +0000 (UTC)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 31 May 2019 11:34:08 +0200
+From:   Roman Penyaev <rpenyaev@suse.de>
+To:     Renzo Davoli <renzo@cs.unibo.it>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Davide Libenzi <davidel@xmailserver.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCH 1/1] eventfd new tag EFD_VPOLL: generate epoll events
+In-Reply-To: <20190527133621.GC26073@cs.unibo.it>
+References: <20190526142521.GA21842@cs.unibo.it>
+ <20190527073332.GA13782@kroah.com> <20190527133621.GC26073@cs.unibo.it>
+Message-ID: <480f1bda66b67f740f5da89189bbfca3@suse.de>
+X-Sender: rpenyaev@suse.de
+User-Agent: Roundcube Webmail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an entry for the meson video decoder for amlogic SoCs.
+Hi Renzo,
 
-Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
----
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
+On 2019-05-27 15:36, Renzo Davoli wrote:
+> On Mon, May 27, 2019 at 09:33:32AM +0200, Greg KH wrote:
+>> On Sun, May 26, 2019 at 04:25:21PM +0200, Renzo Davoli wrote:
+>> > This patch implements an extension of eventfd to define file descriptors
+>> > whose I/O events can be generated at user level. These file descriptors
+>> > trigger notifications for [p]select/[p]poll/epoll.
+>> >
+>> > This feature is useful for user-level implementations of network stacks
+>> > or virtual device drivers as libraries.
+>> 
+>> How can this be used to create a "virtual device driver"?  Do you have
+>> any examples of this new interface being used anywhere?
+> 
+> Networking programs use system calls implementing the Berkeley sockets 
+> API:
+> socket, accept, connect, listen, recv*, send* etc.  Programs dealing 
+> with a
+> device use system calls like open, read, write, ioctl etc.
+> 
+> When somebody wants to write a library able to behave like a network 
+> stack (say
+> lwipv6, picotcp) or a device, they can implement functions like 
+> my_socket,
+> my_accept, my_open or my_ioctl, as drop-in replacement of their system
+> call counterpart.  (It is also possible to use dynamic library magic to
+> rename/divert the system call requests to use their 'virtual'
+> implementation provided by the library: socket maps to my_socket, recv
+> to my_recv etc).
+> 
+> In this way portability and compatibility is easier, using a well known 
+> API
+> instead of inventing new ones.
+> 
+> Unfortunately this approach cannot be applied to
+> poll/select/ppoll/pselect/epoll.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 429c6c624861..4aa50e83a494 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10215,6 +10215,14 @@ S:	Maintained
- F:	drivers/mtd/nand/raw/meson_*
- F:	Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
- 
-+MESON VIDEO DECODER DRIVER FOR AMLOGIC SOCS
-+M:	Maxime Jourdan <mjourdan@baylibre.com>
-+L:	linux-media@lists.freedesktop.org
-+L:	linux-amlogic@lists.infradead.org
-+S:	Supported
-+F:	drivers/staging/media/meson/vdec/
-+T:	git git://linuxtv.org/media_tree.git
-+
- METHODE UDPU SUPPORT
- M:	Vladimir Vid <vladimir.vid@sartura.hr>
- S:	Maintained
--- 
-2.21.0
+If you have to override other systemcalls, what is the problem to 
+override
+poll family?  It will add, let's say, 50 extra code lines complexity to 
+your
+userspace code.  All you need is to be woken up by *any* event and check
+one mask variable, in order to understand what you need to do: read or 
+write,
+basically exactly what you do in your eventfd modification, but only in
+userspace.
+
+
+>> Why can it not be less than 64?
+> This is the imeplementation of 'write'. The 64 bits include the 
+> 'command'
+> EFD_VPOLL_ADDEVENTS, EFD_VPOLL_DELEVENTS or EFD_VPOLL_MODEVENTS (in the 
+> most
+> significant 32 bits) and the set of events (in the lowest 32 bits).
+
+Do you really need add/del/mod semantics?  Userspace still has to keep 
+mask
+somewhere, so you can have one simple command, which does:
+
+    ctx->count = events;
+
+in kernel, so no masks and this games with bits are needed.  That will
+simplify API.
+
+--
+Roman
 
