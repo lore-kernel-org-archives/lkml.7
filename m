@@ -2,120 +2,152 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A2DC28CC2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A474BC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE396266A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 796AF26567
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:22:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559294530;
-	bh=mhjdw66KiObyfwVqEl4q+8P2X37x62yzrXv5UF0h8Q8=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=th6RuFzehUn/2SttFSf6rtTrddSSn93s1fn/MiQlU/7Pcnnjja+FinWt2XvhfOzd9
-	 slg5cLpsFp2pkc1aI4LfMFOs4AqPp6CpceJlTytzAeDgB90rcZbfQL4ggsFFwsAOMp
-	 OKmeG9y1FaEKOxRaTjwpjoCCqEuR+lP43vCRAgLc=
+	s=default; t=1559294560;
+	bh=QrveamkeJE3SIhnGt1ueuD+1GC8s5w6d1VlgzDBSCPs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ivAYVxbI7iV0nRgg8Di6THPMEIpkmeD6T0i+o3O309LXLXjtq+fIwCuRux/aMIWew
+	 C2NB6u13iRftTtjc0b/x31UWi0nmI6yDCYqW9QoJ8eHL0Lbh1ysNujrDKEnmL+PqH3
+	 T84eXZ3SqZGMU7TvXZOzrXCAoBU3CJxo9DttGyEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfEaJWJ (ORCPT
+        id S1727139AbfEaJWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 05:22:09 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:37781 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726158AbfEaJWJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 05:22:09 -0400
-Received: by mail-ot1-f68.google.com with SMTP id r10so8520248otd.4;
-        Fri, 31 May 2019 02:22:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=ZmrjcTQQbB0JQZLmh1TVPDsN8UglFZ3+RMTJhU5OjIc=;
-        b=QS/DLuCASwSPZDty8XIYWQRqBRNHUOz9crdECIR7GqAcL3ApTSdp/nUyrid7aJsvb1
-         2F/FhjS82VQKHIJSHrXNkf/y2I6tF2Ijc+qwRzdVaa6JAyq2ZN9tVFioCGG06enmM2pF
-         /ebWRgoX0Xy//gaySdaqExgrXiNcCmyRRu78/wMDQ+IfpUlPpYjOEE/sD8wQyIUeVabt
-         5onxC9pXF2O8xkEd7L4fKLbm8bws5JeFc3WSGYHdRrwMiqHGVTSS/5bMav5QiUIuHjAy
-         yBTKOctmwCkU0LS6SklyPLzNL/pFjno1hPR97oDQdi6Hi/0/Q5Q0z66fxQAlYj7YcGwG
-         oWIQ==
-X-Gm-Message-State: APjAAAXj814XAp7dIYnRMeFM0otBNJbKGYXWvSFvril3BTf5uxQHHIZL
-        6kSHrmiBIdEh4cYuGZsqCc+E4saGJAtzFtZ8feAe57c1
-X-Google-Smtp-Source: APXvYqzqfwl9QjluHmd3fDEh8DMTSFn24beKN/U0UmB9vwHpTF6jfEYs6fPDtDfvsiuZobYbtmpwlolHi83/lykF9Wk=
-X-Received: by 2002:a9d:6b98:: with SMTP id b24mr971451otq.189.1559294528593;
- Fri, 31 May 2019 02:22:08 -0700 (PDT)
+        Fri, 31 May 2019 05:22:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60254 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726158AbfEaJWj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 05:22:39 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 23EC6AFD2;
+        Fri, 31 May 2019 09:22:37 +0000 (UTC)
+Date:   Fri, 31 May 2019 11:22:36 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Rientjes <rientjes@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Zi Yan <zi.yan@cs.rutgers.edu>,
+        Stefan Priebe - Profihost AG <s.priebe@profihost.ag>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] Revert "mm, thp: restore node-local hugepage
+ allocations"
+Message-ID: <20190531092236.GM6896@dhcp22.suse.cz>
+References: <20190503223146.2312-1-aarcange@redhat.com>
+ <20190503223146.2312-3-aarcange@redhat.com>
+ <alpine.DEB.2.21.1905151304190.203145@chino.kir.corp.google.com>
+ <20190520153621.GL18914@techsingularity.net>
+ <alpine.DEB.2.21.1905201018480.96074@chino.kir.corp.google.com>
+ <20190523175737.2fb5b997df85b5d117092b5b@linux-foundation.org>
+ <alpine.DEB.2.21.1905281907060.86034@chino.kir.corp.google.com>
 MIME-Version: 1.0
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 31 May 2019 11:21:57 +0200
-Message-ID: <CAJZ5v0j_uQxWZRjJ_=S1b=NRpLfyf_0KHfyPwSj30SRWr9RzHg@mail.gmail.com>
-Subject: [GIT PULL] Power management fixes for v5.2-rc3
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1905281907060.86034@chino.kir.corp.google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Wed 29-05-19 14:24:33, David Rientjes wrote:
+> On Thu, 23 May 2019, Andrew Morton wrote:
+> 
+> > > We are going in circles, *yes* there is a problem for potential swap 
+> > > storms today because of the poor interaction between memory compaction and 
+> > > directed reclaim but this is a result of a poor API that does not allow 
+> > > userspace to specify that its workload really will span multiple sockets 
+> > > so faulting remotely is the best course of action.  The fix is not to 
+> > > cause regressions for others who have implemented a userspace stack that 
+> > > is based on the past 3+ years of long standing behavior or for specialized 
+> > > workloads where it is known that it spans multiple sockets so we want some 
+> > > kind of different behavior.  We need to provide a clear and stable API to 
+> > > define these terms for the page allocator that is independent of any 
+> > > global setting of thp enabled, defrag, zone_reclaim_mode, etc.  It's 
+> > > workload dependent.
+> > 
+> > um, who is going to do this work?
+> > 
+> > Implementing a new API doesn't help existing userspace which is hurting
+> > from the problem which this patch addresses.
+> > 
+> 
+> The problem which this patch addresses has apparently gone unreported for 
+> 4+ years since
 
-Please pull from the tag
+Can we finaly stop considering the time and focus on the what is the
+most reasonable behavior in general case please? Conserving mistakes
+based on an argument that we have them for many years is just not
+productive. It is very well possible that workloads that suffer from
+this simply run on older distribution kernels which are moving towards
+newer kernels very slowly.
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- pm-5.2-rc3
+> commit 077fcf116c8c2bd7ee9487b645aa3b50368db7e1
+> Author: Aneesh Kumar K.V <aneesh.kumar@linux.vnet.ibm.com>
+> Date:   Wed Feb 11 15:27:12 2015 -0800
+> 
+>     mm/thp: allocate transparent hugepages on local node
 
-with top-most commit d491f2b75237ef37d8867830ab7fad8d9659e853
+Let me quote the commit message to the full lenght
+"
+    This make sure that we try to allocate hugepages from local node if
+    allowed by mempolicy.  If we can't, we fallback to small page allocation
+    based on mempolicy.  This is based on the observation that allocating
+    pages on local node is more beneficial than allocating hugepages on remote
+    node.
 
- PCI: PM: Avoid possible suspend-to-idle issue
+    With this patch applied we may find transparent huge page allocation
+    failures if the current node doesn't have enough freee hugepages.  Before
+    this patch such failures result in us retrying the allocation on other
+    nodes in the numa node mask.
+"
 
-on top of commit cd6c84d8f0cdc911df435bb075ba22ce3c605b07
+I do not see any single numbers backing those claims or any mention of a
+workload that would benefit from the change. Besides that, we have seen
+that THP on a remote (but close) node might be performing better per
+Andrea's numbers. So those claims do not apply in general.
 
- Linux 5.2-rc2
+This is a general problem when making decisions on heuristics which are
+not a clear cut. AFAICS there have been pretty good argments given that
+_real_ workloads suffer from this change while a demonstration of a _real_
+workload that is benefiting is still missing.
 
-to receive power management fixes for 5.2-rc3.
+> My goal is to reach a solution that does not cause anybody to incur 
+> performance penalties as a result of it.
 
-These fix three issues in the system-wide suspend and hibernation
-area related to PCI device PM handling by suspend-to-idle, device
-wakeup optimizations and arbitrary differences between suspend and
-hiberantion.
+That is certainly appreciated and I can offer my help there as well. But
+I believe we should start with a code base that cannot generate a
+swapping storm by a trivial code as demonstrated by Mel. A general idea
+on how to approve the situation has been already outlined for a default
+case and a new memory policy has been mentioned as well but we need
+something to start with and neither of the two is compatible with the
+__GFP_THISNODE behavior.
 
-Specifics:
+[...]
 
- - Modify the PCI bus type's PM code to avoid putting devices left
-   by their drivers in D0 on purpose during suspend to idle into
-   low-power states as doing that may confuse the system resume
-   callbacks of the drivers in question (Rafael Wysocki).
+> The easiest solution would be to define the MADV_HUGEPAGE behavior 
+> explicitly in sysfs: local or remote.  Defaut to local as the behavior 
+> from the past four years and allow users to specify remote if their 
+> workloads will span multiple sockets.  This is somewhat coarse but no more 
+> than the thp defrag setting in sysfs today that defines defrag behavior 
+> for everybody on the system.
 
- - Avoid checking ACPI wakeup configuration during system-wide
-   suspend for suspended devices that do not use ACPI-based wakeup
-   to allow them to stay in suspend more often (Rafael Wysocki).
+This just makes the THP tunning even muddier. Really, can we start with
+a code that doesn't blow up trivially and build on top? In other words
+start with a less specialized usecase being covered and help more
+specialized usecases to get what they need.
 
- - The last phase of hibernation is analogous to system-wide suspend
-   also because on platforms with ACPI it passes control to the
-   platform firmware to complete the transision, so make it indicate
-   that by calling pm_set_suspend_via_firmware() to allow the drivers
-   that care about this to do the right thing (Rafael Wysocki).
-
-Thanks!
-
-
----------------
-
-Rafael J. Wysocki (3):
-      ACPI/PCI: PM: Add missing wakeup.flags.valid checks
-      ACPI: PM: Call pm_set_suspend_via_firmware() during hibernation
-      PCI: PM: Avoid possible suspend-to-idle issue
-
----------------
-
- drivers/acpi/device_pm.c |  4 ++--
- drivers/acpi/sleep.c     | 39 ++++++++++++++++++++++++---------------
- drivers/pci/pci-acpi.c   |  3 ++-
- drivers/pci/pci-driver.c | 17 ++++++++++++++++-
- include/linux/pci.h      |  1 +
- include/linux/suspend.h  |  2 +-
- kernel/power/hibernate.c |  4 ++--
- 7 files changed, 48 insertions(+), 22 deletions(-)
+-- 
+Michal Hocko
+SUSE Labs
