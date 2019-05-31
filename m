@@ -2,157 +2,101 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8582BC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:37:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0FB6C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5894D21670
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:37:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FJSBML7v"
+	by mail.kernel.org (Postfix) with ESMTP id 8805726AB9
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:38:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559313483;
+	bh=BDjm7pEDdEXPIX9H5qMwxiK+c8NtDxwUnmEORHK/zVE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xOaX1q+pcg6H0lfp/eBA6ERyXi+7nRNqN+I4uhP/3CSG37xanRkuJav5InHyUfgIQ
+	 PypAxV9gmW+kW7VGW8a7DHMkCEQUrdNyFJ/yehvz6u0pVQr34QGb4+emcWLNMc6e9U
+	 mYAHp7yibwRw0WAUfHNrkSn+avsuReWm/4MFWINM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbfEaOh4 (ORCPT
+        id S1726725AbfEaOiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 10:37:56 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:59768 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbfEaOh4 (ORCPT
+        Fri, 31 May 2019 10:38:02 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:35262 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbfEaOiC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 10:37:56 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4VEbplN017657;
-        Fri, 31 May 2019 09:37:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559313471;
-        bh=zZgQ70nXbR7VQXN97IAfQFiWqnaeO/F+zfJEbFVW/qc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=FJSBML7vdqyGPKRY8PjpPy5WX/LhKShKt50DkSD1S88xlTjLxD3tnrAKs8IOHSViI
-         TlVoBHxIhoh92erINraWh7PLohZS1TgJsrssjO1RtUZ92PwZYEg6xFSqm/p1wlcCM1
-         vTgpGXUlYf2GTq9CnI3QAvUx4+GlDdeVRiAvo/fo=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4VEbojt063709
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 31 May 2019 09:37:51 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 31
- May 2019 09:37:50 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 31 May 2019 09:37:50 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4VEbmh4103596;
-        Fri, 31 May 2019 09:37:49 -0500
-Subject: Re: [PATCH] phy: meson-g12a-usb3-pcie: disable locking for cr_regmap
-To:     Neil Armstrong <narmstrong@baylibre.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-amlogic@lists.infradead.org>
-References: <20190531103137.14901-1-narmstrong@baylibre.com>
- <4dc22a2e-66ca-0556-3aa3-4ed8887c2b1b@ti.com>
- <2a354f12-61a8-6b4e-8006-e442245a92ec@baylibre.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <84bdde38-96a5-6ba0-dc81-e157202a4c52@ti.com>
-Date:   Fri, 31 May 2019 20:06:29 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 31 May 2019 10:38:02 -0400
+Received: by mail-qt1-f193.google.com with SMTP id d23so1141912qto.2
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 07:38:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=649G8fX5KsyxKNGqC8JgOTPtl/EUKZLecJRl6sV4WuE=;
+        b=gcp92TBDfc0rnUPM9YcSJPS63vLFPmXlbELISOregSWXFow0wkuMKoNUTCwWuPETjn
+         58EjhTjW0OS5FGcgpplBpmIsKAOKOj5yz/RM0/7byNNAcT83+i2IcZsyAxLeRThi8iBD
+         u/ot7JwaMWPkMOswd8p5V6fcx1AJBQj6oUxJAE5RR0Tljh4eGxulZ9VkS0R88KQxf1yf
+         JMUjXaFl5Rle0cxtVYfNp08eqHZW6Gw8Z9WvlWbFaiyaCQ2i9xdlsZ6WM3u1pkc46Jyz
+         Nx3amfFonmYF8TqE1rNIL3DAei2V1sqrXokli290xrfi41tdLCckSjNVEAmNr1IvZiIA
+         BZaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=649G8fX5KsyxKNGqC8JgOTPtl/EUKZLecJRl6sV4WuE=;
+        b=B5Zg1xaCTnP1sy1AbaGaORjdKPxEJvMPf6Kd6n6crAckyxJdE2Qy/RSUVelvoVsdbb
+         erenSVT90yRzypjgEMhPOuo20lBhU8Ea4gf/CxDItdtsWRJWO1qAMesKgmY9wiLiuuR8
+         2IrYT5RmzWBNXPkKKAd6/p/aDFE4MZPl3bu3cV6dZEMFG0DFnnNBiLVwr0l3pEq+zUYE
+         PJ+6H/1OtSQOMVCZNINcx/G9utlIL6CQOM0f2d+Xnxk9sLCC6BRFM7uh1GI+z+Z/PFjJ
+         /WT9NpcTHMrvxgzBHcFoEf6/3SXshwmqCfVMZn+TVAVfzWV2/LFD3duXu7nTC1W49xie
+         D6bw==
+X-Gm-Message-State: APjAAAUkqseMAk5GBhfOGoUAaCQQFJawBeP8YUtop0V3m9va/b8y7USV
+        pa4Elr7ivwkXcekArvnqFHo=
+X-Google-Smtp-Source: APXvYqygj+noRfQ7ZarPTbIglLApJBmc4ARIM2HfmB8bcs4XGAPQh8P9oPNnFyjrBYBZ687Y1rT0Pw==
+X-Received: by 2002:a0c:878e:: with SMTP id 14mr9262652qvj.103.1559313481179;
+        Fri, 31 May 2019 07:38:01 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::39c9])
+        by smtp.gmail.com with ESMTPSA id v195sm3201216qka.28.2019.05.31.07.38.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 31 May 2019 07:38:00 -0700 (PDT)
+Date:   Fri, 31 May 2019 07:37:59 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Gao Xiang <gaoxiang25@huawei.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH] sched/core: add __sched tag for io_schedule()
+Message-ID: <20190531143759.GD374014@devbig004.ftw2.facebook.com>
+References: <20190531082912.80724-1-gaoxiang25@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <2a354f12-61a8-6b4e-8006-e442245a92ec@baylibre.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190531082912.80724-1-gaoxiang25@huawei.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 31, 2019 at 04:29:12PM +0800, Gao Xiang wrote:
+> non-inline io_schedule() was introduced in
+> commit 10ab56434f2f ("sched/core: Separate out io_schedule_prepare() and io_schedule_finish()")
+> Keep in line with io_schedule_timeout, Otherwise
+> "/proc/<pid>/wchan" will report io_schedule()
+> rather than its callers when waiting io.
+> 
+> Reported-by: Jilong Kou <koujilong@huawei.com>
+> Cc: Tejun Heo <tj@kernel.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 
+Acked-by: Tejun Heo <tj@kernel.org>
 
-On 31/05/19 7:52 PM, Neil Armstrong wrote:
-> On 31/05/2019 12:35, Kishon Vijay Abraham I wrote:
->> Hi,
->>
->> On 31/05/19 4:01 PM, Neil Armstrong wrote:
->>> Fix the following BUG by disabling locking for the cr_regmap config.
->>
->> What caused the BUG in the first place? The commit log needs more details or
->> else this looks like a workaround to mask a BUG.
-> 
-> I thought it was pretty explicit, phy_g12a_usb3_pcie_cr_bus_read() sleeps
-> with regmap_read_poll_timeout() while ran in spinlock_irq, caused by regmap fast_io = true
-> 
-> Locking is not needed in our case, this regmap is only used by the PHY init() callback.
-> 
-> Should I send a v2 with such explanation ?
+Thanks.
 
-yes, should atleast mention locking is not needed here.
-
--Kishon
-
-> 
-> Neil
-> 
->>
->> Thanks
->> Kishon
->>
->>>
->>> BUG: sleeping function called from invalid context at drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c:85
->>> in_atomic(): 1, irqs_disabled(): 128, pid: 60, name: kworker/3:1
->>> [snip]
->>> Workqueue: events deferred_probe_work_func
->>> Call trace:
->>>  dump_backtrace+0x0/0x190
->>>  show_stack+0x14/0x20
->>>  dump_stack+0x90/0xb4
->>>  ___might_sleep+0xec/0x110
->>>  __might_sleep+0x50/0x88
->>>  phy_g12a_usb3_pcie_cr_bus_addr.isra.0+0x80/0x1a8
->>>  phy_g12a_usb3_pcie_cr_bus_read+0x34/0x1d8
->>>  _regmap_read+0x60/0xe0
->>>  _regmap_update_bits+0xc4/0x110
->>>  regmap_update_bits_base+0x60/0x90
->>>  phy_g12a_usb3_pcie_init+0xdc/0x210
->>>  phy_init+0x74/0xd0
->>>  dwc3_meson_g12a_probe+0x2cc/0x4d0
->>>  platform_drv_probe+0x50/0xa0
->>>  really_probe+0x20c/0x3b8
->>>  driver_probe_device+0x68/0x150
->>>  __device_attach_driver+0xa8/0x170
->>>  bus_for_each_drv+0x64/0xc8
->>>  __device_attach+0xd8/0x158
->>>  device_initial_probe+0x10/0x18
->>>  bus_probe_device+0x90/0x98
->>>  deferred_probe_work_func+0x94/0xe8
->>>  process_one_work+0x1e0/0x338
->>>  worker_thread+0x230/0x458
->>>  kthread+0x134/0x138
->>>  ret_from_fork+0x10/0x1c
->>>
->>> Fixes: 36077e16c050 ("phy: amlogic: Add Amlogic G12A USB3 + PCIE Combo PHY Driver")
->>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->>> ---
->>>  drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c b/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c
->>> index 6233a7979a93..ac322d643c7a 100644
->>> --- a/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c
->>> +++ b/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c
->>> @@ -188,7 +188,7 @@ static const struct regmap_config phy_g12a_usb3_pcie_cr_regmap_conf = {
->>>  	.reg_read = phy_g12a_usb3_pcie_cr_bus_read,
->>>  	.reg_write = phy_g12a_usb3_pcie_cr_bus_write,
->>>  	.max_register = 0xffff,
->>> -	.fast_io = true,
->>> +	.disable_locking = true,
->>>  };
->>>  
->>>  static int phy_g12a_usb3_init(struct phy *phy)
->>>
-> 
+-- 
+tejun
