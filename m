@@ -2,129 +2,96 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ECD0C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E8BC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FE73246C7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:27:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 386EE2476F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:27:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mfpiwchZ"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rqMkatPx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbfEaO12 (ORCPT
+        id S1726883AbfEaO1x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 10:27:28 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:33301 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbfEaO12 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 10:27:28 -0400
-Received: by mail-ed1-f66.google.com with SMTP id n17so14871973edb.0;
-        Fri, 31 May 2019 07:27:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6UNAHPK4lxioobAoRT0BGcdwVsps1KJ7DZZuOajW11o=;
-        b=mfpiwchZ+bgLDbE1e8JO0/GVcJgomLJqDptBY16xc1eBCHIV2EQybuV+y2mZiTKbBR
-         HcnLEt8skfwuwZs9OlT3gAAj718u57nEtViwwgbVLNv/ohiiV+0EVEnecjgQbEof6AOl
-         y2stmiNGs85OeqsLZ+DBrgPsqvA6G2SxBzSKRUzMjx9/8GdSkbZW2F66tpQc36H+PgAL
-         CxLwnklncY4eUmZ6AkXZe8EmZV4TnWaDgerELea+KgqNadNDOD5wxS1THgnA62cuNLGr
-         oA2hGXNjqkTJbswnxf8xxLkR2huiBxf5Aq5gzcejVBLzw5oCT26pT/TX++NVuLff/k84
-         aDqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6UNAHPK4lxioobAoRT0BGcdwVsps1KJ7DZZuOajW11o=;
-        b=gFQKR0+I59sDStQMrhPMWKdE21g6zhNC5AfAkp1Kkx0pJPWrHERb9GCvtSiv7QDMak
-         60kTbrd/wcdoRQm5zoqDzsYoZ5XrT2gnn/YYiXOCeu6Av7XyeA8DiIOy9BRUB8jjVGnb
-         tZIYCXJcgQN3es6IqB/grBA1q2L5/Q+LK/wfxBTGrU3T/MM7NHDzfCegk1jF1wjz+mVt
-         uvnAr/xmYrh/2Jg01oz6EC0Mi1ZuvsmH0RscPf+PX5UMF3JjDEKTi7edqGnp6dn4e971
-         IFARSs71Y4z2TtHlGmVcs+HcvvdHHAXebGC0t88qBLjlidEe12ZR/qsWdA9AqI6WZ5vg
-         BBVQ==
-X-Gm-Message-State: APjAAAUhXv6GmF2byk5N3ePjVedkBBnheVWc84c2DIAxqoi0+Cok1GPP
-        EM8HVBJ2TIrdry8sbLZV43RAnzU3dWbN25Q9zCw=
-X-Google-Smtp-Source: APXvYqzyD3X2JQXbWFIbYGfT0jLlLQh/OrIvjzKfXY8ufWrGQhEKlq8kd1Da5N/85EUdu19P7iNRb34Lo6wLYSf0668=
-X-Received: by 2002:a17:906:4b12:: with SMTP id y18mr9397146eju.32.1559312846324;
- Fri, 31 May 2019 07:27:26 -0700 (PDT)
+        Fri, 31 May 2019 10:27:53 -0400
+Received: from mail-eopbgr10089.outbound.protection.outlook.com ([40.107.1.89]:29187
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726418AbfEaO1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 10:27:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1DaOTHPwWxFGu5pFSFNw74JHIu+6LpxvcwpSaDxOi8Y=;
+ b=rqMkatPxMLicE6X4D9J4ema92D2GAwY/ArORX8akzxYkknLgCWORecd5mH00IDhYeJ9oshwtXf1vxPI/bQno0Fwe6UP7oRT4sClgXa0JBDVmOIYSkc2g2nJ92ByIgiyTMSRRvqJIiqBU3yvqY79doLNuePsAInBgNnt6xlG8+Y4=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3645.eurprd04.prod.outlook.com (52.134.14.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.18; Fri, 31 May 2019 14:27:46 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::ccaf:f4a1:704a:e745]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::ccaf:f4a1:704a:e745%4]) with mapi id 15.20.1922.021; Fri, 31 May 2019
+ 14:27:46 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH] crypto: caam - disable some clock checks for iMX7ULP
+Thread-Topic: [PATCH] crypto: caam - disable some clock checks for iMX7ULP
+Thread-Index: AQHVF6DscUjseuTf80KtUeNJyp6zSQ==
+Date:   Fri, 31 May 2019 14:27:46 +0000
+Message-ID: <VI1PR0402MB3485BC76A33F8A81C73184E398190@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <20190531110634.2967-1-iuliana.prodan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c12826dc-12fa-4aa6-8d68-08d6e5d426e3
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR0402MB3645;
+x-ms-traffictypediagnostic: VI1PR0402MB3645:
+x-microsoft-antispam-prvs: <VI1PR0402MB3645A1CD4B1383C90E7B77A398190@VI1PR0402MB3645.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3826;
+x-forefront-prvs: 00540983E2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(39860400002)(396003)(136003)(366004)(376002)(189003)(199004)(14444005)(256004)(7736002)(6116002)(53936002)(74316002)(66556008)(3846002)(6436002)(71200400001)(66066001)(64756008)(186003)(76116006)(305945005)(71190400001)(66476007)(558084003)(4326008)(478600001)(5660300002)(66946007)(73956011)(66446008)(8676002)(76176011)(54906003)(8936002)(86362001)(446003)(6246003)(25786009)(33656002)(2906002)(68736007)(55016002)(110136005)(9686003)(102836004)(99286004)(6636002)(52536014)(81166006)(26005)(14454004)(44832011)(7696005)(476003)(6506007)(229853002)(486006)(316002)(53546011)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3645;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: WVUFRfyYMl6tXBmNjd1fESH2KGSDEGeNui7i2dvjCDr1lfDDHUmZUDlNCzAHzN/dD9+ldmGv79dUMLQgtLd4T8ZvzGZsgOJRGCHrsKH1OjnmJvpKTygI/KVi8ZC48Om/B1Tiq7RW1ryt7p61eDXOotnh7kgil7Ryhd3Bt/FOv2U4uOBXWkCFCOGSWRcp9EZhgkTyVotmcsUQAZS/xxRar/vIyxbQ5zM/VbGX/QmEgCcXd3GsGV22v6Nc2AgtCP9ICCh5KB3wl2PZfkLQHn+KCW+TA9fV3rzo+Q77+J1w3xU4fQAZvp5/Caec6VBRp+hXKW3tqZMdRTTz50oxXVglaGf+RkkKev2tC10mmtbR5awOYE4kTIprAeuRqP15Ca3T6RECi4yee/WpPiQeG842LnIxMW9Tn+y5OCvawpzsYV0=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190529045207.fzvhuu6d6jf5p65t@localhost> <dbe0a38f-8b48-06dd-cc2c-676e92ba0e74@gmail.com>
- <20190530034555.wv35efen3igwwzjq@localhost> <CA+h21hpjsC=ie5G7Gx3EcPpazyxze6X_k+8eC+vw7JBvEO2zNg@mail.gmail.com>
- <20190530143037.iky5kk3h4ssmec3f@localhost> <CA+h21hpp68AEEykxr8bJB=uJ+b0tg881Z7Ao_OfbTAXNxS8WgQ@mail.gmail.com>
- <20190530150557.iur7fruhyf5bs3qw@localhost> <CA+h21hrBwR4Sow7q0_rS1u2md1M4bSAJt8FO5+VLFiu9UGnvjA@mail.gmail.com>
- <20190531043417.6phscbpmo6krvxam@localhost> <CA+h21hp9DfW3wFy4YbHMU31rBHyrnUTdF4kKwX36h9vHOW2COw@mail.gmail.com>
- <20190531140841.j4f72rlojmaayqr5@localhost>
-In-Reply-To: <20190531140841.j4f72rlojmaayqr5@localhost>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Fri, 31 May 2019 17:27:15 +0300
-Message-ID: <CA+h21hroywaij3gyO0u6v+GFVO2Fv_dP_a+L3oMGpQH8mQgJ5g@mail.gmail.com>
-Subject: Re: [PATCH net-next 0/5] PTP support for the SJA1105 DSA driver
-To:     Richard Cochran <richardcochran@gmail.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c12826dc-12fa-4aa6-8d68-08d6e5d426e3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 May 2019 14:27:46.7008
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: horia.geanta@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3645
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 May 2019 at 17:08, Richard Cochran <richardcochran@gmail.com> wrote:
->
-> On Fri, May 31, 2019 at 04:23:24PM +0300, Vladimir Oltean wrote:
-> > The switch has internal logic to not send any other frame to the CPU
-> > between a link-local and a meta frame.
->
-> So this is guarantied by the switch?  What happens when multiple PTP
-> frames arrive at the same time on different ports?  Does the switch
-> buffer them and ensure strict ordering at the CPU port?
->
-> In any case, the switch's guarantee is an important fact to state
-> clearly in your series!
->
-
-Yes, ports with lower index take priority.
-
-> > Hence, if the MAC of the DSA master drops some of these frames, it
-> > does not "spoil any chance" except if, out of the sequence LL n ->
-> > META n -> LL n+1 -> META n+1, it persistently drops only META n and LL
-> > n+1.
->
-> LL = link layer?
->
-
-Yes, link-local in this case means trapped frames in the
-01-80-C2-xx-xx-xx or 01:1B:C9:xx:xx:xx space.
-
-> > So I'd like to re-state the problem towards what should be done to
-> > prevent LL and META frames getting reordered in the DSA master driver
-> > on multi-queue/multi-core systems.
->
-> Ok.
->
-> > At the most basic level, there
-> > should exist a rule that makes only a single core process these
-> > frames.
->
-> This can be done simply using a data structure in the driver with an
-> appropriate locking mechanism.  Then you don't have to worry which
-> core the driver code runs on.
->
-
-Actually you do. DSA is special because it is not the first net device
-in the RX path that processes the frames. Something needs to be done
-on the master port.
-
-> Thanks,
-> Richard
+On 5/31/2019 2:06 PM, Iuliana Prodan wrote:=0A=
+> Disabled the check and set of 'mem' and 'emi_slow'=0A=
+> clocks, since these are not available for iMX7ULP.=0A=
+> =0A=
+> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
+Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
+=0A=
+Thanks,=0A=
+Horia=0A=
