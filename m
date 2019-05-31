@@ -2,103 +2,95 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CC3C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB39AC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A938F24ADE
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAE6C26529
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:22:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbfEaQWP (ORCPT
+        id S1727015AbfEaQWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 12:22:15 -0400
-Received: from foss.arm.com ([217.140.101.70]:54096 "EHLO foss.arm.com"
+        Fri, 31 May 2019 12:22:32 -0400
+Received: from mail.us.es ([193.147.175.20]:45892 "EHLO mail.us.es"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726649AbfEaQWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 12:22:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 72A16341;
-        Fri, 31 May 2019 09:22:14 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D9D693F59C;
-        Fri, 31 May 2019 09:22:08 -0700 (PDT)
-Date:   Fri, 31 May 2019 17:22:06 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Subject: Re: [PATCH v15 17/17] selftests, arm64: add a selftest for passing
- tagged pointers to kernel
-Message-ID: <20190531162206.GB3568@arrakis.emea.arm.com>
-References: <cover.1557160186.git.andreyknvl@google.com>
- <e31d9364eb0c2eba8ce246a558422e811d82d21b.1557160186.git.andreyknvl@google.com>
- <20190522141612.GA28122@arrakis.emea.arm.com>
- <CAAeHK+wUerHQOV2PuaTwTxcCucZHZodLwg48228SB+ymxEqT2A@mail.gmail.com>
+        id S1726924AbfEaQWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 12:22:32 -0400
+Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
+        by mail.us.es (Postfix) with ESMTP id 74B908077A
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 18:22:30 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 6267FDA718
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 18:22:30 +0200 (CEST)
+Received: by antivirus1-rhel7.int (Postfix, from userid 99)
+        id 45E95DA714; Fri, 31 May 2019 18:22:30 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 11A22DA781;
+        Fri, 31 May 2019 18:22:28 +0200 (CEST)
+Received: from 192.168.1.97 (192.168.1.97)
+ by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
+ Fri, 31 May 2019 18:22:28 +0200 (CEST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
+Received: from us.es (sys.soleta.eu [212.170.55.40])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: 1984lsi)
+        by entrada.int (Postfix) with ESMTPSA id D27D04265A31;
+        Fri, 31 May 2019 18:22:27 +0200 (CEST)
+Date:   Fri, 31 May 2019 18:22:27 +0200
+X-SMTPAUTHUS: auth mail.us.es
+From:   Pablo Neira Ayuso <pablo@netfilter.org>
+To:     Simon Horman <horms@verge.net.au>
+Cc:     Julian Anastasov <ja@ssi.bg>, Jacky Hu <hengqing.hu@gmail.com>,
+        jacky.hu@walmart.com, jason.niesz@walmart.com,
+        Wensong Zhang <wensong@linux-vs.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org,
+        lvs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org
+Subject: Re: [PATCH v4] ipvs: add checksum support for gue encapsulation
+Message-ID: <20190531162227.5mbbqqybn6jwausj@salvia>
+References: <20190530001641.504-1-hengqing.hu@gmail.com>
+ <alpine.LFD.2.21.1905301008470.4257@ja.home.ssi.bg>
+ <20190531083741.dxsat27bnsy72wdv@verge.net.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAAeHK+wUerHQOV2PuaTwTxcCucZHZodLwg48228SB+ymxEqT2A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190531083741.dxsat27bnsy72wdv@verge.net.au>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 04:21:48PM +0200, Andrey Konovalov wrote:
-> On Wed, May 22, 2019 at 4:16 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > On Mon, May 06, 2019 at 06:31:03PM +0200, Andrey Konovalov wrote:
-> > > This patch is a part of a series that extends arm64 kernel ABI to allow to
-> > > pass tagged user pointers (with the top byte set to something else other
-> > > than 0x00) as syscall arguments.
-> > >
-> > > This patch adds a simple test, that calls the uname syscall with a
-> > > tagged user pointer as an argument. Without the kernel accepting tagged
-> > > user pointers the test fails with EFAULT.
-> >
-> > That's probably sufficient for a simple example. Something we could add
-> > to Documentation maybe is a small library that can be LD_PRELOAD'ed so
-> > that you can run a lot more tests like LTP.
+On Fri, May 31, 2019 at 10:37:41AM +0200, Simon Horman wrote:
+> On Thu, May 30, 2019 at 10:10:15AM +0300, Julian Anastasov wrote:
+> > 
+> > 	Hello,
+> > 
+> > On Thu, 30 May 2019, Jacky Hu wrote:
+> > 
+> > > Add checksum support for gue encapsulation with the tun_flags parameter,
+> > > which could be one of the values below:
+> > > IP_VS_TUNNEL_ENCAP_FLAG_NOCSUM
+> > > IP_VS_TUNNEL_ENCAP_FLAG_CSUM
+> > > IP_VS_TUNNEL_ENCAP_FLAG_REMCSUM
+> > > 
+> > > Signed-off-by: Jacky Hu <hengqing.hu@gmail.com>
+> > 
+> > 	Looks good to me, thanks!
+> > 
+> > Signed-off-by: Julian Anastasov <ja@ssi.bg>
 > 
-> Should I add this into this series, or should this go into Vincenzo's patchset?
+> Likewise, thanks.
+> 
+> Pablo, pleas consider applying this to nf-next.
 
-If you can tweak the selftest Makefile to build a library and force it
-with LD_PRELOAD, you can keep it with this patch. It would be easier to
-extend to other syscall tests, signal handling etc.
-
--- 
-Catalin
+Applied, thanks Simon.
