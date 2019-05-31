@@ -2,95 +2,139 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB39AC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE09C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAE6C26529
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:22:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1023A26BF8
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:23:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559319837;
+	bh=efAbtd2ephq3ZJ+e75edZWXg5Ub9SkPbKyfyY9Hh5qU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=yO117m3UA6+U0eBYYBfNnhFEaUaN4ORNZ45fuP2DPgyN5mRSQHJJ76FrC5HVGBDZ1
+	 s0ESPQrsZDhcuw/0OK/Y9h2X/mLaefCx+RvVgPGlaa4u/TZUHgp/JdBcytYlYadfyV
+	 2LnfPhuLzJ6i8mkE2yQdXYG2FEe1o1jp8lHwcahs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbfEaQWc (ORCPT
+        id S1726713AbfEaQX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 12:22:32 -0400
-Received: from mail.us.es ([193.147.175.20]:45892 "EHLO mail.us.es"
+        Fri, 31 May 2019 12:23:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726924AbfEaQWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 12:22:32 -0400
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id 74B908077A
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 18:22:30 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 6267FDA718
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 18:22:30 +0200 (CEST)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id 45E95DA714; Fri, 31 May 2019 18:22:30 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 11A22DA781;
-        Fri, 31 May 2019 18:22:28 +0200 (CEST)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Fri, 31 May 2019 18:22:28 +0200 (CEST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (sys.soleta.eu [212.170.55.40])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726546AbfEaQXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 12:23:55 -0400
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id D27D04265A31;
-        Fri, 31 May 2019 18:22:27 +0200 (CEST)
-Date:   Fri, 31 May 2019 18:22:27 +0200
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     Simon Horman <horms@verge.net.au>
-Cc:     Julian Anastasov <ja@ssi.bg>, Jacky Hu <hengqing.hu@gmail.com>,
-        jacky.hu@walmart.com, jason.niesz@walmart.com,
-        Wensong Zhang <wensong@linux-vs.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org,
-        lvs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org
-Subject: Re: [PATCH v4] ipvs: add checksum support for gue encapsulation
-Message-ID: <20190531162227.5mbbqqybn6jwausj@salvia>
-References: <20190530001641.504-1-hengqing.hu@gmail.com>
- <alpine.LFD.2.21.1905301008470.4257@ja.home.ssi.bg>
- <20190531083741.dxsat27bnsy72wdv@verge.net.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id C78B326BF8
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 16:23:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559319835;
+        bh=efAbtd2ephq3ZJ+e75edZWXg5Ub9SkPbKyfyY9Hh5qU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=1GTjQ4bKBpUZNLYNxsYoMB6gOI4xxNtlEBdDQatSNiGr5QltCyAtTw7ocauWoJQMc
+         B2j4PF8Ub8RR61CwnLkYYYy+MwlnhexTDkEs0i+NJoVNFJdiGBas5sDhjrYbPhjpbO
+         Haai5dz1o04iuV8JD9BE9hlgNbWGd0rg5yjc5MXU=
+Received: by mail-wm1-f49.google.com with SMTP id 16so1987338wmg.5
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 09:23:54 -0700 (PDT)
+X-Gm-Message-State: APjAAAVBaoZ4kO/U396LUBkPBXW//D0HTNMLPcaUXxT8AyQzJjewe/5Z
+        sRhMrLW9dBn+pziLcgf/+dWnMyw019x1jI0ZC6dhVQ==
+X-Google-Smtp-Source: APXvYqxZXzo/x+zipl4hnTwPXUOZvfyifCyETHcTpGpWwjYJHutyX2v/KLKuwXvBoO8UfHzJFsNQifVW3kxN18t73zk=
+X-Received: by 2002:a7b:cd84:: with SMTP id y4mr6365439wmj.79.1559319833382;
+ Fri, 31 May 2019 09:23:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190531083741.dxsat27bnsy72wdv@verge.net.au>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Virus-Scanned: ClamAV using ClamSMTP
+References: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm>
+ <20190531051456.fzkvn62qlkf6wqra@treble> <nycvar.YFH.7.76.1905311045240.1962@cbobk.fhfr.pm>
+ <5564116.e9OFvgDRbB@kreacher> <CALCETrUpseta+NrhVwzzVFTe-BkBHtDUJBO22ci3mAsVR+XOog@mail.gmail.com>
+ <nycvar.YFH.7.76.1905311628330.1962@cbobk.fhfr.pm> <B7AC83ED-3F11-42B9-8506-C842A5937B50@amacapital.net>
+ <nycvar.YFH.7.76.1905311651450.1962@cbobk.fhfr.pm>
+In-Reply-To: <nycvar.YFH.7.76.1905311651450.1962@cbobk.fhfr.pm>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 31 May 2019 09:23:41 -0700
+X-Gmail-Original-Message-ID: <CALCETrUQzZTRnvmOS09UvRM9UCGEDvSdbJtkeeEa2foMf+hF2w@mail.gmail.com>
+Message-ID: <CALCETrUQzZTRnvmOS09UvRM9UCGEDvSdbJtkeeEa2foMf+hF2w@mail.gmail.com>
+Subject: Re: [PATCH v4] x86/power: Fix 'nosmt' vs. hibernation triple fault
+ during resume
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 10:37:41AM +0200, Simon Horman wrote:
-> On Thu, May 30, 2019 at 10:10:15AM +0300, Julian Anastasov wrote:
-> > 
-> > 	Hello,
-> > 
-> > On Thu, 30 May 2019, Jacky Hu wrote:
-> > 
-> > > Add checksum support for gue encapsulation with the tun_flags parameter,
-> > > which could be one of the values below:
-> > > IP_VS_TUNNEL_ENCAP_FLAG_NOCSUM
-> > > IP_VS_TUNNEL_ENCAP_FLAG_CSUM
-> > > IP_VS_TUNNEL_ENCAP_FLAG_REMCSUM
-> > > 
-> > > Signed-off-by: Jacky Hu <hengqing.hu@gmail.com>
-> > 
-> > 	Looks good to me, thanks!
-> > 
-> > Signed-off-by: Julian Anastasov <ja@ssi.bg>
-> 
-> Likewise, thanks.
-> 
-> Pablo, pleas consider applying this to nf-next.
+On Fri, May 31, 2019 at 7:54 AM Jiri Kosina <jikos@kernel.org> wrote:
+>
+> On Fri, 31 May 2019, Andy Lutomirski wrote:
+>
+> > For that matter, what actually happens if we get an SMI while halted?
+> > Does RSM go directly to sleep or does it re-fetch the HLT?
+>
+> Our mails just crossed, I replied to Josh's mwait() proposal patch a
+> minute ago.
+>
+> HLT is guaranteed to be re-entered if SMM interrupted it, while MWAIT is
+> not.
+>
+> So as a short-term fix for 5.2, I still believe in v4 of my patch that
+> does the mwait->hlt->mwait transition across hibernate/resume, and for 5.=
+3
+> I can look into forcing it to wait-for-SIPI proper.
+>
 
-Applied, thanks Simon.
+How sure are you?  From http://www.rcollins.org/ddj/Mar97/Mar97.html I see:
+
+In general, the AutoHALT field directs the microprocessor whether or
+not to restart the HLT instruction upon exit of SMM. This is
+accomplished by decrementing EIP and executing whatever instruction
+resides at that position. AutoHALT restart behavior is consistent,
+regardless of whether or not EIP-1 contains a HLT instruction. If the
+SMM handler set Auto HALT[bit0]=3D1 when the interrupted instruction was
+not a HLT instruction(AutoHALT[bit0]=3D 0 upon entrance), they would run
+the risk of resuming execution at an undesired location. The RSM
+microcode doesn=E2=80=99t know the length of the interrupted instruction.
+Therefore when AutoHALT[bit0]=3D1 upon exit, the RSM microcode blindly
+decrements the EIP register by 1 and resumes execution. This explains
+why Intel warns that unpredictable behavior may result from setting
+this field to restart a HLT instruction when the microprocessor wasn=E2=80=
+=99t
+in a HALT state upon entrance. Listing One presents an algorithm that
+describes the AutoHALT Restart feature.
+
+The AMD APM says:
+
+If the return from SMM takes the processor back to the halt state, the
+HLT instruction is not re-
+executed. However, the halt special bus-cycle is driven on the
+processor bus after the RSM instruction
+executes.
+
+The Intel SDM Vol 3 34.10 says:
+
+If the HLT instruction is restarted, the processor will generate a
+memory access to fetch the HLT instruction (if it is
+not in the internal cache), and execute a HLT bus transaction. This
+behavior results in multiple HLT bus transactions
+for the same HLT instruction.
+
+And the SDM is very clear that one should *not* do RSM with auto-halt
+set if the instruction that was interrupted wasn't HLT.
+
+It sounds to me like Intel does not architecturally guarantee that
+it's okay to do HLT from one CPU and then remove the HLT instruction
+out from under it on another CPU.
