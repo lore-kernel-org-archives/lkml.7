@@ -3,163 +3,119 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8F8C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7ACDC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7E0B26820
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1A632682B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:22:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbfEaLRE convert rfc822-to-8bit (ORCPT
+        id S1727053AbfEaLW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 07:17:04 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:32976 "EHLO huawei.com"
+        Fri, 31 May 2019 07:22:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51444 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726386AbfEaLRD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 07:17:03 -0400
-Received: from lhreml708-cah.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id DCBDC516BBC2B6FD8B3B;
-        Fri, 31 May 2019 12:17:01 +0100 (IST)
-Received: from lhreml703-chm.china.huawei.com (10.201.108.52) by
- lhreml708-cah.china.huawei.com (10.201.108.49) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 31 May 2019 12:17:01 +0100
-Received: from lhreml702-chm.china.huawei.com (10.201.108.51) by
- lhreml703-chm.china.huawei.com (10.201.108.52) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Fri, 31 May 2019 12:17:01 +0100
-Received: from lhreml702-chm.china.huawei.com ([10.201.68.197]) by
- lhreml702-chm.china.huawei.com ([10.201.68.197]) with mapi id 15.01.1713.004;
- Fri, 31 May 2019 12:17:01 +0100
-From:   Salil Mehta <salil.mehta@huawei.com>
-To:     linyunsheng <linyunsheng@huawei.com>,
-        "davem@davemloft.net" <davem@davemloft.net>
-CC:     "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "stephen@networkplumber.org" <stephen@networkplumber.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>
-Subject: RE: [PATCH v2 net-next] net: link_watch: prevent starvation when
- processing linkwatch wq
-Thread-Topic: [PATCH v2 net-next] net: link_watch: prevent starvation when
- processing linkwatch wq
-Thread-Index: AQHVF4+KnJVjg+EZ+0GafWQlfrL2fqaFEd8g
-Date:   Fri, 31 May 2019 11:17:00 +0000
-Message-ID: <8a93eecf7a7a4ffd81f1b7d08f1a7442@huawei.com>
-References: <1559293233-43017-1-git-send-email-linyunsheng@huawei.com>
-In-Reply-To: <1559293233-43017-1-git-send-email-linyunsheng@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.202.226.43]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1726002AbfEaLW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 07:22:56 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 09B2EAD05;
+        Fri, 31 May 2019 11:22:55 +0000 (UTC)
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 31 May 2019 13:22:54 +0200
+From:   Roman Penyaev <rpenyaev@suse.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     azat@libevent.org, akpm@linux-foundation.org,
+        viro@zeniv.linux.org.uk, torvalds@linux-foundation.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 07/13] epoll: call ep_add_event_to_uring() from
+ ep_poll_callback()
+In-Reply-To: <20190531095616.GD17637@hirez.programming.kicks-ass.net>
+References: <20190516085810.31077-1-rpenyaev@suse.de>
+ <20190516085810.31077-8-rpenyaev@suse.de>
+ <20190531095616.GD17637@hirez.programming.kicks-ass.net>
+Message-ID: <98971429dc36e8a2e3417af1744de2b2@suse.de>
+X-Sender: rpenyaev@suse.de
+User-Agent: Roundcube Webmail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: netdev-owner@vger.kernel.org [mailto:netdev-
-> owner@vger.kernel.org] On Behalf Of Yunsheng Lin
-> Sent: Friday, May 31, 2019 10:01 AM
-> To: davem@davemloft.net
-> Cc: hkallweit1@gmail.com; f.fainelli@gmail.com;
-> stephen@networkplumber.org; netdev@vger.kernel.org; linux-
-> kernel@vger.kernel.org; Linuxarm <linuxarm@huawei.com>
-> Subject: [PATCH v2 net-next] net: link_watch: prevent starvation when
-> processing linkwatch wq
+On 2019-05-31 11:56, Peter Zijlstra wrote:
+> On Thu, May 16, 2019 at 10:58:04AM +0200, Roman Penyaev wrote:
+>> Each ep_poll_callback() is called when fd calls wakeup() on epfd.
+>> So account new event in user ring.
+>> 
+>> The tricky part here is EPOLLONESHOT.  Since we are lockless we
+>> have to be deal with ep_poll_callbacks() called in paralle, thus
+>> use cmpxchg to clear public event bits and filter out concurrent
+>> call from another cpu.
+>> 
+>> Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Al Viro <viro@zeniv.linux.org.uk>
+>> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+>> Cc: linux-fsdevel@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>> 
+>> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+>> index 2f551c005640..55612da9651e 100644
+>> --- a/fs/eventpoll.c
+>> +++ b/fs/eventpoll.c
+>> @@ -1407,6 +1407,29 @@ struct file *get_epoll_tfile_raw_ptr(struct 
+>> file *file, int tfd,
+>>  }
+>>  #endif /* CONFIG_CHECKPOINT_RESTORE */
+>> 
+>> +/**
+>> + * Atomically clear public event bits and return %true if the old 
+>> value has
+>> + * public event bits set.
+>> + */
+>> +static inline bool ep_clear_public_event_bits(struct epitem *epi)
+>> +{
+>> +	__poll_t old, flags;
+>> +
+>> +	/*
+>> +	 * Here we race with ourselves and with ep_modify(), which can
+>> +	 * change the event bits.  In order not to override events updated
+>> +	 * by ep_modify() we have to do cmpxchg.
+>> +	 */
+>> +
+>> +	old = epi->event.events;
+>> +	do {
+>> +		flags = old;
+>> +	} while ((old = cmpxchg(&epi->event.events, flags,
+>> +				flags & EP_PRIVATE_BITS)) != flags);
+>> +
+>> +	return flags & ~EP_PRIVATE_BITS;
+>> +}
 > 
-> When user has configured a large number of virtual netdev, such
-> as 4K vlans, the carrier on/off operation of the real netdev
-> will also cause it's virtual netdev's link state to be processed
-> in linkwatch. Currently, the processing is done in a work queue,
-> which may cause cpu and rtnl locking starvation problem.
-> 
-> This patch releases the cpu and rtnl lock when link watch worker
-> has processed a fixed number of netdev' link watch event.
-> 
-> Currently __linkwatch_run_queue is called with rtnl lock, so
-> enfore it with ASSERT_RTNL();
-> 
-> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-> ---
-> V2: use cond_resched and rtnl_unlock after processing a fixed
->     number of events
-> ---
->  net/core/link_watch.c | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
-> diff --git a/net/core/link_watch.c b/net/core/link_watch.c
-> index 7f51efb..07eebfb 100644
-> --- a/net/core/link_watch.c
-> +++ b/net/core/link_watch.c
-> @@ -168,9 +168,18 @@ static void linkwatch_do_dev(struct net_device
-> *dev)
-> 
->  static void __linkwatch_run_queue(int urgent_only)
->  {
-> +#define MAX_DO_DEV_PER_LOOP	100
-> +
-> +	int do_dev = MAX_DO_DEV_PER_LOOP;
->  	struct net_device *dev;
->  	LIST_HEAD(wrk);
-> 
-> +	ASSERT_RTNL();
-> +
-> +	/* Give urgent case more budget */
-> +	if (urgent_only)
-> +		do_dev += MAX_DO_DEV_PER_LOOP;
-> +
->  	/*
->  	 * Limit the number of linkwatch events to one
->  	 * per second so that a runaway driver does not
-> @@ -200,6 +209,14 @@ static void __linkwatch_run_queue(int urgent_only)
->  		}
->  		spin_unlock_irq(&lweventlist_lock);
->  		linkwatch_do_dev(dev);
-> +
-> +		if (--do_dev < 0) {
-> +			rtnl_unlock();
-> +			cond_resched();
+> AFAICT epi->event.events also has normal writes to it, eg. in
+> ep_modify(). A number of architectures cannot handle concurrent normal
+> writes and cmpxchg() to the same variable.
+
+Yes, we race with the current function and with ep_modify().  Then, 
+ep_modify()
+should do something as the following:
+
+-	epi->event.events = event->events
++	xchg(&epi->event.events, event->events);
+
+Is that ok?
+
+Just curious: what are these archs?
+
+Thanks.
+
+--
+Roman
 
 
-
-Sorry, missed in my earlier comment. I could see multiple problems here
-and please correct me if I am wrong:
-
-1. It looks like releasing the rtnl_lock here and then res-scheduling might
-   not be safe, especially when you have already held *lweventlist_lock*
-   (which is global and not per-netdev), and when you are trying to
-   reschedule. This can cause *deadlock* with itself.
-
-   Reason: once you release the rtnl_lock() the similar leg of function 
-   netdev_wait_allrefs() could be called for some other netdevice which
-   might end up in waiting for same global linkwatch event list lock
-   i.e. *lweventlist_lock*.
-
-2. After releasing the rtnl_lock() we have not ensured that all the rcu
-   operations are complete. Perhaps we need to take rcu_barrier() before
-   retaking the rtnl_lock()
-
-
-
-
-> +			do_dev = MAX_DO_DEV_PER_LOOP;
-
-
-
-Here, I think rcu_barrier() should exist.
-
-
-
-> +			rtnl_lock();
-> +		}
-> +
->  		spin_lock_irq(&lweventlist_lock);
->  	}
 
