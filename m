@@ -2,60 +2,61 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1586BC28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA59C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E28882609C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:16:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85ADE2609C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:16:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MuAVA6GL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h2xvqJcO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbfEaBQy (ORCPT
+        id S1726816AbfEaBQ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 21:16:54 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37365 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726372AbfEaBQx (ORCPT
+        Thu, 30 May 2019 21:16:58 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39842 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726576AbfEaBQ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 21:16:53 -0400
-Received: by mail-pl1-f195.google.com with SMTP id e7so2796626pln.4;
-        Thu, 30 May 2019 18:16:53 -0700 (PDT)
+        Thu, 30 May 2019 21:16:56 -0400
+Received: by mail-pf1-f195.google.com with SMTP id j2so5072507pfe.6;
+        Thu, 30 May 2019 18:16:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gLXj7SNsIj8HMSdYiQOSKdVgfa5Ol1Nfhh6XVY2TIDE=;
-        b=MuAVA6GLtz4NhogDw/q6IUmvTdo3V2l3ftVmCQ145byUcvTJ0xuuq/czk5JMyskzK8
-         IYrwEmHiIs8tvOnT5oF6TFc5JozBcZ7qxHxsJCy24GzaWXuln3gkn3ZKzQaCD/ajVo8F
-         l9UWEGpDFeMuVtzk+ym9MgfmgS6enbw/Atc+Bk8Cn/YGi4y6LklIeCbdX5KCQwqSIvlh
-         +vffeioRk1+Qq7gHZ/LCCUEvRSGhpxnI+eyZ4JmL5V2Wnj8/+wTtjDrZzTPF5nVkDbu5
-         dDMC8FHjIT0lMcjNfq1vO8hBWdr8YICmsmP4inDdITYNp3Q+Uo9OlZd4ZTrwaVxTzuT0
-         vUFg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=bkXZr4gT4mBUwoanTukqm6IXAK3o1gCJNcNnJlAMMm4=;
+        b=h2xvqJcOF8uE6auLZkxTC0EhAuzhcd5262Jhn1jnrUcCrNS+gfAVIURW17Og1J7dwT
+         +37coHGSd2AzXdW/z8M+fdA1eYX8RV4/ctssgWkxOpHwuKeB1icmWh1PuI7lB++mjM99
+         7yqz2jwp3HP6CxeoTbdiLR3c8aQIf25RxRahQ7lW0KG+AKGabmSlLyjiIQGthH/Z547F
+         juY+6Aoxfx6EZTbJPTVsg5tJDsUuH7UFnMgUGDL0phxPNn9xloSXUujGYS87uFzA6DCZ
+         NyrLg6kNY/3KzBnApb32BTOeISVg7J5i/d5iUDSVJJdFPym8CMTMNyEXNy0NttzZDSof
+         M5Tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gLXj7SNsIj8HMSdYiQOSKdVgfa5Ol1Nfhh6XVY2TIDE=;
-        b=iosEoyy3dsrGBKam3ZCjMBplfTEOeXkfsR4+YDIN/gBMaLCiAoXGj8AJEln13wRpo+
-         o5xt2bpXrjjA18rEw/hwkdkUVHDkGdJFKfcQdclDkrNKIe1duGpig5E3ZxJ9oa2+ab0J
-         DXUD8zbaewtHptl3sJ74shlaknNj+POOVB7NzFJwz8G+wLN+96lbaKclLggfJUaAyPOt
-         WF48GcIH1gvVlZJljHqc5zBpZaKhBTscSSXTswC5JfnNz3lB2BijtH1O9kzJQfYbu3MQ
-         8Fl4asTaYpjMvHS7Bdszp5fs7xytstDYJPUAPUMp7LgU9XObyScfQZUgAMrHztMmnzG+
-         a3Bw==
-X-Gm-Message-State: APjAAAVZhpqFTJI8fn1txqX4rzA5kCwPuohL5vyEAjaYx9Rh8R+T8tii
-        EO1jZXSk4TlOfnZvBUM2x9J5CAvCNrE=
-X-Google-Smtp-Source: APXvYqxI0VFiQXPy0cW0eTAPQXkCFQgZY43EA//KH7MT/4y5HSQYXi/MN26OOMClsQy+mtwg5Fgd8g==
-X-Received: by 2002:a17:902:bf08:: with SMTP id bi8mr6088108plb.206.1559265412795;
-        Thu, 30 May 2019 18:16:52 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=bkXZr4gT4mBUwoanTukqm6IXAK3o1gCJNcNnJlAMMm4=;
+        b=Z5oE678fLWegvxgPDIdwXF//Lx+U8rErKh+/i+fEe1YTclEJ8Abe+pcfRBvHCOSblu
+         pa4AeZvtDEg6UcWu3vKjRKECm5zrBn8tokPnwHmzZ9f9+4oQYFifC0SOTe6/rpD2m1/U
+         KJeJhSvUZAVqMkomCVY1ztG41vSoGw2H24w4wbXPQZGOz0lApzLGT+H7WZPpUWlwAwne
+         Y3Lpi7YinUR+4/9X9rc9pSMSudNfFQnDPagCCPiLg+dvj1kczUnaavTbUZsXUEFjpHR3
+         IzvV33lAOO5Mwi47LWfL1YhgkU8bYYMPMkYBx3Zb0dOy1vwtLGPtEoe/RT4u3rzmqBKg
+         X1cQ==
+X-Gm-Message-State: APjAAAXDv4asU9xGepiYeTVq60G33an5VvVh4UcaZfqWGLkBKp8HSHEn
+        MQzz2c/wBwQBHMq81V+VIQ4xlJerDIo=
+X-Google-Smtp-Source: APXvYqx/2G+SnCGOuiJy/UIyLCLuatwBaN5PI8MEL1r7ABivjbAmwKrVcgL9EXf3zDmKAl6RCmAGhA==
+X-Received: by 2002:a63:f402:: with SMTP id g2mr2992989pgi.197.1559265415541;
+        Thu, 30 May 2019 18:16:55 -0700 (PDT)
 Received: from localhost.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id v93sm3807335pjb.6.2019.05.30.18.16.51
+        by smtp.gmail.com with ESMTPSA id v93sm3807335pjb.6.2019.05.30.18.16.54
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 30 May 2019 18:16:52 -0700 (PDT)
+        Thu, 30 May 2019 18:16:54 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-pm@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -65,10 +66,12 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Guenter Roeck <linux@roeck-us.net>,
         Sebastian Reichel <sre@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/2] HWMON compatibility layer for power supplies
-Date:   Thu, 30 May 2019 18:16:18 -0700
-Message-Id: <20190531011620.9383-1-andrew.smirnov@gmail.com>
+Subject: [PATCH v2 2/2] power: supply: ucs1002: Add HWMON interface
+Date:   Thu, 30 May 2019 18:16:20 -0700
+Message-Id: <20190531011620.9383-3-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190531011620.9383-1-andrew.smirnov@gmail.com>
+References: <20190531011620.9383-1-andrew.smirnov@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,40 +79,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Everyone:
+Expose current sensors found on UCS1002 via HWMON.
 
-This small series contains the code I wrote to expose various power
-supply sensors via HWMON layer in order to be able to access all of
-the sensors in the system with libsensors. Not sure if this is an
-something that can be accepted upstream, so I am hoping to get some
-quick feedback.
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Sebastian Reichel <sre@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-pm@vger.kernel.org
+---
+ drivers/power/supply/ucs1002_power.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Thanks,
-Andrey Smirnov
-
-
-Changes since [v1]:
-
-  - All multiplications converted to use check_mul_overflow()
-
-  - All divisions converted to use DIV_ROUND_CLOSEST()
-
-  - Places that were ignoring errors now don't
-
-  - Alphabetized include list
-
-Andrey Smirnov (2):
-  power: supply: Add HWMON compatibility layer
-  power: supply: ucs1002: Add HWMON interface
-
- drivers/power/supply/Kconfig              |  14 +
- drivers/power/supply/Makefile             |   1 +
- drivers/power/supply/power_supply_hwmon.c | 349 ++++++++++++++++++++++
- drivers/power/supply/ucs1002_power.c      |   6 +
- include/linux/power_supply.h              |   9 +
- 5 files changed, 379 insertions(+)
- create mode 100644 drivers/power/supply/power_supply_hwmon.c
-
+diff --git a/drivers/power/supply/ucs1002_power.c b/drivers/power/supply/ucs1002_power.c
+index 1c89d030c045..ebe84f1ca42f 100644
+--- a/drivers/power/supply/ucs1002_power.c
++++ b/drivers/power/supply/ucs1002_power.c
+@@ -571,6 +571,12 @@ static int ucs1002_probe(struct i2c_client *client,
+ 		return ret;
+ 	}
+ 
++	ret = devm_power_supply_add_hwmon_sysfs(info->charger);
++	if (ret) {
++		dev_err(dev, "Failed to add hmwon attributes: %d\n", ret);
++		return ret;
++	}
++
+ 	ret = regmap_read(info->regmap, UCS1002_REG_PIN_STATUS, &regval);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to read pin status: %d\n", ret);
 -- 
 2.21.0
 
