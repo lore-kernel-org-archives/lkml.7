@@ -2,92 +2,84 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70831C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6264C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A54C26BAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:26:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B778D26BAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:27:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbfEaP0m (ORCPT
+        id S1726816AbfEaP07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 11:26:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54706 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726037AbfEaP0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 11:26:42 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9BD09307D9D0;
-        Fri, 31 May 2019 15:26:36 +0000 (UTC)
-Received: from treble (ovpn-124-142.rdu2.redhat.com [10.10.124.142])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5B6A95DE84;
-        Fri, 31 May 2019 15:26:28 +0000 (UTC)
-Date:   Fri, 31 May 2019 10:26:26 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Jiri Kosina <jikos@kernel.org>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4] x86/power: Fix 'nosmt' vs. hibernation triple fault
- during resume
-Message-ID: <20190531152626.4nmyc7lj6mjwuo2v@treble>
-References: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm>
- <20190531051456.fzkvn62qlkf6wqra@treble>
- <nycvar.YFH.7.76.1905311045240.1962@cbobk.fhfr.pm>
- <5564116.e9OFvgDRbB@kreacher>
- <CALCETrUpseta+NrhVwzzVFTe-BkBHtDUJBO22ci3mAsVR+XOog@mail.gmail.com>
- <nycvar.YFH.7.76.1905311628330.1962@cbobk.fhfr.pm>
- <B7AC83ED-3F11-42B9-8506-C842A5937B50@amacapital.net>
- <nycvar.YFH.7.76.1905311651450.1962@cbobk.fhfr.pm>
+        Fri, 31 May 2019 11:26:59 -0400
+Received: from relay1.mentorg.com ([192.94.38.131]:48418 "EHLO
+        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbfEaP07 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 11:26:59 -0400
+Received: from svr-orw-mbx-01.mgc.mentorg.com ([147.34.90.201])
+        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
+        id 1hWjQl-0007CM-Nl from George_Davis@mentor.com ; Fri, 31 May 2019 08:26:55 -0700
+Received: from localhost (147.34.91.1) by svr-orw-mbx-01.mgc.mentorg.com
+ (147.34.90.201) with Microsoft SMTP Server (TLS) id 15.0.1320.4; Fri, 31 May
+ 2019 08:26:53 -0700
+From:   "George G. Davis" <george_davis@mentor.com>
+To:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        <linux-kbuild@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+CC:     "George G. Davis" <george_davis@mentor.com>
+Subject: [RFC][PATCH] Makefile: Fix checkstack.pl arm64 wrong or unknown architecture
+Date:   Fri, 31 May 2019 11:26:11 -0400
+Message-ID: <1559316388-19565-1-git-send-email-george_davis@mentor.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <nycvar.YFH.7.76.1905311651450.1962@cbobk.fhfr.pm>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Fri, 31 May 2019 15:26:41 +0000 (UTC)
+Content-Type: text/plain
+X-ClientProxiedBy: SVR-ORW-MBX-05.mgc.mentorg.com (147.34.90.205) To
+ svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 04:54:20PM +0200, Jiri Kosina wrote:
-> On Fri, 31 May 2019, Andy Lutomirski wrote:
-> 
-> > For that matter, what actually happens if we get an SMI while halted?  
-> > Does RSM go directly to sleep or does it re-fetch the HLT?
-> 
-> Our mails just crossed, I replied to Josh's mwait() proposal patch a 
-> minute ago.
+The following error occurs for the `make ARCH=arm64 checkstack` case:
 
-Good catch.  I agree that mwait seems unsafe across resume and my patch
-is bogus.
+aarch64-linux-gnu-objdump -d vmlinux $(find . -name '*.ko') | \
+perl ./scripts/checkstack.pl arm64
+wrong or unknown architecture "arm64"
 
-Andy, in the short term it sounds like you're proposing to make
-native_play_dead() use hlt_play_dead() unconditionally.  Right?
+Fix the above error by setting `CHECKSTACK_ARCH := aarch64` for the
+ARCH=arm64 case.
 
-That would simplify things and also would fix Jiri's bug I think.  The
-only question I'd have is if we have data on the power savings
-difference between hlt and mwait.  mwait seems to wake up on a lot of
-different conditions which might negate its deeper sleep state.
+Signed-off-by: George G. Davis <george_davis@mentor.com>
+---
+ Makefile | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Andy, for your long term idea to use INIT IPI, I wonder if that would
-work with SMT siblings?  Specifically I wonder about the Intel issue
-that requires siblings to have CR4.MCE set.
-
+diff --git a/Makefile b/Makefile
+index 11358153d8f2..3e615e8553c0 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1695,7 +1695,11 @@ PHONY += checkstack kernelrelease kernelversion image_name
+ ifeq ($(ARCH), um)
+ CHECKSTACK_ARCH := $(SUBARCH)
+ else
+-CHECKSTACK_ARCH := $(ARCH)
++	ifeq ($(ARCH), arm64)
++		CHECKSTACK_ARCH := aarch64
++	else
++		CHECKSTACK_ARCH := $(ARCH)
++	endif
+ endif
+ checkstack:
+ 	$(OBJDUMP) -d vmlinux $$(find . -name '*.ko') | \
 -- 
-Josh
+2.7.4
+
