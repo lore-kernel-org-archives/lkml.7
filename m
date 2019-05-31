@@ -2,169 +2,145 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 093E4C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 18:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0326AC28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 18:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6A7226E1B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 18:50:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i/FN5emt"
+	by mail.kernel.org (Postfix) with ESMTP id DC73426E1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 18:50:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727182AbfEaSu0 (ORCPT
+        id S1727191AbfEaSuq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 14:50:26 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:39516 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbfEaSuZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 14:50:25 -0400
-Received: by mail-ed1-f68.google.com with SMTP id e24so15950056edq.6;
-        Fri, 31 May 2019 11:50:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9F1WuqVm5Nwgt2J2M3yybMSAaWZKrJwC/jdTGtkMibQ=;
-        b=i/FN5emthvipoIzFp3zGS9/f6xBcQBDTkQ7GC/lmQe0TwDLTHCS3IgiVtCQRBB44uB
-         6WEp7SwcJyAqdjMEYkv19i0jR/gVwbKMEhj2oMHnhpkKRJZ5d0RmumzwB+qOHE1anNKc
-         0EoAj2WEuDVIMfXdkxJ3IGB25hWm23hdRd/FWTJFpXyho+ouicbkZl4TX2nNirMfcJ64
-         mai4mjwMYtQ6nXS7rThoZY8t1lc4IYhFlbouzCfip/E3hE+7kuTzGaxnhDM8chWESfLK
-         33z4dteGs8q9xfQWTk8CUAzFuf3deuNaSOza9pxhkogn2H2EOi/hLl8Wobn2pzywPjxr
-         xrfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9F1WuqVm5Nwgt2J2M3yybMSAaWZKrJwC/jdTGtkMibQ=;
-        b=RJh9o9MV3rfUIu2h0nNdDOZO7JgeoBidWqeCXH2hBCsyCG4sT5Nzzp02lsTwg7foHL
-         KMWkn4jflkC9Mr8bXkiAEpfXFMkEtuyZpxSKJFBlLIw42tXUsFD1kmSu5J7dh/pJ8+/o
-         xdTS5Y5+xAsX7G6NkAQnrW5ZursvoJHYsoQQxZiOBu2uvev8WTC4aKU2+L5bO9UFulVF
-         C8xK9fg64X0bH5uVNnYBH9Uo98aNcfaNZS5WcjNCM5YKuQyQl1aIdzrp//203hLrl+A1
-         nW2Lr/LZynjGC2leScEOfllBMCC0gl/714+Whrk2LLmIb5/wPr1JegbYfn/Y75XIMHP5
-         xBCw==
-X-Gm-Message-State: APjAAAV9qePpBsgcZ85CQrMQ3SRfxN4NdRgWVxN/wD9qBFo7kOdG9BmA
-        xlVW3wpuWnjza1cZGn0IRtLQ/hNpCccKYzTwXQpyQhWp
-X-Google-Smtp-Source: APXvYqzPMqyWQ+/oc5RiQ0JtssEbM6wdvalwO7IL3dmiggPgXl4aCaKyvkmw+wPethuMjUFG0dLNSwtXsRd8qIV8JHw=
-X-Received: by 2002:a50:bc15:: with SMTP id j21mr13082718edh.163.1559328623286;
- Fri, 31 May 2019 11:50:23 -0700 (PDT)
+        Fri, 31 May 2019 14:50:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48200 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726589AbfEaSup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 14:50:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7375AAD3B;
+        Fri, 31 May 2019 18:50:44 +0000 (UTC)
 MIME-Version: 1.0
-References: <20190314002027.7833-1-helen.koike@collabora.com>
- <20190314002027.7833-4-helen.koike@collabora.com> <c591d04c-a7f8-f64b-aff9-4a79b61356e7@koikeco.de>
-In-Reply-To: <c591d04c-a7f8-f64b-aff9-4a79b61356e7@koikeco.de>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Fri, 31 May 2019 11:50:09 -0700
-Message-ID: <CAF6AEGsRzgqNPPuNTopiqXWXQ8GLd1Zi2DsWZFQQ5PuCsDnmBA@mail.gmail.com>
-Subject: Re: [PATCH v3 3/5] drm/msm: fix fb references in async update
-To:     Helen Koike <helen@koikeco.de>
-Cc:     Helen Koike <helen.koike@collabora.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nicholas.kazlauskas@amd.com,
-        "Grodzovsky, Andrey" <andrey.grodzovsky@amd.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        David Airlie <airlied@linux.ie>,
-        Sean Paul <seanpaul@google.com>, kernel@collabora.com,
-        Harry Wentland <harry.wentland@amd.com>,
-        =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@google.com>,
-        stable <stable@vger.kernel.org>, Sean Paul <sean@poorly.run>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 31 May 2019 20:50:44 +0200
+From:   Roman Penyaev <rpenyaev@suse.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     azat@libevent.org, akpm@linux-foundation.org,
+        viro@zeniv.linux.org.uk, torvalds@linux-foundation.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 00/13] epoll: support pollable epoll from userspace
+In-Reply-To: <20190531163312.GW2650@hirez.programming.kicks-ass.net>
+References: <20190516085810.31077-1-rpenyaev@suse.de>
+ <20190531163312.GW2650@hirez.programming.kicks-ass.net>
+Message-ID: <327c990a4418b3d9c5c94787a37350bb@suse.de>
+X-Sender: rpenyaev@suse.de
+User-Agent: Roundcube Webmail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 10:54 AM Helen Koike <helen@koikeco.de> wrote:
->
-> Hello,
->
-> On 3/13/19 9:20 PM, Helen Koike wrote:
-> > Async update callbacks are expected to set the old_fb in the new_state
-> > so prepare/cleanup framebuffers are balanced.
-> >
-> > Cc: <stable@vger.kernel.org> # v4.14+
-> > Fixes: 224a4c970987 ("drm/msm: update cursors asynchronously through atomic")
-> > Suggested-by: Boris Brezillon <boris.brezillon@collabora.com>
-> > Signed-off-by: Helen Koike <helen.koike@collabora.com>
+On 2019-05-31 18:33, Peter Zijlstra wrote:
+> On Thu, May 16, 2019 at 10:57:57AM +0200, Roman Penyaev wrote:
+>> When new event comes for some epoll item kernel does the following:
+>> 
+>>  struct epoll_uitem *uitem;
+>> 
+>>  /* Each item has a bit (index in user items array), discussed later 
+>> */
+>>  uitem = user_header->items[epi->bit];
+>> 
+>>  if (!atomic_fetch_or(uitem->ready_events, pollflags)) {
+>>      i = atomic_add(&ep->user_header->tail, 1);
+> 
+> So this is where you increment tail
+> 
+>> 
+>>      item_idx = &user_index[i & index_mask];
+>> 
+>>      /* Signal with a bit, user spins on index expecting value > 0 */
+>>      *item_idx = idx + 1;
+> 
+> IUC, this is where you write the idx into shared memory, which is
+> _after_ tail has already been incremented.
+> 
+>>  }
+>> 
+>> Important thing here is that ring can't infinitely grow and corrupt 
+>> other
+>> elements, because kernel always checks that item was marked as ready, 
+>> so
+>> userspace has to clear ready_events field.
+>> 
+>> On userside events the following code should be used in order to 
+>> consume
+>> events:
+>> 
+>>  tail = READ_ONCE(header->tail);
+>>  for (i = 0; header->head != tail; header->head++) {
+>>      item_idx_ptr = &index[idx & indeces_mask];
+>> 
+>>      /*
+>>       * Spin here till we see valid index
+>>       */
+>>      while (!(idx = __atomic_load_n(item_idx_ptr, __ATOMIC_ACQUIRE)))
+>>          ;
+> 
+> Which you then try and fix up by busy waiting for @idx to become !0 ?!
+> 
+> Why not write the idx first, then increment the ->tail, such that when
+> we see ->tail, we already know idx must be correct?
+> 
+>> 
+>>      item = &header->items[idx - 1];
+>> 
+>>      /*
+>>       * Mark index as invalid, that is for userspace only, kernel does 
+>> not care
+>>       * and will refill this pointer only when observes that event is 
+>> cleared,
+>>       * which happens below.
+>>       */
+>>      *item_idx_ptr = 0;
+> 
+> That avoids this store too.
+> 
+>> 
+>>      /*
+>>       * Fetch data first, if event is cleared by the kernel we drop 
+>> the data
+>>       * returning false.
+>>       */
+>>      event->data = item->event.data;
+>>      event->events = __atomic_exchange_n(&item->ready_events, 0,
+>>                          __ATOMIC_RELEASE);
+>> 
+>>  }
+> 
+> Aside from that, you have to READ/WRITE_ONCE() on ->head, to avoid
+> load/store tearing.
 
-Thanks, I'm not super happy about the refcnt'ing subtleness here
-(mostly because it makes it harder to page in how things work on
-kernel/display side after spending most of my time in userspace/mesa),
-but I don't want to hold this up..
+Yes, clear. Thanks.
 
-Acked-by: Rob Clark <robdclark@gmail.com>
+> 
+> 
+> That would give something like:
+> 
+> kernel:
+> 
+> 	slot = atomic_fetch_inc(&ep->slot);
+> 	item_idx = &user_index[slot & idx_mask];
+> 	WRITE_ONCE(*item_idx, idx);
+> 	smp_store_release(&ep->user_header->tail, slot);
 
-> >
-> > ---
-> > Hello,
-> >
-> > As mentioned in the cover letter,
-> > But I couldn't test on MSM because I don't have the hardware and I would
-> > appreciate if anyone could test it.
->
-> I got this tested on a dragonboard 410c, no regressions where found and
-> no extra warnings.
->
-> These two tests where already failing for other reasons:
-> flip-vs-cursor-crc-atomic
-> flip-vs-cursor-crc-legacy
->
-> If you want to see the full log:
->
-> https://people.collabora.com/~koike/drm-fixes-results.zip
->
-> Thanks
-> Helen
->
-> >
-> > In other platforms (VC4, AMD, Rockchip), there is a hidden
-> > drm_framebuffer_get(new_fb)/drm_framebuffer_put(old_fb) in async_update
-> > that is wrong, but I couldn't identify those here, not sure if it is hidden
-> > somewhere else, but if tests fail this is probably the cause.
-> >
-> > Thanks!
-> > Helen
-> >
-> > Changes in v3: None
-> > Changes in v2:
-> > - update CC stable and Fixes tag
-> >
-> >  drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c
-> > index be13140967b4..b854f471e9e5 100644
-> > --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c
-> > +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c
-> > @@ -502,6 +502,8 @@ static int mdp5_plane_atomic_async_check(struct drm_plane *plane,
-> >  static void mdp5_plane_atomic_async_update(struct drm_plane *plane,
-> >                                          struct drm_plane_state *new_state)
-> >  {
-> > +     struct drm_framebuffer *old_fb = plane->state->fb;
-> > +
-> >       plane->state->src_x = new_state->src_x;
-> >       plane->state->src_y = new_state->src_y;
-> >       plane->state->crtc_x = new_state->crtc_x;
-> > @@ -524,6 +526,8 @@ static void mdp5_plane_atomic_async_update(struct drm_plane *plane,
-> >
-> >       *to_mdp5_plane_state(plane->state) =
-> >               *to_mdp5_plane_state(new_state);
-> > +
-> > +     new_state->fb = old_fb;
-> >  }
-> >
-> >  static const struct drm_plane_helper_funcs mdp5_plane_helper_funcs = {
-> >
+This can't be called from many cpus,  tail can be overwritten with "old"
+value.  That what I try to solve.
+
+--
+Roman
+
