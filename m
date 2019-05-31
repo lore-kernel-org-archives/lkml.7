@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 038B5C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 195CDC46460
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1E8E26A49
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:16:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F041826A74
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:16:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbfEaOQg (ORCPT
+        id S1726924AbfEaOQE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 10:16:36 -0400
+        Fri, 31 May 2019 10:16:04 -0400
 Received: from mga05.intel.com ([192.55.52.43]:8345 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726589AbfEaOQW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 10:16:22 -0400
+        id S1726889AbfEaOQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 10:16:02 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 May 2019 07:16:21 -0700
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 May 2019 07:16:01 -0700
 X-ExtLoop1: 1
 Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 31 May 2019 07:16:19 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 31 May 2019 07:15:59 -0700
 From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
 To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
 Cc:     Hans de Goede <hdegoede@redhat.com>,
@@ -33,9 +33,9 @@ Cc:     Hans de Goede <hdegoede@redhat.com>,
         Andy Shevchenko <andy@infradead.org>,
         linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH v5 14/16] platform/x86: intel_cht_int33fe: Provide fwnode for the USB connector
-Date:   Fri, 31 May 2019 17:15:45 +0300
-Message-Id: <20190531141547.22728-15-heikki.krogerus@linux.intel.com>
+Subject: [PATCH v5 05/16] software node: Add software_node_get_reference_args()
+Date:   Fri, 31 May 2019 17:15:36 +0300
+Message-Id: <20190531141547.22728-6-heikki.krogerus@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190531141547.22728-1-heikki.krogerus@linux.intel.com>
 References: <20190531141547.22728-1-heikki.krogerus@linux.intel.com>
@@ -46,79 +46,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In ACPI, and now also in DT, the USB connectors usually have
-their own device nodes. In case of USB Type-C, those
-connector (port) nodes are child nodes of the controller or
-PHY device, in our case the fusb302. The software fwnodes
-allow us to create a similar child node for fusb302 that
-represents the connector also on Intel CHT.
-
-This makes it possible replace the fusb302 specific device
-properties which were deprecated with the common USB
-connector properties that tcpm.c is able to use directly.
+This makes it possible to support drivers that use
+fwnode_property_get_reference_args() function.
 
 Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Tested-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/x86/intel_cht_int33fe.c | 25 ++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ drivers/base/swnode.c    | 47 ++++++++++++++++++++++++++++++++++++++++
+ include/linux/property.h | 28 ++++++++++++++++++++++++
+ 2 files changed, 75 insertions(+)
 
-diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
-index 9eb2ec47b47e..dcfe47baff72 100644
---- a/drivers/platform/x86/intel_cht_int33fe.c
-+++ b/drivers/platform/x86/intel_cht_int33fe.c
-@@ -24,6 +24,7 @@
- #include <linux/platform_device.h>
- #include <linux/regulator/consumer.h>
- #include <linux/slab.h>
-+#include <linux/usb/pd.h>
+diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+index 2d925fc2255f..e7b3aa3bd55a 100644
+--- a/drivers/base/swnode.c
++++ b/drivers/base/swnode.c
+@@ -560,6 +560,52 @@ software_node_get_named_child_node(const struct fwnode_handle *fwnode,
+ 	return NULL;
+ }
  
- #define EXPECTED_PTYPE		4
- 
-@@ -31,6 +32,7 @@ enum {
- 	INT33FE_NODE_FUSB302,
- 	INT33FE_NODE_MAX17047,
- 	INT33FE_NODE_PI3USB30532,
-+	INT33FE_NODE_USB_CONNECTOR,
- 	INT33FE_NODE_MAX,
++static int
++software_node_get_reference_args(const struct fwnode_handle *fwnode,
++				 const char *propname, const char *nargs_prop,
++				 unsigned int nargs, unsigned int index,
++				 struct fwnode_reference_args *args)
++{
++	struct swnode *swnode = to_swnode(fwnode);
++	const struct software_node_reference *ref;
++	const struct property_entry *prop;
++	struct fwnode_handle *refnode;
++	int i;
++
++	if (!swnode || !swnode->node->references)
++		return -ENOENT;
++
++	for (ref = swnode->node->references; ref->name; ref++)
++		if (!strcmp(ref->name, propname))
++			break;
++
++	if (!ref->name || index > (ref->nrefs - 1))
++		return -ENOENT;
++
++	refnode = software_node_fwnode(ref->refs[index].node);
++	if (!refnode)
++		return -ENOENT;
++
++	if (nargs_prop) {
++		prop = property_entry_get(swnode->node->properties, nargs_prop);
++		if (!prop)
++			return -EINVAL;
++
++		nargs = prop->value.u32_data;
++	}
++
++	if (nargs > NR_FWNODE_REFERENCE_ARGS)
++		return -EINVAL;
++
++	args->fwnode = software_node_get(refnode);
++	args->nargs = nargs;
++
++	for (i = 0; i < nargs; i++)
++		args->args[i] = ref->refs[index].args[i];
++
++	return 0;
++}
++
+ static const struct fwnode_operations software_node_ops = {
+ 	.get = software_node_get,
+ 	.put = software_node_put,
+@@ -569,6 +615,7 @@ static const struct fwnode_operations software_node_ops = {
+ 	.get_parent = software_node_get_parent,
+ 	.get_next_child_node = software_node_get_next_child,
+ 	.get_named_child_node = software_node_get_named_child_node,
++	.get_reference_args = software_node_get_reference_args
  };
  
-@@ -82,10 +84,33 @@ static const struct property_entry fusb302_props[] = {
- 	{ }
+ /* -------------------------------------------------------------------------- */
+diff --git a/include/linux/property.h b/include/linux/property.h
+index a3813ded52ea..abcde2f236a0 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -332,16 +332,44 @@ int fwnode_graph_parse_endpoint(const struct fwnode_handle *fwnode,
+ /* -------------------------------------------------------------------------- */
+ /* Software fwnode support - when HW description is incomplete or missing */
+ 
++struct software_node;
++
++/**
++ * struct software_node_ref_args - Reference with additional arguments
++ * @node: Reference to a software node
++ * @nargs: Number of elements in @args array
++ * @args: Integer arguments
++ */
++struct software_node_ref_args {
++	const struct software_node *node;
++	unsigned int nargs;
++	u64 args[NR_FWNODE_REFERENCE_ARGS];
++};
++
++/**
++ * struct software_node_reference - Named software node reference property
++ * @name: Name of the property
++ * @nrefs: Number of elements in @refs array
++ * @refs: Array of references with optional arguments
++ */
++struct software_node_reference {
++	const char *name;
++	unsigned int nrefs;
++	const struct software_node_ref_args *refs;
++};
++
+ /**
+  * struct software_node - Software node description
+  * @name: Name of the software node
+  * @parent: Parent of the software node
+  * @properties: Array of device properties
++ * @references: Array of software node reference properties
+  */
+ struct software_node {
+ 	const char *name;
+ 	const struct software_node *parent;
+ 	const struct property_entry *properties;
++	const struct software_node_reference *references;
  };
  
-+#define PDO_FIXED_FLAGS \
-+	(PDO_FIXED_DUAL_ROLE | PDO_FIXED_DATA_SWAP | PDO_FIXED_USB_COMM)
-+
-+static const u32 src_pdo[] = {
-+	PDO_FIXED(5000, 1500, PDO_FIXED_FLAGS),
-+};
-+
-+static const u32 snk_pdo[] = {
-+	PDO_FIXED(5000, 400, PDO_FIXED_FLAGS),
-+	PDO_VAR(5000, 12000, 3000),
-+};
-+
-+static const struct property_entry usb_connector_props[] = {
-+	PROPERTY_ENTRY_STRING("data-role", "dual"),
-+	PROPERTY_ENTRY_STRING("power-role", "dual"),
-+	PROPERTY_ENTRY_STRING("try-power-role", "sink"),
-+	PROPERTY_ENTRY_U32_ARRAY("source-pdos", src_pdo),
-+	PROPERTY_ENTRY_U32_ARRAY("sink-pdos", snk_pdo),
-+	PROPERTY_ENTRY_U32("op-sink-microwatt", 2500000),
-+	{ }
-+};
-+
- static const struct software_node nodes[] = {
- 	{ "fusb302", NULL, fusb302_props },
- 	{ "max17047", NULL, max17047_props },
- 	{ "pi3usb30532" },
-+	{ "connector", &nodes[0], usb_connector_props },
- 	{ }
- };
- 
+ bool is_software_node(const struct fwnode_handle *fwnode);
 -- 
 2.20.1
 
