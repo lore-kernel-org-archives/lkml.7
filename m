@@ -2,152 +2,102 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75AECC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B449C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 313BC265BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CE38265C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:27:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uuf3Zngw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ur3sH+oF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfEaI0p (ORCPT
+        id S1726958AbfEaI1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 04:26:45 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:43234 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbfEaI0l (ORCPT
+        Fri, 31 May 2019 04:27:43 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:46770 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbfEaI1n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 04:26:41 -0400
-Received: by mail-lf1-f67.google.com with SMTP id d7so63988lfb.10
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 01:26:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vfC0vBfj3dl+S4JICqcjDoSBUZJGnS+ckX0H0B+UWP8=;
-        b=uuf3ZngwL3h2t7t4f1mqw1SA7AcmRSii9KiV/Qip2UqqQwkIcD+M5Ncpooxlpjetn+
-         EVwVYGzH/O3ILxbusPiGYoniriBwnLhhb9LcJn2zu+IwE0ZHWaQWjUbup4SXE3tY5shP
-         xuTqV3C0Zoq549IsRmGbXJObFgBs0iytW1nh1YMl6A6rtjQPau14oxFWF4rgbO8NbWSY
-         1yaAOQn9MbjCB0D927ZUIW8CEG4A+c+ephFuvW9vkTkn5TFYfEoCooAx86i8z8PVrjqt
-         djIcCisQKhSypwUNeJd5TzQY131nMP+BgI2vdnOcbQNJbUFWBzECg3+/mriPZrMcUQbK
-         rGCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vfC0vBfj3dl+S4JICqcjDoSBUZJGnS+ckX0H0B+UWP8=;
-        b=LMCZenm0k1UDAWP6LcdmKuxkVYVuggl580G9Jpp/WkAhdpefNjkep5lUG1nOMsrL9y
-         q5TJ4PdDUhtOJ59amJYn2WmbIS2/rAexh6yY4pZvOYOYX/kPJKU2RbEx2CawKMecQD1t
-         ncOLSX8i7/0M1Oi1X1HAN1OGRvs8vXkWO2N8BZXVpxkVXXkkuVBQOHxC5RfbeKlhs1Bs
-         69rGdDWzTME2b6YbdxEH9hD3NrwjinOceNs2sEEZWQ0oo8mofoLhYUiR6X4RxTaBMF9y
-         QFddxn6oXJUTeRzPafPSIwX80oLv8BTd0Lp5L/ME5kMGuRNpGURS1ZIv5osd0fG4Zs9S
-         1aHA==
-X-Gm-Message-State: APjAAAUAWHus+ICkovItbbPfP4ASvlRQtxAZPZ3UDk+E1LIz3tw1WkrU
-        WJj5q9HCaH7Mipc/b9RU5JC+AZILvpLFRcZC1z0=
-X-Google-Smtp-Source: APXvYqyVGfgWVvPGwpdGW2Ln9ZHaOlnCtQ2X4hkv3pLRyIZp7jHZPehfHqxUm45SXgm2E9GU6chipkFtt/uXwtMnQOU=
-X-Received: by 2002:a19:a5ca:: with SMTP id o193mr4826260lfe.89.1559291198938;
- Fri, 31 May 2019 01:26:38 -0700 (PDT)
+        Fri, 31 May 2019 04:27:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=F8NoI3W73DO0SCEdwnQavtdIVV42FzonTKlzSvHEtGs=; b=Ur3sH+oFD8zknDu0FjLQ9xW9C
+        Cfc6ClXXQ+d/xmjRNsCynnL5OkLL7Yjvm1MxZsplISWfPwuoaNsJPV7tU8P7H1h7/gmAltCwLFEVG
+        0wVwN3Aw0IPrhB639kNEpkn9ri3ytGh+84ImmBMUsEO4VQ6DeBpmUs4Lvek3PvipszzKyu6EdRz4e
+        g0oOBLFzxb9l4ZSNYtrFi5duy4QtcnWSt0F02hhn6ZOw3u8PcQ5twQEbE22UCLVK1wXaJueQjbJjd
+        kSREAFdl5Alge3uvXj01Vmc02qiVn+j59ok2qOzfETmZkZsFnRkoRsQikEoMA13zg21wdzzpdaaqG
+        wK3+8emTQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hWcst-000071-1C; Fri, 31 May 2019 08:27:31 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A7EE4201B8CFE; Fri, 31 May 2019 10:27:28 +0200 (CEST)
+Date:   Fri, 31 May 2019 10:27:28 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     l00383200 <liucheng32@huawei.com>, tglx@linutronix.de,
+        gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Stacktrace in ARM32 architecture has jumped the first 2
+ layers, which may ignore the display of save_stack_trace_tsk.
+Message-ID: <20190531082728.GK2623@hirez.programming.kicks-ass.net>
+References: <1559228799-84473-1-git-send-email-liucheng32@huawei.com>
+ <20190530162219.dtooagpeyczfaazb@shell.armlinux.org.uk>
 MIME-Version: 1.0
-References: <cover.1559129225.git.vpillai@digitalocean.com>
- <CAERHkruDE-7R5K=2yRqCJRCpV87HkHzDYbQA2WQkruVYpG7t7Q@mail.gmail.com>
- <e8872bd9-1c6b-fb12-b535-3d37740a0306@linux.alibaba.com> <CAERHkruVthrTgGqiH=yhCspZWpMDAu0G4rNcrDTKQzgPq9eqQQ@mail.gmail.com>
- <21fda627-1d3c-12cc-6389-8c226218e2ce@linux.alibaba.com> <CAERHkrsjTNUssmECksdJnLdDjVJ_9UpvYiHyBDJ3S1toURCbrw@mail.gmail.com>
- <20190531074456.GA314@aaronlu>
-In-Reply-To: <20190531074456.GA314@aaronlu>
-From:   Aubrey Li <aubrey.intel@gmail.com>
-Date:   Fri, 31 May 2019 16:26:26 +0800
-Message-ID: <CAERHkru+tx+b_FMoyZYD+F7cWaFZRA7+6UeJEG_aoFJN+DEKkA@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
-To:     Aaron Lu <aaron.lu@linux.alibaba.com>
-Cc:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190530162219.dtooagpeyczfaazb@shell.armlinux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 3:45 PM Aaron Lu <aaron.lu@linux.alibaba.com> wrote:
->
-> On Fri, May 31, 2019 at 02:53:21PM +0800, Aubrey Li wrote:
-> > On Fri, May 31, 2019 at 2:09 PM Aaron Lu <aaron.lu@linux.alibaba.com> wrote:
-> > >
-> > > On 2019/5/31 13:12, Aubrey Li wrote:
-> > > > On Fri, May 31, 2019 at 11:01 AM Aaron Lu <aaron.lu@linux.alibaba.com> wrote:
-> > > >>
-> > > >> This feels like "date" failed to schedule on some CPU
-> > > >> on time.
-> > > >>
-> > > >> My first reaction is: when shell wakes up from sleep, it will
-> > > >> fork date. If the script is untagged and those workloads are
-> > > >> tagged and all available cores are already running workload
-> > > >> threads, the forked date can lose to the running workload
-> > > >> threads due to __prio_less() can't properly do vruntime comparison
-> > > >> for tasks on different CPUs. So those idle siblings can't run
-> > > >> date and are idled instead. See my previous post on this:
-> > > >> https://lore.kernel.org/lkml/20190429033620.GA128241@aaronlu/
-> > > >> (Now that I re-read my post, I see that I didn't make it clear
-> > > >> that se_bash and se_hog are assigned different tags(e.g. hog is
-> > > >> tagged and bash is untagged).
-> > > >
-> > > > Yes, script is untagged. This looks like exactly the problem in you
-> > > > previous post. I didn't follow that, does that discussion lead to a solution?
-> > >
-> > > No immediate solution yet.
-> > >
-> > > >>
-> > > >> Siblings being forced idle is expected due to the nature of core
-> > > >> scheduling, but when two tasks belonging to two siblings are
-> > > >> fighting for schedule, we should let the higher priority one win.
-> > > >>
-> > > >> It used to work on v2 is probably due to we mistakenly
-> > > >> allow different tagged tasks to schedule on the same core at
-> > > >> the same time, but that is fixed in v3.
-> > > >
-> > > > I have 64 threads running on a 104-CPU server, that is, when the
-> > >
-> > > 104-CPU means 52 cores I guess.
-> > > 64 threads may(should?) spread on all the 52 cores and that is enough
-> > > to make 'date' suffer.
-> >
-> > 64 threads should spread onto all the 52 cores, but why they can get
-> > scheduled while untagged "date" can not? Is it because in the current
->
-> If 'date' didn't get scheduled, there will be no output at all unless
-> all those workload threads finished :-)
+On Thu, May 30, 2019 at 05:22:19PM +0100, Russell King - ARM Linux admin wrote:
+> On Thu, May 30, 2019 at 11:06:39PM +0800, l00383200 wrote:
+> > Without optimization, both save_stack_trace_tsk and __save_stack_trace
+> > will have stacktrace information in ARM32.
+> > 
+> > In this situation, "data.skip += 2" operation will skip the first two layers,
+> > which may make the stacktrace strange and different from other architectures.
+> > 
+> > A simple example is as follows:
+> > In ARM32 architecture:
+> > [<ffffff80083cb3f8>] proc_pid_stack+0xac/0x12c
+> > [<ffffff80083c7c70>] proc_single_show+0x5c/0xa8
+> > [<ffffff800838aca8>] seq_read+0x130/0x420
+> > [<ffffff8008365c54>] __vfs_read+0x60/0x11c
+> > [<ffffff80083665dc>] vfs_read+0x8c/0x140
+> > [<ffffff800836717c>] SyS_read+0x6c/0xcc
+> > [<ffffff8008202cb8>] __sys_trace_return+0x0/0x4
+> > [<ffffffffffffffff>] 0xffffffffffffffff
+> > 
+> > In some other architectures(ARM64):
+> > [<ffffff8008209be0>] save_stack_trace_tsk+0x0/0xf0
+> > [<ffffff80083cb3f8>] proc_pid_stack+0xac/0x12c
+> > [<ffffff80083c7c70>] proc_single_show+0x5c/0xa8
+> > [<ffffff800838aca8>] seq_read+0x130/0x420
+> > [<ffffff8008365c54>] __vfs_read+0x60/0x11c
+> > [<ffffff80083665dc>] vfs_read+0x8c/0x140
+> > [<ffffff800836717c>] SyS_read+0x6c/0xcc
+> > [<ffffff8008202cb8>] __sys_trace_return+0x0/0x4
+> > [<ffffffffffffffff>] 0xffffffffffffffff
+> > 
+> > Therefore, we'd better just jump only one layer to ensure accuracy and consistency.
+> 
+> Why do we want to log the function we called to save the stack trace
+> _in_ the stack trace?  What useful purpose does it serve?
+> 
+> I've always taken the attitude that if we want a stack trace from a
+> certain point in the function, then that's the point that the stack
+> trace should start.  It's entirely sensible.
 
-Certainly I meant untagged "date" can not be scheduled on time, :)
-
->
-> I guess the workload you used is not entirely CPU intensive, or 'date'
-> can be totally blocked due to START_DEBIT. But note that START_DEBIT
-> isn't the problem here, cross CPU vruntime comparison is.
->
-> > implementation the task with cookie always has higher priority than the
-> > task without a cookie?
->
-> No.
-
-I checked the benchmark log manually, it looks like the data of two benchmarks
-with cookies are acceptable, but ones without cookies are really bad.
+Agreed, also the .skip interface sucks and is slated for replacement
+(whenever we get around to it).
