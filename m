@@ -4,190 +4,139 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EF5C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 20:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C3EC28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 20:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36C972085A
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 20:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98D69218C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 20:33:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UUIjg9EQ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Jz9krRjs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727494AbfEaUbQ (ORCPT
+        id S1727561AbfEaUdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 16:31:16 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39744 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727354AbfEaUbP (ORCPT
+        Fri, 31 May 2019 16:33:06 -0400
+Received: from mail-pg1-f178.google.com ([209.85.215.178]:46956 "EHLO
+        mail-pg1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727354AbfEaUdF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 16:31:15 -0400
-Received: by mail-wr1-f66.google.com with SMTP id x4so7308388wrt.6
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 13:31:13 -0700 (PDT)
+        Fri, 31 May 2019 16:33:05 -0400
+Received: by mail-pg1-f178.google.com with SMTP id v9so4630747pgr.13
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 13:33:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=a3Lt6S0EULlvEobg5sBff9gezayiGAoQNEHB7CwKvjM=;
-        b=UUIjg9EQo/WMmpf3+S0GecZLGc1H5qibgnADmot0z21uD18hZSSmjrVFUbugEfUk5N
-         KvAwr4Z7Vok1dZSeJ8M714QDlcAErNcouq/WOe9uYBWglTjei98X74KSTvrGtL8Iv2LC
-         nxgROzA51gZTNMu3eK3x4P3OyJ8SrWaRak/pdSLRuUCssGU+cJQr+351qO+HHSZMRPG5
-         nUmCL4/B00QmeJ/JLEYJB2cl0nwPXQYRVKuDLf4p1tfeqqiaP/T9xAYGUYZKD5ygvyQE
-         cDHwIfLo9fpDmAZjX7iCdWagnYbVNAvcBKgLIQsHcIBSG8G+lBeWhixJAtBl0yJFRiP8
-         d75A==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=uy+PJdNhNNYWmW2SYbVenlVictCiccYq0JuoB6toabI=;
+        b=Jz9krRjsm6lNZDVE3lzRiVxmi2w0/9Fv++xQ39+FzyKuSnfwcVVEeWJ+71t7Rms9La
+         SG0OTtc0mdJFWmMSyPO+QMfBtOJbAYl2+qWlQYYr02+AFUg3FpQM5Dhl5CY4x0wgm/EB
+         /74wjVVcMlWpZajDex8gRmJrMZaP9DS5SzoQI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=a3Lt6S0EULlvEobg5sBff9gezayiGAoQNEHB7CwKvjM=;
-        b=ZvGv5RQdxR4YfNYjU2i/wWBPhq1xastnWsTweU6X8oB0OywLZOuTmWdyVxmL1vvg5n
-         ug7Ta96vANQqQ6q5+NUauuoIa9hLpwshUh1jb8Kg7ruNp3T8ak8V6DvDS4NpPGgMj3ek
-         A8H8eNj6Mwkh2wxgnic5CWy0DlxGIiKRHtDcSVFwxuLR2YeBrUVgVx8s7G6bY5WDxAbs
-         geDH3mRuctqYbPWPQOAsIKRYFuzzOwlHqXHCXLfLu5nZkz6zazTDEJe4fe1Xck1Cf/AP
-         m1J9b0GPac8T6Hg2IvnBNSG4M/CnFlRt3sINpviogQnGgL8kmLc/8kowkFDNZyZzc3Tx
-         nScQ==
-X-Gm-Message-State: APjAAAVvnpZ2Dvtxr1tvxJWpTy1RezbPFUYM+p3L+WSTp+UugoYKV2bP
-        jtcz8iXxYXwdh06Ru2flkVRIjw==
-X-Google-Smtp-Source: APXvYqxBnCkIweS4SWrsnyp9NDpUslJxiPXSDjpUkAslqU8VOFGZUrxjLli9h2ZCZKguEqnIODN7xQ==
-X-Received: by 2002:a5d:55cf:: with SMTP id i15mr7787803wrw.351.1559334672840;
-        Fri, 31 May 2019 13:31:12 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ef2d:6ba0:253d:2607:4c91:6144? ([2a01:e34:ef2d:6ba0:253d:2607:4c91:6144])
-        by smtp.googlemail.com with ESMTPSA id v11sm1393923wmh.28.2019.05.31.13.31.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 31 May 2019 13:31:12 -0700 (PDT)
-Subject: Re: [PATCH v3 0/8] NVIDIA Tegra clocksource driver improvements
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Joseph Lo <josephl@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nicolas Chauvet <kwizart@gmail.com>
-References: <20190524153253.28564-1-digetx@gmail.com>
- <20190531082634.GA6070@pdeschrijver-desktop.Nvidia.com>
- <c686aae8-3be0-805e-265b-a7f16f2a6c02@gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <26aeb9f0-5eb1-005a-02c1-4d785fe70331@linaro.org>
-Date:   Fri, 31 May 2019 22:31:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=uy+PJdNhNNYWmW2SYbVenlVictCiccYq0JuoB6toabI=;
+        b=VgHV9cGrFVsbwZGyQxLhv37/msrVqmwqBfavOEkoWGx4sxe/f8HmmPq4rRR4bDebOA
+         /SrmMslTDNSWaq2TqQz3pMrJ78b76gQnIBp8aSfRH+LW9QXi7i/7E33UdL3RGqIsBExO
+         /rZ8KvWKxNn/UGl4gGsEJ7K6Z3kovFN35LSbO95MaV8Ee6UMpfQfiQ7ZTVDuG1TZSdWy
+         2mabQskxBkYXGzLsrZBeAUKK4JaswFH7YfxgjMIcukaxKqnOPApmcmB1RCeBDuJCua7C
+         t6YtB2Afghv/OwumxE768gE4dcGq+0jCawuzA5Hfm+WoAMGutPtMJRbwjZFBoB5qF49P
+         rMog==
+X-Gm-Message-State: APjAAAV5uxHpQ3se/Lx5J7LUn9ga4LdR58P43caO9L2mfGXwJSkvzO9q
+        7x1Q22uKUU/t6Q2M2KI1Vd/BRA==
+X-Google-Smtp-Source: APXvYqw52rZLQjWIzKJ9G6BGxcByELUH3J09kHhxfkW7luSsySLnOIjCNSGBGJ/9JSu7lpSe1f+Z0Q==
+X-Received: by 2002:a63:a34c:: with SMTP id v12mr11020501pgn.198.1559334785058;
+        Fri, 31 May 2019 13:33:05 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a25sm213079pfn.1.2019.05.31.13.33.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 31 May 2019 13:33:04 -0700 (PDT)
+Date:   Fri, 31 May 2019 13:33:02 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Ke Wu <mikewu@google.com>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-security-module@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: security/loadpin: Allow to exclude specific file types
+Message-ID: <201905311330.EA6B6E5F@keescook>
+References: <73fac64c-fe49-4738-49a4-0afe668eed94@canonical.com>
+ <201905310740.522B3A7C1@keescook>
+ <c80362bd-1dec-3e4f-c3e8-1c58d3a33070@canonical.com>
+ <CANRnR9Q4AY1nyTebWgkVM-wUfZv7kKNLnsrchWPBH4HPbB-X6Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <c686aae8-3be0-805e-265b-a7f16f2a6c02@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANRnR9Q4AY1nyTebWgkVM-wUfZv7kKNLnsrchWPBH4HPbB-X6Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31/05/2019 14:33, Dmitry Osipenko wrote:
-> 31.05.2019 11:26, Peter De Schrijver пишет:
->> On Fri, May 24, 2019 at 06:32:45PM +0300, Dmitry Osipenko wrote:
->>> Hello,
->>>
->>> This series primarily unifies the driver code across all Tegra SoC
->>> generations. In a result the clocksources are allocated per-CPU on
->>> older Tegra's and have a higher rating than the arch-timer, the newer
->>> Tegra210 is getting support for microsecond clocksource and the driver's
->>> code is getting much cleaner. Note that arch-timer usage is discouraged on
->>> all Tegra's due to the time jitter caused by the CPU frequency scaling.
->>
->> I think the limitations are more as follows:
->>
->> Chip	timer		suffers cpu dvfs jitter		can wakeup from cc7
->> T20	us-timer	No				Yes
->> T20	twd timer	Yes				No?
->> T30	us-timer	No				Yes
->> T30	twd timer	Yes				No?
->> T114	us-timer	No				Yes
->> T114	arch timer	No				Yes
->> T124	us-timer	No				Yes
->> T124	arch timer	No				Yes
->> T210	us-timer	No				Yes
->> T210	arch timer	No				No
->> T210	clk_m timer	No				Yes
->>
->> right?
+On Fri, May 31, 2019 at 11:03:17AM -0700, Ke Wu wrote:
+> I think Coverity is correct. Note that it's the size of
+> kernel_read_file_str (rather than exclude_read_files) doesn't equal to
+> ignore_read_file_id.
 > 
-> Doesn't arch timer run off the CPU clock? If yes (that's what I
-> assumed), then it should be affected by the DVFS. Otherwise I'll lower
-> the clocksource's rating for T114/124/132.
+> This is because READING_MAX_ID is also an element in
+> kernel_read_file_str, which makes the size of kernel_read_file_str to
+> be READING_MAX_ID+1. I will send a new patch to fix the issue. Thanks
+> for the  analysis!
+
+Ah! Yes, I see now. I was looking at the wrong things. It should be
+possible to just do:
+
+> > >> 209                for (j = 0; j < ARRAY_SIZE(kernel_read_file_str); j++) {
+
+for (j = 0; j < ARRAY_SIZE(ignore_read_file_id); j++)
+
+and add a
+
+BUILD_BUG_ON(ARRAY_SIZE(kernel_read_file_str) < ARRAY_SIZE(ignore_read_file_id))
+
+for future robustness checking.
+
+Thanks for looking at this more closely!
+
+-Kees
+
+> > >> 210                        if (strcmp(cur, kernel_read_file_str[j]) == 0) {
+> > >> 211                                pr_info("excluding: %s\n",
+> > >> 212                                        kernel_read_file_str[j]);
+> > >>
+> > >> CID 81977 (#1 of 1): Out-of-bounds write
+> > >> overrun-local: Overrunning array ignore_read_file_id of 8 4-byte
+> > >> elements at element index 8 (byte offset 35) using index j (which
+> > >> evaluates to 8).
+> > >>
+> > >> 213                                ignore_read_file_id[j] = 1;
+> > >>
+> > >> According to Coverity ignore_read_file_id is an array of 8 integers.
+> > >> However, ARRAY_SIZE(kernel_read_file_str) is 9, so we have an out of
+> > >> bounds write on ignore_read_file[j] when j is 8.
+> > >
+> > > What am I missing? This doesn't fail the build:
+> > >
+> > > +       BUILD_BUG_ON(ARRAY_SIZE(exclude_read_files) !=
+> > > +                    ARRAY_SIZE(ignore_read_file_id));
+> > >
+> > > They have the same number of elements.
+> > >
+> >
+> > Yep, that's very true. I'll discuss this with Coverity as this seems
+> > like a weird false positive.
+> >
+> > Apologies for the noise.
+> >
+> > Colin
 > 
-> TWD can't wake CPU from the power-down state, so it's a solid "No" for
-> TWD in the "can wakeup from cc7" column.
-
-Wouldn't make sense to rename the timer-tegra20.c to timer-tegra.c now ?
-
+> 
+> 
+> -- 
+> Ke Wu | Software Engineer | mikewu@google.com | Google Inc.
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Kees Cook
