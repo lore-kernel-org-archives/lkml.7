@@ -2,140 +2,116 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1584C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D4AC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88B55265EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:41:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="v1rGuOCu"
+	by mail.kernel.org (Postfix) with ESMTP id 7B0D1265F2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:44:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfEaIlY (ORCPT
+        id S1726792AbfEaIoo convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 04:41:24 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:42188 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726275AbfEaIlY (ORCPT
+        Fri, 31 May 2019 04:44:44 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36552 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726158AbfEaIoo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 04:41:24 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4V8efOA032616;
-        Fri, 31 May 2019 10:41:17 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=TL7GoPObRQHZoQw+6HnAh8fO5ps044p9LItA6uibSU4=;
- b=v1rGuOCu7slmDHdiFgf66D5CP25JcT8WzhD/jJsIgHhJn3RCGU6CGS9DU2xtPnPS/DIc
- rOBlMP52YGP5p7CBftaJZ7wWcof2bMb5x2MDNXhuEAWoE6zHyZBVWPjGJ6g/xAaG+FDY
- glk65eNvS5O0iDFAAvjhXohnxqwUqFIqyIuH9T2iF1DvNO6/JNxx84bew55C/yerS17d
- TDEvEYirLMJTH+q5lLaHZ6dwVJ8fIxcnRLH3M+2xbj2Qk2cho/lbv7bzr/aXl29j9CiX
- bS8MKxoHJ7EhfTSUaYdxGY06jV+sc0FQhFEWDNy/ubY4eQHrH2Mj7kCEFbdlOpdkQIVb pg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2spu60u285-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 31 May 2019 10:41:17 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D13A710B;
-        Fri, 31 May 2019 08:39:19 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D48371863;
-        Fri, 31 May 2019 08:39:18 +0000 (GMT)
-Received: from SFHDAG5NODE3.st.com (10.75.127.15) by SFHDAG5NODE3.st.com
- (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 31 May
- 2019 10:39:18 +0200
-Received: from SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47]) by
- SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47%20]) with mapi id
- 15.00.1347.000; Fri, 31 May 2019 10:39:18 +0200
-From:   Fabien DESSENNE <fabien.dessenne@st.com>
-To:     Pavel Machek <pavel@denx.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Hugues FRUCHET <hugues.fruchet@st.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 070/276] media: stm32-dcmi: return appropriate error
- codes during probe
-Thread-Topic: [PATCH 4.19 070/276] media: stm32-dcmi: return appropriate error
- codes during probe
-Thread-Index: AQHVFpYZYgpvcJwbS0WT+YmI1l46AKaExGkAgAAFjoA=
-Date:   Fri, 31 May 2019 08:39:18 +0000
-Message-ID: <180d29ba-74cc-08ae-35f6-cb58c1d79297@st.com>
-References: <20190530030523.133519668@linuxfoundation.org>
- <20190530030530.607146114@linuxfoundation.org> <20190531081924.GA19447@amd>
-In-Reply-To: <20190531081924.GA19447@amd>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.45]
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <BE3CF23C01D54B46B16CCA9520F56C74@st.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 31 May 2019 04:44:44 -0400
+Received: by mail-wr1-f68.google.com with SMTP id n4so2873745wrs.3
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 01:44:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:user-agent:in-reply-to:references
+         :mime-version:content-transfer-encoding:subject:to:cc:from
+         :message-id;
+        bh=6M6dXVXKFghnFsr3QMCnxQXaLInVC+XDKbFfMFVfErM=;
+        b=YvoIAImPBz0rQRMAM5LcQdoRFP+1rkFksOvebiH1IMX6SOJARWBT5J5aCVKj/sGqBn
+         o0yViOkmfKa4zJVkXxphAtkycN7wbIodIF1IeDCFd5MX/FzXYirqspc11ZKS0w8JpUSL
+         IB9MHYx6zAdNeTH9ZqHjGTpCCSMjzJgdnarTINGBO79vZbIUYkfyO57BuQPxa/wuoPv4
+         27FNRQNDCvbxf5Q39wrGmbIVMBckHWt9gSDgYZFUg6t1T01sYQtUcFqTCCUZLxE8jBv+
+         DVEmqWFkYLvX8JdJrW6ZWfqesFDlPB+arp82garAqAdlEpO2iIc3HMzZXFezD8Ujg8H7
+         +9Kg==
+X-Gm-Message-State: APjAAAVRwokME4VLCoavfe97ViPqYNt2Oeue/Zr6xYeknIJynIemtngm
+        aJsTwcm0mKp8ArxJMESvl4Ko4A==
+X-Google-Smtp-Source: APXvYqyBDlZc0ihTdyXXtXUzobJit8CcEnV5IuLzcBn/aPtJl6Wu0TXjzTbNGwDi0Lqxqg/0bCezIg==
+X-Received: by 2002:adf:f483:: with SMTP id l3mr159106wro.256.1559292282362;
+        Fri, 31 May 2019 01:44:42 -0700 (PDT)
+Received: from [10.82.105.87] (mob-5-90-59-71.net.vodafone.it. [5.90.59.71])
+        by smtp.gmail.com with ESMTPSA id f197sm5459428wme.39.2019.05.31.01.44.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 31 May 2019 01:44:41 -0700 (PDT)
+Date:   Fri, 31 May 2019 10:44:38 +0200
+User-Agent: K-9 Mail for Android
+In-Reply-To: <e41c7ff9ae38363fe8c32346fea0f7efe551d162.camel@perches.com>
+References: <20190531011227.21181-1-mcroce@redhat.com> <e41c7ff9ae38363fe8c32346fea0f7efe551d162.camel@perches.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-31_05:,,
- signatures=0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Subject: Re: [PATCH v2] checkpatch.pl: Warn on duplicate sysctl local variable
+To:     Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
+        Andy Whitcroft <apw@canonical.com>
+CC:     Kees Cook <keescook@chromium.org>,
+        Aaron Tomlin <atomlin@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+From:   Matteo Croce <mcroce@redhat.com>
+Message-ID: <B6174D2A-C9E8-438D-A042-C39CAAA35728@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel
+On May 31, 2019 5:06:58 AM GMT+02:00, Joe Perches <joe@perches.com> wrote:
+> On Fri, 2019-05-31 at 03:12 +0200, Matteo Croce wrote:
+> > Commit 6a33853c5773 ("proc/sysctl: add shared variables for range
+> check")
+> > adds some shared const variables to be used instead of a local copy
+> in
+> > each source file.
+> > Warn when a chunk duplicates one of these values in a ctl_table
+> struct:
+> > 
+> >     $ scripts/checkpatch.pl 0001-test-commit.patch
+> >     WARNING: duplicated sysctl range checking value 'zero', consider
+> using the shared one in include/linux/sysctl.h
+> >     #27: FILE: arch/arm/kernel/isa.c:48:
+> >     +               .extra1         = &zero,
+> > 
+> >     WARNING: duplicated sysctl range checking value 'int_max',
+> consider using the shared one in include/linux/sysctl.h
+> >     #28: FILE: arch/arm/kernel/isa.c:49:
+> >     +               .extra2         = &int_max,
+> > 
+> >     total: 0 errors, 2 warnings, 14 lines checked
+> > 
+> > Signed-off-by: Matteo Croce <mcroce@redhat.com>
+> > ---
+> >  scripts/checkpatch.pl | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> > 
+> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> > index 342c7c781ba5..629c31435487 100755
+> > --- a/scripts/checkpatch.pl
+> > +++ b/scripts/checkpatch.pl
+> > @@ -6639,6 +6639,12 @@ sub process {
+> >  				     "unknown module license " . $extracted_string . "\n" .
+> $herecurr);
+> >  			}
+> >  		}
+> > +
+> > +# check for sysctl duplicate constants
+> > +		if ($line =~ /\.extra[12]\s*=\s*&(zero|one|int_max|max_int)\b/) {
+> 
+> why max_int, there isn't a single use of it in the kernel ?
 
+Because you can never know how a local variabile will be called.
+I wanted to add intmax and maxint too, bit it seemed too much.
 
-On 31/05/2019 10:19 AM, Pavel Machek wrote:
-> Hi!
->
->> [ Upstream commit b5b5a27bee5884860798ffd0f08e611a3942064b ]
->>
->> During probe, return the provided errors value instead of -ENODEV.
->> This allows the driver to be deferred probed if needed.
-> This is not correct AFAICT.
-
-
-The driver gets defer probed *if needed*. *if needed* is for the case=20
-where platform_get_irq returns -EPROBE_DEFER, which happens if the irq=20
-controller is not ready yet.
-
-Of course, for the other cases, the probe would just fail.
-
-
->
->
->> --- a/drivers/media/platform/stm32/stm32-dcmi.c
->> +++ b/drivers/media/platform/stm32/stm32-dcmi.c
->> @@ -1673,8 +1673,9 @@ static int dcmi_probe(struct platform_device *pdev=
-)
->>  =20
->>   	irq =3D platform_get_irq(pdev, 0);
->>   	if (irq <=3D 0) {
->> -		dev_err(&pdev->dev, "Could not get irq\n");
->> -		return -ENODEV;
->> +		if (irq !=3D -EPROBE_DEFER)
->> +			dev_err(&pdev->dev, "Could not get irq\n");
->> +		return irq;
->>   	}
->>  =20
->>   	dcmi->res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> irq =3D=3D 0 is clearly means error here, but will be interpretted as
-> success when returned to the caller.
-
-
-Thank you for pointing this.
-
-It shall be 'return irq ? irq : -ENXIO;'=A0 I will send a fix for this.
-
-
->
-> As device is not initialized at that point, I'd expect some kind of
-> crash later.
-> 									Pavel=
+Bye,
+-- 
+Matteo Croce
+per aspera ad upstream
