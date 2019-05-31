@@ -1,170 +1,119 @@
 Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Level: **
+X-Spam-Status: No, score=2.2 required=3.0 tests=CHARSET_FARAWAY_HEADER,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8B7C28CC4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 04:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FE0C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 04:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94D77255EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 04:37:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VZQtV7CV"
+	by mail.kernel.org (Postfix) with ESMTP id 70C9125C3D
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 04:41:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbfEaEh1 (ORCPT
+        id S1726581AbfEaEln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 00:37:27 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:39350 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbfEaEh1 (ORCPT
+        Fri, 31 May 2019 00:41:43 -0400
+Received: from ZXSHCAS1.zhaoxin.com ([203.148.12.81]:44738 "EHLO
+        ZXSHCAS1.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725955AbfEaEln (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 00:37:27 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4V4b9V1008149;
-        Thu, 30 May 2019 23:37:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559277429;
-        bh=WmWlIV0MNd4gzmwUDi38bv+85fSO0B2C0fC2Y7XqFgQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=VZQtV7CVk40P+SqfrjetVBWMBXU6OixEQsfU3qmxzTwLFEfnjJXVl3K7F9KUyetYy
-         4khN71oykyO2SuPwRhDNeTTtQbtuI/l//WYiQ+Mc2ZVetGdPd8ehUQmegEEL6GqeXk
-         tzGn2V0573j25PmVruYlQHiByUK3kC7S7E5KazOI=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4V4b9Ja019839
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 30 May 2019 23:37:09 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 30
- May 2019 23:37:09 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 30 May 2019 23:37:09 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4V4b4So084582;
-        Thu, 30 May 2019 23:37:06 -0500
-Subject: Re: [PATCH v2] PCI: endpoint: Skip odd BAR when skipping 64bit BAR
-To:     Alan Mikhak <alan.mikhak@sifive.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <lorenzo.pieralisi@arm.com>, <linux-riscv@lists.infradead.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        <gustavo.pimentel@synopsys.com>, <wen.yang99@zte.com.cn>,
-        <kjlu@umn.edu>
-References: <1558648540-14239-1-git-send-email-alan.mikhak@sifive.com>
- <CABEDWGzHkt4p_byEihOAs9g97t450h9-Z0Qu2b2-O1pxCNPX+A@mail.gmail.com>
- <baa68439-f703-a453-34a2-24387bb9112d@ti.com>
- <CABEDWGyJpfX=DzBgXAGwu29rEwmY3s_P9QPC0eJOJ3KBysRWtA@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <96365941-512b-dfb2-05b7-0780e8961f6c@ti.com>
-Date:   Fri, 31 May 2019 10:05:45 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 31 May 2019 00:41:43 -0400
+Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by ZXSHCAS1.zhaoxin.com
+ (10.28.252.161) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Fri, 31 May
+ 2019 12:41:37 +0800
+Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by zxbjmbx1.zhaoxin.com
+ (10.29.252.163) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Fri, 31 May
+ 2019 12:41:37 +0800
+Received: from zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d]) by
+ zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d%16]) with mapi id
+ 15.01.1261.035; Fri, 31 May 2019 12:41:37 +0800
+From:   Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+To:     "Raj, Ashok" <ashok.raj@intel.com>
+CC:     "tipbot@zytor.com" <tipbot@zytor.com>, "bp@suse.de" <bp@suse.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-tip-commits@vger.kernel.org" 
+        <linux-tip-commits@vger.kernel.org>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        David Wang <DavidWang@zhaoxin.com>
+Subject: =?gb2312?B?tPC4tDogtPC4tDogUmU6IFt0aXA6eDg2L3VyZ2VudF0geDg2L21jZTogRW5z?=
+ =?gb2312?B?dXJlIG9mZmxpbmUgQ1BVcyBkb24nIHQgcGFydGljaXBhdGUgaW4gcmVuZGV6?=
+ =?gb2312?Q?vous_process?=
+Thread-Topic: =?gb2312?B?tPC4tDogUmU6IFt0aXA6eDg2L3VyZ2VudF0geDg2L21jZTogRW5zdXJlIG9m?=
+ =?gb2312?B?ZmxpbmUgQ1BVcyBkb24nIHQgcGFydGljaXBhdGUgaW4gcmVuZGV6dm91cyBw?=
+ =?gb2312?Q?rocess?=
+Thread-Index: AdUWlGl+Ivql5y3zT0ybuVHbqcI6gAAJtEFgAAMVQgAAJq81AA==
+Date:   Fri, 31 May 2019 04:41:37 +0000
+Message-ID: <d6b75abaedd844eb87bfbe3f1f364795@zhaoxin.com>
+References: <985acf114ab245fbab52caabf03bd280@zhaoxin.com>
+ <20190530171044.GA18559@araj-mobl1.jf.intel.com>
+In-Reply-To: <20190530171044.GA18559@araj-mobl1.jf.intel.com>
+Accept-Language: en-US, zh-CN
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.32.64.23]
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <CABEDWGyJpfX=DzBgXAGwu29rEwmY3s_P9QPC0eJOJ3KBysRWtA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alan,
-
-On 25/05/19 12:20 AM, Alan Mikhak wrote:
-> Hi Kishon,
-> 
-> Yes. This change is still applicable even when the platform specifies
-> that it only supports 64-bit BARs by setting the bar_fixed_64bit
-> member of epc_features.
-> 
-> The issue being fixed is this: If the 'continue' statement is executed
-> within the loop, the loop index 'bar' needs to advanced by two, not
-> one, when the BAR is 64-bit. Otherwise the next loop iteration will be
-> on an odd BAR which doesn't exist.
-
-IIUC you are fixing the case where the BAR is "reserved" (specified in
-epc_features) and is also a 64-bit BAR?
-
-If 2 consecutive BARs are marked as reserved in reserved_bar of epc_features,
-the result should be the same right?
-
-Thanks
-Kishon
-
-> 
-> The PCI_BASE_ADDRESS_MEM_TYPE_64 flag in epf_bar->flag reflects the
-> value set by the platform in the bar_fixed_64bit member of
-> epc_features.
-> 
-> This patch moves the checking of  PCI_BASE_ADDRESS_MEM_TYPE_64 in
-> epf_bar->flags to before the 'continue' statement to advance the 'bar'
-> loop index accordingly. The comment you see about 'pci_epc_set_bar()'
-> preceding the moved code is the original comment and was also moved
-> along with the code.
-> 
-> Regards,
-> Alan Mikhak
-> 
-> On Fri, May 24, 2019 at 1:51 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>
->> Hi,
->>
->> On 24/05/19 5:25 AM, Alan Mikhak wrote:
->>> +Bjorn Helgaas, +Gustavo Pimentel, +Wen Yang, +Kangjie Lu
->>>
->>> On Thu, May 23, 2019 at 2:55 PM Alan Mikhak <alan.mikhak@sifive.com> wrote:
->>>>
->>>> Always skip odd bar when skipping 64bit BARs in pci_epf_test_set_bar()
->>>> and pci_epf_test_alloc_space().
->>>>
->>>> Otherwise, pci_epf_test_set_bar() will call pci_epc_set_bar() on odd loop
->>>> index when skipping reserved 64bit BAR. Moreover, pci_epf_test_alloc_space()
->>>> will call pci_epf_alloc_space() on bind for odd loop index when BAR is 64bit
->>>> but leaks on subsequent unbind by not calling pci_epf_free_space().
->>>>
->>>> Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
->>>> Reviewed-by: Paul Walmsley <paul.walmsley@sifive.com>
->>>> ---
->>>>  drivers/pci/endpoint/functions/pci-epf-test.c | 25 ++++++++++++-------------
->>>>  1 file changed, 12 insertions(+), 13 deletions(-)
->>>>
->>>> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
->>>> index 27806987e93b..96156a537922 100644
->>>> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
->>>> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
->>>> @@ -389,7 +389,7 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
->>>>
->>>>  static int pci_epf_test_set_bar(struct pci_epf *epf)
->>>>  {
->>>> -       int bar;
->>>> +       int bar, add;
->>>>         int ret;
->>>>         struct pci_epf_bar *epf_bar;
->>>>         struct pci_epc *epc = epf->epc;
->>>> @@ -400,8 +400,14 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
->>>>
->>>>         epc_features = epf_test->epc_features;
->>>>
->>>> -       for (bar = BAR_0; bar <= BAR_5; bar++) {
->>>> +       for (bar = BAR_0; bar <= BAR_5; bar += add) {
->>>>                 epf_bar = &epf->bar[bar];
->>>> +               /*
->>>> +                * pci_epc_set_bar() sets PCI_BASE_ADDRESS_MEM_TYPE_64
->>>> +                * if the specific implementation required a 64-bit BAR,
->>>> +                * even if we only requested a 32-bit BAR.
->>>> +                */
->>
->> set_bar shouldn't set PCI_BASE_ADDRESS_MEM_TYPE_64. If a platform supports only
->> 64-bit BAR, that should be specified in epc_features bar_fixed_64bit member.
->>
->> Thanks
->> Kishon
+T24gRnJpLCBNYXkgMzEsIDIwMTksIFJhaiwgQXNob2sgd3JvdGU6DQo+IE9uIFRodSwgTWF5IDMw
+LCAyMDE5IGF0IDA5OjEzOjM5QU0gKzAwMDAsIFRvbnkgVyBXYW5nLW9jIHdyb3RlOg0KPiA+IE9u
+IFRodSwgTWF5IDMwLCAyMDE5LCBUb255IFcgV2FuZy1vYyB3cm90ZToNCj4gPiA+IEhpIEFzaG9r
+LA0KPiA+ID4gSSBoYXZlIHR3byBxdWVzdGlvbnMgYWJvdXQgdGhpcyBwYXRjaCwgY291bGQgeW91
+IGhlbHAgdG8gY2hlY2s6DQo+ID4gPg0KPiA+ID4gMSwgZm9yIGJyb2FkY2FzdCAjTUMgZXhjZXB0
+aW9ucywgdGhpcyBwYXRjaCBzZWVtcyByZXF1aXJlICNNQyBleGNlcHRpb24NCj4gPiA+IGVycm9y
+cw0KPiA+ID4gc2V0IE1DR19TVEFUVVNfUklQViA9IDEuDQo+ID4gPiBCdXQgZm9yIEludGVsIENQ
+VSwgc29tZSAjTUMgZXhjZXB0aW9uIGVycm9ycyBzZXQgTUNHX1NUQVRVU19SSVBWID0gMA0KPiA+
+ID4gKGxpa2UgIlJlY292ZXJhYmxlLW5vdC1jb250aW51YWJsZSBTUkFSIFR5cGUiIEVycm9ycyks
+IGZvciB0aGVzZSBlcnJvcnMNCj4gPiA+IHRoZSBwYXRjaCBkb2Vzbid0IHNlZW0gdG8gd29yaywg
+aXMgdGhhdCBva2F5Pw0KPiA+ID4NCj4gPiA+IDIsIGZvciBMTUNFIGV4Y2VwdGlvbnMsIHRoaXMg
+cGF0Y2ggc2VlbXMgcmVxdWlyZSAjTUMgZXhjZXB0aW9uIGVycm9ycw0KPiA+ID4gc2V0IE1DR19T
+VEFUVVNfUklQViA9IDAgdG8gbWFrZSBzdXJlIExNQ0UgYmUgaGFuZGxlZCBub3JtYWxseSBldmVu
+DQo+ID4gPiBvbiBvZmZsaW5lIENQVS4NCj4gPiA+IEZvciBMTUNFIGVycm9ycyBzZXQgTUNHX1NU
+QVVTX1JJUFYgPSAxLCB0aGUgcGF0Y2ggcHJldmVudHMgb2ZmbGluZSBDUFUNCj4gPiA+IGhhbmRs
+ZSB0aGVzZSBMTUNFIGVycm9ycywgaXMgdGhhdCBva2F5Pw0KPiA+ID4NCj4gPg0KPiA+IE1vcmUg
+c3BlY2lmaWNhbGx5LCB0aGlzIHBhdGNoIHNlZW1zIHJlcXVpcmUgI01DIGV4Y2VwdGlvbnMgbWVl
+dCB0aGUNCj4gY29uZGl0aW9uDQo+ID4gIk1DR19TVEFUVVNfUklQViBeIE1DR19TVEFUVVNfTE1D
+RVMgPT0gMSI7IEJ1dCBvbiBhIFhlb24gWDU2NTANCj4gbWFjaGluZSAoU01QKSwNCj4gDQo+IFRo
+ZSBvZmZsaW5lIENQVSB3aWxsIG5ldmVyIGdldCBhIExNQ0U9MSwgc2luY2UgdGhvc2Ugb25seSBo
+YXBwZW4gb24gdGhlIENQVQ0KPiB0aGF0J3MgZG9pbmcgYWN0aXZlIHdvcmsuIE9mZmxpbmUgQ1BV
+cyBqdXN0IHNpdHRpbmcgaW4gaWRsZS4NCj4gDQo+IFRoZSBzcGVjaWZpYyBlcnJvciBoZXJlIGlz
+IGEgUENDPTEsIHNvIGlycmVzcGVjdGl2ZSBvZiB3aGF0IGhhcHBlbnMNCj4gV2UgZG8gY2FwdHVy
+ZSB0aGUgZXJyb3JzIGluIHRoZSBwZXItY3B1IGxvZywgYW5kIGtlcm5lbCB3b3VsZCBwYW5pYy4N
+Cj4gDQo+IFdoYXQgc3BlY2lmaWNhbGx5IHRoaXMgcGF0Y2ggdHJpZXMgdG8gYWNoaWV2ZSBpcyB0
+byBsZWF2ZSBhbiBlcnJvcg0KPiBzaXR0aW5nIHdpdGggTUNHLVNUQVRVUy5NQ0lQPTEgYW5kIGFu
+b3RoZXIgcmVjb3ZlcmFibGUgZXJyb3Igd291bGQgc2h1dA0KPiB0aGUNCj4gc3lzdGVtIGRvd20u
+DQpZZXMsIGFncmVlIHdpdGggeW91IGZvciB0aGlzIHBvaW50Lg0KDQpCdXQgZm9yIHF1ZXN0aW9u
+IDEsIFdoZW4gc29tZSAjTUMgZXhjZXB0aW9uIGVycm9ycyBicm9hZGNhc3QgdG8gb2ZmbGluZSBD
+UFUsDQpsaWtlICJSZWNvdmVyYWJsZS1ub3QtY29udGludWFibGUgU1JBUiBUeXBlIiBFcnJvcnMs
+IHNldCBNQ0dfU1RBVFVTX1JJUFYgPSAwLCANClBDQyA9IDAsIGlzIHRoZXJlIGFsc28gdGhlIHBy
+b2JsZW0gOiAiIEtlcm5lbCBwYW5pYyAtIG5vdCBzeW5jaW5nOiBUaW1lb3V0OiBOb3QgYWxsIENQ
+VXMgDQplbnRlcmVkIGJyb2FkY2FzdCBleGNlcHRpb24gaGFuZGxlciI/DQoNClRoYW5rcw0KPiAN
+Cj4gSSBkb24ndCBzZWUgYW55dGhpbmcgd3Jvbmcgd2l0aCB3aGF0IHRoaXMgcGF0Y2ggZG9lcy4u
+DQo+IA0KPiA+ICJEYXRhIENBQ0hFIExldmVsLTIgR2VuZXJpYyBFcnJvciIgZG9lcyBub3QgbWVl
+dCB0aGlzIGNvbmRpdGlvbi4NCj4gPg0KPiA+IEkgZ290IGJlbG93IG1lc3NhZ2UgZnJvbToNCj4g
+aHR0cHM6Ly93d3cuY2VudG9zLm9yZy9mb3J1bXMvdmlld3RvcGljLnBocD9wPTI5Mjc0Mg0KPiA+
+DQo+ID4gSGFyZHdhcmUgZXZlbnQuIFRoaXMgaXMgbm90IGEgc29mdHdhcmUgZXJyb3IuDQo+ID4g
+TUNFIDANCj4gPiBDUFUgNCBCQU5LIDYgVFNDIGI3MDY1ZWVhYTE4YjANCj4gPiBUSU1FIDE1NDU2
+NDM2MDMgTW9uIERlYyAyNCAxMDoyNjo0MyAyMDE4DQo+ID4gTUNHIHN0YXR1czpNQ0lQDQo+ID4g
+TUNpIHN0YXR1czoNCj4gPiBVbmNvcnJlY3RlZCBlcnJvcg0KPiA+IEVycm9yIGVuYWJsZWQNCj4g
+PiBQcm9jZXNzb3IgY29udGV4dCBjb3JydXB0DQo+ID4gTUNBOiBEYXRhIENBQ0hFIExldmVsLTIg
+R2VuZXJpYyBFcnJvcg0KPiA+IFNUQVRVUyBiMjAwMDAwMDgwMDAwMTA2IE1DR1NUQVRVUyA0DQo+
+ID4gTUNHQ0FQIDFjMDkgQVBJQ0lEIDQgU09DS0VUSUQgMA0KPiA+IENQVUlEIFZlbmRvciBJbnRl
+bCBGYW1pbHkgNiBNb2RlbCA0NA0KPiA+DQo+ID4gPiBUaGFua3MNCj4gPiA+IFRvbnkgVyBXYW5n
+LW9jDQo=
