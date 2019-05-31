@@ -2,118 +2,111 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A362C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7528C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A324F26930
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:09:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0B1E26935
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:11:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="piBRNDz/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pJ4t6LkH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbfEaNJc (ORCPT
+        id S1727387AbfEaNLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 09:09:32 -0400
-Received: from mail-eopbgr70057.outbound.protection.outlook.com ([40.107.7.57]:26658
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726330AbfEaNJc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 09:09:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=thIHFzZq6Yb7o0fGxI4pwYvE39AiI5eu80a85wEuJ1M=;
- b=piBRNDz/eG+pR7bxfuC6i1wl8ga2ktUmDf4jTvetzep3//wcRekFdj/IKE5xVPUlWWOtzUoxJCr+wuB6WhPjFWQbeAqgmJSfghpkdyyWyYNXHNGZFFuV/o2TMFm6mxBi9DZKQltnEX6YKC8Au9LONQO72h8BLhdgZTRbVFXKoDc=
-Received: from VI1PR04MB5134.eurprd04.prod.outlook.com (20.177.50.159) by
- VI1PR04MB5583.eurprd04.prod.outlook.com (20.178.123.33) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.17; Fri, 31 May 2019 13:09:25 +0000
-Received: from VI1PR04MB5134.eurprd04.prod.outlook.com
- ([fe80::8d0e:de86:9b49:b40]) by VI1PR04MB5134.eurprd04.prod.outlook.com
- ([fe80::8d0e:de86:9b49:b40%7]) with mapi id 15.20.1922.024; Fri, 31 May 2019
- 13:09:25 +0000
-From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
-To:     David Miller <davem@davemloft.net>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Madalin-cristian Bucur <madalin.bucur@nxp.com>,
-        Roy Pledge <roy.pledge@nxp.com>,
-        Camelia Alexandra Groza <camelia.groza@nxp.com>,
-        Leo Li <leoyang.li@nxp.com>,
-        "jocke@infinera.com" <joakim.tjernlund@infinera.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>
-Subject: RE: [PATCH v3 0/6] Prerequisites for NXP LS104xA SMMU enablement
-Thread-Topic: [PATCH v3 0/6] Prerequisites for NXP LS104xA SMMU enablement
-Thread-Index: AQHVFvLAUsVmmx2jaE2ZHLZY1pGN66aEOpgAgAD6PbA=
-Date:   Fri, 31 May 2019 13:09:25 +0000
-Message-ID: <VI1PR04MB5134C8FF07C4BED216DE12DCEC190@VI1PR04MB5134.eurprd04.prod.outlook.com>
-References: <20190530141951.6704-1-laurentiu.tudor@nxp.com>
- <20190530.150844.1826796344374758568.davem@davemloft.net>
-In-Reply-To: <20190530.150844.1826796344374758568.davem@davemloft.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=laurentiu.tudor@nxp.com; 
-x-originating-ip: [192.88.166.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3b320303-6336-4846-e41c-08d6e5c934cc
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5583;
-x-ms-traffictypediagnostic: VI1PR04MB5583:
-x-ms-exchange-purlcount: 1
-x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-x-microsoft-antispam-prvs: <VI1PR04MB5583705E1A156E9DF61DFD80EC190@VI1PR04MB5583.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1443;
-x-forefront-prvs: 00540983E2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(376002)(39860400002)(346002)(396003)(189003)(199004)(13464003)(26005)(66946007)(64756008)(6916009)(73956011)(11346002)(3846002)(99286004)(33656002)(6116002)(4744005)(66556008)(76176011)(66446008)(66476007)(186003)(55016002)(44832011)(966005)(7696005)(476003)(14454004)(446003)(486006)(478600001)(6246003)(2906002)(229853002)(4326008)(6436002)(25786009)(14444005)(74316002)(9686003)(68736007)(6306002)(76116006)(52536014)(66066001)(305945005)(71190400001)(71200400001)(53936002)(54906003)(6506007)(256004)(5660300002)(7736002)(8936002)(102836004)(81156014)(86362001)(81166006)(316002)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5583;H:VI1PR04MB5134.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: gnqMazF+nzQTNQhmoGkYY7imzrTpo5wzUZ0kcmM93IUJDEfrqOQ15Bn2XqpCjTa3uflPhM7mwZTLTJgCnOUMXfqxueSQmCHsmwuAwaYHLFQxyZeA6CAuWSXcyDGmQxgMgurtAAz281eZP7q6owXMEUUFykgBzo6nbx9XLMwdU7nTQqRDIV2Fv5osOT8lAg8ICwAL949f8xK40AVKOr6S1UYlcAdys2155+H3eB4fm0RARCGp+1BPqG0DAysREEtvLq053Y2HP+E+fycMKUfnmo9NG07i3yb3lspMDUUOngq7ufnseDXmT8SuNLpk/KpW+IN7lsj8hZ9EgjOrbqtoY6JpLj4gg4Dz+KhCE1/Dq0pUwajK3hUW1m72SLQA0D0ML6OAEf2x2E88mvqknaf9qppWSBg3/as88O4VfPz4pds=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 31 May 2019 09:11:36 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40486 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726330AbfEaNLf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 09:11:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=5J0ba4Ad42pvvelRQpkEcT3KcojCTDX3YCcgX/U44Ic=; b=pJ4t6LkHXCwBk7eHWUyyF31bL
+        atygI577w3kMbTDLLv7Bt9klbP5R9DeHtJXzVoOpHE+jJVICLL1cG9Rzka2RzcDMAtnPj6EE0h9T+
+        lPfIHOKqIb6k1IeL3NEddNcVSf1tbSLYBDLxGRnFAQyH+Rr23hwli5u7loQrEzxDcxgR7tvDp8DSk
+        x+TyQ7nPuXjvLT4Vt3sRD6uSfZcphduOwZxhx0KswRnpDlU4qATsn7xUFKxtVxx0O4gk2rezwyfBA
+        DR1b5XHINd9G79IC09pwuj+5nopkC4VOqJcZfy4hYuntVe+TKNT+G7trbG++RBBAJXhL/f4qPQHPu
+        IZ0x3C5cg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hWhJh-0001SF-CS; Fri, 31 May 2019 13:11:31 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B991E20274AFF; Fri, 31 May 2019 15:11:27 +0200 (CEST)
+Date:   Fri, 31 May 2019 15:11:27 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Roman Penyaev <rpenyaev@suse.de>
+Cc:     azat@libevent.org, akpm@linux-foundation.org,
+        viro@zeniv.linux.org.uk, torvalds@linux-foundation.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 06/13] epoll: introduce helpers for adding/removing
+ events to uring
+Message-ID: <20190531131127.GB2606@hirez.programming.kicks-ass.net>
+References: <20190516085810.31077-1-rpenyaev@suse.de>
+ <20190516085810.31077-7-rpenyaev@suse.de>
+ <20190531095549.GB17637@hirez.programming.kicks-ass.net>
+ <7187263bcee61b9abbe687f3a7478bd1@suse.de>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3b320303-6336-4846-e41c-08d6e5c934cc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 May 2019 13:09:25.4735
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: laurentiu.tudor@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5583
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7187263bcee61b9abbe687f3a7478bd1@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, May 31, 2019 at 01:24:07PM +0200, Roman Penyaev wrote:
+> On 2019-05-31 11:55, Peter Zijlstra wrote:
+> > On Thu, May 16, 2019 at 10:58:03AM +0200, Roman Penyaev wrote:
+> > > +#define atomic_set_unless_zero(ptr, flags)			\
+> > > +({								\
+> > > +	typeof(ptr) _ptr = (ptr);				\
+> > > +	typeof(flags) _flags = (flags);				\
+> > > +	typeof(*_ptr) _old, _val = READ_ONCE(*_ptr);		\
+> > > +								\
+> > > +	for (;;) {						\
+> > > +		if (!_val)					\
+> > > +			break;					\
+> > > +		_old = cmpxchg(_ptr, _val, _flags);		\
+> > > +		if (_old == _val)				\
+> > > +			break;					\
+> > > +		_val = _old;					\
+> > > +	}							\
+> > > +	_val;							\
+> > > +})
+> > 
+> > > +#define atomic_or_with_mask(ptr, flags, mask)			\
+> > > +({								\
+> > > +	typeof(ptr) _ptr = (ptr);				\
+> > > +	typeof(flags) _flags = (flags);				\
+> > > +	typeof(flags) _mask = (mask);				\
+> > > +	typeof(*_ptr) _old, _new, _val = READ_ONCE(*_ptr);	\
+> > > +								\
+> > > +	for (;;) {						\
+> > > +		_new = (_val & ~_mask) | _flags;		\
+> > > +		_old = cmpxchg(_ptr, _val, _new);		\
+> > > +		if (_old == _val)				\
+> > > +			break;					\
+> > > +		_val = _old;					\
+> > > +	}							\
+> > > +	_val;							\
+> > > +})
+> > 
+> > Don't call them atomic_*() if they're not part of the atomic_t
+> > interface.
+> 
+> Can we add those two?  Or keep it local is better?
 
-> -----Original Message-----
-> From: David Miller <davem@davemloft.net>
-> Sent: Friday, May 31, 2019 1:09 AM
->=20
-> From: laurentiu.tudor@nxp.com
-> Date: Thu, 30 May 2019 17:19:45 +0300
->=20
-> > Depends on this pull request:
-> >
-> >
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2019-May/653554.htm=
-l
->=20
-> I'm not sure how you want me to handle this.
+Afaict you're using them on the user visible values; we should not put
+atomic_t into shared memory.
 
-Dave, would it make sense / be possible to also pick Leo's PR through your =
-tree?
-
----
-Thanks & Best Regards, Laurentiu
+Your interface isn't compatible with those 'funny' architectures like
+parisc etc. Since you expect userspace to do atomic ops on these
+variables too. It is not a one-way interface ...
