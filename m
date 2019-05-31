@@ -2,185 +2,156 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9507CC28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 622A3C28CC0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73CE920449
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 356EB22C7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:05:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dkhdpTV7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726888AbfEaDCW (ORCPT
+        id S1726687AbfEaDFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 23:02:22 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:17631 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726566AbfEaDCW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 23:02:22 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id B09E3763727074F9058B;
-        Fri, 31 May 2019 11:02:18 +0800 (CST)
-Received: from huawei.com (10.67.188.14) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Fri, 31 May 2019
- 11:02:11 +0800
-From:   xiaoqian <xiaoqian9@huawei.com>
-To:     <linux@armlinux.org.uk>, <rafael.j.wysocki@intel.com>,
-        <ebiederm@xmission.com>, <rppt@linux.ibm.com>, <pmladek@suse.com>,
-        <bhelgaas@google.com>, <sakari.ailus@linux.intel.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
-        <xiaoqian9@huawei.com>
-Subject: [PATCH] Subject:alignment:fetch pc-instr before irq_enable
-Date:   Fri, 31 May 2019 11:01:20 +0800
-Message-ID: <1559271680-7486-1-git-send-email-xiaoqian9@huawei.com>
-X-Mailer: git-send-email 1.8.5.6
+        Thu, 30 May 2019 23:05:08 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:40394 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726487AbfEaDFH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 23:05:07 -0400
+Received: by mail-vs1-f68.google.com with SMTP id c24so5782886vsp.7;
+        Thu, 30 May 2019 20:05:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9Tw6MfE3P1bGwhttusOX/dvsaJqtQKxURFmXarqN8Wk=;
+        b=dkhdpTV768kkp6B70tjzxMcFbZIA1qkLLrYjL4RMf8a3fMP1pJQAV/EVPTzSNNtRYV
+         FUWPb7etlnoUShlILHe5PsYv8oULi7U2zG+aIlAceqOi0Z/mMZKTJFs4qPMNIfcX+rzo
+         ob5XwpUnHizhWxqTmRlqcwe/wBnzJc94gVvnHWylSwNfpoJ4Lt+Ck9otZpgdbXF8dewW
+         3tZMdngZx4eAMJrXkZxgIAA9NTyA5narqpOkzH/dFpeiW/BwC21IHx9uVp1DYV7Ai/wV
+         Xe3MZHPwDIiDjMC7lSBwpFgxXLKuuOa9+YDuCMrbd3l4L1JuZHS2F3vTyk/P3dm1unbB
+         N/7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9Tw6MfE3P1bGwhttusOX/dvsaJqtQKxURFmXarqN8Wk=;
+        b=TQ4hccSjXlk4ZIIY3aERzOf1AdEzwMvueza1QRDPXXXoihw/+atsj5W8xuXHiitbt+
+         53LmgUkr+Pi1q9tLeIqzJJ0gvFwTUgTWgfuLf45wapAHeKaF6o3zA9cRnEfuX+x2ZYT1
+         57nfW+0omWahce/HOg9EifIMDGfiiEoqKbTepPL3NRdrPTN56Ipza1LqlIwEOIv0DyHj
+         el8oJZ1ttjnfGHD7ivHryZJp/9mkd7jVxIiUI4yx8ztnHuPy9zlqfB7/ph2Ni/X0mINF
+         B2zI9xaT8IrYbml6SzfVCVK0uV88aN/eSTYqZKQ4WZEtnqDe928ppbIqqGw6i2ID3E2u
+         JpSA==
+X-Gm-Message-State: APjAAAU4flBgZ1JttPeU25DJv7KEbHqHCmdRFhYdDIlN5mpwS1SkB3gI
+        YgeE0g/ZSDr/vpkcDsohpbopCYnCXra9KTVTbLk=
+X-Google-Smtp-Source: APXvYqzHV1lKMwk+FNM7dfPB5Sz5hARr3Ws8DrzHmkVGhE5KL1j7TfX0wr0G1wdCZo7XKBNHhRdZkGJkonEozHZfCVM=
+X-Received: by 2002:a67:d68e:: with SMTP id o14mr4444883vsj.140.1559271906887;
+ Thu, 30 May 2019 20:05:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.188.14]
-X-CFilter-Loop: Reflected
+References: <1559230098-1543-1-git-send-email-92siuyang@gmail.com> <c83f8777-f6be-029b-980d-9f974b4e28ce@gmail.com>
+In-Reply-To: <c83f8777-f6be-029b-980d-9f974b4e28ce@gmail.com>
+From:   Yang Xiao <92siuyang@gmail.com>
+Date:   Fri, 31 May 2019 11:04:22 +0800
+Message-ID: <CAKgHYH1=aqmOEsbH-OuSjK4CJ=9FmocjuOg6tsyJNPLEOWVB-g@mail.gmail.com>
+Subject: Re: [PATCH] ipv6: Prevent overrun when parsing v6 header options
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the instruction code under PC address is read through
-_probe_kernel_read in do_alignment,if the pte page corresponding
-to the code segment of PC address is reclaimed exactly at this time,
-the address mapping cannot be reconstructed because page fault_disable()
-is executed in _probe_kernel_read function,and the failure to obtain
-the instruction code of PC finally results in the unsuccessful repair
-operation.
-Thus we can modify the implementation of reading user-mode PC instruction
-before local_irq_enable to avoid the above risk.
-At the same time, adjust the sequence of code processing and optimize the
-process.
+On Fri, May 31, 2019 at 1:17 AM Eric Dumazet <eric.dumazet@gmail.com> wrote:
+>
+>
+>
+> On 5/30/19 8:28 AM, Young Xiao wrote:
+> > The fragmentation code tries to parse the header options in order
+> > to figure out where to insert the fragment option.  Since nexthdr points
+> > to an invalid option, the calculation of the size of the network header
+> > can made to be much larger than the linear section of the skb and data
+> > is read outside of it.
+> >
+> > This vulnerability is similar to CVE-2017-9074.
+> >
+> > Signed-off-by: Young Xiao <92siuyang@gmail.com>
+> > ---
+> >  net/ipv6/mip6.c | 24 ++++++++++++++----------
+> >  1 file changed, 14 insertions(+), 10 deletions(-)
+> >
+> > diff --git a/net/ipv6/mip6.c b/net/ipv6/mip6.c
+> > index 64f0f7b..30ed1c5 100644
+> > --- a/net/ipv6/mip6.c
+> > +++ b/net/ipv6/mip6.c
+> > @@ -263,8 +263,6 @@ static int mip6_destopt_offset(struct xfrm_state *x, struct sk_buff *skb,
+> >                              u8 **nexthdr)
+> >  {
+> >       u16 offset = sizeof(struct ipv6hdr);
+> > -     struct ipv6_opt_hdr *exthdr =
+> > -                                (struct ipv6_opt_hdr *)(ipv6_hdr(skb) + 1);
+> >       const unsigned char *nh = skb_network_header(skb);
+> >       unsigned int packet_len = skb_tail_pointer(skb) -
+> >               skb_network_header(skb);
+> > @@ -272,7 +270,8 @@ static int mip6_destopt_offset(struct xfrm_state *x, struct sk_buff *skb,
+> >
+> >       *nexthdr = &ipv6_hdr(skb)->nexthdr;
+> >
+> > -     while (offset + 1 <= packet_len) {
+> > +     while (offset <= packet_len) {
+> > +             struct ipv6_opt_hdr *exthdr;
+> >
+> >               switch (**nexthdr) {
+> >               case NEXTHDR_HOP:
+> > @@ -299,12 +298,15 @@ static int mip6_destopt_offset(struct xfrm_state *x, struct sk_buff *skb,
+> >                       return offset;
+> >               }
+> >
+> > +             if (offset + sizeof(struct ipv6_opt_hdr) > packet_len)
+> > +                     return -EINVAL;
+> > +
+> > +             exthdr = (struct ipv6_opt_hdr *)(nh + offset);
+> >               offset += ipv6_optlen(exthdr);
+> >               *nexthdr = &exthdr->nexthdr;
+> > -             exthdr = (struct ipv6_opt_hdr *)(nh + offset);
+> >       }
+> >
+> > -     return offset;
+> > +     return -EINVAL;
+> >  }
+> >
+>
+>
+> Ok, but have you checked that callers have been fixed ?
 
-Signed-off-by: xiaoqian <xiaoqian9@huawei.com>
-Cc: stable@vger.kernel.org
----
- arch/arm/mm/alignment.c | 81 +++++++++++++++++++++++++++++++++----------------
- 1 file changed, 55 insertions(+), 26 deletions(-)
+I've checked the callers. There are two callers:
+xfrm6_transport_output() and xfrm6_ro_output(). There are checks in
+both function.
 
-diff --git a/arch/arm/mm/alignment.c b/arch/arm/mm/alignment.c
-index e376883ab35b..4124b9ce3c70 100644
---- a/arch/arm/mm/alignment.c
-+++ b/arch/arm/mm/alignment.c
-@@ -76,6 +76,11 @@
- #define IS_T32(hi16) \
- 	(((hi16) & 0xe000) == 0xe000 && ((hi16) & 0x1800))
- 
-+#define INVALID_INSTR_MODE     0
-+#define ARM_INSTR_MODE         1
-+#define THUMB_INSTR_MODE       2
-+#define THUMB2_INSTR_MODE      3
-+
- static unsigned long ai_user;
- static unsigned long ai_sys;
- static void *ai_sys_last_pc;
-@@ -705,6 +710,48 @@ thumb2arm(u16 tinstr)
- 	}
- }
- 
-+static unsigned int
-+fetch_usr_pc_instr(struct pt_regs *regs, unsigned long *pc_instrptr)
-+{
-+	unsigned int fault;
-+	unsigned long instrptr;
-+	unsigned long instr_mode = INVALID_INSTR_MODE;
-+
-+	instrptr = instruction_pointer(regs);
-+
-+	if (thumb_mode(regs)) {
-+		u16 tinstr = 0;
-+		u16 *ptr = (u16 *)(instrptr & ~1);
-+
-+		fault = probe_kernel_address(ptr, tinstr);
-+		if (!fault) {
-+			tinstr = __mem_to_opcode_thumb16(tinstr);
-+			if (cpu_architecture() >= CPU_ARCH_ARMv7 &&
-+			    IS_T32(tinstr)) {
-+				/* Thumb-2 32-bit */
-+				u16 tinstr2 = 0;
-+
-+				fault = probe_kernel_address(ptr + 1, tinstr2);
-+				if (!fault) {
-+					tinstr2 = __mem_to_opcode_thumb16(tinstr2);
-+					*pc_instrptr = __opcode_thumb32_compose(tinstr, tinstr2);
-+					instr_mode = THUMB2_INSTR_MODE;
-+				}
-+			} else {
-+				*pc_instrptr = thumb2arm(tinstr);
-+				instr_mode = THUMB_INSTR_MODE;
-+			}
-+		}
-+	} else {
-+		fault = probe_kernel_address((void *)instrptr, *pc_instrptr);
-+		if (!fault) {
-+			*pc_instrptr = __mem_to_opcode_arm(*pc_instrptr);
-+			instr_mode = ARM_INSTR_MODE;
-+		}
-+	}
-+	return instr_mode;
-+}
-+
- /*
-  * Convert Thumb-2 32 bit LDM, STM, LDRD, STRD to equivalent instruction
-  * handlable by ARM alignment handler, also find the corresponding handler,
-@@ -775,42 +822,24 @@ do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
- 	unsigned long instr = 0, instrptr;
- 	int (*handler)(unsigned long addr, unsigned long instr, struct pt_regs *regs);
- 	unsigned int type;
--	unsigned int fault;
- 	u16 tinstr = 0;
- 	int isize = 4;
- 	int thumb2_32b = 0;
-+	unsigned long pc_instr_mode;
-+
-+	pc_instr_mode = fetch_usr_pc_instr(regs, &instr);
- 
- 	if (interrupts_enabled(regs))
- 		local_irq_enable();
- 
- 	instrptr = instruction_pointer(regs);
--
--	if (thumb_mode(regs)) {
--		u16 *ptr = (u16 *)(instrptr & ~1);
--		fault = probe_kernel_address(ptr, tinstr);
--		tinstr = __mem_to_opcode_thumb16(tinstr);
--		if (!fault) {
--			if (cpu_architecture() >= CPU_ARCH_ARMv7 &&
--			    IS_T32(tinstr)) {
--				/* Thumb-2 32-bit */
--				u16 tinst2 = 0;
--				fault = probe_kernel_address(ptr + 1, tinst2);
--				tinst2 = __mem_to_opcode_thumb16(tinst2);
--				instr = __opcode_thumb32_compose(tinstr, tinst2);
--				thumb2_32b = 1;
--			} else {
--				isize = 2;
--				instr = thumb2arm(tinstr);
--			}
--		}
--	} else {
--		fault = probe_kernel_address((void *)instrptr, instr);
--		instr = __mem_to_opcode_arm(instr);
--	}
--
--	if (fault) {
-+	if (pc_instr_mode == INVALID_INSTR_MODE) {
- 		type = TYPE_FAULT;
- 		goto bad_or_fault;
-+	} else if (pc_instr_mode == THUMB_INSTR_MODE) {
-+		isize = 2;
-+	} else if (pc_instr_mode == THUMB2_INSTR_MODE) {
-+		thumb2_32b = 1;
- 	}
- 
- 	if (user_mode(regs))
--- 
-2.12.3
+------------------------------------------------------------------------------
+        hdr_len = x->type->hdr_offset(x, skb, &prevhdr);
+        if (hdr_len < 0)
+                return hdr_len;
+------------------------------------------------------------------------------
+>
+> xfrm6_transport_output() seems buggy as well,
+> unless the skbs are linearized before entering these functions ?
+I can not understand what you mean about this comment.
+Could you explain it in more detail.
 
+>
+> Thanks.
+>
+>
+>
