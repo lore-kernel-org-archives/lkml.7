@@ -2,85 +2,107 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A13C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D13EC28CC4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAA01263D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:41:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559317284;
-	bh=BxGnRRyjsJ2ho3R155gccJhBEQUfHmioJfLv8ziidDU=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=EqaDCuy8Zg2ERqYnoI3T8HVAJpI1+flyo04E3nqxhyjTi+YQWojiP3ATAoXyoyDna
-	 PXuaEcdFlimJ1ujxYxOU8o4N4EeTuNKCR8cY+e5NQvyIgukUMIRXsoLyo/jlAWgWVA
-	 AXeqtzwwKtFHhOWpe0axXcw/qRMqspup9ksu0Qlg=
+	by mail.kernel.org (Postfix) with ESMTP id 52EEA26A8C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:45:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="fRr515es"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbfEaPlY (ORCPT
+        id S1726713AbfEaPpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 11:41:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56526 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726518AbfEaPlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 11:41:23 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88326218D1;
-        Fri, 31 May 2019 15:41:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559317283;
-        bh=BxGnRRyjsJ2ho3R155gccJhBEQUfHmioJfLv8ziidDU=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=MQ71Jgjq0+N+7J+4gRi7i6TKqN9b2w1EPDyf8QSzCgcpqDVvqe3Tsm+BSszQGMPPn
-         /ftq/7Jo0p/gIRQTHJ3DS4pK5LmXCLzMJcphtO12dKq/Nin7SsZKYoOTNVD/JL1oMs
-         YU64CS6nEtiunbTg0imU8NUzfcqrVHB0ixPAjsOE=
-Date:   Fri, 31 May 2019 17:41:18 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-cc:     Andy Lutomirski <luto@amacapital.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4] x86/power: Fix 'nosmt' vs. hibernation triple fault
- during resume
-In-Reply-To: <20190531152626.4nmyc7lj6mjwuo2v@treble>
-Message-ID: <nycvar.YFH.7.76.1905311739510.1962@cbobk.fhfr.pm>
-References: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm> <20190531051456.fzkvn62qlkf6wqra@treble> <nycvar.YFH.7.76.1905311045240.1962@cbobk.fhfr.pm> <5564116.e9OFvgDRbB@kreacher> <CALCETrUpseta+NrhVwzzVFTe-BkBHtDUJBO22ci3mAsVR+XOog@mail.gmail.com>
- <nycvar.YFH.7.76.1905311628330.1962@cbobk.fhfr.pm> <B7AC83ED-3F11-42B9-8506-C842A5937B50@amacapital.net> <nycvar.YFH.7.76.1905311651450.1962@cbobk.fhfr.pm> <20190531152626.4nmyc7lj6mjwuo2v@treble>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Fri, 31 May 2019 11:45:44 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:37584 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726601AbfEaPpn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 11:45:43 -0400
+Received: by mail-lf1-f66.google.com with SMTP id m15so8283941lfh.4
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 08:45:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/DZt8luZx8AZd+g3OwucXhV/souOkAqU6IAlufN+JIw=;
+        b=fRr515esaIOr8mkEww0IKDtMKmNftE282RImc1BVF4NJkoyzWycXVzqJGvuIhA4tRg
+         yGD98Ugj6GLQCyZr2JaDPuomsu1bWjRPzuDOz5QxW4SEF/qpmGwOeTDYHxJmmhOgcpvh
+         YTD8txi1NP7Tf93arKTMnQTYJzJOeBgEcuaR9Nk9UIfApiKPLOM9OKvKzoFI65b+en8G
+         mqoQU8m/U/4AUlvwyEhuXXJiWSMQGVpS8baWkvBUint97bO4se4HJHQ4vXPI0pA6nHPM
+         QiOQRZe0fXT8C240IXihy/Ku1XNTcuFvmFzZNCsaPzcfS7NIiVdploSAO975KD9bFmyl
+         O+bA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/DZt8luZx8AZd+g3OwucXhV/souOkAqU6IAlufN+JIw=;
+        b=mvTx2sm2zSdMJBf3837iuKvlxZCLbZqFr2D7/+QiX5VrWA2t83IN2+4oT4RhNnn5NE
+         n9oANd1kVSi+ZwqPF0VS+T3M508wc9sndQa4X5wdIXlQnhZXOkVYYxmuzzDtwjlnxmCb
+         yJ9GllEYl639YVOt5ifMXYkoNa/qMRGP8QK19jAqSgZ71UgcURwzBO/oCDEAuSXS7oRS
+         MzCiJSJA0hoNNMPXhqNM4dxJC7Caup1uyOtaERZuCcA8ajxR78wYX5Hkq8tO90UYdp5T
+         kioHZEJPVeeF0eXkQwCv6ZbUHjjfU+uaKK9q9yVwvdxdEja1ygsElyXMcdmjBVuqkKzP
+         WSKA==
+X-Gm-Message-State: APjAAAWfQ8rdn/v0iwnx+hcaQ/iyBOiLNzN7y2F44Y3a+yiOoZBqbq8B
+        8L+uSnOFmdkcZy/+dmmlSo4lsqA08jkdEemMRfmU
+X-Google-Smtp-Source: APXvYqzFztIsHezNj4wOvdAK/eHaIBSHz130vzxCSTL8AZkALwTZeT3dQxZbC5UR86jbnMY3vWbN4D58tPPMshgs18U=
+X-Received: by 2002:a19:c301:: with SMTP id t1mr6164138lff.137.1559317540060;
+ Fri, 31 May 2019 08:45:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20190531013350.GA4642@zhanggen-UX430UQ>
+In-Reply-To: <20190531013350.GA4642@zhanggen-UX430UQ>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Fri, 31 May 2019 11:45:28 -0400
+Message-ID: <CAHC9VhTmj8b9jYMaXd=ORhBgTAWUgF=srgqAXkECe7MFkDXOmg@mail.gmail.com>
+Subject: Re: [PATCH v2] hooks: fix a missing-check bug in selinux_sb_eat_lsm_opts()
+To:     Gen Zhang <blackgod016574@gmail.com>
+Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, omosnace@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 May 2019, Josh Poimboeuf wrote:
+On Thu, May 30, 2019 at 9:34 PM Gen Zhang <blackgod016574@gmail.com> wrote:
+>
+> In selinux_sb_eat_lsm_opts(), 'arg' is allocated by kmemdup_nul(). It
+> returns NULL when fails. So 'arg' should be checked.
+>
+> Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+> Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
+> Fixes: 99dbbb593fe6 ("selinux: rewrite selinux_sb_eat_lsm_opts()")
 
-> The only question I'd have is if we have data on the power savings 
-> difference between hlt and mwait.  mwait seems to wake up on a lot of 
-> different conditions which might negate its deeper sleep state.
+One quick note about the subject line, instead of using "hooks:" you
+should use "selinux:" since this is specific to SELinux.  If the patch
+did apply to the LSM framework as a whole, I would suggest using
+"lsm:" instead of "hooks:" as "hooks" is too ambiguous of a prefix.
 
-hlt wakes up on basically the same set of events, but has the 
-auto-restarting semantics on some of them (especially SMM). So the wakeup 
-frequency itself shouldn't really contribute to power consumption 
-difference; it's the C-state that mwait allows CPU to enter.
+> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+> index 3ec702c..5a9e959 100644
+> --- a/security/selinux/hooks.c
+> +++ b/security/selinux/hooks.c
+> @@ -2635,6 +2635,8 @@ static int selinux_sb_eat_lsm_opts(char *options, void **mnt_opts)
+>                                                 *q++ = c;
+>                                 }
+>                                 arg = kmemdup_nul(arg, q - arg, GFP_KERNEL);
+> +                               if (!arg)
+> +                                       return -ENOMEM;
 
-Thanks,
+It seems like we should also check for, and potentially free *mnt_opts
+as the selinux_add_opt() error handling does just below this change,
+yes?  If that is the case we might want to move that error handling
+code to the bottom of the function and jump there on error.
+
+>                         }
+>                         rc = selinux_add_opt(token, arg, mnt_opts);
+>                         if (unlikely(rc)) {
 
 -- 
-Jiri Kosina
-SUSE Labs
-
+paul moore
+www.paul-moore.com
