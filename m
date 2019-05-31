@@ -2,101 +2,88 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0FB6C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 807DAC28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8805726AB9
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:38:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559313483;
-	bh=BDjm7pEDdEXPIX9H5qMwxiK+c8NtDxwUnmEORHK/zVE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xOaX1q+pcg6H0lfp/eBA6ERyXi+7nRNqN+I4uhP/3CSG37xanRkuJav5InHyUfgIQ
-	 PypAxV9gmW+kW7VGW8a7DHMkCEQUrdNyFJ/yehvz6u0pVQr34QGb4+emcWLNMc6e9U
-	 mYAHp7yibwRw0WAUfHNrkSn+avsuReWm/4MFWINM=
+	by mail.kernel.org (Postfix) with ESMTP id 586E426ABD
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:38:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="0bEtsjft"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbfEaOiC (ORCPT
+        id S1726809AbfEaOiI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 10:38:02 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:35262 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbfEaOiC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 10:38:02 -0400
-Received: by mail-qt1-f193.google.com with SMTP id d23so1141912qto.2
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 07:38:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=649G8fX5KsyxKNGqC8JgOTPtl/EUKZLecJRl6sV4WuE=;
-        b=gcp92TBDfc0rnUPM9YcSJPS63vLFPmXlbELISOregSWXFow0wkuMKoNUTCwWuPETjn
-         58EjhTjW0OS5FGcgpplBpmIsKAOKOj5yz/RM0/7byNNAcT83+i2IcZsyAxLeRThi8iBD
-         u/ot7JwaMWPkMOswd8p5V6fcx1AJBQj6oUxJAE5RR0Tljh4eGxulZ9VkS0R88KQxf1yf
-         JMUjXaFl5Rle0cxtVYfNp08eqHZW6Gw8Z9WvlWbFaiyaCQ2i9xdlsZ6WM3u1pkc46Jyz
-         Nx3amfFonmYF8TqE1rNIL3DAei2V1sqrXokli290xrfi41tdLCckSjNVEAmNr1IvZiIA
-         BZaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=649G8fX5KsyxKNGqC8JgOTPtl/EUKZLecJRl6sV4WuE=;
-        b=B5Zg1xaCTnP1sy1AbaGaORjdKPxEJvMPf6Kd6n6crAckyxJdE2Qy/RSUVelvoVsdbb
-         erenSVT90yRzypjgEMhPOuo20lBhU8Ea4gf/CxDItdtsWRJWO1qAMesKgmY9wiLiuuR8
-         2IrYT5RmzWBNXPkKKAd6/p/aDFE4MZPl3bu3cV6dZEMFG0DFnnNBiLVwr0l3pEq+zUYE
-         PJ+6H/1OtSQOMVCZNINcx/G9utlIL6CQOM0f2d+Xnxk9sLCC6BRFM7uh1GI+z+Z/PFjJ
-         /WT9NpcTHMrvxgzBHcFoEf6/3SXshwmqCfVMZn+TVAVfzWV2/LFD3duXu7nTC1W49xie
-         D6bw==
-X-Gm-Message-State: APjAAAUkqseMAk5GBhfOGoUAaCQQFJawBeP8YUtop0V3m9va/b8y7USV
-        pa4Elr7ivwkXcekArvnqFHo=
-X-Google-Smtp-Source: APXvYqygj+noRfQ7ZarPTbIglLApJBmc4ARIM2HfmB8bcs4XGAPQh8P9oPNnFyjrBYBZ687Y1rT0Pw==
-X-Received: by 2002:a0c:878e:: with SMTP id 14mr9262652qvj.103.1559313481179;
-        Fri, 31 May 2019 07:38:01 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::39c9])
-        by smtp.gmail.com with ESMTPSA id v195sm3201216qka.28.2019.05.31.07.38.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 31 May 2019 07:38:00 -0700 (PDT)
-Date:   Fri, 31 May 2019 07:37:59 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Gao Xiang <gaoxiang25@huawei.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH] sched/core: add __sched tag for io_schedule()
-Message-ID: <20190531143759.GD374014@devbig004.ftw2.facebook.com>
-References: <20190531082912.80724-1-gaoxiang25@huawei.com>
+        Fri, 31 May 2019 10:38:08 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:44866 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726550AbfEaOiI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 10:38:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=tazGyoINDtGJDhMyeZiXu50p40iBVItCCWyPxYp1J44=; b=0bEtsjftZRI57pW96xurs+QNWH
+        uL69zm/Rupsxy+Gb4/ZkKsXh/py+ygqkMY6C2AlcVszodNm5TRXWwog0X0PLmB9g8jrgMlyOXlxfq
+        U66sudJsfecbf7suciGZA/1jXvhzje/FJ+Z4IEkJQLBksg0LzfedzzAmSf0uNqkqzxvA=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hWifO-0006eu-Ph; Fri, 31 May 2019 16:37:58 +0200
+Date:   Fri, 31 May 2019 16:37:58 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Vivien Didelot <vivien.didelot@gmail.com>
+Cc:     Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chris Healy <cphealy@gmail.com>
+Subject: Re: [PATCH] net: dsa: mv88e6xxx: avoid error message on remove from
+ VLAN 0
+Message-ID: <20190531143758.GB23821@lunn.ch>
+References: <20190531073514.2171-1-nikita.yoush@cogentembedded.com>
+ <20190531103105.GE23464@t480s.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190531082912.80724-1-gaoxiang25@huawei.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190531103105.GE23464@t480s.localdomain>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 04:29:12PM +0800, Gao Xiang wrote:
-> non-inline io_schedule() was introduced in
-> commit 10ab56434f2f ("sched/core: Separate out io_schedule_prepare() and io_schedule_finish()")
-> Keep in line with io_schedule_timeout, Otherwise
-> "/proc/<pid>/wchan" will report io_schedule()
-> rather than its callers when waiting io.
+> I'm not sure that I like the semantic of it, because the driver can actually
+> support VID 0 per-se, only the kernel does not use VLAN 0. Thus I would avoid
+> calling the port_vlan_del() ops for VID 0, directly into the upper DSA layer.
 > 
-> Reported-by: Jilong Kou <koujilong@huawei.com>
-> Cc: Tejun Heo <tj@kernel.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+> Florian, Andrew, wouldn't the following patch be more adequate?
+> 
+>     diff --git a/net/dsa/slave.c b/net/dsa/slave.c
+>     index 1e2ae9d59b88..80f228258a92 100644
+>     --- a/net/dsa/slave.c
+>     +++ b/net/dsa/slave.c
+>     @@ -1063,6 +1063,10 @@ static int dsa_slave_vlan_rx_kill_vid(struct net_device *dev, __be16 proto,
+>             struct bridge_vlan_info info;
+>             int ret;
+>      
+>     +       /* VID 0 has a special meaning and is never programmed in hardware */
+>     +       if (!vid)
+>     +               return 0;
+>     +
+>             /* Check for a possible bridge VLAN entry now since there is no
+>              * need to emulate the switchdev prepare + commit phase.
+>              */
+ 
+Hi Vivien
 
-Acked-by: Tejun Heo <tj@kernel.org>
+If we put this in rx_kill_vid, we should probably have something
+similar in rx_add_vid, just in case the kernel does start using VID 0.
 
-Thanks.
-
--- 
-tejun
+	Andrew
