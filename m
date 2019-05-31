@@ -6,59 +6,92 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30FE3C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EFE5C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:44:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DCD626C55
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EEE026C55
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:44:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbfEaQnz (ORCPT
+        id S1726944AbfEaQoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 12:43:55 -0400
-Received: from verein.lst.de ([213.95.11.211]:41831 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726531AbfEaQny (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 12:43:54 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 50CCA68AA6; Fri, 31 May 2019 18:43:28 +0200 (CEST)
-Date:   Fri, 31 May 2019 18:43:27 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "marex@denx.de" <marex@denx.de>, Leo Li <leoyang.li@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "noring@nocrew.org" <noring@nocrew.org>,
-        "JuergenUrban@gmx.de" <JuergenUrban@gmx.de>
-Subject: Re: [PATCH v7 0/5] prerequisites for device reserved local mem
- rework
-Message-ID: <20190531164327.GB27525@lst.de>
-References: <20190529102843.13174-1-laurentiu.tudor@nxp.com> <20190529113427.GC11952@kroah.com> <20190529113758.GA9399@lst.de> <5b8164b3-74a3-9ba4-8c28-61a14ec57a39@nxp.com>
+        Fri, 31 May 2019 12:44:01 -0400
+Received: from charlotte.tuxdriver.com ([70.61.120.58]:49748 "EHLO
+        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726531AbfEaQn7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 12:43:59 -0400
+Received: from cpe-2606-a000-111b-405a-0-0-0-162e.dyn6.twc.com ([2606:a000:111b:405a::162e] helo=localhost)
+        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
+        (Exim 4.63)
+        (envelope-from <nhorman@tuxdriver.com>)
+        id 1hWkd8-0003pv-Az; Fri, 31 May 2019 12:43:52 -0400
+Date:   Fri, 31 May 2019 12:43:19 -0400
+From:   Neil Horman <nhorman@tuxdriver.com>
+To:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Cc:     syzbot <syzbot+f7e9153b037eac9b1df8@syzkaller.appspotmail.com>,
+        davem@davemloft.net, linux-kernel@vger.kernel.org,
+        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, vyasevich@gmail.com
+Subject: Re: memory leak in sctp_process_init
+Message-ID: <20190531164319.GB3828@hmswarspite.think-freely.org>
+References: <00000000000097abb90589e804fd@google.com>
+ <20190528013600.GM5506@localhost.localdomain>
+ <20190528111550.GA4658@hmswarspite.think-freely.org>
+ <20190529190709.GE31099@hmswarspite.think-freely.org>
+ <20190529233757.GC3713@localhost.localdomain>
+ <20190530142011.GC1966@hmswarspite.think-freely.org>
+ <20190530151705.GD3713@localhost.localdomain>
+ <20190530195634.GD1966@hmswarspite.think-freely.org>
+ <20190531124242.GE3713@localhost.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5b8164b3-74a3-9ba4-8c28-61a14ec57a39@nxp.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20190531124242.GE3713@localhost.localdomain>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 02:06:12PM +0000, Laurentiu Tudor wrote:
-> Thanks, hope this time everything is fine.
+On Fri, May 31, 2019 at 09:42:42AM -0300, Marcelo Ricardo Leitner wrote:
+> On Thu, May 30, 2019 at 03:56:34PM -0400, Neil Horman wrote:
+> > On Thu, May 30, 2019 at 12:17:05PM -0300, Marcelo Ricardo Leitner wrote:
+> ...
+> > > --- a/net/sctp/sm_sideeffect.c
+> > > +++ b/net/sctp/sm_sideeffect.c
+> > > @@ -898,6 +898,11 @@ static void sctp_cmd_new_state(struct sctp_cmd_seq *cmds,
+> > >  						asoc->rto_initial;
+> > >  	}
+> > >  
+> > > +	if (sctp_state(asoc, ESTABLISHED)) {
+> > > +		kfree(asoc->peer.cookie);
+> > > +		asoc->peer.cookie = NULL;
+> > > +	}
+> > > +
+> > Not sure I follow why this is needed.  It doesn't hurt anything of course, but
+> > if we're freeing in sctp_association_free, we don't need to duplicate the
+> > operation here, do we?
+> 
+> This one would be to avoid storing the cookie throughout the entire
+> association lifetime, as the cookie is only needed during the
+> handshake.
+> While the free in sctp_association_free will handle the freeing in
+> case the association never enters established state.
+> 
 
-I've applied it to the dma-mapping tree now.
+Ok, I see we do that with the peer_random and other allocated values as well
+when they are no longer needed, but ew, I hate freeing in multiple places like
+that.  I'll fix this up on monday, but I wonder if we can't consolidate that
+somehow
 
-> When you get the time, please let me know your ideas on the next steps.
+Neil
 
-I think the next step is to move the call to
-dma_alloc_from_dev_coherent from dma_alloc_attrs into the ->alloc
-instances.  The only onces that really need it for now are the
-generic and legacy arm dma-direct code, and drivers/iommu/dma-iommu.c
-as well as the ARM DMA API code, as those are the ones use for
-architectures that declare coherent regions.  The other iommus are
-not used on OF platforms (at least that's what my analysis said a while
-ago, feel free to double check it)
+> > >  	if (sctp_state(asoc, ESTABLISHED) ||
+> > >  	    sctp_state(asoc, CLOSED) ||
+> > >  	    sctp_state(asoc, SHUTDOWN_RECEIVED)) {
+> > > 
+> > > Also untested, just sharing the idea.
+> > > 
+> > >   Marcelo
+> > > 
+> 
