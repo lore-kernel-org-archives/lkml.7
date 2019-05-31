@@ -2,109 +2,303 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A00C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 904A7C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 362FE2654C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:11:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 558E2256AB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:13:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wKneH2x+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbfEaILQ convert rfc822-to-8bit (ORCPT
+        id S1726784AbfEaIN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 04:11:16 -0400
-Received: from mga12.intel.com ([192.55.52.136]:16369 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726240AbfEaILP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 04:11:15 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 May 2019 01:11:14 -0700
-X-ExtLoop1: 1
-Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
-  by orsmga008.jf.intel.com with ESMTP; 31 May 2019 01:11:14 -0700
-Received: from fmsmsx120.amr.corp.intel.com (10.18.124.208) by
- fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Fri, 31 May 2019 01:11:14 -0700
-Received: from shsmsx107.ccr.corp.intel.com (10.239.4.96) by
- fmsmsx120.amr.corp.intel.com (10.18.124.208) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Fri, 31 May 2019 01:11:13 -0700
-Received: from shsmsx101.ccr.corp.intel.com ([169.254.1.10]) by
- SHSMSX107.ccr.corp.intel.com ([169.254.9.98]) with mapi id 14.03.0415.000;
- Fri, 31 May 2019 16:11:12 +0800
-From:   "Kang, Luwei" <luwei.kang@intel.com>
-To:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: RE: [PATCH] KVM: LAPIC: Do not mask the local interrupts when LAPIC
- is sw disabled
-Thread-Topic: [PATCH] KVM: LAPIC: Do not mask the local interrupts when
- LAPIC is sw disabled
-Thread-Index: AQHVD8I2LU4/pRFEgkiaWmh/P2D76KaDijsAgAFc1nA=
-Date:   Fri, 31 May 2019 08:11:12 +0000
-Message-ID: <82D7661F83C1A047AF7DC287873BF1E172DAE266@SHSMSX101.ccr.corp.intel.com>
-References: <1558435455-233679-1-git-send-email-luwei.kang@intel.com>
- <20190530184602.GD23930@linux.intel.com>
-In-Reply-To: <20190530184602.GD23930@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiY2FmMzQ1NDgtYzY0OS00MjI2LWE2YzktZTYyMmE1ODEyNjA1IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiZUdhM2R6MnlaWjFUVlFQS1pTdm10Z2F3RVVxTWdZVUVHVVZaSTJLWUdmdlh1TVkya1haUlg2Y1h6Rzk3ZE92RCJ9
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Fri, 31 May 2019 04:13:58 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46046 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbfEaIN6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 04:13:58 -0400
+Received: by mail-wr1-f67.google.com with SMTP id b18so5823415wrq.12
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 01:13:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=Dks2hEW2xwiCJCNTerj2Bd9DUy1Ilr15MADG8wa+FZI=;
+        b=wKneH2x+X0zs3yY8a3QpG/1cNS0jWtUVO4uMFRr7wS+ao5x6XD7HXtVehw9OHvfSRG
+         z8k5rN9fHDljkHBusSacVeD/NHgJrdO9hzzMqT6wuBHT5jp2DFx8wWllXWkephl0hHyU
+         DcHVs1Dnk6JMtRSNeIYNJ5c8fXL1i41BwFZ5O3x9skIMAHJYi/CkYC2uPh8hONf5nmEd
+         aVPG/1uZP5ZZAylKSK3npewQ1NkNWyhBbrO2MlXSV3kaUkcwkqSOUwwu5GwTbuWRFu3T
+         IeLodR5wBm1wDY2mdIoiFFQRAD8Ixn1MCIsyC8iD4Z5Sd1aw/jDsvwnJjTaSir/H4Ers
+         RQ5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Dks2hEW2xwiCJCNTerj2Bd9DUy1Ilr15MADG8wa+FZI=;
+        b=mijxXpNzp9+kwYnXOBClv9Kh5pn0vbtQIjgL9LS7Cu4dh55/tI5y7S2aMz3YzlYO41
+         YQpQbEeoa3o8IiufHhes+dTG+QEAGm7lZlH1b2mfMYD+W9KURIT7T3WgU9f/CDuKKXIP
+         9ji26skjFSf1+JvW7zKNs/SN+i+/Bzpr68qs2lmkSh1HGxa/dhOgCGcExKkbdVvDwXx/
+         7vhb9t4rpXQHmkyUd88kXFk7Qc1l3SvPSMGM8HN0yeDA5wgr2K/TRObMecMzCaWV0FfG
+         h85kkMY2gm55gTk29rDoryFISJoTdzGU5w1d3vo5fcKWfaXhREPfcUihMTQLOcr7vupZ
+         mf5w==
+X-Gm-Message-State: APjAAAXA/0W5OMRq3yMq/1BsmyuEK7mXZJ8mGdpNVUEihSXz6oFjv40W
+        evmVKeMEcuj7Jgeqr5QdOXSy4Q==
+X-Google-Smtp-Source: APXvYqwVfwnr+iVmhbgui/9+c+NjIG99zBxkJBqBtMjutg6V4PUpoykofJK3o4qcUlWHeAKKS3ELCA==
+X-Received: by 2002:adf:fa88:: with SMTP id h8mr5877494wrr.32.1559290435940;
+        Fri, 31 May 2019 01:13:55 -0700 (PDT)
+Received: from dell ([2.27.167.43])
+        by smtp.gmail.com with ESMTPSA id v19sm2211926wml.42.2019.05.31.01.13.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 31 May 2019 01:13:55 -0700 (PDT)
+Date:   Fri, 31 May 2019 09:13:53 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Gwendal Grignou <gwendal@chromium.org>
+Cc:     andy.shevchenko@gmail.com, Guenter Roeck <groeck@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, kernel@collabora.com
+Subject: Re: [PATCH v5] mfd: cros_ec_dev: Register cros_ec_accel_legacy
+ driver as a subdevice
+Message-ID: <20190531081353.GQ4574@dell>
+References: <CAMHSBOWZHLnGWXU_z1ouCVuRRWKg_59P5++zwhJOWrWJoNv=GA@mail.gmail.com>
+ <20190228013541.76792-1-gwendal@chromium.org>
+ <20190402034610.GG4187@dell>
+ <CAPUE2usfB3i4J7P4e_XdsMLV+VK7s+nS-mrD=D_WMpOHiouG2w@mail.gmail.com>
+ <20190529114454.GJ4574@dell>
+ <CAPUE2usYa3z3mcxo6fGsBL-FXLcNy1-Pr+WoQsKmTjhNZCZwSA@mail.gmail.com>
+ <20190530074819.GM4574@dell>
+ <CAPUE2usBh5r22Ak3LxLK-hS7wOObAdW4v1r8TDFUWPz=05FGMw@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPUE2usBh5r22Ak3LxLK-hS7wOObAdW4v1r8TDFUWPz=05FGMw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 30 May 2019, Gwendal Grignou wrote:
 
+> On Thu, May 30, 2019 at 12:48 AM Lee Jones <lee.jones@linaro.org> wrote:
+> >
+> > On Wed, 29 May 2019, Gwendal Grignou wrote:
+> >
+> > > On Wed, May 29, 2019 at 4:44 AM Lee Jones <lee.jones@linaro.org> wrote:
+> > > >
+> > > > On Tue, 28 May 2019, Gwendal Grignou wrote:
+> > > >
+> > > > > On Mon, Apr 1, 2019 at 8:46 PM Lee Jones <lee.jones@linaro.org> wrote:
+> > > > > >
+> > > > > > On Wed, 27 Feb 2019, Gwendal Grignou wrote:
+> > > > > >
+> > > > > > > From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> > > > > > >
+> > > > > > > With this patch, the cros_ec_ctl driver will register the legacy
+> > > > > > > accelerometer driver (named cros_ec_accel_legacy) if it fails to
+> > > > > > > register sensors through the usual path cros_ec_sensors_register().
+> > > > > > > This legacy device is present on Chromebook devices with older EC
+> > > > > > > firmware only supporting deprecated EC commands (Glimmer based devices).
+> > > > > > >
+> > > > > > > Tested-by: Gwendal Grignou <gwendal@chromium.org>
+> > > > > > > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> > > > > > > Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
+> > > > > > > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > > > > > > ---
+> > > > > > > Changes in v5:
+> > > > > > > - Remove unnecessary white lines.
+> > > > > > >
+> > > > > > > Changes in v4:
+> > > > > > > - [5/8] Nit: EC -> ECs (Lee Jones)
+> > > > > > > - [5/8] Statically define cros_ec_accel_legacy_cells (Lee Jones)
+> > > > > > >
+> > > > > > > Changes in v3:
+> > > > > > > - [5/8] Add the Reviewed-by Andy Shevchenko.
+> > > > > > >
+> > > > > > > Changes in v2:
+> > > > > > > - [5/8] Add the Reviewed-by Gwendal.
+> > > > > > >
+> > > > > > >  drivers/mfd/cros_ec_dev.c | 66 +++++++++++++++++++++++++++++++++++++++
+> > > > > > >  1 file changed, 66 insertions(+)
+> > > > > > >
+> > > > > > > diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+> > > > > > > index d275deaecb12..64567bd0a081 100644
+> > > > > > > --- a/drivers/mfd/cros_ec_dev.c
+> > > > > > > +++ b/drivers/mfd/cros_ec_dev.c
+> > > > > > > @@ -376,6 +376,69 @@ static void cros_ec_sensors_register(struct cros_ec_dev *ec)
+> > > > > > >       kfree(msg);
+> > > > > > >  }
+> > > > > > >
+> > > > > > > +static struct cros_ec_sensor_platform sensor_platforms[] = {
+> > > > > > > +     { .sensor_num = 0 },
+> > > > > > > +     { .sensor_num = 1 }
+> > > > > > > +};
+> > > > > >
+> > > > > > I'm still very uncomfortable with this struct.
+> > > > > >
+> > > > > > Other than these indices, the sensors have no other distinguishing
+> > > > > > features, thus there should be no need to identify or distinguish
+> > > > > > between them in this way.
+> > > > > When initializing the sensors, the IIO driver expect to find in the
+> > > > > data  structure pointed by dev_get_platdata(dev), in field sensor_num
+> > > > > is stored the index assigned by the embedded controller to talk to a
+> > > > > given sensor.
+> > > > > cros_ec_sensors_register() use the same mechanism; in that function,
+> > > > > the sensor_num field is populated from the output of an EC command
+> > > > > MOTIONSENSE_CMD_INFO. In case of legacy mode, that command may not be
+> > > > > available and in any case we know the EC has only either 2
+> > > > > accelerometers present or nothing.
+> > > > >
+> > > > > For instance, let's compare a legacy device with a more recent one:
+> > > > >
+> > > > > legacy:
+> > > > > type                  |   id          | sensor_num   | device name
+> > > > > accelerometer  |   0           |   0                  | cros-ec-accel.0
+> > > > > accelerometer  |   1           |   1                  | cros-ec-accel.1
+> > > > >
+> > > > > Modern:
+> > > > > type                  |   id          | sensor_num   | device name
+> > > > > accelerometer  |   0           |   0                  | cros-ec-accel.0
+> > > > > accelerometer  |   1           |   1                  | cros-ec-accel.1
+> > > > > gyroscope        |    0          |    2                 | cros-ec-gyro.0
+> > > > > magnetometer |    0          |   3                  | cros-ec-mag.0
+> > > > > light                  |    0          |   4                  | cros-ec-light.0
+> > > > > ...
+> > > >
+> > > > Why can't these numbers be assigned at runtime?
+> > > I assume you want to know why IIO drivers need to know "sensor_num"
+> > > ahead of time. It is because each IIO driver is independent from the
+> > > other.
+> > > Let assume there was 2 light sensors in the device:
+> > > type                  |   id          | sensor_num   | device name
+> > >  light                  |    0          |   4                  | cros-ec-light.0
+> > >  light                  |    1          |   5                  | cros-ec-light.1
+> > >
+> > > In case of sensors of the same type without sensor_num, cros-ec-light
+> > > driver has no information at probe time if it should bind to sensors
+> > > named by the EC 4 or 5.
+> > >
+> > > We could get away with cros-ec-accel, as EC always presents
+> > > accelerometers with sensor_num  0 and 1, but I don't want to rely on
+> > > this property in the general case.
+> > > Only cros_ec_dev MFD driver has the global view of all sensors available.
+> >
+> > Well seeing as this implementation has already been accepted and you're
+> > only *using* it, rather than creating it, I think this conversation is
+> > moot.  It looks like the original implementation patch was not
+> > reviewed by me, which is frustrating since I would have NACKed it.
+> >
+> > Just so you know, pointlessly enumerating identical devices manually
+> > is not a good practice.  It is one we reject all the time.  This
+> > imp. should too have been rejected on submission.
 
-> -----Original Message-----
-> From: Christopherson, Sean J
-> Sent: Friday, May 31, 2019 2:46 AM
-> To: Kang, Luwei <luwei.kang@intel.com>
-> Cc: linux-kernel@vger.kernel.org; kvm@vger.kernel.org; pbonzini@redhat.com; rkrcmar@redhat.com; tglx@linutronix.de;
-> mingo@redhat.com; bp@alien8.de; hpa@zytor.com; x86@kernel.org
-> Subject: Re: [PATCH] KVM: LAPIC: Do not mask the local interrupts when LAPIC is sw disabled
-> 
-> On Tue, May 21, 2019 at 06:44:15PM +0800, Luwei Kang wrote:
-> > The current code will mask all the local interrupts in the local
-> > vector table when the LAPIC is disabled by SVR (Spurious-Interrupt
-> > Vector Register) "APIC Software Enable/Disable" flag (bit8).
-> > This may block local interrupt be delivered to target vCPU even if
-> > LAPIC is enabled by set SVR (bit8 == 1) after.
-> 
-> The current code aligns with the SDM, which states:
-> 
->   Local APIC State After It Has Been Software Disabled
-> 
->   When the APIC software enable/disable flag in the spurious interrupt
->   vector register has been explicitly cleared (as opposed to being cleared
->   during a power up or reset), the local APIC is temporarily disabled.
->   The operation and response of a local APIC while in this software-
->   disabled state is as follows:
-> 
->     - The mask bits for all the LVT entries are set. Attempts to reset
->       these bits will be ignored.
+> I wrote the original code, Enric submitted it, so I am not just using it.
 
-Thanks for Sean's reminder. 
-I make this patch because I found the PMI from Intel PT can't be inject to target vCPU when there have multi vCPU in guest and the Intel PT interrupt happened on not the first vCPU (i.e. not vCPU0).  The interrupt blocked in kvm_apic_local_deliver() function and can't pass the APIC_LVT_MASKED flag check (LVTPC is masked from start to end). The KVM Guest will enabled the LVTPC during LAPIC is software disabled and enabled LAPIC after during VM bootup, but LVTPC is still disabled. Guest PT driver didn't enabled LVTPC before enable PT as well. But the Guest performance monitor counter driver will enabled LVTPC in each time before using PMU. I will do more check on this. Thank you.
+My point was, *this* patch is just using it.  The implementation has
+already been applied to the mainline kernel.  Who wrote the initial
+commit is not important at this point.
 
-Luwei Kang
+> We can work on implementing the right way. Which model should I follow?
+> The code function is similar to HID sensor hub code which is done in
+> driver/hid/hid-sensor-hub.c [sensor_hub_probe()] which calls
+> mfd_add_hotplug_devices() with an array of mfd_cell,
+> hid_sensor_hub_client_devs. Each cell platfom_data contains  a hsdev
+> structure that is shared between the iio driver and the hid sensor hub
+> driver. hsdev->usage information is sent back and forth between
+> specialized hid IIO device driver and the HID sensor hub driver, for
+> example when sensor_hub_input_attr_get_raw_value() is called.
+> hsdev->usage has the same usage a sensor_num I am using.
 
+It looks like the HID Usage implementation is using a set of
+pre-defined values to identify sensor *types*:
+
+  include/linux/hid-sensor-ids.h
+
+Where as your implementation is confusing me.  In some instances you
+are using it as what looks like an *index* into a register set:
+
+  ec_cmd_read_u16(st->ec,
+                EC_MEMMAP_ACC_DATA +
+                sizeof(s16) *
+                (1 + i + st->sensor_num * MAX_AXIS),
+                data);
+
+And at other times it is used for sensor *types*, but in a very
+limited way:
+
+  enum motionsensor_location {
+          MOTIONSENSE_LOC_BASE = 0,
+          MOTIONSENSE_LOC_LID = 1,
+          MOTIONSENSE_LOC_MAX,
+  };
+
+  static char *cros_ec_accel_legacy_loc_strings[] = {
+          [MOTIONSENSE_LOC_BASE] = "base",
+          [MOTIONSENSE_LOC_LID] = "lid",
+          [MOTIONSENSE_LOC_MAX] = "unknown",
+  };
+
+  return sprintf(buf, "%s\n",
+                 cros_ec_accel_legacy_loc_strings[st->sensor_num +
+                                                MOTIONSENSE_LOC_BASE]);
+
+> I am not enumerating identical devices twice: the embedded controller
+> manages a list of sensors:
+> 
+> For instance on pixelbook, it look like:
+>        +--------+
+>         | EC    |
+>        +--------+
+>    ( via several i2c/spi buses)
+> +--------------------+--------------+-------- ...
+> |                         |                  |
+> IMU (base)     light/prox    Accelrometer (lid)
+> |
+> Magnetometer
+> 
+> A given hardware sensor may be composed of multiple logical sensors
+> (IMU is a accelerometer and a gyroscope into one package).
+> 
+> The EC firmware list all the (logical) sensors in array, and that
+> unique index - sensor_num - points to a single logical sensor.
+
+What what is 'sensor_num'; is it a channel address/number similar to
+what I2C HIDs use to communicate over a specific I2C line, or is it a
+type, similar to what HID devices provide on request for
+identification purposes? 
+
+> Is it more acceptable if I use PLATFORM_DEVID_AUTO instead of
+> assigning .id myself?
+
+Is this a separate question, or can 'sensor_num' be any unique
+arbitrary number?
+
+> The topology will look like:
+> find . -type d -name \*auto
+> ./devices/pci0000:00/0000:00:1f.0/PNP0C09:00/GOOG0004:00/cros-ec-dev.1.auto
+> ./devices/pci0000:00/0000:00:1f.0/PNP0C09:00/GOOG0004:00/cros-ec-dev.1.auto/cros-usbpd-logger.8.auto
+> ./devices/pci0000:00/0000:00:1f.0/PNP0C09:00/GOOG0004:00/cros-ec-dev.1.auto/cros-ec-accel.2.auto
+> ./devices/pci0000:00/0000:00:1f.0/PNP0C09:00/GOOG0004:00/cros-ec-dev.1.auto/cros-ec-gyro.4.auto
+> ./devices/pci0000:00/0000:00:1f.0/PNP0C09:00/GOOG0004:00/cros-ec-dev.1.auto/cros-usbpd-charger.7.auto
+> ./devices/pci0000:00/0000:00:1f.0/PNP0C09:00/GOOG0004:00/cros-ec-dev.1.auto/cros-ec-gyro.3.auto
+> ./devices/pci0000:00/0000:00:1f.0/PNP0C09:00/GOOG0004:00/cros-ec-dev.1.auto/cros-ec-mag.5.auto
+> ./devices/pci0000:00/0000:00:1f.0/PNP0C09:00/GOOG0004:00/cros-ec-dev.1.auto/cros-ec-ring.6.auto
+> ./devices/pci0000:00/0000:00:15.2/i2c_designware.2/i2c-8/i2c-GOOG0008:00/cros-ec-dev.0.auto
+> 
+> Thank you for your support,
+
+No problem.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
