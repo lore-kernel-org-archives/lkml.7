@@ -2,103 +2,78 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A2A4C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 17:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E85C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 17:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E57826D41
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 17:35:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F26526D50
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 17:45:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbfEaRfh (ORCPT
+        id S1726652AbfEaRpF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 13:35:37 -0400
-Received: from gateway33.websitewelcome.com ([192.185.145.239]:35973 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726808AbfEaRfg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 13:35:36 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id 6847EA54B
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 12:35:35 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id WlRHh2D5mYTGMWlRHh1FbM; Fri, 31 May 2019 12:35:35 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.123.250] (port=48162 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hWlRF-002R8Y-Qw; Fri, 31 May 2019 12:35:33 -0500
-Date:   Fri, 31 May 2019 12:35:32 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Boris Brezillon <bbrezillon@kernel.org>
-Cc:     linux-i3c@lists.infradead.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] i3c: master: Use struct_size() helper
-Message-ID: <20190531173532.GA7141@embeddedor>
+        Fri, 31 May 2019 13:45:05 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:55710 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725934AbfEaRpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 13:45:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E4D53A78;
+        Fri, 31 May 2019 10:45:04 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DEB233F59C;
+        Fri, 31 May 2019 10:45:01 -0700 (PDT)
+Subject: Re: [PATCH v3 0/6] Prerequisites for NXP LS104xA SMMU enablement
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     David Miller <davem@davemloft.net>, madalin.bucur@nxp.com,
+        netdev@vger.kernel.org, roy.pledge@nxp.com,
+        linux-kernel@vger.kernel.org, leoyang.li@nxp.com,
+        Joakim.Tjernlund@infinera.com, iommu@lists.linux-foundation.org,
+        camelia.groza@nxp.com, linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20190530141951.6704-1-laurentiu.tudor@nxp.com>
+ <20190530.150844.1826796344374758568.davem@davemloft.net>
+ <20190531163350.GB8708@infradead.org>
+ <37406608-df48-c7a0-6975-4b4ad408ba36@arm.com>
+ <20190531170804.GA12211@infradead.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <1b81c168-f5e0-f86a-f90e-22e8c3f2a602@arm.com>
+Date:   Fri, 31 May 2019 18:45:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.123.250
-X-Source-L: No
-X-Exim-ID: 1hWlRF-002R8Y-Qw
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.123.250]:48162
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <20190531170804.GA12211@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make use of the struct_size() helper instead of an open-coded version
-in order to avoid any potential type mistakes, in particular in the
-context in which this code is being used.
+On 31/05/2019 18:08, Christoph Hellwig wrote:
+> On Fri, May 31, 2019 at 06:03:30PM +0100, Robin Murphy wrote:
+>>> The thing needs to be completely redone as it abuses parts of the
+>>> iommu API in a completely unacceptable way.
+>>
+>> `git grep iommu_iova_to_phys drivers/{crypto,gpu,net}`
+>>
+>> :(
+>>
+>> I guess one alternative is for the offending drivers to maintain their own
+>> lookup tables of mapped DMA addresses - I think at least some of these
+>> things allow storing some kind of token in a descriptor, which even if it's
+>> not big enough for a virtual address might be sufficient for an index.
+> 
+> Well, we'll at least need DMA API wrappers that work on the dma addr
+> only and hide this madness underneath.  And then tell if an given device
+> supports this and fail the probe otherwise.
 
-So, replace the following form:
+Bleh, I'm certainly not keen on formalising any kind of 
+dma_to_phys()/dma_to_virt() interface for this. Or are you just 
+proposing something like dma_unmap_sorry_sir_the_dog_ate_my_homework() 
+for drivers which have 'lost' the original VA they mapped?
 
-sizeof(*defslvs) + ((ndevs - 1) * sizeof(struct i3c_ccc_dev_desc))
-
-with:
-
-struct_size(defslvs, slaves, ndevs - 1)
-
-This code was detected with the help of Coccinelle.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/i3c/master.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
-index b9d2b88928e1..923b04052038 100644
---- a/drivers/i3c/master.c
-+++ b/drivers/i3c/master.c
-@@ -924,9 +924,8 @@ int i3c_master_defslvs_locked(struct i3c_master_controller *master)
- 		ndevs++;
- 
- 	defslvs = i3c_ccc_cmd_dest_init(&dest, I3C_BROADCAST_ADDR,
--					sizeof(*defslvs) +
--					((ndevs - 1) *
--					 sizeof(struct i3c_ccc_dev_desc)));
-+					struct_size(defslvs, slaves,
-+					ndevs - 1));
- 	if (!defslvs)
- 		return -ENOMEM;
- 
--- 
-2.21.0
-
+Robin.
