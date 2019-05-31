@@ -2,384 +2,104 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B236C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92AA9C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34D012666D
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63C1D26676
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:08:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="ZWXV53Rs"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tL1GT6mo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbfEaJHI (ORCPT
+        id S1726899AbfEaJIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 05:07:08 -0400
-Received: from mta-01.yadro.com ([89.207.88.251]:46386 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726002AbfEaJHI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 05:07:08 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 3F5C941908;
-        Fri, 31 May 2019 09:07:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        user-agent:in-reply-to:content-disposition:content-type
-        :content-type:mime-version:references:message-id:subject:subject
-        :from:from:date:date:received:received:received; s=mta-01; t=
-        1559293624; x=1561108025; bh=V2JYksw1ZpPn49A8Zy8oL1DLxXqIFwPGBxx
-        0ZykK3RM=; b=ZWXV53Rs0HjRaijj7GccsS27X91FsXvdCKAEkgTbszlF1SNFbNu
-        Recqa8xL9JFDzJdRk3eJxRKLci3VsBho2OKC8FptW7OC7vYdPcFzgSYGEaysKFa/
-        uK7ox0LWLrCaYusGi/w5tqL6QflmSBAJeZPP3j2nCnQuwBn4Ul8TRqDs=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id FeODQLn3iRyt; Fri, 31 May 2019 12:07:04 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 7E16D41860;
-        Fri, 31 May 2019 12:07:02 +0300 (MSK)
-Received: from localhost (172.17.14.115) by T-EXCH-02.corp.yadro.com
- (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Fri, 31
- May 2019 12:07:01 +0300
-Date:   Fri, 31 May 2019 12:07:01 +0300
-From:   "Alexander A. Filippov" <a.filippov@yadro.com>
-To:     Andrew Jeffery <andrew@aj.id.au>
-CC:     "Alexander A. Filippov" <a.filippov@yadro.com>,
-        <linux-aspeed@lists.ozlabs.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, Joel Stanley <joel@jms.id.au>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] ARM: dts: aspeed: Add YADRO VESNIN BMC
-Message-ID: <20190531090701.GA12476@bbwork.lan>
-References: <20190531061207.23079-1-a.filippov@yadro.com>
- <2966b961-77ca-4371-949c-195b623e344b@www.fastmail.com>
+        Fri, 31 May 2019 05:08:22 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:58958 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbfEaJIW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 05:08:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=1bHe67ZMzZlGf0HYxrOOIqB9sFZ2/e7PsY66nGtu6ZE=; b=tL1GT6mo9h6RdsMJ0+qLgkhZ0
+        4K8PqgIsUlKZ3DbHJGDLh9Qvaw56cQxJt1ZJruo2VjV6MYzXChvvsUoxPlyypBAy/fdKRrxsQi5wp
+        LFYcB3JXFxnFvCziIdLUddzj5KVKCopIzDeW5TF1/76TBg11NiUtQElkrrSI9jE8BxuwrvEBoYpDz
+        cTLKHbUKOP9x6aFJTf+vs8DnTFPB3JegbLMyFZXmjoUjukCwJSz6Ib129tcLEl+rccbsdxGoGeu8g
+        qeb2dgsdZYXS8X51oicRhWubxj/OEddRi7+bz1zQ12xwg5d2noRj9/pKPsI/tFDwlY9b7X9nJHMvt
+        hMgEBOqmA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hWdW7-0003Au-3T; Fri, 31 May 2019 09:08:03 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4630D201B8CFE; Fri, 31 May 2019 11:08:01 +0200 (CEST)
+Date:   Fri, 31 May 2019 11:08:01 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Andrea Parri <andrea.parri@amarulasolutions.com>
+Cc:     Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        David Howells <dhowells@redhat.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Subject: Re: [PATCH] ptrace: restore smp_rmb() in __ptrace_may_access()
+Message-ID: <20190531090801.GM2677@hirez.programming.kicks-ass.net>
+References: <20190529113157.227380-1-jannh@google.com>
+ <20190529162120.GB27659@redhat.com>
+ <CAG48ez3S1c_cd8RNSb9TrF66d+1AMAxD4zh-kixQ6uSEnmS-tg@mail.gmail.com>
+ <20190530103405.GA6392@andrea>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2966b961-77ca-4371-949c-195b623e344b@www.fastmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Originating-IP: [172.17.14.115]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
+In-Reply-To: <20190530103405.GA6392@andrea>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 04:02:37PM +0930, Andrew Jeffery wrote:
-> Hello Alexander,
+On Thu, May 30, 2019 at 12:34:05PM +0200, Andrea Parri wrote:
+> On Wed, May 29, 2019 at 07:38:46PM +0200, Jann Horn wrote:
+> > On Wed, May 29, 2019 at 6:21 PM Oleg Nesterov <oleg@redhat.com> wrote:
 
-Hi Andrew,
-
-> 
-> On Fri, 31 May 2019, at 15:42, Alexander Filippov wrote:
-> > VESNIN is an OpenPower machine with an Aspeed 2400 BMC SoC manufactured
-> > by YADRO.
+> > > (I am wondering if smp_acquire__after_ctrl_dep() could be used instead, just to
+> > >  make this code look more confusing)
 > > 
-> > Signed-off-by: Alexander Filippov <a.filippov@yadro.com>
-> > ---
-> >  arch/arm/boot/dts/Makefile                  |   1 +
-> >  arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts | 234 ++++++++++++++++++++
-> >  2 files changed, 235 insertions(+)
-> >  create mode 100644 arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
-> > 
-> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> > index 834cce80d1b8..09a851a4705c 100644
-> > --- a/arch/arm/boot/dts/Makefile
-> > +++ b/arch/arm/boot/dts/Makefile
-> > @@ -1261,6 +1261,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
-> >  	aspeed-bmc-opp-palmetto.dtb \
-> >  	aspeed-bmc-opp-romulus.dtb \
-> >  	aspeed-bmc-opp-swift.dtb \
-> > +	aspeed-bmc-opp-vesnin.dtb \
-> 
-> The patch doesn't apply to upstream - the Swift machine only exists in the
-> OpenBMC kernel tree. Please rebase the patch onto upstream and resend.
+> > Uuh, I had no idea that that barrier type exists. The helper isn't
+> > even explicitly mentioned in Documentation/memory-barriers.rst. I
+> > don't really want to use dark magic in the middle of ptrace access
+> > logic...
 
-Done.
+Yeah, it's sorta not documented on purpose. It's too easy to get wrong
+and we've only used it inside a number of more convenient primitives as
+an optimzation.
 
-> 
-> >  	aspeed-bmc-opp-witherspoon.dtb \
-> >  	aspeed-bmc-opp-zaius.dtb \
-> >  	aspeed-bmc-portwell-neptune.dtb \
-> > diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts 
-> > b/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
-> > new file mode 100644
-> > index 000000000000..20f07f5bb4f4
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
-> > @@ -0,0 +1,234 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +// Copyright 2019 YADRO
-> > +/dts-v1/;
-> > +
-> > +#include "aspeed-g4.dtsi"
-> > +#include <dt-bindings/gpio/aspeed-gpio.h>
-> > +
-> > +/ {
-> > +	model = "Vesnin BMC";
-> > +	compatible = "yadro,vesnin-bmc", "aspeed,ast2400";
-> > +
-> > +	chosen {
-> > +		stdout-path = &uart5;
-> > +		bootargs = "console=ttyS4,115200 earlyprintk";
-> > +	};
-> > +
-> > +	memory {
-> > +		reg = <0x40000000 0x20000000>;
-> > +	};
-> > +
-> > +	reserved-memory {
-> > +		#address-cells = <1>;
-> > +		#size-cells = <1>;
-> > +		ranges;
-> > +
-> > +		vga_memory: framebuffer@5f000000 {
-> > +			no-map;
-> > +			reg = <0x5f000000 0x01000000>; /* 16MB */
-> > +		};
-> > +		flash_memory: region@5c000000 {
-> > +			no-map;
-> > +			reg = <0x5c000000 0x02000000>; /* 32M */
-> > +		};
-> > +	};
-> > +
-> > +	leds {
-> > +		compatible = "gpio-leds";
-> > +
-> > +		heartbeat {
-> > +			gpios = <&gpio ASPEED_GPIO(R, 4) GPIO_ACTIVE_LOW>;
-> > +		};
-> > +		power_red {
-> > +			gpios = <&gpio ASPEED_GPIO(N, 1) GPIO_ACTIVE_LOW>;
-> > +		};
-> > +
-> > +		id_blue {
-> > +			gpios = <&gpio ASPEED_GPIO(O, 0) GPIO_ACTIVE_LOW>;
-> > +		};
-> > +
-> > +		alarm_red {
-> > +			gpios = <&gpio ASPEED_GPIO(N, 6) GPIO_ACTIVE_LOW>;
-> > +		};
-> > +
-> > +		alarm_yel {
-> > +			gpios = <&gpio ASPEED_GPIO(N, 7) GPIO_ACTIVE_HIGH>;
-> > +		};
-> > +	};
-> > +
-> > +	gpio-keys {
-> > +		compatible = "gpio-keys";
-> > +
-> > +		button_checkstop {
-> > +			label = "checkstop";
-> > +			linux,code = <74>;
-> > +			gpios = <&gpio ASPEED_GPIO(P, 5) GPIO_ACTIVE_LOW>;
-> > +		};
-> > +
-> > +		button_identify {
-> > +			label = "identify";
-> > +			linux,code = <152>;
-> > +			gpios = <&gpio ASPEED_GPIO(O, 7) GPIO_ACTIVE_LOW>;
-> > +		};
-> > +	};
-> > +};
-> > +
-> > +&fmc {
-> > +	status = "okay";
-> > +	flash@0 {
-> > +		status = "okay";
-> > +		m25p,fast-read;
-> > +        label = "bmc";
-> > +#include "openbmc-flash-layout.dtsi"
-> > +	};
-> > +};
-> > +
-> > +&spi {
-> > +	status = "okay";
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&pinctrl_spi1debug_default>;
-> 
-> Is this how the board is strapped? I'm asking in case it's just copy/paste
-> from Palmetto, which was (unfortunately) strapped this way.
+I suppose we could add it to the section on control dependencies; just
+to scare more people :-)
 
-Yes, the board is strapped in such manner.
-I guess it was brought from barreleye which was a prototype for vesnin.
+> > Anyway, looking at it, I think smp_acquire__after_ctrl_dep() doesn't
+> > make sense here; quoting the documentation: "A load-load control
+> > dependency requires a full read memory barrier, not simply a data
+> > dependency barrier to make it work correctly". IIUC
+> > smp_acquire__after_ctrl_dep() is for cases in which you would
+> > otherwise need a full memory barrier - smp_mb() - and you want to be
+> > able to reduce it to a read barrier.
+> 
+> It is supposed to be used when you want an ACQUIRE but you only have a
+> control dependency (so you "augment the dependency" with this barrier).
+> 
+> FWIW, I do agree on the "dark magic"..., and I'd strongly recommend to
+> not use this barrier (or, at least, to use it with high suspicion).
 
-Setting this pin to &pinctrl_spi1_default leads to warning:
-  kernel: aspeed-smc 1e630000.spi: Error applying setting, reverse things back
+Right, so the purpose of the barrier is to upgrade a LOAD->STORE order
+(as provided by the ctrl-dep) to a LOAD->{LOAD,STORE} order as would be
+provided by load-acquire.
 
-> 
-> > +
-> > +	flash@0 {
-> > +		status = "okay";
-> > +		label = "pnor";
-> > +		m25p,fast-read;
-> > +	};
-> > +};
-> > +
-> > +&mac0 {
-> > +	status = "okay";
-> > +
-> > +	use-ncsi;
-> > +	no-hw-checksum;
-> > +
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&pinctrl_rmii1_default>;
-> > +};
-> > +
-> > +
-> > +&uart5 {
-> > +	status = "okay";
-> > +};
-> > +
-> > +&lpc_ctrl {
-> > +	status = "okay";
-> > +	memory-region = <&flash_memory>;
-> > +	flash = <&spi>;
-> > +};
-> > +
-> > +&ibt {
-> > +	status = "okay";
-> > +};
-> > +
-> > +&lpc_host {
-> > +    sio_regs: regs {
-> > +        compatible = "aspeed,bmc-misc";
-> 
-> The patches for this are not upstream, and won't make it in their current
-> form. Please drop this node from the patch.
-> 
-
-Done.
-
-> > +    };
-> > +};
-> > +
-> > +&mbox {
-> > +	status = "okay";
-> 
-> This driver is not upstream either, and we plan on dropping it from the
-> OpenBMC tree too. Please remove this node from the patch.
-
-Done.
-
-> 
-> Cheers,
-> 
-> Andrew
-> 
-> > +};
-> > +
-> > +&uart3 {
-> > +	status = "okay";
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&pinctrl_txd2_default &pinctrl_rxd2_default>;
-> > +};
-> > +
-> > +&i2c0 {
-> > +	status = "okay";
-> > +
-> > +	eeprom@50 {
-> > +		compatible = "atmel,24c256";
-> > +		reg = <0x50>;
-> > +		pagesize = <64>;
-> > +	};
-> > +};
-> > +
-> > +&i2c1 {
-> > +	status = "okay";
-> > +
-> > +	tmp75@49 {
-> > +		compatible = "ti,tmp75";
-> > +		reg = <0x49>;
-> > +	};
-> > +};
-> > +
-> > +&i2c2 {
-> > +	status = "okay";
-> > +};
-> > +
-> > +&i2c3 {
-> > +	status = "okay";
-> > +};
-> > +
-> > +&i2c4 {
-> > +	status = "okay";
-> > +
-> > +	occ-hwmon@50 {
-> > +		compatible = "ibm,p8-occ-hwmon";
-> > +		reg = <0x50>;
-> > +	};
-> > +};
-> > +
-> > +&i2c5 {
-> > +	status = "okay";
-> > +
-> > +	occ-hwmon@51 {
-> > +		compatible = "ibm,p8-occ-hwmon";
-> > +		reg = <0x51>;
-> > +	};
-> > +};
-> > +
-> > +&i2c6 {
-> > +	status = "okay";
-> > +
-> > +	w83795g@2f {
-> > +		compatible = "nuvoton,w83795g";
-> > +		reg = <0x2f>;
-> > +	};
-> > +};
-> > +
-> > +&i2c7 {
-> > +	status = "okay";
-> > +
-> > +	occ-hwmon@56 {
-> > +		compatible = "ibm,p8-occ-hwmon";
-> > +		reg = <0x56>;
-> > +	};
-> > +};
-> > +
-> > +&i2c9 {
-> > +	status = "okay";
-> > +};
-> > +
-> > +&i2c10 {
-> > +	status = "okay";
-> > +};
-> > +
-> > +&i2c11 {
-> > +	status = "okay";
-> > +
-> > +	occ-hwmon@57 {
-> > +		compatible = "ibm,p8-occ-hwmon";
-> > +		reg = <0x57>;
-> > +	};
-> > +};
-> > +
-> > +&i2c12 {
-> > +	status = "okay";
-> > +
-> > +	rtc@68 {
-> > +		compatible = "maxim,ds3231";
-> > +		reg = <0x68>;
-> > +	};
-> > +};
-> > +
-> > +&i2c13 {
-> > +	status = "okay";
-> > +};
-> > +
-> > +&vuart {
-> > +	status = "okay";
-> > +};
-> > -- 
-> > 2.20.1
-> > 
-> >
