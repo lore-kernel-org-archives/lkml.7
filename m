@@ -4,108 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A52DC46470
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5902FC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E29B26B52
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:09:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39AE826B53
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:09:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbfEaPJu (ORCPT
+        id S1726711AbfEaPJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 11:09:50 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:53487 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbfEaPJu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 11:09:50 -0400
-Received: from orion.localdomain ([77.7.63.28]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1N2V8T-1gaooq2QRD-013vOa; Fri, 31 May 2019 17:09:11 +0200
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org, jdelvare@suse.com,
-        linux@roeck-us.net, khalid@gonehiking.org, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, aacraid@microsemi.com,
-        linux-pm@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-scsi@vger.kernel.org
-Subject: [PATCH 2/3] drivers: scsci: remove unnecessary #ifdef MODULE
-Date:   Fri, 31 May 2019 17:09:03 +0200
-Message-Id: <1559315344-10384-3-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1559315344-10384-1-git-send-email-info@metux.net>
-References: <1559315344-10384-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:vRieALr69N/p9CGP2TmTdjYIaR7yt8zI1oJIboQVelsLO9ZBK4b
- 7+fLJ+7X4tp6PmW/HUQ3cXeovgj8VOqyN5fHrvXiqj2TvHm/tnl7ZT9fX4Ufhj8Eljw4E87
- kAnB0ARfOLeJoyoe8xdU7bJg2gJ7EuilpTuLbQBSqBtupjMOlZq0BazVnffUrUVtup3SGgF
- 1bdYZyK7ePS8Gu7h7l5Bw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:8iWc5OqMQLo=:SAi3pINLsLrKq8qqkf5y4X
- hSVd4KQuUvvD3aMzTkHaaY8+SFKLu4gYZUQb4UiDYlimTtQYK6I7AoTb/zvR6G9kpWlcXeQSD
- clMop8KQ4IAb/8+B5vPZ7iSxkdHeBqYu0LTqpLvUljw35yGz9VoLrfHTt3/9OaWMlXg/q6Uet
- T+72o8Swkm9nDHfvWsAExTUbPnmOkDgN7i7LV5dHq6IsQfzx2+lnXDLeGI2fICPql9his15JD
- qTC7R+Hix4Zw0OWYyUVAA5b3QdDNs6kNreNaMbZp4TiFjyHlvu1aRIeqU74zAj3VrhxExyPQG
- Wz2C2A2gNdCIBY5JQEqwBzbxpLzX9bWRW+DKD1WBYESMXBBpBbd205rAnvcEvyMLun9NwBLAy
- HiAVX2gvg2nxURxZEYEbhR1v8LQsCYt4A4AZ5IBUg3hvNkXq/q9MeNbN2yWy7mmpsh2FPlnJB
- qrl2mZxhjqcT3ykoQF2XZHmttU1b45Nj4z/vxpVg0GfFScIW4k/aNrVe0lg5j7S/Yv8qIZsn/
- JDEjgngwo4FSENa93fGtkniZ9YtDJCAtiRBWZnWZeE9T69SVvg26PuxWooZ7AUkXFm+2etFa0
- M+Zr0s1PvXhsPJuWcxzrteuqz/3M2FtZDUBzPeGzjjeW6N/qwyC5/otRGKw6E7gUc2260KHRY
- bLxZmH9ia9sEPntik7KptcGpkoYqpjf1WhGt9iRo8S3j6Ey2mu/2+0HwTSQHhhcMpEQgpudDi
- 11gE65yfBOXMl3a168kbyuVucUmivPdMdfqZ3w==
+        Fri, 31 May 2019 11:09:54 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:46362 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726037AbfEaPJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 11:09:53 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 8575913112EC03796CDD;
+        Fri, 31 May 2019 23:09:48 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Fri, 31 May 2019
+ 23:09:39 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <bhelgaas@google.com>, <sthemmin@microsoft.com>,
+        <sashal@kernel.org>, <decui@microsoft.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] PCI: hv: Fix build error without CONFIG_SYSFS
+Date:   Fri, 31 May 2019 23:09:23 +0800
+Message-ID: <20190531150923.12376-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The MODULE_DEVICE_TABLE() macro already checks for MODULE defined,
-so the extra check here is not necessary.
+while building without CONFIG_SYSFS, fails as below:
 
-Signed-off-by: Enrico Weigelt <info@metux.net>
+drivers/pci/controller/pci-hyperv.o: In function 'hv_pci_assign_slots':
+pci-hyperv.c:(.text+0x40a): undefined reference to 'pci_create_slot'
+drivers/pci/controller/pci-hyperv.o: In function 'pci_devices_present_work':
+pci-hyperv.c:(.text+0xc02): undefined reference to 'pci_destroy_slot'
+drivers/pci/controller/pci-hyperv.o: In function 'hv_pci_remove':
+pci-hyperv.c:(.text+0xe50): undefined reference to 'pci_destroy_slot'
+drivers/pci/controller/pci-hyperv.o: In function 'hv_eject_device_work':
+pci-hyperv.c:(.text+0x11f9): undefined reference to 'pci_destroy_slot'
+
+Select SYSFS while PCI_HYPERV is set to fix this.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: a15f2c08c708 ("PCI: hv: support reporting serial number as slot information")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/scsi/BusLogic.c | 2 --
- drivers/scsi/dpt_i2o.c  | 3 ---
- 2 files changed, 5 deletions(-)
+ drivers/pci/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/BusLogic.c b/drivers/scsi/BusLogic.c
-index e41e51f..68cc68b 100644
---- a/drivers/scsi/BusLogic.c
-+++ b/drivers/scsi/BusLogic.c
-@@ -3893,7 +3893,6 @@ static void __exit blogic_exit(void)
- 
- __setup("BusLogic=", blogic_setup);
- 
--#ifdef MODULE
- /*static struct pci_device_id blogic_pci_tbl[] = {
- 	{ PCI_VENDOR_ID_BUSLOGIC, PCI_DEVICE_ID_BUSLOGIC_MULTIMASTER,
- 	  PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0},
-@@ -3909,7 +3908,6 @@ static void __exit blogic_exit(void)
- 	{PCI_DEVICE(PCI_VENDOR_ID_BUSLOGIC, PCI_DEVICE_ID_BUSLOGIC_FLASHPOINT)},
- 	{0, },
- };
--#endif
- MODULE_DEVICE_TABLE(pci, blogic_pci_tbl);
- 
- module_init(blogic_init);
-diff --git a/drivers/scsi/dpt_i2o.c b/drivers/scsi/dpt_i2o.c
-index a3afd14..eb5cfe8 100644
---- a/drivers/scsi/dpt_i2o.c
-+++ b/drivers/scsi/dpt_i2o.c
-@@ -180,14 +180,11 @@ static u8 adpt_read_blink_led(adpt_hba* host)
-  *============================================================================
-  */
- 
--#ifdef MODULE
- static struct pci_device_id dptids[] = {
- 	{ PCI_DPT_VENDOR_ID, PCI_DPT_DEVICE_ID, PCI_ANY_ID, PCI_ANY_ID,},
- 	{ PCI_DPT_VENDOR_ID, PCI_DPT_RAPTOR_DEVICE_ID, PCI_ANY_ID, PCI_ANY_ID,},
- 	{ 0, }
- };
--#endif
--
- MODULE_DEVICE_TABLE(pci,dptids);
- 
- static int adpt_detect(struct scsi_host_template* sht)
+diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+index 2ab9240..6722952 100644
+--- a/drivers/pci/Kconfig
++++ b/drivers/pci/Kconfig
+@@ -182,6 +182,7 @@ config PCI_LABEL
+ config PCI_HYPERV
+         tristate "Hyper-V PCI Frontend"
+         depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && X86_64
++	select SYSFS
+         help
+           The PCI device frontend driver allows the kernel to import arbitrary
+           PCI devices from a PCI backend to support PCI driver domains.
 -- 
-1.9.1
+2.7.4
+
 
