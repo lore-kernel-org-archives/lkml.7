@@ -6,144 +6,134 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1DD7C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7822C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8048726A8F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 949F826A8F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:47:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbfEaPqW convert rfc822-to-8bit (ORCPT
+        id S1726809AbfEaPrE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 11:46:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60278 "EHLO mx1.redhat.com"
+        Fri, 31 May 2019 11:47:04 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46594 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726531AbfEaPqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 11:46:21 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        id S1726518AbfEaPrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 11:47:04 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9D00130C5854;
-        Fri, 31 May 2019 15:46:17 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (dhcp-192-219.str.redhat.com [10.33.192.219])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DF7081009976;
-        Fri, 31 May 2019 15:46:09 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup and thread creation (v10)
-References: <20190503184219.19266-1-mathieu.desnoyers@efficios.com>
-        <20190503184219.19266-2-mathieu.desnoyers@efficios.com>
-        <87h89gjgaf.fsf@oldenburg2.str.redhat.com>
-        <1239705947.14878.1558985272873.JavaMail.zimbra@efficios.com>
-        <140718133.18261.1559144710554.JavaMail.zimbra@efficios.com>
-        <2022553041.20966.1559249801435.JavaMail.zimbra@efficios.com>
-        <875zprm4jo.fsf@oldenburg2.str.redhat.com>
-        <732661684.21584.1559314109886.JavaMail.zimbra@efficios.com>
-Date:   Fri, 31 May 2019 17:46:08 +0200
-In-Reply-To: <732661684.21584.1559314109886.JavaMail.zimbra@efficios.com>
-        (Mathieu Desnoyers's message of "Fri, 31 May 2019 10:48:29 -0400
-        (EDT)")
-Message-ID: <87muj2k4ov.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        by mx1.redhat.com (Postfix) with ESMTPS id 39EB3B2DE9;
+        Fri, 31 May 2019 15:46:52 +0000 (UTC)
+Received: from carbon (ovpn-200-32.brq.redhat.com [10.40.200.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 51B3460BF7;
+        Fri, 31 May 2019 15:46:45 +0000 (UTC)
+Date:   Fri, 31 May 2019 17:46:43 +0200
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc:     grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net,
+        ast@kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
+        daniel@iogearbox.net, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com, brouer@redhat.com
+Subject: Re: [PATCH v2 net-next 7/7] net: ethernet: ti: cpsw: add XDP
+ support
+Message-ID: <20190531174643.4be8b27f@carbon>
+In-Reply-To: <20190530182039.4945-8-ivan.khoronzhuk@linaro.org>
+References: <20190530182039.4945-1-ivan.khoronzhuk@linaro.org>
+        <20190530182039.4945-8-ivan.khoronzhuk@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8BIT
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Fri, 31 May 2019 15:46:20 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 31 May 2019 15:47:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Mathieu Desnoyers:
 
-> Let's break this down into the various sub-issues involved:
->
-> 1) How early do we need to setup rseq ? Should it be setup before:
->    - LD_PRELOAD .so constructors ?
->      - Without circular dependency,
->      - With circular dependency,
->    - audit libraries initialization ?
->    - IFUNC resolvers ?
->    - other callbacks ?
->    - memory allocator calls ?
->
-> We may end up in a situation where we need memory allocation to be setup
-> in order to initialize TLS before rseq can be registered for the main
-> thread. I suspect we will end up needing a fallbacks which always work
-> for the few cases that would try to use rseq too early in dl/libc startup.
+Hi Ivan,
 
-I think the answer to that depends on whether it's okay to have an
-observable transition from “no rseq kernel support” to “kernel supports
-rseq”.
+From below code snippets, it looks like you only allocated 1 page_pool
+and sharing it with several RX-queues, as I don't have the full context
+and don't know this driver, I might be wrong?
 
-> 2) Do we need to setup __rseq_handled and __rseq_abi at the same stage of
->    startup, or is it OK to setup __rseq_handled before __rseq_abi ?
+To be clear, a page_pool object is needed per RX-queue, as it is
+accessing a small RX page cache (which protected by NAPI/softirq).
 
-I think we should be able to set __rseq_handle early, even if we can
-perform the rseq area registration later.  (The distinction does not
-matter if the registration needs to be performed early as well.)
+On Thu, 30 May 2019 21:20:39 +0300
+Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
 
-Setting __rseq_handle in ld.so is easy if the variable is defined in
-ld.so, which is not a problem at all.
+> @@ -1404,6 +1711,14 @@ static int cpsw_ndo_open(struct net_device *ndev)
+>  			enable_irq(cpsw->irqs_table[0]);
+>  		}
+>  
+> +		pool_size = cpdma_get_num_rx_descs(cpsw->dma);
+> +		cpsw->page_pool = cpsw_create_page_pool(cpsw, pool_size);
+> +		if (IS_ERR(cpsw->page_pool)) {
+> +			ret = PTR_ERR(cpsw->page_pool);
+> +			cpsw->page_pool = NULL;
+> +			goto err_cleanup;
+> +		}
 
-> 3) Which shared object owns __rseq_handled and __rseq_abi ?
->    - libc.so ?
->    - ld-linux-*.so.2 ?
->    - Should both symbols be owned by the same .so ?
+On Thu, 30 May 2019 21:20:39 +0300
+Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
 
-I think we can pick whatever works, based on the requirements from (1).
-It's an implementation detail (altough it currently becomes part of the
-ABI for weird reasons, but the choice itself is arbitrary).
+> @@ -675,10 +742,33 @@ int cpsw_set_ringparam(struct net_device *ndev,
+>  	if (cpsw->usage_count)
+>  		cpdma_chan_split_pool(cpsw->dma);
+>  
+> +	for (i = 0; i < cpsw->data.slaves; i++) {
+> +		struct net_device *ndev = cpsw->slaves[i].ndev;
+> +
+> +		if (!(ndev && netif_running(ndev)))
+> +			continue;
+> +
+> +		cpsw_xdp_unreg_rxqs(netdev_priv(ndev));
+> +	}
+> +
+> +	page_pool_destroy(cpsw->page_pool);
+> +	cpsw->page_pool = pool;
+> +
 
->    - What about the !SHARED case ? I think this would end up in libc.a
->    in all cases.
+On Thu, 30 May 2019 21:20:39 +0300
+Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
 
-Correct.
+> +void cpsw_xdp_unreg_rxqs(struct cpsw_priv *priv)
+> +{
+> +	struct cpsw_common *cpsw = priv->cpsw;
+> +	int i;
+> +
+> +	for (i = 0; i < cpsw->rx_ch_num; i++)
+> +		xdp_rxq_info_unreg(&priv->xdp_rxq[i]);
+> +}
 
-> 4) Inability to touch a TLS variable (__rseq_abi) from ld-linux-*.so.2
->    - Should we extend the dynamic linker to allow such TLS variable to be
->      accessed ? If so, how much effort is required ?
->    - Can we find an alternative way to initialize rseq early during
->      dl init stages while still performing the TLS access from a function
->      implemented within libc.so ?
 
-This is again related to the answer for (1).  There are various hacks we
-could implement to make the initialization invisible (e.g., computing
-the address of the variable using the equivalent of dlsym, after loading
-all the initial objects and before starting relocation).  If it's not
-too hard to add TLS support to ld.so, we can consider that as well.
-(The allocation side should be pretty easy, relocation support it could
-be more tricky.)
+On Thu, 30 May 2019 21:20:39 +0300
+Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
 
-> So far, I got rseq to be initialized before LD_PRELOADed library
-> constructors by doing the initialization in a constructor within
-> libc.so. I don't particularly like this approach, because the
-> constructor order is not guaranteed.
+> +int cpsw_xdp_reg_rxq(struct cpsw_priv *priv, int ch)
+> +{
+> +	struct xdp_rxq_info *xdp_rxq = &priv->xdp_rxq[ch];
+> +	struct cpsw_common *cpsw = priv->cpsw;
+> +	int ret;
+> +
+> +	ret = xdp_rxq_info_reg(xdp_rxq, priv->ndev, ch);
+> +	if (ret)
+> +		goto err_cleanup;
+> +
+> +	ret = xdp_rxq_info_reg_mem_model(xdp_rxq, MEM_TYPE_PAGE_POOL,
+> +					 cpsw->page_pool);
+> +	if (ret)
+> +		goto err_cleanup;
+> +
+> +	return 0;
 
-Right.
 
-> One possible solution would be to somehow expose a rseq initialization
-> function symbol from libc.so, look it up from ld-linux-*.so.2, and
-> invoke it after libc.so has been loaded. It would end up being similar
-> to a constructor, but with a fixed invocation order.
 
-This would still expose lack of rseq support to IFUNC resolvers
-initially.  I don't know if this is a problem (again, it comes down to
-(1) above).  There is a school of thought that you can't reference
-__rseq_abi from an IFUNC resolver because it needs a relocation.
-
-Thanks,
-Florian
+-- 
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
