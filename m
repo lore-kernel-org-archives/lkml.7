@@ -1,126 +1,138 @@
 Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 040A2C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88AAAC28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7CE3269B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:44:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559310298;
-	bh=TwctpdNDV4tXtUwpHTKdh2jtKFEfaT/76NkwZ2eyvQ0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Qn7+EbHd4xY7E/JUOZHSYHhGoFoYqTIWBLZxlkvFeEiOLH3qyrnfPY2oJ8EU1mg21
-	 YIbglftjhujp+0d69vvVVk997qmQwor52M9mTkHikYMvZEstrvxe/fOu2nHIXblo6V
-	 AbNr+Wc7eray3Yn/uyzrM1HbRGZoHMI5p4Y8svw8=
+	by mail.kernel.org (Postfix) with ESMTP id 6B47D269C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:46:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbfEaNo6 (ORCPT
+        id S1726593AbfEaNqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 09:44:58 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44290 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbfEaNo5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 09:44:57 -0400
-Received: by mail-pf1-f193.google.com with SMTP id x3so730632pff.11;
-        Fri, 31 May 2019 06:44:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vPbIIJuyYstqKudbEw2Wc+jcaMTMVd97T1l4e8lD3KA=;
-        b=ZEX8PNbz0qOV4voBBdbFmKU8Z61+Kq1IWhx5JPVytMYOvYTBT5KAWMYHlQHpuKdgSg
-         HSrAx8xuwmobu/aN7G69ZUXBZGFsZAZKV9Jwh7R86aeFbLWpR61w1dIFZRGmCJEQeIJX
-         cWE9s+nnWFabfC6BKmM5q+lzvE9zelYV4BIrEjFfbqCw6jo4BlTEpDpeVU9ZNlUskaZE
-         QxrQ3Kle9nm1Vhb7WtfmtLmGs/xkMXVJASxfRSvUPhsmiQFlY+5ygS1PjZUquJEC4CoC
-         ODl+QIaQ/YQt/Fyrhd0r1FX06SAFd8tvZi3XzPE6c2gDd+30+cy7tWw0Q6OCeGgjV+/u
-         6ZGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vPbIIJuyYstqKudbEw2Wc+jcaMTMVd97T1l4e8lD3KA=;
-        b=KxTOSLjed++fvl4TmCnNEQrSR4rjgkhG4/v6y7aei4wwWwfqfm0MAkoHnfMxC6WXzL
-         0ZEErW5BPuJRFi51DQiFJR/te/6kO9E3ZMnPeS5WJxMCHcpPIJREyGiFZf33zlFO4Pza
-         uBKacJUlRKzHeA5ZG41TfUwigAtB8y3lTldzObn4MmanwAsn2+dAM1ZGJEs/hYsTHkXo
-         VsZz+Fm3svKlvGoEehfLgKonBoS07/F4h7AVadIXGVuRKNUqZ8N8dnf164ZsDBgIGPO9
-         QkancrHb3Tl3lHQK4a6jEij4tqDSLzEoFHNtsG745gW2NvRMgY1S88p/N6B0yhDkl7LE
-         SaZg==
-X-Gm-Message-State: APjAAAXiRNPUJQFv1owGRKapet5F2D7ViJtOZ/g4kpcPP+hNuK/iUc6Z
-        STkxCm1+AWx80iw+Zbjxf/0=
-X-Google-Smtp-Source: APXvYqwQVdzt+MDB8OA82hnznf1kjVB0kSuwffl4tojHdIoAaLiUvdyrPZr97mrwWIcFKVij7mYIJw==
-X-Received: by 2002:a17:90a:9382:: with SMTP id q2mr9524146pjo.131.1559310296875;
-        Fri, 31 May 2019 06:44:56 -0700 (PDT)
-Received: from google.com ([122.38.223.241])
-        by smtp.gmail.com with ESMTPSA id g83sm6546532pfb.158.2019.05.31.06.44.50
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 31 May 2019 06:44:55 -0700 (PDT)
-Date:   Fri, 31 May 2019 22:44:47 +0900
-From:   Minchan Kim <minchan@kernel.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, jannh@google.com,
-        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
-        hdanton@sina.com
-Subject: Re: [RFCv2 3/6] mm: introduce MADV_PAGEOUT
-Message-ID: <20190531134447.GD195463@google.com>
-References: <20190531064313.193437-1-minchan@kernel.org>
- <20190531064313.193437-4-minchan@kernel.org>
- <20190531085044.GJ6896@dhcp22.suse.cz>
+        Fri, 31 May 2019 09:46:39 -0400
+Received: from mga04.intel.com ([192.55.52.120]:15798 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726330AbfEaNqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 09:46:39 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 May 2019 06:46:39 -0700
+X-ExtLoop1: 1
+Received: from kuha.fi.intel.com ([10.237.72.189])
+  by fmsmga001.fm.intel.com with SMTP; 31 May 2019 06:46:36 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 31 May 2019 16:46:35 +0300
+Date:   Fri, 31 May 2019 16:46:35 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v4 13/16] platform/x86: intel_cht_int33fe: Provide
+ software nodes for the devices
+Message-ID: <20190531134635.GE7167@kuha.fi.intel.com>
+References: <20190522105113.11153-1-heikki.krogerus@linux.intel.com>
+ <20190522105113.11153-14-heikki.krogerus@linux.intel.com>
+ <7468b83c-3d75-b43f-559b-68b3140a89e9@redhat.com>
+ <9821910.95WSKUoubE@kreacher>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190531085044.GJ6896@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <9821910.95WSKUoubE@kreacher>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 10:50:44AM +0200, Michal Hocko wrote:
-> On Fri 31-05-19 15:43:10, Minchan Kim wrote:
-> > When a process expects no accesses to a certain memory range
-> > for a long time, it could hint kernel that the pages can be
-> > reclaimed instantly but data should be preserved for future use.
-> > This could reduce workingset eviction so it ends up increasing
-> > performance.
+On Fri, May 31, 2019 at 11:10:31AM +0200, Rafael J. Wysocki wrote:
+> On Wednesday, May 29, 2019 11:30:58 AM CEST Hans de Goede wrote:
+> > Hi,
 > > 
-> > This patch introduces the new MADV_PAGEOUT hint to madvise(2)
-> > syscall. MADV_PAGEOUT can be used by a process to mark a memory
-> > range as not expected to be used for a long time so that kernel
-> > reclaims the memory instantly. The hint can help kernel in deciding
-> > which pages to evict proactively.
+> > On 5/22/19 12:51 PM, Heikki Krogerus wrote:
+> > > Software nodes provide two features that we will need later.
+> > > 1) Software nodes can have references to other software nodes.
+> > > 2) Software nodes can exist before a device entry is created.
+> > > 
+> > > Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > > ---
+> > >   drivers/platform/x86/intel_cht_int33fe.c | 53 ++++++++++++++++++++----
+> > >   1 file changed, 45 insertions(+), 8 deletions(-)
+> > > 
+> > > diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
+> > > index 4ab47d6df413..a4ebd1d6b5b6 100644
+> > > --- a/drivers/platform/x86/intel_cht_int33fe.c
+> > > +++ b/drivers/platform/x86/intel_cht_int33fe.c
+> > > @@ -27,6 +27,13 @@
+> > >   
+> > >   #define EXPECTED_PTYPE		4
+> > >   
+> > > +enum {
+> > > +	INT33FE_NODE_FUSB302,
+> > > +	INT33FE_NODE_MAX17047,
+> > > +	INT33FE_NODE_PI3USB30532,
+> > > +	INT33FE_NODE_MAX,
+> > > +};
+> > > +
+> > >   struct cht_int33fe_data {
+> > >   	struct i2c_client *max17047;
+> > >   	struct i2c_client *fusb302;
+> > > @@ -72,8 +79,13 @@ static const struct property_entry max17047_props[] = {
+> > >   
+> > >   static const struct property_entry fusb302_props[] = {
+> > >   	PROPERTY_ENTRY_STRING("linux,extcon-name", "cht_wcove_pwrsrc"),
+> > > -	PROPERTY_ENTRY_U32("fcs,max-sink-microvolt", 12000000),
+> > > -	PROPERTY_ENTRY_U32("fcs,max-sink-microamp",   3000000),
+> > > +	{ }
+> > > +};
+> > > +
+> > > +static const struct software_node nodes[] = {
+> > > +	{ "fusb302", NULL, fusb302_props },
+> > > +	{ "max17047", NULL, max17047_props },
+> > > +	{ "pi3usb30532" },
+> > >   	{ }
+> > >   };
+> > >   
+> > > @@ -82,14 +94,17 @@ cht_int33fe_register_max17047(struct device *dev, struct cht_int33fe_data *data)
+> > >   {
+> > >   	struct i2c_client *max17047 = NULL;
+> > >   	struct i2c_board_info board_info;
+> > > +	struct fwnode_handle *fwnode;
+> > >   	int ret;
+> > >   
+> > > +	fwnode = software_node_fwnode(&nodes[INT33FE_NODE_MAX17047]);
+> > > +	if (!fwnode)
+> > > +		return -ENODEV;
+> > > +
+> > >   	i2c_for_each_dev(&max17047, cht_int33fe_check_for_max17047);
+> > >   	if (max17047) {
+> > >   		/* Pre-existing i2c-client for the max17047, add device-props */
+> > > -		ret = device_add_properties(&max17047->dev, max17047_props);
+> > > -		if (ret)
+> > > -			return ret;
+> > > +		max17047->dev.fwnode->secondary = fwnode;
+> > 
+> > I believe that you should do:
+> > 		fwnode->secondary = ERR_PTR(-ENODEV);
+> > cht_int33fe_setup_dp
+> > Before this call, as you are doing in the cht_int33fe_setup_dp function.
 > 
-> Again, are there any restictions on what kind of memory can be paged out?
-> Private/Shared, anonymous/file backed. Any restrictions on mapping type.
-> Etc. Please make sure all that is in the changelog.
-
-It's same with MADV_COLD. Yes, I will include all detail in the
-description.
-
+> So I'm inclined to defer this patch until it is improved and queue up the rest of the series.
 > 
-> What are the failure modes? E.g. what if the swap is full, does the call
-> fails or it silently ignores the error?
+> I can fix up the typo in the [15/16] while handling it.
 
-In such case, just ignore the swapout. It returns -EINVAL only if the
-vma is one of (VM_LOCKED|VM_HUGETLB|VM_PFNMAP) at this moment.
+Thanks Rafael. I'll send v5, and fix both in any case.
 
-> 
-> Thanks!
-> -- 
-> Michal Hocko
-> SUSE Labs
+Cheers,
+
+-- 
+heikki
