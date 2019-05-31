@@ -2,92 +2,268 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F38A9C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 20:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68856C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 20:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8C0B26EAA
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 20:06:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32BA126EB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 20:10:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kV49vqq8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O9KKxO12"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727473AbfEaUG0 (ORCPT
+        id S1727483AbfEaUJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 16:06:26 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42362 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727316AbfEaUG0 (ORCPT
+        Fri, 31 May 2019 16:09:59 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:46043 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727405AbfEaUJ6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 16:06:26 -0400
-Received: by mail-pf1-f196.google.com with SMTP id r22so6820896pfh.9
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 13:06:26 -0700 (PDT)
+        Fri, 31 May 2019 16:09:58 -0400
+Received: by mail-qk1-f196.google.com with SMTP id s22so5098315qkj.12;
+        Fri, 31 May 2019 13:09:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9TL9DcOEKgadixiKIuv445aeR9WBFQdFXZrUAgDcDlE=;
-        b=kV49vqq86GuJyq1B2ExOHqAEHCBbLYAxLrlwX9YHW790oTpaKgrElCoYJHUXWkgOJV
-         TyS26P7yQV73R8/GWkjjhukLJb66Q7zUUUJ7a2B93/pJZO6Shv5cFVuO06NhX0qS4a8f
-         ckE9aHhSd9lIxLohPE/+lCMBZ2E8LEVATqVLm7wOqPKHieY8trNRGEwdnTfcrdqsN1Fz
-         yu0mhBAzkmIxIgd+iih/pD0/QURI9+rxP04X2IHVXV+35kUITHS70Eb+sKRt40HBMm7w
-         s6s3jP7zdEP+vz/WybVa2KYlVXm/9BI/SzyLBAfs7+4YVEhu/Sm8BI/uV6UgsPEc/XKh
-         zXXQ==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UVgt0vwEj7EAXy/j4qPK77xL+oH2BUtF2/YFZzbt1nE=;
+        b=O9KKxO12fFVFOyC/LX/kfokc+aOsPKSKZdV1lTR5Xn08biFb0Xem4ZuqQJM6fQLSj+
+         M1bvaAl1mZnMkcfsfdSkj33OCJdogMMWt1QpXd2/Z+H72ilHfFRCZh5LeTB40jTFDyLa
+         nqdqiBmnRKKLgcAnJJQOTjnmGbQGp1OCu2TEV+jp6RI+l7uHFbNuACQ1MUXD8o5XrnSF
+         0Fc8/Kz+TG44tgf6mMfNJdEaIg6Y6/JEOKV/Le2N4P91F2cEOh9sCiCKpLc+0cF9fQeg
+         WVbcKiJ70Bseq7ZO0ZLiClObCXxVQTHQNUYTHMTtrkErpz93I9pawmK4fPoBdl5PkMNh
+         tfMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9TL9DcOEKgadixiKIuv445aeR9WBFQdFXZrUAgDcDlE=;
-        b=a+FkKSYEKntZT0lwjABmXi5ZRPu/phRMy5Wfb380xirVtiGdB908pUVjALcCw5SauF
-         THEPXTog8e/Hj23+Ivi6RWS3DtKdFEosokkxn5c1oVoY8rhN9W46AggmH9KAYv/hthBM
-         eOU62l3uUyLjZn/PYh1dAEI4QluKqJNKQg3nf8Yk2+EETtVetMneRMHJGl2E8CQsS2fb
-         oRpXLjfbai/IJWubMJCQKLtL4iQNBdzfB+PjM9FBYR+G4dQHyvyhqoS6FOFO36nPsgEC
-         ruOD4qHK52lgyo9egVcHDY4Plp2mUIgDM5hs/s+OFR71cWjbJcxws7PmVidN+wh3ZIf4
-         8jWA==
-X-Gm-Message-State: APjAAAWYO+5t/NnFvK4mAtyGhssdjfa8q+Z/Ib/nQDLGwK6trrcJXxeN
-        3/59ltfX/LrOAkRxpx729NF+loqHDT54KE0Vu2VzCA==
-X-Google-Smtp-Source: APXvYqyEK1gsqxDA0Or/CK+vKBpJnggOs9awLB6ySElXj4BB/3+n9Gqj3w6GYh+I5qrhLxZWF88p5xir5ByMCP3e/lU=
-X-Received: by 2002:a17:90a:ac11:: with SMTP id o17mr3043266pjq.134.1559333185173;
- Fri, 31 May 2019 13:06:25 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UVgt0vwEj7EAXy/j4qPK77xL+oH2BUtF2/YFZzbt1nE=;
+        b=bgvzb16jxZuqG00sw91bxOaGFRQgmfmLOz1WUJqrTux9cekGp19pRP8MlZY6d0K0u2
+         8cAxaWLw8Lhayt2Ak2azZ++zuqvsOJygE8482lcqRqWHu0HD0GWuFGARnBe2wjhYn9hX
+         K9QHERddiQ4exEvP9/l4/te4e58dlfXo9GJLEIQupu9f/gI4Mc262lOgL545gWbLDLzS
+         fDI5YhvAb5rNbGh3N31KJ+xfN3q6ATFkXHaGPZzys3YaJqaKZ/TVjpWioIDmn/6IOhwY
+         do/nvs2iu2eGIc80hfuF/NYRB0PLs1nNwJ1X4cbP/8MqWonEsDmhph9cQ+mNc3ACHVfa
+         tXIA==
+X-Gm-Message-State: APjAAAU786yTUQQXi4RqjPFVSrGBSQLJ7k8ytEGdiHyyEKpcdnSrSkHT
+        Nan2GDAc71M7UxNlkaiR974=
+X-Google-Smtp-Source: APXvYqymW1cVo6+LlPBjEpmjRf0EtIZns9ZrSlsJ5Z5b59JmVAJascjO1fJgJivZYri/211PDW+Eqg==
+X-Received: by 2002:a37:de06:: with SMTP id h6mr10540356qkj.322.1559333396485;
+        Fri, 31 May 2019 13:09:56 -0700 (PDT)
+Received: from [172.19.65.94] ([143.107.45.1])
+        by smtp.gmail.com with ESMTPSA id c9sm5434994qtc.39.2019.05.31.13.09.52
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 31 May 2019 13:09:55 -0700 (PDT)
+Subject: Re: [PATCH] dt-bindings: iio: accel: adxl372: switch to YAML bindings
+To:     Alexandru Ardelean <ardeleanalex@gmail.com>,
+        Jonathan Cameron <jic23@kernel.org>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, kernel-usp@googlegroups.com,
+        Rodrigo Ribeiro <rodrigorsdc@gmail.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+References: <20190518215542.25140-1-lucasseikioshiro@gmail.com>
+ <20190519122418.7722641b@archlinux>
+ <CA+U=DsrvRcAARa+jZB8GKQ+q+wWWqAh7dmnHymLd9cpFGC2QSw@mail.gmail.com>
+From:   Lucas Oshiro <lucasseikioshiro@gmail.com>
+Message-ID: <504cc8e0-b94e-5418-ef8f-8b28f668ab6a@gmail.com>
+Date:   Fri, 31 May 2019 17:09:51 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190528235742.105510-1-natechancellor@gmail.com>
- <CAK8P3a0a0hMsZDkqKsfsyCWpdvDni72tjAxCz2VeAaU56zqrXg@mail.gmail.com>
- <20190531183227.GA34102@archlinux-epyc> <CAK8P3a1-_KRvoeK4w0b8775izox8fRm=NGJC=yicDRn7J5UW2Q@mail.gmail.com>
-In-Reply-To: <CAK8P3a1-_KRvoeK4w0b8775izox8fRm=NGJC=yicDRn7J5UW2Q@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 31 May 2019 13:06:13 -0700
-Message-ID: <CAKwvOdkyk3qLMPquSZqXCFauTADJU5X9qJi_fhJqbUuCYBH-6Q@mail.gmail.com>
-Subject: Re: [PATCH] ARM: xor-neon: Replace __GNUC__ checks with CONFIG_CC_IS_GCC
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Stefan Agner <stefan@agner.ch>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CA+U=DsrvRcAARa+jZB8GKQ+q+wWWqAh7dmnHymLd9cpFGC2QSw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 12:21 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> clang, I would suggest dropping your patch then, and instead adding
+Thanks, Alexandru. We're going to send a new version for this patch.
 
-I disagree.  The minimum version of gcc required to build the kernel
-is 4.6, so the comment about older versions of gcc is irrelevant and
-should be removed.
-
-Nathan's -Rpass warnings are warning that vectorization was not
-calculated to be profitable **for 1 of the 4 functions** by LLVM.
-Surely we wouldn't disable NEON opts for XOR because 1 of 4 was not
-vectorized?
-
--- 
-Thanks,
-~Nick Desaulniers
+On 20/05/2019 07:46, Alexandru Ardelean wrote:
+> On Sun, May 19, 2019 at 8:27 PM Jonathan Cameron <jic23@kernel.org> wrote:
+>>
+>> On Sat, 18 May 2019 18:55:42 -0300
+>> Lucas Oshiro <lucasseikioshiro@gmail.com> wrote:
+>>
+>>> Convert the old device tree documentation to yaml format.
+>>>
+>>> Signed-off-by: Lucas Oshiro <lucasseikioshiro@gmail.com>
+>>> Signed-off-by: Rodrigo Ribeiro <rodrigorsdc@gmail.com>
+>>> Co-developed-by: Rodrigo Ribeiro <rodrigorsdc@gmail.com>
+>>> ---
+>>>
+>>> Hello,
+>>> We've added Stefan Popa as maintainer of the yaml documentation of this driver
+>>> because we found through git that he was the author of the older documentation.
+>>
+>> Definitely going to need an Ack from Stefan for that ;)
+> 
+> CC-ing my work-email
+> There are some issues with it and mailing lists; I'll hopefully sort
+> them out in the next weeks.
+> 
+> Stefan is out-of-office.
+> He'll take a look when he comes back.
+> 
+> I'll add a few notes until then.
+> 
+> I'd still like Stefan's ack to be final.
+> 
+>>
+>> I've not really gotten yaml formats into my head yet, but from a quick
+>> look I think this is fine.  I will however be looking for review from others
+>> on these.
+>>
+>> Thanks,
+>>
+>> Jonathan
+>>
+>>>
+>>>   .../bindings/iio/accel/adi,adxl372.yaml       | 66 +++++++++++++++++++
+>>>   .../devicetree/bindings/iio/accel/adxl372.txt | 33 ----------
+>>>   2 files changed, 66 insertions(+), 33 deletions(-)
+>>>   create mode 100644 Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml
+>>>   delete mode 100644 Documentation/devicetree/bindings/iio/accel/adxl372.txt
+> 
+> Also update the MAINTAINERS file when changing this.
+> For reference, many things can be borrowed from the ADXL345, which is
+> similar (from a dt-binding doc perspective only).
+> 
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml
+>>> new file mode 100644
+>>> index 000000000000..a6e2893d2ab1
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml
+>>> @@ -0,0 +1,66 @@
+>>> +# SPDX-License-Identifier: GPL-2.0
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/iio/accelerometers/adi,adxl372.yaml#
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> +
+>>> +title: Analog Devices ADXL372 3-Axis, +/-(200g) Digital Accelerometer
+>>> +
+>>> +maintainers:
+>>> +  - Stefan Popa <stefan.popa@analog.com>
+>>> +
+>>> +description: |
+>>> +  Analog Devices ADXL372 3-Axis, +/-(200g) Digital Accelerometer that supports
+>>> +  both I2C & SPI interfaces
+>>> +    https://www.analog.com/en/products/adxl372.html
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    enum:
+>>> +      - adi,adxl372
+>>> +
+>>> +  reg:
+>>> +    description: the I2C address or SPI chip select number for the device
+> 
+> no need to add a description for reg
+> it's a standard property
+> 
+>>> +    maxItems: 1
+>>> +
+>>> +  interrupts:
+>>> +    description:
+>>> +      interrupt mapping for IRQ as documented in
+>>> +      Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> 
+> no need to describe this either
+> 
+>>> +    maxItems: 1
+>>> +
+>>> +required:
+>>> +  - compatible
+>>> +  - reg
+> 
+> I think interrupts is also required.
+> 
+>>> +
+>>> +examples:
+>>> +  - |
+>>> +        #include <dt-bindings/gpio/gpio.h>
+>>> +        #include <dt-bindings/interrupt-controller/irq.h>
+>>> +        i2c0 {
+>>> +                #address-cells = <1>;
+>>> +                #size-cells = <0>;
+>>> +
+>>> +                /* Example for a I2C device node */
+>>> +                accelerometer@53 {
+>>> +                        compatible = "adi,adxl372";
+>>> +                        reg = <0x53>;
+>>> +                        interrupt-parent = <&gpio>;
+>>> +                        interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
+>>> +                };
+>>> +        };
+>>> +  - |
+>>> +        #include <dt-bindings/gpio/gpio.h>
+>>> +        #include <dt-bindings/interrupt-controller/irq.h>
+>>> +        spi0 {
+>>> +                #address-cells = <1>;
+>>> +                #size-cells = <0>;
+>>> +
+>>> +                accelerometer@0 {
+>>> +                        compatible = "adi,adxl372";
+>>> +                        reg = <0>;
+>>> +                        spi-max-frequency = <1000000>;
+>>> +                        interrupt-parent = <&gpio>;
+>>> +                        interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
+>>> +                };
+>>> +        };
+> 
+> Rest looks good.
+> 
+>>> diff --git a/Documentation/devicetree/bindings/iio/accel/adxl372.txt b/Documentation/devicetree/bindings/iio/accel/adxl372.txt
+>>> deleted file mode 100644
+>>> index a289964756a7..000000000000
+>>> --- a/Documentation/devicetree/bindings/iio/accel/adxl372.txt
+>>> +++ /dev/null
+>>> @@ -1,33 +0,0 @@
+>>> -Analog Devices ADXL372 3-Axis, +/-(200g) Digital Accelerometer
+>>> -
+>>> -http://www.analog.com/media/en/technical-documentation/data-sheets/adxl372.pdf
+>>> -
+>>> -Required properties:
+>>> - - compatible : should be "adi,adxl372"
+>>> - - reg: the I2C address or SPI chip select number for the device
+>>> -
+>>> -Required properties for SPI bus usage:
+>>> - - spi-max-frequency: Max SPI frequency to use
+>>> -
+>>> -Optional properties:
+>>> - - interrupts: interrupt mapping for IRQ as documented in
+>>> -   Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+>>> -
+>>> -Example for a I2C device node:
+>>> -
+>>> -     accelerometer@53 {
+>>> -             compatible = "adi,adxl372";
+>>> -             reg = <0x53>;
+>>> -             interrupt-parent = <&gpio>;
+>>> -             interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
+>>> -     };
+>>> -
+>>> -Example for a SPI device node:
+>>> -
+>>> -     accelerometer@0 {
+>>> -             compatible = "adi,adxl372";
+>>> -             reg = <0>;
+>>> -             spi-max-frequency = <1000000>;
+>>> -             interrupt-parent = <&gpio>;
+>>> -             interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
+>>> -     };
+>>
