@@ -2,96 +2,159 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E8BC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E647C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 386EE2476F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:27:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rqMkatPx"
+	by mail.kernel.org (Postfix) with ESMTP id 015E42477E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:27:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726883AbfEaO1x (ORCPT
+        id S1726860AbfEaO1x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 31 May 2019 10:27:53 -0400
-Received: from mail-eopbgr10089.outbound.protection.outlook.com ([40.107.1.89]:29187
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+Received: from mx2.suse.de ([195.135.220.15]:59624 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726418AbfEaO1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726515AbfEaO1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 31 May 2019 10:27:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1DaOTHPwWxFGu5pFSFNw74JHIu+6LpxvcwpSaDxOi8Y=;
- b=rqMkatPxMLicE6X4D9J4ema92D2GAwY/ArORX8akzxYkknLgCWORecd5mH00IDhYeJ9oshwtXf1vxPI/bQno0Fwe6UP7oRT4sClgXa0JBDVmOIYSkc2g2nJ92ByIgiyTMSRRvqJIiqBU3yvqY79doLNuePsAInBgNnt6xlG8+Y4=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3645.eurprd04.prod.outlook.com (52.134.14.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.18; Fri, 31 May 2019 14:27:46 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::ccaf:f4a1:704a:e745]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::ccaf:f4a1:704a:e745%4]) with mapi id 15.20.1922.021; Fri, 31 May 2019
- 14:27:46 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH] crypto: caam - disable some clock checks for iMX7ULP
-Thread-Topic: [PATCH] crypto: caam - disable some clock checks for iMX7ULP
-Thread-Index: AQHVF6DscUjseuTf80KtUeNJyp6zSQ==
-Date:   Fri, 31 May 2019 14:27:46 +0000
-Message-ID: <VI1PR0402MB3485BC76A33F8A81C73184E398190@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <20190531110634.2967-1-iuliana.prodan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c12826dc-12fa-4aa6-8d68-08d6e5d426e3
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR0402MB3645;
-x-ms-traffictypediagnostic: VI1PR0402MB3645:
-x-microsoft-antispam-prvs: <VI1PR0402MB3645A1CD4B1383C90E7B77A398190@VI1PR0402MB3645.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
-x-forefront-prvs: 00540983E2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(39860400002)(396003)(136003)(366004)(376002)(189003)(199004)(14444005)(256004)(7736002)(6116002)(53936002)(74316002)(66556008)(3846002)(6436002)(71200400001)(66066001)(64756008)(186003)(76116006)(305945005)(71190400001)(66476007)(558084003)(4326008)(478600001)(5660300002)(66946007)(73956011)(66446008)(8676002)(76176011)(54906003)(8936002)(86362001)(446003)(6246003)(25786009)(33656002)(2906002)(68736007)(55016002)(110136005)(9686003)(102836004)(99286004)(6636002)(52536014)(81166006)(26005)(14454004)(44832011)(7696005)(476003)(6506007)(229853002)(486006)(316002)(53546011)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3645;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: WVUFRfyYMl6tXBmNjd1fESH2KGSDEGeNui7i2dvjCDr1lfDDHUmZUDlNCzAHzN/dD9+ldmGv79dUMLQgtLd4T8ZvzGZsgOJRGCHrsKH1OjnmJvpKTygI/KVi8ZC48Om/B1Tiq7RW1ryt7p61eDXOotnh7kgil7Ryhd3Bt/FOv2U4uOBXWkCFCOGSWRcp9EZhgkTyVotmcsUQAZS/xxRar/vIyxbQ5zM/VbGX/QmEgCcXd3GsGV22v6Nc2AgtCP9ICCh5KB3wl2PZfkLQHn+KCW+TA9fV3rzo+Q77+J1w3xU4fQAZvp5/Caec6VBRp+hXKW3tqZMdRTTz50oxXVglaGf+RkkKev2tC10mmtbR5awOYE4kTIprAeuRqP15Ca3T6RECi4yee/WpPiQeG842LnIxMW9Tn+y5OCvawpzsYV0=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B2C73ADCF;
+        Fri, 31 May 2019 14:27:50 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 10B91E00E3; Fri, 31 May 2019 16:27:50 +0200 (CEST)
+Date:   Fri, 31 May 2019 16:27:50 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     Vivien Didelot <vivien.didelot@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, linville@redhat.com,
+        f.fainelli@gmail.com
+Subject: Re: [PATCH net-next] ethtool: do not use regs->len after
+ ops->get_regs
+Message-ID: <20190531142750.GE15954@unicorn.suse.cz>
+References: <20190530235450.11824-1-vivien.didelot@gmail.com>
+ <20190531065432.GB15954@unicorn.suse.cz>
+ <20190531101501.GB23464@t480s.localdomain>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c12826dc-12fa-4aa6-8d68-08d6e5d426e3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 May 2019 14:27:46.7008
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: horia.geanta@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3645
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190531101501.GB23464@t480s.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/31/2019 2:06 PM, Iuliana Prodan wrote:=0A=
-> Disabled the check and set of 'mem' and 'emi_slow'=0A=
-> clocks, since these are not available for iMX7ULP.=0A=
-> =0A=
-> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
-Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
-=0A=
-Thanks,=0A=
-Horia=0A=
+On Fri, May 31, 2019 at 10:15:01AM -0400, Vivien Didelot wrote:
+> Hi Michal,
+> 
+> On Fri, 31 May 2019 08:54:32 +0200, Michal Kubecek <mkubecek@suse.cz> wrote:
+> > On Thu, May 30, 2019 at 07:54:50PM -0400, Vivien Didelot wrote:
+> > > The kernel allocates a buffer of size ops->get_regs_len(), and pass
+> > > it to the kernel driver via ops->get_regs() for filling.
+> > > 
+> > > There is no restriction about what the kernel drivers can or cannot
+> > > do with the regs->len member. Drivers usually ignore it or set
+> > > the same size again. However, ethtool_get_regs() must not use this
+> > > value when copying the buffer back to the user, because userspace may
+> > > have allocated a smaller buffer. For instance ethtool does that when
+> > > dumping the raw registers directly into a fixed-size file.
+> > > 
+> > > Software may still make use of the regs->len value updated by the
+> > > kernel driver, but ethtool_get_regs() must use the original regs->len
+> > > given by userspace, up to ops->get_regs_len(), when copying the buffer.
+> > > 
+> > > Also no need to check regbuf twice.
+> > > 
+> > > Signed-off-by: Vivien Didelot <vivien.didelot@gmail.com>
+> > > ---
+> > >  net/core/ethtool.c | 4 +++-
+> > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/net/core/ethtool.c b/net/core/ethtool.c
+> > > index 4a593853cbf2..8f95c7b7cafe 100644
+> > > --- a/net/core/ethtool.c
+> > > +++ b/net/core/ethtool.c
+> > > @@ -1338,38 +1338,40 @@ static noinline_for_stack int ethtool_set_rxfh(struct net_device *dev,
+> > >  static int ethtool_get_regs(struct net_device *dev, char __user *useraddr)
+> > >  {
+> > >  	struct ethtool_regs regs;
+> > >  	const struct ethtool_ops *ops = dev->ethtool_ops;
+> > >  	void *regbuf;
+> > >  	int reglen, ret;
+> > >  
+> > >  	if (!ops->get_regs || !ops->get_regs_len)
+> > >  		return -EOPNOTSUPP;
+> > >  
+> > >  	if (copy_from_user(&regs, useraddr, sizeof(regs)))
+> > >  		return -EFAULT;
+> > >  
+> > >  	reglen = ops->get_regs_len(dev);
+> > >  	if (reglen <= 0)
+> > >  		return reglen;
+> > >  
+> > >  	if (regs.len > reglen)
+> > >  		regs.len = reglen;
+> > > +	else
+> > > +		reglen = regs.len;
+> > 
+> > This seems wrong. Most drivers do not check regs.len in their get_regs()
+> > handler (I'm not sure if there are any that do) and simply write as much
+> > data as they have. Thus if userspace passes too short regs.len, this
+> > would replace overflow of a userspace buffer for few drivers by overflow
+> > of a kernel buffer for (almost) all drivers.
+> > 
+> > So while we should use the original regs.len from userspace for final
+> > copy_to_user(), we have to allocate the buffer for driver ->get_regs()
+> > callback with size returned by its ->get_regs_len() callback.
+> 
+> Either I've completely screwed my patch, or you have misread it. This patch
+> actually just stores the original value of regs.len passed by userspace to
+> the kernel into reglen, before calling ops->get_regs().
+> 
+> But the kernel still allocates ops->get_regs_len() and passes that to the
+> kernel drivers, as this is the only size drivers must care about.
+> 
+> Then the kernel only copies what the userspace (originally) requested,
+> up to ops->get_regs_len().
+> 
+> In other words, if userspace requested a bigger buffer only ops->get_regs_len()
+> get copied, if the userspace requested a smaller buffer only that length
+> get copied.
+
+The problem with this patch is not with what gets copied to userspace
+but with the buffer allocated for driver callback. With this patch, the
+code looks like this:
+
+	reglen = ops->get_regs_len(dev);
+	if (reglen <= 0)
+		return reglen;
+
+Here we get actual dump size from driver and put it into reglen.
+
+	if (regs.len > reglen)
+		regs.len = reglen;
+	else
+		reglen = regs.len;
+
+If userspace buffer is insufficient, i.e. regs.len < reglen, we shrink
+reglen to regs.len.
+
+	regbuf = vzalloc(reglen);
+	if (!regbuf)
+		return -ENOMEM;
+
+Here we allocate a buffer of size reglen (which has been shrunk to
+regs.len from userspace).
+
+	ops->get_regs(dev, &regs, regbuf);
+
+And pass that buffer to driver's ->get_regs() callback. But these
+callbacks mostly ignore regs.len and simply write as much data as they
+have (size equal to what ->get_regs_len() returned). So if regs.len
+provided by userspace is strictly shorter than actual dump size, driver
+writes past the buffer allocated above.
+
+Michal
