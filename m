@@ -2,90 +2,80 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B34C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B74FDC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E91C926659
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:03:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B4072665E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:03:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbfEaJDU (ORCPT
+        id S1727171AbfEaJDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 05:03:20 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46108 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726693AbfEaJDT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 05:03:19 -0400
-Received: by mail-wr1-f65.google.com with SMTP id n4so724342wrw.13
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 02:03:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HRebP66JW4IyuOF0hDBqAwbwyYWxhmEAnf33J7IdOA0=;
-        b=pPHz49befugaJLF76GxzeDIJp9i/Fzf84Tz4Tjoxznr0ZiKp7P0MhIzHrHRdPKEt6K
-         nstVyr/R21vPvoxKQgH+kF8mieBSqJamJ4OZtq0YaaBkLlLwSXsvdDwM5Wb9Yad8kEOu
-         WVboWuD1yQjGehbuNkxIi3XHr484m86ib1UPrSQZzTvNtnYPU+69ZYEtDSj/p/81L5Lq
-         +wrTLk5JpQNh61mV5wCqwKI3Ekz1C7uXS8POk0RFhfRgzEh25RNiQnoi5I9H/Ly7Qw6J
-         FLKScGNU+zJxJQIbF1IYrzkOZNOiYk1jaCWWZKldVJ4qws99AllTzl/b/BkBxVGvL68c
-         MJtA==
-X-Gm-Message-State: APjAAAXVyL66AS0fnLk0TbRXydVTQ3ukRrRPdaSk/dZu27ZdtGGBS/ga
-        ovUgu17+h07VJUzo03ZzfGeaFA==
-X-Google-Smtp-Source: APXvYqzCgpfqPthhHvp9vkwXGYSCWJ2vPHCJQrPIU+1WZAFnucXSFqdMv5/v5gsJZPaCNRs1GMAPqg==
-X-Received: by 2002:adf:f909:: with SMTP id b9mr5874103wrr.119.1559293398234;
-        Fri, 31 May 2019 02:03:18 -0700 (PDT)
-Received: from [192.168.10.150] ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id t6sm10141754wmt.34.2019.05.31.02.03.17
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 31 May 2019 02:03:17 -0700 (PDT)
-Subject: Re: [PATCH 2/2] virtio_scsi: implement request batching
-To:     Bart Van Assche <bvanassche@acm.org>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, stefanha@redhat.com
-References: <20190530112811.3066-1-pbonzini@redhat.com>
- <20190530112811.3066-3-pbonzini@redhat.com>
- <79490df1-0145-5b40-027a-7e8fb96854d4@acm.org>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <ff7aaa01-022b-f55a-4bb2-c293cfd86bdd@redhat.com>
-Date:   Fri, 31 May 2019 11:03:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 31 May 2019 05:03:52 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:17633 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726649AbfEaJDw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 05:03:52 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id D00F7D2FB07C5677240E;
+        Fri, 31 May 2019 17:03:49 +0800 (CST)
+Received: from localhost.localdomain (10.67.165.24) by
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 31 May 2019 17:03:40 +0800
+From:   Yonglong Liu <liuyonglong@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>, <salil.mehta@huawei.com>,
+        <yisen.zhuang@huawei.com>, <shiju.jose@huawei.com>
+Subject: [PATCH net] net: hns: Fix loopback test failed at copper ports
+Date:   Fri, 31 May 2019 16:59:50 +0800
+Message-ID: <1559293190-24600-1-git-send-email-liuyonglong@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-In-Reply-To: <79490df1-0145-5b40-027a-7e8fb96854d4@acm.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.67.165.24]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/05/19 19:28, Bart Van Assche wrote:
-> On 5/30/19 4:28 AM, Paolo Bonzini wrote:
->> @@ -531,7 +547,8 @@ static int virtscsi_queuecommand(struct Scsi_Host
->> *shost,
->>           req_size = sizeof(cmd->req.cmd);
->>       }
->>   -    ret = virtscsi_kick_cmd(req_vq, cmd, req_size,
->> sizeof(cmd->resp.cmd));
->> +    kick = (sc->flags & SCMD_LAST) != 0;
->> +    ret = virtscsi_add_cmd(req_vq, cmd, req_size,
->> sizeof(cmd->resp.cmd), kick);
-> 
-> Have you considered to have the SCSI core call commit_rqs() if bd->last
-> is true? I think that would avoid that we need to introduce the
-> SCMD_LAST flag and that would also avoid that every SCSI LLD that
-> supports a commit_rqs callback has to introduce code to test the
-> SCMD_LAST flag.
+When doing a loopback test at copper ports, the serdes loopback
+and the phy loopback will fail, because of the adjust link had
+not finished, and phy not ready.
 
-That is slightly worse for performance, as it unlocks and re-locks the
-spinlock.
+Adds sleep between adjust link and test process to fix it.
 
-Paolo
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+---
+ drivers/net/ethernet/hisilicon/hns/hns_ethtool.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_ethtool.c b/drivers/net/ethernet/hisilicon/hns/hns_ethtool.c
+index ce15d23..188c3f6 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_ethtool.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_ethtool.c
+@@ -339,6 +339,7 @@ static int __lb_setup(struct net_device *ndev,
+ static int __lb_up(struct net_device *ndev,
+ 		   enum hnae_loop loop_mode)
+ {
++#define NIC_LB_TEST_WAIT_PHY_LINK_TIME 300
+ 	struct hns_nic_priv *priv = netdev_priv(ndev);
+ 	struct hnae_handle *h = priv->ae_handle;
+ 	int speed, duplex;
+@@ -365,6 +366,9 @@ static int __lb_up(struct net_device *ndev,
+ 
+ 	h->dev->ops->adjust_link(h, speed, duplex);
+ 
++	/* wait adjust link done and phy ready */
++	msleep(NIC_LB_TEST_WAIT_PHY_LINK_TIME);
++
+ 	return 0;
+ }
+ 
+-- 
+2.8.1
 
