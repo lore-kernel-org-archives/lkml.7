@@ -2,136 +2,95 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE55C28CC0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0079C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9950521882
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F57721882
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:34:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="rtCZuTiI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XLjkQvW0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbfEaBcV (ORCPT
+        id S1726792AbfEaBeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 21:32:21 -0400
-Received: from ozlabs.org ([203.11.71.1]:39451 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726372AbfEaBcV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 21:32:21 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45FRl51mj3z9sCJ;
-        Fri, 31 May 2019 11:32:17 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1559266338;
-        bh=ENrMprAgC7Pqmh5Zpsocx65Enrzzgtplf0cUUx2IBkc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=rtCZuTiIc25EynzMguFPWOC1VDMJr/7ioblJT/MQPe/wokGzLTMvWYeKbI4NtxRh6
-         ZxPdHIdWxlnMiA+A3tC6vkjiI87Bu7Pmuw7haK21fLpdg5gse7kw68vvtuQFeTCAJI
-         XsslUFC48qw2xa625nM79vRiPWhidTIKp8eH2fDY+3ChWY2gIfa463ZopZRhYlrfW4
-         1h2/ETlF3UIuym8WL6FLuIG6vh20FnQhYYN7PSbKgSQXa/xBC5xoddeUs889GqcDu6
-         9MUTbB+6ib3CIdneewBKDk+s3mowWOtJPid/5LIcMl44hrYVqvUDilI/m4azivW3kP
-         z3pR1ImGtJL8Q==
-Date:   Fri, 31 May 2019 11:32:16 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] firmware_loader: fix build without sysctl
-Message-ID: <20190531113216.796bb933@canb.auug.org.au>
-In-Reply-To: <20190531012649.31797-1-mcroce@redhat.com>
-References: <20190531012649.31797-1-mcroce@redhat.com>
+        Thu, 30 May 2019 21:34:09 -0400
+Received: from mail-pf1-f176.google.com ([209.85.210.176]:42166 "EHLO
+        mail-pf1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726372AbfEaBeJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 21:34:09 -0400
+Received: by mail-pf1-f176.google.com with SMTP id r22so5082847pfh.9;
+        Thu, 30 May 2019 18:34:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=2jdf5gdvxJLWEpe95q9RP+J/f86gwawcG2y3UhyKy6E=;
+        b=XLjkQvW0rZGGaLjNWYrBaqOhwdd5xcDVuOM5WTenLbFPCJ/u1AI7nQ3xv7snlko0d0
+         x4meUwwpYJ/X+RJXokG+kVasmIKNVUOyevN6M17efAgdRMlWcVgLN9broGf+Yh29wkYM
+         bfssnC8Mt1OuoO8n95wII6hN2RDZopq5u/sVjcg3bXuh07+MKIKHAAvjHzvqC189sqo3
+         HrYA/fu30QVkbkD+/f8wJixIEEx2HvfMmh/bePi3BJP4ufiTZPbxqEeGs1wyv+OVqXek
+         qw6dwmuohi7SQ4KLI/vMIxqx9QcnmtY8ERHp1tL7dnpOJ4q1oqaLXGETJ+zYwgabOw+1
+         0EhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=2jdf5gdvxJLWEpe95q9RP+J/f86gwawcG2y3UhyKy6E=;
+        b=jAZu7qMH/ZcL2E8nW9fmQnyBPsaVb8W0li1ZEm91dKLi8WbImxyqLCeYuwDL7EWVYx
+         Gu6KEhLcKk4vJ0qG3DAPqNcpxkcgP0BI67MEDP12lzICInF41U16rdXq9OMddiyzQTVf
+         He1WJlhAFhoIudk9KcSz1CA4ZwRxwr5CluHZOLLmF/eZk0E2WzrU+pTG7+4VELO3Hh8n
+         1TShM6hVx/2cFddCfAMVD+gWkOsuZnnCWfZVf1UY5t5Gpc/xYNX3YOV+af+EG7GUdLOl
+         CQLJynGOnZRY4txIPy+mfrWL5QHazg9AbX2w0V2mv1GO1mlwZIPJce4iNybqbkbc4nnS
+         8ASQ==
+X-Gm-Message-State: APjAAAWzL0RRx8kNYxFkFBsL2UjNRDUhWIze9WHxAg81uNlhTLClezco
+        +WAyDRDl+sufvpgkJjWYiWFEzyTC
+X-Google-Smtp-Source: APXvYqyOv3x917STsD/cuAg6EAbZ0cle8xAZwN7YMSgJs7VhnIxUQfx5mvD1pbRCzy97ZwqA50uC2Q==
+X-Received: by 2002:a63:5b18:: with SMTP id p24mr6319144pgb.452.1559266448663;
+        Thu, 30 May 2019 18:34:08 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id a64sm3156160pgc.53.2019.05.30.18.33.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 May 2019 18:34:07 -0700 (PDT)
+Date:   Fri, 31 May 2019 09:33:50 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     paul@paul-moore.com, sds@tycho.nsa.gov, eparis@parisplace.org
+Cc:     selinux@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org, omosnace@redhat.com
+Subject: [PATCH v2] hooks: fix a missing-check bug in
+ selinux_sb_eat_lsm_opts()
+Message-ID: <20190531013350.GA4642@zhanggen-UX430UQ>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/TPqHE_Oa=ZmOD5cJXg/Xd=E"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/TPqHE_Oa=ZmOD5cJXg/Xd=E
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+In selinux_sb_eat_lsm_opts(), 'arg' is allocated by kmemdup_nul(). It
+returns NULL when fails. So 'arg' should be checked.
 
-Hi all,
-
-[Just cc'ing Andrew who is currently carrying the patch that this fixes.]
-
-On Fri, 31 May 2019 03:26:49 +0200 Matteo Croce <mcroce@redhat.com> wrote:
->
-> firmware_config_table has references to the sysctl code which
-> triggers a build failure when CONFIG_PROC_SYSCTL is not set:
->=20
->     ld: drivers/base/firmware_loader/fallback_table.o:(.data+0x30): undef=
-ined reference to `sysctl_vals'
->     ld: drivers/base/firmware_loader/fallback_table.o:(.data+0x38): undef=
-ined reference to `sysctl_vals'
->     ld: drivers/base/firmware_loader/fallback_table.o:(.data+0x70): undef=
-ined reference to `sysctl_vals'
->     ld: drivers/base/firmware_loader/fallback_table.o:(.data+0x78): undef=
-ined reference to `sysctl_vals'
->=20
-> Put the firmware_config_table struct under #ifdef CONFIG_PROC_SYSCTL.
->=20
-> Fixes: 6a33853c5773 ("proc/sysctl: add shared variables for range check")
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Matteo Croce <mcroce@redhat.com>
-> ---
->  drivers/base/firmware_loader/fallback_table.c | 4 ++++
->  1 file changed, 4 insertions(+)
->=20
-> diff --git a/drivers/base/firmware_loader/fallback_table.c b/drivers/base=
-/firmware_loader/fallback_table.c
-> index 58d4a1263480..18d646777fb9 100644
-> --- a/drivers/base/firmware_loader/fallback_table.c
-> +++ b/drivers/base/firmware_loader/fallback_table.c
-> @@ -23,6 +23,8 @@ struct firmware_fallback_config fw_fallback_config =3D {
->  };
->  EXPORT_SYMBOL_GPL(fw_fallback_config);
-> =20
-> +#ifdef CONFIG_PROC_SYSCTL
-> +
->  struct ctl_table firmware_config_table[] =3D {
->  	{
->  		.procname	=3D "force_sysfs_fallback",
-> @@ -45,3 +47,5 @@ struct ctl_table firmware_config_table[] =3D {
->  	{ }
->  };
->  EXPORT_SYMBOL_GPL(firmware_config_table);
-> +
-> +#endif
-> --=20
-> 2.21.0
->=20
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/TPqHE_Oa=ZmOD5cJXg/Xd=E
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzwhCAACgkQAVBC80lX
-0Gw0qQf/evM65VBHkhgx3KVeMRBmdSccZ9FHYEeofJFXMPJwh2vm4AEAws/PYLRH
-RL529NygtdmzuK6f/+GKNvbRVXWR2KA2/iBxPFvQOq1aAQDeomLVGrgIXTApy/5D
-44ddPNZaVDLToM894A+DKetLxq8p1+ir9KAa+ZEM5EbZbd34vWJkC8u0HtMscmFW
-zyvpA8d2YBZ+okjdI89AHFbhYnD7x81+ukkNxTkU3Xiy6syyuit5c/JIjHDzTP4a
-nlHygjsJjVXusYBJVHS+HU2hN6s6+NCVtFCaLeIdp8SJvki/OXsvJuZPMZuxVbgk
-pzZDpKGs3wSJxfyOqvyZET0wdWNyOg==
-=MEoS
------END PGP SIGNATURE-----
-
---Sig_/TPqHE_Oa=ZmOD5cJXg/Xd=E--
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
+Fixes: 99dbbb593fe6 ("selinux: rewrite selinux_sb_eat_lsm_opts()")
+---
+diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+index 3ec702c..5a9e959 100644
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -2635,6 +2635,8 @@ static int selinux_sb_eat_lsm_opts(char *options, void **mnt_opts)
+ 						*q++ = c;
+ 				}
+ 				arg = kmemdup_nul(arg, q - arg, GFP_KERNEL);
++				if (!arg)
++					return -ENOMEM;
+ 			}
+ 			rc = selinux_add_opt(token, arg, mnt_opts);
+ 			if (unlikely(rc)) {
