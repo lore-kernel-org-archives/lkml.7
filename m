@@ -2,125 +2,242 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE81C28CC2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E5BC28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 172642654B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D66C2654D
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:01:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="ZZYrGWUU";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Ve1EEkjJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fYWJE6Zp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726807AbfEaIAE (ORCPT
+        id S1726918AbfEaIBQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 04:00:04 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:43047 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726002AbfEaIAC (ORCPT
+        Fri, 31 May 2019 04:01:16 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43962 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbfEaIBQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 04:00:02 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id A7DFD21E90;
-        Fri, 31 May 2019 04:00:00 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Fri, 31 May 2019 04:00:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm2; bh=Vt88uEygPIcGWjDilRhdbj1DAz7EhM7
-        E+LtWenHZ1O0=; b=ZZYrGWUUAz2vapErJCAJ4ZmletpYCqHknQtpEUb+h1fc026
-        G5nvCaCk8jLoLeFNJreiXFtg84DxRbcdHgdkkraHqAwBZyqm9paXl9YSDuiWsD8v
-        JdCdZezsjdhATbCXsp0MY2Q6qjp9ox/XaS2tFKl/9CqXGB4pQ2jO+HMEttwjJCxC
-        1SY4kZ6xAKU8rMHxLz9ExAevcwdIGBVfuRdq4xjz7qilVyMjwoqWkJToGC8FlBbr
-        hV1ey7bjOdayPsVJLhFgCk+W4YZrqrIcSvy1haZuOqk4Uuu/4j1t/GOOnELcoGnA
-        GrrSZkOTOXcOM6aF3PG+lNz8PPLrAEte1slsQWA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=Vt88uE
-        ygPIcGWjDilRhdbj1DAz7EhM7E+LtWenHZ1O0=; b=Ve1EEkjJpwz8q1Iz8lT+Mc
-        VucTu7d03lo5+5+xgcOu6iKgdtdd46Qgw5PeDLSHihSYZXfj/y51wRtIQit5GjJV
-        rScXa40dShDcp8IJxvQctEVpflI/tJSlxJNu8s9RXcU0FWQ0WRaO7g1A6N4RPi+3
-        SpnjneAKmt87yVvgKwZ58jPQhlOPE1OP+bodaEQvi+OGuB+oM0PdOkR/4nwfzXO2
-        W72mRaKz+FQXBszHoMnr98CMOQHMuH7gh9hEXP4OWrXHfaUjMJE1dfTzbNDOMx95
-        mhIaOj0AQHBmtrhxtgsg8GfoiQiutTn3PDJziWguT+oe3RKsqPgVKVoRKYgcKNVA
-        ==
-X-ME-Sender: <xms:_t7wXI4mJrbZtDPpUcAO99yNhOrs8BgfuPiQZkzPI31h5RjEgtvgKw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrudeftddguddvkecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehn
-    ughrvgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrg
-    hrrghmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushht
-    vghrufhiiigvpedt
-X-ME-Proxy: <xmx:_t7wXOLz7iSkzy0OmvZjy7v5Or6mbBRqYAGF6gKSBFztJBNA6q_0jQ>
-    <xmx:_t7wXCfQ3fqbeejk0d8YbBdxC2L9PM4nGHCmJteRuTM9NHl_x6f0_w>
-    <xmx:_t7wXBe0Z94-Nax48W4uyERu_iT9ddofTJYWC8oxirvIIW2aSqCN7g>
-    <xmx:AN_wXDrdEg5grihZAGO7MhqlPB682nuhUMwj8qSe3NO3DhBRnpZiLw>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 7CD0FE00A2; Fri, 31 May 2019 03:59:58 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.6-555-g49357e1-fmstable-20190528v2
-Mime-Version: 1.0
-Message-Id: <af088bbb-d55f-4477-a564-ef9fcc306433@www.fastmail.com>
-In-Reply-To: <20190530093544.12215-1-a.filippov@yadro.com>
-References: <20190530093544.12215-1-a.filippov@yadro.com>
-Date:   Fri, 31 May 2019 17:29:58 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Alexander A. Filippov" <a.filippov@yadro.com>,
-        linux-aspeed@lists.ozlabs.org
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        "Joel Stanley" <joel@jms.id.au>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Rob Herring" <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ARM: dts: aspeed: g4: add video engine support
-Content-Type: text/plain
+        Fri, 31 May 2019 04:01:16 -0400
+Received: by mail-lj1-f196.google.com with SMTP id z5so8661277lji.10
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 01:01:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KX91va6f7Z+53lDjzWHfHOph+OO8BCuoBgOWht/3odk=;
+        b=fYWJE6ZpvakQiIXRNcGnOarA2CMQh+ck6S4ai9uVBZ/iKfaxGcDupXCcWfMj6868nV
+         +HBVbFfpXN257LlQO9qhYrHXu29wZ8x27+LkFGd/oUPSUgpjI1sEHoR92t0LneBN4rlu
+         FDEz51AQ/Ve36FEKogBbYjg1f9y1/12fGpJPhtLuINdPLIPB7D2Askh1nzZ2vFxKPTYY
+         nSLGd/iN0QmmhQPUXQgzuaQcevb0IM/vDWG1zaUGC4fZaEpwmjemcnJnoVZJmP41UCcV
+         FRpu5P951J+nhYWV9jrbK8iHdvY1Mtk4x7hCX9a6aawF7/5juWTsjSDl5zhmD7+UMQwf
+         oA9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KX91va6f7Z+53lDjzWHfHOph+OO8BCuoBgOWht/3odk=;
+        b=OlF9gdEl8DZtbGN3qZEkBvuC5OGx3e5fiLiBByJ9HUimLVw3DyFN0eRORe6ECEXvV7
+         iZXkY3/c5LSdloDrVTuviweKe7Z9gEeADZxRi97BekSpIx6oWtNJp/cpwUNFApgZ6s3P
+         ed5WTmcXL3uZ6RVENTannbyZ9ziBzxxGmsLp4dteZSvZh1ww4tGluLICDZWeV9q410Ar
+         jMZUciD4XELj1GITT4SejKMzA+9pROxyW3/yB8A1F05pcmXk13GNbt10Z9NIq2ebHs++
+         193LZclVLCqYe5L3S+j1t2JkMFyVVQJPCOBRMHuAWjWWBcmDSB+BRstuSGEspdUf0QmE
+         I0/g==
+X-Gm-Message-State: APjAAAUKOj3awuIzzoqr4rJKZkzqBQCt/PS4zqstGyGVL/WkH9jphPne
+        Es8o/kTu1tnqDGlw5PHtLMG4cQ==
+X-Google-Smtp-Source: APXvYqxYSuqOAm08fJBd/1t9mZ/1MlcqK2dBmWBAyiQ5D2j40poQLd/Y5wwAKUwvVqu+pm8R6BgJag==
+X-Received: by 2002:a2e:908d:: with SMTP id l13mr4925290ljg.125.1559289673090;
+        Fri, 31 May 2019 01:01:13 -0700 (PDT)
+Received: from [192.168.27.209] ([37.157.136.206])
+        by smtp.googlemail.com with ESMTPSA id q7sm468497ljc.45.2019.05.31.01.01.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 31 May 2019 01:01:11 -0700 (PDT)
+Subject: Re: [PATCH 10/10] venus: dec: make decoder compliant with stateful
+ codec API
+To:     Tomasz Figa <tfiga@chromium.org>, Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Vikash Garodia <vgarodia@codeaurora.org>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Malathi Gottam <mgottam@codeaurora.org>
+References: <20190117162008.25217-1-stanimir.varbanov@linaro.org>
+ <20190117162008.25217-11-stanimir.varbanov@linaro.org>
+ <60b3efff-31c1-bc04-8af9-deebb8bc013a@xs4all.nl>
+ <fe51ae1e-6d2e-36bd-485a-d85520ad2386@linaro.org>
+ <CAAFQd5Co3G1J4+HOcjtCb7p3rhLcm+1E=mPr2d=AtdOSuF_eKg@mail.gmail.com>
+ <c56930e0-be6f-2ade-fcea-8ee0ff6247ec@linaro.org>
+ <CAAFQd5CNGsnqjpLsWSTf=8r+hSfyOgD8SU-tn5EbHCCuuSgH6A@mail.gmail.com>
+ <01b6683f-9378-e6f2-501f-e2213e6c690d@xs4all.nl>
+ <CAAFQd5Dw-1A2gXuC54Z7808L6Vm9mjPpE7Kbj-TZC18_k_FgVA@mail.gmail.com>
+ <a9b11ba0-adca-f974-67a5-a0fe54689bba@xs4all.nl>
+ <CAAFQd5CMpQ4ODyeBPnOv4w9ktqPsiqJtSkpRhAx+XgQ=Lz9crQ@mail.gmail.com>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <ee62fdb0-d8fa-0695-9088-5aaef48e485f@linaro.org>
+Date:   Fri, 31 May 2019 11:01:09 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <CAAFQd5CMpQ4ODyeBPnOv4w9ktqPsiqJtSkpRhAx+XgQ=Lz9crQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
+On 5/27/19 11:18 AM, Tomasz Figa wrote:
+> On Mon, May 27, 2019 at 4:39 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
+>>
+>> On 5/27/19 5:51 AM, Tomasz Figa wrote:
+>>> On Tue, May 21, 2019 at 9:27 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
+>>>>
+>>>> On 5/21/19 11:09 AM, Tomasz Figa wrote:
+>>>>> Hi Stan,
+>>>>>
+>>>>> On Mon, May 20, 2019 at 11:47 PM Stanimir Varbanov
+>>>>> <stanimir.varbanov@linaro.org> wrote:
+>>>>>>
+>>>>>> Hi Tomasz,
+>>>>>>
+>>>>>> On 4/24/19 3:39 PM, Tomasz Figa wrote:
+>>>>>>> On Wed, Apr 24, 2019 at 9:15 PM Stanimir Varbanov
+>>>>>>> <stanimir.varbanov@linaro.org> wrote:
+>>>>>>>>
+>>>>>>>> Hi Hans,
+>>>>>>>>
+>>>>>>>> On 2/15/19 3:44 PM, Hans Verkuil wrote:
+>>>>>>>>> Hi Stanimir,
+>>>>>>>>>
+>>>>>>>>> I never paid much attention to this patch series since others were busy
+>>>>>>>>> discussing it and I had a lot of other things on my plate, but then I heard
+>>>>>>>>> that this patch made G_FMT blocking.
+>>>>>>>>
+>>>>>>>> OK, another option could be to block REQBUF(CAPTURE) until event from hw
+>>>>>>>> is received that the stream is parsed and the resolution is correctly
+>>>>>>>> set by application. Just to note that I'd think to this like a temporal
+>>>>>>>> solution until gstreamer implements v4l events.
+>>>>>>>>
+>>>>>>>> Is that looks good to you?
+>>>>>>>
+>>>>>>> Hmm, I thought we concluded that gstreamer sets the width and height
+>>>>>>> in OUTPUT queue before querying the CAPTURE queue and so making the
+>>>>>>> driver calculate the CAPTURE format based on what's set on OUTPUT
+>>>>>>> would work fine. Did I miss something?
+>>>>>>
+>>>>>> Nobody is miss something.
+>>>>>>
+>>>>>> First some background about how Venus implements stateful codec API.
+>>>>>>
+>>>>>> The Venus firmware can generate two events "sufficient" and
+>>>>>> "insufficient" buffer requirements (this includes decoder output buffer
+>>>>>> size and internal/scratch buffer sizes). Presently I always set minimum
+>>>>>> possible decoder resolution no matter what the user said, and by that
+>>>>>> way I'm sure that "insufficient" event will always be triggered by the
+>>>>>> firmware (the other reason to take this path is because this is the
+>>>>>> least-common-divider for all supported Venus hw/fw versions thus common
+>>>>>> code in the driver). The reconfiguration (during codec Initialization
+>>>>>> sequence) is made from STREAMON(CAPTURE) context. Now, to make that
+>>>>>> re-configuration happen I need to wait for "insufficient" event from
+>>>>>> firmware in order to know the real coded resolution.
+>>>>>>
+>>>>>> In the case of gstreamer where v4l2_events support is missing I have to
+>>>>>> block (wait for firmware event) REQBUF(CAPTURE) (vb2::queue_setup) or
+>>>>>> STREAMON(CAPTURE) (vb2::start_streaming).
+>>>>>>
+>>>>>> I tried to set the coded resolution to the firmware as-is it set by
+>>>>>> gstreamer but then I cannot receive the "sufficient" event for VP8 and
+>>>>>> VP9 codecs. So I return back to the solution with minimum resolution above.
+>>>>>>
+>>>>>> I'm open for suggestions.
+>>>>>
+>>>>> I think you could still keep setting the minimum size and wait for the
+>>>>> "insufficient" event. At the same time, you could speculatively
+>>>>> advertise the expected "sufficient" size on the CAPTURE queue before
+>>>>> the hardware signals those. Even if you mispredict them, you'll get
+>>>>> the event, update the CAPTURE resolution and send the source change
+>>>>> event to the application, which would then give you the correct
+>>>>> buffers. Would that work for you?
+>>>>
+>>>> As I understand it this still would require event support, which gstreamer
+>>>> doesn't have.
+>>>
+>>> I don't think it matches what I remember from the earlier discussion.
+>>> As long as Gstreamer sets the visible resolution (from the container
+>>> AFAIR) on OUTPUT, the driver would adjust it to something that is
+>>> expected to be the right framebuffer resolution and so Gstreamer would
+>>> be able to continue. Of course if the expected value doesn't match, it
+>>> wouldn't work, but it's the same as currently for Coda AFAICT.
+>>>
+>>>>
+>>>> I think it is OK to have REQBUFS sleep in this case. However, I would only
+>>>
+>>> Why REQBUFS? While that could possibly allow us to allocate the right
+>>> buffers, Gstreamer wouldn't be able to know the right format, because
+>>> it would query it before REQBUFS, wouldn't it?
+>>
+>> Oops, you are right. It's got to be in G_FMT(CAPTURE), but *only* if
+>> nobody subscribed to the SOURCE_CHANGE event.
+>>
+>>>
+>>> For this reason, s5p-mfc makes G_FMT(CAPTURE) blocking and if we
+>>> decide to forcefully keep the compatibility, even with in drivers, we
+>>> should probably do the same here.
+>>>
+>>>> enable this behavior if the application didn't subscribe to the SOURCE_CHANGE
+>>>> event. That's easy enough to check in the driver. And that means that if the
+>>>> application is well written, then the driver will behave in a completely
+>>>> standard way that the compliance test can check.
+>>>
+>>> I guess one could have some helpers for this. They would listen to the
+>>> source change events internally and block / wake-up appropriate ioctls
+>>> whenever necessary.
+>>
+>> I really do not want this for new drivers. gstreamer should be fixed.
+>> A blocking G_FMT is just plain bad. Only those drivers that do this, can
+>> still block if nobody subscribed to EVENT_SOURCE_CHANGE.
+> 
+> Yeah and that's why I just suggested to mimic coda, which doesn't
+> block, but apparently gstreamer still works with it.
 
-On Thu, 30 May 2019, at 19:06, Alexander Filippov wrote:
-> Add a node to describe the video engine on AST2400.
-> 
-> These changes were copied from aspeed-g5.dtsi
-> 
-> Signed-off-by: Alexander Filippov <a.filippov@yadro.com>
+Unfortunately in Venus case that is not an easy task (as I tried to
+explain why above).
 
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+To have an unified and common code for all different SoCs and
+firmware/hardware versions I decided to set the minimum supported
+resolution for the decoder (no matter what the user said) and trigger
+the reconfiguration event always. Something more, I need the event also
+to retrieve the minimum capture buffers
+(V4L2_CID_MIN_BUFFERS_FOR_CAPTURE) and sizes for capture and
+internal/scratch buffers as well, thus I really need to wait for that
+event.
 
-> ---
->  arch/arm/boot/dts/aspeed-g4.dtsi | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+So, just to confirm - you are fine with blocking G_FMT (not REQBUF) when
+the user doesn't subscribe for v4l2 events?
+
 > 
-> diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
-> index 6011692df15a..5a9e3f684359 100644
-> --- a/arch/arm/boot/dts/aspeed-g4.dtsi
-> +++ b/arch/arm/boot/dts/aspeed-g4.dtsi
-> @@ -195,6 +195,16 @@
->  				reg = <0x1e720000 0x8000>;	// 32K
->  			};
->  
-> +			video: video@1e700000 {
-> +				compatible = "aspeed,ast2400-video-engine";
-> +				reg = <0x1e700000 0x1000>;
-> +				clocks = <&syscon ASPEED_CLK_GATE_VCLK>,
-> +					 <&syscon ASPEED_CLK_GATE_ECLK>;
-> +				clock-names = "vclk", "eclk";
-> +				interrupts = <7>;
-> +				status = "disabled";
-> +			};
-> +
->  			gpio: gpio@1e780000 {
->  				#gpio-cells = <2>;
->  				gpio-controller;
-> -- 
-> 2.20.1
+>>
+>>> Another question: If we intend this to be implemented in new drivers
+>>> too, should it be documented in the spec?
+>>
+>> We most certainly do NOT want to implement this in new drivers.
+>>
 > 
->
+> Makes sense.
+> 
+> When venus was merged initially, did it already have a blocking G_FMT?
+
+No it isn't.
+
+-- 
+regards,
+Stan
