@@ -2,94 +2,76 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A34C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 600A9C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D463F26B15
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:55:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33D8F25173
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:58:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbfEaOzN (ORCPT
+        id S1726762AbfEaO6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 10:55:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40650 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726531AbfEaOzM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 10:55:12 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 47CAFC0AD2B7;
-        Fri, 31 May 2019 14:55:12 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 44FF41001E6F;
-        Fri, 31 May 2019 14:55:09 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20190529231112.GB3164@kroah.com>
-References: <20190529231112.GB3164@kroah.com> <20190528231218.GA28384@kroah.com> <20190528162603.GA24097@kroah.com> <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk> <155905931502.7587.11705449537368497489.stgit@warthog.procyon.org.uk> <4031.1559064620@warthog.procyon.org.uk> <31936.1559146000@warthog.procyon.org.uk>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk, raven@themaw.net,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/7] General notification queue with user mmap()'able ring buffer
+        Fri, 31 May 2019 10:58:07 -0400
+Received: from mail-it1-f197.google.com ([209.85.166.197]:52110 "EHLO
+        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726531AbfEaO6G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 10:58:06 -0400
+Received: by mail-it1-f197.google.com with SMTP id g1so8418604itd.1
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 07:58:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to
+         :content-transfer-encoding;
+        bh=K/ofCxOPUpmE2L+U1S33uS/mcJVaDnKhwP6YIHRjApE=;
+        b=nr03mtLc3hpoLPfqethc9LIY/91K/n5tm7juk7jwhKmm46SzkfRMouwVyrXOg3a5R6
+         9gFAc67+RDy/lb1ZXTWqEJP9g2DOElUOXps33+9kZSzLTY8lAU9YujnXpAiGIGecEtB6
+         Eqsb09oR4/WiSnmSTNa/FbnxYxPOxnTXvYgyzFkvttduVPLwrzrR0XFhyvuqXFA6rA3k
+         3H0ysHBdG1xD3G7zPUcox8aRvc8vsnDbokn1u2FnOQBaTRf2k046ZPZHm/25HcHiwAPb
+         1dNnTPW7zlFA7ysIdjyaLKqaQB97K9a3ciivyrFZhuUUrDBIPO41k9Udz6XBKggnWMCP
+         i9yg==
+X-Gm-Message-State: APjAAAXmR/4QqlrsBylm87NbsGCiP7kC6JhqECwj9J718kdAOPcpjmO9
+        j3bPOKjc0L81Qe0WhZWRFyZHmw9b7CgE1nRYnc5zeb67ZhyF
+X-Google-Smtp-Source: APXvYqyyhZl/P7lwZyrsmvKiEyyw0lKV2CmGfhAT3WZKG9HXBfayf7Yq5uk1y2kIusKXTh0GcO1yRKM0PshEKmRswLB5yQHXAwtj
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3762.1559314508.1@warthog.procyon.org.uk>
-Date:   Fri, 31 May 2019 15:55:08 +0100
-Message-ID: <3763.1559314508@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 31 May 2019 14:55:12 +0000 (UTC)
+X-Received: by 2002:a05:660c:143:: with SMTP id r3mr7459566itk.84.1559314686097;
+ Fri, 31 May 2019 07:58:06 -0700 (PDT)
+Date:   Fri, 31 May 2019 07:58:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f53c90058a303d80@google.com>
+Subject: net-next build error (2)
+From:   syzbot <syzbot+21456e3ef58cde16e0fa@syzkaller.appspotmail.com>
+To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greg KH <gregkh@linuxfoundation.org> wrote:
-
-> So, if that's all that needs to be fixed, can you use the same
-> buffer/code if that patch is merged?
-
-I really don't know.  The perf code is complex, partially in hardware drivers
-and is tricky to understand - though a chunk of that is the "aux" buffer part;
-PeterZ used words like "special" and "magic" and the comments in the code talk
-about the hardware writing into the buffer.
-
-__perf_output_begin() does not appear to be SMP safe.  It uses local_cmpxchg()
-and local_add() which on x86 lack the LOCK prefix.
-
-stracing the perf command on my test machine, it calls perf_event_open(2) four
-times and mmap's each fd it gets back.  I'm guessing that each one maps a
-separate buffer for each CPU.
-
-So to use watch_queue based on perf's buffering, you would have to have a
-(2^N)+1 pages-sized buffer for each CPU.  So that would be a minimum of 64K of
-unswappable memory for my desktop machine, say).  Multiply that by each
-process that wants to listen for events...
-
-What I'm aiming for is something that has a single buffer used by all CPUs for
-each instance of /dev/watch_queue opened and I'd also like to avoid having to
-allocate the metadata page and the aux buffer to save space.  This is locked
-memory and cannot be swapped.
-
-Also, perf has to leave a gap in the ring because it uses CIRC_SPACE(), though
-that's a minor detail that I guess can't be fixed now.
-
-I'm also slightly concerned that __perf_output_begin() doesn't check if
-rb->user->tail has got ahead of rb->user->head or that it's lagging too far
-behind.  I doubt it's a serious problem for the kernel since it won't write
-outside of the buffer, but userspace might screw up.  I think the worst that
-will happen is that userspace will get confused.
-
-One thing I would like is to waive the 2^N size requirement.  I understand
-*why* we do that, but I wonder how expensive DIV instructions are for
-relatively small divisors.
-
-David
+SGVsbG8sDQoNCnN5emJvdCBmb3VuZCB0aGUgZm9sbG93aW5nIGNyYXNoIG9uOg0KDQpIRUFEIGNv
+bW1pdDogICAgN2IzZWQyYTEgTWVyZ2UgYnJhbmNoICcxMDBHYkUnIG9mIGdpdDovL2dpdC5rZXJu
+ZWwub3JnL3B1Yi4uDQpnaXQgdHJlZTogICAgICAgbmV0LW5leHQNCmNvbnNvbGUgb3V0cHV0OiBo
+dHRwczovL3N5emthbGxlci5hcHBzcG90LmNvbS94L2xvZy50eHQ/eD0xN2JmOGZkOGEwMDAwMA0K
+a2VybmVsIGNvbmZpZzogIGh0dHBzOi8vc3l6a2FsbGVyLmFwcHNwb3QuY29tL3gvLmNvbmZpZz94
+PTE4MmFiNmVmMzgxMzQ1MDINCmRhc2hib2FyZCBsaW5rOiBodHRwczovL3N5emthbGxlci5hcHBz
+cG90LmNvbS9idWc/ZXh0aWQ9MjE0NTZlM2VmNThjZGUxNmUwZmENCmNvbXBpbGVyOiAgICAgICBn
+Y2MgKEdDQykgOS4wLjAgMjAxODEyMzEgKGV4cGVyaW1lbnRhbCkNCg0KVW5mb3J0dW5hdGVseSwg
+SSBkb24ndCBoYXZlIGFueSByZXByb2R1Y2VyIGZvciB0aGlzIGNyYXNoIHlldC4NCg0KSU1QT1JU
+QU5UOiBpZiB5b3UgZml4IHRoZSBidWcsIHBsZWFzZSBhZGQgdGhlIGZvbGxvd2luZyB0YWcgdG8g
+dGhlIGNvbW1pdDoNClJlcG9ydGVkLWJ5OiBzeXpib3QrMjE0NTZlM2VmNThjZGUxNmUwZmFAc3l6
+a2FsbGVyLmFwcHNwb3RtYWlsLmNvbQ0KDQouL2luY2x1ZGUvbGludXgvbmV0ZmlsdGVyX2lwdjYu
+aDoxMTA6OTogZXJyb3I6IGltcGxpY2l0IGRlY2xhcmF0aW9uIG9mICANCmZ1bmN0aW9uIOKAmG5m
+X2N0X2ZyYWc2X2dhdGhlcuKAmSBbLVdlcnJvcj1pbXBsaWNpdC1mdW5jdGlvbi1kZWNsYXJhdGlv
+bl0NCg0KLS0tDQpUaGlzIGJ1ZyBpcyBnZW5lcmF0ZWQgYnkgYSBib3QuIEl0IG1heSBjb250YWlu
+IGVycm9ycy4NClNlZSBodHRwczovL2dvby5nbC90cHNtRUogZm9yIG1vcmUgaW5mb3JtYXRpb24g
+YWJvdXQgc3l6Ym90Lg0Kc3l6Ym90IGVuZ2luZWVycyBjYW4gYmUgcmVhY2hlZCBhdCBzeXprYWxs
+ZXJAZ29vZ2xlZ3JvdXBzLmNvbS4NCg0Kc3l6Ym90IHdpbGwga2VlcCB0cmFjayBvZiB0aGlzIGJ1
+ZyByZXBvcnQuIFNlZToNCmh0dHBzOi8vZ29vLmdsL3Rwc21FSiNzdGF0dXMgZm9yIGhvdyB0byBj
+b21tdW5pY2F0ZSB3aXRoIHN5emJvdC4NCg==
