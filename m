@@ -2,122 +2,105 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06CD4C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37829C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEC2624999
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:59:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CBBE249CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:01:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbfEaI7J (ORCPT
+        id S1726949AbfEaJBf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 04:59:09 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:50388 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726330AbfEaI7I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 04:59:08 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id B8D5F802CE; Fri, 31 May 2019 10:58:56 +0200 (CEST)
-Date:   Fri, 31 May 2019 10:59:06 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     pavel@ucw.cz
-Cc:     linux-kernel@vger.kernel.org,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        Giridhar Malavali <gmalavali@marvell.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 075/276] scsi: qla2xxx: Fix a qla24xx_enable_msix()
- error path
-Message-ID: <20190531085905.GB19447@amd>
-References: <20190530030523.133519668@linuxfoundation.org>
- <20190530030531.119463640@linuxfoundation.org>
+        Fri, 31 May 2019 05:01:35 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:18065 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726240AbfEaJBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 05:01:34 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 22DB7808011AFE2CD3FA;
+        Fri, 31 May 2019 17:01:32 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.75) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 31 May 2019 17:01:25 +0800
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <hkallweit1@gmail.com>, <f.fainelli@gmail.com>,
+        <stephen@networkplumber.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
+Subject: [PATCH v2 net-next] net: link_watch: prevent starvation when processing linkwatch wq
+Date:   Fri, 31 May 2019 17:00:33 +0800
+Message-ID: <1559293233-43017-1-git-send-email-linyunsheng@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="kORqDWCi7qDJ0mEj"
-Content-Disposition: inline
-In-Reply-To: <20190530030531.119463640@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.75]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When user has configured a large number of virtual netdev, such
+as 4K vlans, the carrier on/off operation of the real netdev
+will also cause it's virtual netdev's link state to be processed
+in linkwatch. Currently, the processing is done in a work queue,
+which may cause cpu and rtnl locking starvation problem.
 
---kORqDWCi7qDJ0mEj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch releases the cpu and rtnl lock when link watch worker
+has processed a fixed number of netdev' link watch event.
 
+Currently __linkwatch_run_queue is called with rtnl lock, so
+enfore it with ASSERT_RTNL();
 
-On Wed 2019-05-29 20:03:53, Greg Kroah-Hartman wrote:
-> [ Upstream commit 24afabdbd0b3553963a2bbf465895492b14d1107 ]
->=20
-> Make sure that the allocated interrupts are freed if allocating memory for
-> the msix_entries array fails.
->=20
-> Cc: Himanshu Madhani <hmadhani@marvell.com>
-> Cc: Giridhar Malavali <gmalavali@marvell.com>
-> Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-> Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-> Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+---
+V2: use cond_resched and rtnl_unlock after processing a fixed
+    number of events
+---
+ net/core/link_watch.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-> --- a/drivers/scsi/qla2xxx/qla_isr.c
-> +++ b/drivers/scsi/qla2xxx/qla_isr.c
-> @@ -3449,7 +3449,7 @@ qla24xx_enable_msix(struct qla_hw_data *ha, struct =
-rsp_que *rsp)
->  		ql_log(ql_log_fatal, vha, 0x00c8,
->  		    "Failed to allocate memory for ha->msix_entries.\n");
->  		ret =3D -ENOMEM;
-> -		goto msix_out;
-> +		goto free_irqs;
+diff --git a/net/core/link_watch.c b/net/core/link_watch.c
+index 7f51efb..07eebfb 100644
+--- a/net/core/link_watch.c
++++ b/net/core/link_watch.c
+@@ -168,9 +168,18 @@ static void linkwatch_do_dev(struct net_device *dev)
+ 
+ static void __linkwatch_run_queue(int urgent_only)
+ {
++#define MAX_DO_DEV_PER_LOOP	100
++
++	int do_dev = MAX_DO_DEV_PER_LOOP;
+ 	struct net_device *dev;
+ 	LIST_HEAD(wrk);
+ 
++	ASSERT_RTNL();
++
++	/* Give urgent case more budget */
++	if (urgent_only)
++		do_dev += MAX_DO_DEV_PER_LOOP;
++
+ 	/*
+ 	 * Limit the number of linkwatch events to one
+ 	 * per second so that a runaway driver does not
+@@ -200,6 +209,14 @@ static void __linkwatch_run_queue(int urgent_only)
+ 		}
+ 		spin_unlock_irq(&lweventlist_lock);
+ 		linkwatch_do_dev(dev);
++
++		if (--do_dev < 0) {
++			rtnl_unlock();
++			cond_resched();
++			do_dev = MAX_DO_DEV_PER_LOOP;
++			rtnl_lock();
++		}
++
+ 		spin_lock_irq(&lweventlist_lock);
+ 	}
+ 
+-- 
+2.8.1
 
-Could we just do > +     pci_free_irq_vectors(ha->pdev); return
--ENOMEM; here? Going through two gotos just does not feel right.
-
-And yes, I'd replace msix_out with direct returns, too. gotos have
-value when there's cleanup to be done, but we are not doing any here.
-
-Thanks,
-								Pavel
-
->  	}
->  	ha->flags.msix_enabled =3D 1;
-> =20
-> @@ -3532,6 +3532,10 @@ qla24xx_enable_msix(struct qla_hw_data *ha, struct=
- rsp_que *rsp)
-> =20
->  msix_out:
->  	return ret;
-> +
-> +free_irqs:
-> +	pci_free_irq_vectors(ha->pdev);
-> +	goto msix_out;
->  }
-> =20
-
-Come on, that is nasty.=20
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---kORqDWCi7qDJ0mEj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlzw7NkACgkQMOfwapXb+vI/GACgqIzAthEf6Dm5q/Fh/RYPwRU2
-ERkAoJeD7mh2WCy8aMSwO5QXuXj+upaf
-=dTH+
------END PGP SIGNATURE-----
-
---kORqDWCi7qDJ0mEj--
