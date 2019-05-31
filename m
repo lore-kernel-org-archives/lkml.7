@@ -2,70 +2,126 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7474BC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 17:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2D6C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 17:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49F5123AC4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 17:25:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559323523;
-	bh=8C1kYFxhylJixHATVxhg0z9Zol+nH8uuB6t9W6CJvPM=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Z9dSVYGZCjr4F/G4eXR+67MgD2cvyjgsuDJFgaYB1QrG6rxjSJ7cnAXxZ0VmhgvFL
-	 R9bFB0FVN/IQWMTG6EwF9RQYj0Wgm+f5N7PlPoXDhbIjsnUSXdNKGAu/jRf7PEzZPg
-	 36TkjDXt0WM5TtDiVkxOZ3y0+A793iOTN9bkRcSQ=
+	by mail.kernel.org (Postfix) with ESMTP id B1B0B26D2C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 17:29:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UoBFbazk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbfEaRZW (ORCPT
+        id S1726818AbfEaR3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 13:25:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34384 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726723AbfEaRZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 13:25:14 -0400
-Subject: Re: [GIT PULL] TTY/Serial fixes for 5.2-rc3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559323514;
-        bh=8C1kYFxhylJixHATVxhg0z9Zol+nH8uuB6t9W6CJvPM=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=R0Jk9EG7qy4Mi3mGl8pSED7JrFRe+630ZApw+8K6vsnZEnNTfXM45neKCr8tJJRnM
-         sTH3NxBSGldfdJF/+2vf4vHrxw4Q8pWnljpljxr8FMzlE7XEV9G4M86Xbyb4Kwyysq
-         ll6gtf67Vuq7SgEuv5uHh0DuLX2cfoobITDVcurc=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190531014702.GA30713@kroah.com>
-References: <20190531014702.GA30713@kroah.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190531014702.GA30713@kroah.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tags/tty-5.2-rc3
-X-PR-Tracked-Commit-Id: a1ad1cc9704f64c169261a76e1aee1cf1ae51832
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: dbde71df810c62e72e2aa6d88a0686a6092956cd
-Message-Id: <155932351439.8550.1054897275048374287.pr-tracker-bot@kernel.org>
-Date:   Fri, 31 May 2019 17:25:14 +0000
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+        Fri, 31 May 2019 13:29:16 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35156 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbfEaR3P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 13:29:15 -0400
+Received: by mail-ot1-f67.google.com with SMTP id n14so9971875otk.2;
+        Fri, 31 May 2019 10:29:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+iyqTcaxt908BOdR/nmvy7fBX5IAvraUTsrYyfpy9lM=;
+        b=UoBFbazk3bF/rwQHpGBuPllAqZAXvZsjxgtdmcBwMPvgO42L4cdQH3h72o4TlQyRru
+         tM0IIF7ewnRRTYgkPDh2P3kn3spIaz2gLe9v2/ISK8fvbM+/QWEAPUyYw5bxAaW2GY5G
+         RiFZ8zjaLVK+shs+jkA5voWmN560eZqheSvuhP9kirDBqFvRNGcrhyCNw7WylKooPjQc
+         0aLg+LJsI93LEveN5rnFKmCdY10L6SoB6EmRE1EeceEtH1UGjQ1ZVWyq8BK3LwIUPOaq
+         4ZKttkXP4rjP63mcuCeTjmvQIcMLhK5jzEpONK/Ul5o63ECKblmyXKupkhY1HXlUL8s0
+         o6Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+iyqTcaxt908BOdR/nmvy7fBX5IAvraUTsrYyfpy9lM=;
+        b=DIOVRJpl5FDK6FsB7GmjuwbtFOkFGJc+khpkMCRGyidGd3dK8ZBDEZwR+Jo+e9aUBf
+         k3CbatI9yzZF349CYcDqA5dCVt6v1XIpOJhLVk3PiAIoRopbTJkcZ+b+GZADssm86saa
+         OmhOb4On/1oDxy4kXN1nwN//kWzH1DC2fBJbhicfiFFhPsI1XCP38wCklMes4GM3onuG
+         8B31FTchcuW+Hzs/g6dAkRXxlJZEkOwDv13CPy/hoEq6W9oMKUs1tixGV6VQOe2c57TJ
+         brWHD5WD4kXflZmFxnJitRXIxTCN4djIqNYXIk5Oe37PlwRjLDqtBE6QDp/Ki19b3VDP
+         pR6w==
+X-Gm-Message-State: APjAAAWZyGVkcsHcOqWCkS0UanWxslYum/0e7b7vCZPEJRTQRmCcqHH7
+        6j00fQAiFSyW4GDCAH6Y/pqOP/rU
+X-Google-Smtp-Source: APXvYqzkAHmyyxrH7D112NjIZLyafOEDSWW854tF2Umsok58KvfnyV7z58ZtX5EZoQoIdN8g1+GjJg==
+X-Received: by 2002:a9d:3d76:: with SMTP id a109mr2645090otc.212.1559323754602;
+        Fri, 31 May 2019 10:29:14 -0700 (PDT)
+Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
+        by smtp.gmail.com with ESMTPSA id a15sm2194992otl.20.2019.05.31.10.29.12
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 31 May 2019 10:29:13 -0700 (PDT)
+Subject: Re: [PATCH] rtlwifi: remove redundant assignment to variable k
+To:     Colin King <colin.king@canonical.com>,
+        Ping-Ke Shih <pkshih@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190531141412.18632-1-colin.king@canonical.com>
+From:   Larry Finger <Larry.Finger@lwfinger.net>
+Message-ID: <14372bed-6522-d81c-7d68-04adc0d71193@lwfinger.net>
+Date:   Fri, 31 May 2019 12:29:12 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190531141412.18632-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 30 May 2019 18:47:02 -0700:
+On 5/31/19 9:14 AM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The assignment of 0 to variable k is never read once we break out of
+> the loop, so the assignment is redundant and can be removed.
+> 
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>   drivers/net/wireless/realtek/rtlwifi/efuse.c | 4 +---
+>   1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/realtek/rtlwifi/efuse.c b/drivers/net/wireless/realtek/rtlwifi/efuse.c
+> index e68340dfd980..83e5318ca04f 100644
+> --- a/drivers/net/wireless/realtek/rtlwifi/efuse.c
+> +++ b/drivers/net/wireless/realtek/rtlwifi/efuse.c
+> @@ -117,10 +117,8 @@ u8 efuse_read_1byte(struct ieee80211_hw *hw, u16 address)
+>   						 rtlpriv->cfg->
+>   						 maps[EFUSE_CTRL] + 3);
+>   			k++;
+> -			if (k == 1000) {
+> -				k = 0;
+> +			if (k == 1000)
+>   				break;
+> -			}
+>   		}
+>   		data = rtl_read_byte(rtlpriv, rtlpriv->cfg->maps[EFUSE_CTRL]);
+>   		return data;
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tags/tty-5.2-rc3
+Colin,
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/dbde71df810c62e72e2aa6d88a0686a6092956cd
+Your patch is not wrong, but it fails to address a basic deficiency of this code 
+snippet - when an error is detected, there is no attempt to either fix the 
+problem or report it upstream. As the data returned will be garbage if this 
+condition happens, we might as well replace the "break" with "return 0xFF", as 
+well as deleting the "k = 0" line. Most of the callers of efuse_read_1byte() 
+ignore the returned result when bits 0 and 4 are set, thus returning all 8 bits 
+is not a bad fixup.
 
-Thank you!
+My suspicion is that this test is in the code merely to prevent an potential 
+unterminated "while" loop, and that this condition is extremely unlikely to happen.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Larry
+
+
