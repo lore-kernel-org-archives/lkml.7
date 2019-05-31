@@ -2,113 +2,110 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E9EC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 07:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E23C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 07:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CB4F264E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 07:27:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19C0026508
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 07:28:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="mcpXksvN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbfEaH1P (ORCPT
+        id S1726873AbfEaH2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 03:27:15 -0400
-Received: from esa4.hc3370-68.iphmx.com ([216.71.155.144]:40963 "EHLO
-        esa4.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbfEaH1P (ORCPT
+        Fri, 31 May 2019 03:28:15 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42883 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfEaH2O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 03:27:15 -0400
-X-Greylist: delayed 426 seconds by postgrey-1.27 at vger.kernel.org; Fri, 31 May 2019 03:27:14 EDT
-Authentication-Results: esa4.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=wei.liu2@citrix.com; spf=Pass smtp.mailfrom=wei.liu2@citrix.com; spf=None smtp.helo=postmaster@MIAPEX02MSOL02.citrite.net
-Received-SPF: None (esa4.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  wei.liu2@citrix.com) identity=pra; client-ip=23.29.105.83;
-  receiver=esa4.hc3370-68.iphmx.com;
-  envelope-from="wei.liu2@citrix.com";
-  x-sender="wei.liu2@citrix.com"; x-conformance=sidf_compatible
-Received-SPF: Pass (esa4.hc3370-68.iphmx.com: domain of
-  wei.liu2@citrix.com designates 23.29.105.83 as permitted
-  sender) identity=mailfrom; client-ip=23.29.105.83;
-  receiver=esa4.hc3370-68.iphmx.com;
-  envelope-from="wei.liu2@citrix.com";
-  x-sender="wei.liu2@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:23.29.105.83 ip4:162.221.156.50 ~all"
-Received-SPF: None (esa4.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@MIAPEX02MSOL02.citrite.net) identity=helo;
-  client-ip=23.29.105.83; receiver=esa4.hc3370-68.iphmx.com;
-  envelope-from="wei.liu2@citrix.com";
-  x-sender="postmaster@MIAPEX02MSOL02.citrite.net";
-  x-conformance=sidf_compatible
-IronPort-SDR: vZ/vfl2aWL/s2CrBoteUwRYksEByaVfCVcKUAHL+r/L7L0C9LKwCME3Jfwyqimk5UyqNI9Uekg
- QyY+0MYrqMjTsS+HXDmX8Ig34gUCd/4+8YpKfoxWA9ZZLIeLbZEKqavso5sj5z/7yfTo3/U3nq
- f8EDO5tH1IOUpds654nQ3M9asmbrkTU9/32zOEidozr3I67zQ/Pg3ESHZ95IoEUq8PCp/wEqWb
- 22RcvvBK22nkB8FFw2j9Y3r9cgDfsq8dI/5VnfrwHVC2+LLZ4uKyXQN3hJcA6M1FCzW3hk2A91
- ZG8=
-X-SBRS: 2.7
-X-MesageID: 1142044
-X-Ironport-Server: esa4.hc3370-68.iphmx.com
-X-Remote-IP: 23.29.105.83
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.60,534,1549947600"; 
-   d="scan'208";a="1142044"
-Date:   Fri, 31 May 2019 08:20:05 +0100
-From:   Wei Liu <wei.liu2@citrix.com>
-To:     Colin King <colin.king@canonical.com>
-CC:     Wei Liu <wei.liu2@citrix.com>,
-        Paul Durrant <paul.durrant@citrix.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        <xen-devel@lists.xenproject.org>, <netdev@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] xen-netback: remove redundant assignment to err
-Message-ID: <20190531072005.GC25537@zion.uk.xensource.com>
-References: <20190530190438.9571-1-colin.king@canonical.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190530190438.9571-1-colin.king@canonical.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 31 May 2019 03:28:14 -0400
+Received: by mail-wr1-f66.google.com with SMTP id l2so5751743wrb.9
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 00:28:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=349bO3eKWo36+YLW2izUvQ+NabomJ8/oiHBTBWo5iAw=;
+        b=mcpXksvNecWmEad6A9O9z6z4TbMSb38IaPy5U9xh/ChgB21Cn7Ccj8gUOXoFOHUIVr
+         8mNjkfFvOSL0xKKy7NQH8LCQa2sP7PeOiupRiyM38ynt6Y0bt4awXv+yW1K7Pj0ySX8C
+         cfSPhYYQ8mjrwUcIVOraaVm5DNxJdZjn+gsP9OkOJXYwVd1D+iAX+kvUz8bDglVqrIFb
+         ZFNBy0lMWFCbgNTyED0DxqosqhZy8WCPY5Yv1R0wL+H3IwC0W4w8cFhfcHUCtOQdcq9b
+         Vjx//oFgvMqrM1ziw3xjhK6qyHexSr1jfpbkVl/VkVhlR+gJ9eL1h8SZ19Hbns2KLNjK
+         ljQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=349bO3eKWo36+YLW2izUvQ+NabomJ8/oiHBTBWo5iAw=;
+        b=kXAbvBlFnFJHD96uct92BlzPkycmP8233VaQGBz49hQs3Ycu8TFVadfB8VBVJcDmtn
+         H/sWgX8UpUMJfIsAdtlPXW+S6rBvwgIy9BwLkFg0YtvVyR7EQ7gztC6oy03nbSM50ubi
+         fVmZKL2iEFpH8XKxSCgn/c9CZHikyZf1QQWiOew8QBgX+0m735MQ5lhHIk7k6Q0zv+Ad
+         bkmfH1XiduX8vmm2EkbVvUMrLHnWuwDBJ15fm2JLCjA17C1S8hIrfVe7zHpF8prf9nE7
+         IucJVHfPjQsoYnJsg7wqfPSjwxu3nwqrjAkjqh/5XVp8D3XjidhbBlG/6CIHyLWv+p5h
+         b79Q==
+X-Gm-Message-State: APjAAAUtGj3S8eJ4EN/blwX4Ng8vOmm3gJDiY+Vn0sDmlPrfHc0pokaz
+        bV/hD3P2hOpARGghcGhsyzdkTN57IUU=
+X-Google-Smtp-Source: APXvYqzRSlmRgkwS8ktZa2OrrW3pe+Ou5C7Zfpqnk9FCgMzvRD6oVAi63eIdPX6etNJnqABbaTVj5w==
+X-Received: by 2002:adf:e584:: with SMTP id l4mr5319382wrm.54.1559287693057;
+        Fri, 31 May 2019 00:28:13 -0700 (PDT)
+Received: from cobook.home (nikaet.starlink.ru. [94.141.168.29])
+        by smtp.gmail.com with ESMTPSA id u9sm11324302wme.48.2019.05.31.00.28.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 31 May 2019 00:28:12 -0700 (PDT)
+From:   Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chris Healy <cphealy@gmail.com>,
+        Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Subject: [PATCH] net: dsa: mv88e6xxx: avoid error message on remove from VLAN 0
+Date:   Fri, 31 May 2019 10:27:07 +0300
+Message-Id: <20190531072707.1755-1-nikita.yoush@cogentembedded.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 08:04:38PM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The variable err is assigned with the value -ENOMEM that is never
-> read and it is re-assigned a new value later on.  The assignment is
-> redundant and can be removed.
-> 
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+When non-bridged, non-vlan'ed mv88e6xxx port is moving down, error
+message is logged:
 
-Acked-by: Wei Liu <wei.liu2@citrix.com>
+failed to kill vid 0081/0 for device eth_cu_1000_4
 
+This is caused by call from __vlan_vid_del() with vin set to zero, over
+call chain this results into _mv88e6xxx_port_vlan_del() called with
+vid=0, and mv88e6xxx_vtu_get() called from there returns -EINVAL.
 
-> ---
->  drivers/net/xen-netback/interface.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/xen-netback/interface.c b/drivers/net/xen-netback/interface.c
-> index 783198844dd7..240f762b3749 100644
-> --- a/drivers/net/xen-netback/interface.c
-> +++ b/drivers/net/xen-netback/interface.c
-> @@ -633,7 +633,7 @@ int xenvif_connect_data(struct xenvif_queue *queue,
->  			unsigned int rx_evtchn)
->  {
->  	struct task_struct *task;
-> -	int err = -ENOMEM;
-> +	int err;
->  
->  	BUG_ON(queue->tx_irq);
->  	BUG_ON(queue->task);
-> -- 
-> 2.20.1
-> 
+On symmetric path moving port up, call goes through
+mv88e6xxx_port_vlan_prepare() that calls mv88e6xxx_port_check_hw_vlan()
+that returns -EOPNOTSUPP for zero vid.
+
+This patch changes mv88e6xxx_vtu_get() to also return -EOPNOTSUPP for
+zero vid, then this error code is explicitly cleared in
+dsa_slave_vlan_rx_kill_vid() and error message is no longer logged.
+---
+ drivers/net/dsa/mv88e6xxx/chip.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
+index 28414db979b0..6b77fde5f0e4 100644
+--- a/drivers/net/dsa/mv88e6xxx/chip.c
++++ b/drivers/net/dsa/mv88e6xxx/chip.c
+@@ -1392,7 +1392,7 @@ static int mv88e6xxx_vtu_get(struct mv88e6xxx_chip *chip, u16 vid,
+ 	int err;
+ 
+ 	if (!vid)
+-		return -EINVAL;
++		return -EOPNOTSUPP;
+ 
+ 	entry->vid = vid - 1;
+ 	entry->valid = false;
+-- 
+2.11.0
+
