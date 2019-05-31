@@ -2,96 +2,133 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35EA7C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F3D7C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D4E726C61
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:45:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EdqWRPp6"
+	by mail.kernel.org (Postfix) with ESMTP id 4F74526C61
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:46:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbfEaQp4 (ORCPT
+        id S1727058AbfEaQqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 12:45:56 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:35548 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbfEaQp4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 12:45:56 -0400
-Received: by mail-qt1-f195.google.com with SMTP id d23so1677931qto.2
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 09:45:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KDk+BjAitXrbvXHzovb9PwGUp2CoC3CSWvkw/pVSbdw=;
-        b=EdqWRPp6EuVh/ogn1cEDxCKNcxzhLkW2GqElnn0fTJdGoGYWqNOBLq/+3XOZktb+6e
-         mUFhXSKRz0Lnm3eKyjb+6u5ogNLyLYD9ZiFbqp2HvihWjrq4m0RvCC/ATz8xcdsxi701
-         4t8l190vdDUEoEJ1KfI6BQdiy0FtejFnr/veB+iV8jRUSgMhXNAdi5HU7CELw32HK9qu
-         EjrjB+baPgS4MzPOHD5Kl9AvQQu+1Z4O/KkNhVSN99pRJHnUe7LhPEY44w+oXNoJyRq8
-         eHkyejl8pUiZSItong1/Dd5fZRYh5z8hUR6PDG6pscgX1AYjE4je2jdJfs2W4Nwm+JZE
-         yJmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KDk+BjAitXrbvXHzovb9PwGUp2CoC3CSWvkw/pVSbdw=;
-        b=rEYzkP/mGldPqqiJcycKEBvn87DEYWaxtIJM0vVyvKiRv4+BTk3KQiwdyHEF8jtfAq
-         8IojH972V/bwIurgzahDgehZX9Tv4wSkclKUYraEWn2ff+kHYisVUBO55CE5gwyW/ROM
-         98/lqhQkWwzbRB1eRi4oDf9E67Zz1cRM47OP4E/myPl2cjw7cuiIj1PsURRsEJvKDhNV
-         KRLZ2OTYboX18Te6P9Sfi8DVxTduYbr/NfhmOpPkJAtO5xw/A4XJmqUvfcoyx9mb0G6r
-         u+FswVzt77rzkzcQyNofF9/mgO1P/obpO/AuKBnXxZIxjyqLuNN4lqH3sCsP2IiiCPZZ
-         8m1w==
-X-Gm-Message-State: APjAAAXf5F1Mw3rjf/cSWMVNqfR92KI3SaqdWst41N+bBmMqL5PhyaRw
-        uHmD3jeykE3cAVLJlEMbHwAGj5oz
-X-Google-Smtp-Source: APXvYqyas23pOZWUBQVxe1wB//swa13JWR6u+Iv2Eknv6QIHk4OlfGnzWwj7JccRCTjPtRyBud2ZMQ==
-X-Received: by 2002:ac8:39a2:: with SMTP id v31mr7231284qte.390.1559321155659;
-        Fri, 31 May 2019 09:45:55 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([190.15.121.82])
-        by smtp.gmail.com with ESMTPSA id h63sm3247302qkf.4.2019.05.31.09.45.54
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 31 May 2019 09:45:55 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id AC94441149; Fri, 31 May 2019 13:45:47 -0300 (-03)
-Date:   Fri, 31 May 2019 13:45:47 -0300
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/22] perf intel-pt: Fix itrace defaults for perf script
-Message-ID: <20190531164547.GC20408@kernel.org>
-References: <20190520113728.14389-1-adrian.hunter@intel.com>
- <20190520113728.14389-2-adrian.hunter@intel.com>
- <20190520144516.GL8945@kernel.org>
+        Fri, 31 May 2019 12:46:15 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:54506 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726652AbfEaQqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 12:46:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2DFE0A78;
+        Fri, 31 May 2019 09:46:14 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 48A043F59C;
+        Fri, 31 May 2019 09:46:08 -0700 (PDT)
+Date:   Fri, 31 May 2019 17:46:05 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Evgenii Stepanov <eugenis@google.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        Elliott Hughes <enh@google.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>
+Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
+Message-ID: <20190531164605.GC3568@arrakis.emea.arm.com>
+References: <6049844a-65f5-f513-5b58-7141588fef2b@oracle.com>
+ <20190523201105.oifkksus4rzcwqt4@mbp>
+ <ffe58af3-7c70-d559-69f6-1f6ebcb0fec6@oracle.com>
+ <20190524101139.36yre4af22bkvatx@mbp>
+ <c6dd53d8-142b-3d8d-6a40-d21c5ee9d272@oracle.com>
+ <CAAeHK+yAUsZWhp6xPAbWewX5Nbw+-G3svUyPmhXu5MVeEDKYvA@mail.gmail.com>
+ <20190530171540.GD35418@arrakis.emea.arm.com>
+ <CAAeHK+y34+SNz3Vf+_378bOxrPaj_3GaLCeC2Y2rHAczuaSz1A@mail.gmail.com>
+ <20190531161954.GA3568@arrakis.emea.arm.com>
+ <CAAeHK+zRDD7ZPPUA9cpwHOdgTRrJLWAby8Wg9oPgmhqMpHwvFw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190520144516.GL8945@kernel.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <CAAeHK+zRDD7ZPPUA9cpwHOdgTRrJLWAby8Wg9oPgmhqMpHwvFw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, May 20, 2019 at 11:45:16AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Mon, May 20, 2019 at 02:37:07PM +0300, Adrian Hunter escreveu:
-> > Commit 4eb068157121 ("perf script: Make itrace script default to all
-> > calls") does not work because 'use_browser' is being used to determine
-> > whether to default to periodic sampling (i.e. better for perf report).
-> > The result is that nothing but CBR events display for perf script
-> > when no --itrace option is specified.
-> > 
-> > Fix by using 'default_no_sample' and 'inject' instead.
+On Fri, May 31, 2019 at 06:24:06PM +0200, Andrey Konovalov wrote:
+> On Fri, May 31, 2019 at 6:20 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > On Fri, May 31, 2019 at 04:29:10PM +0200, Andrey Konovalov wrote:
+> > > On Thu, May 30, 2019 at 7:15 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > > > On Tue, May 28, 2019 at 04:14:45PM +0200, Andrey Konovalov wrote:
+> > > > > Thanks for a lot of valuable input! I've read through all the replies
+> > > > > and got somewhat lost. What are the changes I need to do to this
+> > > > > series?
+> > > > >
+> > > > > 1. Should I move untagging for memory syscalls back to the generic
+> > > > > code so other arches would make use of it as well, or should I keep
+> > > > > the arm64 specific memory syscalls wrappers and address the comments
+> > > > > on that patch?
+> > > >
+> > > > Keep them generic again but make sure we get agreement with Khalid on
+> > > > the actual ABI implications for sparc.
+> > >
+> > > OK, will do. I find it hard to understand what the ABI implications
+> > > are. I'll post the next version without untagging in brk, mmap,
+> > > munmap, mremap (for new_address), mmap_pgoff, remap_file_pages, shmat
+> > > and shmdt.
+> >
+> > It's more about not relaxing the ABI to accept non-zero top-byte unless
+> > we have a use-case for it. For mmap() etc., I don't think that's needed
+> > but if you think otherwise, please raise it.
+> >
+> > > > > 2. Should I make untagging opt-in and controlled by a command line argument?
+> > > >
+> > > > Opt-in, yes, but per task rather than kernel command line option.
+> > > > prctl() is a possibility of opting in.
+> > >
+> > > OK. Should I store a flag somewhere in task_struct? Should it be
+> > > inheritable on clone?
+> >
+> > A TIF flag would do but I'd say leave it out for now (default opted in)
+> > until we figure out the best way to do this (can be a patch on top of
+> > this series).
 > 
-> Applied 1-3 for now, concentrating on fixes, will process 4-22 later.
+> You mean leave the whole opt-in/prctl part out? So the only change
+> would be to move untagging for memory syscalls into generic code?
 
-Tested the ones that affect sqlite databases an the GUI, all look good,
-added committer notes and text screenshots as committer notes, thanks!
+Yes (or just wait until next week to see if the discussion settles
+down).
 
-- Arnaldo
+-- 
+Catalin
