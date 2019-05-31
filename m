@@ -2,99 +2,271 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F95C28CC0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 00:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1C2C28CC0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 00:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31D3E2635B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 00:51:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0A6B2635C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 00:52:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfEaAvP (ORCPT
+        id S1726761AbfEaAwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 20:51:15 -0400
-Received: from mail1.windriver.com ([147.11.146.13]:52631 "EHLO
-        mail1.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726131AbfEaAvO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 20:51:14 -0400
-Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
-        by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id x4V0owUw022099
-        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-        Thu, 30 May 2019 17:50:58 -0700 (PDT)
-Received: from [128.224.155.90] (128.224.155.90) by ALA-HCA.corp.ad.wrs.com
- (147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 30 May
- 2019 17:50:58 -0700
-Subject: Re: Userspace woes with 5.1.5 due to TIPC
-To:     Mihai Moldovan <ionic@ionic.de>,
-        Jon Maloy <jon.maloy@ericsson.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <4ad776cb-c597-da1d-7d5e-af39ded17c40@ionic.de>
- <CH2PR15MB3575BD29C90539022364B8719A180@CH2PR15MB3575.namprd15.prod.outlook.com>
- <1780dd6a-9546-0df5-7fb2-44b78643b079@ionic.de>
-From:   Ying Xue <ying.xue@windriver.com>
-Message-ID: <3cc60b11-2b63-3bfc-2be8-569f2b0ce7cf@windriver.com>
-Date:   Fri, 31 May 2019 08:41:06 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 30 May 2019 20:52:06 -0400
+Received: from mga03.intel.com ([134.134.136.65]:34983 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726131AbfEaAwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 20:52:05 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 17:52:04 -0700
+X-ExtLoop1: 1
+Received: from joy-optiplex-7040.sh.intel.com ([10.239.13.9])
+  by fmsmga007.fm.intel.com with ESMTP; 30 May 2019 17:51:59 -0700
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     intel-gvt-dev@lists.freedesktop.org
+Cc:     aik@ozlabs.ru, Zhengxiao.zx@alibaba-inc.com,
+        shuangtai.tst@alibaba-inc.com, qemu-devel@nongnu.org,
+        eauger@redhat.com, yi.l.liu@intel.com, ziye.yang@intel.com,
+        mlevitsk@redhat.com, pasic@linux.ibm.com, felipe@nutanix.com,
+        changpeng.liu@intel.com, Ken.Xue@amd.com,
+        jonathan.davies@nutanix.com, shaopeng.he@intel.com,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        libvir-list@redhat.com, alex.williamson@redhat.com,
+        eskultet@redhat.com, dgilbert@redhat.com, cohuck@redhat.com,
+        kevin.tian@intel.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, cjia@nvidia.com, kwankhede@nvidia.com,
+        berrange@redhat.com, dinechin@redhat.com,
+        Yan Zhao <yan.y.zhao@intel.com>
+Subject: [PATCH v4 1/2] vfio/mdev: add migration_version attribute for mdev device
+Date:   Thu, 30 May 2019 20:45:59 -0400
+Message-Id: <20190531004559.24581-1-yan.y.zhao@intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190531004438.24528-1-yan.y.zhao@intel.com>
+References: <20190531004438.24528-1-yan.y.zhao@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <1780dd6a-9546-0df5-7fb2-44b78643b079@ionic.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [128.224.155.90]
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/31/19 4:47 AM, Mihai Moldovan wrote:
-> * On 5/30/19 9:51 PM, Jon Maloy wrote:
->> Make sure the following three commits are present in TIPC *after* the offending commit:
->>
->> commit 532b0f7ece4c "tipc: fix modprobe tipc failed after switch order of device registration"
-> 
-> This *is* the offending commit, as far as I understand. Merely rebased in
-> linux-stable, and hence having a different SHA, but mentioning the original SHA
-> (i.e., 532b0f7ece4c) in its commit message.
-> 
-> 
->> Since that patch one was flawed it had to be reverted:
->> commit 5593530e5694  ""Revert tipc: fix modprobe tipc failed after switch order of device registration"
->>
->> It was then replaced with this one: 
->> commit 526f5b851a96 "tipc: fix modprobe tipc failed after switch order of device registration"
-> 
-> Okay, these two are not part of 5.1.5. I've backported them (and only these two)
-> to 5.1.5 and the issue(s) seem to be gone. Definitely something that should be
-> backported to/included in 5.1.6.
-> 
-> 
-> Thanks for pointing all that out! Unfortunately I didn't add anything useful but
-> noise, since you obviously already knew, that this commit was broken. I'd urge
-> Greg to release a new stable version including the fixes soon, if possible,
-> though, for not being able to start/use userspace browsers sounds like a pretty
-> bad regression to me.
-> 
+migration_version attribute is used to check migration compatibility
+between two mdev devices of the same mdev type.
+The key is that it's rw and its data is opaque to userspace.
 
-Not only commit 526f5b851a96 )("tipc: fix modprobe tipc failed after
-switch order of device registration") has to be reverted, but also I
-found commit 7e27e8d6130c ("tipc: switch order of device registration to
-fix a crash") introduced a serious regression which makes tipc internal
-topology service server failed to be created.
+Userspace reads migration_version of mdev device at source side and
+writes the value to migration_version attribute of mdev device at target
+side. It judges migration compatibility according to whether the read
+and write operations succeed or fail.
 
-Today I will fix it with the following approaches:
-1. Revert commit 7e27e8d6130c ("tipc: switch order of device
-registration to fix a crash")
-2. Use another method to solve the problem that commit 7e27e8d6130c
-tries to fix.
+As this attribute is under mdev_type node, userspace is able to know
+whether two mdev devices are compatible before a mdev device is created.
 
-Thanks,
-Ying
+userspace needs to check whether the two mdev devices are of the same
+mdev type before checking the migration_version attribute. It also needs
+to check device creation parameters if aggregation is supported in
+future.
 
-> 
-> 
-> Mihai
-> 
+             __    userspace
+              /\              \
+             /                 \write
+            / read              \
+   ________/__________       ___\|/_____________
+  | migration_version |     | migration_version |-->check migration
+  ---------------------     ---------------------   compatibility
+    mdev device A               mdev device B
+
+Cc: Alex Williamson <alex.williamson@redhat.com>
+Cc: Erik Skultety <eskultet@redhat.com>
+Cc: "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+Cc: Cornelia Huck <cohuck@redhat.com>
+Cc: "Tian, Kevin" <kevin.tian@intel.com>
+Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+Cc: "Wang, Zhi A" <zhi.a.wang@intel.com>
+Cc: Neo Jia <cjia@nvidia.com>
+Cc: Kirti Wankhede <kwankhede@nvidia.com>
+Cc: Daniel P. Berrangé <berrange@redhat.com>
+Cc: Christophe de Dinechin <dinechin@redhat.com>
+
+Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+
+---
+v4:
+fixed a typo. (Cornelia Huck)
+
+v3:
+1. renamed version to migration_version
+(Christophe de Dinechin, Cornelia Huck, Alex Williamson)
+2. let errno to be freely defined by vendor driver
+(Alex Williamson, Erik Skultety, Cornelia Huck, Dr. David Alan Gilbert)
+3. let checking mdev_type be prerequisite of migration compatibility
+check. (Alex Williamson)
+4. reworded example usage section.
+(most of this section came from Alex Williamson)
+5. reworded attribute intention section (Cornelia Huck)
+
+v2:
+1. added detailed intent and usage
+2. made definition of version string completely private to vendor driver
+   (Alex Williamson)
+3. abandoned changes to sample mdev drivers (Alex Williamson)
+4. mandatory --> optional (Cornelia Huck)
+5. added description for errno (Cornelia Huck)
+---
+ Documentation/vfio-mediated-device.txt | 113 +++++++++++++++++++++++++
+ 1 file changed, 113 insertions(+)
+
+diff --git a/Documentation/vfio-mediated-device.txt b/Documentation/vfio-mediated-device.txt
+index c3f69bcaf96e..1241e1cee64e 100644
+--- a/Documentation/vfio-mediated-device.txt
++++ b/Documentation/vfio-mediated-device.txt
+@@ -202,6 +202,7 @@ Directories and files under the sysfs for Each Physical Device
+   |     |   |--- available_instances
+   |     |   |--- device_api
+   |     |   |--- description
++  |     |   |--- migration_version
+   |     |   |--- [devices]
+   |     |--- [<type-id>]
+   |     |   |--- create
+@@ -209,6 +210,7 @@ Directories and files under the sysfs for Each Physical Device
+   |     |   |--- available_instances
+   |     |   |--- device_api
+   |     |   |--- description
++  |     |   |--- migration_version
+   |     |   |--- [devices]
+   |     |--- [<type-id>]
+   |          |--- create
+@@ -216,6 +218,7 @@ Directories and files under the sysfs for Each Physical Device
+   |          |--- available_instances
+   |          |--- device_api
+   |          |--- description
++  |          |--- migration_version
+   |          |--- [devices]
+ 
+ * [mdev_supported_types]
+@@ -246,6 +249,116 @@ Directories and files under the sysfs for Each Physical Device
+   This attribute should show the number of devices of type <type-id> that can be
+   created.
+ 
++* migration_version
++
++  This attribute is rw, and is optional.
++  It is used to check migration compatibility between two mdev devices of the
++  same mdev type. Absence of this attribute means the device of type <type-id>
++  does not support migration.
++  This attribute provides a way to check migration compatibility between two
++  mdev devices from userspace even before device creation. The intended usage is
++  for userspace to read the migration_version attribute from one mdev device and
++  then writing that value to the migration_version attribute of the other mdev
++  device. The second mdev device indicates compatibility via the return code of
++  the write operation. This makes compatibility between mdev devices completely
++  vendor-defined and opaque to userspace. Userspace should do nothing more
++  than verify the mdev types match and then use the migration_version attribute
++  to confirm source to target compatibility.
++
++  Reading/Writing Attribute Data:
++  read(2) will fail if device of type <type-id> does not support migration and
++          otherwise succeed and return migration_version string of the device of
++          type <type-id>.
++
++          This migration_version string is vendor defined and opaque to the
++          userspace. Vendor is free to include whatever they feel is relevant.
++          e.g. <pciid of parent device>-<software version>.
++
++          Restrictions on this migration_version string:
++            1. It should only contain ascii characters
++            2. MAX Length is PATH_MAX (4096)
++
++  write(2) expects migration_version string of source mdev device, and will
++          succeed if it is determined to be compatible and otherwise fail with
++          vendor specific errno.
++
++  Errno:
++  -An errno on read(2) indicates the device of type <type-id> does not support
++  migration;
++  -An errno on write(2) indicates the devices are incompatible or the target
++  doesn't support migration.
++  Vendor driver is free to define specific errno and is suggested to
++  print detailed error in syslog for diagnose purpose.
++
++  Userspace should treat ANY of below conditions as two mdev devices not
++  compatible:
++  (0) The mdev devices are not of the same type
++  (1) any one of the two mdev devices does not have a migration_version
++  attribute
++  (2) error when reading from migration_version attribute of one mdev device
++  (3) error when writing migration_version string of one mdev device to
++  migration_version attribute of the other mdev device
++
++  Userspace should regard two mdev devices compatible when ALL of below
++  conditions are met:
++  (0) The mdev devices are of the same type
++  (1) success when reading from migration_version attribute of one mdev device.
++  (2) success when writing migration_version string of one mdev device to
++  migration_version attribute of the other mdev device.
++
++  Example Usage:
++  (1) Compare mdev types:
++
++  The mdev type of an instantiated device can be read from the mdev_type link
++  within the device instance in sysfs, for example:
++
++  # basename $(readlink -f /sys/bus/mdev/devices/$MDEV_UUID/mdev_type/)
++
++  The mdev types available on a given host system can also be found through
++  /sys/class/mdev_bus, for example:
++
++  # ls /sys/class/mdev_bus/*/mdev_supported_types/
++
++  Migration is only possible between devices of the same mdev type.
++
++  (2) Retrieve the mdev source migration_version:
++
++  The migration_version information can either be read from the mdev_type link
++  on an instantiated device:
++
++  # cat /sys/bus/mdev/devices/$UUID1/mdev_type/migration_version
++
++  Or it can be read from the mdev type definition, for example:
++
++  # cat /sys/class/mdev_bus/*/mdev_supported_types/$MDEV_TYPE/migration_version
++
++  If reading the source migration_version generates an error, migration is not
++  possible.
++  NB, there might be several parent devices for a given mdev type on a host
++  system, each may support or expose different migration_versions.
++  Matching the specific mdev type to a parent may become important in such
++  configurations.
++
++  (3) Test source migration_version at target:
++
++  Given a migration_version as outlined above, its compatibility to an
++  instantiated device of the same mdev type can be tested as:
++  # echo $VERSION > /sys/bus/mdev/devices/$UUID2/mdev_type/migration_version
++
++  If this write fails, the source and target migration versions are not
++  compatible or the target does not support migration.
++
++  Compatibility can also be tested prior to target device creation using the
++  mdev type definition for a parent device with a previously found matching mdev
++  type, for example:
++
++  # echo $VERSION > \
++  /sys/class/mdev_bus/$PARENT/mdev_supported_types/$MDEV_TYPE/migration_version
++
++  Again, an error writing the migration_version indicates that an instance of
++  this mdev type would not support a migration from the provided migration
++  version.
++
+ * [device]
+ 
+   This directory contains links to the devices of type <type-id> that have been
+-- 
+2.17.1
+
