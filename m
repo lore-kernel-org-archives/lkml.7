@@ -2,78 +2,115 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E85C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 17:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA9BFC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 17:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F26526D50
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 17:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB80E26D50
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 17:45:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfEaRpF (ORCPT
+        id S1726803AbfEaRpS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 13:45:05 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:55710 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725934AbfEaRpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 13:45:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E4D53A78;
-        Fri, 31 May 2019 10:45:04 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DEB233F59C;
-        Fri, 31 May 2019 10:45:01 -0700 (PDT)
-Subject: Re: [PATCH v3 0/6] Prerequisites for NXP LS104xA SMMU enablement
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     David Miller <davem@davemloft.net>, madalin.bucur@nxp.com,
-        netdev@vger.kernel.org, roy.pledge@nxp.com,
-        linux-kernel@vger.kernel.org, leoyang.li@nxp.com,
-        Joakim.Tjernlund@infinera.com, iommu@lists.linux-foundation.org,
-        camelia.groza@nxp.com, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20190530141951.6704-1-laurentiu.tudor@nxp.com>
- <20190530.150844.1826796344374758568.davem@davemloft.net>
- <20190531163350.GB8708@infradead.org>
- <37406608-df48-c7a0-6975-4b4ad408ba36@arm.com>
- <20190531170804.GA12211@infradead.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <1b81c168-f5e0-f86a-f90e-22e8c3f2a602@arm.com>
-Date:   Fri, 31 May 2019 18:45:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 31 May 2019 13:45:18 -0400
+Received: from relay1.mentorg.com ([192.94.38.131]:53240 "EHLO
+        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726674AbfEaRpR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 13:45:17 -0400
+Received: from svr-orw-mbx-01.mgc.mentorg.com ([147.34.90.201])
+        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
+        id 1hWlaY-00048y-04 from George_Davis@mentor.com ; Fri, 31 May 2019 10:45:10 -0700
+Received: from localhost (147.34.91.1) by svr-orw-mbx-01.mgc.mentorg.com
+ (147.34.90.201) with Microsoft SMTP Server (TLS) id 15.0.1320.4; Fri, 31 May
+ 2019 10:45:07 -0700
+Date:   Fri, 31 May 2019 13:45:06 -0400
+From:   "George G. Davis" <george_davis@mentor.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+CC:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC][PATCH] Makefile: Fix checkstack.pl arm64 wrong or unknown
+ architecture
+Message-ID: <20190531174506.GC10644@mam-gdavis-lt>
+References: <1559316388-19565-1-git-send-email-george_davis@mentor.com>
+ <CAK7LNATXzLzttF_gLA4wdfE1ue+bLPhvDZVsTKbB5K3nrN3jng@mail.gmail.com>
+ <20190531163908.GB10644@mam-gdavis-lt>
+ <CAK7LNASq8eW0D8fpbxFGhAgR5D158emTR2quCD5ufyC+kK-2GQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190531170804.GA12211@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAK7LNASq8eW0D8fpbxFGhAgR5D158emTR2quCD5ufyC+kK-2GQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-ClientProxiedBy: svr-orw-mbx-02.mgc.mentorg.com (147.34.90.202) To
+ svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31/05/2019 18:08, Christoph Hellwig wrote:
-> On Fri, May 31, 2019 at 06:03:30PM +0100, Robin Murphy wrote:
->>> The thing needs to be completely redone as it abuses parts of the
->>> iommu API in a completely unacceptable way.
->>
->> `git grep iommu_iova_to_phys drivers/{crypto,gpu,net}`
->>
->> :(
->>
->> I guess one alternative is for the offending drivers to maintain their own
->> lookup tables of mapped DMA addresses - I think at least some of these
->> things allow storing some kind of token in a descriptor, which even if it's
->> not big enough for a virtual address might be sufficient for an index.
+Hello Masahiro,
+
+On Sat, Jun 01, 2019 at 02:22:36AM +0900, Masahiro Yamada wrote:
+
+// CUT
+
+> As far as I understood, checkstack.pl is supposed to
+> understand both ARCH= and 'uname -m'.
 > 
-> Well, we'll at least need DMA API wrappers that work on the dma addr
-> only and hide this madness underneath.  And then tell if an given device
-> supports this and fail the probe otherwise.
+> 
+> For example, the following commit supports x86, x86_64, i386,
+> by using regular expression.
+> 
+> commit fda9f9903be6c3b590472c175c514b0834bb3c83
+> Author: Konstantin Khlebnikov <koct9i@gmail.com>
+> Date:   Fri Aug 8 14:23:35 2014 -0700
+> 
+>     scripts/checkstack.pl: automatically handle 32-bit and 64-bit mode
+> for ARCH=x86
+> 
+>     This patch adds support for ARCH=x86 into checkstack.
+> 
+> 
+> 
+> Following this pattern, does this work for you?
+> 
+> diff --git a/scripts/checkstack.pl b/scripts/checkstack.pl
+> index 122aef5e4e14..371bd17a4983 100755
+> --- a/scripts/checkstack.pl
+> +++ b/scripts/checkstack.pl
+> @@ -46,7 +46,7 @@ my (@stack, $re, $dre, $x, $xs, $funcre);
+>         $x      = "[0-9a-f]";   # hex character
+>         $xs     = "[0-9a-f ]";  # hex character or space
+>         $funcre = qr/^$x* <(.*)>:$/;
+> -       if ($arch eq 'aarch64') {
+> +       if ($arch =~ '^(aarch|arm)64$') {
 
-Bleh, I'm certainly not keen on formalising any kind of 
-dma_to_phys()/dma_to_virt() interface for this. Or are you just 
-proposing something like dma_unmap_sorry_sir_the_dog_ate_my_homework() 
-for drivers which have 'lost' the original VA they mapped?
+Yes, that works, thanks!
 
-Robin.
+Will you submit a fix or would you like me to resubmit with the above suggested
+fix?
+
+
+Thanks again!
+
+>                 #ffffffc0006325cc:       a9bb7bfd        stp     x29,
+> x30, [sp, #-80]!
+>                 #a110:       d11643ff        sub     sp, sp, #0x590
+>                 $re = qr/^.*stp.*sp, \#-([0-9]{1,8})\]\!/o;
+> 
+> 
+> 
+> -- 
+> Best Regards
+> Masahiro Yamada
+
+-- 
+Regards,
+George
