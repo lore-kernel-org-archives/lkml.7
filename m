@@ -2,98 +2,336 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB10C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 06:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE7D5C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 06:12:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD78126433
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 06:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B12BE26434
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 06:12:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="r3GwtRCr"
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="lELKoW63"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbfEaGLH (ORCPT
+        id S1726658AbfEaGMn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 02:11:07 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:45839 "EHLO ozlabs.org"
+        Fri, 31 May 2019 02:12:43 -0400
+Received: from mta-01.yadro.com ([89.207.88.251]:36306 "EHLO mta-01.yadro.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726158AbfEaGLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 02:11:07 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725955AbfEaGMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 02:12:42 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id 6C29341908;
+        Fri, 31 May 2019 06:12:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-type:content-type:content-transfer-encoding:mime-version
+        :x-mailer:message-id:date:date:subject:subject:from:from
+        :received:received:received; s=mta-01; t=1559283159; x=
+        1561097560; bh=SCXLQ59EkJt74ZCKzs0o5+P00fxCfvb01ft9hUstgws=; b=l
+        ELKoW63pk+IIFoHcjr5yMFPwETyehBNtzileh9RWF+dM2iEGvnQ7VbhNdnt1l+bf
+        SfCrJe3rqV0T1FXWyGXkg0YDYNsMQuVtCWDmI82ci7WfGcHuot7fhZwgal9s6ybA
+        nWi4qpiyBokP+/j6NpNH41WWK5cnVOLPQfJyBzAKN8=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id BY4-P44u-onI; Fri, 31 May 2019 09:12:39 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45FYwm0K0Vz9sBr;
-        Fri, 31 May 2019 16:11:02 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1559283064;
-        bh=/DGdUvmIazHQUlf9mPACspVIRRRB10dQrvQwR2BJVz4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=r3GwtRCrb+PP1SY1KvU2xNj4uU9qxEjbZFYSQU0GnienHfUtUFjPmi6R9Lql2Yozn
-         N5dGINjtS+6GzqoZ2RO1U70UmbQ/eLmzFG0L5ky3FU0slqu+iOS4etuRAQ+RCUbGTd
-         I+i0Xj2Q7h/kmEVe04MOBZNUPbQqynEb7bx+zOdZwkdw2TOA5KJC1Ylo7tquHBx7LN
-         jw4W6DKbhaEuPMH31F+Lv7S3+/tILVQ7CkEdlraAQA7soCFF0HnsmMCGBQ9CHAqX6R
-         NdqfFDc8qCsSZ2HWiZXywRPJmhIpiMwRVB5+AVdcOR8Y+AfMrwsasZ65nrNnOlz7Zk
-         tuzxv96CykbcA==
-Date:   Fri, 31 May 2019 16:11:02 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: linux-next: Fixes tag needs some work in the drm-fixes tree
-Message-ID: <20190531161102.4d0b2c97@canb.auug.org.au>
+        by mta-01.yadro.com (Postfix) with ESMTPS id 0A14041860;
+        Fri, 31 May 2019 09:12:39 +0300 (MSK)
+Received: from bbwork.lan (172.17.14.115) by T-EXCH-02.corp.yadro.com
+ (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Fri, 31
+ May 2019 09:12:38 +0300
+From:   Alexander Filippov <a.filippov@yadro.com>
+To:     <linux-aspeed@lists.ozlabs.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, Andrew Jeffery <andrew@aj.id.au>,
+        Joel Stanley <joel@jms.id.au>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Alexander Filippov <a.filippov@yadro.com>
+Subject: [PATCH v3] ARM: dts: aspeed: Add YADRO VESNIN BMC
+Date:   Fri, 31 May 2019 09:12:07 +0300
+Message-ID: <20190531061207.23079-1-a.filippov@yadro.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/UapcH+QXdAMGnKLiDJYuPms"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [172.17.14.115]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/UapcH+QXdAMGnKLiDJYuPms
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+VESNIN is an OpenPower machine with an Aspeed 2400 BMC SoC manufactured
+by YADRO.
 
-Hi all,
+Signed-off-by: Alexander Filippov <a.filippov@yadro.com>
+---
+ arch/arm/boot/dts/Makefile                  |   1 +
+ arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts | 234 ++++++++++++++++++++
+ 2 files changed, 235 insertions(+)
+ create mode 100644 arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
 
-In commit
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 834cce80d1b8..09a851a4705c 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -1261,6 +1261,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
+ 	aspeed-bmc-opp-palmetto.dtb \
+ 	aspeed-bmc-opp-romulus.dtb \
+ 	aspeed-bmc-opp-swift.dtb \
++	aspeed-bmc-opp-vesnin.dtb \
+ 	aspeed-bmc-opp-witherspoon.dtb \
+ 	aspeed-bmc-opp-zaius.dtb \
+ 	aspeed-bmc-portwell-neptune.dtb \
+diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts b/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
+new file mode 100644
+index 000000000000..20f07f5bb4f4
+--- /dev/null
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
+@@ -0,0 +1,234 @@
++// SPDX-License-Identifier: GPL-2.0+
++// Copyright 2019 YADRO
++/dts-v1/;
++
++#include "aspeed-g4.dtsi"
++#include <dt-bindings/gpio/aspeed-gpio.h>
++
++/ {
++	model = "Vesnin BMC";
++	compatible = "yadro,vesnin-bmc", "aspeed,ast2400";
++
++	chosen {
++		stdout-path = &uart5;
++		bootargs = "console=ttyS4,115200 earlyprintk";
++	};
++
++	memory {
++		reg = <0x40000000 0x20000000>;
++	};
++
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		vga_memory: framebuffer@5f000000 {
++			no-map;
++			reg = <0x5f000000 0x01000000>; /* 16MB */
++		};
++		flash_memory: region@5c000000 {
++			no-map;
++			reg = <0x5c000000 0x02000000>; /* 32M */
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		heartbeat {
++			gpios = <&gpio ASPEED_GPIO(R, 4) GPIO_ACTIVE_LOW>;
++		};
++		power_red {
++			gpios = <&gpio ASPEED_GPIO(N, 1) GPIO_ACTIVE_LOW>;
++		};
++
++		id_blue {
++			gpios = <&gpio ASPEED_GPIO(O, 0) GPIO_ACTIVE_LOW>;
++		};
++
++		alarm_red {
++			gpios = <&gpio ASPEED_GPIO(N, 6) GPIO_ACTIVE_LOW>;
++		};
++
++		alarm_yel {
++			gpios = <&gpio ASPEED_GPIO(N, 7) GPIO_ACTIVE_HIGH>;
++		};
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++
++		button_checkstop {
++			label = "checkstop";
++			linux,code = <74>;
++			gpios = <&gpio ASPEED_GPIO(P, 5) GPIO_ACTIVE_LOW>;
++		};
++
++		button_identify {
++			label = "identify";
++			linux,code = <152>;
++			gpios = <&gpio ASPEED_GPIO(O, 7) GPIO_ACTIVE_LOW>;
++		};
++	};
++};
++
++&fmc {
++	status = "okay";
++	flash@0 {
++		status = "okay";
++		m25p,fast-read;
++        label = "bmc";
++#include "openbmc-flash-layout.dtsi"
++	};
++};
++
++&spi {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_spi1debug_default>;
++
++	flash@0 {
++		status = "okay";
++		label = "pnor";
++		m25p,fast-read;
++	};
++};
++
++&mac0 {
++	status = "okay";
++
++	use-ncsi;
++	no-hw-checksum;
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_rmii1_default>;
++};
++
++
++&uart5 {
++	status = "okay";
++};
++
++&lpc_ctrl {
++	status = "okay";
++	memory-region = <&flash_memory>;
++	flash = <&spi>;
++};
++
++&ibt {
++	status = "okay";
++};
++
++&lpc_host {
++    sio_regs: regs {
++        compatible = "aspeed,bmc-misc";
++    };
++};
++
++&mbox {
++	status = "okay";
++};
++
++&uart3 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_txd2_default &pinctrl_rxd2_default>;
++};
++
++&i2c0 {
++	status = "okay";
++
++	eeprom@50 {
++		compatible = "atmel,24c256";
++		reg = <0x50>;
++		pagesize = <64>;
++	};
++};
++
++&i2c1 {
++	status = "okay";
++
++	tmp75@49 {
++		compatible = "ti,tmp75";
++		reg = <0x49>;
++	};
++};
++
++&i2c2 {
++	status = "okay";
++};
++
++&i2c3 {
++	status = "okay";
++};
++
++&i2c4 {
++	status = "okay";
++
++	occ-hwmon@50 {
++		compatible = "ibm,p8-occ-hwmon";
++		reg = <0x50>;
++	};
++};
++
++&i2c5 {
++	status = "okay";
++
++	occ-hwmon@51 {
++		compatible = "ibm,p8-occ-hwmon";
++		reg = <0x51>;
++	};
++};
++
++&i2c6 {
++	status = "okay";
++
++	w83795g@2f {
++		compatible = "nuvoton,w83795g";
++		reg = <0x2f>;
++	};
++};
++
++&i2c7 {
++	status = "okay";
++
++	occ-hwmon@56 {
++		compatible = "ibm,p8-occ-hwmon";
++		reg = <0x56>;
++	};
++};
++
++&i2c9 {
++	status = "okay";
++};
++
++&i2c10 {
++	status = "okay";
++};
++
++&i2c11 {
++	status = "okay";
++
++	occ-hwmon@57 {
++		compatible = "ibm,p8-occ-hwmon";
++		reg = <0x57>;
++	};
++};
++
++&i2c12 {
++	status = "okay";
++
++	rtc@68 {
++		compatible = "maxim,ds3231";
++		reg = <0x68>;
++	};
++};
++
++&i2c13 {
++	status = "okay";
++};
++
++&vuart {
++	status = "okay";
++};
+-- 
+2.20.1
 
-  137caa702f23 ("drm/imx: ipuv3-plane: fix atomic update status query for n=
-on-plus i.MX6Q")
-
-Fixes tag
-
-  Fixes: 70e8a0c71e9 ("drm/imx: ipuv3-plane: add function to query atomic u=
-pdate status")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/UapcH+QXdAMGnKLiDJYuPms
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzwxXYACgkQAVBC80lX
-0GwAJAf9EZ4F+IIwdZgVNyjEgLVKZbCJaJCYG6klilNRKDn+LpUeAudzXvxr5BnD
-OVvt/z3EGsnkEcnbLnMNxNNfl3GBDr5oLMOBWyoJcRmG2dlpYnh2A5OVBezvRLlO
-G9/OnmM/b7Az6QKNvTC9GyneIviCOhyLculeOjjskqAZE1N6k8n7n+3Y3hFdxq3V
-RaINsrVHP6icyLGb/VzuSqva/WZGETQwRyeizhmdJ66jWbHFi2vUtwp5ePn5X3XV
-UGtIucKXbE93oksslaHh7yyPSO7drGQOKG183aJFPyqudle8l0PhT4PDe/LDrGUX
-DGsqz0YLYvkpaOCL4nh4bq+r0I8e1A==
-=PFWD
------END PGP SIGNATURE-----
-
---Sig_/UapcH+QXdAMGnKLiDJYuPms--
