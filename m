@@ -6,48 +6,59 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E190C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30FE3C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2B9226C4E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DCD626C55
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:43:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbfEaQjf (ORCPT
+        id S1726837AbfEaQnz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 12:39:35 -0400
-Received: from verein.lst.de ([213.95.11.211]:41791 "EHLO newverein.lst.de"
+        Fri, 31 May 2019 12:43:55 -0400
+Received: from verein.lst.de ([213.95.11.211]:41831 "EHLO newverein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726518AbfEaQje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 12:39:34 -0400
+        id S1726531AbfEaQny (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 12:43:54 -0400
 Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 9B79C68AA6; Fri, 31 May 2019 18:39:07 +0200 (CEST)
-Date:   Fri, 31 May 2019 18:39:07 +0200
+        id 50CCA68AA6; Fri, 31 May 2019 18:43:28 +0200 (CEST)
+Date:   Fri, 31 May 2019 18:43:27 +0200
 From:   Christoph Hellwig <hch@lst.de>
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     hch@lst.de, robin.murphy@arm.com, m.szyprowski@samsung.com,
-        natechancellor@gmail.com, vdumpa@nvidia.com, linux@armlinux.org.uk,
-        catalin.marinas@arm.com, will.deacon@arm.com, chris@zankel.net,
-        jcmvbkbc@gmail.com, joro@8bytes.org, dwmw2@infradead.org,
-        tony@atomide.com, akpm@linux-foundation.org, sfr@canb.auug.org.au,
-        treding@nvidia.com, keescook@chromium.org, iamjoonsoo.kim@lge.com,
-        wsa+renesas@sang-engineering.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, iommu@lists.linux-foundation.org,
-        dann.frazier@canonical.com
-Subject: Re: [PATCH] dma-contiguous: Fix !CONFIG_DMA_CMA version of
- dma_{alloc,free}_contiguous()
-Message-ID: <20190531163907.GA27525@lst.de>
-References: <20190530005425.7184-1-nicoleotsuka@gmail.com>
+To:     Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "marex@denx.de" <marex@denx.de>, Leo Li <leoyang.li@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "noring@nocrew.org" <noring@nocrew.org>,
+        "JuergenUrban@gmx.de" <JuergenUrban@gmx.de>
+Subject: Re: [PATCH v7 0/5] prerequisites for device reserved local mem
+ rework
+Message-ID: <20190531164327.GB27525@lst.de>
+References: <20190529102843.13174-1-laurentiu.tudor@nxp.com> <20190529113427.GC11952@kroah.com> <20190529113758.GA9399@lst.de> <5b8164b3-74a3-9ba4-8c28-61a14ec57a39@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190530005425.7184-1-nicoleotsuka@gmail.com>
+In-Reply-To: <5b8164b3-74a3-9ba4-8c28-61a14ec57a39@nxp.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks,
+On Wed, May 29, 2019 at 02:06:12PM +0000, Laurentiu Tudor wrote:
+> Thanks, hope this time everything is fine.
 
-applied to the dma-mapping tree.
+I've applied it to the dma-mapping tree now.
+
+> When you get the time, please let me know your ideas on the next steps.
+
+I think the next step is to move the call to
+dma_alloc_from_dev_coherent from dma_alloc_attrs into the ->alloc
+instances.  The only onces that really need it for now are the
+generic and legacy arm dma-direct code, and drivers/iommu/dma-iommu.c
+as well as the ARM DMA API code, as those are the ones use for
+architectures that declare coherent regions.  The other iommus are
+not used on OF platforms (at least that's what my analysis said a while
+ago, feel free to double check it)
