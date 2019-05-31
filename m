@@ -2,118 +2,84 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D5AC28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 23:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C38F3C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 23:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 006C027032
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 23:50:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A7B527032
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 23:52:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cMfP/lWB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nFZDBs8V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfEaXul (ORCPT
+        id S1726863AbfEaXwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 19:50:41 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33092 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726693AbfEaXuk (ORCPT
+        Fri, 31 May 2019 19:52:08 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38708 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbfEaXwH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 19:50:40 -0400
-Received: by mail-pg1-f193.google.com with SMTP id h17so4891831pgv.0
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 16:50:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=c79H5rQZz0sMWOQ2Dkv18YmAHI94MxyIDoL9IyRKnFM=;
-        b=cMfP/lWBiG8HDIKe1reMsz+A5J375yyopBUdiNuYccJ9PoMGVkT3Cq6ArQqQttOXkw
-         KElbIOArfqCdwgWKvCi9FEEgVPfH6EUxfR40IDtO7J+V9Zuycnvk0m6cN3XO3ms+Sux1
-         nSHivP7dABj6PsTFIBz4DsSF+3JvZdeS9VVPjg5/f3OZp3m8q8lRg2ZvsDl4lTTHfPVz
-         3TOTsjUz18jwKPdj38ZdWE91k4XwPtKf3ouv1ucmJmVdA5eKX4NfLIV/MqENcvLD2olt
-         R/DQD7pzR8PTjO56anLH84cHeqskxN10riQmO6Do7Tp7IRdULf5Fbs22rBAQIz1721Op
-         yA3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=c79H5rQZz0sMWOQ2Dkv18YmAHI94MxyIDoL9IyRKnFM=;
-        b=OYl0L8FlvSYECVi6Ct9Ms+pSPmJG+0F2ERJb9cRxaSMhrKx+GiI3zHyVS4QEHw50tl
-         lHAH1E68ZaPpppipxKIzGIatBLgSqkctHmUTkm4wJshs+qkQbwWo40Gy4hYpShoMppaO
-         PfpSR5V5uJnQn9800UFM21s9tfzMxtEnyp3Y2ocQCIln75VgCxn5XLay6X0miBv/MJ/0
-         MEQdgmvQC5mJ+eB1b5WrGP2SWVj470ZSZq5RB73Qsz9uKbO3EH8+8mNVqbng4WcsYObR
-         QKKLIOEH0bCvEMTgnj4JV17f2DxbcnqnH48LY2Za5Nk02IDCMm9ebi/jWBQOVqCCevrL
-         WJPw==
-X-Gm-Message-State: APjAAAWGWEqBEshji6q5MTNZLtF/zUMBkWxdEyATDcGihoHxVVC5G5Hh
-        EQAc19kOvfdh8KJLdz7Ej17dtw==
-X-Google-Smtp-Source: APXvYqwA2DJD2HY8jlTR3RoD8ReSjSWYM2qtbknvUUBN0/2NaV3wiCv0C3mqzB04u5cUNeZGnBVCnA==
-X-Received: by 2002:a65:42ca:: with SMTP id l10mr12087312pgp.181.1559346640216;
-        Fri, 31 May 2019 16:50:40 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id a11sm8290710pff.128.2019.05.31.16.50.39
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 31 May 2019 16:50:39 -0700 (PDT)
-Date:   Fri, 31 May 2019 16:50:37 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [RFC][PATCH 1/2] dt-bindings: power: reset: qcom: Add
- qcom,pm8998-pon compatability line
-Message-ID: <20190531235037.GC25597@minitux>
-References: <20190531234734.102842-1-john.stultz@linaro.org>
+        Fri, 31 May 2019 19:52:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=3wGlX09ThV78ZhwRXZYCSXCtvWFVlgTZB4/+Smzd1UY=; b=nFZDBs8VSLFtmN7+y341PHMEW
+        7eyIuFiANsukXA+F0eH7xtfVBPBEZdimy2HJtX5nsqjIoqUsj+VrJX2s4yYvsAeQsCFMNDPoPGIaE
+        k58RHPCRyiEl2OPMHhawhT9ZAP9MZUFphQ4iUGgPXViGtIu+gtMp96geL+2DCaDr73aYOmtZv5wIq
+        fqKbMz/o/iuu840hoRRcmJX79DfUrd2KeoHGC4lAwvQEV+iGraVjSH2bzkr578rU+ZBN7ikYOQk2u
+        40vvKNWgmAeHvW7LJmOay4jwwQFIGqCyCdDjS4DH76Ynzt6XXeGAKwPMtqqk1beqK5KV3NDCLChC1
+        vLguXCTlw==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hWrJf-0006CE-6Y; Fri, 31 May 2019 23:52:07 +0000
+Subject: Re: [PATCH RFC] Rough draft document on merging and rebasing
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org
+References: <20190530135317.3c8d0d7b@lwn.net>
+ <7979b995-6b03-783b-e3d7-0023fabc43bc@infradead.org>
+ <20190531173618.465ae659@lwn.net>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <90525060-9c28-6110-9bdd-b0a4a850ab05@infradead.org>
+Date:   Fri, 31 May 2019 16:52:06 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190531234734.102842-1-john.stultz@linaro.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190531173618.465ae659@lwn.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 31 May 16:47 PDT 2019, John Stultz wrote:
-
-> Update bindings to support for qcom,pm8998-pon which uses gen2 pon
+On 5/31/19 4:36 PM, Jonathan Corbet wrote:
+> On Thu, 30 May 2019 17:45:23 -0700
+> Randy Dunlap <rdunlap@infradead.org> wrote:
 > 
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: David Brown <david.brown@linaro.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-> Cc: Amit Pundir <amit.pundir@linaro.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Sebastian Reichel <sre@kernel.org>
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
->  Documentation/devicetree/bindings/power/reset/qcom,pon.txt | 1 +
->  1 file changed, 1 insertion(+)
+>> On 5/30/19 12:53 PM, Jonathan Corbet wrote:
+>>> +  git merge v5.2-rc1^0  
+>>
+>> That line is presented in my email client (Thunderbird) as
+>>
+>>      git merge v5.2-rc1{superscript 0}
+>>
+>> Could you escape/quote it to prevent that?
 > 
-> diff --git a/Documentation/devicetree/bindings/power/reset/qcom,pon.txt b/Documentation/devicetree/bindings/power/reset/qcom,pon.txt
-> index 5705f575862d..0c0dc3a1e693 100644
-> --- a/Documentation/devicetree/bindings/power/reset/qcom,pon.txt
-> +++ b/Documentation/devicetree/bindings/power/reset/qcom,pon.txt
-> @@ -9,6 +9,7 @@ Required Properties:
->  -compatible: Must be one of:
->  	"qcom,pm8916-pon"
->  	"qcom,pms405-pon"
-> +	"qcom,pm8998-pon"
->  
->  -reg: Specifies the physical address of the pon register
->  
-> -- 
-> 2.17.1
-> 
+> So I'm a wee bit confused.  That's a literal string that one needs to
+> type to obtain the needed effect; if thunderbird is doing weird things
+> with it, I think that the problem does not lie with the document...?  What
+> change would you have me make here?
+
+I dunno.  I just won't depend on my email client.
+I'll read it some other way (like a text editor).
+
+cheers.
+-- 
+~Randy
