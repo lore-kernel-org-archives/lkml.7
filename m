@@ -2,319 +2,164 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E0EC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D377EC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C63AC24499
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:43:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E489269B3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:44:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="C0LFClLd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbfEaNnI (ORCPT
+        id S1726693AbfEaNoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 09:43:08 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42720 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726512AbfEaNnI (ORCPT
+        Fri, 31 May 2019 09:44:18 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:60801 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726330AbfEaNoR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 09:43:08 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4VDWP2B003210
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 09:43:06 -0400
-Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2su51es1wc-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 09:43:06 -0400
-Received: from localhost
-        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Fri, 31 May 2019 14:43:05 +0100
-Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
-        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 31 May 2019 14:43:03 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4VDh2HH12320900
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 31 May 2019 13:43:03 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DC731B205F;
-        Fri, 31 May 2019 13:43:02 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B948DB2065;
-        Fri, 31 May 2019 13:43:02 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 31 May 2019 13:43:02 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id D0BDF16C35A1; Fri, 31 May 2019 06:43:03 -0700 (PDT)
-Date:   Fri, 31 May 2019 06:43:03 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, fweisbec@gmail.com,
-        mingo@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] time/tick-broadcast: Fix tick_broadcast_offline()
- lockdep complaint
-Reply-To: paulmck@linux.ibm.com
-References: <20190527143932.GA10527@linux.ibm.com>
- <alpine.DEB.2.21.1905281300340.1859@nanos.tec.linutronix.de>
- <20190529181941.GZ28207@linux.ibm.com>
- <20190530125809.GA25376@linux.ibm.com>
- <20190531013639.GA32307@lerouge>
+        Fri, 31 May 2019 09:44:17 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190531134414euoutp0201e6f40cc5505a0d8d40b41fb4806bed~jyGpTwsAU0564905649euoutp02b
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 13:44:14 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190531134414euoutp0201e6f40cc5505a0d8d40b41fb4806bed~jyGpTwsAU0564905649euoutp02b
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1559310255;
+        bh=d/ofE7C+qb8FXizk062nYULRDGW//8GcqaiVTR+gKZw=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=C0LFClLdGSPjKtya1SQwG8Vo5S2PJL+EBjOxkpsZ3NmK+cMBLjWmghPfr7y3M0AME
+         RqJrTxhrHEmgpYZJXTjKKVt60J1as6vCThH/ZSIXB+IIfoLvkabmlSUrLDRdOZUzpl
+         r5/lQxQGQrdy2XtrHMEIxaA/81kj+mPRpCtEJ+x0=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190531134414eucas1p28d9b8f040c87e1027ba8c5968784dd36~jyGoplmZM0356303563eucas1p2d;
+        Fri, 31 May 2019 13:44:14 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 45.1D.04377.DAF21FC5; Fri, 31
+        May 2019 14:44:14 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190531134413eucas1p2266b217f5177645a9db3edc7c699f7f2~jyGn8sr8o0456304563eucas1p2V;
+        Fri, 31 May 2019 13:44:13 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190531134413eusmtrp14330820d7eac5b6af688fc8ce893b16c~jyGntG3ml1543915439eusmtrp18;
+        Fri, 31 May 2019 13:44:13 +0000 (GMT)
+X-AuditID: cbfec7f4-113ff70000001119-bf-5cf12fad4869
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 23.77.04140.DAF21FC5; Fri, 31
+        May 2019 14:44:13 +0100 (BST)
+Received: from [106.120.51.75] (unknown [106.120.51.75]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190531134412eusmtip16ad00df3fc610e1c7d48d56e6e278333~jyGnSoau91082410824eusmtip1H;
+        Fri, 31 May 2019 13:44:12 +0000 (GMT)
+Subject: Re: [BISECT] No audio after
+ "ASoC: core: use component driver name as component name"
+To:     Tzung-Bi Shih <tzungbi@google.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+Message-ID: <f0e6753d-6eb4-b56e-d4f4-0d483a685b41@samsung.com>
+Date:   Fri, 31 May 2019 15:44:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190531013639.GA32307@lerouge>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19053113-0060-0000-0000-0000034A7A6E
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011190; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01211238; UDB=6.00636430; IPR=6.00992274;
- MB=3.00027132; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-31 13:43:05
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19053113-0061-0000-0000-00004990B2BE
-Message-Id: <20190531134303.GK28207@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-31_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905310087
+In-Reply-To: <CA+Px+wXs1u9VjkzDerb-BVPQRLZNMnw8Rh5prkb+0mHAggwWgg@mail.gmail.com>
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHfXcuOxtOXo+VD1MKRhEVaYofDhRaVLC+WEJQlKFHPak4zTY1
+        bV9ETea1oXQbyyZpl5UpS7zMMp3kJSkvaQQpViiKa5FsGmJazlPkt9//ef7P+zx/eBmCfUkp
+        mdSMLEGbwWtUtJxs6V1+t/9Z6ELsgUIj4sZGHBLuxpdpmhsaapJyS2MGCffebqa520OdEq7E
+        fp3imn42IO7FyLz0sEzd5C6g1e2mSanaYstW26wltLrT9YBWNzaPk2q3bfsp6Tn5oSRBk5oj
+        aEMj4+Upb+1zROYT39wV51tJPjLJS5GMARwBq19nqFIkZ1j8CEFbj1UiCg+CnoFiUhRuBHNV
+        NdJ/I/WLXYSXWfwQwfx9jWhyIZj2TKxPMEwAjofW4VNezxZ8Enqbawmvh8DVEii7OU95GzQO
+        g4rXlcjLChwJdWXdpJdJvAvurjg36lvxWfC02/56/GHgzvSGR4ZjwDlVtFEncCAUeB5TIu+A
+        Vpd5YxngUSmYJm7S4tXHwDJZQYocAPN9zX/TBMNgdTkpDhQiKO/4JBWFEcFUnwWJroPQ0zdC
+        eaMReA802kO9CPgI9I9Gi+gHH13+4g1+UNVyixDLCjAUs+IbO2HFeksishLKpn+TRqQybUpm
+        2pTGtCmN6f9aCyKtKFDI1qUnC7rwDOFKiI5P12VnJIckXkq3ofVPNbjW52lD9l8JDoQZpPJV
+        GNmFWJbic3R56Q4EDKHaolid+xHLKpL4vKuC9lKcNlsj6BwoiCFVgQq9z+fzLE7ms4Q0QcgU
+        tP+6EkamzEdse9Sr5XG+Q4P0ZmGpttj84cLpiOdG55sAul95OfrY7vprcx2z75xCpUEZVJZf
+        5Je3787PAw0xNZl11jNai6LJp7myc99xLqTrizWqeDVHH7xtIW7QQUWsffNEULPu7pDvphOL
+        4Yn3Lsbr7faDT10zw7kX02rMR2sSDCu8plVF6lL4sL2EVsf/Aced1NlQAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIIsWRmVeSWpSXmKPExsVy+t/xu7pr9T/GGMx8wGdx5eIhJoupD5+w
+        WZw/v4Hd4tuVDiaLy7vmsFnMOL+PyaJzVz+rxYbvaxkt9lx8xe7A6bHhcxObx85Zd9k9Fmwq
+        9di0qpPNY9/bZWwe67dcZfH4vEkugD1Kz6Yov7QkVSEjv7jEVina0MJIz9DSQs/IxFLP0Ng8
+        1srIVEnfziYlNSezLLVI3y5BL+PsrhfMBat5Kn6/PsvUwDiLq4uRk0NCwERi6dcDzF2MXBxC
+        AksZJQ6eW8rWxcgBlJCSmN+iBFEjLPHnWhcbRM1rRonOa79ZQRLCAgkSL3ueM4PYIgK+EvMf
+        rgcrYhaYzCRxcv8VZriOTf/esINUsQkYSvQe7WMEsXkF7CSWdB9kAbFZBFQl5v5+DRYXFYiQ
+        mL2rgQWiRlDi5MwnYDanQKDE6/stYDXMAuoSf+ZdYoawxSWavqxkhbDlJba/ncM8gVFoFpL2
+        WUhaZiFpmYWkZQEjyypGkdTS4tz03GIjveLE3OLSvHS95PzcTYzA6Nx27OeWHYxd74IPMQpw
+        MCrx8E4Q+hgjxJpYVlyZe4hRgoNZSYT374sPMUK8KYmVValF+fFFpTmpxYcYTYGem8gsJZqc
+        D0wceSXxhqaG5haWhubG5sZmFkrivB0CB2OEBNITS1KzU1MLUotg+pg4OKUaGO23ezeZHeOs
+        O7vd4UZm8BLeFKMy7rsPt04/Zbt81/z/7QF75NUuZv77tkZr1c6wXUoHrUV7xNY83c7y50ha
+        9eXbSXM+nilN4qwWEw9do/zx+XMmv4l7eQzk1r6TjikX1Uxhnnqd5edHNvlg81WRug4zq6df
+        WGL4TrLM793z8x9PKT016np/21GJpTgj0VCLuag4EQB5L3YL5AIAAA==
+X-CMS-MailID: 20190531134413eucas1p2266b217f5177645a9db3edc7c699f7f2
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190531102017epcas1p3b5522b9a133bf50659d9d306ed9d6d52
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190531102017epcas1p3b5522b9a133bf50659d9d306ed9d6d52
+References: <CAJKOXPfREyt3P2H8bL9=6+EQ1S3Ja7Urkhy1x7sCHaaubMqV1Q@mail.gmail.com>
+        <CGME20190531102017epcas1p3b5522b9a133bf50659d9d306ed9d6d52@epcas1p3.samsung.com>
+        <CA+Px+wXs1u9VjkzDerb-BVPQRLZNMnw8Rh5prkb+0mHAggwWgg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 03:36:40AM +0200, Frederic Weisbecker wrote:
-> On Thu, May 30, 2019 at 05:58:09AM -0700, Paul E. McKenney wrote:
-> >     It turns out that tick_broadcast_offline() was an innocent bystander.
-> >     After all, interrupts are supposed to be disabled throughout
-> >     take_cpu_down(), and therefore should have been disabled upon entry to
-> >     tick_offline_cpu() and thus to tick_broadcast_offline().  This suggests
-> >     that one of the CPU-hotplug notifiers was incorrectly enabling interrupts,
-> >     and leaving them enabled on return.
-> >     
-> >     Some debugging code showed that the culprit was sched_cpu_dying().
-> >     It had irqs enabled after return from sched_tick_stop().  Which in turn
-> >     had irqs enabled after return from cancel_delayed_work_sync().  Which is a
-> >     wrapper around __cancel_work_timer().  Which can sleep in the case where
-> >     something else is concurrently trying to cancel the same delayed work,
-> >     and as Thomas Gleixner pointed out on IRC, sleeping is a decidedly bad
-> >     idea when you are invoked from take_cpu_down(), regardless of the state
-> >     you leave interrupts in upon return.
-> 
-> Nice catch! Sorry for leaving that puzzle behind.
+On 5/31/19 12:20, Tzung-Bi Shih wrote:
+> On Fri, May 31, 2019 at 5:27 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>> The problem might be in component name. The driver->name and
+>> fmt_single_name(dev, &component->id) are:
+>> snd_dmaengine_pcm != 3830000.i2s
+>> snd_dmaengine_pcm != 3830000.i2s-sec
+>> samsung-i2s != 3830000.i2s
+>>
+>> This commit should not go in without fixing the users of old
+>> behavior... I could adjust the platform names for primary and
+>> secondary links... but now it looks like two components will have the
+>> same name.
+>
+> That is because the two component drivers used the same name in
+> somehow.  But yes, we should not have the commit without fixing
+> potential errors for users depend on old behavior.
 
-Heh!  I needed the break from trying to make RCU do unnatural acts.  ;-)
+There are 2 platform devices (3830000.i2s, 3830000.i2s-sec), for each
+a platform/DMA component is created. For 3830000.i2s there is also
+a component with 2 CPU DAIs registered. 
 
-> >     Code inspection located no reason why the delayed work absolutely
-> >     needed to be canceled from sched_tick_stop():  The work is not
-> >     bound to the outgoing CPU by design, given that the whole point is
-> >     to collect statistics without disturbing the outgoing CPU.
-> >     
-> >     This commit therefore simply drops the cancel_delayed_work_sync() from
-> >     sched_tick_stop().  Instead, a new ->state field is added to the tick_work
-> >     structure so that the delayed-work handler function sched_tick_remote()
-> >     can avoid reposting itself.  A cpu_is_offline() check is also added to
-> >     sched_tick_remote() to avoid mucking with the state of an offlined CPU
-> >     (though it does appear safe to do so).
-> 
-> I can't guarantee that it is safe myself to call the tick of an offline
-> CPU. Better have that check indeed.
+If we derive the platform/DMA component name from the component's driver
+name then we end up with non unique Platform component names 
+(snd_dmaengine_pcm) and subsequently we fail to assign Platform component 
+to DAI links.
 
-No argument, especially given that this preserved the current behavior
-exactly.
+Here is list of components before the patch:
 
-But it looked to me that all of the code was running on some other online
-CPU and was accessing data that would be left around in good state on
-the offline CPU.  And the current behavior won't account for activity
-just prior to the CPU going offline until it comes back online (right?),
-so there might be some incentive to let the last call to sched_tick_remote()
-do the accounting.  Might not be a big deal, though.
+# cat /sys/kernel/debug/asoc/components 
+3830000.i2s
+3830000.i2s-sec
+3830000.i2s
+hdmi-audio-codec.3.auto
+max98090.5-0010
+snd-soc-dummy
+snd-soc-dummy
 
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index 102dfcf0a29a..9a10ee9afcbf 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -3050,14 +3050,44 @@ void scheduler_tick(void)
-> >  
-> >  struct tick_work {
-> >  	int			cpu;
-> > +	int			state;
-> >  	struct delayed_work	work;
-> >  };
-> > +// Values for ->state, see diagram below.
-> > +#define TICK_SCHED_REMOTE_IDLE		0
-> 
-> So it took me some time to understand that the IDLE state is the
-> tick work that ackowledged OFFLINING and finally completes the
-> offline process. Therefore perhaps we can rename it to
-> TICK_SCHED_REMOTE_OFFLINE so that we instantly get the state
-> machine scenario.
+And after the patch:
 
-Good point, your name is much better.  Updated.
-
-> > +#define TICK_SCHED_REMOTE_RUNNING	1
-> > +#define TICK_SCHED_REMOTE_OFFLINING	2
-> > +
-> > +// State diagram for ->state:
-> > +//
-> > +//
-> > +//      +----->IDLE-----------------------------+
-> > +//      |                                       |
-> > +//      |                                       |
-> > +//      |                                       | sched_tick_start()
-> > +//      | sched_tick_remote()                   |
-> > +//      |                                       |
-> > +//      |                                       V
-> > +//      |                        +---------->RUNNING
-> > +//      |                        |              |
-> > +//      |                        |              |
-> > +//      |                        |              |
-> > +//      |     sched_tick_start() |              | sched_tick_stop()
-> > +//      |                        |              |
-> > +//      |                        |              |
-> > +//      |                        |              |
-> > +//      +--------------------OFFLINING<---------+
-> > +//
-> > +//
-> > +// Other transitions get WARN_ON_ONCE(), except that sched_tick_remote()
-> > +// and sched_tick_start() are happy to leave the state in RUNNING.
-> >  
-> >  static struct tick_work __percpu *tick_work_cpu;
-> >  
-> >  static void sched_tick_remote(struct work_struct *work)
-> >  {
-> >  	struct delayed_work *dwork = to_delayed_work(work);
-> > +	int os;
-> >  	struct tick_work *twork = container_of(dwork, struct tick_work, work);
-> >  	int cpu = twork->cpu;
-> >  	struct rq *rq = cpu_rq(cpu);
-> > @@ -3077,7 +3107,7 @@ static void sched_tick_remote(struct work_struct *work)
-> >  
-> >  	rq_lock_irq(rq, &rf);
-> >  	curr = rq->curr;
-> > -	if (is_idle_task(curr))
-> > +	if (is_idle_task(curr) || cpu_is_offline(cpu))
-> 
-> Or we could simply check rq->online, while we have rq locked.
-
-Which would have better cache locality as well.
-
-Let's see...  This is cleared from the same sched_cpu_dying() that invokes
-sched_tick_stop(), so that works.  Where is it set?  In set_rq_online(),
-of course, which is invoked from sched_cpu_activate() which is assigned
-to .startup.single, which sadly not the CPU-online counterpart to
-sched_cpu_dying().  This would result in the workqueue being started
-quite some time before its handler would allow itself to sample the state,
-and would also thus be a deviation from earlier behavior.
-
-In the immortal words of MS-DOS, "Are you sure?"
-
-> >  		goto out_unlock;
-> >  
-> >  	update_rq_clock(rq);
-> > @@ -3097,13 +3127,22 @@ static void sched_tick_remote(struct work_struct *work)
-> >  	/*
-> >  	 * Run the remote tick once per second (1Hz). This arbitrary
-> >  	 * frequency is large enough to avoid overload but short enough
-> > -	 * to keep scheduler internal stats reasonably up to date.
-> > +	 * to keep scheduler internal stats reasonably up to date.  But
-> > +	 * first update state to reflect hotplug activity if required.
-> >  	 */
-> > -	queue_delayed_work(system_unbound_wq, dwork, HZ);
-> > +	do {
-> > +		os = READ_ONCE(twork->state);
-> > +		WARN_ON_ONCE(os == TICK_SCHED_REMOTE_IDLE);
-> > +		if (os == TICK_SCHED_REMOTE_RUNNING)
-> > +			break;
-> > +	} while (cmpxchg(&twork->state, os, TICK_SCHED_REMOTE_IDLE) != os);
-> > +	if (os == TICK_SCHED_REMOTE_RUNNING)
-> > +		queue_delayed_work(system_unbound_wq, dwork, HZ);
-> >  }
-> >  
-> >  static void sched_tick_start(int cpu)
-> >  {
-> > +	int os;
-> >  	struct tick_work *twork;
-> >  
-> >  	if (housekeeping_cpu(cpu, HK_FLAG_TICK))
-> > @@ -3112,14 +3151,23 @@ static void sched_tick_start(int cpu)
-> >  	WARN_ON_ONCE(!tick_work_cpu);
-> >  
-> >  	twork = per_cpu_ptr(tick_work_cpu, cpu);
-> > -	twork->cpu = cpu;
-> > -	INIT_DELAYED_WORK(&twork->work, sched_tick_remote);
-> > -	queue_delayed_work(system_unbound_wq, &twork->work, HZ);
-> > +	do {
-> > +		os = READ_ONCE(twork->state);
-> > +		if (os == TICK_SCHED_REMOTE_RUNNING)
-> 
-> Is it possible to have RUNNING at this stage? sched_tick_start()
-> shouldn't be called twice without a sched_tick_stop() in the middle.
-> 
-> In which case we should even warn if we meet that value here.
-
-Good point, it now looks like this:
-
-	if (os == WARN_ON_ONCE(TICK_SCHED_REMOTE_RUNNING))
-
-Which, after an embarrassingly long time, turned into this:
-
-	if (WARN_ON_ONCE(os == TICK_SCHED_REMOTE_RUNNING))
-
-> > +			break;
-> > +		// Either idle or offline for a short period
-> > +	} while (cmpxchg(&twork->state, os, TICK_SCHED_REMOTE_RUNNING) != os);
-> > +	if (os == TICK_SCHED_REMOTE_IDLE) {
-> > +		twork->cpu = cpu;
-> > +		INIT_DELAYED_WORK(&twork->work, sched_tick_remote);
-> > +		queue_delayed_work(system_unbound_wq, &twork->work, HZ);
-> > +	}
-> >  }
-> >  
-> >  #ifdef CONFIG_HOTPLUG_CPU
-> >  static void sched_tick_stop(int cpu)
-> >  {
-> > +	int os;
-> >  	struct tick_work *twork;
-> >  
-> >  	if (housekeeping_cpu(cpu, HK_FLAG_TICK))
-> > @@ -3128,7 +3176,13 @@ static void sched_tick_stop(int cpu)
-> >  	WARN_ON_ONCE(!tick_work_cpu);
-> >  
-> >  	twork = per_cpu_ptr(tick_work_cpu, cpu);
-> > -	cancel_delayed_work_sync(&twork->work);
-> > +	// There cannot be competing actions, but don't rely on stop_machine.
-> > +	do {
-> > +		os = READ_ONCE(twork->state);
-> > +		WARN_ON_ONCE(os != TICK_SCHED_REMOTE_RUNNING);
-> > +		// Either idle or offline for a short period
-> > +	} while (cmpxchg(&twork->state, os, TICK_SCHED_REMOTE_OFFLINING) != os);
-> > +	// Don't cancel, as this would mess up the state machine.
-> >  }
-> >  #endif /* CONFIG_HOTPLUG_CPU */
-> 
-> I ran the state machine for a few hours inside my head through FWEISBEC_TORTURE
-> and I see no error message. Which is of course not a guarantee of anything but:
-
-I know that feeling!
-
-> Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-
-Thank you, applied!
-
-> Also, I believe that /* */ is the preferred comment style, FWIW ;-)
-
-True enough, but "//" is permitted and allows me three more characters of
-comment before wanting to do a line break.  ;-)
-
-But it is your code, so if you want "/* */", just let me know and I will
-switch to that style.
-
-							Thanx, Paul
-
+root@target:~# cat /sys/kernel/debug/asoc/components 
+samsung-i2s
+snd_dmaengine_pcm
+snd_dmaengine_pcm
+hdmi-audio-codec.3.auto
+max98090.5-0010
+snd-soc-dummy
+snd-soc-dummy
