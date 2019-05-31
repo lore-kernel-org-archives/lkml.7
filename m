@@ -2,194 +2,200 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F00CC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B2EFC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F23C26748
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:03:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56142266EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:06:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbfEaKDj (ORCPT
+        id S1726483AbfEaKG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 06:03:39 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:58086 "EHLO huawei.com"
+        Fri, 31 May 2019 06:06:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40054 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726002AbfEaKDj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 06:03:39 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 9BBDB1EFB9AB272BF3AF;
-        Fri, 31 May 2019 18:03:36 +0800 (CST)
-Received: from [127.0.0.1] (10.133.215.186) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Fri, 31 May 2019
- 18:03:29 +0800
-Subject: Re: [PATCH v8 1/7] iommu: enhance IOMMU default DMA mode build
- options
-To:     John Garry <john.garry@huawei.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "Will Deacon" <will.deacon@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "Michael Ellerman" <mpe@ellerman.id.au>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        iommu <iommu@lists.linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>
-CC:     Hanjun Guo <guohanjun@huawei.com>, Linuxarm <linuxarm@huawei.com>
-References: <20190530034831.4184-1-thunder.leizhen@huawei.com>
- <20190530034831.4184-2-thunder.leizhen@huawei.com>
- <645bd526-4eb0-4a36-2dda-023f009247ab@huawei.com>
-From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <030bafab-58f5-8bb1-0533-2977d6e138b2@huawei.com>
-Date:   Fri, 31 May 2019 18:03:16 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <645bd526-4eb0-4a36-2dda-023f009247ab@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.133.215.186]
-X-CFilter-Loop: Reflected
+        id S1726002AbfEaKG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 06:06:56 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 15D9AAF4C;
+        Fri, 31 May 2019 10:06:54 +0000 (UTC)
+From:   Nikolay Borisov <nborisov@suse.com>
+To:     peterz@infradead.org
+Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org,
+        Nikolay Borisov <nborisov@suse.com>
+Subject: [PATCH] lockdep: Rename lockdep_assert_held_exclusive -> lockdep_assert_held_write
+Date:   Fri, 31 May 2019 13:06:51 +0300
+Message-Id: <20190531100651.3969-1-nborisov@suse.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+All callers of lockdep_assert_held_exclusive use it to verify the
+correct locking state of either a semaphore (ldisc_sem in tty,
+mmap_sem for perf events, i_rwsem of inode for dax) or rwlock by
+apparmor. Thus it makes sense to rename _exclusive to _write since
+that's the semantics callers care. Additionally there is already
+locdep_assert_held_read, this bring asymmetry to the naming.
 
+No functional changes.
 
-On 2019/5/30 20:20, John Garry wrote:
-> On 30/05/2019 04:48, Zhen Lei wrote:
->> First, add build option IOMMU_DEFAULT_{LAZY|STRICT}, so that we have the
->> opportunity to set {lazy|strict} mode as default at build time. Then put
->> the three config options in an choice, make people can only choose one of
->> the three at a time.
->>
-> 
-> Since this was not picked up, but modulo (somtimes same) comments below:
-> 
-> Reviewed-by: John Garry <john.garry@huawei.com>
-> 
->> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
->> ---
->>  drivers/iommu/Kconfig | 42 +++++++++++++++++++++++++++++++++++-------
->>  drivers/iommu/iommu.c |  3 ++-
->>  2 files changed, 37 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
->> index 83664db5221df02..d6a1a45f80ffbf5 100644
->> --- a/drivers/iommu/Kconfig
->> +++ b/drivers/iommu/Kconfig
->> @@ -75,17 +75,45 @@ config IOMMU_DEBUGFS
->>        debug/iommu directory, and then populate a subdirectory with
->>        entries as required.
->>
->> -config IOMMU_DEFAULT_PASSTHROUGH
->> -    bool "IOMMU passthrough by default"
->> +choice
->> +    prompt "IOMMU default DMA mode"
->>      depends on IOMMU_API
->> -        help
->> -      Enable passthrough by default, removing the need to pass in
->> -      iommu.passthrough=on or iommu=pt through command line. If this
->> -      is enabled, you can still disable with iommu.passthrough=off
->> -      or iommu=nopt depending on the architecture.
->> +    default IOMMU_DEFAULT_STRICT
->> +    help
->> +      This option allows IOMMU DMA mode to be chose at build time, to
-> 
-> As before:
-> /s/chose/chosen/, /s/allows IOMMU/allows an IOMMU/
-I'm sorry that the previous version was not modified.
+Signed-off-by: Nikolay Borisov <nborisov@suse.com>
+---
+ arch/x86/events/core.c           | 2 +-
+ drivers/infiniband/core/device.c | 2 +-
+ drivers/tty/tty_ldisc.c          | 8 ++++----
+ fs/dax.c                         | 2 +-
+ include/linux/lockdep.h          | 4 ++--
+ security/apparmor/label.c        | 8 ++++----
+ 6 files changed, 13 insertions(+), 13 deletions(-)
 
-> 
->> +      override the default DMA mode of each ARCHs, removing the need to
-> 
-> Again, as before:
-> ARCHs should be singular
-OK
-
-> 
->> +      pass in kernel parameters through command line. You can still use
->> +      ARCHs specific boot options to override this option again.
->> +
->> +config IOMMU_DEFAULT_PASSTHROUGH
->> +    bool "passthrough"
->> +    help
->> +      In this mode, the DMA access through IOMMU without any addresses
->> +      translation. That means, the wrong or illegal DMA access can not
->> +      be caught, no error information will be reported.
->>
->>        If unsure, say N here.
->>
->> +config IOMMU_DEFAULT_LAZY
->> +    bool "lazy"
->> +    help
->> +      Support lazy mode, where for every IOMMU DMA unmap operation, the
->> +      flush operation of IOTLB and the free operation of IOVA are deferred.
->> +      They are only guaranteed to be done before the related IOVA will be
->> +      reused.
-> 
-> why no advisory on how to set if unsure?
-Because the LAZY and STRICT have their own advantages and disadvantages.
-
-Should I say: If unsure, keep the default。
-
-> 
->> +
->> +config IOMMU_DEFAULT_STRICT
->> +    bool "strict"
->> +    help
->> +      For every IOMMU DMA unmap operation, the flush operation of IOTLB and
->> +      the free operation of IOVA are guaranteed to be done in the unmap
->> +      function.
->> +
->> +      This mode is safer than the two above, but it maybe slower in some
->> +      high performace scenarios.
-> 
-> and here?
-> 
->> +
->> +endchoice
->> +
->>  config OF_IOMMU
->>         def_bool y
->>         depends on OF && IOMMU_API
->> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
->> index 67ee6623f9b2a4d..56bce221285b15f 100644
->> --- a/drivers/iommu/iommu.c
->> +++ b/drivers/iommu/iommu.c
->> @@ -43,7 +43,8 @@
->>  #else
->>  static unsigned int iommu_def_domain_type = IOMMU_DOMAIN_DMA;
->>  #endif
->> -static bool iommu_dma_strict __read_mostly = true;
->> +static bool iommu_dma_strict __read_mostly =
->> +            IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
->>
->>  struct iommu_group {
->>      struct kobject kobj;
->>
-> 
-> 
-> 
-> .
-> 
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index f315425d8468..cf91d80b8452 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -2179,7 +2179,7 @@ static void x86_pmu_event_mapped(struct perf_event *event, struct mm_struct *mm)
+ 	 * For now, this can't happen because all callers hold mmap_sem
+ 	 * for write.  If this changes, we'll need a different solution.
+ 	 */
+-	lockdep_assert_held_exclusive(&mm->mmap_sem);
++	lockdep_assert_held_write(&mm->mmap_sem);
+ 
+ 	if (atomic_inc_return(&mm->context.perf_rdpmc_allowed) == 1)
+ 		on_each_cpu_mask(mm_cpumask(mm), refresh_pce, NULL, 1);
+diff --git a/drivers/infiniband/core/device.c b/drivers/infiniband/core/device.c
+index 78dc07c6ac4b..bbf72f995d1b 100644
+--- a/drivers/infiniband/core/device.c
++++ b/drivers/infiniband/core/device.c
+@@ -440,7 +440,7 @@ static int alloc_name(struct ib_device *ibdev, const char *name)
+ 	int rc;
+ 	int i;
+ 
+-	lockdep_assert_held_exclusive(&devices_rwsem);
++	lockdep_assert_held_write(&devices_rwsem);
+ 	ida_init(&inuse);
+ 	xa_for_each (&devices, index, device) {
+ 		char buf[IB_DEVICE_NAME_MAX];
+diff --git a/drivers/tty/tty_ldisc.c b/drivers/tty/tty_ldisc.c
+index e38f104db174..fde8d4073e74 100644
+--- a/drivers/tty/tty_ldisc.c
++++ b/drivers/tty/tty_ldisc.c
+@@ -487,7 +487,7 @@ static int tty_ldisc_open(struct tty_struct *tty, struct tty_ldisc *ld)
+ 
+ static void tty_ldisc_close(struct tty_struct *tty, struct tty_ldisc *ld)
+ {
+-	lockdep_assert_held_exclusive(&tty->ldisc_sem);
++	lockdep_assert_held_write(&tty->ldisc_sem);
+ 	WARN_ON(!test_bit(TTY_LDISC_OPEN, &tty->flags));
+ 	clear_bit(TTY_LDISC_OPEN, &tty->flags);
+ 	if (ld->ops->close)
+@@ -509,7 +509,7 @@ static int tty_ldisc_failto(struct tty_struct *tty, int ld)
+ 	struct tty_ldisc *disc = tty_ldisc_get(tty, ld);
+ 	int r;
+ 
+-	lockdep_assert_held_exclusive(&tty->ldisc_sem);
++	lockdep_assert_held_write(&tty->ldisc_sem);
+ 	if (IS_ERR(disc))
+ 		return PTR_ERR(disc);
+ 	tty->ldisc = disc;
+@@ -633,7 +633,7 @@ EXPORT_SYMBOL_GPL(tty_set_ldisc);
+  */
+ static void tty_ldisc_kill(struct tty_struct *tty)
+ {
+-	lockdep_assert_held_exclusive(&tty->ldisc_sem);
++	lockdep_assert_held_write(&tty->ldisc_sem);
+ 	if (!tty->ldisc)
+ 		return;
+ 	/*
+@@ -681,7 +681,7 @@ int tty_ldisc_reinit(struct tty_struct *tty, int disc)
+ 	struct tty_ldisc *ld;
+ 	int retval;
+ 
+-	lockdep_assert_held_exclusive(&tty->ldisc_sem);
++	lockdep_assert_held_write(&tty->ldisc_sem);
+ 	ld = tty_ldisc_get(tty, disc);
+ 	if (IS_ERR(ld)) {
+ 		BUG_ON(disc == N_TTY);
+diff --git a/fs/dax.c b/fs/dax.c
+index f74386293632..1224275f79d7 100644
+--- a/fs/dax.c
++++ b/fs/dax.c
+@@ -1196,7 +1196,7 @@ dax_iomap_rw(struct kiocb *iocb, struct iov_iter *iter,
+ 	unsigned flags = 0;
+ 
+ 	if (iov_iter_rw(iter) == WRITE) {
+-		lockdep_assert_held_exclusive(&inode->i_rwsem);
++		lockdep_assert_held_write(&inode->i_rwsem);
+ 		flags |= IOMAP_WRITE;
+ 	} else {
+ 		lockdep_assert_held(&inode->i_rwsem);
+diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
+index 6e2377e6c1d6..d6d6a857fe52 100644
+--- a/include/linux/lockdep.h
++++ b/include/linux/lockdep.h
+@@ -385,7 +385,7 @@ extern void lock_unpin_lock(struct lockdep_map *lock, struct pin_cookie);
+ 		WARN_ON(debug_locks && !lockdep_is_held(l));	\
+ 	} while (0)
+ 
+-#define lockdep_assert_held_exclusive(l)	do {			\
++#define lockdep_assert_held_write(l)	do {			\
+ 		WARN_ON(debug_locks && !lockdep_is_held_type(l, 0));	\
+ 	} while (0)
+ 
+@@ -466,7 +466,7 @@ struct lockdep_map { };
+ #define lockdep_is_held_type(l, r)		(1)
+ 
+ #define lockdep_assert_held(l)			do { (void)(l); } while (0)
+-#define lockdep_assert_held_exclusive(l)	do { (void)(l); } while (0)
++#define lockdep_assert_held_write(l)	do { (void)(l); } while (0)
+ #define lockdep_assert_held_read(l)		do { (void)(l); } while (0)
+ #define lockdep_assert_held_once(l)		do { (void)(l); } while (0)
+ 
+diff --git a/security/apparmor/label.c b/security/apparmor/label.c
+index ba11bdf9043a..3cab01eec805 100644
+--- a/security/apparmor/label.c
++++ b/security/apparmor/label.c
+@@ -80,7 +80,7 @@ void __aa_proxy_redirect(struct aa_label *orig, struct aa_label *new)
+ 
+ 	AA_BUG(!orig);
+ 	AA_BUG(!new);
+-	lockdep_assert_held_exclusive(&labels_set(orig)->lock);
++	lockdep_assert_held_write(&labels_set(orig)->lock);
+ 
+ 	tmp = rcu_dereference_protected(orig->proxy->label,
+ 					&labels_ns(orig)->lock);
+@@ -570,7 +570,7 @@ static bool __label_remove(struct aa_label *label, struct aa_label *new)
+ 
+ 	AA_BUG(!ls);
+ 	AA_BUG(!label);
+-	lockdep_assert_held_exclusive(&ls->lock);
++	lockdep_assert_held_write(&ls->lock);
+ 
+ 	if (new)
+ 		__aa_proxy_redirect(label, new);
+@@ -607,7 +607,7 @@ static bool __label_replace(struct aa_label *old, struct aa_label *new)
+ 	AA_BUG(!ls);
+ 	AA_BUG(!old);
+ 	AA_BUG(!new);
+-	lockdep_assert_held_exclusive(&ls->lock);
++	lockdep_assert_held_write(&ls->lock);
+ 	AA_BUG(new->flags & FLAG_IN_TREE);
+ 
+ 	if (!label_is_stale(old))
+@@ -644,7 +644,7 @@ static struct aa_label *__label_insert(struct aa_labelset *ls,
+ 	AA_BUG(!ls);
+ 	AA_BUG(!label);
+ 	AA_BUG(labels_set(label) != ls);
+-	lockdep_assert_held_exclusive(&ls->lock);
++	lockdep_assert_held_write(&ls->lock);
+ 	AA_BUG(label->flags & FLAG_IN_TREE);
+ 
+ 	/* Figure out where to put new node */
+-- 
+2.17.1
 
