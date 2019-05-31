@@ -2,143 +2,187 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB17C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D08C28CC2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 760862685F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:48:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 191702685D
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:48:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727231AbfEaLsm (ORCPT
+        id S1727268AbfEaLsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 07:48:42 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55768 "EHLO mx1.suse.de"
+        Fri, 31 May 2019 07:48:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55826 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726403AbfEaLsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 07:48:42 -0400
+        id S1726307AbfEaLsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 07:48:54 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id F1702AD4E;
-        Fri, 31 May 2019 11:48:39 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 845C9AD4E;
+        Fri, 31 May 2019 11:48:52 +0000 (UTC)
+Subject: Re: [RFC PATCH v2 04/12] x86/mm/tlb: Flush remote and local TLBs
+ concurrently
+To:     Nadav Amit <namit@vmware.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        xen-devel@lists.xenproject.org
+References: <20190531063645.4697-1-namit@vmware.com>
+ <20190531063645.4697-5-namit@vmware.com>
+From:   Juergen Gross <jgross@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <a847ee9c-4faf-c8b4-43bb-cc30e0980796@suse.com>
+Date:   Fri, 31 May 2019 13:48:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20190531063645.4697-5-namit@vmware.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
 Content-Transfer-Encoding: 7bit
-Date:   Fri, 31 May 2019 13:48:39 +0200
-From:   Roman Penyaev <rpenyaev@suse.de>
-To:     Renzo Davoli <renzo@cs.unibo.it>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Davide Libenzi <davidel@xmailserver.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCH 1/1] eventfd new tag EFD_VPOLL: generate epoll events
-In-Reply-To: <20190531104502.GE3661@cs.unibo.it>
-References: <20190526142521.GA21842@cs.unibo.it>
- <20190527073332.GA13782@kroah.com> <20190527133621.GC26073@cs.unibo.it>
- <480f1bda66b67f740f5da89189bbfca3@suse.de>
- <20190531104502.GE3661@cs.unibo.it>
-Message-ID: <cd20672aaf13f939b4f798d0839d2438@suse.de>
-X-Sender: rpenyaev@suse.de
-User-Agent: Roundcube Webmail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-05-31 12:45, Renzo Davoli wrote:
-> HI Roman,
+On 31/05/2019 08:36, Nadav Amit wrote:
+> To improve TLB shootdown performance, flush the remote and local TLBs
+> concurrently. Introduce flush_tlb_multi() that does so. The current
+> flush_tlb_others() interface is kept, since paravirtual interfaces need
+> to be adapted first before it can be removed. This is left for future
+> work. In such PV environments, TLB flushes are not performed, at this
+> time, concurrently.
 > 
-> On Fri, May 31, 2019 at 11:34:08AM +0200, Roman Penyaev wrote:
->> On 2019-05-27 15:36, Renzo Davoli wrote:
->> > Unfortunately this approach cannot be applied to
->> > poll/select/ppoll/pselect/epoll.
->> 
->> If you have to override other systemcalls, what is the problem to 
->> override
->> poll family?  It will add, let's say, 50 extra code lines complexity 
->> to your
->> userspace code.  All you need is to be woken up by *any* event and 
->> check
->> one mask variable, in order to understand what you need to do: read or
->> write,
->> basically exactly what you do in your eventfd modification, but only 
->> in
->> userspace.
+> Add a static key to tell whether this new interface is supported.
 > 
-> This approach would not scale. If I want to use both a (user-space)
-> network stack
-> and a (emulated) device (or more stacks and devices) which
-> (overridden) poll would I use?
+> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+> Cc: Haiyang Zhang <haiyangz@microsoft.com>
+> Cc: Stephen Hemminger <sthemmin@microsoft.com>
+> Cc: Sasha Levin <sashal@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: x86@kernel.org
+> Cc: Juergen Gross <jgross@suse.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Andy Lutomirski <luto@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> Cc: linux-hyperv@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: virtualization@lists.linux-foundation.org
+> Cc: kvm@vger.kernel.org
+> Cc: xen-devel@lists.xenproject.org
+> Signed-off-by: Nadav Amit <namit@vmware.com>
+> ---
+>  arch/x86/hyperv/mmu.c                 |  2 +
+>  arch/x86/include/asm/paravirt.h       |  8 +++
+>  arch/x86/include/asm/paravirt_types.h |  6 ++
+>  arch/x86/include/asm/tlbflush.h       |  6 ++
+>  arch/x86/kernel/kvm.c                 |  1 +
+>  arch/x86/kernel/paravirt.c            |  3 +
+>  arch/x86/mm/tlb.c                     | 80 +++++++++++++++++++++++----
+>  arch/x86/xen/mmu_pv.c                 |  2 +
+>  8 files changed, 96 insertions(+), 12 deletions(-)
 > 
-> The poll of the first stack is not able to to deal with the third 
-> device.
+> diff --git a/arch/x86/hyperv/mmu.c b/arch/x86/hyperv/mmu.c
+> index e65d7fe6489f..ca28b400c87c 100644
+> --- a/arch/x86/hyperv/mmu.c
+> +++ b/arch/x86/hyperv/mmu.c
+> @@ -233,4 +233,6 @@ void hyperv_setup_mmu_ops(void)
+>  	pr_info("Using hypercall for remote TLB flush\n");
+>  	pv_ops.mmu.flush_tlb_others = hyperv_flush_tlb_others;
+>  	pv_ops.mmu.tlb_remove_table = tlb_remove_table;
+> +
+> +	static_key_disable(&flush_tlb_multi_enabled.key);
+>  }
+> diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
+> index c25c38a05c1c..192be7254457 100644
+> --- a/arch/x86/include/asm/paravirt.h
+> +++ b/arch/x86/include/asm/paravirt.h
+> @@ -47,6 +47,8 @@ static inline void slow_down_io(void)
+>  #endif
+>  }
+>  
+> +DECLARE_STATIC_KEY_TRUE(flush_tlb_multi_enabled);
+> +
+>  static inline void __flush_tlb(void)
+>  {
+>  	PVOP_VCALL0(mmu.flush_tlb_user);
+> @@ -62,6 +64,12 @@ static inline void __flush_tlb_one_user(unsigned long addr)
+>  	PVOP_VCALL1(mmu.flush_tlb_one_user, addr);
+>  }
+>  
+> +static inline void flush_tlb_multi(const struct cpumask *cpumask,
+> +				   const struct flush_tlb_info *info)
+> +{
+> +	PVOP_VCALL2(mmu.flush_tlb_multi, cpumask, info);
+> +}
+> +
+>  static inline void flush_tlb_others(const struct cpumask *cpumask,
+>  				    const struct flush_tlb_info *info)
+>  {
+> diff --git a/arch/x86/include/asm/paravirt_types.h b/arch/x86/include/asm/paravirt_types.h
+> index 946f8f1f1efc..3a156e63c57d 100644
+> --- a/arch/x86/include/asm/paravirt_types.h
+> +++ b/arch/x86/include/asm/paravirt_types.h
+> @@ -211,6 +211,12 @@ struct pv_mmu_ops {
+>  	void (*flush_tlb_user)(void);
+>  	void (*flush_tlb_kernel)(void);
+>  	void (*flush_tlb_one_user)(unsigned long addr);
+> +	/*
+> +	 * flush_tlb_multi() is the preferred interface. When it is used,
+> +	 * flush_tlb_others() should return false.
 
-Since each such a stack has a set of read/write/etc functions you always
-can extend you stack with another call which returns you event mask,
-specifying what exactly you have to do, e.g.:
-
-     nfds = epoll_wait(epollfd, events, MAX_EVENTS, -1);
-     for (n = 0; n < nfds; ++n) {
-          struct sock *sock;
-
-          sock = events[n].data.ptr;
-          events = sock->get_events(sock, &events[n]);
-
-          if (events & EPOLLIN)
-              sock->read(sock);
-          if (events & EPOLLOUT)
-              sock->write(sock);
-     }
+Didn't you want to remove/change this comment?
 
 
-With such a virtual table you can mix all userspace stacks and even
-with normal sockets, for which 'get_events' function can be declared as
-
-static poll_t kernel_sock_get_events(struct sock *sock, struct 
-epoll_event *ev)
-{
-     return ev->events;
-}
-
-Do I miss something?
-
-
->> > > Why can it not be less than 64?
->> > This is the imeplementation of 'write'. The 64 bits include the
->> > 'command'
->> > EFD_VPOLL_ADDEVENTS, EFD_VPOLL_DELEVENTS or EFD_VPOLL_MODEVENTS (in the
->> > most
->> > significant 32 bits) and the set of events (in the lowest 32 bits).
->> 
->> Do you really need add/del/mod semantics?  Userspace still has to keep 
->> mask
->> somewhere, so you can have one simple command, which does:
->>    ctx->count = events;
->> in kernel, so no masks and this games with bits are needed.  That will
->> simplify API.
-> 
-> It is true, at the price to have more complex code in user space.
-> Other system calls could have beeen implemented as "set the value",
-> instead there are
-> ADD/DEL modification flags.
-> I mean for example sigprocmask (SIG_BLOCK, SIG_UNBLOCK, SIG_SETMASK),
-> or even epoll_ctl.
-> While poll requires the program to keep the struct pollfd array stored
-> somewhere,
-> epoll is more powerful and flexible as different file descriptors can 
-> be added
-> and deleted by different modules/components.
-> 
-> If I have two threads implementing the send and receive path of a
-> socket in a user-space
-
-Eventually you come up with such a lock to protect your tcp or whatever
-state machine.  Or you have a real example where read and write paths
-can work completely independently?
-
---
-Roman
+Juergen
