@@ -2,100 +2,89 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD9F6C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A52C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81C1F268C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:24:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aQKXDnGd"
+	by mail.kernel.org (Postfix) with ESMTP id 82AEB268C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:25:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbfEaMX7 (ORCPT
+        id S1727359AbfEaMZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 08:23:59 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:36056 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbfEaMX7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 08:23:59 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4VCNZIo115859;
-        Fri, 31 May 2019 07:23:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559305415;
-        bh=s5BHi330exWmUynpqb3iUBypm5V6BAHHNT54lxakjVA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=aQKXDnGdpv2gEhPpPuFA0HXuKGGuRolwmTMAlhjUjJKl71A2mXvmPJOWIl1PSpTpS
-         0b0Xeka1tz5O/qnoglvbWwln2l4EEzQe8W+vnbe4WWTAoe1WKWHWsR5U4Cna/fMajp
-         LhLdga4wdStzbDyMxcEgka0AmK59q9CuxvcwZJUA=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4VCNZpr039855
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 31 May 2019 07:23:35 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 31
- May 2019 07:23:34 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 31 May 2019 07:23:34 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4VCNWQC031859;
-        Fri, 31 May 2019 07:23:33 -0500
-Subject: Re: [PATCHv6 3/4] drm/omap: add framedone interrupt support
-To:     Sebastian Reichel <sre@kernel.org>
-CC:     Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        <dri-devel@lists.freedesktop.org>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel@collabora.com>
-References: <20190523200756.25314-1-sebastian.reichel@collabora.com>
- <20190523200756.25314-4-sebastian.reichel@collabora.com>
- <9eb23a5d-438e-7b25-e7cb-8b734a150e43@ti.com>
- <20190529215530.mi3fjlsaziq22mw5@earth.universe>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <bbe14265-4499-4a55-ef94-9def2df365d7@ti.com>
-Date:   Fri, 31 May 2019 15:23:32 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 31 May 2019 08:25:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33508 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726330AbfEaMZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 08:25:17 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 42AA4AD76;
+        Fri, 31 May 2019 12:25:16 +0000 (UTC)
+Date:   Fri, 31 May 2019 14:25:15 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Petr Mladek <pmladek@suse.com>
+cc:     Jiri Kosina <jikos@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] stacktrace: Remove superfluous WARN_ONCE() from
+ save_stack_trace_tsk_reliable()
+In-Reply-To: <20190531074147.27616-2-pmladek@suse.com>
+Message-ID: <alpine.LSU.2.21.1905311418120.742@pobox.suse.cz>
+References: <20190531074147.27616-1-pmladek@suse.com> <20190531074147.27616-2-pmladek@suse.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20190529215530.mi3fjlsaziq22mw5@earth.universe>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/05/2019 00:55, Sebastian Reichel wrote:
+On Fri, 31 May 2019, Petr Mladek wrote:
 
-> Oh sorry, I missed the part that omap_irq_wait_init() actually
-> enables the framedone irq. It should be enough to just drop the
-> warning (and the curly brackets) to keep existing behaviour. The
-> code exits early with the above warning for any existing code (since
-> that does not register a framedone handler). DSI on the other hand
-> does not reach the omap_irq_wait_init() part. Regarding combining
-> the logic: I don't think there is anything to combine right now.
-> It should be possible to simplify the logic after DSI has been
-> converted to drm_panel style, since this will move the update logic
-> for the screen content from the panel driver to DSI core.
+> WARN_ONCE() in the generic save_stack_trace_tsk_reliable() is superfluous.
 > 
-> TLDR: It's enough to remove the warning. Do you need a new
-> submission for this?
+> The information is passed also via the return value. The only current
+> user klp_check_stack() writes its own warning when the reliable stack
+> traces are not supported. Other eventual users might want its own error
+> handling as well.
+> 
+> Signed-off-by: Petr Mladek <pmladek@suse.com>
+> Acked-by: Miroslav Benes <mbenes@suse.cz>
+> Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+> ---
+>  kernel/stacktrace.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/kernel/stacktrace.c b/kernel/stacktrace.c
+> index 5667f1da3ede..8d088408928d 100644
+> --- a/kernel/stacktrace.c
+> +++ b/kernel/stacktrace.c
+> @@ -259,7 +259,6 @@ __weak int
+>  save_stack_trace_tsk_reliable(struct task_struct *tsk,
+>  			      struct stack_trace *trace)
+>  {
+> -	WARN_ONCE(1, KERN_INFO "save_stack_tsk_reliable() not implemented yet.\n");
+>  	return -ENOSYS;
+>  }
 
-Ok. No, I can edit the patch.
+Do we even need the weak function now after Thomas' changes to 
+kernel/stacktrace.c?
 
-Nikolaus, are you able to test DSI videomode with these patches?
+- livepatch is the only user and it calls stack_trace_save_tsk_reliable()
+- x86 defines CONFIG_ARCH_STACKWALK and CONFIG_HAVE_RELIABLE_STACKTRACE, 
+  so it has stack_trace_save_tsk_reliable() implemented and it calls 
+  arch_stack_walk_reliable()
+- powerpc defines CONFIG_HAVE_RELIABLE_STACKTRACE and does not have 
+  CONFIG_ARCH_STACKWALK. It also has stack_trace_save_tsk_reliable() 
+  implemented and it calls save_stack_trace_tsk_reliable(), which is 
+  implemented in arch/powerpc/
+- all other archs do not have CONFIG_HAVE_RELIABLE_STACKTRACE and there is 
+  stack_trace_save_tsk_reliable() returning ENOSYS for these cases in 
+  include/linux/stacktrace.c
 
-  Tomi
-
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Miroslav
