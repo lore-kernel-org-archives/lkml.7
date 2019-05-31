@@ -2,120 +2,110 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C6EC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 22:09:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D71C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 22:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C528F26F9B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 22:09:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09E7A26F93
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 22:09:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="gqQvc6m/"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="A6m+hWwr";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WU34CiZq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbfEaWJE (ORCPT
+        id S1726720AbfEaWJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 18:09:04 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44213 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbfEaWJD (ORCPT
+        Fri, 31 May 2019 18:09:54 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:53660 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbfEaWJy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 18:09:03 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w13so7396283wru.11
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 15:09:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Mfg+WnExM9IDxwQ3GIescl8fTMcBUXF0iWpzmhsc0Ow=;
-        b=gqQvc6m/IE4KhvJtYD22mB6DFJrC6TRT0jRl3At0zdC4HkIO4HTbOU+gkSTJLtiVHO
-         d2Pytt4RQaoMKBYmQD9GmRU6vw5udrJUWvlFkcmkOAMPj1nIP0oD3dd19207O9Q1ktc5
-         5QwYZran2v5dPHcSqydCxHuJT4sHk8cuYlZgam0OvIiIrZ2rNCW3/ISVznnux7D/BZfH
-         7e5zgJmO5kMFaSBINFN1csKsXb2IJ5T/F/rdJQjXHYMDROLGMl8aksDBeL1YsVxhFQUF
-         pmZE8T3spJwHcLw7olslX8n4miI0okoBfpur0B3K/znHah3jW9FzKO9ZGqCNNf2f2QPu
-         7OGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Mfg+WnExM9IDxwQ3GIescl8fTMcBUXF0iWpzmhsc0Ow=;
-        b=m7LLYwJfiEFyPFl+NYdzRXwgFreiheHaIU1r3+C7d8LkA+7Dl5jyKJkGNYGK5DOGTB
-         EgxnI2Zgk6otyityBqJrngRsr5GzRDkfpw97CjL+olsVhca7pnzMi1oMu4ogd+/wzzc5
-         aAvZBIvniZaZLVlbYY9k1KwedxTNkfieKwy4BHZs8R80GlOQ+7WDJemNzMTMTqwOwKYS
-         PaF3M2W90NsOlLhX2CaJMztRyelI2q1XdJXN9NxASEbxwVpNQ1Eio3Y3pINCoqGetGyr
-         B8yroacoAzaAetCkBzoZb+Z/OMgLADYXZv5a6cmvTNXVpbEq7oDMPp1aNPAgyNqbIa7j
-         2MYw==
-X-Gm-Message-State: APjAAAXIRDFzT5cqYljyHHSCyAo6LB0RaWLtkgXbPRJ8w/f06VmCnCEj
-        0rXxMn4YiORvLfSxtMvUKgQkNA==
-X-Google-Smtp-Source: APXvYqyM1BrmfXdXLpdNzGf3XeEte6aFrlMVGlMceLwxa2Jfci15tAOkH1kB7Q+eqdN2gl1CjdBNTg==
-X-Received: by 2002:adf:9023:: with SMTP id h32mr8164520wrh.95.1559340541718;
-        Fri, 31 May 2019 15:09:01 -0700 (PDT)
-Received: from brauner.io (93-32-55-82.ip32.fastwebnet.it. [93.32.55.82])
-        by smtp.gmail.com with ESMTPSA id b17sm917188wmj.26.2019.05.31.15.09.00
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 31 May 2019 15:09:01 -0700 (PDT)
-Date:   Sat, 1 Jun 2019 00:08:59 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Andrei Vagin <avagin@gmail.com>
-Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
-        torvalds@linux-foundation.org, jannh@google.com,
-        fweimer@redhat.com, oleg@redhat.com, arnd@arndb.de,
-        dhowells@redhat.com, Pavel Emelyanov <xemul@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Adrian Reber <adrian@lisas.de>, linux-api@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] fork: add clone3
-Message-ID: <20190531220858.nyr7kdduk4auu67m@brauner.io>
-References: <20190529152237.10719-1-christian@brauner.io>
- <20190529222414.GA6492@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190529222414.GA6492@gmail.com>
-User-Agent: NeoMutt/20180716
+        Fri, 31 May 2019 18:09:54 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 7E15F60A44; Fri, 31 May 2019 22:09:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559340593;
+        bh=A8zDS66mjFwXp5YoMISUc0SPzfOMxvbFtRNcKwj+2ZY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=A6m+hWwrjnUITlEJsQN/FfJWTlkxkPd14awJ83GY0dsezNVxfSE29U5VUlHlEpZHf
+         7122p8L184mhQ4qBQQVzQXcyVhpniRXXJADucPytlIamdkLE2iAJcsCsBYzV5LDE4D
+         9+jBnX5CbU3UokdeEf0Ng+onk/26SIIZEj0ib2/U=
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 309D160712;
+        Fri, 31 May 2019 22:09:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559340591;
+        bh=A8zDS66mjFwXp5YoMISUc0SPzfOMxvbFtRNcKwj+2ZY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=WU34CiZqbH7Vy5mC9Mv7jpghXfkOTCP5nHlG1N3qw1UyNTEcxajfVvALY+7S0xV6U
+         lmGAXoHioCsmQXbl7xLpVEe5FChLTjOEoIpjQCjxEQsolowG/Yg1+5I9+xhPXh7OlA
+         9ePXkP+nJfoc0SWBvx4sYPHFHPcEjJunrVYtF5tQ=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 309D160712
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     freedreno@lists.freedesktop.org
+Cc:     bjorn.andersson@linaro.org, Sean Paul <sean@poorly.run>,
+        Kees Cook <keescook@chromium.org>,
+        linux-arm-msm@vger.kernel.org,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Rob Clark <robdclark@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH] drm/msm/adreno: Ensure that the zap shader region is big enough
+Date:   Fri, 31 May 2019 16:09:38 -0600
+Message-Id: <1559340578-11482-1-git-send-email-jcrouse@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 03:24:15PM -0700, Andrei Vagin wrote:
-> On Wed, May 29, 2019 at 05:22:36PM +0200, Christian Brauner wrote:
-> > This adds the clone3 system call.
-> > 
-> > As mentioned several times already (cf. [7], [8]) here's the promised
-> > patchset for clone3().
-> > 
-> > We recently merged the CLONE_PIDFD patchset (cf. [1]). It took the last
-> > free flag from clone().
-> > 
-> > Independent of the CLONE_PIDFD patchset a time namespace has been discussed
-> > at Linux Plumber Conference last year and has been sent out and reviewed
-> > (cf. [5]). It is expected that it will go upstream in the not too distant
-> > future. However, it relies on the addition of the CLONE_NEWTIME flag to
-> > clone(). The only other good candidate - CLONE_DETACHED - is currently not
-> > recyclable as we have identified at least two large or widely used
-> > codebases that currently pass this flag (cf. [2], [3], and [4]). Given that
-> > CLONE_PIDFD grabbed the last clone() flag the time namespace is effectively
-> > blocked. clone3() has the advantage that it will unblock this patchset
-> > again.
-> 
-> Hi Christian,
+Before loading the zap shader we should ensure that the reserved memory
+region is big enough to hold the loaded file.
 
-Hi Andrei,
+Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+---
 
-(Traveling until Monday, so sorry for delayed responses.)
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-> 
-> Thank you for thinking about time namespaces. I looked at this patch
-> quickly and I would suggest to move a termination signal out of flags. I
-> think we can add a separate field (exit_signal) into clone_args. Does it
-> make sense? For me, exit_signal in flags always looked weird...
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+index 6f7f411..3db8e49 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+@@ -67,7 +67,6 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname,
+ 		return ret;
+ 
+ 	mem_phys = r.start;
+-	mem_size = resource_size(&r);
+ 
+ 	/* Request the MDT file for the firmware */
+ 	fw = adreno_request_fw(to_adreno_gpu(gpu), fwname);
+@@ -83,6 +82,13 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname,
+ 		goto out;
+ 	}
+ 
++	if (mem_size > resource_size(&r)) {
++		DRM_DEV_ERROR(dev,
++			"memory region is too small to load the MDT\n");
++		ret = -E2BIG;
++		goto out;
++	}
++
+ 	/* Allocate memory for the firmware image */
+ 	mem_region = memremap(mem_phys, mem_size,  MEMREMAP_WC);
+ 	if (!mem_region) {
+-- 
+2.7.4
 
-Yup, that does sound good to me.
-
-> 
-> I will look at this patch more detailed later this week. Thanks.
-
-Excellent!
-
-Christian
