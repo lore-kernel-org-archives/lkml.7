@@ -2,107 +2,155 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC7FC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 17:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03320C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 17:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58A9326D80
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 17:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C80BE26D83
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 17:56:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uwIXtfnd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S9a+AlHO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfEaRzd (ORCPT
+        id S1726976AbfEaR4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 13:55:33 -0400
-Received: from mail-pg1-f170.google.com ([209.85.215.170]:36664 "EHLO
-        mail-pg1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726996AbfEaRzd (ORCPT
+        Fri, 31 May 2019 13:56:38 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:38643 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726721AbfEaR4i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 13:55:33 -0400
-Received: by mail-pg1-f170.google.com with SMTP id a3so4450669pgb.3;
-        Fri, 31 May 2019 10:55:32 -0700 (PDT)
+        Fri, 31 May 2019 13:56:38 -0400
+Received: by mail-lf1-f67.google.com with SMTP id b11so8622210lfa.5;
+        Fri, 31 May 2019 10:56:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=HxibF4wEOxGDEZRF+k8HwRST1Ib/tNaxCfHf53i+6jw=;
-        b=uwIXtfnd+aiBmh/awwYxMoV6oVCSvlOz5evwQiDab2LMKz+zpK7Hpxfx53bt1SDoJ8
-         EoG9A3wnnpW9Z2I9St8V+7G1MEF5uQjV5zcsUZCu9qgTQxuwKS1FLDfcT4BO56XEGmHI
-         FSCsFT+g9EQpM2HeULvFK5ZRzUYylbYoTHLsRz3zpscIKhOHTkILf9/XxqIvOvYmqtf4
-         wdGtZmcxiCBVuei2gBdOycP9h7KIKRacMM+RfIlaUa8A4rK9UPUOTQxB/HfN26aCSM5N
-         ZQEpbJHe75bDn2BdTPTdrha3oDjgVXGHGufesalGkzqzfwnpOsuaKFhO80BRWsieM2ee
-         40AQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=8lbvXxV2I9wKlK6AoN+2OqvLiWU+5ClVbYmT8Pxzqvg=;
+        b=S9a+AlHOP6AqqdTUudPclvi3EeIjMj3M/Y2aQJPWdLwjWn+LUtdq6e01oBE4j5oCYD
+         p9iGZNlVNNomjyyAGjDapDZEe7dGULyAMqEBqZM/531gG0Hg2FKVwn2iNqQ1TDp+LwCF
+         iuK4ONk63AG9VqhwQwpj3+xH/UJ5idGZUwC4iXIs2N6rJVgYeyx6bIMMIRxx0IOLexhe
+         iiLakWoee78hk9VgOyrdk/f4/h2RAC8PnulltbjGLZbXHBpFPAjc+rqWnwdZPd0ObWtS
+         0wQhCOeLtJKGNOm+6xpKPgh3TM2amz/6vBmg3AG2YIvnMBKk0SVjhWCAYD4onJpsq5KD
+         hakw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=HxibF4wEOxGDEZRF+k8HwRST1Ib/tNaxCfHf53i+6jw=;
-        b=N580krsmMuNlnTBxY674+FziWZJFSHG+6o71Vjn7az5tctur5Ehe6didalKYArNZO5
-         pyWmUKUcOHEnpG2hWLB0Q52wJKOIcazyC4s+ODcyRF6QRZXivCXxEIqqjNUF4HOT0Y2Z
-         WVmSIHxLYPMjDiGgzUMCR2FE43Ji2AqZPgV93vrDoWiMxnF3J7lD1XBRU8PvKLme+awH
-         B+1EyW4DcPwC2wL/FeLaPdr6RvBYoC3AAKA1byWJSjVLuR6tQXwD+dq2jVTCINNHReLt
-         9P+aPWQEGreYErAtzu/KcrVaIICXTEHrBaTV4FA8okLH308KHklbrwGiuHwPwujZk+Gh
-         3g2w==
-X-Gm-Message-State: APjAAAVM6fFHpQE6cW2ErYRmepM2MPjg6XY4Jd8HAZ6JlRy+HdTiRY1Z
-        9HppNfyNzJZj2KSvmhJTqJAGS3pSPFzSpZX/1z2Erpmk
-X-Google-Smtp-Source: APXvYqxGlpGUpt3dDNsUjsYojSaK47xnsF2CGVbiJyPdDAOBhAy029Qd3t/3MoyQCV4zP5kbMCCRpdQoIvYckZQD1eY=
-X-Received: by 2002:a17:90a:240c:: with SMTP id h12mr11258789pje.12.1559325332100;
- Fri, 31 May 2019 10:55:32 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=8lbvXxV2I9wKlK6AoN+2OqvLiWU+5ClVbYmT8Pxzqvg=;
+        b=lJzPoOS7VQy9h56qyPVyU77xGi7tM0zEYnb+vWdCLG7J9lfK9mkS2CaOjCiS3hqyS6
+         oCQee4klW6cin/taiphlvLLfA4SXdNxVXkEW7G5Fg4QMnc1mCEbJmUJRp6xAZZ3BTldl
+         fccHQ8f+N3MWPv6BIqNzK+M3+uGhB3wdZh9bR+toGLCZx6adla4h/Wq2Op2o03aqReCm
+         acNyGo2DeMs6xL9tNgRK59FppvA434PuIlleAI4Aig825haDezCYRBtKnbFviB/rO7Qu
+         1/aoQ7UtVYmpjjbjjQN78/OGpg6TorTU7vL2iwbZ3nB939vYAxmZaMT3hqsQU6XihO3n
+         J1iQ==
+X-Gm-Message-State: APjAAAWR+adclrorHYAR1HY0v4abASIDfEjdcdYkIvOzhg5T4lYgZR+D
+        O/Xwm6jvlSdEVH0Yf5zYNis=
+X-Google-Smtp-Source: APXvYqyAcKi6qBmTAoEu3XjQNZdPFQJm1d+QKwaml6ZXSSVfwb3xqqBeDupMyPmYF7arRm+0tA5o8w==
+X-Received: by 2002:a05:6512:519:: with SMTP id o25mr6189734lfb.71.1559325396418;
+        Fri, 31 May 2019 10:56:36 -0700 (PDT)
+Received: from z50.localnet (109241207190.gdansk.vectranet.pl. [109.241.207.190])
+        by smtp.gmail.com with ESMTPSA id y10sm1285752lfy.66.2019.05.31.10.56.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 31 May 2019 10:56:35 -0700 (PDT)
+From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Subject: Re: [RFC PATCH 4/5] media: ov6650: Fix frame scaling not reset on crop
+Date:   Fri, 31 May 2019 19:56:33 +0200
+Message-ID: <1933971.yMpNBnsSgY@z50>
+In-Reply-To: <20190531114258.6bvsqzlexqnelu5u@valkosipuli.retiisi.org.uk>
+References: <20190526204758.1904-1-jmkrzyszt@gmail.com> <20190526204758.1904-5-jmkrzyszt@gmail.com> <20190531114258.6bvsqzlexqnelu5u@valkosipuli.retiisi.org.uk>
 MIME-Version: 1.0
-From:   Steve French <smfrench@gmail.com>
-Date:   Fri, 31 May 2019 12:55:21 -0500
-Message-ID: <CAH2r5ms=pUiZQPmX_-AoUceAWgr4Y5RwrkLC0o8dyfcMSKpuCQ@mail.gmail.com>
-Subject: [GIT PULL] SMB3 Fixes
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     CIFS <linux-cifs@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please pull the following changes since commit
-cd6c84d8f0cdc911df435bb075ba22ce3c605b07:
+Hi Sakari,
 
-  Linux 5.2-rc2 (2019-05-26 16:49:19 -0700)
+On Friday, May 31, 2019 1:42:58 PM CEST Sakari Ailus wrote:
+> Hi Janusz,
+> 
+> On Sun, May 26, 2019 at 10:47:57PM +0200, Janusz Krzysztofik wrote:
+> > According to V4L2 subdevice interface specification, frame scaling
+> > factors should be reset to default values on modification of input frame
+> > format.  Assuming that requirement also applies in case of crop
+> > rectangle modification unless V4L2_SEL_FLAG_KEEP_CONFIG is requested,
+> > the driver now does not respect it.
+> > 
+> > The KEEP_CONFIG case is already implemented, fix the other path.
+> > 
+> > Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+> > ---
+> >  drivers/media/i2c/ov6650.c | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> > 
+> > diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
+> > index 47590cd51190..cc70d8952999 100644
+> > --- a/drivers/media/i2c/ov6650.c
+> > +++ b/drivers/media/i2c/ov6650.c
+> > @@ -472,6 +472,8 @@ static int ov6650_get_selection(struct v4l2_subdev 
+*sd,
+> >  	}
+> >  }
+> >  
+> > +static int ov6650_s_fmt(struct v4l2_subdev *sd, u32 code, bool 
+half_scale);
+> > +
+> 
+> Would it be possible to rearrange the functions in the file so you wouldn't
+> need extra prototypes? Preferrably that'd be a new patch.
 
-are available in the Git repository at:
+Sure. I've intentionally done it like that for better readability of the 
+patches, but I have a task in my queue for rearrangement of functions order as 
+soon as other modifications are in place.
 
-  git://git.samba.org/sfrench/cifs-2.6.git tags/v5.2-rc2-smb3-fixes
+> >  static int ov6650_set_selection(struct v4l2_subdev *sd,
+> >  		struct v4l2_subdev_pad_config *cfg,
+> >  		struct v4l2_subdev_selection *sel)
+> > @@ -515,7 +517,13 @@ static int ov6650_set_selection(struct v4l2_subdev 
+*sd,
+> >  	}
+> >  	if (!ret)
+> >  		priv->rect.height = sel->r.height;
+> > +	else
+> > +		return ret;
+> 
+> if (ret)
+> 	return ret;
 
-for you to fetch changes up to 31fad7d41e73731f05b8053d17078638cf850fa6:
+OK
 
-  CIFS: cifs_read_allocate_pages: don't iterate through whole page
-array on ENOMEM (2019-05-29 14:02:11 -0500)
+Perhaps you will have more comments on other patches so I'll wait a bit and 
+then resubmit the series as v2.
 
-----------------------------------------------------------------
-4 small smb3 fixes, two for stable
-
-----------------------------------------------------------------
-Colin Ian King (1):
-      cifs: fix memory leak of pneg_inbuf on -EOPNOTSUPP ioctl case
-
-Gen Zhang (1):
-      dfs_cache: fix a wrong use of kfree in flush_cache_ent()
-
-Murphy Zhou (1):
-      fs/cifs/smb2pdu.c: fix buffer free in SMB2_ioctl_free
-
-Roberto Bergantinos Corpas (1):
-      CIFS: cifs_read_allocate_pages: don't iterate through whole page
-array on ENOMEM
-
- fs/cifs/dfs_cache.c | 4 ++--
- fs/cifs/file.c      | 4 +++-
- fs/cifs/smb2pdu.c   | 9 ++++++---
- 3 files changed, 11 insertions(+), 6 deletions(-)
-
-
--- 
 Thanks,
+Janusz
 
-Steve
+> ...
+> 
+> >  
+> > +	if (priv->half_scale) {
+> > +		/* turn off half scaling, preserve media bus format */
+> > +		ret = ov6650_s_fmt(sd, priv->code, false);
+> > +	}
+> >  	return ret;
+> >  }
+> >  
+> 
+> 
+
+
+
+
