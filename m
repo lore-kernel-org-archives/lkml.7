@@ -2,80 +2,66 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5902FC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53DB5C28CC2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39AE826B53
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DBCE26B57
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:10:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbfEaPJy (ORCPT
+        id S1726809AbfEaPKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 11:09:54 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:46362 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726037AbfEaPJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 11:09:53 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 8575913112EC03796CDD;
-        Fri, 31 May 2019 23:09:48 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Fri, 31 May 2019
- 23:09:39 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <bhelgaas@google.com>, <sthemmin@microsoft.com>,
-        <sashal@kernel.org>, <decui@microsoft.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] PCI: hv: Fix build error without CONFIG_SYSFS
-Date:   Fri, 31 May 2019 23:09:23 +0800
-Message-ID: <20190531150923.12376-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+        Fri, 31 May 2019 11:10:07 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:53015 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbfEaPKG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 11:10:06 -0400
+Received: from orion.localdomain ([77.7.63.28]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MZkxd-1h3HwP1gaV-00WlMu; Fri, 31 May 2019 17:09:10 +0200
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org, jdelvare@suse.com,
+        linux@roeck-us.net, khalid@gonehiking.org, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, aacraid@microsemi.com,
+        linux-pm@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-scsi@vger.kernel.org
+Subject: clean some unneeded #ifdef MODULE
+Date:   Fri, 31 May 2019 17:09:01 +0200
+Message-Id: <1559315344-10384-1-git-send-email-info@metux.net>
+X-Mailer: git-send-email 1.9.1
+X-Provags-ID: V03:K1:PrS//R/BJWbSCiEFeyNXflSE6uQtBtKrpHigy2MFykA7Fp+zNo3
+ 7XrHrtMx38tuo5kYPHGcelicWyYAAWToMO+L8sI8UiUEk+D3CrxvZhAgH1QjaWmEXGlfLy/
+ 7Yt/wrGlKG0Sc3XToaE+UPAhqFV6iwRe+tRWZmjFyQJxo73VextLvoxa2lP/ItlAq9TVd8r
+ gpruHdRRfy3w8KTu26AaA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:oJnEBJlP45s=:MJrLj4/4u/r7O5pAS0zSqq
+ xLqf1yfhcB4u0OP7KGbtCcjZ7Vl5vLiRfQp6xjMmgJ4Ob53afyKw5Y+vEDpErNKahjsf8IseG
+ DBhJTLPq5nPJt3GSUKvVrNwQOWzn7H3DbhKdZFB8mKcjkdQ6dqIXsNl8LvHT2ODHDwRNvswig
+ ARAVfcRlGpuk3rYUtiAt3QbxFNtv1cD46ze5VqyCb4IxPwAD/volq5Lf5Np/sNFEsO5s5LTqB
+ CLNyKTBGfaz1LMecQ965jZOSSpbypkWMRx9+TPjcVMy/FDOsI4htnZaU5S0X13tFs6kbC1jN6
+ 4LeOsfy6iEIj+BtmTR95aFKi+x50HVfWpbugfnYcaHj5/0OwoUnJIekUQxoqncxW+MX1UNRZh
+ TgZ/Xn8I0reR4LrEKvOA4/6udduSkUTIDOD4/leWMsKFgLnquiWsMX1/Ot2+VvWaMcL4PPE3g
+ 96qUtJQMrnsApV0cq2gsjp0qZxREVVdkeESm1dmoR7/1pfvek23Vit69ey+LGROIGSG7UvgEx
+ 3dgpzTUKcEmcZfgoi+dIElY+jYBt51/OS9gMFmIiWElbfH9tb0T6wzK8XNpPrQ6lE3JB1ORXC
+ xl7pQE4POXvucv7/qdIC+tz2pfu3PPFg7HZ9yH3+PWuLgcnvPWCTUmkVO6QSuYzVB1AcVeVu6
+ wVLX3MZg/O4whpB1hvMflkNgS7m62s80P+M4rmUfKbVWbJYcQlw+2Je2oIqfqu2yavasnO9qv
+ f9qsXC3nT2/Ig6bZNidmaaTCuGpyk8DDs0knkA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-while building without CONFIG_SYSFS, fails as below:
+Hi folks,
 
-drivers/pci/controller/pci-hyperv.o: In function 'hv_pci_assign_slots':
-pci-hyperv.c:(.text+0x40a): undefined reference to 'pci_create_slot'
-drivers/pci/controller/pci-hyperv.o: In function 'pci_devices_present_work':
-pci-hyperv.c:(.text+0xc02): undefined reference to 'pci_destroy_slot'
-drivers/pci/controller/pci-hyperv.o: In function 'hv_pci_remove':
-pci-hyperv.c:(.text+0xe50): undefined reference to 'pci_destroy_slot'
-drivers/pci/controller/pci-hyperv.o: In function 'hv_eject_device_work':
-pci-hyperv.c:(.text+0x11f9): undefined reference to 'pci_destroy_slot'
+here're some patches that clean up uncessary cases of #ifdef MODULE.
+These ifdef's just exlude MODULE_DEVICE_TABLE's when the kernel is
+built w/o module support. As MODULE_DEVICE_TABLE() macro already
+checks for that, these extra #ifdef's shouldn't be necessary.
 
-Select SYSFS while PCI_HYPERV is set to fix this.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: a15f2c08c708 ("PCI: hv: support reporting serial number as slot information")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/pci/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-index 2ab9240..6722952 100644
---- a/drivers/pci/Kconfig
-+++ b/drivers/pci/Kconfig
-@@ -182,6 +182,7 @@ config PCI_LABEL
- config PCI_HYPERV
-         tristate "Hyper-V PCI Frontend"
-         depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && X86_64
-+	select SYSFS
-         help
-           The PCI device frontend driver allows the kernel to import arbitrary
-           PCI devices from a PCI backend to support PCI driver domains.
--- 
-2.7.4
-
+--mtx
 
