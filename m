@@ -2,184 +2,104 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33AC6C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9DDC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10088246A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B71E3246A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:57:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mOh9a/Kw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbfEaP5l (ORCPT
+        id S1726884AbfEaP5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 11:57:41 -0400
-Received: from foss.arm.com ([217.140.101.70]:53658 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726576AbfEaP5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 11:57:41 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3324A341;
-        Fri, 31 May 2019 08:57:40 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3DB213F59C;
-        Fri, 31 May 2019 08:57:37 -0700 (PDT)
-Date:   Fri, 31 May 2019 16:57:30 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Marco Elver <elver@google.com>
-Cc:     peterz@infradead.org, aryabinin@virtuozzo.com, dvyukov@google.com,
-        glider@google.com, andreyknvl@google.com, hpa@zytor.com,
-        corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        x86@kernel.org, arnd@arndb.de, jpoimboe@redhat.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, kasan-dev@googlegroups.com
-Subject: Re: [PATCH v3 1/3] lib/test_kasan: Add bitops tests
-Message-ID: <20190531155730.GA2646@lakrids.cambridge.arm.com>
-References: <20190531150828.157832-1-elver@google.com>
- <20190531150828.157832-2-elver@google.com>
+        Fri, 31 May 2019 11:57:45 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39207 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726576AbfEaP5o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 11:57:44 -0400
+Received: by mail-pf1-f196.google.com with SMTP id j2so6462142pfe.6;
+        Fri, 31 May 2019 08:57:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=eloYZHuULAl9URe+9/lvxDAE1Ru67J7k+hZbTq0fmts=;
+        b=mOh9a/KwRJaweTtWvyQWN2HMurhArY1e0m6ytfesKLKpxnr2dLKKKkhKqUqolWHL14
+         HgkCTbwZmlPZ9mVSLI/HFY0efNOhBB8MBegx7xjwfqWOx6VyAC1uCErzNNTIUlkKntS7
+         QoxbBUsnwVCOMOzyhXAKJMVsW8AF5yrR6nVwx8CINRe4WauKr9mUwZtCHEgFXTFQucYp
+         QPotsoSvrqAS6E3EmgIgHFUdR1VSKHcj9ldg+razpt9IH1DxVsx663X0QsckHCISmCD9
+         HPNQYgHrFPDJe1vMLiy8hAJqTMctQ6ecvVxO84zqMp6rFWtSO77ObOhI6KjOMdJLYxkr
+         KAxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eloYZHuULAl9URe+9/lvxDAE1Ru67J7k+hZbTq0fmts=;
+        b=GcF7E/DKqWn5IlCb2X6+HuMHU4db+Fq2N2vUOAyqxXnK6oyMG/UI4RnJfwXse9hAMP
+         bhAjvdF2J4SMu1j5fD9LmjVPSOP9Yl1mM6dMjvA+VbzeNamC9qJjHKzCNvPNaPOYpM/A
+         GUiCyxNamzzHLNv9S8GtX5M9JeaFOIJ6kJS1YgPNrBRbuLdlGqkJ5HJGjLYKsrlHW2gj
+         LSLwoGSEIQpTSJTJhBT0Tct633cgcM2k7H9YZ5Bee0ZYv/x+4wnl6lhDVWGF4SpLxeyA
+         jETfXhB5QhBZmlUB7r9mA2xM+V3OrP4zXKt03g2/3Dxz+HDwyGL5oyDM4QOEwjLJLkWp
+         9RWA==
+X-Gm-Message-State: APjAAAV5/1Ys93jO9rGTP6Pi2m/any1V0cNKCi8Ws4mok9TV+UsoHidh
+        PdU3yyWiimok8bVIoGmzpro=
+X-Google-Smtp-Source: APXvYqzSQXHM1yULVV/pYLvLEO0AXzX01JxMYq//CdLY3JUbOaesBtXKPEQc7FEJxBvc9HRg37U9Xg==
+X-Received: by 2002:a62:683:: with SMTP id 125mr3443030pfg.168.1559318263752;
+        Fri, 31 May 2019 08:57:43 -0700 (PDT)
+Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
+        by smtp.gmail.com with ESMTPSA id h1sm7906377pfq.3.2019.05.31.08.57.42
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 31 May 2019 08:57:42 -0700 (PDT)
+Subject: Re: [PATCH] ipv6: Prevent overrun when parsing v6 header options
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     Young Xiao <92siuyang@gmail.com>, davem@davemloft.net,
+        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Steffen Klassert <steffen.klassert@secunet.com>
+References: <1559230098-1543-1-git-send-email-92siuyang@gmail.com>
+ <c83f8777-f6be-029b-980d-9f974b4e28ce@gmail.com>
+ <20190531062911.c6jusfbzgozqk2cu@gondor.apana.org.au>
+ <727c4b18-0d7b-b3c6-e0bb-41b3fe5902d3@gmail.com>
+ <20190531145428.ngwrgbnk2a7us5cy@gondor.apana.org.au>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <56a41977-6f9e-08dd-e4e2-07207324d536@gmail.com>
+Date:   Fri, 31 May 2019 08:57:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190531150828.157832-2-elver@google.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <20190531145428.ngwrgbnk2a7us5cy@gondor.apana.org.au>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 05:08:29PM +0200, Marco Elver wrote:
-> This adds bitops tests to the test_kasan module. In a follow-up patch,
-> support for bitops instrumentation will be added.
-> 
-> Signed-off-by: Marco Elver <elver@google.com>
-> ---
-> Changes in v3:
-> * Use kzalloc instead of kmalloc.
-> * Use sizeof(*bits).
 
-Thatnks for cleaning these up! FWIW:
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+On 5/31/19 7:54 AM, Herbert Xu wrote:
+> On Fri, May 31, 2019 at 07:50:06AM -0700, Eric Dumazet wrote:
+>>
+>> What do you mean by should ?
+>>
+>> Are they currently already linearized before the function is called,
+>> or is it missing and a bug needs to be fixed ?
+> 
+> AFAICS this is the code-path for locally generated outbound packets.
+> Under what circumstances can the IPv6 header be not in the head?
+> 
+>
 
-Mark.
+I guess this means we had yet another random submission from Young Xiao :/
 
-> 
-> Changes in v2:
-> * Use BITS_PER_LONG.
-> * Use heap allocated memory for test, as newer compilers (correctly)
->   warn on OOB stack access.
-> ---
->  lib/test_kasan.c | 75 ++++++++++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 72 insertions(+), 3 deletions(-)
-> 
-> diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-> index 7de2702621dc..1ef9702327d2 100644
-> --- a/lib/test_kasan.c
-> +++ b/lib/test_kasan.c
-> @@ -11,16 +11,17 @@
->  
->  #define pr_fmt(fmt) "kasan test: %s " fmt, __func__
->  
-> +#include <linux/bitops.h>
->  #include <linux/delay.h>
-> +#include <linux/kasan.h>
->  #include <linux/kernel.h>
-> -#include <linux/mman.h>
->  #include <linux/mm.h>
-> +#include <linux/mman.h>
-> +#include <linux/module.h>
->  #include <linux/printk.h>
->  #include <linux/slab.h>
->  #include <linux/string.h>
->  #include <linux/uaccess.h>
-> -#include <linux/module.h>
-> -#include <linux/kasan.h>
->  
->  /*
->   * Note: test functions are marked noinline so that their names appear in
-> @@ -623,6 +624,73 @@ static noinline void __init kasan_strings(void)
->  	strnlen(ptr, 1);
->  }
->  
-> +static noinline void __init kasan_bitops(void)
-> +{
-> +	long *bits = kzalloc(sizeof(*bits), GFP_KERNEL);
-> +	if (!bits)
-> +		return;
-> +
-> +	pr_info("within-bounds in set_bit");
-> +	set_bit(0, bits);
-> +
-> +	pr_info("within-bounds in set_bit");
-> +	set_bit(BITS_PER_LONG - 1, bits);
-> +
-> +	pr_info("out-of-bounds in set_bit\n");
-> +	set_bit(BITS_PER_LONG, bits);
-> +
-> +	pr_info("out-of-bounds in __set_bit\n");
-> +	__set_bit(BITS_PER_LONG, bits);
-> +
-> +	pr_info("out-of-bounds in clear_bit\n");
-> +	clear_bit(BITS_PER_LONG, bits);
-> +
-> +	pr_info("out-of-bounds in __clear_bit\n");
-> +	__clear_bit(BITS_PER_LONG, bits);
-> +
-> +	pr_info("out-of-bounds in clear_bit_unlock\n");
-> +	clear_bit_unlock(BITS_PER_LONG, bits);
-> +
-> +	pr_info("out-of-bounds in __clear_bit_unlock\n");
-> +	__clear_bit_unlock(BITS_PER_LONG, bits);
-> +
-> +	pr_info("out-of-bounds in change_bit\n");
-> +	change_bit(BITS_PER_LONG, bits);
-> +
-> +	pr_info("out-of-bounds in __change_bit\n");
-> +	__change_bit(BITS_PER_LONG, bits);
-> +
-> +	pr_info("out-of-bounds in test_and_set_bit\n");
-> +	test_and_set_bit(BITS_PER_LONG, bits);
-> +
-> +	pr_info("out-of-bounds in __test_and_set_bit\n");
-> +	__test_and_set_bit(BITS_PER_LONG, bits);
-> +
-> +	pr_info("out-of-bounds in test_and_set_bit_lock\n");
-> +	test_and_set_bit_lock(BITS_PER_LONG, bits);
-> +
-> +	pr_info("out-of-bounds in test_and_clear_bit\n");
-> +	test_and_clear_bit(BITS_PER_LONG, bits);
-> +
-> +	pr_info("out-of-bounds in __test_and_clear_bit\n");
-> +	__test_and_clear_bit(BITS_PER_LONG, bits);
-> +
-> +	pr_info("out-of-bounds in test_and_change_bit\n");
-> +	test_and_change_bit(BITS_PER_LONG, bits);
-> +
-> +	pr_info("out-of-bounds in __test_and_change_bit\n");
-> +	__test_and_change_bit(BITS_PER_LONG, bits);
-> +
-> +	pr_info("out-of-bounds in test_bit\n");
-> +	(void)test_bit(BITS_PER_LONG, bits);
-> +
-> +#if defined(clear_bit_unlock_is_negative_byte)
-> +	pr_info("out-of-bounds in clear_bit_unlock_is_negative_byte\n");
-> +	clear_bit_unlock_is_negative_byte(BITS_PER_LONG, bits);
-> +#endif
-> +	kfree(bits);
-> +}
-> +
->  static int __init kmalloc_tests_init(void)
->  {
->  	/*
-> @@ -664,6 +732,7 @@ static int __init kmalloc_tests_init(void)
->  	kasan_memchr();
->  	kasan_memcmp();
->  	kasan_strings();
-> +	kasan_bitops();
->  
->  	kasan_restore_multi_shot(multishot);
->  
-> -- 
-> 2.22.0.rc1.257.g3120a18244-goog
-> 
+Thanks.
+
