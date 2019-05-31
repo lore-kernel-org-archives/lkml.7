@@ -2,126 +2,131 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2D6C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 17:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 143F9C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 17:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1B0B26D2C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 17:29:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9AEA26D35
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 17:32:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UoBFbazk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W+haEbGk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbfEaR3Q (ORCPT
+        id S1726550AbfEaRcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 13:29:16 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35156 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbfEaR3P (ORCPT
+        Fri, 31 May 2019 13:32:51 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33765 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbfEaRcu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 13:29:15 -0400
-Received: by mail-ot1-f67.google.com with SMTP id n14so9971875otk.2;
-        Fri, 31 May 2019 10:29:15 -0700 (PDT)
+        Fri, 31 May 2019 13:32:50 -0400
+Received: by mail-pl1-f195.google.com with SMTP id g21so4293347plq.0
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 10:32:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+iyqTcaxt908BOdR/nmvy7fBX5IAvraUTsrYyfpy9lM=;
-        b=UoBFbazk3bF/rwQHpGBuPllAqZAXvZsjxgtdmcBwMPvgO42L4cdQH3h72o4TlQyRru
-         tM0IIF7ewnRRTYgkPDh2P3kn3spIaz2gLe9v2/ISK8fvbM+/QWEAPUyYw5bxAaW2GY5G
-         RiFZ8zjaLVK+shs+jkA5voWmN560eZqheSvuhP9kirDBqFvRNGcrhyCNw7WylKooPjQc
-         0aLg+LJsI93LEveN5rnFKmCdY10L6SoB6EmRE1EeceEtH1UGjQ1ZVWyq8BK3LwIUPOaq
-         4ZKttkXP4rjP63mcuCeTjmvQIcMLhK5jzEpONK/Ul5o63ECKblmyXKupkhY1HXlUL8s0
-         o6Ug==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=GubS+arfOZNAUjicwzdrEl/ueLaaOn8vkPvMNsjgz6Y=;
+        b=W+haEbGknQ/drf9bb0vWglr3IUlfC8m4m004aUwefq1NU03QWNzAWYYN7Ma+aAfhYF
+         ZBzRYK7QtUL/olblfxqBidTiln2jezhXCx+eJ9w5V5fENE4zTinzlaoEBticN8aLSeWS
+         4/5IbpsqkF+mshEbWRELH3+rMG3GlF267Bwg8f1NkKkORLlsDA5L+SLhHfaiO4xqTDjz
+         2EgIJobgYi2H6eT1BaxMd+RjpQgKj35gLu22fo1HbFOPJzeN3aYqWASMzlfzisThffm3
+         6Iy6SRqTwqNjk2P5ZXaRuFrYuhHuA/E/6m3v9eTLjHbqDJxR+I+w6MbWvDJ6PN17ZgM5
+         CXSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+iyqTcaxt908BOdR/nmvy7fBX5IAvraUTsrYyfpy9lM=;
-        b=DIOVRJpl5FDK6FsB7GmjuwbtFOkFGJc+khpkMCRGyidGd3dK8ZBDEZwR+Jo+e9aUBf
-         k3CbatI9yzZF349CYcDqA5dCVt6v1XIpOJhLVk3PiAIoRopbTJkcZ+b+GZADssm86saa
-         OmhOb4On/1oDxy4kXN1nwN//kWzH1DC2fBJbhicfiFFhPsI1XCP38wCklMes4GM3onuG
-         8B31FTchcuW+Hzs/g6dAkRXxlJZEkOwDv13CPy/hoEq6W9oMKUs1tixGV6VQOe2c57TJ
-         brWHD5WD4kXflZmFxnJitRXIxTCN4djIqNYXIk5Oe37PlwRjLDqtBE6QDp/Ki19b3VDP
-         pR6w==
-X-Gm-Message-State: APjAAAWZyGVkcsHcOqWCkS0UanWxslYum/0e7b7vCZPEJRTQRmCcqHH7
-        6j00fQAiFSyW4GDCAH6Y/pqOP/rU
-X-Google-Smtp-Source: APXvYqzkAHmyyxrH7D112NjIZLyafOEDSWW854tF2Umsok58KvfnyV7z58ZtX5EZoQoIdN8g1+GjJg==
-X-Received: by 2002:a9d:3d76:: with SMTP id a109mr2645090otc.212.1559323754602;
-        Fri, 31 May 2019 10:29:14 -0700 (PDT)
-Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id a15sm2194992otl.20.2019.05.31.10.29.12
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 31 May 2019 10:29:13 -0700 (PDT)
-Subject: Re: [PATCH] rtlwifi: remove redundant assignment to variable k
-To:     Colin King <colin.king@canonical.com>,
-        Ping-Ke Shih <pkshih@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190531141412.18632-1-colin.king@canonical.com>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <14372bed-6522-d81c-7d68-04adc0d71193@lwfinger.net>
-Date:   Fri, 31 May 2019 12:29:12 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=GubS+arfOZNAUjicwzdrEl/ueLaaOn8vkPvMNsjgz6Y=;
+        b=X0H0OqdGj8D66wQKFYnLNeWkjSkfM56Nm4vmjR90UnF6gM9MA6qDDonwogP805fG8l
+         0kk/8R/YlyFeAgU1u37iy3DzHv+2E9TCGN6pmoIEF9dPxAHTo2LViuAEQ9YJOVu0HG2q
+         5Ma5src09MWBL0woa7yWy9fOzOOm8HO1NNrTwJ4enOX7dfvBXTvz4O1y9uUC7rokJBpZ
+         ShByFE8Ob5We8Yj7Eq8gmX0TkQgU9lZKp0Rm5YJXN1iSDfbD/LLk5Mq5ikUXO4fCBTVn
+         KECj/PCIcK5co88x7HWnhCyZtn5iwEr8UOvdwtIlWsT+zl/w1xUx1XPSl+AN09OTi3tT
+         p+DQ==
+X-Gm-Message-State: APjAAAU2KXL+nVzspsjlcnm+zLf4E2EG52gfqgK5fEKYe5iHNUuI7j9H
+        5jxtqlssM17FFcKltb/CBW0=
+X-Google-Smtp-Source: APXvYqz9x5GBZktyYUKj15ZWH+z13Jr1JKwzJ3DHOPsiUCAl2Bm8zAy/O3Hd7HG48J+dJKBBmyAPCA==
+X-Received: by 2002:a17:902:e40f:: with SMTP id ci15mr11169483plb.280.1559323970122;
+        Fri, 31 May 2019 10:32:50 -0700 (PDT)
+Received: from localhost.localdomain ([157.40.16.227])
+        by smtp.gmail.com with ESMTPSA id d13sm11340180pfh.113.2019.05.31.10.32.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 31 May 2019 10:32:46 -0700 (PDT)
+From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
+To:     gregkh@linuxfoundation.org, forest@alittletooquiet.net,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
+Subject: [PATCH v2] staging: vt6655: Change return type of function and remove variable
+Date:   Fri, 31 May 2019 23:02:26 +0530
+Message-Id: <20190531173226.15236-1-nishkadg.linux@gmail.com>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190530211513.GA25966@kroah.com>
+References: <20190530211513.GA25966@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20190531141412.18632-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/31/19 9:14 AM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The assignment of 0 to variable k is never read once we break out of
-> the loop, so the assignment is redundant and can be removed.
-> 
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->   drivers/net/wireless/realtek/rtlwifi/efuse.c | 4 +---
->   1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/realtek/rtlwifi/efuse.c b/drivers/net/wireless/realtek/rtlwifi/efuse.c
-> index e68340dfd980..83e5318ca04f 100644
-> --- a/drivers/net/wireless/realtek/rtlwifi/efuse.c
-> +++ b/drivers/net/wireless/realtek/rtlwifi/efuse.c
-> @@ -117,10 +117,8 @@ u8 efuse_read_1byte(struct ieee80211_hw *hw, u16 address)
->   						 rtlpriv->cfg->
->   						 maps[EFUSE_CTRL] + 3);
->   			k++;
-> -			if (k == 1000) {
-> -				k = 0;
-> +			if (k == 1000)
->   				break;
-> -			}
->   		}
->   		data = rtl_read_byte(rtlpriv, rtlpriv->cfg->maps[EFUSE_CTRL]);
->   		return data;
+Remove return variable bResult from function CARDbRadioPowerOff and
+change the return type of the function to void as it always returns true
+and the return value is never stored nor checked when called.
+Issue found with Coccinelle.
 
-Colin,
+Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+---
+ drivers/staging/vt6655/card.c | 8 ++------
+ drivers/staging/vt6655/card.h | 2 +-
+ 2 files changed, 3 insertions(+), 7 deletions(-)
 
-Your patch is not wrong, but it fails to address a basic deficiency of this code 
-snippet - when an error is detected, there is no attempt to either fix the 
-problem or report it upstream. As the data returned will be garbage if this 
-condition happens, we might as well replace the "break" with "return 0xFF", as 
-well as deleting the "k = 0" line. Most of the callers of efuse_read_1byte() 
-ignore the returned result when bits 0 and 4 are set, thus returning all 8 bits 
-is not a bad fixup.
-
-My suspicion is that this test is in the code merely to prevent an potential 
-unterminated "while" loop, and that this condition is extremely unlikely to happen.
-
-Larry
-
+diff --git a/drivers/staging/vt6655/card.c b/drivers/staging/vt6655/card.c
+index 6ecbe925026d..eba4ee0750dc 100644
+--- a/drivers/staging/vt6655/card.c
++++ b/drivers/staging/vt6655/card.c
+@@ -409,14 +409,11 @@ bool CARDbSetBeaconPeriod(struct vnt_private *priv,
+  *  Out:
+  *      none
+  *
+- * Return Value: true if success; otherwise false
+  */
+-bool CARDbRadioPowerOff(struct vnt_private *priv)
++void CARDbRadioPowerOff(struct vnt_private *priv)
+ {
+-	bool bResult = true;
+-
+ 	if (priv->bRadioOff)
+-		return true;
++		return;
+ 
+ 	switch (priv->byRFType) {
+ 	case RF_RFMD2959:
+@@ -444,7 +441,6 @@ bool CARDbRadioPowerOff(struct vnt_private *priv)
+ 	pr_debug("chester power off\n");
+ 	MACvRegBitsOn(priv->PortOffset, MAC_REG_GPIOCTL0,
+ 		      LED_ACTSET);  /* LED issue */
+-	return bResult;
+ }
+ 
+ /*
+diff --git a/drivers/staging/vt6655/card.h b/drivers/staging/vt6655/card.h
+index f422fb3c78bd..887c1692e05b 100644
+--- a/drivers/staging/vt6655/card.h
++++ b/drivers/staging/vt6655/card.h
+@@ -57,7 +57,7 @@ u64 CARDqGetTSFOffset(unsigned char byRxRate, u64 qwTSF1, u64 qwTSF2);
+ unsigned char CARDbyGetPktType(struct vnt_private *priv);
+ void CARDvSafeResetTx(struct vnt_private *priv);
+ void CARDvSafeResetRx(struct vnt_private *priv);
+-bool CARDbRadioPowerOff(struct vnt_private *priv);
++void CARDbRadioPowerOff(struct vnt_private *priv);
+ bool CARDbRadioPowerOn(struct vnt_private *priv);
+ bool CARDbSetPhyParameter(struct vnt_private *priv, u8 bb_type);
+ bool CARDbUpdateTSF(struct vnt_private *priv, unsigned char byRxRate,
+-- 
+2.19.1
 
