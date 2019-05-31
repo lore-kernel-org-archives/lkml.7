@@ -2,113 +2,91 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 827E5C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE660C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53C3C2677E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:31:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=g001.emailsrvr.com header.i=@g001.emailsrvr.com header.b="HrTvH2rf";
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="cvZXbugW"
+	by mail.kernel.org (Postfix) with ESMTP id C204926782
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:31:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559298715;
+	bh=gnWsYJXafTr4/ebtpkTMaILA8zE+1xeKW9QH7rg3lzY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Hurk6dR0o4en7pzUoVDNAi+ljr1SZgbOxhf0bVL68VrJC9PpJ9+/3QyrElHk1NtES
+	 3mbSwF+vZeYsXA9zxK5abL9D7M7oqedgnnLrbfKh1Yz5GxP0ZOVaWd8/RJeNgV3XKN
+	 96HfxjzJxc8m78A2n/lUbhEekYRh3b390A4Rd5mw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbfEaKbs (ORCPT
+        id S1727209AbfEaKby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 06:31:48 -0400
-Received: from smtp65.ord1d.emailsrvr.com ([184.106.54.65]:42102 "EHLO
-        smtp65.ord1d.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726233AbfEaKbr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 06:31:47 -0400
-X-Greylist: delayed 350 seconds by postgrey-1.27 at vger.kernel.org; Fri, 31 May 2019 06:31:47 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=g001.emailsrvr.com;
-        s=20190322-9u7zjiwi; t=1559298357;
-        bh=+RyXWqRhvrx46/X9uDvSyUTN7HW9qCylh6KVuj6gMts=;
-        h=Subject:To:From:Date:From;
-        b=HrTvH2rfJc3JxXza8WwraZ7VbrPncQJsSJinzEHEoln6GccBuDQxq9B4g5kyYoWOW
-         JryjYPZvi2RhKOAn/cRTIKCiR7E7gxr5baAfAvuiRyCxKz8Tf8EEfSafxDR5eygFA6
-         hTGsVLtCRHOrVbZ3D+gQxJlDHKL6AV5CpB7svr3E=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-        s=20190130-41we5z8j; t=1559298357;
-        bh=+RyXWqRhvrx46/X9uDvSyUTN7HW9qCylh6KVuj6gMts=;
-        h=Subject:To:From:Date:From;
-        b=cvZXbugWw23POqggq5TbKOn/+todCezZby6ZEdzFBsKDmXgNR9jm2aLsDhloYR+Lj
-         lRvmKBq1ClFcHCVHfETPN73C/u7VCG8TK+SMzqKlp3kgtLsvG+sqSkp0iIL261YmRT
-         WJm5WvH2OQHZEeZyWcwW05BiSM6iBcET1avUYKlI=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp1.relay.ord1d.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 158AA4015F;
-        Fri, 31 May 2019 06:25:55 -0400 (EDT)
-X-Sender-Id: abbotti@mev.co.uk
-Received: from [10.0.0.62] (remote.quintadena.com [81.133.34.160])
-        (using TLSv1.2 with cipher AES128-SHA)
-        by 0.0.0.0:465 (trex/5.7.12);
-        Fri, 31 May 2019 06:25:57 -0400
-Subject: Re: [PATCH] staging: comedi: Remove variable runflags
-To:     Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        hsweeten@visionengravers.com, gregkh@linuxfoundation.org,
-        olsonse@umich.edu, jkhasdev@gmail.com,
-        giulio.benetti@micronovasrl.com, nishadkamdar@gmail.com,
-        kas.sandesh@gmail.com, devel@driverdev.osuosl.org,
+        Fri, 31 May 2019 06:31:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56858 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726233AbfEaKby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 06:31:54 -0400
+Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D2462677A;
+        Fri, 31 May 2019 10:31:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559298713;
+        bh=gnWsYJXafTr4/ebtpkTMaILA8zE+1xeKW9QH7rg3lzY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=FUKoQH19LTF+SesZyFy8J0+ENSM97Nxg76R6Kf08tGhYALgjODVxh6x+YN9bPNYPA
+         nNfJFxNYWyuuN1wwVuwdJ/QQV84N7XJY6hpPSTHQc/+cqbljN6Yg8MX0W/C+69ynn3
+         B6MSOq2F2zwSDcdvmPCizxHT79hAF1mbLRK2oR7k=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
         linux-kernel@vger.kernel.org
-References: <20190530205131.29955-1-nishkadg.linux@gmail.com>
-From:   Ian Abbott <abbotti@mev.co.uk>
-Organization: MEV Ltd.
-Message-ID: <8292224d-9c4a-d29e-4a86-d3352fcd2be1@mev.co.uk>
-Date:   Fri, 31 May 2019 11:25:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190530205131.29955-1-nishkadg.linux@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Cc:     Tzung-Bi Shih <tzungbi@google.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH] Revert "ASoC: core: use component driver name as component name"
+Date:   Fri, 31 May 2019 12:31:47 +0200
+Message-Id: <1559298707-14903-1-git-send-email-krzk@kernel.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/05/2019 21:51, Nishka Dasgupta wrote:
-> Remove variable runflags and use its value directly. Issue found with
-> checkpatch.
-> 
-> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
-> ---
->   drivers/staging/comedi/comedi_fops.c | 8 ++------
->   1 file changed, 2 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/staging/comedi/comedi_fops.c b/drivers/staging/comedi/comedi_fops.c
-> index f6d1287c7b83..b84ee9293903 100644
-> --- a/drivers/staging/comedi/comedi_fops.c
-> +++ b/drivers/staging/comedi/comedi_fops.c
-> @@ -676,16 +676,12 @@ EXPORT_SYMBOL_GPL(comedi_is_subdevice_running);
->   
->   static bool __comedi_is_subdevice_running(struct comedi_subdevice *s)
->   {
-> -	unsigned int runflags = __comedi_get_subdevice_runflags(s);
-> -
-> -	return comedi_is_runflags_running(runflags);
-> +	return comedi_is_runflags_running(__comedi_get_subdevice_runflags(s));
->   }
->   
->   bool comedi_can_auto_free_spriv(struct comedi_subdevice *s)
->   {
-> -	unsigned int runflags = __comedi_get_subdevice_runflags(s);
-> -
-> -	return runflags & COMEDI_SRF_FREE_SPRIV;
-> +	return __comedi_get_subdevice_runflags(s) & COMEDI_SRF_FREE_SPRIV;
->   }
->   
->   /**
-> 
+Using component driver as a name is not unique and it breaks audio in
+certain configurations, e.g. Hardkernel Odroid XU3 board where following
+components are registered:
+ - 3830000.i2s with driver snd_dmaengine_pcm
+ - 3830000.i2s-sec with driver snd_dmaengine_pcm
+ - 3830000.i2s with driver 3830000.i2s-sec
 
-I couldn't reproduce this checkpatch issue, even with '--subjective'.
+This reverts commit b19671d6caf1ac393681864d5d85dda9fa99a448.
 
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ sound/soc/soc-core.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+index 2d3520fca613..7abb017a83f3 100644
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -3113,10 +3113,7 @@ static int snd_soc_component_initialize(struct snd_soc_component *component,
+ {
+ 	struct snd_soc_dapm_context *dapm;
+ 
+-	if (driver->name)
+-		component->name = kstrdup(driver->name, GFP_KERNEL);
+-	else
+-		component->name = fmt_single_name(dev, &component->id);
++	component->name = fmt_single_name(dev, &component->id);
+ 	if (!component->name) {
+ 		dev_err(dev, "ASoC: Failed to allocate name\n");
+ 		return -ENOMEM;
 -- 
--=( Ian Abbott <abbotti@mev.co.uk> || Web: www.mev.co.uk )=-
--=( MEV Ltd. is a company registered in England & Wales. )=-
--=( Registered number: 02862268.  Registered address:    )=-
--=( 15 West Park Road, Bramhall, STOCKPORT, SK7 3JZ, UK. )=-
+2.7.4
+
