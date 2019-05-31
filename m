@@ -2,331 +2,136 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B5D9C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6783BC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1166726A72
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:24:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kinvolk.io header.i=@kinvolk.io header.b="CBQuXNNH"
+	by mail.kernel.org (Postfix) with ESMTP id 37E6726A89
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:25:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559312712;
+	bh=xuMjoe5EkMqnrBnt5MUNgIfNL6mvB94WhsCDAFAE2Qk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gKrCmB2SCLRVqlW8B1N4zqZaeR9/1roOeJhFPVDbV/U0J6Hzsreb4JneKF3h+HVrb
+	 AZwF+HnA4lIh3XOh6lsW+as/IohNrCkCDLONS6ZLUksLR96pUSxeOi++aocgkJRC6F
+	 aRnXX6J1ONf4AqbO4vkIlBLvFcznL58PcrjHPnmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbfEaOYy (ORCPT
+        id S1726735AbfEaOZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 10:24:54 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:45872 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbfEaOYx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 10:24:53 -0400
-Received: by mail-lf1-f68.google.com with SMTP id u10so1021630lfm.12
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 07:24:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kinvolk.io; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=QIFTqlspE/r0DEruCD4DATm01uaqKkNSOTeIdqXCCHU=;
-        b=CBQuXNNHE2f4EuWoG9Ch3bMq8576ALClYblADDd6k9DGuFWma33U2JgUlnIe/vTy/a
-         t81C/gpRw5DdID43oRPTQhhTYWwWvTntKIdU2OtZN4i44z/SGdxZ4wrGwpRJJOtcKQy9
-         wZLfzSmtfNku/dXjhg5JbxuTaUxql77Uwvhf4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=QIFTqlspE/r0DEruCD4DATm01uaqKkNSOTeIdqXCCHU=;
-        b=SFVuCMuq5oEPA9aNcPpVm4woyZvJYcgzvOwqmww0QOR57r8Zy5mQ5RYUxdA2BX8V5h
-         wgXHY3xxQO+nts6ea1jlU9i3XSrrIDsDCdkoWwpSOLCH+1Zw+MdUduN+3RerFhxuTYH7
-         SRhnKUjGux0Kjq72yamNOYTDP7PzOU5e6BsT20EXPIA/XWpVh1xfB6xkY+NHemhjp5aM
-         De4kwZiGyqS8uUgGopTe5mtIDd9J/7MV9EARSr2JGNHchxAW+oKJTWhpolDIO3BD5XYB
-         4emR4Li/8Fsz9MznAWlOwcfFKrZA+NTFEPli0ctfyBTvB7TIw3z1NEyj+PH3hYU8TU9K
-         tPeA==
-X-Gm-Message-State: APjAAAVAPBSrk407SXSj1rpgEIJAhfOGhnF4Mr4VTj+4/eG+D1dKMuC+
-        +QZ+Ql4KSxBVuIMPde5CNgS5kJ9Ro2UeYby8r69XgvJLEMKPzQ==
-X-Google-Smtp-Source: APXvYqzvhw/97C0QWRETiuQokDnEgD/UNSngrvmnLcTYSND7CD9WQnx5Xr980b4BFSboAnitLBxkAb5WMMokjqS9crk=
-X-Received: by 2002:ac2:4d17:: with SMTP id r23mr212585lfi.130.1559312690587;
- Fri, 31 May 2019 07:24:50 -0700 (PDT)
+        Fri, 31 May 2019 10:25:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46218 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726682AbfEaOZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 10:25:11 -0400
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E41F26A95
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 14:25:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559312709;
+        bh=xuMjoe5EkMqnrBnt5MUNgIfNL6mvB94WhsCDAFAE2Qk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Vk5d/bOTWDIPFtmxhazofl2WKQckD1fwGoMDgkgb80Wde1p7rC9R61yxj9vBs76J7
+         2RAa22GazhJvDyceEyZa0CQGamgmphP1BeSM5A5BlYNCUywni5lYUMJ0FXVZU2fq+R
+         dx3vO40hdrDv/JN7QD5Iej6oz4aMg8rVZLnme7EE=
+Received: by mail-wr1-f41.google.com with SMTP id d9so6699482wrx.0
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 07:25:09 -0700 (PDT)
+X-Gm-Message-State: APjAAAVtCNL5DFN411HWUiim1RKZV3TYYccLA7gW8uQdMZF9ZWBMAXLc
+        3IErq82fKxgd8XdM27gnZPW5lguh6DXhsIzc1elQaQ==
+X-Google-Smtp-Source: APXvYqwFkqnsZ0FYt+7FEq+HOK5hJc0qmxlJZ5QPh+aCNExJkn5+yXhY+PXnZYbs4sZVZk1ZAqqffkdbreWf7yuO4HI=
+X-Received: by 2002:a5d:6207:: with SMTP id y7mr6479585wru.265.1559312707738;
+ Fri, 31 May 2019 07:25:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190524155931.7946-1-iago@kinvolk.io> <20190524155931.7946-2-iago@kinvolk.io>
- <CAH3MdRU72b2-XXKPToCV922W3fRsmSWb12rUCNqaJjC3=5ZTng@mail.gmail.com>
-In-Reply-To: <CAH3MdRU72b2-XXKPToCV922W3fRsmSWb12rUCNqaJjC3=5ZTng@mail.gmail.com>
-From:   =?UTF-8?Q?Iago_L=C3=B3pez_Galeiras?= <iago@kinvolk.io>
-Date:   Fri, 31 May 2019 16:24:23 +0200
-Message-ID: <CALxOrhxH7H8VK-ukJvPGMcx663wbSsQ9gWBf4dyUKcp9+hqzxw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v4 1/4] bpf: sock ops: add netns ino and dev in
- bpf context
-To:     Y Song <ys114321@gmail.com>
-Cc:     John Fastabend <john.fastabend@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alban Crequy <alban@kinvolk.io>,
-        Krzesimir Nowak <krzesimir@kinvolk.io>,
-        bpf <bpf@vger.kernel.org>, netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm>
+ <20190531051456.fzkvn62qlkf6wqra@treble> <nycvar.YFH.7.76.1905311045240.1962@cbobk.fhfr.pm>
+ <5564116.e9OFvgDRbB@kreacher>
+In-Reply-To: <5564116.e9OFvgDRbB@kreacher>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 31 May 2019 07:24:56 -0700
+X-Gmail-Original-Message-ID: <CALCETrUpseta+NrhVwzzVFTe-BkBHtDUJBO22ci3mAsVR+XOog@mail.gmail.com>
+Message-ID: <CALCETrUpseta+NrhVwzzVFTe-BkBHtDUJBO22ci3mAsVR+XOog@mail.gmail.com>
+Subject: Re: [PATCH v4] x86/power: Fix 'nosmt' vs. hibernation triple fault
+ during resume
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 7:48 PM Y Song <ys114321@gmail.com> wrote:
+On Fri, May 31, 2019 at 1:57 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
 >
-> On Fri, May 24, 2019 at 9:01 AM Iago L=C3=B3pez Galeiras <iago@kinvolk.io=
-> wrote:
+> On Friday, May 31, 2019 10:47:21 AM CEST Jiri Kosina wrote:
+> > On Fri, 31 May 2019, Josh Poimboeuf wrote:
 > >
-> > From: Alban Crequy <alban@kinvolk.io>
+> > > > I disagree with that from the backwards compatibility point of view.
+> > > >
+> > > > I personally am quite frequently using differnet combinations of
+> > > > resumer/resumee kernels, and I've never been biten by it so far. I'd guess
+> > > > I am not the only one.
+> > > > Fixmap sort of breaks that invariant.
+> > >
+> > > Right now there is no backwards compatibility because nosmt resume is
+> > > already broken.
 > >
-> > sockops programs can now access the network namespace inode and device
-> > via (struct bpf_sock_ops)->netns_ino and ->netns_dev. This can be usefu=
-l
-> > to apply different policies on different network namespaces.
+> > Yeah, well, but that's "only" for nosmt kernels at least.
 > >
-> > In the unlikely case where network namespaces are not compiled in
-> > (CONFIG_NET_NS=3Dn), the verifier will return netns_dev as usual and wi=
-ll
-> > return 0 for netns_ino.
+> > > For "future" backwards compatibility we could just define a hard-coded
+> > > reserved fixmap page address, adjacent to the vsyscall reserved address.
+> > >
+> > > Something like this (not yet tested)?  Maybe we could also remove the
+> > > resume_play_dead() hack?
 > >
-> > The generated BPF bytecode for netns_ino is loading the correct inode
-> > number at the time of execution.
-> >
-> > However, the generated BPF bytecode for netns_dev is loading an
-> > immediate value determined at BPF-load-time by looking at the initial
-> > network namespace. In practice, this works because all netns currently
-> > use the same virtual device. If this was to change, this code would nee=
-d
-> > to be updated too.
-> >
-> > Co-authored-by: Iago L=C3=B3pez Galeiras <iago@kinvolk.io>
-> > Signed-off-by: Alban Crequy <alban@kinvolk.io>
-> > Signed-off-by: Iago L=C3=B3pez Galeiras <iago@kinvolk.io>
-> >
-> > ---
-> >
-> > Changes since v1:
-> > - add netns_dev (review from Alexei)
-> >
-> > Changes since v2:
-> > - replace __u64 by u64 in kernel code (review from Y Song)
-> > - remove unneeded #else branch: program would be rejected in
-> >   is_valid_access (review from Y Song)
-> > - allow partial reads (<u64) (review from Y Song)
-> >
-> > Changes since v3:
-> > - return netns_dev unconditionally and set netns_ino to 0 if
-> >   CONFIG_NET_NS is not enabled (review from Jakub Kicinski)
-> > - use bpf_ctx_record_field_size and bpf_ctx_narrow_access_ok instead of
-> >   manually deal with partial reads (review from Y Song)
-> > - update commit message to reflect new code and remove note about
-> >   partial reads since it was discussed in the review
-> > - use bpf_ctx_range() and offsetofend()
-> > ---
-> >  include/uapi/linux/bpf.h |  2 ++
-> >  net/core/filter.c        | 70 ++++++++++++++++++++++++++++++++++++++++
-> >  2 files changed, 72 insertions(+)
-> >
-> > diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-> > index 63e0cf66f01a..e64066a09a5f 100644
-> > --- a/include/uapi/linux/bpf.h
-> > +++ b/include/uapi/linux/bpf.h
-> > @@ -3261,6 +3261,8 @@ struct bpf_sock_ops {
-> >         __u32 sk_txhash;
-> >         __u64 bytes_received;
-> >         __u64 bytes_acked;
-> > +       __u64 netns_dev;
-> > +       __u64 netns_ino;
-> >  };
-> >
-> >  /* Definitions for bpf_sock_ops_cb_flags */
-> > diff --git a/net/core/filter.c b/net/core/filter.c
-> > index 55bfc941d17a..2b1552a8dd74 100644
-> > --- a/net/core/filter.c
-> > +++ b/net/core/filter.c
-> > @@ -76,6 +76,8 @@
-> >  #include <net/lwtunnel.h>
-> >  #include <net/ipv6_stubs.h>
-> >  #include <net/bpf_sk_storage.h>
-> > +#include <linux/kdev_t.h>
-> > +#include <linux/proc_ns.h>
-> >
-> >  /**
-> >   *     sk_filter_trim_cap - run a packet through a socket filter
-> > @@ -6822,6 +6824,18 @@ static bool sock_ops_is_valid_access(int off, in=
-t size,
-> >                 }
-> >         } else {
-> >                 switch (off) {
-> > +               case bpf_ctx_range(struct bpf_sock_ops, netns_dev):
-> > +                       if (off >=3D offsetofend(struct bpf_sock_ops, n=
-etns_dev))
-> > +                               return false;
+> > Does it also solve cpuidle case? I have no overview what all the cpuidle
+> > drivers might be potentially doing in their ->enter_dead() callbacks.
+> > Rafael?
 >
-> This is not needed.
-> #define bpf_ctx_range(TYPE, MEMBER)
->          \
->         offsetof(TYPE, MEMBER) ... offsetofend(TYPE, MEMBER) - 1
-> off should never be >=3D offsetofend(struct bpf_sock_ops, netns_dev).
+> There are just two of them, ACPI cpuidle and intel_idle, and they both should
+> be covered.
+>
+> In any case, I think that this is the way to go here even though it may be somewhat
+> problematic to start with.
 >
 
-Right, I'll remove it.
+Given that there seems to be a genuine compatibility issue right now,
+can we design an actual sane way to hand off control of all CPUs
+rather than adding duct tape to an extremely fragile mechanism?  I can
+think of at least two sensible solutions:
 
-> > +
-> > +                       bpf_ctx_record_field_size(info, sizeof(u64));
-> > +                       if (!bpf_ctx_narrow_access_ok(off, size, sizeof=
-(u64)))
-> > +                               return false;
-> > +                       break;
-> > +               case offsetof(struct bpf_sock_ops, netns_ino):
-> > +                       if (size !=3D sizeof(u64))
-> > +                               return false;
-> > +                       break;
-> >                 case bpf_ctx_range_till(struct bpf_sock_ops, bytes_rece=
-ived,
-> >                                         bytes_acked):
-> >                         if (size !=3D sizeof(__u64))
-> > @@ -7739,6 +7753,11 @@ static u32 sock_addr_convert_ctx_access(enum bpf=
-_access_type type,
-> >         return insn - insn_buf;
-> >  }
-> >
-> > +static struct ns_common *sockops_netns_cb(void *private_data)
-> > +{
-> > +       return &init_net.ns;
-> > +}
-> > +
-> >  static u32 sock_ops_convert_ctx_access(enum bpf_access_type type,
-> >                                        const struct bpf_insn *si,
-> >                                        struct bpf_insn *insn_buf,
-> > @@ -7747,6 +7766,10 @@ static u32 sock_ops_convert_ctx_access(enum bpf_=
-access_type type,
-> >  {
-> >         struct bpf_insn *insn =3D insn_buf;
-> >         int off;
-> > +       struct inode *ns_inode;
-> > +       struct path ns_path;
-> > +       u64 netns_dev;
-> > +       void *res;
-> >
-> >  /* Helper macro for adding read access to tcp_sock or sock fields. */
-> >  #define SOCK_OPS_GET_FIELD(BPF_FIELD, OBJ_FIELD, OBJ)                 =
-       \
-> > @@ -7993,6 +8016,53 @@ static u32 sock_ops_convert_ctx_access(enum bpf_=
-access_type type,
-> >                 SOCK_OPS_GET_OR_SET_FIELD(sk_txhash, sk_txhash,
-> >                                           struct sock, type);
-> >                 break;
-> > +
-> > +       case bpf_ctx_range(struct bpf_sock_ops, netns_dev):
-> > +               /* We get the netns_dev at BPF-load-time and not at
-> > +                * BPF-exec-time. We assume that netns_dev is a constan=
-t.
-> > +                */
-> > +               res =3D ns_get_path_cb(&ns_path, sockops_netns_cb, NULL=
-);
-> > +               if (IS_ERR(res)) {
-> > +                       netns_dev =3D 0;
->
-> What is the proper way to handle error here?
-> If we indeed get an error and netns_dev =3D 0, do this mean bpf program
-> should check netns_dev =3D=3D 0 and special case it? Or since this is rea=
-lly
-> a lower probability thing we can set to 0 and bpf program's logic does no=
-t
-> need to specialize this one.
->
-> At least, maybe we need a little documentation for the field in uapi head=
-er
-> to point out this potential caveat?
->
+1. Have a self-contained "play dead for kexec/resume" function that
+touches only few well-defined physical pages: a set of page tables and
+a page of code.  Load CR3 to point to those page tables, fill in the
+code with some form of infinite loop, and run it.  Or just turn off
+paging entirely and run the infinite loop.  Have the kernel doing the
+resuming inform the kernel being resumed of which pages these are, and
+have the kernel being resumed take over all CPUs before reusing the
+pages.
 
-As far as I can tell, this function can only error with ENOMEM when allocat=
-ing
-a new inode or dentry, which is very unlikely. I don't think bpf programs
-should check for this. Also, for sockops programs worst case is usually tha=
-t
-the connection goes through the usual networking stack so it shouldn't be
-dangerous.
+2. Put the CPU all the way to sleep by sending it an INIT IPI.
 
-I can add a comment like this to the field in the uapi header file:
+Version 2 seems very simple and robust.  Is there a reason we can't do
+it?  We obviously don't want to do it for normal offline because it
+might be a high-power state, but a cpu in the wait-for-SIPI state is
+not going to exit that state all by itself.
 
-    ...
-    /*
-     * netns_dev might be zero if there's an error getting it
-     * when loading the BPF program. This is very unlikely.
-     */
-    __u64 netns_dev;
-    ...
-
-What do you think?
-
-
-
-
-> > +               } else {
-> > +                       ns_inode =3D ns_path.dentry->d_inode;
-> > +                       netns_dev =3D new_encode_dev(ns_inode->i_sb->s_=
-dev);
-> > +               }
-> > +               *target_size =3D 8;
-> > +               *insn++ =3D BPF_MOV64_IMM(si->dst_reg, netns_dev);
-> > +               break;
-> > +
-> > +       case offsetof(struct bpf_sock_ops, netns_ino):
-> > +#ifdef CONFIG_NET_NS
-> > +               /* Loading: sk_ops->sk->__sk_common.skc_net.net->ns.inu=
-m
-> > +                * Type: (struct bpf_sock_ops_kern *)
-> > +                *       ->(struct sock *)
-> > +                *       ->(struct sock_common)
-> > +                *       .possible_net_t
-> > +                *       .(struct net *)
-> > +                *       ->(struct ns_common)
-> > +                *       .(unsigned int)
-> > +                */
-> > +               BUILD_BUG_ON(offsetof(struct sock, __sk_common) !=3D 0)=
-;
-> > +               BUILD_BUG_ON(offsetof(possible_net_t, net) !=3D 0);
-> > +               *insn++ =3D BPF_LDX_MEM(BPF_FIELD_SIZEOF(
-> > +                                               struct bpf_sock_ops_ker=
-n, sk),
-> > +                                     si->dst_reg, si->src_reg,
-> > +                                     offsetof(struct bpf_sock_ops_kern=
-, sk));
-> > +               *insn++ =3D BPF_LDX_MEM(BPF_FIELD_SIZEOF(
-> > +                                               possible_net_t, net),
-> > +                                     si->dst_reg, si->dst_reg,
-> > +                                     offsetof(struct sock_common, skc_=
-net));
-> > +               *insn++ =3D BPF_LDX_MEM(BPF_FIELD_SIZEOF(
-> > +                                               struct ns_common, inum)=
-,
-> > +                                     si->dst_reg, si->dst_reg,
-> > +                                     offsetof(struct net, ns) +
-> > +                                     offsetof(struct ns_common, inum))=
-;
-> > +#else
-> > +               *insn++ =3D BPF_MOV64_IMM(si->dst_reg, 0);
-> > +#endif
-> > +               break;
-> > +
-> >         }
-> >         return insn - insn_buf;
-> >  }
-> > --
-> > 2.21.0
-> >
-
-
-
---
-Iago L=C3=B3pez Galeiras
-
-Kinvolk GmbH | Adalbertstr. 6a, 10999 Berlin
-Gesch=C3=A4ftsf=C3=BChrer/Directors: Alban Crequy, Chris K=C3=BChl, Iago L=
-=C3=B3pez Galeiras
-Registergericht/Court of registration: Amtsgericht Charlottenburg
-Registernummer/Registration number: HRB 171414 B
-Ust-ID-Nummer/VAT ID number: DE302207000
+The patch to implement #2 should be short and sweet as long as we are
+careful to only put genuine APs to sleep like this.  The only downside
+I can see is that an new kernel resuming and old kernel that was
+booted with nosmt is going to waste power, but I don't think that's a
+showstopper.
