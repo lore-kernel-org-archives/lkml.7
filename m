@@ -2,115 +2,151 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 528FDC28CC2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A29C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29257269F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:00:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B2F9269FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:02:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559311257;
-	bh=CJrzlzhg50T+Ztm9mZ3NVQXrrTb54XS8+0pIiXUrQC8=;
+	s=default; t=1559311332;
+	bh=NptAQSoYZ0ZukxhMPl0joJiHkOXX17JrRbk2OMhVDJw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pkA/2blLLimGqKE5JBaLWMuITFzEPoGTDJY7f41zNaiRHx13ug+c96DwigrduI7xc
-	 VIO6GT2Khjsfp1JpBjxuakx9h9PoGj6uQaE4ZqMrw9b7V36J0kqqTWfoCxkev0WfHP
-	 Y3qF8OUQ1nXEYx7XfrkrnuuSxnh+xBdSv6O57P5A=
+	b=19PkwPomuz7qn+UpJuWwR6ZExvnsMEun/vdsnFBSF4sS/j/2XH6cSLsFb1euU1622
+	 qhTvSw5hSMvaVW1cu/jgUeLkSLGU14aIK/zWV7tYpC80zIub5vpt5VHS2ENcy9zeka
+	 1guFuA/oO+P+Icirfi4z76wJyn/CNhLoP37uidy4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbfEaOA4 (ORCPT
+        id S1726601AbfEaOCL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 10:00:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55234 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726386AbfEaOAz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 10:00:55 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C44A5AFD1;
-        Fri, 31 May 2019 14:00:52 +0000 (UTC)
-Date:   Fri, 31 May 2019 16:00:50 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, jannh@google.com,
-        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
-        hdanton@sina.com
-Subject: Re: [RFCv2 5/6] mm: introduce external memory hinting API
-Message-ID: <20190531140050.GS6896@dhcp22.suse.cz>
-References: <20190531064313.193437-1-minchan@kernel.org>
- <20190531064313.193437-6-minchan@kernel.org>
- <20190531083757.GH6896@dhcp22.suse.cz>
- <20190531131859.GB195463@google.com>
+        Fri, 31 May 2019 10:02:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51316 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726386AbfEaOCL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 10:02:11 -0400
+Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7089D269FA;
+        Fri, 31 May 2019 14:02:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559311330;
+        bh=NptAQSoYZ0ZukxhMPl0joJiHkOXX17JrRbk2OMhVDJw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OFMnpQo5ZxTODG2qsquFLQhi8ijp99qOG5Q/tUN/fiYVOdVzY4wRyhtyzj5Bzj8Wm
+         9isdiZ3HCo92E5ugIOal1p3BsP78l7n/IFHu3/4SUGXhTThKf2BAUs5gJdlTX5oA9d
+         f42eOMTy5nkCpRGSibq2yY4Olt8I6IAeo1Ittb88=
+Date:   Fri, 31 May 2019 07:02:09 -0700
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spdx@vger.kernel.org
+Subject: Re: [GIT PULL] SPDX update for 5.2-rc3 - round 1
+Message-ID: <20190531140209.GA31961@kroah.com>
+References: <20190531014808.GA30932@kroah.com>
+ <CAMuHMdV=95sKB+h_pf45DiYeiJzrk1L=014Tj8Y04_hPyRMBNQ@mail.gmail.com>
+ <20190531132400.GA5518@kroah.com>
+ <CAMuHMdX3vQN5tF4-_vGjRQGdbxpPC+u4g-QU45=qykNZgwSj_w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190531131859.GB195463@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAMuHMdX3vQN5tF4-_vGjRQGdbxpPC+u4g-QU45=qykNZgwSj_w@mail.gmail.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 31-05-19 22:19:00, Minchan Kim wrote:
-> On Fri, May 31, 2019 at 10:37:57AM +0200, Michal Hocko wrote:
-> > On Fri 31-05-19 15:43:12, Minchan Kim wrote:
-> > > There is some usecase that centralized userspace daemon want to give
-> > > a memory hint like MADV_[COLD|PAGEEOUT] to other process. Android's
-> > > ActivityManagerService is one of them.
-> > > 
-> > > It's similar in spirit to madvise(MADV_WONTNEED), but the information
-> > > required to make the reclaim decision is not known to the app. Instead,
-> > > it is known to the centralized userspace daemon(ActivityManagerService),
-> > > and that daemon must be able to initiate reclaim on its own without
-> > > any app involvement.
-> > > 
-> > > To solve the issue, this patch introduces new syscall process_madvise(2).
-> > > It could give a hint to the exeternal process of pidfd.
-> > > 
-> > >  int process_madvise(int pidfd, void *addr, size_t length, int advise,
-> > > 			unsigned long cookie, unsigned long flag);
-> > > 
-> > > Since it could affect other process's address range, only privileged
-> > > process(CAP_SYS_PTRACE) or something else(e.g., being the same UID)
-> > > gives it the right to ptrace the process could use it successfully.
-> > > 
-> > > The syscall has a cookie argument to privode atomicity(i.e., detect
-> > > target process's address space change since monitor process has parsed
-> > > the address range of target process so the operaion could fail in case
-> > > of happening race). Although there is no interface to get a cookie
-> > > at this moment, it could be useful to consider it as argument to avoid
-> > > introducing another new syscall in future. It could support *atomicity*
-> > > for disruptive hint(e.g., MADV_DONTNEED|FREE).
-> > > flag argument is reserved for future use if we need to extend the API.
-> > 
-> > Providing an API that is incomplete will not fly. Really. As this really
-> > begs for much more discussion and it would be good to move on with the
-> > core idea of the pro active memory memory management from userspace
-> > usecase. Could you split out the core change so that we can move on and
-> > leave the external for a later discussion. I believe this would lead to
-> > a smoother integration.
+On Fri, May 31, 2019 at 03:51:18PM +0200, Geert Uytterhoeven wrote:
+> Hi Greg,
 > 
-> No problem but I need to understand what you want a little bit more because
-> I thought this patchset is already step by step so if we reach the agreement
-> of part of them like [1-5/6], it could be merged first.
+> On Fri, May 31, 2019 at 3:24 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > On Fri, May 31, 2019 at 09:17:06AM +0200, Geert Uytterhoeven wrote:
+> > > On Fri, May 31, 2019 at 3:49 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > > The following changes since commit cd6c84d8f0cdc911df435bb075ba22ce3c605b07:
+> > > >
+> > > >   Linux 5.2-rc2 (2019-05-26 16:49:19 -0700)
+> > > >
+> > > > are available in the Git repository at:
+> > > >
+> > > >   git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git tags/spdx-5.2-rc3-1
+> > > >
+> > > > for you to fetch changes up to 96ac6d435100450f0565708d9b885ea2a7400e0a:
+> > > >
+> > > >   treewide: Add SPDX license identifier - Kbuild (2019-05-30 11:32:33 -0700)
+> > > >
+> > > > ----------------------------------------------------------------
+> > > > SPDX update for 5.2-rc3, round 1
+> > > >
+> > > > Here is another set of reviewed patches that adds SPDX tags to different
+> > > > kernel files, based on a set of rules that are being used to parse the
+> > > > comments to try to determine that the license of the file is
+> > > > "GPL-2.0-or-later" or "GPL-2.0-only".  Only the "obvious" versions of
+> > > > these matches are included here, a number of "non-obvious" variants of
+> > > > text have been found but those have been postponed for later review and
+> > > > analysis.
+> > > >
+> > > > There is also a patch in here to add the proper SPDX header to a bunch
+> > > > of Kbuild files that we have missed in the past due to new files being
+> > > > added and forgetting that Kbuild uses two different file names for
+> > > > Makefiles.  This issue was reported by the Kbuild maintainer.
+> > > >
+> > > > These patches have been out for review on the linux-spdx@vger mailing
+> > > > list, and while they were created by automatic tools, they were
+> > > > hand-verified by a bunch of different people, all whom names are on the
+> > > > patches are reviewers.
+> > > >
+> > > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > >
+> > > I'm sorry, but as long[*] as this does not conform to
+> > > Documentation/process/license-rules.rst, I have to provide my:
+> > > NAked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> > >
+> > > [*] The obvious solution is to update Documentation/process/license-rules.rst,
+> > >     as people have asked before.
+> >
+> > I don't understand, what does not conform?  We are trying _to_ conform
+> > to that file, what did we do wrong?
 > 
-> Could you say how you want to split the patchset for forward progress?
+> The new "-or-later" and "-only" variants are not (yet) documented in that file.
+> 
+>    File format examples::
+> 
+>       Valid-License-Identifier: GPL-2.0
+>       Valid-License-Identifier: GPL-2.0+
+>       SPDX-URL: https://spdx.org/licenses/GPL-2.0.html
+>       Usage-Guide:
+>         To use this license in source code, put one of the following SPDX
+>         tag/value pairs into a comment according to the placement
+>         guidelines in the licensing rules documentation.
+>         For 'GNU General Public License (GPL) version 2 only' use:
+>           SPDX-License-Identifier: GPL-2.0
+>         For 'GNU General Public License (GPL) version 2 or any later
+> version' use:
+>           SPDX-License-Identifier: GPL-2.0+
 
-I would start with new madvise modes and once they are in a shape to be
-merged then we can start the remote madvise API. I believe that even
-local process reclaim modes are interesting and useful. I haven't heard
-anybody objecting to them without having a remote API so far.
--- 
-Michal Hocko
-SUSE Labs
+
+They do not have to be documented in that file.  As what you quoted
+said, "File format examples::"
+
+Please look in the files in the LICENSES directory for what all of the
+documented identifiers should look like:
+	$ head -n 4 LICENSES/preferred/GPL-2.0
+	Valid-License-Identifier: GPL-2.0
+	Valid-License-Identifier: GPL-2.0-only
+	Valid-License-Identifier: GPL-2.0+
+	Valid-License-Identifier: GPL-2.0-or-later
+
+If you want, please send a patch to fix up the documentation example,
+but it is not incorrect :)
+
+thanks,
+
+greg k-h
