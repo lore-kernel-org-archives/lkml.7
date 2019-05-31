@@ -2,111 +2,109 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B26AC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 495D0C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6FB726AD5
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:44:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22DD526AD5
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:44:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GnGxjK5/"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cLRCeCwZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbfEaOoV (ORCPT
+        id S1726695AbfEaOo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 10:44:21 -0400
-Received: from mail-pg1-f180.google.com ([209.85.215.180]:39508 "EHLO
-        mail-pg1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726485AbfEaOoU (ORCPT
+        Fri, 31 May 2019 10:44:58 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:51032 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbfEaOo5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 10:44:20 -0400
-Received: by mail-pg1-f180.google.com with SMTP id 196so4176386pgc.6
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 07:44:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=RHQnLjVCuzDq+CHZRvfpRZb5hKNSCy3a2JeU2KJM6Fg=;
-        b=GnGxjK5/JnD6DgvQAMsuBHSEk5MAcm6dRUlszPuN0RiGCbl8cpi/e0k67tEdBCTjXG
-         B2plt6FDeG3nEhKDdjaH4YwCkZfVMi2ssOoSz1/br7M9oyiBu/vHOMMSWnh3C49RDdNk
-         Hx4qv5rFEqiDBOVpo/q6gcjNco/xflvfRzZ9o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RHQnLjVCuzDq+CHZRvfpRZb5hKNSCy3a2JeU2KJM6Fg=;
-        b=kb7+IW3wTwBChQLHot+ldSMo/iaM3yWHakGZV8rkIayPozep0l4Rd+EtcwqKnknaQ9
-         53lpP6Q1FU+wBGHhWN+Hao0XVuXnIV3NXo+7le+/p00lcWVzyxNqk2fMQwJQc7B6hAH8
-         7iYZymk/2tGBcBiJyA6wlyJ7IB533Qz/wUNahbfTwkGyVRlPi7E2wqMaF8OM/H4ZCLmP
-         tibEwbrM2JwDAvtPKzAFT3rXvGWyyqbic1BzjcMpoB7COxk/+OwaEAM1MhxaOEa5K7pp
-         S56ic43+K6/4xOpu5QWYLehyjMSM3LJDmdjkupugorVtyRoPdJyBhUUJAqr3cTBPa1/C
-         HbSw==
-X-Gm-Message-State: APjAAAX8rNo1tT/7as335Eo9d1ZB05wwfL4YPQVyOOVSB9F0BJY8QDvq
-        Yr237Xrpl6qaNMj49V/0nAdpGg==
-X-Google-Smtp-Source: APXvYqzIRqdfdxaq/26x0YLlSNSrYfyqBhnbawPfi+9f2Ik6dZkOl6eY+rdzVTfWtukHyzOkP33o/w==
-X-Received: by 2002:aa7:9a1d:: with SMTP id w29mr10358364pfj.81.1559313859909;
-        Fri, 31 May 2019 07:44:19 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id l13sm5847079pjq.20.2019.05.31.07.44.18
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 31 May 2019 07:44:18 -0700 (PDT)
-Date:   Fri, 31 May 2019 07:44:17 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     Ke Wu <mikewu@google.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-security-module@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: security/loadpin: Allow to exclude specific file types
-Message-ID: <201905310740.522B3A7C1@keescook>
-References: <73fac64c-fe49-4738-49a4-0afe668eed94@canonical.com>
+        Fri, 31 May 2019 10:44:57 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4VEiI7M135718;
+        Fri, 31 May 2019 14:44:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : in-reply-to :
+ references : mime-version : content-type : content-transfer-encoding :
+ subject : to : cc : from : message-id; s=corp-2018-07-02;
+ bh=2Om5stwDArQ6nGqOb7I9JAkeWMfEhcwW5B4qI7FOiB0=;
+ b=cLRCeCwZnlsUocnqR6QzeNTw/ws6EKRiVDGt5QG90Hn/e4KTVGWKirkrucWPvBhFQUvU
+ v2Ar9cbIhR0DQteupVsa3sD9gytEUUrem5p0dvpG45c/auWqrWM9jKusfY4jekJ93mPM
+ yVU3FV1gKzN4vsWQan5e9Vgx85Gd9wQA6aQQlL84DNBFSEHv9Ld/W9P34Psv3faIHBkz
+ tvhl6unPvXR/vg/aPQKcZbYPdRJzzyIWTasj6fIVTo6MESGnsA1rnkdLj49ZQAll+Tj8
+ yHdJnQAdKrCaso0uk8lLbIvcYujnVdOybEm18+d0Ml+IVaKBURzuOhPzyk/5UHMOzLjp 7w== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2130.oracle.com with ESMTP id 2spu7dxyqt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 31 May 2019 14:44:48 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4VEiTu6146225;
+        Fri, 31 May 2019 14:44:47 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2su61fgc4n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 31 May 2019 14:44:47 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4VEiitL032333;
+        Fri, 31 May 2019 14:44:44 GMT
+Received: from galaxy-s9.lan (/209.6.36.129)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 31 May 2019 07:44:43 -0700
+Date:   Fri, 31 May 2019 10:44:39 -0400
+User-Agent: K-9 Mail for Android
+In-Reply-To: <ba37b50c-c0ac-5af4-441b-a2d4eda81255@suse.com>
+References: <20190503150401.15904-1-roger.pau@citrix.com> <f4b944e8-6678-a921-e2b2-aaeb00c0d5e1@suse.com> <ba37b50c-c0ac-5af4-441b-a2d4eda81255@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <73fac64c-fe49-4738-49a4-0afe668eed94@canonical.com>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [Xen-devel] [PATCH] xen-blkfront: switch kcalloc to kvcalloc for large array allocation
+To:     Juergen Gross <jgross@suse.com>,
+        Roger Pau Monne <roger.pau@citrix.com>,
+        linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
+CC:     Stefano Stabellini <sstabellini@kernel.org>,
+        stable@vger.kernel.org, linux-block@vger.kernel.org,
+        xen-devel@lists.xenproject.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Message-ID: <63D28830-5450-41F5-AC6E-3D5FDE1F80B7@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9273 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905310093
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9273 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905310093
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 11:46:29AM +0100, Colin Ian King wrote:
-> Hi,
-> 
-> Static analysis with Coverity on linux-next has found a potential issue
-> with the following commit:
-> 
-> commit 1633a4f04cc171fc638deb5c95af96032d3c591b
-> Author: Ke Wu <mikewu@google.com>
-> Date:   Thu May 30 12:22:08 2019 -0700
-> 
->     security/loadpin: Allow to exclude specific file types
-> 
-> 
-> 209                for (j = 0; j < ARRAY_SIZE(kernel_read_file_str); j++) {
-> 210                        if (strcmp(cur, kernel_read_file_str[j]) == 0) {
-> 211                                pr_info("excluding: %s\n",
-> 212                                        kernel_read_file_str[j]);
-> 
-> CID 81977 (#1 of 1): Out-of-bounds write
-> overrun-local: Overrunning array ignore_read_file_id of 8 4-byte
-> elements at element index 8 (byte offset 35) using index j (which
-> evaluates to 8).
-> 
-> 213                                ignore_read_file_id[j] = 1;
-> 
-> According to Coverity ignore_read_file_id is an array of 8 integers.
-> However, ARRAY_SIZE(kernel_read_file_str) is 9, so we have an out of
-> bounds write on ignore_read_file[j] when j is 8.
+On May 31, 2019 10:41:16 AM EDT, Juergen Gross <jgross@suse=2Ecom> wrote:
+>On 06/05/2019 10:11, Juergen Gross wrote:
+>> On 03/05/2019 17:04, Roger Pau Monne wrote:
+>>> There's no reason to request physically contiguous memory for those
+>>> allocations=2E
+>>>
+>>> Reported-by: Ian Jackson <ian=2Ejackson@citrix=2Ecom>
+>>> Signed-off-by: Roger Pau Monn=C3=A9 <roger=2Epau@citrix=2Ecom>
+>>=20
+>> Reviewed-by: Juergen Gross <jgross@suse=2Ecom>
+>
+>Jens, are you going to tkae this patch or should I carry it through the
+>Xen tree?
 
-What am I missing? This doesn't fail the build:
+Usually I ended up picking them (and then asking Jens to git pull into his=
+ branch) but if you want to handle them that would be much easier!
 
-+       BUILD_BUG_ON(ARRAY_SIZE(exclude_read_files) !=
-+                    ARRAY_SIZE(ignore_read_file_id));
+(And if so, please add Acked-by on them from me)=2E
+>
+>
+>Juergen
 
-They have the same number of elements.
-
--- 
-Kees Cook
