@@ -2,154 +2,184 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F546C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D698C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 516BE26BFA
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:24:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF32F26BF7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 16:25:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WkbNgEwA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jHgduwRk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbfEaQYU (ORCPT
+        id S1726945AbfEaQZb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 12:24:20 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42792 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbfEaQYU (ORCPT
+        Fri, 31 May 2019 12:25:31 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:39437 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726678AbfEaQZb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 12:24:20 -0400
-Received: by mail-pf1-f194.google.com with SMTP id r22so6494161pfh.9
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 09:24:19 -0700 (PDT)
+        Fri, 31 May 2019 12:25:31 -0400
+Received: by mail-lf1-f65.google.com with SMTP id p24so1924409lfo.6
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 09:25:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h/x2RsdaGEeomdfj9zckwm1ZuXHc7ti1LUsxVKWauDI=;
-        b=WkbNgEwAtHoOpsgf2n/OOj9tvUzmqxkk0wFQPqMbZDhKXrycKmph8DKGky42GC+koN
-         LJDEln958wkwnmRH28ZEap3NrGgf1V1D0g9IZCcP3z1+J4jMqALHLTOUy5KwiFNCWFFp
-         J5Vof1T/5pKxOH0N8kkgt3VneNxkghx7TLiVO3NO5Dfw0XE9zLDEnv4oejnEpiTXZOeJ
-         tDxDbRBsv0ZCYRogl5V2uwQD8iTi3aUBJXQrVEho7perE1vFrdRi0BvQ0ve9Pq7qowuL
-         FRZuY21tQBRvNHvnsPyF6is+8mWCTar820ssvKvNtiwoTjNWK3ZyaVAaR6TMz/HMowZi
-         esrQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=B2eNH84CQyPYJfD+FLgHh5s2OtUHwmqU+oP9mQ4knKk=;
+        b=jHgduwRkv8cq1Iw2Qr/v0kqjbbSwS85egp1jh5ECiucFpPCkkltnaz8wHcZa1woNfO
+         VRDx2MYbkRVbvQreCVhjyfeQvXFsufQl9qfUoHhtI5nYCQVQEbfH0GKTe+kHlgYR2N83
+         gAYpMrIdwgy/Z8Nra3wGyOs3jQ64BGucjnQbKG8RJS5s+6ALlm3wmSkcdiQgz8BXWsP7
+         OpYhlKp0px0qEAxe3MmN80PLihgE7Hb1pdLZe8DZeibaQHR5lsyT8lJstEhejHnTzgoW
+         +Hw8m3RsBPuJmqjnGPp7YL19BVrclzTB297SFdZb0cq3aJrLwy/9RjbBVXZ2NlMKpijV
+         sbIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h/x2RsdaGEeomdfj9zckwm1ZuXHc7ti1LUsxVKWauDI=;
-        b=hxebn/x2rk7wTOjJ2pbgwgb+ygcRZZQbsAKUn/UP2C11vRhe6nud0oVzsekUcCrMu2
-         +DoNycghxj24s4K3fx9mLE2y/QHB+WfBhDRibTbKAGb9MAyxEJl+MnJ6XvtyVKRQYZTZ
-         zNKJjUKhGgJQhGMJLRbY1KnZwpxUFbp0cGodqsBNdMmXngR0AxJzRIYu3e2YWO0gzuym
-         Uyg6+jvlRzPS0lQGwu7TxtvE2Qg7qkMat+rVXrOykHrQPdr4ESSjW7CG1LvZHRjs7tCx
-         GsPcl4yTv3hbAplPPySzJQ+3rmxROV+1xboQd6zkgfbJ4fWWerf0YABmDtABaXamdxb/
-         vulg==
-X-Gm-Message-State: APjAAAWoIevuK/RsDNYZ0cG2tMVD2gUlfDBj8iSoR+ZUwjv0Yz+ldVQu
-        wAhKqbPEXVYb/aQax1FIrHAT42a4iAkpyIPNMmkpHA==
-X-Google-Smtp-Source: APXvYqxuY1CYuxd04Kewq/lINHwhx4xTvJLFZIhJ6+qsHKD7HtPQ0W1vOSTfUsi9VyOoypjJcb2qINRGGNrlijbQeNg=
-X-Received: by 2002:a62:2c17:: with SMTP id s23mr11223321pfs.51.1559319859023;
- Fri, 31 May 2019 09:24:19 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=B2eNH84CQyPYJfD+FLgHh5s2OtUHwmqU+oP9mQ4knKk=;
+        b=h0vysnE5uhhwN9bc/RVRMzCqHJRE+ELvXUDa+w9rksnnXIOLkGeEn6HcrlLVZhRvPq
+         XXOJjNcOOCdMeCUTuaqWlfKp+USxzhk9J79TcXquNRUcSkQUAcgMudpCKo/SifqHo//V
+         1WKcz9nwXjOXQt5qXTj69GiCVunJTUK4+lwzu7CXwBqTsJbsxVmt5vMbzT0xC6ODztP8
+         X6jGVpMxhq73g1WyH+H2S8xzyX1qyO7Jj57YBRCP9JD6SEpQZh3o2Ui6Qk1fcXMoHKKM
+         +wvxVW9RsD6vs4OumPv84dZCYWOjecPrVS+2d1PsFjvA/+/B8ToUf2YGtU5GKrqQKOaq
+         PeKw==
+X-Gm-Message-State: APjAAAXAYKgSwFOlhBrPq1/UepQDV49E2e9gSwtzilePpKdrzR/PJNG9
+        fhhWe3DsvGvsvoR+Sb1eEhiIvw==
+X-Google-Smtp-Source: APXvYqwBkOdukVGASs4QfUwbU7bk+mmcvhcuTBnDOILOS97xASuRBkP4Wl3zxZi883DoZx+t624GXg==
+X-Received: by 2002:a19:4b4c:: with SMTP id y73mr5969188lfa.129.1559319927370;
+        Fri, 31 May 2019 09:25:27 -0700 (PDT)
+Received: from khorivan (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
+        by smtp.gmail.com with ESMTPSA id 16sm1126209lfy.21.2019.05.31.09.25.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 31 May 2019 09:25:26 -0700 (PDT)
+Date:   Fri, 31 May 2019 19:25:24 +0300
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net,
+        ast@kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
+        daniel@iogearbox.net, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com
+Subject: Re: [PATCH v2 net-next 7/7] net: ethernet: ti: cpsw: add XDP support
+Message-ID: <20190531162523.GA3694@khorivan>
+Mail-Followup-To: Jesper Dangaard Brouer <brouer@redhat.com>,
+        grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net,
+        ast@kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
+        daniel@iogearbox.net, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com
+References: <20190530182039.4945-1-ivan.khoronzhuk@linaro.org>
+ <20190530182039.4945-8-ivan.khoronzhuk@linaro.org>
+ <20190531174643.4be8b27f@carbon>
 MIME-Version: 1.0
-References: <20190521182932.sm4vxweuwo5ermyd@mbp> <201905211633.6C0BF0C2@keescook>
- <6049844a-65f5-f513-5b58-7141588fef2b@oracle.com> <20190523201105.oifkksus4rzcwqt4@mbp>
- <ffe58af3-7c70-d559-69f6-1f6ebcb0fec6@oracle.com> <20190524101139.36yre4af22bkvatx@mbp>
- <c6dd53d8-142b-3d8d-6a40-d21c5ee9d272@oracle.com> <CAAeHK+yAUsZWhp6xPAbWewX5Nbw+-G3svUyPmhXu5MVeEDKYvA@mail.gmail.com>
- <20190530171540.GD35418@arrakis.emea.arm.com> <CAAeHK+y34+SNz3Vf+_378bOxrPaj_3GaLCeC2Y2rHAczuaSz1A@mail.gmail.com>
- <20190531161954.GA3568@arrakis.emea.arm.com>
-In-Reply-To: <20190531161954.GA3568@arrakis.emea.arm.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Fri, 31 May 2019 18:24:06 +0200
-Message-ID: <CAAeHK+zRDD7ZPPUA9cpwHOdgTRrJLWAby8Wg9oPgmhqMpHwvFw@mail.gmail.com>
-Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Evgenii Stepanov <eugenis@google.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Elliott Hughes <enh@google.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190531174643.4be8b27f@carbon>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 6:20 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
->
-> On Fri, May 31, 2019 at 04:29:10PM +0200, Andrey Konovalov wrote:
-> > On Thu, May 30, 2019 at 7:15 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > > On Tue, May 28, 2019 at 04:14:45PM +0200, Andrey Konovalov wrote:
-> > > > Thanks for a lot of valuable input! I've read through all the replies
-> > > > and got somewhat lost. What are the changes I need to do to this
-> > > > series?
-> > > >
-> > > > 1. Should I move untagging for memory syscalls back to the generic
-> > > > code so other arches would make use of it as well, or should I keep
-> > > > the arm64 specific memory syscalls wrappers and address the comments
-> > > > on that patch?
-> > >
-> > > Keep them generic again but make sure we get agreement with Khalid on
-> > > the actual ABI implications for sparc.
-> >
-> > OK, will do. I find it hard to understand what the ABI implications
-> > are. I'll post the next version without untagging in brk, mmap,
-> > munmap, mremap (for new_address), mmap_pgoff, remap_file_pages, shmat
-> > and shmdt.
->
-> It's more about not relaxing the ABI to accept non-zero top-byte unless
-> we have a use-case for it. For mmap() etc., I don't think that's needed
-> but if you think otherwise, please raise it.
->
-> > > > 2. Should I make untagging opt-in and controlled by a command line argument?
-> > >
-> > > Opt-in, yes, but per task rather than kernel command line option.
-> > > prctl() is a possibility of opting in.
-> >
-> > OK. Should I store a flag somewhere in task_struct? Should it be
-> > inheritable on clone?
->
-> A TIF flag would do but I'd say leave it out for now (default opted in)
-> until we figure out the best way to do this (can be a patch on top of
-> this series).
+On Fri, May 31, 2019 at 05:46:43PM +0200, Jesper Dangaard Brouer wrote:
 
-You mean leave the whole opt-in/prctl part out? So the only change
-would be to move untagging for memory syscalls into generic code?
+Hi Jesper,
 
 >
-> Thanks.
+>Hi Ivan,
 >
-> --
-> Catalin
+>From below code snippets, it looks like you only allocated 1 page_pool
+>and sharing it with several RX-queues, as I don't have the full context
+>and don't know this driver, I might be wrong?
+>
+>To be clear, a page_pool object is needed per RX-queue, as it is
+>accessing a small RX page cache (which protected by NAPI/softirq).
+
+There is one RX interrupt and one RX NAPI for all rx channels.
+
+>
+>On Thu, 30 May 2019 21:20:39 +0300
+>Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
+>
+>> @@ -1404,6 +1711,14 @@ static int cpsw_ndo_open(struct net_device *ndev)
+>>  			enable_irq(cpsw->irqs_table[0]);
+>>  		}
+>>
+>> +		pool_size = cpdma_get_num_rx_descs(cpsw->dma);
+>> +		cpsw->page_pool = cpsw_create_page_pool(cpsw, pool_size);
+>> +		if (IS_ERR(cpsw->page_pool)) {
+>> +			ret = PTR_ERR(cpsw->page_pool);
+>> +			cpsw->page_pool = NULL;
+>> +			goto err_cleanup;
+>> +		}
+>
+>On Thu, 30 May 2019 21:20:39 +0300
+>Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
+>
+>> @@ -675,10 +742,33 @@ int cpsw_set_ringparam(struct net_device *ndev,
+>>  	if (cpsw->usage_count)
+>>  		cpdma_chan_split_pool(cpsw->dma);
+>>
+>> +	for (i = 0; i < cpsw->data.slaves; i++) {
+>> +		struct net_device *ndev = cpsw->slaves[i].ndev;
+>> +
+>> +		if (!(ndev && netif_running(ndev)))
+>> +			continue;
+>> +
+>> +		cpsw_xdp_unreg_rxqs(netdev_priv(ndev));
+>> +	}
+>> +
+>> +	page_pool_destroy(cpsw->page_pool);
+>> +	cpsw->page_pool = pool;
+>> +
+>
+>On Thu, 30 May 2019 21:20:39 +0300
+>Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
+>
+>> +void cpsw_xdp_unreg_rxqs(struct cpsw_priv *priv)
+>> +{
+>> +	struct cpsw_common *cpsw = priv->cpsw;
+>> +	int i;
+>> +
+>> +	for (i = 0; i < cpsw->rx_ch_num; i++)
+>> +		xdp_rxq_info_unreg(&priv->xdp_rxq[i]);
+>> +}
+>
+>
+>On Thu, 30 May 2019 21:20:39 +0300
+>Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
+>
+>> +int cpsw_xdp_reg_rxq(struct cpsw_priv *priv, int ch)
+>> +{
+>> +	struct xdp_rxq_info *xdp_rxq = &priv->xdp_rxq[ch];
+>> +	struct cpsw_common *cpsw = priv->cpsw;
+>> +	int ret;
+>> +
+>> +	ret = xdp_rxq_info_reg(xdp_rxq, priv->ndev, ch);
+>> +	if (ret)
+>> +		goto err_cleanup;
+>> +
+>> +	ret = xdp_rxq_info_reg_mem_model(xdp_rxq, MEM_TYPE_PAGE_POOL,
+>> +					 cpsw->page_pool);
+>> +	if (ret)
+>> +		goto err_cleanup;
+>> +
+>> +	return 0;
+>
+>
+>
+>-- 
+>Best regards,
+>  Jesper Dangaard Brouer
+>  MSc.CS, Principal Kernel Engineer at Red Hat
+>  LinkedIn: http://www.linkedin.com/in/brouer
+
+-- 
+Regards,
+Ivan Khoronzhuk
