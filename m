@@ -3,78 +3,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCBCC28CC0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B5F5C28CC0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 583E722CD6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48CE525734
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:07:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbfEaDG6 (ORCPT
+        id S1726787AbfEaDHd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 23:06:58 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:18060 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726418AbfEaDG6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 23:06:58 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 633C8FFE307F46C5E2D8;
-        Fri, 31 May 2019 11:06:55 +0800 (CST)
-Received: from [127.0.0.1] (10.133.213.239) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Fri, 31 May 2019
- 11:06:50 +0800
-Subject: Re: [PATCH net-next] netfilter: nf_conntrack_bridge: Fix build error
- without IPV6
-To:     <pablo@netfilter.org>, <kadlec@blackhole.kfki.hu>, <fw@strlen.de>
-References: <20190531024643.3840-1-yuehaibing@huawei.com>
-CC:     <linux-kernel@vger.kernel.org>, <coreteam@netfilter.org>,
-        <netfilter-devel@vger.kernel.org>, <netdev@vger.kernel.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <19095cab-fbc5-f200-a40c-cb4c1a12fbc6@huawei.com>
-Date:   Fri, 31 May 2019 11:06:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
-MIME-Version: 1.0
-In-Reply-To: <20190531024643.3840-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
+        Thu, 30 May 2019 23:07:33 -0400
+Received: from smtprelay0092.hostedemail.com ([216.40.44.92]:37136 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726418AbfEaDHd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 23:07:33 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 721EB18029DB3;
+        Fri, 31 May 2019 03:07:31 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: knot32_72f49817301f
+X-Filterd-Recvd-Size: 2415
+Received: from XPS-9350 (unknown [172.58.75.234])
+        (Authenticated sender: joe@perches.com)
+        by omf11.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 31 May 2019 03:07:29 +0000 (UTC)
+Message-ID: <e41c7ff9ae38363fe8c32346fea0f7efe551d162.camel@perches.com>
+Subject: Re: [PATCH v2] checkpatch.pl: Warn on duplicate sysctl local
+ variable
+From:   Joe Perches <joe@perches.com>
+To:     Matteo Croce <mcroce@redhat.com>, linux-kernel@vger.kernel.org,
+        Andy Whitcroft <apw@canonical.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Aaron Tomlin <atomlin@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Date:   Thu, 30 May 2019 20:06:58 -0700
+In-Reply-To: <20190531011227.21181-1-mcroce@redhat.com>
+References: <20190531011227.21181-1-mcroce@redhat.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.1-1build1 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+cc netdev
-
-On 2019/5/31 10:46, YueHaibing wrote:
-> Fix gcc build error while CONFIG_IPV6 is not set
+On Fri, 2019-05-31 at 03:12 +0200, Matteo Croce wrote:
+> Commit 6a33853c5773 ("proc/sysctl: add shared variables for range check")
+> adds some shared const variables to be used instead of a local copy in
+> each source file.
+> Warn when a chunk duplicates one of these values in a ctl_table struct:
 > 
-> In file included from net/netfilter/core.c:19:0:
-> ./include/linux/netfilter_ipv6.h: In function 'nf_ipv6_br_defrag':
-> ./include/linux/netfilter_ipv6.h:110:9: error: implicit declaration of function 'nf_ct_frag6_gather' [-Werror=implicit-function-declaration]
+>     $ scripts/checkpatch.pl 0001-test-commit.patch
+>     WARNING: duplicated sysctl range checking value 'zero', consider using the shared one in include/linux/sysctl.h
+>     #27: FILE: arch/arm/kernel/isa.c:48:
+>     +               .extra1         = &zero,
 > 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: 764dd163ac92 ("netfilter: nf_conntrack_bridge: add support for IPv6")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>     WARNING: duplicated sysctl range checking value 'int_max', consider using the shared one in include/linux/sysctl.h
+>     #28: FILE: arch/arm/kernel/isa.c:49:
+>     +               .extra2         = &int_max,
+> 
+>     total: 0 errors, 2 warnings, 14 lines checked
+> 
+> Signed-off-by: Matteo Croce <mcroce@redhat.com>
 > ---
->  include/linux/netfilter_ipv6.h | 2 ++
->  1 file changed, 2 insertions(+)
+>  scripts/checkpatch.pl | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> diff --git a/include/linux/netfilter_ipv6.h b/include/linux/netfilter_ipv6.h
-> index a21b8c9..4ea97fd 100644
-> --- a/include/linux/netfilter_ipv6.h
-> +++ b/include/linux/netfilter_ipv6.h
-> @@ -96,6 +96,8 @@ static inline int nf_ip6_route(struct net *net, struct dst_entry **dst,
->  #endif
->  }
->  
-> +int nf_ct_frag6_gather(struct net *net, struct sk_buff *skb, u32 user);
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index 342c7c781ba5..629c31435487 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -6639,6 +6639,12 @@ sub process {
+>  				     "unknown module license " . $extracted_string . "\n" . $herecurr);
+>  			}
+>  		}
 > +
->  static inline int nf_ipv6_br_defrag(struct net *net, struct sk_buff *skb,
->  				    u32 user)
->  {
-> 
+> +# check for sysctl duplicate constants
+> +		if ($line =~ /\.extra[12]\s*=\s*&(zero|one|int_max|max_int)\b/) {
+
+why max_int, there isn't a single use of it in the kernel ?
+
 
