@@ -2,103 +2,101 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D206C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D56EFC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1D1926877
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:57:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ggoMtVkv"
+	by mail.kernel.org (Postfix) with ESMTP id B56812566B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 11:57:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727273AbfEaL5P (ORCPT
+        id S1727308AbfEaL5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 07:57:15 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42947 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbfEaL5O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 07:57:14 -0400
-Received: by mail-ot1-f66.google.com with SMTP id i2so7906620otr.9
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 04:57:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tpFjn7QsmPn7gjQCM9ineIkv1noxcgSAUiCpDRJVGls=;
-        b=ggoMtVkvlG2qeUN8pOMIN1TvDP/+0BIR4qcfVhviE9WDfOjfXeGyjpI+W8QnoUmxcJ
-         x2nwoKGdoSv0EozQ2yVJeh0oozpuqn0bm3oClCut0g9YfWOoGy4k8OKi5Woc1Tr6wdsR
-         saCjBiOMkI52qqNRHrMW6N4gvn65yFptrOZx31LXYdPgIvxnfwm0ddyiHDQYy5ngOdR8
-         hB8y+5KTxRhiZEFuBdfQrU8TZ0MoRATlpTDWocL+1LY6KoAd6/KsWfNsYAWqXBWGn16I
-         TGqOF89dydO5AY4Ooobb/y61+zEwGES1n/6oWV/AQYIDdJtcTSGt+nwd3u+HZRfK2riV
-         etIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tpFjn7QsmPn7gjQCM9ineIkv1noxcgSAUiCpDRJVGls=;
-        b=SWriMihw4gWKZZTF3ugufXeHyGbAWeODVdORyJgzMw8rzntbcrEvfC7OhQe9kjDFjw
-         wNPucfQSwnwbNv+dBJ6UJ5ULNfR4rLWdl/Yoweu/mJyzC1YsJjaVO12kKFYjCKe70iJO
-         50YoTJaFx7Wa8N3T5ECIRtO+rMwNuddbVuQp/8kxJhAKGVQOR/Fm01Np3a0cXNaKDO/9
-         XuXPAhT4/bgVxbqaqkL0/MaqIY4/KnUWgzBMq2AlLflhiyTej04eiV3nBMcN/NakgVZl
-         YwoMYzroE0Je4KDg8F7VKT4ixyaNbrEtmR9Z5TLJYRAiuxEEsJ0ADyzmxKMSovdfuk2s
-         6M1w==
-X-Gm-Message-State: APjAAAW2xJBQ5wit0+4pOx6cZlsgb6/E+OzmHXhpnr6m9v0Mj3/8XHwn
-        z/FMTuhBnPYHIWxU6NYJB3CD4v2XZJ3ZkY5uUvWTpQ==
-X-Google-Smtp-Source: APXvYqzPMHqTSDmVvn+uwCrjm0kig8jLmBdto0sGBqXKrrdWB4kGfXZ/dGE1UTqnPsAhq0M8Y3sS7ZDD/TN+H4jp40s=
-X-Received: by 2002:a9d:2f26:: with SMTP id h35mr1498224otb.183.1559303833714;
- Fri, 31 May 2019 04:57:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190529113157.227380-1-jannh@google.com> <20190530123452.GF22536@redhat.com>
-In-Reply-To: <20190530123452.GF22536@redhat.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Fri, 31 May 2019 13:56:47 +0200
-Message-ID: <CAG48ez0ivQ+gfwKMife-3ZwBuqAuc1BhDGW3dtYTHMq0sByuNw@mail.gmail.com>
-Subject: Re: [PATCH] ptrace: restore smp_rmb() in __ptrace_may_access()
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     "Eric W . Biederman" <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        David Howells <dhowells@redhat.com>,
-        kernel list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 31 May 2019 07:57:47 -0400
+Received: from mga04.intel.com ([192.55.52.120]:9963 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726330AbfEaL5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 07:57:47 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 May 2019 04:57:46 -0700
+X-ExtLoop1: 1
+Received: from wvoon-ilbpg2.png.intel.com ([10.88.227.88])
+  by orsmga003.jf.intel.com with ESMTP; 31 May 2019 04:57:43 -0700
+From:   Voon Weifeng <weifeng.voon@intel.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jose Abreu <joabreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        biao huang <biao.huang@mediatek.com>,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
+        Kweh Hock Leong <hock.leong.kweh@intel.com>,
+        Voon Weifeng <weifeng.voon@intel.com>
+Subject: [PATCH net-next v5 0/5] net: stmmac: enable EHL SGMI
+Date:   Sat,  1 Jun 2019 03:58:09 +0800
+Message-Id: <1559332694-6354-1-git-send-email-weifeng.voon@intel.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 2:35 PM Oleg Nesterov <oleg@redhat.com> wrote:
-> On 05/29, Jann Horn wrote:
-> > --- a/kernel/cred.c
-> > +++ b/kernel/cred.c
-> > @@ -450,6 +450,15 @@ int commit_creds(struct cred *new)
-> >               if (task->mm)
-> >                       set_dumpable(task->mm, suid_dumpable);
-> >               task->pdeath_signal = 0;
-> > +             /*
-> > +              * If a task drops privileges and becomes nondumpable,
-> > +              * the dumpability change must become visible before
-> > +              * the credential change; otherwise, a __ptrace_may_access()
-> > +              * racing with this change may be able to attach to a task it
-> > +              * shouldn't be able to attach to (as if the task had dropped
-> > +              * privileges without becoming nondumpable).
-> > +              * Pairs with a read barrier in __ptrace_may_access().
-> > +              */
-> >               smp_wmb();
->
-> Hmm. Now that I tried to actually read this patch I do not understand this wmb().
->
-> commit_creds() does rcu_assign_pointer(real_cred) which implies smp_store_release(),
-> the dumpability change must be visible before ->real_cred is updated without any
-> additional barriers?
+This patch-set is to enable Ethernet controller
+(DW Ethernet QoS and DW Ethernet PCS) with SGMII interface in Elkhart Lake.
+The DW Ethernet PCS is the Physical Coding Sublayer that is between Ethernet
+MAC and PHY and uses MDIO Clause-45 as Communication.
 
-Oh, yes, I think you're right.
+Kweh Hock Leong (1):
+  net: stmmac: enable clause 45 mdio support
 
-So I guess I should make a v2 that still adds the smp_rmb() in
-__ptrace_may_access(), but gets rid of the smp_wmb() in
-commit_creds()? (With a comment above the rcu_assign_pointer() that
-explains the ordering?)
+Ong Boon Leong (3):
+  net: stmmac: introducing support for DWC xPCS logics
+  net: stmmac: add xpcs function hooks into main driver and ethtool
+  net: stmmac: add xPCS functions for device with DWMACv5.1
+
+Voon Weifeng (1):
+  net: stmmac: add EHL SGMII 1Gbps PCI info and PCI ID
+
+ drivers/net/ethernet/stmicro/stmmac/Makefile       |   2 +-
+ drivers/net/ethernet/stmicro/stmmac/common.h       |   1 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c  |  33 ++++
+ drivers/net/ethernet/stmicro/stmmac/dwxpcs.c       | 198 +++++++++++++++++++++
+ drivers/net/ethernet/stmicro/stmmac/dwxpcs.h       |  51 ++++++
+ drivers/net/ethernet/stmicro/stmmac/hwif.c         |  42 ++++-
+ drivers/net/ethernet/stmicro/stmmac/hwif.h         |  21 +++
+ drivers/net/ethernet/stmicro/stmmac/stmmac.h       |   2 +
+ .../net/ethernet/stmicro/stmmac/stmmac_ethtool.c   |  50 ++++--
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  | 140 +++++++++++----
+ drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c  |  40 ++++-
+ drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c   | 111 ++++++++++++
+ include/linux/phy.h                                |   2 +
+ include/linux/stmmac.h                             |   3 +
+ 14 files changed, 638 insertions(+), 58 deletions(-)
+ create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwxpcs.c
+ create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwxpcs.h
+
+-- 
+Changelog v5:
+*Cosmetic touch up
+*Change axi_wr_osr_lmt and axi_rd_osr_lmt value to 1 since the register
+ has a default value of 1
+Changelog v4:
+*Rebased to latest net-next
+Changelog v3:
+*Applied reversed christmas tree
+Changelog v2:
+*Added support for the C37 AN for 1000BASE-X and SGMII (MAC side SGMII only)
+*removed and submitted the fix patch to net
+ "net: stmmac: dma channel control register need to be init first"
+*Squash the following 2 patches and move it to the end of the patch set:
+ "net: stmmac: add EHL SGMII 1Gbps platform data and PCI ID"
+ "net: stmmac: add xPCS platform data for EHL"
+1.9.1
+
