@@ -2,96 +2,141 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 482EFC28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 05:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DE6C46460
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 05:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1770E263B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 05:14:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="nJ4npLw9"
+	by mail.kernel.org (Postfix) with ESMTP id 638FF263B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 05:15:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbfEaFOF (ORCPT
+        id S1726736AbfEaFPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 01:14:05 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:37894 "EHLO mail.skyhub.de"
+        Fri, 31 May 2019 01:15:02 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33948 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725955AbfEaFOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 01:14:04 -0400
-Received: from cz.tnic (unknown [207.225.69.115])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725955AbfEaFPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 01:15:02 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1B6E21EC0747;
-        Fri, 31 May 2019 07:14:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1559279642;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=dPY3XGBqhKD5FKYXjl8Me7lXXlj1TGKKetXF9jozRKo=;
-        b=nJ4npLw9pBK+/yUTCph5KX5VxsyPjGz/Zrd8R/cHcPQyDE3pOteQHB56wjexF4jR1BhyyI
-        YzojWZzi8QAxVZkMF4tKCDhsCUfwX95DkdWHSqPjV5fbdl6PDtH2UJSLbjxhHp5NWvbQ/3
-        ZSu1bk+pIt9MYFf9peXJzdkbzRaRIPU=
-Date:   Fri, 31 May 2019 07:14:00 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Herrenschmidt, Benjamin" <benh@amazon.com>,
-        "james.morse@arm.com" <james.morse@arm.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "Hawa, Hanna" <hhhawa@amazon.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Shenhar, Talel" <talel@amazon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Chocron, Jonathan" <jonnyc@amazon.com>,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "Hanoch, Uri" <hanochu@amazon.com>
-Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
-Message-ID: <20190531051400.GA2275@cz.tnic>
-References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
- <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
- <DB09EE2A-7397-4063-B925-66658D0105A5@alien8.de>
- <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 8824D30832C2;
+        Fri, 31 May 2019 05:15:01 +0000 (UTC)
+Received: from treble (ovpn-124-142.rdu2.redhat.com [10.10.124.142])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id DB2EA60CA7;
+        Fri, 31 May 2019 05:14:58 +0000 (UTC)
+Date:   Fri, 31 May 2019 00:14:56 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v4] x86/power: Fix 'nosmt' vs. hibernation triple fault
+ during resume
+Message-ID: <20190531051456.fzkvn62qlkf6wqra@treble>
+References: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm>
+ <nycvar.YFH.7.76.1905300007470.1962@cbobk.fhfr.pm>
+ <CAJZ5v0ja5sQ73zMvUtV+w79LC_d+g6UdomL36rV-EpVDxEzbhA@mail.gmail.com>
+ <alpine.DEB.2.21.1905301425330.2265@nanos.tec.linutronix.de>
+ <CAJZ5v0go1g9KhE=mc19VCFrBuEERzFZCoRD4xt=tF=EnMjfH=A@mail.gmail.com>
+ <20190530233804.syv4brpe3ndslyvo@treble>
+ <nycvar.YFH.7.76.1905310139380.1962@cbobk.fhfr.pm>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <nycvar.YFH.7.76.1905310139380.1962@cbobk.fhfr.pm>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 31 May 2019 05:15:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 01:15:33AM +0000, Herrenschmidt, Benjamin wrote:
-> This isn't terribly helpful, there's nothing telling anybody which of
-> those files corresponds to an ARM SoC :-)
-
-drivers/edac/altera_edac.c is one example.
-
-Also, James and I have a small writeup on how an arm driver should look
-like, we just need to polish it up and post it.
-
-James?
-
-> That said ...
+On Fri, May 31, 2019 at 01:42:02AM +0200, Jiri Kosina wrote:
+> On Thu, 30 May 2019, Josh Poimboeuf wrote:
 > 
-> You really want a single EDAC driver that contains all the stuff for
-> the caches, the memory controller, etc... ?
+> > > >     Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+> > > 
+> > > Yes, it is, thanks!
+> > 
+> > I still think changing monitor/mwait to use a fixmap address would be a
+> > much cleaner way to fix this.  I can try to work up a patch tomorrow.
+> 
+> I disagree with that from the backwards compatibility point of view.
+> 
+> I personally am quite frequently using differnet combinations of 
+> resumer/resumee kernels, and I've never been biten by it so far. I'd guess 
+> I am not the only one.
+> Fixmap sort of breaks that invariant.
 
-Yap.
+Right now there is no backwards compatibility because nosmt resume is
+already broken.
 
--- 
-Regards/Gruss,
-    Boris.
+For "future" backwards compatibility we could just define a hard-coded
+reserved fixmap page address, adjacent to the vsyscall reserved address.
 
-ECO tip #101: Trim your mails when you reply. Srsly.
+Something like this (not yet tested)?  Maybe we could also remove the
+resume_play_dead() hack?
+
+diff --git a/arch/x86/include/asm/fixmap.h b/arch/x86/include/asm/fixmap.h
+index 9da8cccdf3fb..1c328624162c 100644
+--- a/arch/x86/include/asm/fixmap.h
++++ b/arch/x86/include/asm/fixmap.h
+@@ -80,6 +80,7 @@ enum fixed_addresses {
+ #ifdef CONFIG_X86_VSYSCALL_EMULATION
+ 	VSYSCALL_PAGE = (FIXADDR_TOP - VSYSCALL_ADDR) >> PAGE_SHIFT,
+ #endif
++	FIX_MWAIT = (FIXADDR_TOP - VSYSCALL_ADDR - 1) >> PAGE_SHIFT,
+ #endif
+ 	FIX_DBGP_BASE,
+ 	FIX_EARLYCON_MEM_BASE,
+diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+index 73e69aaaa117..9804fbe25d03 100644
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -108,6 +108,8 @@ int __read_mostly __max_smt_threads = 1;
+ /* Flag to indicate if a complete sched domain rebuild is required */
+ bool x86_topology_update;
+ 
++static char __mwait_page[PAGE_SIZE];
++
+ int arch_update_cpu_topology(void)
+ {
+ 	int retval = x86_topology_update;
+@@ -1319,6 +1321,8 @@ void __init native_smp_prepare_cpus(unsigned int max_cpus)
+ 	smp_quirk_init_udelay();
+ 
+ 	speculative_store_bypass_ht_init();
++
++	set_fixmap(FIX_MWAIT, __pa_symbol(&__mwait_page));
+ }
+ 
+ void arch_enable_nonboot_cpus_begin(void)
+@@ -1631,11 +1635,12 @@ static inline void mwait_play_dead(void)
+ 	}
+ 
+ 	/*
+-	 * This should be a memory location in a cache line which is
+-	 * unlikely to be touched by other processors.  The actual
+-	 * content is immaterial as it is not actually modified in any way.
++	 * This memory location is never actually written to.  It's mapped at a
++	 * reserved fixmap address to ensure the monitored address remains
++	 * valid across a hibernation resume operation.  Otherwise a triple
++	 * fault can occur.
+ 	 */
+-	mwait_ptr = &current_thread_info()->flags;
++	mwait_ptr = (void *)fix_to_virt(FIX_MWAIT);
+ 
+ 	wbinvd();
+ 
