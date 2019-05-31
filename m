@@ -2,136 +2,103 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC5D8C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:23:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2AACC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83D3E26B87
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:23:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2D6D26BA8
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:24:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CeIGVQtV"
+	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="L7RaHhsS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbfEaPXs (ORCPT
+        id S1726874AbfEaPYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 11:23:48 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38773 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbfEaPXr (ORCPT
+        Fri, 31 May 2019 11:24:02 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34170 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbfEaPYB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 11:23:47 -0400
-Received: by mail-ed1-f65.google.com with SMTP id g13so15096054edu.5;
-        Fri, 31 May 2019 08:23:46 -0700 (PDT)
+        Fri, 31 May 2019 11:24:01 -0400
+Received: by mail-ot1-f65.google.com with SMTP id l17so9580902otq.1
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 08:24:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=digitalocean.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=0/ovLauDCtIyBdqO9jHJhkEsV0yp4ngvTWZtWEi/FFQ=;
-        b=CeIGVQtVdvzXlmkTPelOg36bvXkKOiS8Nj1+a9yS8LpAiEfVtwUFIQZiMeC6IqJiav
-         YqBPOR9dchgSKF6zxFvzkYkZVsVMQi0QkrwiMNKMmcI+oqEEsHDfhPF8OkPjSUlgck5u
-         0wAnGzz7M0ZTUkCcmfK37QoX0ZDLDav1fnASvdT9+EBLgocPFiAMZ5x/lhiPFRKoGZKn
-         wckBMTjEeAyr/q3hVFM/wq0YsB3a+3B8kPw0Ry/3vuCuuLHmtUQiJuZ+nORbpf1+2JGv
-         JIC5aT1nXhvgSXO3jRwHnNNVh+TRVIyY5P1ghNbrSGJDQZzewd0dCtDyIIL6sOIydWVv
-         AcBw==
+        bh=j8Vb8qpSXm8bzNNepx05WgAIFrGuf3VkeLRTzDWN0Po=;
+        b=L7RaHhsSKsXosswu3wXdWufSUUg3CfskpN/TaYgjCvSi7EvOCG9A99xw2q6b9ZjdTa
+         Xt7EJ/0lEOrBZ6TgD4elQYq3YpXCce8p9eOjo6eRZt6ML8pqgA2iLfGokwYjk04odybC
+         EwFYNbiCbs0gVHqED/E906ddHHzY0RhbuIoXs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=0/ovLauDCtIyBdqO9jHJhkEsV0yp4ngvTWZtWEi/FFQ=;
-        b=pS2aTEXLxTqEchEEYjwsfhQiorBuulaictDgVjlPgV0WuClaedX+ZNywZU1kjG+3pf
-         7/59PqoVXEdJkVKO/wQd1JBYlLbZLPWSoElw/5bG3LEVyovW1hGuoECWuBt+mbB9VkKe
-         3Iyb2bqOwnmuCv+wAmY3JJUtwoWo8fuwPvpayatpvwlVZWnMoN/PlH6cwubYdIad5ffC
-         zp3SBOJnIcU1NvGeUgL7i9DlIRgaQEUI5iM4IDHxZyJrgcoAVWzpKpyGsmrZyq7KuinA
-         kIQtBOJrRjPgHwxtE099cNpMHd43ZFe/kJAjrouTSjuo/r4zEZjTgo5uHJ9FS4W7Zs/m
-         hNPw==
-X-Gm-Message-State: APjAAAUOYdc7Yf4uTuHmHqE2iv0wfOeMxe+i3oQglZi3bt4L/HSIjqj5
-        UOrn2QYlaYH5vdDXBRPbNZq3+oJuujSISroVaFE=
-X-Google-Smtp-Source: APXvYqw0OlbWL16oe54SUMdm6DbHmf40TMFdUctUiyiLCSycjO2k7rRXMRha3Or7kW/fXz2L6cAUOPsdVK71nNAvmIs=
-X-Received: by 2002:a50:92a3:: with SMTP id k32mr12055185eda.123.1559316225574;
- Fri, 31 May 2019 08:23:45 -0700 (PDT)
+        bh=j8Vb8qpSXm8bzNNepx05WgAIFrGuf3VkeLRTzDWN0Po=;
+        b=ZE3qujcO9lhZtElrtS5tenaYmpPo4NCHQjzx5d3iEPOcZE86AUSBKRlyAdRWaYotxH
+         xdDv73xxPGHeFzukhAzbafnBhSCtqIHX2EyqUG1EDKvfbyDGvjPtoAHXbBKYFFhEoy/p
+         W0KCn4HBSXeWe1RG4DzbLHXIHjKdzApXV/1pXKX1u0vp3m2fBjuTJJAilaBhJUVZiOO/
+         iUML03ipuZA7V5BlNSGkZgXdh8rHCRcVS7BfRXjgtXySBbDhUEkN9xeqkW554VvcIofX
+         VffskJao122+JSHT7sFFoQ/r8QcQTTakNLd4guDVZVkUciPXgGYV3nO6Z7C4AOEu+FOV
+         A8BQ==
+X-Gm-Message-State: APjAAAUdAuJvy497uI5scYGnt53r7GA8aT+vNw1JOvwOFDY/CDXH2zvS
+        B+wf7p4o+SR5Tx6ogA/dAM0rmyO9eg9x/52xrKkyog==
+X-Google-Smtp-Source: APXvYqzceGFjArRnoeJHnuX4OEFDzzPJuFPFXVCB5sHuc4jX9G20ZUyeENpQbE3oYvL5aXyhnj2TKRFedR8im7K5tbs=
+X-Received: by 2002:a9d:5788:: with SMTP id q8mr2137440oth.237.1559316240561;
+ Fri, 31 May 2019 08:24:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190530034555.wv35efen3igwwzjq@localhost> <CA+h21hpjsC=ie5G7Gx3EcPpazyxze6X_k+8eC+vw7JBvEO2zNg@mail.gmail.com>
- <20190530143037.iky5kk3h4ssmec3f@localhost> <CA+h21hpp68AEEykxr8bJB=uJ+b0tg881Z7Ao_OfbTAXNxS8WgQ@mail.gmail.com>
- <20190530150557.iur7fruhyf5bs3qw@localhost> <CA+h21hrBwR4Sow7q0_rS1u2md1M4bSAJt8FO5+VLFiu9UGnvjA@mail.gmail.com>
- <20190531043417.6phscbpmo6krvxam@localhost> <CA+h21hp9DfW3wFy4YbHMU31rBHyrnUTdF4kKwX36h9vHOW2COw@mail.gmail.com>
- <20190531140841.j4f72rlojmaayqr5@localhost> <CA+h21hroywaij3gyO0u6v+GFVO2Fv_dP_a+L3oMGpQH8mQgJ5g@mail.gmail.com>
- <20190531151151.k3a2wdf5f334qmqh@localhost>
-In-Reply-To: <20190531151151.k3a2wdf5f334qmqh@localhost>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Fri, 31 May 2019 18:23:34 +0300
-Message-ID: <CA+h21hpHKbTc8toPZf0iprW1b4v6ErnRaSM=C6vk-GCiXM8NvA@mail.gmail.com>
-Subject: Re: [PATCH net-next 0/5] PTP support for the SJA1105 DSA driver
-To:     Richard Cochran <richardcochran@gmail.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        John Stultz <john.stultz@linaro.org>,
+References: <cover.1559129225.git.vpillai@digitalocean.com>
+ <a03795e66ed45469ac5b3c1b1d01c8ed33be299f.1559129225.git.vpillai@digitalocean.com>
+ <20190531110820.GP2623@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190531110820.GP2623@hirez.programming.kicks-ass.net>
+From:   Vineeth Pillai <vpillai@digitalocean.com>
+Date:   Fri, 31 May 2019 11:23:48 -0400
+Message-ID: <CANaguZCxqsxmsF3pSvgT78bD9KC_qzqU1m2D6tg3KPUNJijdsw@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 10/16] sched: Core-wide rq->lock
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 May 2019 at 18:11, Richard Cochran <richardcochran@gmail.com> wrote:
 >
-> On Fri, May 31, 2019 at 05:27:15PM +0300, Vladimir Oltean wrote:
-> > On Fri, 31 May 2019 at 17:08, Richard Cochran <richardcochran@gmail.com> wrote:
-> > > This can be done simply using a data structure in the driver with an
-> > > appropriate locking mechanism.  Then you don't have to worry which
-> > > core the driver code runs on.
-> > >
-> >
-> > Actually you do. DSA is special because it is not the first net device
-> > in the RX path that processes the frames. Something needs to be done
-> > on the master port.
+> I'm confused, how doesn't this break the invariant above?
 >
-> Before you said,
+> That is, all CPUs must at all times agree on the value of rq_lockp(),
+> and I'm not seeing how that is true with the above changes.
 >
->         the switch in its great wisdom mangles bytes 01-1B-19-xx-xx-00
->         of the DMAC to place the switch id and source port there (a
->         rudimentary tagging mechanism).
->
-> So why not simply save each frame in a per-switch/port data structure?
->
+While fixing the crash in cpu online/offline, I was focusing on
+maintaining the invariance
+of all online cpus to agree on the value of rq_lockp(). Would it be
+safe to assume that
+rq and rq_lock would be used only after a cpu is onlined(sched:active)?.
 
-You mean to queue it and subvert DSA's own RX timestamping callback?
-Why would I do that? Just so as not to introduce my .can_timestamp
-callback?
+To maintain the strict invariance, the sibling should also disable
+core scheduling, but
+we need to empty the rbtree before disabling it. I am trying to see
+how to empty the
+rbtree safely in the offline context.
 
-> Now I'm starting to understand your series.  I think it can be done in
-> simpler way...
->
-> sja1105_rcv_meta_state_machine - can and should be at the driver level
-> and not at the port level.
->
-
-Can: yes. Should: why?
-
-> sja1105_port_rxtstamp_work - isn't needed at all.
->
-> How about this?
->
-> 1. When the driver receives a deferred PTP frame, save it into a
->    per-switch,port slot at the driver (not port) level.
->
-> 2. When the driver receives a META frame, match it to the
->    per-switch,port slot.  If there is a PTP frame in that slot, then
->    deliver it with the time stamp from the META frame.
->
-
-One important aspect makes this need be a little bit more complicated:
-reconstructing these RX timestamps.
-You see, there is a mutex on the SPI bus, so in practice I do need the
-sja1105_port_rxtstamp_work for exactly this purpose - to read the
-timestamping clock over SPI.
-
-> Thanks,
-> Richard
+Thanks,
+Vineeth
