@@ -2,83 +2,114 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43346C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 18:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F29C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 18:53:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1226C244D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 18:52:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61C0226E28
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 18:53:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="i/2HIvcs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pGTETKfe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727187AbfEaSwh (ORCPT
+        id S1727194AbfEaSxW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 14:52:37 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:46120 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727053AbfEaSwg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 14:52:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=JHV9B7CY5P1AY/d5DQgFTyOMLZPxcZGMAdD3jQYerfs=; b=i/2HIvcsXchx7C8zTCPQ/Fq3j7
-        5tUu25qWV2Y/a+nH3xwPGi1ADK/loAoXwxU/vXGkapjhN1/Lufi53N1UzC3LvMRd9EgTrPrtuIkO/
-        HqGtIUrpTQPz0Kdc0Gpc0Lr6uXBxXEyDvrwk6yDksPAkvp1LolxXy47nHPiN+aazrgsA=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hWmdX-00007Y-O6; Fri, 31 May 2019 20:52:19 +0200
-Date:   Fri, 31 May 2019 20:52:19 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com,
-        palmer@sifive.com, paul.walmsley@sifive.com,
-        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH REPOST v8 3/3] i2c-ocores: sifive: add polling mode
- workaround for FU540-C000 SoC.
-Message-ID: <20190531185219.GD23821@lunn.ch>
-References: <1559327423-13001-1-git-send-email-sagar.kadam@sifive.com>
- <1559327423-13001-4-git-send-email-sagar.kadam@sifive.com>
+        Fri, 31 May 2019 14:53:22 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:35937 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726640AbfEaSxW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 14:53:22 -0400
+Received: by mail-ed1-f68.google.com with SMTP id a8so15992193edx.3;
+        Fri, 31 May 2019 11:53:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=piCJ6jEF6MBc4EJPMFsudzP7NRZDnr1GSlVWfPmBoUQ=;
+        b=pGTETKfe1tTLLxY/NozLw5pRvA556SpSsWvFQ/zFFBI68rKKDwsQl2SCdYv+30I17T
+         4d1GZKf5SUaDUAi+D48E3fBGZjv5XACgWmfCtfq3iZF50PJoGmkaxwxqy6YTeOy4wmLw
+         roa21TEQ12TNacClYrWZtAS+15Qi5OYX+pPK8yMm6XDZCo68CfbQCrs49GVjQ8O9ufdX
+         EPFJbArhE81aIUqwAuj0ZyOBWgO3ClwISo7P77bGK3R+blXcZuxdIWp//mPioP7SQ8rP
+         0qKOpTzJnIQZPrtZOyW9haCplftEH1/a7vRbz9Lmad3fOP8PFP4zBgF19XpG8tVxF3IH
+         kzAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=piCJ6jEF6MBc4EJPMFsudzP7NRZDnr1GSlVWfPmBoUQ=;
+        b=oNwO0cwP/sDdjTRB5i1I1aJNDniVWatc13zs3BF4hfY2ZTwUekY5/7RVd2KDm22J4I
+         C8C9/QKoAsdiplYOii09mDqMrOU4isxbAHZ7/izCFXjrAgbA/4FpJQecJWtQZZKmahW1
+         /nDlfPyHe7ahbTmuzCrGTDEnbU3Gx4m6/iFt3pXmI3JP1x9dRLBo1v4rKg1uYu59q/ee
+         PfIhWk3fZspqfbqSe0pXBGXmtrPya2AVjKc0PH0ZSAoy2bY+Aa7QOF3H7G4v7xvXMBdU
+         NHmJsha+f+1+Nlb3WKBrleRTE/c/u8XlLl+iIBClZVlem0YlJI/s3tNzlvgptInQoP8M
+         uqHA==
+X-Gm-Message-State: APjAAAUnP2p6r6hCEGoh4QTcFLOxq+cNeU8/dDzpHXZyMiYfkZv+8oc6
+        6IOrgq1wneHtpXwpuU++2sY=
+X-Google-Smtp-Source: APXvYqx535alRqStLg3CPU1+Fg/qXZIQbrvAUQDh4QWyvu8dpjY3mMQzRz94s9OTk3JQBudJj9leNQ==
+X-Received: by 2002:a05:6402:1819:: with SMTP id g25mr3576488edy.56.1559328799792;
+        Fri, 31 May 2019 11:53:19 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f9:2b:2b15::2])
+        by smtp.gmail.com with ESMTPSA id j3sm1789080edh.82.2019.05.31.11.53.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 31 May 2019 11:53:19 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Tyrel Datwyler <tyreld@linux.ibm.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-scsi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] scsi: ibmvscsi: Don't use rc uninitialized in ibmvscsi_do_work
+Date:   Fri, 31 May 2019 11:53:06 -0700
+Message-Id: <20190531185306.41290-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.22.0.rc2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1559327423-13001-4-git-send-email-sagar.kadam@sifive.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 01, 2019 at 12:00:23AM +0530, Sagar Shrikant Kadam wrote:
-> The i2c-ocore driver already has a polling mode interface.But it needs
-> a workaround for FU540 Chipset on HiFive unleashed board (RevA00).
-> There is an erratum in FU540 chip that prevents interrupt driven i2c
-> transfers from working, and also the I2C controller's interrupt bit
-> cannot be cleared if set, due to this the existing i2c polling mode
-> interface added in mainline earlier doesn't work, and CPU stall's
-> infinitely, when-ever i2c transfer is initiated.
-> 
-> Ref:
-> 	commit dd7dbf0eb090 ("i2c: ocores: refactor setup for polling")
-> 
-> The workaround / fix under OCORES_FLAG_BROKEN_IRQ is particularly for
-> FU540-COOO SoC.
-> 
-> The polling function identifies a SiFive device based on the device node
-> and enables the workaround.
-> 
-> Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-> Acked-by: Andrew Lunn <andrew@lunn.ch>
+clang warns:
 
-Please read:
+drivers/scsi/ibmvscsi/ibmvscsi.c:2126:7: warning: variable 'rc' is used
+uninitialized whenever switch case is taken [-Wsometimes-uninitialized]
+        case IBMVSCSI_HOST_ACTION_NONE:
+             ^~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/scsi/ibmvscsi/ibmvscsi.c:2151:6: note: uninitialized use occurs
+here
+        if (rc) {
+            ^~
 
-https://lkml.org/lkml/2019/5/22/954
+Initialize rc to zero so that the atomic_set and dev_err statement don't
+trigger for the cases that just break.
 
-	Andrew
+Fixes: 035a3c4046b5 ("scsi: ibmvscsi: redo driver work thread to use enum action states")
+Link: https://github.com/ClangBuiltLinux/linux/issues/502
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/scsi/ibmvscsi/ibmvscsi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/scsi/ibmvscsi/ibmvscsi.c b/drivers/scsi/ibmvscsi/ibmvscsi.c
+index 727c31dc11a0..6714d8043e62 100644
+--- a/drivers/scsi/ibmvscsi/ibmvscsi.c
++++ b/drivers/scsi/ibmvscsi/ibmvscsi.c
+@@ -2118,7 +2118,7 @@ static unsigned long ibmvscsi_get_desired_dma(struct vio_dev *vdev)
+ static void ibmvscsi_do_work(struct ibmvscsi_host_data *hostdata)
+ {
+ 	unsigned long flags;
+-	int rc;
++	int rc = 0;
+ 	char *action = "reset";
+ 
+ 	spin_lock_irqsave(hostdata->host->host_lock, flags);
+-- 
+2.22.0.rc2
+
