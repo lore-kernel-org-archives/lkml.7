@@ -2,510 +2,466 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A463EC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F8DDC28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6472726A10
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:11:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFF5C26A19
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:11:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559311907;
+	bh=LQWMhP9E/E4TFjdlpTUnQ4R6KKFoHc1gxA2R1wWk3Pg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QfaXG4UZb/emaBQ1d01yT8Ej13IvtVTVJB9M8b572mhFh553I8dDDq313WCr6D6e4
+	 9WvB8KARkdPYWejRZAX7Es/5ExmB7knU2Wh1kpummZecHIexSOvvUXtEwp1n4hhVzC
+	 u9C2/KsjPvb3rRhjpAhj7Xkzyiz6hULZeSwN+ayw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbfEaOLP (ORCPT
+        id S1726773AbfEaOLq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 10:11:15 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:50858 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726386AbfEaOLP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 10:11:15 -0400
-Received: from fsav304.sakura.ne.jp (fsav304.sakura.ne.jp [153.120.85.135])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x4VEBAhw054732;
-        Fri, 31 May 2019 23:11:11 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav304.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav304.sakura.ne.jp);
- Fri, 31 May 2019 23:11:10 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav304.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x4VEB33X054613
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Fri, 31 May 2019 23:11:09 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [RFC] printk/sysrq: Don't play with console_loglevel
-To:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-References: <20190528002412.1625-1-dima@arista.com>
- <20190528041500.GB26865@jagdpanzerIV> <20190528044619.GA3429@jagdpanzerIV>
- <20190528134227.xyb3622gjwu52q4r@pathway.suse.cz>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <82605abd-14d9-376a-446c-48475ae305dc@i-love.sakura.ne.jp>
-Date:   Fri, 31 May 2019 23:11:02 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 31 May 2019 10:11:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59946 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726713AbfEaOLp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 10:11:45 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA30326A10;
+        Fri, 31 May 2019 14:11:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559311904;
+        bh=LQWMhP9E/E4TFjdlpTUnQ4R6KKFoHc1gxA2R1wWk3Pg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=W3KX3cbw8cu3wKs4YpBELVkKKA1w1HCOyNyvlisBUsAlO3/Re/866S7l1l1dmQVEI
+         oWC+osCZsBRfkK3UY+U0rU2owxyl3hl/GeZsG1YOy5UkWObK6aiLKrpQSJVK4VL4Gv
+         WJJYqxkS8vAmUCH0LoFpLlnUWyZhR4dUcc4xSEi8=
+Date:   Fri, 31 May 2019 09:11:42 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com
+Subject: Re: [PATCH v3 4/5] PCI/DPC: Add Error Disconnect Recover (EDR)
+ support
+Message-ID: <20190531141142.GQ28250@google.com>
+References: <cover.1557870869.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <7c2cadb48f690bf4994063623b4a093a87257f93.1557870869.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190528134227.xyb3622gjwu52q4r@pathway.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7c2cadb48f690bf4994063623b4a093a87257f93.1557870869.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/05/28 22:42, Petr Mladek wrote:
-> On Tue 2019-05-28 13:46:19, Sergey Senozhatsky wrote:
->> On (05/28/19 13:15), Sergey Senozhatsky wrote:
->>> On (05/28/19 01:24), Dmitry Safonov wrote:
->>> [..]
->>>> While handling sysrq the console_loglevel is bumped to default to print
->>>> sysrq headers. It's done to print sysrq messages with WARNING level for
->>>> consumers of /proc/kmsg, though it sucks by the following reasons:
->>>> - changing console_loglevel may produce tons of messages (especially on
->>>>   bloated with debug/info prints systems)
->>>> - it doesn't guarantee that the message will be printed as printk may
->>>>   deffer the actual console output from buffer (see the comment near
->>>>   printk() in kernel/printk/printk.c)
->>>>
->>>> Provide KERN_UNSUPPRESSED printk() annotation for such legacy places.
->>>> Make sysrq print the headers unsuppressed instead of changing
->>>> console_loglevel.
+On Tue, May 14, 2019 at 03:18:16PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > 
-> I like this idea. console_loglevel is temporary manipulated only
-> when some messages should or should never appear on the console.
-> Storing this information in the message flags would help
-> to solve all the related races.
+> As per PCI firmware specification v3.2 ECN
+> (https://members.pcisig.com/wg/PCI-SIG/document/12614), when firmware
+> owns Downstream Port Containment (DPC), its expected to use the "Error
+> Disconnect Recover" (EDR) notification to alert OSPM of a DPC event and
+> if OS supports EDR, its expected to handle the software state invalidation
+> and port recovery in OS and let firmware know the recovery status via _OST
+> ACPI call.
 
-Something like this?
+Please also include the ECN title and the ACPI reference(s) related to
+EDR.
 
----
- arch/ia64/kernel/mca.c        | 37 +++++++++++++++------------
- arch/x86/platform/uv/uv_nmi.c |  6 ++---
- drivers/tty/sysrq.c           |  9 +++----
- include/linux/printk.h        | 24 +++++++++---------
- include/linux/sched.h         |  3 +++
- kernel/debug/kdb/kdb_bt.c     |  5 ++--
- kernel/debug/kdb/kdb_io.c     |  5 ++--
- kernel/debug/kdb/kdb_main.c   |  5 ++--
- kernel/printk/printk.c        | 59 +++++++++++++++++++++++++++++++++++++++----
- kernel/printk/printk_safe.c   |  2 ++
- 10 files changed, 105 insertions(+), 50 deletions(-)
+> Since EDR is a hybrid service, DPC service shall be enabled in OS even
+> if AER is not natively enabled in OS.
+> 
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-diff --git a/arch/ia64/kernel/mca.c b/arch/ia64/kernel/mca.c
-index 6a52d76..5f3968c 100644
---- a/arch/ia64/kernel/mca.c
-+++ b/arch/ia64/kernel/mca.c
-@@ -189,19 +189,24 @@
- static unsigned long mlogbuf_timestamp = 0;
- 
- static int loglevel_save = -1;
--#define BREAK_LOGLEVEL(__console_loglevel)		\
--	oops_in_progress = 1;				\
--	if (loglevel_save < 0)				\
--		loglevel_save = __console_loglevel;	\
--	__console_loglevel = 15;
--
--#define RESTORE_LOGLEVEL(__console_loglevel)		\
--	if (loglevel_save >= 0) {			\
--		__console_loglevel = loglevel_save;	\
--		loglevel_save = -1;			\
--	}						\
--	mlogbuf_finished = 0;				\
--	oops_in_progress = 0;
-+#define BREAK_LOGLEVEL()						\
-+	do {								\
-+		int ret;						\
-+		oops_in_progress = 1;					\
-+		ret = set_local_loglevel(CONSOLE_LOGLEVEL_MOTORMOUTH);	\
-+		if (loglevel_save < 0)					\
-+			loglevel_save = ret;				\
-+	} while (0)
-+
-+#define RESTORE_LOGLEVEL()					\
-+	do {							\
-+		if (loglevel_save >= 0) {			\
-+			set_local_loglevel(loglevel_save);	\
-+			loglevel_save = -1;			\
-+		}						\
-+		mlogbuf_finished = 0;				\
-+		oops_in_progress = 0;				\
-+	} while (0)
- 
- /*
-  * Push messages into buffer, print them later if not urgent.
-@@ -288,7 +293,7 @@ void ia64_mlogbuf_dump(void)
-  */
- static void ia64_mlogbuf_finish(int wait)
- {
--	BREAK_LOGLEVEL(console_loglevel);
-+	BREAK_LOGLEVEL();
- 
- 	spin_lock_init(&mlogbuf_rlock);
- 	ia64_mlogbuf_dump();
-@@ -1623,7 +1628,7 @@ static void mca_insert_tr(u64 iord)
- 	 * To enable show_stack from INIT, we use oops_in_progress which should
- 	 * be used in real oops. This would cause something wrong after INIT.
- 	 */
--	BREAK_LOGLEVEL(console_loglevel);
-+	BREAK_LOGLEVEL();
- 	ia64_mlogbuf_dump_from_init();
- 
- 	printk(KERN_ERR "Processes interrupted by INIT -");
-@@ -1648,7 +1653,7 @@ static void mca_insert_tr(u64 iord)
- 		read_unlock(&tasklist_lock);
- 	}
- 	/* FIXME: This will not restore zapped printk locks. */
--	RESTORE_LOGLEVEL(console_loglevel);
-+	RESTORE_LOGLEVEL();
- 	return NOTIFY_DONE;
- }
- 
-diff --git a/arch/x86/platform/uv/uv_nmi.c b/arch/x86/platform/uv/uv_nmi.c
-index b21a932..48592d1 100644
---- a/arch/x86/platform/uv/uv_nmi.c
-+++ b/arch/x86/platform/uv/uv_nmi.c
-@@ -766,13 +766,13 @@ static void uv_nmi_dump_state(int cpu, struct pt_regs *regs, int master)
- 	if (master) {
- 		int tcpu;
- 		int ignored = 0;
--		int saved_console_loglevel = console_loglevel;
-+		int saved_loglevel;
- 
- 		pr_alert("UV: tracing %s for %d CPUs from CPU %d\n",
- 			uv_nmi_action_is("ips") ? "IPs" : "processes",
- 			atomic_read(&uv_nmi_cpus_in_nmi), cpu);
- 
--		console_loglevel = uv_nmi_loglevel;
-+		saved_loglevel = set_local_loglevel(uv_nmi_loglevel);
- 		atomic_set(&uv_nmi_slave_continue, SLAVE_EXIT);
- 		for_each_online_cpu(tcpu) {
- 			if (cpumask_test_cpu(tcpu, uv_nmi_cpu_mask))
-@@ -785,7 +785,7 @@ static void uv_nmi_dump_state(int cpu, struct pt_regs *regs, int master)
- 		if (ignored)
- 			pr_alert("UV: %d CPUs ignored NMI\n", ignored);
- 
--		console_loglevel = saved_console_loglevel;
-+		set_local_loglevel(saved_loglevel);
- 		pr_alert("UV: process trace complete\n");
- 	} else {
- 		while (!atomic_read(&uv_nmi_slave_continue))
-diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
-index 573b205..5675977 100644
---- a/drivers/tty/sysrq.c
-+++ b/drivers/tty/sysrq.c
-@@ -541,8 +541,7 @@ void __handle_sysrq(int key, bool check_mask)
- 	 * simply emit this at KERN_EMERG as that would change message
- 	 * routing in the consumers of /proc/kmsg.
- 	 */
--	orig_log_level = console_loglevel;
--	console_loglevel = CONSOLE_LOGLEVEL_DEFAULT;
-+	orig_log_level = set_local_loglevel(CONSOLE_LOGLEVEL_DEFAULT);
- 
-         op_p = __sysrq_get_key_op(key);
-         if (op_p) {
-@@ -552,11 +551,11 @@ void __handle_sysrq(int key, bool check_mask)
- 		 */
- 		if (!check_mask || sysrq_on_mask(op_p->enable_mask)) {
- 			pr_info("%s\n", op_p->action_msg);
--			console_loglevel = orig_log_level;
-+			set_local_loglevel(orig_log_level);
- 			op_p->handler(key);
- 		} else {
- 			pr_info("This sysrq operation is disabled.\n");
--			console_loglevel = orig_log_level;
-+			set_local_loglevel(orig_log_level);
- 		}
- 	} else {
- 		pr_info("HELP : ");
-@@ -574,7 +573,7 @@ void __handle_sysrq(int key, bool check_mask)
- 			}
- 		}
- 		pr_cont("\n");
--		console_loglevel = orig_log_level;
-+		set_local_loglevel(orig_log_level);
- 	}
- 	rcu_read_unlock();
- 	rcu_sysrq_end();
-diff --git a/include/linux/printk.h b/include/linux/printk.h
-index cefd374..b2dd248 100644
---- a/include/linux/printk.h
-+++ b/include/linux/printk.h
-@@ -47,7 +47,7 @@ static inline const char *printk_skip_headers(const char *buffer)
- #define MESSAGE_LOGLEVEL_DEFAULT CONFIG_MESSAGE_LOGLEVEL_DEFAULT
- 
- /* We show everything that is MORE important than this.. */
--#define CONSOLE_LOGLEVEL_SILENT  0 /* Mum's the word */
-+#define CONSOLE_LOGLEVEL_SILENT -1 /* Mum's the word */
- #define CONSOLE_LOGLEVEL_MIN	 1 /* Minimum loglevel we let people use */
- #define CONSOLE_LOGLEVEL_DEBUG	10 /* issue debug messages */
- #define CONSOLE_LOGLEVEL_MOTORMOUTH 15	/* You can't shut this one up */
-@@ -66,17 +66,6 @@ static inline const char *printk_skip_headers(const char *buffer)
- #define minimum_console_loglevel (console_printk[2])
- #define default_console_loglevel (console_printk[3])
- 
--static inline void console_silent(void)
--{
--	console_loglevel = CONSOLE_LOGLEVEL_SILENT;
--}
--
--static inline void console_verbose(void)
--{
--	if (console_loglevel)
--		console_loglevel = CONSOLE_LOGLEVEL_MOTORMOUTH;
--}
--
- /* strlen("ratelimit") + 1 */
- #define DEVKMSG_STR_MAX_SIZE 10
- extern char devkmsg_log_str[];
-@@ -205,6 +194,7 @@ extern bool printk_timed_ratelimit(unsigned long *caller_jiffies,
- extern void printk_safe_init(void);
- extern void printk_safe_flush(void);
- extern void printk_safe_flush_on_panic(void);
-+char set_local_loglevel(char level);
- #else
- static inline __printf(1, 0)
- int vprintk(const char *s, va_list args)
-@@ -280,8 +270,18 @@ static inline void printk_safe_flush(void)
- static inline void printk_safe_flush_on_panic(void)
- {
- }
-+
-+static inline char set_local_loglevel(char level)
-+{
-+	return 0;
-+}
- #endif
- 
-+static inline void console_verbose(void)
-+{
-+	set_local_loglevel(CONSOLE_LOGLEVEL_MOTORMOUTH);
-+}
-+
- extern int kptr_restrict;
- 
- #ifndef pr_fmt
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 1183741..283d0d2 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -732,6 +732,9 @@ struct task_struct {
- 	/* to be used once the psi infrastructure lands upstream. */
- 	unsigned			use_memdelay:1;
- #endif
-+#ifdef CONFIG_PRINTK
-+	unsigned			printk_loglevel:8;
-+#endif
- 
- 	unsigned long			atomic_flags; /* Flags requiring atomic access. */
- 
-diff --git a/kernel/debug/kdb/kdb_bt.c b/kernel/debug/kdb/kdb_bt.c
-index 7e2379a..b385a7e 100644
---- a/kernel/debug/kdb/kdb_bt.c
-+++ b/kernel/debug/kdb/kdb_bt.c
-@@ -21,8 +21,7 @@
- 
- static void kdb_show_stack(struct task_struct *p, void *addr)
- {
--	int old_lvl = console_loglevel;
--	console_loglevel = CONSOLE_LOGLEVEL_MOTORMOUTH;
-+	int old_lvl = set_local_loglevel(CONSOLE_LOGLEVEL_MOTORMOUTH);
- 	kdb_trap_printk++;
- 	kdb_set_current_task(p);
- 	if (addr) {
-@@ -36,7 +35,7 @@ static void kdb_show_stack(struct task_struct *p, void *addr)
- 	} else {
- 		show_stack(p, NULL);
- 	}
--	console_loglevel = old_lvl;
-+	set_local_loglevel(old_lvl);
- 	kdb_trap_printk--;
- }
- 
-diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
-index 3a5184e..8b76103 100644
---- a/kernel/debug/kdb/kdb_io.c
-+++ b/kernel/debug/kdb/kdb_io.c
-@@ -715,8 +715,7 @@ int vkdb_printf(enum kdb_msgsrc src, const char *fmt, va_list ap)
- 		}
- 	}
- 	if (logging) {
--		saved_loglevel = console_loglevel;
--		console_loglevel = CONSOLE_LOGLEVEL_SILENT;
-+		saved_loglevel = set_local_loglevel(CONSOLE_LOGLEVEL_SILENT);
- 		if (printk_get_level(kdb_buffer) || src == KDB_MSGSRC_PRINTK)
- 			printk("%s", kdb_buffer);
- 		else
-@@ -845,7 +844,7 @@ int vkdb_printf(enum kdb_msgsrc src, const char *fmt, va_list ap)
- kdb_print_out:
- 	suspend_grep = 0; /* end of what may have been a recursive call */
- 	if (logging)
--		console_loglevel = saved_loglevel;
-+		set_local_loglevel(saved_loglevel);
- 	/* kdb_printf_cpu locked the code above. */
- 	smp_store_release(&kdb_printf_cpu, old_cpu);
- 	local_irq_restore(flags);
-diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
-index 9ecfa37..395eb98 100644
---- a/kernel/debug/kdb/kdb_main.c
-+++ b/kernel/debug/kdb/kdb_main.c
-@@ -1130,13 +1130,12 @@ static int kdb_reboot(int argc, const char **argv)
- 
- static void kdb_dumpregs(struct pt_regs *regs)
- {
--	int old_lvl = console_loglevel;
--	console_loglevel = CONSOLE_LOGLEVEL_MOTORMOUTH;
-+	int old_lvl = set_local_loglevel(CONSOLE_LOGLEVEL_MOTORMOUTH);
- 	kdb_trap_printk++;
- 	show_regs(regs);
- 	kdb_trap_printk--;
- 	kdb_printf("\n");
--	console_loglevel = old_lvl;
-+	set_local_loglevel(old_lvl);
- }
- 
- void kdb_set_current_task(struct task_struct *p)
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 1888f6a..dfdefe9 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -351,7 +351,9 @@ enum con_msg_format_flags {
-  */
- 
- enum log_flags {
--	LOG_NEWLINE	= 2,	/* text ended with a newline */
-+	LOG_ALWAYS_CON  = 1,    /* Force suppress_message_printing() = false */
-+	LOG_NEVER_CON   = 2,    /* Force suppress_message_printing() = true */
-+	LOG_NEWLINE	= 4,	/* text ended with a newline */
- 	LOG_CONT	= 8,	/* text is a fragment of a continuation line */
- };
- 
-@@ -1172,6 +1174,9 @@ void __init setup_log_buf(int early)
- }
- 
- static bool __read_mostly ignore_loglevel;
-+static DEFINE_PER_CPU(char, printk_loglevel_nmi);
-+static DEFINE_PER_CPU(char, printk_loglevel_irq);
-+static DEFINE_PER_CPU(char, printk_loglevel_softirq);
- 
- static int __init ignore_loglevel_setup(char *str)
- {
-@@ -1186,11 +1191,36 @@ static int __init ignore_loglevel_setup(char *str)
- MODULE_PARM_DESC(ignore_loglevel,
- 		 "ignore loglevel setting (prints all kernel messages to the console)");
- 
--static bool suppress_message_printing(int level)
-+static bool suppress_message_printing(int flags, int level)
- {
-+	if (flags & LOG_ALWAYS_CON)
-+		return false;
-+	if (flags & LOG_NEVER_CON)
-+		return true;
- 	return (level >= console_loglevel && !ignore_loglevel);
- }
- 
-+char set_local_loglevel(char level)
-+{
-+	char old;
-+
-+	if (in_nmi()) {
-+		old = this_cpu_read(printk_loglevel_nmi);
-+		this_cpu_write(printk_loglevel_nmi, level);
-+	} else if (in_irq()) {
-+		old = this_cpu_read(printk_loglevel_irq);
-+		this_cpu_write(printk_loglevel_irq, level);
-+	} else if (in_serving_softirq()) {
-+		old = this_cpu_read(printk_loglevel_softirq);
-+		this_cpu_write(printk_loglevel_softirq, level);
-+	} else {
-+		old = current->printk_loglevel;
-+		current->printk_loglevel = level;
-+	}
-+	return old;
-+}
-+EXPORT_SYMBOL(set_local_loglevel);
-+
- #ifdef CONFIG_BOOT_PRINTK_DELAY
- 
- static int boot_delay; /* msecs delay after each printk during bootup */
-@@ -1220,7 +1250,7 @@ static void boot_delay_msec(int level)
- 	unsigned long timeout;
- 
- 	if ((boot_delay == 0 || system_state >= SYSTEM_RUNNING)
--		|| suppress_message_printing(level)) {
-+	    || suppress_message_printing(0, level)) {
- 		return;
- 	}
- 
-@@ -1934,6 +1964,25 @@ int vprintk_store(int facility, int level,
- 	if (level == LOGLEVEL_DEFAULT)
- 		level = default_message_loglevel;
- 
-+	{
-+		char loglevel;
-+
-+		if (in_nmi())
-+			loglevel = this_cpu_read(printk_loglevel_nmi);
-+		else if (in_irq())
-+			loglevel = this_cpu_read(printk_loglevel_irq);
-+		else if (in_serving_softirq())
-+			loglevel = this_cpu_read(printk_loglevel_softirq);
-+		else
-+			loglevel = current->printk_loglevel;
-+		if (loglevel) {
-+			if (level >= (int) loglevel && !ignore_loglevel)
-+				lflags |= LOG_NEVER_CON;
-+			else
-+				lflags |= LOG_ALWAYS_CON;
-+		}
-+	}
-+
- 	if (dict)
- 		lflags |= LOG_NEWLINE;
- 
-@@ -2080,7 +2129,7 @@ static void call_console_drivers(const char *ext_text, size_t ext_len,
- 				 const char *text, size_t len) {}
- static size_t msg_print_text(const struct printk_log *msg, bool syslog,
- 			     bool time, char *buf, size_t size) { return 0; }
--static bool suppress_message_printing(int level) { return false; }
-+static bool suppress_message_printing(int flags, int level) { return false; }
- 
- #endif /* CONFIG_PRINTK */
- 
-@@ -2418,7 +2467,7 @@ void console_unlock(void)
- 			break;
- 
- 		msg = log_from_idx(console_idx);
--		if (suppress_message_printing(msg->level)) {
-+		if (suppress_message_printing(msg->flags, msg->level)) {
- 			/*
- 			 * Skip record we have buffered and already printed
- 			 * directly to the console when we received it, and
-diff --git a/kernel/printk/printk_safe.c b/kernel/printk/printk_safe.c
-index b4045e7..d33bea5 100644
---- a/kernel/printk/printk_safe.c
-+++ b/kernel/printk/printk_safe.c
-@@ -186,6 +186,7 @@ static void __printk_safe_flush(struct irq_work *work)
- 	unsigned long flags;
- 	size_t len;
- 	int i;
-+	char level = set_local_loglevel(CONSOLE_LOGLEVEL_MOTORMOUTH);
- 
- 	/*
- 	 * The lock has two functions. First, one reader has to flush all
-@@ -232,6 +233,7 @@ static void __printk_safe_flush(struct irq_work *work)
- out:
- 	report_message_lost(s);
- 	raw_spin_unlock_irqrestore(&read_lock, flags);
-+	set_local_loglevel(level);
- }
- 
- /**
--- 
-1.8.3.1
+I'm looking for an ack from Keith eventually.
+
+> ---
+>  drivers/pci/pcie/Kconfig        |  10 ++
+>  drivers/pci/pcie/dpc.c          | 206 ++++++++++++++++++++++++++++++++
+>  drivers/pci/pcie/portdrv_core.c |   9 +-
+>  3 files changed, 223 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
+> index 362eb8cfa53b..9a05015af7cd 100644
+> --- a/drivers/pci/pcie/Kconfig
+> +++ b/drivers/pci/pcie/Kconfig
+> @@ -150,3 +150,13 @@ config PCIE_BW
+>  	  This enables PCI Express Bandwidth Change Notification.  If
+>  	  you know link width or rate changes occur only to correct
+>  	  unreliable links, you may answer Y.
+> +
+> +config PCIE_EDR
+> +	bool "PCI Express Error Disconnect Recover support"
+> +	default n
+> +	depends on PCIE_DPC && ACPI
+> +	help
+> +	  This options adds Error Disconnect Recover support as specified
+> +	  in PCI firmware specification v3.2 Downstream Port Containment
+> +	  Related Enhancements ECN. Enable this if you want to support hybrid
+> +	  DPC model which uses both firmware and OS to implement DPC.
+> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> index 95810b4b0adc..131fadd29ae2 100644
+> --- a/drivers/pci/pcie/dpc.c
+> +++ b/drivers/pci/pcie/dpc.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/init.h>
+>  #include <linux/pci.h>
+> +#include <linux/acpi.h>
+>  
+>  #include "portdrv.h"
+>  #include "../pci.h"
+> @@ -22,8 +23,22 @@ struct dpc_dev {
+>  	u8			rp_log_size;
+>  	/* Set True if DPC is handled in firmware */
+>  	bool			firmware_dpc;
+> +	pci_ers_result_t	error_state;
+> +#ifdef CONFIG_ACPI
+> +	struct acpi_device	*adev;
+> +#endif
+>  };
+>  
+> +#ifdef CONFIG_ACPI
+> +
+> +#define EDR_PORT_ENABLE_DSM     0x0C
+> +#define EDR_PORT_LOCATE_DSM     0x0D
+> +
+> +static const guid_t pci_acpi_dsm_guid =
+> +		GUID_INIT(0xe5c937d0, 0x3553, 0x4d7a,
+> +			  0x91, 0x17, 0xea, 0x4d, 0x19, 0xc3, 0x43, 0x4d);
+
+This is a duplicate of the global pci_acpi_dsm_guid in
+drivers/pci/pci-acpi.c.  You should be able to at least use that
+global definition if you include linux/pci-acpi.h.  There might be an
+argument for moving the _DSM evaluation to pci/pci-acpi.c.  We do
+already have a use in pci/pci-label.c, so not *everything* is in
+pci/pci-acpi.c anyway.
+
+But I think it would be nice to have the EDR_PORT_ENABLE_DSM
+definitions in pci-acpi.h alongside the existing DEVICE_LABEL_DSM,
+RESET_DELAY_DSM, etc.
+
+> +#endif
+> +
+>  static const char * const rp_pio_error_string[] = {
+>  	"Configuration Request received UR Completion",	 /* Bit Position 0  */
+>  	"Configuration Request received CA Completion",	 /* Bit Position 1  */
+> @@ -297,6 +312,167 @@ static irqreturn_t dpc_irq(int irq, void *context)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +static void dpc_error_resume(struct pci_dev *dev)
+> +{
+> +	struct dpc_dev *dpc = to_dpc_dev(dev);
+> +
+> +	dpc->error_state = PCI_ERS_RESULT_RECOVERED;
+> +}
+> +
+> +#ifdef CONFIG_ACPI
+> +
+> +/*
+> + * _DSM wrapper function to enable/disable DPC port.
+> + * @dpc   : DPC device structure
+> + * @enable: status of DPC port (0 or 1).
+> + *
+> + * returns 0 on success or errno on failure.
+
+You don't check the return value, so why bother returning an
+indication?  Just make it void so it's obvious that we don't care.
+
+> + */
+> +static int acpi_enable_dpc_port(struct dpc_dev *dpc, bool enable)
+> +{
+> +	union acpi_object *obj;
+> +	int status;
+> +	union acpi_object argv4;
+> +	struct pci_dev *pdev = dpc->dev->port;
+> +
+> +	dev_dbg(&pdev->dev, "Enable DPC port, value:%d\n", enable);
+
+Use pci_dbg(pdev) here and elsewhere.
+
+Actually, what I think would be the *best* would be drop this message
+and include an indication in the log message from dpc_probe() about
+DPC/EDR being enabled so we can tell from the dmesg log what model is
+being used.  That would probably require keeping the return value and
+paying attention to it in dpc_probe().
+
+> +	argv4.type = ACPI_TYPE_INTEGER;
+> +	argv4.integer.value = enable;
+> +
+> +	obj = acpi_evaluate_dsm(dpc->adev->handle, &pci_acpi_dsm_guid, 1,
+> +				EDR_PORT_ENABLE_DSM, &argv4);
+> +	if (!obj)
+> +		return -EIO;
+> +
+> +	if (obj->type == ACPI_TYPE_INTEGER && obj->integer.value == enable)
+> +		status = 0;
+> +	else
+> +		status = -EIO;
+> +
+> +	ACPI_FREE(obj);
+> +
+> +	return status;
+> +}
+> +
+> +/*
+> + * _DSM wrapper function to locate DPC port.
+> + * @dpc   : DPC device structure
+> + *
+> + * returns pci_dev.
+> + */
+> +static struct pci_dev *acpi_locate_dpc_port(struct dpc_dev *dpc)
+> +{
+> +	union acpi_object *obj;
+> +	u16 port;
+> +	struct pci_dev *pdev = dpc->dev->port;
+> +
+> +	dev_dbg(&pdev->dev, "Locate DPC port\n");
+
+I think this message is pointless.
+
+> +	obj = acpi_evaluate_dsm(dpc->adev->handle, &pci_acpi_dsm_guid, 1,
+> +				EDR_PORT_LOCATE_DSM, NULL);
+> +	if (!obj)
+> +		return dpc->dev->port;
+> +
+> +	if (obj->type == ACPI_TYPE_INTEGER) {
+> +		/*
+> +		 * Firmware returns DPC port BDF details in following format:
+> +		 *	15:8 = bus
+> +		 *	7:3 = device
+> +		 *	2:0 = function
+> +		 */
+> +		port = obj->integer.value;
+> +		ACPI_FREE(obj);
+> +	} else {
+> +		ACPI_FREE(obj);
+> +		return dpc->dev->port;
+
+This is an error case (firmware didn't implement the _DSM correctly).
+Structure it like this so it *looks* like an error:
+
+  if (obj->type != ACPI_TYPE_INTEGER) {
+    ACPI_FREE(obj);
+    return dpc->dev->port;
+  }
+
+  port = obj->integer.value;
+  ACPI_FREE(obj);
+  ...
+
+Maybe the !ACPI_TYPE_INTEGER case should even return NULL?  If
+firmware didn't implement the _DSM correctly, why should we assume
+dpc->dev->port is the correct device?
+
+> +	}
+> +
+> +	return pci_get_domain_bus_and_slot(0, PCI_BUS_NUM(port), port & 0xff);
+
+The hard-coded domain==0 looks wrong.  Seems like it should be
+something like pci_domain_nr(pdev->bus).
+
+Using pci_get_domain_bus_and_slot() requires a matching pci_dev_put()
+somewhere.
+
+> +}
+> +
+> +/*
+> + * _OST wrapper function to let firmware know the status of EDR event.
+> + * @dpc   : DPC device structure.
+> + * @status: Status of EDR event.
+> + */
+> +static int acpi_send_edr_status(struct dpc_dev *dpc,  u16 status)
+> +{
+> +	u32 ost_status;
+> +	struct pci_dev *pdev = dpc->dev->port;
+> +
+> +	dev_dbg(&pdev->dev, "Sending EDR status :%x\n", status);
+> +
+> +	ost_status =  PCI_DEVID(pdev->bus->number, pdev->devfn);
+> +	ost_status = (ost_status << 16) | status;
+> +
+> +	status = acpi_evaluate_ost(dpc->adev->handle,
+> +				   ACPI_NOTIFY_DISCONNECT_RECOVER,
+> +				   ost_status, NULL);
+> +	if (ACPI_FAILURE(status))
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+> +static void edr_handle_event(acpi_handle handle, u32 event, void *data)
+> +{
+> +	struct dpc_dev *dpc = (struct dpc_dev *) data;
+> +	struct pci_dev *pdev = dpc->dev->port;
+> +	u16 status, cap;
+> +
+> +	dev_info(&pdev->dev, "ACPI event %x received\n", event);
+> +
+> +	if (event != ACPI_NOTIFY_DISCONNECT_RECOVER)
+> +		return;
+> +
+> +	dev_info(&pdev->dev, "Valid EDR event received\n");
+
+These two dev_info()s should be combined; I don't think we really need
+both.  (And convert to pci_info(), of course.)
+
+> +	/*
+> +	 * Check if _DSM(0xD) is available, and if present locate the
+> +	 * port which issued EDR event.
+> +	 */
+> +	pdev = acpi_locate_dpc_port(dpc);
+> +	if (!pdev) {
+> +		pdev = dpc->dev->port;
+> +		dev_err(&pdev->dev, "No valid port found\n");
+> +		return;
+> +	}
+> +
+> +	dpc = to_dpc_dev(pdev);
+
+Ugh.  I hate the spaghetti inside to_dpc_dev() (which has nothing to
+do with these patches).  In any event, "dpc" may be NULL here for a
+variety of reasons.
+
+> +	dpc->error_state = PCI_ERS_RESULT_DISCONNECT;
+> +	cap = dpc->cap_pos;
+> +
+> +	/*
+> +	 * Check if the port supports DPC:
+> +	 *
+> +	 * If port supports DPC, then fall back to default error
+> +	 * recovery.
+> +	 */
+> +	if (cap) {
+> +		/* Check if there is a valid DPC trigger */
+> +		pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
+> +		if (!(status & PCI_EXP_DPC_STATUS_TRIGGER)) {
+> +			dev_err(&pdev->dev, "Invalid DPC trigger %x\n", status);
+> +			return;
+> +		}
+
+Why is this check of PCI_EXP_DPC_STATUS_TRIGGER not part of
+dpc_process_error()?  Seems strange that we read PCI_EXP_DPC_STATUS
+twice (here and then again in dpc_process_error()) and that we handle
+it a little differently here than in the non-EDR path.
+
+> +		dpc_process_error(dpc);
+> +	}
+> +
+> +	/*
+> +	 * If recovery is successful, send _OST(0xF, BDF << 16 | 0x80)
+> +	 * to firmware. If not successful, send _OST(0xF, BDF << 16 | 0x81).
+> +	 */
+> +	if (dpc->error_state == PCI_ERS_RESULT_RECOVERED)
+> +		status = 0x80;
+> +	else
+> +		status = 0x81;
+> +
+> +	acpi_send_edr_status(dpc, status);
+> +}
+> +
+> +#endif
+> +
+>  #define FLAG(x, y) (((x) & (y)) ? '+' : '-')
+>  static int dpc_probe(struct pcie_device *dev)
+>  {
+> @@ -305,6 +481,10 @@ static int dpc_probe(struct pcie_device *dev)
+>  	struct device *device = &dev->device;
+>  	int status;
+>  	u16 ctl, cap;
+> +#ifdef CONFIG_ACPI
+> +	struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
+> +	acpi_status astatus;
+> +#endif
+
+If you move these declarations inside the "if (dpc->firmware_dpc)"
+block before, you won't need this #ifdef.
+>  
+>  	dpc = devm_kzalloc(device, sizeof(*dpc), GFP_KERNEL);
+>  	if (!dpc)
+> @@ -313,6 +493,7 @@ static int dpc_probe(struct pcie_device *dev)
+>  	dpc->cap_pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DPC);
+>  	dpc->dev = dev;
+>  	set_service_data(dev, dpc);
+> +	dpc->error_state = PCI_ERS_RESULT_NONE;
+>  
+>  	if (pcie_aer_get_firmware_first(pdev))
+>  		dpc->firmware_dpc = 1;
+> @@ -335,6 +516,30 @@ static int dpc_probe(struct pcie_device *dev)
+>  		}
+>  	}
+>  
+> +#ifdef CONFIG_ACPI
+> +	if (dpc->firmware_dpc) {
+> +		if (!adev) {
+> +			dev_err(device, "No valid ACPI device found\n");
+
+This and similar messages should use pci_err() with the pci_dev (not
+the device from the pcie_device).  This is to follow 10a9990c1044
+("PCI/DPC: Log messages with pci_dev, not pcie_device"), which I think
+happened after you first posted these patches.
+
+> +			return -ENODEV;
+> +		}
+> +
+> +		dpc->adev = adev;
+> +
+> +		/* Register notifier for ACPI_SYSTEM_NOTIFY events */
+
+Superfluous comment, since that's exactly what the line below says.
+
+> +		astatus = acpi_install_notify_handler(adev->handle,
+> +						      ACPI_SYSTEM_NOTIFY,
+> +						      edr_handle_event,
+> +						      dpc);
+> +
+> +		if (ACPI_FAILURE(astatus)) {
+> +			dev_err(device,
+> +				"Install ACPI_SYSTEM_NOTIFY handler failed\n");
+> +			return -EBUSY;
+> +		}
+> +
+> +		acpi_enable_dpc_port(dpc, true);
+> +	}
+> +#endif
+>  	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CAP, &cap);
+>  	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, &ctl);
+>  
+> @@ -385,6 +590,7 @@ static struct pcie_port_service_driver dpcdriver = {
+>  	.probe		= dpc_probe,
+>  	.remove		= dpc_remove,
+>  	.reset_link	= dpc_reset_link,
+> +	.error_resume   = dpc_error_resume,
+>  };
+>  
+>  int __init pcie_dpc_init(void)
+> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+> index 0a59ac574be1..1b54a39df795 100644
+> --- a/drivers/pci/pcie/portdrv_core.c
+> +++ b/drivers/pci/pcie/portdrv_core.c
+> @@ -250,9 +250,14 @@ static int get_port_device_capability(struct pci_dev *dev)
+>  		pcie_pme_interrupt_enable(dev, false);
+>  	}
+>  
+> +	/*
+> +	 * If EDR support is enabled in OS, then even if AER is not handled in
+> +	 * OS, DPC service can be enabled.
+> +	 */
+>  	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
+> -	    pci_aer_available() && services & PCIE_PORT_SERVICE_AER &&
+> -	    (pcie_ports_native || host->native_dpc))
+> +	    ((IS_ENABLED(CONFIG_PCIE_EDR) && !host->native_dpc) ||
+> +	    (pci_aer_available() && services & PCIE_PORT_SERVICE_AER &&
+> +	    (pcie_ports_native || host->native_dpc))))
+>  		services |= PCIE_PORT_SERVICE_DPC;
+>  
+>  	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
+> -- 
+> 2.20.1
+> 
