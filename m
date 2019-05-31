@@ -2,188 +2,165 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B69C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0214C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8767426F71
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF6F226F72
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:47:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="jvPgk2ZI"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="Gg/PbC/8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbfEaVq5 (ORCPT
+        id S1726725AbfEaVrP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 17:46:57 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35720 "EHLO
+        Fri, 31 May 2019 17:47:15 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34002 "EHLO
         mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbfEaVq5 (ORCPT
+        with ESMTP id S1725934AbfEaVrO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 17:46:57 -0400
-Received: by mail-pg1-f195.google.com with SMTP id t1so1212690pgc.2
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 14:46:57 -0700 (PDT)
+        Fri, 31 May 2019 17:47:14 -0400
+Received: by mail-pg1-f195.google.com with SMTP id h2so1498581pgg.1
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 14:47:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=oLThzkzBE2yZ99mGcWuJK1ZVpwpz5C/kqr251y2sc5U=;
-        b=jvPgk2ZIUMRQExsCU/xVThBINbgLItegNCTr14Bwj9bXzZTd+sxBkOBlHeZ1pqF6h3
-         Rgn7FhhnTPMikxXNXimI3e5sb9DeJgJ7+da/ClkBc1Uw4n1W+rpToIeN+8EQVND+Stwg
-         FoFM6+ffKSxOiNRuliKxzTQXyKR2md5yF8gz8uyGcX7tPyzVjgdOIEpXNa4DPV3in126
-         1bv21pd82SYzX5WmrOEeVE/sSHKnWq0eIXWt1a+hHa4UCQTKtGnRGKDS9F+dpN9VAxW4
-         vFr5ZzTTGZmobDrHpDS7piT2f3jqv6id8KCJMX+a5ldeIu2On9UGHn4bj8dC+kzNcAxI
-         y7sA==
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=y/qtDzfRQ/W3yULCUxx+xpHfZRz8qoHUesDtUOfX044=;
+        b=Gg/PbC/8q0ok2xlMXNmq6cYpWxq8Z9TK1nPVE/Qr31rCh4rtRGOQ8NKp/BHkOlKBFa
+         5tubCy1r3Eu21ZIIBBdpiLZ3taEkoiKkQzP3irx+Y1+slNGQ6LGt1mXsAwSfIoKzl2jA
+         BP5+wXc7UU5sJ4tYhj5A7XYYFXHkODhSUq0Y5UqW2lBD7ysaS7cvUPhq9OH1pm7Xsy1j
+         HcqhngJ/insIji4orvBdY0EMzh/c24xVkXrBWie2O9BcB7QO3ty3sPjOwP6cJRhMAcSl
+         J2dRzuVUe6/TANbp0JRfucEFGczjaqw4M8iOa98VmI18pXXcq1Qn3uTOknAV7YARkXGD
+         oC9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=oLThzkzBE2yZ99mGcWuJK1ZVpwpz5C/kqr251y2sc5U=;
-        b=lR2PCGUS50DaUUka+OkHqirHqziwla6bhGGjcwhKbY9HTFSuuHOmu9ySHriwgZXbxy
-         JM2/MXMivqVKho8aqHEFpIgpfbZMo1qilFf5rxydi/vPyy8cOQJuIS5SMKF13J01qCgQ
-         EI5sULNYljKwBSjqV2+UvNi3G/dVc+gIPnCJtsl4mnM66jqZ8c1YP2GkYK8KkHXPoFm4
-         XbKDXAvjyHob8inyxxTKyCZMiydfwMXA2SHiVvzp8x/sm53XdAI6ETfsry3Lr9sTW/Kv
-         L6INqvAnRVZ2zXG8DW0k2LvBfWhltYQzY3CiwIXluEp0stbHH/WdWzsmsLa7+kr/ozam
-         5Z3A==
-X-Gm-Message-State: APjAAAWEEi+8yxYaE/8XojJm4JZvAHd5Gak7e7sLPJAtcxaY3QC8bzv2
-        3r2/pnZV3EcNFs4J0ErZO0WATd61Qto=
-X-Google-Smtp-Source: APXvYqze/KHV5sj0rVoXVCpynupdbutBmIihHj//q8lnOWHCXog0QcdlmYHafD9Qj0+l/cbmhDknhg==
-X-Received: by 2002:aa7:9212:: with SMTP id 18mr12976936pfo.120.1559339216612;
-        Fri, 31 May 2019 14:46:56 -0700 (PDT)
-Received: from cabot.adilger.ext (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
-        by smtp.gmail.com with ESMTPSA id c9sm6166899pje.3.2019.05.31.14.46.55
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=y/qtDzfRQ/W3yULCUxx+xpHfZRz8qoHUesDtUOfX044=;
+        b=H2I6+QfIRtGHYcCXXKvV+3TPElFOS01oBnbhSKFYLHJY13fQYfBMJQdMmveYh6428u
+         8+FlU0e5q/0siXkuCId1P0EoGaVoDuwBhqK4ggMlfCwuPrYaoXXXTC/D8ynhbJclqfqK
+         rbgQuYVxG1XVGUj8FX6xXpPyL/sm+afENHSBje63U/VgZMqYVpAFw77BcrsOr5LSuUQ4
+         PwNmpeNRn9exg2sob4xoWk3UmxqEYaBYqvjwNH4Nd9wELKkcbYctDFiZiBzjetVlCe28
+         0xzoa9+ayjn23iVc108PedARkQFEIUo0ML5f5Cp3xftLQlxxJopBgLtvyV+pLChRmsuD
+         fOUw==
+X-Gm-Message-State: APjAAAW8MsKv7E3qOuovfqGub19WilmgtEwi0oRl5MlcQcpwHnLp28rp
+        0HiMt5YIqhfZBNDV4eXW9E8TOg==
+X-Google-Smtp-Source: APXvYqzPD7WMsOUPPGShovZFakF+ujEPyN+ES3CreH3CsQSgrRu7lC4M/TJn5ydl2CRCLQAz/ehdaQ==
+X-Received: by 2002:aa7:8294:: with SMTP id s20mr4841341pfm.75.1559339233903;
+        Fri, 31 May 2019 14:47:13 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:ec0c:2d9e:92:467e? ([2601:646:c200:1ef2:ec0c:2d9e:92:467e])
+        by smtp.gmail.com with ESMTPSA id m3sm1937402pfh.23.2019.05.31.14.47.12
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 31 May 2019 14:46:55 -0700 (PDT)
-From:   Andreas Dilger <adilger@dilger.ca>
-Message-Id: <01FB1966-0466-4AB2-913B-F53E8CA816BE@dilger.ca>
-Content-Type: multipart/signed;
- boundary="Apple-Mail=_16DD8B08-042F-434D-9811-EE0461B6A933";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [PATCH] ext4: remove unnecessary gotos in ext4_xattr_set_entry
-Date:   Fri, 31 May 2019 15:46:54 -0600
-In-Reply-To: <20190531121016.11727-1-ptikhomirov@virtuozzo.com>
-Cc:     Theodore Ts'o <tytso@mit.edu>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-To:     Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
-References: <20190531121016.11727-1-ptikhomirov@virtuozzo.com>
-X-Mailer: Apple Mail (2.3273)
+        Fri, 31 May 2019 14:47:13 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: [RFC PATCH v2 11/12] x86/mm/tlb: Use async and inline messages for flushing
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16E227)
+In-Reply-To: <5F153080-D7A7-4054-AB4A-AEDD5F82E0B9@vmware.com>
+Date:   Fri, 31 May 2019 14:47:12 -0700
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <48CECB5C-CA5B-4AD0-9DA5-6759E8FEDED7@amacapital.net>
+References: <20190531063645.4697-1-namit@vmware.com> <20190531063645.4697-12-namit@vmware.com> <CALCETrU0=BpGy5OQezQ7or33n-EFgBVDNe5g8prSUjL2SoRAwA@mail.gmail.com> <5F153080-D7A7-4054-AB4A-AEDD5F82E0B9@vmware.com>
+To:     Nadav Amit <namit@vmware.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---Apple-Mail=_16DD8B08-042F-434D-9811-EE0461B6A933
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=us-ascii
+On May 31, 2019, at 2:33 PM, Nadav Amit <namit@vmware.com> wrote:
 
-On May 31, 2019, at 6:10 AM, Pavel Tikhomirov =
-<ptikhomirov@virtuozzo.com> wrote:
+>> On May 31, 2019, at 2:14 PM, Andy Lutomirski <luto@kernel.org> wrote:
+>>=20
+>>> On Thu, May 30, 2019 at 11:37 PM Nadav Amit <namit@vmware.com> wrote:
+>>> When we flush userspace mappings, we can defer the TLB flushes, as long
+>>> the following conditions are met:
+>>>=20
+>>> 1. No tables are freed, since otherwise speculative page walks might
+>>>  cause machine-checks.
+>>>=20
+>>> 2. No one would access userspace before flush takes place. Specifically,=
+
+>>>  NMI handlers and kprobes would avoid accessing userspace.
+>>=20
+>> I think I need to ask the big picture question.  When someone calls
+>> flush_tlb_mm_range() (or the other entry points), if no page tables
+>> were freed, they want the guarantee that future accesses (initiated
+>> observably after the flush returns) will not use paging entries that
+>> were replaced by stores ordered before flush_tlb_mm_range().  We also
+>> need the guarantee that any effects from any memory access using the
+>> old paging entries will become globally visible before
+>> flush_tlb_mm_range().
+>>=20
+>> I'm wondering if receipt of an IPI is enough to guarantee any of this.
+>> If CPU 1 sets a dirty bit and CPU 2 writes to the APIC to send an IPI
+>> to CPU 1, at what point is CPU 2 guaranteed to be able to observe the
+>> dirty bit?  An interrupt entry today is fully serializing by the time
+>> it finishes, but interrupt entries are epicly slow, and I don't know
+>> if the APIC waits long enough.  Heck, what if IRQs are off on the
+>> remote CPU?  There are a handful of places where we touch user memory
+>> with IRQs off, and it's (sadly) possible for user code to turn off
+>> IRQs with iopl().
+>>=20
+>> I *think* that Intel has stated recently that SMT siblings are
+>> guaranteed to stop speculating when you write to the APIC ICR to poke
+>> them, but SMT is very special.
+>>=20
+>> My general conclusion is that I think the code needs to document what
+>> is guaranteed and why.
 >=20
-> In the "out" label we only iput old/new_ea_inode-s, in all these =
-places
-> these variables are always NULL so there is no point in goto to "out".
->=20
-> Signed-off-by: Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
+> I think I might have managed to confuse you with a bug I made (last minute=
 
-I'm not a fan of changes like this, since it adds potential =
-complexity/bugs
-if the error handling path is changed in the future.  That is one of the =
-major
-benefits of the "goto out_*" model of error handling is that you only =
-need to
-add one new label to the end of the function when some new state is =
-added that
-needs to be cleaned up, compared to having to check each individual =
-error to
-see if something needs to be cleaned up.
-
-Cheers, Andreas
-
-> ---
-> fs/ext4/xattr.c | 9 +++------
-> 1 file changed, 3 insertions(+), 6 deletions(-)
+> bug when I was doing some cleanup). This bug does not affect the performan=
+ce
+> much, but it might led you to think that I use the APIC sending as
+> synchronization.
 >=20
-> diff --git a/fs/ext4/xattr.c b/fs/ext4/xattr.c
-> index 491f9ee4040e..ac2ddd4446b3 100644
-> --- a/fs/ext4/xattr.c
-> +++ b/fs/ext4/xattr.c
-> @@ -1601,8 +1601,7 @@ static int ext4_xattr_set_entry(struct =
-ext4_xattr_info *i,
-> 		next =3D EXT4_XATTR_NEXT(last);
-> 		if ((void *)next >=3D s->end) {
-> 			EXT4_ERROR_INODE(inode, "corrupted xattr =
-entries");
-> -			ret =3D -EFSCORRUPTED;
-> -			goto out;
-> +			return -EFSCORRUPTED;
-> 		}
-> 		if (!last->e_value_inum && last->e_value_size) {
-> 			size_t offs =3D le16_to_cpu(last->e_value_offs);
-> @@ -1620,8 +1619,7 @@ static int ext4_xattr_set_entry(struct =
-ext4_xattr_info *i,
-> 			free +=3D EXT4_XATTR_LEN(name_len) + old_size;
+> The idea is not for us to rely on write to ICR as something serializing. T=
+he
+> flow should be as follows:
 >=20
-> 		if (free < EXT4_XATTR_LEN(name_len) + new_size) {
-> -			ret =3D -ENOSPC;
-> -			goto out;
-> +			return -ENOSPC;
-> 		}
 >=20
-> 		/*
-> @@ -1634,8 +1632,7 @@ static int ext4_xattr_set_entry(struct =
-ext4_xattr_info *i,
-> 		    new_size && is_block &&
-> 		    (min_offs + old_size - new_size) <
-> 					EXT4_XATTR_BLOCK_RESERVE(inode)) =
-{
-> -			ret =3D -ENOSPC;
-> -			goto out;
-> +			return -ENOSPC;
-> 		}
-> 	}
+>    CPU0                    CPU1
 >=20
-> --
-> 2.20.1
+> flush_tlb_mm_range()
+> __smp_call_function_many()
+>  [ prepare call_single_data (csd) ]
+>  [ lock csd ]=20
+>  [ send IPI ]
+>    (*)
+>  [ wait for csd to be unlocked ]
+>                    [ interrupt ]
+>                    [ copy csd info to stack ]
+>                    [ csd unlock ]
+>  [ find csd is unlocked ]
+>  [ continue (**) ]
+>                    [ flush TLB ]
+>=20
+>=20
+> At (**) the pages might be recycled, written-back to disk, etc. Note that
+> during (*), CPU0 might do some local TLB flushes, making it very likely th=
+at
+> CSD will be unlocked by the time it gets there.
+>=20
+> As you can see, I don=E2=80=99t rely on any special micro-architectural be=
+havior.
+> The synchronization is done purely in software.
+>=20
+> Does it make more sense now?
 >=20
 
-
-Cheers, Andreas
-
-
-
-
-
-
---Apple-Mail=_16DD8B08-042F-434D-9811-EE0461B6A933
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - http://gpgtools.org
-
-iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAlzxoM4ACgkQcqXauRfM
-H+ANJhAAodfLf6tuPqM2yx/F5U3yyHxxq5g+PUeL+KT17j09lpJqBVlsgNNjzCDX
-ENDLhPndZZugNwMlz2XxZOzH/2OIsHSeeWKU/RfH+x/5KYtMraeM6nC9yZanH2zq
-xzeNQHnCQmg2IVPf9Qo7IaLiAHs3KVzKEBIGJj7SHDYHeif+Yb3m5Bw/s4NJbu36
-m5DiPktWEUk0KJ0VH5cbNvSy90mR4GX6XrQVfhJj+MOwUeD07pMlUxdcpOj9iZ3a
-FTWDRWETzlpYin8gAsZB3e9pgtSlCkttWj5WtGV07Wt/R3MBxa9k33F+iH2DcofC
-ymZ2tvoT4yPmpZtJTDy/iojOKVenlc9CyxwJ12qJub/zXi/xCDaszGOcMtHx7pPO
-kHQUHqVSkbPrHUmm+NwHRULtmvjmNpkKQCfOXdywWtZL6wBJN38rAGjBX23itbX0
-ZFXDN/o/I9O2l95DliOVLRurD7c2K4c8HUkL2Q7SlcLj6TI81OiltclnxOqOYZib
-Wohb+5ZmQANpfD7b5ffw3+P2uPGlXwD3Ia2RKoI1vs5c7IgXuVxO7l83cX4GNzit
-OHhlSAG3olDXcLIGgs/jxOyc9A8/zjY/PK8elNoG2wScjGNw44+GJkDjuqbeJGng
-XWMc8ELyzpa6xJV76EunFcoCqjzQ/dj9zhzygOXI/Q5/8bNUz3k=
-=mP8+
------END PGP SIGNATURE-----
-
---Apple-Mail=_16DD8B08-042F-434D-9811-EE0461B6A933--
+Yes.  Have you benchmarked this?=
