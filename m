@@ -2,155 +2,180 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 531A7C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58DC8C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BC3426E5D
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2380E26D0B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:33:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="dFbcnBLJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BQkpzAFF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727354AbfEaTbz (ORCPT
+        id S1727343AbfEaTd5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 15:31:55 -0400
-Received: from mail-eopbgr720051.outbound.protection.outlook.com ([40.107.72.51]:63744
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726808AbfEaTby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 15:31:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XDhLtdzdRKerx/TxvY63Zee33x0ifUIufDlO7cdXwjA=;
- b=dFbcnBLJVLX//kDxefmLruIVkEBTKwlzf2+AfSWpqUvbL1QyJ9gV88XiIeCH0r38WPQrsaJXSogkPuWA1Kbv6ftKkamwV/zro/FkMFN6j7sYX37T+DT5/ovvK6AaYdMscrULD5MY0YpGzvVyUgIVZedD7QJGmARMV0FqGg2iijo=
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
- BYAPR05MB6663.namprd05.prod.outlook.com (20.178.235.93) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.10; Fri, 31 May 2019 19:31:10 +0000
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::2cb6:a3d1:f675:ced8]) by BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::2cb6:a3d1:f675:ced8%3]) with mapi id 15.20.1943.016; Fri, 31 May 2019
- 19:31:10 +0000
-From:   Nadav Amit <namit@vmware.com>
-To:     Andy Lutomirski <luto@amacapital.net>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: [RFC PATCH v2 11/12] x86/mm/tlb: Use async and inline messages
- for flushing
-Thread-Topic: [RFC PATCH v2 11/12] x86/mm/tlb: Use async and inline messages
- for flushing
-Thread-Index: AQHVF3tKnfrC/xKd0kyiVp6wMVDUEqaFEHMAgACCTICAAA0WgA==
-Date:   Fri, 31 May 2019 19:31:10 +0000
-Message-ID: <82DB7035-D7BE-4D79-BBC0-B271FB4BF740@vmware.com>
-References: <20190531063645.4697-1-namit@vmware.com>
- <20190531063645.4697-12-namit@vmware.com>
- <20190531105758.GO2623@hirez.programming.kicks-ass.net>
- <16D8E001-98A0-4ABC-AFE8-0F230B869027@amacapital.net>
-In-Reply-To: <16D8E001-98A0-4ABC-AFE8-0F230B869027@amacapital.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=namit@vmware.com; 
-x-originating-ip: [66.170.99.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 643a44d0-8bf8-4b81-0c17-08d6e5fe894b
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB6663;
-x-ms-traffictypediagnostic: BYAPR05MB6663:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <BYAPR05MB66633CFA8ABAE9778769A8FDD0190@BYAPR05MB6663.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 00540983E2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(396003)(376002)(136003)(39860400002)(199004)(189003)(14454004)(186003)(54906003)(478600001)(53936002)(81156014)(6506007)(25786009)(2906002)(4326008)(966005)(53546011)(76176011)(99286004)(6916009)(7416002)(36756003)(3846002)(6116002)(102836004)(26005)(5660300002)(476003)(2616005)(446003)(6246003)(11346002)(6512007)(6306002)(486006)(6436002)(68736007)(71200400001)(66066001)(86362001)(8936002)(8676002)(83716004)(33656002)(81166006)(256004)(76116006)(82746002)(7736002)(66946007)(6486002)(71190400001)(14444005)(316002)(66446008)(66476007)(305945005)(73956011)(229853002)(64756008)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB6663;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 5iBb4VTiO2EEcKWAZlK/7lKzqmP20CaMh3cmCP7VfZJWBn4FjZoMWplKaHUmeP+k3i/3eB2J/kUklgprMjRc8up+pO/3owZDNJ57athvzTBHIwB3dx+yzwe6BUHmhGn0rRoQg+cdAylTtCkM4KyF6rnMKlDkmWOWI7gXd/8YP5CAZFI/+76fmMnk9PUq1QOElqhBX49j9xhV9fRWHKwaj/cCpIyRUIwMZn1nRkNLkXx6w5EIkQkszxdi7c4By169FG1kUhc9Zd5YwFncb7koIieFayAY/s+8VCsNo/bB7eP8vcr9C0hyR+3UrOkuNA6j8FdwprVy1mbhbWtia9x7i7vqkfSI1L7B9c1P5eh4AHzO0dxH8VXpZuakce5vA+G74ZdUXwKEDys/YPQaEI8s0yzl/ZksDYSAi0XegpN3pog=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <88894959EEBDA94BA187EEF3CDBBFC6E@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 31 May 2019 15:33:57 -0400
+Received: from mail-pg1-f173.google.com ([209.85.215.173]:34269 "EHLO
+        mail-pg1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727085AbfEaTd4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 15:33:56 -0400
+Received: by mail-pg1-f173.google.com with SMTP id h2so1335940pgg.1;
+        Fri, 31 May 2019 12:33:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=06pX69LrszfYpG4wdp2HRA31ZlYIm6IIsqk6WiLDoT4=;
+        b=BQkpzAFFJv0KVW4/qyqom+iEzXnmnn95qQqBfRdgL4pSaz7YxtXPlYeHEYr1WnZOm1
+         uabpwkWMaBcxuQLliihknk7onPcicaTM16VgqtWCet0PoTE1Rvct4tCvPIJpVvgeNXgW
+         nT9CYFttytKKqQRMkRptZfinuRBvpPLep0s8Z5lDAE6Lib0t+wo035sW0Lp5motKpuK4
+         Matu/Hhy+yxRjym1KC+kDWOexd9VvlJKr6zfrIJGpB+QM7cJz5jY7ot1YpMvkiFbwjHp
+         IMhQIMjXcGmnpjSvnbcATfqy9mo/RxLE5rdr7OHtZP9uL6Osfslqavk94abUSeqItOND
+         GYHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=06pX69LrszfYpG4wdp2HRA31ZlYIm6IIsqk6WiLDoT4=;
+        b=KH8XnpfY27+DqkVF1hASVBg8F6Bb9nIRk++32cW6cgG/ksG13F4fEX9cOYISsPxgHh
+         QeDitSg0u20R58wKF9U1L3HnDQ4WU8oCXCUEyy4CZdtxzrOUROVM21jxWw9D4FecMjNi
+         3ADz4/NiZ4bgsC3+i3xb1G8xyLHb5y2k+FL5qVPCUuWzbNi5gfqtcJjFez+gDhAd7Uik
+         +oPygIH3jz6d+H6JAWI95Peh4chaVFX+oYSQubrd0azH6UIw5pa4At3SV+dCC2j/xHC9
+         zdQ5kUZJRBkof6kQ27snZGqARZkSURntcJLqi8LHvQDbAQSYnv9CO1x5Qp6Kx7kBtQG8
+         YZKg==
+X-Gm-Message-State: APjAAAV/67Hy7Vbrheap2bAR6sP+8bYZH60R5JDuuqMJuWeCDWflVsBR
+        t4GNQGmg9/6E5ac/qgs+UlKNMcP2
+X-Google-Smtp-Source: APXvYqySfpzD1RqYsACs32hG3NnvInwU3S9YJWQSUVHGVHu/WMAx6r6yh4gQCDejTRudDjX4haou/g==
+X-Received: by 2002:a63:68c5:: with SMTP id d188mr11335741pgc.429.1559331235823;
+        Fri, 31 May 2019 12:33:55 -0700 (PDT)
+Received: from [10.67.49.123] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id s27sm18241645pfd.18.2019.05.31.12.33.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 31 May 2019 12:33:54 -0700 (PDT)
+Subject: Re: [PATCH] net: dsa: mv88e6xxx: avoid error message on remove from
+ VLAN 0
+To:     Vivien Didelot <vivien.didelot@gmail.com>
+Cc:     Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        =?UTF-8?Q?Marek_Beh=c3=ban?= <marek.behun@nic.cz>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chris Healy <cphealy@gmail.com>
+References: <20190531073514.2171-1-nikita.yoush@cogentembedded.com>
+ <20190531103105.GE23464@t480s.localdomain> <20190531143758.GB23821@lunn.ch>
+ <422482dc-8887-0f92-c8c9-f9d639882c77@cogentembedded.com>
+ <20190531110017.GB2075@t480s.localdomain>
+ <38a5dbac-a8e7-325a-225f-b97774f7bb81@gmail.com>
+ <20190531141914.GB26582@t480s.localdomain>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <9efc5407-84b5-6143-0e80-b8aa70a4aacf@gmail.com>
+Date:   Fri, 31 May 2019 12:33:47 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 643a44d0-8bf8-4b81-0c17-08d6e5fe894b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 May 2019 19:31:10.5825
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB6663
+In-Reply-To: <20190531141914.GB26582@t480s.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiBNYXkgMzEsIDIwMTksIGF0IDExOjQ0IEFNLCBBbmR5IEx1dG9taXJza2kgPGx1dG9AYW1h
-Y2FwaXRhbC5uZXQ+IHdyb3RlOg0KPiANCj4gDQo+IA0KPj4gT24gTWF5IDMxLCAyMDE5LCBhdCAz
-OjU3IEFNLCBQZXRlciBaaWpsc3RyYSA8cGV0ZXJ6QGluZnJhZGVhZC5vcmc+IHdyb3RlOg0KPj4g
-DQo+Pj4gT24gVGh1LCBNYXkgMzAsIDIwMTkgYXQgMTE6MzY6NDRQTSAtMDcwMCwgTmFkYXYgQW1p
-dCB3cm90ZToNCj4+PiBXaGVuIHdlIGZsdXNoIHVzZXJzcGFjZSBtYXBwaW5ncywgd2UgY2FuIGRl
-ZmVyIHRoZSBUTEIgZmx1c2hlcywgYXMgbG9uZw0KPj4+IHRoZSBmb2xsb3dpbmcgY29uZGl0aW9u
-cyBhcmUgbWV0Og0KPj4+IA0KPj4+IDEuIE5vIHRhYmxlcyBhcmUgZnJlZWQsIHNpbmNlIG90aGVy
-d2lzZSBzcGVjdWxhdGl2ZSBwYWdlIHdhbGtzIG1pZ2h0DQo+Pj4gIGNhdXNlIG1hY2hpbmUtY2hl
-Y2tzLg0KPj4+IA0KPj4+IDIuIE5vIG9uZSB3b3VsZCBhY2Nlc3MgdXNlcnNwYWNlIGJlZm9yZSBm
-bHVzaCB0YWtlcyBwbGFjZS4gU3BlY2lmaWNhbGx5LA0KPj4+ICBOTUkgaGFuZGxlcnMgYW5kIGtw
-cm9iZXMgd291bGQgYXZvaWQgYWNjZXNzaW5nIHVzZXJzcGFjZS4NCj4+PiANCj4+PiBVc2UgdGhl
-IG5ldyBTTVAgc3VwcG9ydCB0byBleGVjdXRlIHJlbW90ZSBmdW5jdGlvbiBjYWxscyB3aXRoIGlu
-bGluZWQNCj4+PiBkYXRhIGZvciB0aGUgbWF0dGVyLiBUaGUgZnVuY3Rpb24gcmVtb3RlIFRMQiBm
-bHVzaGluZyBmdW5jdGlvbiB3b3VsZCBiZQ0KPj4+IGV4ZWN1dGVkIGFzeW5jaHJvbm91c2x5IGFu
-ZCB0aGUgbG9jYWwgQ1BVIHdvdWxkIGNvbnRpbnVlIGV4ZWN1dGlvbiBhcw0KPj4+IHNvb24gYXMg
-dGhlIElQSSB3YXMgZGVsaXZlcmVkLCBiZWZvcmUgdGhlIGZ1bmN0aW9uIHdhcyBhY3R1YWxseQ0K
-Pj4+IGV4ZWN1dGVkLiBTaW5jZSB0bGJfZmx1c2hfaW5mbyBpcyBjb3BpZWQsIHRoZXJlIGlzIG5v
-IHJpc2sgaXQgd291bGQNCj4+PiBjaGFuZ2UgYmVmb3JlIHRoZSBUTEIgZmx1c2ggaXMgYWN0dWFs
-bHkgZXhlY3V0ZWQuDQo+Pj4gDQo+Pj4gQ2hhbmdlIG5taV91YWNjZXNzX29rYXkoKSB0byBjaGVj
-ayB3aGV0aGVyIGEgcmVtb3RlIFRMQiBmbHVzaCBpcw0KPj4+IGN1cnJlbnRseSBpbiBwcm9ncmVz
-cyBvbiB0aGlzIENQVSBieSBjaGVja2luZyB3aGV0aGVyIHRoZSBhc3luY2hyb25vdXNseQ0KPj4+
-IGNhbGxlZCBmdW5jdGlvbiBpcyB0aGUgcmVtb3RlIFRMQiBmbHVzaGluZyBmdW5jdGlvbi4gVGhl
-IGN1cnJlbnQNCj4+PiBpbXBsZW1lbnRhdGlvbiBkaXNhbGxvd3MgYWNjZXNzIGluIHN1Y2ggY2Fz
-ZXMsIGJ1dCBpdCBpcyBhbHNvIHBvc3NpYmxlDQo+Pj4gdG8gZmx1c2ggdGhlIGVudGlyZSBUTEIg
-aW4gc3VjaCBjYXNlIGFuZCBhbGxvdyBhY2Nlc3MuDQo+PiANCj4+IEFSR0dILCBicmFpbiBodXJ0
-LiBJJ20gbm90IHN1cmUgSSBmdWxseSB1bmRlcnN0YW5kIHRoaXMgb25lLiBIb3cgaXMgaXQNCj4+
-IGRpZmZlcmVudCBmcm9tIHRvZGF5LCB3aGVyZSB0aGUgTk1JIGNhbiBoaXQgaW4gdGhlIG1pZGRs
-ZSBvZiB0aGUgVExCDQo+PiBpbnZhbGlkYXRpb24/DQo+PiANCj4+IEFsc287IHNpbmNlIHdlJ3Jl
-IG5vdCB3YWl0aW5nIG9uIHRoZSBJUEksIHdoYXQgcHJldmVudHMgdXMgZnJvbSBmcmVlaW5nDQo+
-PiB0aGUgdXNlciBwYWdlcyBiZWZvcmUgdGhlIHJlbW90ZSBDUFUgaXMgJ2RvbmUnIHdpdGggdGhl
-bT8gQ3VycmVudGx5IHRoZQ0KPj4gc3luY2hyb25vdXMgSVBJIGlzIGxpa2UgYSBzeW5jIHBvaW50
-IHdoZXJlIHdlICprbm93KiB0aGUgcmVtb3RlIENQVSBpcw0KPj4gY29tcGxldGVseSBkb25lIGFj
-Y2Vzc2luZyB0aGUgcGFnZS4NCj4+IA0KPj4gV2hlcmUgZ2V0dGluZyBhbiBJUEkgc3RvcHMgc3Bl
-Y3VsYXRpb24sIHNwZWN1bGF0aW9uIGFnYWluIHJlc3RhcnRzDQo+PiBpbnNpZGUgdGhlIGludGVy
-cnVwdCBoYW5kbGVyLCBhbmQgdW50aWwgd2UndmUgcGFzc2VkIHRoZSBJTlZMUEcvTU9WIENSMywN
-Cj4+IHNwZWN1bGF0aW9uIGNhbiBoYXBwZW4gb24gdGhhdCBUTEIgZW50cnksIGV2ZW4gdGhvdWdo
-IHdlJ3ZlIGFscmVhZHkNCj4+IGZyZWVkIGFuZCByZS11c2VkIHRoZSB1c2VyLXBhZ2UuDQo+PiAN
-Cj4+IEFsc28sIHdoYXQgaGFwcGVucyBpZiB0aGUgVExCIGludmFsaWRhdGlvbiBJUEkgaXMgc3R1
-Y2sgYmVoaW5kIGFub3RoZXINCj4+IHNtcF9mdW5jdGlvbl9jYWxsIElQSSB0aGF0IGlzIGRvaW5n
-IHVzZXItYWNjZXNzPw0KPj4gDQo+PiBBcyBzYWlkLC4uIGJyYWluIGh1cnRzLg0KPiANCj4gU3Bl
-Y3VsYXRpb24gYXNpZGUsIGFueSBjb2RlIGRvaW5nIGRpcnR5IHRyYWNraW5nIG5lZWRzIHRoZSBm
-bHVzaCB0byBoYXBwZW4NCj4gZm9yIHJlYWwgYmVmb3JlIGl0IHJlYWRzIHRoZSBkaXJ0eSBiaXQu
-DQo+IA0KPiBIb3cgZG9lcyB0aGlzIHBhdGNoIGd1YXJhbnRlZSB0aGF0IHRoZSBmbHVzaCBpcyBy
-ZWFsbHkgZG9uZSBiZWZvcmUgc29tZW9uZQ0KPiBkZXBlbmRzIG9uIGl0Pw0KDQpJIHdhcyBhbHdh
-eXMgdW5kZXIgdGhlIGltcHJlc3Npb24gdGhhdCB0aGUgZGlydHktYml0IGlzIHBhc3MtdGhyb3Vn
-aCAtIHRoZQ0KQS9ELWFzc2lzdCB3YWxrcyB0aGUgdGFibGVzIGFuZCBzZXRzIHRoZSBkaXJ0eSBi
-aXQgdXBvbiBhY2Nlc3MuIE90aGVyd2lzZSwNCndoYXQgaGFwcGVucyB3aGVuIHlvdSBpbnZhbGlk
-YXRlIHRoZSBQVEUsIGFuZCBoYXZlIGFscmVhZHkgbWFya2VkIHRoZSBQVEUgYXMNCm5vbi1wcmVz
-ZW50PyBXb3VsZCB0aGUgQ1BVIHNldCB0aGUgZGlydHktYml0IGF0IHRoaXMgcG9pbnQ/DQoNCklu
-IHRoaXMgcmVnYXJkLCBJIHJlbWVtYmVyIHRoaXMgdGhyZWFkIG9mIERhdmUgSGFuc2VuIFsxXSwg
-d2hpY2ggYWxzbyBzZWVtcw0KdG8gbWUgYXMgc3VwcG9ydGluZyB0aGUgbm90aW9uIHRoZSBkaXJ0
-eS1iaXQgaXMgc2V0IG9uIHdyaXRlIGFuZCBub3Qgb24NCklOVkxQRy4NCg0KTG9va2luZyBhdCB0
-aGUgU0RNIG9uICJWaXJ0dWFsIFRMQiBTY2hlbWXigJ0sIGFsc28gc2VlbXMgdG8gc3VwcG9ydCB0
-aGlzDQpjbGFpbS4gVGhlIGd1ZXN0IGRpcnR5IGJpdCBpcyBzZXQgaW4gc2VjdGlvbiAzMi4zLjUu
-MiAiUmVzcG9uc2UgdG8gUGFnZQ0KRmF1bHRz4oCdLCBhbmQgbm90IGluIHNlY3Rpb24gMzIuMy41
-LiAiUmVzcG9uc2UgdG8gVXNlcyBvZiBJTlZMUEfigJ0uDQoNCkFtIEkgd3Jvbmc/DQoNCg0KWzFd
-IGh0dHBzOi8vZ3JvdXBzLmdvb2dsZS5jb20vZm9ydW0vIyF0b3BpYy9saW51eC5rZXJuZWwvSEJn
-aDB1VDI0SzgNCg0K
+On 5/31/19 11:19 AM, Vivien Didelot wrote:
+> Hi Florian,
+> 
+> On Fri, 31 May 2019 09:36:13 -0700, Florian Fainelli <f.fainelli@gmail.com> wrote:
+>>> But VID 0 has a special meaning for the kernel, it means the port's private
+>>> database (when it is isolated, non-bridged), it is not meant to be programmed
+>>> in the switch. That's why I would've put that knowledge into the DSA layer,
+>>> which job is to translate the kernel operations to the (dumb) DSA drivers.
+>>>
+>>> I hope I'm seeing things correctly here.
+>>
+>> Your first part about the fact that it's the port private database is
+>> true, the fact that it is not programmed into the HW actually depends on
+>> what the switch is capable of doing. With mv88e6xxx you have per-port
+>> VLAN filtering controls, but other switches that do not have that
+>> capability need to program VID == 0 into the HW to continue maintaining
+>> VLAN filtering on a non bridged port while a bridge has enslaved other
+>> ports of the switch.
+> 
+> Are you saying that switches without per-port VLAN filtering controls
+> will program VID 0, and thus put all non bridged ports into the same VLAN,
+> allowing them to talk to each other?
+
+Because VLAN filtering is global to the switch, non-bridged ports must
+have a default VLAN programmed, otherwise any untagged frame would
+result in a VID volation. That default VLAN (0 for non-bridged) cannot
+be the same as the bridge's default_pvid (typically 1) otherwise other
+things like multicast would break (it gets checked differently than UC
+traffic).
+
+There is an additional bitmask that controls whether ports can talk to
+each other (at least with B53 switches).
+-- 
+Florian
