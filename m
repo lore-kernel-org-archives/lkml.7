@@ -1,151 +1,76 @@
 Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F280EC46470
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C75C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF74626A20
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:11:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF89526A21
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:12:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559311915;
-	bh=glFYv7bql2uJKuljpWAk36KYzwGSxnOfjp33Dpflgz4=;
+	s=default; t=1559311974;
+	bh=mSt2ZlKZCnk88aAZtbqzQ9/EkHtdKO9xQmIniYkrw3I=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GTSRBcTfNH24IR/wv/uRGDdpCM62UPuxnFqxXxcJ8UvAx7bN6D7YOodzoRTwQhZvP
-	 7EDjN/6vkhPE24kDx4v3T22ruJm8MeNXbny/qm7zOZ5BKuM41tY2/haOEavR04RCYR
-	 DOUwPQK4eBHKABFV6Pwfx9rxhHP0FyRmYP3oC9fs=
+	b=13c8Yn5fO2/0ysrg5577/ObhQEphZbZ1HOnpJx7Jaffd7l5WQxyfOj1HIxiJzeX53
+	 AOgXcuJqDVBTlMOVvADivfMRcWnXxdjk1XJBS42G7gYnarureCWHXXlvLsoQOqh5uQ
+	 OkF68K0Rzxzf8u68Myc1NZJX/YI/bPYmWi86+K0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbfEaOLy (ORCPT
+        id S1726787AbfEaOMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 10:11:54 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46528 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbfEaOLy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 10:11:54 -0400
-Received: by mail-pl1-f193.google.com with SMTP id e5so2327859pls.13;
-        Fri, 31 May 2019 07:11:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0xhb1pyImBa/JbJpYpXNh4R8mvOJIMPwfstX4vjxQNI=;
-        b=QiARnrE80tnvvBre/mbPmuOKYNVVU8yYQMl/Ex2SrVLL+VfRNrYAD61HNOf0R3SPAb
-         j44k0B09Ni2Ex/RblGlTkMnGKdwiyC9sqSZtLlKZX/BWZLzkFKSoJlgHv065+qA9jiTD
-         9MK2MRBipL+7zBbywzPB1bZaN4VP/WKmThTlnUztCsxMTnHjgQVhjJSkIaNaOYhBKK0c
-         Q2A5ZFUiVoEzwLBqY2pO9Mgb4Bn8SAGzxoRx/cvzf9q58xcFW+bks2xKeh8iCk6BZL91
-         wDHdZ40z6OJh/aa9BdJXdimdyuf1zFwcCv82PyPaEiJmQYRq4vijRYwNx9iLgsCaQoeh
-         JwYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0xhb1pyImBa/JbJpYpXNh4R8mvOJIMPwfstX4vjxQNI=;
-        b=k+4sdMkGZlycRlEfSsWgjYI2y6cq6z9JS5DjN/pQ/59tivWnJ4KYdAcFtdbtxBHKbe
-         KqEzPg20eesy/dfhK49a8PLIppmYUchh0XOne10dCutp2ZGdXnxs7zCUdCty5M780zrx
-         b+vM0Bsj6iF6sFC4MUGvxSvg08o2Yxlsr7y7HqaK5rJvPZqcq0HwUXtKOKgdx0a/C10u
-         bMvVcNNFKDXs1mb34DAm/4SRcFl/8tY5X0ijrYqb3dfSsxZme+Bt2sam3hP326ARKXma
-         JXaeL9CL4Qz22F5bLSKcv08SIRi16AMFelENN+JIqCjwx7ejxfkk8Y+l8xiPdEmmTLqs
-         YrbA==
-X-Gm-Message-State: APjAAAX5cp6jZot2klHlqwA+Apalo/uVf3bDuhgljWHG+vOUhix/XB1s
-        /S/VQ/71/Fne7ABloi71nE0=
-X-Google-Smtp-Source: APXvYqxRT6KrKzfpF6xMTycahrhhwULrJhijSmTAOdDfaQnfB69oVdK0PWFLHL8zxsiMQ2ZRQW2XIA==
-X-Received: by 2002:a17:902:e311:: with SMTP id cg17mr9750155plb.202.1559311913113;
-        Fri, 31 May 2019 07:11:53 -0700 (PDT)
-Received: from google.com ([122.38.223.241])
-        by smtp.gmail.com with ESMTPSA id m1sm5501839pjv.22.2019.05.31.07.11.45
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 31 May 2019 07:11:51 -0700 (PDT)
-Date:   Fri, 31 May 2019 23:11:43 +0900
-From:   Minchan Kim <minchan@kernel.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, jannh@google.com,
-        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
-        hdanton@sina.com
-Subject: Re: [RFCv2 5/6] mm: introduce external memory hinting API
-Message-ID: <20190531141142.GA216592@google.com>
-References: <20190531064313.193437-1-minchan@kernel.org>
- <20190531064313.193437-6-minchan@kernel.org>
- <20190531083757.GH6896@dhcp22.suse.cz>
- <20190531131859.GB195463@google.com>
- <20190531140050.GS6896@dhcp22.suse.cz>
+        Fri, 31 May 2019 10:12:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34452 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726037AbfEaOMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 10:12:53 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05DA826A22;
+        Fri, 31 May 2019 14:12:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559311973;
+        bh=mSt2ZlKZCnk88aAZtbqzQ9/EkHtdKO9xQmIniYkrw3I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Zku0jvJ+xuQNLjLF31JLZW9hJwgkOYE8YvkzBvtzSY9I0sR8aT/90SA72gWQV2P/X
+         cvhV08YOwAx1PnEL7to2RdX2EPDI6pVGkn9mEfAmvpZJltBd0SZQx2VtpsYWyitaW4
+         cOn2lhNmNOO6dTnpaJ7/W/xeU2GQ1pMxHuopwc+A=
+Date:   Fri, 31 May 2019 09:12:51 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com
+Subject: Re: [PATCH v3 0/5] Add Error Disconnect Recover (EDR) support
+Message-ID: <20190531141251.GR28250@google.com>
+References: <cover.1557870869.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190531140050.GS6896@dhcp22.suse.cz>
+In-Reply-To: <cover.1557870869.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 04:00:50PM +0200, Michal Hocko wrote:
-> On Fri 31-05-19 22:19:00, Minchan Kim wrote:
-> > On Fri, May 31, 2019 at 10:37:57AM +0200, Michal Hocko wrote:
-> > > On Fri 31-05-19 15:43:12, Minchan Kim wrote:
-> > > > There is some usecase that centralized userspace daemon want to give
-> > > > a memory hint like MADV_[COLD|PAGEEOUT] to other process. Android's
-> > > > ActivityManagerService is one of them.
-> > > > 
-> > > > It's similar in spirit to madvise(MADV_WONTNEED), but the information
-> > > > required to make the reclaim decision is not known to the app. Instead,
-> > > > it is known to the centralized userspace daemon(ActivityManagerService),
-> > > > and that daemon must be able to initiate reclaim on its own without
-> > > > any app involvement.
-> > > > 
-> > > > To solve the issue, this patch introduces new syscall process_madvise(2).
-> > > > It could give a hint to the exeternal process of pidfd.
-> > > > 
-> > > >  int process_madvise(int pidfd, void *addr, size_t length, int advise,
-> > > > 			unsigned long cookie, unsigned long flag);
-> > > > 
-> > > > Since it could affect other process's address range, only privileged
-> > > > process(CAP_SYS_PTRACE) or something else(e.g., being the same UID)
-> > > > gives it the right to ptrace the process could use it successfully.
-> > > > 
-> > > > The syscall has a cookie argument to privode atomicity(i.e., detect
-> > > > target process's address space change since monitor process has parsed
-> > > > the address range of target process so the operaion could fail in case
-> > > > of happening race). Although there is no interface to get a cookie
-> > > > at this moment, it could be useful to consider it as argument to avoid
-> > > > introducing another new syscall in future. It could support *atomicity*
-> > > > for disruptive hint(e.g., MADV_DONTNEED|FREE).
-> > > > flag argument is reserved for future use if we need to extend the API.
-> > > 
-> > > Providing an API that is incomplete will not fly. Really. As this really
-> > > begs for much more discussion and it would be good to move on with the
-> > > core idea of the pro active memory memory management from userspace
-> > > usecase. Could you split out the core change so that we can move on and
-> > > leave the external for a later discussion. I believe this would lead to
-> > > a smoother integration.
-> > 
-> > No problem but I need to understand what you want a little bit more because
-> > I thought this patchset is already step by step so if we reach the agreement
-> > of part of them like [1-5/6], it could be merged first.
-> > 
-> > Could you say how you want to split the patchset for forward progress?
+On Tue, May 14, 2019 at 03:18:12PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > 
-> I would start with new madvise modes and once they are in a shape to be
-> merged then we can start the remote madvise API. I believe that even
-> local process reclaim modes are interesting and useful. I haven't heard
-> anybody objecting to them without having a remote API so far.
+> This patchset adds support for following features:
+> 
+> 1. Error Disconnect Recover (EDR) support.
+> 2. _OSC based negotiation support for DPC.
+> 
+> You can find EDR spec in the following link.
+> 
+> https://members.pcisig.com/wg/PCI-SIG/document/12614
+> 
+> Changes since v1:
+>  * Rebased on top of v5.1-rc1
 
-Okay, let's focus on [1-3/6] at this moment.
-
-> -- 
-> Michal Hocko
-> SUSE Labs
+I'm sure you'll do this anyway, but please rebase the v4 on my pci/master
+branch (v5.2-rc1).
