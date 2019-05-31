@@ -2,179 +2,177 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B538AC28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D07C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E51B26B9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:30:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rM6Yk7NI"
+	by mail.kernel.org (Postfix) with ESMTP id CB1E726A47
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:35:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559316951;
+	bh=xFMuzcu/Eh0Bgg6ovC5wXwgc3N6wXQm1z0CLVgJoqOk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=U/qjPvVXUyOY6pac8UfzzvN22pgbYxsY0R8jfqBx6Xl42Fa0Lvei49gOXdMFFpjMu
+	 PQr0rNA+VSc/5x/xXEFRUzr8EksFDATYcSjzoRmuInMKTp+hiBrklakCC/sAylQwYd
+	 C/vd6lB69cF1jppKMDA8ra3F/xokQ+O/cvP/y+bE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbfEaPaq (ORCPT
+        id S1726683AbfEaPfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 11:30:46 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:55528 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbfEaPaq (ORCPT
+        Fri, 31 May 2019 11:35:51 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:42934 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726546AbfEaPfu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 11:30:46 -0400
-Received: by mail-it1-f193.google.com with SMTP id g24so3245080iti.5
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 08:30:45 -0700 (PDT)
+        Fri, 31 May 2019 11:35:50 -0400
+Received: by mail-qt1-f194.google.com with SMTP id s15so1331928qtk.9;
+        Fri, 31 May 2019 08:35:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2517myMErx3IlB/1MwcGTySfyxS/U1aLvsiyOBzFQLg=;
-        b=rM6Yk7NIUF2tbA2kv/d7tkwb8UqQbJ7nNBGkaZfISpoO+t0vMxSp0ADkAJQHfDwm0G
-         NS1RmxY9UoJp98JKFce4/xJtkzwJOva0zBJ9MmtpHuz3KviIMlkrTPlyMOUSYDBlh9Qr
-         LJrO0nxqYzlr/Q/LWaBCjGeYbSnU5xreR8L7ygOUk9ZHF4XN6dJT6wOnOTToqUSNvyPJ
-         ZjNEnPWQIMDeJSOIb6I3N6sYDFbcuCPKXaZymtKRUuLTFx7dlevgXDyDup42kQ1KQPBI
-         vZ48ZpVrnLymQyClRaJrIwPfygxlaHo531xrRDCRB5JoSaAEhPSF4ndqTXud46CKY5l2
-         ONrg==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=a6YwIIJc8LPr9G8BXrNtxAA4AtOs9+lI2cdNOdpA3Q0=;
+        b=BAc+ougURJ//27itXmCiZ/hU4b6VQWx20DqetuxCoOrzZFDHn6zHMQjyqBaZ4k26lz
+         X4JG0L42/1KfcfaJHRoGM8cNOS/CJWY8anDBsELhNCL680ziHCEP+iw3DR20vIS6MgpR
+         TpcV2r86X1blXIh+RfkXB1h9iSFGMttjOXnR4j4MWDYFA9daNTEhe7P5umDRvUUZrbg2
+         qs0vDhSXQpdB9nc7GgvXtPdZmD/mhAUgFUdxjpmbM0adJn6wuGJ/mfeYpcymgvmz+YbF
+         xV5PVOMw6X/EGp+S/ol872hO80QHKUg7lGe2KOfch27FKvUFDANfj4zIdRAWn3Lg2e0C
+         Cjnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2517myMErx3IlB/1MwcGTySfyxS/U1aLvsiyOBzFQLg=;
-        b=ezm8kRFaTzk8rMmXi45/Rtl6FcFrUFQxKRzc9LrcJavnHP9oZCvTVDm0I0vbXbICS/
-         JUdJX6bgJweSjUA62cg95hjmlw4fpbZf6kJyKbWROyJZ6cJXTuqDRYnWEdePSKrW3uMc
-         7RTV6rwYa77q8CUlq+kPSJy0SgK7ZRQB3x7L80F2WfKjscK46NKkuIsl3ocULsRmR+GQ
-         P1MpTndn+Rm277XXlU9qhqMf9Tt0pbZQdcfWVNhTV6uPaYD4DheYVEtsvCFac5Hj56ow
-         LKt3gTJwtJOYkH0SDlPkU1FD0jpAXlb8pkzWJKJ2paMOL+yEG8O/wB0h73lzgtZ7CEHg
-         owmQ==
-X-Gm-Message-State: APjAAAV4ZcyLJySaqvJmVXR+eUekh2DwjQHw83EwER7AvWTIRCPSdu8t
-        odaHc3C3Ym01MLmY7jIlsKBcHcANrw4YXXWbLSp7DQ==
-X-Google-Smtp-Source: APXvYqz/rvzlMKEAVtundtKbdzmCd0yGoYdzGKaeAsCdNW9e/4QhtnK5ClxRDBbrihMKn3bVyfSamWkfybMVWqlbMKA=
-X-Received: by 2002:a24:1614:: with SMTP id a20mr7052811ita.153.1559316644972;
- Fri, 31 May 2019 08:30:44 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=a6YwIIJc8LPr9G8BXrNtxAA4AtOs9+lI2cdNOdpA3Q0=;
+        b=unzdv7jHssqwjwZdNtFrnel7pgg5ZtQpvuzsut9bN15vuzgbJeImdMMwdky2ovPwGE
+         miy2MwBeEmJMePzncKYiYHe5A0H20DjwXUAFOYlzGyBNjYq/sl/lnHkLKhIohtHFoi53
+         nCW2oaqAoANnzmbBt6+Jj3ItbtrCNuTdsmBczNtxLJx/KowhSZAyyv1j1pstW1SpTUxU
+         LfX664m3Xv8Zb0Q4u3b07bJ5QRrkGEiZGwKF5h/gVx+yJR+RRYx1DpXZ/a1Sb9MdGIpH
+         ep47yHi9dFSecs3YfZrzD57xhDxzp5Jf9pjO3cDXRCkIfLkrpsuPoQQGu+lLtunMTb4F
+         /nYQ==
+X-Gm-Message-State: APjAAAUE0By7QUOOfQJOiSnLakw1BMfm6HplkQxbgDnRURkLBEVryESC
+        tN9PilXOOocKiCWfa1cHHaM=
+X-Google-Smtp-Source: APXvYqwXrOp+84AjrsXS4B7qfXNV01vDvagtkapssCObEwv2Hle4FplLiTJrDwe7OFh5FsQKOxiVuw==
+X-Received: by 2002:ac8:eca:: with SMTP id w10mr4936223qti.81.1559316949131;
+        Fri, 31 May 2019 08:35:49 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::39c9])
+        by smtp.gmail.com with ESMTPSA id p4sm3449792qkb.84.2019.05.31.08.35.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 31 May 2019 08:35:47 -0700 (PDT)
+Date:   Fri, 31 May 2019 08:35:45 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Patrick Bellasi <patrick.bellasi@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH v9 12/16] sched/core: uclamp: Extend CPU's cgroup
+ controller
+Message-ID: <20190531153545.GE374014@devbig004.ftw2.facebook.com>
+References: <20190515094459.10317-1-patrick.bellasi@arm.com>
+ <20190515094459.10317-13-patrick.bellasi@arm.com>
 MIME-Version: 1.0
-References: <155925716254.3775979.16716824941364738117.stgit@dwillia2-desk3.amr.corp.intel.com>
- <155925718351.3775979.13546720620952434175.stgit@dwillia2-desk3.amr.corp.intel.com>
- <CAKv+Gu-J3-66V7UhH3=AjN4sX7iydHNF7Fd+SMbezaVNrZQmGQ@mail.gmail.com> <CAPcyv4g-GNe2vSYTn0a6ivQYxJdS5khE4AJbcxysoGPsTZwswg@mail.gmail.com>
-In-Reply-To: <CAPcyv4g-GNe2vSYTn0a6ivQYxJdS5khE4AJbcxysoGPsTZwswg@mail.gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Fri, 31 May 2019 17:30:32 +0200
-Message-ID: <CAKv+Gu83QB6x8=LCaAcR0S65WELC-Y+Voxw6LzaVh4FSV3bxYA@mail.gmail.com>
-Subject: Re: [PATCH v2 4/8] x86, efi: Reserve UEFI 2.8 Specific Purpose Memory
- for dax
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Mike Rapoport <rppt@linux.ibm.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kbuild test robot <lkp@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190515094459.10317-13-patrick.bellasi@arm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 May 2019 at 17:28, Dan Williams <dan.j.williams@intel.com> wrote:
->
-> On Fri, May 31, 2019 at 1:30 AM Ard Biesheuvel
-> <ard.biesheuvel@linaro.org> wrote:
-> >
-> > (cc Mike for memblock)
-> >
-> > On Fri, 31 May 2019 at 01:13, Dan Williams <dan.j.williams@intel.com> wrote:
-> > >
-> > > UEFI 2.8 defines an EFI_MEMORY_SP attribute bit to augment the
-> > > interpretation of the EFI Memory Types as "reserved for a special
-> > > purpose".
-> > >
-> > > The proposed Linux behavior for specific purpose memory is that it is
-> > > reserved for direct-access (device-dax) by default and not available for
-> > > any kernel usage, not even as an OOM fallback. Later, through udev
-> > > scripts or another init mechanism, these device-dax claimed ranges can
-> > > be reconfigured and hot-added to the available System-RAM with a unique
-> > > node identifier.
-> > >
-> > > This patch introduces 3 new concepts at once given the entanglement
-> > > between early boot enumeration relative to memory that can optionally be
-> > > reserved from the kernel page allocator by default. The new concepts
-> > > are:
-> > >
-> > > - E820_TYPE_SPECIFIC: Upon detecting the EFI_MEMORY_SP attribute on
-> > >   EFI_CONVENTIONAL memory, update the E820 map with this new type. Only
-> > >   perform this classification if the CONFIG_EFI_SPECIFIC_DAX=y policy is
-> > >   enabled, otherwise treat it as typical ram.
-> > >
-> >
-> > OK, so now we have 'special purpose', 'specific' and 'app specific'
-> > [below]. Do they all mean the same thing?
->
-> I struggled with separating the raw-EFI-type name from the name of the
-> Linux specific policy. Since the reservation behavior is optional I
-> was thinking there should be a distinct Linux kernel name for that
-> policy. I did try to go back and change all occurrences of "special"
-> to "specific" from the RFC to this v2, but seems I missed one.
->
+Hello, Patrick.
 
-OK
+On Wed, May 15, 2019 at 10:44:55AM +0100, Patrick Bellasi wrote:
+> Extend the CPU controller with a couple of new attributes util.{min,max}
+> which allows to enforce utilization boosting and capping for all the
+> tasks in a group. Specifically:
+> 
+> - util.min: defines the minimum utilization which should be considered
+> 	    i.e. the RUNNABLE tasks of this group will run at least at a
+> 		 minimum frequency which corresponds to the util.min
+> 		 utilization
+> 
+> - util.max: defines the maximum utilization which should be considered
+> 	    i.e. the RUNNABLE tasks of this group will run up to a
+> 		 maximum frequency which corresponds to the util.max
+> 		 utilization
 
-> >
-> > > - IORES_DESC_APPLICATION_RESERVED: Add a new I/O resource descriptor for
-> > >   a device driver to search iomem resources for application specific
-> > >   memory. Teach the iomem code to identify such ranges as "Application
-> > >   Reserved".
-> > >
-> > > - MEMBLOCK_APP_SPECIFIC: Given the memory ranges can fallback to the
-> > >   traditional System RAM pool the expectation is that they will have
-> > >   typical SRAT entries. In order to support a policy of device-dax by
-> > >   default with the option to hotplug later, the numa initialization code
-> > >   is taught to avoid marking online MEMBLOCK_APP_SPECIFIC regions.
-> > >
-> >
-> > Can we move the generic memblock changes into a separate patch please?
->
-> Yeah, that can move to a lead-in patch.
->
-> [..]
-> > > diff --git a/include/linux/efi.h b/include/linux/efi.h
-> > > index 91368f5ce114..b57b123cbdf9 100644
-> > > --- a/include/linux/efi.h
-> > > +++ b/include/linux/efi.h
-> > > @@ -129,6 +129,19 @@ typedef struct {
-> > >         u64 attribute;
-> > >  } efi_memory_desc_t;
-> > >
-> > > +#ifdef CONFIG_EFI_SPECIFIC_DAX
-> > > +static inline bool is_efi_dax(efi_memory_desc_t *md)
-> > > +{
-> > > +       return md->type == EFI_CONVENTIONAL_MEMORY
-> > > +               && (md->attribute & EFI_MEMORY_SP);
-> > > +}
-> > > +#else
-> > > +static inline bool is_efi_dax(efi_memory_desc_t *md)
-> > > +{
-> > > +       return false;
-> > > +}
-> > > +#endif
-> > > +
-> > >  typedef struct {
-> > >         efi_guid_t guid;
-> > >         u32 headersize;
-> >
-> > I'd prefer it if we could avoid this DAX policy distinction leaking
-> > into the EFI layer.
-> >
-> > IOW, I am fine with having a 'is_efi_sp_memory()' helper here, but
-> > whether that is DAX memory or not should be decided in the DAX layer.
->
-> Ok, how about is_efi_sp_ram()? Since EFI_MEMORY_SP might be applied to
-> things that aren't EFI_CONVENTIONAL_MEMORY.
+Let's please use a prefix which is more specific.  It's clamping the
+utilization estimates of the member tasks which in turn affect
+scheduling / frequency decisions but cpu.util.max reads like it's
+gonna limit the cpu utilization directly.  Maybe just use uclamp?
 
-Yes, that is fine. As long as the #ifdef lives in the DAX code and not here.
+> These attributes:
+> 
+> a) are available only for non-root nodes, both on default and legacy
+>    hierarchies, while system wide clamps are defined by a generic
+>    interface which does not depends on cgroups. This system wide
+>    interface enforces constraints on tasks in the root node.
+
+I'd much prefer if they weren't entangled this way.  The system wide
+limits should work the same regardless of cgroup's existence.  cgroup
+can put further restriction on top but mere creation of cgroups with
+cpu controller enabled shouldn't take them out of the system-wide
+limits.
+
+> b) enforce effective constraints at each level of the hierarchy which
+>    are a restriction of the group requests considering its parent's
+>    effective constraints. Root group effective constraints are defined
+>    by the system wide interface.
+>    This mechanism allows each (non-root) level of the hierarchy to:
+>    - request whatever clamp values it would like to get
+>    - effectively get only up to the maximum amount allowed by its parent
+
+I'll come back to this later.
+
+> c) have higher priority than task-specific clamps, defined via
+>    sched_setattr(), thus allowing to control and restrict task requests
+
+This sounds good.
+
+> Add two new attributes to the cpu controller to collect "requested"
+> clamp values. Allow that at each non-root level of the hierarchy.
+> Validate local consistency by enforcing util.min < util.max.
+> Keep it simple by do not caring now about "effective" values computation
+> and propagation along the hierarchy.
+
+So, the followings are what we're doing for hierarchical protection
+and limit propgations.
+
+* Limits (high / max) default to max.  Protections (low / min) 0.  A
+  new cgroup by default doesn't constrain itself further and doesn't
+  have any protection.
+
+* A limit defines the upper ceiling for the subtree.  If an ancestor
+  has a limit of X, none of its descendants can have more than X.
+
+* A protection defines the upper ceiling of protections for the
+  subtree.  If an andester has a protection of X, none of its
+  descendants can have more protection than X.
+
+Note that there's no way for an ancestor to enforce protection its
+descendants.  It can only allow them to claim some.  This is
+intentional as the other end of the spectrum is either descendants
+losing the ability to further distribute protections as they see fit.
+
+For proportions (as opposed to weights), we use percentage rational
+numbers - e.g. 38.44 for 38.44%.  I have parser and doc update commits
+pending.  I'll put them on cgroup/for-5.3.
+
+Thanks.
+
+-- 
+tejun
