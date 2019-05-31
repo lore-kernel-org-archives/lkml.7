@@ -2,139 +2,114 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64AA4C28CC0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71920C28CC0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D53426195
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:46:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559267200;
-	bh=KpPDgF37BI8PGuzKi/AA8C9Gf/dJFMJfPiiskVuyFmU=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=U9o4ablljaPZBJC6VbwYqzk04QvlScWbqpdvSiwRuAYnRRnTM5Yg+SclMbb8tjivl
-	 9BtA+h4jMffhCa43BoQJXh+D3Xuru9gpVYpEcy9rtZVraj65T/iPGJnz2fPsGMMQlf
-	 FlK3S//iqTKYW6Ix0jKhNcR/Js/DijJGNwfcU+nw=
+	by mail.kernel.org (Postfix) with ESMTP id 519D326191
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:46:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbfEaBqj (ORCPT
+        id S1726867AbfEaBq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 21:46:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51140 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726576AbfEaBqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 21:46:39 -0400
-Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFC7126191;
-        Fri, 31 May 2019 01:46:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559267198;
-        bh=KpPDgF37BI8PGuzKi/AA8C9Gf/dJFMJfPiiskVuyFmU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=EQXrIQVgFRXMTKfCDtHfH6Z409V3726d91GnWJ39dPSVwItU2MTlOxUbfgCG+sMYc
-         ldq5L2QiPYaF1vl22AhQSFd2Fz0R4svZAqvKHo1Ad+bceFXXtMpCBBBE0EQDgfpkn8
-         pClP1k7b10PYDw029XOG0kiPPAilEGcz3b8vZ9/0=
-Date:   Thu, 30 May 2019 18:46:37 -0700
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: [GIT PULL] USB fixes for 5.2-rc3
-Message-ID: <20190531014637.GA30613@kroah.com>
+        Thu, 30 May 2019 21:46:56 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:9264 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726372AbfEaBq4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 21:46:56 -0400
+X-UUID: 05a641429e3146f69f07f2838f987952-20190531
+X-UUID: 05a641429e3146f69f07f2838f987952-20190531
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <biao.huang@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 578061618; Fri, 31 May 2019 09:46:50 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
+ (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 31 May
+ 2019 09:46:47 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 31 May 2019 09:46:44 +0800
+Message-ID: <1559267203.24897.101.camel@mhfsdcap03>
+Subject: Re: [PATCH 3/4] net: stmmac: modify default value of tx-frames
+From:   biao huang <biao.huang@mediatek.com>
+To:     Andrew Lunn <andrew@lunn.ch>, Jose Abreu <joabreu@synopsys.com>
+CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <netdev@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <yt.shen@mediatek.com>,
+        <jianguo.zhang@mediatek.com>, <boon.leong.ong@intel.com>
+Date:   Fri, 31 May 2019 09:46:43 +0800
+In-Reply-To: <20190530125832.GB22727@lunn.ch>
+References: <1559206484-1825-1-git-send-email-biao.huang@mediatek.com>
+         <1559206484-1825-4-git-send-email-biao.huang@mediatek.com>
+         <20190530125832.GB22727@lunn.ch>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.0 (2019-05-25)
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+Hi Andrew,
 
-  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+On Thu, 2019-05-30 at 14:58 +0200, Andrew Lunn wrote:
+> On Thu, May 30, 2019 at 04:54:43PM +0800, Biao Huang wrote:
+> > the default value of tx-frames is 25, it's too late when
+> > passing tstamp to stack, then the ptp4l will fail:
+> > 
+> > ptp4l -i eth0 -f gPTP.cfg -m
+> > ptp4l: selected /dev/ptp0 as PTP clock
+> > ptp4l: port 1: INITIALIZING to LISTENING on INITIALIZE
+> > ptp4l: port 0: INITIALIZING to LISTENING on INITIALIZE
+> > ptp4l: port 1: link up
+> > ptp4l: timed out while polling for tx timestamp
+> > ptp4l: increasing tx_timestamp_timeout may correct this issue,
+> >        but it is likely caused by a driver bug
+> > ptp4l: port 1: send peer delay response failed
+> > ptp4l: port 1: LISTENING to FAULTY on FAULT_DETECTED (FT_UNSPECIFIED)
+> > 
+> > ptp4l tests pass when changing the tx-frames from 25 to 1 with
+> > ethtool -C option.
+> > It should be fine to set tx-frames default value to 1, so ptp4l will pass
+> > by default.
+> 
+> Hi Biao
+> 
+> What does this do to the number of interrupts? Do we get 25 times more
+> interrupts? Have you done any performance tests to see if this causes
+> performance regressions?
+Yes, it seems tx-frames=25 can reduce interrupts.
+But the tx interrupt is handled in napi now, which will disable/enable
+tx interrupts at the beginning/ending of napi flow.
 
-are available in the Git repository at:
+Here is the test result on our platform:
+		tx-frames=1		tx-frames=25		
+irq number	478514			393750	
+performance	904Mbits/sec		902Mbits/sec
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.2-rc3
+commands for test:
+	"cat /proc/interrupts | grep eth0"
+	"iperf3 -c ipaddress -w 256K -t 60"
 
-for you to fetch changes up to 3ea3091f1bd8586125848c62be295910e9802af0:
+Thanks to napi, the interrupts will not grow 25 times more(almost the
+same level), and no obvious performance degradation.
 
-  usbip: usbip_host: fix stub_dev lock context imbalance regression (2019-05-29 13:26:32 -0700)
+Is there anybody can double check the performance with tx-frames = 0 or
+25?
+> 
+> 	    Andrew
+Thanks.
+Biao
 
-----------------------------------------------------------------
-USB fixes for 5.2-rc3
 
-Here are some tiny USB fixes for a number of reported issues for
-5.2-rc3.
-
-Nothing huge here, just a small collection of xhci and other driver bugs
-that syzbot has been finding in some drivers.  There is also a usbip fix
-and a fix for the usbip fix in here :)
-
-All have been in linux-next with no reported issues.
-
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-----------------------------------------------------------------
-Alan Stern (3):
-      USB: Fix slab-out-of-bounds write in usb_get_bos_descriptor
-      media: usb: siano: Fix general protection fault in smsusb
-      media: usb: siano: Fix false-positive "uninitialized variable" warning
-
-Andrey Smirnov (1):
-      xhci: Convert xhci_handshake() to use readl_poll_timeout_atomic()
-
-Carsten Schmid (1):
-      usb: xhci: avoid null pointer deref when bos field is NULL
-
-Chunfeng Yun (1):
-      usb: mtu3: fix up undefined reference to usb_debug_root
-
-Fabio Estevam (1):
-      xhci: Use %zu for printing size_t type
-
-Henry Lin (1):
-      xhci: update bounce buffer with correct sg num
-
-Jia-Ju Bai (1):
-      usb: xhci: Fix a potential null pointer dereference in xhci_debugfs_create_endpoint()
-
-Mathias Nyman (1):
-      xhci: Fix immediate data transfer if buffer is already DMA mapped
-
-Mauro Carvalho Chehab (1):
-      media: smsusb: better handle optional alignment
-
-Maximilian Luz (1):
-      USB: Add LPM quirk for Surface Dock GigE adapter
-
-Oliver Neukum (5):
-      USB: sisusbvga: fix oops in error path of sisusb_probe
-      USB: rio500: refuse more than one device at a time
-      USB: rio500: fix memory leak in close after disconnect
-      USB: rio500: simplify locking
-      USB: rio500: update Documentation
-
-Shuah Khan (2):
-      usbip: usbip_host: fix BUG: sleeping function called from invalid context
-      usbip: usbip_host: fix stub_dev lock context imbalance regression
-
- Documentation/usb/rio.txt           | 66 ++++++------------------------
- drivers/media/usb/siano/smsusb.c    | 33 +++++++++------
- drivers/usb/core/config.c           |  4 +-
- drivers/usb/core/quirks.c           |  3 ++
- drivers/usb/host/xhci-debugfs.c     |  3 ++
- drivers/usb/host/xhci-ring.c        | 26 ++++++++----
- drivers/usb/host/xhci.c             | 24 +++++------
- drivers/usb/host/xhci.h             |  3 +-
- drivers/usb/misc/rio500.c           | 80 ++++++++++++++++++++++---------------
- drivers/usb/misc/sisusbvga/sisusb.c | 15 +++----
- drivers/usb/mtu3/mtu3_debugfs.c     |  3 +-
- drivers/usb/usbip/stub_dev.c        | 75 ++++++++++++++++++++++++----------
- 12 files changed, 182 insertions(+), 153 deletions(-)
