@@ -2,94 +2,156 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 503D6C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D4BC28CC2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A9A8266F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:36:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9780266F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:37:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726934AbfEaJgd (ORCPT
+        id S1727058AbfEaJhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 05:36:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57114 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726232AbfEaJgc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 05:36:32 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BA36C30C120A;
-        Fri, 31 May 2019 09:36:32 +0000 (UTC)
-Received: from t460s.redhat.com (ovpn-116-233.ams2.redhat.com [10.36.116.233])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1E29A1017E33;
-        Fri, 31 May 2019 09:36:28 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-s390@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [PATCH v1] s390/pkey: Use -ENODEV instead of -EOPNOTSUPP
-Date:   Fri, 31 May 2019 11:36:28 +0200
-Message-Id: <20190531093628.14766-1-david@redhat.com>
+        Fri, 31 May 2019 05:37:07 -0400
+Received: from kirsty.vergenet.net ([202.4.237.240]:44208 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbfEaJhH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 05:37:07 -0400
+Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
+        by kirsty.vergenet.net (Postfix) with ESMTPA id E521425AE77;
+        Fri, 31 May 2019 19:37:04 +1000 (AEST)
+Received: by reginn.horms.nl (Postfix, from userid 7100)
+        id E95FB9401DB; Fri, 31 May 2019 11:37:02 +0200 (CEST)
+Date:   Fri, 31 May 2019 11:37:02 +0200
+From:   Simon Horman <horms@verge.net.au>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Tobias Franzen <tfranzen@de.adit-jv.com>,
+        Biju Das <biju.das@bp.renesas.com>
+Subject: Re: [PATCH] arm64: dts: ulcb-kf: Add support for TI WL1837
+Message-ID: <20190531093702.4pdbamghomqdhhuq@verge.net.au>
+References: <20190411124102.22442-1-spapageorgiou@de.adit-jv.com>
+ <CAMuHMdVfDd_1gHnX=WvkHnF33fG2sWy7F5bTh-DghoKSt-vLCA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Fri, 31 May 2019 09:36:32 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVfDd_1gHnX=WvkHnF33fG2sWy7F5bTh-DghoKSt-vLCA@mail.gmail.com>
+Organisation: Horms Solutions BV
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-systemd-modules-load.service automatically tries to load the pkey module
-on systems that have MSA.
+Hi Spyridon,
 
-Pkey also requires the MSA3 facility and a bunch of subfunctions.
-Failing with -EOPNOTSUPP makes "systemd-modules-load.service" fail on
-any system that does not have all needed subfunctions. For example,
-when running under QEMU TCG (but also on systems where protected keys
-are disabled via the HMC).
+please respond to Geert's review below and
+if appropriate provide an incremental patch.
 
-Let's use -ENODEV, so systemd-modules-load.service properly ignores
-failing to load the pkey module because of missing HW functionality.
+Thanks in advance,
+Simon
 
-Cc: Harald Freudenberger <freude@linux.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Cornelia Huck <cohuck@redhat.com>
-Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- drivers/s390/crypto/pkey_api.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/s390/crypto/pkey_api.c b/drivers/s390/crypto/pkey_api.c
-index 45eb0c14b880..ddfcefb47284 100644
---- a/drivers/s390/crypto/pkey_api.c
-+++ b/drivers/s390/crypto/pkey_api.c
-@@ -1695,15 +1695,15 @@ static int __init pkey_init(void)
- 	 * are able to work with protected keys.
- 	 */
- 	if (!cpacf_query(CPACF_PCKMO, &pckmo_functions))
--		return -EOPNOTSUPP;
-+		return -ENODEV;
- 
- 	/* check for kmc instructions available */
- 	if (!cpacf_query(CPACF_KMC, &kmc_functions))
--		return -EOPNOTSUPP;
-+		return -ENODEV;
- 	if (!cpacf_test_func(&kmc_functions, CPACF_KMC_PAES_128) ||
- 	    !cpacf_test_func(&kmc_functions, CPACF_KMC_PAES_192) ||
- 	    !cpacf_test_func(&kmc_functions, CPACF_KMC_PAES_256))
--		return -EOPNOTSUPP;
-+		return -ENODEV;
- 
- 	pkey_debug_init();
- 
--- 
-2.20.1
-
+On Tue, May 28, 2019 at 11:19:04AM +0200, Geert Uytterhoeven wrote:
+> Hi Spyridon,
+> 
+> On Thu, Apr 11, 2019 at 2:42 PM Spyridon Papageorgiou
+> <spapageorgiou@de.adit-jv.com> wrote:
+> > This patch adds description of TI WL1837 and links interfaces
+> > to communicate with the IC, namely the SDIO interface to WLAN.
+> >
+> > Signed-off-by: Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>
+> 
+> Thanks for your patch!
+> 
+> > --- a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+> > +++ b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+> > @@ -38,6 +38,18 @@
+> >                 regulator-min-microvolt = <5000000>;
+> >                 regulator-max-microvolt = <5000000>;
+> >         };
+> > +
+> > +       wlan_en: regulator-wlan_en {
+> > +               compatible = "regulator-fixed";
+> > +               regulator-name = "wlan-en-regulator";
+> > +
+> > +               regulator-min-microvolt = <3300000>;
+> > +               regulator-max-microvolt = <3300000>;
+> 
+> So this is a 3.3V regulator...
+> 
+> > +
+> > +               gpio = <&gpio_exp_74 4 GPIO_ACTIVE_HIGH>;
+> > +               startup-delay-us = <70000>;
+> > +               enable-active-high;
+> > +       };
+> >  };
+> >
+> >  &can0 {
+> 
+> > @@ -273,6 +298,30 @@
+> >         status = "okay";
+> >  };
+> >
+> > +&sdhi3 {
+> > +       pinctrl-0 = <&sdhi3_pins>;
+> > +       pinctrl-names = "default";
+> > +
+> > +       vmmc-supply = <&wlan_en>;
+> > +       vqmmc-supply = <&wlan_en>;
+> 
+> ... used for both card and I/O line power...
+> 
+> > +       bus-width = <4>;
+> > +       no-1-8-v;
+> 
+> ... hence no 1.8V I/O.
+> 
+> However, VIO of WL1837 is provided by W1.8V of regulator U55,
+> which is 1.8V?
+> 
+> > +       non-removable;
+> > +       cap-power-off-card;
+> > +       keep-power-in-suspend;
+> > +       max-frequency = <26000000>;
+> > +       status = "okay";
+> > +
+> > +       #address-cells = <1>;
+> > +       #size-cells = <0>;
+> > +       wlcore: wlcore@2 {
+> > +               compatible = "ti,wl1837";
+> > +               reg = <2>;
+> > +               interrupt-parent = <&gpio1>;
+> > +               interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
+> 
+> I'm also a bit puzzled by the interrupt type.
+> On Cat 874, it's IRQ_TYPE_LEVEL_HIGH, cfr.
+> https://lore.kernel.org/linux-renesas-soc/1557997166-63351-2-git-send-email-biju.das@bp.renesas.com/
+> 
+> On Kingfisher, the IRQ signal is inverted by U104, so I'd expect
+> IRQ_TYPE_LEVEL_LOW instead of IRQ_TYPE_EDGE_FALLING?
+> 
+> Apart from the above two comments:
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> -- 
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+> 
