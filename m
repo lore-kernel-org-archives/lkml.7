@@ -2,101 +2,82 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2142DC28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E2BC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE793268AD
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:18:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75F2B268AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:21:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="dCWXbd/M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727243AbfEaMSX (ORCPT
+        id S1727272AbfEaMVC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 08:18:23 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:55288 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726331AbfEaMSX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 08:18:23 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 74D2B802E6; Fri, 31 May 2019 14:18:10 +0200 (CEST)
-Date:   Fri, 31 May 2019 14:18:20 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Jiri Kosina <jikos@kernel.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4] x86/power: Fix 'nosmt' vs. hibernation triple fault
- during resume
-Message-ID: <20190531121820.GA3722@amd>
-References: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm>
- <nycvar.YFH.7.76.1905300007470.1962@cbobk.fhfr.pm>
- <CAJZ5v0ja5sQ73zMvUtV+w79LC_d+g6UdomL36rV-EpVDxEzbhA@mail.gmail.com>
- <alpine.DEB.2.21.1905301425330.2265@nanos.tec.linutronix.de>
- <CAJZ5v0go1g9KhE=mc19VCFrBuEERzFZCoRD4xt=tF=EnMjfH=A@mail.gmail.com>
- <20190530233804.syv4brpe3ndslyvo@treble>
- <nycvar.YFH.7.76.1905310139380.1962@cbobk.fhfr.pm>
+        Fri, 31 May 2019 08:21:02 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:44446 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726331AbfEaMVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 08:21:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=OICwzJUG9ru3GANBUzmVbH105fpmRRWmaVDgmJDGPbs=; b=dCWXbd/Mb8MzX3pnUtUoZmyYwD
+        eFsswQtjy7JSX/9I/S3CGod0PyKv/5n7QW+KVhgmi3cdQsoec6775cL9C6FUoL3QLbtCie35BtfGd
+        hlK8l3yuNmSsU7ok3bsIlA+sVrHra9CJ2EO0B/3Ps7z1AY8scoNnTlXt8FPali1OrDAk=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hWgWn-0005Ax-JY; Fri, 31 May 2019 14:20:57 +0200
+Date:   Fri, 31 May 2019 14:20:57 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chris Healy <cphealy@gmail.com>
+Subject: Re: [PATCH] net: phy: support C45 phys in SIOCGMIIREG/SIOCSMIIREG
+ ioctls
+Message-ID: <20190531122057.GA19572@lunn.ch>
+References: <20190531074727.3257-1-nikita.yoush@cogentembedded.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="r5Pyd7+fXNt84Ff3"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <nycvar.YFH.7.76.1905310139380.1962@cbobk.fhfr.pm>
+In-Reply-To: <20190531074727.3257-1-nikita.yoush@cogentembedded.com>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 31, 2019 at 10:47:27AM +0300, Nikita Yushchenko wrote:
+> This change allows phytool [1] and similar tools to read and write C45 phy
+> registers from userspace.
+> 
+> This is useful for debugging and for porting vendor phy diagnostics tools.
+> 
+> [1] https://github.com/wkz/phytool
 
---r5Pyd7+fXNt84Ff3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Nikita
 
-On Fri 2019-05-31 01:42:02, Jiri Kosina wrote:
-> On Thu, 30 May 2019, Josh Poimboeuf wrote:
->=20
-> > > >     Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-> > >=20
-> > > Yes, it is, thanks!
-> >=20
-> > I still think changing monitor/mwait to use a fixmap address would be a
-> > much cleaner way to fix this.  I can try to work up a patch tomorrow.
->=20
-> I disagree with that from the backwards compatibility point of view.
->=20
-> I personally am quite frequently using differnet combinations of=20
-> resumer/resumee kernels, and I've never been biten by it so far. I'd gues=
-s=20
-> I am not the only one.
-> Fixmap sort of breaks that invariant.
+Russell King submitted a similar patch a couple of days ago.
 
-If we get less tricky code, it may be worth it...
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+https://patchwork.ozlabs.org/patch/1102091/
 
---r5Pyd7+fXNt84Ff3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Since he was first, we should probably take his, once he respins the
+series.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Florian: Could you take a second look at
+[net-next,1/4] net: phylink: support for link gpio interrupt
+https://patchwork.ozlabs.org/patch/1102090/
 
-iEYEARECAAYFAlzxG4wACgkQMOfwapXb+vL4dwCgtSpSgpdvZHaImr55/SbbOMad
-9MQAoK0rb5nzJTsI242mfK7pEZ/i4Xmy
-=bqKz
------END PGP SIGNATURE-----
+Everything else in that patchset is good to go.
 
---r5Pyd7+fXNt84Ff3--
+	Thanks
+	   Andrew
