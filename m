@@ -2,92 +2,189 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E102C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFDBC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B1DD24353
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:05:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A728426670
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:06:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="GWmhBh1E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbfEaJF5 (ORCPT
+        id S1727175AbfEaJGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 05:05:57 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:17634 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726768AbfEaJF5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 05:05:57 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id A8B726336D0F26F8ECF0;
-        Fri, 31 May 2019 17:05:54 +0800 (CST)
-Received: from [127.0.0.1] (10.133.213.239) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Fri, 31 May 2019
- 17:05:52 +0800
-Subject: Re: [PATCH net-next] netfilter: nf_conntrack_bridge: Fix build error
- without IPV6
-To:     Pablo Neira Ayuso <pablo@netfilter.org>
-References: <20190531024643.3840-1-yuehaibing@huawei.com>
- <19095cab-fbc5-f200-a40c-cb4c1a12fbc6@huawei.com>
- <20190531080257.62mfimdlwuv42bk3@salvia>
-CC:     <kadlec@blackhole.kfki.hu>, <fw@strlen.de>,
-        <linux-kernel@vger.kernel.org>, <coreteam@netfilter.org>,
-        <netfilter-devel@vger.kernel.org>, <netdev@vger.kernel.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <c65a989a-9b5d-b98e-1bdd-7820a34847c2@huawei.com>
-Date:   Fri, 31 May 2019 17:05:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Fri, 31 May 2019 05:06:22 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:53594 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726797AbfEaJGW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 05:06:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1559293581; x=1590829581;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=IUMbb8sG3OoGniCTVKK5CLJC3zT+OvvZpa9d+vLzxDc=;
+  b=GWmhBh1EqDB4YNTE9mKCS3afHxFFUVasT1HgblRnGrEG4DnDDWMqPD1C
+   iJm/O8j1RQf5KwQGxQK5sq24SV2u54eAgb+EE9ngHFlyrBsev/LpqKgdu
+   TBkH7ewLw06Cg7/xPXwlMS4J6RtlRlK6BBYjRV+wBQCPhwXm1NF11/Aar
+   Q=;
+X-IronPort-AV: E=Sophos;i="5.60,534,1549929600"; 
+   d="scan'208";a="735510243"
+Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-22cc717f.us-west-2.amazon.com) ([10.124.125.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 31 May 2019 09:06:19 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
+        by email-inbound-relay-2a-22cc717f.us-west-2.amazon.com (Postfix) with ESMTPS id AFEBFA2211;
+        Fri, 31 May 2019 09:06:18 +0000 (UTC)
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Fri, 31 May 2019 09:06:18 +0000
+Received: from 38f9d3867b82.ant.amazon.com (10.43.162.74) by
+ EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Fri, 31 May 2019 09:06:15 +0000
+Subject: Re: [PATCH v2 1/2] KVM: Start populating /sys/hypervisor with KVM
+ entries
+To:     "Sironi, Filippo" <sironi@amazon.de>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "Marc Zyngier" <Marc.Zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@linaro.org>
+References: <1539078879-4372-1-git-send-email-sironi@amazon.de>
+ <1557847002-23519-1-git-send-email-sironi@amazon.de>
+ <1557847002-23519-2-git-send-email-sironi@amazon.de>
+ <e976f31b-2ccd-29ba-6a32-2edde49f867f@amazon.com>
+ <3D2C4EE3-1C2E-4032-9964-31A066E542AA@amazon.de>
+From:   Alexander Graf <graf@amazon.com>
+Message-ID: <6b3dadf9-6240-6440-b784-50bec605bf2c@amazon.com>
+Date:   Fri, 31 May 2019 11:06:13 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190531080257.62mfimdlwuv42bk3@salvia>
-Content-Type: text/plain; charset="windows-1252"
+In-Reply-To: <3D2C4EE3-1C2E-4032-9964-31A066E542AA@amazon.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Language: en-US
+X-Originating-IP: [10.43.162.74]
+X-ClientProxiedBy: EX13D02UWB001.ant.amazon.com (10.43.161.240) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-
-On 2019/5/31 16:02, Pablo Neira Ayuso wrote:
-> On Fri, May 31, 2019 at 11:06:49AM +0800, Yuehaibing wrote:
->> +cc netdev
+On 17.05.19 17:41, Sironi, Filippo wrote:
+>> On 16. May 2019, at 15:50, Graf, Alexander <graf@amazon.com> wrote:
 >>
->> On 2019/5/31 10:46, YueHaibing wrote:
->>> Fix gcc build error while CONFIG_IPV6 is not set
+>> On 14.05.19 08:16, Filippo Sironi wrote:
+>>> Start populating /sys/hypervisor with KVM entries when we're running on
+>>> KVM. This is to replicate functionality that's available when we're
+>>> running on Xen.
 >>>
->>> In file included from net/netfilter/core.c:19:0:
->>> ./include/linux/netfilter_ipv6.h: In function 'nf_ipv6_br_defrag':
->>> ./include/linux/netfilter_ipv6.h:110:9: error: implicit declaration of function 'nf_ct_frag6_gather' [-Werror=implicit-function-declaration]
+>>> Start with /sys/hypervisor/uuid, which users prefer over
+>>> /sys/devices/virtual/dmi/id/product_uuid as a way to recognize a virtual
+>>> machine, since it's also available when running on Xen HVM and on Xen PV
+>>> and, on top of that doesn't require root privileges by default.
+>>> Let's create arch-specific hooks so that different architectures can
+>>> provide different implementations.
 >>>
->>> Reported-by: Hulk Robot <hulkci@huawei.com>
->>> Fixes: 764dd163ac92 ("netfilter: nf_conntrack_bridge: add support for IPv6")
->>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>>> Signed-off-by: Filippo Sironi <sironi@amazon.de>
+>> I think this needs something akin to
+>>
+>>   https://www.kernel.org/doc/Documentation/ABI/stable/sysfs-hypervisor-xen
+>>
+>> to document which files are available.
+>>
 >>> ---
->>>  include/linux/netfilter_ipv6.h | 2 ++
->>>  1 file changed, 2 insertions(+)
+>>> v2:
+>>> * move the retrieval of the VM UUID out of uuid_show and into
+>>>   kvm_para_get_uuid, which is a weak function that can be overwritten
 >>>
->>> diff --git a/include/linux/netfilter_ipv6.h b/include/linux/netfilter_ipv6.h
->>> index a21b8c9..4ea97fd 100644
->>> --- a/include/linux/netfilter_ipv6.h
->>> +++ b/include/linux/netfilter_ipv6.h
->>> @@ -96,6 +96,8 @@ static inline int nf_ip6_route(struct net *net, struct dst_entry **dst,
->>>  #endif
->>>  }
->>>  
->>> +int nf_ct_frag6_gather(struct net *net, struct sk_buff *skb, u32 user);
+>>> drivers/Kconfig              |  2 ++
+>>> drivers/Makefile             |  2 ++
+>>> drivers/kvm/Kconfig          | 14 ++++++++++++++
+>>> drivers/kvm/Makefile         |  1 +
+>>> drivers/kvm/sys-hypervisor.c | 30 ++++++++++++++++++++++++++++++
+>>> 5 files changed, 49 insertions(+)
+>>> create mode 100644 drivers/kvm/Kconfig
+>>> create mode 100644 drivers/kvm/Makefile
+>>> create mode 100644 drivers/kvm/sys-hypervisor.c
+>>>
+>> [...]
+>>
 >>> +
-> 
-> This is already defined in:
-> 
-> include/net/netfilter/ipv6/nf_defrag_ipv6.h
-> 
-> Probably this?
+>>> +__weak const char *kvm_para_get_uuid(void)
+>>> +{
+>>> +	return NULL;
+>>> +}
+>>> +
+>>> +static ssize_t uuid_show(struct kobject *obj,
+>>> +			 struct kobj_attribute *attr,
+>>> +			 char *buf)
+>>> +{
+>>> +	const char *uuid = kvm_para_get_uuid();
+>>> +	return sprintf(buf, "%s\n", uuid);
+>> The usual return value for the Xen /sys/hypervisor interface is
+>> "<denied>". Wouldn't it make sense to follow that pattern for the KVM
+>> one too? Currently, if we can not determine the UUID this will just
+>> return (null).
+>>
+>> Otherwise, looks good to me. Are you aware of any other files we should
+>> provide? Also, is there any reason not to implement ARM as well while at it?
+>>
+>> Alex
+> This originated from a customer request that was using /sys/hypervisor/uuid.
+> My guess is that we would want to expose "type" and "version" moving
+> forward and that's when we hypervisor hooks will be useful on top
+> of arch hooks.
+>
+> On a different note, any idea how to check whether the OS is running
+> virtualized on KVM on ARM and ARM64?  kvm_para_available() isn't an
 
-Yes, this works for me.
 
-> 
+Yeah, ARM doesn't have any KVM PV FWIW. I also can't find any explicit 
+hint passed into guests that we are indeed running in KVM. The closest 
+thing I can see is the SMBIOS product identifier in QEMU which gets 
+patched to "KVM Virtual Machine". Maybe we'll have to do with that for 
+the sake of backwards compatibility ...
 
+
+> option and the same is true for S390 where kvm_para_available()
+> always returns true and it would even if a KVM enabled kernel would
+> be running on bare metal.
+
+
+For s390, you can figure the topology out using the sthyi instruction. 
+I'm not sure if there is a nice in-kernel API to leverage that though. 
+In fact, kvm_para_available() probably should check sthyi output to 
+determine whether we really can use it, no? Christian?
+
+
+Alex
+
+
+>
+> I think we will need another arch hook to call a function that says
+> whether the OS is running virtualized on KVM.
+>
+>>> +}
+>>> +
+>>> +static struct kobj_attribute uuid = __ATTR_RO(uuid);
+>>> +
+>>> +static int __init uuid_init(void)
+>>> +{
+>>> +	if (!kvm_para_available())
+>>> +		return 0;
+>>> +	return sysfs_create_file(hypervisor_kobj, &uuid.attr);
+>>> +}
+>>> +
+>>> +device_initcall(uuid_init);
