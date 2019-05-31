@@ -2,179 +2,123 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F598C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A810C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E598826544
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:02:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="mcR/9dij"
+	by mail.kernel.org (Postfix) with ESMTP id 787F22654B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:03:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfEaICk (ORCPT
+        id S1726968AbfEaIDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 04:02:40 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:35496 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726158AbfEaICj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 04:02:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1559289758; x=1590825758;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=/WyYQHOnF3HxsjKHW7ouyvrjqjIbBcb2ZzLtjUBe08s=;
-  b=mcR/9dijRIwhdhGy7RPNSytU6HQHt1d+zH4dgn4C1+uZibvSOgX2xAUR
-   txIXyqeYVUEAaFK0/3/zr+poxkda9yEZOT+kM0zKDiB2VA1Up9TeW8Y34
-   oyqMWymX22Ifxg6S2iuWgSj+co/ZhqfdTZX7N/zzy9N77WdvCMYKBnJ5F
-   o=;
-X-IronPort-AV: E=Sophos;i="5.60,534,1549929600"; 
-   d="scan'208";a="404464927"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 31 May 2019 08:02:37 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com (Postfix) with ESMTPS id E4D9AA24B3;
-        Fri, 31 May 2019 08:02:32 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 31 May 2019 08:02:32 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.161.89) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 31 May 2019 08:02:27 +0000
-Subject: Re: [PATCH 1/3] Build target for emulate.o as a userspace binary
-To:     Sam Caccavale <samcacc@amazon.de>
-CC:     <samcaccavale@gmail.com>, <nmanthey@amazon.de>,
-        <wipawel@amazon.de>, <dwmw@amazon.co.uk>, <mpohlack@amazon.de>,
-        <graf@amazon.de>, <karahmed@amazon.de>,
-        <andrew.cooper3@citrix.com>, <JBeulich@suse.com>,
-        <pbonzini@redhat.com>, <rkrcmar@redhat.com>, <tglx@linutronix.de>,
-        <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
-        <paullangton4@gmail.com>, <anirudhkaushik@google.com>,
-        <x86@kernel.org>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190521153924.15110-1-samcacc@amazon.de>
- <20190521153924.15110-2-samcacc@amazon.de>
-From:   Alexander Graf <graf@amazon.com>
-Message-ID: <529ed65f-f82e-7341-3a4f-6eea1f2961a9@amazon.com>
-Date:   Fri, 31 May 2019 10:02:25 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.0
+        Fri, 31 May 2019 04:03:04 -0400
+Received: from mail.us.es ([193.147.175.20]:38998 "EHLO mail.us.es"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726158AbfEaIDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 04:03:03 -0400
+Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
+        by mail.us.es (Postfix) with ESMTP id 98656BAE9B
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 10:03:01 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 3B680DA70B
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 10:03:01 +0200 (CEST)
+Received: by antivirus1-rhel7.int (Postfix, from userid 99)
+        id 960CFDA7F1; Fri, 31 May 2019 10:03:00 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 21354DA705;
+        Fri, 31 May 2019 10:02:58 +0200 (CEST)
+Received: from 192.168.1.97 (192.168.1.97)
+ by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
+ Fri, 31 May 2019 10:02:58 +0200 (CEST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
+Received: from us.es (sys.soleta.eu [212.170.55.40])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: 1984lsi)
+        by entrada.int (Postfix) with ESMTPSA id E74284265A32;
+        Fri, 31 May 2019 10:02:57 +0200 (CEST)
+Date:   Fri, 31 May 2019 10:02:57 +0200
+X-SMTPAUTHUS: auth mail.us.es
+From:   Pablo Neira Ayuso <pablo@netfilter.org>
+To:     Yuehaibing <yuehaibing@huawei.com>
+Cc:     kadlec@blackhole.kfki.hu, fw@strlen.de,
+        linux-kernel@vger.kernel.org, coreteam@netfilter.org,
+        netfilter-devel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH net-next] netfilter: nf_conntrack_bridge: Fix build error
+ without IPV6
+Message-ID: <20190531080257.62mfimdlwuv42bk3@salvia>
+References: <20190531024643.3840-1-yuehaibing@huawei.com>
+ <19095cab-fbc5-f200-a40c-cb4c1a12fbc6@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20190521153924.15110-2-samcacc@amazon.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.43.161.89]
-X-ClientProxiedBy: EX13D25UWB004.ant.amazon.com (10.43.161.180) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
+Content-Type: multipart/mixed; boundary="mledociainyopav3"
+Content-Disposition: inline
+In-Reply-To: <19095cab-fbc5-f200-a40c-cb4c1a12fbc6@huawei.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 21.05.19 17:39, Sam Caccavale wrote:
-> This commit contains the minimal set of functionality to build
-> afl-harness around arch/x86/emulate.c which allows exercising code
-> in that source file, like x86_emulate_insn.  Resolving the
-> dependencies was done via GCC's -H flag by get_headers.py.
->
-> ---
->   tools/Makefile                                |   9 ++
->   .../fuzz/x86_instruction_emulation/.gitignore |   2 +
->   tools/fuzz/x86_instruction_emulation/Makefile |  57 +++++++
->   .../fuzz/x86_instruction_emulation/README.md  |  12 ++
->   .../x86_instruction_emulation/afl-harness.c   | 149 ++++++++++++++++++
->   tools/fuzz/x86_instruction_emulation/common.h |  87 ++++++++++
->   .../x86_instruction_emulation/emulator_ops.c  |  58 +++++++
->   .../x86_instruction_emulation/emulator_ops.h  | 117 ++++++++++++++
->   .../scripts/get_headers.py                    |  95 +++++++++++
->   .../scripts/make_deps                         |   4 +
->   tools/fuzz/x86_instruction_emulation/stubs.c  |  56 +++++++
->   tools/fuzz/x86_instruction_emulation/stubs.h  |  52 ++++++
->   12 files changed, 698 insertions(+)
->   create mode 100644 tools/fuzz/x86_instruction_emulation/.gitignore
->   create mode 100644 tools/fuzz/x86_instruction_emulation/Makefile
->   create mode 100644 tools/fuzz/x86_instruction_emulation/README.md
->   create mode 100644 tools/fuzz/x86_instruction_emulation/afl-harness.c
->   create mode 100644 tools/fuzz/x86_instruction_emulation/common.h
->   create mode 100644 tools/fuzz/x86_instruction_emulation/emulator_ops.c
->   create mode 100644 tools/fuzz/x86_instruction_emulation/emulator_ops.h
->   create mode 100644 tools/fuzz/x86_instruction_emulation/scripts/get_headers.py
->   create mode 100755 tools/fuzz/x86_instruction_emulation/scripts/make_deps
->   create mode 100644 tools/fuzz/x86_instruction_emulation/stubs.c
->   create mode 100644 tools/fuzz/x86_instruction_emulation/stubs.h
->
-> diff --git a/tools/Makefile b/tools/Makefile
-> index 3dfd72ae6c1a..4d68817b7e49 100644
-> --- a/tools/Makefile
-> +++ b/tools/Makefile
-> @@ -94,6 +94,12 @@ freefall: FORCE
->   kvm_stat: FORCE
->   	$(call descend,kvm/$@)
->   
-> +fuzz: FORCE
-> +	$(call descend,fuzz/x86_instruction_emulation)
-> +
-> +fuzz_deps: FORCE
-> +	$(call descend,fuzz/x86_instruction_emulation,fuzz_deps)
-> +
->   all: acpi cgroup cpupower gpio hv firewire liblockdep \
->   		perf selftests spi turbostat usb \
->   		virtio vm bpf x86_energy_perf_policy \
-> @@ -171,6 +177,9 @@ tmon_clean:
->   freefall_clean:
->   	$(call descend,laptop/freefall,clean)
->   
-> +fuzz_clean:
-> +	$(call descend,fuzz/x86_instruction_emulation,clean)
-> +
->   build_clean:
->   	$(call descend,build,clean)
->   
-> diff --git a/tools/fuzz/x86_instruction_emulation/.gitignore b/tools/fuzz/x86_instruction_emulation/.gitignore
-> new file mode 100644
-> index 000000000000..7d44f7ce266e
-> --- /dev/null
-> +++ b/tools/fuzz/x86_instruction_emulation/.gitignore
-> @@ -0,0 +1,2 @@
-> +*.o
-> +*-harness
-> diff --git a/tools/fuzz/x86_instruction_emulation/Makefile b/tools/fuzz/x86_instruction_emulation/Makefile
-> new file mode 100644
-> index 000000000000..d2854a332605
-> --- /dev/null
-> +++ b/tools/fuzz/x86_instruction_emulation/Makefile
-> @@ -0,0 +1,57 @@
-> +ROOT_DIR=../../..
-> +THIS_DIR=tools/fuzz/x86_instruction_emulation
-> +
-> +include ../../scripts/Makefile.include
-> +
-> +.DEFAULT_GOAL := all
-> +
-> +INCLUDES := $(patsubst -I./%,-I./$(ROOT_DIR)/%, $(LINUXINCLUDE))
-> +INCLUDES := $(patsubst ./include/%,./$(ROOT_DIR)/include/%, $(INCLUDES))
-> +INCLUDES += -include ./$(ROOT_DIR)/include/linux/compiler_types.h
-> +
-> +$(ROOT_DIR)/.config:
-> +	make -C $(ROOT_DIR) menuconfig
-> +	sed -i -r 's/^#? *CONFIG_KVM(.*)=.*/CONFIG_KVM\1=y/' $(ROOT_DIR)/.config
-> +
-> +
-> +ifdef DEBUG
-> +KBUILD_CFLAGS += -DDEBUG
-> +endif
-> +KBUILD_CFLAGS += -g -O0
+--mledociainyopav3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Fri, May 31, 2019 at 11:06:49AM +0800, Yuehaibing wrote:
+> +cc netdev
+> 
+> On 2019/5/31 10:46, YueHaibing wrote:
+> > Fix gcc build error while CONFIG_IPV6 is not set
+> > 
+> > In file included from net/netfilter/core.c:19:0:
+> > ./include/linux/netfilter_ipv6.h: In function 'nf_ipv6_br_defrag':
+> > ./include/linux/netfilter_ipv6.h:110:9: error: implicit declaration of function 'nf_ct_frag6_gather' [-Werror=implicit-function-declaration]
+> > 
+> > Reported-by: Hulk Robot <hulkci@huawei.com>
+> > Fixes: 764dd163ac92 ("netfilter: nf_conntrack_bridge: add support for IPv6")
+> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> > ---
+> >  include/linux/netfilter_ipv6.h | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/include/linux/netfilter_ipv6.h b/include/linux/netfilter_ipv6.h
+> > index a21b8c9..4ea97fd 100644
+> > --- a/include/linux/netfilter_ipv6.h
+> > +++ b/include/linux/netfilter_ipv6.h
+> > @@ -96,6 +96,8 @@ static inline int nf_ip6_route(struct net *net, struct dst_entry **dst,
+> >  #endif
+> >  }
+> >  
+> > +int nf_ct_frag6_gather(struct net *net, struct sk_buff *skb, u32 user);
+> > +
 
-Why -O0? I would expect a some bugs to only emerge with optimization 
-enabled.
+This is already defined in:
 
-Alex
+include/net/netfilter/ipv6/nf_defrag_ipv6.h
 
+Probably this?
+
+--mledociainyopav3
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment; filename="x.patch"
+
+diff --git a/include/linux/netfilter_ipv6.h b/include/linux/netfilter_ipv6.h
+index a21b8c9623ee..3a3dc4b1f0e7 100644
+--- a/include/linux/netfilter_ipv6.h
++++ b/include/linux/netfilter_ipv6.h
+@@ -96,6 +96,8 @@ static inline int nf_ip6_route(struct net *net, struct dst_entry **dst,
+ #endif
+ }
+ 
++#include <net/netfilter/ipv6/nf_defrag_ipv6.h>
++
+ static inline int nf_ipv6_br_defrag(struct net *net, struct sk_buff *skb,
+ 				    u32 user)
+ {
+
+--mledociainyopav3--
