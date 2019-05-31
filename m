@@ -2,515 +2,144 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E42EC28CC0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F5F5C28CC0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:17:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C30726373
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:17:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mi325kFc"
+	by mail.kernel.org (Postfix) with ESMTP id 227EE260AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 01:17:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbfEaBQ7 (ORCPT
+        id S1726835AbfEaBRt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 21:16:59 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33161 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726372AbfEaBQz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 21:16:55 -0400
-Received: by mail-pg1-f193.google.com with SMTP id h17so3042007pgv.0;
-        Thu, 30 May 2019 18:16:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=tfTQSjmGpNGPDgLt4g8vgcjCabX4Xa77zVjLqZs07FM=;
-        b=mi325kFc9Y0IAYOurwJ1+45Ft1wCMqUB1WTOAW1dXZtZ8nxuwV4e9aPTF/pfDM5Vdm
-         BwT370eIASl/0S31SEhHPl+WhGNpPS+QXMxcd4m76w1XA/7YXL0HHDmJ8XQopOHMKcF7
-         mCNic5OaLPGwwmUv2jisYr4BODoT0tRJ5WbzU6n9HsC2ENIggAAVkrDqHTm8wYGCcnKK
-         CCoVBb6PvbfIjH9CUAy6TgeCzL7og0dGkGqSz5zGr8Du+afLwDvgsFdMUpKCpbUTTjCB
-         vMo5GzUb08eR0iBw6tW7H1SIVsVAHcR4qeJ9IIubIrMqa1Vt7Hrh2L0WMgSzMzGQxKmq
-         vjXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=tfTQSjmGpNGPDgLt4g8vgcjCabX4Xa77zVjLqZs07FM=;
-        b=F5KnDmgVXk0idD5qJt3EQ0CvJal+SkNRCiPhZlP0mC90rgg8EpVMtCekc8Pj/uAovJ
-         B1yZG8pi1+ojnxXDbFWbH/FuAyjYdgYRmJm3BfgpvpTeAWzZTSOUxm+Psu0uWiBnn8pV
-         tXx4gqsHP1HKdwByAcp/3zuZIhtZFqNZvPQ0v8sFZD80iOFEURBK693Nutf+iGu3A0Xr
-         m228Kke5T39FjKgil+8sOX4YMRHbXQCzRlVOC8Pqqb5/Im/Qi33XsD59Foz1Higs6lF1
-         mH0rCy3WdIYdPJgPelQnxInY1UPZedTMJBwuIeszy16yh4ebHnJBMFMIsjJd9Q+nLbq9
-         OLqg==
-X-Gm-Message-State: APjAAAVJaPflmDmeudVXnasGysSdk4++L5OWVxCa+/Y5bgvfAv8wbO/Y
-        ggy84AbQF8iWTgSWLg0zChvMAiYd5EA=
-X-Google-Smtp-Source: APXvYqyagxONVmEsLfbewxT0PvVhA+RZtFEk7iJPhLftIDJE0U6REikiGQKva+PnoXtwtc4I4dPHog==
-X-Received: by 2002:a63:a08:: with SMTP id 8mr6334959pgk.46.1559265414294;
-        Thu, 30 May 2019 18:16:54 -0700 (PDT)
-Received: from localhost.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id v93sm3807335pjb.6.2019.05.30.18.16.52
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 30 May 2019 18:16:53 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     linux-pm@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] power: supply: Add HWMON compatibility layer
-Date:   Thu, 30 May 2019 18:16:19 -0700
-Message-Id: <20190531011620.9383-2-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190531011620.9383-1-andrew.smirnov@gmail.com>
-References: <20190531011620.9383-1-andrew.smirnov@gmail.com>
+        Thu, 30 May 2019 21:17:49 -0400
+Received: from mga04.intel.com ([192.55.52.120]:31605 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726131AbfEaBRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 21:17:49 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 18:17:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,533,1549958400"; 
+   d="scan'208";a="180146968"
+Received: from orsmsx103.amr.corp.intel.com ([10.22.225.130])
+  by fmsmga002.fm.intel.com with ESMTP; 30 May 2019 18:17:47 -0700
+Received: from orsmsx106.amr.corp.intel.com ([169.254.1.191]) by
+ ORSMSX103.amr.corp.intel.com ([169.254.5.182]) with mapi id 14.03.0415.000;
+ Thu, 30 May 2019 18:17:47 -0700
+From:   "Yu, Fenghua" <fenghua.yu@intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: RE: [PATCH v3 3/5] x86/umwait: Add sysfs interface to control
+ umwait C0.2 state
+Thread-Topic: [PATCH v3 3/5] x86/umwait: Add sysfs interface to control
+ umwait C0.2 state
+Thread-Index: AQHVEo2OKXbABb0TWkq6YN3OCk9vEqaEqHgA///HhbA=
+Date:   Fri, 31 May 2019 01:17:46 +0000
+Message-ID: <3E5A0FA7E9CA944F9D5414FEC6C712209D8E5C5A@ORSMSX106.amr.corp.intel.com>
+References: <1558742162-73402-1-git-send-email-fenghua.yu@intel.com>
+ <1558742162-73402-4-git-send-email-fenghua.yu@intel.com>
+ <CALCETrUByHERw5ZB7q-3ka71a_4uxVi-uthTjf7JtDPEgLPjRg@mail.gmail.com>
+In-Reply-To: <CALCETrUByHERw5ZB7q-3ka71a_4uxVi-uthTjf7JtDPEgLPjRg@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: request-justification,no-action
+x-originating-ip: [10.22.254.140]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add code implementing HWMON adapter/compatibility layer to allow
-expositing various sensors present on power supply devices via HWMON
-subsystem. This is done in order to allow userspace to use single
-ABI/library(libsensors) to access/manipulate all of the sensors of the
-system.
-
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Sebastian Reichel <sre@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-pm@vger.kernel.org
----
- drivers/power/supply/Kconfig              |  14 +
- drivers/power/supply/Makefile             |   1 +
- drivers/power/supply/power_supply_hwmon.c | 349 ++++++++++++++++++++++
- include/linux/power_supply.h              |   9 +
- 4 files changed, 373 insertions(+)
- create mode 100644 drivers/power/supply/power_supply_hwmon.c
-
-diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-index 26dacdab03cc..1f2252cb95fd 100644
---- a/drivers/power/supply/Kconfig
-+++ b/drivers/power/supply/Kconfig
-@@ -14,6 +14,20 @@ config POWER_SUPPLY_DEBUG
- 	  Say Y here to enable debugging messages for power supply class
- 	  and drivers.
- 
-+config POWER_SUPPLY_HWMON
-+	bool
-+	prompt "Expose power supply sensors as hwmon device"
-+	depends on HWMON=y || HWMON=POWER_SUPPLY
-+	default y
-+	help
-+	  This options enables API that allows sensors found on a
-+	  power supply device (current, voltage, temperature) to be
-+	  exposed as a hwmon device.
-+
-+	  Say 'Y' here if you want power supplies to
-+	  have hwmon sysfs interface too.
-+
-+
- config PDA_POWER
- 	tristate "Generic PDA/phone power driver"
- 	depends on !S390
-diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
-index f208273f9686..c47e88ba16b9 100644
---- a/drivers/power/supply/Makefile
-+++ b/drivers/power/supply/Makefile
-@@ -6,6 +6,7 @@ power_supply-$(CONFIG_SYSFS)		+= power_supply_sysfs.o
- power_supply-$(CONFIG_LEDS_TRIGGERS)	+= power_supply_leds.o
- 
- obj-$(CONFIG_POWER_SUPPLY)	+= power_supply.o
-+obj-$(CONFIG_POWER_SUPPLY_HWMON) += power_supply_hwmon.o
- obj-$(CONFIG_GENERIC_ADC_BATTERY)	+= generic-adc-battery.o
- 
- obj-$(CONFIG_PDA_POWER)		+= pda_power.o
-diff --git a/drivers/power/supply/power_supply_hwmon.c b/drivers/power/supply/power_supply_hwmon.c
-new file mode 100644
-index 000000000000..3451b997367d
---- /dev/null
-+++ b/drivers/power/supply/power_supply_hwmon.c
-@@ -0,0 +1,349 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  power_supply_hwmon.c - power supply hwmon support.
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/hwmon.h>
-+#include <linux/power_supply.h>
-+#include <linux/slab.h>
-+
-+struct power_supply_hwmon {
-+	struct power_supply *psy;
-+	unsigned long *props;
-+};
-+
-+static int power_supply_hwmon_in_to_property(u32 attr)
-+{
-+	switch (attr) {
-+	case hwmon_in_average:
-+		return POWER_SUPPLY_PROP_VOLTAGE_AVG;
-+	case hwmon_in_min:
-+		return POWER_SUPPLY_PROP_VOLTAGE_MIN;
-+	case hwmon_in_max:
-+		return POWER_SUPPLY_PROP_VOLTAGE_MAX;
-+	case hwmon_in_input:
-+		return POWER_SUPPLY_PROP_VOLTAGE_NOW;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int power_supply_hwmon_curr_to_property(u32 attr)
-+{
-+	switch (attr) {
-+	case hwmon_curr_average:
-+		return POWER_SUPPLY_PROP_CURRENT_AVG;
-+	case hwmon_curr_max:
-+		return POWER_SUPPLY_PROP_CURRENT_MAX;
-+	case hwmon_curr_input:
-+		return POWER_SUPPLY_PROP_CURRENT_NOW;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int power_supply_hwmon_temp_to_property(u32 attr, int channel)
-+{
-+	if (channel) {
-+		switch (attr) {
-+		case hwmon_temp_input:
-+			return POWER_SUPPLY_PROP_TEMP_AMBIENT;
-+		case hwmon_temp_min_alarm:
-+			return POWER_SUPPLY_PROP_TEMP_AMBIENT_ALERT_MIN;
-+		case hwmon_temp_max_alarm:
-+			return POWER_SUPPLY_PROP_TEMP_AMBIENT_ALERT_MAX;
-+		default:
-+			break;
-+		}
-+	} else {
-+		switch (attr) {
-+		case hwmon_temp_input:
-+			return POWER_SUPPLY_PROP_TEMP;
-+		case hwmon_temp_max:
-+			return POWER_SUPPLY_PROP_TEMP_MAX;
-+		case hwmon_temp_min:
-+			return POWER_SUPPLY_PROP_TEMP_MIN;
-+		case hwmon_temp_min_alarm:
-+			return POWER_SUPPLY_PROP_TEMP_ALERT_MIN;
-+		case hwmon_temp_max_alarm:
-+			return POWER_SUPPLY_PROP_TEMP_ALERT_MAX;
-+		default:
-+			break;
-+		}
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static int
-+power_supply_hwmon_to_property(enum hwmon_sensor_types type,
-+			       u32 attr, int channel)
-+{
-+	switch (type) {
-+	case hwmon_in:
-+		return power_supply_hwmon_in_to_property(attr);
-+	case hwmon_curr:
-+		return power_supply_hwmon_curr_to_property(attr);
-+	case hwmon_temp:
-+		return power_supply_hwmon_temp_to_property(attr, channel);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static bool power_supply_hwmon_is_a_label(enum hwmon_sensor_types type,
-+					   u32 attr)
-+{
-+	return type == hwmon_temp && attr == hwmon_temp_label;
-+}
-+
-+static bool power_supply_hwmon_is_writable(enum hwmon_sensor_types type,
-+					   u32 attr)
-+{
-+	switch (type) {
-+	case hwmon_in:
-+		return attr == hwmon_in_min ||
-+		       attr == hwmon_in_max;
-+	case hwmon_curr:
-+		return attr == hwmon_curr_max;
-+	case hwmon_temp:
-+		return attr == hwmon_temp_max ||
-+		       attr == hwmon_temp_min ||
-+		       attr == hwmon_temp_min_alarm ||
-+		       attr == hwmon_temp_max_alarm;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static umode_t power_supply_hwmon_is_visible(const void *data,
-+					     enum hwmon_sensor_types type,
-+					     u32 attr, int channel)
-+{
-+	const struct power_supply_hwmon *psyhw = data;
-+	int prop;
-+
-+
-+	if (power_supply_hwmon_is_a_label(type, attr))
-+		return 0444;
-+
-+	prop = power_supply_hwmon_to_property(type, attr, channel);
-+	if (prop < 0 || !test_bit(prop, psyhw->props))
-+		return 0;
-+
-+	if (power_supply_property_is_writeable(psyhw->psy, prop) > 0 &&
-+	    power_supply_hwmon_is_writable(type, attr))
-+		return 0644;
-+
-+	return 0444;
-+}
-+
-+static int power_supply_hwmon_read_string(struct device *dev,
-+					  enum hwmon_sensor_types type,
-+					  u32 attr, int channel,
-+					  const char **str)
-+{
-+	*str = channel ? "temp" : "temp ambient";
-+	return 0;
-+}
-+
-+static int
-+power_supply_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-+			u32 attr, int channel, long *val)
-+{
-+	struct power_supply_hwmon *psyhw = dev_get_drvdata(dev);
-+	struct power_supply *psy = psyhw->psy;
-+	union power_supply_propval pspval;
-+	int ret, prop;
-+
-+	prop = power_supply_hwmon_to_property(type, attr, channel);
-+	if (prop < 0)
-+		return prop;
-+
-+	ret  = power_supply_get_property(psy, prop, &pspval);
-+	if (ret)
-+		return ret;
-+
-+	switch (type) {
-+	/*
-+	 * Both voltage and current is reported in units of
-+	 * microvolts/microamps, so we need to adjust it to
-+	 * milliamps(volts)
-+	 */
-+	case hwmon_curr:
-+	case hwmon_in:
-+		pspval.intval = DIV_ROUND_CLOSEST(pspval.intval, 1000);
-+		break;
-+	/*
-+	 * Temp needs to be converted from 1/10 C to milli-C
-+	 */
-+	case hwmon_temp:
-+		if (check_mul_overflow(pspval.intval, 100,
-+				       &pspval.intval))
-+			return -EOVERFLOW;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	*val = pspval.intval;
-+
-+	return 0;
-+}
-+
-+static int
-+power_supply_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
-+			 u32 attr, int channel, long val)
-+{
-+	struct power_supply_hwmon *psyhw = dev_get_drvdata(dev);
-+	struct power_supply *psy = psyhw->psy;
-+	union power_supply_propval pspval;
-+	int prop;
-+
-+	prop = power_supply_hwmon_to_property(type, attr, channel);
-+	if (prop < 0)
-+		return prop;
-+
-+	pspval.intval = val;
-+
-+	switch (type) {
-+	/*
-+	 * Both voltage and current is reported in units of
-+	 * microvolts/microamps, so we need to adjust it to
-+	 * milliamps(volts)
-+	 */
-+	case hwmon_curr:
-+	case hwmon_in:
-+		if (check_mul_overflow(pspval.intval, 1000,
-+				       &pspval.intval))
-+			return -EOVERFLOW;
-+		break;
-+	/*
-+	 * Temp needs to be converted from 1/10 C to milli-C
-+	 */
-+	case hwmon_temp:
-+		pspval.intval = DIV_ROUND_CLOSEST(pspval.intval, 100);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return power_supply_set_property(psy, prop, &pspval);
-+}
-+
-+static const struct hwmon_ops power_supply_hwmon_ops = {
-+	.is_visible	= power_supply_hwmon_is_visible,
-+	.read		= power_supply_hwmon_read,
-+	.write		= power_supply_hwmon_write,
-+	.read_string	= power_supply_hwmon_read_string,
-+};
-+
-+static const struct hwmon_channel_info *power_supply_hwmon_info[] = {
-+	HWMON_CHANNEL_INFO(temp,
-+			   HWMON_T_LABEL     |
-+			   HWMON_T_INPUT     |
-+			   HWMON_T_MAX       |
-+			   HWMON_T_MIN       |
-+			   HWMON_T_MIN_ALARM |
-+			   HWMON_T_MIN_ALARM,
-+
-+			   HWMON_T_LABEL     |
-+			   HWMON_T_INPUT     |
-+			   HWMON_T_MIN_ALARM |
-+			   HWMON_T_LABEL     |
-+			   HWMON_T_MAX_ALARM),
-+
-+	HWMON_CHANNEL_INFO(curr,
-+			   HWMON_C_AVERAGE |
-+			   HWMON_C_MAX     |
-+			   HWMON_C_INPUT),
-+
-+	HWMON_CHANNEL_INFO(in,
-+			   HWMON_I_AVERAGE |
-+			   HWMON_I_MIN     |
-+			   HWMON_I_MAX     |
-+			   HWMON_I_INPUT),
-+	NULL
-+};
-+
-+static const struct hwmon_chip_info power_supply_hwmon_chip_info = {
-+	.ops = &power_supply_hwmon_ops,
-+	.info = power_supply_hwmon_info,
-+};
-+
-+static void power_supply_hwmon_bitmap_free(void *data)
-+{
-+	bitmap_free(data);
-+}
-+
-+int devm_power_supply_add_hwmon_sysfs(struct power_supply *psy)
-+{
-+	const struct power_supply_desc *desc = psy->desc;
-+	struct power_supply_hwmon *psyhw;
-+	struct device *dev = &psy->dev;
-+	struct device *hwmon;
-+	int ret, i;
-+
-+	if (!devres_open_group(dev, NULL, GFP_KERNEL))
-+		return -ENOMEM;
-+
-+	psyhw = devm_kzalloc(dev, sizeof(*psyhw), GFP_KERNEL);
-+	if (!psyhw) {
-+		ret = -ENOMEM;
-+		goto error;
-+	}
-+
-+	psyhw->psy = psy;
-+	psyhw->props = bitmap_zalloc(POWER_SUPPLY_PROP_TIME_TO_FULL_AVG + 1,
-+				     GFP_KERNEL);
-+	if (!psyhw->props) {
-+		ret = -ENOMEM;
-+		goto error;
-+	}
-+
-+	ret = devm_add_action(dev, power_supply_hwmon_bitmap_free,
-+			      psyhw->props);
-+	if (ret)
-+		goto error;
-+
-+	for (i = 0; i < desc->num_properties; i++) {
-+		const enum power_supply_property prop = desc->properties[i];
-+
-+		switch (prop) {
-+		case POWER_SUPPLY_PROP_CURRENT_AVG:
-+		case POWER_SUPPLY_PROP_CURRENT_MAX:
-+		case POWER_SUPPLY_PROP_CURRENT_NOW:
-+		case POWER_SUPPLY_PROP_TEMP:
-+		case POWER_SUPPLY_PROP_TEMP_MAX:
-+		case POWER_SUPPLY_PROP_TEMP_MIN:
-+		case POWER_SUPPLY_PROP_TEMP_ALERT_MIN:
-+		case POWER_SUPPLY_PROP_TEMP_ALERT_MAX:
-+		case POWER_SUPPLY_PROP_TEMP_AMBIENT:
-+		case POWER_SUPPLY_PROP_TEMP_AMBIENT_ALERT_MIN:
-+		case POWER_SUPPLY_PROP_TEMP_AMBIENT_ALERT_MAX:
-+		case POWER_SUPPLY_PROP_VOLTAGE_AVG:
-+		case POWER_SUPPLY_PROP_VOLTAGE_MIN:
-+		case POWER_SUPPLY_PROP_VOLTAGE_MAX:
-+		case POWER_SUPPLY_PROP_VOLTAGE_NOW:
-+			set_bit(prop, psyhw->props);
-+			break;
-+		default:
-+			break;
-+		}
-+	}
-+
-+	hwmon = devm_hwmon_device_register_with_info(dev, psy->desc->name,
-+						psyhw,
-+						&power_supply_hwmon_chip_info,
-+						NULL);
-+	ret = PTR_ERR_OR_ZERO(hwmon);
-+	if (ret)
-+		goto error;
-+
-+	devres_remove_group(dev, NULL);
-+	return 0;
-+error:
-+	devres_release_group(dev, NULL);
-+	return ret;
-+}
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index d9c0c094f8a0..e94cdfa797e3 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -481,4 +481,13 @@ static inline bool power_supply_is_watt_property(enum power_supply_property psp)
- 	return 0;
- }
- 
-+#ifdef CONFIG_POWER_SUPPLY_HWMON
-+int devm_power_supply_add_hwmon_sysfs(struct power_supply *psy);
-+#else
-+int devm_power_supply_add_hwmon_sysfs(struct power_supply *psy)
-+{
-+	return 0;
-+}
-+#endif
-+
- #endif /* __LINUX_POWER_SUPPLY_H__ */
--- 
-2.21.0
-
+PiBPbiBUaHVyc2RheSwgTWF5IDMwLCAyMDE5IDI6MTEgUE0gQW5keSBMdXRvbWlyc2tpIFttYWls
+dG86bHV0b0BrZXJuZWwub3JnXSB3cm90ZToNCj4gT24gRnJpLCBNYXkgMjQsIDIwMTkgYXQgNTow
+NSBQTSBGZW5naHVhIFl1IDxmZW5naHVhLnl1QGludGVsLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBD
+MC4yIHN0YXRlIGluIHVtd2FpdCBhbmQgdHBhdXNlIGluc3RydWN0aW9ucyBjYW4gYmUgZW5hYmxl
+ZCBvcg0KPiA+IGRpc2FibGVkIG9uIGEgcHJvY2Vzc29yIHRocm91Z2ggSUEzMl9VTVdBSVRfQ09O
+VFJPTCBNU1IgcmVnaXN0ZXIuDQo+ID4NCj4gPiBCeSBkZWZhdWx0LCBDMC4yIGlzIGVuYWJsZWQg
+YW5kIHRoZSB1c2VyIHdhaXQgaW5zdHJ1Y3Rpb25zIHJlc3VsdCBpbg0KPiA+IGxvd2VyIHBvd2Vy
+IGNvbnN1bXB0aW9uIHdpdGggc2xvd2VyIHdha2V1cCB0aW1lLg0KPiA+DQo+ID4gQnV0IGluIHJl
+YWwgdGltZSBzeXN0ZW1zIHdoaWNoIHJlcXVyaWUgZmFzdGVyIHdha2V1cCB0aW1lIGFsdGhvdWdo
+DQo+ID4gcG93ZXIgc2F2aW5ncyBjb3VsZCBiZSBzbWFsbGVyLCB0aGUgYWRtaW5pc3RyYXRvciBu
+ZWVkcyB0byBkaXNhYmxlDQo+ID4gQzAuMiBhbmQgYWxsDQo+ID4gQzAuMiByZXF1ZXN0cyBmcm9t
+IHVzZXIgYXBwbGljYXRpb25zIHJldmVydCB0byBDMC4xLg0KPiA+DQo+ID4gQSBzeXNmcyBpbnRl
+cmZhY2UgIi9zeXMvZGV2aWNlcy9zeXN0ZW0vY3B1L3Vtd2FpdF9jb250cm9sL2VuYWJsZV9jMF8y
+Ig0KPiA+IGlzIGNyZWF0ZWQgdG8gYWxsb3cgdGhlIGFkbWluaXN0cmF0b3IgdG8gY29udHJvbCBD
+MC4yIHN0YXRlIGR1cmluZyBydW4gdGltZS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEZlbmdo
+dWEgWXUgPGZlbmdodWEueXVAaW50ZWwuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBBc2hvayBSYWog
+PGFzaG9rLnJhakBpbnRlbC5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IFRvbnkgTHVjayA8dG9ueS5s
+dWNrQGludGVsLmNvbT4NCj4gPiAtLS0NCj4gPiAgYXJjaC94ODYvcG93ZXIvdW13YWl0LmMgfCA3
+NQ0KPiA+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tDQo+ID4gIDEg
+ZmlsZSBjaGFuZ2VkLCA3MSBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4g
+ZGlmZiAtLWdpdCBhL2FyY2gveDg2L3Bvd2VyL3Vtd2FpdC5jIGIvYXJjaC94ODYvcG93ZXIvdW13
+YWl0LmMgaW5kZXgNCj4gPiA4MGNjNTNhOWMyZDAuLmNmNWRlN2UxY2MyNCAxMDA2NDQNCj4gPiAt
+LS0gYS9hcmNoL3g4Ni9wb3dlci91bXdhaXQuYw0KPiA+ICsrKyBiL2FyY2gveDg2L3Bvd2VyL3Vt
+d2FpdC5jDQo+ID4gQEAgLTcsNiArNyw3IEBADQo+ID4gIHN0YXRpYyBib29sIHVtd2FpdF9jMF8y
+X2VuYWJsZWQgPSB0cnVlOw0KPiA+ICAvKiBVbXdhaXQgbWF4IHRpbWUgaXMgaW4gVFNDLXF1YW50
+YS4gQml0c1sxOjBdIGFyZSB6ZXJvLiAqLyAgc3RhdGljDQo+ID4gdTMyIHVtd2FpdF9tYXhfdGlt
+ZSA9IDEwMDAwMDsNCj4gPiArc3RhdGljIERFRklORV9NVVRFWCh1bXdhaXRfbG9jayk7DQo+ID4N
+Cj4gPiAgLyogUmV0dXJuIHZhbHVlIHRoYXQgd2lsbCBiZSB1c2VkIHRvIHNldCBJQTMyX1VNV0FJ
+VF9DT05UUk9MIE1TUiAqLw0KPiA+IHN0YXRpYyB1MzIgdW13YWl0X2NvbXB1dGVfbXNyX3ZhbHVl
+KHZvaWQpIEBAIC0yMiw3ICsyMyw3IEBAIHN0YXRpYw0KPiB1MzINCj4gPiB1bXdhaXRfY29tcHV0
+ZV9tc3JfdmFsdWUodm9pZCkNCj4gPiAgICAgICAgICAgICAgICAodW13YWl0X21heF90aW1lICYg
+TVNSX0lBMzJfVU1XQUlUX0NPTlRST0xfTUFYX1RJTUUpOw0KPiA+ICB9DQo+ID4NCj4gPiAtc3Rh
+dGljIHZvaWQgdW13YWl0X2NvbnRyb2xfbXNyX3VwZGF0ZSh2b2lkKQ0KPiA+ICtzdGF0aWMgdm9p
+ZCB1bXdhaXRfY29udHJvbF9tc3JfdXBkYXRlKHZvaWQgKnVudXNlZCkNCj4gPiAgew0KPiA+ICAg
+ICAgICAgdTMyIG1zcl92YWw7DQo+ID4NCj4gPiBAQCAtMzMsNyArMzQsOSBAQCBzdGF0aWMgdm9p
+ZCB1bXdhaXRfY29udHJvbF9tc3JfdXBkYXRlKHZvaWQpDQo+ID4gIC8qIFNldCB1cCBJQTMyX1VN
+V0FJVF9DT05UUk9MIE1TUiBvbiBDUFUgdXNpbmcgdGhlIGN1cnJlbnQgZ2xvYmFsDQo+ID4gc2V0
+dGluZy4gKi8gIHN0YXRpYyBpbnQgdW13YWl0X2NwdV9vbmxpbmUodW5zaWduZWQgaW50IGNwdSkg
+IHsNCj4gPiAtICAgICAgIHVtd2FpdF9jb250cm9sX21zcl91cGRhdGUoKTsNCj4gPiArICAgICAg
+IG11dGV4X2xvY2soJnVtd2FpdF9sb2NrKTsNCj4gPiArICAgICAgIHVtd2FpdF9jb250cm9sX21z
+cl91cGRhdGUoTlVMTCk7DQo+ID4gKyAgICAgICBtdXRleF91bmxvY2soJnVtd2FpdF9sb2NrKTsN
+Cj4gDQo+IFdoYXQncyB0aGUgbXV0ZXggZm9yPyAgQ2FuJ3QgeW91IGp1c3QgdXNlIFJFQURfT05D
+RT8NCg0KdW13YWl0X2NvbnRyb2xfbXNyX3VwZGF0ZSgpIHdpbGwgd3JpdGUgYm90aCB1bXdhaXRf
+YzBfMl9lbmFibGVkIGFuZCB1bXdhaXRfbWF4X3RpbWUgKHdoaWNoIGFsc28gY2FuIGJlDQpjaGFu
+Z2VkIHRocm91Z2ggc3lzZnMgaW4gdGhlIG5leHQgcGF0Y2gpIHRvIHRoZSBURVNUX0NUUkwgTVNS
+Lg0KDQpKdXN0IHVzaW5nIFJFQURfT05DRSgpIGZvciB0aGUgdHdvIHZhcmlhYmxlcyBjYW5ub3Qg
+Z3VhcmFudGVlIGFsbCBDUFVzIGhhdmUgdGhlIHNhbWUgc2V0dGluZyBvZiBDMC4yIGFuZCBtYXgg
+dGltZS4NClJFQURfT05DRSgpIGFuZCBXUklURV9PTkNFKCkgY2FuIG9ubHkgZ3VhcmFudGVlIGF0
+b21pY2l0eSBmb3IgcmVhZGluZyBhbmQgd3JpdG5nIHRoZSBzYW1lIHZhcmlhYmxlLg0KDQpGb3Ig
+ZS5nLiB3aXRob3V0IG11dGV4IHByb3RlY3Rpb246DQoNCmluaXRpYWwgdmFsdWVzOiB1bXdhaXRf
+YzBfMl9lbmFibGVkPTEgYW5kIHVtd2FpdF9tYXhfdGltZT0xMDAwMDANCg0KMS4gdW13YWl0X2Nw
+dV9vbmxpbmUoWCk6IHJlYWQgdW13YWl0X2MwXzJfZW5hYmxlZCBhcyAxDQoyLiBlbmFibGVfYzBf
+Ml9zdG9yZSgpOiB1bXdhaXRfYzBfMl9lbmFibGVkID0gMCBhbmQgdXBkYXRlIGFsbCBvbmxpbmUg
+Q1BVcyBhcyBDMC4yIGRpc2FibGVkLg0KMy4gdW13YWl0X2NwdV9vbmxpbmUoWCk6IHJlYWQgdW13
+YWl0X21heF90aW1lPTEwMDAwMA0KNC4gdW13YWl0X2NwdV9vbmxpbmUoWSk6IHJlYWQgdW13YWl0
+X2MwXzJfZW5hYmxlZCBhcyAwDQo1LiB1bXdhaXRfbWF4X3RpbWVfc3RvcmUoKTogdW13YWl0X21h
+eF90aW1lPTUwMCBhbmQgdXBkYXRlIGFsbCBvbmxpbmUgQ1BVcyBhcyBtYXggdGltZSA9IDUwMCBj
+eWNsZXMuDQo2LiB1bXdhaXRfY3B1X29ubGluZShZKTogcmVhZCB1bXdhaXRfbWF4X3RpbWUgYXMg
+NTAwDQo3LiB1bXdhdGlfY3B1X29ubGluZShYKTogd3Jtc3IoKSBlbmFibGVzIEMwLjIgYW5kIHNl
+dHMgbWF4IHRpbWUgMTAwMDAwIG9uIENQVSBYDQo4LiB1bXdhaXRfY3B1X29ubGluZShZKTogZGlz
+YWJsZXMgQzAuMiBhbmQgc2V0cyAgbWF4IHRpbWUgNTAwIG9uIENQVSBZDQoNCldpdGggdGhlIG11
+dGV4IHRvIHByb3RlY3QgdGhlIHR3byB2YXJpYWJsZXMgYW5kIHdybXNyKCksIGVhY2ggQ1BVIHdp
+bGwgaGF2ZSB0aGUgc2FtZSBzZXR0aW5nIG9mIEMwLjIgYW5kIG1heCB0aW1lLg0KDQo+IA0KPiA+
+ICtzdGF0aWMgdm9pZCB1bXdhaXRfY29udHJvbF9tc3JfdXBkYXRlX2FsbF9jcHVzKHZvaWQpDQo+
+ID4gK3sNCj4gPiArICAgICAgIHUzMiBtc3JfdmFsOw0KPiA+ICsNCj4gPiArICAgICAgIG1zcl92
+YWwgPSB1bXdhaXRfY29tcHV0ZV9tc3JfdmFsdWUoKTsNCj4gPiArICAgICAgIC8qIEFsbCBDUFVz
+IGhhdmUgc2FtZSB1bXdhaXQgY29udHJvbCBzZXR0aW5nICovDQo+ID4gKyAgICAgICBvbl9lYWNo
+X2NwdSh1bXdhaXRfY29udHJvbF9tc3JfdXBkYXRlLCBOVUxMLCAxKTsNCj4gDQo+IFdoeSBhcmUg
+eW91IGNhbGxpbmcgdW13YWl0X2NvbXB1dGVfbXNyX3ZhbHVlKCk/DQoNClVtd2FpdF9jb21wdXRl
+X21zcl92YWx1ZSgpIGNvbXB1dGVzIHRoZSBURVNUX0NUTCB2YWx1ZSBmcm9tIHR3byB2YXJpYWJs
+ZXMgdW13YWl0X2MwXzJfZW5hYmxlZCBhbmQgdW13YWl0X21heF90aW1lLg0KQW55IG9mIHRoZSB0
+d28gdmFyaWFibGVzIG1heSBiZSBjaGFuZ2VkIHdoZW4gIHVtd2FpdF9jb250cm9sX21zcl91cGRh
+dGVfYWxsX2NwdXMoKSBpcyBjYWxsZWQuIFNvIG5lZWQgdG8gcmUtY2FsY3VsYXRlIHRoZQ0KTVNS
+IHZhbHVlIHRoZW4gd3JpdGUgdGhlIHZhbHVlIHRvIE1TUiBvbiBhbGwgQ1BVcy4NCg0KVGhhbmtz
+Lg0KDQotRmVuZ2h1YQ0K
