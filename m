@@ -2,84 +2,175 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E3AC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DDBC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:59:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78AF426E99
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:56:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A706226E9B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:59:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u+WzyLtE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727463AbfEaT45 (ORCPT
+        id S1727427AbfEaT7i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 15:56:57 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:37023 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727147AbfEaT44 (ORCPT
+        Fri, 31 May 2019 15:59:38 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:41531 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727282AbfEaT7i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 15:56:56 -0400
-Received: by mail-qt1-f193.google.com with SMTP id y57so2408226qtk.4;
-        Fri, 31 May 2019 12:56:56 -0700 (PDT)
+        Fri, 31 May 2019 15:59:38 -0400
+Received: by mail-ed1-f65.google.com with SMTP id x25so4018783eds.8
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 12:59:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3SkRaYCGnq1C8VvlqaJ8i8zblsitHZj5v7WamNGN6H8=;
+        b=u+WzyLtECMcbvjVI27nPUY/f1sNnnGQ4v95OEd2FRD+2RIN3aj6jzGAF/2PTtZkWbl
+         IsTT3rCeorqDEpWXIuiNbgTjlGHWnHUr/D/sOZSUHeY0xjsMN9HKVI7kH6G0gclx6jkl
+         B82MHaosoGQikbSAqSxEEk2TDrSJO/hPcw3taZ9jfyFUJ4ANImCDvahXr9qfh8f2T5BE
+         FHCu+ECupVFYxp5GFBf5w0hdhwEUn3OgrWM+Py/pRkyzEODGAZgWcZ81VdDKzxCOPVfN
+         6nLxbxuIKeaZTg+ce2C7SPKFLQaUE7po1agK96jvrVl4UCS91D4hCsJWwk8pQ0eJ7d9+
+         0WLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Y/rGGdWu5XycD5C8N2GrP1YfPaYIiEt1+UzdCzQQwTA=;
-        b=IRDgGMYuAvaE1GSIOI3o/tLy6QghUC/gn59W8EGZYnnrf9ygntjzbieiQ3dlEsllbU
-         ztyyIguVbB2eHpmI9PkEJ2BwAS9VlMhKzI+fhGp2Lgr6qdZSii2rAWmai/dO1jFO5bxB
-         cVXi/mZFGbSbMsIAvroXJO/nn9LYuVE7T9DyKs4KHkS08aDguFsrE07Ml8RNFFXZ+X5G
-         svudypRSxUBdUObaug++K1UclxUiicg5g+AnqXx5puXnX8UkMleopia6girdXGU8pZcl
-         pfT6fHEXuCzscjxIpLM04Vewl7J3jbV0wGGhX+nv5qLlnJHgkDn9NqEepMNlBbte9z++
-         nkvw==
-X-Gm-Message-State: APjAAAVtQFKrl/qfDJBgj/1KCyOFg3tHCbU4gYtI8oWsyc+lJhSUS3W9
-        1U8LurkPcqIvnSneESH1GxXBaWFmkXz/x/3ap9g=
-X-Google-Smtp-Source: APXvYqz07GsQb18PQEuYoOrVPB5qWAwO/Z2Je+evEIb3JjUC/80MFu0dsduMvyyuzYa7wz7Pj3pRLV9pSmAglB0lGPc=
-X-Received: by 2002:a0c:b78a:: with SMTP id l10mr10482109qve.62.1559332615542;
- Fri, 31 May 2019 12:56:55 -0700 (PDT)
+        bh=3SkRaYCGnq1C8VvlqaJ8i8zblsitHZj5v7WamNGN6H8=;
+        b=JBiQX/fKL0ClC49lS+LC3VteK6fc9+adXDKk5+M3zQU0hDe/O3qYDBziq8Yosx7oR5
+         bL9nc8iRgjmSQPAg9e3cJYc7NBNvGKZcTZx3hxQ1iRdPAc6TVa96H1B9syvwQCc42Wrs
+         G+lh3FseWZt7KckS9GDERMBzsFTJdteTNftLDhIpwz2qleAzRi7UiCUXf1hTNB/cARY+
+         tEIL0LOHEEh+EvIv4klKf6fyTuENyEsu50V723gVs/YRohUNOTm9OteZJ51wA5TRR7lV
+         lLz0WiEai7e5Gz2unpnsKZaWElLncp+XrQ3hS8ITP9g2neeDUu17ma6awMMrVl0XyJ7L
+         OJ2g==
+X-Gm-Message-State: APjAAAWY+JcrMXslh394iUPxzej1MpWQsST4+awyRaFvPaJIbVZ7ONw2
+        Ab36ra7G1VmNnOkeUqoBQz1DyiRS/tsoqhRJzFYb6Q==
+X-Google-Smtp-Source: APXvYqwCViODZUf7+K8dCeviTHiMP+R9s9zcehJqctp1p3kVpVxvg6odZUTsjoHWEEexh9KnE9DVXLpFwc9HMKyIdjU=
+X-Received: by 2002:a17:906:2922:: with SMTP id v2mr10871610ejd.115.1559332775551;
+ Fri, 31 May 2019 12:59:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190531191204.4044-1-palmer@sifive.com> <20190531191204.4044-4-palmer@sifive.com>
-In-Reply-To: <20190531191204.4044-4-palmer@sifive.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 31 May 2019 21:56:39 +0200
-Message-ID: <CAK8P3a2=xko56LbwV4tyhyyyX+tw+EV-NGavYEYj0q61t=mnwg@mail.gmail.com>
-Subject: Re: [PATCH 3/5] asm-generic: Register fchmodat4 as syscall 428
-To:     Palmer Dabbelt <palmer@sifive.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
+References: <CAOyeoRWfPNmaWY6Lifdkdj3KPPM654vzDO+s3oduEMCJP+Asow@mail.gmail.com>
+ <5CEC9667.30100@intel.com> <CAOyeoRWhfyuuYdguE6Wrzd7GOdow9qRE4MZ4OKkMc5cdhDT53g@mail.gmail.com>
+ <5CEE3AC4.3020904@intel.com> <CAOyeoRW85jV=TW_xwSj0ZYwPj_L+G9wu+QPGEF3nBmPbWGX4_g@mail.gmail.com>
+ <5CF07D37.9090805@intel.com>
+In-Reply-To: <5CF07D37.9090805@intel.com>
+From:   Eric Hankland <ehankland@google.com>
+Date:   Fri, 31 May 2019 12:59:24 -0700
+Message-ID: <CAOyeoRXWQaVYZSVL_LTTdAwJOEr+eCzhp1=_JcOX3i6_CJiD_g@mail.gmail.com>
+Subject: Re: [PATCH v1] KVM: x86: PMU Whitelist
+To:     Wei Wang <wei.w.wang@intel.com>
+Cc:     pbonzini@redhat.com, rkrcmar@redhat.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 9:23 PM Palmer Dabbelt <palmer@sifive.com> wrote:
+On Thu, May 30, 2019 at 5:57 PM Wei Wang <wei.w.wang@intel.com> wrote:
 >
-> Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
+> On 05/30/2019 01:11 AM, Eric Hankland wrote:
+> > On Wed, May 29, 2019 at 12:49 AM Wei Wang <wei.w.wang@intel.com> wrote:
+> >> On 05/29/2019 02:14 AM, Eric Hankland wrote:
+> >>> On Mon, May 27, 2019 at 6:56 PM Wei Wang <wei.w.wang@intel.com> wrote:
+> >>>> On 05/23/2019 06:23 AM, Eric Hankland wrote:
+> >>>>> - Add a VCPU ioctl that can control which events the guest can monitor.
+> >>>>>
+> >>>>> Signed-off-by: ehankland <ehankland@google.com>
+> >>>>> ---
+> >>>>> Some events can provide a guest with information about other guests or the
+> >>>>> host (e.g. L3 cache stats); providing the capability to restrict access
+> >>>>> to a "safe" set of events would limit the potential for the PMU to be used
+> >>>>> in any side channel attacks. This change introduces a new vcpu ioctl that
+> >>>>> sets an event whitelist. If the guest attempts to program a counter for
+> >>>>> any unwhitelisted event, the kernel counter won't be created, so any
+> >>>>> RDPMC/RDMSR will show 0 instances of that event.
+> >>>> The general idea sounds good to me :)
+> >>>>
+> >>>> For the implementation, I would have the following suggestions:
+> >>>>
+> >>>> 1) Instead of using a whitelist, it would be better to use a blacklist to
+> >>>> forbid the guest from counting any core level information. So by default,
+> >>>> kvm maintains a list of those core level events, which are not supported to
+> >>>> the guest.
+> >>>>
+> >>>> The userspace ioctl removes the related events from the blacklist to
+> >>>> make them usable by the guest.
+> >>>>
+> >>>> 2) Use vm ioctl, instead of vcpu ioctl. The blacklist-ed events can be
+> >>>> VM wide
+> >>>> (unnecessary to make each CPU to maintain the same copy).
+> >>>> Accordingly, put the pmu event blacklist into kvm->arch.
+> >>>>
+> >>>> 3) Returning 1 when the guest tries to set the evetlsel msr to count an
+> >>>> event which is on the blacklist.
+> >>>>
+> >>>> Best,
+> >>>> Wei
+> >>> Thanks for the feedback. I have a couple concerns with a KVM
+> >>> maintained blacklist. First, I'm worried it will be difficult to keep
+> >>> such a list up to date and accurate (both coming up with the initial
+> >>> list since there are so many events, and updating it whenever any new
+> >>> events are published or vulnerabilities are discovered).
+> >> Not sure about "so many" above. I think there should be much
+> >> fewer events that may need to be blacklisted.
+> >>
+> >> For example the event table 19-3 from SDM 19.2 shows hundreds of
+> >> events, how many of them would you think that need to be blacklisted?
+> >>
+> >>> Second, users
+> >>> may want to differentiate between whole-socket and sub-socket VMs
+> >>> (some events may be fine for the whole-socket case) - keeping a single
+> >>> blacklist wouldn't allow for this.
+> >> Why wouldn't?
+> >> In any case (e.g. the whole socket dedicated to the single VM) we
+> >> want to unlock the blacklisted events, we can have the userspace
+> >> (e.g. qemu command line options "+event1, +event2") do ioctl to
+> >> have KVM do that.
+> >>
+> >> Btw, for the L3 cache stats event example, I'm not sure if that could
+> >> be an issue if we have "AnyThread=0". I'll double confirm with
+> >> someone.
+> >>
+> >> Best,
+> >> Wei
+> >> Not sure about "so many" above. I think there should be much
+> >> fewer events that may need to be blacklisted.
+> > I think you're right that there are not as many events that seem like
+> > they could leak info as events that seem like they won't, but I think
+> > the work to validate that they definitely don't could be expensive;
+> > with a whitelist it's easy to start with a smaller set and
+> > incrementally add to it without having to evaluate all the events
+> > right away.
+>
+> Before going that whitelist/blacklist direction, do you have an event
+> example that couldn't be solved by setting "AnyThread=0"?
+>
+> If no, I think we could simply gate guest's setting of "AnyThread=0".
+>
+> Best,
+> Wei
 
-As usual, each patch needs a changelog text. I would prefer having a single
-patch here that changes /all/ system call tables at once, rather than doing one
-at a time like we used to.
+With anythread=0, I'm not aware of any events that directly give info
+about other VMs, but monitoring events related to shared resources
+(e.g. LLC References and LLC Misses) could indirectly give you info
+about how heavily other users are using that resource.
 
-In linux-next, we are at number 434 now, and there are a couple of other
-new system calls being proposed right now (more than usual), so you may
-have to change the number a few times.
+I tried returning 1 when the guest tries to write the eventsel msr for
+a disallowed event - the behavior on modern guest kernels looks
+reasonable (warns once about an unchecked MSR access error), but it
+looks like guests using older kernels (older than 2016) might panic
+due to the gpfault (not to mention I'm not sure about the behavior on
+non-linux kernels). So I'm hesitant to return 1 - what do you think?
 
-Note: most architectures use .tbl files now, the exceptions are
-include/uapi/asm-generic/unistd.h and arch/arm64/include/asm/unistd32.h,
-and the latter also requires changing __NR_compat_syscalls in asm/unistd.h.
+I also looked into moving from a vcpu ioctl to a vm ioctl - I can send
+out a version of the patch with this change once we settle on the
+other issues. It will involve some extra locking every time the
+counters are programmed to ensure the whitelist or blacklist isn't
+removed during access.
 
-Numbers should now be the same across architectures, except for alpha,
-which has a +110 offset. We have discussed ways to have a single
-file to modify for a new call on all architectures, but no patches yet.
-
-     Arnd
+Eric
