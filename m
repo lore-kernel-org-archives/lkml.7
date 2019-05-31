@@ -3,74 +3,125 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D3EC28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 00:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3104FC28CC0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 00:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEF3F26371
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 00:55:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0685826374
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 00:57:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbfEaAzb (ORCPT
+        id S1726697AbfEaA5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 20:55:31 -0400
-Received: from smtprelay0034.hostedemail.com ([216.40.44.34]:53010 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726131AbfEaAza (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 20:55:30 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 5ADDA837F252;
-        Fri, 31 May 2019 00:55:29 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: watch56_12886697fdd3c
-X-Filterd-Recvd-Size: 1865
-Received: from XPS-9350 (unknown [172.58.27.55])
-        (Authenticated sender: joe@perches.com)
-        by omf20.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 31 May 2019 00:55:27 +0000 (UTC)
-Message-ID: <685e8554eed17eebc731d62336ef30eb44bd14f7.camel@perches.com>
-Subject: Re: [PATCH] checkpatch.pl: Warn on duplicate sysctl local variable
-From:   Joe Perches <joe@perches.com>
-To:     Matteo Croce <mcroce@redhat.com>, linux-kernel@vger.kernel.org,
-        Andy Whitcroft <apw@canonical.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Aaron Tomlin <atomlin@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Date:   Thu, 30 May 2019 17:54:57 -0700
-In-Reply-To: <20190530235101.3248-1-mcroce@redhat.com>
-References: <20190530235101.3248-1-mcroce@redhat.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
+        Thu, 30 May 2019 20:57:42 -0400
+Received: from mga05.intel.com ([192.55.52.43]:27659 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726128AbfEaA5m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 20:57:42 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 17:57:41 -0700
+X-ExtLoop1: 1
+Received: from unknown (HELO [10.239.13.7]) ([10.239.13.7])
+  by fmsmga006.fm.intel.com with ESMTP; 30 May 2019 17:57:40 -0700
+Message-ID: <5CF07D37.9090805@intel.com>
+Date:   Fri, 31 May 2019 09:02:47 +0800
+From:   Wei Wang <wei.w.wang@intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Thunderbird/31.7.0
+MIME-Version: 1.0
+To:     Eric Hankland <ehankland@google.com>
+CC:     pbonzini@redhat.com, rkrcmar@redhat.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v1] KVM: x86: PMU Whitelist
+References: <CAOyeoRWfPNmaWY6Lifdkdj3KPPM654vzDO+s3oduEMCJP+Asow@mail.gmail.com> <5CEC9667.30100@intel.com> <CAOyeoRWhfyuuYdguE6Wrzd7GOdow9qRE4MZ4OKkMc5cdhDT53g@mail.gmail.com> <5CEE3AC4.3020904@intel.com> <CAOyeoRW85jV=TW_xwSj0ZYwPj_L+G9wu+QPGEF3nBmPbWGX4_g@mail.gmail.com>
+In-Reply-To: <CAOyeoRW85jV=TW_xwSj0ZYwPj_L+G9wu+QPGEF3nBmPbWGX4_g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-05-31 at 01:51 +0200, Matteo Croce wrote:
-> Commit 6a33853c5773 ("proc/sysctl: add shared variables for range check")
-> adds some shared const variables to be used instead of a local copy in
-> each source file.
-> Warn when a chunk duplicates one of these values in a ctl_table struct:
-[]
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-[]
-> @@ -6639,6 +6639,13 @@ sub process {
->  				     "unknown module license " . $extracted_string . "\n" . $herecurr);
->  			}
->  		}
-> +
-> +# check for sysctl duplicate constants
-> +		if ($line =~ /\.extra[12]\s*=\s*&(zero|one|int_max|max_int)\b/) {
-> +			my $extracted_string = get_quoted_string($line, $rawline);
-> +			WARN("DUPLICATED_SYSCTL_CONST",
-> +				"duplicated sysctl range checking value '$1', consider using the shared one in include/linux/sysctl.h" . $extracted_string . "\n" . $herecurr);
-> +		}
+On 05/30/2019 01:11 AM, Eric Hankland wrote:
+> On Wed, May 29, 2019 at 12:49 AM Wei Wang <wei.w.wang@intel.com> wrote:
+>> On 05/29/2019 02:14 AM, Eric Hankland wrote:
+>>> On Mon, May 27, 2019 at 6:56 PM Wei Wang <wei.w.wang@intel.com> wrote:
+>>>> On 05/23/2019 06:23 AM, Eric Hankland wrote:
+>>>>> - Add a VCPU ioctl that can control which events the guest can monitor.
+>>>>>
+>>>>> Signed-off-by: ehankland <ehankland@google.com>
+>>>>> ---
+>>>>> Some events can provide a guest with information about other guests or the
+>>>>> host (e.g. L3 cache stats); providing the capability to restrict access
+>>>>> to a "safe" set of events would limit the potential for the PMU to be used
+>>>>> in any side channel attacks. This change introduces a new vcpu ioctl that
+>>>>> sets an event whitelist. If the guest attempts to program a counter for
+>>>>> any unwhitelisted event, the kernel counter won't be created, so any
+>>>>> RDPMC/RDMSR will show 0 instances of that event.
+>>>> The general idea sounds good to me :)
+>>>>
+>>>> For the implementation, I would have the following suggestions:
+>>>>
+>>>> 1) Instead of using a whitelist, it would be better to use a blacklist to
+>>>> forbid the guest from counting any core level information. So by default,
+>>>> kvm maintains a list of those core level events, which are not supported to
+>>>> the guest.
+>>>>
+>>>> The userspace ioctl removes the related events from the blacklist to
+>>>> make them usable by the guest.
+>>>>
+>>>> 2) Use vm ioctl, instead of vcpu ioctl. The blacklist-ed events can be
+>>>> VM wide
+>>>> (unnecessary to make each CPU to maintain the same copy).
+>>>> Accordingly, put the pmu event blacklist into kvm->arch.
+>>>>
+>>>> 3) Returning 1 when the guest tries to set the evetlsel msr to count an
+>>>> event which is on the blacklist.
+>>>>
+>>>> Best,
+>>>> Wei
+>>> Thanks for the feedback. I have a couple concerns with a KVM
+>>> maintained blacklist. First, I'm worried it will be difficult to keep
+>>> such a list up to date and accurate (both coming up with the initial
+>>> list since there are so many events, and updating it whenever any new
+>>> events are published or vulnerabilities are discovered).
+>> Not sure about "so many" above. I think there should be much
+>> fewer events that may need to be blacklisted.
+>>
+>> For example the event table 19-3 from SDM 19.2 shows hundreds of
+>> events, how many of them would you think that need to be blacklisted?
+>>
+>>> Second, users
+>>> may want to differentiate between whole-socket and sub-socket VMs
+>>> (some events may be fine for the whole-socket case) - keeping a single
+>>> blacklist wouldn't allow for this.
+>> Why wouldn't?
+>> In any case (e.g. the whole socket dedicated to the single VM) we
+>> want to unlock the blacklisted events, we can have the userspace
+>> (e.g. qemu command line options "+event1, +event2") do ioctl to
+>> have KVM do that.
+>>
+>> Btw, for the L3 cache stats event example, I'm not sure if that could
+>> be an issue if we have "AnyThread=0". I'll double confirm with
+>> someone.
+>>
+>> Best,
+>> Wei
+>> Not sure about "so many" above. I think there should be much
+>> fewer events that may need to be blacklisted.
+> I think you're right that there are not as many events that seem like
+> they could leak info as events that seem like they won't, but I think
+> the work to validate that they definitely don't could be expensive;
+> with a whitelist it's easy to start with a smaller set and
+> incrementally add to it without having to evaluate all the events
+> right away.
 
-why is $extracted_string used here?
+Before going that whitelist/blacklist direction, do you have an event
+example that couldn't be solved by setting "AnyThread=0"?
 
+If no, I think we could simply gate guest's setting of "AnyThread=0".
 
+Best,
+Wei
