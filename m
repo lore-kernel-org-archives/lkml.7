@@ -2,83 +2,81 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E34C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 06:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DA7C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 06:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68A0126451
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 06:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CADB26454
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 06:28:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559284138;
+	bh=exq5qae6vVQw+j3gnAu5ggvVu0nRxcCNdyrPyjO7bM0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OG1M3nGKPxBPyeAsrGG89GIiCvZA91SRwNy2kxgTpjoGjzSR0Oqc9qYT9rTG/QIR1
+	 WM2i1VsAMgLMX2sERmgb0cR6aInrtoLkLOgj8KZaSFzuAOu5PNuuHCNaZVAB6t8i5C
+	 J2OlnmOLU6sJ1dz2VF5y3NkWK5SpMLWixtp04akU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbfEaG1s (ORCPT
+        id S1726774AbfEaG25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 02:27:48 -0400
-Received: from mga09.intel.com ([134.134.136.24]:5659 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725955AbfEaG1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 02:27:46 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 23:27:45 -0700
-X-ExtLoop1: 1
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 30 May 2019 23:27:41 -0700
-Received: by lahna (sSMTP sendmail emulation); Fri, 31 May 2019 09:27:40 +0300
-Date:   Fri, 31 May 2019 09:27:40 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Ruslan Babayev <ruslan@babayev.com>, wsa@the-dreams.de,
-        linux@armlinux.org.uk, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: Re: [net-next,v4 0/2] Enable SFP on ACPI based systems
-Message-ID: <20190531062740.GQ2781@lahna.fi.intel.com>
-References: <20190528230233.26772-1-ruslan@babayev.com>
- <20190529094818.GF2781@lahna.fi.intel.com>
- <20190529155132.GZ18059@lunn.ch>
+        Fri, 31 May 2019 02:28:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59148 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725955AbfEaG25 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 02:28:57 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id CFF82AF8A;
+        Fri, 31 May 2019 06:28:55 +0000 (UTC)
+Date:   Fri, 31 May 2019 08:28:54 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>, Roman Gushchin <guro@fb.com>,
+        Dennis Zhou <dennis@kernel.org>, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-mm@kvack.org, kernel-team@fb.com
+Subject: Re: [PATCH REBASED] mm, memcg: Make scan aggression always exclude
+ protection
+Message-ID: <20190531062854.GG6896@dhcp22.suse.cz>
+References: <20190228213050.GA28211@chrisdown.name>
+ <20190322160307.GA3316@chrisdown.name>
+ <20190530061221.GA6703@dhcp22.suse.cz>
+ <20190530064453.GA110128@chrisdown.name>
+ <20190530065111.GC6703@dhcp22.suse.cz>
+ <20190530205210.GA165912@chrisdown.name>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190529155132.GZ18059@lunn.ch>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190530205210.GA165912@chrisdown.name>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 05:51:32PM +0200, Andrew Lunn wrote:
-> On Wed, May 29, 2019 at 12:48:18PM +0300, Mika Westerberg wrote:
-> > On Tue, May 28, 2019 at 04:02:31PM -0700, Ruslan Babayev wrote:
-> > > Changes:
-> > > v2:
-> > > 	- more descriptive commit body
-> > > v3:
-> > > 	- made 'i2c_acpi_find_adapter_by_handle' static inline
-> > > v4:
-> > > 	- don't initialize i2c_adapter to NULL. Instead see below...
-> > > 	- handle the case of neither DT nor ACPI present as invalid.
-> > > 	- alphabetical includes.
-> > > 	- use has_acpi_companion().
-> > > 	- use the same argument name in i2c_acpi_find_adapter_by_handle()
-> > > 	  in both stubbed and non-stubbed cases.
+On Thu 30-05-19 13:52:10, Chris Down wrote:
+> Michal Hocko writes:
+> > On Wed 29-05-19 23:44:53, Chris Down wrote:
+> > > Michal Hocko writes:
+> > > > Maybe I am missing something so correct me if I am wrong but the new
+> > > > calculation actually means that we always allow to scan even min
+> > > > protected memcgs right?
 > > > 
-> > > Ruslan Babayev (2):
-> > >   i2c: acpi: export i2c_acpi_find_adapter_by_handle
-> > >   net: phy: sfp: enable i2c-bus detection on ACPI based systems
+> > > We check if the memcg is min protected as a precondition for coming into
+> > > this function at all, so this generally isn't possible. See the
+> > > mem_cgroup_protected MEMCG_PROT_MIN check in shrink_node.
 > > 
-> > For the series,
-> > 
-> > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > OK, that is the part I was missing, I got confused by checking the min
+> > limit as well here. Thanks for the clarification. A comment would be
+> > handy or do we really need to consider min at all?
 > 
-> Hi Mika
-> 
-> Are you happy for the i2c patch to be merged via net-next?
+> You mean as part of the reclaim pressure calculation? Yeah, we still need
+> it, because we might only set memory.min, but not set memory.low.
 
-Yes, that's fine my me.
-
-Wolfram do you have any objections?
+But then the memcg will get excluded as well right?
+-- 
+Michal Hocko
+SUSE Labs
