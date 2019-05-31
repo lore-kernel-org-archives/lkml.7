@@ -4,63 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF955C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 20:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8F8C28CC2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 20:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C80BC26EE4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 20:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2353026EEE
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 20:55:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559336103;
-	bh=hOWJaY8yysZrmHbu84fuOUV74anOlK996ZbSDhvpSHI=;
+	s=default; t=1559336116;
+	bh=W0Pdxvg7LRWYomnlBfhyOP7Wa9SKZbTdwsLyl/SmF6Q=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Rc1er5mN5Z9Y20tIq9XaeESAUhREUS20E7waNIwIfUgiHdpcKrFebtH9WYTPiDuF9
-	 zicMr3kfrUn/m0K6vlTYPcgGk2052dJjySCXcd2MC3TfbXSoIi0ptfNojWvA5lNNK5
-	 Y014GIfzpXtGmrrsB964aewS4BejBYpWeBrk1SOY=
+	b=yUuRH6wrLHeOnsYYIX+8ymfWHvVs8VlfAlXNl2u/HCiLhbmlwQVTbaponQQddeuWJ
+	 WOuBTmj3jzBuQ+G1sAfpUnCzEzjd1hU949TtG89XNiTvmGm1/2w6nwV8fcldAtlo15
+	 x5yuXRz19yxosCw1IxqMmWjl7iMBzGfYz/pMnJfM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbfEaUzD (ORCPT
+        id S1727616AbfEaUzP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 16:55:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41774 "EHLO mail.kernel.org"
+        Fri, 31 May 2019 16:55:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726676AbfEaUzC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 16:55:02 -0400
-Subject: Re: [GIT PULL] nfsd bugfix for 5.2
+        id S1726676AbfEaUzO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 16:55:14 -0400
+Subject: Re: [GIT PULL] SMB3 Fixes
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559336102;
-        bh=hOWJaY8yysZrmHbu84fuOUV74anOlK996ZbSDhvpSHI=;
+        s=default; t=1559336114;
+        bh=W0Pdxvg7LRWYomnlBfhyOP7Wa9SKZbTdwsLyl/SmF6Q=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=Kzrk2Yc2eFLPXHmNNG1PvhiWWuYLF0aiguPJTtfQLZPHIW9ybCbRxdOg3Sfzb1EtL
-         i54riw+M1yF2+U343KVRh4gwt356OUYwwAfz8GUH6piDbEz7yQ7y1BtGnv+1sp/LBo
-         4BwKb4PpKF7eZRxl8xzOFNRTpIAEp5FufYnkMExc=
+        b=avyRfxWmqQO/GeiJmaYJThRAq+a6FM9mnZjw3LX/eERQt00zEuSFV576y/x9HY0JN
+         e3VXaxkG7w7YzG+wcLk4+8UEFAO7QSXqJmcO0T7F+F6fexbUj8zdZxC5HA9NqRYqc3
+         V9S00Emw43Ksohkbb8wmtAhfEbGEFLHssmDqzOzI=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190531203944.GB5334@fieldses.org>
-References: <20190531203944.GB5334@fieldses.org>
-X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190531203944.GB5334@fieldses.org>
-X-PR-Tracked-Remote: git://linux-nfs.org/~bfields/linux.git tags/nfsd-5.2-1
-X-PR-Tracked-Commit-Id: 141731d15d6eb2fd9aaefbf9b935ce86ae243074
+In-Reply-To: <CAH2r5ms=pUiZQPmX_-AoUceAWgr4Y5RwrkLC0o8dyfcMSKpuCQ@mail.gmail.com>
+References: <CAH2r5ms=pUiZQPmX_-AoUceAWgr4Y5RwrkLC0o8dyfcMSKpuCQ@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAH2r5ms=pUiZQPmX_-AoUceAWgr4Y5RwrkLC0o8dyfcMSKpuCQ@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.samba.org/sfrench/cifs-2.6.git
+ tags/v5.2-rc2-smb3-fixes
+X-PR-Tracked-Commit-Id: 31fad7d41e73731f05b8053d17078638cf850fa6
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3ab4436f688c2d2f221793953cd05435ca84261c
-Message-Id: <155933610210.3628.13222773936955967586.pr-tracker-bot@kernel.org>
-Date:   Fri, 31 May 2019 20:55:02 +0000
-To:     bfields@fieldses.org (J. Bruce Fields)
+X-PR-Merge-Commit-Id: 41e7231fab9d76e906b6d8abe09c44c7b9656d33
+Message-Id: <155933611418.3628.18268123204511844583.pr-tracker-bot@kernel.org>
+Date:   Fri, 31 May 2019 20:55:14 +0000
+To:     Steve French <smfrench@gmail.com>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+        CIFS <linux-cifs@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 31 May 2019 16:39:44 -0400:
+The pull request you sent on Fri, 31 May 2019 12:55:21 -0500:
 
-> git://linux-nfs.org/~bfields/linux.git tags/nfsd-5.2-1
+> git://git.samba.org/sfrench/cifs-2.6.git tags/v5.2-rc2-smb3-fixes
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3ab4436f688c2d2f221793953cd05435ca84261c
+https://git.kernel.org/torvalds/c/41e7231fab9d76e906b6d8abe09c44c7b9656d33
 
 Thank you!
 
