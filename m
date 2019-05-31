@@ -2,105 +2,106 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD444C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22201C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A93B23DD8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:20:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559316020;
-	bh=k1BQ1yPh+N7XX9pqjnPlfC0pXckaeVezrpKaJrNHvGs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jKO1zALUP0fb8Fjy8fWTEBDyBt/SdKG8o4Zz4nRHokIE5VaBezLWSMPu6NawycSiW
-	 jChCDdA4djS37Isxlg6X/NO3yq2Z7yUyOcSho01C2wEmUEbG/LR9u6RtLRICxtx+C6
-	 0Wo8pXYXyrWpuqQHz5hBvA4EWIkw4vyttpfTL1aY=
+	by mail.kernel.org (Postfix) with ESMTP id EF7D526B93
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:21:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qa2Has4h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbfEaPUT (ORCPT
+        id S1726956AbfEaPVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 11:20:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37428 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726418AbfEaPUT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 11:20:19 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EC4926B9B;
-        Fri, 31 May 2019 15:20:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559316018;
-        bh=k1BQ1yPh+N7XX9pqjnPlfC0pXckaeVezrpKaJrNHvGs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UEn3AjoVBZEImDMx9gdCZyAAfnhg/YyyeWdRWu0UkWsmzFRtQxOFf/8cqEsU1u0S0
-         q+IaW7XEWir7Z+f0RBgeswvbDqN2s/+wFz/cvsbZ7Mq/8vXIDMG2A4WSwHhvtiO/EK
-         ObyRmpC/omwj51s2EFshHWSjAQHhv6tR8Gi2frjo=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 21/21] selftests/ftrace: Add syntax error test for multiprobe
-Date:   Sat,  1 Jun 2019 00:20:10 +0900
-Message-Id: <155931600998.28323.4989458148164676449.stgit@devnote2>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <155931578555.28323.16360245959211149678.stgit@devnote2>
-References: <155931578555.28323.16360245959211149678.stgit@devnote2>
-User-Agent: StGit/0.17.1-dirty
+        Fri, 31 May 2019 11:21:12 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43935 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbfEaPVL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 11:21:11 -0400
+Received: by mail-pg1-f193.google.com with SMTP id f25so4220009pgv.10;
+        Fri, 31 May 2019 08:21:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+0Tr9vEtpNIU9gu0fEyXMYZNnfuGPbfVny8e35K7Kv0=;
+        b=qa2Has4hjqsc9E22UmpYbTt4OdiyMl8szg8dXRLUHkfhZsEAtiaTBRBsWMUpjvqqdQ
+         kJ0oj3H8MkAcWTEf5mXKFnGnPFlP6/mjyavNLJBLvwAnXccTiOmY05+EUnW3+o4cla3I
+         GfBcVDycUWmmb6RmWZjDbSk5uF96LLc7RXBv3QRRKiVV9dRTigdw0u6MOwPv1cKQKIKR
+         dcTBwCrLH/L9SeZ4kM5cwqKXFoA44SoEoB1/TcaJIDbWSnzUNamXH1IEqQYKHIDX4/Og
+         QTOQnX75e4Pzpz6/NbfmC3Vgs8SYDA0+g1M22HGdW/cXS+BBOg+oQtM7yqVAV5tlSmH5
+         aM7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+0Tr9vEtpNIU9gu0fEyXMYZNnfuGPbfVny8e35K7Kv0=;
+        b=Wfw1anoiFr6TiEyMlxK4cvW0YRl10rXHa6CNeRDYzN+z7/W49Cn0hnjaOmrz+QN5xD
+         Ku3NxZBGg8ervAMVaxj/P4Wi0cCGiMTXkCwfq0OhVjt4ZSFhCBkUrOmQbZ+t2JKgA7B8
+         kABH1+OVQZz2mY8fMj2A5rB51OlVKOHbEFp3SGih5EQ/oGEsN4fqeJWVCLkVn39/7DjZ
+         X5ILSMNbsl99FFYCWopI5D0JkQ0Y9j019PcOsVOplVHmMsWINtwN7qA4K+SVtmKG7JXR
+         25QZ+1ONplH0CnFPSCEg6y7md3rUUJSPe5byQc1lyyegFOubD2Ejj10ydUoIWtO9uy5V
+         wk8g==
+X-Gm-Message-State: APjAAAVu3xv0ufUPeeIha2A1c5ISjMTCtL3V5AoIQeUeWdD9cF5H847h
+        zkpsRy+OlTBLaA7N/IWbVC4=
+X-Google-Smtp-Source: APXvYqyAPFnlaHrqF/GZwnXik6QwrjBv7CSby7C0zENM6QriBeQFnaUvjKpMk1wBgbOVPKf+OKzpIQ==
+X-Received: by 2002:a63:1f04:: with SMTP id f4mr10131740pgf.423.1559316071156;
+        Fri, 31 May 2019 08:21:11 -0700 (PDT)
+Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
+        by smtp.gmail.com with ESMTPSA id j97sm5832998pje.5.2019.05.31.08.21.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 31 May 2019 08:21:10 -0700 (PDT)
+Date:   Fri, 31 May 2019 08:21:07 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Subject: Re: [PATCH net-next 0/5] PTP support for the SJA1105 DSA driver
+Message-ID: <20190531152107.24zux6grua3s6x22@localhost>
+References: <CA+h21hpjsC=ie5G7Gx3EcPpazyxze6X_k+8eC+vw7JBvEO2zNg@mail.gmail.com>
+ <20190530143037.iky5kk3h4ssmec3f@localhost>
+ <CA+h21hpp68AEEykxr8bJB=uJ+b0tg881Z7Ao_OfbTAXNxS8WgQ@mail.gmail.com>
+ <20190530150557.iur7fruhyf5bs3qw@localhost>
+ <CA+h21hrBwR4Sow7q0_rS1u2md1M4bSAJt8FO5+VLFiu9UGnvjA@mail.gmail.com>
+ <20190531043417.6phscbpmo6krvxam@localhost>
+ <CA+h21hp9DfW3wFy4YbHMU31rBHyrnUTdF4kKwX36h9vHOW2COw@mail.gmail.com>
+ <20190531140841.j4f72rlojmaayqr5@localhost>
+ <CA+h21hroywaij3gyO0u6v+GFVO2Fv_dP_a+L3oMGpQH8mQgJ5g@mail.gmail.com>
+ <20190531151151.k3a2wdf5f334qmqh@localhost>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190531151151.k3a2wdf5f334qmqh@localhost>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add syntax error test cases for multiprobe appending
-errors.
+On Fri, May 31, 2019 at 08:11:51AM -0700, Richard Cochran wrote:
+> 
+> 1. When the driver receives a deferred PTP frame, save it into a
+>    per-switch,port slot at the driver (not port) level.
+> 
+> 2. When the driver receives a META frame, match it to the
+>    per-switch,port slot.  If there is a PTP frame in that slot, then
+>    deliver it with the time stamp from the META frame.
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- tools/testing/selftests/ftrace/test.d/functions    |    2 +-
- .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |   10 ++++++++++
- 2 files changed, 11 insertions(+), 1 deletion(-)
+Actually, since the switch guarantees strict ordering, you don't need
+multiple slots.  You only need to save one Rx'd PTP frame with its
+switch-id and port-id.
 
-diff --git a/tools/testing/selftests/ftrace/test.d/functions b/tools/testing/selftests/ftrace/test.d/functions
-index 779ec11f61bd..1cac8cc2cb35 100644
---- a/tools/testing/selftests/ftrace/test.d/functions
-+++ b/tools/testing/selftests/ftrace/test.d/functions
-@@ -115,7 +115,7 @@ ftrace_errlog_check() { # err-prefix command-with-error-pos-by-^ command-file
-     command=$(echo "$2" | tr -d ^)
-     echo "Test command: $command"
-     echo > error_log
--    (! echo "$command" > "$3" ) 2> /dev/null
-+    (! echo "$command" >> "$3" ) 2> /dev/null
-     grep "$1: error:" -A 3 error_log
-     N=$(tail -n 1 error_log | wc -c)
-     # "  Command: " and "^\n" => 13
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-index aa59944bcace..39ef7ac1f51c 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-@@ -87,4 +87,14 @@ case $(uname -m) in
-     ;;
- esac
- 
-+# multiprobe errors
-+if grep -q "Create/append/" README && grep -q "imm-value" README; then
-+echo 'p:kprobes/testevent _do_fork' > kprobe_events
-+check_error '^r:kprobes/testevent do_exit'	# DIFF_PROBE_TYPE
-+echo 'p:kprobes/testevent _do_fork abcd=\1' > kprobe_events
-+check_error 'p:kprobes/testevent _do_fork ^bcd=\1'	# DIFF_ARG_TYPE
-+check_error 'p:kprobes/testevent _do_fork ^abcd=\1:u8'	# DIFF_ARG_TYPE
-+check_error 'p:kprobes/testevent _do_fork ^abcd=\"foo"'	# DIFF_ARG_TYPE
-+fi
-+
- exit 0
-
+Thanks,
+Richard
