@@ -2,64 +2,94 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B04A5C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A34C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FAA426B11
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:54:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D463F26B15
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:55:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbfEaOyi (ORCPT
+        id S1726825AbfEaOzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 10:54:38 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:49322 "EHLO deadmen.hmeau.com"
+        Fri, 31 May 2019 10:55:13 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40650 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726531AbfEaOyi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 10:54:38 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hWivQ-0007Jr-Fx; Fri, 31 May 2019 22:54:32 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hWivM-0007Cx-9H; Fri, 31 May 2019 22:54:28 +0800
-Date:   Fri, 31 May 2019 22:54:28 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     Young Xiao <92siuyang@gmail.com>, davem@davemloft.net,
-        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Subject: Re: [PATCH] ipv6: Prevent overrun when parsing v6 header options
-Message-ID: <20190531145428.ngwrgbnk2a7us5cy@gondor.apana.org.au>
-References: <1559230098-1543-1-git-send-email-92siuyang@gmail.com>
- <c83f8777-f6be-029b-980d-9f974b4e28ce@gmail.com>
- <20190531062911.c6jusfbzgozqk2cu@gondor.apana.org.au>
- <727c4b18-0d7b-b3c6-e0bb-41b3fe5902d3@gmail.com>
+        id S1726531AbfEaOzM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 10:55:12 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 47CAFC0AD2B7;
+        Fri, 31 May 2019 14:55:12 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 44FF41001E6F;
+        Fri, 31 May 2019 14:55:09 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20190529231112.GB3164@kroah.com>
+References: <20190529231112.GB3164@kroah.com> <20190528231218.GA28384@kroah.com> <20190528162603.GA24097@kroah.com> <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk> <155905931502.7587.11705449537368497489.stgit@warthog.procyon.org.uk> <4031.1559064620@warthog.procyon.org.uk> <31936.1559146000@warthog.procyon.org.uk>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk, raven@themaw.net,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/7] General notification queue with user mmap()'able ring buffer
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <727c4b18-0d7b-b3c6-e0bb-41b3fe5902d3@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3762.1559314508.1@warthog.procyon.org.uk>
+Date:   Fri, 31 May 2019 15:55:08 +0100
+Message-ID: <3763.1559314508@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 31 May 2019 14:55:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 07:50:06AM -0700, Eric Dumazet wrote:
->
-> What do you mean by should ?
-> 
-> Are they currently already linearized before the function is called,
-> or is it missing and a bug needs to be fixed ?
+Greg KH <gregkh@linuxfoundation.org> wrote:
 
-AFAICS this is the code-path for locally generated outbound packets.
-Under what circumstances can the IPv6 header be not in the head?
+> So, if that's all that needs to be fixed, can you use the same
+> buffer/code if that patch is merged?
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+I really don't know.  The perf code is complex, partially in hardware drivers
+and is tricky to understand - though a chunk of that is the "aux" buffer part;
+PeterZ used words like "special" and "magic" and the comments in the code talk
+about the hardware writing into the buffer.
+
+__perf_output_begin() does not appear to be SMP safe.  It uses local_cmpxchg()
+and local_add() which on x86 lack the LOCK prefix.
+
+stracing the perf command on my test machine, it calls perf_event_open(2) four
+times and mmap's each fd it gets back.  I'm guessing that each one maps a
+separate buffer for each CPU.
+
+So to use watch_queue based on perf's buffering, you would have to have a
+(2^N)+1 pages-sized buffer for each CPU.  So that would be a minimum of 64K of
+unswappable memory for my desktop machine, say).  Multiply that by each
+process that wants to listen for events...
+
+What I'm aiming for is something that has a single buffer used by all CPUs for
+each instance of /dev/watch_queue opened and I'd also like to avoid having to
+allocate the metadata page and the aux buffer to save space.  This is locked
+memory and cannot be swapped.
+
+Also, perf has to leave a gap in the ring because it uses CIRC_SPACE(), though
+that's a minor detail that I guess can't be fixed now.
+
+I'm also slightly concerned that __perf_output_begin() doesn't check if
+rb->user->tail has got ahead of rb->user->head or that it's lagging too far
+behind.  I doubt it's a serious problem for the kernel since it won't write
+outside of the buffer, but userspace might screw up.  I think the worst that
+will happen is that userspace will get confused.
+
+One thing I would like is to waive the 2^N size requirement.  I understand
+*why* we do that, but I wonder how expensive DIV instructions are for
+relatively small divisors.
+
+David
