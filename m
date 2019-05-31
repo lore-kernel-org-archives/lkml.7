@@ -2,139 +2,168 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D938EC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 22:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85340C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 22:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A033D26F94
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 22:08:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4546126F9A
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 22:08:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="m3xUf+F8"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="Xkl2M46O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbfEaWII (ORCPT
+        id S1726797AbfEaWIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 18:08:08 -0400
-Received: from mail-eopbgr20048.outbound.protection.outlook.com ([40.107.2.48]:18629
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725913AbfEaWII (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 18:08:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=h5V+TA2g1B8eh+38pPceqToeMVIeshpl4Jz6CyfAw/w=;
- b=m3xUf+F8JB+8Sq1j9UX1ufTZMN0N4wlwcgJp2BiCVhpm8aGIAl+uncLU7W6ITAL07P0HD6f9ekbDRIVV6QjydLhRD7Un5RK4XxwaubhNzcnRNbLnfr5TV1L7/MZvoJByIDghPv5NcvTmywePZ2F3AtWHes1fGrYfUmCiesllyIs=
-Received: from DB8PR05MB5898.eurprd05.prod.outlook.com (20.179.9.32) by
- DB8PR05MB6091.eurprd05.prod.outlook.com (20.179.9.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.19; Fri, 31 May 2019 22:08:03 +0000
-Received: from DB8PR05MB5898.eurprd05.prod.outlook.com
- ([fe80::4008:6417:32d4:6031]) by DB8PR05MB5898.eurprd05.prod.outlook.com
- ([fe80::4008:6417:32d4:6031%5]) with mapi id 15.20.1943.018; Fri, 31 May 2019
- 22:08:03 +0000
-From:   Saeed Mahameed <saeedm@mellanox.com>
-To:     "ivan.khoronzhuk@linaro.org" <ivan.khoronzhuk@linaro.org>,
-        "brouer@redhat.com" <brouer@redhat.com>
-CC:     "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-        "ilias.apalodimas@linaro.org" <ilias.apalodimas@linaro.org>,
-        "grygorii.strashko@ti.com" <grygorii.strashko@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "hawk@kernel.org" <hawk@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>
-Subject: Re: [PATCH v2 net-next 7/7] net: ethernet: ti: cpsw: add XDP support
-Thread-Topic: [PATCH v2 net-next 7/7] net: ethernet: ti: cpsw: add XDP support
-Thread-Index: AQHVFxR3RzUKWjjKSU24ene/DovDe6aFYe2AgAAKzwCAAAIJgIAACKCAgABVEYA=
-Date:   Fri, 31 May 2019 22:08:03 +0000
-Message-ID: <a65de3a257ab5ebec83e817c092f074b58b9ae47.camel@mellanox.com>
-References: <20190530182039.4945-1-ivan.khoronzhuk@linaro.org>
-         <20190530182039.4945-8-ivan.khoronzhuk@linaro.org>
-         <20190531174643.4be8b27f@carbon> <20190531162523.GA3694@khorivan>
-         <20190531183241.255293bc@carbon> <20190531170332.GB3694@khorivan>
-In-Reply-To: <20190531170332.GB3694@khorivan>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.32.2 (3.32.2-1.fc30) 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=saeedm@mellanox.com; 
-x-originating-ip: [209.116.155.178]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2ab187e3-8158-4e18-8462-08d6e61473e5
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB8PR05MB6091;
-x-ms-traffictypediagnostic: DB8PR05MB6091:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <DB8PR05MB6091A12C78605D692EC48407BE190@DB8PR05MB6091.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 00540983E2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39860400002)(136003)(346002)(396003)(376002)(189003)(199004)(7736002)(14444005)(305945005)(6486002)(81156014)(7416002)(256004)(118296001)(26005)(66066001)(99286004)(6246003)(6512007)(14454004)(2501003)(8936002)(36756003)(6306002)(6436002)(8676002)(229853002)(66556008)(4326008)(66446008)(66476007)(446003)(478600001)(71190400001)(76116006)(486006)(11346002)(2616005)(71200400001)(25786009)(316002)(66946007)(68736007)(966005)(476003)(5660300002)(64756008)(6116002)(58126008)(110136005)(53936002)(3846002)(186003)(2906002)(73956011)(6506007)(86362001)(91956017)(76176011)(102836004)(54906003)(45080400002)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR05MB6091;H:DB8PR05MB5898.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Z94977NzkD48HS/yRVlq/s8b856kHPOheVVux6a13MTZMzq1ueGuWZTqcosg68D/W/ap8KQOsBWekXotTIMYUKAHxCUR4SDBtTM3kRshzNlsYSfO6ANNUjHkL0AInLZjMfpjLfRjOtTcUsDL39901daiCJSxDUEXNlUdtbSNaNqrNCX5qDfsPgqbNcgQFkf347iGFWruVWXQT2nVXqkECfaYe+RYCtbTUJWRPhX1WC+ITOIZ5S8vN7ByMOiJWOfZVpfGN92NwgZbDJLnlRk9R/Q3L8gp9JXr0FIx80ZMmkYXz+TWzrFNo4qO+34U6DdhVd66e7+fSTidpk9oJnIfujrOW9ek5T4DMJny+vEOv6jKfBQWVnH4NGj8Fi3nwlgpr7JmYICEXV6mZk66QFULxqOF0VxHMMj8c6cRoQeN4rk=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <53B36BEEBA016349819171CA9F2B689F@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 31 May 2019 18:08:20 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37210 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725913AbfEaWIU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 18:08:20 -0400
+Received: by mail-wr1-f66.google.com with SMTP id h1so7428777wro.4
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 15:08:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=Ko+Wfyi0i3W9WpJFYljQ2csSgtbI9KzNY6clfhR9vIY=;
+        b=Xkl2M46O4ONXQoKukrh9dDHZI44Fdkjsyy2ix0AyrV4jZZTexqNuY0GkXgSG/30iRD
+         iOWtIkxPnFM0RQTqKRl+cMC5qPNoPscKekDEP9DpSpIApMr+2krumjnPat8cZOX3rYCD
+         25cI9u4R3ddTTb455a4bxxTbr+kZH/3GL9qKoawUxCRxVZ08atYeitfzLosAQq4QYmOT
+         Ra9TE2EjDPC5KpRYYV9YJaNzWPd4fQvboEveN3PiK8IM7tkZsg0EDwSPeY7vvK429s2J
+         wt4WtbY52JJ7VfHMXO8LDbULlJ6LcEie+x2CcEJMvhz/SufHgqQrqcEwPKVoBtRJgacV
+         TWWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Ko+Wfyi0i3W9WpJFYljQ2csSgtbI9KzNY6clfhR9vIY=;
+        b=o52pqViBb3kLIy1Ox4YfnM/kKheZ4eKYUysg3qiJ6FVw+Lp4RR4lGmG2mMwhNX2ib2
+         6LRLJBylCxKHs0R6U/MYAUslGtbGahox1QOZ28UOl+MD6SqIkghqLsKeKrs1Kn6VMpXk
+         HdViRDu5ZPlr8RvJSYvULqr2eetYjiMImWSAJSgJK0vQ0dnixxkuTD9PuoQxK08+RlOK
+         p13e3GjeUn6IrfJ3FOxkqsRrlnExqZDZqOh8riXvQdHYpQ918jPF9JOn5NGGM5E6l33S
+         os5YKjFs1VSdc0rlTQ3Zu+VNzjE3PWaV2QsFM1jV22w7XgyhvDrU4fLupIc/iF40OL+J
+         8sVw==
+X-Gm-Message-State: APjAAAWuYbU4hWMqVVLUrMuoHFF+5OXm0aXGsrTwn8shY1h4ipgoJqJD
+        QCwhk9L3NpHDIvYtd+FVFsu6FA==
+X-Google-Smtp-Source: APXvYqzFdnv3qzEAIcXHR3zG4OGdyoA5rAUUUsYFs30nC2YlkL1BuHJpjp4kIfaRFe2SEJMKXHNsfg==
+X-Received: by 2002:a05:6000:1149:: with SMTP id d9mr2285752wrx.154.1559340498233;
+        Fri, 31 May 2019 15:08:18 -0700 (PDT)
+Received: from brauner.io (93-32-55-82.ip32.fastwebnet.it. [93.32.55.82])
+        by smtp.gmail.com with ESMTPSA id 65sm14341721wro.85.2019.05.31.15.08.16
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 31 May 2019 15:08:17 -0700 (PDT)
+Date:   Sat, 1 Jun 2019 00:08:16 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Yann Droneaud <ydroneaud@opteya.com>
+Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, jannh@google.com,
+        fweimer@redhat.com, oleg@redhat.com, arnd@arndb.de,
+        dhowells@redhat.com, Pavel Emelyanov <xemul@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@gmail.com>, linux-api@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] fork: add clone3
+Message-ID: <20190531220815.owrc5kbbdemmwdhs@brauner.io>
+References: <20190529152237.10719-1-christian@brauner.io>
+ <1058006e0df4b52b3e53c7b3202c04140899aeb5.camel@opteya.com>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2ab187e3-8158-4e18-8462-08d6e61473e5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 May 2019 22:08:03.7000
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: saeedm@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR05MB6091
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1058006e0df4b52b3e53c7b3202c04140899aeb5.camel@opteya.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTA1LTMxIGF0IDIwOjAzICswMzAwLCBJdmFuIEtob3JvbnpodWsgd3JvdGU6
-DQo+IE9uIEZyaSwgTWF5IDMxLCAyMDE5IGF0IDA2OjMyOjQxUE0gKzAyMDAsIEplc3BlciBEYW5n
-YWFyZCBCcm91ZXINCj4gd3JvdGU6DQo+ID4gT24gRnJpLCAzMSBNYXkgMjAxOSAxOToyNToyNCAr
-MDMwMCBJdmFuIEtob3JvbnpodWsgPA0KPiA+IGl2YW4ua2hvcm9uemh1a0BsaW5hcm8ub3JnPiB3
-cm90ZToNCj4gPiANCj4gPiA+IE9uIEZyaSwgTWF5IDMxLCAyMDE5IGF0IDA1OjQ2OjQzUE0gKzAy
-MDAsIEplc3BlciBEYW5nYWFyZCBCcm91ZXINCj4gPiA+IHdyb3RlOg0KPiA+ID4gPiBGcm9tIGJl
-bG93IGNvZGUgc25pcHBldHMsIGl0IGxvb2tzIGxpa2UgeW91IG9ubHkgYWxsb2NhdGVkIDENCj4g
-PiA+ID4gcGFnZV9wb29sDQo+ID4gPiA+IGFuZCBzaGFyaW5nIGl0IHdpdGggc2V2ZXJhbCBSWC1x
-dWV1ZXMsIGFzIEkgZG9uJ3QgaGF2ZSB0aGUgZnVsbA0KPiA+ID4gPiBjb250ZXh0DQo+ID4gPiA+
-IGFuZCBkb24ndCBrbm93IHRoaXMgZHJpdmVyLCBJIG1pZ2h0IGJlIHdyb25nPw0KPiA+ID4gPiAN
-Cj4gPiA+ID4gVG8gYmUgY2xlYXIsIGEgcGFnZV9wb29sIG9iamVjdCBpcyBuZWVkZWQgcGVyIFJY
-LXF1ZXVlLCBhcyBpdA0KPiA+ID4gPiBpcw0KPiA+ID4gPiBhY2Nlc3NpbmcgYSBzbWFsbCBSWCBw
-YWdlIGNhY2hlICh3aGljaCBwcm90ZWN0ZWQgYnkNCj4gPiA+ID4gTkFQSS9zb2Z0aXJxKS4NCj4g
-PiA+IA0KPiA+ID4gVGhlcmUgaXMgb25lIFJYIGludGVycnVwdCBhbmQgb25lIFJYIE5BUEkgZm9y
-IGFsbCByeCBjaGFubmVscy4NCj4gPiANCj4gPiBTbywgd2hhdCBhcmUgeW91IHNheWluZz8NCj4g
-PiANCj4gPiBZb3UgX2FyZV8gc2hhcmluZyB0aGUgcGFnZV9wb29sIGJldHdlZW4gc2V2ZXJhbCBS
-WC1jaGFubmVscywgYnV0IGl0DQo+ID4gaXMNCj4gPiBzYWZlIGJlY2F1c2UgdGhpcyBoYXJkd2Fy
-ZSBvbmx5IGhhdmUgb25lIFJYIGludGVycnVwdCArIE5BUEkNCj4gPiBpbnN0YW5jZT8/DQo+IA0K
-PiBJIGNhbiBtaXNzIHNtdGggYnV0IGluIGNhc2Ugb2YgY3BzdyB0ZWNobmljYWxseSBpdCBtZWFu
-czoNCj4gMSkgUlggaW50ZXJydXB0cyBhcmUgZGlzYWJsZWQgd2hpbGUgTkFQSSBpcyBzY2hlZHVs
-ZWQsDQo+ICAgIG5vdCBmb3IgcGFydGljdWxhciBDUFUgb3IgY2hhbm5lbCwgYnV0IGF0IGFsbCwg
-Zm9yIHdob2xlIGNwc3cNCj4gbW9kdWxlLg0KPiAyKSBSWCBjaGFubmVscyBhcmUgaGFuZGxlZCBv
-bmUgYnkgb25lIGJ5IHByaW9yaXR5Lg0KDQpIaSBJdmFuLCBJIGdvdCBhIHNpbGx5IHF1ZXN0aW9u
-Li4gDQoNCldoYXQgaXMgdGhlIHJlYXNvbiBiZWhpbmQgaGF2aW5nIG11bHRpcGxlIFJYIHJpbmdz
-IGFuZCBvbmUgQ1BVL05BUEkNCmhhbmRsaW5nIGFsbCBvZiB0aGVtID8gcHJpb3JpdHkgPyBob3cg
-ZG8geW91IHByaW9yaXRpZXMgPw0KDQo+IDMpIEFmdGVyIGFsbCBvZiB0aGVtIGhhbmRsZWQgYW5k
-IG5vIG1vcmUgaW4gYnVkZ2V0IC0gaW50ZXJydXB0cyBhcmUNCj4gZW5hYmxlZC4NCj4gNCkgSWYg
-cGFnZSBpcyByZXR1cm5lZCB0byB0aGUgcG9vbCwgYW5kIGl0J3Mgd2l0aGluIE5BUEksIG5vIHJh
-Y2VzIGFzDQo+IGl0J3MNCj4gICAgcmV0dXJuZWQgcHJvdGVjdGVkIGJ5IHNvZnRpcnEuIElmIGl0
-J3MgcmV0dXJuZWQgbm90IGluIHNvZnRpcnENCj4gaXQncyBwcm90ZWN0ZWQgDQo+ICAgIGJ5IHBy
-b2R1Y2VyIGxvY2sgb2YgdGhlIHJpbmcuDQo+IA0KPiBQcm9iYWJseSBpdCdzIG5vdCBnb29kIGV4
-YW1wbGUgZm9yIG90aGVycyBob3cgaXQgc2hvdWxkIGJlIHVzZWQsIG5vdA0KPiBhIGJpZw0KPiBw
-cm9ibGVtIHRvIG1vdmUgaXQgdG8gc2VwYXJhdGUgcG9vbHMuLiwgZXZlbiBkb24ndCByZW1lbWJl
-ciB3aHkgSQ0KPiBkZWNpZGVkIHRvDQo+IHVzZSBzaGFyZWQgcG9vbCwgdGhlcmUgd2FzIHNvbWUg
-bW9yZSByZWFzb25zLi4uIG5lZWQgc2VhcmNoIGluDQo+IGhpc3RvcnkuDQo+IA0KPiA+IC0tIA0K
-PiA+IEJlc3QgcmVnYXJkcywNCj4gPiAgSmVzcGVyIERhbmdhYXJkIEJyb3Vlcg0KPiA+ICBNU2Mu
-Q1MsIFByaW5jaXBhbCBLZXJuZWwgRW5naW5lZXIgYXQgUmVkIEhhdA0KPiA+ICBMaW5rZWRJbjog
-aHR0cDovL3d3dy5saW5rZWRpbi5jb20vaW4vYnJvdWVyDQo=
+On Wed, May 29, 2019 at 05:42:14PM +0200, Yann Droneaud wrote:
+> Le mercredi 29 mai 2019 à 17:22 +0200, Christian Brauner a écrit :
+> > This adds the clone3 system call.
+> > 
+> > 
+> > diff --git a/kernel/fork.c b/kernel/fork.c
+> > index b4cba953040a..6bc3e3d17150 100644
+> > --- a/kernel/fork.c
+> > +++ b/kernel/fork.c
+> > @@ -2472,7 +2475,96 @@ SYSCALL_DEFINE5(clone, unsigned long, clone_flags, unsigned long, newsp,
+> >  		 unsigned long, tls)
+> >  #endif
+> >  {
+> > -	return _do_fork(clone_flags, newsp, 0, parent_tidptr, child_tidptr, tls);
+> > +	struct kernel_clone_args args = {
+> > +		.flags = clone_flags,
+> > +		.stack = newsp,
+> > +		.pidfd = parent_tidptr,
+> > +		.parent_tidptr = parent_tidptr,
+> > +		.tls = tls,
+> > +		.child_tidptr = child_tidptr,
+> > +	};
+> > +
+> > +	/* clone(CLONE_PIDFD) uses parent_tidptr to return a pidfd */
+> > +	if ((clone_flags & CLONE_PIDFD) && (clone_flags & CLONE_PARENT_SETTID))
+> > +		return -EINVAL;
+> > +
+> > +	return _do_fork(&args);
+> > +}
+> > +
+> > +static bool clone3_flags_valid(u64 flags)
+> > +{
+> > +	if (flags & CLONE_DETACHED)
+> > +		return false;
+> > +
+> > +	if (flags & ~CLONE_MAX)
+> > +		return false;
+> > +
+> > +	return true;
+> > +}
+> > +
+> > +static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
+> > +				     struct clone_args __user *uargs,
+> > +				     size_t size)
+> > +{
+> > +	struct clone_args args;
+> > +
+> > +	if (unlikely(size > PAGE_SIZE))
+> > +		return -E2BIG;
+> > +
+> > +	if (unlikely(size < sizeof(struct clone_args)))
+> > +		return -EINVAL;
+> > +
+> > +	if (unlikely(!access_ok(uargs, size)))
+> > +		return -EFAULT;
+> > +
+> > +	if (size > sizeof(struct clone_args)) {
+> > +		unsigned char __user *addr;
+> > +		unsigned char __user *end;
+> > +		unsigned char val;
+> > +
+> > +		addr = (void __user *)uargs + sizeof(struct clone_args);
+> > +		end = (void __user *)uargs + size;
+> > +
+> > +		for (; addr < end; addr++) {
+> > +			if (get_user(val, addr))
+> > +				return -EFAULT;
+> > +			if (val)
+> > +				return -E2BIG;
+> 
+> Should be -EINVAL: having something after the structure should be
+> handled just like an invalid flags, while still allowing future
+> userspace program to probe for support for newer feature.
+
+(Traveling until Monday, so sorry for delayed responses.)
+
+This copies what:
+
+kernel/sched/core.c:sched_copy_attr()
+kernel/event/core.c:perf_copy_attr()
+
+are already doing. Consistency might be good here but, I think.
+
+Christian
