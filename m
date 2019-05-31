@@ -2,96 +2,107 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B22C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E84B6C46460
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30B3A2678A
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:34:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559298895;
-	bh=JZQhlN7ovZRJPnCCbDYdQTbN5iS8jI8VdNp1DLtC04c=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=s1ENWkchkleIaKrrenxdBYeE6miuov4JdahhrrJJ6gWU/ta6sNYxnt49bE0bgIfFQ
-	 rU9Q98JNhllkEQcR2mfZiVhxohof/f9uWnhXrspe9EBGdlQthLgknvor3k99SqW696
-	 TWkdL90cy+AaaHtWB6BSNf2Cy8qjkoe0fuDje9pc=
+	by mail.kernel.org (Postfix) with ESMTP id C8AA02678A
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:35:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbfEaKey (ORCPT
+        id S1727174AbfEaKfS convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 06:34:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33252 "EHLO mail.kernel.org"
+        Fri, 31 May 2019 06:35:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36128 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726002AbfEaKey (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 06:34:54 -0400
-Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        id S1726002AbfEaKfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 06:35:18 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01CA726788;
-        Fri, 31 May 2019 10:34:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559298893;
-        bh=JZQhlN7ovZRJPnCCbDYdQTbN5iS8jI8VdNp1DLtC04c=;
-        h=From:To:Cc:Subject:Date:From;
-        b=K9zZ4R5ONoRJhZC3wp3+NNnuUINZ6ztQSIRyMU06UyqLhDdGWMLUEi98ZZfQPpUeq
-         dKJaGelsU47ZqD+f46Q+0XoJKefhQVoXNoHaRwZ+rTyOlEgE2ka28a4UJ60IVT5vFQ
-         2Wgn7b5pXIwFehVS8IavArbhifSWp9ROlteEnu88=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        by mx1.redhat.com (Postfix) with ESMTPS id 1845730C1B98;
+        Fri, 31 May 2019 10:34:56 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 586D5600C7;
+        Fri, 31 May 2019 10:34:45 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20190528142424.19626-3-geert@linux-m68k.org>
+References: <20190528142424.19626-3-geert@linux-m68k.org> <20190528142424.19626-1-geert@linux-m68k.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     dhowells@redhat.com, Igor Konopko <igor.j.konopko@intel.com>,
+        "Mohit P . Tahiliani" <tahiliani@nitk.edu.in>,
+        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        Matias Bjorling <mb@lightnvm.io>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Clemens Ladisch <clemens@ladisch.de>,
         Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        Takashi Iwai <tiwai@suse.com>, Joe Perches <joe@perches.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        linux-block@vger.kernel.org, netdev@vger.kernel.org,
+        linux-afs@lists.infradead.org, alsa-devel@alsa-project.org,
         linux-kernel@vger.kernel.org
-Cc:     Tzung-Bi Shih <tzungbi@google.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2] Revert "ASoC: core: use component driver name as component name"
-Date:   Fri, 31 May 2019 12:34:02 +0200
-Message-Id: <1559298842-15059-1-git-send-email-krzk@kernel.org>
-X-Mailer: git-send-email 2.7.4
+Subject: [PATCH] rxrpc: Fix uninitialized error code in rxrpc_send_data_packet()
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Date:   Fri, 31 May 2019 11:34:44 +0100
+Message-ID: <15499.1559298884@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 31 May 2019 10:35:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using component driver as a name is not unique and it breaks audio in
-certain configurations, e.g. Hardkernel Odroid XU3 board where following
-components are registered:
- - "3830000.i2s" with driver name "snd_dmaengine_pcm"
- - "3830000.i2s-sec" with driver name "snd_dmaengine_pcm"
- - "3830000.i2s" with driver name "samsung-i2s"
 
-This reverts commit b19671d6caf1ac393681864d5d85dda9fa99a448.
+Hi Geert,
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Here's my take on the patch.
 
+David
 ---
+rxrpc: Fix uninitialized error code in rxrpc_send_data_packet()    
+    
+With gcc 4.1:
 
-Changes since v1:
-1. Fix driver name in commit msg.
+    net/rxrpc/output.c: In function ‘rxrpc_send_data_packet’:
+    net/rxrpc/output.c:338: warning: ‘ret’ may be used uninitialized in this function
+
+Indeed, if the first jump to the send_fragmentable label is made, and
+the address family is not handled in the switch() statement, ret will be
+used uninitialized.
+
+Fix this by BUG()'ing as is done in other places in rxrpc where internal
+support for future address families will need adding.  It should not be
+possible to reach this normally as the address families are checked
+up-front.
+
+Fixes: 5a924b8951f835b5 ("rxrpc: Don't store the rxrpc header in the Tx queue sk_buffs")
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: David Howells <dhowells@redhat.com>
 ---
- sound/soc/soc-core.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
-
-diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
-index 2d3520fca613..7abb017a83f3 100644
---- a/sound/soc/soc-core.c
-+++ b/sound/soc/soc-core.c
-@@ -3113,10 +3113,7 @@ static int snd_soc_component_initialize(struct snd_soc_component *component,
- {
- 	struct snd_soc_dapm_context *dapm;
+diff --git a/net/rxrpc/output.c b/net/rxrpc/output.c
+index 004c762c2e8d..6f2b4fb4b0aa 100644
+--- a/net/rxrpc/output.c
++++ b/net/rxrpc/output.c
+@@ -523,6 +523,9 @@ int rxrpc_send_data_packet(struct rxrpc_call *call, struct sk_buff *skb,
+ 		}
+ 		break;
+ #endif
++
++	default:
++		BUG();
+ 	}
  
--	if (driver->name)
--		component->name = kstrdup(driver->name, GFP_KERNEL);
--	else
--		component->name = fmt_single_name(dev, &component->id);
-+	component->name = fmt_single_name(dev, &component->id);
- 	if (!component->name) {
- 		dev_err(dev, "ASoC: Failed to allocate name\n");
- 		return -ENOMEM;
--- 
-2.7.4
-
+ 	if (ret < 0)
