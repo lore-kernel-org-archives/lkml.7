@@ -2,135 +2,126 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4ACC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2008C46470
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5C5326A54
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:18:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JBsBQDHM"
+	by mail.kernel.org (Postfix) with ESMTP id C4CA126A54
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:20:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbfEaOS2 (ORCPT
+        id S1726749AbfEaOUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 10:18:28 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:39748 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726386AbfEaOS1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 10:18:27 -0400
-Received: by mail-it1-f195.google.com with SMTP id j204so10165858ite.4
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 07:18:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=MqKLt/WpCLzDnR6KC2LbU71uyrGieaHBnTcbdQaj2rs=;
-        b=JBsBQDHM/x967z4xbhmkenpWqpse6l3Q82blssloI9kSJK9dVwLAqu7PPCul+RhDyD
-         XCkwXdEkas3GwDPLsyKEE4dHF/keiU6eTfjONXxlrD179eh6yFmVt8bXqZQAENkBnZdp
-         BNSSd5YtOLA9E9A3mpDcECYFCyBuW8AyJKaA9xFyTXykloNvfzpi3CVFaKTzm59dVVpr
-         Oe6J4W0opsoup05QbikGRDhvr61zpO9qlg2OLoFtAbPh4FFQvjWgD9RBeQ5gmYDZx8SX
-         zT+kdy/omDe1r6fB7EaVpeDiXJLd1ZfZeTcNH/CxLnnPJed/cgYSsPwEh+WIUNIXfOqh
-         rW8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=MqKLt/WpCLzDnR6KC2LbU71uyrGieaHBnTcbdQaj2rs=;
-        b=h9PQz4ufFi9OnaK9vKV+remWVHOaSfHerSFh2Dy6w61UjeHhAmDerVcfgH7Dp7dZAN
-         AW/OXg2uQ/8rGYhd4Dpn6Wp969QWFw9YEUI+D3acRVpZmtUaHKVmcIBjcvMmAHd0fRIp
-         OGkCW8fgq7d5MUIGhHKCmsOkRp7Zl/Ux12sZDRe8seOOATKZHlMrEAlNEN5bfQaqIrNg
-         Om6lOGVTQ+DQ8JLAzH8EYB9j6PC7x6q0rMLK+BTAHtuKr7sFAdUCwKi5U7Si+dYtbp4c
-         HG2V5I8Dp6ihqF0jQiV/gS2eBPyrFUn3nnyg5wAZHmMRVJrbv7GDOtDszETdRRSuNsvm
-         SXsQ==
-X-Gm-Message-State: APjAAAWlOoZocRTZ0yKyzbsEwU6sGVSFmfq4aeFsdtrZSGAjQ37ISA+C
-        UPDSR7YuHN7EWUH+x3ycyINKyQ==
-X-Google-Smtp-Source: APXvYqzEQm57Jjt+GxYIloa90ycsvWyHobiGaLJGaDMP/qZ0HuWYZoFbPIjUNoe1PwRHtYrgxpB3aA==
-X-Received: by 2002:a05:660c:191:: with SMTP id v17mr7282964itj.6.1559312306623;
-        Fri, 31 May 2019 07:18:26 -0700 (PDT)
-Received: from localhost (c-75-72-120-115.hsd1.mn.comcast.net. [75.72.120.115])
-        by smtp.gmail.com with ESMTPSA id r6sm1892523iog.38.2019.05.31.07.18.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 31 May 2019 07:18:25 -0700 (PDT)
-Date:   Fri, 31 May 2019 09:18:25 -0500
-From:   Dan Rue <dan.rue@linaro.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 5.0 000/346] 5.0.20-stable review
-Message-ID: <20190531141825.vv4ii22am7i2p5pg@xps.therub.org>
-Mail-Followup-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-References: <20190530030540.363386121@linuxfoundation.org>
- <CA+G9fYtW1E+jOKaU3qnhdwa63r1t7i04uMAcigWAUjVmDss6Pg@mail.gmail.com>
- <20190531132043.GA5211@kroah.com>
+        Fri, 31 May 2019 10:20:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47652 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726037AbfEaOUT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 10:20:19 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DD64BB5C01;
+        Fri, 31 May 2019 14:20:18 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2128E7C5AD;
+        Fri, 31 May 2019 14:20:12 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20190531132620.GC2606@hirez.programming.kicks-ass.net>
+References: <20190531132620.GC2606@hirez.programming.kicks-ass.net> <20190531111445.GO2677@hirez.programming.kicks-ass.net> <CAG48ez0R-R3Xs+3Xg9T9qcV3Xv6r4pnx1Z2y=Ltx7RGOayte_w@mail.gmail.com> <20190528162603.GA24097@kroah.com> <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk> <155905931502.7587.11705449537368497489.stgit@warthog.procyon.org.uk> <4031.1559064620@warthog.procyon.org.uk> <20190528231218.GA28384@kroah.com> <31936.1559146000@warthog.procyon.org.uk> <16193.1559163763@warthog.procyon.org.uk> <21942.1559304135@warthog.procyon.org.uk>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     dhowells@redhat.com, Jann Horn <jannh@google.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>
+Subject: Re: [PATCH 1/7] General notification queue with user mmap()'able ring buffer
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190531132043.GA5211@kroah.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <605.1559312411.1@warthog.procyon.org.uk>
+Date:   Fri, 31 May 2019 15:20:12 +0100
+Message-ID: <606.1559312412@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 31 May 2019 14:20:19 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 06:20:43AM -0700, Greg Kroah-Hartman wrote:
-> On Thu, May 30, 2019 at 09:53:33PM +0530, Naresh Kamboju wrote:
-> > On Thu, 30 May 2019 at 08:48, Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > This is the start of the stable review cycle for the 5.0.20 release.
-> > > There are 346 patches in this series, all will be posted as a response
-> > > to this one.  If anyone has any issues with these being applied, please
-> > > let me know.
-> > >
-> > > Responses should be made by Sat 01 Jun 2019 03:02:10 AM UTC.
-> > > Anything received after that time might be too late.
-> > >
-> > > The whole patch series can be found in one patch at:
-> > >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.0.20-rc1.gz
-> > > or in the git tree and branch at:
-> > >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.0.y
-> > > and the diffstat can be found below.
-> > >
-> > > thanks,
-> > >
-> > > greg k-h
-> > 
-> > Results from Linaro’s test farm.
-> > No regressions on arm64, arm, x86_64, and i386.
+Peter Zijlstra <peterz@infradead.org> wrote:
+
+> Is it not the responsibility of the task that affects the 1->0
+> transition to actually free the memory?
 > 
-> Thanks for testing 4 of these and letting me know.
+> That is, I'm expecting the '...' in both cases above the include the
+> actual freeing of the object. If this is not the case, then @usage is
+> not a reference count.
 
-5.1 sent out now. We were just waiting for the remaining test jobs to
-finish before sending it.
+Yes.  The '...' does the freeing.  It seemed unnecessary to include the code
+ellipsised there since it's not the point of the discussion, but if you want
+the full function:
 
-Dan
+	void afs_put_call(struct afs_call *call)
+	{
+		struct afs_net *net = call->net;
+		int n = atomic_dec_return(&call->usage);
+		int o = atomic_read(&net->nr_outstanding_calls);
 
-> 
-> greg k-h
+		trace_afs_call(call, afs_call_trace_put, n + 1, o,
+			       __builtin_return_address(0));
 
--- 
-Linaro - Kernel Validation
+		ASSERTCMP(n, >=, 0);
+		if (n == 0) {
+			ASSERT(!work_pending(&call->async_work));
+			ASSERT(call->type->name != NULL);
+
+			if (call->rxcall) {
+				rxrpc_kernel_end_call(net->socket, call->rxcall);
+				call->rxcall = NULL;
+			}
+			if (call->type->destructor)
+				call->type->destructor(call);
+
+			afs_put_server(call->net, call->server);
+			afs_put_cb_interest(call->net, call->cbi);
+			afs_put_addrlist(call->alist);
+			kfree(call->request);
+
+			trace_afs_call(call, afs_call_trace_free, 0, o,
+				       __builtin_return_address(0));
+			kfree(call);
+
+			o = atomic_dec_return(&net->nr_outstanding_calls);
+			if (o == 0)
+				wake_up_var(&net->nr_outstanding_calls);
+		}
+	}
+
+You can see the kfree(call) in there.
+Peter Zijlstra <peterz@infradead.org> wrote:
+
+> (and it has already been established that refcount_t doesn't work for
+> usage count scenarios)
+
+?
+
+Does that mean struct kref doesn't either?
+
+> Aside from that, is the problem that refcount_dec_and_test() returns a
+> boolean (true - last put, false - not last) instead of the refcount
+> value? This does indeed make it hard to print the exact count value for
+> the event.
+
+That is the problem, yes - well, one of them: refcount_inc() doesn't either.
+
+David
