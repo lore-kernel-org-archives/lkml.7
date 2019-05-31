@@ -2,111 +2,363 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7528C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 424EDC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0B1E26935
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:11:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pJ4t6LkH"
+	by mail.kernel.org (Postfix) with ESMTP id 01D37265BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:12:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559308358;
+	bh=6WjRnAkWkfthZDCMHvpAtqUoFh0fmjjLRJdwO85AR2U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hpY1mOU+/9U9QveHym1CddYNeY9FGrVb7Yl750VmwcQmu5kK8y5M5+2I7BBoyVR6q
+	 tBHDPs+BMM+8lv6z+KagawwYN7AJN1VI1mIKS+HK1s2hcB9GWltNPYBWaLo7dR/H8k
+	 rfzG6xqsRq92keNJrxyO6ZpJgxyir8mLzC0JV5Uw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727387AbfEaNLg (ORCPT
+        id S1727401AbfEaNMh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 09:11:36 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40486 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726330AbfEaNLf (ORCPT
+        Fri, 31 May 2019 09:12:37 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40813 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726330AbfEaNMg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 09:11:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=5J0ba4Ad42pvvelRQpkEcT3KcojCTDX3YCcgX/U44Ic=; b=pJ4t6LkHXCwBk7eHWUyyF31bL
-        atygI577w3kMbTDLLv7Bt9klbP5R9DeHtJXzVoOpHE+jJVICLL1cG9Rzka2RzcDMAtnPj6EE0h9T+
-        lPfIHOKqIb6k1IeL3NEddNcVSf1tbSLYBDLxGRnFAQyH+Rr23hwli5u7loQrEzxDcxgR7tvDp8DSk
-        x+TyQ7nPuXjvLT4Vt3sRD6uSfZcphduOwZxhx0KswRnpDlU4qATsn7xUFKxtVxx0O4gk2rezwyfBA
-        DR1b5XHINd9G79IC09pwuj+5nopkC4VOqJcZfy4hYuntVe+TKNT+G7trbG++RBBAJXhL/f4qPQHPu
-        IZ0x3C5cg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hWhJh-0001SF-CS; Fri, 31 May 2019 13:11:31 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B991E20274AFF; Fri, 31 May 2019 15:11:27 +0200 (CEST)
-Date:   Fri, 31 May 2019 15:11:27 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Roman Penyaev <rpenyaev@suse.de>
-Cc:     azat@libevent.org, akpm@linux-foundation.org,
-        viro@zeniv.linux.org.uk, torvalds@linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 06/13] epoll: introduce helpers for adding/removing
- events to uring
-Message-ID: <20190531131127.GB2606@hirez.programming.kicks-ass.net>
-References: <20190516085810.31077-1-rpenyaev@suse.de>
- <20190516085810.31077-7-rpenyaev@suse.de>
- <20190531095549.GB17637@hirez.programming.kicks-ass.net>
- <7187263bcee61b9abbe687f3a7478bd1@suse.de>
+        Fri, 31 May 2019 09:12:36 -0400
+Received: by mail-pl1-f195.google.com with SMTP id g69so4009860plb.7;
+        Fri, 31 May 2019 06:12:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9KHsRNI4q1qCWnGmPczkdOM0myR1vhuW2pTdzPAj/o4=;
+        b=B/E7Iah5xOzd7kUYA0Hf89CcQEzyaC9ErJ573MnRH8e/jxbRg315RYZAHLrnqa7jED
+         wqHs1v4dcqHGN1tDdzO5aT9I8gOiLyA+N8Zs/0P0RmHBDdulH69roqZKEltlb3cBKXa/
+         khIa+e6HJ2Q6oUUJ/45dFLs1hZA9ylVu2yd2HiIL/YX6DhA+a89GkJc3USu8TIJ0QoT4
+         2DV3F1pMkl81uU/XLN4bCFMk4V8OUo4rSJaqbxWsV9XhjhiaT2IYIkFkxPMhMs0Fw3zU
+         +TDSAqbU7R4xGSaM1QoMvRNakPgW0zZ9yDLSR1FOUdc/ry3XYGeb+RTbdD4Id5tCiie6
+         9xig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9KHsRNI4q1qCWnGmPczkdOM0myR1vhuW2pTdzPAj/o4=;
+        b=Ilk1WvMN3+fayIOFyKtLbMzc4ohvuflSXYq7dtk0LuPXukvj9H44KBC4UAfLAD4dQv
+         3BRMu2N+J8NvLrZAzDQhtpZUCbB8mOrzp3VA6SPqmLhL2TebCxoM5u60uKe+GdQEBkvs
+         fJn2dcjlqmQCJbRrQAdsHXVicVPxL9DZvaqukg5ZF4wUJkVlkeVr9XjLnxCjpYA3sRex
+         SE7XbynNv+lE4dq0MmbT2fpj8gXSuYLi316mHmSEqVO1QAgwA0yI2B3P3TolLFXRSesC
+         GVmnY/dqwbmbds+qu9bHgaBjlBC4sYzLI+yYEulfj8KdwDyY4SVnGKqlPCT3u74PsLk6
+         JLGQ==
+X-Gm-Message-State: APjAAAVpWnMXDovHMHKSb3ObPn+si5axL/nk3fkBRBuh7BoYdnZtVJtb
+        cC9toZRcl6gisCvsmkN6O/k=
+X-Google-Smtp-Source: APXvYqy7Jgf27DPChwbcQAGQ8nsn/N8QFLKkuC0cBK7/8I3xRLMf23jBQpdMMIkVgJqWw+CCHy38gw==
+X-Received: by 2002:a17:902:2983:: with SMTP id h3mr9458413plb.267.1559308355443;
+        Fri, 31 May 2019 06:12:35 -0700 (PDT)
+Received: from google.com ([122.38.223.241])
+        by smtp.gmail.com with ESMTPSA id x24sm705609pfa.52.2019.05.31.06.12.29
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 31 May 2019 06:12:33 -0700 (PDT)
+Date:   Fri, 31 May 2019 22:12:26 +0900
+From:   Minchan Kim <minchan@kernel.org>
+To:     Oleksandr Natalenko <oleksandr@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>, jannh@google.com,
+        oleg@redhat.com, christian@brauner.io, hdanton@sina.com
+Subject: Re: [RFCv2 4/6] mm: factor out madvise's core functionality
+Message-ID: <20190531131226.GA195463@google.com>
+References: <20190531064313.193437-1-minchan@kernel.org>
+ <20190531064313.193437-5-minchan@kernel.org>
+ <20190531070420.m7sxybbzzayig44o@butterfly.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7187263bcee61b9abbe687f3a7478bd1@suse.de>
+In-Reply-To: <20190531070420.m7sxybbzzayig44o@butterfly.localdomain>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 01:24:07PM +0200, Roman Penyaev wrote:
-> On 2019-05-31 11:55, Peter Zijlstra wrote:
-> > On Thu, May 16, 2019 at 10:58:03AM +0200, Roman Penyaev wrote:
-> > > +#define atomic_set_unless_zero(ptr, flags)			\
-> > > +({								\
-> > > +	typeof(ptr) _ptr = (ptr);				\
-> > > +	typeof(flags) _flags = (flags);				\
-> > > +	typeof(*_ptr) _old, _val = READ_ONCE(*_ptr);		\
-> > > +								\
-> > > +	for (;;) {						\
-> > > +		if (!_val)					\
-> > > +			break;					\
-> > > +		_old = cmpxchg(_ptr, _val, _flags);		\
-> > > +		if (_old == _val)				\
-> > > +			break;					\
-> > > +		_val = _old;					\
-> > > +	}							\
-> > > +	_val;							\
-> > > +})
+On Fri, May 31, 2019 at 09:04:20AM +0200, Oleksandr Natalenko wrote:
+> On Fri, May 31, 2019 at 03:43:11PM +0900, Minchan Kim wrote:
+> > This patch factor out madvise's core functionality so that upcoming
+> > patch can reuse it without duplication. It shouldn't change any behavior.
 > > 
-> > > +#define atomic_or_with_mask(ptr, flags, mask)			\
-> > > +({								\
-> > > +	typeof(ptr) _ptr = (ptr);				\
-> > > +	typeof(flags) _flags = (flags);				\
-> > > +	typeof(flags) _mask = (mask);				\
-> > > +	typeof(*_ptr) _old, _new, _val = READ_ONCE(*_ptr);	\
-> > > +								\
-> > > +	for (;;) {						\
-> > > +		_new = (_val & ~_mask) | _flags;		\
-> > > +		_old = cmpxchg(_ptr, _val, _new);		\
-> > > +		if (_old == _val)				\
-> > > +			break;					\
-> > > +		_val = _old;					\
-> > > +	}							\
-> > > +	_val;							\
-> > > +})
+> > Signed-off-by: Minchan Kim <minchan@kernel.org>
+> > ---
+> >  mm/madvise.c | 188 +++++++++++++++++++++++++++------------------------
+> >  1 file changed, 101 insertions(+), 87 deletions(-)
 > > 
-> > Don't call them atomic_*() if they're not part of the atomic_t
-> > interface.
+> > diff --git a/mm/madvise.c b/mm/madvise.c
+> > index 9d749a1420b4..466623ea8c36 100644
+> > --- a/mm/madvise.c
+> > +++ b/mm/madvise.c
+> > @@ -425,9 +425,10 @@ static int madvise_pageout_pte_range(pmd_t *pmd, unsigned long addr,
+> >  	struct page *page;
+> >  	int isolated = 0;
+> >  	struct vm_area_struct *vma = walk->vma;
+> > +	struct task_struct *task = walk->private;
+> >  	unsigned long next;
+> >  
+> > -	if (fatal_signal_pending(current))
+> > +	if (fatal_signal_pending(task))
+> >  		return -EINTR;
+> >  
+> >  	next = pmd_addr_end(addr, end);
+> > @@ -505,12 +506,14 @@ static int madvise_pageout_pte_range(pmd_t *pmd, unsigned long addr,
+> >  }
+> >  
+> >  static void madvise_pageout_page_range(struct mmu_gather *tlb,
+> > -			     struct vm_area_struct *vma,
+> > -			     unsigned long addr, unsigned long end)
+> > +				struct task_struct *task,
+> > +				struct vm_area_struct *vma,
+> > +				unsigned long addr, unsigned long end)
+> >  {
+> >  	struct mm_walk warm_walk = {
+> >  		.pmd_entry = madvise_pageout_pte_range,
+> >  		.mm = vma->vm_mm,
+> > +		.private = task,
+> >  	};
+> >  
+> >  	tlb_start_vma(tlb, vma);
+> > @@ -519,9 +522,9 @@ static void madvise_pageout_page_range(struct mmu_gather *tlb,
+> >  }
+> >  
+> >  
+> > -static long madvise_pageout(struct vm_area_struct *vma,
+> > -			struct vm_area_struct **prev,
+> > -			unsigned long start_addr, unsigned long end_addr)
+> > +static long madvise_pageout(struct task_struct *task,
+> > +		struct vm_area_struct *vma, struct vm_area_struct **prev,
+> > +		unsigned long start_addr, unsigned long end_addr)
+> >  {
+> >  	struct mm_struct *mm = vma->vm_mm;
+> >  	struct mmu_gather tlb;
+> > @@ -532,7 +535,7 @@ static long madvise_pageout(struct vm_area_struct *vma,
+> >  
+> >  	lru_add_drain();
+> >  	tlb_gather_mmu(&tlb, mm, start_addr, end_addr);
+> > -	madvise_pageout_page_range(&tlb, vma, start_addr, end_addr);
+> > +	madvise_pageout_page_range(&tlb, task, vma, start_addr, end_addr);
+> >  	tlb_finish_mmu(&tlb, start_addr, end_addr);
+> >  
+> >  	return 0;
+> > @@ -744,7 +747,8 @@ static long madvise_dontneed_single_vma(struct vm_area_struct *vma,
+> >  	return 0;
+> >  }
+> >  
+> > -static long madvise_dontneed_free(struct vm_area_struct *vma,
+> > +static long madvise_dontneed_free(struct mm_struct *mm,
+> > +				  struct vm_area_struct *vma,
+> >  				  struct vm_area_struct **prev,
+> >  				  unsigned long start, unsigned long end,
+> >  				  int behavior)
+> > @@ -756,8 +760,8 @@ static long madvise_dontneed_free(struct vm_area_struct *vma,
+> >  	if (!userfaultfd_remove(vma, start, end)) {
+> >  		*prev = NULL; /* mmap_sem has been dropped, prev is stale */
+> >  
+> > -		down_read(&current->mm->mmap_sem);
+> > -		vma = find_vma(current->mm, start);
+> > +		down_read(&mm->mmap_sem);
+> > +		vma = find_vma(mm, start);
+> >  		if (!vma)
+> >  			return -ENOMEM;
+> >  		if (start < vma->vm_start) {
+> > @@ -804,7 +808,8 @@ static long madvise_dontneed_free(struct vm_area_struct *vma,
+> >   * Application wants to free up the pages and associated backing store.
+> >   * This is effectively punching a hole into the middle of a file.
+> >   */
+> > -static long madvise_remove(struct vm_area_struct *vma,
+> > +static long madvise_remove(struct mm_struct *mm,
+> > +				struct vm_area_struct *vma,
+> >  				struct vm_area_struct **prev,
+> >  				unsigned long start, unsigned long end)
+> >  {
+> > @@ -838,13 +843,13 @@ static long madvise_remove(struct vm_area_struct *vma,
+> >  	get_file(f);
+> >  	if (userfaultfd_remove(vma, start, end)) {
+> >  		/* mmap_sem was not released by userfaultfd_remove() */
+> > -		up_read(&current->mm->mmap_sem);
+> > +		up_read(&mm->mmap_sem);
+> >  	}
+> >  	error = vfs_fallocate(f,
+> >  				FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE,
+> >  				offset, end - start);
+> >  	fput(f);
+> > -	down_read(&current->mm->mmap_sem);
+> > +	down_read(&mm->mmap_sem);
+> >  	return error;
+> >  }
+> >  
+> > @@ -918,21 +923,23 @@ static int madvise_inject_error(int behavior,
+> >  #endif
+> >  
+> >  static long
+> > -madvise_vma(struct vm_area_struct *vma, struct vm_area_struct **prev,
+> > +madvise_vma(struct task_struct *task, struct mm_struct *mm,
+> > +		struct vm_area_struct *vma, struct vm_area_struct **prev,
+> >  		unsigned long start, unsigned long end, int behavior)
+> >  {
+> >  	switch (behavior) {
+> >  	case MADV_REMOVE:
+> > -		return madvise_remove(vma, prev, start, end);
+> > +		return madvise_remove(mm, vma, prev, start, end);
+> >  	case MADV_WILLNEED:
+> >  		return madvise_willneed(vma, prev, start, end);
+> >  	case MADV_COLD:
+> >  		return madvise_cold(vma, prev, start, end);
+> >  	case MADV_PAGEOUT:
+> > -		return madvise_pageout(vma, prev, start, end);
+> > +		return madvise_pageout(task, vma, prev, start, end);
+> >  	case MADV_FREE:
+> >  	case MADV_DONTNEED:
+> > -		return madvise_dontneed_free(vma, prev, start, end, behavior);
+> > +		return madvise_dontneed_free(mm, vma, prev, start,
+> > +						end, behavior);
+> >  	default:
+> >  		return madvise_behavior(vma, prev, start, end, behavior);
+> >  	}
+> > @@ -976,68 +983,8 @@ madvise_behavior_valid(int behavior)
+> >  	}
+> >  }
+> >  
+> > -/*
+> > - * The madvise(2) system call.
+> > - *
+> > - * Applications can use madvise() to advise the kernel how it should
+> > - * handle paging I/O in this VM area.  The idea is to help the kernel
+> > - * use appropriate read-ahead and caching techniques.  The information
+> > - * provided is advisory only, and can be safely disregarded by the
+> > - * kernel without affecting the correct operation of the application.
+> > - *
+> > - * behavior values:
+> > - *  MADV_NORMAL - the default behavior is to read clusters.  This
+> > - *		results in some read-ahead and read-behind.
+> > - *  MADV_RANDOM - the system should read the minimum amount of data
+> > - *		on any access, since it is unlikely that the appli-
+> > - *		cation will need more than what it asks for.
+> > - *  MADV_SEQUENTIAL - pages in the given range will probably be accessed
+> > - *		once, so they can be aggressively read ahead, and
+> > - *		can be freed soon after they are accessed.
+> > - *  MADV_WILLNEED - the application is notifying the system to read
+> > - *		some pages ahead.
+> > - *  MADV_DONTNEED - the application is finished with the given range,
+> > - *		so the kernel can free resources associated with it.
+> > - *  MADV_FREE - the application marks pages in the given range as lazy free,
+> > - *		where actual purges are postponed until memory pressure happens.
+> > - *  MADV_REMOVE - the application wants to free up the given range of
+> > - *		pages and associated backing store.
+> > - *  MADV_DONTFORK - omit this area from child's address space when forking:
+> > - *		typically, to avoid COWing pages pinned by get_user_pages().
+> > - *  MADV_DOFORK - cancel MADV_DONTFORK: no longer omit this area when forking.
+> > - *  MADV_WIPEONFORK - present the child process with zero-filled memory in this
+> > - *              range after a fork.
+> > - *  MADV_KEEPONFORK - undo the effect of MADV_WIPEONFORK
+> > - *  MADV_HWPOISON - trigger memory error handler as if the given memory range
+> > - *		were corrupted by unrecoverable hardware memory failure.
+> > - *  MADV_SOFT_OFFLINE - try to soft-offline the given range of memory.
+> > - *  MADV_MERGEABLE - the application recommends that KSM try to merge pages in
+> > - *		this area with pages of identical content from other such areas.
+> > - *  MADV_UNMERGEABLE- cancel MADV_MERGEABLE: no longer merge pages with others.
+> > - *  MADV_HUGEPAGE - the application wants to back the given range by transparent
+> > - *		huge pages in the future. Existing pages might be coalesced and
+> > - *		new pages might be allocated as THP.
+> > - *  MADV_NOHUGEPAGE - mark the given range as not worth being backed by
+> > - *		transparent huge pages so the existing pages will not be
+> > - *		coalesced into THP and new pages will not be allocated as THP.
+> > - *  MADV_DONTDUMP - the application wants to prevent pages in the given range
+> > - *		from being included in its core dump.
+> > - *  MADV_DODUMP - cancel MADV_DONTDUMP: no longer exclude from core dump.
+> > - *
+> > - * return values:
+> > - *  zero    - success
+> > - *  -EINVAL - start + len < 0, start is not page-aligned,
+> > - *		"behavior" is not a valid value, or application
+> > - *		is attempting to release locked or shared pages,
+> > - *		or the specified address range includes file, Huge TLB,
+> > - *		MAP_SHARED or VMPFNMAP range.
+> > - *  -ENOMEM - addresses in the specified range are not currently
+> > - *		mapped, or are outside the AS of the process.
+> > - *  -EIO    - an I/O error occurred while paging in data.
+> > - *  -EBADF  - map exists, but area maps something that isn't a file.
+> > - *  -EAGAIN - a kernel resource was temporarily unavailable.
+> > - */
+> > -SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
+> > +static int madvise_core(struct task_struct *task, struct mm_struct *mm,
+> > +			unsigned long start, size_t len_in, int behavior)
 > 
-> Can we add those two?  Or keep it local is better?
+> Just a minor nitpick, but can we please have it named madvise_common,
+> not madvise_core? This would follow a usual naming scheme, when some
+> common functionality is factored out (like, for mutexes, semaphores
+> etc), and within the kernel "core" usually means something completely
+> different.
 
-Afaict you're using them on the user visible values; we should not put
-atomic_t into shared memory.
+Sure.
 
-Your interface isn't compatible with those 'funny' architectures like
-parisc etc. Since you expect userspace to do atomic ops on these
-variables too. It is not a one-way interface ...
+> 
+> >  {
+> >  	unsigned long end, tmp;
+> >  	struct vm_area_struct *vma, *prev;
+> > @@ -1068,15 +1015,16 @@ SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
+> >  
+> >  #ifdef CONFIG_MEMORY_FAILURE
+> >  	if (behavior == MADV_HWPOISON || behavior == MADV_SOFT_OFFLINE)
+> > -		return madvise_inject_error(behavior, start, start + len_in);
+> > +		return madvise_inject_error(behavior,
+> > +					start, start + len_in);
+> 
+> Not sure what this change is about except changing the line length.
+> Note, madvise_inject_error() still operates on "current" through
+> get_user_pages_fast() and gup_pgd_range(), but that was not changed
+> here. I Know you've filtered out this hint later, so technically this
+> is not an issue, but, maybe, this needs some attention too since we've
+> already spotted it?
+
+It is leftover I had done. I actually modified it to handle remote
+task but changed my mind not to fix it because process_madvise
+will not support it at this moment. I'm not sure it's a good idea
+to change it for *might-be-done-in-future* at this moment even though
+we have spotted.
+
+> 
+> >  #endif
+> >  
+> >  	write = madvise_need_mmap_write(behavior);
+> >  	if (write) {
+> > -		if (down_write_killable(&current->mm->mmap_sem))
+> > +		if (down_write_killable(&mm->mmap_sem))
+> >  			return -EINTR;
+> 
+> Do you still need that trick with mmget_still_valid() here?
+> Something like:
+
+Since MADV_COLD|PAGEOUT doesn't change address space layout or
+vma->vm_flags, technically, we don't need it if I understand
+correctly. Right?
+
+> 
+> if (current->mm != mm && !mmget_still_valid(mm))
+>    goto skip_mm;
+> 
+> and that skip_mm label would be before
+> 
+> if (write)
+>    up_write(&mm->mmap_sem);
+> 
+> below.
+> 
+> (see 04f5866e41fb70690e28397487d8bd8eea7d712a for details on this)
