@@ -2,90 +2,249 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 126DCC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF690C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1BC326E3F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:21:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA1DF26E46
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:23:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727228AbfEaTVb (ORCPT
+        id S1727266AbfEaTXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 15:21:31 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:36449 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726808AbfEaTVa (ORCPT
+        Fri, 31 May 2019 15:23:51 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:45990 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727137AbfEaTXu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 15:21:30 -0400
-Received: by mail-qt1-f195.google.com with SMTP id u12so2288081qth.3
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 12:21:30 -0700 (PDT)
+        Fri, 31 May 2019 15:23:50 -0400
+Received: by mail-pl1-f196.google.com with SMTP id x7so3394566plr.12
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 12:23:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=M/Axm/7nwcI4RwJavi+sPMZhETGsmjoJsyzXG1wGn6A=;
-        b=Oa769bV0E57o/mFwm4rFI6VesZYTPFlBeqxErtPkLpIKz2lD4B4olOfEECo9pwj5oe
-         bfaPfP2QcMn7dBXg1aFjqM8KqsJ4mDBA5HWTItjp2kjmSq7YHdrIRNLgGd3isihYMbnR
-         snIvyUjthS41VCeIp19Hdio0Mhcn23fhJEz9JNE1d1o5d9TE7BqDrdMCUTTGRDqorhEY
-         8PyowO3EUEkiB9LQpF54ZccGwgvHZYBfvjiG9GqF4nz5vmX4fQmyuDogGD09pT5Bysk6
-         jJzLIiZwj49uvkf/SQhI9hO0yhTtOufs8UqpTYVHpsaU8kLVihQjUrRiBxBTVZhTxMr7
-         t9sw==
-X-Gm-Message-State: APjAAAX+msaovHPKy/VGbrlk+YAZBKE2H5/PG7jN/OtQDO/uUC6XTlro
-        5XYI6rD1aj+yvciO2egBS4tmjGYyzxGm5VsWI/A=
-X-Google-Smtp-Source: APXvYqyS23Wu08rwAwTAr7AC8VlLnPp9u0Vb33101ni/Pz03jgR03uZyOBHxcpJpF5Jqjr3IrXxtdoc2pUBXgXv8QRI=
-X-Received: by 2002:ac8:2433:: with SMTP id c48mr10515168qtc.18.1559330489729;
- Fri, 31 May 2019 12:21:29 -0700 (PDT)
+        h=x-gm-message-state:subject:date:message-id:mime-version
+         :content-transfer-encoding:cc:from:to;
+        bh=VG+Xtpxl4luXcLoXYHzOczLmqwJ/KICZpqExcJIYQWo=;
+        b=lP+P2MqNx8YTlUeVdZ0ckOqoUYk+QkeWIrCAHO5s8rKHVlTUzMy3Yr1oGXEiVCRahK
+         ex4b6wIfG6aF+yKPmaIi0zS7ahL+sSLKBnxfoY2FYE6HHkG5jnmSuLK1EzsZAeuMumV6
+         vkiomFH5eKo3F9TXs1uLNjeCZ1Ob8cL1s/7m8bpvYFmaof4yyyp5Ffpr1TF7j+Ye5Z1C
+         p7geJZYKxDLI9oOgD0xAdPKAPYqAypTPqAZfgeAHYBrukSWJvNhPnX7u8jmZfJBnoXvc
+         g8XRSF39WabAQf88WDf3kvtoMrTwQC2MRSKen48MeUcx5wdJ2OGdAeW1xN9djNVXy3E4
+         qfkQ==
+X-Gm-Message-State: APjAAAVaQW0WNhzrXdqIzw/oQHwEVyyVUKtqpSS3QaU+x3A+OY9oPMNb
+        YwL6y4QFunBfNo/8CrDaoGtHmA==
+X-Google-Smtp-Source: APXvYqwodoAgavzj2P4i1gNyR2leUPdA0IKjvBtDOQwiUdYmgggspbkKhk4fbaMsdd3hKYvFlqbwlg==
+X-Received: by 2002:a17:902:1003:: with SMTP id b3mr11774895pla.172.1559330629047;
+        Fri, 31 May 2019 12:23:49 -0700 (PDT)
+Received: from localhost ([12.206.222.5])
+        by smtp.gmail.com with ESMTPSA id r4sm11493078pfq.134.2019.05.31.12.23.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 31 May 2019 12:23:48 -0700 (PDT)
+Subject: Add a new fchmodat4() syscall
+Date:   Fri, 31 May 2019 12:11:59 -0700
+Message-Id: <20190531191204.4044-1-palmer@sifive.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190528235742.105510-1-natechancellor@gmail.com>
- <CAK8P3a0a0hMsZDkqKsfsyCWpdvDni72tjAxCz2VeAaU56zqrXg@mail.gmail.com> <20190531183227.GA34102@archlinux-epyc>
-In-Reply-To: <20190531183227.GA34102@archlinux-epyc>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 31 May 2019 21:21:13 +0200
-Message-ID: <CAK8P3a1-_KRvoeK4w0b8775izox8fRm=NGJC=yicDRn7J5UW2Q@mail.gmail.com>
-Subject: Re: [PATCH] ARM: xor-neon: Replace __GNUC__ checks with CONFIG_CC_IS_GCC
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Stefan Agner <stefan@agner.ch>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Cc:     linux-arch@vger.kernel.org, x86@kernel.org, luto@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        Arnd Bergmann <arnd@arndb.de>
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 8:32 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> On Fri, May 31, 2019 at 10:05:22AM +0200, Arnd Bergmann wrote:
-> > If I remember correctly, we also had the same issue with older versions
-> > of clang, possibly even newer ones. Shouldn't we check for a minimum
-> > compiler version when building with clang to ensure that the code is
-> > really vectorized?
-> >
-> >        Arnd
->
-> Even on tip of tree, it doesn't look like vectorization happens
-> properly. With -S -Rpass-missed='.*' added to the xor-neon.c command:
->
-> /home/nathan/cbl/linux-next/include/asm-generic/xor.h:15:2: remark: the cost-model indicates that interleaving is not beneficial [-Rpass-missed=loop-vectorize]
-> /home/nathan/cbl/linux-next/include/asm-generic/xor.h:11:1: remark: List vectorization was possible but not beneficial with cost 0 >= 0 [-Rpass-missed=slp-vectorizer]
-> xor_8regs_2(unsigned long bytes, unsigned long *p1, unsigned long *p2)
-> ^
->
-> So right now, it doesn't look like there is a minimum version for clang
-> and I don't think adding a warning for clang is productive (what is a
-> user supposed to do?)
+I spent half of dinner last night being complained to by one of our
+hardware engineers about Linux's lack of support for the flags argument
+to fchmodat().  This all came about because of a FUSE filesystem
+implementation, and while there are some application-specific
+workarounds for the issue it seemed to me like the cleanest bet was to
+just go add another fchmodat() that supports flags to the kernel.
 
-I see. If we don't have a vectorized version of the xor module with
-clang, I would suggest dropping your patch then, and instead adding
-a Kconfig dependency on CC_IS_GCC, until clang is able to do it right.
+The actual implementation is super simple: essentially it's just
+the same as fchmodat(), but LOOKUP_FOLLOW is conditionally set based on
+the flags.  I've attempted to make this match "man 2 fchmodat" as
+closely as possible, which says EINVAL is returned for invalid flags (as
+opposed to ENOTSUPP, which is currently returned by glibc for
+AT_SYMLINK_NOFOLLOW).  I have a sketch of a glibc patch that I haven't
+even compiled yet, but seems fairly straight-forward:
 
-       Arnd
+    diff --git a/sysdeps/unix/sysv/linux/fchmodat.c b/sysdeps/unix/sysv/linux/fchmodat.c
+    index 6d9cbc1ce9e0..b1beab76d56c 100644
+    --- a/sysdeps/unix/sysv/linux/fchmodat.c
+    +++ b/sysdeps/unix/sysv/linux/fchmodat.c
+    @@ -29,12 +29,36 @@
+     int
+     fchmodat (int fd, const char *file, mode_t mode, int flag)
+     {
+    -  if (flag & ~AT_SYMLINK_NOFOLLOW)
+    -    return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
+    -#ifndef __NR_lchmod		/* Linux so far has no lchmod syscall.  */
+    +  /* There are four paths through this code:
+    +      - The flags are zero.  In this case it's fine to call fchmodat.
+    +      - The flags are non-zero and glibc doesn't have access to
+    +	__NR_fchmodat4.  In this case all we can do is emulate the error codes
+    +	defined by the glibc interface from userspace.
+    +      - The flags are non-zero, glibc has __NR_fchmodat4, and the kernel has
+    +	fchmodat4.  This is the simplest case, as the fchmodat4 syscall exactly
+    +	matches glibc's library interface so it can be called directly.
+    +      - The flags are non-zero, glibc has __NR_fchmodat4, but the kernel does
+    +	not.  In this case we must respect the error codes defined by the glibc
+    +	interface instead of returning ENOSYS.
+    +    The intent here is to ensure that the kernel is called at most once per
+    +    library call, and that the error types defined by glibc are always
+    +    respected.  */
+    +
+    +#ifdef __NR_fchmodat4
+    +  long result;
+    +#endif
+    +
+    +  if (flag == 0)
+    +    return INLINE_SYSCALL (fchmodat, 3, fd, file, mode);
+    +
+    +#ifdef __NR_fchmodat4
+    +  result = INLINE_SYSCALL (fchmodat4, 4, fd, file, mode, flag);
+    +  if (result == 0 || errno != ENOSYS)
+    +    return result;
+    +#endif
+    +
+       if (flag & AT_SYMLINK_NOFOLLOW)
+         return INLINE_SYSCALL_ERROR_RETURN_VALUE (ENOTSUP);
+    -#endif
+     
+    -  return INLINE_SYSCALL (fchmodat, 3, fd, file, mode);
+    +  return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
+     }
+
+I've never added a new syscall before so I'm not really sure what the
+proper procedure to follow is.  I'm assuming any new syscall will
+involve fairly significant discussion, so I've just done the minimum of
+an implementation for this patch set.  Specifically, I've:
+
+* Defined a new syscall that looks like fchmodat but includes a flag
+  argument, which I'm calling fchmodat4 because it has 4 arguments.  I
+  don't know if that's the correct naming convention, and don't really
+  have any skin in that game.
+* Implemented that syscall by extending the fchmod code to handle flags,
+  which is pretty straight-forward.  I think it's sane, but given that
+  it's so simple I'm not sure if I'm missing something -- specifically,
+  I didn't go check to make sure the semantics of AT_SYMLINK_NOFOLLOW
+  match !LOOKUP_FOLLOW.  I'm assuming the do, but sometimes when I look
+  at something and say "that's so simple, how is it broken" I'm actually
+  just missing something entirely.
+* Added an asm-generic syscall number for this, which I assume I'm
+  supposed to do this first as it looks like we're trying to keep the
+  numbers in sync everywhere.
+* Added x86 syscalls for this so I could test it.
+
+I also cleaned up a checkpatch issue in fchmodat().  I only found this
+because I copied the fchmodat() interface for fchmodat4() and it threw
+the warning, I don't personally care either way as to whether or not the
+space is in there.
+
+I've given this fairly minimal testing.  Essentially all I've done is
+booted up 5.1.6 with this patch set on my local development box and run
+
+    $ touch test-file
+    $ ln -s test-file test-link
+    $ cat > test.c
+    #include <fcntl.h>
+    #include <stdio.h>
+    #include <unistd.h>
+    
+    int main(int argc, char **argv)
+    {
+            long out;
+    
+            out = syscall(428, AT_FDCWD, "test-file", 0x888, AT_SYMLINK_NOFOLLOW);
+            printf("fchmodat4(AT_FDCWD, \"test-file\", 0x888, AT_SYMLINK_NOFOLLOW): %ld\n", out);
+    
+            out = syscall(428, AT_FDCWD, "test-file", 0x888, 0);
+            printf("fchmodat4(AT_FDCWD, \"test-file\", 0x888, 0): %ld\n", out);
+    
+            out = syscall(268, AT_FDCWD, "test-file", 0x888);
+            printf("fchmodat(AT_FDCWD, \"test-file\", 0x888): %ld\n", out);
+    
+            out = syscall(428, AT_FDCWD, "test-link", 0x888, AT_SYMLINK_NOFOLLOW);
+            printf("fchmodat4(AT_FDCWD, \"test-link\", 0x888, AT_SYMLINK_NOFOLLOW): %ld\n", out);
+    
+            out = syscall(428, AT_FDCWD, "test-link", 0x888, 0);
+            printf("fchmodat4(AT_FDCWD, \"test-link\", 0x888, 0): %ld\n", out);
+    
+            out = syscall(268, AT_FDCWD, "test-link", 0x888);
+            printf("fchmodat(AT_FDCWD, \"test-link\", 0x888): %ld\n", out);
+    
+            return 0;
+    }
+    $ gcc test.c -o test
+    $ ./test
+    fchmodat4(AT_FDCWD, "test-file", 0x888, AT_SYMLINK_NOFOLLOW): 0
+    fchmodat4(AT_FDCWD, "test-file", 0x888, 0): 0
+    fchmodat(AT_FDCWD, "test-file", 0x888): 0
+    fchmodat4(AT_FDCWD, "test-link", 0x888, AT_SYMLINK_NOFOLLOW): -1
+    fchmodat4(AT_FDCWD, "test-link", 0x888, 0): 0
+    fchmodat(AT_FDCWD, "test-link", 0x888): 0
+
+While I don't think there's any reason what's there is unacceptable, I
+don't really consider this finished.  I couldn't find a cookbook for
+"here's how you add a system call", but all I really did was "git grep
+add | grep syscall" so if there's something out there then please let me
+know and I'll follow it.  Specifically, I haven't:
+
+* Added any sort of documentation.  I don't find anything with a "git
+  grep fchmodat", so I'm assuming it's just the man pages that are
+  relevant here.
+* Fixed any of the other architectures.  I'm assuming this is just the
+  mechanical process of fixing all these in the same way I did for x86.
+
+      arch/alpha/kernel/syscalls/syscall.tbl:461      common  fchmodat                        sys_fchmodat
+      arch/arm/tools/syscall.tbl:333  common  fchmodat                sys_fchmodat
+      arch/arm64/include/asm/unistd32.h:#define __NR_fchmodat 333
+      arch/arm64/include/asm/unistd32.h:__SYSCALL(__NR_fchmodat, sys_fchmodat)
+      arch/ia64/kernel/fsys.S:        data8 0                         // fchmodat
+      arch/ia64/kernel/syscalls/syscall.tbl:268       common  fchmodat                        sys_fchmodat
+      arch/m68k/kernel/syscalls/syscall.tbl:299       common  fchmodat                        sys_fchmodat
+      arch/microblaze/kernel/syscalls/syscall.tbl:306 common  fchmodat                        sys_fchmodat
+      arch/mips/kernel/syscalls/syscall_n32.tbl:262   n32     fchmodat                        sys_fchmodat
+      arch/mips/kernel/syscalls/syscall_n64.tbl:258   n64     fchmodat                        sys_fchmodat
+      arch/mips/kernel/syscalls/syscall_o32.tbl:299   o32     fchmodat                        sys_fchmodat
+      arch/parisc/kernel/syscalls/syscall.tbl:286     common  fchmodat                sys_fchmodat
+      arch/powerpc/kernel/syscalls/syscall.tbl:297    common  fchmodat                        sys_fchmodat
+      arch/s390/kernel/syscalls/syscall.tbl:299  common       fchmodat                sys_fchmodat                    sys_fchmodat
+      arch/sh/include/uapi/asm/unistd_64.h:#define __NR_fchmodat              334
+      arch/sh/kernel/syscalls/syscall.tbl:306 common  fchmodat                        sys_fchmodat
+      arch/sh/kernel/syscalls_64.S:   .long sys_fchmodat
+      arch/sparc/kernel/syscalls/syscall.tbl:295      common  fchmodat                sys_fchmodat
+      arch/xtensa/kernel/syscalls/syscall.tbl:300     common  fchmodat                        sys_fchmodat
+* Looked at anything in tools.  Again, I'm assuming it's just a
+  mechanical process of looking at all of these and adding fchmodat4.
+
+      tools/include/nolibc/nolibc.h:#ifdef __NR_fchmodat
+      tools/include/nolibc/nolibc.h:  return my_syscall4(__NR_fchmodat, AT_FDCWD, path, mode, 0);
+      tools/include/uapi/asm-generic/unistd.h:#define __NR_fchmodat 53
+      tools/include/uapi/asm-generic/unistd.h:__SYSCALL(__NR_fchmodat, sys_fchmodat)
+      tools/perf/arch/powerpc/entry/syscalls/syscall.tbl:297  common  fchmodat                        sys_fchmodat
+      tools/perf/arch/s390/entry/syscalls/syscall.tbl:299  common     fchmodat                sys_fchmodat                    compat_sys_fchmodat
+      tools/perf/arch/x86/entry/syscalls/syscall_64.tbl:268   common  fchmodat                __x64_sys_fchmodat
+      tools/perf/builtin-trace.c:     { .name     = "fchmodat",
+
+* Done anything with userspace, aside from thinking about the glibc code
+  above.  I'd assume that I'm meant to bring in libc-alpha to the
+  discussion, but I didn't want to do so this early in case this was
+  just a non-starter.
+
+I'm happy dealing with all of that, but given that I'm assuming there's
+going to be some discussion I wanted to send out the proof-of-concept
+first to see if this has any legs.  Aside from the glibc side the
+remaining work smells pretty mechanical, so I figured I'd wait on that
+until I knew it wasn't going to be a waste of time -- partially because
+I'm lazy, but mostly because I just realized I blew my whole morning
+working on this when all I really wanted to do was avoid discussing
+fchmodat in the first place :)
+    
+
