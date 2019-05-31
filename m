@@ -4,26 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 943EEC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1176C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6776226B5A
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C48C726B5E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:10:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbfEaPKN (ORCPT
+        id S1726887AbfEaPKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 11:10:13 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:44159 "EHLO
+        Fri, 31 May 2019 11:10:17 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:57807 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbfEaPKM (ORCPT
+        with ESMTP id S1726418AbfEaPKP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 11:10:12 -0400
+        Fri, 31 May 2019 11:10:15 -0400
 Received: from orion.localdomain ([77.7.63.28]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MatZt-1h099n0hvH-00cSMW; Fri, 31 May 2019 17:09:12 +0200
+ 1MHoZM-1hLEQr02bu-00ExVB; Fri, 31 May 2019 17:09:11 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org, jdelvare@suse.com,
@@ -31,28 +30,28 @@ Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org, jdelvare@suse.com,
         martin.petersen@oracle.com, aacraid@microsemi.com,
         linux-pm@vger.kernel.org, linux-hwmon@vger.kernel.org,
         linux-scsi@vger.kernel.org
-Subject: [PATCH 3/3] drivers: hwmon: i5k_amb: remove unnecessary #ifdef MODULE
-Date:   Fri, 31 May 2019 17:09:04 +0200
-Message-Id: <1559315344-10384-4-git-send-email-info@metux.net>
+Subject: [PATCH 1/3] drivers: cpufreq: cpufreq-nforce2: remove unnecessary #ifdef MODULE
+Date:   Fri, 31 May 2019 17:09:02 +0200
+Message-Id: <1559315344-10384-2-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1559315344-10384-1-git-send-email-info@metux.net>
 References: <1559315344-10384-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:UFXCTI+KzrMW9xbCJ12euR95G6kfoQ3hucMGBBHRk8vAmA8h++y
- atYci0mi+NPhgAE1qhS6aZ9fGOnaGrLanWLtyFr96kZuMR4dOIvcznbAJDB9G2EeSOK6AS0
- lGVHgmvWbj42YrhlmZlOZLH2a2664ODGUNdeTJS1NeKevgeQCC8/7SMQUfNUrn0boYWSrA+
- 1Hs6drrmGWuHAgOwRG04g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:2bZ6GxbGq4A=:ulLt4MudFSLl1iwUUZQWW6
- 1HlUAPB291wGvY/suiq7ef/3DgpQB7zw1CELV8v9xLGZI5pZ7hNnJFnZxt/uhZtL8yz9gM6AF
- pEUD4OWbgd8aN/lqcrOSltvBpVBIFFzaDEzp9lej83UkigEap+16tP/HQKZPRm2YXY7fS4GdZ
- sxALxl0IIIfwiCV6qV6e/WcwRHdYzZX/E1MmELfLhLmiU4YN9ofSR62E0GF7WGhyRSy44y9HV
- nGyCMsp2SjgeEUMtPzgBLiDrhlPiGTJlEgTmR29AsC0nij/mlaIKehcjHIrFBcHzcELKqFJoR
- ZDEATb8yRVuyWDbLcNExBx1w1+N1gDVXN0UAIrU7oI/BepyLZHKao0LoTIzHhtJWl9EKd22HD
- 0tu0/Je45iqqaLMw3Ie9zymLbMLX59VfsrbKtLMRc2gkMfVzTNtOLNtwd17cdsP4qmOICkF8a
- YdyPbs6FmGuJNICL4rA308o80o8J24AQk6sJtcyIuQBivSHzSVrB1MaByuBLl/4k0gQ4uAtpz
- GFXsQtt7Gr4v+EnfMAuBsigtybzCe/dutPGZjXedmrPk29OrGGCKgDD8K5vbl/pGp9IdSK0vm
- Hr8Js3sXUE83hR2V59JQqfcl9nyYj5juyuA9y8fUAPibfZLpAcxf5sBwMXziqjwwhzs9yEth+
- brLvA60uevkbOKmlEQ35cayuxpHD9RlW5uxAWm+VynpY6HAoZDlVz2EoVZ2Cdso6xsJFcs94S
- 3Y2FVSOy6m2lFLYFvY+0lZoE0Ki+BSZKeWCcYw==
+X-Provags-ID: V03:K1:AJheLpqoCJKbh6Psp+1Aqo/PyA4RuHOgwjoUpGVJuTXuR6QfiD4
+ gt34TkkfESTrbAeNrt1ni2kUVHZ6MDEnErBlyN638nhUJDyM18ZaBgONmUM7O3HgrhBrQm7
+ ihsmaC7fHGMHq8L2Sgi74UuUcAi4N0QzjP+mBe1H3SVdjiNHb8oHOKrJetvWIJYvHgNktrD
+ daZE8Tab/M1BWb2Man7uQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:qHX4061IyVQ=:hCuUIvpC9QTPluiqGmqw/+
+ uRykCwCRpIe0OdB5gTV9n2PrNOtMjomKVLyqVPITGGAMxWeNoiPpi1l8RkMY1BLRha0b1f8n+
+ wZi/7zE7tTbAYAPLq9hGToxizzx3EpVQ6LoOIsafPMbkb6Ra0ZNmZjdX6oxPuXnLOOvNv/w5W
+ MZNgf4bcYTSj/vSYVS5JmAoEthTBc2jv8vcHD3znGnHHcTHAAVeLDEOv9YCTFJHv4OvKaddVd
+ Z5YtbsuREczNcvLqpHLmy673pK4tYKwLpI0FP7B7RtHHaaYEvrNg5vIXsAVZLfofco3E5DKh4
+ IwQMvqSQut32S+EA//6IYrt1Yj0Sg7I8kevLUHiHtPGAPgyu7qyP6UU0juNh7ss3Y90rt9q6P
+ YQhRAVpbSAhJ/uIMQZPxOpDrQXb2E8WYRTd4uNK2qwCdazVKjt2yhayA+3qKLN10pgYTKc9eh
+ 9b9cSGvxbAB7XTro5aWU6AU3TE43vLpT+21epTkMWG1+0m7VEp/8pjnpE7XV5smlfjftbmJ7b
+ z+vgz9tMZJELVXgw2jaNtU0bgw9ZnW10/0BH/+bgYI0bsWkEoCtCA3A/uQgMUYTNDZCkflqp0
+ Cp7ZwJEvNdK001VE7Yun8GTLxQ2ZT/UxTWMpOo/z+nEjUbZMtA+KxjQjHz6s9TWDOgKtosuAn
+ vzw3QG2zdh95eC9HAJ15vBNAQ+nt9uoFqOUCMut+qeks6+gB4M4DpdI8AUtlCn6T9+CV5nGSl
+ 6Y82LiOO8CZ6DVsAnHKTAVz6xyMaJ9l3r5XjDw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -63,28 +62,27 @@ so the extra check here is not necessary.
 
 Signed-off-by: Enrico Weigelt <info@metux.net>
 ---
- drivers/hwmon/i5k_amb.c | 2 --
+ drivers/cpufreq/cpufreq-nforce2.c | 2 --
  1 file changed, 2 deletions(-)
 
-diff --git a/drivers/hwmon/i5k_amb.c b/drivers/hwmon/i5k_amb.c
-index 2cf73d8..622405b 100644
---- a/drivers/hwmon/i5k_amb.c
-+++ b/drivers/hwmon/i5k_amb.c
-@@ -495,14 +495,12 @@ static int i5k_channel_probe(u16 *amb_present, unsigned long dev_id)
- 	{ 0, 0 }
+diff --git a/drivers/cpufreq/cpufreq-nforce2.c b/drivers/cpufreq/cpufreq-nforce2.c
+index 33c309a..b8a6c9e 100644
+--- a/drivers/cpufreq/cpufreq-nforce2.c
++++ b/drivers/cpufreq/cpufreq-nforce2.c
+@@ -374,13 +374,11 @@ static int nforce2_cpu_exit(struct cpufreq_policy *policy)
+ 	.exit = nforce2_cpu_exit,
  };
  
 -#ifdef MODULE
- static const struct pci_device_id i5k_amb_ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_5000_ERR) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_5400_ERR) },
- 	{ 0, }
+ static const struct pci_device_id nforce2_ids[] = {
+ 	{ PCI_VENDOR_ID_NVIDIA, PCI_DEVICE_ID_NVIDIA_NFORCE2 },
+ 	{}
  };
- MODULE_DEVICE_TABLE(pci, i5k_amb_ids);
+ MODULE_DEVICE_TABLE(pci, nforce2_ids);
 -#endif
  
- static int i5k_amb_probe(struct platform_device *pdev)
- {
+ /**
+  * nforce2_detect_chipset - detect the Southbridge which contains FSB PLL logic
 -- 
 1.9.1
 
