@@ -3,193 +3,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FF3C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E3AC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5BC026E8C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78AF426E99
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 19:56:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727433AbfEaT4D (ORCPT
+        id S1727463AbfEaT45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 15:56:03 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:15143 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727318AbfEaT4C (ORCPT
+        Fri, 31 May 2019 15:56:57 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:37023 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727147AbfEaT44 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 15:56:02 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cf186d00001>; Fri, 31 May 2019 12:56:00 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 31 May 2019 12:56:00 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 31 May 2019 12:56:00 -0700
-Received: from [10.2.175.94] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 May
- 2019 19:55:57 +0000
-Subject: Re: [PATCH V2 04/12] clk: tegra: add support for peripheral clock
- suspend and resume
-To:     Stephen Boyd <sboyd@kernel.org>, <jason@lakedaemon.net>,
-        <jonathanh@nvidia.com>, <linus.walleij@linaro.org>,
-        <marc.zyngier@arm.com>, <mark.rutland@arm.com>, <stefan@agner.ch>,
-        <tglx@linutronix.de>, <thierry.reding@gmail.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <jckuo@nvidia.com>, <josephl@nvidia.com>, <talho@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
- <1559084936-4610-5-git-send-email-skomatineni@nvidia.com>
- <20190529233049.A7E5924371@mail.kernel.org>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <abd481db-9387-8e7f-e68e-9f1a3e217b51@nvidia.com>
-Date:   Fri, 31 May 2019 12:55:56 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 31 May 2019 15:56:56 -0400
+Received: by mail-qt1-f193.google.com with SMTP id y57so2408226qtk.4;
+        Fri, 31 May 2019 12:56:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Y/rGGdWu5XycD5C8N2GrP1YfPaYIiEt1+UzdCzQQwTA=;
+        b=IRDgGMYuAvaE1GSIOI3o/tLy6QghUC/gn59W8EGZYnnrf9ygntjzbieiQ3dlEsllbU
+         ztyyIguVbB2eHpmI9PkEJ2BwAS9VlMhKzI+fhGp2Lgr6qdZSii2rAWmai/dO1jFO5bxB
+         cVXi/mZFGbSbMsIAvroXJO/nn9LYuVE7T9DyKs4KHkS08aDguFsrE07Ml8RNFFXZ+X5G
+         svudypRSxUBdUObaug++K1UclxUiicg5g+AnqXx5puXnX8UkMleopia6girdXGU8pZcl
+         pfT6fHEXuCzscjxIpLM04Vewl7J3jbV0wGGhX+nv5qLlnJHgkDn9NqEepMNlBbte9z++
+         nkvw==
+X-Gm-Message-State: APjAAAVtQFKrl/qfDJBgj/1KCyOFg3tHCbU4gYtI8oWsyc+lJhSUS3W9
+        1U8LurkPcqIvnSneESH1GxXBaWFmkXz/x/3ap9g=
+X-Google-Smtp-Source: APXvYqz07GsQb18PQEuYoOrVPB5qWAwO/Z2Je+evEIb3JjUC/80MFu0dsduMvyyuzYa7wz7Pj3pRLV9pSmAglB0lGPc=
+X-Received: by 2002:a0c:b78a:: with SMTP id l10mr10482109qve.62.1559332615542;
+ Fri, 31 May 2019 12:56:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190529233049.A7E5924371@mail.kernel.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20190531191204.4044-1-palmer@sifive.com> <20190531191204.4044-4-palmer@sifive.com>
+In-Reply-To: <20190531191204.4044-4-palmer@sifive.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 31 May 2019 21:56:39 +0200
+Message-ID: <CAK8P3a2=xko56LbwV4tyhyyyX+tw+EV-NGavYEYj0q61t=mnwg@mail.gmail.com>
+Subject: Re: [PATCH 3/5] asm-generic: Register fchmodat4 as syscall 428
+To:     Palmer Dabbelt <palmer@sifive.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-	t=1559332560; bh=fyUgksf15TgB7D/+ZMOAO7M7CVG31MW/WSQCDBy4pVQ=;
-	h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-	 User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-	 X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-	 Content-Language;
-	b=iqAjo2NdebEX6IQgtE+dZ1EoyeCEIZAqRf22p21EapkVX0OBJC3q4Gq7gRPrH2fJC
-	 uhLbg6vyTpA7tw+SL/Q6OC76foZllVOZDlC8m02oSU3qttQyJX5rCD59shHR+I4y1U
-	 EO5f5ynsViWBR2kJNtgRO2yTrKQCYOWgX2VSfb1c3OX347L/TSCQDDFU/bocKSDD6L
-	 cjVCbddyiIHj6HtpiRzWKIezGprf40oa5Lsd7heEqGTFe2IPIuIAcrtSjmg455iUvU
-	 qyKwofgEpOyXkvlW1Jy4Xm+1v3hRH1W5bgxWWMWL7BWkGQQDwHLZXwNVTA0iT/JH6L
-	 nz/b3Hyar6Dwg==
+On Fri, May 31, 2019 at 9:23 PM Palmer Dabbelt <palmer@sifive.com> wrote:
+>
+> Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
 
-On 5/29/19 4:30 PM, Stephen Boyd wrote:
-> Quoting Sowjanya Komatineni (2019-05-28 16:08:48)
->> This patch implements peripheral clock context save and restore
->> to support system suspend and resume operation.
-> Again, why?
-Will add more in commit in next version of this series.
->> diff --git a/drivers/clk/tegra/clk.c b/drivers/clk/tegra/clk.c
->> index 6f2862eddad7..08b788766564 100644
->> --- a/drivers/clk/tegra/clk.c
->> +++ b/drivers/clk/tegra/clk.c
->> @@ -81,6 +81,10 @@ static struct clk **clks;
->>   static int clk_num;
->>   static struct clk_onecell_data clk_data;
->>   
->> +#ifdef CONFIG_PM_SLEEP
->> +static u32 *periph_ctx;
->> +#endif
-> Please move this into the ifdef below.
->
-WIll fix in V3
->> +
->>   /* Handlers for SoC-specific reset lines */
->>   static int (*special_reset_assert)(unsigned long);
->>   static int (*special_reset_deassert)(unsigned long);
->> @@ -210,6 +214,65 @@ const struct tegra_clk_periph_regs *get_reg_bank(int clkid)
->>          }
->>   }
->>   
->> +#ifdef CONFIG_PM_SLEEP
->> +void tegra_clk_periph_suspend(void __iomem *clk_base)
->> +{
->> +       int i, idx;
->> +
->> +       idx = 0;
->> +       for (i = 0; i < periph_banks; i++, idx++)
->> +               periph_ctx[idx] =
->> +                       readl_relaxed(clk_base + periph_regs[i].rst_reg);
->> +
->> +       for (i = 0; i < periph_banks; i++, idx++)
->> +               periph_ctx[idx] =
->> +                       readl_relaxed(clk_base + periph_regs[i].enb_reg);
->> +}
->> +
->> +void tegra_clk_periph_force_on(u32 *clks_on, int count, void __iomem *clk_base)
->> +{
->> +       int i;
->> +
->> +       WARN_ON(count != periph_banks);
->> +
->> +       for (i = 0; i < count; i++)
->> +               writel_relaxed(clks_on[i], clk_base + periph_regs[i].enb_reg);
->> +}
->> +
->> +void tegra_clk_periph_resume(void __iomem *clk_base)
->> +{
->> +       int i, idx;
->> +
->> +       idx = 0;
->> +       for (i = 0; i < periph_banks; i++, idx++)
->> +               writel_relaxed(periph_ctx[idx],
->> +                              clk_base + periph_regs[i].rst_reg);
->> +
->> +       /* ensure all resets have propagated */
->> +       fence_udelay(2, clk_base);
->> +       tegra_read_chipid();
->> +
->> +       for (i = 0; i < periph_banks; i++, idx++)
->> +               writel_relaxed(periph_ctx[idx],
->> +                              clk_base + periph_regs[i].enb_reg);
->> +
->> +       /* ensure all enables have propagated */
->> +       fence_udelay(2, clk_base);
->> +       tegra_read_chipid();
->> +}
->> +
->> +static int tegra_clk_suspend_ctx_init(int banks)
->> +{
->> +       int err = 0;
->> +
->> +       periph_ctx = kzalloc(2 * banks * sizeof(*periph_ctx), GFP_KERNEL);
-> Is this kcalloc(2 * banks, sizeof(*periph_ctx)... ?
-Will fix in V3
->> +       if (!periph_ctx)
->> +               err = -ENOMEM;
->> +
->> +       return err;
->> +}
->> +#endif
->> +
->>   struct clk ** __init tegra_clk_init(void __iomem *regs, int num, int banks)
->>   {
->>          clk_base = regs;
->> @@ -226,11 +289,20 @@ struct clk ** __init tegra_clk_init(void __iomem *regs, int num, int banks)
->>          periph_banks = banks;
->>   
->>          clks = kcalloc(num, sizeof(struct clk *), GFP_KERNEL);
->> -       if (!clks)
->> +       if (!clks) {
->>                  kfree(periph_clk_enb_refcnt);
->> +               return NULL;
->> +       }
->>   
->>          clk_num = num;
->>   
->> +#ifdef CONFIG_PM_SLEEP
-> Can you use if (IS_ENABLED(CONFIG_PM_SLEEP)) here?
-Will fix in V3
->
->> +       if (tegra_clk_suspend_ctx_init(banks)) {
->> +               kfree(periph_clk_enb_refcnt);
->> +               kfree(clks);
->> +               return NULL;
->> +       }
->> +#endif
->>          return clks;
->>   }
->>   
+As usual, each patch needs a changelog text. I would prefer having a single
+patch here that changes /all/ system call tables at once, rather than doing one
+at a time like we used to.
+
+In linux-next, we are at number 434 now, and there are a couple of other
+new system calls being proposed right now (more than usual), so you may
+have to change the number a few times.
+
+Note: most architectures use .tbl files now, the exceptions are
+include/uapi/asm-generic/unistd.h and arch/arm64/include/asm/unistd32.h,
+and the latter also requires changing __NR_compat_syscalls in asm/unistd.h.
+
+Numbers should now be the same across architectures, except for alpha,
+which has a +110 offset. We have discussed ways to have a single
+file to modify for a new call on all architectures, but no patches yet.
+
+     Arnd
