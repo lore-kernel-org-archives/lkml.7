@@ -2,102 +2,98 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83637C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:29:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC81C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 566B225973
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:29:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="x+5Mxo/i"
+	by mail.kernel.org (Postfix) with ESMTP id 8358E266DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:30:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbfEaJ3d (ORCPT
+        id S1727008AbfEaJaz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 05:29:33 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:42066 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726386AbfEaJ3c (ORCPT
+        Fri, 31 May 2019 05:30:55 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:51248 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbfEaJaz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 05:29:32 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4V9TCGJ055040;
-        Fri, 31 May 2019 09:29:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=B/80Jbbdq5j+mezsLHBpZfOYUfPS/DTx5wYd1REElw0=;
- b=x+5Mxo/iFOaYGB6PxeQ6fjKAm1DRHRb7a9ce3Xv0K1GDid5835vLUk3loMPnkP2BiNRm
- enz0u4jZXswJZEha/tG7V0+6y/WWbiBuQb1qZSC0zMppyFvtxV/jtsX1qJlRMprwi64y
- Mi7G80UHqschyFu30a9ybAu2/udZjlM9hQifYpIo/RHXpjOa1eEj5vrGNwZnPN9VL5Y/
- 3iC1uZzt5cPjZpyEn5vfXFGZF2z/rQcfQ+Q4uoVbdzYktm6HPst+pjsOIV0wrAQHaNEM
- u+sx0xnEPfZTlu6JPInnyM9VBaMaA4f+134BLaBsWZDBX/8s2Nvvf/CmupV3sa+B3XiN dw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2spw4tw6d3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 31 May 2019 09:29:20 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4V9RkNj122297;
-        Fri, 31 May 2019 09:29:19 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2ss1fphk0h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 31 May 2019 09:29:19 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4V9TG0F027392;
-        Fri, 31 May 2019 09:29:17 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 31 May 2019 02:29:15 -0700
-Date:   Fri, 31 May 2019 12:29:07 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Cc:     larry.finger@lwfinger.net, florian.c.schilhabel@googlemail.com,
-        gregkh@linuxfoundation.org, himadri18.07@gmail.com,
-        colin.king@canonical.com, straube.linux@gmail.com,
-        yangx92@hotmail.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: rtl8712: Replace function r8712_init_mlme_priv
-Message-ID: <20190531092907.GC31203@kadam>
-References: <20190530205531.30016-1-nishkadg.linux@gmail.com>
+        Fri, 31 May 2019 05:30:55 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 3CE6F80225; Fri, 31 May 2019 11:30:43 +0200 (CEST)
+Date:   Fri, 31 May 2019 11:30:52 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Fabien Dessenne <fabien.dessenne@st.com>
+Cc:     Hugues Fruchet <hugues.fruchet@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Pavel Machek <pavel@denx.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH] media: stm32-dcmi: fix irq = 0 case
+Message-ID: <20190531093052.GA23111@amd>
+References: <1559294295-20573-1-git-send-email-fabien.dessenne@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ZGiS0Q5IWpPtfppv"
 Content-Disposition: inline
-In-Reply-To: <20190530205531.30016-1-nishkadg.linux@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9273 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905310062
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9273 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905310062
+In-Reply-To: <1559294295-20573-1-git-send-email-fabien.dessenne@st.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 02:25:31AM +0530, Nishka Dasgupta wrote:
-> Delete r8712_init_mlme_priv as it does nothing except call
-> _init_mlme_priv, and rename _init_mlme_priv to
-> r8712_init_mlme_priv.
-> Change the type of the new r8712_init_mlme_priv (formerly _init_mlme_priv)
-> to (non-static) int, from static sint.
-> 
-> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
-> ---
 
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+--ZGiS0Q5IWpPtfppv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Looks good, thanks.
+On Fri 2019-05-31 11:18:15, Fabien Dessenne wrote:
+> Manage the irq =3D 0 case, where we shall return an error.
+>=20
+> Fixes: b5b5a27bee58 ("media: stm32-dcmi: return appropriate error codes d=
+uring probe")
+> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
 
-regards,
-dan carpenter
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Reported-by: Pavel Machek <pavel@ucw.cz>
 
+:-).
+								Pavel
+
+> +++ b/drivers/media/platform/stm32/stm32-dcmi.c
+> @@ -1702,7 +1702,7 @@ static int dcmi_probe(struct platform_device *pdev)
+>  	if (irq <=3D 0) {
+>  		if (irq !=3D -EPROBE_DEFER)
+>  			dev_err(&pdev->dev, "Could not get irq\n");
+> -		return irq;
+> +		return irq ? irq : -ENXIO;
+>  	}
+> =20
+>  	dcmi->res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--ZGiS0Q5IWpPtfppv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlzw9EwACgkQMOfwapXb+vI91gCgrymhw+fLQG9ycygMMLdOh9Mv
+Ao8AoKLSVLOH71CRZXNcxqg8QDUQpczh
+=7mwO
+-----END PGP SIGNATURE-----
+
+--ZGiS0Q5IWpPtfppv--
