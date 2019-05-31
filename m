@@ -2,150 +2,75 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 815B9C28CC0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 00:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F64C46470
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 00:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5413A26348
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 00:26:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0423E2634F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 00:35:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="E7zN9t3G"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="XMVG4VkD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbfEaAZ7 (ORCPT
+        id S1726609AbfEaAfJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 20:25:59 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:37605 "EHLO ozlabs.org"
+        Thu, 30 May 2019 20:35:09 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:57800 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726045AbfEaAZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 20:25:59 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726128AbfEaAfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 20:35:08 -0400
+Received: from cz.tnic (unknown [207.225.69.115])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45FQGW4f6Yz9sDX;
-        Fri, 31 May 2019 10:25:54 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1559262355;
-        bh=zSm7pKnWmGtlSP5Cszh1yek7Et6ipYjizk37mVLQDWk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=E7zN9t3GfHpWkYYChe1Ws8rTHORmXKWCbnho/6biYnfQg94BTb+gx2t2njCt22XNf
-         5KOMUVScyix+um1zAjINp15ukJm+deUUE8hzD4codI43pumL1Q1b74fdDyWrAn+Rtz
-         uVrYRSaTaPdlAAQYHAS1xs/FkGfvJVX+i0U2EXzWu0xgW0blm4NsrpB+4lrd+rb7rA
-         W2mtr2QoliBmWpFnZoR5DDAa/ohsefSjMNgpGM40Ditmsrgo5DXvmslUUX5u1xlNW9
-         wYSTKn0z2g2C1uhiqC4NOtBTV8NMY5jMQsXl+T33IowF2V226sxJKNcF1pwcz8Vj8h
-         pWw4P9ygyn02Q==
-Date:   Fri, 31 May 2019 10:25:53 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>
-Subject: linux-next: manual merge of the net-next tree with the net tree
-Message-ID: <20190531102553.21963774@canb.auug.org.au>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9F3A71EC048A;
+        Fri, 31 May 2019 02:35:06 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1559262907;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=dL4Q7H1RzI/U415F83326iuQleoLP8cRBYlKonLtIAA=;
+        b=XMVG4VkDB3/wPVzUlw18YET6qYZJx1qL7wb7B9xmCuZqODESTDttUmRrIH/d6wqmDcoZwD
+        4PKainp6OgnS3JI6oGKb37uQ6yxMjywCWIR3j6VX98LKjqYKXhsnj0lQ8zdWSibF4Xp7pm
+        bsJXh/MiQWb768XcdGEL1HsBuUv3so0=
+Date:   Fri, 31 May 2019 02:35:04 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Hanna Hawa <hhhawa@amazon.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, mchehab@kernel.org, james.morse@arm.com,
+        davem@davemloft.net, nicolas.ferre@microchip.com,
+        paulmck@linux.ibm.com, dwmw@amazon.co.uk, benh@amazon.com,
+        ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com,
+        hanochu@amazon.com, linux-edac@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: EDAC: add Amazon Annapurna Labs EDAC
+ binding
+Message-ID: <20190531003504.GA2630@cz.tnic>
+References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
+ <1559211329-13098-2-git-send-email-hhhawa@amazon.com>
+ <20190530115446.GA14088@kroah.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/9nWRv0t=KTrRSG3exrmFxVh"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190530115446.GA14088@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/9nWRv0t=KTrRSG3exrmFxVh
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, May 30, 2019 at 04:54:46AM -0700, Greg KH wrote:
+> I know I can't take patches without any changelog text,
 
-Hi all,
+I thought I was the only one?! :-)
 
-Today's linux-next merge of the net-next tree got a conflict in:
+Good.
 
-  drivers/net/phy/phylink.c
+-- 
+Regards/Gruss,
+    Boris.
 
-between commit:
-
-  c678726305b9 ("net: phylink: ensure consistent phy interface mode")
-
-from the net tree and commit:
-
-  27755ff88c0e ("net: phylink: Add phylink_mac_link_{up, down} wrapper func=
-tions")
-
-from the net-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/net/phy/phylink.c
-index 9044b95d2afe,68d0a89c52be..000000000000
---- a/drivers/net/phy/phylink.c
-+++ b/drivers/net/phy/phylink.c
-@@@ -399,6 -414,36 +418,36 @@@ static const char *phylink_pause_to_str
-  	}
-  }
- =20
-+ static void phylink_mac_link_up(struct phylink *pl,
-+ 				struct phylink_link_state link_state)
-+ {
-+ 	struct net_device *ndev =3D pl->netdev;
-+=20
-++	pl->cur_interface =3D link_state.interface;
-+ 	pl->ops->mac_link_up(pl->config, pl->link_an_mode,
- -			     pl->phy_state.interface,
- -			     pl->phydev);
-++			     pl->cur_interface, pl->phydev);
-+=20
-+ 	if (ndev)
-+ 		netif_carrier_on(ndev);
-+=20
-+ 	phylink_info(pl,
-+ 		     "Link is Up - %s/%s - flow control %s\n",
-+ 		     phy_speed_to_str(link_state.speed),
-+ 		     phy_duplex_to_str(link_state.duplex),
-+ 		     phylink_pause_to_str(link_state.pause));
-+ }
-+=20
-+ static void phylink_mac_link_down(struct phylink *pl)
-+ {
-+ 	struct net_device *ndev =3D pl->netdev;
-+=20
-+ 	if (ndev)
-+ 		netif_carrier_off(ndev);
-+ 	pl->ops->mac_link_down(pl->config, pl->link_an_mode,
- -			       pl->phy_state.interface);
-++			       pl->cur_interface);
-+ 	phylink_info(pl, "Link is Down\n");
-+ }
-+=20
-  static void phylink_resolve(struct work_struct *w)
-  {
-  	struct phylink *pl =3D container_of(w, struct phylink, resolve);
-
---Sig_/9nWRv0t=KTrRSG3exrmFxVh
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzwdJEACgkQAVBC80lX
-0Gwgrwf/Yd0UmZuflVIpQOy57opRiCEoFfskS3ssDSvWIE1D29u5OwYilAsLkarE
-bNkpEnCfIatYOyFrZMLnq7IwKm1qlvbdEONHvEU/kCEsWUbF1pLC+4i6Gyh/a3u4
-bP03SbPPra5r2M4E+/kjadVo2sRO7vHfBAaEZkVv7245IB646TUA6wRSqY+v8bRa
-qDDiMIbSSoo8ML0SCDUkVJp+Ga5M0BlFOfzHGv+N0biSsUocl/H5rT+14N6mPv5T
-bJ5PTcuF2Kein0qKKkwCwPaeVfhDFhNKjI/P1XFYns0HnBHyhPYQx/qnGBnhkYPx
-Ys8zcwK5YtIQQc6WOl80KU/ouncFDw==
-=WZjm
------END PGP SIGNATURE-----
-
---Sig_/9nWRv0t=KTrRSG3exrmFxVh--
+ECO tip #101: Trim your mails when you reply. Srsly.
