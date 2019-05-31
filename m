@@ -2,157 +2,156 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B134C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 628B2C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEBE624765
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:57:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e32JUU3P"
+	by mail.kernel.org (Postfix) with ESMTP id 335772674F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:02:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559296931;
+	bh=ZfRv0Yrgp+Zd8xGJN40ArXNdaxOgATDzT4hykN3QQJs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ydVtsR48vdAQG7+OvA3NGgJfKjkL0SwljOVBd6oz9PlIGDw/FaB3sRjgc9UnPMezA
+	 gi+RRWjVE2XTzXl07dRhlbkDZuD1Rqxab0NjR6d5vi5YF1GsrFSukSnavU591ijfjW
+	 PiLMam6DajosmrXZ7nW2jJZWDXA8fTDPwqOhh7go=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727135AbfEaJ5s (ORCPT
+        id S1726593AbfEaKCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 05:57:48 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:42327 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbfEaJ5s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 05:57:48 -0400
-Received: by mail-oi1-f194.google.com with SMTP id v25so6700065oic.9
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 02:57:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=t/dabiI1+zXohN0XPJPWZWWtcKfqB2v/nUShweQXWc0=;
-        b=e32JUU3PfkhWWkA3PguBCXaJsg7lPEFltaK4JUSnF6IbCO9/3/VgXrN9kHh3T04HLU
-         cc4gQFNRfzpdnn3Zlkl3O/QinrY8vWDnieuJJwrqkt0dvkzgU7PDufYQXYPqEMNesADO
-         JVaQC2W7ZHVecGYxyIF1y9IjnOSSWo9uVr8tnjnGR/TrX7YhkC2+GmF2tE5qi7m3/FYn
-         BfTdJ9JkODL+hIo8f7g/TB0zWHG/iD4uzthFPjhkMd1kviqjgSmtvoJPj1I2+Rb2A3IN
-         KPSBDVByMZKy33HHr8kFjSobFkI5QhXEmahv2OcciHPwIGZXWvZ6+fRFSfkNx/Xuce6j
-         T5LQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=t/dabiI1+zXohN0XPJPWZWWtcKfqB2v/nUShweQXWc0=;
-        b=p9gkkwZrQzrast8aEDSYBwUN5zvmrFG+RGISX0qMQnA6YL2LvgaQZ/A+HM1CQviU4O
-         uzMwyQ5aIPoVR/625z6UcpdVFvKt89OpDMmUa+QkJr+Xhl2iY71jpJoYhqEYnWSHjPdg
-         USX0//NZShPsBssuQHpgDPanscYYTlP66SRVu5oaSY6Rd1ZJ8xNKUsYZY0jISkw73Fwv
-         VCM1ylhPFFC4rgYo5dHEH+UEakAoECWNaxNByV/SCuWueXhtQBegMwaEKicP1J0q0m88
-         o9N3/1Spk1MpUFoujzXHodK09zdrc+IwztZA8JRjl95OvrgBbaKR2pLqtunFR9A1NY0i
-         c8+w==
-X-Gm-Message-State: APjAAAWg/9fn3GGeUfBvkvfK/GNdR0Tdr53FFTRKNOarGYnG6A7XlgYQ
-        14n5D8AQeavvolT1ihgHls3Ysx8fST3sl2KKgttGTw==
-X-Google-Smtp-Source: APXvYqxTrzMK8mZublRee/EYe0PadumD22Hhgu5bTyuirvM1rEu/qvQvgb6zLiAISTocJYvBThR/Q2W5owRyw3GKgfY=
-X-Received: by 2002:aca:bfc6:: with SMTP id p189mr5781082oif.121.1559296667221;
- Fri, 31 May 2019 02:57:47 -0700 (PDT)
+        Fri, 31 May 2019 06:02:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59286 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726002AbfEaKCK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 06:02:10 -0400
+Received: from localhost.localdomain (nat-pool-mxp-t.redhat.com [149.6.153.186])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A714726748;
+        Fri, 31 May 2019 10:02:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559296929;
+        bh=ZfRv0Yrgp+Zd8xGJN40ArXNdaxOgATDzT4hykN3QQJs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ACH+Tw7vIyV0rlXKYRfqQ1cbiCIGHPIqfXHltfSFrCgExnxiBmQBCWIbU2kbUmEUg
+         MjwxNpGjZeHzza3xx3EfCsClyJACURIDexq5rzy2wXNxyBaxhsN1coZJc1AEMD3fm7
+         sMRYh5T79vi47/5gymd7Dxol6fYQUUIOlEuCvD40=
+Date:   Fri, 31 May 2019 12:02:03 +0200
+From:   Lorenzo Bianconi <lorenzo@kernel.org>
+To:     Ryder Lee <ryder.lee@mediatek.com>
+Cc:     Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
+        Yiwei Chung <yiwei.chung@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Chih-Min Chen <chih-min.Chen@mediatek.com>,
+        linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] mt76: mt7615: enable support for mesh
+Message-ID: <20190531100201.GA3527@localhost.localdomain>
+References: <7f167d09736652f81383991c971506630bbedacc.1559287432.git.ryder.lee@mediatek.com>
 MIME-Version: 1.0
-References: <20190529141500.193390-1-elver@google.com> <20190529141500.193390-3-elver@google.com>
- <EE911EC6-344B-4EB2-90A4-B11E8D96BEDC@zytor.com>
-In-Reply-To: <EE911EC6-344B-4EB2-90A4-B11E8D96BEDC@zytor.com>
-From:   Marco Elver <elver@google.com>
-Date:   Fri, 31 May 2019 11:57:36 +0200
-Message-ID: <CANpmjNOsPnVd50cTzUW8UYXPGqpSnRLcjj=JbZraTYVq1n18Fw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] x86: Move CPU feature test out of uaccess region
-To:     "H. Peter Anvin" <hpa@zytor.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="envbJBWh7q8WU6mo"
+Content-Disposition: inline
+In-Reply-To: <7f167d09736652f81383991c971506630bbedacc.1559287432.git.ryder.lee@mediatek.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 May 2019 at 16:29, <hpa@zytor.com> wrote:
->
-> On May 29, 2019 7:15:00 AM PDT, Marco Elver <elver@google.com> wrote:
-> >This patch is a pre-requisite for enabling KASAN bitops
-> >instrumentation:
-> >moves boot_cpu_has feature test out of the uaccess region, as
-> >boot_cpu_has uses test_bit. With instrumentation, the KASAN check would
-> >otherwise be flagged by objtool.
-> >
-> >This approach is preferred over adding the explicit kasan_check_*
-> >functions to the uaccess whitelist of objtool, as the case here appears
-> >to be the only one.
-> >
-> >Signed-off-by: Marco Elver <elver@google.com>
-> >---
-> >v1:
-> >* This patch replaces patch: 'tools/objtool: add kasan_check_* to
-> >  uaccess whitelist'
-> >---
-> > arch/x86/ia32/ia32_signal.c | 9 ++++++++-
-> > 1 file changed, 8 insertions(+), 1 deletion(-)
-> >
-> >diff --git a/arch/x86/ia32/ia32_signal.c b/arch/x86/ia32/ia32_signal.c
-> >index 629d1ee05599..12264e3c9c43 100644
-> >--- a/arch/x86/ia32/ia32_signal.c
-> >+++ b/arch/x86/ia32/ia32_signal.c
-> >@@ -333,6 +333,7 @@ int ia32_setup_rt_frame(int sig, struct ksignal
-> >*ksig,
-> >       void __user *restorer;
-> >       int err = 0;
-> >       void __user *fpstate = NULL;
-> >+      bool has_xsave;
-> >
-> >       /* __copy_to_user optimizes that into a single 8 byte store */
-> >       static const struct {
-> >@@ -352,13 +353,19 @@ int ia32_setup_rt_frame(int sig, struct ksignal
-> >*ksig,
-> >       if (!access_ok(frame, sizeof(*frame)))
-> >               return -EFAULT;
-> >
-> >+      /*
-> >+       * Move non-uaccess accesses out of uaccess region if not strictly
-> >+       * required; this also helps avoid objtool flagging these accesses
-> >with
-> >+       * instrumentation enabled.
-> >+       */
-> >+      has_xsave = boot_cpu_has(X86_FEATURE_XSAVE);
-> >       put_user_try {
-> >               put_user_ex(sig, &frame->sig);
-> >               put_user_ex(ptr_to_compat(&frame->info), &frame->pinfo);
-> >               put_user_ex(ptr_to_compat(&frame->uc), &frame->puc);
-> >
-> >               /* Create the ucontext.  */
-> >-              if (boot_cpu_has(X86_FEATURE_XSAVE))
-> >+              if (has_xsave)
-> >                       put_user_ex(UC_FP_XSTATE, &frame->uc.uc_flags);
-> >               else
-> >                       put_user_ex(0, &frame->uc.uc_flags);
->
-> This was meant to use static_cpu_has(). Why did that get dropped?
 
-I couldn't find any mailing list thread referring to why this doesn't
-use static_cpu_has, do you have any background?
+--envbJBWh7q8WU6mo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-static_cpu_has also solves the UACCESS warning.
+> Enable NL80211_IFTYPE_MESH_POINT and add its path.
+>=20
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> ---
+>  drivers/net/wireless/mediatek/mt76/mt7615/init.c | 6 ++++++
+>  drivers/net/wireless/mediatek/mt76/mt7615/main.c | 1 +
+>  drivers/net/wireless/mediatek/mt76/mt7615/mcu.c  | 5 ++++-
+>  3 files changed, 11 insertions(+), 1 deletion(-)
+>=20
 
-If you confirm it is safe to change to static_cpu_has(), I will change
-this patch. Note that I should then also change
-arch/x86/kernel/signal.c to mirror the change for 32bit  (although
-KASAN is not supported for 32bit x86).
+[...]
 
-Thanks,
--- Marco
+> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/main.c b/drivers/n=
+et/wireless/mediatek/mt76/mt7615/main.c
+> index b0bb7cc12385..585e67fa2728 100644
+> --- a/drivers/net/wireless/mediatek/mt76/mt7615/main.c
+> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/main.c
+> @@ -37,6 +37,7 @@ static int get_omac_idx(enum nl80211_iftype type, u32 m=
+ask)
+> =20
+>  	switch (type) {
+>  	case NL80211_IFTYPE_AP:
+> +	case NL80211_IFTYPE_MESH_POINT:
+>  		/* ap use hw bssid 0 and ext bssid */
+>  		if (~mask & BIT(HW_BSSID_0))
+>  			return HW_BSSID_0;
+> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c b/drivers/ne=
+t/wireless/mediatek/mt76/mt7615/mcu.c
+> index 43f70195244c..8b8db526cb16 100644
+> --- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+> @@ -754,6 +754,7 @@ int mt7615_mcu_set_bss_info(struct mt7615_dev *dev,
+> =20
+>  	switch (vif->type) {
+>  	case NL80211_IFTYPE_AP:
+> +	case NL80211_IFTYPE_MESH_POINT:
+>  		tx_wlan_idx =3D mvif->sta.wcid.idx;
+>  		conn_type =3D CONNECTION_INFRA_AP;
+
+Just out of curiosity, why not using CONNECTION_MESH_{AP,STA} here?
+why not NETWORK_MESH?
+
+>  		break;
+> @@ -968,7 +969,8 @@ int mt7615_mcu_add_wtbl(struct mt7615_dev *dev, struc=
+t ieee80211_vif *vif,
+>  		.rx_wtbl =3D {
+>  			.tag =3D cpu_to_le16(WTBL_RX),
+>  			.len =3D cpu_to_le16(sizeof(struct wtbl_rx)),
+> -			.rca1 =3D vif->type !=3D NL80211_IFTYPE_AP,
+> +			.rca1 =3D vif->type !=3D (NL80211_IFTYPE_AP ||
+> +					      NL80211_IFTYPE_MESH_POINT),
+>  			.rca2 =3D 1,
+>  			.rv =3D 1,
+>  		},
+> @@ -1042,6 +1044,7 @@ static void sta_rec_convert_vif_type(enum nl80211_i=
+ftype type, u32 *conn_type)
+>  {
+>  	switch (type) {
+>  	case NL80211_IFTYPE_AP:
+> +	case NL80211_IFTYPE_MESH_POINT:
+>  		if (conn_type)
+>  			*conn_type =3D CONNECTION_INFRA_STA;
+>  		break;
+
+same here.
+
+Regards,
+Lorenzo
+
+> --=20
+> 2.18.0
+>=20
+
+--envbJBWh7q8WU6mo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCXPD7lgAKCRA6cBh0uS2t
+rFA6AP9xl4wUemuHlJ2lNcCI2smmKaZNi4KmXW4gSR0kGjaB3wEAsww6TO6o9pAq
+PI3sKVdjK8j31EW9B+ekCKNxFmSPBgA=
+=w7DQ
+-----END PGP SIGNATURE-----
+
+--envbJBWh7q8WU6mo--
