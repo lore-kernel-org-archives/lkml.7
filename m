@@ -2,156 +2,119 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D4BC28CC2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D75C6C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:37:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9780266F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:37:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4F72266FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:37:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbfEaJhH (ORCPT
+        id S1726911AbfEaJhw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 05:37:07 -0400
-Received: from kirsty.vergenet.net ([202.4.237.240]:44208 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbfEaJhH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 05:37:07 -0400
-Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id E521425AE77;
-        Fri, 31 May 2019 19:37:04 +1000 (AEST)
-Received: by reginn.horms.nl (Postfix, from userid 7100)
-        id E95FB9401DB; Fri, 31 May 2019 11:37:02 +0200 (CEST)
-Date:   Fri, 31 May 2019 11:37:02 +0200
-From:   Simon Horman <horms@verge.net.au>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Fri, 31 May 2019 05:37:52 -0400
+Received: from foss.arm.com ([217.140.101.70]:48884 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726280AbfEaJhv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 05:37:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 735ED341;
+        Fri, 31 May 2019 02:37:50 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 106B93F59C;
+        Fri, 31 May 2019 02:37:45 -0700 (PDT)
+Date:   Fri, 31 May 2019 10:37:43 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Morten Rasmussen <morten.rasmussen@arm.com>,
+        "Andrew F. Davis" <afd@ti.com>, Atish Patra <atish.patra@wdc.com>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <anup@brainfault.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-riscv@lists.infradead.org,
         Mark Rutland <mark.rutland@arm.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Tobias Franzen <tfranzen@de.adit-jv.com>,
-        Biju Das <biju.das@bp.renesas.com>
-Subject: Re: [PATCH] arm64: dts: ulcb-kf: Add support for TI WL1837
-Message-ID: <20190531093702.4pdbamghomqdhhuq@verge.net.au>
-References: <20190411124102.22442-1-spapageorgiou@de.adit-jv.com>
- <CAMuHMdVfDd_1gHnX=WvkHnF33fG2sWy7F5bTh-DghoKSt-vLCA@mail.gmail.com>
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Otto Sabart <ottosabart@seberm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v6 1/7] Documentation: DT: arm: add support for sockets
+ defining package boundaries
+Message-ID: <20190531093743.GB18292@e107155-lin>
+References: <20190529211340.17087-1-atish.patra@wdc.com>
+ <20190529211340.17087-2-atish.patra@wdc.com>
+ <49f41e62-5354-a674-d95f-5f63851a0ca6@ti.com>
+ <20190530115103.GA10919@e105550-lin.cambridge.arm.com>
+ <20190530214254.tuxsnyv52a2fyhck@shell.armlinux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdVfDd_1gHnX=WvkHnF33fG2sWy7F5bTh-DghoKSt-vLCA@mail.gmail.com>
-Organisation: Horms Solutions BV
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190530214254.tuxsnyv52a2fyhck@shell.armlinux.org.uk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Spyridon,
-
-please respond to Geert's review below and
-if appropriate provide an incremental patch.
-
-Thanks in advance,
-Simon
-
-On Tue, May 28, 2019 at 11:19:04AM +0200, Geert Uytterhoeven wrote:
-> Hi Spyridon,
-> 
-> On Thu, Apr 11, 2019 at 2:42 PM Spyridon Papageorgiou
-> <spapageorgiou@de.adit-jv.com> wrote:
-> > This patch adds description of TI WL1837 and links interfaces
-> > to communicate with the IC, namely the SDIO interface to WLAN.
+On Thu, May 30, 2019 at 10:42:54PM +0100, Russell King - ARM Linux admin wrote:
+> On Thu, May 30, 2019 at 12:51:03PM +0100, Morten Rasmussen wrote:
+> > On Wed, May 29, 2019 at 07:39:17PM -0400, Andrew F. Davis wrote:
+> > > On 5/29/19 5:13 PM, Atish Patra wrote:
+> > > >From: Sudeep Holla <sudeep.holla@arm.com>
+> > > >
+> > > >The current ARM DT topology description provides the operating system
+> > > >with a topological view of the system that is based on leaf nodes
+> > > >representing either cores or threads (in an SMT system) and a
+> > > >hierarchical set of cluster nodes that creates a hierarchical topology
+> > > >view of how those cores and threads are grouped.
+> > > >
+> > > >However this hierarchical representation of clusters does not allow to
+> > > >describe what topology level actually represents the physical package or
+> > > >the socket boundary, which is a key piece of information to be used by
+> > > >an operating system to optimize resource allocation and scheduling.
+> > > >
+> > >
+> > > Are physical package descriptions really needed? What does "socket" imply
+> > > that a higher layer "cluster" node grouping does not? It doesn't imply a
+> > > different NUMA distance and the definition of "socket" is already not well
+> > > defined, is a dual chiplet processor not just a fancy dual "socket" or are
+> > > dual "sockets" on a server board "slotket" card, will we need new names for
+> > > those too..
 > >
-> > Signed-off-by: Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>
-> 
-> Thanks for your patch!
-> 
-> > --- a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
-> > +++ b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
-> > @@ -38,6 +38,18 @@
-> >                 regulator-min-microvolt = <5000000>;
-> >                 regulator-max-microvolt = <5000000>;
-> >         };
-> > +
-> > +       wlan_en: regulator-wlan_en {
-> > +               compatible = "regulator-fixed";
-> > +               regulator-name = "wlan-en-regulator";
-> > +
-> > +               regulator-min-microvolt = <3300000>;
-> > +               regulator-max-microvolt = <3300000>;
-> 
-> So this is a 3.3V regulator...
-> 
-> > +
-> > +               gpio = <&gpio_exp_74 4 GPIO_ACTIVE_HIGH>;
-> > +               startup-delay-us = <70000>;
-> > +               enable-active-high;
-> > +       };
-> >  };
-> >
-> >  &can0 {
-> 
-> > @@ -273,6 +298,30 @@
-> >         status = "okay";
-> >  };
-> >
-> > +&sdhi3 {
-> > +       pinctrl-0 = <&sdhi3_pins>;
-> > +       pinctrl-names = "default";
-> > +
-> > +       vmmc-supply = <&wlan_en>;
-> > +       vqmmc-supply = <&wlan_en>;
-> 
-> ... used for both card and I/O line power...
-> 
-> > +       bus-width = <4>;
-> > +       no-1-8-v;
-> 
-> ... hence no 1.8V I/O.
-> 
-> However, VIO of WL1837 is provided by W1.8V of regulator U55,
-> which is 1.8V?
-> 
-> > +       non-removable;
-> > +       cap-power-off-card;
-> > +       keep-power-in-suspend;
-> > +       max-frequency = <26000000>;
-> > +       status = "okay";
-> > +
-> > +       #address-cells = <1>;
-> > +       #size-cells = <0>;
-> > +       wlcore: wlcore@2 {
-> > +               compatible = "ti,wl1837";
-> > +               reg = <2>;
-> > +               interrupt-parent = <&gpio1>;
-> > +               interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-> 
-> I'm also a bit puzzled by the interrupt type.
-> On Cat 874, it's IRQ_TYPE_LEVEL_HIGH, cfr.
-> https://lore.kernel.org/linux-renesas-soc/1557997166-63351-2-git-send-email-biju.das@bp.renesas.com/
-> 
-> On Kingfisher, the IRQ signal is inverted by U104, so I'd expect
-> IRQ_TYPE_LEVEL_LOW instead of IRQ_TYPE_EDGE_FALLING?
-> 
-> Apart from the above two comments:
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> -- 
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-> 
+> > Socket (or package) just implies what you suggest, a grouping of CPUs
+> > based on the physical socket (or package). Some resources might be
+> > associated with packages and more importantly socket information is
+> > exposed to user-space. At the moment clusters are being exposed to
+> > user-space as sockets which is less than ideal for some topologies.
+>
+> Please point out a 32-bit ARM system that has multiple "socket"s.
+>
+> As far as I'm aware, all 32-bit systems do not have socketed CPUs
+> (modern ARM CPUs are part of a larger SoC), and the CPUs are always
+> in one package.
+>
+> Even the test systems I've seen do not have socketed CPUs.
+>
+
+As far as we know, there's none. So we simply have to assume all
+those systems are single socket(IOW all CPUs reside inside a single
+SoC package) system.
+
+--
+Regards,
+Sudeep
