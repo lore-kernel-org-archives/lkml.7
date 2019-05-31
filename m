@@ -2,81 +2,98 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96949C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E088EC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67D1D26966
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:29:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF5AB2696E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:29:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbfEaN3a (ORCPT
+        id S1726687AbfEaN3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 09:29:30 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:17637 "EHLO huawei.com"
+        Fri, 31 May 2019 09:29:44 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48508 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726485AbfEaN3a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 09:29:30 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 6EEA1810B1C503DC496B;
-        Fri, 31 May 2019 21:29:27 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 31 May 2019 21:29:19 +0800
-From:   Kefeng Wang <wangkefeng.wang@huawei.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Baruch Siach <baruch@tkos.co.il>,
-        <linux-serial@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH] tty/serial: digicolor: Fix digicolor-usart already registered warning
-Date:   Fri, 31 May 2019 21:37:33 +0800
-Message-ID: <20190531133733.16243-1-wangkefeng.wang@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        id S1726418AbfEaN3o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 09:29:44 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id F3D19AE4E;
+        Fri, 31 May 2019 13:29:42 +0000 (UTC)
+Date:   Fri, 31 May 2019 15:29:42 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Petr Mladek <pmladek@suse.com>
+cc:     Jiri Kosina <jikos@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] livepatch: Remove duplicate warning about missing
+ reliable stacktrace support
+In-Reply-To: <20190531131906.lkhrfgpze57pqrcg@pathway.suse.cz>
+Message-ID: <alpine.LSU.2.21.1905311528000.742@pobox.suse.cz>
+References: <20190531074147.27616-1-pmladek@suse.com> <20190531074147.27616-3-pmladek@suse.com> <alpine.LSU.2.21.1905311425450.742@pobox.suse.cz> <20190531131906.lkhrfgpze57pqrcg@pathway.suse.cz>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When modprobe/rmmod/modprobe module, if platform_driver_register() fails,
-the kernel complained,
+On Fri, 31 May 2019, Petr Mladek wrote:
 
-  proc_dir_entry 'driver/digicolor-usart' already registered
-  WARNING: CPU: 1 PID: 5636 at fs/proc/generic.c:360 proc_register+0x19d/0x270
+> On Fri 2019-05-31 14:32:34, Miroslav Benes wrote:
+> > On Fri, 31 May 2019, Petr Mladek wrote:
+> > 
+> > > WARN_ON_ONCE() could not be called safely under rq lock because
+> > > of console deadlock issues.
+> > > 
+> > > It can be simply removed. A better descriptive message is written
+> > > in klp_enable_patch() when klp_have_reliable_stack() fails.
+> > > The remaining debug message is good enough.
+> > > 
+> > > Signed-off-by: Petr Mladek <pmladek@suse.com>
+> > > ---
+> > >  kernel/livepatch/transition.c | 1 -
+> > >  1 file changed, 1 deletion(-)
+> > > 
+> > > diff --git a/kernel/livepatch/transition.c b/kernel/livepatch/transition.c
+> > > index abb2a4a2cbb2..1bf362df76e1 100644
+> > > --- a/kernel/livepatch/transition.c
+> > > +++ b/kernel/livepatch/transition.c
+> > > @@ -247,7 +247,6 @@ static int klp_check_stack(struct task_struct *task, char *err_buf)
+> > >  	int ret, nr_entries;
+> > >  
+> > >  	ret = stack_trace_save_tsk_reliable(task, entries, ARRAY_SIZE(entries));
+> > > -	WARN_ON_ONCE(ret == -ENOSYS);
+> > >  	if (ret < 0) {
+> > >  		snprintf(err_buf, STACK_ERR_BUF_SIZE,
+> > >  			 "%s: %s:%d has an unreliable stack\n",
+> > 
+> > The current situation is not the best, but I think the patch improves it 
+> > only slightly. I see two possible solutions.
+> > 
+> > 1. we either revert commit 1d98a69e5cef ("livepatch: Remove reliable 
+> > stacktrace check in klp_try_switch_task()"), so that klp_check_stack() 
+> > returns right away.
+> > 
+> > 2. or we test ret from stack_trace_save_tsk_reliable() for ENOSYS and 
+> > return.
+> > 
+> > In my opinion either of them is better than what we have now (and what we 
+> > would have with the patch), because klp_check_stack() returns, but it 
+> > prints out that a task has an unreliable stack. Yes, it is pr_debug() only 
+> > in the end, but still.
+> 
+> IMHO, any extra check will not improve the situation much. Quiet
+> return is as useless as the misleading pr_debug() that will
+> not normally get printed anyway.
 
-Fix this by adding uart_unregister_driver() when platform_driver_register() fails.
+I disagree here. I think the silent return would be perfectly fine. The 
+user was warned in klp_enable_patch() already.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
----
- drivers/tty/serial/digicolor-usart.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/tty/serial/digicolor-usart.c b/drivers/tty/serial/digicolor-usart.c
-index f460cca139e2..13ac36e2da4f 100644
---- a/drivers/tty/serial/digicolor-usart.c
-+++ b/drivers/tty/serial/digicolor-usart.c
-@@ -541,7 +541,11 @@ static int __init digicolor_uart_init(void)
- 	if (ret)
- 		return ret;
- 
--	return platform_driver_register(&digicolor_uart_platform);
-+	ret = platform_driver_register(&digicolor_uart_platform);
-+	if (ret)
-+		uart_unregister_driver(&digicolor_uart);
-+
-+	return ret;
- }
- module_init(digicolor_uart_init);
- 
--- 
-2.20.1
-
+Miroslav
