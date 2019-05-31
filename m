@@ -2,102 +2,86 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B68DC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 22:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D38D1C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 22:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E2C926FAC
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 22:14:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="BAC3ltmN"
+	by mail.kernel.org (Postfix) with ESMTP id 9C25F26FAA
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 22:15:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559340953;
+	bh=RWApvAIvY1RThjF1i2LTG9eqcVS2NtirCE3seHJn4QY=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=HnxUFf2CondJ3Pa2VAXbvwaLs8agQzGR8slTLNOSiuNg79QjFarvZy5nYOqyxBcYE
+	 VlLOyseuUxgZEiVuyX6LP1zIQiVSoDcGo3iEWwFgzmjNsrswbbFF7kyxlDVbLIf2WT
+	 6DrVOzyZlApzuPoYCbK2+/5oJej5LDMje/pw2gEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfEaWOA (ORCPT
+        id S1726721AbfEaWPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 18:14:00 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43344 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726450AbfEaWOA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 18:14:00 -0400
-Received: by mail-wr1-f68.google.com with SMTP id m6so1735489wrj.10
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 15:13:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=e0zehylnRNwEoLMrCtDr0FIIIv+bm7246N0/VnWTSdI=;
-        b=BAC3ltmN+JNBuMnr+fmkqoJ/R2Jl5ZglI9F+hoi3aeqvqtSHvB7KjA9durJerJCZlL
-         MbdlR5Ed+iyDoBNWR+pPGjhyb1smmWtfOWf2XXKElsdhddUjuTys9W6XUQdRrhBbFGjF
-         mGaH1m6kD7e1H3TOp+L36cVvw2k3E5sR3x7XZuw40NQOYOo6OJLn7ZluWzrAIebz0o6Y
-         gkRwYNYL2BjdADyxBLHOw7HPuyGtEeOasqUgH/wGNYi17Q6PNJUqpytlGTWAJHgRmBLh
-         NfxaABdmTQ7txQpL3XyymcvLMOEUt+nvKjIzNK9mXONEoUOTpXefg4E4OUQ1PyvBZM/3
-         N6WA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=e0zehylnRNwEoLMrCtDr0FIIIv+bm7246N0/VnWTSdI=;
-        b=F++01KWKbgkLSjTlxXgjj6vVkJQWyPfYsaM8Wko6QzWpjV9AtnLWo+LmN/LBk2V7yD
-         DwnHUcVx7LM0em2Gy/aNMtGDQulC0hoxNtctsSWbBNsaI3RbEEDQX7oBK2ww+vs0/EG7
-         gqB92DOTxu5O0nCd/bWfD2VrXhYZoT15QhF8fUzV+maTV6QUhzCbv7B2a2qHjk/MdK5N
-         wTPcCyO56+k/8zUcGPUAbadzOdazYfzFE2gUjjV7w6H+A0iAwYLPMfmQB45lmf5WfmBH
-         5u37U3Qf+nsVCltNxrn5eEh3iDAdc6RH1Jn0T8Vr3Le2TWy53H3RRUk59au0NASP4Zih
-         Beyw==
-X-Gm-Message-State: APjAAAWGqoJ6WQuC0nYofpStAcsBKNx2OMI5xBxMXQvSz84sD8EKjds9
-        l1ot8JB+gsFFZIy+6SWznZTvRg==
-X-Google-Smtp-Source: APXvYqw0OR/H3EuEp5fqjZFM8TZ/nEGygjIjvRDRDc9VEOCCRUu9NNHqaeGl81tYfFTPe2EALCE5+A==
-X-Received: by 2002:adf:e583:: with SMTP id l3mr7751345wrm.1.1559340838726;
-        Fri, 31 May 2019 15:13:58 -0700 (PDT)
-Received: from brauner.io (93-32-55-82.ip32.fastwebnet.it. [93.32.55.82])
-        by smtp.gmail.com with ESMTPSA id k2sm7898056wrx.84.2019.05.31.15.13.57
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 31 May 2019 15:13:58 -0700 (PDT)
-Date:   Sat, 1 Jun 2019 00:13:57 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrei Vagin <avagin@gmail.com>, Al Viro <viro@zeniv.linux.org.uk>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Jann Horn <jannh@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Re: [PATCH v1 1/2] fork: add clone3
-Message-ID: <20190531221356.uekyzxhtuijgj4pg@brauner.io>
-References: <20190529152237.10719-1-christian@brauner.io>
- <20190529222414.GA6492@gmail.com>
- <CAHk-=whQP-Ykxi=zSYaV9iXsHsENa+2fdj-zYKwyeyed63Lsfw@mail.gmail.com>
+        Fri, 31 May 2019 18:15:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59770 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726450AbfEaWPw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 18:15:52 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B032726FA9;
+        Fri, 31 May 2019 22:15:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559340951;
+        bh=RWApvAIvY1RThjF1i2LTG9eqcVS2NtirCE3seHJn4QY=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=cBwtYK1mYEJERlI5L84YmpBbLIZwDLJajYrVDqkrnzAhTyne2sZFJIIl4geDCoCo1
+         NcZCPABTbrkuLWZieiFiqaCL2pznFrAUhZsxzcMB6lYobyGmt+q+OoYfPxvIrFO18z
+         hom9g9IvfUarwHWZ6GTpkIbqV2EgdSttM3TKw64Q=
+Date:   Sat, 1 Jun 2019 00:15:48 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Dave Hansen <dave.hansen@intel.com>
+cc:     Hans de Goede <hdegoede@redhat.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: hid-related 5.2-rc1 boot hang
+In-Reply-To: <a349dfac-be58-93bd-e44c-080ed935ab06@intel.com>
+Message-ID: <nycvar.YFH.7.76.1906010014150.1962@cbobk.fhfr.pm>
+References: <2c1684f6-9def-93dc-54ab-888142fd5e71@intel.com> <nycvar.YFH.7.76.1905281913140.1962@cbobk.fhfr.pm> <CAO-hwJJzNAuFbdMVFZ4+h7J=bh6QHr_MioyK2yTV=M5R6CTm=A@mail.gmail.com> <8a17e6e2-b468-28fd-5b40-0c258ca7efa9@intel.com> <4689a737-6c40-b4ae-cc38-5df60318adce@redhat.com>
+ <a349dfac-be58-93bd-e44c-080ed935ab06@intel.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whQP-Ykxi=zSYaV9iXsHsENa+2fdj-zYKwyeyed63Lsfw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 01:38:29PM -0700, Linus Torvalds wrote:
-> On Wed, May 29, 2019 at 3:24 PM Andrei Vagin <avagin@gmail.com> wrote:
-> >
-> > Thank you for thinking about time namespaces. I looked at this patch
-> > quickly and I would suggest to move a termination signal out of flags. I
-> > think we can add a separate field (exit_signal) into clone_args. Does it
-> > make sense? For me, exit_signal in flags always looked weird...
+On Thu, 30 May 2019, Dave Hansen wrote:
+
+> On 5/29/19 2:17 AM, Hans de Goede wrote:
+> ...
+> > Dave, can you try building your initrd without the hid-logitech-dj module
+> > included in the initrd?
 > 
-> I agree - the child signal in flags was always just a "it fits" kind
-> of thing, and that was obviously true back then, but is not true now.
+> I did this on a vanilla 5.2-rc2 kernel (without the reverts) and still
+> experienced the boot hang while the device was inserted.
+> 
+> > Also can you check if your modprobe is provided by module-init-tools
+> > or by kmod ?
+> 
+> $ dpkg -S `which modprobe`
+> kmod: /sbin/modprobe
 
-(Traveling until Monday, so sorry for delayed responses.)
+Benjamin, Hans, are you looking into this?
 
-Yip, I agree that this is a good idea (answered Andrei's mail just now
-saying the same thing). I'll send out a new version of the patch with
-these changes added next week.
+If not, I think we should start reverting (at least the request_module() 
+changes, not sure about the rest of logitech issues yet) next week.
 
-Christian
+Thanks,
+
+-- 
+Jiri Kosina
+SUSE Labs
+
