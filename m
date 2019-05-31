@@ -2,152 +2,116 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EBBBC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:43:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06326C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 791B3267A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:43:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFAE2267AA
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:45:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=cs.unibo.it header.i=@cs.unibo.it header.b="CAKhQHBm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbfEaKnP (ORCPT
+        id S1726952AbfEaKpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 06:43:15 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:43848 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726158AbfEaKnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 06:43:14 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 9228C33A72539724796A;
-        Fri, 31 May 2019 18:43:10 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Fri, 31 May 2019
- 18:42:59 +0800
-Subject: Re: [PATCH v8 1/7] iommu: enhance IOMMU default DMA mode build
- options
-To:     "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>,
-        "Jean-Philippe Brucker" <jean-philippe.brucker@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "Jonathan Corbet" <corbet@lwn.net>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "Michael Ellerman" <mpe@ellerman.id.au>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        iommu <iommu@lists.linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>
-References: <20190530034831.4184-1-thunder.leizhen@huawei.com>
- <20190530034831.4184-2-thunder.leizhen@huawei.com>
- <645bd526-4eb0-4a36-2dda-023f009247ab@huawei.com>
- <030bafab-58f5-8bb1-0533-2977d6e138b2@huawei.com>
-CC:     Hanjun Guo <guohanjun@huawei.com>, Linuxarm <linuxarm@huawei.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <55d0e30c-5bca-41fc-5bf0-4366dc387afd@huawei.com>
-Date:   Fri, 31 May 2019 11:42:45 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        Fri, 31 May 2019 06:45:08 -0400
+Received: from mail.virtlab.unibo.it ([130.136.161.50]:43110 "EHLO
+        mail.virtlab.unibo.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726158AbfEaKpI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 06:45:08 -0400
+Received: from cs.unibo.it (host5.studiodavoli.it [109.234.61.227])
+        by mail.virtlab.unibo.it (Postfix) with ESMTPSA id 3F13F1FF56;
+        Fri, 31 May 2019 12:45:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=cs.unibo.it;
+        s=virtlab; t=1559299504;
+        bh=s4G4mm0cVlJxxyR750Hz6JmulktaIEHy2Bt1ua5aYVU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CAKhQHBm8yDt+YFRTa0N3chhhC+ygsozaglGaLMMQgRfeA720bE0+p55Z9myJ2qdE
+         v+O+Y9/zx3J/zBtByHSNb0jZQuYIsE8gLVNkbIyEySIS8cDYkU65hsPiIQBQJMKZlp
+         tzfdFhaLGei9bCsCSP9xfq4yE5rsajcjm1xnT5RA=
+Date:   Fri, 31 May 2019 12:45:02 +0200
+From:   Renzo Davoli <renzo@cs.unibo.it>
+To:     Roman Penyaev <rpenyaev@suse.de>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Davide Libenzi <davidel@xmailserver.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCH 1/1] eventfd new tag EFD_VPOLL: generate epoll events
+Message-ID: <20190531104502.GE3661@cs.unibo.it>
+References: <20190526142521.GA21842@cs.unibo.it>
+ <20190527073332.GA13782@kroah.com>
+ <20190527133621.GC26073@cs.unibo.it>
+ <480f1bda66b67f740f5da89189bbfca3@suse.de>
 MIME-Version: 1.0
-In-Reply-To: <030bafab-58f5-8bb1-0533-2977d6e138b2@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <480f1bda66b67f740f5da89189bbfca3@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+HI Roman,
 
->>> -config IOMMU_DEFAULT_PASSTHROUGH
->>> -    bool "IOMMU passthrough by default"
->>> +choice
->>> +    prompt "IOMMU default DMA mode"
->>>      depends on IOMMU_API
->>> -        help
->>> -      Enable passthrough by default, removing the need to pass in
->>> -      iommu.passthrough=on or iommu=pt through command line. If this
->>> -      is enabled, you can still disable with iommu.passthrough=off
->>> -      or iommu=nopt depending on the architecture.
->>> +    default IOMMU_DEFAULT_STRICT
->>> +    help
->>> +      This option allows IOMMU DMA mode to be chose at build time, to
->>
->> As before:
->> /s/chose/chosen/, /s/allows IOMMU/allows an IOMMU/
-> I'm sorry that the previous version was not modified.
->
->>
->>> +      override the default DMA mode of each ARCHs, removing the need to
->>
->> Again, as before:
->> ARCHs should be singular
-> OK
->
->>
->>> +      pass in kernel parameters through command line. You can still use
->>> +      ARCHs specific boot options to override this option again.
+On Fri, May 31, 2019 at 11:34:08AM +0200, Roman Penyaev wrote:
+> On 2019-05-27 15:36, Renzo Davoli wrote:
+> > Unfortunately this approach cannot be applied to
+> > poll/select/ppoll/pselect/epoll.
+> 
+> If you have to override other systemcalls, what is the problem to override
+> poll family?  It will add, let's say, 50 extra code lines complexity to your
+> userspace code.  All you need is to be woken up by *any* event and check
+> one mask variable, in order to understand what you need to do: read or
+> write,
+> basically exactly what you do in your eventfd modification, but only in
+> userspace.
 
-*
+This approach would not scale. If I want to use both a (user-space) network stack
+and a (emulated) device (or more stacks and devices) which (overridden) poll would I use?
 
->>> +
->>> +config IOMMU_DEFAULT_PASSTHROUGH
->>> +    bool "passthrough"
->>> +    help
->>> +      In this mode, the DMA access through IOMMU without any addresses
->>> +      translation. That means, the wrong or illegal DMA access can not
->>> +      be caught, no error information will be reported.
->>>
->>>        If unsure, say N here.
->>>
->>> +config IOMMU_DEFAULT_LAZY
->>> +    bool "lazy"
->>> +    help
->>> +      Support lazy mode, where for every IOMMU DMA unmap operation, the
->>> +      flush operation of IOTLB and the free operation of IOVA are deferred.
->>> +      They are only guaranteed to be done before the related IOVA will be
->>> +      reused.
->>
->> why no advisory on how to set if unsure?
-> Because the LAZY and STRICT have their own advantages and disadvantages.
->
-> Should I say: If unsure, keep the default。
+The poll of the first stack is not able to to deal with the third device.
 
-Maybe. So you could put this in the help for the choice, * above, and 
-remove the advisory on IOMMU_DEFAULT_PASSTHROUGH.
+> 
+> 
+> > > Why can it not be less than 64?
+> > This is the imeplementation of 'write'. The 64 bits include the
+> > 'command'
+> > EFD_VPOLL_ADDEVENTS, EFD_VPOLL_DELEVENTS or EFD_VPOLL_MODEVENTS (in the
+> > most
+> > significant 32 bits) and the set of events (in the lowest 32 bits).
+> 
+> Do you really need add/del/mod semantics?  Userspace still has to keep mask
+> somewhere, so you can have one simple command, which does:
+>    ctx->count = events;
+> in kernel, so no masks and this games with bits are needed.  That will
+> simplify API.
 
-However the maintainer may have a different view.
+It is true, at the price to have more complex code in user space.
+Other system calls could have beeen implemented as "set the value", instead there are
+ADD/DEL modification flags.
+I mean for example sigprocmask (SIG_BLOCK, SIG_UNBLOCK, SIG_SETMASK), or even epoll_ctl.
+While poll requires the program to keep the struct pollfd array stored somewhere,
+epoll is more powerful and flexible as different file descriptors can be added
+and deleted by different modules/components.
 
-Thanks,
-John
+If I have two threads implementing the send and receive path of a socket in a user-space
+network stack implementation the epoll pending bitmap is shared so I have to create
+critical sections like the following one any time I need to set or reset a bit.
+	pthread_mutex_lock(mylock)
+	events |= EPOLLIN
+	write(efd, &events, sizeof(events));
+	pthread_mutex_unlock(mylock)
+Using add/del semantics locking is not required as the send path thread deals with EPOLLOUT while
+its siblings receive thread uses EPOLLIN or EPOLLPRI
 
->
->>
->>> +
->>> +config IOMMU_DEFAULT_STRICT
->>> +    bool "strict"
->>> +    help
->>> +      For every IOMMU DMA unmap operation, the flush operation of IOTLB and
->>> +      the free operation of IOVA are guaranteed to be done in the unmap
->>> +      function.
->>> +
->>> +      This mode is safer than the two above, but it maybe slower in some
->>> +      high performace scenarios.
->>
->> and here?
+I would prefer the add/del/mod semantics, but if this is generally perceived as a unnecessary 
+complexity in the kernel code I can update my patch.  
 
+Thank you Roman,
+			
+			renzo
