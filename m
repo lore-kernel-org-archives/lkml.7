@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 532BAC28CC2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3346FC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 272A926348
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 067F82635C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 03:54:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W3TwW4Dq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dwV6lcEW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbfEaDyL (ORCPT
+        id S1727013AbfEaDyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 23:54:11 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34895 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbfEaDyI (ORCPT
+        Thu, 30 May 2019 23:54:17 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:32785 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726977AbfEaDyP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 23:54:08 -0400
-Received: by mail-io1-f68.google.com with SMTP id p2so7031166iol.2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 20:54:08 -0700 (PDT)
+        Thu, 30 May 2019 23:54:15 -0400
+Received: by mail-it1-f196.google.com with SMTP id j17so9844533itk.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 20:54:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=qcjrhVYsZg52RJ5XXriOknCyqMNzK66d33ZzlwDcMVo=;
-        b=W3TwW4DqsezXBlUJHicJWKqM/j0qAEnP6ywmwbFYab/eJVNGGidy9owsITmfaNAdf6
-         Fz5fuAuBri9mUH60zR3nugFjCv3odkZK6b4QYl4vGiQCDYsAc+9+SB1gAXM8GLdw+1eR
-         q/MWSwM0Q45OYgflLad5PZ2BGq5fTi6Zh5TtBnmnOq2f31aSzXW0kPNfq+dFmxNe3bLW
-         xDC2BU3ZbGf9oaByMK8aQe0qmfaNHtkNnyuES5HZvwzjktrsL/wwUV3DtJss56WiImYG
-         588YsvLCDWIkiEHFIAb0j8CR+dgreVIM0l064j6cYll80b80qiv2Bf4TCK3groaINQrC
-         k+IQ==
+        bh=hqFf2+cwBc4XPU/wNoeNiXzq2lmzHpPCTPDaeLdQu4s=;
+        b=dwV6lcEWrxc5B6DJHcpq3zyz85EXyb7kFr66i80SndfVrNSU4O6J2BhCuq4xE9YuzG
+         QJEmlxKobURV1wOZvw/c6rRePWj08be/9fs9y2H4V4dAqvoWGBzKvPWGy3M/GlkBE0dG
+         fB0+1S4FXZaI2IcfQfZRZVtRvdl6d9HBSKFx7wjh0vvlKTQbnW0gnMSsdPc4JZbOEZxZ
+         9+ldXNVSP69hgIFuV09GrO8sJw5L3I7P9UL2lk12RFXNAOLaRkF4zItXR5B1Uy4SSQ5S
+         2lnj0k2mR9SfKdIkG9tTaENn3hV+GHxRfykjUcndTjGzcKr5Fj37FZl1j9/iwIRDGMNH
+         /bvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=qcjrhVYsZg52RJ5XXriOknCyqMNzK66d33ZzlwDcMVo=;
-        b=P0W4nHm6vRf+e++XwFx9bgBK3QWEh5Kae+XZ9hrOIyI3dUKBQYuSyvTJD9joK3LsJY
-         yzDHLCDqo9U5WK5JU2zTl8cB+aedgOFJZz65ZniAV9Y7b7kerkgmRH4sI2AcqDeRxoQU
-         c22K+MvRekViSqfyzXZnNHuY5LXc/5oYoFTU7KNwyIJcC+JBeb7QXlDIrZomyyK4ZTlV
-         aLcNZSbOXfaqte0aViAEEYgleTsnvEji3moclhjOme/irFRzYY+PG8E3fNhM41ZRa0vz
-         MiEOiI+o8J9g1JYz5TQFm9jxCReGngIrP+zQgB6s3u8cCzCm/gKyu+BdEFKW+Fh2grmM
-         vAlA==
-X-Gm-Message-State: APjAAAVik+oY0iRqAPrbNoub1xBcb9DmCiHEK8udsvnLUteTlEg++YU0
-        PqU04vdd3dacaojE8jhjYI+gaw==
-X-Google-Smtp-Source: APXvYqyoSK33VrVMXXIhBImgNXPM19PElBRuQNwVsxLaDvN7FuwTs/xkVcRJ5E34mPw9RNG7aVFRmg==
-X-Received: by 2002:a5d:9518:: with SMTP id d24mr5008878iom.21.1559274847945;
-        Thu, 30 May 2019 20:54:07 -0700 (PDT)
+        bh=hqFf2+cwBc4XPU/wNoeNiXzq2lmzHpPCTPDaeLdQu4s=;
+        b=VO6r+PLwk98BBVc4J4wD18L4eVD3Z5LPjj2kSHZVgl6lNDtypI1m8pX7kl33j6EJ+C
+         1KCwnXAziaxyJA9iR4pmLDW6rXLcGksrVypGXGFa0vVXBTs+vsYzcTHzY7P6Z0Mq7DTC
+         Ec/MoHux066jzRIZu4Ad7s+96nv35oMfiiS9NloIS7R+74w45XJpA7/EEZPYcO3EHtdj
+         yPGaWdFOsBv1v+Xz3uDygOyCd8X2X/+qnRugzHXoluZYUv3DEMaXoMBZ7DxCROj905kW
+         z9Nh9Cl0w/Yqya+nkqej6W95YspcdtWMt4snTUw7rmlHpRV3+NlBSPNQuk6qYKt+1ow3
+         0X4Q==
+X-Gm-Message-State: APjAAAV/+qxs48FZtdmQ4XDG8tILXPPltSZ8+iYl7j+LdUckuIRmUT5X
+        Q9ItGGUwOvAq83sNqNtJUmE7Sg==
+X-Google-Smtp-Source: APXvYqwWD8aa4VUIefG8yGQZZRSCg34qIIIGxgQIp1ineTqYUGxgNceXvUOJ1ILtPXFr+A14j81EGw==
+X-Received: by 2002:a24:a09:: with SMTP id 9mr5343497itw.146.1559274854371;
+        Thu, 30 May 2019 20:54:14 -0700 (PDT)
 Received: from localhost.localdomain (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
-        by smtp.gmail.com with ESMTPSA id q15sm1626947ioi.15.2019.05.30.20.54.06
+        by smtp.gmail.com with ESMTPSA id q15sm1626947ioi.15.2019.05.30.20.54.13
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 20:54:07 -0700 (PDT)
+        Thu, 30 May 2019 20:54:13 -0700 (PDT)
 From:   Alex Elder <elder@linaro.org>
 To:     davem@davemloft.net, arnd@arndb.de, bjorn.andersson@linaro.org,
         ilias.apalodimas@linaro.org
@@ -65,9 +65,9 @@ Cc:     evgreen@chromium.org, benchan@google.com, ejcaruso@google.com,
         netdev@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
-Subject: [PATCH v2 09/17] soc: qcom: ipa: IPA interface to GSI
-Date:   Thu, 30 May 2019 22:53:40 -0500
-Message-Id: <20190531035348.7194-10-elder@linaro.org>
+Subject: [PATCH v2 14/17] soc: qcom: ipa: support build of IPA code
+Date:   Thu, 30 May 2019 22:53:45 -0500
+Message-Id: <20190531035348.7194-15-elder@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190531035348.7194-1-elder@linaro.org>
 References: <20190531035348.7194-1-elder@linaro.org>
@@ -78,130 +78,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch provides interface functions supplied by the IPA layer
-that are called from the GSI layer.  One function is called when a
-GSI transaction has completed.  The others allow the GSI layer to
-inform the IPA layer when the hardware has been told it has new TREs
-to execute, and when the hardware has indicated transactions have
-completed.
+Add build and Kconfig support for the Qualcomm IPA driver.
 
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- drivers/net/ipa/ipa_gsi.c | 48 ++++++++++++++++++++++++++++++++++++++
- drivers/net/ipa/ipa_gsi.h | 49 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 97 insertions(+)
- create mode 100644 drivers/net/ipa/ipa_gsi.c
- create mode 100644 drivers/net/ipa/ipa_gsi.h
+ drivers/net/Kconfig      |  2 ++
+ drivers/net/Makefile     |  1 +
+ drivers/net/ipa/Kconfig  | 16 ++++++++++++++++
+ drivers/net/ipa/Makefile |  7 +++++++
+ 4 files changed, 26 insertions(+)
+ create mode 100644 drivers/net/ipa/Kconfig
+ create mode 100644 drivers/net/ipa/Makefile
 
-diff --git a/drivers/net/ipa/ipa_gsi.c b/drivers/net/ipa/ipa_gsi.c
+diff --git a/drivers/net/Kconfig b/drivers/net/Kconfig
+index 48e209e55843..d87fe174eb9f 100644
+--- a/drivers/net/Kconfig
++++ b/drivers/net/Kconfig
+@@ -388,6 +388,8 @@ source "drivers/net/fddi/Kconfig"
+ 
+ source "drivers/net/hippi/Kconfig"
+ 
++source "drivers/net/ipa/Kconfig"
++
+ config NET_SB1000
+ 	tristate "General Instruments Surfboard 1000"
+ 	depends on PNP
+diff --git a/drivers/net/Makefile b/drivers/net/Makefile
+index 0d3ba056cda3..ff8918fe09b0 100644
+--- a/drivers/net/Makefile
++++ b/drivers/net/Makefile
+@@ -45,6 +45,7 @@ obj-$(CONFIG_ETHERNET) += ethernet/
+ obj-$(CONFIG_FDDI) += fddi/
+ obj-$(CONFIG_HIPPI) += hippi/
+ obj-$(CONFIG_HAMRADIO) += hamradio/
++obj-$(CONFIG_IPA) += ipa/
+ obj-$(CONFIG_PLIP) += plip/
+ obj-$(CONFIG_PPP) += ppp/
+ obj-$(CONFIG_PPP_ASYNC) += ppp/
+diff --git a/drivers/net/ipa/Kconfig b/drivers/net/ipa/Kconfig
 new file mode 100644
-index 000000000000..7f8d74688c1e
+index 000000000000..b1e3f7405992
 --- /dev/null
-+++ b/drivers/net/ipa/ipa_gsi.c
-@@ -0,0 +1,48 @@
-+// SPDX-License-Identifier: GPL-2.0
++++ b/drivers/net/ipa/Kconfig
+@@ -0,0 +1,16 @@
++config IPA
++	tristate "Qualcomm IPA support"
++	depends on NET
++	select QCOM_QMI_HELPERS
++	select QCOM_MDT_LOADER
++	default n
++	help
++	  Choose Y here to include support for the Qualcomm IP Accelerator
++	  (IPA), a hardware block present in some Qualcomm SoCs.  The IPA
++	  is a programmable protocol processor that is capable of generic
++	  hardware handling of IP packets, including routing, filtering,
++	  and NAT.  Currently the IPA driver supports only basic transport
++	  of network traffic between the AP and modem, on the Qualcomm
++	  SDM845 SoC.
 +
-+/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
-+ * Copyright (C) 2019 Linaro Ltd.
-+ */
-+
-+#include <linux/types.h>
-+
-+#include "gsi_trans.h"
-+#include "ipa.h"
-+#include "ipa_endpoint.h"
-+
-+void ipa_gsi_trans_complete(struct gsi_trans *trans)
-+{
-+	struct ipa *ipa = container_of(trans->gsi, struct ipa, gsi);
-+	struct ipa_endpoint *endpoint;
-+
-+	endpoint = ipa->endpoint_map[trans->channel_id];
-+	if (endpoint == ipa->command_endpoint)
-+		return;		/* Nothing to do for commands */
-+
-+	if (endpoint->toward_ipa)
-+		ipa_endpoint_skb_tx_complete(trans);
-+	else
-+		ipa_endpoint_rx_complete(trans);
-+}
-+
-+void ipa_gsi_channel_tx_queued(struct gsi *gsi, u32 channel_id, u32 count,
-+			       u32 byte_count)
-+{
-+	struct ipa *ipa = container_of(gsi, struct ipa, gsi);
-+	struct ipa_endpoint *endpoint;
-+
-+	endpoint = ipa->endpoint_map[channel_id];
-+	if (endpoint->netdev)
-+		netdev_sent_queue(endpoint->netdev, byte_count);
-+}
-+
-+void ipa_gsi_channel_tx_completed(struct gsi *gsi, u32 channel_id, u32 count,
-+				  u32 byte_count)
-+{
-+	struct ipa *ipa = container_of(gsi, struct ipa, gsi);
-+	struct ipa_endpoint *endpoint;
-+
-+	endpoint = ipa->endpoint_map[channel_id];
-+	if (endpoint->netdev)
-+		netdev_completed_queue(endpoint->netdev, count, byte_count);
-+}
-diff --git a/drivers/net/ipa/ipa_gsi.h b/drivers/net/ipa/ipa_gsi.h
++	  If unsure, say N.
+diff --git a/drivers/net/ipa/Makefile b/drivers/net/ipa/Makefile
 new file mode 100644
-index 000000000000..72adb520da40
+index 000000000000..a43039c09a25
 --- /dev/null
-+++ b/drivers/net/ipa/ipa_gsi.h
-@@ -0,0 +1,49 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
++++ b/drivers/net/ipa/Makefile
+@@ -0,0 +1,7 @@
++obj-$(CONFIG_IPA)	+=	ipa.o
 +
-+/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
-+ * Copyright (C) 2019 Linaro Ltd.
-+ */
-+#ifndef _IPA_GSI_TRANS_H_
-+#define _IPA_GSI_TRANS_H_
-+
-+#include <linux/types.h>
-+
-+struct gsi_trans;
-+
-+/**
-+ * ipa_gsi_trans_complete() - GSI transaction completion callback
-+ * @gsi:	GSI pointer
-+ * @trans:	Transaction that has completed
-+ *
-+ * This called from the GSI layer to notify the IPA layer that a
-+ * transaction has completed.
-+ */
-+void ipa_gsi_trans_complete(struct gsi_trans *trans);
-+
-+/**
-+ * ipa_gsi_channel_tx_queued() - GSI queued to hardware notification
-+ * @gsi:	GSI pointer
-+ * @channel_id:	Channel number
-+ * @count:	Number of transactions queued
-+ * @byte_count:	Number of bytes to transfer represented by transactions
-+ *
-+ * This called from the GSI layer to notify the IPA layer that some
-+ * number of transactions have been queued to hardware for execution.
-+ */
-+void ipa_gsi_channel_tx_queued(struct gsi *gsi, u32 channel_id, u32 count,
-+			       u32 byte_count);
-+/**
-+ * ipa_gsi_trans_complete() - GSI transaction completion callback
-+ipa_gsi_channel_tx_completed()
-+ * @gsi:	GSI pointer
-+ * @channel_id:	Channel number
-+ * @count:	Number of transactions completed since last report
-+ * @byte_count:	Number of bytes transferred represented by transactions
-+ *
-+ * This called from the GSI layer to notify the IPA layer that the hardware
-+ * has reported the completion of some number of transactions.
-+ */
-+void ipa_gsi_channel_tx_completed(struct gsi *gsi, u32 channel_id, u32 count,
-+				  u32 byte_count);
-+
-+#endif /* _IPA_GSI_TRANS_H_ */
++ipa-y			:=	ipa_main.o ipa_clock.o ipa_mem.o \
++				ipa_interrupt.o gsi.o gsi_trans.o \
++				ipa_gsi.o ipa_smp2p.o ipa_uc.o \
++				ipa_endpoint.o ipa_cmd.o ipa_netdev.o \
++				ipa_qmi.o ipa_qmi_msg.o ipa_data-sdm845.o
 -- 
 2.20.1
 
