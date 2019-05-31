@@ -2,89 +2,148 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8599FC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 23:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 299C5C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 23:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43E7227034
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 23:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEF7927041
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 23:59:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DrR5If3b";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JhHqfqgm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbfEaX5z (ORCPT
+        id S1726863AbfEaX7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 19:57:55 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35226 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbfEaX5z (ORCPT
+        Fri, 31 May 2019 19:59:46 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:34120 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbfEaX7p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 19:57:55 -0400
-Received: by mail-pl1-f193.google.com with SMTP id p1so4607136plo.2
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 16:57:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=t9nVl1gIHwlIdoPhU2OlffJsZVlBCqHfyxU1NxDBE+w=;
-        b=dNyd78CA5oSXEpmmFtqGTURXPzIrtsTGZ5bdlzoZJp7nTRzg0DRfZvsGkc0wXMlg6c
-         KXK0spMNBji4xsUjXd3jf/E9IuZN6e3BC2XAQUP3ymlEXR4oEpq+pzGBTfyg48HDW0h7
-         +rRcZJJoMmkyzBE1r/C2HEDPDSjHJjMFTZ3dlvp2AXs1uuhWAqe2z7rab2nx6OVQKv/+
-         1elHEQvyQO/L8KebXeHdFhdqspo0YZrVzidqwgYAbqF4PGzhFXp5zyTwxesRwQxPeuM9
-         /a+i8eMwnzfRef5tyxSb+oi22Obu6QhcWGWvYXI2Icy3CleB5Jampx3U7DtgukHBh10s
-         KTfw==
-X-Gm-Message-State: APjAAAVb2Yq4h5kPE82GeM1oK7B1M4Y6hHtr9SLXANxK13h+vmzK5X2V
-        pBJB6XHXsq5yUIC0QcgohiOWkA==
-X-Google-Smtp-Source: APXvYqxtos57K7T2XrlqEmaGz3PgUmvWlxnSpQme8O4EI89epWX4DYPjXoKLLCIvww44k1fLGUHRiA==
-X-Received: by 2002:a17:902:bb96:: with SMTP id m22mr13017495pls.5.1559347074023;
-        Fri, 31 May 2019 16:57:54 -0700 (PDT)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id t124sm7527066pfb.80.2019.05.31.16.57.52
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 31 May 2019 16:57:53 -0700 (PDT)
-Date:   Fri, 31 May 2019 16:57:53 -0700 (PDT)
-X-Google-Original-Date: Fri, 31 May 2019 16:42:25 PDT (-0700)
-Subject:     Re: [PATCH 3/5] asm-generic: Register fchmodat4 as syscall 428
-In-Reply-To: <CAK8P3a2=xko56LbwV4tyhyyyX+tw+EV-NGavYEYj0q61t=mnwg@mail.gmail.com>
-CC:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-arch@vger.kernel.org, x86@kernel.org, luto@kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Message-ID: <mhng-d362e451-72d2-4893-a749-8469359b65ea@palmer-si-x1e>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Fri, 31 May 2019 19:59:45 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 7B0C36070D; Fri, 31 May 2019 23:59:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559347184;
+        bh=tJJKl5ehmjDb2KK6XeMOmnd1rblvf2TEFa0oPKfTx5A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=DrR5If3bSV4UtULQl7DoeUdYH0qFStHS2EZNSIBc+cRSxZWIZArUiSxyvoPNOcyc+
+         BV1zFF3oNDbjY01hii7pjCDzqV2bQY+v6PFLeGPMvyWpdx0LSzd0kKC/qtsqXQKFE2
+         F9xYliUcplczYufvnmMhN9ZUuMk3PlzArFyOZXIM=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 2C6286070D;
+        Fri, 31 May 2019 23:59:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559347183;
+        bh=tJJKl5ehmjDb2KK6XeMOmnd1rblvf2TEFa0oPKfTx5A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=JhHqfqgmdNVqLrmRdouTw0Seluy99Trhgv3NmXlFn69xRxPpycBc/Q+DRSfAeVwu4
+         JTEboKLfLKX0c13lS4DlpcSurxqakUSwUHvxF/LXUHDnPuoHKctksui16YqOi10b83
+         IBD+oLcK1w2+MnQzgPq0KGIsSeRbdNA1g0f1wxfU=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 31 May 2019 17:59:43 -0600
+From:   Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Alex Elder <elder@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
+        Dan Williams <dcbw@redhat.com>,
+        David Miller <davem@davemloft.net>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        evgreen@chromium.org, Ben Chan <benchan@google.com>,
+        Eric Caruso <ejcaruso@google.com>, cpratapa@codeaurora.org,
+        syadagir@codeaurora.org, abhishek.esse@gmail.com,
+        Networking <netdev@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-soc@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+In-Reply-To: <20190531233306.GB25597@minitux>
+References: <20190531035348.7194-1-elder@linaro.org>
+ <e75cd1c111233fdc05f47017046a6b0f0c97673a.camel@redhat.com>
+ <065c95a8-7b17-495d-f225-36c46faccdd7@linaro.org>
+ <CAK8P3a05CevRBV3ym+pnKmxv+A0_T+AtURW2L4doPAFzu3QcJw@mail.gmail.com>
+ <a28c5e13-59bc-144d-4153-9d104cfa9188@linaro.org>
+ <20190531233306.GB25597@minitux>
+Message-ID: <d76a710d45dd7df3a28afb12fc62cf14@codeaurora.org>
+X-Sender: subashab@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 May 2019 12:56:39 PDT (-0700), Arnd Bergmann wrote:
-> On Fri, May 31, 2019 at 9:23 PM Palmer Dabbelt <palmer@sifive.com> wrote:
->>
->> Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
->
-> As usual, each patch needs a changelog text. I would prefer having a single
-> patch here that changes /all/ system call tables at once, rather than doing one
-> at a time like we used to.
+On 2019-05-31 17:33, Bjorn Andersson wrote:
+> On Fri 31 May 13:47 PDT 2019, Alex Elder wrote:
+> 
+>> On 5/31/19 2:19 PM, Arnd Bergmann wrote:
+>> > On Fri, May 31, 2019 at 6:36 PM Alex Elder <elder@linaro.org> wrote:
+>> >> On 5/31/19 9:58 AM, Dan Williams wrote:
+>> >>> On Thu, 2019-05-30 at 22:53 -0500, Alex Elder wrote:
+>> >>>
+>> >>> My question from the Nov 2018 IPA rmnet driver still stands; how does
+>> >>> this relate to net/ethernet/qualcomm/rmnet/ if at all? And if this is
+>> >>> really just a netdev talking to the IPA itself and unrelated to
+>> >>> net/ethernet/qualcomm/rmnet, let's call it "ipa%d" and stop cargo-
+>> >>> culting rmnet around just because it happens to be a net driver for a
+>> >>> QC SoC.
+>> >>
+>> >> First, the relationship between the IPA driver and the rmnet driver
+>> >> is that the IPA driver is assumed to sit between the rmnet driver
+>> >> and the hardware.
+>> >
+>> > Does this mean that IPA can only be used to back rmnet, and rmnet
+>> > can only be used on top of IPA, or can or both of them be combined
+>> > with another driver to talk to instead?
+>> 
+>> No it does not mean that.
+>> 
+>> As I understand it, one reason for the rmnet layer was to abstract
+>> the back end, which would allow using a modem, or using something
+>> else (a LAN?), without exposing certain details of the hardware.
+>> (Perhaps to support multiplexing, etc. without duplicating that
+>> logic in two "back-end" drivers?)
+>> 
+>> To be perfectly honest, at first I thought having IPA use rmnet
+>> was a cargo cult thing like Dan suggested, because I didn't see
+>> the benefit.  I now see why one would use that pass-through layer
+>> to handle the QMAP features.
+>> 
+>> But back to your question.  The other thing is that I see no
+>> reason the IPA couldn't present a "normal" (non QMAP) interface
+>> for a modem.  It's something I'd really like to be able to do,
+>> but I can't do it without having the modem firmware change its
+>> configuration for these endpoints.  My access to the people who
+>> implement the modem firmware has been very limited (something
+>> I hope to improve), and unless and until I can get corresponding
+>> changes on the modem side to implement connections that don't
+>> use QMAP, I can't implement such a thing.
+>> 
+> 
+> But any such changes would either be years into the future or for
+> specific devices and as such not applicable to any/most of devices on
+> the market now or in the coming years.
+> 
+> 
+> But as Arnd points out, if the software split between IPA and rmnet is
+> suboptimal your are encouraged to fix that.
+> 
+> Regards,
+> Bjorn
 
-Works for me.  That also gives me something to write about it the text :)
+The split rmnet design was chosen because we could place rmnet
+over any transport - IPA, PCIe (https://lkml.org/lkml/2018/4/26/1159)
+or USB.
 
-> In linux-next, we are at number 434 now, and there are a couple of other
-> new system calls being proposed right now (more than usual), so you may
-> have to change the number a few times.
+rmnet registers a rx handler, so the rmnet packet processing itself
+happens in the same softirq when packets are queued to network stack
+by IPA.
 
-OK, no problem.  It'll be a bit easier to handle the number that way.
-
-> Note: most architectures use .tbl files now, the exceptions are
-> include/uapi/asm-generic/unistd.h and arch/arm64/include/asm/unistd32.h,
-> and the latter also requires changing __NR_compat_syscalls in asm/unistd.h.
->
-> Numbers should now be the same across architectures, except for alpha,
-> which has a +110 offset. We have discussed ways to have a single
-> file to modify for a new call on all architectures, but no patches yet.
-
-OK, thanks.  I'll wait a bit for feedback, but unless there's anything else
-I'll go ahead and finish this.
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
