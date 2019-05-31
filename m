@@ -2,73 +2,113 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 720DAC28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99191C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4230B26928
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:03:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559307820;
-	bh=EAcHXloLVvWOmeaCQKGt2kykF6vQUgK3h5YLYFZKb5Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rGhKhUsr6tz58AwXuY7CB39Is1pD5N7K1vim4acxNOh5F3HSk/MNXG0zgd+fyCeIH
-	 sPehc4YRjJJCWAKGhJhZpn9YxQOsmh6SccF/QCo0esNQUN2R2HJ9dh/3HcFWQd3hgO
-	 Ie8N8VPFFrRrRdEMfWsjpxCFjWRzOaViNodqsIYc=
+	by mail.kernel.org (Postfix) with ESMTP id 729502692C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:05:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Jddq8a64"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbfEaNDj (ORCPT
+        id S1727382AbfEaNF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 09:03:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55804 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726330AbfEaNDj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 09:03:39 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AFA226928;
-        Fri, 31 May 2019 13:03:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559307818;
-        bh=EAcHXloLVvWOmeaCQKGt2kykF6vQUgK3h5YLYFZKb5Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0xA4neoblMrz9g0w77d8Ik0pV5W3wOMiLGHIt48Qv6JWGepPT7uMm7mCu3c0A6O0M
-         u6TYIV3M0BPYWe/tU+/R5Y8z+iayyr2RshD+zlN9jkJmqa5h4/BKw9+0FfYpsiwhy3
-         CC763w4f6Em3BN69cmomHPMD/zy8RSSze4aDNass=
-Date:   Fri, 31 May 2019 08:03:36 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com
-Subject: Re: [PATCH v3 1/5] PCI/ACPI: Add _OSC based negotiation support for
- DPC
-Message-ID: <20190531130336.GO28250@google.com>
-References: <cover.1557870869.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <1d7b8966972edcad8ac9f219e9d83b47beb85f6f.1557870869.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+        Fri, 31 May 2019 09:05:27 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:60486 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726330AbfEaNF1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 09:05:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=PgUhnVURh2ADsQW/SeXfrMWkdAfU9SjN4srmC8FhFMY=; b=Jddq8a64kyT4ZwUcekI8eTvi5
+        aWeG4Jc6o32wfZp/PaTagIjVAwN4aBSlNRKR4WWcqP/BdXtuRLYKr+WeBTBWshF0Y+2ak4/J8ktwI
+        PZVcAX34NZSkYEUg2+aAipGy77NCbKz0wsSdZrU9EBsI7u9askq7ZjWNoBkHywbDAbS2ceUyZRErZ
+        KOCq9Dl04MODWwNNmetzylqgRbAXzP8ydAqvCmSBRwDnBbNRcyIfSTDhSk5QXgH10MqmgeVetXDD8
+        6lxoDmMHcYP3Cnu7OhzX/kbsiO6tmU6CYFG9R4++Wyoj1VS/FU2Zj0m3Ntn0iDTsTknHE4u66M3hm
+        AHiQc1nsg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hWhDi-0007WO-7I; Fri, 31 May 2019 13:05:20 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 03F6420274AFF; Fri, 31 May 2019 15:05:16 +0200 (CEST)
+Date:   Fri, 31 May 2019 15:05:16 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Roman Penyaev <rpenyaev@suse.de>
+Cc:     azat@libevent.org, akpm@linux-foundation.org,
+        viro@zeniv.linux.org.uk, torvalds@linux-foundation.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 07/13] epoll: call ep_add_event_to_uring() from
+ ep_poll_callback()
+Message-ID: <20190531130516.GA2606@hirez.programming.kicks-ass.net>
+References: <20190516085810.31077-1-rpenyaev@suse.de>
+ <20190516085810.31077-8-rpenyaev@suse.de>
+ <20190531095616.GD17637@hirez.programming.kicks-ass.net>
+ <98971429dc36e8a2e3417af1744de2b2@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1d7b8966972edcad8ac9f219e9d83b47beb85f6f.1557870869.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <98971429dc36e8a2e3417af1744de2b2@suse.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 03:18:13PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+On Fri, May 31, 2019 at 01:22:54PM +0200, Roman Penyaev wrote:
+> On 2019-05-31 11:56, Peter Zijlstra wrote:
+> > On Thu, May 16, 2019 at 10:58:04AM +0200, Roman Penyaev wrote:
+
+> > > +static inline bool ep_clear_public_event_bits(struct epitem *epi)
+> > > +{
+> > > +	__poll_t old, flags;
+> > > +
+> > > +	/*
+> > > +	 * Here we race with ourselves and with ep_modify(), which can
+> > > +	 * change the event bits.  In order not to override events updated
+> > > +	 * by ep_modify() we have to do cmpxchg.
+> > > +	 */
+> > > +
+> > > +	old = epi->event.events;
+> > > +	do {
+> > > +		flags = old;
+> > > +	} while ((old = cmpxchg(&epi->event.events, flags,
+> > > +				flags & EP_PRIVATE_BITS)) != flags);
+> > > +
+> > > +	return flags & ~EP_PRIVATE_BITS;
+> > > +}
+> > 
+> > AFAICT epi->event.events also has normal writes to it, eg. in
+> > ep_modify(). A number of architectures cannot handle concurrent normal
+> > writes and cmpxchg() to the same variable.
 > 
-> As per PCI Firmware Specification, r3.2 ECN
-> (https://members.pcisig.com/wg/PCI-SIG/document/12614), OS can use
-> bit 7 of _OSC Control Field to negotiate control over Downstream Port
-> Containment (DPC) configuration of PCIe port.
+> Yes, we race with the current function and with ep_modify().  Then,
+> ep_modify()
+> should do something as the following:
+> 
+> -	epi->event.events = event->events
+> +	xchg(&epi->event.events, event->events);
+> 
+> Is that ok?
 
-I think this citation should reference the "Downstream Port
-Containment Related Enhancements ECN", i.e., it should include the
-title of the ECN.  I first thought you were citing the PCI Firmware
-Spec, r3.2, but of course it's not in there.
+That should be correct, but at that point I think we should also always
+read the thing with READ_ONCE() to avoid load-tearing. And I suspect it
+then becomes sensible to change the type to atomic_t.
 
-Bjorn
+atomic_set() vs atomic_cmpxchg() only carries the extra overhead on
+those 'dodgy' platforms.
+
+> Just curious: what are these archs?
+
+Oh, lovely stuff like parisc, sparc32 and arc-eznps. See
+arch/parisc/lib/bitops.c:__cmpxchg_*() for example :/ Those systems only
+have a single truly atomic op (something from the xchg / test-and-set
+family) and the rest is fudged on top of that.
+
