@@ -2,135 +2,120 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A748C46460
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF23C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D62126738
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4DB02672B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 09:53:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sYTsig4i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbfEaJvj (ORCPT
+        id S1726797AbfEaJxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 05:51:39 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:54576 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726158AbfEaJvj (ORCPT
+        Fri, 31 May 2019 05:53:36 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:35051 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726233AbfEaJxg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 05:51:39 -0400
-Received: from 79.184.255.225.ipv4.supernova.orange.pl (79.184.255.225) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
- id c2a60a58b5156938; Fri, 31 May 2019 11:51:36 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v2] PM: sleep: Add kerneldoc comments to some functions
-Date:   Fri, 31 May 2019 11:51:36 +0200
-Message-ID: <28365872.MChk0tSMPN@kreacher>
-In-Reply-To: <36259828.LPqo0PWuvG@kreacher>
-References: <36259828.LPqo0PWuvG@kreacher>
+        Fri, 31 May 2019 05:53:36 -0400
+Received: by mail-io1-f66.google.com with SMTP id p2so7668083iol.2
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 02:53:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3ai6iFpYmtM8MFBjASserTn9RG0APCv4fkrpDT2QH0s=;
+        b=sYTsig4iu/OL18DOUgnOo7s11OsbQjWZfDA2inJ93Fsa1/fEGuacCqp90wGkhnIm78
+         VNLtmLH9aCmUv65+RYs7yxtNhVl8CR6psqS7mm2OpbXhOwl/CyQzmvcX7r6HfbqFRjYr
+         3pDdDMRCDa0a1C3GV55e7L5G9ZYk+InzFulrFnV7Qyjw55Fk4bSJuD7C7wIX46y0/+9p
+         74XbwgbUrDw1cC6OWzcl3dPe6JQ+EjOz21SwJeHAkLUKMo3YE3DpjLvL8tXCJH+iPyAV
+         NgKaIMn93CTdzQuQNsNex9dAr5t//KWJMF5zz4ys6kE3KdGy20+LZ4/nVuAXPLsTj/59
+         v6yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3ai6iFpYmtM8MFBjASserTn9RG0APCv4fkrpDT2QH0s=;
+        b=L3DKp9kEXDHgX2r7Wyn915wd0u/h69SJFq/IMyG2osnqOvjrqyxBEZBwoO2mEAQKSw
+         FhvedT813iXTlFopXqiSkrtmdR4LKdBhH+xlmhvWd24Ya58SWwUPytvFikUlVz4yZcf9
+         s4Ph4CuzyyDVmSjgJtbBJ83RtV3QxcDJoOcNX35t2Yayiyb5AN+u/vk9SAaNmgrngBRe
+         EJiHGmcIzBumiDxNI7TZ7fHX7l8gxeNBbErrXR6GQWEM8/hk2jYhWbABGr60bp4s1A63
+         Y+Y/UHX9rNbLTqaCD2HsyypsAueQnXyd6KSdTFkY+8IJ3hP6zgnWXdJpX5QXOz9/MA35
+         IUJA==
+X-Gm-Message-State: APjAAAWWYb8aSuJ95AycB/GZK/AU7N4US2k69boYO/XWB3R/Lc7TfXtg
+        TzjBMSkotSwS8QOC2q6xbd+Z7t6ur2nuv3tTZ3Pr1w==
+X-Google-Smtp-Source: APXvYqw2mpipHKZXc6j5mvS5ExdEGILYRJ56MCHegbdi7Qcl/Zhz9ajUgzEptekDjCANHQgyjVBYn5LJ1l9Sak42td0=
+X-Received: by 2002:a5d:9402:: with SMTP id v2mr5804806ion.128.1559296415235;
+ Fri, 31 May 2019 02:53:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20190531094900.12708-1-yuehaibing@huawei.com>
+In-Reply-To: <20190531094900.12708-1-yuehaibing@huawei.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Fri, 31 May 2019 11:53:22 +0200
+Message-ID: <CAKv+Gu9G_gLUWJrkKrDJkV74BBk9rizAGd1RCzaxniTJrTY7BA@mail.gmail.com>
+Subject: Re: [PATCH -next] crypto: atmel-i2c - Fix build error while CRC16 set
+ to m
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, May 27, 2019 12:45:18 PM CEST Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> Add kerneldoc comments to pm_suspend_via_firmware(),
-> pm_resume_via_firmware() and pm_suspend_via_s2idle() to explain
-> what they do.
-> 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Fri, 31 May 2019 at 11:50, YueHaibing <yuehaibing@huawei.com> wrote:
+>
+> If CRYPTO_DEV_ATMEL_ECC is set m, which select CRC16 to m,
+> while CRYPTO_DEV_ATMEL_SHA204A is set to y, building fails.
+>
+> drivers/crypto/atmel-i2c.o: In function `atmel_i2c_checksum':
+> atmel-i2c.c:(.text+0x16): undefined reference to `crc16'
+>
+> Add CRC16 dependency to CRYPTO_DEV_ATMEL_SHA204A, and also make
+> CRYPTO_DEV_ATMEL_ECC depends on CRC16.
+>
+
+Please use 'select' in both cases, not 'depends on'
+
+
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: da001fb651b0 ("crypto: atmel-i2c - add support for SHA204A random number generator")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 > ---
-> 
-> -> v2:
->   Put more information into the pm_suspend_via_firmware() kerneldoc comment.
-
-It doesn't look like there are any more comments here, so I'll be queuing up this one.
-
-> 
-> ---
->  include/linux/suspend.h |   31 +++++++++++++++++++++++++++++++
->  kernel/power/suspend.c  |    6 ++++++
->  2 files changed, 37 insertions(+)
-> 
-> Index: linux-pm/include/linux/suspend.h
-> ===================================================================
-> --- linux-pm.orig/include/linux/suspend.h
-> +++ linux-pm/include/linux/suspend.h
-> @@ -227,11 +227,42 @@ static inline void pm_set_resume_via_fir
->  	pm_suspend_global_flags |= PM_SUSPEND_FLAG_FW_RESUME;
->  }
->  
-> +/**
-> + * pm_suspend_via_firmware - Check if platform firmware will suspend the system.
-> + *
-> + * To be called during system-wide power management transitions to sleep states
-> + * or during the subsequent system-wide transitions back to the working state.
-> + *
-> + * Return 'true' if the platform firmware is going to be invoked at the end of
-> + * the system-wide power management transition (to a sleep state) in progress in
-> + * order to complete it, or if the platform firmware has been invoked in order
-> + * to complete the last (or preceding) transition of the system to a sleep
-> + * state.
-> + *
-> + * This matters if the caller needs or wants to carry out some special actions
-> + * depending on whether or not control will be passed to the platform firmware
-> + * subsequently (for example, the device may need to be reset before letting the
-> + * platform firmware manipulate it, which is not necessary when the platform
-> + * firmware is not going to be invoked) or when such special actions may have
-> + * been carried out during the preceding transition of the system to a sleep
-> + * state (as they may need to be taken into account).
-> + */
->  static inline bool pm_suspend_via_firmware(void)
->  {
->  	return !!(pm_suspend_global_flags & PM_SUSPEND_FLAG_FW_SUSPEND);
->  }
->  
-> +/**
-> + * pm_resume_via_firmware - Check if platform firmware has woken up the system.
-> + *
-> + * To be called during system-wide power management transitions from sleep
-> + * states.
-> + *
-> + * Return 'true' if the platform firmware has passed control to the kernel at
-> + * the beginning of the system-wide power management transition in progress, so
-> + * the event that woke up the system from sleep has been handled by the platform
-> + * firmware.
-> + */
->  static inline bool pm_resume_via_firmware(void)
->  {
->  	return !!(pm_suspend_global_flags & PM_SUSPEND_FLAG_FW_RESUME);
-> Index: linux-pm/kernel/power/suspend.c
-> ===================================================================
-> --- linux-pm.orig/kernel/power/suspend.c
-> +++ linux-pm/kernel/power/suspend.c
-> @@ -62,6 +62,12 @@ static DECLARE_SWAIT_QUEUE_HEAD(s2idle_w
->  enum s2idle_states __read_mostly s2idle_state;
->  static DEFINE_RAW_SPINLOCK(s2idle_lock);
->  
-> +/**
-> + * pm_suspend_via_s2idle - Check if suspend-to-idle is the default suspend.
-> + *
-> + * Return 'true' if suspend-to-idle has been selected as the default system
-> + * suspend method.
-> + */
->  bool pm_suspend_via_s2idle(void)
->  {
->  	return mem_sleep_current == PM_SUSPEND_TO_IDLE;
-> 
-> 
-> 
-> 
-
-
-
-
+>  drivers/crypto/Kconfig | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
+> index fe01a99..7aebff8 100644
+> --- a/drivers/crypto/Kconfig
+> +++ b/drivers/crypto/Kconfig
+> @@ -528,7 +528,7 @@ config CRYPTO_DEV_ATMEL_ECC
+>         depends on I2C
+>         select CRYPTO_DEV_ATMEL_I2C
+>         select CRYPTO_ECDH
+> -       select CRC16
+> +       depends on CRC16
+>         help
+>           Microhip / Atmel ECC hw accelerator.
+>           Select this if you want to use the Microchip / Atmel module for
+> @@ -540,6 +540,7 @@ config CRYPTO_DEV_ATMEL_ECC
+>  config CRYPTO_DEV_ATMEL_SHA204A
+>         tristate "Support for Microchip / Atmel SHA accelerator and RNG"
+>         depends on I2C
+> +       depends on CRC16
+>         select CRYPTO_DEV_ATMEL_I2C
+>         select HW_RANDOM
+>         help
+> --
+> 2.7.4
+>
+>
