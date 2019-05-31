@@ -2,159 +2,153 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38457C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49399C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 047CA2688B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:13:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1332C268AB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:13:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="MUGHXYMe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JfNlnKh1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727271AbfEaMNJ (ORCPT
+        id S1727348AbfEaMNP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 08:13:09 -0400
-Received: from mail-eopbgr70044.outbound.protection.outlook.com ([40.107.7.44]:56803
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726233AbfEaMNI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 08:13:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tSVZFnz5EofKxjDO51pqdERUDg0mztW6Np+chrnU8WI=;
- b=MUGHXYMeybuB/bqGoe8dDT/hRUdtc4H9wcJd+RrhmiHVpvQL48i/MSZeNj9k3FRESkK0FxzmdEB2ZXaPIAOFbbRHQaT1ET1MRw2I2c9QuUJHVKM/5Aj1OqhdJ0ZEt0Gk6xOAaF1Ub8mrwUa8XqY9BK+n6kkCUm84uuGuMfH6mV8=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3836.eurprd04.prod.outlook.com (52.134.71.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.17; Fri, 31 May 2019 12:13:02 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::5835:e874:bd94:fec]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::5835:e874:bd94:fec%5]) with mapi id 15.20.1943.018; Fri, 31 May 2019
- 12:13:02 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Fabio Estevam <festevam@gmail.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Bruno Thomsen <bruno.thomsen@gmail.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>, Leo Li <leoyang.li@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>,
-        Pramod Kumar <pramod.kumar_1@nxp.com>,
-        Vabhav Sharma <vabhav.sharma@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH 2/3] arm64: dts: freescale: Add i.MX8MN dtsi support
-Thread-Topic: [PATCH 2/3] arm64: dts: freescale: Add i.MX8MN dtsi support
-Thread-Index: AQHVFsxub3h/I8/ZmEeLiTXReak9WqaFHYKAgAAIYOA=
-Date:   Fri, 31 May 2019 12:13:02 +0000
-Message-ID: <DB3PR0402MB3916139B49D9EF7E44E33911F5190@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190530094706.865-1-Anson.Huang@nxp.com>
- <20190530094706.865-2-Anson.Huang@nxp.com>
- <CAOMZO5D1B1tKs8eu_a8hXs193+TukHAYHiCEyk5g63p1S-cnbg@mail.gmail.com>
-In-Reply-To: <CAOMZO5D1B1tKs8eu_a8hXs193+TukHAYHiCEyk5g63p1S-cnbg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 56a1de6b-3714-4bd0-b86c-08d6e5c15431
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3836;
-x-ms-traffictypediagnostic: DB3PR0402MB3836:
-x-microsoft-antispam-prvs: <DB3PR0402MB3836F93AA410562FFF848736F5190@DB3PR0402MB3836.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 00540983E2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(366004)(39860400002)(396003)(346002)(189003)(199004)(13464003)(8936002)(44832011)(71190400001)(486006)(305945005)(81156014)(66066001)(229853002)(478600001)(9686003)(86362001)(55016002)(71200400001)(7736002)(52536014)(6436002)(53936002)(2906002)(8676002)(5660300002)(33656002)(7416002)(316002)(6916009)(476003)(73956011)(26005)(256004)(76116006)(99286004)(1411001)(25786009)(54906003)(3846002)(6116002)(4326008)(102836004)(53546011)(66446008)(74316002)(6506007)(6246003)(66476007)(7696005)(76176011)(66946007)(68736007)(11346002)(81166006)(66556008)(446003)(186003)(64756008)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3836;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: yDyvQeX3GAMW6i/RpXz/NW1iOLdvQjaiom/2hfnmF+HUeT71ur7qrLNlRoJiDD0TagvUtpKN5Vjr5w2+2gHEDEc3BveUjyz+48SEreDLXEg35d7x3UzUKimaPCt+EmyeJz6MhSRFmLelNrHXmxYGmcE9D9P+8MdcKLhzqyciX/zPNBcMj2PPdA6oyT6+Wbw9865TTLDml40/71UTUvOe183SV6doNmVYtuxiAAHvhn59TYHtNleU16fus3gHrXecHLl1uqvb0DeohRyJklRwmkmutea+XmqROSIFOXK4rlmV5WWROiEQG7D55DV+EtCjG9nIy072ZRdMCdiEg8CHCgCEkv7Ad9dwzb6KVcyxJuCTnUCMnSu7a9qzFTkXAV967NhnMf9nsnq42sad6ztCd2U5SEPk9f590iMwzCc6at8=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 31 May 2019 08:13:15 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:37970 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726233AbfEaMNO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 08:13:14 -0400
+Received: by mail-it1-f193.google.com with SMTP id h9so679838itk.3;
+        Fri, 31 May 2019 05:13:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=atIK3Z4pOl58AUWDjMScnZMywy+rlJAUd7dwx6jXLYM=;
+        b=JfNlnKh14mQcZkvyBftIv2uN55Gi1+AGQx8AQbO7XTXI65apQbd43bz6KZLpAd2Qob
+         euiTzNdju+Y3idHhtfaJs4vqKwttbD3BEvRCqDp0gLHQIwRd9Eg/urVpmxQK4RRvxSt+
+         KdXndu9KABgQN5UFXx2Xuhg+eZzPPRxGkWMOJ2LKPCLfHBNsmbIdexrIdS+KWeGBuIvK
+         rDXO4Hq8+qxZJ5AxOOJg3jgHJMIdQg+HKkoDDbM+5thrSrO6JbGHuWzZHsZ1QYsyPKWm
+         2IGeqmVZKc/nLYACzJSBsZ21IEEWlqA4vPuvfg/yGfcp+1d6efBUaed+a2H3WPp5SpBy
+         gsEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=atIK3Z4pOl58AUWDjMScnZMywy+rlJAUd7dwx6jXLYM=;
+        b=n9b+d65YoOaa9wNGV9Gs7dUlU+lDhNKxPSxAebx5VARrNNduYTYig1h+t/ROLwiISX
+         /KUD5sgvjtdLEo+0mjMn7scC8gjM1uvs9jvRXAcCsfVbhoJ5dvsEGjJ1FGftP85wZCvd
+         UcVE2mrWIR77Aj51rgodRyw7WYX0RNnsvUQvLokvjPMpagZRFZDjNfoShk7i+ooI7+oV
+         +wk7xZ/sOYe5Htg9/591FO0Tzlk4PbEOs96bqLRO+kIuNYNdLUyb6f+Vv3XyBcDPz0YV
+         JL7gR3jSRgEnt48dBffY7862tlk7Q3v+D5i7M3RQ+d+DZSpkMekk9l6dlD2uGrPjxiPG
+         6hlg==
+X-Gm-Message-State: APjAAAUHvz9Gt9UofNDLmHHXreIfX7eJT/VApHMNWVqidG4j8PCvI4V2
+        QMchf0NRKpMxuB8Jmo+Pd5KtfxR12MKxeZ6h510=
+X-Google-Smtp-Source: APXvYqz3dZ1ERvd9Fqykdr5sI5iUqO7/DPRb8FpoL6306O+rT/e6QvjuUYL4RuJjfXLC0sNYcoFFAcEz969Hm0wJxcA=
+X-Received: by 2002:a24:9ac7:: with SMTP id l190mr5943232ite.100.1559304793222;
+ Fri, 31 May 2019 05:13:13 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 56a1de6b-3714-4bd0-b86c-08d6e5c15431
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 May 2019 12:13:02.2258
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: anson.huang@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3836
+References: <20190510194229.20628-1-aford173@gmail.com> <af325707-3e42-493d-e858-77878ef06138@ti.com>
+ <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com> <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com>
+In-Reply-To: <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Fri, 31 May 2019 07:13:01 -0500
+Message-ID: <CAHCN7xLNCuqDyvOvtQef+CnRCMit2U2XTDP+=XKkjfmrnVv4kg@mail.gmail.com>
+Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to dts
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford <adam.ford@logicpd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        dri-devel@lists.freedesktop.org,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIEZhYmlvDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRmFiaW8g
-RXN0ZXZhbSA8ZmVzdGV2YW1AZ21haWwuY29tPg0KPiBTZW50OiBGcmlkYXksIE1heSAzMSwgMjAx
-OSA3OjQwIFBNDQo+IFRvOiBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gQ2M6
-IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQNCj4gPG1hcmsu
-cnV0bGFuZEBhcm0uY29tPjsgU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPjsgU2FzY2hh
-DQo+IEhhdWVyIDxzLmhhdWVyQHBlbmd1dHJvbml4LmRlPjsgU2FzY2hhIEhhdWVyIDxrZXJuZWxA
-cGVuZ3V0cm9uaXguZGU+Ow0KPiBBbmRyZXkgU21pcm5vdiA8YW5kcmV3LnNtaXJub3ZAZ21haWwu
-Y29tPjsgTWFuaXZhbm5hbiBTYWRoYXNpdmFtDQo+IDxtYW5pdmFubmFuLnNhZGhhc2l2YW1AbGlu
-YXJvLm9yZz47IEJydW5vIFRob21zZW4NCj4gPGJydW5vLnRob21zZW5AZ21haWwuY29tPjsgQWlz
-aGVuZyBEb25nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT47DQo+IEphY2t5IEJhaSA8cGluZy5iYWlA
-bnhwLmNvbT47IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgTHVjYXMgU3RhY2gNCj4gPGwu
-c3RhY2hAcGVuZ3V0cm9uaXguZGU+OyBQYW5rYWogQmFuc2FsIDxwYW5rYWouYmFuc2FsQG54cC5j
-b20+Ow0KPiBCaGFza2FyIFVwYWRoYXlhIDxiaGFza2FyLnVwYWRoYXlhQG54cC5jb20+OyBQcmFt
-b2QgS3VtYXINCj4gPHByYW1vZC5rdW1hcl8xQG54cC5jb20+OyBWYWJoYXYgU2hhcm1hIDx2YWJo
-YXYuc2hhcm1hQG54cC5jb20+Ow0KPiBMZW9uYXJkIENyZXN0ZXogPGxlb25hcmQuY3Jlc3RlekBu
-eHAuY29tPjsgb3BlbiBsaXN0Ok9QRU4gRklSTVdBUkUNCj4gQU5EIEZMQVRURU5FRCBERVZJQ0Ug
-VFJFRSBCSU5ESU5HUyA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+Ow0KPiBsaW51eC1rZXJu
-ZWwgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBtb2RlcmF0ZWQgbGlzdDpBUk0vRlJF
-RVNDQUxFDQo+IElNWCAvIE1YQyBBUk0gQVJDSElURUNUVVJFIDxsaW51eC1hcm0ta2VybmVsQGxp
-c3RzLmluZnJhZGVhZC5vcmc+OyBkbC0NCj4gbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4N
-Cj4gU3ViamVjdDogUmU6IFtQQVRDSCAyLzNdIGFybTY0OiBkdHM6IGZyZWVzY2FsZTogQWRkIGku
-TVg4TU4gZHRzaSBzdXBwb3J0DQo+IA0KPiBPbiBUaHUsIE1heSAzMCwgMjAxOSBhdCA2OjQ1IEFN
-IDxBbnNvbi5IdWFuZ0BueHAuY29tPiB3cm90ZToNCj4gDQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgZ3BpbzE6IGdwaW9AMzAyMDAwMDAgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wsaW14OG1uLWdwaW8iLCAiZnNsLGlteDM1LWdwaW8i
-Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4MzAyMDAwMDAg
-MHgxMDAwMD47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1cHRz
-ID0gPEdJQ19TUEkgNjQgSVJRX1RZUEVfTEVWRUxfSElHSD4sDQo+ID4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPEdJQ19TUEkgNjUNCj4gPiArIElSUV9UWVBF
-X0xFVkVMX0hJR0g+Ow0KPiANCj4gTm8gR1BJTyBjbG9ja3MgZW50cmllcz8NCg0KSnVzdCBub3Rp
-Y2VkIHRoaXMsIHRoZSBpbnRlcm5hbCBicmluZy11cCBicmFuY2gncyBjbG9jayBkcml2ZXIgZG9l
-cyBOT1QgaGF2ZSBpdCwNCkkgd2lsbCBhZGQgdGhlbSBpbiBWMiwgdGhhbmtzIGZvciBwb2ludGlu
-ZyBvdXQgdGhpcy4gDQoNCj4gDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgdXNicGh5bm9w
-MTogdXNicGh5bm9wMSB7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb21w
-YXRpYmxlID0gInVzYi1ub3AteGNlaXYiOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgY2xvY2tzID0gPCZjbGsgSU1YOE1OX0NMS19VU0JfUEhZX1JFRj47DQo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICBhc3NpZ25lZC1jbG9ja3MgPSA8JmNsayBJTVg4TU5f
-Q0xLX1VTQl9QSFlfUkVGPjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGFz
-c2lnbmVkLWNsb2NrLXBhcmVudHMgPSA8JmNsaw0KPiBJTVg4TU5fU1lTX1BMTDFfMTAwTT47DQo+
-ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbG9jay1uYW1lcyA9ICJtYWluX2Ns
-ayI7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4gDQo+ICB1c2JwaHlub3AxIGRv
-ZXMgbm90IGhhdmUgYW55IHJlZ2lzdGVycyBhc3NvY2lhdGVkLCBzbyBpdCBzaG91bGQgYmUgcGxh
-Y2VkDQo+IG91dHNpZGUgdGhlIHNvYy4NCj4gDQo+IEJ1aWxkaW5nIHdpdGggVz0xIHNob3VsZCB3
-YXJuIHlvdSBhYm91dCB0aGF0Lg0KPiANCg0KT0ssIEkgd2lsbCBtb3ZlIHRoZW0gdG8gb3V0c2lk
-ZSBvZiBzb2MuDQoNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICB1c2JwaHlub3AyOiB1c2Jw
-aHlub3AyIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUg
-PSAidXNiLW5vcC14Y2VpdiI7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBj
-bG9ja3MgPSA8JmNsayBJTVg4TU5fQ0xLX1VTQl9QSFlfUkVGPjsNCj4gPiArICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIGFzc2lnbmVkLWNsb2NrcyA9IDwmY2xrIElNWDhNTl9DTEtfVVNC
-X1BIWV9SRUY+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYXNzaWduZWQt
-Y2xvY2stcGFyZW50cyA9IDwmY2xrDQo+IElNWDhNTl9TWVNfUExMMV8xMDBNPjsNCj4gPiArICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsb2NrLW5hbWVzID0gIm1haW5fY2xrIjsNCj4g
-PiArICAgICAgICAgICAgICAgICAgICAgICB9Ow0KPiA+ICsNCj4gDQo+IERpdHRvDQoNCk9LLCBJ
-IHdpbGwgbW92ZSB0aGVtIHRvIG91dHNpZGUgb2Ygc29jLg0KDQpUaGFua3MsDQpBbnNvbi4NCg0K
+On Tue, May 28, 2019 at 10:53 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+>
+> Hi,
+>
+> On 28/05/2019 18:09, Adam Ford wrote:
+> > On Tue, May 28, 2019 at 4:11 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+> >>
+> >> Hi,
+> >>
+> >> On 10/05/2019 22:42, Adam Ford wrote:
+> >>> Currently the source code is compiled using hard-coded values
+> >>> from CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK.  This patch allows this
+> >>> clock divider value to be moved to the device tree and be changed
+> >>> without having to recompile the kernel.
+> >>>
+> >>> Signed-off-by: Adam Ford <aford173@gmail.com>
+> >>
+> >> I understand why you want to do this, but I'm not sure it's a good idea.
+> >> It's really something the driver should figure out, and if we add it to
+> >> the DT, it effectively becomes an ABI.
+> >>
+> >> That said... I'm not sure how good of a job the driver could ever do, as
+> >> it can't know the future scaling needs of the userspace at the time it
+> >> is configuring the clock. And so, I'm not nacking this patch, but I
+> >> don't feel very good about this patch...
+> >>
+> >> The setting also affects all outputs (exluding venc), which may not be
+> >> what the user wants. Then again, I think this setting is really only
+> >> needed on OMAP2 & 3, which have only a single output. But that's the
+> >> same with the current kconfig option, of course.
+> >>
+> >> So, the current CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK is an ugly hack, in my
+> >> opinion, and moving it to DT makes it a worse hack =). But I don't have
+> >> any good suggestions either.
+> >
+> > As it stands the Logic PD OMAP35 and AM37/DM37 boards (SOM-LV and
+> > Torpedo) require this to be hard coded to 4 or it hangs during start.
+> > This is the case for all versions 4.2+.  I haven't tested it with
+> > older stuff.  Tony has a DM3730 Torpedo kit and reported the hanging
+> > issue to me. I told him to set that value to 4 to make it not hang.
+> > He asked that I move it to the DT to avoid custom kernels.  I agree
+> > it's a hack, but if it's create a customized defconfig file for 4
+> > boards or modify the device tree, it seems like the device tree
+> > approach is less intrusive.
+>
+> Ok, well, I think that's a separate thing from its intended use. The
+> point of the kconfig option is to ensure that the fclk/pclk ratio stays
+> under a certain number to allow enough scaling range. It should never
+> affect a basic non-scaling use case, unless you set it to a too high
+> value, which prevents finding any pclk.
+>
+> Has anyone debugged why the hang is happening?
+
+I tried debugging this years ago, and I was told to use the
+CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK.
+>
+> If we can't fix the bug itself, rather than adding a DT option, we could
+> change add a min_fck_per_pck field (as you do), keep the kconfig option,
+> and set the min_fck_per_pck based on the kconfig option, _or_ in case of
+> those affected SoCs, set the min_fck_per_pck even without the kconfig
+> option.
+
+I am just curious if anyone else sees this.  If nobody is using this
+hack, I wonder how much of the impact it will be.  I'm trying trying
+to get my board to boot without hanging without creating a custom
+defconfig.
+
+adam
+>
+>   Tomi
+>
+> --
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
