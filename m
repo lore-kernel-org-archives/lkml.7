@@ -7,65 +7,62 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39414C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 07:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B31AC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 07:39:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CA772651A
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 07:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33D1E2652D
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 07:39:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="S2Wnzsu8"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZkHtZhss"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbfEaHj0 (ORCPT
+        id S1727001AbfEaHj3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 03:39:26 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41521 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726158AbfEaHjX (ORCPT
+        Fri, 31 May 2019 03:39:29 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38827 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726960AbfEaHjZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 03:39:23 -0400
-Received: by mail-pg1-f193.google.com with SMTP id z3so3554839pgp.8
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 00:39:23 -0700 (PDT)
+        Fri, 31 May 2019 03:39:25 -0400
+Received: by mail-pf1-f195.google.com with SMTP id a186so4968941pfa.5
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 00:39:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=amLWzMGEOrMIVY/i8SOjRUFJFk74K5wA9+AH20vWRFI=;
-        b=S2Wnzsu8nCvTtm8EV4HrqG9J3QxY0JvdrwvVbqX3A5HD0hk1y2+7TjzwQxNUHg338R
-         aTLOrA+4U5i+eEQ6BJa/8aWfXg2K57v2wUesXPDBNu+I6SB+1Smw5cxfXrmyJHisv2Cp
-         o9wxb+pic8FbNdC+Bj10EmTxsQIhA+kntf/c8=
+        bh=0Nj60oBqIopyn1T0IlYYbYPmf6l7buHAsI+lHlXOg1k=;
+        b=ZkHtZhssBlyDhxswlfEUAS1Y3CtbQ9bqfTQnvrQrGeCWHBeLSOjEUACwOZS7Ge+o1l
+         MJW+IOlmm35blzrv1SFnVZW/Lf4qnTBs40u+tsXiPXtiX80q4rkRCzkMVhERs589KqZm
+         DPq1c7M2+F/sP+CZadODVEfH8ZYseJ/92Okw8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=amLWzMGEOrMIVY/i8SOjRUFJFk74K5wA9+AH20vWRFI=;
-        b=IFvw54NFTen1Daao4tZRlflnyLnwec5XFIuYOaFOChYtTLPNkSeaa0BC1qcqUAnS9Y
-         E0U3hSIGCAbPn/erTiPQHxKA8mRP/6/1QRubz8+d6lq4V29tQKY6MZzObxM/RjSeiXEd
-         C+JsS7ObXPrJgN3z5nn/p1zEaFzQ056JjrDRbPvtNRmn2IFtQpNq1E/1bq/v/UI0e/Uw
-         EQpSea1sazfC4mNB/LHl5zKzW/FkTki/LKZ7gZJ2qDXZES5DdW+lvd/3gNXndcPkxYUL
-         iknrq7yUnEuR0clgz/2Ytk7tkD8bkltY0Y9DLHhJzDX8K7Ve7psaWhK9qQdh+tdqVxps
-         o68g==
-X-Gm-Message-State: APjAAAV3YUSyiUAvKtiKkZQQHyzWwua4uoYWpRtEogawfS//vcrdrNNB
-        GQ5N7X+n11mGIPxKRYKgvGPShQ==
-X-Google-Smtp-Source: APXvYqyT5uZjk09V1ef9FcAAvx5WcXHLlC6rFD9TvjX/1wVBTG9vVJRPgKSB40SLpJjEtmzqOCaDeQ==
-X-Received: by 2002:a63:1b0e:: with SMTP id b14mr7604009pgb.365.1559288362674;
-        Fri, 31 May 2019 00:39:22 -0700 (PDT)
+        bh=0Nj60oBqIopyn1T0IlYYbYPmf6l7buHAsI+lHlXOg1k=;
+        b=agmdf/NiTDJC2P0PSlN6TmI5hpkaLX/7X0ZTVZoo62Pp9ZET2uV6aNlXH9MRWwibKI
+         vbK/vr8FcjkhWUGWkT78GQvXOBRlw/Pifhx4L03o+KUrN1VGS9p16YD2ED/fBR27yy5D
+         U1vaioJwXljvw3kevAx0uuHyq97f+TfSgJCmGHB04Wu8VwGehfWRDVWMH74VBpYGcxjU
+         4BFhdriTy3ZhRTv1ZZ0oAF1g7v8xA8AXQtzmFa4XjAsc5dMy8e2h89+9GdY9J1E8NMAX
+         ru1NavhAEX9dBLVWBQaMfMT//NtKBKiYt12JndMQSqYiH7Bc1IWXQOCfR1LjVd55+wgn
+         YURQ==
+X-Gm-Message-State: APjAAAWQyIEWqpAd0umqr3Hqsu4RU92QfieKzbqn+YrKk9s/vKtpeRu3
+        Y7Col1d7FIkaq7Fe/wERzWWxkA==
+X-Google-Smtp-Source: APXvYqzBbChruBHRjjXj+6jQC2mdU1dW5CEXePkSM1WEL6tL8pEWny6Q/UNJJS4/7kCzYYFs/39n+g==
+X-Received: by 2002:a62:6145:: with SMTP id v66mr8012840pfb.144.1559288364789;
+        Fri, 31 May 2019 00:39:24 -0700 (PDT)
 Received: from pihsun-z840.tpe.corp.google.com ([2401:fa00:1:10:7889:7a43:f899:134c])
-        by smtp.googlemail.com with ESMTPSA id r71sm17051741pjb.2.2019.05.31.00.39.20
+        by smtp.googlemail.com with ESMTPSA id r71sm17051741pjb.2.2019.05.31.00.39.23
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 31 May 2019 00:39:22 -0700 (PDT)
+        Fri, 31 May 2019 00:39:24 -0700 (PDT)
 From:   Pi-Hsun Shih <pihsun@chromium.org>
-Cc:     Pi-Hsun Shih <pihsun@chromium.org>, Rob Herring <robh@kernel.org>,
+Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
         Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
         Benson Leung <bleung@chromium.org>,
         Enric Balletbo i Serra <enric.balletbo@collabora.com>,
         Guenter Roeck <groeck@chromium.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v9 5/7] dt-bindings: Add binding for cros-ec-rpmsg.
-Date:   Fri, 31 May 2019 15:38:46 +0800
-Message-Id: <20190531073848.155444-6-pihsun@chromium.org>
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v9 6/7] mfd: cros_ec: differentiate SCP from EC by feature bit.
+Date:   Fri, 31 May 2019 15:38:47 +0800
+Message-Id: <20190531073848.155444-7-pihsun@chromium.org>
 X-Mailer: git-send-email 2.22.0.rc1.257.g3120a18244-goog
 In-Reply-To: <20190531073848.155444-1-pihsun@chromium.org>
 References: <20190531073848.155444-1-pihsun@chromium.org>
@@ -77,44 +74,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a DT binding documentation for ChromeOS EC driver over rpmsg.
+System Companion Processor (SCP) is Cortex M4 co-processor on some
+MediaTek platform that can run EC-style firmware. Since a SCP and EC
+would both exist on a system, and use the cros_ec_dev driver, we need to
+differentiate between them for the userspace, or they would both be
+registered at /dev/cros_ec, causing a conflict.
 
 Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-Acked-by: Rob Herring <robh@kernel.org>
 
 ---
-Changes from v8, v7, v6:
+Changes from v8:
  - No change.
 
-Changes from v5:
- - New patch.
----
- Documentation/devicetree/bindings/mfd/cros-ec.txt | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Changes from v7:
+ - Address comments in v7.
+ - Rebase the series onto https://lore.kernel.org/patchwork/patch/1059196/.
 
-diff --git a/Documentation/devicetree/bindings/mfd/cros-ec.txt b/Documentation/devicetree/bindings/mfd/cros-ec.txt
-index 6245c9b1a68b..4860eabd0f72 100644
---- a/Documentation/devicetree/bindings/mfd/cros-ec.txt
-+++ b/Documentation/devicetree/bindings/mfd/cros-ec.txt
-@@ -3,7 +3,7 @@ ChromeOS Embedded Controller
- Google's ChromeOS EC is a Cortex-M device which talks to the AP and
- implements various function such as keyboard and battery charging.
+Changes from v6, v5, v4, v3, v2:
+ - No change.
+
+Changes from v1:
+ - New patch extracted from Patch 5.
+---
+ drivers/mfd/cros_ec_dev.c            | 10 ++++++++++
+ include/linux/mfd/cros_ec.h          |  1 +
+ include/linux/mfd/cros_ec_commands.h |  2 +-
+ 3 files changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+index a5391f96eafd..66107de3dbce 100644
+--- a/drivers/mfd/cros_ec_dev.c
++++ b/drivers/mfd/cros_ec_dev.c
+@@ -440,6 +440,16 @@ static int ec_device_probe(struct platform_device *pdev)
+ 		ec_platform->ec_name = CROS_EC_DEV_TP_NAME;
+ 	}
  
--The EC can be connect through various means (I2C, SPI, LPC) and the
-+The EC can be connect through various means (I2C, SPI, LPC, RPMSG) and the
- compatible string used depends on the interface. Each connection method has
- its own driver which connects to the top level interface-agnostic EC driver.
- Other Linux driver (such as cros-ec-keyb for the matrix keyboard) connect to
-@@ -17,6 +17,9 @@ Required properties (SPI):
- - compatible: "google,cros-ec-spi"
- - reg: SPI chip select
- 
-+Required properties (RPMSG):
-+- compatible: "google,cros-ec-rpmsg"
++	/* Check whether this is actually a SCP rather than an EC. */
++	if (cros_ec_check_features(ec, EC_FEATURE_SCP)) {
++		dev_info(dev, "CrOS SCP MCU detected.\n");
++		/*
++		 * Help userspace differentiating ECs from SCP,
++		 * regardless of the probing order.
++		 */
++		ec_platform->ec_name = CROS_EC_DEV_SCP_NAME;
++	}
 +
- Optional properties (SPI):
- - google,cros-ec-spi-pre-delay: Some implementations of the EC need a little
-   time to wake up from sleep before they can receive SPI transfers at a high
+ 	/*
+ 	 * Add the class device
+ 	 * Link to the character device for creating the /dev entry
+diff --git a/include/linux/mfd/cros_ec.h b/include/linux/mfd/cros_ec.h
+index cfa78bb4990f..751cb3756d49 100644
+--- a/include/linux/mfd/cros_ec.h
++++ b/include/linux/mfd/cros_ec.h
+@@ -27,6 +27,7 @@
+ #define CROS_EC_DEV_PD_NAME "cros_pd"
+ #define CROS_EC_DEV_TP_NAME "cros_tp"
+ #define CROS_EC_DEV_ISH_NAME "cros_ish"
++#define CROS_EC_DEV_SCP_NAME "cros_scp"
+ 
+ /*
+  * The EC is unresponsive for a time after a reboot command.  Add a
+diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd/cros_ec_commands.h
+index dcec96f01879..8b578b4c1ec7 100644
+--- a/include/linux/mfd/cros_ec_commands.h
++++ b/include/linux/mfd/cros_ec_commands.h
+@@ -884,7 +884,7 @@ enum ec_feature_code {
+ 	EC_FEATURE_REFINED_TABLET_MODE_HYSTERESIS = 37,
+ 	/* EC supports audio codec. */
+ 	EC_FEATURE_AUDIO_CODEC = 38,
+-	/* EC Supports SCP. */
++	/* The MCU is a System Companion Processor (SCP). */
+ 	EC_FEATURE_SCP = 39,
+ 	/* The MCU is an Integrated Sensor Hub */
+ 	EC_FEATURE_ISH = 40,
 -- 
 2.22.0.rc1.257.g3120a18244-goog
 
