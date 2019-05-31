@@ -6,106 +6,88 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44431C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F62EC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17E56268CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06A17268E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 12:32:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727316AbfEaM1s (ORCPT
+        id S1727184AbfEaMch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 08:27:48 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:45493 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbfEaM1r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 08:27:47 -0400
-Received: from [192.168.1.110] ([77.7.63.28]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MMoXE-1hGFi146Q0-00Il8N; Fri, 31 May 2019 14:27:30 +0200
-Subject: Re: [PATCH -next] x86: apuv2: Make two symbols static
-To:     YueHaibing <yuehaibing@huawei.com>, info@metux.net,
-        dvhart@infradead.org, andy@infradead.org, linus.walleij@linaro.org
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-References: <20190529143844.23084-1-yuehaibing@huawei.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <abbb799c-07d1-1c8e-dac0-259678f53a20@metux.net>
-Date:   Fri, 31 May 2019 14:27:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Fri, 31 May 2019 08:32:37 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34578 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726233AbfEaMcg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 08:32:36 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 08C13AD96;
+        Fri, 31 May 2019 12:32:35 +0000 (UTC)
+Date:   Fri, 31 May 2019 14:32:34 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Petr Mladek <pmladek@suse.com>
+cc:     Jiri Kosina <jikos@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] livepatch: Remove duplicate warning about missing
+ reliable stacktrace support
+In-Reply-To: <20190531074147.27616-3-pmladek@suse.com>
+Message-ID: <alpine.LSU.2.21.1905311425450.742@pobox.suse.cz>
+References: <20190531074147.27616-1-pmladek@suse.com> <20190531074147.27616-3-pmladek@suse.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20190529143844.23084-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:9EgrzZs0sVlzNy1LbqYZBr4fsjC/c0wL4kwv8y8gUl+ppMRDt/N
- /Tl9/jXG828zpp9Q6XVDpIoHj3NKDMi8HVhsSftaZSnO0fvDNF/MEmykYzy09URxMho1JdS
- FQ/Lagz4RFiFs8CZVgHYuUPabctTlJ61WKy815SAh7l4QFCJguHJwbnY1dM71yxyRFg9PFl
- 8NDvRNPvQ3cTXo+XouDzw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:1RAZlWEqpOk=:ZHh41jLhluryaRA021Cpdu
- yLgCVf1xRyPN4VVCEHQWZ/gWtqTTgMVohjN52ZjKgOyZZdnRg/+LfZEaRkUHQy1WB18ZOqjja
- /6m3yRDGV279qBsDHmFPaHlQ1PNRJZz7jj1AL78Te5ycExrax4eEVguTlE+RkSDDnmh3Do+9G
- Cz4awr374VzRt3ykEzm4HgzktTgDFHYYpiRCsT1f9cARJthTa+qGAP1amEXBlaYFLYTRA82CG
- kuwRt9mdwO905KXMo5du3YEovC1Hketk3UCgCSTttKBAJJ0qvxqmw2vkQbJwKRRCxv5PyfpAD
- SgY5vejr5o0NBMEy21ZhbUEXPx+iJZtFM1PgzGNwy3BpkEs4gAW4EfZ/aTfpG/022f34Yvrag
- SofuX3pcKpKQY2m4A13mM5objPps2B05mV8nJSAvWB4bwcn4u3AI1/+tktfFump2BUt3kc2Yx
- USnECAXXyRDv8916QxYBRCUj6HCyl5V+ZvHDkxgBBPdUhlEdLkmF5iwMCZxaNXehHjMMLwQSX
- UJUansj64azhcnw67ml1pa2ipS/iiHIzvBbpjLSkxXDHdFR47ZGHk9P2ohlbg3MKvqumPi5lc
- kaHx1smnR1o5Qjwk/XDzvaCPS+nyXj0EcDKykDn/tEUpF+XPahB2Tn9O6zmSKbgAtnvMeUscg
- g6BXU7FuWQjYG0Dre1M+V73TekRFLb1Vw4HDbuvbYysGvNreI1tqGaszlfImyBxEAILL95g5+
- XD2e/mE729RD2DMSiRAl8HAzkMZBf5t1RfQwaD84gkcEoNv+2TWnmdO0QSU=
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29.05.19 16:38, YueHaibing wrote:
-> Fix sparse warnings:
+On Fri, 31 May 2019, Petr Mladek wrote:
+
+> WARN_ON_ONCE() could not be called safely under rq lock because
+> of console deadlock issues.
 > 
-> drivers/platform/x86/pcengines-apuv2.c:80:27: warning: symbol 'gpios_led_table' was not declared. Should it be static?
-> drivers/platform/x86/pcengines-apuv2.c:113:27: warning: symbol 'gpios_key_table' was not declared. Should it be static?
+> It can be simply removed. A better descriptive message is written
+> in klp_enable_patch() when klp_have_reliable_stack() fails.
+> The remaining debug message is good enough.
 > 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> Signed-off-by: Petr Mladek <pmladek@suse.com>
 > ---
->  drivers/platform/x86/pcengines-apuv2.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  kernel/livepatch/transition.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> diff --git a/drivers/platform/x86/pcengines-apuv2.c b/drivers/platform/x86/pcengines-apuv2.c
-> index c1ca931e1fab..b0d3110ae378 100644
-> --- a/drivers/platform/x86/pcengines-apuv2.c
-> +++ b/drivers/platform/x86/pcengines-apuv2.c
-> @@ -77,7 +77,7 @@ static const struct gpio_led_platform_data apu2_leds_pdata = {
->  	.leds		= apu2_leds,
->  };
+> diff --git a/kernel/livepatch/transition.c b/kernel/livepatch/transition.c
+> index abb2a4a2cbb2..1bf362df76e1 100644
+> --- a/kernel/livepatch/transition.c
+> +++ b/kernel/livepatch/transition.c
+> @@ -247,7 +247,6 @@ static int klp_check_stack(struct task_struct *task, char *err_buf)
+>  	int ret, nr_entries;
 >  
-> -struct gpiod_lookup_table gpios_led_table = {
-> +static struct gpiod_lookup_table gpios_led_table = {
->  	.dev_id = "leds-gpio",
->  	.table = {
->  		GPIO_LOOKUP_IDX(AMD_FCH_GPIO_DRIVER_NAME, APU2_GPIO_LINE_LED1,
-> @@ -110,7 +110,7 @@ static const struct gpio_keys_platform_data apu2_keys_pdata = {
->  	.name		= "apu2-keys",
->  };
->  
-> -struct gpiod_lookup_table gpios_key_table = {
-> +static struct gpiod_lookup_table gpios_key_table = {
->  	.dev_id = "gpio-keys-polled",
->  	.table = {
->  		GPIO_LOOKUP_IDX(AMD_FCH_GPIO_DRIVER_NAME, APU2_GPIO_LINE_MODESW,
-> 
+>  	ret = stack_trace_save_tsk_reliable(task, entries, ARRAY_SIZE(entries));
+> -	WARN_ON_ONCE(ret == -ENOSYS);
+>  	if (ret < 0) {
+>  		snprintf(err_buf, STACK_ERR_BUF_SIZE,
+>  			 "%s: %s:%d has an unreliable stack\n",
 
-thanks.
+The current situation is not the best, but I think the patch improves it 
+only slightly. I see two possible solutions.
 
+1. we either revert commit 1d98a69e5cef ("livepatch: Remove reliable 
+stacktrace check in klp_try_switch_task()"), so that klp_check_stack() 
+returns right away.
 
-Acked-By: Enrico Weigelt, metux IT consult <info@metux.net>
+2. or we test ret from stack_trace_save_tsk_reliable() for ENOSYS and 
+return.
 
+In my opinion either of them is better than what we have now (and what we 
+would have with the patch), because klp_check_stack() returns, but it 
+prints out that a task has an unreliable stack. Yes, it is pr_debug() only 
+in the end, but still.
 
---mtx
+I don't have a preference and my understanding is that Petr does not want 
+to do v4. I can prepare a patch, but it would be nice to choose now. Josh? 
+Anyone else?
 
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Miroslav
