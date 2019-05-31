@@ -4,44 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82925C28CC2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 06:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C982C28CC2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 06:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6137B2646E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 06:37:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C9AF26471
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 06:37:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726816AbfEaGhG (ORCPT
+        id S1726881AbfEaGhM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 02:37:06 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:37248 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726706AbfEaGhD (ORCPT
+        Fri, 31 May 2019 02:37:12 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42328 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726820AbfEaGhI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 02:37:03 -0400
-Received: by mail-pl1-f193.google.com with SMTP id e7so3112525pln.4
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 23:37:02 -0700 (PDT)
+        Fri, 31 May 2019 02:37:08 -0400
+Received: by mail-pg1-f196.google.com with SMTP id e6so2211094pgd.9;
+        Thu, 30 May 2019 23:37:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=4BOxKga3sIPJeUuSYhutOqVYFIx9PIo1uS8S8T7b8Wc=;
-        b=HNBIE+sJLwgWQmKGfuwpt61MxqUONPu0df3NwSir5CMPCfkgeRjEyPwV/ZrkV0h4vm
-         2LmELnAW0kWC/uGXxYjPT+4amlzlIveYQvCEQxVu7K92LnhXVAgmTaT7ExfyCB/StbCZ
-         gOadEVpRUMEPzHq4jjs0ptrjZtzb5VxJT3SCjbIudLfFKmGgvLjpdn+mfgJz3l0DP2Po
-         5pTCnEsW+udL4TE5QCHHtTwNKB19g5ZYKLwY28VoElLjHPZpjVip2H0novlhwVV7KbkQ
-         h7OBmI0kd3y1/gHqHCppCs7mi/N9E6ExVwVe7MSEnENCktekxyJgHxDHvOTTAbqn2cOW
-         xZ+g==
-X-Gm-Message-State: APjAAAWk5yflX3T6VxG3kYpUfyHJ9AtVLg6hkM+fVS/OTL8lLxUOrbcp
-        DeUr7hTYhtbStrPydbUO/BY=
-X-Google-Smtp-Source: APXvYqxZ/flXbfZHHkwwSBPFNK+xb9uFSYxDNQQ/Xc91PNsquLCy/kiUa1bVC06oo7PJ3neykmSqYg==
-X-Received: by 2002:a17:902:e48e:: with SMTP id cj14mr6926096plb.299.1559284622267;
-        Thu, 30 May 2019 23:37:02 -0700 (PDT)
+        bh=7bwO8b2099JZadUfRmVcnPa+T8ct2M/drZDJt4vgMUM=;
+        b=MQtNKVIIhCsNGCjqQIzlTDvmsNLTK/9jgZ5KiwyzKQ+CswF4q2/19IJevG+dFFgI4U
+         rwmuQ2vFWN3d79sUmzNKytZ6vgJJ/wJBpdVA7tT/cqspw9jz8wq4RKfKgaG6rmiIE4wt
+         fk0F/nVh9ZGmuaiHINzi7Xks7WbMHEY+XYZjfYC18Tzg8wmgC+Mda7gCOUq/tEJmVKdr
+         8HrC8CqJE+xPWyccUlhHvbzW/53V+A0FDubXqb4zDN3B2XGY/b+aS6CUn+AczmruYY9c
+         0BgLONg4xBKfAONN1req3WoaVkrsZNbBce4ocypolZGrciJEvlEbtget9OG0gds79Fw1
+         Z6Lg==
+X-Gm-Message-State: APjAAAUVc2ZvOnt/glQz2gIEPSayX1U6Zu+wON9IUQzofLEUBOzNkFUY
+        KnN3ePZ5xqjhKvqGVfFctEY=
+X-Google-Smtp-Source: APXvYqy40gpqhsyMdmpCYqEmAgDL9zi8xcQuj4XMXWCp0oVtt6RuVLS2aWlcI95Dz4ODQdS2nlSAPQ==
+X-Received: by 2002:a62:1a0f:: with SMTP id a15mr8084310pfa.111.1559284627207;
+        Thu, 30 May 2019 23:37:07 -0700 (PDT)
 Received: from htb-2n-eng-dhcp405.eng.vmware.com ([66.170.99.1])
-        by smtp.gmail.com with ESMTPSA id g17sm9256429pfk.55.2019.05.30.23.37.00
+        by smtp.gmail.com with ESMTPSA id g17sm9256429pfk.55.2019.05.30.23.37.05
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 23:37:01 -0700 (PDT)
+        Thu, 30 May 2019 23:37:06 -0700 (PDT)
 From:   Nadav Amit <namit@vmware.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Andy Lutomirski <luto@kernel.org>
@@ -50,10 +51,10 @@ Cc:     Borislav Petkov <bp@alien8.de>,
         Ingo Molnar <mingo@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
         linux-kernel@vger.kernel.org, Nadav Amit <namit@vmware.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: [RFC PATCH v2 03/12] x86/mm/tlb: Refactor common code into flush_tlb_on_cpus()
-Date:   Thu, 30 May 2019 23:36:36 -0700
-Message-Id: <20190531063645.4697-4-namit@vmware.com>
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+Subject: [RFC PATCH v2 06/12] KVM: x86: Provide paravirtualized flush_tlb_multi()
+Date:   Thu, 30 May 2019 23:36:39 -0700
+Message-Id: <20190531063645.4697-7-namit@vmware.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190531063645.4697-1-namit@vmware.com>
 References: <20190531063645.4697-1-namit@vmware.com>
@@ -64,143 +65,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-arch_tlbbatch_flush() and flush_tlb_mm_range() have very similar code,
-which is effectively the same. Extract the mutual code into a new
-function flush_tlb_on_cpus().
+Support the new interface of flush_tlb_multi, which also flushes the
+local CPU's TLB, instead of flush_tlb_others that does not. This
+interface is more performant since it parallelize remote and local TLB
+flushes.
 
-There is one functional change, which should not affect correctness:
-flush_tlb_mm_range compared loaded_mm and the mm to figure out if local
-flush is needed. Instead, the common code would look at the mm_cpumask()
-which should give the same result. Performance should not be affected,
-since this cpumask should not change in such a frequency that would
-introduce cache contention.
+The actual implementation of flush_tlb_multi() is almost identical to
+that of flush_tlb_others().
 
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
+Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org
 Signed-off-by: Nadav Amit <namit@vmware.com>
 ---
- arch/x86/mm/tlb.c | 62 ++++++++++++++++++++++++++---------------------
- 1 file changed, 34 insertions(+), 28 deletions(-)
+ arch/x86/kernel/kvm.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index 7f61431c75fb..ac98ad76f695 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -733,7 +733,11 @@ static inline struct flush_tlb_info *get_flush_tlb_info(struct mm_struct *mm,
- 			unsigned int stride_shift, bool freed_tables,
- 			u64 new_tlb_gen)
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index c1c2b88ea3f1..86b8267166e6 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -593,7 +593,7 @@ static void __init kvm_apf_trap_init(void)
+ 
+ static DEFINE_PER_CPU(cpumask_var_t, __pv_tlb_mask);
+ 
+-static void kvm_flush_tlb_others(const struct cpumask *cpumask,
++static void kvm_flush_tlb_multi(const struct cpumask *cpumask,
+ 			const struct flush_tlb_info *info)
  {
--	struct flush_tlb_info *info = this_cpu_ptr(&flush_tlb_info);
-+	struct flush_tlb_info *info;
-+
-+	preempt_disable();
-+
-+	info = this_cpu_ptr(&flush_tlb_info);
- 
- #ifdef CONFIG_DEBUG_VM
- 	/*
-@@ -761,6 +765,23 @@ static inline void put_flush_tlb_info(void)
- 	barrier();
- 	this_cpu_dec(flush_tlb_info_idx);
- #endif
-+	preempt_enable();
-+}
-+
-+static void flush_tlb_on_cpus(const cpumask_t *cpumask,
-+			      const struct flush_tlb_info *info)
-+{
-+	int this_cpu = smp_processor_id();
-+
-+	if (cpumask_test_cpu(this_cpu, cpumask)) {
-+		lockdep_assert_irqs_enabled();
-+		local_irq_disable();
-+		flush_tlb_func_local(info, TLB_LOCAL_MM_SHOOTDOWN);
-+		local_irq_enable();
-+	}
-+
-+	if (cpumask_any_but(cpumask, this_cpu) < nr_cpu_ids)
-+		flush_tlb_others(cpumask, info);
- }
- 
- void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
-@@ -769,9 +790,6 @@ void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
- {
- 	struct flush_tlb_info *info;
- 	u64 new_tlb_gen;
--	int cpu;
--
--	cpu = get_cpu();
- 
- 	/* Should we flush just the requested range? */
- 	if ((end == TLB_FLUSH_ALL) ||
-@@ -786,18 +804,18 @@ void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
- 	info = get_flush_tlb_info(mm, start, end, stride_shift, freed_tables,
- 				  new_tlb_gen);
- 
--	if (mm == this_cpu_read(cpu_tlbstate.loaded_mm)) {
--		lockdep_assert_irqs_enabled();
--		local_irq_disable();
--		flush_tlb_func_local(info, TLB_LOCAL_MM_SHOOTDOWN);
--		local_irq_enable();
--	}
-+	/*
-+	 * Assert that mm_cpumask() corresponds with the loaded mm. We got one
-+	 * exception: for init_mm we do not need to flush anything, and the
-+	 * cpumask does not correspond with loaded_mm.
-+	 */
-+	VM_WARN_ON_ONCE(cpumask_test_cpu(smp_processor_id(), mm_cpumask(mm)) !=
-+			(mm == this_cpu_read(cpu_tlbstate.loaded_mm)) ||
-+			mm == &init_mm);
- 
--	if (cpumask_any_but(mm_cpumask(mm), cpu) < nr_cpu_ids)
--		flush_tlb_others(mm_cpumask(mm), info);
-+	flush_tlb_on_cpus(mm_cpumask(mm), info);
- 
- 	put_flush_tlb_info();
--	put_cpu();
- }
- 
- 
-@@ -832,13 +850,11 @@ void flush_tlb_kernel_range(unsigned long start, unsigned long end)
- 	} else {
- 		struct flush_tlb_info *info;
- 
--		preempt_disable();
- 		info = get_flush_tlb_info(NULL, start, end, 0, false, 0);
- 
- 		on_each_cpu(do_kernel_range_flush, info, 1);
- 
- 		put_flush_tlb_info();
--		preempt_enable();
+ 	u8 state;
+@@ -607,6 +607,11 @@ static void kvm_flush_tlb_others(const struct cpumask *cpumask,
+ 	 * queue flush_on_enter for pre-empted vCPUs
+ 	 */
+ 	for_each_cpu(cpu, flushmask) {
++		/*
++		 * The local vCPU is never preempted, so we do not explicitly
++		 * skip check for local vCPU - it will never be cleared from
++		 * flushmask.
++		 */
+ 		src = &per_cpu(steal_time, cpu);
+ 		state = READ_ONCE(src->preempted);
+ 		if ((state & KVM_VCPU_PREEMPTED)) {
+@@ -616,7 +621,7 @@ static void kvm_flush_tlb_others(const struct cpumask *cpumask,
+ 		}
  	}
+ 
+-	native_flush_tlb_others(flushmask, info);
++	native_flush_tlb_multi(flushmask, info);
  }
  
-@@ -856,21 +872,11 @@ static const struct flush_tlb_info full_flush_tlb_info = {
+ static void __init kvm_guest_init(void)
+@@ -641,9 +646,8 @@ static void __init kvm_guest_init(void)
+ 	if (kvm_para_has_feature(KVM_FEATURE_PV_TLB_FLUSH) &&
+ 	    !kvm_para_has_hint(KVM_HINTS_REALTIME) &&
+ 	    kvm_para_has_feature(KVM_FEATURE_STEAL_TIME)) {
+-		pv_ops.mmu.flush_tlb_others = kvm_flush_tlb_others;
++		pv_ops.mmu.flush_tlb_multi = kvm_flush_tlb_multi;
+ 		pv_ops.mmu.tlb_remove_table = tlb_remove_table;
+-		static_key_disable(&flush_tlb_multi_enabled.key);
+ 	}
  
- void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
- {
--	int cpu = get_cpu();
--
--	if (cpumask_test_cpu(cpu, &batch->cpumask)) {
--		lockdep_assert_irqs_enabled();
--		local_irq_disable();
--		flush_tlb_func_local(&full_flush_tlb_info, TLB_LOCAL_SHOOTDOWN);
--		local_irq_enable();
--	}
--
--	if (cpumask_any_but(&batch->cpumask, cpu) < nr_cpu_ids)
--		flush_tlb_others(&batch->cpumask, &full_flush_tlb_info);
-+	preempt_disable();
-+	flush_tlb_on_cpus(&batch->cpumask, &full_flush_tlb_info);
-+	preempt_enable();
- 
- 	cpumask_clear(&batch->cpumask);
--
--	put_cpu();
- }
- 
- static ssize_t tlbflush_read_file(struct file *file, char __user *user_buf,
+ 	if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
 -- 
 2.20.1
 
