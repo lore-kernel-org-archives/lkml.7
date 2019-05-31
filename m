@@ -2,163 +2,85 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19575C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61DBFC46470
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DECC8246B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:50:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="OyH3mAtS"
+	by mail.kernel.org (Postfix) with ESMTP id 2E1602479C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:50:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559292649;
+	bh=H0YCCBLkpQqYTU6X2HPTeAEMFw+WsFm9xFJghDfbqg0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ramHkrLFYf69DXMTzkbu3mpLhigmylnFYXvDbjL5V1AUYaA4y5GSnvPfS4vFlicVC
+	 Q9yK/wQpcPYIJjGoxeccIBCT5tbk2BYfn7rVOb39hsdw1Yv53arBHCPdpJdm/6mB38
+	 9UD17gUzJfalzJVes1wdPkRy4vpUOyvlAy+E5mc0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbfEaIuh (ORCPT
+        id S1727006AbfEaIus (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 04:50:37 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:19981 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726158AbfEaIug (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 04:50:36 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cf0eadb0000>; Fri, 31 May 2019 01:50:35 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 31 May 2019 01:50:35 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 31 May 2019 01:50:35 -0700
-Received: from [10.19.65.14] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 May
- 2019 08:50:32 +0000
-Subject: Re: [PATCH V1] i2c: busses: tegra: Add suspend-resume support
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1559195718-6693-1-git-send-email-bbiswas@nvidia.com>
- <c8bad04b-67ef-bcdf-04df-4aa61271e81c@gmail.com>
-From:   Bitan Biswas <bbiswas@nvidia.com>
-Message-ID: <9142282b-ab76-53a0-13ce-c43b8adc575f@nvidia.com>
-Date:   Fri, 31 May 2019 01:50:29 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 31 May 2019 04:50:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56026 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726158AbfEaIur (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 04:50:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2BDD5AF55;
+        Fri, 31 May 2019 08:50:46 +0000 (UTC)
+Date:   Fri, 31 May 2019 10:50:44 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>, jannh@google.com,
+        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
+        hdanton@sina.com
+Subject: Re: [RFCv2 3/6] mm: introduce MADV_PAGEOUT
+Message-ID: <20190531085044.GJ6896@dhcp22.suse.cz>
+References: <20190531064313.193437-1-minchan@kernel.org>
+ <20190531064313.193437-4-minchan@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <c8bad04b-67ef-bcdf-04df-4aa61271e81c@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559292635; bh=gwf39AOYTh9QTv4U3hBy8Ry+efkLynIwOdktjp72GYQ=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=OyH3mAtSqXJg7DM81lTRF9F8cR7j833s1uNnWgtMm2oSKeG8WS48JWkCk0hmEs0Hc
-         V+xH7/PnTmRi+T0u5d+I2U43sKgdez4Y1ROzjVa6pAlWyAVJ6MaC9uESPgPWks+6E9
-         0ciZNRdXUf2rtgnUNnlKESNg97zQqboGgIKjXFtKsPiWdyVHpIG9bVrVjqgv3bcTyc
-         fecPgFJ3N4F989E+ep6HRRQHrLeLwe93oCb16s8j0cNBo8EUpI1JrB241S4cwPrLTL
-         /jumfEXbFQx9J18Jh+Lx3jZw64cN03ZTkHK2Ieooez4hQvVOACrfxYkSC6fQVfFCfU
-         RgvZDw5vXgHog==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190531064313.193437-4-minchan@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri 31-05-19 15:43:10, Minchan Kim wrote:
+> When a process expects no accesses to a certain memory range
+> for a long time, it could hint kernel that the pages can be
+> reclaimed instantly but data should be preserved for future use.
+> This could reduce workingset eviction so it ends up increasing
+> performance.
+> 
+> This patch introduces the new MADV_PAGEOUT hint to madvise(2)
+> syscall. MADV_PAGEOUT can be used by a process to mark a memory
+> range as not expected to be used for a long time so that kernel
+> reclaims the memory instantly. The hint can help kernel in deciding
+> which pages to evict proactively.
 
+Again, are there any restictions on what kind of memory can be paged out?
+Private/Shared, anonymous/file backed. Any restrictions on mapping type.
+Etc. Please make sure all that is in the changelog.
 
-On 5/30/19 4:27 AM, Dmitry Osipenko wrote:
-> 30.05.2019 8:55, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> Post suspend I2C registers have power on reset values. Before any
->> transfer initialize I2C registers to prevent I2C transfer timeout
->> and implement suspend and resume callbacks needed. Fix below errors
->> post suspend:
->>
->> 1) Tegra I2C transfer timeout during jetson tx2 resume:
->>
->> [   27.520613] pca953x 1-0074: calling pca953x_resume+0x0/0x1b0 @ 2939, =
-parent: i2c-1
->> [   27.633623] tegra-i2c 3160000.i2c: i2c transfer timed out
->> [   27.639162] pca953x 1-0074: Unable to sync registers 0x3-0x5. -110
->> [   27.645336] pca953x 1-0074: Failed to sync GPIO dir registers: -110
->> [   27.651596] PM: dpm_run_callback(): pca953x_resume+0x0/0x1b0 returns =
--110
->> [   27.658375] pca953x 1-0074: pca953x_resume+0x0/0x1b0 returned -110 af=
-ter 127152 usecs
->> [   27.666194] PM: Device 1-0074 failed to resume: error -110
->>
->> 2) Tegra I2C transfer timeout error on jetson Xavier post resume.
->>
->> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
->> ---
->>   drivers/i2c/busses/i2c-tegra.c | 24 ++++++++++++++++++++++++
->>   1 file changed, 24 insertions(+)
->>
->> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-teg=
-ra.c
->> index ebaa78d..f6a377f 100644
->> --- a/drivers/i2c/busses/i2c-tegra.c
->> +++ b/drivers/i2c/busses/i2c-tegra.c
->> @@ -1687,9 +1687,33 @@ static int tegra_i2c_remove(struct platform_devic=
-e *pdev)
->>   }
->>  =20
->>   #ifdef CONFIG_PM_SLEEP
->> +static int tegra_i2c_suspend(struct device *dev)
->> +{
->> +	struct tegra_i2c_dev *i2c_dev =3D dev_get_drvdata(dev);
->> +
->> +	i2c_mark_adapter_suspended(&i2c_dev->adapter);
->> +
->> +	return 0;
->> +}
->> +
->> +static int tegra_i2c_resume(struct device *dev)
->> +{
->> +	struct tegra_i2c_dev *i2c_dev =3D dev_get_drvdata(dev);
->> +	int ret;
->> +
->> +	i2c_lock_bus(&i2c_dev->adapter, I2C_LOCK_ROOT_ADAPTER);
->> +	ret =3D tegra_i2c_init(i2c_dev, false);
->> +	i2c_unlock_bus(&i2c_dev->adapter, I2C_LOCK_ROOT_ADAPTER);
->=20
-> Why the locking is needed here?
+What are the failure modes? E.g. what if the swap is full, does the call
+fails or it silently ignores the error?
 
-async resume could result in stress test issues if some client accesses=20
-the i2c instance. This ensures the i2c instance is locked till the=20
-initialization is complete.
-
->=20
->> +	if (!ret)
->> +		i2c_mark_adapter_resumed(&i2c_dev->adapter);
->> +
->> +       return ret;
->=20
-> A very minor nit.. will be a bit more straightforward to write this as:
->=20
-> 	int err;
->=20
-> 	err =3D tegra_i2c_init(i2c_dev, false);
-> 	if (err)
-> 		return err;
->=20
-> 	i2c_mark_adapter_resumed(&i2c_dev->adapter);
->=20
-> 	return 0;
->=20
-> It is always cleaner to return 0 on success.
-Thanks. I shall update the section in patch as per this suggestion.
-
--regards,
-  Bitan
-
+Thanks!
+-- 
+Michal Hocko
+SUSE Labs
