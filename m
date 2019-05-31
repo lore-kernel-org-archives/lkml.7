@@ -2,75 +2,102 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F64C46470
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 00:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06406C28CC0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 00:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0423E2634F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 00:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D098726353
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 00:35:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="XMVG4VkD"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jCIWjKq7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbfEaAfJ (ORCPT
+        id S1726719AbfEaAfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 20:35:09 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:57800 "EHLO mail.skyhub.de"
+        Thu, 30 May 2019 20:35:14 -0400
+Received: from ozlabs.org ([203.11.71.1]:50461 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726128AbfEaAfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 20:35:08 -0400
-Received: from cz.tnic (unknown [207.225.69.115])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726128AbfEaAfN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 20:35:13 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9F3A71EC048A;
-        Fri, 31 May 2019 02:35:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1559262907;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=dL4Q7H1RzI/U415F83326iuQleoLP8cRBYlKonLtIAA=;
-        b=XMVG4VkDB3/wPVzUlw18YET6qYZJx1qL7wb7B9xmCuZqODESTDttUmRrIH/d6wqmDcoZwD
-        4PKainp6OgnS3JI6oGKb37uQ6yxMjywCWIR3j6VX98LKjqYKXhsnj0lQ8zdWSibF4Xp7pm
-        bsJXh/MiQWb768XcdGEL1HsBuUv3so0=
-Date:   Fri, 31 May 2019 02:35:04 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Hanna Hawa <hhhawa@amazon.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, mchehab@kernel.org, james.morse@arm.com,
-        davem@davemloft.net, nicolas.ferre@microchip.com,
-        paulmck@linux.ibm.com, dwmw@amazon.co.uk, benh@amazon.com,
-        ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com,
-        hanochu@amazon.com, linux-edac@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: EDAC: add Amazon Annapurna Labs EDAC
- binding
-Message-ID: <20190531003504.GA2630@cz.tnic>
-References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
- <1559211329-13098-2-git-send-email-hhhawa@amazon.com>
- <20190530115446.GA14088@kroah.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45FQT93dDjz9sB8;
+        Fri, 31 May 2019 10:35:09 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1559262910;
+        bh=vmnfdHJwUM1HVyyOa3wxblirRR6+i4b48iUJQ32CBwU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=jCIWjKq7ClNbTCzgsp5WvhuwAyqifAx8V/KS4CYaQWuRQMhYRbIIxOhzKN6MX3KQt
+         EOUoncS8GkvmphMmA2RplWMKzqOZh8E27lMmdbU0y1UOwdWVdOVwoRyOTH2oW9yN/r
+         VwImk8CTrD3IoD7SomPdJPrn9uC5GZpolfI1YJKY7oApHtC3Tlpi740gUMCQ3yotBy
+         KfZqSHvHd2ntrOIJOnEO2Ui/VXFOXtZESsbs7m0RKjCbPsRiT+u5OEowGzLina0do9
+         cC73G4hwfnHhMbjyZ5ci2gjekdxMbzDza6fqbKjLcvRBQzMaQ+icqMTeaT4uWCD2D0
+         IB/p5lhfcF7kA==
+Date:   Fri, 31 May 2019 10:35:08 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: linux-next: build failure after merge of the net-next tree
+Message-ID: <20190531103508.1bfc06db@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190530115446.GA14088@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/W.Z4eGjR4oT3n1RNXpkMYJa"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 04:54:46AM -0700, Greg KH wrote:
-> I know I can't take patches without any changelog text,
+--Sig_/W.Z4eGjR4oT3n1RNXpkMYJa
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I thought I was the only one?! :-)
+Hi all,
 
-Good.
+After merging the net-next tree, today's linux-next build (powerpc
+ppc64_defconfig) failed like this:
 
--- 
-Regards/Gruss,
-    Boris.
+In file included from net/netfilter/utils.c:5:
+include/linux/netfilter_ipv6.h: In function 'nf_ipv6_br_defrag':
+include/linux/netfilter_ipv6.h:110:9: error: implicit declaration of functi=
+on 'nf_ct_frag6_gather'; did you mean 'nf_ct_attach'? [-Werror=3Dimplicit-f=
+unction-declaration]
+  return nf_ct_frag6_gather(net, skb, user);
+         ^~~~~~~~~~~~~~~~~~
+         nf_ct_attach
 
-ECO tip #101: Trim your mails when you reply. Srsly.
+Caused by commit
+
+  764dd163ac92 ("netfilter: nf_conntrack_bridge: add support for IPv6")
+
+CONFIG_IPV6 is not set for this build.
+
+I have reverted that commit for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/W.Z4eGjR4oT3n1RNXpkMYJa
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzwdrwACgkQAVBC80lX
+0GymwQf/d4wXf91KoGIB7ydQiSpx7yRSRdw2moG9XUV0oidKP3RZF17p9wOjQXp7
+kGWuPdykRUIsJNNVzWUfQXRSKaYthcMVG3bJRoj/63GQLKfKR7rhocfihPMPc2uI
+YATaDoHCz1fAy5hOgOLY4fkpuW3Pynuo8eRMhcUVsHs0Dkw/r1iPRQ7Bc8vCYOod
+SUflPO3jWNMiKPd4965BkDQDMBPz75B/d9UbXSKtA9esqFW5J7VET7y27zVXPc2n
+DhM8j93WERysFLRJpn3ns9ZqLi0JBBSmdn3Kn7Xg8ORP7Ul4uynPA3gDWsn3EyMJ
+f0bnj9l4G7XN14FXVFzULgih62VUeA==
+=a/FF
+-----END PGP SIGNATURE-----
+
+--Sig_/W.Z4eGjR4oT3n1RNXpkMYJa--
