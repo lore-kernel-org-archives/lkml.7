@@ -2,171 +2,122 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5403BC28CC2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DBDC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4D8926B91
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:28:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="XIVyr9YG"
+	by mail.kernel.org (Postfix) with ESMTP id E8DCE26B91
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 15:29:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbfEaP2f (ORCPT
+        id S1726899AbfEaP3a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 11:28:35 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:37468 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbfEaP2f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 11:28:35 -0400
-Received: by mail-oi1-f196.google.com with SMTP id i4so7622397oih.4
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 08:28:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=b9VU1ThXRX1owmBXLf1YRTdum6FS+CeP7p64pXwOkS8=;
-        b=XIVyr9YGPbDuCLeXxxYbVHOG05ctX7hT5HQsP6nJa1j1DnKaasZz5JB/RK6lDSpx+c
-         HzfmGWxWYWzMnEbBdfQQMvYVCEFWGl/60vfUVApHkfZB3ZcxcXr2uDikIZEu8remlQTX
-         ftwGSjmXObo5h3R/pVFyxxIharRZXdgiTzIXVwSkHaaoMvrQ+jrSlPXBr9pUz82jFrQl
-         vWR78tkx85FB7kfi8ds326K/U/oggOsmavXYa7FO1quTWH0e6v5aUWbaehnliUADmxfH
-         S0jV6S1DZIMs06nuxz6DrfT88NultFFHDaCNLKDiF7b31aCK/AUuV0AuXv0XrCNxPnLx
-         mzuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=b9VU1ThXRX1owmBXLf1YRTdum6FS+CeP7p64pXwOkS8=;
-        b=k+nMbjsHmYUeC5rosvK9vpuV+3QKFDdhPz8FNn0NgiJsI/TxvZ027kTzr92s6dw/oe
-         JJyvHZQjDLp4C2SyGr5GFy1QWG/UDDqp12G62uZqE44+27FLB7KxIXQrKzG4EIZN32CM
-         tgDxbfq7iLjdtHMRjlSHuy2luHeT28OgZAJOo0WuNfD2ejfhxgO3ActOYQ4ualWgXdRD
-         UnQvrLYV/x9nML9Et1J3Q+49Ec9o0HYzVZAIomUqlDBqnxultgWDvj4cbXEk3WWUd+om
-         5sf6gBQNBQJsGRISz8c2+MQ1mBSM+4BnciQ5T37LWfI6AwognTUR/Q+jR2ezYhxARB5Y
-         pT+w==
-X-Gm-Message-State: APjAAAVudBFyLv/33ZuEaQ3p6169o5wFrdmxLsuPEaTobv+qzI/iUYsQ
-        PO3MIMlq+/x1Z2dcxqHC99iP1wbwYgh1j8d2VMGuEw==
-X-Google-Smtp-Source: APXvYqy30mw0sLftLrl/aUtPyWC+IDu0mVJfVClUdLCKR5NDk2l1hNOYNXFLrWvyRqIfX8K1tYPXy7QBcir0mZrwRQY=
-X-Received: by 2002:aca:6087:: with SMTP id u129mr6243189oib.70.1559316514205;
- Fri, 31 May 2019 08:28:34 -0700 (PDT)
+        Fri, 31 May 2019 11:29:30 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:17640 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726421AbfEaP33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 11:29:29 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 7764E844F282E0077772;
+        Fri, 31 May 2019 23:29:26 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Fri, 31 May 2019
+ 23:29:20 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <james.smart@broadcom.com>, <dick.kennedy@broadcom.com>,
+        <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
+        <jsmart2021@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] scsi: lpfc: Make some symbols static
+Date:   Fri, 31 May 2019 23:28:41 +0800
+Message-ID: <20190531152841.13684-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-References: <155925716254.3775979.16716824941364738117.stgit@dwillia2-desk3.amr.corp.intel.com>
- <155925718351.3775979.13546720620952434175.stgit@dwillia2-desk3.amr.corp.intel.com>
- <CAKv+Gu-J3-66V7UhH3=AjN4sX7iydHNF7Fd+SMbezaVNrZQmGQ@mail.gmail.com>
-In-Reply-To: <CAKv+Gu-J3-66V7UhH3=AjN4sX7iydHNF7Fd+SMbezaVNrZQmGQ@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 31 May 2019 08:28:22 -0700
-Message-ID: <CAPcyv4g-GNe2vSYTn0a6ivQYxJdS5khE4AJbcxysoGPsTZwswg@mail.gmail.com>
-Subject: Re: [PATCH v2 4/8] x86, efi: Reserve UEFI 2.8 Specific Purpose Memory
- for dax
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Mike Rapoport <rppt@linux.ibm.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kbuild test robot <lkp@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 1:30 AM Ard Biesheuvel
-<ard.biesheuvel@linaro.org> wrote:
->
-> (cc Mike for memblock)
->
-> On Fri, 31 May 2019 at 01:13, Dan Williams <dan.j.williams@intel.com> wrote:
-> >
-> > UEFI 2.8 defines an EFI_MEMORY_SP attribute bit to augment the
-> > interpretation of the EFI Memory Types as "reserved for a special
-> > purpose".
-> >
-> > The proposed Linux behavior for specific purpose memory is that it is
-> > reserved for direct-access (device-dax) by default and not available for
-> > any kernel usage, not even as an OOM fallback. Later, through udev
-> > scripts or another init mechanism, these device-dax claimed ranges can
-> > be reconfigured and hot-added to the available System-RAM with a unique
-> > node identifier.
-> >
-> > This patch introduces 3 new concepts at once given the entanglement
-> > between early boot enumeration relative to memory that can optionally be
-> > reserved from the kernel page allocator by default. The new concepts
-> > are:
-> >
-> > - E820_TYPE_SPECIFIC: Upon detecting the EFI_MEMORY_SP attribute on
-> >   EFI_CONVENTIONAL memory, update the E820 map with this new type. Only
-> >   perform this classification if the CONFIG_EFI_SPECIFIC_DAX=y policy is
-> >   enabled, otherwise treat it as typical ram.
-> >
->
-> OK, so now we have 'special purpose', 'specific' and 'app specific'
-> [below]. Do they all mean the same thing?
+Fix sparse warnings:
 
-I struggled with separating the raw-EFI-type name from the name of the
-Linux specific policy. Since the reservation behavior is optional I
-was thinking there should be a distinct Linux kernel name for that
-policy. I did try to go back and change all occurrences of "special"
-to "specific" from the RFC to this v2, but seems I missed one.
+drivers/scsi/lpfc/lpfc_sli.c:115:1: warning: symbol 'lpfc_sli4_pcimem_bcopy' was not declared. Should it be static?
+drivers/scsi/lpfc/lpfc_sli.c:7854:1: warning: symbol 'lpfc_sli4_process_missed_mbox_completions' was not declared. Should it be static?
+drivers/scsi/lpfc/lpfc_nvmet.c:223:27: warning: symbol 'lpfc_nvmet_get_ctx_for_xri' was not declared. Should it be static?
+drivers/scsi/lpfc/lpfc_nvmet.c:245:27: warning: symbol 'lpfc_nvmet_get_ctx_for_oxid' was not declared. Should it be static?
+drivers/scsi/lpfc/lpfc_init.c:75:10: warning: symbol 'lpfc_present_cpu' was not declared. Should it be static?
 
->
-> > - IORES_DESC_APPLICATION_RESERVED: Add a new I/O resource descriptor for
-> >   a device driver to search iomem resources for application specific
-> >   memory. Teach the iomem code to identify such ranges as "Application
-> >   Reserved".
-> >
-> > - MEMBLOCK_APP_SPECIFIC: Given the memory ranges can fallback to the
-> >   traditional System RAM pool the expectation is that they will have
-> >   typical SRAT entries. In order to support a policy of device-dax by
-> >   default with the option to hotplug later, the numa initialization code
-> >   is taught to avoid marking online MEMBLOCK_APP_SPECIFIC regions.
-> >
->
-> Can we move the generic memblock changes into a separate patch please?
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/scsi/lpfc/lpfc_init.c  | 2 +-
+ drivers/scsi/lpfc/lpfc_nvmet.c | 4 ++--
+ drivers/scsi/lpfc/lpfc_sli.c   | 4 ++--
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-Yeah, that can move to a lead-in patch.
+diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
+index cd8e47544d07..faf43b1d3dbe 100644
+--- a/drivers/scsi/lpfc/lpfc_init.c
++++ b/drivers/scsi/lpfc/lpfc_init.c
+@@ -72,7 +72,7 @@ unsigned long _dump_buf_dif_order;
+ spinlock_t _dump_buf_lock;
+ 
+ /* Used when mapping IRQ vectors in a driver centric manner */
+-uint32_t lpfc_present_cpu;
++static uint32_t lpfc_present_cpu;
+ 
+ static void lpfc_get_hba_model_desc(struct lpfc_hba *, uint8_t *, uint8_t *);
+ static int lpfc_post_rcv_buf(struct lpfc_hba *);
+diff --git a/drivers/scsi/lpfc/lpfc_nvmet.c b/drivers/scsi/lpfc/lpfc_nvmet.c
+index eb93189f4544..e471bbcca838 100644
+--- a/drivers/scsi/lpfc/lpfc_nvmet.c
++++ b/drivers/scsi/lpfc/lpfc_nvmet.c
+@@ -220,7 +220,7 @@ lpfc_nvmet_cmd_template(void)
+ 	/* Word 12, 13, 14, 15 - is zero */
+ }
+ 
+-struct lpfc_nvmet_rcv_ctx *
++static struct lpfc_nvmet_rcv_ctx *
+ lpfc_nvmet_get_ctx_for_xri(struct lpfc_hba *phba, u16 xri)
+ {
+ 	struct lpfc_nvmet_rcv_ctx *ctxp;
+@@ -242,7 +242,7 @@ lpfc_nvmet_get_ctx_for_xri(struct lpfc_hba *phba, u16 xri)
+ 	return NULL;
+ }
+ 
+-struct lpfc_nvmet_rcv_ctx *
++static struct lpfc_nvmet_rcv_ctx *
+ lpfc_nvmet_get_ctx_for_oxid(struct lpfc_hba *phba, u16 oxid, u32 sid)
+ {
+ 	struct lpfc_nvmet_rcv_ctx *ctxp;
+diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+index 081c4357958e..dea8b9df27c0 100644
+--- a/drivers/scsi/lpfc/lpfc_sli.c
++++ b/drivers/scsi/lpfc/lpfc_sli.c
+@@ -108,7 +108,7 @@ lpfc_get_iocb_from_iocbq(struct lpfc_iocbq *iocbq)
+  * endianness. This function can be called with or without
+  * lock.
+  **/
+-void
++static void
+ lpfc_sli4_pcimem_bcopy(void *srcp, void *destp, uint32_t cnt)
+ {
+ 	uint64_t *src = srcp;
+@@ -7882,7 +7882,7 @@ lpfc_sli4_mbox_completions_pending(struct lpfc_hba *phba)
+  * and will process all the completions associated with the eq for the
+  * mailbox completion queue.
+  **/
+-bool
++static bool
+ lpfc_sli4_process_missed_mbox_completions(struct lpfc_hba *phba)
+ {
+ 	struct lpfc_sli4_hba *sli4_hba = &phba->sli4_hba;
+-- 
+2.17.1
 
-[..]
-> > diff --git a/include/linux/efi.h b/include/linux/efi.h
-> > index 91368f5ce114..b57b123cbdf9 100644
-> > --- a/include/linux/efi.h
-> > +++ b/include/linux/efi.h
-> > @@ -129,6 +129,19 @@ typedef struct {
-> >         u64 attribute;
-> >  } efi_memory_desc_t;
-> >
-> > +#ifdef CONFIG_EFI_SPECIFIC_DAX
-> > +static inline bool is_efi_dax(efi_memory_desc_t *md)
-> > +{
-> > +       return md->type == EFI_CONVENTIONAL_MEMORY
-> > +               && (md->attribute & EFI_MEMORY_SP);
-> > +}
-> > +#else
-> > +static inline bool is_efi_dax(efi_memory_desc_t *md)
-> > +{
-> > +       return false;
-> > +}
-> > +#endif
-> > +
-> >  typedef struct {
-> >         efi_guid_t guid;
-> >         u32 headersize;
->
-> I'd prefer it if we could avoid this DAX policy distinction leaking
-> into the EFI layer.
->
-> IOW, I am fine with having a 'is_efi_sp_memory()' helper here, but
-> whether that is DAX memory or not should be decided in the DAX layer.
 
-Ok, how about is_efi_sp_ram()? Since EFI_MEMORY_SP might be applied to
-things that aren't EFI_CONVENTIONAL_MEMORY.
