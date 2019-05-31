@@ -2,209 +2,125 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DAF7C28CC2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 05:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C4E7C04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 05:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0719E247AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 05:08:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D021B263B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 05:12:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bfwmmXuq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vVhfIp8b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbfEaFI1 (ORCPT
+        id S1726640AbfEaFMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 01:08:27 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:44860 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbfEaFI0 (ORCPT
+        Fri, 31 May 2019 01:12:55 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:36885 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfEaFMy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 01:08:26 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4V58A0U012287;
-        Fri, 31 May 2019 00:08:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559279290;
-        bh=gYhMecEMX+ee1Qe5Uep//ZaFtqyHp3bCVlIEhSh0Q5Q=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=bfwmmXuqU3bPsQJLn4eNx+JOLtUj+pooy1VGtjiw/IyfHYv3zCkRWFV5NApuw924J
-         dTih+VWTZ5r8tlh6taiaOLxdI4AXnzV7CKMN3yfr/B9sDCbyTIfcXtL5Ct7oHcUrrg
-         yBdACAm4XwH7WkKeIEoygelHWUf3DYXLeQuECOdI=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4V58A2C053824
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 31 May 2019 00:08:10 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 31
- May 2019 00:08:10 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 31 May 2019 00:08:10 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4V583e3072190;
-        Fri, 31 May 2019 00:08:04 -0500
-Subject: Re: [PATCH] PCI: endpoint: Add DMA to Linux PCI EP Framework
-To:     Alan Mikhak <alan.mikhak@sifive.com>
-CC:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "wen.yang99@zte.com.cn" <wen.yang99@zte.com.cn>,
-        "kjlu@umn.edu" <kjlu@umn.edu>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "palmer@sifive.com" <palmer@sifive.com>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-        Vinod Koul <vkoul@kernel.org>
-References: <1558650258-15050-1-git-send-email-alan.mikhak@sifive.com>
- <305100E33629484CBB767107E4246BBB0A6FAFFD@DE02WEMBXB.internal.synopsys.com>
- <CABEDWGxsQ9NXrN7W_8HVrXQBb9HiBd+d1dNfv+cXmoBpXQnLwA@mail.gmail.com>
- <305100E33629484CBB767107E4246BBB0A6FC308@DE02WEMBXB.internal.synopsys.com>
- <CABEDWGxL-WYz1BY7yXJ6eKULgVtKeo67XhgHZjvtm5Ka5foKiA@mail.gmail.com>
- <192e3a19-8b69-dfaf-aa5c-45c7087548cc@ti.com>
- <CABEDWGxLeD-K8PjkD5hPSTFGJKs2hxEaAVO+nE5eC9Nx2yw=ig@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <75d578c2-a98c-d1ef-1633-6dc5dc3b0913@ti.com>
-Date:   Fri, 31 May 2019 10:36:45 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 31 May 2019 01:12:54 -0400
+Received: by mail-lf1-f66.google.com with SMTP id m15so6838247lfh.4
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 22:12:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YglXuDcWf9alTVQYtcbGhpd+g01E+BzX09PlpWU7znI=;
+        b=vVhfIp8bGmjkhBghXDT5wKTG0FfDZVItFEl3sfCf172am+PmH1Adz/XHBDFUqhtu+x
+         PdzEkUr9EJIUrSdSVgOW+hb72EbhNrKOaiHJ56nCFjWy9yEo9bxOj2PMGD0M0zqQnUbF
+         YVEBUhkwt1MXpWVuZ2jsfZ3VM4H3OY7H3xEQuM2p76dmYDARwDcHwPtB1aBTVjgvzGvt
+         6mi2luQHRT/irnsvNznPZANGcjVnMNo9kVtokTpYdN8YlrO+WTCsabpAOPCQXiUZIRWQ
+         vKRL2OwX7vgz49zDCahE3/HkLkwZC2/lhAYLoGmLXJCHjP4PxwtFf4U+LO+H43ok1ksg
+         7aAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YglXuDcWf9alTVQYtcbGhpd+g01E+BzX09PlpWU7znI=;
+        b=LE+Oyv+BD28oVNj2Qm5fJWaxEVePPXRDHIkfdHMMMIUJcj+igpMN8xI0F/k2GuKVC5
+         21GfclAfRGiGJSdXbnoxPLBxNJveBZ/ExNx8pibMcweUnhGYZ73ouw+mk1PSBTmXR6tk
+         RQeyQUp0cfPgFmhSDAV4aE3cPe4V6A9SWLMIDHlxMqRMzqZwtYiNynWEIBMaoK+DzWEJ
+         eb586YSNJtGn4IPgpegrCCVw4qCkHP5TA8fgsJnBiiP29cREmOOGUb9GF1oeHZ+DINVS
+         yngwjOIgu+ct0UUx85LL2ykYbwG0/P2ZO0ZzUO6Q8sLlDbqy1JoJtGO4UqvA7qLFk/IX
+         QJWQ==
+X-Gm-Message-State: APjAAAVUNEEqkoPTCuDsCfgqELrFjwNACHn1zgG9QregwUFp8oBFDpCE
+        J7KLS4cgqM7VV4kH/29SKETRSMU+hW+zkv1xujo=
+X-Google-Smtp-Source: APXvYqzxNanFqrzcDcuTnlHnXqkPxPoGos2xY39RE5g+INO2w2Vk/edgPmduLJWKiGd5hdWWAeZ+HBCuAyKUw/Xzsl8=
+X-Received: by 2002:a19:2045:: with SMTP id g66mr4252270lfg.132.1559279572547;
+ Thu, 30 May 2019 22:12:52 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CABEDWGxLeD-K8PjkD5hPSTFGJKs2hxEaAVO+nE5eC9Nx2yw=ig@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <cover.1559129225.git.vpillai@digitalocean.com>
+ <CAERHkruDE-7R5K=2yRqCJRCpV87HkHzDYbQA2WQkruVYpG7t7Q@mail.gmail.com> <e8872bd9-1c6b-fb12-b535-3d37740a0306@linux.alibaba.com>
+In-Reply-To: <e8872bd9-1c6b-fb12-b535-3d37740a0306@linux.alibaba.com>
+From:   Aubrey Li <aubrey.intel@gmail.com>
+Date:   Fri, 31 May 2019 13:12:40 +0800
+Message-ID: <CAERHkruVthrTgGqiH=yhCspZWpMDAu0G4rNcrDTKQzgPq9eqQQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
+To:     Aaron Lu <aaron.lu@linux.alibaba.com>
+Cc:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alan,
+On Fri, May 31, 2019 at 11:01 AM Aaron Lu <aaron.lu@linux.alibaba.com> wrote:
+>
+> This feels like "date" failed to schedule on some CPU
+> on time.
+>
+> My first reaction is: when shell wakes up from sleep, it will
+> fork date. If the script is untagged and those workloads are
+> tagged and all available cores are already running workload
+> threads, the forked date can lose to the running workload
+> threads due to __prio_less() can't properly do vruntime comparison
+> for tasks on different CPUs. So those idle siblings can't run
+> date and are idled instead. See my previous post on this:
+> https://lore.kernel.org/lkml/20190429033620.GA128241@aaronlu/
+> (Now that I re-read my post, I see that I didn't make it clear
+> that se_bash and se_hog are assigned different tags(e.g. hog is
+> tagged and bash is untagged).
 
-On 30/05/19 11:26 PM, Alan Mikhak wrote:
-> On Wed, May 29, 2019 at 10:48 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>
->> +Vinod Koul
->>
->> Hi,
->>
->>>>> On Fri, May 24, 2019 at 1:59 AM Gustavo Pimentel
->>>>> <Gustavo.Pimentel@synopsys.com> wrote:
->>>>>>
->>>>>> Hi Alan,
->>>>>>
->>>>>> This patch implementation is very HW implementation dependent and
->>>>>> requires the DMA to exposed through PCIe BARs, which aren't always the
->>>>>> case. Besides, you are defining some control bits on
->>>>>> include/linux/pci-epc.h that may not have any meaning to other types of
->>>>>> DMA.
->>>>>>
->>>>>> I don't think this was what Kishon had in mind when he developed the
->>>>>> pcitest, but let see what Kishon was to say about it.
->>>>>>
->>>>>> I've developed a DMA driver for DWC PCI using Linux Kernel DMAengine API
->>>>>> and which I submitted some days ago.
->>>>>> By having a DMA driver which implemented using DMAengine API, means the
->>>>>> pcitest can use the DMAengine client API, which will be completely
->>>>>> generic to any other DMA implementation.
->>
->> right, my initial thought process was to use only dmaengine APIs in
->> pci-epf-test so that the system DMA or DMA within the PCIe controller can be
->> used transparently. But can we register DMA within the PCIe controller to the
->> DMA subsystem? AFAIK only system DMA should register with the DMA subsystem.
->> (ADMA in SDHCI doesn't use dmaengine). Vinod Koul can confirm.
->>
->> If DMA within the PCIe controller cannot be registered in DMA subsystem, we
->> should use something like what Alan has done in this patch with dma_read ops.
->> The dma_read ops implementation in the EP controller can either use dmaengine
->> APIs or use the DMA within the PCIe controller.
->>
->> I'll review the patch separately.
->>
->> Thanks
->> Kishon
-> 
-> Hi Kishon,
-> 
-> I have some improvements in mind for a v2 patch in response to
-> feedback from Gustavo Pimentel that the current implementation is HW
-> specific. I hesitate from submitting a v2 patch because it seems best
-> to seek comment on possible directions this may be taking.
-> 
-> One alternative is to wait for or modify test functions in
-> pci-epf-test.c to call DMAengine client APIs, if possible. I imagine
-> pci-epf-test.c test functions would still allocate the necessary local
-> buffer on the endpoint side for the same canned tests for everyone to
-> use. They would prepare the buffer in the existing manner by filling
-> it with random bytes and calculate CRC in the case of a write test.
-> However, they would then initiate DMA operations by using DMAengine
-> client APIs in a generic way instead of calling memcpy_toio() and
-> memcpy_fromio(). They would post-process the buffer in the existing
+Yes, script is untagged. This looks like exactly the problem in you
+previous post. I didn't follow that, does that discussion lead to a solution?
 
-No, you can't remove memcpy_toio/memcpy_fromio APIs. There could be platforms
-without system DMA or they could have system DMA but without MEMCOPY channels
-or without DMA in their PCI controller.
-> manner such as the checking for CRC in the case of a read test.
-> Finally, they would release the resources and report results back to
-> the user of pcitest across the PCIe bus through the existing methods.
-> 
-> Another alternative I have in mind for v2 is to change the struct
-> pci_epc_dma that this patch added to pci-epc.h from the following:
-> 
-> struct pci_epc_dma {
->         u32     control;
->         u32     size;
->         u64     sar;
->         u64     dar;
-> };
-> 
-> to something similar to the following:
-> 
-> struct pci_epc_dma {
->         size_t  size;
->         void *buffer;
->         int flags;
-> };
-> 
-> The 'flags' field can be a bit field or separate boolean values to
-> specify such things as linked-list mode vs single-block, etc.
-> Associated #defines would be removed from pci-epc.h to be replaced if
-> needed with something generic. The 'size' field specifies the size of
-> DMA transfer that can fit in the buffer.
+>
+> Siblings being forced idle is expected due to the nature of core
+> scheduling, but when two tasks belonging to two siblings are
+> fighting for schedule, we should let the higher priority one win.
+>
+> It used to work on v2 is probably due to we mistakenly
+> allow different tagged tasks to schedule on the same core at
+> the same time, but that is fixed in v3.
 
-I still have to look closer into your DMA patch but linked-list mode or single
-block mode shouldn't be an user select-able option but should be determined by
-the size of transfer.
-> 
-> That way the dma test functions in pci-epf-test.c can simply kmalloc
-> and prepare a local buffer on the endpoint side for the DMA transfer
-> and pass its pointer down the stack using the 'buffer' field to lower
-> layers. This would allow different PCIe controller drivers to
-> implement DMA or not according to their needs. Each implementer can
-> decide to use DMAengine client API, which would be preferable, or
-> directly read or write to DMA hardware registers to suit their needs.
+I have 64 threads running on a 104-CPU server, that is, when the
+system has ~40% idle time, and "date" is still failed to be picked
+up onto CPU on time. This may be the nature of core scheduling,
+but it seems to be far from fairness.
 
-yes, that would be my preferred method as well. In fact I had implemented
-pci_epf_tx() in [1], as a way for pci-epf-test to pass buffer address to
-endpoint controller driver. I had also implemented helpers for platforms using
-system DMA (i.e uses DMAengine).
+Shouldn't we share the core between (sysbench+gemmbench)
+and (date)? I mean core level sharing instead of  "date" starvation?
 
-Thanks
-Kishon
-
-[1] ->
-http://git.ti.com/cgit/cgit.cgi/ti-linux-kernel/ti-linux-kernel.git/tree/drivers/pci/endpoint/pci-epf-core.c?h=ti-linux-4.19.y
-> 
-> I would appreciate feedback and comment on such choices as part of this review.
-> 
-> Regards,
-> Alan Mikhak
-> 
+Thanks,
+-Aubrey
