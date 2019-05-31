@@ -2,104 +2,136 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1C0C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A8CDC28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2EC82443D
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:02:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ny+J7PBH"
+	by mail.kernel.org (Postfix) with ESMTP id 335F72454E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 14:03:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559311416;
+	bh=p41p45M6i/uCibOXphkra8L16duJTI30iNOpxTD5syU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WuUDgtMKTiPfnBz/FmULD2Y7y3L/MGt83pscu0w7LjC/1dpKFaHmE26RM2Mb5qNvH
+	 xWQMl0jEnJOcxHSimy3H2E/xhJQ5jKvvWbKnHxIn3N+hVGa9WCX1TLo1ZrG7bxfzJ+
+	 tvZUVRRF7VW+3hHPLCGAKoj5ITz0pxQJjMvhnNQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbfEaOC1 (ORCPT
+        id S1726689AbfEaODf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 10:02:27 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:47972 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbfEaOC1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 10:02:27 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4VE2Nk6016233;
-        Fri, 31 May 2019 09:02:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559311343;
-        bh=X4G8CTwe6H4BU9Q2AlV5IeTINpOr1gEaiB74pbXls5I=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Ny+J7PBHlP59ZfM0ndebblQFBAe15C9shS8AyesYsL2YT7EiO7L3TkoCJpftkzW2q
-         0AGSBkO9PV0f0nSQGwMeGBJILYm5ES1pxlB6UNRps3uZyXG6VwsOggj2KmjuSAewkt
-         bx6f78kXoglW7D7GrqwYH0EU2Gmuukzt/L2n17NA=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4VE2N4q072318
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 31 May 2019 09:02:23 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 31
- May 2019 09:02:23 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 31 May 2019 09:02:23 -0500
-Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4VE2N25033657;
-        Fri, 31 May 2019 09:02:23 -0500
-Subject: Re: [PATCH v2] hwspinlock: ignore disabled device
-To:     Fabien Dessenne <fabien.dessenne@st.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Benjamin Gaignard <benjamin.gaignard@st.com>
-References: <1552064026-11415-1-git-send-email-fabien.dessenne@st.com>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <b9059d73-9849-7105-6080-5d3d994335f3@ti.com>
-Date:   Fri, 31 May 2019 09:02:23 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 31 May 2019 10:03:35 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55636 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726037AbfEaODf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 10:03:35 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C57EDAF52;
+        Fri, 31 May 2019 14:03:32 +0000 (UTC)
+Date:   Fri, 31 May 2019 16:03:32 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>, jannh@google.com,
+        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
+        hdanton@sina.com
+Subject: Re: [RFCv2 1/6] mm: introduce MADV_COLD
+Message-ID: <20190531140332.GT6896@dhcp22.suse.cz>
+References: <20190531064313.193437-1-minchan@kernel.org>
+ <20190531064313.193437-2-minchan@kernel.org>
+ <20190531084752.GI6896@dhcp22.suse.cz>
+ <20190531133904.GC195463@google.com>
 MIME-Version: 1.0
-In-Reply-To: <1552064026-11415-1-git-send-email-fabien.dessenne@st.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190531133904.GC195463@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/8/19 10:53 AM, Fabien Dessenne wrote:
-> Do not wait for hwspinlock device registration if it is not available
-> for use.
+On Fri 31-05-19 22:39:04, Minchan Kim wrote:
+> On Fri, May 31, 2019 at 10:47:52AM +0200, Michal Hocko wrote:
+> > On Fri 31-05-19 15:43:08, Minchan Kim wrote:
+> > > When a process expects no accesses to a certain memory range, it could
+> > > give a hint to kernel that the pages can be reclaimed when memory pressure
+> > > happens but data should be preserved for future use.  This could reduce
+> > > workingset eviction so it ends up increasing performance.
+> > > 
+> > > This patch introduces the new MADV_COLD hint to madvise(2) syscall.
+> > > MADV_COLD can be used by a process to mark a memory range as not expected
+> > > to be used in the near future. The hint can help kernel in deciding which
+> > > pages to evict early during memory pressure.
+> > > 
+> > > Internally, it works via deactivating pages from active list to inactive's
+> > > head if the page is private because inactive list could be full of
+> > > used-once pages which are first candidate for the reclaiming and that's a
+> > > reason why MADV_FREE move pages to head of inactive LRU list. Therefore,
+> > > if the memory pressure happens, they will be reclaimed earlier than other
+> > > active pages unless there is no access until the time.
+> > 
+> > [I am intentionally not looking at the implementation because below
+> > points should be clear from the changelog - sorry about nagging ;)]
+> > 
+> > What kind of pages can be deactivated? Anonymous/File backed.
+> > Private/shared? If shared, are there any restrictions?
 > 
-> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+> Both file and private pages could be deactived from each active LRU
+> to each inactive LRU if the page has one map_count. In other words,
+> 
+>     if (page_mapcount(page) <= 1)
+>         deactivate_page(page);
 
-Acked-by: Suman Anna <s-anna@ti.com>
+Why do we restrict to pages that are single mapped?
 
-> ---
-> V2: use 'goto out' instead of 'return'
+> > Are there any restrictions on mappings? E.g. what would be an effect of
+> > this operation on hugetlbfs mapping?
 > 
->  drivers/hwspinlock/hwspinlock_core.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/hwspinlock/hwspinlock_core.c b/drivers/hwspinlock/hwspinlock_core.c
-> index 2bad40d..d806307 100644
-> --- a/drivers/hwspinlock/hwspinlock_core.c
-> +++ b/drivers/hwspinlock/hwspinlock_core.c
-> @@ -333,6 +333,11 @@ int of_hwspin_lock_get_id(struct device_node *np, int index)
->  	if (ret)
->  		return ret;
->  
-> +	if (!of_device_is_available(args.np)) {
-> +		ret = -ENOENT;
-> +		goto out;
-> +	}
-> +
->  	/* Find the hwspinlock device: we need its base_id */
->  	ret = -EPROBE_DEFER;
->  	rcu_read_lock();
-> 
+> VM_LOCKED|VM_HUGETLB|VM_PFNMAP vma will be skipped like MADV_FREE|DONTNEED
 
+OK documenting that this is restricted to the same vmas as MADV_FREE|DONTNEED
+is really useful to mention.
+
+> 
+> > 
+> > Also you are talking about inactive LRU but what kind of LRU is that? Is
+> > it the anonymous LRU? If yes, don't we have the same problem as with the
+> 
+> active file page -> inactive file LRU
+> active anon page -> inacdtive anon LRU
+> 
+> > early MADV_FREE implementation when enough page cache causes that
+> > deactivated anonymous memory doesn't get reclaimed anytime soon. Or
+> > worse never when there is no swap available?
+> 
+> I think MADV_COLD is a little bit different symantic with MAVD_FREE.
+> MADV_FREE means it's okay to discard when the memory pressure because
+> the content of the page is *garbage*. Furthemore, freeing such pages is
+> almost zero overhead since we don't need to swap out and access
+> afterward causes minor fault. Thus, it would make sense to put those
+> freeable pages in inactive file LRU to compete other used-once pages.
+> 
+> However, MADV_COLD doesn't means it's a garbage and freeing requires
+> swap out/swap in afterward. So, it would be better to move inactive
+> anon's LRU list, not file LRU. Furthermore, it would avoid unnecessary
+> scanning of those cold anonymous if system doesn't have a swap device.
+
+Please document this, if this is really a desirable semantic because
+then you have the same set of problems as we've had with the early
+MADV_FREE implementation mentioned above.
+
+-- 
+Michal Hocko
+SUSE Labs
