@@ -2,171 +2,113 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC87C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 20:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA79FC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 20:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BB20247B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 20:19:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDC9B26EEB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 20:26:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a0WjSdiL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xv43EpmE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727551AbfEaUTW (ORCPT
+        id S1727538AbfEaU0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 16:19:22 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43837 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727405AbfEaUTW (ORCPT
+        Fri, 31 May 2019 16:26:11 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:42372 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727354AbfEaU0K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 16:19:22 -0400
-Received: by mail-pl1-f195.google.com with SMTP id gn7so4418753plb.10;
-        Fri, 31 May 2019 13:19:21 -0700 (PDT)
+        Fri, 31 May 2019 16:26:10 -0400
+Received: by mail-ed1-f66.google.com with SMTP id g24so6692552eds.9
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 13:26:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KHXPz3bmXRLX7mBl1qQo7PINranTFtOG3PdQWBgTOjU=;
-        b=a0WjSdiLPggj9E3E7xXCRM/5laD1Sw++NUkYtQzHWZdn9aw3TdUfdHoMtk3plE52kE
-         zMRGyvNLZS3CcPo5HD9vJcXnxp89GfGTotKaG9tISjVp8r1DTl2umuT96gRiMzpFEEU+
-         8P3fj2xp47B3N8GQxzFuxcD2nd1XrGvsuRI85nX1lzcLi6AzWzzZRKryCQHfglMToY40
-         HGTN3P7vh6LeQEvsB4lUCgipJqjL16o4H1YMkF4QUD00pC6+GnnXz8Ce17Qtt+5iKJ7L
-         WxYe5SwXejZnhtSGfBMKIoKlNOyL7K/bf1gK9WSXgUXpcmw6xHG/4hUmXFJ4WP75ajWo
-         8JVQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Gkdrhj+L2y9Un3DqIxCBN2IczH3NAgr/P0YLMvWGg3k=;
+        b=Xv43EpmEIYCOnqrcH6IC1jp47hvR8jTZmpsuMilbWt6IoPWH1ceBQLdNcwW1Ar1Tfc
+         BaL/lNspAs5IRQaUY2ITsepMDgaj4bX36mXu8JbEV2gn5MfxqziePZ1goCdh5rxF2xRA
+         ephcT0SA8NIjA9rlqzcqsDfFXVSRJ4VndZuCK5rnmo2R7Pa8KPARwxESCUxVSjFOQ1bw
+         nn6Bxa61HWZ7m7UPLW9L54TSAB8QXfwRo79eIgjevEGPWCKOOxgF3+WGb9v93fCtZ3wH
+         8Y6Ye6iZTLO/yFY9AUWH/B6+RJj7c9Q/h8j3uw1AQaxu4kNzFkHkNhvxFovkT2M13MWh
+         GCLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KHXPz3bmXRLX7mBl1qQo7PINranTFtOG3PdQWBgTOjU=;
-        b=YylUs0v4q0WYDimqmAtYCBl58fbxgB9o6tzujAEyzE8ij2N3ssI4roTXwhtC57kNMQ
-         oTgJ6zD8YTrkgk4DzZlODcEsVNLKCVvX+TDOKnZoZdTnCUtt4qNYX8lr19rRtpyTbYUt
-         9yE7Ot34iK4u0T+iVJYaIkECYlB1Y+FKkpRqMllgbOSHJ/9ZnA962G8Wb3jKDJ09MDPU
-         g6KhCp5XwCGPiaVnTpqoe6Y6O5JHxoYGbQlVvf9PXSdtErufLaLNoy5n0BWUYkaCMJBa
-         UmXGDtdfDz3Ip1i87w6srxUa1XhSJ8Sr1FA+wFwHT3/mC0lcvFq7acpVPpMjCoHqnydV
-         fc9w==
-X-Gm-Message-State: APjAAAVHP9FWBuS3ouqgn418Ese+qBsQ4aPPBV+/1JJfJL3OP2/CX7j8
-        eJtwZCXCLi5i1QHkk96YFHU=
-X-Google-Smtp-Source: APXvYqx5vljHHiOIRFhCMYdS3kAzR4Rv1/1+nmNLeBVQtZibd3Bh1eOQllGPzSyNezBbnOOE4+G+Yw==
-X-Received: by 2002:a17:902:a405:: with SMTP id p5mr11115959plq.51.1559333961553;
-        Fri, 31 May 2019 13:19:21 -0700 (PDT)
-Received: from localhost.localdomain ([45.114.62.35])
-        by smtp.gmail.com with ESMTPSA id j20sm4408050pff.183.2019.05.31.13.19.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 31 May 2019 13:19:21 -0700 (PDT)
-From:   Anand Moon <linux.amoon@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Vicente Bergas <vicencb@gmail.com>,
-        Jagan Teki <jagan@amarulasolutions.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] arm64: dts: rockchip: Add missing configuration pwr amd rst for PCIe
-Date:   Fri, 31 May 2019 20:19:13 +0000
-Message-Id: <20190531201913.1122-1-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Gkdrhj+L2y9Un3DqIxCBN2IczH3NAgr/P0YLMvWGg3k=;
+        b=tXJ1GZhzw5BiIgC13sg92xyCgSabkdg+JS5m5wVc1rQO+G2RSye4lA8I2qGCGU1j6J
+         v1FZXgpBJ7fjf3HFIgP9wEKn7OoukosIIzL4rtgkW7JPjxkbrncnW1mHLNENAR7rW20c
+         Ay+mNWnBzt1RKTnagBWzzBLudbwDsh4074gOZvH0wuqzpTmdf1fVyr5sEGHxPhNb55wR
+         dNlgWudp1lGV/cS8B7SlPrQLHo8IV+m+kgit2694dRNsiZkjtXuE63pvrXpmojoLyFzq
+         wGK7gGOv+0LxvU5ugm0zgk4RhFtMhysnxVkQ2ZoOWvTtNebMiotH3lZkDgbZDzaOhcX5
+         95ow==
+X-Gm-Message-State: APjAAAVzcHQrvYKI6yuUobnji9kUna1Lin3nh6compUUmwfPkJN1ey+e
+        qkAbQIg94Y/jwenv2/Btx/w=
+X-Google-Smtp-Source: APXvYqxixZFEj5U32gsuL97OYf945hk0gTpmJ868WJqXPlesOklKj4GB4h8NEuJIo6Ibi7k6Kx9AYA==
+X-Received: by 2002:a17:906:a94c:: with SMTP id hh12mr11415070ejb.143.1559334368623;
+        Fri, 31 May 2019 13:26:08 -0700 (PDT)
+Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
+        by smtp.gmail.com with ESMTPSA id i45sm1892124eda.67.2019.05.31.13.26.07
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 31 May 2019 13:26:07 -0700 (PDT)
+Date:   Fri, 31 May 2019 13:26:05 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Stefan Agner <stefan@agner.ch>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH] ARM: xor-neon: Replace __GNUC__ checks with
+ CONFIG_CC_IS_GCC
+Message-ID: <20190531202605.GA78113@archlinux-epyc>
+References: <20190528235742.105510-1-natechancellor@gmail.com>
+ <CAK8P3a0a0hMsZDkqKsfsyCWpdvDni72tjAxCz2VeAaU56zqrXg@mail.gmail.com>
+ <20190531183227.GA34102@archlinux-epyc>
+ <CAK8P3a1-_KRvoeK4w0b8775izox8fRm=NGJC=yicDRn7J5UW2Q@mail.gmail.com>
+ <CAKwvOdkyk3qLMPquSZqXCFauTADJU5X9qJi_fhJqbUuCYBH-6Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdkyk3qLMPquSZqXCFauTADJU5X9qJi_fhJqbUuCYBH-6Q@mail.gmail.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add missing PCIe gpio pin (#PCIE_PWR) for vcc3v3_pcie power
-regulator node also add missing reset pinctrl (#PCIE_PERST_L) for PCIe node.
+On Fri, May 31, 2019 at 01:06:13PM -0700, Nick Desaulniers wrote:
+> On Fri, May 31, 2019 at 12:21 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > clang, I would suggest dropping your patch then, and instead adding
+> 
+> I disagree.  The minimum version of gcc required to build the kernel
+> is 4.6, so the comment about older versions of gcc is irrelevant and
+> should be removed.
+> 
+> Nathan's -Rpass warnings are warning that vectorization was not
+> calculated to be profitable **for 1 of the 4 functions** by LLVM.
+> Surely we wouldn't disable NEON opts for XOR because 1 of 4 was not
+> vectorized?
 
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
-using schematics: thanks for suggested by Manivannan
-[1] https://dl.vamrs.com/products/rock960/docs/hw/rock960_sch_v12_20180314.pdf
+Well I kept it short but clang warns that all of the loops are not
+profitable.
 
-Changes from prevoius patch:
-[2] https://patchwork.kernel.org/patch/10968695/
+However, the config option for xor-neon.c is CONFIG_XOR_BLOCKS, which
+also controls the arm64 implementation. We wouldn't want to disable it
+for clang altogether if it works on arm64 fine.
 
-Fix the suject and commit message and corrected the PWR and PERST configuration
-as per shematics and dts nodes.
----
- arch/arm64/boot/dts/rockchip/rk3399-ficus.dts    | 7 +++++++
- arch/arm64/boot/dts/rockchip/rk3399-rock960.dts  | 7 +++++++
- arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi | 3 +--
- 3 files changed, 15 insertions(+), 2 deletions(-)
+If it turns out to be broken for both, I suppose I would be okay with
+disabling CONFIG_XOR_BLOCKS for clang but it should be done in a
+separate patch as this one should be applied regardless of clang working
+or not (because this warning will appear again when clang is fixed).
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts b/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
-index 6b059bd7a04f..94e2a59bc1c7 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
-@@ -89,6 +89,8 @@
- 
- &pcie0 {
- 	ep-gpios = <&gpio4 RK_PD4 GPIO_ACTIVE_HIGH>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie_clkreqn_cpm &pcie_perst_l>;
- };
- 
- &pinctrl {
-@@ -104,6 +106,11 @@
- 			rockchip,pins =
- 				<1 RK_PD0 RK_FUNC_GPIO &pcfg_pull_none>;
- 			};
-+
-+		pcie_perst_l: pcie-perst-l {
-+			rockchip,pins =
-+				<4 RK_PD4 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
- 	};
- 
- 	usb2 {
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
-index 12285c51cceb..665fe09c7c74 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
-@@ -64,6 +64,8 @@
- 
- &pcie0 {
- 	ep-gpios = <&gpio2 RK_PA2 GPIO_ACTIVE_HIGH>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie_clkreqn_cpm &pcie_perst_l>;
- };
- 
- &pinctrl {
-@@ -104,6 +106,11 @@
- 			rockchip,pins =
- 				<2 RK_PA5 RK_FUNC_GPIO &pcfg_pull_none>;
- 			};
-+
-+		pcie_perst_l: pcie-perst-l {
-+			rockchip,pins =
-+				<2 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
- 	};
- 
- 	usb2 {
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-index c7d48d41e184..3df0cd67b4b2 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-@@ -55,6 +55,7 @@
- 
- 	vcc3v3_pcie: vcc3v3-pcie-regulator {
- 		compatible = "regulator-fixed";
-+		gpio = <&gpio2 RK_PA5 GPIO_ACTIVE_HIGH>;
- 		enable-active-high;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pcie_drv>;
-@@ -382,8 +383,6 @@
- 
- &pcie0 {
- 	num-lanes = <4>;
--	pinctrl-names = "default";
--	pinctrl-0 = <&pcie_clkreqn_cpm>;
- 	vpcie3v3-supply = <&vcc3v3_pcie>;
- 	status = "okay";
- };
--- 
-2.21.0
-
+Cheers,
+Nathan
