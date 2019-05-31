@@ -2,100 +2,96 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C4F4C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14AD2C46470
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA30423C0F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E26A52479C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:47:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559292477;
+	bh=D+yLBKqr975QJsixWB4wyv6wZEEE6jqGqlntHmrGCi8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0IqT3aE4+ab+W5Tz5GHKdyq44xYeMQ87bHr9ugdul4boLvSGVKEYDmw/gncX3EVk2
+	 9Ss5TaU1oQZSttjYGCUSMK5dNvk9hX4997HSgM1aqAIBrDiDe1Ww3P9bXrj4eLgMHa
+	 nK9WIaD5yJ+FCpgXt7yV76h8VO9MiiQEovqKszDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727055AbfEaIri (ORCPT
+        id S1727080AbfEaIrz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 04:47:38 -0400
-Received: from foss.arm.com ([217.140.101.70]:47918 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726002AbfEaIri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 04:47:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7619E341;
-        Fri, 31 May 2019 01:47:37 -0700 (PDT)
-Received: from [10.162.42.223] (unknown [10.162.42.223])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 20D713F59C;
-        Fri, 31 May 2019 01:47:28 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: Re: [RFC] mm: Generalize notify_page_fault()
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        "David S. Miller" <davem@davemloft.net>
-References: <1559195713-6956-1-git-send-email-anshuman.khandual@arm.com>
- <20190530110639.GC23461@bombadil.infradead.org>
- <4f9a610d-e856-60f6-4467-09e9c3836771@arm.com>
- <20190530133954.GA2024@bombadil.infradead.org>
-Message-ID: <f1995445-d5ab-f292-d26c-809581002184@arm.com>
-Date:   Fri, 31 May 2019 14:17:43 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Fri, 31 May 2019 04:47:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55688 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727058AbfEaIrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 04:47:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id CF1F3AF55;
+        Fri, 31 May 2019 08:47:53 +0000 (UTC)
+Date:   Fri, 31 May 2019 10:47:52 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>, jannh@google.com,
+        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
+        hdanton@sina.com
+Subject: Re: [RFCv2 1/6] mm: introduce MADV_COLD
+Message-ID: <20190531084752.GI6896@dhcp22.suse.cz>
+References: <20190531064313.193437-1-minchan@kernel.org>
+ <20190531064313.193437-2-minchan@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190530133954.GA2024@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190531064313.193437-2-minchan@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 05/30/2019 07:09 PM, Matthew Wilcox wrote:
-> On Thu, May 30, 2019 at 05:31:15PM +0530, Anshuman Khandual wrote:
->> On 05/30/2019 04:36 PM, Matthew Wilcox wrote:
->>> The two handle preemption differently.  Why is x86 wrong and this one
->>> correct?
->>
->> Here it expects context to be already non-preemptible where as the proposed
->> generic function makes it non-preemptible with a preempt_[disable|enable]()
->> pair for the required code section, irrespective of it's present state. Is
->> not this better ?
+On Fri 31-05-19 15:43:08, Minchan Kim wrote:
+> When a process expects no accesses to a certain memory range, it could
+> give a hint to kernel that the pages can be reclaimed when memory pressure
+> happens but data should be preserved for future use.  This could reduce
+> workingset eviction so it ends up increasing performance.
 > 
-> git log -p arch/x86/mm/fault.c
+> This patch introduces the new MADV_COLD hint to madvise(2) syscall.
+> MADV_COLD can be used by a process to mark a memory range as not expected
+> to be used in the near future. The hint can help kernel in deciding which
+> pages to evict early during memory pressure.
 > 
-> search for 'kprobes'.
-> 
-> tell me what you think.
-> 
+> Internally, it works via deactivating pages from active list to inactive's
+> head if the page is private because inactive list could be full of
+> used-once pages which are first candidate for the reclaiming and that's a
+> reason why MADV_FREE move pages to head of inactive LRU list. Therefore,
+> if the memory pressure happens, they will be reclaimed earlier than other
+> active pages unless there is no access until the time.
 
-Are you referring to these following commits
+[I am intentionally not looking at the implementation because below
+points should be clear from the changelog - sorry about nagging ;)]
 
-a980c0ef9f6d ("x86/kprobes: Refactor kprobes_fault() like kprobe_exceptions_notify()")
-b506a9d08bae ("x86: code clarification patch to Kprobes arch code")
+What kind of pages can be deactivated? Anonymous/File backed.
+Private/shared? If shared, are there any restrictions?
 
-In particular the later one (b506a9d08bae). It explains how the invoking context
-in itself should be non-preemptible for the kprobes processing context irrespective
-of whether kprobe_running() or perhaps smp_processor_id() is safe or not. Hence it
-does not make much sense to continue when original invoking context is preemptible.
-Instead just bail out earlier. This seems to be making more sense than preempt
-disable-enable pair. If there are no concerns about this change from other platforms,
-I will change the preemption behavior in proposed generic function next time around.
+Are there any restrictions on mappings? E.g. what would be an effect of
+this operation on hugetlbfs mapping?
+
+Also you are talking about inactive LRU but what kind of LRU is that? Is
+it the anonymous LRU? If yes, don't we have the same problem as with the
+early MADV_FREE implementation when enough page cache causes that
+deactivated anonymous memory doesn't get reclaimed anytime soon. Or
+worse never when there is no swap available?
+-- 
+Michal Hocko
+SUSE Labs
