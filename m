@@ -2,204 +2,99 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E079C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 18:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FBFC28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 18:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4606226D9A
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 18:11:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="k5VLoki8"
+	by mail.kernel.org (Postfix) with ESMTP id EB3D926DA8
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 18:11:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbfEaSLA (ORCPT
+        id S1727001AbfEaSLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 14:11:00 -0400
-Received: from mail.efficios.com ([167.114.142.138]:37580 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726701AbfEaSLA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 14:11:00 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 2AD3922F45C;
-        Fri, 31 May 2019 14:10:58 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id CVbXiAMBTh8l; Fri, 31 May 2019 14:10:57 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 6F47022F452;
-        Fri, 31 May 2019 14:10:57 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 6F47022F452
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1559326257;
-        bh=5pWd1qkBb3teYvKpgXTm+KiNou/eDaH+jFixlM1uv00=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=k5VLoki8BdROQLM1uUaHJqdewCx2tHy6R5ucG0eHqDTt3UWAv1n9iK2SuWXSWBFUQ
-         vlulMZ9s32lcR5UkF7OzzNks0Vn7Qmks0QyoxoGO4Xut/3s8omXKqVY9RVZMKGHJEI
-         TNqhwXToZDkqim9Wpy910sYbH4lsLnAPsrijTPNGLKiLLYsDQW/h96scaq1Uz6nVj8
-         BZnP7fvRhAFDklGPfoCS5E3wkvGtefxr4UxK/oVrXr8d2brN7j9RIel3zHh5puZV8Q
-         /NZCvbAJaWDLBdFEiZFzMBJ91j6l7XEUzfYmXUaLL2hqS7cAoqdjCR7GuqfT8uQGFc
-         Ahvecd3l/caGw==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id kld0ZKmMzhFe; Fri, 31 May 2019 14:10:57 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id 516D322F446;
-        Fri, 31 May 2019 14:10:57 -0400 (EDT)
-Date:   Fri, 31 May 2019 14:10:57 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
+        Fri, 31 May 2019 14:11:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50456 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726638AbfEaSLg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 14:11:36 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7588A3086228;
+        Fri, 31 May 2019 18:11:36 +0000 (UTC)
+Received: from treble (ovpn-124-142.rdu2.redhat.com [10.10.124.142])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B7CA31017E30;
+        Fri, 31 May 2019 18:11:32 +0000 (UTC)
+Date:   Fri, 31 May 2019 13:11:30 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-Message-ID: <1528929896.22217.1559326257155.JavaMail.zimbra@efficios.com>
-In-Reply-To: <87muj2k4ov.fsf@oldenburg2.str.redhat.com>
-References: <20190503184219.19266-1-mathieu.desnoyers@efficios.com> <87h89gjgaf.fsf@oldenburg2.str.redhat.com> <1239705947.14878.1558985272873.JavaMail.zimbra@efficios.com> <140718133.18261.1559144710554.JavaMail.zimbra@efficios.com> <2022553041.20966.1559249801435.JavaMail.zimbra@efficios.com> <875zprm4jo.fsf@oldenburg2.str.redhat.com> <732661684.21584.1559314109886.JavaMail.zimbra@efficios.com> <87muj2k4ov.fsf@oldenburg2.str.redhat.com>
-Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup
- and thread creation (v10)
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4] x86/power: Fix 'nosmt' vs. hibernation triple fault
+ during resume
+Message-ID: <20190531181130.afwizqcwibm5dmml@treble>
+References: <nycvar.YFH.7.76.1905311045240.1962@cbobk.fhfr.pm>
+ <5564116.e9OFvgDRbB@kreacher>
+ <CALCETrUpseta+NrhVwzzVFTe-BkBHtDUJBO22ci3mAsVR+XOog@mail.gmail.com>
+ <nycvar.YFH.7.76.1905311628330.1962@cbobk.fhfr.pm>
+ <B7AC83ED-3F11-42B9-8506-C842A5937B50@amacapital.net>
+ <nycvar.YFH.7.76.1905311651450.1962@cbobk.fhfr.pm>
+ <20190531152626.4nmyc7lj6mjwuo2v@treble>
+ <nycvar.YFH.7.76.1905311739510.1962@cbobk.fhfr.pm>
+ <20190531161952.dps3grwg4ytrpuqw@treble>
+ <CALCETrXFx4eV5ajMxOeM2UN=Ss9h3sGRLpd_4t33VAMXyPODiw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.12_GA_3803 (ZimbraWebClient - FF67 (Linux)/8.8.12_GA_3794)
-Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v10)
-Thread-Index: 86crk3o97x34dTvOXYVp+G+7ug75ug==
+Content-Disposition: inline
+In-Reply-To: <CALCETrXFx4eV5ajMxOeM2UN=Ss9h3sGRLpd_4t33VAMXyPODiw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Fri, 31 May 2019 18:11:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 31, 2019 at 09:51:09AM -0700, Andy Lutomirski wrote:
+> Just to clarify what I was thinking, it seems like soft-offlining a
+> CPU and resuming a kernel have fundamentally different requirements.
+> To soft-offline a CPU, we want to get power consumption as low as
+> possible and make sure that MCE won't kill the system.  It's okay for
+> the CPU to occasionally execute some code.  For resume, what we're
+> really doing is trying to hand control of all CPUs from kernel A to
+> kernel B.  There are two basic ways to hand off control of a given
+> CPU: we can jump (with JMP, RET, horrible self-modifying code, etc)
+> from one kernel to the other, or we can attempt to make a given CPU
+> stop executing code from either kernel at all and then forcibly wrench
+> control of it in kernel B.  Either approach seems okay, but the latter
+> approach depends on getting the CPU to reliably stop executing code.
+> We don't care about power consumption for resume, and I'm not even
+> convinced that we need to be able to survive an MCE that happens while
+> we're resuming, although surviving MCE would be nice.
 
+I'd thought you were proposing a global improvement: we get rid of
+mwait_play_dead() everywhere, i.e. all the time, not just for the resume
+path.
 
------ On May 31, 2019, at 11:46 AM, Florian Weimer fweimer@redhat.com wrote=
-:
+Instead it sounds like you were proposing a local improvement to the
+resume path, to continue doing what
+hibernate_resume_nonboot_cpu_disable() is already doing, but use an INIT
+IPI instead of HLT to make sure the CPU is completely dead.
 
-> * Mathieu Desnoyers:
->=20
->> Let's break this down into the various sub-issues involved:
->>
->> 1) How early do we need to setup rseq ? Should it be setup before:
->>    - LD_PRELOAD .so constructors ?
->>      - Without circular dependency,
->>      - With circular dependency,
->>    - audit libraries initialization ?
->>    - IFUNC resolvers ?
->>    - other callbacks ?
->>    - memory allocator calls ?
->>
->> We may end up in a situation where we need memory allocation to be setup
->> in order to initialize TLS before rseq can be registered for the main
->> thread. I suspect we will end up needing a fallbacks which always work
->> for the few cases that would try to use rseq too early in dl/libc startu=
-p.
->=20
-> I think the answer to that depends on whether it's okay to have an
-> observable transition from =E2=80=9Cno rseq kernel support=E2=80=9D to =
-=E2=80=9Ckernel supports
-> rseq=E2=80=9D.
+That may be a theoretical improvement but we'd still need to do the
+whole "wake and play dead" dance which Jiri's patch is doing for offline
+CPUs.  So Jiri's patch looks ok to me.
 
-As far as my own use-cases are concerned, I only care that rseq is initiali=
-zed
-before LD_PRELOAD .so constructors are executed.
-
-There appears to be some amount of documented limitations for what can be
-done by the IFUNC resolvers. It might be acceptable to document that rseq
-might not be initialized yet when those are executed.
-
-I'd like to hear what others think about whether we should care about IFUNC
-resolvers and audit libraries using restartable sequences TLS ?
-
-[...]
-
->=20
->> 4) Inability to touch a TLS variable (__rseq_abi) from ld-linux-*.so.2
->>    - Should we extend the dynamic linker to allow such TLS variable to b=
-e
->>      accessed ? If so, how much effort is required ?
->>    - Can we find an alternative way to initialize rseq early during
->>      dl init stages while still performing the TLS access from a functio=
-n
->>      implemented within libc.so ?
->=20
-> This is again related to the answer for (1).  There are various hacks we
-> could implement to make the initialization invisible (e.g., computing
-> the address of the variable using the equivalent of dlsym, after loading
-> all the initial objects and before starting relocation).  If it's not
-> too hard to add TLS support to ld.so, we can consider that as well.
-> (The allocation side should be pretty easy, relocation support it could
-> be more tricky.)
->=20
->> So far, I got rseq to be initialized before LD_PRELOADed library
->> constructors by doing the initialization in a constructor within
->> libc.so. I don't particularly like this approach, because the
->> constructor order is not guaranteed.
->=20
-> Right.
-
-One question related to use of constructors: AFAIU, if a library depends
-on glibc, ELF guarantees that the glibc constructor will be executed first,
-before the other library.
-
-Which leaves us with the execution order of constructors within libc.so,
-which is not guaranteed if we just use __attribute__ ((constructor)).
-However, all gcc versions that are required to build recent glibc
-seem to support a constructor with a "priority" value (lower gets
-executed first, and those are executed before constructors without
-priority).
-
-Could we do e.g.:
-
---- a/include/libc-internal.h
-+++ b/include/libc-internal.h
-@@ -21,6 +21,12 @@
-=20
- #include <hp-timing.h>
-=20
-+/* Libc constructor priority order. Lower is executed first.  */
-+enum libc_constructor_prio {
-+       /* Priorities between 0 and 100 are reserved.  */
-+       LIBC_CONSTRUCTOR_PRIO_RSEQ_INIT =3D 1000,
-+};
-+
- /* Initialize the `__libc_enable_secure' flag.  */
- extern void __libc_init_secure (void);
-=20
-and
-
-csu/libc-start.c:
-
-static
-__attribute__ ((constructor (LIBC_CONSTRUCTOR_PRIO_RSEQ_INIT)))
-void __rseq_libc_init (void)
-{
-  rseq_init ();
-  /* Register rseq ABI to the kernel.   */
-  (void) rseq_register_current_thread ();
-}
-
-[...]
-
-Thanks,
-
-Mathieu
-
-
-
-
---=20
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+-- 
+Josh
