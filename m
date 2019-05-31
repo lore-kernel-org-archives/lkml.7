@@ -2,102 +2,136 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FBDC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E85FBC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0920265BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:26:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dglyHjYn"
+	by mail.kernel.org (Postfix) with ESMTP id C7916265BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:26:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbfEaI0i (ORCPT
+        id S1726941AbfEaI0m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 04:26:38 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:7322 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbfEaI0h (ORCPT
+        Fri, 31 May 2019 04:26:42 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:44708 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbfEaI0k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 04:26:37 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cf0e5320001>; Fri, 31 May 2019 01:26:26 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 31 May 2019 01:26:37 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 31 May 2019 01:26:37 -0700
-Received: from tbergstrom-lnx.Nvidia.com (172.20.13.39) by
- HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3; Fri, 31 May 2019 08:26:36 +0000
-Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
-        id 67E4740BFF; Fri, 31 May 2019 11:26:34 +0300 (EEST)
-Date:   Fri, 31 May 2019 11:26:34 +0300
-From:   Peter De Schrijver <pdeschrijver@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Fri, 31 May 2019 04:26:40 -0400
+Received: from 79.184.255.225.ipv4.supernova.orange.pl (79.184.255.225) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
+ id 839ca75bcd552a6f; Fri, 31 May 2019 10:26:38 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Joseph Lo <josephl@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Nicolas Chauvet <kwizart@gmail.com>
-Subject: Re: [PATCH v3 0/8] NVIDIA Tegra clocksource driver improvements
-Message-ID: <20190531082634.GA6070@pdeschrijver-desktop.Nvidia.com>
-References: <20190524153253.28564-1-digetx@gmail.com>
+        the arch/x86 maintainers <x86@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v4] x86/power: Fix 'nosmt' vs. hibernation triple fault during resume
+Date:   Fri, 31 May 2019 10:26:37 +0200
+Message-ID: <1639292.WxYr0VA4et@kreacher>
+In-Reply-To: <20190531051456.fzkvn62qlkf6wqra@treble>
+References: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm> <nycvar.YFH.7.76.1905310139380.1962@cbobk.fhfr.pm> <20190531051456.fzkvn62qlkf6wqra@treble>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190524153253.28564-1-digetx@gmail.com>
-X-NVConfidentiality: public
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559291187; bh=VcZEf7tgMNIXUUg2aicGt0agDtisPyMFpAo7p5giBdA=;
-        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
-         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
-         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
-        b=dglyHjYnmWAOWHzKaqceaJx0Ys6DQXlaf3TFxqQb8JHYiYzozq4oJdsSPGPD235Ar
-         X/bjWk9y8g0q6EGDe6DUucL96LJFyzgIzQvNxZpl7Sy7rgqksECiBBRq/4cRQtqGUT
-         S4Jbd2MfLwoOzAGCVr7GozHU8QPlZ31oAWoh65XEYpnDhCkgSuBDRzqbPg6MkoaYV2
-         0t1Lifc1N+UATaavXZ+VzSS4eh3ogSzAud448T0d9Jq8XYtEe0ez4lHyAgDgPZohNh
-         +e7gyJZZA0INC8ZO9BIdyWgMn7bGjnI9C3DP2dOT0aIdyaq70LXUiC4sq3/VTUIBnf
-         Lie7wCUBnA9ww==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 06:32:45PM +0300, Dmitry Osipenko wrote:
-> Hello,
+On Friday, May 31, 2019 7:14:56 AM CEST Josh Poimboeuf wrote:
+> On Fri, May 31, 2019 at 01:42:02AM +0200, Jiri Kosina wrote:
+> > On Thu, 30 May 2019, Josh Poimboeuf wrote:
+> > 
+> > > > >     Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+> > > > 
+> > > > Yes, it is, thanks!
+> > > 
+> > > I still think changing monitor/mwait to use a fixmap address would be a
+> > > much cleaner way to fix this.  I can try to work up a patch tomorrow.
+> > 
+> > I disagree with that from the backwards compatibility point of view.
+> > 
+> > I personally am quite frequently using differnet combinations of 
+> > resumer/resumee kernels, and I've never been biten by it so far. I'd guess 
+> > I am not the only one.
+> > Fixmap sort of breaks that invariant.
 > 
-> This series primarily unifies the driver code across all Tegra SoC
-> generations. In a result the clocksources are allocated per-CPU on
-> older Tegra's and have a higher rating than the arch-timer, the newer
-> Tegra210 is getting support for microsecond clocksource and the driver's
-> code is getting much cleaner. Note that arch-timer usage is discouraged on
-> all Tegra's due to the time jitter caused by the CPU frequency scaling.
+> Right now there is no backwards compatibility because nosmt resume is
+> already broken.
+> 
+> For "future" backwards compatibility we could just define a hard-coded
+> reserved fixmap page address, adjacent to the vsyscall reserved address.
+> 
+> Something like this (not yet tested)?  Maybe we could also remove the
+> resume_play_dead() hack?
 
-I think the limitations are more as follows:
+Yes, we can IMO, but in a separate patch, please.
 
-Chip	timer		suffers cpu dvfs jitter		can wakeup from cc7
-T20	us-timer	No				Yes
-T20	twd timer	Yes				No?
-T30	us-timer	No				Yes
-T30	twd timer	Yes				No?
-T114	us-timer	No				Yes
-T114	arch timer	No				Yes
-T124	us-timer	No				Yes
-T124	arch timer	No				Yes
-T210	us-timer	No				Yes
-T210	arch timer	No				No
-T210	clk_m timer	No				Yes
+> diff --git a/arch/x86/include/asm/fixmap.h b/arch/x86/include/asm/fixmap.h
+> index 9da8cccdf3fb..1c328624162c 100644
+> --- a/arch/x86/include/asm/fixmap.h
+> +++ b/arch/x86/include/asm/fixmap.h
+> @@ -80,6 +80,7 @@ enum fixed_addresses {
+>  #ifdef CONFIG_X86_VSYSCALL_EMULATION
+>  	VSYSCALL_PAGE = (FIXADDR_TOP - VSYSCALL_ADDR) >> PAGE_SHIFT,
+>  #endif
+> +	FIX_MWAIT = (FIXADDR_TOP - VSYSCALL_ADDR - 1) >> PAGE_SHIFT,
+>  #endif
+>  	FIX_DBGP_BASE,
+>  	FIX_EARLYCON_MEM_BASE,
+> diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+> index 73e69aaaa117..9804fbe25d03 100644
+> --- a/arch/x86/kernel/smpboot.c
+> +++ b/arch/x86/kernel/smpboot.c
+> @@ -108,6 +108,8 @@ int __read_mostly __max_smt_threads = 1;
+>  /* Flag to indicate if a complete sched domain rebuild is required */
+>  bool x86_topology_update;
+>  
+> +static char __mwait_page[PAGE_SIZE];
+> +
+>  int arch_update_cpu_topology(void)
+>  {
+>  	int retval = x86_topology_update;
+> @@ -1319,6 +1321,8 @@ void __init native_smp_prepare_cpus(unsigned int max_cpus)
+>  	smp_quirk_init_udelay();
+>  
+>  	speculative_store_bypass_ht_init();
+> +
+> +	set_fixmap(FIX_MWAIT, __pa_symbol(&__mwait_page));
+>  }
+>  
+>  void arch_enable_nonboot_cpus_begin(void)
+> @@ -1631,11 +1635,12 @@ static inline void mwait_play_dead(void)
+>  	}
+>  
+>  	/*
+> -	 * This should be a memory location in a cache line which is
+> -	 * unlikely to be touched by other processors.  The actual
+> -	 * content is immaterial as it is not actually modified in any way.
+> +	 * This memory location is never actually written to.  It's mapped at a
+> +	 * reserved fixmap address to ensure the monitored address remains
+> +	 * valid across a hibernation resume operation.  Otherwise a triple
+> +	 * fault can occur.
+>  	 */
+> -	mwait_ptr = &current_thread_info()->flags;
+> +	mwait_ptr = (void *)fix_to_virt(FIX_MWAIT);
+>  
+>  	wbinvd();
+>  
+> 
 
-right?
+Jiri, any chance to test this?
 
-Peter.
+
+
