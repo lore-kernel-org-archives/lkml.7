@@ -2,105 +2,55 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B085DC04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9744FC28CC2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:23:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AE3B265B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:23:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bttYdLG7"
+	by mail.kernel.org (Postfix) with ESMTP id 775BF265B4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 08:23:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbfEaIX2 (ORCPT
+        id S1726849AbfEaIX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 04:23:28 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:45138 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbfEaIX1 (ORCPT
+        Fri, 31 May 2019 04:23:58 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:50543 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbfEaIX6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 04:23:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=fdnlo9ztd5dJncnArgtMmEkp4hYI9oo/LawGnWmTfnY=; b=bttYdLG7ehBKlEgRpdcZXZcX9
-        wgIMA+lbL3IUV0x+adFyIFnTALbEB2N47V0Lv/RBkw+BfeC51Ofsr8t2FDFSIO1UjLRzkTAG8dtf1
-        NtVZMhBJr7W9XzVE1ko2ZYZRSdwhnylESKlpjhF6qLYntSSewu93jCQrTarfZJCv9PhsL2rDnDV/h
-        tSq4mo7XocQr3dvAGv/Im9E5PJwyWVl36gw61QQC9KB11+LcahflJN23PnCTE1DW0tieof7dBnEsI
-        n2c3099mPsvEcPT9vGkM8ZmI6pj1BRQ6prajI9T4WTzptLhCLnCKTzBLY8nfwn4/RhlNo/lMRGIzk
-        rDurHpGVw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hWcou-00070v-B1; Fri, 31 May 2019 08:23:24 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C9BA6201B8CFE; Fri, 31 May 2019 10:23:22 +0200 (CEST)
-Date:   Fri, 31 May 2019 10:23:22 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc:     "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
-        Will Deacon <Will.Deacon@arm.com>,
-        arcml <linux-snps-arc@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Subject: Re: single copy atomicity for double load/stores on 32-bit systems
-Message-ID: <20190531082322.GI2623@hirez.programming.kicks-ass.net>
-References: <2fd3a455-6267-5d21-c530-41964a4f6ce9@synopsys.com>
- <20190530185358.GG28207@linux.ibm.com>
- <C2D7FE5348E1B147BCA15975FBA2307501A2520D9C@us01wembx1.internal.synopsys.com>
+        Fri, 31 May 2019 04:23:58 -0400
+Received: from 79.184.255.225.ipv4.supernova.orange.pl (79.184.255.225) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
+ id 59d5adea62202d2a; Fri, 31 May 2019 10:23:55 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-efi@vger.kernel.org, Len Brown <lenb@kernel.org>,
+        Keith Busch <keith.busch@intel.com>, vishal.l.verma@intel.com,
+        ard.biesheuvel@linaro.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-nvdimm@lists.01.org
+Subject: Re: [PATCH v2 1/8] acpi: Drop drivers/acpi/hmat/ directory
+Date:   Fri, 31 May 2019 10:23:55 +0200
+Message-ID: <4965161.Uu1Nigf0I0@kreacher>
+In-Reply-To: <155925716783.3775979.13301455166290564145.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <155925716254.3775979.16716824941364738117.stgit@dwillia2-desk3.amr.corp.intel.com> <155925716783.3775979.13301455166290564145.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <C2D7FE5348E1B147BCA15975FBA2307501A2520D9C@us01wembx1.internal.synopsys.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 07:16:36PM +0000, Vineet Gupta wrote:
-> On 5/30/19 11:55 AM, Paul E. McKenney wrote:
-> >
-> >> I'm not sure how to interpret "natural alignment" for the case of double
-> >> load/stores on 32-bit systems where the hardware and ABI allow for 4 byte
-> >> alignment (ARCv2 LDD/STD, ARM LDRD/STRD ....)
-> >>
-> >> I presume (and the question) that lkmm doesn't expect such 8 byte load/stores to
-> >> be atomic unless 8-byte aligned
-> > I would not expect 8-byte accesses to be atomic on 32-bit systems unless
-> > some special instruction was in use.  But that usually means special
-> > intrinsics or assembly code.
-> 
-> Thx for confirming.
-> 
-> In cases where we *do* expect the atomicity, it seems there's some existing type
-> checking but isn't water tight.
-> e.g.
-> 
-> #define __smp_load_acquire(p)                        \
-> ({                                    \
->     typeof(*p) ___p1 = READ_ONCE(*p);                \
->     compiletime_assert_atomic_type(*p);                \
->     __smp_mb();                            \
->     ___p1;                                \
-> })
-> 
-> #define compiletime_assert_atomic_type(t)                \
->     compiletime_assert(__native_word(t),                \
->         "Need native word sized stores/loads for atomicity.")
-> 
-> #define __native_word(t) \
->     (sizeof(t) == sizeof(char) || sizeof(t) == sizeof(short) || \
->      sizeof(t) == sizeof(int) || sizeof(t) == sizeof(long))
-> 
-> 
-> So it won't catch the usage of 4 byte aligned long long which gcc targets to
-> single double load instruction.
+On Friday, May 31, 2019 12:59:27 AM CEST Dan Williams wrote:
+> As a single source file object there is no need for the hmat enabling to
+> have its own directory.
 
-Yes, we didn't do those because that would result in runtime overhead.
+Well, I asked Keith to add that directory as the code in hmat.c is more related to mm than to
+the rest of the ACPI subsystem.
 
-We assume natural alignment for any type the hardware can do.
+Is there any problem with retaining it?
+
+
+
