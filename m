@@ -2,95 +2,90 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD406C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4FACC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B016026126
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:17:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E257218C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 10:20:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iEkFNxgo"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NsM6Ojtr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfEaKRe (ORCPT
+        id S1726809AbfEaKUP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 06:17:34 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47112 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbfEaKRe (ORCPT
+        Fri, 31 May 2019 06:20:15 -0400
+Received: from mail-oi1-f178.google.com ([209.85.167.178]:44869 "EHLO
+        mail-oi1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbfEaKUP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 06:17:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=w4vrqrDF7W9RqTb6Rqgru/EiLTE4cPWG6ak1MZifZa4=; b=iEkFNxgonBs4Y+I/ZiKzU3r56
-        4VPv/zTUAGze8uO37S7CRrVORy8JOYfYoI5RhMJzK7zP5lYtRPbMaOQxKOj+PgvMgjhF2Ji5YwrhP
-        HGDOLNFsd6XjlpOX35/ZzudxsLH1sQh+oHSi2whe57rDiJkkBkT6C/VibUcLuQTb3VdqlQMzyjL+c
-        zlrfuL4LaI2P7cSAPSUSB4Avlv85AVBt8yTjUbwKB7FXTJtvVXQfmW+lIscKnTnDNzVM2W+NUmHtA
-        X5JxiLs47yuWsczojYz6OhMDWfdCyTGuI+1STkai+fnr7fL87FeQ/BZd+Ew3lABs37x+6fp4dA4Dk
-        /HCQlDjZA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hWeb7-0000UV-SJ; Fri, 31 May 2019 10:17:18 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2E94E201CF1CB; Fri, 31 May 2019 12:17:16 +0200 (CEST)
-Date:   Fri, 31 May 2019 12:17:16 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Nadav Amit <namit@vmware.com>
-Cc:     Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, Rik van Riel <riel@surriel.com>
-Subject: Re: [RFC PATCH v2 07/12] smp: Do not mark call_function_data as
- shared
-Message-ID: <20190531101716.GN2623@hirez.programming.kicks-ass.net>
-References: <20190531063645.4697-1-namit@vmware.com>
- <20190531063645.4697-8-namit@vmware.com>
+        Fri, 31 May 2019 06:20:15 -0400
+Received: by mail-oi1-f178.google.com with SMTP id e189so572970oib.11
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 03:20:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iy+b2XmhA0ntKME0CnMJCgRk0OfnARxxHVb5nAyoOQI=;
+        b=NsM6Ojtr9vYMDTe1/mfRqJupLufihu+ZNUA0u/SNXUiXRqSs5vzhrg6EJCVVp47vua
+         csDeujruhQ52gKRcsDzg+TNOyATTyYrEUPZRQ8CgvxuRfHVTHBESoi3M3caz1MktLeeQ
+         gcOjC16+wZ4tOKU/esGTXt7IbhtV7MP+3F1fWGcWV1+EIoEGDKhrYgu/QmFjCFPPAYJx
+         fM5KFxta5mP1FY4t9E8EFGCQC1DGAtEaRVK2khkPqqm7xE+4dZ8N/K6EOVG5xlUlyHUg
+         Iretlr5BJIcYk+L+LCNn4iNJwpmrX9suAxk4syrbuBbPMFc+6dDd+Hy/FiI8feCuByOK
+         7M+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iy+b2XmhA0ntKME0CnMJCgRk0OfnARxxHVb5nAyoOQI=;
+        b=BLTvkQpBRh1ps9zH00t2EhYI+Hdye7qVQDduMEteu1ob2MGgUXjYtX4scXd8rmUgOy
+         oeG5sAvY6GID1NzazTD7QOx2vSZxT/rgRWj6QgQtCNih95rw8FGsRL2dcJa/FQ81RRxJ
+         i8v2XoymjrQKl8wEborbEh6ChmGWCMZ36OBqule2fFmkkgnmmkfrWlxD08+YLEOkHWDA
+         ++9HdYp+TY9s2TmwttJDNmcy2GJ/aZiPU0O2hMNT/k4dJxcmWRbynt3H+VZFrD5Rih31
+         zCvsytcnvz/XrzaMcxWqyEtzM1nzXazWqDvaNN+2+XBQBySR3NgGouLgoyVvVdGZtEWj
+         UYYA==
+X-Gm-Message-State: APjAAAWwoVDx6kqvFbEBCjIky/3//iykEAUGGPcEuP5HYN8XB8e1QDax
+        +bEy0Jc8WgAUB9j33UC+D6iEyjquspFv3acptYY7MA==
+X-Google-Smtp-Source: APXvYqyXFvGVgoiZdcOxGr/H1SlhMtGXL6Lz7te6iFo0TuR9613uWJrlqnQVhGO1bcWpGSXyPQR0yNsMKuEton5QgRg=
+X-Received: by 2002:aca:80e:: with SMTP id 14mr5832960oii.2.1559298014153;
+ Fri, 31 May 2019 03:20:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190531063645.4697-8-namit@vmware.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CAJKOXPfREyt3P2H8bL9=6+EQ1S3Ja7Urkhy1x7sCHaaubMqV1Q@mail.gmail.com>
+In-Reply-To: <CAJKOXPfREyt3P2H8bL9=6+EQ1S3Ja7Urkhy1x7sCHaaubMqV1Q@mail.gmail.com>
+From:   Tzung-Bi Shih <tzungbi@google.com>
+Date:   Fri, 31 May 2019 18:20:03 +0800
+Message-ID: <CA+Px+wXs1u9VjkzDerb-BVPQRLZNMnw8Rh5prkb+0mHAggwWgg@mail.gmail.com>
+Subject: Re: [BISECT] No audio after "ASoC: core: use component driver name as
+ component name"
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 11:36:40PM -0700, Nadav Amit wrote:
-> cfd_data is marked as shared, but although it hold pointers to shared
-> data structures, it is private per core.
-> 
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Rik van Riel <riel@surriel.com>
-> Cc: Andy Lutomirski <luto@kernel.org>
-> Signed-off-by: Nadav Amit <namit@vmware.com>
-> ---
->  kernel/smp.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/smp.c b/kernel/smp.c
-> index 6b411ee86ef6..f1a358f9c34c 100644
-> --- a/kernel/smp.c
-> +++ b/kernel/smp.c
-> @@ -33,7 +33,7 @@ struct call_function_data {
->  	cpumask_var_t		cpumask_ipi;
->  };
->  
-> -static DEFINE_PER_CPU_SHARED_ALIGNED(struct call_function_data, cfd_data);
-> +static DEFINE_PER_CPU(struct call_function_data, cfd_data);
+On Fri, May 31, 2019 at 5:27 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> The problem might be in component name. The driver->name and
+> fmt_single_name(dev, &component->id) are:
+> snd_dmaengine_pcm != 3830000.i2s
+> snd_dmaengine_pcm != 3830000.i2s-sec
+> samsung-i2s != 3830000.i2s
+>
+> This commit should not go in without fixing the users of old
+> behavior... I could adjust the platform names for primary and
+> secondary links... but now it looks like two components will have the
+> same name.
+That is because the two component drivers used the same name in
+somehow.  But yes, we should not have the commit without fixing
+potential errors for users depend on old behavior.
 
-Should that not be DEFINE_PER_CPU_ALIGNED() then?
-
->  static DEFINE_PER_CPU_SHARED_ALIGNED(struct llist_head, call_single_queue);
->  
-> -- 
-> 2.20.1
-> 
+Could you send a patch to revert the commit b19671d6caf1?
