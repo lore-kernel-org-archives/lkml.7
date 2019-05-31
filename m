@@ -2,137 +2,111 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F39C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:26:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA71EC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3146226963
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:26:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oMieT2ho"
+	by mail.kernel.org (Postfix) with ESMTP id 8620E26969
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 13:27:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559309224;
+	bh=YqusqY9ZkH6Npoicn+crWGyPEFfsOWB2EFhjTifVbMk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LTfjVfpy5l8F8ap1l1xJQjLbbY0gnMlHu0QQh0sKEQDmou3jRRbLBhoKSqH7OvXUC
+	 u4au85n4plH/XuFFEVoli28AAk+8kY4POKEojZ1SKXZbKbwGp+agCn8oii8dGzBD06
+	 uENihZz/U3UFvBzJpD8nJn30ms/eXfDLHeAWe7c4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726634AbfEaN0r (ORCPT
+        id S1726658AbfEaN1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 09:26:47 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:60612 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726485AbfEaN0q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 09:26:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8n09TENg//rbgbzsGXRPd289l+d2UZWCH+fGg2NaHa4=; b=oMieT2howrG7WS9bOvNKdCmiR
-        jX6TmxtTHoTJ6p19NQ7BG0HE7FY04HsI5/nyRw+Aq42dtfLxVH85f/Oo1wrKHZiXHSYILXb6bYx6K
-        yhA1rgynmCx8lfqGcZssXNV6HHnn7atgrynyvL/+8MltoPvEPtws/8cz6hOIaknzrE3S4stP3RQCA
-        +MPBd2PAi7l2iU3fhSRgYTaCLKkRqUgtXi6eiRPa1g0WJHp8m2WPOXwF9+0/y9HLU+804TTCeG+yR
-        KtRFcgaXX9U1NowGmovnO8AyDivrrgn/IpW9UKTGwPivpjuRU9V2uX1aDiIUIutXoeABwDttquviR
-        2s09w9mqg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hWhY5-0007pO-9M; Fri, 31 May 2019 13:26:21 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 158FF201822CC; Fri, 31 May 2019 15:26:20 +0200 (CEST)
-Date:   Fri, 31 May 2019 15:26:20 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Jann Horn <jannh@google.com>, Greg KH <gregkh@linuxfoundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
-Subject: Re: [PATCH 1/7] General notification queue with user mmap()'able
- ring buffer
-Message-ID: <20190531132620.GC2606@hirez.programming.kicks-ass.net>
-References: <20190531111445.GO2677@hirez.programming.kicks-ass.net>
- <CAG48ez0R-R3Xs+3Xg9T9qcV3Xv6r4pnx1Z2y=Ltx7RGOayte_w@mail.gmail.com>
- <20190528162603.GA24097@kroah.com>
- <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
- <155905931502.7587.11705449537368497489.stgit@warthog.procyon.org.uk>
- <4031.1559064620@warthog.procyon.org.uk>
- <20190528231218.GA28384@kroah.com>
- <31936.1559146000@warthog.procyon.org.uk>
- <16193.1559163763@warthog.procyon.org.uk>
- <21942.1559304135@warthog.procyon.org.uk>
+        Fri, 31 May 2019 09:27:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45378 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726386AbfEaN1D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 09:27:03 -0400
+Received: from earth.universe (host-091-097-002-124.ewe-ip-backbone.de [91.97.2.124])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C697626963;
+        Fri, 31 May 2019 13:27:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559309222;
+        bh=YqusqY9ZkH6Npoicn+crWGyPEFfsOWB2EFhjTifVbMk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yTdPijdQt8v7qtRFDw9pFy+qt44JpuV3K/Cz5T4qmw09784Xdt2s9ac02aezUJIUf
+         c4RTjM5ZSMQtaky85KkxQlV6LQfWccRikbhWo5gbE0Gf6tB1HdPYG7bkvCsKugjv6k
+         CNx/lx5Q+ULsMLVHsXWeX6V1O+OqmMlrQAOFFvTQ=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 3D7443C08D3; Fri, 31 May 2019 15:27:00 +0200 (CEST)
+Date:   Fri, 31 May 2019 15:27:00 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        dmitry.torokhov@gmail.com, gregkh@linuxfoundation.org,
+        teheo@suse.de
+Subject: Re: devm_* vs. PROBE_DEFFER: memory leaks?
+Message-ID: <20190531132700.o7kopr33kdztqdv6@earth.universe>
+References: <20190531085209.GA20964@amd>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="sfcqqzyrmfnzli66"
 Content-Disposition: inline
-In-Reply-To: <21942.1559304135@warthog.procyon.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190531085209.GA20964@amd>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 01:02:15PM +0100, David Howells wrote:
-> Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > Can you re-iterate the exact problem? I konw we talked about this in the
-> > past, but I seem to have misplaced those memories :/
-> 
-> Take this for example:
-> 
-> 	void afs_put_call(struct afs_call *call)
-> 	{
-> 		struct afs_net *net = call->net;
-> 		int n = atomic_dec_return(&call->usage);
-> 		int o = atomic_read(&net->nr_outstanding_calls);
-> 
-> 		trace_afs_call(call, afs_call_trace_put, n + 1, o,
-> 			       __builtin_return_address(0));
-> 
-> 		ASSERTCMP(n, >=, 0);
-> 		if (n == 0) {
-> 			...
-> 		}
-> 	}
-> 
-> I am printing the usage count in the afs_call tracepoint so that I can use it
-> to debug refcount bugs.  If I do it like this:
-> 
-> 	void afs_put_call(struct afs_call *call)
-> 	{
-> 		int n = refcount_read(&call->usage);
-> 		int o = atomic_read(&net->nr_outstanding_calls);
-> 
-> 		trace_afs_call(call, afs_call_trace_put, n, o,
-> 			       __builtin_return_address(0));
-> 
-> 		if (refcount_dec_and_test(&call->usage)) {
-> 			...
-> 		}
-> 	}
-> 
-> then there's a temporal gap between the usage count being read and the actual
-> atomic decrement in which another CPU can alter the count.  This can be
-> exacerbated by an interrupt occurring, a softirq occurring or someone enabling
-> the tracepoint.
-> 
-> I can't do the tracepoint after the decrement if refcount_dec_and_test()
-> returns false unless I save all the values from the object that I might need
-> as the object could be destroyed any time from that point on.
 
-Is it not the responsibility of the task that affects the 1->0
-transition to actually free the memory?
+--sfcqqzyrmfnzli66
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-That is, I'm expecting the '...' in both cases above the include the
-actual freeing of the object. If this is not the case, then @usage is
-not a reference count.
+Hi,
 
-(and it has already been established that refcount_t doesn't work for
-usage count scenarios)
+On Fri, May 31, 2019 at 10:52:10AM +0200, Pavel Machek wrote:
+> Is devm_ supposed to work with EPROBE_DEFFER?
 
-Aside from that, is the problem that refcount_dec_and_test() returns a
-boolean (true - last put, false - not last) instead of the refcount
-value? This does indeed make it hard to print the exact count value for
-the event.
+Sure.
+
+> Probe function is now called multiple times;
+> is memory freed between calling probe()?
+
+Yes, EPROBE_DEFER is an error code, so devm resources
+are released.
+
+> Will allocations from failed probe()s remain after the driver is
+> inserted successfully, leaking memory?
+
+devm_ is connected to the device, not to the driver.
+
+Since code is better than words, check drivers/base/dd.c yourself.
+The relevant function name is really_probe(), interesting part for
+you starts at ret = drv->probe(dev) line.
+
+-- Sebastian
+
+--sfcqqzyrmfnzli66
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlzxK6AACgkQ2O7X88g7
++po8XhAApEXxQhcTweD9Ef8YuyoQm7NGIQl1kT6QV+Mg9vDgyf4wvowZDEcInCMd
+Em2OCVHoO6QBEnmq8yci4a1l1hpppH3a7MugZKGBRdS9t1f0tBMdyE5dpU5xYmWX
+yPfV16JT6Duk47wxVN53DhjNZlpYNVCQL4ok6crOlJWwp3JvfG+GZVXpuEZ+0md5
+Qo1iQWVYsOnVljBgKTeQ4ZkcjeRqrUIB7OcJJ4jmV2/t2JurtYr2C9u7BCnG26CC
+AuBUE5wWQtq30HS79jF0/b9F2sVu2QLf9vfCRt8mayTA+pi3e6qoYsYrvkHOTjTF
+PuJGb1oxgrJ2YSZm+R0q7GRZIwB2twV3LgTghImzHP85rX3uo8KvJPvbkyTYNMfk
+NspgQCcJAuNNNRH9rRkMLLuWTx2lCC77mWxNUwfHBltDIphT/3m+JRsnW6VdgA/T
+xR6yZ/q/ThQZQ0tCPxyEunry62fHbdllcRYCIwJ9CNKSnrO4kWLrDUqop8LUFlq+
+b0bSYHHd3+CDT5379zQPlryIlJKy9l2P0vTCwIFDKurOSX+Qi8APnpas4qjD0vAE
+lPEoPoLUwqWefDbt1t90OSVJCggqIDoTH4q3aOLWPDwvNr4wFXHo7kW37ogwYr6F
+FM22DHPQUqZqdNyLYnlxonn2h+959laOa0xYN8lR+y5IfrMvTek=
+=K+Zu
+-----END PGP SIGNATURE-----
+
+--sfcqqzyrmfnzli66--
