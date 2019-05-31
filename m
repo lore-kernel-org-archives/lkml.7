@@ -2,226 +2,145 @@ Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 180F4C04AB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 096AEC04AB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEBCB26F20
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:07:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF0C426F21
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 21:08:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zDxr9MwX"
+	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="AHSFVG4T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727661AbfEaVHU (ORCPT
+        id S1727626AbfEaVIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 17:07:20 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:44540 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727196AbfEaVHU (ORCPT
+        Fri, 31 May 2019 17:08:24 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:40232 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727087AbfEaVIY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 17:07:20 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4VL7DbR108552;
-        Fri, 31 May 2019 16:07:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559336833;
-        bh=kUuiyLNO9I7AX8rnyIlR6E0SbWaESymz+6qSpyhOkzQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=zDxr9MwXWjuG8jRobkaS70rVQmNov+QE6CtHnoeW+aaEV60YFj3Z8VgC3hV4sJsed
-         SZ7mFXTk7HApsghjv3ogjfIZFJWheZOTvZyhipkrIG8QsKJ63PZbDVUDFh5AEtexq5
-         1HeoyqoTGYOzVlqrgRzZETvflktH7Bj8HsLMLnho=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4VL7DoW117869
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 31 May 2019 16:07:13 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 31
- May 2019 16:07:12 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 31 May 2019 16:07:12 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4VL7Cmf124175;
-        Fri, 31 May 2019 16:07:12 -0500
-Subject: Re: [RESEND PATCH v4 6/6] leds: lm36274: Introduce the TI LM36274 LED
- driver
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>
-CC:     Pavel Machek <pavel@ucw.cz>, <broonie@kernel.org>,
-        <lgirdwood@gmail.com>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190522192733.13422-1-dmurphy@ti.com>
- <20190522192733.13422-7-dmurphy@ti.com> <20190523125012.GB20354@amd>
- <0c2bd6af-92c5-2458-dc41-1ea413545347@ti.com>
- <89a80aa8-66ee-d0ec-fa54-c55ca8de06af@gmail.com> <20190529135821.GK4574@dell>
- <afff7c24-bb68-e9dc-295e-4449f9729cc9@gmail.com> <20190530073827.GL4574@dell>
- <c75025f5-a984-78fa-2737-d10027e5741c@gmail.com> <20190531062312.GP4574@dell>
- <8b4cfc12-284d-6daf-c82d-4c8e487cc203@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <ec1066ec-c68b-c1ee-dd70-6be7f71924eb@ti.com>
-Date:   Fri, 31 May 2019 16:07:12 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 31 May 2019 17:08:24 -0400
+Received: by mail-qk1-f194.google.com with SMTP id c70so7211926qkg.7
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 14:08:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=digitalocean.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JT7dDjnTKBL9VZjxy4yAmtt7AKDxUXO0Wr5vb0mPuy8=;
+        b=AHSFVG4T/EVCI+NTTlS/LFS1YdiMiSE69oFVhV4W20TnqP0nvTADRgdq57kiHdUd17
+         GavVgP9o1ktb0SnZ/kSUFjfcVJzD9joMcQeduPHtmjIR/slEwFOjzDtXz6Q5YG8znHue
+         qHQVr1yR0DjZoH1neQJ9vZLbyRHzzDDuQhBA8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JT7dDjnTKBL9VZjxy4yAmtt7AKDxUXO0Wr5vb0mPuy8=;
+        b=VW7SyPov6jTPkUpMSwgqWImctHTbS/TamVlM1N5q0/T7Yu/9b6VkKTRsD5SCqhBXFh
+         iF/FAKSrcQ1Nf6CNuipMR1J0ADK2WXWxVzATvPKEjLdN4GIx4hl2odRm/J0kxEOwAHiV
+         b7+78GnslteB8mOSLmeu2vBLTMVl+NTA6NwBMBk4or38kx0iZ1pAlQb3hp1CuyqJRJ18
+         zEHD6fcTCTzhDnl/jwvkg/+IAzEDByjJhoRSuJH0vMueSiDiVtblq3AVT+sjA3LsAoTk
+         J6EMVKs0Aqj8BfGfPc3/lesdFhu2PRIaQ/JQbXnepZeKjWX6QUQE2cRfC9yL1KmDR6Uk
+         ecvw==
+X-Gm-Message-State: APjAAAVuP1kkXIqtfsFJkryZPolKVs2QOY2yyFxPx81I8l21/jlsupP7
+        zDnfet0eq8FKpGr3PiL3SGRSEw==
+X-Google-Smtp-Source: APXvYqxrzdWw9pJNwyeOhVUNM92Ccg98D69X77yj0hNxXfUQh0J+i90hIL+nrb300PP+ItCPdFIZ6g==
+X-Received: by 2002:ae9:c017:: with SMTP id u23mr10544052qkk.245.1559336903531;
+        Fri, 31 May 2019 14:08:23 -0700 (PDT)
+Received: from sinkpad (192-222-189-155.qc.cable.ebox.net. [192.222.189.155])
+        by smtp.gmail.com with ESMTPSA id j37sm4256293qtb.76.2019.05.31.14.08.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 31 May 2019 14:08:22 -0700 (PDT)
+Date:   Fri, 31 May 2019 17:08:16 -0400
+From:   Julien Desfossez <jdesfossez@digitalocean.com>
+To:     Aaron Lu <aaron.lu@linux.alibaba.com>
+Cc:     Aubrey Li <aubrey.intel@gmail.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
+Message-ID: <20190531210816.GA24027@sinkpad>
+References: <cover.1559129225.git.vpillai@digitalocean.com>
+ <CAERHkruDE-7R5K=2yRqCJRCpV87HkHzDYbQA2WQkruVYpG7t7Q@mail.gmail.com>
+ <e8872bd9-1c6b-fb12-b535-3d37740a0306@linux.alibaba.com>
 MIME-Version: 1.0
-In-Reply-To: <8b4cfc12-284d-6daf-c82d-4c8e487cc203@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e8872bd9-1c6b-fb12-b535-3d37740a0306@linux.alibaba.com>
+X-Mailer: Mutt 1.5.24 (2015-08-30)
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+> My first reaction is: when shell wakes up from sleep, it will
+> fork date. If the script is untagged and those workloads are
+> tagged and all available cores are already running workload
+> threads, the forked date can lose to the running workload
+> threads due to __prio_less() can't properly do vruntime comparison
+> for tasks on different CPUs. So those idle siblings can't run
+> date and are idled instead. See my previous post on this:
+> 
+> https://lore.kernel.org/lkml/20190429033620.GA128241@aaronlu/
+> (Now that I re-read my post, I see that I didn't make it clear
+> that se_bash and se_hog are assigned different tags(e.g. hog is
+> tagged and bash is untagged).
+> 
+> Siblings being forced idle is expected due to the nature of core
+> scheduling, but when two tasks belonging to two siblings are
+> fighting for schedule, we should let the higher priority one win.
+> 
+> It used to work on v2 is probably due to we mistakenly
+> allow different tagged tasks to schedule on the same core at
+> the same time, but that is fixed in v3.
 
-On 5/31/19 2:44 PM, Jacek Anaszewski wrote:
-> On 5/31/19 8:23 AM, Lee Jones wrote:
->> On Thu, 30 May 2019, Jacek Anaszewski wrote:
->>
->>> On 5/30/19 9:38 AM, Lee Jones wrote:
->>>> On Wed, 29 May 2019, Jacek Anaszewski wrote:
->>>>
->>>>> On 5/29/19 3:58 PM, Lee Jones wrote:
->>>>>> On Fri, 24 May 2019, Jacek Anaszewski wrote:
->>>>>>
->>>>>>> Hi,
->>>>>>>
->>>>>>> On 5/23/19 9:09 PM, Dan Murphy wrote:
->>>>>>>> Pavel
->>>>>>>>
->>>>>>>> Thanks for the review
->>>>>>>>
->>>>>>>> On 5/23/19 7:50 AM, Pavel Machek wrote:
->>>>>>>>> Hi!
->>>>>>>>>
->>>>>>>>>> +++ b/drivers/leds/leds-lm36274.c
->>>>>>>>>
->>>>>>>>>> +static int lm36274_parse_dt(struct lm36274 *lm36274_data)
->>>>>>>>>> +{
->>>>>>>>>> +    struct fwnode_handle *child = NULL;
->>>>>>>>>> +    char label[LED_MAX_NAME_SIZE];
->>>>>>>>>> +    struct device *dev = &lm36274_data->pdev->dev;
->>>>>>>>>> +    const char *name;
->>>>>>>>>> +    int child_cnt;
->>>>>>>>>> +    int ret = -EINVAL;
->>>>>>>>>> +
->>>>>>>>>> +    /* There should only be 1 node */
->>>>>>>>>> +    child_cnt = device_get_child_node_count(dev);
->>>>>>>>>> +    if (child_cnt != 1)
->>>>>>>>>> +        return ret;
->>>>>>>>>
->>>>>>>>> I'd do explicit "return -EINVAL" here.
->>>>>>>>>
->>>>>>>>
->>>>>>>> ACK
->>>>>>>>
->>>>>>>>>> +static int lm36274_probe(struct platform_device *pdev)
->>>>>>>>>> +{
->>>>>>>>>> +    struct ti_lmu *lmu = dev_get_drvdata(pdev->dev.parent);
->>>>>>>>>> +    struct lm36274 *lm36274_data;
->>>>>>>>>> +    int ret;
->>>>>>>>>> +
->>>>>>>>>> +    lm36274_data = devm_kzalloc(&pdev->dev, 
->>>>>>>>>> sizeof(*lm36274_data),
->>>>>>>>>> +                    GFP_KERNEL);
->>>>>>>>>> +    if (!lm36274_data) {
->>>>>>>>>> +        ret = -ENOMEM;
->>>>>>>>>> +        return ret;
->>>>>>>>>> +    }
->>>>>>>>>
->>>>>>>>> And certainly do "return -ENOMEM" explicitly here.
->>>>>>>>>
->>>>>>>>
->>>>>>>> ACK
->>>>>>>>
->>>>>>>>> Acked-by: Pavel Machek <pavel@ucw.cz>
->>>>>>>
->>>>>>> I've done all amendments requested by Pavel and updated branch
->>>>>>> ib-leds-mfd-regulator on linux-leds.git, but in the same time
->>>>>>
->>>>>> What do you mean by updated?  You cannot update an 'ib' (immutable
->>>>>> branch).  Immutable means that it cannot change, by definition.
->>>>>
->>>>> We have already talked about that. Nobody has pulled so the branch
->>>>> could have been safely updated.
->>>>
->>>> You have no sure way to know that.  And since I have no way to know,
->>>> or faith that you won't update it again, pulling it now/at all would
->>>> seem like a foolish thing to do.
->>>
->>> Sorry, but you are simply unjust. You're pretending to portray the
->>> situation as if I have been notoriously causing merge conflicts in
->>> linux-next which did not take place.
->>>
->>> Just to recap what this discussion is about:
->>>
->>> On 7 Apr 2019:
->>>
->>> 1. I sent pull request [0].
->>> 2. 45 minutes later I updated it after discovering one omission [1].
->>>     It was rather small chance for it to be pulled as quickly as that.
->>>     And even if it happened it wouldn't have been much harmful - we
->>>     wouldn't have lost e.g. weeks of testing in linux-next due to that
->>>     fact.
->>>
->>> On 21 May 2019:
->>>
->>> 3. I sent another pull request [2] to you and REGULATOR maintainers.
->>>     After it turned out that lack of feedback from REGULATOR 
->>> maintainers
->>>     was caused by failing to send them the exact copies of patches to
->>>     review, I informed you about possible need for updating the branch.
->>>     Afterwards I received a reply from you saying that you hadn't 
->>> pulled
->>>     the branch anyway. At that point I was sure that neither MFD nor
->>>     REGULATOR tree contains the patches. And only after that I updated
->>>     the branch.
->>
->> Here are 2 examples where you have changed immutable branches, which
->> is 100% of the Pull Requests I have received from you.  Using that
->> record as a benchmark, the situation hardly seems unjust.
->>
->>>> Until you can provide me with an assurance that you will not keep
->>>> updating/changing the supposedly immutable pull-requests you send out,
->>>> I won't be pulling any more in.
->>>
->>> I can just uphold the assurance which is implicitly assumed for anyone
->>> who has never broken acclaimed rules. As justified above.
->>
->> You have broken the rules every (100% of the) time.
->
-> Yes, I admit, I would lose in court.
->
->>> [0] https://lore.kernel.org/patchwork/patch/1059075/
->>> [1] https://lore.kernel.org/patchwork/patch/1059080/
->>> [2] https://lore.kernel.org/patchwork/patch/1077066/
->>
->> So we have 2 choices moving forward; you can either provide me with
->> assurance that you have learned from this experience and will never
->> change an *immutable* branch again, or I can continue to handle them,
->> which has been the preference for some years.
->>
->> If you choose the former and adaptions need to be made in the future,
->> the correct thing to do is create a *new*, different pull-request
->> which has its own *new*, different tag, but uses the original tag as a
->> base.
->
-> I choose the former. That being said:
->
-> Hereby I solemnly declare never ever change an immutable branch again.
->
-So how do I proceed with the requested change by Mark B on the LM36274 
-driver.
+I confirm this is indeed what is happening, we reproduced it with a
+simple script that only uses one core (cpu 2 and 38 are sibling on this
+machine):
 
-Do I add a patch on top?
+setup:
+cgcreate -g cpu,cpuset:test
+cgcreate -g cpu,cpuset:test/set1
+cgcreate -g cpu,cpuset:test/set2
+echo 2,38 > /sys/fs/cgroup/cpuset/test/cpuset.cpus
+echo 0 > /sys/fs/cgroup/cpuset/test/cpuset.mems
+echo 2,38 > /sys/fs/cgroup/cpuset/test/set1/cpuset.cpus
+echo 2,38 > /sys/fs/cgroup/cpuset/test/set2/cpuset.cpus
+echo 0 > /sys/fs/cgroup/cpuset/test/set1/cpuset.mems
+echo 0 > /sys/fs/cgroup/cpuset/test/set2/cpuset.mems
+echo 1 > /sys/fs/cgroup/cpu,cpuacct/test/set1/cpu.tag
 
-Or do I submit a patch to the regulator tree once the PR is pulled?
+In one terminal:
+sudo cgexec -g cpu,cpuset:test/set1 sysbench --threads=1 --time=30
+--test=cpu run
 
-Dan
+In another one:
+sudo cgexec -g cpu,cpuset:test/set2 date
 
+It's very clear that 'date' hangs until sysbench is done.
+
+We started experimenting with marking a task on the forced idle sibling
+if normalized vruntimes are equal. That way, at the next compare, if the
+normalized vruntimes are still equal, it prefers the task on the forced
+idle sibling. It still needs more work, but in our early tests it helps.
+
+Thanks,
+
+Julien
