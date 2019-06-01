@@ -6,34 +6,36 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21706C28CC0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 03:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC7D6C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 04:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB17727114
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 03:49:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE5AB27114
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 04:04:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbfFADtI (ORCPT
+        id S1726013AbfFAEEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 23:49:08 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:51254 "EHLO huawei.com"
+        Sat, 1 Jun 2019 00:04:06 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:17643 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726428AbfFADtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 23:49:07 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id D27372D7FDA04B78A18B;
-        Sat,  1 Jun 2019 11:49:00 +0800 (CST)
+        id S1725800AbfFAEEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 00:04:06 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 8CF64136B7EF2269589D;
+        Sat,  1 Jun 2019 12:04:03 +0800 (CST)
 Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Sat, 1 Jun 2019 11:48:52 +0800
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.439.0; Sat, 1 Jun 2019 12:03:57 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        <u.kleine-koenig@pengutronix.de>,
-        <andriy.shevchenko@linux.intel.com>, <thesven73@gmail.com>
-CC:     YueHaibing <yuehaibing@huawei.com>, <linux-pwm@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] pwm: pca9685: Remove set but not used variable 'pwm'
-Date:   Sat, 1 Jun 2019 03:57:09 +0000
-Message-ID: <20190601035709.85379-1-yuehaibing@huawei.com>
+To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        "Kate Stewart" <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Allison Randal" <allison@lohutok.net>
+CC:     YueHaibing <yuehaibing@huawei.com>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+Subject: [PATCH -next] ALSA: lx6464es - Remove set but not used variables 'orun_mask, urun_mask'
+Date:   Sat, 1 Jun 2019 04:12:14 +0000
+Message-ID: <20190601041214.99366-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Type:   text/plain; charset=US-ASCII
@@ -47,33 +49,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fixes gcc '-Wunused-but-set-variable' warning:
 
-drivers/pwm/pwm-pca9685.c: In function 'pca9685_pwm_gpio_free':
-drivers/pwm/pwm-pca9685.c:173:21: warning:
- variable 'pwm' set but not used [-Wunused-but-set-variable]
+sound/pci/lx6464es/lx_core.c: In function 'lx_interrupt_handle_async_events':
+sound/pci/lx6464es/lx_core.c:990:6: warning:
+ variable 'urun_mask' set but not used [-Wunused-but-set-variable]
+sound/pci/lx6464es/lx_core.c:989:6: warning:
+ variable 'orun_mask' set but not used [-Wunused-but-set-variable]
 
-It's not used since commit e926b12c611c ("pwm: Clear chip_data in pwm_put()")
+They are never used, so can be removed.
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/pwm/pwm-pca9685.c | 2 --
- 1 file changed, 2 deletions(-)
+ sound/pci/lx6464es/lx_core.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
-index 567f5e2771c4..d16215c276bd 100644
---- a/drivers/pwm/pwm-pca9685.c
-+++ b/drivers/pwm/pwm-pca9685.c
-@@ -170,12 +170,10 @@ static void pca9685_pwm_gpio_set(struct gpio_chip *gpio, unsigned int offset,
- static void pca9685_pwm_gpio_free(struct gpio_chip *gpio, unsigned int offset)
- {
- 	struct pca9685 *pca = gpiochip_get_data(gpio);
--	struct pwm_device *pwm;
+diff --git a/sound/pci/lx6464es/lx_core.c b/sound/pci/lx6464es/lx_core.c
+index 9236a1a8c49b..dd3a873777eb 100644
+--- a/sound/pci/lx6464es/lx_core.c
++++ b/sound/pci/lx6464es/lx_core.c
+@@ -986,8 +986,6 @@ static int lx_interrupt_handle_async_events(struct lx6464es *chip, u32 irqsrc,
+ 	 * Stat[8]	LSB overrun
+ 	 * */
  
- 	pca9685_pwm_gpio_set(gpio, offset, 0);
- 	pm_runtime_put(pca->chip.dev);
- 	mutex_lock(&pca->lock);
--	pwm = &pca->chip.pwms[offset];
- 	mutex_unlock(&pca->lock);
- }
+-	u64 orun_mask;
+-	u64 urun_mask;
+ 	int eb_pending_out = (irqsrc & MASK_SYS_STATUS_EOBO) ? 1 : 0;
+ 	int eb_pending_in  = (irqsrc & MASK_SYS_STATUS_EOBI) ? 1 : 0;
+ 
+@@ -1010,9 +1008,6 @@ static int lx_interrupt_handle_async_events(struct lx6464es *chip, u32 irqsrc,
+ 			    *r_notified_out_pipe_mask);
+ 	}
+ 
+-	orun_mask = ((u64)stat[7] << 32) + stat[8];
+-	urun_mask = ((u64)stat[5] << 32) + stat[6];
+-
+ 	/* todo: handle xrun notification */
+ 
+ 	return err;
+
+
 
 
 
