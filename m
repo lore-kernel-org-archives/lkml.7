@@ -2,57 +2,55 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC123C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA68C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5A6027480
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86C9027452
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:31:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395858;
-	bh=FJIoqZ3bUBzyDyOiVEgVb95bb2oFjRDbg5iidlYew6A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KNWIWSxeVKIQyjyFPpYWBucUQWaaVCQAz4t/nLuBbT8ifpnOiO7S6t0U+sRHx1cDa
-	 R5loH6X/rq0hhz1q59RJDqlj7hNXhKCdm2Q/FowykQ1MkcWharjPvQ5d9H5vx8jPll
-	 gUlgVrDAdBB1XtnGlvoS3V0mLxxpKdYwGtKnZbPI=
+	s=default; t=1559395862;
+	bh=tNoRIS4k70wOedviwPoL8m/3q8ML2UORzJJdUGoDJiQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=tGuFaZuD7Qrnty5ue5Y7IPAByfN1RYuZxbbmp8q/yJuDJMUTKdesR4xuXJ2DOOHpm
+	 ReOJQfhArs88ilroEZxw5VAXX/UitdmB9QkvM+0UE1gSZu7tfyHdQqS1kGFZ8JSu7g
+	 IIH6zBmaxx9RcR82ESUmlNtlhiPVRpzqsybNmuLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729289AbfFAN0D (ORCPT
+        id S1729760AbfFANbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:26:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56210 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:31:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729552AbfFANZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:25:50 -0400
+        id S1729616AbfFAN0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:26:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 146D82739B;
-        Sat,  1 Jun 2019 13:25:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD3272739A;
+        Sat,  1 Jun 2019 13:26:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395549;
-        bh=FJIoqZ3bUBzyDyOiVEgVb95bb2oFjRDbg5iidlYew6A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XMahaD9f404fTDalv3bnEzgEAZvn4Wy5f70bNJB30R/iR33AMhFypSbh6dZEvhpEn
-         bzljlsW1Y9TAU8r3gn7MpP+ijRr7d7ftbsaFntfOK2sWp0NZ3G8Kc7/QLXx2bAoRkW
-         hkuQPf6uKeuIW7hO1zV8ls7620wC2T4N55b0f6ls=
+        s=default; t=1559395562;
+        bh=tNoRIS4k70wOedviwPoL8m/3q8ML2UORzJJdUGoDJiQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=iwj2AJeCdtyG8SWvAN6sBdbx+6onW99sr6wuasRQb3G2Dn6go1bbkmTlOg1WD4Wlx
+         pAI+5kdEUdKjpTxHSIRF95vXcm0rkfPA/JjARDAQ+6uOOeRUZu1NVAy1Xr3Cu9xCdl
+         ptF4eTkke6Y2tJDowy+QWeoeiK4RjHpRFEPvVMJI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Elazar Leibovich <elazar@lightbitslabs.com>,
-        Orit Wasserman <orit.was@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
+Cc:     Hou Tao <houtao1@huawei.com>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 25/74] tracing: Fix partial reading of trace event's id file
-Date:   Sat,  1 Jun 2019 09:24:12 -0400
-Message-Id: <20190601132501.27021-25-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 01/56] fs/fat/file.c: issue flush after the writeback of FAT
+Date:   Sat,  1 Jun 2019 09:25:05 -0400
+Message-Id: <20190601132600.27427-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190601132501.27021-1-sashal@kernel.org>
-References: <20190601132501.27021-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,78 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Elazar Leibovich <elazar@lightbitslabs.com>
+From: Hou Tao <houtao1@huawei.com>
 
-[ Upstream commit cbe08bcbbe787315c425dde284dcb715cfbf3f39 ]
+[ Upstream commit bd8309de0d60838eef6fb575b0c4c7e95841cf73 ]
 
-When reading only part of the id file, the ppos isn't tracked correctly.
-This is taken care by simple_read_from_buffer.
+fsync() needs to make sure the data & meta-data of file are persistent
+after the return of fsync(), even when a power-failure occurs later.  In
+the case of fat-fs, the FAT belongs to the meta-data of file, so we need
+to issue a flush after the writeback of FAT instead before.
 
-Reading a single byte, and then the next byte would result EOF.
+Also bail out early when any stage of fsync fails.
 
-While this seems like not a big deal, this breaks abstractions that
-reads information from files unbuffered. See for example
-https://github.com/golang/go/issues/29399
-
-This code was mentioned as problematic in
-commit cd458ba9d5a5
-("tracing: Do not (ab)use trace_seq in event_id_read()")
-
-An example C code that show this bug is:
-
-  #include <stdio.h>
-  #include <stdint.h>
-
-  #include <sys/types.h>
-  #include <sys/stat.h>
-  #include <fcntl.h>
-  #include <unistd.h>
-
-  int main(int argc, char **argv) {
-    if (argc < 2)
-      return 1;
-    int fd = open(argv[1], O_RDONLY);
-    char c;
-    read(fd, &c, 1);
-    printf("First  %c\n", c);
-    read(fd, &c, 1);
-    printf("Second %c\n", c);
-  }
-
-Then run with, e.g.
-
-  sudo ./a.out /sys/kernel/debug/tracing/events/tcp/tcp_set_state/id
-
-You'll notice you're getting the first character twice, instead of the
-first two characters in the id file.
-
-Link: http://lkml.kernel.org/r/20181231115837.4932-1-elazar@lightbitslabs.com
-
-Cc: Orit Wasserman <orit.was@gmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: stable@vger.kernel.org
-Fixes: 23725aeeab10b ("ftrace: provide an id file for each event")
-Signed-off-by: Elazar Leibovich <elazar@lightbitslabs.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Link: http://lkml.kernel.org/r/20190409030158.136316-1-houtao1@huawei.com
+Signed-off-by: Hou Tao <houtao1@huawei.com>
+Acked-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Jan Kara <jack@suse.cz>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace_events.c | 3 ---
- 1 file changed, 3 deletions(-)
+ fs/fat/file.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 9549ed120556e..af969f753e5e9 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -1310,9 +1310,6 @@ event_id_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t *ppos)
- 	char buf[32];
- 	int len;
+diff --git a/fs/fat/file.c b/fs/fat/file.c
+index a08f1039909a7..d3f655ae020b2 100644
+--- a/fs/fat/file.c
++++ b/fs/fat/file.c
+@@ -156,12 +156,17 @@ static int fat_file_release(struct inode *inode, struct file *filp)
+ int fat_file_fsync(struct file *filp, loff_t start, loff_t end, int datasync)
+ {
+ 	struct inode *inode = filp->f_mapping->host;
+-	int res, err;
++	int err;
++
++	err = __generic_file_fsync(filp, start, end, datasync);
++	if (err)
++		return err;
  
--	if (*ppos)
--		return 0;
--
- 	if (unlikely(!id))
- 		return -ENODEV;
+-	res = generic_file_fsync(filp, start, end, datasync);
+ 	err = sync_mapping_buffers(MSDOS_SB(inode->i_sb)->fat_inode->i_mapping);
++	if (err)
++		return err;
+ 
+-	return res ? res : err;
++	return blkdev_issue_flush(inode->i_sb->s_bdev, GFP_KERNEL, NULL);
+ }
+ 
  
 -- 
 2.20.1
