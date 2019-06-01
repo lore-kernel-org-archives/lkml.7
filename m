@@ -2,97 +2,359 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63346C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 16:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB615C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 16:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DB8A2774C
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 16:05:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD24F2769B
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 16:08:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="WxiKyCmW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbfFAQFR (ORCPT
+        id S1726721AbfFAQI1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 12:05:17 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:56741 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726246AbfFAQFQ (ORCPT
+        Sat, 1 Jun 2019 12:08:27 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35786 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726143AbfFAQI0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 12:05:16 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hX6VB-0005BR-FK; Sat, 01 Jun 2019 18:05:01 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hX6V9-0002xN-7I; Sat, 01 Jun 2019 18:04:59 +0200
-Date:   Sat, 1 Jun 2019 18:04:59 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-pwm@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -next] pwm: pca9685: Remove set but not used variable
- 'pwm'
-Message-ID: <20190601160459.baedo5pp5hsrltzs@pengutronix.de>
-References: <20190601035709.85379-1-yuehaibing@huawei.com>
- <CAGngYiXZM0QUdKE_zDK763J9iDuiKSbmFeTVA1PJ_4WvjntjQQ@mail.gmail.com>
+        Sat, 1 Jun 2019 12:08:26 -0400
+Received: by mail-pg1-f193.google.com with SMTP id s27so156735pgl.2
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Jun 2019 09:08:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pexNnjdwXBXMeIxyaoaSmCkUfu6bHwCGflifoKJOFh0=;
+        b=WxiKyCmWdRQmhIM5wm597zw50+YXZSfnILxjSM+htuaoO3TVbi42Ic3cQD2H1eFPms
+         zYeDKktowvvWhpXgNzNl9Vdbd6TuLR9OL1pUp7EyKOkDKG9iy3t6AIKW84swRBDDNq+/
+         TqjqfMAODdL/2QgUqXCy0m625xS/5DeAmg0lM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pexNnjdwXBXMeIxyaoaSmCkUfu6bHwCGflifoKJOFh0=;
+        b=LAJcbZKSw6xhX2fYryuZUVk2k5sTnqqxHzdjRRrPKOG72v5lmvTHE1QisDdFpT5iDa
+         9qIpIguFgLX33jL4+osCKdxXWCoylLPxRrwsVnf6ZDUY5Df9lfbb0gJbIpkCHR3qCIU6
+         4Cs3azDV63t4x8U743TfzparIvwUrhrYczM6UHrbiri6vHtregvyf29+c5W+aeZqV1uz
+         HIJnKkKSe44x7t26E4UAWLiOzXEMUhFx92/pwM6ogE5x4N5D/qt2uSZ6IhXjztOH+poL
+         VZ5iNnQoOBQ8s8a6CheH3cmY4cOZVwkorXVxaGENMaW0g1VuJOyUvknfmSdgTO49Qdkj
+         9Rhg==
+X-Gm-Message-State: APjAAAXxgGTqyM3oqKSVl43DgWZlYiEflkDn6+Rysuk4cNbRpNrrFsKD
+        478ls+afMiF0hP2udkVw59r+gQ==
+X-Google-Smtp-Source: APXvYqxZXZK4WGk89b4N6G6WMvGKLWjnBUS6OedyKpMkltuoQFWUABkWLtnkfNyZxNLQsgW0T8LOsA==
+X-Received: by 2002:a17:90a:342:: with SMTP id 2mr15845957pjf.128.1559405305086;
+        Sat, 01 Jun 2019 09:08:25 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id 2sm5013896pfo.41.2019.06.01.09.08.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 01 Jun 2019 09:08:24 -0700 (PDT)
+Date:   Sat, 1 Jun 2019 12:08:22 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     viro@zeniv.linux.org.uk, raven@themaw.net,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mszeredi@redhat.com
+Subject: Re: [PATCH 09/25] vfs: Allow mount information to be queried by
+ fsinfo() [ver #13]
+Message-ID: <20190601160822.GA77761@google.com>
+References: <155905626142.1662.18430571708534506785.stgit@warthog.procyon.org.uk>
+ <155905633578.1662.8087594848892366318.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGngYiXZM0QUdKE_zDK763J9iDuiKSbmFeTVA1PJ_4WvjntjQQ@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <155905633578.1662.8087594848892366318.stgit@warthog.procyon.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Sven,
+On Tue, May 28, 2019 at 04:12:15PM +0100, David Howells wrote:
+[snip]
+> +
+> +/*
+> + * Store a mount record into the fsinfo buffer.
+> + */
+> +static void store_mount_fsinfo(struct fsinfo_kparams *params,
+> +			       struct fsinfo_mount_child *child)
+> +{
+> +	unsigned int usage = params->usage;
+> +	unsigned int total = sizeof(*child);
+> +
+> +	if (params->usage >= INT_MAX)
+> +		return;
+> +	params->usage = usage + total;
+> +	if (params->buffer && params->usage <= params->buf_size)
+> +		memcpy(params->buffer + usage, child, total);
+> +}
+> +
+> +/*
+> + * Return information about the submounts relative to path.
+> + */
+> +int fsinfo_generic_mount_children(struct path *path, struct fsinfo_kparams *params)
+> +{
+> +	struct fsinfo_mount_child record;
+> +	struct mount *m, *child;
+> +
+> +	if (!path->mnt)
+> +		return -ENODATA;
+> +
+> +	rcu_read_lock();
+> +
+> +	m = real_mount(path->mnt);
+> +	list_for_each_entry_rcu(child, &m->mnt_mounts, mnt_child) {
+> +		if (child->mnt_parent != m)
+> +			continue;
+> +		record.mnt_id = child->mnt_id;
+> +		record.notify_counter = atomic_read(&child->mnt_notify_counter);
+> +		store_mount_fsinfo(params, &record);
+> +	}
+> +
+> +	record.mnt_id = m->mnt_id;
+> +	record.notify_counter = atomic_read(&m->mnt_notify_counter);
+> +	store_mount_fsinfo(params, &record);
+> +
+> +	rcu_read_unlock();
 
-On Sat, Jun 01, 2019 at 09:03:09AM -0400, Sven Van Asbroeck wrote:
-> Hi YueHaibing,
-> 
-> On Fri, May 31, 2019 at 11:49 PM YueHaibing <yuehaibing@huawei.com> wrote:
-> >
-> >         mutex_lock(&pca->lock);
-> > -       pwm = &pca->chip.pwms[offset];
-> >         mutex_unlock(&pca->lock);
-> 
-> Thanks for noticing this issue. However it should be fixed differently.
-> 
-> This was introduced by Uwe's clean-up patch:
-> commit e926b12c611c2095c79 ("pwm: Clear chip_data in pwm_put()")
-> 
-> But Uwe did not realize that in this case, the pwm chip_data is used as a
-> synchronization mechanism between pwm and gpio. Moving the chip_data
-> clear out of the mutex breaks this mechanism.
+Not super familiar with this code, but wanted to check with you:
 
+Here, if the rcu_read_lock is supposed to protect the RCU list, can
+rcu_read_lock() scope be reduced to just wrapping around the
+list_for_each_entry_rcu?
+
+  rcu_read_lock();
+  list_for_each_entry_rcu(..) {
+  	...
+  }
+  rcu_read_unlock();
+
+(and similarly to other similar parts of this patch).
+
+thanks,
+
+  - Joel
+
+> +	return params->usage;
+> +}
+> +
+> +/*
+> + * Return the path of the Nth submount relative to path.  This is derived from
+> + * d_path(), but the root determination is more complicated.
+> + */
+> +int fsinfo_generic_mount_submount(struct path *path, struct fsinfo_kparams *params)
+> +{
+> +	struct mountpoint *mp;
+> +	struct mount *m, *child;
+> +	struct path mountpoint, root;
+> +	unsigned int n = params->Nth;
+> +	size_t len;
+> +	void *p;
+> +
+> +	if (!path->mnt)
+> +		return -ENODATA;
+> +
+> +	rcu_read_lock();
+> +
+> +	m = real_mount(path->mnt);
+> +	list_for_each_entry_rcu(child, &m->mnt_mounts, mnt_child) {
+> +		mp = READ_ONCE(child->mnt_mp);
+> +		if (child->mnt_parent != m || !mp)
+> +			continue;
+> +		if (n-- == 0)
+> +			goto found;
+> +	}
+> +	rcu_read_unlock();
+> +	return -ENODATA;
+> +
+> +found:
+> +	mountpoint.mnt = path->mnt;
+> +	mountpoint.dentry = READ_ONCE(mp->m_dentry);
+> +
+> +	get_fs_root_rcu(current->fs, &root);
+> +	if (root.mnt != path->mnt) {
+> +		root.mnt = path->mnt;
+> +		root.dentry = path->mnt->mnt_root;
+> +	}
+> +
+> +	p = __d_path(&mountpoint, &root, params->buffer, params->buf_size);
+> +	rcu_read_unlock();
+> +
+> +	if (IS_ERR(p))
+> +		return PTR_ERR(p);
+> +	if (!p)
+> +		return -EPERM;
+> +
+> +	len = (params->buffer + params->buf_size) - p;
+> +	memmove(params->buffer, p, len);
+> +	return len;
+> +}
+> +#endif /* CONFIG_FSINFO */
+> diff --git a/include/uapi/linux/fsinfo.h b/include/uapi/linux/fsinfo.h
+> index dae2e8dd757e..7f7a75e9758a 100644
+> --- a/include/uapi/linux/fsinfo.h
+> +++ b/include/uapi/linux/fsinfo.h
+> @@ -32,6 +32,10 @@ enum fsinfo_attribute {
+>  	FSINFO_ATTR_PARAM_ENUM		= 14,	/* Nth enum-to-val */
+>  	FSINFO_ATTR_PARAMETERS		= 15,	/* Mount parameters (large string) */
+>  	FSINFO_ATTR_LSM_PARAMETERS	= 16,	/* LSM Mount parameters (large string) */
+> +	FSINFO_ATTR_MOUNT_INFO		= 17,	/* Mount object information */
+> +	FSINFO_ATTR_MOUNT_DEVNAME	= 18,	/* Mount object device name (string) */
+> +	FSINFO_ATTR_MOUNT_CHILDREN	= 19,	/* Submount list (array) */
+> +	FSINFO_ATTR_MOUNT_SUBMOUNT	= 20,	/* Relative path of Nth submount (string) */
+>  	FSINFO_ATTR__NR
+>  };
+>  
+> @@ -268,4 +272,28 @@ struct fsinfo_param_enum {
+>  	char		name[252];	/* Name of the enum value */
+>  };
+>  
+> +/*
+> + * Information struct for fsinfo(FSINFO_ATTR_MOUNT_INFO).
+> + */
+> +struct fsinfo_mount_info {
+> +	__u64		f_sb_id;	/* Superblock ID */
+> +	__u32		mnt_id;		/* Mount identifier (use with AT_FSINFO_MOUNTID_PATH) */
+> +	__u32		parent_id;	/* Parent mount identifier */
+> +	__u32		group_id;	/* Mount group ID */
+> +	__u32		master_id;	/* Slave master group ID */
+> +	__u32		from_id;	/* Slave propogated from ID */
+> +	__u32		attr;		/* MOUNT_ATTR_* flags */
+> +	__u32		notify_counter;	/* Number of notifications generated. */
+> +	__u32		__reserved[1];
+> +};
+> +
+> +/*
+> + * Information struct element for fsinfo(FSINFO_ATTR_MOUNT_CHILDREN).
+> + * - An extra element is placed on the end representing the parent mount.
+> + */
+> +struct fsinfo_mount_child {
+> +	__u32		mnt_id;		/* Mount identifier (use with AT_FSINFO_MOUNTID_PATH) */
+> +	__u32		notify_counter;	/* Number of notifications generated on mount. */
+> +};
+> +
+>  #endif /* _UAPI_LINUX_FSINFO_H */
+> diff --git a/samples/vfs/test-fsinfo.c b/samples/vfs/test-fsinfo.c
+> index 90926024e1c5..a838adcdca9e 100644
+> --- a/samples/vfs/test-fsinfo.c
+> +++ b/samples/vfs/test-fsinfo.c
+> @@ -21,10 +21,10 @@
+>  #include <errno.h>
+>  #include <time.h>
+>  #include <math.h>
+> -#include <fcntl.h>
+>  #include <sys/syscall.h>
+>  #include <linux/fsinfo.h>
+>  #include <linux/socket.h>
+> +#include <linux/fcntl.h>
+>  #include <sys/stat.h>
+>  #include <arpa/inet.h>
+>  
+> @@ -83,6 +83,10 @@ static const struct fsinfo_attr_info fsinfo_buffer_info[FSINFO_ATTR__NR] = {
+>  	FSINFO_STRUCT_N		(PARAM_ENUM,		param_enum),
+>  	FSINFO_OVERLARGE	(PARAMETERS,		-),
+>  	FSINFO_OVERLARGE	(LSM_PARAMETERS,	-),
+> +	FSINFO_STRUCT		(MOUNT_INFO,		mount_info),
+> +	FSINFO_STRING		(MOUNT_DEVNAME,		mount_devname),
+> +	FSINFO_STRUCT_ARRAY	(MOUNT_CHILDREN,	mount_child),
+> +	FSINFO_STRING_N		(MOUNT_SUBMOUNT,	mount_submount),
+>  };
+>  
+>  #define FSINFO_NAME(X,Y) [FSINFO_ATTR_##X] = #Y
+> @@ -104,6 +108,10 @@ static const char *fsinfo_attr_names[FSINFO_ATTR__NR] = {
+>  	FSINFO_NAME		(PARAM_ENUM,		param_enum),
+>  	FSINFO_NAME		(PARAMETERS,		parameters),
+>  	FSINFO_NAME		(LSM_PARAMETERS,	lsm_parameters),
+> +	FSINFO_NAME		(MOUNT_INFO,		mount_info),
+> +	FSINFO_NAME		(MOUNT_DEVNAME,		mount_devname),
+> +	FSINFO_NAME		(MOUNT_CHILDREN,	mount_children),
+> +	FSINFO_NAME		(MOUNT_SUBMOUNT,	mount_submount),
+>  };
+>  
+>  union reply {
+> @@ -116,6 +124,8 @@ union reply {
+>  	struct fsinfo_capabilities caps;
+>  	struct fsinfo_timestamp_info timestamps;
+>  	struct fsinfo_volume_uuid uuid;
+> +	struct fsinfo_mount_info mount_info;
+> +	struct fsinfo_mount_child mount_children[1];
+>  };
+>  
+>  static void dump_hex(unsigned int *data, int from, int to)
+> @@ -312,6 +322,29 @@ static void dump_attr_VOLUME_UUID(union reply *r, int size)
+>  	       f->uuid[14], f->uuid[15]);
+>  }
+>  
+> +static void dump_attr_MOUNT_INFO(union reply *r, int size)
+> +{
+> +	struct fsinfo_mount_info *f = &r->mount_info;
+> +
+> +	printf("\n");
+> +	printf("\tsb_id   : %llx\n", (unsigned long long)f->f_sb_id);
+> +	printf("\tmnt_id  : %x\n", f->mnt_id);
+> +	printf("\tparent  : %x\n", f->parent_id);
+> +	printf("\tgroup   : %x\n", f->group_id);
+> +	printf("\tattr    : %x\n", f->attr);
+> +	printf("\tnotifs  : %x\n", f->notify_counter);
+> +}
+> +
+> +static void dump_attr_MOUNT_CHILDREN(union reply *r, int size)
+> +{
+> +	struct fsinfo_mount_child *f = r->mount_children;
+> +	int i = 0;
+> +
+> +	printf("\n");
+> +	for (; size >= sizeof(*f); size -= sizeof(*f), f++)
+> +		printf("\t[%u] %8x %8x\n", i++, f->mnt_id, f->notify_counter);
+> +}
+> +
+>  /*
+>   *
+>   */
+> @@ -327,6 +360,8 @@ static const dumper_t fsinfo_attr_dumper[FSINFO_ATTR__NR] = {
+>  	FSINFO_DUMPER(CAPABILITIES),
+>  	FSINFO_DUMPER(TIMESTAMP_INFO),
+>  	FSINFO_DUMPER(VOLUME_UUID),
+> +	FSINFO_DUMPER(MOUNT_INFO),
+> +	FSINFO_DUMPER(MOUNT_CHILDREN),
+>  };
+>  
+>  static void dump_fsinfo(enum fsinfo_attribute attr,
+> @@ -529,16 +564,21 @@ int main(int argc, char **argv)
+>  	unsigned int attr;
+>  	int raw = 0, opt, Nth, Mth;
+>  
+> -	while ((opt = getopt(argc, argv, "adlr"))) {
+> +	while ((opt = getopt(argc, argv, "Madlr"))) {
+>  		switch (opt) {
+> +		case 'M':
+> +			params.at_flags = AT_FSINFO_MOUNTID_PATH;
+> +			continue;
+>  		case 'a':
+>  			params.at_flags |= AT_NO_AUTOMOUNT;
+> +			params.at_flags &= ~AT_FSINFO_MOUNTID_PATH;
+>  			continue;
+>  		case 'd':
+>  			debug = true;
+>  			continue;
+>  		case 'l':
+>  			params.at_flags &= ~AT_SYMLINK_NOFOLLOW;
+> +			params.at_flags &= ~AT_FSINFO_MOUNTID_PATH;
+>  			continue;
+>  		case 'r':
+>  			raw = 1;
+> @@ -551,7 +591,8 @@ int main(int argc, char **argv)
+>  	argv += optind;
+>  
+>  	if (argc != 1) {
+> -		printf("Format: test-fsinfo [-alr] <file>\n");
+> +		printf("Format: test-fsinfo [-adlr] <file>\n");
+> +		printf("Format: test-fsinfo [-dr] -M <mnt_id>\n");
+>  		exit(2);
+>  	}
+>  
 > 
-> I think the following would restore the mechanism:
-> 
-> >         mutex_lock(&pca->lock);
-> >        pwm = &pca->chip.pwms[offset];
-> > +     pwm_set_chip_data(pwm, NULL);
-> >         mutex_unlock(&pca->lock);
-
-I didn't look into the driver to try to understand that, but the
-definitely needs a comment to explain for the next person to think they
-can do a cleanup here.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
