@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D787BC28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D00E6C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC34B26D3E
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:42:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A89D822CC0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:42:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396561;
-	bh=tsssE0v+kXPO86DlQQUBNR2vi0jKCRkgEd9A2mCpXD8=;
+	s=default; t=1559396568;
+	bh=KyJQPpQA3t/kHSchWa3aIy96jwgQX46ZurVe8ZfdpHk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cH+MYoxcZ/d99q40f+ldVW7GR2pDitXXexygwv9XF5rmfWfT88tzGWv7UgePs6xhK
-	 Uue9EEhPNENQa2ekmn+adzi1m9CtjQ+69xJXH08E2SXP4vyTNmZnH7PBLEn80EqWFX
-	 A4nc8nBH0f8VE6+JD+rc90Qr/87SRSzknkmKNRD8=
+	b=PwwGmgR6yZ4hxktNQlL3zorkdyhSV6fCK8KbBM2bTJe0iMP6gA84+40WahixbBJi1
+	 j2ze1jzh6oLdqBQmpz90XbaDH1/FZiSVyadJN4bGyvD16ZmltUsZOIhRKIs0XCufD+
+	 FbH8FpdRJ9GvcYp0TAyPZTijjfLQ5D92NeDb+QPQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728517AbfFANmk (ORCPT
+        id S1728514AbfFANmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:42:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45828 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:42:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727909AbfFANSo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:18:44 -0400
+        id S1727890AbfFANSm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:18:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3323825BFE;
-        Sat,  1 Jun 2019 13:18:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16EC1272AF;
+        Sat,  1 Jun 2019 13:18:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395123;
-        bh=tsssE0v+kXPO86DlQQUBNR2vi0jKCRkgEd9A2mCpXD8=;
+        s=default; t=1559395121;
+        bh=KyJQPpQA3t/kHSchWa3aIy96jwgQX46ZurVe8ZfdpHk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TPda+0omkU+yVe2G896kaJq2bg42Jcf2oN/IV14OVPiZGrK+8tsO94hycQEGA5j/H
-         XExnfofT3dy6cUIyT830e6/il4sg41gLBAiEK+S2I9iJrWFdsCH2b8YKeurxHmPCAu
-         /xBY86li6cfUhQF1JXLxpyNAYHi7dJ7UenbGXFa4=
+        b=eDEO0f7PZOkKx8B6/60Kevet3Hf/R+9D8ZlQAkfjWX6rJt9inhvTaBI+eaj9Pdv+S
+         WK8mc9AZTomPFyG9dhCXZjTPv0GnyIASUZP+z83me9h/BvfkfomoLEXG0UfsNhOpOm
+         hyapj6GhjguRlyHcTTcRxaKeNEQKJQGMKbx3ofDI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
         linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.1 047/186] f2fs: fix to do sanity check on free nid
-Date:   Sat,  1 Jun 2019 09:14:23 -0400
-Message-Id: <20190601131653.24205-47-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 045/186] f2fs: fix error path of recovery
+Date:   Sat,  1 Jun 2019 09:14:21 -0400
+Message-Id: <20190601131653.24205-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131653.24205-1-sashal@kernel.org>
 References: <20190601131653.24205-1-sashal@kernel.org>
@@ -61,75 +61,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 626bcf2b7ce87211dba565f2bfa7842ba5be5c1b ]
+[ Upstream commit 988385795c7f46b231982d54750587f204bd558b ]
 
-As Jungyeon reported in bugzilla:
-
-https://bugzilla.kernel.org/show_bug.cgi?id=203225
-
-- Overview
-When mounting the attached crafted image and unmounting it, following errors are reported.
-Additionally, it hangs on sync after unmounting.
-
-The image is intentionally fuzzed from a normal f2fs image for testing.
-Compile options for F2FS are as follows.
-CONFIG_F2FS_FS=y
-CONFIG_F2FS_STAT_FS=y
-CONFIG_F2FS_FS_XATTR=y
-CONFIG_F2FS_FS_POSIX_ACL=y
-CONFIG_F2FS_CHECK_FS=y
-
-- Reproduces
-mkdir test
-mount -t f2fs tmp.img test
-touch test/t
-umount test
-sync
-
-- Messages
- kernel BUG at fs/f2fs/node.c:3073!
- RIP: 0010:f2fs_destroy_node_manager+0x2f0/0x300
- Call Trace:
-  f2fs_put_super+0xf4/0x270
-  generic_shutdown_super+0x62/0x110
-  kill_block_super+0x1c/0x50
-  kill_f2fs_super+0xad/0xd0
-  deactivate_locked_super+0x35/0x60
-  cleanup_mnt+0x36/0x70
-  task_work_run+0x75/0x90
-  exit_to_usermode_loop+0x93/0xa0
-  do_syscall_64+0xba/0xf0
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
- RIP: 0010:f2fs_destroy_node_manager+0x2f0/0x300
-
-NAT table is corrupted, so reserved meta/node inode ids were added into
-free list incorrectly, during file creation, since reserved id has cached
-in inode hash, so it fails the creation and preallocated nid can not be
-released later, result in kernel panic.
-
-To fix this issue, let's do nid boundary check during free nid loading.
+There are some places in where we missed to unlock page or unlock page
+incorrectly, fix them.
 
 Signed-off-by: Chao Yu <yuchao0@huawei.com>
 Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/node.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/f2fs/recovery.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-index d45ecef751165..63bb6134d39ae 100644
---- a/fs/f2fs/node.c
-+++ b/fs/f2fs/node.c
-@@ -2082,6 +2082,9 @@ static bool add_free_nid(struct f2fs_sb_info *sbi,
- 	if (unlikely(nid == 0))
- 		return false;
+diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
+index 73338c432e7e4..b14c718139a96 100644
+--- a/fs/f2fs/recovery.c
++++ b/fs/f2fs/recovery.c
+@@ -325,8 +325,10 @@ static int find_fsync_dnodes(struct f2fs_sb_info *sbi, struct list_head *head,
+ 			break;
+ 		}
  
-+	if (unlikely(f2fs_check_nid_range(sbi, nid)))
-+		return false;
-+
- 	i = f2fs_kmem_cache_alloc(free_nid_slab, GFP_NOFS);
- 	i->nid = nid;
- 	i->state = FREE_NID;
+-		if (!is_recoverable_dnode(page))
++		if (!is_recoverable_dnode(page)) {
++			f2fs_put_page(page, 1);
+ 			break;
++		}
+ 
+ 		if (!is_fsync_dnode(page))
+ 			goto next;
+@@ -338,8 +340,10 @@ static int find_fsync_dnodes(struct f2fs_sb_info *sbi, struct list_head *head,
+ 			if (!check_only &&
+ 					IS_INODE(page) && is_dent_dnode(page)) {
+ 				err = f2fs_recover_inode_page(sbi, page);
+-				if (err)
++				if (err) {
++					f2fs_put_page(page, 1);
+ 					break;
++				}
+ 				quota_inode = true;
+ 			}
+ 
+@@ -355,6 +359,7 @@ static int find_fsync_dnodes(struct f2fs_sb_info *sbi, struct list_head *head,
+ 					err = 0;
+ 					goto next;
+ 				}
++				f2fs_put_page(page, 1);
+ 				break;
+ 			}
+ 		}
+@@ -370,6 +375,7 @@ static int find_fsync_dnodes(struct f2fs_sb_info *sbi, struct list_head *head,
+ 				"%s: detect looped node chain, "
+ 				"blkaddr:%u, next:%u",
+ 				__func__, blkaddr, next_blkaddr_of_node(page));
++			f2fs_put_page(page, 1);
+ 			err = -EINVAL;
+ 			break;
+ 		}
+@@ -380,7 +386,6 @@ static int find_fsync_dnodes(struct f2fs_sb_info *sbi, struct list_head *head,
+ 
+ 		f2fs_ra_meta_pages_cond(sbi, blkaddr);
+ 	}
+-	f2fs_put_page(page, 1);
+ 	return err;
+ }
+ 
+@@ -674,8 +679,10 @@ static int recover_data(struct f2fs_sb_info *sbi, struct list_head *inode_list,
+ 		 */
+ 		if (IS_INODE(page)) {
+ 			err = recover_inode(entry->inode, page);
+-			if (err)
++			if (err) {
++				f2fs_put_page(page, 1);
+ 				break;
++			}
+ 		}
+ 		if (entry->last_dentry == blkaddr) {
+ 			err = recover_dentry(entry->inode, page, dir_list);
 -- 
 2.20.1
 
