@@ -2,110 +2,93 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D595DC28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 17:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2717C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 17:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A907E275C4
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 17:12:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A38F8238CE
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 17:15:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gp2miNk+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbfFARMI (ORCPT
+        id S1726718AbfFARPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 13:12:08 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49916 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726013AbfFARMI (ORCPT
+        Sat, 1 Jun 2019 13:15:09 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:39953 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726547AbfFARPJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 13:12:08 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x51H7WU5088742
-        for <linux-kernel@vger.kernel.org>; Sat, 1 Jun 2019 13:12:07 -0400
-Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sunh5u9br-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Jun 2019 13:12:06 -0400
-Received: from localhost
-        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
-        Sat, 1 Jun 2019 18:12:05 +0100
-Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
-        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 1 Jun 2019 18:12:01 +0100
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x51HC0TI31130018
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 1 Jun 2019 17:12:00 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1A936112062;
-        Sat,  1 Jun 2019 17:12:00 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 713DD112061;
-        Sat,  1 Jun 2019 17:11:57 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.80.209.235])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Sat,  1 Jun 2019 17:11:57 +0000 (GMT)
-References: <20190521044912.1375-1-bauerman@linux.ibm.com>
-User-agent: mu4e 1.0; emacs 26.2
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Anshuman Khandual <anshuman.linux@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>
-Subject: Re: [PATCH 00/12] Secure Virtual Machine Enablement
-In-reply-to: <20190521044912.1375-1-bauerman@linux.ibm.com>
-Date:   Sat, 01 Jun 2019 14:11:53 -0300
+        Sat, 1 Jun 2019 13:15:09 -0400
+Received: by mail-pf1-f193.google.com with SMTP id u17so8108823pfn.7;
+        Sat, 01 Jun 2019 10:15:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=MaeGnnu+LwIT7dIVF39aAxoy1OwHrQNYuo7RxgaVTjQ=;
+        b=gp2miNk+sV9zve1Qb/a9ZeG/1gcf4PLmuQGszm6cOYE7H1B6IdNlLyUTLiQLHNfi9o
+         56DX9+eRzseOc7m6ZgXwL2skvNZ7DMnzIqeOt+Mo1D9gd3eE1pTZsSd2VMAcgmpw+DDh
+         NvfJyQ1b8xzliUGVy0/Fb5p2pn1GKfx3/6prbWqHBmHBCPqxTg84NnLbZwY+HFm+Y23A
+         kprnJt4BjrjtYrBgiqVvyVW5zxKltHnE/N7D9sO92/C/dmOt1SuwCPM46l0Ml0GFsdWw
+         3KSRVdNHSIley7Ce3Fn6GJKCLh6BwPZjg9xbQLXbGOlfRfX7VxJWdYmHqfeaZ2VYN+Ou
+         nFsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MaeGnnu+LwIT7dIVF39aAxoy1OwHrQNYuo7RxgaVTjQ=;
+        b=ODKXnEY5EZ5Ff7eleA7+wyUUWi4HdlkNBR3gRnW3q7LujpjobamzoVSuBS7QoxTvsB
+         eBmEA52PI1jUhneOPwcbSMg6I3SEp9norAlECJH2RbooivVZxVSo3NjRQ9VTpjJD37Si
+         UC2JpC5agdk1HL8zyzeu9XXG1PHCeCpE3RPZ6EDI1uRu0z5c0xAYELjSypwQq8SN39E0
+         1yAC20MQcPL+EbIwetbuqAEfXDf3bwZPw7hgqAbf+RNZTBzCyfka74r9DmkGh//MUtQN
+         CAII1bzAB2D051H2L/2JKkw9SarPtbRp2SPxN3pl1ktQg9+7VnN+4Zaknogz1G/A2/Ja
+         Ithw==
+X-Gm-Message-State: APjAAAWQiqPsKvrLHURPzV4HqDPzaHS+ayiU+iYxqZ1HSYRQJCdRcpri
+        cy2C9yh47+uFK6xjOs/y908=
+X-Google-Smtp-Source: APXvYqz7XXeNdzCz/ZCHL7/zjTH9yoyX7XjU53lgzzYBDwyefm3nWjGT0hfgqI8+Rz6pQRUcjsgFJg==
+X-Received: by 2002:aa7:80d9:: with SMTP id a25mr18637915pfn.50.1559409308633;
+        Sat, 01 Jun 2019 10:15:08 -0700 (PDT)
+Received: from [172.27.227.228] ([216.129.126.118])
+        by smtp.googlemail.com with ESMTPSA id d19sm8361120pjs.22.2019.06.01.10.15.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 01 Jun 2019 10:15:07 -0700 (PDT)
+Subject: Re: KASAN: user-memory-access Read in ip6_hold_safe (3)
+To:     syzbot <syzbot+a5b6e01ec8116d046842@syzkaller.appspotmail.com>,
+        davem@davemloft.net, kuznet@ms2.inr.ac.ru,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
+References: <000000000000a7776f058a3ce9db@google.com>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <178c7ee0-46b7-8334-ef98-e530eb60a2cf@gmail.com>
+Date:   Sat, 1 Jun 2019 11:15:05 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
+ Gecko/20100101 Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-x-cbid: 19060117-0052-0000-0000-000003CA0417
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011197; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01211780; UDB=6.00636760; IPR=6.00992823;
- MB=3.00027145; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-01 17:12:04
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060117-0053-0000-0000-0000612056EE
-Message-Id: <87imtpgrhi.fsf@morokweng.localdomain>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-01_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=956 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906010124
+In-Reply-To: <000000000000a7776f058a3ce9db@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 6/1/19 12:05 AM, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    dfb569f2 net: ll_temac: Fix compile error
+> git tree:       net-next
+syzbot team:
 
-Hello,
+Is there any way to know the history of syzbot runs to determine that
+crash X did not happen at commit Y but does happen at commit Z? That
+narrows the window when trying to find where a regression occurs.
 
-Thiago Jung Bauermann <bauerman@linux.ibm.com> writes:
-
-> This series enables Secure Virtual Machines (SVMs) on powerpc. SVMs use the
-> Protected Execution Facility (PEF) and request to be migrated to secure
-> memory during prom_init() so by default all of their memory is inaccessible
-> to the hypervisor. There is an Ultravisor call that the VM can use to
-> request certain pages to be made accessible to (or shared with) the
-> hypervisor.
->
-> The objective of these patches is to have the guest perform this request
-> for buffers that need to be accessed by the hypervisor such as the LPPACAs,
-> the SWIOTLB memory and the Debug Trace Log.
-
-Ping? Any more comments on these patches? Or even acks? :-)
-
--- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
-
+Thanks,
