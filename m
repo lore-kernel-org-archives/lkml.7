@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9600C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 856C6C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:33:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AED4527500
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:33:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5535927505
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:33:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396028;
-	bh=FSI2aQNv3ltYE6uawZI59HSVPdmf3g/QpBr65EX3ngs=;
+	s=default; t=1559396031;
+	bh=Hshb00E3YY/ALIe4BTZ8oT6UxHJVL0f6jBjud6JkyMY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cjani7IV25+REjCKPCJPixRMjPmKZfwpiERzUMAH8ApT/iXJ6+CEbyfdpuK60WhE4
-	 hBdSGNYSUakI60frY3c2iAARatrvnwlS1tKD3w/21cPmPab0yHFr6O3QrFP+ztyCwd
-	 ygZkd1/6SG8ztIw2XvmM5T6G1Yfpau52i5k6Rf0U=
+	b=BNmkZDAKWH/F2ok1+fGA93mPMDQMYgrB5VEyS5j5IvrJYMZMWDkhjR2rrNHvHvQ5w
+	 5hqEc94cNRPy/EwFRoyE3iZydVjaWUoiE2R2pei2wqA7rWjmOdDBL/Uo3NOutiV5SC
+	 sHMaKc4+6k7wn2tF4YoLzQdek20MNR4akGabsfYI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729615AbfFANdr (ORCPT
+        id S1729395AbfFANdp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:33:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54436 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:33:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729184AbfFANYX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:24:23 -0400
+        id S1728651AbfFANY0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:24:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB403264C3;
-        Sat,  1 Jun 2019 13:24:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A074264C3;
+        Sat,  1 Jun 2019 13:24:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395462;
-        bh=FSI2aQNv3ltYE6uawZI59HSVPdmf3g/QpBr65EX3ngs=;
+        s=default; t=1559395466;
+        bh=Hshb00E3YY/ALIe4BTZ8oT6UxHJVL0f6jBjud6JkyMY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zK+Vl7F7+GGDHfxsC+DKIBOo1T1sczwk5lGGBN/2XAGTAF3hrWz6yWJxy26iXcjKp
-         FVg+wQaxBZFJo91aFslSiN7sLMY2izFRWeaSeabDM2CaVOr6JIYPuP49pOV4ydyC3L
-         8UakgtXHfC4G40e87+yukln3Byp4OATcKsPqeoSw=
+        b=bkV3nr5LinVpG768tK3MAMC9UuHjNinEBMESJ+lvBJWPnTw0EvO0ZcRHotu4K5V2Y
+         +20rVVd5h8XW4SDF9Tow7dRd4wPHB0mHIyiRBpuHNGrYmio/B4+74denU0DVUD8jOk
+         33mLTzEeBhlFPi0XnT/R7VIy9uuTbdAC49C4CbBA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Cyrill Gorcunov <gorcunov@gmail.com>,
-        Andrey Vagin <avagin@gmail.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+Cc:     Daniel Gomez <dagmcr@gmail.com>,
+        Javier Martinez Canillas <javier@dowhile0.org>,
+        Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 13/99] kernel/sys.c: prctl: fix false positive in validate_prctl_map()
-Date:   Sat,  1 Jun 2019 09:22:20 -0400
-Message-Id: <20190601132346.26558-13-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 16/99] mfd: tps65912-spi: Add missing of table registration
+Date:   Sat,  1 Jun 2019 09:22:23 -0400
+Message-Id: <20190601132346.26558-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132346.26558-1-sashal@kernel.org>
 References: <20190601132346.26558-1-sashal@kernel.org>
@@ -63,54 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cyrill Gorcunov <gorcunov@gmail.com>
+From: Daniel Gomez <dagmcr@gmail.com>
 
-[ Upstream commit a9e73998f9d705c94a8dca9687633adc0f24a19a ]
+[ Upstream commit 9e364e87ad7f2c636276c773d718cda29d62b741 ]
 
-While validating new map we require the @start_data to be strictly less
-than @end_data, which is fine for regular applications (this is why this
-nit didn't trigger for that long).  These members are set from executable
-loaders such as elf handers, still it is pretty valid to have a loadable
-data section with zero size in file, in such case the start_data is equal
-to end_data once kernel loader finishes.
+MODULE_DEVICE_TABLE(of, <of_match_table> should be called to complete DT
+OF mathing mechanism and register it.
 
-As a result when we're trying to restore such programs the procedure fails
-and the kernel returns -EINVAL.  From the image dump of a program:
+Before this patch:
+modinfo drivers/mfd/tps65912-spi.ko | grep alias
+alias:          spi:tps65912
 
- | "mm_start_code": "0x400000",
- | "mm_end_code": "0x8f5fb4",
- | "mm_start_data": "0xf1bfb0",
- | "mm_end_data": "0xf1bfb0",
+After this patch:
+modinfo drivers/mfd/tps65912-spi.ko | grep alias
+alias:          of:N*T*Cti,tps65912C*
+alias:          of:N*T*Cti,tps65912
+alias:          spi:tps65912
 
-Thus we need to change validate_prctl_map from strictly less to less or
-equal operator use.
-
-Link: http://lkml.kernel.org/r/20190408143554.GY1421@uranus.lan
-Fixes: f606b77f1a9e3 ("prctl: PR_SET_MM -- introduce PR_SET_MM_MAP operation")
-Signed-off-by: Cyrill Gorcunov <gorcunov@gmail.com>
-Cc: Andrey Vagin <avagin@gmail.com>
-Cc: Dmitry Safonov <0x7f454c46@gmail.com>
-Cc: Pavel Emelyanov <xemul@virtuozzo.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
+Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sys.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mfd/tps65912-spi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/sys.c b/kernel/sys.c
-index e25ec93aea221..ab96b98823473 100644
---- a/kernel/sys.c
-+++ b/kernel/sys.c
-@@ -1861,7 +1861,7 @@ static int validate_prctl_map(struct prctl_mm_map *prctl_map)
- 	((unsigned long)prctl_map->__m1 __op				\
- 	 (unsigned long)prctl_map->__m2) ? 0 : -EINVAL
- 	error  = __prctl_check_order(start_code, <, end_code);
--	error |= __prctl_check_order(start_data, <, end_data);
-+	error |= __prctl_check_order(start_data,<=, end_data);
- 	error |= __prctl_check_order(start_brk, <=, brk);
- 	error |= __prctl_check_order(arg_start, <=, arg_end);
- 	error |= __prctl_check_order(env_start, <=, env_end);
+diff --git a/drivers/mfd/tps65912-spi.c b/drivers/mfd/tps65912-spi.c
+index 3bd75061f7776..f78be039e4637 100644
+--- a/drivers/mfd/tps65912-spi.c
++++ b/drivers/mfd/tps65912-spi.c
+@@ -27,6 +27,7 @@ static const struct of_device_id tps65912_spi_of_match_table[] = {
+ 	{ .compatible = "ti,tps65912", },
+ 	{ /* sentinel */ }
+ };
++MODULE_DEVICE_TABLE(of, tps65912_spi_of_match_table);
+ 
+ static int tps65912_spi_probe(struct spi_device *spi)
+ {
 -- 
 2.20.1
 
