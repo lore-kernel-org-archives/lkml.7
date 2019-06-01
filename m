@@ -2,90 +2,72 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_NEOMUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF674C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 10:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 509E9C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 11:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DCFD27226
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 10:56:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E7CF244D4
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 11:02:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727227AbfFAK4q (ORCPT
+        id S1727111AbfFALCu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 06:56:46 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40262 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726109AbfFAK4q (ORCPT
+        Sat, 1 Jun 2019 07:02:50 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:33274 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726134AbfFALCu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 06:56:46 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x51Aq51G060334
-        for <linux-kernel@vger.kernel.org>; Sat, 1 Jun 2019 06:56:45 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sunehutcv-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Jun 2019 06:56:45 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Sat, 1 Jun 2019 11:56:43 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 1 Jun 2019 11:56:40 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x51Auddd45154444
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 1 Jun 2019 10:56:40 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C9DF742041;
-        Sat,  1 Jun 2019 10:56:39 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9E78B42047;
-        Sat,  1 Jun 2019 10:56:39 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.21])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Sat,  1 Jun 2019 10:56:39 +0000 (GMT)
-Date:   Sat, 1 Jun 2019 12:56:38 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: Re: [PATCH] s390: Kconfig: pedantic cleanups
-References: <1551904321-23099-1-git-send-email-info@metux.net>
+        Sat, 1 Jun 2019 07:02:50 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1hX1mh-0001op-Aa; Sat, 01 Jun 2019 13:02:47 +0200
+Date:   Sat, 1 Jun 2019 13:02:47 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Soeren Moch <smoch@web.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] Revert "usb: core: remove local_irq_save() around
+ ->complete() handler"
+Message-ID: <20190601110247.v4lzwvqhuwrjrotb@linutronix.de>
+References: <20190531215340.24539-1-smoch@web.de>
+ <20190531220535.GA16603@kroah.com>
+ <6c03445c-3607-9f33-afee-94613f8d6978@web.de>
+ <20190601105008.zfqrtu6krw4mhisb@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1551904321-23099-1-git-send-email-info@metux.net>
-X-TM-AS-GCONF: 00
-x-cbid: 19060110-0028-0000-0000-00000373865C
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060110-0029-0000-0000-0000243353F9
-Message-Id: <20190601105638.GH3600@osiris>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-01_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=728 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906010081
+In-Reply-To: <20190601105008.zfqrtu6krw4mhisb@linutronix.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 06, 2019 at 09:32:01PM +0100, Enrico Weigelt, metux IT consult wrote:
-> Formatting of Kconfig files doesn't look so pretty, so just
-> take damp cloth and clean it up.
-> 
-> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
-> ---
->  arch/s390/Kconfig          |  2 +-
->  drivers/s390/block/Kconfig |  2 +-
->  drivers/s390/char/Kconfig  | 15 +++++++--------
->  drivers/s390/net/Kconfig   |  8 ++++----
->  4 files changed, 13 insertions(+), 14 deletions(-)
+On 2019-06-01 12:50:08 [+0200], To Soeren Moch wrote:
+> I will look into this. 
 
-Applied, thanks.
+nothing obvious. If there is really blocken lock, could you please
+enable lockdep
+|CONFIG_LOCK_DEBUGGING_SUPPORT=y
+|CONFIG_PROVE_LOCKING=y
+|# CONFIG_LOCK_STAT is not set
+|CONFIG_DEBUG_RT_MUTEXES=y
+|CONFIG_DEBUG_SPINLOCK=y
+|CONFIG_DEBUG_MUTEXES=y
+|CONFIG_DEBUG_WW_MUTEX_SLOWPATH=y
+|CONFIG_DEBUG_RWSEMS=y
+|CONFIG_DEBUG_LOCK_ALLOC=y
+|CONFIG_LOCKDEP=y
+|# CONFIG_DEBUG_LOCKDEP is not set
+|CONFIG_DEBUG_ATOMIC_SLEEP=y
 
+and send me the splat that lockdep will report?
+ 
+> > Thanks,
+> > Soeren
+
+Sebastian
