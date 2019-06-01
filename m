@@ -2,110 +2,82 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65538C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 19:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E54C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 19:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B227274EF
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 19:26:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49A8B2767D
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 19:41:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=yahoo.ca header.i=@yahoo.ca header.b="GFA5BRaZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbfFAT0J (ORCPT
+        id S1726628AbfFATlz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 15:26:09 -0400
-Received: from smtprelay0107.hostedemail.com ([216.40.44.107]:39317 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726148AbfFAT0I (ORCPT
+        Sat, 1 Jun 2019 15:41:55 -0400
+Received: from sonic301-32.consmr.mail.ne1.yahoo.com ([66.163.184.201]:44198
+        "EHLO sonic301-32.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726195AbfFATlz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 15:26:08 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 0A19318224087;
-        Sat,  1 Jun 2019 19:26:07 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: sound41_180a175e3152b
-X-Filterd-Recvd-Size: 3016
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf08.hostedemail.com (Postfix) with ESMTPA;
-        Sat,  1 Jun 2019 19:26:04 +0000 (UTC)
-Message-ID: <a88b259e59c6a713a819266d9ad5c248efa43295.camel@perches.com>
-Subject: Re: [PATCH 8/8] staging: rtl8712: Fixed CamelCase in struct
- _adapter from drv_types.h
-From:   Joe Perches <joe@perches.com>
-To:     Deepak Mishra <linux.dkm@gmail.com>, linux-kernel@vger.kernel.org,
-        wlanfae <wlanfae@realtek.com>
-Cc:     gregkh@linuxfoundation.org, Larry.Finger@lwfinger.net,
-        florian.c.schilhabel@googlemail.com, himadri18.07@gmail.com,
-        straube.linux@gmail.com
-Date:   Sat, 01 Jun 2019 12:26:02 -0700
-In-Reply-To: <ad9dad01b15d233cbded3f0693c3c33e21f8d286.1559412149.git.linux.dkm@gmail.com>
-References: <cover.1559412149.git.linux.dkm@gmail.com>
-         <ad9dad01b15d233cbded3f0693c3c33e21f8d286.1559412149.git.linux.dkm@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Sat, 1 Jun 2019 15:41:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.ca; s=s2048; t=1559418113; bh=8713HDhZQya8lWL0W8on0YNF6KO3UUWiPnP3Vn4P6BY=; h=In-Reply-To:References:From:To:Subject:Cc:Date:From:Subject; b=GFA5BRaZS7PRtFd7nonAMq4kR7+7/w2QpZH78/Pe3hX69+0qZLmX7WxMe2FYEX1Wj9qrYFEACuNZxHZ1hv16HyrtVsWYmGOLHcaSK8BxeBEY6AQHapbnoOJH7TuWN60jaRyzqbWlrO8XwsPDvleNotXDzTcMacq0hlODLbzk8zhz5hYSRRTC54qafh0Z4a6YzmuGzyBxZh+Rbcqq9ZTi6cIHghIwFLpioPQOBE6MzkTeNIEVLZXNRRMnl+6hDkPI5niEUWqFgEslN6IG3Xv1loIVgNIHjR+t0reRS4AZOT7/5OUbvMR+tPcj3sLyAUs27PNgGEQYuMKfHOAL816XCw==
+X-YMail-OSG: .a2GnfkVM1mK2E8krSQEMNfHekcUf4o375_xIZWuscuNwaoqll3Awqj9IQDLLp1
+ yHVchtvuAQen0GgcI1GEyCNBLiCdgR3jhgA5djPNM3eWMnptVEDzyZW35gESHjp2Tjh2JT5V1EEm
+ CPlmrOSZ4NUaxOQbCSBNtQQLk8PctDYjm7Lbv4zdSkpaNopJbzLlnLqzOF5VXaar3TdxHF3bhk6W
+ tLQwBOu4DdfTNCBy4wK4UH9Q.TEtx4WUHPH7_DdYbMX6eLjry3T3_eTlUvEVxSwH5VKDVxkYbI8P
+ MkszG08wlTANi7motOU8S14pt1ZOlYkdDVRIFGneI6DrCr7YcxsDxTa723x5HPIVultJugc3ZbXy
+ h5ECGfi1cACmHilkZtFDGZCcWe_PAO8ilaqqhpTY1F7jwS6e5AtN3tghfw_CIlTmesWq1klGNqSs
+ C7ofvy57qnUgCuPciXyfdH.s24sCSUFzGNSL6rpXk94PKL2aAcCXuXJScd30Kod.wss5rki9ueE.
+ vSj7ZsZkrvW6WJSsGH.nln_YdyuRlu0W_6WuEMyxGcEzhcL743R2lEXgSBMOzOdPxejJGXj8zlYx
+ JdMH0Za_2DnuozOA6sShcBWhL_UjLH76B22sSuNSSgjpj21q6ksmoVFkz3Ia.WO52Hu6jaGWm2u0
+ pDaZx016danD.fSFCth_wi3EvTdnmF4X3nnA87L4kM0hyOpaO1LLClWKIFfw_qdF84uQIERC4K6M
+ OLixyoZmgJ.IqhVqesWK_l5N0qXyAtKHF3TZR8gUz8FiLSRMSvzRpEfW1vwD_dIUUttyrlwhq49z
+ jdJEnlh2yXEtK7cMDaIbbfDLTAOqy6KZPCCp6uebFoSJsg6xBNaDWv6vQwILSVbQjbs13QlG_vXi
+ oJxaAqYn7zgdWRrSuRnYTumKbezPCJi2h0RWkPsCkJrwd_JyrHk_XCAB_U3fjL989VHJCYimoHRK
+ O16wHQ42DGEySX272wmu4ok835AO5ZpA8ANQdXV0tLweY_HTt0MZwVEt94_tOhc1zFEuRyWIOt4B
+ nMSbDCNIxMLwhiuELD.cLjZ3LFrWWJn.rhgXy93cqKmIK02WTr30F7RgGQKhrIr4c4.x59XtuSdB
+ iEYce0G3FhyGnbg5M1eAHBT770MthTpNNsN8APXTfbMFAIONZTme__U2grr9eTC13Rh3OkOqg41Y
+ rdy7FHUEkgecHjwYFnKuYozSHKD4aIvzf2L4PV2ZF9JTOrHVPSjfO4t7ftE1PPHk-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.ne1.yahoo.com with HTTP; Sat, 1 Jun 2019 19:41:53 +0000
+Received: from pink.alxu.ca (EHLO localhost) ([198.98.62.56])
+          by smtp406.mail.ne1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID f5d5a22d1a321ea646c829e6229e0c9d;
+          Sat, 01 Jun 2019 19:41:46 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190601162907.GB6261@kroah.com>
+References: <20190601144943.126995-1-alex_y_xu@yahoo.ca> <20190601162907.GB6261@kroah.com>
+From:   Alex Xu <alex_y_xu@yahoo.ca>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] crypto: ux500 - fix license comment syntax error
+Cc:     linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        tglx@linutronix.de, allison@lohutok.net, alexios.zavras@intel.com,
+        swinslow@gmail.com, rfontana@redhat.com,
+        linux-spdx@vger.kernel.org, torvalds@linux-foundation.org
+Message-ID: <155941810155.1991.11907646865432946934@pink.alxu.ca>
+User-Agent: alot/0.8.1
+Date:   Sat, 01 Jun 2019 19:41:41 +0000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2019-06-02 at 00:13 +0530, Deepak Mishra wrote:
-> This patch fixes CamelCase blnEnableRxFF0Filter by renaming it
-> to bln_enable_rx_ff0_filter in drv_types.h and related files rtl871x_cmd.c
-> xmit_linux.c
+Quoting Greg KH (2019-06-01 16:29:07)
+> On Sat, Jun 01, 2019 at 10:49:43AM -0400, Alex Xu (Hello71) wrote:
+> > Causes error: drivers/crypto/ux500/cryp/Makefile:5: *** missing
+> > separator.  Stop.
+> >=20
+> > Fixes: af873fcecef5 ("treewide: Replace GPLv2 boilerplate/reference wit=
+h SPDX - rule 194")
+> > Signed-off-by: Alex Xu (Hello71) <alex_y_xu@yahoo.ca>
+> > ---
+> >  drivers/crypto/ux500/cryp/Makefile | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> Also, how did 0-day not catch this?  Is this an odd configuration that
+> it can not build?
 
-One could also improve this by removing the
-hungarian like bln_ prefix and simplify the
-name of the boolean variable.
-
-> diff --git a/drivers/staging/rtl8712/drv_types.h b/drivers/staging/rtl8712/drv_types.h
-[]
-> @@ -164,7 +164,7 @@ struct _adapter {
->  	struct iw_statistics iwstats;
->  	int pid; /*process id from UI*/
->  	struct work_struct wk_filter_rx_ff0;
-> -	u8 blnEnableRxFF0Filter;
-> +	u8 bln_enable_rx_ff0_filter;
-
-e.g.:
-
-	bool enable_rx_ff0_filter;
-
-> diff --git a/drivers/staging/rtl8712/rtl871x_cmd.c b/drivers/staging/rtl8712/rtl871x_cmd.c
-[]
-> @@ -238,7 +238,7 @@ u8 r8712_sitesurvey_cmd(struct _adapter *padapter,
->  	mod_timer(&pmlmepriv->scan_to_timer,
->  		  jiffies + msecs_to_jiffies(SCANNING_TIMEOUT));
->  	padapter->ledpriv.LedControlHandler(padapter, LED_CTL_SITE_SURVEY);
-> -	padapter->blnEnableRxFF0Filter = 0;
-> +	padapter->bln_enable_rx_ff0_filter = 0;
-
-	padapter->enable_rx_ff0_filter = false;
-
-> diff --git a/drivers/staging/rtl8712/xmit_linux.c b/drivers/staging/rtl8712/xmit_linux.c
-[]
-> @@ -103,11 +103,11 @@ void r8712_SetFilter(struct work_struct *work)
->  	r8712_write8(padapter, 0x117, newvalue);
->  
->  	spin_lock_irqsave(&padapter->lockRxFF0Filter, irqL);
-> -	padapter->blnEnableRxFF0Filter = 1;
-> +	padapter->bln_enable_rx_ff0_filter = 1;
-
-	padapter->enable_rx_ff0_filter = true;
-
-etc...
-
-Then you could rename padapter to adapter, and maybe
-"struct _adapter" to something more sensible like
-"struct rtl8712dev" etc...
-
-And one day, hopefully sooner than later, realtek will
-improve their driver software base and help eliminate
-all the duplicated non-style defects across the family
-of drivers for their hardware...
-
-
-
+I had to run "make clean" to get the error.
