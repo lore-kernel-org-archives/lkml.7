@@ -4,57 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B095C28CC4
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F496C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AE5927305
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7535627310
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:21:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395277;
-	bh=fKpwX+0ndO0fyq/4snZ5Zvj1X2AzAdtPXs3or6au32k=;
+	s=default; t=1559395281;
+	bh=ovK+AB50RkngX4ySnqrgWIrQ10Rt36zLYGZVQ5jDaEM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f87KbRebd6j14qfnWtsGzyZTUMkPrl1P2Q7eqSUyFiPD/CxmyomprWXoWzi19LNEA
-	 CNfdelh0NsxfLDTkeXu1qp1IgOCZHD66K01hKnXpNFoDyfd9clvFmZeHGNxgO4YuWE
-	 6dVt/c9MJLeDf4r0sxRWRWXr6gqgyd6T11o/7Lgs=
+	b=sZbrWfy9FtyvEjaXuqInkpwHNqOkrq+QW4+tVjtD5b57EN7tK3DCFvt6fhOzxt7L/
+	 pnn6r//ZPyLAuYGSq8PGKE2iI3jxTatOYxHTbS/2ieeHToGAkbGq4Qz3ffxOG5eT7G
+	 Nfwu3whMk2ifsS/2aRqrDPkiwBv0QJQi2pxaV/Dc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728440AbfFANVQ (ORCPT
+        id S1728467AbfFANVU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:21:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48484 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:21:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728420AbfFANVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:21:11 -0400
+        id S1728419AbfFANVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:21:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C312C272FE;
-        Sat,  1 Jun 2019 13:21:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F6B2272F5;
+        Sat,  1 Jun 2019 13:21:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395270;
-        bh=fKpwX+0ndO0fyq/4snZ5Zvj1X2AzAdtPXs3or6au32k=;
+        s=default; t=1559395269;
+        bh=ovK+AB50RkngX4ySnqrgWIrQ10Rt36zLYGZVQ5jDaEM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RpAPS/CLmpa08wJUHjnUOW/LeFroKCYRZul5V88hTn6Qgj0ml/6ZMSkjncM+cPKRe
-         cTOZBCaf2izHsv+fqZBEAGc4visUnAZoxnCHZx9sy+o6jW3aeskH09xYPfwLES9IeY
-         j22f7ikQhrGw8qTYdI3YrCxBLe0zuNczOhwXTn/Q=
+        b=z/yKsNj1nueg8nCIqgBq6xlYh6diCWex/riOg7Ne0ViA5EpLL0LXCFcXpfzahnV8o
+         LbkorczrkUbrhsW1CnBd20FF49TGBmMWZ4Ql0BaArEPnaK/+YV+jD0x3w9dmg4Ge8u
+         A5b2lDH9acIJWUpD6yz+p7uIvJUnRF6CcVRJ7Cls=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Borislav Petkov <bp@suse.de>,
-        Johannes Thumshirn <jth@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>, linuxppc-dev@ozlabs.org,
-        morbidrsa@gmail.com, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 035/173] EDAC/mpc85xx: Prevent building as a module
-Date:   Sat,  1 Jun 2019 09:17:07 -0400
-Message-Id: <20190601131934.25053-35-sashal@kernel.org>
+Cc:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Douglas Anderson <dianders@chromium.org>,
+        Kees Cook <keescook@chromium.org>,
+        Sasha Levin <sashal@kernel.org>,
+        kernel-hardening@lists.openwall.com
+Subject: [PATCH AUTOSEL 5.0 034/173] gcc-plugins: arm_ssp_per_task_plugin: Fix for older GCC < 6
+Date:   Sat,  1 Jun 2019 09:17:06 -0400
+Message-Id: <20190601131934.25053-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131934.25053-1-sashal@kernel.org>
 References: <20190601131934.25053-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,57 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
 
-[ Upstream commit 2b8358a951b1e2a534a54924cd8245e58a1c5fb8 ]
+[ Upstream commit 259799ea5a9aa099a267f3b99e1f7078bbaf5c5e ]
 
-The mpc85xx EDAC driver can be configured as a module but then fails to
-build because it uses two unexported symbols:
+Use gen_rtx_set instead of gen_rtx_SET. The former is a wrapper macro
+that handles the difference between GCC versions implementing
+the latter.
 
-  ERROR: ".pci_find_hose_for_OF_device" [drivers/edac/mpc85xx_edac_mod.ko] undefined!
-  ERROR: ".early_find_capability" [drivers/edac/mpc85xx_edac_mod.ko] undefined!
+This fixes the following error on my system with g++ 5.4.0 as the host
+compiler
 
-We don't want to export those symbols just for this driver, so make the
-driver only configurable as a built-in.
+   HOSTCXX -fPIC scripts/gcc-plugins/arm_ssp_per_task_plugin.o
+ scripts/gcc-plugins/arm_ssp_per_task_plugin.c:42:14: error: macro "gen_rtx_SET" requires 3 arguments, but only 2 given
+          mask)),
+               ^
+ scripts/gcc-plugins/arm_ssp_per_task_plugin.c: In function ‘unsigned int arm_pertask_ssp_rtl_execute()’:
+ scripts/gcc-plugins/arm_ssp_per_task_plugin.c:39:20: error: ‘gen_rtx_SET’ was not declared in this scope
+    emit_insn_before(gen_rtx_SET
 
-This seems to have been broken since at least
-
-  c92132f59806 ("edac/85xx: Add PCIe error interrupt edac support")
-
-(Nov 2013).
-
- [ bp: make it depend on EDAC=y so that the EDAC core doesn't get built
-   as a module. ]
-
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Johannes Thumshirn <jth@kernel.org>
-Cc: James Morse <james.morse@arm.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Cc: linuxppc-dev@ozlabs.org
-Cc: morbidrsa@gmail.com
-Link: https://lkml.kernel.org/r/20190502141941.12927-1-mpe@ellerman.id.au
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Fixes: 189af4657186 ("ARM: smp: add support for per-task stack canaries")
+Cc: stable@vger.kernel.org
+Tested-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ scripts/gcc-plugins/arm_ssp_per_task_plugin.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index e286b5b990035..a3e6750393380 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -251,8 +251,8 @@ config EDAC_PND2
- 	  micro-server but may appear on others in the future.
+diff --git a/scripts/gcc-plugins/arm_ssp_per_task_plugin.c b/scripts/gcc-plugins/arm_ssp_per_task_plugin.c
+index 89c47f57d1ce1..8c1af9bdcb1bb 100644
+--- a/scripts/gcc-plugins/arm_ssp_per_task_plugin.c
++++ b/scripts/gcc-plugins/arm_ssp_per_task_plugin.c
+@@ -36,7 +36,7 @@ static unsigned int arm_pertask_ssp_rtl_execute(void)
+ 		mask = GEN_INT(sext_hwi(sp_mask, GET_MODE_PRECISION(Pmode)));
+ 		masked_sp = gen_reg_rtx(Pmode);
  
- config EDAC_MPC85XX
--	tristate "Freescale MPC83xx / MPC85xx"
--	depends on FSL_SOC
-+	bool "Freescale MPC83xx / MPC85xx"
-+	depends on FSL_SOC && EDAC=y
- 	help
- 	  Support for error detection and correction on the Freescale
- 	  MPC8349, MPC8560, MPC8540, MPC8548, T4240
+-		emit_insn_before(gen_rtx_SET(masked_sp,
++		emit_insn_before(gen_rtx_set(masked_sp,
+ 					     gen_rtx_AND(Pmode,
+ 							 stack_pointer_rtx,
+ 							 mask)),
 -- 
 2.20.1
 
