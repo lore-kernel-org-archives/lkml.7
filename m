@@ -2,53 +2,54 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 814FAC28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E85C28CC4
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B4E3275F6
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:38:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE561275F0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:38:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396283;
-	bh=FgMFEcTVwa74AVoDLLyLM/uFPRGeAP3wLj1aXlqq6GY=;
+	s=default; t=1559396286;
+	bh=wW9cAtPSoBqT/Uuh4VP3U+WowY10DUfgUZS8/UDdDn4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xTxdbhZugDGSPKNeNfBNKyAWzUHo1AMipMiCUCzLQ+gB9UCwvbSOEwwA/mAL1aJIb
-	 sSYK14zb8ewTj+KPq3YPQOzQdx6qd4gi3h7/eYTIrxGQj6VfJbnlJktw5IKgW419ze
-	 wm8gIm4g70utqNq9fjG5Rn9Wnz1m513AJOgKJRoI=
+	b=LWMfma0m5e/tXu1qt4lRPU7Qb+kBs5jEXqQNzwy5tRH5UjXBA1585cQ8U+Dd9WrM7
+	 BIVM+ew0hBtZbxBeTupeGpdvhlTPBVu04B5pgtqghmvzPylOlrLaiRCLkJuEfUHqcI
+	 RY0SieqrGWkh8HelfBUP14QrtghQ3Jn7JAqiKCOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728826AbfFANiC (ORCPT
+        id S1728561AbfFANVh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:38:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49144 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:21:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728576AbfFANVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:21:40 -0400
+        id S1728550AbfFANVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:21:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8349B272FC;
-        Sat,  1 Jun 2019 13:21:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45EEE272F5;
+        Sat,  1 Jun 2019 13:21:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395300;
-        bh=FgMFEcTVwa74AVoDLLyLM/uFPRGeAP3wLj1aXlqq6GY=;
+        s=default; t=1559395294;
+        bh=wW9cAtPSoBqT/Uuh4VP3U+WowY10DUfgUZS8/UDdDn4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mjz7jWbCvNp7F1s/lg2zBH8tigaF166tnmg9CTAwMVUSsSsRS6Gdc9rPeIrdgsyuG
-         zdvHSaDyqSonykWZ4QKKIwGscfkISMOks8G+eUhF3IH0ey2siYPen79KlKVwcVnFjZ
-         lyaAro99w2GjYIxdPkuffiQAXR8uUKK+C5X4fcJM=
+        b=jTqj41GXsWu+aOsZCrU7XWaXPwv6dNWYDZAYalEyP73+y4Dl07xTB8B/HxVy2uXUM
+         F+i5vhhkJkMyIP7ERY3bq+JgInaOxjUF5D4TkvitK7I6Cl+ZJdcetRK3+E3TliXBut
+         xvkT/hwDZljYmFjvUEEANVuEoQykSDZVCyhpf29o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 060/173] PCI: dwc: Free MSI IRQ page in dw_pcie_free_msi()
-Date:   Sat,  1 Jun 2019 09:17:32 -0400
-Message-Id: <20190601131934.25053-60-sashal@kernel.org>
+Cc:     Elazar Leibovich <elazar@lightbitslabs.com>,
+        Orit Wasserman <orit.was@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 056/173] tracing: Fix partial reading of trace event's id file
+Date:   Sat,  1 Jun 2019 09:17:28 -0400
+Message-Id: <20190601131934.25053-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131934.25053-1-sashal@kernel.org>
 References: <20190601131934.25053-1-sashal@kernel.org>
@@ -61,68 +62,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+From: Elazar Leibovich <elazar@lightbitslabs.com>
 
-[ Upstream commit dc69a3d567941784c3d00e1d0834582b42b0b3e7 ]
+[ Upstream commit cbe08bcbbe787315c425dde284dcb715cfbf3f39 ]
 
-To avoid a memory leak, free the page allocated for MSI IRQ in
-dw_pcie_free_msi().
+When reading only part of the id file, the ppos isn't tracked correctly.
+This is taken care by simple_read_from_buffer.
 
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Reading a single byte, and then the next byte would result EOF.
+
+While this seems like not a big deal, this breaks abstractions that
+reads information from files unbuffered. See for example
+https://github.com/golang/go/issues/29399
+
+This code was mentioned as problematic in
+commit cd458ba9d5a5
+("tracing: Do not (ab)use trace_seq in event_id_read()")
+
+An example C code that show this bug is:
+
+  #include <stdio.h>
+  #include <stdint.h>
+
+  #include <sys/types.h>
+  #include <sys/stat.h>
+  #include <fcntl.h>
+  #include <unistd.h>
+
+  int main(int argc, char **argv) {
+    if (argc < 2)
+      return 1;
+    int fd = open(argv[1], O_RDONLY);
+    char c;
+    read(fd, &c, 1);
+    printf("First  %c\n", c);
+    read(fd, &c, 1);
+    printf("Second %c\n", c);
+  }
+
+Then run with, e.g.
+
+  sudo ./a.out /sys/kernel/debug/tracing/events/tcp/tcp_set_state/id
+
+You'll notice you're getting the first character twice, instead of the
+first two characters in the id file.
+
+Link: http://lkml.kernel.org/r/20181231115837.4932-1-elazar@lightbitslabs.com
+
+Cc: Orit Wasserman <orit.was@gmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: stable@vger.kernel.org
+Fixes: 23725aeeab10b ("ftrace: provide an id file for each event")
+Signed-off-by: Elazar Leibovich <elazar@lightbitslabs.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-designware-host.c | 12 ++++++++----
- drivers/pci/controller/dwc/pcie-designware.h      |  1 +
- 2 files changed, 9 insertions(+), 4 deletions(-)
+ kernel/trace/trace_events.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index d14a6237bdf5a..86ee6d1888d75 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -303,20 +303,24 @@ void dw_pcie_free_msi(struct pcie_port *pp)
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 5b3b0c3c8a47e..d910e36c34b5c 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -1318,9 +1318,6 @@ event_id_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t *ppos)
+ 	char buf[32];
+ 	int len;
  
- 	irq_domain_remove(pp->msi_domain);
- 	irq_domain_remove(pp->irq_domain);
-+
-+	if (pp->msi_page)
-+		__free_page(pp->msi_page);
- }
+-	if (*ppos)
+-		return 0;
+-
+ 	if (unlikely(!id))
+ 		return -ENODEV;
  
- void dw_pcie_msi_init(struct pcie_port *pp)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
- 	struct device *dev = pci->dev;
--	struct page *page;
- 	u64 msi_target;
- 
--	page = alloc_page(GFP_KERNEL);
--	pp->msi_data = dma_map_page(dev, page, 0, PAGE_SIZE, DMA_FROM_DEVICE);
-+	pp->msi_page = alloc_page(GFP_KERNEL);
-+	pp->msi_data = dma_map_page(dev, pp->msi_page, 0, PAGE_SIZE,
-+				    DMA_FROM_DEVICE);
- 	if (dma_mapping_error(dev, pp->msi_data)) {
- 		dev_err(dev, "Failed to map MSI data\n");
--		__free_page(page);
-+		__free_page(pp->msi_page);
-+		pp->msi_page = NULL;
- 		return;
- 	}
- 	msi_target = (u64)pp->msi_data;
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 9943d8c68335d..0cede55a7bcc1 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -176,6 +176,7 @@ struct pcie_port {
- 	struct irq_domain	*irq_domain;
- 	struct irq_domain	*msi_domain;
- 	dma_addr_t		msi_data;
-+	struct page		*msi_page;
- 	u32			num_vectors;
- 	u32			irq_status[MAX_MSI_CTRLS];
- 	raw_spinlock_t		lock;
 -- 
 2.20.1
 
