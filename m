@@ -4,48 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DADAC28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A35D8C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4307427635
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D2E127635
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:39:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396396;
-	bh=Au6V8N1tGmfWzLGZV8cy65ZWNYgqrGSrVTj21xNZJog=;
+	s=default; t=1559396399;
+	bh=ySSBzNCHE8z5+w8tkOcIZjG4dIlaAl6/E1llUlc4oNg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m90d2ebvH8FBACVu6bPP6XY1HmjQXByyCBo2/hlo79FGdBS0qkhXeOlh2WNXOG0nw
-	 PsIf0D6/tJO9FkymGGYUTyCDR27qqRkrMhjDVA3niN4J+615QzPoW8g8zRpSPOd29C
-	 5VM+NLMjiA4JnWg153Gezn5SGc9e7hyUpiTry0Co=
+	b=Jdzd8nej8Ak1sugNc5cTNLh+eIkE2a/aKwsf4rG2h2PRI3qbBayUvWc6qvjdxN17d
+	 Pg0hlZWXOHxB+8lSIM3IK3K3SiCXMH7IaBT9HIXh55g5sBB36rGMkFcpRma6atv1pZ
+	 vdiXqs7/NsXprlCJhb2rPUfiV97ut7JLGwmQ65VQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727736AbfFANjz (ORCPT
+        id S1728373AbfFANUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:39:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48124 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:20:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728374AbfFANUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:20:51 -0400
+        id S1727476AbfFANUj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:20:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9D96272D8;
-        Sat,  1 Jun 2019 13:20:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86666272D8;
+        Sat,  1 Jun 2019 13:20:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395250;
-        bh=Au6V8N1tGmfWzLGZV8cy65ZWNYgqrGSrVTj21xNZJog=;
+        s=default; t=1559395238;
+        bh=ySSBzNCHE8z5+w8tkOcIZjG4dIlaAl6/E1llUlc4oNg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lKaFq0dvIUQv1mlHxE/3KOxafivpWZ+gn7EEVeyr0QnxZC+2J5xxMLasbmGFVZamD
-         99+VbdH5NkHdIiWKwk+V0NzQRtoN/dJtfYMetz6RvYsWb4NF8YZk1WnOtgJDVQvfw7
-         GrbMThKJMmSkhCVy0//pPAGTNtL1c8/zseCu1Ti0=
+        b=y9GkeMhNso9hEr1R8CrY6u/RMNcr4BNYWv/a/qwKITJKSwkEGlYITFTJF2r7ufnZ8
+         wPuhYJr+D5KzVhBM8QY6VAbxKO93y7CUuGBce93OgUsEIfG+gBUJABAw+w9WQZLhqV
+         jgnf5MXwA5ZXMArOaCy+vD6osALWZigMyOKd9cUY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ben Skeggs <bskeggs@redhat.com>, Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.0 026/173] drm/nouveau/disp/dp: respect sink limits when selecting failsafe link configuration
-Date:   Sat,  1 Jun 2019 09:16:58 -0400
-Message-Id: <20190601131934.25053-26-sashal@kernel.org>
+Cc:     Yue Hu <huyue2@yulong.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, Joe Perches <joe@perches.com>,
+        David Rientjes <rientjes@google.com>,
+        Dmitry Safonov <d.safonov@partner.samsung.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 5.0 019/173] mm/cma_debug.c: fix the break condition in cma_maxchunk_get()
+Date:   Sat,  1 Jun 2019 09:16:51 -0400
+Message-Id: <20190601131934.25053-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131934.25053-1-sashal@kernel.org>
 References: <20190601131934.25053-1-sashal@kernel.org>
@@ -58,45 +64,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Skeggs <bskeggs@redhat.com>
+From: Yue Hu <huyue2@yulong.com>
 
-[ Upstream commit 13d03e9daf70dab032c03dc172e75bb98ad899c4 ]
+[ Upstream commit f0fd50504a54f5548eb666dc16ddf8394e44e4b7 ]
 
-Where possible, we want the failsafe link configuration (one which won't
-hang the OR during modeset because of not enough bandwidth for the mode)
-to also be supported by the sink.
+If not find zero bit in find_next_zero_bit(), it will return the size
+parameter passed in, so the start bit should be compared with bitmap_maxno
+rather than cma->count.  Although getting maxchunk is working fine due to
+zero value of order_per_bit currently, the operation will be stuck if
+order_per_bit is set as non-zero.
 
-This prevents "link rate unsupported by sink" messages when link training
-fails.
-
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Link: http://lkml.kernel.org/r/20190319092734.276-1-zbestahu@gmail.com
+Signed-off-by: Yue Hu <huyue2@yulong.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Joe Perches <joe@perches.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Dmitry Safonov <d.safonov@partner.samsung.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/engine/disp/dp.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ mm/cma_debug.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/disp/dp.c b/drivers/gpu/drm/nouveau/nvkm/engine/disp/dp.c
-index 5f301e632599b..818d21bd28d31 100644
---- a/drivers/gpu/drm/nouveau/nvkm/engine/disp/dp.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/engine/disp/dp.c
-@@ -365,8 +365,15 @@ nvkm_dp_train(struct nvkm_dp *dp, u32 dataKBps)
- 	 * and it's better to have a failed modeset than that.
- 	 */
- 	for (cfg = nvkm_dp_rates; cfg->rate; cfg++) {
--		if (cfg->nr <= outp_nr && cfg->nr <= outp_bw)
--			failsafe = cfg;
-+		if (cfg->nr <= outp_nr && cfg->nr <= outp_bw) {
-+			/* Try to respect sink limits too when selecting
-+			 * lowest link configuration.
-+			 */
-+			if (!failsafe ||
-+			    (cfg->nr <= sink_nr && cfg->bw <= sink_bw))
-+				failsafe = cfg;
-+		}
-+
- 		if (failsafe && cfg[1].rate < dataKBps)
+diff --git a/mm/cma_debug.c b/mm/cma_debug.c
+index ad6723e9d110a..3e0415076cc9e 100644
+--- a/mm/cma_debug.c
++++ b/mm/cma_debug.c
+@@ -58,7 +58,7 @@ static int cma_maxchunk_get(void *data, u64 *val)
+ 	mutex_lock(&cma->lock);
+ 	for (;;) {
+ 		start = find_next_zero_bit(cma->bitmap, bitmap_maxno, end);
+-		if (start >= cma->count)
++		if (start >= bitmap_maxno)
  			break;
- 	}
+ 		end = find_next_bit(cma->bitmap, bitmap_maxno, start);
+ 		maxchunk = max(end - start, maxchunk);
 -- 
 2.20.1
 
