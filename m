@@ -7,50 +7,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3251C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3496FC28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FB4D27486
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0476E27481
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:30:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395839;
-	bh=MODFjkth/tTireZcEvnjTAIW7rZOerRG4BYU/xQisb0=;
+	s=default; t=1559395843;
+	bh=bw8UDpgDObzmuy67BHmUvWs9daSIpWqkdGgNmdcHcac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BjrBxC3jMYcAmPsx8B9uRDPTNTiToCRyvKcRJPGtJnEjBCJsBdrEVbGofnARoGLkn
-	 jl3AZtqd0BvFVZ9RIX8gRVXfBfauxUu7ZdPIaogjO+mxwkf/Gtr7ctJ8i8lJa9VXY3
-	 hK/rIEuXwkGJWYDu+DiNjABc0eiN12YrPOL+nWvU=
+	b=IDGk2P6JUDad7X1cOupgWcZNEapHlSzIyspgIKbwvKbq4YLAi7Xkid60YcPdC3HrN
+	 VTKPL7e2MN8138o1SKdlowv9BjdV9Nw7qxw9vHyGVAA2Lr6kZLF9zaGVGJEX7OeKAX
+	 NheQCfSGEK5qLqOrYbVqB4lJrVJBjFwavBw4eEDU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729660AbfFAN0O (ORCPT
+        id S1729847AbfFANam (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:26:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56394 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:30:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727763AbfFANZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:25:59 -0400
+        id S1729358AbfFAN0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:26:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F5C3273A0;
-        Sat,  1 Jun 2019 13:25:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 015AD273C1;
+        Sat,  1 Jun 2019 13:26:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395559;
-        bh=MODFjkth/tTireZcEvnjTAIW7rZOerRG4BYU/xQisb0=;
+        s=default; t=1559395573;
+        bh=bw8UDpgDObzmuy67BHmUvWs9daSIpWqkdGgNmdcHcac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qlj+TrAVvUzBzV2HAwIUxp3xdWommq5KzyvA1RNjlFjao4eehOpXG44IQxv6563E3
-         CnjcemxydNM5XGy06r8kmBHvd4UaIFXpvi8380liV3nm0DximdDOQDc6Z7g9VPP3r6
-         gI6FY3UUfBLl1rg7aDFhClRvRA/p5XviwT4ZWfNs=
+        b=IR8ROffjBLFFr7zB32B+4s7Soynpc9nOORheIaHrzHfRUioXLlEhVJA1rwiXCbVyc
+         w8Ddh5ll5AAPciGmjsUzyT5efQ77asBJvgYT7ckDg3hy3+xJ4ac00KLwYrm8VqcuCo
+         5Q2wh0g1IvjyglDZhICh/qOI9yvdtJdx6qTmDk1w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Georg Hofmann <georg@hofmannsweb.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 30/74] watchdog: imx2_wdt: Fix set_timeout for big timeout values
-Date:   Sat,  1 Jun 2019 09:24:17 -0400
-Message-Id: <20190601132501.27021-30-sashal@kernel.org>
+Cc:     Yue Hu <huyue2@yulong.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.4 05/56] mm/cma.c: fix crash on CMA allocation if bitmap allocation fails
+Date:   Sat,  1 Jun 2019 09:25:09 -0400
+Message-Id: <20190601132600.27427-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190601132501.27021-1-sashal@kernel.org>
-References: <20190601132501.27021-1-sashal@kernel.org>
+In-Reply-To: <20190601132600.27427-1-sashal@kernel.org>
+References: <20190601132600.27427-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,41 +65,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Georg Hofmann <georg@hofmannsweb.com>
+From: Yue Hu <huyue2@yulong.com>
 
-[ Upstream commit b07e228eee69601addba98b47b1a3850569e5013 ]
+[ Upstream commit 1df3a339074e31db95c4790ea9236874b13ccd87 ]
 
-The documentated behavior is: if max_hw_heartbeat_ms is implemented, the
-minimum of the set_timeout argument and max_hw_heartbeat_ms should be used.
-This patch implements this behavior.
-Previously only the first 7bits were used and the input argument was
-returned.
+f022d8cb7ec7 ("mm: cma: Don't crash on allocation if CMA area can't be
+activated") fixes the crash issue when activation fails via setting
+cma->count as 0, same logic exists if bitmap allocation fails.
 
-Signed-off-by: Georg Hofmann <georg@hofmannsweb.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Link: http://lkml.kernel.org/r/20190325081309.6004-1-zbestahu@gmail.com
+Signed-off-by: Yue Hu <huyue2@yulong.com>
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Laura Abbott <labbott@redhat.com>
+Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/imx2_wdt.c | 4 +++-
+ mm/cma.c | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/watchdog/imx2_wdt.c b/drivers/watchdog/imx2_wdt.c
-index 518dfa1047cbd..5098982e1a585 100644
---- a/drivers/watchdog/imx2_wdt.c
-+++ b/drivers/watchdog/imx2_wdt.c
-@@ -181,8 +181,10 @@ static void __imx2_wdt_set_timeout(struct watchdog_device *wdog,
- static int imx2_wdt_set_timeout(struct watchdog_device *wdog,
- 				unsigned int new_timeout)
- {
--	__imx2_wdt_set_timeout(wdog, new_timeout);
-+	unsigned int actual;
+diff --git a/mm/cma.c b/mm/cma.c
+index f0d91aca5a4cd..5ae4452656cdf 100644
+--- a/mm/cma.c
++++ b/mm/cma.c
+@@ -100,8 +100,10 @@ static int __init cma_activate_area(struct cma *cma)
  
-+	actual = min(new_timeout, wdog->max_hw_heartbeat_ms * 1000);
-+	__imx2_wdt_set_timeout(wdog, actual);
- 	wdog->timeout = new_timeout;
- 	return 0;
- }
+ 	cma->bitmap = kzalloc(bitmap_size, GFP_KERNEL);
+ 
+-	if (!cma->bitmap)
++	if (!cma->bitmap) {
++		cma->count = 0;
+ 		return -ENOMEM;
++	}
+ 
+ 	WARN_ON_ONCE(!pfn_valid(pfn));
+ 	zone = page_zone(pfn_to_page(pfn));
 -- 
 2.20.1
 
