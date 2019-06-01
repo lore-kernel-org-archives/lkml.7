@@ -2,145 +2,128 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E696FC46460
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 15:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31EF8C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 15:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9C52273D5
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 15:40:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FEAA27607
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 15:42:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbfFAPkm convert rfc822-to-8bit (ORCPT
+        id S1726718AbfFAPm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 11:40:42 -0400
-Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:45556 "EHLO
-        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725980AbfFAPkl (ORCPT
+        Sat, 1 Jun 2019 11:42:57 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:52724 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725946AbfFAPm5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 11:40:41 -0400
-Received: from pps.filterd (m0134423.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x51FajkG009810;
-        Sat, 1 Jun 2019 15:40:12 GMT
-Received: from g9t5008.houston.hpe.com (g9t5008.houston.hpe.com [15.241.48.72])
-        by mx0b-002e3701.pphosted.com with ESMTP id 2sunkf9ftg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 01 Jun 2019 15:40:11 +0000
-Received: from G4W9120.americas.hpqcorp.net (exchangepmrr1.us.hpecorp.net [16.210.21.15])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by g9t5008.houston.hpe.com (Postfix) with ESMTPS id CC7C553;
-        Sat,  1 Jun 2019 15:40:10 +0000 (UTC)
-Received: from G4W9120.americas.hpqcorp.net (2002:10d2:150f::10d2:150f) by
- G4W9120.americas.hpqcorp.net (2002:10d2:150f::10d2:150f) with Microsoft SMTP
- Server (TLS) id 15.0.1367.3; Sat, 1 Jun 2019 15:40:10 +0000
-Received: from NAM05-DM3-obe.outbound.protection.outlook.com (15.241.52.11) by
- G4W9120.americas.hpqcorp.net (16.210.21.15) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3 via Frontend Transport; Sat, 1 Jun 2019 15:40:10 +0000
-Received: from AT5PR8401MB1169.NAMPRD84.PROD.OUTLOOK.COM (10.169.7.147) by
- AT5PR8401MB0868.NAMPRD84.PROD.OUTLOOK.COM (10.169.7.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.17; Sat, 1 Jun 2019 15:40:07 +0000
-Received: from AT5PR8401MB1169.NAMPRD84.PROD.OUTLOOK.COM
- ([fe80::207d:29e:1463:8c27]) by AT5PR8401MB1169.NAMPRD84.PROD.OUTLOOK.COM
- ([fe80::207d:29e:1463:8c27%9]) with mapi id 15.20.1943.016; Sat, 1 Jun 2019
- 15:40:07 +0000
-From:   "Elliott, Robert (Servers)" <elliott@hpe.com>
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-        "jdelvare@suse.com" <jdelvare@suse.com>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "khalid@gonehiking.org" <khalid@gonehiking.org>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "aacraid@microsemi.com" <aacraid@microsemi.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
-Subject: RE: [PATCH 2/3] drivers: scsi: remove unnecessary #ifdef MODULE
-Thread-Topic: [PATCH 2/3] drivers: scsi: remove unnecessary #ifdef MODULE
-Thread-Index: AQHVGIKwDGRd9/ojF029uE3ZhMxagaaG7YPg
-Date:   Sat, 1 Jun 2019 15:40:07 +0000
-Message-ID: <AT5PR8401MB1169E817136F8B8587C7A716AB1A0@AT5PR8401MB1169.NAMPRD84.PROD.OUTLOOK.COM>
-References: <1559397700-15585-1-git-send-email-info@metux.net>
- <1559397700-15585-3-git-send-email-info@metux.net>
-In-Reply-To: <1559397700-15585-3-git-send-email-info@metux.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [2601:2c3:877f:e23c:fddd:5eac:59cb:6dc3]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2955e4e2-78df-4b3f-1873-08d6e6a76c7c
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AT5PR8401MB0868;
-x-ms-traffictypediagnostic: AT5PR8401MB0868:
-x-microsoft-antispam-prvs: <AT5PR8401MB086894FDA4FA54C0937C570AAB1A0@AT5PR8401MB0868.NAMPRD84.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:3631;
-x-forefront-prvs: 00550ABE1F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(396003)(366004)(346002)(136003)(376002)(189003)(199004)(13464003)(14444005)(256004)(86362001)(76176011)(4326008)(6116002)(14454004)(33656002)(2906002)(7416002)(68736007)(71200400001)(55016002)(54906003)(316002)(6436002)(110136005)(9686003)(4744005)(71190400001)(53936002)(6246003)(1250700005)(25786009)(64756008)(66476007)(66556008)(73956011)(76116006)(7736002)(66946007)(99286004)(478600001)(102836004)(52536014)(81156014)(476003)(229853002)(7696005)(5660300002)(6506007)(53546011)(186003)(305945005)(46003)(486006)(8676002)(66446008)(74316002)(81166006)(446003)(11346002)(2501003)(8936002);DIR:OUT;SFP:1102;SCL:1;SRVR:AT5PR8401MB0868;H:AT5PR8401MB1169.NAMPRD84.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: hpe.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: cUe5XGW5Vx0es10ssp/xT+psm28KyuBqDYZTpifpOtZ7R/00HOfBonHjWC40gsCmxtx3x+te2ZNTz0CXoXTurt7SIOLgxKe9zAYtSdSQ1QhaXwFdJzzJJSDRG5RbVlOVmx/bM8YkBw83FphIqsKu1cqZwk9wJ4+AansW9fmjHBJ1krFB+RkcDEKuyTfS6v1ySkNaX/nTfAOtz8f+KR9sNdoQhxlFLw2y+BVgmgye9RG+mGat+2EKkupV3KJ35K9neJAcbzXLkPNDtvqEMnjH1Amc/boOzE7wG3THSopjPsaW7pSFc5eo93vOEATr3r+6c/qFB472ZRSSN5MpLaIZ7b5qKcA5ZYEeov+PCbsGMKmaq0ya1C9Jv/sJZVq8ECWLJkjRUx0bCrw/XgW/UvXXGck40o4+lP/m8puYoAWsewg=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Sat, 1 Jun 2019 11:42:57 -0400
+Received: from callcc.thunk.org ([66.31.38.53])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x51Fgnih031925
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 1 Jun 2019 11:42:49 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id D4029420481; Sat,  1 Jun 2019 11:42:48 -0400 (EDT)
+Date:   Sat, 1 Jun 2019 11:42:48 -0400
+From:   "Theodore Ts'o" <tytso@mit.edu>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH RFC] Rough draft document on merging and rebasing
+Message-ID: <20190601154248.GA17800@mit.edu>
+Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org
+References: <20190530135317.3c8d0d7b@lwn.net>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2955e4e2-78df-4b3f-1873-08d6e6a76c7c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jun 2019 15:40:07.2652
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 105b2061-b669-4b31-92ac-24d304d195dc
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: elliott@hpe.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AT5PR8401MB0868
-X-OriginatorOrg: hpe.com
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-01_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=907 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906010112
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190530135317.3c8d0d7b@lwn.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 30, 2019 at 01:53:17PM -0600, Jonathan Corbet wrote:
+> +Rebasing
+> +========
+> +
+> +"Rebasing" is the process of changing the history of a series of commits
+> +within a repository.  At its simplest, a rebase could change the starting
+> +point of a patch series from one point to another.  Other uses include
+> +fixing (or deleting) broken commits, adding tags to commits, or changing
+> +the order in which commits are applied.  Used properly, rebasing can yield
+> +a cleaner and clearer development history; used improperly, it can obscure
+> +that history and introduce bugs.
 
+Rebasing is being used in two senses here.  The first is where the
+diffs don't change (much), but the starting point of the changes is
+being changed.  The second is where a broken commit is dropped, adding
+a signed-off-by, etc.
 
-> -----Original Message-----
-> From: linux-kernel-owner@vger.kernel.org <linux-kernel-
-> owner@vger.kernel.org> On Behalf Of Enrico Weigelt, metux IT consult
-> Sent: Saturday, June 01, 2019 9:02 AM
-> Subject: [PATCH 2/3] drivers: scsi: remove unnecessary #ifdef MODULE
-> 
-> The MODULE_DEVICE_TABLE() macro already checks for MODULE defined,
-> so the extra check here is not necessary.
-> 
-...
-> diff --git a/drivers/scsi/BusLogic.c b/drivers/scsi/BusLogic.c
-...
-> 
-> -#ifdef MODULE
->  static struct pci_device_id dptids[] = {
->  	{ PCI_DPT_VENDOR_ID, PCI_DPT_DEVICE_ID, PCI_ANY_ID,
-> PCI_ANY_ID,},
->  	{ PCI_DPT_VENDOR_ID, PCI_DPT_RAPTOR_DEVICE_ID, PCI_ANY_ID,
-> PCI_ANY_ID,},
->  	{ 0, }
->  };
-> -#endif
-> -
->  MODULE_DEVICE_TABLE(pci,dptids);
+Both have the property that they can used for good or ill, but the
+details when this is an issue can change a bit.  More below...
 
-I don't see any reply to James' comment that these changes result in
-static struct definitions that are unused, which should result in
-complaints by the compiler like:
-    warning: 'dptids' defined by not used [-Wunused-variable]
+> +There are a few rules of thumb that can help developers to avoid the worst
+> +perils of rebasing:
+> +
+> + - History that has been exposed to the world beyond your private system
+> +   should not be rebased.  Others may have pulled a copy of your tree and
+> +   built on it; rebasing your tree will create pain for them.  If work is
+> +   in need of rebasing, that is usually a sign that it is not yet ready to
+> +   be committed to a public repository.
 
+That seems to be a bit too categorical.  It's been recommended, and
+some people do, push patches to a branch so the zero-day bot will pick
+it up and test for potential problems.  And broken commits *do* get
+dropped from candidate stable kernel releases.  And, of course,
+there's linux-next, which is constantly getting rebased.
 
+And there have been people who have pushed out RFC patche series onto
+a git branch, and publicized it on LKML for the convenience of
+reviewers.  (Perhaps because there is a patch which is so big it
+exceeds the LKML size restrictions.)
+
+I think it's more about whether people know that a branch is
+considered unstable from a historical perspective or not.  No one
+builds on top of linux-next because, well, that would be silly.
+
+Finally, I'm bit concerned about anything which states absolutes,
+because there are people who tend to be real stickler for the rules,
+and if they see something stated in absolute terms, they fail to
+understand that there are exceptions that are well understood, and in
+use for years before the existence of the document which is trying to
+codify best practices.
+
+> + - Realize the rebasing a patch series changes the environment in which it
+> +   was developed and, likely, invalidates much of the testing that was
+> +   done.  A rebased patch series should, as a general rule, be treated like
+> +   new code and retested from the beginning.
+
+In this paragraph, "rebasing" is being used in the change the base
+commit on top of which a series of changes were based upon.  And it's
+what most people think of when they see the word "rebase".
+
+However "git rebase" is also used to rewrite git history when dropping
+a bad commit, or fixing things so the branch is bisectable, etc.  But
+in the definitions above, the word "rebase" was defined to include
+both "changing the base of a patch stack", and "rewriting git
+history".  I wonder if that helps more than it hinders understanding.
+
+At least in my mind, "rebasing" is much more often the wrong thing,
+where as "rewriting git history" for a leaf repository can be more
+often justifable.  And of course, if someone is working on a feature
+for which the review and development cycle takes several kernel
+releases, I'd claim that "rebasing" in that case always makes sense,
+even if they *have* exposed their patch series via git for review /
+commenting purposes.
+
+Regards,
+
+						- Ted
