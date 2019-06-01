@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA8EAC28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E8AC28CC3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84104249FD
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2F4325DA0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:27:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395671;
-	bh=RzVdEbcgR3gqdeLqYWaRHctpGJEk+NWbLFfeHvZL7Sw=;
+	s=default; t=1559395676;
+	bh=xo/HVDXnZUTw1egaog1W5dRMlGcmSy5gcJmhj/9oWRE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r2X54pUP/T0UArbB+rzlrVnvC5XDURBYCXiXUy2Vey95IuWNryqKOn1Vf8tf+XfQf
-	 4PhezG+eRbg69YYUZq17j6e+TMvg3a7BV+xLmStplmgX8Z4jk2A6aaCn0MScG7EbJ0
-	 Wq82+oYd0r/MUe0H2IeTxZCDZ2koozu2rResRrpU=
+	b=uRSyf20gd2uZnRAzKmqewFzURvTK91czLbMmYoFKA1980wYI1MYNsrVdIZgTMRyx8
+	 NwXhPceBmdj0M95NtLvn22Ruh+laNDUs1m22sp5HFMJUQ3xrS2JoZSlsVuwHPniDpI
+	 hJBLBKMj5cdHuGnofsWK3jkKL0uPrUiEONaAU1ts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730012AbfFAN1u (ORCPT
+        id S1730021AbfFAN14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:27:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60808 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:27:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729971AbfFAN1j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:27:39 -0400
+        id S1729960AbfFAN1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:27:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9121726D2A;
-        Sat,  1 Jun 2019 13:27:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B658326FAA;
+        Sat,  1 Jun 2019 13:27:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395658;
-        bh=RzVdEbcgR3gqdeLqYWaRHctpGJEk+NWbLFfeHvZL7Sw=;
+        s=default; t=1559395654;
+        bh=xo/HVDXnZUTw1egaog1W5dRMlGcmSy5gcJmhj/9oWRE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QNaalJd9UOGkzT4pkKfeSpb9J3GjaZRPmBZJlNPBbz1yyYus53xazU78xN7aB9ASc
-         TMyIcgSh61Cx36SA65X2ybqDdJl01psYBfLJD3sDCR4pbdhXdgYDkuVP2VYhh+dDWQ
-         lFhP7Oj5LdOVkcn0fK6jw3vj/nrYRLE0T9se3XZ8=
+        b=xeeMtw9WhYjv/dM0kkq1cLrvvVJ43sw3QCNpfmgNj8tNIM+i7GDbtTOzkE2TuoZ5s
+         a5d93nsTPT0kCjFYL06IhhAqeMnisGGCU+9JKXq1/DA7pdYPSK/Oo2tr9T1mQdyQM3
+         sSnP6gw9ZjvWl9TkrJ8pmVRAsoG0d1cOvyW3mCK4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 56/56] ARM: exynos: Fix undefined instruction during Exynos5422 resume
-Date:   Sat,  1 Jun 2019 09:26:00 -0400
-Message-Id: <20190601132600.27427-56-sashal@kernel.org>
+Cc:     =?UTF-8?q?Christoph=20Vogtl=C3=A4nder?= 
+        <c.vogtlaender@sigma-surface-science.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 53/56] pwm: tiehrpwm: Update shadow register for disabling PWMs
+Date:   Sat,  1 Jun 2019 09:25:57 -0400
+Message-Id: <20190601132600.27427-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132600.27427-1-sashal@kernel.org>
 References: <20190601132600.27427-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,88 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Christoph Vogtländer <c.vogtlaender@sigma-surface-science.com>
 
-[ Upstream commit 4d8e3e951a856777720272ce27f2c738a3eeef8c ]
+[ Upstream commit b00ef53053191d3025c15e8041699f8c9d132daf ]
 
-During early system resume on Exynos5422 with performance counters enabled
-the following kernel oops happens:
+It must be made sure that immediate mode is not already set, when
+modifying shadow register value in ehrpwm_pwm_disable(). Otherwise
+modifications to the action-qualifier continuous S/W force
+register(AQSFRC) will be done in the active register.
+This may happen when both channels are being disabled. In this case,
+only the first channel state will be recorded as disabled in the shadow
+register. Later, when enabling the first channel again, the second
+channel would be enabled as well. Setting RLDCSF to zero, first, ensures
+that the shadow register is updated as desired.
 
-    Internal error: Oops - undefined instruction: 0 [#1] PREEMPT SMP ARM
-    Modules linked in:
-    CPU: 0 PID: 1433 Comm: bash Tainted: G        W         5.0.0-rc5-next-20190208-00023-gd5fb5a8a13e6-dirty #5480
-    Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
-    ...
-    Flags: nZCv  IRQs off  FIQs off  Mode SVC_32  ISA ARM  Segment none
-    Control: 10c5387d  Table: 4451006a  DAC: 00000051
-    Process bash (pid: 1433, stack limit = 0xb7e0e22f)
-    ...
-    (reset_ctrl_regs) from [<c0112ad0>] (dbg_cpu_pm_notify+0x1c/0x24)
-    (dbg_cpu_pm_notify) from [<c014c840>] (notifier_call_chain+0x44/0x84)
-    (notifier_call_chain) from [<c014cbc0>] (__atomic_notifier_call_chain+0x7c/0x128)
-    (__atomic_notifier_call_chain) from [<c01ffaac>] (cpu_pm_notify+0x30/0x54)
-    (cpu_pm_notify) from [<c055116c>] (syscore_resume+0x98/0x3f4)
-    (syscore_resume) from [<c0189350>] (suspend_devices_and_enter+0x97c/0xe74)
-    (suspend_devices_and_enter) from [<c0189fb8>] (pm_suspend+0x770/0xc04)
-    (pm_suspend) from [<c0187740>] (state_store+0x6c/0xcc)
-    (state_store) from [<c09fa698>] (kobj_attr_store+0x14/0x20)
-    (kobj_attr_store) from [<c030159c>] (sysfs_kf_write+0x4c/0x50)
-    (sysfs_kf_write) from [<c0300620>] (kernfs_fop_write+0xfc/0x1e0)
-    (kernfs_fop_write) from [<c0282be8>] (__vfs_write+0x2c/0x160)
-    (__vfs_write) from [<c0282ea4>] (vfs_write+0xa4/0x16c)
-    (vfs_write) from [<c0283080>] (ksys_write+0x40/0x8c)
-    (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
-
-Undefined instruction is triggered during CP14 reset, because bits: #16
-(Secure privileged invasive debug disabled) and #17 (Secure privileged
-noninvasive debug disable) are set in DSCR. Those bits depend on SPNIDEN
-and SPIDEN lines, which are provided by Secure JTAG hardware block. That
-block in turn is powered from cluster 0 (big/Eagle), but the Exynos5422
-boots on cluster 1 (LITTLE/KFC).
-
-To fix this issue it is enough to turn on the power on the cluster 0 for
-a while. This lets the Secure JTAG block to propagate the needed signals
-to LITTLE/KFC cores and change their DSCR.
-
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Fixes: 38dabd91ff0b ("pwm: tiehrpwm: Fix disabling of output of PWMs")
+Signed-off-by: Christoph Vogtländer <c.vogtlaender@sigma-surface-science.com>
+[vigneshr@ti.com: Improve commit message]
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-exynos/suspend.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ drivers/pwm/pwm-tiehrpwm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/mach-exynos/suspend.c b/arch/arm/mach-exynos/suspend.c
-index e8adb428dddb4..2b19695f5f35f 100644
---- a/arch/arm/mach-exynos/suspend.c
-+++ b/arch/arm/mach-exynos/suspend.c
-@@ -508,8 +508,27 @@ static void exynos3250_pm_resume(void)
+diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
+index 062dff1c902df..ede17f89d57f6 100644
+--- a/drivers/pwm/pwm-tiehrpwm.c
++++ b/drivers/pwm/pwm-tiehrpwm.c
+@@ -385,6 +385,8 @@ static void ehrpwm_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	}
  
- static void exynos5420_prepare_pm_resume(void)
- {
-+	unsigned int mpidr, cluster;
-+
-+	mpidr = read_cpuid_mpidr();
-+	cluster = MPIDR_AFFINITY_LEVEL(mpidr, 1);
-+
- 	if (IS_ENABLED(CONFIG_EXYNOS5420_MCPM))
- 		WARN_ON(mcpm_cpu_powered_up());
-+
-+	if (IS_ENABLED(CONFIG_HW_PERF_EVENTS) && cluster != 0) {
-+		/*
-+		 * When system is resumed on the LITTLE/KFC core (cluster 1),
-+		 * the DSCR is not properly updated until the power is turned
-+		 * on also for the cluster 0. Enable it for a while to
-+		 * propagate the SPNIDEN and SPIDEN signals from Secure JTAG
-+		 * block and avoid undefined instruction issue on CP14 reset.
-+		 */
-+		pmu_raw_writel(S5P_CORE_LOCAL_PWR_EN,
-+				EXYNOS_COMMON_CONFIGURATION(0));
-+		pmu_raw_writel(0,
-+				EXYNOS_COMMON_CONFIGURATION(0));
-+	}
- }
- 
- static void exynos5420_pm_resume(void)
+ 	/* Update shadow register first before modifying active register */
++	ehrpwm_modify(pc->mmio_base, AQSFRC, AQSFRC_RLDCSF_MASK,
++		      AQSFRC_RLDCSF_ZRO);
+ 	ehrpwm_modify(pc->mmio_base, AQCSFRC, aqcsfrc_mask, aqcsfrc_val);
+ 	/*
+ 	 * Changes to immediate action on Action Qualifier. This puts
 -- 
 2.20.1
 
