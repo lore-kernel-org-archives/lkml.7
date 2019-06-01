@@ -7,48 +7,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B927C46470
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B38ACC28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F032427251
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:17:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CEC327227
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:17:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395031;
-	bh=ODfp8jxc5ne6xwedr1RUz4fhd+Pxzup3hNIbD9QDFfA=;
+	s=default; t=1559395032;
+	bh=fkbIABfdfNh+VcYgcRZEDOG8m6KEgaR3fR6nVyY8C/A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=02kWCzl9ngJPGA2w0VHvcPJ9KjK9qEPgDYjO21TxT05DQdcKzUpWxGIJHzDLjYMEx
-	 4kDQG8JRAKSWV7mS3c/7gxbbKvx+6jOzsjuzG44uyXROQY4D8+IYk7KHg6JnBnGH1N
-	 yBjzFYrQ6LwGRt5nBgx7TUoGAzsU3f4USM1TM6B8=
+	b=mF0jH13VhmRes10Qpg4O/2vmdm4x+ocSq58Qj2B2SKv0rPWhz53NqftqyNV9iiS7X
+	 eQ+XnibzGL9rw5xmTWEdJuSr6HJaUNm/ko+RG5LEOedimuNJ1hO0Ikcw0dEVcttMxp
+	 Y9j2OghtXNe4uyl12Q8wwVTGBEXgm/Ec5Ik3eWzM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbfFANRI (ORCPT
+        id S1727330AbfFANRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:17:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41828 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:17:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726210AbfFANRG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:17:06 -0400
+        id S1726210AbfFANRJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:17:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A8C427256;
-        Sat,  1 Jun 2019 13:17:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B35627256;
+        Sat,  1 Jun 2019 13:17:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395025;
-        bh=ODfp8jxc5ne6xwedr1RUz4fhd+Pxzup3hNIbD9QDFfA=;
+        s=default; t=1559395028;
+        bh=fkbIABfdfNh+VcYgcRZEDOG8m6KEgaR3fR6nVyY8C/A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D9vLrNxXyxARAXGq6IrdcNSCT+Bm44+moayj2mT+RI8gGGQhd9vFNtrJvESivQ+pU
-         2z3BMRd9b3bfzIM51/qKqm7y+2Nl7VJjB/fm9Kv83oojULjqsC6j2EpMjSBj1OUs53
-         sdHh/InnQEZ21cWnCRxhG0rmV6tW4nI+fsENq/rI=
+        b=h8n9wnb+0Xt+dbviREXb8+O511iB7dL35pJoMEPot6y4/9WZ7VT0cI4y1gY5W1734
+         w9P9X4aloNqwcFgjWiplWKhHluqTmVtxtrPyuA68582TLLGxn0/EOzYybCDiGmUc7A
+         TL14LXcq62UxUA6ffDWyd9W9Vtf1oCG/Lc1qR2p0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>, Alexandre Bounine <alex.bou9@gmail.com>,
-        Matt Porter <mporter@kernel.crashing.org>,
+Cc:     Christian Brauner <christian@brauner.io>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Waiman Long <longman@redhat.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 003/186] rapidio: fix a NULL pointer dereference when create_workqueue() fails
-Date:   Sat,  1 Jun 2019 09:13:39 -0400
-Message-Id: <20190601131653.24205-3-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 005/186] sysctl: return -EINVAL if val violates minmax
+Date:   Sat,  1 Jun 2019 09:13:41 -0400
+Message-Id: <20190601131653.24205-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131653.24205-1-sashal@kernel.org>
 References: <20190601131653.24205-1-sashal@kernel.org>
@@ -61,42 +68,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Christian Brauner <christian@brauner.io>
 
-[ Upstream commit 23015b22e47c5409620b1726a677d69e5cd032ba ]
+[ Upstream commit e260ad01f0aa9e96b5386d5cd7184afd949dc457 ]
 
-In case create_workqueue fails, the fix releases resources and returns
--ENOMEM to avoid NULL pointer dereference.
+Currently when userspace gives us a values that overflow e.g.  file-max
+and other callers of __do_proc_doulongvec_minmax() we simply ignore the
+new value and leave the current value untouched.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Acked-by: Alexandre Bounine <alex.bou9@gmail.com>
-Cc: Matt Porter <mporter@kernel.crashing.org>
+This can be problematic as it gives the illusion that the limit has
+indeed be bumped when in fact it failed.  This commit makes sure to
+return EINVAL when an overflow is detected.  Please note that this is a
+userspace facing change.
+
+Link: http://lkml.kernel.org/r/20190210203943.8227-4-christian@brauner.io
+Signed-off-by: Christian Brauner <christian@brauner.io>
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Dominik Brodowski <linux@dominikbrodowski.net>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Joe Lawrence <joe.lawrence@redhat.com>
+Cc: Waiman Long <longman@redhat.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rapidio/rio_cm.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ kernel/sysctl.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/rapidio/rio_cm.c b/drivers/rapidio/rio_cm.c
-index cf45829585cb4..b29fc258eeba4 100644
---- a/drivers/rapidio/rio_cm.c
-+++ b/drivers/rapidio/rio_cm.c
-@@ -2147,6 +2147,14 @@ static int riocm_add_mport(struct device *dev,
- 	mutex_init(&cm->rx_lock);
- 	riocm_rx_fill(cm, RIOCM_RX_RING_SIZE);
- 	cm->rx_wq = create_workqueue(DRV_NAME "/rxq");
-+	if (!cm->rx_wq) {
-+		riocm_error("failed to allocate IBMBOX_%d on %s",
-+			    cmbox, mport->name);
-+		rio_release_outb_mbox(mport, cmbox);
-+		kfree(cm);
-+		return -ENOMEM;
-+	}
-+
- 	INIT_WORK(&cm->rx_work, rio_ibmsg_handler);
- 
- 	cm->tx_slot = 0;
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index c9ec050bcf461..387efbaf464a7 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -2874,8 +2874,10 @@ static int __do_proc_doulongvec_minmax(void *data, struct ctl_table *table, int
+ 			if (neg)
+ 				continue;
+ 			val = convmul * val / convdiv;
+-			if ((min && val < *min) || (max && val > *max))
+-				continue;
++			if ((min && val < *min) || (max && val > *max)) {
++				err = -EINVAL;
++				break;
++			}
+ 			*i = val;
+ 		} else {
+ 			val = convdiv * (*i) / convmul;
 -- 
 2.20.1
 
