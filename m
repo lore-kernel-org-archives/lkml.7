@@ -2,144 +2,164 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5440C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 08:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D7B3C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 08:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94C0327181
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 08:37:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="n2LRLS4L"
+	by mail.kernel.org (Postfix) with ESMTP id 147112719A
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 08:49:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbfFAIhk (ORCPT
+        id S1726773AbfFAItx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 04:37:40 -0400
-Received: from mout.web.de ([217.72.192.78]:37309 "EHLO mout.web.de"
+        Sat, 1 Jun 2019 04:49:53 -0400
+Received: from ou.quest-ce.net ([195.154.187.82]:50923 "EHLO ou.quest-ce.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726013AbfFAIhk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 04:37:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1559378254;
-        bh=A2n9kAcES47/+bnZaoJNCVg0H4NW/A4A8Mo34xdoI5s=;
-        h=X-UI-Sender-Class:Cc:References:Subject:To:From:Date:In-Reply-To;
-        b=n2LRLS4L7+ZcfZepwiFtpMb6W0DU2Jt1IqTALuD6hChP5d/fSHXGJXXUb/SMGRQzg
-         BasSLYHwQYU4fv/78A1EUuAER9HRKupCfwT42y+hTvq4GEZ0HUgpIaqwt5O+Ti/0G2
-         gl7lZ5RQOXsZarXAkhVoF37FQzHrWVbioBl0qOVc=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.4] ([93.133.68.189]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LoYX0-1gv9rY02yA-00gZ2F; Sat, 01
- Jun 2019 10:37:34 +0200
-Cc:     LKML <linux-kernel@vger.kernel.org>
-References: <1556674718-5081-1-git-send-email-johunt@akamai.com>
-Subject: Re: ss: Checking efficient analysis for network connections
-To:     Josh Hunt <johunt@akamai.com>, David Ahern <dsahern@gmail.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        netdev@vger.kernel.org
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <3d1c67c8-7dfe-905b-4548-dae23592edc5@web.de>
-Date:   Sat, 1 Jun 2019 10:36:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1726058AbfFAItw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 04:49:52 -0400
+Received: from [2a01:e35:39f2:1220:9dd7:c176:119b:4c9d] (helo=opteyam2)
+        by ou.quest-ce.net with esmtpsa (TLS1.1:RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <ydroneaud@opteya.com>)
+        id 1hWzhq-000CZz-Pq; Sat, 01 Jun 2019 10:49:39 +0200
+Message-ID: <7ba353ba112ebbe1493fcc210795cf74a0e83f74.camel@opteya.com>
+From:   Yann Droneaud <ydroneaud@opteya.com>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, jannh@google.com,
+        fweimer@redhat.com, oleg@redhat.com, arnd@arndb.de,
+        dhowells@redhat.com, Pavel Emelyanov <xemul@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@gmail.com>, linux-api@vger.kernel.org
+Date:   Sat, 01 Jun 2019 10:49:38 +0200
+In-Reply-To: <20190531220815.owrc5kbbdemmwdhs@brauner.io>
+References: <20190529152237.10719-1-christian@brauner.io>
+         <1058006e0df4b52b3e53c7b3202c04140899aeb5.camel@opteya.com>
+         <20190531220815.owrc5kbbdemmwdhs@brauner.io>
+Organization: OPTEYA
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
 MIME-Version: 1.0
-In-Reply-To: <1556674718-5081-1-git-send-email-johunt@akamai.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-X-Provags-ID: V03:K1:zahEED2aGN6akXRv9OgQBi63qvgAKWx2Q4CBAVAYjHaUWe43rr9
- 3OAjYchsT1vbigmaiTEkyS2m6ICn9k7XRL/nv5AwKB1A1L24/GEP67tJ5I7WdvzD2Dq9XJ9
- GXX/tVg8RTOiIeYJpN0HKSzUF5jPQFVtPXyrCGneY7ACadbdFGlvRhxk6Uad2qyTzJjyUjL
- h5W6jqrvSi335Sdd/0/ew==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:p4Nii7LVxbg=:vIoq/L1wVlLwmF+qYKUQob
- sUWNcrMbyfgfzobahVaO7tGv6poILnAigXgUUzOe32oAvwy5hqlNLDRJv/t58+Awp/avRS1ii
- HGxP+eWk64dxadUYJ3EVdZn2c8y1VOidhXaXPEXcXxxobz9ciHqkBwy5BCG6XUq3FSNg85GE1
- 207J9jJpqeR+tLXsI4AjcPc1mlatPdPQOrUkv0vA2pCa0swCX/Rhw7xINM62TcUJloU7jLNTg
- GB7v3gKXy8wkP75Sq+7Ei2H6eANLlvpgWym1tr6CczUMwogN6bGkZ7ZzfTXu0uG6mLux/sMgl
- h/MroRbkRDMqxr43fnn+6Q5yYpvxF7pkeHfUG8kAX8LDdNnOEmtOn/rsnqon2PuJMRFmey6vh
- fv5EJ6u+Dv7D0hw9nYNIEGmFoLUmj+fwDbJBBgqmOHn4NPs6VrFaYRirUwrQg6SrwM7x2FFTu
- +qMc3dWZg5oGxhH1fVLS7Yls76Naayrr/hFlODuMWt2ZhGfjsIlZMLSfjRBIRHP7i5QTDyZsa
- +b8Zhk/8fjvmYn5EkhHT4r5N8QJBodGMzvyIm9nYp/xGuwDIIKajvzmmWzaSZfxm4svqaImfK
- MnxlsGhMyzHe7NW8VUbtK3RoGF3gc5/UOwlUz8taVD6yrvP1hUXgdEy53qjaxlkV6++wLgytO
- chHocfK436ZamocYzvaIev8SBLv8YV1up1ljWZEQEeb0AC62iaVozeCxQJyFHYWjZ9z2iyXxI
- k462v6nOHaT+4lVr7AzcTUSoQ+g+fjQFh+zPy87PaabuLWan7eLuU8M0CoBKK8w/gqprNOKyY
- MIM8MsgkywPqblcjQ5ZDruF4DUy80fJEyWr1a7xOAkWh4npGzoXJhnwleyFaPSVzowEJkYpCO
- C76SBf5wLe6LB4Om6cugkf7upWXTgwDys915r24OmtIhl9qEl1R6yzamU458R0YLa/uWkQTM1
- fy2YgkUxcqsAwRX8cPZeYP8nWrW8g66/ZxzF4q2HTPcWsWUaa4VXs
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a01:e35:39f2:1220:9dd7:c176:119b:4c9d
+X-SA-Exim-Mail-From: ydroneaud@opteya.com
+Subject: Re: [PATCH v1 1/2] fork: add clone3
+X-SA-Exim-Version: 4.2.1 (built Mon, 26 Dec 2011 16:24:06 +0000)
+X-SA-Exim-Scanned: Yes (on ou.quest-ce.net)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Multi-line output in ss makes it difficult to search for things with grep.
+Hi,
 
-I became more concerned about efficient data processing for the
-provided information. There are further software development possibilities
-to consider, aren't there?
+Le samedi 01 juin 2019 à 00:08 +0200, Christian Brauner a écrit :
+> On Wed, May 29, 2019 at 05:42:14PM +0200, Yann Droneaud wrote:
+> > Le mercredi 29 mai 2019 à 17:22 +0200, Christian Brauner a écrit :
+> > > This adds the clone3 system call.
+> > > 
+> > > 
+> > > diff --git a/kernel/fork.c b/kernel/fork.c
+> > > index b4cba953040a..6bc3e3d17150 100644
+> > > --- a/kernel/fork.c
+> > > +++ b/kernel/fork.c
+> > > @@ -2472,7 +2475,96 @@ SYSCALL_DEFINE5(clone, unsigned long,
+> > > clone_flags, unsigned long, newsp,
+> > >  		 unsigned long, tls)
+> > >  #endif
+> > >  {
+> > > -	return _do_fork(clone_flags, newsp, 0, parent_tidptr,
+> > > child_tidptr, tls);
+> > > +	struct kernel_clone_args args = {
+> > > +		.flags = clone_flags,
+> > > +		.stack = newsp,
+> > > +		.pidfd = parent_tidptr,
+> > > +		.parent_tidptr = parent_tidptr,
+> > > +		.tls = tls,
+> > > +		.child_tidptr = child_tidptr,
+> > > +	};
+> > > +
+> > > +	/* clone(CLONE_PIDFD) uses parent_tidptr to return a pidfd */
+> > > +	if ((clone_flags & CLONE_PIDFD) && (clone_flags &
+> > > CLONE_PARENT_SETTID))
+> > > +		return -EINVAL;
+> > > +
+> > > +	return _do_fork(&args);
+> > > +}
+> > > +
+> > > +static bool clone3_flags_valid(u64 flags)
+> > > +{
+> > > +	if (flags & CLONE_DETACHED)
+> > > +		return false;
+> > > +
+> > > +	if (flags & ~CLONE_MAX)
+> > > +		return false;
+> > > +
+> > > +	return true;
+> > > +}
+> > > +
+> > > +static int copy_clone_args_from_user(struct kernel_clone_args
+> > > *kargs,
+> > > +				     struct clone_args __user *uargs,
+> > > +				     size_t size)
+> > > +{
+> > > +	struct clone_args args;
+> > > +
+> > > +	if (unlikely(size > PAGE_SIZE))
+> > > +		return -E2BIG;
+> > > +
+> > > +	if (unlikely(size < sizeof(struct clone_args)))
+> > > +		return -EINVAL;
+> > > +
+> > > +	if (unlikely(!access_ok(uargs, size)))
+> > > +		return -EFAULT;
+> > > +
+> > > +	if (size > sizeof(struct clone_args)) {
+> > > +		unsigned char __user *addr;
+> > > +		unsigned char __user *end;
+> > > +		unsigned char val;
+> > > +
+> > > +		addr = (void __user *)uargs + sizeof(struct
+> > > clone_args);
+> > > +		end = (void __user *)uargs + size;
+> > > +
+> > > +		for (; addr < end; addr++) {
+> > > +			if (get_user(val, addr))
+> > > +				return -EFAULT;
+> > > +			if (val)
+> > > +				return -E2BIG;
+> > 
+> > Should be -EINVAL: having something after the structure should be
+> > handled just like an invalid flags, while still allowing future
+> > userspace program to probe for support for newer feature.
+> 
+> (Traveling until Monday, so sorry for delayed responses.)
+> 
+> This copies what:
+> 
+> kernel/sched/core.c:sched_copy_attr()
+> kernel/event/core.c:perf_copy_attr()
+> 
+> are already doing. Consistency might be good here but, I think.
+> 
 
-The chosen data formats influence the software situation considerably.
+I would have prefer all the above to returns -EINVAL for consistency
+with the unknown flags check ... 
 
-* Information is exported together with extra space characters.
-  Other field delimiters can occasionally be nicer.
+"Designing the API: Planning for Extension" [1] doesn't mandate return
+-EINVAL for that case, but does make perf_event_open() and
+perf_copy_attr() the example to follow ... so you're right.
 
-* Regular expressions are useful to extract data from text lines.
-  But other programming interfaces are safer to work with data structures.
-  The mentioned program can be used to filter the provided input.
-  But if you would like to work with information from the filtered records,
-  you would need to repeat some data processing by the calling process
-  so that items will be converted into structured elements.
-  Would you like to avoid duplicate work?
+[1] 
+https://www.kernel.org/doc/html/v5.1/process/adding-syscalls.html#designing-the-api-planning-for-extension
+
+Regards.
+
+-- 
+Yann Droneaud
+OPTEYA
 
 
-I imagine then that it would be also nicer to perform filtering based on
-configurable constraints at the data source directly.
-How much can Linux help more in this software area?
-How do you think about such ideas?
-
-Regards,
-Markus
