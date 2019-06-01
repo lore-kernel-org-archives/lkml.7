@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0168C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F12C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74BAB27629
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:40:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D42552764B
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:40:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396402;
-	bh=lERRBpbiWXcItU0VZZrHkshCFTxnimKBKwtoNIoSXbM=;
+	s=default; t=1559396405;
+	bh=Ai2vQJywRYMGVTbPiAk3Y9zEsCHedQ3M3f/TFeUR7Xg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ptzCAgW9PeipVVJDbOS9mXsof3GYzalooa/QwR72CC1wOU4krF6An/VF8zURFvGap
-	 iVAXMrbW/X8KCtRTZiNaOPZKUXYbNVu2yQf0zbwKdt+P7eDtrzvR3swAtZ5zxQTS/w
-	 1yfB5bYUoi0rt9zqeRcTteg3rqo+2/cGRV0UT55A=
+	b=kYej8taMbBU7njuDsWD+zgtiNhRmGw+UO18mR72trpLf2d6e/KyQUKHP8rbjOj2ds
+	 yqXwKhl3WnLxqreGS13qUvx1V1jarNumqHb9/lG3dO9QrRh+f0fxYbJkSHTdji8CEG
+	 kTHGBXHq+tPBtq3nQF+N9k3Iwx8UHZ2aJpvjHLzc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728359AbfFANUs (ORCPT
+        id S1728633AbfFANkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:20:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47818 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:40:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728330AbfFANUg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:20:36 -0400
+        id S1727613AbfFANUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:20:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0B3C272D8;
-        Sat,  1 Jun 2019 13:20:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAE61272E9;
+        Sat,  1 Jun 2019 13:20:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395235;
-        bh=lERRBpbiWXcItU0VZZrHkshCFTxnimKBKwtoNIoSXbM=;
+        s=default; t=1559395247;
+        bh=Ai2vQJywRYMGVTbPiAk3Y9zEsCHedQ3M3f/TFeUR7Xg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gmVdpg1IjEFC8PHYzXCJUfvfHvJ7ByU/9Nw3/Wp+CqKKQ8qeaL431Yp5IuUe2PgjZ
-         8AVtzJRnpdFYipS9Hp/SdP/muuVHxqfGwSBKtS/M+Vp1s/71eMBiiKx8jHd86iHiK+
-         Sf24ts6tzhgj795p5ChcKj8uDGo/PWTyCgxLiuE4=
+        b=RkfKf0A7lM89VebdC5utHEFNxW03E47kYUNjSknDq27T5aelHdzajp7qqiSVPLU/Z
+         qH222DBL+6ox+aHDhlflBKLr16LNgQ0DdPYF5lW/QCJoAd2IMuTeGWQ64KfggCOw5g
+         urPoVs488w7RmVOqZtciloiM7msV/phO2c9qAxP4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 5.0 018/173] mm: page_mkclean vs MADV_DONTNEED race
-Date:   Sat,  1 Jun 2019 09:16:50 -0400
-Message-Id: <20190601131934.25053-18-sashal@kernel.org>
+Cc:     Binbin Wu <binbin.wu@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 025/173] mfd: intel-lpss: Set the device in reset state when init
+Date:   Sat,  1 Jun 2019 09:16:57 -0400
+Message-Id: <20190601131934.25053-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131934.25053-1-sashal@kernel.org>
 References: <20190601131934.25053-1-sashal@kernel.org>
@@ -63,81 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+From: Binbin Wu <binbin.wu@intel.com>
 
-[ Upstream commit 024eee0e83f0df52317be607ca521e0fc572aa07 ]
+[ Upstream commit dad06532292d77f37fbe831a02948a593500f682 ]
 
-MADV_DONTNEED is handled with mmap_sem taken in read mode.  We call
-page_mkclean without holding mmap_sem.
+In virtualized setup, when system reboots due to warm
+reset interrupt storm is seen.
 
-MADV_DONTNEED implies that pages in the region are unmapped and subsequent
-access to the pages in that range is handled as a new page fault.  This
-implies that if we don't have parallel access to the region when
-MADV_DONTNEED is run we expect those range to be unallocated.
+Call Trace:
+<IRQ>
+dump_stack+0x70/0xa5
+__report_bad_irq+0x2e/0xc0
+note_interrupt+0x248/0x290
+? add_interrupt_randomness+0x30/0x220
+handle_irq_event_percpu+0x54/0x80
+handle_irq_event+0x39/0x60
+handle_fasteoi_irq+0x91/0x150
+handle_irq+0x108/0x180
+do_IRQ+0x52/0xf0
+common_interrupt+0xf/0xf
+</IRQ>
+RIP: 0033:0x76fc2cfabc1d
+Code: 24 28 bf 03 00 00 00 31 c0 48 8d 35 63 77 0e 00 48 8d 15 2e
+94 0e 00 4c 89 f9 49 89 d9 4c 89 d3 e8 b8 e2 01 00 48 8b 54 24 18
+<48> 89 ef 48 89 de 4c 89 e1 e8 d5 97 01 00 84 c0 74 2d 48 8b 04
+24
+RSP: 002b:00007ffd247c1fc0 EFLAGS: 00000293 ORIG_RAX: ffffffffffffffda
+RAX: 0000000000000000 RBX: 00007ffd247c1ff0 RCX: 000000000003d3ce
+RDX: 0000000000000000 RSI: 00007ffd247c1ff0 RDI: 000076fc2cbb6010
+RBP: 000076fc2cded010 R08: 00007ffd247c2210 R09: 00007ffd247c22a0
+R10: 000076fc29465470 R11: 0000000000000000 R12: 00007ffd247c1fc0
+R13: 000076fc2ce8e470 R14: 000076fc27ec9960 R15: 0000000000000414
+handlers:
+[<000000000d3fa913>] idma64_irq
+Disabling IRQ #27
 
-w.r.t page_mkclean() we need to make sure that we don't break the
-MADV_DONTNEED semantics.  MADV_DONTNEED check for pmd_none without holding
-pmd_lock.  This implies we skip the pmd if we temporarily mark pmd none.
-Avoid doing that while marking the page clean.
+To avoid interrupt storm, set the device in reset state
+before bringing out the device from reset state.
 
-Keep the sequence same for dax too even though we don't support
-MADV_DONTNEED for dax mapping
+Changelog v2:
+- correct the subject line by adding "mfd: "
 
-The bug was noticed by code review and I didn't observe any failures w.r.t
-test run.  This is similar to
-
-commit 58ceeb6bec86d9140f9d91d71a710e963523d063
-Author: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Date:   Thu Apr 13 14:56:26 2017 -0700
-
-    thp: fix MADV_DONTNEED vs. MADV_FREE race
-
-commit ced108037c2aa542b3ed8b7afd1576064ad1362a
-Author: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Date:   Thu Apr 13 14:56:20 2017 -0700
-
-    thp: fix MADV_DONTNEED vs. numa balancing race
-
-Link: http://lkml.kernel.org/r/20190321040610.14226-1-aneesh.kumar@linux.ibm.com
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc:"Kirill A . Shutemov" <kirill@shutemov.name>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Binbin Wu <binbin.wu@intel.com>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/dax.c  | 2 +-
- mm/rmap.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/mfd/intel-lpss.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/dax.c b/fs/dax.c
-index 8eb3e8c2b4bdc..163ebd6cc0d1c 100644
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -814,7 +814,7 @@ static void dax_entry_mkclean(struct address_space *mapping, pgoff_t index,
- 				goto unlock_pmd;
+diff --git a/drivers/mfd/intel-lpss.c b/drivers/mfd/intel-lpss.c
+index 50bffc3382d77..ff3fba16e7359 100644
+--- a/drivers/mfd/intel-lpss.c
++++ b/drivers/mfd/intel-lpss.c
+@@ -273,6 +273,9 @@ static void intel_lpss_init_dev(const struct intel_lpss *lpss)
+ {
+ 	u32 value = LPSS_PRIV_SSP_REG_DIS_DMA_FIN;
  
- 			flush_cache_page(vma, address, pfn);
--			pmd = pmdp_huge_clear_flush(vma, address, pmdp);
-+			pmd = pmdp_invalidate(vma, address, pmdp);
- 			pmd = pmd_wrprotect(pmd);
- 			pmd = pmd_mkclean(pmd);
- 			set_pmd_at(vma->vm_mm, address, pmdp, pmd);
-diff --git a/mm/rmap.c b/mm/rmap.c
-index 0454ecc29537a..e0710b258c417 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -928,7 +928,7 @@ static bool page_mkclean_one(struct page *page, struct vm_area_struct *vma,
- 				continue;
++	/* Set the device in reset state */
++	writel(0, lpss->priv + LPSS_PRIV_RESETS);
++
+ 	intel_lpss_deassert_reset(lpss);
  
- 			flush_cache_page(vma, address, page_to_pfn(page));
--			entry = pmdp_huge_clear_flush(vma, address, pmd);
-+			entry = pmdp_invalidate(vma, address, pmd);
- 			entry = pmd_wrprotect(entry);
- 			entry = pmd_mkclean(entry);
- 			set_pmd_at(vma->vm_mm, address, pmd, entry);
+ 	intel_lpss_set_remap_addr(lpss);
 -- 
 2.20.1
 
