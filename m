@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84FB6C28CC4
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE26C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55AD5276E8
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66EDA27002
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:43:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396603;
-	bh=3AxVhhfeTwP/UIeayUxSzq1J3kA3JwnFmCZfJ9onbEE=;
+	s=default; t=1559396607;
+	bh=s5RyXHwKBq2Vm7OqgVW19Gaam/SjiYsY97Rol1WiydY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I9HylrjR2kHQYP4IBuuS7P/Jo0tdjD9u9pIK6ueSwf+uP1DsNuUzvYjTZ7k6cKsnX
-	 fnPmFHg3OXMmRKlqfx5hoooX0jxZKXkR2sV2978rk0XxueAZg3ifRinKwcLf1FOT08
-	 /kRHjXTvwzm8EWAvYqObgetoxWWlPjzxRHrJctu4=
+	b=GusqFO7vW3WNydDwegRFJYKDrpHeMOxKM40Wb5DSrYoKvP9wDWLsAGDlXXdDF5SZs
+	 MegkXDJ8vYffq2Nl8HTY+8aYMTEIFVczS06gMbGzQuP2DcPIb5h0UPUZ9F/4qHiAHl
+	 zO04qZ14IIDHFPlTeFkuLzEyfeeul6xwN7la/cJw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727776AbfFANSY (ORCPT
+        id S1728400AbfFANnZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:18:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45290 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:43:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727732AbfFANSQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:18:16 -0400
+        id S1727768AbfFANSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:18:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52F71229EB;
-        Sat,  1 Jun 2019 13:18:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8246B23CA5;
+        Sat,  1 Jun 2019 13:18:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395096;
-        bh=3AxVhhfeTwP/UIeayUxSzq1J3kA3JwnFmCZfJ9onbEE=;
+        s=default; t=1559395103;
+        bh=s5RyXHwKBq2Vm7OqgVW19Gaam/SjiYsY97Rol1WiydY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LCw2KpJxmuTo/9IBnSEa1BC8GFJaweFK+D5gcnuD4hgCK+RL8u8IlN3yL5+uBqugu
-         Z33xzqf22MWXjdg6b7ba2fDsP/ZqAEYj9MmntK8Dn9kqaJfozsp+GTk4eAwg1SBXOb
-         y1MlnIEzq9EVvHY7cvP8sxWQSUPEKE0qP3oaFWc0=
+        b=i0PsgJA3iDvCT/Ang7F0v+C6AYsHHJENYc/gynHczcSL+ofOc5z2l9OBfVpFzBg32
+         +CsrJJ5iS2XKyvOfv9KrJzjkvstzyrC5S/Q1WjgLH35jr4ZQGb3YrIVOC80FJYp6pV
+         0udwtjYW5yPA7zUc5m+13H4nun2Z/PE7+DY4vtBQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ben Skeggs <bskeggs@redhat.com>, Lyude Paul <lyude@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.1 031/186] drm/nouveau/kms/gf119-gp10x: push HeadSetControlOutputResource() mthd when encoders change
-Date:   Sat,  1 Jun 2019 09:14:07 -0400
-Message-Id: <20190601131653.24205-31-sashal@kernel.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 034/186] objtool: Don't use ignore flag for fake jumps
+Date:   Sat,  1 Jun 2019 09:14:10 -0400
+Message-Id: <20190601131653.24205-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131653.24205-1-sashal@kernel.org>
 References: <20190601131653.24205-1-sashal@kernel.org>
@@ -59,39 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Skeggs <bskeggs@redhat.com>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-[ Upstream commit a0b694d0af21c9993d1a39a75fd814bd48bf7eb4 ]
+[ Upstream commit e6da9567959e164f82bc81967e0d5b10dee870b4 ]
 
-HW has error checks in place which check that pixel depth is explicitly
-provided on DP, while HDMI has a "default" setting that we use.
+The ignore flag is set on fake jumps in order to keep
+add_jump_destinations() from setting their jump_dest, since it already
+got set when the fake jump was created.
 
-In multi-display configurations with identical modelines, but different
-protocols (HDMI + DP, in this case), it was possible for the DP head to
-get swapped to the head which previously drove the HDMI output, without
-updating HeadSetControlOutputResource(), triggering the error check and
-hanging the core update.
+But using the ignore flag is a bit of a hack.  It's normally used to
+skip validation of an instruction, which doesn't really make sense for
+fake jumps.
 
-Reported-by: Lyude Paul <lyude@redhat.com>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Also, after the next patch, using the ignore flag for fake jumps can
+trigger a false "why am I validating an ignored function?" warning.
+
+Instead just add an explicit check in add_jump_destinations() to skip
+fake jumps.
+
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/71abc072ff48b2feccc197723a9c52859476c068.1557766718.git.jpoimboe@redhat.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/dispnv50/head.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/objtool/check.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/head.c b/drivers/gpu/drm/nouveau/dispnv50/head.c
-index 2e7a0c347ddbe..8efb778a3b207 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/head.c
-+++ b/drivers/gpu/drm/nouveau/dispnv50/head.c
-@@ -306,7 +306,7 @@ nv50_head_atomic_check(struct drm_crtc *crtc, struct drm_crtc_state *state)
- 			asyh->set.or = head->func->or != NULL;
- 		}
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 2cd57730381b8..ecf5fc77f50b5 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -28,6 +28,8 @@
+ #include <linux/hashtable.h>
+ #include <linux/kernel.h>
  
--		if (asyh->state.mode_changed)
-+		if (asyh->state.mode_changed || asyh->state.connectors_changed)
- 			nv50_head_atomic_check_mode(head, asyh);
++#define FAKE_JUMP_OFFSET -1
++
+ struct alternative {
+ 	struct list_head list;
+ 	struct instruction *insn;
+@@ -501,7 +503,7 @@ static int add_jump_destinations(struct objtool_file *file)
+ 		    insn->type != INSN_JUMP_UNCONDITIONAL)
+ 			continue;
  
- 		if (asyh->state.color_mgmt_changed ||
+-		if (insn->ignore)
++		if (insn->ignore || insn->offset == FAKE_JUMP_OFFSET)
+ 			continue;
+ 
+ 		rela = find_rela_by_dest_range(insn->sec, insn->offset,
+@@ -670,10 +672,10 @@ static int handle_group_alt(struct objtool_file *file,
+ 		clear_insn_state(&fake_jump->state);
+ 
+ 		fake_jump->sec = special_alt->new_sec;
+-		fake_jump->offset = -1;
++		fake_jump->offset = FAKE_JUMP_OFFSET;
+ 		fake_jump->type = INSN_JUMP_UNCONDITIONAL;
+ 		fake_jump->jump_dest = list_next_entry(last_orig_insn, list);
+-		fake_jump->ignore = true;
++		fake_jump->func = orig_insn->func;
+ 	}
+ 
+ 	if (!special_alt->new_len) {
 -- 
 2.20.1
 
