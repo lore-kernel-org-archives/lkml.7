@@ -2,147 +2,106 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F84C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 23:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B5F7C28CC4
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 23:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3956277E9
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 23:00:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 409AA277C4
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 23:22:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="P5a+za9L"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZC4jPopi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbfFAW77 (ORCPT
+        id S1726652AbfFAXWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 18:59:59 -0400
-Received: from mail-eopbgr820094.outbound.protection.outlook.com ([40.107.82.94]:41568
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726149AbfFAW77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 18:59:59 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=fSb6VxGImQRbmaTavkMeZHoUsSVBf1DXWtzP/HAgRvmWBW14ual5jgSPk9qMxRD5bHZjI3ApOHBwsnc5pcE46fdq4e3YORh1MfZ3RMdq9F86ngck98feab2GpO4NL44j64Mj0NiXTw1WGEnSf5WVe20K3nnDWhpvF4OnU3t7epA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6n8cSrZdPBP+APjT0/IEZ2BwuACDxsAQURtUZpdtFGg=;
- b=LmtRpazrLyzJLd1oQEqthEibTQtsCFdFtMI2EukQYlrugMU0LM6u0qzruVJ1cxpvwBhdZ/l/3qbOyrfzL+qfFmtulut7sfsfZQ2UE8CcjJXd6a40oFprCIfgc8FU9+MDjvBHa3kRWkrgUNWzxzlgPjSVcoKd8X/uszYZykY/b40=
-ARC-Authentication-Results: i=1; test.office365.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6n8cSrZdPBP+APjT0/IEZ2BwuACDxsAQURtUZpdtFGg=;
- b=P5a+za9LL/HR4pI5A4E15ovJHrU0eC5i7p9VKaaoOo92tqJMOyyru9eg1xrAr0AHHEMF6nOYDBqzNvAL5/i5cyRgvK8EgLm9SDV2q05hukyiMDi8yCJ6HTehGrNcWn9j+QOE7NMAlLsiB41UaaMNRu+CYrmnOhczmApTmTjwT/k=
-Received: from BYAPR21MB1221.namprd21.prod.outlook.com (2603:10b6:a03:107::12)
- by BYAPR21MB1221.namprd21.prod.outlook.com (2603:10b6:a03:107::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1943.3; Sat, 1 Jun
- 2019 22:59:56 +0000
-Received: from BYAPR21MB1221.namprd21.prod.outlook.com
- ([fe80::d005:4de8:ffbf:ba6b]) by BYAPR21MB1221.namprd21.prod.outlook.com
- ([fe80::d005:4de8:ffbf:ba6b%7]) with mapi id 15.20.1943.015; Sat, 1 Jun 2019
- 22:59:56 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     YueHaibing <yuehaibing@huawei.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: RE: [PATCH] PCI: hv: Fix build error without CONFIG_SYSFS
-Thread-Topic: [PATCH] PCI: hv: Fix build error without CONFIG_SYSFS
-Thread-Index: AQHVF8LqT31hu0oy4EC9yHNNMbYtz6aGQ4zQ
-Date:   Sat, 1 Jun 2019 22:59:56 +0000
-Message-ID: <BYAPR21MB12211EEA95200F437C8E37ECD71A0@BYAPR21MB1221.namprd21.prod.outlook.com>
-References: <20190531150923.12376-1-yuehaibing@huawei.com>
-In-Reply-To: <20190531150923.12376-1-yuehaibing@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-06-01T22:59:54.1676311Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=0e76142d-58b5-4ed7-bcde-8854964c8780;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a4ab7b9d-d25e-40d3-a23a-08d6e6e4ddb7
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BYAPR21MB1221;
-x-ms-traffictypediagnostic: BYAPR21MB1221:
-x-microsoft-antispam-prvs: <BYAPR21MB12215469F4F965808C78C289D71A0@BYAPR21MB1221.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 00550ABE1F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(396003)(346002)(39860400002)(136003)(376002)(199004)(189003)(186003)(74316002)(229853002)(5660300002)(66476007)(66066001)(52536014)(66446008)(2906002)(256004)(22452003)(68736007)(6436002)(6116002)(11346002)(10090500001)(1511001)(76176011)(478600001)(486006)(2501003)(26005)(33656002)(476003)(9686003)(55016002)(446003)(316002)(8676002)(64756008)(76116006)(6246003)(14454004)(81156014)(71200400001)(66946007)(66556008)(8990500004)(53936002)(7736002)(86362001)(8936002)(71190400001)(305945005)(25786009)(73956011)(54906003)(7696005)(81166006)(10290500003)(6506007)(3846002)(4326008)(99286004)(110136005)(52396003)(102836004);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR21MB1221;H:BYAPR21MB1221.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: C4Y7O9stUinpPoHXFU9OYB3+n/CMkQYw6eItoBXj4T7AqdOGbpclD3v16eYbKB7FFxdhf7N6aIsVNyXWPuE+jgKa2dFYKChc5g02NS1X5YI5mQ9xSWZwTKjpjslc7Xi5f2JLDnK2JRkrZ3+yG6OwTLnTMjI5IvOC2Jq0g4kx3hhNt66vU6+2yC+NUgLu15dU6lK/EcEmivt8Y3ZSbnUSWrTkvBDhqwhw/0UNneqI4814FTUSprM+yuNdhzcqulQ9f9ULPy76/CCURB02wdN4GKe++z050Sdeiwukj/lRRY2FyrmSatRB7T3nb7olpDb/wFftWQDPSBFKlIRWaUl30Qscb+T0zopTNIv1APu65rnapKTGlVWJaW7/j4Gj75anJ/sFUQqOiRTCL8B7McPHnFkILYOF5Pn0e+zm/y7FHRg=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sat, 1 Jun 2019 19:22:10 -0400
+Received: from mail-pf1-f176.google.com ([209.85.210.176]:41572 "EHLO
+        mail-pf1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726149AbfFAXWJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 19:22:09 -0400
+Received: by mail-pf1-f176.google.com with SMTP id q17so8388624pfq.8;
+        Sat, 01 Jun 2019 16:22:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=bytKcnWl4DSJZnnGOOS5hiwowoQ6gtqAZ+8TrBMmas8=;
+        b=ZC4jPopia8riIAqC1pgw5kEc01ub5mspwVB4Wf3Lem5hJFgX7C2IaSVuItB4rkvBFT
+         O6vieJpn45PAjYgsVkhTXsMKKDo2TXq3kk78iOLbBE0Uqm41+kwIABYx4B6rQ7+4qx37
+         7XtcJL2CbMRfhODKsBOUCEH/nu1tCg9uwW9dAc9OeLSaMpy99vJlqVkujbmCHu1VbokQ
+         oHMlkjIEw7lQ4lHL6+IKQ9Q/lp42SEgQNjxiXPRZ+7oVVk4Tdj2jAEXnPq3dU1FpeC0G
+         crvBTnLRKHv9MDnYowazgTg2MzzIrp2y2bdYNwUruyuMaBmojPGJ30x75QsVYdZ5Tj4a
+         GrDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=bytKcnWl4DSJZnnGOOS5hiwowoQ6gtqAZ+8TrBMmas8=;
+        b=Xuy4eZabAAqnF76SgVnbLPHEci5TWqktboiGTNR9IC+9ChiTnPLmETnKgq/uF8Vy12
+         reG5i7UUMHaO6YO0c1H+IcLNaw2Bn3rGlg27PY/J/rpg2XsMqdfCvEYJsRKr65sH+GRc
+         bIV6OmDNrEv6IZM43PE3nV36jyHJ3NDneuaRRp+DCxF24Sb5DUJQXy7EQqKOPKY9yPJ4
+         Gjb9TSOwBnl0i57OR/ldPV2lFYEKNumoP3j65GvriwMx1zWRl7Ln639g490Yxa+OTiCN
+         EwlBRcMB0dP5cJjM9+Q/UL+hNx039KQZ6ivHvS328TBMdjKXiFNU45jTjXUpdx5Mq9hq
+         Ve4w==
+X-Gm-Message-State: APjAAAV8BfWZJvZziKU6AzdVK5yCdrZvo/TRhXu2tlmbHj16VntDngJt
+        6NsAYsWGIYtCTbjp8UukZiY=
+X-Google-Smtp-Source: APXvYqzoTrBsH3BR/eGzCZRW716vfkLIpcpbeen0ltSFQHkpgNlujb9zzby+KtzWvu1c+cEVCiMFbQ==
+X-Received: by 2002:a63:1e5b:: with SMTP id p27mr19021226pgm.213.1559431328871;
+        Sat, 01 Jun 2019 16:22:08 -0700 (PDT)
+Received: from localhost.localdomain ([2601:644:8201:32e0:7256:81ff:febd:926d])
+        by smtp.gmail.com with ESMTPSA id q10sm10112262pff.132.2019.06.01.16.22.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 01 Jun 2019 16:22:08 -0700 (PDT)
+Date:   Sat, 1 Jun 2019 16:22:06 -0700
+From:   Eduardo Valentin <edubezval@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Rui Zhang <rui.zhang@intel.com>
+Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] Thermal-SoC management fixes for v5.2-rc3
+Message-ID: <20190601232205.GA7411@localhost.localdomain>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a4ab7b9d-d25e-40d3-a23a-08d6e6e4ddb7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jun 2019 22:59:56.4076
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mikelley@ntdev.microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR21MB1221
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>  Sent: Friday, May 31, 2019 8:09 A=
-M
->=20
-> while building without CONFIG_SYSFS, fails as below:
->=20
-> drivers/pci/controller/pci-hyperv.o: In function 'hv_pci_assign_slots':
-> pci-hyperv.c:(.text+0x40a): undefined reference to 'pci_create_slot'
-> drivers/pci/controller/pci-hyperv.o: In function 'pci_devices_present_wor=
-k':
-> pci-hyperv.c:(.text+0xc02): undefined reference to 'pci_destroy_slot'
-> drivers/pci/controller/pci-hyperv.o: In function 'hv_pci_remove':
-> pci-hyperv.c:(.text+0xe50): undefined reference to 'pci_destroy_slot'
-> drivers/pci/controller/pci-hyperv.o: In function 'hv_eject_device_work':
-> pci-hyperv.c:(.text+0x11f9): undefined reference to 'pci_destroy_slot'
->=20
-> Select SYSFS while PCI_HYPERV is set to fix this.
->=20
+Please consider the following thermal soc changes for v5.2-rc3. This is really
+a single revert, detected to cause issues on the tsens driver.
 
-I'm wondering if is the right way to fix the problem.  Conceptually
-is it possible to setup & operate virtual PCI devices like=20
-pci-hyperv.c does, even if sysfs is not present?  Or is it right to
-always required sysfs?
+The following changes since commit cd6c84d8f0cdc911df435bb075ba22ce3c605b07:
 
-The function pci_dev_assign_slot() in slot.c has a null implementation
-in include/linux/pci.h when CONFIG_SYSFS is not defined, which
-seems to be trying to solve the same problem for that function.  And
-if CONFIG_HOTPLUG_PCI is defined but CONFIG_SYSFS is not,
-pci_hp_create_module_link() and pci_hp_remove_module_link()
-look like they would have the same problem.  Maybe there should
-be degenerate implementations of pci_create_slot() and
-pci_destroy_slot() for cases when CONFIG_SYSFS is not defined?
+  Linux 5.2-rc2 (2019-05-26 16:49:19 -0700)
 
-But I'll admit I don't know the full story behind how PCI slots
-are represented and used, so maybe I'm off base.  I just noticed
-the inconsistency in how other functions in slot.c are handled.
+are available in the git repository at:
 
-Thoughts?
+  git://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal fixes
 
-Michael
+for you to fetch changes up to ca657468a0d4bcc25445f6636485a19a525267bd:
+
+  Revert "drivers: thermal: tsens: Add new operation to check if a sensor is enabled" (2019-05-28 19:30:33 -0700)
+
+Specifics:
+- Revert tsens change that is reported to cause issues.
+
+BR,
+
+----------------------------------------------------------------
+Eduardo Valentin (1):
+      Revert "drivers: thermal: tsens: Add new operation to check if a sensor is enabled"
+
+ drivers/thermal/qcom/tsens-common.c | 14 --------------
+ drivers/thermal/qcom/tsens-v0_1.c   |  1 -
+ drivers/thermal/qcom/tsens-v2.c     |  1 -
+ drivers/thermal/qcom/tsens.c        |  5 -----
+ drivers/thermal/qcom/tsens.h        |  1 -
+ 5 files changed, 22 deletions(-)
