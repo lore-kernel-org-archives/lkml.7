@@ -2,91 +2,70 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 019A7C04AB6
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB3EC04AB6
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C142226E42
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:16:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B9E82707F
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:18:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbfFAAQg (ORCPT
+        id S1727047AbfFAASV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 20:16:36 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:23431 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726518AbfFAAQg (ORCPT
+        Fri, 31 May 2019 20:18:21 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:53024 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbfFAASV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 20:16:36 -0400
-X-UUID: 5271996c16df40fba33bcdd53ac2b4a6-20190601
-X-UUID: 5271996c16df40fba33bcdd53ac2b4a6-20190601
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <sean.wang@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 40283549; Sat, 01 Jun 2019 08:16:30 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sat, 1 Jun 2019 08:16:28 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sat, 1 Jun 2019 08:16:28 +0800
-From:   <sean.wang@mediatek.com>
-To:     <john@phrozen.org>, <davem@davemloft.net>
-CC:     <nbd@openwrt.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <mark-mc.lee@mediatek.com>
-Subject: [PATCH net v1 2/2] net: ethernet: mediatek: Use NET_IP_ALIGN to judge if HW RX_2BYTE_OFFSET is enabled
-Date:   Sat, 1 Jun 2019 08:16:27 +0800
-Message-ID: <1559348187-14941-2-git-send-email-sean.wang@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1559348187-14941-1-git-send-email-sean.wang@mediatek.com>
-References: <1559348187-14941-1-git-send-email-sean.wang@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: A0B3E15B67915A6D9E21AD7A1D9C947EE3F76452E73B813B3042EC22ACAB26252000:8
-X-MTK:  N
+        Fri, 31 May 2019 20:18:21 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 81940150402B2;
+        Fri, 31 May 2019 17:18:20 -0700 (PDT)
+Date:   Fri, 31 May 2019 17:18:19 -0700 (PDT)
+Message-Id: <20190531.171819.1461966494167760290.davem@davemloft.net>
+To:     tanhuazhong@huawei.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        salil.mehta@huawei.com, yisen.zhuang@huawei.com,
+        linuxarm@huawei.com
+Subject: Re: [PATCH net-next 00/12] code optimizations & bugfixes for HNS3
+ driver
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190531.171529.1003718945482922118.davem@davemloft.net>
+References: <1559292898-64090-1-git-send-email-tanhuazhong@huawei.com>
+        <20190531.171529.1003718945482922118.davem@davemloft.net>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=iso-8859-7
+Content-Transfer-Encoding: base64
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 31 May 2019 17:18:20 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
-
-Should only enable HW RX_2BYTE_OFFSET function in the case NET_IP_ALIGN
-equals to 2.
-
-Signed-off-by: Mark Lee <mark-mc.lee@mediatek.com>
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
----
- drivers/net/ethernet/mediatek/mtk_eth_soc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-index 0b88febbaf2a..765cd56ebcd2 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -1778,6 +1778,7 @@ static void mtk_poll_controller(struct net_device *dev)
- 
- static int mtk_start_dma(struct mtk_eth *eth)
- {
-+	u32 rx_2b_offset = (NET_IP_ALIGN == 2) ? MTK_RX_2B_OFFSET : 0;
- 	int err;
- 
- 	err = mtk_dma_init(eth);
-@@ -1794,7 +1795,7 @@ static int mtk_start_dma(struct mtk_eth *eth)
- 		MTK_QDMA_GLO_CFG);
- 
- 	mtk_w32(eth,
--		MTK_RX_DMA_EN | MTK_RX_2B_OFFSET |
-+		MTK_RX_DMA_EN | rx_2b_offset |
- 		MTK_RX_BT_32DWORDS | MTK_MULTI_EN,
- 		MTK_PDMA_GLO_CFG);
- 
--- 
-2.17.1
-
+RnJvbTogRGF2aWQgTWlsbGVyIDxkYXZlbUBkYXZlbWxvZnQubmV0Pg0KRGF0ZTogRnJpLCAzMSBN
+YXkgMjAxOSAxNzoxNToyOSAtMDcwMCAoUERUKQ0KDQo+IEZyb206IEh1YXpob25nIFRhbiA8dGFu
+aHVhemhvbmdAaHVhd2VpLmNvbT4NCj4gRGF0ZTogRnJpLCAzMSBNYXkgMjAxOSAxNjo1NDo0NiAr
+MDgwMA0KPiANCj4+IFRoaXMgcGF0Y2gtc2V0IGluY2x1ZGVzIGNvZGUgb3B0aW1pemF0aW9ucyBh
+bmQgYnVnZml4ZXMgZm9yIHRoZSBITlMzDQo+PiBldGhlcm5ldCBjb250cm9sbGVyIGRyaXZlci4N
+Cj4+IA0KPj4gW3BhdGNoIDEvMTJdIHJlbW92ZXMgdGhlIHJlZHVuZGFudCBjb3JlIHJlc2V0IHR5
+cGUNCj4+IA0KPj4gW3BhdGNoIDIvMTIgLSAzLzEyXSBmaXhlcyB0d28gVkxBTiByZWxhdGVkIGlz
+c3Vlcw0KPj4gDQo+PiBbcGF0Y2ggNC8xMl0gZml4ZXMgYSBUTSBpc3N1ZQ0KPj4gDQo+PiBbcGF0
+Y2ggNS8xMiAtIDEyLzEyXSBpbmNsdWRlcyBzb21lIHBhdGNoZXMgcmVsYXRlZCB0byBSQVMgJiBN
+U0ktWCBlcnJvcg0KPiANCj4gU2VyaWVzIGFwcGxpZWQuDQoNCkkgcmV2ZXJ0ZWQsIHlvdSBuZWVk
+IHRvIGFjdHVhbGx5IGJ1aWxkIHRlc3QgdGhlIGluZmluaWJhbmQgc2lkZSBvZiB5b3VyDQpkcml2
+ZXIuDQoNCmRyaXZlcnMvaW5maW5pYmFuZC9ody9obnMvaG5zX3JvY2VfaHdfdjIuYzogSW4gZnVu
+Y3Rpb24goWhuc19yb2NlX3YyX21zaXhfaW50ZXJydXB0X2FibqI6DQpkcml2ZXJzL2luZmluaWJh
+bmQvaHcvaG5zL2huc19yb2NlX2h3X3YyLmM6NTAzMjoxNDogd2FybmluZzogcGFzc2luZyBhcmd1
+bWVudCAyIG9mIKFvcHMtPnNldF9kZWZhdWx0X3Jlc2V0X3JlcXVlc3SiIG1ha2VzIHBvaW50ZXIg
+ZnJvbSBpbnRlZ2VyIHdpdGhvdXQgYSBjYXN0IFstV2ludC1jb252ZXJzaW9uXQ0KICAgICAgICAg
+ICAgICBITkFFM19GVU5DX1JFU0VUKTsNCiAgICAgICAgICAgICAgXn5+fn5+fn5+fn5+fn5+fg0K
+ZHJpdmVycy9pbmZpbmliYW5kL2h3L2hucy9obnNfcm9jZV9od192Mi5jOjUwMzI6MTQ6IG5vdGU6
+IGV4cGVjdGVkIKFsb25nIHVuc2lnbmVkIGludCAqoiBidXQgYXJndW1lbnQgaXMgb2YgdHlwZSCh
+aW50og0KICBDLWMgQy1jbWFrZVs1XTogKioqIERlbGV0aW5nIGZpbGUgJ2RyaXZlcnMvbmV0L3dp
+cmVsZXNzL2F0aC9jYXJsOTE3MC9jbWQubycNCg==
