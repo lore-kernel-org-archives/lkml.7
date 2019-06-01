@@ -7,56 +7,61 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED8BC28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67606C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 383162750F
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:34:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41A092752C
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:34:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396042;
-	bh=JX7cXTsUkmGV1mJ7r9klX/mRdipXfa7dpWAhCWyvSRM=;
+	s=default; t=1559396047;
+	bh=dg/hQgmd7Dh998D1vF9dt1j5c4/F+dz2LDsSHZxNSkI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=muBAegk4xkk9F7Qd0Ju6X+PvZ0ha0UL3Q8MmOtwKR0W0ZO81OKqfHxh4O+8xwe8f9
-	 5WXcbZkAq3mZl4IuRYdDYQxDd9ZdH/hh6/x7EahTAfcj0dU16twkIaQdS2qhfv2cEA
-	 NPQWtcZFEhPbCqrqSWFd46PRarYdlncXAoFib2Uc=
+	b=sa+h8b++Ja8u7l5z4UlGnMQ63ghaHuLKsMShrLyRDsiTw99REAE5JV9jSKuYqmaxP
+	 sa+QCt3teevZMFpjxRXoTQGQi+rAxsWO2IYHqssaIixM3OJtK7bYDqPNb4oysOGvUD
+	 +U8NQ2TeJ0hjtEFPogx0MeZWyMT1ekRKdeg6oTj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729334AbfFANeB (ORCPT
+        id S1728461AbfFANYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:34:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54226 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:24:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729172AbfFANYN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:24:13 -0400
+        id S1729147AbfFANYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:24:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75CB724C2E;
-        Sat,  1 Jun 2019 13:24:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A3E027355;
+        Sat,  1 Jun 2019 13:24:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395452;
-        bh=JX7cXTsUkmGV1mJ7r9klX/mRdipXfa7dpWAhCWyvSRM=;
+        s=default; t=1559395444;
+        bh=dg/hQgmd7Dh998D1vF9dt1j5c4/F+dz2LDsSHZxNSkI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ad5valh9xIcIDCGMD250Uamm5kLvcLzZNIxtMs2a7eitJRHFychJLXz/+bvaHzzkq
-         r8JeWIQ0giJNElFzqYfYytfWBh1sKaGq815C/Kpb5UxnUx86wWhaLF91aczek443ZS
-         WoCMeAd5DjkOH6xvzho9JXVpcynlmrWC6XI3DLeM=
+        b=Vx54991IOXa1TvoMVx5m7NUe+lkj6rr3frz0zDt7WjM8z/TD9/3jLJhO8sWXc5Gdz
+         Uwi6xgap+THUUklGripJ8eCSw4sPe4Z3iysIkrsgFt5yOEnSKSN7j9DtEten14/qu7
+         dZYvZhRLoJTK1DnJj4aak/rdcuKIbOxjjU1RiPl0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yue Hu <huyue2@yulong.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
+Cc:     =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.14 09/99] mm/cma.c: fix crash on CMA allocation if bitmap allocation fails
-Date:   Sat,  1 Jun 2019 09:22:16 -0400
-Message-Id: <20190601132346.26558-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 06/99] mm/hmm: select mmu notifier when selecting HMM
+Date:   Sat,  1 Jun 2019 09:22:13 -0400
+Message-Id: <20190601132346.26558-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132346.26558-1-sashal@kernel.org>
 References: <20190601132346.26558-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -65,44 +70,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yue Hu <huyue2@yulong.com>
+From: Jérôme Glisse <jglisse@redhat.com>
 
-[ Upstream commit 1df3a339074e31db95c4790ea9236874b13ccd87 ]
+[ Upstream commit 734fb89968900b5c5f8edd5038bd4cdeab8c61d2 ]
 
-f022d8cb7ec7 ("mm: cma: Don't crash on allocation if CMA area can't be
-activated") fixes the crash issue when activation fails via setting
-cma->count as 0, same logic exists if bitmap allocation fails.
+To avoid random config build issue, select mmu notifier when HMM is
+selected.  In any cases when HMM get selected it will be by users that
+will also wants the mmu notifier.
 
-Link: http://lkml.kernel.org/r/20190325081309.6004-1-zbestahu@gmail.com
-Signed-off-by: Yue Hu <huyue2@yulong.com>
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Laura Abbott <labbott@redhat.com>
-Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>
+Link: http://lkml.kernel.org/r/20190403193318.16478-2-jglisse@redhat.com
+Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
+Acked-by: Balbir Singh <bsingharora@gmail.com>
+Cc: Ralph Campbell <rcampbell@nvidia.com>
+Cc: John Hubbard <jhubbard@nvidia.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Souptick Joarder <jrdr.linux@gmail.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/cma.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ mm/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/cma.c b/mm/cma.c
-index 5749c9b3b5d02..cba4fe1b284c8 100644
---- a/mm/cma.c
-+++ b/mm/cma.c
-@@ -105,8 +105,10 @@ static int __init cma_activate_area(struct cma *cma)
+diff --git a/mm/Kconfig b/mm/Kconfig
+index 59efbd3337e0c..cc4d633947bfa 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -708,12 +708,12 @@ config MIGRATE_VMA_HELPER
  
- 	cma->bitmap = kzalloc(bitmap_size, GFP_KERNEL);
+ config HMM
+ 	bool
++	select MMU_NOTIFIER
+ 	select MIGRATE_VMA_HELPER
  
--	if (!cma->bitmap)
-+	if (!cma->bitmap) {
-+		cma->count = 0;
- 		return -ENOMEM;
-+	}
- 
- 	WARN_ON_ONCE(!pfn_valid(pfn));
- 	zone = page_zone(pfn_to_page(pfn));
+ config HMM_MIRROR
+ 	bool "HMM mirror CPU page table into a device page table"
+ 	depends on ARCH_HAS_HMM
+-	select MMU_NOTIFIER
+ 	select HMM
+ 	help
+ 	  Select HMM_MIRROR if you want to mirror range of the CPU page table of a
 -- 
 2.20.1
 
