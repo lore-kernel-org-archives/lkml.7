@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D24C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54921C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A864C272E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:20:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AF5D272E4
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:20:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395253;
-	bh=U4sB3dWCPHwc1nLm/zgQjuLXCr/ooxzXR6feKSSgEDM=;
+	s=default; t=1559395256;
+	bh=FqTSBe2EtMLANJyq2W3Rh4WKsrc9+fooGilgER43Ulc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jLwmPFS0ZiPidyp6JQRWAV6hSi1GcWWsiIqouC5s5YTLvRyXE44nEl2DZwZOOZToY
-	 4X5jYuJ6fCa6Ud7V4uZBpxSwcIesyuSbwdYsojdRnqrpYMOfJJIgw4/3jWP9MpJkk7
-	 TDwwmScBvSLZ2LOJj0CB8kCKMmUPahXGAn8ZrGQE=
+	b=bqonziTmsiUwXVMBos/l0p16hvX1YekslyAIiVrTAND0EesOn8+trr6EA2LNESKoJ
+	 WAu6T45/D8YrsfNG+Lqt6u4uQ4mIHJKj3GsvbFxYF6on0NrwgVh4NcXDWouoaa8dz+
+	 epX1+Y8b3NS/nKFhD+O2Bmu9JQOhvVVI8/1YtVsE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728378AbfFANUv (ORCPT
+        id S1728381AbfFANUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:20:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47916 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:20:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728341AbfFANUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:20:41 -0400
+        id S1727981AbfFANUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:20:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20879272DE;
-        Sat,  1 Jun 2019 13:20:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B72EE272E0;
+        Sat,  1 Jun 2019 13:20:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395240;
-        bh=U4sB3dWCPHwc1nLm/zgQjuLXCr/ooxzXR6feKSSgEDM=;
+        s=default; t=1559395251;
+        bh=FqTSBe2EtMLANJyq2W3Rh4WKsrc9+fooGilgER43Ulc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=isXTkHpbG4Lty0mdtDY+UH/NYfjU/GxrRPW6WAVYD4lT1OIXhxi6zPwi0ykqb3B95
-         cdPQf308lO/memHpEyK8xxfcwtxgeIjS0fsW/ZonFW5gf/9Op/vmTTh19AIRqPuUnw
-         6dube5hkRmt0iqegN3+Z8qP73tDlqF08ZEYqmCZY=
+        b=RMhOUBQAiX4ZtMdBr5WYqKmIVUE94uOOMPKC3foU+ztUOhjGbMnVCYbUZ5qXpfCyC
+         n+mSzYvKviHUS7d92FNf9L/gTxo7muWYHuMzMFvgawRqtU6CJs9A6nARuEMXXXhOO+
+         u9VBnSsf89sMwAj5xT0qVEfx4imcfLRmz/JjzdlA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 5.0 020/173] mm/slab.c: fix an infinite loop in leaks_show()
-Date:   Sat,  1 Jun 2019 09:16:52 -0400
-Message-Id: <20190601131934.25053-20-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 027/173] mfd: twl6040: Fix device init errors for ACCCTL register
+Date:   Sat,  1 Jun 2019 09:16:59 -0400
+Message-Id: <20190601131934.25053-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131934.25053-1-sashal@kernel.org>
 References: <20190601131934.25053-1-sashal@kernel.org>
@@ -64,85 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 745e10146c31b1c6ed3326286704ae251b17f663 ]
+[ Upstream commit 48171d0ea7caccf21c9ee3ae75eb370f2a756062 ]
 
-"cat /proc/slab_allocators" could hang forever on SMP machines with
-kmemleak or object debugging enabled due to other CPUs running do_drain()
-will keep making kmemleak_object or debug_objects_cache dirty and unable
-to escape the first loop in leaks_show(),
+I noticed that we can get a -EREMOTEIO errors on at least omap4 duovero:
 
-do {
-	set_store_user_clean(cachep);
-	drain_cpu_caches(cachep);
-	...
+twl6040 0-004b: Failed to write 2d = 19: -121
 
-} while (!is_store_user_clean(cachep));
+And then any following register access will produce errors.
 
-For example,
+There 2d offset above is register ACCCTL that gets written on twl6040
+powerup. With error checking added to the related regcache_sync() call,
+the -EREMOTEIO error is reproducable on twl6040 powerup at least
+duovero.
 
-do_drain
-  slabs_destroy
-    slab_destroy
-      kmem_cache_free
-        __cache_free
-          ___cache_free
-            kmemleak_free_recursive
-              delete_object_full
-                __delete_object
-                  put_object
-                    free_object_rcu
-                      kmem_cache_free
-                        cache_free_debugcheck --> dirty kmemleak_object
+To fix the error, we need to wait until twl6040 is accessible after the
+powerup. Based on tests on omap4 duovero, we need to wait over 8ms after
+powerup before register write will complete without failures. Let's also
+make sure we warn about possible errors too.
 
-One approach is to check cachep->name and skip both kmemleak_object and
-debug_objects_cache in leaks_show().  The other is to set store_user_clean
-after drain_cpu_caches() which leaves a small window between
-drain_cpu_caches() and set_store_user_clean() where per-CPU caches could
-be dirty again lead to slightly wrong information has been stored but
-could also speed up things significantly which sounds like a good
-compromise.  For example,
+Note that we have twl6040_patch[] reg_sequence with the ACCCTL register
+configuration and regcache_sync() will write the new value to ACCCTL.
 
- # cat /proc/slab_allocators
- 0m42.778s # 1st approach
- 0m0.737s  # 2nd approach
-
-[akpm@linux-foundation.org: tweak comment]
-Link: http://lkml.kernel.org/r/20190411032635.10325-1-cai@lca.pw
-Fixes: d31676dfde25 ("mm/slab: alternative implementation for DEBUG_SLAB_LEAK")
-Signed-off-by: Qian Cai <cai@lca.pw>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/slab.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/mfd/twl6040.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/mm/slab.c b/mm/slab.c
-index f4bbc53008f3b..932a439149cdb 100644
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -4317,8 +4317,12 @@ static int leaks_show(struct seq_file *m, void *p)
- 	 * whole processing.
- 	 */
- 	do {
--		set_store_user_clean(cachep);
- 		drain_cpu_caches(cachep);
+diff --git a/drivers/mfd/twl6040.c b/drivers/mfd/twl6040.c
+index 7c3c5fd5fcd04..86052c5c60696 100644
+--- a/drivers/mfd/twl6040.c
++++ b/drivers/mfd/twl6040.c
+@@ -322,8 +322,19 @@ int twl6040_power(struct twl6040 *twl6040, int on)
+ 			}
+ 		}
+ 
 +		/*
-+		 * drain_cpu_caches() could make kmemleak_object and
-+		 * debug_objects_cache dirty, so reset afterwards.
++		 * Register access can produce errors after power-up unless we
++		 * wait at least 8ms based on measurements on duovero.
 +		 */
-+		set_store_user_clean(cachep);
++		usleep_range(10000, 12000);
++
+ 		/* Sync with the HW */
+-		regcache_sync(twl6040->regmap);
++		ret = regcache_sync(twl6040->regmap);
++		if (ret) {
++			dev_err(twl6040->dev, "Failed to sync with the HW: %i\n",
++				ret);
++			goto out;
++		}
  
- 		x[1] = 0;
- 
+ 		/* Default PLL configuration after power up */
+ 		twl6040->pll = TWL6040_SYSCLK_SEL_LPPLL;
 -- 
 2.20.1
 
