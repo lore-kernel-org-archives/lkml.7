@@ -2,78 +2,92 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B633EC28CC4
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 10:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F70C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 10:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 900DC212F5
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 10:50:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACEBA27220
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 10:50:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727243AbfFAKuO convert rfc822-to-8bit (ORCPT
+        id S1727307AbfFAKuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 06:50:14 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:33266 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbfFAKuM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 06:50:12 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1hX1aS-0001h9-Ma; Sat, 01 Jun 2019 12:50:08 +0200
-Date:   Sat, 1 Jun 2019 12:50:08 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Soeren Moch <smoch@web.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] Revert "usb: core: remove local_irq_save() around
- ->complete() handler"
-Message-ID: <20190601105008.zfqrtu6krw4mhisb@linutronix.de>
-References: <20190531215340.24539-1-smoch@web.de>
- <20190531220535.GA16603@kroah.com>
- <6c03445c-3607-9f33-afee-94613f8d6978@web.de>
+        Sat, 1 Jun 2019 06:50:18 -0400
+Received: from mga12.intel.com ([192.55.52.136]:44926 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726109AbfFAKuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 06:50:17 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Jun 2019 03:50:16 -0700
+X-ExtLoop1: 1
+Received: from unknown (HELO [10.239.13.7]) ([10.239.13.7])
+  by orsmga007.jf.intel.com with ESMTP; 01 Jun 2019 03:50:15 -0700
+Message-ID: <5CF2599B.3030001@intel.com>
+Date:   Sat, 01 Jun 2019 18:55:23 +0800
+From:   Wei Wang <wei.w.wang@intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Thunderbird/31.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <6c03445c-3607-9f33-afee-94613f8d6978@web.de>
-User-Agent: NeoMutt/20180716
+To:     Eric Hankland <ehankland@google.com>
+CC:     pbonzini@redhat.com, rkrcmar@redhat.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v1] KVM: x86: PMU Whitelist
+References: <CAOyeoRWfPNmaWY6Lifdkdj3KPPM654vzDO+s3oduEMCJP+Asow@mail.gmail.com> <5CEC9667.30100@intel.com> <CAOyeoRWhfyuuYdguE6Wrzd7GOdow9qRE4MZ4OKkMc5cdhDT53g@mail.gmail.com> <5CEE3AC4.3020904@intel.com> <CAOyeoRW85jV=TW_xwSj0ZYwPj_L+G9wu+QPGEF3nBmPbWGX4_g@mail.gmail.com> <5CF07D37.9090805@intel.com> <CAOyeoRXWQaVYZSVL_LTTdAwJOEr+eCzhp1=_JcOX3i6_CJiD_g@mail.gmail.com>
+In-Reply-To: <CAOyeoRXWQaVYZSVL_LTTdAwJOEr+eCzhp1=_JcOX3i6_CJiD_g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-06-01 01:02:37 [+0200], Soeren Moch wrote:
-> > Why not just fix that driver?  Wouldn't that be easier?
-> >
-> I suspect there are more drivers to fix. I only tested WIFI sticks so
-> far, RTL8188 drivers also seem to suffer from this. I'm not sure how to
-> fix all this properly, maybe Sebastian as original patch author can help
-> here.
+On 06/01/2019 03:59 AM, Eric Hankland wrote:
+>
+> With anythread=0, I'm not aware of any events that directly give info
+> about other VMs, but monitoring events related to shared resources
+> (e.g. LLC References and LLC Misses) could indirectly give you info
+> about how heavily other users are using that resource.
 
-Suspecting isn't helping here.
+My question is that have we proved that this indirect info leakage 
+indeed happens?
+The spec states that the counter will count the related events generated by
+the logical CPU with AnyThread=0. I would be inclined to trust the 
+hardware behavior
+documented in the spec unless we could prove there is a problem.
 
-> This patch is mostly for -stable, to get an acceptable solution quickly.
-> It was really annoying to get such unstable WIFI connection over the
-> last three kernel releases to my development board.  Since my internet
-> service provider forcefully updated my router box 3 weeks ago, I
-> unfortunately see the same symptoms on my primary internet access.
-> That's even worse, I need to reset this router box every few days. I'm
-> not sure, however, that this is caused by the same problem, but it feels
-> like this.
-> So can we please fix this regression quickly and workout a proper fix
-> later? In the original patch there is no reason given, why this patch is
-> necessary. With this revert I at least see a stable connection.
 
-I will look into this. This patch got in in v4.20-rc1 and the final
-kernel was released by the end of 2018. This is the first report I am
-aware of over half year later…
 
-> Thanks,
-> Soeren
+>
+> I tried returning 1 when the guest tries to write the eventsel msr for
+> a disallowed event - the behavior on modern guest kernels looks
+> reasonable (warns once about an unchecked MSR access error), but it
+> looks like guests using older kernels (older than 2016) might panic
+> due to the gpfault (not to mention I'm not sure about the behavior on
+> non-linux kernels). So I'm hesitant to return 1 - what do you think?
 
-Sebastian
+ From the guest point of view, returning 0 means that the event counting 
+is running well.
+That is, the guest is expecting to get some count numbers. So better not 
+to zero the value
+when the guest does rdpmc/rdmsr to get the count in this case.
+
+I think we could just ensure "AnyThread=0" in the config, and create the 
+kernel
+counter as usual.
+
+
+> I also looked into moving from a vcpu ioctl to a vm ioctl - I can send
+> out a version of the patch with this change once we settle on the
+> other issues. It will involve some extra locking every time the
+> counters are programmed to ensure the whitelist or blacklist isn't
+> removed during access.
+>
+
+Yes, the above discussion needs to be done first.
+
+Best,
+Wei
+
