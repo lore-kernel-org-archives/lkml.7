@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C6BC28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC08C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8908273D6
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:26:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16729273CE
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:26:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395612;
-	bh=QKHwLt3uugsnYRvB0JA2qbRzynAt2NN7z333VfW/eFc=;
+	s=default; t=1559395618;
+	bh=khIwVd6SZumGNPgq8E7WpdAaNyfO/nGOyz01eOSDa2w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Izb7j2Dq/I4vD58002f3peS7Pkl1kEwCvfFAiGi5hik5PRFB9I6WeJjG2tWgpkh8C
-	 /wf7v2Bg1mbcAKAzg3sS6NZD+ERlbOhy/7iS+Ptk34MjyKcfhjc7KHOLVFcMXPA4dP
-	 g7uVuLNg45ik55UoW5BQR/1wPr180XD3lYOJu3xw=
+	b=YjbPAbBxE6mcUmQc6+Ng3Cp/dY/2kxZt9g8ZNOrE71O/vWXfw0DyFaf7AhApBGLcP
+	 /Mxyx9vpgpfbP7rJ4SDuCPYMZRQ1TjiQP4DayZBg8RSgjhS5cfsTRbfXoCZyExDpcZ
+	 Po280wKeiJFBGzKwhrWYFw1js+hj1ePjfwFl2XAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729785AbfFAN0v (ORCPT
+        id S1729225AbfFAN0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:26:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57284 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:26:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729845AbfFAN0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:26:46 -0400
+        id S1729869AbfFAN0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:26:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96367273C3;
-        Sat,  1 Jun 2019 13:26:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B446273A3;
+        Sat,  1 Jun 2019 13:26:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395605;
-        bh=QKHwLt3uugsnYRvB0JA2qbRzynAt2NN7z333VfW/eFc=;
+        s=default; t=1559395611;
+        bh=khIwVd6SZumGNPgq8E7WpdAaNyfO/nGOyz01eOSDa2w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PJnn2z4b8B5dOxd5SeB2fsMr51PbYeyL2ucR44xTJI4bKYK9AL2BCc+Pca19dPzlO
-         Mrz29XjFGJFTTKzhZIV77dsMQE5BBpgJgLpwlWvQNBS/b7IH+lvT4xjEyLLadbAyok
-         FmnOOZwhaA27CxchaSTPiKze9jhwFsiPE6Sf/Q18=
+        b=rBO0nJZXX2hVy+PBVq0dWQU+CoPLYDGZrp0PzsdGlCDH/gf26uVFUaJYuaT7yxxOL
+         6pmccoEGMdOVVboXrWz60l595FzTGdVHuMXjBpN6anX2I5Et+8iljqHaGwOpe5jCHE
+         CJk8TpH2QRaaLI++YaCPNOZo7jGhPN8nL6qQPLoU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kirill Smelkov <kirr@nexedi.com>,
-        Han-Wen Nienhuys <hanwen@google.com>,
-        Jakob Unterwurzacher <jakobunt@gmail.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 24/56] fuse: require /dev/fuse reads to have enough buffer capacity
-Date:   Sat,  1 Jun 2019 09:25:28 -0400
-Message-Id: <20190601132600.27427-24-sashal@kernel.org>
+Cc:     Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 28/56] media: ov6650: Fix sensor possibly not detected on probe
+Date:   Sat,  1 Jun 2019 09:25:32 -0400
+Message-Id: <20190601132600.27427-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132600.27427-1-sashal@kernel.org>
 References: <20190601132600.27427-1-sashal@kernel.org>
@@ -61,82 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kirill Smelkov <kirr@nexedi.com>
+From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
 
-[ Upstream commit d4b13963f217dd947da5c0cabd1569e914d21699 ]
+[ Upstream commit 933c1320847f5ed6b61a7d10f0a948aa98ccd7b0 ]
 
-A FUSE filesystem server queues /dev/fuse sys_read calls to get
-filesystem requests to handle. It does not know in advance what would be
-that request as it can be anything that client issues - LOOKUP, READ,
-WRITE, ... Many requests are short and retrieve data from the
-filesystem. However WRITE and NOTIFY_REPLY write data into filesystem.
+After removal of clock_start() from before soc_camera_init_i2c() in
+soc_camera_probe() by commit 9aea470b399d ("[media] soc-camera: switch
+I2C subdevice drivers to use v4l2-clk") introduced in v3.11, the ov6650
+driver could no longer probe the sensor successfully because its clock
+was no longer turned on in advance.  The issue was initially worked
+around by adding that missing clock_start() equivalent to OMAP1 camera
+interface driver - the only user of this sensor - but a propoer fix
+should be rather implemented in the sensor driver code itself.
 
-Before getting into operation phase, FUSE filesystem server and kernel
-client negotiate what should be the maximum write size the client will
-ever issue. After negotiation the contract in between server/client is
-that the filesystem server then should queue /dev/fuse sys_read calls with
-enough buffer capacity to receive any client request - WRITE in
-particular, while FUSE client should not, in particular, send WRITE
-requests with > negotiated max_write payload. FUSE client in kernel and
-libfuse historically reserve 4K for request header. This way the
-contract is that filesystem server should queue sys_reads with
-4K+max_write buffer.
+Fix the issue by inserting a delay between the clock is turned on and
+the sensor I2C registers are read for the first time.
 
-If the filesystem server does not follow this contract, what can happen
-is that fuse_dev_do_read will see that request size is > buffer size,
-and then it will return EIO to client who issued the request but won't
-indicate in any way that there is a problem to filesystem server.
-This can be hard to diagnose because for some requests, e.g. for
-NOTIFY_REPLY which mimics WRITE, there is no client thread that is
-waiting for request completion and that EIO goes nowhere, while on
-filesystem server side things look like the kernel is not replying back
-after successful NOTIFY_RETRIEVE request made by the server.
+Tested on Amstrad Delta with now out of tree but still locally
+maintained omap1_camera host driver.
 
-We can make the problem easy to diagnose if we indicate via error return to
-filesystem server when it is violating the contract.  This should not
-practically cause problems because if a filesystem server is using shorter
-buffer, writes to it were already very likely to cause EIO, and if the
-filesystem is read-only it should be too following FUSE_MIN_READ_BUFFER
-minimum buffer size.
+Fixes: 9aea470b399d ("[media] soc-camera: switch I2C subdevice drivers to use v4l2-clk")
 
-Please see [1] for context where the problem of stuck filesystem was hit
-for real (because kernel client was incorrectly sending more than
-max_write data with NOTIFY_REPLY; see also previous patch), how the
-situation was traced and for more involving patch that did not make it
-into the tree.
-
-[1] https://marc.info/?l=linux-fsdevel&m=155057023600853&w=2
-
-Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
-Cc: Han-Wen Nienhuys <hanwen@google.com>
-Cc: Jakob Unterwurzacher <jakobunt@gmail.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fuse/dev.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/media/i2c/soc_camera/ov6650.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-index 341196338e484..fbb978e75c6be 100644
---- a/fs/fuse/dev.c
-+++ b/fs/fuse/dev.c
-@@ -1265,6 +1265,16 @@ static ssize_t fuse_dev_do_read(struct fuse_dev *fud, struct file *file,
- 	struct fuse_in *in;
- 	unsigned reqsize;
+diff --git a/drivers/media/i2c/soc_camera/ov6650.c b/drivers/media/i2c/soc_camera/ov6650.c
+index 1e4783b51a351..1e9ebfda25525 100644
+--- a/drivers/media/i2c/soc_camera/ov6650.c
++++ b/drivers/media/i2c/soc_camera/ov6650.c
+@@ -843,6 +843,8 @@ static int ov6650_video_probe(struct i2c_client *client)
+ 	if (ret < 0)
+ 		return ret;
  
-+	/*
-+	 * Require sane minimum read buffer - that has capacity for fixed part
-+	 * of any request header + negotated max_write room for data. If the
-+	 * requirement is not satisfied return EINVAL to the filesystem server
-+	 * to indicate that it is not following FUSE server/client contract.
-+	 * Don't dequeue / abort any request.
-+	 */
-+	if (nbytes < max_t(size_t, FUSE_MIN_READ_BUFFER, 4096 + fc->max_write))
-+		return -EINVAL;
++	msleep(20);
 +
-  restart:
- 	spin_lock(&fiq->waitq.lock);
- 	err = -EAGAIN;
+ 	/*
+ 	 * check and show product ID and manufacturer ID
+ 	 */
 -- 
 2.20.1
 
