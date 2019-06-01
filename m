@@ -2,105 +2,122 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 377D4C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 10:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACF8C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 10:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 150FA271DC
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 10:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA2CC271DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 10:31:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lq2dtFvF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfFAKXq (ORCPT
+        id S1727047AbfFAKbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 06:23:46 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40614 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726130AbfFAKXp (ORCPT
+        Sat, 1 Jun 2019 06:31:47 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:39517 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbfFAKbr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 06:23:45 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x51ANfjg109361
-        for <linux-kernel@vger.kernel.org>; Sat, 1 Jun 2019 06:23:44 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2sunds38x0-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Jun 2019 06:23:43 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Sat, 1 Jun 2019 11:22:19 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 1 Jun 2019 11:22:16 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x51AMFpt63176856
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 1 Jun 2019 10:22:15 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 71FE0AE04D;
-        Sat,  1 Jun 2019 10:22:15 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4694FAE045;
-        Sat,  1 Jun 2019 10:22:15 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.21])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Sat,  1 Jun 2019 10:22:15 +0000 (GMT)
-Date:   Sat, 1 Jun 2019 12:22:13 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] s390: drop meaningless 'targets' from tools Makefile
-References: <20190517075428.13496-1-yamada.masahiro@socionext.com>
- <20190517075428.13496-4-yamada.masahiro@socionext.com>
+        Sat, 1 Jun 2019 06:31:47 -0400
+Received: by mail-ed1-f68.google.com with SMTP id e24so18798417edq.6;
+        Sat, 01 Jun 2019 03:31:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jmzu/4f2VSybe0QBfOp4nNczJtPbQGeo/AKVN1JR9ts=;
+        b=lq2dtFvFprYJYo/nLc5JBQ+xRtuz5Ob5ac30+8sE6xnhBOhMxH0KNHY1maBw2WpZHg
+         QMoidWuFUQ8ZeRmkE2SUPcxtRI8G/FVz88Kt9aWLSWREuksiGaCJqovin8HEIN4CpsYB
+         rz6xP608rnn4CbCXCNNnmpVnj8RFgwLUsxEZAZ16kLuGow1LTXP3uzGharu+nEd2r287
+         zxzhYD57rEcX81csJG16YXbBHm0UKe5Y9hLoK/cnpxceF8ZN3TyTmM6jpBTRpPQ9noMp
+         I4HOjuJUD10KXwA9KxZyZigFv9zk+rZEjBvCfWONbVgZ6nsAwJuHz6Xu6Mn/kNi8Biau
+         T9Sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jmzu/4f2VSybe0QBfOp4nNczJtPbQGeo/AKVN1JR9ts=;
+        b=HAx2NiB4N0SqPrRJfZR1lmFaX/8P7HBoeHzkaA0yIfsGsnxs7axUQ3MgK6CgISow1N
+         b6EC+gLCHcaS1YKUljUzT7kAjTG66ahuhzYCuIP7PaANH+ZdiVSRyjvCzXgJfS3U5VDB
+         rIarM99QzFR8KvcNaqvVQW7blv/dMeEXKrqLoRy651OvNkr5S1l1/4h+qfgDbZUlyn/h
+         luI+CfdL+rzLPEBDFkU/uMSpgajo9u0LQYZ57TH6tZK4qFu0BqnDawkd9KW+RhltYLcz
+         SPogwqwtyxnu4rcMYNA+LNMWGwgGPRSil7hG8LYUXY9e0tpvx2NvImEPq/VAnlm5ojBb
+         a8wg==
+X-Gm-Message-State: APjAAAUOXJGUDlFn+5kv83I7NdMqdXkBFKEsFYgC7EsbaRG3nPKfoWu9
+        tBZUfSeV0xaYPhUkODr1aO5+nYQ0UH/EF1d2QjXPm12gM+0=
+X-Google-Smtp-Source: APXvYqxqLzqYj6AhQWHLo3YvdnTGsH5oDxKIkaDeZKOGWEgzvXTlACG85hQl6WqY7GpYr4Vs2SOANeLANsn6v2JL3E0=
+X-Received: by 2002:aa7:d30a:: with SMTP id p10mr3269396edq.123.1559385105419;
+ Sat, 01 Jun 2019 03:31:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190517075428.13496-4-yamada.masahiro@socionext.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19060110-0012-0000-0000-000003218177
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060110-0013-0000-0000-0000215A5638
-Message-Id: <20190601102213.GE3600@osiris>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-01_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=854 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906010077
+References: <CA+h21hrBwR4Sow7q0_rS1u2md1M4bSAJt8FO5+VLFiu9UGnvjA@mail.gmail.com>
+ <20190531043417.6phscbpmo6krvxam@localhost> <CA+h21hp9DfW3wFy4YbHMU31rBHyrnUTdF4kKwX36h9vHOW2COw@mail.gmail.com>
+ <20190531140841.j4f72rlojmaayqr5@localhost> <CA+h21hroywaij3gyO0u6v+GFVO2Fv_dP_a+L3oMGpQH8mQgJ5g@mail.gmail.com>
+ <20190531151151.k3a2wdf5f334qmqh@localhost> <CA+h21hpHKbTc8toPZf0iprW1b4v6ErnRaSM=C6vk-GCiXM8NvA@mail.gmail.com>
+ <20190531160909.jh43saqvichukv7p@localhost> <CA+h21hpVrVNJTFj4DHHV+zphs2MjyRO-XZsM3D-STra+BYYHtw@mail.gmail.com>
+ <CA+h21houLC7TGJYQ28LxiUxyBE7ju2ZiRcUd41aGo_=uAhgVgQ@mail.gmail.com> <20190601050714.xylw5noxka7sa4p3@localhost>
+In-Reply-To: <20190601050714.xylw5noxka7sa4p3@localhost>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Sat, 1 Jun 2019 13:31:34 +0300
+Message-ID: <CA+h21hr3+vUjS9_m=CtEbFeN9Bgxkg8b-4zuXSMnZXGtfUEOsQ@mail.gmail.com>
+Subject: Re: [PATCH net-next 0/5] PTP support for the SJA1105 DSA driver
+To:     Richard Cochran <richardcochran@gmail.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 04:54:27PM +0900, Masahiro Yamada wrote:
-> 'targets' should be specified to include .*.cmd files to evaluate
-> if_changed or friends.
-> 
-> Here, facility-defs.h and dis-defs.h are generated by filechk.
-> 
-> Because filechk does not generate .*.cmd file, the 'targets' addition
-> is meaningless. The filechk correctly updates the target when its
-> content is changed.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
->  arch/s390/tools/Makefile | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/arch/s390/tools/Makefile b/arch/s390/tools/Makefile
-> index 4864ea5e6ceb..b5e35e8f999a 100644
-> --- a/arch/s390/tools/Makefile
-> +++ b/arch/s390/tools/Makefile
-> @@ -6,7 +6,6 @@
->  kapi := arch/$(ARCH)/include/generated/asm
->  kapi-hdrs-y := $(kapi)/facility-defs.h $(kapi)/dis-defs.h
-> 
-> -targets += $(addprefix ../../../,$(kapi-hdrs-y))
+On Sat, 1 Jun 2019 at 08:07, Richard Cochran <richardcochran@gmail.com> wrote:
+>
+> On Fri, May 31, 2019 at 09:12:03PM +0300, Vladimir Oltean wrote:
+> > It won't work unless I make changes to dsa_switch_rcv.
+>
+> Or to the tagging code.
+>
+> > Right now taggers can only return a pointer to the skb, or NULL, case
+> > in which DSA will free it.
+>
+> The tagger can re-write the skb.  Why not reform it into a PTP frame?
+> This clever trick is what the phyter does in hardware.  See dp83640.c.
+>
 
-Applied, thanks.
+I think you're missing the point here.
+If I dress the meta frame into a PTP frame (btw is there any
+preferable event message for this purpose?) then sure, I'll make
+dsa_skb_defer_rx_timestamp call my .port_rxtstamp and I can e.g. move
+my state machine there.
+The problem is that in the current DSA structure, I'll still have less
+timestampable frames waiting for a meta frame than meta frames
+themselves. This is because not all frames that the switch takes an RX
+timestamp for will make it to my .port_rxtstamp (in fact that is what
+my .can_timestamp patch changes). I can put the timestampable frame in
+a 1-entry wait queue which I'll deplete upon arrival of the first meta
+frame, but when I get meta frames and the wait queue is empty, it can
+mean multiple things: either DSA didn't care about this timestamp
+(ok), or the timestampable frame got reordered or dropped by the MAC,
+or what have you (not ok). So I can't exclude the possibility that the
+meta frame was holding a relevant timestamp.
+Sure, I can dress the meta frame into whatever the previous
+MAC-trapped frame was (PTP or not) and then I'll have .port_rxtstamp
+function see a 1-to-1 correspondence with meta frames in case
+everything works fine. But then I'll have non-PTP meta frames leaking
+up the stack...
 
+Regards,
+-Vladimir
+
+> Thanks,
+> Richard
