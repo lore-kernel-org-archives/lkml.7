@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE26C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0F1C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66EDA27002
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BF4F276F2
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:43:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396607;
-	bh=s5RyXHwKBq2Vm7OqgVW19Gaam/SjiYsY97Rol1WiydY=;
+	s=default; t=1559396618;
+	bh=Hshb00E3YY/ALIe4BTZ8oT6UxHJVL0f6jBjud6JkyMY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GusqFO7vW3WNydDwegRFJYKDrpHeMOxKM40Wb5DSrYoKvP9wDWLsAGDlXXdDF5SZs
-	 MegkXDJ8vYffq2Nl8HTY+8aYMTEIFVczS06gMbGzQuP2DcPIb5h0UPUZ9F/4qHiAHl
-	 zO04qZ14IIDHFPlTeFkuLzEyfeeul6xwN7la/cJw=
+	b=SHUePUoTPLej0l5YpUm0zT0igfqSBRQiTZ9YYKjDZuumMO0O4JmEc6h01/JXK8JHs
+	 ZknDaPqvI44oUtbTDH3JTT456xVbaD++hGQZE58lL6ElfgIQ6HB5tInnUcEiZ0/AfR
+	 +jfW99x7ic0ZPioKL/1YulgogRhSbdI0feJ7qCJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728400AbfFANnZ (ORCPT
+        id S1728241AbfFANnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:43:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45444 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:43:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727768AbfFANSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:18:23 -0400
+        id S1727677AbfFANSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:18:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8246B23CA5;
-        Sat,  1 Jun 2019 13:18:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD0462727C;
+        Sat,  1 Jun 2019 13:18:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395103;
-        bh=s5RyXHwKBq2Vm7OqgVW19Gaam/SjiYsY97Rol1WiydY=;
+        s=default; t=1559395086;
+        bh=Hshb00E3YY/ALIe4BTZ8oT6UxHJVL0f6jBjud6JkyMY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i0PsgJA3iDvCT/Ang7F0v+C6AYsHHJENYc/gynHczcSL+ofOc5z2l9OBfVpFzBg32
-         +CsrJJ5iS2XKyvOfv9KrJzjkvstzyrC5S/Q1WjgLH35jr4ZQGb3YrIVOC80FJYp6pV
-         0udwtjYW5yPA7zUc5m+13H4nun2Z/PE7+DY4vtBQ=
+        b=s3Ak+8W+exmGAicZADTOp4bd0AnPZLhKeBYj+OahyjOy0AXP/22dKJMmt4AR1HjwF
+         J8C8m9keN1zXg71SQWzdiPeKjRokRRd8SZQcLDlzEwFzDKbusmcR6l3B05238nTAFL
+         SvCUyTK8GV08pMpeMy3lk6WnW3j0oQ7yy2LayR9g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 034/186] objtool: Don't use ignore flag for fake jumps
-Date:   Sat,  1 Jun 2019 09:14:10 -0400
-Message-Id: <20190601131653.24205-34-sashal@kernel.org>
+Cc:     Daniel Gomez <dagmcr@gmail.com>,
+        Javier Martinez Canillas <javier@dowhile0.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 026/186] mfd: tps65912-spi: Add missing of table registration
+Date:   Sat,  1 Jun 2019 09:14:02 -0400
+Message-Id: <20190601131653.24205-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131653.24205-1-sashal@kernel.org>
 References: <20190601131653.24205-1-sashal@kernel.org>
@@ -61,70 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Daniel Gomez <dagmcr@gmail.com>
 
-[ Upstream commit e6da9567959e164f82bc81967e0d5b10dee870b4 ]
+[ Upstream commit 9e364e87ad7f2c636276c773d718cda29d62b741 ]
 
-The ignore flag is set on fake jumps in order to keep
-add_jump_destinations() from setting their jump_dest, since it already
-got set when the fake jump was created.
+MODULE_DEVICE_TABLE(of, <of_match_table> should be called to complete DT
+OF mathing mechanism and register it.
 
-But using the ignore flag is a bit of a hack.  It's normally used to
-skip validation of an instruction, which doesn't really make sense for
-fake jumps.
+Before this patch:
+modinfo drivers/mfd/tps65912-spi.ko | grep alias
+alias:          spi:tps65912
 
-Also, after the next patch, using the ignore flag for fake jumps can
-trigger a false "why am I validating an ignored function?" warning.
+After this patch:
+modinfo drivers/mfd/tps65912-spi.ko | grep alias
+alias:          of:N*T*Cti,tps65912C*
+alias:          of:N*T*Cti,tps65912
+alias:          spi:tps65912
 
-Instead just add an explicit check in add_jump_destinations() to skip
-fake jumps.
-
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/71abc072ff48b2feccc197723a9c52859476c068.1557766718.git.jpoimboe@redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
+Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/objtool/check.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/mfd/tps65912-spi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 2cd57730381b8..ecf5fc77f50b5 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -28,6 +28,8 @@
- #include <linux/hashtable.h>
- #include <linux/kernel.h>
+diff --git a/drivers/mfd/tps65912-spi.c b/drivers/mfd/tps65912-spi.c
+index 3bd75061f7776..f78be039e4637 100644
+--- a/drivers/mfd/tps65912-spi.c
++++ b/drivers/mfd/tps65912-spi.c
+@@ -27,6 +27,7 @@ static const struct of_device_id tps65912_spi_of_match_table[] = {
+ 	{ .compatible = "ti,tps65912", },
+ 	{ /* sentinel */ }
+ };
++MODULE_DEVICE_TABLE(of, tps65912_spi_of_match_table);
  
-+#define FAKE_JUMP_OFFSET -1
-+
- struct alternative {
- 	struct list_head list;
- 	struct instruction *insn;
-@@ -501,7 +503,7 @@ static int add_jump_destinations(struct objtool_file *file)
- 		    insn->type != INSN_JUMP_UNCONDITIONAL)
- 			continue;
- 
--		if (insn->ignore)
-+		if (insn->ignore || insn->offset == FAKE_JUMP_OFFSET)
- 			continue;
- 
- 		rela = find_rela_by_dest_range(insn->sec, insn->offset,
-@@ -670,10 +672,10 @@ static int handle_group_alt(struct objtool_file *file,
- 		clear_insn_state(&fake_jump->state);
- 
- 		fake_jump->sec = special_alt->new_sec;
--		fake_jump->offset = -1;
-+		fake_jump->offset = FAKE_JUMP_OFFSET;
- 		fake_jump->type = INSN_JUMP_UNCONDITIONAL;
- 		fake_jump->jump_dest = list_next_entry(last_orig_insn, list);
--		fake_jump->ignore = true;
-+		fake_jump->func = orig_insn->func;
- 	}
- 
- 	if (!special_alt->new_len) {
+ static int tps65912_spi_probe(struct spi_device *spi)
+ {
 -- 
 2.20.1
 
