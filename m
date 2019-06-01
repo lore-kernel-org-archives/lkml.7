@@ -2,109 +2,73 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B972C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 09:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB39EC28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 09:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 245D6270DD
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 09:15:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C42A27140
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 09:19:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbfFAJPh (ORCPT
+        id S1726973AbfFAJTv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 05:15:37 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:45048 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726134AbfFAJPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 05:15:36 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 85489C906D572A0C7651;
-        Sat,  1 Jun 2019 17:15:34 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Sat, 1 Jun 2019 17:15:25 +0800
-From:   Kefeng Wang <wangkefeng.wang@huawei.com>
-To:     Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-CC:     <linuxcrypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH v2] crypto: pcrypt: Fix possible deadlock in padata_sysfs_release
-Date:   Sat, 1 Jun 2019 17:23:32 +0800
-Message-ID: <20190601092332.136481-1-wangkefeng.wang@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <1b71b136-3501-db1c-834b-ba7ed1431f4d@huawei.com>
-References: <1b71b136-3501-db1c-834b-ba7ed1431f4d@huawei.com>
+        Sat, 1 Jun 2019 05:19:51 -0400
+Received: from www74.your-server.de ([213.133.104.74]:59318 "EHLO
+        www74.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbfFAJTv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 05:19:51 -0400
+X-Greylist: delayed 1721 seconds by postgrey-1.27 at vger.kernel.org; Sat, 01 Jun 2019 05:19:50 EDT
+Received: from [88.198.220.130] (helo=sslproxy01.your-server.de)
+        by www74.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <klaus.kusche@computerix.info>)
+        id 1hWzjE-0004z7-8O; Sat, 01 Jun 2019 10:51:04 +0200
+Received: from [95.91.33.208] (helo=[192.168.178.20])
+        by sslproxy01.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <klaus.kusche@computerix.info>)
+        id 1hWzjD-0007Qr-RS; Sat, 01 Jun 2019 10:51:03 +0200
+To:     keescook@chromium.org, johannes.hirte@datenkhaos.de
+From:   Klaus Kusche <klaus.kusche@computerix.info>
+Cc:     bp@suse.de, samitolvanen@google.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/build: Move _etext to actual end of .text
+Message-ID: <e76e3384-702e-e0f6-c949-79beaca2a109@computerix.info>
+Date:   Sat, 1 Jun 2019 10:51:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: klaus.kusche@computerix.info
+X-Virus-Scanned: Clear (ClamAV 0.100.3/25467/Sat Jun  1 10:00:07 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a deadlock issue in pcrypt_init_padata(),
 
-pcrypt_init_padata()
-    cpus_read_lock()
-      padata_free()
-        padata_sysfs_release()
-          cpus_read_lock()
+Hello,
 
-Narrow rcu_read_lock/unlock() and move put_online_cpus()
-before padata_free() to fix it.
+same problem here.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
----
- crypto/pcrypt.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+gcc version 9.1.0 (Gentoo 9.1.0 p1.0)
+linux-5.1.6
 
-diff --git a/crypto/pcrypt.c b/crypto/pcrypt.c
-index 0e9ce329fd47..f3dacb714cd4 100644
---- a/crypto/pcrypt.c
-+++ b/crypto/pcrypt.c
-@@ -407,16 +407,19 @@ static int pcrypt_init_padata(struct padata_pcrypt *pcrypt,
- 	int ret = -ENOMEM;
- 	struct pcrypt_cpumask *mask;
- 
--	get_online_cpus();
- 
- 	pcrypt->wq = alloc_workqueue("%s", WQ_MEM_RECLAIM | WQ_CPU_INTENSIVE,
- 				     1, name);
- 	if (!pcrypt->wq)
- 		goto err;
- 
-+	get_online_cpus();
-+
- 	pcrypt->pinst = padata_alloc_possible(pcrypt->wq);
--	if (!pcrypt->pinst)
-+	if (!pcrypt->pinst) {
-+		put_online_cpus();
- 		goto err_destroy_workqueue;
-+	}
- 
- 	mask = kmalloc(sizeof(*mask), GFP_KERNEL);
- 	if (!mask)
-@@ -448,12 +451,11 @@ static int pcrypt_init_padata(struct padata_pcrypt *pcrypt,
- 	free_cpumask_var(mask->mask);
- 	kfree(mask);
- err_free_padata:
-+	put_online_cpus();
- 	padata_free(pcrypt->pinst);
- err_destroy_workqueue:
- 	destroy_workqueue(pcrypt->wq);
- err:
--	put_online_cpus();
--
- 	return ret;
- }
- 
+RELOCS  arch/x86/boot/compressed/vmlinux.relocs
+Invalid absolute R_X86_64_32S relocation: _etext
+make[2]: *** [arch/x86/boot/compressed/Makefile:130: arch/x86/boot/compressed/vmlinux.relocs] Error 1
+make[2]: *** Deleting file 'arch/x86/boot/compressed/vmlinux.relocs'
+make[2]: *** Waiting for unfinished jobs....
+
+make clean or make distclean did *not* help.
+
 -- 
-2.20.1
-
+Prof. Dr. Klaus Kusche
+Private address: Rosenberg 41, 07546 Gera, Germany
++49 365 20413058 klaus.kusche@computerix.info https://www.computerix.info
+Office address: DHGE Gera, Weg der Freundschaft 4, 07546 Gera, Germany
++49 365 4341 306 klaus.kusche@dhge.de https://www.dhge.de
