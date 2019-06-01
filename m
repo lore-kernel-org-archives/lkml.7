@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1062C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B02FC28CC3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E28E27544
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:34:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D501727541
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:34:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396078;
-	bh=vx53/cn0piw5/Nd49Mujb3RPDQN5VCsCot01OzuqToI=;
+	s=default; t=1559396088;
+	bh=DZF/MddlC/nM3d3p4VzFWyOpX2xZN+JN3H/kLYMBOI8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F8/e5S6cQ3FWcoV3WuIXWuZ1BFywmf7yPMGsUIGDmbnbOdZIpHEkcSgHpaTex6vvd
-	 f7ghG7h6SYw5KfYt8RKScVcnZJ0mtva0Y6Z655xRvXwsHhxv6p2Vfsvd9iVzPxKHQ6
-	 EvYR/47m2kXHCFgW9g0NC6uP3dgghBWm2pIpQ0BE=
+	b=to7vCjwoRbINVkE3xBG/APj74LwMG9LWc9KAAoiZaQI73Idek1n7APMrfUu7aTCej
+	 ZHVRfefhLg8ivdePv672Pk5f2KEIqKEPKt53ZbEkf6Bm0VK/4ipjL48RUaWh0UWoIS
+	 ndHALNVnOglLuV+R+JIDBS23IROdHoIbhtzAngxY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729470AbfFANeh (ORCPT
+        id S1729533AbfFANes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:34:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53580 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:34:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728470AbfFANXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:23:36 -0400
+        id S1729043AbfFANXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:23:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7651C264BE;
-        Sat,  1 Jun 2019 13:23:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DE45264BE;
+        Sat,  1 Jun 2019 13:23:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395416;
-        bh=vx53/cn0piw5/Nd49Mujb3RPDQN5VCsCot01OzuqToI=;
+        s=default; t=1559395411;
+        bh=DZF/MddlC/nM3d3p4VzFWyOpX2xZN+JN3H/kLYMBOI8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OoRQVnHRYTwjNf4BdrffianhOuohGmdTyCsDu3veeVcHqjvqcXK951kuVYUUL8I//
-         izA5O3U7IytKGA72TW26SKgLj+Bik9YEqJTv+AwPDGmIcu9POHipQaMka8SNjqwctJ
-         I6ol6DrpbjYd1VCa0a0xPdsm2qyEE5uWhC+iNnvQ=
+        b=TuGhXe5SXcj2R+3DeumK+lbPFw6C275TZu1MEjqmy4DfQ7qfvWPKHY1xHMCcT1sju
+         dtxhWmzcNdtQ0dWAVaUoPpvB142PAUCGPL/Sd6ngeBel5YNXqvGCDF5Tr/TKUC6OuY
+         NTOItuIu6HMQYivJ6oAL2r2GyzCl27wvfkyAYCFc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Taehee Yoo <ap420073@gmail.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 051/141] netfilter: nf_flow_table: fix missing error check for rhashtable_insert_fast
-Date:   Sat,  1 Jun 2019 09:20:27 -0400
-Message-Id: <20190601132158.25821-51-sashal@kernel.org>
+Cc:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 048/141] PCI: dwc: Free MSI IRQ page in dw_pcie_free_msi()
+Date:   Sat,  1 Jun 2019 09:20:24 -0400
+Message-Id: <20190601132158.25821-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132158.25821-1-sashal@kernel.org>
 References: <20190601132158.25821-1-sashal@kernel.org>
@@ -61,59 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 
-[ Upstream commit 43c8f131184faf20c07221f3e09724611c6525d8 ]
+[ Upstream commit dc69a3d567941784c3d00e1d0834582b42b0b3e7 ]
 
-rhashtable_insert_fast() may return an error value when memory
-allocation fails, but flow_offload_add() does not check for errors.
-This patch just adds missing error checking.
+To avoid a memory leak, free the page allocated for MSI IRQ in
+dw_pcie_free_msi().
 
-Fixes: ac2a66665e23 ("netfilter: add generic flow table infrastructure")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_flow_table_core.c | 25 ++++++++++++++++++-------
- 1 file changed, 18 insertions(+), 7 deletions(-)
+ drivers/pci/controller/dwc/pcie-designware-host.c | 12 ++++++++----
+ drivers/pci/controller/dwc/pcie-designware.h      |  1 +
+ 2 files changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/net/netfilter/nf_flow_table_core.c b/net/netfilter/nf_flow_table_core.c
-index e1537ace2b90c..5df7486bb4164 100644
---- a/net/netfilter/nf_flow_table_core.c
-+++ b/net/netfilter/nf_flow_table_core.c
-@@ -185,14 +185,25 @@ static const struct rhashtable_params nf_flow_offload_rhash_params = {
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 4eedb2c54ab38..acd50920c2ffd 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -303,20 +303,24 @@ void dw_pcie_free_msi(struct pcie_port *pp)
  
- int flow_offload_add(struct nf_flowtable *flow_table, struct flow_offload *flow)
- {
--	flow->timeout = (u32)jiffies;
-+	int err;
- 
--	rhashtable_insert_fast(&flow_table->rhashtable,
--			       &flow->tuplehash[FLOW_OFFLOAD_DIR_ORIGINAL].node,
--			       nf_flow_offload_rhash_params);
--	rhashtable_insert_fast(&flow_table->rhashtable,
--			       &flow->tuplehash[FLOW_OFFLOAD_DIR_REPLY].node,
--			       nf_flow_offload_rhash_params);
-+	err = rhashtable_insert_fast(&flow_table->rhashtable,
-+				     &flow->tuplehash[0].node,
-+				     nf_flow_offload_rhash_params);
-+	if (err < 0)
-+		return err;
+ 	irq_domain_remove(pp->msi_domain);
+ 	irq_domain_remove(pp->irq_domain);
 +
-+	err = rhashtable_insert_fast(&flow_table->rhashtable,
-+				     &flow->tuplehash[1].node,
-+				     nf_flow_offload_rhash_params);
-+	if (err < 0) {
-+		rhashtable_remove_fast(&flow_table->rhashtable,
-+				       &flow->tuplehash[0].node,
-+				       nf_flow_offload_rhash_params);
-+		return err;
-+	}
-+
-+	flow->timeout = (u32)jiffies;
- 	return 0;
++	if (pp->msi_page)
++		__free_page(pp->msi_page);
  }
- EXPORT_SYMBOL_GPL(flow_offload_add);
+ 
+ void dw_pcie_msi_init(struct pcie_port *pp)
+ {
+ 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+ 	struct device *dev = pci->dev;
+-	struct page *page;
+ 	u64 msi_target;
+ 
+-	page = alloc_page(GFP_KERNEL);
+-	pp->msi_data = dma_map_page(dev, page, 0, PAGE_SIZE, DMA_FROM_DEVICE);
++	pp->msi_page = alloc_page(GFP_KERNEL);
++	pp->msi_data = dma_map_page(dev, pp->msi_page, 0, PAGE_SIZE,
++				    DMA_FROM_DEVICE);
+ 	if (dma_mapping_error(dev, pp->msi_data)) {
+ 		dev_err(dev, "Failed to map MSI data\n");
+-		__free_page(page);
++		__free_page(pp->msi_page);
++		pp->msi_page = NULL;
+ 		return;
+ 	}
+ 	msi_target = (u64)pp->msi_data;
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index 9f1a5e399b703..14dcf66466996 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -164,6 +164,7 @@ struct pcie_port {
+ 	struct irq_domain	*irq_domain;
+ 	struct irq_domain	*msi_domain;
+ 	dma_addr_t		msi_data;
++	struct page		*msi_page;
+ 	u32			num_vectors;
+ 	u32			irq_status[MAX_MSI_CTRLS];
+ 	raw_spinlock_t		lock;
 -- 
 2.20.1
 
