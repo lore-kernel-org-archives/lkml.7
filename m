@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4307FC46470
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61497C28CC3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 130DA2725F
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:17:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 314DA2725E
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:17:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395037;
-	bh=tcNmDS2dYfT0+toW5BTsfBTpVZ2j+T3dVc+NEoQiLYc=;
+	s=default; t=1559395039;
+	bh=JCgk4WVrJP7TAAEujf0s21n6kcXbE/rOteapxr/mU1c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QSWsU6TKzec73pWj6ULqWzuWwsLdopUdFfl9S/xzi9i7W7eRWHv0qU0Y+dYgKhk0p
-	 UFZLGllfTfjlz5qpX+jtc7kpE0AqVSZtfjT2oIODKmY9OAHZqQxVgqkKoXkunsCIDi
-	 B/rvEyLiL0fBX9jEBSSZEajLOYHAXSeh6JhjshG8=
+	b=nI5Cq9rJxMNtczZRToO+J8VHIdA2GBDmyyorAWBXntGhC7i/DqEXkXfD88x9Rj0el
+	 6WXCBX/qt1uahA5bHLFpkWGZKMO2iRMG/hGQzhhs3ThjtAz9LKmemma6zBTArFppWS
+	 EUz1Ir4dIHwfSjVF1A4y1+6jnKi2UfKRG2aCahf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727358AbfFANRQ (ORCPT
+        id S1727382AbfFANRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:17:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41846 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:17:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727269AbfFANRH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:17:07 -0400
+        id S1727339AbfFANRO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:17:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2A5B2725E;
-        Sat,  1 Jun 2019 13:17:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3F9527252;
+        Sat,  1 Jun 2019 13:17:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395026;
-        bh=tcNmDS2dYfT0+toW5BTsfBTpVZ2j+T3dVc+NEoQiLYc=;
+        s=default; t=1559395033;
+        bh=JCgk4WVrJP7TAAEujf0s21n6kcXbE/rOteapxr/mU1c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z3hNBJh5t9+k3cevH0is/455tORRtsD3EZraPdkozFVeal600QkC0qQBU2aDNh7V8
-         ZLUCXTs2zXZJgeUSYFvVTeA2i8CLivEwX2E0FIujpxoH7c+Bxc0gs7cB8qgDncNdYi
-         BEOM55ItDfokLOfl1dgFr7zwVR0VCBZdT1UUVO5M=
+        b=V8VLu24jkuWi6liybUnKL25P0A4jnGzu37zuR0Ijd9IL5aTb351SyP1AqeOg77Puz
+         DhAig1SwJ6W3eEZLQQocM2l4gM4u4yBRHZJdiydTvUizaK5Kxlktt9Dk9aF+uMKRdD
+         I8TFXBnYCnU0W/62awJ5cbYUDKcTChEZpD31i5+U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hou Tao <houtao1@huawei.com>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+Cc:     Li Rongqing <lirongqing@baidu.com>, Zhang Yu <zhangyu31@baidu.com>,
+        Davidlohr Bueso <dbueso@suse.de>,
+        Manfred Spraul <manfred@colorfullife.com>,
+        Arnd Bergmann <arnd@arndb.de>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 004/186] fs/fat/file.c: issue flush after the writeback of FAT
-Date:   Sat,  1 Jun 2019 09:13:40 -0400
-Message-Id: <20190601131653.24205-4-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 006/186] ipc: prevent lockup on alloc_msg and free_msg
+Date:   Sat,  1 Jun 2019 09:13:42 -0400
+Message-Id: <20190601131653.24205-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131653.24205-1-sashal@kernel.org>
 References: <20190601131653.24205-1-sashal@kernel.org>
@@ -62,54 +64,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hou Tao <houtao1@huawei.com>
+From: Li Rongqing <lirongqing@baidu.com>
 
-[ Upstream commit bd8309de0d60838eef6fb575b0c4c7e95841cf73 ]
+[ Upstream commit d6a2946a88f524a47cc9b79279667137899db807 ]
 
-fsync() needs to make sure the data & meta-data of file are persistent
-after the return of fsync(), even when a power-failure occurs later.  In
-the case of fat-fs, the FAT belongs to the meta-data of file, so we need
-to issue a flush after the writeback of FAT instead before.
+msgctl10 of ltp triggers the following lockup When CONFIG_KASAN is
+enabled on large memory SMP systems, the pages initialization can take a
+long time, if msgctl10 requests a huge block memory, and it will block
+rcu scheduler, so release cpu actively.
 
-Also bail out early when any stage of fsync fails.
+After adding schedule() in free_msg, free_msg can not be called when
+holding spinlock, so adding msg to a tmp list, and free it out of
+spinlock
 
-Link: http://lkml.kernel.org/r/20190409030158.136316-1-houtao1@huawei.com
-Signed-off-by: Hou Tao <houtao1@huawei.com>
-Acked-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Jan Kara <jack@suse.cz>
+  rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+  rcu:     Tasks blocked on level-1 rcu_node (CPUs 16-31): P32505
+  rcu:     Tasks blocked on level-1 rcu_node (CPUs 48-63): P34978
+  rcu:     (detected by 11, t=35024 jiffies, g=44237529, q=16542267)
+  msgctl10        R  running task    21608 32505   2794 0x00000082
+  Call Trace:
+   preempt_schedule_irq+0x4c/0xb0
+   retint_kernel+0x1b/0x2d
+  RIP: 0010:__is_insn_slot_addr+0xfb/0x250
+  Code: 82 1d 00 48 8b 9b 90 00 00 00 4c 89 f7 49 c1 ee 03 e8 59 83 1d 00 48 b8 00 00 00 00 00 fc ff df 4c 39 eb 48 89 9d 58 ff ff ff <41> c6 04 06 f8 74 66 4c 8d 75 98 4c 89 f1 48 c1 e9 03 48 01 c8 48
+  RSP: 0018:ffff88bce041f758 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
+  RAX: dffffc0000000000 RBX: ffffffff8471bc50 RCX: ffffffff828a2a57
+  RDX: dffffc0000000000 RSI: dffffc0000000000 RDI: ffff88bce041f780
+  RBP: ffff88bce041f828 R08: ffffed15f3f4c5b3 R09: ffffed15f3f4c5b3
+  R10: 0000000000000001 R11: ffffed15f3f4c5b2 R12: 000000318aee9b73
+  R13: ffffffff8471bc50 R14: 1ffff1179c083ef0 R15: 1ffff1179c083eec
+   kernel_text_address+0xc1/0x100
+   __kernel_text_address+0xe/0x30
+   unwind_get_return_address+0x2f/0x50
+   __save_stack_trace+0x92/0x100
+   create_object+0x380/0x650
+   __kmalloc+0x14c/0x2b0
+   load_msg+0x38/0x1a0
+   do_msgsnd+0x19e/0xcf0
+   do_syscall_64+0x117/0x400
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+  rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+  rcu:     Tasks blocked on level-1 rcu_node (CPUs 0-15): P32170
+  rcu:     (detected by 14, t=35016 jiffies, g=44237525, q=12423063)
+  msgctl10        R  running task    21608 32170  32155 0x00000082
+  Call Trace:
+   preempt_schedule_irq+0x4c/0xb0
+   retint_kernel+0x1b/0x2d
+  RIP: 0010:lock_acquire+0x4d/0x340
+  Code: 48 81 ec c0 00 00 00 45 89 c6 4d 89 cf 48 8d 6c 24 20 48 89 3c 24 48 8d bb e4 0c 00 00 89 74 24 0c 48 c7 44 24 20 b3 8a b5 41 <48> c1 ed 03 48 c7 44 24 28 b4 25 18 84 48 c7 44 24 30 d0 54 7a 82
+  RSP: 0018:ffff88af83417738 EFLAGS: 00000282 ORIG_RAX: ffffffffffffff13
+  RAX: dffffc0000000000 RBX: ffff88bd335f3080 RCX: 0000000000000002
+  RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88bd335f3d64
+  RBP: ffff88af83417758 R08: 0000000000000000 R09: 0000000000000000
+  R10: 0000000000000001 R11: ffffed13f3f745b2 R12: 0000000000000000
+  R13: 0000000000000002 R14: 0000000000000000 R15: 0000000000000000
+   is_bpf_text_address+0x32/0xe0
+   kernel_text_address+0xec/0x100
+   __kernel_text_address+0xe/0x30
+   unwind_get_return_address+0x2f/0x50
+   __save_stack_trace+0x92/0x100
+   save_stack+0x32/0xb0
+   __kasan_slab_free+0x130/0x180
+   kfree+0xfa/0x2d0
+   free_msg+0x24/0x50
+   do_msgrcv+0x508/0xe60
+   do_syscall_64+0x117/0x400
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Davidlohr said:
+ "So after releasing the lock, the msg rbtree/list is empty and new
+  calls will not see those in the newly populated tmp_msg list, and
+  therefore they cannot access the delayed msg freeing pointers, which
+  is good. Also the fact that the node_cache is now freed before the
+  actual messages seems to be harmless as this is wanted for
+  msg_insert() avoiding GFP_ATOMIC allocations, and after releasing the
+  info->lock the thing is freed anyway so it should not change things"
+
+Link: http://lkml.kernel.org/r/1552029161-4957-1-git-send-email-lirongqing@baidu.com
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
+Reviewed-by: Davidlohr Bueso <dbueso@suse.de>
+Cc: Manfred Spraul <manfred@colorfullife.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fat/file.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ ipc/mqueue.c  | 10 ++++++++--
+ ipc/msgutil.c |  6 ++++++
+ 2 files changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/fs/fat/file.c b/fs/fat/file.c
-index b3bed32946b1d..0e3ed79fcc3f1 100644
---- a/fs/fat/file.c
-+++ b/fs/fat/file.c
-@@ -193,12 +193,17 @@ static int fat_file_release(struct inode *inode, struct file *filp)
- int fat_file_fsync(struct file *filp, loff_t start, loff_t end, int datasync)
- {
- 	struct inode *inode = filp->f_mapping->host;
--	int res, err;
-+	int err;
+diff --git a/ipc/mqueue.c b/ipc/mqueue.c
+index aea30530c4728..127ba1e8950b7 100644
+--- a/ipc/mqueue.c
++++ b/ipc/mqueue.c
+@@ -436,7 +436,8 @@ static void mqueue_evict_inode(struct inode *inode)
+ 	struct user_struct *user;
+ 	unsigned long mq_bytes, mq_treesize;
+ 	struct ipc_namespace *ipc_ns;
+-	struct msg_msg *msg;
++	struct msg_msg *msg, *nmsg;
++	LIST_HEAD(tmp_msg);
+ 
+ 	clear_inode(inode);
+ 
+@@ -447,10 +448,15 @@ static void mqueue_evict_inode(struct inode *inode)
+ 	info = MQUEUE_I(inode);
+ 	spin_lock(&info->lock);
+ 	while ((msg = msg_get(info)) != NULL)
+-		free_msg(msg);
++		list_add_tail(&msg->m_list, &tmp_msg);
+ 	kfree(info->node_cache);
+ 	spin_unlock(&info->lock);
+ 
++	list_for_each_entry_safe(msg, nmsg, &tmp_msg, m_list) {
++		list_del(&msg->m_list);
++		free_msg(msg);
++	}
 +
-+	err = __generic_file_fsync(filp, start, end, datasync);
-+	if (err)
-+		return err;
+ 	/* Total amount of bytes accounted for the mqueue */
+ 	mq_treesize = info->attr.mq_maxmsg * sizeof(struct msg_msg) +
+ 		min_t(unsigned int, info->attr.mq_maxmsg, MQ_PRIO_MAX) *
+diff --git a/ipc/msgutil.c b/ipc/msgutil.c
+index 84598025a6ade..e65593742e2be 100644
+--- a/ipc/msgutil.c
++++ b/ipc/msgutil.c
+@@ -18,6 +18,7 @@
+ #include <linux/utsname.h>
+ #include <linux/proc_ns.h>
+ #include <linux/uaccess.h>
++#include <linux/sched.h>
  
--	res = generic_file_fsync(filp, start, end, datasync);
- 	err = sync_mapping_buffers(MSDOS_SB(inode->i_sb)->fat_inode->i_mapping);
-+	if (err)
-+		return err;
+ #include "util.h"
  
--	return res ? res : err;
-+	return blkdev_issue_flush(inode->i_sb->s_bdev, GFP_KERNEL, NULL);
- }
- 
- 
+@@ -64,6 +65,9 @@ static struct msg_msg *alloc_msg(size_t len)
+ 	pseg = &msg->next;
+ 	while (len > 0) {
+ 		struct msg_msgseg *seg;
++
++		cond_resched();
++
+ 		alen = min(len, DATALEN_SEG);
+ 		seg = kmalloc(sizeof(*seg) + alen, GFP_KERNEL_ACCOUNT);
+ 		if (seg == NULL)
+@@ -176,6 +180,8 @@ void free_msg(struct msg_msg *msg)
+ 	kfree(msg);
+ 	while (seg != NULL) {
+ 		struct msg_msgseg *tmp = seg->next;
++
++		cond_resched();
+ 		kfree(seg);
+ 		seg = tmp;
+ 	}
 -- 
 2.20.1
 
