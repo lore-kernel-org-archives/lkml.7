@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A5BC46470
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F81C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A359C261B1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:37:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFD922749A
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:37:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396256;
-	bh=2LUsXLY2sI/4AyYGBsY7LNb4t1yX41DcnUFOv/XEQ+Q=;
+	s=default; t=1559396261;
+	bh=yVDF691FvRRmQWwU9hpWWqnPFhNxOx4wwe332Tui718=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mcQE2mbh0Gr9Wqd3gJYmr2dDQ5MoCtC5nGzklwr159zIKDthnGG4Oi/5uX7XQorvw
-	 lWUYF6W1h//SWfu+wSOrH8p4IPjtBeQW3x6l5j2B7OgySLci4GqlyivSTGGU5GPQJ3
-	 koYvW5VOYd8fqU57+CjboRN3NoiPuOVMAGi2HLwc=
+	b=s6anZFTqmW1VH0l7xe5JCWGCOrke8NIF2g/QwYpu6L7rjxbUslxm4TH9GtGkkCJ4v
+	 IaWtAyGgtXe4RIFbFIvRLwd2dzRIq3Sx3x5qiZ4cD8JbDpNNfEZ46K3jrioDADzxYa
+	 KQFvFuhGjM5Q4LY1nptziL0xspbpp+2UTcLz/YGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728614AbfFANVt (ORCPT
+        id S1728969AbfFANhl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:21:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49200 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:37:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728587AbfFANVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:21:43 -0400
+        id S1727779AbfFANVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:21:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FDC527301;
-        Sat,  1 Jun 2019 13:21:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3F83272FC;
+        Sat,  1 Jun 2019 13:21:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395302;
-        bh=2LUsXLY2sI/4AyYGBsY7LNb4t1yX41DcnUFOv/XEQ+Q=;
+        s=default; t=1559395306;
+        bh=yVDF691FvRRmQWwU9hpWWqnPFhNxOx4wwe332Tui718=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wh8yEujOnUgVE2O9EZw8AxQZGD8u2jrYyu+5m2zTFMowHXPDz0GwQYIgDRsbEH76e
-         qumsBqfFoFW1/Ba5etqojkMXmRqRM5hCkU/Q8Jr73RBIoUeKPLQOZTJEhuGX2Ajfy7
-         m697cM052RZjcdrousiHDw+R/zotRzt8JqswN9gA=
+        b=Yvz9PsWIGQOk5TibzWZqJEDrqs2dVeGXf4n2LkDS/8q1RXlzppJeX39/digbLSqI/
+         yBlkZr8jCXVT8sDLMdbyUc25ccBzelc97L5eCKvIDnRgGe32L2b6S4n06JDUqQSiq9
+         LSA3sB/UkELY4euY3Txr14ol/nnk2z5NyZpU8ACs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        Murphy Zhou <jencce.kernel@gmail.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-unionfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 062/173] ovl: do not generate duplicate fsnotify events for "fake" path
-Date:   Sat,  1 Jun 2019 09:17:34 -0400
-Message-Id: <20190601131934.25053-62-sashal@kernel.org>
+Cc:     Taehee Yoo <ap420073@gmail.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 064/173] netfilter: nf_flow_table: fix missing error check for rhashtable_insert_fast
+Date:   Sat,  1 Jun 2019 09:17:36 -0400
+Message-Id: <20190601131934.25053-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131934.25053-1-sashal@kernel.org>
 References: <20190601131934.25053-1-sashal@kernel.org>
@@ -60,53 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amir Goldstein <amir73il@gmail.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit d989903058a83e8536cc7aadf9256a47d5c173fe ]
+[ Upstream commit 43c8f131184faf20c07221f3e09724611c6525d8 ]
 
-Overlayfs "fake" path is used for stacked file operations on underlying
-files.  Operations on files with "fake" path must not generate fsnotify
-events with path data, because those events have already been generated at
-overlayfs layer and because the reported event->fd for fanotify marks on
-underlying inode/filesystem will have the wrong path (the overlayfs path).
+rhashtable_insert_fast() may return an error value when memory
+allocation fails, but flow_offload_add() does not check for errors.
+This patch just adds missing error checking.
 
-Link: https://lore.kernel.org/linux-fsdevel/20190423065024.12695-1-jencce.kernel@gmail.com/
-Reported-by: Murphy Zhou <jencce.kernel@gmail.com>
-Fixes: d1d04ef8572b ("ovl: stack file ops")
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Fixes: ac2a66665e23 ("netfilter: add generic flow table infrastructure")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/overlayfs/file.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ net/netfilter/nf_flow_table_core.c | 25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
-diff --git a/fs/overlayfs/file.c b/fs/overlayfs/file.c
-index 84dd957efa24a..6f6eb638a320f 100644
---- a/fs/overlayfs/file.c
-+++ b/fs/overlayfs/file.c
-@@ -29,10 +29,11 @@ static struct file *ovl_open_realfile(const struct file *file,
- 	struct inode *inode = file_inode(file);
- 	struct file *realfile;
- 	const struct cred *old_cred;
-+	int flags = file->f_flags | O_NOATIME | FMODE_NONOTIFY;
+diff --git a/net/netfilter/nf_flow_table_core.c b/net/netfilter/nf_flow_table_core.c
+index c0c72ae9df42f..604446c0264cc 100644
+--- a/net/netfilter/nf_flow_table_core.c
++++ b/net/netfilter/nf_flow_table_core.c
+@@ -185,14 +185,25 @@ static const struct rhashtable_params nf_flow_offload_rhash_params = {
  
- 	old_cred = ovl_override_creds(inode->i_sb);
--	realfile = open_with_fake_path(&file->f_path, file->f_flags | O_NOATIME,
--				       realinode, current_cred());
-+	realfile = open_with_fake_path(&file->f_path, flags, realinode,
-+				       current_cred());
- 	revert_creds(old_cred);
+ int flow_offload_add(struct nf_flowtable *flow_table, struct flow_offload *flow)
+ {
+-	flow->timeout = (u32)jiffies;
++	int err;
  
- 	pr_debug("open(%p[%pD2/%c], 0%o) -> (%p, 0%o)\n",
-@@ -50,7 +51,7 @@ static int ovl_change_flags(struct file *file, unsigned int flags)
- 	int err;
- 
- 	/* No atime modificaton on underlying */
--	flags |= O_NOATIME;
-+	flags |= O_NOATIME | FMODE_NONOTIFY;
- 
- 	/* If some flag changed that cannot be changed then something's amiss */
- 	if (WARN_ON((file->f_flags ^ flags) & ~OVL_SETFL_MASK))
+-	rhashtable_insert_fast(&flow_table->rhashtable,
+-			       &flow->tuplehash[FLOW_OFFLOAD_DIR_ORIGINAL].node,
+-			       nf_flow_offload_rhash_params);
+-	rhashtable_insert_fast(&flow_table->rhashtable,
+-			       &flow->tuplehash[FLOW_OFFLOAD_DIR_REPLY].node,
+-			       nf_flow_offload_rhash_params);
++	err = rhashtable_insert_fast(&flow_table->rhashtable,
++				     &flow->tuplehash[0].node,
++				     nf_flow_offload_rhash_params);
++	if (err < 0)
++		return err;
++
++	err = rhashtable_insert_fast(&flow_table->rhashtable,
++				     &flow->tuplehash[1].node,
++				     nf_flow_offload_rhash_params);
++	if (err < 0) {
++		rhashtable_remove_fast(&flow_table->rhashtable,
++				       &flow->tuplehash[0].node,
++				       nf_flow_offload_rhash_params);
++		return err;
++	}
++
++	flow->timeout = (u32)jiffies;
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(flow_offload_add);
 -- 
 2.20.1
 
