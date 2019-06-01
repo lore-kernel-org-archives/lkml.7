@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FF6C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26680C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD82B274A3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:31:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1544274A3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:31:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395880;
-	bh=hrZDqXfSJzml3w1hOe3venmfJ7b/KFSfob+wNMwmYjM=;
+	s=default; t=1559395885;
+	bh=8V8QfzxQrR/IOInXNwg7FdmiR7yDP2YnBkeR/E9IEKE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hzSvRF3VBJu3MubDpEzmMyzQghhgOCbMY1HIzxo93fPMLt6cvVo8nT7CxsDGD7YLb
-	 tryvNJpg5C34abM0iMB2N7X0uDWGiQoZ341dwanj5z3O1C1l60b5P+bJibb5IpbO3Y
-	 4xPuY/+vtOpOjuHnhPdDSjePXVJ/Ge+cIfCQcHHg=
+	b=CvcOCRde4itfWx4V6Uo57+Pxuat47mGrPaBTtG7for6DE5JVOwmTSbsHr35U4eD5E
+	 OdqOQGngVLoAgQYEoOVHRvylskAcbVlL2VPmeELloo+evieQrzqxpnrm6C3fWA55IB
+	 YZ9UsKm8wjrqs8FGo9aGU+KsRCQqPbdtoxxSFjUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729545AbfFANZt (ORCPT
+        id S1729275AbfFANbX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:25:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56038 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:31:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728911AbfFANZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:25:41 -0400
+        id S1729533AbfFANZr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:25:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B558C27396;
-        Sat,  1 Jun 2019 13:25:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2A4327375;
+        Sat,  1 Jun 2019 13:25:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395540;
-        bh=hrZDqXfSJzml3w1hOe3venmfJ7b/KFSfob+wNMwmYjM=;
+        s=default; t=1559395546;
+        bh=8V8QfzxQrR/IOInXNwg7FdmiR7yDP2YnBkeR/E9IEKE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UDYaRvPBO3uGhnmy7UlVDvY9us/XDLeJNz1H1xZ9le0tpLIWYjdLwPaAkOCZbpIIh
-         gfXMlEnNgRWBfai8aGHcwhWGlQO0JdccXPuN/khsLl6sQTX+ueR2LwkM0ycfYWdtUU
-         PPGbxdotR2gh+61rzq+/9QlIGNjRUb5IVn6mX/KM=
+        b=G7y6lI46MmIoBr3BfN9W2ws7j2Zhk1ffXzKQ8AaF76ZtNpSAz1wtGfvqMxDT9wcGT
+         fWx1JVzTKpV7WSdONp0RpaKe35en2K4aYHhZo0fr7IFao80EZaHasU4Cw1adDtrvc+
+         tvTlK+R2mm+XQkMGh4t7uD+JMb5JdSBxY1Cew+9g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matt Redfearn <matt.redfearn@thinci.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sean Paul <seanpaul@chromium.org>,
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.9 17/74] drm/bridge: adv7511: Fix low refresh rate selection
-Date:   Sat,  1 Jun 2019 09:24:04 -0400
-Message-Id: <20190601132501.27021-17-sashal@kernel.org>
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.9 22/74] f2fs: fix to avoid panic in do_recover_data()
+Date:   Sat,  1 Jun 2019 09:24:09 -0400
+Message-Id: <20190601132501.27021-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132501.27021-1-sashal@kernel.org>
 References: <20190601132501.27021-1-sashal@kernel.org>
@@ -61,49 +59,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Redfearn <matt.redfearn@thinci.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 67793bd3b3948dc8c8384b6430e036a30a0ecb43 ]
+[ Upstream commit 22d61e286e2d9097dae36f75ed48801056b77cac ]
 
-The driver currently sets register 0xfb (Low Refresh Rate) based on the
-value of mode->vrefresh. Firstly, this field is specified to be in Hz,
-but the magic numbers used by the code are Hz * 1000. This essentially
-leads to the low refresh rate always being set to 0x01, since the
-vrefresh value will always be less than 24000. Fix the magic numbers to
-be in Hz.
-Secondly, according to the comment in drm_modes.h, the field is not
-supposed to be used in a functional way anyway. Instead, use the helper
-function drm_mode_vrefresh().
+As Jungyeon reported in bugzilla:
 
-Fixes: 9c8af882bf12 ("drm: Add adv7511 encoder driver")
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Matt Redfearn <matt.redfearn@thinci.com>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190424132210.26338-1-matt.redfearn@thinci.com
+https://bugzilla.kernel.org/show_bug.cgi?id=203227
+
+- Overview
+When mounting the attached crafted image, following errors are reported.
+Additionally, it hangs on sync after trying to mount it.
+
+The image is intentionally fuzzed from a normal f2fs image for testing.
+Compile options for F2FS are as follows.
+CONFIG_F2FS_FS=y
+CONFIG_F2FS_STAT_FS=y
+CONFIG_F2FS_FS_XATTR=y
+CONFIG_F2FS_FS_POSIX_ACL=y
+CONFIG_F2FS_CHECK_FS=y
+
+- Reproduces
+mkdir test
+mount -t f2fs tmp.img test
+sync
+
+- Messages
+ kernel BUG at fs/f2fs/recovery.c:549!
+ RIP: 0010:recover_data+0x167a/0x1780
+ Call Trace:
+  f2fs_recover_fsync_data+0x613/0x710
+  f2fs_fill_super+0x1043/0x1aa0
+  mount_bdev+0x16d/0x1a0
+  mount_fs+0x4a/0x170
+  vfs_kern_mount+0x5d/0x100
+  do_mount+0x200/0xcf0
+  ksys_mount+0x79/0xc0
+  __x64_sys_mount+0x1c/0x20
+  do_syscall_64+0x43/0xf0
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+During recovery, if ofs_of_node is inconsistent in between recovered
+node page and original checkpointed node page, let's just fail recovery
+instead of making kernel panic.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/f2fs/recovery.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-index 32ab5c32834be..1b2fae915eccb 100644
---- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-+++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-@@ -735,11 +735,11 @@ static void adv7511_mode_set(struct adv7511 *adv7511,
- 			vsync_polarity = 1;
- 	}
+diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
+index e59eeaf02eaa7..9de1480a86bd3 100644
+--- a/fs/f2fs/recovery.c
++++ b/fs/f2fs/recovery.c
+@@ -407,7 +407,15 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
  
--	if (mode->vrefresh <= 24000)
-+	if (drm_mode_vrefresh(mode) <= 24)
- 		low_refresh_rate = ADV7511_LOW_REFRESH_RATE_24HZ;
--	else if (mode->vrefresh <= 25000)
-+	else if (drm_mode_vrefresh(mode) <= 25)
- 		low_refresh_rate = ADV7511_LOW_REFRESH_RATE_25HZ;
--	else if (mode->vrefresh <= 30000)
-+	else if (drm_mode_vrefresh(mode) <= 30)
- 		low_refresh_rate = ADV7511_LOW_REFRESH_RATE_30HZ;
- 	else
- 		low_refresh_rate = ADV7511_LOW_REFRESH_RATE_NONE;
+ 	get_node_info(sbi, dn.nid, &ni);
+ 	f2fs_bug_on(sbi, ni.ino != ino_of_node(page));
+-	f2fs_bug_on(sbi, ofs_of_node(dn.node_page) != ofs_of_node(page));
++
++	if (ofs_of_node(dn.node_page) != ofs_of_node(page)) {
++		f2fs_msg(sbi->sb, KERN_WARNING,
++			"Inconsistent ofs_of_node, ino:%lu, ofs:%u, %u",
++			inode->i_ino, ofs_of_node(dn.node_page),
++			ofs_of_node(page));
++		err = -EFAULT;
++		goto err;
++	}
+ 
+ 	for (; start < end; start++, dn.ofs_in_node++) {
+ 		block_t src, dest;
 -- 
 2.20.1
 
