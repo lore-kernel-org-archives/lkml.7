@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3698C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2432FC28CC4
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DA00272AE
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:18:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F26D127278
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:18:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395111;
-	bh=FqTSBe2EtMLANJyq2W3Rh4WKsrc9+fooGilgER43Ulc=;
+	s=default; t=1559395114;
+	bh=gUSPFcg3u6gsSECUBzjova+NOiDsmG6nS4+aOwcZlQM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UfOuNfyVGQUHchIHS66jJ2IrQ30nVucq0+DbusAhDk7uN2262T0+PzK6JeEq2mMX8
-	 mvBmjDZJIC3bkDx6paVlwmf6G9xXJ8O1aK7f/lyX4GVcVpAuhMncRW60SKMhFS0F1C
-	 iUN+92M+IOXYRsYUB1SyCgHuLTOvL7PMRDET2NM4=
+	b=rugFqAVWUPTAyjUPpPvqqDOoGsS0isiuV12ZETRWUIpYjkI6LsONw6ZXkpdAS6fp1
+	 4FLzUYHqVm7WfGRPgcJ67XA1FiThma+ZNndYqFUmyyO+wtXycxV+HuSXESGw/hCkje
+	 5nie4G+78FzYYOYQS3zfQftH1n232FaoJ2dNWX8k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727788AbfFANS0 (ORCPT
+        id S1727828AbfFANSd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:18:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45166 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:18:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727715AbfFANSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:18:12 -0400
+        id S1727760AbfFANSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:18:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7C3A229EB;
-        Sat,  1 Jun 2019 13:18:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C9DA251C3;
+        Sat,  1 Jun 2019 13:18:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395091;
-        bh=FqTSBe2EtMLANJyq2W3Rh4WKsrc9+fooGilgER43Ulc=;
+        s=default; t=1559395109;
+        bh=gUSPFcg3u6gsSECUBzjova+NOiDsmG6nS4+aOwcZlQM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tRZMlXeKi5uPSLK8j2R/UhwidAdU3PKPyaeKO47cC0NC+a0efO6FONNxgUF635JBo
-         rxlka0FZJAHf9/EEaB4NcHQn+vEb6WaZwigvcOCuRM3/XIg5JNhxA2iS6EqL1p1koh
-         5sFE3t7GbWI2CDoDi6qIxvIYIo+Hk+X/hJdE2pIE=
+        b=GaIC757KXiPNUpcXKK3yF0NNzENGJB3n9ZrjfOllAD1tpCyXx5NCbskrMgmwkn2CH
+         cYhLnTYrENUpqyNdtoqR/iwZRfxUKnpnpg/iwJ1z5CLWp5wnF3Cj6peLtQD7h2i5kv
+         B08vaqd+SjCZa0LCcKZZEgiVCUPUZ5f7YvOx7WuQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 029/186] mfd: twl6040: Fix device init errors for ACCCTL register
-Date:   Sat,  1 Jun 2019 09:14:05 -0400
-Message-Id: <20190601131653.24205-29-sashal@kernel.org>
+Cc:     Ben Skeggs <bskeggs@redhat.com>, Lyude Paul <lyude@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.1 035/186] drm/nouveau/kms/gv100-: fix spurious window immediate interlocks
+Date:   Sat,  1 Jun 2019 09:14:11 -0400
+Message-Id: <20190601131653.24205-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131653.24205-1-sashal@kernel.org>
 References: <20190601131653.24205-1-sashal@kernel.org>
@@ -60,62 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Ben Skeggs <bskeggs@redhat.com>
 
-[ Upstream commit 48171d0ea7caccf21c9ee3ae75eb370f2a756062 ]
+[ Upstream commit d2434e4d942c32cadcbdbcd32c58f35098f3b604 ]
 
-I noticed that we can get a -EREMOTEIO errors on at least omap4 duovero:
+Cursor position updates were accidentally causing us to attempt to interlock
+window with window immediate, and without a matching window immediate update,
+NVDisplay could hang forever in some circumstances.
 
-twl6040 0-004b: Failed to write 2d = 19: -121
+Fixes suspend/resume on (at least) Quadro RTX4000 (TU104).
 
-And then any following register access will produce errors.
-
-There 2d offset above is register ACCCTL that gets written on twl6040
-powerup. With error checking added to the related regcache_sync() call,
-the -EREMOTEIO error is reproducable on twl6040 powerup at least
-duovero.
-
-To fix the error, we need to wait until twl6040 is accessible after the
-powerup. Based on tests on omap4 duovero, we need to wait over 8ms after
-powerup before register write will complete without failures. Let's also
-make sure we warn about possible errors too.
-
-Note that we have twl6040_patch[] reg_sequence with the ACCCTL register
-configuration and regcache_sync() will write the new value to ACCCTL.
-
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Reported-by: Lyude Paul <lyude@redhat.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/twl6040.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/nouveau/dispnv50/disp.h     | 1 +
+ drivers/gpu/drm/nouveau/dispnv50/wimmc37b.c | 1 +
+ drivers/gpu/drm/nouveau/dispnv50/wndw.c     | 2 +-
+ 3 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/twl6040.c b/drivers/mfd/twl6040.c
-index 7c3c5fd5fcd04..86052c5c60696 100644
---- a/drivers/mfd/twl6040.c
-+++ b/drivers/mfd/twl6040.c
-@@ -322,8 +322,19 @@ int twl6040_power(struct twl6040 *twl6040, int on)
- 			}
- 		}
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.h b/drivers/gpu/drm/nouveau/dispnv50/disp.h
+index 2216c58620c2d..7c41b0599d1ac 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/disp.h
++++ b/drivers/gpu/drm/nouveau/dispnv50/disp.h
+@@ -41,6 +41,7 @@ struct nv50_disp_interlock {
+ 		NV50_DISP_INTERLOCK__SIZE
+ 	} type;
+ 	u32 data;
++	u32 wimm;
+ };
  
-+		/*
-+		 * Register access can produce errors after power-up unless we
-+		 * wait at least 8ms based on measurements on duovero.
-+		 */
-+		usleep_range(10000, 12000);
-+
- 		/* Sync with the HW */
--		regcache_sync(twl6040->regmap);
-+		ret = regcache_sync(twl6040->regmap);
-+		if (ret) {
-+			dev_err(twl6040->dev, "Failed to sync with the HW: %i\n",
-+				ret);
-+			goto out;
-+		}
+ void corec37d_ntfy_init(struct nouveau_bo *, u32);
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/wimmc37b.c b/drivers/gpu/drm/nouveau/dispnv50/wimmc37b.c
+index 9103b8494279c..f7dbd965e4e72 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/wimmc37b.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/wimmc37b.c
+@@ -75,6 +75,7 @@ wimmc37b_init_(const struct nv50_wimm_func *func, struct nouveau_drm *drm,
+ 		return ret;
+ 	}
  
- 		/* Default PLL configuration after power up */
- 		twl6040->pll = TWL6040_SYSCLK_SEL_LPPLL;
++	wndw->interlock.wimm = wndw->interlock.data;
+ 	wndw->immd = func;
+ 	return 0;
+ }
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/wndw.c b/drivers/gpu/drm/nouveau/dispnv50/wndw.c
+index b95181027b317..471a39a077e55 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/wndw.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/wndw.c
+@@ -149,7 +149,7 @@ nv50_wndw_flush_set(struct nv50_wndw *wndw, u32 *interlock,
+ 	if (asyw->set.point) {
+ 		if (asyw->set.point = false, asyw->set.mask)
+ 			interlock[wndw->interlock.type] |= wndw->interlock.data;
+-		interlock[NV50_DISP_INTERLOCK_WIMM] |= wndw->interlock.data;
++		interlock[NV50_DISP_INTERLOCK_WIMM] |= wndw->interlock.wimm;
+ 
+ 		wndw->immd->point(wndw, asyw);
+ 		wndw->immd->update(wndw, interlock);
 -- 
 2.20.1
 
