@@ -2,53 +2,50 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6828EC28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C74C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EA1D2745F
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA65A27452
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:29:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395787;
-	bh=3UPIdmXIdADXaiJl+kkjj0qnijCPhtrHNPwoEaZBDMM=;
+	s=default; t=1559395790;
+	bh=CcNoyl25ugdYGqhwEHjvBlDa8GmSANSblKB56TyjuJs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tk/LAOeCWQtS2fkALLqPjwsNYB/T4TGq+XQfqiVF5vwLLivXtKw9skrZm2oul7DWB
-	 GvSSl+iEG3iV7iKHRcqjx4IGiL1y9Ir1ygeMmenPOFD3VooRGiIvsQ9i3PJd9Ox/vp
-	 9k4w+JrzyoK73ZzejWCJH2DO5faWPcpIFEJD7iAQ=
+	b=zBGfuzJ43l3uUcsD7RhFunqCrBOIfcSDXr95h0tLq9ysYNwcqx6dzmvcAAM6gTAHG
+	 hliks1boGr8K5thjSVcSAow3ntX2JCfbvkIq8hjGeTh1dSLqlvH6cJI5DLKLPOQMMV
+	 MvpTRDrPMBKvglODgBjTli+kkNn1RaSQL8tO8q8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729971AbfFAN3q (ORCPT
+        id S1729862AbfFAN3p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:29:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57322 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:29:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729854AbfFAN0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:26:47 -0400
+        id S1729861AbfFAN0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:26:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9802273D6;
-        Sat,  1 Jun 2019 13:26:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 052FC273A3;
+        Sat,  1 Jun 2019 13:26:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395606;
-        bh=3UPIdmXIdADXaiJl+kkjj0qnijCPhtrHNPwoEaZBDMM=;
+        s=default; t=1559395607;
+        bh=CcNoyl25ugdYGqhwEHjvBlDa8GmSANSblKB56TyjuJs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RuvVB9HMK+SCbEl6EZ9oXsN5+u6qacoSnk6WrslEhO7/KxtQ2DUzSyQhM/YUh27Uz
-         1ueFQrRW7/N8yBtaaFX2VZtJdX1coyCz3H0qhRaJ2TUX9NSx+s9IUDVmIHRQiWm1BT
-         GatragTZdhp5ie5DzZtwXSQlwfHUuMbMtr2kalC4=
+        b=oLjIaJ100eAiBF+vRlMLj6JOwKpFj/oIYSwwrcpRdLlI9vkRBbb5YFD6guxVEUj4C
+         yMGkcConOnWuR3lgCV3O1a/rnaxowLYCOWHNfRJYNfLu4C2wNTqyXwwA5WJU3XihF/
+         YnWQHMnJbXtIhGxMyowv0buU3jXme/Uoc9Y5EA70=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kirill Smelkov <kirr@nexedi.com>,
-        Han-Wen Nienhuys <hanwen@google.com>,
-        Jakob Unterwurzacher <jakobunt@gmail.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 25/56] fuse: retrieve: cap requested size to negotiated max_write
-Date:   Sat,  1 Jun 2019 09:25:29 -0400
-Message-Id: <20190601132600.27427-25-sashal@kernel.org>
+Cc:     "J. Bruce Fields" <bfields@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 26/56] nfsd: allow fh_want_write to be called twice
+Date:   Sat,  1 Jun 2019 09:25:30 -0400
+Message-Id: <20190601132600.27427-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132600.27427-1-sashal@kernel.org>
 References: <20190601132600.27427-1-sashal@kernel.org>
@@ -61,66 +58,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kirill Smelkov <kirr@nexedi.com>
+From: "J. Bruce Fields" <bfields@redhat.com>
 
-[ Upstream commit 7640682e67b33cab8628729afec8ca92b851394f ]
+[ Upstream commit 0b8f62625dc309651d0efcb6a6247c933acd8b45 ]
 
-FUSE filesystem server and kernel client negotiate during initialization
-phase, what should be the maximum write size the client will ever issue.
-Correspondingly the filesystem server then queues sys_read calls to read
-requests with buffer capacity large enough to carry request header + that
-max_write bytes. A filesystem server is free to set its max_write in
-anywhere in the range between [1*page, fc->max_pages*page]. In particular
-go-fuse[2] sets max_write by default as 64K, wheres default fc->max_pages
-corresponds to 128K. Libfuse also allows users to configure max_write, but
-by default presets it to possible maximum.
+A fuzzer recently triggered lockdep warnings about potential sb_writers
+deadlocks caused by fh_want_write().
 
-If max_write is < fc->max_pages*page, and in NOTIFY_RETRIEVE handler we
-allow to retrieve more than max_write bytes, corresponding prepared
-NOTIFY_REPLY will be thrown away by fuse_dev_do_read, because the
-filesystem server, in full correspondence with server/client contract, will
-be only queuing sys_read with ~max_write buffer capacity, and
-fuse_dev_do_read throws away requests that cannot fit into server request
-buffer. In turn the filesystem server could get stuck waiting indefinitely
-for NOTIFY_REPLY since NOTIFY_RETRIEVE handler returned OK which is
-understood by clients as that NOTIFY_REPLY was queued and will be sent
-back.
+Looks like we aren't careful to pair each fh_want_write() with an
+fh_drop_write().
 
-Cap requested size to negotiate max_write to avoid the problem.  This
-aligns with the way NOTIFY_RETRIEVE handler works, which already
-unconditionally caps requested retrieve size to fuse_conn->max_pages.  This
-way it should not hurt NOTIFY_RETRIEVE semantic if we return less data than
-was originally requested.
+It's not normally a problem since fh_put() will call fh_drop_write() for
+us.  And was OK for NFSv3 where we'd do one operation that might call
+fh_want_write(), and then put the filehandle.
 
-Please see [1] for context where the problem of stuck filesystem was hit
-for real, how the situation was traced and for more involving patch that
-did not make it into the tree.
+But an NFSv4 protocol fuzzer can do weird things like call unlink twice
+in a compound, and then we get into trouble.
 
-[1] https://marc.info/?l=linux-fsdevel&m=155057023600853&w=2
-[2] https://github.com/hanwen/go-fuse
+I'm a little worried about this approach of just leaving everything to
+fh_put().  But I think there are probably a lot of
+fh_want_write()/fh_drop_write() imbalances so for now I think we need it
+to be more forgiving.
 
-Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
-Cc: Han-Wen Nienhuys <hanwen@google.com>
-Cc: Jakob Unterwurzacher <jakobunt@gmail.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fuse/dev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfsd/vfs.h | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-index fbb978e75c6be..217ceca3eb063 100644
---- a/fs/fuse/dev.c
-+++ b/fs/fuse/dev.c
-@@ -1734,7 +1734,7 @@ static int fuse_retrieve(struct fuse_conn *fc, struct inode *inode,
- 	offset = outarg->offset & ~PAGE_CACHE_MASK;
- 	file_size = i_size_read(inode);
+diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
+index fcfc48cbe1360..128d6e216fd77 100644
+--- a/fs/nfsd/vfs.h
++++ b/fs/nfsd/vfs.h
+@@ -109,8 +109,11 @@ void		nfsd_put_raparams(struct file *file, struct raparms *ra);
  
--	num = outarg->size;
-+	num = min(outarg->size, fc->max_write);
- 	if (outarg->offset > file_size)
- 		num = 0;
- 	else if (outarg->offset + num > file_size)
+ static inline int fh_want_write(struct svc_fh *fh)
+ {
+-	int ret = mnt_want_write(fh->fh_export->ex_path.mnt);
++	int ret;
+ 
++	if (fh->fh_want_write)
++		return 0;
++	ret = mnt_want_write(fh->fh_export->ex_path.mnt);
+ 	if (!ret)
+ 		fh->fh_want_write = true;
+ 	return ret;
 -- 
 2.20.1
 
