@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C21D8C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7353C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C11527552
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:34:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD1722753E
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:34:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396091;
-	bh=Fv9uytBOgNYpDhXFGzwaeV2PNsUrMGxcqV1c9hs8yv8=;
+	s=default; t=1559396098;
+	bh=IJgCsnCscmaIOUw0lpzQ4vvjmabqAz71RYqBpOX1BwY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cTZXLnhMR8BODOSQla0MgO+MIXV8yUyWKY6G6eAeCJe/TPgvoF76N0lMWOFO9oRVe
-	 vWopkb7y/AHSv4fsJnLvCjhXdKcJC1HayoAGd7BVzt5RqsJY6DU/0Uj6iO5OK6Qzn+
-	 QZCkDn4yRDrHSWOEedm+rGQHCtxSsvpTP2Vn+e5s=
+	b=xQqa+00Ednq3oboci/f8JtKo88B6GfMSrpHAO7Im9pEurb/Fsqtst3Dwc1HFQ5pZg
+	 Qo+BTxJCs7KrqQRMyoo9oXAVrXCpmpT+zAva74tksjVb55WqjjaZgrxVWU3X/AYdCl
+	 PwLpAzhl9xJVVxTelZPmZdWvL7itkKAqYp/n/w2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729471AbfFANeq (ORCPT
+        id S1729017AbfFANX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:34:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53510 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:23:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728697AbfFANXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:23:32 -0400
+        id S1728982AbfFANXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:23:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A64027358;
-        Sat,  1 Jun 2019 13:23:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E8F827359;
+        Sat,  1 Jun 2019 13:23:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395412;
-        bh=Fv9uytBOgNYpDhXFGzwaeV2PNsUrMGxcqV1c9hs8yv8=;
+        s=default; t=1559395401;
+        bh=IJgCsnCscmaIOUw0lpzQ4vvjmabqAz71RYqBpOX1BwY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F64slh9Z3XKynOEGWGOyYq9Eq2TnrQ3D5QJ1yKacHBIjDpNheSy9k+LPPEWGYUSoE
-         fQNYxu8wbzyMcLjMXtH2fl8FPydE3FpSDU5jPFt8L1+EJU7t/3w19aUFjSHrXLxOYj
-         420F/+gHYquKpMtD/zzyvMRfFsT2UYJ6yC2HoqEE=
+        b=IKsB+gV0bft1YBQ6Mk+MdmQwT3USMdMVy4VpDxK4arhL/80k4ThetaFxsSGynvk5p
+         h1XLAEw1pUNvDqk36Ii8zCbv5f0mMDO7NtLINsGvzBqrAoQoTp1mdP4qxWyFHiDTXH
+         1rZs++QlBrG+XLDLZBy7Q4CIX9VWzyQ6DH3NwXnM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        Murphy Zhou <jencce.kernel@gmail.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-unionfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 049/141] ovl: do not generate duplicate fsnotify events for "fake" path
-Date:   Sat,  1 Jun 2019 09:20:25 -0400
-Message-Id: <20190601132158.25821-49-sashal@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.19 041/141] f2fs: fix to do sanity check on valid block count of segment
+Date:   Sat,  1 Jun 2019 09:20:17 -0400
+Message-Id: <20190601132158.25821-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132158.25821-1-sashal@kernel.org>
 References: <20190601132158.25821-1-sashal@kernel.org>
@@ -60,53 +59,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amir Goldstein <amir73il@gmail.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit d989903058a83e8536cc7aadf9256a47d5c173fe ]
+[ Upstream commit e95bcdb2fefa129f37bd9035af1d234ca92ee4ef ]
 
-Overlayfs "fake" path is used for stacked file operations on underlying
-files.  Operations on files with "fake" path must not generate fsnotify
-events with path data, because those events have already been generated at
-overlayfs layer and because the reported event->fd for fanotify marks on
-underlying inode/filesystem will have the wrong path (the overlayfs path).
+As Jungyeon reported in bugzilla:
 
-Link: https://lore.kernel.org/linux-fsdevel/20190423065024.12695-1-jencce.kernel@gmail.com/
-Reported-by: Murphy Zhou <jencce.kernel@gmail.com>
-Fixes: d1d04ef8572b ("ovl: stack file ops")
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+https://bugzilla.kernel.org/show_bug.cgi?id=203233
+
+- Overview
+When mounting the attached crafted image and running program, following errors are reported.
+Additionally, it hangs on sync after running program.
+
+The image is intentionally fuzzed from a normal f2fs image for testing.
+Compile options for F2FS are as follows.
+CONFIG_F2FS_FS=y
+CONFIG_F2FS_STAT_FS=y
+CONFIG_F2FS_FS_XATTR=y
+CONFIG_F2FS_FS_POSIX_ACL=y
+CONFIG_F2FS_CHECK_FS=y
+
+- Reproduces
+cc poc_13.c
+mkdir test
+mount -t f2fs tmp.img test
+cp a.out test
+cd test
+sudo ./a.out
+sync
+
+- Kernel messages
+ F2FS-fs (sdb): Bitmap was wrongly set, blk:4608
+ kernel BUG at fs/f2fs/segment.c:2102!
+ RIP: 0010:update_sit_entry+0x394/0x410
+ Call Trace:
+  f2fs_allocate_data_block+0x16f/0x660
+  do_write_page+0x62/0x170
+  f2fs_do_write_node_page+0x33/0xa0
+  __write_node_page+0x270/0x4e0
+  f2fs_sync_node_pages+0x5df/0x670
+  f2fs_write_checkpoint+0x372/0x1400
+  f2fs_sync_fs+0xa3/0x130
+  f2fs_do_sync_file+0x1a6/0x810
+  do_fsync+0x33/0x60
+  __x64_sys_fsync+0xb/0x10
+  do_syscall_64+0x43/0xf0
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+sit.vblocks and sum valid block count in sit.valid_map may be
+inconsistent, segment w/ zero vblocks will be treated as free
+segment, while allocating in free segment, we may allocate a
+free block, if its bitmap is valid previously, it can cause
+kernel crash due to bitmap verification failure.
+
+Anyway, to avoid further serious metadata inconsistence and
+corruption, it is necessary and worth to detect SIT
+inconsistence. So let's enable check_block_count() to verify
+vblocks and valid_map all the time rather than do it only
+CONFIG_F2FS_CHECK_FS is enabled.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/overlayfs/file.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ fs/f2fs/segment.h | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/overlayfs/file.c b/fs/overlayfs/file.c
-index 986313da0c889..dbf39e715e6aa 100644
---- a/fs/overlayfs/file.c
-+++ b/fs/overlayfs/file.c
-@@ -29,10 +29,11 @@ static struct file *ovl_open_realfile(const struct file *file,
- 	struct inode *inode = file_inode(file);
- 	struct file *realfile;
- 	const struct cred *old_cred;
-+	int flags = file->f_flags | O_NOATIME | FMODE_NONOTIFY;
- 
- 	old_cred = ovl_override_creds(inode->i_sb);
--	realfile = open_with_fake_path(&file->f_path, file->f_flags | O_NOATIME,
--				       realinode, current_cred());
-+	realfile = open_with_fake_path(&file->f_path, flags, realinode,
-+				       current_cred());
- 	revert_creds(old_cred);
- 
- 	pr_debug("open(%p[%pD2/%c], 0%o) -> (%p, 0%o)\n",
-@@ -50,7 +51,7 @@ static int ovl_change_flags(struct file *file, unsigned int flags)
- 	int err;
- 
- 	/* No atime modificaton on underlying */
--	flags |= O_NOATIME;
-+	flags |= O_NOATIME | FMODE_NONOTIFY;
- 
- 	/* If some flag changed that cannot be changed then something's amiss */
- 	if (WARN_ON((file->f_flags ^ flags) & ~OVL_SETFL_MASK))
+diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
+index b3d9e317ff0c1..5079532cb176b 100644
+--- a/fs/f2fs/segment.h
++++ b/fs/f2fs/segment.h
+@@ -660,7 +660,6 @@ static inline void verify_block_addr(struct f2fs_io_info *fio, block_t blk_addr)
+ static inline int check_block_count(struct f2fs_sb_info *sbi,
+ 		int segno, struct f2fs_sit_entry *raw_sit)
+ {
+-#ifdef CONFIG_F2FS_CHECK_FS
+ 	bool is_valid  = test_bit_le(0, raw_sit->valid_map) ? true : false;
+ 	int valid_blocks = 0;
+ 	int cur_pos = 0, next_pos;
+@@ -687,7 +686,7 @@ static inline int check_block_count(struct f2fs_sb_info *sbi,
+ 		set_sbi_flag(sbi, SBI_NEED_FSCK);
+ 		return -EINVAL;
+ 	}
+-#endif
++
+ 	/* check segment usage, and check boundary of a given segment number */
+ 	if (unlikely(GET_SIT_VBLOCKS(raw_sit) > sbi->blocks_per_seg
+ 					|| segno > TOTAL_SEGS(sbi) - 1)) {
 -- 
 2.20.1
 
