@@ -2,231 +2,97 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F00F5C28CC2
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 02:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5EDAC04AB6
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 02:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAB9827025
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 02:12:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9728827028
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 02:15:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XU+pKjLj"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="HvEiy0qh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfFACMj (ORCPT
+        id S1726988AbfFACPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 22:12:39 -0400
-Received: from mail-vs1-f73.google.com ([209.85.217.73]:34646 "EHLO
-        mail-vs1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbfFACMj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 22:12:39 -0400
-Received: by mail-vs1-f73.google.com with SMTP id v187so2363817vsc.1
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 19:12:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=08mjM/33fuAqClzZoa7YUqdS1ySMCsNBKI12UqOjWzk=;
-        b=XU+pKjLjCREmIBEMxtJFIuXHdFTwxOwud1WuUBFVM/dIo2ugghEu8frk5STuW6Ba5X
-         sl+zeuOutVq74dkKsF8vRIABDKcSElkUh8RjD6BNxGAB+lxazRNlgWEoJ5Z7znW5Kw81
-         Kky7qO0kD/7H1w3E5t6b5/pD/4qeE8nMajfcqDgwpGjo01ZteNYb156IoMwCXtY+ISKy
-         p8pG0CSF3ULO7WtN20Y7tCtpZoKv+/yzn1rDcbCka/j2ixifbrz4SP2x7kCb1zYsGRbJ
-         uuoCgNifI0hwYZcLlvqKfXAHyOOnJkHvtikvnxGbGK/HHfOFUOe/zTJmDCwfP2ExJoDD
-         wyHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=08mjM/33fuAqClzZoa7YUqdS1ySMCsNBKI12UqOjWzk=;
-        b=b9fjsEjhYZu4pNyV4CV7RdDT9c3Am+P2McME0Qc+9heRFcjbJkZuVrAMzhy33NzuzM
-         nRVOlX/4vUjMlgO+IHYMwVAnV3fk0wy7ZFBHDiFhdKs6DKSwYxdCAUVQjXgtLaOyMpht
-         iZT1g/giqoQomXKxJrc0rtUX/QlpXZsAko/aLFoYUswf1+CmXTKbUyZlgCwIT4sxbnRd
-         1hBaSVN7blxO7B4m1pIDYfZdyog3uLmRDXzcrhLLUBTtJq7RvNrMFecumsagYoZZXMvX
-         Mj3sLk2ArffoHGZ9YvfR/Aj0rMDG/dL3tNsWg0L54wYJ93lLyebgAKbfKrt0K56Z4aEx
-         Xfmg==
-X-Gm-Message-State: APjAAAXbnu/yVDH8klU0H4aldH18Xr7szkP7FzovZ31RSW1YywEL1OpL
-        UJoblLn/Knl0EGdNr9eURnXZmQn/mPJ/PrI=
-X-Google-Smtp-Source: APXvYqyZctxOLLcNqdJz4F8qgSoryrsfzX9pcTmEDGxkkTcjvAc7STsB97HnlgnuSCfsvxcZBuyiP5a9mw7ZzC4=
-X-Received: by 2002:a67:ea03:: with SMTP id g3mr6750699vso.212.1559355157607;
- Fri, 31 May 2019 19:12:37 -0700 (PDT)
-Date:   Fri, 31 May 2019 19:12:28 -0700
-In-Reply-To: <20190423132823.7915-1-georgi.djakov@linaro.org>
-Message-Id: <20190601021228.210574-1-saravanak@google.com>
-Mime-Version: 1.0
-References: <20190423132823.7915-1-georgi.djakov@linaro.org>
-X-Mailer: git-send-email 2.22.0.rc1.311.g5d7573a151-goog
-Subject: Re: [PATCH v2 0/5] Introduce OPP bandwidth bindings
-From:   Saravana Kannan <saravanak@google.com>
-To:     georgi.djakov@linaro.org
-Cc:     amit.kucheria@linaro.org, bjorn.andersson@linaro.org,
-        daidavid1@codeaurora.org, devicetree@vger.kernel.org,
-        evgreen@chromium.org, jcrouse@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, mark.rutland@arm.com, nm@ti.com,
-        rjw@rjwysocki.net, robh+dt@kernel.org, sboyd@kernel.org,
-        seansw@qti.qualcomm.com, sibis@codeaurora.org,
-        vincent.guittot@linaro.org, vireshk@kernel.org,
-        saravanak@google.com, kernel-team@android.com
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 31 May 2019 22:15:03 -0400
+Received: from ozlabs.org ([203.11.71.1]:47209 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726713AbfFACPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 22:15:02 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45G4dv3thxz9sNf;
+        Sat,  1 Jun 2019 12:14:59 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1559355300;
+        bh=2Pq8fZ4Jp2OzD+5xd1TEq29le1blLr/7qLu8KJdreVc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=HvEiy0qhkMbfOl+DBfmi8p8qpvLS8jPBiP7x4YTfVyylXrNlsgjnkV0/YYMMoaVib
+         S+dLuH4FZNYTRZw8aY625aNkUTVSuTO0bgogyPbVzHma5oqwJXQ9j9pIWviMAwr2fm
+         QFh+9fRhceZYkxVJt1cvJz9I62tOiInK8ahsgLt6T17oF1yw8vspNy/AT0WsiERmPS
+         gQlMBM6hLqOenw/uu0tmPIY+8mAfvwtxep8Z337j2Y49iWP26yAAV1jmqV4wQ2PF/b
+         jIN5IAwOWd6uSI4T52ERXsgDgb7sJSno6F/vQ1JAHw6MEVI7Xlm9xT8yXbHZ1vIl9/
+         YuQiL5LI78VxA==
+Date:   Sat, 1 Jun 2019 12:14:57 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Matteo Croce <mcroce@redhat.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] firmware_loader: fix build without sysctl
+Message-ID: <20190601121457.196aaa07@canb.auug.org.au>
+In-Reply-To: <CAGnkfhwJm0N2WvLv9o+DZeL9JjDsDp3-TB-G6iS_6mhTyzYRHQ@mail.gmail.com>
+References: <20190531012649.31797-1-mcroce@redhat.com>
+        <dbc00eaa-c6e9-45b2-7232-5af35fdea113@infradead.org>
+        <CAGnkfhwJm0N2WvLv9o+DZeL9JjDsDp3-TB-G6iS_6mhTyzYRHQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/.4DKpmM8J4KDFiKa316Skyr"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'll have to Nack this series because it's making a couple of wrong assumptions
-about bandwidth voting.
+--Sig_/.4DKpmM8J4KDFiKa316Skyr
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Firstly, it's mixing up OPP to bandwidth mapping (Eg: CPU freq to CPU<->DDR
-bandwidth mapping) with the bandwidth levels that are actually supported by an
-interconnect path (Eg: CPU<->DDR bandwidth levels). For example, CPU0 might
-decide to vote for a max of 10 GB/s because it's a little CPU and never needs
-anything higher than 10 GB/s even at CPU0's max frequency. But that has no
-bearing on bandwidth level available between CPU<->DDR.
+Hi Matteo,
 
-There needs to be a separate BW OPP table describing the bandwith levels
-available for the CPU<->DDR path and then a separate mapping between CPU OPP to
-CPU<->DDR BW OPP. That way, the mapping decision (policy or voltage based
-config decision) doesn't affect the description of what the hardware really is
-capable of.
+On Fri, 31 May 2019 11:12:39 +0200 Matteo Croce <mcroce@redhat.com> wrote:
+>
+> please correct the Fixes tag if possible.
+> It seems that the hash of the offending commit now is d91bff3011cf
 
-Put another way, if someone comes around and decides the CPU0's max freq should
-ask for 15 GB/s because some shared voltage rail would already be pushed to a
-voltage sufficient to support 15 GB/s, then it shouldn't change the HW
-description of what bandwidth levels are available between CPU<->DDR. If the
-CPU<->DDR path supports 20 GB/s, it always does independent of the CPU OPP
-table mapping.
+Unfortunately, these hashes will keep changing for things in Andrew's
+patch queue until they are sent to Linus.  In the end Andrew will
+probably just squash this fix into the original patch.
 
-By splitting out the available bandwidth levels of the CPU<->DDR path into a
-separate BW OPP table, we avoid these kinds of issues.
 
-Also, one could easily imagine using a bandwidth counter or some other means of
-BW measurement hardware to vote for bandwidth between CPU<->DDR and CPU<->L3.
-That entity should be able to know/learn all the available bandwidth levels in
-the CPU<->DDR path without forcing bandwidth levels to be listed in CPU OPP
-table. And if it's measuring bandwidth at a point common for all CPUs, what CPU
-OPP table is it even supposed to look at to learn all the available bandwidth
-levels. It just doesn't make sense.
+Cheers,
+Stephen Rothwell
 
-It's also easy to envision having multiple policies or devfreq governors voting
-for an interconnect path. The mapping you are talking about in this series is
-just an input for one of them (the cpufreq-map governor I sent out a while
-ago).
+--Sig_/.4DKpmM8J4KDFiKa316Skyr
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Secondly, when it comes to bandwidth OPP tables, the peak bandwidth should be
-the key/first element (similar to how frequency is now). Long explanation
-follows.
+-----BEGIN PGP SIGNATURE-----
 
-All the sensible frequency combinations of all the hardware interconnects
-between the master and slave port (Eg: GPU -> MMNOC -> BIMC -> DDR) determine
-the peak bandwidth levels available in that interconnect path.
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzx36EACgkQAVBC80lX
+0GxQHAf+NjKhRDs6MVWS6qYiWpaMsZaUVmhuPik2JMZIZRuhnSuONoLF4p0GF3Sv
++0JBWPCRJgxPSUsaLzsATFJqpNwNh7lWSmsYOkF88PuXde6rzMKPBg5qlkgNsezo
+NTCq6XLuXMtCpVKe5cTVpazSkm1zCA6Zoha4TsNDUKdHB9AE9q8lQdXTYF8WgYvs
+AczdaTQDbC5lOnY4cZwdVc/h0d2XcfaIDpPMrlKLYxmaEv94+G0mMAgvemIJb/ML
+tg/hUlf1yK31UCnroKJrsLjGRbQFuJwJiy0yHweQTzdm1ilMds6w1Q77GTAWw241
+0tmkA/0dKGTm+HXsklp3cMjKUUhImA==
+=4zvd
+-----END PGP SIGNATURE-----
 
-If multiple devices (GPU, CPU, etc) vote for different peak bandwidths for an
-interconnect (say BIMC), the interconnect provider picks the max peak bandwidth
-amongst all the requests and then picks the lowest interconnect frequency that
-can support the max peak bandwidth. 
-
-So the devices (GPU, CPU, etc), actually have some control on what interconnect
-frequencies are picked by asking for a specific peak bandwidth -- so there's
-actually a notion of useful levels.
-
-Average bandwidth is an additive property -- so if CPU and GPU ask for 5 GB/s
-and 3 GB/s respectively for an interconnect, the interconnect provider adds
-them up and configures the interconnect for 8 GB/s. So if GPU asks for 5 GB/s
-average bandwidth, it has no idea what frequency the interconnect will actually
-get configured to. So, average bandwidth really doesn't provide a sense of
-levels to pick from for a given interconnect path.
-
-So peak bandwidth is a much better pick than average bandwidth for being a key
-to the bandwidth OPP table.
-
-So what I think we need is:
-* Bandwidth OPP support in the kernel
-* Bandwidth OPP DT binding to describe the bandwidth levels available for
-  different interconnect paths.
-* A new "interconnect-opp" property that can point to different BW OPP
-  tables for each of the interconnect paths listed under interconnects
-  property.
-
-Then for mapping from device OPP to interconnect path bandwidth OPPs, you
-just used the existing required-opps binding to link an entry in GPU OPP to
-an entry in GPU<->DDR bandwidth OPP table. That way the hardware is
-actually described correctly and the mapping is kept separate.
-
-So, in the end, it'll look something like this in DT.
-
-gpu_cache_opp_table: gpu_cache_opp_table {
-	compatible = "operating-points-v2";
-
-	gpu_cache_3000: opp-3000 {
-		opp-peak-mbps = <3000>;
-		avg-mbps = <1000>;
-	};
-	gpu_cache_6000: opp-6000 {
-		opp-peak-mbps = <6000>;
-		avg-mbps = <2000>;
-	};
-	gpu_cache_9000: opp-9000 {
-		opp-peak-mbps = <9000>;
-		avg-mbps = <9000>;
-	};
-};
-
-gpu_ddr_opp_table: gpu_ddr_opp_table {
-	compatible = "operating-points-v2";
-
-	gpu_ddr_1525: opp-1525 {
-		opp-peak-mbps = <1525>;
-		avg-mbps = <452>;
-	};
-	gpu_ddr_3051: opp-3051 {
-		opp-peak-mbps = <3051>;
-		avg-mbps = <915>;
-	};
-	gpu_ddr_7500: opp-7500 {
-		opp-peak-mbps = <7500>;
-		avg-mbps = <3000>;
-	};
-};
-
-gpu_opp_table: gpu_opp_table {
-	compatible = "operating-points-v2";
-	opp-shared;
-
-	opp-200000000 {
-		opp-hz = /bits/ 64 <200000000>;
-		required-opps = <&gpu_cache_3000>, <&gpu_ddr_1525>;
-	};
-	opp-400000000 {
-		opp-hz = /bits/ 64 <400000000>;
-		required-opps = <&gpu_cache_6000>, <&gpu_ddr_3051>;
-	};
-};
-
-gpu@7864000 {
-	...
-	operating-points-v2 = <&gpu_opp_table>;
-	interconnects = <&mmnoc MASTER_GPU_1 &bimc SLAVE_SYSTEL_CACHE>,
-			<&mmnoc MASTER_GPU_1 &bimc SLAVE_DDR>;
-	interconnect-names = "gpu-cache", "gpu-mem";
-	interconnect-opps = <&gpu_cache_bw_opp>, <&gpu_ddr_bw_opp>
-};
-
-It's very clear what the HW supports vs what the mapping chooses to use. It's
-also very clearer what the mapping is doing because it actually points to
-entries in appropriately names OPP tables. There's no confusion on what mapping
-corresponds to what interconnect paths -- which is why this doesn't need a
-comment to clarify the intent here whereas in this patch series, the mappings
-needed comments on which interconnect they are referring to.
-
-Sorry about the long email and jumping in out of nowhere. The need for
-something like this has been in my mind for a long time and my situation has
-also changed where I can be more active upstream compared to before.
-
-Thanks and have a nice weekend.
-
--Saravana
-
--- 
+--Sig_/.4DKpmM8J4KDFiKa316Skyr--
