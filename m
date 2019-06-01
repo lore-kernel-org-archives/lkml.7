@@ -4,56 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0512C46470
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE30C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BABD4274BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7F71274B9
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:31:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395888;
-	bh=SVlgSoGR56p9bQCDkoRB9u0+RerzryqMJb1jlyeZN9I=;
+	s=default; t=1559395891;
+	bh=rkq75MGnmuEVUwiUR2RkFurysoqEuWO6KQEXkRKaiTw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sls+N4AIkY475FIpEkTcnGIxPd63v7TkBYaauBdeKdaOa5yMUg4Cci2WX7QNCA5Ir
-	 k6m69RDJj1kBPyo2q2nt3H50dimsWvdh54kLCsUvit+v32KPWAHv9w/7INVEXqja0Z
-	 nOTrrL7j4+PRwn1QQ/u0OR2iEZ3EoBgEM7owAmAY=
+	b=WtuMQ+a8Thw2KX0T5yVfuqW/hGiCPFxYrUf4LrM4QnSNTdhRAqYGM7nCY84HuCig1
+	 XGMx+P7SJVVa7hKrakbyK0cNpfhSSyY570VRwucPAob61Xk4YLQ6wySgaPJzUIN2Us
+	 HlMk9a4ui87WcKuilUUO56SU6psg8dQjt/lFCdrc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729527AbfFANZp (ORCPT
+        id S1728209AbfFANba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:25:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55988 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:31:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729511AbfFANZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:25:38 -0400
+        id S1729525AbfFANZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:25:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8578E27375;
-        Sat,  1 Jun 2019 13:25:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30C19273AD;
+        Sat,  1 Jun 2019 13:25:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395537;
-        bh=SVlgSoGR56p9bQCDkoRB9u0+RerzryqMJb1jlyeZN9I=;
+        s=default; t=1559395544;
+        bh=rkq75MGnmuEVUwiUR2RkFurysoqEuWO6KQEXkRKaiTw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sEWADxcdf62Y8SBc7BOtqQqudE2vYNPykUK/ftXJcyGcv6XsPAquVSN5fqGXYclBz
-         af64MiANyDJ3NummVeFeRtIupaIRm1zAaEpuUf1Uq1TbULssNrispeAMA2py1FXc9P
-         0DW6jgt93C7cF7YC2Cy4bgFk0mHzu+Si9CiuvBH0=
+        b=aTAP5U6N2UAjCUxYWIiF1+ISZKhQ0gT8zlup6jHqouUg74UOLBEXL5Bg5FNAfjtZv
+         1L7CHwU7VP2gbnBujUDX1C9rvpO57Ubr/X9+B4tEpx6y8eFrP5AZBPbDetskKnh3qY
+         tqUn/uJFJqKRvqsPz+zMehmCFqDhd66pD67HRqiA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, jolsa@redhat.com,
-        kan.liang@intel.com, vincent.weaver@maine.edu,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 16/74] perf/x86/intel: Allow PEBS multi-entry in watermark mode
-Date:   Sat,  1 Jun 2019 09:24:03 -0400
-Message-Id: <20190601132501.27021-16-sashal@kernel.org>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 20/74] pwm: meson: Use the spin-lock only to protect register modifications
+Date:   Sat,  1 Jun 2019 09:24:07 -0400
+Message-Id: <20190601132501.27021-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132501.27021-1-sashal@kernel.org>
 References: <20190601132501.27021-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,47 +64,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephane Eranian <eranian@google.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit c7a286577d7592720c2f179aadfb325a1ff48c95 ]
+[ Upstream commit f173747fffdf037c791405ab4f1ec0eb392fc48e ]
 
-This patch fixes a restriction/bug introduced by:
+Holding the spin-lock for all of the code in meson_pwm_apply() can
+result in a "BUG: scheduling while atomic". This can happen because
+clk_get_rate() (which is called from meson_pwm_calc()) may sleep.
+Only hold the spin-lock when modifying registers to solve this.
 
-   583feb08e7f7 ("perf/x86/intel: Fix handling of wakeup_events for multi-entry PEBS")
+The reason why we need a spin-lock in the driver is because the
+REG_MISC_AB register is shared between the two channels provided by one
+PWM controller. The only functions where REG_MISC_AB is modified are
+meson_pwm_enable() and meson_pwm_disable() so the register reads/writes
+in there need to be protected by the spin-lock.
 
-The original patch prevented using multi-entry PEBS when wakeup_events != 0.
-However given that wakeup_events is part of a union with wakeup_watermark, it
-means that in watermark mode, PEBS multi-entry is also disabled which is not the
-intent. This patch fixes this by checking is watermark mode is enabled.
+The original code also used the spin-lock to protect the values in
+struct meson_pwm_channel. This could be necessary if two consumers can
+use the same PWM channel. However, PWM core doesn't allow this so we
+don't need to protect the values in struct meson_pwm_channel with a
+lock.
 
-Signed-off-by: Stephane Eranian <eranian@google.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: jolsa@redhat.com
-Cc: kan.liang@intel.com
-Cc: vincent.weaver@maine.edu
-Fixes: 583feb08e7f7 ("perf/x86/intel: Fix handling of wakeup_events for multi-entry PEBS")
-Link: http://lkml.kernel.org/r/20190514003400.224340-1-eranian@google.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 211ed630753d2f ("pwm: Add support for Meson PWM Controller")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/intel/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pwm/pwm-meson.c | 25 +++++++++++++++++--------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index cb8178a2783a8..e98e238d37750 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -2867,7 +2867,7 @@ static int intel_pmu_hw_config(struct perf_event *event)
- 		return ret;
+diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
+index 9d5bd7d5c610b..f58a4867b5194 100644
+--- a/drivers/pwm/pwm-meson.c
++++ b/drivers/pwm/pwm-meson.c
+@@ -110,6 +110,10 @@ struct meson_pwm {
+ 	const struct meson_pwm_data *data;
+ 	void __iomem *base;
+ 	u8 inverter_mask;
++	/*
++	 * Protects register (write) access to the REG_MISC_AB register
++	 * that is shared between the two PWMs.
++	 */
+ 	spinlock_t lock;
+ };
  
- 	if (event->attr.precise_ip) {
--		if (!(event->attr.freq || event->attr.wakeup_events)) {
-+		if (!(event->attr.freq || (event->attr.wakeup_events && !event->attr.watermark))) {
- 			event->hw.flags |= PERF_X86_EVENT_AUTO_RELOAD;
- 			if (!(event->attr.sample_type &
- 			      ~intel_pmu_free_running_flags(event)))
+@@ -230,6 +234,7 @@ static void meson_pwm_enable(struct meson_pwm *meson,
+ {
+ 	u32 value, clk_shift, clk_enable, enable;
+ 	unsigned int offset;
++	unsigned long flags;
+ 
+ 	switch (id) {
+ 	case 0:
+@@ -250,6 +255,8 @@ static void meson_pwm_enable(struct meson_pwm *meson,
+ 		return;
+ 	}
+ 
++	spin_lock_irqsave(&meson->lock, flags);
++
+ 	value = readl(meson->base + REG_MISC_AB);
+ 	value &= ~(MISC_CLK_DIV_MASK << clk_shift);
+ 	value |= channel->pre_div << clk_shift;
+@@ -262,11 +269,14 @@ static void meson_pwm_enable(struct meson_pwm *meson,
+ 	value = readl(meson->base + REG_MISC_AB);
+ 	value |= enable;
+ 	writel(value, meson->base + REG_MISC_AB);
++
++	spin_unlock_irqrestore(&meson->lock, flags);
+ }
+ 
+ static void meson_pwm_disable(struct meson_pwm *meson, unsigned int id)
+ {
+ 	u32 value, enable;
++	unsigned long flags;
+ 
+ 	switch (id) {
+ 	case 0:
+@@ -281,9 +291,13 @@ static void meson_pwm_disable(struct meson_pwm *meson, unsigned int id)
+ 		return;
+ 	}
+ 
++	spin_lock_irqsave(&meson->lock, flags);
++
+ 	value = readl(meson->base + REG_MISC_AB);
+ 	value &= ~enable;
+ 	writel(value, meson->base + REG_MISC_AB);
++
++	spin_unlock_irqrestore(&meson->lock, flags);
+ }
+ 
+ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+@@ -291,19 +305,16 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ {
+ 	struct meson_pwm_channel *channel = pwm_get_chip_data(pwm);
+ 	struct meson_pwm *meson = to_meson_pwm(chip);
+-	unsigned long flags;
+ 	int err = 0;
+ 
+ 	if (!state)
+ 		return -EINVAL;
+ 
+-	spin_lock_irqsave(&meson->lock, flags);
+-
+ 	if (!state->enabled) {
+ 		meson_pwm_disable(meson, pwm->hwpwm);
+ 		channel->state.enabled = false;
+ 
+-		goto unlock;
++		return 0;
+ 	}
+ 
+ 	if (state->period != channel->state.period ||
+@@ -324,7 +335,7 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		err = meson_pwm_calc(meson, channel, pwm->hwpwm,
+ 				     state->duty_cycle, state->period);
+ 		if (err < 0)
+-			goto unlock;
++			return err;
+ 
+ 		channel->state.polarity = state->polarity;
+ 		channel->state.period = state->period;
+@@ -336,9 +347,7 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		channel->state.enabled = true;
+ 	}
+ 
+-unlock:
+-	spin_unlock_irqrestore(&meson->lock, flags);
+-	return err;
++	return 0;
+ }
+ 
+ static void meson_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
 -- 
 2.20.1
 
