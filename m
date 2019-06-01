@@ -1,149 +1,134 @@
-Return-Path: <SRS0=bMiL=T7=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 299C5C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 23:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C8EC04AB6
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEF7927041
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 May 2019 23:59:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DrR5If3b";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JhHqfqgm"
+	by mail.kernel.org (Postfix) with ESMTP id A301127048
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:00:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559347248;
+	bh=4BNWIjdigKxKDogULYqYoz0tNzxPsCrWNp7S7A4jrRA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=KUiv6b7snUp4Psg8MDluKuB9cXjtqm9K8JNlUrq+txqf/nOGwHKgi3UYvuOfPgx8f
+	 3zjxglZPP8gmu8XHqKAUkqt4cbW/Ha8N+3EY0/8AJ+YO0/bCyxdGJnsfP5BmfZCkg/
+	 86Ac5/GOn1SZZ2t3yqjrPW8mynxj5Lk2ovga0G84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbfEaX7q (ORCPT
+        id S1726917AbfFAAAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 19:59:46 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:34120 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbfEaX7p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 19:59:45 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 7B0C36070D; Fri, 31 May 2019 23:59:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559347184;
-        bh=tJJKl5ehmjDb2KK6XeMOmnd1rblvf2TEFa0oPKfTx5A=;
+        Fri, 31 May 2019 20:00:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48304 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726610AbfFAAAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 20:00:47 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96A9F27044;
+        Sat,  1 Jun 2019 00:00:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559347247;
+        bh=4BNWIjdigKxKDogULYqYoz0tNzxPsCrWNp7S7A4jrRA=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=DrR5If3bSV4UtULQl7DoeUdYH0qFStHS2EZNSIBc+cRSxZWIZArUiSxyvoPNOcyc+
-         BV1zFF3oNDbjY01hii7pjCDzqV2bQY+v6PFLeGPMvyWpdx0LSzd0kKC/qtsqXQKFE2
-         F9xYliUcplczYufvnmMhN9ZUuMk3PlzArFyOZXIM=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 2C6286070D;
-        Fri, 31 May 2019 23:59:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559347183;
-        bh=tJJKl5ehmjDb2KK6XeMOmnd1rblvf2TEFa0oPKfTx5A=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JhHqfqgmdNVqLrmRdouTw0Seluy99Trhgv3NmXlFn69xRxPpycBc/Q+DRSfAeVwu4
-         JTEboKLfLKX0c13lS4DlpcSurxqakUSwUHvxF/LXUHDnPuoHKctksui16YqOi10b83
-         IBD+oLcK1w2+MnQzgPq0KGIsSeRbdNA1g0f1wxfU=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+        b=i5SKVxIKwWz9x+xpHiX88TxAWiNaAXjJwtUcL5B9qRjmOPOaSo5fKCYr32jO3uJKu
+         vjrVaS23xnmTy6YsjQ2s6sd2W7wi8Jze6nYHOgEZYloPkPYcO0sOXrM6auM8c24NGB
+         0WnkltjQJxUK6yvEUl41l/c1kR1zx27ga/mxrSSQ=
+Date:   Fri, 31 May 2019 17:00:46 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Albert Vaca Cintora <albertvaka@gmail.com>
+Cc:     rdunlap@infradead.org, mingo@kernel.org, jack@suse.cz,
+        ebiederm@xmission.com, nsaenzjulienne@suse.de,
+        linux-kernel@vger.kernel.org, corbet@lwn.net,
+        linux-doc@vger.kernel.org, mbrugger@suse.com
+Subject: Re: [PATCH v3 2/3] kernel/ucounts: expose count of inotify watches
+ in use
+Message-Id: <20190531170046.ac2b52d8c4923fdeedf943cc@linux-foundation.org>
+In-Reply-To: <20190531195016.4430-2-albertvaka@gmail.com>
+References: <20190531195016.4430-1-albertvaka@gmail.com>
+        <20190531195016.4430-2-albertvaka@gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Date:   Fri, 31 May 2019 17:59:43 -0600
-From:   Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Alex Elder <elder@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
-        Dan Williams <dcbw@redhat.com>,
-        David Miller <davem@davemloft.net>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        evgreen@chromium.org, Ben Chan <benchan@google.com>,
-        Eric Caruso <ejcaruso@google.com>, cpratapa@codeaurora.org,
-        syadagir@codeaurora.org, abhishek.esse@gmail.com,
-        Networking <netdev@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-soc@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-In-Reply-To: <20190531233306.GB25597@minitux>
-References: <20190531035348.7194-1-elder@linaro.org>
- <e75cd1c111233fdc05f47017046a6b0f0c97673a.camel@redhat.com>
- <065c95a8-7b17-495d-f225-36c46faccdd7@linaro.org>
- <CAK8P3a05CevRBV3ym+pnKmxv+A0_T+AtURW2L4doPAFzu3QcJw@mail.gmail.com>
- <a28c5e13-59bc-144d-4153-9d104cfa9188@linaro.org>
- <20190531233306.GB25597@minitux>
-Message-ID: <d76a710d45dd7df3a28afb12fc62cf14@codeaurora.org>
-X-Sender: subashab@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-05-31 17:33, Bjorn Andersson wrote:
-> On Fri 31 May 13:47 PDT 2019, Alex Elder wrote:
-> 
->> On 5/31/19 2:19 PM, Arnd Bergmann wrote:
->> > On Fri, May 31, 2019 at 6:36 PM Alex Elder <elder@linaro.org> wrote:
->> >> On 5/31/19 9:58 AM, Dan Williams wrote:
->> >>> On Thu, 2019-05-30 at 22:53 -0500, Alex Elder wrote:
->> >>>
->> >>> My question from the Nov 2018 IPA rmnet driver still stands; how does
->> >>> this relate to net/ethernet/qualcomm/rmnet/ if at all? And if this is
->> >>> really just a netdev talking to the IPA itself and unrelated to
->> >>> net/ethernet/qualcomm/rmnet, let's call it "ipa%d" and stop cargo-
->> >>> culting rmnet around just because it happens to be a net driver for a
->> >>> QC SoC.
->> >>
->> >> First, the relationship between the IPA driver and the rmnet driver
->> >> is that the IPA driver is assumed to sit between the rmnet driver
->> >> and the hardware.
->> >
->> > Does this mean that IPA can only be used to back rmnet, and rmnet
->> > can only be used on top of IPA, or can or both of them be combined
->> > with another driver to talk to instead?
->> 
->> No it does not mean that.
->> 
->> As I understand it, one reason for the rmnet layer was to abstract
->> the back end, which would allow using a modem, or using something
->> else (a LAN?), without exposing certain details of the hardware.
->> (Perhaps to support multiplexing, etc. without duplicating that
->> logic in two "back-end" drivers?)
->> 
->> To be perfectly honest, at first I thought having IPA use rmnet
->> was a cargo cult thing like Dan suggested, because I didn't see
->> the benefit.  I now see why one would use that pass-through layer
->> to handle the QMAP features.
->> 
->> But back to your question.  The other thing is that I see no
->> reason the IPA couldn't present a "normal" (non QMAP) interface
->> for a modem.  It's something I'd really like to be able to do,
->> but I can't do it without having the modem firmware change its
->> configuration for these endpoints.  My access to the people who
->> implement the modem firmware has been very limited (something
->> I hope to improve), and unless and until I can get corresponding
->> changes on the modem side to implement connections that don't
->> use QMAP, I can't implement such a thing.
->> 
-> 
-> But any such changes would either be years into the future or for
-> specific devices and as such not applicable to any/most of devices on
-> the market now or in the coming years.
-> 
-> 
-> But as Arnd points out, if the software split between IPA and rmnet is
-> suboptimal your are encouraged to fix that.
-> 
-> Regards,
-> Bjorn
+On Fri, 31 May 2019 21:50:15 +0200 Albert Vaca Cintora <albertvaka@gmail.com> wrote:
 
-The split rmnet design was chosen because we could place rmnet
-over any transport - IPA, PCIe (https://lkml.org/lkml/2018/4/26/1159)
-or USB.
+> Adds a readonly 'current_inotify_watches' entry to the user sysctl table.
+> The handler for this entry is a custom function that ends up calling
+> proc_dointvec. Said sysctl table already contains 'max_inotify_watches'
+> and it gets mounted under /proc/sys/user/.
+> 
+> Inotify watches are a finite resource, in a similar way to available file
+> descriptors. The motivation for this patch is to be able to set up
+> monitoring and alerting before an application starts failing because
+> it runs out of inotify watches.
+> 
+> ...
+>
+> --- a/kernel/ucount.c
+> +++ b/kernel/ucount.c
+> @@ -118,6 +118,26 @@ static void put_ucounts(struct ucounts *ucounts)
+>  	kfree(ucounts);
+>  }
+>  
+> +#ifdef CONFIG_INOTIFY_USER
+> +int proc_read_inotify_watches(struct ctl_table *table, int write,
+> +		     void __user *buffer, size_t *lenp, loff_t *ppos)
+> +{
+> +	struct ucounts *ucounts;
+> +	struct ctl_table fake_table;
 
-rmnet registers a rx handler, so the rmnet packet processing itself
-happens in the same softirq when packets are queued to network stack
-by IPA.
+hmm.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> +	int count = -1;
+> +
+> +	ucounts = get_ucounts(current_user_ns(), current_euid());
+> +	if (ucounts != NULL) {
+> +		count = atomic_read(&ucounts->ucount[UCOUNT_INOTIFY_WATCHES]);
+> +		put_ucounts(ucounts);
+> +	}
+> +
+> +	fake_table.data = &count;
+> +	fake_table.maxlen = sizeof(count);
+> +	return proc_dointvec(&fake_table, write, buffer, lenp, ppos);
+
+proc_dointvec
+->do_proc_dointvec
+  ->__do_proc_dointvec
+    ->proc_first_pos_non_zero_ignore
+      ->warn_sysctl_write
+        ->pr_warn_once(..., table->procname)
+
+and I think ->procname is uninitialized.
+
+That's from a cursory check.  Perhaps other uninitialized members of
+fake_table are accessed, dunno.
+
+we could do
+
+	{
+		struct ctl_table fake_table = {
+			.data = &count,
+			.maxlen = sizeof(count),
+		};
+
+		return proc_dointvec(&fake_table, write, buffer, lenp, ppos);
+	}
+
+or whatever.  That will cause the pr_warn_once to print "(null)" but
+that's OK I guess.
+
+Are there other places in the kernel which do this temp ctl_table
+trick?  If so, what do they do?  If not, what is special about this
+code?
+
+
