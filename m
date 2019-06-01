@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D042C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D24C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21FC3272F8
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:20:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A864C272E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:20:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395243;
-	bh=DHR7kqRzoj0p2zUAiXG+aU4DQZFfXRciLoxmjLkKDQY=;
+	s=default; t=1559395253;
+	bh=U4sB3dWCPHwc1nLm/zgQjuLXCr/ooxzXR6feKSSgEDM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ObUpmfzVJ0+hSVZO6Pjk8925JWM2NTmy0mrRj5ziWQfnIVvPdxkTQnb1FBpm86pLx
-	 ZFQLga1z08XSvSwRiiPRtp7OWX8VgjrAMlyu2W/R9e+P0jneNA34b7utbQ6TJl5NIN
-	 raT4Uf6Jsu6BC4bjnZJ6DYqzovaDW7Z94iK76eNA=
+	b=jLwmPFS0ZiPidyp6JQRWAV6hSi1GcWWsiIqouC5s5YTLvRyXE44nEl2DZwZOOZToY
+	 4X5jYuJ6fCa6Ud7V4uZBpxSwcIesyuSbwdYsojdRnqrpYMOfJJIgw4/3jWP9MpJkk7
+	 TDwwmScBvSLZ2LOJj0CB8kCKMmUPahXGAn8ZrGQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbfFANUm (ORCPT
+        id S1728378AbfFANUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:20:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47716 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:20:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728314AbfFANUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:20:30 -0400
+        id S1728341AbfFANUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:20:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A191D272DE;
-        Sat,  1 Jun 2019 13:20:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20879272DE;
+        Sat,  1 Jun 2019 13:20:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395229;
-        bh=DHR7kqRzoj0p2zUAiXG+aU4DQZFfXRciLoxmjLkKDQY=;
+        s=default; t=1559395240;
+        bh=U4sB3dWCPHwc1nLm/zgQjuLXCr/ooxzXR6feKSSgEDM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x+hU3+pd/Vc6FNGedGcso1ElgcqREezAShbeqlEzN8/y/3TiPWOxo3Qlh4rmFflXi
-         oRYY0lFQtiKOuk6cV2q7865DlUoEZJ4n06gXXn1jGBjCnXovMZYqX49f45mZOQOdDD
-         EpU9dJsgNn6zjJ/9YIKpMEvCC8pR6QyqJhWfmsp4=
+        b=isXTkHpbG4Lty0mdtDY+UH/NYfjU/GxrRPW6WAVYD4lT1OIXhxi6zPwi0ykqb3B95
+         cdPQf308lO/memHpEyK8xxfcwtxgeIjS0fsW/ZonFW5gf/9Op/vmTTh19AIRqPuUnw
+         6dube5hkRmt0iqegN3+Z8qP73tDlqF08ZEYqmCZY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Baoquan He <bhe@redhat.com>, David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
+Cc:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 5.0 016/173] mm/memory_hotplug.c: fix the wrong usage of N_HIGH_MEMORY
-Date:   Sat,  1 Jun 2019 09:16:48 -0400
-Message-Id: <20190601131934.25053-16-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 020/173] mm/slab.c: fix an infinite loop in leaks_show()
+Date:   Sat,  1 Jun 2019 09:16:52 -0400
+Message-Id: <20190601131934.25053-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131934.25053-1-sashal@kernel.org>
 References: <20190601131934.25053-1-sashal@kernel.org>
@@ -64,47 +64,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Baoquan He <bhe@redhat.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit d3ba3ae19751e476b0840a0c9a673a5766fa3219 ]
+[ Upstream commit 745e10146c31b1c6ed3326286704ae251b17f663 ]
 
-In node_states_check_changes_online(), N_HIGH_MEMORY is used to substitute
-ZONE_HIGHMEM directly.  This is not right.  N_HIGH_MEMORY is to mark the
-memory state of node.  Here zone index is checked, which should be
-compared with 'ZONE_HIGHMEM' accordingly.
+"cat /proc/slab_allocators" could hang forever on SMP machines with
+kmemleak or object debugging enabled due to other CPUs running do_drain()
+will keep making kmemleak_object or debug_objects_cache dirty and unable
+to escape the first loop in leaks_show(),
 
-Replace it with ZONE_HIGHMEM.
+do {
+	set_store_user_clean(cachep);
+	drain_cpu_caches(cachep);
+	...
 
-This is a code cleanup - no known runtime effects.
+} while (!is_store_user_clean(cachep));
 
-Link: http://lkml.kernel.org/r/20190320080732.14933-1-bhe@redhat.com
-Fixes: 8efe33f40f3e ("mm/memory_hotplug.c: simplify node_states_check_changes_online")
-Signed-off-by: Baoquan He <bhe@redhat.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-Cc: Wei Yang <richard.weiyang@gmail.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
+For example,
+
+do_drain
+  slabs_destroy
+    slab_destroy
+      kmem_cache_free
+        __cache_free
+          ___cache_free
+            kmemleak_free_recursive
+              delete_object_full
+                __delete_object
+                  put_object
+                    free_object_rcu
+                      kmem_cache_free
+                        cache_free_debugcheck --> dirty kmemleak_object
+
+One approach is to check cachep->name and skip both kmemleak_object and
+debug_objects_cache in leaks_show().  The other is to set store_user_clean
+after drain_cpu_caches() which leaves a small window between
+drain_cpu_caches() and set_store_user_clean() where per-CPU caches could
+be dirty again lead to slightly wrong information has been stored but
+could also speed up things significantly which sounds like a good
+compromise.  For example,
+
+ # cat /proc/slab_allocators
+ 0m42.778s # 1st approach
+ 0m0.737s  # 2nd approach
+
+[akpm@linux-foundation.org: tweak comment]
+Link: http://lkml.kernel.org/r/20190411032635.10325-1-cai@lca.pw
+Fixes: d31676dfde25 ("mm/slab: alternative implementation for DEBUG_SLAB_LEAK")
+Signed-off-by: Qian Cai <cai@lca.pw>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/memory_hotplug.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/slab.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index e06e7a89d0e5b..33f1b8d307e64 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -684,7 +684,7 @@ static void node_states_check_changes_online(unsigned long nr_pages,
- 	if (zone_idx(zone) <= ZONE_NORMAL && !node_state(nid, N_NORMAL_MEMORY))
- 		arg->status_change_nid_normal = nid;
- #ifdef CONFIG_HIGHMEM
--	if (zone_idx(zone) <= N_HIGH_MEMORY && !node_state(nid, N_HIGH_MEMORY))
-+	if (zone_idx(zone) <= ZONE_HIGHMEM && !node_state(nid, N_HIGH_MEMORY))
- 		arg->status_change_nid_high = nid;
- #endif
- }
+diff --git a/mm/slab.c b/mm/slab.c
+index f4bbc53008f3b..932a439149cdb 100644
+--- a/mm/slab.c
++++ b/mm/slab.c
+@@ -4317,8 +4317,12 @@ static int leaks_show(struct seq_file *m, void *p)
+ 	 * whole processing.
+ 	 */
+ 	do {
+-		set_store_user_clean(cachep);
+ 		drain_cpu_caches(cachep);
++		/*
++		 * drain_cpu_caches() could make kmemleak_object and
++		 * debug_objects_cache dirty, so reset afterwards.
++		 */
++		set_store_user_clean(cachep);
+ 
+ 		x[1] = 0;
+ 
 -- 
 2.20.1
 
