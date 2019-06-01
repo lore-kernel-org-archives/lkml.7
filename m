@@ -4,70 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC41C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 509A9C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C361E27368
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:24:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2710324C2E
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:24:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395445;
-	bh=1AZL6D3qwXNHIy9yjqUa+tR3Lq0kC77fehYK0LnnQv0=;
+	s=default; t=1559395457;
+	bh=YiYiPtpnEFepbxQPf0DdT4QTwc/B9sjCipaAyV8Th/8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RPIsQajIwcT7CdBottjDWuur6PwD1nzBtf1JRXtDop24G2yr9l9shiyd/eNSGYT8R
-	 r+W3dYDBhEGuzZqsdthYCKMjMQBCQmIhDjH5Ha6gH7grrFBjmlpvV/6WMUnocKvDXs
-	 QLFmMQ1ZzN+x/bXG+UZcxJs4dmFH831ItU8BzDtg=
+	b=M5YW/oumH5s6LREvyFMax0r2No3cDA9pjrEzwT6nnzSSwMtI5J2XhPsu53QImxNwE
+	 muLDuhiRM60Tz5O3FdT2Gv1deh6+rXO3Pfpbpx0HF2oiyYvT67Os5FlMfOF6Z2Bmje
+	 hK8jMAVUcVtIVg7hzem0V1AEG4ZOIBYtL8gbE+zs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729163AbfFANYF (ORCPT
+        id S1729179AbfFANYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:24:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53976 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:24:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727750AbfFANYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:24:03 -0400
+        id S1727689AbfFANYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:24:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01457264C3;
-        Sat,  1 Jun 2019 13:23:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B8082736E;
+        Sat,  1 Jun 2019 13:24:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395441;
-        bh=1AZL6D3qwXNHIy9yjqUa+tR3Lq0kC77fehYK0LnnQv0=;
+        s=default; t=1559395449;
+        bh=YiYiPtpnEFepbxQPf0DdT4QTwc/B9sjCipaAyV8Th/8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oxO6STPLERt7PW39yN7JfiuSF6vCG1RaTB+wQ2HKCNN4RekQ0MlfJbcq7pSYuEPkI
-         JuqWeZnbfnSu1aA7mhDz1FUVaIk+rQtEbpuoJsbPPyDgqW+21zilGeMZ5JO4LeVbHN
-         gW8GJEplFrfEG8ixo3ecZ/BqWeMKzxeNRQUcFYkE=
+        b=1Ri8R3uhz9nuuyQnC55f1ynLULPxAkIo7SeQCvLWKlCD1m5NepvmvoF5qvc/wMq+m
+         +qrkZ6E8ANpJkWfFIr+67i7CUug1FL0E7iiWRpO7p6vfdYPNduEKKGWdPmzTHauSt3
+         Hg38tK9T13PPVraUVzpN5bBkMj3HA2mgL7W3io+s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Mathieu Malaterre <malat@debian.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        Borislav Petkov <bp@suse.de>,
-        Mark Rutland <mark.rutland@arm.com>,
+Cc:     Linxu Fang <fanglinxu@huawei.com>,
+        Taku Izumi <izumi.taku@jp.fujitsu.com>,
+        Xishi Qiu <qiuxishi@huawei.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Oscar Salvador <osalvador@suse.de>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 05/99] ARM: prevent tracing IPI_CPU_BACKTRACE
-Date:   Sat,  1 Jun 2019 09:22:12 -0400
-Message-Id: <20190601132346.26558-5-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.14 08/99] mem-hotplug: fix node spanned pages when we have a node with only ZONE_MOVABLE
+Date:   Sat,  1 Jun 2019 09:22:15 -0400
+Message-Id: <20190601132346.26558-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132346.26558-1-sashal@kernel.org>
 References: <20190601132346.26558-1-sashal@kernel.org>
@@ -80,106 +66,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Linxu Fang <fanglinxu@huawei.com>
 
-[ Upstream commit be167862ae7dd85c56d385209a4890678e1b0488 ]
+[ Upstream commit 299c83dce9ea3a79bb4b5511d2cb996b6b8e5111 ]
 
-Patch series "compiler: allow all arches to enable
-CONFIG_OPTIMIZE_INLINING", v3.
+342332e6a925 ("mm/page_alloc.c: introduce kernelcore=mirror option") and
+later patches rewrote the calculation of node spanned pages.
 
-This patch (of 11):
+e506b99696a2 ("mem-hotplug: fix node spanned pages when we have a movable
+node"), but the current code still has problems,
 
-When function tracing for IPIs is enabled, we get a warning for an
-overflow of the ipi_types array with the IPI_CPU_BACKTRACE type as
-triggered by raise_nmi():
+When we have a node with only zone_movable and the node id is not zero,
+the size of node spanned pages is double added.
 
-  arch/arm/kernel/smp.c: In function 'raise_nmi':
-  arch/arm/kernel/smp.c:489:2: error: array subscript is above array bounds [-Werror=array-bounds]
-    trace_ipi_raise(target, ipi_types[ipinr]);
+That's because we have an empty normal zone, and zone_start_pfn or
+zone_end_pfn is not between arch_zone_lowest_possible_pfn and
+arch_zone_highest_possible_pfn, so we need to use clamp to constrain the
+range just like the commit <96e907d13602> (bootmem: Reimplement
+__absent_pages_in_range() using for_each_mem_pfn_range()).
 
-This is a correct warning as we actually overflow the array here.
+e.g.
+Zone ranges:
+  DMA      [mem 0x0000000000001000-0x0000000000ffffff]
+  DMA32    [mem 0x0000000001000000-0x00000000ffffffff]
+  Normal   [mem 0x0000000100000000-0x000000023fffffff]
+Movable zone start for each node
+  Node 0: 0x0000000100000000
+  Node 1: 0x0000000140000000
+Early memory node ranges
+  node   0: [mem 0x0000000000001000-0x000000000009efff]
+  node   0: [mem 0x0000000000100000-0x00000000bffdffff]
+  node   0: [mem 0x0000000100000000-0x000000013fffffff]
+  node   1: [mem 0x0000000140000000-0x000000023fffffff]
 
-This patch raise_nmi() to call __smp_cross_call() instead of
-smp_cross_call(), to avoid calling into ftrace.  For clarification, I'm
-also adding a two new code comments describing how this one is special.
+node 0 DMA	spanned:0xfff   present:0xf9e   absent:0x61
+node 0 DMA32	spanned:0xff000 present:0xbefe0	absent:0x40020
+node 0 Normal	spanned:0	present:0	absent:0
+node 0 Movable	spanned:0x40000 present:0x40000 absent:0
+On node 0 totalpages(node_present_pages): 1048446
+node_spanned_pages:1310719
+node 1 DMA	spanned:0	    present:0		absent:0
+node 1 DMA32	spanned:0	    present:0		absent:0
+node 1 Normal	spanned:0x100000    present:0x100000	absent:0
+node 1 Movable	spanned:0x100000    present:0x100000	absent:0
+On node 1 totalpages(node_present_pages): 2097152
+node_spanned_pages:2097152
+Memory: 6967796K/12582392K available (16388K kernel code, 3686K rwdata,
+4468K rodata, 2160K init, 10444K bss, 5614596K reserved, 0K
+cma-reserved)
 
-The warning appears to have shown up after commit e7273ff49acf ("ARM:
-8488/1: Make IPI_CPU_BACKTRACE a "non-secure" SGI"), which changed the
-number assignment from '15' to '8', but as far as I can tell has existed
-since the IPI tracepoints were first introduced.  If we decide to
-backport this patch to stable kernels, we probably need to backport
-e7273ff49acf as well.
+It shows that the current memory of node 1 is double added.
+After this patch, the problem is fixed.
 
-[yamada.masahiro@socionext.com: rebase on v5.1-rc1]
-Link: http://lkml.kernel.org/r/20190423034959.13525-2-yamada.masahiro@socionext.com
-Fixes: e7273ff49acf ("ARM: 8488/1: Make IPI_CPU_BACKTRACE a "non-secure" SGI")
-Fixes: 365ec7b17327 ("ARM: add IPI tracepoints") # v3.17
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Mathieu Malaterre <malat@debian.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Stefan Agner <stefan@agner.ch>
-Cc: Boris Brezillon <bbrezillon@kernel.org>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Richard Weinberger <richard@nod.at>
-Cc: David Woodhouse <dwmw2@infradead.org>
-Cc: Brian Norris <computersforpeace@gmail.com>
-Cc: Marek Vasut <marek.vasut@gmail.com>
-Cc: Russell King <rmk+kernel@arm.linux.org.uk>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Mark Rutland <mark.rutland@arm.com>
+node 0 DMA	spanned:0xfff   present:0xf9e   absent:0x61
+node 0 DMA32	spanned:0xff000 present:0xbefe0	absent:0x40020
+node 0 Normal	spanned:0	present:0	absent:0
+node 0 Movable	spanned:0x40000 present:0x40000 absent:0
+On node 0 totalpages(node_present_pages): 1048446
+node_spanned_pages:1310719
+node 1 DMA	spanned:0	    present:0		absent:0
+node 1 DMA32	spanned:0	    present:0		absent:0
+node 1 Normal	spanned:0	    present:0		absent:0
+node 1 Movable	spanned:0x100000    present:0x100000	absent:0
+On node 1 totalpages(node_present_pages): 1048576
+node_spanned_pages:1048576
+memory: 6967796K/8388088K available (16388K kernel code, 3686K rwdata,
+4468K rodata, 2160K init, 10444K bss, 1420292K reserved, 0K
+cma-reserved)
+
+Link: http://lkml.kernel.org/r/1554178276-10372-1-git-send-email-fanglinxu@huawei.com
+Signed-off-by: Linxu Fang <fanglinxu@huawei.com>
+Cc: Taku Izumi <izumi.taku@jp.fujitsu.com>
+Cc: Xishi Qiu <qiuxishi@huawei.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Pavel Tatashin <pavel.tatashin@microsoft.com>
+Cc: Oscar Salvador <osalvador@suse.de>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/include/asm/hardirq.h | 1 +
- arch/arm/kernel/smp.c          | 6 +++++-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ mm/page_alloc.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/include/asm/hardirq.h b/arch/arm/include/asm/hardirq.h
-index cba23eaa60721..7a88f160b1fbe 100644
---- a/arch/arm/include/asm/hardirq.h
-+++ b/arch/arm/include/asm/hardirq.h
-@@ -6,6 +6,7 @@
- #include <linux/threads.h>
- #include <asm/irq.h>
- 
-+/* number of IPIS _not_ including IPI_CPU_BACKTRACE */
- #define NR_IPI	7
- 
- typedef struct {
-diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
-index 844bb2f1ddef3..dc06483c26039 100644
---- a/arch/arm/kernel/smp.c
-+++ b/arch/arm/kernel/smp.c
-@@ -76,6 +76,10 @@ enum ipi_msg_type {
- 	IPI_CPU_STOP,
- 	IPI_IRQ_WORK,
- 	IPI_COMPLETION,
-+	/*
-+	 * CPU_BACKTRACE is special and not included in NR_IPI
-+	 * or tracable with trace_ipi_*
-+	 */
- 	IPI_CPU_BACKTRACE,
- 	/*
- 	 * SGI8-15 can be reserved by secure firmware, and thus may
-@@ -801,7 +805,7 @@ core_initcall(register_cpufreq_notifier);
- 
- static void raise_nmi(cpumask_t *mask)
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 923deb33bf342..6f71518a45587 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -5727,13 +5727,15 @@ static unsigned long __meminit zone_spanned_pages_in_node(int nid,
+ 					unsigned long *zone_end_pfn,
+ 					unsigned long *ignored)
  {
--	smp_cross_call(mask, IPI_CPU_BACKTRACE);
-+	__smp_cross_call(mask, IPI_CPU_BACKTRACE);
- }
++	unsigned long zone_low = arch_zone_lowest_possible_pfn[zone_type];
++	unsigned long zone_high = arch_zone_highest_possible_pfn[zone_type];
+ 	/* When hotadd a new node from cpu_up(), the node should be empty */
+ 	if (!node_start_pfn && !node_end_pfn)
+ 		return 0;
  
- void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
+ 	/* Get the start and end of the zone */
+-	*zone_start_pfn = arch_zone_lowest_possible_pfn[zone_type];
+-	*zone_end_pfn = arch_zone_highest_possible_pfn[zone_type];
++	*zone_start_pfn = clamp(node_start_pfn, zone_low, zone_high);
++	*zone_end_pfn = clamp(node_end_pfn, zone_low, zone_high);
+ 	adjust_zone_range_for_zone_movable(nid, zone_type,
+ 				node_start_pfn, node_end_pfn,
+ 				zone_start_pfn, zone_end_pfn);
 -- 
 2.20.1
 
