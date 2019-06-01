@@ -2,143 +2,90 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1206EC28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 10:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF674C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 10:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9CC52722C
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 10:56:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SAshwVJT"
+	by mail.kernel.org (Postfix) with ESMTP id 9DCFD27226
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 10:56:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727187AbfFAK4V (ORCPT
+        id S1727227AbfFAK4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 06:56:21 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:37092 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbfFAK4U (ORCPT
+        Sat, 1 Jun 2019 06:56:46 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40262 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726109AbfFAK4q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 06:56:20 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x51AtujZ094143;
-        Sat, 1 Jun 2019 05:55:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559386557;
-        bh=bxg2k/hWhokU2wf2qE2aElJbPfm88t3enDqzTSr1Xoc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=SAshwVJTfnPjGK6MJe8SUU3jMcAx2x/QqV/dDpYoCMzn2oehLxIWCAQLw/h+yInbI
-         ZGiLk4JlQvN3W85Cgx1eLSVSv6B+8MH18lCOvX+rhxRPXR32SN/P1aCIPo7WbhfQRN
-         CsCoXDwMq9a7DxTJKHiAXMQLZC0VYsEvHAr76xCw=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x51AtuDu033889
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 1 Jun 2019 05:55:56 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Sat, 1 Jun
- 2019 05:55:56 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Sat, 1 Jun 2019 05:55:56 -0500
-Received: from [10.250.96.121] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x51AtrJY124492;
-        Sat, 1 Jun 2019 05:55:53 -0500
-Subject: Re: [PATCH v2 net-next 4/7] net: ethernet: ti: cpsw_ethtool: simplify
- slave loops
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>, <hawk@kernel.org>,
-        <davem@davemloft.net>
-CC:     <ast@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>, <xdp-newbies@vger.kernel.org>,
-        <ilias.apalodimas@linaro.org>, <netdev@vger.kernel.org>,
-        <daniel@iogearbox.net>, <jakub.kicinski@netronome.com>,
-        <john.fastabend@gmail.com>
-References: <20190530182039.4945-1-ivan.khoronzhuk@linaro.org>
- <20190530182039.4945-5-ivan.khoronzhuk@linaro.org>
-From:   grygorii <grygorii.strashko@ti.com>
-Message-ID: <d9e38ccf-004e-b2bd-fed4-af71157d02b4@ti.com>
-Date:   Sat, 1 Jun 2019 13:55:51 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Sat, 1 Jun 2019 06:56:46 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x51Aq51G060334
+        for <linux-kernel@vger.kernel.org>; Sat, 1 Jun 2019 06:56:45 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sunehutcv-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Jun 2019 06:56:45 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Sat, 1 Jun 2019 11:56:43 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 1 Jun 2019 11:56:40 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x51Auddd45154444
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 1 Jun 2019 10:56:40 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C9DF742041;
+        Sat,  1 Jun 2019 10:56:39 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9E78B42047;
+        Sat,  1 Jun 2019 10:56:39 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.21])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Sat,  1 Jun 2019 10:56:39 +0000 (GMT)
+Date:   Sat, 1 Jun 2019 12:56:38 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH] s390: Kconfig: pedantic cleanups
+References: <1551904321-23099-1-git-send-email-info@metux.net>
 MIME-Version: 1.0
-In-Reply-To: <20190530182039.4945-5-ivan.khoronzhuk@linaro.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1551904321-23099-1-git-send-email-info@metux.net>
+X-TM-AS-GCONF: 00
+x-cbid: 19060110-0028-0000-0000-00000373865C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19060110-0029-0000-0000-0000243353F9
+Message-Id: <20190601105638.GH3600@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-01_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=728 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906010081
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 30/05/2019 21:20, Ivan Khoronzhuk wrote:
-> Only for consistency reasons, do it like in main cpsw.c module
-> and use ndev reference but not by means of slave.
+On Wed, Mar 06, 2019 at 09:32:01PM +0100, Enrico Weigelt, metux IT consult wrote:
+> Formatting of Kconfig files doesn't look so pretty, so just
+> take damp cloth and clean it up.
 > 
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 > ---
->   drivers/net/ethernet/ti/cpsw_ethtool.c | 40 ++++++++++++++------------
->   1 file changed, 21 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/ti/cpsw_ethtool.c b/drivers/net/ethernet/ti/cpsw_ethtool.c
-> index a4a7ec0d2531..c260bb32aacf 100644
-> --- a/drivers/net/ethernet/ti/cpsw_ethtool.c
-> +++ b/drivers/net/ethernet/ti/cpsw_ethtool.c
-> @@ -458,7 +458,6 @@ int cpsw_nway_reset(struct net_device *ndev)
->   static void cpsw_suspend_data_pass(struct net_device *ndev)
->   {
+>  arch/s390/Kconfig          |  2 +-
+>  drivers/s390/block/Kconfig |  2 +-
+>  drivers/s390/char/Kconfig  | 15 +++++++--------
+>  drivers/s390/net/Kconfig   |  8 ++++----
+>  4 files changed, 13 insertions(+), 14 deletions(-)
 
-[...]
+Applied, thanks.
 
->   
->   	return 0;
->   }
-> @@ -587,7 +590,6 @@ int cpsw_set_channels_common(struct net_device *ndev,
->   {
->   	struct cpsw_priv *priv = netdev_priv(ndev);
->   	struct cpsw_common *cpsw = priv->cpsw;
-> -	struct cpsw_slave *slave;
->   	int i, ret;
->   
->   	ret = cpsw_check_ch_settings(cpsw, chs);
-> @@ -604,20 +606,20 @@ int cpsw_set_channels_common(struct net_device *ndev,
->   	if (ret)
->   		goto err;
->   
-> -	for (i = cpsw->data.slaves, slave = cpsw->slaves; i; i--, slave++) {
-> -		if (!(slave->ndev && netif_running(slave->ndev)))
-> +	for (i = 0; i < cpsw->data.slaves; i++) {
-> +		struct net_device *ndev = cpsw->slaves[i].ndev;
-
-Sry, but could you rename this local var "ndev" and make it differ from func argument name.
-
-> +
-> +		if (!(ndev && netif_running(ndev)))
->   			continue;
->   
->   		/* Inform stack about new count of queues */
-> -		ret = netif_set_real_num_tx_queues(slave->ndev,
-> -						   cpsw->tx_ch_num);
-> +		ret = netif_set_real_num_tx_queues(ndev, cpsw->tx_ch_num);
->   		if (ret) {
->   			dev_err(priv->dev, "cannot set real number of tx queues\n");
->   			goto err;
->   		}
->   
-> -		ret = netif_set_real_num_rx_queues(slave->ndev,
-> -						   cpsw->rx_ch_num);
-> +		ret = netif_set_real_num_rx_queues(ndev, cpsw->rx_ch_num);
->   		if (ret) {
->   			dev_err(priv->dev, "cannot set real number of rx queues\n");
->   			goto err;
-> 
-
--- 
-Best regards,
-grygorii
