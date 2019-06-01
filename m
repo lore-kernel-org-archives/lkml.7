@@ -4,55 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3862CC28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:26:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A6D7C28CC3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CB27273C7
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:26:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E050273C1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:26:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395580;
-	bh=me0jHZ4okS1/tGNFwIDuP/a8uqOaFJTeahlh8eX/lQo=;
+	s=default; t=1559395585;
+	bh=vdcufoQDlWb/nHyo8/lK8E32rV3hNnWhS3aL89GBcJ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oYg6g5ZOKRHiWeggnoqi5ZgNTNucplCFnna2EpD6YIHim9b1jXUmOWTXlCK1TxE7J
-	 MKXz/X7N+HaxZD9MhdGlmZgs4tCBc/0UPk3dDjcdMbp1wsWcwCdJKT0VVuJ617A6H/
-	 Bi3o4EpDaFvZoc3shyhLpRr1DTLLrlp6tgmpxBXk=
+	b=scjk7CJr/b9MDxZ7jtMPjXB3mxc/mVpaRH5lltFB6bTew7ayeRkCCG7f3JywolO9Y
+	 +x+4ztg7lxQpCyHF5nAWCNDp24hrmsX/aBhAf6XkmbFQdl5aTYvXVB1dqvFyh3KIg4
+	 Lml83JAI2TWa47Adz3NCfh1Qlgsr4AQFNrhE6mG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729677AbfFAN0S (ORCPT
+        id S1729697AbfFAN0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:26:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56526 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:26:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729123AbfFAN0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:26:11 -0400
+        id S1729685AbfFAN0X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:26:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19FF72739A;
-        Sat,  1 Jun 2019 13:26:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E42A273AD;
+        Sat,  1 Jun 2019 13:26:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395570;
-        bh=me0jHZ4okS1/tGNFwIDuP/a8uqOaFJTeahlh8eX/lQo=;
+        s=default; t=1559395582;
+        bh=vdcufoQDlWb/nHyo8/lK8E32rV3hNnWhS3aL89GBcJ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Iq00m0vDFEnvXuJMWFm6+xE3RS7cMzVSIqdSkYfn3WFT70VcOXdbErjh/U7Qabqc0
-         d8h7pxH5Yf0sjlu2IZqyaRX6u5+4L2MQOJPqyrWViLUWiwYiHZDemMYfQmrnKK8Bgz
-         rbpxqJ3tc7ILnG4npup7DTERmlBFDVm5rXJ1qYwM=
+        b=hneIHuynUhTVTTJ66Upj/fppp/Bs5fA2moYHu9SmYruTjbeXy15Q5HwoWY3UVbZVo
+         kMpyenpZxZedtBUl2dLSzlck2Dpju+8kXB8qNYko2A4/+97VWf4Aj/8iWyxJnvD01t
+         78w9vpMGt3DmAN6nvt5lZuR9H5SSI5ROhJBTQuEk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
+Cc:     Stephane Eranian <eranian@google.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.4 04/56] hugetlbfs: on restore reserve error path retain subpool reservation
-Date:   Sat,  1 Jun 2019 09:25:08 -0400
-Message-Id: <20190601132600.27427-4-sashal@kernel.org>
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, jolsa@redhat.com,
+        kan.liang@intel.com, vincent.weaver@maine.edu,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 10/56] perf/x86/intel: Allow PEBS multi-entry in watermark mode
+Date:   Sat,  1 Jun 2019 09:25:14 -0400
+Message-Id: <20190601132600.27427-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132600.27427-1-sashal@kernel.org>
 References: <20190601132600.27427-1-sashal@kernel.org>
@@ -65,80 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Kravetz <mike.kravetz@oracle.com>
+From: Stephane Eranian <eranian@google.com>
 
-[ Upstream commit 0919e1b69ab459e06df45d3ba6658d281962db80 ]
+[ Upstream commit c7a286577d7592720c2f179aadfb325a1ff48c95 ]
 
-When a huge page is allocated, PagePrivate() is set if the allocation
-consumed a reservation.  When freeing a huge page, PagePrivate is checked.
-If set, it indicates the reservation should be restored.  PagePrivate
-being set at free huge page time mostly happens on error paths.
+This patch fixes a restriction/bug introduced by:
 
-When huge page reservations are created, a check is made to determine if
-the mapping is associated with an explicitly mounted filesystem.  If so,
-pages are also reserved within the filesystem.  The default action when
-freeing a huge page is to decrement the usage count in any associated
-explicitly mounted filesystem.  However, if the reservation is to be
-restored the reservation/use count within the filesystem should not be
-decrementd.  Otherwise, a subsequent page allocation and free for the same
-mapping location will cause the file filesystem usage to go 'negative'.
+   583feb08e7f7 ("perf/x86/intel: Fix handling of wakeup_events for multi-entry PEBS")
 
-Filesystem                         Size  Used Avail Use% Mounted on
-nodev                              4.0G -4.0M  4.1G    - /opt/hugepool
+The original patch prevented using multi-entry PEBS when wakeup_events != 0.
+However given that wakeup_events is part of a union with wakeup_watermark, it
+means that in watermark mode, PEBS multi-entry is also disabled which is not the
+intent. This patch fixes this by checking is watermark mode is enabled.
 
-To fix, when freeing a huge page do not adjust filesystem usage if
-PagePrivate() is set to indicate the reservation should be restored.
-
-I did not cc stable as the problem has been around since reserves were
-added to hugetlbfs and nobody has noticed.
-
-Link: http://lkml.kernel.org/r/20190328234704.27083-2-mike.kravetz@oracle.com
-Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
-Reviewed-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: jolsa@redhat.com
+Cc: kan.liang@intel.com
+Cc: vincent.weaver@maine.edu
+Fixes: 583feb08e7f7 ("perf/x86/intel: Fix handling of wakeup_events for multi-entry PEBS")
+Link: http://lkml.kernel.org/r/20190514003400.224340-1-eranian@google.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/hugetlb.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+ arch/x86/kernel/cpu/perf_event_intel.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 324b2953e57e9..0357ad53af368 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -1221,12 +1221,23 @@ void free_huge_page(struct page *page)
- 	ClearPagePrivate(page);
+diff --git a/arch/x86/kernel/cpu/perf_event_intel.c b/arch/x86/kernel/cpu/perf_event_intel.c
+index 325ed90511cff..3572434a73cb7 100644
+--- a/arch/x86/kernel/cpu/perf_event_intel.c
++++ b/arch/x86/kernel/cpu/perf_event_intel.c
+@@ -2513,7 +2513,7 @@ static int intel_pmu_hw_config(struct perf_event *event)
+ 		return ret;
  
- 	/*
--	 * A return code of zero implies that the subpool will be under its
--	 * minimum size if the reservation is not restored after page is free.
--	 * Therefore, force restore_reserve operation.
-+	 * If PagePrivate() was set on page, page allocation consumed a
-+	 * reservation.  If the page was associated with a subpool, there
-+	 * would have been a page reserved in the subpool before allocation
-+	 * via hugepage_subpool_get_pages().  Since we are 'restoring' the
-+	 * reservtion, do not call hugepage_subpool_put_pages() as this will
-+	 * remove the reserved page from the subpool.
- 	 */
--	if (hugepage_subpool_put_pages(spool, 1) == 0)
--		restore_reserve = true;
-+	if (!restore_reserve) {
-+		/*
-+		 * A return code of zero implies that the subpool will be
-+		 * under its minimum size if the reservation is not restored
-+		 * after page is free.  Therefore, force restore_reserve
-+		 * operation.
-+		 */
-+		if (hugepage_subpool_put_pages(spool, 1) == 0)
-+			restore_reserve = true;
-+	}
- 
- 	spin_lock(&hugetlb_lock);
- 	clear_page_huge_active(page);
+ 	if (event->attr.precise_ip) {
+-		if (!(event->attr.freq || event->attr.wakeup_events)) {
++		if (!(event->attr.freq || (event->attr.wakeup_events && !event->attr.watermark))) {
+ 			event->hw.flags |= PERF_X86_EVENT_AUTO_RELOAD;
+ 			if (!(event->attr.sample_type &
+ 			      ~intel_pmu_free_running_flags(event)))
 -- 
 2.20.1
 
