@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F7AC28CC4
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:36:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A3AC28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B0F627596
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:36:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD78627587
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:36:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396172;
-	bh=Zym5nfYQabsOu0HM7LG3ClqZmIZ9QL9KNpVc6EOKBj8=;
+	s=default; t=1559396183;
+	bh=LKSwLnv5hy1MPp67Vl7ZcvLXUVpoIKpAXmhCwEF4sIg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IrTZW2MgbOBtP6gt2rqjwNP6hDlclyCNaOUWohgyHWbNqGivrn0BurEDMx56uJ6Np
-	 f4zFFEiDO4XxZqd45acxNVWiKVvZVkpeJooRkBkQg7ansv869EpwKWNyhgHIzTDrox
-	 V/kytPBvTwUCt9van36UvEM2DvsNQh6Qpx7CdfGM=
+	b=Vy2+9RlxvztUOQhf33gjfsdIgDRpjWfzUfFCFGkWwc05q2tVLhdpnSYcWBmZlN/Qq
+	 lNf6LzZUepW4HdJgOT2MdcTUoDDzn+guBPa1r6oy1C6qPqf2VymRn8JgL7KdN+jrDy
+	 AonHYSsT5KnzfkSwGAXPYQ3lgTOO2sb9nrC562LQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728616AbfFANXB (ORCPT
+        id S1729025AbfFANgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:23:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52672 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:36:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728856AbfFANW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:22:58 -0400
+        id S1727633AbfFANWv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:22:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA0482613B;
-        Sat,  1 Jun 2019 13:22:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8B632613B;
+        Sat,  1 Jun 2019 13:22:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395377;
-        bh=Zym5nfYQabsOu0HM7LG3ClqZmIZ9QL9KNpVc6EOKBj8=;
+        s=default; t=1559395370;
+        bh=LKSwLnv5hy1MPp67Vl7ZcvLXUVpoIKpAXmhCwEF4sIg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T2gOzwIeeK4tCdC7VsqcZpzGqO6iKDiqyGXYZNx2UhOreknIzqyrDDjuCv9LJONja
-         lkm+dg0VFjlcb9Me/fjTAFFWJb1eqrwX0xOw0sQjKrICyPAGsjeEj0NFZ7hZ4Gm2FZ
-         jEjYq2ln6XPDgrexYzECpXpt25AhOvJKJLq9s5RM=
+        b=gUBDmPzh5s/DqLdxxV6hq//G2Lk2ogCfIeEVZsglfiVMSGAgNa6fxX64/9s8jldFo
+         wazU7R8Vic7IcvWx1kK3x6PCaPIxFzwm/pSKAZOnhFvuCOwHFwjZeTALoOGvvNQP51
+         wf+TNlLVnj/7myxVl1Z+cYQDfexNBEoztzU20+i8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matt Redfearn <matt.redfearn@thinci.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 025/141] drm/bridge: adv7511: Fix low refresh rate selection
-Date:   Sat,  1 Jun 2019 09:20:01 -0400
-Message-Id: <20190601132158.25821-25-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 022/141] mfd: twl6040: Fix device init errors for ACCCTL register
+Date:   Sat,  1 Jun 2019 09:19:58 -0400
+Message-Id: <20190601132158.25821-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132158.25821-1-sashal@kernel.org>
 References: <20190601132158.25821-1-sashal@kernel.org>
@@ -61,49 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Redfearn <matt.redfearn@thinci.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 67793bd3b3948dc8c8384b6430e036a30a0ecb43 ]
+[ Upstream commit 48171d0ea7caccf21c9ee3ae75eb370f2a756062 ]
 
-The driver currently sets register 0xfb (Low Refresh Rate) based on the
-value of mode->vrefresh. Firstly, this field is specified to be in Hz,
-but the magic numbers used by the code are Hz * 1000. This essentially
-leads to the low refresh rate always being set to 0x01, since the
-vrefresh value will always be less than 24000. Fix the magic numbers to
-be in Hz.
-Secondly, according to the comment in drm_modes.h, the field is not
-supposed to be used in a functional way anyway. Instead, use the helper
-function drm_mode_vrefresh().
+I noticed that we can get a -EREMOTEIO errors on at least omap4 duovero:
 
-Fixes: 9c8af882bf12 ("drm: Add adv7511 encoder driver")
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Matt Redfearn <matt.redfearn@thinci.com>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190424132210.26338-1-matt.redfearn@thinci.com
+twl6040 0-004b: Failed to write 2d = 19: -121
+
+And then any following register access will produce errors.
+
+There 2d offset above is register ACCCTL that gets written on twl6040
+powerup. With error checking added to the related regcache_sync() call,
+the -EREMOTEIO error is reproducable on twl6040 powerup at least
+duovero.
+
+To fix the error, we need to wait until twl6040 is accessible after the
+powerup. Based on tests on omap4 duovero, we need to wait over 8ms after
+powerup before register write will complete without failures. Let's also
+make sure we warn about possible errors too.
+
+Note that we have twl6040_patch[] reg_sequence with the ACCCTL register
+configuration and regcache_sync() will write the new value to ACCCTL.
+
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/mfd/twl6040.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-index 85c2d407a52e1..e7ddd3e3db920 100644
---- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-+++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-@@ -747,11 +747,11 @@ static void adv7511_mode_set(struct adv7511 *adv7511,
- 			vsync_polarity = 1;
- 	}
+diff --git a/drivers/mfd/twl6040.c b/drivers/mfd/twl6040.c
+index dd19f17a1b637..2b8c479dbfa6e 100644
+--- a/drivers/mfd/twl6040.c
++++ b/drivers/mfd/twl6040.c
+@@ -322,8 +322,19 @@ int twl6040_power(struct twl6040 *twl6040, int on)
+ 			}
+ 		}
  
--	if (mode->vrefresh <= 24000)
-+	if (drm_mode_vrefresh(mode) <= 24)
- 		low_refresh_rate = ADV7511_LOW_REFRESH_RATE_24HZ;
--	else if (mode->vrefresh <= 25000)
-+	else if (drm_mode_vrefresh(mode) <= 25)
- 		low_refresh_rate = ADV7511_LOW_REFRESH_RATE_25HZ;
--	else if (mode->vrefresh <= 30000)
-+	else if (drm_mode_vrefresh(mode) <= 30)
- 		low_refresh_rate = ADV7511_LOW_REFRESH_RATE_30HZ;
- 	else
- 		low_refresh_rate = ADV7511_LOW_REFRESH_RATE_NONE;
++		/*
++		 * Register access can produce errors after power-up unless we
++		 * wait at least 8ms based on measurements on duovero.
++		 */
++		usleep_range(10000, 12000);
++
+ 		/* Sync with the HW */
+-		regcache_sync(twl6040->regmap);
++		ret = regcache_sync(twl6040->regmap);
++		if (ret) {
++			dev_err(twl6040->dev, "Failed to sync with the HW: %i\n",
++				ret);
++			goto out;
++		}
+ 
+ 		/* Default PLL configuration after power up */
+ 		twl6040->pll = TWL6040_SYSCLK_SEL_LPPLL;
 -- 
 2.20.1
 
