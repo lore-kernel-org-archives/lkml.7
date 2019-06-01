@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1EDC28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91394C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C50E327194
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:32:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66D75217D4
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:32:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395955;
-	bh=CnYtyKFPz7zE+XtWLlfig+4Gu1FfBpSVh+Gp+ChrUo8=;
+	s=default; t=1559395961;
+	bh=WDEbsLFAiCl6ckqFCFT+twQVUD5HCY1sdQCo7AQCfjw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bt4AtaOZTGIlMc8LcfcDEnWrSaFUaApJvINmW2CRqIj2xRPoisM+m8QZKFgUj6C+U
-	 /tDFyOTAPvaTkJZf5U1u+9V9kgCUDC5Lo4RFmDfCvrmo8jFQtWF9d5s78lcjslyOfj
-	 3Xfw4oaKdgPs1ZHstiIXKXtJDGDZKz7eLTne6c50=
+	b=EQItHi4CDNblsLRs/vPMJwg63QMf2hU6pHNu3puNxyaX6nKYER8gsvOXwcDd9aPCR
+	 cfn+hVoBzVFDg6mbxfVhe0hQJUAmG+mJbzPmUvM0drlcFnuKSFZ6aiqJnTINfGJp7T
+	 jKfvijdiHhNZV90XHkF8YFpOMndts066aPIaCGbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbfFANYw (ORCPT
+        id S1728493AbfFANcj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:24:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54836 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:32:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729284AbfFANYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:24:43 -0400
+        id S1729318AbfFANYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:24:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8ED127358;
-        Sat,  1 Jun 2019 13:24:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F37D2738D;
+        Sat,  1 Jun 2019 13:24:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395482;
-        bh=CnYtyKFPz7zE+XtWLlfig+4Gu1FfBpSVh+Gp+ChrUo8=;
+        s=default; t=1559395489;
+        bh=WDEbsLFAiCl6ckqFCFT+twQVUD5HCY1sdQCo7AQCfjw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Aqa+FgyvAKqJ52SQUAFcSGmmOFmV5K10/PAcv3CfDug0xCeO5NV8clTftSehUP5ly
-         UsNQh9BDZShpIluMXjD8lIe3T3tCqslHxr9ytpomE5eQUjbfJWOy0YWS8fS7n3AesX
-         hNeAk/+XJgFHYwJv9FecaoGeW3+kCQVviqeM983Q=
+        b=d9VwLFcyjZWxcBynaFEj7jlZDuZP3ib4JtDRxJsVaMdnXyNyKXjr3L5hy490LvwBz
+         WxZGFUjJ2At6LAqxZNMRh4ea+igK02GwJiEce+ATxTjRwQucuo47G3x2LctCKoH+Dl
+         IDKJFqILRgjEqFcEujvS85ApuTcvBE8ZKccxZhVA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.14 27/99] f2fs: fix to avoid panic in do_recover_data()
-Date:   Sat,  1 Jun 2019 09:22:34 -0400
-Message-Id: <20190601132346.26558-27-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 33/99] configfs: fix possible use-after-free in configfs_register_group
+Date:   Sat,  1 Jun 2019 09:22:40 -0400
+Message-Id: <20190601132346.26558-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132346.26558-1-sashal@kernel.org>
 References: <20190601132346.26558-1-sashal@kernel.org>
@@ -59,78 +58,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 22d61e286e2d9097dae36f75ed48801056b77cac ]
+[ Upstream commit 35399f87e271f7cf3048eab00a421a6519ac8441 ]
 
-As Jungyeon reported in bugzilla:
+In configfs_register_group(), if create_default_group() failed, we
+forget to unlink the group. It will left a invalid item in the parent list,
+which may trigger the use-after-free issue seen below:
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203227
+BUG: KASAN: use-after-free in __list_add_valid+0xd4/0xe0 lib/list_debug.c:26
+Read of size 8 at addr ffff8881ef61ae20 by task syz-executor.0/5996
 
-- Overview
-When mounting the attached crafted image, following errors are reported.
-Additionally, it hangs on sync after trying to mount it.
+CPU: 1 PID: 5996 Comm: syz-executor.0 Tainted: G         C        5.0.0+ #5
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xa9/0x10e lib/dump_stack.c:113
+ print_address_description+0x65/0x270 mm/kasan/report.c:187
+ kasan_report+0x149/0x18d mm/kasan/report.c:317
+ __list_add_valid+0xd4/0xe0 lib/list_debug.c:26
+ __list_add include/linux/list.h:60 [inline]
+ list_add_tail include/linux/list.h:93 [inline]
+ link_obj+0xb0/0x190 fs/configfs/dir.c:759
+ link_group+0x1c/0x130 fs/configfs/dir.c:784
+ configfs_register_group+0x56/0x1e0 fs/configfs/dir.c:1751
+ configfs_register_default_group+0x72/0xc0 fs/configfs/dir.c:1834
+ ? 0xffffffffc1be0000
+ iio_sw_trigger_init+0x23/0x1000 [industrialio_sw_trigger]
+ do_one_initcall+0xbc/0x47d init/main.c:887
+ do_init_module+0x1b5/0x547 kernel/module.c:3456
+ load_module+0x6405/0x8c10 kernel/module.c:3804
+ __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
+ do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x462e99
+Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f494ecbcc58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
+RDX: 0000000000000000 RSI: 0000000020000180 RDI: 0000000000000003
+RBP: 00007f494ecbcc70 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f494ecbd6bc
+R13: 00000000004bcefa R14: 00000000006f6fb0 R15: 0000000000000004
 
-The image is intentionally fuzzed from a normal f2fs image for testing.
-Compile options for F2FS are as follows.
-CONFIG_F2FS_FS=y
-CONFIG_F2FS_STAT_FS=y
-CONFIG_F2FS_FS_XATTR=y
-CONFIG_F2FS_FS_POSIX_ACL=y
-CONFIG_F2FS_CHECK_FS=y
+Allocated by task 5987:
+ set_track mm/kasan/common.c:87 [inline]
+ __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:497
+ kmalloc include/linux/slab.h:545 [inline]
+ kzalloc include/linux/slab.h:740 [inline]
+ configfs_register_default_group+0x4c/0xc0 fs/configfs/dir.c:1829
+ 0xffffffffc1bd0023
+ do_one_initcall+0xbc/0x47d init/main.c:887
+ do_init_module+0x1b5/0x547 kernel/module.c:3456
+ load_module+0x6405/0x8c10 kernel/module.c:3804
+ __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
+ do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-- Reproduces
-mkdir test
-mount -t f2fs tmp.img test
-sync
+Freed by task 5987:
+ set_track mm/kasan/common.c:87 [inline]
+ __kasan_slab_free+0x130/0x180 mm/kasan/common.c:459
+ slab_free_hook mm/slub.c:1429 [inline]
+ slab_free_freelist_hook mm/slub.c:1456 [inline]
+ slab_free mm/slub.c:3003 [inline]
+ kfree+0xe1/0x270 mm/slub.c:3955
+ configfs_register_default_group+0x9a/0xc0 fs/configfs/dir.c:1836
+ 0xffffffffc1bd0023
+ do_one_initcall+0xbc/0x47d init/main.c:887
+ do_init_module+0x1b5/0x547 kernel/module.c:3456
+ load_module+0x6405/0x8c10 kernel/module.c:3804
+ __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
+ do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-- Messages
- kernel BUG at fs/f2fs/recovery.c:549!
- RIP: 0010:recover_data+0x167a/0x1780
- Call Trace:
-  f2fs_recover_fsync_data+0x613/0x710
-  f2fs_fill_super+0x1043/0x1aa0
-  mount_bdev+0x16d/0x1a0
-  mount_fs+0x4a/0x170
-  vfs_kern_mount+0x5d/0x100
-  do_mount+0x200/0xcf0
-  ksys_mount+0x79/0xc0
-  __x64_sys_mount+0x1c/0x20
-  do_syscall_64+0x43/0xf0
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+The buggy address belongs to the object at ffff8881ef61ae00
+ which belongs to the cache kmalloc-192 of size 192
+The buggy address is located 32 bytes inside of
+ 192-byte region [ffff8881ef61ae00, ffff8881ef61aec0)
+The buggy address belongs to the page:
+page:ffffea0007bd8680 count:1 mapcount:0 mapping:ffff8881f6c03000 index:0xffff8881ef61a700
+flags: 0x2fffc0000000200(slab)
+raw: 02fffc0000000200 ffffea0007ca4740 0000000500000005 ffff8881f6c03000
+raw: ffff8881ef61a700 000000008010000c 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
 
-During recovery, if ofs_of_node is inconsistent in between recovered
-node page and original checkpointed node page, let's just fail recovery
-instead of making kernel panic.
+Memory state around the buggy address:
+ ffff8881ef61ad00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff8881ef61ad80: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+>ffff8881ef61ae00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                               ^
+ ffff8881ef61ae80: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+ ffff8881ef61af00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: 5cf6a51e6062 ("configfs: allow dynamic group creation")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/recovery.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ fs/configfs/dir.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
-index 6ea445377767d..65a82c5bafcbe 100644
---- a/fs/f2fs/recovery.c
-+++ b/fs/f2fs/recovery.c
-@@ -445,7 +445,15 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
+diff --git a/fs/configfs/dir.c b/fs/configfs/dir.c
+index d2a1a79fa324b..d7955dc56737f 100644
+--- a/fs/configfs/dir.c
++++ b/fs/configfs/dir.c
+@@ -1755,12 +1755,19 @@ int configfs_register_group(struct config_group *parent_group,
  
- 	get_node_info(sbi, dn.nid, &ni);
- 	f2fs_bug_on(sbi, ni.ino != ino_of_node(page));
--	f2fs_bug_on(sbi, ofs_of_node(dn.node_page) != ofs_of_node(page));
+ 	inode_lock_nested(d_inode(parent), I_MUTEX_PARENT);
+ 	ret = create_default_group(parent_group, group);
+-	if (!ret) {
+-		spin_lock(&configfs_dirent_lock);
+-		configfs_dir_set_ready(group->cg_item.ci_dentry->d_fsdata);
+-		spin_unlock(&configfs_dirent_lock);
+-	}
++	if (ret)
++		goto err_out;
 +
-+	if (ofs_of_node(dn.node_page) != ofs_of_node(page)) {
-+		f2fs_msg(sbi->sb, KERN_WARNING,
-+			"Inconsistent ofs_of_node, ino:%lu, ofs:%u, %u",
-+			inode->i_ino, ofs_of_node(dn.node_page),
-+			ofs_of_node(page));
-+		err = -EFAULT;
-+		goto err;
-+	}
- 
- 	for (; start < end; start++, dn.ofs_in_node++) {
- 		block_t src, dest;
++	spin_lock(&configfs_dirent_lock);
++	configfs_dir_set_ready(group->cg_item.ci_dentry->d_fsdata);
++	spin_unlock(&configfs_dirent_lock);
++	inode_unlock(d_inode(parent));
++	return 0;
++err_out:
+ 	inode_unlock(d_inode(parent));
++	mutex_lock(&subsys->su_mutex);
++	unlink_group(group);
++	mutex_unlock(&subsys->su_mutex);
+ 	return ret;
+ }
+ EXPORT_SYMBOL(configfs_register_group);
 -- 
 2.20.1
 
