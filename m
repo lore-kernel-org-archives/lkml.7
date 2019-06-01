@@ -4,50 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B96A4C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:34:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09794C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 876AE2751A
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:34:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D81552751D
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:34:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396062;
-	bh=6bKgTT5gnfcJKsWHUTECbQrducSnrKEOJSsgdtKBWCw=;
+	s=default; t=1559396065;
+	bh=zGPXe6yKB8iHpDJBGyZgJ2inSNUo5k/VZIINshdLB9I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MJerhEC0y2DmeEWwVAxWvzXMi39p4usnElARzlkWIdxGjNruJcAkKJ3vIPGyIOqrC
-	 YNCafoA/Jb1Tk+DlKe3dP/B43aBttM56PCOXtVUwkikHX8BNWqfMcshv+xm125ZcCb
-	 8GCeAgiZqJa87TBckFNRYjS3RxbnXm5ZXhKJEaGo=
+	b=y2n0N0/aibN0TyufLAN96VdI+LW5dPwDtkqMD3VkGEFH9zz6fKvALanENJ88SIO9n
+	 +DoK6p41gnLjb8vtfa8Y/Y/ZzLULyzDOr236QxjldKL+YPmdqCigUZmowZ6allBXCK
+	 alpIfVkQRxH7U3fCpUlVnD7cUm7Z9uf/VD4GUrKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729431AbfFANeV (ORCPT
+        id S1729108AbfFANXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:34:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53726 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:23:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727672AbfFANXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:23:45 -0400
+        id S1727672AbfFANXm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:23:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF55927355;
-        Sat,  1 Jun 2019 13:23:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E55927336;
+        Sat,  1 Jun 2019 13:23:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395424;
-        bh=6bKgTT5gnfcJKsWHUTECbQrducSnrKEOJSsgdtKBWCw=;
+        s=default; t=1559395421;
+        bh=zGPXe6yKB8iHpDJBGyZgJ2inSNUo5k/VZIINshdLB9I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HAJBPlqqBJ3eBT6+nxNV4hAQKxGkwaqKYvfLQdxhx3NrSFdW8LOjujdwrjkinnr6A
-         P95SplnyGSoXSWZZ21/+9GZVklUS2bbeN2e7xc9H4s6XWaTJzDILQdkdK816k98TSz
-         SOoExu2fwWBZ3ykXpg/hlC0mdWbzmFweqr68WuY0=
+        b=YpXvjZf0fTIp9qSxq9NRoxkPzgn3LlGXgBTbX33K8VImzFMvyahpOJFTTk2LWUGKA
+         1jigkVOIwngi9JTFEUAXIvWtju9w5txqSO9DR5N/laHxgbEJ03sID0W4TOpz3s9lJk
+         OSJmVJEr1omIa/kGXSOGFhEFvF7xzYyXwiMhz2i4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Georg Hofmann <georg@hofmannsweb.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 056/141] watchdog: imx2_wdt: Fix set_timeout for big timeout values
-Date:   Sat,  1 Jun 2019 09:20:32 -0400
-Message-Id: <20190601132158.25821-56-sashal@kernel.org>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Juergen Gross <jgross@suse.com>,
+        Serge Semin <Sergey.Semin@t-platforms.ru>,
+        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 053/141] mips: Make sure dt memory regions are valid
+Date:   Sat,  1 Jun 2019 09:20:29 -0400
+Message-Id: <20190601132158.25821-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132158.25821-1-sashal@kernel.org>
 References: <20190601132158.25821-1-sashal@kernel.org>
@@ -60,41 +72,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Georg Hofmann <georg@hofmannsweb.com>
+From: Serge Semin <fancer.lancer@gmail.com>
 
-[ Upstream commit b07e228eee69601addba98b47b1a3850569e5013 ]
+[ Upstream commit 93fa5b280761a4dbb14c5330f260380385ab2b49 ]
 
-The documentated behavior is: if max_hw_heartbeat_ms is implemented, the
-minimum of the set_timeout argument and max_hw_heartbeat_ms should be used.
-This patch implements this behavior.
-Previously only the first 7bits were used and the input argument was
-returned.
+There are situations when memory regions coming from dts may be
+too big for the platform physical address space. This especially
+concerns XPA-capable systems. Bootloader may determine more than 4GB
+memory available and pass it to the kernel over dts memory node, while
+kernel is built without XPA/64BIT support. In this case the region
+may either simply be truncated by add_memory_region() method
+or by u64->phys_addr_t type casting. But in worst case the method
+can even drop the memory region if it exceeds PHYS_ADDR_MAX size.
+So lets make sure the retrieved from dts memory regions are valid,
+and if some of them aren't, just manually truncate them with a warning
+printed out.
 
-Signed-off-by: Georg Hofmann <georg@hofmannsweb.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Cc: Huacai Chen <chenhc@lemote.com>
+Cc: Stefan Agner <stefan@agner.ch>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Serge Semin <Sergey.Semin@t-platforms.ru>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/imx2_wdt.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/mips/kernel/prom.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/watchdog/imx2_wdt.c b/drivers/watchdog/imx2_wdt.c
-index 2b52514eaa86a..7e7bdcbbc741b 100644
---- a/drivers/watchdog/imx2_wdt.c
-+++ b/drivers/watchdog/imx2_wdt.c
-@@ -178,8 +178,10 @@ static void __imx2_wdt_set_timeout(struct watchdog_device *wdog,
- static int imx2_wdt_set_timeout(struct watchdog_device *wdog,
- 				unsigned int new_timeout)
+diff --git a/arch/mips/kernel/prom.c b/arch/mips/kernel/prom.c
+index 89950b7bf536b..bdaf3536241a2 100644
+--- a/arch/mips/kernel/prom.c
++++ b/arch/mips/kernel/prom.c
+@@ -41,7 +41,19 @@ char *mips_get_machine_name(void)
+ #ifdef CONFIG_USE_OF
+ void __init early_init_dt_add_memory_arch(u64 base, u64 size)
  {
--	__imx2_wdt_set_timeout(wdog, new_timeout);
-+	unsigned int actual;
- 
-+	actual = min(new_timeout, wdog->max_hw_heartbeat_ms * 1000);
-+	__imx2_wdt_set_timeout(wdog, actual);
- 	wdog->timeout = new_timeout;
- 	return 0;
+-	return add_memory_region(base, size, BOOT_MEM_RAM);
++	if (base >= PHYS_ADDR_MAX) {
++		pr_warn("Trying to add an invalid memory region, skipped\n");
++		return;
++	}
++
++	/* Truncate the passed memory region instead of type casting */
++	if (base + size - 1 >= PHYS_ADDR_MAX || base + size < base) {
++		pr_warn("Truncate memory region %llx @ %llx to size %llx\n",
++			size, base, PHYS_ADDR_MAX - base);
++		size = PHYS_ADDR_MAX - base;
++	}
++
++	add_memory_region(base, size, BOOT_MEM_RAM);
  }
+ 
+ int __init early_init_dt_reserve_memory_arch(phys_addr_t base,
 -- 
 2.20.1
 
