@@ -2,28 +2,27 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1EE0C28CC4
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 14:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E58D4C28CC4
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 14:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2E542702A
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 14:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF66524658
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 14:02:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbfFAOCh (ORCPT
+        id S1726853AbfFAOCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 10:02:37 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:54587 "EHLO
+        Sat, 1 Jun 2019 10:02:44 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:52767 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726143AbfFAOCa (ORCPT
+        with ESMTP id S1726634AbfFAOCm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 10:02:30 -0400
+        Sat, 1 Jun 2019 10:02:42 -0400
 Received: from orion.localdomain ([95.114.112.19]) by mrelayeu.kundenserver.de
  (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MS3vJ-1h8iCv3O8p-00TSvX; Sat, 01 Jun 2019 16:01:46 +0200
+ 1MuUrM-1gfeyh2gPS-00rU8U; Sat, 01 Jun 2019 16:01:45 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org, jdelvare@suse.com,
@@ -31,81 +30,37 @@ Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org, jdelvare@suse.com,
         martin.petersen@oracle.com, aacraid@microsemi.com,
         linux-pm@vger.kernel.org, linux-hwmon@vger.kernel.org,
         linux-scsi@vger.kernel.org
-Subject: [PATCH 2/3] drivers: scsi: remove unnecessary #ifdef MODULE
-Date:   Sat,  1 Jun 2019 16:01:39 +0200
-Message-Id: <1559397700-15585-3-git-send-email-info@metux.net>
+Subject: remove unneeded #ifdef MODULE
+Date:   Sat,  1 Jun 2019 16:01:37 +0200
+Message-Id: <1559397700-15585-1-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1559397700-15585-1-git-send-email-info@metux.net>
-References: <1559397700-15585-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:g52S7+6K+q7a6APcfLktQhtu6ysHVyU98fi+mu/EcNS2n+TBuZt
- a8WSpwzjfTZQh17F+xrRcraDx578GIi1tpiQ/rZ6OhbFzrLYTScnlur1ZUSxWWt7MBmIFR2
- MECVgJKk8DrwvVZm0XgHMGOempAKuwdBeM/fVJ/EUlHMaf3O+9gpiIjNuKKsv3uberbFF6o
- 5crXOBT37nAt7QTHbw7Iw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:z05ZqzbJR2I=:xRzDes0nICf8as6QyE5kyp
- JRZUQd3TBI5k6cgFV4h0/rWxs8I+kKBTjpl3l8H0BiS6XTGo7AOBIyD2U6Po+mANLSoPDf5m0
- ErP/6ywGyTIB19Z4bN1RNaOYuqlLzsB0N6QMIZVJ8VT1Dw0vzp6xOyATN7MKXHnvNNc/PtL02
- jfnv/ks80t8drbIvWpxKUaiCEUEiK+Up6nLUo2nNbIOPc0Es5/rJBPAennFdmtHr/o4XCTlsF
- n9yuG+DZ3zAwpAzOLK7bCSIAer9oSGtd37i1IJR2Qohd+sHBZ/rPzadtAufL/U2qCOSZtfaEu
- BrONKjeSgbRavmljSGskd3VqIMQfAaqNPIfaNzq6Wm9HXSKUu76BBtgeHfGLJDUeNzATSxelX
- U+I3Qrb5XSZQGNGTWf6VbsV80jByhlpIwMQzaJv2cFc4cRzTEi8x95D8BGQ3yAZwp7F/Pj3El
- qLAYf2ZaPjBBTLSDbKt4TQU/TXO7E5UGLOaplyhwxwFNMfjPmQUuH9ftO1aoMJ3TiW1aMUnGc
- x2pgfQb2qRU+TIsQ3n5mlrMiVMgZjd4sFAq90zQ7uXeo4hHnE1wdqc4UFK55EA9pcEvx7Zj+H
- ryawlrQnliSamCk5wtFS81Q8x/0C01o0V6tADTjV7DorTn2EFs9AYQdUPyLmsjhZmZ15CyoIz
- Mx18H6Qy8x0prwveBbO/1UroNMcUQmAxBDyzUqphtvSjzIujtaWmXrhfECYq7uLHg7s6Q1Nan
- oAnwhjy7dsHuHOyE32xYfP/gGOUAhWyw+8Q6qQ==
+X-Provags-ID: V03:K1:hGTgP1y7zY+DVXA/rOYqRPbljVCiVHRqPra8wSw4Lkfo1xHjwNn
+ eK9ZzEYzFoatUXTklAva012EmlLrpLSb5plOGiEEGxCWI39nTOi/JdUF5xvW8bmZeubpcSc
+ xc8pnImbQFOUGhhWZLVGngY7hE7GncvcAlxymgO3klVT6wdQkYncmMKsMOeeuEsQKS0QShc
+ StwfyiM1ZO9f+Gk1pPJCg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:d0/aFr6L5/Q=:dJYAEC1kzUKCKAKaj1w7ME
+ FSAvSirVALQTSLvxpmanuY0cyWrJUEcUF64D/ArKTxkOK9sw2FxEmipp29+ADmoAMKkAxUSWM
+ VlUckQ3W5mhQCPS4OG22rHvGAZRHAGVGC58h3bOQJVCcg7r3c9ZaH3MFIswYfqDg39zG0919Y
+ H6oRs1tUaGqdL6Xy9zaStkgTtFHs7hOeIlGU17FEpdA4wQQFxyihmCcKhIDooSxeJBeDOE5xW
+ svi/gvFfIWe/QO8LpJyCyp9FMnHg47NcutYWxd5yvDyXdrS+73TWw/aOiWkg2VZiVCQs8Gcoy
+ q9H27W7399HD88fTcZBIv7uyWmk9dODuqr1PoJ0NAgBnEWnS1uYisLZ+QN8oJKlBSa/EgKyn3
+ OyScGXWW/H0E4OkggsSp6DVYsn1KPBQXKEt+zTO2lTrHdFiqisk24EfmeMrSqSrWcY7CIvHFe
+ kJHhQZ+TiS5EXEACMa/24cIN9Rz5U7L8RmmY3FXdEL1nvmP0zlBlRFXPdWQn9zvxPFLDksBfU
+ m1uVq6R/tOm6U3rkF+qAB7lOIkI5nbN4B5JH3y0XFQF5sJRG5ooKitxAjLNEFhWryzGiHij4h
+ 5zp4maKCCbi83lNTcfG9AS2VdVUzpSyH8jqtOVUO0G9elkHJCIRrVR3bwE/49TXOcBB+WQ+MI
+ GVtfS40Gbg/noJkoNf3q6cdxwX545eiBElw20LPpVnpLl8a1ZHpDU7CMANVsa/epfhWqPgh3U
+ Uy4qF0JDswsG9vefLymMZZohFAAWJpuiTzibPw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The MODULE_DEVICE_TABLE() macro already checks for MODULE defined,
-so the extra check here is not necessary.
+Hi folks,
 
-Signed-off-by: Enrico Weigelt <info@metux.net>
----
- drivers/scsi/BusLogic.c | 2 --
- drivers/scsi/dpt_i2o.c  | 3 ---
- 2 files changed, 5 deletions(-)
+here're some patches that remove some (IMHO) unncessary cases of #ifdef MODULE
+These basically switch off calls to MODULE_DEVICE_TABLE() macro, which already
+checks for MODULE symbol on its own.
 
-diff --git a/drivers/scsi/BusLogic.c b/drivers/scsi/BusLogic.c
-index e41e51f..68cc68b 100644
---- a/drivers/scsi/BusLogic.c
-+++ b/drivers/scsi/BusLogic.c
-@@ -3893,7 +3893,6 @@ static void __exit blogic_exit(void)
- 
- __setup("BusLogic=", blogic_setup);
- 
--#ifdef MODULE
- /*static struct pci_device_id blogic_pci_tbl[] = {
- 	{ PCI_VENDOR_ID_BUSLOGIC, PCI_DEVICE_ID_BUSLOGIC_MULTIMASTER,
- 	  PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0},
-@@ -3909,7 +3908,6 @@ static void __exit blogic_exit(void)
- 	{PCI_DEVICE(PCI_VENDOR_ID_BUSLOGIC, PCI_DEVICE_ID_BUSLOGIC_FLASHPOINT)},
- 	{0, },
- };
--#endif
- MODULE_DEVICE_TABLE(pci, blogic_pci_tbl);
- 
- module_init(blogic_init);
-diff --git a/drivers/scsi/dpt_i2o.c b/drivers/scsi/dpt_i2o.c
-index abc74fd..9b28f9f 100644
---- a/drivers/scsi/dpt_i2o.c
-+++ b/drivers/scsi/dpt_i2o.c
-@@ -177,14 +177,11 @@ static u8 adpt_read_blink_led(adpt_hba* host)
-  *============================================================================
-  */
- 
--#ifdef MODULE
- static struct pci_device_id dptids[] = {
- 	{ PCI_DPT_VENDOR_ID, PCI_DPT_DEVICE_ID, PCI_ANY_ID, PCI_ANY_ID,},
- 	{ PCI_DPT_VENDOR_ID, PCI_DPT_RAPTOR_DEVICE_ID, PCI_ANY_ID, PCI_ANY_ID,},
- 	{ 0, }
- };
--#endif
--
- MODULE_DEVICE_TABLE(pci,dptids);
- 
- static int adpt_detect(struct scsi_host_template* sht)
--- 
-1.9.1
+have fun
+--mtx 
 
