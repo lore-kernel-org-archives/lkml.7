@@ -4,55 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86951C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41CF4C28CC4
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51FFD272D8
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:20:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BC51272E3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:20:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395234;
-	bh=8MS0V5tPfk/9WGLTQwnoxCLz2GwEAguIF5tSrT/drqE=;
+	s=default; t=1559395237;
+	bh=EUByx5zh2wrCSnE7Ofwl6VCrs/EpHhNJjFD4fe7H9YE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y5lyMxqDNalUaoeDIvMbUClFARgSuI4XeGSlSfpXq4oq60uMNYO8N3CoOMJRzWM6A
-	 4ZLLyMrsrrpClcNPlBPI2qu2UZi9OVhCam1vZ/81zSFJhjQ1d2EBQH9gq6h2sxIViZ
-	 soEBX6V+8GdB41VfozdPjG9xnGGWoGF5+DWrJbmI=
+	b=uYBALOnvGNYQvwhopvaBmZAXI7VLy3xWXGnodxAc1YHa4Ea5hJE9jfXhIVXvW7/lh
+	 kIfgpyGZ2mELdQYrurow/7ndyf3d1rPV5HF8GioYww63qX+H7lQlFAv2sEN9pqN9TL
+	 pwIADc05CjXOQFkSnZoraOT9/nB9+ccVsBBcUOhE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728320AbfFANUc (ORCPT
+        id S1728331AbfFANUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:20:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47572 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:20:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727545AbfFANUY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:20:24 -0400
+        id S1728306AbfFANU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:20:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CC5C272E2;
-        Sat,  1 Jun 2019 13:20:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63616272D8;
+        Sat,  1 Jun 2019 13:20:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395223;
-        bh=8MS0V5tPfk/9WGLTQwnoxCLz2GwEAguIF5tSrT/drqE=;
+        s=default; t=1559395226;
+        bh=EUByx5zh2wrCSnE7Ofwl6VCrs/EpHhNJjFD4fe7H9YE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dNc+7XlDcA2JYbC6KZ/I/xj1hJrjcpa3D2wRfbTGVtLa21hrYFTtv5ghMM5dZ0xx6
-         nEylOu6zdU0JijeU7japd+L0yHy/WSuBZplmhjiQjncMEVB7Odiqs1mwIbJoSzfh98
-         YVTPU8eICJuW0CC79Sl3NDxygbSdXuodQm3RF9Ck=
+        b=PC4TMuvxpsn1Iut01aZ0g5gJVIX07fLCy5uxU+UE6MSXCYcLRPoi6qTdirtQiq3nB
+         g7YdCw6mcq2fdOyP9NDhEV6prsZLfhbv8euq+y7EYprh7hpfgWDznuxVwuDNpCSbsj
+         E3uGeX2fEEHg4NclLyJiLRpiNlB578SiAppFKHF4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yue Hu <huyue2@yulong.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Steven Price <steven.price@arm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Russell King <linux@armlinux.org.uk>,
+        Will Deacon <will.deacon@arm.com>,
+        Guan Xuetao <gxt@pku.edu.cn>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 5.0 014/173] mm/cma.c: fix crash on CMA allocation if bitmap allocation fails
-Date:   Sat,  1 Jun 2019 09:16:46 -0400
-Message-Id: <20190601131934.25053-14-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 015/173] initramfs: free initrd memory if opening /initrd.image fails
+Date:   Sat,  1 Jun 2019 09:16:47 -0400
+Message-Id: <20190601131934.25053-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131934.25053-1-sashal@kernel.org>
 References: <20190601131934.25053-1-sashal@kernel.org>
@@ -65,44 +68,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yue Hu <huyue2@yulong.com>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 1df3a339074e31db95c4790ea9236874b13ccd87 ]
+[ Upstream commit 54c7a8916a887f357088f99e9c3a7720cd57d2c8 ]
 
-f022d8cb7ec7 ("mm: cma: Don't crash on allocation if CMA area can't be
-activated") fixes the crash issue when activation fails via setting
-cma->count as 0, same logic exists if bitmap allocation fails.
+Patch series "initramfs tidyups".
 
-Link: http://lkml.kernel.org/r/20190325081309.6004-1-zbestahu@gmail.com
-Signed-off-by: Yue Hu <huyue2@yulong.com>
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Laura Abbott <labbott@redhat.com>
-Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>
+I've spent some time chasing down behavior in initramfs and found
+plenty of opportunity to improve the code.  A first stab on that is
+contained in this series.
+
+This patch (of 7):
+
+We free the initrd memory for all successful or error cases except for the
+case where opening /initrd.image fails, which looks like an oversight.
+
+Steven said:
+
+: This also changes the behaviour when CONFIG_INITRAMFS_FORCE is enabled
+: - specifically it means that the initrd is freed (previously it was
+: ignored and never freed).  But that seems like reasonable behaviour and
+: the previous behaviour looks like another oversight.
+
+Link: http://lkml.kernel.org/r/20190213174621.29297-3-hch@lst.de
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Steven Price <steven.price@arm.com>
+Acked-by: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>	[arm64]
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>	[m68k]
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Guan Xuetao <gxt@pku.edu.cn>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/cma.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ init/initramfs.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/mm/cma.c b/mm/cma.c
-index f4f3a8a57d862..f160ce31ef469 100644
---- a/mm/cma.c
-+++ b/mm/cma.c
-@@ -106,8 +106,10 @@ static int __init cma_activate_area(struct cma *cma)
+diff --git a/init/initramfs.c b/init/initramfs.c
+index fca899622937f..ccc88aacc8649 100644
+--- a/init/initramfs.c
++++ b/init/initramfs.c
+@@ -612,13 +612,12 @@ static int __init populate_rootfs(void)
+ 		printk(KERN_INFO "Trying to unpack rootfs image as initramfs...\n");
+ 		err = unpack_to_rootfs((char *)initrd_start,
+ 			initrd_end - initrd_start);
+-		if (!err) {
+-			free_initrd();
++		if (!err)
+ 			goto done;
+-		} else {
+-			clean_rootfs();
+-			unpack_to_rootfs(__initramfs_start, __initramfs_size);
+-		}
++
++		clean_rootfs();
++		unpack_to_rootfs(__initramfs_start, __initramfs_size);
++
+ 		printk(KERN_INFO "rootfs image is not initramfs (%s)"
+ 				"; looks like an initrd\n", err);
+ 		fd = ksys_open("/initrd.image",
+@@ -632,7 +631,6 @@ static int __init populate_rootfs(void)
+ 				       written, initrd_end - initrd_start);
  
- 	cma->bitmap = kzalloc(bitmap_size, GFP_KERNEL);
- 
--	if (!cma->bitmap)
-+	if (!cma->bitmap) {
-+		cma->count = 0;
- 		return -ENOMEM;
-+	}
- 
- 	WARN_ON_ONCE(!pfn_valid(pfn));
- 	zone = page_zone(pfn_to_page(pfn));
+ 			ksys_close(fd);
+-			free_initrd();
+ 		}
+ 	done:
+ 		/* empty statement */;
+@@ -642,9 +640,9 @@ static int __init populate_rootfs(void)
+ 			initrd_end - initrd_start);
+ 		if (err)
+ 			printk(KERN_EMERG "Initramfs unpacking failed: %s\n", err);
+-		free_initrd();
+ #endif
+ 	}
++	free_initrd();
+ 	flush_delayed_fput();
+ 	return 0;
+ }
 -- 
 2.20.1
 
