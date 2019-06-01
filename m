@@ -2,85 +2,124 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DEAC28CC3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AACE8C28CC3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3B0F27044
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:01:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81CED27050
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:05:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kL/lYlFf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WNJY/3yW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbfFAABK (ORCPT
+        id S1726875AbfFAAFp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 20:01:10 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:44974 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726610AbfFAABJ (ORCPT
+        Fri, 31 May 2019 20:05:45 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36635 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726713AbfFAAFo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 20:01:09 -0400
-Received: by mail-lf1-f65.google.com with SMTP id r15so9236159lfm.11;
-        Fri, 31 May 2019 17:01:08 -0700 (PDT)
+        Fri, 31 May 2019 20:05:44 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v22so6895997wml.1
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 17:05:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=yKdvwn9RwsVp3ATSXapbe6ZW0aek57t8ojH7+ian7HM=;
-        b=kL/lYlFfJthahRmW8UDam8MACxdtYLAUTRKt4DilMNwK9KrzfJ58WAdyPV38esLCb2
-         zJ8538tu9N4Qk6rfPAzB+cl3gsk76G1vkfDUVUTb0LW441SNGEKRE1tQ1n1y/3rZDJ5L
-         Q5GmOgdpWUcz8nzMaVXDMydQsnUyaloQFx11y9lIMXlNyOb+HXPVBUwYq7RJKF6Kwpfp
-         R5axTB/E4JIlw+a5JbO+Gs7DjmeCN0BhwOjybvc81c/B4/QuiJW4LM9rkUGEaPj4TWUe
-         Wd+pyvuDGwPoP5Qo+wWtoTbpAuI3CD/+tANzbcndRz43iyun+CHf/E3pu6plNzdzHbi7
-         kb0A==
+        bh=q8wl8Ebr+tk3zdpRQhTbcjzF7wVJuwWPREKgkot9nSU=;
+        b=WNJY/3yWFpK+ZSv7Sxw4R3kUbleuB6gvBougV0etbg8DpJcU4ZBc5RQKwXJzf6ih8/
+         ihAgNSuoaYELwpfeBMVRfqiKXP1yormx16Tl5sx0yli8Qh3KuJTVHD/1L5r1KMvjlSkT
+         aqbw4BpqU2oYWkcmoEvoPDDG4jNuIAAs9VOHhM+i/9riLzEBzZA9AA0wkeCsY3Ebdj+s
+         wD88tcTcr4KudgeppRszfgbrcFEPUVvpSulgAfcl+gdeajNaTtSPnjuOTv1N+XeickCA
+         ML1DAXzB3sh80l02yfMPxJH6qXWtsNIhJI6z07eXniTB0Cj4V0UuZa09o9o0Qv68b44w
+         KANg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=yKdvwn9RwsVp3ATSXapbe6ZW0aek57t8ojH7+ian7HM=;
-        b=C8sx+87QN+POsM5LfiK1bNFYbSgbVxINMT7pSbSaQ4eSyhuohiaf6kZRTMHEd8nkTM
-         oeEVH8QO0V4J28WhvlAfore0QN9qz9pm5D9a0VSlobcftFEMtqHjRiniI2vxYGySqKmD
-         Ec4QsUat9UjLvZmWLQslc5tWZeV8FueQQlwHX+mlSFThqWoHCumI3nmBqAibfHgTJGtm
-         wbsRdwLmj+HbeauZZtsIT9czVqd4PvDn7PUMw8/OtvWCPnuB6CA1rhqXHZ/fe1bKjTpc
-         J58Mi/a2aGXqpwXd/5GOcCe0hO8v7xQKUjcCxjxfkvuy6oIwaHw4CL2x7TpAZHYdRO+A
-         X3Wg==
-X-Gm-Message-State: APjAAAVy6f++vmfsyPMrrAYVlqdjc5OoGrXLfuJe3iIY1AQuS1AQ/Xsc
-        d+q+efjjqpiVNb/U1nt8oM+jihQPM2UnZfmKXXk=
-X-Google-Smtp-Source: APXvYqznjO5XK58TWy6Smzmc/NgjZWLcWIv6IboQBhMU2TwYzgdkZQ4gZu6P+so9ZG43jy2N3EJq4LrdDcQHBrOvfHY=
-X-Received: by 2002:ac2:4252:: with SMTP id m18mr7059629lfl.100.1559347267743;
- Fri, 31 May 2019 17:01:07 -0700 (PDT)
+        bh=q8wl8Ebr+tk3zdpRQhTbcjzF7wVJuwWPREKgkot9nSU=;
+        b=fIn1qb7N0a4MBjR0ulIPQp2kx9Hoox8qxNfsE70y6Z7cxyQz17L35pHshbvlr3ZTfl
+         llKRyJDrdTWxZmx64ffyIC1vELYVx167xylHN9aSemBWlgzKWCzQ2IYkEDFsMswIAyt6
+         E/ktJvhf0WWzNW6fI/hYqyaMscKEIMrjTliWgQZGl4w1wP5HxIIvMPOIRXCI7/pdrJ6q
+         G/tGPMrDEwO7zS2EGkcnkWwSAe3almzeGdYuAnulzMn/8WJWPXmenVwGPcgLOINsKBgz
+         um/cxn4eS+KJaa7BTyzAlB/D5k9QHfj2rLugK0ABD/BLuL2IMNCVQoYIZo8cRgUUa0c5
+         878A==
+X-Gm-Message-State: APjAAAXIEJxQgxauyuLnOgQiPvDehq9+9RRs7KNhTHQURjckcWn4pVqW
+        WR7lOadEANSw3v+ziwneNQ58ZZTfNwMr+WurKPaU9w==
+X-Google-Smtp-Source: APXvYqx6IqRo6a9cOKueKjJoBvf6m40KnlPpQdf6c682eEXGzCyVjaUTixWO7j8FalDLH0+SUsUPfSsPHlP05rS3Z50=
+X-Received: by 2002:a1c:9a53:: with SMTP id c80mr1080859wme.173.1559347542656;
+ Fri, 31 May 2019 17:05:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190530010359.2499670-1-guro@fb.com>
-In-Reply-To: <20190530010359.2499670-1-guro@fb.com>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Fri, 31 May 2019 17:00:56 -0700
-Message-ID: <CAADnVQKCYDdP2xvmV4P38Ewh5YgyPnT-EV10oWrUpeCCJBrqcA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 0/5] bpf: bpf maps memory accounting cleanup
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        bpf <bpf@vger.kernel.org>, Kernel Team <kernel-team@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20190531234734.102842-1-john.stultz@linaro.org>
+ <20190531234734.102842-2-john.stultz@linaro.org> <20190531235302.GD25597@minitux>
+In-Reply-To: <20190531235302.GD25597@minitux>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Fri, 31 May 2019 17:05:30 -0700
+Message-ID: <CALAqxLXAdu63roX0WgXHqOwrr2dyJV+Oh06SSu8D+LqUOE3gng@mail.gmail.com>
+Subject: Re: [RFC][PATCH 2/2] reset: qcom-pon: Add support for gen2 pon
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Amit Pundir <amit.pundir@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-arm-msm@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 6:04 PM Roman Gushchin <guro@fb.com> wrote:
+On Fri, May 31, 2019 at 4:53 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
 >
-> During my work on memcg-based memory accounting for bpf maps
-> I've done some cleanups and refactorings of the existing
-> memlock rlimit-based code. It makes it more robust, unifies
-> size to pages conversion, size checks and corresponding error
-> codes. Also it adds coverage for cgroup local storage and
-> socket local storage maps.
+> On Fri 31 May 16:47 PDT 2019, John Stultz wrote:
 >
-> It looks like some preliminary work on the mm side might be
-> required to start working on the memcg-based accounting,
-> so I'm sending these patches as a separate patchset.
+> > Add support for gen2 pon register so "reboot bootloader" can
+> > work on pixel3 and db845.
+> >
+> > Cc: Andy Gross <agross@kernel.org>
+> > Cc: David Brown <david.brown@linaro.org>
+> > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > Cc: Amit Pundir <amit.pundir@linaro.org>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Sebastian Reichel <sre@kernel.org>
+> > Cc: linux-arm-msm@vger.kernel.org
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: John Stultz <john.stultz@linaro.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/pm8998.dtsi |  2 +-
+> >  drivers/power/reset/qcom-pon.c       | 15 ++++++++++++---
+> >  2 files changed, 13 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/pm8998.dtsi b/arch/arm64/boot/dts/qcom/pm8998.dtsi
+> > index d3ca35a940fb..051a52df80f9 100644
+> > --- a/arch/arm64/boot/dts/qcom/pm8998.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/pm8998.dtsi
+> > @@ -39,7 +39,7 @@
+> >               #size-cells = <0>;
+> >
+> >               pm8998_pon: pon@800 {
+> > -                     compatible = "qcom,pm8916-pon";
+> > +                     compatible = "qcom,pm8998-pon";
+> >
+> >                       reg = <0x800>;
+> >                       mode-bootloader = <0x2>;
+>
+> We want to take this through arm-soc and the rest through Sebastian's
+> tree, so please provide the dts update in a separate commit.
 
-Applied. Thanks
+Sure. I wasn't sure if tracking the change in a separate patch was
+worth it for such a trivial oneliner, but that's fine, I'll split it
+out.
+
+thanks for the review!
+-john
