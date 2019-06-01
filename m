@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C21B0C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 874B3C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9768D272B6
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:18:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53FFF27252
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:18:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395127;
-	bh=x8WusflpMqt/AQe0mDJsZNdB1mRr4/b8/mcpBhzwGKY=;
+	s=default; t=1559395132;
+	bh=2ccqYycJZZ1nnGUBwAj1VsJj0XgkSy4wHfISQDCsOJA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KvzRbZTh8O0mVLb1BL6NT/EY0UVxNkkzju25T4qUsmSmPxUVZY8PRF3Y8q2hk2FSk
-	 t3RNrgpj7uixQYW1VigoSe+s//TQM0tHJhMuDxAxEUcfDL7bgQEMRd/KcPhZIn5vHO
-	 PYx1/9l1DUx1zIduRigUp0H6ygu/fsRUy2fpLQOA=
+	b=gCVvrHS5i3n8dmIfzxQLpHI7NaNKZYWGACnA3wD5l7RgzGEXj1uLOjivF/7icKANm
+	 ghuK4GSq+URMetkVFWy4rcJOF5S3DvcBlhILAvzC+e/7t3NOC6GGx7bQ3ZOmPemoQM
+	 sSdGdVe1JdbpRmRljpwyp+HwH3L1z7T+0IMGB5M4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbfFANSq (ORCPT
+        id S1727977AbfFANSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:18:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45786 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:18:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727902AbfFANSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:18:43 -0400
+        id S1727902AbfFANSr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:18:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2508327252;
-        Sat,  1 Jun 2019 13:18:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FE40272AA;
+        Sat,  1 Jun 2019 13:18:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395122;
-        bh=x8WusflpMqt/AQe0mDJsZNdB1mRr4/b8/mcpBhzwGKY=;
+        s=default; t=1559395127;
+        bh=2ccqYycJZZ1nnGUBwAj1VsJj0XgkSy4wHfISQDCsOJA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hZt7Ej9n3oRq/kFiwtHeKqEPHGO23nF0lECG5GWswn7DtJ3siOZJ27QpzziDwJsoU
-         6kichbp/nXUUT8dlOe1R0S9eZONlIjq3k+cfyOtN478lySk4vmZnV//OioLydXshcO
-         SQlHG3Wa1PTT20KgTjtn2XnQfHLst2NhBGjEAUoM=
+        b=akIQDe8alKtbqkuYt/YLqeOa6zmt81m5Kk0CsB4KMIyPHOD4tvW8XXn0avCBXqvKD
+         0go1OnNbZWvmEcvfMXqpaBf/ezeer6HrX4cL+UjEdMWdtQWp04in6SksBrOjzZnVXa
+         llzfXU7oTgS4C3Fm9oMRLaW613qyV5T8q/iFt9kk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
         linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.1 046/186] f2fs: fix to avoid panic in f2fs_remove_inode_page()
-Date:   Sat,  1 Jun 2019 09:14:22 -0400
-Message-Id: <20190601131653.24205-46-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 050/186] f2fs: fix to use inline space only if inline_xattr is enable
+Date:   Sat,  1 Jun 2019 09:14:26 -0400
+Message-Id: <20190601131653.24205-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131653.24205-1-sashal@kernel.org>
 References: <20190601131653.24205-1-sashal@kernel.org>
@@ -61,76 +61,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 8b6810f8acfe429fde7c7dad4714692cc5f75651 ]
+[ Upstream commit 622927f3b8809206f6da54a6a7ed4df1a7770fce ]
 
-As Jungyeon reported in bugzilla:
+With below mkfs and mount option:
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203219
+MKFS_OPTIONS  -- -O extra_attr -O project_quota -O inode_checksum -O flexible_inline_xattr -O inode_crtime -f
+MOUNT_OPTIONS -- -o noinline_xattr
 
-- Overview
-When mounting the attached crafted image and running program, I got this error.
-Additionally, it hangs on sync after running the program.
+We may miss xattr data with below testcase:
+- mkdir dir
+- setfattr -n "user.name" -v 0 dir
+- for ((i = 0; i < 190; i++)) do touch dir/$i; done
+- umount
+- mount
+- getfattr -n "user.name" dir
 
-The image is intentionally fuzzed from a normal f2fs image for testing and I enabled option CONFIG_F2FS_CHECK_FS on.
+user.name: No such attribute
 
-- Reproduces
-cc poc_06.c
-mkdir test
-mount -t f2fs tmp.img test
-cp a.out test
-cd test
-sudo ./a.out
-sync
+The root cause is that we persist xattr data into reserved inline xattr
+space, even if inline_xattr is not enable in inline directory inode, after
+inline dentry conversion, reserved space no longer exists, so that xattr
+data missed.
 
-- Messages
- kernel BUG at fs/f2fs/node.c:1183!
- RIP: 0010:f2fs_remove_inode_page+0x294/0x2d0
- Call Trace:
-  f2fs_evict_inode+0x2a3/0x3a0
-  evict+0xba/0x180
-  __dentry_kill+0xbe/0x160
-  dentry_kill+0x46/0x180
-  dput+0xbb/0x100
-  do_renameat2+0x3c9/0x550
-  __x64_sys_rename+0x17/0x20
-  do_syscall_64+0x43/0xf0
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Let's use inline xattr space only if inline_xattr flag is set on inode
+to fix this iusse.
 
-The reason is f2fs_remove_inode_page() will trigger kernel panic due to
-inconsistent i_blocks value of inode.
-
-To avoid panic, let's just print debug message and set SBI_NEED_FSCK to
-give a hint to fsck for latter repairing of potential image corruption.
-
+Fixes: 6afc662e68b5 ("f2fs: support flexible inline xattr size")
 Signed-off-by: Chao Yu <yuchao0@huawei.com>
-[Jaegeuk Kim: fix build warning and add unlikely]
 Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/node.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ fs/f2fs/f2fs.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-index 3f99ab2886955..d45ecef751165 100644
---- a/fs/f2fs/node.c
-+++ b/fs/f2fs/node.c
-@@ -1179,8 +1179,14 @@ int f2fs_remove_inode_page(struct inode *inode)
- 		f2fs_put_dnode(&dn);
- 		return -EIO;
- 	}
--	f2fs_bug_on(F2FS_I_SB(inode),
--			inode->i_blocks != 0 && inode->i_blocks != 8);
-+
-+	if (unlikely(inode->i_blocks != 0 && inode->i_blocks != 8)) {
-+		f2fs_msg(F2FS_I_SB(inode)->sb, KERN_WARNING,
-+			"Inconsistent i_blocks, ino:%lu, iblocks:%llu",
-+			inode->i_ino,
-+			(unsigned long long)inode->i_blocks);
-+		set_sbi_flag(F2FS_I_SB(inode), SBI_NEED_FSCK);
-+	}
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 74f06f12110f1..10240fbdd396d 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -2579,7 +2579,9 @@ static inline void *inline_xattr_addr(struct inode *inode, struct page *page)
  
- 	/* will put inode & node pages */
- 	err = truncate_node(&dn);
+ static inline int inline_xattr_size(struct inode *inode)
+ {
+-	return get_inline_xattr_addrs(inode) * sizeof(__le32);
++	if (f2fs_has_inline_xattr(inode))
++		return get_inline_xattr_addrs(inode) * sizeof(__le32);
++	return 0;
+ }
+ 
+ static inline int f2fs_has_inline_data(struct inode *inode)
 -- 
 2.20.1
 
