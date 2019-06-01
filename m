@@ -2,123 +2,159 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 457DCC04AB6
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F33C28CC2
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14F992708E
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:29:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9B0C2708F
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:31:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g7AQ2p/R"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fFR8Yoea"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbfFAA3D (ORCPT
+        id S1726985AbfFAAbZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 20:29:03 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:36019 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbfFAA3C (ORCPT
+        Fri, 31 May 2019 20:31:25 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:46350 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726748AbfFAAbZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 20:29:02 -0400
-Received: by mail-ed1-f68.google.com with SMTP id a8so17117734edx.3
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 17:29:01 -0700 (PDT)
+        Fri, 31 May 2019 20:31:25 -0400
+Received: by mail-ua1-f65.google.com with SMTP id a95so4479225uaa.13
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 17:31:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JNA+M2HNg5wC58bq9MZMCh6YyzsCVe0fiW59+AoI+uk=;
-        b=g7AQ2p/RBhEEwukGt++EPQDzHYe3xAanZFkwZbDE2W/aOJnnVSHjYYJyumy9E3fGIK
-         MOYIQP5P9hNJ/8I6BMNJauiYurLi7++SWUKkh10Q0nWDqa9uayZhElnX4el7hGmqoNvQ
-         U7uDj2Hrst9GJYcVKnfWPPlSLGRmh66qyJC8yFR3EgO6/8uK/fwbLtw2klXXCQaeRD8/
-         cAOBe+wMbSvjmTJrdxom7WKJ/rNw/wJEXVVro9JNLuP15MDMgzMFcESSm4cOTSUSbSKn
-         h8IjqqdAea5IqczJoAirb11KMsrKfU/IZIVZODIfcvwgHHbdNwEoNCf5v/lUFY04XvUp
-         O2sw==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4Kd7/+kr4jxVkBeK6chb/uAQy3afbVih/qTqLzH6YXg=;
+        b=fFR8Yoeaj7rQIWQWlq5wNouI2OAxcAVIV3ViDHmGepDRlaAgLcyqpr8Iz7xvqv9yY5
+         KJmkoV7EiKoPljy47wPqBEY60yV3btg78qOiRyIpUHSX0g63rNFdXWGeuMwWQMMpOOh2
+         a4i5ZjgFDQtwHDCayYIL8rsqq5gfw9tPM6UkI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JNA+M2HNg5wC58bq9MZMCh6YyzsCVe0fiW59+AoI+uk=;
-        b=oKIR9DKWWLdoAEmUG9P01q/THR+GNtNVQgatyEZtGydU3Q8b3FVnN1zalthuX/8kx/
-         gAtDk6/1cu2JwBrg9UWUqoi7/B30a0FjAv9iC+0aylW1/2ikEcuRStv4JhSoSfQGoRzX
-         rJKL8KrKohzjIAcBPMNFu+E8zgdZpW+IE1HY8SUHoRKZKrh0qDQ6oe1PeU4XkbqEJ33e
-         ZHzujwu3oYWSyUtdA4EiDD6LVm16rdm9qnCmg1CzFBNToFcaqpFlK8hMEACd17ouGF/B
-         SU8z3qM+54Gdqw99HxnTaRI9tB/ySISDte1LFF4JPsUKY4a1X5WStloOA6xFKGAGA0lm
-         9gyw==
-X-Gm-Message-State: APjAAAWSw5NpQNtK5F62Riy1fcnUoct5ZR+Q4GGTc9kxIrynvETVJqxm
-        zJKZ/N9daGy6aDAThTV+A+Q=
-X-Google-Smtp-Source: APXvYqyjHBP6Ky2mspUst454rSxki3hW4y23rkcxYomBYUoZjYnk+QD/AlcwIriW+0mzpinwEfLa/w==
-X-Received: by 2002:a50:bb24:: with SMTP id y33mr14611589ede.116.1559348940661;
-        Fri, 31 May 2019 17:29:00 -0700 (PDT)
-Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
-        by smtp.gmail.com with ESMTPSA id h20sm1244729eja.37.2019.05.31.17.28.59
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 31 May 2019 17:29:00 -0700 (PDT)
-Date:   Fri, 31 May 2019 17:28:58 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Stefan Agner <stefan@agner.ch>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] ARM: xor-neon: Replace __GNUC__ checks with
- CONFIG_CC_IS_GCC
-Message-ID: <20190601002858.GA89184@archlinux-epyc>
-References: <20190528235742.105510-1-natechancellor@gmail.com>
- <CAK8P3a0a0hMsZDkqKsfsyCWpdvDni72tjAxCz2VeAaU56zqrXg@mail.gmail.com>
- <20190531183227.GA34102@archlinux-epyc>
- <CAK8P3a1-_KRvoeK4w0b8775izox8fRm=NGJC=yicDRn7J5UW2Q@mail.gmail.com>
- <CAKwvOdkyk3qLMPquSZqXCFauTADJU5X9qJi_fhJqbUuCYBH-6Q@mail.gmail.com>
- <CAK8P3a2pYp6aaOSrtHKbVW+hPbwgj1An6dWNd-YLJyR5otvU-A@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4Kd7/+kr4jxVkBeK6chb/uAQy3afbVih/qTqLzH6YXg=;
+        b=H2mRod2myLs+LWPHsQKgXmfC8NvMlXKDMbA26PIzX4sgGsoCHeyNo4yuqHkuYUoxCj
+         QUToZsplgeddJqmOgsqcUkO5vxrKvVBjO53/pr3h98mwVpFjCx4i2ya6LE8WJ+Chot0B
+         MTZmIRRTa5IQ1aHLG/YdmIlPXDDcV2tmv2jizFTVhvNHiqTIg1ZRFqgYz42xmxArO7Nb
+         UkSFML21XuzAiGKeWYYNgt07IUjJc0F4Vv+8cUY/xSBprDCoW/+AMSmI9JcPGsETk3th
+         F9DOGP0TfYPkly9UJhHSJqt2EDUgL5Ppw+TPT5Ne5rVhevaAjtccdgpQ/GqhgJBb915r
+         Zetg==
+X-Gm-Message-State: APjAAAUVSXCvUY1iUBF6EZXQ72C13YJ8y6n+A/mo7ratzxWIBJweLxZS
+        wUMkyuSmM6ePvTzyOjFOIVdGYbQh/9I=
+X-Google-Smtp-Source: APXvYqyyv9TAoEyO+7ZVWry+PL1bztSf5+cx607W2fLfy5OqGYigPZX3aExrPw5K69NIyGpPC/w/Zg==
+X-Received: by 2002:ab0:4d67:: with SMTP id k39mr6956463uag.59.1559349084129;
+        Fri, 31 May 2019 17:31:24 -0700 (PDT)
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
+        by smtp.gmail.com with ESMTPSA id c3sm1066672vso.2.2019.05.31.17.31.22
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 31 May 2019 17:31:22 -0700 (PDT)
+Received: by mail-ua1-f45.google.com with SMTP id l3so4375899uad.4
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 17:31:22 -0700 (PDT)
+X-Received: by 2002:ab0:670c:: with SMTP id q12mr6641706uam.106.1559349081772;
+ Fri, 31 May 2019 17:31:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2pYp6aaOSrtHKbVW+hPbwgj1An6dWNd-YLJyR5otvU-A@mail.gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+References: <20190531030057.18328-1-bjorn.andersson@linaro.org>
+ <20190531030057.18328-3-bjorn.andersson@linaro.org> <CAD=FV=V=_ozPiTvT-Fnrc1a+qfHYi3ynNn8cbw9ibqfKk7Am_w@mail.gmail.com>
+ <20190601000917.GE25597@minitux>
+In-Reply-To: <20190601000917.GE25597@minitux>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Fri, 31 May 2019 17:31:14 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VDtMgEeFsG9NxzsY1tEcCOTDShMe50J=5wNWQ095uejw@mail.gmail.com>
+Message-ID: <CAD=FV=VDtMgEeFsG9NxzsY1tEcCOTDShMe50J=5wNWQ095uejw@mail.gmail.com>
+Subject: Re: [PATCH v8 2/4] soc: qcom: Add AOSS QMP driver
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arun Kumar Neelakantam <aneela@codeaurora.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 11:03:19PM +0200, Arnd Bergmann wrote:
-> On Fri, May 31, 2019 at 10:06 PM 'Nick Desaulniers' via Clang Built
-> Linux <clang-built-linux@googlegroups.com> wrote:
+Hi,
+
+On Fri, May 31, 2019 at 5:09 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Fri 31 May 15:24 PDT 2019, Doug Anderson wrote:
+>
+> > Hi,
 > >
-> > On Fri, May 31, 2019 at 12:21 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > > clang, I would suggest dropping your patch then, and instead adding
+> > On Thu, May 30, 2019 at 8:01 PM Bjorn Andersson
+> > <bjorn.andersson@linaro.org> wrote:
+> > >
+> > > +/**
+> > > + * qmp_send() - send a message to the AOSS
+> > > + * @qmp: qmp context
+> > > + * @data: message to be sent
+> > > + * @len: length of the message
+> > > + *
+> > > + * Transmit @data to AOSS and wait for the AOSS to acknowledge the message.
+> > > + * @len must be a multiple of 4 and not longer than the mailbox size. Access is
+> > > + * synchronized by this implementation.
+> > > + *
+> > > + * Return: 0 on success, negative errno on failure
+> > > + */
+> > > +static int qmp_send(struct qmp *qmp, const void *data, size_t len)
+> > > +{
+> > > +       int ret;
+> > > +
+> > > +       if (WARN_ON(len + sizeof(u32) > qmp->size))
+> > > +               return -EINVAL;
+> > > +
+> > > +       if (WARN_ON(len % sizeof(u32)))
+> > > +               return -EINVAL;
+> > > +
+> > > +       mutex_lock(&qmp->tx_lock);
+> > > +
+> > > +       /* The message RAM only implements 32-bit accesses */
+> > > +       __iowrite32_copy(qmp->msgram + qmp->offset + sizeof(u32),
+> > > +                        data, len / sizeof(u32));
+> > > +       writel(len, qmp->msgram + qmp->offset);
+> > > +       qmp_kick(qmp);
+> > > +
+> > > +       ret = wait_event_interruptible_timeout(qmp->event,
+> > > +                                              qmp_message_empty(qmp), HZ);
+> > > +       if (!ret) {
+> > > +               dev_err(qmp->dev, "ucore did not ack channel\n");
+> > > +               ret = -ETIMEDOUT;
+> > > +
+> > > +               /* Clear message from buffer */
+> > > +               writel(0, qmp->msgram + qmp->offset);
+> > > +       } else {
+> > > +               ret = 0;
+> > > +       }
 > >
-> > I disagree.  The minimum version of gcc required to build the kernel
-> > is 4.6, so the comment about older versions of gcc is irrelevant and
-> > should be removed.
-> 
-> Sure, that's ok. It just feels wrong to remove a warning that points
-> to a real problem that still exists and can be detected at the moment.
-> 
-> If we think that clang-9 is going to be fixed before its release,
-> the warning could be changed to test for that version as a minimum,
-> and point to the bugzilla entry for more details.
-> 
->       Arnd
+> > Just like Vinod said in in v7, the "ret = 0" is redundant.
+> >
+>
+> If the condition passed to wait_event_interruptible_timeout() evaluates
+> true the remote side has consumed the message and ret will be 1. We end
+> up in the else block (i.e. not timeout) and we want the function to
+> return 0, so we set ret to 0.
+>
+> Please let me know if I'm reading this wrong.
 
-I just tested the arm64 implementation and it shows the same warnings
-about cost as arm.
+Ah, it's me that's confused.  I missed the "!" on ret.  Maybe it'd be
+less confusing if you did:
 
-However, I see a warning as something that can be resolved by the user.
-The GCC warning's solution is to just use a newer version of GCC
-(something fairly easily attainable). This new warning currently has no
-solution other than don't use clang.
+time_left = wait_event_interruptible_timeout(...)
+if (!time_left)
 
-It is up to you and Nick but I would say unless we are going to
-prioritize fixing this, we shouldn't add a warning for it. I'd say it is
-more appropriate to fix it then add a warning saying upgrade to this
-version to fix it, like the GCC one (though I don't necessarily hate
-adding the warning assuming that clang 9 will have it fixed).
+Even though you _can_ use "ret", it's less confusing to use a
+different variable since (often) ret is an error code.
 
-Cheers,
-Nathan
+Speaking of which: do you actually handle the case where you get an
+interrupt?  Should the above just be wait_event_timeout()?
