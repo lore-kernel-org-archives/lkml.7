@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58FC2C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF931C28CC4
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F13827606
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6B612761B
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:38:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396334;
-	bh=PvBMGHJxHsUYKT3cIK68/s85Z6jUyu7dqbNNgdd+LY8=;
+	s=default; t=1559396337;
+	bh=rDr+S/YhMeOfziIR4LGO1pfbXrc+hfDQibhZ68dZ/wE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WfZBDw5EAQVi+LoiBFBACXMIs09JYha+KBWxc9KBZ/Egx6hb861h025XcCgNvyYp7
-	 zPrNqxrhMFRDXMh2th7lkZjplnBJvvM2HR2pXVthADQunHpuGNyKVQSYJxl+Ua/tQi
-	 /ClsJXdZ8XUKQazAtfuSZ0eOFRT3dYfL6bqZSgxg=
+	b=0vXBwWTz/xeR5YHhs0aCE8+FzuXW32+dYVBTPbS5D8BmycGYkhcesnEpRbNt5ReBo
+	 EKkwEr4+sBIRqi+7IldsFZFzBNHbHS4lgj704AYic5aHwQIftfcHDuUk/Zawnd7k9o
+	 ERuu8jl/XrsQh3rC2PgCAC01Ff2WBrCjZnqqfXcI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728835AbfFANix (ORCPT
+        id S1728481AbfFANVW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:38:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48728 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:21:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728432AbfFANVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:21:23 -0400
+        id S1728432AbfFANVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:21:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5025A272F5;
-        Sat,  1 Jun 2019 13:21:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7AA227301;
+        Sat,  1 Jun 2019 13:21:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395282;
-        bh=PvBMGHJxHsUYKT3cIK68/s85Z6jUyu7dqbNNgdd+LY8=;
+        s=default; t=1559395274;
+        bh=rDr+S/YhMeOfziIR4LGO1pfbXrc+hfDQibhZ68dZ/wE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aaqtVw6LHCe+2sLRYFg+ElRzA6uxgMMP5M6pTveTHgmME2ZW9R/7mxi0rfiTjL5Ar
-         x8cO9yPPLueEOhNc3T4Of0tXg6Xa5Hfx0w+H2kTM6jky+ncRKccVOOv4vaxRMEXoTU
-         E14LkBX0QF/pBXWesYr5Qj7DxXLYDHXOPbGw2zPQ=
+        b=kWgYzLOKBJr9BjYYVTf3VWLHphYjRLpz3mW80qnMEe8F/kexnW9acnVJnZ2EKQt/D
+         O8vOg3NVFTgaK1Hw8x6cI84kNTHqPnjuwa6a6aV9d611tiIH5gJy5YY7WUl79VbPbb
+         lEMi2K96ntZnSUKOD/HoRaX020neDKxhOCrcCfg4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.0 046/173] f2fs: fix to avoid panic in dec_valid_block_count()
-Date:   Sat,  1 Jun 2019 09:17:18 -0400
-Message-Id: <20190601131934.25053-46-sashal@kernel.org>
+Cc:     Fabien Dessenne <fabien.dessenne@st.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 038/173] mailbox: stm32-ipcc: check invalid irq
+Date:   Sat,  1 Jun 2019 09:17:10 -0400
+Message-Id: <20190601131934.25053-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131934.25053-1-sashal@kernel.org>
 References: <20190601131934.25053-1-sashal@kernel.org>
@@ -59,94 +59,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Fabien Dessenne <fabien.dessenne@st.com>
 
-[ Upstream commit 5e159cd349bf3a31fb7e35c23a93308eb30f4f71 ]
+[ Upstream commit 68a1c8485cf83734d4da9d81cd3b5d2ae7c0339b ]
 
-As Jungyeon reported in bugzilla:
+On failure of_irq_get() returns a negative value or zero, which is
+not handled as an error in the existing implementation.
+Instead of using this API, use platform_get_irq() that returns
+exclusively a negative value on failure.
+Also, do not output an error log in case of defer probe error.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203209
-
-- Overview
-When mounting the attached crafted image and running program, I got this error.
-Additionally, it hangs on sync after the this script.
-
-The image is intentionally fuzzed from a normal f2fs image for testing and I enabled option CONFIG_F2FS_CHECK_FS on.
-
-- Reproduces
-cc poc_01.c
-./run.sh f2fs
-sync
-
- kernel BUG at fs/f2fs/f2fs.h:1788!
- RIP: 0010:f2fs_truncate_data_blocks_range+0x342/0x350
- Call Trace:
-  f2fs_truncate_blocks+0x36d/0x3c0
-  f2fs_truncate+0x88/0x110
-  f2fs_setattr+0x3e1/0x460
-  notify_change+0x2da/0x400
-  do_truncate+0x6d/0xb0
-  do_sys_ftruncate+0xf1/0x160
-  do_syscall_64+0x43/0xf0
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-The reason is dec_valid_block_count() will trigger kernel panic due to
-inconsistent count in between inode.i_blocks and actual block.
-
-To avoid panic, let's just print debug message and set SBI_NEED_FSCK to
-give a hint to fsck for latter repairing.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-[Jaegeuk Kim: fix build warning and add unlikely]
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/f2fs.h | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/mailbox/stm32-ipcc.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 48f1bbf3e87eb..f8dfa64429f64 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -1787,6 +1787,7 @@ static inline int inc_valid_block_count(struct f2fs_sb_info *sbi,
- 	return -ENOSPC;
- }
+diff --git a/drivers/mailbox/stm32-ipcc.c b/drivers/mailbox/stm32-ipcc.c
+index a338bd4cd7db6..b4efc6069082a 100644
+--- a/drivers/mailbox/stm32-ipcc.c
++++ b/drivers/mailbox/stm32-ipcc.c
+@@ -8,9 +8,9 @@
+ #include <linux/bitfield.h>
+ #include <linux/clk.h>
+ #include <linux/interrupt.h>
++#include <linux/io.h>
+ #include <linux/mailbox_controller.h>
+ #include <linux/module.h>
+-#include <linux/of_irq.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_wakeirq.h>
  
-+void f2fs_msg(struct super_block *sb, const char *level, const char *fmt, ...);
- static inline void dec_valid_block_count(struct f2fs_sb_info *sbi,
- 						struct inode *inode,
- 						block_t count)
-@@ -1795,13 +1796,21 @@ static inline void dec_valid_block_count(struct f2fs_sb_info *sbi,
+@@ -240,9 +240,11 @@ static int stm32_ipcc_probe(struct platform_device *pdev)
  
- 	spin_lock(&sbi->stat_lock);
- 	f2fs_bug_on(sbi, sbi->total_valid_block_count < (block_t) count);
--	f2fs_bug_on(sbi, inode->i_blocks < sectors);
- 	sbi->total_valid_block_count -= (block_t)count;
- 	if (sbi->reserved_blocks &&
- 		sbi->current_reserved_blocks < sbi->reserved_blocks)
- 		sbi->current_reserved_blocks = min(sbi->reserved_blocks,
- 					sbi->current_reserved_blocks + count);
- 	spin_unlock(&sbi->stat_lock);
-+	if (unlikely(inode->i_blocks < sectors)) {
-+		f2fs_msg(sbi->sb, KERN_WARNING,
-+			"Inconsistent i_blocks, ino:%lu, iblocks:%llu, sectors:%llu",
-+			inode->i_ino,
-+			(unsigned long long)inode->i_blocks,
-+			(unsigned long long)sectors);
-+		set_sbi_flag(sbi, SBI_NEED_FSCK);
-+		return;
-+	}
- 	f2fs_i_blocks_write(inode, count, false, true);
- }
+ 	/* irq */
+ 	for (i = 0; i < IPCC_IRQ_NUM; i++) {
+-		ipcc->irqs[i] = of_irq_get_byname(dev->of_node, irq_name[i]);
++		ipcc->irqs[i] = platform_get_irq_byname(pdev, irq_name[i]);
+ 		if (ipcc->irqs[i] < 0) {
+-			dev_err(dev, "no IRQ specified %s\n", irq_name[i]);
++			if (ipcc->irqs[i] != -EPROBE_DEFER)
++				dev_err(dev, "no IRQ specified %s\n",
++					irq_name[i]);
+ 			ret = ipcc->irqs[i];
+ 			goto err_clk;
+ 		}
+@@ -263,9 +265,10 @@ static int stm32_ipcc_probe(struct platform_device *pdev)
  
-@@ -2808,7 +2817,6 @@ static inline void f2fs_update_iostat(struct f2fs_sb_info *sbi,
- 
- bool f2fs_is_valid_blkaddr(struct f2fs_sb_info *sbi,
- 					block_t blkaddr, int type);
--void f2fs_msg(struct super_block *sb, const char *level, const char *fmt, ...);
- static inline void verify_blkaddr(struct f2fs_sb_info *sbi,
- 					block_t blkaddr, int type)
- {
+ 	/* wakeup */
+ 	if (of_property_read_bool(np, "wakeup-source")) {
+-		ipcc->wkp = of_irq_get_byname(dev->of_node, "wakeup");
++		ipcc->wkp = platform_get_irq_byname(pdev, "wakeup");
+ 		if (ipcc->wkp < 0) {
+-			dev_err(dev, "could not get wakeup IRQ\n");
++			if (ipcc->wkp != -EPROBE_DEFER)
++				dev_err(dev, "could not get wakeup IRQ\n");
+ 			ret = ipcc->wkp;
+ 			goto err_clk;
+ 		}
 -- 
 2.20.1
 
