@@ -7,58 +7,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F67C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B96A4C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B5AC27534
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:34:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 876AE2751A
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:34:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396054;
-	bh=hmHDqocuR+fOA+hANEpWDXA5DiRouRUxCAjHS6ovgmk=;
+	s=default; t=1559396062;
+	bh=6bKgTT5gnfcJKsWHUTECbQrducSnrKEOJSsgdtKBWCw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=teUflb4s0kDUFysUs6UNs2s/DaHmW4bsi48MX8ZJqUT4QT/9+l+PkAbfDj4KOIPdN
-	 vkYSEDuvo8FJU/Vq9mXLm3deuos5y+a3H91dVYzcPFIsjv+ZbhlvdcT10Wu6Dj2vD8
-	 vB0hLHK8aJ+5gqu8/TgLgWaQcOIesPs5at6R7xiM=
+	b=MJerhEC0y2DmeEWwVAxWvzXMi39p4usnElARzlkWIdxGjNruJcAkKJ3vIPGyIOqrC
+	 YNCafoA/Jb1Tk+DlKe3dP/B43aBttM56PCOXtVUwkikHX8BNWqfMcshv+xm125ZcCb
+	 8GCeAgiZqJa87TBckFNRYjS3RxbnXm5ZXhKJEaGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729398AbfFANeN (ORCPT
+        id S1729431AbfFANeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:34:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53826 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:34:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728171AbfFANXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:23:52 -0400
+        id S1727672AbfFANXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:23:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF0D927360;
-        Sat,  1 Jun 2019 13:23:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF55927355;
+        Sat,  1 Jun 2019 13:23:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395431;
-        bh=hmHDqocuR+fOA+hANEpWDXA5DiRouRUxCAjHS6ovgmk=;
+        s=default; t=1559395424;
+        bh=6bKgTT5gnfcJKsWHUTECbQrducSnrKEOJSsgdtKBWCw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jB5GxqqwAXMO+h3YER2OBltyd4Q7QgQGJr9pzu/use9/gZkX97SOduEjxoPrEKuUZ
-         DVLri/E9LQsTr3AhWtcYPu+8eUCtVq/UFaw7w4Bw7DP4rZUgr3KWaw/rde3GsFLyd7
-         eB/odyD6EiTLwqRYITv5E0bUiBQQUXGJOPrRMrjA=
+        b=HAJBPlqqBJ3eBT6+nxNV4hAQKxGkwaqKYvfLQdxhx3NrSFdW8LOjujdwrjkinnr6A
+         P95SplnyGSoXSWZZ21/+9GZVklUS2bbeN2e7xc9H4s6XWaTJzDILQdkdK816k98TSz
+         SOoExu2fwWBZ3ykXpg/hlC0mdWbzmFweqr68WuY0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christian Brauner <christian@brauner.io>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 03/99] sysctl: return -EINVAL if val violates minmax
-Date:   Sat,  1 Jun 2019 09:22:10 -0400
-Message-Id: <20190601132346.26558-3-sashal@kernel.org>
+Cc:     Georg Hofmann <georg@hofmannsweb.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 056/141] watchdog: imx2_wdt: Fix set_timeout for big timeout values
+Date:   Sat,  1 Jun 2019 09:20:32 -0400
+Message-Id: <20190601132158.25821-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190601132346.26558-1-sashal@kernel.org>
-References: <20190601132346.26558-1-sashal@kernel.org>
+In-Reply-To: <20190601132158.25821-1-sashal@kernel.org>
+References: <20190601132158.25821-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -68,53 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Brauner <christian@brauner.io>
+From: Georg Hofmann <georg@hofmannsweb.com>
 
-[ Upstream commit e260ad01f0aa9e96b5386d5cd7184afd949dc457 ]
+[ Upstream commit b07e228eee69601addba98b47b1a3850569e5013 ]
 
-Currently when userspace gives us a values that overflow e.g.  file-max
-and other callers of __do_proc_doulongvec_minmax() we simply ignore the
-new value and leave the current value untouched.
+The documentated behavior is: if max_hw_heartbeat_ms is implemented, the
+minimum of the set_timeout argument and max_hw_heartbeat_ms should be used.
+This patch implements this behavior.
+Previously only the first 7bits were used and the input argument was
+returned.
 
-This can be problematic as it gives the illusion that the limit has
-indeed be bumped when in fact it failed.  This commit makes sure to
-return EINVAL when an overflow is detected.  Please note that this is a
-userspace facing change.
-
-Link: http://lkml.kernel.org/r/20190210203943.8227-4-christian@brauner.io
-Signed-off-by: Christian Brauner <christian@brauner.io>
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Dominik Brodowski <linux@dominikbrodowski.net>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Joe Lawrence <joe.lawrence@redhat.com>
-Cc: Waiman Long <longman@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Georg Hofmann <georg@hofmannsweb.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sysctl.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/watchdog/imx2_wdt.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index f13601a616ad6..cfc2c0d1369ab 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -2732,8 +2732,10 @@ static int __do_proc_doulongvec_minmax(void *data, struct ctl_table *table, int
- 			if (neg)
- 				continue;
- 			val = convmul * val / convdiv;
--			if ((min && val < *min) || (max && val > *max))
--				continue;
-+			if ((min && val < *min) || (max && val > *max)) {
-+				err = -EINVAL;
-+				break;
-+			}
- 			*i = val;
- 		} else {
- 			val = convdiv * (*i) / convmul;
+diff --git a/drivers/watchdog/imx2_wdt.c b/drivers/watchdog/imx2_wdt.c
+index 2b52514eaa86a..7e7bdcbbc741b 100644
+--- a/drivers/watchdog/imx2_wdt.c
++++ b/drivers/watchdog/imx2_wdt.c
+@@ -178,8 +178,10 @@ static void __imx2_wdt_set_timeout(struct watchdog_device *wdog,
+ static int imx2_wdt_set_timeout(struct watchdog_device *wdog,
+ 				unsigned int new_timeout)
+ {
+-	__imx2_wdt_set_timeout(wdog, new_timeout);
++	unsigned int actual;
+ 
++	actual = min(new_timeout, wdog->max_hw_heartbeat_ms * 1000);
++	__imx2_wdt_set_timeout(wdog, actual);
+ 	wdog->timeout = new_timeout;
+ 	return 0;
+ }
 -- 
 2.20.1
 
