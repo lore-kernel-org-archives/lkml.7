@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B981C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 344ECC28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA4B8272BE
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:19:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04421272BE
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:19:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395190;
-	bh=NHp4Zus6V4JDtlhyZgmwXxF/CbFxoMXzr6qTYcrfCPI=;
+	s=default; t=1559395194;
+	bh=xGl3o/wgSSe9NcYm31iO+XU59jnYYMCVp8k0+UVjGq4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hK6nzNFYXFUB155oKQ05+0KZqG0GlMRM9zRpTiRHUpNV9vIvTKWSJF3QT5Dg3o9S6
-	 veng1v7gj6pQBk3/1WI9CH0i4RBsWftrLk5Y/5iPMAyVl0fft4rq0gjaYKX/AtWU8a
-	 248GN3L/c7mWrCvBxsG6lDFp/T7Zd/4kw4eiI6xs=
+	b=mF12Lqoj3BY6lFHz4guWtk0xqP4pS0K21t580qkVh010uWQso1S4wzFxdythVwdlz
+	 x/xKuz4MlSdUcua63zsJ6oQlflkQD09MKJM7zGIG5SZXwkCkCjPvMeox7FrsIfrOIj
+	 Yb3bopyiT3mQLqdyOWY9qM/23Tzo7WtOfCszYclw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727527AbfFANTs (ORCPT
+        id S1728235AbfFANTx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:19:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46860 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:19:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726794AbfFANTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:19:47 -0400
+        id S1727530AbfFANTt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:19:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EF082725F;
-        Sat,  1 Jun 2019 13:19:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C819272C0;
+        Sat,  1 Jun 2019 13:19:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395186;
-        bh=NHp4Zus6V4JDtlhyZgmwXxF/CbFxoMXzr6qTYcrfCPI=;
+        s=default; t=1559395189;
+        bh=xGl3o/wgSSe9NcYm31iO+XU59jnYYMCVp8k0+UVjGq4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VuiUhad7NAChNF9UZcoCgwfFn9BF/KQ8m6F3TGnJ5ul9mPMLLGFw7rd0UqzSll1ER
-         6+yk36QjCl/ZGDeXH2kKjAGpP0JjGO5Qzfqsy4id4n+r3f1iQllGL0xtbagcvFpT/g
-         4DiI0wNSwIYhjGtMvxfYX+M+ZfPGXEx7aStUYXnU=
+        b=eZZTUcbW9fqYzRQDinnsjHvRN/29ArNCot3YJBWtYyXVg/U04cjKBVz+JQQrndCwo
+         388IS6DwPd1BKtpUo4i+HPCrAi/T44QNeLkv9/3ZyltfeXKGx22RXQwwzSZRz37ESh
+         kL/aeKsv0cYl17jycUSPDdpl9zwlEFyyuYN8BByg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jonas Karlman <jonas@kwiboo.se>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.0 002/173] media: rockchip/vpu: Add missing dont_use_autosuspend() calls
-Date:   Sat,  1 Jun 2019 09:16:34 -0400
-Message-Id: <20190601131934.25053-2-sashal@kernel.org>
+Cc:     Hou Tao <houtao1@huawei.com>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 004/173] fs/fat/file.c: issue flush after the writeback of FAT
+Date:   Sat,  1 Jun 2019 09:16:36 -0400
+Message-Id: <20190601131934.25053-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131934.25053-1-sashal@kernel.org>
 References: <20190601131934.25053-1-sashal@kernel.org>
@@ -62,43 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonas Karlman <jonas@kwiboo.se>
+From: Hou Tao <houtao1@huawei.com>
 
-[ Upstream commit 5c5b90f5cbad77dc15d8b5582efdb2e362bcd710 ]
+[ Upstream commit bd8309de0d60838eef6fb575b0c4c7e95841cf73 ]
 
-Those calls are needed to restore a clean PM state when the probe fails
-or when the driver is unloaded such that future ->probe() calls can
-initialize runtime PM again.
+fsync() needs to make sure the data & meta-data of file are persistent
+after the return of fsync(), even when a power-failure occurs later.  In
+the case of fat-fs, the FAT belongs to the meta-data of file, so we need
+to issue a flush after the writeback of FAT instead before.
 
-Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Also bail out early when any stage of fsync fails.
+
+Link: http://lkml.kernel.org/r/20190409030158.136316-1-houtao1@huawei.com
+Signed-off-by: Hou Tao <houtao1@huawei.com>
+Acked-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Jan Kara <jack@suse.cz>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/rockchip/vpu/rockchip_vpu_drv.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/fat/file.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/staging/media/rockchip/vpu/rockchip_vpu_drv.c b/drivers/staging/media/rockchip/vpu/rockchip_vpu_drv.c
-index 33b556b3f0df8..d489b5dd54d7a 100644
---- a/drivers/staging/media/rockchip/vpu/rockchip_vpu_drv.c
-+++ b/drivers/staging/media/rockchip/vpu/rockchip_vpu_drv.c
-@@ -492,6 +492,7 @@ static int rockchip_vpu_probe(struct platform_device *pdev)
- 	v4l2_device_unregister(&vpu->v4l2_dev);
- err_clk_unprepare:
- 	clk_bulk_unprepare(vpu->variant->num_clocks, vpu->clocks);
-+	pm_runtime_dont_use_autosuspend(vpu->dev);
- 	pm_runtime_disable(vpu->dev);
- 	return ret;
+diff --git a/fs/fat/file.c b/fs/fat/file.c
+index 13935ee99e1e5..87baa023f8316 100644
+--- a/fs/fat/file.c
++++ b/fs/fat/file.c
+@@ -193,12 +193,17 @@ static int fat_file_release(struct inode *inode, struct file *filp)
+ int fat_file_fsync(struct file *filp, loff_t start, loff_t end, int datasync)
+ {
+ 	struct inode *inode = filp->f_mapping->host;
+-	int res, err;
++	int err;
++
++	err = __generic_file_fsync(filp, start, end, datasync);
++	if (err)
++		return err;
+ 
+-	res = generic_file_fsync(filp, start, end, datasync);
+ 	err = sync_mapping_buffers(MSDOS_SB(inode->i_sb)->fat_inode->i_mapping);
++	if (err)
++		return err;
+ 
+-	return res ? res : err;
++	return blkdev_issue_flush(inode->i_sb->s_bdev, GFP_KERNEL, NULL);
  }
-@@ -512,6 +513,7 @@ static int rockchip_vpu_remove(struct platform_device *pdev)
- 	v4l2_m2m_release(vpu->m2m_dev);
- 	v4l2_device_unregister(&vpu->v4l2_dev);
- 	clk_bulk_unprepare(vpu->variant->num_clocks, vpu->clocks);
-+	pm_runtime_dont_use_autosuspend(vpu->dev);
- 	pm_runtime_disable(vpu->dev);
- 	return 0;
- }
+ 
+ 
 -- 
 2.20.1
 
