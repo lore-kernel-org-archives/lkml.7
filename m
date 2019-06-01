@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E80EC28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B9AC28CC4
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F35327355
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:24:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82FC227386
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:24:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395470;
-	bh=dre30RdEQXy41bPIIowne0S263PWWWGLIDPuhU17HJQ=;
+	s=default; t=1559395479;
+	bh=LYd7yfqZAV1mEdBiJ9BN3+K19cHjYcomUjoPUxgLoNM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tVqf78ArlZ9P8+YdIyLwCEnFwSydvgS4I6rSxO9gQ6Z1xbflGo9ik57PyUba2/plF
-	 kjBMxu6Pc2eW8KBqZQGpAsUNdGkoAPmy2v/ZC4qf6rvDA9rfKcFZ4CWPVLBKL/+bS0
-	 2ZvVvUMvo6G8mReiTu/afHgfTgpZeAwC9rybWZxQ=
+	b=F5PKdm48jIfcwjNuPopmC/ENtYi9EZtY1SRh5cFIdE9juDOrmYKmt4tzz5wgAAz3H
+	 kZzUJAs4V7rC5vWnSzi5JiILJgZQGjTUgcpyaDjt51nF2u4koE05srzigZoDAbQJie
+	 vh/6ABy+JexH0Kbk1XJs5USjGO8QkQ1jBXP4AbSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729224AbfFANY3 (ORCPT
+        id S1729271AbfFANYi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:24:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54468 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:24:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729209AbfFANY0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:24:26 -0400
+        id S1729237AbfFANYd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:24:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60D3F27355;
-        Sat,  1 Jun 2019 13:24:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B0612737A;
+        Sat,  1 Jun 2019 13:24:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395465;
-        bh=dre30RdEQXy41bPIIowne0S263PWWWGLIDPuhU17HJQ=;
+        s=default; t=1559395472;
+        bh=LYd7yfqZAV1mEdBiJ9BN3+K19cHjYcomUjoPUxgLoNM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c9RmorXG4qA6JqrabuNUOG1FGznLnxNgr4UWb+PdrEQGEK0b8CvfkekIwGW62Fbes
-         7wFSk9fQKaNEmqxYuKqYJWCqemOBrnZuVhkAkkOgo3yII0NzflU4eSj1K7F50JOqMa
-         CM4+3uTH/1WveTzbWhHczJ8VU6OZbiXbclAEL8nk=
+        b=pD1b/jT8T3e2+YAANbVflfzpUXEm/FCjRUm+bH9JTNAgt4nqaD6rZx5g8YJu2ngoD
+         9KJHRG67HaNL8tGl3tS3u/iqqomZfxntVIOVTb+o5YwJwh3dv5q2uJicYXTe9Xvfu5
+         dcUEVOfv9aD3+e2aZM4hVCjsEBXOmDbWDMb+Bsrg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Amit Kucheria <amit.kucheria@linaro.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 15/99] drivers: thermal: tsens: Don't print error message on -EPROBE_DEFER
-Date:   Sat,  1 Jun 2019 09:22:22 -0400
-Message-Id: <20190601132346.26558-15-sashal@kernel.org>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, jolsa@redhat.com,
+        kan.liang@intel.com, vincent.weaver@maine.edu,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 20/99] perf/x86/intel: Allow PEBS multi-entry in watermark mode
+Date:   Sat,  1 Jun 2019 09:22:27 -0400
+Message-Id: <20190601132346.26558-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132346.26558-1-sashal@kernel.org>
 References: <20190601132346.26558-1-sashal@kernel.org>
@@ -60,41 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amit Kucheria <amit.kucheria@linaro.org>
+From: Stephane Eranian <eranian@google.com>
 
-[ Upstream commit fc7d18cf6a923cde7f5e7ba2c1105bb106d3e29a ]
+[ Upstream commit c7a286577d7592720c2f179aadfb325a1ff48c95 ]
 
-We print a calibration failure message on -EPROBE_DEFER from
-nvmem/qfprom as follows:
-[    3.003090] qcom-tsens 4a9000.thermal-sensor: version: 1.4
-[    3.005376] qcom-tsens 4a9000.thermal-sensor: tsens calibration failed
-[    3.113248] qcom-tsens 4a9000.thermal-sensor: version: 1.4
+This patch fixes a restriction/bug introduced by:
 
-This confuses people when, in fact, calibration succeeds later when
-nvmem/qfprom device is available. Don't print this message on a
--EPROBE_DEFER.
+   583feb08e7f7 ("perf/x86/intel: Fix handling of wakeup_events for multi-entry PEBS")
 
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
+The original patch prevented using multi-entry PEBS when wakeup_events != 0.
+However given that wakeup_events is part of a union with wakeup_watermark, it
+means that in watermark mode, PEBS multi-entry is also disabled which is not the
+intent. This patch fixes this by checking is watermark mode is enabled.
+
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: jolsa@redhat.com
+Cc: kan.liang@intel.com
+Cc: vincent.weaver@maine.edu
+Fixes: 583feb08e7f7 ("perf/x86/intel: Fix handling of wakeup_events for multi-entry PEBS")
+Link: http://lkml.kernel.org/r/20190514003400.224340-1-eranian@google.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/qcom/tsens.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/events/intel/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
-index 3f9fe6aa51ccc..ebbe1ec7b9e83 100644
---- a/drivers/thermal/qcom/tsens.c
-+++ b/drivers/thermal/qcom/tsens.c
-@@ -162,7 +162,8 @@ static int tsens_probe(struct platform_device *pdev)
- 	if (tmdev->ops->calibrate) {
- 		ret = tmdev->ops->calibrate(tmdev);
- 		if (ret < 0) {
--			dev_err(dev, "tsens calibration failed\n");
-+			if (ret != -EPROBE_DEFER)
-+				dev_err(dev, "tsens calibration failed\n");
- 			return ret;
- 		}
- 	}
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 0b93f5519ddab..d44bb077c6cfd 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3051,7 +3051,7 @@ static int intel_pmu_hw_config(struct perf_event *event)
+ 		return ret;
+ 
+ 	if (event->attr.precise_ip) {
+-		if (!(event->attr.freq || event->attr.wakeup_events)) {
++		if (!(event->attr.freq || (event->attr.wakeup_events && !event->attr.watermark))) {
+ 			event->hw.flags |= PERF_X86_EVENT_AUTO_RELOAD;
+ 			if (!(event->attr.sample_type &
+ 			      ~intel_pmu_free_running_flags(event)))
 -- 
 2.20.1
 
