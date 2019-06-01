@@ -2,92 +2,106 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F70C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 10:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 943E7C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 10:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACEBA27220
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 10:50:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 694972721A
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 10:55:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727307AbfFAKuS (ORCPT
+        id S1727038AbfFAKzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 06:50:18 -0400
-Received: from mga12.intel.com ([192.55.52.136]:44926 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726109AbfFAKuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 06:50:17 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Jun 2019 03:50:16 -0700
-X-ExtLoop1: 1
-Received: from unknown (HELO [10.239.13.7]) ([10.239.13.7])
-  by orsmga007.jf.intel.com with ESMTP; 01 Jun 2019 03:50:15 -0700
-Message-ID: <5CF2599B.3030001@intel.com>
-Date:   Sat, 01 Jun 2019 18:55:23 +0800
-From:   Wei Wang <wei.w.wang@intel.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Thunderbird/31.7.0
+        Sat, 1 Jun 2019 06:55:44 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33840 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726109AbfFAKzo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 06:55:44 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x51Aq8b2012472
+        for <linux-kernel@vger.kernel.org>; Sat, 1 Jun 2019 06:55:43 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sunvdb2nm-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Jun 2019 06:55:43 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Sat, 1 Jun 2019 11:55:41 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 1 Jun 2019 11:55:37 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x51AtacM57933938
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 1 Jun 2019 10:55:36 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 98CEA4C046;
+        Sat,  1 Jun 2019 10:55:36 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 59A584C040;
+        Sat,  1 Jun 2019 10:55:36 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.21])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Sat,  1 Jun 2019 10:55:36 +0000 (GMT)
+Date:   Sat, 1 Jun 2019 12:55:35 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Alexandre Ghiti <alex@ghiti.fr>
+Cc:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] s390: mmap base does not depend on ADDR_NO_RANDOMIZE
+ personality
+References: <20190404061956.25507-1-alex@ghiti.fr>
 MIME-Version: 1.0
-To:     Eric Hankland <ehankland@google.com>
-CC:     pbonzini@redhat.com, rkrcmar@redhat.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH v1] KVM: x86: PMU Whitelist
-References: <CAOyeoRWfPNmaWY6Lifdkdj3KPPM654vzDO+s3oduEMCJP+Asow@mail.gmail.com> <5CEC9667.30100@intel.com> <CAOyeoRWhfyuuYdguE6Wrzd7GOdow9qRE4MZ4OKkMc5cdhDT53g@mail.gmail.com> <5CEE3AC4.3020904@intel.com> <CAOyeoRW85jV=TW_xwSj0ZYwPj_L+G9wu+QPGEF3nBmPbWGX4_g@mail.gmail.com> <5CF07D37.9090805@intel.com> <CAOyeoRXWQaVYZSVL_LTTdAwJOEr+eCzhp1=_JcOX3i6_CJiD_g@mail.gmail.com>
-In-Reply-To: <CAOyeoRXWQaVYZSVL_LTTdAwJOEr+eCzhp1=_JcOX3i6_CJiD_g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190404061956.25507-1-alex@ghiti.fr>
+X-TM-AS-GCONF: 00
+x-cbid: 19060110-0020-0000-0000-00000342866D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19060110-0021-0000-0000-000021959394
+Message-Id: <20190601105534.GG3600@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-01_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=966 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906010081
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/01/2019 03:59 AM, Eric Hankland wrote:
->
-> With anythread=0, I'm not aware of any events that directly give info
-> about other VMs, but monitoring events related to shared resources
-> (e.g. LLC References and LLC Misses) could indirectly give you info
-> about how heavily other users are using that resource.
+On Thu, Apr 04, 2019 at 02:19:56AM -0400, Alexandre Ghiti wrote:
+> randomize_stack_top() checks for current task flag PF_RANDOMIZE in order
+> to use stack randomization and PF_RANDOMIZE is set when
+> ADDR_NO_RANDOMIZE is unset, so no need to check for ADDR_NO_RANDOMIZE
+> in stack_maxrandom_size.
+> 
+> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+> ---
+>  arch/s390/mm/mmap.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/arch/s390/mm/mmap.c b/arch/s390/mm/mmap.c
+> index 687f2a4d3459..5185ed0a0463 100644
+> --- a/arch/s390/mm/mmap.c
+> +++ b/arch/s390/mm/mmap.c
+> @@ -24,8 +24,7 @@ static unsigned long stack_maxrandom_size(void)
+>  {
+>  	if (!(current->flags & PF_RANDOMIZE))
+>  		return 0;
+> -	if (current->personality & ADDR_NO_RANDOMIZE)
+> -		return 0;
+> +
+>  	return STACK_RND_MASK << PAGE_SHIFT;
 
-My question is that have we proved that this indirect info leakage 
-indeed happens?
-The spec states that the counter will count the related events generated by
-the logical CPU with AnyThread=0. I would be inclined to trust the 
-hardware behavior
-documented in the spec unless we could prove there is a problem.
-
-
-
->
-> I tried returning 1 when the guest tries to write the eventsel msr for
-> a disallowed event - the behavior on modern guest kernels looks
-> reasonable (warns once about an unchecked MSR access error), but it
-> looks like guests using older kernels (older than 2016) might panic
-> due to the gpfault (not to mention I'm not sure about the behavior on
-> non-linux kernels). So I'm hesitant to return 1 - what do you think?
-
- From the guest point of view, returning 0 means that the event counting 
-is running well.
-That is, the guest is expecting to get some count numbers. So better not 
-to zero the value
-when the guest does rdpmc/rdmsr to get the count in this case.
-
-I think we could just ensure "AnyThread=0" in the config, and create the 
-kernel
-counter as usual.
-
-
-> I also looked into moving from a vcpu ioctl to a vm ioctl - I can send
-> out a version of the patch with this change once we settle on the
-> other issues. It will involve some extra locking every time the
-> counters are programmed to ensure the whitelist or blacklist isn't
-> removed during access.
->
-
-Yes, the above discussion needs to be done first.
-
-Best,
-Wei
+Applied, thanks.
 
