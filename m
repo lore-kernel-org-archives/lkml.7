@@ -2,84 +2,92 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,PLING_QUERY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9863AC28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 21:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E829C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 21:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C13827751
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 21:18:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09C7F2778B
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 21:30:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfFAVS0 (ORCPT
+        id S1726616AbfFAVaM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 17:18:26 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:60347 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbfFAVS0 (ORCPT
+        Sat, 1 Jun 2019 17:30:12 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:41701 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbfFAVaL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 17:18:26 -0400
-X-Originating-IP: 82.246.155.60
-Received: from localhost (hy283-1-82-246-155-60.fbx.proxad.net [82.246.155.60])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id AC846E0009;
-        Sat,  1 Jun 2019 21:18:19 +0000 (UTC)
-Date:   Sat, 1 Jun 2019 23:18:16 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>, Peng Fan <peng.fan@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH V7 4/4] rtc: imx-sc: add rtc alarm support
-Message-ID: <20190601211816.GF3558@piout.net>
-References: <1554785675-8090-1-git-send-email-Anson.Huang@nxp.com>
- <1554785675-8090-4-git-send-email-Anson.Huang@nxp.com>
+        Sat, 1 Jun 2019 17:30:11 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id D8B5D803AC; Sat,  1 Jun 2019 23:29:59 +0200 (CEST)
+Date:   Sat, 1 Jun 2019 23:30:09 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     kernel list <linux-kernel@vger.kernel.org>, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org
+Subject: Re: 5.1.0-next-20190520 -- emacs segfaults on 32-bit machine Re:
+ 5.2-rc0.8: emacs segfaults?! x220, with 32-bit userland
+Message-ID: <20190601213009.GC13060@amd>
+References: <20190519221700.GA7154@amd>
+ <20190520160636.z6fpjiidc2d5ko5g@linutronix.de>
+ <20190520231342.GA20835@amd>
+ <20190521073240.mikv2ufwyriy4q7r@linutronix.de>
+ <20190522183329.GB10003@amd>
+ <20190523083724.GA21185@amd>
+ <20190523145035.wncfmwem57z2oxb7@linutronix.de>
+ <20190527130317.GB19795@amd>
+ <20190527130848.lec6zp3ntyhemsbj@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="oJ71EGRlYNjSvfq7"
 Content-Disposition: inline
-In-Reply-To: <1554785675-8090-4-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190527130848.lec6zp3ntyhemsbj@linutronix.de>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/04/2019 05:00:07+0000, Anson Huang wrote:
-> Add i.MX system controller RTC alarm support, the RTC alarm
-> is implemented via SIP(silicon provider) runtime service call
-> and ARM-Trusted-Firmware will communicate with system controller
-> via MU(message unit) IPC to set RTC alarm. When RTC alarm fires,
-> system controller will generate a common MU irq event and notify
-> system controller RTC driver to handle the irq event.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-> ---
-> Changes since V6:
-> 	- add comments to .read_alarm callback function to explain why it is an empty function;
-> 	- improve irq notify callback function name.
-> --
->  drivers/rtc/rtc-imx-sc.c | 87 ++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 87 insertions(+)
-> 
-Applied, thanks.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+--oJ71EGRlYNjSvfq7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon 2019-05-27 15:08:48, Sebastian Andrzej Siewior wrote:
+> On 2019-05-27 15:03:17 [+0200], Pavel Machek wrote:
+> > > could you please send me (offlist) your .config? Also, what kind of
+> > > userland do you run? Something like Debian stable?
+> >=20
+> > Yep, debian stable.
+>=20
+> Since we had a little bit of development recently, could you please
+> check if
+> 	http://lkml.kernel.org/r/20190526173325.lpt5qtg7c6rnbql5@linutronix.de
+>=20
+> makes any difference?
+
+X version of emacs keeps crashing, but I guess that's something
+unrelated. Looks like this one is solved.
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--oJ71EGRlYNjSvfq7
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlzy7mEACgkQMOfwapXb+vLfsACdHvEPAgNcEoPeM8ezplpRKItk
+iQsAnihbNYHGpqsP8UkuSqtqDBYANZ5/
+=ZWnl
+-----END PGP SIGNATURE-----
+
+--oJ71EGRlYNjSvfq7--
