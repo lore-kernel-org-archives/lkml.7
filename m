@@ -2,132 +2,134 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 860BAC28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 16:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C80C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 16:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 599BE27753
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 16:29:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559406562;
-	bh=zWBk10dzRErfJ9SACepYGw53HJJmChyH73elCQ7D4Jg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=tIQeGPAnMwrbF11cQY6XyxmsN2jJ5f/PwhC9hSyIMKLjiojG7l8ygSVaVJhb09Rfh
-	 ZCi76efRGO5SiEyAYY9BAGOXvXS1kWukksOsJdfj5cKdNdEQQat4CGCkiEcBi2jOV6
-	 SKRA/ym5ezS5ZZYzISbbBIEodZBnKqCvKasyHC6Y=
+	by mail.kernel.org (Postfix) with ESMTP id 882B227758
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 16:29:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="nRY6su9I";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LjTxODYr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbfFAQ3U (ORCPT
+        id S1726800AbfFAQ3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 12:29:20 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:36639 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726713AbfFAQ3O (ORCPT
+        Sat, 1 Jun 2019 12:29:54 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:35179 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726601AbfFAQ3y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 12:29:14 -0400
-Received: by mail-lf1-f66.google.com with SMTP id q26so10383351lfc.3
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Jun 2019 09:29:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WbBlTtzN8zF5Iqk8bw1nVflVKcbi7cIeUDGHN5Yot1E=;
-        b=Fa5BzECDkVJJVil3Feep0HbYjDwApJFYj92zZCD6f4aYCxc2Als39M3w9fuXET3xGS
-         3dJFRH9YhqCQxcCzt7i+R2DDortv76Hw0c0yls+ilBPK12ky3bwefHhCdXxs096uQvMr
-         JNZz4F8UnUXJp5G999kMQlHK92/csNz/XzzF4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WbBlTtzN8zF5Iqk8bw1nVflVKcbi7cIeUDGHN5Yot1E=;
-        b=FkDaMHfn3EfMA1R5aQupWkRl78O/4hOAVsrsx6RyxztXmptVfKGOIfQ6qOmtntMKDY
-         56Ie0kfkui0jR0b+ZNY72TJod7SVg3+DkN2xto+xGndthtxSEQMLU6rxK0VyfNfXluQ7
-         b4pZvUtJAsSOSRyVudEOYh9n/p5d6hypjs9wl6jQk9mEhp95PGpT/zAHfoAxwsBmx3bx
-         dCkbRkmuHYrDG8rk/kK79o2422qd/z1ObcxtTJoAOsRSgpLPAsFb+8j7nGptY6J8Wvwq
-         kWSSMoQTRoAPIwYhWVADTrYfG8+hDEIb25ou9rmwcDAvjgKBuP5haWdScxAyvcWO01h6
-         Jlow==
-X-Gm-Message-State: APjAAAXndy3gPfH60PrsgNUAun3HxHTpSDguHXTcJ7eW72AHgr+ctafL
-        /11+WhZ7lRm1KgyStaCbdE8Tiw68N7c=
-X-Google-Smtp-Source: APXvYqzpdinZ/pYls36bnf20zNRqULlSWhT0R6ehGmhC4PWA9s03e072mg1c+aRkz2gJQXeETz5j6Q==
-X-Received: by 2002:ac2:4565:: with SMTP id k5mr5822676lfm.170.1559406551489;
-        Sat, 01 Jun 2019 09:29:11 -0700 (PDT)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
-        by smtp.gmail.com with ESMTPSA id p5sm1889959ljg.55.2019.06.01.09.29.10
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 01 Jun 2019 09:29:10 -0700 (PDT)
-Received: by mail-lj1-f178.google.com with SMTP id h11so12490603ljb.2
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Jun 2019 09:29:10 -0700 (PDT)
-X-Received: by 2002:a2e:9ad1:: with SMTP id p17mr9481496ljj.147.1559406549964;
- Sat, 01 Jun 2019 09:29:09 -0700 (PDT)
+        Sat, 1 Jun 2019 12:29:54 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailnew.nyi.internal (Postfix) with ESMTP id C63301D34;
+        Sat,  1 Jun 2019 12:29:51 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Sat, 01 Jun 2019 12:29:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=G6joXSFpHr+xnj1AE0zs7wKpYB9
+        XnoEfEGHkoMcid1w=; b=nRY6su9IGsDoiTe9tsxFg667lnKPfE7bbeIx592as2E
+        em7dgml8pmc/pwKeUgSSxDHV4YRUE5iHljoVEX7GwRqUVrGqRVJkDxsFfQA30YNx
+        KAg+vCy3UqtEA8q+fvNg10SCASxR1++3b7VtYzJYC+N1OpR7dwMlIFWnvd3amsNv
+        Svcl/IGHc7g6aMVf2kFMIXlX7fD9mqL1hUcPRxNY4cX2VDdrexj6V4sFosvqQqLB
+        4QzWd5PIE2iO4hyQ8H5YfT8CtVcl1yoG2xcYid/UFIJHsE1B7gaFquYpVfosEu13
+        VwfxIFeXKA3/ohtuXL7ry3m+5gE3ZXXpLXrUVd048rg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=G6joXS
+        FpHr+xnj1AE0zs7wKpYB9XnoEfEGHkoMcid1w=; b=LjTxODYr47rpGdziuqBMg7
+        yzbx/pWEF8iqPYcSzsQUplRekJ5IrYNM+xmL983a3mf1SWpfxq3F7DR0iT7mPgeU
+        STzQullm7rLdvtyZIdH+WJpqeOD1ad59UZqYzemwryvZYYdMk6CZwJScn4TborJp
+        w6/yKs/RQw04Ww1niMzCezTy4/CfQDFX6NW9a9nDjT34AoDPEMxKO4MQXCnAIWvZ
+        HRj6oHNnNzqVEvFuEVXb2M7l+VA8FOfffWcG2Ehe07LmrALUZbx2SQtKNDkyGsoU
+        lhowFvWgeklx+BHL5sQIdBAKZwINajJLVc6FlkH/Mh8O/5JavUzd90IErunoJcYg
+        ==
+X-ME-Sender: <xms:_KfyXKCkChUD_dQe1UjZ39ztuPNZx9Mh3Q9HiHrIHQzqyL5Ydgpyyw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrudeffedguddtgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgv
+    ghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrd
+    dutdejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhen
+    ucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:_KfyXAKecZrq_nTMfU6kDLNs03MzA4OO4ALIlZVWyuGakKuhVf5kBg>
+    <xmx:_KfyXPup1dsrtKWSgylv0Ee6FekAGQ1T4Z2Xd_hJll_YFTxvMa7hKQ>
+    <xmx:_KfyXHIylZ0NZn-20E8FiO40B12uzL1ENnef06W7Z-EnIcHIVC4M0A>
+    <xmx:_6fyXFdKdLkEhd6BO8Vrb93mqDin6qbJozGTQ0UtET7KSfRiWhncJA>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id E14418005C;
+        Sat,  1 Jun 2019 12:29:47 -0400 (EDT)
+Date:   Sat, 1 Jun 2019 18:29:45 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-spdx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Joe Perches <joe@perches.com>,
+        Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org,
+        Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-renesas-soc@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] treewide: fix typos of SPDX-License-Identifier
+Message-ID: <20190601162945.GA6395@kroah.com>
+References: <20190601032242.10405-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
-References: <20190601074959.14036-1-hch@lst.de> <20190601074959.14036-9-hch@lst.de>
-In-Reply-To: <20190601074959.14036-9-hch@lst.de>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 1 Jun 2019 09:28:54 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj9w5NxTcJsqpvYUiL3OBOH-J3=4-vXcc3GaG_U8H-gJw@mail.gmail.com>
-Message-ID: <CAHk-=wj9w5NxTcJsqpvYUiL3OBOH-J3=4-vXcc3GaG_U8H-gJw@mail.gmail.com>
-Subject: Re: [PATCH 08/16] sparc64: add the missing pgd_page definition
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-mips@vger.kernel.org,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Linux-MM <linux-mm@kvack.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190601032242.10405-1-yamada.masahiro@socionext.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Both sparc64 and sh had this pattern, but now that I look at it more
-closely, I think your version is wrong, or at least nonoptimal.
+On Sat, Jun 01, 2019 at 12:22:42PM +0900, Masahiro Yamada wrote:
+> Prior to the adoption of SPDX, it was difficult for tools to determine
+> the correct license due to incomplete or badly formatted license text.
+> The SPDX solves this issue, assuming people can correctly spell
+> "SPDX-License-Identifier" although this assumption is broken in some
+> places.
+> 
+> Since scripts/spdxcheck.py parses only lines that exactly matches to
+> the correct tag, it cannot (should not) detect this kind of error.
+> 
+> If the correct tag is missing, scripts/checkpatch.pl warns like this:
+> 
+>  WARNING: Missing or malformed SPDX-License-Identifier tag in line *
+> 
+> So, people should notice it before the patch submission, but in reality
+> broken tags sometimes slip in. The checkpatch warning is not useful for
+> checking the committed files globally since large number of files still
+> have no SPDX tag.
+> 
+> Also, I am not sure about the legal effect when the SPDX tag is broken.
+> 
+> Anyway, these typos are absolutely worth fixing. It is pretty easy to
+> find suspicious lines by grep.
+> 
+>   $ git grep --not -e SPDX-License-Identifier --and -e SPDX- -- \
+>     :^LICENSES :^scripts/spdxcheck.py :^*/license-rules.rst
+>   arch/arm/kernel/bugs.c:// SPDX-Identifier: GPL-2.0
+>   drivers/phy/st/phy-stm32-usbphyc.c:// SPDX-Licence-Identifier: GPL-2.0
+>   drivers/pinctrl/sh-pfc/pfc-r8a77980.c:// SPDX-Lincense-Identifier: GPL 2.0
+>   lib/test_stackinit.c:// SPDX-Licenses: GPLv2
+>   sound/soc/codecs/max9759.c:// SPDX-Licence-Identifier: GPL-2.0
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-On Sat, Jun 1, 2019 at 12:50 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> +#define pgd_page(pgd)                  virt_to_page(__va(pgd_val(pgd)))
+Very nice catch, thanks!  I'll go queue this up now.
 
-Going through the virtual address is potentially very inefficient, and
-might in some cases just be wrong (ie it's definitely wrong for
-HIGHMEM style setups).
-
-It would likely be much better to go through the physical address and
-use "pfn_to_page()". I realize that we don't have a "pgd to physical",
-but neither do we really have a "pgd to virtual", and your
-"__va(pgd_val(x))" thing is not at allguaranteed to work. You're
-basically assuming that "pgd_val(x)" is the physical address, which is
-likely not entirely incorrect, but it should be checked by the
-architecture people.
-
-The pgd value could easily have high bits with meaning, which would
-also potentially screw up the __va(x) model.
-
-So I thgink this would be better done with
-
-     #define pgd_page(pgd)    pfn_to_page(pgd_pfn(pgd))
-
-where that "pgd_pfn()" would need to be a new (but likely very
-trivial) function. That's what we do for pte_pfn().
-
-IOW, it would likely end up something like
-
-  #define pgd_to_pfn(pgd) (pgd_val(x) >> PFN_PGD_SHIFT)
-
-David?
-
-                  Linus
+greg k-h
