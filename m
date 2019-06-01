@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D5CC28CC3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 049AEC28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E42E02759F
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:36:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE53F275B0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:36:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396205;
-	bh=3AHyLiaaIVOZrnhOveyBohT0S0wfLE8mrW2w8/yGuoE=;
+	s=default; t=1559396208;
+	bh=gOZxUIYQsBEQRv9bk+M8JatOYaVu6PBPjijotTiPsns=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mZwAiSLvxjG0zhhDZyD8dQJu7HvmSprN+cZV+5I7cKdBF3kziZ3Ljjp/hpXMT4Igd
-	 7sLyUp7G8tlqgnNNofaEOQ8JFnCcb08k3ZkQG7jkw5M5KhpwgFycuXcCHrxmKGKiOL
-	 W/UcqQL1z6YqZRlYAgw9kka2IsMX8EFGQvlFYV7M=
+	b=fBhT6ZMsQRCR8H5LYJ+u2THjyY5gtpFyb9Yv9Ia5kEs1YtyAxDcWP7XxHAlpZ20bD
+	 WV/AJsofD2kANlprOaBK1tTDGp27JpdOLvzapPZNaq6/or+/7aT/BmyMdBZbL9latP
+	 gMSUPF6Q0lBDF16GCoLDSsXSUDPlefo9grv58yZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729086AbfFANgo (ORCPT
+        id S1728768AbfFANWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:36:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52356 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:22:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728762AbfFANWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:22:42 -0400
+        id S1728136AbfFANWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:22:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 196F024438;
-        Sat,  1 Jun 2019 13:22:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF97126E87;
+        Sat,  1 Jun 2019 13:22:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395362;
-        bh=3AHyLiaaIVOZrnhOveyBohT0S0wfLE8mrW2w8/yGuoE=;
+        s=default; t=1559395354;
+        bh=gOZxUIYQsBEQRv9bk+M8JatOYaVu6PBPjijotTiPsns=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zehwvH/DKVuLbjZj6CTPZp0Agzq/g5J7sxGQF/N/96cB4LyWa9XzE0pRlwzzj3YcD
-         5H9x8g41gWADBYR2MVF2EYLg8sgA8KzFKoCAutJc+wGUWf+dtfPfqu+xSgOe0wWUrO
-         7I6c1OmsfAeWp5lRvoGfdpaS+a5xowCQR2I93pWQ=
+        b=wHZUqz32iMTPY1jA7ax4RY3fenLrXNAdaQmzNdANUaF0MH+Fi4Wbf/8ckv3ikjlzu
+         +dIh+cdEP31vBOn84qlvACNtF+M1OInnwSmhPHsvChVfKw9Cw5UdERLv5Vc4lchfq9
+         Iuw1+lrUeqVnQd3Dk8m3pMCZgbFaqveG6y9Glk/4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Cyrill Gorcunov <gorcunov@gmail.com>,
-        Andrey Vagin <avagin@gmail.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
+Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 016/141] kernel/sys.c: prctl: fix false positive in validate_prctl_map()
-Date:   Sat,  1 Jun 2019 09:19:52 -0400
-Message-Id: <20190601132158.25821-16-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.19 013/141] mm: page_mkclean vs MADV_DONTNEED race
+Date:   Sat,  1 Jun 2019 09:19:49 -0400
+Message-Id: <20190601132158.25821-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132158.25821-1-sashal@kernel.org>
 References: <20190601132158.25821-1-sashal@kernel.org>
@@ -63,54 +63,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cyrill Gorcunov <gorcunov@gmail.com>
+From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
 
-[ Upstream commit a9e73998f9d705c94a8dca9687633adc0f24a19a ]
+[ Upstream commit 024eee0e83f0df52317be607ca521e0fc572aa07 ]
 
-While validating new map we require the @start_data to be strictly less
-than @end_data, which is fine for regular applications (this is why this
-nit didn't trigger for that long).  These members are set from executable
-loaders such as elf handers, still it is pretty valid to have a loadable
-data section with zero size in file, in such case the start_data is equal
-to end_data once kernel loader finishes.
+MADV_DONTNEED is handled with mmap_sem taken in read mode.  We call
+page_mkclean without holding mmap_sem.
 
-As a result when we're trying to restore such programs the procedure fails
-and the kernel returns -EINVAL.  From the image dump of a program:
+MADV_DONTNEED implies that pages in the region are unmapped and subsequent
+access to the pages in that range is handled as a new page fault.  This
+implies that if we don't have parallel access to the region when
+MADV_DONTNEED is run we expect those range to be unallocated.
 
- | "mm_start_code": "0x400000",
- | "mm_end_code": "0x8f5fb4",
- | "mm_start_data": "0xf1bfb0",
- | "mm_end_data": "0xf1bfb0",
+w.r.t page_mkclean() we need to make sure that we don't break the
+MADV_DONTNEED semantics.  MADV_DONTNEED check for pmd_none without holding
+pmd_lock.  This implies we skip the pmd if we temporarily mark pmd none.
+Avoid doing that while marking the page clean.
 
-Thus we need to change validate_prctl_map from strictly less to less or
-equal operator use.
+Keep the sequence same for dax too even though we don't support
+MADV_DONTNEED for dax mapping
 
-Link: http://lkml.kernel.org/r/20190408143554.GY1421@uranus.lan
-Fixes: f606b77f1a9e3 ("prctl: PR_SET_MM -- introduce PR_SET_MM_MAP operation")
-Signed-off-by: Cyrill Gorcunov <gorcunov@gmail.com>
-Cc: Andrey Vagin <avagin@gmail.com>
-Cc: Dmitry Safonov <0x7f454c46@gmail.com>
-Cc: Pavel Emelyanov <xemul@virtuozzo.com>
+The bug was noticed by code review and I didn't observe any failures w.r.t
+test run.  This is similar to
+
+commit 58ceeb6bec86d9140f9d91d71a710e963523d063
+Author: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Date:   Thu Apr 13 14:56:26 2017 -0700
+
+    thp: fix MADV_DONTNEED vs. MADV_FREE race
+
+commit ced108037c2aa542b3ed8b7afd1576064ad1362a
+Author: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Date:   Thu Apr 13 14:56:20 2017 -0700
+
+    thp: fix MADV_DONTNEED vs. numa balancing race
+
+Link: http://lkml.kernel.org/r/20190321040610.14226-1-aneesh.kumar@linux.ibm.com
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc:"Kirill A . Shutemov" <kirill@shutemov.name>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sys.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/dax.c  | 2 +-
+ mm/rmap.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sys.c b/kernel/sys.c
-index 123bd73046ec6..096932a450466 100644
---- a/kernel/sys.c
-+++ b/kernel/sys.c
-@@ -1919,7 +1919,7 @@ static int validate_prctl_map(struct prctl_mm_map *prctl_map)
- 	((unsigned long)prctl_map->__m1 __op				\
- 	 (unsigned long)prctl_map->__m2) ? 0 : -EINVAL
- 	error  = __prctl_check_order(start_code, <, end_code);
--	error |= __prctl_check_order(start_data, <, end_data);
-+	error |= __prctl_check_order(start_data,<=, end_data);
- 	error |= __prctl_check_order(start_brk, <=, brk);
- 	error |= __prctl_check_order(arg_start, <=, arg_end);
- 	error |= __prctl_check_order(env_start, <=, env_end);
+diff --git a/fs/dax.c b/fs/dax.c
+index 004c8ac1117c4..75a289c31c7e5 100644
+--- a/fs/dax.c
++++ b/fs/dax.c
+@@ -908,7 +908,7 @@ static void dax_mapping_entry_mkclean(struct address_space *mapping,
+ 				goto unlock_pmd;
+ 
+ 			flush_cache_page(vma, address, pfn);
+-			pmd = pmdp_huge_clear_flush(vma, address, pmdp);
++			pmd = pmdp_invalidate(vma, address, pmdp);
+ 			pmd = pmd_wrprotect(pmd);
+ 			pmd = pmd_mkclean(pmd);
+ 			set_pmd_at(vma->vm_mm, address, pmdp, pmd);
+diff --git a/mm/rmap.c b/mm/rmap.c
+index 85b7f94233526..f048c2651954b 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -926,7 +926,7 @@ static bool page_mkclean_one(struct page *page, struct vm_area_struct *vma,
+ 				continue;
+ 
+ 			flush_cache_page(vma, address, page_to_pfn(page));
+-			entry = pmdp_huge_clear_flush(vma, address, pmd);
++			entry = pmdp_invalidate(vma, address, pmd);
+ 			entry = pmd_wrprotect(entry);
+ 			entry = pmd_mkclean(entry);
+ 			set_pmd_at(vma->vm_mm, address, pmd, entry);
 -- 
 2.20.1
 
