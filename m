@@ -2,134 +2,110 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C80C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 16:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D595DC28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 17:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 882B227758
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 16:29:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="nRY6su9I";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LjTxODYr"
+	by mail.kernel.org (Postfix) with ESMTP id A907E275C4
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 17:12:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726800AbfFAQ3y (ORCPT
+        id S1726531AbfFARMI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 12:29:54 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:35179 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726601AbfFAQ3y (ORCPT
+        Sat, 1 Jun 2019 13:12:08 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49916 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726013AbfFARMI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 12:29:54 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailnew.nyi.internal (Postfix) with ESMTP id C63301D34;
-        Sat,  1 Jun 2019 12:29:51 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Sat, 01 Jun 2019 12:29:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=G6joXSFpHr+xnj1AE0zs7wKpYB9
-        XnoEfEGHkoMcid1w=; b=nRY6su9IGsDoiTe9tsxFg667lnKPfE7bbeIx592as2E
-        em7dgml8pmc/pwKeUgSSxDHV4YRUE5iHljoVEX7GwRqUVrGqRVJkDxsFfQA30YNx
-        KAg+vCy3UqtEA8q+fvNg10SCASxR1++3b7VtYzJYC+N1OpR7dwMlIFWnvd3amsNv
-        Svcl/IGHc7g6aMVf2kFMIXlX7fD9mqL1hUcPRxNY4cX2VDdrexj6V4sFosvqQqLB
-        4QzWd5PIE2iO4hyQ8H5YfT8CtVcl1yoG2xcYid/UFIJHsE1B7gaFquYpVfosEu13
-        VwfxIFeXKA3/ohtuXL7ry3m+5gE3ZXXpLXrUVd048rg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=G6joXS
-        FpHr+xnj1AE0zs7wKpYB9XnoEfEGHkoMcid1w=; b=LjTxODYr47rpGdziuqBMg7
-        yzbx/pWEF8iqPYcSzsQUplRekJ5IrYNM+xmL983a3mf1SWpfxq3F7DR0iT7mPgeU
-        STzQullm7rLdvtyZIdH+WJpqeOD1ad59UZqYzemwryvZYYdMk6CZwJScn4TborJp
-        w6/yKs/RQw04Ww1niMzCezTy4/CfQDFX6NW9a9nDjT34AoDPEMxKO4MQXCnAIWvZ
-        HRj6oHNnNzqVEvFuEVXb2M7l+VA8FOfffWcG2Ehe07LmrALUZbx2SQtKNDkyGsoU
-        lhowFvWgeklx+BHL5sQIdBAKZwINajJLVc6FlkH/Mh8O/5JavUzd90IErunoJcYg
-        ==
-X-ME-Sender: <xms:_KfyXKCkChUD_dQe1UjZ39ztuPNZx9Mh3Q9HiHrIHQzqyL5Ydgpyyw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrudeffedguddtgecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgv
-    ghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrd
-    dutdejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhen
-    ucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:_KfyXAKecZrq_nTMfU6kDLNs03MzA4OO4ALIlZVWyuGakKuhVf5kBg>
-    <xmx:_KfyXPup1dsrtKWSgylv0Ee6FekAGQ1T4Z2Xd_hJll_YFTxvMa7hKQ>
-    <xmx:_KfyXHIylZ0NZn-20E8FiO40B12uzL1ENnef06W7Z-EnIcHIVC4M0A>
-    <xmx:_6fyXFdKdLkEhd6BO8Vrb93mqDin6qbJozGTQ0UtET7KSfRiWhncJA>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id E14418005C;
-        Sat,  1 Jun 2019 12:29:47 -0400 (EDT)
-Date:   Sat, 1 Jun 2019 18:29:45 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-spdx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Joe Perches <joe@perches.com>,
-        Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org,
-        Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-renesas-soc@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] treewide: fix typos of SPDX-License-Identifier
-Message-ID: <20190601162945.GA6395@kroah.com>
-References: <20190601032242.10405-1-yamada.masahiro@socionext.com>
+        Sat, 1 Jun 2019 13:12:08 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x51H7WU5088742
+        for <linux-kernel@vger.kernel.org>; Sat, 1 Jun 2019 13:12:07 -0400
+Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sunh5u9br-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Jun 2019 13:12:06 -0400
+Received: from localhost
+        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
+        Sat, 1 Jun 2019 18:12:05 +0100
+Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
+        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 1 Jun 2019 18:12:01 +0100
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x51HC0TI31130018
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 1 Jun 2019 17:12:00 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1A936112062;
+        Sat,  1 Jun 2019 17:12:00 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 713DD112061;
+        Sat,  1 Jun 2019 17:11:57 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.80.209.235])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Sat,  1 Jun 2019 17:11:57 +0000 (GMT)
+References: <20190521044912.1375-1-bauerman@linux.ibm.com>
+User-agent: mu4e 1.0; emacs 26.2
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Anshuman Khandual <anshuman.linux@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>
+Subject: Re: [PATCH 00/12] Secure Virtual Machine Enablement
+In-reply-to: <20190521044912.1375-1-bauerman@linux.ibm.com>
+Date:   Sat, 01 Jun 2019 14:11:53 -0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190601032242.10405-1-yamada.masahiro@socionext.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+x-cbid: 19060117-0052-0000-0000-000003CA0417
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011197; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01211780; UDB=6.00636760; IPR=6.00992823;
+ MB=3.00027145; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-01 17:12:04
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19060117-0053-0000-0000-0000612056EE
+Message-Id: <87imtpgrhi.fsf@morokweng.localdomain>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-01_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=956 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906010124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 01, 2019 at 12:22:42PM +0900, Masahiro Yamada wrote:
-> Prior to the adoption of SPDX, it was difficult for tools to determine
-> the correct license due to incomplete or badly formatted license text.
-> The SPDX solves this issue, assuming people can correctly spell
-> "SPDX-License-Identifier" although this assumption is broken in some
-> places.
-> 
-> Since scripts/spdxcheck.py parses only lines that exactly matches to
-> the correct tag, it cannot (should not) detect this kind of error.
-> 
-> If the correct tag is missing, scripts/checkpatch.pl warns like this:
-> 
->  WARNING: Missing or malformed SPDX-License-Identifier tag in line *
-> 
-> So, people should notice it before the patch submission, but in reality
-> broken tags sometimes slip in. The checkpatch warning is not useful for
-> checking the committed files globally since large number of files still
-> have no SPDX tag.
-> 
-> Also, I am not sure about the legal effect when the SPDX tag is broken.
-> 
-> Anyway, these typos are absolutely worth fixing. It is pretty easy to
-> find suspicious lines by grep.
-> 
->   $ git grep --not -e SPDX-License-Identifier --and -e SPDX- -- \
->     :^LICENSES :^scripts/spdxcheck.py :^*/license-rules.rst
->   arch/arm/kernel/bugs.c:// SPDX-Identifier: GPL-2.0
->   drivers/phy/st/phy-stm32-usbphyc.c:// SPDX-Licence-Identifier: GPL-2.0
->   drivers/pinctrl/sh-pfc/pfc-r8a77980.c:// SPDX-Lincense-Identifier: GPL 2.0
->   lib/test_stackinit.c:// SPDX-Licenses: GPLv2
->   sound/soc/codecs/max9759.c:// SPDX-Licence-Identifier: GPL-2.0
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-Very nice catch, thanks!  I'll go queue this up now.
+Hello,
 
-greg k-h
+Thiago Jung Bauermann <bauerman@linux.ibm.com> writes:
+
+> This series enables Secure Virtual Machines (SVMs) on powerpc. SVMs use the
+> Protected Execution Facility (PEF) and request to be migrated to secure
+> memory during prom_init() so by default all of their memory is inaccessible
+> to the hypervisor. There is an Ultravisor call that the VM can use to
+> request certain pages to be made accessible to (or shared with) the
+> hypervisor.
+>
+> The objective of these patches is to have the guest perform this request
+> for buffers that need to be accessed by the hypervisor such as the LPPACAs,
+> the SWIOTLB memory and the Debug Trace Log.
+
+Ping? Any more comments on these patches? Or even acks? :-)
+
+-- 
+Thiago Jung Bauermann
+IBM Linux Technology Center
+
