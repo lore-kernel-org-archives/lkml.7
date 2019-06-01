@@ -6,47 +6,49 @@ X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6395FC28CC3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 06:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69336C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 06:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46B8827122
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 06:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3455F270BE
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 06:08:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbfFAGFH (ORCPT
+        id S1726800AbfFAGII (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 02:05:07 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:51125 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbfFAGFH (ORCPT
+        Sat, 1 Jun 2019 02:08:08 -0400
+Received: from mail-it1-f198.google.com ([209.85.166.198]:44629 "EHLO
+        mail-it1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbfFAGIH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 02:05:07 -0400
-Received: by mail-io1-f69.google.com with SMTP id c3so9371540iol.17
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 23:05:06 -0700 (PDT)
+        Sat, 1 Jun 2019 02:08:07 -0400
+Received: by mail-it1-f198.google.com with SMTP id o83so10110592itc.9
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 23:08:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=SXQQgqF/aSIlu13g8xFuBn/XDNM3CAXOv6SxuCbdpBU=;
-        b=O0aJSnQyk3ccmEVt/EDgkLV7UBVXxplQBK0BPUAWTRup/FLUmX8VrJhPY5Hx7YOJfq
-         iSArR28yuIMFUCbWsAyCYZUfRUZ3umG3/OI2GsSZjNNuPpSJ9hV2PEsPFPqFTnoCwGiX
-         UsbCtXt53ogkWeY8tWX0Yiwpiis04lf+obQBovoRpLcCsaLK8TRzPt8MDI9JeZjK7Jb4
-         KoqiH8RSze0ENpH8Zmh5w0aL6EaWk6L4SgpQJ0YKWrSNazYMIUWL4cWJLPkiNxvhtLSI
-         0r30EHc/ywk4DfzUTqmsCGuRNUtRKOy37ePP8oo5uNP1lv+O0oFrYXHjnRncoPP56fNj
-         F5fw==
-X-Gm-Message-State: APjAAAUN3nzyK2STaP9lOQAvFtYIQOGEAZWfoCN3RPdXEcSC3z8DIkGH
-        jtLnguUff2OMalebdm3dS2dd5O2UQmj1MaOFk7hMWnCrux0p
-X-Google-Smtp-Source: APXvYqy6SJ2GKwtVJS0kjybBhfdm82xPT/g8i/MTallIrAo4/fTzzlvirlc4bwrV4u3K5xmvtDvFmn5/JbicVHli2qPw2IAPBQHC
+        bh=8UTTULkwtsMoOI/rW0r8zzkuES3tsjU/CYGnZsvOq0A=;
+        b=DU2JTklTR1CRgEmwjZ2umN2dfgz1epeknVxehHnsMZxZGfAPwBmkXPbE0QYHBqbBuZ
+         PZcUPO1ljzr0OGuKPpc7ms7ggoee6mSiYBR90kIlvJjJWsEiPtWUNnBJyFVp3DlULDeU
+         TR+eDVL3Phs8MMCYSYla2WofEnVCdu23ZdEgMGcWHCWPjcXYw8x/UR6gKfq4ApTtvd12
+         5Mu0XhVKKCjBlolG+L8pdIovxvyvUYRSPbuFKKOE9VCrC0HS6gByXgVA4pg/tLzAjnoo
+         QU1C4nmc2dGQghWGl68dyCQJ6YB3eN+Ga6o6e02WWYlAkaKWXMchxaQqrKgEgZoKW5pI
+         wiqw==
+X-Gm-Message-State: APjAAAVADSdM2YDHC6dBebNlOeDN1AxBLQe2L/V4RHglYN+pK9p2R+9K
+        ZtnhH+Z8/iCDnZ3WpyAWVw1hpdYwXDiL+2qw5XLFEG2qIoR2
+X-Google-Smtp-Source: APXvYqyoP4KycHe/yLu9ubg6c4LS27pyf8cjRjLpGHwo+8mvuKiQmLRx52XI1LxAUJBaatKAcf/+leBPrwwYQyNHEWI8payr2RHU
 MIME-Version: 1.0
-X-Received: by 2002:a02:c7c9:: with SMTP id s9mr9197824jao.82.1559369106485;
- Fri, 31 May 2019 23:05:06 -0700 (PDT)
-Date:   Fri, 31 May 2019 23:05:06 -0700
+X-Received: by 2002:a5e:961a:: with SMTP id a26mr8752787ioq.125.1559369285382;
+ Fri, 31 May 2019 23:08:05 -0700 (PDT)
+Date:   Fri, 31 May 2019 23:08:05 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000aa7a27058a3ce9aa@google.com>
-Subject: general protection fault in tcp_v6_connect
-From:   syzbot <syzbot+5ee26b4e30c45930bd3c@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, edumazet@google.com, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
+Message-ID: <000000000000543e45058a3cf40b@google.com>
+Subject: possible deadlock in get_user_pages_unlocked (2)
+From:   syzbot <syzbot+e1374b2ec8f6a25ab2e5@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, aneesh.kumar@linux.ibm.com,
+        dan.j.williams@intel.com, ira.weiny@intel.com, jhubbard@nvidia.com,
+        keith.busch@intel.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, rppt@linux.ibm.com, sfr@canb.auug.org.au,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -57,86 +59,153 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    f4aa8012 cxgb4: Make t4_get_tp_e2c_map static
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=1662cb12a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d137eb988ffd93c3
-dashboard link: https://syzkaller.appspot.com/bug?extid=5ee26b4e30c45930bd3c
+HEAD commit:    3c09c195 Add linux-next specific files for 20190531
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=13b36b9aa00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6cfb24468280cd5c
+dashboard link: https://syzkaller.appspot.com/bug?extid=e1374b2ec8f6a25ab2e5
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
 Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+5ee26b4e30c45930bd3c@syzkaller.appspotmail.com
+Reported-by: syzbot+e1374b2ec8f6a25ab2e5@syzkaller.appspotmail.com
 
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 17324 Comm: syz-executor.5 Not tainted 5.2.0-rc1+ #2
+======================================================
+WARNING: possible circular locking dependency detected
+5.2.0-rc2-next-20190531 #4 Not tainted
+------------------------------------------------------
+syz-executor.5/29536 is trying to acquire lock:
+0000000031b33a56 (&mm->mmap_sem#2){++++}, at:  
+get_user_pages_unlocked+0xfc/0x4a0 mm/gup.c:1174
+
+but task is already holding lock:
+00000000e8d693f5 (&sb->s_type->i_mutex_key#10){++++}, at: inode_trylock  
+include/linux/fs.h:798 [inline]
+00000000e8d693f5 (&sb->s_type->i_mutex_key#10){++++}, at:  
+ext4_file_write_iter+0x246/0x1070 fs/ext4/file.c:232
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #1 (&sb->s_type->i_mutex_key#10){++++}:
+        down_write+0x38/0xa0 kernel/locking/rwsem.c:66
+        inode_lock include/linux/fs.h:778 [inline]
+        process_measurement+0x15ae/0x15e0  
+security/integrity/ima/ima_main.c:228
+        ima_file_mmap+0x11a/0x130 security/integrity/ima/ima_main.c:370
+        security_file_mprotect+0xd5/0x100 security/security.c:1430
+        do_mprotect_pkey+0x537/0xa30 mm/mprotect.c:550
+        __do_sys_pkey_mprotect mm/mprotect.c:590 [inline]
+        __se_sys_pkey_mprotect mm/mprotect.c:587 [inline]
+        __x64_sys_pkey_mprotect+0x97/0xf0 mm/mprotect.c:587
+        do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+-> #0 (&mm->mmap_sem#2){++++}:
+        lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4300
+        down_read+0x3f/0x1e0 kernel/locking/rwsem.c:24
+        get_user_pages_unlocked+0xfc/0x4a0 mm/gup.c:1174
+        __gup_longterm_unlocked mm/gup.c:2193 [inline]
+        get_user_pages_fast+0x43f/0x530 mm/gup.c:2245
+        iov_iter_get_pages+0x2c2/0xf80 lib/iov_iter.c:1287
+        dio_refill_pages fs/direct-io.c:171 [inline]
+        dio_get_page fs/direct-io.c:215 [inline]
+        do_direct_IO fs/direct-io.c:983 [inline]
+        do_blockdev_direct_IO+0x3f7b/0x8e00 fs/direct-io.c:1336
+        __blockdev_direct_IO+0xa1/0xca fs/direct-io.c:1422
+        ext4_direct_IO_write fs/ext4/inode.c:3782 [inline]
+        ext4_direct_IO+0xaa7/0x1bb0 fs/ext4/inode.c:3909
+        generic_file_direct_write+0x20a/0x4a0 mm/filemap.c:3110
+        __generic_file_write_iter+0x2ee/0x630 mm/filemap.c:3293
+        ext4_file_write_iter+0x332/0x1070 fs/ext4/file.c:266
+        call_write_iter include/linux/fs.h:1870 [inline]
+        new_sync_write+0x4d3/0x770 fs/read_write.c:483
+        __vfs_write+0xe1/0x110 fs/read_write.c:496
+        vfs_write+0x268/0x5d0 fs/read_write.c:558
+        ksys_write+0x14f/0x290 fs/read_write.c:611
+        __do_sys_write fs/read_write.c:623 [inline]
+        __se_sys_write fs/read_write.c:620 [inline]
+        __x64_sys_write+0x73/0xb0 fs/read_write.c:620
+        do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+other info that might help us debug this:
+
+  Possible unsafe locking scenario:
+
+        CPU0                    CPU1
+        ----                    ----
+   lock(&sb->s_type->i_mutex_key#10);
+                                lock(&mm->mmap_sem#2);
+                                lock(&sb->s_type->i_mutex_key#10);
+   lock(&mm->mmap_sem#2);
+
+  *** DEADLOCK ***
+
+3 locks held by syz-executor.5/29536:
+  #0: 000000007070e315 (&f->f_pos_lock){+.+.}, at: __fdget_pos+0xee/0x110  
+fs/file.c:801
+  #1: 000000001278f3d0 (sb_writers#3){.+.+}, at: file_start_write  
+include/linux/fs.h:2836 [inline]
+  #1: 000000001278f3d0 (sb_writers#3){.+.+}, at: vfs_write+0x485/0x5d0  
+fs/read_write.c:557
+  #2: 00000000e8d693f5 (&sb->s_type->i_mutex_key#10){++++}, at:  
+inode_trylock include/linux/fs.h:798 [inline]
+  #2: 00000000e8d693f5 (&sb->s_type->i_mutex_key#10){++++}, at:  
+ext4_file_write_iter+0x246/0x1070 fs/ext4/file.c:232
+
+stack backtrace:
+CPU: 0 PID: 29536 Comm: syz-executor.5 Not tainted 5.2.0-rc2-next-20190531  
+#4
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
-RIP: 0010:__read_once_size include/linux/compiler.h:194 [inline]
-RIP: 0010:rt6_get_cookie include/net/ip6_fib.h:264 [inline]
-RIP: 0010:ip6_dst_store include/net/ip6_route.h:213 [inline]
-RIP: 0010:tcp_v6_connect+0xfd0/0x20a0 net/ipv6/tcp_ipv6.c:298
-Code: 89 e6 e8 83 a2 48 fb 45 84 e4 0f 84 90 09 00 00 e8 35 a1 48 fb 49 8d  
-7e 70 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f  
-85 57 0e 00 00 4d 8b 66 70 e8 4d 88 35 fb 31 ff 89
-RSP: 0018:ffff888066547800 EFLAGS: 00010207
-RAX: dffffc0000000000 RBX: ffff888064e839f0 RCX: ffffc90010e49000
-RDX: 000000000000002b RSI: ffffffff8628033b RDI: 000000000000015f
-RBP: ffff888066547980 R08: ffff8880a9412080 R09: ffffed1015d26be0
-R10: ffffed1015d26bdf R11: ffff8880ae935efb R12: 0000000000000001
-R13: ffff888064e82f40 R14: 00000000000000ef R15: ffff888066547de8
-FS:  00007f43abb71700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ffc77267668 CR3: 00000000a5071000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
-  __inet_stream_connect+0x834/0xe90 net/ipv4/af_inet.c:659
-  tcp_sendmsg_fastopen net/ipv4/tcp.c:1143 [inline]
-  tcp_sendmsg_locked+0x2318/0x3920 net/ipv4/tcp.c:1185
-  tcp_sendmsg+0x30/0x50 net/ipv4/tcp.c:1419
-  inet_sendmsg+0x141/0x5d0 net/ipv4/af_inet.c:802
-  sock_sendmsg_nosec net/socket.c:652 [inline]
-  sock_sendmsg+0xd7/0x130 net/socket.c:671
-  __sys_sendto+0x262/0x380 net/socket.c:1964
-  __do_sys_sendto net/socket.c:1976 [inline]
-  __se_sys_sendto net/socket.c:1972 [inline]
-  __x64_sys_sendto+0xe1/0x1a0 net/socket.c:1972
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_circular_bug.cold+0x1cc/0x28f kernel/locking/lockdep.c:1566
+  check_prev_add kernel/locking/lockdep.c:2311 [inline]
+  check_prevs_add kernel/locking/lockdep.c:2419 [inline]
+  validate_chain kernel/locking/lockdep.c:2801 [inline]
+  __lock_acquire+0x3755/0x5490 kernel/locking/lockdep.c:3790
+  lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4300
+  down_read+0x3f/0x1e0 kernel/locking/rwsem.c:24
+  get_user_pages_unlocked+0xfc/0x4a0 mm/gup.c:1174
+  __gup_longterm_unlocked mm/gup.c:2193 [inline]
+  get_user_pages_fast+0x43f/0x530 mm/gup.c:2245
+  iov_iter_get_pages+0x2c2/0xf80 lib/iov_iter.c:1287
+  dio_refill_pages fs/direct-io.c:171 [inline]
+  dio_get_page fs/direct-io.c:215 [inline]
+  do_direct_IO fs/direct-io.c:983 [inline]
+  do_blockdev_direct_IO+0x3f7b/0x8e00 fs/direct-io.c:1336
+  __blockdev_direct_IO+0xa1/0xca fs/direct-io.c:1422
+  ext4_direct_IO_write fs/ext4/inode.c:3782 [inline]
+  ext4_direct_IO+0xaa7/0x1bb0 fs/ext4/inode.c:3909
+  generic_file_direct_write+0x20a/0x4a0 mm/filemap.c:3110
+  __generic_file_write_iter+0x2ee/0x630 mm/filemap.c:3293
+  ext4_file_write_iter+0x332/0x1070 fs/ext4/file.c:266
+  call_write_iter include/linux/fs.h:1870 [inline]
+  new_sync_write+0x4d3/0x770 fs/read_write.c:483
+  __vfs_write+0xe1/0x110 fs/read_write.c:496
+  vfs_write+0x268/0x5d0 fs/read_write.c:558
+  ksys_write+0x14f/0x290 fs/read_write.c:611
+  __do_sys_write fs/read_write.c:623 [inline]
+  __se_sys_write fs/read_write.c:620 [inline]
+  __x64_sys_write+0x73/0xb0 fs/read_write.c:620
   do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
   entry_SYSCALL_64_after_hwframe+0x49/0xbe
 RIP: 0033:0x459279
 Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
 ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f43abb70c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
-RAX: ffffffffffffffda RBX: 0000000000000006 RCX: 0000000000459279
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000004
-RBP: 000000000075c100 R08: 0000000020000380 R09: 000000000000001c
-R10: 0000000020000000 R11: 0000000000000246 R12: 00007f43abb716d4
-R13: 00000000004c6d9d R14: 00000000004dbc40 R15: 00000000ffffffff
-Modules linked in:
----[ end trace c8448517bbb9ef43 ]---
-RIP: 0010:__read_once_size include/linux/compiler.h:194 [inline]
-RIP: 0010:rt6_get_cookie include/net/ip6_fib.h:264 [inline]
-RIP: 0010:ip6_dst_store include/net/ip6_route.h:213 [inline]
-RIP: 0010:tcp_v6_connect+0xfd0/0x20a0 net/ipv6/tcp_ipv6.c:298
-Code: 89 e6 e8 83 a2 48 fb 45 84 e4 0f 84 90 09 00 00 e8 35 a1 48 fb 49 8d  
-7e 70 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f  
-85 57 0e 00 00 4d 8b 66 70 e8 4d 88 35 fb 31 ff 89
-RSP: 0018:ffff888066547800 EFLAGS: 00010207
-RAX: dffffc0000000000 RBX: ffff888064e839f0 RCX: ffffc90010e49000
-RDX: 000000000000002b RSI: ffffffff8628033b RDI: 000000000000015f
-RBP: ffff888066547980 R08: ffff8880a9412080 R09: ffffed1015d26be0
-R10: ffffed1015d26bdf R11: ffff8880ae935efb R12: 0000000000000001
-R13: ffff888064e82f40 R14: 00000000000000ef R15: ffff888066547de8
-FS:  00007f43abb71700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f86924a7000 CR3: 00000000a5071000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+RSP: 002b:00007f65e9a0fc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459279
+RDX: 000000010000000d RSI: 0000000020000000 RDI: 0000000000000004
+RBP: 000000000075bfc0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f65e9a106d4
+R13: 00000000004c8e8a R14: 00000000004dfae0 R15: 00000000ffffffff
 
 
 ---
