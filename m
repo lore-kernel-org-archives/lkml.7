@@ -7,49 +7,58 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 289A1C28CC4
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C50A1C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01C01273A3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:26:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EBF0273B2
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:26:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395574;
-	bh=WXNJfxzNqE4ECcdcaGmClTiyd4M/VptP4WcBtThcM4A=;
+	s=default; t=1559395577;
+	bh=6sujLPHojiodkFk/sT4dPXMVg1EbwtHZuWkazWxrAUE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2PU4UoMdpS79LTNgFGWnZtBHrPqgIZjBmTRnu83jflodYVoM4sj6Olz0HV9KFOhMp
-	 2mVqrKroth5OIqwkLA5Zlhje7WfO/e+ct5XMYk3/uYkVJzYTHX09ng+JfuYzCTi94H
-	 zTE/285NpQLgL//iCcq5gT4tYx8uTRUzxmJD1siM=
+	b=WzJNBmJKZXE1sFeVviu7jfXkVL6NNH0TauCFslX7ymsPblp70c/RXjAdtlvuF8OGs
+	 X0q75MPnhoGhuOq009hrGaH4oQhNWguRrXsZaeRR0ZabOEj2vOiZC8QgUI/ihMChvT
+	 bMsb9mQRGe9piqR0cj9f/JeMP7lTAm/BOao4kxL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729350AbfFAN0M (ORCPT
+        id S1729671AbfFAN0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:26:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56376 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:26:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729262AbfFANZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:25:59 -0400
+        id S1729620AbfFAN0F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:26:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64CFA273B2;
-        Sat,  1 Jun 2019 13:25:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06104273AD;
+        Sat,  1 Jun 2019 13:26:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395558;
-        bh=WXNJfxzNqE4ECcdcaGmClTiyd4M/VptP4WcBtThcM4A=;
+        s=default; t=1559395564;
+        bh=6sujLPHojiodkFk/sT4dPXMVg1EbwtHZuWkazWxrAUE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=owbkRzXRIEPiYJg/NVJFzp6fq9+Uvev3JYbdgIIxqRFfd/fVULNP6b3RPCifkj5t9
-         I/6fQXrXxfKeZhKoEdiIRAAxSYMyjFcj0nYLr7V7D1R491JjnJ9p0PTZvcIaTjn2IM
-         9vydXulHIKDiguoJp9sX6kbI+/oNVn+ir9YUHaVU=
+        b=0lLgDPCDGz/2BC0574EhnvGZ4uqSVqxDl1+l3Tu+Jf+oFOVUUuUJETq8zBji7+0Ui
+         e4rJBHrk+NLSYD2On/z4QBV2gVdAHlW33vo/isxQWsp01ZE02qB6eT9fWFarZtBylj
+         6i9lGGKGE3qM5OBBII2KgHXE9ylFAfwPj73dzsQ4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 29/74] watchdog: Use depends instead of select for pretimeout governors
-Date:   Sat,  1 Jun 2019 09:24:16 -0400
-Message-Id: <20190601132501.27021-29-sashal@kernel.org>
+Cc:     Christian Brauner <christian@brauner.io>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 02/56] sysctl: return -EINVAL if val violates minmax
+Date:   Sat,  1 Jun 2019 09:25:06 -0400
+Message-Id: <20190601132600.27427-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190601132501.27021-1-sashal@kernel.org>
-References: <20190601132501.27021-1-sashal@kernel.org>
+In-Reply-To: <20190601132600.27427-1-sashal@kernel.org>
+References: <20190601132600.27427-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,94 +68,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Christian Brauner <christian@brauner.io>
 
-[ Upstream commit f627ac0e12cd2736e60b9f5782ecec1d97251f77 ]
+[ Upstream commit e260ad01f0aa9e96b5386d5cd7184afd949dc457 ]
 
-Watchdog pretimeout governors were enabled from the default governor
-selection using "select". As a result, the default governor was always
-built into the kernel, even if no watchdog driver was loaded. By using
-"depends on" instead of "select", we are in better control, and the
-governors can all be built as modules. At the same time, set the default
-configuration option for pretimeout governors to match WATCHDOG_CORE
-(meaning all pretimeout governors are by default enabled if pretimeout
-support is enabled).
+Currently when userspace gives us a values that overflow e.g.  file-max
+and other callers of __do_proc_doulongvec_minmax() we simply ignore the
+new value and leave the current value untouched.
 
-The practical impact of this change is minimal. Previously, selecting
-a default governor automatically enabled that governor. Now, a default
-governor can only be selected if that governor has been enabled.
-Consequently, the order of governor selection is now reversed: The
-governor selection is now first, followed by default governor selection.
+This can be problematic as it gives the illusion that the limit has
+indeed be bumped when in fact it failed.  This commit makes sure to
+return EINVAL when an overflow is detected.  Please note that this is a
+userspace facing change.
 
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Link: http://lkml.kernel.org/r/20190210203943.8227-4-christian@brauner.io
+Signed-off-by: Christian Brauner <christian@brauner.io>
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Dominik Brodowski <linux@dominikbrodowski.net>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Joe Lawrence <joe.lawrence@redhat.com>
+Cc: Waiman Long <longman@redhat.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/Kconfig | 30 ++++++++++++++++--------------
- 1 file changed, 16 insertions(+), 14 deletions(-)
+ kernel/sysctl.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 8f8909a668d78..15c01830799a4 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -1855,6 +1855,20 @@ config WATCHDOG_PRETIMEOUT_GOV
- 
- if WATCHDOG_PRETIMEOUT_GOV
- 
-+config WATCHDOG_PRETIMEOUT_GOV_NOOP
-+	tristate "Noop watchdog pretimeout governor"
-+	default WATCHDOG_CORE
-+	help
-+	  Noop watchdog pretimeout governor, only an informational
-+	  message is added to kernel log buffer.
-+
-+config WATCHDOG_PRETIMEOUT_GOV_PANIC
-+	tristate "Panic watchdog pretimeout governor"
-+	default WATCHDOG_CORE
-+	help
-+	  Panic watchdog pretimeout governor, on watchdog pretimeout
-+	  event put the kernel into panic.
-+
- choice
- 	prompt "Default Watchdog Pretimeout Governor"
- 	default WATCHDOG_PRETIMEOUT_DEFAULT_GOV_PANIC
-@@ -1865,7 +1879,7 @@ choice
- 
- config WATCHDOG_PRETIMEOUT_DEFAULT_GOV_NOOP
- 	bool "noop"
--	select WATCHDOG_PRETIMEOUT_GOV_NOOP
-+	depends on WATCHDOG_PRETIMEOUT_GOV_NOOP
- 	help
- 	  Use noop watchdog pretimeout governor by default. If noop
- 	  governor is selected by a user, write a short message to
-@@ -1873,7 +1887,7 @@ config WATCHDOG_PRETIMEOUT_DEFAULT_GOV_NOOP
- 
- config WATCHDOG_PRETIMEOUT_DEFAULT_GOV_PANIC
- 	bool "panic"
--	select WATCHDOG_PRETIMEOUT_GOV_PANIC
-+	depends on WATCHDOG_PRETIMEOUT_GOV_PANIC
- 	help
- 	  Use panic watchdog pretimeout governor by default, if
- 	  a watchdog pretimeout event happens, consider that
-@@ -1881,18 +1895,6 @@ config WATCHDOG_PRETIMEOUT_DEFAULT_GOV_PANIC
- 
- endchoice
- 
--config WATCHDOG_PRETIMEOUT_GOV_NOOP
--	tristate "Noop watchdog pretimeout governor"
--	help
--	  Noop watchdog pretimeout governor, only an informational
--	  message is added to kernel log buffer.
--
--config WATCHDOG_PRETIMEOUT_GOV_PANIC
--	tristate "Panic watchdog pretimeout governor"
--	help
--	  Panic watchdog pretimeout governor, on watchdog pretimeout
--	  event put the kernel into panic.
--
- endif # WATCHDOG_PRETIMEOUT_GOV
- 
- endif # WATCHDOG
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index c140659db6699..24c7fe8608d02 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -2461,8 +2461,10 @@ static int __do_proc_doulongvec_minmax(void *data, struct ctl_table *table, int
+ 			if (neg)
+ 				continue;
+ 			val = convmul * val / convdiv;
+-			if ((min && val < *min) || (max && val > *max))
+-				continue;
++			if ((min && val < *min) || (max && val > *max)) {
++				err = -EINVAL;
++				break;
++			}
+ 			*i = val;
+ 		} else {
+ 			val = convdiv * (*i) / convmul;
 -- 
 2.20.1
 
