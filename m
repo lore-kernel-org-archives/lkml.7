@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6611AC28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE67C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4023A27368
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:24:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5FA92738C
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:24:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395482;
-	bh=WbsEjZ01dW2VzUflcPYAWm4rdqD1xl3f+Eh2Tyn2NQM=;
+	s=default; t=1559395484;
+	bh=69y2gItOvSr9OXGYmGzI3KvaoNkcFXtW1WXboLzi4RU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lkNIMn2yuRCAt5Vw7UuWx1CrUuyDlv0ZRY3YHASch0B0yO2QcoB5T1a/6qbDUibq8
-	 YVPYll8PLfYbfQ7gScoJw92eiF0Ea0X/rs0Juv/KZIF8TBVEnhbhq6nBEMqvqZRgPL
-	 Syc6F4SaqDZ9ZKsBt9r6FvAiQnSp7yLdvbIXcnr0=
+	b=hiBMQGoMSzlYXBNSMSNWzR4n40cO3nqPnxcoe3mzl+xiasmE7G7/UwaEF1z5tANJQ
+	 wQVXnlDFcasAW3GCODSZUpQIBJOqzgLjnTr7IYwyUxzYyljB7n9moJyBVq11wCIuWE
+	 +Rhcx1un3i8TO+uknxaQ4sAUnjt04iKwevticd1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbfFANYl (ORCPT
+        id S1729295AbfFANYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:24:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54674 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:24:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729263AbfFANYg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:24:36 -0400
+        id S1729263AbfFANYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:24:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFE9227355;
-        Sat,  1 Jun 2019 13:24:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A303327385;
+        Sat,  1 Jun 2019 13:24:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395476;
-        bh=WbsEjZ01dW2VzUflcPYAWm4rdqD1xl3f+Eh2Tyn2NQM=;
+        s=default; t=1559395481;
+        bh=69y2gItOvSr9OXGYmGzI3KvaoNkcFXtW1WXboLzi4RU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Aodt/nGAB08nuMRaqNPeQ/wcmu75RIlrzIMdGWCAYZx558RC3t+33IaSs0L7nE7g7
-         Vaux/xZE0jdC2us8aYM+xGz4Iueqckkez8uNpzeCMJsE9rZDJtjyk3i1MUyLS994Jv
-         F3hLAXSmPyYal6md2LpKn9ykSnQeyuphBM5TyBw0=
+        b=ltIr17fL6bULozUshRH4CUsDM1F4q29LL9/+G9fbZ6SpYxK9pT649TKUKC2WmNIJu
+         bJtJ8VvqGq1H3zaIvvV3pRNsUwUtwHk+97YD1TLnrXQ5w6jOisYfkM6SQIATNdHS/v
+         q2nCIMgsnBsgfPWOJ29iNHpZBal37evWsDGOs7Ts=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+Cc:     Miroslav Lichvar <mlichvar@redhat.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 22/99] objtool: Don't use ignore flag for fake jumps
-Date:   Sat,  1 Jun 2019 09:22:29 -0400
-Message-Id: <20190601132346.26558-22-sashal@kernel.org>
+        John Stultz <john.stultz@linaro.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Prarit Bhargava <prarit@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 26/99] ntp: Allow TAI-UTC offset to be set to zero
+Date:   Sat,  1 Jun 2019 09:22:33 -0400
+Message-Id: <20190601132346.26558-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132346.26558-1-sashal@kernel.org>
 References: <20190601132346.26558-1-sashal@kernel.org>
@@ -61,70 +63,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Miroslav Lichvar <mlichvar@redhat.com>
 
-[ Upstream commit e6da9567959e164f82bc81967e0d5b10dee870b4 ]
+[ Upstream commit fdc6bae940ee9eb869e493990540098b8c0fd6ab ]
 
-The ignore flag is set on fake jumps in order to keep
-add_jump_destinations() from setting their jump_dest, since it already
-got set when the fake jump was created.
+The ADJ_TAI adjtimex mode sets the TAI-UTC offset of the system clock.
+It is typically set by NTP/PTP implementations and it is automatically
+updated by the kernel on leap seconds. The initial value is zero (which
+applications may interpret as unknown), but this value cannot be set by
+adjtimex. This limitation seems to go back to the original "nanokernel"
+implementation by David Mills.
 
-But using the ignore flag is a bit of a hack.  It's normally used to
-skip validation of an instruction, which doesn't really make sense for
-fake jumps.
+Change the ADJ_TAI check to accept zero as a valid TAI-UTC offset in
+order to allow setting it back to the initial value.
 
-Also, after the next patch, using the ignore flag for fake jumps can
-trigger a false "why am I validating an ignored function?" warning.
-
-Instead just add an explicit check in add_jump_destinations() to skip
-fake jumps.
-
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/71abc072ff48b2feccc197723a9c52859476c068.1557766718.git.jpoimboe@redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 153b5d054ac2 ("ntp: support for TAI")
+Suggested-by: Ondrej Mosnacek <omosnace@redhat.com>
+Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: Richard Cochran <richardcochran@gmail.com>
+Cc: Prarit Bhargava <prarit@redhat.com>
+Link: https://lkml.kernel.org/r/20190417084833.7401-1-mlichvar@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/objtool/check.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ kernel/time/ntp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index ae3446768181f..95326c6a7a249 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -28,6 +28,8 @@
- #include <linux/hashtable.h>
- #include <linux/kernel.h>
- 
-+#define FAKE_JUMP_OFFSET -1
-+
- struct alternative {
- 	struct list_head list;
- 	struct instruction *insn;
-@@ -498,7 +500,7 @@ static int add_jump_destinations(struct objtool_file *file)
- 		    insn->type != INSN_JUMP_UNCONDITIONAL)
- 			continue;
- 
--		if (insn->ignore)
-+		if (insn->ignore || insn->offset == FAKE_JUMP_OFFSET)
- 			continue;
- 
- 		rela = find_rela_by_dest_range(insn->sec, insn->offset,
-@@ -645,10 +647,10 @@ static int handle_group_alt(struct objtool_file *file,
- 		clear_insn_state(&fake_jump->state);
- 
- 		fake_jump->sec = special_alt->new_sec;
--		fake_jump->offset = -1;
-+		fake_jump->offset = FAKE_JUMP_OFFSET;
- 		fake_jump->type = INSN_JUMP_UNCONDITIONAL;
- 		fake_jump->jump_dest = list_next_entry(last_orig_insn, list);
--		fake_jump->ignore = true;
-+		fake_jump->func = orig_insn->func;
+diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
+index 99e03bec68e4c..4bb9b66338bee 100644
+--- a/kernel/time/ntp.c
++++ b/kernel/time/ntp.c
+@@ -640,7 +640,7 @@ static inline void process_adjtimex_modes(struct timex *txc,
+ 		time_constant = max(time_constant, 0l);
  	}
  
- 	if (!special_alt->new_len) {
+-	if (txc->modes & ADJ_TAI && txc->constant > 0)
++	if (txc->modes & ADJ_TAI && txc->constant >= 0)
+ 		*time_tai = txc->constant;
+ 
+ 	if (txc->modes & ADJ_OFFSET)
 -- 
 2.20.1
 
