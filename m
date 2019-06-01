@@ -2,176 +2,101 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA855C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 10:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 524A2C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 10:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DECB271CD
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 10:09:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 251D5271D3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 10:21:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfFAKJB (ORCPT
+        id S1726840AbfFAKVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 06:09:01 -0400
-Received: from hosting.gsystem.sk ([212.5.213.30]:38306 "EHLO
-        hosting.gsystem.sk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbfFAKJB (ORCPT
+        Sat, 1 Jun 2019 06:21:12 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50196 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726109AbfFAKVM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 06:09:01 -0400
-Received: from gsql.ggedos.sk (off-20.infotel.telecom.sk [212.5.213.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by hosting.gsystem.sk (Postfix) with ESMTPSA id 2A4847A0241;
-        Sat,  1 Jun 2019 12:08:59 +0200 (CEST)
-From:   Ondrej Zary <linux@zary.sk>
-To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
-Cc:     "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        David Rientjes <rientjes@google.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] wd719x: Fix resets and aborts
-Date:   Sat,  1 Jun 2019 12:08:57 +0200
-Message-Id: <20190601100857.22917-1-linux@zary.sk>
-X-Mailer: git-send-email 2.11.0
+        Sat, 1 Jun 2019 06:21:12 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x51AHBmw093251
+        for <linux-kernel@vger.kernel.org>; Sat, 1 Jun 2019 06:21:11 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sunw2tb9h-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Jun 2019 06:21:11 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Sat, 1 Jun 2019 11:21:09 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 1 Jun 2019 11:21:07 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x51AL68J48234544
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 1 Jun 2019 10:21:06 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2ABC142042;
+        Sat,  1 Jun 2019 10:21:06 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F253942041;
+        Sat,  1 Jun 2019 10:21:05 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.21])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Sat,  1 Jun 2019 10:21:05 +0000 (GMT)
+Date:   Sat, 1 Jun 2019 12:21:04 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     xiaolinkui <xiaolinkui@kylinos.cn>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arch: s390: use struct_size() in kmalloc()
+References: <1558077317-12201-1-git-send-email-xiaolinkui@kylinos.cn>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1558077317-12201-1-git-send-email-xiaolinkui@kylinos.cn>
+X-TM-AS-GCONF: 00
+x-cbid: 19060110-0012-0000-0000-000003218158
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19060110-0013-0000-0000-0000215A5618
+Message-Id: <20190601102104.GA3600@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-01_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=44 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=874 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906010076
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Host reset oopses because it calls wd719x_chip_init, which calls
-request_firmware, under a spinlock. Stop the RISC first, then flush
-active SCBs under a spinlock. Finally call wd719x_chip_init unlocked.
+On Fri, May 17, 2019 at 03:15:17PM +0800, xiaolinkui wrote:
+> Use the new struct_size() helper to keep code simple.
+> 
+> Signed-off-by: xiaolinkui <xiaolinkui@kylinos.cn>
+> ---
+>  arch/s390/include/asm/idals.h | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/arch/s390/include/asm/idals.h b/arch/s390/include/asm/idals.h
+> index 15578fd..6fb7ace 100644
+> --- a/arch/s390/include/asm/idals.h
+> +++ b/arch/s390/include/asm/idals.h
+> @@ -122,8 +122,7 @@ idal_buffer_alloc(size_t size, int page_order)
+> 
+>  	nr_ptrs = (size + IDA_BLOCK_SIZE - 1) >> IDA_SIZE_LOG;
+>  	nr_chunks = (4096 << page_order) >> IDA_SIZE_LOG;
+> -	ib = kmalloc(sizeof(struct idal_buffer) + nr_ptrs*sizeof(void *),
+> -		     GFP_DMA | GFP_KERNEL);
+> +	ib = kmalloc(struct_size(ib, data, nr_ptrs), GFP_DMA | GFP_KERNEL);
+>  	if (ib == NULL)
+>  		return ERR_PTR(-ENOMEM);
+>  	ib->size = size;
 
-Also found and fixed more bugs during tests:
-
-Affected active SCBs were not flushed during abort, bus and device
-reset. This caused problems in a following host reset (hang or oops).
-
-Device and bus reset failed under load because the result of the reset
-command is WD719X_SUE_TERM or WD719X_SUE_RESET. Don't treat these codes
-as error in wd719x_wait_done.
-
-wd719x_direct_cmd for RESET/ABORT commands didn't work properly,
-causing timeouts. Looks like it was caused by the WD719X_DISABLE_INT
-bit. Not setting it for RESET/ABORT commands seems to fix the probem.
-Also lower the log level of the corresponding "direct command
-completed" message to debug.
-
-Unfortunately, my documentation is missing some pages, including page
-67 (SPIDER67.gif) about resets :(
-
-Reported-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-Signed-off-by: Ondrej Zary <linux@zary.sk>
----
- drivers/scsi/wd719x.c | 42 ++++++++++++++++++++++++++++++------------
- 1 file changed, 30 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/scsi/wd719x.c b/drivers/scsi/wd719x.c
-index e3310e9488d2..2b44b0be2e00 100644
---- a/drivers/scsi/wd719x.c
-+++ b/drivers/scsi/wd719x.c
-@@ -107,8 +107,15 @@ static inline int wd719x_wait_done(struct wd719x *wd, int timeout)
- 	}
- 
- 	if (status != WD719X_INT_NOERRORS) {
-+		u8 sue = wd719x_readb(wd, WD719X_AMR_SCB_ERROR);
-+		/* we get this after wd719x_dev_reset, it's not an error */
-+		if (sue == WD719X_SUE_TERM)
-+			return 0;
-+		/* we get this after wd719x_bus_reset, it's not an error */
-+		if (sue == WD719X_SUE_RESET)
-+			return 0;
- 		dev_err(&wd->pdev->dev, "direct command failed, status 0x%02x, SUE 0x%02x\n",
--			status, wd719x_readb(wd, WD719X_AMR_SCB_ERROR));
-+			status, sue);
- 		return -EIO;
- 	}
- 
-@@ -127,8 +134,10 @@ static int wd719x_direct_cmd(struct wd719x *wd, u8 opcode, u8 dev, u8 lun,
- 	if (wd719x_wait_ready(wd))
- 		return -ETIMEDOUT;
- 
--	/* make sure we get NO interrupts */
--	dev |= WD719X_DISABLE_INT;
-+	/* disable interrupts except for RESET/ABORT (it breaks them) */
-+	if (opcode != WD719X_CMD_BUSRESET && opcode != WD719X_CMD_ABORT &&
-+	    opcode != WD719X_CMD_ABORT_TAG && opcode != WD719X_CMD_RESET)
-+		dev |= WD719X_DISABLE_INT;
- 	wd719x_writeb(wd, WD719X_AMR_CMD_PARAM, dev);
- 	wd719x_writeb(wd, WD719X_AMR_CMD_PARAM_2, lun);
- 	wd719x_writeb(wd, WD719X_AMR_CMD_PARAM_3, tag);
-@@ -464,6 +473,7 @@ static int wd719x_abort(struct scsi_cmnd *cmd)
- 	spin_lock_irqsave(wd->sh->host_lock, flags);
- 	result = wd719x_direct_cmd(wd, action, cmd->device->id,
- 				   cmd->device->lun, cmd->tag, scb->phys, 0);
-+	wd719x_finish_cmd(scb, DID_ABORT);
- 	spin_unlock_irqrestore(wd->sh->host_lock, flags);
- 	if (result)
- 		return FAILED;
-@@ -476,6 +486,7 @@ static int wd719x_reset(struct scsi_cmnd *cmd, u8 opcode, u8 device)
- 	int result;
- 	unsigned long flags;
- 	struct wd719x *wd = shost_priv(cmd->device->host);
-+	struct wd719x_scb *scb, *tmp;
- 
- 	dev_info(&wd->pdev->dev, "%s reset requested\n",
- 		 (opcode == WD719X_CMD_BUSRESET) ? "bus" : "device");
-@@ -483,6 +494,12 @@ static int wd719x_reset(struct scsi_cmnd *cmd, u8 opcode, u8 device)
- 	spin_lock_irqsave(wd->sh->host_lock, flags);
- 	result = wd719x_direct_cmd(wd, opcode, device, 0, 0, 0,
- 				   WD719X_WAIT_FOR_SCSI_RESET);
-+	/* flush all SCBs (or all for a device if dev_reset) */
-+	list_for_each_entry_safe(scb, tmp, &wd->active_scbs, list) {
-+		if (opcode == WD719X_CMD_BUSRESET ||
-+		    scb->cmd->device->id == device)
-+			wd719x_finish_cmd(scb, DID_RESET);
-+	}
- 	spin_unlock_irqrestore(wd->sh->host_lock, flags);
- 	if (result)
- 		return FAILED;
-@@ -505,22 +522,23 @@ static int wd719x_host_reset(struct scsi_cmnd *cmd)
- 	struct wd719x *wd = shost_priv(cmd->device->host);
- 	struct wd719x_scb *scb, *tmp;
- 	unsigned long flags;
--	int result;
- 
- 	dev_info(&wd->pdev->dev, "host reset requested\n");
- 	spin_lock_irqsave(wd->sh->host_lock, flags);
--	/* Try to reinit the RISC */
--	if (wd719x_chip_init(wd) == 0)
--		result = SUCCESS;
--	else
--		result = FAILED;
-+	/* stop the RISC */
-+	if (wd719x_direct_cmd(wd, WD719X_CMD_SLEEP, 0, 0, 0, 0,
-+			      WD719X_WAIT_FOR_RISC))
-+		dev_warn(&wd->pdev->dev, "RISC sleep command failed\n");
-+	/* disable RISC */
-+	wd719x_writeb(wd, WD719X_PCI_MODE_SELECT, 0);
- 
- 	/* flush all SCBs */
- 	list_for_each_entry_safe(scb, tmp, &wd->active_scbs, list)
--		wd719x_finish_cmd(scb, result);
-+		wd719x_finish_cmd(scb, DID_RESET);
- 	spin_unlock_irqrestore(wd->sh->host_lock, flags);
- 
--	return result;
-+	/* Try to reinit the RISC */
-+	return wd719x_chip_init(wd) == 0 ? SUCCESS : FAILED;
- }
- 
- static int wd719x_biosparam(struct scsi_device *sdev, struct block_device *bdev,
-@@ -672,7 +690,7 @@ static irqreturn_t wd719x_interrupt(int irq, void *dev_id)
- 			else
- 				dev_err(&wd->pdev->dev, "card returned invalid SCB pointer\n");
- 		} else
--			dev_warn(&wd->pdev->dev, "direct command 0x%x completed\n",
-+			dev_dbg(&wd->pdev->dev, "direct command 0x%x completed\n",
- 				 regs.bytes.OPC);
- 		break;
- 	case WD719X_INT_PIOREADY:
--- 
-Ondrej Zary
+Applied, thanks.
 
