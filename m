@@ -7,55 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD2C4C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 140C8C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 822A7272DC
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:19:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2A94272C6
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:20:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395196;
-	bh=38LgSbJoTl/07ed7Yd+jNq76SQ4YZYrh0KVRudg1NVE=;
+	s=default; t=1559395200;
+	bh=tbWvIJWdFYjCbnqY0TwJ2oWM5ZjnFur7mWM2r3xBZnA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c9E10osQokRZpji/PuazcBVQ7hKoKxVTYntuJBAubR4vcMsviL4VgMF6niMC7LNtL
-	 zijyIJ7qYj+M4ujAPCkVxZfufSvvYEbQ3Ylh4lv5hTIxDoBkxj0/A5D6qIWPtLZDoZ
-	 DNyzZu9dkjQ3mEfDn3RRWCy/3ekrWwEU2szPmFUI=
+	b=OlrJNeEhkRBI6Ub1MT0r4hiu1LPMZGpP+xNLAfnMzbURxqHwF5ClskapN7bvhUb+c
+	 7rl4GbOHbzByq5cF5hQ69B8aWsw/BsU2fmZgs2N5kQKKWWsDzFW2Zmks+dyROx1Wnx
+	 4F6t8p2s+1NS/+PU159KyLJFDhSyLzswFrWMQlBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728247AbfFANTz (ORCPT
+        id S1728249AbfFANT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:19:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46964 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:19:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727579AbfFANTv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:19:51 -0400
+        id S1727579AbfFANT5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:19:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADB4B272AC;
-        Sat,  1 Jun 2019 13:19:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8CFD272C0;
+        Sat,  1 Jun 2019 13:19:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395191;
-        bh=38LgSbJoTl/07ed7Yd+jNq76SQ4YZYrh0KVRudg1NVE=;
+        s=default; t=1559395196;
+        bh=tbWvIJWdFYjCbnqY0TwJ2oWM5ZjnFur7mWM2r3xBZnA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pGM1bk2vb2cR8SMIOKc9taUU0iuPwuea5GEOQTYxbt3Rj30GvR7NflCMdMiPLySdS
-         OZYWv5oephdpkWoF7cNnXRWwIQ1oFQ7sZfNZlgG8vgFXucrRwD2oBHAPNfwi3qvSSp
-         7bLMLS3zVTdkprITZ7GYrKFYLj2JMS3Dx3tUyIKI=
+        b=GCh77K985J18QxXO+SPKxd01jIBpO4cAWPM81NEXDTmQ09TwiJqFpEHEkeODZIhoS
+         /z8CnLyimRGH3GCmWvO51COXlq0v4arEKNpPDErcQ/UqF2DL5fYR2f8U+Q91sgbgaA
+         Wie82Lm6tl9Krs3Pphr7kpuHmEHlmNZlnHtHh7AI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christian Brauner <christian@brauner.io>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 005/173] sysctl: return -EINVAL if val violates minmax
-Date:   Sat,  1 Jun 2019 09:16:37 -0400
-Message-Id: <20190601131934.25053-5-sashal@kernel.org>
+Cc:     Brian Masney <masneyb@onstation.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.0 007/173] drm/msm: correct attempted NULL pointer dereference in debugfs
+Date:   Sat,  1 Jun 2019 09:16:39 -0400
+Message-Id: <20190601131934.25053-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131934.25053-1-sashal@kernel.org>
 References: <20190601131934.25053-1-sashal@kernel.org>
@@ -68,53 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Brauner <christian@brauner.io>
+From: Brian Masney <masneyb@onstation.org>
 
-[ Upstream commit e260ad01f0aa9e96b5386d5cd7184afd949dc457 ]
+[ Upstream commit 90f94660e53189755676543954101de78c26253b ]
 
-Currently when userspace gives us a values that overflow e.g.  file-max
-and other callers of __do_proc_doulongvec_minmax() we simply ignore the
-new value and leave the current value untouched.
+msm_gem_describe() would attempt to dereference a NULL pointer via the
+address space pointer when no IOMMU is present. Correct this by adding
+the appropriate check.
 
-This can be problematic as it gives the illusion that the limit has
-indeed be bumped when in fact it failed.  This commit makes sure to
-return EINVAL when an overflow is detected.  Please note that this is a
-userspace facing change.
-
-Link: http://lkml.kernel.org/r/20190210203943.8227-4-christian@brauner.io
-Signed-off-by: Christian Brauner <christian@brauner.io>
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Dominik Brodowski <linux@dominikbrodowski.net>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Joe Lawrence <joe.lawrence@redhat.com>
-Cc: Waiman Long <longman@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+Fixes: 575f0485508b ("drm/msm: Clean up and enhance the output of the 'gem' debugfs node")
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190513234105.7531-2-masneyb@onstation.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sysctl.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/msm/msm_gem.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index f50f1471c1199..9664d5ae2de10 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -2818,8 +2818,10 @@ static int __do_proc_doulongvec_minmax(void *data, struct ctl_table *table, int
- 			if (neg)
- 				continue;
- 			val = convmul * val / convdiv;
--			if ((min && val < *min) || (max && val > *max))
--				continue;
-+			if ((min && val < *min) || (max && val > *max)) {
-+				err = -EINVAL;
-+				break;
-+			}
- 			*i = val;
- 		} else {
- 			val = convdiv * (*i) / convmul;
+diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
+index c8886d3071fa3..bdf0089771bde 100644
+--- a/drivers/gpu/drm/msm/msm_gem.c
++++ b/drivers/gpu/drm/msm/msm_gem.c
+@@ -805,7 +805,8 @@ void msm_gem_describe(struct drm_gem_object *obj, struct seq_file *m)
+ 		seq_puts(m, "      vmas:");
+ 
+ 		list_for_each_entry(vma, &msm_obj->vmas, list)
+-			seq_printf(m, " [%s: %08llx,%s,inuse=%d]", vma->aspace->name,
++			seq_printf(m, " [%s: %08llx,%s,inuse=%d]",
++				vma->aspace != NULL ? vma->aspace->name : NULL,
+ 				vma->iova, vma->mapped ? "mapped" : "unmapped",
+ 				vma->inuse);
+ 
 -- 
 2.20.1
 
