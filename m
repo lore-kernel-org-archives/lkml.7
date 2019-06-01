@@ -2,54 +2,53 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E85C28CC4
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA228C28CC4
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE561275F0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:38:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8CDD264D2
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:38:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396286;
-	bh=wW9cAtPSoBqT/Uuh4VP3U+WowY10DUfgUZS8/UDdDn4=;
+	s=default; t=1559396291;
+	bh=FtvJm9fu6aj7T1gZCNpgvX9YigZ/+6wWTXenqwkTZXY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LWMfma0m5e/tXu1qt4lRPU7Qb+kBs5jEXqQNzwy5tRH5UjXBA1585cQ8U+Dd9WrM7
-	 BIVM+ew0hBtZbxBeTupeGpdvhlTPBVu04B5pgtqghmvzPylOlrLaiRCLkJuEfUHqcI
-	 RY0SieqrGWkh8HelfBUP14QrtghQ3Jn7JAqiKCOA=
+	b=I1c9xismPiM2Ih9w4fZqHXrcEWV3xD3dlkiSYJ1lW+6RWygmj2DlfgbIeWQhx3+SR
+	 rPsFmMcYAX4QsqEo5Udqf1LgdiHsRTS54nAR+XDlWr29WjL2w+tTcf5DBGHgqzSiQ7
+	 OLJntxdjkWMYXBk/jo5YU3IzZkR1IIC4I+s9nODA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728561AbfFANVh (ORCPT
+        id S1729094AbfFANiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:21:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49006 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:38:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728550AbfFANVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:21:34 -0400
+        id S1728545AbfFANVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:21:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45EEE272F5;
-        Sat,  1 Jun 2019 13:21:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FBE5272E7;
+        Sat,  1 Jun 2019 13:21:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395294;
-        bh=wW9cAtPSoBqT/Uuh4VP3U+WowY10DUfgUZS8/UDdDn4=;
+        s=default; t=1559395292;
+        bh=FtvJm9fu6aj7T1gZCNpgvX9YigZ/+6wWTXenqwkTZXY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jTqj41GXsWu+aOsZCrU7XWaXPwv6dNWYDZAYalEyP73+y4Dl07xTB8B/HxVy2uXUM
-         F+i5vhhkJkMyIP7ERY3bq+JgInaOxjUF5D4TkvitK7I6Cl+ZJdcetRK3+E3TliXBut
-         xvkT/hwDZljYmFjvUEEANVuEoQykSDZVCyhpf29o=
+        b=DiOukflbtSTNfBmVe9azHkMRu/5/tDZV+FRmBcjYaxi2PQHXljvGsZBvbZcHWZwzN
+         9aGYgwyNZfhScyv1kRc1ACn50JJrO5PcAr5trFFe5oIVRcT26VnHiR1j0vXsOXrl0O
+         rOPxfDZnA3mbdHjeGjzo8D6cTETzqVjLNhqXKQYU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Elazar Leibovich <elazar@lightbitslabs.com>,
-        Orit Wasserman <orit.was@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Andreas Ziegler <andreas.ziegler@fau.de>,
         Ingo Molnar <mingo@redhat.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 056/173] tracing: Fix partial reading of trace event's id file
-Date:   Sat,  1 Jun 2019 09:17:28 -0400
-Message-Id: <20190601131934.25053-56-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 055/173] tracing: probeevent: Fix to make the type of $comm string
+Date:   Sat,  1 Jun 2019 09:17:27 -0400
+Message-Id: <20190601131934.25053-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131934.25053-1-sashal@kernel.org>
 References: <20190601131934.25053-1-sashal@kernel.org>
@@ -62,79 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Elazar Leibovich <elazar@lightbitslabs.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit cbe08bcbbe787315c425dde284dcb715cfbf3f39 ]
+[ Upstream commit 3dd1f7f24f8ceec00bbbc364c2ac3c893f0fdc4c ]
 
-When reading only part of the id file, the ppos isn't tracked correctly.
-This is taken care by simple_read_from_buffer.
+Fix to make the type of $comm "string".  If we set the other type to $comm
+argument, it shows meaningless value or wrong data. Currently probe events
+allow us to set string array type (e.g. ":string[2]"), or other digit types
+like x8 on $comm. But since clearly $comm is just a string data, it should
+not be fetched by other types including array.
 
-Reading a single byte, and then the next byte would result EOF.
+Link: http://lkml.kernel.org/r/155723736241.9149.14582064184468574539.stgit@devnote2
 
-While this seems like not a big deal, this breaks abstractions that
-reads information from files unbuffered. See for example
-https://github.com/golang/go/issues/29399
-
-This code was mentioned as problematic in
-commit cd458ba9d5a5
-("tracing: Do not (ab)use trace_seq in event_id_read()")
-
-An example C code that show this bug is:
-
-  #include <stdio.h>
-  #include <stdint.h>
-
-  #include <sys/types.h>
-  #include <sys/stat.h>
-  #include <fcntl.h>
-  #include <unistd.h>
-
-  int main(int argc, char **argv) {
-    if (argc < 2)
-      return 1;
-    int fd = open(argv[1], O_RDONLY);
-    char c;
-    read(fd, &c, 1);
-    printf("First  %c\n", c);
-    read(fd, &c, 1);
-    printf("Second %c\n", c);
-  }
-
-Then run with, e.g.
-
-  sudo ./a.out /sys/kernel/debug/tracing/events/tcp/tcp_set_state/id
-
-You'll notice you're getting the first character twice, instead of the
-first two characters in the id file.
-
-Link: http://lkml.kernel.org/r/20181231115837.4932-1-elazar@lightbitslabs.com
-
-Cc: Orit Wasserman <orit.was@gmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Andreas Ziegler <andreas.ziegler@fau.de>
 Cc: Ingo Molnar <mingo@redhat.com>
 Cc: stable@vger.kernel.org
-Fixes: 23725aeeab10b ("ftrace: provide an id file for each event")
-Signed-off-by: Elazar Leibovich <elazar@lightbitslabs.com>
+Fixes: 533059281ee5 ("tracing: probeevent: Introduce new argument fetching code")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace_events.c | 3 ---
- 1 file changed, 3 deletions(-)
+ kernel/trace/trace_probe.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 5b3b0c3c8a47e..d910e36c34b5c 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -1318,9 +1318,6 @@ event_id_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t *ppos)
- 	char buf[32];
- 	int len;
- 
--	if (*ppos)
--		return 0;
--
- 	if (unlikely(!id))
- 		return -ENODEV;
- 
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index 9962cb5da8acd..44f078cda0ac8 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -405,13 +405,14 @@ static int traceprobe_parse_probe_arg_body(char *arg, ssize_t *size,
+ 				return -E2BIG;
+ 		}
+ 	}
+-	/*
+-	 * The default type of $comm should be "string", and it can't be
+-	 * dereferenced.
+-	 */
+-	if (!t && strcmp(arg, "$comm") == 0)
++
++	/* Since $comm can not be dereferred, we can find $comm by strcmp */
++	if (strcmp(arg, "$comm") == 0) {
++		/* The type of $comm must be "string", and not an array. */
++		if (parg->count || (t && strcmp(t, "string")))
++			return -EINVAL;
+ 		parg->type = find_fetch_type("string");
+-	else
++	} else
+ 		parg->type = find_fetch_type(t);
+ 	if (!parg->type) {
+ 		pr_info("Unsupported type: %s\n", t);
 -- 
 2.20.1
 
