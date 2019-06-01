@@ -2,100 +2,86 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B734C28CC3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9AC2C04AB6
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51CC527048
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:09:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f5/IYJMd"
+	by mail.kernel.org (Postfix) with ESMTP id 8F76B26D09
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:12:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559347958;
+	bh=GGD1oFdcIDlJ6FqkekMGdawRxHreTdZHjFVN9PCi6a8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=F1tP+dqqCTnkI3lUxsrwEvy8Sojso7Frndw2dhoaFDw6jJz8jgpb/BRJY7N4whGYO
+	 TkHzma93KMkTHfQifFjmlhTfNxCNL7U7Ho/Zi7T/tBlp2nOAZRTQP+EUm4WWNxwBwf
+	 RdmIAzRYCufKLhKTmtHVD8ZVXh9NRHk5OGLvp6yY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727179AbfFAAJx (ORCPT
+        id S1726924AbfFAAMh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 20:09:53 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:46151 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726842AbfFAAJx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 20:09:53 -0400
-Received: by mail-lf1-f65.google.com with SMTP id l26so9241369lfh.13;
-        Fri, 31 May 2019 17:09:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0O5y3zxJLjO+OFcgaKEEvfFc20FWAOhAiAEXszX5msk=;
-        b=f5/IYJMd1LneyL+J8KijD7RhbM6Yv+/UjfPlJ+IyfR71JYrZTBHIcgcWhxj0ZuSFlf
-         OauU4xnS3yObYtej+TYeCNAHUc0owB/GmIiqSBLtmyHob8WcFJCYzY0hQfgSN9BL2n5p
-         v+lnk7bSk7FN1Qb9sPdaunp6cSpccBktCTJkRJAS+SIbDC2qXdTWi9waHRWvw2ygwVNq
-         CKpkGopD9kC46BNoVHj3CrsEf3iMh6sLgkVk7DiFXGWSSRyMXnySyghedmX95SQ9bH/Y
-         lIFXXm+3cSwEUKsCaPH4ApA8BwjqYp95fkGqEw0Rh4PuTj/3apztACv2b7RDKJyBN9xQ
-         vt4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0O5y3zxJLjO+OFcgaKEEvfFc20FWAOhAiAEXszX5msk=;
-        b=RZDXEXNaz4ZCZNcgwakqbQ7r4jDKY6QA0dm/eDU+N+s9ckP85l695CjhnAL9PicSPU
-         L8hSUQf5cZ+kVh4ileXLd9KAM1x7LzVsI02X2brJyOsprqSL+jqiIiuNyfvQSUm6etzc
-         ZqEHIeYYAY0iQQTUh6Gd1783KcOnuTfFHyD8QS55mbBG3Qo/kiR+etcoLyXKl+VWnMmG
-         ngpuAU+9YtYw/UYgGL1Xgdpvg/HnOWkfum0Us0nlS2122zPqDGjcGvERRzXLy3kNbQdw
-         qZUEBJmfsULZbwbJyEhQ3V6ZokjAL6naYymvDb4cPXXFJ/vMKqzY5EJXRAfH1SuU8a4+
-         DAXA==
-X-Gm-Message-State: APjAAAUSr7JgF+I0cPYpRhVrVQAEDaAIJBg1i65sF1VMHK4ISFZS7LuR
-        KqzZaVHFzmDbeUAK5llIU4qDRTATNT+JPqGuQUY=
-X-Google-Smtp-Source: APXvYqyU0iW+NSklLJf3qHZtRLKPHQxuDtnO3IWUd1+SsBVtZYgctk9VnfK45znYVuqr6WdQ3tVVp0jlNS88Khwb+FQ=
-X-Received: by 2002:ac2:5337:: with SMTP id f23mr7428221lfh.15.1559347790765;
- Fri, 31 May 2019 17:09:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190530222922.4269-1-luke.r.nels@gmail.com> <mhng-b4ce883e-9ec7-4098-9acc-18eb140f93e0@palmer-si-x1c4>
-In-Reply-To: <mhng-b4ce883e-9ec7-4098-9acc-18eb140f93e0@palmer-si-x1c4>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Fri, 31 May 2019 17:09:39 -0700
-Message-ID: <CAADnVQJspryT=Dvkh3vyyPv1air+Gfk61=uwWwgtD1sZb5PdnA@mail.gmail.com>
-Subject: Re: [PATCH bpf v2] bpf, riscv: clear high 32 bits for ALU32 add/sub/neg/lsh/rsh/arsh
-To:     Palmer Dabbelt <palmer@sifive.com>
-Cc:     luke.r.nels@gmail.com, Xi Wang <xi.wang@gmail.com>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
-        aou@eecs.berkeley.edu, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-riscv@lists.infradead.org, bpf <bpf@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 31 May 2019 20:12:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58694 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726483AbfFAAMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 20:12:37 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 791E026963;
+        Sat,  1 Jun 2019 00:12:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559347956;
+        bh=GGD1oFdcIDlJ6FqkekMGdawRxHreTdZHjFVN9PCi6a8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=XGllllyOcRfEtT/HKNL8h1qqwTaK0KHhm77p0FWVZvY/qXX3zttyq8+Ri08THHd8f
+         Ts/pUuDYgYTJs/OHUORYCmAIkB9fAF6XKzzr7JKa8uERnCmThp41trzMld251Zv2c1
+         e2XUUgIIuYj9l6AZCfwjQDZnLCb0agq9yt28NlkY=
+Date:   Fri, 31 May 2019 17:12:35 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Vaneet Narang <v.narang@samsung.com>,
+        Maninder Singh <maninder1.s@samsung.com>,
+        "terrelln@fb.com" <terrelln@fb.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "gustavo@embeddedor.com" <gustavo@embeddedor.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        AMIT SAHRAWAT <a.sahrawat@samsung.com>,
+        PANKAJ MISHRA <pankaj.m@samsung.com>
+Subject: Re: [PATCH 1/2] zstd: pass pointer rathen than structure to
+ functions
+Message-Id: <20190531171235.7c458cf1ac1b5dd299dbf6ec@linux-foundation.org>
+In-Reply-To: <20190530133519.gdkxey5lv4hrrv7q@gondor.apana.org.au>
+References: <1557468704-3014-1-git-send-email-maninder1.s@samsung.com>
+        <CGME20190510061311epcas5p19e9bf3d08319ac99890e03e0bd59e478@epcms5p1>
+        <20190530091327epcms5p11a7725e9c01286b1a7c023737bf4e448@epcms5p1>
+        <20190530133519.gdkxey5lv4hrrv7q@gondor.apana.org.au>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 1:40 PM Palmer Dabbelt <palmer@sifive.com> wrote:
->
-> On Thu, 30 May 2019 15:29:22 PDT (-0700), luke.r.nels@gmail.com wrote:
-> > In BPF, 32-bit ALU operations should zero-extend their results into
-> > the 64-bit registers.
-> >
-> > The current BPF JIT on RISC-V emits incorrect instructions that perform
-> > sign extension only (e.g., addw, subw) on 32-bit add, sub, lsh, rsh,
-> > arsh, and neg. This behavior diverges from the interpreter and JITs
-> > for other architectures.
-> >
-> > This patch fixes the bugs by performing zero extension on the destination
-> > register of 32-bit ALU operations.
-> >
-> > Fixes: 2353ecc6f91f ("bpf, riscv: add BPF JIT for RV64G")
-> > Cc: Xi Wang <xi.wang@gmail.com>
-> > Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
->
-> Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
->
-> Thanks!  I'm assuming this is going in through a BPF tree and not the RISC-V
-> tree, but LMK if that's not the case.
+On Thu, 30 May 2019 21:35:19 +0800 Herbert Xu <herbert@gondor.apana.org.au> wrote:
 
-Applied to bpf tree. Thanks
+> On Thu, May 30, 2019 at 02:43:27PM +0530, Vaneet Narang wrote:
+> > [Reminder] Any updates ?
+> 
+> I was assuming that Andrew was going to pick this up.  Andrew?
+> 
+
+I don't have a copy of these emails, sorry.  I wasn't cc'ed on the
+originals and late in April I had a few hours of email bouncing
+happening.  I got booted off all the vger lists, and it took over a
+week for me to notice this due to travel :( These patches fell in that
+window
+
+Can we please have a resend, with any new acks and reviewed-by's added
+on?
+
