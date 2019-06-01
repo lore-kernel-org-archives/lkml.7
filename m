@@ -2,54 +2,52 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F7C5C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FED5C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DDC7276A8
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:41:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ADE527692
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:42:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396515;
-	bh=wW9cAtPSoBqT/Uuh4VP3U+WowY10DUfgUZS8/UDdDn4=;
+	s=default; t=1559396523;
+	bh=LKMQHcklJvIWS99udh9eSLS62WW47Rn8+BrT4bYHeeQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cpdamTqRliViU3qT++jp21AZZqlC8/fnQJ1jODku4TI1G+HtA9agRn6Fr0lVelS+x
-	 sluBGiRCzlzFlQ6A5nyanIN1oohCaUeQoPbEFcSgUKjI3E5NECuUJlHbGpzkuovFPL
-	 X6mJwF1Q4IINNizh8SvDs68FqSb75HVWGWIHDWag=
+	b=xs+oFfpCFCcru0tJIaQlcynt7TZElCy4m4yLh8j5M/TeD41nePXZMriJebxN2CzyI
+	 Ou/Qc/ukb6/Jf9n9AOQJfgaZ96y39qq0RlTLlUYQ228RG/cO9rskdfqBoY2Sl7DefV
+	 IOKYTFa/Tn8lqgSDFTEa/nh+F4+VRNrQkklzzEsE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbfFANly (ORCPT
+        id S1728532AbfFANmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:41:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46134 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:42:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728010AbfFANS5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:18:57 -0400
+        id S1727983AbfFANSy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:18:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61E3927266;
-        Sat,  1 Jun 2019 13:18:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3639255FF;
+        Sat,  1 Jun 2019 13:18:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395137;
-        bh=wW9cAtPSoBqT/Uuh4VP3U+WowY10DUfgUZS8/UDdDn4=;
+        s=default; t=1559395133;
+        bh=LKMQHcklJvIWS99udh9eSLS62WW47Rn8+BrT4bYHeeQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VZj+y3x/FQ7n7M7xcooRvCYKeMRN8sRqIwh/Aw/SSRo427T92LQt9v+Mkq5Nxh7cp
-         oCEwl1b+0D0SHiJ0ZCrVKEHjwvunv6DmymldkbAIaE4HT4yOJ1D8zbuo2FNngfgcXI
-         Lk4rZU+/d5GGSkxt5H+8Oiyn2nJPWeKSJc8TnBfU=
+        b=T7v76F/G6RWw0jSq1RXc0bSnbgOl86c6yQG4x+u+jWFEZuy6T+Fju/kgNONZdiCBq
+         R6UHUgulPKP2QV8OQcXz7cvZdqybKLfdC77MX/2KcY1RzmCHxi+J8ejsVq/atrnwe/
+         s5X7Mr4xcZC3w+L9JCLnDZGkQSRlWVuquyeGzXPE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Elazar Leibovich <elazar@lightbitslabs.com>,
-        Orit Wasserman <orit.was@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 059/186] tracing: Fix partial reading of trace event's id file
-Date:   Sat,  1 Jun 2019 09:14:35 -0400
-Message-Id: <20190601131653.24205-59-sashal@kernel.org>
+Cc:     Eugen Hristev <eugen.hristev@microchip.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 056/186] media: atmel: atmel-isc: fix asd memory allocation
+Date:   Sat,  1 Jun 2019 09:14:32 -0400
+Message-Id: <20190601131653.24205-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131653.24205-1-sashal@kernel.org>
 References: <20190601131653.24205-1-sashal@kernel.org>
@@ -62,78 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Elazar Leibovich <elazar@lightbitslabs.com>
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-[ Upstream commit cbe08bcbbe787315c425dde284dcb715cfbf3f39 ]
+[ Upstream commit 1e4e25c4959c10728fbfcc6a286f9503d32dfe02 ]
 
-When reading only part of the id file, the ppos isn't tracked correctly.
-This is taken care by simple_read_from_buffer.
+The subsystem will free the asd memory on notifier cleanup, if the asd is
+added to the notifier.
+However the memory is freed using kfree.
+Thus, we cannot allocate the asd using devm_*
+This can lead to crashes and problems.
+To test this issue, just return an error at probe, but cleanup the
+notifier beforehand.
 
-Reading a single byte, and then the next byte would result EOF.
+Fixes: 106267444f ("[media] atmel-isc: add the Image Sensor Controller code")
 
-While this seems like not a big deal, this breaks abstractions that
-reads information from files unbuffered. See for example
-https://github.com/golang/go/issues/29399
-
-This code was mentioned as problematic in
-commit cd458ba9d5a5
-("tracing: Do not (ab)use trace_seq in event_id_read()")
-
-An example C code that show this bug is:
-
-  #include <stdio.h>
-  #include <stdint.h>
-
-  #include <sys/types.h>
-  #include <sys/stat.h>
-  #include <fcntl.h>
-  #include <unistd.h>
-
-  int main(int argc, char **argv) {
-    if (argc < 2)
-      return 1;
-    int fd = open(argv[1], O_RDONLY);
-    char c;
-    read(fd, &c, 1);
-    printf("First  %c\n", c);
-    read(fd, &c, 1);
-    printf("Second %c\n", c);
-  }
-
-Then run with, e.g.
-
-  sudo ./a.out /sys/kernel/debug/tracing/events/tcp/tcp_set_state/id
-
-You'll notice you're getting the first character twice, instead of the
-first two characters in the id file.
-
-Link: http://lkml.kernel.org/r/20181231115837.4932-1-elazar@lightbitslabs.com
-
-Cc: Orit Wasserman <orit.was@gmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: stable@vger.kernel.org
-Fixes: 23725aeeab10b ("ftrace: provide an id file for each event")
-Signed-off-by: Elazar Leibovich <elazar@lightbitslabs.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace_events.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/media/platform/atmel/atmel-isc.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 5b3b0c3c8a47e..d910e36c34b5c 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -1318,9 +1318,6 @@ event_id_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t *ppos)
- 	char buf[32];
- 	int len;
+diff --git a/drivers/media/platform/atmel/atmel-isc.c b/drivers/media/platform/atmel/atmel-isc.c
+index 50178968b8a63..5b0e96bd8c7e5 100644
+--- a/drivers/media/platform/atmel/atmel-isc.c
++++ b/drivers/media/platform/atmel/atmel-isc.c
+@@ -2065,8 +2065,11 @@ static int isc_parse_dt(struct device *dev, struct isc_device *isc)
+ 			break;
+ 		}
  
--	if (*ppos)
--		return 0;
--
- 	if (unlikely(!id))
- 		return -ENODEV;
+-		subdev_entity->asd = devm_kzalloc(dev,
+-				     sizeof(*subdev_entity->asd), GFP_KERNEL);
++		/* asd will be freed by the subsystem once it's added to the
++		 * notifier list
++		 */
++		subdev_entity->asd = kzalloc(sizeof(*subdev_entity->asd),
++					     GFP_KERNEL);
+ 		if (!subdev_entity->asd) {
+ 			of_node_put(rem);
+ 			ret = -ENOMEM;
+@@ -2210,6 +2213,7 @@ static int atmel_isc_probe(struct platform_device *pdev)
+ 						     subdev_entity->asd);
+ 		if (ret) {
+ 			fwnode_handle_put(subdev_entity->asd->match.fwnode);
++			kfree(subdev_entity->asd);
+ 			goto cleanup_subdev;
+ 		}
  
 -- 
 2.20.1
