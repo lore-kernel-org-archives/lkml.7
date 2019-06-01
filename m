@@ -2,106 +2,68 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B5F7C28CC4
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 23:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9BDDC28CC3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 23:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 409AA277C4
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 23:22:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZC4jPopi"
+	by mail.kernel.org (Postfix) with ESMTP id A2DA32773D
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 23:46:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfFAXWK (ORCPT
+        id S1726723AbfFAXqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 19:22:10 -0400
-Received: from mail-pf1-f176.google.com ([209.85.210.176]:41572 "EHLO
-        mail-pf1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbfFAXWJ (ORCPT
+        Sat, 1 Jun 2019 19:46:45 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:37574 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726211AbfFAXqp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 19:22:09 -0400
-Received: by mail-pf1-f176.google.com with SMTP id q17so8388624pfq.8;
-        Sat, 01 Jun 2019 16:22:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=bytKcnWl4DSJZnnGOOS5hiwowoQ6gtqAZ+8TrBMmas8=;
-        b=ZC4jPopia8riIAqC1pgw5kEc01ub5mspwVB4Wf3Lem5hJFgX7C2IaSVuItB4rkvBFT
-         O6vieJpn45PAjYgsVkhTXsMKKDo2TXq3kk78iOLbBE0Uqm41+kwIABYx4B6rQ7+4qx37
-         7XtcJL2CbMRfhODKsBOUCEH/nu1tCg9uwW9dAc9OeLSaMpy99vJlqVkujbmCHu1VbokQ
-         oHMlkjIEw7lQ4lHL6+IKQ9Q/lp42SEgQNjxiXPRZ+7oVVk4Tdj2jAEXnPq3dU1FpeC0G
-         crvBTnLRKHv9MDnYowazgTg2MzzIrp2y2bdYNwUruyuMaBmojPGJ30x75QsVYdZ5Tj4a
-         GrDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=bytKcnWl4DSJZnnGOOS5hiwowoQ6gtqAZ+8TrBMmas8=;
-        b=Xuy4eZabAAqnF76SgVnbLPHEci5TWqktboiGTNR9IC+9ChiTnPLmETnKgq/uF8Vy12
-         reG5i7UUMHaO6YO0c1H+IcLNaw2Bn3rGlg27PY/J/rpg2XsMqdfCvEYJsRKr65sH+GRc
-         bIV6OmDNrEv6IZM43PE3nV36jyHJ3NDneuaRRp+DCxF24Sb5DUJQXy7EQqKOPKY9yPJ4
-         Gjb9TSOwBnl0i57OR/ldPV2lFYEKNumoP3j65GvriwMx1zWRl7Ln639g490Yxa+OTiCN
-         EwlBRcMB0dP5cJjM9+Q/UL+hNx039KQZ6ivHvS328TBMdjKXiFNU45jTjXUpdx5Mq9hq
-         Ve4w==
-X-Gm-Message-State: APjAAAV8BfWZJvZziKU6AzdVK5yCdrZvo/TRhXu2tlmbHj16VntDngJt
-        6NsAYsWGIYtCTbjp8UukZiY=
-X-Google-Smtp-Source: APXvYqzoTrBsH3BR/eGzCZRW716vfkLIpcpbeen0ltSFQHkpgNlujb9zzby+KtzWvu1c+cEVCiMFbQ==
-X-Received: by 2002:a63:1e5b:: with SMTP id p27mr19021226pgm.213.1559431328871;
-        Sat, 01 Jun 2019 16:22:08 -0700 (PDT)
-Received: from localhost.localdomain ([2601:644:8201:32e0:7256:81ff:febd:926d])
-        by smtp.gmail.com with ESMTPSA id q10sm10112262pff.132.2019.06.01.16.22.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 01 Jun 2019 16:22:08 -0700 (PDT)
-Date:   Sat, 1 Jun 2019 16:22:06 -0700
-From:   Eduardo Valentin <edubezval@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Rui Zhang <rui.zhang@intel.com>
-Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] Thermal-SoC management fixes for v5.2-rc3
-Message-ID: <20190601232205.GA7411@localhost.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Sat, 1 Jun 2019 19:46:45 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 12DA014FA9CFA;
+        Sat,  1 Jun 2019 16:46:44 -0700 (PDT)
+Date:   Sat, 01 Jun 2019 16:46:43 -0700 (PDT)
+Message-Id: <20190601.164643.756724745563418604.davem@davemloft.net>
+To:     hch@lst.de
+Cc:     torvalds@linux-foundation.org, paul.burton@mips.com,
+        jhogan@kernel.org, ysato@users.sourceforge.jp, dalias@libc.org,
+        npiggin@gmail.com, khalid.aziz@oracle.com, andreyknvl@google.com,
+        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
+        linux-mips@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-mm@kvack.org, x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: RFC: switch the remaining architectures to use generic GUP v2
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190601074959.14036-1-hch@lst.de>
+References: <20190601074959.14036-1-hch@lst.de>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 01 Jun 2019 16:46:44 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please consider the following thermal soc changes for v5.2-rc3. This is really
-a single revert, detected to cause issues on the tsens driver.
+From: Christoph Hellwig <hch@lst.de>
+Date: Sat,  1 Jun 2019 09:49:43 +0200
 
-The following changes since commit cd6c84d8f0cdc911df435bb075ba22ce3c605b07:
+> below is a series to switch mips, sh and sparc64 to use the generic
+> GUP code so that we only have one codebase to touch for further
+> improvements to this code.  I don't have hardware for any of these
+> architectures, and generally no clue about their page table
+> management, so handle with care.
+> 
+> Changes since v1:
+>  - fix various issues found by the build bot
+>  - cherry pick and use the untagged_addr helper form Andrey
+>  - add various refactoring patches to share more code over architectures
+>  - move the powerpc hugepd code to mm/gup.c and sync it with the generic
+>    hup semantics
 
-  Linux 5.2-rc2 (2019-05-26 16:49:19 -0700)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal fixes
-
-for you to fetch changes up to ca657468a0d4bcc25445f6636485a19a525267bd:
-
-  Revert "drivers: thermal: tsens: Add new operation to check if a sensor is enabled" (2019-05-28 19:30:33 -0700)
-
-Specifics:
-- Revert tsens change that is reported to cause issues.
-
-BR,
-
-----------------------------------------------------------------
-Eduardo Valentin (1):
-      Revert "drivers: thermal: tsens: Add new operation to check if a sensor is enabled"
-
- drivers/thermal/qcom/tsens-common.c | 14 --------------
- drivers/thermal/qcom/tsens-v0_1.c   |  1 -
- drivers/thermal/qcom/tsens-v2.c     |  1 -
- drivers/thermal/qcom/tsens.c        |  5 -----
- drivers/thermal/qcom/tsens.h        |  1 -
- 5 files changed, 22 deletions(-)
+I will today look seriously at the sparc64 stuff wrt. tagged pointers.
