@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DE1C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A59DC28CC4
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59996274C8
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:37:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7784242DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:37:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396272;
-	bh=8wPyq/bRunq62drSXXF46S3ny3rqGcFrVdccoxLpWbA=;
+	s=default; t=1559396280;
+	bh=A4/NetqUtcNLkyBmze+0c1akfZnG/G1wfiwTCwo3EgY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mfjqnZkfTo9VxzpT9Ks2wRDiZMlw5PWRho/RSxP0G7EDHMuYlFJwP/Wc4Ipt5tDSh
-	 wXQr0sQceKMvqtNkddoDPFR05VuA+5xpeSMjyGlKmsSPs2+9y8YJpbPV3x3o/ngy3b
-	 p3TqDjPI3kW7Ks4uW/XiAA/y0+wWIRyWXxI/94zE=
+	b=CXO4giNwPSZnVG8UK6/7TwFv+dKUPfKqWea6otx11C7WDW4CfaAVN39niciqeFY4u
+	 DUUvl+0c1koOgqFjws6KI5unOJCt8SSHba6XTr5wQvSpjQTaQ9auJ8zVfVhU4Hw64j
+	 OKH3Nmz08DxB5cVGWWOVOOSnOFaVwIsArj6iALro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729081AbfFANhv (ORCPT
+        id S1728283AbfFANVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:37:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49168 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:21:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728581AbfFANVm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:21:42 -0400
+        id S1728556AbfFANVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:21:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B858C27308;
-        Sat,  1 Jun 2019 13:21:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F0B9272FC;
+        Sat,  1 Jun 2019 13:21:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395301;
-        bh=8wPyq/bRunq62drSXXF46S3ny3rqGcFrVdccoxLpWbA=;
+        s=default; t=1559395295;
+        bh=A4/NetqUtcNLkyBmze+0c1akfZnG/G1wfiwTCwo3EgY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zXf4QxeXMvReOhnO9CpyLhRFHSExFK0rhBTt3ND/clT+HAcwJK/1Bzlqj+XlAL/T/
-         d/H7XkjPYYxRWAj4WznB9GMaZu/IP2oX535HHhKb6Cojd5+E0sObPPMQL7uaSmG45K
-         TDaYWYw2qZ0ONpgf//RqkBIMWbUKCghIyaWejrw4=
+        b=DOj7BYk+lJEuFpU33eZ83bgGHGMWiWOAa/vDUfKnbfZRXz2UMGqY0uif6voiFyIZg
+         dPnu0Ak8Hs3WXFw9i1zmUY2kvRVdoc1G6gQuqjOwCylrUccLYkmS99qKhUKm9goGyB
+         +T1l34IkQ0XUZyVYGhYg/E69u8fx4MTM93hSsn18=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kristian Evensen <kristian.evensen@gmail.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 061/173] netfilter: ctnetlink: Resolve conntrack L3-protocol flush regression
-Date:   Sat,  1 Jun 2019 09:17:33 -0400
-Message-Id: <20190601131934.25053-61-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 057/173] configfs: fix possible use-after-free in configfs_register_group
+Date:   Sat,  1 Jun 2019 09:17:29 -0400
+Message-Id: <20190601131934.25053-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131934.25053-1-sashal@kernel.org>
 References: <20190601131934.25053-1-sashal@kernel.org>
@@ -62,52 +58,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kristian Evensen <kristian.evensen@gmail.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit f8e608982022fad035160870f5b06086d3cba54d ]
+[ Upstream commit 35399f87e271f7cf3048eab00a421a6519ac8441 ]
 
-Commit 59c08c69c278 ("netfilter: ctnetlink: Support L3 protocol-filter
-on flush") introduced a user-space regression when flushing connection
-track entries. Before this commit, the nfgen_family field was not used
-by the kernel and all entries were removed. Since this commit,
-nfgen_family is used to filter out entries that should not be removed.
-One example a broken tool is conntrack. conntrack always sets
-nfgen_family to AF_INET, so after 59c08c69c278 only IPv4 entries were
-removed with the -F parameter.
+In configfs_register_group(), if create_default_group() failed, we
+forget to unlink the group. It will left a invalid item in the parent list,
+which may trigger the use-after-free issue seen below:
 
-Pablo Neira Ayuso suggested using nfgenmsg->version to resolve the
-regression, and this commit implements his suggestion. nfgenmsg->version
-is so far set to zero, so it is well-suited to be used as a flag for
-selecting old or new flush behavior. If version is 0, nfgen_family is
-ignored and all entries are used. If user-space sets the version to one
-(or any other value than 0), then the new behavior is used. As version
-only can have two valid values, I chose not to add a new
-NFNETLINK_VERSION-constant.
+BUG: KASAN: use-after-free in __list_add_valid+0xd4/0xe0 lib/list_debug.c:26
+Read of size 8 at addr ffff8881ef61ae20 by task syz-executor.0/5996
 
-Fixes: 59c08c69c278 ("netfilter: ctnetlink: Support L3 protocol-filter on flush")
-Reported-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Suggested-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Kristian Evensen <kristian.evensen@gmail.com>
-Tested-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+CPU: 1 PID: 5996 Comm: syz-executor.0 Tainted: G         C        5.0.0+ #5
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xa9/0x10e lib/dump_stack.c:113
+ print_address_description+0x65/0x270 mm/kasan/report.c:187
+ kasan_report+0x149/0x18d mm/kasan/report.c:317
+ __list_add_valid+0xd4/0xe0 lib/list_debug.c:26
+ __list_add include/linux/list.h:60 [inline]
+ list_add_tail include/linux/list.h:93 [inline]
+ link_obj+0xb0/0x190 fs/configfs/dir.c:759
+ link_group+0x1c/0x130 fs/configfs/dir.c:784
+ configfs_register_group+0x56/0x1e0 fs/configfs/dir.c:1751
+ configfs_register_default_group+0x72/0xc0 fs/configfs/dir.c:1834
+ ? 0xffffffffc1be0000
+ iio_sw_trigger_init+0x23/0x1000 [industrialio_sw_trigger]
+ do_one_initcall+0xbc/0x47d init/main.c:887
+ do_init_module+0x1b5/0x547 kernel/module.c:3456
+ load_module+0x6405/0x8c10 kernel/module.c:3804
+ __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
+ do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x462e99
+Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f494ecbcc58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
+RDX: 0000000000000000 RSI: 0000000020000180 RDI: 0000000000000003
+RBP: 00007f494ecbcc70 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f494ecbd6bc
+R13: 00000000004bcefa R14: 00000000006f6fb0 R15: 0000000000000004
+
+Allocated by task 5987:
+ set_track mm/kasan/common.c:87 [inline]
+ __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:497
+ kmalloc include/linux/slab.h:545 [inline]
+ kzalloc include/linux/slab.h:740 [inline]
+ configfs_register_default_group+0x4c/0xc0 fs/configfs/dir.c:1829
+ 0xffffffffc1bd0023
+ do_one_initcall+0xbc/0x47d init/main.c:887
+ do_init_module+0x1b5/0x547 kernel/module.c:3456
+ load_module+0x6405/0x8c10 kernel/module.c:3804
+ __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
+ do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 5987:
+ set_track mm/kasan/common.c:87 [inline]
+ __kasan_slab_free+0x130/0x180 mm/kasan/common.c:459
+ slab_free_hook mm/slub.c:1429 [inline]
+ slab_free_freelist_hook mm/slub.c:1456 [inline]
+ slab_free mm/slub.c:3003 [inline]
+ kfree+0xe1/0x270 mm/slub.c:3955
+ configfs_register_default_group+0x9a/0xc0 fs/configfs/dir.c:1836
+ 0xffffffffc1bd0023
+ do_one_initcall+0xbc/0x47d init/main.c:887
+ do_init_module+0x1b5/0x547 kernel/module.c:3456
+ load_module+0x6405/0x8c10 kernel/module.c:3804
+ __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
+ do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8881ef61ae00
+ which belongs to the cache kmalloc-192 of size 192
+The buggy address is located 32 bytes inside of
+ 192-byte region [ffff8881ef61ae00, ffff8881ef61aec0)
+The buggy address belongs to the page:
+page:ffffea0007bd8680 count:1 mapcount:0 mapping:ffff8881f6c03000 index:0xffff8881ef61a700
+flags: 0x2fffc0000000200(slab)
+raw: 02fffc0000000200 ffffea0007ca4740 0000000500000005 ffff8881f6c03000
+raw: ffff8881ef61a700 000000008010000c 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8881ef61ad00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff8881ef61ad80: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+>ffff8881ef61ae00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                               ^
+ ffff8881ef61ae80: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+ ffff8881ef61af00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+
+Fixes: 5cf6a51e6062 ("configfs: allow dynamic group creation")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_conntrack_netlink.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/configfs/dir.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/net/netfilter/nf_conntrack_netlink.c b/net/netfilter/nf_conntrack_netlink.c
-index 36619ad8ab8c2..8233dfafb339d 100644
---- a/net/netfilter/nf_conntrack_netlink.c
-+++ b/net/netfilter/nf_conntrack_netlink.c
-@@ -1254,7 +1254,7 @@ static int ctnetlink_del_conntrack(struct net *net, struct sock *ctnl,
- 	struct nf_conntrack_tuple tuple;
- 	struct nf_conn *ct;
- 	struct nfgenmsg *nfmsg = nlmsg_data(nlh);
--	u_int8_t u3 = nfmsg->nfgen_family;
-+	u_int8_t u3 = nfmsg->version ? nfmsg->nfgen_family : AF_UNSPEC;
- 	struct nf_conntrack_zone zone;
- 	int err;
+diff --git a/fs/configfs/dir.c b/fs/configfs/dir.c
+index 39843fa7e11b0..920d350df37b6 100644
+--- a/fs/configfs/dir.c
++++ b/fs/configfs/dir.c
+@@ -1755,12 +1755,19 @@ int configfs_register_group(struct config_group *parent_group,
  
+ 	inode_lock_nested(d_inode(parent), I_MUTEX_PARENT);
+ 	ret = create_default_group(parent_group, group);
+-	if (!ret) {
+-		spin_lock(&configfs_dirent_lock);
+-		configfs_dir_set_ready(group->cg_item.ci_dentry->d_fsdata);
+-		spin_unlock(&configfs_dirent_lock);
+-	}
++	if (ret)
++		goto err_out;
++
++	spin_lock(&configfs_dirent_lock);
++	configfs_dir_set_ready(group->cg_item.ci_dentry->d_fsdata);
++	spin_unlock(&configfs_dirent_lock);
++	inode_unlock(d_inode(parent));
++	return 0;
++err_out:
+ 	inode_unlock(d_inode(parent));
++	mutex_lock(&subsys->su_mutex);
++	unlink_group(group);
++	mutex_unlock(&subsys->su_mutex);
+ 	return ret;
+ }
+ EXPORT_SYMBOL(configfs_register_group);
 -- 
 2.20.1
 
