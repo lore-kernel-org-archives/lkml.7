@@ -4,58 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C50A1C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3862CC28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:26:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EBF0273B2
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:26:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CB27273C7
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:26:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395577;
-	bh=6sujLPHojiodkFk/sT4dPXMVg1EbwtHZuWkazWxrAUE=;
+	s=default; t=1559395580;
+	bh=me0jHZ4okS1/tGNFwIDuP/a8uqOaFJTeahlh8eX/lQo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WzJNBmJKZXE1sFeVviu7jfXkVL6NNH0TauCFslX7ymsPblp70c/RXjAdtlvuF8OGs
-	 X0q75MPnhoGhuOq009hrGaH4oQhNWguRrXsZaeRR0ZabOEj2vOiZC8QgUI/ihMChvT
-	 bMsb9mQRGe9piqR0cj9f/JeMP7lTAm/BOao4kxL4=
+	b=oYg6g5ZOKRHiWeggnoqi5ZgNTNucplCFnna2EpD6YIHim9b1jXUmOWTXlCK1TxE7J
+	 MKXz/X7N+HaxZD9MhdGlmZgs4tCBc/0UPk3dDjcdMbp1wsWcwCdJKT0VVuJ617A6H/
+	 Bi3o4EpDaFvZoc3shyhLpRr1DTLLrlp6tgmpxBXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729671AbfFAN0Q (ORCPT
+        id S1729677AbfFAN0S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:26:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56486 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:26:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729620AbfFAN0F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:26:05 -0400
+        id S1729123AbfFAN0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:26:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06104273AD;
-        Sat,  1 Jun 2019 13:26:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19FF72739A;
+        Sat,  1 Jun 2019 13:26:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395564;
-        bh=6sujLPHojiodkFk/sT4dPXMVg1EbwtHZuWkazWxrAUE=;
+        s=default; t=1559395570;
+        bh=me0jHZ4okS1/tGNFwIDuP/a8uqOaFJTeahlh8eX/lQo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0lLgDPCDGz/2BC0574EhnvGZ4uqSVqxDl1+l3Tu+Jf+oFOVUUuUJETq8zBji7+0Ui
-         e4rJBHrk+NLSYD2On/z4QBV2gVdAHlW33vo/isxQWsp01ZE02qB6eT9fWFarZtBylj
-         6i9lGGKGE3qM5OBBII2KgHXE9ylFAfwPj73dzsQ4=
+        b=Iq00m0vDFEnvXuJMWFm6+xE3RS7cMzVSIqdSkYfn3WFT70VcOXdbErjh/U7Qabqc0
+         d8h7pxH5Yf0sjlu2IZqyaRX6u5+4L2MQOJPqyrWViLUWiwYiHZDemMYfQmrnKK8Bgz
+         rbpxqJ3tc7ILnG4npup7DTERmlBFDVm5rXJ1qYwM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christian Brauner <christian@brauner.io>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Waiman Long <longman@redhat.com>,
+Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 02/56] sysctl: return -EINVAL if val violates minmax
-Date:   Sat,  1 Jun 2019 09:25:06 -0400
-Message-Id: <20190601132600.27427-2-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.4 04/56] hugetlbfs: on restore reserve error path retain subpool reservation
+Date:   Sat,  1 Jun 2019 09:25:08 -0400
+Message-Id: <20190601132600.27427-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132600.27427-1-sashal@kernel.org>
 References: <20190601132600.27427-1-sashal@kernel.org>
@@ -68,53 +65,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Brauner <christian@brauner.io>
+From: Mike Kravetz <mike.kravetz@oracle.com>
 
-[ Upstream commit e260ad01f0aa9e96b5386d5cd7184afd949dc457 ]
+[ Upstream commit 0919e1b69ab459e06df45d3ba6658d281962db80 ]
 
-Currently when userspace gives us a values that overflow e.g.  file-max
-and other callers of __do_proc_doulongvec_minmax() we simply ignore the
-new value and leave the current value untouched.
+When a huge page is allocated, PagePrivate() is set if the allocation
+consumed a reservation.  When freeing a huge page, PagePrivate is checked.
+If set, it indicates the reservation should be restored.  PagePrivate
+being set at free huge page time mostly happens on error paths.
 
-This can be problematic as it gives the illusion that the limit has
-indeed be bumped when in fact it failed.  This commit makes sure to
-return EINVAL when an overflow is detected.  Please note that this is a
-userspace facing change.
+When huge page reservations are created, a check is made to determine if
+the mapping is associated with an explicitly mounted filesystem.  If so,
+pages are also reserved within the filesystem.  The default action when
+freeing a huge page is to decrement the usage count in any associated
+explicitly mounted filesystem.  However, if the reservation is to be
+restored the reservation/use count within the filesystem should not be
+decrementd.  Otherwise, a subsequent page allocation and free for the same
+mapping location will cause the file filesystem usage to go 'negative'.
 
-Link: http://lkml.kernel.org/r/20190210203943.8227-4-christian@brauner.io
-Signed-off-by: Christian Brauner <christian@brauner.io>
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Dominik Brodowski <linux@dominikbrodowski.net>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Joe Lawrence <joe.lawrence@redhat.com>
-Cc: Waiman Long <longman@redhat.com>
+Filesystem                         Size  Used Avail Use% Mounted on
+nodev                              4.0G -4.0M  4.1G    - /opt/hugepool
+
+To fix, when freeing a huge page do not adjust filesystem usage if
+PagePrivate() is set to indicate the reservation should be restored.
+
+I did not cc stable as the problem has been around since reserves were
+added to hugetlbfs and nobody has noticed.
+
+Link: http://lkml.kernel.org/r/20190328234704.27083-2-mike.kravetz@oracle.com
+Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+Reviewed-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sysctl.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ mm/hugetlb.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index c140659db6699..24c7fe8608d02 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -2461,8 +2461,10 @@ static int __do_proc_doulongvec_minmax(void *data, struct ctl_table *table, int
- 			if (neg)
- 				continue;
- 			val = convmul * val / convdiv;
--			if ((min && val < *min) || (max && val > *max))
--				continue;
-+			if ((min && val < *min) || (max && val > *max)) {
-+				err = -EINVAL;
-+				break;
-+			}
- 			*i = val;
- 		} else {
- 			val = convdiv * (*i) / convmul;
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 324b2953e57e9..0357ad53af368 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -1221,12 +1221,23 @@ void free_huge_page(struct page *page)
+ 	ClearPagePrivate(page);
+ 
+ 	/*
+-	 * A return code of zero implies that the subpool will be under its
+-	 * minimum size if the reservation is not restored after page is free.
+-	 * Therefore, force restore_reserve operation.
++	 * If PagePrivate() was set on page, page allocation consumed a
++	 * reservation.  If the page was associated with a subpool, there
++	 * would have been a page reserved in the subpool before allocation
++	 * via hugepage_subpool_get_pages().  Since we are 'restoring' the
++	 * reservtion, do not call hugepage_subpool_put_pages() as this will
++	 * remove the reserved page from the subpool.
+ 	 */
+-	if (hugepage_subpool_put_pages(spool, 1) == 0)
+-		restore_reserve = true;
++	if (!restore_reserve) {
++		/*
++		 * A return code of zero implies that the subpool will be
++		 * under its minimum size if the reservation is not restored
++		 * after page is free.  Therefore, force restore_reserve
++		 * operation.
++		 */
++		if (hugepage_subpool_put_pages(spool, 1) == 0)
++			restore_reserve = true;
++	}
+ 
+ 	spin_lock(&hugetlb_lock);
+ 	clear_page_huge_active(page);
 -- 
 2.20.1
 
