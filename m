@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC82AC28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 07:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF19C46460
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 07:50:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1B392714A
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 07:50:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 678F82716C
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 07:50:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mkWRLr9J"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZtJlig3V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727191AbfFAHuv (ORCPT
+        id S1727221AbfFAHuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 03:50:51 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50904 "EHLO
+        Sat, 1 Jun 2019 03:50:52 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:51042 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726210AbfFAHup (ORCPT
+        with ESMTP id S1726210AbfFAHuv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 03:50:45 -0400
+        Sat, 1 Jun 2019 03:50:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=64aY9b4xFVCSoNTQbXTmr4fGKAtsk5F7+1Ma/JRJei4=; b=mkWRLr9J9mHC0wx40p7g15JOI9
-        MqOjScSPa9jeEaRm9X2mjxzwMKdjCd086mEGnPApg7IMDXb1c7CpovPAF6hXz2nMidmHuycA4jU0t
-        uYlQ3KBMfUCPEMSbW9cc4MZnsg4vxER8u/iO/pt02EJS8C69A7HyF1u4YCsOwGF3WTfZVnDfmIvrY
-        mjdmAE+SemqsVDC+nsAYctAGcsSTP2jyW9Tra0GOmnaRwgZjYuZsl6++JQlzm+y47NF8eU0MPkqi3
-        of1k7Chqe2bjQ8kairsqNJ+gtDw7yjrfcUA2WU5ac8yOVr2wiPgLS1f9WRR0fa69WyMUAbZ/uEtoY
-        XAOpu9Dg==;
+        bh=X2YVbgqGFpTprzpI9hgCNMZIAzqWGH+eXDnTmW0sVJU=; b=ZtJlig3VMwLrE3XBd3epSBCFB2
+        cZmqrWkQ/wKi02+ByfE4Vhsmik2Rj5BCC8ZLuKRSHBHIT5Q45EtH0aRHAtFwtRFtRhiDiZrjaAoA4
+        8RTsfsQ60cd74rPAkeo/Cn3/XAtwgId2fdhBRwTqwEu6GknlPe5g8YfZ+z77k2gCLpl24hX1VjjIC
+        TnCIKT4Hf0cJ2uH1YJfG8fO3GBgKwmBtHVuYNOIMAEhwh3WpgrHqC4Nk44qGMziz/MuA1JaU90A/3
+        vFhqt1HRTaKMkCTuh8llBkmIaAlqI9ShNU0aucN01pOF2uvfFOHa+lDOaDgEu+Dn2ZOkDTe/8hAIA
+        6Vk5ptvQ==;
 Received: from 217-76-161-89.static.highway.a1.net ([217.76.161.89] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hWymL-0007l9-SJ; Sat, 01 Jun 2019 07:50:14 +0000
+        id 1hWymj-0007nL-UH; Sat, 01 Jun 2019 07:50:38 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Linus Torvalds <torvalds@linux-foundation.org>,
         Paul Burton <paul.burton@mips.com>,
@@ -54,9 +54,9 @@ Cc:     Nicholas Piggin <npiggin@gmail.com>,
         linux-mips@vger.kernel.org, linux-sh@vger.kernel.org,
         sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-mm@kvack.org, x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 03/16] mm: simplify gup_fast_permitted
-Date:   Sat,  1 Jun 2019 09:49:46 +0200
-Message-Id: <20190601074959.14036-4-hch@lst.de>
+Subject: [PATCH 09/16] sparc64: define untagged_addr()
+Date:   Sat,  1 Jun 2019 09:49:52 +0200
+Message-Id: <20190601074959.14036-10-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601074959.14036-1-hch@lst.de>
 References: <20190601074959.14036-1-hch@lst.de>
@@ -68,111 +68,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pass in the already calculated end value instead of recomputing it, and
-leave the end > start check in the callers instead of duplicating them
-in the arch code.
+Add a helper to untag a user pointer.  This is needed for ADI support
+in get_user_pages_fast.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/s390/include/asm/pgtable.h   |  8 +-------
- arch/x86/include/asm/pgtable_64.h |  8 +-------
- mm/gup.c                          | 17 +++++++----------
- 3 files changed, 9 insertions(+), 24 deletions(-)
+ arch/sparc/include/asm/pgtable_64.h | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgtable.h
-index 9f0195d5fa16..9b274fcaacb6 100644
---- a/arch/s390/include/asm/pgtable.h
-+++ b/arch/s390/include/asm/pgtable.h
-@@ -1270,14 +1270,8 @@ static inline pte_t *pte_offset(pmd_t *pmd, unsigned long address)
- #define pte_offset_map(pmd, address) pte_offset_kernel(pmd, address)
- #define pte_unmap(pte) do { } while (0)
- 
--static inline bool gup_fast_permitted(unsigned long start, int nr_pages)
-+static inline bool gup_fast_permitted(unsigned long start, unsigned long end)
- {
--	unsigned long len, end;
--
--	len = (unsigned long) nr_pages << PAGE_SHIFT;
--	end = start + len;
--	if (end < start)
--		return false;
- 	return end <= current->mm->context.asce_limit;
+diff --git a/arch/sparc/include/asm/pgtable_64.h b/arch/sparc/include/asm/pgtable_64.h
+index dcf970e82262..a93eca29e85a 100644
+--- a/arch/sparc/include/asm/pgtable_64.h
++++ b/arch/sparc/include/asm/pgtable_64.h
+@@ -1076,6 +1076,28 @@ static inline int io_remap_pfn_range(struct vm_area_struct *vma,
  }
- #define gup_fast_permitted gup_fast_permitted
-diff --git a/arch/x86/include/asm/pgtable_64.h b/arch/x86/include/asm/pgtable_64.h
-index 0bb566315621..4990d26dfc73 100644
---- a/arch/x86/include/asm/pgtable_64.h
-+++ b/arch/x86/include/asm/pgtable_64.h
-@@ -259,14 +259,8 @@ extern void init_extra_mapping_uc(unsigned long phys, unsigned long size);
- extern void init_extra_mapping_wb(unsigned long phys, unsigned long size);
+ #define io_remap_pfn_range io_remap_pfn_range 
  
- #define gup_fast_permitted gup_fast_permitted
--static inline bool gup_fast_permitted(unsigned long start, int nr_pages)
-+static inline bool gup_fast_permitted(unsigned long start, unsigned long end)
- {
--	unsigned long len, end;
--
--	len = (unsigned long)nr_pages << PAGE_SHIFT;
--	end = start + len;
--	if (end < start)
--		return false;
- 	if (end >> __VIRTUAL_MASK_SHIFT)
- 		return false;
- 	return true;
-diff --git a/mm/gup.c b/mm/gup.c
-index 9775f7675653..e7566f5ff9cf 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -2122,13 +2122,9 @@ static void gup_pgd_range(unsigned long addr, unsigned long end,
-  * Check if it's allowed to use __get_user_pages_fast() for the range, or
-  * we need to fall back to the slow version:
-  */
--bool gup_fast_permitted(unsigned long start, int nr_pages)
-+static bool gup_fast_permitted(unsigned long start, unsigned long end)
- {
--	unsigned long len, end;
--
--	len = (unsigned long) nr_pages << PAGE_SHIFT;
--	end = start + len;
--	return end >= start;
-+	return true;
- }
- #endif
++static inline unsigned long untagged_addr(unsigned long start)
++{
++	if (adi_capable()) {
++		long addr = start;
++
++		/* If userspace has passed a versioned address, kernel
++		 * will not find it in the VMAs since it does not store
++		 * the version tags in the list of VMAs. Storing version
++		 * tags in list of VMAs is impractical since they can be
++		 * changed any time from userspace without dropping into
++		 * kernel. Any address search in VMAs will be done with
++		 * non-versioned addresses. Ensure the ADI version bits
++		 * are dropped here by sign extending the last bit before
++		 * ADI bits. IOMMU does not implement version tags.
++		 */
++		return (addr << (long)adi_nbits()) >> (long)adi_nbits();
++	}
++
++	return start;
++}
++#define untagged_addr untagged_addr
++
+ #include <asm/tlbflush.h>
+ #include <asm-generic/pgtable.h>
  
-@@ -2149,6 +2145,8 @@ int __get_user_pages_fast(unsigned long start, int nr_pages, int write,
- 	len = (unsigned long) nr_pages << PAGE_SHIFT;
- 	end = start + len;
- 
-+	if (end < start)
-+		return 0;
- 	if (unlikely(!access_ok((void __user *)start, len)))
- 		return 0;
- 
-@@ -2164,7 +2162,7 @@ int __get_user_pages_fast(unsigned long start, int nr_pages, int write,
- 	 * block IPIs that come from THPs splitting.
- 	 */
- 
--	if (gup_fast_permitted(start, nr_pages)) {
-+	if (gup_fast_permitted(start, end)) {
- 		local_irq_save(flags);
- 		gup_pgd_range(start, end, write ? FOLL_WRITE : 0, pages, &nr);
- 		local_irq_restore(flags);
-@@ -2223,13 +2221,12 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
- 	len = (unsigned long) nr_pages << PAGE_SHIFT;
- 	end = start + len;
- 
--	if (nr_pages <= 0)
-+	if (end < start)
- 		return 0;
--
- 	if (unlikely(!access_ok((void __user *)start, len)))
- 		return -EFAULT;
- 
--	if (gup_fast_permitted(start, nr_pages)) {
-+	if (gup_fast_permitted(start, end)) {
- 		local_irq_disable();
- 		gup_pgd_range(addr, end, gup_flags, pages, &nr);
- 		local_irq_enable();
 -- 
 2.20.1
 
