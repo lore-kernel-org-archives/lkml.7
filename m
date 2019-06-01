@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE581C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B12C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87F9227658
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 488862764C
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:40:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396423;
-	bh=jfPQCmUydba2zcQZEEaw0J1fCLxruIlh+oTFwfSiTCg=;
+	s=default; t=1559396435;
+	bh=qDTHW3V/7qE9KwP69AnCsB8AhB++Ec/yyyT8YyDxTM8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qQ3MNDwwwsk1W+M8GVQROidAD+MvzRd2sxEAY2j3GLL5KaTdE+3ITD77cZ2qzDRsl
-	 p6YQml2muHXgfa2zrBRm0YfbsNMOPvv1GqlHjDbP892pu9tWpVX9EAOkgth256Y7MC
-	 eaVk9XmisHYqPP7pxvzh6S5vw+HhjVaMQJeqCJ/A=
+	b=BQrP0yL11jtw2ixG7WtagNnqKJFo2LYp+7etauaN7LRheZ20CmWpR7C/wfb613JjR
+	 9IodOAHXc4ALDNo5/Cj2EZVL8+vKMDNAK+xuIbfb4wRt3DYL/63E+Ud7qn5rGAPi45
+	 SgtZOf1uJ20RiWoUffucT5sXYC6kBJ86N1Pib3JE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728497AbfFANkW (ORCPT
+        id S1729002AbfFANke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:40:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48022 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:40:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727755AbfFANUo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:20:44 -0400
+        id S1727777AbfFANUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:20:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EFD2272F8;
-        Sat,  1 Jun 2019 13:20:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11A42272E4;
+        Sat,  1 Jun 2019 13:20:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395244;
-        bh=jfPQCmUydba2zcQZEEaw0J1fCLxruIlh+oTFwfSiTCg=;
+        s=default; t=1559395243;
+        bh=qDTHW3V/7qE9KwP69AnCsB8AhB++Ec/yyyT8YyDxTM8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RjTyuBURbFG5ea/RBKZkZgrfSfq9u0VO88O8pZWDetwPVs0YNo7g6evSdtc2bfTx4
-         GqsHo2JzaWjeXPhmmtO8UA1R8lZ5J9/VqnC12rWBAHAZ2VOJM3kEUtoNu67tmGiRpR
-         rnSTQM70lTxilhfMyEteOGhbkbcxWbJQ4gOttMNs=
+        b=gtY3gLlcWCPNZC5BQiSlmtFCnZ4r3uJ3cwgVGdTUrZXguuGNeG0OAwPi9gb1oaJXz
+         Lpdjb6lQbplvQFd24AF8Bb+fcSWlchXYGx+TjKs1AXFyZi5PVwA27TUKkc4rvn/3LP
+         /pwe0QS2xF3a0VvINVErXueANZbclMv1LsdPTxtM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiada Wang <jiada_wang@mentor.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 022/173] thermal: rcar_gen3_thermal: disable interrupt in .remove
-Date:   Sat,  1 Jun 2019 09:16:54 -0400
-Message-Id: <20190601131934.25053-22-sashal@kernel.org>
+Cc:     Cyrill Gorcunov <gorcunov@gmail.com>,
+        Andrey Vagin <avagin@gmail.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 021/173] kernel/sys.c: prctl: fix false positive in validate_prctl_map()
+Date:   Sat,  1 Jun 2019 09:16:53 -0400
+Message-Id: <20190601131934.25053-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131934.25053-1-sashal@kernel.org>
 References: <20190601131934.25053-1-sashal@kernel.org>
@@ -61,40 +63,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiada Wang <jiada_wang@mentor.com>
+From: Cyrill Gorcunov <gorcunov@gmail.com>
 
-[ Upstream commit 63f55fcea50c25ae5ad45af92d08dae3b84534c2 ]
+[ Upstream commit a9e73998f9d705c94a8dca9687633adc0f24a19a ]
 
-Currently IRQ remains enabled after .remove, later if device is probed,
-IRQ is requested before .thermal_init, this may cause IRQ function be
-called before device is initialized.
+While validating new map we require the @start_data to be strictly less
+than @end_data, which is fine for regular applications (this is why this
+nit didn't trigger for that long).  These members are set from executable
+loaders such as elf handers, still it is pretty valid to have a loadable
+data section with zero size in file, in such case the start_data is equal
+to end_data once kernel loader finishes.
 
-this patch disables interrupt in .remove, to ensure irq function
-only be called after device is fully initialized.
+As a result when we're trying to restore such programs the procedure fails
+and the kernel returns -EINVAL.  From the image dump of a program:
 
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
+ | "mm_start_code": "0x400000",
+ | "mm_end_code": "0x8f5fb4",
+ | "mm_start_data": "0xf1bfb0",
+ | "mm_end_data": "0xf1bfb0",
+
+Thus we need to change validate_prctl_map from strictly less to less or
+equal operator use.
+
+Link: http://lkml.kernel.org/r/20190408143554.GY1421@uranus.lan
+Fixes: f606b77f1a9e3 ("prctl: PR_SET_MM -- introduce PR_SET_MM_MAP operation")
+Signed-off-by: Cyrill Gorcunov <gorcunov@gmail.com>
+Cc: Andrey Vagin <avagin@gmail.com>
+Cc: Dmitry Safonov <0x7f454c46@gmail.com>
+Cc: Pavel Emelyanov <xemul@virtuozzo.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/rcar_gen3_thermal.c | 3 +++
- 1 file changed, 3 insertions(+)
+ kernel/sys.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/thermal/rcar_gen3_thermal.c b/drivers/thermal/rcar_gen3_thermal.c
-index 75786cc8e2f91..0a0562551611b 100644
---- a/drivers/thermal/rcar_gen3_thermal.c
-+++ b/drivers/thermal/rcar_gen3_thermal.c
-@@ -330,6 +330,9 @@ MODULE_DEVICE_TABLE(of, rcar_gen3_thermal_dt_ids);
- static int rcar_gen3_thermal_remove(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-+	struct rcar_gen3_thermal_priv *priv = dev_get_drvdata(dev);
-+
-+	rcar_thermal_irq_set(priv, false);
- 
- 	pm_runtime_put(dev);
- 	pm_runtime_disable(dev);
+diff --git a/kernel/sys.c b/kernel/sys.c
+index f7eb62eceb243..82ba11e6d2e50 100644
+--- a/kernel/sys.c
++++ b/kernel/sys.c
+@@ -1923,7 +1923,7 @@ static int validate_prctl_map(struct prctl_mm_map *prctl_map)
+ 	((unsigned long)prctl_map->__m1 __op				\
+ 	 (unsigned long)prctl_map->__m2) ? 0 : -EINVAL
+ 	error  = __prctl_check_order(start_code, <, end_code);
+-	error |= __prctl_check_order(start_data, <, end_data);
++	error |= __prctl_check_order(start_data,<=, end_data);
+ 	error |= __prctl_check_order(start_brk, <=, brk);
+ 	error |= __prctl_check_order(arg_start, <=, arg_end);
+ 	error |= __prctl_check_order(env_start, <=, env_end);
 -- 
 2.20.1
 
