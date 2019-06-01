@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3CECC28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 927C1C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9348727267
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:18:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63CD627280
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:18:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395082;
-	bh=fBG6o237/Gi95Ym64uFcIJk2iniP//T77hTEuO8BtCg=;
+	s=default; t=1559395086;
+	bh=YYB0EhmhKwO+BACLQxlVq8PWBzlWl0Dwmepsww+vT5w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kKdJiCjbwNQ+ADTP04sBQrEati2O3LX+ydLavVkZvrXZpbdZbDE1DA2lsJcj4vv/6
-	 6VGi/7g2/iQogDZPBO5H3ZaFVSGdsl6SIDhUy3yrWAeCif6gfUu3/gq481OU1hjvVV
-	 MApRwT4sm+E2Gln8EofA0hHl6mys1ihOU6F2hpiw=
+	b=NRuXCMunNFXSM6D0Q0GinAPcz7cj9Zfg2F7cPY0tWue9gfv68OZfaezhQLDhziuPz
+	 zWrq82PlOCpQM+mFud/WyISvr/Z9l9qfC6pZ+I0SBdyJzArH5b28C/tOqwxFCfqZHT
+	 4vsIxOiXh6IlznaBgZv0zzulmoWRDzc81ElpLyws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbfFANSB (ORCPT
+        id S1727676AbfFANSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:18:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44886 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:18:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727585AbfFANR7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:17:59 -0400
+        id S1727653AbfFANSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:18:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9926127253;
-        Sat,  1 Jun 2019 13:17:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C44E27253;
+        Sat,  1 Jun 2019 13:18:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395078;
-        bh=fBG6o237/Gi95Ym64uFcIJk2iniP//T77hTEuO8BtCg=;
+        s=default; t=1559395083;
+        bh=YYB0EhmhKwO+BACLQxlVq8PWBzlWl0Dwmepsww+vT5w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o5wRMSJrGKW1vMF10zjqyWPSJasEkBUnG2zreR45v3oIcxqZFEz2v0tXbP8PmFtvZ
-         3F1VrPsT+nutAca0+NT2xqixV3ZhtfsqzfEfoiICvPEav2sw2LGp2vfU8aZxLjg0Yb
-         sMTjeVugpQ0SSxiSg2kB0jP8qbUf9fSPpL2AD6gM=
+        b=rq+7TgGGzOPtme9PJL2IWEMpkrYyZM0LFHTa6ZOqj+LnIUG0NKAm2A6G7Yu1lQJKR
+         E+X0TeAhmerdjfwsmsYw6T7H9lly/1vCre/zJrvwoKwtv4f4AyI2oSRrI4Bd+8FG3O
+         SQSUxhKtULe41Z1GPZBlYU1JfLKf4I/hUz3/KN6E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yue Hu <huyue2@yulong.com>,
+Cc:     Cyrill Gorcunov <gorcunov@gmail.com>,
+        Andrey Vagin <avagin@gmail.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>, Joe Perches <joe@perches.com>,
-        David Rientjes <rientjes@google.com>,
-        Dmitry Safonov <d.safonov@partner.samsung.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 5.1 021/186] mm/cma_debug.c: fix the break condition in cma_maxchunk_get()
-Date:   Sat,  1 Jun 2019 09:13:57 -0400
-Message-Id: <20190601131653.24205-21-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 023/186] kernel/sys.c: prctl: fix false positive in validate_prctl_map()
+Date:   Sat,  1 Jun 2019 09:13:59 -0400
+Message-Id: <20190601131653.24205-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131653.24205-1-sashal@kernel.org>
 References: <20190601131653.24205-1-sashal@kernel.org>
@@ -64,44 +63,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yue Hu <huyue2@yulong.com>
+From: Cyrill Gorcunov <gorcunov@gmail.com>
 
-[ Upstream commit f0fd50504a54f5548eb666dc16ddf8394e44e4b7 ]
+[ Upstream commit a9e73998f9d705c94a8dca9687633adc0f24a19a ]
 
-If not find zero bit in find_next_zero_bit(), it will return the size
-parameter passed in, so the start bit should be compared with bitmap_maxno
-rather than cma->count.  Although getting maxchunk is working fine due to
-zero value of order_per_bit currently, the operation will be stuck if
-order_per_bit is set as non-zero.
+While validating new map we require the @start_data to be strictly less
+than @end_data, which is fine for regular applications (this is why this
+nit didn't trigger for that long).  These members are set from executable
+loaders such as elf handers, still it is pretty valid to have a loadable
+data section with zero size in file, in such case the start_data is equal
+to end_data once kernel loader finishes.
 
-Link: http://lkml.kernel.org/r/20190319092734.276-1-zbestahu@gmail.com
-Signed-off-by: Yue Hu <huyue2@yulong.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Joe Perches <joe@perches.com>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Dmitry Safonov <d.safonov@partner.samsung.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+As a result when we're trying to restore such programs the procedure fails
+and the kernel returns -EINVAL.  From the image dump of a program:
+
+ | "mm_start_code": "0x400000",
+ | "mm_end_code": "0x8f5fb4",
+ | "mm_start_data": "0xf1bfb0",
+ | "mm_end_data": "0xf1bfb0",
+
+Thus we need to change validate_prctl_map from strictly less to less or
+equal operator use.
+
+Link: http://lkml.kernel.org/r/20190408143554.GY1421@uranus.lan
+Fixes: f606b77f1a9e3 ("prctl: PR_SET_MM -- introduce PR_SET_MM_MAP operation")
+Signed-off-by: Cyrill Gorcunov <gorcunov@gmail.com>
+Cc: Andrey Vagin <avagin@gmail.com>
+Cc: Dmitry Safonov <0x7f454c46@gmail.com>
+Cc: Pavel Emelyanov <xemul@virtuozzo.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/cma_debug.c | 2 +-
+ kernel/sys.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/cma_debug.c b/mm/cma_debug.c
-index 8d7b2fd522259..a7dd9e8e10d5d 100644
---- a/mm/cma_debug.c
-+++ b/mm/cma_debug.c
-@@ -56,7 +56,7 @@ static int cma_maxchunk_get(void *data, u64 *val)
- 	mutex_lock(&cma->lock);
- 	for (;;) {
- 		start = find_next_zero_bit(cma->bitmap, bitmap_maxno, end);
--		if (start >= cma->count)
-+		if (start >= bitmap_maxno)
- 			break;
- 		end = find_next_bit(cma->bitmap, bitmap_maxno, start);
- 		maxchunk = max(end - start, maxchunk);
+diff --git a/kernel/sys.c b/kernel/sys.c
+index 12df0e5434b84..bdbfe8d37418f 100644
+--- a/kernel/sys.c
++++ b/kernel/sys.c
+@@ -1924,7 +1924,7 @@ static int validate_prctl_map(struct prctl_mm_map *prctl_map)
+ 	((unsigned long)prctl_map->__m1 __op				\
+ 	 (unsigned long)prctl_map->__m2) ? 0 : -EINVAL
+ 	error  = __prctl_check_order(start_code, <, end_code);
+-	error |= __prctl_check_order(start_data, <, end_data);
++	error |= __prctl_check_order(start_data,<=, end_data);
+ 	error |= __prctl_check_order(start_brk, <=, brk);
+ 	error |= __prctl_check_order(arg_start, <=, arg_end);
+ 	error |= __prctl_check_order(env_start, <=, env_end);
 -- 
 2.20.1
 
