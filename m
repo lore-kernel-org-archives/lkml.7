@@ -7,55 +7,59 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC25C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C65C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A98DB27280
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E6F5272B4
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:19:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395151;
-	bh=xgM/0zR1Re+p+SRvP4V+6y1AYNCntVtbaaDoL2WYHZE=;
+	s=default; t=1559395162;
+	bh=9xEkafkImboL0Vlars0FgDOJ0ZEDWSP9hRRg7LPRHYY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RoZRnC0mpo3t4O6MZKhPliBPul31AvqePmPV4LeBpsyIb0uDcYExvNvVZlS7r/2J9
-	 cOLm50VPF+CbwvmjuifmKXQ+t/eS0R2BoiF/DE6uZC84wFnFWqCsadYyMIsjHzIJmI
-	 t7u7XQDavniEbrKbRAQsBcU6/WGQK4dLVG0dyMk4=
+	b=UeHKrLkb2xT052bzbcJVPgxW+zabvi245Uz+a/QhGfgnsjL355tATOHXBVzMf3ZtF
+	 LiogH4Ar1YPI8XwMR0tEeN1y8yiP8FbHZ3/94qlTHv0mdwMPYB3LnCAZyLYU6GRrS1
+	 +W2VdZ+ZOdG6U6KXWzYK7kKwx/asjVWM/qlJUUCY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbfFANTK (ORCPT
+        id S1728205AbfFANTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:19:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46334 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:19:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728079AbfFANTJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:19:09 -0400
+        id S1728184AbfFANTU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:19:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D359E272BE;
-        Sat,  1 Jun 2019 13:19:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABACA27280;
+        Sat,  1 Jun 2019 13:19:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395148;
-        bh=xgM/0zR1Re+p+SRvP4V+6y1AYNCntVtbaaDoL2WYHZE=;
+        s=default; t=1559395159;
+        bh=9xEkafkImboL0Vlars0FgDOJ0ZEDWSP9hRRg7LPRHYY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MzQz/d6JZ0fGaGgiXttBtPEp1PWguJ5M/RBlqAXN8rKfgU+5YlESuECYRM1p3xHfE
-         g6AdKjp9OngYiOM1MxLxlAYj0Z6wcHZMDoBBB2aUYwLo60NaQm/H2+z7rufOvUcp2t
-         lV8yrKRwjkOaMs422mfvugl+KGUKOUPi9inqOi4E=
+        b=uYrOX6P2jchL1WyrvPZD9w7+HgIuR3AzX2WhV1gfs2lMZLyqclJpR9LUop9fUahpx
+         tzKVTZyXB3Z43rrxmnB1A//o2ECa/Ajr1lGJO6G9SfFD+SbneweKeDS2rSfzwlDow5
+         NY+VrvkMgovJstgAAU6yDXkyC4CyxQ25SQ1WTdFM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andreas Schwab <schwab@linux-m68k.org>,
-        Prarit Bhargava <prarit@redhat.com>,
-        Yisheng Xie <ysxie@foxmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Marko Myllynen <myllynen@redhat.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 065/186] fbcon: Don't reset logo_shown when logo is currently shown
-Date:   Sat,  1 Jun 2019 09:14:41 -0400
-Message-Id: <20190601131653.24205-65-sashal@kernel.org>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Juergen Gross <jgross@suse.com>,
+        Serge Semin <Sergey.Semin@t-platforms.ru>,
+        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 071/186] mips: Make sure dt memory regions are valid
+Date:   Sat,  1 Jun 2019 09:14:47 -0400
+Message-Id: <20190601131653.24205-71-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131653.24205-1-sashal@kernel.org>
 References: <20190601131653.24205-1-sashal@kernel.org>
@@ -68,43 +72,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Schwab <schwab@linux-m68k.org>
+From: Serge Semin <fancer.lancer@gmail.com>
 
-[ Upstream commit 3c5a1b111373e669c8220803464c3a508a87e254 ]
+[ Upstream commit 93fa5b280761a4dbb14c5330f260380385ab2b49 ]
 
-When the logo is currently drawn on a virtual console, and the console
-loglevel is reduced to quiet, logo_shown must be left alone, so that it
-the scrolling region on that virtual console is properly reset.
+There are situations when memory regions coming from dts may be
+too big for the platform physical address space. This especially
+concerns XPA-capable systems. Bootloader may determine more than 4GB
+memory available and pass it to the kernel over dts memory node, while
+kernel is built without XPA/64BIT support. In this case the region
+may either simply be truncated by add_memory_region() method
+or by u64->phys_addr_t type casting. But in worst case the method
+can even drop the memory region if it exceeds PHYS_ADDR_MAX size.
+So lets make sure the retrieved from dts memory regions are valid,
+and if some of them aren't, just manually truncate them with a warning
+printed out.
 
-Fixes: 10993504d647 ("fbcon: Silence fbcon logo on 'quiet' boots")
-Signed-off-by: Andreas Schwab <schwab@linux-m68k.org>
-Cc: Prarit Bhargava <prarit@redhat.com>
-Cc: Yisheng Xie <ysxie@foxmail.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Marko Myllynen <myllynen@redhat.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Cc: Huacai Chen <chenhc@lemote.com>
+Cc: Stefan Agner <stefan@agner.ch>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Serge Semin <Sergey.Semin@t-platforms.ru>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/core/fbcon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/kernel/prom.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
-index cd059a801662e..786f9aab55df6 100644
---- a/drivers/video/fbdev/core/fbcon.c
-+++ b/drivers/video/fbdev/core/fbcon.c
-@@ -1069,7 +1069,7 @@ static void fbcon_init(struct vc_data *vc, int init)
+diff --git a/arch/mips/kernel/prom.c b/arch/mips/kernel/prom.c
+index 93b8e0b4332f7..b9d6c6ec41778 100644
+--- a/arch/mips/kernel/prom.c
++++ b/arch/mips/kernel/prom.c
+@@ -41,7 +41,19 @@ char *mips_get_machine_name(void)
+ #ifdef CONFIG_USE_OF
+ void __init early_init_dt_add_memory_arch(u64 base, u64 size)
+ {
+-	return add_memory_region(base, size, BOOT_MEM_RAM);
++	if (base >= PHYS_ADDR_MAX) {
++		pr_warn("Trying to add an invalid memory region, skipped\n");
++		return;
++	}
++
++	/* Truncate the passed memory region instead of type casting */
++	if (base + size - 1 >= PHYS_ADDR_MAX || base + size < base) {
++		pr_warn("Truncate memory region %llx @ %llx to size %llx\n",
++			size, base, PHYS_ADDR_MAX - base);
++		size = PHYS_ADDR_MAX - base;
++	}
++
++	add_memory_region(base, size, BOOT_MEM_RAM);
+ }
  
- 	cap = info->flags;
- 
--	if (console_loglevel <= CONSOLE_LOGLEVEL_QUIET)
-+	if (logo_shown < 0 && console_loglevel <= CONSOLE_LOGLEVEL_QUIET)
- 		logo_shown = FBCON_LOGO_DONTSHOW;
- 
- 	if (vc != svc || logo_shown == FBCON_LOGO_DONTSHOW ||
+ int __init early_init_dt_reserve_memory_arch(phys_addr_t base,
 -- 
 2.20.1
 
