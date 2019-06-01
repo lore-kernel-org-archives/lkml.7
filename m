@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB84FC28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5ABC28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5405272C5
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:18:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 924B4272A7
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:19:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395136;
-	bh=DQFifoSnA4WTPRNM7L36Gt4t6w84wHh5lhn7kpd4ZEs=;
+	s=default; t=1559395145;
+	bh=EC9c2GInWSKJ2OTfHtjz/c/OUO0ekHNd7+59xQ4zdUo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sqp/OeLhHQkPclx4HIcNQQ+GkCXkRKDVDVVE3qXwQ17ohv2rbzGU966q6YXCPulJs
-	 3QK+0UXM6tPJrqSzHgmvtY+EDCLCGdN0y7Ti0oTUakMhq2EJ9SNxkrz9AaXZRmNDBI
-	 ml7XqK8/to5WxFN4kP2AZHImHjfijciGsY9f+i2A=
+	b=dnCBNU4LcHsKSUMeyCCZ+c0k0sbFYPGbzyUlMLgqYtVo9b4CbLPXiKmTaCPipwfbv
+	 HFODxGCsgJmxSd4YjxQeJRbyn1vt5DftwZ5elk3tlggi11YJLxARSv4CnQNtokt1S4
+	 4bcRI8qoocuwTLgFbJyz9MQle0Sd2OOo34WMlatY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727995AbfFANSz (ORCPT
+        id S1728084AbfFANTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:18:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45946 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:19:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727966AbfFANSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:18:50 -0400
+        id S1728063AbfFANTD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:19:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9197F272C0;
-        Sat,  1 Jun 2019 13:18:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AEA5229EB;
+        Sat,  1 Jun 2019 13:19:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395130;
-        bh=DQFifoSnA4WTPRNM7L36Gt4t6w84wHh5lhn7kpd4ZEs=;
+        s=default; t=1559395143;
+        bh=EC9c2GInWSKJ2OTfHtjz/c/OUO0ekHNd7+59xQ4zdUo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TQ6zSbBINGpkEnnBZlgscZyr1+ScUJL0FtnEPD4bjrafmnVVWLrnNzfzlDyQ1CKLI
-         NSfhGfO2QIgCLwWyjJRdh0HjTdWbgVkvA0DrGbrsEpqA3GjcvFY+WWLEYaaOeWQPh1
-         rOpaOUz3f65myPG+clQLtKm9ef5HhXoJ/CN1mxGo=
+        b=ATVlVPOiu6YXFKhVypG3ijNqni909tGd6xlnGZ5YFqdOTrYidz5XDVdUjv3mTQO+A
+         qsV1pu7VMzANu3NfV+X81VcK+cboe7D258NKt7qiChqmPtXEFtEKuMLbwMaCa+9+fm
+         79dOCHphAFEzlIvrDcXQXfyCKkh/fzX6+v/KtEaE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.1 053/186] f2fs: fix to avoid deadloop in foreground GC
-Date:   Sat,  1 Jun 2019 09:14:29 -0400
-Message-Id: <20190601131653.24205-53-sashal@kernel.org>
+Cc:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 063/186] PCI: dwc: Free MSI in dw_pcie_host_init() error path
+Date:   Sat,  1 Jun 2019 09:14:39 -0400
+Message-Id: <20190601131653.24205-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131653.24205-1-sashal@kernel.org>
 References: <20190601131653.24205-1-sashal@kernel.org>
@@ -59,84 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 
-[ Upstream commit 793ab1c8a792f8bccd7ae4c5be02bd275410b3af ]
+[ Upstream commit 9e2b5de5604a6ff2626c51e77014d92c9299722c ]
 
-As Jungyeon reported in bugzilla:
+If we ever did MSI-related initializations, we need to call
+dw_pcie_free_msi() in the error code path.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203211
+Remove the IS_ENABLED(CONFIG_PCI_MSI) check for MSI init because
+pci_msi_enabled() already has a stub for !CONFIG_PCI_MSI.
 
-- Overview
-When mounting the attached crafted image and making a new file, I got this error and the error messages keep repeating.
-
-The image is intentionally fuzzed from a normal f2fs image for testing and I run with option CONFIG_F2FS_CHECK_FS on.
-
-- Reproduces
-mkdir test
-mount -t f2fs tmp.img test
-cd test
-touch t
-
-- Messages
-[   58.820451] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.821485] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.822530] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.823571] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.824616] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.825640] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.826663] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.827698] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.828719] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.829759] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.830783] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.831828] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.832869] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.833888] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.834945] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.835996] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.837028] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.838051] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.839072] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.840100] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.841147] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.842186] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.843214] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.844267] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.845282] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.846305] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.847341] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-... (repeating)
-
-During GC, if segment type stored in SSA and SIT is inconsistent, we just
-skip migrating current segment directly, since we need to know the exact
-type to decide the migration function we use.
-
-So in foreground GC, we will easily run into a infinite loop as we may
-select the same victim segment which has inconsistent type due to greedy
-policy. In order to end up this, we choose to shutdown filesystem. For
-backgrond GC, we need to do that as well, so that we can avoid latter
-potential infinite looped foreground GC.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/gc.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/controller/dwc/pcie-designware-host.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-index ab764bd106de1..a66a8752e5f65 100644
---- a/fs/f2fs/gc.c
-+++ b/fs/f2fs/gc.c
-@@ -1175,6 +1175,7 @@ static int do_garbage_collect(struct f2fs_sb_info *sbi,
- 				"type [%d, %d] in SSA and SIT",
- 				segno, type, GET_SUM_TYPE((&sum->footer)));
- 			set_sbi_flag(sbi, SBI_NEED_FSCK);
-+			f2fs_stop_checkpoint(sbi, false);
- 			goto skip;
- 		}
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 25087d3c9a823..acd185b4661e1 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -439,7 +439,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 	if (ret)
+ 		pci->num_viewport = 2;
  
+-	if (IS_ENABLED(CONFIG_PCI_MSI) && pci_msi_enabled()) {
++	if (pci_msi_enabled()) {
+ 		/*
+ 		 * If a specific SoC driver needs to change the
+ 		 * default number of vectors, it needs to implement
+@@ -477,7 +477,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 	if (pp->ops->host_init) {
+ 		ret = pp->ops->host_init(pp);
+ 		if (ret)
+-			goto error;
++			goto err_free_msi;
+ 	}
+ 
+ 	pp->root_bus_nr = pp->busn->start;
+@@ -491,7 +491,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 
+ 	ret = pci_scan_root_bus_bridge(bridge);
+ 	if (ret)
+-		goto error;
++		goto err_free_msi;
+ 
+ 	bus = bridge->bus;
+ 
+@@ -507,6 +507,9 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 	pci_bus_add_devices(bus);
+ 	return 0;
+ 
++err_free_msi:
++	if (pci_msi_enabled() && !pp->ops->msi_host_init)
++		dw_pcie_free_msi(pp);
+ error:
+ 	pci_free_host_bridge(bridge);
+ 	return ret;
 -- 
 2.20.1
 
