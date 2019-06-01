@@ -2,86 +2,89 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9AC2C04AB6
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF70C04AB6
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F76B26D09
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:12:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559347958;
-	bh=GGD1oFdcIDlJ6FqkekMGdawRxHreTdZHjFVN9PCi6a8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=F1tP+dqqCTnkI3lUxsrwEvy8Sojso7Frndw2dhoaFDw6jJz8jgpb/BRJY7N4whGYO
-	 TkHzma93KMkTHfQifFjmlhTfNxCNL7U7Ho/Zi7T/tBlp2nOAZRTQP+EUm4WWNxwBwf
-	 RdmIAzRYCufKLhKTmtHVD8ZVXh9NRHk5OGLvp6yY=
+	by mail.kernel.org (Postfix) with ESMTP id 2A7F626963
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:14:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbfFAAMh (ORCPT
+        id S1726956AbfFAAOd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 20:12:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58694 "EHLO mail.kernel.org"
+        Fri, 31 May 2019 20:14:33 -0400
+Received: from mga06.intel.com ([134.134.136.31]:8648 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726483AbfFAAMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 20:12:37 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 791E026963;
-        Sat,  1 Jun 2019 00:12:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559347956;
-        bh=GGD1oFdcIDlJ6FqkekMGdawRxHreTdZHjFVN9PCi6a8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=XGllllyOcRfEtT/HKNL8h1qqwTaK0KHhm77p0FWVZvY/qXX3zttyq8+Ri08THHd8f
-         Ts/pUuDYgYTJs/OHUORYCmAIkB9fAF6XKzzr7JKa8uERnCmThp41trzMld251Zv2c1
-         e2XUUgIIuYj9l6AZCfwjQDZnLCb0agq9yt28NlkY=
-Date:   Fri, 31 May 2019 17:12:35 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Vaneet Narang <v.narang@samsung.com>,
-        Maninder Singh <maninder1.s@samsung.com>,
-        "terrelln@fb.com" <terrelln@fb.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "gustavo@embeddedor.com" <gustavo@embeddedor.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        AMIT SAHRAWAT <a.sahrawat@samsung.com>,
-        PANKAJ MISHRA <pankaj.m@samsung.com>
-Subject: Re: [PATCH 1/2] zstd: pass pointer rathen than structure to
- functions
-Message-Id: <20190531171235.7c458cf1ac1b5dd299dbf6ec@linux-foundation.org>
-In-Reply-To: <20190530133519.gdkxey5lv4hrrv7q@gondor.apana.org.au>
-References: <1557468704-3014-1-git-send-email-maninder1.s@samsung.com>
-        <CGME20190510061311epcas5p19e9bf3d08319ac99890e03e0bd59e478@epcms5p1>
-        <20190530091327epcms5p11a7725e9c01286b1a7c023737bf4e448@epcms5p1>
-        <20190530133519.gdkxey5lv4hrrv7q@gondor.apana.org.au>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1726518AbfFAAOd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 20:14:33 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 May 2019 17:14:32 -0700
+X-ExtLoop1: 1
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.29])
+  by fmsmga008.fm.intel.com with ESMTP; 31 May 2019 17:14:30 -0700
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Hugh Dickins <hughd@google.com>
+Subject: Re: [PATCH -mm] mm, swap: Fix bad swap file entry warning
+References: <20190531024102.21723-1-ying.huang@intel.com>
+        <20190531061047.GB6896@dhcp22.suse.cz>
+Date:   Sat, 01 Jun 2019 08:14:29 +0800
+In-Reply-To: <20190531061047.GB6896@dhcp22.suse.cz> (Michal Hocko's message of
+        "Fri, 31 May 2019 08:10:47 +0200")
+Message-ID: <87tvda40wq.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 May 2019 21:35:19 +0800 Herbert Xu <herbert@gondor.apana.org.au> wrote:
+Michal Hocko <mhocko@kernel.org> writes:
 
-> On Thu, May 30, 2019 at 02:43:27PM +0530, Vaneet Narang wrote:
-> > [Reminder] Any updates ?
-> 
-> I was assuming that Andrew was going to pick this up.  Andrew?
-> 
+> On Fri 31-05-19 10:41:02, Huang, Ying wrote:
+>> From: Huang Ying <ying.huang@intel.com>
+>> 
+>> Mike reported the following warning messages
+>> 
+>>   get_swap_device: Bad swap file entry 1400000000000001
+>> 
+>> This is produced by
+>> 
+>> - total_swapcache_pages()
+>>   - get_swap_device()
+>> 
+>> Where get_swap_device() is used to check whether the swap device is
+>> valid and prevent it from being swapoff if so.  But get_swap_device()
+>> may produce warning message as above for some invalid swap devices.
+>> This is fixed via calling swp_swap_info() before get_swap_device() to
+>> filter out the swap devices that may cause warning messages.
+>> 
+>> Fixes: 6a946753dbe6 ("mm/swap_state.c: simplify total_swapcache_pages() with get_swap_device()")
+>
+> I suspect this is referring to a mmotm patch right?
 
-I don't have a copy of these emails, sorry.  I wasn't cc'ed on the
-originals and late in April I had a few hours of email bouncing
-happening.  I got booted off all the vger lists, and it took over a
-week for me to notice this due to travel :( These patches fell in that
-window
+Yes.
 
-Can we please have a resend, with any new acks and reviewed-by's added
-on?
+> There doesn't seem
+> to be any sha like this in Linus' tree AFAICS. If that is the case then
+> please note that mmotm patch showing up in linux-next do not have a
+> stable sha1 and therefore you shouldn't reference them in the commit
+> message. Instead please refer to the specific mmotm patch file so that
+> Andrew knows it should be folded in to it.
 
+Thanks for reminding!  I will be more careful in the future.  It seems
+that Andrew has identified the right patch to be folded into.
+
+Best Regards,
+Huang, Ying
