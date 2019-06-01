@@ -2,172 +2,206 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F412C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 04:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2476CC28CC4
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 04:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED4F227116
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 04:25:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F16FE2711F
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 04:26:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="U0QSsqFg";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="N1FnC6Fs"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="eULIT2RU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726009AbfFAEZm (ORCPT
+        id S1726149AbfFAE0x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 00:25:42 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:44086 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725800AbfFAEZl (ORCPT
+        Sat, 1 Jun 2019 00:26:53 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37808 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbfFAE0x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 00:25:41 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x514PSvl028979
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 21:25:40 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : content-type : content-id :
- content-transfer-encoding : mime-version; s=pfpt0818;
- bh=nuKr3htPJhdii8ANK1usteKgh3OCu7nJ6JaST00moT0=;
- b=U0QSsqFgoX3gJE3Roe27IZAA2k2cHp+YaCgDLjKJ9SeqSLU8cKLPLwVzYbBNq69mE0bZ
- Rcw6avv94kN1ajdB7JEJZw6/H3/JwR+yfMxdAyiV12VItk8L9gEDcSytKD2NaV7BRyFA
- QJWTSsFmZ44MAmj/FLbgkLJ4oTgpy5ERAb6xykbZ5OF/wFeBFEPjSBXqubm4LElpI7uW
- +WnlK4LPXZrSTulpLkdYNoJWlusKOcMIgr/IWey2xhbKit5iGrhoJRbl25j2nSD8nqqy
- HwV/nqfz3EgWRrfkdwa4vkrBb+a0s0UVUC5bShpdxMMfZcJzpkJvnN2qq6HD5DbreHtp Vg== 
-Received: from sc-exch03.marvell.com ([199.233.58.183])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2su5xh2s40-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 21:25:40 -0700
-Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH03.marvell.com
- (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Fri, 31 May
- 2019 21:25:38 -0700
-Received: from NAM05-BY2-obe.outbound.protection.outlook.com (104.47.50.52) by
- SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Fri, 31 May 2019 21:25:38 -0700
+        Sat, 1 Jun 2019 00:26:53 -0400
+Received: by mail-oi1-f194.google.com with SMTP id i4so8879522oih.4
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 21:26:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nuKr3htPJhdii8ANK1usteKgh3OCu7nJ6JaST00moT0=;
- b=N1FnC6FsGL8GptvC1DHbSG26pOSNW3iIR2ZcBco/7CrfTwinZ4WQfiiEgTz7by7JgR1yAeJAusR7rvMiSOEFlodsxdiCDDqqy+Ims/LTG+Z7VW6WeXD2BARl8R3abEShb+WHzvy+LEiB5VKcTvzbtEzNyAQ2v7qEk67TS79h59Y=
-Received: from BN6PR1801MB2065.namprd18.prod.outlook.com (10.161.157.12) by
- BN6PR1801MB2050.namprd18.prod.outlook.com (10.161.153.38) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.21; Sat, 1 Jun 2019 04:25:35 +0000
-Received: from BN6PR1801MB2065.namprd18.prod.outlook.com
- ([fe80::dcb8:35bc:5639:1942]) by BN6PR1801MB2065.namprd18.prod.outlook.com
- ([fe80::dcb8:35bc:5639:1942%5]) with mapi id 15.20.1922.021; Sat, 1 Jun 2019
- 04:25:35 +0000
-From:   Yuri Norov <ynorov@marvell.com>
-To:     Qian Cai <cai@lca.pw>, Dexuan-Linux Cui <dexuan.linux@gmail.com>,
-        "Mike Kravetz" <mike.kravetz@oracle.com>
-CC:     "Huang, Ying" <ying.huang@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        "v-lide@microsoft.com" <v-lide@microsoft.com>,
-        "Yury Norov" <yury.norov@gmail.com>
-Subject: Re: [PATCH -mm] mm, swap: Fix bad swap file entry warning
-Thread-Topic: [PATCH -mm] mm, swap: Fix bad swap file entry warning
-Thread-Index: AQHVGDIGV2zQWjMkJ0mLcCoMq5uXRw==
-Date:   Sat, 1 Jun 2019 04:25:35 +0000
-Message-ID: <ba248cf9f2344d0db6d029ae82a32c52BN6PR1801MB2065F9E5FF6F9E8928879290CB190@BN6PR1801MB2065.namprd18.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-publictraffictype: Email
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-originating-ip: [2601:648:8300:77e8:50ea:80dc:e366:5a32]
-x-ms-office365-filtering-correlation-id: a8f68b22-c0a0-4486-2e11-08d6e64931a3
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN6PR1801MB2050;
-x-ms-traffictypediagnostic: BN6PR1801MB2050:
-x-ms-exchange-purlcount: 3
-x-microsoft-antispam-prvs: <BN6PR1801MB2050ADCAA80DDDBA507CC231CB1A0@BN6PR1801MB2050.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 00550ABE1F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(396003)(366004)(346002)(39860400002)(189003)(199004)(102836004)(5660300002)(8676002)(81156014)(6506007)(8936002)(25786009)(476003)(478600001)(7696005)(86362001)(71200400001)(71190400001)(4326008)(14454004)(81166006)(966005)(68736007)(2906002)(7736002)(45080400002)(66446008)(305945005)(64756008)(74316002)(66556008)(6436002)(107886003)(66476007)(66946007)(316002)(73956011)(486006)(6246003)(53936002)(76116006)(55016002)(256004)(6306002)(118296001)(99286004)(229853002)(186003)(6116002)(46003)(110136005)(9686003)(54906003)(6606295002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR1801MB2050;H:BN6PR1801MB2065.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:3;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: FBHiHz4YKP6Dh8svuuTm0cuD73CxRQ15plCpCUgrDuQTyqfwTW5CGXnTQycuxnegHehfn1G5O1sXD251M2kE+GH2PcXlFCPVXKIrOhSRszq8uAsk5NmuKLjUyZbdoyDVnPAXsDMdeozMBkGZZG7HEnZ2J8rr6h2Z/AbvwH9hYmnJjtYcB8OplDNq8RwaXPuK6xAqEr8PTbaiTdDjq0RXlXhlbDq4p1YPYOmCfOLgukDZXjfsIKrYda8P07UGsLiXgsKhbqwQXzJzy51Lxrwuv4O8Y6Khpak75M1xQy7zhgEIo1s/iB+B1BwMrR845Ba6EH3wW3xKvoCuln8GcLHxRofO0kmPaxG3DAZvw2qRmch12zKAo1rMRly/Fbk9ein8z38ibjoUrwG14CyuNurfdqAoZSPysnhOjaf2wdajDZk=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <563594FB5DAE5E42842E3221D7217725@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QNhOzt9mi4QEW/UkqlsD+LhM4aY8Y6V5JqJaEQnQrZQ=;
+        b=eULIT2RUbl0QppQ6H9eCEst+tZtjWGfwdar6IgE+5A7dmFfh1ZeY2XyDRx/oNIhgUO
+         GGNsqiKa0xpM3Nr2i9e786mXzhwNl/Xq1eonERgnlCZNWV/tYdtfaWjSgwdr/1tzfk/L
+         5DO4m0UXmprTZzmKQs8b0kC5v7kUXidi2LJZrJxpAo3HErjCp/QvGRV6X0RTnBZ34ZKr
+         udmUl3O34LWsBSKBasIJfybnTQpG5SpiwAMaozCzfOr3ifgomLjfRfGhu+foVEa36g3o
+         TZY+dEmnqWFGw+Wg1ZmxdcQYZRfNnHrzZWhRHxNEjj6tazoyTq109M4x5OzNtB7fQ9aZ
+         sgdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QNhOzt9mi4QEW/UkqlsD+LhM4aY8Y6V5JqJaEQnQrZQ=;
+        b=gMBIWff73KQHiWBSEqGbjH2gM2wEr8eM8b0+H+X/6LPR3Fx8gBGujoLK7YAwvnnhFX
+         9q1Fk+M7LEKbGs9k47AX7tgdCyOyvFLJhoSQXnV0bK2gmaC+SCar1qLFPO/6x5DM2et8
+         cU/244avnKbVpoqL/0RASDmCAcp7a+j4vsgYltIHg2WbB4QfwIraw1dV/cjWQZD73+fr
+         w8sxv1f+cMOcNJ0smoj2Y3ZyJD8PwvyNSViREE5nhkI6Xa5HLGoF9leeo3fOCVY9juPz
+         28aBlqmwlXpsYLWvPo4Da65HQEIxaZ4PgKgQuTIWgTcU39ViYbAZdNdtfFZ6fSbs6iq7
+         I5Cg==
+X-Gm-Message-State: APjAAAUO5zIKwsLGKEK+Cw/g0h6LaReT62EN/AaYA3V1zCBR+6qUBYdz
+        cfWGrZ46uUT6Qp95kV+BoZiKV1sXwj9kkUvxmGvPJg==
+X-Google-Smtp-Source: APXvYqzaVrB3g+ABIuTUypcECW4eQQb+L1oF8XmOAVSlRCVDBJ3IC+ot8aNdAKsRh5Ex61K+ZnvQLoiDoa1OvrTEoaY=
+X-Received: by 2002:aca:6087:: with SMTP id u129mr1104493oib.70.1559363212074;
+ Fri, 31 May 2019 21:26:52 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: a8f68b22-c0a0-4486-2e11-08d6e64931a3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jun 2019 04:25:35.7600
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ynorov@marvell.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1801MB2050
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-01_03:,,
- signatures=0
+References: <155925716254.3775979.16716824941364738117.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <155925718351.3775979.13546720620952434175.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAKv+Gu-J3-66V7UhH3=AjN4sX7iydHNF7Fd+SMbezaVNrZQmGQ@mail.gmail.com>
+ <CAPcyv4g-GNe2vSYTn0a6ivQYxJdS5khE4AJbcxysoGPsTZwswg@mail.gmail.com> <CAKv+Gu83QB6x8=LCaAcR0S65WELC-Y+Voxw6LzaVh4FSV3bxYA@mail.gmail.com>
+In-Reply-To: <CAKv+Gu83QB6x8=LCaAcR0S65WELC-Y+Voxw6LzaVh4FSV3bxYA@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 31 May 2019 21:26:40 -0700
+Message-ID: <CAPcyv4hXBJBMrqoUr4qG5A3CUVgWzWK6bfBX29JnLCKDC7CiGA@mail.gmail.com>
+Subject: Re: [PATCH v2 4/8] x86, efi: Reserve UEFI 2.8 Specific Purpose Memory
+ for dax
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kbuild test robot <lkp@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(Resend as LKML didn't take outlook settings.)
-
-> On Fri, 2019-05-31 at 11:27 -0700, Dexuan-Linux Cui wrote:
-> > Hi,
-> > Did you know about the panic reported here:
-> >  https://marc.info/?t=3D155930773000003&r=3D1&w=3D2
-> >=20
-> > "Kernel panic - not syncing: stack-protector: Kernel stack is
-> > corrupted in: write_irq_affinity.isra> "
-> >=20
-> > This panic is reported on PowerPC and x86.
-> >=20
-> > In the case of x86, we see a lot of "get_swap_device: Bad swap file ent=
-ry"
-> > errors before the panic:
-> >=20
-> > ...
-> > [=A0=A0=A024.404693] get_swap_device: Bad swap file entry 5800000000000=
-001
-> > [=A0=A0=A024.408702] get_swap_device: Bad swap file entry 5c00000000000=
-001
-> > [=A0=A0=A024.412510] get_swap_device: Bad swap file entry 6000000000000=
-001
-> > [=A0=A0=A024.416519] get_swap_device: Bad swap file entry 6400000000000=
-001
-> > [=A0=A0=A024.420217] get_swap_device: Bad swap file entry 6800000000000=
-001
-> > [=A0=A0=A024.423921] get_swap_device: Bad swap file entry 6c00000000000=
-001
-
-[..]
-
-I don't have a panic, but I observe many lines like this.
-
-> Looks familiar,
+On Fri, May 31, 2019 at 8:30 AM Ard Biesheuvel
+<ard.biesheuvel@linaro.org> wrote:
 >
-> https://lore.kernel.org/lkml/1559242868.6132.35.camel@lca.pw/
+> On Fri, 31 May 2019 at 17:28, Dan Williams <dan.j.williams@intel.com> wrote:
+> >
+> > On Fri, May 31, 2019 at 1:30 AM Ard Biesheuvel
+> > <ard.biesheuvel@linaro.org> wrote:
+> > >
+> > > (cc Mike for memblock)
+> > >
+> > > On Fri, 31 May 2019 at 01:13, Dan Williams <dan.j.williams@intel.com> wrote:
+> > > >
+> > > > UEFI 2.8 defines an EFI_MEMORY_SP attribute bit to augment the
+> > > > interpretation of the EFI Memory Types as "reserved for a special
+> > > > purpose".
+> > > >
+> > > > The proposed Linux behavior for specific purpose memory is that it is
+> > > > reserved for direct-access (device-dax) by default and not available for
+> > > > any kernel usage, not even as an OOM fallback. Later, through udev
+> > > > scripts or another init mechanism, these device-dax claimed ranges can
+> > > > be reconfigured and hot-added to the available System-RAM with a unique
+> > > > node identifier.
+> > > >
+> > > > This patch introduces 3 new concepts at once given the entanglement
+> > > > between early boot enumeration relative to memory that can optionally be
+> > > > reserved from the kernel page allocator by default. The new concepts
+> > > > are:
+> > > >
+> > > > - E820_TYPE_SPECIFIC: Upon detecting the EFI_MEMORY_SP attribute on
+> > > >   EFI_CONVENTIONAL memory, update the E820 map with this new type. Only
+> > > >   perform this classification if the CONFIG_EFI_SPECIFIC_DAX=y policy is
+> > > >   enabled, otherwise treat it as typical ram.
+> > > >
+> > >
+> > > OK, so now we have 'special purpose', 'specific' and 'app specific'
+> > > [below]. Do they all mean the same thing?
+> >
+> > I struggled with separating the raw-EFI-type name from the name of the
+> > Linux specific policy. Since the reservation behavior is optional I
+> > was thinking there should be a distinct Linux kernel name for that
+> > policy. I did try to go back and change all occurrences of "special"
+> > to "specific" from the RFC to this v2, but seems I missed one.
+> >
 >
-> I suppose Andrew might be better of reverting the whole series first befo=
-re Yury
-> came up with a right fix, so that other people who is testing linux-next =
-don't
-> need to waste time for the same problem.
+> OK
 
-I didn't observe any problems with this series on top of 5.1, and there's a=
- fix for swap\
-that eliminates the problem on top of current next for me:
-https://lkml.org/lkml/2019/5/30/1630
+I'll go ahead and use "application reserved" terminology consistently
+throughout the code to distinguish that Linux translation from the raw
+"EFI specific purpose" attribute.
 
-Could you please test my series with the patch above?
+>
+> > >
+> > > > - IORES_DESC_APPLICATION_RESERVED: Add a new I/O resource descriptor for
+> > > >   a device driver to search iomem resources for application specific
+> > > >   memory. Teach the iomem code to identify such ranges as "Application
+> > > >   Reserved".
+> > > >
+> > > > - MEMBLOCK_APP_SPECIFIC: Given the memory ranges can fallback to the
+> > > >   traditional System RAM pool the expectation is that they will have
+> > > >   typical SRAT entries. In order to support a policy of device-dax by
+> > > >   default with the option to hotplug later, the numa initialization code
+> > > >   is taught to avoid marking online MEMBLOCK_APP_SPECIFIC regions.
+> > > >
+> > >
+> > > Can we move the generic memblock changes into a separate patch please?
+> >
+> > Yeah, that can move to a lead-in patch.
+> >
+> > [..]
+> > > > diff --git a/include/linux/efi.h b/include/linux/efi.h
+> > > > index 91368f5ce114..b57b123cbdf9 100644
+> > > > --- a/include/linux/efi.h
+> > > > +++ b/include/linux/efi.h
+> > > > @@ -129,6 +129,19 @@ typedef struct {
+> > > >         u64 attribute;
+> > > >  } efi_memory_desc_t;
+> > > >
+> > > > +#ifdef CONFIG_EFI_SPECIFIC_DAX
+> > > > +static inline bool is_efi_dax(efi_memory_desc_t *md)
+> > > > +{
+> > > > +       return md->type == EFI_CONVENTIONAL_MEMORY
+> > > > +               && (md->attribute & EFI_MEMORY_SP);
+> > > > +}
+> > > > +#else
+> > > > +static inline bool is_efi_dax(efi_memory_desc_t *md)
+> > > > +{
+> > > > +       return false;
+> > > > +}
+> > > > +#endif
+> > > > +
+> > > >  typedef struct {
+> > > >         efi_guid_t guid;
+> > > >         u32 headersize;
+> > >
+> > > I'd prefer it if we could avoid this DAX policy distinction leaking
+> > > into the EFI layer.
+> > >
+> > > IOW, I am fine with having a 'is_efi_sp_memory()' helper here, but
+> > > whether that is DAX memory or not should be decided in the DAX layer.
+> >
+> > Ok, how about is_efi_sp_ram()? Since EFI_MEMORY_SP might be applied to
+> > things that aren't EFI_CONVENTIONAL_MEMORY.
+>
+> Yes, that is fine. As long as the #ifdef lives in the DAX code and not here.
 
-Thanks,
-Yury
+We still need some ifdef in the efi core because that is the central
+location to make the policy distinction to identify identify
+EFI_CONVENTIONAL_MEMORY differently depending on whether EFI_MEMORY_SP
+is present. I agree with you that "dax" should be dropped from the
+naming. So how about:
 
-     =
+#ifdef CONFIG_EFI_APPLICATION_RESERVED
+static inline bool is_efi_application_reserved(efi_memory_desc_t *md)
+{
+        return md->type == EFI_CONVENTIONAL_MEMORY
+                && (md->attribute & EFI_MEMORY_SP);
+}
+#else
+static inline bool is_efi_application_reserved(efi_memory_desc_t *md)
+{
+        return false;
+}
+#endif
