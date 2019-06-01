@@ -7,59 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09794C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1062C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:34:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D81552751D
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:34:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E28E27544
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:34:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396065;
-	bh=zGPXe6yKB8iHpDJBGyZgJ2inSNUo5k/VZIINshdLB9I=;
+	s=default; t=1559396078;
+	bh=vx53/cn0piw5/Nd49Mujb3RPDQN5VCsCot01OzuqToI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y2n0N0/aibN0TyufLAN96VdI+LW5dPwDtkqMD3VkGEFH9zz6fKvALanENJ88SIO9n
-	 +DoK6p41gnLjb8vtfa8Y/Y/ZzLULyzDOr236QxjldKL+YPmdqCigUZmowZ6allBXCK
-	 alpIfVkQRxH7U3fCpUlVnD7cUm7Z9uf/VD4GUrKs=
+	b=F8/e5S6cQ3FWcoV3WuIXWuZ1BFywmf7yPMGsUIGDmbnbOdZIpHEkcSgHpaTex6vvd
+	 f7ghG7h6SYw5KfYt8RKScVcnZJ0mtva0Y6Z655xRvXwsHhxv6p2Vfsvd9iVzPxKHQ6
+	 EvYR/47m2kXHCFgW9g0NC6uP3dgghBWm2pIpQ0BE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729108AbfFANXo (ORCPT
+        id S1729470AbfFANeh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:23:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53628 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:34:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727672AbfFANXm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:23:42 -0400
+        id S1728470AbfFANXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:23:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E55927336;
-        Sat,  1 Jun 2019 13:23:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7651C264BE;
+        Sat,  1 Jun 2019 13:23:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395421;
-        bh=zGPXe6yKB8iHpDJBGyZgJ2inSNUo5k/VZIINshdLB9I=;
+        s=default; t=1559395416;
+        bh=vx53/cn0piw5/Nd49Mujb3RPDQN5VCsCot01OzuqToI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YpXvjZf0fTIp9qSxq9NRoxkPzgn3LlGXgBTbX33K8VImzFMvyahpOJFTTk2LWUGKA
-         1jigkVOIwngi9JTFEUAXIvWtju9w5txqSO9DR5N/laHxgbEJ03sID0W4TOpz3s9lJk
-         OSJmVJEr1omIa/kGXSOGFhEFvF7xzYyXwiMhz2i4=
+        b=OoRQVnHRYTwjNf4BdrffianhOuohGmdTyCsDu3veeVcHqjvqcXK951kuVYUUL8I//
+         izA5O3U7IytKGA72TW26SKgLj+Bik9YEqJTv+AwPDGmIcu9POHipQaMka8SNjqwctJ
+         I6ol6DrpbjYd1VCa0a0xPdsm2qyEE5uWhC+iNnvQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Juergen Gross <jgross@suse.com>,
-        Serge Semin <Sergey.Semin@t-platforms.ru>,
-        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 053/141] mips: Make sure dt memory regions are valid
-Date:   Sat,  1 Jun 2019 09:20:29 -0400
-Message-Id: <20190601132158.25821-53-sashal@kernel.org>
+Cc:     Taehee Yoo <ap420073@gmail.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 051/141] netfilter: nf_flow_table: fix missing error check for rhashtable_insert_fast
+Date:   Sat,  1 Jun 2019 09:20:27 -0400
+Message-Id: <20190601132158.25821-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132158.25821-1-sashal@kernel.org>
 References: <20190601132158.25821-1-sashal@kernel.org>
@@ -72,69 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <fancer.lancer@gmail.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 93fa5b280761a4dbb14c5330f260380385ab2b49 ]
+[ Upstream commit 43c8f131184faf20c07221f3e09724611c6525d8 ]
 
-There are situations when memory regions coming from dts may be
-too big for the platform physical address space. This especially
-concerns XPA-capable systems. Bootloader may determine more than 4GB
-memory available and pass it to the kernel over dts memory node, while
-kernel is built without XPA/64BIT support. In this case the region
-may either simply be truncated by add_memory_region() method
-or by u64->phys_addr_t type casting. But in worst case the method
-can even drop the memory region if it exceeds PHYS_ADDR_MAX size.
-So lets make sure the retrieved from dts memory regions are valid,
-and if some of them aren't, just manually truncate them with a warning
-printed out.
+rhashtable_insert_fast() may return an error value when memory
+allocation fails, but flow_offload_add() does not check for errors.
+This patch just adds missing error checking.
 
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Cc: Huacai Chen <chenhc@lemote.com>
-Cc: Stefan Agner <stefan@agner.ch>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Serge Semin <Sergey.Semin@t-platforms.ru>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Fixes: ac2a66665e23 ("netfilter: add generic flow table infrastructure")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/prom.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ net/netfilter/nf_flow_table_core.c | 25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
-diff --git a/arch/mips/kernel/prom.c b/arch/mips/kernel/prom.c
-index 89950b7bf536b..bdaf3536241a2 100644
---- a/arch/mips/kernel/prom.c
-+++ b/arch/mips/kernel/prom.c
-@@ -41,7 +41,19 @@ char *mips_get_machine_name(void)
- #ifdef CONFIG_USE_OF
- void __init early_init_dt_add_memory_arch(u64 base, u64 size)
- {
--	return add_memory_region(base, size, BOOT_MEM_RAM);
-+	if (base >= PHYS_ADDR_MAX) {
-+		pr_warn("Trying to add an invalid memory region, skipped\n");
-+		return;
-+	}
-+
-+	/* Truncate the passed memory region instead of type casting */
-+	if (base + size - 1 >= PHYS_ADDR_MAX || base + size < base) {
-+		pr_warn("Truncate memory region %llx @ %llx to size %llx\n",
-+			size, base, PHYS_ADDR_MAX - base);
-+		size = PHYS_ADDR_MAX - base;
-+	}
-+
-+	add_memory_region(base, size, BOOT_MEM_RAM);
- }
+diff --git a/net/netfilter/nf_flow_table_core.c b/net/netfilter/nf_flow_table_core.c
+index e1537ace2b90c..5df7486bb4164 100644
+--- a/net/netfilter/nf_flow_table_core.c
++++ b/net/netfilter/nf_flow_table_core.c
+@@ -185,14 +185,25 @@ static const struct rhashtable_params nf_flow_offload_rhash_params = {
  
- int __init early_init_dt_reserve_memory_arch(phys_addr_t base,
+ int flow_offload_add(struct nf_flowtable *flow_table, struct flow_offload *flow)
+ {
+-	flow->timeout = (u32)jiffies;
++	int err;
+ 
+-	rhashtable_insert_fast(&flow_table->rhashtable,
+-			       &flow->tuplehash[FLOW_OFFLOAD_DIR_ORIGINAL].node,
+-			       nf_flow_offload_rhash_params);
+-	rhashtable_insert_fast(&flow_table->rhashtable,
+-			       &flow->tuplehash[FLOW_OFFLOAD_DIR_REPLY].node,
+-			       nf_flow_offload_rhash_params);
++	err = rhashtable_insert_fast(&flow_table->rhashtable,
++				     &flow->tuplehash[0].node,
++				     nf_flow_offload_rhash_params);
++	if (err < 0)
++		return err;
++
++	err = rhashtable_insert_fast(&flow_table->rhashtable,
++				     &flow->tuplehash[1].node,
++				     nf_flow_offload_rhash_params);
++	if (err < 0) {
++		rhashtable_remove_fast(&flow_table->rhashtable,
++				       &flow->tuplehash[0].node,
++				       nf_flow_offload_rhash_params);
++		return err;
++	}
++
++	flow->timeout = (u32)jiffies;
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(flow_offload_add);
 -- 
 2.20.1
 
