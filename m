@@ -4,53 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B12C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB0AFC28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 488862764C
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B063127655
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:40:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396435;
-	bh=qDTHW3V/7qE9KwP69AnCsB8AhB++Ec/yyyT8YyDxTM8=;
+	s=default; t=1559396443;
+	bh=i4Yu/3MTaldNHtJo+VKdVtRs33iUDUWR/V3xo/Zz3Lg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BQrP0yL11jtw2ixG7WtagNnqKJFo2LYp+7etauaN7LRheZ20CmWpR7C/wfb613JjR
-	 9IodOAHXc4ALDNo5/Cj2EZVL8+vKMDNAK+xuIbfb4wRt3DYL/63E+Ud7qn5rGAPi45
-	 SgtZOf1uJ20RiWoUffucT5sXYC6kBJ86N1Pib3JE=
+	b=btdHc4oo71tsABOv3XQjXRVw1z0Csd+cCBd48BhusQa5OEeOtpdnBrsuCt5xm/6cO
+	 rTWFXSpSNQhCUnPBXnvDQAYmfRu2jZewmhBj7MEO8Jo/j7cRKTr9KIaInj+SlH62VL
+	 aCbHtJ7H91/XRZFwsfLSd+itTXLryTzvTvW/L6j4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729002AbfFANke (ORCPT
+        id S1728312AbfFANU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:40:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47972 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:20:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727777AbfFANUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:20:43 -0400
+        id S1728299AbfFANUV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:20:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11A42272E4;
-        Sat,  1 Jun 2019 13:20:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60D26272E4;
+        Sat,  1 Jun 2019 13:20:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395243;
-        bh=qDTHW3V/7qE9KwP69AnCsB8AhB++Ec/yyyT8YyDxTM8=;
+        s=default; t=1559395220;
+        bh=i4Yu/3MTaldNHtJo+VKdVtRs33iUDUWR/V3xo/Zz3Lg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gtY3gLlcWCPNZC5BQiSlmtFCnZ4r3uJ3cwgVGdTUrZXguuGNeG0OAwPi9gb1oaJXz
-         Lpdjb6lQbplvQFd24AF8Bb+fcSWlchXYGx+TjKs1AXFyZi5PVwA27TUKkc4rvn/3LP
-         /pwe0QS2xF3a0VvINVErXueANZbclMv1LsdPTxtM=
+        b=uRTQcvKUTLEWl/CTApCvSDTRkzDag9dq9Ni/qRUHikROWBJvuW/ze1ZHilQ6U+6T+
+         1Isc5efo9S/j8fLua3gT3eYoWABxaz2GryN0aPgKsSE5MR9cnKcu7I+rXJ0uRpGoTj
+         +3Zxfhb5zm0eAG5xsAPASVTwyn7a7kPGUtRR3NIg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Cyrill Gorcunov <gorcunov@gmail.com>,
-        Andrey Vagin <avagin@gmail.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
+Cc:     Linxu Fang <fanglinxu@huawei.com>,
+        Taku Izumi <izumi.taku@jp.fujitsu.com>,
+        Xishi Qiu <qiuxishi@huawei.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Oscar Salvador <osalvador@suse.de>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 021/173] kernel/sys.c: prctl: fix false positive in validate_prctl_map()
-Date:   Sat,  1 Jun 2019 09:16:53 -0400
-Message-Id: <20190601131934.25053-21-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 5.0 013/173] mem-hotplug: fix node spanned pages when we have a node with only ZONE_MOVABLE
+Date:   Sat,  1 Jun 2019 09:16:45 -0400
+Message-Id: <20190601131934.25053-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131934.25053-1-sashal@kernel.org>
 References: <20190601131934.25053-1-sashal@kernel.org>
@@ -63,54 +66,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cyrill Gorcunov <gorcunov@gmail.com>
+From: Linxu Fang <fanglinxu@huawei.com>
 
-[ Upstream commit a9e73998f9d705c94a8dca9687633adc0f24a19a ]
+[ Upstream commit 299c83dce9ea3a79bb4b5511d2cb996b6b8e5111 ]
 
-While validating new map we require the @start_data to be strictly less
-than @end_data, which is fine for regular applications (this is why this
-nit didn't trigger for that long).  These members are set from executable
-loaders such as elf handers, still it is pretty valid to have a loadable
-data section with zero size in file, in such case the start_data is equal
-to end_data once kernel loader finishes.
+342332e6a925 ("mm/page_alloc.c: introduce kernelcore=mirror option") and
+later patches rewrote the calculation of node spanned pages.
 
-As a result when we're trying to restore such programs the procedure fails
-and the kernel returns -EINVAL.  From the image dump of a program:
+e506b99696a2 ("mem-hotplug: fix node spanned pages when we have a movable
+node"), but the current code still has problems,
 
- | "mm_start_code": "0x400000",
- | "mm_end_code": "0x8f5fb4",
- | "mm_start_data": "0xf1bfb0",
- | "mm_end_data": "0xf1bfb0",
+When we have a node with only zone_movable and the node id is not zero,
+the size of node spanned pages is double added.
 
-Thus we need to change validate_prctl_map from strictly less to less or
-equal operator use.
+That's because we have an empty normal zone, and zone_start_pfn or
+zone_end_pfn is not between arch_zone_lowest_possible_pfn and
+arch_zone_highest_possible_pfn, so we need to use clamp to constrain the
+range just like the commit <96e907d13602> (bootmem: Reimplement
+__absent_pages_in_range() using for_each_mem_pfn_range()).
 
-Link: http://lkml.kernel.org/r/20190408143554.GY1421@uranus.lan
-Fixes: f606b77f1a9e3 ("prctl: PR_SET_MM -- introduce PR_SET_MM_MAP operation")
-Signed-off-by: Cyrill Gorcunov <gorcunov@gmail.com>
-Cc: Andrey Vagin <avagin@gmail.com>
-Cc: Dmitry Safonov <0x7f454c46@gmail.com>
-Cc: Pavel Emelyanov <xemul@virtuozzo.com>
+e.g.
+Zone ranges:
+  DMA      [mem 0x0000000000001000-0x0000000000ffffff]
+  DMA32    [mem 0x0000000001000000-0x00000000ffffffff]
+  Normal   [mem 0x0000000100000000-0x000000023fffffff]
+Movable zone start for each node
+  Node 0: 0x0000000100000000
+  Node 1: 0x0000000140000000
+Early memory node ranges
+  node   0: [mem 0x0000000000001000-0x000000000009efff]
+  node   0: [mem 0x0000000000100000-0x00000000bffdffff]
+  node   0: [mem 0x0000000100000000-0x000000013fffffff]
+  node   1: [mem 0x0000000140000000-0x000000023fffffff]
+
+node 0 DMA	spanned:0xfff   present:0xf9e   absent:0x61
+node 0 DMA32	spanned:0xff000 present:0xbefe0	absent:0x40020
+node 0 Normal	spanned:0	present:0	absent:0
+node 0 Movable	spanned:0x40000 present:0x40000 absent:0
+On node 0 totalpages(node_present_pages): 1048446
+node_spanned_pages:1310719
+node 1 DMA	spanned:0	    present:0		absent:0
+node 1 DMA32	spanned:0	    present:0		absent:0
+node 1 Normal	spanned:0x100000    present:0x100000	absent:0
+node 1 Movable	spanned:0x100000    present:0x100000	absent:0
+On node 1 totalpages(node_present_pages): 2097152
+node_spanned_pages:2097152
+Memory: 6967796K/12582392K available (16388K kernel code, 3686K rwdata,
+4468K rodata, 2160K init, 10444K bss, 5614596K reserved, 0K
+cma-reserved)
+
+It shows that the current memory of node 1 is double added.
+After this patch, the problem is fixed.
+
+node 0 DMA	spanned:0xfff   present:0xf9e   absent:0x61
+node 0 DMA32	spanned:0xff000 present:0xbefe0	absent:0x40020
+node 0 Normal	spanned:0	present:0	absent:0
+node 0 Movable	spanned:0x40000 present:0x40000 absent:0
+On node 0 totalpages(node_present_pages): 1048446
+node_spanned_pages:1310719
+node 1 DMA	spanned:0	    present:0		absent:0
+node 1 DMA32	spanned:0	    present:0		absent:0
+node 1 Normal	spanned:0	    present:0		absent:0
+node 1 Movable	spanned:0x100000    present:0x100000	absent:0
+On node 1 totalpages(node_present_pages): 1048576
+node_spanned_pages:1048576
+memory: 6967796K/8388088K available (16388K kernel code, 3686K rwdata,
+4468K rodata, 2160K init, 10444K bss, 1420292K reserved, 0K
+cma-reserved)
+
+Link: http://lkml.kernel.org/r/1554178276-10372-1-git-send-email-fanglinxu@huawei.com
+Signed-off-by: Linxu Fang <fanglinxu@huawei.com>
+Cc: Taku Izumi <izumi.taku@jp.fujitsu.com>
+Cc: Xishi Qiu <qiuxishi@huawei.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Pavel Tatashin <pavel.tatashin@microsoft.com>
+Cc: Oscar Salvador <osalvador@suse.de>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sys.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/page_alloc.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sys.c b/kernel/sys.c
-index f7eb62eceb243..82ba11e6d2e50 100644
---- a/kernel/sys.c
-+++ b/kernel/sys.c
-@@ -1923,7 +1923,7 @@ static int validate_prctl_map(struct prctl_mm_map *prctl_map)
- 	((unsigned long)prctl_map->__m1 __op				\
- 	 (unsigned long)prctl_map->__m2) ? 0 : -EINVAL
- 	error  = __prctl_check_order(start_code, <, end_code);
--	error |= __prctl_check_order(start_data, <, end_data);
-+	error |= __prctl_check_order(start_data,<=, end_data);
- 	error |= __prctl_check_order(start_brk, <=, brk);
- 	error |= __prctl_check_order(arg_start, <=, arg_end);
- 	error |= __prctl_check_order(env_start, <=, env_end);
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index d59be95ba45cf..140acb4b69aae 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -6182,13 +6182,15 @@ static unsigned long __init zone_spanned_pages_in_node(int nid,
+ 					unsigned long *zone_end_pfn,
+ 					unsigned long *ignored)
+ {
++	unsigned long zone_low = arch_zone_lowest_possible_pfn[zone_type];
++	unsigned long zone_high = arch_zone_highest_possible_pfn[zone_type];
+ 	/* When hotadd a new node from cpu_up(), the node should be empty */
+ 	if (!node_start_pfn && !node_end_pfn)
+ 		return 0;
+ 
+ 	/* Get the start and end of the zone */
+-	*zone_start_pfn = arch_zone_lowest_possible_pfn[zone_type];
+-	*zone_end_pfn = arch_zone_highest_possible_pfn[zone_type];
++	*zone_start_pfn = clamp(node_start_pfn, zone_low, zone_high);
++	*zone_end_pfn = clamp(node_end_pfn, zone_low, zone_high);
+ 	adjust_zone_range_for_zone_movable(nid, zone_type,
+ 				node_start_pfn, node_end_pfn,
+ 				zone_start_pfn, zone_end_pfn);
 -- 
 2.20.1
 
