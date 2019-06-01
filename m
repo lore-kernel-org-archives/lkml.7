@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C35D0C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 527F8C28CC3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CFEB276A1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:42:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E383276AE
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:42:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396532;
-	bh=j9nceCr4lnqVvFaCMjBVALHv0h6X+sYsZqwcySYCEZo=;
+	s=default; t=1559396540;
+	bh=U5I4SwGO5ux2RXzKWyEj2xwdyHf+G6wG0MwXfiKJfHI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=di/CU1EJZ7MlwBoznxwkfJZjkOo6MnoaCJNkgICvqNItpQY1ySV+zcJvAotdUpa0D
-	 0pFWosKAEqYisFlI5dU38w5wuE/VfaJBFLP0W9OrZO74ReCFcSdrpY70+fM+KFACuh
-	 TYtsnQqWZIhm6mVwlWjo3ocQqz0pEFQBWyqyalP8=
+	b=dw0r0EWVW+gCoLYJfW8B6NFffkHU9MnKRRQ+G2PYJo4vHzYy4PaVC15fkjYl8xe9O
+	 KepgK8njP/QXeBXAuhwK5Ts5dWTmbNxU4jXfSkOB4dU+Nik4Ln6oQsQD+8nQSXsVwZ
+	 fgeoCkTCjDt9xxk+U2kNCF1/9kzbgqvWxH7nzNTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbfFANmL (ORCPT
+        id S1727962AbfFANSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:42:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45970 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:18:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727973AbfFANSw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:18:52 -0400
+        id S1727916AbfFANSp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:18:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E7ED25525;
-        Sat,  1 Jun 2019 13:18:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 411CC272AC;
+        Sat,  1 Jun 2019 13:18:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395131;
-        bh=j9nceCr4lnqVvFaCMjBVALHv0h6X+sYsZqwcySYCEZo=;
+        s=default; t=1559395124;
+        bh=U5I4SwGO5ux2RXzKWyEj2xwdyHf+G6wG0MwXfiKJfHI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mrd9z94cXEFhQI7zk+NicSydxRToYP8g2bceNPfAwOXjpVhjVnDd+ZEtVM6gwGjK4
-         /wuOoHz6QPrEXynsV3NUfva/g7d0inzgCUH27Uo+IhL1wmg8Kjn3IcSG2S6R9HeQUB
-         HYjzF5yn7F/lXK+c2kJjgSEt+3hGvz8vmCO8vwMI=
+        b=J9muKZlm9b+VHzPL9uyh4z/Ap7Up1DCMsPJ8BO6JgFe4y3Cku/zjirfHlnVdg/iUj
+         9UQh9ZSKKkh99uLCv12C30axEi9FOgxqDdnd83WKa3aNdBh5yZesfWG6tMbPqJkf2I
+         ljCkkXa4dgNdIGS2ZlXGYCyudoe6FO0DdZQalqDM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
         linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.1 054/186] f2fs: fix to retrieve inline xattr space
-Date:   Sat,  1 Jun 2019 09:14:30 -0400
-Message-Id: <20190601131653.24205-54-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 048/186] f2fs: fix to clear dirty inode in error path of f2fs_iget()
+Date:   Sat,  1 Jun 2019 09:14:24 -0400
+Message-Id: <20190601131653.24205-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131653.24205-1-sashal@kernel.org>
 References: <20190601131653.24205-1-sashal@kernel.org>
@@ -61,73 +61,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 45a746881576977f85504c21a75547f10c5c0a8e ]
+[ Upstream commit 546d22f070d64a7b96f57c93333772085d3a5e6d ]
 
-With below mkfs and mount option, generic/339 of fstest will report that
-scratch image becomes corrupted.
+As Jungyeon reported in bugzilla:
 
-MKFS_OPTIONS  -- -O extra_attr -O project_quota -O inode_checksum -O flexible_inline_xattr -O inode_crtime -f /dev/zram1
-MOUNT_OPTIONS -- -o acl,user_xattr -o discard,noinline_xattr /dev/zram1 /mnt/scratch_f2fs
+https://bugzilla.kernel.org/show_bug.cgi?id=203217
 
-[ASSERT] (f2fs_check_dirent_position:1315)  --> Wrong position of dirent pino:1970, name: (...)
-level:8, dir_level:0, pgofs:951, correct range:[900, 901]
+- Overview
+When mounting the attached crafted image and running program, I got this error.
+Additionally, it hangs on sync after running the program.
 
-In old kernel, inline data and directory always reserved 200 bytes in
-inode layout, even if inline_xattr is disabled, then new kernel tries
-to retrieve that space for non-inline xattr inode, but for inline dentry,
-its layout size should be fixed, so we just keep that reserved space.
+The image is intentionally fuzzed from a normal f2fs image for testing and I enabled option CONFIG_F2FS_CHECK_FS on.
 
-But the problem here is that, after inline dentry conversion, inline
-dentry layout no longer exists, if we still reserve inline xattr space,
-after dents updates, there will be a hole in inline xattr space, which
-can break hierarchy hash directory structure.
+- Reproduces
+cc poc_test_05.c
+mkdir test
+mount -t f2fs tmp.img test
+sudo ./a.out
+sync
 
-This patch fixes this issue by retrieving inline xattr space after
-inline dentry conversion.
+- Messages
+ kernel BUG at fs/f2fs/inode.c:707!
+ RIP: 0010:f2fs_evict_inode+0x33f/0x3a0
+ Call Trace:
+  evict+0xba/0x180
+  f2fs_iget+0x598/0xdf0
+  f2fs_lookup+0x136/0x320
+  __lookup_slow+0x92/0x140
+  lookup_slow+0x30/0x50
+  walk_component+0x1c1/0x350
+  path_lookupat+0x62/0x200
+  filename_lookup+0xb3/0x1a0
+  do_readlinkat+0x56/0x110
+  __x64_sys_readlink+0x16/0x20
+  do_syscall_64+0x43/0xf0
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Fixes: 6afc662e68b5 ("f2fs: support flexible inline xattr size")
+During inode loading, __recover_inline_status() can recovery inode status
+and set inode dirty, once we failed in following process, it will fail
+the check in f2fs_evict_inode, result in trigger BUG_ON().
+
+Let's clear dirty inode in error path of f2fs_iget() to avoid panic.
+
 Signed-off-by: Chao Yu <yuchao0@huawei.com>
 Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/inline.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ fs/f2fs/inode.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/f2fs/inline.c b/fs/f2fs/inline.c
-index bb6a152310ef4..404d2462a0fe6 100644
---- a/fs/f2fs/inline.c
-+++ b/fs/f2fs/inline.c
-@@ -420,6 +420,14 @@ static int f2fs_move_inline_dirents(struct inode *dir, struct page *ipage,
- 	stat_dec_inline_dir(dir);
- 	clear_inode_flag(dir, FI_INLINE_DENTRY);
+diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+index e7f2e87593156..4edd6f2bb4910 100644
+--- a/fs/f2fs/inode.c
++++ b/fs/f2fs/inode.c
+@@ -488,6 +488,7 @@ struct inode *f2fs_iget(struct super_block *sb, unsigned long ino)
+ 	return inode;
  
-+	/*
-+	 * should retrieve reserved space which was used to keep
-+	 * inline_dentry's structure for backward compatibility.
-+	 */
-+	if (!f2fs_sb_has_flexible_inline_xattr(F2FS_I_SB(dir)) &&
-+			!f2fs_has_inline_xattr(dir))
-+		F2FS_I(dir)->i_inline_xattr_size = 0;
-+
- 	f2fs_i_depth_write(dir, 1);
- 	if (i_size_read(dir) < PAGE_SIZE)
- 		f2fs_i_size_write(dir, PAGE_SIZE);
-@@ -501,6 +509,15 @@ static int f2fs_move_rehashed_dirents(struct inode *dir, struct page *ipage,
- 
- 	stat_dec_inline_dir(dir);
- 	clear_inode_flag(dir, FI_INLINE_DENTRY);
-+
-+	/*
-+	 * should retrieve reserved space which was used to keep
-+	 * inline_dentry's structure for backward compatibility.
-+	 */
-+	if (!f2fs_sb_has_flexible_inline_xattr(F2FS_I_SB(dir)) &&
-+			!f2fs_has_inline_xattr(dir))
-+		F2FS_I(dir)->i_inline_xattr_size = 0;
-+
- 	kvfree(backup_dentry);
- 	return 0;
- recover:
+ bad_inode:
++	f2fs_inode_synced(inode);
+ 	iget_failed(inode);
+ 	trace_f2fs_iget_exit(inode, ret);
+ 	return ERR_PTR(ret);
 -- 
 2.20.1
 
