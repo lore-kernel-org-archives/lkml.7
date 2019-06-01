@@ -2,161 +2,78 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62303C28CC3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 03:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21706C28CC0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 03:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AD6E20684
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 03:26:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="xw0YwrrA"
+	by mail.kernel.org (Postfix) with ESMTP id EB17727114
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 03:49:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbfFAD0I (ORCPT
+        id S1726818AbfFADtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 23:26:08 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:40304 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbfFAD0H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 23:26:07 -0400
-X-Greylist: delayed 152836 seconds by postgrey-1.27 at vger.kernel.org; Fri, 31 May 2019 23:26:06 EDT
-Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id x513MrHC023003;
-        Sat, 1 Jun 2019 12:22:53 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x513MrHC023003
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1559359374;
-        bh=r3qAVs3xM8MaSXiqlFioeBt+ecKWRRFeKPnE+XTAM3A=;
-        h=From:To:Cc:Subject:Date:From;
-        b=xw0YwrrAPeAY0OlcTa3SqAJKQnezXQoI2+/7rrH2CfETfalYjs1oPY4aVPA7tr9gd
-         PRENg4z1TGu6XcME/fQNuRRNr/MWUyJDUA9g6NOMDBnSEuZOGzvFEhQ27AUfnIO3sa
-         i1YAFJSzyn2RPF7OIZdKRk5sifWn4Jnc1sOFY9daWmqQyNbN9Bv7WwR1Z0r2TcU1q8
-         wYJjAACezYFAKTQmvSn0Nxg8GYX4RN/YnoLhUfVK+VO0x+7E0OfO0bRe/S3bJLJByI
-         R2uRHaeHgFubi/04LIXnk9kFNomJCl9TkcTXqn7fOzIIxpVKdpGhv5s4zM4BOfsM7g
-         mqkobRgO/jTHA==
-X-Nifty-SrcIP: [126.125.154.139]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-spdx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Joe Perches <joe@perches.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org,
-        Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-renesas-soc@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] treewide: fix typos of SPDX-License-Identifier
-Date:   Sat,  1 Jun 2019 12:22:42 +0900
-Message-Id: <20190601032242.10405-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 31 May 2019 23:49:08 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:51254 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726428AbfFADtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 23:49:07 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id D27372D7FDA04B78A18B;
+        Sat,  1 Jun 2019 11:49:00 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.439.0; Sat, 1 Jun 2019 11:48:52 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        <u.kleine-koenig@pengutronix.de>,
+        <andriy.shevchenko@linux.intel.com>, <thesven73@gmail.com>
+CC:     YueHaibing <yuehaibing@huawei.com>, <linux-pwm@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] pwm: pca9685: Remove set but not used variable 'pwm'
+Date:   Sat, 1 Jun 2019 03:57:09 +0000
+Message-ID: <20190601035709.85379-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prior to the adoption of SPDX, it was difficult for tools to determine
-the correct license due to incomplete or badly formatted license text.
-The SPDX solves this issue, assuming people can correctly spell
-"SPDX-License-Identifier" although this assumption is broken in some
-places.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Since scripts/spdxcheck.py parses only lines that exactly matches to
-the correct tag, it cannot (should not) detect this kind of error.
+drivers/pwm/pwm-pca9685.c: In function 'pca9685_pwm_gpio_free':
+drivers/pwm/pwm-pca9685.c:173:21: warning:
+ variable 'pwm' set but not used [-Wunused-but-set-variable]
 
-If the correct tag is missing, scripts/checkpatch.pl warns like this:
+It's not used since commit e926b12c611c ("pwm: Clear chip_data in pwm_put()")
 
- WARNING: Missing or malformed SPDX-License-Identifier tag in line *
-
-So, people should notice it before the patch submission, but in reality
-broken tags sometimes slip in. The checkpatch warning is not useful for
-checking the committed files globally since large number of files still
-have no SPDX tag.
-
-Also, I am not sure about the legal effect when the SPDX tag is broken.
-
-Anyway, these typos are absolutely worth fixing. It is pretty easy to
-find suspicious lines by grep.
-
-  $ git grep --not -e SPDX-License-Identifier --and -e SPDX- -- \
-    :^LICENSES :^scripts/spdxcheck.py :^*/license-rules.rst
-  arch/arm/kernel/bugs.c:// SPDX-Identifier: GPL-2.0
-  drivers/phy/st/phy-stm32-usbphyc.c:// SPDX-Licence-Identifier: GPL-2.0
-  drivers/pinctrl/sh-pfc/pfc-r8a77980.c:// SPDX-Lincense-Identifier: GPL 2.0
-  lib/test_stackinit.c:// SPDX-Licenses: GPLv2
-  sound/soc/codecs/max9759.c:// SPDX-Licence-Identifier: GPL-2.0
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
+ drivers/pwm/pwm-pca9685.c | 2 --
+ 1 file changed, 2 deletions(-)
 
- arch/arm/kernel/bugs.c                | 2 +-
- drivers/phy/st/phy-stm32-usbphyc.c    | 2 +-
- drivers/pinctrl/sh-pfc/pfc-r8a77980.c | 2 +-
- lib/test_stackinit.c                  | 2 +-
- sound/soc/codecs/max9759.c            | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
+diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
+index 567f5e2771c4..d16215c276bd 100644
+--- a/drivers/pwm/pwm-pca9685.c
++++ b/drivers/pwm/pwm-pca9685.c
+@@ -170,12 +170,10 @@ static void pca9685_pwm_gpio_set(struct gpio_chip *gpio, unsigned int offset,
+ static void pca9685_pwm_gpio_free(struct gpio_chip *gpio, unsigned int offset)
+ {
+ 	struct pca9685 *pca = gpiochip_get_data(gpio);
+-	struct pwm_device *pwm;
+ 
+ 	pca9685_pwm_gpio_set(gpio, offset, 0);
+ 	pm_runtime_put(pca->chip.dev);
+ 	mutex_lock(&pca->lock);
+-	pwm = &pca->chip.pwms[offset];
+ 	mutex_unlock(&pca->lock);
+ }
 
-diff --git a/arch/arm/kernel/bugs.c b/arch/arm/kernel/bugs.c
-index d41d3598e5e5..14c8dbbb7d2d 100644
---- a/arch/arm/kernel/bugs.c
-+++ b/arch/arm/kernel/bugs.c
-@@ -1,4 +1,4 @@
--// SPDX-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0
- #include <linux/init.h>
- #include <asm/bugs.h>
- #include <asm/proc-fns.h>
-diff --git a/drivers/phy/st/phy-stm32-usbphyc.c b/drivers/phy/st/phy-stm32-usbphyc.c
-index 1255cd1d9a60..56bdea4b0bd9 100644
---- a/drivers/phy/st/phy-stm32-usbphyc.c
-+++ b/drivers/phy/st/phy-stm32-usbphyc.c
-@@ -1,4 +1,4 @@
--// SPDX-Licence-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * STMicroelectronics STM32 USB PHY Controller driver
-  *
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77980.c b/drivers/pinctrl/sh-pfc/pfc-r8a77980.c
-index 473da65890a7..9ed4ead2dafb 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a77980.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a77980.c
-@@ -1,4 +1,4 @@
--// SPDX-Lincense-Identifier: GPL 2.0
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * R8A77980 processor support - PFC hardware block.
-  *
-diff --git a/lib/test_stackinit.c b/lib/test_stackinit.c
-index 13115b6f2b88..e97dc54b4fdf 100644
---- a/lib/test_stackinit.c
-+++ b/lib/test_stackinit.c
-@@ -1,4 +1,4 @@
--// SPDX-Licenses: GPLv2
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Test cases for compiler-based stack variable zeroing via future
-  * compiler flags or CONFIG_GCC_PLUGIN_STRUCTLEAK*.
-diff --git a/sound/soc/codecs/max9759.c b/sound/soc/codecs/max9759.c
-index ecfb4a80424b..00e9d4fd1651 100644
---- a/sound/soc/codecs/max9759.c
-+++ b/sound/soc/codecs/max9759.c
-@@ -1,4 +1,4 @@
--// SPDX-Licence-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * MAX9759 Amplifier Driver
-  *
--- 
-2.17.1
+
 
