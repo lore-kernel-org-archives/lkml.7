@@ -2,96 +2,154 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C884BC28CC3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 21:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F27C28CC6
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 22:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9476A277C5
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 21:58:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D958B2773E
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 22:27:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v5Rg1RqE"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="CQwWpjN2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfFAV6A (ORCPT
+        id S1726701AbfFAW1r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 17:58:00 -0400
-Received: from mail-lf1-f44.google.com ([209.85.167.44]:40112 "EHLO
-        mail-lf1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbfFAV57 (ORCPT
+        Sat, 1 Jun 2019 18:27:47 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36288 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbfFAW1r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 17:57:59 -0400
-Received: by mail-lf1-f44.google.com with SMTP id a9so9280246lff.7
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Jun 2019 14:57:58 -0700 (PDT)
+        Sat, 1 Jun 2019 18:27:47 -0400
+Received: by mail-pg1-f195.google.com with SMTP id a3so6058849pgb.3
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Jun 2019 15:27:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iX4aUvP8mUEVM8HdWg49o9RU01eQ7XewzcFBTY3Bx24=;
-        b=v5Rg1RqEiQjot+YKwJ+PhDGLJoCQJd8cYJq7XmjmWMf2QH01fGW4x/Z5ORituEhHJs
-         uiKgOIIGIk1S+p+Ass+7N5+tZd89QzUbJTE6k48A3Q7qJCcFOQqjQnsJTpzox6RyPGxs
-         +tqoa7EbDvSNfVsjq/Gqoeht11e4W1EerkKbVIyOXXkAeZwj9DTl1iT5jFOuX4o/53yT
-         kQ8zzjlohBzeR90fAbuL9SAXXZix82l6hVNabjHnRL9CRR975mtb0s64+kmGCaxDSAoQ
-         xa0StwixDXdTJRxnWe2jUMxiC+ao9SqvpWi5v/Wmrq6unOGvktH7uTy7K39zHyXXQZ/4
-         RKDQ==
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aBGnU4B8yz6TY7rs1ttpv6dYzM78JOOLHwHJBrwnlj0=;
+        b=CQwWpjN2M/JQgAh0nRmAFns5qtmUi/CfZMZrB2mQoTB9+Qo1tSEc1Kpz0C1BNh1MMF
+         Qoe6ipWnbmIlLMqdCsoERG9eceVDsizaAa+20vynwx8xh51jXlOaCvVKdu7AF8PI2hsW
+         7P7wjWs83oqjTUezNSxGTAR88321VMSmNnCfo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iX4aUvP8mUEVM8HdWg49o9RU01eQ7XewzcFBTY3Bx24=;
-        b=snJH8odevD/sdqRsZhlwyO74wWtTqo2ys0QG32mcjS1sCpt7/g9wG9qEZTBk20INz6
-         nMGzhQmOlA4yfSSIDR64PQLxIx8vGIY1xtUFvLC8hPM4IzX0Uk6iG3Okk2GpDdvtOysO
-         MDNB0zfy8QX3GMI2Glr9pSmBqjEygYleXCTbSjhShHJ1DRFxCYlp/t25Gsv4Cqy2xhaN
-         iNt0cBiVqhvbAPCGkCjlQkAI6oDBeFYvnhT5o9Alh/d5vdYteqppO2eIpXCnttWxwG/q
-         ia5KQXB3mJBYD8oj5KN5pbe1L7dzoWVpyD6cETg4qdgMmh5WlBbuS4ck53OvR3pkfdTv
-         iYfA==
-X-Gm-Message-State: APjAAAUcKPN6szKzMDXL5CJWB9RD45XnRu6JzgbPDzbJC/Gv5OS1VsCF
-        sSJxS4JuPpDebuXZUTrNzr9S2nmfcjFEH1FHvdUbeg==
-X-Google-Smtp-Source: APXvYqw0XTvysBl/m/dr9Q5wGY5haXlZTXPgYUORtBrHw14mtkac6rnJP8Fn/UKwu14kYqlIb9d/EVQ/Ux/B6/DDXgM=
-X-Received: by 2002:a19:6a01:: with SMTP id u1mr7878184lfu.141.1559426277981;
- Sat, 01 Jun 2019 14:57:57 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aBGnU4B8yz6TY7rs1ttpv6dYzM78JOOLHwHJBrwnlj0=;
+        b=Of5qxPA3wbklaobhnfRMavN7NNbESbV3fLZRW/T2N0hHvRhCI7YWmCJNp1e/z8r+s3
+         9xTMrhLuX7jyzSEqtvJSSObtIz6/YVvpb0SefEBj2gSr1HMa6jOUZljD+kcsa9wWRPBo
+         kgvUsM5lK2/Ukg9GwdPHistyNS5i7hhclTsQxj7iLijoHTXg8QbY23rAmz0aZKPC9rFK
+         KXGzdzGsX3/4+fyj0w2USCk/xygEeCZ6Zd9yTjJ74P0XFsZ73lAa9zdxUSIZqCSHg9pr
+         uPWs8ySKKSRJ38nHyBzEu5VoYsZcb/FrThMwWKDNCPt+W9ZPTBoSPtHe2DrWzR2K6Y0p
+         ghfA==
+X-Gm-Message-State: APjAAAVYRX522QM9IYEWXLWFk3xktf6bpXECiwGLwRffA3C2UEphi3Ve
+        4qIrZNqIT5GI0ccUEPivF86Krao3S2pPJg==
+X-Google-Smtp-Source: APXvYqz+bu0xK6K2Pq1cv50i7dezdioX7vQ1voWVoSyrcm+9lGNu615sW37T90U6U6uGuDCkx76uoA==
+X-Received: by 2002:a63:6848:: with SMTP id d69mr18759474pgc.0.1559428065507;
+        Sat, 01 Jun 2019 15:27:45 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id t33sm9908018pjb.1.2019.06.01.15.27.40
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 01 Jun 2019 15:27:44 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
+        kernel-hardening@lists.openwall.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        neilb@suse.com, netdev@vger.kernel.org, oleg@redhat.com,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Pavel Machek <pavel@ucw.cz>, peterz@infradead.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, rcu@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT))
+Subject: [RFC 0/6] Harden list_for_each_entry_rcu() and family
+Date:   Sat,  1 Jun 2019 18:27:32 -0400
+Message-Id: <20190601222738.6856-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.22.0.rc1.311.g5d7573a151-goog
 MIME-Version: 1.0
-References: <F29452FD-AFA4-422B-992C-D348FEEAE0E2@goldelico.com>
-In-Reply-To: <F29452FD-AFA4-422B-992C-D348FEEAE0E2@goldelico.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 1 Jun 2019 23:57:46 +0200
-Message-ID: <CACRpkdajVu2H-9zX4gAEnHHR8gd=4jseabLGsHB=0CF1BKH-JA@mail.gmail.com>
-Subject: Re: BUG: gpio: pca953x: 24 bit expanders broken since v5.2-rc1
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Nandor Han <nandor.han@vaisala.com>,
-        Mark Brown <broonie@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 7:06 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
+Hi,
+Please consider this as an RFC / proof-of-concept to gather some feedback. This
+series aims to provide lockdep checking to RCU list macros.
 
-> Now, this was not a (visible) problem until patch
->
->         8b9f9d4dc511 regmap: verify if register is writeable before writing operations
->
-> enforces to check the register number before invoking the
-> callback pca953x_writeable_register(). pca953x_writeable_register()
-> seems to know about REG_ADDR_AI (through reg & REG_ADDR_MASK) and
-> accepts 0x88 as a valid register number.
->
-> After the regmap patch the register is checked against
-> pca953x_i2c_regmap.max_register before applying REG_ADDR_MASK
-> and 0x88 is obviously beyond, explaining the symptom.
+RCU has a number of primitives for "consumption" of an RCU protected pointer.
+Most of the time, these consumers make sure that such accesses are under a RCU
+reader-section (such as rcu_dereference{,sched,bh} or under a lock, such as
+with rcu_dereference_protected()).
 
-Can we simply bump the .max_register in
-pca953x_i2c_regmap to 0xff for a quick fix with a comment
-FIXME to figure it out the right way?
+However, there are other ways to consume RCU pointers, such as by
+list_for_each_enry_rcu or hlist_for_each_enry_rcu. Unlike the rcu_dereference
+family, these consumers do no lockdep checking at all. And with the growing
+number of RCU list uses, it is possible for bugs to creep in and go unnoticed
+which lockdep checks can catch.
 
-Yours,
-Linus Walleij
+Since RCU consolidation efforts last year, the different traditional RCU
+flavors (preempt, bh, sched) are all consolidated. In other words, any of these
+flavors can cause a reader section to occur and all of them must cease before
+the reader section is considered to be unlocked.
+
+Now, the list_for_each_entry_rcu and family are different from the
+rcu_dereference family in that, there is no _bh or _sched version of this
+macro. They are used under many different RCU reader flavors, and also SRCU.
+This series adds a new internal function rcu_read_lock_any_held() which checks
+if any reader section is active at all, when these macros are called. If no
+reader section exists, then the optional fourth argument to
+list_for_each_entry_rcu() can be a lockdep expression which is evaluated
+(similar to how rcu_dereference_check() works).
+
+The optional argument trick to list_for_each_entry_rcu() can also be used in
+the future to possibly remove rcu_dereference_{,bh,sched}_protected() API and
+we can pass an optional lockdep expression to rcu_dereference() itself. Thus
+eliminating 3 more RCU APIs.
+
+Note that some list macro wrappers already do their own lockdep checking in the
+caller side. These can be eliminated in favor of the built-in lockdep checking
+in the list macro that this series adds. For example, workqueue code has a
+assert_rcu_or_wq_mutex() function which is called in for_each_wq().  This
+series replaces that in favor of the built-in one.
+
+Also in the future, we can extend these checks to list_entry_rcu() and other
+list macros as well.
+
+Joel Fernandes (Google) (6):
+rcu: Add support for consolidated-RCU reader checking
+ipv4: add lockdep condition to fix for_each_entry
+driver/core: Convert to use built-in RCU list checking
+workqueue: Convert for_each_wq to use built-in list check
+x86/pci: Pass lockdep condition to pcm_mmcfg_list iterator
+acpi: Use built-in RCU list checking for acpi_ioremaps list
+
+arch/x86/pci/mmconfig-shared.c |  5 +++--
+drivers/acpi/osl.c             |  6 +++--
+drivers/base/base.h            |  1 +
+drivers/base/core.c            | 10 +++++++++
+drivers/base/power/runtime.c   | 15 ++++++++-----
+include/linux/rculist.h        | 40 ++++++++++++++++++++++++++++++----
+include/linux/rcupdate.h       |  7 ++++++
+kernel/rcu/update.c            | 26 ++++++++++++++++++++++
+kernel/workqueue.c             |  5 ++---
+net/ipv4/fib_frontend.c        |  3 ++-
+10 files changed, 101 insertions(+), 17 deletions(-)
+
+--
+2.22.0.rc1.311.g5d7573a151-goog
+
