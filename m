@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A33DEC28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC2F5C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A83627473
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:30:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C3DE2747B
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:30:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395830;
-	bh=iKFhaIr8rPvFeRFwneCZtFEEkt+6qqK4mTCTtwCb0eM=;
+	s=default; t=1559395835;
+	bh=W+mXVN4o7qdgu7foKIesICoUXtgOLDULDim6bbYHyBQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1z9bzdhVKdwYCwWlCGb+fC97UEsYY2eab9dD9iilmyfffxlh/dUSqn/MngnbkRaHr
-	 0SL4RhoNASpWt4x83Kq98GRv9f1nSlr3bAtgkLmyacR/I3V978xOboKZEhiAUEJ2Uz
-	 YO99KARoh3DwzsBRV94yo6t1tHT4EzcYLEDstBNY=
+	b=SH/v/sHZo+etTgCLvjRZE8LKyyG+eO3PvV0qEzLTt739r+bi0zZbJPvcNh67TfFbZ
+	 FHAeNUqa8wVougnUiPjVHMz7Z+6/C01ZuIgLS1xcjZ8eE7iKF9OkMhcmCUW3uEGKvd
+	 SOxik629HKAne/Rg1AH7G2DTJKQklTGzl2A97rYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729829AbfFANaY (ORCPT
+        id S1729942AbfFANae (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:30:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56772 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:30:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729678AbfFAN0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:26:21 -0400
+        id S1729670AbfFAN0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:26:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 410E1273B8;
-        Sat,  1 Jun 2019 13:26:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0375273B8;
+        Sat,  1 Jun 2019 13:26:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395581;
-        bh=iKFhaIr8rPvFeRFwneCZtFEEkt+6qqK4mTCTtwCb0eM=;
+        s=default; t=1559395576;
+        bh=W+mXVN4o7qdgu7foKIesICoUXtgOLDULDim6bbYHyBQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EBVDrJbm5dJfs3zy4iFRHeItpW8Jl62qKSyWVjFEh+4yEs4Rfg2qQgN1Li9npDebm
-         wEBrwELOiX2j9GprzrTPKHtwelTE1hFfXRJ0ZLJPTDRFsaM+NoI/+jvcXoM+DB2rsv
-         6b2yyDWxDxaXl+XRp8K5IQXDC13/HmSQ9gOQ/SLQ=
+        b=qm01W1DEWjd/oBg3hjfXX+xFRoN+IvPJvvfCu3to2bTN8Ccmpj/BMLe7AORBjxlq+
+         nNHG5KKUMdzM6PdTHzMJSZNcJjD44PbgYzEBEV23jOW/qJEN6FWy6AE7bpI3xxFQ/t
+         QIappIyfV/FlnPYKlbFOA468bO/Jnv8r8+D6MSBw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 09/56] mfd: twl6040: Fix device init errors for ACCCTL register
-Date:   Sat,  1 Jun 2019 09:25:13 -0400
-Message-Id: <20190601132600.27427-9-sashal@kernel.org>
+Cc:     Yue Hu <huyue2@yulong.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, Joe Perches <joe@perches.com>,
+        David Rientjes <rientjes@google.com>,
+        Dmitry Safonov <d.safonov@partner.samsung.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.4 06/56] mm/cma_debug.c: fix the break condition in cma_maxchunk_get()
+Date:   Sat,  1 Jun 2019 09:25:10 -0400
+Message-Id: <20190601132600.27427-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132600.27427-1-sashal@kernel.org>
 References: <20190601132600.27427-1-sashal@kernel.org>
@@ -60,62 +64,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Yue Hu <huyue2@yulong.com>
 
-[ Upstream commit 48171d0ea7caccf21c9ee3ae75eb370f2a756062 ]
+[ Upstream commit f0fd50504a54f5548eb666dc16ddf8394e44e4b7 ]
 
-I noticed that we can get a -EREMOTEIO errors on at least omap4 duovero:
+If not find zero bit in find_next_zero_bit(), it will return the size
+parameter passed in, so the start bit should be compared with bitmap_maxno
+rather than cma->count.  Although getting maxchunk is working fine due to
+zero value of order_per_bit currently, the operation will be stuck if
+order_per_bit is set as non-zero.
 
-twl6040 0-004b: Failed to write 2d = 19: -121
-
-And then any following register access will produce errors.
-
-There 2d offset above is register ACCCTL that gets written on twl6040
-powerup. With error checking added to the related regcache_sync() call,
-the -EREMOTEIO error is reproducable on twl6040 powerup at least
-duovero.
-
-To fix the error, we need to wait until twl6040 is accessible after the
-powerup. Based on tests on omap4 duovero, we need to wait over 8ms after
-powerup before register write will complete without failures. Let's also
-make sure we warn about possible errors too.
-
-Note that we have twl6040_patch[] reg_sequence with the ACCCTL register
-configuration and regcache_sync() will write the new value to ACCCTL.
-
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Link: http://lkml.kernel.org/r/20190319092734.276-1-zbestahu@gmail.com
+Signed-off-by: Yue Hu <huyue2@yulong.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Joe Perches <joe@perches.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Dmitry Safonov <d.safonov@partner.samsung.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/twl6040.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ mm/cma_debug.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/twl6040.c b/drivers/mfd/twl6040.c
-index 72aab60ae8466..db8684430f02c 100644
---- a/drivers/mfd/twl6040.c
-+++ b/drivers/mfd/twl6040.c
-@@ -316,8 +316,19 @@ int twl6040_power(struct twl6040 *twl6040, int on)
- 			}
- 		}
- 
-+		/*
-+		 * Register access can produce errors after power-up unless we
-+		 * wait at least 8ms based on measurements on duovero.
-+		 */
-+		usleep_range(10000, 12000);
-+
- 		/* Sync with the HW */
--		regcache_sync(twl6040->regmap);
-+		ret = regcache_sync(twl6040->regmap);
-+		if (ret) {
-+			dev_err(twl6040->dev, "Failed to sync with the HW: %i\n",
-+				ret);
-+			goto out;
-+		}
- 
- 		/* Default PLL configuration after power up */
- 		twl6040->pll = TWL6040_SYSCLK_SEL_LPPLL;
+diff --git a/mm/cma_debug.c b/mm/cma_debug.c
+index f8e4b60db1672..da50dab56b700 100644
+--- a/mm/cma_debug.c
++++ b/mm/cma_debug.c
+@@ -57,7 +57,7 @@ static int cma_maxchunk_get(void *data, u64 *val)
+ 	mutex_lock(&cma->lock);
+ 	for (;;) {
+ 		start = find_next_zero_bit(cma->bitmap, bitmap_maxno, end);
+-		if (start >= cma->count)
++		if (start >= bitmap_maxno)
+ 			break;
+ 		end = find_next_bit(cma->bitmap, bitmap_maxno, start);
+ 		maxchunk = max(end - start, maxchunk);
 -- 
 2.20.1
 
