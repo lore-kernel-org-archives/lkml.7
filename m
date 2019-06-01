@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4307C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF5BAC28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DA502745B
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:30:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8FF12745B
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:30:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395813;
-	bh=0ar076jmH0sMsMaf6T/4hb3NCEfzVN9jqdWdJ3pX69Y=;
+	s=default; t=1559395821;
+	bh=tIiH9k+zsKAKz1eukhaZsoAaSiz+HnC2A/lbPTqYALk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TthQFLllttQuQ7L3Ryb2GziEbg4Crsy6fg6fRkesG2RD/eVqVGsZGM+h8qzbK6tzy
-	 M3qsVHE6JlOJNB0CALIPsl2LZ+KdAd9QNjbx6fBxuQTt5AuQlb2p4MSWPr22hLYjvI
-	 fv+exhyKAZmxx/L2UNZ4JzYqkC9BFd04stQfOdfA=
+	b=EfxEP3C25a58wv1oOWCsqph6WjjZz02iifQ+FKIt4AHCnD1hC7flQnknqz5YkfaEY
+	 ccADKiEsfx0fGmeby7dtNPweK9CAOoiZg5J9xDdeORA/YsSOzcSGaf+UalR9uN86zw
+	 8xipl8kikJaK+rrubTKjYsArK2caSBqD77/4vjrM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729826AbfFANaN (ORCPT
+        id S1729686AbfFAN0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:30:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56882 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:26:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729709AbfFAN02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:26:28 -0400
+        id S1729123AbfFAN0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:26:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E7F9273C1;
-        Sat,  1 Jun 2019 13:26:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF647273C0;
+        Sat,  1 Jun 2019 13:26:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395588;
-        bh=0ar076jmH0sMsMaf6T/4hb3NCEfzVN9jqdWdJ3pX69Y=;
+        s=default; t=1559395578;
+        bh=tIiH9k+zsKAKz1eukhaZsoAaSiz+HnC2A/lbPTqYALk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sDH+nRSZkqvhzYkL5EGLT5iU504PfISYXMIVqtLULvAroNzyOtwjlPEe/JHOMkXFQ
-         O8pO1nRa6qu5iyAZB2r0N5ED7G+NzliC5lxBUBbrWulycfKt1d6MovwcyLjf16bSoX
-         hE9UWt1FlorIBwUtGwJNI3cm1UlCDYo9tsfxmrIM=
+        b=kwGjz/PSa0eC3N1VEsxI7QnUWYxZy9Y79oWYSfArW8ij3sQwoYAydoWx7WuiKXjlm
+         b99QEoY16V60hCJhVKv7rFuCXDQzqbp8+sjTFtrgJAcbi0ngg4Uv9ZNIaQ7YJCMPRE
+         4wFsF8Qna2aVd2P9WBNJ4RjdJuoPaAS/CiPqqYyk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miroslav Lichvar <mlichvar@redhat.com>,
-        Ondrej Mosnacek <omosnace@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Prarit Bhargava <prarit@redhat.com>,
+Cc:     Cyrill Gorcunov <gorcunov@gmail.com>,
+        Andrey Vagin <avagin@gmail.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 13/56] ntp: Allow TAI-UTC offset to be set to zero
-Date:   Sat,  1 Jun 2019 09:25:17 -0400
-Message-Id: <20190601132600.27427-13-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 07/56] kernel/sys.c: prctl: fix false positive in validate_prctl_map()
+Date:   Sat,  1 Jun 2019 09:25:11 -0400
+Message-Id: <20190601132600.27427-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132600.27427-1-sashal@kernel.org>
 References: <20190601132600.27427-1-sashal@kernel.org>
@@ -63,46 +63,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miroslav Lichvar <mlichvar@redhat.com>
+From: Cyrill Gorcunov <gorcunov@gmail.com>
 
-[ Upstream commit fdc6bae940ee9eb869e493990540098b8c0fd6ab ]
+[ Upstream commit a9e73998f9d705c94a8dca9687633adc0f24a19a ]
 
-The ADJ_TAI adjtimex mode sets the TAI-UTC offset of the system clock.
-It is typically set by NTP/PTP implementations and it is automatically
-updated by the kernel on leap seconds. The initial value is zero (which
-applications may interpret as unknown), but this value cannot be set by
-adjtimex. This limitation seems to go back to the original "nanokernel"
-implementation by David Mills.
+While validating new map we require the @start_data to be strictly less
+than @end_data, which is fine for regular applications (this is why this
+nit didn't trigger for that long).  These members are set from executable
+loaders such as elf handers, still it is pretty valid to have a loadable
+data section with zero size in file, in such case the start_data is equal
+to end_data once kernel loader finishes.
 
-Change the ADJ_TAI check to accept zero as a valid TAI-UTC offset in
-order to allow setting it back to the initial value.
+As a result when we're trying to restore such programs the procedure fails
+and the kernel returns -EINVAL.  From the image dump of a program:
 
-Fixes: 153b5d054ac2 ("ntp: support for TAI")
-Suggested-by: Ondrej Mosnacek <omosnace@redhat.com>
-Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: John Stultz <john.stultz@linaro.org>
-Cc: Richard Cochran <richardcochran@gmail.com>
-Cc: Prarit Bhargava <prarit@redhat.com>
-Link: https://lkml.kernel.org/r/20190417084833.7401-1-mlichvar@redhat.com
+ | "mm_start_code": "0x400000",
+ | "mm_end_code": "0x8f5fb4",
+ | "mm_start_data": "0xf1bfb0",
+ | "mm_end_data": "0xf1bfb0",
+
+Thus we need to change validate_prctl_map from strictly less to less or
+equal operator use.
+
+Link: http://lkml.kernel.org/r/20190408143554.GY1421@uranus.lan
+Fixes: f606b77f1a9e3 ("prctl: PR_SET_MM -- introduce PR_SET_MM_MAP operation")
+Signed-off-by: Cyrill Gorcunov <gorcunov@gmail.com>
+Cc: Andrey Vagin <avagin@gmail.com>
+Cc: Dmitry Safonov <0x7f454c46@gmail.com>
+Cc: Pavel Emelyanov <xemul@virtuozzo.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/time/ntp.c | 2 +-
+ kernel/sys.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
-index ab861771e37f8..0e0dc5d89911d 100644
---- a/kernel/time/ntp.c
-+++ b/kernel/time/ntp.c
-@@ -633,7 +633,7 @@ static inline void process_adjtimex_modes(struct timex *txc,
- 		time_constant = max(time_constant, 0l);
- 	}
- 
--	if (txc->modes & ADJ_TAI && txc->constant > 0)
-+	if (txc->modes & ADJ_TAI && txc->constant >= 0)
- 		*time_tai = txc->constant;
- 
- 	if (txc->modes & ADJ_OFFSET)
+diff --git a/kernel/sys.c b/kernel/sys.c
+index e2446ade79ba7..1855f1bf113e4 100644
+--- a/kernel/sys.c
++++ b/kernel/sys.c
+@@ -1762,7 +1762,7 @@ static int validate_prctl_map(struct prctl_mm_map *prctl_map)
+ 	((unsigned long)prctl_map->__m1 __op				\
+ 	 (unsigned long)prctl_map->__m2) ? 0 : -EINVAL
+ 	error  = __prctl_check_order(start_code, <, end_code);
+-	error |= __prctl_check_order(start_data, <, end_data);
++	error |= __prctl_check_order(start_data,<=, end_data);
+ 	error |= __prctl_check_order(start_brk, <=, brk);
+ 	error |= __prctl_check_order(arg_start, <=, arg_end);
+ 	error |= __prctl_check_order(env_start, <=, env_end);
 -- 
 2.20.1
 
