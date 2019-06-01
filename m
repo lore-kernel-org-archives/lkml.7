@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F49C28CC4
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F04FFC28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CF75273AB
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:25:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFDAA273A0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:25:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395552;
-	bh=LKSwLnv5hy1MPp67Vl7ZcvLXUVpoIKpAXmhCwEF4sIg=;
+	s=default; t=1559395555;
+	bh=42LW48W8DZcCEbLw6HOz3/Nm4Q8vo0BU67ftoLZtpWA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AWvhNf7Lfk07DC5hoEwak9h1FuZ9SciOJUGTXPsruT1JLRlx9eb1Sq1BXxFs3WkZj
-	 ogXmakV5B/PQg6DzqYPKDmNEsNUpKwNJ78ngm+w+DPMWPPvtTP8Hr47PzE3Hpw0R9J
-	 bRThpQZOIEpMgjoTzLhWkBXOYy/9q1GRj4c1FOjY=
+	b=OJgUSXW43447SHfjBuWMXzH2/f20ZAtXyxoCVY6Oi9D10jKLk9EWVQYQLHXnXYm7I
+	 fnJyioFKMQpf18bqCWlEHumCKX2NnUI6iLWGQ3DyUtcuko/br/f0E3xPY6u6PcRyH1
+	 BFJ+PgCM7U0G0D8Lq7q3dDG77ImGpcNFs0H5d3WU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729103AbfFANZv (ORCPT
+        id S1727937AbfFANZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:25:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55970 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:25:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729505AbfFANZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:25:36 -0400
+        id S1729230AbfFANZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:25:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4ED392739A;
-        Sat,  1 Jun 2019 13:25:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8351D27396;
+        Sat,  1 Jun 2019 13:25:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395536;
-        bh=LKSwLnv5hy1MPp67Vl7ZcvLXUVpoIKpAXmhCwEF4sIg=;
+        s=default; t=1559395545;
+        bh=42LW48W8DZcCEbLw6HOz3/Nm4Q8vo0BU67ftoLZtpWA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oC4u+aEWVkv+J02ucLDXiL3w9nbHH23brTK2hVuAXlFE0Scdd9yZB6XRXkXs2o27X
-         yVgsB1w2L/R0g5KBcvVbTzU/r6+g+3cl8Huwf8bj3ZfsJLd8BQFlb8K124GWH+BKQb
-         F3zwI/lZ/actpzU49ZR60BfT9gPlmRfE8vjQ2ieQ=
+        b=oUuIguc79E8VwFBInSkNV8MG3Z3xyZnlb/Y1cLF2GSRGu/oyhlDfUQ2LibIeSS4KV
+         djTemswDyY83N+JtY44jLX0V8Xci9uWkJQWvwpcsAGx1He1b19/rsIRcr0nV5xHK8z
+         KSjdfqfaJ9Wo8X1fFdK7hC3WJ6rfiUgWfZymMuYo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 15/74] mfd: twl6040: Fix device init errors for ACCCTL register
-Date:   Sat,  1 Jun 2019 09:24:02 -0400
-Message-Id: <20190601132501.27021-15-sashal@kernel.org>
+Cc:     Miroslav Lichvar <mlichvar@redhat.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Prarit Bhargava <prarit@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 21/74] ntp: Allow TAI-UTC offset to be set to zero
+Date:   Sat,  1 Jun 2019 09:24:08 -0400
+Message-Id: <20190601132501.27021-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132501.27021-1-sashal@kernel.org>
 References: <20190601132501.27021-1-sashal@kernel.org>
@@ -60,62 +63,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Miroslav Lichvar <mlichvar@redhat.com>
 
-[ Upstream commit 48171d0ea7caccf21c9ee3ae75eb370f2a756062 ]
+[ Upstream commit fdc6bae940ee9eb869e493990540098b8c0fd6ab ]
 
-I noticed that we can get a -EREMOTEIO errors on at least omap4 duovero:
+The ADJ_TAI adjtimex mode sets the TAI-UTC offset of the system clock.
+It is typically set by NTP/PTP implementations and it is automatically
+updated by the kernel on leap seconds. The initial value is zero (which
+applications may interpret as unknown), but this value cannot be set by
+adjtimex. This limitation seems to go back to the original "nanokernel"
+implementation by David Mills.
 
-twl6040 0-004b: Failed to write 2d = 19: -121
+Change the ADJ_TAI check to accept zero as a valid TAI-UTC offset in
+order to allow setting it back to the initial value.
 
-And then any following register access will produce errors.
-
-There 2d offset above is register ACCCTL that gets written on twl6040
-powerup. With error checking added to the related regcache_sync() call,
-the -EREMOTEIO error is reproducable on twl6040 powerup at least
-duovero.
-
-To fix the error, we need to wait until twl6040 is accessible after the
-powerup. Based on tests on omap4 duovero, we need to wait over 8ms after
-powerup before register write will complete without failures. Let's also
-make sure we warn about possible errors too.
-
-Note that we have twl6040_patch[] reg_sequence with the ACCCTL register
-configuration and regcache_sync() will write the new value to ACCCTL.
-
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Fixes: 153b5d054ac2 ("ntp: support for TAI")
+Suggested-by: Ondrej Mosnacek <omosnace@redhat.com>
+Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: Richard Cochran <richardcochran@gmail.com>
+Cc: Prarit Bhargava <prarit@redhat.com>
+Link: https://lkml.kernel.org/r/20190417084833.7401-1-mlichvar@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/twl6040.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ kernel/time/ntp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/twl6040.c b/drivers/mfd/twl6040.c
-index dd19f17a1b637..2b8c479dbfa6e 100644
---- a/drivers/mfd/twl6040.c
-+++ b/drivers/mfd/twl6040.c
-@@ -322,8 +322,19 @@ int twl6040_power(struct twl6040 *twl6040, int on)
- 			}
- 		}
+diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
+index 6df8927c58a5b..0a16419006f3b 100644
+--- a/kernel/time/ntp.c
++++ b/kernel/time/ntp.c
+@@ -639,7 +639,7 @@ static inline void process_adjtimex_modes(struct timex *txc,
+ 		time_constant = max(time_constant, 0l);
+ 	}
  
-+		/*
-+		 * Register access can produce errors after power-up unless we
-+		 * wait at least 8ms based on measurements on duovero.
-+		 */
-+		usleep_range(10000, 12000);
-+
- 		/* Sync with the HW */
--		regcache_sync(twl6040->regmap);
-+		ret = regcache_sync(twl6040->regmap);
-+		if (ret) {
-+			dev_err(twl6040->dev, "Failed to sync with the HW: %i\n",
-+				ret);
-+			goto out;
-+		}
+-	if (txc->modes & ADJ_TAI && txc->constant > 0)
++	if (txc->modes & ADJ_TAI && txc->constant >= 0)
+ 		*time_tai = txc->constant;
  
- 		/* Default PLL configuration after power up */
- 		twl6040->pll = TWL6040_SYSCLK_SEL_LPPLL;
+ 	if (txc->modes & ADJ_OFFSET)
 -- 
 2.20.1
 
