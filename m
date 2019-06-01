@@ -4,62 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C65C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C0DC28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E6F5272B4
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:19:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C631272C4
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:19:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395162;
-	bh=9xEkafkImboL0Vlars0FgDOJ0ZEDWSP9hRRg7LPRHYY=;
+	s=default; t=1559395167;
+	bh=wZ6tuDrRkPrM+Vcz63gxvzc04Ec8yGwcjLpW6W+50Cs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UeHKrLkb2xT052bzbcJVPgxW+zabvi245Uz+a/QhGfgnsjL355tATOHXBVzMf3ZtF
-	 LiogH4Ar1YPI8XwMR0tEeN1y8yiP8FbHZ3/94qlTHv0mdwMPYB3LnCAZyLYU6GRrS1
-	 +W2VdZ+ZOdG6U6KXWzYK7kKwx/asjVWM/qlJUUCY=
+	b=Enh8gg38/0qTLVTh8EKGydexInXOxOmkQdNfDvzxu8JYWb5sKaRqZGhEDzVmKLwDZ
+	 u2W8OJg2IdAxP5W4u31TX6r16sZ87Vk6P9mxUZ6Q4UpELfMIlMKHQlVAGRwbS9RYb3
+	 5neh7EOggN8l+EwosEQfRkwbWWS35YxahSKQwvZ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728205AbfFANTV (ORCPT
+        id S1728227AbfFANT0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:19:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46478 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:19:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728184AbfFANTU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:19:20 -0400
+        id S1728184AbfFANTX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:19:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABACA27280;
-        Sat,  1 Jun 2019 13:19:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 317BD2725F;
+        Sat,  1 Jun 2019 13:19:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395159;
-        bh=9xEkafkImboL0Vlars0FgDOJ0ZEDWSP9hRRg7LPRHYY=;
+        s=default; t=1559395161;
+        bh=wZ6tuDrRkPrM+Vcz63gxvzc04Ec8yGwcjLpW6W+50Cs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uYrOX6P2jchL1WyrvPZD9w7+HgIuR3AzX2WhV1gfs2lMZLyqclJpR9LUop9fUahpx
-         tzKVTZyXB3Z43rrxmnB1A//o2ECa/Ajr1lGJO6G9SfFD+SbneweKeDS2rSfzwlDow5
-         NY+VrvkMgovJstgAAU6yDXkyC4CyxQ25SQ1WTdFM=
+        b=m1mwd+EeP+X+tG7D4B6+WjcldxfGcVhvGG4YcM/z3j42JdAjldTEecBYHu2n3yh2w
+         vQnT9pB3j5tlpEXa+MoF34knNwvZcrqMiiGJ6QPgHFcqaWZ3vh3sGGrm9CqwfDoIXc
+         vonTblkVtcLhvdsIasD9Ml0ybFJwTevWwhxMV8W4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Juergen Gross <jgross@suse.com>,
-        Serge Semin <Sergey.Semin@t-platforms.ru>,
-        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 071/186] mips: Make sure dt memory regions are valid
-Date:   Sat,  1 Jun 2019 09:14:47 -0400
-Message-Id: <20190601131653.24205-71-sashal@kernel.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 073/186] watchdog: Use depends instead of select for pretimeout governors
+Date:   Sat,  1 Jun 2019 09:14:49 -0400
+Message-Id: <20190601131653.24205-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131653.24205-1-sashal@kernel.org>
 References: <20190601131653.24205-1-sashal@kernel.org>
@@ -72,69 +59,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <fancer.lancer@gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
 
-[ Upstream commit 93fa5b280761a4dbb14c5330f260380385ab2b49 ]
+[ Upstream commit f627ac0e12cd2736e60b9f5782ecec1d97251f77 ]
 
-There are situations when memory regions coming from dts may be
-too big for the platform physical address space. This especially
-concerns XPA-capable systems. Bootloader may determine more than 4GB
-memory available and pass it to the kernel over dts memory node, while
-kernel is built without XPA/64BIT support. In this case the region
-may either simply be truncated by add_memory_region() method
-or by u64->phys_addr_t type casting. But in worst case the method
-can even drop the memory region if it exceeds PHYS_ADDR_MAX size.
-So lets make sure the retrieved from dts memory regions are valid,
-and if some of them aren't, just manually truncate them with a warning
-printed out.
+Watchdog pretimeout governors were enabled from the default governor
+selection using "select". As a result, the default governor was always
+built into the kernel, even if no watchdog driver was loaded. By using
+"depends on" instead of "select", we are in better control, and the
+governors can all be built as modules. At the same time, set the default
+configuration option for pretimeout governors to match WATCHDOG_CORE
+(meaning all pretimeout governors are by default enabled if pretimeout
+support is enabled).
 
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Cc: Huacai Chen <chenhc@lemote.com>
-Cc: Stefan Agner <stefan@agner.ch>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Serge Semin <Sergey.Semin@t-platforms.ru>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+The practical impact of this change is minimal. Previously, selecting
+a default governor automatically enabled that governor. Now, a default
+governor can only be selected if that governor has been enabled.
+Consequently, the order of governor selection is now reversed: The
+governor selection is now first, followed by default governor selection.
+
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/prom.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ drivers/watchdog/Kconfig | 30 ++++++++++++++++--------------
+ 1 file changed, 16 insertions(+), 14 deletions(-)
 
-diff --git a/arch/mips/kernel/prom.c b/arch/mips/kernel/prom.c
-index 93b8e0b4332f7..b9d6c6ec41778 100644
---- a/arch/mips/kernel/prom.c
-+++ b/arch/mips/kernel/prom.c
-@@ -41,7 +41,19 @@ char *mips_get_machine_name(void)
- #ifdef CONFIG_USE_OF
- void __init early_init_dt_add_memory_arch(u64 base, u64 size)
- {
--	return add_memory_region(base, size, BOOT_MEM_RAM);
-+	if (base >= PHYS_ADDR_MAX) {
-+		pr_warn("Trying to add an invalid memory region, skipped\n");
-+		return;
-+	}
-+
-+	/* Truncate the passed memory region instead of type casting */
-+	if (base + size - 1 >= PHYS_ADDR_MAX || base + size < base) {
-+		pr_warn("Truncate memory region %llx @ %llx to size %llx\n",
-+			size, base, PHYS_ADDR_MAX - base);
-+		size = PHYS_ADDR_MAX - base;
-+	}
-+
-+	add_memory_region(base, size, BOOT_MEM_RAM);
- }
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index 242eea8596373..1d3b4bfbbc4d8 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -2033,6 +2033,20 @@ config WATCHDOG_PRETIMEOUT_GOV
  
- int __init early_init_dt_reserve_memory_arch(phys_addr_t base,
+ if WATCHDOG_PRETIMEOUT_GOV
+ 
++config WATCHDOG_PRETIMEOUT_GOV_NOOP
++	tristate "Noop watchdog pretimeout governor"
++	default WATCHDOG_CORE
++	help
++	  Noop watchdog pretimeout governor, only an informational
++	  message is added to kernel log buffer.
++
++config WATCHDOG_PRETIMEOUT_GOV_PANIC
++	tristate "Panic watchdog pretimeout governor"
++	default WATCHDOG_CORE
++	help
++	  Panic watchdog pretimeout governor, on watchdog pretimeout
++	  event put the kernel into panic.
++
+ choice
+ 	prompt "Default Watchdog Pretimeout Governor"
+ 	default WATCHDOG_PRETIMEOUT_DEFAULT_GOV_PANIC
+@@ -2043,7 +2057,7 @@ choice
+ 
+ config WATCHDOG_PRETIMEOUT_DEFAULT_GOV_NOOP
+ 	bool "noop"
+-	select WATCHDOG_PRETIMEOUT_GOV_NOOP
++	depends on WATCHDOG_PRETIMEOUT_GOV_NOOP
+ 	help
+ 	  Use noop watchdog pretimeout governor by default. If noop
+ 	  governor is selected by a user, write a short message to
+@@ -2051,7 +2065,7 @@ config WATCHDOG_PRETIMEOUT_DEFAULT_GOV_NOOP
+ 
+ config WATCHDOG_PRETIMEOUT_DEFAULT_GOV_PANIC
+ 	bool "panic"
+-	select WATCHDOG_PRETIMEOUT_GOV_PANIC
++	depends on WATCHDOG_PRETIMEOUT_GOV_PANIC
+ 	help
+ 	  Use panic watchdog pretimeout governor by default, if
+ 	  a watchdog pretimeout event happens, consider that
+@@ -2059,18 +2073,6 @@ config WATCHDOG_PRETIMEOUT_DEFAULT_GOV_PANIC
+ 
+ endchoice
+ 
+-config WATCHDOG_PRETIMEOUT_GOV_NOOP
+-	tristate "Noop watchdog pretimeout governor"
+-	help
+-	  Noop watchdog pretimeout governor, only an informational
+-	  message is added to kernel log buffer.
+-
+-config WATCHDOG_PRETIMEOUT_GOV_PANIC
+-	tristate "Panic watchdog pretimeout governor"
+-	help
+-	  Panic watchdog pretimeout governor, on watchdog pretimeout
+-	  event put the kernel into panic.
+-
+ endif # WATCHDOG_PRETIMEOUT_GOV
+ 
+ endif # WATCHDOG
 -- 
 2.20.1
 
