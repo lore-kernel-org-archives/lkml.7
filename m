@@ -2,75 +2,93 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A59AC28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 08:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E01C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 08:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B55627174
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 08:06:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6CBB2717F
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 08:19:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbfFAIGp (ORCPT
+        id S1726547AbfFAITR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 04:06:45 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:47324 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726013AbfFAIGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 04:06:44 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id EFC26A79FF7D3BE022FC;
-        Sat,  1 Jun 2019 16:06:38 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Sat, 1 Jun 2019
- 16:06:30 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <davem@davemloft.net>, <gregkh@linuxfoundation.org>,
-        <tglx@linutronix.de>, <ariel.elior@marvell.com>,
-        <michal.kalderon@marvell.com>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH net-next] qed: Fix build error without CONFIG_DEVLINK
-Date:   Sat, 1 Jun 2019 16:06:05 +0800
-Message-ID: <20190601080605.13052-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Sat, 1 Jun 2019 04:19:17 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46068 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726013AbfFAITQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 04:19:16 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id BA44E28A1F8;
+        Sat,  1 Jun 2019 09:19:15 +0100 (BST)
+Date:   Sat, 1 Jun 2019 10:19:12 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Boris Brezillon <bbrezillon@kernel.org>,
+        linux-i3c@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i3c: master: Use struct_size() helper
+Message-ID: <20190601101912.2a609581@collabora.com>
+In-Reply-To: <20190531173532.GA7141@embeddedor>
+References: <20190531173532.GA7141@embeddedor>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix gcc build error while CONFIG_DEVLINK is not set
+On Fri, 31 May 2019 12:35:32 -0500
+"Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
 
-drivers/net/ethernet/qlogic/qed/qed_main.o: In function `qed_remove':
-qed_main.c:(.text+0x1eb4): undefined reference to `devlink_unregister'
+> Make use of the struct_size() helper instead of an open-coded version
+> in order to avoid any potential type mistakes, in particular in the
+> context in which this code is being used.
+> 
+> So, replace the following form:
+> 
+> sizeof(*defslvs) + ((ndevs - 1) * sizeof(struct i3c_ccc_dev_desc))
+> 
+> with:
+> 
+> struct_size(defslvs, slaves, ndevs - 1)
+> 
+> This code was detected with the help of Coccinelle.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>  drivers/i3c/master.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
+> index b9d2b88928e1..923b04052038 100644
+> --- a/drivers/i3c/master.c
+> +++ b/drivers/i3c/master.c
+> @@ -924,9 +924,8 @@ int i3c_master_defslvs_locked(struct i3c_master_controller *master)
+>  		ndevs++;
+>  
+>  	defslvs = i3c_ccc_cmd_dest_init(&dest, I3C_BROADCAST_ADDR,
+> -					sizeof(*defslvs) +
+> -					((ndevs - 1) *
+> -					 sizeof(struct i3c_ccc_dev_desc)));
+> +					struct_size(defslvs, slaves,
+> +					ndevs - 1));
 
-Select DEVLINK to fix this.
+ndev - 1 should be aligned on the struct_size open parens, or even
+better, be put on one line since it seems to fit the 80-chars limit:
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 24e04879abdd ("qed: Add qed devlink parameters table")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/net/ethernet/qlogic/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+defslvs = i3c_ccc_cmd_dest_init(&dest, I3C_BROADCAST_ADDR,
+				struct_size(defslvs, slaves, ndevs - 1));
 
-diff --git a/drivers/net/ethernet/qlogic/Kconfig b/drivers/net/ethernet/qlogic/Kconfig
-index fdbb3ce..a391cf6 100644
---- a/drivers/net/ethernet/qlogic/Kconfig
-+++ b/drivers/net/ethernet/qlogic/Kconfig
-@@ -87,6 +87,7 @@ config QED
- 	depends on PCI
- 	select ZLIB_INFLATE
- 	select CRC8
-+	select NET_DEVLINK
- 	---help---
- 	  This enables the support for ...
- 
--- 
-2.7.4
 
+>  	if (!defslvs)
+>  		return -ENOMEM;
+>  
 
