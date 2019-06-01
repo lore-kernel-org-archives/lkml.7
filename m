@@ -2,186 +2,100 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2313C28CC3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B734C28CC3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8DDE2705E
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:09:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51CC527048
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:09:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I9FC/0ZN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f5/IYJMd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727161AbfFAAJV (ORCPT
+        id S1727179AbfFAAJx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 20:09:21 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39843 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727141AbfFAAJU (ORCPT
+        Fri, 31 May 2019 20:09:53 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:46151 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726842AbfFAAJx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 20:09:20 -0400
-Received: by mail-pf1-f194.google.com with SMTP id j2so7122133pfe.6
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2019 17:09:20 -0700 (PDT)
+        Fri, 31 May 2019 20:09:53 -0400
+Received: by mail-lf1-f65.google.com with SMTP id l26so9241369lfh.13;
+        Fri, 31 May 2019 17:09:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nU7TNgR5LpcNvtYfSjIrl1EToZnQ809br5ciYzVxz7U=;
-        b=I9FC/0ZN/P/uw2vcGA853atGEf+PUvmHuWe6siUN9uSS4JO2+5MB8qHRmZy20iRVpB
-         YU72lxTiwZZ/cBdhfRmt7Zy9/C4xG2ZRKMpeA92Y5B2NXOz/SkEa4hL6q+pZoWboE9MU
-         26z1rzEZaUZj1mx/EQ2vdmwpGyEj0YQpvCPLbv3RQuaK0IL2yu6SamJAtAgubX8z8nrM
-         O753bm2N089NIIjQ6BNnrFigotYL4rmqLenI31/X9TBd3m46slJ44Z8tN0NMky7Rrsne
-         ojR5pFxSLUTBs1UtZx25wL/TpcPYTVC8ez1Kkd38jLrJLXcsZXXVrXufvs70Qnidi2Sw
-         vtDQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0O5y3zxJLjO+OFcgaKEEvfFc20FWAOhAiAEXszX5msk=;
+        b=f5/IYJMd1LneyL+J8KijD7RhbM6Yv+/UjfPlJ+IyfR71JYrZTBHIcgcWhxj0ZuSFlf
+         OauU4xnS3yObYtej+TYeCNAHUc0owB/GmIiqSBLtmyHob8WcFJCYzY0hQfgSN9BL2n5p
+         v+lnk7bSk7FN1Qb9sPdaunp6cSpccBktCTJkRJAS+SIbDC2qXdTWi9waHRWvw2ygwVNq
+         CKpkGopD9kC46BNoVHj3CrsEf3iMh6sLgkVk7DiFXGWSSRyMXnySyghedmX95SQ9bH/Y
+         lIFXXm+3cSwEUKsCaPH4ApA8BwjqYp95fkGqEw0Rh4PuTj/3apztACv2b7RDKJyBN9xQ
+         vt4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nU7TNgR5LpcNvtYfSjIrl1EToZnQ809br5ciYzVxz7U=;
-        b=TivTH/21E3BYyhiS/SNMMF4NT1i7ZR1uieVJLnWqjfTSZtiehOIDLoJMrWIEC743Et
-         QJbo2xLq9eHIgHnCDOwF6gD3W9WLZPMt9NwQmK2a1ZDRNAH0QMOC3bI0Si687pfhJCPZ
-         UMObT/ypNvth1BmV7OsCRnNdbsNxpPG89Va/OCsOIpxy1s8hXbRSTlRa0umIscA7Rbma
-         XFbgCZu5T8vj6ZTLI3QHuR3zEGz2YYLcYFD9gzeTlmawPo4KUgktoLsmswzXIE3yxl4V
-         DChbdgH+WIAIiwJ5kg91qraGBdsEjSasI+5WpOBjnmKzIfFoPZ49dZvrhu/LYzfrtINa
-         EnTA==
-X-Gm-Message-State: APjAAAV5maTEjhka/jby+asEHW0ZRiGCC3KQ1PBzFZ4X2I3jY8Ub2+Yf
-        UEhqSIl+dG8kK2aXZFP47xp/3Q==
-X-Google-Smtp-Source: APXvYqyy+66Tc/ezRAw9Zd8t0fwoOYr/EWkFnuNA2Mr7izQNHyFv54Hb3h8WLJ37PE1ILgdrom0QRg==
-X-Received: by 2002:a62:582:: with SMTP id 124mr13734526pff.209.1559347760035;
-        Fri, 31 May 2019 17:09:20 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id e4sm6451863pgi.80.2019.05.31.17.09.18
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 31 May 2019 17:09:19 -0700 (PDT)
-Date:   Fri, 31 May 2019 17:09:17 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Arun Kumar Neelakantam <aneela@codeaurora.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v8 2/4] soc: qcom: Add AOSS QMP driver
-Message-ID: <20190601000917.GE25597@minitux>
-References: <20190531030057.18328-1-bjorn.andersson@linaro.org>
- <20190531030057.18328-3-bjorn.andersson@linaro.org>
- <CAD=FV=V=_ozPiTvT-Fnrc1a+qfHYi3ynNn8cbw9ibqfKk7Am_w@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0O5y3zxJLjO+OFcgaKEEvfFc20FWAOhAiAEXszX5msk=;
+        b=RZDXEXNaz4ZCZNcgwakqbQ7r4jDKY6QA0dm/eDU+N+s9ckP85l695CjhnAL9PicSPU
+         L8hSUQf5cZ+kVh4ileXLd9KAM1x7LzVsI02X2brJyOsprqSL+jqiIiuNyfvQSUm6etzc
+         ZqEHIeYYAY0iQQTUh6Gd1783KcOnuTfFHyD8QS55mbBG3Qo/kiR+etcoLyXKl+VWnMmG
+         ngpuAU+9YtYw/UYgGL1Xgdpvg/HnOWkfum0Us0nlS2122zPqDGjcGvERRzXLy3kNbQdw
+         qZUEBJmfsULZbwbJyEhQ3V6ZokjAL6naYymvDb4cPXXFJ/vMKqzY5EJXRAfH1SuU8a4+
+         DAXA==
+X-Gm-Message-State: APjAAAUSr7JgF+I0cPYpRhVrVQAEDaAIJBg1i65sF1VMHK4ISFZS7LuR
+        KqzZaVHFzmDbeUAK5llIU4qDRTATNT+JPqGuQUY=
+X-Google-Smtp-Source: APXvYqyU0iW+NSklLJf3qHZtRLKPHQxuDtnO3IWUd1+SsBVtZYgctk9VnfK45znYVuqr6WdQ3tVVp0jlNS88Khwb+FQ=
+X-Received: by 2002:ac2:5337:: with SMTP id f23mr7428221lfh.15.1559347790765;
+ Fri, 31 May 2019 17:09:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=V=_ozPiTvT-Fnrc1a+qfHYi3ynNn8cbw9ibqfKk7Am_w@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <20190530222922.4269-1-luke.r.nels@gmail.com> <mhng-b4ce883e-9ec7-4098-9acc-18eb140f93e0@palmer-si-x1c4>
+In-Reply-To: <mhng-b4ce883e-9ec7-4098-9acc-18eb140f93e0@palmer-si-x1c4>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Fri, 31 May 2019 17:09:39 -0700
+Message-ID: <CAADnVQJspryT=Dvkh3vyyPv1air+Gfk61=uwWwgtD1sZb5PdnA@mail.gmail.com>
+Subject: Re: [PATCH bpf v2] bpf, riscv: clear high 32 bits for ALU32 add/sub/neg/lsh/rsh/arsh
+To:     Palmer Dabbelt <palmer@sifive.com>
+Cc:     luke.r.nels@gmail.com, Xi Wang <xi.wang@gmail.com>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
+        aou@eecs.berkeley.edu, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-riscv@lists.infradead.org, bpf <bpf@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 31 May 15:24 PDT 2019, Doug Anderson wrote:
-
-> Hi,
-> 
-> On Thu, May 30, 2019 at 8:01 PM Bjorn Andersson
-> <bjorn.andersson@linaro.org> wrote:
+On Fri, May 31, 2019 at 1:40 PM Palmer Dabbelt <palmer@sifive.com> wrote:
+>
+> On Thu, 30 May 2019 15:29:22 PDT (-0700), luke.r.nels@gmail.com wrote:
+> > In BPF, 32-bit ALU operations should zero-extend their results into
+> > the 64-bit registers.
 > >
-> > +/**
-> > + * qmp_send() - send a message to the AOSS
-> > + * @qmp: qmp context
-> > + * @data: message to be sent
-> > + * @len: length of the message
-> > + *
-> > + * Transmit @data to AOSS and wait for the AOSS to acknowledge the message.
-> > + * @len must be a multiple of 4 and not longer than the mailbox size. Access is
-> > + * synchronized by this implementation.
-> > + *
-> > + * Return: 0 on success, negative errno on failure
-> > + */
-> > +static int qmp_send(struct qmp *qmp, const void *data, size_t len)
-> > +{
-> > +       int ret;
-> > +
-> > +       if (WARN_ON(len + sizeof(u32) > qmp->size))
-> > +               return -EINVAL;
-> > +
-> > +       if (WARN_ON(len % sizeof(u32)))
-> > +               return -EINVAL;
-> > +
-> > +       mutex_lock(&qmp->tx_lock);
-> > +
-> > +       /* The message RAM only implements 32-bit accesses */
-> > +       __iowrite32_copy(qmp->msgram + qmp->offset + sizeof(u32),
-> > +                        data, len / sizeof(u32));
-> > +       writel(len, qmp->msgram + qmp->offset);
-> > +       qmp_kick(qmp);
-> > +
-> > +       ret = wait_event_interruptible_timeout(qmp->event,
-> > +                                              qmp_message_empty(qmp), HZ);
-> > +       if (!ret) {
-> > +               dev_err(qmp->dev, "ucore did not ack channel\n");
-> > +               ret = -ETIMEDOUT;
-> > +
-> > +               /* Clear message from buffer */
-> > +               writel(0, qmp->msgram + qmp->offset);
-> > +       } else {
-> > +               ret = 0;
-> > +       }
-> 
-> Just like Vinod said in in v7, the "ret = 0" is redundant.
-> 
+> > The current BPF JIT on RISC-V emits incorrect instructions that perform
+> > sign extension only (e.g., addw, subw) on 32-bit add, sub, lsh, rsh,
+> > arsh, and neg. This behavior diverges from the interpreter and JITs
+> > for other architectures.
+> >
+> > This patch fixes the bugs by performing zero extension on the destination
+> > register of 32-bit ALU operations.
+> >
+> > Fixes: 2353ecc6f91f ("bpf, riscv: add BPF JIT for RV64G")
+> > Cc: Xi Wang <xi.wang@gmail.com>
+> > Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
+>
+> Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
+>
+> Thanks!  I'm assuming this is going in through a BPF tree and not the RISC-V
+> tree, but LMK if that's not the case.
 
-If the condition passed to wait_event_interruptible_timeout() evaluates
-true the remote side has consumed the message and ret will be 1. We end
-up in the else block (i.e. not timeout) and we want the function to
-return 0, so we set ret to 0.
-
-Please let me know if I'm reading this wrong.
-
-> 
-> > +static int qmp_qdss_clk_add(struct qmp *qmp)
-> > +{
-> > +       struct clk_init_data qdss_init = {
-> > +               .ops = &qmp_qdss_clk_ops,
-> > +               .name = "qdss",
-> > +       };
-> 
-> As I mentioned in v7, there is no downside in marking qdss_init as
-> "static const" and it avoids the compiler inserting a memcpy() to get
-> this data on the stack.  Using static const also reduces your stack
-> usage.
-> 
-
-In which case we would just serve it from .ro, makes sense now that I
-read your comment again. 
-
-> 
-> > +       int ret;
-> > +
-> > +       qmp->qdss_clk.init = &qdss_init;
-> > +       ret = clk_hw_register(qmp->dev, &qmp->qdss_clk);
-> > +       if (ret < 0) {
-> > +               dev_err(qmp->dev, "failed to register qdss clock\n");
-> > +               return ret;
-> > +       }
-> > +
-> > +       ret = of_clk_add_hw_provider(qmp->dev->of_node, of_clk_hw_simple_get,
-> > +                                    &qmp->qdss_clk);
-> 
-> I still prefer to devm-ify the whole driver, using
-> devm_add_action_or_reset() to handle things where there is no devm.
-> ...but I won't insist.
-> 
-> 
-> Above things are just nits and I won't insist.  They also could be
-> addressed in follow-up patches.  Thus:
-> 
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
-
-Thanks!
-
-Regards,
-Bjorn
+Applied to bpf tree. Thanks
