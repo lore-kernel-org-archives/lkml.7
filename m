@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B92E4C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3976BC28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9339B274FC
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:33:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13E6F25F3D
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:33:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395993;
-	bh=a1/59yPA5qvkX/IzatJ1mZxQdqXMcsdATBRZAsjQNgc=;
+	s=default; t=1559395998;
+	bh=LKSwLnv5hy1MPp67Vl7ZcvLXUVpoIKpAXmhCwEF4sIg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qLF9B3HRHxeei7yUFGtXE1VQomWlHnICT2RmIhTx6YTdWafbGimpRESbc8VbPICuq
-	 jPY/V9BW4areWgHWhFIOjGjDaNX3Bg0CFzWwcVYIdSy8Fz5wtEYnXg6Yuhv3oWySa+
-	 DJM22OFwyGDNZGVFf7NS2g1sFJ8rlGQEQqcXHwXA=
+	b=bvUAmbtL6O9EzdEyiGINaOOzMmqbBsOp8Tgtb0rk7uMl9Tn/JRLgDYrZuti21V9f+
+	 DPVo1AeE3z9tMZ78nb3H81vfmsmoLIY5rWoIfI05ZRHvm4kCMrEl5Q7xJhBC26vD3/
+	 UW+XgBlKVDoxBohj1ZKh6wCjzHHgosJ+5uyq1xnQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729534AbfFANdM (ORCPT
+        id S1729255AbfFANYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:33:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54694 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:24:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729266AbfFANYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:24:38 -0400
+        id S1729232AbfFANYb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:24:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF57727358;
-        Sat,  1 Jun 2019 13:24:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 604C527358;
+        Sat,  1 Jun 2019 13:24:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395478;
-        bh=a1/59yPA5qvkX/IzatJ1mZxQdqXMcsdATBRZAsjQNgc=;
+        s=default; t=1559395471;
+        bh=LKSwLnv5hy1MPp67Vl7ZcvLXUVpoIKpAXmhCwEF4sIg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cgkYysJRDS30p67Vc0FTWLwjdC7VgtahZpOE9nxUoXn7CjY1AKRqzlTxIUOqBbFm6
-         hZGIzDRF/Ttln6alw2oADiwgFflXoRje6LI3qPCr7cT9x8oJv2g4AIceVhP84Hi3Hi
-         WkeNby3YXZwws+yWPJfvf79+Vx9UcfeKDMFmsGI0=
+        b=wUMPzgh3VOETb38PSZnbSg0r8dQHb+VCNBDQ6BkwhhoeWf7f/Sy35XcacKB9HItBt
+         XIIZ+lwEYM53yS+I1x/KYUXzS6V20A7IhgczctCI/mIyO3nLP441Nky9FPw6a6Emxu
+         nNEMsLLcezEDqGRp5hQLIyxqPk1lkvyDEXNPWbSU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Borislav Petkov <bp@suse.de>,
-        Johannes Thumshirn <jth@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>, linuxppc-dev@ozlabs.org,
-        morbidrsa@gmail.com, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 23/99] EDAC/mpc85xx: Prevent building as a module
-Date:   Sat,  1 Jun 2019 09:22:30 -0400
-Message-Id: <20190601132346.26558-23-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 19/99] mfd: twl6040: Fix device init errors for ACCCTL register
+Date:   Sat,  1 Jun 2019 09:22:26 -0400
+Message-Id: <20190601132346.26558-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132346.26558-1-sashal@kernel.org>
 References: <20190601132346.26558-1-sashal@kernel.org>
@@ -63,57 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 2b8358a951b1e2a534a54924cd8245e58a1c5fb8 ]
+[ Upstream commit 48171d0ea7caccf21c9ee3ae75eb370f2a756062 ]
 
-The mpc85xx EDAC driver can be configured as a module but then fails to
-build because it uses two unexported symbols:
+I noticed that we can get a -EREMOTEIO errors on at least omap4 duovero:
 
-  ERROR: ".pci_find_hose_for_OF_device" [drivers/edac/mpc85xx_edac_mod.ko] undefined!
-  ERROR: ".early_find_capability" [drivers/edac/mpc85xx_edac_mod.ko] undefined!
+twl6040 0-004b: Failed to write 2d = 19: -121
 
-We don't want to export those symbols just for this driver, so make the
-driver only configurable as a built-in.
+And then any following register access will produce errors.
 
-This seems to have been broken since at least
+There 2d offset above is register ACCCTL that gets written on twl6040
+powerup. With error checking added to the related regcache_sync() call,
+the -EREMOTEIO error is reproducable on twl6040 powerup at least
+duovero.
 
-  c92132f59806 ("edac/85xx: Add PCIe error interrupt edac support")
+To fix the error, we need to wait until twl6040 is accessible after the
+powerup. Based on tests on omap4 duovero, we need to wait over 8ms after
+powerup before register write will complete without failures. Let's also
+make sure we warn about possible errors too.
 
-(Nov 2013).
+Note that we have twl6040_patch[] reg_sequence with the ACCCTL register
+configuration and regcache_sync() will write the new value to ACCCTL.
 
- [ bp: make it depend on EDAC=y so that the EDAC core doesn't get built
-   as a module. ]
-
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Johannes Thumshirn <jth@kernel.org>
-Cc: James Morse <james.morse@arm.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Cc: linuxppc-dev@ozlabs.org
-Cc: morbidrsa@gmail.com
-Link: https://lkml.kernel.org/r/20190502141941.12927-1-mpe@ellerman.id.au
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/mfd/twl6040.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index 96afb2aeed18a..aaaa8ce8d3fdd 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -246,8 +246,8 @@ config EDAC_PND2
- 	  micro-server but may appear on others in the future.
+diff --git a/drivers/mfd/twl6040.c b/drivers/mfd/twl6040.c
+index dd19f17a1b637..2b8c479dbfa6e 100644
+--- a/drivers/mfd/twl6040.c
++++ b/drivers/mfd/twl6040.c
+@@ -322,8 +322,19 @@ int twl6040_power(struct twl6040 *twl6040, int on)
+ 			}
+ 		}
  
- config EDAC_MPC85XX
--	tristate "Freescale MPC83xx / MPC85xx"
--	depends on FSL_SOC
-+	bool "Freescale MPC83xx / MPC85xx"
-+	depends on FSL_SOC && EDAC=y
- 	help
- 	  Support for error detection and correction on the Freescale
- 	  MPC8349, MPC8560, MPC8540, MPC8548, T4240
++		/*
++		 * Register access can produce errors after power-up unless we
++		 * wait at least 8ms based on measurements on duovero.
++		 */
++		usleep_range(10000, 12000);
++
+ 		/* Sync with the HW */
+-		regcache_sync(twl6040->regmap);
++		ret = regcache_sync(twl6040->regmap);
++		if (ret) {
++			dev_err(twl6040->dev, "Failed to sync with the HW: %i\n",
++				ret);
++			goto out;
++		}
+ 
+ 		/* Default PLL configuration after power up */
+ 		twl6040->pll = TWL6040_SYSCLK_SEL_LPPLL;
 -- 
 2.20.1
 
