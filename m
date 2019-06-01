@@ -2,82 +2,94 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E54C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 19:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B449C28CC4
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 20:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49A8B2767D
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 19:41:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ADD1261DE
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 20:12:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.ca header.i=@yahoo.ca header.b="GFA5BRaZ"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="bNCcX2B/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfFATlz (ORCPT
+        id S1726693AbfFAULG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 15:41:55 -0400
-Received: from sonic301-32.consmr.mail.ne1.yahoo.com ([66.163.184.201]:44198
-        "EHLO sonic301-32.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726195AbfFATlz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 15:41:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.ca; s=s2048; t=1559418113; bh=8713HDhZQya8lWL0W8on0YNF6KO3UUWiPnP3Vn4P6BY=; h=In-Reply-To:References:From:To:Subject:Cc:Date:From:Subject; b=GFA5BRaZS7PRtFd7nonAMq4kR7+7/w2QpZH78/Pe3hX69+0qZLmX7WxMe2FYEX1Wj9qrYFEACuNZxHZ1hv16HyrtVsWYmGOLHcaSK8BxeBEY6AQHapbnoOJH7TuWN60jaRyzqbWlrO8XwsPDvleNotXDzTcMacq0hlODLbzk8zhz5hYSRRTC54qafh0Z4a6YzmuGzyBxZh+Rbcqq9ZTi6cIHghIwFLpioPQOBE6MzkTeNIEVLZXNRRMnl+6hDkPI5niEUWqFgEslN6IG3Xv1loIVgNIHjR+t0reRS4AZOT7/5OUbvMR+tPcj3sLyAUs27PNgGEQYuMKfHOAL816XCw==
-X-YMail-OSG: .a2GnfkVM1mK2E8krSQEMNfHekcUf4o375_xIZWuscuNwaoqll3Awqj9IQDLLp1
- yHVchtvuAQen0GgcI1GEyCNBLiCdgR3jhgA5djPNM3eWMnptVEDzyZW35gESHjp2Tjh2JT5V1EEm
- CPlmrOSZ4NUaxOQbCSBNtQQLk8PctDYjm7Lbv4zdSkpaNopJbzLlnLqzOF5VXaar3TdxHF3bhk6W
- tLQwBOu4DdfTNCBy4wK4UH9Q.TEtx4WUHPH7_DdYbMX6eLjry3T3_eTlUvEVxSwH5VKDVxkYbI8P
- MkszG08wlTANi7motOU8S14pt1ZOlYkdDVRIFGneI6DrCr7YcxsDxTa723x5HPIVultJugc3ZbXy
- h5ECGfi1cACmHilkZtFDGZCcWe_PAO8ilaqqhpTY1F7jwS6e5AtN3tghfw_CIlTmesWq1klGNqSs
- C7ofvy57qnUgCuPciXyfdH.s24sCSUFzGNSL6rpXk94PKL2aAcCXuXJScd30Kod.wss5rki9ueE.
- vSj7ZsZkrvW6WJSsGH.nln_YdyuRlu0W_6WuEMyxGcEzhcL743R2lEXgSBMOzOdPxejJGXj8zlYx
- JdMH0Za_2DnuozOA6sShcBWhL_UjLH76B22sSuNSSgjpj21q6ksmoVFkz3Ia.WO52Hu6jaGWm2u0
- pDaZx016danD.fSFCth_wi3EvTdnmF4X3nnA87L4kM0hyOpaO1LLClWKIFfw_qdF84uQIERC4K6M
- OLixyoZmgJ.IqhVqesWK_l5N0qXyAtKHF3TZR8gUz8FiLSRMSvzRpEfW1vwD_dIUUttyrlwhq49z
- jdJEnlh2yXEtK7cMDaIbbfDLTAOqy6KZPCCp6uebFoSJsg6xBNaDWv6vQwILSVbQjbs13QlG_vXi
- oJxaAqYn7zgdWRrSuRnYTumKbezPCJi2h0RWkPsCkJrwd_JyrHk_XCAB_U3fjL989VHJCYimoHRK
- O16wHQ42DGEySX272wmu4ok835AO5ZpA8ANQdXV0tLweY_HTt0MZwVEt94_tOhc1zFEuRyWIOt4B
- nMSbDCNIxMLwhiuELD.cLjZ3LFrWWJn.rhgXy93cqKmIK02WTr30F7RgGQKhrIr4c4.x59XtuSdB
- iEYce0G3FhyGnbg5M1eAHBT770MthTpNNsN8APXTfbMFAIONZTme__U2grr9eTC13Rh3OkOqg41Y
- rdy7FHUEkgecHjwYFnKuYozSHKD4aIvzf2L4PV2ZF9JTOrHVPSjfO4t7ftE1PPHk-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.ne1.yahoo.com with HTTP; Sat, 1 Jun 2019 19:41:53 +0000
-Received: from pink.alxu.ca (EHLO localhost) ([198.98.62.56])
-          by smtp406.mail.ne1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID f5d5a22d1a321ea646c829e6229e0c9d;
-          Sat, 01 Jun 2019 19:41:46 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190601162907.GB6261@kroah.com>
-References: <20190601144943.126995-1-alex_y_xu@yahoo.ca> <20190601162907.GB6261@kroah.com>
-From:   Alex Xu <alex_y_xu@yahoo.ca>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] crypto: ux500 - fix license comment syntax error
-Cc:     linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        tglx@linutronix.de, allison@lohutok.net, alexios.zavras@intel.com,
-        swinslow@gmail.com, rfontana@redhat.com,
-        linux-spdx@vger.kernel.org, torvalds@linux-foundation.org
-Message-ID: <155941810155.1991.11907646865432946934@pink.alxu.ca>
-User-Agent: alot/0.8.1
-Date:   Sat, 01 Jun 2019 19:41:41 +0000
+        Sat, 1 Jun 2019 16:11:06 -0400
+Received: from mout.gmx.net ([212.227.15.18]:42097 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726149AbfFAULG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 16:11:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1559419839;
+        bh=ICYulOaDDu4Ey1z3HoQ0MCtyYdkzjS3YwLST+w9zPsU=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=bNCcX2B//x79pHNtY8cOEAaceA40Cx+193pCmiZXG/MVHAH0VrIqta4/MAqEUQMHI
+         XJ3e3FoIg8ZW/h+Dbn4LKYy28Zj9U0929xK4eqWfCMAs8FB0rKvwFrLasgoG/dKTT9
+         LpfizzDRK2pJwaNDLfCmfsOYQfwEhECXDEulREWw=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([37.4.249.160]) by mail.gmx.com
+ (mrgmx002 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 0M9ra4-1hQakY3UaG-00B59S; Sat, 01 Jun 2019 22:10:38 +0200
+From:   Stefan Wahren <wahrenst@gmx.net>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Stefan Wahren <wahrenst@gmx.net>, Eric Anholt <eric@anholt.net>,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [GIT PULL 1/1] bcm2835-dt-next-2019-06-01
+Date:   Sat,  1 Jun 2019 22:09:16 +0200
+Message-Id: <1559419756-5941-1-git-send-email-wahrenst@gmx.net>
+X-Mailer: git-send-email 2.7.4
+X-Provags-ID: V03:K1:UpB6vwyQzEh9qffJl5eMjGcqLFEdTDWnluw7jib5BIzcUYFCyGy
+ OHrdVE6m/vKsFfiB6BEBKhFNczjt3IfyWJPLlK8Vg678EAD4V7reMMCJtMeh0ikLIU7V0tk
+ Pkjgy5PbgCf+DAPSeGmFxkfR9aRuHH0ML5POYqjD2DHJFNWUdcF40DL3nbOdSwA1O8nsMH2
+ cQexaCt8+CW48XeyCDjsw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Sv38ZiG8aEE=:wn5L+0PqdgvCjvmFTGhfie
+ DekkTuNpCynQ98b9RFgxGCwCupwfeUCPM3z5lFI6mNOK1f4MmqgOyWGrmV4PkVZmbPdSyuee4
+ VTgQES0bE8wy2LCk5fpzJrPdmo6pCuJNPIer3fZSNM0VxzH2bZDr4KdiEkvxFT2P+hpJJwPC3
+ KMzOg5wXQEpt5AkA6tJrD6YGZwbcVIFWcKFsr4xc/1J/KqiwLQMdtBtzDzhwP5e7Zp1IPuMxh
+ uJ9UjQ43tZlZCaI3BVt/d52ich3EpvNP26xwJ4PvpfEkrO/lg3JGUmcqY1xVsNs8Nl6DnTyDs
+ MCY8yzX5lci77zsfBAyjm4iQz+U75V2w4LIj5MN8cyjnBm0L7JegBPgAAEXApy5E3tExVF9s0
+ n6+w/+h7uWMm746Ns7WS+m/NPi6+4Lx6K99zU4TvduOJA6s/RcCHHczzmTB46w5Zxh2nGShYh
+ CiODYJiOsOsd6dutZJKluNi6TRFAaGeaALB6vdW+tTHrrW1T0WLEAwIW3eelOYNtH4bu1G7v/
+ 54kWLwgL6LqbgzAfejccb/mjNb/oBeyKU1+Kn9YsPNPYXVUBFGDVDkqNfKbU/xqwmjH+pUSsn
+ MYxjAqQ+k/afoEgPipPO/71IX99Hpsp/ixTBPLfgQXUdPIxglLEFZS+tPs1RMeHbC1OQXWXBI
+ 4aFnVz/c38YUq6kxoOY2isqeMlhpBUOAatOzU2cyFITwJX4l1zKv/nL7IjIjZ5ewAlMXMuVlP
+ DLaeiIxgSgmE72DXsFPXprn0hoxR/OXH0N/k8GLJhe7jgwn13x+PDBziA3h6H9ig3Olb6zVQJ
+ pWYwlKGwaHjknUShLbAiMFSMGL+1/QZL9PN/pZltKAqBDpaQnz7hrQtVFwJzvG7sk+mirk/nt
+ hEQFjJZY9MSXwYMKSzvhF1IPXYq2W525v6VfhDHwnTQSuwWXvAcELv0OhdS0FjNlDTWfPu+bZ
+ sOE97oVN9DiFN3mkVyOfv0yH3lR38HEY=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Greg KH (2019-06-01 16:29:07)
-> On Sat, Jun 01, 2019 at 10:49:43AM -0400, Alex Xu (Hello71) wrote:
-> > Causes error: drivers/crypto/ux500/cryp/Makefile:5: *** missing
-> > separator.  Stop.
-> >=20
-> > Fixes: af873fcecef5 ("treewide: Replace GPLv2 boilerplate/reference wit=
-h SPDX - rule 194")
-> > Signed-off-by: Alex Xu (Hello71) <alex_y_xu@yahoo.ca>
-> > ---
-> >  drivers/crypto/ux500/cryp/Makefile | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> Also, how did 0-day not catch this?  Is this an odd configuration that
-> it can not build?
+Hi Florian,
 
-I had to run "make clean" to get the error.
+the following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+
+are available in the git repository at:
+
+  git://github.com/anholt/linux tags/bcm2835-dt-next-2019-06-01
+
+for you to fetch changes up to 08e3c41585386f5cefc91ede8835005742df4ba9:
+
+  ARM: bcm283x: Enable DMA support for SPI controller (2019-05-25 12:50:18 +0200)
+
+----------------------------------------------------------------
+This pull requests enables DMA support for the main SPI controller
+on all Raspberry Pis.
+
+----------------------------------------------------------------
+Lukas Wunner (1):
+      ARM: bcm283x: Enable DMA support for SPI controller
+
+ arch/arm/boot/dts/bcm283x.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
