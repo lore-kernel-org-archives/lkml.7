@@ -7,53 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E8AC28CC3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB542C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2F4325DA0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:27:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81AB72588D
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:28:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395676;
-	bh=xo/HVDXnZUTw1egaog1W5dRMlGcmSy5gcJmhj/9oWRE=;
+	s=default; t=1559395686;
+	bh=bBqzhpjlF9a5ewQjycgLTP6BzvF8Q9GBGeuSnfvvjww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uRSyf20gd2uZnRAzKmqewFzURvTK91czLbMmYoFKA1980wYI1MYNsrVdIZgTMRyx8
-	 NwXhPceBmdj0M95NtLvn22Ruh+laNDUs1m22sp5HFMJUQ3xrS2JoZSlsVuwHPniDpI
-	 hJBLBKMj5cdHuGnofsWK3jkKL0uPrUiEONaAU1ts=
+	b=S88QvEeDrYdQg3iWsO2y6TxVdR26KessLBbgPKZI0sBImO53OdWaUgmiw6PGRJnQa
+	 7M/Fiq3IxmS0lZEapc6UZz+EkrllatJop1zqtrOKGq/ednyGb1kR+zPHwggiMIrLWi
+	 5t+ARj1uwWOlyMfjW6+Lai8iVmranD8Arf8DC/jo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730021AbfFAN14 (ORCPT
+        id S1729761AbfFAN2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:27:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60184 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:28:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729960AbfFAN1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:27:35 -0400
+        id S1729950AbfFAN12 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:27:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B658326FAA;
-        Sat,  1 Jun 2019 13:27:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E35C524937;
+        Sat,  1 Jun 2019 13:27:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395654;
-        bh=xo/HVDXnZUTw1egaog1W5dRMlGcmSy5gcJmhj/9oWRE=;
+        s=default; t=1559395647;
+        bh=bBqzhpjlF9a5ewQjycgLTP6BzvF8Q9GBGeuSnfvvjww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xeeMtw9WhYjv/dM0kkq1cLrvvVJ43sw3QCNpfmgNj8tNIM+i7GDbtTOzkE2TuoZ5s
-         a5d93nsTPT0kCjFYL06IhhAqeMnisGGCU+9JKXq1/DA7pdYPSK/Oo2tr9T1mQdyQM3
-         sSnP6gw9ZjvWl9TkrJ8pmVRAsoG0d1cOvyW3mCK4=
+        b=ehOpGPq7ip0HskbGxzeJvzPlvTTwgsUQVERM5GkdRpI/mjX55o1nbplPTV3mO4Cm8
+         QAsUjp7wt5X2BFTzdqdKx+4xcR6pooz7cjuZVAipYZpEspB4QlAFth0ZZA5O2celdN
+         I6HR52MUGl3aMqbBtSF6zRcdwdKnJWXNHscpbYHw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Christoph=20Vogtl=C3=A4nder?= 
-        <c.vogtlaender@sigma-surface-science.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 53/56] pwm: tiehrpwm: Update shadow register for disabling PWMs
-Date:   Sat,  1 Jun 2019 09:25:57 -0400
-Message-Id: <20190601132600.27427-53-sashal@kernel.org>
+Cc:     Kangjie Lu <kjlu@umn.edu>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Steven Price <steven.price@arm.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 49/56] PCI: xilinx: Check for __get_free_pages() failure
+Date:   Sat,  1 Jun 2019 09:25:53 -0400
+Message-Id: <20190601132600.27427-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132600.27427-1-sashal@kernel.org>
 References: <20190601132600.27427-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,43 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Vogtländer <c.vogtlaender@sigma-surface-science.com>
+From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit b00ef53053191d3025c15e8041699f8c9d132daf ]
+[ Upstream commit 699ca30162686bf305cdf94861be02eb0cf9bda2 ]
 
-It must be made sure that immediate mode is not already set, when
-modifying shadow register value in ehrpwm_pwm_disable(). Otherwise
-modifications to the action-qualifier continuous S/W force
-register(AQSFRC) will be done in the active register.
-This may happen when both channels are being disabled. In this case,
-only the first channel state will be recorded as disabled in the shadow
-register. Later, when enabling the first channel again, the second
-channel would be enabled as well. Setting RLDCSF to zero, first, ensures
-that the shadow register is updated as desired.
+If __get_free_pages() fails, return -ENOMEM to avoid a NULL pointer
+dereference.
 
-Fixes: 38dabd91ff0b ("pwm: tiehrpwm: Fix disabling of output of PWMs")
-Signed-off-by: Christoph Vogtländer <c.vogtlaender@sigma-surface-science.com>
-[vigneshr@ti.com: Improve commit message]
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Steven Price <steven.price@arm.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-tiehrpwm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pci/host/pcie-xilinx.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
-index 062dff1c902df..ede17f89d57f6 100644
---- a/drivers/pwm/pwm-tiehrpwm.c
-+++ b/drivers/pwm/pwm-tiehrpwm.c
-@@ -385,6 +385,8 @@ static void ehrpwm_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+diff --git a/drivers/pci/host/pcie-xilinx.c b/drivers/pci/host/pcie-xilinx.c
+index 4cfa46360d122..6a2499f4d6109 100644
+--- a/drivers/pci/host/pcie-xilinx.c
++++ b/drivers/pci/host/pcie-xilinx.c
+@@ -349,14 +349,19 @@ static const struct irq_domain_ops msi_domain_ops = {
+  * xilinx_pcie_enable_msi - Enable MSI support
+  * @port: PCIe port information
+  */
+-static void xilinx_pcie_enable_msi(struct xilinx_pcie_port *port)
++static int xilinx_pcie_enable_msi(struct xilinx_pcie_port *port)
+ {
+ 	phys_addr_t msg_addr;
+ 
+ 	port->msi_pages = __get_free_pages(GFP_KERNEL, 0);
++	if (!port->msi_pages)
++		return -ENOMEM;
++
+ 	msg_addr = virt_to_phys((void *)port->msi_pages);
+ 	pcie_write(port, 0x0, XILINX_PCIE_REG_MSIBASE1);
+ 	pcie_write(port, msg_addr, XILINX_PCIE_REG_MSIBASE2);
++
++	return 0;
+ }
+ 
+ /* INTx Functions */
+@@ -555,6 +560,7 @@ static int xilinx_pcie_init_irq_domain(struct xilinx_pcie_port *port)
+ 	struct device *dev = port->dev;
+ 	struct device_node *node = dev->of_node;
+ 	struct device_node *pcie_intc_node;
++	int ret;
+ 
+ 	/* Setup INTx */
+ 	pcie_intc_node = of_get_next_child(node, NULL);
+@@ -582,7 +588,9 @@ static int xilinx_pcie_init_irq_domain(struct xilinx_pcie_port *port)
+ 			return PTR_ERR(port->irq_domain);
+ 		}
+ 
+-		xilinx_pcie_enable_msi(port);
++		ret = xilinx_pcie_enable_msi(port);
++		if (ret)
++			return ret;
  	}
  
- 	/* Update shadow register first before modifying active register */
-+	ehrpwm_modify(pc->mmio_base, AQSFRC, AQSFRC_RLDCSF_MASK,
-+		      AQSFRC_RLDCSF_ZRO);
- 	ehrpwm_modify(pc->mmio_base, AQCSFRC, aqcsfrc_mask, aqcsfrc_val);
- 	/*
- 	 * Changes to immediate action on Action Qualifier. This puts
+ 	return 0;
 -- 
 2.20.1
 
