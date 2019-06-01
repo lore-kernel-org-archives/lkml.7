@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E97CC28CC4
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF56C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1910627442
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:29:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29BC027430
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:29:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395757;
-	bh=WiKANmaMlD3Gbk6YfVehwxHNLtkVsP/TGQIBMtp9hHM=;
+	s=default; t=1559395767;
+	bh=OGBA0B3m5sN0CGLqsT+uM6B3105oqsPh40TEuaQMLlE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kdj0xVlk6Z+QUOHE1Wb3kl2YIhGWlJR2kcE7dXkzxWXleHgBEpR43qu4XER72yTnQ
-	 Oc/KZER382mHusXyXivWxFjjS1cDQoh0Htlhi3dZxtwYFcYotCTWejCoc0jUwkgjMt
-	 g66yQLut+PitzQOM0xInerU6vgPXuC7m21rjUO+Q=
+	b=P/BfOB8rXJtqN5mpeRY4XBbK2aiGr+S89aXghdQRgRMrAM9JqdmBHqAnZKJq9FmOs
+	 fpju8uavVNWFviPY9RmfWtqwzmGW9vGyuIH5XtIwQYNGYcOHhcJ9KnhlKmEtRO7eHi
+	 eoe0vxLxfu7R16HbchpZj7hNMx1g5Psa1oYE6lOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729819AbfFAN3Q (ORCPT
+        id S1729825AbfFAN30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:29:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57534 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:29:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729884AbfFAN1B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:27:01 -0400
+        id S1729500AbfFAN0y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:26:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B2D8273D1;
-        Sat,  1 Jun 2019 13:26:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01A57273C3;
+        Sat,  1 Jun 2019 13:26:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395620;
-        bh=WiKANmaMlD3Gbk6YfVehwxHNLtkVsP/TGQIBMtp9hHM=;
+        s=default; t=1559395613;
+        bh=OGBA0B3m5sN0CGLqsT+uM6B3105oqsPh40TEuaQMLlE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hhJN/2yDRlJ1qOdAIyyRp1YQk7JDG9NPoXJ3Ps9mTXNVww/WPDBulonK0HryJ9ff3
-         3sjdX3XRGy9wOA64lTrKlGbshb3iyGzEluPzS/xQexsjLZXl67tJvBch1bxdLRK0vH
-         gzodJO7gnnFfCUUy6Yah8Csx6bJNmYXTl3fV7BlI=
+        b=WOHlz6GofkNFb0tHrIHBv7kv9UySeOgT7wp+W3KCP0xEtO60w63j3Y06EA99BeSym
+         si43n6cYSvL0C2bKQ4GtnY/2HkaWMstv1pAhTvMhkGMbUj/+Y3XZ3oH+2NV4VSlyos
+         5HM/ZO0+B7TEdjLsoqKFp7lEEjAUcB88yfhyToTU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>, linux-tegra@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.4 34/56] iommu/tegra-smmu: Fix invalid ASID bits on Tegra30/114
-Date:   Sat,  1 Jun 2019 09:25:38 -0400
-Message-Id: <20190601132600.27427-34-sashal@kernel.org>
+Cc:     Enrico Granata <egranata@chromium.org>,
+        Jett Rink <jettrink@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 30/56] platform/chrome: cros_ec_proto: check for NULL transfer function
+Date:   Sat,  1 Jun 2019 09:25:34 -0400
+Message-Id: <20190601132600.27427-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132600.27427-1-sashal@kernel.org>
 References: <20190601132600.27427-1-sashal@kernel.org>
@@ -61,83 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Enrico Granata <egranata@chromium.org>
 
-[ Upstream commit 43a0541e312f7136e081e6bf58f6c8a2e9672688 ]
+[ Upstream commit 94d4e7af14a1170e34cf082d92e4c02de9e9fb88 ]
 
-Both Tegra30 and Tegra114 have 4 ASID's and the corresponding bitfield of
-the TLB_FLUSH register differs from later Tegra generations that have 128
-ASID's.
+As new transfer mechanisms are added to the EC codebase, they may
+not support v2 of the EC protocol.
 
-In a result the PTE's are now flushed correctly from TLB and this fixes
-problems with graphics (randomly failing tests) on Tegra30.
+If the v3 initial handshake transfer fails, the kernel will try
+and call cmd_xfer as a fallback. If v2 is not supported, cmd_xfer
+will be NULL, and the code will end up causing a kernel panic.
 
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Add a check for NULL before calling the transfer function, along
+with a helpful comment explaining how one might end up in this
+situation.
+
+Signed-off-by: Enrico Granata <egranata@chromium.org>
+Reviewed-by: Jett Rink <jettrink@chromium.org>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/tegra-smmu.c | 25 ++++++++++++++++++-------
- 1 file changed, 18 insertions(+), 7 deletions(-)
+ drivers/platform/chrome/cros_ec_proto.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
-index 9305964250aca..c4eb293b15242 100644
---- a/drivers/iommu/tegra-smmu.c
-+++ b/drivers/iommu/tegra-smmu.c
-@@ -91,7 +91,6 @@ static inline u32 smmu_readl(struct tegra_smmu *smmu, unsigned long offset)
- #define  SMMU_TLB_FLUSH_VA_MATCH_ALL     (0 << 0)
- #define  SMMU_TLB_FLUSH_VA_MATCH_SECTION (2 << 0)
- #define  SMMU_TLB_FLUSH_VA_MATCH_GROUP   (3 << 0)
--#define  SMMU_TLB_FLUSH_ASID(x)          (((x) & 0x7f) << 24)
- #define  SMMU_TLB_FLUSH_VA_SECTION(addr) ((((addr) & 0xffc00000) >> 12) | \
- 					  SMMU_TLB_FLUSH_VA_MATCH_SECTION)
- #define  SMMU_TLB_FLUSH_VA_GROUP(addr)   ((((addr) & 0xffffc000) >> 12) | \
-@@ -194,8 +193,12 @@ static inline void smmu_flush_tlb_asid(struct tegra_smmu *smmu,
- {
- 	u32 value;
+diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
+index a0b8c8a8c3231..5c285f2b3a650 100644
+--- a/drivers/platform/chrome/cros_ec_proto.c
++++ b/drivers/platform/chrome/cros_ec_proto.c
+@@ -66,6 +66,17 @@ static int send_command(struct cros_ec_device *ec_dev,
+ 	else
+ 		xfer_fxn = ec_dev->cmd_xfer;
  
--	value = SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_ASID(asid) |
--		SMMU_TLB_FLUSH_VA_MATCH_ALL;
-+	if (smmu->soc->num_asids == 4)
-+		value = (asid & 0x3) << 29;
-+	else
-+		value = (asid & 0x7f) << 24;
++	if (!xfer_fxn) {
++		/*
++		 * This error can happen if a communication error happened and
++		 * the EC is trying to use protocol v2, on an underlying
++		 * communication mechanism that does not support v2.
++		 */
++		dev_err_once(ec_dev->dev,
++			     "missing EC transfer API, cannot send command\n");
++		return -EIO;
++	}
 +
-+	value |= SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_VA_MATCH_ALL;
- 	smmu_writel(smmu, value, SMMU_TLB_FLUSH);
- }
- 
-@@ -205,8 +208,12 @@ static inline void smmu_flush_tlb_section(struct tegra_smmu *smmu,
- {
- 	u32 value;
- 
--	value = SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_ASID(asid) |
--		SMMU_TLB_FLUSH_VA_SECTION(iova);
-+	if (smmu->soc->num_asids == 4)
-+		value = (asid & 0x3) << 29;
-+	else
-+		value = (asid & 0x7f) << 24;
-+
-+	value |= SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_VA_SECTION(iova);
- 	smmu_writel(smmu, value, SMMU_TLB_FLUSH);
- }
- 
-@@ -216,8 +223,12 @@ static inline void smmu_flush_tlb_group(struct tegra_smmu *smmu,
- {
- 	u32 value;
- 
--	value = SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_ASID(asid) |
--		SMMU_TLB_FLUSH_VA_GROUP(iova);
-+	if (smmu->soc->num_asids == 4)
-+		value = (asid & 0x3) << 29;
-+	else
-+		value = (asid & 0x7f) << 24;
-+
-+	value |= SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_VA_GROUP(iova);
- 	smmu_writel(smmu, value, SMMU_TLB_FLUSH);
- }
- 
+ 	ret = (*xfer_fxn)(ec_dev, msg);
+ 	if (msg->result == EC_RES_IN_PROGRESS) {
+ 		int i;
 -- 
 2.20.1
 
