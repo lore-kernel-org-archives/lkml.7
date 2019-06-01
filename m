@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5A8C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CFDC28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34E40272A3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:19:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADDB0272C5
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:19:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395170;
-	bh=el4UumI+dWZf9QEDr98NW9WMPFeWsO8jktub8fr2lCg=;
+	s=default; t=1559395173;
+	bh=6bKgTT5gnfcJKsWHUTECbQrducSnrKEOJSsgdtKBWCw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q+VYkdCxSCDQvItykBdkhzQFSmpS4t130PMEqL38U/qwB84koz0+ACWiGaTbaqaFF
-	 q4x2ybSTF3Ubw+QOQfFu1QYnNKMfnm9rnh24RTJ7zPzon5uIV5YjJPgn2mj/t64SEd
-	 DIg6hqxFp/7oV1b3aEZuiIorydQh2ZpZ7XtY2UVs=
+	b=eYO01T/BawmUi33FRWdufKJmbhguequaFBXdy54pER4H/U45CUGCVjtoYfqpbqNXT
+	 zqA2gq4xyXVk6fTkTswdrMLYz3Yza46aNqm+CfVHxg5k72yFgUyUJg0jAI88rUJI7I
+	 cmGOJWzx2+BldSer4323e6JFHGypfc/X4zw2lgII=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727457AbfFANTY (ORCPT
+        id S1727499AbfFANTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:19:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46520 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:19:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728196AbfFANTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:19:21 -0400
+        id S1728220AbfFANTX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:19:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC5F7272B3;
-        Sat,  1 Jun 2019 13:19:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D3F6272AC;
+        Sat,  1 Jun 2019 13:19:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395160;
-        bh=el4UumI+dWZf9QEDr98NW9WMPFeWsO8jktub8fr2lCg=;
+        s=default; t=1559395163;
+        bh=6bKgTT5gnfcJKsWHUTECbQrducSnrKEOJSsgdtKBWCw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QcGxe4M+8DiBfPv77lKVhTxhyGyHy67VdLZsSEY65pFiriXs0FeNqFEWHyAB01kX0
-         mL/mJ899ZOuDEmIAi28py7HhIsPPkSiFv7eKlNs//ucZ2EMLeBkjQVJXuIAqSNCddv
-         ahIiqMPHiO//C0cI2LBtM2pvfNr5FxXljzAVN2XI=
+        b=kEK97Hk4roJhvSPyrBIjEV5QLR5hVXQx3fDDFd6IJHJH9/5A4NcDhxSlvEJgeibOl
+         kBZSPtIsDYxH5PFxBXmwyZvTpB0jAvfAknd18uL7RvnI3hkkF2GU21F63HKoURLUKh
+         RQGGGYaiTPcnrZR55PSkfGucUNam+QNIZZxrpMAo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 072/186] netfilter: nf_tables: fix base chain stat rcu_dereference usage
-Date:   Sat,  1 Jun 2019 09:14:48 -0400
-Message-Id: <20190601131653.24205-72-sashal@kernel.org>
+Cc:     Georg Hofmann <georg@hofmannsweb.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 074/186] watchdog: imx2_wdt: Fix set_timeout for big timeout values
+Date:   Sat,  1 Jun 2019 09:14:50 -0400
+Message-Id: <20190601131653.24205-74-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131653.24205-1-sashal@kernel.org>
 References: <20190601131653.24205-1-sashal@kernel.org>
@@ -61,77 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Georg Hofmann <georg@hofmannsweb.com>
 
-[ Upstream commit edbd82c5fba009f68d20b5db585be1e667c605f6 ]
+[ Upstream commit b07e228eee69601addba98b47b1a3850569e5013 ]
 
-Following splat gets triggered when nfnetlink monitor is running while
-xtables-nft selftests are running:
+The documentated behavior is: if max_hw_heartbeat_ms is implemented, the
+minimum of the set_timeout argument and max_hw_heartbeat_ms should be used.
+This patch implements this behavior.
+Previously only the first 7bits were used and the input argument was
+returned.
 
-net/netfilter/nf_tables_api.c:1272 suspicious rcu_dereference_check() usage!
-other info that might help us debug this:
-
-1 lock held by xtables-nft-mul/27006:
- #0: 00000000e0f85be9 (&net->nft.commit_mutex){+.+.}, at: nf_tables_valid_genid+0x1a/0x50
-Call Trace:
- nf_tables_fill_chain_info.isra.45+0x6cc/0x6e0
- nf_tables_chain_notify+0xf8/0x1a0
- nf_tables_commit+0x165c/0x1740
-
-nf_tables_fill_chain_info() can be called both from dumps (rcu read locked)
-or from the transaction path if a userspace process subscribed to nftables
-notifications.
-
-In the 'table dump' case, rcu_access_pointer() cannot be used: We do not
-hold transaction mutex so the pointer can be NULLed right after the check.
-Just unconditionally fetch the value, then have the helper return
-immediately if its NULL.
-
-In the notification case we don't hold the rcu read lock, but updates are
-prevented due to transaction mutex. Use rcu_dereference_check() to make lockdep
-aware of this.
-
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Georg Hofmann <georg@hofmannsweb.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_tables_api.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/watchdog/imx2_wdt.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index 1606eaa5ae0da..aa5e7b00a581f 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -1190,6 +1190,9 @@ static int nft_dump_stats(struct sk_buff *skb, struct nft_stats __percpu *stats)
- 	u64 pkts, bytes;
- 	int cpu;
+diff --git a/drivers/watchdog/imx2_wdt.c b/drivers/watchdog/imx2_wdt.c
+index 2b52514eaa86a..7e7bdcbbc741b 100644
+--- a/drivers/watchdog/imx2_wdt.c
++++ b/drivers/watchdog/imx2_wdt.c
+@@ -178,8 +178,10 @@ static void __imx2_wdt_set_timeout(struct watchdog_device *wdog,
+ static int imx2_wdt_set_timeout(struct watchdog_device *wdog,
+ 				unsigned int new_timeout)
+ {
+-	__imx2_wdt_set_timeout(wdog, new_timeout);
++	unsigned int actual;
  
-+	if (!stats)
-+		return 0;
-+
- 	memset(&total, 0, sizeof(total));
- 	for_each_possible_cpu(cpu) {
- 		cpu_stats = per_cpu_ptr(stats, cpu);
-@@ -1247,6 +1250,7 @@ static int nf_tables_fill_chain_info(struct sk_buff *skb, struct net *net,
- 	if (nft_is_base_chain(chain)) {
- 		const struct nft_base_chain *basechain = nft_base_chain(chain);
- 		const struct nf_hook_ops *ops = &basechain->ops;
-+		struct nft_stats __percpu *stats;
- 		struct nlattr *nest;
- 
- 		nest = nla_nest_start(skb, NFTA_CHAIN_HOOK);
-@@ -1268,8 +1272,9 @@ static int nf_tables_fill_chain_info(struct sk_buff *skb, struct net *net,
- 		if (nla_put_string(skb, NFTA_CHAIN_TYPE, basechain->type->name))
- 			goto nla_put_failure;
- 
--		if (rcu_access_pointer(basechain->stats) &&
--		    nft_dump_stats(skb, rcu_dereference(basechain->stats)))
-+		stats = rcu_dereference_check(basechain->stats,
-+					      lockdep_commit_lock_is_held(net));
-+		if (nft_dump_stats(skb, stats))
- 			goto nla_put_failure;
- 	}
- 
++	actual = min(new_timeout, wdog->max_hw_heartbeat_ms * 1000);
++	__imx2_wdt_set_timeout(wdog, actual);
+ 	wdog->timeout = new_timeout;
+ 	return 0;
+ }
 -- 
 2.20.1
 
