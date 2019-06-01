@@ -2,92 +2,141 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D479C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 14:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43045C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 15:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1113627738
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 14:51:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1152326DCE
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 15:27:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.ca header.i=@yahoo.ca header.b="inLolirg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QqK/60vo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfFAOt5 (ORCPT
+        id S1726711AbfFAP1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 10:49:57 -0400
-Received: from sonic306-20.consmr.mail.gq1.yahoo.com ([98.137.68.83]:40857
-        "EHLO sonic306-20.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726149AbfFAOt5 (ORCPT
+        Sat, 1 Jun 2019 11:27:38 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:46909 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726149AbfFAP1h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 10:49:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.ca; s=s2048; t=1559400594; bh=+FzsEswF8TO/uXcnNYhQmpuXhgJ4Ib1a9HuuWhRst2M=; h=From:To:Cc:Subject:Date:From:Subject; b=inLolirgV5LNclRrIx8nzdggEuMyGfPUi3HjN7gCB+4lp7VLU78RORfFU7MCjfuWP0tzq+pfEdFaMcaLsO08BXWESlyENEg2QhJw1zwkSZFY0NruJhnzGee8Uzobc/dON4+y80QH+4Ei5+9H38YTUV9BpOG6NyEitCpr/QPy0WUH88j2SZa6nZl//Krl6pWkSEDqyx0caQn4e9uK/v8TB2FcQ4VVGHvzQJ7IfEt2TfmKLmp/SCBNhgHC8K1Zha9SaDkM1w66nWVflvWlikKrCEjuLoIvholXxI3oyUZWVyL30ArVzqPsY9B2Oz1K1oc07DXN13DIuWeSmicXw4vcJA==
-X-YMail-OSG: bs9eEw4VM1k_cUQemsl_R7K6eSi11LXPHCsKKbXcZ19749GV2DjRjlelFP0SS4N
- csgAxnXCLiGltmqAefoFiuIvU0mlxpBix7.oG2yBfRs6I10VjLnxbAeLvYdwAfNezE.TEKoMbG3W
- gR9.9tHD9lKe3mu7eOj9ewK20Fke7KnZZ9jgJPIk_9Q70AtHKBFpzzCVbM6OV4bDYWccxyOe5H8c
- Zo0UP0yOdNRHzNsLN5nK0xshAfXmuw0puDqctvl1PFVRqLTleOy0rh.fS4wGHPM0L5cwHJRb0ZuU
- 7VVgv.NFsYiWAFqfZiju7xDyEKM7RUurtF_g47lSNdYf4WSYzTsS_9YvNRhmMIDiOmPLldgpZlnn
- hkZNCh6J9HjqgjOXTsueyVhFULAfjafnktpyg3Ln5jz9YU8JlFatUcA6S6v8.GTI_CJDJM9j7Y4h
- WaykDdXiHb0i28nnVGGs8ytTKacjHAgzQbuMucY2KcQhrBPn0GRuUa0OftPVqUI0dMOiy4fIwiNB
- GRunGnDoVixRv8vOFGogdjbkW0nn4DaAs.pg2nM9dpWQSsT.H99SoRD7004I4q96uPvxUtM7qUaR
- sffA4AX4Y3qU20ixgw2VgdetGEDYTbW1RnphDhd_rlhiCAWDnwdbYzEH7Hwv10j5UzVyhy2GD8lS
- LwkDD3ofzt7Jw36r7Lo3E.t20tkE9hlbT5cDcJLbjKHJY337.jCJoeP..rmgYgr2mTk8Kw2UCx2.
- hXaYllIYahsElF8YsK_t_vcgO1rF2f8QUEntfp4cEQa4i83Ij8EC8tLJD463T5rVf6N.J5rWZ0LI
- adsxPXaLWO9Dno2hu4eckJ9CZbd516XgEXKp9Bh5iE67SeVvrGJJApOKHKwrwDofX3LcGgdw3ReK
- Hi_FslLLL1O0mtMeNPHTV5xnRL7y8a0_pArdmsNntccGHzCdNecXlf.JyMUyi7FeH_Z7Iz3e9KPR
- MmTEO.duYZ5gUORst73Wm0fnLYMpwetiMMM4BZ_YL6Pa.K1m0UmshtzLRpCc43LT2wd7rBfZi9.i
- Z6.Ns1ylT6nm2To23xxEIAUhnXHatoZLabsm20nl.PgBpQu8r5Dz3ax0o0D8QdD_zxf.KVoRT525
- oL7XQuTx0_mCyPF3s6BlHN7lDzfmdRaQIR_uQHqEOSOsuHqy_x6LFhcv.cQogvw5Hbk7AoPboUAw
- kil6h.l6yXZWM87MWGZys7_WAIRYU
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic306.consmr.mail.gq1.yahoo.com with HTTP; Sat, 1 Jun 2019 14:49:54 +0000
-Received: from CPE00fc8de26033-CM00fc8de26030.cpe.net.cable.rogers.com (EHLO localhost) ([99.228.156.240])
-          by smtp424.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 0c5696934456779ae32f2b5029b3dd5e;
-          Sat, 01 Jun 2019 14:49:52 +0000 (UTC)
-From:   "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
-To:     linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        tglx@linutronix.de
-Cc:     allison@lohutok.net, alexios.zavras@intel.com, swinslow@gmail.com,
-        rfontana@redhat.com, gregkh@linuxfoundation.org,
-        linux-spdx@vger.kernel.org, torvalds@linux-foundation.org,
-        "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
-Subject: [PATCH] crypto: ux500 - fix license comment syntax error
-Date:   Sat,  1 Jun 2019 10:49:43 -0400
-Message-Id: <20190601144943.126995-1-alex_y_xu@yahoo.ca>
-X-Mailer: git-send-email 2.21.0
+        Sat, 1 Jun 2019 11:27:37 -0400
+Received: by mail-pl1-f194.google.com with SMTP id e5so3478019pls.13;
+        Sat, 01 Jun 2019 08:27:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=XIj7YOEub6/JCzsqfFJlT7eLLCGSmwe1HtOY1YjxnSQ=;
+        b=QqK/60vo/jfvKUYQNFShV+4TE7taLKRU0t6RaGWKMP1yhJMs21nKP6NbTmhuyfsCdq
+         aV/9r/z7lNh3/NAFfO5wB3r0sz1zV+GZNmeUVX7fuzIR+rVVStmqwhJbXg4wf3Q/5Acc
+         tzPf4GhY3TjwiFiphKe+xrLSON7e/QG7VOrLcgS1q5HkKwuaqEnXnxhsTcA9niUFTvlt
+         ttaPmJL5J8kQf+L1SStF/oVJ52JCAybqRUVJGUDs6+raj8YDudTUicLYe/6n/EF99w4T
+         Fgq9ZGFTHYp19gx8gv5Irps3bw25UTaQ9M6qT0HGWKc4MlnpY3ciBlSgeLPT7d2P098K
+         L68g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=XIj7YOEub6/JCzsqfFJlT7eLLCGSmwe1HtOY1YjxnSQ=;
+        b=qouREPbrt+AvQEA5+/okPdliCZXqTztqNf9UmW/hbD1vT9u2RuQgVSdpLVRzynMXkG
+         b57lEQWCfY5YuVOkOv04P+kLszv3kAY5Z7lE7/5upQuH/pxXZ2nGY8RCvMr82b0/g7L8
+         xvqasHjduGrcwdePpmW6SXrdu0VsHg78/A7Uu0m7fOc/yeIGcCvmwUrPeSgTu5sU+CPO
+         5goS1ybynwkxnJGUAWPAPh8LBooIwQxS64GMXsmH1f4mJhmmGyLssWGuJcbIGdmV6lLb
+         c6YUcf90wtZ2zZppgNn0EGeb9IKQk8vCuPKGHn3+KOCXDuKfPOEf7D+LIhXLdAH+7kU1
+         F8ug==
+X-Gm-Message-State: APjAAAWU8D9v7RciOfQmYuI1lc1fq/cZEBGIdhnXHv44DYNRaZBzfjYE
+        7PtqcNJoPSIG5qgaEFpxYVU=
+X-Google-Smtp-Source: APXvYqwkq5LWhccgJndQpLkagphyyBfTQ93qwaTbUW8HtO/ujVRSt7L4XOPHl57FC2oeddhetk1w6A==
+X-Received: by 2002:a17:902:9006:: with SMTP id a6mr12808271plp.305.1559402857033;
+        Sat, 01 Jun 2019 08:27:37 -0700 (PDT)
+Received: from t-1000 (c-98-210-58-162.hsd1.ca.comcast.net. [98.210.58.162])
+        by smtp.gmail.com with ESMTPSA id y12sm7521851pgi.10.2019.06.01.08.27.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 01 Jun 2019 08:27:36 -0700 (PDT)
+Date:   Sat, 1 Jun 2019 08:27:34 -0700
+From:   Shobhit Kukreti <shobhitkukreti@gmail.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Shunqian Zheng <zhengsq@rock-chips.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     shobhitkukreti@gmail.com
+Subject: [PATCH] media: i2c: Fix Unnecessary Semicolon Warning Reported by
+ coccicheck
+Message-ID: <20190601152731.GA15956@t-1000>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Causes error: drivers/crypto/ux500/cryp/Makefile:5: *** missing
-separator.  Stop.
+	Removed the warning from the following files:
 
-Fixes: af873fcecef5 ("treewide: Replace GPLv2 boilerplate/reference with
-SPDX - rule 194")
+	drivers/media/i2c/ov13858.c
+	drivers/media/i2c/ov2685.c
+	drivers/media/i2c/ov5695.c
 
-Signed-off-by: Alex Xu (Hello71) <alex_y_xu@yahoo.ca>
+Signed-off-by: Shobhit Kukreti <shobhitkukreti@gmail.com>
 ---
- drivers/crypto/ux500/cryp/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/i2c/ov13858.c | 4 ++--
+ drivers/media/i2c/ov2685.c  | 2 +-
+ drivers/media/i2c/ov5695.c  | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/crypto/ux500/cryp/Makefile b/drivers/crypto/ux500/cryp/Makefile
-index a90b50597e5c..3e67531f484c 100644
---- a/drivers/crypto/ux500/cryp/Makefile
-+++ b/drivers/crypto/ux500/cryp/Makefile
-@@ -2,7 +2,7 @@
- #/*
- # * Copyright (C) ST-Ericsson SA 2010
- # * Author: shujuan.chen@stericsson.com for ST-Ericsson.
-- */
-+# */
+diff --git a/drivers/media/i2c/ov13858.c b/drivers/media/i2c/ov13858.c
+index 45bb872..aac6f77 100644
+--- a/drivers/media/i2c/ov13858.c
++++ b/drivers/media/i2c/ov13858.c
+@@ -1224,7 +1224,7 @@ static int ov13858_set_ctrl(struct v4l2_ctrl *ctrl)
+ 					 ov13858->exposure->minimum,
+ 					 max, ov13858->exposure->step, max);
+ 		break;
+-	};
++	}
  
- ccflags-$(CONFIG_CRYPTO_DEV_UX500_DEBUG) += -DDEBUG
+ 	/*
+ 	 * Applying V4L2 control value only happens
+@@ -1262,7 +1262,7 @@ static int ov13858_set_ctrl(struct v4l2_ctrl *ctrl)
+ 			 "ctrl(id:0x%x,val:0x%x) is not handled\n",
+ 			 ctrl->id, ctrl->val);
+ 		break;
+-	};
++	}
+ 
+ 	pm_runtime_put(&client->dev);
+ 
+diff --git a/drivers/media/i2c/ov2685.c b/drivers/media/i2c/ov2685.c
+index 98a1f2e3..6814583 100644
+--- a/drivers/media/i2c/ov2685.c
++++ b/drivers/media/i2c/ov2685.c
+@@ -576,7 +576,7 @@ static int ov2685_set_ctrl(struct v4l2_ctrl *ctrl)
+ 			 __func__, ctrl->id, ctrl->val);
+ 		ret = -EINVAL;
+ 		break;
+-	};
++	}
+ 
+ 	pm_runtime_put(&client->dev);
+ 
+diff --git a/drivers/media/i2c/ov5695.c b/drivers/media/i2c/ov5695.c
+index 5d107c5..e65a943 100644
+--- a/drivers/media/i2c/ov5695.c
++++ b/drivers/media/i2c/ov5695.c
+@@ -1143,7 +1143,7 @@ static int ov5695_set_ctrl(struct v4l2_ctrl *ctrl)
+ 		dev_warn(&client->dev, "%s Unhandled id:0x%x, val:0x%x\n",
+ 			 __func__, ctrl->id, ctrl->val);
+ 		break;
+-	};
++	}
+ 
+ 	pm_runtime_put(&client->dev);
  
 -- 
-2.21.0
+2.7.4
 
