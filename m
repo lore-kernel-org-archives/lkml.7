@@ -4,86 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC75C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54AD3C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C45B2765D
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:40:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D5782765D
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:40:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396448;
-	bh=ScgJYkGTk/PhPT3kjMb9ADqbqdufWP7M/9PRoLC1WvQ=;
+	s=default; t=1559396456;
+	bh=s+Z98v9ivrDolaDrRNoRrO6t6pmUb/gBb80oUlBT2RM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N8YjznwxOmeUDA0NSaGsmDZEk6SyPEcJksoZ4Q2+v7EuqTzv09vUN71N9VjIrEoAs
-	 anrncvVtJVjFzGB2zkLkMqYIWDIPDbtICtIC/b3OaqnAlKu1e1DlzHMapN18CPkRK0
-	 2THktKmV1J2uPUtM1aOQkN97oMcvpW7Ot9wDHXzA=
+	b=IwL0uA6J1k4xEI++mKnakqPUmLV7uGyBWMHr2FtRAQlaEFm2aOsKEE0RvqvfmKiYC
+	 6fHw+wCJoSa55+HuTsMRcLVkX0mr6EQyj+7xZliEnU6D/55DN1I5ldFIsrRUfYO6Ki
+	 uN6Tdo+rme1tpgolhjCH4+zQpkM9SBiF0PoUFThU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbfFANkr (ORCPT
+        id S1728784AbfFANkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:40:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47358 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:40:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727665AbfFANUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:20:18 -0400
+        id S1728248AbfFANT6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:19:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04F89272E6;
-        Sat,  1 Jun 2019 13:20:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D76B272B9;
+        Sat,  1 Jun 2019 13:19:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395217;
-        bh=ScgJYkGTk/PhPT3kjMb9ADqbqdufWP7M/9PRoLC1WvQ=;
+        s=default; t=1559395197;
+        bh=s+Z98v9ivrDolaDrRNoRrO6t6pmUb/gBb80oUlBT2RM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mHDCelFL7I+6zvUsFsCkioMT7E3sWaMnhhGNDf34Bm1e1EjH5qe40sRJ5aZsMMAnb
-         yG94GWrBuY9ZOCYS2nVVB/WgikA1FapTtovCHV3usFMEFsekm+jY2CoGr5T9dtLaW/
-         DBHW4uDn36qp2LQ/0evnv0SGkq2jFFVUd1tKyW0g=
+        b=Z3HaZkd6351hnunqMx+53jdQmH/G+1wACj7oOuUqe6FCjA03UUammvsIvTqRYXliq
+         ojuE3VgarTpg97By8+Ulm92q9s9wLtMCdP4PZaTmcAiwk8LkpW8f6pPAHKWCH0z77W
+         fYYIGonZSEtkLN8yirqopZx7mOsxUjJIbqw+d2d0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Hildenbrand <david@redhat.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Wei Yang <richard.weiyang@gmail.com>, Qian Cai <cai@lca.pw>,
-        Arun KS <arunks@codeaurora.org>,
-        Mathieu Malaterre <malat@debian.org>,
-        Andrew Banman <andrew.banman@hpe.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mike Travis <mike.travis@hpe.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rich Felker <dalias@libc.org>, Rob Herring <robh@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 5.0 012/173] mm/memory_hotplug: release memory resource after arch_remove_memory()
-Date:   Sat,  1 Jun 2019 09:16:44 -0400
-Message-Id: <20190601131934.25053-12-sashal@kernel.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.0 008/173] drm/pl111: Initialize clock spinlock early
+Date:   Sat,  1 Jun 2019 09:16:40 -0400
+Message-Id: <20190601131934.25053-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131934.25053-1-sashal@kernel.org>
 References: <20190601131934.25053-1-sashal@kernel.org>
@@ -96,178 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Guenter Roeck <linux@roeck-us.net>
 
-[ Upstream commit d9eb1417c77df7ce19abd2e41619e9dceccbdf2a ]
+[ Upstream commit 3e01ae2612bdd7975c74ec7123d7f8f5e6eed795 ]
 
-Patch series "mm/memory_hotplug: Better error handling when removing
-memory", v1.
+The following warning is seen on systems with broken clock divider.
 
-Error handling when removing memory is somewhat messed up right now.  Some
-errors result in warnings, others are completely ignored.  Memory unplug
-code can essentially not deal with errors properly as of now.
-remove_memory() will never fail.
+INFO: trying to register non-static key.
+the code is fine but needs lockdep annotation.
+turning off the locking correctness validator.
+CPU: 0 PID: 1 Comm: swapper Not tainted 5.1.0-09698-g1fb3b52 #1
+Hardware name: ARM Integrator/CP (Device Tree)
+[<c0011be8>] (unwind_backtrace) from [<c000ebb8>] (show_stack+0x10/0x18)
+[<c000ebb8>] (show_stack) from [<c07d3fd0>] (dump_stack+0x18/0x24)
+[<c07d3fd0>] (dump_stack) from [<c0060d48>] (register_lock_class+0x674/0x6f8)
+[<c0060d48>] (register_lock_class) from [<c005de2c>]
+	(__lock_acquire+0x68/0x2128)
+[<c005de2c>] (__lock_acquire) from [<c0060408>] (lock_acquire+0x110/0x21c)
+[<c0060408>] (lock_acquire) from [<c07f755c>] (_raw_spin_lock+0x34/0x48)
+[<c07f755c>] (_raw_spin_lock) from [<c0536c8c>]
+	(pl111_display_enable+0xf8/0x5fc)
+[<c0536c8c>] (pl111_display_enable) from [<c0502f54>]
+	(drm_atomic_helper_commit_modeset_enables+0x1ec/0x244)
 
-We have basically two choices:
-1. Allow arch_remov_memory() and friends to fail, propagating errors via
-   remove_memory(). Might be problematic (e.g. DIMMs consisting of multiple
-   pieces added/removed separately).
-2. Don't allow the functions to fail, handling errors in a nicer way.
+Since commit eedd6033b4c8 ("drm/pl111: Support variants with broken clock
+divider"), the spinlock is not initialized if the clock divider is broken.
+Initialize it earlier to fix the problem.
 
-It seems like most errors that can theoretically happen are really corner
-cases and mostly theoretical (e.g.  "section not valid").  However e.g.
-aborting removal of sections while all callers simply continue in case of
-errors is not nice.
-
-If we can gurantee that removal of memory always works (and WARN/skip in
-case of theoretical errors so we can figure out what is going on), we can
-go ahead and implement better error handling when adding memory.
-
-E.g. via add_memory():
-
-arch_add_memory()
-ret = do_stuff()
-if (ret) {
-	arch_remove_memory();
-	goto error;
-}
-
-Handling here that arch_remove_memory() might fail is basically
-impossible.  So I suggest, let's avoid reporting errors while removing
-memory, warning on theoretical errors instead and continuing instead of
-aborting.
-
-This patch (of 4):
-
-__add_pages() doesn't add the memory resource, so __remove_pages()
-shouldn't remove it.  Let's factor it out.  Especially as it is a special
-case for memory used as system memory, added via add_memory() and friends.
-
-We now remove the resource after removing the sections instead of doing it
-the other way around.  I don't think this change is problematic.
-
-add_memory()
-	register memory resource
-	arch_add_memory()
-
-remove_memory
-	arch_remove_memory()
-	release memory resource
-
-While at it, explain why we ignore errors and that it only happeny if
-we remove memory in a different granularity as we added it.
-
-[david@redhat.com: fix printk warning]
-  Link: http://lkml.kernel.org/r/20190417120204.6997-1-david@redhat.com
-Link: http://lkml.kernel.org/r/20190409100148.24703-2-david@redhat.com
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Wei Yang <richard.weiyang@gmail.com>
-Cc: Qian Cai <cai@lca.pw>
-Cc: Arun KS <arunks@codeaurora.org>
-Cc: Mathieu Malaterre <malat@debian.org>
-Cc: Andrew Banman <andrew.banman@hpe.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Mike Travis <mike.travis@hpe.com>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Oscar Salvador <osalvador@suse.com>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Rich Felker <dalias@libc.org>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Stefan Agner <stefan@agner.ch>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: eedd6033b4c8 ("drm/pl111: Support variants with broken clock divider")
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/1557758781-23586-1-git-send-email-linux@roeck-us.net
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/memory_hotplug.c | 35 +++++++++++++++++++++--------------
- 1 file changed, 21 insertions(+), 14 deletions(-)
+ drivers/gpu/drm/pl111/pl111_display.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 7493f50ee8800..e06e7a89d0e5b 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -559,20 +559,6 @@ int __remove_pages(struct zone *zone, unsigned long phys_start_pfn,
- 	if (is_dev_zone(zone)) {
- 		if (altmap)
- 			map_offset = vmem_altmap_offset(altmap);
--	} else {
--		resource_size_t start, size;
--
--		start = phys_start_pfn << PAGE_SHIFT;
--		size = nr_pages * PAGE_SIZE;
--
--		ret = release_mem_region_adjustable(&iomem_resource, start,
--					size);
--		if (ret) {
--			resource_size_t endres = start + size - 1;
--
--			pr_warn("Unable to release resource <%pa-%pa> (%d)\n",
--					&start, &endres, ret);
--		}
+diff --git a/drivers/gpu/drm/pl111/pl111_display.c b/drivers/gpu/drm/pl111/pl111_display.c
+index 754f6b25f2652..6d9f78612deeb 100644
+--- a/drivers/gpu/drm/pl111/pl111_display.c
++++ b/drivers/gpu/drm/pl111/pl111_display.c
+@@ -531,14 +531,15 @@ pl111_init_clock_divider(struct drm_device *drm)
+ 		dev_err(drm->dev, "CLCD: unable to get clcdclk.\n");
+ 		return PTR_ERR(parent);
  	}
- 
- 	clear_zone_contiguous(zone);
-@@ -1828,6 +1814,26 @@ void try_offline_node(int nid)
- }
- EXPORT_SYMBOL(try_offline_node);
- 
-+static void __release_memory_resource(resource_size_t start,
-+				      resource_size_t size)
-+{
-+	int ret;
 +
-+	/*
-+	 * When removing memory in the same granularity as it was added,
-+	 * this function never fails. It might only fail if resources
-+	 * have to be adjusted or split. We'll ignore the error, as
-+	 * removing of memory cannot fail.
-+	 */
-+	ret = release_mem_region_adjustable(&iomem_resource, start, size);
-+	if (ret) {
-+		resource_size_t endres = start + size - 1;
++	spin_lock_init(&priv->tim2_lock);
 +
-+		pr_warn("Unable to release resource <%pa-%pa> (%d)\n",
-+			&start, &endres, ret);
-+	}
-+}
-+
- /**
-  * remove_memory
-  * @nid: the node ID
-@@ -1862,6 +1868,7 @@ void __ref __remove_memory(int nid, u64 start, u64 size)
- 	memblock_remove(start, size);
+ 	/* If the clock divider is broken, use the parent directly */
+ 	if (priv->variant->broken_clockdivider) {
+ 		priv->clk = parent;
+ 		return 0;
+ 	}
+ 	parent_name = __clk_get_name(parent);
+-
+-	spin_lock_init(&priv->tim2_lock);
+ 	div->init = &init;
  
- 	arch_remove_memory(nid, start, size, NULL);
-+	__release_memory_resource(start, size);
- 
- 	try_offline_node(nid);
- 
+ 	ret = devm_clk_hw_register(drm->dev, div);
 -- 
 2.20.1
 
