@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28CA1C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E36EC28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E93EF273CB
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:27:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE98D273D5
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:27:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395624;
-	bh=Y/+Qb5iD+NbGfigAdcJh/DDFmWZpuiR+gDcuExZeFrI=;
+	s=default; t=1559395632;
+	bh=8dJthh1jYsngYIJ74T3O79DJE0/Xj/gr+R9BWBUL8gI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yw88jHjZJZfWhVdDzSruLQ93QC9uJrlB1ewl9B+WCVKIBD+67uI23zCsWmauO08x/
-	 fiMU+np8D8PKMB/68yuMs7RFQY1UzXdzpL1AfMNBAKQX4C/ibB+12/ba5UsNW7UoLj
-	 E+n5bwzCWCwikNmZGoCJixp0fKxVNo9TRW+mKaro=
+	b=DhqCrB/Gghh1bpXFhp8bO8SqBt9Ys0jZ58ldQxydrIxeCt55NzEFbjp6kNmgKG35Z
+	 LEIaknxEcij644N8Gd2wtoDxt3kTyQ+s9iEgJhbmZ+1cz/LSmAZbaT9PoppBfELSrs
+	 6QIB+QZ6e3HyquDE94lXjHUH9f/gh16Vl3Wp4M7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729899AbfFAN1D (ORCPT
+        id S1729563AbfFAN1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:27:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57520 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:27:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729231AbfFAN07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:26:59 -0400
+        id S1728169AbfFAN1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:27:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FBB6273CD;
-        Sat,  1 Jun 2019 13:26:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F68E273CB;
+        Sat,  1 Jun 2019 13:27:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395619;
-        bh=Y/+Qb5iD+NbGfigAdcJh/DDFmWZpuiR+gDcuExZeFrI=;
+        s=default; t=1559395625;
+        bh=8dJthh1jYsngYIJ74T3O79DJE0/Xj/gr+R9BWBUL8gI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l9X3qUcBLTMWn25dwRxRtzJmpyhoAZAMV228WIIHWwBU80zmWsNYzN9JflzL2WCp8
-         qz9B7Q5xvVbrMhlMyzD24umX9ZEGlMudn8cCijIRKPp61DKsuhk6JzTteTCLc3N9NK
-         6NA8L1NqiPNNH+ldh9rMEZgwZd0KdeaLFfOpXBeI=
+        b=LYWQApqnLTC9qgr+xT2ocmHVtgLxAz9de3iN/SXsm+NfU01/VNcHVytZtQoDnNmft
+         IdKf0dzUWlSqAg2Ux7pnozO1L4Is1zugq2SEd/FS+v35+vdJ69UEeTGEzrSscGjAAw
+         GYejvMfDwACv8Lr1EgSeDQ0Hr3whOdv44Btkm8+s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiufei Xue <jiufei.xue@linux.alibaba.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 33/56] fbdev: fix WARNING in __alloc_pages_nodemask bug
-Date:   Sat,  1 Jun 2019 09:25:37 -0400
-Message-Id: <20190601132600.27427-33-sashal@kernel.org>
+Cc:     Yufen Yu <yuyufen@huawei.com>, Xiao Ni <xni@redhat.com>,
+        NeilBrown <neilb@suse.com>, Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 38/56] md: add mddev->pers to avoid potential NULL pointer dereference
+Date:   Sat,  1 Jun 2019 09:25:42 -0400
+Message-Id: <20190601132600.27427-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132600.27427-1-sashal@kernel.org>
 References: <20190601132600.27427-1-sashal@kernel.org>
@@ -60,53 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiufei Xue <jiufei.xue@linux.alibaba.com>
+From: Yufen Yu <yuyufen@huawei.com>
 
-[ Upstream commit 8c40292be9169a9cbe19aadd1a6fc60cbd1af82f ]
+[ Upstream commit ee37e62191a59d253fc916b9fc763deb777211e2 ]
 
-Syzkaller hit 'WARNING in __alloc_pages_nodemask' bug.
+When doing re-add, we need to ensure rdev->mddev->pers is not NULL,
+which can avoid potential NULL pointer derefence in fallowing
+add_bound_rdev().
 
-WARNING: CPU: 1 PID: 1473 at mm/page_alloc.c:4377
-__alloc_pages_nodemask+0x4da/0x2130
-Kernel panic - not syncing: panic_on_warn set ...
-
-Call Trace:
- alloc_pages_current+0xb1/0x1e0
- kmalloc_order+0x1f/0x60
- kmalloc_order_trace+0x1d/0x120
- fb_alloc_cmap_gfp+0x85/0x2b0
- fb_set_user_cmap+0xff/0x370
- do_fb_ioctl+0x949/0xa20
- fb_ioctl+0xdd/0x120
- do_vfs_ioctl+0x186/0x1070
- ksys_ioctl+0x89/0xa0
- __x64_sys_ioctl+0x74/0xb0
- do_syscall_64+0xc8/0x550
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-This is a warning about order >= MAX_ORDER and the order is from
-userspace ioctl. Add flag __NOWARN to silence this warning.
-
-Signed-off-by: Jiufei Xue <jiufei.xue@linux.alibaba.com>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Fixes: a6da4ef85cef ("md: re-add a failed disk")
+Cc: Xiao Ni <xni@redhat.com>
+Cc: NeilBrown <neilb@suse.com>
+Cc: <stable@vger.kernel.org> # 4.4+
+Reviewed-by: NeilBrown <neilb@suse.com>
+Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/core/fbcmap.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/md/md.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/video/fbdev/core/fbcmap.c b/drivers/video/fbdev/core/fbcmap.c
-index 68a113594808f..2811c4afde01c 100644
---- a/drivers/video/fbdev/core/fbcmap.c
-+++ b/drivers/video/fbdev/core/fbcmap.c
-@@ -94,6 +94,8 @@ int fb_alloc_cmap_gfp(struct fb_cmap *cmap, int len, int transp, gfp_t flags)
- 	int size = len * sizeof(u16);
- 	int ret = -ENOMEM;
- 
-+	flags |= __GFP_NOWARN;
-+
- 	if (cmap->len != len) {
- 		fb_dealloc_cmap(cmap);
- 		if (!len)
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 07f307402351b..f71cca28dddac 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -2690,8 +2690,10 @@ state_store(struct md_rdev *rdev, const char *buf, size_t len)
+ 			err = 0;
+ 		}
+ 	} else if (cmd_match(buf, "re-add")) {
+-		if (test_bit(Faulty, &rdev->flags) && (rdev->raid_disk == -1) &&
+-			rdev->saved_raid_disk >= 0) {
++		if (!rdev->mddev->pers)
++			err = -EINVAL;
++		else if (test_bit(Faulty, &rdev->flags) && (rdev->raid_disk == -1) &&
++				rdev->saved_raid_disk >= 0) {
+ 			/* clear_bit is performed _after_ all the devices
+ 			 * have their local Faulty bit cleared. If any writes
+ 			 * happen in the meantime in the local node, they
 -- 
 2.20.1
 
