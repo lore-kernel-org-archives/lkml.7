@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC45C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 200B3C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A92C62742F
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:29:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEB2627456
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:29:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395771;
-	bh=jh4k3ff9Qzzy6TgrwDRGZoaobI4tCQlVDN3izfiOQP0=;
+	s=default; t=1559395778;
+	bh=YE2Axna26BxbOj4bYB4bN0rPCd2ystqjbVgrX3oPqMY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ld/EPE7YwpKM7Z5id/3ct65bNhO3fx++TvodiU3UxgcKYlBDjSKhxFTCeCfkxcsDH
-	 ZMr5n1/52iP1PXp/BZiS08pN4o/Nk0V0mMlw4V4fOnshjyg4Ny0+cdMBJvtMRTKNXB
-	 B5z1KrmRZXC+jb5TeXnxgXwmULKdSL89NB87a+CE=
+	b=xkN1H1dgjUJamS9ApfBaeI8bmBLZKYvcldMR/FKPCxbvS7cUONZS91pjmGUx8YD+N
+	 Nsq3/Q5TFkxena5f2uZeO5/HAWeJTP0uHoWmafiU5FwXgREQ8lb+y4Z3xmd1myUwhG
+	 lS7oL1H60MK0mlkinhQYJ5lwXvCNxegwwqX7NNpA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729834AbfFAN3a (ORCPT
+        id S1729867AbfFAN0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:29:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57374 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:26:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729784AbfFAN0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:26:53 -0400
+        id S1729462AbfFAN0l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:26:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C09B7273B2;
-        Sat,  1 Jun 2019 13:26:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 745DC273C3;
+        Sat,  1 Jun 2019 13:26:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395612;
-        bh=jh4k3ff9Qzzy6TgrwDRGZoaobI4tCQlVDN3izfiOQP0=;
+        s=default; t=1559395601;
+        bh=YE2Axna26BxbOj4bYB4bN0rPCd2ystqjbVgrX3oPqMY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ajfrn+q0U2NzLeMdvsTK+8DXY5+2NFnlFQ5vhtCVh1l269HgTJ/lk0O7JVovrmbwK
-         VVRmFYR+yPPb3yQWpACPyTZOJLtGg6X9vx2r+QKV+a6obRVwdDCyqVWNBttV6th6qW
-         fKH6q4dmkgHp8OK5wB6OiALIXlkRqULUoP++Dkfg=
+        b=BEaP8W/3kAWNVSK/VlvNSvu0WIhLjprNN6qIRmzctbNJYqo9uSjei7LCWr1RJaWpZ
+         Lt19B0Ykg4V557ALvLuQWHjEk+TRkHIsm+J+JxyiZlyu4JDkcdxnfgSiNwh/EnbSrO
+         +NpcOwKkGOpCcFE1t4xyxITcyZPEtTfeEJKYSU3c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wenwen Wang <wang6495@umn.edu>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 29/56] x86/PCI: Fix PCI IRQ routing table memory leak
-Date:   Sat,  1 Jun 2019 09:25:33 -0400
-Message-Id: <20190601132600.27427-29-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>,
+        Liwei Song <liwei.song@windriver.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 20/56] ALSA: hda - Register irq handler after the chip initialization
+Date:   Sat,  1 Jun 2019 09:25:24 -0400
+Message-Id: <20190601132600.27427-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132600.27427-1-sashal@kernel.org>
 References: <20190601132600.27427-1-sashal@kernel.org>
@@ -61,67 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wang6495@umn.edu>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit ea094d53580f40c2124cef3d072b73b2425e7bfd ]
+[ Upstream commit f495222e28275222ab6fd93813bd3d462e16d340 ]
 
-In pcibios_irq_init(), the PCI IRQ routing table 'pirq_table' is first
-found through pirq_find_routing_table().  If the table is not found and
-CONFIG_PCI_BIOS is defined, the table is then allocated in
-pcibios_get_irq_routing_table() using kmalloc().  Later, if the I/O APIC is
-used, this table is actually not used.  In that case, the allocated table
-is not freed, which is a memory leak.
+Currently the IRQ handler in HD-audio controller driver is registered
+before the chip initialization.  That is, we have some window opened
+between the azx_acquire_irq() call and the CORB/RIRB setup.  If an
+interrupt is triggered in this small window, the IRQ handler may
+access to the uninitialized RIRB buffer, which leads to a NULL
+dereference Oops.
 
-Free the allocated table if it is not used.
+This is usually no big problem since most of Intel chips do register
+the IRQ via MSI, and we've already fixed the order of the IRQ
+enablement and the CORB/RIRB setup in the former commit b61749a89f82
+("sound: enable interrupt after dma buffer initialization"), hence the
+IRQ won't be triggered in that room.  However, some platforms use a
+shared IRQ, and this may allow the IRQ trigger by another source.
 
-Signed-off-by: Wenwen Wang <wang6495@umn.edu>
-[bhelgaas: added Ingo's reviewed-by, since the only change since v1 was to
-use the irq_routing_table local variable name he suggested]
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Another possibility is the kdump environment: a stale interrupt might
+be present in there, the IRQ handler can be falsely triggered as well.
+
+For covering this small race, let's move the azx_acquire_irq() call
+after hda_intel_init_chip() call.  Although this is a bit radical
+change, it can cover more widely than checking the CORB/RIRB setup
+locally in the callee side.
+
+Reported-by: Liwei Song <liwei.song@windriver.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/pci/irq.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ sound/pci/hda/hda_intel.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/pci/irq.c b/arch/x86/pci/irq.c
-index 9bd1154847457..5f0e596b0519b 100644
---- a/arch/x86/pci/irq.c
-+++ b/arch/x86/pci/irq.c
-@@ -1117,6 +1117,8 @@ static struct dmi_system_id __initdata pciirq_dmi_table[] = {
- 
- void __init pcibios_irq_init(void)
- {
-+	struct irq_routing_table *rtable = NULL;
-+
- 	DBG(KERN_DEBUG "PCI: IRQ init\n");
- 
- 	if (raw_pci_ops == NULL)
-@@ -1127,8 +1129,10 @@ void __init pcibios_irq_init(void)
- 	pirq_table = pirq_find_routing_table();
- 
- #ifdef CONFIG_PCI_BIOS
--	if (!pirq_table && (pci_probe & PCI_BIOS_IRQ_SCAN))
-+	if (!pirq_table && (pci_probe & PCI_BIOS_IRQ_SCAN)) {
- 		pirq_table = pcibios_get_irq_routing_table();
-+		rtable = pirq_table;
-+	}
- #endif
- 	if (pirq_table) {
- 		pirq_peer_trick();
-@@ -1143,8 +1147,10 @@ void __init pcibios_irq_init(void)
- 		 * If we're using the I/O APIC, avoid using the PCI IRQ
- 		 * routing table
- 		 */
--		if (io_apic_assign_pci_irqs)
-+		if (io_apic_assign_pci_irqs) {
-+			kfree(rtable);
- 			pirq_table = NULL;
-+		}
+diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+index 74c9600876d68..ef8955abd9186 100644
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -1707,9 +1707,6 @@ static int azx_first_init(struct azx *chip)
+ 			chip->msi = 0;
  	}
  
- 	x86_init.pci.fixup_irqs();
+-	if (azx_acquire_irq(chip, 0) < 0)
+-		return -EBUSY;
+-
+ 	pci_set_master(pci);
+ 	synchronize_irq(bus->irq);
+ 
+@@ -1820,6 +1817,9 @@ static int azx_first_init(struct azx *chip)
+ 		return -ENODEV;
+ 	}
+ 
++	if (azx_acquire_irq(chip, 0) < 0)
++		return -EBUSY;
++
+ 	strcpy(card->driver, "HDA-Intel");
+ 	strlcpy(card->shortname, driver_short_names[chip->driver_type],
+ 		sizeof(card->shortname));
 -- 
 2.20.1
 
