@@ -6,79 +6,88 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52029C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 17:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22146C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 17:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 197A627747
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 17:35:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E655827751
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 17:41:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WerUmUvF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kNKo1PJp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbfFARfX (ORCPT
+        id S1726693AbfFARlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 13:35:23 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34873 "EHLO
+        Sat, 1 Jun 2019 13:41:32 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46630 "EHLO
         mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726013AbfFARfX (ORCPT
+        with ESMTP id S1726013AbfFARlb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 13:35:23 -0400
-Received: by mail-lj1-f195.google.com with SMTP id h11so12577527ljb.2
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Jun 2019 10:35:21 -0700 (PDT)
+        Sat, 1 Jun 2019 13:41:31 -0400
+Received: by mail-lj1-f195.google.com with SMTP id m15so4244676ljg.13
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Jun 2019 10:41:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=owmhC4nkQ++0XWcQKeCbAiLKodtwVwoOL0lLVZVcgyE=;
-        b=WerUmUvFuVb1ad6IAGBDRNrocbnRRe/ludsVjfZCo7EVt4en/Ja8o70U0DMLbhvG20
-         sk9Ry7wH0dKBjHUAuIMonGzsi/O5gR0QAf34QQl+i4YRH5jyZUcXmHYnsUGS6KHDbHM9
-         DJjELC2evjoStf0LYeAFVEfWL0dnLm88pVHlmUiLBTUk0U8JLPkxjpxzujDTTKXI2AIp
-         nEj5ui2QIbFv5tqVv/BrJi5wzVULfQ8NIpuDZhRNJkWG57ZMXOwo37eDsa2K3tlQzGo9
-         6EEmeBbimUfiJ+R/kstgGxrxMYMv7Xo9vBZRhNAe63uDyH0exAXY2I7sEBevheD9mKAZ
-         N/Rg==
+        bh=rHjJzagrI2w6CxzEMyI3YS1Fy3fUOHjBVJQpvV06gF4=;
+        b=kNKo1PJp5JY8FyKD7JkhadL2uuwGlRwXyBzur6y5fdsxiydbyEgL0yjSnj/Ex6vBKV
+         m91afAFfI15VdDMK9Zfn7vRNKG2F0OlQhgZcdfwH1WdJS/+fB//hckYTGPJAbO1ERb4K
+         HyAxPI2RKz2bVOmVcIHmnjJRBJ7zha/dHpZkNggiMM6m0cGW79yQVu5hgFKOmcog6a/X
+         hQs3OUaUJOD+266aTLeyUt6aplfIXQOZtfyQz94Xlt0MZhseWtud2aHTOzF2cCpB5s4s
+         80eAyy08uKq1gEL3GyhM5xQ4EG9xJyOOnryKvPiD/uGps9VmxiPapZa7RSqZOrdEj4sK
+         Y6aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=owmhC4nkQ++0XWcQKeCbAiLKodtwVwoOL0lLVZVcgyE=;
-        b=TkGtGRz/801YzDFIuL/Y2xZP0AcvM5RuBoZLpFKIuNhS+fVxUltkkJZ6LkYPI90bRH
-         4w8QIVKWavCeMso51J5L4TcslcTdmsUXvQy1TvwvNGoa+Lu1Ylfw1+P9EoJDgcIPsZfs
-         JUAP7dOhXyfON/AiwaCfG/N3BkGn10w0bImz3pDNLIf5KKw9tSRN7TR0+i7jQcYxJRku
-         S1VMfYq2c3+WaCy4lFLJ7av28C3QqIKZxP6yqwJf1SPStPRoyJJM3stBR80TpzKwAghj
-         m5wVNqSnzlZ8e9ycQ3n69vrYygcDhZJoRnaLJDAN0cpGeJ4EpHAmlA//PD6CLMF7F/pJ
-         qLbA==
-X-Gm-Message-State: APjAAAWTmmVjYXUKCYXZwaEJ5I3k0o2/9CSN4KHDbziAIaczudB9A/rG
-        Zdl/UXDVXxeiRqp/tTOFiAyyYDyHjE1ah36EdJRatdTZ
-X-Google-Smtp-Source: APXvYqzq9gTWZsAaPSchU/CdBc50ntEnexEA2Elo8kyp/1cSgd9LzQr3i7TrIBqh5qaIoJg1bUhCfWWkTV+Bw7CC2tY=
-X-Received: by 2002:a2e:5bdd:: with SMTP id m90mr289291lje.46.1559410521088;
- Sat, 01 Jun 2019 10:35:21 -0700 (PDT)
+        bh=rHjJzagrI2w6CxzEMyI3YS1Fy3fUOHjBVJQpvV06gF4=;
+        b=n2iBnwqHxUrJhY9yVZhKWysu5Tws31VMSTDY6rFYJ1EUouloVeA4Ze9vYq5LfUPpNI
+         SlAoHm/+rZXSuUS2BI0CcRtip3Iz5+MSW/Sm9Oetx+Hz0EvzAbVzVFsPvZcb4Lftx0AB
+         YCL+4p57YOBYFM3Sb99iYs4ZcE9a6mm+U53i61Hpzhw6FmJ6Erm3IiGRbs4hhSonLN08
+         Bcc7JR78MvxVrk1uKW9nGUciQ4RrQHj97nNadpNUpJx86O2u6eXJmbQ6eNBnsgaB2Tfc
+         zBKaMNTQsVwg7ASyRncm1JIxlUNQ9hrKyxJX+kupaIqC2La4bcmx+wEETZ/VAmf0JPvz
+         jp5w==
+X-Gm-Message-State: APjAAAXVtjlXifuH/exOLhGZVBCxbaSdSs+rvrMcPwjcsAtc+e5KZGvo
+        /NcD8PtgXxVgg05vsvd+OEpjUpv1snS7BanYjK8bzg==
+X-Google-Smtp-Source: APXvYqyMs3a2CNuuQZwXewGMpnWnrvA5Em5qjXrSELyADIL3SbiyiL6hwwGk0M0RbgN9+6Gp3Y2EroKx7Y7np874/U4=
+X-Received: by 2002:a2e:9018:: with SMTP id h24mr2448110ljg.165.1559410889721;
+ Sat, 01 Jun 2019 10:41:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190520144108.3787-1-narmstrong@baylibre.com>
-In-Reply-To: <20190520144108.3787-1-narmstrong@baylibre.com>
+References: <20190508073331.27475-1-drinkcat@chromium.org>
+In-Reply-To: <20190508073331.27475-1-drinkcat@chromium.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 1 Jun 2019 19:35:09 +0200
-Message-ID: <CACRpkdZ6PBMPDie4RyuPfzfhs3W5XunZMqa6cG4bg7+kEhUegg@mail.gmail.com>
-Subject: Re: [PATCH 0/5] pinctrl: meson: gpio: update with SPDX Licence identifier
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+Date:   Sat, 1 Jun 2019 19:41:18 +0200
+Message-ID: <CACRpkdb1cfQts-CshwgoSXDv5JM8=miy4=2FhKpOi-jZL6OTxw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] pinctrl: mediatek: mt8183: Add support for wake sources
+To:     Nicolas Boichat <drinkcat@chromium.org>
+Cc:     "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chuanjia Liu <Chuanjia.Liu@mediatek.com>,
+        Evan Green <evgreen@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 4:41 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+On Wed, May 8, 2019 at 9:33 AM Nicolas Boichat <drinkcat@chromium.org> wrote:
 
-> Update the SPDX Licence identifier for the Amlogic Pinctrl drivers and
-> the corresponding GPIO dt-bindings headers.
+> This adds support for wake sources in pinctrl-mtk-common-v2, and
+> pinctrl-mt8183. Without this patch, all interrupts that are left
+> enabled on suspend act as wake sources (and wake sources without
+> interrupt enabled do not).
 >
-> Neil Armstrong (5):
+> Changes since v1:
+>  - Move changes from mtk-common-v2 to mtk-pinctrl-paris, as
+>    recommended by Sean, to keep better separation between eint
+>    and pinctrl-common features.
 
-All 5 patches applied, I took a quick look in mainline and it appears those
-files were not hit by the large scripted conversions to SPDX that tglx did
-recently.
+Both patches applied with Sean's ACK!
 
 Yours,
 Linus Walleij
