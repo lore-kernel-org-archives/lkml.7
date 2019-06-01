@@ -2,93 +2,137 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7231C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 10:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 782E0C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 10:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A852F271ED
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 10:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46B6C271ED
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 10:45:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rjoKGRLL"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Mi8XPKWv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbfFAKlN (ORCPT
+        id S1727053AbfFAKpy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 06:41:13 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:42005 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbfFAKlN (ORCPT
+        Sat, 1 Jun 2019 06:45:54 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:43768 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbfFAKpx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 06:41:13 -0400
-Received: by mail-lj1-f194.google.com with SMTP id t28so837605lje.9
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Jun 2019 03:41:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HfG8SFYlwhX2T6RV6yxB9+NDJcpkM3O1MaSrYiv8LPo=;
-        b=rjoKGRLLtJKt2NLllelbm573MDL2ykr+faYahdLKjSY7Y5bcl9oOcfgIPjxjLRT8Rg
-         mveZbNR6/4PcibX5IGuiP2ht/kulnh3WcI4MaWK2Y1A0DXjutsYEwD3qTftFhiv8GqfK
-         7+qaDof1ZYd3doX7X1h+7WeRcfHVpsj0pwMdcoQ9xEdSqbExbR0q5XsGZkhOjNfO0bju
-         T5gSSanCNIC12PTxtOjXIjZmgaW8TSijlkhgbcIQjczBFFhQDLrsYZl8VwB/3MG1Gh3c
-         8YfiZYGEuJBRTypFu7XSl1WsefQ2ppNKSDi5woINqma62CXA6zpRINHHLvZ5yGrTw5X8
-         DUHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HfG8SFYlwhX2T6RV6yxB9+NDJcpkM3O1MaSrYiv8LPo=;
-        b=ESFbTMWKWNsQZtw8LzlXnfkJeb311AJdEHRp+7wQkvvSm9JrZYa3RfDgMf1LexO4Mk
-         6Pb6Zj+joCRrCSK+OHtIrz4cNKwiOianfVjLkfnNogSM3no5PT3zLEiNdn/tR0OiZiBg
-         9vvq0gKM0HFnR9oJ7KleKsCmsHhwRlzhcW4Ys7vj8ppJNsOcoj1jN/NGvobD5aAs1MDL
-         IOKVcUtaCnFmyeBRUA0vMjsVoBRfSE/XmfHuutjNr3ayOA0Iz5SHZLh2ELgwhW1GJWnp
-         tXYXB9eUoZCLEnvK/kuvH1zmRAk5d1Pw1b0WFzYUts4S+JiUi9UCQPHlzYVNdj1chfCk
-         CkfQ==
-X-Gm-Message-State: APjAAAUDJJiQzyM7V0fQ9ORjw11KTVz8d9QuQyPR3WDE5dphuSIf31rW
-        eQQSQfsM62PwIXsCXmRh3/7OyArGWUazOo3r8To=
-X-Google-Smtp-Source: APXvYqwo+hRPRQiNwv/GCJLziYFhPRmDBka35PISCOCnRhr43lAq1JZzc9/8GlGwArLsGmyrafsMQ15XfcxCKdwIxNE=
-X-Received: by 2002:a2e:9157:: with SMTP id q23mr8892650ljg.188.1559385671552;
- Sat, 01 Jun 2019 03:41:11 -0700 (PDT)
+        Sat, 1 Jun 2019 06:45:53 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x51Aji7w017184;
+        Sat, 1 Jun 2019 05:45:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559385944;
+        bh=oc83/WPZAKxZ5gQImeSIybMZHlJVM8DNCMv1sFjd1hU=;
+        h=From:To:CC:Subject:Date;
+        b=Mi8XPKWvDzQ3mg2ey+x3AjQiZbi86miCck1paLJvmkU821YROEZSu87Vfexfoo9EW
+         1/2EVIU0dIzrhHJdFHUnNEO60C04a4Gi+S9bd3XGuBBNe1gvZud97vZ9jZIMGRQZ16
+         L7xjaODp4d6xQoH0T7flv0qgaRjQOL7g9oPfWOps=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x51Aji0A022616
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sat, 1 Jun 2019 05:45:44 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Sat, 1 Jun
+ 2019 05:45:44 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Sat, 1 Jun 2019 05:45:44 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x51AjgxX076536;
+        Sat, 1 Jun 2019 05:45:43 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Sekhar Nori <nsekhar@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Wingman Kwok <w-kwok2@ti.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH net-next 00/10] net: ethernet: ti: netcp: update and enable cpts support
+Date:   Sat, 1 Jun 2019 13:45:24 +0300
+Message-ID: <20190601104534.25790-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20190528193004.GA7744@gmail.com> <CAFqt6zZ0SHXddLoQMoO3LHT=50Br0x4r3Wn4XviypRxRUtn9zQ@mail.gmail.com>
-In-Reply-To: <CAFqt6zZ0SHXddLoQMoO3LHT=50Br0x4r3Wn4XviypRxRUtn9zQ@mail.gmail.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Sat, 1 Jun 2019 12:41:00 +0200
-Message-ID: <CANiq72m7YURu2XiKHQ+F8sxitVecZyrCPFBw=wGr2CddEv3khg@mail.gmail.com>
-Subject: Re: [PATCH] mm: Fail when offset == num in first check of vm_map_pages_zero()
-To:     Souptick Joarder <jrdr.linux@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Huang Ying <ying.huang@intel.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 9:09 AM Souptick Joarder <jrdr.linux@gmail.com> wrote:
->
-> On Wed, May 29, 2019 at 1:38 AM Miguel Ojeda
-> <miguel.ojeda.sandonis@gmail.com> wrote:
-> >
-> > If the user asks us for offset == num, we should already fail in the
-> > first check, i.e. the one testing for offsets beyond the object.
-> >
-> > At the moment, we are failing on the second test anyway,
-> > since count cannot be 0. Still, to agree with the comment of the first
-> > test, we should first there.
->
-> I think, we need to cc linux-mm.
+Hi
 
-Cc'ing Andrew as well as Souptick suggested me.
+The Keystone 2 66AK2HK/E/L 1G Ethernet Switch Subsystems contains The
+Common Platform Time Sync (CPTS) module which is in general compatible with
+CPTS module found on TI AM3/4/5 SoCs. So, the basic support for
+Keystone 2 CPTS is available by default, but not documented and has never been
+enabled inconfig files.
 
-Cheers,
-Miguel
+The Keystone 2 CPTS module supports also some additional features like time
+sync reference (RFTCLK) clock selection through CPTS_RFTCLK_SEL register
+(offset: x08) in CPTS module, which can modelled as multiplexer clock
+(this was discussed some time ago [1]).
+
+This series adds missed binding documentation for Keystone 2 66AK2HK/E/L
+CPTS module and enables CPTS for TI Keystone 2 66AK2HK/E/L SoCs with possiblity
+to select CPTS reference clock.
+
+Patch 1: adds the CPTS binding documentation. CPTS bindings are defined in the
+way that allows CPTS properties to be grouped under "cpts" sub-node.
+It also defines "cpts-refclk-mux" clock for CPTS RFTCLK selection.
+Patches 2-3: implement CPTS properties grouping under "cpts" sub-node with
+backward compatibility support.
+Patch 4: adds support for time sync reference (RFTCLK) clock selection from DT
+by adding support for "cpts-refclk-mux" multiplexer clock.
+Patches 5-9: DT CPTS nodes update for TI Keystone 2 66AK2HK/E/L SoCs.
+Patch 10: enables CPTS for TI Keystone 2 66AK2HK/E/L SoCs.
+
+I grouped all patches in one series for better illustration of the changes,
+but in general Pateches 1-4 are netdev matarieal (first) and other patches
+are platform specific.
+
+Series can be found at:
+ git@git.ti.com:~gragst/ti-linux-kernel/gragsts-ti-linux-kernel.git
+branch:
+ net-next-k2e-cpts-refclk
+
+[1] https://www.spinics.net/lists/netdev/msg408931.html
+
+Grygorii Strashko (10):
+  dt-bindings: doc: net: keystone-netcp: document cpts
+  net: ethernet: ti: cpts: use devm_get_clk_from_child
+  net: ethernet: ti: netcp_ethss: add support for child cpts node
+  net: ethernet: ti: cpts: add support for ext rftclk selection
+  ARM: dts: keystone-clocks: add input fixed clocks
+  ARM: dts: k2e-clocks: add input ext. fixed clocks tsipclka/b
+  ARM: dts: k2e-netcp: add cpts refclk_mux node
+  ARM: dts: k2hk-netcp: add cpts refclk_mux node
+  ARM: dts: k2l-netcp: add cpts refclk_mux node
+  ARM: configs: keystone: enable cpts
+
+ .../bindings/net/keystone-netcp.txt           | 44 ++++++++++
+ arch/arm/boot/dts/keystone-clocks.dtsi        | 27 ++++++
+ arch/arm/boot/dts/keystone-k2e-clocks.dtsi    | 20 +++++
+ arch/arm/boot/dts/keystone-k2e-netcp.dtsi     | 21 ++++-
+ arch/arm/boot/dts/keystone-k2hk-netcp.dtsi    | 20 ++++-
+ arch/arm/boot/dts/keystone-k2l-netcp.dtsi     | 20 ++++-
+ arch/arm/configs/keystone_defconfig           |  1 +
+ drivers/net/ethernet/ti/cpts.c                | 88 ++++++++++++++++++-
+ drivers/net/ethernet/ti/cpts.h                |  2 +-
+ drivers/net/ethernet/ti/netcp_ethss.c         |  9 +-
+ 10 files changed, 240 insertions(+), 12 deletions(-)
+
+-- 
+2.17.1
+
