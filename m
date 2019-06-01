@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D902AC04AB6
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0523C04AB6
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8EF627057
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:08:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D9DF27059
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:08:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbfFAAIc (ORCPT
+        id S1727042AbfFAAIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 20:08:32 -0400
-Received: from mailgw02.mediatek.com ([216.200.240.185]:33667 "EHLO
+        Fri, 31 May 2019 20:08:35 -0400
+Received: from mailgw02.mediatek.com ([216.200.240.185]:33692 "EHLO
         mailgw02.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbfFAAI3 (ORCPT
+        with ESMTP id S1726970AbfFAAIb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 20:08:29 -0400
-X-UUID: 5af83b4fed8f44c7b71ee22a7101d49e-20190531
-X-UUID: 5af83b4fed8f44c7b71ee22a7101d49e-20190531
+        Fri, 31 May 2019 20:08:31 -0400
+X-UUID: 35a337c33cc04d1cb07cb42092bc151c-20190531
+X-UUID: 35a337c33cc04d1cb07cb42092bc151c-20190531
 Received: from mtkcas67.mediatek.inc [(172.29.193.45)] by mailgw02.mediatek.com
         (envelope-from <sean.wang@mediatek.com>)
         (musrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 734761380; Fri, 31 May 2019 16:03:24 -0800
+        with ESMTP id 829873254; Fri, 31 May 2019 16:03:28 -0800
 Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- MTKMBS62N1.mediatek.inc (172.29.193.41) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 31 May 2019 17:03:23 -0700
+ MTKMBS62N2.mediatek.inc (172.29.193.42) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 31 May 2019 17:03:26 -0700
 Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sat, 1 Jun 2019 08:03:21 +0800
+ Transport; Sat, 1 Jun 2019 08:03:26 +0800
 From:   <sean.wang@mediatek.com>
 To:     <john@phrozen.org>, <davem@davemloft.net>
 CC:     <nbd@openwrt.org>, <netdev@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
         <linux-mediatek@lists.infradead.org>,
         Sean Wang <sean.wang@mediatek.com>
-Subject: [PATCH net-next v1 2/6] dt-bindings: net: mediatek: Add support for MediaTek MT7629 SoC
-Date:   Sat, 1 Jun 2019 08:03:11 +0800
-Message-ID: <1559347395-14058-3-git-send-email-sean.wang@mediatek.com>
+Subject: [PATCH net-next v1 6/6] arm64: dts: mt7622: Enlarge the SGMII register range
+Date:   Sat, 1 Jun 2019 08:03:15 +0800
+Message-ID: <1559347395-14058-7-git-send-email-sean.wang@mediatek.com>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <1559347395-14058-1-git-send-email-sean.wang@mediatek.com>
 References: <1559347395-14058-1-git-send-email-sean.wang@mediatek.com>
@@ -55,51 +55,27 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sean Wang <sean.wang@mediatek.com>
 
-Add binding document for the ethernet on MT7629 SoC.
+Enlarge the SGMII register range and using 2.5G force mode on default.
 
 Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 ---
- .../devicetree/bindings/net/mediatek-net.txt       | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/net/mediatek-net.txt b/Documentation/devicetree/bindings/net/mediatek-net.txt
-index 503f2b9194e2..770ff98d4524 100644
---- a/Documentation/devicetree/bindings/net/mediatek-net.txt
-+++ b/Documentation/devicetree/bindings/net/mediatek-net.txt
-@@ -11,6 +11,7 @@ Required properties:
- 		"mediatek,mt2701-eth": for MT2701 SoC
- 		"mediatek,mt7623-eth", "mediatek,mt2701-eth": for MT7623 SoC
- 		"mediatek,mt7622-eth": for MT7622 SoC
-+		"mediatek,mt7629-eth": for MT7629 SoC
- - reg: Address and length of the register set for the device
- - interrupts: Should contain the three frame engines interrupts in numeric
- 	order. These are fe_int0, fe_int1 and fe_int2.
-@@ -19,14 +20,23 @@ Required properties:
- 	"ethif", "esw", "gp2", "gp1" : For MT2701 and MT7623 SoC
-         "ethif", "esw", "gp0", "gp1", "gp2", "sgmii_tx250m", "sgmii_rx250m",
- 	"sgmii_cdr_ref", "sgmii_cdr_fb", "sgmii_ck", "eth2pll" : For MT7622 SoC
-+	"ethif", "sgmiitop", "esw", "gp0", "gp1", "gp2", "fe", "sgmii_tx250m",
-+	"sgmii_rx250m", "sgmii_cdr_ref", "sgmii_cdr_fb", "sgmii2_tx250m",
-+	"sgmii2_rx250m", "sgmii2_cdr_ref", "sgmii2_cdr_fb", "sgmii_ck",
-+	"eth2pll" : For MT7629 SoC.
- - power-domains: phandle to the power domain that the ethernet is part of
- - resets: Should contain phandles to the ethsys reset signals
- - reset-names: Should contain the names of reset signal listed in the resets
- 		property
- 		These are "fe", "gmac" and "ppe"
- - mediatek,ethsys: phandle to the syscon node that handles the port setup
--- mediatek,sgmiisys: phandle to the syscon node that handles the SGMII setup
--	which is required for those SoCs equipped with SGMII such as MT7622 SoC.
-+- mediatek,infracfg: phandle to the syscon node that handles the path from
-+	GMAC to PHY variants, which is required for MT7629 SoC.
-+- mediatek,sgmiisys: a list of phandles to the syscon node that handles the
-+	SGMII setup which is required for those SoCs equipped with SGMII such
-+	as MT7622 and MT7629 SoC. And MT7622 have only one set of SGMII shared
-+	by GMAC1 and GMAC2; MT7629 have two independent sets of SGMII directed
-+	to GMAC1 and GMAC2, respectively.
- - mediatek,pctl: phandle to the syscon node that handles the ports slew rate
- 	and driver current: only for MT2701 and MT7623 SoC
- 
+diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+index 4b1f5ae710eb..d1e13d340e26 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+@@ -929,7 +929,8 @@
+ 	sgmiisys: sgmiisys@1b128000 {
+ 		compatible = "mediatek,mt7622-sgmiisys",
+ 			     "syscon";
+-		reg = <0 0x1b128000 0 0x1000>;
++		reg = <0 0x1b128000 0 0x3000>;
+ 		#clock-cells = <1>;
++		mediatek,physpeed = "2500";
+ 	};
+ };
 -- 
 2.17.1
 
