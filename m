@@ -2,80 +2,96 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C36CAC28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 07:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB368C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 07:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97FAF270F1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 07:14:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8D45249AB
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 07:28:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbfFAHOC (ORCPT
+        id S1726547AbfFAH17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 03:14:02 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:35468 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726013AbfFAHOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 03:14:02 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 92328B4C434BBCF60B04;
-        Sat,  1 Jun 2019 15:13:59 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.439.0; Sat, 1 Jun 2019 15:13:53 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <harry.wentland@amd.com>, <sunpeng.li@amd.com>,
-        <alexander.deucher@amd.com>, <christian.koenig@amd.com>,
-        <David1.Zhou@amd.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <hanghong.ma@amd.com>, <Jun.Lei@amd.com>, <Wenjing.Liu@amd.com>,
-        <Krunoslav.Kovac@amd.com>, <nicholas.kazlauskas@amd.com>,
-        <David.Francis@amd.com>, <Bhawanpreet.Lakha@amd.com>
-CC:     YueHaibing <yuehaibing@huawei.com>,
-        <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] drm/amd/display: Use kmemdup in dc_copy_stream()
-Date:   Sat, 1 Jun 2019 07:22:08 +0000
-Message-ID: <20190601072208.193673-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Sat, 1 Jun 2019 03:27:59 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:52450 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726058AbfFAH17 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 03:27:59 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 56B6D802F5; Sat,  1 Jun 2019 09:27:47 +0200 (CEST)
+Date:   Sat, 1 Jun 2019 09:27:56 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     pavel@ucw.cz
+Cc:     linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Keith Busch <keith.busch@intel.com>, Jan Kara <jack@suse.cz>,
+        Yufen Yu <yuyufen@huawei.com>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 130/276] block: fix use-after-free on gendisk
+Message-ID: <20190601072756.GA2215@amd>
+References: <20190530030523.133519668@linuxfoundation.org>
+ <20190530030533.910471797@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ibTvN161/egqYuK8"
+Content-Disposition: inline
+In-Reply-To: <20190530030533.910471797@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use kmemdup rather than duplicating its implementation.
 
-Detected by coccinelle.
+--ibTvN161/egqYuK8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/gpu/drm/amd/display/dc/core/dc_stream.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Hi!
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_stream.c b/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
-index a002e690814f..b166c732b532 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
-@@ -167,12 +167,11 @@ struct dc_stream_state *dc_copy_stream(const struct dc_stream_state *stream)
- {
- 	struct dc_stream_state *new_stream;
- 
--	new_stream = kzalloc(sizeof(struct dc_stream_state), GFP_KERNEL);
-+	new_stream = kmemdup(stream, sizeof(struct dc_stream_state),
-+			     GFP_KERNEL);
- 	if (!new_stream)
- 		return NULL;
- 
--	memcpy(new_stream, stream, sizeof(struct dc_stream_state));
--
- 	if (new_stream->sink)
- 		dc_sink_retain(new_stream->sink);
+> +++ b/block/genhd.c
+> @@ -518,6 +518,18 @@ void blk_free_devt(dev_t devt)
+>  	}
+>  }
+> =20
+> +/**
+> + *	We invalidate devt by assigning NULL pointer for devt in idr.
+> + */
+> +void blk_invalidate_devt(dev_t devt)
+> +{
+> +	if (MAJOR(devt) =3D=3D BLOCK_EXT_MAJOR) {
+> +		spin_lock_bh(&ext_devt_lock);
+> +		idr_replace(&ext_devt_idr, NULL, blk_mangle_minor(MINOR(devt)));
+> +		spin_unlock_bh(&ext_devt_lock);
+> +	}
+> +}
+> +
 
+AFAICT /** means linuxdoc, but the comment does not have required
+format. Probably should be just /*.
 
+Thanks,
+								Pavel
 
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--ibTvN161/egqYuK8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlzyKPwACgkQMOfwapXb+vJsrgCgqD+CDZs2l5FIKcmOJq0+LQpP
+yhcAnR/Uu9rulkUgtM5Yhv44dQ6hl1Uh
+=fDgO
+-----END PGP SIGNATURE-----
+
+--ibTvN161/egqYuK8--
