@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6FAC28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5055C28CC3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D5F627339
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:33:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9871B2750C
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:33:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396012;
-	bh=qVIXectfZsHqbZ7VBc05uhjaf7DR5Xsbh8IdrYBVmng=;
+	s=default; t=1559396017;
+	bh=Nyx14ac/mB3BniQfS343Wq2fwYSOGrIrx2vCdbHaaLk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k7IyneeOd+bq5nArk7Ehahqq7Bl+sXfbWHu4DFDStTIVsttN6FArhVBABGdETZvXI
-	 gMO0WgYdGyzgPASETCgNXQdkx3h8iJqHmGuLLCG47JPsm6uZBf9l4BHff+Fv3BYh8Q
-	 p/TFCeeDSqv7KmuFjzR1AhaISq2hGoyAe84sRvVw=
+	b=PBlyiXYAfS5KyYX6QYuRPJb7DC70xh806gLoFgPn3mhBUSMnCtO/MB5NV/nqh/SqY
+	 3sEn+i376rhuM4hd61Fg815LTpjWnpYS236CX6ZuI3U8r2u2YtfrP9nT4e5Necvc8y
+	 8qdTT/PTd40A8dbYCQTcMI/URAm63961PARO2ClQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729404AbfFANdb (ORCPT
+        id S1729576AbfFANdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:33:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54562 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:33:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729228AbfFANYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:24:30 -0400
+        id S1729213AbfFANY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:24:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59095264C3;
-        Sat,  1 Jun 2019 13:24:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C49227355;
+        Sat,  1 Jun 2019 13:24:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395470;
-        bh=qVIXectfZsHqbZ7VBc05uhjaf7DR5Xsbh8IdrYBVmng=;
+        s=default; t=1559395467;
+        bh=Nyx14ac/mB3BniQfS343Wq2fwYSOGrIrx2vCdbHaaLk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pvr8QkdqlKmqH8XU3csraUZ82LoyY1M1pSIPWy+nUKf3sBx62Ovb1YELg5ZjSCETF
-         kWYuixaFKeKvb0frN2pRqeWDQhQeMx/wb3MYkmU3xJgJkr1kp26VlMjwlY4LNm9cqB
-         vvX1dR8u7wJkDluEDQwGGi3iTNMG0wZdE3ALRjTI=
+        b=RkCI9c+KdK/2Sz3zBeL8EDpLhQy8HMGd9fvInw5y9xkRFJgh+3b+JVIMvLQ2xrylf
+         JO7eYHAUg8iPBGN+u8L9/tfm4/v2nGU+VNqAr76Si7yJZXb8Hf1gbVFQAxvrkycQb2
+         65JdwkvMAiI8BwARE4LdCiNR71g+YgOwyB39/T3E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ben Skeggs <bskeggs@redhat.com>, Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.14 18/99] drm/nouveau/disp/dp: respect sink limits when selecting failsafe link configuration
-Date:   Sat,  1 Jun 2019 09:22:25 -0400
-Message-Id: <20190601132346.26558-18-sashal@kernel.org>
+Cc:     Binbin Wu <binbin.wu@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 17/99] mfd: intel-lpss: Set the device in reset state when init
+Date:   Sat,  1 Jun 2019 09:22:24 -0400
+Message-Id: <20190601132346.26558-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132346.26558-1-sashal@kernel.org>
 References: <20190601132346.26558-1-sashal@kernel.org>
@@ -58,45 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Skeggs <bskeggs@redhat.com>
+From: Binbin Wu <binbin.wu@intel.com>
 
-[ Upstream commit 13d03e9daf70dab032c03dc172e75bb98ad899c4 ]
+[ Upstream commit dad06532292d77f37fbe831a02948a593500f682 ]
 
-Where possible, we want the failsafe link configuration (one which won't
-hang the OR during modeset because of not enough bandwidth for the mode)
-to also be supported by the sink.
+In virtualized setup, when system reboots due to warm
+reset interrupt storm is seen.
 
-This prevents "link rate unsupported by sink" messages when link training
-fails.
+Call Trace:
+<IRQ>
+dump_stack+0x70/0xa5
+__report_bad_irq+0x2e/0xc0
+note_interrupt+0x248/0x290
+? add_interrupt_randomness+0x30/0x220
+handle_irq_event_percpu+0x54/0x80
+handle_irq_event+0x39/0x60
+handle_fasteoi_irq+0x91/0x150
+handle_irq+0x108/0x180
+do_IRQ+0x52/0xf0
+common_interrupt+0xf/0xf
+</IRQ>
+RIP: 0033:0x76fc2cfabc1d
+Code: 24 28 bf 03 00 00 00 31 c0 48 8d 35 63 77 0e 00 48 8d 15 2e
+94 0e 00 4c 89 f9 49 89 d9 4c 89 d3 e8 b8 e2 01 00 48 8b 54 24 18
+<48> 89 ef 48 89 de 4c 89 e1 e8 d5 97 01 00 84 c0 74 2d 48 8b 04
+24
+RSP: 002b:00007ffd247c1fc0 EFLAGS: 00000293 ORIG_RAX: ffffffffffffffda
+RAX: 0000000000000000 RBX: 00007ffd247c1ff0 RCX: 000000000003d3ce
+RDX: 0000000000000000 RSI: 00007ffd247c1ff0 RDI: 000076fc2cbb6010
+RBP: 000076fc2cded010 R08: 00007ffd247c2210 R09: 00007ffd247c22a0
+R10: 000076fc29465470 R11: 0000000000000000 R12: 00007ffd247c1fc0
+R13: 000076fc2ce8e470 R14: 000076fc27ec9960 R15: 0000000000000414
+handlers:
+[<000000000d3fa913>] idma64_irq
+Disabling IRQ #27
 
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+To avoid interrupt storm, set the device in reset state
+before bringing out the device from reset state.
+
+Changelog v2:
+- correct the subject line by adding "mfd: "
+
+Signed-off-by: Binbin Wu <binbin.wu@intel.com>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/engine/disp/dp.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ drivers/mfd/intel-lpss.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/disp/dp.c b/drivers/gpu/drm/nouveau/nvkm/engine/disp/dp.c
-index 6160a6158cf26..5e51a5c1eb013 100644
---- a/drivers/gpu/drm/nouveau/nvkm/engine/disp/dp.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/engine/disp/dp.c
-@@ -364,8 +364,15 @@ nvkm_dp_train(struct nvkm_dp *dp, u32 dataKBps)
- 	 * and it's better to have a failed modeset than that.
- 	 */
- 	for (cfg = nvkm_dp_rates; cfg->rate; cfg++) {
--		if (cfg->nr <= outp_nr && cfg->nr <= outp_bw)
--			failsafe = cfg;
-+		if (cfg->nr <= outp_nr && cfg->nr <= outp_bw) {
-+			/* Try to respect sink limits too when selecting
-+			 * lowest link configuration.
-+			 */
-+			if (!failsafe ||
-+			    (cfg->nr <= sink_nr && cfg->bw <= sink_bw))
-+				failsafe = cfg;
-+		}
+diff --git a/drivers/mfd/intel-lpss.c b/drivers/mfd/intel-lpss.c
+index 40e8d9b59d077..b5c4f8f974aa7 100644
+--- a/drivers/mfd/intel-lpss.c
++++ b/drivers/mfd/intel-lpss.c
+@@ -273,6 +273,9 @@ static void intel_lpss_init_dev(const struct intel_lpss *lpss)
+ {
+ 	u32 value = LPSS_PRIV_SSP_REG_DIS_DMA_FIN;
+ 
++	/* Set the device in reset state */
++	writel(0, lpss->priv + LPSS_PRIV_RESETS);
 +
- 		if (failsafe && cfg[1].rate < dataKBps)
- 			break;
- 	}
+ 	intel_lpss_deassert_reset(lpss);
+ 
+ 	intel_lpss_set_remap_addr(lpss);
 -- 
 2.20.1
 
