@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 856C6C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E52CAC28CC3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5535927505
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:33:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4A7527525
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:33:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396031;
-	bh=Hshb00E3YY/ALIe4BTZ8oT6UxHJVL0f6jBjud6JkyMY=;
+	s=default; t=1559396033;
+	bh=khdRBGEtI4IRSX0deEmUgTpUYXoqbn3SdHYvyHZ05aU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BNmkZDAKWH/F2ok1+fGA93mPMDQMYgrB5VEyS5j5IvrJYMZMWDkhjR2rrNHvHvQ5w
-	 5hqEc94cNRPy/EwFRoyE3iZydVjaWUoiE2R2pei2wqA7rWjmOdDBL/Uo3NOutiV5SC
-	 sHMaKc4+6k7wn2tF4YoLzQdek20MNR4akGabsfYI=
+	b=phsyHKHbccNn4XWqXANoiW7/cbG+C5iTO+FnYgzpoL3Qa0xfpFDmsw42rrmVjvIhd
+	 h0H64LmK5mt1Qq31J09+CKxDXelxQwVBh7izPbc4t93qeLeVMTz1iV1iAnVsa1zKaF
+	 xhN/faEK0bd8YZkjvDUIuQaCao/dKx9/5+VSO21o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729395AbfFANdp (ORCPT
+        id S1728290AbfFANYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:33:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54490 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:24:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728651AbfFANY0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:24:26 -0400
+        id S1729184AbfFANYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:24:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A074264C3;
-        Sat,  1 Jun 2019 13:24:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61ECB27358;
+        Sat,  1 Jun 2019 13:24:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395466;
-        bh=Hshb00E3YY/ALIe4BTZ8oT6UxHJVL0f6jBjud6JkyMY=;
+        s=default; t=1559395458;
+        bh=khdRBGEtI4IRSX0deEmUgTpUYXoqbn3SdHYvyHZ05aU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bkV3nr5LinVpG768tK3MAMC9UuHjNinEBMESJ+lvBJWPnTw0EvO0ZcRHotu4K5V2Y
-         +20rVVd5h8XW4SDF9Tow7dRd4wPHB0mHIyiRBpuHNGrYmio/B4+74denU0DVUD8jOk
-         33mLTzEeBhlFPi0XnT/R7VIy9uuTbdAC49C4CbBA=
+        b=t6wU7aRdzc61UPq4vhQJTuqrwuvxlgXeBsb3qoK/RqMZB/6SpFlTFm5NwzG/xZt1m
+         iuTfeSmh0tb6A53kNCNpkr5k9GHXI1Qp82qgGz04/0xcQTMeH9x5oDFHAQLO6LmI2Z
+         8HTkjOkxANIhlrBKSTsrHMtmUswSm9Tpo2ouQDUE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Gomez <dagmcr@gmail.com>,
-        Javier Martinez Canillas <javier@dowhile0.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 16/99] mfd: tps65912-spi: Add missing of table registration
-Date:   Sat,  1 Jun 2019 09:22:23 -0400
-Message-Id: <20190601132346.26558-16-sashal@kernel.org>
+Cc:     Yue Hu <huyue2@yulong.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, Joe Perches <joe@perches.com>,
+        David Rientjes <rientjes@google.com>,
+        Dmitry Safonov <d.safonov@partner.samsung.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.14 11/99] mm/cma_debug.c: fix the break condition in cma_maxchunk_get()
+Date:   Sat,  1 Jun 2019 09:22:18 -0400
+Message-Id: <20190601132346.26558-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132346.26558-1-sashal@kernel.org>
 References: <20190601132346.26558-1-sashal@kernel.org>
@@ -60,43 +64,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Gomez <dagmcr@gmail.com>
+From: Yue Hu <huyue2@yulong.com>
 
-[ Upstream commit 9e364e87ad7f2c636276c773d718cda29d62b741 ]
+[ Upstream commit f0fd50504a54f5548eb666dc16ddf8394e44e4b7 ]
 
-MODULE_DEVICE_TABLE(of, <of_match_table> should be called to complete DT
-OF mathing mechanism and register it.
+If not find zero bit in find_next_zero_bit(), it will return the size
+parameter passed in, so the start bit should be compared with bitmap_maxno
+rather than cma->count.  Although getting maxchunk is working fine due to
+zero value of order_per_bit currently, the operation will be stuck if
+order_per_bit is set as non-zero.
 
-Before this patch:
-modinfo drivers/mfd/tps65912-spi.ko | grep alias
-alias:          spi:tps65912
-
-After this patch:
-modinfo drivers/mfd/tps65912-spi.ko | grep alias
-alias:          of:N*T*Cti,tps65912C*
-alias:          of:N*T*Cti,tps65912
-alias:          spi:tps65912
-
-Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
-Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Link: http://lkml.kernel.org/r/20190319092734.276-1-zbestahu@gmail.com
+Signed-off-by: Yue Hu <huyue2@yulong.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Joe Perches <joe@perches.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Dmitry Safonov <d.safonov@partner.samsung.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/tps65912-spi.c | 1 +
- 1 file changed, 1 insertion(+)
+ mm/cma_debug.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/tps65912-spi.c b/drivers/mfd/tps65912-spi.c
-index 3bd75061f7776..f78be039e4637 100644
---- a/drivers/mfd/tps65912-spi.c
-+++ b/drivers/mfd/tps65912-spi.c
-@@ -27,6 +27,7 @@ static const struct of_device_id tps65912_spi_of_match_table[] = {
- 	{ .compatible = "ti,tps65912", },
- 	{ /* sentinel */ }
- };
-+MODULE_DEVICE_TABLE(of, tps65912_spi_of_match_table);
- 
- static int tps65912_spi_probe(struct spi_device *spi)
- {
+diff --git a/mm/cma_debug.c b/mm/cma_debug.c
+index 275df8b5b22e7..c47ea3cfee791 100644
+--- a/mm/cma_debug.c
++++ b/mm/cma_debug.c
+@@ -58,7 +58,7 @@ static int cma_maxchunk_get(void *data, u64 *val)
+ 	mutex_lock(&cma->lock);
+ 	for (;;) {
+ 		start = find_next_zero_bit(cma->bitmap, bitmap_maxno, end);
+-		if (start >= cma->count)
++		if (start >= bitmap_maxno)
+ 			break;
+ 		end = find_next_bit(cma->bitmap, bitmap_maxno, start);
+ 		maxchunk = max(end - start, maxchunk);
 -- 
 2.20.1
 
