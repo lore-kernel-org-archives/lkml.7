@@ -2,50 +2,54 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB19C28CC3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC123C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90DBF27480
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:30:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5A6027480
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:30:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395855;
-	bh=WDEbsLFAiCl6ckqFCFT+twQVUD5HCY1sdQCo7AQCfjw=;
+	s=default; t=1559395858;
+	bh=FJIoqZ3bUBzyDyOiVEgVb95bb2oFjRDbg5iidlYew6A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=poPnAQjxf/QyqUIk/DjUqvEtZ+gBcAZMVp9S0RLo1ccZZv2+UAvnyZQC4DF9r7jEx
-	 YI5UtJ0TEYLXfEhe7xYNVKU7UX4lt3i7gE23tMhQcAtIVXF9z2tQ1mI1yy8JdppfAO
-	 zILq/jdLnvYCJ3K0afCa4v4lJSwETNZgAqAVZZoU=
+	b=KNWIWSxeVKIQyjyFPpYWBucUQWaaVCQAz4t/nLuBbT8ifpnOiO7S6t0U+sRHx1cDa
+	 R5loH6X/rq0hhz1q59RJDqlj7hNXhKCdm2Q/FowykQ1MkcWharjPvQ5d9H5vx8jPll
+	 gUlgVrDAdBB1XtnGlvoS3V0mLxxpKdYwGtKnZbPI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729632AbfFAN0G (ORCPT
+        id S1729289AbfFAN0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:26:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56224 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:26:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729558AbfFANZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:25:51 -0400
+        id S1729552AbfFANZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:25:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48C582739A;
-        Sat,  1 Jun 2019 13:25:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 146D82739B;
+        Sat,  1 Jun 2019 13:25:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395551;
-        bh=WDEbsLFAiCl6ckqFCFT+twQVUD5HCY1sdQCo7AQCfjw=;
+        s=default; t=1559395549;
+        bh=FJIoqZ3bUBzyDyOiVEgVb95bb2oFjRDbg5iidlYew6A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vEEGktYjj+3cE6Rs+fEDU19POpaCsgV1KBwxNtfCdgFgcLhoLN1endtr8USfBBABq
-         T6DyU2dAVoFYr4OLib1crwR0D0Akuy9qfN6fAIHJoqTlY+8Wi4Op1Mm8CD82bgIaZP
-         kXhIRwkx/2qTUAm2pZdkMqjnET+jF+0Fr3n6RgBs=
+        b=XMahaD9f404fTDalv3bnEzgEAZvn4Wy5f70bNJB30R/iR33AMhFypSbh6dZEvhpEn
+         bzljlsW1Y9TAU8r3gn7MpP+ijRr7d7ftbsaFntfOK2sWp0NZ3G8Kc7/QLXx2bAoRkW
+         hkuQPf6uKeuIW7hO1zV8ls7620wC2T4N55b0f6ls=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 26/74] configfs: fix possible use-after-free in configfs_register_group
-Date:   Sat,  1 Jun 2019 09:24:13 -0400
-Message-Id: <20190601132501.27021-26-sashal@kernel.org>
+Cc:     Elazar Leibovich <elazar@lightbitslabs.com>,
+        Orit Wasserman <orit.was@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 25/74] tracing: Fix partial reading of trace event's id file
+Date:   Sat,  1 Jun 2019 09:24:12 -0400
+Message-Id: <20190601132501.27021-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132501.27021-1-sashal@kernel.org>
 References: <20190601132501.27021-1-sashal@kernel.org>
@@ -58,135 +62,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Elazar Leibovich <elazar@lightbitslabs.com>
 
-[ Upstream commit 35399f87e271f7cf3048eab00a421a6519ac8441 ]
+[ Upstream commit cbe08bcbbe787315c425dde284dcb715cfbf3f39 ]
 
-In configfs_register_group(), if create_default_group() failed, we
-forget to unlink the group. It will left a invalid item in the parent list,
-which may trigger the use-after-free issue seen below:
+When reading only part of the id file, the ppos isn't tracked correctly.
+This is taken care by simple_read_from_buffer.
 
-BUG: KASAN: use-after-free in __list_add_valid+0xd4/0xe0 lib/list_debug.c:26
-Read of size 8 at addr ffff8881ef61ae20 by task syz-executor.0/5996
+Reading a single byte, and then the next byte would result EOF.
 
-CPU: 1 PID: 5996 Comm: syz-executor.0 Tainted: G         C        5.0.0+ #5
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xa9/0x10e lib/dump_stack.c:113
- print_address_description+0x65/0x270 mm/kasan/report.c:187
- kasan_report+0x149/0x18d mm/kasan/report.c:317
- __list_add_valid+0xd4/0xe0 lib/list_debug.c:26
- __list_add include/linux/list.h:60 [inline]
- list_add_tail include/linux/list.h:93 [inline]
- link_obj+0xb0/0x190 fs/configfs/dir.c:759
- link_group+0x1c/0x130 fs/configfs/dir.c:784
- configfs_register_group+0x56/0x1e0 fs/configfs/dir.c:1751
- configfs_register_default_group+0x72/0xc0 fs/configfs/dir.c:1834
- ? 0xffffffffc1be0000
- iio_sw_trigger_init+0x23/0x1000 [industrialio_sw_trigger]
- do_one_initcall+0xbc/0x47d init/main.c:887
- do_init_module+0x1b5/0x547 kernel/module.c:3456
- load_module+0x6405/0x8c10 kernel/module.c:3804
- __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
- do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x462e99
-Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f494ecbcc58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-RDX: 0000000000000000 RSI: 0000000020000180 RDI: 0000000000000003
-RBP: 00007f494ecbcc70 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f494ecbd6bc
-R13: 00000000004bcefa R14: 00000000006f6fb0 R15: 0000000000000004
+While this seems like not a big deal, this breaks abstractions that
+reads information from files unbuffered. See for example
+https://github.com/golang/go/issues/29399
 
-Allocated by task 5987:
- set_track mm/kasan/common.c:87 [inline]
- __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:497
- kmalloc include/linux/slab.h:545 [inline]
- kzalloc include/linux/slab.h:740 [inline]
- configfs_register_default_group+0x4c/0xc0 fs/configfs/dir.c:1829
- 0xffffffffc1bd0023
- do_one_initcall+0xbc/0x47d init/main.c:887
- do_init_module+0x1b5/0x547 kernel/module.c:3456
- load_module+0x6405/0x8c10 kernel/module.c:3804
- __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
- do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+This code was mentioned as problematic in
+commit cd458ba9d5a5
+("tracing: Do not (ab)use trace_seq in event_id_read()")
 
-Freed by task 5987:
- set_track mm/kasan/common.c:87 [inline]
- __kasan_slab_free+0x130/0x180 mm/kasan/common.c:459
- slab_free_hook mm/slub.c:1429 [inline]
- slab_free_freelist_hook mm/slub.c:1456 [inline]
- slab_free mm/slub.c:3003 [inline]
- kfree+0xe1/0x270 mm/slub.c:3955
- configfs_register_default_group+0x9a/0xc0 fs/configfs/dir.c:1836
- 0xffffffffc1bd0023
- do_one_initcall+0xbc/0x47d init/main.c:887
- do_init_module+0x1b5/0x547 kernel/module.c:3456
- load_module+0x6405/0x8c10 kernel/module.c:3804
- __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
- do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+An example C code that show this bug is:
 
-The buggy address belongs to the object at ffff8881ef61ae00
- which belongs to the cache kmalloc-192 of size 192
-The buggy address is located 32 bytes inside of
- 192-byte region [ffff8881ef61ae00, ffff8881ef61aec0)
-The buggy address belongs to the page:
-page:ffffea0007bd8680 count:1 mapcount:0 mapping:ffff8881f6c03000 index:0xffff8881ef61a700
-flags: 0x2fffc0000000200(slab)
-raw: 02fffc0000000200 ffffea0007ca4740 0000000500000005 ffff8881f6c03000
-raw: ffff8881ef61a700 000000008010000c 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
+  #include <stdio.h>
+  #include <stdint.h>
 
-Memory state around the buggy address:
- ffff8881ef61ad00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff8881ef61ad80: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
->ffff8881ef61ae00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                               ^
- ffff8881ef61ae80: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
- ffff8881ef61af00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  #include <sys/types.h>
+  #include <sys/stat.h>
+  #include <fcntl.h>
+  #include <unistd.h>
 
-Fixes: 5cf6a51e6062 ("configfs: allow dynamic group creation")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+  int main(int argc, char **argv) {
+    if (argc < 2)
+      return 1;
+    int fd = open(argv[1], O_RDONLY);
+    char c;
+    read(fd, &c, 1);
+    printf("First  %c\n", c);
+    read(fd, &c, 1);
+    printf("Second %c\n", c);
+  }
+
+Then run with, e.g.
+
+  sudo ./a.out /sys/kernel/debug/tracing/events/tcp/tcp_set_state/id
+
+You'll notice you're getting the first character twice, instead of the
+first two characters in the id file.
+
+Link: http://lkml.kernel.org/r/20181231115837.4932-1-elazar@lightbitslabs.com
+
+Cc: Orit Wasserman <orit.was@gmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: stable@vger.kernel.org
+Fixes: 23725aeeab10b ("ftrace: provide an id file for each event")
+Signed-off-by: Elazar Leibovich <elazar@lightbitslabs.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/configfs/dir.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ kernel/trace/trace_events.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/fs/configfs/dir.c b/fs/configfs/dir.c
-index d2a1a79fa324b..d7955dc56737f 100644
---- a/fs/configfs/dir.c
-+++ b/fs/configfs/dir.c
-@@ -1755,12 +1755,19 @@ int configfs_register_group(struct config_group *parent_group,
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 9549ed120556e..af969f753e5e9 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -1310,9 +1310,6 @@ event_id_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t *ppos)
+ 	char buf[32];
+ 	int len;
  
- 	inode_lock_nested(d_inode(parent), I_MUTEX_PARENT);
- 	ret = create_default_group(parent_group, group);
--	if (!ret) {
--		spin_lock(&configfs_dirent_lock);
--		configfs_dir_set_ready(group->cg_item.ci_dentry->d_fsdata);
--		spin_unlock(&configfs_dirent_lock);
--	}
-+	if (ret)
-+		goto err_out;
-+
-+	spin_lock(&configfs_dirent_lock);
-+	configfs_dir_set_ready(group->cg_item.ci_dentry->d_fsdata);
-+	spin_unlock(&configfs_dirent_lock);
-+	inode_unlock(d_inode(parent));
-+	return 0;
-+err_out:
- 	inode_unlock(d_inode(parent));
-+	mutex_lock(&subsys->su_mutex);
-+	unlink_group(group);
-+	mutex_unlock(&subsys->su_mutex);
- 	return ret;
- }
- EXPORT_SYMBOL(configfs_register_group);
+-	if (*ppos)
+-		return 0;
+-
+ 	if (unlikely(!id))
+ 		return -ENODEV;
+ 
 -- 
 2.20.1
 
