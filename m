@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF29BC28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BAE2C46470
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8DF52757D
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FD222757D
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:35:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396145;
-	bh=aNSg5XVsGkBPZbEvDCg1nv+Z663UXtIi0ywaorvDbkA=;
+	s=default; t=1559396151;
+	bh=hbpDSdsiqzzH44ua+jPAMAV4A0jaon2NuTZRaJlsP0o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F0jD4zzjrSRXIuteOakg9d8hlHuzdWk4cDKoDcdJFeer/4gI6AaLDErpMxwwHlYtE
-	 jBpGPTyREqA34M2jGVNVKf+E+657cgChNZqKjel9uZT51t7W3ktDmfLdXcl6UEREi/
-	 v1HFkJ711pksDfY9xnxFx4w0XlMIuS06h9Yuh3V0=
+	b=kozi2me9xv4gAO5Z245HzUJV+8CZxDEDoC6fX4a4twMeyEULw9RXMeVSAWshi+ges
+	 7jh/Sct0u766E4mcAwXjdz/wxAh8jxvia/lNJRNBx4RM67wuza/JhTvryiUdjWOUuF
+	 PYcV0f9UJusXCX8YyVmlOumUvgSlQ3GwCh48B+Tk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729287AbfFANfo (ORCPT
+        id S1728924AbfFANXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:35:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52964 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:23:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728935AbfFANXO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:23:14 -0400
+        id S1728893AbfFANXI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:23:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 355B7240F2;
-        Sat,  1 Jun 2019 13:23:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01BA227331;
+        Sat,  1 Jun 2019 13:23:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395393;
-        bh=aNSg5XVsGkBPZbEvDCg1nv+Z663UXtIi0ywaorvDbkA=;
+        s=default; t=1559395388;
+        bh=hbpDSdsiqzzH44ua+jPAMAV4A0jaon2NuTZRaJlsP0o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CV5DdqUA+M98GMRPRR2cD36XQOvWrP8Qsqy1WT2HLhrIKfIUwPXTn2vku1J9G6Ibq
-         MPKoqTLR0vT0ipV0OQ2kXl2VDSSozos/Z1aW7GIzf8KtEwlP2pL3XZy9Gly93cdunQ
-         z1NifRyiFZ4+Iv1Kk5uIK25Pv34cO+vLsVfp415E=
+        b=t99NIeaIE71ZrLa/9BIgoxYxRlf8CtWPX10euHk5tXlluT38Jic2CF8LlrrcIJSSt
+         UojoIAL+N5MFsWgl8x6n8pPYQ4IYORVF+qpgmL+cZWxNrKdy0fUqJB9hz2lQTC7/BV
+         8sT66A6sV13wa+veBYe5d4EmgpMy2PPTH4xLanYA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.19 034/141] f2fs: fix to avoid panic in do_recover_data()
-Date:   Sat,  1 Jun 2019 09:20:10 -0400
-Message-Id: <20190601132158.25821-34-sashal@kernel.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Borislav Petkov <bp@suse.de>,
+        Johannes Thumshirn <jth@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>, linuxppc-dev@ozlabs.org,
+        morbidrsa@gmail.com, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 029/141] EDAC/mpc85xx: Prevent building as a module
+Date:   Sat,  1 Jun 2019 09:20:05 -0400
+Message-Id: <20190601132158.25821-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132158.25821-1-sashal@kernel.org>
 References: <20190601132158.25821-1-sashal@kernel.org>
@@ -59,78 +63,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit 22d61e286e2d9097dae36f75ed48801056b77cac ]
+[ Upstream commit 2b8358a951b1e2a534a54924cd8245e58a1c5fb8 ]
 
-As Jungyeon reported in bugzilla:
+The mpc85xx EDAC driver can be configured as a module but then fails to
+build because it uses two unexported symbols:
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203227
+  ERROR: ".pci_find_hose_for_OF_device" [drivers/edac/mpc85xx_edac_mod.ko] undefined!
+  ERROR: ".early_find_capability" [drivers/edac/mpc85xx_edac_mod.ko] undefined!
 
-- Overview
-When mounting the attached crafted image, following errors are reported.
-Additionally, it hangs on sync after trying to mount it.
+We don't want to export those symbols just for this driver, so make the
+driver only configurable as a built-in.
 
-The image is intentionally fuzzed from a normal f2fs image for testing.
-Compile options for F2FS are as follows.
-CONFIG_F2FS_FS=y
-CONFIG_F2FS_STAT_FS=y
-CONFIG_F2FS_FS_XATTR=y
-CONFIG_F2FS_FS_POSIX_ACL=y
-CONFIG_F2FS_CHECK_FS=y
+This seems to have been broken since at least
 
-- Reproduces
-mkdir test
-mount -t f2fs tmp.img test
-sync
+  c92132f59806 ("edac/85xx: Add PCIe error interrupt edac support")
 
-- Messages
- kernel BUG at fs/f2fs/recovery.c:549!
- RIP: 0010:recover_data+0x167a/0x1780
- Call Trace:
-  f2fs_recover_fsync_data+0x613/0x710
-  f2fs_fill_super+0x1043/0x1aa0
-  mount_bdev+0x16d/0x1a0
-  mount_fs+0x4a/0x170
-  vfs_kern_mount+0x5d/0x100
-  do_mount+0x200/0xcf0
-  ksys_mount+0x79/0xc0
-  __x64_sys_mount+0x1c/0x20
-  do_syscall_64+0x43/0xf0
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+(Nov 2013).
 
-During recovery, if ofs_of_node is inconsistent in between recovered
-node page and original checkpointed node page, let's just fail recovery
-instead of making kernel panic.
+ [ bp: make it depend on EDAC=y so that the EDAC core doesn't get built
+   as a module. ]
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Johannes Thumshirn <jth@kernel.org>
+Cc: James Morse <james.morse@arm.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Cc: linuxppc-dev@ozlabs.org
+Cc: morbidrsa@gmail.com
+Link: https://lkml.kernel.org/r/20190502141941.12927-1-mpe@ellerman.id.au
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/recovery.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/edac/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
-index ae0e5f2e67b4a..bf5c5f4fa77ea 100644
---- a/fs/f2fs/recovery.c
-+++ b/fs/f2fs/recovery.c
-@@ -485,7 +485,15 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
- 		goto err;
+diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+index 57304b2e989f2..b00cc03ad6b67 100644
+--- a/drivers/edac/Kconfig
++++ b/drivers/edac/Kconfig
+@@ -250,8 +250,8 @@ config EDAC_PND2
+ 	  micro-server but may appear on others in the future.
  
- 	f2fs_bug_on(sbi, ni.ino != ino_of_node(page));
--	f2fs_bug_on(sbi, ofs_of_node(dn.node_page) != ofs_of_node(page));
-+
-+	if (ofs_of_node(dn.node_page) != ofs_of_node(page)) {
-+		f2fs_msg(sbi->sb, KERN_WARNING,
-+			"Inconsistent ofs_of_node, ino:%lu, ofs:%u, %u",
-+			inode->i_ino, ofs_of_node(dn.node_page),
-+			ofs_of_node(page));
-+		err = -EFAULT;
-+		goto err;
-+	}
- 
- 	for (; start < end; start++, dn.ofs_in_node++) {
- 		block_t src, dest;
+ config EDAC_MPC85XX
+-	tristate "Freescale MPC83xx / MPC85xx"
+-	depends on FSL_SOC
++	bool "Freescale MPC83xx / MPC85xx"
++	depends on FSL_SOC && EDAC=y
+ 	help
+ 	  Support for error detection and correction on the Freescale
+ 	  MPC8349, MPC8560, MPC8540, MPC8548, T4240
 -- 
 2.20.1
 
