@@ -4,56 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F496C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C477C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7535627310
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:21:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C2E827310
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:21:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395281;
-	bh=ovK+AB50RkngX4ySnqrgWIrQ10Rt36zLYGZVQ5jDaEM=;
+	s=default; t=1559395285;
+	bh=ZWzVFlIft31zb3RWJGRv+k8CjnegSe/O+ll1Bp6ExCU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sZbrWfy9FtyvEjaXuqInkpwHNqOkrq+QW4+tVjtD5b57EN7tK3DCFvt6fhOzxt7L/
-	 pnn6r//ZPyLAuYGSq8PGKE2iI3jxTatOYxHTbS/2ieeHToGAkbGq4Qz3ffxOG5eT7G
-	 Nfwu3whMk2ifsS/2aRqrDPkiwBv0QJQi2pxaV/Dc=
+	b=jGomWmxoLMt/4HXBIp4W4c/kG+I1gjZoErqJiMaF5lfzoZE0kIwCoD4xstVxYejhl
+	 R0e07thu/EsoEwv3kxjvGKh7IyUBlg09DRa9Jonko+Ah0E5WcANwEQaJvS7YNcXez/
+	 +hx4arHV+VjqpuV7/kLlPyeFcXJtjLN808tjJhn4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728467AbfFANVU (ORCPT
+        id S1728495AbfFANVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:21:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48460 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:21:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728419AbfFANVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:21:09 -0400
+        id S1728436AbfFANVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:21:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F6B2272F5;
-        Sat,  1 Jun 2019 13:21:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F552272FE;
+        Sat,  1 Jun 2019 13:21:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395269;
-        bh=ovK+AB50RkngX4ySnqrgWIrQ10Rt36zLYGZVQ5jDaEM=;
+        s=default; t=1559395275;
+        bh=ZWzVFlIft31zb3RWJGRv+k8CjnegSe/O+ll1Bp6ExCU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z/yKsNj1nueg8nCIqgBq6xlYh6diCWex/riOg7Ne0ViA5EpLL0LXCFcXpfzahnV8o
-         LbkorczrkUbrhsW1CnBd20FF49TGBmMWZ4Ql0BaArEPnaK/+YV+jD0x3w9dmg4Ge8u
-         A5b2lDH9acIJWUpD6yz+p7uIvJUnRF6CcVRJ7Cls=
+        b=0B4r277CHEMfqZHeU1rq7G9chvJ/ZrQEc8peqxZH3Vy6pIetDD2/5B3/wlqpFHxfn
+         HW9xbbhUj4aALx8jY8oDEmwfU/mkkvHXfCNTrTebqj1uHEilDFtKJyFbGOOQhRWnWN
+         tkbgolMePvAeJHRRXbceHJFSfIMm2xEeLFUvzCMo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Douglas Anderson <dianders@chromium.org>,
-        Kees Cook <keescook@chromium.org>,
-        Sasha Levin <sashal@kernel.org>,
-        kernel-hardening@lists.openwall.com
-Subject: [PATCH AUTOSEL 5.0 034/173] gcc-plugins: arm_ssp_per_task_plugin: Fix for older GCC < 6
-Date:   Sat,  1 Jun 2019 09:17:06 -0400
-Message-Id: <20190601131934.25053-34-sashal@kernel.org>
+Cc:     Miroslav Lichvar <mlichvar@redhat.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Prarit Bhargava <prarit@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 039/173] ntp: Allow TAI-UTC offset to be set to zero
+Date:   Sat,  1 Jun 2019 09:17:11 -0400
+Message-Id: <20190601131934.25053-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131934.25053-1-sashal@kernel.org>
 References: <20190601131934.25053-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,48 +63,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+From: Miroslav Lichvar <mlichvar@redhat.com>
 
-[ Upstream commit 259799ea5a9aa099a267f3b99e1f7078bbaf5c5e ]
+[ Upstream commit fdc6bae940ee9eb869e493990540098b8c0fd6ab ]
 
-Use gen_rtx_set instead of gen_rtx_SET. The former is a wrapper macro
-that handles the difference between GCC versions implementing
-the latter.
+The ADJ_TAI adjtimex mode sets the TAI-UTC offset of the system clock.
+It is typically set by NTP/PTP implementations and it is automatically
+updated by the kernel on leap seconds. The initial value is zero (which
+applications may interpret as unknown), but this value cannot be set by
+adjtimex. This limitation seems to go back to the original "nanokernel"
+implementation by David Mills.
 
-This fixes the following error on my system with g++ 5.4.0 as the host
-compiler
+Change the ADJ_TAI check to accept zero as a valid TAI-UTC offset in
+order to allow setting it back to the initial value.
 
-   HOSTCXX -fPIC scripts/gcc-plugins/arm_ssp_per_task_plugin.o
- scripts/gcc-plugins/arm_ssp_per_task_plugin.c:42:14: error: macro "gen_rtx_SET" requires 3 arguments, but only 2 given
-          mask)),
-               ^
- scripts/gcc-plugins/arm_ssp_per_task_plugin.c: In function ‘unsigned int arm_pertask_ssp_rtl_execute()’:
- scripts/gcc-plugins/arm_ssp_per_task_plugin.c:39:20: error: ‘gen_rtx_SET’ was not declared in this scope
-    emit_insn_before(gen_rtx_SET
-
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Fixes: 189af4657186 ("ARM: smp: add support for per-task stack canaries")
-Cc: stable@vger.kernel.org
-Tested-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Fixes: 153b5d054ac2 ("ntp: support for TAI")
+Suggested-by: Ondrej Mosnacek <omosnace@redhat.com>
+Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: Richard Cochran <richardcochran@gmail.com>
+Cc: Prarit Bhargava <prarit@redhat.com>
+Link: https://lkml.kernel.org/r/20190417084833.7401-1-mlichvar@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/gcc-plugins/arm_ssp_per_task_plugin.c | 2 +-
+ kernel/time/ntp.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/scripts/gcc-plugins/arm_ssp_per_task_plugin.c b/scripts/gcc-plugins/arm_ssp_per_task_plugin.c
-index 89c47f57d1ce1..8c1af9bdcb1bb 100644
---- a/scripts/gcc-plugins/arm_ssp_per_task_plugin.c
-+++ b/scripts/gcc-plugins/arm_ssp_per_task_plugin.c
-@@ -36,7 +36,7 @@ static unsigned int arm_pertask_ssp_rtl_execute(void)
- 		mask = GEN_INT(sext_hwi(sp_mask, GET_MODE_PRECISION(Pmode)));
- 		masked_sp = gen_reg_rtx(Pmode);
+diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
+index 36a2bef001253..2f11dc592eb3a 100644
+--- a/kernel/time/ntp.c
++++ b/kernel/time/ntp.c
+@@ -689,7 +689,7 @@ static inline void process_adjtimex_modes(const struct timex *txc, s32 *time_tai
+ 		time_constant = max(time_constant, 0l);
+ 	}
  
--		emit_insn_before(gen_rtx_SET(masked_sp,
-+		emit_insn_before(gen_rtx_set(masked_sp,
- 					     gen_rtx_AND(Pmode,
- 							 stack_pointer_rtx,
- 							 mask)),
+-	if (txc->modes & ADJ_TAI && txc->constant > 0)
++	if (txc->modes & ADJ_TAI && txc->constant >= 0)
+ 		*time_tai = txc->constant;
+ 
+ 	if (txc->modes & ADJ_OFFSET)
 -- 
 2.20.1
 
