@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F05C28CC4
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CCD1C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34C4126FAA
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33B85272E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:29:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395737;
-	bh=h1UnrCnk/5MnPPaNdmSoBK/0X7X3BZNxYU/PcbGSPbc=;
+	s=default; t=1559395742;
+	bh=IL/nGdSKktqzepUO//InfHWaBEuu+eKO2x3C+X1hdKk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vnx3eV2KDoa/42AVMHY5Zj7HlB022IEWDSt3KBOSFAA+5oAtN00K5d0nYSPoIJLC1
-	 o036vpMMOMr2Ol6IFtIYx76D9Mh1e57NAgukTOGQE10BqJGO0CwLUngvXndbmF5dg0
-	 fz/oCNlrOWGOKfOsOzUn6/OQemnzARCTrNqpa/Wg=
+	b=IUp7YxsK3C6CA1i8lzCj/gRWsqDeVOMv4bvDX+tHargPKlN+ODYjFubs6lJHrmo4e
+	 GJgAAOuDGtD6Zr1Gv9YnrNZGOD379yuDt4HvomTtAOcW5CbwfkmzdJWLPXzeKc2Vqs
+	 2YpaWkiYNfothft5d1+aiXzREnZiIdlj/Ffg3/Xw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729918AbfFAN2l (ORCPT
+        id S1729801AbfFAN3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:28:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57868 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:29:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729921AbfFAN1N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:27:13 -0400
+        id S1729346AbfFAN1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:27:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3F27273CD;
-        Sat,  1 Jun 2019 13:27:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BE48273CB;
+        Sat,  1 Jun 2019 13:27:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395632;
-        bh=h1UnrCnk/5MnPPaNdmSoBK/0X7X3BZNxYU/PcbGSPbc=;
+        s=default; t=1559395631;
+        bh=IL/nGdSKktqzepUO//InfHWaBEuu+eKO2x3C+X1hdKk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vAHRjfKiAYcVruuLNis7zO748d8ur1qKB1koqGIzrDBdGyxSYjFHXS+bWDfHhvmzo
-         BleaS4m7H/raQBWrHUoyXMj3hY+yV2Tbfkn5CvJxY1wnet2fOH5KACM4GAr99g9DXO
-         ZIxLkr5wFbzS8+57kLdJ94wRc3VDBblCmOLtvu98=
+        b=nFCnXe6h5bvw6Ml7fasxMni6fxhJye9X7orj/1VzigUA8zMp2Rt0gsq+s5DamHI/s
+         7evynRJ4czZ3Ed2kFxHjF5NZIk1+NwXU9Fvn0HgXiNHxhHnyNpm+kFsWzoCO+1Ky4u
+         kYkGfwSmnX/1atPAggrcZWzboSy32D0a0TpcAQxM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Yifeng Li <tomli@tomli.me>,
@@ -47,9 +47,9 @@ Cc:     Yifeng Li <tomli@tomli.me>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sasha Levin <sashal@kernel.org>, linux-fbdev@vger.kernel.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.4 42/56] fbdev: sm712fb: fix boot screen glitch when sm712fb replaces VGA
-Date:   Sat,  1 Jun 2019 09:25:46 -0400
-Message-Id: <20190601132600.27427-42-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 41/56] fbdev: sm712fb: fix crashes and garbled display during DPMS modesetting
+Date:   Sat,  1 Jun 2019 09:25:45 -0400
+Message-Id: <20190601132600.27427-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132600.27427-1-sashal@kernel.org>
 References: <20190601132600.27427-1-sashal@kernel.org>
@@ -64,13 +64,19 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yifeng Li <tomli@tomli.me>
 
-[ Upstream commit ec1587d5073f29820e358f3a383850d61601d981 ]
+[ Upstream commit f627caf55b8e735dcec8fa6538e9668632b55276 ]
 
-When the machine is booted in VGA mode, loading sm712fb would cause
-a glitch of random pixels shown on the screen. To prevent it from
-happening, we first clear the entire framebuffer, and we also need
-to stop calling smtcfb_setmode() during initialization, the fbdev
-layer will call it for us later when it's ready.
+On a Thinkpad s30 (Pentium III / i440MX, Lynx3DM), blanking the display
+or starting the X server will crash and freeze the system, or garble the
+display.
+
+Experiments showed this problem can mostly be solved by adjusting the
+order of register writes. Also, sm712fb failed to consider the difference
+of clock frequency when unblanking the display, and programs the clock for
+SM712 to SM720.
+
+Fix them by adjusting the order of register writes, and adding an
+additional check for SM720 for programming the clock frequency.
 
 Signed-off-by: Yifeng Li <tomli@tomli.me>
 Tested-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
@@ -79,26 +85,119 @@ Cc: <stable@vger.kernel.org>  # v4.4+
 Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/sm712fb.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/video/fbdev/sm712fb.c | 64 +++++++++++++++++++++--------------
+ 1 file changed, 38 insertions(+), 26 deletions(-)
 
 diff --git a/drivers/video/fbdev/sm712fb.c b/drivers/video/fbdev/sm712fb.c
-index 2539c1e6facb4..6a30714a18632 100644
+index 86ae1d4556fc1..2539c1e6facb4 100644
 --- a/drivers/video/fbdev/sm712fb.c
 +++ b/drivers/video/fbdev/sm712fb.c
-@@ -1498,7 +1498,11 @@ static int smtcfb_pci_probe(struct pci_dev *pdev,
- 	if (err)
- 		goto failed;
+@@ -827,67 +827,79 @@ static inline unsigned int chan_to_field(unsigned int chan,
  
--	smtcfb_setmode(sfb);
-+	/*
-+	 * The screen would be temporarily garbled when sm712fb takes over
-+	 * vesafb or VGA text mode. Zero the framebuffer.
-+	 */
-+	memset_io(sfb->lfb, 0, sfb->fb->fix.smem_len);
- 
- 	err = register_framebuffer(info);
- 	if (err < 0)
+ static int smtc_blank(int blank_mode, struct fb_info *info)
+ {
++	struct smtcfb_info *sfb = info->par;
++
+ 	/* clear DPMS setting */
+ 	switch (blank_mode) {
+ 	case FB_BLANK_UNBLANK:
+ 		/* Screen On: HSync: On, VSync : On */
++
++		switch (sfb->chip_id) {
++		case 0x710:
++		case 0x712:
++			smtc_seqw(0x6a, 0x16);
++			smtc_seqw(0x6b, 0x02);
++		case 0x720:
++			smtc_seqw(0x6a, 0x0d);
++			smtc_seqw(0x6b, 0x02);
++			break;
++		}
++
++		smtc_seqw(0x23, (smtc_seqr(0x23) & (~0xc0)));
+ 		smtc_seqw(0x01, (smtc_seqr(0x01) & (~0x20)));
+-		smtc_seqw(0x6a, 0x16);
+-		smtc_seqw(0x6b, 0x02);
+ 		smtc_seqw(0x21, (smtc_seqr(0x21) & 0x77));
+ 		smtc_seqw(0x22, (smtc_seqr(0x22) & (~0x30)));
+-		smtc_seqw(0x23, (smtc_seqr(0x23) & (~0xc0)));
+-		smtc_seqw(0x24, (smtc_seqr(0x24) | 0x01));
+ 		smtc_seqw(0x31, (smtc_seqr(0x31) | 0x03));
++		smtc_seqw(0x24, (smtc_seqr(0x24) | 0x01));
+ 		break;
+ 	case FB_BLANK_NORMAL:
+ 		/* Screen Off: HSync: On, VSync : On   Soft blank */
++		smtc_seqw(0x24, (smtc_seqr(0x24) | 0x01));
++		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
++		smtc_seqw(0x23, (smtc_seqr(0x23) & (~0xc0)));
+ 		smtc_seqw(0x01, (smtc_seqr(0x01) & (~0x20)));
++		smtc_seqw(0x22, (smtc_seqr(0x22) & (~0x30)));
+ 		smtc_seqw(0x6a, 0x16);
+ 		smtc_seqw(0x6b, 0x02);
+-		smtc_seqw(0x22, (smtc_seqr(0x22) & (~0x30)));
+-		smtc_seqw(0x23, (smtc_seqr(0x23) & (~0xc0)));
+-		smtc_seqw(0x24, (smtc_seqr(0x24) | 0x01));
+-		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
+ 		break;
+ 	case FB_BLANK_VSYNC_SUSPEND:
+ 		/* Screen On: HSync: On, VSync : Off */
++		smtc_seqw(0x24, (smtc_seqr(0x24) & (~0x01)));
++		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
++		smtc_seqw(0x23, ((smtc_seqr(0x23) & (~0xc0)) | 0x20));
+ 		smtc_seqw(0x01, (smtc_seqr(0x01) | 0x20));
+-		smtc_seqw(0x20, (smtc_seqr(0x20) & (~0xB0)));
+-		smtc_seqw(0x6a, 0x0c);
+-		smtc_seqw(0x6b, 0x02);
+ 		smtc_seqw(0x21, (smtc_seqr(0x21) | 0x88));
++		smtc_seqw(0x20, (smtc_seqr(0x20) & (~0xB0)));
+ 		smtc_seqw(0x22, ((smtc_seqr(0x22) & (~0x30)) | 0x20));
+-		smtc_seqw(0x23, ((smtc_seqr(0x23) & (~0xc0)) | 0x20));
+-		smtc_seqw(0x24, (smtc_seqr(0x24) & (~0x01)));
+-		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
+ 		smtc_seqw(0x34, (smtc_seqr(0x34) | 0x80));
++		smtc_seqw(0x6a, 0x0c);
++		smtc_seqw(0x6b, 0x02);
+ 		break;
+ 	case FB_BLANK_HSYNC_SUSPEND:
+ 		/* Screen On: HSync: Off, VSync : On */
++		smtc_seqw(0x24, (smtc_seqr(0x24) & (~0x01)));
++		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
++		smtc_seqw(0x23, ((smtc_seqr(0x23) & (~0xc0)) | 0xD8));
+ 		smtc_seqw(0x01, (smtc_seqr(0x01) | 0x20));
+-		smtc_seqw(0x20, (smtc_seqr(0x20) & (~0xB0)));
+-		smtc_seqw(0x6a, 0x0c);
+-		smtc_seqw(0x6b, 0x02);
+ 		smtc_seqw(0x21, (smtc_seqr(0x21) | 0x88));
++		smtc_seqw(0x20, (smtc_seqr(0x20) & (~0xB0)));
+ 		smtc_seqw(0x22, ((smtc_seqr(0x22) & (~0x30)) | 0x10));
+-		smtc_seqw(0x23, ((smtc_seqr(0x23) & (~0xc0)) | 0xD8));
+-		smtc_seqw(0x24, (smtc_seqr(0x24) & (~0x01)));
+-		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
+ 		smtc_seqw(0x34, (smtc_seqr(0x34) | 0x80));
++		smtc_seqw(0x6a, 0x0c);
++		smtc_seqw(0x6b, 0x02);
+ 		break;
+ 	case FB_BLANK_POWERDOWN:
+ 		/* Screen On: HSync: Off, VSync : Off */
++		smtc_seqw(0x24, (smtc_seqr(0x24) & (~0x01)));
++		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
++		smtc_seqw(0x23, ((smtc_seqr(0x23) & (~0xc0)) | 0xD8));
+ 		smtc_seqw(0x01, (smtc_seqr(0x01) | 0x20));
+-		smtc_seqw(0x20, (smtc_seqr(0x20) & (~0xB0)));
+-		smtc_seqw(0x6a, 0x0c);
+-		smtc_seqw(0x6b, 0x02);
+ 		smtc_seqw(0x21, (smtc_seqr(0x21) | 0x88));
++		smtc_seqw(0x20, (smtc_seqr(0x20) & (~0xB0)));
+ 		smtc_seqw(0x22, ((smtc_seqr(0x22) & (~0x30)) | 0x30));
+-		smtc_seqw(0x23, ((smtc_seqr(0x23) & (~0xc0)) | 0xD8));
+-		smtc_seqw(0x24, (smtc_seqr(0x24) & (~0x01)));
+-		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
+ 		smtc_seqw(0x34, (smtc_seqr(0x34) | 0x80));
++		smtc_seqw(0x6a, 0x0c);
++		smtc_seqw(0x6b, 0x02);
+ 		break;
+ 	default:
+ 		return -EINVAL;
 -- 
 2.20.1
 
