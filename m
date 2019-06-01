@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA793C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AFFC28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 849C02727C
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCC9D2727C
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:18:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395095;
-	bh=Au6V8N1tGmfWzLGZV8cy65ZWNYgqrGSrVTj21xNZJog=;
+	s=default; t=1559395098;
+	bh=r7Rkp6drW7YvC8pyR7a7+/B2PEGns/wxV56cYM3pWR8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QRYSC58PnaFHGekY2SoOkOTeZFTVsPOHtZWqr4myparJ5PqfhqV7BeRcMiwW6wWPs
-	 V+kMIbdcpyKydzcSG/jP8j4J4PxwJOOWWfAFqZb7KkT3R2C1DIVqlFmxUiF9rsiHCn
-	 HGPT9JNHXfqSngPGYePNlxh74JvoYXtHhdYEp5yQ=
+	b=f9sv6ICOowCsmM1wxqeWOhuMxtT0/bfCnB3+zWDXXR2MxAh2xF6botwgojfXFPT/j
+	 Fi31x0RnB3HIpbXkuzW3h5M9LlR+mQV6vHKryUJna7Y0mBvIFcTOfJiincH41n/oL/
+	 00tkniiFJCP71uElOaqDd3Hee6/oAVYFyfNZPEFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727729AbfFANSO (ORCPT
+        id S1727743AbfFANSS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:18:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45150 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:18:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727707AbfFANSL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:18:11 -0400
+        id S1727721AbfFANSN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:18:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2E782725E;
-        Sat,  1 Jun 2019 13:18:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 192932725E;
+        Sat,  1 Jun 2019 13:18:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395090;
-        bh=Au6V8N1tGmfWzLGZV8cy65ZWNYgqrGSrVTj21xNZJog=;
+        s=default; t=1559395093;
+        bh=r7Rkp6drW7YvC8pyR7a7+/B2PEGns/wxV56cYM3pWR8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nLkwqQhEVwNLBvCgI8Yh1ge746zCYGemMBUEJLp776NBG/l0WN5eNhUJ8RlQyrdYb
-         GsBtoUMrrdYi9XCOCs/vC3goVzxly8/Kx+CvRcXesKphdNQre+uNTA6uPcPcNlIuM+
-         PO+7vgcT6WfYY97AdzpF1DCZI8uXszt0oiQKWOG0=
+        b=daNnsERJXUB2/zlBFJ8IiVblpNou7WgotIUDAq00MgoM35mQI76eCV6xvs+x+sm+s
+         knGouN/WRJYxK/3hTFUba+4mWtU8pdcSNPXKBXGb9U9nzOdXFZ1+/zKyxQtLF09rvI
+         9UQhd6pgIJfDO0vSMeKM8mjqhHzW0dw62Yvmoxhs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ben Skeggs <bskeggs@redhat.com>, Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.1 028/186] drm/nouveau/disp/dp: respect sink limits when selecting failsafe link configuration
-Date:   Sat,  1 Jun 2019 09:14:04 -0400
-Message-Id: <20190601131653.24205-28-sashal@kernel.org>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, jolsa@redhat.com,
+        kan.liang@intel.com, vincent.weaver@maine.edu,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 030/186] perf/x86/intel: Allow PEBS multi-entry in watermark mode
+Date:   Sat,  1 Jun 2019 09:14:06 -0400
+Message-Id: <20190601131653.24205-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131653.24205-1-sashal@kernel.org>
 References: <20190601131653.24205-1-sashal@kernel.org>
@@ -58,45 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Skeggs <bskeggs@redhat.com>
+From: Stephane Eranian <eranian@google.com>
 
-[ Upstream commit 13d03e9daf70dab032c03dc172e75bb98ad899c4 ]
+[ Upstream commit c7a286577d7592720c2f179aadfb325a1ff48c95 ]
 
-Where possible, we want the failsafe link configuration (one which won't
-hang the OR during modeset because of not enough bandwidth for the mode)
-to also be supported by the sink.
+This patch fixes a restriction/bug introduced by:
 
-This prevents "link rate unsupported by sink" messages when link training
-fails.
+   583feb08e7f7 ("perf/x86/intel: Fix handling of wakeup_events for multi-entry PEBS")
 
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+The original patch prevented using multi-entry PEBS when wakeup_events != 0.
+However given that wakeup_events is part of a union with wakeup_watermark, it
+means that in watermark mode, PEBS multi-entry is also disabled which is not the
+intent. This patch fixes this by checking is watermark mode is enabled.
+
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: jolsa@redhat.com
+Cc: kan.liang@intel.com
+Cc: vincent.weaver@maine.edu
+Fixes: 583feb08e7f7 ("perf/x86/intel: Fix handling of wakeup_events for multi-entry PEBS")
+Link: http://lkml.kernel.org/r/20190514003400.224340-1-eranian@google.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/engine/disp/dp.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ arch/x86/events/intel/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/disp/dp.c b/drivers/gpu/drm/nouveau/nvkm/engine/disp/dp.c
-index 5f301e632599b..818d21bd28d31 100644
---- a/drivers/gpu/drm/nouveau/nvkm/engine/disp/dp.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/engine/disp/dp.c
-@@ -365,8 +365,15 @@ nvkm_dp_train(struct nvkm_dp *dp, u32 dataKBps)
- 	 * and it's better to have a failed modeset than that.
- 	 */
- 	for (cfg = nvkm_dp_rates; cfg->rate; cfg++) {
--		if (cfg->nr <= outp_nr && cfg->nr <= outp_bw)
--			failsafe = cfg;
-+		if (cfg->nr <= outp_nr && cfg->nr <= outp_bw) {
-+			/* Try to respect sink limits too when selecting
-+			 * lowest link configuration.
-+			 */
-+			if (!failsafe ||
-+			    (cfg->nr <= sink_nr && cfg->bw <= sink_bw))
-+				failsafe = cfg;
-+		}
-+
- 		if (failsafe && cfg[1].rate < dataKBps)
- 			break;
- 	}
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index d35f4775d5f10..82dad001d1ea1 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3189,7 +3189,7 @@ static int intel_pmu_hw_config(struct perf_event *event)
+ 		return ret;
+ 
+ 	if (event->attr.precise_ip) {
+-		if (!(event->attr.freq || event->attr.wakeup_events)) {
++		if (!(event->attr.freq || (event->attr.wakeup_events && !event->attr.watermark))) {
+ 			event->hw.flags |= PERF_X86_EVENT_AUTO_RELOAD;
+ 			if (!(event->attr.sample_type &
+ 			      ~intel_pmu_large_pebs_flags(event)))
 -- 
 2.20.1
 
