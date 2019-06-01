@@ -2,158 +2,96 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76827C04AB6
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 02:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DAD9C04AB6
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 02:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3795925841
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 02:02:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00FB2270A2
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 02:10:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="QbCkLEA6"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="OXeFWh5k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbfFACCe (ORCPT
+        id S1727122AbfFACKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 22:02:34 -0400
-Received: from mout.gmx.net ([212.227.15.15]:47359 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726881AbfFACCd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 22:02:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1559354552;
-        bh=XZNh8PrGgmF3y2pjWQbVYuQtQJgoz62KYsyOPS1YvSs=;
-        h=X-UI-Sender-Class:To:From:Subject:Date;
-        b=QbCkLEA6QyGvZp4mec1kILiWpQMwoDlXGZ+Gro8DopdNKf07lNxPqyhu6G37gDhay
-         YhD3vgpoVGdL+i2apVDzijM8n9h0spDpmYNNpbKd+6N9UflA3aFVgbQd5P4lgic1xP
-         et8nFlrrR3lLzr/GrMfDx2p9Fs6g0SWy1JmYM5mI=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [0.0.0.0] ([54.250.245.166]) by mail.gmx.com (mrgmx002
- [212.227.17.184]) with ESMTPSA (Nemesis) id 0MN0jA-1hUfMN0alc-006iyq for
- <linux-kernel@vger.kernel.org>; Sat, 01 Jun 2019 04:02:32 +0200
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-From:   Qu Wenruo <quwenruo.btrfs@gmx.com>
-Subject: [5.2-rc REGRESSION] Random gcc crash for 'make -j12' when low on
- memory
-Openpgp: preference=signencrypt
-Autocrypt: addr=quwenruo.btrfs@gmx.com; prefer-encrypt=mutual; keydata=
- mQENBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
- 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
- 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
- 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
- gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
- AAG0IlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT6JAVQEEwEIAD4CGwMFCwkI
- BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCWdWCnQUJCWYC
- bgAKCRDCPZHzoSX+qAR8B/94VAsSNygx1C6dhb1u1Wp1Jr/lfO7QIOK/nf1PF0VpYjTQ2au8
- ihf/RApTna31sVjBx3jzlmpy+lDoPdXwbI3Czx1PwDbdhAAjdRbvBmwM6cUWyqD+zjVm4RTG
- rFTPi3E7828YJ71Vpda2qghOYdnC45xCcjmHh8FwReLzsV2A6FtXsvd87bq6Iw2axOHVUax2
- FGSbardMsHrya1dC2jF2R6n0uxaIc1bWGweYsq0LXvLcvjWH+zDgzYCUB0cfb+6Ib/ipSCYp
- 3i8BevMsTs62MOBmKz7til6Zdz0kkqDdSNOq8LgWGLOwUTqBh71+lqN2XBpTDu1eLZaNbxSI
- ilaVuQENBFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcga
- CbPEwhLj1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj
- /IrRUUka68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fN
- GSsRb+pKEKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0
- q1eW4Jrv0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEv
- ABEBAAGJATwEGAEIACYWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCWdWBrwIbDAUJA8JnAAAK
- CRDCPZHzoSX+qA3xB/4zS8zYh3Cbm3FllKz7+RKBw/ETBibFSKedQkbJzRlZhBc+XRwF61mi
- f0SXSdqKMbM1a98fEg8H5kV6GTo62BzvynVrf/FyT+zWbIVEuuZttMk2gWLIvbmWNyrQnzPl
- mnjK4AEvZGIt1pk+3+N/CMEfAZH5Aqnp0PaoytRZ/1vtMXNgMxlfNnb96giC3KMR6U0E+siA
- 4V7biIoyNoaN33t8m5FwEwd2FQDG9dAXWhG13zcm9gnk63BN3wyCQR+X5+jsfBaS4dvNzvQv
- h8Uq/YGjCoV1ofKYh3WKMY8avjq25nlrhzD/Nto9jHp8niwr21K//pXVA81R2qaXqGbql+zo
-Message-ID: <33122d28-b85c-6d75-07c7-dfbdc6e101fb@gmx.com>
-Date:   Sat, 1 Jun 2019 10:02:27 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 31 May 2019 22:10:15 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:31466 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726881AbfFACKO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 May 2019 22:10:14 -0400
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x5129pxC020572;
+        Sat, 1 Jun 2019 11:09:52 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x5129pxC020572
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1559354992;
+        bh=m5mAnMPwjDlz809r+I3TRHdaHgJqPbJUfMA2Ks6nXoQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=OXeFWh5kuMc7PTux0tSwL10409K9U7aOGxjnZO1hWJNDnwx1LePGzmlGuDCbgxoMD
+         QpZwvldZiivIxLEHn7dLcZYzH3PIGLliMHztJ5fJZbpo4DVCq0MTyqjeaauCxwewT7
+         q7zQF9p9V58dK1SRNhWQNNF6pN+kRbEhj3B1yPyKWCsNvyOGE6t20dbEH5HNUqY50M
+         tC+3iaysZEfZ4Oar2sIKZ8pCVUx0bcRkn9r54NiEYO3758lkucCz5NfVrNqe9pMb3C
+         eQgktkwUR4/y41lamVDG6kf+D5Evp8dx0l8VtjFQNZzqA7WIvhKY/t8nHkzpMLxlDB
+         TlP9QFI1AE87Q==
+X-Nifty-SrcIP: [209.85.222.43]
+Received: by mail-ua1-f43.google.com with SMTP id f20so2900823ual.0;
+        Fri, 31 May 2019 19:09:52 -0700 (PDT)
+X-Gm-Message-State: APjAAAW0vJ7+NUTq5IPBh+tnAZAKSNul4dTGGi6X9LkInAnae5ilvXn2
+        5npbaH6jzZdNQWr62gNdkP0d/n3FVLqOFc3W6Hw=
+X-Google-Smtp-Source: APXvYqwB4BA9jCIMiyU3B9xWJ0d64yGLFmvT3Mp/7QBMvJ549t1LuK/enpEv26YsyVU68yhuPMAWs/m0Dcps68fsJt0=
+X-Received: by 2002:ab0:234d:: with SMTP id h13mr6905688uao.95.1559354991160;
+ Fri, 31 May 2019 19:09:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="YMFgnb5ARuqf2F3RYsiwdx6hW0sZItfNG"
-X-Provags-ID: V03:K1:RqwCj4sicdehsM8bZHdV1zXJ3wtRfB2RR5Qud02E5dYqEb/lD0Z
- dhbrGhNev1QI3g0vb1O3YkbdYyhsF+DkkAglAQKtIshGSsYLlolkbfEhteAj9gBvc9XNqOS
- XgjH776rJ/HvqdgSj7KXTGjzShCG4pesnMx4li2q3c4MXq0gG2dpK6FhHnpVHMJu52QZNFD
- ABYn2T8tdoPH1AHUG6zGQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:hTK5ryLbrfY=:duXp6UxUdSdHBcKx0iLCaY
- fSnTYGyP8lHWTxke5cNMcE9O5PCtQAX0SqnTr/oNHZXAdoVniSBVSGczUhfkLWpxlKiRBj5i5
- m/6aUyax73wV4LoRtKOccqG63KPJ5Jpf0OJUFFH4YkAnP/89s6TLNNmg/VTdGqN1RVR9LpyQ7
- ILH/9X0wiygnq0PzNOkrgqoYcGkretUWfsP0KAxplzMYpI363kNcSiOw2TZ7gAd6kw6kogD2V
- 3VVVv3aPMVhOUAsdQ6R+M1uTHMlkwcMr79pIDefHfHNRNLhzKdIfKhBLDYaXAf8JSOxfcRkTx
- UX2ELkLagYXq5htv7tT/iUR9TP8qZIxTRmnlCeYc5omZiBC+G2DUtu72v47g2OCmzlL+Gei/W
- TNdXHp93VGyxHwUm9KSCpGFtC5Mu9wFpq9Cbpqe+Wg1Dwut8eubVCdzn1yFvW/xbJzCXuJDnW
- 1w4FfePFVcBfkiCb/Fv40pY3+SH3oKmhG3mLv/VYBX9DxC3UjlvSD7Hj/Lly7uH/4M3h4j48P
- lm340P+6RsNJCGFvcAQyG0/mjazsvc6ZTIwkwC6PXWhsci0b3Hnl/pZIy3HCBKH6+qa5GeDsl
- t+AhpP4h8RzN0uEmiuI6mQPr99eN4/Jq7Rhffju9SPWm3i0UKVtOEFHfJyYgG0zwdB+IT4qkW
- o1/h7tjjALOITP/j9Npj3w1i95c2p0DXsoECUGm/FWXZyKgRJyYt75QYK2NBAx80j7GT4tlA6
- /CnE9ZUruOEtRWCXW3lmSJuKCi914b/bXiotXw7ENTcDXlNmWG+v7X1efAzoWYkJevmIJAAAa
- c+6rUe8MioUsKliPDBx/JANXm6V9xFViW+dQK6ojmLINJPRmr6LWNOovfNmUO3mIYguwL9dit
- oapscdF1ZX9IP3UEwv6seIVU4W9KnrndTlIIXr4kLS5b6ARHwOoExdhDl8thobctAqgsRMkh/
- MxrXMhdYSj4QlFVJy2e/YUFKeYuELnkg=
+References: <1559316388-19565-1-git-send-email-george_davis@mentor.com>
+ <CAK7LNATXzLzttF_gLA4wdfE1ue+bLPhvDZVsTKbB5K3nrN3jng@mail.gmail.com>
+ <20190531163908.GB10644@mam-gdavis-lt> <CAK7LNASq8eW0D8fpbxFGhAgR5D158emTR2quCD5ufyC+kK-2GQ@mail.gmail.com>
+ <20190531174506.GC10644@mam-gdavis-lt>
+In-Reply-To: <20190531174506.GC10644@mam-gdavis-lt>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sat, 1 Jun 2019 11:09:15 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASazA2496=GkJdJFVw3S7mQ8LaVqHc6dX=FU0DGYtRTBg@mail.gmail.com>
+Message-ID: <CAK7LNASazA2496=GkJdJFVw3S7mQ8LaVqHc6dX=FU0DGYtRTBg@mail.gmail.com>
+Subject: Re: [RFC][PATCH] Makefile: Fix checkstack.pl arm64 wrong or unknown architecture
+To:     "George G. Davis" <george_davis@mentor.com>
+Cc:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---YMFgnb5ARuqf2F3RYsiwdx6hW0sZItfNG
-Content-Type: multipart/mixed; boundary="knlOWPXv7MhPiirMqex0qGrXgdbiOMFq2";
- protected-headers="v1"
-From: Qu Wenruo <quwenruo.btrfs@gmx.com>
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Message-ID: <33122d28-b85c-6d75-07c7-dfbdc6e101fb@gmx.com>
-Subject: [5.2-rc REGRESSION] Random gcc crash for 'make -j12' when low on
- memory
+On Sat, Jun 1, 2019 at 2:45 AM George G. Davis <george_davis@mentor.com> wrote:
+> > Following this pattern, does this work for you?
+> >
+> > diff --git a/scripts/checkstack.pl b/scripts/checkstack.pl
+> > index 122aef5e4e14..371bd17a4983 100755
+> > --- a/scripts/checkstack.pl
+> > +++ b/scripts/checkstack.pl
+> > @@ -46,7 +46,7 @@ my (@stack, $re, $dre, $x, $xs, $funcre);
+> >         $x      = "[0-9a-f]";   # hex character
+> >         $xs     = "[0-9a-f ]";  # hex character or space
+> >         $funcre = qr/^$x* <(.*)>:$/;
+> > -       if ($arch eq 'aarch64') {
+> > +       if ($arch =~ '^(aarch|arm)64$') {
+>
+> Yes, that works, thanks!
+>
+> Will you submit a fix or would you like me to resubmit with the above suggested
+> fix?
 
---knlOWPXv7MhPiirMqex0qGrXgdbiOMFq2
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Please send v2.
 
-Hi,
+Thanks.
 
-When compiling the kernel on v5.2-rc (both rc1 and rc2) with "make
--j12", the gcc will randomly crash with segfault, while on v5.1-rc7
-everything is OK.
-
-The crash only happens when the VM has only 1G ram, when given 4G ram it
-no longer crash.
-However according to dmesg, there is no OOM triggered.
-
-Thus this looks like a regression.
-
-The environment is:
-VM hypervisor: KVM
-vCPU: 8
-vRAM: 1G (crash) 4G (OK)
-Distro: Archlinux
-Tried kernel: Upstream v5.1-rc7 (good), v5.2-rc1 (fail), v5.2-rc2(fail)
-
-Host CPU: Ryzen 1700 (no gcc crash on host)
-
-Is there something related to OOM changed?
-
-Thanks,
-Qu
-
-
-
---knlOWPXv7MhPiirMqex0qGrXgdbiOMFq2--
-
---YMFgnb5ARuqf2F3RYsiwdx6hW0sZItfNG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEELd9y5aWlW6idqkLhwj2R86El/qgFAlzx3LMACgkQwj2R86El
-/qhI1Qf+Po0MPMh19esypYEV8K8hzL3PJuEjAtYaAbsAB69D59QXiiX0SaY+9OsY
-kycZlQTO0BgtJobVR+01sLthGhfLbDrcevuF563nwA4SMsKspbPKpo+RXS14T0Jd
-UwUW+EnrOb06/NH3aUe2itxQwuVLCNE4XXz3MfPY1X8yK3C/+IPEXEG1re1eUXhQ
-JIZasu9UvBYZGtm4hT4yeSg4MwzDK5o8QG0+CIxmvMZd0ir0jheMkgRJlA0p8zN3
-fbdyAZN5w5HPUIvhRpDIZudaTSwBFlwtyIgq2xY3JqeFkq4t2jpQ37/HxQjJrp/p
-ps5cf8ssAUhTxxl42UTMSk6wtwTYNA==
-=WBCX
------END PGP SIGNATURE-----
-
---YMFgnb5ARuqf2F3RYsiwdx6hW0sZItfNG--
+-- 
+Best Regards
+Masahiro Yamada
