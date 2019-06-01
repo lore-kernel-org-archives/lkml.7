@@ -2,128 +2,199 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31EF8C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 15:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33EDDC28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 15:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FEAA27607
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 15:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E660327427
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 15:48:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dH7Pa4KJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbfFAPm5 (ORCPT
+        id S1726695AbfFAPsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 11:42:57 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:52724 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725946AbfFAPm5 (ORCPT
+        Sat, 1 Jun 2019 11:48:01 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:41156 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725980AbfFAPsA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 11:42:57 -0400
-Received: from callcc.thunk.org ([66.31.38.53])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x51Fgnih031925
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 1 Jun 2019 11:42:49 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id D4029420481; Sat,  1 Jun 2019 11:42:48 -0400 (EDT)
-Date:   Sat, 1 Jun 2019 11:42:48 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org
-Subject: Re: [PATCH RFC] Rough draft document on merging and rebasing
-Message-ID: <20190601154248.GA17800@mit.edu>
-Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org
-References: <20190530135317.3c8d0d7b@lwn.net>
+        Sat, 1 Jun 2019 11:48:00 -0400
+Received: by mail-qt1-f193.google.com with SMTP id s57so4693537qte.8;
+        Sat, 01 Jun 2019 08:47:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jnDetmrENIxs3LtOFD/826Chw2+m/gYK9iycOoO55tI=;
+        b=dH7Pa4KJv3p4ZkRySjerWQi76tFlvwluzIGoZRDEcFf/UX+i4OvW2dANlNiLgg+Q4Q
+         bUnOzvSNxUrU4z9GXls9nnt37PbakzxCizoU2acdy6UWTXuXrri9/mBawKGXRR4e7M+T
+         vm/596h6BlXJb2+jDNKx5YEvv2C9LD0upcku0ABixYYTysG982EFsaS/3T1upDXY772Q
+         HmRCW+2pMM00DM1kNJbWszzKAOZSwyw8Mvv798ih5M30nhzs0d5tmrFHzRi/HwBZJN7g
+         5ogejoHU+oeEba0agLx+zJNdZIA/uMIiBau+xI9DlmZ5QBBciBVIGJKM/PB2aLfAkO8w
+         LHGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jnDetmrENIxs3LtOFD/826Chw2+m/gYK9iycOoO55tI=;
+        b=mao2pD1EaFmu90trXsv/j6RYRcx5beVNjDe0BuEW5MROuwqj7yAp6MXtFSYN0jMSLK
+         4EnNL3eeIcUFz1ma09qvGPf3MmAWphO8h+ujDFodSTnyOuCV/teNTFWgumKvhfPyzA2L
+         3sjouTmt4OLYXC2zZCSrql6YXebtg2go/6d6A4d0swrMxkEnDKxlxhu0FRppP/Sky+gY
+         C7uqUPQpMjVJI+/AFIAETvy8O+0GwSs6kxhJ8AVFMkv+Ua3O3nKFCHhhdYGUVI5opiMX
+         +WazMYlwGjs5Uu/zfMZSXz6tdHVy4jYeY0N/bOXdBalx3m5eV/dRaKoNv2dGNEp3b5mn
+         VaSQ==
+X-Gm-Message-State: APjAAAWjgYavej8cMeauphTWfsP/L49FPWU56yxNFwIbnbB0zSpBXltL
+        Cz3oeooy7zK2h1gYFL2LfLs=
+X-Google-Smtp-Source: APXvYqwSyxHtVh1pXMw9BNOXZpNpHLZfFdKZ9Uv0KAGzjug/Yn3GOLxaN+CPe5k+5KzfgbazCToD0Q==
+X-Received: by 2002:a0c:d78c:: with SMTP id z12mr12863103qvi.244.1559404078816;
+        Sat, 01 Jun 2019 08:47:58 -0700 (PDT)
+Received: from localhost.localdomain ([168.181.49.32])
+        by smtp.gmail.com with ESMTPSA id j26sm6409797qtj.70.2019.06.01.08.47.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 01 Jun 2019 08:47:58 -0700 (PDT)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+        id F3D7DC085E; Sat,  1 Jun 2019 12:47:53 -0300 (-03)
+Date:   Sat, 1 Jun 2019 12:47:53 -0300
+From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     syzbot <syzbot+6ad9c3bd0a218a2ab41d@syzkaller.appspotmail.com>,
+        davem@davemloft.net, linux-kernel@vger.kernel.org,
+        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        nhorman@tuxdriver.com, syzkaller-bugs@googlegroups.com,
+        vyasevich@gmail.com
+Subject: Re: memory leak in sctp_send_reset_streams
+Message-ID: <20190601154753.GG3713@localhost.localdomain>
+References: <20190601122615.16872-1-hdanton@sina.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190530135317.3c8d0d7b@lwn.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190601122615.16872-1-hdanton@sina.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 01:53:17PM -0600, Jonathan Corbet wrote:
-> +Rebasing
-> +========
-> +
-> +"Rebasing" is the process of changing the history of a series of commits
-> +within a repository.  At its simplest, a rebase could change the starting
-> +point of a patch series from one point to another.  Other uses include
-> +fixing (or deleting) broken commits, adding tags to commits, or changing
-> +the order in which commits are applied.  Used properly, rebasing can yield
-> +a cleaner and clearer development history; used improperly, it can obscure
-> +that history and introduce bugs.
+On Sat, Jun 01, 2019 at 08:26:15PM +0800, Hillf Danton wrote:
+> 
+> Hi
 
-Rebasing is being used in two senses here.  The first is where the
-diffs don't change (much), but the starting point of the changes is
-being changed.  The second is where a broken commit is dropped, adding
-a signed-off-by, etc.
+Hi,
 
-Both have the property that they can used for good or ill, but the
-details when this is an issue can change a bit.  More below...
+> 
+> On Fri, May 31, 2019 at 02:18:06PM -0700, syzbot wrote:
+> > Hello,
+> > 
+> > syzbot found the following crash on:
+> > 
+> > HEAD commit:    036e3431 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=153cff12a00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=8f0f63a62bb5b13c
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=6ad9c3bd0a218a2ab41d
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12561c86a00000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15b76fd8a00000
+> > 
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+6ad9c3bd0a218a2ab41d@syzkaller.appspotmail.com
+> > 
+> > executing program
+> > executing program
+> > executing program
+> > executing program
+> > executing program
+> > BUG: memory leak
+> > unreferenced object 0xffff888123894820 (size 32):
+> >    comm "syz-executor045", pid 7267, jiffies 4294943559 (age 13.660s)
+> >    hex dump (first 32 bytes):
+> >      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+> >      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+> >    backtrace:
+> >      [<00000000c7e71c69>] kmemleak_alloc_recursive
+> > include/linux/kmemleak.h:55 [inline]
+> >      [<00000000c7e71c69>] slab_post_alloc_hook mm/slab.h:439 [inline]
+> >      [<00000000c7e71c69>] slab_alloc mm/slab.c:3326 [inline]
+> >      [<00000000c7e71c69>] __do_kmalloc mm/slab.c:3658 [inline]
+> >      [<00000000c7e71c69>] __kmalloc+0x161/0x2c0 mm/slab.c:3669
+> >      [<000000003250ed8e>] kmalloc_array include/linux/slab.h:670 [inline]
+> >      [<000000003250ed8e>] kcalloc include/linux/slab.h:681 [inline]
+> >      [<000000003250ed8e>] sctp_send_reset_streams+0x1ab/0x5a0 net/sctp/stream.c:302
+> >      [<00000000cd899c6e>] sctp_setsockopt_reset_streams net/sctp/socket.c:4314 [inline]
+> >      [<00000000cd899c6e>] sctp_setsockopt net/sctp/socket.c:4765 [inline]
+> >      [<00000000cd899c6e>] sctp_setsockopt+0xc23/0x2bf0 net/sctp/socket.c:4608
+> >      [<00000000ff3a21a2>] sock_common_setsockopt+0x38/0x50 net/core/sock.c:3130
+> >      [<000000009eb87ae7>] __sys_setsockopt+0x98/0x120 net/socket.c:2078
+> >      [<00000000e0ede6ca>] __do_sys_setsockopt net/socket.c:2089 [inline]
+> >      [<00000000e0ede6ca>] __se_sys_setsockopt net/socket.c:2086 [inline]
+> >      [<00000000e0ede6ca>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2086
+> >      [<00000000c61155f5>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:301
+> >      [<00000000e540958c>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > 
+> > BUG: memory leak
+> > unreferenced object 0xffff888123894980 (size 32):
+> >    comm "syz-executor045", pid 7268, jiffies 4294944145 (age 7.800s)
+> >    hex dump (first 32 bytes):
+> >      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+> >      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+> >    backtrace:
+> >      [<00000000c7e71c69>] kmemleak_alloc_recursive
+> > include/linux/kmemleak.h:55 [inline]
+> >      [<00000000c7e71c69>] slab_post_alloc_hook mm/slab.h:439 [inline]
+> >      [<00000000c7e71c69>] slab_alloc mm/slab.c:3326 [inline]
+> >      [<00000000c7e71c69>] __do_kmalloc mm/slab.c:3658 [inline]
+> >      [<00000000c7e71c69>] __kmalloc+0x161/0x2c0 mm/slab.c:3669
+> >      [<000000003250ed8e>] kmalloc_array include/linux/slab.h:670 [inline]
+> >      [<000000003250ed8e>] kcalloc include/linux/slab.h:681 [inline]
+> >      [<000000003250ed8e>] sctp_send_reset_streams+0x1ab/0x5a0 net/sctp/stream.c:302
+> >      [<00000000cd899c6e>] sctp_setsockopt_reset_streams net/sctp/socket.c:4314 [inline]
+> >      [<00000000cd899c6e>] sctp_setsockopt net/sctp/socket.c:4765 [inline]
+> >      [<00000000cd899c6e>] sctp_setsockopt+0xc23/0x2bf0 net/sctp/socket.c:4608
+> >      [<00000000ff3a21a2>] sock_common_setsockopt+0x38/0x50 net/core/sock.c:3130
+> >      [<000000009eb87ae7>] __sys_setsockopt+0x98/0x120 net/socket.c:2078
+> >      [<00000000e0ede6ca>] __do_sys_setsockopt net/socket.c:2089 [inline]
+> >      [<00000000e0ede6ca>] __se_sys_setsockopt net/socket.c:2086 [inline]
+> >      [<00000000e0ede6ca>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2086
+> >      [<00000000c61155f5>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:301
+> >      [<00000000e540958c>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > 
+> > 
+> > 
+> > ---
+> > This bug is generated by a bot. It may contain errors.
+> > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> > 
+> > syzbot will keep track of this bug report. See:
+> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> > syzbot can test patches for this bug, for details see:
+> > https://goo.gl/tpsmEJ#testing-patches
+> > 
+> The following tiny change is prepared based on the info listed above and I want
+> to know if it works for you.
+> 
+> thanks
+> Hillf
+> ------->8---
+> diff --git a/net/sctp/stream.c b/net/sctp/stream.c
+> index 93ed078..d3e2f03 100644
+> --- a/net/sctp/stream.c
+> +++ b/net/sctp/stream.c
+> @@ -310,6 +310,7 @@ int sctp_send_reset_streams(struct sctp_association *asoc,
+> 
+> 	if (out && !sctp_stream_outq_is_empty(stream, str_nums, nstr_list)) {
+> 		retval = -EAGAIN;
+> +		kfree(nstr_list);
 
-> +There are a few rules of thumb that can help developers to avoid the worst
-> +perils of rebasing:
-> +
-> + - History that has been exposed to the world beyond your private system
-> +   should not be rebased.  Others may have pulled a copy of your tree and
-> +   built on it; rebasing your tree will create pain for them.  If work is
-> +   in need of rebasing, that is usually a sign that it is not yet ready to
-> +   be committed to a public repository.
+Yes it does. Thanks Hillf.
 
-That seems to be a bit too categorical.  It's been recommended, and
-some people do, push patches to a branch so the zero-day bot will pick
-it up and test for potential problems.  And broken commits *do* get
-dropped from candidate stable kernel releases.  And, of course,
-there's linux-next, which is constantly getting rebased.
-
-And there have been people who have pushed out RFC patche series onto
-a git branch, and publicized it on LKML for the convenience of
-reviewers.  (Perhaps because there is a patch which is so big it
-exceeds the LKML size restrictions.)
-
-I think it's more about whether people know that a branch is
-considered unstable from a historical perspective or not.  No one
-builds on top of linux-next because, well, that would be silly.
-
-Finally, I'm bit concerned about anything which states absolutes,
-because there are people who tend to be real stickler for the rules,
-and if they see something stated in absolute terms, they fail to
-understand that there are exceptions that are well understood, and in
-use for years before the existence of the document which is trying to
-codify best practices.
-
-> + - Realize the rebasing a patch series changes the environment in which it
-> +   was developed and, likely, invalidates much of the testing that was
-> +   done.  A rebased patch series should, as a general rule, be treated like
-> +   new code and retested from the beginning.
-
-In this paragraph, "rebasing" is being used in the change the base
-commit on top of which a series of changes were based upon.  And it's
-what most people think of when they see the word "rebase".
-
-However "git rebase" is also used to rewrite git history when dropping
-a bad commit, or fixing things so the branch is bisectable, etc.  But
-in the definitions above, the word "rebase" was defined to include
-both "changing the base of a patch stack", and "rewriting git
-history".  I wonder if that helps more than it hinders understanding.
-
-At least in my mind, "rebasing" is much more often the wrong thing,
-where as "rewriting git history" for a leaf repository can be more
-often justifable.  And of course, if someone is working on a feature
-for which the review and development cycle takes several kernel
-releases, I'd claim that "rebasing" in that case always makes sense,
-even if they *have* exposed their patch series via git for review /
-commenting purposes.
-
-Regards,
-
-						- Ted
+> 		goto out;
+> 	}
+> 
+> --
+> 
