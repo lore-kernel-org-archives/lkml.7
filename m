@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C202EC28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBAAC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91DDB264D2
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:38:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB39D274D9
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:38:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396295;
-	bh=SyI3a4Y4WPlHfdSj/wde0sOUv9ueGlk3PAJeMJDAHBE=;
+	s=default; t=1559396301;
+	bh=3PmY+xIbfOtUT8ZXCVXiVtg42HjcdYEkCCaoWoQ33Gk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L4VEJcuy9JH4kQl9zfkNAZfzWg5e41QZw+E687ibQngNqn2WtAje3JPvJe1Pd2AT9
-	 6Gl1QVR4OCcraBAi2O/zw65RTtQLQJ0Q+MkPC8Al+AUYi6GjikzIKzrVb/+mFlltHL
-	 6XCvkcQZKapMekjm16S7MflpcRSENeD1uivD3Zcs=
+	b=uUg9VsM1PdZabbDQMgyzVWOSxFxf/NgHyXVD0HkOTMJDDsrw1B7pQgGsnLBAuKvKN
+	 0dhsaqcN8Sl8H3+W8ebG28ZEZaTWeQkxx0cqPAwjJTq3CWKi8s1pGOJ2LzQD2LD3bE
+	 cKQ307ctJTcv39QTJ2JjlvCNtF19Dj9bSZHvPhlQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728322AbfFANiO (ORCPT
+        id S1728238AbfFANVc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:38:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48952 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:21:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727654AbfFANVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:21:33 -0400
+        id S1728493AbfFANVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:21:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB96427305;
-        Sat,  1 Jun 2019 13:21:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C055272FE;
+        Sat,  1 Jun 2019 13:21:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395291;
-        bh=SyI3a4Y4WPlHfdSj/wde0sOUv9ueGlk3PAJeMJDAHBE=;
+        s=default; t=1559395284;
+        bh=3PmY+xIbfOtUT8ZXCVXiVtg42HjcdYEkCCaoWoQ33Gk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sw1QzafS96hU1zkXxZmCWBX4p67woZrr/plFSSt/EChiVv58NWCzetkEkZ6kqd79K
-         k1msuHnqmYQv29YvQox2fQXS+fIlvcqIOZpjGlvPEAb+FTJG+8+hsPHAQ/cxNPEuwq
-         XREzqHC4odykaFz1KlGqW5niJRpL994xHxtwnehI=
+        b=oO8qNyQKualRh9mEQmgUIoo+Rc6FGGYNGPeDRHJQlXTDS9iJvUU++W4i9fIcLnU1D
+         CZy4CmSFZ2RKxCuizIIGKnFoUd/L99DQdp2bxnehS2UwL4gTnu9Ou9dfAS4ntkKGw1
+         jqDKTcTEs0Pfsw+9ySD5XyAkECnFRiU1BjCQCC7k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     John Sperbeck <jsperbeck@google.com>,
-        Dennis Zhou <dennis@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 054/173] percpu: remove spurious lock dependency between percpu and sched
-Date:   Sat,  1 Jun 2019 09:17:26 -0400
-Message-Id: <20190601131934.25053-54-sashal@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.0 047/173] f2fs: fix to use inline space only if inline_xattr is enable
+Date:   Sat,  1 Jun 2019 09:17:19 -0400
+Message-Id: <20190601131934.25053-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131934.25053-1-sashal@kernel.org>
 References: <20190601131934.25053-1-sashal@kernel.org>
@@ -60,178 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Sperbeck <jsperbeck@google.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 198790d9a3aeaef5792d33a560020861126edc22 ]
+[ Upstream commit 622927f3b8809206f6da54a6a7ed4df1a7770fce ]
 
-In free_percpu() we sometimes call pcpu_schedule_balance_work() to
-queue a work item (which does a wakeup) while holding pcpu_lock.
-This creates an unnecessary lock dependency between pcpu_lock and
-the scheduler's pi_lock.  There are other places where we call
-pcpu_schedule_balance_work() without hold pcpu_lock, and this case
-doesn't need to be different.
+With below mkfs and mount option:
 
-Moving the call outside the lock prevents the following lockdep splat
-when running tools/testing/selftests/bpf/{test_maps,test_progs} in
-sequence with lockdep enabled:
+MKFS_OPTIONS  -- -O extra_attr -O project_quota -O inode_checksum -O flexible_inline_xattr -O inode_crtime -f
+MOUNT_OPTIONS -- -o noinline_xattr
 
-======================================================
-WARNING: possible circular locking dependency detected
-5.1.0-dbg-DEV #1 Not tainted
-------------------------------------------------------
-kworker/23:255/18872 is trying to acquire lock:
-000000000bc79290 (&(&pool->lock)->rlock){-.-.}, at: __queue_work+0xb2/0x520
+We may miss xattr data with below testcase:
+- mkdir dir
+- setfattr -n "user.name" -v 0 dir
+- for ((i = 0; i < 190; i++)) do touch dir/$i; done
+- umount
+- mount
+- getfattr -n "user.name" dir
 
-but task is already holding lock:
-00000000e3e7a6aa (pcpu_lock){..-.}, at: free_percpu+0x36/0x260
+user.name: No such attribute
 
-which lock already depends on the new lock.
+The root cause is that we persist xattr data into reserved inline xattr
+space, even if inline_xattr is not enable in inline directory inode, after
+inline dentry conversion, reserved space no longer exists, so that xattr
+data missed.
 
-the existing dependency chain (in reverse order) is:
+Let's use inline xattr space only if inline_xattr flag is set on inode
+to fix this iusse.
 
--> #4 (pcpu_lock){..-.}:
-       lock_acquire+0x9e/0x180
-       _raw_spin_lock_irqsave+0x3a/0x50
-       pcpu_alloc+0xfa/0x780
-       __alloc_percpu_gfp+0x12/0x20
-       alloc_htab_elem+0x184/0x2b0
-       __htab_percpu_map_update_elem+0x252/0x290
-       bpf_percpu_hash_update+0x7c/0x130
-       __do_sys_bpf+0x1912/0x1be0
-       __x64_sys_bpf+0x1a/0x20
-       do_syscall_64+0x59/0x400
-       entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
--> #3 (&htab->buckets[i].lock){....}:
-       lock_acquire+0x9e/0x180
-       _raw_spin_lock_irqsave+0x3a/0x50
-       htab_map_update_elem+0x1af/0x3a0
-
--> #2 (&rq->lock){-.-.}:
-       lock_acquire+0x9e/0x180
-       _raw_spin_lock+0x2f/0x40
-       task_fork_fair+0x37/0x160
-       sched_fork+0x211/0x310
-       copy_process.part.43+0x7b1/0x2160
-       _do_fork+0xda/0x6b0
-       kernel_thread+0x29/0x30
-       rest_init+0x22/0x260
-       arch_call_rest_init+0xe/0x10
-       start_kernel+0x4fd/0x520
-       x86_64_start_reservations+0x24/0x26
-       x86_64_start_kernel+0x6f/0x72
-       secondary_startup_64+0xa4/0xb0
-
--> #1 (&p->pi_lock){-.-.}:
-       lock_acquire+0x9e/0x180
-       _raw_spin_lock_irqsave+0x3a/0x50
-       try_to_wake_up+0x41/0x600
-       wake_up_process+0x15/0x20
-       create_worker+0x16b/0x1e0
-       workqueue_init+0x279/0x2ee
-       kernel_init_freeable+0xf7/0x288
-       kernel_init+0xf/0x180
-       ret_from_fork+0x24/0x30
-
--> #0 (&(&pool->lock)->rlock){-.-.}:
-       __lock_acquire+0x101f/0x12a0
-       lock_acquire+0x9e/0x180
-       _raw_spin_lock+0x2f/0x40
-       __queue_work+0xb2/0x520
-       queue_work_on+0x38/0x80
-       free_percpu+0x221/0x260
-       pcpu_freelist_destroy+0x11/0x20
-       stack_map_free+0x2a/0x40
-       bpf_map_free_deferred+0x3c/0x50
-       process_one_work+0x1f7/0x580
-       worker_thread+0x54/0x410
-       kthread+0x10f/0x150
-       ret_from_fork+0x24/0x30
-
-other info that might help us debug this:
-
-Chain exists of:
-  &(&pool->lock)->rlock --> &htab->buckets[i].lock --> pcpu_lock
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(pcpu_lock);
-                               lock(&htab->buckets[i].lock);
-                               lock(pcpu_lock);
-  lock(&(&pool->lock)->rlock);
-
- *** DEADLOCK ***
-
-3 locks held by kworker/23:255/18872:
- #0: 00000000b36a6e16 ((wq_completion)events){+.+.},
-     at: process_one_work+0x17a/0x580
- #1: 00000000dfd966f0 ((work_completion)(&map->work)){+.+.},
-     at: process_one_work+0x17a/0x580
- #2: 00000000e3e7a6aa (pcpu_lock){..-.},
-     at: free_percpu+0x36/0x260
-
-stack backtrace:
-CPU: 23 PID: 18872 Comm: kworker/23:255 Not tainted 5.1.0-dbg-DEV #1
-Hardware name: ...
-Workqueue: events bpf_map_free_deferred
-Call Trace:
- dump_stack+0x67/0x95
- print_circular_bug.isra.38+0x1c6/0x220
- check_prev_add.constprop.50+0x9f6/0xd20
- __lock_acquire+0x101f/0x12a0
- lock_acquire+0x9e/0x180
- _raw_spin_lock+0x2f/0x40
- __queue_work+0xb2/0x520
- queue_work_on+0x38/0x80
- free_percpu+0x221/0x260
- pcpu_freelist_destroy+0x11/0x20
- stack_map_free+0x2a/0x40
- bpf_map_free_deferred+0x3c/0x50
- process_one_work+0x1f7/0x580
- worker_thread+0x54/0x410
- kthread+0x10f/0x150
- ret_from_fork+0x24/0x30
-
-Signed-off-by: John Sperbeck <jsperbeck@google.com>
-Signed-off-by: Dennis Zhou <dennis@kernel.org>
+Fixes: 6afc662e68b5 ("f2fs: support flexible inline xattr size")
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/percpu.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ fs/f2fs/f2fs.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/mm/percpu.c b/mm/percpu.c
-index 59bd6a51954c9..4ad3a4214249e 100644
---- a/mm/percpu.c
-+++ b/mm/percpu.c
-@@ -1721,6 +1721,7 @@ void free_percpu(void __percpu *ptr)
- 	struct pcpu_chunk *chunk;
- 	unsigned long flags;
- 	int off;
-+	bool need_balance = false;
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index f8dfa64429f64..2149d1f190d62 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -2570,7 +2570,9 @@ static inline void *inline_xattr_addr(struct inode *inode, struct page *page)
  
- 	if (!ptr)
- 		return;
-@@ -1742,7 +1743,7 @@ void free_percpu(void __percpu *ptr)
- 
- 		list_for_each_entry(pos, &pcpu_slot[pcpu_nr_slots - 1], list)
- 			if (pos != chunk) {
--				pcpu_schedule_balance_work();
-+				need_balance = true;
- 				break;
- 			}
- 	}
-@@ -1750,6 +1751,9 @@ void free_percpu(void __percpu *ptr)
- 	trace_percpu_free_percpu(chunk->base_addr, off, ptr);
- 
- 	spin_unlock_irqrestore(&pcpu_lock, flags);
-+
-+	if (need_balance)
-+		pcpu_schedule_balance_work();
+ static inline int inline_xattr_size(struct inode *inode)
+ {
+-	return get_inline_xattr_addrs(inode) * sizeof(__le32);
++	if (f2fs_has_inline_xattr(inode))
++		return get_inline_xattr_addrs(inode) * sizeof(__le32);
++	return 0;
  }
- EXPORT_SYMBOL_GPL(free_percpu);
  
+ static inline int f2fs_has_inline_data(struct inode *inode)
 -- 
 2.20.1
 
