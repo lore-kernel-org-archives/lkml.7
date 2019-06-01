@@ -2,60 +2,97 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2AAC28CC3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 23:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 447A2C28CC3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 23:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE17A277D8
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 23:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 137F22064A
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 23:53:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726807AbfFAXsj (ORCPT
+        id S1726708AbfFAXxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 19:48:39 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:37662 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726531AbfFAXsj (ORCPT
+        Sat, 1 Jun 2019 19:53:42 -0400
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:33760 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726211AbfFAXxl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 19:48:39 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id AF397150FC725;
-        Sat,  1 Jun 2019 16:48:38 -0700 (PDT)
-Date:   Sat, 01 Jun 2019 16:48:38 -0700 (PDT)
-Message-Id: <20190601.164838.1496580524715275443.davem@davemloft.net>
-To:     Markus.Elfring@web.de
-Cc:     johunt@akamai.com, dsahern@gmail.com, stephen@networkplumber.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: ss: Checking efficient analysis for network connections
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <3d1c67c8-7dfe-905b-4548-dae23592edc5@web.de>
-References: <1556674718-5081-1-git-send-email-johunt@akamai.com>
-        <3d1c67c8-7dfe-905b-4548-dae23592edc5@web.de>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 01 Jun 2019 16:48:38 -0700 (PDT)
+        Sat, 1 Jun 2019 19:53:41 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by kvm5.telegraphics.com.au (Postfix) with ESMTP id D444327652;
+        Sat,  1 Jun 2019 19:53:37 -0400 (EDT)
+Date:   Sun, 2 Jun 2019 09:53:47 +1000 (AEST)
+From:   Finn Thain <fthain@telegraphics.com.au>
+To:     Kangjie Lu <kjlu@umn.edu>
+cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        Rob Herring <robh@kernel.org>, linux-fbdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH AUTOSEL 4.4 44/56] video: imsttfb: fix potential NULL
+ pointer dereferences
+In-Reply-To: <20190601161929.GA5028@kroah.com>
+Message-ID: <alpine.LNX.2.21.1906020944570.8@nippy.intranet>
+References: <20190601132600.27427-1-sashal@kernel.org> <20190601132600.27427-44-sashal@kernel.org> <20190601161929.GA5028@kroah.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <Markus.Elfring@web.de>
-Date: Sat, 1 Jun 2019 10:36:40 +0200
+On Sat, 1 Jun 2019, Greg Kroah-Hartman wrote:
 
-> I imagine then that it would be also nicer to perform filtering based on
-> configurable constraints at the data source directly.
-> How much can Linux help more in this software area?
-> How do you think about such ideas?
+> On Sat, Jun 01, 2019 at 09:25:48AM -0400, Sasha Levin wrote:
 
-If you use netlink operations directly, you can have the kernel filter
-on various criteria and only get the socket entries you are interested
-in.
+> > From: Kangjie Lu <kjlu@umn.edu>
+> > 
+> > [ Upstream commit 1d84353d205a953e2381044953b7fa31c8c9702d ]
+> > ...
+> 
+> Why only 4.4.y?  Shouldn't this be queued up for everything or none?
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-This whole discussion has zero to do with what text format 'ss' outputs.
+Also, why not check the result of the other ioremap calls? (I should have 
+checked that when this first crossed my inbox...)
+
+From 1d84353d205a953e2381044953b7fa31c8c9702d Mon Sep 17 00:00:00 2001
+From: Kangjie Lu <kjlu@umn.edu>
+Date: Mon, 1 Apr 2019 17:46:58 +0200
+Subject: [PATCH] video: imsttfb: fix potential NULL pointer dereferences
+
+In case ioremap fails, the fix releases resources and returns
+-ENOMEM to avoid NULL pointer dereferences.
+
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Cc: Aditya Pakki <pakki001@umn.edu>
+Cc: Finn Thain <fthain@telegraphics.com.au>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[b.zolnierkie: minor patch summary fixup]
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+
+diff --git a/drivers/video/fbdev/imsttfb.c b/drivers/video/fbdev/imsttfb.c
+index 4b9615e4ce74..35bba3c2036d 100644
+--- a/drivers/video/fbdev/imsttfb.c
++++ b/drivers/video/fbdev/imsttfb.c
+@@ -1515,6 +1515,11 @@ static int imsttfb_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	info->fix.smem_start = addr;
+ 	info->screen_base = (__u8 *)ioremap(addr, par->ramdac == IBM ?
+ 					    0x400000 : 0x800000);
++	if (!info->screen_base) {
++		release_mem_region(addr, size);
++		framebuffer_release(info);
++		return -ENOMEM;
++	}
+ 	info->fix.mmio_start = addr + 0x800000;
+ 	par->dc_regs = ioremap(addr + 0x800000, 0x1000);
+ 	par->cmap_regs_phys = addr + 0x840000;
+
