@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBAAC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D033C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB39D274D9
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:38:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CED5275EB
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:38:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396301;
-	bh=3PmY+xIbfOtUT8ZXCVXiVtg42HjcdYEkCCaoWoQ33Gk=;
+	s=default; t=1559396305;
+	bh=LKMQHcklJvIWS99udh9eSLS62WW47Rn8+BrT4bYHeeQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uUg9VsM1PdZabbDQMgyzVWOSxFxf/NgHyXVD0HkOTMJDDsrw1B7pQgGsnLBAuKvKN
-	 0dhsaqcN8Sl8H3+W8ebG28ZEZaTWeQkxx0cqPAwjJTq3CWKi8s1pGOJ2LzQD2LD3bE
-	 cKQ307ctJTcv39QTJ2JjlvCNtF19Dj9bSZHvPhlQ=
+	b=zRHEV1gjPbqw91KFdoVDdSsOyB4EiwF3WqO2hyZuumcIHaZGYMLJFHkjWA+cHP8N5
+	 APfsGFHZfTzIRaxZRbOpcufdV9+nKCUb6Qi+W1aw28nA9yOl2VS8ACOfkyPdG+IoCe
+	 LmsTmP9dkcmSpsPvsdke+4e3cvFE9usNLWNkzYFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728238AbfFANVc (ORCPT
+        id S1729132AbfFANiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:21:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48742 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:38:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728493AbfFANVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:21:24 -0400
+        id S1728534AbfFANVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:21:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C055272FE;
-        Sat,  1 Jun 2019 13:21:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3D8127301;
+        Sat,  1 Jun 2019 13:21:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395284;
-        bh=3PmY+xIbfOtUT8ZXCVXiVtg42HjcdYEkCCaoWoQ33Gk=;
+        s=default; t=1559395290;
+        bh=LKMQHcklJvIWS99udh9eSLS62WW47Rn8+BrT4bYHeeQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oO8qNyQKualRh9mEQmgUIoo+Rc6FGGYNGPeDRHJQlXTDS9iJvUU++W4i9fIcLnU1D
-         CZy4CmSFZ2RKxCuizIIGKnFoUd/L99DQdp2bxnehS2UwL4gTnu9Ou9dfAS4ntkKGw1
-         jqDKTcTEs0Pfsw+9ySD5XyAkECnFRiU1BjCQCC7k=
+        b=gXGeq+4EyIPWwLFt6wQyMYMJIsdMd/wTh/31HAZWPkKa+I4d9Zuk4iTjh2DpUB5X0
+         fmuv8Zt9pq97hJCj8SuVPS/KqCptpN+7kwkT4+MOVl7NwMfPKbPSsGRoYkIHeGu7LD
+         /KZE4JdKNmWXnrl98Na2wUxkqucc71McIoUExIas=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.0 047/173] f2fs: fix to use inline space only if inline_xattr is enable
-Date:   Sat,  1 Jun 2019 09:17:19 -0400
-Message-Id: <20190601131934.25053-47-sashal@kernel.org>
+Cc:     Eugen Hristev <eugen.hristev@microchip.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 053/173] media: atmel: atmel-isc: fix asd memory allocation
+Date:   Sat,  1 Jun 2019 09:17:25 -0400
+Message-Id: <20190601131934.25053-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131934.25053-1-sashal@kernel.org>
 References: <20190601131934.25053-1-sashal@kernel.org>
@@ -59,56 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-[ Upstream commit 622927f3b8809206f6da54a6a7ed4df1a7770fce ]
+[ Upstream commit 1e4e25c4959c10728fbfcc6a286f9503d32dfe02 ]
 
-With below mkfs and mount option:
+The subsystem will free the asd memory on notifier cleanup, if the asd is
+added to the notifier.
+However the memory is freed using kfree.
+Thus, we cannot allocate the asd using devm_*
+This can lead to crashes and problems.
+To test this issue, just return an error at probe, but cleanup the
+notifier beforehand.
 
-MKFS_OPTIONS  -- -O extra_attr -O project_quota -O inode_checksum -O flexible_inline_xattr -O inode_crtime -f
-MOUNT_OPTIONS -- -o noinline_xattr
+Fixes: 106267444f ("[media] atmel-isc: add the Image Sensor Controller code")
 
-We may miss xattr data with below testcase:
-- mkdir dir
-- setfattr -n "user.name" -v 0 dir
-- for ((i = 0; i < 190; i++)) do touch dir/$i; done
-- umount
-- mount
-- getfattr -n "user.name" dir
-
-user.name: No such attribute
-
-The root cause is that we persist xattr data into reserved inline xattr
-space, even if inline_xattr is not enable in inline directory inode, after
-inline dentry conversion, reserved space no longer exists, so that xattr
-data missed.
-
-Let's use inline xattr space only if inline_xattr flag is set on inode
-to fix this iusse.
-
-Fixes: 6afc662e68b5 ("f2fs: support flexible inline xattr size")
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/f2fs.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/media/platform/atmel/atmel-isc.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index f8dfa64429f64..2149d1f190d62 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -2570,7 +2570,9 @@ static inline void *inline_xattr_addr(struct inode *inode, struct page *page)
+diff --git a/drivers/media/platform/atmel/atmel-isc.c b/drivers/media/platform/atmel/atmel-isc.c
+index 50178968b8a63..5b0e96bd8c7e5 100644
+--- a/drivers/media/platform/atmel/atmel-isc.c
++++ b/drivers/media/platform/atmel/atmel-isc.c
+@@ -2065,8 +2065,11 @@ static int isc_parse_dt(struct device *dev, struct isc_device *isc)
+ 			break;
+ 		}
  
- static inline int inline_xattr_size(struct inode *inode)
- {
--	return get_inline_xattr_addrs(inode) * sizeof(__le32);
-+	if (f2fs_has_inline_xattr(inode))
-+		return get_inline_xattr_addrs(inode) * sizeof(__le32);
-+	return 0;
- }
+-		subdev_entity->asd = devm_kzalloc(dev,
+-				     sizeof(*subdev_entity->asd), GFP_KERNEL);
++		/* asd will be freed by the subsystem once it's added to the
++		 * notifier list
++		 */
++		subdev_entity->asd = kzalloc(sizeof(*subdev_entity->asd),
++					     GFP_KERNEL);
+ 		if (!subdev_entity->asd) {
+ 			of_node_put(rem);
+ 			ret = -ENOMEM;
+@@ -2210,6 +2213,7 @@ static int atmel_isc_probe(struct platform_device *pdev)
+ 						     subdev_entity->asd);
+ 		if (ret) {
+ 			fwnode_handle_put(subdev_entity->asd->match.fwnode);
++			kfree(subdev_entity->asd);
+ 			goto cleanup_subdev;
+ 		}
  
- static inline int f2fs_has_inline_data(struct inode *inode)
 -- 
 2.20.1
 
