@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA68C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E2BDC28CC4
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86C9027452
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:31:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59E4727492
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:31:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395862;
-	bh=tNoRIS4k70wOedviwPoL8m/3q8ML2UORzJJdUGoDJiQ=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=tGuFaZuD7Qrnty5ue5Y7IPAByfN1RYuZxbbmp8q/yJuDJMUTKdesR4xuXJ2DOOHpm
-	 ReOJQfhArs88ilroEZxw5VAXX/UitdmB9QkvM+0UE1gSZu7tfyHdQqS1kGFZ8JSu7g
-	 IIH6zBmaxx9RcR82ESUmlNtlhiPVRpzqsybNmuLs=
+	s=default; t=1559395866;
+	bh=f653hOYWIpL012Q/bpIIzhFqDPCteg5uTOLQYLwjC2M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=nI9TAoSlZCOysRF+nP4yoYMskmcaqxWdFnFy0QoQR+js78BzCu0Xg+y6EN48F0da5
+	 MHTE+RIQIkBHpvi1ga49jWd9keeLzvi+9e5ZlDu3ygLjOr3mLMcwSevlfj1/Gqzvq1
+	 H/OJ6XuLbUuJ1hxAdo0yG4DnyhAYcUJwp7O6dO14=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729760AbfFANbB (ORCPT
+        id S1729597AbfFANZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:31:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56470 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:25:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729616AbfFAN0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:26:03 -0400
+        id S1729538AbfFANZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:25:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD3272739A;
-        Sat,  1 Jun 2019 13:26:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00DCB273AC;
+        Sat,  1 Jun 2019 13:25:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395562;
-        bh=tNoRIS4k70wOedviwPoL8m/3q8ML2UORzJJdUGoDJiQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=iwj2AJeCdtyG8SWvAN6sBdbx+6onW99sr6wuasRQb3G2Dn6go1bbkmTlOg1WD4Wlx
-         pAI+5kdEUdKjpTxHSIRF95vXcm0rkfPA/JjARDAQ+6uOOeRUZu1NVAy1Xr3Cu9xCdl
-         ptF4eTkke6Y2tJDowy+QWeoeiK4RjHpRFEPvVMJI=
+        s=default; t=1559395547;
+        bh=f653hOYWIpL012Q/bpIIzhFqDPCteg5uTOLQYLwjC2M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zGGNliWVbBZomGz7Qem19sL/zjytKYzjLsu3LSiycu9rfF5uK89wg1MMsOWPkjwyu
+         KqBFr6emQtBPM8c4hKd4MFdQSD1C5AKR1E3l+zlhXlTstL0Xac7hRqFiU6ZMc6/ft1
+         J9B38PGK6F0MI1lwZYQPgRQg6gImyL9QngC7Gock=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hou Tao <houtao1@huawei.com>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 01/56] fs/fat/file.c: issue flush after the writeback of FAT
-Date:   Sat,  1 Jun 2019 09:25:05 -0400
-Message-Id: <20190601132600.27427-1-sashal@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.9 23/74] f2fs: fix to clear dirty inode in error path of f2fs_iget()
+Date:   Sat,  1 Jun 2019 09:24:10 -0400
+Message-Id: <20190601132501.27021-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190601132501.27021-1-sashal@kernel.org>
+References: <20190601132501.27021-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,54 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hou Tao <houtao1@huawei.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit bd8309de0d60838eef6fb575b0c4c7e95841cf73 ]
+[ Upstream commit 546d22f070d64a7b96f57c93333772085d3a5e6d ]
 
-fsync() needs to make sure the data & meta-data of file are persistent
-after the return of fsync(), even when a power-failure occurs later.  In
-the case of fat-fs, the FAT belongs to the meta-data of file, so we need
-to issue a flush after the writeback of FAT instead before.
+As Jungyeon reported in bugzilla:
 
-Also bail out early when any stage of fsync fails.
+https://bugzilla.kernel.org/show_bug.cgi?id=203217
 
-Link: http://lkml.kernel.org/r/20190409030158.136316-1-houtao1@huawei.com
-Signed-off-by: Hou Tao <houtao1@huawei.com>
-Acked-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Jan Kara <jack@suse.cz>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+- Overview
+When mounting the attached crafted image and running program, I got this error.
+Additionally, it hangs on sync after running the program.
+
+The image is intentionally fuzzed from a normal f2fs image for testing and I enabled option CONFIG_F2FS_CHECK_FS on.
+
+- Reproduces
+cc poc_test_05.c
+mkdir test
+mount -t f2fs tmp.img test
+sudo ./a.out
+sync
+
+- Messages
+ kernel BUG at fs/f2fs/inode.c:707!
+ RIP: 0010:f2fs_evict_inode+0x33f/0x3a0
+ Call Trace:
+  evict+0xba/0x180
+  f2fs_iget+0x598/0xdf0
+  f2fs_lookup+0x136/0x320
+  __lookup_slow+0x92/0x140
+  lookup_slow+0x30/0x50
+  walk_component+0x1c1/0x350
+  path_lookupat+0x62/0x200
+  filename_lookup+0xb3/0x1a0
+  do_readlinkat+0x56/0x110
+  __x64_sys_readlink+0x16/0x20
+  do_syscall_64+0x43/0xf0
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+During inode loading, __recover_inline_status() can recovery inode status
+and set inode dirty, once we failed in following process, it will fail
+the check in f2fs_evict_inode, result in trigger BUG_ON().
+
+Let's clear dirty inode in error path of f2fs_iget() to avoid panic.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fat/file.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ fs/f2fs/inode.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/fat/file.c b/fs/fat/file.c
-index a08f1039909a7..d3f655ae020b2 100644
---- a/fs/fat/file.c
-+++ b/fs/fat/file.c
-@@ -156,12 +156,17 @@ static int fat_file_release(struct inode *inode, struct file *filp)
- int fat_file_fsync(struct file *filp, loff_t start, loff_t end, int datasync)
- {
- 	struct inode *inode = filp->f_mapping->host;
--	int res, err;
-+	int err;
-+
-+	err = __generic_file_fsync(filp, start, end, datasync);
-+	if (err)
-+		return err;
+diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+index 1de02c31756bc..c56d04ec45dcf 100644
+--- a/fs/f2fs/inode.c
++++ b/fs/f2fs/inode.c
+@@ -288,6 +288,7 @@ struct inode *f2fs_iget(struct super_block *sb, unsigned long ino)
+ 	return inode;
  
--	res = generic_file_fsync(filp, start, end, datasync);
- 	err = sync_mapping_buffers(MSDOS_SB(inode->i_sb)->fat_inode->i_mapping);
-+	if (err)
-+		return err;
- 
--	return res ? res : err;
-+	return blkdev_issue_flush(inode->i_sb->s_bdev, GFP_KERNEL, NULL);
- }
- 
- 
+ bad_inode:
++	f2fs_inode_synced(inode);
+ 	iget_failed(inode);
+ 	trace_f2fs_iget_exit(inode, ret);
+ 	return ERR_PTR(ret);
 -- 
 2.20.1
 
