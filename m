@@ -4,55 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2D3C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D88C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43671273E5
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F58621904
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:27:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395639;
-	bh=NXRP5iIORsVwjkHjS8fPpUcqxL+R+Gvk7tie5kKBxM4=;
+	s=default; t=1559395643;
+	bh=3K6/aUg3C52Mziko9m56XexLE8geFfS7O36EjOwfNKI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AuGeOy54cad+txyGCnVQWg+B63nvmncmACbE00pOwMug8e4GB34/pnsxP/Vp69lqp
-	 VblcvO+5n9xc9Ok1yUt+8s7sYHTTSCm3xLO8qtw8EtSTwyZuhMNm8jnr+jg1DUhIuY
-	 j18XWkxW2pQNXPYbeHJW6C4gsQf9w/nOKfMnGhek=
+	b=B7lhAEwbIPqAXXA/epDqfC9E6xxUdqsb2vGVJ5qonp4PPyZAOvZNmsIBCB2+SLhUN
+	 gj0JFUysSZ0YONI7yt/4tq9e6SU/Y767WPtlCiAg/C2ouGVt4OaXee1btCcq5+5j8Y
+	 8fSDyKbKd+w9EJ9ONK1vIwTS9bQ1msic/8IGtI8I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729932AbfFAN1R (ORCPT
+        id S1729938AbfFAN1W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:27:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57676 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:27:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729231AbfFAN1F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:27:05 -0400
+        id S1729804AbfFAN1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:27:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9021F273BD;
-        Sat,  1 Jun 2019 13:27:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54522273CD;
+        Sat,  1 Jun 2019 13:27:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395624;
-        bh=NXRP5iIORsVwjkHjS8fPpUcqxL+R+Gvk7tie5kKBxM4=;
+        s=default; t=1559395627;
+        bh=3K6/aUg3C52Mziko9m56XexLE8geFfS7O36EjOwfNKI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v9NYSGxdwpMJtJYU2jRqzITEc3bqKxMV/GyJRBgDxRp+MDTRUIEvVENOY6eUqEY5N
-         rV7UyBq0171TtCbolOIhchNdqXLLtUrrdMDAK+TGwe1ds125LLawfptbQgY7b0Vv5h
-         1eVFWAyrK6sT+YwE1rGULEfPG3fhxiC6zyNHwA1s=
+        b=kJ48E0JkWSo9dkFWAXyRWVGOD9IxwW2yPNiKYPtTo2Yn+IZ2i/2EdzWsnAm50YLXO
+         P0eu/2GqTzRkYA7BWaqDoq2Wq8HCrIGcnUFTeMdZLc3C5LU7TjEWvigztOYgVEfF9G
+         Z1zIgFmu0mAHT0aJc/RwKmXrXmmSCKtpnL+/9sj8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Angus Ainslie <angus@akkea.ca>,
-        Chris Healy <cphealy@gmail.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Adam Ford <aford173@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 37/56] ARM: dts: imx6qdl: Specify IMX6QDL_CLK_IPG as "ipg" clock to SDMA
-Date:   Sat,  1 Jun 2019 09:25:41 -0400
-Message-Id: <20190601132600.27427-37-sashal@kernel.org>
+Cc:     Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.4 39/56] PCI: rpadlpar: Fix leaked device_node references in add/remove paths
+Date:   Sat,  1 Jun 2019 09:25:43 -0400
+Message-Id: <20190601132600.27427-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132600.27427-1-sashal@kernel.org>
 References: <20190601132600.27427-1-sashal@kernel.org>
@@ -65,48 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
+From: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
 
-[ Upstream commit b14c872eebc501b9640b04f4a152df51d6eaf2fc ]
+[ Upstream commit fb26228bfc4ce3951544848555c0278e2832e618 ]
 
-Since 25aaa75df1e6 SDMA driver uses clock rates of "ipg" and "ahb"
-clock to determine if it needs to configure the IP block as operating
-at 1:1 or 1:2 clock ratio (ACR bit in SDMAARM_CONFIG). Specifying both
-clocks as IMX6QDL_CLK_SDMA results in driver incorrectly thinking that
-ratio is 1:1 which results in broken SDMA funtionality(this at least
-breaks RAVE SP serdev driver on RDU2). Fix the code to specify
-IMX6QDL_CLK_IPG as "ipg" clock for SDMA, to avoid detecting incorrect
-clock ratio.
+The find_dlpar_node() helper returns a device node with its reference
+incremented.  Both the add and remove paths use this helper for find the
+appropriate node, but fail to release the reference when done.
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-Cc: Angus Ainslie (Purism) <angus@akkea.ca>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Tested-by: Adam Ford <aford173@gmail.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Annotate the find_dlpar_node() helper with a comment about the incremented
+reference count and call of_node_put() on the obtained device_node in the
+add and remove paths.  Also, fixup a reference leak in the find_vio_slot()
+helper where we fail to call of_node_put() on the vdevice node after we
+iterate over its children.
+
+Signed-off-by: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6qdl.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/hotplug/rpadlpar_core.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index e6af41c4bbc12..3992b8ea1c48f 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -853,7 +853,7 @@
- 				compatible = "fsl,imx6q-sdma", "fsl,imx35-sdma";
- 				reg = <0x020ec000 0x4000>;
- 				interrupts = <0 2 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clks IMX6QDL_CLK_SDMA>,
-+				clocks = <&clks IMX6QDL_CLK_IPG>,
- 					 <&clks IMX6QDL_CLK_SDMA>;
- 				clock-names = "ipg", "ahb";
- 				#dma-cells = <3>;
+diff --git a/drivers/pci/hotplug/rpadlpar_core.c b/drivers/pci/hotplug/rpadlpar_core.c
+index f2fcbe944d940..aae295708ea7a 100644
+--- a/drivers/pci/hotplug/rpadlpar_core.c
++++ b/drivers/pci/hotplug/rpadlpar_core.c
+@@ -55,6 +55,7 @@ static struct device_node *find_vio_slot_node(char *drc_name)
+ 		if ((rc == 0) && (!strcmp(drc_name, name)))
+ 			break;
+ 	}
++	of_node_put(parent);
+ 
+ 	return dn;
+ }
+@@ -78,6 +79,7 @@ static struct device_node *find_php_slot_pci_node(char *drc_name,
+ 	return np;
+ }
+ 
++/* Returns a device_node with its reference count incremented */
+ static struct device_node *find_dlpar_node(char *drc_name, int *node_type)
+ {
+ 	struct device_node *dn;
+@@ -314,6 +316,7 @@ int dlpar_add_slot(char *drc_name)
+ 			rc = dlpar_add_phb(drc_name, dn);
+ 			break;
+ 	}
++	of_node_put(dn);
+ 
+ 	printk(KERN_INFO "%s: slot %s added\n", DLPAR_MODULE_NAME, drc_name);
+ exit:
+@@ -447,6 +450,7 @@ int dlpar_remove_slot(char *drc_name)
+ 			rc = dlpar_remove_pci_slot(drc_name, dn);
+ 			break;
+ 	}
++	of_node_put(dn);
+ 	vm_unmap_aliases();
+ 
+ 	printk(KERN_INFO "%s: slot %s removed\n", DLPAR_MODULE_NAME, drc_name);
 -- 
 2.20.1
 
