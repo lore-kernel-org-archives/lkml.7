@@ -4,56 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8143CC28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1EDC28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 403E725EDC
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C50E327194
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:32:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395952;
-	bh=ywvvdd9oSFpraLt+fk0hQCZAKHCivxgtF0sMSLhDmsw=;
+	s=default; t=1559395955;
+	bh=CnYtyKFPz7zE+XtWLlfig+4Gu1FfBpSVh+Gp+ChrUo8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BYWbRDr6Vgkzu4552XLCZp1xT9FSzFs7pRMOz+DraHNdMuPA+rmPOBy4JFrOh13rd
-	 NF5iiV74Szzyli7cYoRSk3JDnJprvjljmMdQE3FtMzvI/tpDB8Q7YWnn7JfQEFiSPn
-	 HDZRKNDdO+Zc9dEusbu+vFgER6gKrtd8DqbsxGco=
+	b=Bt4AtaOZTGIlMc8LcfcDEnWrSaFUaApJvINmW2CRqIj2xRPoisM+m8QZKFgUj6C+U
+	 /tDFyOTAPvaTkJZf5U1u+9V9kgCUDC5Lo4RFmDfCvrmo8jFQtWF9d5s78lcjslyOfj
+	 3Xfw4oaKdgPs1ZHstiIXKXtJDGDZKz7eLTne6c50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729385AbfFANcb (ORCPT
+        id S1728275AbfFANYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:32:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55060 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729334AbfFANYw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 1 Jun 2019 09:24:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54836 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729284AbfFANYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:24:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D563527358;
-        Sat,  1 Jun 2019 13:24:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8ED127358;
+        Sat,  1 Jun 2019 13:24:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395491;
-        bh=ywvvdd9oSFpraLt+fk0hQCZAKHCivxgtF0sMSLhDmsw=;
+        s=default; t=1559395482;
+        bh=CnYtyKFPz7zE+XtWLlfig+4Gu1FfBpSVh+Gp+ChrUo8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dyO9mPdNNR4IofH0OadZ/686vficVDcbDKkiCNJIZZ/sxzxid7NCcGzNBsojbeQAo
-         w6P8Ced9Y2cFK3zYRoEGP+zLY7ZnO0rrmoktt9XsrBtxrYQT3oFgwj36Fza7SlOdly
-         N64cScMhM6pXPNIYC6zIa6t3wv4Fqo+6Z9gCb2Y4=
+        b=Aqa+FgyvAKqJ52SQUAFcSGmmOFmV5K10/PAcv3CfDug0xCeO5NV8clTftSehUP5ly
+         UsNQh9BDZShpIluMXjD8lIe3T3tCqslHxr9ytpomE5eQUjbfJWOy0YWS8fS7n3AesX
+         hNeAk/+XJgFHYwJv9FecaoGeW3+kCQVviqeM983Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <maze@google.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        linux-um@lists.infradead.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 34/99] uml: fix a boot splat wrt use of cpu_all_mask
-Date:   Sat,  1 Jun 2019 09:22:41 -0400
-Message-Id: <20190601132346.26558-34-sashal@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.14 27/99] f2fs: fix to avoid panic in do_recover_data()
+Date:   Sat,  1 Jun 2019 09:22:34 -0400
+Message-Id: <20190601132346.26558-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132346.26558-1-sashal@kernel.org>
 References: <20190601132346.26558-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,84 +59,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maciej Żenczykowski <maze@google.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 689a58605b63173acb0a8cf954af6a8f60440c93 ]
+[ Upstream commit 22d61e286e2d9097dae36f75ed48801056b77cac ]
 
-Memory: 509108K/542612K available (3835K kernel code, 919K rwdata, 1028K rodata, 129K init, 211K bss, 33504K reserved, 0K cma-reserved)
-NR_IRQS: 15
-clocksource: timer: mask: 0xffffffffffffffff max_cycles: 0x1cd42e205, max_idle_ns: 881590404426 ns
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 0 at kernel/time/clockevents.c:458 clockevents_register_device+0x72/0x140
-posix-timer cpumask == cpu_all_mask, using cpu_possible_mask instead
-Modules linked in:
-CPU: 0 PID: 0 Comm: swapper Not tainted 5.1.0-rc4-00048-ged79cc87302b #4
-Stack:
- 604ebda0 603c5370 604ebe20 6046fd17
- 00000000 6006fcbb 604ebdb0 603c53b5
- 604ebe10 6003bfc4 604ebdd0 9000001ca
-Call Trace:
- [<6006fcbb>] ? printk+0x0/0x94
- [<60083160>] ? clockevents_register_device+0x72/0x140
- [<6001f16e>] show_stack+0x13b/0x155
- [<603c5370>] ? dump_stack_print_info+0xe2/0xeb
- [<6006fcbb>] ? printk+0x0/0x94
- [<603c53b5>] dump_stack+0x2a/0x2c
- [<6003bfc4>] __warn+0x10e/0x13e
- [<60070320>] ? vprintk_func+0xc8/0xcf
- [<60030fd6>] ? block_signals+0x0/0x16
- [<6006fcbb>] ? printk+0x0/0x94
- [<6003c08b>] warn_slowpath_fmt+0x97/0x99
- [<600311a1>] ? set_signals+0x0/0x3f
- [<6003bff4>] ? warn_slowpath_fmt+0x0/0x99
- [<600842cb>] ? tick_oneshot_mode_active+0x44/0x4f
- [<60030fd6>] ? block_signals+0x0/0x16
- [<6006fcbb>] ? printk+0x0/0x94
- [<6007d2d5>] ? __clocksource_select+0x20/0x1b1
- [<60030fd6>] ? block_signals+0x0/0x16
- [<6006fcbb>] ? printk+0x0/0x94
- [<60083160>] clockevents_register_device+0x72/0x140
- [<60031192>] ? get_signals+0x0/0xf
- [<60030fd6>] ? block_signals+0x0/0x16
- [<6006fcbb>] ? printk+0x0/0x94
- [<60002eec>] um_timer_setup+0xc8/0xca
- [<60001b59>] start_kernel+0x47f/0x57e
- [<600035bc>] start_kernel_proc+0x49/0x4d
- [<6006c483>] ? kmsg_dump_register+0x82/0x8a
- [<6001de62>] new_thread_handler+0x81/0xb2
- [<60003571>] ? kmsg_dumper_stdout_init+0x1a/0x1c
- [<60020c75>] uml_finishsetup+0x54/0x59
+As Jungyeon reported in bugzilla:
 
-random: get_random_bytes called from init_oops_id+0x27/0x34 with crng_init=0
----[ end trace 00173d0117a88acb ]---
-Calibrating delay loop... 6941.90 BogoMIPS (lpj=34709504)
+https://bugzilla.kernel.org/show_bug.cgi?id=203227
 
-Signed-off-by: Maciej Żenczykowski <maze@google.com>
-Cc: Jeff Dike <jdike@addtoit.com>
-Cc: Richard Weinberger <richard@nod.at>
-Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Cc: linux-um@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
+- Overview
+When mounting the attached crafted image, following errors are reported.
+Additionally, it hangs on sync after trying to mount it.
 
-Signed-off-by: Richard Weinberger <richard@nod.at>
+The image is intentionally fuzzed from a normal f2fs image for testing.
+Compile options for F2FS are as follows.
+CONFIG_F2FS_FS=y
+CONFIG_F2FS_STAT_FS=y
+CONFIG_F2FS_FS_XATTR=y
+CONFIG_F2FS_FS_POSIX_ACL=y
+CONFIG_F2FS_CHECK_FS=y
+
+- Reproduces
+mkdir test
+mount -t f2fs tmp.img test
+sync
+
+- Messages
+ kernel BUG at fs/f2fs/recovery.c:549!
+ RIP: 0010:recover_data+0x167a/0x1780
+ Call Trace:
+  f2fs_recover_fsync_data+0x613/0x710
+  f2fs_fill_super+0x1043/0x1aa0
+  mount_bdev+0x16d/0x1a0
+  mount_fs+0x4a/0x170
+  vfs_kern_mount+0x5d/0x100
+  do_mount+0x200/0xcf0
+  ksys_mount+0x79/0xc0
+  __x64_sys_mount+0x1c/0x20
+  do_syscall_64+0x43/0xf0
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+During recovery, if ofs_of_node is inconsistent in between recovered
+node page and original checkpointed node page, let's just fail recovery
+instead of making kernel panic.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/um/kernel/time.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/f2fs/recovery.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/arch/um/kernel/time.c b/arch/um/kernel/time.c
-index 7f69d17de3540..9b21ae892009f 100644
---- a/arch/um/kernel/time.c
-+++ b/arch/um/kernel/time.c
-@@ -56,7 +56,7 @@ static int itimer_one_shot(struct clock_event_device *evt)
- static struct clock_event_device timer_clockevent = {
- 	.name			= "posix-timer",
- 	.rating			= 250,
--	.cpumask		= cpu_all_mask,
-+	.cpumask		= cpu_possible_mask,
- 	.features		= CLOCK_EVT_FEAT_PERIODIC |
- 				  CLOCK_EVT_FEAT_ONESHOT,
- 	.set_state_shutdown	= itimer_shutdown,
+diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
+index 6ea445377767d..65a82c5bafcbe 100644
+--- a/fs/f2fs/recovery.c
++++ b/fs/f2fs/recovery.c
+@@ -445,7 +445,15 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
+ 
+ 	get_node_info(sbi, dn.nid, &ni);
+ 	f2fs_bug_on(sbi, ni.ino != ino_of_node(page));
+-	f2fs_bug_on(sbi, ofs_of_node(dn.node_page) != ofs_of_node(page));
++
++	if (ofs_of_node(dn.node_page) != ofs_of_node(page)) {
++		f2fs_msg(sbi->sb, KERN_WARNING,
++			"Inconsistent ofs_of_node, ino:%lu, ofs:%u, %u",
++			inode->i_ino, ofs_of_node(dn.node_page),
++			ofs_of_node(page));
++		err = -EFAULT;
++		goto err;
++	}
+ 
+ 	for (; start < end; start++, dn.ofs_in_node++) {
+ 		block_t src, dest;
 -- 
 2.20.1
 
