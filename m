@@ -2,51 +2,54 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56EE1C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6EECC28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30421273AD
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:26:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80AE6273E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:26:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395594;
-	bh=RuV1rmQjMiQxxHW7uHW03PXKl3lV1LJQxkPwU2UGFW0=;
+	s=default; t=1559395596;
+	bh=AMh3azfDv9eQJGwB33I3PMFCyzDsud9Khu23J1NMkyw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QX7MKz6S4wa9ebJb4wp+krYc2mD21H/bFic3HTqkY1CDNvSXmuPxPZZyLAlWyyrp7
-	 x1w9DdwRqqKkfp7xHriSfv7AK3D7/rRTJlrL9YnZHIkH6I9ujttjROoRAwr6e8AvBh
-	 jTDJ8BW5isO0A+ZMrsqKSSUPsNvgM9Z5a39gv/BU=
+	b=dWS52p1a72yWg9nwXwy2lOZz/+9/xfCnXaMLfCg8hp+SK/0k/+WyiTd3N/7woHNYI
+	 wtvh/mXd5KZ2xPQaMNVpdlMpuEkk6EOcF8ET3cmBHu5OLca4eyUPrHjAL70kEloN/B
+	 mNOspeEhp+aL+aI7SAWEkUkaAW4usrBMfpbiwOVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729732AbfFAN0d (ORCPT
+        id S1729744AbfFAN0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:26:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56910 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:26:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727442AbfFAN03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:26:29 -0400
+        id S1729722AbfFAN0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:26:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B676273AC;
-        Sat,  1 Jun 2019 13:26:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A9AA273CD;
+        Sat,  1 Jun 2019 13:26:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395589;
-        bh=RuV1rmQjMiQxxHW7uHW03PXKl3lV1LJQxkPwU2UGFW0=;
+        s=default; t=1559395591;
+        bh=AMh3azfDv9eQJGwB33I3PMFCyzDsud9Khu23J1NMkyw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mh9YW0vVdrnPp0HYrRdv3kTAuVV9A8rA3WAI5+tSjkVsdBuOIISXlnW71axAZ05L2
-         Nt9yAG70jPsq97bAynqM7vVrGAXClAeEYgT0rerH7R1eyed653x78s93kZkTCJ/fIH
-         CFujQGHzEHbd56nPJuTUsp5BuJDDpzmz28VPAmpg=
+        b=YnkKdvNYlk/SnNUN3aJmEeQDCT5iqUrpYfXB65ImIGMGJxDA9D/nraSwUrlhhvAFW
+         ffzgEpnSdeI2PecBBFJrU7kOLQl52KenxTXAxvPrbWjdN4hCDJZvf0lAgG9YKDY5hL
+         QlMKRfYHjoEky0WVlcBPGQnL64AU6kNjKzXxEBsk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.4 14/56] f2fs: fix to avoid panic in do_recover_data()
-Date:   Sat,  1 Jun 2019 09:25:18 -0400
-Message-Id: <20190601132600.27427-14-sashal@kernel.org>
+Cc:     Elazar Leibovich <elazar@lightbitslabs.com>,
+        Orit Wasserman <orit.was@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 16/56] tracing: Fix partial reading of trace event's id file
+Date:   Sat,  1 Jun 2019 09:25:20 -0400
+Message-Id: <20190601132600.27427-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132600.27427-1-sashal@kernel.org>
 References: <20190601132600.27427-1-sashal@kernel.org>
@@ -59,78 +62,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Elazar Leibovich <elazar@lightbitslabs.com>
 
-[ Upstream commit 22d61e286e2d9097dae36f75ed48801056b77cac ]
+[ Upstream commit cbe08bcbbe787315c425dde284dcb715cfbf3f39 ]
 
-As Jungyeon reported in bugzilla:
+When reading only part of the id file, the ppos isn't tracked correctly.
+This is taken care by simple_read_from_buffer.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203227
+Reading a single byte, and then the next byte would result EOF.
 
-- Overview
-When mounting the attached crafted image, following errors are reported.
-Additionally, it hangs on sync after trying to mount it.
+While this seems like not a big deal, this breaks abstractions that
+reads information from files unbuffered. See for example
+https://github.com/golang/go/issues/29399
 
-The image is intentionally fuzzed from a normal f2fs image for testing.
-Compile options for F2FS are as follows.
-CONFIG_F2FS_FS=y
-CONFIG_F2FS_STAT_FS=y
-CONFIG_F2FS_FS_XATTR=y
-CONFIG_F2FS_FS_POSIX_ACL=y
-CONFIG_F2FS_CHECK_FS=y
+This code was mentioned as problematic in
+commit cd458ba9d5a5
+("tracing: Do not (ab)use trace_seq in event_id_read()")
 
-- Reproduces
-mkdir test
-mount -t f2fs tmp.img test
-sync
+An example C code that show this bug is:
 
-- Messages
- kernel BUG at fs/f2fs/recovery.c:549!
- RIP: 0010:recover_data+0x167a/0x1780
- Call Trace:
-  f2fs_recover_fsync_data+0x613/0x710
-  f2fs_fill_super+0x1043/0x1aa0
-  mount_bdev+0x16d/0x1a0
-  mount_fs+0x4a/0x170
-  vfs_kern_mount+0x5d/0x100
-  do_mount+0x200/0xcf0
-  ksys_mount+0x79/0xc0
-  __x64_sys_mount+0x1c/0x20
-  do_syscall_64+0x43/0xf0
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  #include <stdio.h>
+  #include <stdint.h>
 
-During recovery, if ofs_of_node is inconsistent in between recovered
-node page and original checkpointed node page, let's just fail recovery
-instead of making kernel panic.
+  #include <sys/types.h>
+  #include <sys/stat.h>
+  #include <fcntl.h>
+  #include <unistd.h>
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+  int main(int argc, char **argv) {
+    if (argc < 2)
+      return 1;
+    int fd = open(argv[1], O_RDONLY);
+    char c;
+    read(fd, &c, 1);
+    printf("First  %c\n", c);
+    read(fd, &c, 1);
+    printf("Second %c\n", c);
+  }
+
+Then run with, e.g.
+
+  sudo ./a.out /sys/kernel/debug/tracing/events/tcp/tcp_set_state/id
+
+You'll notice you're getting the first character twice, instead of the
+first two characters in the id file.
+
+Link: http://lkml.kernel.org/r/20181231115837.4932-1-elazar@lightbitslabs.com
+
+Cc: Orit Wasserman <orit.was@gmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: stable@vger.kernel.org
+Fixes: 23725aeeab10b ("ftrace: provide an id file for each event")
+Signed-off-by: Elazar Leibovich <elazar@lightbitslabs.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/recovery.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ kernel/trace/trace_events.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
-index 2878be3e448f7..410354c334d75 100644
---- a/fs/f2fs/recovery.c
-+++ b/fs/f2fs/recovery.c
-@@ -413,7 +413,15 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index ba5392807912b..bd4c0bb61ad72 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -1288,9 +1288,6 @@ event_id_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t *ppos)
+ 	char buf[32];
+ 	int len;
  
- 	get_node_info(sbi, dn.nid, &ni);
- 	f2fs_bug_on(sbi, ni.ino != ino_of_node(page));
--	f2fs_bug_on(sbi, ofs_of_node(dn.node_page) != ofs_of_node(page));
-+
-+	if (ofs_of_node(dn.node_page) != ofs_of_node(page)) {
-+		f2fs_msg(sbi->sb, KERN_WARNING,
-+			"Inconsistent ofs_of_node, ino:%lu, ofs:%u, %u",
-+			inode->i_ino, ofs_of_node(dn.node_page),
-+			ofs_of_node(page));
-+		err = -EFAULT;
-+		goto err;
-+	}
+-	if (*ppos)
+-		return 0;
+-
+ 	if (unlikely(!id))
+ 		return -ENODEV;
  
- 	for (; start < end; start++, dn.ofs_in_node++) {
- 		block_t src, dest;
 -- 
 2.20.1
 
