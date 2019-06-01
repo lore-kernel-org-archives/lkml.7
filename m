@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C171DC28CC4
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:39:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB545C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91C1C2760F
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:39:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B062D27616
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:39:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396355;
-	bh=Z0KlpCfOT/7pV35VGhPfHHiPn1Mtm/8veSecTD4VCeE=;
+	s=default; t=1559396360;
+	bh=lto4uKj0I1kt3M2FNnSTn8NQADKxrJcUxNIx3W2cx/U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2p47balDvKTh4bqv3hO+2A04eDXhjkfRXYPNVAj+HLWPPUEshKWslS6NhlBBxugOG
-	 9yPnrF4NgeLaqGVlMG4rAGmVlvafdEgrVwoMYUtDggwiZNV6K0h0tOghOKdA/GveGI
-	 Rm5b9+hTJLruXu7Kw1XMNQJb06qcLq3PawfuVUVg=
+	b=vnW+2D8nM0x3WKDaScJfexZo9cOj0IjUKMyMy+aFYY6RqSX/6hPTBNCVz9XN55WIz
+	 iJ+exM9q30sdJzxrJurEpqlp4W6/4IhcWtqQxKqzDqXRhMxR2DZYgh/z6U8CewHdvc
+	 LQI/IaIKobccU9Lo428Alar80Bz/nA/W4XQe7/6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728452AbfFANVT (ORCPT
+        id S1729346AbfFANjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:21:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48500 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:39:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727334AbfFANVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:21:12 -0400
+        id S1727338AbfFANVS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:21:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B08F272E7;
-        Sat,  1 Jun 2019 13:21:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BFDC27306;
+        Sat,  1 Jun 2019 13:21:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395272;
-        bh=Z0KlpCfOT/7pV35VGhPfHHiPn1Mtm/8veSecTD4VCeE=;
+        s=default; t=1559395277;
+        bh=lto4uKj0I1kt3M2FNnSTn8NQADKxrJcUxNIx3W2cx/U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=homgCLfcq3etGQVNimdNHLHdeFWrq02Dp4kkfV6adxT33ghXgDWfj2EbplFAAb5M2
-         8K1m3hI7nshXocteqP+UgB6xGf4Go4/B4DolLWFeW8/kF02uzuDHI2Dv0m+Y7LqQZK
-         dPzNIN8hCbJIyFNamCs1iQ8Yra0hRxAwGNdEE7y8=
+        b=M1sbpqkvTDub9T6L5LbTeiR9EHq5zKGL2ivr12y2ST02BYi+DZ8hRsmEGB8mZKJO9
+         wE25hzSqWmNaY9eHnSjIg4EGyQaJpFsMnfWeCPGFupK0hnB2PXH9nTRUuTpbg27h91
+         rHfwns2E20bcgt5jyvRm4e2bOvoL4hX4kyMQE1oo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 036/173] NFS4: Fix v4.0 client state corruption when mount
-Date:   Sat,  1 Jun 2019 09:17:08 -0400
-Message-Id: <20190601131934.25053-36-sashal@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.0 041/173] f2fs: fix to avoid panic in f2fs_inplace_write_data()
+Date:   Sat,  1 Jun 2019 09:17:13 -0400
+Message-Id: <20190601131934.25053-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131934.25053-1-sashal@kernel.org>
 References: <20190601131934.25053-1-sashal@kernel.org>
@@ -59,49 +59,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit f02f3755dbd14fb935d24b14650fff9ba92243b8 ]
+[ Upstream commit 05573d6ccf702df549a7bdeabef31e4753df1a90 ]
 
-stat command with soft mount never return after server is stopped.
+As Jungyeon reported in bugzilla:
 
-When alloc a new client, the state of the client will be set to
-NFS4CLNT_LEASE_EXPIRED.
+https://bugzilla.kernel.org/show_bug.cgi?id=203239
 
-When the server is stopped, the state manager will work, and accord
-the state to recover. But the state is NFS4CLNT_LEASE_EXPIRED, it
-will drain the slot table and lead other task to wait queue, until
-the client recovered. Then the stat command is hung.
+- Overview
+When mounting the attached crafted image and running program, following errors are reported.
+Additionally, it hangs on sync after running program.
 
-When discover server trunking, the client will renew the lease,
-but check the client state, it lead the client state corruption.
+The image is intentionally fuzzed from a normal f2fs image for testing.
+Compile options for F2FS are as follows.
+CONFIG_F2FS_FS=y
+CONFIG_F2FS_STAT_FS=y
+CONFIG_F2FS_FS_XATTR=y
+CONFIG_F2FS_FS_POSIX_ACL=y
+CONFIG_F2FS_CHECK_FS=y
 
-So, we need to call state manager to recover it when detect server
-ip trunking.
+- Reproduces
+cc poc_15.c
+./run.sh f2fs
+sync
 
-Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+- Kernel messages
+ ------------[ cut here ]------------
+ kernel BUG at fs/f2fs/segment.c:3162!
+ RIP: 0010:f2fs_inplace_write_data+0x12d/0x160
+ Call Trace:
+  f2fs_do_write_data_page+0x3c1/0x820
+  __write_data_page+0x156/0x720
+  f2fs_write_cache_pages+0x20d/0x460
+  f2fs_write_data_pages+0x1b4/0x300
+  do_writepages+0x15/0x60
+  __filemap_fdatawrite_range+0x7c/0xb0
+  file_write_and_wait_range+0x2c/0x80
+  f2fs_do_sync_file+0x102/0x810
+  do_fsync+0x33/0x60
+  __x64_sys_fsync+0xb/0x10
+  do_syscall_64+0x43/0xf0
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+The reason is f2fs_inplace_write_data() will trigger kernel panic due
+to data block locates in node type segment.
+
+To avoid panic, let's just return error code and set SBI_NEED_FSCK to
+give a hint to fsck for latter repairing.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4state.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/f2fs/segment.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index 02488b50534ac..6999e870baa97 100644
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -159,6 +159,10 @@ int nfs40_discover_server_trunking(struct nfs_client *clp,
- 		/* Sustain the lease, even if it's empty.  If the clientid4
- 		 * goes stale it's of no use for trunking discovery. */
- 		nfs4_schedule_state_renewal(*result);
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 2b809b54d81bb..b3f1f75af05cc 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -3170,13 +3170,18 @@ int f2fs_inplace_write_data(struct f2fs_io_info *fio)
+ {
+ 	int err;
+ 	struct f2fs_sb_info *sbi = fio->sbi;
++	unsigned int segno;
+ 
+ 	fio->new_blkaddr = fio->old_blkaddr;
+ 	/* i/o temperature is needed for passing down write hints */
+ 	__get_segment_type(fio);
+ 
+-	f2fs_bug_on(sbi, !IS_DATASEG(get_seg_entry(sbi,
+-			GET_SEGNO(sbi, fio->new_blkaddr))->type));
++	segno = GET_SEGNO(sbi, fio->new_blkaddr);
 +
-+		/* If the client state need to recover, do it. */
-+		if (clp->cl_state)
-+			nfs4_schedule_state_manager(clp);
- 	}
- out:
- 	return status;
++	if (!IS_DATASEG(get_seg_entry(sbi, segno)->type)) {
++		set_sbi_flag(sbi, SBI_NEED_FSCK);
++		return -EFAULT;
++	}
+ 
+ 	stat_inc_inplace_blocks(fio->sbi);
+ 
 -- 
 2.20.1
 
