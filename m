@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 874B3C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB84FC28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53FFF27252
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5405272C5
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:18:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395132;
-	bh=2ccqYycJZZ1nnGUBwAj1VsJj0XgkSy4wHfISQDCsOJA=;
+	s=default; t=1559395136;
+	bh=DQFifoSnA4WTPRNM7L36Gt4t6w84wHh5lhn7kpd4ZEs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gCVvrHS5i3n8dmIfzxQLpHI7NaNKZYWGACnA3wD5l7RgzGEXj1uLOjivF/7icKANm
-	 ghuK4GSq+URMetkVFWy4rcJOF5S3DvcBlhILAvzC+e/7t3NOC6GGx7bQ3ZOmPemoQM
-	 sSdGdVe1JdbpRmRljpwyp+HwH3L1z7T+0IMGB5M4=
+	b=Sqp/OeLhHQkPclx4HIcNQQ+GkCXkRKDVDVVE3qXwQ17ohv2rbzGU966q6YXCPulJs
+	 3QK+0UXM6tPJrqSzHgmvtY+EDCLCGdN0y7Ti0oTUakMhq2EJ9SNxkrz9AaXZRmNDBI
+	 ml7XqK8/to5WxFN4kP2AZHImHjfijciGsY9f+i2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbfFANSv (ORCPT
+        id S1727995AbfFANSz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:18:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45854 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:18:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727902AbfFANSr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:18:47 -0400
+        id S1727966AbfFANSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:18:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FE40272AA;
-        Sat,  1 Jun 2019 13:18:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9197F272C0;
+        Sat,  1 Jun 2019 13:18:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395127;
-        bh=2ccqYycJZZ1nnGUBwAj1VsJj0XgkSy4wHfISQDCsOJA=;
+        s=default; t=1559395130;
+        bh=DQFifoSnA4WTPRNM7L36Gt4t6w84wHh5lhn7kpd4ZEs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=akIQDe8alKtbqkuYt/YLqeOa6zmt81m5Kk0CsB4KMIyPHOD4tvW8XXn0avCBXqvKD
-         0go1OnNbZWvmEcvfMXqpaBf/ezeer6HrX4cL+UjEdMWdtQWp04in6SksBrOjzZnVXa
-         llzfXU7oTgS4C3Fm9oMRLaW613qyV5T8q/iFt9kk=
+        b=TQ6zSbBINGpkEnnBZlgscZyr1+ScUJL0FtnEPD4bjrafmnVVWLrnNzfzlDyQ1CKLI
+         NSfhGfO2QIgCLwWyjJRdh0HjTdWbgVkvA0DrGbrsEpqA3GjcvFY+WWLEYaaOeWQPh1
+         rOpaOUz3f65myPG+clQLtKm9ef5HhXoJ/CN1mxGo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
         linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.1 050/186] f2fs: fix to use inline space only if inline_xattr is enable
-Date:   Sat,  1 Jun 2019 09:14:26 -0400
-Message-Id: <20190601131653.24205-50-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 053/186] f2fs: fix to avoid deadloop in foreground GC
+Date:   Sat,  1 Jun 2019 09:14:29 -0400
+Message-Id: <20190601131653.24205-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131653.24205-1-sashal@kernel.org>
 References: <20190601131653.24205-1-sashal@kernel.org>
@@ -61,54 +61,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 622927f3b8809206f6da54a6a7ed4df1a7770fce ]
+[ Upstream commit 793ab1c8a792f8bccd7ae4c5be02bd275410b3af ]
 
-With below mkfs and mount option:
+As Jungyeon reported in bugzilla:
 
-MKFS_OPTIONS  -- -O extra_attr -O project_quota -O inode_checksum -O flexible_inline_xattr -O inode_crtime -f
-MOUNT_OPTIONS -- -o noinline_xattr
+https://bugzilla.kernel.org/show_bug.cgi?id=203211
 
-We may miss xattr data with below testcase:
-- mkdir dir
-- setfattr -n "user.name" -v 0 dir
-- for ((i = 0; i < 190; i++)) do touch dir/$i; done
-- umount
-- mount
-- getfattr -n "user.name" dir
+- Overview
+When mounting the attached crafted image and making a new file, I got this error and the error messages keep repeating.
 
-user.name: No such attribute
+The image is intentionally fuzzed from a normal f2fs image for testing and I run with option CONFIG_F2FS_CHECK_FS on.
 
-The root cause is that we persist xattr data into reserved inline xattr
-space, even if inline_xattr is not enable in inline directory inode, after
-inline dentry conversion, reserved space no longer exists, so that xattr
-data missed.
+- Reproduces
+mkdir test
+mount -t f2fs tmp.img test
+cd test
+touch t
 
-Let's use inline xattr space only if inline_xattr flag is set on inode
-to fix this iusse.
+- Messages
+[   58.820451] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.821485] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.822530] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.823571] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.824616] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.825640] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.826663] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.827698] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.828719] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.829759] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.830783] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.831828] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.832869] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.833888] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.834945] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.835996] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.837028] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.838051] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.839072] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.840100] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.841147] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.842186] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.843214] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.844267] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.845282] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.846305] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.847341] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+... (repeating)
 
-Fixes: 6afc662e68b5 ("f2fs: support flexible inline xattr size")
+During GC, if segment type stored in SSA and SIT is inconsistent, we just
+skip migrating current segment directly, since we need to know the exact
+type to decide the migration function we use.
+
+So in foreground GC, we will easily run into a infinite loop as we may
+select the same victim segment which has inconsistent type due to greedy
+policy. In order to end up this, we choose to shutdown filesystem. For
+backgrond GC, we need to do that as well, so that we can avoid latter
+potential infinite looped foreground GC.
+
 Signed-off-by: Chao Yu <yuchao0@huawei.com>
 Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/f2fs.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/f2fs/gc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 74f06f12110f1..10240fbdd396d 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -2579,7 +2579,9 @@ static inline void *inline_xattr_addr(struct inode *inode, struct page *page)
+diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+index ab764bd106de1..a66a8752e5f65 100644
+--- a/fs/f2fs/gc.c
++++ b/fs/f2fs/gc.c
+@@ -1175,6 +1175,7 @@ static int do_garbage_collect(struct f2fs_sb_info *sbi,
+ 				"type [%d, %d] in SSA and SIT",
+ 				segno, type, GET_SUM_TYPE((&sum->footer)));
+ 			set_sbi_flag(sbi, SBI_NEED_FSCK);
++			f2fs_stop_checkpoint(sbi, false);
+ 			goto skip;
+ 		}
  
- static inline int inline_xattr_size(struct inode *inode)
- {
--	return get_inline_xattr_addrs(inode) * sizeof(__le32);
-+	if (f2fs_has_inline_xattr(inode))
-+		return get_inline_xattr_addrs(inode) * sizeof(__le32);
-+	return 0;
- }
- 
- static inline int f2fs_has_inline_data(struct inode *inode)
 -- 
 2.20.1
 
