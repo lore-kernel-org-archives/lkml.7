@@ -2,199 +2,97 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33EDDC28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 15:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63346C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 16:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E660327427
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 15:48:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dH7Pa4KJ"
+	by mail.kernel.org (Postfix) with ESMTP id 3DB8A2774C
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 16:05:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbfFAPsB (ORCPT
+        id S1726701AbfFAQFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 11:48:01 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:41156 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbfFAPsA (ORCPT
+        Sat, 1 Jun 2019 12:05:17 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:56741 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726246AbfFAQFQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 11:48:00 -0400
-Received: by mail-qt1-f193.google.com with SMTP id s57so4693537qte.8;
-        Sat, 01 Jun 2019 08:47:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jnDetmrENIxs3LtOFD/826Chw2+m/gYK9iycOoO55tI=;
-        b=dH7Pa4KJv3p4ZkRySjerWQi76tFlvwluzIGoZRDEcFf/UX+i4OvW2dANlNiLgg+Q4Q
-         bUnOzvSNxUrU4z9GXls9nnt37PbakzxCizoU2acdy6UWTXuXrri9/mBawKGXRR4e7M+T
-         vm/596h6BlXJb2+jDNKx5YEvv2C9LD0upcku0ABixYYTysG982EFsaS/3T1upDXY772Q
-         HmRCW+2pMM00DM1kNJbWszzKAOZSwyw8Mvv798ih5M30nhzs0d5tmrFHzRi/HwBZJN7g
-         5ogejoHU+oeEba0agLx+zJNdZIA/uMIiBau+xI9DlmZ5QBBciBVIGJKM/PB2aLfAkO8w
-         LHGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jnDetmrENIxs3LtOFD/826Chw2+m/gYK9iycOoO55tI=;
-        b=mao2pD1EaFmu90trXsv/j6RYRcx5beVNjDe0BuEW5MROuwqj7yAp6MXtFSYN0jMSLK
-         4EnNL3eeIcUFz1ma09qvGPf3MmAWphO8h+ujDFodSTnyOuCV/teNTFWgumKvhfPyzA2L
-         3sjouTmt4OLYXC2zZCSrql6YXebtg2go/6d6A4d0swrMxkEnDKxlxhu0FRppP/Sky+gY
-         C7uqUPQpMjVJI+/AFIAETvy8O+0GwSs6kxhJ8AVFMkv+Ua3O3nKFCHhhdYGUVI5opiMX
-         +WazMYlwGjs5Uu/zfMZSXz6tdHVy4jYeY0N/bOXdBalx3m5eV/dRaKoNv2dGNEp3b5mn
-         VaSQ==
-X-Gm-Message-State: APjAAAWjgYavej8cMeauphTWfsP/L49FPWU56yxNFwIbnbB0zSpBXltL
-        Cz3oeooy7zK2h1gYFL2LfLs=
-X-Google-Smtp-Source: APXvYqwSyxHtVh1pXMw9BNOXZpNpHLZfFdKZ9Uv0KAGzjug/Yn3GOLxaN+CPe5k+5KzfgbazCToD0Q==
-X-Received: by 2002:a0c:d78c:: with SMTP id z12mr12863103qvi.244.1559404078816;
-        Sat, 01 Jun 2019 08:47:58 -0700 (PDT)
-Received: from localhost.localdomain ([168.181.49.32])
-        by smtp.gmail.com with ESMTPSA id j26sm6409797qtj.70.2019.06.01.08.47.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 01 Jun 2019 08:47:58 -0700 (PDT)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id F3D7DC085E; Sat,  1 Jun 2019 12:47:53 -0300 (-03)
-Date:   Sat, 1 Jun 2019 12:47:53 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     syzbot <syzbot+6ad9c3bd0a218a2ab41d@syzkaller.appspotmail.com>,
-        davem@davemloft.net, linux-kernel@vger.kernel.org,
-        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
-        nhorman@tuxdriver.com, syzkaller-bugs@googlegroups.com,
-        vyasevich@gmail.com
-Subject: Re: memory leak in sctp_send_reset_streams
-Message-ID: <20190601154753.GG3713@localhost.localdomain>
-References: <20190601122615.16872-1-hdanton@sina.com>
+        Sat, 1 Jun 2019 12:05:16 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hX6VB-0005BR-FK; Sat, 01 Jun 2019 18:05:01 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hX6V9-0002xN-7I; Sat, 01 Jun 2019 18:04:59 +0200
+Date:   Sat, 1 Jun 2019 18:04:59 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-pwm@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next] pwm: pca9685: Remove set but not used variable
+ 'pwm'
+Message-ID: <20190601160459.baedo5pp5hsrltzs@pengutronix.de>
+References: <20190601035709.85379-1-yuehaibing@huawei.com>
+ <CAGngYiXZM0QUdKE_zDK763J9iDuiKSbmFeTVA1PJ_4WvjntjQQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190601122615.16872-1-hdanton@sina.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGngYiXZM0QUdKE_zDK763J9iDuiKSbmFeTVA1PJ_4WvjntjQQ@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 01, 2019 at 08:26:15PM +0800, Hillf Danton wrote:
-> 
-> Hi
+Hello Sven,
 
-Hi,
+On Sat, Jun 01, 2019 at 09:03:09AM -0400, Sven Van Asbroeck wrote:
+> Hi YueHaibing,
+> 
+> On Fri, May 31, 2019 at 11:49 PM YueHaibing <yuehaibing@huawei.com> wrote:
+> >
+> >         mutex_lock(&pca->lock);
+> > -       pwm = &pca->chip.pwms[offset];
+> >         mutex_unlock(&pca->lock);
+> 
+> Thanks for noticing this issue. However it should be fixed differently.
+> 
+> This was introduced by Uwe's clean-up patch:
+> commit e926b12c611c2095c79 ("pwm: Clear chip_data in pwm_put()")
+> 
+> But Uwe did not realize that in this case, the pwm chip_data is used as a
+> synchronization mechanism between pwm and gpio. Moving the chip_data
+> clear out of the mutex breaks this mechanism.
 
 > 
-> On Fri, May 31, 2019 at 02:18:06PM -0700, syzbot wrote:
-> > Hello,
-> > 
-> > syzbot found the following crash on:
-> > 
-> > HEAD commit:    036e3431 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=153cff12a00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=8f0f63a62bb5b13c
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=6ad9c3bd0a218a2ab41d
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12561c86a00000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15b76fd8a00000
-> > 
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+6ad9c3bd0a218a2ab41d@syzkaller.appspotmail.com
-> > 
-> > executing program
-> > executing program
-> > executing program
-> > executing program
-> > executing program
-> > BUG: memory leak
-> > unreferenced object 0xffff888123894820 (size 32):
-> >    comm "syz-executor045", pid 7267, jiffies 4294943559 (age 13.660s)
-> >    hex dump (first 32 bytes):
-> >      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> >      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> >    backtrace:
-> >      [<00000000c7e71c69>] kmemleak_alloc_recursive
-> > include/linux/kmemleak.h:55 [inline]
-> >      [<00000000c7e71c69>] slab_post_alloc_hook mm/slab.h:439 [inline]
-> >      [<00000000c7e71c69>] slab_alloc mm/slab.c:3326 [inline]
-> >      [<00000000c7e71c69>] __do_kmalloc mm/slab.c:3658 [inline]
-> >      [<00000000c7e71c69>] __kmalloc+0x161/0x2c0 mm/slab.c:3669
-> >      [<000000003250ed8e>] kmalloc_array include/linux/slab.h:670 [inline]
-> >      [<000000003250ed8e>] kcalloc include/linux/slab.h:681 [inline]
-> >      [<000000003250ed8e>] sctp_send_reset_streams+0x1ab/0x5a0 net/sctp/stream.c:302
-> >      [<00000000cd899c6e>] sctp_setsockopt_reset_streams net/sctp/socket.c:4314 [inline]
-> >      [<00000000cd899c6e>] sctp_setsockopt net/sctp/socket.c:4765 [inline]
-> >      [<00000000cd899c6e>] sctp_setsockopt+0xc23/0x2bf0 net/sctp/socket.c:4608
-> >      [<00000000ff3a21a2>] sock_common_setsockopt+0x38/0x50 net/core/sock.c:3130
-> >      [<000000009eb87ae7>] __sys_setsockopt+0x98/0x120 net/socket.c:2078
-> >      [<00000000e0ede6ca>] __do_sys_setsockopt net/socket.c:2089 [inline]
-> >      [<00000000e0ede6ca>] __se_sys_setsockopt net/socket.c:2086 [inline]
-> >      [<00000000e0ede6ca>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2086
-> >      [<00000000c61155f5>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:301
-> >      [<00000000e540958c>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > 
-> > BUG: memory leak
-> > unreferenced object 0xffff888123894980 (size 32):
-> >    comm "syz-executor045", pid 7268, jiffies 4294944145 (age 7.800s)
-> >    hex dump (first 32 bytes):
-> >      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> >      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> >    backtrace:
-> >      [<00000000c7e71c69>] kmemleak_alloc_recursive
-> > include/linux/kmemleak.h:55 [inline]
-> >      [<00000000c7e71c69>] slab_post_alloc_hook mm/slab.h:439 [inline]
-> >      [<00000000c7e71c69>] slab_alloc mm/slab.c:3326 [inline]
-> >      [<00000000c7e71c69>] __do_kmalloc mm/slab.c:3658 [inline]
-> >      [<00000000c7e71c69>] __kmalloc+0x161/0x2c0 mm/slab.c:3669
-> >      [<000000003250ed8e>] kmalloc_array include/linux/slab.h:670 [inline]
-> >      [<000000003250ed8e>] kcalloc include/linux/slab.h:681 [inline]
-> >      [<000000003250ed8e>] sctp_send_reset_streams+0x1ab/0x5a0 net/sctp/stream.c:302
-> >      [<00000000cd899c6e>] sctp_setsockopt_reset_streams net/sctp/socket.c:4314 [inline]
-> >      [<00000000cd899c6e>] sctp_setsockopt net/sctp/socket.c:4765 [inline]
-> >      [<00000000cd899c6e>] sctp_setsockopt+0xc23/0x2bf0 net/sctp/socket.c:4608
-> >      [<00000000ff3a21a2>] sock_common_setsockopt+0x38/0x50 net/core/sock.c:3130
-> >      [<000000009eb87ae7>] __sys_setsockopt+0x98/0x120 net/socket.c:2078
-> >      [<00000000e0ede6ca>] __do_sys_setsockopt net/socket.c:2089 [inline]
-> >      [<00000000e0ede6ca>] __se_sys_setsockopt net/socket.c:2086 [inline]
-> >      [<00000000e0ede6ca>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2086
-> >      [<00000000c61155f5>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:301
-> >      [<00000000e540958c>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > 
-> > 
-> > 
-> > ---
-> > This bug is generated by a bot. It may contain errors.
-> > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> > 
-> > syzbot will keep track of this bug report. See:
-> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> > syzbot can test patches for this bug, for details see:
-> > https://goo.gl/tpsmEJ#testing-patches
-> > 
-> The following tiny change is prepared based on the info listed above and I want
-> to know if it works for you.
+> I think the following would restore the mechanism:
 > 
-> thanks
-> Hillf
-> ------->8---
-> diff --git a/net/sctp/stream.c b/net/sctp/stream.c
-> index 93ed078..d3e2f03 100644
-> --- a/net/sctp/stream.c
-> +++ b/net/sctp/stream.c
-> @@ -310,6 +310,7 @@ int sctp_send_reset_streams(struct sctp_association *asoc,
-> 
-> 	if (out && !sctp_stream_outq_is_empty(stream, str_nums, nstr_list)) {
-> 		retval = -EAGAIN;
-> +		kfree(nstr_list);
+> >         mutex_lock(&pca->lock);
+> >        pwm = &pca->chip.pwms[offset];
+> > +     pwm_set_chip_data(pwm, NULL);
+> >         mutex_unlock(&pca->lock);
 
-Yes it does. Thanks Hillf.
+I didn't look into the driver to try to understand that, but the
+definitely needs a comment to explain for the next person to think they
+can do a cleanup here.
 
-> 		goto out;
-> 	}
-> 
-> --
-> 
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
