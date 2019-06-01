@@ -2,102 +2,191 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26701C28CC3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 02:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 710A5C28CC2
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 03:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF38A270B9
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 02:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40D46270D7
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 03:13:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iLLsRGv5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ko/E4KiN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727164AbfFACsI (ORCPT
+        id S1726881AbfFADNE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 22:48:08 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36820 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726634AbfFACsH (ORCPT
+        Fri, 31 May 2019 23:13:04 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43632 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726547AbfFADNE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 22:48:07 -0400
-Received: by mail-pf1-f193.google.com with SMTP id u22so7288699pfm.3;
-        Fri, 31 May 2019 19:48:07 -0700 (PDT)
+        Fri, 31 May 2019 23:13:04 -0400
+Received: by mail-lj1-f195.google.com with SMTP id z5so11361781lji.10;
+        Fri, 31 May 2019 20:13:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wA6Nag5cogefANISMYEj8MTYfV7u56NtZXfu3ry/z74=;
-        b=iLLsRGv5rZG2Z2S1xBjyxzN2EiMpCOjxyobS4Kjt63lDR9BvrmiQKI8Z6KRR1cKDAS
-         T/elngl98c1HflHiYL2VK+WBLcwfvzg3p2brNe/PijlOZilflzHDABXBHGd3doMV5qm5
-         7k+vRi4HZ8LE01xkHSNMH4fc8G+apBDcKiyxn5SF54Lo3lyTKWJzgpSqBO2kxe7RgwF1
-         LjcaIwvwZKU8WXWL0YsG1/7Ly737J9odKGWEKYSZluOtXoF1wWphx82qZJn6zBbWvyhQ
-         Wr1m1M6RA4iwQ17iruIeE1lAZU6drlS4AQyoKU4WCiTQmQzW2y4EFVKA69mIcKloJlJb
-         mnpg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=W7y0t1BE57lzfu+uhdY3ylGWznDBN9VdOiMaLtHbq9Q=;
+        b=Ko/E4KiNUOEV/aYbKYehkF2WPxT7IHS+RfF/MLa0r+Elqiy4hKUbkeRC4mX7C+BwWe
+         S7GyN+1kAlEQ5LZ11/L46Tho+5OYTVM/Q+3yHFmFWafrQKbygG4Kct5ZmbqjhSv61geN
+         2rDH3mm4Kc+0dbq89YGycPhanJJiCrgUch3mSA8Kyb3Ed1855r5qoOpIZjqgmmSEUqxL
+         FIyMobAuOLwA3nV0nra7AlAK8CYqJ2Te6TsiGaMonRo3lcgWhydDNLDIp7g8fQu/GqD8
+         /OkRQBPIxZMj+Xrax0HoAyVaara0CKMgVdd15ufruLk+a+sxuO9Z2v2dsR3VEYB+W4P/
+         fpXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wA6Nag5cogefANISMYEj8MTYfV7u56NtZXfu3ry/z74=;
-        b=pBTjkbHACsjchefUqPirUQA+q5C6+9qWTFnLDWAJpWWuCPqHdjHET44Plt6hpb8fZx
-         p5b8o3kjxPm3LM+EiJn5WBrK6UWpBQEDi9l1MVNy9y1oxv1AKmtGmjxiTfHtcwTDRvWx
-         9xEZVdJ9YtHJwN8pIYGmq5PAyTMW8V5vAzoG8LMNgpy6Ly+EaNU+qp61K2n3TwxhJf1V
-         1iIcbQYhxmYjRqzmYHDq8/ZAiJ0b3jKEqBV/1M2LHankjPhirDZW7DvX6o4lom7VkpOh
-         40Icnafjfw5s6H36jrcwCWAIt5neIyZUzIXbZbISW8NoKk/I0LxsU9GScDqBULQLzyIB
-         1mWw==
-X-Gm-Message-State: APjAAAV+cv1cutuiFmmcDj+7rK5OFzyoUkP8V7x2cEhGWDaRY6HxFA0T
-        tQQ7R4k/30k2x9hTJ0iZdms=
-X-Google-Smtp-Source: APXvYqwOHSP6VGI+c+WCLijOFl5QUgm7TIFm8uBRjKS560u4/63ZU3mOmv1fIgQ0ufdJeHFLrtehMQ==
-X-Received: by 2002:aa7:9256:: with SMTP id 22mr338244pfp.69.1559357287182;
-        Fri, 31 May 2019 19:48:07 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([66.42.35.75])
-        by smtp.gmail.com with ESMTPSA id f11sm8189908pfd.27.2019.05.31.19.48.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 31 May 2019 19:48:06 -0700 (PDT)
-Date:   Sat, 1 Jun 2019 10:47:53 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     paul@paul-moore.com, sds@tycho.nsa.gov, eparis@parisplace.org,
-        omosnace@redhat.com, selinux@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH v3] selinux: lsm: fix a missing-check bug in
- selinux_sb_eat_lsm_opts()
-Message-ID: <20190601024753.GA8962@zhanggen-UX430UQ>
-References: <20190601021526.GA8264@zhanggen-UX430UQ>
- <20190601022527.GR17978@ZenIV.linux.org.uk>
- <20190601023449.GS17978@ZenIV.linux.org.uk>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=W7y0t1BE57lzfu+uhdY3ylGWznDBN9VdOiMaLtHbq9Q=;
+        b=nSp5YomLRecdrmJnfPlFg0gW/gzh807VoIC7VyctaFlm6R7nX92/82b/XkoCFFopi0
+         HCR19sQSSRdpLlrFPetXuHB0LjFGYj5n+SfvgYAJzxRpALpAEweqdriTFlRuRyKFzDIi
+         I06Je0VG438NSwgZ+uATC5o909T7X351Y4GVbF/sxvhbsmjNel/cGsEL4NKVT1RuP/Nc
+         K35Q6iTSOFzA+sWmg7dFc20i1wQgfqj+BDr56UFgW4toE/zDl3j5hmi6O98Gu93ucouI
+         H0TaUY01Vtg3zRsWEMxGF6z8IDsxNhS6lyFpa79X7mBpOcVXaY6AxViATfXC1tgwhjIp
+         1aOQ==
+X-Gm-Message-State: APjAAAWTOtJl560S1V/Vt6oNf79UB7xyvcZJqR0GkZxVLPNiK/eRziQL
+        4R7/GySZmMmdNHAHmqWak28Qz8k40+RGA/czZqs=
+X-Google-Smtp-Source: APXvYqzqURqxpAAoiO7eRZBWY1kPr5Erc0XlfyqAjvnwbGRYvXInlNmsMurhDZCieIEYUjLZZ5efUacCg2SVGA5tSLM=
+X-Received: by 2002:a2e:9f44:: with SMTP id v4mr7758548ljk.85.1559358781222;
+ Fri, 31 May 2019 20:13:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190601023449.GS17978@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190531223735.4998-1-mmullins@fb.com> <B719E003-E100-463E-A921-E59189572181@fb.com>
+In-Reply-To: <B719E003-E100-463E-A921-E59189572181@fb.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Fri, 31 May 2019 20:12:49 -0700
+Message-ID: <CAADnVQKS1eMMzDRh-fkXQyQihoDBbdg3vAC9jvuOB9QgAakxag@mail.gmail.com>
+Subject: Re: [PATCH bpf v2] bpf: preallocate a perf_sample_data per event fd
+To:     Song Liu <songliubraving@fb.com>
+Cc:     Matt Mullins <mmullins@fb.com>, Andrew Hall <hall@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 01, 2019 at 03:34:49AM +0100, Al Viro wrote:
-> On Sat, Jun 01, 2019 at 03:25:27AM +0100, Al Viro wrote:
-> > On Sat, Jun 01, 2019 at 10:15:26AM +0800, Gen Zhang wrote:
-> > > In selinux_sb_eat_lsm_opts(), 'arg' is allocated by kmemdup_nul(). It
-> > > returns NULL when fails. So 'arg' should be checked. And 'mnt_opts' 
-> > > should be freed when error.
-> > 
-> > What's the latter one for?  On failure we'll get to put_fs_context()
-> > pretty soon, so
-> >         security_free_mnt_opts(&fc->security);
-> > will be called just fine.  Leaving it allocated on failure is fine...
-> 
-> Actually, right now in mainline it is not (btrfs_mount_root() has
-> an odd call of security_sb_eat_lsm_opts()); eventually we will be
-> down to just the callers in ->parse_monolithic() instances, at which
-> point the above will become correct.  At the moment it is not, so
-> consider the objection withdrawn (and I really need to get some sleep,
-> seeing how long did it take me to recall the context... ;-/)
-Thanks for your comments. And have a good dream.
+On Fri, May 31, 2019 at 6:28 PM Song Liu <songliubraving@fb.com> wrote:
+>
+>
+>
+> > On May 31, 2019, at 3:37 PM, Matt Mullins <mmullins@fb.com> wrote:
+> >
+> > It is possible that a BPF program can be called while another BPF
+> > program is executing bpf_perf_event_output.  This has been observed with
+> > I/O completion occurring as a result of an interrupt:
+> >
+> >       bpf_prog_247fd1341cddaea4_trace_req_end+0x8d7/0x1000
+> >       ? trace_call_bpf+0x82/0x100
+> >       ? sch_direct_xmit+0xe2/0x230
+> >       ? blk_mq_end_request+0x1/0x100
+> >       ? blk_mq_end_request+0x5/0x100
+> >       ? kprobe_perf_func+0x19b/0x240
+> >       ? __qdisc_run+0x86/0x520
+> >       ? blk_mq_end_request+0x1/0x100
+> >       ? blk_mq_end_request+0x5/0x100
+> >       ? kprobe_ftrace_handler+0x90/0xf0
+> >       ? ftrace_ops_assist_func+0x6e/0xe0
+> >       ? ip6_input_finish+0xbf/0x460
+> >       ? 0xffffffffa01e80bf
+> >       ? nbd_dbg_flags_show+0xc0/0xc0 [nbd]
+> >       ? blkdev_issue_zeroout+0x200/0x200
+> >       ? blk_mq_end_request+0x1/0x100
+> >       ? blk_mq_end_request+0x5/0x100
+> >       ? flush_smp_call_function_queue+0x6c/0xe0
+> >       ? smp_call_function_single_interrupt+0x32/0xc0
+> >       ? call_function_single_interrupt+0xf/0x20
+> >       ? call_function_single_interrupt+0xa/0x20
+> >       ? swiotlb_map_page+0x140/0x140
+> >       ? refcount_sub_and_test+0x1a/0x50
+> >       ? tcp_wfree+0x20/0xf0
+> >       ? skb_release_head_state+0x62/0xc0
+> >       ? skb_release_all+0xe/0x30
+> >       ? napi_consume_skb+0xb5/0x100
+> >       ? mlx5e_poll_tx_cq+0x1df/0x4e0
+> >       ? mlx5e_poll_tx_cq+0x38c/0x4e0
+> >       ? mlx5e_napi_poll+0x58/0xc30
+> >       ? mlx5e_napi_poll+0x232/0xc30
+> >       ? net_rx_action+0x128/0x340
+> >       ? __do_softirq+0xd4/0x2ad
+> >       ? irq_exit+0xa5/0xb0
+> >       ? do_IRQ+0x7d/0xc0
+> >       ? common_interrupt+0xf/0xf
+> >       </IRQ>
+> >       ? __rb_free_aux+0xf0/0xf0
+> >       ? perf_output_sample+0x28/0x7b0
+> >       ? perf_prepare_sample+0x54/0x4a0
+> >       ? perf_event_output+0x43/0x60
+> >       ? bpf_perf_event_output_raw_tp+0x15f/0x180
+> >       ? blk_mq_start_request+0x1/0x120
+> >       ? bpf_prog_411a64a706fc6044_should_trace+0xad4/0x1000
+> >       ? bpf_trace_run3+0x2c/0x80
+> >       ? nbd_send_cmd+0x4c2/0x690 [nbd]
+> >
+> > This also cannot be alleviated by further splitting the per-cpu
+> > perf_sample_data structs (as in commit 283ca526a9bd ("bpf: fix
+> > corruption on concurrent perf_event_output calls")), as a raw_tp could
+> > be attached to the block:block_rq_complete tracepoint and execute during
+> > another raw_tp.  Instead, keep a pre-allocated perf_sample_data
+> > structure per perf_event_array element and fail a bpf_perf_event_output
+> > if that element is concurrently being used.
+> >
+> > Fixes: 20b9d7ac4852 ("bpf: avoid excessive stack usage for perf_sample_data")
+> > Signed-off-by: Matt Mullins <mmullins@fb.com>
+>
+> This looks great. Thanks for the fix.
+>
+> Acked-by: Song Liu <songliubraving@fb.com>
+>
+> > ---
+> > v1->v2:
+> >       keep a pointer to the struct perf_sample_data rather than directly
+> >       embedding it in the structure, avoiding the circular include and
+> >       removing the need for in_use.  Suggested by Song.
+> >
+> > include/linux/bpf.h      |  1 +
+> > kernel/bpf/arraymap.c    |  3 ++-
+> > kernel/trace/bpf_trace.c | 29 ++++++++++++++++-------------
+> > 3 files changed, 19 insertions(+), 14 deletions(-)
+> >
+> > diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+> > index 4fb3aa2dc975..47fd85cfbbaf 100644
+> > --- a/include/linux/bpf.h
+> > +++ b/include/linux/bpf.h
+> > @@ -472,6 +472,7 @@ struct bpf_event_entry {
+> >       struct file *perf_file;
+> >       struct file *map_file;
+> >       struct rcu_head rcu;
+> > +     struct perf_sample_data *sd;
+> > };
+> >
+> > bool bpf_prog_array_compatible(struct bpf_array *array, const struct bpf_prog *fp);
+> > diff --git a/kernel/bpf/arraymap.c b/kernel/bpf/arraymap.c
+> > index 584636c9e2eb..c7f5d593e04f 100644
+> > --- a/kernel/bpf/arraymap.c
+> > +++ b/kernel/bpf/arraymap.c
+> > @@ -654,11 +654,12 @@ static struct bpf_event_entry *bpf_event_entry_gen(struct file *perf_file,
+> > {
+> >       struct bpf_event_entry *ee;
+> >
+> > -     ee = kzalloc(sizeof(*ee), GFP_ATOMIC);
+> > +     ee = kzalloc(sizeof(*ee) + sizeof(struct perf_sample_data), GFP_ATOMIC);
+> >       if (ee) {
+> >               ee->event = perf_file->private_data;
+> >               ee->perf_file = perf_file;
+> >               ee->map_file = map_file;
+> > +             ee->sd = (void *)ee + sizeof(*ee);
 
-Thanks
-Gen
+This bit looks quite weird, but I don't have better ideas
+to avoid circular .h pain.
+
+Applied to bpf tree. Thanks
