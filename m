@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC25C28CC4
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 16:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D294C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 16:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B749027757
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 16:28:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 529B427758
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 16:29:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559406516;
-	bh=uCeN449FLUw2mHtKLIIhlW8Nt7bEVeY3B/gW5PJZFkc=;
+	s=default; t=1559406554;
+	bh=9cyji5W/w3gbLF6yi/8SShOVJ7aru52p6Duz2OPhsWI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EZWr/t6f9MLba0AJRtBKr3LJaxaNeSSY66CQvfAUGp8tH74gQ3X7LPQx9h+4crjCr
-	 weLt6dAVSUN3E8kLkDYSgmmGGT3tqoBIp8fKghJCdcpV8HxJ7AZlS3Ehry4gnMQ2pn
-	 Rcel+Pt5otMel5dQTopkzDzc9D/ZMc+hgeyk+lOs=
+	b=bsEqumumZ+vUELsg6Hw7Xcec7i7Y3Gls/RhUJSh7WZXcxLw9uE0aEKIqYR6kT1P1w
+	 pqee4VOj9ACYzU+yKt4xwZxjPOIH2BCa8xC27oZwc3FJy/Ssd9veT0Luf67eItHYU8
+	 yZtmv5esbhxNjxPqfIph/Py43Z0b6myEaq3hOv7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfFAQ2f (ORCPT
+        id S1726710AbfFAQ3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 12:28:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37330 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 12:29:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726075AbfFAQ2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 12:28:35 -0400
+        id S1726075AbfFAQ3K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 12:29:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09F9D27753;
-        Sat,  1 Jun 2019 16:28:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 717AE27753;
+        Sat,  1 Jun 2019 16:29:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559406514;
-        bh=uCeN449FLUw2mHtKLIIhlW8Nt7bEVeY3B/gW5PJZFkc=;
+        s=default; t=1559406550;
+        bh=9cyji5W/w3gbLF6yi/8SShOVJ7aru52p6Duz2OPhsWI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2rcZoi7n4RPUgZGfNRdD4taMZFkglYlDMylrrtcd4e6s81N3qduZNetzqkDqV9RCb
-         GVP88xTWKW2eMqLzHQ7ysUjHJ0DpD3ix+pcnTqa+BZy6ZpdMMc4aO/gPWinNONFszN
-         XGznKgTFhjWRmO3+hRXvOGxD0LdYR+U62OPVPEk0=
-Date:   Sat, 1 Jun 2019 18:28:31 +0200
+        b=Yilr7e1TS/QXm+oWaOWbk/DSU4NcsL/dtLlbqwQEszU6azN9QYEeb5TwuJFUXMBV6
+         ZVawcKz+8SuISvEwXuinwm6ATX9KQS+MDq6bNGuAoNZl+1XN1H7Ab+MX9JeCidP2k2
+         UUENOivbzAFvzWGdvPyMpPiOMQMr5ezgOLRzryXo=
+Date:   Sat, 1 Jun 2019 18:29:07 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
 Cc:     linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
@@ -47,7 +47,7 @@ Cc:     linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
         swinslow@gmail.com, rfontana@redhat.com,
         linux-spdx@vger.kernel.org, torvalds@linux-foundation.org
 Subject: Re: [PATCH] crypto: ux500 - fix license comment syntax error
-Message-ID: <20190601162831.GA6261@kroah.com>
+Message-ID: <20190601162907.GB6261@kroah.com>
 References: <20190601144943.126995-1-alex_y_xu@yahoo.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -63,15 +63,14 @@ On Sat, Jun 01, 2019 at 10:49:43AM -0400, Alex Xu (Hello71) wrote:
 > Causes error: drivers/crypto/ux500/cryp/Makefile:5: *** missing
 > separator.  Stop.
 > 
-> Fixes: af873fcecef5 ("treewide: Replace GPLv2 boilerplate/reference with
-> SPDX - rule 194")
-> 
+> Fixes: af873fcecef5 ("treewide: Replace GPLv2 boilerplate/reference with SPDX - rule 194")
 > Signed-off-by: Alex Xu (Hello71) <alex_y_xu@yahoo.ca>
 > ---
 >  drivers/crypto/ux500/cryp/Makefile | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Ugh, sorry about that.  Will go queue that up right now.
+Also, how did 0-day not catch this?  Is this an odd configuration that
+it can not build?
 
 thanks,
 
