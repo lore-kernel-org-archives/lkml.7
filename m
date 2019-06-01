@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FCDC28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EABA0C28CC3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA2C227682
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5FBB276A3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:41:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396502;
-	bh=VJXdiM0UCZ55BzcrYVIp2IYpcyvmtSQqPebIULr9+q8=;
+	s=default; t=1559396507;
+	bh=dN5eMgI6uk6cD1aeCIi9eYYk+cAFfwjxaLfWdmlzH7g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gpcy6qKqAe6SWqyHDUq4hdO6l8zyr0SdWs0r8qqME9H2/CGNMXJcmASMwhja7O2Ro
-	 E58HMPLBlLV++NRMxHob9yzKi+d2mm8BXuLVZMdQAjPL+V+2UQpiYF1tHwwmBpM9mY
-	 Z/7KQ8hfp3V+6EmcM5ViD5WmeBthkPntwBqH33GQ=
+	b=FVb1fMrwl3VpuV33lChKz4LYehocyMGzQ1TLGl3S5PHP0kgyNK9A+JfGrFxaEEIaA
+	 sTGBmVwI5+CDy2Diwjx3zTKg8O+LMT1I6YIvg+yoBx9/yVrlSLxjNP0bAGtDZXbnKs
+	 X9yjKKdCf40vMPy7eYuLzoXrL0WzukbGejW1A/FI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728887AbfFANlm (ORCPT
+        id S1728035AbfFANTA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:41:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46224 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:19:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728054AbfFANTD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:19:03 -0400
+        id S1727966AbfFANS4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:18:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A3C027280;
-        Sat,  1 Jun 2019 13:19:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 396AB27253;
+        Sat,  1 Jun 2019 13:18:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395142;
-        bh=VJXdiM0UCZ55BzcrYVIp2IYpcyvmtSQqPebIULr9+q8=;
+        s=default; t=1559395136;
+        bh=dN5eMgI6uk6cD1aeCIi9eYYk+cAFfwjxaLfWdmlzH7g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wF0iOvE0lxF6NtYRK12cIsNsKe5cVagjbpSqv8WKAfMopjd8demoELRH1E6ujrBVL
-         jjWZxLZo6regZMRY6Jpfaxhelc6+WHl4neQ/yRPvC83fBfBfbWAOTso9Wjw8emqdK7
-         mnO1Q/BtRg8wV+K592tqCmDJAScFKNr9wYfXr3go=
+        b=NwlkK1fuKsBpOtncLH7NGauV8JY7Sf9rBEVluZ2be7a4cDBRAtLZif1hNAxmzJnCN
+         kdAjrBBumcpHfKGUHJp6IkFR8JKRSktnN9tTybhPqoSiLOMvwodbX3g9H4vIraZPwW
+         BFCwGqRLnntzzGLGGkPpMpwjyTiD0B8JOYL4KH48=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ronnie Sahlberg <lsahlber@redhat.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 062/186] cifs: fix credits leak for SMB1 oplock breaks
-Date:   Sat,  1 Jun 2019 09:14:38 -0400
-Message-Id: <20190601131653.24205-62-sashal@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Andreas Ziegler <andreas.ziegler@fau.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 058/186] tracing: probeevent: Fix to make the type of $comm string
+Date:   Sat,  1 Jun 2019 09:14:34 -0400
+Message-Id: <20190601131653.24205-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131653.24205-1-sashal@kernel.org>
 References: <20190601131653.24205-1-sashal@kernel.org>
@@ -60,83 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronnie Sahlberg <lsahlber@redhat.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit d69cb728e70c40268762182a62f5d5d6fa51c5b2 ]
+[ Upstream commit 3dd1f7f24f8ceec00bbbc364c2ac3c893f0fdc4c ]
 
-For SMB1 oplock breaks we would grab one credit while sending the PDU
-but we would never relese the credit back since we will never receive a
-response to this from the server. Eventuallt this would lead to a hang
-once all credits are leaked.
+Fix to make the type of $comm "string".  If we set the other type to $comm
+argument, it shows meaningless value or wrong data. Currently probe events
+allow us to set string array type (e.g. ":string[2]"), or other digit types
+like x8 on $comm. But since clearly $comm is just a string data, it should
+not be fetched by other types including array.
 
-Fix this by defining a new flag CIFS_NO_SRV_RSP which indicates that there
-is no server response to this command and thus we need to add any credits back
-immediately after sending the PDU.
+Link: http://lkml.kernel.org/r/155723736241.9149.14582064184468574539.stgit@devnote2
 
-CC: Stable <stable@vger.kernel.org> #v5.0+
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Cc: Andreas Ziegler <andreas.ziegler@fau.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: stable@vger.kernel.org
+Fixes: 533059281ee5 ("tracing: probeevent: Introduce new argument fetching code")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/cifsglob.h  |  1 +
- fs/cifs/cifssmb.c   |  2 +-
- fs/cifs/transport.c | 10 +++++-----
- 3 files changed, 7 insertions(+), 6 deletions(-)
+ kernel/trace/trace_probe.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/fs/cifs/cifsglob.h b/fs/cifs/cifsglob.h
-index 585ad3207cb12..607468948f72b 100644
---- a/fs/cifs/cifsglob.h
-+++ b/fs/cifs/cifsglob.h
-@@ -1687,6 +1687,7 @@ static inline bool is_retryable_error(int error)
- 
- #define   CIFS_HAS_CREDITS 0x0400    /* already has credits */
- #define   CIFS_TRANSFORM_REQ 0x0800    /* transform request before sending */
-+#define   CIFS_NO_SRV_RSP    0x1000    /* there is no server response */
- 
- /* Security Flags: indicate type of session setup needed */
- #define   CIFSSEC_MAY_SIGN	0x00001
-diff --git a/fs/cifs/cifssmb.c b/fs/cifs/cifssmb.c
-index f43747c062a70..6050851edcb82 100644
---- a/fs/cifs/cifssmb.c
-+++ b/fs/cifs/cifssmb.c
-@@ -2540,7 +2540,7 @@ CIFSSMBLock(const unsigned int xid, struct cifs_tcon *tcon,
- 
- 	if (lockType == LOCKING_ANDX_OPLOCK_RELEASE) {
- 		/* no response expected */
--		flags = CIFS_ASYNC_OP | CIFS_OBREAK_OP;
-+		flags = CIFS_NO_SRV_RSP | CIFS_ASYNC_OP | CIFS_OBREAK_OP;
- 		pSMB->Timeout = 0;
- 	} else if (waitFlag) {
- 		flags = CIFS_BLOCKING_OP; /* blocking operation, no timeout */
-diff --git a/fs/cifs/transport.c b/fs/cifs/transport.c
-index 1de8e996e566f..72e242c49ca11 100644
---- a/fs/cifs/transport.c
-+++ b/fs/cifs/transport.c
-@@ -1054,8 +1054,11 @@ compound_send_recv(const unsigned int xid, struct cifs_ses *ses,
- 
- 	mutex_unlock(&ses->server->srv_mutex);
- 
--	if (rc < 0) {
--		/* Sending failed for some reason - return credits back */
-+	/*
-+	 * If sending failed for some reason or it is an oplock break that we
-+	 * will not receive a response to - return credits back
-+	 */
-+	if (rc < 0 || (flags & CIFS_NO_SRV_RSP)) {
- 		for (i = 0; i < num_rqst; i++)
- 			add_credits(ses->server, &credits[i], optype);
- 		goto out;
-@@ -1076,9 +1079,6 @@ compound_send_recv(const unsigned int xid, struct cifs_ses *ses,
- 		smb311_update_preauth_hash(ses, rqst[0].rq_iov,
- 					   rqst[0].rq_nvec);
- 
--	if ((flags & CIFS_TIMEOUT_MASK) == CIFS_ASYNC_OP)
--		goto out;
--
- 	for (i = 0; i < num_rqst; i++) {
- 		rc = wait_for_response(ses->server, midQ[i]);
- 		if (rc != 0)
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index 8f8411e7835fd..e41d389b7f491 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -420,13 +420,14 @@ static int traceprobe_parse_probe_arg_body(char *arg, ssize_t *size,
+ 				return -E2BIG;
+ 		}
+ 	}
+-	/*
+-	 * The default type of $comm should be "string", and it can't be
+-	 * dereferenced.
+-	 */
+-	if (!t && strcmp(arg, "$comm") == 0)
++
++	/* Since $comm can not be dereferred, we can find $comm by strcmp */
++	if (strcmp(arg, "$comm") == 0) {
++		/* The type of $comm must be "string", and not an array. */
++		if (parg->count || (t && strcmp(t, "string")))
++			return -EINVAL;
+ 		parg->type = find_fetch_type("string");
+-	else
++	} else
+ 		parg->type = find_fetch_type(t);
+ 	if (!parg->type) {
+ 		pr_info("Unsupported type: %s\n", t);
 -- 
 2.20.1
 
