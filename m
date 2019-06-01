@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE74C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FF6C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB8E227481
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:31:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD82B274A3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:31:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395875;
-	bh=ZOtcpfX7mdM0MUHUL/3hoFsE7Y0Mb6qtswUwZjOU6rE=;
+	s=default; t=1559395880;
+	bh=hrZDqXfSJzml3w1hOe3venmfJ7b/KFSfob+wNMwmYjM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OtwgNqqrVP0aZXqPMEm/vyKmKHRSJtzT2qZrgnE4yquo48oIpVfRXAVv3uIPeb+wG
-	 c6Zv8j9CumopKQYrKHPx6PS0F3SkHZRIZBdMajLS8jCXMyaHxd5h0ftyLdtRjHJuLP
-	 pNTyrmQf0kxrFiVm2ccwjVeL0OePMDUbnp/8JYj4=
+	b=hzSvRF3VBJu3MubDpEzmMyzQghhgOCbMY1HIzxo93fPMLt6cvVo8nT7CxsDGD7YLb
+	 tryvNJpg5C34abM0iMB2N7X0uDWGiQoZ341dwanj5z3O1C1l60b5P+bJibb5IpbO3Y
+	 4xPuY/+vtOpOjuHnhPdDSjePXVJ/Ge+cIfCQcHHg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729575AbfFANZy (ORCPT
+        id S1729545AbfFANZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:25:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56090 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:25:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728968AbfFANZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:25:43 -0400
+        id S1728911AbfFANZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:25:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D117273AC;
-        Sat,  1 Jun 2019 13:25:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B558C27396;
+        Sat,  1 Jun 2019 13:25:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395542;
-        bh=ZOtcpfX7mdM0MUHUL/3hoFsE7Y0Mb6qtswUwZjOU6rE=;
+        s=default; t=1559395540;
+        bh=hrZDqXfSJzml3w1hOe3venmfJ7b/KFSfob+wNMwmYjM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C4SGxIR4dp8ubvFMaWlrTGj18OfNkUAQ6GqXD4fDW79D2Jml951SfSzf+L8zh5mX4
-         UldVJbl2Sixbh8coY/WfBp+IZ4OEKC7calEqP0m65YjTuzlD3/uyckrsxG2soyb46A
-         +XQqcsLtiR9jO6btUrTjPVWpJGg8TCA95nWPtVLI=
+        b=UDYaRvPBO3uGhnmy7UlVDvY9us/XDLeJNz1H1xZ9le0tpLIWYjdLwPaAkOCZbpIIh
+         gfXMlEnNgRWBfai8aGHcwhWGlQO0JdccXPuN/khsLl6sQTX+ueR2LwkM0ycfYWdtUU
+         PPGbxdotR2gh+61rzq+/9QlIGNjRUb5IVn6mX/KM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 19/74] NFS4: Fix v4.0 client state corruption when mount
-Date:   Sat,  1 Jun 2019 09:24:06 -0400
-Message-Id: <20190601132501.27021-19-sashal@kernel.org>
+Cc:     Matt Redfearn <matt.redfearn@thinci.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.9 17/74] drm/bridge: adv7511: Fix low refresh rate selection
+Date:   Sat,  1 Jun 2019 09:24:04 -0400
+Message-Id: <20190601132501.27021-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132501.27021-1-sashal@kernel.org>
 References: <20190601132501.27021-1-sashal@kernel.org>
@@ -59,49 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+From: Matt Redfearn <matt.redfearn@thinci.com>
 
-[ Upstream commit f02f3755dbd14fb935d24b14650fff9ba92243b8 ]
+[ Upstream commit 67793bd3b3948dc8c8384b6430e036a30a0ecb43 ]
 
-stat command with soft mount never return after server is stopped.
+The driver currently sets register 0xfb (Low Refresh Rate) based on the
+value of mode->vrefresh. Firstly, this field is specified to be in Hz,
+but the magic numbers used by the code are Hz * 1000. This essentially
+leads to the low refresh rate always being set to 0x01, since the
+vrefresh value will always be less than 24000. Fix the magic numbers to
+be in Hz.
+Secondly, according to the comment in drm_modes.h, the field is not
+supposed to be used in a functional way anyway. Instead, use the helper
+function drm_mode_vrefresh().
 
-When alloc a new client, the state of the client will be set to
-NFS4CLNT_LEASE_EXPIRED.
-
-When the server is stopped, the state manager will work, and accord
-the state to recover. But the state is NFS4CLNT_LEASE_EXPIRED, it
-will drain the slot table and lead other task to wait queue, until
-the client recovered. Then the stat command is hung.
-
-When discover server trunking, the client will renew the lease,
-but check the client state, it lead the client state corruption.
-
-So, we need to call state manager to recover it when detect server
-ip trunking.
-
-Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Fixes: 9c8af882bf12 ("drm: Add adv7511 encoder driver")
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Matt Redfearn <matt.redfearn@thinci.com>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190424132210.26338-1-matt.redfearn@thinci.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4state.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index 857af951831f4..6f474b0670323 100644
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -143,6 +143,10 @@ int nfs40_discover_server_trunking(struct nfs_client *clp,
- 		/* Sustain the lease, even if it's empty.  If the clientid4
- 		 * goes stale it's of no use for trunking discovery. */
- 		nfs4_schedule_state_renewal(*result);
-+
-+		/* If the client state need to recover, do it. */
-+		if (clp->cl_state)
-+			nfs4_schedule_state_manager(clp);
+diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+index 32ab5c32834be..1b2fae915eccb 100644
+--- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
++++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+@@ -735,11 +735,11 @@ static void adv7511_mode_set(struct adv7511 *adv7511,
+ 			vsync_polarity = 1;
  	}
- out:
- 	return status;
+ 
+-	if (mode->vrefresh <= 24000)
++	if (drm_mode_vrefresh(mode) <= 24)
+ 		low_refresh_rate = ADV7511_LOW_REFRESH_RATE_24HZ;
+-	else if (mode->vrefresh <= 25000)
++	else if (drm_mode_vrefresh(mode) <= 25)
+ 		low_refresh_rate = ADV7511_LOW_REFRESH_RATE_25HZ;
+-	else if (mode->vrefresh <= 30000)
++	else if (drm_mode_vrefresh(mode) <= 30)
+ 		low_refresh_rate = ADV7511_LOW_REFRESH_RATE_30HZ;
+ 	else
+ 		low_refresh_rate = ADV7511_LOW_REFRESH_RATE_NONE;
 -- 
 2.20.1
 
