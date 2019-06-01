@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B0D2C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A48C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BB8E23A7D
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C4C723A7D
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:28:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395692;
-	bh=IAcLolur0s/FFdJNYaNpQtzY56PRhPlK7SeSIWJIMy0=;
+	s=default; t=1559395700;
+	bh=c9BS3yPV0ra5QvlyLBeJ8t3uanQxgL2aKNqONSy7bPQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V4eSBq/W0FNHrnz4U2OoBsssvOnVo+ve50/qqgNgcHDfpPbTDfhoe+1n5852Odtda
-	 xitaCbuNsXac3r+jsa826QrGfJHliu5csD10MaiEKga5xaPospwt9ocypCIiOOnoej
-	 rRuDOH8oI1pfcGqa9lYTgPr0OQzVnz2NVBMMy75I=
+	b=Wuy7nCOo2oftZB84oWBKGfAnCMsItx/F74Fbz30TOm/SfjmfkZH1DGdI1k/5PmMxe
+	 Jwm4csOM4kYWm82EkXTAKzO2gqe/aAoNYjPaZZ86DTl6Llgd7mk0t5tX7Ckph29AAX
+	 ppNGweap4gSHRcoOHxELokXsF+a+2FHlrkGT3rEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730023AbfFAN2L (ORCPT
+        id S1730043AbfFAN2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:28:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58592 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:28:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729944AbfFAN10 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:27:26 -0400
+        id S1729804AbfFAN1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:27:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CF8922387;
-        Sat,  1 Jun 2019 13:27:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72ED2273E5;
+        Sat,  1 Jun 2019 13:27:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395645;
-        bh=IAcLolur0s/FFdJNYaNpQtzY56PRhPlK7SeSIWJIMy0=;
+        s=default; t=1559395642;
+        bh=c9BS3yPV0ra5QvlyLBeJ8t3uanQxgL2aKNqONSy7bPQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VG7EN7IVPvr47R1jOsOTpLF9Y+zB3fV4nC09N9a/cjA6l1xkppVFZ7RlMrs07fGmm
-         aa5buuBBOcfoBx80elpNRfxWeC7D2piYOHW+u7JYiCmChRNvCQBFYEEzKN8cpDo/1f
-         XW4210a3D7L03boBlV2/H65bQILI47H2xt5i5ybw=
+        b=pTPn51K5t+FbvwDfdZ+2+rZYl8mP9Ii/euj04/VmiRPv2hllJjMaS08eGUtv6k4rU
+         ndbMThN36sqYX/AM6xTUPjfiClZovoo+SZBCDeeFPyjOZWE33Io/PsA/1V3zW0LTfo
+         g47VLMvo+vt9DGW2Ryvq8mfuM6Qn63plSXu8WnmM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yifeng Li <tomli@tomli.me>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Teddy Wang <teddy.wang@siliconmotion.com>,
+Cc:     Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Fredrik Noring <noring@nocrew.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Mukesh Ojha <mojha@codeaurora.org>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sasha Levin <sashal@kernel.org>, linux-fbdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.4 48/56] fbdev: sm712fb: fix crashes during framebuffer writes by correctly mapping VRAM
-Date:   Sat,  1 Jun 2019 09:25:52 -0400
-Message-Id: <20190601132600.27427-48-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 46/56] fbdev: fix divide error in fb_var_to_videomode
+Date:   Sat,  1 Jun 2019 09:25:50 -0400
+Message-Id: <20190601132600.27427-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132600.27427-1-sashal@kernel.org>
 References: <20190601132600.27427-1-sashal@kernel.org>
@@ -62,151 +63,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yifeng Li <tomli@tomli.me>
+From: Shile Zhang <shile.zhang@linux.alibaba.com>
 
-[ Upstream commit 9e0e59993df0601cddb95c4f6c61aa3d5e753c00 ]
+[ Upstream commit cf84807f6dd0be5214378e66460cfc9187f532f9 ]
 
-On a Thinkpad s30 (Pentium III / i440MX, Lynx3DM), running fbtest or X
-will crash the machine instantly, because the VRAM/framebuffer is not
-mapped correctly.
+To fix following divide-by-zero error found by Syzkaller:
 
-On SM712, the framebuffer starts at the beginning of address space, but
-SM720's framebuffer starts at the 1 MiB offset from the beginning. However,
-sm712fb fails to take this into account, as a result, writing to the
-framebuffer will destroy all the registers and kill the system immediately.
-Another problem is the driver assumes 8 MiB of VRAM for SM720, but some
-SM720 system, such as this IBM Thinkpad, only has 4 MiB of VRAM.
+  divide error: 0000 [#1] SMP PTI
+  CPU: 7 PID: 8447 Comm: test Kdump: loaded Not tainted 4.19.24-8.al7.x86_64 #1
+  Hardware name: Alibaba Cloud Alibaba Cloud ECS, BIOS rel-1.12.0-0-ga698c8995f-prebuilt.qemu.org 04/01/2014
+  RIP: 0010:fb_var_to_videomode+0xae/0xc0
+  Code: 04 44 03 46 78 03 4e 7c 44 03 46 68 03 4e 70 89 ce d1 ee 69 c0 e8 03 00 00 f6 c2 01 0f 45 ce 83 e2 02 8d 34 09 0f 45 ce 31 d2 <41> f7 f0 31 d2 f7 f1 89 47 08 f3 c3 66 0f 1f 44 00 00 0f 1f 44 00
+  RSP: 0018:ffffb7e189347bf0 EFLAGS: 00010246
+  RAX: 00000000e1692410 RBX: ffffb7e189347d60 RCX: 0000000000000000
+  RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffb7e189347c10
+  RBP: ffff99972a091c00 R08: 0000000000000000 R09: 0000000000000000
+  R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000100
+  R13: 0000000000010000 R14: 00007ffd66baf6d0 R15: 0000000000000000
+  FS:  00007f2054d11740(0000) GS:ffff99972fbc0000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 00007f205481fd20 CR3: 00000004288a0001 CR4: 00000000001606a0
+  Call Trace:
+   fb_set_var+0x257/0x390
+   ? lookup_fast+0xbb/0x2b0
+   ? fb_open+0xc0/0x140
+   ? chrdev_open+0xa6/0x1a0
+   do_fb_ioctl+0x445/0x5a0
+   do_vfs_ioctl+0x92/0x5f0
+   ? __alloc_fd+0x3d/0x160
+   ksys_ioctl+0x60/0x90
+   __x64_sys_ioctl+0x16/0x20
+   do_syscall_64+0x5b/0x190
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  RIP: 0033:0x7f20548258d7
+  Code: 44 00 00 48 8b 05 b9 15 2d 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 89 15 2d 00 f7 d8 64 89 01 48
 
-Fix this problem by removing the hardcoded VRAM size, adding a function to
-query the amount of VRAM from register MCR76 on SM720, and adding proper
-framebuffer offset.
+It can be triggered easily with following test code:
 
-Please note that the memory map may have additional problems on Big-Endian
-system, which is not available for testing by myself. But I highly suspect
-that the original code is also broken on Big-Endian machines for SM720, so
-at least we are not making the problem worse. More, the driver also assumed
-SM710/SM712 has 4 MiB of VRAM, but it has a 2 MiB version as well, and used
-in earlier laptops, such as IBM Thinkpad 240X, the driver would probably
-crash on them. I've never seen one of those machines and cannot fix it, but
-I have documented these problems in the comments.
+  #include <linux/fb.h>
+  #include <fcntl.h>
+  #include <sys/ioctl.h>
+  int main(void)
+  {
+          struct fb_var_screeninfo var = {.activate = 0x100, .pixclock = 60};
+          int fd = open("/dev/fb0", O_RDWR);
+          if (fd < 0)
+                  return 1;
 
-Signed-off-by: Yifeng Li <tomli@tomli.me>
-Tested-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Cc: Teddy Wang <teddy.wang@siliconmotion.com>
-Cc: <stable@vger.kernel.org>  # v4.4+
+          if (ioctl(fd, FBIOPUT_VSCREENINFO, &var))
+                  return 1;
+
+          return 0;
+  }
+
+Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+Cc: Fredrik Noring <noring@nocrew.org>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/sm712.h   |  5 ----
- drivers/video/fbdev/sm712fb.c | 48 ++++++++++++++++++++++++++++++++---
- 2 files changed, 44 insertions(+), 9 deletions(-)
+ drivers/video/fbdev/core/modedb.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/video/fbdev/sm712.h b/drivers/video/fbdev/sm712.h
-index aad1cc4be34a9..2cba1e73ed24f 100644
---- a/drivers/video/fbdev/sm712.h
-+++ b/drivers/video/fbdev/sm712.h
-@@ -19,11 +19,6 @@
- #define SCREEN_Y_RES      600
- #define SCREEN_BPP        16
+diff --git a/drivers/video/fbdev/core/modedb.c b/drivers/video/fbdev/core/modedb.c
+index de119f11b78f9..455a15f701720 100644
+--- a/drivers/video/fbdev/core/modedb.c
++++ b/drivers/video/fbdev/core/modedb.c
+@@ -933,6 +933,9 @@ void fb_var_to_videomode(struct fb_videomode *mode,
+ 	if (var->vmode & FB_VMODE_DOUBLE)
+ 		vtotal *= 2;
  
--/*Assume SM712 graphics chip has 4MB VRAM */
--#define SM712_VIDEOMEMORYSIZE	  0x00400000
--/*Assume SM722 graphics chip has 8MB VRAM */
--#define SM722_VIDEOMEMORYSIZE	  0x00800000
--
- #define dac_reg	(0x3c8)
- #define dac_val	(0x3c9)
- 
-diff --git a/drivers/video/fbdev/sm712fb.c b/drivers/video/fbdev/sm712fb.c
-index 5148765f007cf..62ddd7792ad20 100644
---- a/drivers/video/fbdev/sm712fb.c
-+++ b/drivers/video/fbdev/sm712fb.c
-@@ -1338,6 +1338,11 @@ static int smtc_map_smem(struct smtcfb_info *sfb,
- {
- 	sfb->fb->fix.smem_start = pci_resource_start(pdev, 0);
- 
-+	if (sfb->chip_id == 0x720)
-+		/* on SM720, the framebuffer starts at the 1 MB offset */
-+		sfb->fb->fix.smem_start += 0x00200000;
++	if (!htotal || !vtotal)
++		return;
 +
-+	/* XXX: is it safe for SM720 on Big-Endian? */
- 	if (sfb->fb->var.bits_per_pixel == 32)
- 		sfb->fb->fix.smem_start += big_addr;
- 
-@@ -1375,12 +1380,45 @@ static inline void sm7xx_init_hw(void)
- 	outb_p(0x11, 0x3c5);
+ 	hfreq = pixclock/htotal;
+ 	mode->refresh = hfreq/vtotal;
  }
- 
-+static u_long sm7xx_vram_probe(struct smtcfb_info *sfb)
-+{
-+	u8 vram;
-+
-+	switch (sfb->chip_id) {
-+	case 0x710:
-+	case 0x712:
-+		/*
-+		 * Assume SM712 graphics chip has 4MB VRAM.
-+		 *
-+		 * FIXME: SM712 can have 2MB VRAM, which is used on earlier
-+		 * laptops, such as IBM Thinkpad 240X. This driver would
-+		 * probably crash on those machines. If anyone gets one of
-+		 * those and is willing to help, run "git blame" and send me
-+		 * an E-mail.
-+		 */
-+		return 0x00400000;
-+	case 0x720:
-+		outb_p(0x76, 0x3c4);
-+		vram = inb_p(0x3c5) >> 6;
-+
-+		if (vram == 0x00)
-+			return 0x00800000;  /* 8 MB */
-+		else if (vram == 0x01)
-+			return 0x01000000;  /* 16 MB */
-+		else if (vram == 0x02)
-+			return 0x00400000;  /* illegal, fallback to 4 MB */
-+		else if (vram == 0x03)
-+			return 0x00400000;  /* 4 MB */
-+	}
-+	return 0;  /* unknown hardware */
-+}
-+
- static int smtcfb_pci_probe(struct pci_dev *pdev,
- 			    const struct pci_device_id *ent)
- {
- 	struct smtcfb_info *sfb;
- 	struct fb_info *info;
--	u_long smem_size = 0x00800000;	/* default 8MB */
-+	u_long smem_size;
- 	int err;
- 	unsigned long mmio_base;
- 
-@@ -1437,12 +1475,15 @@ static int smtcfb_pci_probe(struct pci_dev *pdev,
- 	mmio_base = pci_resource_start(pdev, 0);
- 	pci_read_config_byte(pdev, PCI_REVISION_ID, &sfb->chip_rev_id);
- 
-+	smem_size = sm7xx_vram_probe(sfb);
-+	dev_info(&pdev->dev, "%lu MiB of VRAM detected.\n",
-+					smem_size / 1048576);
-+
- 	switch (sfb->chip_id) {
- 	case 0x710:
- 	case 0x712:
- 		sfb->fb->fix.mmio_start = mmio_base + 0x00400000;
- 		sfb->fb->fix.mmio_len = 0x00400000;
--		smem_size = SM712_VIDEOMEMORYSIZE;
- 		sfb->lfb = ioremap(mmio_base, mmio_addr);
- 		if (!sfb->lfb) {
- 			dev_err(&pdev->dev,
-@@ -1474,8 +1515,7 @@ static int smtcfb_pci_probe(struct pci_dev *pdev,
- 	case 0x720:
- 		sfb->fb->fix.mmio_start = mmio_base;
- 		sfb->fb->fix.mmio_len = 0x00200000;
--		smem_size = SM722_VIDEOMEMORYSIZE;
--		sfb->dp_regs = ioremap(mmio_base, 0x00a00000);
-+		sfb->dp_regs = ioremap(mmio_base, 0x00200000 + smem_size);
- 		sfb->lfb = sfb->dp_regs + 0x00200000;
- 		sfb->mmio = (smtc_regbaseaddress =
- 		    sfb->dp_regs + 0x000c0000);
 -- 
 2.20.1
 
