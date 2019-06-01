@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54AD3C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B29F0C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D5782765D
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E95027675
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:41:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396456;
-	bh=s+Z98v9ivrDolaDrRNoRrO6t6pmUb/gBb80oUlBT2RM=;
+	s=default; t=1559396461;
+	bh=LTi+JbfTQHp/PZG7LixQxWzqEOh2c+JikTHhQVj8nHc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IwL0uA6J1k4xEI++mKnakqPUmLV7uGyBWMHr2FtRAQlaEFm2aOsKEE0RvqvfmKiYC
-	 6fHw+wCJoSa55+HuTsMRcLVkX0mr6EQyj+7xZliEnU6D/55DN1I5ldFIsrRUfYO6Ki
-	 uN6Tdo+rme1tpgolhjCH4+zQpkM9SBiF0PoUFThU=
+	b=anrXwxj+kSgs2aTExTdCNnRg8Xhu4aOz7PEAwV2ZGbBtVyEmcn2ywiLSpJh3ZfcVk
+	 oVKE5MzHTROuw9NaCHBCnpOrhifQmNIK9sykLuTL9XUe7/arvadz3lJK6O9efWO91D
+	 VliBkitXBhOsLrKD7ORtPGkKg9fz5m2zuskvdbAI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728784AbfFANkz (ORCPT
+        id S1728211AbfFANTw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:40:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47094 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:19:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728248AbfFANT6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:19:58 -0400
+        id S1727438AbfFANTs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:19:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D76B272B9;
-        Sat,  1 Jun 2019 13:19:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22F2C272AC;
+        Sat,  1 Jun 2019 13:19:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395197;
-        bh=s+Z98v9ivrDolaDrRNoRrO6t6pmUb/gBb80oUlBT2RM=;
+        s=default; t=1559395188;
+        bh=LTi+JbfTQHp/PZG7LixQxWzqEOh2c+JikTHhQVj8nHc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z3HaZkd6351hnunqMx+53jdQmH/G+1wACj7oOuUqe6FCjA03UUammvsIvTqRYXliq
-         ojuE3VgarTpg97By8+Ulm92q9s9wLtMCdP4PZaTmcAiwk8LkpW8f6pPAHKWCH0z77W
-         fYYIGonZSEtkLN8yirqopZx7mOsxUjJIbqw+d2d0=
+        b=opXaU/48VsGGQHIFeUpsARkafc8WwGgL8/bohrQPmCOV4IV/9fxFLCSrGfg84i5Gm
+         HqPGB7si7pCKDPjCt8BVGdEkd2e/rs1bRJQ92LyLwZc3C5AHFcylLRyliKXYXqJd5j
+         yE8kHmpn4lHC4MPielOZH7ZqY65rmM5Jl2bLSPPQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.0 008/173] drm/pl111: Initialize clock spinlock early
-Date:   Sat,  1 Jun 2019 09:16:40 -0400
-Message-Id: <20190601131934.25053-8-sashal@kernel.org>
+Cc:     Kangjie Lu <kjlu@umn.edu>, Alexandre Bounine <alex.bou9@gmail.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 003/173] rapidio: fix a NULL pointer dereference when create_workqueue() fails
+Date:   Sat,  1 Jun 2019 09:16:35 -0400
+Message-Id: <20190601131934.25053-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131934.25053-1-sashal@kernel.org>
 References: <20190601131934.25053-1-sashal@kernel.org>
@@ -60,65 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit 3e01ae2612bdd7975c74ec7123d7f8f5e6eed795 ]
+[ Upstream commit 23015b22e47c5409620b1726a677d69e5cd032ba ]
 
-The following warning is seen on systems with broken clock divider.
+In case create_workqueue fails, the fix releases resources and returns
+-ENOMEM to avoid NULL pointer dereference.
 
-INFO: trying to register non-static key.
-the code is fine but needs lockdep annotation.
-turning off the locking correctness validator.
-CPU: 0 PID: 1 Comm: swapper Not tainted 5.1.0-09698-g1fb3b52 #1
-Hardware name: ARM Integrator/CP (Device Tree)
-[<c0011be8>] (unwind_backtrace) from [<c000ebb8>] (show_stack+0x10/0x18)
-[<c000ebb8>] (show_stack) from [<c07d3fd0>] (dump_stack+0x18/0x24)
-[<c07d3fd0>] (dump_stack) from [<c0060d48>] (register_lock_class+0x674/0x6f8)
-[<c0060d48>] (register_lock_class) from [<c005de2c>]
-	(__lock_acquire+0x68/0x2128)
-[<c005de2c>] (__lock_acquire) from [<c0060408>] (lock_acquire+0x110/0x21c)
-[<c0060408>] (lock_acquire) from [<c07f755c>] (_raw_spin_lock+0x34/0x48)
-[<c07f755c>] (_raw_spin_lock) from [<c0536c8c>]
-	(pl111_display_enable+0xf8/0x5fc)
-[<c0536c8c>] (pl111_display_enable) from [<c0502f54>]
-	(drm_atomic_helper_commit_modeset_enables+0x1ec/0x244)
-
-Since commit eedd6033b4c8 ("drm/pl111: Support variants with broken clock
-divider"), the spinlock is not initialized if the clock divider is broken.
-Initialize it earlier to fix the problem.
-
-Fixes: eedd6033b4c8 ("drm/pl111: Support variants with broken clock divider")
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/1557758781-23586-1-git-send-email-linux@roeck-us.net
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Acked-by: Alexandre Bounine <alex.bou9@gmail.com>
+Cc: Matt Porter <mporter@kernel.crashing.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/pl111/pl111_display.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/rapidio/rio_cm.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/gpu/drm/pl111/pl111_display.c b/drivers/gpu/drm/pl111/pl111_display.c
-index 754f6b25f2652..6d9f78612deeb 100644
---- a/drivers/gpu/drm/pl111/pl111_display.c
-+++ b/drivers/gpu/drm/pl111/pl111_display.c
-@@ -531,14 +531,15 @@ pl111_init_clock_divider(struct drm_device *drm)
- 		dev_err(drm->dev, "CLCD: unable to get clcdclk.\n");
- 		return PTR_ERR(parent);
- 	}
+diff --git a/drivers/rapidio/rio_cm.c b/drivers/rapidio/rio_cm.c
+index bad0e0ea4f305..ef989a15aefc4 100644
+--- a/drivers/rapidio/rio_cm.c
++++ b/drivers/rapidio/rio_cm.c
+@@ -2145,6 +2145,14 @@ static int riocm_add_mport(struct device *dev,
+ 	mutex_init(&cm->rx_lock);
+ 	riocm_rx_fill(cm, RIOCM_RX_RING_SIZE);
+ 	cm->rx_wq = create_workqueue(DRV_NAME "/rxq");
++	if (!cm->rx_wq) {
++		riocm_error("failed to allocate IBMBOX_%d on %s",
++			    cmbox, mport->name);
++		rio_release_outb_mbox(mport, cmbox);
++		kfree(cm);
++		return -ENOMEM;
++	}
 +
-+	spin_lock_init(&priv->tim2_lock);
-+
- 	/* If the clock divider is broken, use the parent directly */
- 	if (priv->variant->broken_clockdivider) {
- 		priv->clk = parent;
- 		return 0;
- 	}
- 	parent_name = __clk_get_name(parent);
--
--	spin_lock_init(&priv->tim2_lock);
- 	div->init = &init;
+ 	INIT_WORK(&cm->rx_work, rio_ibmsg_handler);
  
- 	ret = devm_clk_hw_register(drm->dev, div);
+ 	cm->tx_slot = 0;
 -- 
 2.20.1
 
