@@ -4,54 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9410C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 611EEC28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 925A9272B3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:28:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C83827428
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:28:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395725;
-	bh=Ty1n3O1+kcrqM6zde0cyWrmCFeIf8+B9A/Bi/spdayo=;
+	s=default; t=1559395729;
+	bh=UNuKEqGv1phTlS2mkIZ57l/ivlTnengkZI+UYIKW4ic=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2KU1TebWPPKJTZCo2a+xUf0Dj7SrNMjbfvCZOleLd3ObCo6kleI1HNlOJLo0uvU9P
-	 cCGQVfpeNZg3sjurq2D7Pik2r8UnVLH/4mLC04O437V+wxLMPtvFSE1rTKLMEEp//R
-	 2IgaTJA1gfvTYV7L/ZmOASAnj7IiVL+TYyNn33sM=
+	b=be1x2O2nMSQb0dO3KEvuMBlxT7qKyR677DuCTIAN0k3Zqo7eZGjdxCk0L1bHygdJf
+	 XRtEh1HoQa1tNtqVhUK+57e9mdBd6OgYczsGfYvf+EYUnztwRcfPVCCKEcZETvN3Hk
+	 sHd5qDwrxe46GvuV0fXSQBCn1jVscnzMQtVeeE5Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729984AbfFAN2o (ORCPT
+        id S1729790AbfFAN2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:28:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57140 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:28:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729757AbfFAN0j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:26:39 -0400
+        id S1729818AbfFAN0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:26:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A49A3273C3;
-        Sat,  1 Jun 2019 13:26:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C27F273BD;
+        Sat,  1 Jun 2019 13:26:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395598;
-        bh=Ty1n3O1+kcrqM6zde0cyWrmCFeIf8+B9A/Bi/spdayo=;
+        s=default; t=1559395604;
+        bh=UNuKEqGv1phTlS2mkIZ57l/ivlTnengkZI+UYIKW4ic=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LNcNuDrw8mkPkg1vtBYrrX6vgjyMfvmRTcGbba0ufPMRJeWNK1d9Cms/QwuXXPHe5
-         4GYWotD9xVw67ScDi+8+pWi/l0ZSeHF0rs1bIOpR9z9XdndevIY3Uq0at7waUfCltp
-         6k7gbOBZ15PQfCXX0d56Q6WYz+Q4GGqCK8xbSxvE=
+        b=WH4izXtShZLpjTMFTqbHrfsg16SY+WwzDt9xgR4Uof7srw+ZJIV/X1m2YGJp/c/bw
+         RsHX0kV0kTwfo1fYSm2C5XQJ+vPWItQduC7s5e6DvjizC10B5MeCbxg+YvjoLotba1
+         GzaQmAKZ0sN6QSoUBJR2J3sxIfPgp8/WyBT5apJA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.4 19/56] iommu/vt-d: Set intel_iommu_gfx_mapped correctly
-Date:   Sat,  1 Jun 2019 09:25:23 -0400
-Message-Id: <20190601132600.27427-19-sashal@kernel.org>
+Cc:     Liu Bo <bo.liu@linux.alibaba.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 23/56] fuse: honor RLIMIT_FSIZE in fuse_file_fallocate
+Date:   Sat,  1 Jun 2019 09:25:27 -0400
+Message-Id: <20190601132600.27427-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132600.27427-1-sashal@kernel.org>
 References: <20190601132600.27427-1-sashal@kernel.org>
@@ -64,54 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Baolu <baolu.lu@linux.intel.com>
+From: Liu Bo <bo.liu@linux.alibaba.com>
 
-[ Upstream commit cf1ec4539a50bdfe688caad4615ca47646884316 ]
+[ Upstream commit 0cbade024ba501313da3b7e5dd2a188a6bc491b5 ]
 
-The intel_iommu_gfx_mapped flag is exported by the Intel
-IOMMU driver to indicate whether an IOMMU is used for the
-graphic device. In a virtualized IOMMU environment (e.g.
-QEMU), an include-all IOMMU is used for graphic device.
-This flag is found to be clear even the IOMMU is used.
+fstests generic/228 reported this failure that fuse fallocate does not
+honor what 'ulimit -f' has set.
 
-Cc: Ashok Raj <ashok.raj@intel.com>
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: Kevin Tian <kevin.tian@intel.com>
-Reported-by: Zhenyu Wang <zhenyuw@linux.intel.com>
-Fixes: c0771df8d5297 ("intel-iommu: Export a flag indicating that the IOMMU is used for iGFX.")
-Suggested-by: Kevin Tian <kevin.tian@intel.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+This adds the necessary inode_newsize_ok() check.
+
+Signed-off-by: Liu Bo <bo.liu@linux.alibaba.com>
+Fixes: 05ba1f082300 ("fuse: add FALLOCATE operation")
+Cc: <stable@vger.kernel.org> # v3.5
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel-iommu.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ fs/fuse/file.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 3e97c4b2ebed2..b965561a41627 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -3983,9 +3983,7 @@ static void __init init_no_remapping_devices(void)
- 
- 		/* This IOMMU has *only* gfx devices. Either bypass it or
- 		   set the gfx_mapped flag, as appropriate */
--		if (dmar_map_gfx) {
--			intel_iommu_gfx_mapped = 1;
--		} else {
-+		if (!dmar_map_gfx) {
- 			drhd->ignored = 1;
- 			for_each_active_dev_scope(drhd->devices,
- 						  drhd->devices_cnt, i, dev)
-@@ -4694,6 +4692,9 @@ int __init intel_iommu_init(void)
- 		goto out_free_reserved_range;
+diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+index d40c2451487cb..3ba45758e0938 100644
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -2947,6 +2947,13 @@ static long fuse_file_fallocate(struct file *file, int mode, loff_t offset,
+ 		}
  	}
  
-+	if (dmar_map_gfx)
-+		intel_iommu_gfx_mapped = 1;
++	if (!(mode & FALLOC_FL_KEEP_SIZE) &&
++	    offset + length > i_size_read(inode)) {
++		err = inode_newsize_ok(inode, offset + length);
++		if (err)
++			return err;
++	}
 +
- 	init_no_remapping_devices();
+ 	if (!(mode & FALLOC_FL_KEEP_SIZE))
+ 		set_bit(FUSE_I_SIZE_UNSTABLE, &fi->state);
  
- 	ret = init_dmars();
 -- 
 2.20.1
 
