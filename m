@@ -2,70 +2,115 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB3EC04AB6
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 277E3C04AB6
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:18:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B9E82707F
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:18:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE1B627086
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 00:18:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbfFAASV (ORCPT
+        id S1727109AbfFAASi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 May 2019 20:18:21 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:53024 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfFAASV (ORCPT
+        Fri, 31 May 2019 20:18:38 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:1182 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726643AbfFAAQh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 May 2019 20:18:21 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 81940150402B2;
-        Fri, 31 May 2019 17:18:20 -0700 (PDT)
-Date:   Fri, 31 May 2019 17:18:19 -0700 (PDT)
-Message-Id: <20190531.171819.1461966494167760290.davem@davemloft.net>
-To:     tanhuazhong@huawei.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        salil.mehta@huawei.com, yisen.zhuang@huawei.com,
-        linuxarm@huawei.com
-Subject: Re: [PATCH net-next 00/12] code optimizations & bugfixes for HNS3
- driver
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190531.171529.1003718945482922118.davem@davemloft.net>
-References: <1559292898-64090-1-git-send-email-tanhuazhong@huawei.com>
-        <20190531.171529.1003718945482922118.davem@davemloft.net>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-7
-Content-Transfer-Encoding: base64
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 31 May 2019 17:18:20 -0700 (PDT)
+        Fri, 31 May 2019 20:16:37 -0400
+X-UUID: 5df5e52535ce49878221b1e70ad1d9e8-20190601
+X-UUID: 5df5e52535ce49878221b1e70ad1d9e8-20190601
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        (envelope-from <sean.wang@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 2097552773; Sat, 01 Jun 2019 08:16:29 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Sat, 1 Jun 2019 08:16:28 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Sat, 1 Jun 2019 08:16:28 +0800
+From:   <sean.wang@mediatek.com>
+To:     <john@phrozen.org>, <davem@davemloft.net>
+CC:     <nbd@openwrt.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <mark-mc.lee@mediatek.com>
+Subject: [PATCH net v1 1/2] net: ethernet: mediatek: Use hw_feature to judge if HWLRO is supported
+Date:   Sat, 1 Jun 2019 08:16:26 +0800
+Message-ID: <1559348187-14941-1-git-send-email-sean.wang@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogRGF2aWQgTWlsbGVyIDxkYXZlbUBkYXZlbWxvZnQubmV0Pg0KRGF0ZTogRnJpLCAzMSBN
-YXkgMjAxOSAxNzoxNToyOSAtMDcwMCAoUERUKQ0KDQo+IEZyb206IEh1YXpob25nIFRhbiA8dGFu
-aHVhemhvbmdAaHVhd2VpLmNvbT4NCj4gRGF0ZTogRnJpLCAzMSBNYXkgMjAxOSAxNjo1NDo0NiAr
-MDgwMA0KPiANCj4+IFRoaXMgcGF0Y2gtc2V0IGluY2x1ZGVzIGNvZGUgb3B0aW1pemF0aW9ucyBh
-bmQgYnVnZml4ZXMgZm9yIHRoZSBITlMzDQo+PiBldGhlcm5ldCBjb250cm9sbGVyIGRyaXZlci4N
-Cj4+IA0KPj4gW3BhdGNoIDEvMTJdIHJlbW92ZXMgdGhlIHJlZHVuZGFudCBjb3JlIHJlc2V0IHR5
-cGUNCj4+IA0KPj4gW3BhdGNoIDIvMTIgLSAzLzEyXSBmaXhlcyB0d28gVkxBTiByZWxhdGVkIGlz
-c3Vlcw0KPj4gDQo+PiBbcGF0Y2ggNC8xMl0gZml4ZXMgYSBUTSBpc3N1ZQ0KPj4gDQo+PiBbcGF0
-Y2ggNS8xMiAtIDEyLzEyXSBpbmNsdWRlcyBzb21lIHBhdGNoZXMgcmVsYXRlZCB0byBSQVMgJiBN
-U0ktWCBlcnJvcg0KPiANCj4gU2VyaWVzIGFwcGxpZWQuDQoNCkkgcmV2ZXJ0ZWQsIHlvdSBuZWVk
-IHRvIGFjdHVhbGx5IGJ1aWxkIHRlc3QgdGhlIGluZmluaWJhbmQgc2lkZSBvZiB5b3VyDQpkcml2
-ZXIuDQoNCmRyaXZlcnMvaW5maW5pYmFuZC9ody9obnMvaG5zX3JvY2VfaHdfdjIuYzogSW4gZnVu
-Y3Rpb24goWhuc19yb2NlX3YyX21zaXhfaW50ZXJydXB0X2FibqI6DQpkcml2ZXJzL2luZmluaWJh
-bmQvaHcvaG5zL2huc19yb2NlX2h3X3YyLmM6NTAzMjoxNDogd2FybmluZzogcGFzc2luZyBhcmd1
-bWVudCAyIG9mIKFvcHMtPnNldF9kZWZhdWx0X3Jlc2V0X3JlcXVlc3SiIG1ha2VzIHBvaW50ZXIg
-ZnJvbSBpbnRlZ2VyIHdpdGhvdXQgYSBjYXN0IFstV2ludC1jb252ZXJzaW9uXQ0KICAgICAgICAg
-ICAgICBITkFFM19GVU5DX1JFU0VUKTsNCiAgICAgICAgICAgICAgXn5+fn5+fn5+fn5+fn5+fg0K
-ZHJpdmVycy9pbmZpbmliYW5kL2h3L2hucy9obnNfcm9jZV9od192Mi5jOjUwMzI6MTQ6IG5vdGU6
-IGV4cGVjdGVkIKFsb25nIHVuc2lnbmVkIGludCAqoiBidXQgYXJndW1lbnQgaXMgb2YgdHlwZSCh
-aW50og0KICBDLWMgQy1jbWFrZVs1XTogKioqIERlbGV0aW5nIGZpbGUgJ2RyaXZlcnMvbmV0L3dp
-cmVsZXNzL2F0aC9jYXJsOTE3MC9jbWQubycNCg==
+From: Sean Wang <sean.wang@mediatek.com>
+
+Should hw_feature as hardware capability flags to check if hardware LRO
+got support.
+
+Signed-off-by: Mark Lee <mark-mc.lee@mediatek.com>
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+---
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+index f9fbb3ffa3a6..0b88febbaf2a 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+@@ -2298,13 +2298,13 @@ static int mtk_get_rxnfc(struct net_device *dev, struct ethtool_rxnfc *cmd,
+ 
+ 	switch (cmd->cmd) {
+ 	case ETHTOOL_GRXRINGS:
+-		if (dev->features & NETIF_F_LRO) {
++		if (dev->hw_features & NETIF_F_LRO) {
+ 			cmd->data = MTK_MAX_RX_RING_NUM;
+ 			ret = 0;
+ 		}
+ 		break;
+ 	case ETHTOOL_GRXCLSRLCNT:
+-		if (dev->features & NETIF_F_LRO) {
++		if (dev->hw_features & NETIF_F_LRO) {
+ 			struct mtk_mac *mac = netdev_priv(dev);
+ 
+ 			cmd->rule_cnt = mac->hwlro_ip_cnt;
+@@ -2312,11 +2312,11 @@ static int mtk_get_rxnfc(struct net_device *dev, struct ethtool_rxnfc *cmd,
+ 		}
+ 		break;
+ 	case ETHTOOL_GRXCLSRULE:
+-		if (dev->features & NETIF_F_LRO)
++		if (dev->hw_features & NETIF_F_LRO)
+ 			ret = mtk_hwlro_get_fdir_entry(dev, cmd);
+ 		break;
+ 	case ETHTOOL_GRXCLSRLALL:
+-		if (dev->features & NETIF_F_LRO)
++		if (dev->hw_features & NETIF_F_LRO)
+ 			ret = mtk_hwlro_get_fdir_all(dev, cmd,
+ 						     rule_locs);
+ 		break;
+@@ -2333,11 +2333,11 @@ static int mtk_set_rxnfc(struct net_device *dev, struct ethtool_rxnfc *cmd)
+ 
+ 	switch (cmd->cmd) {
+ 	case ETHTOOL_SRXCLSRLINS:
+-		if (dev->features & NETIF_F_LRO)
++		if (dev->hw_features & NETIF_F_LRO)
+ 			ret = mtk_hwlro_add_ipaddr(dev, cmd);
+ 		break;
+ 	case ETHTOOL_SRXCLSRLDEL:
+-		if (dev->features & NETIF_F_LRO)
++		if (dev->hw_features & NETIF_F_LRO)
+ 			ret = mtk_hwlro_del_ipaddr(dev, cmd);
+ 		break;
+ 	default:
+-- 
+2.17.1
+
