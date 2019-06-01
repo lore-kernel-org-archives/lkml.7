@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C106C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E97CC28CC4
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CBC727440
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1910627442
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:29:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395752;
-	bh=gQlPNPhZcXT6VIEEzKrUXnPC76Ad8zmFYPWyY//o/gw=;
+	s=default; t=1559395757;
+	bh=WiKANmaMlD3Gbk6YfVehwxHNLtkVsP/TGQIBMtp9hHM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gVr/oAqhSIPJP/tuyjN7Ld+jw12ADjYWa35G3PsXMLEEDP4zYuUUDTeCI7TNhpKU3
-	 9eJOJjqnmRkYXsPwd+i5wvaQn7yiOLrAfFNcRNUf/mJGuMLlZgZV0Cq+Qje8qe8Xth
-	 y/DhCO6zVrSDR0yz+APhBHqCHSVaFSbJEtB6kIqU=
+	b=Kdj0xVlk6Z+QUOHE1Wb3kl2YIhGWlJR2kcE7dXkzxWXleHgBEpR43qu4XER72yTnQ
+	 Oc/KZER382mHusXyXivWxFjjS1cDQoh0Htlhi3dZxtwYFcYotCTWejCoc0jUwkgjMt
+	 g66yQLut+PitzQOM0xInerU6vgPXuC7m21rjUO+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729745AbfFAN3L (ORCPT
+        id S1729819AbfFAN3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:29:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57614 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:29:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729889AbfFAN1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:27:02 -0400
+        id S1729884AbfFAN1B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:27:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DE04273B2;
-        Sat,  1 Jun 2019 13:27:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B2D8273D1;
+        Sat,  1 Jun 2019 13:26:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395621;
-        bh=gQlPNPhZcXT6VIEEzKrUXnPC76Ad8zmFYPWyY//o/gw=;
+        s=default; t=1559395620;
+        bh=WiKANmaMlD3Gbk6YfVehwxHNLtkVsP/TGQIBMtp9hHM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MkfBOSNxrY25g+WOeA2nGLz+NkTwPKH52ahPGb2GRBIOw9+sJHNEMfCj2c97vTgza
-         7xmQxk6+EKIPFOpZUWZ5KONkm0s2NmjkRLcye6WgWC0eyccH07mJ/xBI19q9axKq/o
-         D7czrADW542jHNXxJEruKb2bHVaH+56rTlLEsfm4=
+        b=hhJN/2yDRlJ1qOdAIyyRp1YQk7JDG9NPoXJ3Ps9mTXNVww/WPDBulonK0HryJ9ff3
+         3sjdX3XRGy9wOA64lTrKlGbshb3iyGzEluPzS/xQexsjLZXl67tJvBch1bxdLRK0vH
+         gzodJO7gnnFfCUUy6Yah8Csx6bJNmYXTl3fV7BlI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Angus Ainslie <angus@akkea.ca>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 35/56] ARM: dts: imx6sx: Specify IMX6SX_CLK_IPG as "ahb" clock to SDMA
-Date:   Sat,  1 Jun 2019 09:25:39 -0400
-Message-Id: <20190601132600.27427-35-sashal@kernel.org>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>, linux-tegra@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.4 34/56] iommu/tegra-smmu: Fix invalid ASID bits on Tegra30/114
+Date:   Sat,  1 Jun 2019 09:25:38 -0400
+Message-Id: <20190601132600.27427-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132600.27427-1-sashal@kernel.org>
 References: <20190601132600.27427-1-sashal@kernel.org>
@@ -64,45 +61,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-[ Upstream commit cc839d0f8c284fcb7591780b568f13415bbb737c ]
+[ Upstream commit 43a0541e312f7136e081e6bf58f6c8a2e9672688 ]
 
-Since 25aaa75df1e6 SDMA driver uses clock rates of "ipg" and "ahb"
-clock to determine if it needs to configure the IP block as operating
-at 1:1 or 1:2 clock ratio (ACR bit in SDMAARM_CONFIG). Specifying both
-clocks as IMX6SL_CLK_SDMA results in driver incorrectly thinking that
-ratio is 1:1 which results in broken SDMA funtionality. Fix the code
-to specify IMX6SL_CLK_AHB as "ahb" clock for SDMA, to avoid detecting
-incorrect clock ratio.
+Both Tegra30 and Tegra114 have 4 ASID's and the corresponding bitfield of
+the TLB_FLUSH register differs from later Tegra generations that have 128
+ASID's.
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Angus Ainslie (Purism) <angus@akkea.ca>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+In a result the PTE's are now flushed correctly from TLB and this fixes
+problems with graphics (randomly failing tests) on Tegra30.
+
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6sl.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iommu/tegra-smmu.c | 25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index d8ba99f1d87ba..ac820dfef9774 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -657,7 +657,7 @@
- 				reg = <0x020ec000 0x4000>;
- 				interrupts = <0 2 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6SL_CLK_SDMA>,
--					 <&clks IMX6SL_CLK_SDMA>;
-+					 <&clks IMX6SL_CLK_AHB>;
- 				clock-names = "ipg", "ahb";
- 				#dma-cells = <3>;
- 				/* imx6sl reuses imx6q sdma firmware */
+diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
+index 9305964250aca..c4eb293b15242 100644
+--- a/drivers/iommu/tegra-smmu.c
++++ b/drivers/iommu/tegra-smmu.c
+@@ -91,7 +91,6 @@ static inline u32 smmu_readl(struct tegra_smmu *smmu, unsigned long offset)
+ #define  SMMU_TLB_FLUSH_VA_MATCH_ALL     (0 << 0)
+ #define  SMMU_TLB_FLUSH_VA_MATCH_SECTION (2 << 0)
+ #define  SMMU_TLB_FLUSH_VA_MATCH_GROUP   (3 << 0)
+-#define  SMMU_TLB_FLUSH_ASID(x)          (((x) & 0x7f) << 24)
+ #define  SMMU_TLB_FLUSH_VA_SECTION(addr) ((((addr) & 0xffc00000) >> 12) | \
+ 					  SMMU_TLB_FLUSH_VA_MATCH_SECTION)
+ #define  SMMU_TLB_FLUSH_VA_GROUP(addr)   ((((addr) & 0xffffc000) >> 12) | \
+@@ -194,8 +193,12 @@ static inline void smmu_flush_tlb_asid(struct tegra_smmu *smmu,
+ {
+ 	u32 value;
+ 
+-	value = SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_ASID(asid) |
+-		SMMU_TLB_FLUSH_VA_MATCH_ALL;
++	if (smmu->soc->num_asids == 4)
++		value = (asid & 0x3) << 29;
++	else
++		value = (asid & 0x7f) << 24;
++
++	value |= SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_VA_MATCH_ALL;
+ 	smmu_writel(smmu, value, SMMU_TLB_FLUSH);
+ }
+ 
+@@ -205,8 +208,12 @@ static inline void smmu_flush_tlb_section(struct tegra_smmu *smmu,
+ {
+ 	u32 value;
+ 
+-	value = SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_ASID(asid) |
+-		SMMU_TLB_FLUSH_VA_SECTION(iova);
++	if (smmu->soc->num_asids == 4)
++		value = (asid & 0x3) << 29;
++	else
++		value = (asid & 0x7f) << 24;
++
++	value |= SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_VA_SECTION(iova);
+ 	smmu_writel(smmu, value, SMMU_TLB_FLUSH);
+ }
+ 
+@@ -216,8 +223,12 @@ static inline void smmu_flush_tlb_group(struct tegra_smmu *smmu,
+ {
+ 	u32 value;
+ 
+-	value = SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_ASID(asid) |
+-		SMMU_TLB_FLUSH_VA_GROUP(iova);
++	if (smmu->soc->num_asids == 4)
++		value = (asid & 0x3) << 29;
++	else
++		value = (asid & 0x7f) << 24;
++
++	value |= SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_VA_GROUP(iova);
+ 	smmu_writel(smmu, value, SMMU_TLB_FLUSH);
+ }
+ 
 -- 
 2.20.1
 
