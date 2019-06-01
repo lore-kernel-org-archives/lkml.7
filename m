@@ -7,55 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A7D6C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F11C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E835624DD5
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A844527332
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:22:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395331;
-	bh=BbOwVBE/a0Ts6qr8jzkK8ATWPK9HNWZdFgnN6gM9smM=;
+	s=default; t=1559395335;
+	bh=s+Z98v9ivrDolaDrRNoRrO6t6pmUb/gBb80oUlBT2RM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q/AuxnaGReIPIeKfnK+RqfNP7okJX37YQuWo4YHHFk1r4lai1SXlejeIKa96rovgA
-	 3nioUCyr2JHOixB3WFfZ4qF1b/LdGpKKHykG1jvhwkSnGIRbY2AzkZnHacFj/LqQe2
-	 g7qa+7GPH+TdVfItkhQk2+4sW3qUz6gYp4wg3ZjU=
+	b=whWzOFBIBPaw0mmWkXM2leVfNreHpgH8/XKArUEjMPKpB37YEqdjfG1gQ7/kvPc+g
+	 pIrKcFjvarEumgCl9GNUiyfAA8pas4awPi5J19Ec6RM734CxtukscS8EGefbnuhuoJ
+	 D+sMJSPcTBQ+NFNzecjBCgsz93RyfL+GtVQZcMDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbfFANWJ (ORCPT
+        id S1728702AbfFANWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:22:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49510 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:22:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728112AbfFANWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:22:04 -0400
+        id S1728681AbfFANWJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:22:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 314DB27312;
-        Sat,  1 Jun 2019 13:22:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 452E5272E9;
+        Sat,  1 Jun 2019 13:22:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395323;
-        bh=BbOwVBE/a0Ts6qr8jzkK8ATWPK9HNWZdFgnN6gM9smM=;
+        s=default; t=1559395328;
+        bh=s+Z98v9ivrDolaDrRNoRrO6t6pmUb/gBb80oUlBT2RM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mb6ynkiRcuUzTT2BaV4VA5c0Tfxtiq0KY3CZB2zfOSXfx+K3jHdBd9kuJh1pVX62T
-         V73wK0gTkOOnEPzIn1khG3Y+ruD5FxxTzinSNb2xrdRZQv6Ig2e05HfXNnIndGxP3D
-         RlN/+CK0Ii1cWGlcPyxeQCLX5EiozwdbA8VqIv/U=
+        b=YQkkVSnxBHZgz86HvHovgL2bXKLNSHb3JZTbECjqwBzcIrvVtKkiPjOcMvzHVnaD5
+         54b8Xp6IfMSwfaqTmvQinBsVkrrE4xdBn83fuZYjvWxz3mn03VDScd5cjvk/k2AN1Q
+         LarzYlK+5o7C9HMXnqGACZQRk3VBzZzfaP85eELM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christian Brauner <christian@brauner.io>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 003/141] sysctl: return -EINVAL if val violates minmax
-Date:   Sat,  1 Jun 2019 09:19:39 -0400
-Message-Id: <20190601132158.25821-3-sashal@kernel.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 005/141] drm/pl111: Initialize clock spinlock early
+Date:   Sat,  1 Jun 2019 09:19:41 -0400
+Message-Id: <20190601132158.25821-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132158.25821-1-sashal@kernel.org>
 References: <20190601132158.25821-1-sashal@kernel.org>
@@ -68,53 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Brauner <christian@brauner.io>
+From: Guenter Roeck <linux@roeck-us.net>
 
-[ Upstream commit e260ad01f0aa9e96b5386d5cd7184afd949dc457 ]
+[ Upstream commit 3e01ae2612bdd7975c74ec7123d7f8f5e6eed795 ]
 
-Currently when userspace gives us a values that overflow e.g.  file-max
-and other callers of __do_proc_doulongvec_minmax() we simply ignore the
-new value and leave the current value untouched.
+The following warning is seen on systems with broken clock divider.
 
-This can be problematic as it gives the illusion that the limit has
-indeed be bumped when in fact it failed.  This commit makes sure to
-return EINVAL when an overflow is detected.  Please note that this is a
-userspace facing change.
+INFO: trying to register non-static key.
+the code is fine but needs lockdep annotation.
+turning off the locking correctness validator.
+CPU: 0 PID: 1 Comm: swapper Not tainted 5.1.0-09698-g1fb3b52 #1
+Hardware name: ARM Integrator/CP (Device Tree)
+[<c0011be8>] (unwind_backtrace) from [<c000ebb8>] (show_stack+0x10/0x18)
+[<c000ebb8>] (show_stack) from [<c07d3fd0>] (dump_stack+0x18/0x24)
+[<c07d3fd0>] (dump_stack) from [<c0060d48>] (register_lock_class+0x674/0x6f8)
+[<c0060d48>] (register_lock_class) from [<c005de2c>]
+	(__lock_acquire+0x68/0x2128)
+[<c005de2c>] (__lock_acquire) from [<c0060408>] (lock_acquire+0x110/0x21c)
+[<c0060408>] (lock_acquire) from [<c07f755c>] (_raw_spin_lock+0x34/0x48)
+[<c07f755c>] (_raw_spin_lock) from [<c0536c8c>]
+	(pl111_display_enable+0xf8/0x5fc)
+[<c0536c8c>] (pl111_display_enable) from [<c0502f54>]
+	(drm_atomic_helper_commit_modeset_enables+0x1ec/0x244)
 
-Link: http://lkml.kernel.org/r/20190210203943.8227-4-christian@brauner.io
-Signed-off-by: Christian Brauner <christian@brauner.io>
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Dominik Brodowski <linux@dominikbrodowski.net>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Joe Lawrence <joe.lawrence@redhat.com>
-Cc: Waiman Long <longman@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Since commit eedd6033b4c8 ("drm/pl111: Support variants with broken clock
+divider"), the spinlock is not initialized if the clock divider is broken.
+Initialize it earlier to fix the problem.
+
+Fixes: eedd6033b4c8 ("drm/pl111: Support variants with broken clock divider")
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/1557758781-23586-1-git-send-email-linux@roeck-us.net
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sysctl.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/pl111/pl111_display.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 9a85c7ae73621..f8576509c7bef 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -2791,8 +2791,10 @@ static int __do_proc_doulongvec_minmax(void *data, struct ctl_table *table, int
- 			if (neg)
- 				continue;
- 			val = convmul * val / convdiv;
--			if ((min && val < *min) || (max && val > *max))
--				continue;
-+			if ((min && val < *min) || (max && val > *max)) {
-+				err = -EINVAL;
-+				break;
-+			}
- 			*i = val;
- 		} else {
- 			val = convdiv * (*i) / convmul;
+diff --git a/drivers/gpu/drm/pl111/pl111_display.c b/drivers/gpu/drm/pl111/pl111_display.c
+index 754f6b25f2652..6d9f78612deeb 100644
+--- a/drivers/gpu/drm/pl111/pl111_display.c
++++ b/drivers/gpu/drm/pl111/pl111_display.c
+@@ -531,14 +531,15 @@ pl111_init_clock_divider(struct drm_device *drm)
+ 		dev_err(drm->dev, "CLCD: unable to get clcdclk.\n");
+ 		return PTR_ERR(parent);
+ 	}
++
++	spin_lock_init(&priv->tim2_lock);
++
+ 	/* If the clock divider is broken, use the parent directly */
+ 	if (priv->variant->broken_clockdivider) {
+ 		priv->clk = parent;
+ 		return 0;
+ 	}
+ 	parent_name = __clk_get_name(parent);
+-
+-	spin_lock_init(&priv->tim2_lock);
+ 	div->init = &init;
+ 
+ 	ret = devm_clk_hw_register(drm->dev, div);
 -- 
 2.20.1
 
