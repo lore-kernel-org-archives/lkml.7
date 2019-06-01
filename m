@@ -2,139 +2,368 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D23C28CC4
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 11:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BC2C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 11:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8CFC271E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 11:44:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78D1B27227
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 11:45:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="rxL49L7/";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="rxL49L7/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbfFALox convert rfc822-to-8bit (ORCPT
+        id S1727196AbfFALpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 07:44:53 -0400
-Received: from mail.fireflyinternet.com ([109.228.58.192]:65379 "EHLO
-        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726089AbfFALox (ORCPT
+        Sat, 1 Jun 2019 07:45:21 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:52032 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726089AbfFALpV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 07:44:53 -0400
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from localhost (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 16758757-1500050 
-        for multiple; Sat, 01 Jun 2019 12:44:32 +0100
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
+        Sat, 1 Jun 2019 07:45:21 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 8F5828EE134;
+        Sat,  1 Jun 2019 04:45:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1559389520;
+        bh=67HF3QVZ2A2To2qFqZa4kJCNcserrtD1fOcFO/nMTJY=;
+        h=Subject:From:To:Cc:Date:From;
+        b=rxL49L7/w9S3RoL2DRTeJ/NFYPj7erMdbD9qoEuBGAFkTlCOZvMwEY/NvvozT9bK9
+         8hS6T83Y/Vo5CucCmy4sXBrWl2oox9sEwltcRHYm0/Q1IW7UK0JaDnYk5H5STbj9EB
+         cbHFV+huAQhVZA9UTeH0fm/VXldYu0tSUcLegn88=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 8Q66XVI67O6C; Sat,  1 Jun 2019 04:45:20 -0700 (PDT)
+Received: from [172.21.11.227] (unknown [146.185.56.194])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id DC8368EE10A;
+        Sat,  1 Jun 2019 04:45:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1559389520;
+        bh=67HF3QVZ2A2To2qFqZa4kJCNcserrtD1fOcFO/nMTJY=;
+        h=Subject:From:To:Cc:Date:From;
+        b=rxL49L7/w9S3RoL2DRTeJ/NFYPj7erMdbD9qoEuBGAFkTlCOZvMwEY/NvvozT9bK9
+         8hS6T83Y/Vo5CucCmy4sXBrWl2oox9sEwltcRHYm0/Q1IW7UK0JaDnYk5H5STbj9EB
+         cbHFV+huAQhVZA9UTeH0fm/VXldYu0tSUcLegn88=
+Message-ID: <1559389512.2947.33.camel@HansenPartnership.com>
+Subject: [GIT PULL] SCSI fixes for 5.2-rc1
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
 To:     Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-In-Reply-To: <155938118174.22493.11599751119608173366@skylake-alporthouse-com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Hugh Dickins <hughd@google.com>, Jan Kara <jack@suse.cz>,
-        Song Liu <liu.song.a23@gmail.com>
-References: <20190307153051.18815-1-willy@infradead.org>
- <155938118174.22493.11599751119608173366@skylake-alporthouse-com>
-Message-ID: <155938946857.22493.6955534794168533151@skylake-alporthouse-com>
-User-Agent: alot/0.6
-Subject: Re: [PATCH v4] page cache: Store only head pages in i_pages
-Date:   Sat, 01 Jun 2019 12:44:28 +0100
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Sat, 01 Jun 2019 14:45:12 +0300
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Chris Wilson (2019-06-01 10:26:21)
-> Quoting Matthew Wilcox (2019-03-07 15:30:51)
-> > Transparent Huge Pages are currently stored in i_pages as pointers to
-> > consecutive subpages.  This patch changes that to storing consecutive
-> > pointers to the head page in preparation for storing huge pages more
-> > efficiently in i_pages.
-> > 
-> > Large parts of this are "inspired" by Kirill's patch
-> > https://lore.kernel.org/lkml/20170126115819.58875-2-kirill.shutemov@linux.intel.com/
-> > 
-> > Signed-off-by: Matthew Wilcox <willy@infradead.org>
-> > Acked-by: Jan Kara <jack@suse.cz>
-> > Reviewed-by: Kirill Shutemov <kirill@shutemov.name>
-> > Reviewed-and-tested-by: Song Liu <songliubraving@fb.com>
-> > Tested-by: William Kucharski <william.kucharski@oracle.com>
-> > Reviewed-by: William Kucharski <william.kucharski@oracle.com>
-> 
-> I've bisected some new softlockups under THP mempressure to this patch.
-> They are all rcu stalls that look similar to:
-> [  242.645276] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-> [  242.645293] rcu:     Tasks blocked on level-0 rcu_node (CPUs 0-3): P828
-> [  242.645301]  (detected by 1, t=5252 jiffies, g=55501, q=221)
-> [  242.645307] gem_syslatency  R  running task        0   828    815 0x00004000
-> [  242.645315] Call Trace:
-> [  242.645326]  ? __schedule+0x1a0/0x440
-> [  242.645332]  ? preempt_schedule_irq+0x27/0x50
-> [  242.645337]  ? apic_timer_interrupt+0xa/0x20
-> [  242.645342]  ? xas_load+0x3c/0x80
-> [  242.645347]  ? xas_load+0x8/0x80
-> [  242.645353]  ? find_get_entry+0x4f/0x130
-> [  242.645358]  ? pagecache_get_page+0x2b/0x210
-> [  242.645364]  ? lookup_swap_cache+0x42/0x100
-> [  242.645371]  ? do_swap_page+0x6f/0x600
-> [  242.645375]  ? unmap_region+0xc2/0xe0
-> [  242.645380]  ? __handle_mm_fault+0x7a9/0xfa0
-> [  242.645385]  ? handle_mm_fault+0xc2/0x1c0
-> [  242.645393]  ? __do_page_fault+0x198/0x410
-> [  242.645399]  ? page_fault+0x5/0x20
-> [  242.645404]  ? page_fault+0x1b/0x20
-> 
-> Any suggestions as to what information you might want?
+Six minor fixes to device drivers and one to the multipath alua
+handler.  The most extensive fix is the zfcp port remove prevention
+one, but it's impact is only s390.
 
-Perhaps,
-[   76.175502] page:ffffea00098e0000 count:0 mapcount:0 mapping:0000000000000000 index:0x1
-[   76.175525] flags: 0x8000000000000000()
-[   76.175533] raw: 8000000000000000 ffffea0004a7e988 ffffea000445c3c8 0000000000000000
-[   76.175538] raw: 0000000000000001 0000000000000000 00000000ffffffff 0000000000000000
-[   76.175543] page dumped because: VM_BUG_ON_PAGE(entry != page)
-[   76.175560] ------------[ cut here ]------------
-[   76.175564] kernel BUG at mm/swap_state.c:170!
-[   76.175574] invalid opcode: 0000 [#1] PREEMPT SMP
-[   76.175581] CPU: 0 PID: 131 Comm: kswapd0 Tainted: G     U            5.1.0+ #247
-[   76.175586] Hardware name:  /NUC6CAYB, BIOS AYAPLCEL.86A.0029.2016.1124.1625 11/24/2016
-[   76.175598] RIP: 0010:__delete_from_swap_cache+0x22e/0x340
-[   76.175604] Code: e8 b7 3e fd ff 48 01 1d a8 7e 04 01 48 83 c4 30 5b 5d 41 5c 41 5d 41 5e 41 5f c3 48 c7 c6 03 7e bf 81 48 89 c7 e8 92 f8 fd ff <0f> 0b 48 c7 c6 c8 7c bf 81 48 89 df e8 81 f8 fd ff 0f 0b 48 c7 c6
-[   76.175613] RSP: 0000:ffffc900008dba88 EFLAGS: 00010046
-[   76.175619] RAX: 0000000000000032 RBX: ffffea00098e0040 RCX: 0000000000000006
-[   76.175624] RDX: 0000000000000007 RSI: 0000000000000000 RDI: ffffffff81bf6d4c
-[   76.175629] RBP: ffff888265ed8640 R08: 00000000000002c2 R09: 0000000000000000
-[   76.175634] R10: 0000000273a4626d R11: 0000000000000000 R12: 0000000000000001
-[   76.175639] R13: 0000000000000040 R14: 0000000000000000 R15: ffffea00098e0000
-[   76.175645] FS:  0000000000000000(0000) GS:ffff888277a00000(0000) knlGS:0000000000000000
-[   76.175651] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   76.175656] CR2: 00007f24e4399000 CR3: 0000000002c09000 CR4: 00000000001406f0
-[   76.175661] Call Trace:
-[   76.175671]  __remove_mapping+0x1c2/0x380
-[   76.175678]  shrink_page_list+0x11db/0x1d10
-[   76.175684]  shrink_inactive_list+0x14b/0x420
-[   76.175690]  shrink_node_memcg+0x20e/0x740
-[   76.175696]  shrink_node+0xba/0x420
-[   76.175702]  balance_pgdat+0x27d/0x4d0
-[   76.175709]  kswapd+0x216/0x300
-[   76.175715]  ? wait_woken+0x80/0x80
-[   76.175721]  ? balance_pgdat+0x4d0/0x4d0
-[   76.175726]  kthread+0x106/0x120
-[   76.175732]  ? kthread_create_on_node+0x40/0x40
-[   76.175739]  ret_from_fork+0x1f/0x30
-[   76.175745] Modules linked in: i915 intel_gtt drm_kms_helper
-[   76.175754] ---[ end trace 8faf2ec849d50724 ]---
-[   76.206689] RIP: 0010:__delete_from_swap_cache+0x22e/0x340
-[   76.206708] Code: e8 b7 3e fd ff 48 01 1d a8 7e 04 01 48 83 c4 30 5b 5d 41 5c 41 5d 41 5e 41 5f c3 48 c7 c6 03 7e bf 81 48 89 c7 e8 92 f8 fd ff <0f> 0b 48 c7 c6 c8 7c bf 81 48 89 df e8 81 f8 fd ff 0f 0b 48 c7 c6
-[   76.206718] RSP: 0000:ffffc900008dba88 EFLAGS: 00010046
-[   76.206723] RAX: 0000000000000032 RBX: ffffea00098e0040 RCX: 0000000000000006
-[   76.206729] RDX: 0000000000000007 RSI: 0000000000000000 RDI: ffffffff81bf6d4c
-[   76.206734] RBP: ffff888265ed8640 R08: 00000000000002c2 R09: 0000000000000000
-[   76.206740] R10: 0000000273a4626d R11: 0000000000000000 R12: 0000000000000001
-[   76.206745] R13: 0000000000000040 R14: 0000000000000000 R15: ffffea00098e0000
-[   76.206750] FS:  0000000000000000(0000) GS:ffff888277a00000(0000) knlGS:0000000000000000
-[   76.206757] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
--Chris
+The patch is available here:
+
+git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+
+The short changelog is:
+
+Jason Yan (2):
+      scsi: libsas: delete sas port if expander discover failed
+      scsi: libsas: only clear phy->in_shutdown after shutdown event done
+
+Lianbo Jiang (1):
+      scsi: smartpqi: properly set both the DMA mask and the coherent DMA mask
+
+Steffen Maier (2):
+      scsi: zfcp: fix to prevent port_remove with pure auto scan LUNs (only sdevs)
+      scsi: zfcp: fix missing zfcp_port reference put on -EBUSY from port_remove
+
+Varun Prakash (1):
+      scsi: libcxgbi: add a check for NULL pointer in cxgbi_check_route()
+
+YueHaibing (1):
+      scsi: scsi_dh_alua: Fix possible null-ptr-deref
+
+And the diffstat:
+
+ drivers/s390/scsi/zfcp_ext.h               |  1 +
+ drivers/s390/scsi/zfcp_scsi.c              |  9 +++++
+ drivers/s390/scsi/zfcp_sysfs.c             | 55 ++++++++++++++++++++++++++----
+ drivers/s390/scsi/zfcp_unit.c              |  8 ++++-
+ drivers/scsi/cxgbi/libcxgbi.c              |  4 +++
+ drivers/scsi/device_handler/scsi_dh_alua.c |  6 ++--
+ drivers/scsi/libsas/sas_expander.c         |  2 ++
+ drivers/scsi/libsas/sas_phy.c              |  3 +-
+ drivers/scsi/smartpqi/smartpqi_init.c      |  2 +-
+ 9 files changed, 76 insertions(+), 14 deletions(-)
+
+With full diff below.
+
+James
+
+---
+
+diff --git a/drivers/s390/scsi/zfcp_ext.h
+b/drivers/s390/scsi/zfcp_ext.h
+index c6acca521ffe..31e8a7240fd7 100644
+--- a/drivers/s390/scsi/zfcp_ext.h
++++ b/drivers/s390/scsi/zfcp_ext.h
+@@ -167,6 +167,7 @@ extern const struct attribute_group
+*zfcp_port_attr_groups[];
+ extern struct mutex zfcp_sysfs_port_units_mutex;
+ extern struct device_attribute *zfcp_sysfs_sdev_attrs[];
+ extern struct device_attribute *zfcp_sysfs_shost_attrs[];
++bool zfcp_sysfs_port_is_removing(const struct zfcp_port *const port);
+ 
+ /* zfcp_unit.c */
+ extern int zfcp_unit_add(struct zfcp_port *, u64);
+diff --git a/drivers/s390/scsi/zfcp_scsi.c
+b/drivers/s390/scsi/zfcp_scsi.c
+index 221d0dfb8493..e9ded2befa0d 100644
+--- a/drivers/s390/scsi/zfcp_scsi.c
++++ b/drivers/s390/scsi/zfcp_scsi.c
+@@ -129,6 +129,15 @@ static int zfcp_scsi_slave_alloc(struct
+scsi_device *sdev)
+ 
+ 	zfcp_sdev->erp_action.port = port;
+ 
++	mutex_lock(&zfcp_sysfs_port_units_mutex);
++	if (zfcp_sysfs_port_is_removing(port)) {
++		/* port is already gone */
++		mutex_unlock(&zfcp_sysfs_port_units_mutex);
++		put_device(&port->dev); /* undo
+zfcp_get_port_by_wwpn() */
++		return -ENXIO;
++	}
++	mutex_unlock(&zfcp_sysfs_port_units_mutex);
++
+ 	unit = zfcp_unit_find(port, zfcp_scsi_dev_lun(sdev));
+ 	if (unit)
+ 		put_device(&unit->dev);
+diff --git a/drivers/s390/scsi/zfcp_sysfs.c
+b/drivers/s390/scsi/zfcp_sysfs.c
+index b277be6f7611..af197e2b3e69 100644
+--- a/drivers/s390/scsi/zfcp_sysfs.c
++++ b/drivers/s390/scsi/zfcp_sysfs.c
+@@ -235,6 +235,53 @@ static ZFCP_DEV_ATTR(adapter, port_rescan,
+S_IWUSR, NULL,
+ 
+ DEFINE_MUTEX(zfcp_sysfs_port_units_mutex);
+ 
++static void zfcp_sysfs_port_set_removing(struct zfcp_port *const port)
++{
++	lockdep_assert_held(&zfcp_sysfs_port_units_mutex);
++	atomic_set(&port->units, -1);
++}
++
++bool zfcp_sysfs_port_is_removing(const struct zfcp_port *const port)
++{
++	lockdep_assert_held(&zfcp_sysfs_port_units_mutex);
++	return atomic_read(&port->units) == -1;
++}
++
++static bool zfcp_sysfs_port_in_use(struct zfcp_port *const port)
++{
++	struct zfcp_adapter *const adapter = port->adapter;
++	unsigned long flags;
++	struct scsi_device *sdev;
++	bool in_use = true;
++
++	mutex_lock(&zfcp_sysfs_port_units_mutex);
++	if (atomic_read(&port->units) > 0)
++		goto unlock_port_units_mutex; /* zfcp_unit(s) under
+port */
++
++	spin_lock_irqsave(adapter->scsi_host->host_lock, flags);
++	__shost_for_each_device(sdev, adapter->scsi_host) {
++		const struct zfcp_scsi_dev *zsdev =
+sdev_to_zfcp(sdev);
++
++		if (sdev->sdev_state == SDEV_DEL ||
++		    sdev->sdev_state == SDEV_CANCEL)
++			continue;
++		if (zsdev->port != port)
++			continue;
++		/* alive scsi_device under port of interest */
++		goto unlock_host_lock;
++	}
++
++	/* port is about to be removed, so no more unit_add or
+slave_alloc */
++	zfcp_sysfs_port_set_removing(port);
++	in_use = false;
++
++unlock_host_lock:
++	spin_unlock_irqrestore(adapter->scsi_host->host_lock, flags);
++unlock_port_units_mutex:
++	mutex_unlock(&zfcp_sysfs_port_units_mutex);
++	return in_use;
++}
++
+ static ssize_t zfcp_sysfs_port_remove_store(struct device *dev,
+ 					    struct device_attribute
+*attr,
+ 					    const char *buf, size_t
+count)
+@@ -257,15 +304,11 @@ static ssize_t
+zfcp_sysfs_port_remove_store(struct device *dev,
+ 	else
+ 		retval = 0;
+ 
+-	mutex_lock(&zfcp_sysfs_port_units_mutex);
+-	if (atomic_read(&port->units) > 0) {
++	if (zfcp_sysfs_port_in_use(port)) {
+ 		retval = -EBUSY;
+-		mutex_unlock(&zfcp_sysfs_port_units_mutex);
++		put_device(&port->dev); /* undo
+zfcp_get_port_by_wwpn() */
+ 		goto out;
+ 	}
+-	/* port is about to be removed, so no more unit_add */
+-	atomic_set(&port->units, -1);
+-	mutex_unlock(&zfcp_sysfs_port_units_mutex);
+ 
+ 	write_lock_irq(&adapter->port_list_lock);
+ 	list_del(&port->list);
+diff --git a/drivers/s390/scsi/zfcp_unit.c
+b/drivers/s390/scsi/zfcp_unit.c
+index 1bf0a0984a09..e67bf7388cae 100644
+--- a/drivers/s390/scsi/zfcp_unit.c
++++ b/drivers/s390/scsi/zfcp_unit.c
+@@ -124,7 +124,7 @@ int zfcp_unit_add(struct zfcp_port *port, u64
+fcp_lun)
+ 	int retval = 0;
+ 
+ 	mutex_lock(&zfcp_sysfs_port_units_mutex);
+-	if (atomic_read(&port->units) == -1) {
++	if (zfcp_sysfs_port_is_removing(port)) {
+ 		/* port is already gone */
+ 		retval = -ENODEV;
+ 		goto out;
+@@ -168,8 +168,14 @@ int zfcp_unit_add(struct zfcp_port *port, u64
+fcp_lun)
+ 	write_lock_irq(&port->unit_list_lock);
+ 	list_add_tail(&unit->list, &port->unit_list);
+ 	write_unlock_irq(&port->unit_list_lock);
++	/*
++	 * lock order: shost->scan_mutex before
+zfcp_sysfs_port_units_mutex
++	 * due to      zfcp_unit_scsi_scan() =>
+zfcp_scsi_slave_alloc()
++	 */
++	mutex_unlock(&zfcp_sysfs_port_units_mutex);
+ 
+ 	zfcp_unit_scsi_scan(unit);
++	return retval;
+ 
+ out:
+ 	mutex_unlock(&zfcp_sysfs_port_units_mutex);
+diff --git a/drivers/scsi/cxgbi/libcxgbi.c
+b/drivers/scsi/cxgbi/libcxgbi.c
+index 8b915d4ed98d..7d43e014bd21 100644
+--- a/drivers/scsi/cxgbi/libcxgbi.c
++++ b/drivers/scsi/cxgbi/libcxgbi.c
+@@ -639,6 +639,10 @@ cxgbi_check_route(struct sockaddr *dst_addr, int
+ifindex)
+ 
+ 	if (ndev->flags & IFF_LOOPBACK) {
+ 		ndev = ip_dev_find(&init_net, daddr->sin_addr.s_addr);
++		if (!ndev) {
++			err = -ENETUNREACH;
++			goto rel_neigh;
++		}
+ 		mtu = ndev->mtu;
+ 		pr_info("rt dev %s, loopback -> %s, mtu %u.\n",
+ 			n->dev->name, ndev->name, mtu);
+diff --git a/drivers/scsi/device_handler/scsi_dh_alua.c
+b/drivers/scsi/device_handler/scsi_dh_alua.c
+index d7ac498ba35a..2a9dcb8973b7 100644
+--- a/drivers/scsi/device_handler/scsi_dh_alua.c
++++ b/drivers/scsi/device_handler/scsi_dh_alua.c
+@@ -1174,10 +1174,8 @@ static int __init alua_init(void)
+ 	int r;
+ 
+ 	kaluad_wq = alloc_workqueue("kaluad", WQ_MEM_RECLAIM, 0);
+-	if (!kaluad_wq) {
+-		/* Temporary failure, bypass */
+-		return SCSI_DH_DEV_TEMP_BUSY;
+-	}
++	if (!kaluad_wq)
++		return -ENOMEM;
+ 
+ 	r = scsi_register_device_handler(&alua_dh);
+ 	if (r != 0) {
+diff --git a/drivers/scsi/libsas/sas_expander.c
+b/drivers/scsi/libsas/sas_expander.c
+index 83f2fd70ce76..9f7e2457360e 100644
+--- a/drivers/scsi/libsas/sas_expander.c
++++ b/drivers/scsi/libsas/sas_expander.c
+@@ -1019,6 +1019,8 @@ static struct domain_device
+*sas_ex_discover_expander(
+ 		list_del(&child->dev_list_node);
+ 		spin_unlock_irq(&parent->port->dev_list_lock);
+ 		sas_put_device(child);
++		sas_port_delete(phy->port);
++		phy->port = NULL;
+ 		return NULL;
+ 	}
+ 	list_add_tail(&child->siblings, &parent->ex_dev.children);
+diff --git a/drivers/scsi/libsas/sas_phy.c
+b/drivers/scsi/libsas/sas_phy.c
+index e030e1452136..b71f5ac6c7dc 100644
+--- a/drivers/scsi/libsas/sas_phy.c
++++ b/drivers/scsi/libsas/sas_phy.c
+@@ -35,7 +35,6 @@ static void sas_phye_loss_of_signal(struct
+work_struct *work)
+ 	struct asd_sas_event *ev = to_asd_sas_event(work);
+ 	struct asd_sas_phy *phy = ev->phy;
+ 
+-	phy->in_shutdown = 0;
+ 	phy->error = 0;
+ 	sas_deform_port(phy, 1);
+ }
+@@ -45,7 +44,6 @@ static void sas_phye_oob_done(struct work_struct
+*work)
+ 	struct asd_sas_event *ev = to_asd_sas_event(work);
+ 	struct asd_sas_phy *phy = ev->phy;
+ 
+-	phy->in_shutdown = 0;
+ 	phy->error = 0;
+ }
+ 
+@@ -126,6 +124,7 @@ static void sas_phye_shutdown(struct work_struct
+*work)
+ 				  ret);
+ 	} else
+ 		pr_notice("phy%d is not enabled, cannot shutdown\n",
+phy->id);
++	phy->in_shutdown = 0;
+ }
+ 
+ /* ---------- Phy class registration ---------- */
+diff --git a/drivers/scsi/smartpqi/smartpqi_init.c
+b/drivers/scsi/smartpqi/smartpqi_init.c
+index b17761eafca9..d6be4e8f4a8f 100644
+--- a/drivers/scsi/smartpqi/smartpqi_init.c
++++ b/drivers/scsi/smartpqi/smartpqi_init.c
+@@ -7291,7 +7291,7 @@ static int pqi_pci_init(struct pqi_ctrl_info
+*ctrl_info)
+ 	else
+ 		mask = DMA_BIT_MASK(32);
+ 
+-	rc = dma_set_mask(&ctrl_info->pci_dev->dev, mask);
++	rc = dma_set_mask_and_coherent(&ctrl_info->pci_dev->dev,
+mask);
+ 	if (rc) {
+ 		dev_err(&ctrl_info->pci_dev->dev, "failed to set DMA
+mask\n");
+ 		goto disable_device;
