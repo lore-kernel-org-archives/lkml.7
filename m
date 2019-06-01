@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 200B3C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B5CC28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEB2627456
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E60C82745A
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:29:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395778;
-	bh=YE2Axna26BxbOj4bYB4bN0rPCd2ystqjbVgrX3oPqMY=;
+	s=default; t=1559395781;
+	bh=uAAi8CTOOnASvru0RtQIRJjMPSSGzCt7X5cKVXUegXs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xkN1H1dgjUJamS9ApfBaeI8bmBLZKYvcldMR/FKPCxbvS7cUONZS91pjmGUx8YD+N
-	 Nsq3/Q5TFkxena5f2uZeO5/HAWeJTP0uHoWmafiU5FwXgREQ8lb+y4Z3xmd1myUwhG
-	 lS7oL1H60MK0mlkinhQYJ5lwXvCNxegwwqX7NNpA=
+	b=zz74O+1CqSYmaBK8L4ERLmHvSTC/sErui/mQ7qJyZcBuzA054wo5kanq9rAneto/p
+	 opgyuBWAHgZ6EqpeGf1hEg0IlI7q03+izNi2b4Vq3vRbzT9m0JXUUMkovjB1L0Nlq6
+	 uUt8qpbmEa8ICsBerz0FHeQGHP5kXgtxQfq1JeNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729867AbfFAN0t (ORCPT
+        id S1729889AbfFAN3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:26:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57192 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:29:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729462AbfFAN0l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:26:41 -0400
+        id S1729862AbfFAN0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:26:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 745DC273C3;
-        Sat,  1 Jun 2019 13:26:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC104273BD;
+        Sat,  1 Jun 2019 13:26:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395601;
-        bh=YE2Axna26BxbOj4bYB4bN0rPCd2ystqjbVgrX3oPqMY=;
+        s=default; t=1559395608;
+        bh=uAAi8CTOOnASvru0RtQIRJjMPSSGzCt7X5cKVXUegXs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BEaP8W/3kAWNVSK/VlvNSvu0WIhLjprNN6qIRmzctbNJYqo9uSjei7LCWr1RJaWpZ
-         Lt19B0Ykg4V557ALvLuQWHjEk+TRkHIsm+J+JxyiZlyu4JDkcdxnfgSiNwh/EnbSrO
-         +NpcOwKkGOpCcFE1t4xyxITcyZPEtTfeEJKYSU3c=
+        b=0X6bZYzNlH2LNW9OADR0SfFv+ow24fTjluDq0pLl1uezuEeBwDiANuq5WtuJybirJ
+         7FZ0hKLsLWDFZ4foNPijiNcvNjNky5FfLvI8JnZ1Ek1tJMTkO51u5gCsLyDEuNwSq5
+         og94ilhTrK0CtUn8fZTq9kZrTgqgxWzZIWbLDHBs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>,
-        Liwei Song <liwei.song@windriver.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 20/56] ALSA: hda - Register irq handler after the chip initialization
-Date:   Sat,  1 Jun 2019 09:25:24 -0400
-Message-Id: <20190601132600.27427-20-sashal@kernel.org>
+Cc:     James Prestwood <james.prestwood@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 27/56] PCI: Mark Atheros AR9462 to avoid bus reset
+Date:   Sat,  1 Jun 2019 09:25:31 -0400
+Message-Id: <20190601132600.27427-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132600.27427-1-sashal@kernel.org>
 References: <20190601132600.27427-1-sashal@kernel.org>
@@ -59,63 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: James Prestwood <james.prestwood@linux.intel.com>
 
-[ Upstream commit f495222e28275222ab6fd93813bd3d462e16d340 ]
+[ Upstream commit 6afb7e26978da5e86e57e540fdce65c8b04f398a ]
 
-Currently the IRQ handler in HD-audio controller driver is registered
-before the chip initialization.  That is, we have some window opened
-between the azx_acquire_irq() call and the CORB/RIRB setup.  If an
-interrupt is triggered in this small window, the IRQ handler may
-access to the uninitialized RIRB buffer, which leads to a NULL
-dereference Oops.
+When using PCI passthrough with this device, the host machine locks up
+completely when starting the VM, requiring a hard reboot.  Add a quirk to
+avoid bus resets on this device.
 
-This is usually no big problem since most of Intel chips do register
-the IRQ via MSI, and we've already fixed the order of the IRQ
-enablement and the CORB/RIRB setup in the former commit b61749a89f82
-("sound: enable interrupt after dma buffer initialization"), hence the
-IRQ won't be triggered in that room.  However, some platforms use a
-shared IRQ, and this may allow the IRQ trigger by another source.
-
-Another possibility is the kdump environment: a stale interrupt might
-be present in there, the IRQ handler can be falsely triggered as well.
-
-For covering this small race, let's move the azx_acquire_irq() call
-after hda_intel_init_chip() call.  Although this is a bit radical
-change, it can cover more widely than checking the CORB/RIRB setup
-locally in the callee side.
-
-Reported-by: Liwei Song <liwei.song@windriver.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: c3e59ee4e766 ("PCI: Mark Atheros AR93xx to avoid bus reset")
+Link: https://lore.kernel.org/linux-pci/20190107213248.3034-1-james.prestwood@linux.intel.com
+Signed-off-by: James Prestwood <james.prestwood@linux.intel.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+CC: stable@vger.kernel.org	# v3.14+
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_intel.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/pci/quirks.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index 74c9600876d68..ef8955abd9186 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -1707,9 +1707,6 @@ static int azx_first_init(struct azx *chip)
- 			chip->msi = 0;
- 	}
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index d85010ebac5aa..36c6f3702167c 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -3141,6 +3141,7 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0030, quirk_no_bus_reset);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0032, quirk_no_bus_reset);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x003c, quirk_no_bus_reset);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0033, quirk_no_bus_reset);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0034, quirk_no_bus_reset);
  
--	if (azx_acquire_irq(chip, 0) < 0)
--		return -EBUSY;
--
- 	pci_set_master(pci);
- 	synchronize_irq(bus->irq);
- 
-@@ -1820,6 +1817,9 @@ static int azx_first_init(struct azx *chip)
- 		return -ENODEV;
- 	}
- 
-+	if (azx_acquire_irq(chip, 0) < 0)
-+		return -EBUSY;
-+
- 	strcpy(card->driver, "HDA-Intel");
- 	strlcpy(card->shortname, driver_short_names[chip->driver_type],
- 		sizeof(card->shortname));
+ static void quirk_no_pm_reset(struct pci_dev *dev)
+ {
 -- 
 2.20.1
 
