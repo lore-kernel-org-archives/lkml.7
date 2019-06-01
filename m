@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0F1C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0F5C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BF4F276F2
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:43:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F6BC276F4
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:43:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396618;
-	bh=Hshb00E3YY/ALIe4BTZ8oT6UxHJVL0f6jBjud6JkyMY=;
+	s=default; t=1559396622;
+	bh=53ok0bYmTt809hAnpG8NrkQv7x3hj2dYv3pMJurUqMg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SHUePUoTPLej0l5YpUm0zT0igfqSBRQiTZ9YYKjDZuumMO0O4JmEc6h01/JXK8JHs
-	 ZknDaPqvI44oUtbTDH3JTT456xVbaD++hGQZE58lL6ElfgIQ6HB5tInnUcEiZ0/AfR
-	 +jfW99x7ic0ZPioKL/1YulgogRhSbdI0feJ7qCJY=
+	b=msbzjAckL0k96V9DQbdaoGgTcJ//fPrCgdOA47LsZfJ28wCVAKXSq8LRoI50GUHlP
+	 WP4hj5ryET0jkrBS9k02jTRVTOfRqY04kk6Ej5A081dDmYgC796ltnD1n8q7TmRo5r
+	 dbhAUo5/o5WDU4NVMMFQlb4bkCBhVQx8Pkxh/2TQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728241AbfFANnh (ORCPT
+        id S1728334AbfFANnl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:43:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45092 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:43:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727677AbfFANSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:18:06 -0400
+        id S1727628AbfFANSF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:18:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD0462727C;
-        Sat,  1 Jun 2019 13:18:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E92C2727A;
+        Sat,  1 Jun 2019 13:18:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395086;
-        bh=Hshb00E3YY/ALIe4BTZ8oT6UxHJVL0f6jBjud6JkyMY=;
+        s=default; t=1559395084;
+        bh=53ok0bYmTt809hAnpG8NrkQv7x3hj2dYv3pMJurUqMg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s3Ak+8W+exmGAicZADTOp4bd0AnPZLhKeBYj+OahyjOy0AXP/22dKJMmt4AR1HjwF
-         J8C8m9keN1zXg71SQWzdiPeKjRokRRd8SZQcLDlzEwFzDKbusmcR6l3B05238nTAFL
-         SvCUyTK8GV08pMpeMy3lk6WnW3j0oQ7yy2LayR9g=
+        b=z4p/Y5OqqSrQI45vYd/4inQqOCw4c/X/6i8zulwYslQYEptCrjVFeOIdG3+xA3Y7m
+         HM4i7ufNLyan7qX+wLSLkG4QaCQDcnVYNJf2OuyLDiiSs3N/huOXxQlkYBMyt/1Xma
+         1hSz2G6MyOzSKefdvOZvSLu7nyfvHKLF+YzfQU5o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Gomez <dagmcr@gmail.com>,
-        Javier Martinez Canillas <javier@dowhile0.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 026/186] mfd: tps65912-spi: Add missing of table registration
-Date:   Sat,  1 Jun 2019 09:14:02 -0400
-Message-Id: <20190601131653.24205-26-sashal@kernel.org>
+Cc:     Jiada Wang <jiada_wang@mentor.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 024/186] thermal: rcar_gen3_thermal: disable interrupt in .remove
+Date:   Sat,  1 Jun 2019 09:14:00 -0400
+Message-Id: <20190601131653.24205-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131653.24205-1-sashal@kernel.org>
 References: <20190601131653.24205-1-sashal@kernel.org>
@@ -60,43 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Gomez <dagmcr@gmail.com>
+From: Jiada Wang <jiada_wang@mentor.com>
 
-[ Upstream commit 9e364e87ad7f2c636276c773d718cda29d62b741 ]
+[ Upstream commit 63f55fcea50c25ae5ad45af92d08dae3b84534c2 ]
 
-MODULE_DEVICE_TABLE(of, <of_match_table> should be called to complete DT
-OF mathing mechanism and register it.
+Currently IRQ remains enabled after .remove, later if device is probed,
+IRQ is requested before .thermal_init, this may cause IRQ function be
+called before device is initialized.
 
-Before this patch:
-modinfo drivers/mfd/tps65912-spi.ko | grep alias
-alias:          spi:tps65912
+this patch disables interrupt in .remove, to ensure irq function
+only be called after device is fully initialized.
 
-After this patch:
-modinfo drivers/mfd/tps65912-spi.ko | grep alias
-alias:          of:N*T*Cti,tps65912C*
-alias:          of:N*T*Cti,tps65912
-alias:          spi:tps65912
-
-Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
-Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/tps65912-spi.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/thermal/rcar_gen3_thermal.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/mfd/tps65912-spi.c b/drivers/mfd/tps65912-spi.c
-index 3bd75061f7776..f78be039e4637 100644
---- a/drivers/mfd/tps65912-spi.c
-+++ b/drivers/mfd/tps65912-spi.c
-@@ -27,6 +27,7 @@ static const struct of_device_id tps65912_spi_of_match_table[] = {
- 	{ .compatible = "ti,tps65912", },
- 	{ /* sentinel */ }
- };
-+MODULE_DEVICE_TABLE(of, tps65912_spi_of_match_table);
- 
- static int tps65912_spi_probe(struct spi_device *spi)
+diff --git a/drivers/thermal/rcar_gen3_thermal.c b/drivers/thermal/rcar_gen3_thermal.c
+index 88fa41cf16e83..0c9e7a5bacdf1 100644
+--- a/drivers/thermal/rcar_gen3_thermal.c
++++ b/drivers/thermal/rcar_gen3_thermal.c
+@@ -331,6 +331,9 @@ MODULE_DEVICE_TABLE(of, rcar_gen3_thermal_dt_ids);
+ static int rcar_gen3_thermal_remove(struct platform_device *pdev)
  {
+ 	struct device *dev = &pdev->dev;
++	struct rcar_gen3_thermal_priv *priv = dev_get_drvdata(dev);
++
++	rcar_thermal_irq_set(priv, false);
+ 
+ 	pm_runtime_put(dev);
+ 	pm_runtime_disable(dev);
 -- 
 2.20.1
 
