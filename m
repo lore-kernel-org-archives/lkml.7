@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 640F1C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A5BC46470
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AAF924287
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:37:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A359C261B1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:37:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396246;
-	bh=n+m6o8ArLQiT2h5XaaZBVCSiyu9AaupKRXP6MB3ZETo=;
+	s=default; t=1559396256;
+	bh=2LUsXLY2sI/4AyYGBsY7LNb4t1yX41DcnUFOv/XEQ+Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XuPOlbULbcJZNA0G2oBj9nLB7y1T7K+VVM8PcqWaViDE9nW2BLPgJJHFTwX/muS3J
-	 Cj3R4mmFlggvrxSsvwlWYtDh+YeM32InkWjnkaPMhwkq8N5MbxXNqufkiBIF+2HCQa
-	 n6GCrXZy+QWffZTVf5yN6sIn1Ft0u75ayzRQHdR4=
+	b=mcQE2mbh0Gr9Wqd3gJYmr2dDQ5MoCtC5nGzklwr159zIKDthnGG4Oi/5uX7XQorvw
+	 lWUYF6W1h//SWfu+wSOrH8p4IPjtBeQW3x6l5j2B7OgySLci4GqlyivSTGGU5GPQJ3
+	 koYvW5VOYd8fqU57+CjboRN3NoiPuOVMAGi2HLwc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728965AbfFANhZ (ORCPT
+        id S1728614AbfFANVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:37:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49364 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:21:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727941AbfFANVy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:21:54 -0400
+        id S1728587AbfFANVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:21:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2124327301;
-        Sat,  1 Jun 2019 13:21:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FDC527301;
+        Sat,  1 Jun 2019 13:21:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395313;
-        bh=n+m6o8ArLQiT2h5XaaZBVCSiyu9AaupKRXP6MB3ZETo=;
+        s=default; t=1559395302;
+        bh=2LUsXLY2sI/4AyYGBsY7LNb4t1yX41DcnUFOv/XEQ+Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h66ZtpBjx9hkWw2zQoi/R7PnMLJp8rTgQBwAZ4qyS7RAft6soSTlTzsIS99WkMMSy
-         M3r49pPgPW5XOH9ABiwKHgldUdAtMdJaAsYykDWKDa8tX5A2OVFMKANFW7143jCalL
-         3LF+70o82iqwR5N5+qiTWelSDvIdnnLfjNHemz+c=
+        b=wh8yEujOnUgVE2O9EZw8AxQZGD8u2jrYyu+5m2zTFMowHXPDz0GwQYIgDRsbEH76e
+         qumsBqfFoFW1/Ba5etqojkMXmRqRM5hCkU/Q8Jr73RBIoUeKPLQOZTJEhuGX2Ajfy7
+         m697cM052RZjcdrousiHDw+R/zotRzt8JqswN9gA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 067/173] netfilter: nf_tables: fix base chain stat rcu_dereference usage
-Date:   Sat,  1 Jun 2019 09:17:39 -0400
-Message-Id: <20190601131934.25053-67-sashal@kernel.org>
+Cc:     Amir Goldstein <amir73il@gmail.com>,
+        Murphy Zhou <jencce.kernel@gmail.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-unionfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 062/173] ovl: do not generate duplicate fsnotify events for "fake" path
+Date:   Sat,  1 Jun 2019 09:17:34 -0400
+Message-Id: <20190601131934.25053-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131934.25053-1-sashal@kernel.org>
 References: <20190601131934.25053-1-sashal@kernel.org>
@@ -61,77 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Amir Goldstein <amir73il@gmail.com>
 
-[ Upstream commit edbd82c5fba009f68d20b5db585be1e667c605f6 ]
+[ Upstream commit d989903058a83e8536cc7aadf9256a47d5c173fe ]
 
-Following splat gets triggered when nfnetlink monitor is running while
-xtables-nft selftests are running:
+Overlayfs "fake" path is used for stacked file operations on underlying
+files.  Operations on files with "fake" path must not generate fsnotify
+events with path data, because those events have already been generated at
+overlayfs layer and because the reported event->fd for fanotify marks on
+underlying inode/filesystem will have the wrong path (the overlayfs path).
 
-net/netfilter/nf_tables_api.c:1272 suspicious rcu_dereference_check() usage!
-other info that might help us debug this:
-
-1 lock held by xtables-nft-mul/27006:
- #0: 00000000e0f85be9 (&net->nft.commit_mutex){+.+.}, at: nf_tables_valid_genid+0x1a/0x50
-Call Trace:
- nf_tables_fill_chain_info.isra.45+0x6cc/0x6e0
- nf_tables_chain_notify+0xf8/0x1a0
- nf_tables_commit+0x165c/0x1740
-
-nf_tables_fill_chain_info() can be called both from dumps (rcu read locked)
-or from the transaction path if a userspace process subscribed to nftables
-notifications.
-
-In the 'table dump' case, rcu_access_pointer() cannot be used: We do not
-hold transaction mutex so the pointer can be NULLed right after the check.
-Just unconditionally fetch the value, then have the helper return
-immediately if its NULL.
-
-In the notification case we don't hold the rcu read lock, but updates are
-prevented due to transaction mutex. Use rcu_dereference_check() to make lockdep
-aware of this.
-
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Link: https://lore.kernel.org/linux-fsdevel/20190423065024.12695-1-jencce.kernel@gmail.com/
+Reported-by: Murphy Zhou <jencce.kernel@gmail.com>
+Fixes: d1d04ef8572b ("ovl: stack file ops")
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_tables_api.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ fs/overlayfs/file.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index 25c2b98b9a960..eb3915b76ff47 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -1147,6 +1147,9 @@ static int nft_dump_stats(struct sk_buff *skb, struct nft_stats __percpu *stats)
- 	u64 pkts, bytes;
- 	int cpu;
+diff --git a/fs/overlayfs/file.c b/fs/overlayfs/file.c
+index 84dd957efa24a..6f6eb638a320f 100644
+--- a/fs/overlayfs/file.c
++++ b/fs/overlayfs/file.c
+@@ -29,10 +29,11 @@ static struct file *ovl_open_realfile(const struct file *file,
+ 	struct inode *inode = file_inode(file);
+ 	struct file *realfile;
+ 	const struct cred *old_cred;
++	int flags = file->f_flags | O_NOATIME | FMODE_NONOTIFY;
  
-+	if (!stats)
-+		return 0;
-+
- 	memset(&total, 0, sizeof(total));
- 	for_each_possible_cpu(cpu) {
- 		cpu_stats = per_cpu_ptr(stats, cpu);
-@@ -1204,6 +1207,7 @@ static int nf_tables_fill_chain_info(struct sk_buff *skb, struct net *net,
- 	if (nft_is_base_chain(chain)) {
- 		const struct nft_base_chain *basechain = nft_base_chain(chain);
- 		const struct nf_hook_ops *ops = &basechain->ops;
-+		struct nft_stats __percpu *stats;
- 		struct nlattr *nest;
+ 	old_cred = ovl_override_creds(inode->i_sb);
+-	realfile = open_with_fake_path(&file->f_path, file->f_flags | O_NOATIME,
+-				       realinode, current_cred());
++	realfile = open_with_fake_path(&file->f_path, flags, realinode,
++				       current_cred());
+ 	revert_creds(old_cred);
  
- 		nest = nla_nest_start(skb, NFTA_CHAIN_HOOK);
-@@ -1225,8 +1229,9 @@ static int nf_tables_fill_chain_info(struct sk_buff *skb, struct net *net,
- 		if (nla_put_string(skb, NFTA_CHAIN_TYPE, basechain->type->name))
- 			goto nla_put_failure;
+ 	pr_debug("open(%p[%pD2/%c], 0%o) -> (%p, 0%o)\n",
+@@ -50,7 +51,7 @@ static int ovl_change_flags(struct file *file, unsigned int flags)
+ 	int err;
  
--		if (rcu_access_pointer(basechain->stats) &&
--		    nft_dump_stats(skb, rcu_dereference(basechain->stats)))
-+		stats = rcu_dereference_check(basechain->stats,
-+					      lockdep_commit_lock_is_held(net));
-+		if (nft_dump_stats(skb, stats))
- 			goto nla_put_failure;
- 	}
+ 	/* No atime modificaton on underlying */
+-	flags |= O_NOATIME;
++	flags |= O_NOATIME | FMODE_NONOTIFY;
  
+ 	/* If some flag changed that cannot be changed then something's amiss */
+ 	if (WARN_ON((file->f_flags ^ flags) & ~OVL_SETFL_MASK))
 -- 
 2.20.1
 
