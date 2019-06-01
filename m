@@ -7,61 +7,59 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67606C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F67C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:34:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41A092752C
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:34:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B5AC27534
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:34:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396047;
-	bh=dg/hQgmd7Dh998D1vF9dt1j5c4/F+dz2LDsSHZxNSkI=;
+	s=default; t=1559396054;
+	bh=hmHDqocuR+fOA+hANEpWDXA5DiRouRUxCAjHS6ovgmk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sa+h8b++Ja8u7l5z4UlGnMQ63ghaHuLKsMShrLyRDsiTw99REAE5JV9jSKuYqmaxP
-	 sa+QCt3teevZMFpjxRXoTQGQi+rAxsWO2IYHqssaIixM3OJtK7bYDqPNb4oysOGvUD
-	 +U8NQ2TeJ0hjtEFPogx0MeZWyMT1ekRKdeg6oTj8=
+	b=teUflb4s0kDUFysUs6UNs2s/DaHmW4bsi48MX8ZJqUT4QT/9+l+PkAbfDj4KOIPdN
+	 vkYSEDuvo8FJU/Vq9mXLm3deuos5y+a3H91dVYzcPFIsjv+ZbhlvdcT10Wu6Dj2vD8
+	 vB0hLHK8aJ+5gqu8/TgLgWaQcOIesPs5at6R7xiM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728461AbfFANYK (ORCPT
+        id S1729398AbfFANeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:24:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54056 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:34:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729147AbfFANYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:24:05 -0400
+        id S1728171AbfFANXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:23:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A3E027355;
-        Sat,  1 Jun 2019 13:24:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF0D927360;
+        Sat,  1 Jun 2019 13:23:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395444;
-        bh=dg/hQgmd7Dh998D1vF9dt1j5c4/F+dz2LDsSHZxNSkI=;
+        s=default; t=1559395431;
+        bh=hmHDqocuR+fOA+hANEpWDXA5DiRouRUxCAjHS6ovgmk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vx54991IOXa1TvoMVx5m7NUe+lkj6rr3frz0zDt7WjM8z/TD9/3jLJhO8sWXc5Gdz
-         Uwi6xgap+THUUklGripJ8eCSw4sPe4Z3iysIkrsgFt5yOEnSKSN7j9DtEten14/qu7
-         dZYvZhRLoJTK1DnJj4aak/rdcuKIbOxjjU1RiPl0=
+        b=jB5GxqqwAXMO+h3YER2OBltyd4Q7QgQGJr9pzu/use9/gZkX97SOduEjxoPrEKuUZ
+         DVLri/E9LQsTr3AhWtcYPu+8eUCtVq/UFaw7w4Bw7DP4rZUgr3KWaw/rde3GsFLyd7
+         eB/odyD6EiTLwqRYITv5E0bUiBQQUXGJOPrRMrjA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
+Cc:     Christian Brauner <christian@brauner.io>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Waiman Long <longman@redhat.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.14 06/99] mm/hmm: select mmu notifier when selecting HMM
-Date:   Sat,  1 Jun 2019 09:22:13 -0400
-Message-Id: <20190601132346.26558-6-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 03/99] sysctl: return -EINVAL if val violates minmax
+Date:   Sat,  1 Jun 2019 09:22:10 -0400
+Message-Id: <20190601132346.26558-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132346.26558-1-sashal@kernel.org>
 References: <20190601132346.26558-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -70,50 +68,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jérôme Glisse <jglisse@redhat.com>
+From: Christian Brauner <christian@brauner.io>
 
-[ Upstream commit 734fb89968900b5c5f8edd5038bd4cdeab8c61d2 ]
+[ Upstream commit e260ad01f0aa9e96b5386d5cd7184afd949dc457 ]
 
-To avoid random config build issue, select mmu notifier when HMM is
-selected.  In any cases when HMM get selected it will be by users that
-will also wants the mmu notifier.
+Currently when userspace gives us a values that overflow e.g.  file-max
+and other callers of __do_proc_doulongvec_minmax() we simply ignore the
+new value and leave the current value untouched.
 
-Link: http://lkml.kernel.org/r/20190403193318.16478-2-jglisse@redhat.com
-Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
-Acked-by: Balbir Singh <bsingharora@gmail.com>
-Cc: Ralph Campbell <rcampbell@nvidia.com>
-Cc: John Hubbard <jhubbard@nvidia.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Souptick Joarder <jrdr.linux@gmail.com>
+This can be problematic as it gives the illusion that the limit has
+indeed be bumped when in fact it failed.  This commit makes sure to
+return EINVAL when an overflow is detected.  Please note that this is a
+userspace facing change.
+
+Link: http://lkml.kernel.org/r/20190210203943.8227-4-christian@brauner.io
+Signed-off-by: Christian Brauner <christian@brauner.io>
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Dominik Brodowski <linux@dominikbrodowski.net>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Joe Lawrence <joe.lawrence@redhat.com>
+Cc: Waiman Long <longman@redhat.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/sysctl.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/mm/Kconfig b/mm/Kconfig
-index 59efbd3337e0c..cc4d633947bfa 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -708,12 +708,12 @@ config MIGRATE_VMA_HELPER
- 
- config HMM
- 	bool
-+	select MMU_NOTIFIER
- 	select MIGRATE_VMA_HELPER
- 
- config HMM_MIRROR
- 	bool "HMM mirror CPU page table into a device page table"
- 	depends on ARCH_HAS_HMM
--	select MMU_NOTIFIER
- 	select HMM
- 	help
- 	  Select HMM_MIRROR if you want to mirror range of the CPU page table of a
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index f13601a616ad6..cfc2c0d1369ab 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -2732,8 +2732,10 @@ static int __do_proc_doulongvec_minmax(void *data, struct ctl_table *table, int
+ 			if (neg)
+ 				continue;
+ 			val = convmul * val / convdiv;
+-			if ((min && val < *min) || (max && val > *max))
+-				continue;
++			if ((min && val < *min) || (max && val > *max)) {
++				err = -EINVAL;
++				break;
++			}
+ 			*i = val;
+ 		} else {
+ 			val = convdiv * (*i) / convmul;
 -- 
 2.20.1
 
