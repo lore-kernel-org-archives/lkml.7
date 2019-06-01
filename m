@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC0FDC28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FCDC28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD2CC27694
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA2C227682
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:41:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396500;
-	bh=A4/NetqUtcNLkyBmze+0c1akfZnG/G1wfiwTCwo3EgY=;
+	s=default; t=1559396502;
+	bh=VJXdiM0UCZ55BzcrYVIp2IYpcyvmtSQqPebIULr9+q8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lBfuqdZ5C8Y991rj0OJbF21sz+R6Loi8JVwlyWYbRGiMAddf5AtaKNv92HUf6aGfG
-	 gbvILm8f+YGCDmrcW9cCV/gMPrJ9ZtsVMqOxgXC0dgnhce/ASdaoG7gEhhilRwo7fy
-	 uK7MFj2V6JAM8AZl3WyZDlRt1x7LJy5HXT7zqJJ8=
+	b=gpcy6qKqAe6SWqyHDUq4hdO6l8zyr0SdWs0r8qqME9H2/CGNMXJcmASMwhja7O2Ro
+	 E58HMPLBlLV++NRMxHob9yzKi+d2mm8BXuLVZMdQAjPL+V+2UQpiYF1tHwwmBpM9mY
+	 Z/7KQ8hfp3V+6EmcM5ViD5WmeBthkPntwBqH33GQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbfFANTC (ORCPT
+        id S1728887AbfFANlm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:19:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46164 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:41:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728021AbfFANS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:18:58 -0400
+        id S1728054AbfFANTD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:19:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F8C2251C3;
-        Sat,  1 Jun 2019 13:18:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A3C027280;
+        Sat,  1 Jun 2019 13:19:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395138;
-        bh=A4/NetqUtcNLkyBmze+0c1akfZnG/G1wfiwTCwo3EgY=;
+        s=default; t=1559395142;
+        bh=VJXdiM0UCZ55BzcrYVIp2IYpcyvmtSQqPebIULr9+q8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VUIfiDQOZ8tK+MDLJ6Sin7Qovqktq19Bk2Q5uafCclFjkyn9WpPhs97RFzaWPqmOC
-         4kqLeFCzwyySsQlYS1v6spdtKexjanVrGqXGxYWQnyH9jXezbg58DWluQ48KggrKe8
-         WW9WwxmxhVa5nxPFd3FbFVQN3kld1IAkykOK0RKs=
+        b=wF0iOvE0lxF6NtYRK12cIsNsKe5cVagjbpSqv8WKAfMopjd8demoELRH1E6ujrBVL
+         jjWZxLZo6regZMRY6Jpfaxhelc6+WHl4neQ/yRPvC83fBfBfbWAOTso9Wjw8emqdK7
+         mnO1Q/BtRg8wV+K592tqCmDJAScFKNr9wYfXr3go=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 060/186] configfs: fix possible use-after-free in configfs_register_group
-Date:   Sat,  1 Jun 2019 09:14:36 -0400
-Message-Id: <20190601131653.24205-60-sashal@kernel.org>
+Cc:     Ronnie Sahlberg <lsahlber@redhat.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 062/186] cifs: fix credits leak for SMB1 oplock breaks
+Date:   Sat,  1 Jun 2019 09:14:38 -0400
+Message-Id: <20190601131653.24205-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131653.24205-1-sashal@kernel.org>
 References: <20190601131653.24205-1-sashal@kernel.org>
@@ -58,135 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Ronnie Sahlberg <lsahlber@redhat.com>
 
-[ Upstream commit 35399f87e271f7cf3048eab00a421a6519ac8441 ]
+[ Upstream commit d69cb728e70c40268762182a62f5d5d6fa51c5b2 ]
 
-In configfs_register_group(), if create_default_group() failed, we
-forget to unlink the group. It will left a invalid item in the parent list,
-which may trigger the use-after-free issue seen below:
+For SMB1 oplock breaks we would grab one credit while sending the PDU
+but we would never relese the credit back since we will never receive a
+response to this from the server. Eventuallt this would lead to a hang
+once all credits are leaked.
 
-BUG: KASAN: use-after-free in __list_add_valid+0xd4/0xe0 lib/list_debug.c:26
-Read of size 8 at addr ffff8881ef61ae20 by task syz-executor.0/5996
+Fix this by defining a new flag CIFS_NO_SRV_RSP which indicates that there
+is no server response to this command and thus we need to add any credits back
+immediately after sending the PDU.
 
-CPU: 1 PID: 5996 Comm: syz-executor.0 Tainted: G         C        5.0.0+ #5
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xa9/0x10e lib/dump_stack.c:113
- print_address_description+0x65/0x270 mm/kasan/report.c:187
- kasan_report+0x149/0x18d mm/kasan/report.c:317
- __list_add_valid+0xd4/0xe0 lib/list_debug.c:26
- __list_add include/linux/list.h:60 [inline]
- list_add_tail include/linux/list.h:93 [inline]
- link_obj+0xb0/0x190 fs/configfs/dir.c:759
- link_group+0x1c/0x130 fs/configfs/dir.c:784
- configfs_register_group+0x56/0x1e0 fs/configfs/dir.c:1751
- configfs_register_default_group+0x72/0xc0 fs/configfs/dir.c:1834
- ? 0xffffffffc1be0000
- iio_sw_trigger_init+0x23/0x1000 [industrialio_sw_trigger]
- do_one_initcall+0xbc/0x47d init/main.c:887
- do_init_module+0x1b5/0x547 kernel/module.c:3456
- load_module+0x6405/0x8c10 kernel/module.c:3804
- __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
- do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x462e99
-Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f494ecbcc58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-RDX: 0000000000000000 RSI: 0000000020000180 RDI: 0000000000000003
-RBP: 00007f494ecbcc70 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f494ecbd6bc
-R13: 00000000004bcefa R14: 00000000006f6fb0 R15: 0000000000000004
-
-Allocated by task 5987:
- set_track mm/kasan/common.c:87 [inline]
- __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:497
- kmalloc include/linux/slab.h:545 [inline]
- kzalloc include/linux/slab.h:740 [inline]
- configfs_register_default_group+0x4c/0xc0 fs/configfs/dir.c:1829
- 0xffffffffc1bd0023
- do_one_initcall+0xbc/0x47d init/main.c:887
- do_init_module+0x1b5/0x547 kernel/module.c:3456
- load_module+0x6405/0x8c10 kernel/module.c:3804
- __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
- do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 5987:
- set_track mm/kasan/common.c:87 [inline]
- __kasan_slab_free+0x130/0x180 mm/kasan/common.c:459
- slab_free_hook mm/slub.c:1429 [inline]
- slab_free_freelist_hook mm/slub.c:1456 [inline]
- slab_free mm/slub.c:3003 [inline]
- kfree+0xe1/0x270 mm/slub.c:3955
- configfs_register_default_group+0x9a/0xc0 fs/configfs/dir.c:1836
- 0xffffffffc1bd0023
- do_one_initcall+0xbc/0x47d init/main.c:887
- do_init_module+0x1b5/0x547 kernel/module.c:3456
- load_module+0x6405/0x8c10 kernel/module.c:3804
- __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
- do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff8881ef61ae00
- which belongs to the cache kmalloc-192 of size 192
-The buggy address is located 32 bytes inside of
- 192-byte region [ffff8881ef61ae00, ffff8881ef61aec0)
-The buggy address belongs to the page:
-page:ffffea0007bd8680 count:1 mapcount:0 mapping:ffff8881f6c03000 index:0xffff8881ef61a700
-flags: 0x2fffc0000000200(slab)
-raw: 02fffc0000000200 ffffea0007ca4740 0000000500000005 ffff8881f6c03000
-raw: ffff8881ef61a700 000000008010000c 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8881ef61ad00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff8881ef61ad80: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
->ffff8881ef61ae00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                               ^
- ffff8881ef61ae80: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
- ffff8881ef61af00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-
-Fixes: 5cf6a51e6062 ("configfs: allow dynamic group creation")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+CC: Stable <stable@vger.kernel.org> #v5.0+
+Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/configfs/dir.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ fs/cifs/cifsglob.h  |  1 +
+ fs/cifs/cifssmb.c   |  2 +-
+ fs/cifs/transport.c | 10 +++++-----
+ 3 files changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/fs/configfs/dir.c b/fs/configfs/dir.c
-index 39843fa7e11b0..920d350df37b6 100644
---- a/fs/configfs/dir.c
-+++ b/fs/configfs/dir.c
-@@ -1755,12 +1755,19 @@ int configfs_register_group(struct config_group *parent_group,
+diff --git a/fs/cifs/cifsglob.h b/fs/cifs/cifsglob.h
+index 585ad3207cb12..607468948f72b 100644
+--- a/fs/cifs/cifsglob.h
++++ b/fs/cifs/cifsglob.h
+@@ -1687,6 +1687,7 @@ static inline bool is_retryable_error(int error)
  
- 	inode_lock_nested(d_inode(parent), I_MUTEX_PARENT);
- 	ret = create_default_group(parent_group, group);
--	if (!ret) {
--		spin_lock(&configfs_dirent_lock);
--		configfs_dir_set_ready(group->cg_item.ci_dentry->d_fsdata);
--		spin_unlock(&configfs_dirent_lock);
--	}
-+	if (ret)
-+		goto err_out;
-+
-+	spin_lock(&configfs_dirent_lock);
-+	configfs_dir_set_ready(group->cg_item.ci_dentry->d_fsdata);
-+	spin_unlock(&configfs_dirent_lock);
-+	inode_unlock(d_inode(parent));
-+	return 0;
-+err_out:
- 	inode_unlock(d_inode(parent));
-+	mutex_lock(&subsys->su_mutex);
-+	unlink_group(group);
-+	mutex_unlock(&subsys->su_mutex);
- 	return ret;
- }
- EXPORT_SYMBOL(configfs_register_group);
+ #define   CIFS_HAS_CREDITS 0x0400    /* already has credits */
+ #define   CIFS_TRANSFORM_REQ 0x0800    /* transform request before sending */
++#define   CIFS_NO_SRV_RSP    0x1000    /* there is no server response */
+ 
+ /* Security Flags: indicate type of session setup needed */
+ #define   CIFSSEC_MAY_SIGN	0x00001
+diff --git a/fs/cifs/cifssmb.c b/fs/cifs/cifssmb.c
+index f43747c062a70..6050851edcb82 100644
+--- a/fs/cifs/cifssmb.c
++++ b/fs/cifs/cifssmb.c
+@@ -2540,7 +2540,7 @@ CIFSSMBLock(const unsigned int xid, struct cifs_tcon *tcon,
+ 
+ 	if (lockType == LOCKING_ANDX_OPLOCK_RELEASE) {
+ 		/* no response expected */
+-		flags = CIFS_ASYNC_OP | CIFS_OBREAK_OP;
++		flags = CIFS_NO_SRV_RSP | CIFS_ASYNC_OP | CIFS_OBREAK_OP;
+ 		pSMB->Timeout = 0;
+ 	} else if (waitFlag) {
+ 		flags = CIFS_BLOCKING_OP; /* blocking operation, no timeout */
+diff --git a/fs/cifs/transport.c b/fs/cifs/transport.c
+index 1de8e996e566f..72e242c49ca11 100644
+--- a/fs/cifs/transport.c
++++ b/fs/cifs/transport.c
+@@ -1054,8 +1054,11 @@ compound_send_recv(const unsigned int xid, struct cifs_ses *ses,
+ 
+ 	mutex_unlock(&ses->server->srv_mutex);
+ 
+-	if (rc < 0) {
+-		/* Sending failed for some reason - return credits back */
++	/*
++	 * If sending failed for some reason or it is an oplock break that we
++	 * will not receive a response to - return credits back
++	 */
++	if (rc < 0 || (flags & CIFS_NO_SRV_RSP)) {
+ 		for (i = 0; i < num_rqst; i++)
+ 			add_credits(ses->server, &credits[i], optype);
+ 		goto out;
+@@ -1076,9 +1079,6 @@ compound_send_recv(const unsigned int xid, struct cifs_ses *ses,
+ 		smb311_update_preauth_hash(ses, rqst[0].rq_iov,
+ 					   rqst[0].rq_nvec);
+ 
+-	if ((flags & CIFS_TIMEOUT_MASK) == CIFS_ASYNC_OP)
+-		goto out;
+-
+ 	for (i = 0; i < num_rqst; i++) {
+ 		rc = wait_for_response(ses->server, midQ[i]);
+ 		if (rc != 0)
 -- 
 2.20.1
 
