@@ -4,58 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FCAC28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8671CC28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 824702763A
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5566927623
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:39:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396380;
-	bh=WY1hPdJyYKI9OsjIk8QB655ji3F1XMrtlczo3w6SXlY=;
+	s=default; t=1559396386;
+	bh=hCD5vPJJgdhGGe/HgVH1HOOfxm4+Y+J0sGXQXxItVZA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ytwqvgP8q395znOLb4aVVW1bSM9qEmxv13MFlNHo9nYnM+tX+XU1J+HYcg5Z+2vhl
-	 2P382s8GEYdoCnua7oob+/gwRODmbJtY01zlZmkHXYjkITnCT3NAmR+iig5n7B4qB4
-	 bfnzjhB01z+Gm4/GQ92DwTVzTfdwuTJ8+z4GP1JE=
+	b=W3vgIawt4J0RzDL9CqUgX+jtS8z4aGwm6crPFpvuHTbjHXCUg1tRUL1O6GrAnV06+
+	 zTOAe5EVUaLBNv1UoC94acVkf7rvvmsLzEBFwlOXrYDCHr0KW3Km6Tu1GPDc742h+x
+	 9zobdaebV+MsfhDBDa9HXRPgqtGAsp/PeYG68sYc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729371AbfFANjf (ORCPT
+        id S1728177AbfFANU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:39:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48414 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:20:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728389AbfFANVI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:21:08 -0400
+        id S1727981AbfFANU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:20:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D541272F3;
-        Sat,  1 Jun 2019 13:21:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C907272E0;
+        Sat,  1 Jun 2019 13:20:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395268;
-        bh=WY1hPdJyYKI9OsjIk8QB655ji3F1XMrtlczo3w6SXlY=;
+        s=default; t=1559395255;
+        bh=hCD5vPJJgdhGGe/HgVH1HOOfxm4+Y+J0sGXQXxItVZA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v26wxSIUxBXUkolnycaBgG3rJMzvytkKyeFrOmJzWgRl5bZBcz3MVJI6kLAyUymTQ
-         5v12YE3WxyUZohJTkTGY5z7vpr0zfLgMCxirFnm51UqGOCVPDtDdVQatgZAF07GTOK
-         V6zc5GJ+GdniURqHDtLF3otGsTs/r/Qg53RN8OsQ=
+        b=gIPqtohIhhngDMOy4/r4fpQoMGHwhvfzppSFPnARJmCvuK6aqm20MT9FJFpt+wPEj
+         ui0L6eQqSNa9yf5epzCvMqFaX+fd7LBsJIOBglcBfQXRMJYlkz14wHX6pNR5ABg4/V
+         NTOQ3EVqfZKHNl0G43hS1mgpdy1vjbsjLLrQNoN4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Krzesimir Nowak <krzesimir@kinvolk.io>,
-        Alban Crequy <alban@kinvolk.io>,
-        =?UTF-8?q?Iago=20L=C3=B3pez=20Galeiras?= <iago@kinvolk.io>,
-        Yonghong Song <yhs@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 033/173] bpf: fix undefined behavior in narrow load handling
-Date:   Sat,  1 Jun 2019 09:17:05 -0400
-Message-Id: <20190601131934.25053-33-sashal@kernel.org>
+Cc:     Ben Skeggs <bskeggs@redhat.com>, Lyude Paul <lyude@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.0 029/173] drm/nouveau/kms/gf119-gp10x: push HeadSetControlOutputResource() mthd when encoders change
+Date:   Sat,  1 Jun 2019 09:17:01 -0400
+Message-Id: <20190601131934.25053-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131934.25053-1-sashal@kernel.org>
 References: <20190601131934.25053-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -64,53 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzesimir Nowak <krzesimir@kinvolk.io>
+From: Ben Skeggs <bskeggs@redhat.com>
 
-[ Upstream commit e2f7fc0ac6957cabff4cecf6c721979b571af208 ]
+[ Upstream commit a0b694d0af21c9993d1a39a75fd814bd48bf7eb4 ]
 
-Commit 31fd85816dbe ("bpf: permits narrower load from bpf program
-context fields") made the verifier add AND instructions to clear the
-unwanted bits with a mask when doing a narrow load. The mask is
-computed with
+HW has error checks in place which check that pixel depth is explicitly
+provided on DP, while HDMI has a "default" setting that we use.
 
-  (1 << size * 8) - 1
+In multi-display configurations with identical modelines, but different
+protocols (HDMI + DP, in this case), it was possible for the DP head to
+get swapped to the head which previously drove the HDMI output, without
+updating HeadSetControlOutputResource(), triggering the error check and
+hanging the core update.
 
-where "size" is the size of the narrow load. When doing a 4 byte load
-of a an 8 byte field the verifier shifts the literal 1 by 32 places to
-the left. This results in an overflow of a signed integer, which is an
-undefined behavior. Typically, the computed mask was zero, so the
-result of the narrow load ended up being zero too.
-
-Cast the literal to long long to avoid overflows. Note that narrow
-load of the 4 byte fields does not have the undefined behavior,
-because the load size can only be either 1 or 2 bytes, so shifting 1
-by 8 or 16 places will not overflow it. And reading 4 bytes would not
-be a narrow load of a 4 bytes field.
-
-Fixes: 31fd85816dbe ("bpf: permits narrower load from bpf program context fields")
-Reviewed-by: Alban Crequy <alban@kinvolk.io>
-Reviewed-by: Iago López Galeiras <iago@kinvolk.io>
-Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
-Cc: Yonghong Song <yhs@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Reported-by: Lyude Paul <lyude@redhat.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/verifier.c | 2 +-
+ drivers/gpu/drm/nouveau/dispnv50/head.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index d53825b6fcd94..3b287b42212ea 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -6612,7 +6612,7 @@ static int convert_ctx_accesses(struct bpf_verifier_env *env)
- 									insn->dst_reg,
- 									shift);
- 				insn_buf[cnt++] = BPF_ALU64_IMM(BPF_AND, insn->dst_reg,
--								(1 << size * 8) - 1);
-+								(1ULL << size * 8) - 1);
- 			}
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/head.c b/drivers/gpu/drm/nouveau/dispnv50/head.c
+index ac97ebce5b351..4f0b254ebabf2 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/head.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/head.c
+@@ -306,7 +306,7 @@ nv50_head_atomic_check(struct drm_crtc *crtc, struct drm_crtc_state *state)
+ 			asyh->set.or = head->func->or != NULL;
  		}
  
+-		if (asyh->state.mode_changed)
++		if (asyh->state.mode_changed || asyh->state.connectors_changed)
+ 			nv50_head_atomic_check_mode(head, asyh);
+ 
+ 		if (asyh->state.color_mgmt_changed ||
 -- 
 2.20.1
 
