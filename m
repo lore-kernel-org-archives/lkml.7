@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D510DC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19735C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE7A027675
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:41:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3F4D2767D
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:41:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396469;
-	bh=iAhwYOxkWlSvfVSnrLCFU2gNm87V3tU6asxy1IXvgBo=;
+	s=default; t=1559396472;
+	bh=82S1Qqa4eAW0+cSX+eHPI4DSwXmWn7CYa0kAFadQiNg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bMIi5NHJ7s6tSx7vdV6U+0Nyv6QPjypl5yIpHOWYupxj+Dbo+B+r7Ph2xKPTLFesR
-	 uEwsrXfNOt1+ONjzUioIYsEMXwYQpxlbwon+7jQojIlqApSbLTFtEkHYY3Ie5VbZ1T
-	 YLpFAWab8omAOXTSNDjaxkf+acIZ5mEFHhiTP+NU=
+	b=NH/pKhdf4qMZKaKlRXNn/3pO9lhLdclHpn7Hyz6VvVMCTjndYLOxbrKl8tTiWcscs
+	 LqWlawgiW30jRTCdpqQl0W6Ff38VZqbVNg0tExxr21lLOqj5BkGgGqg1nwsZRFNdq1
+	 KY4FAhE1EbgcyRA9nnieeLdBTFbG7nfUWnkdStmo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728189AbfFANTU (ORCPT
+        id S1728176AbfFANTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:19:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46446 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:19:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728151AbfFANTP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:19:15 -0400
+        id S1728141AbfFANTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:19:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4480255FF;
-        Sat,  1 Jun 2019 13:19:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3C7127280;
+        Sat,  1 Jun 2019 13:19:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395154;
-        bh=iAhwYOxkWlSvfVSnrLCFU2gNm87V3tU6asxy1IXvgBo=;
+        s=default; t=1559395153;
+        bh=82S1Qqa4eAW0+cSX+eHPI4DSwXmWn7CYa0kAFadQiNg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nTF+hzkUhI4tGr897dtaXsbK/RmLKfKcdCIJ4ZqAE9Nc2j1jMfZrq2aG5Yxo84rEW
-         FNdOFJgIcJ30G2Rnvkdxizg7CG7iUTaFYCRWhdZNRoik2rs08UeLKBvtAxe40vtl88
-         GfJ2PWRJ8B0vww2cRPItiDsy+x/X6T3/MRr2Eopw=
+        b=0YN4p4UCq7pHmLso+uGE0m3J3XUwOgAgYFtgJs2KbkHxbUJnmFkI9+PLUiAjXvgRP
+         gppA/7RtRzBpMLPX1NuLd9M4HY2dSefNZFwuV3UEHiYXJWp0UMTUgvyuEyjDlNx13a
+         B9qFpWbfDOXdItc1FPvCZ/oC7aeyM0JWwEJ+reH4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Taehee Yoo <ap420073@gmail.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 069/186] netfilter: nf_flow_table: fix missing error check for rhashtable_insert_fast
-Date:   Sat,  1 Jun 2019 09:14:45 -0400
-Message-Id: <20190601131653.24205-69-sashal@kernel.org>
+Cc:     Ludovic Barre <ludovic.barre@st.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 068/186] mmc: mmci: Prevent polling for busy detection in IRQ context
+Date:   Sat,  1 Jun 2019 09:14:44 -0400
+Message-Id: <20190601131653.24205-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131653.24205-1-sashal@kernel.org>
 References: <20190601131653.24205-1-sashal@kernel.org>
@@ -61,59 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Ludovic Barre <ludovic.barre@st.com>
 
-[ Upstream commit 43c8f131184faf20c07221f3e09724611c6525d8 ]
+[ Upstream commit 8520ce1e17799b220ff421d4f39438c9c572ade3 ]
 
-rhashtable_insert_fast() may return an error value when memory
-allocation fails, but flow_offload_add() does not check for errors.
-This patch just adds missing error checking.
+The IRQ handler, mmci_irq(), loops until all status bits have been cleared.
+However, the status bit signaling busy in variant->busy_detect_flag, may be
+set even if busy detection isn't monitored for the current request.
 
-Fixes: ac2a66665e23 ("netfilter: add generic flow table infrastructure")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+This may be the case for the CMD11 when switching the I/O voltage, which
+leads to that mmci_irq() busy loops in IRQ context. Fix this problem, by
+clearing the status bit for busy, before continuing to validate the
+condition for the loop. This is safe, because the busy status detection has
+already been taken care of by mmci_cmd_irq().
+
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_flow_table_core.c | 25 ++++++++++++++++++-------
- 1 file changed, 18 insertions(+), 7 deletions(-)
+ drivers/mmc/host/mmci.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/net/netfilter/nf_flow_table_core.c b/net/netfilter/nf_flow_table_core.c
-index 7aabfd4b1e50b..a9e4f74b1ff6e 100644
---- a/net/netfilter/nf_flow_table_core.c
-+++ b/net/netfilter/nf_flow_table_core.c
-@@ -185,14 +185,25 @@ static const struct rhashtable_params nf_flow_offload_rhash_params = {
+diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+index 387ff14587b87..e27978c47db7d 100644
+--- a/drivers/mmc/host/mmci.c
++++ b/drivers/mmc/host/mmci.c
+@@ -1550,9 +1550,10 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
+ 		}
  
- int flow_offload_add(struct nf_flowtable *flow_table, struct flow_offload *flow)
- {
--	flow->timeout = (u32)jiffies;
-+	int err;
+ 		/*
+-		 * Don't poll for busy completion in irq context.
++		 * Busy detection has been handled by mmci_cmd_irq() above.
++		 * Clear the status bit to prevent polling in IRQ context.
+ 		 */
+-		if (host->variant->busy_detect && host->busy_status)
++		if (host->variant->busy_detect_flag)
+ 			status &= ~host->variant->busy_detect_flag;
  
--	rhashtable_insert_fast(&flow_table->rhashtable,
--			       &flow->tuplehash[FLOW_OFFLOAD_DIR_ORIGINAL].node,
--			       nf_flow_offload_rhash_params);
--	rhashtable_insert_fast(&flow_table->rhashtable,
--			       &flow->tuplehash[FLOW_OFFLOAD_DIR_REPLY].node,
--			       nf_flow_offload_rhash_params);
-+	err = rhashtable_insert_fast(&flow_table->rhashtable,
-+				     &flow->tuplehash[0].node,
-+				     nf_flow_offload_rhash_params);
-+	if (err < 0)
-+		return err;
-+
-+	err = rhashtable_insert_fast(&flow_table->rhashtable,
-+				     &flow->tuplehash[1].node,
-+				     nf_flow_offload_rhash_params);
-+	if (err < 0) {
-+		rhashtable_remove_fast(&flow_table->rhashtable,
-+				       &flow->tuplehash[0].node,
-+				       nf_flow_offload_rhash_params);
-+		return err;
-+	}
-+
-+	flow->timeout = (u32)jiffies;
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(flow_offload_add);
+ 		ret = 1;
 -- 
 2.20.1
 
