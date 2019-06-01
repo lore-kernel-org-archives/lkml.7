@@ -2,368 +2,143 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BC2C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 11:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 023B0C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 12:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78D1B27227
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 11:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2C2A270D7
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 12:07:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="rxL49L7/";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="rxL49L7/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EKAku0AQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbfFALpV (ORCPT
+        id S1727111AbfFAMHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 07:45:21 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:52032 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726089AbfFALpV (ORCPT
+        Sat, 1 Jun 2019 08:07:13 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:46064 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbfFAMHM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 07:45:21 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 8F5828EE134;
-        Sat,  1 Jun 2019 04:45:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1559389520;
-        bh=67HF3QVZ2A2To2qFqZa4kJCNcserrtD1fOcFO/nMTJY=;
-        h=Subject:From:To:Cc:Date:From;
-        b=rxL49L7/w9S3RoL2DRTeJ/NFYPj7erMdbD9qoEuBGAFkTlCOZvMwEY/NvvozT9bK9
-         8hS6T83Y/Vo5CucCmy4sXBrWl2oox9sEwltcRHYm0/Q1IW7UK0JaDnYk5H5STbj9EB
-         cbHFV+huAQhVZA9UTeH0fm/VXldYu0tSUcLegn88=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 8Q66XVI67O6C; Sat,  1 Jun 2019 04:45:20 -0700 (PDT)
-Received: from [172.21.11.227] (unknown [146.185.56.194])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id DC8368EE10A;
-        Sat,  1 Jun 2019 04:45:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1559389520;
-        bh=67HF3QVZ2A2To2qFqZa4kJCNcserrtD1fOcFO/nMTJY=;
-        h=Subject:From:To:Cc:Date:From;
-        b=rxL49L7/w9S3RoL2DRTeJ/NFYPj7erMdbD9qoEuBGAFkTlCOZvMwEY/NvvozT9bK9
-         8hS6T83Y/Vo5CucCmy4sXBrWl2oox9sEwltcRHYm0/Q1IW7UK0JaDnYk5H5STbj9EB
-         cbHFV+huAQhVZA9UTeH0fm/VXldYu0tSUcLegn88=
-Message-ID: <1559389512.2947.33.camel@HansenPartnership.com>
-Subject: [GIT PULL] SCSI fixes for 5.2-rc1
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Sat, 01 Jun 2019 14:45:12 +0300
+        Sat, 1 Jun 2019 08:07:12 -0400
+Received: by mail-ed1-f68.google.com with SMTP id f20so19023119edt.12;
+        Sat, 01 Jun 2019 05:07:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v/1dgR8R4KPUnRWOObGMCnhpJN8HCuXuRSPEAAZVh/Q=;
+        b=EKAku0AQ4DAoef2v9ZUtlvGNZ6X/c3OuGdNhUZ2ChWlC1VAr8FIZSXHNt6ngj5Rxhh
+         KmGyDrXKjJanH2KJz4/qjWLTQ4S+0D8Q4nNyhJ+l0d1a/VAn6aMr84K5FSvfwbKgD8jd
+         woi0l3SMDceDhkPg2ljBOwUVkorUaUjWRoBWUYY/9EMpLVyM9lPu/hJO16nuWcpjtgR3
+         iYb/Xapcr2QS1tfHzgpLBKiR7ZhmkLlUFyoJzjZVibGGaIs2nE8SIlsrhYYMpVUv5w69
+         ZBeLF9vPaiIcWckVyHNIuXJYcxQ93kUuUBpQCrgLaXmAvl85tifY4mlpSrzBO7pEfzPt
+         7+ZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v/1dgR8R4KPUnRWOObGMCnhpJN8HCuXuRSPEAAZVh/Q=;
+        b=f/8W059CdDtYHFx16tfSEmn6+K6QMh1pyq6vnQfCiHnBEzsfFZJHCl2jG5dA2xf0vM
+         J9heyhx6m3I+U0UDXpSHVLCin3EHu9lpF3IzyX5qSCkKtHP2z0KHQ2BsazMoA86h1bc8
+         he76oMNXsuMZsnHEAPW/TtjPzcecG/0GObikqinHoti0wpHNGvS4m5qc9txpMsjgT5c6
+         O3LtmvYRxL4m0B5nwUzaoYFHgWeNvkBeqCpLuI969pi1ZKNJaglOpf7U4anhZqm6iGJ4
+         wxHCkil8C1Akt4DDzdyZTec1+rYh67NMvblGNWjhoRUq0xynuiAC6tHG7L/0Hk2ZnSqO
+         mcHQ==
+X-Gm-Message-State: APjAAAWd8Nl2R5R/Es3OGIJBVxnHoNlOjYL6kvZqwKzr7X4K1RQWu1rB
+        3IZUnpIWQhrGdRRkiKS1dNfXrzPvhxHetUsh3Qw=
+X-Google-Smtp-Source: APXvYqxJN71xBoJwAufBcKZ3S0D6alWut4d77EFvU604XKgk13n0hgAwW1VgSOIESFZ2W6P5LSbxPZs1ILsBXEfdJo0=
+X-Received: by 2002:a17:906:1483:: with SMTP id x3mr13965430ejc.90.1559390830330;
+ Sat, 01 Jun 2019 05:07:10 -0700 (PDT)
+MIME-Version: 1.0
+References: <CA+h21hrBwR4Sow7q0_rS1u2md1M4bSAJt8FO5+VLFiu9UGnvjA@mail.gmail.com>
+ <20190531043417.6phscbpmo6krvxam@localhost> <CA+h21hp9DfW3wFy4YbHMU31rBHyrnUTdF4kKwX36h9vHOW2COw@mail.gmail.com>
+ <20190531140841.j4f72rlojmaayqr5@localhost> <CA+h21hroywaij3gyO0u6v+GFVO2Fv_dP_a+L3oMGpQH8mQgJ5g@mail.gmail.com>
+ <20190531151151.k3a2wdf5f334qmqh@localhost> <CA+h21hpHKbTc8toPZf0iprW1b4v6ErnRaSM=C6vk-GCiXM8NvA@mail.gmail.com>
+ <20190531160909.jh43saqvichukv7p@localhost> <CA+h21hpVrVNJTFj4DHHV+zphs2MjyRO-XZsM3D-STra+BYYHtw@mail.gmail.com>
+ <CA+h21houLC7TGJYQ28LxiUxyBE7ju2ZiRcUd41aGo_=uAhgVgQ@mail.gmail.com>
+ <20190601050714.xylw5noxka7sa4p3@localhost> <CA+h21hr3+vUjS9_m=CtEbFeN9Bgxkg8b-4zuXSMnZXGtfUEOsQ@mail.gmail.com>
+In-Reply-To: <CA+h21hr3+vUjS9_m=CtEbFeN9Bgxkg8b-4zuXSMnZXGtfUEOsQ@mail.gmail.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Sat, 1 Jun 2019 15:06:59 +0300
+Message-ID: <CA+h21hpoRFCKJZWxS3QwZO6fUHOd=aZDm2A9iqZ-7V9PxCPWVg@mail.gmail.com>
+Subject: Re: [PATCH net-next 0/5] PTP support for the SJA1105 DSA driver
+To:     Richard Cochran <richardcochran@gmail.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Six minor fixes to device drivers and one to the multipath alua
-handler.  The most extensive fix is the zfcp port remove prevention
-one, but it's impact is only s390.
+On Sat, 1 Jun 2019 at 13:31, Vladimir Oltean <olteanv@gmail.com> wrote:
+>
+> On Sat, 1 Jun 2019 at 08:07, Richard Cochran <richardcochran@gmail.com> wrote:
+> >
+> > On Fri, May 31, 2019 at 09:12:03PM +0300, Vladimir Oltean wrote:
+> > > It won't work unless I make changes to dsa_switch_rcv.
+> >
+> > Or to the tagging code.
+> >
+> > > Right now taggers can only return a pointer to the skb, or NULL, case
+> > > in which DSA will free it.
+> >
+> > The tagger can re-write the skb.  Why not reform it into a PTP frame?
+> > This clever trick is what the phyter does in hardware.  See dp83640.c.
+> >
+>
+> I think you're missing the point here.
+> If I dress the meta frame into a PTP frame (btw is there any
+> preferable event message for this purpose?) then sure, I'll make
+> dsa_skb_defer_rx_timestamp call my .port_rxtstamp and I can e.g. move
+> my state machine there.
+> The problem is that in the current DSA structure, I'll still have less
+> timestampable frames waiting for a meta frame than meta frames
+> themselves. This is because not all frames that the switch takes an RX
+> timestamp for will make it to my .port_rxtstamp (in fact that is what
+> my .can_timestamp patch changes). I can put the timestampable frame in
+> a 1-entry wait queue which I'll deplete upon arrival of the first meta
+> frame, but when I get meta frames and the wait queue is empty, it can
+> mean multiple things: either DSA didn't care about this timestamp
+> (ok), or the timestampable frame got reordered or dropped by the MAC,
+> or what have you (not ok). So I can't exclude the possibility that the
+> meta frame was holding a relevant timestamp.
+> Sure, I can dress the meta frame into whatever the previous
+> MAC-trapped frame was (PTP or not) and then I'll have .port_rxtstamp
+> function see a 1-to-1 correspondence with meta frames in case
+> everything works fine. But then I'll have non-PTP meta frames leaking
+> up the stack...
+>
 
-The patch is available here:
+Actually maybe this is exactly what you meant and I didn't think it through.
+If RX timestamping is enabled, then I can just copy all MAC-trapped
+frames to a private skb in a per-driver data structure, and have DSA
+drop them.
+Then when their meta frame arrives, I can just morph them into what
+the previous frame was, just that now I'm also holding the partial
+timestamp in skb->cb.
+PTP frames will reconstruct the full timestamp without waiting for any
+meta (they are the meta), while other MAC-trapped frames (STP etc)
+will just carry a meaningless skb->cb when passed up the stack.
+In retrospect, it would have been amazing if the switch gave me the
+meta frames *before* the actual link-local frames that needed the
+timestamp.
 
-git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+Thanks!
+-Vladimir
 
-The short changelog is:
-
-Jason Yan (2):
-      scsi: libsas: delete sas port if expander discover failed
-      scsi: libsas: only clear phy->in_shutdown after shutdown event done
-
-Lianbo Jiang (1):
-      scsi: smartpqi: properly set both the DMA mask and the coherent DMA mask
-
-Steffen Maier (2):
-      scsi: zfcp: fix to prevent port_remove with pure auto scan LUNs (only sdevs)
-      scsi: zfcp: fix missing zfcp_port reference put on -EBUSY from port_remove
-
-Varun Prakash (1):
-      scsi: libcxgbi: add a check for NULL pointer in cxgbi_check_route()
-
-YueHaibing (1):
-      scsi: scsi_dh_alua: Fix possible null-ptr-deref
-
-And the diffstat:
-
- drivers/s390/scsi/zfcp_ext.h               |  1 +
- drivers/s390/scsi/zfcp_scsi.c              |  9 +++++
- drivers/s390/scsi/zfcp_sysfs.c             | 55 ++++++++++++++++++++++++++----
- drivers/s390/scsi/zfcp_unit.c              |  8 ++++-
- drivers/scsi/cxgbi/libcxgbi.c              |  4 +++
- drivers/scsi/device_handler/scsi_dh_alua.c |  6 ++--
- drivers/scsi/libsas/sas_expander.c         |  2 ++
- drivers/scsi/libsas/sas_phy.c              |  3 +-
- drivers/scsi/smartpqi/smartpqi_init.c      |  2 +-
- 9 files changed, 76 insertions(+), 14 deletions(-)
-
-With full diff below.
-
-James
-
----
-
-diff --git a/drivers/s390/scsi/zfcp_ext.h
-b/drivers/s390/scsi/zfcp_ext.h
-index c6acca521ffe..31e8a7240fd7 100644
---- a/drivers/s390/scsi/zfcp_ext.h
-+++ b/drivers/s390/scsi/zfcp_ext.h
-@@ -167,6 +167,7 @@ extern const struct attribute_group
-*zfcp_port_attr_groups[];
- extern struct mutex zfcp_sysfs_port_units_mutex;
- extern struct device_attribute *zfcp_sysfs_sdev_attrs[];
- extern struct device_attribute *zfcp_sysfs_shost_attrs[];
-+bool zfcp_sysfs_port_is_removing(const struct zfcp_port *const port);
- 
- /* zfcp_unit.c */
- extern int zfcp_unit_add(struct zfcp_port *, u64);
-diff --git a/drivers/s390/scsi/zfcp_scsi.c
-b/drivers/s390/scsi/zfcp_scsi.c
-index 221d0dfb8493..e9ded2befa0d 100644
---- a/drivers/s390/scsi/zfcp_scsi.c
-+++ b/drivers/s390/scsi/zfcp_scsi.c
-@@ -129,6 +129,15 @@ static int zfcp_scsi_slave_alloc(struct
-scsi_device *sdev)
- 
- 	zfcp_sdev->erp_action.port = port;
- 
-+	mutex_lock(&zfcp_sysfs_port_units_mutex);
-+	if (zfcp_sysfs_port_is_removing(port)) {
-+		/* port is already gone */
-+		mutex_unlock(&zfcp_sysfs_port_units_mutex);
-+		put_device(&port->dev); /* undo
-zfcp_get_port_by_wwpn() */
-+		return -ENXIO;
-+	}
-+	mutex_unlock(&zfcp_sysfs_port_units_mutex);
-+
- 	unit = zfcp_unit_find(port, zfcp_scsi_dev_lun(sdev));
- 	if (unit)
- 		put_device(&unit->dev);
-diff --git a/drivers/s390/scsi/zfcp_sysfs.c
-b/drivers/s390/scsi/zfcp_sysfs.c
-index b277be6f7611..af197e2b3e69 100644
---- a/drivers/s390/scsi/zfcp_sysfs.c
-+++ b/drivers/s390/scsi/zfcp_sysfs.c
-@@ -235,6 +235,53 @@ static ZFCP_DEV_ATTR(adapter, port_rescan,
-S_IWUSR, NULL,
- 
- DEFINE_MUTEX(zfcp_sysfs_port_units_mutex);
- 
-+static void zfcp_sysfs_port_set_removing(struct zfcp_port *const port)
-+{
-+	lockdep_assert_held(&zfcp_sysfs_port_units_mutex);
-+	atomic_set(&port->units, -1);
-+}
-+
-+bool zfcp_sysfs_port_is_removing(const struct zfcp_port *const port)
-+{
-+	lockdep_assert_held(&zfcp_sysfs_port_units_mutex);
-+	return atomic_read(&port->units) == -1;
-+}
-+
-+static bool zfcp_sysfs_port_in_use(struct zfcp_port *const port)
-+{
-+	struct zfcp_adapter *const adapter = port->adapter;
-+	unsigned long flags;
-+	struct scsi_device *sdev;
-+	bool in_use = true;
-+
-+	mutex_lock(&zfcp_sysfs_port_units_mutex);
-+	if (atomic_read(&port->units) > 0)
-+		goto unlock_port_units_mutex; /* zfcp_unit(s) under
-port */
-+
-+	spin_lock_irqsave(adapter->scsi_host->host_lock, flags);
-+	__shost_for_each_device(sdev, adapter->scsi_host) {
-+		const struct zfcp_scsi_dev *zsdev =
-sdev_to_zfcp(sdev);
-+
-+		if (sdev->sdev_state == SDEV_DEL ||
-+		    sdev->sdev_state == SDEV_CANCEL)
-+			continue;
-+		if (zsdev->port != port)
-+			continue;
-+		/* alive scsi_device under port of interest */
-+		goto unlock_host_lock;
-+	}
-+
-+	/* port is about to be removed, so no more unit_add or
-slave_alloc */
-+	zfcp_sysfs_port_set_removing(port);
-+	in_use = false;
-+
-+unlock_host_lock:
-+	spin_unlock_irqrestore(adapter->scsi_host->host_lock, flags);
-+unlock_port_units_mutex:
-+	mutex_unlock(&zfcp_sysfs_port_units_mutex);
-+	return in_use;
-+}
-+
- static ssize_t zfcp_sysfs_port_remove_store(struct device *dev,
- 					    struct device_attribute
-*attr,
- 					    const char *buf, size_t
-count)
-@@ -257,15 +304,11 @@ static ssize_t
-zfcp_sysfs_port_remove_store(struct device *dev,
- 	else
- 		retval = 0;
- 
--	mutex_lock(&zfcp_sysfs_port_units_mutex);
--	if (atomic_read(&port->units) > 0) {
-+	if (zfcp_sysfs_port_in_use(port)) {
- 		retval = -EBUSY;
--		mutex_unlock(&zfcp_sysfs_port_units_mutex);
-+		put_device(&port->dev); /* undo
-zfcp_get_port_by_wwpn() */
- 		goto out;
- 	}
--	/* port is about to be removed, so no more unit_add */
--	atomic_set(&port->units, -1);
--	mutex_unlock(&zfcp_sysfs_port_units_mutex);
- 
- 	write_lock_irq(&adapter->port_list_lock);
- 	list_del(&port->list);
-diff --git a/drivers/s390/scsi/zfcp_unit.c
-b/drivers/s390/scsi/zfcp_unit.c
-index 1bf0a0984a09..e67bf7388cae 100644
---- a/drivers/s390/scsi/zfcp_unit.c
-+++ b/drivers/s390/scsi/zfcp_unit.c
-@@ -124,7 +124,7 @@ int zfcp_unit_add(struct zfcp_port *port, u64
-fcp_lun)
- 	int retval = 0;
- 
- 	mutex_lock(&zfcp_sysfs_port_units_mutex);
--	if (atomic_read(&port->units) == -1) {
-+	if (zfcp_sysfs_port_is_removing(port)) {
- 		/* port is already gone */
- 		retval = -ENODEV;
- 		goto out;
-@@ -168,8 +168,14 @@ int zfcp_unit_add(struct zfcp_port *port, u64
-fcp_lun)
- 	write_lock_irq(&port->unit_list_lock);
- 	list_add_tail(&unit->list, &port->unit_list);
- 	write_unlock_irq(&port->unit_list_lock);
-+	/*
-+	 * lock order: shost->scan_mutex before
-zfcp_sysfs_port_units_mutex
-+	 * due to      zfcp_unit_scsi_scan() =>
-zfcp_scsi_slave_alloc()
-+	 */
-+	mutex_unlock(&zfcp_sysfs_port_units_mutex);
- 
- 	zfcp_unit_scsi_scan(unit);
-+	return retval;
- 
- out:
- 	mutex_unlock(&zfcp_sysfs_port_units_mutex);
-diff --git a/drivers/scsi/cxgbi/libcxgbi.c
-b/drivers/scsi/cxgbi/libcxgbi.c
-index 8b915d4ed98d..7d43e014bd21 100644
---- a/drivers/scsi/cxgbi/libcxgbi.c
-+++ b/drivers/scsi/cxgbi/libcxgbi.c
-@@ -639,6 +639,10 @@ cxgbi_check_route(struct sockaddr *dst_addr, int
-ifindex)
- 
- 	if (ndev->flags & IFF_LOOPBACK) {
- 		ndev = ip_dev_find(&init_net, daddr->sin_addr.s_addr);
-+		if (!ndev) {
-+			err = -ENETUNREACH;
-+			goto rel_neigh;
-+		}
- 		mtu = ndev->mtu;
- 		pr_info("rt dev %s, loopback -> %s, mtu %u.\n",
- 			n->dev->name, ndev->name, mtu);
-diff --git a/drivers/scsi/device_handler/scsi_dh_alua.c
-b/drivers/scsi/device_handler/scsi_dh_alua.c
-index d7ac498ba35a..2a9dcb8973b7 100644
---- a/drivers/scsi/device_handler/scsi_dh_alua.c
-+++ b/drivers/scsi/device_handler/scsi_dh_alua.c
-@@ -1174,10 +1174,8 @@ static int __init alua_init(void)
- 	int r;
- 
- 	kaluad_wq = alloc_workqueue("kaluad", WQ_MEM_RECLAIM, 0);
--	if (!kaluad_wq) {
--		/* Temporary failure, bypass */
--		return SCSI_DH_DEV_TEMP_BUSY;
--	}
-+	if (!kaluad_wq)
-+		return -ENOMEM;
- 
- 	r = scsi_register_device_handler(&alua_dh);
- 	if (r != 0) {
-diff --git a/drivers/scsi/libsas/sas_expander.c
-b/drivers/scsi/libsas/sas_expander.c
-index 83f2fd70ce76..9f7e2457360e 100644
---- a/drivers/scsi/libsas/sas_expander.c
-+++ b/drivers/scsi/libsas/sas_expander.c
-@@ -1019,6 +1019,8 @@ static struct domain_device
-*sas_ex_discover_expander(
- 		list_del(&child->dev_list_node);
- 		spin_unlock_irq(&parent->port->dev_list_lock);
- 		sas_put_device(child);
-+		sas_port_delete(phy->port);
-+		phy->port = NULL;
- 		return NULL;
- 	}
- 	list_add_tail(&child->siblings, &parent->ex_dev.children);
-diff --git a/drivers/scsi/libsas/sas_phy.c
-b/drivers/scsi/libsas/sas_phy.c
-index e030e1452136..b71f5ac6c7dc 100644
---- a/drivers/scsi/libsas/sas_phy.c
-+++ b/drivers/scsi/libsas/sas_phy.c
-@@ -35,7 +35,6 @@ static void sas_phye_loss_of_signal(struct
-work_struct *work)
- 	struct asd_sas_event *ev = to_asd_sas_event(work);
- 	struct asd_sas_phy *phy = ev->phy;
- 
--	phy->in_shutdown = 0;
- 	phy->error = 0;
- 	sas_deform_port(phy, 1);
- }
-@@ -45,7 +44,6 @@ static void sas_phye_oob_done(struct work_struct
-*work)
- 	struct asd_sas_event *ev = to_asd_sas_event(work);
- 	struct asd_sas_phy *phy = ev->phy;
- 
--	phy->in_shutdown = 0;
- 	phy->error = 0;
- }
- 
-@@ -126,6 +124,7 @@ static void sas_phye_shutdown(struct work_struct
-*work)
- 				  ret);
- 	} else
- 		pr_notice("phy%d is not enabled, cannot shutdown\n",
-phy->id);
-+	phy->in_shutdown = 0;
- }
- 
- /* ---------- Phy class registration ---------- */
-diff --git a/drivers/scsi/smartpqi/smartpqi_init.c
-b/drivers/scsi/smartpqi/smartpqi_init.c
-index b17761eafca9..d6be4e8f4a8f 100644
---- a/drivers/scsi/smartpqi/smartpqi_init.c
-+++ b/drivers/scsi/smartpqi/smartpqi_init.c
-@@ -7291,7 +7291,7 @@ static int pqi_pci_init(struct pqi_ctrl_info
-*ctrl_info)
- 	else
- 		mask = DMA_BIT_MASK(32);
- 
--	rc = dma_set_mask(&ctrl_info->pci_dev->dev, mask);
-+	rc = dma_set_mask_and_coherent(&ctrl_info->pci_dev->dev,
-mask);
- 	if (rc) {
- 		dev_err(&ctrl_info->pci_dev->dev, "failed to set DMA
-mask\n");
- 		goto disable_device;
+> Regards,
+> -Vladimir
+>
+> > Thanks,
+> > Richard
