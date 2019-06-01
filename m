@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CFDC28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A3B2C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:19:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADDB0272C5
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 604A02725F
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:19:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395173;
-	bh=6bKgTT5gnfcJKsWHUTECbQrducSnrKEOJSsgdtKBWCw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eYO01T/BawmUi33FRWdufKJmbhguequaFBXdy54pER4H/U45CUGCVjtoYfqpbqNXT
-	 zqA2gq4xyXVk6fTkTswdrMLYz3Yza46aNqm+CfVHxg5k72yFgUyUJg0jAI88rUJI7I
-	 cmGOJWzx2+BldSer4323e6JFHGypfc/X4zw2lgII=
+	s=default; t=1559395180;
+	bh=0BH7zsVElE5DDidWWhc24VgxlmlbeytlvrOF5RZBkgI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=TSOmFkXGNz2AFik7phxiZeuiBWpcNsAY1PSWnMGGNxFpbSfUH8idjqryt73jMTuBH
+	 1/x3Tj9pANl9c3jzMFVUaeu53IktEjFFS09H5uCHIizKqXCKLQkNTfwPtj2x+rF1wq
+	 d7ezvXOqW6o3F/1/96LGbKBgT145gZZVaCRFdETM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727499AbfFANTd (ORCPT
+        id S1727489AbfFANTj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:19:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46562 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:19:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728220AbfFANTX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:19:23 -0400
+        id S1726794AbfFANTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:19:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D3F6272AC;
-        Sat,  1 Jun 2019 13:19:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE4A4272BE;
+        Sat,  1 Jun 2019 13:19:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395163;
-        bh=6bKgTT5gnfcJKsWHUTECbQrducSnrKEOJSsgdtKBWCw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kEK97Hk4roJhvSPyrBIjEV5QLR5hVXQx3fDDFd6IJHJH9/5A4NcDhxSlvEJgeibOl
-         kBZSPtIsDYxH5PFxBXmwyZvTpB0jAvfAknd18uL7RvnI3hkkF2GU21F63HKoURLUKh
-         RQGGGYaiTPcnrZR55PSkfGucUNam+QNIZZxrpMAo=
+        s=default; t=1559395176;
+        bh=0BH7zsVElE5DDidWWhc24VgxlmlbeytlvrOF5RZBkgI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=DnuLTbkFfqGn9ia3ApPI4iiDFb+8wx9EuSLf9veL3lVWa0QV0j9T6O6SogD1ivUwV
+         Fn9/4XpeFSO1cow30isMmcxRSSEr/1m+8APJjDM1ekazo/Y3IkKI/ppl90tuwjCOrI
+         IxOOvDTp0mqM+dXILwCTGrJqz0eg6Ui1CKR3hCcQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Georg Hofmann <georg@hofmannsweb.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 074/186] watchdog: imx2_wdt: Fix set_timeout for big timeout values
-Date:   Sat,  1 Jun 2019 09:14:50 -0400
-Message-Id: <20190601131653.24205-74-sashal@kernel.org>
+Cc:     Jonas Karlman <jonas@kwiboo.se>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.0 001/173] media: rockchip/vpu: Fix/re-order probe-error/remove path
+Date:   Sat,  1 Jun 2019 09:16:33 -0400
+Message-Id: <20190601131934.25053-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190601131653.24205-1-sashal@kernel.org>
-References: <20190601131653.24205-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,41 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Georg Hofmann <georg@hofmannsweb.com>
+From: Jonas Karlman <jonas@kwiboo.se>
 
-[ Upstream commit b07e228eee69601addba98b47b1a3850569e5013 ]
+[ Upstream commit fc8670d1f72b746ff3a5fe441f1fca4c4dba0e6f ]
 
-The documentated behavior is: if max_hw_heartbeat_ms is implemented, the
-minimum of the set_timeout argument and max_hw_heartbeat_ms should be used.
-This patch implements this behavior.
-Previously only the first 7bits were used and the input argument was
-returned.
+media_device_cleanup() and v4l2_m2m_unregister_media_controller() were
+missing in the probe error path.
+While at it, re-order calls in the remove path to unregister/cleanup
+things in the reverse order they were initialized/registered.
 
-Signed-off-by: Georg Hofmann <georg@hofmannsweb.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/imx2_wdt.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/staging/media/rockchip/vpu/rockchip_vpu_drv.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/watchdog/imx2_wdt.c b/drivers/watchdog/imx2_wdt.c
-index 2b52514eaa86a..7e7bdcbbc741b 100644
---- a/drivers/watchdog/imx2_wdt.c
-+++ b/drivers/watchdog/imx2_wdt.c
-@@ -178,8 +178,10 @@ static void __imx2_wdt_set_timeout(struct watchdog_device *wdog,
- static int imx2_wdt_set_timeout(struct watchdog_device *wdog,
- 				unsigned int new_timeout)
- {
--	__imx2_wdt_set_timeout(wdog, new_timeout);
-+	unsigned int actual;
- 
-+	actual = min(new_timeout, wdog->max_hw_heartbeat_ms * 1000);
-+	__imx2_wdt_set_timeout(wdog, actual);
- 	wdog->timeout = new_timeout;
+diff --git a/drivers/staging/media/rockchip/vpu/rockchip_vpu_drv.c b/drivers/staging/media/rockchip/vpu/rockchip_vpu_drv.c
+index 962412c79b917..33b556b3f0df8 100644
+--- a/drivers/staging/media/rockchip/vpu/rockchip_vpu_drv.c
++++ b/drivers/staging/media/rockchip/vpu/rockchip_vpu_drv.c
+@@ -481,10 +481,12 @@ static int rockchip_vpu_probe(struct platform_device *pdev)
  	return 0;
- }
+ err_video_dev_unreg:
+ 	if (vpu->vfd_enc) {
++		v4l2_m2m_unregister_media_controller(vpu->m2m_dev);
+ 		video_unregister_device(vpu->vfd_enc);
+ 		video_device_release(vpu->vfd_enc);
+ 	}
+ err_m2m_rel:
++	media_device_cleanup(&vpu->mdev);
+ 	v4l2_m2m_release(vpu->m2m_dev);
+ err_v4l2_unreg:
+ 	v4l2_device_unregister(&vpu->v4l2_dev);
+@@ -501,13 +503,13 @@ static int rockchip_vpu_remove(struct platform_device *pdev)
+ 	v4l2_info(&vpu->v4l2_dev, "Removing %s\n", pdev->name);
+ 
+ 	media_device_unregister(&vpu->mdev);
+-	v4l2_m2m_unregister_media_controller(vpu->m2m_dev);
+-	v4l2_m2m_release(vpu->m2m_dev);
+-	media_device_cleanup(&vpu->mdev);
+ 	if (vpu->vfd_enc) {
++		v4l2_m2m_unregister_media_controller(vpu->m2m_dev);
+ 		video_unregister_device(vpu->vfd_enc);
+ 		video_device_release(vpu->vfd_enc);
+ 	}
++	media_device_cleanup(&vpu->mdev);
++	v4l2_m2m_release(vpu->m2m_dev);
+ 	v4l2_device_unregister(&vpu->v4l2_dev);
+ 	clk_bulk_unprepare(vpu->variant->num_clocks, vpu->clocks);
+ 	pm_runtime_disable(vpu->dev);
 -- 
 2.20.1
 
