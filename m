@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C477C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C5E1C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C2E827310
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:21:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 735612731B
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:21:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395285;
-	bh=ZWzVFlIft31zb3RWJGRv+k8CjnegSe/O+ll1Bp6ExCU=;
+	s=default; t=1559395288;
+	bh=KyJQPpQA3t/kHSchWa3aIy96jwgQX46ZurVe8ZfdpHk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jGomWmxoLMt/4HXBIp4W4c/kG+I1gjZoErqJiMaF5lfzoZE0kIwCoD4xstVxYejhl
-	 R0e07thu/EsoEwv3kxjvGKh7IyUBlg09DRa9Jonko+Ah0E5WcANwEQaJvS7YNcXez/
-	 +hx4arHV+VjqpuV7/kLlPyeFcXJtjLN808tjJhn4=
+	b=H4lF52tmQTfDjZRE53byc/tkba6U3LhxX2DvrQ2rqMc+i6C2WjYJbTnKrz3fueffI
+	 FKXBx8aHWhGzuJVnJULywvpjMwYT0dus3IKU7JOOMgi4k0UDa1TNARez/EDzFCs+vM
+	 LIWOBXQd1m8SWYjzyGw5ltpJ6qAZracMq2Erj7yA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728495AbfFANVY (ORCPT
+        id S1728512AbfFANV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:21:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48558 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:21:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728436AbfFANVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:21:16 -0400
+        id S1728445AbfFANVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:21:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F552272FE;
-        Sat,  1 Jun 2019 13:21:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18B9D272F6;
+        Sat,  1 Jun 2019 13:21:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395275;
-        bh=ZWzVFlIft31zb3RWJGRv+k8CjnegSe/O+ll1Bp6ExCU=;
+        s=default; t=1559395278;
+        bh=KyJQPpQA3t/kHSchWa3aIy96jwgQX46ZurVe8ZfdpHk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0B4r277CHEMfqZHeU1rq7G9chvJ/ZrQEc8peqxZH3Vy6pIetDD2/5B3/wlqpFHxfn
-         HW9xbbhUj4aALx8jY8oDEmwfU/mkkvHXfCNTrTebqj1uHEilDFtKJyFbGOOQhRWnWN
-         tkbgolMePvAeJHRRXbceHJFSfIMm2xEeLFUvzCMo=
+        b=ow1fWcHKgSB2mq5ntdSS8dz4MwkZiJuEH3VlN812O60LQtG4Uy81wDZ/fAf+bDfvO
+         D8oFJYD+K5RByUh11HuOolOVLkUtnyxlcB5e3Ot0odCV29QJlaV2lRvuMF8poJCGHi
+         ApYo6DTzuksxJObf9yijAOh8k4yl4HVHBO8Vnxro=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miroslav Lichvar <mlichvar@redhat.com>,
-        Ondrej Mosnacek <omosnace@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Prarit Bhargava <prarit@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 039/173] ntp: Allow TAI-UTC offset to be set to zero
-Date:   Sat,  1 Jun 2019 09:17:11 -0400
-Message-Id: <20190601131934.25053-39-sashal@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.0 042/173] f2fs: fix error path of recovery
+Date:   Sat,  1 Jun 2019 09:17:14 -0400
+Message-Id: <20190601131934.25053-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131934.25053-1-sashal@kernel.org>
 References: <20190601131934.25053-1-sashal@kernel.org>
@@ -63,46 +59,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miroslav Lichvar <mlichvar@redhat.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit fdc6bae940ee9eb869e493990540098b8c0fd6ab ]
+[ Upstream commit 988385795c7f46b231982d54750587f204bd558b ]
 
-The ADJ_TAI adjtimex mode sets the TAI-UTC offset of the system clock.
-It is typically set by NTP/PTP implementations and it is automatically
-updated by the kernel on leap seconds. The initial value is zero (which
-applications may interpret as unknown), but this value cannot be set by
-adjtimex. This limitation seems to go back to the original "nanokernel"
-implementation by David Mills.
+There are some places in where we missed to unlock page or unlock page
+incorrectly, fix them.
 
-Change the ADJ_TAI check to accept zero as a valid TAI-UTC offset in
-order to allow setting it back to the initial value.
-
-Fixes: 153b5d054ac2 ("ntp: support for TAI")
-Suggested-by: Ondrej Mosnacek <omosnace@redhat.com>
-Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: John Stultz <john.stultz@linaro.org>
-Cc: Richard Cochran <richardcochran@gmail.com>
-Cc: Prarit Bhargava <prarit@redhat.com>
-Link: https://lkml.kernel.org/r/20190417084833.7401-1-mlichvar@redhat.com
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/time/ntp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/f2fs/recovery.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
-index 36a2bef001253..2f11dc592eb3a 100644
---- a/kernel/time/ntp.c
-+++ b/kernel/time/ntp.c
-@@ -689,7 +689,7 @@ static inline void process_adjtimex_modes(const struct timex *txc, s32 *time_tai
- 		time_constant = max(time_constant, 0l);
+diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
+index 73338c432e7e4..b14c718139a96 100644
+--- a/fs/f2fs/recovery.c
++++ b/fs/f2fs/recovery.c
+@@ -325,8 +325,10 @@ static int find_fsync_dnodes(struct f2fs_sb_info *sbi, struct list_head *head,
+ 			break;
+ 		}
+ 
+-		if (!is_recoverable_dnode(page))
++		if (!is_recoverable_dnode(page)) {
++			f2fs_put_page(page, 1);
+ 			break;
++		}
+ 
+ 		if (!is_fsync_dnode(page))
+ 			goto next;
+@@ -338,8 +340,10 @@ static int find_fsync_dnodes(struct f2fs_sb_info *sbi, struct list_head *head,
+ 			if (!check_only &&
+ 					IS_INODE(page) && is_dent_dnode(page)) {
+ 				err = f2fs_recover_inode_page(sbi, page);
+-				if (err)
++				if (err) {
++					f2fs_put_page(page, 1);
+ 					break;
++				}
+ 				quota_inode = true;
+ 			}
+ 
+@@ -355,6 +359,7 @@ static int find_fsync_dnodes(struct f2fs_sb_info *sbi, struct list_head *head,
+ 					err = 0;
+ 					goto next;
+ 				}
++				f2fs_put_page(page, 1);
+ 				break;
+ 			}
+ 		}
+@@ -370,6 +375,7 @@ static int find_fsync_dnodes(struct f2fs_sb_info *sbi, struct list_head *head,
+ 				"%s: detect looped node chain, "
+ 				"blkaddr:%u, next:%u",
+ 				__func__, blkaddr, next_blkaddr_of_node(page));
++			f2fs_put_page(page, 1);
+ 			err = -EINVAL;
+ 			break;
+ 		}
+@@ -380,7 +386,6 @@ static int find_fsync_dnodes(struct f2fs_sb_info *sbi, struct list_head *head,
+ 
+ 		f2fs_ra_meta_pages_cond(sbi, blkaddr);
  	}
+-	f2fs_put_page(page, 1);
+ 	return err;
+ }
  
--	if (txc->modes & ADJ_TAI && txc->constant > 0)
-+	if (txc->modes & ADJ_TAI && txc->constant >= 0)
- 		*time_tai = txc->constant;
- 
- 	if (txc->modes & ADJ_OFFSET)
+@@ -674,8 +679,10 @@ static int recover_data(struct f2fs_sb_info *sbi, struct list_head *inode_list,
+ 		 */
+ 		if (IS_INODE(page)) {
+ 			err = recover_inode(entry->inode, page);
+-			if (err)
++			if (err) {
++				f2fs_put_page(page, 1);
+ 				break;
++			}
+ 		}
+ 		if (entry->last_dentry == blkaddr) {
+ 			err = recover_dentry(entry->inode, page, dir_list);
 -- 
 2.20.1
 
