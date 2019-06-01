@@ -4,54 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEF4C28CC3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E05A3C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95EFD2768E
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADB4427693
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:41:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396486;
-	bh=2LUsXLY2sI/4AyYGBsY7LNb4t1yX41DcnUFOv/XEQ+Q=;
+	s=default; t=1559396497;
+	bh=2uGRV4UYU8MhgIsmB1C/n9YqWWL5HigLXU2aP/VhuWI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lB1gIvmSxWAyO95a0fZce3gna84ejPj6l1SoP4YOV31qU1pOLs49p+yMycvbZSB0e
-	 8xS+E/s/W5fn0wTV+JfXWHyrYlNUC1RYPra+7twRhEHyAOsP+hRWNxye1mvXC4n980
-	 xCTQ0IPsEbporKIR1pEH014sVcFcpKd2zaQ3YDT8=
+	b=eEcNjtizOn5Ygow0g/ybXYbr8lV+wc0ijOh1GM9BwW1BTpDeFYvDmOVpVKvpXqsNM
+	 A67Ih2N/lFLypsHWObY1Jb3IxIHeyi7nebN2/cjVmYafwAudQeGxdBwZU9jBOpWddv
+	 eo4a/UhYZxonJlIAOkQtRpUaJ0su48Dtr820uaG0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbfFANTN (ORCPT
+        id S1728069AbfFANTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:19:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46394 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:19:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728117AbfFANTL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:19:11 -0400
+        id S1728041AbfFANTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:19:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01BD325525;
-        Sat,  1 Jun 2019 13:19:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 097902729D;
+        Sat,  1 Jun 2019 13:18:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395150;
-        bh=2LUsXLY2sI/4AyYGBsY7LNb4t1yX41DcnUFOv/XEQ+Q=;
+        s=default; t=1559395140;
+        bh=2uGRV4UYU8MhgIsmB1C/n9YqWWL5HigLXU2aP/VhuWI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BPG1vr0fTvjBMcb9VdT06u5MmQ8xJKlWJAHb7406rFzKqwVfd2mBsmZkB8oeLIca+
-         2Zm18ZAxma9HPmD/nxw8vS7Tocri9YR2YzuhH6TejRyqH2wWq4AlneT5HMALxA+v9f
-         tyxGmEuA8v3zXkYkLVUhKZjT3tf8B4J/0jGlb9to=
+        b=RkUNsxQKxlnz1eu2HxrWp+p6GEWH950z28Zzeh1peAanNpSV2at4x2f4pxupXMDD2
+         HyWIOD3k2VwDGUjAHmmvppt1ZbbZqPMQ7wnR7jN2NAFislySxl7gQBLKdcNq4qbgeD
+         gfIxLHF3l5ptYsLV0ZRUckqcVmI7tnLtmvefVovk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        Murphy Zhou <jencce.kernel@gmail.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-unionfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 067/186] ovl: do not generate duplicate fsnotify events for "fake" path
-Date:   Sat,  1 Jun 2019 09:14:43 -0400
-Message-Id: <20190601131653.24205-67-sashal@kernel.org>
+Cc:     =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <maze@google.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        linux-um@lists.infradead.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 061/186] uml: fix a boot splat wrt use of cpu_all_mask
+Date:   Sat,  1 Jun 2019 09:14:37 -0400
+Message-Id: <20190601131653.24205-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131653.24205-1-sashal@kernel.org>
 References: <20190601131653.24205-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,53 +62,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amir Goldstein <amir73il@gmail.com>
+From: Maciej Żenczykowski <maze@google.com>
 
-[ Upstream commit d989903058a83e8536cc7aadf9256a47d5c173fe ]
+[ Upstream commit 689a58605b63173acb0a8cf954af6a8f60440c93 ]
 
-Overlayfs "fake" path is used for stacked file operations on underlying
-files.  Operations on files with "fake" path must not generate fsnotify
-events with path data, because those events have already been generated at
-overlayfs layer and because the reported event->fd for fanotify marks on
-underlying inode/filesystem will have the wrong path (the overlayfs path).
+Memory: 509108K/542612K available (3835K kernel code, 919K rwdata, 1028K rodata, 129K init, 211K bss, 33504K reserved, 0K cma-reserved)
+NR_IRQS: 15
+clocksource: timer: mask: 0xffffffffffffffff max_cycles: 0x1cd42e205, max_idle_ns: 881590404426 ns
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 0 at kernel/time/clockevents.c:458 clockevents_register_device+0x72/0x140
+posix-timer cpumask == cpu_all_mask, using cpu_possible_mask instead
+Modules linked in:
+CPU: 0 PID: 0 Comm: swapper Not tainted 5.1.0-rc4-00048-ged79cc87302b #4
+Stack:
+ 604ebda0 603c5370 604ebe20 6046fd17
+ 00000000 6006fcbb 604ebdb0 603c53b5
+ 604ebe10 6003bfc4 604ebdd0 9000001ca
+Call Trace:
+ [<6006fcbb>] ? printk+0x0/0x94
+ [<60083160>] ? clockevents_register_device+0x72/0x140
+ [<6001f16e>] show_stack+0x13b/0x155
+ [<603c5370>] ? dump_stack_print_info+0xe2/0xeb
+ [<6006fcbb>] ? printk+0x0/0x94
+ [<603c53b5>] dump_stack+0x2a/0x2c
+ [<6003bfc4>] __warn+0x10e/0x13e
+ [<60070320>] ? vprintk_func+0xc8/0xcf
+ [<60030fd6>] ? block_signals+0x0/0x16
+ [<6006fcbb>] ? printk+0x0/0x94
+ [<6003c08b>] warn_slowpath_fmt+0x97/0x99
+ [<600311a1>] ? set_signals+0x0/0x3f
+ [<6003bff4>] ? warn_slowpath_fmt+0x0/0x99
+ [<600842cb>] ? tick_oneshot_mode_active+0x44/0x4f
+ [<60030fd6>] ? block_signals+0x0/0x16
+ [<6006fcbb>] ? printk+0x0/0x94
+ [<6007d2d5>] ? __clocksource_select+0x20/0x1b1
+ [<60030fd6>] ? block_signals+0x0/0x16
+ [<6006fcbb>] ? printk+0x0/0x94
+ [<60083160>] clockevents_register_device+0x72/0x140
+ [<60031192>] ? get_signals+0x0/0xf
+ [<60030fd6>] ? block_signals+0x0/0x16
+ [<6006fcbb>] ? printk+0x0/0x94
+ [<60002eec>] um_timer_setup+0xc8/0xca
+ [<60001b59>] start_kernel+0x47f/0x57e
+ [<600035bc>] start_kernel_proc+0x49/0x4d
+ [<6006c483>] ? kmsg_dump_register+0x82/0x8a
+ [<6001de62>] new_thread_handler+0x81/0xb2
+ [<60003571>] ? kmsg_dumper_stdout_init+0x1a/0x1c
+ [<60020c75>] uml_finishsetup+0x54/0x59
 
-Link: https://lore.kernel.org/linux-fsdevel/20190423065024.12695-1-jencce.kernel@gmail.com/
-Reported-by: Murphy Zhou <jencce.kernel@gmail.com>
-Fixes: d1d04ef8572b ("ovl: stack file ops")
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+random: get_random_bytes called from init_oops_id+0x27/0x34 with crng_init=0
+---[ end trace 00173d0117a88acb ]---
+Calibrating delay loop... 6941.90 BogoMIPS (lpj=34709504)
+
+Signed-off-by: Maciej Żenczykowski <maze@google.com>
+Cc: Jeff Dike <jdike@addtoit.com>
+Cc: Richard Weinberger <richard@nod.at>
+Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Cc: linux-um@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/overlayfs/file.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/um/kernel/time.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/overlayfs/file.c b/fs/overlayfs/file.c
-index 84dd957efa24a..6f6eb638a320f 100644
---- a/fs/overlayfs/file.c
-+++ b/fs/overlayfs/file.c
-@@ -29,10 +29,11 @@ static struct file *ovl_open_realfile(const struct file *file,
- 	struct inode *inode = file_inode(file);
- 	struct file *realfile;
- 	const struct cred *old_cred;
-+	int flags = file->f_flags | O_NOATIME | FMODE_NONOTIFY;
- 
- 	old_cred = ovl_override_creds(inode->i_sb);
--	realfile = open_with_fake_path(&file->f_path, file->f_flags | O_NOATIME,
--				       realinode, current_cred());
-+	realfile = open_with_fake_path(&file->f_path, flags, realinode,
-+				       current_cred());
- 	revert_creds(old_cred);
- 
- 	pr_debug("open(%p[%pD2/%c], 0%o) -> (%p, 0%o)\n",
-@@ -50,7 +51,7 @@ static int ovl_change_flags(struct file *file, unsigned int flags)
- 	int err;
- 
- 	/* No atime modificaton on underlying */
--	flags |= O_NOATIME;
-+	flags |= O_NOATIME | FMODE_NONOTIFY;
- 
- 	/* If some flag changed that cannot be changed then something's amiss */
- 	if (WARN_ON((file->f_flags ^ flags) & ~OVL_SETFL_MASK))
+diff --git a/arch/um/kernel/time.c b/arch/um/kernel/time.c
+index 052de4c8acb2e..0c572a48158e8 100644
+--- a/arch/um/kernel/time.c
++++ b/arch/um/kernel/time.c
+@@ -56,7 +56,7 @@ static int itimer_one_shot(struct clock_event_device *evt)
+ static struct clock_event_device timer_clockevent = {
+ 	.name			= "posix-timer",
+ 	.rating			= 250,
+-	.cpumask		= cpu_all_mask,
++	.cpumask		= cpu_possible_mask,
+ 	.features		= CLOCK_EVT_FEAT_PERIODIC |
+ 				  CLOCK_EVT_FEAT_ONESHOT,
+ 	.set_state_shutdown	= itimer_shutdown,
 -- 
 2.20.1
 
