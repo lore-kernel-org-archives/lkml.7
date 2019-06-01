@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D8EC28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E96FC28CC4
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86DFF2767E
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 184A327681
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:41:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396475;
-	bh=mpK1R3CoQOBwdpjhvFcXxrFDFhjGjyoxehuKVzq5gmI=;
+	s=default; t=1559396484;
+	bh=Br3cRnNVP5bb5xNzXE3kLWwEt5wSKwgAOl2eaAtvdwE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FU8U1JaLlWVH9V8AtK8yy9otR5md1LMdriff1M8rd6CugMJtbMLTkTkHBK64SJmZl
-	 66wERrbZ2nzpGced02L6h1KwTFfOwpiR4WKDYbXhRn04fJ4l5ooTxueK3OFH54Q/Q9
-	 PLoiQywP185XmEGAPWmTl5AivZPBRMzTa0YQfvQE=
+	b=BUA5dQ+7yoAbH4YuI4lu11t5LNxhvuMqrozNr912grE2A7YUdPhVBqZqQipZ50klI
+	 c0iAUNf/O64avQ4nj2t9cgGsu0rWPblqbUa+rp+FPKQx7Kt4R8b3LIQlNqe8K9Lbrc
+	 JtzXmcNtapoKm9UT8HwyYFzNQWsC57GO/JOS+25M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728982AbfFANlO (ORCPT
+        id S1728155AbfFANTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:41:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46454 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728105AbfFANTQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 1 Jun 2019 09:19:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46374 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728105AbfFANTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:19:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 269BC272AA;
-        Sat,  1 Jun 2019 13:19:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA737255FF;
+        Sat,  1 Jun 2019 13:19:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395156;
-        bh=mpK1R3CoQOBwdpjhvFcXxrFDFhjGjyoxehuKVzq5gmI=;
+        s=default; t=1559395149;
+        bh=Br3cRnNVP5bb5xNzXE3kLWwEt5wSKwgAOl2eaAtvdwE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YV8OIl2mHfUhpqro/3IIUcy9lUF1GqielVlJk+iu9S9OU5Nlh9ccqn0clu5PNcKI/
-         4ISpTWZcOyuMJG41ZSyaN2aTNihVZHUGXz+QDGVK7H6MaYHa53ujvZk9krYGz7zjhm
-         ey0aJCNe9mPO5GqyTC9or4RxBaY7M7KUnedciMEY=
+        b=PQBDMzNXnCca7YnKvPXOdcOnsE8T2BYlc7ykwH7Z9dTwAPbfgylJruUGU5OZBxaNr
+         87OpIqG95ghem0fxWmNzItWabC+oHQ6Y3uLHg8cu5fLTESWqJXlaAFpzsa1YO+CzmL
+         xFBT4rVsR1Qt34l2tjfnD7EvtjCRI1a/ymn9DTCA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jakub Jankowski <shasta@toxcorp.com>,
+Cc:     Kristian Evensen <kristian.evensen@gmail.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
         Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>,
         netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 070/186] netfilter: nf_conntrack_h323: restore boundary check correctness
-Date:   Sat,  1 Jun 2019 09:14:46 -0400
-Message-Id: <20190601131653.24205-70-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 066/186] netfilter: ctnetlink: Resolve conntrack L3-protocol flush regression
+Date:   Sat,  1 Jun 2019 09:14:42 -0400
+Message-Id: <20190601131653.24205-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131653.24205-1-sashal@kernel.org>
 References: <20190601131653.24205-1-sashal@kernel.org>
@@ -61,43 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Jankowski <shasta@toxcorp.com>
+From: Kristian Evensen <kristian.evensen@gmail.com>
 
-[ Upstream commit f5e85ce8e733c2547827f6268136b70b802eabdb ]
+[ Upstream commit f8e608982022fad035160870f5b06086d3cba54d ]
 
-Since commit bc7d811ace4a ("netfilter: nf_ct_h323: Convert
-CHECK_BOUND macro to function"), NAT traversal for H.323
-doesn't work, failing to parse H323-UserInformation.
-nf_h323_error_boundary() compares contents of the bitstring,
-not the addresses, preventing valid H.323 packets from being
-conntrack'd.
+Commit 59c08c69c278 ("netfilter: ctnetlink: Support L3 protocol-filter
+on flush") introduced a user-space regression when flushing connection
+track entries. Before this commit, the nfgen_family field was not used
+by the kernel and all entries were removed. Since this commit,
+nfgen_family is used to filter out entries that should not be removed.
+One example a broken tool is conntrack. conntrack always sets
+nfgen_family to AF_INET, so after 59c08c69c278 only IPv4 entries were
+removed with the -F parameter.
 
-This looks like an oversight from when CHECK_BOUND macro was
-converted to a function.
+Pablo Neira Ayuso suggested using nfgenmsg->version to resolve the
+regression, and this commit implements his suggestion. nfgenmsg->version
+is so far set to zero, so it is well-suited to be used as a flag for
+selecting old or new flush behavior. If version is 0, nfgen_family is
+ignored and all entries are used. If user-space sets the version to one
+(or any other value than 0), then the new behavior is used. As version
+only can have two valid values, I chose not to add a new
+NFNETLINK_VERSION-constant.
 
-To fix it, stop dereferencing bs->cur and bs->end.
-
-Fixes: bc7d811ace4a ("netfilter: nf_ct_h323: Convert CHECK_BOUND macro to function")
-Signed-off-by: Jakub Jankowski <shasta@toxcorp.com>
+Fixes: 59c08c69c278 ("netfilter: ctnetlink: Support L3 protocol-filter on flush")
+Reported-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Suggested-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Kristian Evensen <kristian.evensen@gmail.com>
+Tested-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
 Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_conntrack_h323_asn1.c | 2 +-
+ net/netfilter/nf_conntrack_netlink.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nf_conntrack_h323_asn1.c b/net/netfilter/nf_conntrack_h323_asn1.c
-index 1601275efe2d1..4c2ef42e189cb 100644
---- a/net/netfilter/nf_conntrack_h323_asn1.c
-+++ b/net/netfilter/nf_conntrack_h323_asn1.c
-@@ -172,7 +172,7 @@ static int nf_h323_error_boundary(struct bitstr *bs, size_t bytes, size_t bits)
- 	if (bits % BITS_PER_BYTE > 0)
- 		bytes++;
+diff --git a/net/netfilter/nf_conntrack_netlink.c b/net/netfilter/nf_conntrack_netlink.c
+index d7f61b0547c65..d2715b4d2e72e 100644
+--- a/net/netfilter/nf_conntrack_netlink.c
++++ b/net/netfilter/nf_conntrack_netlink.c
+@@ -1254,7 +1254,7 @@ static int ctnetlink_del_conntrack(struct net *net, struct sock *ctnl,
+ 	struct nf_conntrack_tuple tuple;
+ 	struct nf_conn *ct;
+ 	struct nfgenmsg *nfmsg = nlmsg_data(nlh);
+-	u_int8_t u3 = nfmsg->nfgen_family;
++	u_int8_t u3 = nfmsg->version ? nfmsg->nfgen_family : AF_UNSPEC;
+ 	struct nf_conntrack_zone zone;
+ 	int err;
  
--	if (*bs->cur + bytes > *bs->end)
-+	if (bs->cur + bytes > bs->end)
- 		return 1;
- 
- 	return 0;
 -- 
 2.20.1
 
