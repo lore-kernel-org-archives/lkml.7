@@ -2,51 +2,53 @@ Return-Path: <SRS0=TpO6=UA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B5CC28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6828EC28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E60C82745A
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EA1D2745F
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:29:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395781;
-	bh=uAAi8CTOOnASvru0RtQIRJjMPSSGzCt7X5cKVXUegXs=;
+	s=default; t=1559395787;
+	bh=3UPIdmXIdADXaiJl+kkjj0qnijCPhtrHNPwoEaZBDMM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zz74O+1CqSYmaBK8L4ERLmHvSTC/sErui/mQ7qJyZcBuzA054wo5kanq9rAneto/p
-	 opgyuBWAHgZ6EqpeGf1hEg0IlI7q03+izNi2b4Vq3vRbzT9m0JXUUMkovjB1L0Nlq6
-	 uUt8qpbmEa8ICsBerz0FHeQGHP5kXgtxQfq1JeNc=
+	b=tk/LAOeCWQtS2fkALLqPjwsNYB/T4TGq+XQfqiVF5vwLLivXtKw9skrZm2oul7DWB
+	 GvSSl+iEG3iV7iKHRcqjx4IGiL1y9Ir1ygeMmenPOFD3VooRGiIvsQ9i3PJd9Ox/vp
+	 9k4w+JrzyoK73ZzejWCJH2DO5faWPcpIFEJD7iAQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729889AbfFAN3k (ORCPT
+        id S1729971AbfFAN3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:29:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57348 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:29:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729862AbfFAN0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:26:49 -0400
+        id S1729854AbfFAN0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:26:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC104273BD;
-        Sat,  1 Jun 2019 13:26:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9802273D6;
+        Sat,  1 Jun 2019 13:26:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395608;
-        bh=uAAi8CTOOnASvru0RtQIRJjMPSSGzCt7X5cKVXUegXs=;
+        s=default; t=1559395606;
+        bh=3UPIdmXIdADXaiJl+kkjj0qnijCPhtrHNPwoEaZBDMM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0X6bZYzNlH2LNW9OADR0SfFv+ow24fTjluDq0pLl1uezuEeBwDiANuq5WtuJybirJ
-         7FZ0hKLsLWDFZ4foNPijiNcvNjNky5FfLvI8JnZ1Ek1tJMTkO51u5gCsLyDEuNwSq5
-         og94ilhTrK0CtUn8fZTq9kZrTgqgxWzZIWbLDHBs=
+        b=RuvVB9HMK+SCbEl6EZ9oXsN5+u6qacoSnk6WrslEhO7/KxtQ2DUzSyQhM/YUh27Uz
+         1ueFQrRW7/N8yBtaaFX2VZtJdX1coyCz3H0qhRaJ2TUX9NSx+s9IUDVmIHRQiWm1BT
+         GatragTZdhp5ie5DzZtwXSQlwfHUuMbMtr2kalC4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Prestwood <james.prestwood@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 27/56] PCI: Mark Atheros AR9462 to avoid bus reset
-Date:   Sat,  1 Jun 2019 09:25:31 -0400
-Message-Id: <20190601132600.27427-27-sashal@kernel.org>
+Cc:     Kirill Smelkov <kirr@nexedi.com>,
+        Han-Wen Nienhuys <hanwen@google.com>,
+        Jakob Unterwurzacher <jakobunt@gmail.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 25/56] fuse: retrieve: cap requested size to negotiated max_write
+Date:   Sat,  1 Jun 2019 09:25:29 -0400
+Message-Id: <20190601132600.27427-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132600.27427-1-sashal@kernel.org>
 References: <20190601132600.27427-1-sashal@kernel.org>
@@ -59,36 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Prestwood <james.prestwood@linux.intel.com>
+From: Kirill Smelkov <kirr@nexedi.com>
 
-[ Upstream commit 6afb7e26978da5e86e57e540fdce65c8b04f398a ]
+[ Upstream commit 7640682e67b33cab8628729afec8ca92b851394f ]
 
-When using PCI passthrough with this device, the host machine locks up
-completely when starting the VM, requiring a hard reboot.  Add a quirk to
-avoid bus resets on this device.
+FUSE filesystem server and kernel client negotiate during initialization
+phase, what should be the maximum write size the client will ever issue.
+Correspondingly the filesystem server then queues sys_read calls to read
+requests with buffer capacity large enough to carry request header + that
+max_write bytes. A filesystem server is free to set its max_write in
+anywhere in the range between [1*page, fc->max_pages*page]. In particular
+go-fuse[2] sets max_write by default as 64K, wheres default fc->max_pages
+corresponds to 128K. Libfuse also allows users to configure max_write, but
+by default presets it to possible maximum.
 
-Fixes: c3e59ee4e766 ("PCI: Mark Atheros AR93xx to avoid bus reset")
-Link: https://lore.kernel.org/linux-pci/20190107213248.3034-1-james.prestwood@linux.intel.com
-Signed-off-by: James Prestwood <james.prestwood@linux.intel.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-CC: stable@vger.kernel.org	# v3.14+
+If max_write is < fc->max_pages*page, and in NOTIFY_RETRIEVE handler we
+allow to retrieve more than max_write bytes, corresponding prepared
+NOTIFY_REPLY will be thrown away by fuse_dev_do_read, because the
+filesystem server, in full correspondence with server/client contract, will
+be only queuing sys_read with ~max_write buffer capacity, and
+fuse_dev_do_read throws away requests that cannot fit into server request
+buffer. In turn the filesystem server could get stuck waiting indefinitely
+for NOTIFY_REPLY since NOTIFY_RETRIEVE handler returned OK which is
+understood by clients as that NOTIFY_REPLY was queued and will be sent
+back.
+
+Cap requested size to negotiate max_write to avoid the problem.  This
+aligns with the way NOTIFY_RETRIEVE handler works, which already
+unconditionally caps requested retrieve size to fuse_conn->max_pages.  This
+way it should not hurt NOTIFY_RETRIEVE semantic if we return less data than
+was originally requested.
+
+Please see [1] for context where the problem of stuck filesystem was hit
+for real, how the situation was traced and for more involving patch that
+did not make it into the tree.
+
+[1] https://marc.info/?l=linux-fsdevel&m=155057023600853&w=2
+[2] https://github.com/hanwen/go-fuse
+
+Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
+Cc: Han-Wen Nienhuys <hanwen@google.com>
+Cc: Jakob Unterwurzacher <jakobunt@gmail.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/fuse/dev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index d85010ebac5aa..36c6f3702167c 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -3141,6 +3141,7 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0030, quirk_no_bus_reset);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0032, quirk_no_bus_reset);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x003c, quirk_no_bus_reset);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0033, quirk_no_bus_reset);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0034, quirk_no_bus_reset);
+diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+index fbb978e75c6be..217ceca3eb063 100644
+--- a/fs/fuse/dev.c
++++ b/fs/fuse/dev.c
+@@ -1734,7 +1734,7 @@ static int fuse_retrieve(struct fuse_conn *fc, struct inode *inode,
+ 	offset = outarg->offset & ~PAGE_CACHE_MASK;
+ 	file_size = i_size_read(inode);
  
- static void quirk_no_pm_reset(struct pci_dev *dev)
- {
+-	num = outarg->size;
++	num = min(outarg->size, fc->max_write);
+ 	if (outarg->offset > file_size)
+ 		num = 0;
+ 	else if (outarg->offset + num > file_size)
 -- 
 2.20.1
 
