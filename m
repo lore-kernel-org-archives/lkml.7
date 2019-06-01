@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA66C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E10E1C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4B4C2735D
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:23:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAEFE27363
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:23:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395396;
-	bh=zrtdq2BIE9jOKb2LdQMn8+1cTfS9+Ij+vtD4sbtBBSw=;
+	s=default; t=1559395398;
+	bh=4J9YH8H33lL1cAD9vxXb2Asyh3ywbLyY9cbc1X6NWkg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=djr3n2k9viOSAhn6gqW8n+yfno4TDr7O2XsWIsdQkdTNoYH0rS8P1zBkeiQBWhnPv
-	 sjVanhFDZFSL+G+5Bx00gYhFtOSbLivciIyzJ+bQKg7dt4mfrJGhPZ1Jd6q40sgfsL
-	 ejT4RN2x96DYGohfYdHx6/ex+t5IIqSEEVDNc9h4=
+	b=Dt8Ob/OupnFsa7Fmb1h9/70OMPY3R+MzFp0S3ockzyxWuO3+h9Z7oLCwqZyljPbrV
+	 bSX/VxqcrtubV6QCLDRMOVKz6Zz0HuU1KxMlcj5hFhYYhixz5MxdXzOb/qFfI7+kLo
+	 pDV2gSvquE6yek0smeTGEwGn+/9w7A0m2UI7gRuQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728948AbfFANXQ (ORCPT
+        id S1728961AbfFANXS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:23:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52952 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:23:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728893AbfFANXN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:23:13 -0400
+        id S1728315AbfFANXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:23:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9A0327359;
-        Sat,  1 Jun 2019 13:23:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5382127358;
+        Sat,  1 Jun 2019 13:23:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395392;
-        bh=zrtdq2BIE9jOKb2LdQMn8+1cTfS9+Ij+vtD4sbtBBSw=;
+        s=default; t=1559395396;
+        bh=4J9YH8H33lL1cAD9vxXb2Asyh3ywbLyY9cbc1X6NWkg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F+6zeeaNbwJ5I6/QclvfE9yWskYESZ+fh67G7hpONuTLRE3/O8BnFiCZb6uEJmPGc
-         2Ha9/3jUE5kR/KjZevrdm5mXk5IXI20gJDg5Do54+M+y/A2807vBvsthPnbRPxkbE3
-         M16w8oeY1mm6v9uRjdHI/Ewx5VdyAFhxdTS79A84=
+        b=IAVRK01S9eeFZ3xFUEoS5henZYWTdt1myfk8oYKgw1/6GinxXQt7bXnsytqgQtrNT
+         EsP3dmfIacuBZvDqGV/Q+5VWQdBsZ+9FO1iqj47uK4YDuF7MKZrCIRG7H0bG3Dh/eC
+         Orw5Mv1ZIJN6fkyNrW1X9P+u0V4NmVWBKdRSOipc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miroslav Lichvar <mlichvar@redhat.com>,
-        Ondrej Mosnacek <omosnace@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Prarit Bhargava <prarit@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 033/141] ntp: Allow TAI-UTC offset to be set to zero
-Date:   Sat,  1 Jun 2019 09:20:09 -0400
-Message-Id: <20190601132158.25821-33-sashal@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.19 036/141] f2fs: fix to avoid panic in f2fs_remove_inode_page()
+Date:   Sat,  1 Jun 2019 09:20:12 -0400
+Message-Id: <20190601132158.25821-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132158.25821-1-sashal@kernel.org>
 References: <20190601132158.25821-1-sashal@kernel.org>
@@ -63,46 +59,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miroslav Lichvar <mlichvar@redhat.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit fdc6bae940ee9eb869e493990540098b8c0fd6ab ]
+[ Upstream commit 8b6810f8acfe429fde7c7dad4714692cc5f75651 ]
 
-The ADJ_TAI adjtimex mode sets the TAI-UTC offset of the system clock.
-It is typically set by NTP/PTP implementations and it is automatically
-updated by the kernel on leap seconds. The initial value is zero (which
-applications may interpret as unknown), but this value cannot be set by
-adjtimex. This limitation seems to go back to the original "nanokernel"
-implementation by David Mills.
+As Jungyeon reported in bugzilla:
 
-Change the ADJ_TAI check to accept zero as a valid TAI-UTC offset in
-order to allow setting it back to the initial value.
+https://bugzilla.kernel.org/show_bug.cgi?id=203219
 
-Fixes: 153b5d054ac2 ("ntp: support for TAI")
-Suggested-by: Ondrej Mosnacek <omosnace@redhat.com>
-Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: John Stultz <john.stultz@linaro.org>
-Cc: Richard Cochran <richardcochran@gmail.com>
-Cc: Prarit Bhargava <prarit@redhat.com>
-Link: https://lkml.kernel.org/r/20190417084833.7401-1-mlichvar@redhat.com
+- Overview
+When mounting the attached crafted image and running program, I got this error.
+Additionally, it hangs on sync after running the program.
+
+The image is intentionally fuzzed from a normal f2fs image for testing and I enabled option CONFIG_F2FS_CHECK_FS on.
+
+- Reproduces
+cc poc_06.c
+mkdir test
+mount -t f2fs tmp.img test
+cp a.out test
+cd test
+sudo ./a.out
+sync
+
+- Messages
+ kernel BUG at fs/f2fs/node.c:1183!
+ RIP: 0010:f2fs_remove_inode_page+0x294/0x2d0
+ Call Trace:
+  f2fs_evict_inode+0x2a3/0x3a0
+  evict+0xba/0x180
+  __dentry_kill+0xbe/0x160
+  dentry_kill+0x46/0x180
+  dput+0xbb/0x100
+  do_renameat2+0x3c9/0x550
+  __x64_sys_rename+0x17/0x20
+  do_syscall_64+0x43/0xf0
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+The reason is f2fs_remove_inode_page() will trigger kernel panic due to
+inconsistent i_blocks value of inode.
+
+To avoid panic, let's just print debug message and set SBI_NEED_FSCK to
+give a hint to fsck for latter repairing of potential image corruption.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+[Jaegeuk Kim: fix build warning and add unlikely]
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/time/ntp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/f2fs/node.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
-index c5e0cba3b39cc..6b23cd584295f 100644
---- a/kernel/time/ntp.c
-+++ b/kernel/time/ntp.c
-@@ -698,7 +698,7 @@ static inline void process_adjtimex_modes(const struct timex *txc, s32 *time_tai
- 		time_constant = max(time_constant, 0l);
+diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+index 19a0d83aae653..807a77518a491 100644
+--- a/fs/f2fs/node.c
++++ b/fs/f2fs/node.c
+@@ -1180,8 +1180,14 @@ int f2fs_remove_inode_page(struct inode *inode)
+ 		f2fs_put_dnode(&dn);
+ 		return -EIO;
  	}
+-	f2fs_bug_on(F2FS_I_SB(inode),
+-			inode->i_blocks != 0 && inode->i_blocks != 8);
++
++	if (unlikely(inode->i_blocks != 0 && inode->i_blocks != 8)) {
++		f2fs_msg(F2FS_I_SB(inode)->sb, KERN_WARNING,
++			"Inconsistent i_blocks, ino:%lu, iblocks:%llu",
++			inode->i_ino,
++			(unsigned long long)inode->i_blocks);
++		set_sbi_flag(F2FS_I_SB(inode), SBI_NEED_FSCK);
++	}
  
--	if (txc->modes & ADJ_TAI && txc->constant > 0)
-+	if (txc->modes & ADJ_TAI && txc->constant >= 0)
- 		*time_tai = txc->constant;
- 
- 	if (txc->modes & ADJ_OFFSET)
+ 	/* will put inode & node pages */
+ 	err = truncate_node(&dn);
 -- 
 2.20.1
 
