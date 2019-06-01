@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F099C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9410C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2B1A272F3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 925A9272B3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:28:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395718;
-	bh=z+2iD4+/Ewj+1snXK5rNtGsBfX7fC0rrDwMCwJjU3FU=;
+	s=default; t=1559395725;
+	bh=Ty1n3O1+kcrqM6zde0cyWrmCFeIf8+B9A/Bi/spdayo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rZnEMBSMY2VVa0wBRAGybhHiDpVL4St/f/+KSlcqyv27e3lcMaenygKeVPl039+CR
-	 McChMuKiLRHZdvoGqa3SomURrODALX2Pj9vmHNOF9pOxfj0kSdcoTqE+mVGGJCqGzP
-	 cP2AaK48zt9GJp071OEf+Tk55+/lLQ+VEO8orQ0Q=
+	b=2KU1TebWPPKJTZCo2a+xUf0Dj7SrNMjbfvCZOleLd3ObCo6kleI1HNlOJLo0uvU9P
+	 cCGQVfpeNZg3sjurq2D7Pik2r8UnVLH/4mLC04O437V+wxLMPtvFSE1rTKLMEEp//R
+	 2IgaTJA1gfvTYV7L/ZmOASAnj7IiVL+TYyNn33sM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729290AbfFAN2h (ORCPT
+        id S1729984AbfFAN2o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:28:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57912 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:28:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729918AbfFAN1O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:27:14 -0400
+        id S1729757AbfFAN0j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:26:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DDCE273AD;
-        Sat,  1 Jun 2019 13:27:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A49A3273C3;
+        Sat,  1 Jun 2019 13:26:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395634;
-        bh=z+2iD4+/Ewj+1snXK5rNtGsBfX7fC0rrDwMCwJjU3FU=;
+        s=default; t=1559395598;
+        bh=Ty1n3O1+kcrqM6zde0cyWrmCFeIf8+B9A/Bi/spdayo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UlaKj1WiOSn1nUj5rEsoHtO0XRClOPdDkDZgzqO2EuoWxmP4FQ8hSfN2ApJ+13bDQ
-         zwXW8mqfrRaBVCyl6aha4mg2lJB+POiPZ8+AiSU+NDhuTwE5BXzVZ9ERvWgkoIQaOb
-         yrVTgcA1qk5lOJ557o568K2kOwJiAJpgbFJBA2fY=
+        b=LNcNuDrw8mkPkg1vtBYrrX6vgjyMfvmRTcGbba0ufPMRJeWNK1d9Cms/QwuXXPHe5
+         4GYWotD9xVw67ScDi+8+pWi/l0ZSeHF0rs1bIOpR9z9XdndevIY3Uq0at7waUfCltp
+         6k7gbOBZ15PQfCXX0d56Q6WYz+Q4GGqCK8xbSxvE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>, Aditya Pakki <pakki001@umn.edu>,
-        Ferenc Bakonyi <fero@drama.obuda.kando.hu>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>,
         Sasha Levin <sashal@kernel.org>,
-        linux-nvidia@lists.surfsouth.com, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 43/56] video: hgafb: fix potential NULL pointer dereference
-Date:   Sat,  1 Jun 2019 09:25:47 -0400
-Message-Id: <20190601132600.27427-43-sashal@kernel.org>
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.4 19/56] iommu/vt-d: Set intel_iommu_gfx_mapped correctly
+Date:   Sat,  1 Jun 2019 09:25:23 -0400
+Message-Id: <20190601132600.27427-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132600.27427-1-sashal@kernel.org>
 References: <20190601132600.27427-1-sashal@kernel.org>
@@ -62,36 +64,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Lu Baolu <baolu.lu@linux.intel.com>
 
-[ Upstream commit ec7f6aad57ad29e4e66cc2e18e1e1599ddb02542 ]
+[ Upstream commit cf1ec4539a50bdfe688caad4615ca47646884316 ]
 
-When ioremap fails, hga_vram should not be dereferenced. The fix
-check the failure to avoid NULL pointer dereference.
+The intel_iommu_gfx_mapped flag is exported by the Intel
+IOMMU driver to indicate whether an IOMMU is used for the
+graphic device. In a virtualized IOMMU environment (e.g.
+QEMU), an include-all IOMMU is used for graphic device.
+This flag is found to be clear even the IOMMU is used.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Cc: Aditya Pakki <pakki001@umn.edu>
-Cc: Ferenc Bakonyi <fero@drama.obuda.kando.hu>
-[b.zolnierkie: minor patch summary fixup]
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Ashok Raj <ashok.raj@intel.com>
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: Kevin Tian <kevin.tian@intel.com>
+Reported-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Fixes: c0771df8d5297 ("intel-iommu: Export a flag indicating that the IOMMU is used for iGFX.")
+Suggested-by: Kevin Tian <kevin.tian@intel.com>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/hgafb.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/iommu/intel-iommu.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/video/fbdev/hgafb.c b/drivers/video/fbdev/hgafb.c
-index 15d3ccff29654..4a397c7c1b560 100644
---- a/drivers/video/fbdev/hgafb.c
-+++ b/drivers/video/fbdev/hgafb.c
-@@ -285,6 +285,8 @@ static int hga_card_detect(void)
- 	hga_vram_len  = 0x08000;
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 3e97c4b2ebed2..b965561a41627 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -3983,9 +3983,7 @@ static void __init init_no_remapping_devices(void)
  
- 	hga_vram = ioremap(0xb0000, hga_vram_len);
-+	if (!hga_vram)
-+		goto error;
+ 		/* This IOMMU has *only* gfx devices. Either bypass it or
+ 		   set the gfx_mapped flag, as appropriate */
+-		if (dmar_map_gfx) {
+-			intel_iommu_gfx_mapped = 1;
+-		} else {
++		if (!dmar_map_gfx) {
+ 			drhd->ignored = 1;
+ 			for_each_active_dev_scope(drhd->devices,
+ 						  drhd->devices_cnt, i, dev)
+@@ -4694,6 +4692,9 @@ int __init intel_iommu_init(void)
+ 		goto out_free_reserved_range;
+ 	}
  
- 	if (request_region(0x3b0, 12, "hgafb"))
- 		release_io_ports = 1;
++	if (dmar_map_gfx)
++		intel_iommu_gfx_mapped = 1;
++
+ 	init_no_remapping_devices();
+ 
+ 	ret = init_dmars();
 -- 
 2.20.1
 
