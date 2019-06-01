@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A481C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:23:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FA7C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A42727336
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:23:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E093C27333
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:23:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395418;
-	bh=9r1puFqb8kXnbp2vr3hFIXYft/uYYN/xujmq0taN2EU=;
+	s=default; t=1559395422;
+	bh=mpK1R3CoQOBwdpjhvFcXxrFDFhjGjyoxehuKVzq5gmI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dms9uLP+5PLCnD7nU4/0echntUk3wx/536BGLa8Z/eIja44DypzSEM6b9nH6p/ErG
-	 lWuT+7SWVXXu6ATTgoSsS2HYA26TWXKvphaiMx78Ut7L/nroWwbIlHruRQN1oXbw3q
-	 SERmQrMpoGNSm9Kx2VA+MusACpzYkF2lxSsmt54I=
+	b=2KQoO0QcLv3PzFoa192MsjCzAOsc4OmuCCh8TsEwzynqSsDykLmD1eLFyokqPuRB9
+	 mCyszqEAyD3L41y/R86NMmXw4bKYgMOcA89AS+hpX/OuIe2uZrS06vOtt4Fdy6MEvR
+	 49JinMmVR4Hst2XvrQtodz69NSJj/rTiKk5IwGSg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbfFANXh (ORCPT
+        id S1727979AbfFANXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:23:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53538 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:23:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727979AbfFANXf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:23:35 -0400
+        id S1728215AbfFANXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:23:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 687B524C2E;
-        Sat,  1 Jun 2019 13:23:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE1AC27333;
+        Sat,  1 Jun 2019 13:23:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395415;
-        bh=9r1puFqb8kXnbp2vr3hFIXYft/uYYN/xujmq0taN2EU=;
+        s=default; t=1559395417;
+        bh=mpK1R3CoQOBwdpjhvFcXxrFDFhjGjyoxehuKVzq5gmI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mTKXP9qsGr5/a1LyFfQRK0qCwttUoP6QzeYE6g8pqFrWwBHz2UZU6r8P2Iu4eCE+g
-         2TKWzyKujCp3fAbF6krkFxkIgC52WK33SOC9GgvDuUzJs1jDWZl6GmWlOtFHv7vZwC
-         OyfokcC6sRpYAxCSiDynXgpgFGAUfAhmAZxNgDP8=
+        b=CP4BNeUX9RGVDwKuYnMuXyR7Pbgczw7QueMFnyaNm3FJS7wDfjRHQLjkRfK7VkxYQ
+         STdqZ1oXuk0mTFA4mZ2pOkZStnH/R3aCXg6Wl19LE2DGVHS0Qkam6Wdbj7+cxOsQcf
+         k4LNwd3s2gA5lEeVP6EwStTA6W0Ju/pyfVt2Ta2E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ludovic Barre <ludovic.barre@st.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 050/141] mmc: mmci: Prevent polling for busy detection in IRQ context
-Date:   Sat,  1 Jun 2019 09:20:26 -0400
-Message-Id: <20190601132158.25821-50-sashal@kernel.org>
+Cc:     Jakub Jankowski <shasta@toxcorp.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 052/141] netfilter: nf_conntrack_h323: restore boundary check correctness
+Date:   Sat,  1 Jun 2019 09:20:28 -0400
+Message-Id: <20190601132158.25821-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601132158.25821-1-sashal@kernel.org>
 References: <20190601132158.25821-1-sashal@kernel.org>
@@ -59,44 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre@st.com>
+From: Jakub Jankowski <shasta@toxcorp.com>
 
-[ Upstream commit 8520ce1e17799b220ff421d4f39438c9c572ade3 ]
+[ Upstream commit f5e85ce8e733c2547827f6268136b70b802eabdb ]
 
-The IRQ handler, mmci_irq(), loops until all status bits have been cleared.
-However, the status bit signaling busy in variant->busy_detect_flag, may be
-set even if busy detection isn't monitored for the current request.
+Since commit bc7d811ace4a ("netfilter: nf_ct_h323: Convert
+CHECK_BOUND macro to function"), NAT traversal for H.323
+doesn't work, failing to parse H323-UserInformation.
+nf_h323_error_boundary() compares contents of the bitstring,
+not the addresses, preventing valid H.323 packets from being
+conntrack'd.
 
-This may be the case for the CMD11 when switching the I/O voltage, which
-leads to that mmci_irq() busy loops in IRQ context. Fix this problem, by
-clearing the status bit for busy, before continuing to validate the
-condition for the loop. This is safe, because the busy status detection has
-already been taken care of by mmci_cmd_irq().
+This looks like an oversight from when CHECK_BOUND macro was
+converted to a function.
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+To fix it, stop dereferencing bs->cur and bs->end.
+
+Fixes: bc7d811ace4a ("netfilter: nf_ct_h323: Convert CHECK_BOUND macro to function")
+Signed-off-by: Jakub Jankowski <shasta@toxcorp.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/mmci.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ net/netfilter/nf_conntrack_h323_asn1.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-index 1841d250e9e2c..eb1a65cb878f0 100644
---- a/drivers/mmc/host/mmci.c
-+++ b/drivers/mmc/host/mmci.c
-@@ -1295,9 +1295,10 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
- 		}
+diff --git a/net/netfilter/nf_conntrack_h323_asn1.c b/net/netfilter/nf_conntrack_h323_asn1.c
+index 1601275efe2d1..4c2ef42e189cb 100644
+--- a/net/netfilter/nf_conntrack_h323_asn1.c
++++ b/net/netfilter/nf_conntrack_h323_asn1.c
+@@ -172,7 +172,7 @@ static int nf_h323_error_boundary(struct bitstr *bs, size_t bytes, size_t bits)
+ 	if (bits % BITS_PER_BYTE > 0)
+ 		bytes++;
  
- 		/*
--		 * Don't poll for busy completion in irq context.
-+		 * Busy detection has been handled by mmci_cmd_irq() above.
-+		 * Clear the status bit to prevent polling in IRQ context.
- 		 */
--		if (host->variant->busy_detect && host->busy_status)
-+		if (host->variant->busy_detect_flag)
- 			status &= ~host->variant->busy_detect_flag;
+-	if (*bs->cur + bytes > *bs->end)
++	if (bs->cur + bytes > bs->end)
+ 		return 1;
  
- 		ret = 1;
+ 	return 0;
 -- 
 2.20.1
 
