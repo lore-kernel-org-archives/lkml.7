@@ -7,48 +7,53 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F12C28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF00C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D42552764B
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62E3327651
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:40:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559396405;
-	bh=Ai2vQJywRYMGVTbPiAk3Y9zEsCHedQ3M3f/TFeUR7Xg=;
+	s=default; t=1559396410;
+	bh=i2CKDvvI3H1Wdcjf6zDc07VYBcgn+3crgsPxk0chYKw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kYej8taMbBU7njuDsWD+zgtiNhRmGw+UO18mR72trpLf2d6e/KyQUKHP8rbjOj2ds
-	 yqXwKhl3WnLxqreGS13qUvx1V1jarNumqHb9/lG3dO9QrRh+f0fxYbJkSHTdji8CEG
-	 kTHGBXHq+tPBtq3nQF+N9k3Iwx8UHZ2aJpvjHLzc=
+	b=ptWHSYrhaLQk8mPsfOS/SyoJ9s01XRD7URLcwUX73q6xFI7jUWymvKmU7ZE8Skq3Q
+	 r5SZT9qvYxhXIxNX4V/ICFA4uj6L4m9fiaLJuaAIPFY+OY+70ZavD4YL68MGMLEiqr
+	 EaE8lCtiPlXj3D8kGzQC8gluAUPgry2+/O/d1moI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728633AbfFANkF (ORCPT
+        id S1728351AbfFANUr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:40:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48102 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:20:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727613AbfFANUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:20:48 -0400
+        id S1728321AbfFANUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:20:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAE61272E9;
-        Sat,  1 Jun 2019 13:20:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE084272DB;
+        Sat,  1 Jun 2019 13:20:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395247;
-        bh=Ai2vQJywRYMGVTbPiAk3Y9zEsCHedQ3M3f/TFeUR7Xg=;
+        s=default; t=1559395233;
+        bh=i2CKDvvI3H1Wdcjf6zDc07VYBcgn+3crgsPxk0chYKw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RkfKf0A7lM89VebdC5utHEFNxW03E47kYUNjSknDq27T5aelHdzajp7qqiSVPLU/Z
-         qH222DBL+6ox+aHDhlflBKLr16LNgQ0DdPYF5lW/QCJoAd2IMuTeGWQ64KfggCOw5g
-         urPoVs488w7RmVOqZtciloiM7msV/phO2c9qAxP4=
+        b=rA9OPVjt3HdvnevdKf64evreMsSRwglAN1X6gVGdawdt5e4dWgYiIdXPDgZWhGtEd
+         JI47YgYhtfLr5UdmPK/1/bxwNP1C4KhtHFfVXIVZSjRvjxSgKcD4wL2iEBu0lD4MrW
+         D9FA3A44QyX+bY1SqYb5mziMwvOutgyvT/5Uy8h4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Binbin Wu <binbin.wu@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 025/173] mfd: intel-lpss: Set the device in reset state when init
-Date:   Sat,  1 Jun 2019 09:16:57 -0400
-Message-Id: <20190601131934.25053-25-sashal@kernel.org>
+Cc:     Yue Hu <huyue2@yulong.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 5.0 017/173] mm/cma.c: fix the bitmap status to show failed allocation reason
+Date:   Sat,  1 Jun 2019 09:16:49 -0400
+Message-Id: <20190601131934.25053-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131934.25053-1-sashal@kernel.org>
 References: <20190601131934.25053-1-sashal@kernel.org>
@@ -61,70 +66,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Binbin Wu <binbin.wu@intel.com>
+From: Yue Hu <huyue2@yulong.com>
 
-[ Upstream commit dad06532292d77f37fbe831a02948a593500f682 ]
+[ Upstream commit 2b59e01a3aa665f751d1410b99fae9336bd424e1 ]
 
-In virtualized setup, when system reboots due to warm
-reset interrupt storm is seen.
+Currently one bit in cma bitmap represents number of pages rather than
+one page, cma->count means cma size in pages. So to find available pages
+via find_next_zero_bit()/find_next_bit() we should use cma size not in
+pages but in bits although current free pages number is correct due to
+zero value of order_per_bit. Once order_per_bit is changed the bitmap
+status will be incorrect.
 
-Call Trace:
-<IRQ>
-dump_stack+0x70/0xa5
-__report_bad_irq+0x2e/0xc0
-note_interrupt+0x248/0x290
-? add_interrupt_randomness+0x30/0x220
-handle_irq_event_percpu+0x54/0x80
-handle_irq_event+0x39/0x60
-handle_fasteoi_irq+0x91/0x150
-handle_irq+0x108/0x180
-do_IRQ+0x52/0xf0
-common_interrupt+0xf/0xf
-</IRQ>
-RIP: 0033:0x76fc2cfabc1d
-Code: 24 28 bf 03 00 00 00 31 c0 48 8d 35 63 77 0e 00 48 8d 15 2e
-94 0e 00 4c 89 f9 49 89 d9 4c 89 d3 e8 b8 e2 01 00 48 8b 54 24 18
-<48> 89 ef 48 89 de 4c 89 e1 e8 d5 97 01 00 84 c0 74 2d 48 8b 04
-24
-RSP: 002b:00007ffd247c1fc0 EFLAGS: 00000293 ORIG_RAX: ffffffffffffffda
-RAX: 0000000000000000 RBX: 00007ffd247c1ff0 RCX: 000000000003d3ce
-RDX: 0000000000000000 RSI: 00007ffd247c1ff0 RDI: 000076fc2cbb6010
-RBP: 000076fc2cded010 R08: 00007ffd247c2210 R09: 00007ffd247c22a0
-R10: 000076fc29465470 R11: 0000000000000000 R12: 00007ffd247c1fc0
-R13: 000076fc2ce8e470 R14: 000076fc27ec9960 R15: 0000000000000414
-handlers:
-[<000000000d3fa913>] idma64_irq
-Disabling IRQ #27
+The size input in cma_debug_show_areas() is not correct.  It will
+affect the available pages at some position to debug the failure issue.
 
-To avoid interrupt storm, set the device in reset state
-before bringing out the device from reset state.
+This is an example with order_per_bit = 1
 
-Changelog v2:
-- correct the subject line by adding "mfd: "
+Before this change:
+[    4.120060] cma: number of available pages: 1@93+4@108+7@121+7@137+7@153+7@169+7@185+7@201+3@213+3@221+3@229+3@237+3@245+3@253+3@261+3@269+3@277+3@285+3@293+3@301+3@309+3@317+3@325+19@333+15@369+512@512=> 638 free of 1024 total pages
 
-Signed-off-by: Binbin Wu <binbin.wu@intel.com>
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+After this change:
+[    4.143234] cma: number of available pages: 2@93+8@108+14@121+14@137+14@153+14@169+14@185+14@201+6@213+6@221+6@229+6@237+6@245+6@253+6@261+6@269+6@277+6@285+6@293+6@301+6@309+6@317+6@325+38@333+30@369=> 252 free of 1024 total pages
+
+Obviously the bitmap status before is incorrect.
+
+Link: http://lkml.kernel.org/r/20190320060829.9144-1-zbestahu@gmail.com
+Signed-off-by: Yue Hu <huyue2@yulong.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Laura Abbott <labbott@redhat.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/intel-lpss.c | 3 +++
- 1 file changed, 3 insertions(+)
+ mm/cma.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/mfd/intel-lpss.c b/drivers/mfd/intel-lpss.c
-index 50bffc3382d77..ff3fba16e7359 100644
---- a/drivers/mfd/intel-lpss.c
-+++ b/drivers/mfd/intel-lpss.c
-@@ -273,6 +273,9 @@ static void intel_lpss_init_dev(const struct intel_lpss *lpss)
+diff --git a/mm/cma.c b/mm/cma.c
+index f160ce31ef469..0b6d6c63bcef5 100644
+--- a/mm/cma.c
++++ b/mm/cma.c
+@@ -371,23 +371,26 @@ int __init cma_declare_contiguous(phys_addr_t base,
+ #ifdef CONFIG_CMA_DEBUG
+ static void cma_debug_show_areas(struct cma *cma)
  {
- 	u32 value = LPSS_PRIV_SSP_REG_DIS_DMA_FIN;
+-	unsigned long next_zero_bit, next_set_bit;
++	unsigned long next_zero_bit, next_set_bit, nr_zero;
+ 	unsigned long start = 0;
+-	unsigned int nr_zero, nr_total = 0;
++	unsigned long nr_part, nr_total = 0;
++	unsigned long nbits = cma_bitmap_maxno(cma);
  
-+	/* Set the device in reset state */
-+	writel(0, lpss->priv + LPSS_PRIV_RESETS);
-+
- 	intel_lpss_deassert_reset(lpss);
- 
- 	intel_lpss_set_remap_addr(lpss);
+ 	mutex_lock(&cma->lock);
+ 	pr_info("number of available pages: ");
+ 	for (;;) {
+-		next_zero_bit = find_next_zero_bit(cma->bitmap, cma->count, start);
+-		if (next_zero_bit >= cma->count)
++		next_zero_bit = find_next_zero_bit(cma->bitmap, nbits, start);
++		if (next_zero_bit >= nbits)
+ 			break;
+-		next_set_bit = find_next_bit(cma->bitmap, cma->count, next_zero_bit);
++		next_set_bit = find_next_bit(cma->bitmap, nbits, next_zero_bit);
+ 		nr_zero = next_set_bit - next_zero_bit;
+-		pr_cont("%s%u@%lu", nr_total ? "+" : "", nr_zero, next_zero_bit);
+-		nr_total += nr_zero;
++		nr_part = nr_zero << cma->order_per_bit;
++		pr_cont("%s%lu@%lu", nr_total ? "+" : "", nr_part,
++			next_zero_bit);
++		nr_total += nr_part;
+ 		start = next_zero_bit + nr_zero;
+ 	}
+-	pr_cont("=> %u free of %lu total pages\n", nr_total, cma->count);
++	pr_cont("=> %lu free of %lu total pages\n", nr_total, cma->count);
+ 	mutex_unlock(&cma->lock);
+ }
+ #else
 -- 
 2.20.1
 
