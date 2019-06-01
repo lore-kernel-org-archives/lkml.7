@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B3CC28CC1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2056C28CC1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F289D272AF
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:18:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D3E1272AF
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Jun 2019 13:18:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559395117;
-	bh=EO/dkPdDUW+fy2N8DW/eKTgmTrgnAEjtpEC/X2yFuUQ=;
+	s=default; t=1559395120;
+	bh=Abv9GsTyntkTHWoXQ9xFksd//sO3na6syWyCUco9TYM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fg2K4VoFAtIamHTJBbV5C+VoPJq0OXA43CIu7cuN/S4nYUdxqR42ZfrhBW2E7Nawv
-	 lVb0NeYyCJOm25NXoToDUNz8VybGW19uU3su9o4kipq7KlgecVyVH4mGda0Ox81mTs
-	 yYQaQEwaiXWM3S0qjzq/7lbhgcnNHgypBADkvfz4=
+	b=x13aIfQNLuk+//iOcLdy8O27d5ORTrkg4CnJmMOhKPHCibSM/cck3hpGKH17D4sr3
+	 hoHlI/EYUoLb2cNMQQvTEGYLZ1k6QzZVKRz6bUIDLa9w61l3EQT15tYRylT2AvU48H
+	 +o80MCBlXYUn50B++IggpEOuVew/iCaCLGA7cs+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727842AbfFANSg (ORCPT
+        id S1727877AbfFANSj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 09:18:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45522 "EHLO mail.kernel.org"
+        Sat, 1 Jun 2019 09:18:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727804AbfFANSc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:18:32 -0400
+        id S1727804AbfFANSh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:18:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32EFB255FF;
-        Sat,  1 Jun 2019 13:18:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57B46272AB;
+        Sat,  1 Jun 2019 13:18:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395111;
-        bh=EO/dkPdDUW+fy2N8DW/eKTgmTrgnAEjtpEC/X2yFuUQ=;
+        s=default; t=1559395116;
+        bh=Abv9GsTyntkTHWoXQ9xFksd//sO3na6syWyCUco9TYM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zxpHU9IGWcZS6hYw/r5ArGK7pkRYSUvdPqYv2Mb63+rUZnzSDajE++yFv7vo6je50
-         ycPYnkAJOYn5dFNU46P0JuPJnD2s5HYe/rBJhvWA+3iW9mmIu4UtSkHkk2AluXvswb
-         Kg9UA85uCfhsDedZLtLD+dH0atsI678YKY6er1TE=
+        b=jH/QP21SENmJNm7brza/gPq6gOWN4/ftKCUbvyXoQliiu2JIkpuueD+GqsauQfaoj
+         HTYYTZKeg0kc6MpQOmw1G4+movcOdHhZ/hIdz102jlkaP35TP9BE1MUhj+J4Ra61Y/
+         fxG4HZu+t6qPeUX8CHZRZIH/7dKTJCRRHqniKlr8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Krzesimir Nowak <krzesimir@kinvolk.io>,
-        Alban Crequy <alban@kinvolk.io>,
-        =?UTF-8?q?Iago=20L=C3=B3pez=20Galeiras?= <iago@kinvolk.io>,
-        Yonghong Song <yhs@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 036/186] bpf: fix undefined behavior in narrow load handling
-Date:   Sat,  1 Jun 2019 09:14:12 -0400
-Message-Id: <20190601131653.24205-36-sashal@kernel.org>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.1 040/186] pwm: meson: Use the spin-lock only to protect register modifications
+Date:   Sat,  1 Jun 2019 09:14:16 -0400
+Message-Id: <20190601131653.24205-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190601131653.24205-1-sashal@kernel.org>
 References: <20190601131653.24205-1-sashal@kernel.org>
@@ -64,53 +64,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzesimir Nowak <krzesimir@kinvolk.io>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit e2f7fc0ac6957cabff4cecf6c721979b571af208 ]
+[ Upstream commit f173747fffdf037c791405ab4f1ec0eb392fc48e ]
 
-Commit 31fd85816dbe ("bpf: permits narrower load from bpf program
-context fields") made the verifier add AND instructions to clear the
-unwanted bits with a mask when doing a narrow load. The mask is
-computed with
+Holding the spin-lock for all of the code in meson_pwm_apply() can
+result in a "BUG: scheduling while atomic". This can happen because
+clk_get_rate() (which is called from meson_pwm_calc()) may sleep.
+Only hold the spin-lock when modifying registers to solve this.
 
-  (1 << size * 8) - 1
+The reason why we need a spin-lock in the driver is because the
+REG_MISC_AB register is shared between the two channels provided by one
+PWM controller. The only functions where REG_MISC_AB is modified are
+meson_pwm_enable() and meson_pwm_disable() so the register reads/writes
+in there need to be protected by the spin-lock.
 
-where "size" is the size of the narrow load. When doing a 4 byte load
-of a an 8 byte field the verifier shifts the literal 1 by 32 places to
-the left. This results in an overflow of a signed integer, which is an
-undefined behavior. Typically, the computed mask was zero, so the
-result of the narrow load ended up being zero too.
+The original code also used the spin-lock to protect the values in
+struct meson_pwm_channel. This could be necessary if two consumers can
+use the same PWM channel. However, PWM core doesn't allow this so we
+don't need to protect the values in struct meson_pwm_channel with a
+lock.
 
-Cast the literal to long long to avoid overflows. Note that narrow
-load of the 4 byte fields does not have the undefined behavior,
-because the load size can only be either 1 or 2 bytes, so shifting 1
-by 8 or 16 places will not overflow it. And reading 4 bytes would not
-be a narrow load of a 4 bytes field.
-
-Fixes: 31fd85816dbe ("bpf: permits narrower load from bpf program context fields")
-Reviewed-by: Alban Crequy <alban@kinvolk.io>
-Reviewed-by: Iago López Galeiras <iago@kinvolk.io>
-Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
-Cc: Yonghong Song <yhs@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Fixes: 211ed630753d2f ("pwm: Add support for Meson PWM Controller")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/verifier.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pwm/pwm-meson.c | 25 +++++++++++++++++--------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
 
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 09d5d972c9ff2..950fac024fbb1 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -7296,7 +7296,7 @@ static int convert_ctx_accesses(struct bpf_verifier_env *env)
- 									insn->dst_reg,
- 									shift);
- 				insn_buf[cnt++] = BPF_ALU64_IMM(BPF_AND, insn->dst_reg,
--								(1 << size * 8) - 1);
-+								(1ULL << size * 8) - 1);
- 			}
- 		}
+diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
+index c1ed641b3e266..f6e738ad7bd92 100644
+--- a/drivers/pwm/pwm-meson.c
++++ b/drivers/pwm/pwm-meson.c
+@@ -111,6 +111,10 @@ struct meson_pwm {
+ 	const struct meson_pwm_data *data;
+ 	void __iomem *base;
+ 	u8 inverter_mask;
++	/*
++	 * Protects register (write) access to the REG_MISC_AB register
++	 * that is shared between the two PWMs.
++	 */
+ 	spinlock_t lock;
+ };
  
+@@ -235,6 +239,7 @@ static void meson_pwm_enable(struct meson_pwm *meson,
+ {
+ 	u32 value, clk_shift, clk_enable, enable;
+ 	unsigned int offset;
++	unsigned long flags;
+ 
+ 	switch (id) {
+ 	case 0:
+@@ -255,6 +260,8 @@ static void meson_pwm_enable(struct meson_pwm *meson,
+ 		return;
+ 	}
+ 
++	spin_lock_irqsave(&meson->lock, flags);
++
+ 	value = readl(meson->base + REG_MISC_AB);
+ 	value &= ~(MISC_CLK_DIV_MASK << clk_shift);
+ 	value |= channel->pre_div << clk_shift;
+@@ -267,11 +274,14 @@ static void meson_pwm_enable(struct meson_pwm *meson,
+ 	value = readl(meson->base + REG_MISC_AB);
+ 	value |= enable;
+ 	writel(value, meson->base + REG_MISC_AB);
++
++	spin_unlock_irqrestore(&meson->lock, flags);
+ }
+ 
+ static void meson_pwm_disable(struct meson_pwm *meson, unsigned int id)
+ {
+ 	u32 value, enable;
++	unsigned long flags;
+ 
+ 	switch (id) {
+ 	case 0:
+@@ -286,9 +296,13 @@ static void meson_pwm_disable(struct meson_pwm *meson, unsigned int id)
+ 		return;
+ 	}
+ 
++	spin_lock_irqsave(&meson->lock, flags);
++
+ 	value = readl(meson->base + REG_MISC_AB);
+ 	value &= ~enable;
+ 	writel(value, meson->base + REG_MISC_AB);
++
++	spin_unlock_irqrestore(&meson->lock, flags);
+ }
+ 
+ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+@@ -296,19 +310,16 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ {
+ 	struct meson_pwm_channel *channel = pwm_get_chip_data(pwm);
+ 	struct meson_pwm *meson = to_meson_pwm(chip);
+-	unsigned long flags;
+ 	int err = 0;
+ 
+ 	if (!state)
+ 		return -EINVAL;
+ 
+-	spin_lock_irqsave(&meson->lock, flags);
+-
+ 	if (!state->enabled) {
+ 		meson_pwm_disable(meson, pwm->hwpwm);
+ 		channel->state.enabled = false;
+ 
+-		goto unlock;
++		return 0;
+ 	}
+ 
+ 	if (state->period != channel->state.period ||
+@@ -329,7 +340,7 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		err = meson_pwm_calc(meson, channel, pwm->hwpwm,
+ 				     state->duty_cycle, state->period);
+ 		if (err < 0)
+-			goto unlock;
++			return err;
+ 
+ 		channel->state.polarity = state->polarity;
+ 		channel->state.period = state->period;
+@@ -341,9 +352,7 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		channel->state.enabled = true;
+ 	}
+ 
+-unlock:
+-	spin_unlock_irqrestore(&meson->lock, flags);
+-	return err;
++	return 0;
+ }
+ 
+ static void meson_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
 -- 
 2.20.1
 
