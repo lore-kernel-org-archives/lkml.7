@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC65C282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 21:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC4AC282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 21:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0695E279E5
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 21:44:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 754E927A12
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 21:44:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EagNt2hB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F1OuY5wD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbfFBVoo (ORCPT
+        id S1727353AbfFBVor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 17:44:44 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:37543 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726776AbfFBVol (ORCPT
+        Sun, 2 Jun 2019 17:44:47 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46572 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727298AbfFBVop (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 17:44:41 -0400
-Received: by mail-lf1-f66.google.com with SMTP id m15so11975020lfh.4;
-        Sun, 02 Jun 2019 14:44:39 -0700 (PDT)
+        Sun, 2 Jun 2019 17:44:45 -0400
+Received: by mail-lj1-f195.google.com with SMTP id m15so6009129ljg.13;
+        Sun, 02 Jun 2019 14:44:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=RAvWzRmI3ATy0YIjicB8IsfAo/qyadtg5+mzRUz93eI=;
-        b=EagNt2hBDCd5AycfRYX3JxLV75oOBD0xhzNHS+0joAwPYhfHQfZlz1JeqVKtseGLQX
-         v6MXzeiQgozkp0oPnfkyOsK0CwZlSuAV0z9UEmMDiH2QvTnfd8aqgD9PygNvxN10tSot
-         ybJiyobwkhwR4aAug2uyfnMQcj2a0+gCUaJLmYPxqJFyzD4JiX3GxiG5CKpVvHWDbPC8
-         XbJZdQOr08yy8dsglkctybiJEQcJtVAJoIZt8WqM2h1euvTbOX0annWjLQaL3cqaBxnB
-         QdeO3mxDcz0cq9mVSTgbzDaNqjxhMwnqC3hXzdLwWWWiV+xKBjdIj4D4Apf3sHObNxRd
-         +X5g==
+        bh=Jb4CR3tw0eT4aVX7xtcGL6iTHp8bUhh7DM3yv9SQ9I4=;
+        b=F1OuY5wD8BSWPscoULEjkHVI/lOauyQU1wlbTNufssMlVyg67KNbWNIL8EdlVp/AhD
+         XOjEIgv0+511dDxRqv95oSMavqhvr8d9VcoP63hRSXm8clwm0HfuDmr9GoF7GNy4Ow6s
+         Bg/ISL0bbDKNROHNvAt3dxorpJ2gG4yMbwcDJOB4xVMxtxiuqTVNcERUUrOCGza3RmyT
+         aKtIxd1ZrHeklaDz07pQzkdZPJuHnrzIdtY5DkGCVY8WtwKAv/cBb+vf2dtQAdMP+Lb/
+         iKGDZ0mTW6QD/5WCbVgpWMJ6RpDW6RB8qw9ySur0X5NCETMWddjjSKplxJQCrdRX+y2L
+         OfRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=RAvWzRmI3ATy0YIjicB8IsfAo/qyadtg5+mzRUz93eI=;
-        b=NDTtCeeAdBnWma37Uq02oWr5uVQyAOk5ZEE4VpJyZ2ivXXuuI/6KdhucGlOUuhEoL9
-         gxsM5kBLTnJUMrQn4aRB0FMBPtJJ/vZ7YmDpBOIpNZxFSTQ/Zh3t3YgjmR6U0ia3AnLm
-         V/7irdQwCLtTjJphWzQpuqVsZfbkKoC/+OHVc47pTWHly2Lf5gsx36mMMAnY7IAKvPVY
-         IaHrsmffd1XYiUFRE38ZOrjC2SV3aR2NRWb5A7TXfXf3FsXvipz3U35nFNm6u0utZN5E
-         fDDVivN9R4NoCgsBAjnyMRS5dNZviuAiUo67SOU/Axw8MaBkwIvcpPU6HhI4GbMS7Vi3
-         Uq1w==
-X-Gm-Message-State: APjAAAWZ+PomDYS7UWYgRlvLyLMxfAUeSZX1DooJqm//WBcRgD/V66eo
-        u0QzAc51YAuTj1+9WGtzCHI=
-X-Google-Smtp-Source: APXvYqwVURBfRmTEbtFUio49iwWSumnN/lwOcLQ3vllsTSPty3UieZP3qePS3npckEpNH7djaR4w7g==
-X-Received: by 2002:ac2:5ec6:: with SMTP id d6mr12817520lfq.131.1559511879215;
-        Sun, 02 Jun 2019 14:44:39 -0700 (PDT)
+        bh=Jb4CR3tw0eT4aVX7xtcGL6iTHp8bUhh7DM3yv9SQ9I4=;
+        b=M4eb9yGmUKhgcqqWBO1KbZmFC3RPoqxEBAfRp4ELHtfI+nIjfsQIxs40X+BTgF3mrh
+         qpOqDcAtrYGjvkp5nD6Q3i8E8XhuNX9MbYNg1yMT0GA7eZcAPA06WFtlnYU25vI9UZ4N
+         NJixqacP1R01OkmH0QdfQ375pXmCM1vsIiYMsPqAJO7ASsdrRMXx5+dc2YP2cGIvZkgY
+         Z/mI9NUkL62zPnO0hFF9QQJ+HheIaSRb3gwDkKYGbQXS5toaY0DKLFHx33le9L+bmTLJ
+         qrL2u0bfFzvZyOzFCNJ/pJM2S5lF+7mXz+fsXqEFVSsnVz0dfc5fV9eQeYKaPgXYcQyv
+         cj+w==
+X-Gm-Message-State: APjAAAX/J0YHif11CBg/oI3gUjz4argIlyMwoN7vMxvmdbmdj8KO/e9l
+        /8lyFj1kZhgw5vs/nyLi9zc=
+X-Google-Smtp-Source: APXvYqyJ75tpCNWwmqUFZa53zRGteWryFAV1NLeBal5AI6HZv76NipH/O4rM6L0/fef/mCwqVrzA2g==
+X-Received: by 2002:a2e:8784:: with SMTP id n4mr12522759lji.4.1559511882906;
+        Sun, 02 Jun 2019 14:44:42 -0700 (PDT)
 Received: from localhost.localdomain ([94.29.35.141])
-        by smtp.gmail.com with ESMTPSA id g22sm2803653lje.43.2019.06.02.14.44.38
+        by smtp.gmail.com with ESMTPSA id g22sm2803653lje.43.2019.06.02.14.44.41
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 02 Jun 2019 14:44:38 -0700 (PDT)
+        Sun, 02 Jun 2019 14:44:42 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -66,9 +66,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
 Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
         linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v1] ARM: tegra: Enable Tegra VDE driver in tegra_defconfig
-Date:   Mon,  3 Jun 2019 00:37:07 +0300
-Message-Id: <20190602213712.26857-3-digetx@gmail.com>
+Subject: [PATCH v1 2/4] staging: media: tegra-vde: Manually pack UAPI structures
+Date:   Mon,  3 Jun 2019 00:37:10 +0300
+Message-Id: <20190602213712.26857-6-digetx@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190602213712.26857-1-digetx@gmail.com>
 References: <20190602213712.26857-1-digetx@gmail.com>
@@ -79,30 +79,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The video decoder driver was tested by time and works absolutely fine.
-The reason why it is in staging is because it doesn't provide common V4L
-interface yet, this shouldn't stop driver enabling in the defconfig since
-our userspace (libvdpau-tegra) provides combined acceleration of decoding
-and displaying without use of V4L.
+The __packed macro isn't available in userspace with the kernel headers.
+Checkpatch asks to use the macro, which is unwanted in a case of a UAPI
+header. There is no much benefit in a tight packing of the structures,
+hence let's pack them manually to cleanup things a tad. Note that there
+is no old-stable userspace that will suffer from this change, hence it's
+fine to change the ABI. In a result also more space is reserved for a
+possible future expansion of the UAPI as it was already shown that more
+fields will be needed for a later SoC generations.
 
+Suggested-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- arch/arm/configs/tegra_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/staging/media/tegra-vde/tegra-vde.c | 13 +++++-
+ drivers/staging/media/tegra-vde/uapi.h      | 44 +++++++++++----------
+ 2 files changed, 34 insertions(+), 23 deletions(-)
 
-diff --git a/arch/arm/configs/tegra_defconfig b/arch/arm/configs/tegra_defconfig
-index 8f5c6a5b444c..a27592d3b1fa 100644
---- a/arch/arm/configs/tegra_defconfig
-+++ b/arch/arm/configs/tegra_defconfig
-@@ -250,6 +250,8 @@ CONFIG_KEYBOARD_NVEC=y
- CONFIG_SERIO_NVEC_PS2=y
- CONFIG_NVEC_POWER=y
- CONFIG_NVEC_PAZ00=y
-+CONFIG_STAGING_MEDIA=y
-+CONFIG_TEGRA_VDE=y
- CONFIG_TEGRA_IOMMU_GART=y
- CONFIG_TEGRA_IOMMU_SMMU=y
- CONFIG_ARCH_TEGRA_2x_SOC=y
+diff --git a/drivers/staging/media/tegra-vde/tegra-vde.c b/drivers/staging/media/tegra-vde/tegra-vde.c
+index a5020dbf6eef..cc4244da2705 100644
+--- a/drivers/staging/media/tegra-vde/tegra-vde.c
++++ b/drivers/staging/media/tegra-vde/tegra-vde.c
+@@ -795,7 +795,7 @@ static int tegra_vde_ioctl_decode_h264(struct tegra_vde *vde,
+ {
+ 	struct device *dev = vde->miscdev.parent;
+ 	struct tegra_vde_h264_decoder_ctx ctx;
+-	struct tegra_vde_h264_frame frames[17];
++	struct tegra_vde_h264_frame *frames;
+ 	struct tegra_vde_h264_frame __user *frames_user;
+ 	struct video_frame *dpb_frames;
+ 	struct dma_buf_attachment *bitstream_data_dmabuf_attachment;
+@@ -830,11 +830,17 @@ static int tegra_vde_ioctl_decode_h264(struct tegra_vde *vde,
+ 	if (ret)
+ 		return ret;
+ 
++	frames = kmalloc_array(ctx.dpb_frames_nb, sizeof(*frames), GFP_KERNEL);
++	if (!frames) {
++		ret = -ENOMEM;
++		goto release_bitstream_dmabuf;
++	}
++
+ 	dpb_frames = kcalloc(ctx.dpb_frames_nb, sizeof(*dpb_frames),
+ 			     GFP_KERNEL);
+ 	if (!dpb_frames) {
+ 		ret = -ENOMEM;
+-		goto release_bitstream_dmabuf;
++		goto free_frames;
+ 	}
+ 
+ 	macroblocks_nb = ctx.pic_width_in_mbs * ctx.pic_height_in_mbs;
+@@ -955,6 +961,9 @@ static int tegra_vde_ioctl_decode_h264(struct tegra_vde *vde,
+ free_dpb_frames:
+ 	kfree(dpb_frames);
+ 
++free_frames:
++	kfree(frames);
++
+ release_bitstream_dmabuf:
+ 	tegra_vde_detach_and_put_dmabuf(bitstream_data_dmabuf_attachment,
+ 					bitstream_sgt, DMA_TO_DEVICE);
+diff --git a/drivers/staging/media/tegra-vde/uapi.h b/drivers/staging/media/tegra-vde/uapi.h
+index dd3e4a8c9f7e..ffb4983e5bb6 100644
+--- a/drivers/staging/media/tegra-vde/uapi.h
++++ b/drivers/staging/media/tegra-vde/uapi.h
+@@ -21,40 +21,42 @@ struct tegra_vde_h264_frame {
+ 	__u32 frame_num;
+ 	__u32 flags;
+ 
+-	__u32 reserved;
+-} __attribute__((packed));
++	// Must be zero'ed
++	__u32 reserved[6];
++};
+ 
+ struct tegra_vde_h264_decoder_ctx {
+ 	__s32 bitstream_data_fd;
+ 	__u32 bitstream_data_offset;
+ 
+ 	__u64 dpb_frames_ptr;
+-	__u8  dpb_frames_nb;
+-	__u8  dpb_ref_frames_with_earlier_poc_nb;
++	__u32 dpb_frames_nb;
++	__u32 dpb_ref_frames_with_earlier_poc_nb;
+ 
+ 	// SPS
+-	__u8  baseline_profile;
+-	__u8  level_idc;
+-	__u8  log2_max_pic_order_cnt_lsb;
+-	__u8  log2_max_frame_num;
+-	__u8  pic_order_cnt_type;
+-	__u8  direct_8x8_inference_flag;
+-	__u8  pic_width_in_mbs;
+-	__u8  pic_height_in_mbs;
++	__u32 baseline_profile;
++	__u32 level_idc;
++	__u32 log2_max_pic_order_cnt_lsb;
++	__u32 log2_max_frame_num;
++	__u32 pic_order_cnt_type;
++	__u32 direct_8x8_inference_flag;
++	__u32 pic_width_in_mbs;
++	__u32 pic_height_in_mbs;
+ 
+ 	// PPS
+-	__u8  pic_init_qp;
+-	__u8  deblocking_filter_control_present_flag;
+-	__u8  constrained_intra_pred_flag;
+-	__u8  chroma_qp_index_offset;
+-	__u8  pic_order_present_flag;
++	__u32 pic_init_qp;
++	__u32 deblocking_filter_control_present_flag;
++	__u32 constrained_intra_pred_flag;
++	__u32 chroma_qp_index_offset;
++	__u32 pic_order_present_flag;
+ 
+ 	// Slice header
+-	__u8  num_ref_idx_l0_active_minus1;
+-	__u8  num_ref_idx_l1_active_minus1;
++	__u32 num_ref_idx_l0_active_minus1;
++	__u32 num_ref_idx_l1_active_minus1;
+ 
+-	__u32 reserved;
+-} __attribute__((packed));
++	// Must be zero'ed
++	__u32 reserved[11];
++};
+ 
+ #define VDE_IOCTL_BASE			('v' + 0x20)
+ 
 -- 
 2.21.0
 
