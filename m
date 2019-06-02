@@ -2,101 +2,71 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F024C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 00:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D88AC28CC3
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 01:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3603F2776C
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 00:38:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="rIWMv8hN"
+	by mail.kernel.org (Postfix) with ESMTP id E0E78277CB
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 01:04:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfFBAi0 (ORCPT
+        id S1726718AbfFBBEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Jun 2019 20:38:26 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:59819 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726211AbfFBAi0 (ORCPT
+        Sat, 1 Jun 2019 21:04:25 -0400
+Received: from mailgw01.mediatek.com ([216.200.240.184]:58348 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726211AbfFBBEZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Jun 2019 20:38:26 -0400
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x520cKBo006195;
-        Sun, 2 Jun 2019 09:38:20 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x520cKBo006195
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1559435901;
-        bh=VPMWdmiaMMit8aN3x2Svzq92UM7PBXY5o/g1AChMeqw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=rIWMv8hNY4lqui1No4RF7wbo/bN5gy3vTAda/lC5cTq8bPLlEBCZbsqjZ5Ex4wqKt
-         0kjfGsFGMV5r9p6VzVV+rhu+PGTHbBk1sWB74VBjTr2hVhSKmrw2rbkjZovPOCIalx
-         2xmaWGzJUozR3soe5kAwII6KTUuJtyeeYCJDIIULsqtiPLR7qZzTSXCLpUkmO5EaP7
-         T+Lzd5+DR4DZ6+0tMooKWTWr7d6yPrjCIfXNu7poNweTpjRjhg60hJSFMC5o719LgG
-         WDvc6eT+RBwknd9x1biTV6KvJ5AiJMBXA4+Di6m68KAF18pP058nOtHwna3rQmPa8D
-         CnvQfqhiSbodg==
-X-Nifty-SrcIP: [209.85.222.46]
-Received: by mail-ua1-f46.google.com with SMTP id 7so5250768uah.1;
-        Sat, 01 Jun 2019 17:38:20 -0700 (PDT)
-X-Gm-Message-State: APjAAAVB94RgSPzS/XJv0ATYD3TMhvZ5DnRW3GlOJRQRVxiq8Bc5Vyb3
-        11swrhTyh7JIEvZS3essSv2jKITjjvtflKBsHWk=
-X-Google-Smtp-Source: APXvYqzqZ75H6WWeaX+LmWXIu9i2MAyw2MtmcZ5+WQel0nCu4TR+kFBGEkCow4ynoBFcyfjMf0nwuCrztJEVw9Vvwt4=
-X-Received: by 2002:a9f:24a3:: with SMTP id 32mr8228855uar.109.1559435899588;
- Sat, 01 Jun 2019 17:38:19 -0700 (PDT)
+        Sat, 1 Jun 2019 21:04:25 -0400
+X-UUID: f2afecfc659f46bfb1d0f459c8697aa9-20190601
+X-UUID: f2afecfc659f46bfb1d0f459c8697aa9-20190601
+Received: from mtkcas67.mediatek.inc [(172.29.193.45)] by mailgw01.mediatek.com
+        (envelope-from <sean.wang@mediatek.com>)
+        (musrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 420870484; Sat, 01 Jun 2019 17:04:21 -0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ MTKMBS62N2.mediatek.inc (172.29.193.42) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Sat, 1 Jun 2019 18:04:19 -0700
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Sun, 2 Jun 2019 09:04:18 +0800
+From:   <sean.wang@mediatek.com>
+To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <marcel@holtmann.org>, <johan.hedberg@gmail.com>
+CC:     <devicetree@vger.kernel.org>, <linux-bluetooth@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Sean Wang <sean.wang@mediatek.com>
+Subject: [PATCH v1 0/4] add boot-gpios and clock property to btmtkuart
+Date:   Sun, 2 Jun 2019 09:04:13 +0800
+Message-ID: <1559437457-26766-1-git-send-email-sean.wang@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-References: <20190601144943.126995-1-alex_y_xu@yahoo.ca> <20190601162907.GB6261@kroah.com>
- <155941810155.1991.11907646865432946934@pink.alxu.ca>
-In-Reply-To: <155941810155.1991.11907646865432946934@pink.alxu.ca>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sun, 2 Jun 2019 09:37:43 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASoaiBCObeEPO-hcrg9ftsGq2QWXoG+R8TWv1z53HJvXw@mail.gmail.com>
-Message-ID: <CAK7LNASoaiBCObeEPO-hcrg9ftsGq2QWXoG+R8TWv1z53HJvXw@mail.gmail.com>
-Subject: Re: [PATCH] crypto: ux500 - fix license comment syntax error
-To:     Alex Xu <alex_y_xu@yahoo.ca>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        allison@lohutok.net, alexios.zavras@intel.com, swinslow@gmail.com,
-        rfontana@redhat.com, linux-spdx@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 2, 2019 at 4:41 AM Alex Xu <alex_y_xu@yahoo.ca> wrote:
->
-> Quoting Greg KH (2019-06-01 16:29:07)
-> > On Sat, Jun 01, 2019 at 10:49:43AM -0400, Alex Xu (Hello71) wrote:
-> > > Causes error: drivers/crypto/ux500/cryp/Makefile:5: *** missing
-> > > separator.  Stop.
-> > >
-> > > Fixes: af873fcecef5 ("treewide: Replace GPLv2 boilerplate/reference with SPDX - rule 194")
-> > > Signed-off-by: Alex Xu (Hello71) <alex_y_xu@yahoo.ca>
-> > > ---
-> > >  drivers/crypto/ux500/cryp/Makefile | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > Also, how did 0-day not catch this?  Is this an odd configuration that
-> > it can not build?
->
-> I had to run "make clean" to get the error.
+From: Sean Wang <sean.wang@mediatek.com>
 
-I think this copyright block is ugly.
+Update dt-binding and the corresponding implmentation of boot-gpios and clock
+property to btmtkuart.
 
+Sean Wang (4):
+  dt-bindings: net: bluetooth: add boot-gpios property to UART-based
+    device
+  dt-bindings: net: bluetooth: add clock property to UART-based device
+  Bluetooth: btmtkuart: add an implementation for boot-gpios property
+  Bluetooth: btmtkuart: add an implementation for clock osc property
 
-# SPDX-License-Identifier: GPL-2.0-only
-#
-# Copyright (C) ST-Ericsson SA 2010
-# Author: shujuan.chen@stericsson.com for ST-Ericsson.
-
-looks nicer IMHO.
-
-
-
+ .../bindings/net/mediatek-bluetooth.txt       | 17 +++++++
+ drivers/bluetooth/btmtkuart.c                 | 51 +++++++++++++++----
+ 2 files changed, 58 insertions(+), 10 deletions(-)
 
 -- 
-Best Regards
-Masahiro Yamada
+2.17.1
+
