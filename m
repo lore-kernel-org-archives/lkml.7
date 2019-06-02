@@ -2,164 +2,144 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9543C282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 13:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E1BC282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 13:46:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD8C527923
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 13:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A08052792C
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 13:46:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PQo7xN0O"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kmTIPegk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfFBNg5 (ORCPT
+        id S1726652AbfFBNqN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 09:36:57 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53398 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbfFBNg5 (ORCPT
+        Sun, 2 Jun 2019 09:46:13 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:44267 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726168AbfFBNqN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 09:36:57 -0400
-Received: by mail-wm1-f67.google.com with SMTP id d17so1084201wmb.3;
-        Sun, 02 Jun 2019 06:36:54 -0700 (PDT)
+        Sun, 2 Jun 2019 09:46:13 -0400
+Received: by mail-lf1-f67.google.com with SMTP id r15so11487236lfm.11
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 06:46:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=6M+Tu/nPOq4TtFuBA80HcvzEsuQO0Tl5aFrElztCMrw=;
-        b=PQo7xN0Oukp50y+DAxPrKPXCoT6F1W8UzYOEiFP1sBWvUQ6Y+jUTMbuvPAH+hTlSkB
-         b9ZYAOyMuX6NCS0/T4JOrBm02wFk1DLKhOLK54hZeKx/MjbgCNq8vpKyIPtvEUFngpze
-         830IMpw4ki5wmz9v8MrdCFtqPT1Krkyxmef8AOXGf+gOC4lTCZAwiNeL9zcLeJ+mHFWx
-         OT1q3bKy6/zfxQf0o+fhqUx3TY2BuNWD9lKk1HbvZgaapWOklMDVVOBkAMS4bdTpAZK1
-         Oi0ZGkbUdk9e/6Iifv4o1rxVZ4yonc+LSoqKxqLCmaB05x7IZ/iu4vuRfqyRqaFDOekP
-         ZFtQ==
+        bh=/HXePg+U9wYisFggCp2Pzqg3Rwj+xqMpwFPX/mLExcw=;
+        b=kmTIPegkoSpcJ8hqye1lqSBQSA7MkeiqNch0W+2HBj7RSol1Jvtjj5QrIzwitU+hIz
+         akckmxjuwIQxq3CoddMUkYVUqOsjhEbSterRG+2EC4tTyQYt8H/bvNP1aGKC+dk3FBfT
+         8TCZkeexa5fDIsp599kOGla3jttCqBINBPmBrQlTpBsiNSlMbb00/fPdJffvjz8ajOYK
+         iVwNJT5Ay/bdeUz64mIMnz31e0pXEQ79gMjuYSMlZwFKh72N+UDjLCVPQQ42LnlMZ+XA
+         8J2/dJaI806P5fVy7F0wT32fW/RGcjS4b1Fv+/oRdSFGssK5AG7MnV5OUlsMZKpVYIfA
+         cp1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=6M+Tu/nPOq4TtFuBA80HcvzEsuQO0Tl5aFrElztCMrw=;
-        b=PDB6TNabyiStz+dcO1xvBJ4hD/F8wsi1owHF/O0gLwRRACxLRTNL4dqyfxfp+nNGYf
-         RWh4K0/JPGiPkJLtiH5PSh3PFUlinLpa34rHb8REbucHkcueWAHl/4Jee4sweAH5N0Kr
-         F1iMk2E+cgMqYc4AJUokd1ViS21NbiTU6+7a+pEy1N/y6Xmv5imwtz6oNxEil3SuCMT2
-         IZn7kBBgTYrD4Fx5LPPw3jCDJWRohIcciO7T6UvlBsQrUmSEwr7E7UcgkXurU1Ly8Egj
-         LbZoWAOuMDGErbpRUimQvNNz7Le66j1n3NzEfogmdQ3SZrkq7CoMMTM4S8zf+9nZ8FvR
-         PFTw==
-X-Gm-Message-State: APjAAAVqHKD68DwHuvdyoG+Eo7skJ4FuP2b2iL3fJLkd9Sykq7slDx5J
-        PdBYDJfqgmaCfmsTWXVUv73sv5jXYGVPZYG15bQ=
-X-Google-Smtp-Source: APXvYqzt1ZbLKW9U5eB8+6RqQSBFnR+6o+ysXXtrVS2I+UmBZtyKV36+w17n2wl/cp+R9xcpPt3dVvcyJao9ze8gphw=
-X-Received: by 2002:a1c:eb16:: with SMTP id j22mr7203910wmh.56.1559482613930;
- Sun, 02 Jun 2019 06:36:53 -0700 (PDT)
+        bh=/HXePg+U9wYisFggCp2Pzqg3Rwj+xqMpwFPX/mLExcw=;
+        b=YWNaWjrco32DWBk+3MOviObrFfi8HmalyR6vnqTCBt/P2xqR+yeovo0uencLgGB2EZ
+         0zxxHrVVE1G1bTdAsteAW3oC8ntnOK+DrRBz9cfQ6tC0sZboBqGRys86w39rfYBL5HQ1
+         ukETd3Vdy/qgv01TcTpXRyoRRIV+IWwSgzio2gSjk4eu7LghrJW9kCLJlKKSK2Ih3Rbg
+         bIS5s76rnaEBTLfkE1XakrU2Vz/BNUFnR/Z4m+r1ICDG8D0t0UC70gaWOFnCLMEjTsV7
+         xLd3zvyA1vgCLqqf6l4n1N/Oiy8K85I9r7s0RXCIUhYALzCvHkJV1SWByYy0+/8M3Qvu
+         4rbw==
+X-Gm-Message-State: APjAAAUUtsNJhRrLpUkYdGwu1DJTscI9Y6HtJiW9vmNjPNc0Aw3v92aj
+        qJv/h+JQ6aV6qJrxgNw3V/D6BVEtUW8hzwbFYpm6mg==
+X-Google-Smtp-Source: APXvYqz6WY5pxflKsXHSMYl4mX+ysp3I0qjeB0QZKykytlcSBEDK9daj1SeTNDVgSkwE6Ex68afJYUMfuStOy42vDGM=
+X-Received: by 2002:a19:ae09:: with SMTP id f9mr11059917lfc.60.1559483171545;
+ Sun, 02 Jun 2019 06:46:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190602034429.6888-1-hdanton@sina.com> <20190602105133.GA16948@hmswarspite.think-freely.org>
-In-Reply-To: <20190602105133.GA16948@hmswarspite.think-freely.org>
-From:   Xin Long <lucien.xin@gmail.com>
-Date:   Sun, 2 Jun 2019 21:36:42 +0800
-Message-ID: <CADvbK_dUDjK3UAF49uo+DZv+QiuEsaMmZeqDwBJ0suRwu4yXJw@mail.gmail.com>
-Subject: Re: [PATCH] net: sctp: fix memory leak in sctp_send_reset_streams
-To:     Neil Horman <nhorman@tuxdriver.com>
-Cc:     Hillf Danton <hdanton@sina.com>, linux-sctp@vger.kernel.org,
-        network dev <netdev@vger.kernel.org>,
-        syzkaller <syzkaller@googlegroups.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        syzbot <syzbot+6ad9c3bd0a218a2ab41d@syzkaller.appspotmail.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Eric Dumazet <edumazet@google.com>
+References: <20190529145322.20630-1-thierry.reding@gmail.com> <20190529145322.20630-2-thierry.reding@gmail.com>
+In-Reply-To: <20190529145322.20630-2-thierry.reding@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sun, 2 Jun 2019 15:46:00 +0200
+Message-ID: <CACRpkdb5vB6OwcAxtjsKLzHt9V27juEOEEDqqQczKT-3r+7X-g@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] gpio: Add support for hierarchical IRQ domains
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Bitan Biswas <bbiswas@nvidia.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 2, 2019 at 6:52 PM Neil Horman <nhorman@tuxdriver.com> wrote:
+On Wed, May 29, 2019 at 4:53 PM Thierry Reding <thierry.reding@gmail.com> wrote:
+
+> From: Thierry Reding <treding@nvidia.com>
 >
-> On Sun, Jun 02, 2019 at 11:44:29AM +0800, Hillf Danton wrote:
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    036e3431 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=153cff12a00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=8f0f63a62bb5b13c
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=6ad9c3bd0a218a2ab41d
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12561c86a00000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15b76fd8a00000
-> >
-> > executing program
-> > executing program
-> > executing program
-> > executing program
-> > executing program
-> > BUG: memory leak
-> > unreferenced object 0xffff888123894820 (size 32):
-> >   comm "syz-executor045", pid 7267, jiffies 4294943559 (age 13.660s)
-> >   hex dump (first 32 bytes):
-> >     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> >     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> >   backtrace:
-> >     [<00000000c7e71c69>] kmemleak_alloc_recursive
-> > include/linux/kmemleak.h:55 [inline]
-> >     [<00000000c7e71c69>] slab_post_alloc_hook mm/slab.h:439 [inline]
-> >     [<00000000c7e71c69>] slab_alloc mm/slab.c:3326 [inline]
-> >     [<00000000c7e71c69>] __do_kmalloc mm/slab.c:3658 [inline]
-> >     [<00000000c7e71c69>] __kmalloc+0x161/0x2c0 mm/slab.c:3669
-> >     [<000000003250ed8e>] kmalloc_array include/linux/slab.h:670 [inline]
-> >     [<000000003250ed8e>] kcalloc include/linux/slab.h:681 [inline]
-> >     [<000000003250ed8e>] sctp_send_reset_streams+0x1ab/0x5a0 net/sctp/stream.c:302
-> >     [<00000000cd899c6e>] sctp_setsockopt_reset_streams net/sctp/socket.c:4314 [inline]
-> >     [<00000000cd899c6e>] sctp_setsockopt net/sctp/socket.c:4765 [inline]
-> >     [<00000000cd899c6e>] sctp_setsockopt+0xc23/0x2bf0 net/sctp/socket.c:4608
-> >     [<00000000ff3a21a2>] sock_common_setsockopt+0x38/0x50 net/core/sock.c:3130
-> >     [<000000009eb87ae7>] __sys_setsockopt+0x98/0x120 net/socket.c:2078
-> >     [<00000000e0ede6ca>] __do_sys_setsockopt net/socket.c:2089 [inline]
-> >     [<00000000e0ede6ca>] __se_sys_setsockopt net/socket.c:2086 [inline]
-> >     [<00000000e0ede6ca>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2086
-> >     [<00000000c61155f5>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:301
-> >     [<00000000e540958c>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> >
-> >
-> > It was introduced in commit d570a59c5b5f ("sctp: only allow the out stream
-> > reset when the stream outq is empty"), in orde to check stream outqs before
-> > sending SCTP_STRRESET_IN_PROGRESS back to the peer of the stream. EAGAIN is
-> > returned, however, without the nstr_list slab released, if any outq is found
-> > to be non empty.
-> >
-> > Freeing the slab in question before bailing out fixes it.
-> >
-> > Fixes: d570a59c5b5f ("sctp: only allow the out stream reset when the stream outq is empty")
-> > Reported-by: syzbot <syzbot+6ad9c3bd0a218a2ab41d@syzkaller.appspotmail.com>
-> > Reported-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-> > Tested-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-> > Cc: Xin Long <lucien.xin@gmail.com>
-> > Cc: Neil Horman <nhorman@tuxdriver.com>
-> > Cc: Vlad Yasevich <vyasevich@gmail.com>
-> > Cc: Eric Dumazet <edumazet@google.com>
-> > Signed-off-by: Hillf Danton <hdanton@sina.com>
-> > ---
-> > net/sctp/stream.c | 1 +
-> > 1 file changed, 1 insertion(+)
-> >
-> > diff --git a/net/sctp/stream.c b/net/sctp/stream.c
-> > index 93ed078..d3e2f03 100644
-> > --- a/net/sctp/stream.c
-> > +++ b/net/sctp/stream.c
-> > @@ -310,6 +310,7 @@ int sctp_send_reset_streams(struct sctp_association *asoc,
-> >
-> >       if (out && !sctp_stream_outq_is_empty(stream, str_nums, nstr_list)) {
-> >               retval = -EAGAIN;
-> > +             kfree(nstr_list);
-> >               goto out;
-> >       }
-> >
-> > --
-> >
-> >
-> Acked-by: Neil Horman <nhorman@tuxdriver.com>
-Reviewed-by: Xin Long <lucien.xin@gmail.com>
+> Hierarchical IRQ domains can be used to stack different IRQ controllers
+> on top of each other. One specific use-case where this can be useful is
+> if a power management controller has top-level controls for wakeup
+> interrupts. In such cases, the power management controller can be a
+> parent to other interrupt controllers and program additional registers
+> when an IRQ has its wake capability enabled or disabled.
+>
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+> Changes in v3:
+> - use irq_create_fwspec_mapping() instead of irq_domain_alloc_irqs()
+> - add missing kerneldoc for new parent_domain field
+> - keep IRQ_DOMAIN dependency for clarity
+>
+> Changes in v2:
+> - select IRQ_DOMAIN_HIERARCHY to avoid build failure
+> - move more code into the gpiolib core
+
+This is looking really good!
+
+>  config GPIOLIB_IRQCHIP
+>         select IRQ_DOMAIN
+> +       select IRQ_DOMAIN_HIERARCHY
+>         bool
+
+Hm OK I guess. It would be ugly to ifdef all hierarchy
+code in gpiolib.
+
+>  static int gpiochip_to_irq(struct gpio_chip *chip, unsigned offset)
+>  {
+> +       struct irq_domain *domain = chip->irq.domain;
+> +
+>         if (!gpiochip_irqchip_irq_valid(chip, offset))
+>                 return -ENXIO;
+>
+> +       if (irq_domain_is_hierarchy(domain)) {
+> +               struct irq_fwspec spec;
+> +
+> +               spec.fwnode = domain->fwnode;
+> +               spec.param_count = 2;
+> +               spec.param[0] = offset;
+> +               spec.param[1] = IRQ_TYPE_NONE;
+> +
+> +               return irq_create_fwspec_mapping(&spec);
+> +       }
+> +
+>         return irq_create_mapping(chip->irq.domain, offset);
+
+This is looking really good!
+
+> +       /*
+> +        * Allow GPIO chips to override the ->to_irq() if they really need to.
+> +        * This should only be very rarely needed, the majority should be fine
+> +        * with gpiochip_to_irq().
+> +        */
+> +       if (!gpiochip->to_irq)
+> +               gpiochip->to_irq = gpiochip_to_irq;
+
+Please drop this. The default .to_irq() should be good for everyone.
+Also patch 2/2 now contains a identical copy of the gpiolib
+.to_irq() which I suspect you indended to drop, actually.
+
+Other than that I'm ready to merge the v3 of this!
+
+Yours,
+Linus Walleij
