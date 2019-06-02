@@ -2,134 +2,121 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E1BC282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 22:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1B3C282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 22:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FF4127A1B
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 22:00:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E8E327A20
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 22:00:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="weVrd+TD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rXUyCBlM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbfFBWAK (ORCPT
+        id S1727047AbfFBWAX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 18:00:10 -0400
-Received: from gateway23.websitewelcome.com ([192.185.50.129]:23429 "EHLO
-        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726270AbfFBWAJ (ORCPT
+        Sun, 2 Jun 2019 18:00:23 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:46331 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbfFBWAX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 18:00:09 -0400
-X-Greylist: delayed 1292 seconds by postgrey-1.27 at vger.kernel.org; Sun, 02 Jun 2019 18:00:09 EDT
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway23.websitewelcome.com (Postfix) with ESMTP id EF8544ADF
-        for <linux-kernel@vger.kernel.org>; Sun,  2 Jun 2019 16:38:36 -0500 (CDT)
-Received: from br164.hostgator.com.br ([192.185.176.180])
-        by cmsmtp with SMTP
-        id XYBYhVp2LdnCeXYBYh9oJE; Sun, 02 Jun 2019 16:38:36 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=3yY6puF5yr6t9ajzI5zXVjuhpN5P/MQwRyHXK2uCu9Y=; b=weVrd+TD99WJUSZK0UrQH42JTt
-        qtv4X92WOjdU8XJmSO7aM4e3pRacAVkOnZ/DOlx5uv/KMLXNQq1FsE0KdYN6KRcEiwAYBLbADUwro
-        u2k7eCKfqjnboMEtV6c0pcXLLpPieOul+FO9B3yj3WpJF667TwKKdvXpRxORfKrMZcSBjxzHV7q1W
-        UCCHDakokr4RyB0GuUVxpojYIvw4mcQcT+I61sG5IkEoCqJBZQe9JgYlmYAUAg40ZLW36MBV+XApH
-        Zqx5zW712hoY9kF75XDRyDCz1fpHmcu6GTkEF5Ku71nq9lcNHYi/BEZgI1DM5h3yd7B1L/rWj1w8i
-        /F3u0lnw==;
-Received: from [177.34.20.96] (port=54464 helo=[192.168.0.28])
-        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <matheus@castello.eng.br>)
-        id 1hXYBY-003QwH-8q; Sun, 02 Jun 2019 18:38:36 -0300
-Subject: Re: [PATCH v3 2/5] dt-bindings: power: supply: Max17040: Add low
- level SOC alert threshold
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
-        <b.zolnierkie@samsung.com>, lee.jones@linaro.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <CAJKOXPf=nPrmw6Vzi_=LmO=dVsV4Gvoc-q75XP2FBEgm9Gxv0A@mail.gmail.com>
- <20190527022258.32748-1-matheus@castello.eng.br>
- <20190527022258.32748-3-matheus@castello.eng.br>
- <CAJKOXPdtsyY_GhniBAb0yV=HOhGx+x4xRPqNgdO+d0MDZRZ_7w@mail.gmail.com>
-From:   Matheus Castello <matheus@castello.eng.br>
-Message-ID: <71c4f6b6-fbbb-14ba-0cf0-2377498fdfbc@castello.eng.br>
-Date:   Sun, 2 Jun 2019 18:38:26 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Sun, 2 Jun 2019 18:00:23 -0400
+Received: by mail-lj1-f196.google.com with SMTP id m15so6022403ljg.13;
+        Sun, 02 Jun 2019 15:00:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pSO0H2Cb09CLOksHCZL4+23n2F4bglfpiYqVlXdmSfM=;
+        b=rXUyCBlMcV0bxFvqljbaR2UaMAAKXoGyvYOwiL/fraYrb6NX1s+e06Db9EmTtqZyq+
+         MR9+Aj7S7O0Esk1UGwr5N3MsS20PQbC6MjjZT0UyE3LB9lU/OmE3hxPpTeRxMCMscSTj
+         bM8WlmIS2thi69ERW3BEQlCfeuJ2NlX7b3nA1YjDNzidYEX7taTrVG8j1NfN9uw5LYEG
+         QCIsyOeDsNjNtJWo2T5zpo9DAi94Js2EmxoOkbU97JY6FQV4VHDUkJHqPWffysMBS5pN
+         ADpDcj57t3ob377xVWa8R8LcdFHbJS1/TvUf+Rw1nQDRlYN7CQkw9yu+SipjBVdm0KJA
+         DCLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pSO0H2Cb09CLOksHCZL4+23n2F4bglfpiYqVlXdmSfM=;
+        b=bn7KO7kSG9gqwHIq+rPXsuiF16yx43XhYo15auszsqGq/ECJEt+Zhrrnu2Vs9pyOZY
+         MTi61kICWDfl/NibXXoa+hB4rbgXTugZqV3I+DdFOm9J4QPhkQ0bz1VPmRSXyyRxppfj
+         q8Tm16eBVxfhQiRbhtZQHzX7Ern72hef6jpLVHrRuTg9868sYKuGYHn6NoYGnqLu4aZ8
+         DHfpA6AUeUmv0e8I1DUJxOAIx9aN7+N4oRThY5iYu+sBva9oPntDTtdpQxA/Qm41z7mE
+         b7jevFnLxhlpI49Y0CtNqfJdLe2yb6bpS9DgZbw8lvgYYj8kKj8aA/KBzet19dLnseCH
+         cz0A==
+X-Gm-Message-State: APjAAAUnzDgqcKXc+kmOeXHruCqoKpYBGMDXdLjXXP/r303zFFkeUOl+
+        Gvo18AGkvagnTl04nqhPhGLYvEiYhZ29kMSRvDo=
+X-Google-Smtp-Source: APXvYqzF2ASIyINX5BllZ1zYtV8spOtlH4ML28puBxpogyGYLuAXeJjrOIOpZBBzC3J7OdWvFcybZF60eiLm7KaJ6zs=
+X-Received: by 2002:a2e:8116:: with SMTP id d22mr7225ljg.8.1559512820874; Sun,
+ 02 Jun 2019 15:00:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAJKOXPdtsyY_GhniBAb0yV=HOhGx+x4xRPqNgdO+d0MDZRZ_7w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - castello.eng.br
-X-BWhitelist: no
-X-Source-IP: 177.34.20.96
-X-Source-L: No
-X-Exim-ID: 1hXYBY-003QwH-8q
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.28]) [177.34.20.96]:54464
-X-Source-Auth: matheus@castello.eng.br
-X-Email-Count: 10
-X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
-X-Local-Domain: yes
+References: <20190602213926.2290-1-olteanv@gmail.com> <20190602213926.2290-9-olteanv@gmail.com>
+In-Reply-To: <20190602213926.2290-9-olteanv@gmail.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Mon, 3 Jun 2019 01:00:10 +0300
+Message-ID: <CA+h21ho1d0RWE=fjy9YhcJ2aBr11BHvOT+daoQd7M+S1S6B0WA@mail.gmail.com>
+Subject: Re: [PATCH v2 net-next 08/10] net: dsa: sja1105: Make
+ sja1105_is_link_local not match meta frames
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Richard Cochran <richardcochran@gmail.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Mon, 27 May 2019 at 04:45, Matheus Castello <matheus@castello.eng.br> wrote:
->>
->> For configure low level state of charge threshold alert signaled from
->> max17040 we add "maxim,alert-low-soc-level" property.
->>
->> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
->> ---
->>   .../power/supply/max17040_battery.txt         | 28 +++++++++++++++++++
->>   1 file changed, 28 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/power/supply/max17040_battery.txt
->>
->> diff --git a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
->> new file mode 100644
->> index 000000000000..a13e8d50ff7b
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
->> @@ -0,0 +1,28 @@
->> +max17040_battery
->> +~~~~~~~~~~~~~~~~
->> +
->> +Required properties :
->> + - compatible : "maxim,max17040" or "maxim,max77836-battery"
-> 
-> One more comment. The datasheet for max17040 says that there is on
-> ALERT pin and ALERT bits in RCOMP register. Which device are you
-> using? If it turns out that max17040 does not support it, then the
-> driver and bindings should reflect this - interrupts should not be set
-> on max17040.
-> 
+On Mon, 3 Jun 2019 at 00:40, Vladimir Oltean <olteanv@gmail.com> wrote:
+>
+> Although meta frames are configured to be sent at SJA1105_META_DMAC
+> (01-80-C2-00-00-0E) which is a multicast MAC address that would also be
+> trapped by the switch to the CPU, were it to receive it on a front-panel
+> port, meta frames are conceptually not link-local frames, they only
+> carry their RX timestamps.
+>
+> The choice of sending meta frames at a multicast DMAC is a pragmatic
+> one, to avoid installing an extra entry to the DSA master port's
+> multicast MAC filter.
+>
+> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+> ---
+> Changes in v2:
+>
+> Patch is new.
+>
+>  include/linux/dsa/sja1105.h | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/include/linux/dsa/sja1105.h b/include/linux/dsa/sja1105.h
+> index f3237afed35a..d64e56d6c521 100644
+> --- a/include/linux/dsa/sja1105.h
+> +++ b/include/linux/dsa/sja1105.h
+> @@ -31,6 +31,8 @@ static inline bool sja1105_is_link_local(const struct sk_buff *skb)
+>         const struct ethhdr *hdr = eth_hdr(skb);
+>         u64 dmac = ether_addr_to_u64(hdr->h_dest);
+>
+> +       if (ntohs(hdr->h_proto) == ETH_P_SJA1105_META)
+> +               return false;
+>         if ((dmac & SJA1105_LINKLOCAL_FILTER_A_MASK) ==
+>                     SJA1105_LINKLOCAL_FILTER_A)
+>                 return true;
+> --
+> 2.17.1
+>
 
-Yes you are right, max17040 have no ALERT pin. I am using max17043. Let 
-me know what you think would be best, put a note about it in the 
-description, add a compatibles like "maxim,max17043" and 
-"maxim,max17044"? What do you think?
+Please be aware that this patch is misplaced and should be moved after
+the current 09/10 (doesn't compile as 08/10).
+I'll bundle this change in v3 with the other feedback I'll hopefully get.
 
-Best Regards,
-Matheus Castello
-
-> Best regards,
-> Krzysztof
-> 
+Thanks!
+-Vladimir
