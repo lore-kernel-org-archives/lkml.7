@@ -2,135 +2,111 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDDCC282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 10:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A05C282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 11:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBA0E273AB
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 10:52:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73BE9278A7
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 11:05:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbfFBKwT (ORCPT
+        id S1726594AbfFBLFP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 06:52:19 -0400
-Received: from charlotte.tuxdriver.com ([70.61.120.58]:53467 "EHLO
-        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726122AbfFBKwS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 06:52:18 -0400
-Received: from cpe-2606-a000-111b-405a-0-0-0-162e.dyn6.twc.com ([2606:a000:111b:405a::162e] helo=localhost)
-        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
-        (Exim 4.63)
-        (envelope-from <nhorman@tuxdriver.com>)
-        id 1hXO5p-0006gO-VQ; Sun, 02 Jun 2019 06:52:09 -0400
-Date:   Sun, 2 Jun 2019 06:51:33 -0400
-From:   Neil Horman <nhorman@tuxdriver.com>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller@googlegroups.com,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        syzbot <syzbot+6ad9c3bd0a218a2ab41d@syzkaller.appspotmail.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Eric Dumazet <edumazet@google.com>
-Subject: Re: [PATCH] net: sctp: fix memory leak in sctp_send_reset_streams
-Message-ID: <20190602105133.GA16948@hmswarspite.think-freely.org>
-References: <20190602034429.6888-1-hdanton@sina.com>
+        Sun, 2 Jun 2019 07:05:15 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:55743 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726124AbfFBLFP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Jun 2019 07:05:15 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45GwMD4zdSz9s00;
+        Sun,  2 Jun 2019 21:05:12 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     anju@linux.vnet.ibm.com, bauerman@linux.ibm.com,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        ravi.bangoria@linux.ibm.com
+Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-5.2-3 tag
+Date:   Sun, 02 Jun 2019 21:05:12 +1000
+Message-ID: <878suknt7b.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190602034429.6888-1-hdanton@sina.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 02, 2019 at 11:44:29AM +0800, Hillf Danton wrote:
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    036e3431 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=153cff12a00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=8f0f63a62bb5b13c
-> dashboard link: https://syzkaller.appspot.com/bug?extid=6ad9c3bd0a218a2ab41d
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12561c86a00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15b76fd8a00000
-> 
-> executing program
-> executing program
-> executing program
-> executing program
-> executing program
-> BUG: memory leak
-> unreferenced object 0xffff888123894820 (size 32):
->   comm "syz-executor045", pid 7267, jiffies 4294943559 (age 13.660s)
->   hex dump (first 32 bytes):
->     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->   backtrace:
->     [<00000000c7e71c69>] kmemleak_alloc_recursive
-> include/linux/kmemleak.h:55 [inline]
->     [<00000000c7e71c69>] slab_post_alloc_hook mm/slab.h:439 [inline]
->     [<00000000c7e71c69>] slab_alloc mm/slab.c:3326 [inline]
->     [<00000000c7e71c69>] __do_kmalloc mm/slab.c:3658 [inline]
->     [<00000000c7e71c69>] __kmalloc+0x161/0x2c0 mm/slab.c:3669
->     [<000000003250ed8e>] kmalloc_array include/linux/slab.h:670 [inline]
->     [<000000003250ed8e>] kcalloc include/linux/slab.h:681 [inline]
->     [<000000003250ed8e>] sctp_send_reset_streams+0x1ab/0x5a0 net/sctp/stream.c:302
->     [<00000000cd899c6e>] sctp_setsockopt_reset_streams net/sctp/socket.c:4314 [inline]
->     [<00000000cd899c6e>] sctp_setsockopt net/sctp/socket.c:4765 [inline]
->     [<00000000cd899c6e>] sctp_setsockopt+0xc23/0x2bf0 net/sctp/socket.c:4608
->     [<00000000ff3a21a2>] sock_common_setsockopt+0x38/0x50 net/core/sock.c:3130
->     [<000000009eb87ae7>] __sys_setsockopt+0x98/0x120 net/socket.c:2078
->     [<00000000e0ede6ca>] __do_sys_setsockopt net/socket.c:2089 [inline]
->     [<00000000e0ede6ca>] __se_sys_setsockopt net/socket.c:2086 [inline]
->     [<00000000e0ede6ca>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2086
->     [<00000000c61155f5>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:301
->     [<00000000e540958c>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> 
-> It was introduced in commit d570a59c5b5f ("sctp: only allow the out stream
-> reset when the stream outq is empty"), in orde to check stream outqs before
-> sending SCTP_STRRESET_IN_PROGRESS back to the peer of the stream. EAGAIN is
-> returned, however, without the nstr_list slab released, if any outq is found
-> to be non empty.
-> 
-> Freeing the slab in question before bailing out fixes it.
-> 
-> Fixes: d570a59c5b5f ("sctp: only allow the out stream reset when the stream outq is empty")
-> Reported-by: syzbot <syzbot+6ad9c3bd0a218a2ab41d@syzkaller.appspotmail.com>
-> Reported-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-> Tested-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-> Cc: Xin Long <lucien.xin@gmail.com>
-> Cc: Neil Horman <nhorman@tuxdriver.com>
-> Cc: Vlad Yasevich <vyasevich@gmail.com>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Signed-off-by: Hillf Danton <hdanton@sina.com>
-> ---
-> net/sctp/stream.c | 1 +
-> 1 file changed, 1 insertion(+)
-> 
-> diff --git a/net/sctp/stream.c b/net/sctp/stream.c
-> index 93ed078..d3e2f03 100644
-> --- a/net/sctp/stream.c
-> +++ b/net/sctp/stream.c
-> @@ -310,6 +310,7 @@ int sctp_send_reset_streams(struct sctp_association *asoc,
-> 
-> 	if (out && !sctp_stream_outq_is_empty(stream, str_nums, nstr_list)) {
-> 		retval = -EAGAIN;
-> +		kfree(nstr_list);
-> 		goto out;
-> 	}
-> 
-> --
-> 
-> 
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+Hi Linus,
+
+Please pull some more powerpc fixes for 5.2:
+
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+
+are available in the git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.2-3
+
+for you to fetch changes up to 8b909e3548706cbebc0a676067b81aadda57f47e:
+
+  powerpc/kexec: Fix loading of kernel + initramfs with kexec_file_load() (2019-05-23 14:00:32 +1000)
+
+- ------------------------------------------------------------------
+powerpc fixes for 5.2 #3
+
+A minor fix to our IMC PMU code to print a less confusing error message when the
+driver can't initialise properly.
+
+A fix for a bug where a user requesting an unsupported branch sampling filter
+can corrupt PMU state, preventing the PMU from counting properly.
+
+And finally a fix for a bug in our support for kexec_file_load(), which
+prevented loading a kernel and initramfs. Most versions of kexec don't yet use
+kexec_file_load().
+
+Thanks to:
+  Anju T Sudhakar, Dave Young, Madhavan Srinivasan, Ravi Bangoria, Thiago Jung
+  Bauermann.
+
+- ------------------------------------------------------------------
+Anju T Sudhakar (1):
+      powerpc/powernv: Return for invalid IMC domain
+
+Ravi Bangoria (1):
+      powerpc/perf: Fix MMCRA corruption by bhrb_filter
+
+Thiago Jung Bauermann (1):
+      powerpc/kexec: Fix loading of kernel + initramfs with kexec_file_load()
+
+
+ arch/powerpc/kernel/kexec_elf_64.c        | 6 +++++-
+ arch/powerpc/perf/core-book3s.c           | 6 ++++--
+ arch/powerpc/perf/power8-pmu.c            | 3 +++
+ arch/powerpc/perf/power9-pmu.c            | 3 +++
+ arch/powerpc/platforms/powernv/opal-imc.c | 4 ++++
+ 5 files changed, 19 insertions(+), 3 deletions(-)
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJc860sAAoJEFHr6jzI4aWAgk0QAJ7e67M/DrigLDIi5LdnwDQQ
+AtQW+QzeoBHWiSgWfibqv5NjC9XCdOtvbOkD44TAlF99YMe5k8wShLLwiPSCIYEu
+7r83+NHPp7jpeoO8fmE4dTJsmp4Ez+cJfOKpAF6h2w+1yJ5gL2AP5wNLUBi6Cliw
+lUIRb73JgWj2hwu0HMNAxbE+mlyIpi8fXRk8TeUXVB+IEInOQxU0x/RkxqN4cCtG
+f0hzAnZPywdDvRBuU6roPU3zrII7nVgrLUPXjgin/v58sdqR7zFnWnsm+ou0jkuy
+K5zMcCuqZ6lrYjoak+OiqOt8CcalBtqju9ZANQkDIe5hMhXn4Maex1YbFE0i1UYm
+Ljbm6Dp4dSTxQcx7GV1xMzHGNHEMQFKSABX+jF9l/KOVl4aVZAEz5F6DNKZO4lo+
+EVX9HPBb6ZPyvwntLei8zn9C9LiSVWP5zsAW2zFam4isi498Ca1YpAyoSd58NrRn
+WXVcDwMIp9c8uiQllbICNWdHzJhJWhUu/lW2idKFy05zG5+g6dg80StVpYlaEZwK
+jggKwkD1H9VWrOZjoIHceOWPUxfjJ6wrvkovGqQqx6l9CkpEYfn1EG0p4s7CwXZ/
+wEq0wVsfVaHPkEDSHSwg8mI9ZaEwoY6WMXE63WbVPNMWN26yw5vLJJx4o91Gk/wq
+1F4UgNfF5XuQu8m5NWyU
+=qxoS
+-----END PGP SIGNATURE-----
