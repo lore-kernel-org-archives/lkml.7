@@ -2,111 +2,144 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A05C282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 11:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4204AC28CC6
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 11:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73BE9278A7
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 11:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15A51278FB
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 11:21:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g57zPOz6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbfFBLFP (ORCPT
+        id S1726683AbfFBLV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 07:05:15 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:55743 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726124AbfFBLFP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 07:05:15 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45GwMD4zdSz9s00;
-        Sun,  2 Jun 2019 21:05:12 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     anju@linux.vnet.ibm.com, bauerman@linux.ibm.com,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        ravi.bangoria@linux.ibm.com
-Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-5.2-3 tag
-Date:   Sun, 02 Jun 2019 21:05:12 +1000
-Message-ID: <878suknt7b.fsf@concordia.ellerman.id.au>
+        Sun, 2 Jun 2019 07:21:29 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43597 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726168AbfFBLV2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Jun 2019 07:21:28 -0400
+Received: by mail-pg1-f193.google.com with SMTP id f25so6598476pgv.10;
+        Sun, 02 Jun 2019 04:21:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SWsv2Kj8e8VQJPMoaBE0n56CZDHc2v93YdRGa+NaSWg=;
+        b=g57zPOz6tqBG3iAyMqRWgubMS3ZJ6Mjukgv6HGwbUeYtP5jZl4fbAmVCOCB20kqA9m
+         xAF61M3/D+xB3b3Y7L00uNKk/sng7kiL4svmH2bkip8NulIuc0R527PgaimCqgMU6Zfo
+         hdf5jInCexVgT1ln2/amJnqtZDGesXDLgGKHsmYErQxz7Cn6vxY8jYxO9+/E2je7I9Er
+         Viuc21BIkFcvTyKw7rNsgF1iVLS7hdwlXfGSAqEQUpQMq1za5MBAD2bVpOw3FrCoBl8r
+         YRolUSTKOEja8AgkEI5PU735OC0T4zW8uUe7DAqx5ClovfoFfMJ9GSrlAS3AhCy3vFRq
+         d8pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SWsv2Kj8e8VQJPMoaBE0n56CZDHc2v93YdRGa+NaSWg=;
+        b=pWfR7dTNZuvWlnYJaaiVY99LhhpPRaWE4Oa7Fy4HNHg4ROul9ZZPGsbvArZbdI7I6l
+         50xJEYNEbreVMrr3m35AUyw62GjgsPaqngBHmH32J+66CeoACDyu24a0mVytoyVO38OG
+         MrpaQtjUbTJbsqDvh4evf1fn/1AzWY+bmWc1iwa/yzgcEKXmM+gKAPgUkzFrS2uNTO+X
+         ff2434t2hLaoROVgBnYO9qpaZq9ASDc/IprsMEf+dpxhobLY1ylkv+SZLUmhy0XpgVU6
+         kBDXFEyjGzVwnxKyFC07X3LUr0O58xnDCEH6aXXicS6a/3BFudyB9PASkxpublJpfGlC
+         Zz8Q==
+X-Gm-Message-State: APjAAAUv3+XgPnMl7rEGhvyShiZb1iNKFkLAFDeyksebRTfSU11cOqlg
+        NzVYatHwVXHc6R015DtMjDind6Fzd4M=
+X-Google-Smtp-Source: APXvYqwLtjM5bP8bTikgdx9VMuu6O5K9dZWqTrMAp75dRnbnELaIF0yQjFL3IYBDm2u14WQjKyLrQw==
+X-Received: by 2002:a17:90a:778b:: with SMTP id v11mr22751443pjk.132.1559474487885;
+        Sun, 02 Jun 2019 04:21:27 -0700 (PDT)
+Received: from localhost.localdomain ([123.213.206.190])
+        by smtp.gmail.com with ESMTPSA id h7sm16816872pfo.108.2019.06.02.04.21.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 02 Jun 2019 04:21:27 -0700 (PDT)
+From:   Minwoo Im <minwoo.im.dev@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Minwoo Im <minwoo.im@samsung.com>,
+        Minwoo Im <minwoo.im.dev@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org
+Subject: [PATCH] genirq/affinity: remove unused arg when building aff mask
+Date:   Sun,  2 Jun 2019 20:21:17 +0900
+Message-Id: <20190602112117.31839-1-minwoo.im.dev@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+When building affinity masks, the struct irq_affinity *affd is not
+needed because irq_create_affinity_masks() has already given a cursored
+current vector after pre_vectors via "curvec".
 
-Hi Linus,
+This patch removes unused argument for irq_build_affinity_masks() and
+__irq_build_affinity_masks().  No functions changes are included.
 
-Please pull some more powerpc fixes for 5.2:
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: linux-block@vger.kernel.org
+Signed-off-by: Minwoo Im <minwoo.im.dev@gmail.com>
+---
+ kernel/irq/affinity.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+diff --git a/kernel/irq/affinity.c b/kernel/irq/affinity.c
+index f18cd5aa33e8..4352b08ae48d 100644
+--- a/kernel/irq/affinity.c
++++ b/kernel/irq/affinity.c
+@@ -94,8 +94,7 @@ static int get_nodes_in_cpumask(cpumask_var_t *node_to_cpumask,
+ 	return nodes;
+ }
+ 
+-static int __irq_build_affinity_masks(const struct irq_affinity *affd,
+-				      unsigned int startvec,
++static int __irq_build_affinity_masks(unsigned int startvec,
+ 				      unsigned int numvecs,
+ 				      unsigned int firstvec,
+ 				      cpumask_var_t *node_to_cpumask,
+@@ -171,8 +170,7 @@ static int __irq_build_affinity_masks(const struct irq_affinity *affd,
+  *	1) spread present CPU on these vectors
+  *	2) spread other possible CPUs on these vectors
+  */
+-static int irq_build_affinity_masks(const struct irq_affinity *affd,
+-				    unsigned int startvec, unsigned int numvecs,
++static int irq_build_affinity_masks(unsigned int startvec, unsigned int numvecs,
+ 				    unsigned int firstvec,
+ 				    struct irq_affinity_desc *masks)
+ {
+@@ -197,7 +195,7 @@ static int irq_build_affinity_masks(const struct irq_affinity *affd,
+ 	build_node_to_cpumask(node_to_cpumask);
+ 
+ 	/* Spread on present CPUs starting from affd->pre_vectors */
+-	nr_present = __irq_build_affinity_masks(affd, curvec, numvecs,
++	nr_present = __irq_build_affinity_masks(curvec, numvecs,
+ 						firstvec, node_to_cpumask,
+ 						cpu_present_mask, nmsk, masks);
+ 
+@@ -212,7 +210,7 @@ static int irq_build_affinity_masks(const struct irq_affinity *affd,
+ 	else
+ 		curvec = firstvec + nr_present;
+ 	cpumask_andnot(npresmsk, cpu_possible_mask, cpu_present_mask);
+-	nr_others = __irq_build_affinity_masks(affd, curvec, numvecs,
++	nr_others = __irq_build_affinity_masks(curvec, numvecs,
+ 					       firstvec, node_to_cpumask,
+ 					       npresmsk, nmsk, masks);
+ 	put_online_cpus();
+@@ -295,7 +293,7 @@ irq_create_affinity_masks(unsigned int nvecs, struct irq_affinity *affd)
+ 		unsigned int this_vecs = affd->set_size[i];
+ 		int ret;
+ 
+-		ret = irq_build_affinity_masks(affd, curvec, this_vecs,
++		ret = irq_build_affinity_masks(curvec, this_vecs,
+ 					       curvec, masks);
+ 		if (ret) {
+ 			kfree(masks);
+-- 
+2.21.0
 
-  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
-
-are available in the git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.2-3
-
-for you to fetch changes up to 8b909e3548706cbebc0a676067b81aadda57f47e:
-
-  powerpc/kexec: Fix loading of kernel + initramfs with kexec_file_load() (2019-05-23 14:00:32 +1000)
-
-- ------------------------------------------------------------------
-powerpc fixes for 5.2 #3
-
-A minor fix to our IMC PMU code to print a less confusing error message when the
-driver can't initialise properly.
-
-A fix for a bug where a user requesting an unsupported branch sampling filter
-can corrupt PMU state, preventing the PMU from counting properly.
-
-And finally a fix for a bug in our support for kexec_file_load(), which
-prevented loading a kernel and initramfs. Most versions of kexec don't yet use
-kexec_file_load().
-
-Thanks to:
-  Anju T Sudhakar, Dave Young, Madhavan Srinivasan, Ravi Bangoria, Thiago Jung
-  Bauermann.
-
-- ------------------------------------------------------------------
-Anju T Sudhakar (1):
-      powerpc/powernv: Return for invalid IMC domain
-
-Ravi Bangoria (1):
-      powerpc/perf: Fix MMCRA corruption by bhrb_filter
-
-Thiago Jung Bauermann (1):
-      powerpc/kexec: Fix loading of kernel + initramfs with kexec_file_load()
-
-
- arch/powerpc/kernel/kexec_elf_64.c        | 6 +++++-
- arch/powerpc/perf/core-book3s.c           | 6 ++++--
- arch/powerpc/perf/power8-pmu.c            | 3 +++
- arch/powerpc/perf/power9-pmu.c            | 3 +++
- arch/powerpc/platforms/powernv/opal-imc.c | 4 ++++
- 5 files changed, 19 insertions(+), 3 deletions(-)
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJc860sAAoJEFHr6jzI4aWAgk0QAJ7e67M/DrigLDIi5LdnwDQQ
-AtQW+QzeoBHWiSgWfibqv5NjC9XCdOtvbOkD44TAlF99YMe5k8wShLLwiPSCIYEu
-7r83+NHPp7jpeoO8fmE4dTJsmp4Ez+cJfOKpAF6h2w+1yJ5gL2AP5wNLUBi6Cliw
-lUIRb73JgWj2hwu0HMNAxbE+mlyIpi8fXRk8TeUXVB+IEInOQxU0x/RkxqN4cCtG
-f0hzAnZPywdDvRBuU6roPU3zrII7nVgrLUPXjgin/v58sdqR7zFnWnsm+ou0jkuy
-K5zMcCuqZ6lrYjoak+OiqOt8CcalBtqju9ZANQkDIe5hMhXn4Maex1YbFE0i1UYm
-Ljbm6Dp4dSTxQcx7GV1xMzHGNHEMQFKSABX+jF9l/KOVl4aVZAEz5F6DNKZO4lo+
-EVX9HPBb6ZPyvwntLei8zn9C9LiSVWP5zsAW2zFam4isi498Ca1YpAyoSd58NrRn
-WXVcDwMIp9c8uiQllbICNWdHzJhJWhUu/lW2idKFy05zG5+g6dg80StVpYlaEZwK
-jggKwkD1H9VWrOZjoIHceOWPUxfjJ6wrvkovGqQqx6l9CkpEYfn1EG0p4s7CwXZ/
-wEq0wVsfVaHPkEDSHSwg8mI9ZaEwoY6WMXE63WbVPNMWN26yw5vLJJx4o91Gk/wq
-1F4UgNfF5XuQu8m5NWyU
-=qxoS
------END PGP SIGNATURE-----
