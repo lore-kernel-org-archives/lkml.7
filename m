@@ -2,104 +2,63 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92ABBC282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 21:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BD3C282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 21:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 570A124369
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 21:22:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CGUGzSna"
+	by mail.kernel.org (Postfix) with ESMTP id 74F46212F5
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 21:31:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726835AbfFBVW1 (ORCPT
+        id S1726817AbfFBVbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 17:22:27 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40706 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726561AbfFBVW1 (ORCPT
+        Sun, 2 Jun 2019 17:31:38 -0400
+Received: from depni-mx.sinp.msu.ru ([213.131.7.21]:25 "EHLO
+        depni-mx.sinp.msu.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbfFBVbi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 17:22:27 -0400
-Received: by mail-lj1-f193.google.com with SMTP id q62so14282996ljq.7;
-        Sun, 02 Jun 2019 14:22:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fz1ltyVFvVWw0/t6pPLFHhNIn1MdgnWyz2QGoYgJ52U=;
-        b=CGUGzSnatSXJWaLOSZq3Mb4UjEy+vI/7kOY3a/2heaGwtjHRHjOE66/LeMqv/vQp6o
-         Ff/nm9C/KRzryxYS5B/RmvAhQNOvGIUFfQ7Mn8PEOsxIrDTxsgyIJYR7vmwGr9huvwWQ
-         laLnthk5eKnJeNtVxMk0tdNn5qJu+Gk9/T7chkKT2DWmlQ0iYsENBZ1cl1B/3eKPGI0d
-         8nUQmO0hpaHoNLSKSXUUw8ZuSlo+mPTUPRDlijPWKTi9f4ZGqz2eLnuMJsKubpdVhl4O
-         tI0/tT4w3BfBpE/BO8uroFnNAO0tmTlLzxnJOSg2Tx3srNG2Xhc+WkmJjTbEZrUdjYia
-         Ox1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fz1ltyVFvVWw0/t6pPLFHhNIn1MdgnWyz2QGoYgJ52U=;
-        b=tRT0kuErEGHG3lS4+PQmEe2wXx3cnpZFCQYx7NzWEHqEWs2yx2f/A9bhqzT3zp7vvs
-         gkqrgQBI5kB9daRiPUfMkLgl6W37j/UXUhXbQLxsbvR5zBykpyCfep5Df/aMpuTKnHSQ
-         ueXt0mkLlZFhPArf7rL2zq38JavUyflpRBfRKfzytzydg91QGdMfUR7EyWCfI7hokWTO
-         WvXvVvKPZJ3FuYdW4Ijhbj3bd0eT2Hmz2Yu6zvUPgVYPNrQJhbyPtv3QRpwkivnHF9Pu
-         B3xvUl8uwPf/G5fDpKXZPDpsoJVLSQa9k9zf5lA57tEdnncu+NTAuJM5M9xDbc+Y1QI5
-         bxvg==
-X-Gm-Message-State: APjAAAX+0ra98FJ62/y/RQJsj9/yUnLuca2pzSkpMRp6HbLLenzkbEdl
-        iZaDnRJpCJndNoZndSFvva1rv0USQIk=
-X-Google-Smtp-Source: APXvYqxvhE4gZ/BFQvzhcXN5ZGedfhX2RC5p6Tu43cmdMyaKqAO3/eULvdg6lBSkQfsToOfJ0v8gpg==
-X-Received: by 2002:a2e:809a:: with SMTP id i26mr12499635ljg.182.1559510545309;
-        Sun, 02 Jun 2019 14:22:25 -0700 (PDT)
-Received: from z50.gdansk-morena.vectranet.pl (109241207190.gdansk.vectranet.pl. [109.241.207.190])
-        by smtp.gmail.com with ESMTPSA id j11sm2758551lfm.29.2019.06.02.14.22.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 02 Jun 2019 14:22:24 -0700 (PDT)
-From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Subject: [PATCH] media: ov6650: Fix device node exposed without proper locking
-Date:   Sun,  2 Jun 2019 23:22:15 +0200
-Message-Id: <20190602212215.26734-1-jmkrzyszt@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Sun, 2 Jun 2019 17:31:38 -0400
+Received: from spider (unknown [109.63.145.211])
+        by depni-mx.sinp.msu.ru (Postfix) with ESMTPSA id B68A01BF404;
+        Mon,  3 Jun 2019 00:34:03 +0300 (MSK)
+From:   Serge Belyshev <belyshev@depni.sinp.msu.ru>
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] drm/i915: Skip object locking around a no-op set-domain ioctl
+References: <20190321161908.8007-1-chris@chris-wilson.co.uk>
+        <20190321161908.8007-2-chris@chris-wilson.co.uk>
+        <878sv31mqk.fsf@depni.sinp.msu.ru>
+Date:   Mon, 03 Jun 2019 00:31:33 +0300
+In-Reply-To: <878sv31mqk.fsf@depni.sinp.msu.ru> (Serge Belyshev's message of
+        "Sun, 19 May 2019 00:22:43 +0300")
+Message-ID: <878suj8yiy.fsf@depni.sinp.msu.ru>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit c62b96050bee ("media: ov6650: Register with asynchronous
-subdevice framework") carelessly requested creation of a video device
-node by setting a V4L2_SUBDEV_FL_HAS_DEVNODE flag.  The driver is not
-ready for that as it doesn't implement proper locking required for
-serialization of IOCTLs.
+Hi!
 
-Fix it by dropping the flag assignment.
+> This patch causes lockups in firefox. They appear like non-fatal hangs
+> of the webpage contents, "fixable" with alt-tab or a background system
+> load.  I have verified that reverting the commit 754a254427 on top of
+> current Linus tree fixes the problem.
 
-Fixes: c62b96050bee ("media: ov6650: Register with asynchronous subdevice framework")
-Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
----
- drivers/media/i2c/ov6650.c | 1 -
- 1 file changed, 1 deletion(-)
+This is still broken in v5.2-rc3.
 
-diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
-index 1b972e591b48..ace95ba7dd19 100644
---- a/drivers/media/i2c/ov6650.c
-+++ b/drivers/media/i2c/ov6650.c
-@@ -1009,7 +1009,6 @@ static int ov6650_probe(struct i2c_client *client,
- 	priv->colorspace  = V4L2_COLORSPACE_JPEG;
- 
- 	priv->subdev.internal_ops = &ov6650_internal_ops;
--	priv->subdev.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
- 
- 	ret = v4l2_async_register_subdev(&priv->subdev);
- 	if (ret)
--- 
-2.21.0
+I have also verified that the particular commit, if backported to v5.1
+release, breaks firefox there too in the same way.
 
+
+(for reference:)
+
+commit 754a25442705c4f90e0d05f1a7bd303ffe700ca9
+Author: Chris Wilson <chris@chris-wilson.co.uk>
+Date:   Thu Mar 21 16:19:08 2019 +0000
+
+    drm/i915: Skip object locking around a no-op set-domain ioctl
