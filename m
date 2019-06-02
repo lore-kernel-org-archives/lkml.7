@@ -2,85 +2,127 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A728BC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 06:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19DECC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 06:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7330E24F6A
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 06:21:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559456493;
-	bh=vhBKwCxwAgvEEdMJpzjBTxKgav4wSMPXDFR+K4mBLm8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pwH/wX1OdvrEjv7fAgL0SU/d16nes/ueFc+Q724xcLao6+GtFZYmmbURimbFeAJIf
-	 /kjD8F0bfc9cUuuS/PNUUnR35y+DxE8KIM59Yskh2lIebAl4NdaY+cHUa52ObFz+ip
-	 vFRtq2erDytWepmQdWgPpvtuw4aGNvExkZpvFIKI=
+	by mail.kernel.org (Postfix) with ESMTP id E6FFB27849
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 06:24:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726136AbfFBGUv (ORCPT
+        id S1726170AbfFBGYG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 02:20:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40900 "EHLO mail.kernel.org"
+        Sun, 2 Jun 2019 02:24:06 -0400
+Received: from sauhun.de ([88.99.104.3]:55462 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725871AbfFBGUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 02:20:51 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01E2124F6A;
-        Sun,  2 Jun 2019 06:20:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559456450;
-        bh=vhBKwCxwAgvEEdMJpzjBTxKgav4wSMPXDFR+K4mBLm8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FnYNb4YAy5jvKsdSs5P79OE5CNT9qtCcKA9hBr4W+qmUs/+UeTKaMRZXENw8A0i0A
-         JSle85ss5/U+eNgxkyQm3cWV/9g40GbDz5IwpPjOiqLPB/s/kVvowVK9XUyexmfEyI
-         qDnI5XqhBBogc5exi+uc5HR4B0VsjA5HArGN3xis=
-Date:   Sun, 2 Jun 2019 08:20:47 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Deepak Mishra <linux.dkm@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Larry.Finger@lwfinger.net,
-        florian.c.schilhabel@googlemail.com, himadri18.07@gmail.com,
-        straube.linux@gmail.com
-Subject: Re: [PATCH 0/8] staging: rtl8712: Fixed CamelCase in struct _adapter
- from drv_types.h
-Message-ID: <20190602062047.GA12076@kroah.com>
-References: <cover.1559412149.git.linux.dkm@gmail.com>
+        id S1725871AbfFBGYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Jun 2019 02:24:05 -0400
+Received: from localhost (ip5b40b67c.dynamic.kabel-deutschland.de [91.64.182.124])
+        by pokefinder.org (Postfix) with ESMTPSA id B24BD2C3559;
+        Sun,  2 Jun 2019 08:24:02 +0200 (CEST)
+Date:   Sun, 2 Jun 2019 08:24:02 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Rosin <peda@axentia.se>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PULL REQUEST] i2c for 5.2
+Message-ID: <20190602062356.GA1616@kunai>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="9jxsPFA5p3P2qPhR"
 Content-Disposition: inline
-In-Reply-To: <cover.1559412149.git.linux.dkm@gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 02, 2019 at 12:13:34AM +0530, Deepak Mishra wrote:
-> This patchset fixes CamelCase checks in struct _adapter in drv_types.h
-> and in files where struct _adapter is used by renaming the variables
-> without camel case. 
-> 
-> These check were reported by checkpatch.pl
->   
-> Deepak Mishra (8):
->   staging: rtl8712: Fixed CamelCase in struct _adapter from drv_types.h
->   staging: rtl8712: Fixed CamelCase in struct _adapter from drv_types.h
->   staging: rtl8712: Fixed CamelCase in struct _adapter from drv_types.h
->   staging: rtl8712: Fixed CamelCase in struct _adapter from drv_types.h
->   staging: rtl8712: Fixed CamelCase in struct _adapter from drv_types.h
->   staging: rtl8712: Fixed CamelCase in struct _adapter from drv_types.h
->   staging: rtl8712: Fixed CamelCase in struct _adapter from drv_types.h
->   staging: rtl8712: Fixed CamelCase in struct _adapter from drv_types.h
 
-All of these patches had the same subject line, yet did diffferent
-things, that's not ok :(
+--9jxsPFA5p3P2qPhR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Please fix this series up to have unique subject lines and resend.
+Linus,
 
-thanks,
+I2C has for you a memleak fix for the core, two driver bugfixes, as well
+as fixing missing file patterns to MAINTAINERS.
 
-greg k-h
+Please pull.
+
+Thanks,
+
+   Wolfram
+
+
+The following changes since commit cd6c84d8f0cdc911df435bb075ba22ce3c605b07:
+
+  Linux 5.2-rc2 (2019-05-26 16:49:19 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-current
+
+for you to fetch changes up to c8552db31d5e70f0311be031b22292bf256791da:
+
+  MAINTAINERS: add I2C DT bindings to ARM platforms (2019-06-01 14:52:13 +0200)
+
+----------------------------------------------------------------
+Masahisa Kojima (1):
+      i2c: synquacer: fix synquacer_i2c_doxfer() return value
+
+Vadim Pasternak (1):
+      i2c: mlxcpld: Fix wrong initialization order in probe
+
+Wolfram Sang (2):
+      MAINTAINERS: add DT bindings to i2c drivers
+      MAINTAINERS: add I2C DT bindings to ARM platforms
+
+Yingjoe Chen (1):
+      i2c: dev: fix potential memory leak in i2cdev_ioctl_rdwr
+
+
+with much appreciated quality assurance from
+----------------------------------------------------------------
+Andrew Lunn (1):
+      (Rev.) MAINTAINERS: add DT bindings to i2c drivers
+
+Heiko Stuebner (1):
+      (Rev.) MAINTAINERS: add I2C DT bindings to ARM platforms
+
+Linus Walleij (1):
+      (Rev.) MAINTAINERS: add I2C DT bindings to ARM platforms
+
+Michal Simek (1):
+      (Rev.) MAINTAINERS: add I2C DT bindings to ARM platforms
+
+ MAINTAINERS                        | 18 ++++++++++++++++++
+ drivers/i2c/busses/i2c-mlxcpld.c   |  2 +-
+ drivers/i2c/busses/i2c-synquacer.c |  2 +-
+ drivers/i2c/i2c-dev.c              |  1 +
+ 4 files changed, 21 insertions(+), 2 deletions(-)
+
+--9jxsPFA5p3P2qPhR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlzza3cACgkQFA3kzBSg
+KbYKVRAAtJp1SvqEyUMCJKsSvsj67n7lEiL6A+YEDHqjU4joBDorP/x8ZnnWnVgl
+T7MK1bQaiDxMOkyhSax+iFu+ufRigYlB+7He5zm+jvqbAkHVOn1BNY7ROF+up4n6
+HGP1xsoQBWCMsz6HeXyL/WDJ3yLUVt9tz8tpaBlBKpmUOZUdnHJKUUIft3tuIhZ7
+FT+LVrtQfYewUiKBajM8DK+8+YlJt0ttNhdD1BazTuP2ZyQhF6+KZXzNUOCM3UeE
+9pMDiJaFI0lskHKSNu0OS18kgoCCXll0o79iFbOOKyZtPkgThvg01TuSssrk/n4I
+livz1w6KKx/AExhcld7qIX322pjznXkcl0UrGPL9/7vrdjrml17FErWZG4sHUeXZ
+DdALAo+oQVsJymaHnEaPPU8b3vJKzk3TVv/qpWbsfWYjvOW0nKkFfojhp8j39EXm
+OF87XcyW6VjEIASY65DJFgEl7z7ngqFEyju6XIthx060UBrnFrXSoUF1ZuqkzjJP
+eKZgBTaF7T50CSnj9uIQNaVkZ8nkOcmj6EAPsj4fZ4ByiGnp92cvTKGXMkZKtvPp
+xB+VfG3X+umLXTZJjZ4WHOgoWpnGPqz0DMDsoYeBcSAHlmbYOKwE4V42Ez04cWT8
+6KxBMfG9RXe0TyF0kTFGw0p9+nq3bSQc48CfdW2KhY11IOLPByI=
+=QTnz
+-----END PGP SIGNATURE-----
+
+--9jxsPFA5p3P2qPhR--
