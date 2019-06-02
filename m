@@ -2,84 +2,63 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC86C282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 20:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80513C28CC6
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 20:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF9C7278B6
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 20:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 619A727973
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 20:50:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbfFBUhM (ORCPT
+        id S1726869AbfFBUuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 16:37:12 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:59078 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726485AbfFBUhL (ORCPT
+        Sun, 2 Jun 2019 16:50:13 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:48296 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbfFBUuM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 16:37:11 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 77750634C7B;
-        Sun,  2 Jun 2019 23:36:57 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.89)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1hXXDt-0000bk-Jh; Sun, 02 Jun 2019 23:36:57 +0300
-Date:   Sun, 2 Jun 2019 23:36:57 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 4/5] media: ov6650: Fix frame scaling not reset on
- crop
-Message-ID: <20190602203657.jirbekewlh7tykmj@valkosipuli.retiisi.org.uk>
-References: <20190526204758.1904-1-jmkrzyszt@gmail.com>
- <1933971.yMpNBnsSgY@z50>
- <20190601223754.65soglqayxrblgzl@mara.localdomain>
- <11387277.ecJxfdHps5@z50>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <11387277.ecJxfdHps5@z50>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Sun, 2 Jun 2019 16:50:12 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id ACB2F1411B403;
+        Sun,  2 Jun 2019 13:50:10 -0700 (PDT)
+Date:   Sun, 02 Jun 2019 13:50:10 -0700 (PDT)
+Message-Id: <20190602.135010.1382762534390460032.davem@davemloft.net>
+To:     horatiu.vultur@microchip.com
+Cc:     alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, ralf@linux-mips.org,
+        paul.burton@mips.com, jhogan@kernel.org,
+        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH net-next v3 0/2] Add hw offload of TC flower on MSCC
+ Ocelot
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1559287017-32397-1-git-send-email-horatiu.vultur@microchip.com>
+References: <1559287017-32397-1-git-send-email-horatiu.vultur@microchip.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 02 Jun 2019 13:50:11 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Janusz,
+From: Horatiu Vultur <horatiu.vultur@microchip.com>
+Date: Fri, 31 May 2019 09:16:55 +0200
 
-On Sun, Jun 02, 2019 at 11:58:23AM +0200, Janusz Krzysztofik wrote:
-> Hi Sakari,
+> This patch series enables hardware offload for flower filter used in
+> traffic controller on MSCC Ocelot board.
 > 
-> On Sunday, June 2, 2019 12:37:55 AM CEST Sakari Ailus wrote:
-> > 
-> > ... I realised that the subtle effect of "media:
-> > ov6650: Register with asynchronous subdevice framework" is that the driver
-> > is now responsible for serialising the access to its own data structures
-> > now. 
+> v2->v3 changes:
+>  - remove the check for shared blocks
 > 
-> Indeed, I must have been not thinking much while preparing it, only following 
-> patterns from other implementations blindly, sorry.
+> v1->v2 changes:
+>  - when declaring variables use reverse christmas tree
 
-No worries. I missed it at the time, too...
-
-> 
-> > And it doesn't do that. Could you submit a fix, please? It'd be good to
-> > get that to 5.2 through the fixes branch.
-> 
-> How about dropping that V4L2_SUBDEV_FL_HAS_DEVNODE flag for now?  I think that 
-> will be the most safe approach for a quick fix.  I'd then re-add it together 
-> with proper locking in a separate patch later.  What do yo think?
-
-Sure. Then we just re-introduce the flag when the driver is ready for that.
-
--- 
-Regards,
-
-Sakari Ailus
+Series applied, thanks.
