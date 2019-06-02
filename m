@@ -4,57 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A8EEC28CC6
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 12:20:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10422C282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 12:24:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E49A424E35
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 12:20:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD5FD27906
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 12:24:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="cpm9Wahq"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="eIiL2pGu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbfFBMU2 (ORCPT
+        id S1726744AbfFBMYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 08:20:28 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:40749 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725977AbfFBMU2 (ORCPT
+        Sun, 2 Jun 2019 08:24:49 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:38072 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726485AbfFBMYs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 08:20:28 -0400
-Received: by mail-lf1-f65.google.com with SMTP id a9so9995103lff.7
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 05:20:27 -0700 (PDT)
+        Sun, 2 Jun 2019 08:24:48 -0400
+Received: by mail-lf1-f67.google.com with SMTP id b11so11430603lfa.5
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 05:24:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=joelfernandes.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=P8XJjbcSeHXWyfrm0lZNaxFevNGN/ntRWhil7kOzvQw=;
-        b=cpm9Wahqojbpp4VkjWfrSzKQi0a2ao6+Snhc7Rw0Q7G2cnlWl4NN+SpMBNDiynHStQ
-         e+MwKcJW+v+aBPTP2CMVHQ+2Z75W4hXURUexykVjLm+sx6J//Q5pTVNwqTtc92n26m9x
-         wUI8z1LDwo3dz8mT0g1ckf93t0vtaHtsUBp88=
+        bh=d9XL3Kdg/XwAAZpeQtzVh3EdhTNcfgE61MkHiEb6f6I=;
+        b=eIiL2pGuoT1uPZ6iXK+26kX3ON9RbP1IPb/stloJPcBPj9Zo94HojRPxXy/OkFOiPK
+         X9H9+xcdJRrG5OhcVzQf2kFWuTRAl5KXardR/13k2qRA9L3/8mMVGyJhfmvfa1CKQ5lZ
+         kXMSBhJU+EcziEfH4B1bkn1X38iaVN/7RnDp8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=P8XJjbcSeHXWyfrm0lZNaxFevNGN/ntRWhil7kOzvQw=;
-        b=fotZkQFWp47Ruee4gNM14PBuDurF7uBaXCYtYOQcj/6tC2RuCi2RGHsBCAI9zeQJZl
-         1QvGLDnM9Nwbxb0dFLIx+Jl+bRZy+jZ5dr0JgBIPcuKypkLXjy8Miv0fcZjD+4QtgPsr
-         49asQhIN3AgLzdRpsFu6H1BV/k6pNfTCLRz7oIwDoryNTJiUC0fs7iklI/NYzLyspaZH
-         loGYahfRxXOLS3Y/kvwdxa/sFPR3Fb00iEMa8Cqo1ZPPiRbGHAd8PTDvEz2qNskojRJZ
-         q/Q30Vx661EZVSmAqfv9nSxKt2yvj763Df0Ip9vQqeqpSGS7XCiKL3ltdJCUKtvPmN3R
-         1btA==
-X-Gm-Message-State: APjAAAUpLd18moZDu2b965R81WmGRkaatSUodgql6nxXWynUBE3wZ6jV
-        LQ4KoyQo/jkNCbV8L5moqZK2sh7GYkVMrRdupiYYEw==
-X-Google-Smtp-Source: APXvYqxoUeTRSI6CtltHxEsRlYpiPonozfm3ENUzJsZRTMHK2FWCrZ71nbqlV68IH4IhR7parmAXCyudOrYXvzl+KNs=
-X-Received: by 2002:ac2:4544:: with SMTP id j4mr10895112lfm.176.1559478026242;
- Sun, 02 Jun 2019 05:20:26 -0700 (PDT)
+        bh=d9XL3Kdg/XwAAZpeQtzVh3EdhTNcfgE61MkHiEb6f6I=;
+        b=V5ni/zMvKEr2YSP764681xvx62M3DvEET9+B7AbfIjBCovuQ0v2gUBonm4Tqix8abA
+         8+WZAv5UWnv8iCAbmESFK/J6vbIvF4xBzuFLp5VOEIgAb+Y+qnBWFfumEzdf0qnjwJB2
+         4C5mcAHmPKcFdaV2dNjsrmq7e9GsJYG4Zt5DEznH+PkhLcPDiyNyVHy+ixHfWgDdWlhq
+         Esa5dvDctWI+NLGv2sbrrH9ADVwAUyfK6oAlUPc2LlQYUTiZmRNw2unqsnNHqwZxOkMz
+         4xK/t89kMGrs1uaB/Y1dDzYex6mOkTRdpMJr/U/Sk9lexar9LRlZ1UWBIoNEMDyZsUIq
+         XSEQ==
+X-Gm-Message-State: APjAAAXTFaXPdMOszvDwmSoNAF0Cfrms2ljZ79Oi/cl2rs+7y77sllWk
+        1btC98aNMneM0PzLsrW6K2LNcBKACN4S0dIHNNaZ0Q==
+X-Google-Smtp-Source: APXvYqx4YBeHBoQTcjTH8I7UAKp3m6GHYEI6h8xOHmlpzR1QFhMBG6BANgkDDCynETKbf79fFNw+DGqbIxcWNN3SHnE=
+X-Received: by 2002:ac2:4544:: with SMTP id j4mr10902247lfm.176.1559478286535;
+ Sun, 02 Jun 2019 05:24:46 -0700 (PDT)
 MIME-Version: 1.0
 References: <20190601222738.6856-1-joel@joelfernandes.org> <20190601222738.6856-3-joel@joelfernandes.org>
- <20190602070014.GA543@amd>
-In-Reply-To: <20190602070014.GA543@amd>
+ <20190602070014.GA543@amd> <CAEXW_YT3t4Hb6wKsjXPGng+YbA5rhNRa7OSdZwdN4AKGfVkX3g@mail.gmail.com>
+In-Reply-To: <CAEXW_YT3t4Hb6wKsjXPGng+YbA5rhNRa7OSdZwdN4AKGfVkX3g@mail.gmail.com>
 From:   Joel Fernandes <joel@joelfernandes.org>
-Date:   Sun, 2 Jun 2019 08:20:15 -0400
-Message-ID: <CAEXW_YT3t4Hb6wKsjXPGng+YbA5rhNRa7OSdZwdN4AKGfVkX3g@mail.gmail.com>
+Date:   Sun, 2 Jun 2019 08:24:35 -0400
+Message-ID: <CAEXW_YSM2wwah2Q7LKmUO1Dp7GG62ciQA1nZ7GLw3m6cyuXXTw@mail.gmail.com>
 Subject: Re: [RFC 2/6] ipv4: add lockdep condition to fix for_each_entry
 To:     Pavel Machek <pavel@denx.de>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
@@ -88,18 +89,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 2, 2019 at 3:00 AM Pavel Machek <pavel@denx.de> wrote:
+On Sun, Jun 2, 2019 at 8:20 AM Joel Fernandes <joel@joelfernandes.org> wrote:
 >
-> On Sat 2019-06-01 18:27:34, Joel Fernandes (Google) wrote:
-> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> On Sun, Jun 2, 2019 at 3:00 AM Pavel Machek <pavel@denx.de> wrote:
+> >
+> > On Sat 2019-06-01 18:27:34, Joel Fernandes (Google) wrote:
+> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> >
+> > This really needs to be merged to previous patch, you can't break
+> > compilation in middle of series...
+> >
+> > Or probably you need hlist_for_each_entry_rcu_lockdep() macro with
+> > additional argument, and switch users to it.
 >
-> This really needs to be merged to previous patch, you can't break
-> compilation in middle of series...
->
-> Or probably you need hlist_for_each_entry_rcu_lockdep() macro with
-> additional argument, and switch users to it.
+> Good point. I can also just add a temporary transition macro, and then
+> remove it in the last patch. That way no new macro is needed.
 
-Good point. I can also just add a temporary transition macro, and then
-remove it in the last patch. That way no new macro is needed.
-
-Thanks!
+Actually, no. There is no compilation break so I did not follow what
+you mean. The fourth argument to the hlist_for_each_entry_rcu is
+optional. The only thing that happens is new lockdep warnings will
+arise which later parts of the series fix by passing in that fourth
+argument.
