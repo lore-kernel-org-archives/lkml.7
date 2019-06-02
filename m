@@ -2,189 +2,149 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90015C28CC2
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 05:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5F7C28CC2
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 05:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 532D72783D
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 05:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16F8827847
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 05:41:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="I+l433GU"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="ZL5e7FyS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726157AbfFBFGO (ORCPT
+        id S1726122AbfFBFlE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 01:06:14 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36908 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbfFBFGO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 01:06:14 -0400
-Received: by mail-pg1-f193.google.com with SMTP id 20so6338889pgr.4
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Jun 2019 22:06:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=8FrEn8Oc47oyqvsIyUn+ei84DckXK5ddHX1nKUOQVF0=;
-        b=I+l433GU6rh5Vh+cXRg2sWftONjf5E0xtYRJR0maMC3On194A0XuFQ8es0fmdrLaO4
-         QMulbFvcAdi+pOn8HpskX0ufgW7qoStMxwwMGtpoIzBLU8ImYfubQhLJZlu5J4RYe6TO
-         Yim8ter4osHiihcYza518LDlKNV+048cHSWMc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8FrEn8Oc47oyqvsIyUn+ei84DckXK5ddHX1nKUOQVF0=;
-        b=ZJ+lJdc/A3sG97aoYifQw2cihVoqHTOvOH3rD8yPALqmBlLRy8rBKGc7VgDz/cbb+x
-         6OEHFQwBPKOu4OYOA/s2zlh9ZJiOTlRL6YE1OzWaU1RkCUVSDuOMypzNpTuik3hvKAhe
-         YgrM1S4ueY8uoJ3mLA8htMW9+0OoVFVVQBYV4rSg0AiG+Pd3hZbizVK24jJ7sak8JBY7
-         kmCV+2y06HeY5W87OGKzYgI/jPBUFBxLB7W2VXEgN2SWaJxizfljyqWAhWpGccMFMGLU
-         z8ckAvfzbFMzgKvYZluFh86VILA9VD2EQCy380bq5h+LEwitqa/PewJleHaeK8UZrs9a
-         sWbg==
-X-Gm-Message-State: APjAAAVQsTKO/O2aHiC8wJcTDiu/ZW7q96jAE9Ew1hj/wprmqyTThWch
-        +4Rg+fbB744kMLhFqCXFU/BbUw==
-X-Google-Smtp-Source: APXvYqww51z53Fj+SFur89FkVZvsAjQrEhIV13t8870aGnrYJ2f32X4e6lxRmTKOa2Pc17jm0i7ppA==
-X-Received: by 2002:a65:520b:: with SMTP id o11mr20347226pgp.184.1559451973138;
-        Sat, 01 Jun 2019 22:06:13 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id x28sm12472404pfo.78.2019.06.01.22.06.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 01 Jun 2019 22:06:12 -0700 (PDT)
-Date:   Sat, 1 Jun 2019 22:06:10 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     enh <enh@google.com>, Evgenii Stepanov <eugenis@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
-Message-ID: <201906012156.55E2C45@keescook>
-References: <201905211633.6C0BF0C2@keescook>
- <20190522101110.m2stmpaj7seezveq@mbp>
- <CAJgzZoosKBwqXRyA6fb8QQSZXFqfHqe9qO9je5TogHhzuoGXJQ@mail.gmail.com>
- <20190522163527.rnnc6t4tll7tk5zw@mbp>
- <201905221316.865581CF@keescook>
- <20190523144449.waam2mkyzhjpqpur@mbp>
- <201905230917.DEE7A75EF0@keescook>
- <20190523174345.6sv3kcipkvlwfmox@mbp>
- <201905231327.77CA8D0A36@keescook>
- <20190528170244.GF32006@arrakis.emea.arm.com>
+        Sun, 2 Jun 2019 01:41:04 -0400
+Received: from mout.web.de ([212.227.17.11]:39023 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725857AbfFBFlE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Jun 2019 01:41:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1559454051;
+        bh=IAyv54Xq10Ah7uvwKkQaJL6K+uyoP2Zfsq5WTIgBscw=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=ZL5e7FySW24tOYgFImszaw+EWp63RbDb86vhypcEy02tzUUbKJVpDp/+F0uaFTM3e
+         qgGCYRPFcCVmf7/4Y/CAzjLFB3nDQwM8BMtRAlfV2zMIu4WHmgZm2IIoU8/+FRBfps
+         PmFTlPxHkHWQXOawhWoZ+AMUosTo5sCbmhBee9IY=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.4] ([93.131.86.186]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LfRzh-1gmxvW2xab-00p8XY; Sun, 02
+ Jun 2019 07:40:51 +0200
+Subject: Re: ss: Checking efficient analysis for network connections
+To:     David Miller <davem@davemloft.net>,
+        David Ahern <dsahern@gmail.com>,
+        Stephen Hemminger <stephen@networkplumber.org>
+Cc:     Josh Hunt <johunt@akamai.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1556674718-5081-1-git-send-email-johunt@akamai.com>
+ <3d1c67c8-7dfe-905b-4548-dae23592edc5@web.de>
+ <20190601.164838.1496580524715275443.davem@davemloft.net>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <e1af968b-199b-a0f2-dbb1-c294aceeb08c@web.de>
+Date:   Sun, 2 Jun 2019 07:40:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190528170244.GF32006@arrakis.emea.arm.com>
+In-Reply-To: <20190601.164838.1496580524715275443.davem@davemloft.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:n96cx3wdrwkO5U77W8HJWS3MLCj1DuOP4NfHbGeNbSoLfyybdZ9
+ yHlPx9sWz+FRSMjI5lA4l6UnhpPEzeKPoHv4jm6izyUIs2wE9h2F4F09pervxdsT27B9G0t
+ zuKSnUtMmZ6dMQwc71hU9P7NkUTfo/oKI4tVZnxfwcz8erFC4GBPDfw9A2Dr7hnfcZIrD6c
+ x55AAZo5iK0F1TmogPCjA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:pMAy72MVERg=:9q/g1Er3UnjL+Y+75PZjpJ
+ oNoFMbhPmtmt1n6MCyQRrtGgmRZUPjK1J7d/MjQ1GKChzCZk48Lxs+vgfxOhnn2d5pHmyNWjb
+ l0n//WHLYcriPUEqpXwljBIYEdC9pJp6i019Woh+9lsg+xm8+euAE/BkJUx88yqhN/FkUv/Eb
+ NgcRbiucMk4vZiw0lYRgYopCpJTLsuvMWVSGvmA9zQsrd/pyzAkO82SAuFR3E5OufBIh9zv4T
+ 6eMtTtFt5j7Z3dJfiL3Tx+WO7D+ZAwQlQP2zgnX/+NT2ztBVQ3FL1m8A1pHUJSD1pD7VxGrB3
+ ZPtfumSTdrtJzPJ/3+rrl2jHX8DGfr3nDRJo94+hivCqUKUciAdPZNmfjrnEFeymW/S2/fQpc
+ v7R/o07/PEBPpUbabAAZ/cQATuQj8i2rvj5aZI9BBZ6jfN9AD6ZOg0JWrc2Ri5q+imacZqGcF
+ YolNpHwn6O+ddSjXe3K03LKBoq3elc6fRxlW6vACPZ60+r9p67L9TDF00HlxPSyFXIkXP1Hdr
+ h8Z8G4AkQ91E8Eqf/xSkyCwrOMI+GHfYmo8ttz+pIPIaTenim7wN8uBNJQFbHhGI1UZw+506s
+ CRgWfAn4CS1F+mMCX4FW/ZeqILX0Te/AlFFWGjESuGb1DUKQpEXebhsj2qzs6Y4vY2GThRM9m
+ Ix/oH+MSDPF+m6bqGqXcVc6YhpToMbED36f0o7ulOrOJ1oZ9zECrqvBn+pdXrb7IUNpuaP5HZ
+ mmrAhVeJn/DPW3C/zXem7BzNZcxeBMDv22KqEhyYhuy8mjc6y08rQu0VmD8fp9gZhkG0FWyRm
+ H2Hu31+kMRj+DYMd+D52PQLwmYEipgqbK9kS6J3QEtc8HkzUAMAj2Ryj33S5Eb2nP+V0GLjf4
+ 1eZ2Glwv5LV1MHtdQT4uN1r62iFJEh/RX2WNQ5GmBppijzZA9we9SeU+QCdDipveOMuH9Nq9h
+ u063LGdj1oS74PW7dvJeOwwfcGB4+8xoRiipr2IrEEpOSHE9YCJ5x
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 06:02:45PM +0100, Catalin Marinas wrote:
-> On Thu, May 23, 2019 at 02:31:16PM -0700, Kees Cook wrote:
-> > syzkaller already attempts to randomly inject non-canonical and
-> > 0xFFFF....FFFF addresses for user pointers in syscalls in an effort to
-> > find bugs like CVE-2017-5123 where waitid() via unchecked put_user() was
-> > able to write directly to kernel memory[1].
-> > 
-> > It seems that using TBI by default and not allowing a switch back to
-> > "normal" ABI without a reboot actually means that userspace cannot inject
-> > kernel pointers into syscalls any more, since they'll get universally
-> > stripped now. Is my understanding correct, here? i.e. exploiting
-> > CVE-2017-5123 would be impossible under TBI?
-> > 
-> > If so, then I think we should commit to the TBI ABI and have a boot
-> > flag to disable it, but NOT have a process flag, as that would allow
-> > attackers to bypass the masking. The only flag should be "TBI or MTE".
-> > 
-> > If so, can I get top byte masking for other architectures too? Like,
-> > just to strip high bits off userspace addresses? ;)
-> 
-> Just for fun, hack/attempt at your idea which should not interfere with
-> TBI. Only briefly tested on arm64 (and the s390 __TYPE_IS_PTR macro is
-> pretty weird ;)):
+> If you use netlink operations directly,
 
-OMG, this is amazing and bonkers. I love it.
+Thanks for such feedback.
 
-> --------------------------8<---------------------------------
-> diff --git a/arch/s390/include/asm/compat.h b/arch/s390/include/asm/compat.h
-> index 63b46e30b2c3..338455a74eff 100644
-> --- a/arch/s390/include/asm/compat.h
-> +++ b/arch/s390/include/asm/compat.h
-> @@ -11,9 +11,6 @@
->  
->  #include <asm-generic/compat.h>
->  
-> -#define __TYPE_IS_PTR(t) (!__builtin_types_compatible_p( \
-> -				typeof(0?(__force t)0:0ULL), u64))
-> -
->  #define __SC_DELOUSE(t,v) ({ \
->  	BUILD_BUG_ON(sizeof(t) > 4 && !__TYPE_IS_PTR(t)); \
->  	(__force t)(__TYPE_IS_PTR(t) ? ((v) & 0x7fffffff) : (v)); \
-> diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-> index e2870fe1be5b..b1b9fe8502da 100644
-> --- a/include/linux/syscalls.h
-> +++ b/include/linux/syscalls.h
-> @@ -119,8 +119,15 @@ struct io_uring_params;
->  #define __TYPE_IS_L(t)	(__TYPE_AS(t, 0L))
->  #define __TYPE_IS_UL(t)	(__TYPE_AS(t, 0UL))
->  #define __TYPE_IS_LL(t) (__TYPE_AS(t, 0LL) || __TYPE_AS(t, 0ULL))
-> +#define __TYPE_IS_PTR(t) (!__builtin_types_compatible_p(typeof(0 ? (__force t)0 : 0ULL), u64))
->  #define __SC_LONG(t, a) __typeof(__builtin_choose_expr(__TYPE_IS_LL(t), 0LL, 0L)) a
-> +#ifdef CONFIG_64BIT
-> +#define __SC_CAST(t, a)	(__TYPE_IS_PTR(t) \
-> +				? (__force t) ((__u64)a & ~(1UL << 55)) \
-> +				: (__force t) a)
-> +#else
->  #define __SC_CAST(t, a)	(__force t) a
-> +#endif
->  #define __SC_ARGS(t, a)	a
->  #define __SC_TEST(t, a) (void)BUILD_BUG_ON_ZERO(!__TYPE_IS_LL(t) && sizeof(t) > sizeof(long))
+Should this programming interface become better known?
 
-I'm laughing, I'm crying. Now I have to go look at the disassembly to
-see how this actually looks. (I mean, it _does_ solve my specific case
-of the waitid() flaw, but wouldn't help with pointers deeper in structs,
-etc, though TBI does, I think still help with that. I have to catch back
-up on the thread...) Anyway, if it's not too expensive it'd block
-reachability for those kinds of flaws.
 
-I wonder what my chances are of actually getting this landed? :)
-(Though, I guess I need to find a "VA width" macro instead of a raw 55.)
+> you can have the kernel filter on various criteria
+> and only get the socket entries you are interested in.
 
-Thanks for thinking of __SC_CAST() and __TYPE_IS_PTR() together. Really
-made my day. :)
+This is good to know.
 
--- 
-Kees Cook
+
+> This whole discussion has zero to do with what text format 'ss' outputs.
+
+Some software components are affected here.
+
+The socket statistic tool is using data from the directory =E2=80=9C/proc/=
+net=E2=80=9D.
+
+* Provided text files refer to known Linux data formats.
+  Can it happen to work with other data formats there?
+
+* The analysis program can also be extended for the support
+  of additional data formats, can't it?
+
+Regards,
+Markus
