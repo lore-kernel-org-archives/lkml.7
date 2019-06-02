@@ -6,62 +6,64 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC488C282DC
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB7DEC28CC6
 	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 17:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DF5627999
+	by mail.kernel.org (Postfix) with ESMTP id A91EB2799D
 	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 17:25:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1559496316;
-	bh=jlcMWVzdPq3NOzQ6G/XPuPxeSqD9ynDnnBzWdfLQygk=;
+	bh=bQHJLHPNT5pP74l9jEgP5wetQf4mrRfdkVTymsb0zEE=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=ZIkD3sAdTD9Rqz/CI28qRGCLYqzOc7i4LjWPQ+2svvhVOPRAHjKT7AI2xQMs6qLP7
-	 ng6nTekr4yD2TvDniTTSXzZZj76mLC5MOEvunx2a+KW9a+28UY/26VG01JjbC+yBk+
-	 +yXfZCCniXcvbgketyIZTwld7xPdxCllJOjdTJto=
+	b=AAf3TwZrMGRZen1B6BU+DpKuBF1P15PuX37TCVKqrUGUofqQMOqg4nPFQyNMuNso2
+	 red3MFOQgTsGAmwSqoAS/tazxnbxj5CaAW13aLVDz1a3O+/8J4njQVE+zoTH6C9KKb
+	 d/G2bbU5sda0Pl+nMcEl76syRl+vlZf3uLwah9cA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbfFBRZO (ORCPT
+        id S1726894AbfFBRZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 13:25:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35186 "EHLO mail.kernel.org"
+        Sun, 2 Jun 2019 13:25:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726587AbfFBRZN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 13:25:13 -0400
-Subject: Re: [GIT PULL] LED fix for 5.2-rc3
+        id S1726634AbfFBRZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Jun 2019 13:25:14 -0400
+Subject: Re: [GIT PULL] Thermal-SoC management fixes for v5.2-rc3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559496313;
-        bh=jlcMWVzdPq3NOzQ6G/XPuPxeSqD9ynDnnBzWdfLQygk=;
+        bh=bQHJLHPNT5pP74l9jEgP5wetQf4mrRfdkVTymsb0zEE=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=gFWtRCnQvNbt8onbCekloKuslXbWumn/a+Ja9lTGgJKIlTbuTsuEdV1hZ7JhfYuQ2
-         KIRiprqebrliQSWuaTj/YABXfi2koqbu///IFkddDFCbr0xFQxFYu+1hyWCMrakUYF
-         WrU5uQvNnblGam02T06POvtBnPhHc+e2uQ66tkH8=
+        b=ql7ARcVedNMlFAl8nhgH8gEaomIeyax4o61Q3VYf9n7MhLdNc54m/4oj2OtCMqJKD
+         tMYwZF+g3nCJY8RfdHigq8Jvwf0ik9/nVkvF4ZsPPuUEWiovo3hWEHFWJPpRCQghXx
+         IFRh4cewg5szFcrayX3PCk1S2HKE7WomyIEaPeGE=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190601175944.21297-1-jacek.anaszewski@gmail.com>
-References: <20190601175944.21297-1-jacek.anaszewski@gmail.com>
+In-Reply-To: <20190601232205.GA7411@localhost.localdomain>
+References: <20190601232205.GA7411@localhost.localdomain>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190601175944.21297-1-jacek.anaszewski@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git
- tags/led-fixes-for-5.2-rc3
-X-PR-Tracked-Commit-Id: 8c0f693c6effbc3f42f77a9e81209af9af20910c
+X-PR-Tracked-Message-Id: <20190601232205.GA7411@localhost.localdomain>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal
+ fixes
+X-PR-Tracked-Commit-Id: ca657468a0d4bcc25445f6636485a19a525267bd
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: f58c356ea74feef8c2bb774dd19ded91567a5cf2
-Message-Id: <155949631296.24242.20021876127476850.pr-tracker-bot@kernel.org>
-Date:   Sun, 02 Jun 2019 17:25:12 +0000
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org, jacek.anaszewski@gmail.com,
-        pavel@ucw.cz
+X-PR-Merge-Commit-Id: 378e853f68e9a9548c64687880715ac3cca31c22
+Message-Id: <155949631348.24242.8443286616973099270.pr-tracker-bot@kernel.org>
+Date:   Sun, 02 Jun 2019 17:25:13 +0000
+To:     Eduardo Valentin <edubezval@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Rui Zhang <rui.zhang@intel.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat,  1 Jun 2019 19:59:44 +0200:
+The pull request you sent on Sat, 1 Jun 2019 16:22:06 -0700:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git tags/led-fixes-for-5.2-rc3
+> git://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal fixes
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/f58c356ea74feef8c2bb774dd19ded91567a5cf2
+https://git.kernel.org/torvalds/c/378e853f68e9a9548c64687880715ac3cca31c22
 
 Thank you!
 
