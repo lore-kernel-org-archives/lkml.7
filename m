@@ -8,53 +8,53 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C047C282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 16:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C0BC46460
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 16:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28BA72797D
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 16:35:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7DCE27983
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 16:35:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i/GiEXl3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PmVtSjB7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbfFBQft (ORCPT
+        id S1726921AbfFBQfz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 12:35:49 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55865 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726776AbfFBQfq (ORCPT
+        Sun, 2 Jun 2019 12:35:55 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38217 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726387AbfFBQfq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 2 Jun 2019 12:35:46 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 16so4534357wmg.5
+Received: by mail-wr1-f66.google.com with SMTP id d18so9704887wrs.5
         for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 09:35:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bPqNziqN3jwSyP9jBiLarbBjFW7IRf4d6KG+ehEQH8I=;
-        b=i/GiEXl3PBCQeCimNLpYhU4zywZjhwiXRNfQ3cpTZcTQxDmQSWyACTwX2HXvQBeysq
-         oxRGLsVqO1D2udN0vLI8C3R05npvkHO2cAInkULu5L/MK0i04zXRRk8cRAZhJNBvk/9l
-         mz1F/ZFBurdBA5k4o3udZ+WvTuLxxVcSr2xAbu9aWeiNUnhOCv2/Piz8JTThQ91RWA6L
-         PF5iip+gG8OaY8tRu9bnbxOLfkKqZ+GO+DATgkn+D5FqQOaB04RYr9EyCKys7PGaFQ8i
-         +Rv6/6k+dN+nebejHRvb4f93IuPXOO39AXM5YF+5gI3HQfCbfHYj7nTxzyEokjbBZBaN
-         +ZuA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=wWcxgEI3gs42SAaAZOA2b9Y+neLUp9KjqdAC8jB7QHQ=;
+        b=PmVtSjB7f/TOFWpB+2Q/vdiDC/y/WjxLBWpT23SHz8vsHy/i5nvOC7GCNJoxb7ltxk
+         nvX+h1438RNymOktsMGM8nKRWisn8Hhg4+AeXmHnJdEm/BeY+YR2lQFaaU1wtGIKanp3
+         EsOfq1KXs+Ut411etBiUeXsat/FA+CqwB28EAiT6IBOMklhGYQWy/gQGtCWWpTusNwlR
+         DDgVKHWKi2XGFF5AFA+e3tzI0isoqevl1mDrbad1aozr6xQgl6pP7O0VaCLL5NRi4BDo
+         fVeS/DmoOcKvKG78mYSNOLFywWF3cd3YA5KuI9tT7CmpePhO6FYG6TJ470QjEIdJVIfR
+         Ldww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bPqNziqN3jwSyP9jBiLarbBjFW7IRf4d6KG+ehEQH8I=;
-        b=LHyrAONchYIGCEcvGTdy3kiAy2okEfAprnbgQ83jY8S0UMxtqnZa5SzhvOeplKswbr
-         dCMXZpMEyOmt4nu/xS5HS0Kosybp/ZttEU9r1zzTkNBPXo3GyxhJMgVzfbrr8oT2LCxM
-         FXJmo80JFjTpfAUzoBgIJAMRuqsj600rlb6h6LtBWtWlklY9KbB76oPlnM9ps7LOhwM+
-         BZt/jgkhXT9qn7lxjIpzmMGg27sxhSaoAKf4Hbwdd9uAdj2ARf33W14B3J3vCEhHQUir
-         fANZpyb+px4mlM68I295KFPBEjFe8on5GX1IIK4IJx9iurFnUdT0Kg7N+0mkbJHBIOh1
-         zWkQ==
-X-Gm-Message-State: APjAAAUkPXygfp0lJEMEmC3GpyYrhTewSGbx9xzGK20WjaRtR2ZbZoDB
-        QqAylss/rQOGIQhK9xzIw2Y=
-X-Google-Smtp-Source: APXvYqxA0qvxMUvIHbPuyM/mUzR6nerSvsGDgs42I8IrUoZjKBqn/jV19eLqdUpRR1hmQOS+IFWrPA==
-X-Received: by 2002:a1c:ce:: with SMTP id 197mr11801235wma.48.1559493344522;
-        Sun, 02 Jun 2019 09:35:44 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=wWcxgEI3gs42SAaAZOA2b9Y+neLUp9KjqdAC8jB7QHQ=;
+        b=NEcr2qAehDoDWY1L54Chz0rleiOVgYMEqxTT3Wn5Q3l2c2bkcBfpSO5Pg3lWIGctNt
+         7tS3Uj0lALTr7gsFZLw5a7k5T97t0Iugj3Aih6Av0nyztsY5BUloO5zobcCc6UmMptS7
+         b3IgOO6OM2Td/uKSZA52cWVY0SM8MSmutxNyr8RdsiY2ZXMdN5EKtweVGRT982GN+xHu
+         UJQSTlkjhg9doj9DQOEODByus/jHN2wPqmYW5NraaLeZcOv+yKJu4nYTP6NiclL9AM11
+         tiNdV/R52gqyKyLlmbvXQGqk2BY6HGNa9ZJ91EX6MWiJrEHKbydncUelZsMJ9yDEGbuy
+         BJ4w==
+X-Gm-Message-State: APjAAAVhwWOZbUvypTyfN83vt4TT1/Umv5Hmx50nDqJUBcZqK1QRhF0W
+        rX0quAdumiSKXsnyVMJlUkk=
+X-Google-Smtp-Source: APXvYqx7op/7MpCSPePSRvMMp9c2IfcUO4+YSiAbeshsCOA5pXZyvI9CiP0SAE2kuxE3SH334Wd2KQ==
+X-Received: by 2002:adf:8306:: with SMTP id 6mr13626082wrd.155.1559493345342;
+        Sun, 02 Jun 2019 09:35:45 -0700 (PDT)
 Received: from localhost.localdomain ([2a02:8108:96bf:e0ab:2b68:5d76:a12a:e6ba])
-        by smtp.gmail.com with ESMTPSA id c5sm6639273wma.19.2019.06.02.09.35.43
+        by smtp.gmail.com with ESMTPSA id c5sm6639273wma.19.2019.06.02.09.35.44
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
         Sun, 02 Jun 2019 09:35:44 -0700 (PDT)
 From:   Michael Straube <straube.linux@gmail.com>
@@ -62,10 +62,12 @@ To:     gregkh@linuxfoundation.org
 Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org,
         Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH 1/2] staging: rtl8188eu: remove redundant definition of ETH_ALEN
-Date:   Sun,  2 Jun 2019 18:35:27 +0200
-Message-Id: <20190602163528.28495-1-straube.linux@gmail.com>
+Subject: [PATCH 2/2] staging: rtl8188eu: remove unused definitions from ieee80211.h
+Date:   Sun,  2 Jun 2019 18:35:28 +0200
+Message-Id: <20190602163528.28495-2-straube.linux@gmail.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190602163528.28495-1-straube.linux@gmail.com>
+References: <20190602163528.28495-1-straube.linux@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,29 +75,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ETH_ALEN is defined in linux/if_ether.h which is included by
-osdep_service.h, so remove the redundant definition from ieee80211.h.
-
-osdep_service.h:33:#include <linux/etherdevice.h>
-etherdevice.h:25:#include <linux/if_ether.h>
+MGMT_QUEUE_NUM, ETH_TYPE_LEN and PAYLOAD_TYPE_LEN are defined but
+not used in the driver code, so remove them.
 
 Signed-off-by: Michael Straube <straube.linux@gmail.com>
 ---
- drivers/staging/rtl8188eu/include/ieee80211.h | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/staging/rtl8188eu/include/ieee80211.h | 5 -----
+ 1 file changed, 5 deletions(-)
 
 diff --git a/drivers/staging/rtl8188eu/include/ieee80211.h b/drivers/staging/rtl8188eu/include/ieee80211.h
-index c60b833ca110..d43aa4304ca5 100644
+index d43aa4304ca5..42ee4ebe90eb 100644
 --- a/drivers/staging/rtl8188eu/include/ieee80211.h
 +++ b/drivers/staging/rtl8188eu/include/ieee80211.h
-@@ -14,7 +14,6 @@
+@@ -12,11 +12,6 @@
+ #include "wifi.h"
+ #include <linux/wireless.h>
  
- #define MGMT_QUEUE_NUM 5
+-#define MGMT_QUEUE_NUM 5
+-
+-#define ETH_TYPE_LEN		2
+-#define PAYLOAD_TYPE_LEN	1
+-
+ #ifdef CONFIG_88EU_AP_MODE
  
--#define ETH_ALEN	6
- #define ETH_TYPE_LEN		2
- #define PAYLOAD_TYPE_LEN	1
- 
+ #define RTL_IOCTL_HOSTAPD (SIOCIWFIRSTPRIV + 28)
 -- 
 2.21.0
 
