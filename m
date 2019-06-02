@@ -2,90 +2,91 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 252BAC282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 08:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8B2C282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 09:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECBE027888
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 08:39:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ISwdVjqG"
+	by mail.kernel.org (Postfix) with ESMTP id 0B7BC2789C
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 09:04:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfFBIj0 (ORCPT
+        id S1726416AbfFBJEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 04:39:26 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39568 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbfFBIjZ (ORCPT
+        Sun, 2 Jun 2019 05:04:36 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:45154 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726159AbfFBJEg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 04:39:25 -0400
-Received: by mail-lj1-f194.google.com with SMTP id a10so10164157ljf.6
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 01:39:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yE2J5a6MB0Gc48eIqCKYzxTEPvXkEUZm6g5N6vUrQy0=;
-        b=ISwdVjqGJ/u5HKAq5gTbqhDyiyczVmMmlYTgwPHKcPUmp0SwhHzU7n9NBcQLBkvePA
-         AWZD4Y/Gd3Yl5vikkmWg5f0Ggh2Bx5BvM4zyG0wVU7KLmxO33iIVHM7rgYXNl1Ccs1Xy
-         GEnHP6yig7grGK7di8iJCX6nFOvvZ1avP631pXQHKH+bw1LgP2uBOkr+ExzwXGbxTYgr
-         xBp9nEvrC7335Ckbb2gq8dp5yWLCsj1QgPWMcODMuUhBThSETgSzzM7wrbzsLl7yxDBl
-         10ZyzxfsW7kA1z0zpt5fsaNVuQ+47nBrhlHLOro5mWUJ+Fcv0rdwL1eFPX/OFm+ns+pE
-         H4zg==
+        Sun, 2 Jun 2019 05:04:36 -0400
+Received: by mail-lf1-f66.google.com with SMTP id u10so4184263lfm.12;
+        Sun, 02 Jun 2019 02:04:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=yE2J5a6MB0Gc48eIqCKYzxTEPvXkEUZm6g5N6vUrQy0=;
-        b=c8j/b1uNfcKHJOxMVbmpTgt6GmFwpG9dowps9XUnN6hmCFYmxGXykvi7kQfFv3R8U8
-         vWq6ogmpj5ffQZ1mOg6KqKb9ddymtOyaNkRxsO3G3QwMrcX6xOTVZQRHUkHL3yj7i13d
-         Y/cgjTeIZCOjFQ1G7XcI6/zqv0w1XzH73QlBTurDqP0J16AjRCrNJYVQOeV/ku2EPklu
-         DC0KuheS34ibRGM/bVkHW8NdUZQr9Y7QEFbSV/tmmP4UjyIrRNVzLd2/eJlwwiuwUrAe
-         C63wLmUYgtF5LpRnJR0PiE6EJwIRytC5plNXvejIIItCKa4AEEwdJGbCtGaeMun4dkRK
-         fVOA==
-X-Gm-Message-State: APjAAAX+On8mjgTOnWqgbDtVAsyc3Q/u5YVb1Z4WGWCloRepA+wr0Myo
-        0pcDwyGNTP7LKrz8sTxDGhvzqtVd8G/7B7fxDFim2A==
-X-Google-Smtp-Source: APXvYqyh6hWIl5W5nMmF/9/ej0DWHVcr46h1HQVRnLm8WUwbiyWxXnadUkdktX1kP9ytr2yZqkgU50r5CZ++QGbwClo=
-X-Received: by 2002:a2e:8902:: with SMTP id d2mr10897010lji.94.1559464764019;
- Sun, 02 Jun 2019 01:39:24 -0700 (PDT)
+        bh=ZRCW1o4GdnDTTwiENrsOUXxx3rdgPikwY37hABnif3E=;
+        b=etaQJjuax+yPTkcvPdWmpeLaxdfEGAXPfyIrRXDglyEQIyVnA5zQan50KeLm8F0wHM
+         qiORht5DbSb1+cGSwDGvsnFn2udmzuxBadiZexAvU4f7W+4Jwngv0wowr2I+g++D9rdo
+         K7KwuwBDk6Z9CGpLD+RhSCEOMeRdwz84rf1XQQ+oF8r8bPWfuIr+ItEtV5+A2L2Neiir
+         8CgPrK5hzLLgHPqjr+SkNMJaocpT7TmV8mZbV3KmcuJjZ11lIqI1ISy8+47ZBJmf6vyN
+         ndnZQrpyyd8OBW7IqXGxn08HQAeBqnFxQ4mChQiry1xZcC9w8NFDvOi5ksOSrXHWfXcD
+         QhqQ==
+X-Gm-Message-State: APjAAAUKmgJ3V9iWHoBJ53dmZ98hNsOZ9jD+MNwgNy8vfK1CU+kPvrcy
+        H++AiM5iNHa2wV7o0qMZexJEO11tyFG2wSUweas=
+X-Google-Smtp-Source: APXvYqx4R3CkZ66/i5qLA/4ODaVt1vONSi/4rrdmsiYdDOOlB/HAeTuNDypKunxR3+HarPEimeyV0wVERXodVvNSMGk=
+X-Received: by 2002:ac2:44b1:: with SMTP id c17mr10710134lfm.87.1559466274493;
+ Sun, 02 Jun 2019 02:04:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190528091304.9932-1-yuehaibing@huawei.com>
-In-Reply-To: <20190528091304.9932-1-yuehaibing@huawei.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 2 Jun 2019 10:39:12 +0200
-Message-ID: <CACRpkdb0dti=x2UxaOoP=VRrzxQTuAaeQ2==UM4U6KNyHC2QwQ@mail.gmail.com>
-Subject: Re: [PATCH -next] pinctrl: bcm2835: Fix build error without CONFIG_OF
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Doug Berger <opendmb@gmail.com>, Eric Anholt <eric@anholt.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Matheus Castello <matheus@castello.eng.br>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <cover.1559438652.git.fthain@telegraphics.com.au> <a69c9e248f46f02a2cdef95e2ff3d3b08531c6fa.1559438652.git.fthain@telegraphics.com.au>
+In-Reply-To: <a69c9e248f46f02a2cdef95e2ff3d3b08531c6fa.1559438652.git.fthain@telegraphics.com.au>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Sun, 2 Jun 2019 11:04:22 +0200
+Message-ID: <CAMuHMdXbJ5kuPxLKOR6v=-98vzJxoiduVkYfK0EeWze7tm5uVw@mail.gmail.com>
+Subject: Re: [PATCH 6/7] scsi: mac_scsi: Enable PDMA on Mac IIfx
+To:     Finn Thain <fthain@telegraphics.com.au>
+Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        scsi <linux-scsi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Joshua Thompson <funaho@jurai.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 11:18 AM YueHaibing <yuehaibing@huawei.com> wrote:
+Hi Finn,
 
-> drivers/pinctrl/bcm/pinctrl-bcm2835.c: In function bcm2835_pctl_dt_node_to_map:
-> drivers/pinctrl/bcm/pinctrl-bcm2835.c:720:8: error: implicit declaration of function pinconf_generic_dt_node_to_map_all;
-> drivers/pinctrl/bcm/pinctrl-bcm2835.c: In function bcm2835_pinctrl_probe:
-> drivers/pinctrl/bcm/pinctrl-bcm2835.c:1022:15: error: struct gpio_chip has no member named of_node
->   pc->gpio_chip.of_node = np;
+On Sun, Jun 2, 2019 at 3:29 AM Finn Thain <fthain@telegraphics.com.au> wrote:
+> Add support for Apple's custom "SCSI DMA" chip. This patch doesn't make
+> use of its DMA capability. Just the PDMA capability is sufficient to
+> improve sequential read throughput by a factor of 5.
 >
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: 0de704955ee4 ("pinctrl: bcm2835: Add support for generic pinctrl binding")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> Cc: Michael Schmitz <schmitzmic@gmail.com>
+> Cc: Joshua Thompson <funaho@jurai.org>
+> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> Tested-by: Stan Johnson <userm57@yahoo.com>
+> Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
 
-Patch applied.
+Thanks for your patch!
 
-Yours,
-Linus Walleij
+> ---
+>  arch/m68k/mac/config.c  | 10 +++++++--
+
+For the  m68k change to go in through the SCSI tree:
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
