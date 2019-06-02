@@ -2,134 +2,69 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6193EC28CC6
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 17:15:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC488C282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 17:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D2322798D
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 17:15:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DF5627999
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 17:25:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559495735;
-	bh=iKIo93UeJ437K4irUmndYQOjZYcRPejH0B2PixPv/8c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XcLbnK5n/esrKXakI4jYRs4tMcS0PnbXvb1f3OyJjt5JjRREqGn6RAvHw2t/3iVGo
-	 2sJsGxLPGRsTdtFS0+ZwjFM9RzvkdohNMRbNC1LLpHZmoZvl5xim+Uyn/KdP2Jqgsp
-	 xwSkzLm2NFc/caqjtHyygUYCZbUXG2G5DiNEyhww=
+	s=default; t=1559496316;
+	bh=jlcMWVzdPq3NOzQ6G/XPuPxeSqD9ynDnnBzWdfLQygk=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=ZIkD3sAdTD9Rqz/CI28qRGCLYqzOc7i4LjWPQ+2svvhVOPRAHjKT7AI2xQMs6qLP7
+	 ng6nTekr4yD2TvDniTTSXzZZj76mLC5MOEvunx2a+KW9a+28UY/26VG01JjbC+yBk+
+	 +yXfZCCniXcvbgketyIZTwld7xPdxCllJOjdTJto=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbfFBRPe (ORCPT
+        id S1726795AbfFBRZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 13:15:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54886 "EHLO mail.kernel.org"
+        Sun, 2 Jun 2019 13:25:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726587AbfFBRPe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 13:15:34 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBC0F2798C;
-        Sun,  2 Jun 2019 17:15:32 +0000 (UTC)
+        id S1726587AbfFBRZN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Jun 2019 13:25:13 -0400
+Subject: Re: [GIT PULL] LED fix for 5.2-rc3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559495733;
-        bh=iKIo93UeJ437K4irUmndYQOjZYcRPejH0B2PixPv/8c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dM9LC8+DmMT6anTs5JrPomeWrfyAuYEk3PrDXE1TMXu+1RrNhP2kKj8YCoj0ZPJBy
-         Y1ABbXGwgBf/M+nVi4qrBs26We6vrL9NBFFpGIQYnjb1b6nk018Dip4piYW8koN7Dz
-         VIFfuyj1Zwuo7YNWjqPkTYgQa2CIa7EkvXLBjWNw=
-Date:   Sun, 2 Jun 2019 19:15:31 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spdx@vger.kernel.org
-Subject: Re: [GIT PULL] SPDX update for 5.2-rc3 - round 2
-Message-ID: <20190602171531.GF19671@kroah.com>
-References: <20190602063905.GA14513@kroah.com>
- <CAK7LNAQf7difmgLo3OmEHCEvODaU3zoXLA8mKcyVL7NdCcZD=w@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK7LNAQf7difmgLo3OmEHCEvODaU3zoXLA8mKcyVL7NdCcZD=w@mail.gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+        s=default; t=1559496313;
+        bh=jlcMWVzdPq3NOzQ6G/XPuPxeSqD9ynDnnBzWdfLQygk=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=gFWtRCnQvNbt8onbCekloKuslXbWumn/a+Ja9lTGgJKIlTbuTsuEdV1hZ7JhfYuQ2
+         KIRiprqebrliQSWuaTj/YABXfi2koqbu///IFkddDFCbr0xFQxFYu+1hyWCMrakUYF
+         WrU5uQvNnblGam02T06POvtBnPhHc+e2uQ66tkH8=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190601175944.21297-1-jacek.anaszewski@gmail.com>
+References: <20190601175944.21297-1-jacek.anaszewski@gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190601175944.21297-1-jacek.anaszewski@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git
+ tags/led-fixes-for-5.2-rc3
+X-PR-Tracked-Commit-Id: 8c0f693c6effbc3f42f77a9e81209af9af20910c
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: f58c356ea74feef8c2bb774dd19ded91567a5cf2
+Message-Id: <155949631296.24242.20021876127476850.pr-tracker-bot@kernel.org>
+Date:   Sun, 02 Jun 2019 17:25:12 +0000
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org, jacek.anaszewski@gmail.com,
+        pavel@ucw.cz
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 02, 2019 at 09:03:46PM +0900, Masahiro Yamada wrote:
-> On Sun, Jun 2, 2019 at 4:17 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > The following changes since commit 2f4c53349961c8ca480193e47da4d44fdb8335a8:
-> >
-> >   Merge tag 'spdx-5.2-rc3-1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core (2019-05-31 08:34:32 -0700)
-> >
-> > are available in the Git repository at:
-> >
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git tags/spdx-5.2-rc3-2
-> >
-> > for you to fetch changes up to 8e82fe2ab65a80b1526b285c661ab88cc5891e3a:
-> >
-> >   treewide: fix typos of SPDX-License-Identifier (2019-06-01 18:29:58 +0200)
-> >
-> > ----------------------------------------------------------------
-> > SPDX fixes for 5.2-rc3, round 2
-> >
-> > Here are just two small patches, that fix up some found SPDX identifier
-> > issues.
-> >
-> > The first patch fixes an error in a previous SPDX fixup patch, that
-> > causes build errors when doing 'make clean' on the tree (the fact that
-> > almost no one noticed it reflects the fact that kernel developers don't
-> > like doing that option very often...)
-> 
-> This paragraph is not precise.
-> 
-> Not only "make clean", but also the normal build is broken.
-> In fact, ARCH=arm allmodconfig is broken.
-> 
-> 
-> $ make -j8 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- allmodconfig
->   [ snip ]
-> $ make -j8 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
->   [ snip ]
-> drivers/crypto/ux500/cryp/Makefile:5: *** missing separator.  Stop.
-> make[3]: *** [scripts/Makefile.build;489: drivers/crypto/ux500/cryp] Error 2
-> make[2]: *** [scripts/Makefile.build;489: drivers/crypto/ux500] Error 2
-> make[1]: *** [scripts/Makefile.build;489: drivers/crypto] Error 2
-> make[1]: *** Waiting for unfinished jobs....
-> 
-> 
-> 
-> The 0-day bot should check allmodconfig for all arches,
-> but surprisingly it was not caught before the merge.
+The pull request you sent on Sat,  1 Jun 2019 19:59:44 +0200:
 
-Ah, good catch, odd that 0-day missed it.  Maybe it is not building
-32bit builds these days :(
+> git://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git tags/led-fixes-for-5.2-rc3
 
-> > The second patch fixes up a number of places in the tree where people
-> > mistyped the string "SPDX-License-Identifier".  Given that people can
-> > not even type their own name all the time without mistakes, this was
-> > bound to happen, and odds are, we will have to add some type of check
-> > for this to checkpatch.pl to catch this happening in the future.
-> 
-> checkpatch.pl already warns
-> "Missing or malformed SPDX-License-Identifier tag"
-> unless correctly typed "SPDX-License-Identifier" is found in the file.
-> 
-> No more check is needed for this, I think.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/f58c356ea74feef8c2bb774dd19ded91567a5cf2
 
-Ok, thanks, I thought it was not caught which is why it snuck in.
+Thank you!
 
-> Not all developers run scripts/checkpatch.pl before patch submission.
-> Not all maintainers run scripts/checkpatch.pl before commit.
-
-Very true :(
-
-thanks,
-
-greg k-h
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
