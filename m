@@ -2,140 +2,108 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6207C282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 21:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B39C282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 21:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8800D277A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 21:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E596268AF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 21:44:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V0g1x/fY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YsDpK0en"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727248AbfFBVk6 (ORCPT
+        id S1727256AbfFBVoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 17:40:58 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35516 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727035AbfFBVkc (ORCPT
+        Sun, 2 Jun 2019 17:44:39 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:42253 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726776AbfFBVoj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 17:40:32 -0400
-Received: by mail-wm1-f67.google.com with SMTP id c6so6157201wml.0;
-        Sun, 02 Jun 2019 14:40:31 -0700 (PDT)
+        Sun, 2 Jun 2019 17:44:39 -0400
+Received: by mail-lf1-f66.google.com with SMTP id y13so11961729lfh.9;
+        Sun, 02 Jun 2019 14:44:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=JBFtQTGEdtOewlByjetdV4IfH+7KdYrEQNHeO2lLAJQ=;
-        b=V0g1x/fYeod4S3lJfHg/oeVhUJ5Hk9ff44MM0LZHmM6g/XkcAeoqNJ5i814G39eokZ
-         vYNLb/Q4/5tGhBqi6IeVuKQIAeuib2nmLg6yIFpcGlThwzjoSrG4iAgHvZ+Nw3uQsPR1
-         EFSvkfkasEVFqvtq/Z6XqIhDROCUnqbmJirNi9k6T/0Ol++kImGEM72z9yWmDgkXxmeZ
-         jv7EBDd9cAYyEroCr59WIcPkeplJKr968EnRdnfOrLX0P8jW4QKSs9k9U3DE9pO/fs1n
-         9ayRfxlUZAQvlyxsZ9Whup00QD5aWusIk8rAcR7gqiPeTc6Iim63h5c847bBfzGVn4cv
-         RusQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SBjg5eRa81EzQPPSxTQMKBg6nX0dKdVE0RBDky8GBmA=;
+        b=YsDpK0enaC3AKpHJBpeWesF3I3XFx4UEa2ArMOUJ2gsU4VYeNUUuq4kR/nx155oPpP
+         xl6GGEIP9QYoSDkJ5aAoJUMPa2/3s0W852J27jTTKA45mngN7mX8kMnfXIHTQxukywXz
+         q7vYo5pRad4doGyTnwL4f7QLHY/pm2sRcSSA03cDGkvt94fRYjgUWlfCsj5CiHL4FfSS
+         LRlmMRRq+MH5nc0Nua1SOa69PCFksPfDcwUv74z9l8SruttXz2bBmMhcpQHswHTTA4z0
+         QgHoXCM5GYRgJrB6GtS2USoORtnW0OVNnzkTo3vEywkLWMLh3AdQyA3iQx2MIlgjw05P
+         HZAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=JBFtQTGEdtOewlByjetdV4IfH+7KdYrEQNHeO2lLAJQ=;
-        b=Zq3bM6mQnORIMvDe8kM4VSP3CzPii2TAUqENr4jSo6KKmb8ExfX2zZ+IiLHr8jQJ3r
-         18Yd55HSaxUtzO9ESo/SLbctIBSvOJ0/VKaoCdE8NfOpYPEgwfsIjPVhKfDB0cjOuXO0
-         L2mFY+IsVeLmJRpMLRwaxr9norOzsO0cAEY8A9e2vN2hQYya6/PPf9DNuFUqwoto00CD
-         wmwHD+LppAUtFQjspijPcfEtc8HgUBepI8enFvtDSzZ59xvKymcvD7+rnB+nXTJgV/mu
-         nPbJnv5YMei6KgGcnEMfwhx8g1fIB6hkmQoJBHLMNRQht3i6oDE8oZ8EnYD9nnha0qB7
-         3gvQ==
-X-Gm-Message-State: APjAAAVoqD3IqGy/NDUDkN0JS+1PAEsObP6c1y5jAJ71vVqOnNCIliNk
-        1rSboenR9IP1xFLXjstN/Rs=
-X-Google-Smtp-Source: APXvYqwS7/jVWDxxdO3vFWFrJxk/rvAwgPzMxX/zUbyVu9vjR/PCWxENXVbavY/BXmQifut0dJuljQ==
-X-Received: by 2002:a1c:44d4:: with SMTP id r203mr9924004wma.158.1559511630396;
-        Sun, 02 Jun 2019 14:40:30 -0700 (PDT)
-Received: from localhost.localdomain ([86.121.27.188])
-        by smtp.gmail.com with ESMTPSA id 65sm26486793wro.85.2019.06.02.14.40.28
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SBjg5eRa81EzQPPSxTQMKBg6nX0dKdVE0RBDky8GBmA=;
+        b=bn1sZQikJF3LR6BshmspF4bgHkC8ILuknU7t4UpFOkphnASqKH0wJW86felA2a9uHd
+         b6tH77ZcSWVtoofJgJ1/6RlhiZVsHV+3omLX9DOS0/OK/q1TSsGYqDN9sEOXS1F+QoLW
+         2suR73dRVi2OwpdUOnJYlM7p4BL5KtIIG/hEcmCcHvCSdGtT+ZZ440hNNe+fiRAvv/wl
+         zmkTcLoxtiYyKdMlTzHvvV9gzY8C1HGrrFYXRiS2zxVN+BDOoj7lumst6cqj5H5y9q3P
+         qs2rDnGJYkSwn/g3w1fgLObH+hJ2CyWjK9TClC+KrK8iFBu+97HN0PRqy28J0CYkGAQU
+         nJpw==
+X-Gm-Message-State: APjAAAV1MWyBhm5cdCpLq91HTol1i2HoVNsA9xyNbW2omSI+NyAofELK
+        aX18wps5D+rrF2zPCpSSb8c=
+X-Google-Smtp-Source: APXvYqzRFvCNnsb07UorKV39uaj4aB8VnwzziVDJkkHdhszJ9fxKQWmdYoy/eC6HvwChuiuiNPCnww==
+X-Received: by 2002:a19:6a01:: with SMTP id u1mr10103527lfu.141.1559511876507;
+        Sun, 02 Jun 2019 14:44:36 -0700 (PDT)
+Received: from localhost.localdomain ([94.29.35.141])
+        by smtp.gmail.com with ESMTPSA id g22sm2803653lje.43.2019.06.02.14.44.32
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 02 Jun 2019 14:40:29 -0700 (PDT)
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
-        davem@davemloft.net, richardcochran@gmail.com,
-        john.stultz@linaro.org, tglx@linutronix.de, sboyd@kernel.org
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Vladimir Oltean <olteanv@gmail.com>
-Subject: [PATCH v2 net-next 07/10] net: dsa: sja1105: Move sja1105_is_link_local to include/linux
-Date:   Mon,  3 Jun 2019 00:39:23 +0300
-Message-Id: <20190602213926.2290-8-olteanv@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190602213926.2290-1-olteanv@gmail.com>
-References: <20190602213926.2290-1-olteanv@gmail.com>
+        Sun, 02 Jun 2019 14:44:35 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/4] NVIDIA Tegra Video Decoder driver improvements
+Date:   Mon,  3 Jun 2019 00:37:05 +0300
+Message-Id: <20190602213712.26857-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This function will be reused from the .port_rxtstamp callback to see if
-the received SKB can be timestamped by the switch.
+Hello,
 
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
----
-Changes in v2:
+This series cleans up some of minor shortcomings that are caused by
+checkpatch recommendations that are not very applicable for the driver.
+Then IOMMU support is added to the driver and now it can handle sparse
+memory buffers that GPU hands to VDE in a default kernel configuration
+on Tegra30+.
 
-Patch is new.
+Dmitry Osipenko (4):
+  staging: media: tegra-vde: Remove BIT() macro from UAPI header
+  staging: media: tegra-vde: Manually pack UAPI structures
+  staging: media: tegra-vde: Add IOMMU support
+  staging: media: tegra-vde: Defer dmabuf's unmapping
 
- include/linux/dsa/sja1105.h | 15 +++++++++++++++
- net/dsa/tag_sja1105.c       | 15 ---------------
- 2 files changed, 15 insertions(+), 15 deletions(-)
+ drivers/staging/media/tegra-vde/Kconfig       |   1 +
+ drivers/staging/media/tegra-vde/Makefile      |   1 +
+ .../staging/media/tegra-vde/dmabuf-cache.c    | 223 ++++++++++++++++++
+ drivers/staging/media/tegra-vde/iommu.c       | 146 ++++++++++++
+ drivers/staging/media/tegra-vde/trace.h       |   1 +
+ drivers/staging/media/tegra-vde/uapi.h        |  48 ++--
+ .../media/tegra-vde/{tegra-vde.c => vde.c}    | 212 ++++++-----------
+ drivers/staging/media/tegra-vde/vde.h         | 105 +++++++++
+ 8 files changed, 574 insertions(+), 163 deletions(-)
+ create mode 100644 drivers/staging/media/tegra-vde/dmabuf-cache.c
+ create mode 100644 drivers/staging/media/tegra-vde/iommu.c
+ rename drivers/staging/media/tegra-vde/{tegra-vde.c => vde.c} (88%)
+ create mode 100644 drivers/staging/media/tegra-vde/vde.h
 
-diff --git a/include/linux/dsa/sja1105.h b/include/linux/dsa/sja1105.h
-index e46e18c47d41..f3237afed35a 100644
---- a/include/linux/dsa/sja1105.h
-+++ b/include/linux/dsa/sja1105.h
-@@ -25,4 +25,19 @@ struct sja1105_port {
- 	int mgmt_slot;
- };
- 
-+/* Similar to is_link_local_ether_addr(hdr->h_dest) but also covers PTP */
-+static inline bool sja1105_is_link_local(const struct sk_buff *skb)
-+{
-+	const struct ethhdr *hdr = eth_hdr(skb);
-+	u64 dmac = ether_addr_to_u64(hdr->h_dest);
-+
-+	if ((dmac & SJA1105_LINKLOCAL_FILTER_A_MASK) ==
-+		    SJA1105_LINKLOCAL_FILTER_A)
-+		return true;
-+	if ((dmac & SJA1105_LINKLOCAL_FILTER_B_MASK) ==
-+		    SJA1105_LINKLOCAL_FILTER_B)
-+		return true;
-+	return false;
-+}
-+
- #endif /* _NET_DSA_SJA1105_H */
-diff --git a/net/dsa/tag_sja1105.c b/net/dsa/tag_sja1105.c
-index d840a3749549..e0903028d1cd 100644
---- a/net/dsa/tag_sja1105.c
-+++ b/net/dsa/tag_sja1105.c
-@@ -7,21 +7,6 @@
- #include <linux/packing.h>
- #include "dsa_priv.h"
- 
--/* Similar to is_link_local_ether_addr(hdr->h_dest) but also covers PTP */
--static inline bool sja1105_is_link_local(const struct sk_buff *skb)
--{
--	const struct ethhdr *hdr = eth_hdr(skb);
--	u64 dmac = ether_addr_to_u64(hdr->h_dest);
--
--	if ((dmac & SJA1105_LINKLOCAL_FILTER_A_MASK) ==
--		    SJA1105_LINKLOCAL_FILTER_A)
--		return true;
--	if ((dmac & SJA1105_LINKLOCAL_FILTER_B_MASK) ==
--		    SJA1105_LINKLOCAL_FILTER_B)
--		return true;
--	return false;
--}
--
- /* This is the first time the tagger sees the frame on RX.
-  * Figure out if we can decode it, and if we can, annotate skb->cb with how we
-  * plan to do that, so we don't need to check again in the rcv function.
 -- 
-2.17.1
+2.21.0
 
