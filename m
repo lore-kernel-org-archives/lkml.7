@@ -2,156 +2,106 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E70EEC28CC6
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 12:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64872C282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 12:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C059627907
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 12:04:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 202D4278F7
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 12:07:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="cdnEGsT+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bNugs5Vl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfFBMEg (ORCPT
+        id S1726720AbfFBMHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 08:04:36 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:47093 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbfFBMEf (ORCPT
+        Sun, 2 Jun 2019 08:07:44 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44401 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbfFBMHn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 08:04:35 -0400
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x52C4NIL020729;
-        Sun, 2 Jun 2019 21:04:23 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x52C4NIL020729
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1559477063;
-        bh=L8BBfjhdI+/yIFupjgT2A38Yv2uz8WkuxBjhJ/5EnGk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cdnEGsT+uup1Yz3LLoeyTKz+J5iI4amTooWH7XE9dzrsQEFhGxo+Hpi4kYWgAfsIG
-         0k4t46U4SI6zcE1vPweR1NPUBn0pFxV+hR8gbsrlHf8akZo99G8CTsIN/RqBhPuwbV
-         7TIU+84lCHT3yGZiPNTLl2cl48ARRjt5di+2qjUa61vDUnSNYjNPM9MlaCL4l3bk4Q
-         4YsvWvxPIclY4jd7ngSMQA4S7hk9AzcjqnbEb63JQFTDLjuSNnSQ9rcE6FhfEeMFO5
-         JCt0pdG7dDqqu4rAW/egou+nx5SpHsftSIYkf3vFOqyPrFFHGzk7akmlecIM3l9Pxp
-         vuRmituLpllwg==
-X-Nifty-SrcIP: [209.85.221.170]
-Received: by mail-vk1-f170.google.com with SMTP id d7so2375731vkf.1;
-        Sun, 02 Jun 2019 05:04:23 -0700 (PDT)
-X-Gm-Message-State: APjAAAWbCDa8yTsoTukVhVRLz6Av67uLMYRht8YPXRIF1CVf+iJWl+5x
-        8bF99K7qQGDR84AdYQapBcbjoFIX84ML43cBER0=
-X-Google-Smtp-Source: APXvYqz/KyN+HSG2O3lEN56GOsrGKze9CFETpPyxwX0dVsWKUOWbnBtm24pePPyozckbAw4Ks7fsX78sNDzlA2AraDU=
-X-Received: by 2002:a1f:ac05:: with SMTP id v5mr7391064vke.34.1559477062262;
- Sun, 02 Jun 2019 05:04:22 -0700 (PDT)
+        Sun, 2 Jun 2019 08:07:43 -0400
+Received: by mail-pf1-f195.google.com with SMTP id t16so120094pfe.11
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 05:07:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qX3ghjlw/x61cEZZaOOANDltXvTi7Um5dbpJ/suOwPo=;
+        b=bNugs5VlHZPS4tZ2VPhAX09sWOYYGdVuKnoOLgjmuOdLsm6J2zmLxYDwlanH7ezVMX
+         d2ATyFvXAdfIBBL6pukfNrxawsTimGZkOnAmr5ngT8EYiWM5dxN7k8zNSXF0Dy36kR7L
+         wix5aoCXP8t/SU7WdSrKg+rh3m1faTCtS8lKiNImTIVDdYjx2H2H+zanoOTMeYX2PqTg
+         anwfOhV9UyQXvaQgrAb/Tn2OvnA+h3n4TVnIeiA+KpLEp6YRiSS0Eu5EU5RAmZwG9/Zx
+         DFR2lpvve+CAN+uS+nylIbCd027VJipl/LxoU9XaYMscmqttlwS/bqWpj6xTykrljg/g
+         eVdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qX3ghjlw/x61cEZZaOOANDltXvTi7Um5dbpJ/suOwPo=;
+        b=mC5XlBrZkVfLUxoGtKJMTlD1WuGlIgdRNVmU5u1w0hSh7b+7RTYl23myz4FLLSNQ9h
+         59eKfL7PA1jyt9m9tcgdNPwfz4dboE6rFKAx4dWu/PH3ha8zhOWJr1t0cSntZKv0aTPm
+         YxAitmpyGvOf572ds1zW1I5idgsKRu4SvBKiktAvB/UyErsB809fgDsq4c9zToDvJW42
+         GZZu11+wBUcTHgoo+vkQhNp7JZTthUi4YNez5cNu/4OzgScmsID2Elqopxfv+TNK8I63
+         3SxjWON7MuMiGY8F4KtDcC+tnyA5LiQfmGZQ+ic2EcD+qMA8tWilbTAZ1LAXjajcax61
+         KG3g==
+X-Gm-Message-State: APjAAAXmzjMjr/gxUSaiaPjAZo+mVR5ZUB11kAPCvZJJBK35q+YUk3PH
+        al7RaplZVsw/ryhQBl6FBN6vre+aXGQ=
+X-Google-Smtp-Source: APXvYqzm2wJW1+YOTI30uFW4t5o4z2n5SL6LKrDTNG9aLkdwk+rTGDGuQD+/ySgk9af0E2r2tIFxaQ==
+X-Received: by 2002:a65:5684:: with SMTP id v4mr21788486pgs.160.1559477262974;
+        Sun, 02 Jun 2019 05:07:42 -0700 (PDT)
+Received: from localhost.localdomain (119-18-21-111.771215.syd.nbn.aussiebb.net. [119.18.21.111])
+        by smtp.gmail.com with ESMTPSA id x28sm13668510pfo.78.2019.06.02.05.07.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 02 Jun 2019 05:07:42 -0700 (PDT)
+From:   Rhys Kidd <rhyskidd@gmail.com>
+To:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, Karol Herbst <kherbst@redhat.com>,
+        Lyude Paul <lyude@redhat.com>,
+        Ilia Mirkin <imirkin@alum.mit.edu>
+Cc:     Rhys Kidd <rhyskidd@gmail.com>
+Subject: [PATCH] drm/nouveau/bios: downgrade absence of tmds table to info from an error
+Date:   Sun,  2 Jun 2019 22:07:27 +1000
+Message-Id: <20190602120727.4001-1-rhyskidd@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190602063905.GA14513@kroah.com>
-In-Reply-To: <20190602063905.GA14513@kroah.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sun, 2 Jun 2019 21:03:46 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQf7difmgLo3OmEHCEvODaU3zoXLA8mKcyVL7NdCcZD=w@mail.gmail.com>
-Message-ID: <CAK7LNAQf7difmgLo3OmEHCEvODaU3zoXLA8mKcyVL7NdCcZD=w@mail.gmail.com>
-Subject: Re: [GIT PULL] SPDX update for 5.2-rc3 - round 2
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spdx@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 2, 2019 at 4:17 PM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> The following changes since commit 2f4c53349961c8ca480193e47da4d44fdb8335a8:
->
->   Merge tag 'spdx-5.2-rc3-1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core (2019-05-31 08:34:32 -0700)
->
-> are available in the Git repository at:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git tags/spdx-5.2-rc3-2
->
-> for you to fetch changes up to 8e82fe2ab65a80b1526b285c661ab88cc5891e3a:
->
->   treewide: fix typos of SPDX-License-Identifier (2019-06-01 18:29:58 +0200)
->
-> ----------------------------------------------------------------
-> SPDX fixes for 5.2-rc3, round 2
->
-> Here are just two small patches, that fix up some found SPDX identifier
-> issues.
->
-> The first patch fixes an error in a previous SPDX fixup patch, that
-> causes build errors when doing 'make clean' on the tree (the fact that
-> almost no one noticed it reflects the fact that kernel developers don't
-> like doing that option very often...)
+Absence of a TMDS Info Table is common on Optimus setups where the NVIDIA
+gpu is not connected directly to any outputs.
 
-This paragraph is not precise.
+Reporting an error in this scenario is too harsh. Accordingly, change the
+error message to an info message.
 
-Not only "make clean", but also the normal build is broken.
-In fact, ARCH=arm allmodconfig is broken.
+By default the error message also causes a boot flicker for these sytems.
 
+Signed-off-by: Rhys Kidd <rhyskidd@gmail.com>
+---
+ drivers/gpu/drm/nouveau/nouveau_bios.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-$ make -j8 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- allmodconfig
-  [ snip ]
-$ make -j8 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
-  [ snip ]
-drivers/crypto/ux500/cryp/Makefile:5: *** missing separator.  Stop.
-make[3]: *** [scripts/Makefile.build;489: drivers/crypto/ux500/cryp] Error 2
-make[2]: *** [scripts/Makefile.build;489: drivers/crypto/ux500] Error 2
-make[1]: *** [scripts/Makefile.build;489: drivers/crypto] Error 2
-make[1]: *** Waiting for unfinished jobs....
-
-
-
-The 0-day bot should check allmodconfig for all arches,
-but surprisingly it was not caught before the merge.
-
-
-
-> The second patch fixes up a number of places in the tree where people
-> mistyped the string "SPDX-License-Identifier".  Given that people can
-> not even type their own name all the time without mistakes, this was
-> bound to happen, and odds are, we will have to add some type of check
-> for this to checkpatch.pl to catch this happening in the future.
-
-checkpatch.pl already warns
-"Missing or malformed SPDX-License-Identifier tag"
-unless correctly typed "SPDX-License-Identifier" is found in the file.
-
-No more check is needed for this, I think.
-
-Not all developers run scripts/checkpatch.pl before patch submission.
-Not all maintainers run scripts/checkpatch.pl before commit.
-
-Thanks.
-
-
-> Both of these have passed testing by 0-day.
->
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->
-> ----------------------------------------------------------------
-> Alex Xu (Hello71) (1):
->       crypto: ux500 - fix license comment syntax error
->
-> Masahiro Yamada (1):
->       treewide: fix typos of SPDX-License-Identifier
->
->  arch/arm/kernel/bugs.c                | 2 +-
->  drivers/crypto/ux500/cryp/Makefile    | 2 +-
->  drivers/phy/st/phy-stm32-usbphyc.c    | 2 +-
->  drivers/pinctrl/sh-pfc/pfc-r8a77980.c | 2 +-
->  lib/test_stackinit.c                  | 2 +-
->  sound/soc/codecs/max9759.c            | 2 +-
->  6 files changed, 6 insertions(+), 6 deletions(-)
-
-
-
+diff --git a/drivers/gpu/drm/nouveau/nouveau_bios.c b/drivers/gpu/drm/nouveau/nouveau_bios.c
+index 66bf2aff4a3e..bdfadc63204a 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_bios.c
++++ b/drivers/gpu/drm/nouveau/nouveau_bios.c
+@@ -935,7 +935,7 @@ static int parse_bit_tmds_tbl_entry(struct drm_device *dev, struct nvbios *bios,
+ 
+ 	tmdstableptr = ROM16(bios->data[bitentry->offset]);
+ 	if (!tmdstableptr) {
+-		NV_ERROR(drm, "Pointer to TMDS table invalid\n");
++		NV_INFO(drm, "Pointer to TMDS table not found\n");
+ 		return -EINVAL;
+ 	}
+ 
 -- 
-Best Regards
-Masahiro Yamada
+2.20.1
+
