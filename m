@@ -2,106 +2,104 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64872C282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 12:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A8EEC28CC6
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 12:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 202D4278F7
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 12:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E49A424E35
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 12:20:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bNugs5Vl"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="cpm9Wahq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbfFBMHo (ORCPT
+        id S1726708AbfFBMU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 08:07:44 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:44401 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbfFBMHn (ORCPT
+        Sun, 2 Jun 2019 08:20:28 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40749 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725977AbfFBMU2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 08:07:43 -0400
-Received: by mail-pf1-f195.google.com with SMTP id t16so120094pfe.11
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 05:07:43 -0700 (PDT)
+        Sun, 2 Jun 2019 08:20:28 -0400
+Received: by mail-lf1-f65.google.com with SMTP id a9so9995103lff.7
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 05:20:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qX3ghjlw/x61cEZZaOOANDltXvTi7Um5dbpJ/suOwPo=;
-        b=bNugs5VlHZPS4tZ2VPhAX09sWOYYGdVuKnoOLgjmuOdLsm6J2zmLxYDwlanH7ezVMX
-         d2ATyFvXAdfIBBL6pukfNrxawsTimGZkOnAmr5ngT8EYiWM5dxN7k8zNSXF0Dy36kR7L
-         wix5aoCXP8t/SU7WdSrKg+rh3m1faTCtS8lKiNImTIVDdYjx2H2H+zanoOTMeYX2PqTg
-         anwfOhV9UyQXvaQgrAb/Tn2OvnA+h3n4TVnIeiA+KpLEp6YRiSS0Eu5EU5RAmZwG9/Zx
-         DFR2lpvve+CAN+uS+nylIbCd027VJipl/LxoU9XaYMscmqttlwS/bqWpj6xTykrljg/g
-         eVdg==
+        d=joelfernandes.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=P8XJjbcSeHXWyfrm0lZNaxFevNGN/ntRWhil7kOzvQw=;
+        b=cpm9Wahqojbpp4VkjWfrSzKQi0a2ao6+Snhc7Rw0Q7G2cnlWl4NN+SpMBNDiynHStQ
+         e+MwKcJW+v+aBPTP2CMVHQ+2Z75W4hXURUexykVjLm+sx6J//Q5pTVNwqTtc92n26m9x
+         wUI8z1LDwo3dz8mT0g1ckf93t0vtaHtsUBp88=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qX3ghjlw/x61cEZZaOOANDltXvTi7Um5dbpJ/suOwPo=;
-        b=mC5XlBrZkVfLUxoGtKJMTlD1WuGlIgdRNVmU5u1w0hSh7b+7RTYl23myz4FLLSNQ9h
-         59eKfL7PA1jyt9m9tcgdNPwfz4dboE6rFKAx4dWu/PH3ha8zhOWJr1t0cSntZKv0aTPm
-         YxAitmpyGvOf572ds1zW1I5idgsKRu4SvBKiktAvB/UyErsB809fgDsq4c9zToDvJW42
-         GZZu11+wBUcTHgoo+vkQhNp7JZTthUi4YNez5cNu/4OzgScmsID2Elqopxfv+TNK8I63
-         3SxjWON7MuMiGY8F4KtDcC+tnyA5LiQfmGZQ+ic2EcD+qMA8tWilbTAZ1LAXjajcax61
-         KG3g==
-X-Gm-Message-State: APjAAAXmzjMjr/gxUSaiaPjAZo+mVR5ZUB11kAPCvZJJBK35q+YUk3PH
-        al7RaplZVsw/ryhQBl6FBN6vre+aXGQ=
-X-Google-Smtp-Source: APXvYqzm2wJW1+YOTI30uFW4t5o4z2n5SL6LKrDTNG9aLkdwk+rTGDGuQD+/ySgk9af0E2r2tIFxaQ==
-X-Received: by 2002:a65:5684:: with SMTP id v4mr21788486pgs.160.1559477262974;
-        Sun, 02 Jun 2019 05:07:42 -0700 (PDT)
-Received: from localhost.localdomain (119-18-21-111.771215.syd.nbn.aussiebb.net. [119.18.21.111])
-        by smtp.gmail.com with ESMTPSA id x28sm13668510pfo.78.2019.06.02.05.07.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 02 Jun 2019 05:07:42 -0700 (PDT)
-From:   Rhys Kidd <rhyskidd@gmail.com>
-To:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, Karol Herbst <kherbst@redhat.com>,
-        Lyude Paul <lyude@redhat.com>,
-        Ilia Mirkin <imirkin@alum.mit.edu>
-Cc:     Rhys Kidd <rhyskidd@gmail.com>
-Subject: [PATCH] drm/nouveau/bios: downgrade absence of tmds table to info from an error
-Date:   Sun,  2 Jun 2019 22:07:27 +1000
-Message-Id: <20190602120727.4001-1-rhyskidd@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=P8XJjbcSeHXWyfrm0lZNaxFevNGN/ntRWhil7kOzvQw=;
+        b=fotZkQFWp47Ruee4gNM14PBuDurF7uBaXCYtYOQcj/6tC2RuCi2RGHsBCAI9zeQJZl
+         1QvGLDnM9Nwbxb0dFLIx+Jl+bRZy+jZ5dr0JgBIPcuKypkLXjy8Miv0fcZjD+4QtgPsr
+         49asQhIN3AgLzdRpsFu6H1BV/k6pNfTCLRz7oIwDoryNTJiUC0fs7iklI/NYzLyspaZH
+         loGYahfRxXOLS3Y/kvwdxa/sFPR3Fb00iEMa8Cqo1ZPPiRbGHAd8PTDvEz2qNskojRJZ
+         q/Q30Vx661EZVSmAqfv9nSxKt2yvj763Df0Ip9vQqeqpSGS7XCiKL3ltdJCUKtvPmN3R
+         1btA==
+X-Gm-Message-State: APjAAAUpLd18moZDu2b965R81WmGRkaatSUodgql6nxXWynUBE3wZ6jV
+        LQ4KoyQo/jkNCbV8L5moqZK2sh7GYkVMrRdupiYYEw==
+X-Google-Smtp-Source: APXvYqxoUeTRSI6CtltHxEsRlYpiPonozfm3ENUzJsZRTMHK2FWCrZ71nbqlV68IH4IhR7parmAXCyudOrYXvzl+KNs=
+X-Received: by 2002:ac2:4544:: with SMTP id j4mr10895112lfm.176.1559478026242;
+ Sun, 02 Jun 2019 05:20:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190601222738.6856-1-joel@joelfernandes.org> <20190601222738.6856-3-joel@joelfernandes.org>
+ <20190602070014.GA543@amd>
+In-Reply-To: <20190602070014.GA543@amd>
+From:   Joel Fernandes <joel@joelfernandes.org>
+Date:   Sun, 2 Jun 2019 08:20:15 -0400
+Message-ID: <CAEXW_YT3t4Hb6wKsjXPGng+YbA5rhNRa7OSdZwdN4AKGfVkX3g@mail.gmail.com>
+Subject: Re: [RFC 2/6] ipv4: add lockdep condition to fix for_each_entry
+To:     Pavel Machek <pavel@denx.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Kees Cook <keescook@chromium.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Neil Brown <neilb@suse.com>, netdev <netdev@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Peter Zilstra <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, rcu <rcu@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Absence of a TMDS Info Table is common on Optimus setups where the NVIDIA
-gpu is not connected directly to any outputs.
+On Sun, Jun 2, 2019 at 3:00 AM Pavel Machek <pavel@denx.de> wrote:
+>
+> On Sat 2019-06-01 18:27:34, Joel Fernandes (Google) wrote:
+> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+>
+> This really needs to be merged to previous patch, you can't break
+> compilation in middle of series...
+>
+> Or probably you need hlist_for_each_entry_rcu_lockdep() macro with
+> additional argument, and switch users to it.
 
-Reporting an error in this scenario is too harsh. Accordingly, change the
-error message to an info message.
+Good point. I can also just add a temporary transition macro, and then
+remove it in the last patch. That way no new macro is needed.
 
-By default the error message also causes a boot flicker for these sytems.
-
-Signed-off-by: Rhys Kidd <rhyskidd@gmail.com>
----
- drivers/gpu/drm/nouveau/nouveau_bios.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/nouveau/nouveau_bios.c b/drivers/gpu/drm/nouveau/nouveau_bios.c
-index 66bf2aff4a3e..bdfadc63204a 100644
---- a/drivers/gpu/drm/nouveau/nouveau_bios.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_bios.c
-@@ -935,7 +935,7 @@ static int parse_bit_tmds_tbl_entry(struct drm_device *dev, struct nvbios *bios,
- 
- 	tmdstableptr = ROM16(bios->data[bitentry->offset]);
- 	if (!tmdstableptr) {
--		NV_ERROR(drm, "Pointer to TMDS table invalid\n");
-+		NV_INFO(drm, "Pointer to TMDS table not found\n");
- 		return -EINVAL;
- 	}
- 
--- 
-2.20.1
-
+Thanks!
