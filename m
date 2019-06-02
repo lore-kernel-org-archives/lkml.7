@@ -2,123 +2,108 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90AB7C282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 14:56:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C490C282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 15:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C9742794D
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 14:56:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WsL5NCHO"
+	by mail.kernel.org (Postfix) with ESMTP id 1CC5427955
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 15:01:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726572AbfFBO4J (ORCPT
+        id S1726690AbfFBPBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 10:56:09 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41784 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbfFBO4J (ORCPT
+        Sun, 2 Jun 2019 11:01:40 -0400
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:56082 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726084AbfFBPBk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 10:56:09 -0400
-Received: by mail-lj1-f196.google.com with SMTP id s21so3198993lji.8;
-        Sun, 02 Jun 2019 07:56:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DW2E0BpzAc0HLFFmW75+Kp5tG91kuZE20dTCBSAHOjQ=;
-        b=WsL5NCHO/hx1ZcYASq4bsmolID5vN3N1r5wG/oh7g8v9HayVY74o1nj2uE6NvUpM+t
-         dByuvmgtCWtJmogFel7dFCHTiIsgOSJclkZ3LElEGL5FLevDqF3Tm25/Mz/fftMMWMha
-         kWImrXq7jvQXlgq5Dlw2jVjERZ0/NNI0ApMjPxRfOvDp9aykkipBF4yhaERnX1ZuGSI5
-         haG2X8KSUGAtGdmSFDJDI3I8XCzb5BgO5DVX0NV4JRBFWRcKAHeH/QGERFelXs2+l4Hc
-         w7DL2pR3j8JMZEKcvfgE8Sg1D/QP7Rx8ELE3zkJnd8XCkXEhpyJSFm01SHb+BAjswNGu
-         EqpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DW2E0BpzAc0HLFFmW75+Kp5tG91kuZE20dTCBSAHOjQ=;
-        b=DL/bCED6pyk2o0xo0DDFrOjBeiidp03yLS2nN0yiOVKPZAnlKeDX/2P8Eqjm54zl6t
-         7ZF/dPaFb+SbDWknszgiYy7+ZqN1kFP75JjUayFLejCnxYLvXzxditeQAcdx70BPxNjv
-         89NfwPKi9UPR8jJuWJHpB1JKGCi2/TA0detj+hveO1jMhcKX87+ih3NDUbMBgVZx4i9m
-         VzchOgPhTAsOL5Zxp6g3AWvCtc/BdwlMFnEYVazWHRtXWB7yqhTfRVC7s9y/2CUzGXGn
-         gSXT88MSsz6wC8vAtV5OXTgT155eHaoD4SaDbsDfBgGV/rWc5qtxFhu88AYlihboHCyn
-         LSYg==
-X-Gm-Message-State: APjAAAV08SRcB32YUvw3H+9XlTYLX5g9LczD1X55Qa4ElFL5IBvBu3aE
-        OntjQCri1eA+Jsw43c2SbyJk7BQPmIM=
-X-Google-Smtp-Source: APXvYqxuvhbc5F1/SxRPxqwQh4RZAsUd4T+CyhZn3U7SOKGpwqiR7EKjrJoNpV/YsRm9j6xUQKE+3g==
-X-Received: by 2002:a2e:5d49:: with SMTP id r70mr11553508ljb.102.1559487366917;
-        Sun, 02 Jun 2019 07:56:06 -0700 (PDT)
-Received: from z50.gdansk-morena.vectranet.pl (109241207190.gdansk.vectranet.pl. [109.241.207.190])
-        by smtp.gmail.com with ESMTPSA id x14sm2523212lfe.83.2019.06.02.07.56.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 02 Jun 2019 07:56:06 -0700 (PDT)
-From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Jarkko Nikula <jarkko.nikula@bitmer.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Subject: [PATCH] ASoC: ti: Fix SDMA users not providing channel names
-Date:   Sun,  2 Jun 2019 16:55:49 +0200
-Message-Id: <20190602145549.30899-1-jmkrzyszt@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Sun, 2 Jun 2019 11:01:40 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TTDV38c_1559487683;
+Received: from Alexs-MacBook-Pro.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TTDV38c_1559487683)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sun, 02 Jun 2019 23:01:23 +0800
+Subject: Re: [PATCH 13/22] docs: zh_CN: avoid duplicate citation references
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Harry Wei <harryxiyou@gmail.com>
+References: <cover.1559171394.git.mchehab+samsung@kernel.org>
+ <9d3b9729663f75249b514dd3910309eb418d9e46.1559171394.git.mchehab+samsung@kernel.org>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <04bca27d-3c59-5cc7-576b-44e399fa893f@linux.alibaba.com>
+Date:   Sun, 2 Jun 2019 23:01:21 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <9d3b9729663f75249b514dd3910309eb418d9e46.1559171394.git.mchehab+samsung@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-McBSP used to work correctly as long as compat DMA probing, removed by
-commit 642aafea8889 ("ASoC: ti: remove compat dma probing"), was
-available.  New method of DMA probing apparently requires users to
-provide channel names when registering with SDMA, while McBSP passes
-NULLs.  Fix it.
 
-The same probably applies to McASP (not tested), hence the patch fixes
-both.
 
-Fixes: 642aafea8889 ("ASoC: ti: remove compat dma probing")
-Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
----
- sound/soc/ti/davinci-mcasp.c | 2 +-
- sound/soc/ti/omap-mcbsp.c    | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+On 2019/5/30 7:23 上午, Mauro Carvalho Chehab wrote:
+>     Documentation/process/management-style.rst:35: WARNING: duplicate label decisions, other instance in     Documentation/translations/zh_CN/process/management-style.rst
+>     Documentation/process/programming-language.rst:37: WARNING: duplicate citation c-language, other instance in     Documentation/translations/zh_CN/process/programming-language.rst
+>     Documentation/process/programming-language.rst:38: WARNING: duplicate citation gcc, other instance in     Documentation/translations/zh_CN/process/programming-language.rst
+>     Documentation/process/programming-language.rst:39: WARNING: duplicate citation clang, other instance in     Documentation/translations/zh_CN/process/programming-language.rst
+>     Documentation/process/programming-language.rst:40: WARNING: duplicate citation icc, other instance in     Documentation/translations/zh_CN/process/programming-language.rst
+>     Documentation/process/programming-language.rst:41: WARNING: duplicate citation gcc-c-dialect-options, other instance in     Documentation/translations/zh_CN/process/programming-language.rst
+>     Documentation/process/programming-language.rst:42: WARNING: duplicate citation gnu-extensions, other instance in     Documentation/translations/zh_CN/process/programming-language.rst
+>     Documentation/process/programming-language.rst:43: WARNING: duplicate citation gcc-attribute-syntax, other instance in     Documentation/translations/zh_CN/process/programming-language.rst
+>     Documentation/process/programming-language.rst:44: WARNING: duplicate citation n2049, other instance in     Documentation/translations/zh_CN/process/programming-language.rst
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> ---
+>  .../zh_CN/process/management-style.rst        |  4 +--
+>  .../zh_CN/process/programming-language.rst    | 28 +++++++++----------
+>  2 files changed, 16 insertions(+), 16 deletions(-)
+> 
+> diff --git a/Documentation/translations/zh_CN/process/management-style.rst b/Documentation/translations/zh_CN/process/management-style.rst
+> index a181fa56d19e..c6a5bb285797 100644
+> --- a/Documentation/translations/zh_CN/process/management-style.rst
+> +++ b/Documentation/translations/zh_CN/process/management-style.rst
+> @@ -28,7 +28,7 @@ Linux内核管理风格
+>  
+>  不管怎样，这里是：
+>  
+> -.. _decisions:
+> +.. _cn_decisions:
+>  
+>  1）决策
+>  -------
+> @@ -108,7 +108,7 @@ Linux内核管理风格
+>  但是，为了做好作为内核管理者的准备，最好记住不要烧掉任何桥梁，不要轰炸任何
+>  无辜的村民，也不要疏远太多的内核开发人员。事实证明，疏远人是相当容易的，而
+>  亲近一个疏远的人是很难的。因此，“疏远”立即属于“不可逆”的范畴，并根据
+> -:ref:`decisions` 成为绝不可以做的事情。
+> +:ref:`cn_decisions` 成为绝不可以做的事情。
 
-diff --git a/sound/soc/ti/davinci-mcasp.c b/sound/soc/ti/davinci-mcasp.c
-index 9fbc759fdefe..f31805920e3e 100644
---- a/sound/soc/ti/davinci-mcasp.c
-+++ b/sound/soc/ti/davinci-mcasp.c
-@@ -2237,7 +2237,7 @@ static int davinci_mcasp_probe(struct platform_device *pdev)
- 		ret = edma_pcm_platform_register(&pdev->dev);
- 		break;
- 	case PCM_SDMA:
--		ret = sdma_pcm_platform_register(&pdev->dev, NULL, NULL);
-+		ret = sdma_pcm_platform_register(&pdev->dev, "tx", "rx");
- 		break;
- 	default:
- 		dev_err(&pdev->dev, "No DMA controller found (%d)\n", ret);
-diff --git a/sound/soc/ti/omap-mcbsp.c b/sound/soc/ti/omap-mcbsp.c
-index a395598f1f20..610c5e706fd2 100644
---- a/sound/soc/ti/omap-mcbsp.c
-+++ b/sound/soc/ti/omap-mcbsp.c
-@@ -1438,7 +1438,7 @@ static int asoc_mcbsp_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	return sdma_pcm_platform_register(&pdev->dev, NULL, NULL);
-+	return sdma_pcm_platform_register(&pdev->dev, "tx", "rx");
- }
- 
- static int asoc_mcbsp_remove(struct platform_device *pdev)
--- 
-2.21.0
+It's good to have.
 
+>  
+>  这里只有几个简单的规则：
+>  
+> diff --git a/Documentation/translations/zh_CN/process/programming-language.rst b/Documentation/translations/zh_CN/process/programming-language.rst
+> index 51fd4ef48ea1..9de9a3108c4d 100644
+> --- a/Documentation/translations/zh_CN/process/programming-language.rst
+> +++ b/Documentation/translations/zh_CN/process/programming-language.rst
+> @@ -8,21 +8,21 @@
+>  程序设计语言
+>  ============
+>  
+> -内核是用C语言 [c-language]_ 编写的。更准确地说，内核通常是用 ``gcc`` [gcc]_
+> -在 ``-std=gnu89`` [gcc-c-dialect-options]_ 下编译的：ISO C90的 GNU 方言（
+> +内核是用C语言 [cn_c-language]_ 编写的。更准确地说，内核通常是用 ``gcc`` [cn_gcc]_
+
+this change isn't good. cn_gcc will show in docs, it looks wired and confusing for peoples. other changes have the same issue. Could you find other way to fix the warning? or I'd rather tolerant it.
+
+Thanks
+Alex
