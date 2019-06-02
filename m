@@ -2,158 +2,150 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05363C282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 07:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DEABC282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 07:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C23AA2783C
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 07:35:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E78FC27849
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 07:50:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="hEdbjXxt";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="THigIyw4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726290AbfFBHfK (ORCPT
+        id S1726261AbfFBHuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 03:35:10 -0400
-Received: from outgoing-stata.csail.mit.edu ([128.30.2.210]:45621 "EHLO
-        outgoing-stata.csail.mit.edu" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725875AbfFBHfJ (ORCPT
+        Sun, 2 Jun 2019 03:50:24 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:46676 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725875AbfFBHuX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 03:35:09 -0400
-Received: from c-73-193-85-113.hsd1.wa.comcast.net ([73.193.85.113] helo=srivatsab-a01.vmware.com)
-        by outgoing-stata.csail.mit.edu with esmtpsa (TLS1.2:RSA_AES_128_CBC_SHA1:128)
-        (Exim 4.82)
-        (envelope-from <srivatsa@csail.mit.edu>)
-        id 1hXKXo-000XZY-I5; Sun, 02 Jun 2019 03:04:40 -0400
-Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
- controller
-To:     Paolo Valente <paolo.valente@linaro.org>
-Cc:     linux-fsdevel@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
-        Jeff Moyer <jmoyer@redhat.com>, Theodore Ts'o <tytso@mit.edu>,
-        amakhalov@vmware.com, anishs@vmware.com, srivatsab@vmware.com,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-References: <8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu>
- <A0DFE635-EFEC-4670-AD70-5D813E170BEE@linaro.org>
- <5B6570A2-541A-4CF8-98E0-979EA6E3717D@linaro.org>
- <2CB39B34-21EE-4A95-A073-8633CF2D187C@linaro.org>
- <FC24E25F-4578-454D-AE2B-8D8D352478D8@linaro.org>
- <0e3fdf31-70d9-26eb-7b42-2795d4b03722@csail.mit.edu>
- <F5E29C98-6CC4-43B8-994D-0B5354EECBF3@linaro.org>
- <686D6469-9DE7-4738-B92A-002144C3E63E@linaro.org>
- <01d55216-5718-767a-e1e6-aadc67b632f4@csail.mit.edu>
- <CA8A23E2-6F22-4444-9A20-E052A94CAA9B@linaro.org>
- <cc148388-3c82-d7c0-f9ff-8c31bb5dc77d@csail.mit.edu>
- <6FE0A98F-1E3D-4EF6-8B38-2C85741924A4@linaro.org>
- <2A58C239-EF3F-422B-8D87-E7A3B500C57C@linaro.org>
- <a04368ba-f1d5-8f2c-1279-a685a137d024@csail.mit.edu>
- <E270AD92-943E-4529-8158-AB480D6D9DF8@linaro.org>
- <5b71028c-72f0-73dd-0cd5-f28ff298a0a3@csail.mit.edu>
- <FFA44D26-75FF-4A8E-A331-495349BE5FFC@linaro.org>
- <0d6e3c02-1952-2177-02d7-10ebeb133940@csail.mit.edu>
- <7B74A790-BD98-412B-ADAB-3B513FB1944E@linaro.org>
-From:   "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Message-ID: <6a6f4aa4-fc95-f132-55b2-224ff52bd2d8@csail.mit.edu>
-Date:   Sun, 2 Jun 2019 00:04:34 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <7B74A790-BD98-412B-ADAB-3B513FB1944E@linaro.org>
-Content-Type: text/plain; charset=windows-1252
+        Sun, 2 Jun 2019 03:50:23 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x527nnvN018126;
+        Sun, 2 Jun 2019 00:50:09 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=U/Y+saax1dAQ0eNAL2r41Z6lrdj5PTBHu0Vfi43qz9U=;
+ b=hEdbjXxt54wN01rX+yV2MhTsZthXjXzbsSErq6QAAMb362V2GA1HbLAwLR20Wu6POJ0R
+ /C6GeASQxMhRMMwRf3flSHGEEz0FwHCSjjSbjjz/Ar3szIYgTGs6iqpNByX196CPv8pd
+ qQSJ7lJwsYfv7rJh1fVxh5/mB+Qs0Hhz20YN1klvb81YrxpfvwH5lfc6IRaZs+/ObuN0
+ h1MAvvkQdSbLAbE+Ew3GkVMEcQMgpYDXBGU0mKLrNAS/hSH5iKM6d1kWgT9tVhANFVRP
+ 1/rfltXPetwyuj4B8K9SZ5ugE9KKi+p48byEcHGJ9PZjNGnhxgHlBP+MtxOMjAir23nI TQ== 
+Received: from sc-exch04.marvell.com ([199.233.58.184])
+        by mx0b-0016f401.pphosted.com with ESMTP id 2survk2xy4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Sun, 02 Jun 2019 00:50:09 -0700
+Received: from SC-EXCH02.marvell.com (10.93.176.82) by SC-EXCH04.marvell.com
+ (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Sun, 2 Jun
+ 2019 00:50:08 -0700
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (104.47.37.53) by
+ SC-EXCH02.marvell.com (10.93.176.82) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Sun, 2 Jun 2019 00:50:08 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U/Y+saax1dAQ0eNAL2r41Z6lrdj5PTBHu0Vfi43qz9U=;
+ b=THigIyw4VT1tHNvFwaSXHCXPE7hy7Agvs50DOA/TT/tqGj6OGt8xGIYkd5gf/3RWvuJ4csu5QaT+PkrhzSAoVCDJkOfm28NRsepqVD7YnsDBrSo9w7jr8b8V//ZvM6Veal2NuuEKPVYYiSaZz+qB2O8BK1w29zbw0U9rojG3AYQ=
+Received: from MN2PR18MB3182.namprd18.prod.outlook.com (10.255.236.143) by
+ MN2PR18MB2589.namprd18.prod.outlook.com (20.179.82.96) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.21; Sun, 2 Jun 2019 07:50:06 +0000
+Received: from MN2PR18MB3182.namprd18.prod.outlook.com
+ ([fe80::9880:2b8b:52e5:b413]) by MN2PR18MB3182.namprd18.prod.outlook.com
+ ([fe80::9880:2b8b:52e5:b413%3]) with mapi id 15.20.1922.025; Sun, 2 Jun 2019
+ 07:50:06 +0000
+From:   Michal Kalderon <mkalderon@marvell.com>
+To:     YueHaibing <yuehaibing@huawei.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Ariel Elior <aelior@marvell.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: RE: [PATCH net-next] qed: Fix build error without CONFIG_DEVLINK
+Thread-Topic: [PATCH net-next] qed: Fix build error without CONFIG_DEVLINK
+Thread-Index: AQHVGFD4gMyJs5ZeR0mTxcaxDoreq6aH/tsA
+Date:   Sun, 2 Jun 2019 07:50:05 +0000
+Message-ID: <MN2PR18MB31826214544CB3DFD79A2671A11B0@MN2PR18MB3182.namprd18.prod.outlook.com>
+References: <20190601080605.13052-1-yuehaibing@huawei.com>
+In-Reply-To: <20190601080605.13052-1-yuehaibing@huawei.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [212.199.69.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 760ca41f-ab3c-4b36-21c5-08d6e72eeda2
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB2589;
+x-ms-traffictypediagnostic: MN2PR18MB2589:
+x-microsoft-antispam-prvs: <MN2PR18MB2589A52CA4CB31B6122E4308A11B0@MN2PR18MB2589.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 005671E15D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39850400004)(396003)(376002)(136003)(346002)(199004)(189003)(74316002)(99286004)(6116002)(3846002)(66066001)(52536014)(446003)(11346002)(486006)(476003)(4744005)(5660300002)(6636002)(478600001)(6436002)(71200400001)(71190400001)(86362001)(66946007)(73956011)(229853002)(9686003)(76116006)(316002)(66556008)(66476007)(64756008)(66446008)(2201001)(55016002)(68736007)(8936002)(81156014)(8676002)(2501003)(81166006)(186003)(256004)(6246003)(2906002)(53936002)(4326008)(110136005)(6506007)(76176011)(7696005)(7736002)(305945005)(54906003)(25786009)(102836004)(33656002)(14454004)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2589;H:MN2PR18MB3182.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: SOxPeklc8bfb9iQHlD6Ec8IX1Q6LV+TMgfagmqIaZpGfPn6ml4s088uJC/Dw4oO1JvBeee3oy3XS5jscNSYW7Qj+SE42QDuhCqGjT3zTKufsCMtrMmFNZ86L9d4Htn93X8qNB7zRWebnOhwpVWelsISjAS4XBnud8MLptgfhsI2XgW7D6sHrBoF8SkjnkrSzTuKAXrCmZeF6gRdKYEZzqiM2gleVbFQ2/EwjWH1E6SA15dQIusaEwGBmPk75TFEBifvAdYMRTK06wWn/bvVWkq9yXnWw9hiAXJRYVn7dV8nyvs/sTpxYvPPXLJNBYsH6CfHLH7gmilFmcD4eVVGRjvx3TkMIl3mWIFFocozzQ2J0zg/g0poyybglonEOqIv1Zcu0ILkOUbJRrW7sI6GJhfUUFEp0jfHMOJP4rXzO/cQ=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 760ca41f-ab3c-4b36-21c5-08d6e72eeda2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jun 2019 07:50:05.9761
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mkalderon@marvell.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2589
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-02_02:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/30/19 3:45 AM, Paolo Valente wrote:
-> 
-> 
->> Il giorno 30 mag 2019, alle ore 10:29, Srivatsa S. Bhat <srivatsa@csail.mit.edu> ha scritto:
->>
-[...]
->>
->> Your fix held up well under my testing :)
->>
-> 
-> Great!
-> 
->> As for throughput, with low_latency = 1, I get around 1.4 MB/s with
->> bfq (vs 1.6 MB/s with mq-deadline). This is a huge improvement
->> compared to what it was before (70 KB/s).
->>
-> 
-> That's beautiful news!
-> 
-> So, now we have the best of the two worlds: maximum throughput and
-> total control on I/O (including minimum latency for interactive and
-> soft real-time applications).  Besides, no manual configuration
-> needed.  Of course, this holds unless/until you find other flaws ... ;)
-> 
+> From: netdev-owner@vger.kernel.org <netdev-owner@vger.kernel.org>
+> On Behalf Of YueHaibing
+>=20
+> Fix gcc build error while CONFIG_DEVLINK is not set
+>=20
+> drivers/net/ethernet/qlogic/qed/qed_main.o: In function `qed_remove':
+> qed_main.c:(.text+0x1eb4): undefined reference to `devlink_unregister'
+>=20
+> Select DEVLINK to fix this.
+>=20
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: 24e04879abdd ("qed: Add qed devlink parameters table")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/net/ethernet/qlogic/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/net/ethernet/qlogic/Kconfig
+> b/drivers/net/ethernet/qlogic/Kconfig
+> index fdbb3ce..a391cf6 100644
+> --- a/drivers/net/ethernet/qlogic/Kconfig
+> +++ b/drivers/net/ethernet/qlogic/Kconfig
+> @@ -87,6 +87,7 @@ config QED
+>  	depends on PCI
+>  	select ZLIB_INFLATE
+>  	select CRC8
+> +	select NET_DEVLINK
+>  	---help---
+>  	  This enables the support for ...
+>=20
+> --
+> 2.7.4
+>=20
 
-Indeed, that's awesome! :)
+Thanks,=A0
 
->> With tracing on, the throughput is a bit lower (as expected I guess),
->> about 1 MB/s, and the corresponding trace file
->> (trace-waker-detection-1MBps) is available at:
->>
->> https://www.dropbox.com/s/3roycp1zwk372zo/bfq-traces.tar.gz?dl=0
->>
-> 
-> Thank you for the new trace.  I've analyzed it carefully, and, as I
-> imagined, this residual 12% throughput loss is due to a couple of
-> heuristics that occasionally get something wrong.  Most likely, ~12%
-> is the worst-case loss, and if one repeats the tests, the loss may be
-> much lower in some runs.
->
-
-Ah, I see.
- 
-> I think it is very hard to eliminate this fluctuation while keeping
-> full I/O control.  But, who knows, I might have some lucky idea in the
-> future.
-> 
-
-:)
-
-> At any rate, since you pointed out that you are interested in
-> out-of-the-box performance, let me complete the context: in case
-> low_latency is left set, one gets, in return for this 12% loss,
-> a) at least 1000% higher responsiveness, e.g., 1000% lower start-up
-> times of applications under load [1];
-> b) 500-1000% higher throughput in multi-client server workloads, as I
-> already pointed out [2].
-> 
-
-I'm very happy that you could solve the problem without having to
-compromise on any of the performance characteristics/features of BFQ!
+Acked-by: Michal Kalderon=A0<michal.kalderon@marvell.com>
 
 
-> I'm going to prepare complete patches.  In addition, if ok for you,
-> I'll report these results on the bug you created.  Then I guess we can
-> close it.
-> 
-
-Sounds great!
-
-> [1] https://algo.ing.unimo.it/people/paolo/disk_sched/results.php
-> [2] https://www.linaro.org/blog/io-bandwidth-management-for-production-quality-services/
-> 
->> Thank you so much for your tireless efforts in fixing this issue!
->>
-> 
-> I did enjoy working on this with you: your test case and your support
-> enabled me to make important improvements.  So, thank you very much
-> for your collaboration so far,
-> Paolo
-
-My pleasure! :)
- 
-Regards,
-Srivatsa
-VMware Photon OS
