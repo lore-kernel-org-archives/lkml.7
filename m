@@ -2,228 +2,94 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	FREEMAIL_REPLYTO_END_DIGIT,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB4CC282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 15:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E6AC282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 15:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA1B62796C
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 15:56:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F6792796D
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 15:59:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DeoIg8Xw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lbn9N2Yt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfFBP4Y (ORCPT
+        id S1726715AbfFBP7R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 11:56:24 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44715 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbfFBP4X (ORCPT
+        Sun, 2 Jun 2019 11:59:17 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:37044 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726168AbfFBP7Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 11:56:23 -0400
-Received: by mail-wr1-f65.google.com with SMTP id w13so9623682wru.11
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 08:56:21 -0700 (PDT)
+        Sun, 2 Jun 2019 11:59:16 -0400
+Received: by mail-qt1-f195.google.com with SMTP id y57so6842940qtk.4
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 08:59:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:reply-to:mime-version
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=nhWOILuDvP2H60A9rApnGdMVLdYuriaJlseg1jGSqdQ=;
-        b=DeoIg8Xw5PtlIzybCBSjdIPhrA3kAG6nZ/TE5TVmgL9bCJAunkXWYflmFZQufVMueO
-         k/QnCn3h6D4TQ3C+bSh07/lPKKwQsSqkQjy0nHm8YG8L1f60q8gAic+NWLqD97R05ccY
-         NtKIv8iXkUJajf9M7eT2ckKUjvxwE6BxxuWPwVQvJPoV+klCP/nf3RAhCJ6FIffOldib
-         OFqVCq8mqcqyKz984Gkm6Gjv0O+cXSGiN9MoN2vpbf1ERxjD6L838INS0Hj5HfUluTZz
-         k0nTRrPQaPOZLqS2gAUWf0EYYjY5ZKwwmYjiruhkT8UkMAXMwyA2MdhZKiufc1AHrrys
-         xXnw==
+        bh=A6wrK07m18vBz92aFXgDpxBS8gA3r3xl4zuOhpCZv1M=;
+        b=Lbn9N2Yty87IYvzN0tY37lEGmAFLUcK+8DqmDX5/TGrpMbwsiofJ70DQyrIm1rahr1
+         6hIIC8Ws9xjn32ppsWcRYeOdg4pNGB+vkjC2tSvijfyclLtwOirqP+ihI/tijJwEqc4f
+         5M/jREEnpB/7d36agucSOZxILNL+QtXQ0AgjNLJJ+pt+VLO6QvjB1Ka8TddhE/+UMUdi
+         xSQkOYMvtg4eAeFEs9LWxmrgBXPu4gKhvfrCsRAwe8dqY1LjY7/kP5g76W3R++CBgu8t
+         hRrUtiZ9QKgOSUbRMY4qRgAfNeqt4fJhElWChlTKlR+OvpSELAOvkFOVvC/KDE12dH23
+         CixQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :mime-version:content-transfer-encoding;
-        bh=nhWOILuDvP2H60A9rApnGdMVLdYuriaJlseg1jGSqdQ=;
-        b=HA5RQLvy7zLtPYhzf1zdUE4Py5idWU69EwPBG8zDNPodtlyHI9VkAYAyo4HwFRV0Dn
-         i9dlT+9Eps8m1jJ8/DQN6NR2iEUwPN3LVyD+f06oGJ/Ec18Civp8Dd6eKsOpaNcixWPz
-         gSmU1Ma3ziNO5XDoNV042uRmngtgr4Y9lpQrz2rqKLP9RwxjbLCZuaKho4gFgcfEt/5u
-         POsSLTJkWT+92LWO56e9hpVQEgQFrQkf+V5wVOAKt9j2s2BLVkc1NCIyVdfbh2zWZ20/
-         DxzIlf4OuVLKLPAdld8F+HDMkzbGCLo+3vnTd4IFExKj1I8vlAq0JcSwq60RAFqIe/Yb
-         1MKQ==
-X-Gm-Message-State: APjAAAVpYMs7ZxLVoH5+BlOSnxlRdMKbbGhyzlt2fIpQqWLU+sO4QWB8
-        7Fp2yNnacGP51ABH6P2dgWg3cQEwrZpsrQ==
-X-Google-Smtp-Source: APXvYqzOc2qNR8FJOAepVVu+GdCgf8Q5tVZ+bCz4X5QpW4HPq7O2mDwP5fwHeZZ0YhVBc/OuiUnbfg==
-X-Received: by 2002:adf:df87:: with SMTP id z7mr13760130wrl.8.1559490980759;
-        Sun, 02 Jun 2019 08:56:20 -0700 (PDT)
-Received: from p200300EEEE2F.fritz.box (p200300C98712670014A3D3D52C57F0B4.dip0.t-ipconnect.de. [2003:c9:8712:6700:14a3:d3d5:2c57:f0b4])
-        by smtp.gmail.com with ESMTPSA id p13sm9508823wmb.23.2019.06.02.08.56.19
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 02 Jun 2019 08:56:20 -0700 (PDT)
-From:   Emanuel Bennici <benniciemanuel78@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Joe Perches <joe@perches.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH] pci: ibmphp: Replace functionname with __func__ in Messages
-Date:   Sun,  2 Jun 2019 17:56:17 +0200
-Message-Id: <20190602155619.21992-1-benniciemanuel78@gmail.com>
-X-Mailer: git-send-email 2.19.1
-Reply-To: benniciemanuel78@gmail.com
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=A6wrK07m18vBz92aFXgDpxBS8gA3r3xl4zuOhpCZv1M=;
+        b=HUtfojO9LcvC6e3ReHWAZmF9tfKL00E4DuaGSEZBPIPjIm6Fi06IHPr10nvRQEXWfM
+         q55QOfupwEyJLYGjpBN9aF4VCQquAbZLn0z89ZFvYA1TqxY9swcwKFeA1omdMGKKJj5M
+         YyOsNxCB+y/jL+fEjTpaotjMHIQ926koQnPfyWzvyTOyKnqsU7QfgeUo26Q+anm8DhvS
+         jzl5qbjtC92QMvfJTVUn9iYsab+Eau+P2sKy86FC75S2rUZsssR+Gu6xta2Hi9TdQ+SK
+         1hm2VYUnrxtWf3SS/Ou3rbaf2sA7U2hILY5KzIsnxvTH9KiddQ0ZzD304nJtxAORwkXS
+         2eEA==
+X-Gm-Message-State: APjAAAW3dYOeQJBmM8lvtCmAr4B7akGNVU9Mrzj0zSX2wCnVQXjgAmpX
+        ZZGAo56H995JKnVVnRrq6jg=
+X-Google-Smtp-Source: APXvYqzVsPrvMha2ALY8t+t1yy/JX9yurW+MLgtDuk6hbCDgUbZis2lMZDlRK9hxuQv6Aaolg7kmjQ==
+X-Received: by 2002:ac8:2bb3:: with SMTP id m48mr18901947qtm.218.1559491155744;
+        Sun, 02 Jun 2019 08:59:15 -0700 (PDT)
+Received: from arch-01.home (c-73-132-202-198.hsd1.md.comcast.net. [73.132.202.198])
+        by smtp.gmail.com with ESMTPSA id n7sm7378589qkd.53.2019.06.02.08.59.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 02 Jun 2019 08:59:15 -0700 (PDT)
+From:   Geordan Neukum <gneukum1@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jeremy Sowden <jeremy@azazel.net>, Mao Wenan <maowenan@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Geordan Neukum <gneukum1@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] staging: kpc2000: kpc_spi: Assorted small fixes
+Date:   Sun,  2 Jun 2019 15:58:32 +0000
+Message-Id: <cover.1559488571.git.gneukum1@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the hardcoded Function-Names in error and debug Messages with
-the __func__ Macro.
-If the Function-Name changes we haven't to check all the error/ debug
-messages.
+This patch set contains a few small fixups to the kpc_spi driver. There
+is certainly nothing groundbreaking in this patch set. It is limited to
+style fixups, removing unused things, and using the managed resource API
+for mapping I/O space.
 
-Signed-off-by: Emanuel Bennici <benniciemanuel78@gmail.com>
----
- drivers/pci/hotplug/ibmphp_core.c | 34 +++++++++++++++----------------
- 1 file changed, 16 insertions(+), 18 deletions(-)
+Geordan Neukum (5):
+  staging: kpc2000: kpc_spi: Remove unnecessary consecutive newlines
+  staging: kpc2000: kpc_spi: column-align switch and subordinate cases
+  staging: kpc2000: kpc_spi: remove fifo_depth from kp_spi struct
+  staging: kpc2000: kpc_spi: remove function kp_spi_bytes_per_word()
+  staging: kpc2000: kpc_spi: use devm_* API to manage mapped I/O space
 
-diff --git a/drivers/pci/hotplug/ibmphp_core.c b/drivers/pci/hotplug/ibmphp_core.c
-index 17124254d897..59840a094973 100644
---- a/drivers/pci/hotplug/ibmphp_core.c
-+++ b/drivers/pci/hotplug/ibmphp_core.c
-@@ -194,7 +194,7 @@ static inline int power_on(struct slot *slot_cur)
- 		return retval;
- 	}
- 	if (CTLR_RESULT(slot_cur->ctrl->status)) {
--		err("command not completed successfully in power_on\n");
-+		err("command not completed successfully in %s\n", __func__);
- 		return -EIO;
- 	}
- 	msleep(3000);	/* For ServeRAID cards, and some 66 PCI */
-@@ -212,7 +212,7 @@ static inline int power_off(struct slot *slot_cur)
- 		return retval;
- 	}
- 	if (CTLR_RESULT(slot_cur->ctrl->status)) {
--		err("command not completed successfully in power_off\n");
-+		err("command not completed successfully in %s\n", __func__);
- 		retval = -EIO;
- 	}
- 	return retval;
-@@ -224,8 +224,8 @@ static int set_attention_status(struct hotplug_slot *hotplug_slot, u8 value)
- 	struct slot *pslot;
- 	u8 cmd = 0x00;     /* avoid compiler warning */
+ drivers/staging/kpc2000/kpc2000_spi.c | 45 ++++++---------------------
+ 1 file changed, 9 insertions(+), 36 deletions(-)
 
--	debug("set_attention_status - Entry hotplug_slot[%lx] value[%x]\n",
--			(ulong) hotplug_slot, value);
-+	debug("%s - Entry hotplug_slot[%lx] value[%x]\n",
-+			__func__, (ulong) hotplug_slot, value);
- 	ibmphp_lock_operations();
-
-
-@@ -242,7 +242,7 @@ static int set_attention_status(struct hotplug_slot *hotplug_slot, u8 value)
- 			break;
- 		default:
- 			rc = -ENODEV;
--			err("set_attention_status - Error : invalid input [%x]\n",
-+			err("%s - Error : invalid input [%x]\n", __func__,
- 					value);
- 			break;
- 		}
-@@ -255,7 +255,7 @@ static int set_attention_status(struct hotplug_slot *hotplug_slot, u8 value)
-
- 	ibmphp_unlock_operations();
-
--	debug("set_attention_status - Exit rc[%d]\n", rc);
-+	debug("%s - Exit rc[%d]\n", __func__, rc);
- 	return rc;
- }
-
-@@ -265,7 +265,7 @@ static int get_attention_status(struct hotplug_slot *hotplug_slot, u8 *value)
- 	struct slot *pslot;
- 	struct slot myslot;
-
--	debug("get_attention_status - Entry hotplug_slot[%lx] pvalue[%lx]\n",
-+	debug("%s - Entry hotplug_slot[%lx] pvalue[%lx]\n", __func__,
- 					(ulong) hotplug_slot, (ulong) value);
-
- 	ibmphp_lock_operations();
-@@ -282,7 +282,7 @@ static int get_attention_status(struct hotplug_slot *hotplug_slot, u8 *value)
- 	}
-
- 	ibmphp_unlock_operations();
--	debug("get_attention_status - Exit rc[%d] value[%x]\n", rc, *value);
-+	debug("%s - Exit rc[%d] value[%x]\n", __func__, rc, *value);
- 	return rc;
- }
-
-@@ -292,7 +292,7 @@ static int get_latch_status(struct hotplug_slot *hotplug_slot, u8 *value)
- 	struct slot *pslot;
- 	struct slot myslot;
-
--	debug("get_latch_status - Entry hotplug_slot[%lx] pvalue[%lx]\n",
-+	debug("%s - Entry hotplug_slot[%lx] pvalue[%lx]\n", __func__,
- 					(ulong) hotplug_slot, (ulong) value);
- 	ibmphp_lock_operations();
- 	if (hotplug_slot) {
-@@ -305,8 +305,7 @@ static int get_latch_status(struct hotplug_slot *hotplug_slot, u8 *value)
- 	}
-
- 	ibmphp_unlock_operations();
--	debug("get_latch_status - Exit rc[%d] rc[%x] value[%x]\n",
--			rc, rc, *value);
-+	debug("%s - Exit rc[%d] rc[%x] value[%x]\n", __func__, rc, rc, *value);
- 	return rc;
- }
-
-@@ -317,7 +316,7 @@ static int get_power_status(struct hotplug_slot *hotplug_slot, u8 *value)
- 	struct slot *pslot;
- 	struct slot myslot;
-
--	debug("get_power_status - Entry hotplug_slot[%lx] pvalue[%lx]\n",
-+	debug("%s - Entry hotplug_slot[%lx] pvalue[%lx]\n", __func__,
- 					(ulong) hotplug_slot, (ulong) value);
- 	ibmphp_lock_operations();
- 	if (hotplug_slot) {
-@@ -330,8 +329,7 @@ static int get_power_status(struct hotplug_slot *hotplug_slot, u8 *value)
- 	}
-
- 	ibmphp_unlock_operations();
--	debug("get_power_status - Exit rc[%d] rc[%x] value[%x]\n",
--			rc, rc, *value);
-+	debug("%s - Exit rc[%d] rc[%x] value[%x]\n", __func__, rc, rc, *value);
- 	return rc;
- }
-
-@@ -360,7 +358,7 @@ static int get_adapter_present(struct hotplug_slot *hotplug_slot, u8 *value)
- 	}
-
- 	ibmphp_unlock_operations();
--	debug("get_adapter_present - Exit rc[%d] value[%x]\n", rc, *value);
-+	debug("%s - Exit rc[%d] value[%x]\n", __func__, rc, *value);
- 	return rc;
- }
-
-@@ -711,8 +709,7 @@ static u8 bus_structure_fixup(u8 busno)
- 	for (dev->devfn = 0; dev->devfn < 256; dev->devfn += 8) {
- 		if (!pci_read_config_word(dev, PCI_VENDOR_ID, &l) &&
- 					(l != 0x0000) && (l != 0xffff)) {
--			debug("%s - Inside bus_structure_fixup()\n",
--							__func__);
-+			debug("%s - Inside %s\n", __func__, __func__);
- 			b = pci_scan_bus(busno, ibmphp_pci_bus->ops, NULL);
- 			if (!b)
- 				continue;
-@@ -885,7 +882,8 @@ static int set_bus(struct slot *slot_cur)
- 			return retval;
- 		}
- 		if (CTLR_RESULT(slot_cur->ctrl->status)) {
--			err("command not completed successfully in set_bus\n");
-+			err("command not completed successfully in %s\n",
-+				__func__);
- 			return -EIO;
- 		}
- 	}
---
-2.19.1
+-- 
+2.21.0
 
