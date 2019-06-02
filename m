@@ -2,69 +2,115 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF006C282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 17:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF0AC282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 17:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2CAB279A2
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 17:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D483273A0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 17:32:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559496333;
-	bh=9FWIEqhrbY65cbvWohqbtGpeD8HmsgvvclVV/yNsBaE=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=mhNv2c3XLQYDVmgDtdTLEwQ2qLA4JdymHMyuvXBpA2NbM8qckp+pc2ARR6X+SeU2o
-	 i1nD7Lpv15yr0tfeA8w4FGWqZYwWnfvcdbVQ1QKpZLbiG2gEzZaQvq18rvbW501Pwc
-	 O/ATT9PxV7RIUOZE4KDRUCvZ5twb0O8HPEYNPdqY=
+	s=default; t=1559496759;
+	bh=X7BkSitWUo5k9Gw8U65tfTl9Ch7l6XUzmjKw/8AXJiU=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=XbdqJlimpp48eogiFQyds5ruj3R1uOZH9d3XeTdsTSAG7D6JpaiKhrJF5D9ccoKm0
+	 gXy27WwRwXNLcqa0DmjDKeOB8d09bmlkBoiSK8WzWlIbuYqCfWfCGhYErs12Qbbatg
+	 rsPS8YbHrgOL8U43nQIovPkWG4pvlNN41CxivChg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbfFBRZd (ORCPT
+        id S1726830AbfFBRci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 13:25:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35214 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726587AbfFBRZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 13:25:14 -0400
-Subject: Re: [PULL REQUEST] i2c for 5.2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559496314;
-        bh=9FWIEqhrbY65cbvWohqbtGpeD8HmsgvvclVV/yNsBaE=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=IgxmATjjakXwSBHVRr2gKOmWpEePfjkmq3Ko9TfBM3xHwKrTIUVnM5TILDLRx9fyX
-         SHAYLM5yGxdJHPFqd1+rVrDQA7iTd2ON/IH3hiKKQ4QUPgAjhXm8W26tp4PYhnHMG8
-         yeOdxiLbODyEYaUEdxKMdHet7BKJgjUSUkTQpFEw=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190602062356.GA1616@kunai>
-References: <20190602062356.GA1616@kunai>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190602062356.GA1616@kunai>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-current
-X-PR-Tracked-Commit-Id: c8552db31d5e70f0311be031b22292bf256791da
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 38baf0bb79f51b4fcbf6df8fd181441d7b5c7913
-Message-Id: <155949631397.24242.15334043470129943507.pr-tracker-bot@kernel.org>
-Date:   Sun, 02 Jun 2019 17:25:13 +0000
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Rosin <peda@axentia.se>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
+        Sun, 2 Jun 2019 13:32:38 -0400
+Received: from mail-wr1-f51.google.com ([209.85.221.51]:40741 "EHLO
+        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726170AbfFBRci (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Jun 2019 13:32:38 -0400
+Received: by mail-wr1-f51.google.com with SMTP id p11so4915993wre.7
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 10:32:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=uGhq/DFCmh9x/QiI3c2FfenegvK+p86vibxoOmRXfhU=;
+        b=SW/xbczif2gORIFVFSCqoLa80ZqwatuR+jUduYVGA4F9dS4W7ECvQ78QB48RXfOxro
+         XmLym4C6EnhrBpsdny3ijIkZ1Y5wEefe61YHAoQpUyz92Vqt7uM1Yb4BGujL83C/iY8D
+         nSnlTRItSPQCQTIv0pATssE+3Chtz15ij5vrG3faOzt3tsXuQSImtmea70jvz8kRqFSr
+         n+RifK6NBxzDp+0jDO5Nwm/s4S1dO0obCqzGnVu1Sj5ug+eI5lCHqncUL+dy3rn2ZtuY
+         9BrFA1JBZIn7KQrPOTe7snDrVXuU14NSqEcAOq7wH56qmRKAqeVi4hpc9sQNzttdhK/P
+         KFZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=uGhq/DFCmh9x/QiI3c2FfenegvK+p86vibxoOmRXfhU=;
+        b=sZobTi+ciZI+PaFUIoZrT3UMFF2LI+sPEyWDslVQDLvKaKDdzSOKPIfMY7Z7BZdTLR
+         lJpVW5GJzHQmaO9oD/jkfrATaK+bvPZND9iKeUkCfTSYizaTOfWr5QehgRKxoGlTiuyy
+         HTdWzfg8VZvEvl1+Nclw6J6K74IBVlRBdORJx9615sS+U+ZaE3mXHWfJPGcBuoNnjnUS
+         Ew3jJeLbJWwsDZQbeSNmxknrqSvwQu/u056qpXjKmP/G6FWC90VIFAfW94IOxxScFueT
+         1dU1fwwRB5+PkpL3ol3725lU5k9UshyFNhnVlvElpTsl22OZVuHMHGa+G2Yt07l20uuc
+         MH1g==
+X-Gm-Message-State: APjAAAV4EQ6W3QOw9D2jqOcUQoOoW7r7jAoXHEror7ws6FpL5/1rr3wJ
+        PLSIs1sif94MODPbOx7kOjA=
+X-Google-Smtp-Source: APXvYqwAFHMKT8Ae8jYnFwsF8veIgv1hO8aDPTodkms8Hk4ydrOHZvH156oJEenPcf1WDUnshslpJQ==
+X-Received: by 2002:a5d:4141:: with SMTP id c1mr5051013wrq.159.1559496757052;
+        Sun, 02 Jun 2019 10:32:37 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id i9sm8819311wmf.43.2019.06.02.10.32.35
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 02 Jun 2019 10:32:36 -0700 (PDT)
+Date:   Sun, 2 Jun 2019 19:32:34 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] core/urgent fix
+Message-ID: <20190602173234.GA126544@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 2 Jun 2019 08:24:02 +0200:
+Linus,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-current
+Please pull the latest core-urgent-for-linus git tree from:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/38baf0bb79f51b4fcbf6df8fd181441d7b5c7913
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-urgent-for-linus
 
-Thank you!
+   # HEAD: 7eaf51a2e094229b75cc0c315f1cbbe2f3960058 stacktrace: Unbreak stack_trace_save_tsk_reliable()
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Fix a stack_trace_save_tsk_reliable() regression.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Joe Lawrence (1):
+      stacktrace: Unbreak stack_trace_save_tsk_reliable()
+
+
+ kernel/stacktrace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/stacktrace.c b/kernel/stacktrace.c
+index 27bafc1e271e..90d3e0bf0302 100644
+--- a/kernel/stacktrace.c
++++ b/kernel/stacktrace.c
+@@ -206,7 +206,7 @@ int stack_trace_save_tsk_reliable(struct task_struct *tsk, unsigned long *store,
+ 
+ 	ret = arch_stack_walk_reliable(consume_entry, &c, tsk);
+ 	put_task_stack(tsk);
+-	return ret;
++	return ret ? ret : c.len;
+ }
+ #endif
+ 
