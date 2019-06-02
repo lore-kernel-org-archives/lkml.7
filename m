@@ -5,67 +5,67 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B4AAC282DC
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E92C46470
 	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 10:26:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0CA5278C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 10:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70D46278C7
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 10:26:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DxpOo2a+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fTyzS8jS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbfFBK0l (ORCPT
+        id S1726879AbfFBK0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 06:26:41 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45387 "EHLO
+        Sun, 2 Jun 2019 06:26:45 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46151 "EHLO
         mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726716AbfFBK0j (ORCPT
+        with ESMTP id S1726716AbfFBK0m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 06:26:39 -0400
-Received: by mail-pg1-f196.google.com with SMTP id w34so6543325pga.12
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 03:26:38 -0700 (PDT)
+        Sun, 2 Jun 2019 06:26:42 -0400
+Received: by mail-pg1-f196.google.com with SMTP id v9so6545944pgr.13
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 03:26:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=cn/02pRULQN1C+RrPVokHf7vG5PSRqDMX3dkUYRHGtE=;
-        b=DxpOo2a+ySBu2WW5wsQEtCucyYPQ+s2ETm9jvQRje17u5GAL9E2rTktp/LE6YEBRIn
-         Dw6gv1+VjOp/gmS4beIS4ByleAgujTOY83tNmRcN1KD/m3KpozkKo9QYQbjPtWiiiNZ+
-         nZ7S52s+mCKjFQSbcCHkJhuXUUD7olFhRD4K+84Pypn4Ya/YkL+vPHsLSs/gbSyn2iav
-         Hy0E2CMnMA01KgRADh/X7VoHYUTqHNW0majL7TUgJd4eEZJri6p0LoNbxp3yi90l9br1
-         hUMzrXTOb586Coo82r6x4PM9Kg6E1+MgrIDrOe7ozPUJzTfqKN4VdRcD4i8B+L9AIIOQ
-         RqgA==
+        bh=f+umcMKa+r6Ca6FAPU2kaAKeDDe1pl33+1WzuzGjt8I=;
+        b=fTyzS8jSGsXowmnvIrsvtd9oLBg0b20iphN7lXxqMGAVq4IQ1sSzsvrkSWuKz++HiA
+         vom6SR6b7+p9X0MdM9e5QELVDPa4bTP6PwE2jJee3brY1XlsM50XJFQiO6Rvm9VG8bvg
+         wlICqHwXqGjS+zyGZuDwDEadSGDzR/irAzZVsuq1SMEcf9HQlA29gIHRbRtL3PBiSToQ
+         Id7L8NJHLJKWUtJhTbfo/e7+dlDUfmV3u0xqgtXdNa9pdlMo+PSYMANZYIx1P/+1jlEF
+         rzXHtfCuyDt54vh0w0/uQH3PzReJgqM3C19X1sxa7046NKynLsoRxM+sowdMi5SsVf3S
+         0RGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=cn/02pRULQN1C+RrPVokHf7vG5PSRqDMX3dkUYRHGtE=;
-        b=cwFJPs4jShJwETNS2+hHA5e9+ViGn6J3OJTBqi2f8ND75fVNOPR+Vz8uVS24Po02Ox
-         D/O9OeY3LWrch9fQp0LX6zpopjfVrzUyF6nfDobTJifnS6zLeQ1qcjDdsCX60DgSbd75
-         UkQKhtr+mNCQelfjCZK83GWkX+rC6as2lIbTD7cJ3OBsYCdhaygcdI5BZH+wJlE1pZR/
-         5UoYwxmxMxek5Qohwuqk6fa2MUUs1SR3Rk2XicyHmdBUBJvTlMNF5fQIAePk14eeNzCw
-         xzcwnCFxV8ALHnxk7nUUlhloJ5aMZNnUYLF63l9M9k0iICjH3oC/GAY/tmH9VLtiuDt/
-         LG5g==
-X-Gm-Message-State: APjAAAUtCrvqGRl0rAXX+kIHde/fttCPSgxbRNvbO8TuqewdpBowGPsP
-        NACmMNzCjCZO5Tkv2L4o0Vnv2jSN
-X-Google-Smtp-Source: APXvYqwv5sNyN638DfFJzXaBRr3+cz+2KVn9Ej8WR9wH/vi2AG2TZmuILoEUs34XPSpA7rAh5ZYzvA==
-X-Received: by 2002:aa7:824b:: with SMTP id e11mr21413003pfn.33.1559471198220;
-        Sun, 02 Jun 2019 03:26:38 -0700 (PDT)
+        bh=f+umcMKa+r6Ca6FAPU2kaAKeDDe1pl33+1WzuzGjt8I=;
+        b=PYvKmtmwtLvdr9Ff7F9a4hh4LXAShocblCbe/hp8E6plopLjwEqLPz35oGFK0if9tu
+         bNxDOZhs8uz/JCnlZKlfoaBzI2lloDp4W9NiOo7VLb47IpQrrlpAQtMnHIPcuJ29v6zC
+         vWpDsc+acDK1uzWzfSeS9SInSZuoYBqTtEhwaW3x5CNsVgX6BAPfqRx/4HqdS21/0v6a
+         hviSoUashvHbwjfsep2ydpEBYkDj0VZEhGUrDtJ63AoAxV0P4on9vfeJFzowENQrXZbW
+         w1XAqAXnTKOLPzLIC8wSYSRnRX7g8UyKRUaDNv8m+qaSjG6UoRH1DCDoL4p6PdHdBx4X
+         4bIg==
+X-Gm-Message-State: APjAAAUNwtWEcwZKwyNHBz6a/6ndG0Ho3bJNRDc3FkIUk++QY1uM3Ppo
+        v96x0onHvwxaAD8odpcirPbMjmxO
+X-Google-Smtp-Source: APXvYqyzkjTWMWlOdaRiyB4z3Ov2qoQ1kzskDGKEmgm2bLcX+Xhnir0AnWE0vXNz0avKSYfbGHIZng==
+X-Received: by 2002:a65:60cd:: with SMTP id r13mr20997332pgv.58.1559471201320;
+        Sun, 02 Jun 2019 03:26:41 -0700 (PDT)
 Received: from localhost.localdomain ([117.192.23.157])
-        by smtp.googlemail.com with ESMTPSA id j13sm12221099pfh.13.2019.06.02.03.26.35
+        by smtp.googlemail.com with ESMTPSA id j13sm12221099pfh.13.2019.06.02.03.26.38
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 02 Jun 2019 03:26:37 -0700 (PDT)
+        Sun, 02 Jun 2019 03:26:40 -0700 (PDT)
 From:   Deepak Mishra <linux.dkm@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, joe@perches.com, wlanfae@realtek.com,
         Larry.Finger@lwfinger.net, florian.c.schilhabel@googlemail.com,
         linux.dkm@gmail.com, himadri18.07@gmail.com,
         straube.linux@gmail.com
-Subject: [PATCH v2 3/9] staging: rtl8712: Fixed CamelCase cmdThread rename to cmd_thread
-Date:   Sun,  2 Jun 2019 15:55:32 +0530
-Message-Id: <587e87c58b6820a2c6d067ce271290054000a318.1559470738.git.linux.dkm@gmail.com>
+Subject: [PATCH v2 4/9] staging: rtl8712: Fixed CamelCase renames evtThread to evt_thread
+Date:   Sun,  2 Jun 2019 15:55:33 +0530
+Message-Id: <7f7b0e38b7f10f187ac4ad6eff8e0c1b47698258.1559470738.git.linux.dkm@gmail.com>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <cover.1559470737.git.linux.dkm@gmail.com>
 References: <cover.1559470737.git.linux.dkm@gmail.com>
@@ -76,54 +76,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch renames CamelCase cmdThread to cmd_thread in struct _adapter and related
-files drv_types.h,os_intfs.c
-CHECK: Avoid CamelCase: <cmdThread>
+This patch fixes CamelCase renames evtThread to evt_thread in struct _adapter as reported by
+checkpatch.pl
+CHECK: Avoid CamelCase: <evtThread>
 
 Signed-off-by: Deepak Mishra <linux.dkm@gmail.com>
 ---
  drivers/staging/rtl8712/drv_types.h | 2 +-
- drivers/staging/rtl8712/os_intfs.c  | 6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/staging/rtl8712/drv_types.h b/drivers/staging/rtl8712/drv_types.h
-index 7d1178278ecc..c6faafb13bdf 100644
+index c6faafb13bdf..5360f049088a 100644
 --- a/drivers/staging/rtl8712/drv_types.h
 +++ b/drivers/staging/rtl8712/drv_types.h
-@@ -152,7 +152,7 @@ struct _adapter {
- 	u32	imr_content;
+@@ -153,7 +153,7 @@ struct _adapter {
  	u8	eeprom_address_size;
  	u8	hw_init_completed;
--	struct task_struct *cmdThread;
-+	struct task_struct *cmd_thread;
- 	pid_t evtThread;
+ 	struct task_struct *cmd_thread;
+-	pid_t evtThread;
++	pid_t evt_thread;
  	struct task_struct *xmitThread;
  	pid_t recvThread;
-diff --git a/drivers/staging/rtl8712/os_intfs.c b/drivers/staging/rtl8712/os_intfs.c
-index c962696c9822..1653b36c4bfd 100644
---- a/drivers/staging/rtl8712/os_intfs.c
-+++ b/drivers/staging/rtl8712/os_intfs.c
-@@ -221,9 +221,9 @@ struct net_device *r8712_init_netdev(void)
- 
- static u32 start_drv_threads(struct _adapter *padapter)
- {
--	padapter->cmdThread = kthread_run(r8712_cmd_thread, padapter, "%s",
-+	padapter->cmd_thread = kthread_run(r8712_cmd_thread, padapter, "%s",
- 					  padapter->pnetdev->name);
--	if (IS_ERR(padapter->cmdThread))
-+	if (IS_ERR(padapter->cmd_thread))
- 		return _FAIL;
- 	return _SUCCESS;
- }
-@@ -235,7 +235,7 @@ void r8712_stop_drv_threads(struct _adapter *padapter)
- 
- 	/*Below is to terminate r8712_cmd_thread & event_thread...*/
- 	complete(&padapter->cmdpriv.cmd_queue_comp);
--	if (padapter->cmdThread)
-+	if (padapter->cmd_thread)
- 		wait_for_completion_interruptible(completion);
- 	padapter->cmdpriv.cmd_seq = 1;
- }
+ 	uint (*dvobj_init)(struct _adapter *adapter);
 -- 
 2.19.1
 
