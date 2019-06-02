@@ -2,241 +2,171 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F08E3C46460
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 19:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A3DC28CC6
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 19:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB7D32797D
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 19:08:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lmYArfef"
+	by mail.kernel.org (Postfix) with ESMTP id AD722279C1
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 19:29:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbfFBTIw (ORCPT
+        id S1726807AbfFBT3B convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 15:08:52 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:44595 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbfFBTIv (ORCPT
+        Sun, 2 Jun 2019 15:29:01 -0400
+Received: from mail.fireflyinternet.com ([109.228.58.192]:63692 "EHLO
+        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726270AbfFBT3B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 15:08:51 -0400
-Received: by mail-ed1-f67.google.com with SMTP id b8so23552493edm.11;
-        Sun, 02 Jun 2019 12:08:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aaBnd3Mz67/mbpVkdYT/2BN5oFrupn5X4M/t44T3/Vg=;
-        b=lmYArfefuVc8Zcozg9TjAwVGWcJeWBwFEZt1Fu7iVxDfd9QlQfGvf15pyROvXVtkbr
-         vtxL8nTDUZcILwufR1Qw3fo+0aTowXMqdZfhd+B3abRCeajFApVy4xbvk2hfVrghQN48
-         4wy3JdFRXmOPBtV3UpZU5ZXNsfo2zom26TRBTDg6sy94Cfml/InFLs+K+d4h1rXh6kf0
-         vQi1gkIbm40CGUhO/yEx3gCYDEQUctT2tJcVlErKU+PHqnthauTeWbxsuL4ns7+y1KaL
-         1uMjCn7d1c5il2JAu8NTBVgdgWvS5Rorn/p6TUEPPSWg3stj+lKrKpzfqaKXA7wdobEV
-         fjsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aaBnd3Mz67/mbpVkdYT/2BN5oFrupn5X4M/t44T3/Vg=;
-        b=iA0lx+tYJR0dy7O7XH103xaznyBaGa2jP6zSO3e2AZnvX4FoQSQshSO34tCSi+LMu8
-         hNcQ5al2Y8VN8ARSJMYriBkP2wg+L7kIc0dIoCcJV4i1qTsrikaAEOFVAtdChMrL5CQV
-         V51VObsxle30UmUIqAAQNxQ8sphZThOXnXZL3nkMT4DUPOvIVHN4Iwehoc9ZJqmOfRMH
-         tEcseBfmsKQ/hu5urtk2uFoYzdB0rFg0KAvAqPzli7NhzMcdTuIqxHB+mW/OgUDN8sdi
-         nCa0Ah8rppiN01sTfy8MaJDM4EZRltjM1DpTQtE2LW32lJ4QLIANw4VssUqZgf+Wuyh1
-         pcOA==
-X-Gm-Message-State: APjAAAWfZgHFBnWW7i1XRSm9zz0ZoJXsJrLg0r9EIEFkzCcicd2P4nD8
-        zk1NvYFQePIiTdZFybOoWM7h5883v/sJ2pKh82Ww5gMT
-X-Google-Smtp-Source: APXvYqzHZVKy1A3muaPGeeKB+e4u8+5dwO9Amo1xU4tbSVt/nRxSRiJpbGz9LvIrdCtY/wCMoFFM9Txz9ayg2lSgjts=
-X-Received: by 2002:aa7:cdd7:: with SMTP id h23mr8124859edw.264.1559502528659;
- Sun, 02 Jun 2019 12:08:48 -0700 (PDT)
+        Sun, 2 Jun 2019 15:29:01 -0400
+X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
+Received: from localhost (unverified [78.156.65.138]) 
+        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 16768014-1500050 
+        for multiple; Sun, 02 Jun 2019 20:28:09 +0100
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20181201165348.24140-1-robdclark@gmail.com> <CAL_JsqJmPqis46Un91QyhXgdrVtfATMP_hTp6wSeSAfc8MLFfw@mail.gmail.com>
- <CAF6AEGs9Nsft8ofZkGz_yWBPBC+prh8dBSkJ4PJr8yk2c5FMdQ@mail.gmail.com>
-In-Reply-To: <CAF6AEGs9Nsft8ofZkGz_yWBPBC+prh8dBSkJ4PJr8yk2c5FMdQ@mail.gmail.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Sun, 2 Jun 2019 12:08:33 -0700
-Message-ID: <CAF6AEGt-dhbQS5zZCNVTLT57OiUwO0RiP5bawTSu2RKZ-7W-aw@mail.gmail.com>
-Subject: Re: [PATCH] of/device: add blacklist for iommu dma_ops
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Linux IOMMU <iommu@lists.linux-foundation.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        David Airlie <airlied@linux.ie>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Archit Taneja <architt@codeaurora.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+To:     Matthew Wilcox <willy@infradead.org>
+From:   Chris Wilson <chris@chris-wilson.co.uk>
+In-Reply-To: <20190602105150.GB23346@bombadil.infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Hugh Dickins <hughd@google.com>, Jan Kara <jack@suse.cz>,
+        Song Liu <liu.song.a23@gmail.com>
+References: <20190307153051.18815-1-willy@infradead.org>
+ <155938118174.22493.11599751119608173366@skylake-alporthouse-com>
+ <155938946857.22493.6955534794168533151@skylake-alporthouse-com>
+ <20190602105150.GB23346@bombadil.infradead.org>
+Message-ID: <155950368509.22493.15394943722747213271@skylake-alporthouse-com>
+User-Agent: alot/0.6
+Subject: Re: [PATCH v4] page cache: Store only head pages in i_pages
+Date:   Sun, 02 Jun 2019 20:28:05 +0100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 10, 2019 at 7:35 AM Rob Clark <robdclark@gmail.com> wrote:
->
-> On Tue, Dec 4, 2018 at 2:29 PM Rob Herring <robh+dt@kernel.org> wrote:
-> >
-> > On Sat, Dec 1, 2018 at 10:54 AM Rob Clark <robdclark@gmail.com> wrote:
-> > >
-> > > This solves a problem we see with drm/msm, caused by getting
-> > > iommu_dma_ops while we attach our own domain and manage it directly at
-> > > the iommu API level:
-> > >
-> > >   [0000000000000038] user address but active_mm is swapper
-> > >   Internal error: Oops: 96000005 [#1] PREEMPT SMP
-> > >   Modules linked in:
-> > >   CPU: 7 PID: 70 Comm: kworker/7:1 Tainted: G        W         4.19.3 #90
-> > >   Hardware name: xxx (DT)
-> > >   Workqueue: events deferred_probe_work_func
-> > >   pstate: 80c00009 (Nzcv daif +PAN +UAO)
-> > >   pc : iommu_dma_map_sg+0x7c/0x2c8
-> > >   lr : iommu_dma_map_sg+0x40/0x2c8
-> > >   sp : ffffff80095eb4f0
-> > >   x29: ffffff80095eb4f0 x28: 0000000000000000
-> > >   x27: ffffffc0f9431578 x26: 0000000000000000
-> > >   x25: 00000000ffffffff x24: 0000000000000003
-> > >   x23: 0000000000000001 x22: ffffffc0fa9ac010
-> > >   x21: 0000000000000000 x20: ffffffc0fab40980
-> > >   x19: ffffffc0fab40980 x18: 0000000000000003
-> > >   x17: 00000000000001c4 x16: 0000000000000007
-> > >   x15: 000000000000000e x14: ffffffffffffffff
-> > >   x13: ffff000000000000 x12: 0000000000000028
-> > >   x11: 0101010101010101 x10: 7f7f7f7f7f7f7f7f
-> > >   x9 : 0000000000000000 x8 : ffffffc0fab409a0
-> > >   x7 : 0000000000000000 x6 : 0000000000000002
-> > >   x5 : 0000000100000000 x4 : 0000000000000000
-> > >   x3 : 0000000000000001 x2 : 0000000000000002
-> > >   x1 : ffffffc0f9431578 x0 : 0000000000000000
-> > >   Process kworker/7:1 (pid: 70, stack limit = 0x0000000017d08ffb)
-> > >   Call trace:
-> > >    iommu_dma_map_sg+0x7c/0x2c8
-> > >    __iommu_map_sg_attrs+0x70/0x84
-> > >    get_pages+0x170/0x1e8
-> > >    msm_gem_get_iova+0x8c/0x128
-> > >    _msm_gem_kernel_new+0x6c/0xc8
-> > >    msm_gem_kernel_new+0x4c/0x58
-> > >    dsi_tx_buf_alloc_6g+0x4c/0x8c
-> > >    msm_dsi_host_modeset_init+0xc8/0x108
-> > >    msm_dsi_modeset_init+0x54/0x18c
-> > >    _dpu_kms_drm_obj_init+0x430/0x474
-> > >    dpu_kms_hw_init+0x5f8/0x6b4
-> > >    msm_drm_bind+0x360/0x6c8
-> > >    try_to_bring_up_master.part.7+0x28/0x70
-> > >    component_master_add_with_match+0xe8/0x124
-> > >    msm_pdev_probe+0x294/0x2b4
-> > >    platform_drv_probe+0x58/0xa4
-> > >    really_probe+0x150/0x294
-> > >    driver_probe_device+0xac/0xe8
-> > >    __device_attach_driver+0xa4/0xb4
-> > >    bus_for_each_drv+0x98/0xc8
-> > >    __device_attach+0xac/0x12c
-> > >    device_initial_probe+0x24/0x30
-> > >    bus_probe_device+0x38/0x98
-> > >    deferred_probe_work_func+0x78/0xa4
-> > >    process_one_work+0x24c/0x3dc
-> > >    worker_thread+0x280/0x360
-> > >    kthread+0x134/0x13c
-> > >    ret_from_fork+0x10/0x18
-> > >   Code: d2800004 91000725 6b17039f 5400048a (f9401f40)
-> > >   ---[ end trace f22dda57f3648e2c ]---
-> > >   Kernel panic - not syncing: Fatal exception
-> > >   SMP: stopping secondary CPUs
-> > >   Kernel Offset: disabled
-> > >   CPU features: 0x0,22802a18
-> > >   Memory Limit: none
-> > >
-> > > The problem is that when drm/msm does it's own iommu_attach_device(),
-> > > now the domain returned by iommu_get_domain_for_dev() is drm/msm's
-> > > domain, and it doesn't have domain->iova_cookie.
-> > >
-> > > We kind of avoided this problem prior to sdm845/dpu because the iommu
-> > > was attached to the mdp node in dt, which is a child of the toplevel
-> > > mdss node (which corresponds to the dev passed in dma_map_sg()).  But
-> > > with sdm845, now the iommu is attached at the mdss level so we hit the
-> > > iommu_dma_ops in dma_map_sg().
-> > >
-> > > But auto allocating/attaching a domain before the driver is probed was
-> > > already a blocking problem for enabling per-context pagetables for the
-> > > GPU.  This problem is also now solved with this patch.
-> > >
-> > > Fixes: 97890ba9289c dma-mapping: detect and configure IOMMU in of_dma_configure
-> > > Tested-by: Douglas Anderson <dianders@chromium.org>
-> > > Signed-off-by: Rob Clark <robdclark@gmail.com>
-> > > ---
-> > > This is an alternative/replacement for [1].  What it lacks in elegance
-> > > it makes up for in practicality ;-)
-> > >
-> > > [1] https://patchwork.freedesktop.org/patch/264930/
-> > >
-> > >  drivers/of/device.c | 22 ++++++++++++++++++++++
-> > >  1 file changed, 22 insertions(+)
-> > >
-> > > diff --git a/drivers/of/device.c b/drivers/of/device.c
-> > > index 5957cd4fa262..15ffee00fb22 100644
-> > > --- a/drivers/of/device.c
-> > > +++ b/drivers/of/device.c
-> > > @@ -72,6 +72,14 @@ int of_device_add(struct platform_device *ofdev)
-> > >         return device_add(&ofdev->dev);
-> > >  }
-> > >
-> > > +static const struct of_device_id iommu_blacklist[] = {
-> > > +       { .compatible = "qcom,mdp4" },
-> > > +       { .compatible = "qcom,mdss" },
-> > > +       { .compatible = "qcom,sdm845-mdss" },
-> > > +       { .compatible = "qcom,adreno" },
-> > > +       {}
-> > > +};
-> >
-> > Not completely clear to whether this is still needed or not, but this
-> > really won't scale. Why can't the driver for these devices override
-> > whatever has been setup by default?
-> >
->
-> fwiw, at the moment it is not needed, but it will become needed again
-> to implement per-context pagetables (although I suppose for this we
-> only need to blacklist qcom,adreno and not also the display nodes).
+Quoting Matthew Wilcox (2019-06-02 11:51:50)
+> On Sat, Jun 01, 2019 at 12:44:28PM +0100, Chris Wilson wrote:
+> > Quoting Chris Wilson (2019-06-01 10:26:21)
+> > > Quoting Matthew Wilcox (2019-03-07 15:30:51)
+> > > > Transparent Huge Pages are currently stored in i_pages as pointers to
+> > > > consecutive subpages.  This patch changes that to storing consecutive
+> > > > pointers to the head page in preparation for storing huge pages more
+> > > > efficiently in i_pages.
+> > > > 
+> > > > Large parts of this are "inspired" by Kirill's patch
+> > > > https://lore.kernel.org/lkml/20170126115819.58875-2-kirill.shutemov@linux.intel.com/
+> > > > 
+> > > > Signed-off-by: Matthew Wilcox <willy@infradead.org>
+> > > > Acked-by: Jan Kara <jack@suse.cz>
+> > > > Reviewed-by: Kirill Shutemov <kirill@shutemov.name>
+> > > > Reviewed-and-tested-by: Song Liu <songliubraving@fb.com>
+> > > > Tested-by: William Kucharski <william.kucharski@oracle.com>
+> > > > Reviewed-by: William Kucharski <william.kucharski@oracle.com>
+> > > 
+> > > I've bisected some new softlockups under THP mempressure to this patch.
+> > > They are all rcu stalls that look similar to:
+> > > [  242.645276] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+> > > [  242.645293] rcu:     Tasks blocked on level-0 rcu_node (CPUs 0-3): P828
+> > > [  242.645301]  (detected by 1, t=5252 jiffies, g=55501, q=221)
+> > > [  242.645307] gem_syslatency  R  running task        0   828    815 0x00004000
+> > > [  242.645315] Call Trace:
+> > > [  242.645326]  ? __schedule+0x1a0/0x440
+> > > [  242.645332]  ? preempt_schedule_irq+0x27/0x50
+> > > [  242.645337]  ? apic_timer_interrupt+0xa/0x20
+> > > [  242.645342]  ? xas_load+0x3c/0x80
+> > > [  242.645347]  ? xas_load+0x8/0x80
+> > > [  242.645353]  ? find_get_entry+0x4f/0x130
+> > > [  242.645358]  ? pagecache_get_page+0x2b/0x210
+> > > [  242.645364]  ? lookup_swap_cache+0x42/0x100
+> > > [  242.645371]  ? do_swap_page+0x6f/0x600
+> > > [  242.645375]  ? unmap_region+0xc2/0xe0
+> > > [  242.645380]  ? __handle_mm_fault+0x7a9/0xfa0
+> > > [  242.645385]  ? handle_mm_fault+0xc2/0x1c0
+> > > [  242.645393]  ? __do_page_fault+0x198/0x410
+> > > [  242.645399]  ? page_fault+0x5/0x20
+> > > [  242.645404]  ? page_fault+0x1b/0x20
+> > > 
+> > > Any suggestions as to what information you might want?
+> > 
+> > Perhaps,
+> > [   76.175502] page:ffffea00098e0000 count:0 mapcount:0 mapping:0000000000000000 index:0x1
+> > [   76.175525] flags: 0x8000000000000000()
+> > [   76.175533] raw: 8000000000000000 ffffea0004a7e988 ffffea000445c3c8 0000000000000000
+> > [   76.175538] raw: 0000000000000001 0000000000000000 00000000ffffffff 0000000000000000
+> > [   76.175543] page dumped because: VM_BUG_ON_PAGE(entry != page)
+> > [   76.175560] ------------[ cut here ]------------
+> > [   76.175564] kernel BUG at mm/swap_state.c:170!
+> > [   76.175574] invalid opcode: 0000 [#1] PREEMPT SMP
+> > [   76.175581] CPU: 0 PID: 131 Comm: kswapd0 Tainted: G     U            5.1.0+ #247
+> > [   76.175586] Hardware name:  /NUC6CAYB, BIOS AYAPLCEL.86A.0029.2016.1124.1625 11/24/2016
+> > [   76.175598] RIP: 0010:__delete_from_swap_cache+0x22e/0x340
+> > [   76.175604] Code: e8 b7 3e fd ff 48 01 1d a8 7e 04 01 48 83 c4 30 5b 5d 41 5c 41 5d 41 5e 41 5f c3 48 c7 c6 03 7e bf 81 48 89 c7 e8 92 f8 fd ff <0f> 0b 48 c7 c6 c8 7c bf 81 48 89 df e8 81 f8 fd ff 0f 0b 48 c7 c6
+> > [   76.175613] RSP: 0000:ffffc900008dba88 EFLAGS: 00010046
+> > [   76.175619] RAX: 0000000000000032 RBX: ffffea00098e0040 RCX: 0000000000000006
+> > [   76.175624] RDX: 0000000000000007 RSI: 0000000000000000 RDI: ffffffff81bf6d4c
+> > [   76.175629] RBP: ffff888265ed8640 R08: 00000000000002c2 R09: 0000000000000000
+> > [   76.175634] R10: 0000000273a4626d R11: 0000000000000000 R12: 0000000000000001
+> > [   76.175639] R13: 0000000000000040 R14: 0000000000000000 R15: ffffea00098e0000
+> > [   76.175645] FS:  0000000000000000(0000) GS:ffff888277a00000(0000) knlGS:0000000000000000
+> > [   76.175651] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [   76.175656] CR2: 00007f24e4399000 CR3: 0000000002c09000 CR4: 00000000001406f0
+> > [   76.175661] Call Trace:
+> > [   76.175671]  __remove_mapping+0x1c2/0x380
+> > [   76.175678]  shrink_page_list+0x11db/0x1d10
+> > [   76.175684]  shrink_inactive_list+0x14b/0x420
+> > [   76.175690]  shrink_node_memcg+0x20e/0x740
+> > [   76.175696]  shrink_node+0xba/0x420
+> > [   76.175702]  balance_pgdat+0x27d/0x4d0
+> > [   76.175709]  kswapd+0x216/0x300
+> > [   76.175715]  ? wait_woken+0x80/0x80
+> > [   76.175721]  ? balance_pgdat+0x4d0/0x4d0
+> > [   76.175726]  kthread+0x106/0x120
+> > [   76.175732]  ? kthread_create_on_node+0x40/0x40
+> > [   76.175739]  ret_from_fork+0x1f/0x30
+> > [   76.175745] Modules linked in: i915 intel_gtt drm_kms_helper
+> > [   76.175754] ---[ end trace 8faf2ec849d50724 ]---
+> > [   76.206689] RIP: 0010:__delete_from_swap_cache+0x22e/0x340
+> > [   76.206708] Code: e8 b7 3e fd ff 48 01 1d a8 7e 04 01 48 83 c4 30 5b 5d 41 5c 41 5d 41 5e 41 5f c3 48 c7 c6 03 7e bf 81 48 89 c7 e8 92 f8 fd ff <0f> 0b 48 c7 c6 c8 7c bf 81 48 89 df e8 81 f8 fd ff 0f 0b 48 c7 c6
+> > [   76.206718] RSP: 0000:ffffc900008dba88 EFLAGS: 00010046
+> > [   76.206723] RAX: 0000000000000032 RBX: ffffea00098e0040 RCX: 0000000000000006
+> > [   76.206729] RDX: 0000000000000007 RSI: 0000000000000000 RDI: ffffffff81bf6d4c
+> > [   76.206734] RBP: ffff888265ed8640 R08: 00000000000002c2 R09: 0000000000000000
+> > [   76.206740] R10: 0000000273a4626d R11: 0000000000000000 R12: 0000000000000001
+> > [   76.206745] R13: 0000000000000040 R14: 0000000000000000 R15: ffffea00098e0000
+> > [   76.206750] FS:  0000000000000000(0000) GS:ffff888277a00000(0000) knlGS:0000000000000000
+> > [   76.206757] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> 
+> Thanks for the reports, Chris.
+> 
+> I think they're both canaries; somehow the page cache / swap cache has
+> got corrupted and contains entries that it shouldn't.
+> 
+> This second one (with the VM_BUG_ON_PAGE in __delete_from_swap_cache)
+> shows a regular (non-huge) page at index 1.  There are two ways we might
+> have got there; one is that we asked to delete a page at index 1 which is
+> no longer in the cache.  The other is that we asked to delete a huge page
+> at index 0, but the page wasn't subsequently stored in indices 1-511.
+> 
+> We dump the page that we found; not the page we're looking for, so I don't
+> know which.  If this one's easy to reproduce, you could add:
+> 
+>         for (i = 0; i < nr; i++) {
+>                 void *entry = xas_store(&xas, NULL);
+> +               if (entry != page) {
+> +                       printk("Oh dear %d %d\n", i, nr);
+> +                       dump_page(page, "deleting page");
+> +               }
+>                 VM_BUG_ON_PAGE(entry != page, entry);
+>                 set_page_private(page + i, 0);
+>                 xas_next(&xas);
+>         }
+> 
+> I'll re-read the patch and see if I can figure out how the cache is getting
+> screwed up.  Given what you said, probably on the swap-in path.
 
-So, another case I've come across, on the display side.. I'm working
-on handling the case where bootloader enables display (and takes iommu
-out of reset).. as soon as DMA domain gets attached we get iommu
-faults, because bootloader has already configured display for scanout.
-Unfortunately this all happens before actual driver is probed and has
-a chance to intervene.
-
-It's rather unfortunate that we tried to be clever rather than just
-making drivers call some function to opt-in to the hookup of dma iommu
-ops :-(
-
-BR,
--R
-
->
-> The reason is that in the current state the core code creates the
-> first domain before the driver has a chance to intervene and tell it
-> not to.  And this results that driver ends up using a different
-> context bank on the iommu than what the firmware expects.
->
-> I guess the alternative is to put some property in DT.. but that
-> doesn't really feel right.  I guess there aren't really many (or any?)
-> other drivers that have this specific problem, so I don't really
-> expect it to be a scaling problem.
->
-> Yeah, it's a bit ugly, but I'll take a small ugly working hack, over
-> elegant but non-working any day ;-)... but if someone has a better
-> idea then I'm all ears.
->
-> BR,
-> -R
+I can give you a clue, it requires split_huge_page_to_list().
+-Chris
