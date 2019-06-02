@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E9AC282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 10:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1216DC282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 10:26:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 883B2278CC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 10:26:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9884278CC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 10:26:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MkBO/HGB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HrMXlQ1N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbfFBK0y (ORCPT
+        id S1726981AbfFBK05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 06:26:54 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:36383 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726917AbfFBK0v (ORCPT
+        Sun, 2 Jun 2019 06:26:57 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:38668 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726960AbfFBK0y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 06:26:51 -0400
-Received: by mail-pl1-f195.google.com with SMTP id d21so5813543plr.3
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 03:26:51 -0700 (PDT)
+        Sun, 2 Jun 2019 06:26:54 -0400
+Received: by mail-pg1-f196.google.com with SMTP id v11so6562127pgl.5
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 03:26:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1q8rxh449LQmVHRRd/tqt/iiw4IrNCg2hqu9B0pbY2M=;
-        b=MkBO/HGB4ucjukkVuknWSkmBU6FPgCyzs46CiDfgssoHm/q/8CfLJAXukxC9bFXO/t
-         a+3rRYs575II6dyZoZNr0QhfZRkM/peAZxHADxDKbPfEo39cYRVkXliKXXxulh2ch996
-         9N2v7yyVRlQc5x3rb85uqY63DRwT5ndGalXxAjjlqSJFAcDWusA145Q3mcHOVlZudf7F
-         4WkPBIXD124CzCgKnMdLPaRM+gCRYq6QdeLv/berW/xJ8PgitIOmo96y2AGKXHmF4IR7
-         BSPG/uWPxu8khkA5l/L0qGsh5xyDvVaovWj/cXzYqLEyNq1WMp+VPEpXoVecATaHBpR4
-         FmfA==
+        bh=cKIUH11KwFXPaOzB3T3N/IBDlwu+dDeLYBil+yyqzok=;
+        b=HrMXlQ1NrvU892a9LzgJVM7BpBWOdVTOMYFftY5ZhRPdcw7MJCipMmfppFvi8z3/ML
+         CsrHymj35R/vJrvE+RdKURqtBE+2YYFcqiQqMdz2fwWVlY5tGRkR59eh7Ihlk/NCaf/t
+         YcSEgQr1c2+f+Hpjp2vSpbDKMQw2xXinago994U43nrFFffONcCeG093CEEzQUo4BHyu
+         nwqCzXEIjIHrq1lzripcrBUvvUi3Uw/dpROaGIrTE9HHk8MOFrBN00at7906q9nW+2iw
+         ZIBeF3nfusGc3sKPb9+GCBJ6WCFMHeupWiqqXzXpXyKYTCi56yVnIiU2dhN2Qt6WRIG9
+         A0HQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1q8rxh449LQmVHRRd/tqt/iiw4IrNCg2hqu9B0pbY2M=;
-        b=HC9jbvtJ0VvV3TJXaXvdhTsPbx6xGP6rp7ZxO3RKcsV3kF/ufCqeAki4uelc2IEZi/
-         iZFLkbNHMe51rJ6cE5LJRaGOBk2Dj2P13nYPHAfwAgE4KAAy9aBeBE1S2D7H+Tq8gIGN
-         B697EnCMQBZ+GJlQ0cgNSwSNyAuhLoDMma7tkPuigBQ7pLbVtsK+HdICHnhTYZU0zjVV
-         nOSoLymHaS+kkPQZJ5FJ/CAbJI/LXQ9KOk85FipijtE2qBQU3lZNJVUEPc+JxqhRU+2e
-         iv7ScCnoxyr2Jw9ATJ6yQWeich00Qzyka3zWl0Mt1Rxa+uH2SDG6B3ZTN6axuMTpyvf8
-         wRgA==
-X-Gm-Message-State: APjAAAWvPkj6HUUQm084Vt4EwXC/pTZ24twZm3l6FIEZ+rpqusEi3392
-        6riiUtoAzmyveac9fbPKrInNZNJa
-X-Google-Smtp-Source: APXvYqyI+B6UDIQxMWsrQhItRigP4E2h7oaxGYrGe18sHKcUjkmg8pkbFkF4Des8YtwRzymUuYuolg==
-X-Received: by 2002:a17:902:ba82:: with SMTP id k2mr12454698pls.323.1559471210896;
-        Sun, 02 Jun 2019 03:26:50 -0700 (PDT)
+        bh=cKIUH11KwFXPaOzB3T3N/IBDlwu+dDeLYBil+yyqzok=;
+        b=MYcskQ1r6iBCrYJvVvdrF8bO5AbAJN0GmzK7iCzlKlzQ984FuNXi2koBXyYDqc8aUM
+         lkp82xxkA7lnQ21NOUQlpM8k0NCsNlJc2ZwhgxzXxbTzb/kx2GrSY6mwhmMU5IEm0Rm7
+         vHTtONtU9pE3iGbHSdr15++Mdz0vaNouxmJzvy7/a/nDS9kxwROuZdVMmLALIhxdCzls
+         n6Jpa38qI9C+EMsvYi91Qguyj+byqQxtblVRO25FGProtxCmUJuzf1xUDAok6Xv5aRUk
+         0E/KiCMI1OVvelWzjtGexV1R9+fmYM0nymRk5o7G8cAwmoiQ+pWgFhb97FRFCwP7Qer8
+         9CnQ==
+X-Gm-Message-State: APjAAAXxBqX6Dxin8R66FXvOGpPcXAgJYVNKoumSTWDOtvRCBkegpWae
+        WYb0NMewSuL/JVFPHoXkuJVdgm9f
+X-Google-Smtp-Source: APXvYqzlyzLWQfeASAiWeK/a21bsbMcts5CVEapPYHUG3UG19rJXa11dEbDMdnRaNIhCMKU1MA1rUA==
+X-Received: by 2002:a62:2c17:: with SMTP id s23mr23363953pfs.51.1559471214024;
+        Sun, 02 Jun 2019 03:26:54 -0700 (PDT)
 Received: from localhost.localdomain ([117.192.23.157])
-        by smtp.googlemail.com with ESMTPSA id j13sm12221099pfh.13.2019.06.02.03.26.47
+        by smtp.googlemail.com with ESMTPSA id j13sm12221099pfh.13.2019.06.02.03.26.51
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 02 Jun 2019 03:26:50 -0700 (PDT)
+        Sun, 02 Jun 2019 03:26:53 -0700 (PDT)
 From:   Deepak Mishra <linux.dkm@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, joe@perches.com, wlanfae@realtek.com,
         Larry.Finger@lwfinger.net, florian.c.schilhabel@googlemail.com,
         linux.dkm@gmail.com, himadri18.07@gmail.com,
         straube.linux@gmail.com
-Subject: [PATCH v2 7/9] staging: rtl8712: Fixed CamelCase wkFilterRxFF0 to wk_filter_rx_ff0 in
-Date:   Sun,  2 Jun 2019 15:55:36 +0530
-Message-Id: <b24dc1f4deaa7b681363adade74cbcbb69359157.1559470738.git.linux.dkm@gmail.com>
+Subject: [PATCH v2 8/9] staging: rtl8712: fixed enable_rx_ff0_filter as bool and CamelCase
+Date:   Sun,  2 Jun 2019 15:55:37 +0530
+Message-Id: <7b32a7cf85ef0c3f6d2ba82480a1f8d0ad651779.1559470738.git.linux.dkm@gmail.com>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <cover.1559470737.git.linux.dkm@gmail.com>
 References: <cover.1559470737.git.linux.dkm@gmail.com>
@@ -76,55 +76,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch renames CamelCase variable wkFilterRxFF0 to wk_filter_rx_ff0
-in drv_types.h and related files rtl871x_xmit.c and xmit_linux.c as
-reported by checkpatch.pl
+This patch fixes CamelCase blnEnableRxFF0Filter by renaming it
+to enable_rx_ff0_filter in drv_types.h and related files rtl871x_cmd.c
+xmit_linux.c
+It was reported by checkpatch.pl
+
+This fix also makes enable_rx_ff0_filter a bool and uses true false than
+previously used u8 as suggested by joe@perches.com
 
 Signed-off-by: Deepak Mishra <linux.dkm@gmail.com>
 ---
- drivers/staging/rtl8712/drv_types.h    | 2 +-
- drivers/staging/rtl8712/rtl871x_xmit.c | 2 +-
- drivers/staging/rtl8712/xmit_linux.c   | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/staging/rtl8712/drv_types.h   | 2 +-
+ drivers/staging/rtl8712/rtl871x_cmd.c | 2 +-
+ drivers/staging/rtl8712/xmit_linux.c  | 4 ++--
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/staging/rtl8712/drv_types.h b/drivers/staging/rtl8712/drv_types.h
-index 1f8aa0358b77..ddab6514a549 100644
+index ddab6514a549..e3e2b32e964e 100644
 --- a/drivers/staging/rtl8712/drv_types.h
 +++ b/drivers/staging/rtl8712/drv_types.h
-@@ -163,7 +163,7 @@ struct _adapter {
- 	struct net_device_stats stats;
+@@ -164,7 +164,7 @@ struct _adapter {
  	struct iw_statistics iwstats;
  	int pid; /*process id from UI*/
--	struct work_struct wkFilterRxFF0;
-+	struct work_struct wk_filter_rx_ff0;
- 	u8 blnEnableRxFF0Filter;
+ 	struct work_struct wk_filter_rx_ff0;
+-	u8 blnEnableRxFF0Filter;
++	bool enable_rx_ff0_filter;
  	spinlock_t lockRxFF0Filter;
  	const struct firmware *fw;
-diff --git a/drivers/staging/rtl8712/rtl871x_xmit.c b/drivers/staging/rtl8712/rtl871x_xmit.c
-index bfd5538a4652..5d63d2721eb6 100644
---- a/drivers/staging/rtl8712/rtl871x_xmit.c
-+++ b/drivers/staging/rtl8712/rtl871x_xmit.c
-@@ -139,7 +139,7 @@ sint _r8712_init_xmit_priv(struct xmit_priv *pxmitpriv,
- 		pxmitbuf++;
- 	}
- 	pxmitpriv->free_xmitbuf_cnt = NR_XMITBUFF;
--	INIT_WORK(&padapter->wkFilterRxFF0, r8712_SetFilter);
-+	INIT_WORK(&padapter->wk_filter_rx_ff0, r8712_SetFilter);
- 	alloc_hwxmits(padapter);
- 	init_hwxmits(pxmitpriv->hwxmits, pxmitpriv->hwxmit_entry);
- 	tasklet_init(&pxmitpriv->xmit_tasklet,
+ 	struct usb_interface *pusb_intf;
+diff --git a/drivers/staging/rtl8712/rtl871x_cmd.c b/drivers/staging/rtl8712/rtl871x_cmd.c
+index 05a78ac24987..6a8d58d97873 100644
+--- a/drivers/staging/rtl8712/rtl871x_cmd.c
++++ b/drivers/staging/rtl8712/rtl871x_cmd.c
+@@ -238,7 +238,7 @@ u8 r8712_sitesurvey_cmd(struct _adapter *padapter,
+ 	mod_timer(&pmlmepriv->scan_to_timer,
+ 		  jiffies + msecs_to_jiffies(SCANNING_TIMEOUT));
+ 	padapter->ledpriv.LedControlHandler(padapter, LED_CTL_SITE_SURVEY);
+-	padapter->blnEnableRxFF0Filter = 0;
++	padapter->enable_rx_ff0_filter = false;
+ 	return _SUCCESS;
+ }
+ 
 diff --git a/drivers/staging/rtl8712/xmit_linux.c b/drivers/staging/rtl8712/xmit_linux.c
-index 8bcb0775411f..e65a51c7f372 100644
+index e65a51c7f372..9fa1abcf5e50 100644
 --- a/drivers/staging/rtl8712/xmit_linux.c
 +++ b/drivers/staging/rtl8712/xmit_linux.c
-@@ -94,7 +94,7 @@ void r8712_set_qos(struct pkt_file *ppktfile, struct pkt_attrib *pattrib)
- void r8712_SetFilter(struct work_struct *work)
- {
- 	struct _adapter *padapter = container_of(work, struct _adapter,
--						wkFilterRxFF0);
-+						wk_filter_rx_ff0);
- 	u8  oldvalue = 0x00, newvalue = 0x00;
- 	unsigned long irqL;
+@@ -103,11 +103,11 @@ void r8712_SetFilter(struct work_struct *work)
+ 	r8712_write8(padapter, 0x117, newvalue);
+ 
+ 	spin_lock_irqsave(&padapter->lockRxFF0Filter, irqL);
+-	padapter->blnEnableRxFF0Filter = 1;
++	padapter->enable_rx_ff0_filter = true;
+ 	spin_unlock_irqrestore(&padapter->lockRxFF0Filter, irqL);
+ 	do {
+ 		msleep(100);
+-	} while (padapter->blnEnableRxFF0Filter == 1);
++	} while (padapter->enable_rx_ff0_filter == true);
+ 	r8712_write8(padapter, 0x117, oldvalue);
+ }
  
 -- 
 2.19.1
