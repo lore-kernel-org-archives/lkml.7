@@ -2,121 +2,98 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1B3C282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 22:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F3CC282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 22:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E8E327A20
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 22:00:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBF2027A21
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 22:21:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rXUyCBlM"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="pcV0gcQc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbfFBWAX (ORCPT
+        id S1726817AbfFBWVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 18:00:23 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:46331 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbfFBWAX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 18:00:23 -0400
-Received: by mail-lj1-f196.google.com with SMTP id m15so6022403ljg.13;
-        Sun, 02 Jun 2019 15:00:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pSO0H2Cb09CLOksHCZL4+23n2F4bglfpiYqVlXdmSfM=;
-        b=rXUyCBlMcV0bxFvqljbaR2UaMAAKXoGyvYOwiL/fraYrb6NX1s+e06Db9EmTtqZyq+
-         MR9+Aj7S7O0Esk1UGwr5N3MsS20PQbC6MjjZT0UyE3LB9lU/OmE3hxPpTeRxMCMscSTj
-         bM8WlmIS2thi69ERW3BEQlCfeuJ2NlX7b3nA1YjDNzidYEX7taTrVG8j1NfN9uw5LYEG
-         QCIsyOeDsNjNtJWo2T5zpo9DAi94Js2EmxoOkbU97JY6FQV4VHDUkJHqPWffysMBS5pN
-         ADpDcj57t3ob377xVWa8R8LcdFHbJS1/TvUf+Rw1nQDRlYN7CQkw9yu+SipjBVdm0KJA
-         DCLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pSO0H2Cb09CLOksHCZL4+23n2F4bglfpiYqVlXdmSfM=;
-        b=bn7KO7kSG9gqwHIq+rPXsuiF16yx43XhYo15auszsqGq/ECJEt+Zhrrnu2Vs9pyOZY
-         MTi61kICWDfl/NibXXoa+hB4rbgXTugZqV3I+DdFOm9J4QPhkQ0bz1VPmRSXyyRxppfj
-         q8Tm16eBVxfhQiRbhtZQHzX7Ern72hef6jpLVHrRuTg9868sYKuGYHn6NoYGnqLu4aZ8
-         DHfpA6AUeUmv0e8I1DUJxOAIx9aN7+N4oRThY5iYu+sBva9oPntDTtdpQxA/Qm41z7mE
-         b7jevFnLxhlpI49Y0CtNqfJdLe2yb6bpS9DgZbw8lvgYYj8kKj8aA/KBzet19dLnseCH
-         cz0A==
-X-Gm-Message-State: APjAAAUnzDgqcKXc+kmOeXHruCqoKpYBGMDXdLjXXP/r303zFFkeUOl+
-        Gvo18AGkvagnTl04nqhPhGLYvEiYhZ29kMSRvDo=
-X-Google-Smtp-Source: APXvYqzF2ASIyINX5BllZ1zYtV8spOtlH4ML28puBxpogyGYLuAXeJjrOIOpZBBzC3J7OdWvFcybZF60eiLm7KaJ6zs=
-X-Received: by 2002:a2e:8116:: with SMTP id d22mr7225ljg.8.1559512820874; Sun,
- 02 Jun 2019 15:00:20 -0700 (PDT)
+        Sun, 2 Jun 2019 18:21:00 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:33845 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726305AbfFBWU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Jun 2019 18:20:59 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45HCLt6QTJz9s4V;
+        Mon,  3 Jun 2019 08:20:53 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1559514056;
+        bh=wTdYZ6QQsl/ZBjigzg21CbLkrvMORg6/09w4BHo4vmk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=pcV0gcQc5rgsOqLva+zbsq+h4LGY5mRBs7Fq2Le0oEjUpqKKFXFBGw0ipMTig1+JP
+         QMalwNmB0GlH2lwEQrX9fYyXGRdwPksaeoIgujrvzAkMdDHgh3hErboDdkVgwOsdlE
+         kuITZ/h9PI4PhYwMHnZ6gaa2sRq2iJfjZRHLrg9nVBxHwf8BSo4JvKxJpsQVDngcJJ
+         9djmV9jXqzQZWkxJQFR17kHqYsd2QsG2IfrCE1G9bXw7CNppM8S/aceSEwm/Y9KxjY
+         ZmR6WL/OFatzSCBarvjvhvDnODktchcr/N4LXMXXaqsZGB8psS0o9iQeDOJN63ezFy
+         R+X4CZ06dwBCg==
+Date:   Mon, 3 Jun 2019 08:20:51 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: unable to fetch the drm-intel-fixes tree
+Message-ID: <20190603082051.273a014c@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20190602213926.2290-1-olteanv@gmail.com> <20190602213926.2290-9-olteanv@gmail.com>
-In-Reply-To: <20190602213926.2290-9-olteanv@gmail.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Mon, 3 Jun 2019 01:00:10 +0300
-Message-ID: <CA+h21ho1d0RWE=fjy9YhcJ2aBr11BHvOT+daoQd7M+S1S6B0WA@mail.gmail.com>
-Subject: Re: [PATCH v2 net-next 08/10] net: dsa: sja1105: Make
- sja1105_is_link_local not match meta frames
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Richard Cochran <richardcochran@gmail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/1_9rLO0/J=YT2o1Opl+PJ50"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 3 Jun 2019 at 00:40, Vladimir Oltean <olteanv@gmail.com> wrote:
->
-> Although meta frames are configured to be sent at SJA1105_META_DMAC
-> (01-80-C2-00-00-0E) which is a multicast MAC address that would also be
-> trapped by the switch to the CPU, were it to receive it on a front-panel
-> port, meta frames are conceptually not link-local frames, they only
-> carry their RX timestamps.
->
-> The choice of sending meta frames at a multicast DMAC is a pragmatic
-> one, to avoid installing an extra entry to the DSA master port's
-> multicast MAC filter.
->
-> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-> ---
-> Changes in v2:
->
-> Patch is new.
->
->  include/linux/dsa/sja1105.h | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/include/linux/dsa/sja1105.h b/include/linux/dsa/sja1105.h
-> index f3237afed35a..d64e56d6c521 100644
-> --- a/include/linux/dsa/sja1105.h
-> +++ b/include/linux/dsa/sja1105.h
-> @@ -31,6 +31,8 @@ static inline bool sja1105_is_link_local(const struct sk_buff *skb)
->         const struct ethhdr *hdr = eth_hdr(skb);
->         u64 dmac = ether_addr_to_u64(hdr->h_dest);
->
-> +       if (ntohs(hdr->h_proto) == ETH_P_SJA1105_META)
-> +               return false;
->         if ((dmac & SJA1105_LINKLOCAL_FILTER_A_MASK) ==
->                     SJA1105_LINKLOCAL_FILTER_A)
->                 return true;
-> --
-> 2.17.1
->
+--Sig_/1_9rLO0/J=YT2o1Opl+PJ50
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Please be aware that this patch is misplaced and should be moved after
-the current 09/10 (doesn't compile as 08/10).
-I'll bundle this change in v3 with the other feedback I'll hopefully get.
+Hi all,
 
-Thanks!
--Vladimir
+Trying to fetch the drm-intel-fixes tree today gives me this error:
+
+-----------------------------------------------------------------
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+-----------------------------------------------------------------
+
+The same for drm-misc-fixes, drm-intel and drm-misc.  These are all
+hosted on git://anongit.freedesktop.org/ .
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/1_9rLO0/J=YT2o1Opl+PJ50
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz0S8MACgkQAVBC80lX
+0Gz3UQf9E0cKzaW8f5StW3DTvDdZiWjw1QyXRHKf8WQoEXoPZwtJ+0sJ64rdgg5N
+5ohpavRBGdD3FScFgbbCQw5O1Sq2yUVp328M+Er7LgqYrjr0CVrdRWnETC/Opujq
+7/Vpq33iyAqSsNH00H0cdU9Rj0CaTcQE1K2OlYmZucqXPldsT2UWTli3+SufoiUL
+ygs4VwVjBfld47TKB+xJF/ucl6b5egXv+Wnk5QR42FwkKSdFyLXxeVLnyZ60LerE
+583IymIdHjMOlg4j8iZ3vZw6mpbGKveoGo1FNh5O9ziNgqXXP2H69EyfAWyirvU3
+5rXk2jci4jM9RCzU6bxf4JtV9gFYbQ==
+=leUS
+-----END PGP SIGNATURE-----
+
+--Sig_/1_9rLO0/J=YT2o1Opl+PJ50--
