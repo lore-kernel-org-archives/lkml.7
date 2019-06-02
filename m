@@ -2,137 +2,93 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9049BC282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 10:12:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D534BC282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 10:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6493C278A6
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 10:12:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oVNFRgac"
+	by mail.kernel.org (Postfix) with ESMTP id A6949278C6
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 10:14:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfFBKMx (ORCPT
+        id S1726722AbfFBKOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 06:12:53 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:36291 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725977AbfFBKMx (ORCPT
+        Sun, 2 Jun 2019 06:14:48 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:56485 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726168AbfFBKOs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 06:12:53 -0400
-Received: by mail-oi1-f196.google.com with SMTP id y124so10896949oiy.3
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 03:12:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7qacIANq562EgTHRqJG9jDAeUGiZDxPSfHGATxPq4ws=;
-        b=oVNFRgacvtu/duMu6f1pvyGu2CDIHlJ7aJwuG+cjjh5sMqZSQR1qHuniKj/1c76QrJ
-         qgaVenOQR81SxYUAfb+j8fLt9pL4JympAhEc22guvIuhi6fbzmhibm3xRwnaaOwIkuxE
-         bbAqLaLs894e9iY+SHZf9L89LjUsySeKkUXDOoVCPjHlW0vjaVw1WHH6T83M6/S20H0C
-         h1Pyrk0Joyo6zHciKkvac7S7zdd83RjPLwulIVpaHK6iyMooJ5pHQNP7Etgj1RkX1/MH
-         iZYkeLO1UPZPzZP4Wnne9/SC8++bc8gVkhMfqyXyHJ3BqrVx7/kr4xmAX/glKkrEBrq4
-         TkTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7qacIANq562EgTHRqJG9jDAeUGiZDxPSfHGATxPq4ws=;
-        b=FCP/5kHEq2sphALfL/cinH9pz8LsEKOXiu7ZUeIL88Omq4X+0X4JbIM4/RZDl37Q9T
-         xOAAaJUvRhZpBDmCC6FXpy4uZYkm8ZumMjfuMGmEW5+apDXoEwOyxSD1zpmckanAFExn
-         YN4/WUT1PybMjIIc5KjYj8XR2V4+CqvmnoSUyrZikSJHhFgRRxrRTuvtRFZ4Vjy2ytIG
-         pejS60yYuxBrr+ega/EEjE9+lWL5GAkCg24Qvomv5M4rRCCm7tKPiBOcGdBCnVWWyAIP
-         kVwL8qiiqSIHZLupbASSfOWauGDiBxC3PqdwqYBPMZ2oqM4SGJkgbuI5/ZME3l49KQC6
-         d6jA==
-X-Gm-Message-State: APjAAAWwF4ThLPH6voT/p+Oh1BIOQ2WYr17oc6OsdEdbxkNhgvFd4ScT
-        RvbmshWHf+O3I3VTwkNJZYu15t+Rw0AylxuB+t0=
-X-Google-Smtp-Source: APXvYqxZD7LMPq0FsVDfYzP9t1D5jZxRrHuaOry7yIhVsrT1UGENer0OhPxAeJKdevFuhxem76CLbJVCyPaj+eSAp/w=
-X-Received: by 2002:aca:6c1:: with SMTP id 184mr4258973oig.122.1559470371918;
- Sun, 02 Jun 2019 03:12:51 -0700 (PDT)
+        Sun, 2 Jun 2019 06:14:48 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id DEEF080370; Sun,  2 Jun 2019 12:14:34 +0200 (CEST)
+Date:   Sun, 2 Jun 2019 12:14:34 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-omap@vger.kernel.org, Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH 1/2] phy: core: Add phy_pm_runtime_enabled
+Message-ID: <20190602101434.GA1126@atrey.karlin.mff.cuni.cz>
+References: <20181117133755.9129-1-tony@atomide.com>
+ <20181117133755.9129-2-tony@atomide.com>
+ <20181117153845.GU19900@localhost>
+ <20181117154353.GM53235@atomide.com>
 MIME-Version: 1.0
-References: <cover.1559412149.git.linux.dkm@gmail.com> <ad9dad01b15d233cbded3f0693c3c33e21f8d286.1559412149.git.linux.dkm@gmail.com>
- <a88b259e59c6a713a819266d9ad5c248efa43295.camel@perches.com>
-In-Reply-To: <a88b259e59c6a713a819266d9ad5c248efa43295.camel@perches.com>
-From:   Deepak Mishra <linux.dkm@gmail.com>
-Date:   Sun, 2 Jun 2019 15:42:40 +0530
-Message-ID: <CAHkoDDZc4ua7N8Y-rQfgBCXARu83mpQwYDp0sYOUE0AGmvsiFg@mail.gmail.com>
-Subject: Re: [PATCH 8/8] staging: rtl8712: Fixed CamelCase in struct _adapter
- from drv_types.h
-To:     Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org
-Cc:     wlanfae <wlanfae@realtek.com>, gregkh@linuxfoundation.org,
-        Larry.Finger@lwfinger.net, florian.c.schilhabel@googlemail.com,
-        himadri18.07@gmail.com, straube.linux@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181117154353.GM53235@atomide.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 01, 2019 at 12:26:02PM -0700, Joe Perches wrote:
-> On Sun, 2019-06-02 at 00:13 +0530, Deepak Mishra wrote:
-> > This patch fixes CamelCase blnEnableRxFF0Filter by renaming it
-> > to bln_enable_rx_ff0_filter in drv_types.h and related files rtl871x_cmd.c
-> > xmit_linux.c
->
-> One could also improve this by removing the
-> hungarian like bln_ prefix and simplify the
-> name of the boolean variable.
->
- Thank you for your suggestion and I am modifying accordingly and
- sending a V2 patch.
-> > diff --git a/drivers/staging/rtl8712/drv_types.h b/drivers/staging/rtl8712/drv_types.h
-> []
-> > @@ -164,7 +164,7 @@ struct _adapter {
-> >     struct iw_statistics iwstats;
-> >     int pid; /*process id from UI*/
-> >     struct work_struct wk_filter_rx_ff0;
-> > -   u8 blnEnableRxFF0Filter;
-> > +   u8 bln_enable_rx_ff0_filter;
->
-> e.g.:
->
->       bool enable_rx_ff0_filter;
->
-> > diff --git a/drivers/staging/rtl8712/rtl871x_cmd.c b/drivers/staging/rtl8712/rtl871x_cmd.c
-> []
-> > @@ -238,7 +238,7 @@ u8 r8712_sitesurvey_cmd(struct _adapter *padapter,
-> >     mod_timer(&pmlmepriv->scan_to_timer,
-> >               jiffies + msecs_to_jiffies(SCANNING_TIMEOUT));
-> >     padapter->ledpriv.LedControlHandler(padapter, LED_CTL_SITE_SURVEY);
-> > -   padapter->blnEnableRxFF0Filter = 0;
-> > +   padapter->bln_enable_rx_ff0_filter = 0;
->
->       padapter->enable_rx_ff0_filter = false;
->
-> > diff --git a/drivers/staging/rtl8712/xmit_linux.c b/drivers/staging/rtl8712/xmit_linux.c
-> []
-> > @@ -103,11 +103,11 @@ void r8712_SetFilter(struct work_struct *work)
-> >     r8712_write8(padapter, 0x117, newvalue);
-> >
-> >     spin_lock_irqsave(&padapter->lockRxFF0Filter, irqL);
-> > -   padapter->blnEnableRxFF0Filter = 1;
-> > +   padapter->bln_enable_rx_ff0_filter = 1;
->
->       padapter->enable_rx_ff0_filter = true;
->
-> etc...
->
-> Then you could rename padapter to adapter, and maybe
-> "struct _adapter" to something more sensible like
-> "struct rtl8712dev" etc...
->
-  Thanks for suggestion again. I am going to take it in a diferent patchset
-  and submit that.
+Hi!
 
-> And one day, hopefully sooner than later, realtek will
-> improve their driver software base and help eliminate
-> all the duplicated non-style defects across the family
-> of drivers for their hardware...
->
+> > > The phy driver may need to check phy_pm_runtime_enabled() in suspend as
+> > > PM runtime for phy may be already disabled when phy power_off() is called.
+> > > 
+> > > Cc: Pavel Machek <pavel@ucw.cz>
+> > > Cc: Sebastian Reichel <sre@kernel.org>
+> > > Signed-off-by: Tony Lindgren <tony@atomide.com>
+> > > ---
+> > >  drivers/phy/phy-core.c  | 9 +++++++++
+> > >  include/linux/phy/phy.h | 6 ++++++
+> > >  2 files changed, 15 insertions(+)
+> > > 
+> > > diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
+> > > --- a/drivers/phy/phy-core.c
+> > > +++ b/drivers/phy/phy-core.c
+> > 
+> > > diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+> > > --- a/include/linux/phy/phy.h
+> > > +++ b/include/linux/phy/phy.h
+> > > @@ -158,6 +158,7 @@ int phy_pm_runtime_get(struct phy *phy);
+> > >  int phy_pm_runtime_get_sync(struct phy *phy);
+> > >  int phy_pm_runtime_put(struct phy *phy);
+> > >  int phy_pm_runtime_put_sync(struct phy *phy);
+> > > +bool phy_pm_runtime_enabled(struct phy *phy);
+> > >  void phy_pm_runtime_allow(struct phy *phy);
+> > >  void phy_pm_runtime_forbid(struct phy *phy);
+> > >  int phy_init(struct phy *phy);
+> > > @@ -240,6 +241,11 @@ static inline int phy_pm_runtime_put_sync(struct phy *phy)
+> > >  	return -ENOSYS;
+> > >  }
+> > >  
+> > > +static inline bool phy_pm_runtime_enabled(struct phy *phy)
+> > > +{
+> > > +	return false
+> > 
+> > Missing semicolon.
+> 
+> Oops thanks for catching that. I guess I did not try building
+> without CONFIG_GENERIC_PHY. Will fix and repost.
 
-Best regards
-
-Deepak Mishra
+Did this series get lost/forgotten somewhere? Is it still needed? Any
+way I can help?
+									Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
