@@ -2,73 +2,134 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA591C282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 21:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E1BC282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 22:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87D7D279E6
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 21:48:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FF4127A1B
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 22:00:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="weVrd+TD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727197AbfFBVsa convert rfc822-to-8bit (ORCPT
+        id S1726862AbfFBWAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 17:48:30 -0400
-Received: from mail.fireflyinternet.com ([109.228.58.192]:60968 "EHLO
-        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726715AbfFBVs3 (ORCPT
+        Sun, 2 Jun 2019 18:00:10 -0400
+Received: from gateway23.websitewelcome.com ([192.185.50.129]:23429 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726270AbfFBWAJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 17:48:29 -0400
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from localhost (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 16768558-1500050 
-        for multiple; Sun, 02 Jun 2019 22:47:39 +0100
-Content-Type: text/plain; charset="utf-8"
+        Sun, 2 Jun 2019 18:00:09 -0400
+X-Greylist: delayed 1292 seconds by postgrey-1.27 at vger.kernel.org; Sun, 02 Jun 2019 18:00:09 EDT
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id EF8544ADF
+        for <linux-kernel@vger.kernel.org>; Sun,  2 Jun 2019 16:38:36 -0500 (CDT)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id XYBYhVp2LdnCeXYBYh9oJE; Sun, 02 Jun 2019 16:38:36 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=3yY6puF5yr6t9ajzI5zXVjuhpN5P/MQwRyHXK2uCu9Y=; b=weVrd+TD99WJUSZK0UrQH42JTt
+        qtv4X92WOjdU8XJmSO7aM4e3pRacAVkOnZ/DOlx5uv/KMLXNQq1FsE0KdYN6KRcEiwAYBLbADUwro
+        u2k7eCKfqjnboMEtV6c0pcXLLpPieOul+FO9B3yj3WpJF667TwKKdvXpRxORfKrMZcSBjxzHV7q1W
+        UCCHDakokr4RyB0GuUVxpojYIvw4mcQcT+I61sG5IkEoCqJBZQe9JgYlmYAUAg40ZLW36MBV+XApH
+        Zqx5zW712hoY9kF75XDRyDCz1fpHmcu6GTkEF5Ku71nq9lcNHYi/BEZgI1DM5h3yd7B1L/rWj1w8i
+        /F3u0lnw==;
+Received: from [177.34.20.96] (port=54464 helo=[192.168.0.28])
+        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1hXYBY-003QwH-8q; Sun, 02 Jun 2019 18:38:36 -0300
+Subject: Re: [PATCH v3 2/5] dt-bindings: power: supply: Max17040: Add low
+ level SOC alert threshold
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
+        <b.zolnierkie@samsung.com>, lee.jones@linaro.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <CAJKOXPf=nPrmw6Vzi_=LmO=dVsV4Gvoc-q75XP2FBEgm9Gxv0A@mail.gmail.com>
+ <20190527022258.32748-1-matheus@castello.eng.br>
+ <20190527022258.32748-3-matheus@castello.eng.br>
+ <CAJKOXPdtsyY_GhniBAb0yV=HOhGx+x4xRPqNgdO+d0MDZRZ_7w@mail.gmail.com>
+From:   Matheus Castello <matheus@castello.eng.br>
+Message-ID: <71c4f6b6-fbbb-14ba-0cf0-2377498fdfbc@castello.eng.br>
+Date:   Sun, 2 Jun 2019 18:38:26 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-In-Reply-To: <20190307153051.18815-1-willy@infradead.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Hugh Dickins <hughd@google.com>, Jan Kara <jack@suse.cz>,
-        Song Liu <liu.song.a23@gmail.com>
-References: <20190307153051.18815-1-willy@infradead.org>
-Message-ID: <155951205528.18214.706102020945306720@skylake-alporthouse-com>
-User-Agent: alot/0.6
-Subject: Re: [PATCH v4] page cache: Store only head pages in i_pages
-Date:   Sun, 02 Jun 2019 22:47:35 +0100
+In-Reply-To: <CAJKOXPdtsyY_GhniBAb0yV=HOhGx+x4xRPqNgdO+d0MDZRZ_7w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 177.34.20.96
+X-Source-L: No
+X-Exim-ID: 1hXYBY-003QwH-8q
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.28]) [177.34.20.96]:54464
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 10
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Matthew Wilcox (2019-03-07 15:30:51)
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index 404acdcd0455..aaf88f85d492 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -2456,6 +2456,9 @@ static void __split_huge_page(struct page *page, struct list_head *list,
->                         if (IS_ENABLED(CONFIG_SHMEM) && PageSwapBacked(head))
->                                 shmem_uncharge(head->mapping->host, 1);
->                         put_page(head + i);
-> +               } else if (!PageAnon(page)) {
-> +                       __xa_store(&head->mapping->i_pages, head[i].index,
-> +                                       head + i, 0);
+> On Mon, 27 May 2019 at 04:45, Matheus Castello <matheus@castello.eng.br> wrote:
+>>
+>> For configure low level state of charge threshold alert signaled from
+>> max17040 we add "maxim,alert-low-soc-level" property.
+>>
+>> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+>> ---
+>>   .../power/supply/max17040_battery.txt         | 28 +++++++++++++++++++
+>>   1 file changed, 28 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+>> new file mode 100644
+>> index 000000000000..a13e8d50ff7b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+>> @@ -0,0 +1,28 @@
+>> +max17040_battery
+>> +~~~~~~~~~~~~~~~~
+>> +
+>> +Required properties :
+>> + - compatible : "maxim,max17040" or "maxim,max77836-battery"
+> 
+> One more comment. The datasheet for max17040 says that there is on
+> ALERT pin and ALERT bits in RCOMP register. Which device are you
+> using? If it turns out that max17040 does not support it, then the
+> driver and bindings should reflect this - interrupts should not be set
+> on max17040.
+> 
 
-Forgiving the ignorant copy'n'paste, this is required:
+Yes you are right, max17040 have no ALERT pin. I am using max17043. Let 
+me know what you think would be best, put a note about it in the 
+description, add a compatibles like "maxim,max17043" and 
+"maxim,max17044"? What do you think?
 
-+               } else if (PageSwapCache(page)) {
-+                       swp_entry_t entry = { .val = page_private(head + i) };
-+                       __xa_store(&swap_address_space(entry)->i_pages,
-+                                  swp_offset(entry),
-+                                  head + i, 0);
-                }
-        }
- 
-The locking is definitely wrong.
--Chris
+Best Regards,
+Matheus Castello
+
+> Best regards,
+> Krzysztof
+> 
