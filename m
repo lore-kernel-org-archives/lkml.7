@@ -2,266 +2,164 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3C6C282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 13:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9543C282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 13:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B37272791A
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 13:20:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD8C527923
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 13:36:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ILzGGVIG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PQo7xN0O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbfFBNU0 (ORCPT
+        id S1726652AbfFBNg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 09:20:26 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40526 "EHLO
+        Sun, 2 Jun 2019 09:36:57 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53398 "EHLO
         mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbfFBNUZ (ORCPT
+        with ESMTP id S1726084AbfFBNg5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 09:20:25 -0400
-Received: by mail-wm1-f67.google.com with SMTP id u16so3414540wmc.5;
-        Sun, 02 Jun 2019 06:20:23 -0700 (PDT)
+        Sun, 2 Jun 2019 09:36:57 -0400
+Received: by mail-wm1-f67.google.com with SMTP id d17so1084201wmb.3;
+        Sun, 02 Jun 2019 06:36:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=XTwNe906qFumDaIG0AZBysUzGIWn0KYcPiQZdVgGgBw=;
-        b=ILzGGVIG+lMcnqXI0tTLfD9wEi5JQ0o51iUUpePofA6e+oDHD7lLaLoi3PTxqqqbQH
-         H3mwFWeuZUG727PZ25DL2tl/PS4VgV6Z4RwLzBLWuK0pPdtjadmMdKvogKLix+Ukps6d
-         XUv1tkWW8FW+LRf06TtdGFS/1kxHKW6DFpv7OAWEURmDEdJBzBW44bibIUJpI18dpJh2
-         u2hhqtECAvvjb+txjROdRUqYP+c2/1tYAJhlJx01VdL5od5Mijqzf9Yn2CnemTzdV3oP
-         y53ethPcC53mlrsESsrpTvF04W+5rP9EuwJfBfuz2SZczeVdHg3hG0hKZtazrCh/2uoq
-         dzCg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6M+Tu/nPOq4TtFuBA80HcvzEsuQO0Tl5aFrElztCMrw=;
+        b=PQo7xN0Oukp50y+DAxPrKPXCoT6F1W8UzYOEiFP1sBWvUQ6Y+jUTMbuvPAH+hTlSkB
+         b9ZYAOyMuX6NCS0/T4JOrBm02wFk1DLKhOLK54hZeKx/MjbgCNq8vpKyIPtvEUFngpze
+         830IMpw4ki5wmz9v8MrdCFtqPT1Krkyxmef8AOXGf+gOC4lTCZAwiNeL9zcLeJ+mHFWx
+         OT1q3bKy6/zfxQf0o+fhqUx3TY2BuNWD9lKk1HbvZgaapWOklMDVVOBkAMS4bdTpAZK1
+         Oi0ZGkbUdk9e/6Iifv4o1rxVZ4yonc+LSoqKxqLCmaB05x7IZ/iu4vuRfqyRqaFDOekP
+         ZFtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=XTwNe906qFumDaIG0AZBysUzGIWn0KYcPiQZdVgGgBw=;
-        b=huym70Q0uiWmcJp+VYMwxuqJSnCctfJG4+N1473Vtc9Wj6H+DwpONhe1PLKO3VZv2c
-         w1TozgPTsmL48n6VZ5/V2ngN1G1yb43bwBen+hIBw24fSPZZCGAFCZbmHq3V8Is0Xezt
-         vCFlprTroqclLJqw4CkLlUu5NoGO2WbaimRDFFt+CR61WsMKxj2YAppyijZUTqPFOVGi
-         8ajA+3kVrOqHg5zYSe9H+xpZ5SvU/lzkoX7zfctH4R9uCa5O6r8mYQl47r8InwgEW0mf
-         bSwBbJcmettX1i9m4sKHQ7jFSl9GEk5gXFa7v1WKOu6yb49mdgMwFyirKTzI01KAshlr
-         tppg==
-X-Gm-Message-State: APjAAAXrWzbFycuGHWlh9F4C4hk59jfDHnNuum2TQFf61ecBfFVxMZtn
-        CiQwFNR3M4GsRJuj8U6aXio=
-X-Google-Smtp-Source: APXvYqzsYFYOf+ERfUvXIY9dutCsJnUs0fKN/uPfd11jr2mLpzUvoGvC3cbhl+vF5Jsod5HjGoyGDw==
-X-Received: by 2002:a1c:48c5:: with SMTP id v188mr10990796wma.175.1559481622600;
-        Sun, 02 Jun 2019 06:20:22 -0700 (PDT)
-Received: from Pali-Latitude.lan ([2001:718:1e03:a01::1ca])
-        by smtp.gmail.com with ESMTPSA id b136sm15839022wme.30.2019.06.02.06.20.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 02 Jun 2019 06:20:21 -0700 (PDT)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
-To:     Jean Delvare <jdelvare@suse.com>, Wolfram Sang <wsa@the-dreams.de>,
-        =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>,
-        Steven Honeyman <stevenhoneyman@gmail.com>,
-        Valdis.Kletnieks@vt.edu,
-        Jochen Eisinger <jochen@penguin-breeder.org>,
-        Gabriele Mazzotta <gabriele.mzt@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>, Mario_Limonciello@dell.com,
-        Alex Hung <alex.hung@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH v3] i2c: i801: Register optional lis3lv02d i2c device on Dell machines
-Date:   Sun,  2 Jun 2019 15:20:03 +0200
-Message-Id: <20190602132003.1911-1-pali.rohar@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20180127133209.28995-1-pali.rohar@gmail.com>
-References: <20180127133209.28995-1-pali.rohar@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6M+Tu/nPOq4TtFuBA80HcvzEsuQO0Tl5aFrElztCMrw=;
+        b=PDB6TNabyiStz+dcO1xvBJ4hD/F8wsi1owHF/O0gLwRRACxLRTNL4dqyfxfp+nNGYf
+         RWh4K0/JPGiPkJLtiH5PSh3PFUlinLpa34rHb8REbucHkcueWAHl/4Jee4sweAH5N0Kr
+         F1iMk2E+cgMqYc4AJUokd1ViS21NbiTU6+7a+pEy1N/y6Xmv5imwtz6oNxEil3SuCMT2
+         IZn7kBBgTYrD4Fx5LPPw3jCDJWRohIcciO7T6UvlBsQrUmSEwr7E7UcgkXurU1Ly8Egj
+         LbZoWAOuMDGErbpRUimQvNNz7Le66j1n3NzEfogmdQ3SZrkq7CoMMTM4S8zf+9nZ8FvR
+         PFTw==
+X-Gm-Message-State: APjAAAVqHKD68DwHuvdyoG+Eo7skJ4FuP2b2iL3fJLkd9Sykq7slDx5J
+        PdBYDJfqgmaCfmsTWXVUv73sv5jXYGVPZYG15bQ=
+X-Google-Smtp-Source: APXvYqzt1ZbLKW9U5eB8+6RqQSBFnR+6o+ysXXtrVS2I+UmBZtyKV36+w17n2wl/cp+R9xcpPt3dVvcyJao9ze8gphw=
+X-Received: by 2002:a1c:eb16:: with SMTP id j22mr7203910wmh.56.1559482613930;
+ Sun, 02 Jun 2019 06:36:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190602034429.6888-1-hdanton@sina.com> <20190602105133.GA16948@hmswarspite.think-freely.org>
+In-Reply-To: <20190602105133.GA16948@hmswarspite.think-freely.org>
+From:   Xin Long <lucien.xin@gmail.com>
+Date:   Sun, 2 Jun 2019 21:36:42 +0800
+Message-ID: <CADvbK_dUDjK3UAF49uo+DZv+QiuEsaMmZeqDwBJ0suRwu4yXJw@mail.gmail.com>
+Subject: Re: [PATCH] net: sctp: fix memory leak in sctp_send_reset_streams
+To:     Neil Horman <nhorman@tuxdriver.com>
+Cc:     Hillf Danton <hdanton@sina.com>, linux-sctp@vger.kernel.org,
+        network dev <netdev@vger.kernel.org>,
+        syzkaller <syzkaller@googlegroups.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        syzbot <syzbot+6ad9c3bd0a218a2ab41d@syzkaller.appspotmail.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Eric Dumazet <edumazet@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dell platform team told us that some (DMI whitelisted) Dell Latitude
-machines have ST microelectronics accelerometer at i2c address 0x29.
-
-Presence of that ST microelectronics accelerometer is verified by existence
-of SMO88xx ACPI device which represent that accelerometer. Unfortunately
-ACPI device does not specify i2c address.
-
-This patch registers lis3lv02d device for selected Dell Latitude machines
-at i2c address 0x29 after detection. And for Dell Vostro V131 machine at
-i2c address 0x1d which was manually detected.
-
-Finally commit a7ae81952cda ("i2c: i801: Allow ACPI SystemIO OpRegion to
-conflict with PCI BAR") allowed to use i2c-i801 driver on Dell machines so
-lis3lv02d correctly initialize accelerometer.
-
-Tested on Dell Latitude E6440.
-
-Signed-off-by: Pali Rohár <pali.rohar@gmail.com>
-
----
-Changes since v2:
- * Use explicit list of SMOxx ACPI devices
-
-Changes since v1:
- * Added Dell Vostro V131 based on Michał Kępień testing
- * Changed DMI product structure to include also i2c address
----
- drivers/i2c/busses/i2c-i801.c       | 118 ++++++++++++++++++++++++++++++++++++
- drivers/platform/x86/dell-smo8800.c |   1 +
- 2 files changed, 119 insertions(+)
-
-diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
-index ac7f7817dc89..2ac8ff41cc24 100644
---- a/drivers/i2c/busses/i2c-i801.c
-+++ b/drivers/i2c/busses/i2c-i801.c
-@@ -1134,6 +1134,121 @@ static void dmi_check_onboard_devices(const struct dmi_header *dm, void *adap)
- 	}
- }
- 
-+/* NOTE: Keep this list in sync with drivers/platform/x86/dell-smo8800.c */
-+static const struct acpi_device_id acpi_smo8800_ids[] = {
-+	{ "SMO8800", 0 },
-+	{ "SMO8801", 0 },
-+	{ "SMO8810", 0 },
-+	{ "SMO8811", 0 },
-+	{ "SMO8820", 0 },
-+	{ "SMO8821", 0 },
-+	{ "SMO8830", 0 },
-+	{ "SMO8831", 0 },
-+};
-+
-+static acpi_status check_acpi_smo88xx_device(acpi_handle obj_handle,
-+					     u32 nesting_level,
-+					     void *context,
-+					     void **return_value)
-+{
-+	struct acpi_device_info *info;
-+	acpi_status status;
-+	char *hid;
-+	int i;
-+
-+	status = acpi_get_object_info(obj_handle, &info);
-+	if (!ACPI_SUCCESS(status) || !(info->valid & ACPI_VALID_HID))
-+		return AE_OK;
-+
-+	hid = info->hardware_id.string;
-+	if (!hid)
-+		return AE_OK;
-+
-+	for (i = 0; i < ARRAY_SIZE(acpi_smo8800_ids); ++i) {
-+		if (strcmp(hid, acpi_smo8800_ids[i].id) == 0) {
-+			*((bool *)return_value) = true;
-+			return AE_CTRL_TERMINATE;
-+		}
-+	}
-+
-+	return AE_OK;
-+
-+}
-+
-+static bool is_dell_system_with_lis3lv02d(void)
-+{
-+	bool found;
-+	acpi_status status;
-+	const char *vendor;
-+
-+	vendor = dmi_get_system_info(DMI_SYS_VENDOR);
-+	if (strcmp(vendor, "Dell Inc.") != 0)
-+		return false;
-+
-+	/*
-+	 * Check that ACPI device SMO88xx exists and is enabled. That ACPI
-+	 * device represent our ST microelectronics lis3lv02d accelerometer but
-+	 * unfortunately without any other information (like i2c address).
-+	 */
-+	found = false;
-+	status = acpi_get_devices(NULL, check_acpi_smo88xx_device, NULL,
-+				  (void **)&found);
-+	if (!ACPI_SUCCESS(status) || !found)
-+		return false;
-+
-+	return true;
-+}
-+
-+/*
-+ * Accelerometer's i2c address is not specified in DMI nor ACPI,
-+ * so it is needed to define mapping table based on DMI product names.
-+ */
-+static struct {
-+	const char *dmi_product_name;
-+	unsigned short i2c_addr;
-+} dell_lis3lv02d_devices[] = {
-+	/*
-+	 * Dell platform team told us that these Latitude devices have
-+	 * ST microelectronics accelerometer at i2c address 0x29.
-+	 */
-+	{ "Latitude E5250",     0x29 },
-+	{ "Latitude E5450",     0x29 },
-+	{ "Latitude E5550",     0x29 },
-+	{ "Latitude E6440",     0x29 },
-+	{ "Latitude E6440 ATG", 0x29 },
-+	{ "Latitude E6540",     0x29 },
-+	/*
-+	 * Additional individual entries were added after verification.
-+	 */
-+	{ "Vostro V131",        0x1d },
-+};
-+
-+static void register_dell_lis3lv02d_i2c_device(struct i801_priv *priv)
-+{
-+	struct i2c_board_info info;
-+	const char *dmi_product_name;
-+	int i;
-+
-+	dmi_product_name = dmi_get_system_info(DMI_PRODUCT_NAME);
-+	for (i = 0; i < ARRAY_SIZE(dell_lis3lv02d_devices); ++i) {
-+		if (strcmp(dmi_product_name,
-+			   dell_lis3lv02d_devices[i].dmi_product_name) == 0)
-+			break;
-+	}
-+
-+	if (i == ARRAY_SIZE(dell_lis3lv02d_devices)) {
-+		dev_warn(&priv->pci_dev->dev,
-+			 "Accelerometer lis3lv02d is present on i2c bus but its"
-+			 " i2c address is unknown, skipping registration...\n");
-+		return;
-+	}
-+
-+	memset(&info, 0, sizeof(struct i2c_board_info));
-+	info.addr = dell_lis3lv02d_devices[i].i2c_addr;
-+	strlcpy(info.type, "lis3lv02d", I2C_NAME_SIZE);
-+	i2c_new_device(&priv->adapter, &info);
-+}
-+
- /* Register optional slaves */
- static void i801_probe_optional_slaves(struct i801_priv *priv)
- {
-@@ -1152,6 +1267,9 @@ static void i801_probe_optional_slaves(struct i801_priv *priv)
- 
- 	if (dmi_name_in_vendors("FUJITSU"))
- 		dmi_walk(dmi_check_onboard_devices, &priv->adapter);
-+
-+	if (is_dell_system_with_lis3lv02d())
-+		register_dell_lis3lv02d_i2c_device(priv);
- }
- #else
- static void __init input_apanel_init(void) {}
-diff --git a/drivers/platform/x86/dell-smo8800.c b/drivers/platform/x86/dell-smo8800.c
-index 5cdb09cba077..bfcc1d1b9b96 100644
---- a/drivers/platform/x86/dell-smo8800.c
-+++ b/drivers/platform/x86/dell-smo8800.c
-@@ -198,6 +198,7 @@ static int smo8800_remove(struct acpi_device *device)
- 	return 0;
- }
- 
-+/* NOTE: Keep this list in sync with drivers/i2c/busses/i2c-i801.c */
- static const struct acpi_device_id smo8800_ids[] = {
- 	{ "SMO8800", 0 },
- 	{ "SMO8801", 0 },
--- 
-2.11.0
-
+On Sun, Jun 2, 2019 at 6:52 PM Neil Horman <nhorman@tuxdriver.com> wrote:
+>
+> On Sun, Jun 02, 2019 at 11:44:29AM +0800, Hillf Danton wrote:
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    036e3431 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=153cff12a00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=8f0f63a62bb5b13c
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=6ad9c3bd0a218a2ab41d
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12561c86a00000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15b76fd8a00000
+> >
+> > executing program
+> > executing program
+> > executing program
+> > executing program
+> > executing program
+> > BUG: memory leak
+> > unreferenced object 0xffff888123894820 (size 32):
+> >   comm "syz-executor045", pid 7267, jiffies 4294943559 (age 13.660s)
+> >   hex dump (first 32 bytes):
+> >     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+> >     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+> >   backtrace:
+> >     [<00000000c7e71c69>] kmemleak_alloc_recursive
+> > include/linux/kmemleak.h:55 [inline]
+> >     [<00000000c7e71c69>] slab_post_alloc_hook mm/slab.h:439 [inline]
+> >     [<00000000c7e71c69>] slab_alloc mm/slab.c:3326 [inline]
+> >     [<00000000c7e71c69>] __do_kmalloc mm/slab.c:3658 [inline]
+> >     [<00000000c7e71c69>] __kmalloc+0x161/0x2c0 mm/slab.c:3669
+> >     [<000000003250ed8e>] kmalloc_array include/linux/slab.h:670 [inline]
+> >     [<000000003250ed8e>] kcalloc include/linux/slab.h:681 [inline]
+> >     [<000000003250ed8e>] sctp_send_reset_streams+0x1ab/0x5a0 net/sctp/stream.c:302
+> >     [<00000000cd899c6e>] sctp_setsockopt_reset_streams net/sctp/socket.c:4314 [inline]
+> >     [<00000000cd899c6e>] sctp_setsockopt net/sctp/socket.c:4765 [inline]
+> >     [<00000000cd899c6e>] sctp_setsockopt+0xc23/0x2bf0 net/sctp/socket.c:4608
+> >     [<00000000ff3a21a2>] sock_common_setsockopt+0x38/0x50 net/core/sock.c:3130
+> >     [<000000009eb87ae7>] __sys_setsockopt+0x98/0x120 net/socket.c:2078
+> >     [<00000000e0ede6ca>] __do_sys_setsockopt net/socket.c:2089 [inline]
+> >     [<00000000e0ede6ca>] __se_sys_setsockopt net/socket.c:2086 [inline]
+> >     [<00000000e0ede6ca>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2086
+> >     [<00000000c61155f5>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:301
+> >     [<00000000e540958c>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> >
+> >
+> > It was introduced in commit d570a59c5b5f ("sctp: only allow the out stream
+> > reset when the stream outq is empty"), in orde to check stream outqs before
+> > sending SCTP_STRRESET_IN_PROGRESS back to the peer of the stream. EAGAIN is
+> > returned, however, without the nstr_list slab released, if any outq is found
+> > to be non empty.
+> >
+> > Freeing the slab in question before bailing out fixes it.
+> >
+> > Fixes: d570a59c5b5f ("sctp: only allow the out stream reset when the stream outq is empty")
+> > Reported-by: syzbot <syzbot+6ad9c3bd0a218a2ab41d@syzkaller.appspotmail.com>
+> > Reported-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+> > Tested-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+> > Cc: Xin Long <lucien.xin@gmail.com>
+> > Cc: Neil Horman <nhorman@tuxdriver.com>
+> > Cc: Vlad Yasevich <vyasevich@gmail.com>
+> > Cc: Eric Dumazet <edumazet@google.com>
+> > Signed-off-by: Hillf Danton <hdanton@sina.com>
+> > ---
+> > net/sctp/stream.c | 1 +
+> > 1 file changed, 1 insertion(+)
+> >
+> > diff --git a/net/sctp/stream.c b/net/sctp/stream.c
+> > index 93ed078..d3e2f03 100644
+> > --- a/net/sctp/stream.c
+> > +++ b/net/sctp/stream.c
+> > @@ -310,6 +310,7 @@ int sctp_send_reset_streams(struct sctp_association *asoc,
+> >
+> >       if (out && !sctp_stream_outq_is_empty(stream, str_nums, nstr_list)) {
+> >               retval = -EAGAIN;
+> > +             kfree(nstr_list);
+> >               goto out;
+> >       }
+> >
+> > --
+> >
+> >
+> Acked-by: Neil Horman <nhorman@tuxdriver.com>
+Reviewed-by: Xin Long <lucien.xin@gmail.com>
