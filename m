@@ -2,93 +2,123 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D534BC282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 10:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C8FC282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 10:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6949278C6
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 10:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15D66278B9
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 10:15:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbfFBKOs (ORCPT
+        id S1726749AbfFBKPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 06:14:48 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:56485 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbfFBKOs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 06:14:48 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id DEEF080370; Sun,  2 Jun 2019 12:14:34 +0200 (CEST)
-Date:   Sun, 2 Jun 2019 12:14:34 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-omap@vger.kernel.org, Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH 1/2] phy: core: Add phy_pm_runtime_enabled
-Message-ID: <20190602101434.GA1126@atrey.karlin.mff.cuni.cz>
-References: <20181117133755.9129-1-tony@atomide.com>
- <20181117133755.9129-2-tony@atomide.com>
- <20181117153845.GU19900@localhost>
- <20181117154353.GM53235@atomide.com>
+        Sun, 2 Jun 2019 06:15:43 -0400
+Received: from ozlabs.org ([203.11.71.1]:49641 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726122AbfFBKPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Jun 2019 06:15:42 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45GvG369hPz9s7h;
+        Sun,  2 Jun 2019 20:15:39 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Nathan Chancellor <natechancellor@gmail.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org
+Subject: Re: [PATCH] scsi: ibmvscsi: Don't use rc uninitialized in ibmvscsi_do_work
+In-Reply-To: <20190531185306.41290-1-natechancellor@gmail.com>
+References: <20190531185306.41290-1-natechancellor@gmail.com>
+Date:   Sun, 02 Jun 2019 20:15:38 +1000
+Message-ID: <87blzgnvhx.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20181117154353.GM53235@atomide.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+Hi Nathan,
 
-> > > The phy driver may need to check phy_pm_runtime_enabled() in suspend as
-> > > PM runtime for phy may be already disabled when phy power_off() is called.
-> > > 
-> > > Cc: Pavel Machek <pavel@ucw.cz>
-> > > Cc: Sebastian Reichel <sre@kernel.org>
-> > > Signed-off-by: Tony Lindgren <tony@atomide.com>
-> > > ---
-> > >  drivers/phy/phy-core.c  | 9 +++++++++
-> > >  include/linux/phy/phy.h | 6 ++++++
-> > >  2 files changed, 15 insertions(+)
-> > > 
-> > > diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-> > > --- a/drivers/phy/phy-core.c
-> > > +++ b/drivers/phy/phy-core.c
-> > 
-> > > diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-> > > --- a/include/linux/phy/phy.h
-> > > +++ b/include/linux/phy/phy.h
-> > > @@ -158,6 +158,7 @@ int phy_pm_runtime_get(struct phy *phy);
-> > >  int phy_pm_runtime_get_sync(struct phy *phy);
-> > >  int phy_pm_runtime_put(struct phy *phy);
-> > >  int phy_pm_runtime_put_sync(struct phy *phy);
-> > > +bool phy_pm_runtime_enabled(struct phy *phy);
-> > >  void phy_pm_runtime_allow(struct phy *phy);
-> > >  void phy_pm_runtime_forbid(struct phy *phy);
-> > >  int phy_init(struct phy *phy);
-> > > @@ -240,6 +241,11 @@ static inline int phy_pm_runtime_put_sync(struct phy *phy)
-> > >  	return -ENOSYS;
-> > >  }
-> > >  
-> > > +static inline bool phy_pm_runtime_enabled(struct phy *phy)
-> > > +{
-> > > +	return false
-> > 
-> > Missing semicolon.
-> 
-> Oops thanks for catching that. I guess I did not try building
-> without CONFIG_GENERIC_PHY. Will fix and repost.
+Nathan Chancellor <natechancellor@gmail.com> writes:
+> clang warns:
+>
+> drivers/scsi/ibmvscsi/ibmvscsi.c:2126:7: warning: variable 'rc' is used
+> uninitialized whenever switch case is taken [-Wsometimes-uninitialized]
+>         case IBMVSCSI_HOST_ACTION_NONE:
+>              ^~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/scsi/ibmvscsi/ibmvscsi.c:2151:6: note: uninitialized use occurs
+> here
+>         if (rc) {
+>             ^~
+>
+> Initialize rc to zero so that the atomic_set and dev_err statement don't
+> trigger for the cases that just break.
+>
+> Fixes: 035a3c4046b5 ("scsi: ibmvscsi: redo driver work thread to use enum action states")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/502
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>  drivers/scsi/ibmvscsi/ibmvscsi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/scsi/ibmvscsi/ibmvscsi.c b/drivers/scsi/ibmvscsi/ibmvscsi.c
+> index 727c31dc11a0..6714d8043e62 100644
+> --- a/drivers/scsi/ibmvscsi/ibmvscsi.c
+> +++ b/drivers/scsi/ibmvscsi/ibmvscsi.c
+> @@ -2118,7 +2118,7 @@ static unsigned long ibmvscsi_get_desired_dma(struct vio_dev *vdev)
+>  static void ibmvscsi_do_work(struct ibmvscsi_host_data *hostdata)
+>  {
+>  	unsigned long flags;
+> -	int rc;
+> +	int rc = 0;
+>  	char *action = "reset";
+>  
+>  	spin_lock_irqsave(hostdata->host->host_lock, flags);
 
-Did this series get lost/forgotten somewhere? Is it still needed? Any
-way I can help?
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+It's always preferable IMHO to keep any initialisation as localised as
+possible, so that the compiler can continue to warn about uninitialised
+usages elsewhere. In this case that would mean doing the rc = 0 in the
+switch, something like:
+
+diff --git a/drivers/scsi/ibmvscsi/ibmvscsi.c b/drivers/scsi/ibmvscsi/ibmvscsi.c
+index 727c31dc11a0..7ee5755cf636 100644
+--- a/drivers/scsi/ibmvscsi/ibmvscsi.c
++++ b/drivers/scsi/ibmvscsi/ibmvscsi.c
+@@ -2123,9 +2123,6 @@ static void ibmvscsi_do_work(struct ibmvscsi_host_data *hostdata)
+ 
+        spin_lock_irqsave(hostdata->host->host_lock, flags);
+        switch (hostdata->action) {
+-       case IBMVSCSI_HOST_ACTION_NONE:
+-       case IBMVSCSI_HOST_ACTION_UNBLOCK:
+-               break;
+        case IBMVSCSI_HOST_ACTION_RESET:
+                spin_unlock_irqrestore(hostdata->host->host_lock, flags);
+                rc = ibmvscsi_reset_crq_queue(&hostdata->queue, hostdata);
+@@ -2142,7 +2139,10 @@ static void ibmvscsi_do_work(struct ibmvscsi_host_data *hostdata)
+                if (!rc)
+                        rc = ibmvscsi_send_crq(hostdata, 0xC001000000000000LL, 0);
+                break;
++       case IBMVSCSI_HOST_ACTION_NONE:
++       case IBMVSCSI_HOST_ACTION_UNBLOCK:
+        default:
++               rc = 0;
+                break;
+        }
+
+
+But then that makes me wonder if that's actually correct?
+
+If we get an action that we don't recognise should we just throw it away
+like that? (by doing hostdata->action = IBMVSCSI_HOST_ACTION_NONE). Tyrel?
+
+cheers
