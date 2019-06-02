@@ -2,135 +2,178 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4A2C28CC6
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 10:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8789C28CC6
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 10:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90608278D3
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 10:27:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5FE6278D7
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 10:51:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f9UqLVUs"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qHKeCOdm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbfFBK1A (ORCPT
+        id S1726587AbfFBKvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 06:27:00 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36856 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbfFBK06 (ORCPT
+        Sun, 2 Jun 2019 06:51:53 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40526 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726122AbfFBKvw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 06:26:58 -0400
-Received: by mail-pf1-f194.google.com with SMTP id u22so8873678pfm.3
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 03:26:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=H/UOYaUuSv3BYs/6fr1qvCTOeBxayYz1L+t266OVcrM=;
-        b=f9UqLVUs392Ph0L/TbCTOTvNh9vDFyO6aBR8WM/VEfZ7Ao6Y64ouJoLftyedkTp+wH
-         v4gVQBWvrGbgMXmXQfn0LH2GrVSMt02eslWBvymjU1L63NCBc9dpQSIer8uqXYBF6S44
-         SVw5dGM3K8A75YExPXrhD8VXbmyqjRvtb1jo0RKZP6DubHn+HOm7wuOTIPA5fdG/1gPM
-         4G5Y/7F4VWY4m3PG7tNP0a2Vbr87GyAVU32KGLoao6JiT9kUf7rZWWXz95Y+deHchgbk
-         dwtFvlvOuX15bmRjEjVX71ic10c2546Sj8pkFLu53U/xaH1dy+t2D3Q1x/Vv/DbifDqn
-         Tfnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=H/UOYaUuSv3BYs/6fr1qvCTOeBxayYz1L+t266OVcrM=;
-        b=nQG1Wkdx6Qt24mHREuyms+e5Fd6Jag/5Ax7qnJBOA+CBQfL92aj3ANB4v2jfTofQTG
-         Cn4lYQRt0O29/5JS0UchCzYjlATzQ+YuaYadFAwFQvPrbxh3C+Uywc9b4uswfsVy1SaU
-         HZ968OA5TDTTNjceNan+p4CX3ZpXQ7rEjkKqr6ayVScbg4GBj67GBJo5XAUt2PEBVrU2
-         EU5Wsy3Px2YV9zn9PVYVLXejGwe0FL1jimBRrMyxByxyR/qF0kX4ChUagG3gLL8clOKg
-         w+NmszvDc8eHp3Gzaw15pUtBcFbcgypAZxZI3pyNTe60mpLpbswIF9zn6x3FClgbLOHW
-         wdwA==
-X-Gm-Message-State: APjAAAW5dOV2iEqiSz2lL+ldOpPuKZXk1R49eRcWx302kq2/7MJPTvL0
-        0kCTfOe8waKU//GtJM8tyswsFlsK
-X-Google-Smtp-Source: APXvYqyWHPGgP7CteLevTrGH/40QdENuEg0lSDPHbszWS+obd++S0D+jxFWGaTJAA2u8g9C5tmx+sQ==
-X-Received: by 2002:a63:eb56:: with SMTP id b22mr20492557pgk.81.1559471217156;
-        Sun, 02 Jun 2019 03:26:57 -0700 (PDT)
-Received: from localhost.localdomain ([117.192.23.157])
-        by smtp.googlemail.com with ESMTPSA id j13sm12221099pfh.13.2019.06.02.03.26.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 02 Jun 2019 03:26:56 -0700 (PDT)
-From:   Deepak Mishra <linux.dkm@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, joe@perches.com, wlanfae@realtek.com,
-        Larry.Finger@lwfinger.net, florian.c.schilhabel@googlemail.com,
-        linux.dkm@gmail.com, himadri18.07@gmail.com,
-        straube.linux@gmail.com
-Subject: [PATCH v2 9/9] staging: rtl8712: Fixed CamelCase lockRxFF0Filter
-Date:   Sun,  2 Jun 2019 15:55:38 +0530
-Message-Id: <c555df2475320ac55d1498d87ca0e38681934af3.1559470738.git.linux.dkm@gmail.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <cover.1559470737.git.linux.dkm@gmail.com>
-References: <cover.1559470737.git.linux.dkm@gmail.com>
+        Sun, 2 Jun 2019 06:51:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=PfTrtT36Gn17nPtbXHoxi/Jx7QDUfN6tc9VcJoAdbC8=; b=qHKeCOdmR2osGY5UXzuCb7SQF
+        tM80uCUKDQk0aIKkwrPZ71T/7hhkyqtiE42WqPVw7Q6pXg3HR8T7hk5a8zMoGtt3PUMyez55dHmob
+        XUlTOopWynXCso7DRgXGW6DANm08xtuKSR/zKwQ4Dl44T4Nls/bt00FRr7cYizTSdapIABRQJZP2n
+        B65/Kpd76A7sP1De+q1mah+OkCqESDUtjmbzQvXRYDa6pXnThZQqmF2NuBvVl27WHiKXiCnRrQWC2
+        j3msSoUK35bQlUdALPBp/Pnr+rc+4R+kW/2m9dD6k/HOuVeYrDIukC0dqcm8gvOmPDVD6X6/vDlJE
+        G1MiqhDSQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hXO5e-0003VD-Hr; Sun, 02 Jun 2019 10:51:50 +0000
+Date:   Sun, 2 Jun 2019 03:51:50 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Hugh Dickins <hughd@google.com>, Jan Kara <jack@suse.cz>,
+        Song Liu <liu.song.a23@gmail.com>
+Subject: Re: [PATCH v4] page cache: Store only head pages in i_pages
+Message-ID: <20190602105150.GB23346@bombadil.infradead.org>
+References: <20190307153051.18815-1-willy@infradead.org>
+ <155938118174.22493.11599751119608173366@skylake-alporthouse-com>
+ <155938946857.22493.6955534794168533151@skylake-alporthouse-com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <155938946857.22493.6955534794168533151@skylake-alporthouse-com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes CamelCase lockRxFF0Filter by renaming to
-lock_rx_ff0_filter in drv_types.h and related files
-usb_intf.c and xmit_linux.c
+On Sat, Jun 01, 2019 at 12:44:28PM +0100, Chris Wilson wrote:
+> Quoting Chris Wilson (2019-06-01 10:26:21)
+> > Quoting Matthew Wilcox (2019-03-07 15:30:51)
+> > > Transparent Huge Pages are currently stored in i_pages as pointers to
+> > > consecutive subpages.  This patch changes that to storing consecutive
+> > > pointers to the head page in preparation for storing huge pages more
+> > > efficiently in i_pages.
+> > > 
+> > > Large parts of this are "inspired" by Kirill's patch
+> > > https://lore.kernel.org/lkml/20170126115819.58875-2-kirill.shutemov@linux.intel.com/
+> > > 
+> > > Signed-off-by: Matthew Wilcox <willy@infradead.org>
+> > > Acked-by: Jan Kara <jack@suse.cz>
+> > > Reviewed-by: Kirill Shutemov <kirill@shutemov.name>
+> > > Reviewed-and-tested-by: Song Liu <songliubraving@fb.com>
+> > > Tested-by: William Kucharski <william.kucharski@oracle.com>
+> > > Reviewed-by: William Kucharski <william.kucharski@oracle.com>
+> > 
+> > I've bisected some new softlockups under THP mempressure to this patch.
+> > They are all rcu stalls that look similar to:
+> > [  242.645276] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+> > [  242.645293] rcu:     Tasks blocked on level-0 rcu_node (CPUs 0-3): P828
+> > [  242.645301]  (detected by 1, t=5252 jiffies, g=55501, q=221)
+> > [  242.645307] gem_syslatency  R  running task        0   828    815 0x00004000
+> > [  242.645315] Call Trace:
+> > [  242.645326]  ? __schedule+0x1a0/0x440
+> > [  242.645332]  ? preempt_schedule_irq+0x27/0x50
+> > [  242.645337]  ? apic_timer_interrupt+0xa/0x20
+> > [  242.645342]  ? xas_load+0x3c/0x80
+> > [  242.645347]  ? xas_load+0x8/0x80
+> > [  242.645353]  ? find_get_entry+0x4f/0x130
+> > [  242.645358]  ? pagecache_get_page+0x2b/0x210
+> > [  242.645364]  ? lookup_swap_cache+0x42/0x100
+> > [  242.645371]  ? do_swap_page+0x6f/0x600
+> > [  242.645375]  ? unmap_region+0xc2/0xe0
+> > [  242.645380]  ? __handle_mm_fault+0x7a9/0xfa0
+> > [  242.645385]  ? handle_mm_fault+0xc2/0x1c0
+> > [  242.645393]  ? __do_page_fault+0x198/0x410
+> > [  242.645399]  ? page_fault+0x5/0x20
+> > [  242.645404]  ? page_fault+0x1b/0x20
+> > 
+> > Any suggestions as to what information you might want?
+> 
+> Perhaps,
+> [   76.175502] page:ffffea00098e0000 count:0 mapcount:0 mapping:0000000000000000 index:0x1
+> [   76.175525] flags: 0x8000000000000000()
+> [   76.175533] raw: 8000000000000000 ffffea0004a7e988 ffffea000445c3c8 0000000000000000
+> [   76.175538] raw: 0000000000000001 0000000000000000 00000000ffffffff 0000000000000000
+> [   76.175543] page dumped because: VM_BUG_ON_PAGE(entry != page)
+> [   76.175560] ------------[ cut here ]------------
+> [   76.175564] kernel BUG at mm/swap_state.c:170!
+> [   76.175574] invalid opcode: 0000 [#1] PREEMPT SMP
+> [   76.175581] CPU: 0 PID: 131 Comm: kswapd0 Tainted: G     U            5.1.0+ #247
+> [   76.175586] Hardware name:  /NUC6CAYB, BIOS AYAPLCEL.86A.0029.2016.1124.1625 11/24/2016
+> [   76.175598] RIP: 0010:__delete_from_swap_cache+0x22e/0x340
+> [   76.175604] Code: e8 b7 3e fd ff 48 01 1d a8 7e 04 01 48 83 c4 30 5b 5d 41 5c 41 5d 41 5e 41 5f c3 48 c7 c6 03 7e bf 81 48 89 c7 e8 92 f8 fd ff <0f> 0b 48 c7 c6 c8 7c bf 81 48 89 df e8 81 f8 fd ff 0f 0b 48 c7 c6
+> [   76.175613] RSP: 0000:ffffc900008dba88 EFLAGS: 00010046
+> [   76.175619] RAX: 0000000000000032 RBX: ffffea00098e0040 RCX: 0000000000000006
+> [   76.175624] RDX: 0000000000000007 RSI: 0000000000000000 RDI: ffffffff81bf6d4c
+> [   76.175629] RBP: ffff888265ed8640 R08: 00000000000002c2 R09: 0000000000000000
+> [   76.175634] R10: 0000000273a4626d R11: 0000000000000000 R12: 0000000000000001
+> [   76.175639] R13: 0000000000000040 R14: 0000000000000000 R15: ffffea00098e0000
+> [   76.175645] FS:  0000000000000000(0000) GS:ffff888277a00000(0000) knlGS:0000000000000000
+> [   76.175651] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   76.175656] CR2: 00007f24e4399000 CR3: 0000000002c09000 CR4: 00000000001406f0
+> [   76.175661] Call Trace:
+> [   76.175671]  __remove_mapping+0x1c2/0x380
+> [   76.175678]  shrink_page_list+0x11db/0x1d10
+> [   76.175684]  shrink_inactive_list+0x14b/0x420
+> [   76.175690]  shrink_node_memcg+0x20e/0x740
+> [   76.175696]  shrink_node+0xba/0x420
+> [   76.175702]  balance_pgdat+0x27d/0x4d0
+> [   76.175709]  kswapd+0x216/0x300
+> [   76.175715]  ? wait_woken+0x80/0x80
+> [   76.175721]  ? balance_pgdat+0x4d0/0x4d0
+> [   76.175726]  kthread+0x106/0x120
+> [   76.175732]  ? kthread_create_on_node+0x40/0x40
+> [   76.175739]  ret_from_fork+0x1f/0x30
+> [   76.175745] Modules linked in: i915 intel_gtt drm_kms_helper
+> [   76.175754] ---[ end trace 8faf2ec849d50724 ]---
+> [   76.206689] RIP: 0010:__delete_from_swap_cache+0x22e/0x340
+> [   76.206708] Code: e8 b7 3e fd ff 48 01 1d a8 7e 04 01 48 83 c4 30 5b 5d 41 5c 41 5d 41 5e 41 5f c3 48 c7 c6 03 7e bf 81 48 89 c7 e8 92 f8 fd ff <0f> 0b 48 c7 c6 c8 7c bf 81 48 89 df e8 81 f8 fd ff 0f 0b 48 c7 c6
+> [   76.206718] RSP: 0000:ffffc900008dba88 EFLAGS: 00010046
+> [   76.206723] RAX: 0000000000000032 RBX: ffffea00098e0040 RCX: 0000000000000006
+> [   76.206729] RDX: 0000000000000007 RSI: 0000000000000000 RDI: ffffffff81bf6d4c
+> [   76.206734] RBP: ffff888265ed8640 R08: 00000000000002c2 R09: 0000000000000000
+> [   76.206740] R10: 0000000273a4626d R11: 0000000000000000 R12: 0000000000000001
+> [   76.206745] R13: 0000000000000040 R14: 0000000000000000 R15: ffffea00098e0000
+> [   76.206750] FS:  0000000000000000(0000) GS:ffff888277a00000(0000) knlGS:0000000000000000
+> [   76.206757] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
 
-This was reported by checkpatch.pl
+Thanks for the reports, Chris.
 
-Signed-off-by: Deepak Mishra <linux.dkm@gmail.com>
----
- drivers/staging/rtl8712/drv_types.h  | 2 +-
- drivers/staging/rtl8712/usb_intf.c   | 2 +-
- drivers/staging/rtl8712/xmit_linux.c | 4 ++--
- 3 files changed, 4 insertions(+), 4 deletions(-)
+I think they're both canaries; somehow the page cache / swap cache has
+got corrupted and contains entries that it shouldn't.
 
-diff --git a/drivers/staging/rtl8712/drv_types.h b/drivers/staging/rtl8712/drv_types.h
-index e3e2b32e964e..087fad7a4433 100644
---- a/drivers/staging/rtl8712/drv_types.h
-+++ b/drivers/staging/rtl8712/drv_types.h
-@@ -165,7 +165,7 @@ struct _adapter {
- 	int pid; /*process id from UI*/
- 	struct work_struct wk_filter_rx_ff0;
- 	bool enable_rx_ff0_filter;
--	spinlock_t lockRxFF0Filter;
-+	spinlock_t lock_rx_ff0_filter;
- 	const struct firmware *fw;
- 	struct usb_interface *pusb_intf;
- 	struct mutex mutex_start;
-diff --git a/drivers/staging/rtl8712/usb_intf.c b/drivers/staging/rtl8712/usb_intf.c
-index 200a271c28e1..d0daae0b8299 100644
---- a/drivers/staging/rtl8712/usb_intf.c
-+++ b/drivers/staging/rtl8712/usb_intf.c
-@@ -571,7 +571,7 @@ static int r871xu_drv_init(struct usb_interface *pusb_intf,
- 	/* step 6. Load the firmware asynchronously */
- 	if (rtl871x_load_fw(padapter))
- 		goto error;
--	spin_lock_init(&padapter->lockRxFF0Filter);
-+	spin_lock_init(&padapter->lock_rx_ff0_filter);
- 	mutex_init(&padapter->mutex_start);
- 	return 0;
- error:
-diff --git a/drivers/staging/rtl8712/xmit_linux.c b/drivers/staging/rtl8712/xmit_linux.c
-index 9fa1abcf5e50..1b52be50c04c 100644
---- a/drivers/staging/rtl8712/xmit_linux.c
-+++ b/drivers/staging/rtl8712/xmit_linux.c
-@@ -102,9 +102,9 @@ void r8712_SetFilter(struct work_struct *work)
- 	newvalue = oldvalue & 0xfe;
- 	r8712_write8(padapter, 0x117, newvalue);
- 
--	spin_lock_irqsave(&padapter->lockRxFF0Filter, irqL);
-+	spin_lock_irqsave(&padapter->lock_rx_ff0_filter, irqL);
- 	padapter->enable_rx_ff0_filter = true;
--	spin_unlock_irqrestore(&padapter->lockRxFF0Filter, irqL);
-+	spin_unlock_irqrestore(&padapter->lock_rx_ff0_filter, irqL);
- 	do {
- 		msleep(100);
- 	} while (padapter->enable_rx_ff0_filter == true);
--- 
-2.19.1
+This second one (with the VM_BUG_ON_PAGE in __delete_from_swap_cache)
+shows a regular (non-huge) page at index 1.  There are two ways we might
+have got there; one is that we asked to delete a page at index 1 which is
+no longer in the cache.  The other is that we asked to delete a huge page
+at index 0, but the page wasn't subsequently stored in indices 1-511.
 
+We dump the page that we found; not the page we're looking for, so I don't
+know which.  If this one's easy to reproduce, you could add:
+
+        for (i = 0; i < nr; i++) {
+                void *entry = xas_store(&xas, NULL);
++		if (entry != page) {
++			printk("Oh dear %d %d\n", i, nr);
++			dump_page(page, "deleting page");
++		}
+                VM_BUG_ON_PAGE(entry != page, entry);
+                set_page_private(page + i, 0);
+                xas_next(&xas);
+        }
+
+I'll re-read the patch and see if I can figure out how the cache is getting
+screwed up.  Given what you said, probably on the swap-in path.
