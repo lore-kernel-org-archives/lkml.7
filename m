@@ -2,145 +2,100 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD19C282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 14:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28814C282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 14:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0716327940
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 14:18:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6C0227944
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 14:20:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oaLJsP6T"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z5fzM2KJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfFBOS2 (ORCPT
+        id S1726695AbfFBOUO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 10:18:28 -0400
-Received: from mail-ot1-f52.google.com ([209.85.210.52]:35815 "EHLO
-        mail-ot1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbfFBOS1 (ORCPT
+        Sun, 2 Jun 2019 10:20:14 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:32780 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbfFBOUO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 10:18:27 -0400
-Received: by mail-ot1-f52.google.com with SMTP id n14so13747072otk.2;
-        Sun, 02 Jun 2019 07:18:27 -0700 (PDT)
+        Sun, 2 Jun 2019 10:20:14 -0400
+Received: by mail-pg1-f193.google.com with SMTP id h17so6761216pgv.0;
+        Sun, 02 Jun 2019 07:20:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=gV1qEV1VFZsBA5JmnTEr5cYWRUDz3Z118FE3e1CQpg8=;
-        b=oaLJsP6TLkPFb/k3Ty33h2Pqx8VhZmFXuSZQ5iAfTlGBwY/vCt3kUMhphVvKnMuYei
-         /k7sscrAa4B/D5N9vZ+sDZzyyKz5vdDyIhEy5v+bYv1AxqBOfMCwyTJbMxARrwUwgx8q
-         tig57qr2w16BEitYpJhRGUdcDhRHDacntUO5Okypn2Z3BH+EYaJ9G3+b51FU+y2ZVLdd
-         3QDcLsDHUo7el8Gnj9FTozn1PaIVpnaWuiP6HYdw92yxipfGuGou3i+xxjpzzl8Uv3HL
-         Y+heDwCBVkSjhkNIybg1YAIaPcIGjW+LIflwFEuUKXGdxCO+CLP2biL+M46EKTZa62cG
-         DomA==
+        h=from:to:cc:subject:date:message-id;
+        bh=gm5OUfBYt2rZ5++CvxJbeV901kE7mvqiml3mou2FzOk=;
+        b=Z5fzM2KJ5F1WEsd1lSFWNKX6OqhyWzXe6/ML/6sT0TpxmiZpPVbVB8JX8jcN+0TXhg
+         5ahR1zt59qVEUo+vuWi5FcX6ly+RPVcNaXGftC6b/rCGIGfr+1L5QTZUUmJnSZD3Ipjp
+         BIOAlE3XoXQUwxq2pMZJ1CgNBa0Y9OYfSreEweoheCfycVQ/P80hsVA+jLZW42T05hkW
+         tnotpMoTGoNNbNhPP3SWMBKUd+n3Qf5NVX+44NUOiMGfpmPCfTD7PakorNXAFmyQ/OXr
+         ccHz/8gFsZz0spMvIFF7b3itr1CnGE7WJbdNhT2RTdpYmqXDLGHocHr6SPBre3eEUVYP
+         Gzvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=gV1qEV1VFZsBA5JmnTEr5cYWRUDz3Z118FE3e1CQpg8=;
-        b=LyXUiOQkyAbeq/xhtk40dw5MGqdkqY3ULwPgoMNriRumj3zhoGb+wl5DorU6D1YrHJ
-         Llz9iPb7fNsD+/KMsk1/Lh2ayMx9yIvABIUrjuVt1pUWy/RCgiiz/ITNmQOgwoDPYASc
-         LoqyQjuptixKewtORvSVUdZJuHasQFvQ2n3tkf1dCL4c0g4U1HyYYLVe0ade6UN/mTtv
-         1oiuoxprI5A9zDQD/5KpNtuGVfBrB/UfZqteoYxlQzMDYXiCgBPDzBTaWSNrpSzGX9En
-         FQysbDH86mUfZyhlJNdUHLdrOM4rzrRJ5pRdY/yrofHntSITGjfstDQMHVen1p3q7BcZ
-         dzYA==
-X-Gm-Message-State: APjAAAUr9ffFrVfwfR1itGSl5OX5yvGL8+cyHFiN2qYxj5ZSHYrxFY3l
-        fKdNI8mQ3xTT+A/4/uQH3TdaT3Rq+yWoPr3ZsJ0=
-X-Google-Smtp-Source: APXvYqwPMjTqfQdEKdinAiKPsdYwws1mQlFxM3FFrdBpNtIqhlTD6uB+f+/GOAJU84eFEQ723B4mMlaUosKmB8OlRnQ=
-X-Received: by 2002:a9d:68c5:: with SMTP id i5mr9153798oto.224.1559485106608;
- Sun, 02 Jun 2019 07:18:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190601035709.85379-1-yuehaibing@huawei.com> <CAGngYiXZM0QUdKE_zDK763J9iDuiKSbmFeTVA1PJ_4WvjntjQQ@mail.gmail.com>
- <20190601160459.baedo5pp5hsrltzs@pengutronix.de>
-In-Reply-To: <20190601160459.baedo5pp5hsrltzs@pengutronix.de>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Sun, 2 Jun 2019 10:18:15 -0400
-Message-ID: <CAGngYiUfGGF+PwaT4SE2ZJkrCidc7-QWeuRsPTDwrLL1onm88w@mail.gmail.com>
-Subject: Re: [PATCH -next] pwm: pca9685: Remove set but not used variable 'pwm'
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-pwm@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=gm5OUfBYt2rZ5++CvxJbeV901kE7mvqiml3mou2FzOk=;
+        b=dqjxR8D4l1qjYiNKznLAwZD9vTRmYLBmNI/6gJt4FJ7z7sRPOSVTcpzLmJB73I7Rv8
+         vOlzPVAOGfDId+m5AaUoGirSZFwnlH2YFTeu9rcZGKO+f5yK63IyZba95+Nem56fb18y
+         LLUW7UbZ++CUMm6Vj6T/CUHX1FdRAp3OfZuMZh0Rjm2lZcVLP+KbCSBDHQ5GgtEMiOmQ
+         v9EkdOu4SuwsBujpmmBrXOb7bCe7OS45DTDFZYnAIqaz+/qnWYnVDtXCBVSTcpquAiGw
+         gM6clwL2w+vgXbhDw1WtAtXVXA2spd4DkptQ0VVx3L9qQiBdLqQ92tJlQzmXYQ54ztYU
+         dxUQ==
+X-Gm-Message-State: APjAAAWOZIbhwHXwNXN+WeALqJ33RsADAzTOJ75AkdRoVyd2dar88n/G
+        2flGU7C0DQAgiW0Tc4lWgdi0lnCS
+X-Google-Smtp-Source: APXvYqwQ1RTfwGwrUl833DLpdfu8jg+jL7nudr1ZHjRyUrACslFw0tE59equcReVwjWa1/bqXCDjJA==
+X-Received: by 2002:a63:eb03:: with SMTP id t3mr22548381pgh.315.1559485213155;
+        Sun, 02 Jun 2019 07:20:13 -0700 (PDT)
+Received: from localhost.localdomain ([27.7.2.234])
+        by smtp.googlemail.com with ESMTPSA id t33sm11768133pjb.1.2019.06.02.07.20.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 02 Jun 2019 07:20:12 -0700 (PDT)
+From:   Vivek Pernamitta <pervivek@gmail.com>
+Cc:     pervivek@gmail.com, Mark Brown <broonie@kernel.org>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] spi: spidev: Fix for reverting spi max speed value only on failure
+Date:   Sun,  2 Jun 2019 19:49:59 +0530
+Message-Id: <20190602141959.5616-1-pervivek@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 1, 2019 at 12:05 PM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> I didn't look into the driver to try to understand that, but the
-> definitely needs a comment to explain for the next person to think they
-> can do a cleanup here.
+When user space application request for change in spi clock
+using ioctl, current value is taken back-up and new value is
+assigned to spi->max_speed_hz, then spi_setup() function is
+called with new value. If spi_setup() function fails, it needs
+reverting to old spi_max_speed value only in failure condition.
 
-Certainly.
+Signed-off-by: Vivek Pernamitta <pervivek@gmail.com>
+---
+ drivers/spi/spidev.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-But if we do restore the old behaviour, there may still be problems.
-I'm unsure if the old synchronization was working correctly.
-See the example at the end of this email.
+diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
+index 30498cf25f3b..70382b642f37 100644
+--- a/drivers/spi/spidev.c
++++ b/drivers/spi/spidev.c
+@@ -458,9 +458,10 @@ spidev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ 			retval = spi_setup(spi);
+ 			if (retval >= 0)
+ 				spidev->speed_hz = tmp;
+-			else
++			else {
+ 				dev_dbg(&spi->dev, "%d Hz (max)\n", tmp);
+-			spi->max_speed_hz = save;
++				spi->max_speed_hz = save;
++			}
+ 		}
+ 		break;
+ 
+-- 
+2.17.1
 
-An intuitive way forward would be to use a simple bitfield in
-struct pca9685 to track if a specific pwm is in use by either
-pwm or gpio. Protected by a mutex.
-
-But it could be that the old behaviour is 'good enough' for
-the driver's users (I am no longer one of them).
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-
-Let's take the example of two threads, racing to grab a pwm and gpio,
-respectively. Assume the gpio is backed by the pwm, so they conflict.
-
-[Thread 1]
-drivers/pwm/core.c:
-
-    if (pwm->chip->ops->request) {
-        err =3D pwm->chip->ops->request(pwm->chip, pwm);
-            [this calls pca9685_pwm_request()]
-            [which calls pca9685_pwm_is_gpio()]
-            [checks pwm chip_data, is NULL, pwm is free]
-            [returns 0 - pwm request ok]
-        if (err) {
-            module_put(pwm->chip->ops->owner);
-            return err;
-        }
-    }
-
-        [CONTEXT SWITCH to Thread 2]
-        static int pca9685_pwm_gpio_request(struct gpio_chip *gpio,
-unsigned int offset)
-        {
-            struct pca9685 *pca =3D gpiochip_get_data(gpio);
-            struct pwm_device *pwm;
-
-            mutex_lock(&pca->lock);
-
-            pwm =3D &pca->chip.pwms[offset];
-
-            [pwm->flags do not (yet) have PWMF_REQUESTED]
-            if (pwm->flags & (PWMF_REQUESTED | PWMF_EXPORTED)) {
-                mutex_unlock(&pca->lock);
-                return -EBUSY;
-            }
-
-            pwm_set_chip_data(pwm, (void *)1);
-
-            mutex_unlock(&pca->lock);
-            pm_runtime_get_sync(pca->chip.dev);
-            return 0;
-        }
-
-[CONTEXT SWITCH back to Thread 1, still in pwm/core.c]
-
-    set_bit(PWMF_REQUESTED, &pwm->flags);
-    pwm->label =3D label;
