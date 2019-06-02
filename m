@@ -2,126 +2,145 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0758C282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 14:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD19C282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 14:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9F022793F
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 14:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0716327940
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 14:18:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PaIRevF6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oaLJsP6T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726835AbfFBONm (ORCPT
+        id S1726690AbfFBOS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 10:13:42 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39321 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbfFBONl (ORCPT
+        Sun, 2 Jun 2019 10:18:28 -0400
+Received: from mail-ot1-f52.google.com ([209.85.210.52]:35815 "EHLO
+        mail-ot1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbfFBOS1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 10:13:41 -0400
-Received: by mail-pg1-f196.google.com with SMTP id 196so6739696pgc.6
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 07:13:41 -0700 (PDT)
+        Sun, 2 Jun 2019 10:18:27 -0400
+Received: by mail-ot1-f52.google.com with SMTP id n14so13747072otk.2;
+        Sun, 02 Jun 2019 07:18:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=w9PH2k6rPB87/EEGusf4NGVLGYsoLDBvNH1XesU5MSE=;
-        b=PaIRevF6X9EwLo4tynO/oQYZRBcG85PvvyQLyKkXdp6vLjcnIUH5UpsmZLz4KjTSBK
-         hms704ygyRWoFPRI63ehIjsVCPvsOsoLL/AGv2aj3Mda4muSyDjZjdLokpCixSZp4ahG
-         qlAtxyFvBrQMPKJWe18dzIzQFmAOLj+AU3DvdTYo7PkHk0cbmUPxrnna1QjVzTad/gOQ
-         nrWhRxa14WLuw3btqxPJvpBCUuBlBc4O4MmyrqQ1XI4zXU21DvHZq1m0yqutKddyMBjH
-         gtoHj2K6RggWYFSgNfu5ixkSbo2dtTPZLaqkqci6yyFWWYqFXhrf2EcOBYyeQxJTEwcW
-         f+tw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=gV1qEV1VFZsBA5JmnTEr5cYWRUDz3Z118FE3e1CQpg8=;
+        b=oaLJsP6TLkPFb/k3Ty33h2Pqx8VhZmFXuSZQ5iAfTlGBwY/vCt3kUMhphVvKnMuYei
+         /k7sscrAa4B/D5N9vZ+sDZzyyKz5vdDyIhEy5v+bYv1AxqBOfMCwyTJbMxARrwUwgx8q
+         tig57qr2w16BEitYpJhRGUdcDhRHDacntUO5Okypn2Z3BH+EYaJ9G3+b51FU+y2ZVLdd
+         3QDcLsDHUo7el8Gnj9FTozn1PaIVpnaWuiP6HYdw92yxipfGuGou3i+xxjpzzl8Uv3HL
+         Y+heDwCBVkSjhkNIybg1YAIaPcIGjW+LIflwFEuUKXGdxCO+CLP2biL+M46EKTZa62cG
+         DomA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=w9PH2k6rPB87/EEGusf4NGVLGYsoLDBvNH1XesU5MSE=;
-        b=EbyB1/Ms6gmIJ0l+JYLu7SHrX+C2sZojvXcEKE1kHrbwf7p/qKhDm/ixKQFjmB4DYB
-         ezyN61efxmgxfPLEAUQClVUler5wZ4pnmuOaczfRjBKnZ7IACmCVePtpFq4Fh8ko+5hd
-         CcvzEAV7K8ykSAGQgOCGyCsTCKLSuGZFvDwxtkWSTCkHrDdxE2CewYMDYxrY0JmHTBer
-         cnqdKiZ+jolBPFDKeJEvJC8xUHzEaQb9FN3I+e28XOveFp+cklNo36UHipDYD674Hiek
-         fKqDEdz4mE7/ah7N39MjxxaFbWxtIzkuC19ZZnf2BjkiBpLzSBxuD3KxbXxDKYSd9aOp
-         +mUg==
-X-Gm-Message-State: APjAAAWk0jHyPNrswEL/BGGAHYZpiTmmECzscOdxZcVW29cv6cMiYYWu
-        HVGwnMs40sm4NZQ0Z9oko7k=
-X-Google-Smtp-Source: APXvYqzpaRyuh5gQli++xqEgVoQRrE1rPqttbhI9uhh1SUA8jrKDVOtdKqsjDKH3Ewbwo8eiC0WG0Q==
-X-Received: by 2002:a65:530d:: with SMTP id m13mr22569795pgq.68.1559484821083;
-        Sun, 02 Jun 2019 07:13:41 -0700 (PDT)
-Received: from localhost.localdomain (119-18-21-111.771215.syd.nbn.aussiebb.net. [119.18.21.111])
-        by smtp.gmail.com with ESMTPSA id x66sm12533278pfx.139.2019.06.02.07.13.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 02 Jun 2019 07:13:40 -0700 (PDT)
-From:   Rhys Kidd <rhyskidd@gmail.com>
-To:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, Karol Herbst <kherbst@redhat.com>,
-        Lyude Paul <lyude@redhat.com>,
-        Ilia Mirkin <imirkin@alum.mit.edu>
-Cc:     Rhys Kidd <rhyskidd@gmail.com>
-Subject: [PATCH 2/2] drm/nouveau/bios/init: handle INIT_RESET_END devinit opcode
-Date:   Mon,  3 Jun 2019 00:13:15 +1000
-Message-Id: <20190602141315.6197-3-rhyskidd@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190602141315.6197-1-rhyskidd@gmail.com>
-References: <20190602141315.6197-1-rhyskidd@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=gV1qEV1VFZsBA5JmnTEr5cYWRUDz3Z118FE3e1CQpg8=;
+        b=LyXUiOQkyAbeq/xhtk40dw5MGqdkqY3ULwPgoMNriRumj3zhoGb+wl5DorU6D1YrHJ
+         Llz9iPb7fNsD+/KMsk1/Lh2ayMx9yIvABIUrjuVt1pUWy/RCgiiz/ITNmQOgwoDPYASc
+         LoqyQjuptixKewtORvSVUdZJuHasQFvQ2n3tkf1dCL4c0g4U1HyYYLVe0ade6UN/mTtv
+         1oiuoxprI5A9zDQD/5KpNtuGVfBrB/UfZqteoYxlQzMDYXiCgBPDzBTaWSNrpSzGX9En
+         FQysbDH86mUfZyhlJNdUHLdrOM4rzrRJ5pRdY/yrofHntSITGjfstDQMHVen1p3q7BcZ
+         dzYA==
+X-Gm-Message-State: APjAAAUr9ffFrVfwfR1itGSl5OX5yvGL8+cyHFiN2qYxj5ZSHYrxFY3l
+        fKdNI8mQ3xTT+A/4/uQH3TdaT3Rq+yWoPr3ZsJ0=
+X-Google-Smtp-Source: APXvYqwPMjTqfQdEKdinAiKPsdYwws1mQlFxM3FFrdBpNtIqhlTD6uB+f+/GOAJU84eFEQ723B4mMlaUosKmB8OlRnQ=
+X-Received: by 2002:a9d:68c5:: with SMTP id i5mr9153798oto.224.1559485106608;
+ Sun, 02 Jun 2019 07:18:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190601035709.85379-1-yuehaibing@huawei.com> <CAGngYiXZM0QUdKE_zDK763J9iDuiKSbmFeTVA1PJ_4WvjntjQQ@mail.gmail.com>
+ <20190601160459.baedo5pp5hsrltzs@pengutronix.de>
+In-Reply-To: <20190601160459.baedo5pp5hsrltzs@pengutronix.de>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Sun, 2 Jun 2019 10:18:15 -0400
+Message-ID: <CAGngYiUfGGF+PwaT4SE2ZJkrCidc7-QWeuRsPTDwrLL1onm88w@mail.gmail.com>
+Subject: Re: [PATCH -next] pwm: pca9685: Remove set but not used variable 'pwm'
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-pwm@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signal that the reset sequence has completed.
+On Sat, Jun 1, 2019 at 12:05 PM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> I didn't look into the driver to try to understand that, but the
+> definitely needs a comment to explain for the next person to think they
+> can do a cleanup here.
 
-This opcode signals that the software reset sequence has completed.
-Ordinarily, no actual operations are performed by the opcode.
-However it allows for possible software work arounds by devinit
-engines in software agents other than the VBIOS, such as the resman,
-FCODE, and EFI driver.
+Certainly.
 
-Signed-off-by: Rhys Kidd <rhyskidd@gmail.com>
----
- drivers/gpu/drm/nouveau/nvkm/subdev/bios/init.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+But if we do restore the old behaviour, there may still be problems.
+I'm unsure if the old synchronization was working correctly.
+See the example at the end of this email.
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/init.c b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/init.c
-index a54b5e410dcd..49d09503cd31 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/init.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/init.c
-@@ -1945,6 +1945,17 @@ init_reset_begun(struct nvbios_init *init)
- 	init->offset += 1;
- }
- 
-+/**
-+ * INIT_RESET_END - opcode 0x8d
-+ *
-+ */
-+static void
-+init_reset_end(struct nvbios_init *init)
-+{
-+	trace("RESET_END\n");
-+	init->offset += 1;
-+}
-+
- /**
-  * INIT_GPIO - opcode 0x8e
-  *
-@@ -2272,7 +2283,7 @@ static struct nvbios_init_opcode {
- 	[0x7a] = { init_zm_reg },
- 	[0x87] = { init_ram_restrict_pll },
- 	[0x8c] = { init_reset_begun },
--	[0x8d] = { init_reserved },
-+	[0x8d] = { init_reset_end },
- 	[0x8e] = { init_gpio },
- 	[0x8f] = { init_ram_restrict_zm_reg_group },
- 	[0x90] = { init_copy_zm_reg },
--- 
-2.20.1
+An intuitive way forward would be to use a simple bitfield in
+struct pca9685 to track if a specific pwm is in use by either
+pwm or gpio. Protected by a mutex.
 
+But it could be that the old behaviour is 'good enough' for
+the driver's users (I am no longer one of them).
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+Let's take the example of two threads, racing to grab a pwm and gpio,
+respectively. Assume the gpio is backed by the pwm, so they conflict.
+
+[Thread 1]
+drivers/pwm/core.c:
+
+    if (pwm->chip->ops->request) {
+        err =3D pwm->chip->ops->request(pwm->chip, pwm);
+            [this calls pca9685_pwm_request()]
+            [which calls pca9685_pwm_is_gpio()]
+            [checks pwm chip_data, is NULL, pwm is free]
+            [returns 0 - pwm request ok]
+        if (err) {
+            module_put(pwm->chip->ops->owner);
+            return err;
+        }
+    }
+
+        [CONTEXT SWITCH to Thread 2]
+        static int pca9685_pwm_gpio_request(struct gpio_chip *gpio,
+unsigned int offset)
+        {
+            struct pca9685 *pca =3D gpiochip_get_data(gpio);
+            struct pwm_device *pwm;
+
+            mutex_lock(&pca->lock);
+
+            pwm =3D &pca->chip.pwms[offset];
+
+            [pwm->flags do not (yet) have PWMF_REQUESTED]
+            if (pwm->flags & (PWMF_REQUESTED | PWMF_EXPORTED)) {
+                mutex_unlock(&pca->lock);
+                return -EBUSY;
+            }
+
+            pwm_set_chip_data(pwm, (void *)1);
+
+            mutex_unlock(&pca->lock);
+            pm_runtime_get_sync(pca->chip.dev);
+            return 0;
+        }
+
+[CONTEXT SWITCH back to Thread 1, still in pwm/core.c]
+
+    set_bit(PWMF_REQUESTED, &pwm->flags);
+    pwm->label =3D label;
