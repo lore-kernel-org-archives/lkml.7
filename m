@@ -2,373 +2,241 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4F1C282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 18:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F08E3C46460
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 19:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63C34279BD
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 18:45:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB7D32797D
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 19:08:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lmYArfef"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfFBSo7 (ORCPT
+        id S1726795AbfFBTIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 14:44:59 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:52266 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbfFBSo7 (ORCPT
+        Sun, 2 Jun 2019 15:08:52 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:44595 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbfFBTIv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 14:44:59 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id B9FDD803C0;
-        Sun,  2 Jun 2019 20:44:54 +0200 (CEST)
-Date:   Sun, 2 Jun 2019 20:44:53 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, od@zcrc.me
-Subject: Re: [PATCH 2/2] drm/panel: Add Novatek NT39016 panel support
-Message-ID: <20190602184453.GB10060@ravnborg.org>
-References: <20190602164844.15659-1-paul@crapouillou.net>
- <20190602164844.15659-2-paul@crapouillou.net>
+        Sun, 2 Jun 2019 15:08:51 -0400
+Received: by mail-ed1-f67.google.com with SMTP id b8so23552493edm.11;
+        Sun, 02 Jun 2019 12:08:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aaBnd3Mz67/mbpVkdYT/2BN5oFrupn5X4M/t44T3/Vg=;
+        b=lmYArfefuVc8Zcozg9TjAwVGWcJeWBwFEZt1Fu7iVxDfd9QlQfGvf15pyROvXVtkbr
+         vtxL8nTDUZcILwufR1Qw3fo+0aTowXMqdZfhd+B3abRCeajFApVy4xbvk2hfVrghQN48
+         4wy3JdFRXmOPBtV3UpZU5ZXNsfo2zom26TRBTDg6sy94Cfml/InFLs+K+d4h1rXh6kf0
+         vQi1gkIbm40CGUhO/yEx3gCYDEQUctT2tJcVlErKU+PHqnthauTeWbxsuL4ns7+y1KaL
+         1uMjCn7d1c5il2JAu8NTBVgdgWvS5Rorn/p6TUEPPSWg3stj+lKrKpzfqaKXA7wdobEV
+         fjsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aaBnd3Mz67/mbpVkdYT/2BN5oFrupn5X4M/t44T3/Vg=;
+        b=iA0lx+tYJR0dy7O7XH103xaznyBaGa2jP6zSO3e2AZnvX4FoQSQshSO34tCSi+LMu8
+         hNcQ5al2Y8VN8ARSJMYriBkP2wg+L7kIc0dIoCcJV4i1qTsrikaAEOFVAtdChMrL5CQV
+         V51VObsxle30UmUIqAAQNxQ8sphZThOXnXZL3nkMT4DUPOvIVHN4Iwehoc9ZJqmOfRMH
+         tEcseBfmsKQ/hu5urtk2uFoYzdB0rFg0KAvAqPzli7NhzMcdTuIqxHB+mW/OgUDN8sdi
+         nCa0Ah8rppiN01sTfy8MaJDM4EZRltjM1DpTQtE2LW32lJ4QLIANw4VssUqZgf+Wuyh1
+         pcOA==
+X-Gm-Message-State: APjAAAWfZgHFBnWW7i1XRSm9zz0ZoJXsJrLg0r9EIEFkzCcicd2P4nD8
+        zk1NvYFQePIiTdZFybOoWM7h5883v/sJ2pKh82Ww5gMT
+X-Google-Smtp-Source: APXvYqzHZVKy1A3muaPGeeKB+e4u8+5dwO9Amo1xU4tbSVt/nRxSRiJpbGz9LvIrdCtY/wCMoFFM9Txz9ayg2lSgjts=
+X-Received: by 2002:aa7:cdd7:: with SMTP id h23mr8124859edw.264.1559502528659;
+ Sun, 02 Jun 2019 12:08:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190602164844.15659-2-paul@crapouillou.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=ER_8r6IbAAAA:8
-        a=EHaNKQqtAAAA:8 a=4dAJPdOlH5hFgu4_sGMA:9 a=CjuIK1q_8ugA:10
-        a=9LHmKk7ezEChjTCyhBa9:22 a=KIA0-nbnOXq3vJi0w304:22
+References: <20181201165348.24140-1-robdclark@gmail.com> <CAL_JsqJmPqis46Un91QyhXgdrVtfATMP_hTp6wSeSAfc8MLFfw@mail.gmail.com>
+ <CAF6AEGs9Nsft8ofZkGz_yWBPBC+prh8dBSkJ4PJr8yk2c5FMdQ@mail.gmail.com>
+In-Reply-To: <CAF6AEGs9Nsft8ofZkGz_yWBPBC+prh8dBSkJ4PJr8yk2c5FMdQ@mail.gmail.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Sun, 2 Jun 2019 12:08:33 -0700
+Message-ID: <CAF6AEGt-dhbQS5zZCNVTLT57OiUwO0RiP5bawTSu2RKZ-7W-aw@mail.gmail.com>
+Subject: Re: [PATCH] of/device: add blacklist for iommu dma_ops
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Linux IOMMU <iommu@lists.linux-foundation.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Archit Taneja <architt@codeaurora.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul.
+On Fri, May 10, 2019 at 7:35 AM Rob Clark <robdclark@gmail.com> wrote:
+>
+> On Tue, Dec 4, 2018 at 2:29 PM Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > On Sat, Dec 1, 2018 at 10:54 AM Rob Clark <robdclark@gmail.com> wrote:
+> > >
+> > > This solves a problem we see with drm/msm, caused by getting
+> > > iommu_dma_ops while we attach our own domain and manage it directly at
+> > > the iommu API level:
+> > >
+> > >   [0000000000000038] user address but active_mm is swapper
+> > >   Internal error: Oops: 96000005 [#1] PREEMPT SMP
+> > >   Modules linked in:
+> > >   CPU: 7 PID: 70 Comm: kworker/7:1 Tainted: G        W         4.19.3 #90
+> > >   Hardware name: xxx (DT)
+> > >   Workqueue: events deferred_probe_work_func
+> > >   pstate: 80c00009 (Nzcv daif +PAN +UAO)
+> > >   pc : iommu_dma_map_sg+0x7c/0x2c8
+> > >   lr : iommu_dma_map_sg+0x40/0x2c8
+> > >   sp : ffffff80095eb4f0
+> > >   x29: ffffff80095eb4f0 x28: 0000000000000000
+> > >   x27: ffffffc0f9431578 x26: 0000000000000000
+> > >   x25: 00000000ffffffff x24: 0000000000000003
+> > >   x23: 0000000000000001 x22: ffffffc0fa9ac010
+> > >   x21: 0000000000000000 x20: ffffffc0fab40980
+> > >   x19: ffffffc0fab40980 x18: 0000000000000003
+> > >   x17: 00000000000001c4 x16: 0000000000000007
+> > >   x15: 000000000000000e x14: ffffffffffffffff
+> > >   x13: ffff000000000000 x12: 0000000000000028
+> > >   x11: 0101010101010101 x10: 7f7f7f7f7f7f7f7f
+> > >   x9 : 0000000000000000 x8 : ffffffc0fab409a0
+> > >   x7 : 0000000000000000 x6 : 0000000000000002
+> > >   x5 : 0000000100000000 x4 : 0000000000000000
+> > >   x3 : 0000000000000001 x2 : 0000000000000002
+> > >   x1 : ffffffc0f9431578 x0 : 0000000000000000
+> > >   Process kworker/7:1 (pid: 70, stack limit = 0x0000000017d08ffb)
+> > >   Call trace:
+> > >    iommu_dma_map_sg+0x7c/0x2c8
+> > >    __iommu_map_sg_attrs+0x70/0x84
+> > >    get_pages+0x170/0x1e8
+> > >    msm_gem_get_iova+0x8c/0x128
+> > >    _msm_gem_kernel_new+0x6c/0xc8
+> > >    msm_gem_kernel_new+0x4c/0x58
+> > >    dsi_tx_buf_alloc_6g+0x4c/0x8c
+> > >    msm_dsi_host_modeset_init+0xc8/0x108
+> > >    msm_dsi_modeset_init+0x54/0x18c
+> > >    _dpu_kms_drm_obj_init+0x430/0x474
+> > >    dpu_kms_hw_init+0x5f8/0x6b4
+> > >    msm_drm_bind+0x360/0x6c8
+> > >    try_to_bring_up_master.part.7+0x28/0x70
+> > >    component_master_add_with_match+0xe8/0x124
+> > >    msm_pdev_probe+0x294/0x2b4
+> > >    platform_drv_probe+0x58/0xa4
+> > >    really_probe+0x150/0x294
+> > >    driver_probe_device+0xac/0xe8
+> > >    __device_attach_driver+0xa4/0xb4
+> > >    bus_for_each_drv+0x98/0xc8
+> > >    __device_attach+0xac/0x12c
+> > >    device_initial_probe+0x24/0x30
+> > >    bus_probe_device+0x38/0x98
+> > >    deferred_probe_work_func+0x78/0xa4
+> > >    process_one_work+0x24c/0x3dc
+> > >    worker_thread+0x280/0x360
+> > >    kthread+0x134/0x13c
+> > >    ret_from_fork+0x10/0x18
+> > >   Code: d2800004 91000725 6b17039f 5400048a (f9401f40)
+> > >   ---[ end trace f22dda57f3648e2c ]---
+> > >   Kernel panic - not syncing: Fatal exception
+> > >   SMP: stopping secondary CPUs
+> > >   Kernel Offset: disabled
+> > >   CPU features: 0x0,22802a18
+> > >   Memory Limit: none
+> > >
+> > > The problem is that when drm/msm does it's own iommu_attach_device(),
+> > > now the domain returned by iommu_get_domain_for_dev() is drm/msm's
+> > > domain, and it doesn't have domain->iova_cookie.
+> > >
+> > > We kind of avoided this problem prior to sdm845/dpu because the iommu
+> > > was attached to the mdp node in dt, which is a child of the toplevel
+> > > mdss node (which corresponds to the dev passed in dma_map_sg()).  But
+> > > with sdm845, now the iommu is attached at the mdss level so we hit the
+> > > iommu_dma_ops in dma_map_sg().
+> > >
+> > > But auto allocating/attaching a domain before the driver is probed was
+> > > already a blocking problem for enabling per-context pagetables for the
+> > > GPU.  This problem is also now solved with this patch.
+> > >
+> > > Fixes: 97890ba9289c dma-mapping: detect and configure IOMMU in of_dma_configure
+> > > Tested-by: Douglas Anderson <dianders@chromium.org>
+> > > Signed-off-by: Rob Clark <robdclark@gmail.com>
+> > > ---
+> > > This is an alternative/replacement for [1].  What it lacks in elegance
+> > > it makes up for in practicality ;-)
+> > >
+> > > [1] https://patchwork.freedesktop.org/patch/264930/
+> > >
+> > >  drivers/of/device.c | 22 ++++++++++++++++++++++
+> > >  1 file changed, 22 insertions(+)
+> > >
+> > > diff --git a/drivers/of/device.c b/drivers/of/device.c
+> > > index 5957cd4fa262..15ffee00fb22 100644
+> > > --- a/drivers/of/device.c
+> > > +++ b/drivers/of/device.c
+> > > @@ -72,6 +72,14 @@ int of_device_add(struct platform_device *ofdev)
+> > >         return device_add(&ofdev->dev);
+> > >  }
+> > >
+> > > +static const struct of_device_id iommu_blacklist[] = {
+> > > +       { .compatible = "qcom,mdp4" },
+> > > +       { .compatible = "qcom,mdss" },
+> > > +       { .compatible = "qcom,sdm845-mdss" },
+> > > +       { .compatible = "qcom,adreno" },
+> > > +       {}
+> > > +};
+> >
+> > Not completely clear to whether this is still needed or not, but this
+> > really won't scale. Why can't the driver for these devices override
+> > whatever has been setup by default?
+> >
+>
+> fwiw, at the moment it is not needed, but it will become needed again
+> to implement per-context pagetables (although I suppose for this we
+> only need to blacklist qcom,adreno and not also the display nodes).
 
-Nice driver.
-Feedback, mostly a repeat from irc, but you get it here too so others
-can follow.
+So, another case I've come across, on the display side.. I'm working
+on handling the case where bootloader enables display (and takes iommu
+out of reset).. as soon as DMA domain gets attached we get iommu
+faults, because bootloader has already configured display for scanout.
+Unfortunately this all happens before actual driver is probed and has
+a chance to intervene.
 
-The backlight handling can be simplified.
-Please see panel-innolux-p079zca.c as one (semi random) example.
+It's rather unfortunate that we tried to be clever rather than just
+making drivers call some function to opt-in to the hookup of dma iommu
+ops :-(
 
-	Sam
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+BR,
+-R
 
-This driver is authored by Maarten ter Huurne <maarten@treewalker.org>
-as well as you.
-Could you get a s-o-b or at least some other formal
-attribution of Maarten in the changelog.
-
-
-> +
-> +#include <drm/drm_modes.h>
-> +#include <drm/drm_panel.h>
-> +#include <linux/backlight.h>
-> +#include <linux/delay.h>
-> +#include <linux/device.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/spi/spi.h>
-> +#include <uapi/linux/media-bus-format.h>
-
-Recently (after I was there) panels sort the include in blocks like
-this:
-
-#include <linux/*>
-
-#include <other general files from include/*>
-
-#include <drm/*>
-
-Within each block the header files are sorted.
-
-For media-bus-format.h - you could use:
-#include <linux/media-bus-format.h>
-
-> +
-> +static int nt39016_prepare(struct drm_panel *drm_panel)
-> +{
-> +	struct nt39016 *panel = to_nt39016(drm_panel);
-> +	int err;
-> +
-> +	err = regulator_enable(panel->supply);
-> +	if (err) {
-> +		dev_err(panel->dev, "Failed to enable power supply: %i", err);
-> +		return err;
-> +	}
-> +
-> +	/*
-> +	 * Reset the NT39016.
-> +	 * The documentation says the reset pulse should be at least 40 us to
-> +	 * pass the glitch filter, but when testing I see some resets fail and
-> +	 * some succeed when using a 70 us delay, so we use 100 us instead.
-> +	 */
-> +	gpiod_set_value_cansleep(panel->reset_gpio, 1);
-> +	usleep_range(100, 1000);
-> +	gpiod_set_value_cansleep(panel->reset_gpio, 0);
-> +	udelay(2);
-> +
-> +	/* Init all registers. */
-> +	err = regmap_multi_reg_write(panel->map, nt39016_panel_regs,
-> +				     ARRAY_SIZE(nt39016_panel_regs));
-
-Nice!
-
-> +	if (err) {
-> +		dev_err(panel->dev, "Failed to init registers: %i", err);
-
-Maybe it is just me, but I wonder why %i and not %d?
-You are consistent which is good.
-But I saw no other panle drivers use %i, so consider to do like the
-rest.
-
-
-> +		goto err_disable_regulator;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_disable_regulator:
-> +	regulator_disable(panel->supply);
-> +	return err;
-> +}
-> +
-> +static int nt39016_unprepare(struct drm_panel *drm_panel)
-> +{
-> +	struct nt39016 *panel = to_nt39016(drm_panel);
-> +
-> +	gpiod_set_value_cansleep(panel->reset_gpio, 1);
-> +
-> +	regulator_disable(panel->supply);
-> +
-> +	return 0;
-> +}
-> +
-> +static int nt39016_enable(struct drm_panel *drm_panel)
-> +{
-> +	struct nt39016 *panel = to_nt39016(drm_panel);
-> +	int err;
-> +
-> +	err = regmap_write(panel->map, NT39016_REG_SYSTEM, 0x07);
-> +	if (err) {
-> +		dev_err(panel->dev, "Unable to enable panel: %i", err);
-> +		return err;
-> +	}
-> +
-> +	/* Wait for the picture to be ready before enabling backlight */
-> +	msleep(150);
-> +
-> +	if (panel->backlight) {
-> +		panel->backlight->props.state &= ~BL_CORE_FBBLANK;
-> +		panel->backlight->props.power = FB_BLANK_UNBLANK;
-> +		backlight_update_status(panel->backlight);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int nt39016_disable(struct drm_panel *drm_panel)
-> +{
-> +	struct nt39016 *panel = to_nt39016(drm_panel);
-> +	int err;
-> +
-> +	if (panel->backlight) {
-> +		panel->backlight->props.power = FB_BLANK_POWERDOWN;
-> +		panel->backlight->props.state |= BL_CORE_FBBLANK;
-> +		backlight_update_status(panel->backlight);
-> +	}
-> +
-> +	err = regmap_write(panel->map, NT39016_REG_SYSTEM, 0x05);
-> +	if (err) {
-> +		dev_err(panel->dev, "Unable to disable panel: %i", err);
-> +		return err;
-> +	}
-> +
-> +	return 0;
-> +}
-Can we get some nice constants for 0x04, 0x05 and 0x07?
-(All values written to NT39016_REG_SYSTEM).
-
-> +
-> +static int nt39016_get_modes(struct drm_panel *drm_panel)
-> +{
-> +	struct nt39016 *panel = to_nt39016(drm_panel);
-> +	const struct nt39016_panel_info *panel_info = panel->panel_info;
-> +	struct drm_connector *connector = drm_panel->connector;
-> +	struct drm_display_mode *mode;
-> +
-> +	mode = drm_mode_duplicate(drm_panel->drm, &panel_info->display_mode);
-> +	if (!mode)
-> +		return -ENOMEM;
-> +
-> +	drm_mode_set_name(mode);
-> +
-> +	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
-> +	drm_mode_probed_add(connector, mode);
-> +
-> +	connector->display_info.bpc = 8;
-> +	connector->display_info.width_mm = panel_info->width_mm;
-> +	connector->display_info.height_mm = panel_info->height_mm;
-> +
-> +	drm_display_info_set_bus_formats(&connector->display_info,
-> +					 &panel_info->bus_format, 1);
-> +	connector->display_info.bus_flags = panel_info->bus_flags;
-> +
-> +	return 1;
-> +}
-> +
-> +static const struct drm_panel_funcs nt39016_funcs = {
-> +	.prepare	= nt39016_prepare,
-> +	.unprepare	= nt39016_unprepare,
-> +	.enable		= nt39016_enable,
-> +	.disable	= nt39016_disable,
-> +	.get_modes	= nt39016_get_modes,
-> +};
-> +
-> +static int nt39016_probe(struct spi_device *spi)
-> +{
-> +	struct device *dev = &spi->dev;
-> +	struct nt39016 *panel;
-> +	int err;
-> +
-> +	panel = devm_kzalloc(dev, sizeof(*panel), GFP_KERNEL);
-> +	if (!panel)
-> +		return -ENOMEM;
-> +
-> +	panel->dev = dev;
-> +	spi_set_drvdata(spi, panel);
-> +
-> +	panel->panel_info = of_device_get_match_data(dev);
-> +	if (!panel->panel_info)
-> +		return -EINVAL;
-> +
-> +	panel->supply = devm_regulator_get(dev, "power");
-> +	if (IS_ERR(panel->supply)) {
-> +		dev_err(dev, "Failed to get power supply");
-> +		return PTR_ERR(panel->supply);
-> +	}
-> +
-> +	panel->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
-> +	if (IS_ERR(panel->reset_gpio)) {
-> +		dev_err(dev, "Failed to get reset GPIO");
-> +		return PTR_ERR(panel->reset_gpio);
-> +	}
-> +
-> +	spi->bits_per_word = 8;
-> +	spi->mode = SPI_MODE_3 | SPI_3WIRE;
-> +	err = spi_setup(spi);
-> +	if (err) {
-> +		dev_err(dev, "Failed to setup SPI");
-> +		return err;
-> +	}
-> +
-> +	panel->map = devm_regmap_init_spi(spi, &nt39016_regmap_config);
-> +	if (IS_ERR(panel->map)) {
-> +		dev_err(dev, "Failed to init regmap");
-> +		return PTR_ERR(panel->map);
-> +	}
-> +
-> +	panel->backlight = devm_of_find_backlight(dev);
-> +	if (IS_ERR(panel->backlight)) {
-> +		err = PTR_ERR(panel->backlight);
-> +		if (err != -EPROBE_DEFER)
-> +			dev_err(dev, "Failed to get backlight handle");
-> +		return err;
-> +	}
-> +
-> +	drm_panel_init(&panel->drm_panel);
-> +	panel->drm_panel.dev = dev;
-> +	panel->drm_panel.funcs = &nt39016_funcs;
-> +
-> +	err = drm_panel_add(&panel->drm_panel);
-> +	if (err < 0) {
-> +		dev_err(dev, "Failed to register panel");
-> +		goto err_free_backlight;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_free_backlight:
-> +	if (panel->backlight)
-> +		put_device(&panel->backlight->dev);
-When devm_xxx is used for backlight, the above is not needed.
-
-Consider to write error codes for all what can fail in probe().
-It may help you later when diving into logs.
-
-> +
-> +static int nt39016_remove(struct spi_device *spi)
-> +{
-> +	struct nt39016 *panel = spi_get_drvdata(spi);
-> +
-> +	drm_panel_remove(&panel->drm_panel);
-> +
-> +	nt39016_disable(&panel->drm_panel);
-> +	nt39016_unprepare(&panel->drm_panel);
-> +
-> +	if (panel->backlight)
-> +		put_device(&panel->backlight->dev);
-Not needed.
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct nt39016_panel_info kd035g6_info = {
-> +	.display_mode = {
-> +		.clock = 6000,
-> +		.hdisplay = 320,
-> +		.hsync_start = 320 + 10,
-> +		.hsync_end = 320 + 10 + 50,
-> +		.htotal = 320 + 10 + 50 + 20,
-> +		.vdisplay = 240,
-> +		.vsync_start = 240 + 5,
-> +		.vsync_end = 240 + 5 + 1,
-> +		.vtotal = 240 + 5 + 1 + 4,
-> +		.vrefresh = 60,
-> +		.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
-> +	},
-> +	.width_mm = 71,
-> +	.height_mm = 53,
-> +	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-> +	.bus_flags = DRM_BUS_FLAG_PIXDATA_NEGEDGE,
-> +};
-Everything specified - good!
-
-> +
-> +static const struct of_device_id nt39016_of_match[] = {
-> +	{ .compatible = "kingdisplay,kd035g6-54nt", .data = &kd035g6_info },
-> +	{},
-Maybe write { /* sentinel */ } like many other drivers.
-> +};
-> +MODULE_DEVICE_TABLE(of, nt39016_of_match);
-> +
-> +static struct spi_driver nt39016_driver = {
-> +	.driver = {
-> +		.name = "nt39016",
-> +		.of_match_table = nt39016_of_match,
-> +	},
-> +	.probe = nt39016_probe,
-> +	.remove = nt39016_remove,
-> +};
-> +
-> +module_spi_driver(nt39016_driver);
-> +
-> +MODULE_AUTHOR("Maarten ter Huurne <maarten@treewalker.org>");
-> +MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
-> +MODULE_LICENSE("GPL v2");
+>
+> The reason is that in the current state the core code creates the
+> first domain before the driver has a chance to intervene and tell it
+> not to.  And this results that driver ends up using a different
+> context bank on the iommu than what the firmware expects.
+>
+> I guess the alternative is to put some property in DT.. but that
+> doesn't really feel right.  I guess there aren't really many (or any?)
+> other drivers that have this specific problem, so I don't really
+> expect it to be a scaling problem.
+>
+> Yeah, it's a bit ugly, but I'll take a small ugly working hack, over
+> elegant but non-working any day ;-)... but if someone has a better
+> idea then I'm all ears.
+>
+> BR,
+> -R
