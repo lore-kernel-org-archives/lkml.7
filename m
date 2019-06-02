@@ -2,117 +2,141 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA431C282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 08:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE054C282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 08:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73FF12788C
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 08:28:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QSOIKTSG"
+	by mail.kernel.org (Postfix) with ESMTP id B90F12788C
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 08:36:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726212AbfFBI2U (ORCPT
+        id S1726410AbfFBIgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 04:28:20 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37220 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725939AbfFBI2U (ORCPT
+        Sun, 2 Jun 2019 04:36:52 -0400
+Received: from [176.110.122.116] ([176.110.122.116]:52152 "EHLO
+        ocean.emcraft.com" rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org
+        with ESMTP id S1725925AbfFBIgw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 04:28:20 -0400
-Received: by mail-wr1-f66.google.com with SMTP id h1so9219556wro.4
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 01:28:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WnNi9KkC4U+mIhXiCVi96pOXS/XmFU28bKFjrsJQpfY=;
-        b=QSOIKTSGa2YueIbuOgCUlbVf4/H4ir6PyaElNxFbkoz+rmtLL4YyRmskp/q+r/ScPR
-         mEUGT8rhc7UvlMCP+pQzH9Tj3XOK5qxHibwDGdmYFGZ676C1tLe9mkLFnzCfkR3Rggei
-         3GmyH67W4Aa6J5jdNr/IkzXJ4Chdt39vUP4P7fBvkXowwC2h/GUYpiZjBnW3tz2D9xjH
-         eEUHxymjFKxekx9IBq9J3a+NLbynIT782F044lNF5p78C6xp6jH8tqCn1fcFuy7SjKLp
-         zHaImxaigsJ3MkkB0sdkunuK9bb3sGFuQVEl6plBZBIUtpy7NVexFKYxZwoEfcc3RAk2
-         ZerA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WnNi9KkC4U+mIhXiCVi96pOXS/XmFU28bKFjrsJQpfY=;
-        b=FpD1waO6eluSSmfsnGcS+vX4MgAQkzO0cz+HEJ+m/N5I/huqpbd8t3zfUp8vQqS8KA
-         rG03c084gebixYxORghUNR5S5GIdMoCqX33ku317qWBHLrf4f1OChsThsin3wLj97Cpk
-         UK6Qm7Zg4xxLl1jWwK6PS45rEiIeiiLA72k2Cc/0tFfrMC8laYBwe6sxWgpKTvRA3O/u
-         gQPx88uOcYC6JEWZWREUmo2AlFbvtl9uVLf1gH4mMYOW9wX7AT10y3h6max6fUaih1jR
-         +oJf7GSL4pOGDK/imspDKRyNOqOvokGrChbhydcLJ1s8g2b0U6Ws230nh0l4SK9JSJGL
-         J6Tg==
-X-Gm-Message-State: APjAAAU3c5QxqImB28mSbgKwlh//hH8jB5YvI8/aYamqgUy1U7brC7p1
-        nHGYNLgFG+9kIqLTIQJeOvA=
-X-Google-Smtp-Source: APXvYqwtRn6icomP8dU6EUlNiNqfA6oW0HYJpH6eAFdqakg1ERF0j3ZrKujTsTiiS6+vj957Pw8Yhw==
-X-Received: by 2002:a5d:6144:: with SMTP id y4mr12532929wrt.84.1559464098333;
-        Sun, 02 Jun 2019 01:28:18 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:8108:96bf:e0ab:2b68:5d76:a12a:e6ba])
-        by smtp.gmail.com with ESMTPSA id 32sm34252041wra.35.2019.06.02.01.28.17
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 02 Jun 2019 01:28:17 -0700 (PDT)
-From:   Michael Straube <straube.linux@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH] staging: rtl8188eu: remove ODM_PhyStatusQuery() wrapper
-Date:   Sun,  2 Jun 2019 10:28:00 +0200
-Message-Id: <20190602082800.5846-1-straube.linux@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Sun, 2 Jun 2019 04:36:52 -0400
+X-Greylist: delayed 4503 seconds by postgrey-1.27 at vger.kernel.org; Sun, 02 Jun 2019 04:36:51 EDT
+Received: from [10.8.0.10] (helo=mehome.localdomain)
+        by ocean.emcraft.com with esmtps (TLSv1:AES256-SHA:256)
+        (Exim 4.76)
+        (envelope-from <sposelenov@emcraft.com>)
+        id 1hXKoA-0002FG-S7; Sun, 02 Jun 2019 10:21:37 +0300
+Message-ID: <34079b6a34abbad5ab13925dc004e397f70524e3.camel@emcraft.com>
+Subject: Re: [PATCH] binfmt_flat: make load_flat_shared_library() work
+From:   Sergei Poselenov <sposelenov@emcraft.com>
+To:     Arnd Bergmann <arnd@arndb.de>, Greg Ungerer <gerg@linux-m68k.org>
+Cc:     arch@emcraft.com, Jann Horn <jannh@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nicolas Pitre <nicolas.pitre@linaro.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linux/m68k <linux-m68k@vger.kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Date:   Sun, 02 Jun 2019 10:21:33 +0300
+In-Reply-To: <CAK8P3a0b7MBn+84jh0Y2zhFLLAqZ2tMvFDFF9Kw=breRLH4Utg@mail.gmail.com>
+References: <20190524201817.16509-1-jannh@google.com>
+         <20190525144304.e2b9475a18a1f78a964c5640@linux-foundation.org>
+         <CAG48ez36xJ9UA8gWef3+1rHQwob5nb8WP3RqnbT8GEOV9Z38jA@mail.gmail.com>
+         <6956cfe5-90d4-aad4-48e3-66b0ece91fed@linux-m68k.org>
+         <CAK8P3a0b7MBn+84jh0Y2zhFLLAqZ2tMvFDFF9Kw=breRLH4Utg@mail.gmail.com>
+Organization: Emcraft Systems
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Function ODM_PhyStatusQuery() is just a wrapper around
-ODM_PhyStatusQuery_92CSeries(). Rename ODM_PhyStatusQuery_92CSeries()
-to ODM_PhyStatusQuery() and remove the wrapper.
+Hello Arnd, all,
 
-Signed-off-by: Michael Straube <straube.linux@gmail.com>
----
- drivers/staging/rtl8188eu/hal/odm_hwconfig.c | 15 +++------------
- 1 file changed, 3 insertions(+), 12 deletions(-)
+On Wed, 2019-05-29 at 14:05 +0200, Arnd Bergmann wrote:
+> On Tue, May 28, 2019 at 12:56 PM Greg Ungerer <gerg@linux-m68k.org>
+> wrote:
+> > On 27/5/19 11:38 pm, Jann Horn wrote:
+> > > On Sat, May 25, 2019 at 11:43 PM Andrew Morton
+> > > <akpm@linux-foundation.org> wrote:
+> > > > On Fri, 24 May 2019 22:18:17 +0200 Jann Horn <jannh@google.com>
+> > > > wrote:
+> > > > > load_flat_shared_library() is broken: It only calls
+> > > > > load_flat_file() if
+> > > > > prepare_binprm() returns zero, but prepare_binprm() returns
+> > > > > the number of
+> > > > > bytes read - so this only happens if the file is empty.
+> > > > 
+> > > > ouch.
+> > > > 
+> > > > > Instead, call into load_flat_file() if the number of bytes
+> > > > > read is
+> > > > > non-negative. (Even if the number of bytes is zero - in that
+> > > > > case,
+> > > > > load_flat_file() will see nullbytes and return a nice
+> > > > > -ENOEXEC.)
+> > > > > 
+> > > > > In addition, remove the code related to bprm creds and stop
+> > > > > using
+> > > > > prepare_binprm() - this code is loading a library, not a main
+> > > > > executable,
+> > > > > and it only actually uses the members "buf", "file" and
+> > > > > "filename" of the
+> > > > > linux_binprm struct. Instead, call kernel_read() directly.
+> > > > > 
+> > > > > Cc: stable@vger.kernel.org
+> > > > > Fixes: 287980e49ffc ("remove lots of IS_ERR_VALUE abuses")
+> > > > > Signed-off-by: Jann Horn <jannh@google.com>
+> > > > > ---
+> > > > > I only found the bug by looking at the code, I have not
+> > > > > verified its
+> > > > > existence at runtime.
+> > > > > Also, this patch is compile-tested only.
+> > > > > It would be nice if someone who works with nommu Linux could
+> > > > > have a
+> > > > > look at this patch.
+> > > > 
+> > > > 287980e49ffc was three years ago!  Has it really been broken
+> > > > for all
+> > > > that time?  If so, it seems a good source of freed disk
+> > > > space...
+> > > 
+> > > Maybe... but I didn't want to rip it out without having one of
+> > > the
+> > > maintainers confirm that this really isn't likely to be used
+> > > anymore.
+> > 
+> > I have not used shared libraries on m68k non-mmu setups for
+> > a very long time. At least 10 years I would think.
+> 
+> I think Emcraft have a significant customer base running ARM NOMMU
+> Linux, I wonder whether they would have run into this (adding
+> Sergei to Cc).
+> My suspicion is that they use only binfmt-elf-fdpic, not binfmt-flat.
+> 
 
-diff --git a/drivers/staging/rtl8188eu/hal/odm_hwconfig.c b/drivers/staging/rtl8188eu/hal/odm_hwconfig.c
-index 149b0009ad66..d5a9ac51e907 100644
---- a/drivers/staging/rtl8188eu/hal/odm_hwconfig.c
-+++ b/drivers/staging/rtl8188eu/hal/odm_hwconfig.c
-@@ -387,10 +387,9 @@ static void odm_Process_RSSIForDM(struct odm_dm_struct *dm_odm,
- }
- 
- /*  Endianness before calling this API */
--static void ODM_PhyStatusQuery_92CSeries(struct odm_dm_struct *dm_odm,
--					 struct odm_phy_status_info *pPhyInfo,
--					 u8 *pPhyStatus,
--					 struct odm_per_pkt_info *pPktinfo)
-+void ODM_PhyStatusQuery(struct odm_dm_struct *dm_odm,
-+			struct odm_phy_status_info *pPhyInfo,
-+			u8 *pPhyStatus, struct odm_per_pkt_info *pPktinfo)
- {
- 	odm_RxPhyStatus92CSeries_Parsing(dm_odm, pPhyInfo, pPhyStatus,
- 					 pPktinfo);
-@@ -398,12 +397,4 @@ static void ODM_PhyStatusQuery_92CSeries(struct odm_dm_struct *dm_odm,
- 		;/*  Select the packets to do RSSI checking for antenna switching. */
- 	else
- 		odm_Process_RSSIForDM(dm_odm, pPhyInfo, pPktinfo);
--
--}
--
--void ODM_PhyStatusQuery(struct odm_dm_struct *dm_odm,
--			struct odm_phy_status_info *pPhyInfo,
--			u8 *pPhyStatus, struct odm_per_pkt_info *pPktinfo)
--{
--	ODM_PhyStatusQuery_92CSeries(dm_odm, pPhyInfo, pPhyStatus, pPktinfo);
- }
--- 
-2.21.0
+We use both, acutally, but all-static. We don't support shared
+libraries with bFLT or ELF FDPIC.
+
+Kind regards,
+Sergei
+> The only architectures I see that enable binfmt-flat are sh, xtensa
+> and h8300, but only arch/sh uses CONFIG_BINFMT_SHARED_FLAT
+> for a few machine specific configurations, and I'm in turn fairly
+> sure
+> those machines have not run a recent kernel in many years.
+> 
+> The one SH nommu platform likely to have users is j2, and that is
+> probably always used with musl-libc with elf-fdpic (given that
+> Rich Felker maintains both the kernel port and the library).
+> 
+>       Arnd
+> 
 
