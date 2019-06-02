@@ -2,79 +2,117 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3265BC282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 08:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA431C282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 08:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC17027884
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 08:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73FF12788C
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 08:28:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Ll60+3BZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QSOIKTSG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfFBIGf (ORCPT
+        id S1726212AbfFBI2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 04:06:35 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38317 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726122AbfFBIGe (ORCPT
+        Sun, 2 Jun 2019 04:28:20 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37220 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725939AbfFBI2U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 04:06:34 -0400
-Received: by mail-wm1-f65.google.com with SMTP id t5so8381731wmh.3
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 01:06:33 -0700 (PDT)
+        Sun, 2 Jun 2019 04:28:20 -0400
+Received: by mail-wr1-f66.google.com with SMTP id h1so9219556wro.4
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 01:28:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:subject:message-id:user-agent:mime-version;
-        bh=i/hfo7Of2DjU/8nVgdxSdJ+UmmcoAojSd1TjlivmETA=;
-        b=Ll60+3BZiHid5SgkpYwizKijDVwyt1HV2OpUrbc8J8NB8P8r6CkJaxjXsjH35mxsCD
-         tAY8qqva2kAsJAXuLW/tH0H22Vrh9LIBQwrRo2l0HFsG0G0RnnYkDhvmnmVKFhV/rUDE
-         jN4FSaV7smkDgYCURREGflCB1u2TgSfDqe8W4IWO7djrzgfuOyybdt6OX5BSPbidfAwF
-         +lyTjoeZ+pebzC4o5M2gO2ZX5cXaApOwDiyknZZnqqiC1AM1Us07ptkVViKOYJrMDv10
-         8iFPjgvLgsXjiPMBOFj79emU3G/kHTaAJz8+2rWoLMuVaeMPiOQmTZBQTGfnzo1dxwdw
-         XADA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WnNi9KkC4U+mIhXiCVi96pOXS/XmFU28bKFjrsJQpfY=;
+        b=QSOIKTSGa2YueIbuOgCUlbVf4/H4ir6PyaElNxFbkoz+rmtLL4YyRmskp/q+r/ScPR
+         mEUGT8rhc7UvlMCP+pQzH9Tj3XOK5qxHibwDGdmYFGZ676C1tLe9mkLFnzCfkR3Rggei
+         3GmyH67W4Aa6J5jdNr/IkzXJ4Chdt39vUP4P7fBvkXowwC2h/GUYpiZjBnW3tz2D9xjH
+         eEUHxymjFKxekx9IBq9J3a+NLbynIT782F044lNF5p78C6xp6jH8tqCn1fcFuy7SjKLp
+         zHaImxaigsJ3MkkB0sdkunuK9bb3sGFuQVEl6plBZBIUtpy7NVexFKYxZwoEfcc3RAk2
+         ZerA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:user-agent
-         :mime-version;
-        bh=i/hfo7Of2DjU/8nVgdxSdJ+UmmcoAojSd1TjlivmETA=;
-        b=B5FL7Iz5suddnuSTzdbeiOLoCN3ueyBI0vrxXQvOV+33WzwPZIQdng5bU7lfrtRKcV
-         ult8XEvwUM40WyW8gF21DELN+Hpnp6BQTJMCWDsgzdUDtcg1OGlFQMbnCHL1jY6ZpepE
-         dsxr58UbxGAWeaIfEdcdpZjwbDOoszop5WE0xtqVGaUihceqDlvyWaqQZfYrxqseXtUy
-         4FUdWbV9SUgp7YKeL4uzC78C1C36S07MN9HrvuAqP7WYB4OxnvBwHja5YT8Z/pJpgMkl
-         Q2Ahm5eLw1kwss2UcvmAzSEfLk+6Th8LAB5m6+SvbZ0SrVYB+PTj45L67xHaXMl8rKx1
-         IfuA==
-X-Gm-Message-State: APjAAAWzaD6/7P7fRtc4J7vcHGD+d4Q9jePEJR1Kacdhh7P/kmpoihG2
-        ociAySQBVFwRvoHk3LTeBoOgMrokFnE=
-X-Google-Smtp-Source: APXvYqwZ99le5sUXEkN7ObI0zUL2ItWFAbjGlxqe/xcop0Jrfu7KDtSlyao4dJAC/Ft0y4H32SIjeA==
-X-Received: by 2002:a1c:6346:: with SMTP id x67mr6301480wmb.16.1559462792596;
-        Sun, 02 Jun 2019 01:06:32 -0700 (PDT)
-Received: from localhost (217-76-161-89.static.highway.a1.net. [217.76.161.89])
-        by smtp.gmail.com with ESMTPSA id l7sm4605025wrt.71.2019.06.02.01.06.31
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WnNi9KkC4U+mIhXiCVi96pOXS/XmFU28bKFjrsJQpfY=;
+        b=FpD1waO6eluSSmfsnGcS+vX4MgAQkzO0cz+HEJ+m/N5I/huqpbd8t3zfUp8vQqS8KA
+         rG03c084gebixYxORghUNR5S5GIdMoCqX33ku317qWBHLrf4f1OChsThsin3wLj97Cpk
+         UK6Qm7Zg4xxLl1jWwK6PS45rEiIeiiLA72k2Cc/0tFfrMC8laYBwe6sxWgpKTvRA3O/u
+         gQPx88uOcYC6JEWZWREUmo2AlFbvtl9uVLf1gH4mMYOW9wX7AT10y3h6max6fUaih1jR
+         +oJf7GSL4pOGDK/imspDKRyNOqOvokGrChbhydcLJ1s8g2b0U6Ws230nh0l4SK9JSJGL
+         J6Tg==
+X-Gm-Message-State: APjAAAU3c5QxqImB28mSbgKwlh//hH8jB5YvI8/aYamqgUy1U7brC7p1
+        nHGYNLgFG+9kIqLTIQJeOvA=
+X-Google-Smtp-Source: APXvYqwtRn6icomP8dU6EUlNiNqfA6oW0HYJpH6eAFdqakg1ERF0j3ZrKujTsTiiS6+vj957Pw8Yhw==
+X-Received: by 2002:a5d:6144:: with SMTP id y4mr12532929wrt.84.1559464098333;
+        Sun, 02 Jun 2019 01:28:18 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:8108:96bf:e0ab:2b68:5d76:a12a:e6ba])
+        by smtp.gmail.com with ESMTPSA id 32sm34252041wra.35.2019.06.02.01.28.17
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 02 Jun 2019 01:06:32 -0700 (PDT)
-Date:   Sun, 2 Jun 2019 01:06:29 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, devicetree@vger.kernel.org
-Subject: Sorry for the extra noise
-Message-ID: <alpine.DEB.2.21.9999.1906020105161.9338@viisi.sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Sun, 02 Jun 2019 01:28:17 -0700 (PDT)
+From:   Michael Straube <straube.linux@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        Michael Straube <straube.linux@gmail.com>
+Subject: [PATCH] staging: rtl8188eu: remove ODM_PhyStatusQuery() wrapper
+Date:   Sun,  2 Jun 2019 10:28:00 +0200
+Message-Id: <20190602082800.5846-1-straube.linux@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Function ODM_PhyStatusQuery() is just a wrapper around
+ODM_PhyStatusQuery_92CSeries(). Rename ODM_PhyStatusQuery_92CSeries()
+to ODM_PhyStatusQuery() and remove the wrapper.
 
-Sorry for the extra noise on the recent DT patch series posts.  It seems 
-my patch posting scripts malfunctioned.
+Signed-off-by: Michael Straube <straube.linux@gmail.com>
+---
+ drivers/staging/rtl8188eu/hal/odm_hwconfig.c | 15 +++------------
+ 1 file changed, 3 insertions(+), 12 deletions(-)
 
+diff --git a/drivers/staging/rtl8188eu/hal/odm_hwconfig.c b/drivers/staging/rtl8188eu/hal/odm_hwconfig.c
+index 149b0009ad66..d5a9ac51e907 100644
+--- a/drivers/staging/rtl8188eu/hal/odm_hwconfig.c
++++ b/drivers/staging/rtl8188eu/hal/odm_hwconfig.c
+@@ -387,10 +387,9 @@ static void odm_Process_RSSIForDM(struct odm_dm_struct *dm_odm,
+ }
+ 
+ /*  Endianness before calling this API */
+-static void ODM_PhyStatusQuery_92CSeries(struct odm_dm_struct *dm_odm,
+-					 struct odm_phy_status_info *pPhyInfo,
+-					 u8 *pPhyStatus,
+-					 struct odm_per_pkt_info *pPktinfo)
++void ODM_PhyStatusQuery(struct odm_dm_struct *dm_odm,
++			struct odm_phy_status_info *pPhyInfo,
++			u8 *pPhyStatus, struct odm_per_pkt_info *pPktinfo)
+ {
+ 	odm_RxPhyStatus92CSeries_Parsing(dm_odm, pPhyInfo, pPhyStatus,
+ 					 pPktinfo);
+@@ -398,12 +397,4 @@ static void ODM_PhyStatusQuery_92CSeries(struct odm_dm_struct *dm_odm,
+ 		;/*  Select the packets to do RSSI checking for antenna switching. */
+ 	else
+ 		odm_Process_RSSIForDM(dm_odm, pPhyInfo, pPktinfo);
+-
+-}
+-
+-void ODM_PhyStatusQuery(struct odm_dm_struct *dm_odm,
+-			struct odm_phy_status_info *pPhyInfo,
+-			u8 *pPhyStatus, struct odm_per_pkt_info *pPktinfo)
+-{
+-	ODM_PhyStatusQuery_92CSeries(dm_odm, pPhyInfo, pPhyStatus, pPktinfo);
+ }
+-- 
+2.21.0
 
-- Paul
