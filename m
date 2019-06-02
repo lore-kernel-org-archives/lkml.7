@@ -2,62 +2,132 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00884C282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 14:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A6FC282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 14:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D150627907
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 14:36:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FE0C2794D
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 14:36:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfFBOgd (ORCPT
+        id S1726786AbfFBOgt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 10:36:33 -0400
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:1992 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726084AbfFBOgd (ORCPT
+        Sun, 2 Jun 2019 10:36:49 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:55696 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726084AbfFBOgs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 10:36:33 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R231e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TTDV.nj_1559486189;
-Received: from Alexs-MacBook-Pro.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TTDV.nj_1559486189)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sun, 02 Jun 2019 22:36:29 +0800
-Subject: Re: [PATCH 04/22] docs: zh_CN: get rid of basic_profiling.txt
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Harry Wei <harryxiyou@gmail.com>
-References: <cover.1559171394.git.mchehab+samsung@kernel.org>
- <81f5848d02cafb986d9145dbff17beb1e4427dea.1559171394.git.mchehab+samsung@kernel.org>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <a172f513-b26b-539a-c26f-08715448511e@linux.alibaba.com>
-Date:   Sun, 2 Jun 2019 22:36:28 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        Sun, 2 Jun 2019 10:36:48 -0400
+X-UUID: 6a1c0736c5ba410e8098854fab9cdcb0-20190602
+X-UUID: 6a1c0736c5ba410e8098854fab9cdcb0-20190602
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <ryder.lee@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 730077780; Sun, 02 Jun 2019 22:36:42 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Sun, 2 Jun 2019 22:36:41 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Sun, 2 Jun 2019 22:36:41 +0800
+Message-ID: <1559486201.2086.4.camel@mtkswgap22>
+Subject: Re: [PATCH v2 1/2] mt76: mt7615: enable support for mesh
+From:   Ryder Lee <ryder.lee@mediatek.com>
+To:     Felix Fietkau <nbd@nbd.name>
+CC:     Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
+        Yiwei Chung <yiwei.chung@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        "Chih-Min Chen" <chih-min.Chen@mediatek.com>,
+        <linux-wireless@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Sun, 2 Jun 2019 22:36:41 +0800
+In-Reply-To: <e459fbc79154da9e0e6e098d2c49a9b17e842f47.1559301203.git.ryder.lee@mediatek.com>
+References: <e459fbc79154da9e0e6e098d2c49a9b17e842f47.1559301203.git.ryder.lee@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-In-Reply-To: <81f5848d02cafb986d9145dbff17beb1e4427dea.1559171394.git.mchehab+samsung@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/5/30 7:23 上午, Mauro Carvalho Chehab wrote:
-> Changeset 5700d1974818 ("docs: Get rid of the "basic profiling" guide")
-> removed an old basic-profiling.txt file that was not updated over
-> the last 11 years and won't reflect the post-perf era.
+On Fri, 2019-05-31 at 22:09 +0800, Ryder Lee wrote:
+> Enable NL80211_IFTYPE_MESH_POINT and update its path.
 > 
-> It makes no sense to keep its translation, so get rid of it too.
-> 
-> Fixes: 5700d1974818 ("docs: Get rid of the "basic profiling" guide")
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 > ---
+> Changes since v2 - remove unused definitions
+> ---
+>  drivers/net/wireless/mediatek/mt76/mt7615/init.c | 6 ++++++
+>  drivers/net/wireless/mediatek/mt76/mt7615/main.c | 1 +
+>  drivers/net/wireless/mediatek/mt76/mt7615/mcu.c  | 5 ++++-
+>  drivers/net/wireless/mediatek/mt76/mt7615/mcu.h  | 6 ------
+>  4 files changed, 11 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/init.c b/drivers/net/wireless/mediatek/mt76/mt7615/init.c
+> index 59f604f3161f..f860af6a42da 100644
+> --- a/drivers/net/wireless/mediatek/mt76/mt7615/init.c
+> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/init.c
+> @@ -133,6 +133,9 @@ static const struct ieee80211_iface_limit if_limits[] = {
+>  	{
+>  		.max = MT7615_MAX_INTERFACES,
+>  		.types = BIT(NL80211_IFTYPE_AP) |
+> +#ifdef CONFIG_MAC80211_MESH
+> +			 BIT(NL80211_IFTYPE_MESH_POINT) |
+> +#endif
+>  			 BIT(NL80211_IFTYPE_STATION)
+>  	}
+>  };
+> @@ -195,6 +198,9 @@ int mt7615_register_device(struct mt7615_dev *dev)
+>  	dev->mt76.antenna_mask = 0xf;
+>  
+>  	wiphy->interface_modes = BIT(NL80211_IFTYPE_STATION) |
+> +#ifdef CONFIG_MAC80211_MESH
+> +				 BIT(NL80211_IFTYPE_MESH_POINT) |
+> +#endif
+>  				 BIT(NL80211_IFTYPE_AP);
+>  
+>  	ret = mt76_register_device(&dev->mt76, true, mt7615_rates,
+> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/main.c b/drivers/net/wireless/mediatek/mt76/mt7615/main.c
+> index b0bb7cc12385..585e67fa2728 100644
+> --- a/drivers/net/wireless/mediatek/mt76/mt7615/main.c
+> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/main.c
+> @@ -37,6 +37,7 @@ static int get_omac_idx(enum nl80211_iftype type, u32 mask)
+>  
+>  	switch (type) {
+>  	case NL80211_IFTYPE_AP:
+> +	case NL80211_IFTYPE_MESH_POINT:
+>  		/* ap use hw bssid 0 and ext bssid */
+>  		if (~mask & BIT(HW_BSSID_0))
+>  			return HW_BSSID_0;
+> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+> index 43f70195244c..8b8db526cb16 100644
+> --- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+> @@ -754,6 +754,7 @@ int mt7615_mcu_set_bss_info(struct mt7615_dev *dev,
+>  
+>  	switch (vif->type) {
+>  	case NL80211_IFTYPE_AP:
+> +	case NL80211_IFTYPE_MESH_POINT:
+>  		tx_wlan_idx = mvif->sta.wcid.idx;
+>  		conn_type = CONNECTION_INFRA_AP;
+>  		break;
+> @@ -968,7 +969,8 @@ int mt7615_mcu_add_wtbl(struct mt7615_dev *dev, struct ieee80211_vif *vif,
+>  		.rx_wtbl = {
+>  			.tag = cpu_to_le16(WTBL_RX),
+>  			.len = cpu_to_le16(sizeof(struct wtbl_rx)),
+> -			.rca1 = vif->type != NL80211_IFTYPE_AP,
+> +			.rca1 = vif->type != (NL80211_IFTYPE_AP ||
+> +					      NL80211_IFTYPE_MESH_POINT),
 
-Acked-by: Alex Shi <alex.shi@linux.alibaba.com>
+Oops, this expression is wrong. I will fix it in v3.
+Sorry for the inconvenience.
+
+Ryder
+
