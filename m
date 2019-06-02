@@ -2,136 +2,100 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 453F6C282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 09:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8740AC282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 09:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AFF1278AE
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 09:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56249278B6
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 09:58:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aren1K6a"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LdCHiT4i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbfFBJup (ORCPT
+        id S1726416AbfFBJ62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 05:50:45 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:34269 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725953AbfFBJuo (ORCPT
+        Sun, 2 Jun 2019 05:58:28 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:46969 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725953AbfFBJ62 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 05:50:44 -0400
-Received: by mail-ed1-f65.google.com with SMTP id c26so12007856edt.1;
-        Sun, 02 Jun 2019 02:50:43 -0700 (PDT)
+        Sun, 2 Jun 2019 05:58:28 -0400
+Received: by mail-lf1-f67.google.com with SMTP id l26so11250253lfh.13;
+        Sun, 02 Jun 2019 02:58:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=u3baPT6NnNJAMlA9vKWsPZmTx286jlZiMcP5rx6KNI4=;
-        b=aren1K6ad7kY70mRxgM7GGAHeiPHynWdd1Hu+YRCGCestJ6ZOp6Vn8iZyArxITse+L
-         xY44QEBj0ajHgEpyDFjLe6N9GONA38Csy7tzDua5ZPtMu9JNPH+kNugWNr4nY6qDr+Y7
-         NQ4JQJA7bewfz6YUBROYeiCzLIcJxzFoWeQR2Q06/lGA5onTbdLgLsXCll1aaZ3r0B6s
-         wdjbYnIiTpx7FIDCSCINAzxnjhHrBvPikI90HHtZCbtb5x96lihU7dP4WE/GN/b7g8Fk
-         bvGxIKfQt4QvK/JRFug3ln0Hyr2/pCRbVcx0Gjks6Qt2if8fQV9yDzfC+J1+BqFHYmu9
-         dbYA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=KXYdQUKOB+u8P8O0FLkc8ya3EQeBwf41WKBLmxzpcZ8=;
+        b=LdCHiT4iF98VJLu5ZMvzSz38dc/ItvhnlFx31mlMK2Vf03KnfWwFAHurWxS9nDTfXH
+         YcC1IeRkfRRjbbSQrK/aWXZiiEFk7LGQaF/FJaljcx3w/Qqlu9QupnVXYK7CRbhS5PpT
+         hdUqNvBFd2jxQROycjwwYDbeM1IMtpJXpKG4RTdyqLHwYW8Xh3ke4mHWBDf+c4Yn3QfU
+         mUB3PStp3TNNvFU6BbeYpD1qZdcqUoEtImPDIyjS2DCB0fqtjgiWB0jXM8saUF+17tLC
+         krLRcqcdtWrvSL65EjEt2exgMdB47g0GiUPV+9MkQ8sHpCna+vxtxtScZGvkpB65VfFN
+         figw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=u3baPT6NnNJAMlA9vKWsPZmTx286jlZiMcP5rx6KNI4=;
-        b=GHJK2+YzeG1atSe7JJQnvujHqmMH/vD402czuzF7l2L8LklgMdiVOuahzOKIwT13zV
-         ZHkqgU8TIzs90dDAvtc/iiHD6LthnRpJ7rCApojGhpbOXn3u6HRnrEt3WAI8B8mI0vwg
-         BkZPgYFCuNBgx8dHdBx2rGuUasWDOmOCucQIztRfJ5PftSV0uCrWNaePG1ZZ1HgjcHra
-         NQs2I62++yYAxXN4iLqpqKdwgCEGDV+vIug9BqSAUrUPveuPAAPzU3BRJFv6ZuBfTSLA
-         wjfgnOyXYHOtr/M3GSEivfTm0qMb6N/SbuuLDrXsvpLYGHKBnQMjpfpw+Ye9odphusmX
-         oZPA==
-X-Gm-Message-State: APjAAAXwt4u7isFeetnfsl/tr7nHjOl8862ymbqzliHwDK8rI9P2N44r
-        TlcI5a6YXnXu3SYW3EHMKmlFAyAi
-X-Google-Smtp-Source: APXvYqzB38n/Q4yzegdZMIIdoiBAEiswBxAFcY7WwOI4NRkOpe3Fo2xXsO5AZxyV5pHcFKQxMIYOMA==
-X-Received: by 2002:a50:ec87:: with SMTP id e7mr21698848edr.126.1559469042892;
-        Sun, 02 Jun 2019 02:50:42 -0700 (PDT)
-Received: from 640k.lan ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id o19sm850450eja.84.2019.06.02.02.50.41
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=KXYdQUKOB+u8P8O0FLkc8ya3EQeBwf41WKBLmxzpcZ8=;
+        b=lC5WGA9xM89xfPd4e9BBAzlaFcuPZQxbMButmR338z+uyr7LCB5oAkeVhhmkOeYpGg
+         1VYNGvGUKUn5A1fW3+Qhr8BDszMfu9ugNwbL4jBtfRTJZ2VdpXV/G5k1wl4/sWbhrZjg
+         QNUOV3CBWXLCBn/9CadIEcMhga+IqR1eVHjZjNrhV2lMBspK/7ZZIwVBduQ1S5Clib9t
+         ySXBuO3eHFy0jib1OkNrfBgh5qdGEFdXhMgKcmJ7AvWOX6gxYssQ9PHqlhRr8/HtL7cJ
+         nA96Zuv3cvZIqt6u/x3dc9sdYk2tHO4r2wF0Xofjk3+PCfpESfL6npqAGrgPxozPtAjL
+         NiIA==
+X-Gm-Message-State: APjAAAWuAAmxIiTZaFj40xjule8uLbUY5OycAkSSjjOwDYV2OV70ODnF
+        88XB+mG7WSw+e/ldExm9zym8xBJQGK4=
+X-Google-Smtp-Source: APXvYqxGmln9Il6VJ+XoG/EXc4W4C3KnoHhayvnOMRO5/QPDWyvfjM+mdMCh6OS1D1GVRiYbnEgijQ==
+X-Received: by 2002:a19:6e41:: with SMTP id q1mr3115326lfk.20.1559469506305;
+        Sun, 02 Jun 2019 02:58:26 -0700 (PDT)
+Received: from z50.localnet (109241207190.gdansk.vectranet.pl. [109.241.207.190])
+        by smtp.gmail.com with ESMTPSA id r11sm1660323ljh.90.2019.06.02.02.58.24
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 02 Jun 2019 02:50:41 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, rkrcmar@redhat.com,
-        kvm@vger.kernel.org
-Subject: [GIT PULL] KVM fixes for 5.2-rc3
-Date:   Sun,  2 Jun 2019 11:50:39 +0200
-Message-Id: <1559469039-42045-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        Sun, 02 Jun 2019 02:58:25 -0700 (PDT)
+From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Subject: Re: [RFC PATCH 4/5] media: ov6650: Fix frame scaling not reset on crop
+Date:   Sun, 02 Jun 2019 11:58:23 +0200
+Message-ID: <11387277.ecJxfdHps5@z50>
+In-Reply-To: <20190601223754.65soglqayxrblgzl@mara.localdomain>
+References: <20190526204758.1904-1-jmkrzyszt@gmail.com> <1933971.yMpNBnsSgY@z50> <20190601223754.65soglqayxrblgzl@mara.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+Hi Sakari,
 
-The following changes since commit cd6c84d8f0cdc911df435bb075ba22ce3c605b07:
+On Sunday, June 2, 2019 12:37:55 AM CEST Sakari Ailus wrote:
+> 
+> ... I realised that the subtle effect of "media:
+> ov6650: Register with asynchronous subdevice framework" is that the driver
+> is now responsible for serialising the access to its own data structures
+> now. 
 
-  Linux 5.2-rc2 (2019-05-26 16:49:19 -0700)
+Indeed, I must have been not thinking much while preparing it, only following 
+patterns from other implementations blindly, sorry.
 
-are available in the git repository at:
+> And it doesn't do that. Could you submit a fix, please? It'd be good to
+> get that to 5.2 through the fixes branch.
 
-  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+How about dropping that V4L2_SUBDEV_FL_HAS_DEVNODE flag for now?  I think that 
+will be the most safe approach for a quick fix.  I'd then re-add it together 
+with proper locking in a separate patch later.  What do yo think?
 
-for you to fetch changes up to f8d221d2e0e1572d0d60174c118e3554d1aa79fa:
+Thanks,
+Janusz
 
-  Merge tag 'kvm-s390-master-5.2-2' of git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux into kvm-master (2019-06-01 00:49:02 +0200)
 
-----------------------------------------------------------------
-
-Fixes for PPC and s390.
-
-----------------------------------------------------------------
-Christian Borntraeger (1):
-      kvm: fix compile on s390 part 2
-
-Cédric Le Goater (7):
-      KVM: PPC: Book3S HV: XIVE: Clear file mapping when device is released
-      KVM: PPC: Book3S HV: XIVE: Do not test the EQ flag validity when resetting
-      KVM: PPC: Book3S HV: XIVE: Fix the enforced limit on the vCPU identifier
-      KVM: PPC: Book3S HV: XIVE: Introduce a new mutex for the XIVE device
-      KVM: PPC: Book3S HV: XIVE: Do not clear IRQ data of passthrough interrupts
-      KVM: PPC: Book3S HV: XIVE: Take the srcu read lock when accessing memslots
-      KVM: PPC: Book3S HV: XIVE: Fix page offset when clearing ESB pages
-
-Paolo Bonzini (2):
-      Merge tag 'kvm-ppc-fixes-5.2-1' of git://git.kernel.org/.../paulus/powerpc into kvm-master
-      Merge tag 'kvm-s390-master-5.2-2' of git://git.kernel.org/.../kvms390/linux into kvm-master
-
-Paul Mackerras (5):
-      KVM: PPC: Book3S HV: Avoid touching arch.mmu_ready in XIVE release functions
-      KVM: PPC: Book3S HV: Use new mutex to synchronize MMU setup
-      KVM: PPC: Book3S: Use new mutex to synchronize access to rtas token list
-      KVM: PPC: Book3S HV: Don't take kvm->lock around kvm_for_each_vcpu
-      KVM: PPC: Book3S HV: Fix lockdep warning when entering guest on POWER9
-
-Suraj Jitindar Singh (1):
-      KVM: PPC: Book3S HV: Restore SPRG3 in kvmhv_p9_guest_entry()
-
-Thomas Huth (1):
-      KVM: s390: Do not report unusabled IDs via KVM_CAP_MAX_VCPU_ID
-
- arch/mips/kvm/mips.c                  |   3 +
- arch/powerpc/include/asm/kvm_host.h   |   2 +
- arch/powerpc/kvm/book3s.c             |   1 +
- arch/powerpc/kvm/book3s_64_mmu_hv.c   |  36 ++++++------
- arch/powerpc/kvm/book3s_hv.c          |  48 ++++++++++------
- arch/powerpc/kvm/book3s_rtas.c        |  14 ++---
- arch/powerpc/kvm/book3s_xive.c        |  55 +++++++++----------
- arch/powerpc/kvm/book3s_xive.h        |   1 +
- arch/powerpc/kvm/book3s_xive_native.c | 100 +++++++++++++++++++---------------
- arch/powerpc/kvm/powerpc.c            |   3 +
- arch/s390/kvm/kvm-s390.c              |   1 +
- arch/x86/kvm/x86.c                    |   3 +
- virt/kvm/arm/arm.c                    |   3 +
- virt/kvm/kvm_main.c                   |   4 +-
- 14 files changed, 157 insertions(+), 117 deletions(-)
