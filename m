@@ -2,72 +2,39 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C0BC46460
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 16:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F8ECC282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 16:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7DCE27983
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 16:35:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PmVtSjB7"
+	by mail.kernel.org (Postfix) with ESMTP id 1451D27977
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 16:41:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbfFBQfz (ORCPT
+        id S1726744AbfFBQlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 12:35:55 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38217 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbfFBQfq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 12:35:46 -0400
-Received: by mail-wr1-f66.google.com with SMTP id d18so9704887wrs.5
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 09:35:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=wWcxgEI3gs42SAaAZOA2b9Y+neLUp9KjqdAC8jB7QHQ=;
-        b=PmVtSjB7f/TOFWpB+2Q/vdiDC/y/WjxLBWpT23SHz8vsHy/i5nvOC7GCNJoxb7ltxk
-         nvX+h1438RNymOktsMGM8nKRWisn8Hhg4+AeXmHnJdEm/BeY+YR2lQFaaU1wtGIKanp3
-         EsOfq1KXs+Ut411etBiUeXsat/FA+CqwB28EAiT6IBOMklhGYQWy/gQGtCWWpTusNwlR
-         DDgVKHWKi2XGFF5AFA+e3tzI0isoqevl1mDrbad1aozr6xQgl6pP7O0VaCLL5NRi4BDo
-         fVeS/DmoOcKvKG78mYSNOLFywWF3cd3YA5KuI9tT7CmpePhO6FYG6TJ470QjEIdJVIfR
-         Ldww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=wWcxgEI3gs42SAaAZOA2b9Y+neLUp9KjqdAC8jB7QHQ=;
-        b=NEcr2qAehDoDWY1L54Chz0rleiOVgYMEqxTT3Wn5Q3l2c2bkcBfpSO5Pg3lWIGctNt
-         7tS3Uj0lALTr7gsFZLw5a7k5T97t0Iugj3Aih6Av0nyztsY5BUloO5zobcCc6UmMptS7
-         b3IgOO6OM2Td/uKSZA52cWVY0SM8MSmutxNyr8RdsiY2ZXMdN5EKtweVGRT982GN+xHu
-         UJQSTlkjhg9doj9DQOEODByus/jHN2wPqmYW5NraaLeZcOv+yKJu4nYTP6NiclL9AM11
-         tiNdV/R52gqyKyLlmbvXQGqk2BY6HGNa9ZJ91EX6MWiJrEHKbydncUelZsMJ9yDEGbuy
-         BJ4w==
-X-Gm-Message-State: APjAAAVhwWOZbUvypTyfN83vt4TT1/Umv5Hmx50nDqJUBcZqK1QRhF0W
-        rX0quAdumiSKXsnyVMJlUkk=
-X-Google-Smtp-Source: APXvYqx7op/7MpCSPePSRvMMp9c2IfcUO4+YSiAbeshsCOA5pXZyvI9CiP0SAE2kuxE3SH334Wd2KQ==
-X-Received: by 2002:adf:8306:: with SMTP id 6mr13626082wrd.155.1559493345342;
-        Sun, 02 Jun 2019 09:35:45 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:8108:96bf:e0ab:2b68:5d76:a12a:e6ba])
-        by smtp.gmail.com with ESMTPSA id c5sm6639273wma.19.2019.06.02.09.35.44
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 02 Jun 2019 09:35:44 -0700 (PDT)
-From:   Michael Straube <straube.linux@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH 2/2] staging: rtl8188eu: remove unused definitions from ieee80211.h
-Date:   Sun,  2 Jun 2019 18:35:28 +0200
-Message-Id: <20190602163528.28495-2-straube.linux@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190602163528.28495-1-straube.linux@gmail.com>
-References: <20190602163528.28495-1-straube.linux@gmail.com>
+        Sun, 2 Jun 2019 12:41:49 -0400
+Received: from foss.arm.com ([217.140.101.70]:40928 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726305AbfFBQls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Jun 2019 12:41:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0B19C374;
+        Sun,  2 Jun 2019 09:41:48 -0700 (PDT)
+Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C9EA83F246;
+        Sun,  2 Jun 2019 09:41:46 -0700 (PDT)
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     peterz@infradead.org, mingo@kernel.org, vincent.guittot@linaro.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH] sched/fair: Cleanup definition of NOHZ blocked load functions
+Date:   Sun,  2 Jun 2019 17:41:10 +0100
+Message-Id: <20190602164110.23231-1-valentin.schneider@arm.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <090C3AE4-55E4-45F3-AEAB-3E7F26FB7D6D@lca.pw>
+References: <090C3AE4-55E4-45F3-AEAB-3E7F26FB7D6D@lca.pw>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,30 +42,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MGMT_QUEUE_NUM, ETH_TYPE_LEN and PAYLOAD_TYPE_LEN are defined but
-not used in the driver code, so remove them.
+cfs_rq_has_blocked() and others_have_blocked() are only used within
+update_blocked_averages(). The !CONFIG_FAIR_GROUP_SCHED version of the
+latter calls them within a #define CONFIG_NO_HZ_COMMON block, whereas
+the CONFIG_FAIR_GROUP_SCHED one calls them unconditionnally.
 
-Signed-off-by: Michael Straube <straube.linux@gmail.com>
+As reported by Qian, the above leads to this warning in
+!CONFIG_NO_HZ_COMMON configs:
+
+  kernel/sched/fair.c: In function 'update_blocked_averages':
+  kernel/sched/fair.c:7750:7: warning: variable 'done' set but not used
+  [-Wunused-but-set-variable]
+
+It wouldn't be wrong to keep cfs_rq_has_blocked() and
+others_have_blocked() as they are, but since their only current use is
+to figure out when we can stop calling update_blocked_averages() on
+fully decayed NOHZ idle CPUs, we can give them a new definition for
+!CONFIG_NO_HZ_COMMON.
+
+Change the definition of cfs_rq_has_blocked() and
+others_have_blocked() for !CONFIG_NO_HZ_COMMON so that the
+NOHZ-specific blocks of update_blocked_averages() become no-ops and
+the 'done' variable gets optimised out.
+
+No change in functionality intended.
+
+Reported-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
 ---
- drivers/staging/rtl8188eu/include/ieee80211.h | 5 -----
- 1 file changed, 5 deletions(-)
+ kernel/sched/fair.c | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/staging/rtl8188eu/include/ieee80211.h b/drivers/staging/rtl8188eu/include/ieee80211.h
-index d43aa4304ca5..42ee4ebe90eb 100644
---- a/drivers/staging/rtl8188eu/include/ieee80211.h
-+++ b/drivers/staging/rtl8188eu/include/ieee80211.h
-@@ -12,11 +12,6 @@
- #include "wifi.h"
- #include <linux/wireless.h>
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index f35930f5e528..03919a316a03 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -7695,6 +7695,7 @@ static void attach_tasks(struct lb_env *env)
+ 	rq_unlock(env->dst_rq, &rf);
+ }
  
--#define MGMT_QUEUE_NUM 5
--
--#define ETH_TYPE_LEN		2
--#define PAYLOAD_TYPE_LEN	1
--
- #ifdef CONFIG_88EU_AP_MODE
++#ifdef CONFIG_NO_HZ_COMMON
+ static inline bool cfs_rq_has_blocked(struct cfs_rq *cfs_rq)
+ {
+ 	if (cfs_rq->avg.load_avg)
+@@ -7721,6 +7722,10 @@ static inline bool others_have_blocked(struct rq *rq)
  
- #define RTL_IOCTL_HOSTAPD (SIOCIWFIRSTPRIV + 28)
+ 	return false;
+ }
++#else
++static inline bool cfs_rq_has_blocked(struct cfs_rq *cfs_rq) { return false; }
++static inline bool others_have_blocked(struct rq *rq) { return false; }
++#endif
+ 
+ #ifdef CONFIG_FAIR_GROUP_SCHED
+ 
+@@ -7741,6 +7746,18 @@ static inline bool cfs_rq_is_decayed(struct cfs_rq *cfs_rq)
+ 	return true;
+ }
+ 
++#ifdef CONFIG_NO_HZ_COMMON
++static inline void update_blocked_load_status(struct rq *rq, bool has_blocked)
++{
++	rq->last_blocked_load_update_tick = jiffies;
++
++	if (!has_blocked)
++		rq->has_blocked_load = 0;
++}
++#else
++static inline void update_blocked_load_status(struct rq *rq, bool has_blocked) {}
++#endif
++
+ static void update_blocked_averages(int cpu)
+ {
+ 	struct rq *rq = cpu_rq(cpu);
+@@ -7787,11 +7804,7 @@ static void update_blocked_averages(int cpu)
+ 	if (others_have_blocked(rq))
+ 		done = false;
+ 
+-#ifdef CONFIG_NO_HZ_COMMON
+-	rq->last_blocked_load_update_tick = jiffies;
+-	if (done)
+-		rq->has_blocked_load = 0;
+-#endif
++	update_blocked_load_status(rq, !done);
+ 	rq_unlock_irqrestore(rq, &rf);
+ }
+ 
 -- 
-2.21.0
+2.20.1
 
