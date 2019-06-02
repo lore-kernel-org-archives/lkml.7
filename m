@@ -2,109 +2,106 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B78C282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 20:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 926D6C282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 20:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 236B027950
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 20:22:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66626278AF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 20:35:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mdnOW5bo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbfFBUWG (ORCPT
+        id S1726795AbfFBUfh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 16:22:06 -0400
-Received: from mail-it1-f198.google.com ([209.85.166.198]:51771 "EHLO
-        mail-it1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726485AbfFBUWG (ORCPT
+        Sun, 2 Jun 2019 16:35:37 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:33233 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726485AbfFBUfh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 16:22:06 -0400
-Received: by mail-it1-f198.google.com with SMTP id g1so13411359itd.1
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 13:22:05 -0700 (PDT)
+        Sun, 2 Jun 2019 16:35:37 -0400
+Received: by mail-lj1-f193.google.com with SMTP id v29so2962711ljv.0
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 13:35:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ua7Bg2WTXh54kp2rUqBSlcTuCgZgsqmLT8oZP4ysRwE=;
+        b=mdnOW5bofVv/5/qFr/LOVppZD9jE51jMdGume3hrgp2z/+0KL0LfX2a+FLaQ1PC1eH
+         9mkXoLmeN+JU5ulWliHHSAA1RSE577e2u7clzYMm+ZgQ8Io6bgT4b87nkmqobJqLNiL3
+         aPMYKoUTq9x+H69c/BFUMyCZdVAwG8/3so6Cy1LTQ1nKFpz8u0UF3Rqr+xfR8S2QILhQ
+         CdKKBGI2e/5bf4kcz6c3uWtlXdhcWG1k6Z0f/7odY+EJkxVx6vDH+a0wqpbIojIWGcNZ
+         JSzvM48cBA5vA+Raapu2hzogb1GHJHEfTF3kbe+LxkAzqAWI0mZXT/yBrlC3rLdEYtHo
+         DPkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=nm/6ER+q3h3p7sTnyVJsppuDHKrbGzPwoUfMZCDiitU=;
-        b=LetNtJzT5umyDjL35XgGve7rsvRxdiQDt4vwyn6dG3AUWgzeo39AdAXznYGuZq9Kc9
-         3RvRZLOKlKXCk//KyYoxe5nzg6wKRiYD4f6DLESChJYSDuogAlhbRN3ufI75vcCypH+m
-         npFeJKiV8noJLS6h/nZvr0eWCOmPOCFzmJzVvxGhGwvlG3ymDtxNJ/cHD/Ke76sh+hRF
-         oECqeypUkuE1xcpbz/ispao78n4YwRdgRo8vX2nM5Z+XLVxX+D7dlPYSFtHQ2jfkDnXc
-         kI0uG++lHkJcBIlZrQ33A8RyqHcW1RrvgnDS9S6HUGxOu+0MDN81mMhEY4gqql9f30dU
-         Pm/A==
-X-Gm-Message-State: APjAAAXBm3G3FHUTyKaRDvO/RO4ogOyCubyx5blVqcRCxR1k3RQs/sQ1
-        Kbe74m9fqga9BX/mGF12xOVkS45Ak4X45E8HSpqxp0vJlHGd
-X-Google-Smtp-Source: APXvYqxQFrUTlp580iEffCW3xPsgRer1omtAU0nI1TGqhLahdWMMLa63xxmOMwAlI+JCxnE0Es2ID4rmw2ObF6bcoZb4nORmgJNi
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ua7Bg2WTXh54kp2rUqBSlcTuCgZgsqmLT8oZP4ysRwE=;
+        b=R1N4p9naSYmlJ+ONPkAOjCg0IuTDQW72vJPRXSY5aFSeWVJ0tt7JnzBvqS7Xyhyp+j
+         QLHzxnqgRvl/IZU4VsuVTKB+ovKl4A3Fgh/SdrQUwAFDC1jHM16e5/MJg/VIUrA7tGPO
+         yCSdUpAOyvJ6JZM5oCvEAPAYphUxH7GDaTK7bQVIkx3zYU7V5+/c20k1VKm7D5uui/df
+         wOQiu0LxlLOc7/XG44SH8SWJYhi63I8Lgak8D8AKUzW1tGFqYeLBK811xZQcSJcLI4La
+         ARFM0FfeN7MrT9C5Cdy3fvJp/vNKOfkowHLiuyfqfmzDKDD2t7h85W0iYjA6NDAC/U7e
+         x1bQ==
+X-Gm-Message-State: APjAAAXgCWOE2FB75lph1GwFYBttH1OwseK4oE3VFdLCf2Du/XdVp21o
+        NqaL1U6Q4NE/heEs5jRyMRQ4g47WaAZNo5f6oK4J8g==
+X-Google-Smtp-Source: APXvYqwGsGMLL4jmNK+u3Vc4fpOIFYqvavFRPbb8kW41gazuGxmhrGq1xjBhRInORzT2HTZ0GULsW1cybw3CRQIPBYE=
+X-Received: by 2002:a2e:984a:: with SMTP id e10mr4150601ljj.113.1559507734458;
+ Sun, 02 Jun 2019 13:35:34 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:6006:: with SMTP id r6mr13572641iog.231.1559506925129;
- Sun, 02 Jun 2019 13:22:05 -0700 (PDT)
-Date:   Sun, 02 Jun 2019 13:22:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000004c134d058a5d0096@google.com>
-Subject: memory leak in sctp_v6_create_accept_sk
-From:   syzbot <syzbot+276ca1c77a19977c0130@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, linux-kernel@vger.kernel.org,
-        linux-sctp@vger.kernel.org, marcelo.leitner@gmail.com,
-        netdev@vger.kernel.org, nhorman@tuxdriver.com,
-        syzkaller-bugs@googlegroups.com, vyasevich@gmail.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20190529145322.20630-1-thierry.reding@gmail.com>
+ <20190529145322.20630-2-thierry.reding@gmail.com> <CACRpkda_aK++k0eVHmGszgts86usaxbQ9uU0kqAzAjapK8AOQg@mail.gmail.com>
+In-Reply-To: <CACRpkda_aK++k0eVHmGszgts86usaxbQ9uU0kqAzAjapK8AOQg@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sun, 2 Jun 2019 22:35:22 +0200
+Message-ID: <CACRpkdb6OjHZGgDHXH8gfi0WwzX8170zHJKbpbnSRv+UsZvfhw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] gpio: Add support for hierarchical IRQ domains
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Bitan Biswas <bbiswas@nvidia.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Sun, Jun 2, 2019 at 3:51 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Wed, May 29, 2019 at 4:53 PM Thierry Reding <thierry.reding@gmail.com> wrote:
+>
+> > From: Thierry Reding <treding@nvidia.com>
+> >
+> > Hierarchical IRQ domains can be used to stack different IRQ controllers
+> > on top of each other. One specific use-case where this can be useful is
+> > if a power management controller has top-level controls for wakeup
+> > interrupts. In such cases, the power management controller can be a
+> > parent to other interrupt controllers and program additional registers
+> > when an IRQ has its wake capability enabled or disabled.
+> >
+> > Signed-off-by: Thierry Reding <treding@nvidia.com>
+> > ---
+> > Changes in v3:
+> > - use irq_create_fwspec_mapping() instead of irq_domain_alloc_irqs()
+> > - add missing kerneldoc for new parent_domain field
+> > - keep IRQ_DOMAIN dependency for clarity
+>
+> Actually I applied the patch, and dropped the two lines making
+> it possible to override .to_irq() for now, so I can illustrate my
+> idea on top. If I manage.
 
-syzbot found the following crash on:
+Bah I rewrote the whole think as I want it, maybe my ideas are stupid
+but take a look at it, also very interested in input from the irqchip
+maintainers.
 
-HEAD commit:    3ab4436f Merge tag 'nfsd-5.2-1' of git://linux-nfs.org/~bf..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=153c64a6a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=50393f7bfe444ff6
-dashboard link: https://syzkaller.appspot.com/bug?extid=276ca1c77a19977c0130
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16195636a00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1717d286a00000
+Sending it out as RFC in a moment.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+276ca1c77a19977c0130@syzkaller.appspotmail.com
-
-ffffffffda RBX: 00000000006fbc38 RCX: 0000000000446b59
-BUG: memory leak
-unreferenced object 0xffff88812382ec40 (size 1512):
-   comm "syz-executor098", pid 7138, jiffies 4294945165 (age 7.780s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     0a 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  ...@............
-   backtrace:
-     [<0000000006e93bd5>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:55 [inline]
-     [<0000000006e93bd5>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<0000000006e93bd5>] slab_alloc mm/slab.c:3326 [inline]
-     [<0000000006e93bd5>] kmem_cache_alloc+0x134/0x270 mm/slab.c:3488
-     [<000000007da542cd>] sk_prot_alloc+0x41/0x170 net/core/sock.c:1596
-     [<00000000a4eabe8a>] sk_alloc+0x35/0x2f0 net/core/sock.c:1656
-     [<0000000053fa015e>] sctp_v6_create_accept_sk+0x5c/0x1b0  
-net/sctp/ipv6.c:711
-     [<000000008c31091c>] sctp_accept+0x1df/0x290 net/sctp/socket.c:4913
-     [<00000000ec8d71b8>] inet_accept+0x4e/0x1d0 net/ipv4/af_inet.c:734
-     [<000000001f5fe485>] __sys_accept4+0x12a/0x280 net/socket.c:1760
-     [<0000000070a98ea5>] __do_sys_accept net/socket.c:1801 [inline]
-     [<0000000070a98ea5>] __se_sys_accept net/socket.c:1798 [inline]
-     [<0000000070a98ea5>] __x64_sys_accept+0x20/0x30 net/socket.c:1798
-     [<000000004a076fbd>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<00000000d752b65c>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Yours,
+Linus Walleij
