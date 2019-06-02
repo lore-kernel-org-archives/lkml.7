@@ -2,127 +2,115 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19DECC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 06:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C007C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 07:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6FFB27849
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 06:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2F2027861
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 07:07:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726170AbfFBGYG (ORCPT
+        id S1726270AbfFBHHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 02:24:06 -0400
-Received: from sauhun.de ([88.99.104.3]:55462 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725871AbfFBGYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 02:24:05 -0400
-Received: from localhost (ip5b40b67c.dynamic.kabel-deutschland.de [91.64.182.124])
-        by pokefinder.org (Postfix) with ESMTPSA id B24BD2C3559;
-        Sun,  2 Jun 2019 08:24:02 +0200 (CEST)
-Date:   Sun, 2 Jun 2019 08:24:02 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Rosin <peda@axentia.se>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PULL REQUEST] i2c for 5.2
-Message-ID: <20190602062356.GA1616@kunai>
+        Sun, 2 Jun 2019 03:07:16 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:52690 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725871AbfFBHHQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Jun 2019 03:07:16 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 09A7780353; Sun,  2 Jun 2019 09:00:04 +0200 (CEST)
+Date:   Sun, 2 Jun 2019 09:00:14 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
+        kernel-hardening@lists.openwall.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        neilb@suse.com, netdev@vger.kernel.org, oleg@redhat.com,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>, peterz@infradead.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, rcu@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [RFC 2/6] ipv4: add lockdep condition to fix for_each_entry
+Message-ID: <20190602070014.GA543@amd>
+References: <20190601222738.6856-1-joel@joelfernandes.org>
+ <20190601222738.6856-3-joel@joelfernandes.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="9jxsPFA5p3P2qPhR"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="u3/rZRmxL6MmkK24"
 Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190601222738.6856-3-joel@joelfernandes.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---9jxsPFA5p3P2qPhR
+--u3/rZRmxL6MmkK24
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Linus,
+On Sat 2019-06-01 18:27:34, Joel Fernandes (Google) wrote:
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-I2C has for you a memleak fix for the core, two driver bugfixes, as well
-as fixing missing file patterns to MAINTAINERS.
+This really needs to be merged to previous patch, you can't break
+compilation in middle of series...
 
-Please pull.
+Or probably you need hlist_for_each_entry_rcu_lockdep() macro with
+additional argument, and switch users to it.
+								Pavel
 
-Thanks,
+>  net/ipv4/fib_frontend.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/net/ipv4/fib_frontend.c b/net/ipv4/fib_frontend.c
+> index b298255f6fdb..ef7c9f8e8682 100644
+> --- a/net/ipv4/fib_frontend.c
+> +++ b/net/ipv4/fib_frontend.c
+> @@ -127,7 +127,8 @@ struct fib_table *fib_get_table(struct net *net, u32 =
+id)
+>  	h =3D id & (FIB_TABLE_HASHSZ - 1);
+> =20
+>  	head =3D &net->ipv4.fib_table_hash[h];
+> -	hlist_for_each_entry_rcu(tb, head, tb_hlist) {
+> +	hlist_for_each_entry_rcu(tb, head, tb_hlist,
+> +				 lockdep_rtnl_is_held()) {
+>  		if (tb->tb_id =3D=3D id)
+>  			return tb;
+>  	}
 
-   Wolfram
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-
-The following changes since commit cd6c84d8f0cdc911df435bb075ba22ce3c605b07:
-
-  Linux 5.2-rc2 (2019-05-26 16:49:19 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-current
-
-for you to fetch changes up to c8552db31d5e70f0311be031b22292bf256791da:
-
-  MAINTAINERS: add I2C DT bindings to ARM platforms (2019-06-01 14:52:13 +0200)
-
-----------------------------------------------------------------
-Masahisa Kojima (1):
-      i2c: synquacer: fix synquacer_i2c_doxfer() return value
-
-Vadim Pasternak (1):
-      i2c: mlxcpld: Fix wrong initialization order in probe
-
-Wolfram Sang (2):
-      MAINTAINERS: add DT bindings to i2c drivers
-      MAINTAINERS: add I2C DT bindings to ARM platforms
-
-Yingjoe Chen (1):
-      i2c: dev: fix potential memory leak in i2cdev_ioctl_rdwr
-
-
-with much appreciated quality assurance from
-----------------------------------------------------------------
-Andrew Lunn (1):
-      (Rev.) MAINTAINERS: add DT bindings to i2c drivers
-
-Heiko Stuebner (1):
-      (Rev.) MAINTAINERS: add I2C DT bindings to ARM platforms
-
-Linus Walleij (1):
-      (Rev.) MAINTAINERS: add I2C DT bindings to ARM platforms
-
-Michal Simek (1):
-      (Rev.) MAINTAINERS: add I2C DT bindings to ARM platforms
-
- MAINTAINERS                        | 18 ++++++++++++++++++
- drivers/i2c/busses/i2c-mlxcpld.c   |  2 +-
- drivers/i2c/busses/i2c-synquacer.c |  2 +-
- drivers/i2c/i2c-dev.c              |  1 +
- 4 files changed, 21 insertions(+), 2 deletions(-)
-
---9jxsPFA5p3P2qPhR
+--u3/rZRmxL6MmkK24
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlzza3cACgkQFA3kzBSg
-KbYKVRAAtJp1SvqEyUMCJKsSvsj67n7lEiL6A+YEDHqjU4joBDorP/x8ZnnWnVgl
-T7MK1bQaiDxMOkyhSax+iFu+ufRigYlB+7He5zm+jvqbAkHVOn1BNY7ROF+up4n6
-HGP1xsoQBWCMsz6HeXyL/WDJ3yLUVt9tz8tpaBlBKpmUOZUdnHJKUUIft3tuIhZ7
-FT+LVrtQfYewUiKBajM8DK+8+YlJt0ttNhdD1BazTuP2ZyQhF6+KZXzNUOCM3UeE
-9pMDiJaFI0lskHKSNu0OS18kgoCCXll0o79iFbOOKyZtPkgThvg01TuSssrk/n4I
-livz1w6KKx/AExhcld7qIX322pjznXkcl0UrGPL9/7vrdjrml17FErWZG4sHUeXZ
-DdALAo+oQVsJymaHnEaPPU8b3vJKzk3TVv/qpWbsfWYjvOW0nKkFfojhp8j39EXm
-OF87XcyW6VjEIASY65DJFgEl7z7ngqFEyju6XIthx060UBrnFrXSoUF1ZuqkzjJP
-eKZgBTaF7T50CSnj9uIQNaVkZ8nkOcmj6EAPsj4fZ4ByiGnp92cvTKGXMkZKtvPp
-xB+VfG3X+umLXTZJjZ4WHOgoWpnGPqz0DMDsoYeBcSAHlmbYOKwE4V42Ez04cWT8
-6KxBMfG9RXe0TyF0kTFGw0p9+nq3bSQc48CfdW2KhY11IOLPByI=
-=QTnz
+iEYEARECAAYFAlzzc/4ACgkQMOfwapXb+vLLpgCfQoWBSykNcFHCJ34MeV9TE4Es
+/qIAn1NEzcdOi5m4WfplnoKX79226+10
+=Uigu
 -----END PGP SIGNATURE-----
 
---9jxsPFA5p3P2qPhR--
+--u3/rZRmxL6MmkK24--
