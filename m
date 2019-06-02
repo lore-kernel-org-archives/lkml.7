@@ -2,39 +2,44 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F8ECC282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 16:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE445C282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 16:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1451D27977
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 16:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9375627982
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 16:49:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="UemrOozu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbfFBQlt (ORCPT
+        id S1726794AbfFBQtA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 12:41:49 -0400
-Received: from foss.arm.com ([217.140.101.70]:40928 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726305AbfFBQls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 12:41:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0B19C374;
-        Sun,  2 Jun 2019 09:41:48 -0700 (PDT)
-Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C9EA83F246;
-        Sun,  2 Jun 2019 09:41:46 -0700 (PDT)
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     peterz@infradead.org, mingo@kernel.org, vincent.guittot@linaro.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH] sched/fair: Cleanup definition of NOHZ blocked load functions
-Date:   Sun,  2 Jun 2019 17:41:10 +0100
-Message-Id: <20190602164110.23231-1-valentin.schneider@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <090C3AE4-55E4-45F3-AEAB-3E7F26FB7D6D@lca.pw>
-References: <090C3AE4-55E4-45F3-AEAB-3E7F26FB7D6D@lca.pw>
+        Sun, 2 Jun 2019 12:49:00 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:44000 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbfFBQtA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Jun 2019 12:49:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1559494136; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=vb7xsY48X0IRX6WU/JJNVZf+YbRONceHxAfWa0qnxCM=;
+        b=UemrOozu4Rr/GzEu+cKFK/mOKU91ndgTzD9ExD9YClsejMyJmTvR7OPou7D0BOrtuzoztp
+        M1CTSia3mAC3rXHuLtg3r9OUszmbj9NrOuV+stE/jTYl7SgoNLPZ6X+XCjC3VrVzBXfEr6
+        wBpFhMHNjXsMc5E7UO+I+8dhfOjVSLU=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sam@ravnborg.org, od@zcrc.me,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 1/2] dt-bindings: display: Add King Display KD035G6-54NT panel documentation
+Date:   Sun,  2 Jun 2019 18:48:43 +0200
+Message-Id: <20190602164844.15659-1-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -42,92 +47,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-cfs_rq_has_blocked() and others_have_blocked() are only used within
-update_blocked_averages(). The !CONFIG_FAIR_GROUP_SCHED version of the
-latter calls them within a #define CONFIG_NO_HZ_COMMON block, whereas
-the CONFIG_FAIR_GROUP_SCHED one calls them unconditionnally.
+The KD035G6-54NT is a 3.5" 320x240 24-bit TFT LCD panel.
 
-As reported by Qian, the above leads to this warning in
-!CONFIG_NO_HZ_COMMON configs:
-
-  kernel/sched/fair.c: In function 'update_blocked_averages':
-  kernel/sched/fair.c:7750:7: warning: variable 'done' set but not used
-  [-Wunused-but-set-variable]
-
-It wouldn't be wrong to keep cfs_rq_has_blocked() and
-others_have_blocked() as they are, but since their only current use is
-to figure out when we can stop calling update_blocked_averages() on
-fully decayed NOHZ idle CPUs, we can give them a new definition for
-!CONFIG_NO_HZ_COMMON.
-
-Change the definition of cfs_rq_has_blocked() and
-others_have_blocked() for !CONFIG_NO_HZ_COMMON so that the
-NOHZ-specific blocks of update_blocked_averages() become no-ops and
-the 'done' variable gets optimised out.
-
-No change in functionality intended.
-
-Reported-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- kernel/sched/fair.c | 23 ++++++++++++++++++-----
- 1 file changed, 18 insertions(+), 5 deletions(-)
+ .../panel/kingdisplay,kd035g6-54nt.txt        | 27 +++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/kingdisplay,kd035g6-54nt.txt
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index f35930f5e528..03919a316a03 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -7695,6 +7695,7 @@ static void attach_tasks(struct lb_env *env)
- 	rq_unlock(env->dst_rq, &rf);
- }
- 
-+#ifdef CONFIG_NO_HZ_COMMON
- static inline bool cfs_rq_has_blocked(struct cfs_rq *cfs_rq)
- {
- 	if (cfs_rq->avg.load_avg)
-@@ -7721,6 +7722,10 @@ static inline bool others_have_blocked(struct rq *rq)
- 
- 	return false;
- }
-+#else
-+static inline bool cfs_rq_has_blocked(struct cfs_rq *cfs_rq) { return false; }
-+static inline bool others_have_blocked(struct rq *rq) { return false; }
-+#endif
- 
- #ifdef CONFIG_FAIR_GROUP_SCHED
- 
-@@ -7741,6 +7746,18 @@ static inline bool cfs_rq_is_decayed(struct cfs_rq *cfs_rq)
- 	return true;
- }
- 
-+#ifdef CONFIG_NO_HZ_COMMON
-+static inline void update_blocked_load_status(struct rq *rq, bool has_blocked)
-+{
-+	rq->last_blocked_load_update_tick = jiffies;
+diff --git a/Documentation/devicetree/bindings/display/panel/kingdisplay,kd035g6-54nt.txt b/Documentation/devicetree/bindings/display/panel/kingdisplay,kd035g6-54nt.txt
+new file mode 100644
+index 000000000000..a6e4a9af4925
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/kingdisplay,kd035g6-54nt.txt
+@@ -0,0 +1,27 @@
++King Display KD035G6-54NT 3.5" (320x240 pixels) 24-bit TFT LCD panel
 +
-+	if (!has_blocked)
-+		rq->has_blocked_load = 0;
-+}
-+#else
-+static inline void update_blocked_load_status(struct rq *rq, bool has_blocked) {}
-+#endif
++Required properties:
++- compatible: should be "kingdisplay,kd035g6-54nt"
++- power-supply: See panel-common.txt
++- reset-gpios: See panel-common.txt
 +
- static void update_blocked_averages(int cpu)
- {
- 	struct rq *rq = cpu_rq(cpu);
-@@ -7787,11 +7804,7 @@ static void update_blocked_averages(int cpu)
- 	if (others_have_blocked(rq))
- 		done = false;
- 
--#ifdef CONFIG_NO_HZ_COMMON
--	rq->last_blocked_load_update_tick = jiffies;
--	if (done)
--		rq->has_blocked_load = 0;
--#endif
-+	update_blocked_load_status(rq, !done);
- 	rq_unlock_irqrestore(rq, &rf);
- }
- 
++Optional properties:
++- backlight: see panel-common.txt
++
++Example:
++
++&spi {
++	display-panel {
++		compatible = "kingdisplay,kd035g6-54nt";
++		reg = <0>;
++
++		spi-max-frequency = <3125000>;
++		spi-3wire;
++		spi-cs-high;
++
++		reset-gpios = <&gpe 2 GPIO_ACTIVE_LOW>;
++
++		backlight = <&backlight>;
++		power-supply = <&ldo6>;
++	};
++};
 -- 
-2.20.1
+2.21.0.593.g511ec345e18
 
