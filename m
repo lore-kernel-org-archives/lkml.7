@@ -2,178 +2,135 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8789C28CC6
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 10:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDDCC282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 10:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5FE6278D7
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 10:51:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qHKeCOdm"
+	by mail.kernel.org (Postfix) with ESMTP id EBA0E273AB
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 10:52:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbfFBKvx (ORCPT
+        id S1726721AbfFBKwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 06:51:53 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40526 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726122AbfFBKvw (ORCPT
+        Sun, 2 Jun 2019 06:52:19 -0400
+Received: from charlotte.tuxdriver.com ([70.61.120.58]:53467 "EHLO
+        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726122AbfFBKwS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 06:51:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=PfTrtT36Gn17nPtbXHoxi/Jx7QDUfN6tc9VcJoAdbC8=; b=qHKeCOdmR2osGY5UXzuCb7SQF
-        tM80uCUKDQk0aIKkwrPZ71T/7hhkyqtiE42WqPVw7Q6pXg3HR8T7hk5a8zMoGtt3PUMyez55dHmob
-        XUlTOopWynXCso7DRgXGW6DANm08xtuKSR/zKwQ4Dl44T4Nls/bt00FRr7cYizTSdapIABRQJZP2n
-        B65/Kpd76A7sP1De+q1mah+OkCqESDUtjmbzQvXRYDa6pXnThZQqmF2NuBvVl27WHiKXiCnRrQWC2
-        j3msSoUK35bQlUdALPBp/Pnr+rc+4R+kW/2m9dD6k/HOuVeYrDIukC0dqcm8gvOmPDVD6X6/vDlJE
-        G1MiqhDSQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hXO5e-0003VD-Hr; Sun, 02 Jun 2019 10:51:50 +0000
-Date:   Sun, 2 Jun 2019 03:51:50 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Hugh Dickins <hughd@google.com>, Jan Kara <jack@suse.cz>,
-        Song Liu <liu.song.a23@gmail.com>
-Subject: Re: [PATCH v4] page cache: Store only head pages in i_pages
-Message-ID: <20190602105150.GB23346@bombadil.infradead.org>
-References: <20190307153051.18815-1-willy@infradead.org>
- <155938118174.22493.11599751119608173366@skylake-alporthouse-com>
- <155938946857.22493.6955534794168533151@skylake-alporthouse-com>
+        Sun, 2 Jun 2019 06:52:18 -0400
+Received: from cpe-2606-a000-111b-405a-0-0-0-162e.dyn6.twc.com ([2606:a000:111b:405a::162e] helo=localhost)
+        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
+        (Exim 4.63)
+        (envelope-from <nhorman@tuxdriver.com>)
+        id 1hXO5p-0006gO-VQ; Sun, 02 Jun 2019 06:52:09 -0400
+Date:   Sun, 2 Jun 2019 06:51:33 -0400
+From:   Neil Horman <nhorman@tuxdriver.com>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller@googlegroups.com,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        syzbot <syzbot+6ad9c3bd0a218a2ab41d@syzkaller.appspotmail.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Eric Dumazet <edumazet@google.com>
+Subject: Re: [PATCH] net: sctp: fix memory leak in sctp_send_reset_streams
+Message-ID: <20190602105133.GA16948@hmswarspite.think-freely.org>
+References: <20190602034429.6888-1-hdanton@sina.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <155938946857.22493.6955534794168533151@skylake-alporthouse-com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+In-Reply-To: <20190602034429.6888-1-hdanton@sina.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 01, 2019 at 12:44:28PM +0100, Chris Wilson wrote:
-> Quoting Chris Wilson (2019-06-01 10:26:21)
-> > Quoting Matthew Wilcox (2019-03-07 15:30:51)
-> > > Transparent Huge Pages are currently stored in i_pages as pointers to
-> > > consecutive subpages.  This patch changes that to storing consecutive
-> > > pointers to the head page in preparation for storing huge pages more
-> > > efficiently in i_pages.
-> > > 
-> > > Large parts of this are "inspired" by Kirill's patch
-> > > https://lore.kernel.org/lkml/20170126115819.58875-2-kirill.shutemov@linux.intel.com/
-> > > 
-> > > Signed-off-by: Matthew Wilcox <willy@infradead.org>
-> > > Acked-by: Jan Kara <jack@suse.cz>
-> > > Reviewed-by: Kirill Shutemov <kirill@shutemov.name>
-> > > Reviewed-and-tested-by: Song Liu <songliubraving@fb.com>
-> > > Tested-by: William Kucharski <william.kucharski@oracle.com>
-> > > Reviewed-by: William Kucharski <william.kucharski@oracle.com>
-> > 
-> > I've bisected some new softlockups under THP mempressure to this patch.
-> > They are all rcu stalls that look similar to:
-> > [  242.645276] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-> > [  242.645293] rcu:     Tasks blocked on level-0 rcu_node (CPUs 0-3): P828
-> > [  242.645301]  (detected by 1, t=5252 jiffies, g=55501, q=221)
-> > [  242.645307] gem_syslatency  R  running task        0   828    815 0x00004000
-> > [  242.645315] Call Trace:
-> > [  242.645326]  ? __schedule+0x1a0/0x440
-> > [  242.645332]  ? preempt_schedule_irq+0x27/0x50
-> > [  242.645337]  ? apic_timer_interrupt+0xa/0x20
-> > [  242.645342]  ? xas_load+0x3c/0x80
-> > [  242.645347]  ? xas_load+0x8/0x80
-> > [  242.645353]  ? find_get_entry+0x4f/0x130
-> > [  242.645358]  ? pagecache_get_page+0x2b/0x210
-> > [  242.645364]  ? lookup_swap_cache+0x42/0x100
-> > [  242.645371]  ? do_swap_page+0x6f/0x600
-> > [  242.645375]  ? unmap_region+0xc2/0xe0
-> > [  242.645380]  ? __handle_mm_fault+0x7a9/0xfa0
-> > [  242.645385]  ? handle_mm_fault+0xc2/0x1c0
-> > [  242.645393]  ? __do_page_fault+0x198/0x410
-> > [  242.645399]  ? page_fault+0x5/0x20
-> > [  242.645404]  ? page_fault+0x1b/0x20
-> > 
-> > Any suggestions as to what information you might want?
+On Sun, Jun 02, 2019 at 11:44:29AM +0800, Hillf Danton wrote:
 > 
-> Perhaps,
-> [   76.175502] page:ffffea00098e0000 count:0 mapcount:0 mapping:0000000000000000 index:0x1
-> [   76.175525] flags: 0x8000000000000000()
-> [   76.175533] raw: 8000000000000000 ffffea0004a7e988 ffffea000445c3c8 0000000000000000
-> [   76.175538] raw: 0000000000000001 0000000000000000 00000000ffffffff 0000000000000000
-> [   76.175543] page dumped because: VM_BUG_ON_PAGE(entry != page)
-> [   76.175560] ------------[ cut here ]------------
-> [   76.175564] kernel BUG at mm/swap_state.c:170!
-> [   76.175574] invalid opcode: 0000 [#1] PREEMPT SMP
-> [   76.175581] CPU: 0 PID: 131 Comm: kswapd0 Tainted: G     U            5.1.0+ #247
-> [   76.175586] Hardware name:  /NUC6CAYB, BIOS AYAPLCEL.86A.0029.2016.1124.1625 11/24/2016
-> [   76.175598] RIP: 0010:__delete_from_swap_cache+0x22e/0x340
-> [   76.175604] Code: e8 b7 3e fd ff 48 01 1d a8 7e 04 01 48 83 c4 30 5b 5d 41 5c 41 5d 41 5e 41 5f c3 48 c7 c6 03 7e bf 81 48 89 c7 e8 92 f8 fd ff <0f> 0b 48 c7 c6 c8 7c bf 81 48 89 df e8 81 f8 fd ff 0f 0b 48 c7 c6
-> [   76.175613] RSP: 0000:ffffc900008dba88 EFLAGS: 00010046
-> [   76.175619] RAX: 0000000000000032 RBX: ffffea00098e0040 RCX: 0000000000000006
-> [   76.175624] RDX: 0000000000000007 RSI: 0000000000000000 RDI: ffffffff81bf6d4c
-> [   76.175629] RBP: ffff888265ed8640 R08: 00000000000002c2 R09: 0000000000000000
-> [   76.175634] R10: 0000000273a4626d R11: 0000000000000000 R12: 0000000000000001
-> [   76.175639] R13: 0000000000000040 R14: 0000000000000000 R15: ffffea00098e0000
-> [   76.175645] FS:  0000000000000000(0000) GS:ffff888277a00000(0000) knlGS:0000000000000000
-> [   76.175651] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   76.175656] CR2: 00007f24e4399000 CR3: 0000000002c09000 CR4: 00000000001406f0
-> [   76.175661] Call Trace:
-> [   76.175671]  __remove_mapping+0x1c2/0x380
-> [   76.175678]  shrink_page_list+0x11db/0x1d10
-> [   76.175684]  shrink_inactive_list+0x14b/0x420
-> [   76.175690]  shrink_node_memcg+0x20e/0x740
-> [   76.175696]  shrink_node+0xba/0x420
-> [   76.175702]  balance_pgdat+0x27d/0x4d0
-> [   76.175709]  kswapd+0x216/0x300
-> [   76.175715]  ? wait_woken+0x80/0x80
-> [   76.175721]  ? balance_pgdat+0x4d0/0x4d0
-> [   76.175726]  kthread+0x106/0x120
-> [   76.175732]  ? kthread_create_on_node+0x40/0x40
-> [   76.175739]  ret_from_fork+0x1f/0x30
-> [   76.175745] Modules linked in: i915 intel_gtt drm_kms_helper
-> [   76.175754] ---[ end trace 8faf2ec849d50724 ]---
-> [   76.206689] RIP: 0010:__delete_from_swap_cache+0x22e/0x340
-> [   76.206708] Code: e8 b7 3e fd ff 48 01 1d a8 7e 04 01 48 83 c4 30 5b 5d 41 5c 41 5d 41 5e 41 5f c3 48 c7 c6 03 7e bf 81 48 89 c7 e8 92 f8 fd ff <0f> 0b 48 c7 c6 c8 7c bf 81 48 89 df e8 81 f8 fd ff 0f 0b 48 c7 c6
-> [   76.206718] RSP: 0000:ffffc900008dba88 EFLAGS: 00010046
-> [   76.206723] RAX: 0000000000000032 RBX: ffffea00098e0040 RCX: 0000000000000006
-> [   76.206729] RDX: 0000000000000007 RSI: 0000000000000000 RDI: ffffffff81bf6d4c
-> [   76.206734] RBP: ffff888265ed8640 R08: 00000000000002c2 R09: 0000000000000000
-> [   76.206740] R10: 0000000273a4626d R11: 0000000000000000 R12: 0000000000000001
-> [   76.206745] R13: 0000000000000040 R14: 0000000000000000 R15: ffffea00098e0000
-> [   76.206750] FS:  0000000000000000(0000) GS:ffff888277a00000(0000) knlGS:0000000000000000
-> [   76.206757] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-
-Thanks for the reports, Chris.
-
-I think they're both canaries; somehow the page cache / swap cache has
-got corrupted and contains entries that it shouldn't.
-
-This second one (with the VM_BUG_ON_PAGE in __delete_from_swap_cache)
-shows a regular (non-huge) page at index 1.  There are two ways we might
-have got there; one is that we asked to delete a page at index 1 which is
-no longer in the cache.  The other is that we asked to delete a huge page
-at index 0, but the page wasn't subsequently stored in indices 1-511.
-
-We dump the page that we found; not the page we're looking for, so I don't
-know which.  If this one's easy to reproduce, you could add:
-
-        for (i = 0; i < nr; i++) {
-                void *entry = xas_store(&xas, NULL);
-+		if (entry != page) {
-+			printk("Oh dear %d %d\n", i, nr);
-+			dump_page(page, "deleting page");
-+		}
-                VM_BUG_ON_PAGE(entry != page, entry);
-                set_page_private(page + i, 0);
-                xas_next(&xas);
-        }
-
-I'll re-read the patch and see if I can figure out how the cache is getting
-screwed up.  Given what you said, probably on the swap-in path.
+> syzbot found the following crash on:
+> 
+> HEAD commit:    036e3431 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=153cff12a00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=8f0f63a62bb5b13c
+> dashboard link: https://syzkaller.appspot.com/bug?extid=6ad9c3bd0a218a2ab41d
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12561c86a00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15b76fd8a00000
+> 
+> executing program
+> executing program
+> executing program
+> executing program
+> executing program
+> BUG: memory leak
+> unreferenced object 0xffff888123894820 (size 32):
+>   comm "syz-executor045", pid 7267, jiffies 4294943559 (age 13.660s)
+>   hex dump (first 32 bytes):
+>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>   backtrace:
+>     [<00000000c7e71c69>] kmemleak_alloc_recursive
+> include/linux/kmemleak.h:55 [inline]
+>     [<00000000c7e71c69>] slab_post_alloc_hook mm/slab.h:439 [inline]
+>     [<00000000c7e71c69>] slab_alloc mm/slab.c:3326 [inline]
+>     [<00000000c7e71c69>] __do_kmalloc mm/slab.c:3658 [inline]
+>     [<00000000c7e71c69>] __kmalloc+0x161/0x2c0 mm/slab.c:3669
+>     [<000000003250ed8e>] kmalloc_array include/linux/slab.h:670 [inline]
+>     [<000000003250ed8e>] kcalloc include/linux/slab.h:681 [inline]
+>     [<000000003250ed8e>] sctp_send_reset_streams+0x1ab/0x5a0 net/sctp/stream.c:302
+>     [<00000000cd899c6e>] sctp_setsockopt_reset_streams net/sctp/socket.c:4314 [inline]
+>     [<00000000cd899c6e>] sctp_setsockopt net/sctp/socket.c:4765 [inline]
+>     [<00000000cd899c6e>] sctp_setsockopt+0xc23/0x2bf0 net/sctp/socket.c:4608
+>     [<00000000ff3a21a2>] sock_common_setsockopt+0x38/0x50 net/core/sock.c:3130
+>     [<000000009eb87ae7>] __sys_setsockopt+0x98/0x120 net/socket.c:2078
+>     [<00000000e0ede6ca>] __do_sys_setsockopt net/socket.c:2089 [inline]
+>     [<00000000e0ede6ca>] __se_sys_setsockopt net/socket.c:2086 [inline]
+>     [<00000000e0ede6ca>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2086
+>     [<00000000c61155f5>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:301
+>     [<00000000e540958c>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> 
+> It was introduced in commit d570a59c5b5f ("sctp: only allow the out stream
+> reset when the stream outq is empty"), in orde to check stream outqs before
+> sending SCTP_STRRESET_IN_PROGRESS back to the peer of the stream. EAGAIN is
+> returned, however, without the nstr_list slab released, if any outq is found
+> to be non empty.
+> 
+> Freeing the slab in question before bailing out fixes it.
+> 
+> Fixes: d570a59c5b5f ("sctp: only allow the out stream reset when the stream outq is empty")
+> Reported-by: syzbot <syzbot+6ad9c3bd0a218a2ab41d@syzkaller.appspotmail.com>
+> Reported-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+> Tested-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+> Cc: Xin Long <lucien.xin@gmail.com>
+> Cc: Neil Horman <nhorman@tuxdriver.com>
+> Cc: Vlad Yasevich <vyasevich@gmail.com>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Signed-off-by: Hillf Danton <hdanton@sina.com>
+> ---
+> net/sctp/stream.c | 1 +
+> 1 file changed, 1 insertion(+)
+> 
+> diff --git a/net/sctp/stream.c b/net/sctp/stream.c
+> index 93ed078..d3e2f03 100644
+> --- a/net/sctp/stream.c
+> +++ b/net/sctp/stream.c
+> @@ -310,6 +310,7 @@ int sctp_send_reset_streams(struct sctp_association *asoc,
+> 
+> 	if (out && !sctp_stream_outq_is_empty(stream, str_nums, nstr_list)) {
+> 		retval = -EAGAIN;
+> +		kfree(nstr_list);
+> 		goto out;
+> 	}
+> 
+> --
+> 
+> 
+Acked-by: Neil Horman <nhorman@tuxdriver.com>
