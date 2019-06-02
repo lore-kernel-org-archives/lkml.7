@@ -7,64 +7,66 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1F6C282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 08:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65921C28CC6
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 08:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7C4227887
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 08:05:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3559E2788D
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 08:05:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="c5AyJHJQ"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Jh2MUFSC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726849AbfFBIFR (ORCPT
+        id S1726894AbfFBIFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 04:05:17 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33116 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726803AbfFBIFO (ORCPT
+        Sun, 2 Jun 2019 04:05:18 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50805 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726749AbfFBIFM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 04:05:14 -0400
-Received: by mail-wm1-f65.google.com with SMTP id v19so9309927wmh.0
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 01:05:12 -0700 (PDT)
+        Sun, 2 Jun 2019 04:05:12 -0400
+Received: by mail-wm1-f68.google.com with SMTP id f204so4521091wme.0
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 01:05:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=QmaqjHAcXNQW/qmNDVGvURxfu0pBpsioEB7U9HBButg=;
-        b=c5AyJHJQQn97Ig9xKz8VpCWMryghMHrJJ5H1EhXWar+zpiY77POV6FQ/f0W8sQe2JJ
-         euGG9MOHa9sn+CCDz8+DTOz1jBhPKK6oIP1h37OLQAJYYppanEEku4MHBIYPwKx+qM9U
-         XHTaoe1VYB8AUcH4I+aGlsAMTVjY5Yfu6x9QA0Z4dr76lV3znrqxsyQIoMxbu4q1XJ24
-         7UVQCB4ltN02xRMu0o6R40KsJwZlS7uAXHkh0fppA9y++QOt+q0dpcDASZH7MSqH9xlH
-         iHb558RaW03WzD6ukiB54q+sd/SU4uARYNhCmqPcJFFYZiW43pFDmmIejBAttCUJY09y
-         +5PA==
+        bh=H1tMVKDcnY0AsHYQC7kH5mkhPScubjTBOZaBll4fZ84=;
+        b=Jh2MUFSC6yvbMpDucQG/ilOoM5CYKmfuZDXgiOIRrRnMzB6xhDHg3LBcqIZFuW7AB0
+         yH38rFadgxa0UKWSqAHjmu+mJTAWeAGkSSgtPLaZKyV4+rRgb199wq7Rv1mzApOmn3XT
+         1Yi3pz2g50vuQORxfEP6R6v0mM7ehegwwsLIYyRbceyR85TG1ctM5GCOlEwTFHGFe+kA
+         KTAzGPU4nmHh/3k+f6N3PcjcxM/LZEEPiN194Xn9LpsZfynk922KygaBci0s5ufyrmFT
+         BoNMCWJPCrP8xST2d5qYhQlu9bs/tE3Z5nR+VrHIVS1gOTYBaCnyjHI3FwwKhIoZFuyg
+         y5yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=QmaqjHAcXNQW/qmNDVGvURxfu0pBpsioEB7U9HBButg=;
-        b=WfDoHN4cdmeRr4OrFjPFXwmOobUVsEKLzhEQZ6rLma+efV5rpjxgBep1xe3BMTsHDb
-         OGz2CkLE1Qw9c5rX9Cz9DgZK8CI8fwxOFjDoOyY3SZLdk2tREiPOqUEzDOIURVdJlBhu
-         /WQRpvM+rCeMH4ZWla6Gz1gxmhO/AEpuEaovZmDNh1WFnATeB126OoN/XME+rN/sGfDW
-         GzsPkCbxM3RhDrpW4OTcEX/CfxAOG9wO1igwlfaW1Ph74K7HxlgNOpvGYrOfHHsFIXu3
-         DB0iHNbLO1Duzg0G37fYQvgi3+Z0wUNJ3up7fU3vaTjKZVCPBLYnW81aWD+lW/YU5ml1
-         XUqw==
-X-Gm-Message-State: APjAAAWYUwrWj+2FMBk1R5J0naD3/5k07Uk08JBQ3mWh/PzelchWjqg7
-        t5vSeUYfo1WXiu6qlM36MM5H/LCh5Ms=
-X-Google-Smtp-Source: APXvYqyq4F0fqV/E/88Xn12tEzosdIbLtgNGXWvBnpTrS21K0Ra87wwMdUCctRh2AeEUjHEwTgjF9g==
-X-Received: by 2002:a05:600c:2243:: with SMTP id a3mr10379885wmm.83.1559462711525;
-        Sun, 02 Jun 2019 01:05:11 -0700 (PDT)
+        bh=H1tMVKDcnY0AsHYQC7kH5mkhPScubjTBOZaBll4fZ84=;
+        b=kzcCre4jnju1ztkvHaAZB84T4BFp6t49Wguj2H87tsro6L9Vx1Psj7o+P5dkzoU+fG
+         XCsj4l0rvSUpOVuTroF5mq9Tcl6jfecKwjfgP38mOEqkbR/PvSENH9aAXoL+xWkCy4GG
+         7rriiF2gw/0O1MOtOcPmWTUSlxc3MkRufdfva5pOEwHjrbIIbsapE5clnZwKPxjPUahk
+         ytOg5hnk5/prFLMevxjVjGIuSh3rOivvMC4yEBojJr5wVmqNn7bo9BRxi0Dhxl3kpr50
+         pkQAU5Ma/NqLImcqQz34YodTczu7jk76gNjGuU/0+dTE3sNPbaW8CyCyS3S+8ZMx73po
+         TOoQ==
+X-Gm-Message-State: APjAAAUEShjnB1iMtq7oqqcpXqgMVo2zcf8YvaFSW8Q5zRIfIddxpH/L
+        UfghNWTPmIVA/tuGOJ9iBEs9ybTf7WE=
+X-Google-Smtp-Source: APXvYqz5uLF4yGrAxJlxIeqcqfrTAAcrwVgixMeXevQoCdAYkopPq/VrFd5l8qo8wOQVvmviNJyosw==
+X-Received: by 2002:a1c:6c08:: with SMTP id h8mr3319734wmc.62.1559462709684;
+        Sun, 02 Jun 2019 01:05:09 -0700 (PDT)
 Received: from viisi.fritz.box (217-76-161-89.static.highway.a1.net. [217.76.161.89])
-        by smtp.gmail.com with ESMTPSA id l190sm10186301wml.16.2019.06.02.01.05.09
+        by smtp.gmail.com with ESMTPSA id l190sm10186301wml.16.2019.06.02.01.05.08
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 02 Jun 2019 01:05:11 -0700 (PDT)
+        Sun, 02 Jun 2019 01:05:09 -0700 (PDT)
 From:   Paul Walmsley <paul.walmsley@sifive.com>
 To:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
 Cc:     Paul Walmsley <paul@pwsan.com>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, devicetree@vger.kernel.org
-Subject: [PATCH v3 5/5] riscv: dts: add initial board data for the SiFive HiFive Unleashed
-Date:   Sun,  2 Jun 2019 01:05:00 -0700
-Message-Id: <20190602080500.31700-6-paul.walmsley@sifive.com>
+        Albert Ou <aou@eecs.berkeley.edu>,
+        ShihPo Hung <shihpo.hung@sifive.com>,
+        devicetree@vger.kernel.org
+Subject: [PATCH v3 4/5] riscv: dts: add initial support for the SiFive FU540-C000 SoC
+Date:   Sun,  2 Jun 2019 01:04:59 -0700
+Message-Id: <20190602080500.31700-5-paul.walmsley@sifive.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190602080500.31700-1-paul.walmsley@sifive.com>
 References: <20190602080500.31700-1-paul.walmsley@sifive.com>
@@ -75,14 +77,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add initial board data for the SiFive HiFive Unleashed A00.
+Add initial support for the SiFive FU540-C000 SoC.  This is a 28nm SoC
+based around the SiFive U54-MC core complex and a TileLink
+interconnect.
 
-Currently the data populated in this DT file describes the board
-DRAM configuration and the external clock sources that supply the
-PRCI.
+This file is expected to grow as more device drivers are added to the
+kernel.
 
-This third version incorporates changes based on more comments from
-Rob Herring <robh+dt@kernel.org>.
+This patch includes a fix to the QSPI memory map due to a
+documentation bug, found by ShihPo Hung <shihpo.hung@sifive.com>, adds
+entries for the I2C controller, and merges all DT changes that
+formerly were made dynamically by the riscv-pk BBL proxy kernel.
 
 Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
 Signed-off-by: Paul Walmsley <paul@pwsan.com>
@@ -90,95 +95,234 @@ Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Palmer Dabbelt <palmer@sifive.com>
 Cc: Albert Ou <aou@eecs.berkeley.edu>
+Cc: ShihPo Hung <shihpo.hung@sifive.com>
 Cc: devicetree@vger.kernel.org
 Cc: linux-riscv@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- arch/riscv/boot/dts/sifive/Makefile           |  2 +
- .../boot/dts/sifive/hifive-unleashed-a00.dts  | 67 +++++++++++++++++++
- 2 files changed, 69 insertions(+)
- create mode 100644 arch/riscv/boot/dts/sifive/Makefile
- create mode 100644 arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+ arch/riscv/boot/dts/sifive/fu540-c000.dtsi | 215 +++++++++++++++++++++
+ 1 file changed, 215 insertions(+)
+ create mode 100644 arch/riscv/boot/dts/sifive/fu540-c000.dtsi
 
-diff --git a/arch/riscv/boot/dts/sifive/Makefile b/arch/riscv/boot/dts/sifive/Makefile
+diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
 new file mode 100644
-index 000000000000..baaeef9efdcb
+index 000000000000..3c06ee4b2b29
 --- /dev/null
-+++ b/arch/riscv/boot/dts/sifive/Makefile
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0
-+dtb-y += hifive-unleashed-a00.dtb
-diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-new file mode 100644
-index 000000000000..1de4ea1577d5
---- /dev/null
-+++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-@@ -0,0 +1,67 @@
++++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+@@ -0,0 +1,215 @@
 +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
 +/* Copyright (c) 2018-2019 SiFive, Inc */
 +
 +/dts-v1/;
 +
-+#include "fu540-c000.dtsi"
-+
-+/* Clock frequency (in Hz) of the PCB crystal for rtcclk */
-+#define RTCCLK_FREQ		1000000
++#include <dt-bindings/clock/sifive-fu540-prci.h>
 +
 +/ {
 +	#address-cells = <2>;
 +	#size-cells = <2>;
-+	model = "SiFive HiFive Unleashed A00";
-+	compatible = "sifive,hifive-unleashed-a00", "sifive,fu540-c000";
++	compatible = "sifive,fu540-c000", "sifive,fu540";
++
++	aliases {
++		serial0 = &uart0;
++		serial1 = &uart1;
++	};
 +
 +	chosen {
 +	};
 +
 +	cpus {
-+		timebase-frequency = <RTCCLK_FREQ>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		timebase-frequency = <1000000>;
++		cpu0: cpu@0 {
++			compatible = "sifive,e51", "sifive,rocket0", "riscv";
++			device_type = "cpu";
++			i-cache-block-size = <64>;
++			i-cache-sets = <128>;
++			i-cache-size = <16384>;
++			reg = <0>;
++			riscv,isa = "rv64imac";
++			status = "disabled";
++			cpu0_intc: interrupt-controller {
++				#interrupt-cells = <1>;
++				compatible = "riscv,cpu-intc";
++				interrupt-controller;
++			};
++		};
++		cpu1: cpu@1 {
++			compatible = "sifive,u54-mc", "sifive,rocket0", "riscv";
++			d-cache-block-size = <64>;
++			d-cache-sets = <64>;
++			d-cache-size = <32768>;
++			d-tlb-sets = <1>;
++			d-tlb-size = <32>;
++			device_type = "cpu";
++			i-cache-block-size = <64>;
++			i-cache-sets = <64>;
++			i-cache-size = <32768>;
++			i-tlb-sets = <1>;
++			i-tlb-size = <32>;
++			mmu-type = "riscv,sv39";
++			reg = <1>;
++			riscv,isa = "rv64imafdc";
++			tlb-split;
++			cpu1_intc: interrupt-controller {
++				#interrupt-cells = <1>;
++				compatible = "riscv,cpu-intc";
++				interrupt-controller;
++			};
++		};
++		cpu2: cpu@2 {
++			clock-frequency = <0>;
++			compatible = "sifive,u54-mc", "sifive,rocket0", "riscv";
++			d-cache-block-size = <64>;
++			d-cache-sets = <64>;
++			d-cache-size = <32768>;
++			d-tlb-sets = <1>;
++			d-tlb-size = <32>;
++			device_type = "cpu";
++			i-cache-block-size = <64>;
++			i-cache-sets = <64>;
++			i-cache-size = <32768>;
++			i-tlb-sets = <1>;
++			i-tlb-size = <32>;
++			mmu-type = "riscv,sv39";
++			reg = <2>;
++			riscv,isa = "rv64imafdc";
++			tlb-split;
++			cpu2_intc: interrupt-controller {
++				#interrupt-cells = <1>;
++				compatible = "riscv,cpu-intc";
++				interrupt-controller;
++			};
++		};
++		cpu3: cpu@3 {
++			clock-frequency = <0>;
++			compatible = "sifive,u54-mc", "sifive,rocket0", "riscv";
++			d-cache-block-size = <64>;
++			d-cache-sets = <64>;
++			d-cache-size = <32768>;
++			d-tlb-sets = <1>;
++			d-tlb-size = <32>;
++			device_type = "cpu";
++			i-cache-block-size = <64>;
++			i-cache-sets = <64>;
++			i-cache-size = <32768>;
++			i-tlb-sets = <1>;
++			i-tlb-size = <32>;
++			mmu-type = "riscv,sv39";
++			reg = <3>;
++			riscv,isa = "rv64imafdc";
++			tlb-split;
++			cpu3_intc: interrupt-controller {
++				#interrupt-cells = <1>;
++				compatible = "riscv,cpu-intc";
++				interrupt-controller;
++			};
++		};
++		cpu4: cpu@4 {
++			clock-frequency = <0>;
++			compatible = "sifive,u54-mc", "sifive,rocket0", "riscv";
++			d-cache-block-size = <64>;
++			d-cache-sets = <64>;
++			d-cache-size = <32768>;
++			d-tlb-sets = <1>;
++			d-tlb-size = <32>;
++			device_type = "cpu";
++			i-cache-block-size = <64>;
++			i-cache-sets = <64>;
++			i-cache-size = <32768>;
++			i-tlb-sets = <1>;
++			i-tlb-size = <32>;
++			mmu-type = "riscv,sv39";
++			reg = <4>;
++			riscv,isa = "rv64imafdc";
++			tlb-split;
++			cpu4_intc: interrupt-controller {
++				#interrupt-cells = <1>;
++				compatible = "riscv,cpu-intc";
++				interrupt-controller;
++			};
++		};
 +	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x0 0x80000000 0x2 0x00000000>;
-+	};
-+
 +	soc {
-+	};
-+
-+	hfclk: hfclk {
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		clock-frequency = <33333333>;
-+		clock-output-names = "hfclk";
-+	};
-+
-+	rtcclk: rtcclk {
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		clock-frequency = <RTCCLK_FREQ>;
-+		clock-output-names = "rtcclk";
-+	};
-+};
-+
-+&qspi0 {
-+	flash@0 {
-+		compatible = "issi,is25wp256", "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <50000000>;
-+		m25p,fast-read;
-+		spi-tx-bus-width = <4>;
-+		spi-rx-bus-width = <4>;
-+	};
-+};
-+
-+&qspi2 {
-+	status = "okay";
-+	mmc@0 {
-+		compatible = "mmc-spi-slot";
-+		reg = <0>;
-+		spi-max-frequency = <20000000>;
-+		voltage-ranges = <3300 3300>;
-+		disable-wp;
++		#address-cells = <2>;
++		#size-cells = <2>;
++		compatible = "sifive,fu540-c000", "sifive,fu540", "simple-bus";
++		ranges;
++		plic0: interrupt-controller@c000000 {
++			#interrupt-cells = <1>;
++			compatible = "sifive,plic-1.0.0";
++			reg = <0x0 0xc000000 0x0 0x4000000>;
++			riscv,ndev = <53>;
++			interrupt-controller;
++			interrupts-extended = <
++				&cpu0_intc 0xffffffff
++				&cpu1_intc 0xffffffff &cpu1_intc 9
++				&cpu2_intc 0xffffffff &cpu2_intc 9
++				&cpu3_intc 0xffffffff &cpu3_intc 9
++				&cpu4_intc 0xffffffff &cpu4_intc 9>;
++		};
++		prci: clock-controller@10000000 {
++			compatible = "sifive,fu540-c000-prci";
++			reg = <0x0 0x10000000 0x0 0x1000>;
++			clocks = <&hfclk>, <&rtcclk>;
++			#clock-cells = <1>;
++		};
++		uart0: serial@10010000 {
++			compatible = "sifive,fu540-c000-uart", "sifive,uart0";
++			reg = <0x0 0x10010000 0x0 0x1000>;
++			interrupt-parent = <&plic0>;
++			interrupts = <4>;
++			clocks = <&prci PRCI_CLK_TLCLK>;
++		};
++		uart1: serial@10011000 {
++			compatible = "sifive,fu540-c000-uart", "sifive,uart0";
++			reg = <0x0 0x10011000 0x0 0x1000>;
++			interrupt-parent = <&plic0>;
++			interrupts = <5>;
++			clocks = <&prci PRCI_CLK_TLCLK>;
++		};
++		i2c0: i2c@10030000 {
++			compatible = "sifive,fu540-c000-i2c", "sifive,i2c0";
++			reg = <0x0 0x10030000 0x0 0x1000>;
++			interrupt-parent = <&plic0>;
++			interrupts = <50>;
++			clocks = <&prci PRCI_CLK_TLCLK>;
++			reg-shift = <2>;
++			reg-io-width = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++		qspi0: spi@10040000 {
++			compatible = "sifive,fu540-c000-spi", "sifive,spi0";
++			reg = <0x0 0x10040000 0x0 0x1000
++			       0x0 0x20000000 0x0 0x10000000>;
++			interrupt-parent = <&plic0>;
++			interrupts = <51>;
++			clocks = <&prci PRCI_CLK_TLCLK>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++		qspi1: spi@10041000 {
++			compatible = "sifive,fu540-c000-spi", "sifive,spi0";
++			reg = <0x0 0x10041000 0x0 0x1000
++			       0x0 0x30000000 0x0 0x10000000>;
++			interrupt-parent = <&plic0>;
++			interrupts = <52>;
++			clocks = <&prci PRCI_CLK_TLCLK>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++		qspi2: spi@10050000 {
++			compatible = "sifive,fu540-c000-spi", "sifive,spi0";
++			reg = <0x0 0x10050000 0x0 0x1000>;
++			interrupt-parent = <&plic0>;
++			interrupts = <6>;
++			clocks = <&prci PRCI_CLK_TLCLK>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
 +	};
 +};
 -- 
