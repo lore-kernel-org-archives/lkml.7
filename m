@@ -2,97 +2,101 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	FREEMAIL_REPLYTO_END_DIGIT,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CCDC282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 16:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD13BC282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 16:35:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 764DD27975
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 16:35:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4EC72797D
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 16:35:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="Ns2Y8lqd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mGagF19o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbfFBQfn (ORCPT
+        id S1726862AbfFBQfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 12:35:43 -0400
-Received: from mail.kmu-office.ch ([178.209.48.109]:42384 "EHLO
-        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbfFBQfn (ORCPT
+        Sun, 2 Jun 2019 12:35:47 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:50933 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbfFBQfp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 12:35:43 -0400
-Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
-        by mail.kmu-office.ch (Postfix) with ESMTPSA id E74AF5C13F9;
-        Sun,  2 Jun 2019 18:35:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
-        t=1559493339;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TLPIFtw8wW5Uo7zTBt1EGjS3mHTdYvG1RP4d99oqY1k=;
-        b=Ns2Y8lqdIvcdhIyuckIZwJ4ao1UebMtbGultA9s+Oqd4ibbZsli9+xMYVU935rmTtDMLj7
-        5WU9x7SfGvuXUEdnd2F5KixEes/5ypLmw6mTVPaSRbLDxS7qXzmOIRcL9HEr8tTVjEx0ia
-        HK8fW42HsJpV3bD86r4KvNeHAO8al64=
+        Sun, 2 Jun 2019 12:35:45 -0400
+Received: by mail-wm1-f67.google.com with SMTP id f204so4960172wme.0
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 09:35:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:reply-to:mime-version
+         :content-transfer-encoding;
+        bh=hXRaRyTkvJJsioc4WPPsWium9XCHIfD1KCToEtjOIPk=;
+        b=mGagF19o9GZQ3c37OrzhCHf5yqSQcX3oxPfzSKPcVfZ4j84pwVu57aQxp2i1qGgU7B
+         Fq58TQJxTinSPo23+W3Pd3puM31J2YuS7eJatytp5HN32Qv3x1J7jvOB8tN9Q6ZvzODd
+         j/T7Vd4BHnMm6A0pcQocdQJ9OKddT8o+g0Nj8KC+xhoXFc34aP6SjUVEaY4HV2b25NFh
+         Kkmj6mQNN0cssPmB+CFDiYmJd2xpaPvAnlat/0O+ZFgOTsA091JEjfQOwg1JkrQVcYnG
+         Q493ILNwoEXBQ8BPE6UYzJFeDF0IcNPtiTvF3at+xaX0CDEUuM1xIa9feeQ8DuP0Asuk
+         NpZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :mime-version:content-transfer-encoding;
+        bh=hXRaRyTkvJJsioc4WPPsWium9XCHIfD1KCToEtjOIPk=;
+        b=PdJojoTTlcccoHUozL4nqNRIRnku893h3jrfanziK0PazvaC7nL0FXr8O4YKTSsMvE
+         3QuMMZbnp7Q/yc3XmBzM4ET6GDFSRslbbLE3MkGJVhkGnpDwXSNCYS/KZsTnw9x3QMMf
+         P77XoTT6rQ74dsjK1eXFzZsTiSi66S4huCc6jJrL5lFG+Z04T3y+ndPw35bj8yXId5ZB
+         l5a/PFgV5VgA5J2/rT22m/S/U4LyeZAecsl176grAGXGmZXCvkbs2lganWi3V9Er8to9
+         tzqQ0YaWIalm1OuTXcBqLd5szr0uAbWURTO2MWA76TvpDtxqyDX6drWWfoKFS3NW/rji
+         uBLw==
+X-Gm-Message-State: APjAAAXuK7h1iJbAgT74eQwrmUVppnR4+ztjSDOlOm1RwvMR6/0kc5ai
+        2Odazg2A7HliLxnzcLQArXQQCNG/CqaOBQ==
+X-Google-Smtp-Source: APXvYqySzcEO0kHHyTKLrSwe9OVMZXejkKvakyWJnoukpbU317JTou9t+IqqOeEL5Tdj6mGcwYJ8cQ==
+X-Received: by 2002:a1c:3d41:: with SMTP id k62mr10771399wma.61.1559493343526;
+        Sun, 02 Jun 2019 09:35:43 -0700 (PDT)
+Received: from p200300EEEE2F.fritz.box (p200300C98712670014A3D3D52C57F0B4.dip0.t-ipconnect.de. [2003:c9:8712:6700:14a3:d3d5:2c57:f0b4])
+        by smtp.gmail.com with ESMTPSA id l18sm28902282wrh.54.2019.06.02.09.35.42
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 02 Jun 2019 09:35:42 -0700 (PDT)
+From:   Emanuel Bennici <benniciemanuel78@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, Joe Perches <joe@perches.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v2] pci: hotplug: ibmphp: Remove superfluous debug message
+Date:   Sun,  2 Jun 2019 18:35:39 +0200
+Message-Id: <20190602163541.8842-1-benniciemanuel78@gmail.com>
+X-Mailer: git-send-email 2.19.1
+Reply-To: benniciemanuel78@gmail.com
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Date:   Sun, 02 Jun 2019 18:35:39 +0200
-From:   Stefan Agner <stefan@agner.ch>
-To:     Nick Desaulniers <ndesaulniers@google.com>,
-        Olof Johansson <olof@lixom.net>
-Cc:     arm@kernel.org, Russell King <linux@armlinux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>, nico@fluxnic.net,
-        f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, kgene@kernel.org,
-        krzk@kernel.org, Rob Herring <robh@kernel.org>,
-        ssantosh@kernel.org, jason@lakedaemon.net, andrew@lunn.ch,
-        gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com,
-        tony@atomide.com, Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        mans@mansr.com, Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 2/2] ARM: OMAP2: drop explicit assembler architecture
-In-Reply-To: <CAKwvOdmsHxyPU2O1vZ-Mah-E5vTtEWKHStp2EQCiE4A55D8xDQ@mail.gmail.com>
-References: <c0ca465daa7c7663c19b0bcb848c70e8da22baff.1558996564.git.stefan@agner.ch>
- <5ead0fe96f7e5729e4a82f432022b16cb84458a6.1558996564.git.stefan@agner.ch>
- <CAKwvOdmsHxyPU2O1vZ-Mah-E5vTtEWKHStp2EQCiE4A55D8xDQ@mail.gmail.com>
-Message-ID: <fa06b27eeea796f70f1e243096b86117@agner.ch>
-X-Sender: stefan@agner.ch
-User-Agent: Roundcube Webmail/1.3.7
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30.05.2019 22:02, Nick Desaulniers wrote:
-> On Mon, May 27, 2019 at 3:41 PM Stefan Agner <stefan@agner.ch> wrote:
->>
->> OMAP2 depends on ARCH_MULTI_V6, which makes sure that the kernel is
->> compiled with -march=armv6. The compiler frontend will pass the
->> architecture to the assembler. There is no explicit architecture
->> specification necessary.
->>
->> Signed-off-by: Stefan Agner <stefan@agner.ch>
->> Acked-by: Tony Lindgren <tony@atomide.com>
->> ---
->> Changes since v2:
->> - New patch
->>
->> Changes since v3:
->> - Rebase on top of v5.2-rc2
-> 
-> Hi Stefan, looks like both patches are ack'd.  Are you waiting for an
-> explicit reviewed by tag to submit to
-> https://www.armlinux.org.uk/developer/patches/?
+The 'Exit' Debug message is superfluous ftrace can be used instead.
 
-This should go through arm-soc, it missed the last merge window, see
-Olofs message:
-https://lore.kernel.org/lkml/20190516214819.dopw4eiumt6is46e@localhost/T/#u
+Signed-off-by: Emanuel Bennici <benniciemanuel78@gmail.com>
+---
+ drivers/pci/hotplug/ibmphp_core.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Should be still early enough to make it in this merge window.
+diff --git a/drivers/pci/hotplug/ibmphp_core.c b/drivers/pci/hotplug/ibmphp_core.c
+index cd73bea12bc7..a2ea1ff6cfbc 100644
+--- a/drivers/pci/hotplug/ibmphp_core.c
++++ b/drivers/pci/hotplug/ibmphp_core.c
+@@ -890,7 +890,6 @@ static int set_bus(struct slot *slot_cur)
+ 	/* This is for x440, once Brandon fixes the firmware,
+ 	will not need this delay */
+ 	msleep(1000);
+-	debug("%s - Exit\n", __func__);
+ 	return 0;
+ }
 
 --
-Stefan
+2.19.1
+
