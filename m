@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 701B1C28CC6
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 15:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E5FFC282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 15:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A86B27975
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 15:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0807927973
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 15:59:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MYvCheit"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tR9j48sC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbfFBP7W (ORCPT
+        id S1726869AbfFBP7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 11:59:22 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:37051 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726807AbfFBP7U (ORCPT
+        Sun, 2 Jun 2019 11:59:24 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:39551 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726820AbfFBP7V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 11:59:20 -0400
-Received: by mail-qt1-f195.google.com with SMTP id y57so6843035qtk.4
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 08:59:19 -0700 (PDT)
+        Sun, 2 Jun 2019 11:59:21 -0400
+Received: by mail-qt1-f196.google.com with SMTP id i34so6816994qta.6
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 08:59:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=+x69TcqR+bFk5ojFt7qJV1dRlBhJRgOfaQiTn1tZPS8=;
-        b=MYvCheitu3trQbthrCc+NFtNRsCrAR0AMpD2tJHUlLfNo3NAxwCOI08WShtnySj6Lx
-         4S95Rt70PtwzG5dzxZh4Z2SykzZgIEWiHW+dOJi/LAI8Swf/NIJROgPvx+8EfncWdSNR
-         5FH0cayP0kzhWdojRYM1FeqLGGONVmBpZ36e6/ttlVZMWIu40UhLcSerIk+EmaPZkyz/
-         JsRiHN4EzcULpDLEzME+p0e0oAeWkLOnix0Er6dV4xN744QJoQkXU7NgYQy4MiwTPa43
-         v7b5CT/tTr+lVF+vkHnF3uXRnFkMhFNzSWRGn4v5LVzUT022VoTYBwSPCIK8IDhSWEf1
-         Pr7Q==
+        bh=KoiwGzojzqWS04G3Vtf6A7KlpS48j88h/ZjvUsdgYpw=;
+        b=tR9j48sCzJxSI0PhXjlAQsYW+PvL/Rc1czHdQ6+7kWZVEpCAQfCujqP1Hdi1ibUKK7
+         cyj2Hbc5Wia9wlPPdqlFNARCcRuoDM6wF5JoMM8nZjjhS5+0nv1MBUxXqTvibDs5Sg/X
+         GxrF/9DLeRU/NJcoT8w/lYv4hnLAWCko9005beumexent1mM/ZjPHWaIonvWfULVVaLw
+         gkCZJPk++9V/AFD40d9JNbwLh97gJhKcRIxWQ9XZQXa5qfErF9gawbxCRfNB/S59Q8V/
+         xu10VXl30gsuboKcd26fPC5gw1BhhlbBQe+Lr16iAASQRT2OMobjTgiaDby/izR6mThC
+         iKog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+x69TcqR+bFk5ojFt7qJV1dRlBhJRgOfaQiTn1tZPS8=;
-        b=T6HSjSK752UgOdb7x8jJR6B5I8omyb/prmR4oRHzfx3h2veys0enV5APipbv1il3Ac
-         4oyzywaPnRHUnXIqZQiqGU8jIOUqgcH/8SuGrGb8isZdKbjLWkvB2CpuUyeA1BrPyv+k
-         1czptf2ek876ncFG+oEaNDqwsl4jEgVjQ7nFFps6tSV1SKPSBH8YimBEutYl1b8nPfiG
-         YwkTg7cAYzr45HBXYng2C21VbsdQVo2kZVnGeeLGsmwohTwdfIIdU1Y54QUrcJWm9Ed+
-         dxvFs8Co+tq5bd34Lsb+th9VOS3RS8CIPi1i80b0j881tbzhjgA10TT2L2tXN1XD3P6J
-         8new==
-X-Gm-Message-State: APjAAAWCDvIE24BtOahuCdJcZ4XHfAmjrmSMq16zhGLjnfsleYPHxZUB
-        hftF2SU4hFddr/4EknUJvp0=
-X-Google-Smtp-Source: APXvYqyWB7XjANhzDLQmvPMM3f7fCuYB6dOenwwz6hucZ/BpvdVr4r69D3ginhLR0O6khN2GZ/qjmQ==
-X-Received: by 2002:a05:6214:206:: with SMTP id i6mr13189095qvt.169.1559491159296;
-        Sun, 02 Jun 2019 08:59:19 -0700 (PDT)
+        bh=KoiwGzojzqWS04G3Vtf6A7KlpS48j88h/ZjvUsdgYpw=;
+        b=bqIT7rkbSuIfgT5+Yedzg1X6xB9KgJ3YKlqRCpZ7dVZKaStKsSZkiO8aUF9qi7zVKP
+         SaSuMWb7THYIjSMTYG0zQdmj0mKe+DSlmn3/Rqi24CYp3lJRkoZlv0TuFLkiKxBXPKUc
+         4RqxlEuw7XXbwbJZDllucAlbGhG6rjolXf+Lzw2IMZIFX3MZFY6tdQm2PynYVurZabeq
+         SFUU5aHzt0Pxo2jUHnnTji9YJMwQW/ELDj7jC7Tx4+tJzAGf7VCuAbYDC3X3O39NKDwt
+         ML0LhQX+rCzE6ooX+tPP5rtGadt0JcWGoEOXtkcFDB9WikDHQ2lXRhay7sg0b1wcbZ4p
+         FCng==
+X-Gm-Message-State: APjAAAUL6JnXgDcIMOcQJSsehOgg+bXIwWHUpYSUBGCgrlwyaXjijrkY
+        S5qyPV2PicT/OC+6nfirSgw=
+X-Google-Smtp-Source: APXvYqw9J/rFcfXbdhQskuwc1AHuGE0/QpenBHvEu+OMCKRnkBFxVYSaQWtYShts/aHwF0F3L9um6A==
+X-Received: by 2002:aed:38a1:: with SMTP id k30mr19835361qte.159.1559491160182;
+        Sun, 02 Jun 2019 08:59:20 -0700 (PDT)
 Received: from arch-01.home (c-73-132-202-198.hsd1.md.comcast.net. [73.132.202.198])
-        by smtp.gmail.com with ESMTPSA id n7sm7378589qkd.53.2019.06.02.08.59.18
+        by smtp.gmail.com with ESMTPSA id n7sm7378589qkd.53.2019.06.02.08.59.19
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 02 Jun 2019 08:59:18 -0700 (PDT)
+        Sun, 02 Jun 2019 08:59:19 -0700 (PDT)
 From:   Geordan Neukum <gneukum1@gmail.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Jeremy Sowden <jeremy@azazel.net>, Mao Wenan <maowenan@huawei.com>,
@@ -65,9 +65,9 @@ Cc:     Jeremy Sowden <jeremy@azazel.net>, Mao Wenan <maowenan@huawei.com>,
         Geordan Neukum <gneukum1@gmail.com>,
         Dan Carpenter <dan.carpenter@oracle.com>,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/5] staging: kpc2000: kpc_spi: remove function kp_spi_bytes_per_word()
-Date:   Sun,  2 Jun 2019 15:58:36 +0000
-Message-Id: <b086eac79a4061c7cd67bd587de9d302f9820610.1559488571.git.gneukum1@gmail.com>
+Subject: [PATCH 5/5] staging: kpc2000: kpc_spi: use devm_* API to manage mapped I/O space
+Date:   Sun,  2 Jun 2019 15:58:37 +0000
+Message-Id: <ea222a6da192a4eb0ba9c8c840843f240f414092.1559488571.git.gneukum1@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1559488571.git.gneukum1@gmail.com>
 References: <cover.1559488571.git.gneukum1@gmail.com>
@@ -78,40 +78,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The static function kp_spi_bytes_per_word() is defined in kpc2000_spi.c,
-but it is completely unused. As this function is unused, it can and
-should be removed.
+The kpc_spi driver does not unmap its I/O space upon error cases in the
+probe() function or upon remove(). Make the driver clean up after itself
+more maintainably by migrating to using the managed resource API.
 
 Signed-off-by: Geordan Neukum <gneukum1@gmail.com>
 ---
- drivers/staging/kpc2000/kpc2000_spi.c | 14 --------------
- 1 file changed, 14 deletions(-)
+ drivers/staging/kpc2000/kpc2000_spi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/staging/kpc2000/kpc2000_spi.c b/drivers/staging/kpc2000/kpc2000_spi.c
-index 049b1e324031..b513432a26ed 100644
+index b513432a26ed..32d3ec532e26 100644
 --- a/drivers/staging/kpc2000/kpc2000_spi.c
 +++ b/drivers/staging/kpc2000/kpc2000_spi.c
-@@ -162,20 +162,6 @@ union kp_spi_ffctrl {
- /***************
-  * SPI Helpers *
-  ***************/
--	static inline int
--kp_spi_bytes_per_word(int word_len)
--{
--	if (word_len <= 8){
--		return 1;
--	}
--	else if (word_len <= 16) {
--		return 2;
--	}
--	else { /* word_len <= 32 */
--		return 4;
--	}
--}
--
- 	static inline u64
- kp_spi_read_reg(struct kp_spi_controller_state *cs, int idx)
- {
+@@ -471,7 +471,8 @@ kp_spi_probe(struct platform_device *pldev)
+ 		goto free_master;
+ 	}
+ 
+-	kpspi->phys = (unsigned long)ioremap_nocache(r->start, resource_size(r));
++	kpspi->phys = (unsigned long)devm_ioremap_nocache(&pldev->dev, r->start,
++							  resource_size(r));
+ 	kpspi->base = (u64 __iomem *)kpspi->phys;
+ 
+ 	status = spi_register_master(master);
 -- 
 2.21.0
 
