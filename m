@@ -2,141 +2,90 @@ Return-Path: <SRS0=BIzH=UB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE054C282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 08:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 252BAC282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 08:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B90F12788C
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 08:36:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECBE027888
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Jun 2019 08:39:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ISwdVjqG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbfFBIgw (ORCPT
+        id S1726683AbfFBIj0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 04:36:52 -0400
-Received: from [176.110.122.116] ([176.110.122.116]:52152 "EHLO
-        ocean.emcraft.com" rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1725925AbfFBIgw (ORCPT
+        Sun, 2 Jun 2019 04:39:26 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:39568 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbfFBIjZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 04:36:52 -0400
-X-Greylist: delayed 4503 seconds by postgrey-1.27 at vger.kernel.org; Sun, 02 Jun 2019 04:36:51 EDT
-Received: from [10.8.0.10] (helo=mehome.localdomain)
-        by ocean.emcraft.com with esmtps (TLSv1:AES256-SHA:256)
-        (Exim 4.76)
-        (envelope-from <sposelenov@emcraft.com>)
-        id 1hXKoA-0002FG-S7; Sun, 02 Jun 2019 10:21:37 +0300
-Message-ID: <34079b6a34abbad5ab13925dc004e397f70524e3.camel@emcraft.com>
-Subject: Re: [PATCH] binfmt_flat: make load_flat_shared_library() work
-From:   Sergei Poselenov <sposelenov@emcraft.com>
-To:     Arnd Bergmann <arnd@arndb.de>, Greg Ungerer <gerg@linux-m68k.org>
-Cc:     arch@emcraft.com, Jann Horn <jannh@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nicolas Pitre <nicolas.pitre@linaro.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linux/m68k <linux-m68k@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Date:   Sun, 02 Jun 2019 10:21:33 +0300
-In-Reply-To: <CAK8P3a0b7MBn+84jh0Y2zhFLLAqZ2tMvFDFF9Kw=breRLH4Utg@mail.gmail.com>
-References: <20190524201817.16509-1-jannh@google.com>
-         <20190525144304.e2b9475a18a1f78a964c5640@linux-foundation.org>
-         <CAG48ez36xJ9UA8gWef3+1rHQwob5nb8WP3RqnbT8GEOV9Z38jA@mail.gmail.com>
-         <6956cfe5-90d4-aad4-48e3-66b0ece91fed@linux-m68k.org>
-         <CAK8P3a0b7MBn+84jh0Y2zhFLLAqZ2tMvFDFF9Kw=breRLH4Utg@mail.gmail.com>
-Organization: Emcraft Systems
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+        Sun, 2 Jun 2019 04:39:25 -0400
+Received: by mail-lj1-f194.google.com with SMTP id a10so10164157ljf.6
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 01:39:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yE2J5a6MB0Gc48eIqCKYzxTEPvXkEUZm6g5N6vUrQy0=;
+        b=ISwdVjqGJ/u5HKAq5gTbqhDyiyczVmMmlYTgwPHKcPUmp0SwhHzU7n9NBcQLBkvePA
+         AWZD4Y/Gd3Yl5vikkmWg5f0Ggh2Bx5BvM4zyG0wVU7KLmxO33iIVHM7rgYXNl1Ccs1Xy
+         GEnHP6yig7grGK7di8iJCX6nFOvvZ1avP631pXQHKH+bw1LgP2uBOkr+ExzwXGbxTYgr
+         xBp9nEvrC7335Ckbb2gq8dp5yWLCsj1QgPWMcODMuUhBThSETgSzzM7wrbzsLl7yxDBl
+         10ZyzxfsW7kA1z0zpt5fsaNVuQ+47nBrhlHLOro5mWUJ+Fcv0rdwL1eFPX/OFm+ns+pE
+         H4zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yE2J5a6MB0Gc48eIqCKYzxTEPvXkEUZm6g5N6vUrQy0=;
+        b=c8j/b1uNfcKHJOxMVbmpTgt6GmFwpG9dowps9XUnN6hmCFYmxGXykvi7kQfFv3R8U8
+         vWq6ogmpj5ffQZ1mOg6KqKb9ddymtOyaNkRxsO3G3QwMrcX6xOTVZQRHUkHL3yj7i13d
+         Y/cgjTeIZCOjFQ1G7XcI6/zqv0w1XzH73QlBTurDqP0J16AjRCrNJYVQOeV/ku2EPklu
+         DC0KuheS34ibRGM/bVkHW8NdUZQr9Y7QEFbSV/tmmP4UjyIrRNVzLd2/eJlwwiuwUrAe
+         C63wLmUYgtF5LpRnJR0PiE6EJwIRytC5plNXvejIIItCKa4AEEwdJGbCtGaeMun4dkRK
+         fVOA==
+X-Gm-Message-State: APjAAAX+On8mjgTOnWqgbDtVAsyc3Q/u5YVb1Z4WGWCloRepA+wr0Myo
+        0pcDwyGNTP7LKrz8sTxDGhvzqtVd8G/7B7fxDFim2A==
+X-Google-Smtp-Source: APXvYqyh6hWIl5W5nMmF/9/ej0DWHVcr46h1HQVRnLm8WUwbiyWxXnadUkdktX1kP9ytr2yZqkgU50r5CZ++QGbwClo=
+X-Received: by 2002:a2e:8902:: with SMTP id d2mr10897010lji.94.1559464764019;
+ Sun, 02 Jun 2019 01:39:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20190528091304.9932-1-yuehaibing@huawei.com>
+In-Reply-To: <20190528091304.9932-1-yuehaibing@huawei.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sun, 2 Jun 2019 10:39:12 +0200
+Message-ID: <CACRpkdb0dti=x2UxaOoP=VRrzxQTuAaeQ2==UM4U6KNyHC2QwQ@mail.gmail.com>
+Subject: Re: [PATCH -next] pinctrl: bcm2835: Fix build error without CONFIG_OF
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Doug Berger <opendmb@gmail.com>, Eric Anholt <eric@anholt.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Matheus Castello <matheus@castello.eng.br>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Arnd, all,
+On Tue, May 28, 2019 at 11:18 AM YueHaibing <yuehaibing@huawei.com> wrote:
 
-On Wed, 2019-05-29 at 14:05 +0200, Arnd Bergmann wrote:
-> On Tue, May 28, 2019 at 12:56 PM Greg Ungerer <gerg@linux-m68k.org>
-> wrote:
-> > On 27/5/19 11:38 pm, Jann Horn wrote:
-> > > On Sat, May 25, 2019 at 11:43 PM Andrew Morton
-> > > <akpm@linux-foundation.org> wrote:
-> > > > On Fri, 24 May 2019 22:18:17 +0200 Jann Horn <jannh@google.com>
-> > > > wrote:
-> > > > > load_flat_shared_library() is broken: It only calls
-> > > > > load_flat_file() if
-> > > > > prepare_binprm() returns zero, but prepare_binprm() returns
-> > > > > the number of
-> > > > > bytes read - so this only happens if the file is empty.
-> > > > 
-> > > > ouch.
-> > > > 
-> > > > > Instead, call into load_flat_file() if the number of bytes
-> > > > > read is
-> > > > > non-negative. (Even if the number of bytes is zero - in that
-> > > > > case,
-> > > > > load_flat_file() will see nullbytes and return a nice
-> > > > > -ENOEXEC.)
-> > > > > 
-> > > > > In addition, remove the code related to bprm creds and stop
-> > > > > using
-> > > > > prepare_binprm() - this code is loading a library, not a main
-> > > > > executable,
-> > > > > and it only actually uses the members "buf", "file" and
-> > > > > "filename" of the
-> > > > > linux_binprm struct. Instead, call kernel_read() directly.
-> > > > > 
-> > > > > Cc: stable@vger.kernel.org
-> > > > > Fixes: 287980e49ffc ("remove lots of IS_ERR_VALUE abuses")
-> > > > > Signed-off-by: Jann Horn <jannh@google.com>
-> > > > > ---
-> > > > > I only found the bug by looking at the code, I have not
-> > > > > verified its
-> > > > > existence at runtime.
-> > > > > Also, this patch is compile-tested only.
-> > > > > It would be nice if someone who works with nommu Linux could
-> > > > > have a
-> > > > > look at this patch.
-> > > > 
-> > > > 287980e49ffc was three years ago!  Has it really been broken
-> > > > for all
-> > > > that time?  If so, it seems a good source of freed disk
-> > > > space...
-> > > 
-> > > Maybe... but I didn't want to rip it out without having one of
-> > > the
-> > > maintainers confirm that this really isn't likely to be used
-> > > anymore.
-> > 
-> > I have not used shared libraries on m68k non-mmu setups for
-> > a very long time. At least 10 years I would think.
-> 
-> I think Emcraft have a significant customer base running ARM NOMMU
-> Linux, I wonder whether they would have run into this (adding
-> Sergei to Cc).
-> My suspicion is that they use only binfmt-elf-fdpic, not binfmt-flat.
-> 
+> drivers/pinctrl/bcm/pinctrl-bcm2835.c: In function bcm2835_pctl_dt_node_to_map:
+> drivers/pinctrl/bcm/pinctrl-bcm2835.c:720:8: error: implicit declaration of function pinconf_generic_dt_node_to_map_all;
+> drivers/pinctrl/bcm/pinctrl-bcm2835.c: In function bcm2835_pinctrl_probe:
+> drivers/pinctrl/bcm/pinctrl-bcm2835.c:1022:15: error: struct gpio_chip has no member named of_node
+>   pc->gpio_chip.of_node = np;
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: 0de704955ee4 ("pinctrl: bcm2835: Add support for generic pinctrl binding")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-We use both, acutally, but all-static. We don't support shared
-libraries with bFLT or ELF FDPIC.
+Patch applied.
 
-Kind regards,
-Sergei
-> The only architectures I see that enable binfmt-flat are sh, xtensa
-> and h8300, but only arch/sh uses CONFIG_BINFMT_SHARED_FLAT
-> for a few machine specific configurations, and I'm in turn fairly
-> sure
-> those machines have not run a recent kernel in many years.
-> 
-> The one SH nommu platform likely to have users is j2, and that is
-> probably always used with musl-libc with elf-fdpic (given that
-> Rich Felker maintains both the kernel port and the library).
-> 
->       Arnd
-> 
-
+Yours,
+Linus Walleij
