@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA2CC04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C50C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DCBD27ECA
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D091927EB0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553219;
-	bh=SR5S+zg4vfPJpt4EjZu8DEszS+aX+A9Nblv/L3pQI14=;
+	s=default; t=1559553222;
+	bh=91c/7Vw0o7uW7vB6jdWbVqPOLMj6YQ1zYZM9AcHEjYI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GDrUzcAMmOA7d8cWdeKk1FURAXePqyWcJ38D2UPQGDv7mI3daNoj731f/+NepjzUP
-	 G3B3E2YlrE8rjDUzxZ0C6oxipM/2483KT8THSrMT5Q8AoGyW5gwhzmVwWkvNXFdno1
-	 HxFt6xqCjROhYMpFuVpCojtIaIcxnJj1AJxR/fjE=
+	b=JCqKZIMDSPpGTDXM5jhiOJka39M+ALGsqxFTw//iDI70Yrzv5KCXnast5sxYNtN3B
+	 k6KcQdN4arCzc7EQtwUVvrA5NS/TGjWIdjTJrI7FDJOwM6KzaQ0eCpK2a2SSN8HRX+
+	 ahOWJLjcTFflxbPio+YrY93O9Gs8VI28vjk1nRUI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728872AbfFCJNj (ORCPT
+        id S1728888AbfFCJNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:13:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33760 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 05:13:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728841AbfFCJN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:13:28 -0400
+        id S1727887AbfFCJNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:13:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 751A0276E6;
-        Mon,  3 Jun 2019 09:13:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA08D27EB0;
+        Mon,  3 Jun 2019 09:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553208;
-        bh=SR5S+zg4vfPJpt4EjZu8DEszS+aX+A9Nblv/L3pQI14=;
+        s=default; t=1559553218;
+        bh=91c/7Vw0o7uW7vB6jdWbVqPOLMj6YQ1zYZM9AcHEjYI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wTQW0mWclYvlvoFgxLX9dEMLGB/+3t8G+XW48fAu6sT4o2rojhbe4R2x8cBhr9Nne
-         yYhgzxHBp7II5WoP/fkTWlrshux5Jy0LSKZheiVQ9dngI+cIo1B21RviG1ZPirgZGQ
-         jxdeA6qquRn7j2B0WXTmVOrYDqs5QT8D42Fbl1xQ=
+        b=oLTBHuHufjct1pV87yNf2vSDVNizbsgJQ84XNqnH0DxWhBwFTayhD/lrrb5H5rfww
+         LjpcIc6MSSCVTR7ZNl7tVoBLrAw9G7cLXp4KFMWHkGywL6OdiGsOTkQApTLcF+acqQ
+         tOCxFJT+ohbxH8/TLh57c0HRwy67cUUHLIWOVmhY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
-        Daniel Jurgens <danielj@mellanox.com>,
-        Mark Bloch <markb@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.1 23/40] net/mlx5: Allocate root ns memory using kzalloc to match kfree
-Date:   Mon,  3 Jun 2019 11:09:16 +0200
-Message-Id: <20190603090524.039817876@linuxfoundation.org>
+        stable@vger.kernel.org, Rakesh Hemnani <rhemnani@fb.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.1 27/40] bnxt_en: Fix aggregation buffer leak under OOM condition.
+Date:   Mon,  3 Jun 2019 11:09:20 +0200
+Message-Id: <20190603090524.265305338@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190603090522.617635820@linuxfoundation.org>
 References: <20190603090522.617635820@linuxfoundation.org>
@@ -61,38 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parav Pandit <parav@mellanox.com>
+From: Michael Chan <michael.chan@broadcom.com>
 
-[ Upstream commit 25fa506b70cadb580c1e9cbd836d6417276d4bcd ]
+[ Upstream commit 296d5b54163964b7ae536b8b57dfbd21d4e868e1 ]
 
-root ns is yet another fs core node which is freed using kfree() by
-tree_put_node().
-Rest of the other fs core objects are also allocated using kmalloc
-variants.
+For every RX packet, the driver replenishes all buffers used for that
+packet and puts them back into the RX ring and RX aggregation ring.
+In one code path where the RX packet has one RX buffer and one or more
+aggregation buffers, we missed recycling the aggregation buffer(s) if
+we are unable to allocate a new SKB buffer.  This leads to the
+aggregation ring slowly running out of buffers over time.  Fix it
+by properly recycling the aggregation buffers.
 
-However, root ns memory is allocated using kvzalloc().
-Hence allocate root ns memory using kzalloc().
-
-Fixes: 2530236303d9e ("net/mlx5_core: Flow steering tree initialization")
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Reviewed-by: Daniel Jurgens <danielj@mellanox.com>
-Reviewed-by: Mark Bloch <markb@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
+Reported-by: Rakesh Hemnani <rhemnani@fb.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/fs_core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
-@@ -2286,7 +2286,7 @@ static struct mlx5_flow_root_namespace
- 		cmds = mlx5_fs_cmd_get_default_ipsec_fpga_cmds(table_type);
- 
- 	/* Create the root namespace */
--	root_ns = kvzalloc(sizeof(*root_ns), GFP_KERNEL);
-+	root_ns = kzalloc(sizeof(*root_ns), GFP_KERNEL);
- 	if (!root_ns)
- 		return NULL;
- 
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -1640,6 +1640,8 @@ static int bnxt_rx_pkt(struct bnxt *bp,
+ 		skb = bnxt_copy_skb(bnapi, data_ptr, len, dma_addr);
+ 		bnxt_reuse_rx_data(rxr, cons, data);
+ 		if (!skb) {
++			if (agg_bufs)
++				bnxt_reuse_rx_agg_bufs(cpr, cp_cons, agg_bufs);
+ 			rc = -ENOMEM;
+ 			goto next_rx;
+ 		}
 
 
