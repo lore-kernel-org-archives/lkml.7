@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 300FAC04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 120F9C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06C0127E7A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE66D27EA8
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:12:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553137;
-	bh=RokwJaxmfCRgi0uqFVxRhyqXjSgRlyTjIFQ9il/sdiU=;
+	s=default; t=1559553140;
+	bh=s5XUr4oAMYMkO/L1yXi+KcIP++cyMJwnAPtD+Pi+5qY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X62BYC2hlycHeOKM/KQDodyxSm/HBxIMWXxOHvye6Aj05CSrtkMXnWIbwqEuJkp/t
-	 AR5LqOVmN3NcA+RXKP0y2jh//2IZcZrD+Bo7bOgBoa3XwFkI+NFeuB0bCHmYMrTqpU
-	 3NdXhCVmKbbbGTTCva2dGzdBMs+QFggZ9hmZm3A4=
+	b=gQBE4YKf8DMeNSS3sMcrTZ8yyzF8tBqw5/QgDmdispgPcuOsduHLkjyoU6yy8K8iE
+	 fV3eYmEWerne1XxvKMIpgpnTgx8Cq374rM8QCRtLS4/l0Z56BF5vABJBsYFne6lS1H
+	 SvLcamh1V2dka8HkYuJwZmyasdGYGxJB9oMNRwqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728605AbfFCJMQ (ORCPT
+        id S1728060AbfFCJMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:12:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57680 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 05:12:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728597AbfFCJMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:12:12 -0400
+        id S1728597AbfFCJMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:12:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A93227E94;
-        Mon,  3 Jun 2019 09:12:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8860627EA5;
+        Mon,  3 Jun 2019 09:12:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553130;
-        bh=RokwJaxmfCRgi0uqFVxRhyqXjSgRlyTjIFQ9il/sdiU=;
+        s=default; t=1559553136;
+        bh=s5XUr4oAMYMkO/L1yXi+KcIP++cyMJwnAPtD+Pi+5qY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qv2b0GmleiqGd9yIJuOStdOnBzQRgfXSD8wb9kUDqUt9d/WfzqWMOvEGzyVX6pyk4
-         cmE1PuLx/CZTtuOQvZDD26pf3+U6PFBu6ve3ziUx18V7BPt/AB2wDayLE7xwU+rz4d
-         NDVDBFfi5kEVnvl/Subui2Xzm7QpfcNyF9C6bsXc=
+        b=XnsCNwFOjME/qB/m55JdgAAvaiy0IZVr+YlrV27gUPEv5pZZgMEUgbCVbIdB2r78B
+         tnGGoEokeB5LVtjcRV32murOMFac44K7r4UiqksOKpj27wkhrA5GOR22DcZLbcrTbP
+         QU39ekrOsRaKSXlgdsm4pj/CN6JZCzE00RHdUBvY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>
-Subject: [PATCH 5.0 32/36] net: correct zerocopy refcnt with udp MSG_MORE
-Date:   Mon,  3 Jun 2019 11:09:20 +0200
-Message-Id: <20190603090523.101971185@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Beulich <jbeulich@suse.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Prarit Bhargava <prarit@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: [PATCH 5.0 34/36] xen/pciback: Dont disable PCI_COMMAND on PCI device reset.
+Date:   Mon,  3 Jun 2019 11:09:22 +0200
+Message-Id: <20190603090523.223934283@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190603090520.998342694@linuxfoundation.org>
 References: <20190603090520.998342694@linuxfoundation.org>
@@ -61,98 +62,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willem de Bruijn <willemb@google.com>
+From: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
 
-[ Upstream commit 100f6d8e09905c59be45b6316f8f369c0be1b2d8 ]
+commit 7681f31ec9cdacab4fd10570be924f2cef6669ba upstream.
 
-TCP zerocopy takes a uarg reference for every skb, plus one for the
-tcp_sendmsg_locked datapath temporarily, to avoid reaching refcnt zero
-as it builds, sends and frees skbs inside its inner loop.
+There is no need for this at all. Worst it means that if
+the guest tries to write to BARs it could lead (on certain
+platforms) to PCI SERR errors.
 
-UDP and RAW zerocopy do not send inside the inner loop so do not need
-the extra sock_zerocopy_get + sock_zerocopy_put pair. Commit
-52900d22288ed ("udp: elide zerocopy operation in hot path") introduced
-extra_uref to pass the initial reference taken in sock_zerocopy_alloc
-to the first generated skb.
+Please note that with af6fc858a35b90e89ea7a7ee58e66628c55c776b
+"xen-pciback: limit guest control of command register"
+a guest is still allowed to enable those control bits (safely), but
+is not allowed to disable them and that therefore a well behaved
+frontend which enables things before using them will still
+function correctly.
 
-But, sock_zerocopy_realloc takes this extra reference at the start of
-every call. With MSG_MORE, no new skb may be generated to attach the
-extra_uref to, so refcnt is incorrectly 2 with only one skb.
+This is done via an write to the configuration register 0x4 which
+triggers on the backend side:
+command_write
+  \- pci_enable_device
+     \- pci_enable_device_flags
+        \- do_pci_enable_device
+           \- pcibios_enable_device
+              \-pci_enable_resourcess
+                [which enables the PCI_COMMAND_MEMORY|PCI_COMMAND_IO]
 
-Do not take the extra ref if uarg && !tcp, which implies MSG_MORE.
-Update extra_uref accordingly.
+However guests (and drivers) which don't do this could cause
+problems, including the security issues which XSA-120 sought
+to address.
 
-This conditional assignment triggers a false positive may be used
-uninitialized warning, so have to initialize extra_uref at define.
-
-Changes v1->v2: fix typo in Fixes SHA1
-
-Fixes: 52900d22288e7 ("udp: elide zerocopy operation in hot path")
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Diagnosed-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Jan Beulich <jbeulich@suse.com>
+Signed-off-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Reviewed-by: Prarit Bhargava <prarit@redhat.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Cc: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/core/skbuff.c     |    6 +++++-
- net/ipv4/ip_output.c  |    4 ++--
- net/ipv6/ip6_output.c |    4 ++--
- 3 files changed, 9 insertions(+), 5 deletions(-)
 
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -1001,7 +1001,11 @@ struct ubuf_info *sock_zerocopy_realloc(
- 			uarg->len++;
- 			uarg->bytelen = bytelen;
- 			atomic_set(&sk->sk_zckey, ++next);
--			sock_zerocopy_get(uarg);
-+
-+			/* no extra ref when appending to datagram (MSG_MORE) */
-+			if (sk->sk_type == SOCK_STREAM)
-+				sock_zerocopy_get(uarg);
-+
- 			return uarg;
- 		}
- 	}
---- a/net/ipv4/ip_output.c
-+++ b/net/ipv4/ip_output.c
-@@ -883,7 +883,7 @@ static int __ip_append_data(struct sock
- 	int csummode = CHECKSUM_NONE;
- 	struct rtable *rt = (struct rtable *)cork->dst;
- 	unsigned int wmem_alloc_delta = 0;
--	bool paged, extra_uref;
-+	bool paged, extra_uref = false;
- 	u32 tskey = 0;
+---
+ drivers/xen/xen-pciback/pciback_ops.c |    2 --
+ 1 file changed, 2 deletions(-)
+
+--- a/drivers/xen/xen-pciback/pciback_ops.c
++++ b/drivers/xen/xen-pciback/pciback_ops.c
+@@ -127,8 +127,6 @@ void xen_pcibk_reset_device(struct pci_d
+ 		if (pci_is_enabled(dev))
+ 			pci_disable_device(dev);
  
- 	skb = skb_peek_tail(queue);
-@@ -923,7 +923,7 @@ static int __ip_append_data(struct sock
- 		uarg = sock_zerocopy_realloc(sk, length, skb_zcopy(skb));
- 		if (!uarg)
- 			return -ENOBUFS;
--		extra_uref = true;
-+		extra_uref = !skb;	/* only extra ref if !MSG_MORE */
- 		if (rt->dst.dev->features & NETIF_F_SG &&
- 		    csummode == CHECKSUM_PARTIAL) {
- 			paged = true;
---- a/net/ipv6/ip6_output.c
-+++ b/net/ipv6/ip6_output.c
-@@ -1269,7 +1269,7 @@ static int __ip6_append_data(struct sock
- 	int csummode = CHECKSUM_NONE;
- 	unsigned int maxnonfragsize, headersize;
- 	unsigned int wmem_alloc_delta = 0;
--	bool paged, extra_uref;
-+	bool paged, extra_uref = false;
- 
- 	skb = skb_peek_tail(queue);
- 	if (!skb) {
-@@ -1338,7 +1338,7 @@ emsgsize:
- 		uarg = sock_zerocopy_realloc(sk, length, skb_zcopy(skb));
- 		if (!uarg)
- 			return -ENOBUFS;
--		extra_uref = true;
-+		extra_uref = !skb;	/* only extra ref if !MSG_MORE */
- 		if (rt->dst.dev->features & NETIF_F_SG &&
- 		    csummode == CHECKSUM_PARTIAL) {
- 			paged = true;
+-		pci_write_config_word(dev, PCI_COMMAND, 0);
+-
+ 		dev->is_busmaster = 0;
+ 	} else {
+ 		pci_read_config_word(dev, PCI_COMMAND, &cmd);
 
 
