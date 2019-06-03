@@ -2,120 +2,129 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 684E5C28CC5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 02:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46485C28CC5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 02:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AC6227AD1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 02:19:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 245E227AD1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 02:19:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfFCCTS (ORCPT
+        id S1726964AbfFCCTr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 22:19:18 -0400
-Received: from twhmllg4.macronix.com ([122.147.135.202]:12474 "EHLO
-        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfFCCTS (ORCPT
+        Sun, 2 Jun 2019 22:19:47 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:48089 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726305AbfFCCTq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 22:19:18 -0400
-Received: from localhost.localdomain ([172.17.195.96])
-        by TWHMLLG4.macronix.com with ESMTP id x532JBjk041764;
-        Mon, 3 Jun 2019 10:19:11 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-From:   Mason Yang <masonccyang@mxic.com.tw>
-To:     miquel.raynal@bootlin.com, marek.vasut@gmail.com,
-        linux-kernel@vger.kernel.org, bbrezillon@kernel.org,
-        richard@nod.at, dwmw2@infradead.org, computersforpeace@gmail.com,
-        linux-mtd@lists.infradead.org, vigneshr@ti.com, tglx@linutronix.de,
-        frieder.schrempf@kontron.de, allison@lohutok.net
-Cc:     juliensu@mxic.com.tw, masonccyang@mxic.com.tw
-Subject: [PATCH v3] mtd: rawnand: Add Macronix NAND read retry support
-Date:   Mon,  3 Jun 2019 10:42:04 +0800
-Message-Id: <1559529724-5454-1-git-send-email-masonccyang@mxic.com.tw>
-X-Mailer: git-send-email 1.9.1
-X-MAIL: TWHMLLG4.macronix.com x532JBjk041764
+        Sun, 2 Jun 2019 22:19:46 -0400
+X-UUID: 2a27758f1ed445d3ae430e40fa8cbcf4-20190603
+X-UUID: 2a27758f1ed445d3ae430e40fa8cbcf4-20190603
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1566463222; Mon, 03 Jun 2019 10:19:39 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ MTKMBS33N2.mediatek.inc (172.27.4.76) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 3 Jun 2019 10:19:36 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 3 Jun 2019 10:19:34 +0800
+Message-ID: <1559528374.32185.4.camel@mtksdaap41>
+Subject: Re: [v4 3/7] drm/mediatek: add dsi reg commit disable control
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        <linux-pwm@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Thierry Reding" <treding@nvidia.com>,
+        Ajay Kumar <ajaykumar.rs@samsung.com>,
+        "Inki Dae" <inki.dae@samsung.com>,
+        Rahul Sharma <rahul.sharma@samsung.com>,
+        "Sean Paul" <seanpaul@chromium.org>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        "Andy Yan" <andy.yan@rock-chips.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
+        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
+        <stonea168@163.com>
+Date:   Mon, 3 Jun 2019 10:19:34 +0800
+In-Reply-To: <20190601092615.67917-4-jitao.shi@mediatek.com>
+References: <20190601092615.67917-1-jitao.shi@mediatek.com>
+         <20190601092615.67917-4-jitao.shi@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for Macronix NAND read retry.
+Hi, Jitao:
 
-Macronix NANDs support specific read operation for data recovery,
-which can be enabled with a SET_FEATURE.
-Driver checks byte 167 of Vendor Blocks in ONFI parameter page table
-to see if this high-reliability function is supported.
+On Sat, 2019-06-01 at 17:26 +0800, Jitao Shi wrote:
+> New DSI IP has shadow register and working reg. The register
+> values are writen to shadow register. And then trigger with
+> commit reg, the register values will be moved working register.
+> 
+> This fucntion is defualt on. But this driver doesn't use this
+> function. So add the disable control.
 
-Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
----
- drivers/mtd/nand/raw/nand_macronix.c | 45 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
 
-diff --git a/drivers/mtd/nand/raw/nand_macronix.c b/drivers/mtd/nand/raw/nand_macronix.c
-index fad57c3..58511ae 100644
---- a/drivers/mtd/nand/raw/nand_macronix.c
-+++ b/drivers/mtd/nand/raw/nand_macronix.c
-@@ -8,6 +8,50 @@
- 
- #include "internals.h"
- 
-+#define MACRONIX_READ_RETRY_BIT BIT(0)
-+#define MACRONIX_NUM_READ_RETRY_MODES 6
-+
-+struct nand_onfi_vendor_macronix {
-+	u8 reserved;
-+	u8 reliability_func;
-+} __packed;
-+
-+static int macronix_nand_setup_read_retry(struct nand_chip *chip, int mode)
-+{
-+	u8 feature[ONFI_SUBFEATURE_PARAM_LEN];
-+
-+	if (!chip->parameters.supports_set_get_features ||
-+	    !test_bit(ONFI_FEATURE_ADDR_READ_RETRY,
-+		      chip->parameters.set_feature_list))
-+		return -ENOTSUPP;
-+
-+	feature[0] = mode;
-+	return nand_set_features(chip, ONFI_FEATURE_ADDR_READ_RETRY, feature);
-+}
-+
-+static void macronix_nand_onfi_init(struct nand_chip *chip)
-+{
-+	struct nand_parameters *p = &chip->parameters;
-+	struct nand_onfi_vendor_macronix *mxic;
-+
-+	if (!p->onfi)
-+		return;
-+
-+	mxic = (struct nand_onfi_vendor_macronix *)p->onfi->vendor;
-+	if ((mxic->reliability_func & MACRONIX_READ_RETRY_BIT) == 0)
-+		return;
-+
-+	chip->read_retries = MACRONIX_NUM_READ_RETRY_MODES;
-+	chip->setup_read_retry = macronix_nand_setup_read_retry;
-+
-+	if (p->supports_set_get_features) {
-+		bitmap_set(p->set_feature_list,
-+			   ONFI_FEATURE_ADDR_READ_RETRY, 1);
-+		bitmap_set(p->get_feature_list,
-+			   ONFI_FEATURE_ADDR_READ_RETRY, 1);
-+	}
-+}
-+
- /*
-  * Macronix AC series does not support using SET/GET_FEATURES to change
-  * the timings unlike what is declared in the parameter page. Unflag
-@@ -56,6 +100,7 @@ static int macronix_nand_init(struct nand_chip *chip)
- 		chip->options |= NAND_BBM_FIRSTPAGE | NAND_BBM_SECONDPAGE;
- 
- 	macronix_nand_fix_broken_get_timings(chip);
-+	macronix_nand_onfi_init(chip);
- 
- 	return 0;
- }
--- 
-1.9.1
+> 
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_dsi.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> index a48db056df6c..eea47294079e 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> @@ -131,6 +131,10 @@
+>  #define VM_CMD_EN			BIT(0)
+>  #define TS_VFP_EN			BIT(5)
+>  
+> +#define DSI_SHADOW_DEBUG	0x190U
+> +#define FORCE_COMMIT			BIT(0)
+> +#define BYPASS_SHADOW			BIT(1)
+> +
+>  #define CONFIG				(0xff << 0)
+>  #define SHORT_PACKET			0
+>  #define LONG_PACKET			2
+> @@ -157,6 +161,7 @@ struct phy;
+>  
+>  struct mtk_dsi_driver_data {
+>  	const u32 reg_cmdq_off;
+> +	bool has_shadow_ctl;
+>  };
+>  
+>  struct mtk_dsi {
+> @@ -594,6 +599,11 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
+>  	}
+>  
+>  	mtk_dsi_enable(dsi);
+> +
+> +	if (dsi->driver_data->has_shadow_ctl)
+> +		writel(FORCE_COMMIT | BYPASS_SHADOW,
+> +		       dsi->regs + DSI_SHADOW_DEBUG);
+> +
+>  	mtk_dsi_reset_engine(dsi);
+>  	mtk_dsi_phy_timconfig(dsi);
+>  
+
 
