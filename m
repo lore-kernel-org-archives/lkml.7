@@ -2,47 +2,152 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69173C28CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 06:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CABC04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 06:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48C6A267DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 06:49:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B15DD26E66
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 06:51:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727323AbfFCGtr (ORCPT
+        id S1727170AbfFCGv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 02:49:47 -0400
-Received: from verein.lst.de ([213.95.11.211]:54912 "EHLO newverein.lst.de"
+        Mon, 3 Jun 2019 02:51:58 -0400
+Received: from mga02.intel.com ([134.134.136.20]:39431 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726618AbfFCGtr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 02:49:47 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 05FD468B20; Mon,  3 Jun 2019 08:49:22 +0200 (CEST)
-Date:   Mon, 3 Jun 2019 08:49:21 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Ley Foon Tan <lftan@altera.com>,
-        Michal Simek <monstr@monstr.eu>, linux-mips@vger.kernel.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH 2/7] au1100fb: fix DMA API abuse
-Message-ID: <20190603064921.GB22023@lst.de>
-References: <20190430110032.25301-1-hch@lst.de> <CGME20190430110118epcas2p24019c7551331cc6390e5b5e07b381dd9@epcas2p2.samsung.com> <20190430110032.25301-3-hch@lst.de> <7a63eeae-4ec3-c82e-c497-8adc7bcb3cea@samsung.com>
+        id S1726694AbfFCGv5 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 02:51:57 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jun 2019 23:51:56 -0700
+X-ExtLoop1: 1
+Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.239.196.112]) ([10.239.196.112])
+  by orsmga003.jf.intel.com with ESMTP; 02 Jun 2019 23:51:55 -0700
+Subject: Re: [PATCH v2 0/7] perf diff: diff cycles at basic block level
+To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <1559572577-25436-1-git-send-email-yao.jin@linux.intel.com>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <e0c769be-f548-f6ef-3667-118d37fe888c@linux.intel.com>
+Date:   Mon, 3 Jun 2019 14:51:54 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7a63eeae-4ec3-c82e-c497-8adc7bcb3cea@samsung.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <1559572577-25436-1-git-send-email-yao.jin@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-FYI, I've merged this patch into the dma-mapping tree to make progress
-with the generic uncached segment support for mips.
+
+
+On 6/3/2019 10:36 PM, Jin Yao wrote:
+> In some cases small changes in hot loops can show big differences.
+> But it's difficult to identify these differences.
+> 
+> perf diff currently can only diff symbols (functions). We can also expand
+> it to diff cycles of individual programs blocks as reported by timed LBR.
+> This would allow to identify changes in specific code accurately.
+> 
+> With this patch set, for example,
+> 
+>   # perf record -b ./div
+>   # perf record -b ./div
+>   # perf diff -s cycles
+> 
+
+Sorry, the command line should be perf diff -c cycles.
+
+Thanks
+Jin Yao
+
+>   # Event 'cycles'
+>   #
+>   # Baseline         Block cycles diff [start:end]  Shared Object     Symbol
+>   # ........  ....................................  ................  ....................................
+>   #
+>       49.03%        -9 [         4ef:         520]  div               [.] main
+>       49.03%         0 [         4e8:         4ea]  div               [.] main
+>       49.03%         0 [         4ef:         500]  div               [.] main
+>       49.03%         0 [         4ef:         51c]  div               [.] main
+>       49.03%         0 [         4ef:         535]  div               [.] main
+>       18.82%         0 [       3ac40:       3ac4d]  libc-2.23.so      [.] __random_r
+>       18.82%         0 [       3ac40:       3ac5c]  libc-2.23.so      [.] __random_r
+>       18.82%         0 [       3ac40:       3ac76]  libc-2.23.so      [.] __random_r
+>       18.82%         0 [       3ac40:       3ac88]  libc-2.23.so      [.] __random_r
+>       18.82%         0 [       3ac90:       3ac9c]  libc-2.23.so      [.] __random_r
+>       16.29%        -8 [       3aac0:       3aac0]  libc-2.23.so      [.] __random
+>       16.29%         0 [       3aac0:       3aad2]  libc-2.23.so      [.] __random
+>       16.29%         0 [       3aae0:       3aae7]  libc-2.23.so      [.] __random
+>       16.29%         0 [       3ab03:       3ab0f]  libc-2.23.so      [.] __random
+>       16.29%         0 [       3ab14:       3ab1b]  libc-2.23.so      [.] __random
+>       16.29%         0 [       3ab28:       3ab2e]  libc-2.23.so      [.] __random
+>       16.29%         0 [       3ab4a:       3ab53]  libc-2.23.so      [.] __random
+>        8.11%         0 [         640:         644]  div               [.] compute_flag
+>        8.11%         0 [         649:         659]  div               [.] compute_flag
+>        5.46%         0 [       3af60:       3af60]  libc-2.23.so      [.] rand
+>        5.46%         0 [       3af60:       3af64]  libc-2.23.so      [.] rand
+>        2.25%         0 [         490:         490]  div               [.] rand@plt
+>        0.01%        26 [      c00a27:      c00a27]  [kernel.vmlinux]  [k] native_irq_return_iret
+>        0.00%      -157 [      2bf9f2:      2bfa63]  [kernel.vmlinux]  [k] update_blocked_averages
+>        0.00%       -56 [      2bf980:      2bf9d3]  [kernel.vmlinux]  [k] update_blocked_averages
+>        0.00%        48 [      2bf934:      2bf942]  [kernel.vmlinux]  [k] update_blocked_averages
+>        0.00%         3 [      2bfb38:      2bfb67]  [kernel.vmlinux]  [k] update_blocked_averages
+> 
+> The 'cycles' is a new perf-diff computation selection, which enables
+> the displaying of cycles difference of same program basic block amongst
+> two perf.data. The program basic block is the code block between two
+> branches in a function.
+> 
+>   v2:
+>   ---
+>   Keep standard perf diff format.
+> 
+>   Following is the v1 output.
+> 
+>   # perf diff --basic-block
+> 
+>   # Cycles diff  Basic block (start:end)
+>   # ...........  .......................
+>   #
+>            -208  hrtimer_interrupt (30b9e0:30ba42)
+>            -157  update_blocked_averages (2bf9f2:2bfa63)
+>            -126  interrupt_entry (c00880:c0093a)
+>             -86  hrtimer_interrupt (30bb29:30bb32)
+>             -74  hrtimer_interrupt (30ba65:30bac4)
+>             -56  update_blocked_averages (2bf980:2bf9d3)
+>              48  update_blocked_averages (2bf934:2bf942)
+>             -35  native_write_msr (267900:26790b)
+>              26  native_irq_return_iret (c00a27:c00a27)
+>              22  rcu_check_callbacks (2febb6:2febdc)
+>             -21  __hrtimer_run_queues (30b220:30b2a3)
+>              19  pvclock_gtod_notify (14ba0:14c1b)
+>             -18  task_tick_fair (2c5d29:2c5d41)
+> 
+> Jin Yao (7):
+>    perf util: Create block_info structure
+>    perf util: Add block_info in hist_entry
+>    perf diff: Check if all data files with branch stacks
+>    perf diff: Use hists to manage basic blocks per symbol
+>    perf diff: Link same basic blocks among different data files
+>    perf diff: Print the basic block cycles diff
+>    perf diff: Documentation -c cycles option
+> 
+>   tools/perf/Documentation/perf-diff.txt |  14 +-
+>   tools/perf/builtin-diff.c              | 373 ++++++++++++++++++++++++++++++++-
+>   tools/perf/ui/stdio/hist.c             |  26 +++
+>   tools/perf/util/hist.c                 |  42 +++-
+>   tools/perf/util/hist.h                 |   9 +
+>   tools/perf/util/sort.h                 |   8 +
+>   tools/perf/util/symbol.c               |  22 ++
+>   tools/perf/util/symbol.h               |  23 ++
+>   8 files changed, 509 insertions(+), 8 deletions(-)
+> 
