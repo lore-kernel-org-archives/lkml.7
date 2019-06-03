@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4288BC28CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E76C28CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F2B627E57
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:11:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 236D527E7E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:11:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553095;
-	bh=ujhi6CpwYLYZfWyY7aUjKt1dxXqrqMs4fZUEJRhOKfk=;
+	s=default; t=1559553099;
+	bh=M70iY75YB6uFHmdLogfmBSj+VIsEpj2o7JIN4Idf4uY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U/G2fI9B0ATG+siVxxDj1pK4qrSOd9BYg3GnwIFkZvD6HsLx/rth9lA23AxiCwazX
-	 hV9xMpCkgS+ysuekR1sPsAaFcE15XN4zxauFn0JwI43F4aRJKpFMdoq7KaCn1hxVzo
-	 UabjQZTt6F5M1/Dp4T52qERaqs3hmK9yGrgjp0h4=
+	b=wuLJ9Q4bMEhX1+dHlwA6WB4w+cMO+3rbA0pvoxWOiro0Zwm5Qt++8PojQ29Mo4Oa+
+	 UKnEVn9WqJRrfc+0ZZMuHLKs4BZEU1lgw+02nGb+iJTKunH7sdbtX0+TG8RG9WgQbj
+	 AsTpxk0Jyy852MoAwNLxeti+kQJEp+ZlRpaRD7k0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbfFCJLe (ORCPT
+        id S1727971AbfFCJLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:11:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56618 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 05:11:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727947AbfFCJLa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:11:30 -0400
+        id S1728418AbfFCJLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:11:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD55827E7A;
-        Mon,  3 Jun 2019 09:11:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7614A27E66;
+        Mon,  3 Jun 2019 09:11:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553090;
-        bh=ujhi6CpwYLYZfWyY7aUjKt1dxXqrqMs4fZUEJRhOKfk=;
+        s=default; t=1559553093;
+        bh=M70iY75YB6uFHmdLogfmBSj+VIsEpj2o7JIN4Idf4uY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eJod5U4fsOVvo5jH0Z0DX/xV1OeL1wHbm2SvtVeaApomraxrUxanKJMqxQcy1eVTG
-         GLjuyODzvydkTM1lg+wJrX4wC/Zl0fVGveOA+idi0rCMpDHSL3qTl0U39SQpcbxq1J
-         xkZ7Awa7RC6l87nMr48zTd6t+UlC4iq+ltMJWx1M=
+        b=W8PL0J6o2z5gJ9cmOVK2OfGekSzw+HHLYUNmH2IrwQvg1AR5HL1J3zfKY67a1rt+G
+         mXkOr4Q+MMulIAWls9wi7h3KwCr2V7yrmT5XO07kPFUaAPF6gvYjcPfIXcaunAf+dK
+         shtA4LsJYuuuWY6rolyn7y52oE1USslu54S9KFQk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
+        Albert Astals Cid <aacid@kde.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 17/36] net: stmmac: fix reset gpio free missing
-Date:   Mon,  3 Jun 2019 11:09:05 +0200
-Message-Id: <20190603090522.116311384@linuxfoundation.org>
+Subject: [PATCH 5.0 18/36] r8169: fix MAC address being lost in PCI D3
+Date:   Mon,  3 Jun 2019 11:09:06 +0200
+Message-Id: <20190603090522.186695240@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190603090520.998342694@linuxfoundation.org>
 References: <20190603090520.998342694@linuxfoundation.org>
@@ -60,36 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-[ Upstream commit 49ce881c0d4c4a7a35358d9dccd5f26d0e56fc61 ]
+[ Upstream commit 59715171fbd0172a579576f46821031800a63bc5 ]
 
-Commit 984203ceff27 ("net: stmmac: mdio: remove reset gpio free")
-removed the reset gpio free, when the driver is unbinded or rmmod,
-we miss the gpio free.
+(At least) RTL8168e forgets its MAC address in PCI D3. To fix this set
+the MAC address when resuming. For resuming from runtime-suspend we
+had this in place already, for resuming from S3/S5 it was missing.
 
-This patch uses managed API to request the reset gpio, so that the
-gpio could be freed properly.
+The commit referenced as being fixed isn't wrong, it's just the first
+one where the patch applies cleanly.
 
-Fixes: 984203ceff27 ("net: stmmac: mdio: remove reset gpio free")
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Fixes: 0f07bd850d36 ("r8169: use dev_get_drvdata where possible")
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Reported-by: Albert Astals Cid <aacid@kde.org>
+Tested-by: Albert Astals Cid <aacid@kde.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/realtek/r8169.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-@@ -267,7 +267,8 @@ int stmmac_mdio_reset(struct mii_bus *bu
- 			of_property_read_u32_array(np,
- 				"snps,reset-delays-us", data->delays, 3);
+--- a/drivers/net/ethernet/realtek/r8169.c
++++ b/drivers/net/ethernet/realtek/r8169.c
+@@ -6814,6 +6814,8 @@ static int rtl8169_resume(struct device
+ 	struct net_device *dev = dev_get_drvdata(device);
+ 	struct rtl8169_private *tp = netdev_priv(dev);
  
--			if (gpio_request(data->reset_gpio, "mdio-reset"))
-+			if (devm_gpio_request(priv->device, data->reset_gpio,
-+					      "mdio-reset"))
- 				return 0;
- 		}
++	rtl_rar_set(tp, dev->dev_addr);
++
+ 	clk_prepare_enable(tp->clk);
  
+ 	if (netif_running(dev))
+@@ -6847,6 +6849,7 @@ static int rtl8169_runtime_resume(struct
+ {
+ 	struct net_device *dev = dev_get_drvdata(device);
+ 	struct rtl8169_private *tp = netdev_priv(dev);
++
+ 	rtl_rar_set(tp, dev->dev_addr);
+ 
+ 	if (!tp->TxDescArray)
 
 
