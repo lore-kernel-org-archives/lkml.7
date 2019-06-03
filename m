@@ -2,151 +2,138 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 860E1C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6783C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56C7427D12
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C030E27D17
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:54:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h35yfEjr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UaA55vFX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbfFCHyJ (ORCPT
+        id S1727468AbfFCHyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 03:54:09 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41918 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbfFCHyJ (ORCPT
+        Mon, 3 Jun 2019 03:54:13 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37394 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726656AbfFCHyK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 03:54:09 -0400
-Received: by mail-wr1-f67.google.com with SMTP id c2so10908832wrm.8;
-        Mon, 03 Jun 2019 00:54:07 -0700 (PDT)
+        Mon, 3 Jun 2019 03:54:10 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 22so1684698wmg.2;
+        Mon, 03 Jun 2019 00:54:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Jc7RTNdlKbjvzZoes3lNTQ2YApwJsgBEhNds1f4HJKs=;
-        b=h35yfEjrY2vvw99MwIpgXVkJ5IJiLh3ia6b0guwVdc3G0+xJ2Lb1yR3zklGwbM3WxX
-         BL9Uh2FU37IOo8En3rj1xsbbk36A6TTZfUw4xW57Z8D4k/Q2kj+3vzrADUe2RP1a9hCO
-         T9fGLYAcz6iENTagpLuICFPOUeCyAy/nn8b1w+H/1W6eg/2/WStqBy9DteoE/WgKHgWY
-         6vkKgvCshlq7vF3eyL1FKkaybSVOorAkVs3CqUusi+kl0gF0uAgbYLTrBjX/QsDcagNd
-         brUWJdFilFSI2qHU4us+OZ95q9iLISWkqoeRjL1oxvn1boPXwPFTZho2AyjZ9TheB+4D
-         DrKA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Vxn++X6GnNn7FvRm2GLwCr6U91lHVxlpb9LxLQUYoh8=;
+        b=UaA55vFXUfkwbZG1fE7WZ3BEU/NRz3EniJlHgVBM/EDOoI+hIjRj09/ae1Pl4bHi9b
+         Rh0+ZR+hWmbGNRI24pI29x0wGunvVOsLfbNgkJk1kzx3SVl/klB+IuEyzfp2oY9s9zdF
+         wm5ciRxDVw12GbJ0SfU8YpQl27uoRnFxeaTv4RDr+3Q6F5bf38Oy0djTORRtPA55Q7lr
+         gSJut3+7O3lkELl0qvFS87+AMZQT7i2zBlBXZzjBJJJvIXo7bk1/0mdRz4ZURgGMvLmM
+         IwJdpJ1NpWDp3CdNKNjR0BlaCg5N0atpWN838Y0INAuA8kHuEqYRCBKVDqszMJshdVZK
+         nNcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Jc7RTNdlKbjvzZoes3lNTQ2YApwJsgBEhNds1f4HJKs=;
-        b=c959ET3jhdje8pI85lQp7zFmLItbZ7cU13rue6w5pSllvXUoDWJDxSEOHWk442gx4G
-         pAeRvTPs9YMoJ7M+OdEfScgRDaCOgg2mSEG8WypgCtyRaE4ibOkhyHaHp4zLNpXNDtzN
-         +HIdKVUlVJ8qw2Zj4cpd9q5R/XOockDsiRSlpcDaPDZeLqpvffecWQO4j1V7/rJmLe54
-         kQV9++9InlcjvJrZSlpvlKhtU8cldrhvVnWZNZb4zrNX7u/pgQutA/JXaVaDQqfXN/Vc
-         Ijc2iiNuFZTQ1ty4kEbQlgJxnhHY5GvZ3mfbwFtZSjeILURZ+fVFd839AkWSgK8NbO01
-         MYow==
-X-Gm-Message-State: APjAAAVdpZ79b0FNkS5am9QGd8n+PHKh3LP+UGyAhTKZMZ9+AgPasJxo
-        /NIvYdZee5uI1hZBXHwD424=
-X-Google-Smtp-Source: APXvYqxiTSwZLXUULRvAFA/dfGcBZic3OggAmUtZmzPOd/5qOuxPbnrAMWF3IQY0KCa3Np3mjYPxUA==
-X-Received: by 2002:a5d:5390:: with SMTP id d16mr8506962wrv.85.1559548447260;
-        Mon, 03 Jun 2019 00:54:07 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id c2sm20530611wrf.75.2019.06.03.00.54.06
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 03 Jun 2019 00:54:06 -0700 (PDT)
-Date:   Mon, 3 Jun 2019 09:54:05 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/2] gpio: Add support for hierarchical IRQ domains
-Message-ID: <20190603075405.GB27753@ulmo>
-References: <20190529145322.20630-1-thierry.reding@gmail.com>
- <20190529145322.20630-2-thierry.reding@gmail.com>
- <CACRpkda_aK++k0eVHmGszgts86usaxbQ9uU0kqAzAjapK8AOQg@mail.gmail.com>
- <CACRpkdb6OjHZGgDHXH8gfi0WwzX8170zHJKbpbnSRv+UsZvfhw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Vxn++X6GnNn7FvRm2GLwCr6U91lHVxlpb9LxLQUYoh8=;
+        b=DtaPX48hcQUlYuEWXkdpz07zcSieDaVGpViYuavlSEr9IoqXFLcE1hk+chnkAp+a2b
+         pcDbxBNPzb9nl34tfEbu1QHm3zl5cJj+qc4XL3xCKA5bI76vznHNUqm7KB7si5HcNbcK
+         ptEsHLks/AdjSRzIfgMP9oDv33h1rgmPcckXhseklSDL2lF9Oa1F4+xg9f8ZAG2h1384
+         rmqRuqGqQoaZApv/w2CFezjL7e8YbGJ/ksHgWZAg9zaB3nkcYAcrZbH6EhXn9AV3e5vo
+         7jgnvAJzhhMM3ZXPWneOhaicACKId+wrBsHA2y82s2AWycSdholsj/bm/Xmm2EgOBIZu
+         8cqA==
+X-Gm-Message-State: APjAAAWCNnvc4Oky1BFdRnsLrPC6Y1SrkAiWIWAVLM/rgrdO42Hg9KN+
+        CzOB06m+Le335o2fd9JdsYEmrmIhPmwxj9TbZeU=
+X-Google-Smtp-Source: APXvYqw9kMPf+INXeMqlOFlFgNgw0nEIS42SjTDd0sxR9d2hrhqUuyp/FltCIycXfO33ebmylOwNZSqfjQ0mSG0kHZc=
+X-Received: by 2002:a1c:eb16:: with SMTP id j22mr1122553wmh.56.1559548447660;
+ Mon, 03 Jun 2019 00:54:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="TRYliJ5NKNqkz5bu"
-Content-Disposition: inline
-In-Reply-To: <CACRpkdb6OjHZGgDHXH8gfi0WwzX8170zHJKbpbnSRv+UsZvfhw@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <1559532216-12114-1-git-send-email-92siuyang@gmail.com>
+In-Reply-To: <1559532216-12114-1-git-send-email-92siuyang@gmail.com>
+From:   Xin Long <lucien.xin@gmail.com>
+Date:   Mon, 3 Jun 2019 15:53:56 +0800
+Message-ID: <CADvbK_eUYhP=pSLqHdBp8E3-NJP28=jErSSvW5moO9WVK=X8XQ@mail.gmail.com>
+Subject: Re: [PATCH] ipvlan: Don't propagate IFF_ALLMULTI changes on down interfaces.
+To:     Young Xiao <92siuyang@gmail.com>
+Cc:     davem <davem@davemloft.net>,
+        Daniel Borkmann <daniel@iogearbox.net>, petrm@mellanox.com,
+        jiri@mellanox.com, idosch@mellanox.com, uehaibing@huawei.com,
+        Hangbin Liu <liuhangbin@gmail.com>,
+        network dev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 3, 2019 at 11:22 AM Young Xiao <92siuyang@gmail.com> wrote:
+>
+> Clearing the IFF_ALLMULTI flag on a down interface could cause an allmulti
+> overflow on the underlying interface.
+>
+> Attempting the set IFF_ALLMULTI on the underlying interface would cause an
+> error and the log message:
+>
+> "allmulti touches root, set allmulti failed."
+s/root/roof
 
---TRYliJ5NKNqkz5bu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I guess this patch was inspired by:
 
-On Sun, Jun 02, 2019 at 10:35:22PM +0200, Linus Walleij wrote:
-> On Sun, Jun 2, 2019 at 3:51 PM Linus Walleij <linus.walleij@linaro.org> w=
-rote:
-> > On Wed, May 29, 2019 at 4:53 PM Thierry Reding <thierry.reding@gmail.co=
-m> wrote:
-> >
-> > > From: Thierry Reding <treding@nvidia.com>
-> > >
-> > > Hierarchical IRQ domains can be used to stack different IRQ controlle=
-rs
-> > > on top of each other. One specific use-case where this can be useful =
-is
-> > > if a power management controller has top-level controls for wakeup
-> > > interrupts. In such cases, the power management controller can be a
-> > > parent to other interrupt controllers and program additional registers
-> > > when an IRQ has its wake capability enabled or disabled.
-> > >
-> > > Signed-off-by: Thierry Reding <treding@nvidia.com>
-> > > ---
-> > > Changes in v3:
-> > > - use irq_create_fwspec_mapping() instead of irq_domain_alloc_irqs()
-> > > - add missing kerneldoc for new parent_domain field
-> > > - keep IRQ_DOMAIN dependency for clarity
-> >
-> > Actually I applied the patch, and dropped the two lines making
-> > it possible to override .to_irq() for now, so I can illustrate my
-> > idea on top. If I manage.
->=20
-> Bah I rewrote the whole think as I want it, maybe my ideas are stupid
-> but take a look at it, also very interested in input from the irqchip
-> maintainers.
->=20
-> Sending it out as RFC in a moment.
+commit bbeb0eadcf9fe74fb2b9b1a6fea82cd538b1e556
+Author: Peter Christensen <pch@ordbogen.com>
+Date:   Thu May 8 11:15:37 2014 +0200
 
-Okay, taking a look.
+    macvlan: Don't propagate IFF_ALLMULTI changes on down interfaces.
 
-Thierry
+I could trigger this error on macvlan prior to this patch with:
 
---TRYliJ5NKNqkz5bu
-Content-Type: application/pgp-signature; name="signature.asc"
+  # ip link add mymacvlan1 link eth2 type macvlan mode bridge
+  # ip link set mymacvlan1 up
+  # ip link set mymacvlan1 allmulticast on
+  # ip link set mymacvlan1 down
+  # ip link set mymacvlan1 allmulticast off
+  # ip link set mymacvlan1 allmulticast on
 
------BEGIN PGP SIGNATURE-----
+but not on ipvlan, could you?
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlz00h0ACgkQ3SOs138+
-s6EZfw/7BJannL3kB1Nh/+VGh/5w17Bx5M9krNi9ZnAdgOmUdIkhU2jgYJeq9rHL
-lL0mqmiTp3kOC/P6UaWZDuP9Ua2c4A4tWyDm1f1/mFntd+jwdf/RCkeeGwlGKeaP
-Hjk+xQLfb+iJGAIDE/yFuObO5/4NbcqtfNr62odpmhy/X2AvZT09bDIRJEtkrPdw
-Eg2QIsO7Y7IQ7FaIpL353upu01V7xgiFxJuTq883zLT7TEF//RxnpYe3KEqAwVA2
-Vj18fFheP0kJbFfsQWeHw7Dald+4pENxQzfq2eohnl2BdwkbFWLEwlNRcozhLgLP
-cT8AX1H1L//+aOSZAnvm2QvVNsvkMyGELs1rznw6+82/BS3+bZctpDXUoJ9gl1Bc
-nvZjzKftd3cUkr10K5tPgXiM/72MqQWflEHhlJ68kA2sJrOuoTEpRyNgXpIBqHuX
-StSVhjqQU3UHP/QgviN1Bp/QpEI+1NPjrO1debtHdiKEa/JcwqGuzl/6bcckBwoC
-0bT1bb/5DE5IFYLixCQndPaX5rWnV6xX7FDttEi7+1f6QtqvH1tkexhddKWNOCOB
-rCMlNgDYTpbV0wVNixKgepiJLbUw3xxX/UMOZV161MQayl9ahIKa1y1zJWTzjlPg
-nc6cNCt8uaYBLH/rm0w4nQ4VN2EypDKEn7fjj3Sk8QqLYz0s3mE=
-=lwgL
------END PGP SIGNATURE-----
+macvlan had this problem, as lowerdev's allmulticast is cleared when doing
+dev_stop and set when doing dev_open, which doesn't happen on ipvlan.
 
---TRYliJ5NKNqkz5bu--
+So I'd think this patch fixes nothing unless you want to add
+dev_set_allmulti(1/-1) in ipvlan_open/stop(), but that's another topic.
+
+did I miss something?
+
+>
+> Signed-off-by: Young Xiao <92siuyang@gmail.com>
+> ---
+>  drivers/net/ipvlan/ipvlan_main.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/net/ipvlan/ipvlan_main.c b/drivers/net/ipvlan/ipvlan_main.c
+> index bbeb162..523bb83 100644
+> --- a/drivers/net/ipvlan/ipvlan_main.c
+> +++ b/drivers/net/ipvlan/ipvlan_main.c
+> @@ -242,8 +242,10 @@ static void ipvlan_change_rx_flags(struct net_device *dev, int change)
+>         struct ipvl_dev *ipvlan = netdev_priv(dev);
+>         struct net_device *phy_dev = ipvlan->phy_dev;
+>
+> -       if (change & IFF_ALLMULTI)
+> -               dev_set_allmulti(phy_dev, dev->flags & IFF_ALLMULTI? 1 : -1);
+> +       if (dev->flags & IFF_UP) {
+> +               if (change & IFF_ALLMULTI)
+> +                       dev_set_allmulti(phy_dev, dev->flags & IFF_ALLMULTI ? 1 : -1);
+> +       }
+>  }
+>
+>  static void ipvlan_set_multicast_mac_filter(struct net_device *dev)
+> --
+> 2.7.4
+>
