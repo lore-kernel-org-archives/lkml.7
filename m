@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A45C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B92C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65E6F27F56
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A09C027F56
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:16:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553391;
-	bh=sVe/hc/9Uz5givtDxZl6T6BsIsAPVmZI5xhxpdMn4QM=;
+	s=default; t=1559553398;
+	bh=+Y3RyFGuyeVzcTxPSIRnG+lKl/0OSsVEM+e1L0Exjys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ETz2rONxDuWfD+ZSTMtXBBmbbLD7seUNNHPKjtSpi3TBMQnixoq0qRlmkzkB5frRH
-	 Y66U0GxocQww1AMEhrQtTjOYi3D+ooHdRlxUdmK4yX9egByH2b9Rsqju3AP16VOjIa
-	 4Aga08iHVwC6zVhQgQhysNlLtO5oV0igArRsV+uc=
+	b=s7tach7UiZxcGs29AI/QwXdED3/kxcQ+ZBg2UsXYS/x1tQXbs3X2IOs68nta5HfAB
+	 EaNreufAzrmdlOpWLQS24C43LzIc3lWeGiQ5Bmy0HnX6mSnW8+Y96f5qYmQpONzAcJ
+	 NbRP00lx9Uy69TqiSc+WoEG0kMZXiWuJHJjsgeE4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728444AbfFCJQ3 (ORCPT
+        id S1728720AbfFCJQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:16:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60538 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 05:16:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728667AbfFCJMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:12:39 -0400
+        id S1728607AbfFCJMT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:12:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 971B627DF3;
-        Mon,  3 Jun 2019 09:12:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A15427E94;
+        Mon,  3 Jun 2019 09:12:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553159;
-        bh=sVe/hc/9Uz5givtDxZl6T6BsIsAPVmZI5xhxpdMn4QM=;
+        s=default; t=1559553138;
+        bh=+Y3RyFGuyeVzcTxPSIRnG+lKl/0OSsVEM+e1L0Exjys=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HpHcyEyEB1h2y05ZPmEwdgcThrexx9pt7mi76i8JqKJ2lSQf3Yze5gyX4aHEHOXo3
-         woaRLzCETHhwW3Hfd3B0uxB+W8OwG2kpKaCJhXvGAK3C/9Ks7o4yCcz6bS9sWAWF8p
-         mqUgWs6VBQZrV7x3iBXoebblqhaQi4lExXUGg12Q=
+        b=Eh0wVQiijwhiJ4fxdXgaSnv/t3g6NpTgMouf6Jh5raKHEFpsv5NAoxkK+WeGCZ/Gk
+         fqNOKMytZ5BVu5bvGiivz05gol/tPbkQM+faXcWDBAbw95FohPGBxcDqobyj0Kl4XZ
+         UK7VL6PO9DUFq12Y9y5xvgh8bJLJvP4QiUzsVnLo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Dirk van der Merwe <dirk.vandermerwe@netronome.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 30/36] net/tls: dont ignore netdev notifications if no TLS features
-Date:   Mon,  3 Jun 2019 11:09:18 +0200
-Message-Id: <20190603090522.983099765@linuxfoundation.org>
+        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.0 35/36] Revert "tipc: fix modprobe tipc failed after switch order of device registration"
+Date:   Mon,  3 Jun 2019 11:09:23 +0200
+Message-Id: <20190603090523.290867372@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190603090520.998342694@linuxfoundation.org>
 References: <20190603090520.998342694@linuxfoundation.org>
@@ -61,37 +58,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <jakub.kicinski@netronome.com>
+From: David S. Miller <davem@davemloft.net>
 
-[ Upstream commit c3f4a6c39cf269a40d45f813c05fa830318ad875 ]
+commit 5593530e56943182ebb6d81eca8a3be6db6dbba4 upstream.
 
-On device surprise removal path (the notifier) we can't
-bail just because the features are disabled.  They may
-have been enabled during the lifetime of the device.
-This bug leads to leaking netdev references and
-use-after-frees if there are active connections while
-device features are cleared.
+This reverts commit 532b0f7ece4cb2ffd24dc723ddf55242d1188e5e.
 
-Fixes: e8f69799810c ("net/tls: Add generic NIC offload infrastructure")
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reviewed-by: Dirk van der Merwe <dirk.vandermerwe@netronome.com>
+More revisions coming up.
+
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/tls/tls_device.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/tls/tls_device.c
-+++ b/net/tls/tls_device.c
-@@ -981,7 +981,8 @@ static int tls_dev_event(struct notifier
+---
+ net/tipc/core.c |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+--- a/net/tipc/core.c
++++ b/net/tipc/core.c
+@@ -66,10 +66,6 @@ static int __net_init tipc_init_net(stru
+ 	INIT_LIST_HEAD(&tn->node_list);
+ 	spin_lock_init(&tn->node_list_lock);
+ 
+-	err = tipc_socket_init();
+-	if (err)
+-		goto out_socket;
+-
+ 	err = tipc_sk_rht_init(net);
+ 	if (err)
+ 		goto out_sk_rht;
+@@ -96,8 +92,6 @@ out_subscr:
+ out_nametbl:
+ 	tipc_sk_rht_destroy(net);
+ out_sk_rht:
+-	tipc_socket_stop();
+-out_socket:
+ 	return err;
+ }
+ 
+@@ -108,7 +102,6 @@ static void __net_exit tipc_exit_net(str
+ 	tipc_bcast_stop(net);
+ 	tipc_nametbl_stop(net);
+ 	tipc_sk_rht_destroy(net);
+-	tipc_socket_stop();
+ }
+ 
+ static struct pernet_operations tipc_net_ops = {
+@@ -144,6 +137,10 @@ static int __init tipc_init(void)
+ 	if (err)
+ 		goto out_pernet;
+ 
++	err = tipc_socket_init();
++	if (err)
++		goto out_socket;
++
+ 	err = tipc_bearer_setup();
+ 	if (err)
+ 		goto out_bearer;
+@@ -151,6 +148,8 @@ static int __init tipc_init(void)
+ 	pr_info("Started in single node mode\n");
+ 	return 0;
+ out_bearer:
++	tipc_socket_stop();
++out_socket:
+ 	unregister_pernet_subsys(&tipc_net_ops);
+ out_pernet:
+ 	tipc_unregister_sysctl();
+@@ -166,6 +165,7 @@ out_netlink:
+ static void __exit tipc_exit(void)
  {
- 	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
- 
--	if (!(dev->features & (NETIF_F_HW_TLS_RX | NETIF_F_HW_TLS_TX)))
-+	if (!dev->tlsdev_ops &&
-+	    !(dev->features & (NETIF_F_HW_TLS_RX | NETIF_F_HW_TLS_TX)))
- 		return NOTIFY_DONE;
- 
- 	switch (event) {
+ 	tipc_bearer_cleanup();
++	tipc_socket_stop();
+ 	unregister_pernet_subsys(&tipc_net_ops);
+ 	tipc_netlink_stop();
+ 	tipc_netlink_compat_stop();
 
 
