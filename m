@@ -2,396 +2,133 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4217CC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D60FC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0248D250F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:07:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C95125254
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:07:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="bc7TrWgT"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lWohiKBq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbfFCWHh (ORCPT
+        id S1726853AbfFCWH5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 18:07:37 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46909 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726025AbfFCWHg (ORCPT
+        Mon, 3 Jun 2019 18:07:57 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36434 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726503AbfFCWH4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 18:07:36 -0400
-Received: by mail-pg1-f195.google.com with SMTP id v9so9034992pgr.13
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 15:07:36 -0700 (PDT)
+        Mon, 3 Jun 2019 18:07:56 -0400
+Received: by mail-pf1-f193.google.com with SMTP id u22so11389069pfm.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 15:07:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=xjW+KHnHD//MqYRxY0A82usCY+qgrBu78W4ErXk80GU=;
-        b=bc7TrWgTSGZgsPvNADkSHVc76wW+ddItC6br4BoP2u6J2Pd8x17XCsWC3tGSkAaHij
-         oDcMSFJAURwkI1EsRGyUV04wA/UtJNTcgot7wyikPKZfLvqoi6mEr5mnVocvC0sTBFhE
-         g0b3BThoDChYC55UwB0tCBNdqej7Q0Yz1Gli7Xn8kG9PLT/OKEki2zZyQkfL6rGKUnYs
-         IhBE+6SRBybCA4Z4ALlC/2E8iG4/Lj7Ku4+nALz8YwsvMit9wJIScjmbYbcNW8nNdZNK
-         TPuwsI7mqRB+pFgEWLd8ALXu3vRcJfmSXTvT9yk7gHuUaX/0bTi7PuDMoT/E+qB+7sUQ
-         gyaw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jsqt76+/tC7lNIGkBOfSxOR0w7kTsY9VRuEizjLylaM=;
+        b=lWohiKBqCPBenj/eJUzVHOJpCdAi91g5TtT2pyrV0FfesO2LcED3e8srNOon8Iibg8
+         XtIVB4yvu8opanO7FhZdkXkw4qrcWHepKTZehjxMhdJDV96SRObFjXSOJ7rGU53BIOCP
+         amFtVM8IVZTgsTynPUL6wWPlqXYRwRZZzxCbIY9Ee0e3Vl33p4qUyAVxj8FpxZ60liZ+
+         tlqBRl6mtiIkFKWFCab1uDZBalnO4+vn2OxS13m7xXU6v0FU5TV28RkCj9ovOInxVDww
+         AAHmWcMNk0lFA89DRsCsZY4WJwkQ6CMV6qh3KnKzsG3YvEUYZUc8GLtbMBr5SeewywTj
+         cL0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=xjW+KHnHD//MqYRxY0A82usCY+qgrBu78W4ErXk80GU=;
-        b=iJyE6SXi/fKAAwUsgJtUF3p13R+QeAMGojEp0TcvIRqzMGffmGVZVm0M90IOFJRalq
-         BvYhlPKPncSask17Ma5RUzWKHUcoj2cntqbjgtBq4VwAdnXuumQTZLLk6A3CW+++OoxB
-         v8i+5d40YvinaUjT3UzFbQYNKayHoAWbMhqEyUYJKqNO46j03mvORsl6Rto0SzTbjSs/
-         HQ5PC0AR1MW/EIP/I1GMOKl41DHEVOXxkqQUFI0Bk600j1ar3iJ19bmSHlaIt/F+Vumk
-         pCraRyGPEYPzR/leQL0mN/1JPlqT8mPNN+sxowhUMHXtoXzlvR/54dAR+SCpgMNOJ60V
-         O1QQ==
-X-Gm-Message-State: APjAAAWQQtyXyE37C3FmIweqbtV34ZuTGvCg+FMAYodd3gtNr+ppaneR
-        juFG3zfKFhoFTuYTuobIt0akvA==
-X-Google-Smtp-Source: APXvYqze2WOGrqc7zcRp11zL0Su9NKxuQeLHHGNTzfXyE/gd72jk+MrGfhvjph0MXtK8eEj/GjOljw==
-X-Received: by 2002:aa7:8292:: with SMTP id s18mr2491755pfm.111.1559596113541;
-        Mon, 03 Jun 2019 14:08:33 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::1:9fa4])
-        by smtp.gmail.com with ESMTPSA id w62sm2586095pfw.132.2019.06.03.14.08.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 03 Jun 2019 14:08:32 -0700 (PDT)
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: [PATCH 05/11] mm: vmscan: replace shrink_node() loop with a retry jump
-Date:   Mon,  3 Jun 2019 17:07:40 -0400
-Message-Id: <20190603210746.15800-6-hannes@cmpxchg.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190603210746.15800-1-hannes@cmpxchg.org>
-References: <20190603210746.15800-1-hannes@cmpxchg.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jsqt76+/tC7lNIGkBOfSxOR0w7kTsY9VRuEizjLylaM=;
+        b=YHpf2yXBvY2JksGVu3nbOm6GQrpdPGLOuUueWFofy85vSusR7wsvYh8u/putOnxakU
+         EChJAYWminft4osUOcDWoImGeb3Zg6kTTeqPxKnxrXHFEH7AKHFr5Po2/UIahSbXVlPo
+         9HSV2ssoaiBExGAUCJAeWBNSu+8JVKHNnQmGMlTrL4fU/OBDXH5ejeWanWvbmds9xbSP
+         d3KSz2/DcAg4jUtMBqpMK8OXWltEJeK38h2v0tsElfngI/vnMeLi7fOnMDIuU7/Qt4l4
+         0/fj/b4JyzQHSfLN6s1W6M/ZmQDflPTmaztkAI4vZK2gl1NRcjFRgOfKjVcsKdstrMTS
+         Es5Q==
+X-Gm-Message-State: APjAAAUGgK39spSddVRo1Ijh9bYe/ZGex4eCgPHBSuh2hnR/WdH7AwTF
+        YhJ+Rocu+YJAh4h7AsDeBmXF1Za2/eXajjIoBpDiMw==
+X-Google-Smtp-Source: APXvYqwtRDahz95jt5ckTsuH+i7KTn9MRTd6CF+6hpsuPoa7lkdPVCsC5gUhiu+y1T7oPa6/2fCZnPaB/OkOvv8EDa4=
+X-Received: by 2002:a17:90a:bf02:: with SMTP id c2mr5763850pjs.73.1559596083400;
+ Mon, 03 Jun 2019 14:08:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190603174323.48251-1-natechancellor@gmail.com>
+In-Reply-To: <20190603174323.48251-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 3 Jun 2019 14:07:50 -0700
+Message-ID: <CAKwvOdkQzdZezwf51UddFVGQh0mRFMEexr1cMHx=va88T515YQ@mail.gmail.com>
+Subject: Re: [PATCH] PCI: rpaphp: Avoid a sometimes-uninitialized warning
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Most of the function body is inside a loop, which imposes an
-additional indentation and scoping level that makes the code a bit
-hard to follow and modify.
+On Mon, Jun 3, 2019 at 10:44 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+> Looking at the loop in a vacuum as clang would, fndit could be
+> uninitialized if entries was ever zero or the if statement was
+> always true within the loop. Regardless of whether or not this
+> warning is a problem in practice, "found" variables should always
+> be initialized to false so that there is no possibility of
+> undefined behavior.
 
-The looping only happens in case of reclaim-compaction, which isn't
-the common case. So rather than adding yet another function level to
-the reclaim path and have every reclaim invocation go through a level
-that only exists for one specific cornercase, use a retry goto.
+Thanks for the patch Nathan.  fndit isn't really being used for
+anything other than a print statement outside of the loop.  How about:
 
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
----
- mm/vmscan.c | 266 ++++++++++++++++++++++++++--------------------------
- 1 file changed, 133 insertions(+), 133 deletions(-)
+```
+diff --git a/drivers/pci/hotplug/rpaphp_core.c
+b/drivers/pci/hotplug/rpaphp_core.c
+index bcd5d357ca23..c3899ee1db99 100644
+--- a/drivers/pci/hotplug/rpaphp_core.c
++++ b/drivers/pci/hotplug/rpaphp_core.c
+@@ -230,7 +230,7 @@ static int rpaphp_check_drc_props_v2(struct
+device_node *dn, char *drc_name,
+  struct of_drc_info drc;
+  const __be32 *value;
+  char cell_drc_name[MAX_DRC_NAME_LEN];
+- int j, fndit;
++ int j;
 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index afd5e2432a8e..304974481146 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -2672,164 +2672,164 @@ static bool pgdat_memcg_congested(pg_data_t *pgdat, struct mem_cgroup *memcg)
- static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
- {
- 	struct reclaim_state *reclaim_state = current->reclaim_state;
-+	struct mem_cgroup *root = sc->target_mem_cgroup;
-+	struct mem_cgroup_reclaim_cookie reclaim = {
-+		.pgdat = pgdat,
-+		.priority = sc->priority,
-+	};
- 	unsigned long nr_reclaimed, nr_scanned;
- 	bool reclaimable = false;
-+	struct mem_cgroup *memcg;
- 
--	do {
--		struct mem_cgroup *root = sc->target_mem_cgroup;
--		struct mem_cgroup_reclaim_cookie reclaim = {
--			.pgdat = pgdat,
--			.priority = sc->priority,
--		};
--		struct mem_cgroup *memcg;
+  info = of_find_property(dn->parent, "ibm,drc-info", NULL);
+  if (info == NULL)
+@@ -245,17 +245,13 @@ static int rpaphp_check_drc_props_v2(struct
+device_node *dn, char *drc_name,
+
+  /* Should now know end of current entry */
+
+- if (my_index > drc.last_drc_index)
+- continue;
 -
--		memset(&sc->nr, 0, sizeof(sc->nr));
-+again:
-+	memset(&sc->nr, 0, sizeof(sc->nr));
- 
--		nr_reclaimed = sc->nr_reclaimed;
--		nr_scanned = sc->nr_scanned;
-+	nr_reclaimed = sc->nr_reclaimed;
-+	nr_scanned = sc->nr_scanned;
- 
--		memcg = mem_cgroup_iter(root, NULL, &reclaim);
--		do {
--			unsigned long reclaimed;
--			unsigned long scanned;
-+	memcg = mem_cgroup_iter(root, NULL, &reclaim);
-+	do {
-+		unsigned long reclaimed;
-+		unsigned long scanned;
- 
--			switch (mem_cgroup_protected(root, memcg)) {
--			case MEMCG_PROT_MIN:
--				/*
--				 * Hard protection.
--				 * If there is no reclaimable memory, OOM.
--				 */
-+		switch (mem_cgroup_protected(root, memcg)) {
-+		case MEMCG_PROT_MIN:
-+			/*
-+			 * Hard protection.
-+			 * If there is no reclaimable memory, OOM.
-+			 */
-+			continue;
-+		case MEMCG_PROT_LOW:
-+			/*
-+			 * Soft protection.
-+			 * Respect the protection only as long as
-+			 * there is an unprotected supply
-+			 * of reclaimable memory from other cgroups.
-+			 */
-+			if (!sc->memcg_low_reclaim) {
-+				sc->memcg_low_skipped = 1;
- 				continue;
--			case MEMCG_PROT_LOW:
--				/*
--				 * Soft protection.
--				 * Respect the protection only as long as
--				 * there is an unprotected supply
--				 * of reclaimable memory from other cgroups.
--				 */
--				if (!sc->memcg_low_reclaim) {
--					sc->memcg_low_skipped = 1;
--					continue;
--				}
--				memcg_memory_event(memcg, MEMCG_LOW);
--				break;
--			case MEMCG_PROT_NONE:
--				/*
--				 * All protection thresholds breached. We may
--				 * still choose to vary the scan pressure
--				 * applied based on by how much the cgroup in
--				 * question has exceeded its protection
--				 * thresholds (see get_scan_count).
--				 */
--				break;
- 			}
+- fndit = 1;
+- break;
++ /* Found it */
++ if (my_index <= drc.last_drc_index) {
++ sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix,
++ my_index);
++ break;
++ }
+  }
+- /* Found it */
 -
--			reclaimed = sc->nr_reclaimed;
--			scanned = sc->nr_scanned;
--			shrink_node_memcg(pgdat, memcg, sc);
--
--			if (sc->may_shrinkslab) {
--				shrink_slab(sc->gfp_mask, pgdat->node_id,
--				    memcg, sc->priority);
--			}
--
--			/* Record the group's reclaim efficiency */
--			vmpressure(sc->gfp_mask, memcg, false,
--				   sc->nr_scanned - scanned,
--				   sc->nr_reclaimed - reclaimed);
--
-+			memcg_memory_event(memcg, MEMCG_LOW);
-+			break;
-+		case MEMCG_PROT_NONE:
- 			/*
--			 * Kswapd have to scan all memory cgroups to fulfill
--			 * the overall scan target for the node.
--			 *
--			 * Limit reclaim, on the other hand, only cares about
--			 * nr_to_reclaim pages to be reclaimed and it will
--			 * retry with decreasing priority if one round over the
--			 * whole hierarchy is not sufficient.
-+			 * All protection thresholds breached. We may
-+			 * still choose to vary the scan pressure
-+			 * applied based on by how much the cgroup in
-+			 * question has exceeded its protection
-+			 * thresholds (see get_scan_count).
- 			 */
--			if (!current_is_kswapd() &&
--					sc->nr_reclaimed >= sc->nr_to_reclaim) {
--				mem_cgroup_iter_break(root, memcg);
--				break;
--			}
--		} while ((memcg = mem_cgroup_iter(root, memcg, &reclaim)));
-+			break;
-+		}
-+
-+		reclaimed = sc->nr_reclaimed;
-+		scanned = sc->nr_scanned;
-+		shrink_node_memcg(pgdat, memcg, sc);
- 
--		if (reclaim_state) {
--			sc->nr_reclaimed += reclaim_state->reclaimed_slab;
--			reclaim_state->reclaimed_slab = 0;
-+		if (sc->may_shrinkslab) {
-+			shrink_slab(sc->gfp_mask, pgdat->node_id,
-+				    memcg, sc->priority);
- 		}
- 
--		/* Record the subtree's reclaim efficiency */
--		vmpressure(sc->gfp_mask, sc->target_mem_cgroup, true,
--			   sc->nr_scanned - nr_scanned,
--			   sc->nr_reclaimed - nr_reclaimed);
-+		/* Record the group's reclaim efficiency */
-+		vmpressure(sc->gfp_mask, memcg, false,
-+			   sc->nr_scanned - scanned,
-+			   sc->nr_reclaimed - reclaimed);
- 
--		if (sc->nr_reclaimed - nr_reclaimed)
--			reclaimable = true;
-+		/*
-+		 * Kswapd have to scan all memory cgroups to fulfill
-+		 * the overall scan target for the node.
-+		 *
-+		 * Limit reclaim, on the other hand, only cares about
-+		 * nr_to_reclaim pages to be reclaimed and it will
-+		 * retry with decreasing priority if one round over the
-+		 * whole hierarchy is not sufficient.
-+		 */
-+		if (!current_is_kswapd() &&
-+		    sc->nr_reclaimed >= sc->nr_to_reclaim) {
-+			mem_cgroup_iter_break(root, memcg);
-+			break;
-+		}
-+	} while ((memcg = mem_cgroup_iter(root, memcg, &reclaim)));
- 
--		if (current_is_kswapd()) {
--			/*
--			 * If reclaim is isolating dirty pages under writeback,
--			 * it implies that the long-lived page allocation rate
--			 * is exceeding the page laundering rate. Either the
--			 * global limits are not being effective at throttling
--			 * processes due to the page distribution throughout
--			 * zones or there is heavy usage of a slow backing
--			 * device. The only option is to throttle from reclaim
--			 * context which is not ideal as there is no guarantee
--			 * the dirtying process is throttled in the same way
--			 * balance_dirty_pages() manages.
--			 *
--			 * Once a node is flagged PGDAT_WRITEBACK, kswapd will
--			 * count the number of pages under pages flagged for
--			 * immediate reclaim and stall if any are encountered
--			 * in the nr_immediate check below.
--			 */
--			if (sc->nr.writeback && sc->nr.writeback == sc->nr.taken)
--				set_bit(PGDAT_WRITEBACK, &pgdat->flags);
-+	if (reclaim_state) {
-+		sc->nr_reclaimed += reclaim_state->reclaimed_slab;
-+		reclaim_state->reclaimed_slab = 0;
-+	}
- 
--			/*
--			 * Tag a node as congested if all the dirty pages
--			 * scanned were backed by a congested BDI and
--			 * wait_iff_congested will stall.
--			 */
--			if (sc->nr.dirty && sc->nr.dirty == sc->nr.congested)
--				set_bit(PGDAT_CONGESTED, &pgdat->flags);
-+	/* Record the subtree's reclaim efficiency */
-+	vmpressure(sc->gfp_mask, sc->target_mem_cgroup, true,
-+		   sc->nr_scanned - nr_scanned,
-+		   sc->nr_reclaimed - nr_reclaimed);
- 
--			/* Allow kswapd to start writing pages during reclaim.*/
--			if (sc->nr.unqueued_dirty == sc->nr.file_taken)
--				set_bit(PGDAT_DIRTY, &pgdat->flags);
-+	if (sc->nr_reclaimed - nr_reclaimed)
-+		reclaimable = true;
- 
--			/*
--			 * If kswapd scans pages marked marked for immediate
--			 * reclaim and under writeback (nr_immediate), it
--			 * implies that pages are cycling through the LRU
--			 * faster than they are written so also forcibly stall.
--			 */
--			if (sc->nr.immediate)
--				congestion_wait(BLK_RW_ASYNC, HZ/10);
--		}
-+	if (current_is_kswapd()) {
-+		/*
-+		 * If reclaim is isolating dirty pages under writeback,
-+		 * it implies that the long-lived page allocation rate
-+		 * is exceeding the page laundering rate. Either the
-+		 * global limits are not being effective at throttling
-+		 * processes due to the page distribution throughout
-+		 * zones or there is heavy usage of a slow backing
-+		 * device. The only option is to throttle from reclaim
-+		 * context which is not ideal as there is no guarantee
-+		 * the dirtying process is throttled in the same way
-+		 * balance_dirty_pages() manages.
-+		 *
-+		 * Once a node is flagged PGDAT_WRITEBACK, kswapd will
-+		 * count the number of pages under pages flagged for
-+		 * immediate reclaim and stall if any are encountered
-+		 * in the nr_immediate check below.
-+		 */
-+		if (sc->nr.writeback && sc->nr.writeback == sc->nr.taken)
-+			set_bit(PGDAT_WRITEBACK, &pgdat->flags);
- 
- 		/*
--		 * Legacy memcg will stall in page writeback so avoid forcibly
--		 * stalling in wait_iff_congested().
-+		 * Tag a node as congested if all the dirty pages
-+		 * scanned were backed by a congested BDI and
-+		 * wait_iff_congested will stall.
- 		 */
--		if (cgroup_reclaim(sc) && writeback_working(sc) &&
--		    sc->nr.dirty && sc->nr.dirty == sc->nr.congested)
--			set_memcg_congestion(pgdat, root, true);
-+		if (sc->nr.dirty && sc->nr.dirty == sc->nr.congested)
-+			set_bit(PGDAT_CONGESTED, &pgdat->flags);
-+
-+		/* Allow kswapd to start writing pages during reclaim.*/
-+		if (sc->nr.unqueued_dirty == sc->nr.file_taken)
-+			set_bit(PGDAT_DIRTY, &pgdat->flags);
- 
- 		/*
--		 * Stall direct reclaim for IO completions if underlying BDIs
--		 * and node is congested. Allow kswapd to continue until it
--		 * starts encountering unqueued dirty pages or cycling through
--		 * the LRU too quickly.
-+		 * If kswapd scans pages marked marked for immediate
-+		 * reclaim and under writeback (nr_immediate), it
-+		 * implies that pages are cycling through the LRU
-+		 * faster than they are written so also forcibly stall.
- 		 */
--		if (!sc->hibernation_mode && !current_is_kswapd() &&
--		   current_may_throttle() && pgdat_memcg_congested(pgdat, root))
--			wait_iff_congested(BLK_RW_ASYNC, HZ/10);
-+		if (sc->nr.immediate)
-+			congestion_wait(BLK_RW_ASYNC, HZ/10);
-+	}
-+
-+	/*
-+	 * Legacy memcg will stall in page writeback so avoid forcibly
-+	 * stalling in wait_iff_congested().
-+	 */
-+	if (cgroup_reclaim(sc) && writeback_working(sc) &&
-+	    sc->nr.dirty && sc->nr.dirty == sc->nr.congested)
-+		set_memcg_congestion(pgdat, root, true);
-+
-+	/*
-+	 * Stall direct reclaim for IO completions if underlying BDIs
-+	 * and node is congested. Allow kswapd to continue until it
-+	 * starts encountering unqueued dirty pages or cycling through
-+	 * the LRU too quickly.
-+	 */
-+	if (!sc->hibernation_mode && !current_is_kswapd() &&
-+	    current_may_throttle() && pgdat_memcg_congested(pgdat, root))
-+		wait_iff_congested(BLK_RW_ASYNC, HZ/10);
- 
--	} while (should_continue_reclaim(pgdat, sc->nr_reclaimed - nr_reclaimed,
--					 sc->nr_scanned - nr_scanned, sc));
-+	if (should_continue_reclaim(pgdat, sc->nr_reclaimed - nr_reclaimed,
-+				    sc->nr_scanned - nr_scanned, sc))
-+		goto again;
- 
- 	/*
- 	 * Kswapd gives up on balancing particular nodes after too
+- if (fndit)
+- sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix,
+- my_index);
+
+  if (((drc_name == NULL) ||
+       (drc_name && !strcmp(drc_name, cell_drc_name))) &&
+```
+(not sure my tabs were pasted properly in the above...)
+
 -- 
-2.21.0
-
+Thanks,
+~Nick Desaulniers
