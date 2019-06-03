@@ -2,97 +2,101 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEE1C28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3883DC28CC6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91E5E2803D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EB052803C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:49:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="jZRdLLd/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RrCV1Gym"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727962AbfFCJsC (ORCPT
+        id S1727075AbfFCJtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:48:02 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35233 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727048AbfFCJrw (ORCPT
+        Mon, 3 Jun 2019 05:49:11 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59846 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbfFCJtK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:47:52 -0400
-Received: by mail-wm1-f68.google.com with SMTP id c6so7385873wml.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 02:47:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=T9Ny5N7xcGaPs9PTlrreMwQ78swu8eI1bqcwr5eO4vE=;
-        b=jZRdLLd/0Cwb2WksjvzB5nfmewOs6XQTiqgY3942FTJZbY3otyh522qliwYQUxB80r
-         tldzgHNhJJDUtVqZqbbUaurGWFIWMjB07Tbpi2Nr2fXQbwTBScqSPtUEzGg/REKu8y74
-         96r+RTtykcM+FmDC49Bf97j7ggNKk0RTHUuwghW1TiaWe9aw9eVSzVAoxtuj+vxVomPN
-         tE8aXdcslm6uL7cb4sB09Tn+q496+67zaoL3zQAiyh29M07k1Qg3Rxo9T99jVmXQrivZ
-         e5NouXydbCRiZ+Waa4lXIO2rqDLnEoyHPxG/FtOnB3HRl6PwFtyvfszgfY8tbh8F0jq/
-         nGpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=T9Ny5N7xcGaPs9PTlrreMwQ78swu8eI1bqcwr5eO4vE=;
-        b=lzSgY9DWaGC9QJYpR5/M4mgG3WYgTmbiyQLxZ3B8nK8C5d91I/oFshEPhTACLwoeNA
-         YcVa11cUVrnSQcJLs96k6K1oIeIU64xBbLHWebxRfsR/rj+GZNSP+1bp5bKcAMs40Bh0
-         q17Vf7Ra4Fi0RIx6QyWivJ5//juR/0t33knYnN3NXg16pp8U9LuENocY9ebaADATc9sz
-         viPHxGzYXCLWXPvN56xUy/jLbBiYPaA+DDu3orHoGS0c6H5wqpqKvKHEGkoXRpyYD0W/
-         14GiZGMicU/B6WtB61aXGefCCCHUJcbSB8+rd2oRkprx7YOS0wjpaZSAFEIfj//teMMa
-         r2AQ==
-X-Gm-Message-State: APjAAAXb1LAioBO99xUC8AlvuufHRl3LHEs6wlw8iG7uKiAneCax01qq
-        yO+qMLQx5mIZ+LniiCyJczAlo2IgzEQLpA==
-X-Google-Smtp-Source: APXvYqxYgQQ6aKW2VVH6+UX/ZVBFLY7/jEsZhudyesWCvOJtNp0VN66G3eM04FyN/tjpGKCky56o9g==
-X-Received: by 2002:a7b:cd8e:: with SMTP id y14mr13747212wmj.155.1559555270333;
-        Mon, 03 Jun 2019 02:47:50 -0700 (PDT)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id z14sm11235375wrh.86.2019.06.03.02.47.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 03 Jun 2019 02:47:49 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     khilman@baylibre.com
-Cc:     linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 3/4] arm64: dts: meson-g12a-sei510: bump bluetooth bus speed to 2Mbaud/s
-Date:   Mon,  3 Jun 2019 11:47:39 +0200
-Message-Id: <20190603094740.12255-4-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190603094740.12255-1-narmstrong@baylibre.com>
-References: <20190603094740.12255-1-narmstrong@baylibre.com>
+        Mon, 3 Jun 2019 05:49:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=65d4Y+1Ap7Wq4oBfZo3msirKt5xkc5tCjlN63jde964=; b=RrCV1GymZsHV1Th3QTzbw2prm
+        UjrJRPyT7kPJCk8yfzqL2iTr4w2Jg6krm9LEIrk3anCpSMFz+rM5pwqH5xWdG4v2Z+RsODytT7eZY
+        JAZAmjg/0G2TtlUUOsbRD49rR2S42j31E6T6c7sa/TcULUGfel2EFK4VLb+o92Z2pG058OtDj9213
+        siiC6ac3TYjJQhVrhBaWCX44+9bDHGtkqFavaidrm/gWywZ+y0xJ0r4pjyj4f/eFnnk2Aa6ZW6TAk
+        XlY3q9GCYPKMLu6BaNMHvvFrIlsnj3I+AJqnvvpBm121IWjrfdHe3ihWplfn914C8sND1kMRSKWQB
+        yWOqntmMQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hXjaV-0001GT-Mx; Mon, 03 Jun 2019 09:49:07 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 94AC6202CD6A0; Mon,  3 Jun 2019 11:49:05 +0200 (CEST)
+Date:   Mon, 3 Jun 2019 11:49:05 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Liangyan <liangyan.peng@linux.alibaba.com>
+Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org,
+        yun.wang@linux.alibaba.com, shanpeic@linux.alibaba.com,
+        xlpang@linux.alibaba.com,
+        "liangyan.ply" <liangyan.ply@linux.alibaba.com>,
+        Ben Segall <bsegall@google.com>
+Subject: Re: [PATCH] sched/fair: don't restart enqueued cfs quota slack timer
+Message-ID: <20190603094905.GA3419@hirez.programming.kicks-ass.net>
+References: <20190603044309.168065-1-liangyan.peng@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190603044309.168065-1-liangyan.peng@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Setting to 2Mbaud/s is the nominal bus speed for common usages.
+On Mon, Jun 03, 2019 at 12:43:09PM +0800, Liangyan wrote:
+> From: "liangyan.ply" <liangyan.ply@linux.alibaba.com>
+> 
+> start_cfs_slack_bandwidth() will restart the quota slack timer,
+> if it is called frequently, this timer will be restarted continuously
+> and may have no chance to expire to unthrottle cfs tasks.
+> This will cause that the throttled tasks can't be unthrottled in time
+> although they have remaining quota.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts | 1 +
- 1 file changed, 1 insertion(+)
+This looks very similar to the patch from Ben here:
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
-index 3e0e119c13ce..4fc30131e5e7 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
-@@ -530,6 +530,7 @@
- 	bluetooth {
- 		compatible = "brcm,bcm43438-bt";
- 		shutdown-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
-+		max-speed = <2000000>;
- 		clocks = <&wifi32k>;
- 		clock-names = "lpo";
- 		vbat-supply = <&vddao_3v3>;
--- 
-2.21.0
+  https://lkml.kernel.org/r/xm26blzlyr9d.fsf@bsegall-linux.svl.corp.google.com
 
+> 
+> Signed-off-by: Liangyan <liangyan.peng@linux.alibaba.com>
+> ---
+>  kernel/sched/fair.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index d90a64620072..fdb03c752f97 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -4411,9 +4411,11 @@ static void start_cfs_slack_bandwidth(struct cfs_bandwidth *cfs_b)
+>  	if (runtime_refresh_within(cfs_b, min_left))
+>  		return;
+>  
+> -	hrtimer_start(&cfs_b->slack_timer,
+> +	if (!hrtimer_active(&cfs_b->slack_timer)) {
+> +		hrtimer_start(&cfs_b->slack_timer,
+>  			ns_to_ktime(cfs_bandwidth_slack_period),
+>  			HRTIMER_MODE_REL);
+> +	}
+>  }
+>  
+>  /* we know any runtime found here is valid as update_curr() precedes return */
+> -- 
+> 2.14.4.44.g2045bb6
+> 
