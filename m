@@ -2,125 +2,109 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34189C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F52FC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:33:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04BB023EAE
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:32:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 232B323ECA
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:33:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SxRXTAPJ"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="A3TCvfX0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbfFCSc1 (ORCPT
+        id S1726682AbfFCSdH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 14:32:27 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39733 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbfFCScZ (ORCPT
+        Mon, 3 Jun 2019 14:33:07 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:15140 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726112AbfFCSdG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 14:32:25 -0400
-Received: by mail-lj1-f194.google.com with SMTP id a10so13965753ljf.6
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 11:32:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=t54X/Fzcqzl0rbwLC0aNC65O4bdybHEbE+a1rfg9Liw=;
-        b=SxRXTAPJ1R5lRYBBqnU/IRLFTdiBzyLV4t8P118DSL5bBOq7bxmmEqc/yqQNPbPOWl
-         xRQFKWh0J0znBPNVBbWYiqWISLFcI6UlrAF14zFYAeyylvaINraOt4f1VP4gVfvS8PRz
-         HEfEKCYeh0/FCrSjXrB61x4D6zIDB//skFhFuGCa8xtHkhQSpImZCIY33l64HXYFKuIb
-         y2XopOv11jjTM43TwK8nEFNw2b370gpv448jVqhlOkwKFHRabfBOjDbxA+dAgO/SnSnW
-         xVFXGJfzKQEvUTw+UXVlLMZckKp3yvdS2k3ciy9snP8bESZRMM3Fkjp6eaLjFSz9S8rQ
-         CoFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=t54X/Fzcqzl0rbwLC0aNC65O4bdybHEbE+a1rfg9Liw=;
-        b=qTdVwolm0P34w1Wpnf3Ymfnnk6U7JbkImuK24W8XKA16msYBzKVtqXeRpy82LXxd/R
-         Rdp7zhBhgIyR2q23Mzs+a3zrO6JsfOrPFDqudill7Ks4MGDmvCBs2l0sxMbSnSv7ZV9e
-         fI8loQ9+ZYsAUjN8TX9NJW/0UHWI7PmDWxbf3iWR4WiE5D/q2sJUK06ibxMD72fbEHqD
-         TyTQ4wMg7PCzW1U/MBRpHxqmsCguoLMbKksmGjZpdo+hy6PthOneLAtfIIg/qsfYuDMs
-         Dv6gc+oc+I1SJykf1dQLqF4dq/d0JYMJM3a3F52rfPtL5aFUC1P9S2PYG8fZJ+oiwFhl
-         P96g==
-X-Gm-Message-State: APjAAAVH92IKOmhhNncTZ7PugVtjYU7q91H2yk7J8oqGDCSCaYNkGSll
-        xrZ3fkscv62u41yg3YFaTd691qv1c0P5vpl8R3O/2Q==
-X-Google-Smtp-Source: APXvYqyKq7TdviCr529yCsvAFqqt1xFyKjJAFjmswoe3UEhw/0hjfhP/np1OZii2cg0byhOz0GYyhsifHL4Oa8vKlKA=
-X-Received: by 2002:a2e:7001:: with SMTP id l1mr14746563ljc.11.1559586743799;
- Mon, 03 Jun 2019 11:32:23 -0700 (PDT)
+        Mon, 3 Jun 2019 14:33:06 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cf567e00000>; Mon, 03 Jun 2019 11:33:04 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 03 Jun 2019 11:33:05 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 03 Jun 2019 11:33:05 -0700
+Received: from [10.26.11.157] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 3 Jun
+ 2019 18:33:02 +0000
+Subject: Re: [PATCH 4.19 00/32] 4.19.48-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20190603090308.472021390@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <87bedfca-5d88-a697-1f10-25fe964d69a3@nvidia.com>
+Date:   Mon, 3 Jun 2019 19:33:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <1559571064-28087-1-git-send-email-vincent.guitto@linaro.org>
- <1559571436-29091-1-git-send-email-vincent.guittot@linaro.org> <7280a3b0-0727-f365-4453-8b4b01a64559@arm.com>
-In-Reply-To: <7280a3b0-0727-f365-4453-8b4b01a64559@arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Mon, 3 Jun 2019 20:32:12 +0200
-Message-ID: <CAKfTPtCU_+YJgMVpk-CKhetqTbOcNWVOmbUOD_xuTJqSD64J=w@mail.gmail.com>
-Subject: Re: [PATCH] sched/fair: clean up asym packing
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190603090308.472021390@linuxfoundation.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559586784; bh=u+wT24mGyHsbtfP2s/PCxFI9aBFkb1je47cecOWWjtg=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=A3TCvfX00eCyOkJR/lHdsD5rB1AG9tggA4TWpheR/52rBnWtQZnfw/hCuld3CFxt6
+         9BCjrvH/h2aX534SvEAxecCWJGjvDQaWnjXzoQfc34/xwqUF7Or8x/zTdazg/WdgEt
+         OZrtcGZp6a8aoZMIhqTqF1ef9ydwMSdLQCgW5oUjs17o836rRjI1JZO7YY2l13iu/F
+         VqA21gwSbEFqxj+DJst7I1An3Jgoue3K03fAGRdJJPq/Xv2+b4HedDN+9dxDUOEfiv
+         xsDfg6eIF7YRgEuS9cjnm6+GBwz1sND/dODpRASVUiWXJswHURy2GatG/Ho/r7vR/S
+         Qc72yClYjV4xA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 3 Jun 2019 at 20:15, Valentin Schneider
-<valentin.schneider@arm.com> wrote:
->
-> Hi,
->
-> On 03/06/2019 15:17, Vincent Guittot wrote:
-> > Clean up asym packing to follow the default load balance behavior:
-> > - classify the group by creating a group_asym_capacity field.
->
-> Being nitpicky here, this doesn't classify the group in the usual way
-> - it doesn't get a specific group_type value (group_classify()). So maybe
-> "classify" isn't the best term here.
 
-My original goal was to add a group type to classify the group but
-this would have broken the current behavior whereas I only want to
-move code
+On 03/06/2019 10:07, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.48 release.
+> There are 32 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed 05 Jun 2019 09:02:49 AM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.48-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
->
-> Also, why tag this group in update_sd_pick_busiest()? It would make more
-> sense to do so in update_sg_lb_stats() like with the other sg_lb_stats fields:
+All tests are passing for Tegra ...
 
-With your proposal below, the test is called for every groups'
-statistic update whereas it is only done lastly after checking other
-rules in the current code and I don't want to modify the current
-behavior but only move code to set imbalance in calculate imbalance.
+Test results for stable-v4.19:
+    12 builds:	12 pass, 0 fail
+    22 boots:	22 pass, 0 fail
+    32 tests:	32 pass, 0 fail
 
-A bigger cleanup will come in next steps
+Linux version:	4.19.48-rc1-g322f407
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra194-p2972-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra30-cardhu-a04
 
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 93c24473c8a0..537710026c3a 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -8298,6 +8298,10 @@ static inline void update_sg_lb_stats(struct lb_env *env,
->                 }
->         }
->
-> +       if (sgs->sum_nr_running &&
-> +           sched_asym_prefer(env->dst_cpu, group->asym_prefer_cpu))
-> +               sgs->group_asym_capacity = 1;
-> +
->         /* Adjust by relative CPU capacity of the group */
->         sgs->group_capacity = group->sgc->capacity;
->         sgs->avg_load = (sgs->group_load*SCHED_CAPACITY_SCALE) / sgs->group_capacity;
-> @@ -8391,9 +8395,7 @@ static bool update_sd_pick_busiest(struct lb_env *env,
->          * perform better since they share less core resources.  Hence when we
->          * have idle threads, we want them to be the higher ones.
->          */
-> -       if (sgs->sum_nr_running &&
-> -           sched_asym_prefer(env->dst_cpu, sg->asym_prefer_cpu)) {
-> -               sgs->group_asym_capacity = 1;
-> +       if (sgs->group_asym_capacity) {
->                 if (!sds->busiest)
->                         return true;
->
+Cheers
+Jon
+
+-- 
+nvpublic
