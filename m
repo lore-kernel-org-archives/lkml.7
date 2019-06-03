@@ -2,132 +2,78 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C96C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 136B2C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7130A20652
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:54:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O8pewUE4"
+	by mail.kernel.org (Postfix) with ESMTP id E476020652
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:55:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726349AbfFCXyO (ORCPT
+        id S1726465AbfFCXzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 19:54:14 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33130 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbfFCXyO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 19:54:14 -0400
-Received: by mail-lj1-f196.google.com with SMTP id v29so6625373ljv.0;
-        Mon, 03 Jun 2019 16:54:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=g9m612Ua5ZtJoE5e9+kvoqKKvahu9EaWnw+91ctupQU=;
-        b=O8pewUE47xHrXtZ+DxPtT2115bZe28AI3dMiXT3Pve3hdsJz7hB9nUECfyjeOMmA+j
-         rFwxiV4/ku6k6mKKqh609VH7YWqv07p5LKzxLm/wUwgHYa26/Qv3b3jk6hNyYppSdut6
-         rO37eJcRNEgZWAtuRH/ivBUAx/2T3hXvzRSaYUQZLiWG+Ucs7VkwfYFuf5AayRGNIhaV
-         iS+KpUR2dtBTTl3PZbU65JGpdVdRln0iXDofEaQKlqlrujttVmlTNOTP7xKcylzmFvOQ
-         6b6mC4bFx0fd8Wii0X0JPLNXNNnx5AwfiaqiwnDTKdCfUDIpgc0zLpw2SmrFKVlMQ6nS
-         U/xQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=g9m612Ua5ZtJoE5e9+kvoqKKvahu9EaWnw+91ctupQU=;
-        b=Vt0FObVlBnIEEIPkD3ZXuD9hfHMMh5wYKX2pVHhx/GCFSVI5O93d298eOV/2nIxF0E
-         df+Wdo77xDA7+82ONNtzqJGPAgGCggJFJ+CeO0EMvGhXmVfxaNTAHgSy01/ejlU5mPGI
-         /iDMCJfpA3TiVIrJylNcMShHb0ndx52poflUp4US5FxxdFrbeDUJNg8+qHmvevPS2vdh
-         GK8qmSKsF9dCSYmlNsczfRcK9eNmNbQI/irjWJ3GoLxS2GJ/eFBOs+1XOwh/FkH3N9q7
-         sPTgAy0BakFkBuj4n8wzeGXGhYBpR18rqZTB4PKmuKlwggNWnPX6B7Jvqzw2OGhzGRu1
-         YyNA==
-X-Gm-Message-State: APjAAAUkblcm58lKsg08X6//c97rJTHdrQvok0glSKAIz37bual3q5LW
-        LQ+g/1yXRg1sUchPSf4dUYhQFUMc969rKjiTttC+Yfks
-X-Google-Smtp-Source: APXvYqyQ4eA4OAV4dR5jtvi0RzR5D1hH48qipdM5L3YSoNldq7ZCkQbnFrgwOdWEQBZgdGbhF9DZR9rR3/kY493wlhA=
-X-Received: by 2002:a2e:5b5b:: with SMTP id p88mr5669244ljb.192.1559606051674;
- Mon, 03 Jun 2019 16:54:11 -0700 (PDT)
+        Mon, 3 Jun 2019 19:55:03 -0400
+Received: from mga07.intel.com ([134.134.136.100]:37239 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726101AbfFCXzC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 19:55:02 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 16:55:01 -0700
+X-ExtLoop1: 1
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga006.fm.intel.com with ESMTP; 03 Jun 2019 16:55:01 -0700
+Date:   Mon, 3 Jun 2019 16:56:10 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Pingfan Liu <kernelfans@gmail.com>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Keith Busch <keith.busch@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv2 1/2] mm/gup: fix omission of check on FOLL_LONGTERM in
+ get_user_pages_fast()
+Message-ID: <20190603235610.GB29018@iweiny-DESK2.sc.intel.com>
+References: <1559543653-13185-1-git-send-email-kernelfans@gmail.com>
+ <20190603164206.GB29719@infradead.org>
 MIME-Version: 1.0
-References: <20190531223735.4998-1-mmullins@fb.com> <6c6a4d47-796a-20e2-eb12-503a00d1fa0b@iogearbox.net>
- <68841715-4d5b-6ad1-5241-4e7199dd63da@iogearbox.net> <05626702394f7b95273ab19fef30461677779333.camel@fb.com>
- <CAADnVQKAPTao3nE1AC5dvYtCKFhDHu9VeCnVE04TLjGpY6yANw@mail.gmail.com> <70b9a1b2-c960-b810-96f9-1fb5f4a4061b@iogearbox.net>
-In-Reply-To: <70b9a1b2-c960-b810-96f9-1fb5f4a4061b@iogearbox.net>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Mon, 3 Jun 2019 16:54:00 -0700
-Message-ID: <CAADnVQKfZj5hDhyP6A=2tWAGJ2u7Fyx5d_rOTZ-ZyH1xBXtB3w@mail.gmail.com>
-Subject: Re: [PATCH bpf v2] bpf: preallocate a perf_sample_data per event fd
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     Matt Mullins <mmullins@fb.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Andrew Hall <hall@fb.com>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Martin Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        Song Liu <songliubraving@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190603164206.GB29719@infradead.org>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 3, 2019 at 4:48 PM Daniel Borkmann <daniel@iogearbox.net> wrote:
->
-> On 06/04/2019 01:27 AM, Alexei Starovoitov wrote:
-> > On Mon, Jun 3, 2019 at 3:59 PM Matt Mullins <mmullins@fb.com> wrote:
-> >>
-> >> If these are invariably non-nested, I can easily keep bpf_misc_sd when
-> >> I resubmit.  There was no technical reason other than keeping the two
-> >> codepaths as similar as possible.
-> >>
-> >> What resource gives you worry about doing this for the networking
-> >> codepath?
-> >
-> > my preference would be to keep tracing and networking the same.
-> > there is already minimal nesting in networking and probably we see
-> > more when reuseport progs will start running from xdp and clsbpf
-> >
-> >>> Aside from that it's also really bad to miss events like this as exporting
-> >>> through rb is critical. Why can't you have a per-CPU counter that selects a
-> >>> sample data context based on nesting level in tracing? (I don't see a discussion
-> >>> of this in your commit message.)
-> >>
-> >> This change would only drop messages if the same perf_event is
-> >> attempted to be used recursively (i.e. the same CPU on the same
-> >> PERF_EVENT_ARRAY map, as I haven't observed anything use index !=
-> >> BPF_F_CURRENT_CPU in testing).
-> >>
-> >> I'll try to accomplish the same with a percpu nesting level and
-> >> allocating 2 or 3 perf_sample_data per cpu.  I think that'll solve the
-> >> same problem -- a local patch keeping track of the nesting level is how
-> >> I got the above stack trace, too.
-> >
-> > I don't think counter approach works. The amount of nesting is unknown.
-> > imo the approach taken in this patch is good.
-> > I don't see any issue when event_outputs will be dropped for valid progs.
-> > Only when user called the helper incorrectly without BPF_F_CURRENT_CPU.
-> > But that's an error anyway.
->
-> My main worry with this xchg() trick is that we'll miss to export crucial
-> data with the EBUSY bailing out especially given nesting could increase in
-> future as you state, so users might have a hard time debugging this kind of
-> issue if they share the same perf event map among these programs, and no
-> option to get to this data otherwise. Supporting nesting up to a certain
-> level would still be better than a lost event which is also not reported
-> through the usual way aka perf rb.
+On Mon, Jun 03, 2019 at 09:42:06AM -0700, Christoph Hellwig wrote:
+> > +#if defined(CONFIG_CMA)
+> 
+> You can just use #ifdef here.
+> 
+> > +static inline int reject_cma_pages(int nr_pinned, unsigned int gup_flags,
+> > +	struct page **pages)
+> 
+> Please use two instead of one tab to indent the continuing line of
+> a function declaration.
+> 
+> > +{
+> > +	if (unlikely(gup_flags & FOLL_LONGTERM)) {
+> 
+> IMHO it would be a little nicer if we could move this into the caller.
 
-I simply don't see this 'miss to export data' in all but contrived conditions.
-Say two progs share the same perf event array.
-One prog calls event_output and while rb logic is working
-another prog needs to start executing and use the same event array
-slot. Today it's only possible for tracing prog combined with networking,
-but having two progs use the same event output array is pretty much
-a user bug. Just like not passing BPF_F_CURRENT_CPU.
-Same kind of a bug.
+FWIW we already had this discussion and thought it better to put this here.
+
+https://lkml.org/lkml/2019/5/30/1565
+
+Ira
+
+[PS John for some reason your responses don't appear in that thread?]
+
