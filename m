@@ -2,81 +2,84 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B530C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:15:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8AFC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44BEC24CF9
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:15:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559574951;
-	bh=54oATYsXXJ8P2M14fItKq+XktmeWUBPg/oIseVIgycE=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=aYCOmtEcNuyyuiu7+bbg15PGyydzcFgUeI7EhwoXWtxjrrs3o644Cyk3zX7RIV86S
-	 z4HvNLoVes1+izkVllTfU1uhsrHAb1+2flMqBBgtRD2SsgxJr2KtxuZVm3kHzYPdCH
-	 NSEQxaIqZmI1sqVBK3ciMXPGmK3OckLuBLtdMHig=
+	by mail.kernel.org (Postfix) with ESMTP id 3FB662773D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:16:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="F2ra5yoD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729345AbfFCPPu (ORCPT
+        id S1729381AbfFCPQL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 11:15:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57318 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 11:16:11 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:50778 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729081AbfFCPPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 11:15:49 -0400
-Received: from [192.168.0.101] (unknown [58.212.135.189])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 296B524CF1;
-        Mon,  3 Jun 2019 15:15:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559574949;
-        bh=54oATYsXXJ8P2M14fItKq+XktmeWUBPg/oIseVIgycE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=TpgLbiVsdpdF49lOLEgS3pAq5qsVYM50r0Mf7QmMNRzjzT8t79qh6m4Fskm/t1uYo
-         r1bBMKVQe/rmg2KBYIAKSwupUWc1XTvQ+PDNJhfTfzkQpaI1dEC/Plups1LVSK0PPR
-         dZ1+o65toz9AvGiaT+4WjOIPD47zO+vVeIiX0Bc4=
-Subject: Re: [f2fs-dev] [PATCH v3 4/4] f2fs: Add option to limit required GC
- for checkpoint=disable
-To:     Daniel Rosenberg <drosen@google.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-f2fs-devel@lists.sourceforge.net
-Cc:     linux-fsdevel@vger.kernel.org, kernel-team@android.com,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-References: <20190530004906.261170-1-drosen@google.com>
- <20190530004906.261170-5-drosen@google.com>
-From:   Chao Yu <chao@kernel.org>
-Message-ID: <cbd6e561-66c3-da63-d5b4-e81da990bd15@kernel.org>
-Date:   Mon, 3 Jun 2019 23:15:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1729171AbfFCPQL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 11:16:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=fPn2jgXxehD/h+yYF5fK2Ud2Xt3zX9OgX9H3wnmo/ig=; b=F2ra5yoDEWJ3UCbYraOBznnZ+y
+        p6/BIq4obLb1xi0ctNuB/oTN8LyGtJnX/9uVf4jHufC7+3kNYD4SY9rVV41WgP+zH4nzOQy2i+Z5Y
+        ugPk07bYwdqaS2lKz2zD+dFOtPb+z8FgFqH93oyYzcKOG7iZG08kcON8fqISMSxeoU/s=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hXogw-00064L-4s; Mon, 03 Jun 2019 17:16:06 +0200
+Date:   Mon, 3 Jun 2019 17:16:06 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next v3 08/10] net: dsa: mv88e6xxx: add support for
+ mv88e6250
+Message-ID: <20190603151606.GG19627@lunn.ch>
+References: <20190603144112.27713-1-rasmus.villemoes@prevas.dk>
+ <20190603144112.27713-9-rasmus.villemoes@prevas.dk>
 MIME-Version: 1.0
-In-Reply-To: <20190530004906.261170-5-drosen@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190603144112.27713-9-rasmus.villemoes@prevas.dk>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-5-30 8:49, Daniel Rosenberg via Linux-f2fs-devel wrote:
-> This extends the checkpoint option to allow checkpoint=disable:%u[%]
-> This allows you to specify what how much of the disk you are willing
-> to lose access to while mounting with checkpoint=disable. If the amount
-> lost would be higher, the mount will return -EAGAIN. This can be given
-> as a percent of total space, or in blocks.
-> 
-> Currently, we need to run garbage collection until the amount of holes
-> is smaller than the OVP space. With the new option, f2fs can mark
-> space as unusable up front instead of requiring garbage collection until
-> the number of holes is small enough.
-> 
-> Signed-off-by: Daniel Rosenberg <drosen@google.com>
+> The chip has four per port 16-bits statistics registers, two of which
+> correspond to the existing "sw_in_filtered" and "sw_out_filtered" (but
+> at offsets 0x13 and 0x10 rather than 0x12 and 0x13, because why should
+> this be easy...).
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
+This is Marvell. Nothing is easy, they keep making subtle changes like
+this.
 
-Thanks,
+> Wiring up those four statistics seems to require
+> introducing a STATS_TYPE_PORT_6250 bit or similar, which seems a tad
+> ugly, so for now this just allows access to the STATS_TYPE_BANK0 ones.
+
+I don't think it will be too ugly. We have the abstraction in place to
+support it. So feel free to add a follow up patch adding these
+statistics if you want.
+ 
+> The chip does have ptp support, and the existing
+> mv88e6352_{gpio,avb,ptp}_ops at first glance seem like they would work
+> out-of-the-box, but for simplicity (and lack of testing) I'm eliding
+> this.
+
+Fine, you can add this later, if you do get a test system.
+
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+
+    Andrew
