@@ -2,99 +2,189 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 325CCC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 709D5C28CC6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF34527D9D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:23:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559564587;
-	bh=JUpzLa7o+gjfbaXzaqNHUDC0SKjhj6jOWbWu5myQmaM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=s7ZeZ3+aeH3S7oWqF4tVeWk6Y8y6thur8n6c0mPPx9FMHDa13C2r3Ud8hbsYwFFE5
-	 Z/Hdrfm16e8gW882nYCiG200X9pWkSnmeR5vgubcNvbxyfnerOMSa/sNuVPMyAXF9V
-	 9VCYBu5CfumO2WW1OwRZo/lxIv6cQ7p1m6cyCu5A=
+	by mail.kernel.org (Postfix) with ESMTP id 5259E27D77
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:23:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727249AbfFCMXG (ORCPT
+        id S1727323AbfFCMXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 08:23:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57156 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726137AbfFCMXG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 08:23:06 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED3CB27D77;
-        Mon,  3 Jun 2019 12:23:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559564585;
-        bh=JUpzLa7o+gjfbaXzaqNHUDC0SKjhj6jOWbWu5myQmaM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XfYhRn1JfzWsBVGa/xKOV1EHw5Uj9YPVbOaWR2lXReNjVmjYIF4M1POmpIHGA2N7s
-         U/IBHx+WvGwzHhciZPN+t+eaxXGgVuhXGLnN9cxghHVyaIuAnmW+9hcb7fhYdYT2ID
-         P/0Eg328GEnIMRAnDqyVWj8CaFbtebMLfLREdqo8=
-Date:   Mon, 3 Jun 2019 14:23:03 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jim Lin <jilin@nvidia.com>
-Cc:     mathias.nyman@intel.com, stern@rowland.harvard.edu,
-        kai.heng.feng@canonical.com, drinkcat@chromium.org,
-        Thinh.Nguyen@synopsys.com, nsaenzjulienne@suse.de,
-        jflat@chromium.org, malat@debian.org, linux-usb@vger.kernel.org,
+        Mon, 3 Jun 2019 08:23:35 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:46511 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726137AbfFCMXf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 08:23:35 -0400
+Received: from localhost (aaubervilliers-681-1-24-139.w90-88.abo.wanadoo.fr [90.88.144.139])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 2E134100004;
+        Mon,  3 Jun 2019 12:23:28 +0000 (UTC)
+Date:   Mon, 3 Jun 2019 14:23:28 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     paul.kocialkowski@bootlin.com, wens@csie.org, mchehab@kernel.org,
+        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 0/2] usb: xhci: Add Clear_TT_Buffer
-Message-ID: <20190603122303.GA16267@kroah.com>
-References: <1559559224-9845-1-git-send-email-jilin@nvidia.com>
+Subject: Re: [PATCH 7/7] media: cedrus: Improve H264 memory efficiency
+Message-ID: <20190603122328.kczqsr4pza2ggvbk@flea>
+References: <20190530211516.1891-1-jernej.skrabec@siol.net>
+ <20190530211516.1891-8-jernej.skrabec@siol.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="eyhk33onwxqf3gu2"
 Content-Disposition: inline
-In-Reply-To: <1559559224-9845-1-git-send-email-jilin@nvidia.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190530211516.1891-8-jernej.skrabec@siol.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 06:53:42PM +0800, Jim Lin wrote:
-> USB 2.0 specification chapter 11.17.5 says "as part of endpoint halt
-> processing for full-/low-speed endpoints connected via a TT, the host
-> software must use the Clear_TT_Buffer request to the TT to ensure
-> that the buffer is not in the busy state".
-> 
-> In our case, a full-speed speaker (ConferenceCam) is behind a high-
-> speed hub (ConferenceCam Connect), sometimes once we get STALL on a
-> request we may continue to get STALL with the folllowing requests,
-> like Set_Interface.
-> 
-> Solution is to invoke usb_hub_clear_tt_buffer() to send
-> Clear_TT_Buffer request to the hub of the device for the following
-> Set_Interface requests to the device to get ACK successfully.
-> 
-> The Clear_TT_Buffer request sent to the hub includes the address of
-> the LS/FS child device in wValue field. usb_hub_clear_tt_buffer()
-> uses udev->devnum to set the address wValue. This won't work for
-> devices connected to xHC.
-> 
-> For other host controllers udev->devnum is the same as the address of
-> the usb device, chosen and set by usb core. With xHC the controller
-> hardware assigns the address, and won't be the same as devnum.
-> 
-> Here we have two patches.
-> One is to add devaddr in struct usb_device for
-> usb_hub_clear_tt_buffer() to use.
-> Another is to invoke usb_hub_clear_tt_buffer() for halt processing.
 
-Why did you resend patch series 11?
+--eyhk33onwxqf3gu2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Signed-off-by: Jim Lin <jilin@nvidia.com>
+On Thu, May 30, 2019 at 11:15:16PM +0200, Jernej Skrabec wrote:
+> H264 decoder driver preallocated pretty big worst case mv col buffer
+> pool. It turns out that pool is most of the time much bigger than it
+> needs to be.
+>
+> Solution implemented here is to allocate memory only if capture buffer
+> is actually used and only as much as it is really necessary.
+>
+> This is also preparation for 4K video decoding support, which will be
+> implemented later.
 
-There is nothing to sign off on a 0/X patch :)
+What is it doing exactly to prepare for 4k?
 
-thanks,
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> ---
+>  drivers/staging/media/sunxi/cedrus/cedrus.h   |  4 -
+>  .../staging/media/sunxi/cedrus/cedrus_h264.c  | 81 +++++++------------
+>  2 files changed, 28 insertions(+), 57 deletions(-)
+>
+> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h b/drivers/staging/media/sunxi/cedrus/cedrus.h
+> index 16c1bdfd243a..fcbbbef65494 100644
+> --- a/drivers/staging/media/sunxi/cedrus/cedrus.h
+> +++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
+> @@ -106,10 +106,6 @@ struct cedrus_ctx {
+>
+>  	union {
+>  		struct {
+> -			void		*mv_col_buf;
+> -			dma_addr_t	mv_col_buf_dma;
+> -			ssize_t		mv_col_buf_field_size;
+> -			ssize_t		mv_col_buf_size;
+>  			void		*pic_info_buf;
+>  			dma_addr_t	pic_info_buf_dma;
+>  			void		*neighbor_info_buf;
+> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> index b2290f98d81a..758fd0049e8f 100644
+> --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> @@ -54,17 +54,14 @@ static void cedrus_h264_write_sram(struct cedrus_dev *dev,
+>  		cedrus_write(dev, VE_AVC_SRAM_PORT_DATA, *buffer++);
+>  }
+>
+> -static dma_addr_t cedrus_h264_mv_col_buf_addr(struct cedrus_ctx *ctx,
+> -					      unsigned int position,
+> +static dma_addr_t cedrus_h264_mv_col_buf_addr(struct cedrus_buffer *buf,
+>  					      unsigned int field)
+>  {
+> -	dma_addr_t addr = ctx->codec.h264.mv_col_buf_dma;
+> -
+> -	/* Adjust for the position */
+> -	addr += position * ctx->codec.h264.mv_col_buf_field_size * 2;
+> +	dma_addr_t addr = buf->extra_buf_dma;
+>
+>  	/* Adjust for the field */
+> -	addr += field * ctx->codec.h264.mv_col_buf_field_size;
+> +	if (field)
+> +		addr += buf->extra_buf_size / 2;
+>
+>  	return addr;
+>  }
+> @@ -76,7 +73,6 @@ static void cedrus_fill_ref_pic(struct cedrus_ctx *ctx,
+>  				struct cedrus_h264_sram_ref_pic *pic)
+>  {
+>  	struct vb2_buffer *vbuf = &buf->m2m_buf.vb.vb2_buf;
+> -	unsigned int position = buf->codec.h264.position;
+>
+>  	pic->top_field_order_cnt = cpu_to_le32(top_field_order_cnt);
+>  	pic->bottom_field_order_cnt = cpu_to_le32(bottom_field_order_cnt);
+> @@ -84,10 +80,8 @@ static void cedrus_fill_ref_pic(struct cedrus_ctx *ctx,
+>
+>  	pic->luma_ptr = cpu_to_le32(cedrus_buf_addr(vbuf, &ctx->dst_fmt, 0));
+>  	pic->chroma_ptr = cpu_to_le32(cedrus_buf_addr(vbuf, &ctx->dst_fmt, 1));
+> -	pic->mv_col_top_ptr =
+> -		cpu_to_le32(cedrus_h264_mv_col_buf_addr(ctx, position, 0));
+> -	pic->mv_col_bot_ptr =
+> -		cpu_to_le32(cedrus_h264_mv_col_buf_addr(ctx, position, 1));
+> +	pic->mv_col_top_ptr = cpu_to_le32(cedrus_h264_mv_col_buf_addr(buf, 0));
+> +	pic->mv_col_bot_ptr = cpu_to_le32(cedrus_h264_mv_col_buf_addr(buf, 1));
+>  }
+>
+>  static void cedrus_write_frame_list(struct cedrus_ctx *ctx,
+> @@ -142,6 +136,28 @@ static void cedrus_write_frame_list(struct cedrus_ctx *ctx,
+>  	output_buf = vb2_to_cedrus_buffer(&run->dst->vb2_buf);
+>  	output_buf->codec.h264.position = position;
+>
+> +	if (!output_buf->extra_buf_size) {
+> +		const struct v4l2_ctrl_h264_sps *sps = run->h264.sps;
+> +		unsigned int field_size;
+> +
+> +		field_size = DIV_ROUND_UP(ctx->src_fmt.width, 16) *
+> +			DIV_ROUND_UP(ctx->src_fmt.height, 16) * 16;
+> +		if (!(sps->flags & V4L2_H264_SPS_FLAG_DIRECT_8X8_INFERENCE))
+> +			field_size = field_size * 2;
+> +		if (!(sps->flags & V4L2_H264_SPS_FLAG_FRAME_MBS_ONLY))
+> +			field_size = field_size * 2;
+> +
+> +		output_buf->extra_buf_size = field_size * 2;
+> +		output_buf->extra_buf =
+> +			dma_alloc_coherent(dev->dev,
+> +					   output_buf->extra_buf_size,
+> +					   &output_buf->extra_buf_dma,
+> +					   GFP_KERNEL);
+> +
+> +		if (!output_buf->extra_buf)
+> +			output_buf->extra_buf_size = 0;
+> +	}
+> +
 
-greg k-h
+That also means that instead of allocating that buffer exactly once,
+you now allocate it for each output buffer?
+
+I guess that it will cleaned up by your previous patch at
+buffer_cleanup time, so after it's no longer a reference frame?
+
+What is the average memory usage before, and after that change during
+a playback, and what is the runtime cost of doing it multiple times
+instead of once?
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--eyhk33onwxqf3gu2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXPURQAAKCRDj7w1vZxhR
+xQTuAQDxJ1RMufUbH3eDRtX9HW0gxGhrJuNi1JtqtOlRUQxP9gEAhrUoGxyQYYQw
+ZarXFHSd/6ngImXRgIlWm5yMFMfIpAg=
+=9+qh
+-----END PGP SIGNATURE-----
+
+--eyhk33onwxqf3gu2--
