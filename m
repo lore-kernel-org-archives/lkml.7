@@ -2,108 +2,95 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A695C28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC173C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 137A127F80
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:50:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9447427F98
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:52:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="rTDGsqGB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u0FiRAG1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727749AbfFCMuO (ORCPT
+        id S1727591AbfFCMwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 08:50:14 -0400
-Received: from mout.web.de ([217.72.192.78]:51579 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726855AbfFCMuO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 08:50:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1559566206;
-        bh=ncAOMhhFgsUF2XN16mQShqw1rNbF+Fdi8FKqT34/XD8=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=rTDGsqGBj17yUQp7FoSiYHvT2c5Frz/uZlELQ++2O0a+WOwC8SWvZmz/KZE9bxrVZ
-         VAzAn3ny5LMVyiCgjea1wByNeqi/CZmRYX479353Cf7rxbydNvQqSLgS5kvxjfJr2l
-         57GVpkA6NkUg1AItoqddyalNnxtc5UrGauOKOV7M=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.58.28] ([80.130.118.25]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0McWnE-1hGFWn3zYe-00HcGC; Mon, 03
- Jun 2019 14:50:06 +0200
-Subject: Re: [PATCH] Revert "usb: core: remove local_irq_save() around
- ->complete() handler"
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-References: <20190531215340.24539-1-smoch@web.de>
- <20190531220535.GA16603@kroah.com>
- <6c03445c-3607-9f33-afee-94613f8d6978@web.de>
- <20190601105008.zfqrtu6krw4mhisb@linutronix.de>
- <20190601110247.v4lzwvqhuwrjrotb@linutronix.de>
-From:   =?UTF-8?Q?S=c3=b6ren_Moch?= <smoch@web.de>
-Message-ID: <4c7bf7c6-ed59-e1b6-47a4-0f5623d35ba5@web.de>
-Date:   Mon, 3 Jun 2019 14:50:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 3 Jun 2019 08:52:11 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40464 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726713AbfFCMwL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 08:52:11 -0400
+Received: by mail-wr1-f65.google.com with SMTP id p11so7097682wre.7
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 05:52:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=wq4yXJBlhuJZxMm1hF9bS2M5hccH7sIFbHfwg9bPyr8=;
+        b=u0FiRAG1N1Uc7hXsujUHXgiHeLFDEduvv2RaP9IH4uBuwimI4HmDFnwWTCj/YuqzlN
+         GHtC4OSLAXSoEGZgkYrBiCnnjYAKdsQrWDtYs70f+dbavzGxEnWcuxe2ScUjnutYWmvo
+         gzD56w7XjOfdy/bHa3vFc9EzoVt0VT5wuf+1hIyrpuT2FHQHWHjZ9Bm+Bp6Unu/7mqxU
+         9G+YzbZmQCJm07mZ24PQbLpTNBU6ijYualwFvtX6LIdd1lsxYKIamM4UrdxzzT5kFulT
+         itq42B17nQ5vpo/TxNUMY36cNp3NsCWrx90hg7OleUfxzpTp5ofnjUaZuFERuMLbV+wg
+         NdcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=wq4yXJBlhuJZxMm1hF9bS2M5hccH7sIFbHfwg9bPyr8=;
+        b=hU39v8fLGKDVQ0ly06jaTK8ALjFgT4k0eq8E49cswXZhQ2Svj4KQ/Z3sy2zsMZui2G
+         TJv4LGhLfFTAepkm4ifv8H64LNG0PTZFYn4hYBQWX1gtstnjhcduCFHL/Ollpzbv4kVS
+         4jbs16ZHvXYZ8Llc4/H99As8NVdcSDMuY+Rip9CJqrWQAFfEaYO2lwEbjiot8SIrz+wT
+         dpoL4+y/IhO2l5K/2aQnOyhT8JJpf8eo1zHZvE/4Y36oPNVUua/weLm/U26MXUbP0yWO
+         OLHGAoLoQKoXugyuYVq7YbFzhkGwio4ArczNlXqGz1gWKCAXzubgrYQG+2sjCQAUoe6b
+         bmuA==
+X-Gm-Message-State: APjAAAVMEQbcxbdulJZDPleeKgFt6Ve2jCxkf27SAkJ2rujeRQSO1PCj
+        WSHmIGBdezNjP7pYRiDbVWztcg==
+X-Google-Smtp-Source: APXvYqyHqS828di86eR4vgH2o4EKGJYQNKkueq2r86n9Zcm0f3WrLAXn3vXIJ40ZJjMdjHZWGSyg0g==
+X-Received: by 2002:adf:eb45:: with SMTP id u5mr2393533wrn.38.1559566329776;
+        Mon, 03 Jun 2019 05:52:09 -0700 (PDT)
+Received: from dell ([2.27.167.43])
+        by smtp.gmail.com with ESMTPSA id o3sm11745269wrv.94.2019.06.03.05.52.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 03 Jun 2019 05:52:09 -0700 (PDT)
+Date:   Mon, 3 Jun 2019 13:52:07 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mfd: menelaus: Remove superfluous error message
+Message-ID: <20190603125207.GT4797@dell>
+References: <20190521204304.21295-1-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
-In-Reply-To: <20190601110247.v4lzwvqhuwrjrotb@linutronix.de>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Provags-ID: V03:K1:qFn9Y+T56/6+a/FEeIJmIMcxZPT2LFJxYX2NkrgnS7uJ/mDJ2/K
- q/i2foJDu60xNCTkCWPc3PK7G1TI4KdvqwiiZ0AXGcONuJS6hqlcG/8hLOG9vid38cwVU1B
- ARFbVdaVTVY3NfTDHXFgQ25csXXWd0mpUC88ZWvoMH/t9RAXCjQGnil5GkBI6/+rCvdIAqu
- 3FHFIVoF6knn2YhZRCrMQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:4Cm5CqzsTSA=:F6v3mYZtH5Bz9b2q26Sa5q
- c3LITnLLJbEYanijSZ5IBbPBc1SX9Jhc9hNea/0IrrGD3BEZ5/f5TRzTgux4zTK1FwbnozN99
- N6wHiLZT6yPds1iAv7GkaNSQaMQgqpVG1x9tSQp1Sly/8N4F4I5orbcWHj5O5f+6KthmAeuTY
- wO+fceg6+sM5WyEEGRKRAMSFnlNykBDb4dXNe8wiGa4210kBtA2gyfveyeAdgdJ9QaYlqT0y2
- pEGxJ66WSzseFJdycAlmJ/eFlsLu1tSLXlMaoVTlY121I7KzhsiTLoBtp5qB0fm/wSOhiT8TR
- 1sCckS5naQBhGb8YErdogmE7mm/dmoNP41UQCHirqZNeSvtg0dUdUH4UD8pywactecFBMMODx
- rcYF0KHuk+2Oxp9Zpr+0jKuOc09mSRhDYNbsJRbvnLyUOWWlANJMT/C+8RiL1fzZhUkxFxac+
- 5jGCnA5Ltt7SRyro/lWPeMrpH9jCJI/NaXJzJT9GQxFqjSzoOXmMB11dqsJzrQGWWlFC71BFE
- oaVPooC57TQ14T+K7mST213fW0qPkk24KLoAKFmQxwHjWmvB4gXEPnKbeR/BEQUmAR4h0PF7T
- sC/9KGF1L5knuqApH+tEFIe+T/AWUIqcz1CIjnViiCfA2ApiLHvNb/dRtu7Q5NpvUJOjrr0CT
- rgg/o+UMtc3DGSIbsJkbs9Vw6DEBpx9HwoZUSkASuHLm5jvZlF3W9+OmyjOQsXcvsI7Bp5GFM
- tXbx0ZHCF/OCSro3WhwuNZf06HXRCsCi/FBwwrcTylUVARu/OtJzYg2aXe8KsGdG2gcIaAo3m
- UtIeMyFkaxgm3uAzIrqVtcP+jETVFI0vOt18KkgcMUJVZtqkhM4kGIkpc9DnMardhFOqkpqRH
- LSNgsEiObbv/gjpp3Wivwt0ljje2mkucNxLug7oI4RVVqgeq3qpNRdP8Igcrj29nMR67IPTKn
- jkWyZI2YSHoSPWKjMba6oS/3prZ2P9Jw=
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190521204304.21295-1-alexandre.belloni@bootlin.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 21 May 2019, Alexandre Belloni wrote:
 
+> The RTC core already has error messages in case of failure, there is no
+> need to have another message in the driver.
+> 
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> ---
+>  drivers/mfd/menelaus.c | 2 --
+>  1 file changed, 2 deletions(-)
 
-On 01.06.19 13:02, Sebastian Andrzej Siewior wrote:
-> On 2019-06-01 12:50:08 [+0200], To Soeren Moch wrote:
->> I will look into this.
-> nothing obvious. If there is really blocken lock, could you please
-> enable lockdep
-> |CONFIG_LOCK_DEBUGGING_SUPPORT=3Dy
-> |CONFIG_PROVE_LOCKING=3Dy
-> |# CONFIG_LOCK_STAT is not set
-> |CONFIG_DEBUG_RT_MUTEXES=3Dy
-> |CONFIG_DEBUG_SPINLOCK=3Dy
-> |CONFIG_DEBUG_MUTEXES=3Dy
-> |CONFIG_DEBUG_WW_MUTEX_SLOWPATH=3Dy
-> |CONFIG_DEBUG_RWSEMS=3Dy
-> |CONFIG_DEBUG_LOCK_ALLOC=3Dy
-> |CONFIG_LOCKDEP=3Dy
-> |# CONFIG_DEBUG_LOCKDEP is not set
-> |CONFIG_DEBUG_ATOMIC_SLEEP=3Dy
->
-> and send me the splat that lockdep will report?
->
-I will do so. I cannot promise, however, that this will happen within
-the next few days.
+Applied, thanks.
 
-Thanks for your suggestions,
-Soeren
-
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
