@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FE3C28CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 06:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 552F9C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 06:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B94B27C06
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 06:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3443627C0B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 06:42:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbfFCGmD (ORCPT
+        id S1727153AbfFCGmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 02:42:03 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:44998 "EHLO
+        Mon, 3 Jun 2019 02:42:07 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45014 "EHLO
         foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726383AbfFCGmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 02:42:03 -0400
+        id S1726383AbfFCGmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 02:42:06 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 73E9F15AB;
-        Sun,  2 Jun 2019 23:42:02 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0EED715A2;
+        Sun,  2 Jun 2019 23:42:06 -0700 (PDT)
 Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.40.144])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 88E193F5AF;
-        Sun,  2 Jun 2019 23:41:59 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0A4533F5AF;
+        Sun,  2 Jun 2019 23:42:02 -0700 (PDT)
 From:   Anshuman Khandual <anshuman.khandual@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
@@ -33,9 +33,9 @@ Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
         James Morse <james.morse@arm.com>,
         Andrey Konovalov <andreyknvl@google.com>
-Subject: [PATCH V2 1/4] arm64/mm: Drop mmap_sem before calling __do_kernel_fault()
-Date:   Mon,  3 Jun 2019 12:11:22 +0530
-Message-Id: <1559544085-7502-2-git-send-email-anshuman.khandual@arm.com>
+Subject: [PATCH V2 2/4] arm64/mm: Drop task_struct argument from __do_page_fault()
+Date:   Mon,  3 Jun 2019 12:11:23 +0530
+Message-Id: <1559544085-7502-3-git-send-email-anshuman.khandual@arm.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1559544085-7502-1-git-send-email-anshuman.khandual@arm.com>
 References: <1559544085-7502-1-git-send-email-anshuman.khandual@arm.com>
@@ -44,19 +44,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is an inconsistency between down_read_trylock() success and failure
-paths while dealing with kernel access for non exception table areas where
-it calls __do_kernel_fault(). In case of failure it just bails out without
-holding mmap_sem but when it succeeds it does so while holding mmap_sem.
-Fix this inconsistency by just dropping mmap_sem in success path as well.
-
-__do_kernel_fault() calls die_kernel_fault() which then calls show_pte().
-show_pte() in this path might become bit more unreliable without holding
-mmap_sem. But there are already instances [1] in do_page_fault() where
-die_kernel_fault() gets called without holding mmap_sem. show_pte() can
-be made more robust independently but in a later patch.
-
-[1] Conditional block for (is_ttbr0_addr && is_el1_permission_fault)
+The task_struct argument is not getting used in __do_page_fault(). Hence
+just drop it and use current or cuurent->mm instead where ever required.
+This does not change any functionality.
 
 Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 Cc: Catalin Marinas <catalin.marinas@arm.com>
@@ -65,25 +55,66 @@ Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: James Morse <james.morse@arm.com>
 Cc: Andrey Konovalov <andreyknvl@google.com>
 ---
- arch/arm64/mm/fault.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm64/mm/fault.c | 15 +++++----------
+ 1 file changed, 5 insertions(+), 10 deletions(-)
 
 diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-index a30818e..dc1cf32 100644
+index dc1cf32..da02678 100644
 --- a/arch/arm64/mm/fault.c
 +++ b/arch/arm64/mm/fault.c
-@@ -503,8 +503,10 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
- 		 */
- 		might_sleep();
- #ifdef CONFIG_DEBUG_VM
--		if (!user_mode(regs) && !search_exception_tables(regs->pc))
-+		if (!user_mode(regs) && !search_exception_tables(regs->pc)) {
-+			up_read(&mm->mmap_sem);
- 			goto no_context;
-+		}
+@@ -395,8 +395,7 @@ static void do_bad_area(unsigned long addr, unsigned int esr, struct pt_regs *re
+ #define VM_FAULT_BADACCESS	0x020000
+ 
+ static vm_fault_t __do_page_fault(struct mm_struct *mm, unsigned long addr,
+-			   unsigned int mm_flags, unsigned long vm_flags,
+-			   struct task_struct *tsk)
++			   unsigned int mm_flags, unsigned long vm_flags)
+ {
+ 	struct vm_area_struct *vma;
+ 	vm_fault_t fault;
+@@ -440,8 +439,7 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
+ 				   struct pt_regs *regs)
+ {
+ 	const struct fault_info *inf;
+-	struct task_struct *tsk;
+-	struct mm_struct *mm;
++	struct mm_struct *mm = current->mm;
+ 	vm_fault_t fault, major = 0;
+ 	unsigned long vm_flags = VM_READ | VM_WRITE;
+ 	unsigned int mm_flags = FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_KILLABLE;
+@@ -449,9 +447,6 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
+ 	if (notify_page_fault(regs, esr))
+ 		return 0;
+ 
+-	tsk = current;
+-	mm  = tsk->mm;
+-
+ 	/*
+ 	 * If we're in an interrupt or have no user context, we must not take
+ 	 * the fault.
+@@ -510,7 +505,7 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
  #endif
  	}
  
+-	fault = __do_page_fault(mm, addr, mm_flags, vm_flags, tsk);
++	fault = __do_page_fault(mm, addr, mm_flags, vm_flags);
+ 	major |= fault & VM_FAULT_MAJOR;
+ 
+ 	if (fault & VM_FAULT_RETRY) {
+@@ -550,11 +545,11 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
+ 		 * that point.
+ 		 */
+ 		if (major) {
+-			tsk->maj_flt++;
++			current->maj_flt++;
+ 			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MAJ, 1, regs,
+ 				      addr);
+ 		} else {
+-			tsk->min_flt++;
++			current->min_flt++;
+ 			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1, regs,
+ 				      addr);
+ 		}
 -- 
 2.7.4
 
