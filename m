@@ -2,296 +2,153 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B92C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE956C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6CEB24E8A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:55:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B07F726A4D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:59:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HneNI4Cr"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Hq13E+vc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727645AbfFCMzO (ORCPT
+        id S1727605AbfFCM7l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 08:55:14 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50285 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727323AbfFCMzO (ORCPT
+        Mon, 3 Jun 2019 08:59:41 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:59191 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726791AbfFCM7l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 08:55:14 -0400
-Received: by mail-wm1-f68.google.com with SMTP id f204so7076074wme.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 05:55:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=2CmoCBy7i9ln8u3VDjIynmL/vFP2+HZt6bXh5Y1ubgY=;
-        b=HneNI4CrWx3O7cwpxDYx43tFQOd9J93CC1U0Hlpgua0VMZXWa3tQELLt3Bayv5Yw5M
-         JYUoVLvwNHKAxQYvf6KWnkg3uvALSR9JwEHBInExu73i1TByTPqQgsnAWTUoggddyY1Z
-         xYPMSyoUV6tn1x+Lm/Io04UzCWsT/g/zTRu5c0AJz3CUbQQxBZu4/vLJm/GB7ME0pgKK
-         Zw0ua2qe5kele0QlGr1D4QIPfpmzqTc/B/GppMlNRWcNB1eKNSKbZR/1ZXrH0e44DxNI
-         sNA28CJ/RRyZQrj0zeie/uD9fUVzZPOUPEX+b4Cu6E/UPgRbRrqAW5fNt47W4H4IeD8U
-         ZjWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=2CmoCBy7i9ln8u3VDjIynmL/vFP2+HZt6bXh5Y1ubgY=;
-        b=bxrBPJZfi2AlAXPu8rwJACGnd8sXTTXGC0mgZ8nqXiugQmTx7cIbwgrsLV4put5dIh
-         /I2xo0Y2QqtyaRFNyX9/hRG6nFZkFN0DFjApM7bDadBn6iSw+BOE1nv9jUTGGbzv2qzC
-         R6SoZPWOqAbD9kpYhkEqb6CDcP2i1Ii630w3PKHpJnw/T1O1g1my1+XEhaV7Q8nQmNgg
-         Qa6gX7xKUfSMLMEJ7xYA3poFG8w1x1fXs54KVdrIRPJi4QcVUdE41Q8x7zWtFJuWiJmB
-         NOmqTG1KiWLL9tZotBCVcrhQ/rZThl5sctiKfuEG7Sneav7syuosEuDizTzt2JnBSqj2
-         xDfg==
-X-Gm-Message-State: APjAAAWrdpFe1l3/1vUSJB19ikcbH2bUoWINNcZOSOJKXxeYbKlXYBHl
-        wIRFARgmsY15pLxbKshoFLkLgze0/T0=
-X-Google-Smtp-Source: APXvYqzeymALbUYrWb6Ozdc/6+knTdJjvHpWSccfOj1UDCrUxIoYuDg7dna8XRZjfc+bhddnH3G7wQ==
-X-Received: by 2002:a7b:c444:: with SMTP id l4mr2336053wmi.15.1559566511905;
-        Mon, 03 Jun 2019 05:55:11 -0700 (PDT)
-Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id y9sm3981550wma.1.2019.06.03.05.55.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 03 Jun 2019 05:55:11 -0700 (PDT)
-Date:   Mon, 3 Jun 2019 13:55:09 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Fabien Lahoudere <fabien.lahoudere@collabora.com>
-Cc:     kernel@collabora.com, Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] iio: common: cros_ec_sensors: support protocol v3
- message
-Message-ID: <20190603125509.GV4797@dell>
-References: <9d5dbba798410321177efa5d8a562105ff8cf429.1558533743.git.fabien.lahoudere@collabora.com>
+        Mon, 3 Jun 2019 08:59:41 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x53Cx2if601518
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Mon, 3 Jun 2019 05:59:02 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x53Cx2if601518
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019051801; t=1559566743;
+        bh=jEygdx87i/j9q88sGfVRvjkbl9QSUse80iqW0PNV28M=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=Hq13E+vc/PDtt/9CeexGF0BQTGNu7ykCcSKEEN21jI/AfI0sCV+8rDnpebs1BgVmT
+         GoIzPT6feaYs1iSja31pvebVnhygCDDIr9bKE2ec6eeK4lCm1wTqZ3Np477kHh2oF1
+         SnBk4pmvolLj5ORe0l5Ew+5rBmUzjzgcnxg4oj94um9BRzePRWAB4/fA7rzBwKtXk8
+         idECGf7lYGAOl8zl985ojYE1OumHGp1T9Dn/Sl0jpuKpAkWAvJdnXElZv9jektj6SZ
+         0fbgqMnLTYVsHMgXOQCYDC70td/6ttETKICR+kbe3AhIabVsOpGncussUppp33h/Os
+         Cu6CVyaNgLdHw==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x53Cx0OO601515;
+        Mon, 3 Jun 2019 05:59:00 -0700
+Date:   Mon, 3 Jun 2019 05:59:00 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Rick Edgecombe <tipbot@zytor.com>
+Message-ID: <tip-8e41f8726dcf423621e2b6938d015b9796f6f676@git.kernel.org>
+Cc:     tglx@linutronix.de, namit@vmware.com, hpa@zytor.com,
+        rick.p.edgecombe@intel.com, dave.hansen@intel.com,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org, bp@alien8.de, peterz@infradead.org,
+        luto@kernel.org, mingo@kernel.org, davem@davemloft.net,
+        mroos@linux.ee
+Reply-To: rick.p.edgecombe@intel.com, dave.hansen@intel.com,
+          torvalds@linux-foundation.org, tglx@linutronix.de,
+          namit@vmware.com, hpa@zytor.com, linux-kernel@vger.kernel.org,
+          bp@alien8.de, peterz@infradead.org, luto@kernel.org,
+          mingo@kernel.org, davem@davemloft.net, mroos@linux.ee,
+          akpm@linux-foundation.org
+In-Reply-To: <20190527211058.2729-2-rick.p.edgecombe@intel.com>
+References: <20190527211058.2729-2-rick.p.edgecombe@intel.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/urgent] mm/vmalloc: Fix calculation of direct map addr
+ range
+Git-Commit-ID: 8e41f8726dcf423621e2b6938d015b9796f6f676
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <9d5dbba798410321177efa5d8a562105ff8cf429.1558533743.git.fabien.lahoudere@collabora.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 May 2019, Fabien Lahoudere wrote:
+Commit-ID:  8e41f8726dcf423621e2b6938d015b9796f6f676
+Gitweb:     https://git.kernel.org/tip/8e41f8726dcf423621e2b6938d015b9796f6f676
+Author:     Rick Edgecombe <rick.p.edgecombe@intel.com>
+AuthorDate: Mon, 27 May 2019 14:10:57 -0700
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Mon, 3 Jun 2019 11:47:25 +0200
 
-> Version 3 of the EC protocol provides min and max frequencies and fifo
-> size for EC sensors.
-> 
-> Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
-> ---
->  .../cros_ec_sensors/cros_ec_sensors_core.c    | 98 ++++++++++++++++++-
->  .../linux/iio/common/cros_ec_sensors_core.h   |  7 ++
->  include/linux/mfd/cros_ec_commands.h          | 21 ++++
+mm/vmalloc: Fix calculation of direct map addr range
 
-Please note that we are about to add a pretty bit update for this
-file.  Once it's complete you may wish to rebase in order to avoid
-any possible merge conflicts.
+The calculation of the direct map address range to flush was wrong.
+This could cause the RO direct map alias to not get flushed. Today
+this shouldn't be a problem because this flush is only needed on x86
+right now and the spurious fault handler will fix cached RO->RW
+translations. In the future though, it could cause the permissions
+to remain RO in the TLB for the direct map alias, and then the page
+would return from the page allocator to some other component as RO
+and cause a crash.
 
->  3 files changed, 125 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> index 719a0df5aeeb..d5c8b4714ad6 100644
-> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> @@ -19,12 +19,84 @@
->  #include <linux/slab.h>
->  #include <linux/platform_device.h>
->  
-> +/*
-> + * Hard coded to the first device to support sensor fifo.  The EC has a 2048
-> + * byte fifo and will trigger an interrupt when fifo is 2/3 full.
-> + */
-> +#define CROS_EC_FIFO_SIZE (2048 * 2 / 3)
-> +
->  static char *cros_ec_loc[] = {
->  	[MOTIONSENSE_LOC_BASE] = "base",
->  	[MOTIONSENSE_LOC_LID] = "lid",
->  	[MOTIONSENSE_LOC_MAX] = "unknown",
->  };
->  
-> +static void get_default_min_max_freq_and_fifo_size(enum motionsensor_type type,
-> +						   u32 *min_freq,
-> +						   u32 *max_freq,
-> +						   u32 *max_fifo_events)
-> +{
-> +	/* we don't know fifo size, set to size previously used by sensor HAL */
-> +	*max_fifo_events = CROS_EC_FIFO_SIZE;
-> +
-> +	switch (type) {
-> +	case MOTIONSENSE_TYPE_ACCEL:
-> +	case MOTIONSENSE_TYPE_GYRO:
-> +		*min_freq = 12500;
-> +		*max_freq = 100000;
-> +		break;
-> +	case MOTIONSENSE_TYPE_MAG:
-> +		*min_freq = 5000;
-> +		*max_freq = 25000;
-> +		break;
-> +	case MOTIONSENSE_TYPE_PROX:
-> +	case MOTIONSENSE_TYPE_LIGHT:
-> +		*min_freq = 100;
-> +		*max_freq = 50000;
-> +		break;
-> +	case MOTIONSENSE_TYPE_BARO:
-> +		*min_freq = 250;
-> +		*max_freq = 20000;
-> +		break;
-> +	case MOTIONSENSE_TYPE_ACTIVITY:
-> +	default:
-> +		*max_fifo_events = 0;
-> +		*min_freq = 0;
-> +		*max_freq = 0;
-> +		break;
-> +	}
-> +}
-> +
-> +static int cros_ec_get_host_cmd_version_mask(struct cros_ec_device *ec_dev,
-> +					     u16 cmd_offset, u16 cmd, u32 *mask)
-> +{
-> +	struct {
-> +		struct cros_ec_command msg;
-> +		union {
-> +			struct ec_params_get_cmd_versions params;
-> +			struct ec_response_get_cmd_versions resp;
-> +		};
-> +	} __packed buf;
-> +	struct ec_params_get_cmd_versions *params = &buf.params;
-> +	struct ec_response_get_cmd_versions *resp = &buf.resp;
-> +	struct cros_ec_command *msg = &buf.msg;
-> +	int ret;
-> +
-> +	memset(&buf, 0, sizeof(buf));
-> +	msg->command = EC_CMD_GET_CMD_VERSIONS + cmd_offset;
-> +	msg->insize = sizeof(*resp);
-> +	msg->outsize = sizeof(*params);
-> +	params->cmd = cmd;
-> +	ret = cros_ec_cmd_xfer_status(ec_dev, msg);
-> +	if (ret >= 0) {
-> +		if (msg->result == EC_RES_SUCCESS)
-> +			*mask = resp->version_mask;
-> +		else
-> +			*mask = 0;
-> +	}
-> +	return ret;
-> +}
-> +
->  int cros_ec_sensors_core_init(struct platform_device *pdev,
->  			      struct iio_dev *indio_dev,
->  			      bool physical_device)
-> @@ -33,6 +105,8 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
->  	struct cros_ec_sensors_core_state *state = iio_priv(indio_dev);
->  	struct cros_ec_dev *ec = dev_get_drvdata(pdev->dev.parent);
->  	struct cros_ec_sensor_platform *sensor_platform = dev_get_platdata(dev);
-> +	u32 ver_mask;
-> +	int ret;
->  
->  	platform_set_drvdata(pdev, indio_dev);
->  
-> @@ -47,8 +121,16 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
->  
->  	mutex_init(&state->cmd_lock);
->  
-> +	/* determine what version of MOTIONSENSE CMD EC has */
-> +	ret = cros_ec_get_host_cmd_version_mask(state->ec,
-> +						ec->cmd_offset,
-> +						EC_CMD_MOTION_SENSE_CMD,
-> +						&ver_mask);
-> +	if (ret < 0 || ver_mask == 0)
-> +		return -ENODEV;
-> +
->  	/* Set up the host command structure. */
-> -	state->msg->version = 2;
-> +	state->msg->version = fls(ver_mask) - 1;
->  	state->msg->command = EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset;
->  	state->msg->outsize = sizeof(struct ec_params_motion_sense);
->  
-> @@ -66,6 +148,20 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
->  		}
->  		state->type = state->resp->info.type;
->  		state->loc = state->resp->info.location;
-> +		if (state->msg->version < 3) {
-> +			get_default_min_max_freq_and_fifo_size(
-> +					state->resp->info.type,
-> +					&state->min_freq,
-> +					&state->max_freq,
-> +					&state->fifo_max_event_count);
-> +		} else {
-> +			state->min_freq =
-> +				state->resp->info_3.min_frequency;
-> +			state->max_freq =
-> +				state->resp->info_3.max_frequency;
-> +			state->fifo_max_event_count =
-> +				state->resp->info_3.fifo_max_event_count;
-> +		}
->  	}
->  
->  	return 0;
-> diff --git a/include/linux/iio/common/cros_ec_sensors_core.h b/include/linux/iio/common/cros_ec_sensors_core.h
-> index ce16445411ac..4742a9637a85 100644
-> --- a/include/linux/iio/common/cros_ec_sensors_core.h
-> +++ b/include/linux/iio/common/cros_ec_sensors_core.h
-> @@ -78,6 +78,13 @@ struct cros_ec_sensors_core_state {
->  				    unsigned long scan_mask, s16 *data);
->  
->  	int curr_sampl_freq;
-> +
-> +	/* Min and Max Sampling Frequency in mHz */
-> +	u32 min_freq;
-> +	u32 max_freq;
-> +
-> +	/* event fifo size represented in number of events */
-> +	u32 fifo_max_event_count;
->  };
->  
->  /**
-> diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd/cros_ec_commands.h
-> index dcec96f01879..27d71cbf22f1 100644
-> --- a/include/linux/mfd/cros_ec_commands.h
-> +++ b/include/linux/mfd/cros_ec_commands.h
-> @@ -1744,6 +1744,27 @@ struct ec_response_motion_sense {
->  			uint8_t chip;
->  		} info;
->  
-> +		/* Used for MOTIONSENSE_CMD_INFO version 3 */
-> +		struct __ec_todo_unpacked {
-> +			/* Should be element of enum motionsensor_type. */
-> +			uint8_t type;
-> +
-> +			/* Should be element of enum motionsensor_location. */
-> +			uint8_t location;
-> +
-> +			/* Should be element of enum motionsensor_chip. */
-> +			uint8_t chip;
-> +
-> +			/* Minimum sensor sampling frequency */
-> +			uint32_t min_frequency;
-> +
-> +			/* Maximum sensor sampling frequency */
-> +			uint32_t max_frequency;
-> +
-> +			/* Max number of sensor events that could be in fifo */
-> +			uint32_t fifo_max_event_count;
-> +		} info_3;
-> +
->  		/* Used for MOTIONSENSE_CMD_DATA */
->  		struct ec_response_motion_sensor_data data;
->  
+So fix fix the address range calculation so the flush will include the
+direct map range.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Meelis Roos <mroos@linux.ee>
+Cc: Nadav Amit <namit@vmware.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: 868b104d7379 ("mm/vmalloc: Add flag for freeing of special permsissions")
+Link: https://lkml.kernel.org/r/20190527211058.2729-2-rick.p.edgecombe@intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ mm/vmalloc.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 7350a124524b..93b2dca2aadb 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -2123,7 +2123,6 @@ static inline void set_area_direct_map(const struct vm_struct *area,
+ /* Handle removing and resetting vm mappings related to the vm_struct. */
+ static void vm_remove_mappings(struct vm_struct *area, int deallocate_pages)
+ {
+-	unsigned long addr = (unsigned long)area->addr;
+ 	unsigned long start = ULONG_MAX, end = 0;
+ 	int flush_reset = area->flags & VM_FLUSH_RESET_PERMS;
+ 	int i;
+@@ -2135,8 +2134,8 @@ static void vm_remove_mappings(struct vm_struct *area, int deallocate_pages)
+ 	 * execute permissions, without leaving a RW+X window.
+ 	 */
+ 	if (flush_reset && !IS_ENABLED(CONFIG_ARCH_HAS_SET_DIRECT_MAP)) {
+-		set_memory_nx(addr, area->nr_pages);
+-		set_memory_rw(addr, area->nr_pages);
++		set_memory_nx((unsigned long)area->addr, area->nr_pages);
++		set_memory_rw((unsigned long)area->addr, area->nr_pages);
+ 	}
+ 
+ 	remove_vm_area(area->addr);
+@@ -2160,9 +2159,10 @@ static void vm_remove_mappings(struct vm_struct *area, int deallocate_pages)
+ 	 * the vm_unmap_aliases() flush includes the direct map.
+ 	 */
+ 	for (i = 0; i < area->nr_pages; i++) {
+-		if (page_address(area->pages[i])) {
++		unsigned long addr = (unsigned long)page_address(area->pages[i]);
++		if (addr) {
+ 			start = min(addr, start);
+-			end = max(addr, end);
++			end = max(addr + PAGE_SIZE, end);
+ 		}
+ 	}
+ 
