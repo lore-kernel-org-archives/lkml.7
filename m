@@ -2,108 +2,151 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB0B2C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6BCC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3E682731D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:37:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XlmNNBU9"
+	by mail.kernel.org (Postfix) with ESMTP id CF9AF205F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:37:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbfFCPhR (ORCPT
+        id S1728135AbfFCPhX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 11:37:17 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:44267 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727150AbfFCPhQ (ORCPT
+        Mon, 3 Jun 2019 11:37:23 -0400
+Received: from mailoutvs38.siol.net ([185.57.226.229]:51660 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727150AbfFCPhV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 11:37:16 -0400
-Received: by mail-qt1-f194.google.com with SMTP id x47so9847644qtk.11;
-        Mon, 03 Jun 2019 08:37:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:message-id:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-disposition:content-transfer-encoding;
-        bh=rHntYJUbuDaq+hgx/W8n2ZESMDDGCXnZRtFMetN3TC8=;
-        b=XlmNNBU9PdkdMaMNFetESigw2qJNWerg96dKJCPoh7BM92dAbMIDvW5iqVstKUIF/m
-         S3KJRrY+3St7YM1Aby9bA85c+AYI/ZSvn5YVGzL9/VhypuDrS/xGnRGO9G4L4GYst7sM
-         yBXdbK+SzstYCVG/iv1DV0l3PRuHODLcuHgMmvP5Fw67/OnZcMDr1WJXmcrRgO+RQtsk
-         PxuWQtUzDca1DEj2K2ASNpyOMb0TaSK7WDeAqac3E5LjAejN2iEWjcd9HYDNIzaHCfQ2
-         2IyxyznQbR+k/CnvIghUEQQCJtHSwcMG5nZVOUavIQ0ZAKjcQNU4PzeKSMxvoNmcx4xO
-         iCNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding;
-        bh=rHntYJUbuDaq+hgx/W8n2ZESMDDGCXnZRtFMetN3TC8=;
-        b=GDgqW+IVnOOTbdRzbCNZRdzhGxIyZipiBFveP3Kaad5WIulSQi95eqHYFStlMQYRIU
-         6BbSMdUkqeK9K7q6hjaubfBH94K7Kgf/nMklNH9MfkorzqRuPHgnYmej0EB0ECcORdky
-         Qb3W+nr91T7gC1gvSUbuzTWdZ41EGJMhsJSAzTPFTa7PVCQDE3hD3YMKtk4zY43qo6Sd
-         OuTXvfl++6WRcBTyMsrqPWPj6H3u36KGvCcl+PgrfNinqaXQcrXO+PUF7IzdHry8N1wr
-         vM3k3h7ZKfwTqaLIDaatPF4DowUpLO9kRG8CaX+YVZw+bbWhBdRWtVq6nQ2+Fa2opNlk
-         az7A==
-X-Gm-Message-State: APjAAAX7kE1VkIYuauyk5V8aS9b7ddk4goaDP54ZJ6bJwGSB61j+h0mz
-        o7sRT2M8uuaj7M0Ph/D2xuo=
-X-Google-Smtp-Source: APXvYqy0IknxALApVjEtsBV9AdMLGg36F2dpjWNa/TKvbUcusEf+PKUzn34Mm46N887BwEy+73MKtA==
-X-Received: by 2002:ac8:525a:: with SMTP id y26mr23858606qtn.297.1559576235773;
-        Mon, 03 Jun 2019 08:37:15 -0700 (PDT)
-Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
-        by smtp.gmail.com with ESMTPSA id q79sm7391803qka.54.2019.06.03.08.37.13
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 03 Jun 2019 08:37:14 -0700 (PDT)
-Date:   Mon, 3 Jun 2019 11:37:13 -0400
-Message-ID: <20190603113713.GB2789@t480s.localdomain>
-From:   Vivien Didelot <vivien.didelot@gmail.com>
-To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next v3 01/10] net: dsa: mv88e6xxx: add
- mv88e6250_g1_ieee_pri_map
-In-Reply-To: <20190603144112.27713-2-rasmus.villemoes@prevas.dk>
-References: <20190603144112.27713-1-rasmus.villemoes@prevas.dk>
- <20190603144112.27713-2-rasmus.villemoes@prevas.dk>
+        Mon, 3 Jun 2019 11:37:21 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 41407520580;
+        Mon,  3 Jun 2019 17:37:18 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id y2fQPCRP4Vjv; Mon,  3 Jun 2019 17:37:17 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id DA31B520F55;
+        Mon,  3 Jun 2019 17:37:17 +0200 (CEST)
+Received: from jernej-laptop.localnet (cpe-86-58-52-202.static.triera.net [86.58.52.202])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id 89BE3520580;
+        Mon,  3 Jun 2019 17:37:17 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     paul.kocialkowski@bootlin.com, wens@csie.org, mchehab@kernel.org,
+        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/7] media: cedrus: Fix decoding for some H264 videos
+Date:   Mon, 03 Jun 2019 17:37:17 +0200
+Message-ID: <2536664.ljALn0aKaT@jernej-laptop>
+In-Reply-To: <20190603115536.j5lan6wtmbxpoe2k@flea>
+References: <20190530211516.1891-1-jernej.skrabec@siol.net> <20190530211516.1891-4-jernej.skrabec@siol.net> <20190603115536.j5lan6wtmbxpoe2k@flea>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rasmus,
-
-On Mon, 3 Jun 2019 14:42:12 +0000, Rasmus Villemoes <rasmus.villemoes@prevas.dk> wrote:
-> Quite a few of the existing supported chips that use
-> mv88e6085_g1_ieee_pri_map as ->ieee_pri_map (including, incidentally,
-> mv88e6085 itself) actually have a reset value of 0xfa50 in the
-> G1_IEEE_PRI register.
+Dne ponedeljek, 03. junij 2019 ob 13:55:36 CEST je Maxime Ripard napisal(a):
+> Hi,
 > 
-> The data sheet for the mv88e6095, however, does describe a reset value
-> of 0xfa41.
+> On Thu, May 30, 2019 at 11:15:12PM +0200, Jernej Skrabec wrote:
+> > It seems that for some H264 videos at least one bitstream parsing
+> > trigger must be called in order to be decoded correctly. There is no
+> > explanation why this helps, but it was observed that two sample videos
+> > with this fix are now decoded correctly and there is no regression with
+> > others.
+> > 
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > ---
+> > I have two samples which are fixed by this:
+> > http://jernej.libreelec.tv/videos/h264/test.mkv
+> > http://jernej.libreelec.tv/videos/h264/Dredd%20%E2%80%93%20DTS%20Sound%20C
+> > heck%20DTS-HD%20MA%207.1.m2ts
+> > 
+> > Although second one also needs support for multi-slice frames, which is
+> > not yet implemented here.> 
+> >  .../staging/media/sunxi/cedrus/cedrus_h264.c  | 22 ++++++++++++++++---
+> >  1 file changed, 19 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> > b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c index
+> > cc8d17f211a1..d0ee3f90ff46 100644
+> > --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> > @@ -6,6 +6,7 @@
+> > 
+> >   * Copyright (c) 2018 Bootlin
+> >   */
+> > 
+> > +#include <linux/delay.h>
+> > 
+> >  #include <linux/types.h>
+> >  
+> >  #include <media/videobuf2-dma-contig.h>
+> > 
+> > @@ -289,6 +290,20 @@ static void cedrus_write_pred_weight_table(struct
+> > cedrus_ctx *ctx,> 
+> >  	}
+> >  
+> >  }
 > 
-> So rather than changing the value in the existing callback, introduce
-> a new variant with the 0xfa50 value. That will be used by the upcoming
-> mv88e6250, and existing chips can be switched over one by one,
-> preferably double-checking both the data sheet and actual hardware in
-> each case - if anybody actually feels this is important enough to
-> care.
+> We should have a comment here explaining why that is needed
 
-Given your previous thread on this topic, I'd prefer that you include
-a first patch which implements mv88e6095_g1_ieee_pri_map() using 0xfa41
-and update mv88e{6092,6095}_ops to use it, then a second one which fixes
-mv88e6085_g1_ieee_pri_map to use 0xfa50. Then mv88e6250_ops can use it.
+ok.
+
+> 
+> > +static void cedrus_skip_bits(struct cedrus_dev *dev, int num)
+> > +{
+> > +	for (; num > 32; num -= 32) {
+> > +		cedrus_write(dev, VE_H264_TRIGGER_TYPE, 0x3 | (32 << 
+8));
+> 
+> Using defines here would be great
+
+Yes, sorry about that.
+
+> 
+> > +		while (cedrus_read(dev, VE_H264_STATUS) & (1 << 8))
+> > +			udelay(1);
+> > +	}
+> 
+> A new line here would be great
+> 
+> > +	if (num > 0) {
+> > +		cedrus_write(dev, VE_H264_TRIGGER_TYPE, 0x3 | (num << 
+8));
+> > +		while (cedrus_read(dev, VE_H264_STATUS) & (1 << 8))
+> > +			udelay(1);
+> > +	}
+> 
+> Can't we make that a bit simpler by not duplicating the loop?
+> 
+> Something like:
+> 
+> int current = 0;
+> 
+> while (current < num) {
+>     int tmp = min(num - current, 32);
+> 
+>     cedrus_write(dev, VE_H264_TRIGGER_TYPE, 0x3 | (current << 8))
+>     while (...)
+>        ...
+> 
+>     current += tmp;
+> }
+
+Yes, that looks better, I'll change it in next version.
+
+Best regards,
+Jernej
 
 
-Thanks,
-Vivien
+
