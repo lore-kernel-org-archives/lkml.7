@@ -2,120 +2,104 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36705C28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 19:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA94C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 19:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D7A4271A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 19:19:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559589588;
-	bh=3uwe74qIbMfURcy3Wq0/4CqiYzWU+2RJSBxa5JvCv8s=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=nsMhNvn6hzdyPEx5YLQrR8tXgWBHC8Gl4AzQzLLMdDbbFm5ZnwBn4b/R/lVr6YfJ9
-	 8lWD76UWrYhtmb2c49XMYjLGAGZRVf0lOvDDEe2Bqqk5bQ3HQCILlM7jLg/XRVyi2Q
-	 Lgf/YEv0m22CZXCOUt/SlRiBTl5atWMQVaMeqAz8=
+	by mail.kernel.org (Postfix) with ESMTP id 882A6271AB
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 19:21:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="oLOzOFaN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbfFCTTr (ORCPT
+        id S1726817AbfFCTU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 15:19:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55478 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 15:20:59 -0400
+Received: from mail.z3ntu.xyz ([128.199.32.197]:55344 "EHLO mail.z3ntu.xyz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726049AbfFCTTq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 15:19:46 -0400
-Received: from localhost.localdomain (unknown [194.230.155.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB11A2719C;
-        Mon,  3 Jun 2019 19:19:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559589586;
-        bh=3uwe74qIbMfURcy3Wq0/4CqiYzWU+2RJSBxa5JvCv8s=;
-        h=From:To:Cc:Subject:Date:From;
-        b=oH5jJWUBFhcCraa5qEP6vros82SVl+juZUaoaRRkGgLVs6zJSe7kz+jBiB2UK78hS
-         9q5LJuGYUThjgZwKF8VLDt5WkMJ8Hoqi2v1RlEgUWjo2e7j09DX+/V3NT/LtnadM6H
-         UlZ139R1zeuamlirjZMjHa7qGv0GOzbnFUeAqZK8=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        James Hartley <james.hartley@sondrel.com>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] MIPS: config: Remove left-over BACKLIGHT_LCD_SUPPORT
-Date:   Mon,  3 Jun 2019 21:19:34 +0200
-Message-Id: <20190603191934.20721-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        id S1726049AbfFCTU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 15:20:59 -0400
+Received: from localhost.localdomain (80-110-121-20.cgn.dynamic.surfer.at [80.110.121.20])
+        by mail.z3ntu.xyz (Postfix) with ESMTPSA id A794AC0101;
+        Mon,  3 Jun 2019 19:20:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1559589657; bh=0ZOQ8oo0MRQTYnRxEe5Ztp+WG3N9bT3TzGBVaCY33eA=;
+        h=From:To:Cc:Subject:Date;
+        b=oLOzOFaNi+UanyTvl65bDSpLVo7pkbCsfAitG6cfQ5FTxlHTjQkzVkkKqON6CLvwq
+         sXkADZ31m7oqL24vC70ViNBeBPxoHVAWaVaX2G5HjVBhfYqb5086/pDuPccWawedy5
+         +WD6iAwcriLI7GLmSD0ogWd+/loG82HDl5kzh3nY=
+From:   Luca Weiss <luca@z3ntu.xyz>
+Cc:     Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] iio: light: stk3310: Add support for stk3335
+Date:   Mon,  3 Jun 2019 21:20:39 +0200
+Message-Id: <20190603192040.24101-1-luca@z3ntu.xyz>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The CONFIG_BACKLIGHT_LCD_SUPPORT was removed in commit 8c5dc8d9f19c
-("video: backlight: Remove useless BACKLIGHT_LCD_SUPPORT kernel
-symbol"). Options protected by CONFIG_BACKLIGHT_LCD_SUPPORT are now
-available directly.
+From: Martijn Braam <martijn@brixit.nl>
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+The stk3335 light/proximity sensor is similar to the stk3310 and stk3311
+sensors and works with the stk3310 driver.
+
+Signed-off-by: Martijn Braam <martijn@brixit.nl>
+Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
 ---
- arch/mips/configs/gpr_defconfig       | 1 -
- arch/mips/configs/lemote2f_defconfig  | 1 -
- arch/mips/configs/pistachio_defconfig | 1 -
- arch/mips/configs/qi_lb60_defconfig   | 1 -
- 4 files changed, 4 deletions(-)
+ drivers/iio/light/stk3310.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/configs/gpr_defconfig b/arch/mips/configs/gpr_defconfig
-index 9d9af5f923c3..9085f4d6c698 100644
---- a/arch/mips/configs/gpr_defconfig
-+++ b/arch/mips/configs/gpr_defconfig
-@@ -249,7 +249,6 @@ CONFIG_WATCHDOG_NOWAYOUT=y
- CONFIG_SSB=m
- CONFIG_SSB_DRIVER_PCICORE=y
- # CONFIG_VGA_ARB is not set
--CONFIG_BACKLIGHT_LCD_SUPPORT=y
- # CONFIG_LCD_CLASS_DEVICE is not set
- CONFIG_BACKLIGHT_CLASS_DEVICE=y
- # CONFIG_BACKLIGHT_GENERIC is not set
-diff --git a/arch/mips/configs/lemote2f_defconfig b/arch/mips/configs/lemote2f_defconfig
-index 300127b0f5b7..2d4cb03dfa03 100644
---- a/arch/mips/configs/lemote2f_defconfig
-+++ b/arch/mips/configs/lemote2f_defconfig
-@@ -144,7 +144,6 @@ CONFIG_FB_TILEBLITTING=y
- CONFIG_FB_SIS=y
- CONFIG_FB_SIS_300=y
- CONFIG_FB_SIS_315=y
--CONFIG_BACKLIGHT_LCD_SUPPORT=y
- # CONFIG_LCD_CLASS_DEVICE is not set
- CONFIG_BACKLIGHT_CLASS_DEVICE=y
- CONFIG_BACKLIGHT_GENERIC=m
-diff --git a/arch/mips/configs/pistachio_defconfig b/arch/mips/configs/pistachio_defconfig
-index 2f08d071ada6..24e07180c57d 100644
---- a/arch/mips/configs/pistachio_defconfig
-+++ b/arch/mips/configs/pistachio_defconfig
-@@ -214,7 +214,6 @@ CONFIG_IR_IMG_RC6=y
- CONFIG_MEDIA_SUPPORT=y
- CONFIG_FB=y
- CONFIG_FB_MODE_HELPERS=y
--CONFIG_BACKLIGHT_LCD_SUPPORT=y
- # CONFIG_LCD_CLASS_DEVICE is not set
- CONFIG_BACKLIGHT_CLASS_DEVICE=y
- CONFIG_SOUND=y
-diff --git a/arch/mips/configs/qi_lb60_defconfig b/arch/mips/configs/qi_lb60_defconfig
-index 1a0677d04982..199c7a7bf692 100644
---- a/arch/mips/configs/qi_lb60_defconfig
-+++ b/arch/mips/configs/qi_lb60_defconfig
-@@ -77,7 +77,6 @@ CONFIG_REGULATOR=y
- CONFIG_REGULATOR_FIXED_VOLTAGE=y
- CONFIG_FB=y
- CONFIG_FB_JZ4740=y
--CONFIG_BACKLIGHT_LCD_SUPPORT=y
- CONFIG_LCD_CLASS_DEVICE=y
- # CONFIG_BACKLIGHT_CLASS_DEVICE is not set
- # CONFIG_VGA_CONSOLE is not set
+diff --git a/drivers/iio/light/stk3310.c b/drivers/iio/light/stk3310.c
+index 6e2a169da950..a25cc35f334e 100644
+--- a/drivers/iio/light/stk3310.c
++++ b/drivers/iio/light/stk3310.c
+@@ -40,6 +40,7 @@
+ 
+ #define STK3310_CHIP_ID_VAL			0x13
+ #define STK3311_CHIP_ID_VAL			0x1D
++#define STK3335_CHIP_ID_VAL			0x51
+ #define STK3310_PSINT_EN			0x01
+ #define STK3310_PS_MAX_VAL			0xFFFF
+ 
+@@ -454,7 +455,8 @@ static int stk3310_init(struct iio_dev *indio_dev)
+ 		return ret;
+ 
+ 	if (chipid != STK3310_CHIP_ID_VAL &&
+-	    chipid != STK3311_CHIP_ID_VAL) {
++	    chipid != STK3311_CHIP_ID_VAL &&
++	    chipid != STK3335_CHIP_ID_VAL) {
+ 		dev_err(&client->dev, "invalid chip id: 0x%x\n", chipid);
+ 		return -ENODEV;
+ 	}
+@@ -666,6 +668,7 @@ static SIMPLE_DEV_PM_OPS(stk3310_pm_ops, stk3310_suspend, stk3310_resume);
+ static const struct i2c_device_id stk3310_i2c_id[] = {
+ 	{"STK3310", 0},
+ 	{"STK3311", 0},
++	{"STK3335", 0},
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(i2c, stk3310_i2c_id);
+@@ -673,6 +676,7 @@ MODULE_DEVICE_TABLE(i2c, stk3310_i2c_id);
+ static const struct acpi_device_id stk3310_acpi_id[] = {
+ 	{"STK3310", 0},
+ 	{"STK3311", 0},
++	{"STK3335", 0},
+ 	{}
+ };
+ 
 -- 
-2.17.1
+2.21.0
 
