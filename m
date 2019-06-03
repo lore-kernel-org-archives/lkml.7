@@ -2,91 +2,141 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 142BEC28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 661F3C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D473F2792D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:31:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="ktxaZJIA"
+	by mail.kernel.org (Postfix) with ESMTP id 45A1323BE3
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:34:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbfFCPbe (ORCPT
+        id S1727508AbfFCPeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 11:31:34 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:55050 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726922AbfFCPbb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 11:31:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1559575889; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=aCRtvN6bDnPOtOpR9F9ADHP2LKTTl3otOLpu3pQeu+A=;
-        b=ktxaZJIAidgdHSgYp+cBaMNV4v9rUFSErAAMlKgHDebwaDqRMIpGq/QBgbQNLqEEx26BVA
-        6cUkMT4y95ODpQeKAyRWT8p7h5qWbunEhBzK+IhKwcJhqT0xYj5T8B5s3mSN9OFt/OjrY6
-        dUhmCsd+VN7OUfmIzdMjTaWyLRRK8uA=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>
-Cc:     od@zcrc.me, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v4 2/3] drm: Add bus flag for Sharp-specific signals
-Date:   Mon,  3 Jun 2019 17:31:19 +0200
-Message-Id: <20190603153120.23947-2-paul@crapouillou.net>
-In-Reply-To: <20190603153120.23947-1-paul@crapouillou.net>
-References: <20190603153120.23947-1-paul@crapouillou.net>
+        Mon, 3 Jun 2019 11:34:01 -0400
+Received: from mga04.intel.com ([192.55.52.120]:47247 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726714AbfFCPeA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 11:34:00 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 08:34:00 -0700
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 08:33:59 -0700
+Message-ID: <f510f69ec5744e80fc612ae06a35b49d56cf2c80.camel@linux.intel.com>
+Subject: Re: [RFC PATCH 00/11] mm / virtio: Provide support for paravirtual
+ waste page treatment
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     David Hildenbrand <david@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>, nitesh@redhat.com,
+        kvm@vger.kernel.org, mst@redhat.com, dave.hansen@intel.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
+        konrad.wilk@oracle.com, lcapitulino@redhat.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com
+Date:   Mon, 03 Jun 2019 08:33:59 -0700
+In-Reply-To: <09c42bc7-ddc7-6b34-44d8-ffb5e63c7c6f@redhat.com>
+References: <20190530215223.13974.22445.stgit@localhost.localdomain>
+         <09c42bc7-ddc7-6b34-44d8-ffb5e63c7c6f@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the DRM_BUS_FLAG_SHARP_SIGNALS to the drm_bus_flags enum.
+On Mon, 2019-06-03 at 11:31 +0200, David Hildenbrand wrote:
+> On 30.05.19 23:53, Alexander Duyck wrote:
+> > This series provides an asynchronous means of hinting to a hypervisor
+> > that a guest page is no longer in use and can have the data associated
+> > with it dropped. To do this I have implemented functionality that allows
+> > for what I am referring to as "waste page treatment".
+> > 
+> > I have based many of the terms and functionality off of waste water
+> > treatment, the idea for the similarity occured to me after I had reached
+> > the point of referring to the hints as "bubbles", as the hints used the
+> > same approach as the balloon functionality but would disappear if they
+> > were touched, as a result I started to think of the virtio device as an
+> > aerator. The general idea with all of this is that the guest should be
+> > treating the unused pages so that when they end up heading "downstream"
+> > to either another guest, or back at the host they will not need to be
+> > written to swap.
+> > 
+> > So for a bit of background for the treatment process, it is based on a
+> > sequencing batch reactor (SBR)[1]. The treatment process itself has five
+> > stages. The first stage is the fill, with this we take the raw pages and
+> > add them to the reactor. The second stage is react, in this stage we hand
+> > the pages off to the Virtio Balloon driver to have hints attached to them
+> > and for those hints to be sent to the hypervisor. The third stage is
+> > settle, in this stage we are waiting for the hypervisor to process the
+> > pages, and we should receive an interrupt when it is completed. The fourth
+> > stage is to decant, or drain the reactor of pages. Finally we have the
+> > idle stage which we will go into if the reference count for the reactor
+> > gets down to 0 after a drain, or if a fill operation fails to obtain any
+> > pages and the reference count has hit 0. Otherwise we return to the first
+> > state and start the cycle over again.
+> 
+> While I like this analogy, I don't like the terminology mixed into
+> linux-mm core.
+> 
+> mm/aeration.c? Bubble? Treated? whut?
+> 
+> Can you come up with a terminology once can understand without a PHD in
+> biology? (if that is even the right field of study, I have no idea)
 
-This flags can be used when the display must be driven with the
-Sharp-specific signals SPL, CLS, REV, PS.
+I had started with the bubble, as I had mentioned before. From there I got
+to aerator because of the fact that we were filling the memory with holes.
+I figure the first two work pretty well, but I am not really attached to
+any of the other terms. As far as the rest of the terminology most of it
+is actually chemistry if I am not mistaken. I could probably just swap out
+"Treated" with "Aerated" and it would work just as well. I would also need
+to get away from the more complex terms such as "decant", but for the most
+part that is just a matter of finding the synonyms such as "drain".
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
+> ALSO: isn't the analogy partially wrong? Nobody would be using "waste
+> water" just because they are low on "clean water". At least not in my
+> city (I hope so ;) ). But maybe I am not getting the whole concept
+> because we are dealing with pages we want to hint to the hypervisor and
+> not with actual "waste".
 
-Notes:
-    v3: New patch
-    
-    v4: Rebase on drm-misc-next (b232d4ed92ea)
+Actually the analogy isn't for a low condition. The analogy would be for a
+condition where we have an excess of waste water and don't want to contain
+it. As such we want to treat it and return it to the water cycle.
 
- include/drm/drm_connector.h | 3 +++
- 1 file changed, 3 insertions(+)
+As far as the "waste" in the analogy I was thinking more of the page data.
+When a page has been used we normally mark it as "Dirty", so I thought it
+would be an apt analogy since those dirty pages would have to be written
+to long term storage if we didn't do something to invalidate the page
+data.
 
-diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
-index 547656173c74..5861367f7339 100644
---- a/include/drm/drm_connector.h
-+++ b/include/drm/drm_connector.h
-@@ -323,6 +323,8 @@ enum drm_panel_orientation {
-  *					edge of the pixel clock
-  * @DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE:	Sync signals are sampled on the falling
-  *					edge of the pixel clock
-+ * @DRM_BUS_FLAG_SHARP_SIGNALS:		Set if the Sharp-specific signals
-+ *					(SPL, CLS, PS, REV) must be used
-  */
- enum drm_bus_flags {
- 	DRM_BUS_FLAG_DE_LOW = BIT(0),
-@@ -341,6 +343,7 @@ enum drm_bus_flags {
- 	DRM_BUS_FLAG_SYNC_DRIVE_NEGEDGE = DRM_BUS_FLAG_SYNC_NEGEDGE,
- 	DRM_BUS_FLAG_SYNC_SAMPLE_POSEDGE = DRM_BUS_FLAG_SYNC_NEGEDGE,
- 	DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE = DRM_BUS_FLAG_SYNC_POSEDGE,
-+	DRM_BUS_FLAG_SHARP_SIGNALS = BIT(8),
- };
- 
- /**
--- 
-2.21.0.593.g511ec345e18
+> > This patch set is still far more intrusive then I would really like for
+> > what it has to do. Currently I am splitting the nr_free_pages into two
+> > values and having to add a pointer and an index to track where we area in
+> > the treatment process for a given free_area. I'm also not sure I have
+> > covered all possible corner cases where pages can get into the free_area
+> > or move from one migratetype to another.
+> 
+> Yes, it is quite intrusive. Maybe we can minimize the impact/error
+> proneness.
+
+My hope by submitting this as an RFC was to get input on what directions I
+might need to head in before I went to far down this current path.
+
+> > Also I am still leaving a number of things hard-coded such as limiting the
+> > lowest order processed to PAGEBLOCK_ORDER, and have left it up to the
+> > guest to determine what size of reactor it wants to allocate to process
+> > the hints.
+> > 
+> > Another consideration I am still debating is if I really want to process
+> > the aerator_cycle() function in interrupt context or if I should have it
+> > running in a thread somewhere else.
+> 
+> Did you get to test/benchmark the difference?
+
+I haven't yet.
 
