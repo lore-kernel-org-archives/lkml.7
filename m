@@ -7,52 +7,57 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1365C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 920CBC04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7821627E55
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B87227E49
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:11:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553072;
-	bh=vYK+S5IoxQQVHRo385/3aZ7IkzTAkxVmmcV5eHatUJo=;
+	s=default; t=1559553074;
+	bh=wKRkOxxi0rWgjjdvH42irIrb7H/TvTZPRbgRF8ZF4o4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tciacj5PQebl2SYSGb8WmMCXxcZHmy+A8WY1SKcPJt4OJHkwAZKEB7+BsGo+J0fsD
-	 36ytZfrBcI187j8Spq053cl15KUBO8ZZbflzPFNqac3CrizaMaXJnDkh1enOT/H/Ji
-	 jnLnOionti01bHFTNdf2nYyPKbblGqS1MWXpF49Y=
+	b=1PRw0v7DAVxcne126vkF4i/Gbw6nAvbhtPGaJzN+s1pDqbCyLPjmWkQGJ2oEiKmtR
+	 BQuuZOYGVB1UR+288lfgTctouEGJb1itBcDOZw2hCtM8SYu+PWCNFhXCj1Y0hP2nMg
+	 qVQBoT4atLIiJLtwq1XI+AQUv6heqi7rzo8mdZHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727913AbfFCJLL (ORCPT
+        id S1728327AbfFCJLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:11:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55940 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 05:11:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728294AbfFCJLG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:11:06 -0400
+        id S1728302AbfFCJLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:11:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DA8C27E4A;
-        Mon,  3 Jun 2019 09:11:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B5AC27E36;
+        Mon,  3 Jun 2019 09:11:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553066;
-        bh=vYK+S5IoxQQVHRo385/3aZ7IkzTAkxVmmcV5eHatUJo=;
+        s=default; t=1559553069;
+        bh=wKRkOxxi0rWgjjdvH42irIrb7H/TvTZPRbgRF8ZF4o4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pdsN7P74QyK+K6v3x4YXXhiS7f4ZMyCgsTPV09DHK3xDmnmy0ShxZsHDgxYZPCaNf
-         yNdyFnNbWPQWf0lI3J8DCGX2nMPNJOY52KcTOXoDXIGltXCY/IDGcN+ybLgjFl2DZx
-         YRGB5vKqQROJyLI/Ue/LtPvVJ1btJ+09nz3ayBjc=
+        b=S8NuzwFiP4/7M5GN4pyLznQz0hGS2EmARSfKYpLNCogowH5dDgNi8aA+dpEngg3GX
+         6u15ARH51C1Jcer7ii5tI4XlS/BMfcsb6+wIwpKOfq9AIsq9qS9G2YEHpR4+QkfLRZ
+         tv5RC1mzcyVToXGGSW+rlbm0a0TOn74orba7Ynv0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 09/32] net: dsa: mv88e6xxx: fix handling of upper half of STATS_TYPE_PORT
-Date:   Mon,  3 Jun 2019 11:08:03 +0200
-Message-Id: <20190603090311.307798518@linuxfoundation.org>
+        stable@vger.kernel.org, Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Heesoon Kim <Heesoon.Kim@stratus.com>,
+        Jarod Wilson <jarod@redhat.com>,
+        Jay Vosburgh <jay.vosburgh@canonical.com>
+Subject: [PATCH 5.0 01/36] bonding/802.3ad: fix slave link initialization transition states
+Date:   Mon,  3 Jun 2019 11:08:49 +0200
+Message-Id: <20190603090521.077564611@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190603090308.472021390@linuxfoundation.org>
-References: <20190603090308.472021390@linuxfoundation.org>
+In-Reply-To: <20190603090520.998342694@linuxfoundation.org>
+References: <20190603090520.998342694@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,33 +66,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+From: Jarod Wilson <jarod@redhat.com>
 
-[ Upstream commit 84b3fd1fc9592d431e23b077e692fa4e3fd0f086 ]
+[ Upstream commit 334031219a84b9994594015aab85ed7754c80176 ]
 
-Currently, the upper half of a 4-byte STATS_TYPE_PORT statistic ends
-up in bits 47:32 of the return value, instead of bits 31:16 as they
-should.
+Once in a while, with just the right timing, 802.3ad slaves will fail to
+properly initialize, winding up in a weird state, with a partner system
+mac address of 00:00:00:00:00:00. This started happening after a fix to
+properly track link_failure_count tracking, where an 802.3ad slave that
+reported itself as link up in the miimon code, but wasn't able to get a
+valid speed/duplex, started getting set to BOND_LINK_FAIL instead of
+BOND_LINK_DOWN. That was the proper thing to do for the general "my link
+went down" case, but has created a link initialization race that can put
+the interface in this odd state.
 
-Fixes: 6e46e2d821bb ("net: dsa: mv88e6xxx: Fix u64 statistics")
-Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+The simple fix is to instead set the slave link to BOND_LINK_DOWN again,
+if the link has never been up (last_link_up == 0), so the link state
+doesn't bounce from BOND_LINK_DOWN to BOND_LINK_FAIL -- it hasn't failed
+in this case, it simply hasn't been up yet, and this prevents the
+unnecessary state change from DOWN to FAIL and getting stuck in an init
+failure w/o a partner mac.
+
+Fixes: ea53abfab960 ("bonding/802.3ad: fix link_failure_count tracking")
+CC: Jay Vosburgh <j.vosburgh@gmail.com>
+CC: Veaceslav Falico <vfalico@gmail.com>
+CC: Andy Gospodarek <andy@greyhouse.net>
+CC: "David S. Miller" <davem@davemloft.net>
+CC: netdev@vger.kernel.org
+Tested-by: Heesoon Kim <Heesoon.Kim@stratus.com>
+Signed-off-by: Jarod Wilson <jarod@redhat.com>
+Acked-by: Jay Vosburgh <jay.vosburgh@canonical.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/mv88e6xxx/chip.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/bonding/bond_main.c |   15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
---- a/drivers/net/dsa/mv88e6xxx/chip.c
-+++ b/drivers/net/dsa/mv88e6xxx/chip.c
-@@ -877,7 +877,7 @@ static uint64_t _mv88e6xxx_get_ethtool_s
- 			err = mv88e6xxx_port_read(chip, port, s->reg + 1, &reg);
- 			if (err)
- 				return U64_MAX;
--			high = reg;
-+			low |= ((u32)reg) << 16;
- 		}
- 		break;
- 	case STATS_TYPE_BANK1:
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -3123,13 +3123,18 @@ static int bond_slave_netdev_event(unsig
+ 	case NETDEV_CHANGE:
+ 		/* For 802.3ad mode only:
+ 		 * Getting invalid Speed/Duplex values here will put slave
+-		 * in weird state. So mark it as link-fail for the time
+-		 * being and let link-monitoring (miimon) set it right when
+-		 * correct speeds/duplex are available.
++		 * in weird state. Mark it as link-fail if the link was
++		 * previously up or link-down if it hasn't yet come up, and
++		 * let link-monitoring (miimon) set it right when correct
++		 * speeds/duplex are available.
+ 		 */
+ 		if (bond_update_speed_duplex(slave) &&
+-		    BOND_MODE(bond) == BOND_MODE_8023AD)
+-			slave->link = BOND_LINK_FAIL;
++		    BOND_MODE(bond) == BOND_MODE_8023AD) {
++			if (slave->last_link_up)
++				slave->link = BOND_LINK_FAIL;
++			else
++				slave->link = BOND_LINK_DOWN;
++		}
+ 
+ 		if (BOND_MODE(bond) == BOND_MODE_8023AD)
+ 			bond_3ad_adapter_speed_duplex_changed(slave);
 
 
