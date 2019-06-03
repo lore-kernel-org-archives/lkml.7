@@ -2,117 +2,69 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12777C28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D85C28CC6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:32:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E290E26D87
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:30:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YQ5Brn47"
+	by mail.kernel.org (Postfix) with ESMTP id 5DCE726D87
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:32:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729984AbfFCRaz (ORCPT
+        id S1729986AbfFCRcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 13:30:55 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:45976 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729937AbfFCRay (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 13:30:54 -0400
-Received: by mail-pl1-f195.google.com with SMTP id x7so6256510plr.12;
-        Mon, 03 Jun 2019 10:30:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=x6LxCMvNbKAvwufPMN7pUEzpJTJQGX+IjHaO61nLrhc=;
-        b=YQ5Brn47WmIUvxHa11mrJMb/bYejP+FD0Afb7Ey8tTnpBdSokXokZ656J9Dv0WB6fL
-         eAoGRSTdY9915p9+DzDT9HOGN+1WUbigkCkoAC4T4v2GILXJbDiaUdeMLNPG3cmj1xBe
-         yaT0UW6KJ1dcxKlsYtE5Ano6R83qTneWrr+e4azAn3W7Z3bReHBbjnlHpwNmaM27mlKB
-         a6L3wQwzJ8tIGXul6Zgw5MwDR7fALBF47i5TKHs0FdDVWFnPO41Qw+K/BfSEZosMot+y
-         id/pHJXOhEhWAJpJZZxut2ZvqHa09UGKPBiuP7kbz8Y1rzC/QKqLOvc8QqjSqpUNnDWb
-         bKfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=x6LxCMvNbKAvwufPMN7pUEzpJTJQGX+IjHaO61nLrhc=;
-        b=tQhZyjG39leZ+GOHbH900qqT8j3LasXvCsd49JWqXvnqCNYfouuRpPXHUCeEOi5p4h
-         i40OIAmsfuLWdyJM0v8+3HtA+KYMVeOe9DA4VczPedzgeaP/DcXrNZ/rksXGmZnMnnRv
-         oHkazxH7qh/z1/Nb9tEpk6Zok8ph4ZRzs8pAMS568lxqxdL3F0AkisZ7f9rRBcoZlbn6
-         drbaEbniaj71u2dMTIarCZ4ANjkXpR1xxy6vtHvfir/5MDrZiJ5XHiXZF1kI6JRK8vZY
-         t3N/iFB63M1kXFJDcxOm8pwU70kFrPYu2pCBEbPY54v2awIrDFXZ1Q4D9+RSUkMEBaUH
-         Orkg==
-X-Gm-Message-State: APjAAAUMvNlKZXZ4b5TLXTBfFQq4x5rMVjYr1XouIg6Mh/URqtWuv+j/
-        3wMAtG7Xw+6Iexj/9Z8i2z4=
-X-Google-Smtp-Source: APXvYqzNjxQ4dQJciaN24y3Z8GJOIyhK6apkaM3QDoPTxdGJ6+DnNvx6wBHVXO0NkrbcjcGU+HaT+Q==
-X-Received: by 2002:a17:902:8c8f:: with SMTP id t15mr31739499plo.87.1559583054215;
-        Mon, 03 Jun 2019 10:30:54 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d3sm10724873pfa.176.2019.06.03.10.30.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Jun 2019 10:30:53 -0700 (PDT)
-Date:   Mon, 3 Jun 2019 10:30:52 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     linux-pm@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] power: supply: ucs1002: Add HWMON interface
-Message-ID: <20190603173052.GB5220@roeck-us.net>
-References: <20190531011620.9383-1-andrew.smirnov@gmail.com>
- <20190531011620.9383-3-andrew.smirnov@gmail.com>
+        Mon, 3 Jun 2019 13:32:17 -0400
+Received: from foss.arm.com ([217.140.101.70]:56644 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726206AbfFCRcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 13:32:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE60980D;
+        Mon,  3 Jun 2019 10:32:16 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A6BF63F5AF;
+        Mon,  3 Jun 2019 10:32:13 -0700 (PDT)
+Date:   Mon, 3 Jun 2019 18:32:11 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Alexandre Ghiti <alex@ghiti.fr>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Will Deacon <will.deacon@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v4 02/14] arm64: Make use of is_compat_task instead of
+ hardcoding this test
+Message-ID: <20190603173210.GI63283@arrakis.emea.arm.com>
+References: <20190526134746.9315-1-alex@ghiti.fr>
+ <20190526134746.9315-3-alex@ghiti.fr>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190531011620.9383-3-andrew.smirnov@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190526134746.9315-3-alex@ghiti.fr>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 06:16:20PM -0700, Andrey Smirnov wrote:
-> Expose current sensors found on UCS1002 via HWMON.
+On Sun, May 26, 2019 at 09:47:34AM -0400, Alexandre Ghiti wrote:
+> Each architecture has its own way to determine if a task is a compat task,
+> by using is_compat_task in arch_mmap_rnd, it allows more genericity and
+> then it prepares its moving to mm/.
 > 
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: Sebastian Reichel <sre@kernel.org>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-pm@vger.kernel.org
+> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+> Acked-by: Kees Cook <keescook@chromium.org>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-
-> ---
->  drivers/power/supply/ucs1002_power.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/power/supply/ucs1002_power.c b/drivers/power/supply/ucs1002_power.c
-> index 1c89d030c045..ebe84f1ca42f 100644
-> --- a/drivers/power/supply/ucs1002_power.c
-> +++ b/drivers/power/supply/ucs1002_power.c
-> @@ -571,6 +571,12 @@ static int ucs1002_probe(struct i2c_client *client,
->  		return ret;
->  	}
->  
-> +	ret = devm_power_supply_add_hwmon_sysfs(info->charger);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to add hmwon attributes: %d\n", ret);
-> +		return ret;
-> +	}
-> +
->  	ret = regmap_read(info->regmap, UCS1002_REG_PIN_STATUS, &regval);
->  	if (ret) {
->  		dev_err(dev, "Failed to read pin status: %d\n", ret);
-> -- 
-> 2.21.0
-> 
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
