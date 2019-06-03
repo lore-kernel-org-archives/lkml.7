@@ -2,189 +2,96 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 709D5C28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB61C28CC6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5259E27D77
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:23:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54FE227F30
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:24:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727323AbfFCMXf (ORCPT
+        id S1726824AbfFCMYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 08:23:35 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:46511 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726137AbfFCMXf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 08:23:35 -0400
-Received: from localhost (aaubervilliers-681-1-24-139.w90-88.abo.wanadoo.fr [90.88.144.139])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 2E134100004;
-        Mon,  3 Jun 2019 12:23:28 +0000 (UTC)
-Date:   Mon, 3 Jun 2019 14:23:28 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     paul.kocialkowski@bootlin.com, wens@csie.org, mchehab@kernel.org,
-        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 7/7] media: cedrus: Improve H264 memory efficiency
-Message-ID: <20190603122328.kczqsr4pza2ggvbk@flea>
-References: <20190530211516.1891-1-jernej.skrabec@siol.net>
- <20190530211516.1891-8-jernej.skrabec@siol.net>
+        Mon, 3 Jun 2019 08:24:33 -0400
+Received: from foss.arm.com ([217.140.101.70]:50090 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726137AbfFCMYd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 08:24:33 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A38D115A2;
+        Mon,  3 Jun 2019 05:24:32 -0700 (PDT)
+Received: from darkstar (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 67E793F5AF;
+        Mon,  3 Jun 2019 05:24:28 -0700 (PDT)
+Date:   Mon, 3 Jun 2019 13:24:22 +0100
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Tejun Heo <tj@kernel.org>, Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH v9 12/16] sched/core: uclamp: Extend CPU's cgroup
+ controller
+Message-ID: <20190603122422.GA19426@darkstar>
+References: <20190515094459.10317-1-patrick.bellasi@arm.com>
+ <20190515094459.10317-13-patrick.bellasi@arm.com>
+ <20190531153545.GE374014@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="eyhk33onwxqf3gu2"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190530211516.1891-8-jernej.skrabec@siol.net>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190531153545.GE374014@devbig004.ftw2.facebook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 31-May 08:35, Tejun Heo wrote:
+> Hello, Patrick.
 
---eyhk33onwxqf3gu2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hi Tejun!
 
-On Thu, May 30, 2019 at 11:15:16PM +0200, Jernej Skrabec wrote:
-> H264 decoder driver preallocated pretty big worst case mv col buffer
-> pool. It turns out that pool is most of the time much bigger than it
-> needs to be.
->
-> Solution implemented here is to allocate memory only if capture buffer
-> is actually used and only as much as it is really necessary.
->
-> This is also preparation for 4K video decoding support, which will be
-> implemented later.
+> On Wed, May 15, 2019 at 10:44:55AM +0100, Patrick Bellasi wrote:
+> > Extend the CPU controller with a couple of new attributes util.{min,max}
+> > which allows to enforce utilization boosting and capping for all the
+> > tasks in a group. Specifically:
+> > 
+> > - util.min: defines the minimum utilization which should be considered
+> > 	    i.e. the RUNNABLE tasks of this group will run at least at a
+> > 		 minimum frequency which corresponds to the util.min
+> > 		 utilization
+> > 
+> > - util.max: defines the maximum utilization which should be considered
+> > 	    i.e. the RUNNABLE tasks of this group will run up to a
+> > 		 maximum frequency which corresponds to the util.max
+> > 		 utilization
+> 
+> Let's please use a prefix which is more specific.  It's clamping the
+> utilization estimates of the member tasks which in turn affect
+> scheduling / frequency decisions but cpu.util.max reads like it's
+> gonna limit the cpu utilization directly.  Maybe just use uclamp?
 
-What is it doing exactly to prepare for 4k?
+Being too specific does not risk to expose implementation details?
 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> ---
->  drivers/staging/media/sunxi/cedrus/cedrus.h   |  4 -
->  .../staging/media/sunxi/cedrus/cedrus_h264.c  | 81 +++++++------------
->  2 files changed, 28 insertions(+), 57 deletions(-)
->
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h b/drivers/staging/media/sunxi/cedrus/cedrus.h
-> index 16c1bdfd243a..fcbbbef65494 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus.h
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
-> @@ -106,10 +106,6 @@ struct cedrus_ctx {
->
->  	union {
->  		struct {
-> -			void		*mv_col_buf;
-> -			dma_addr_t	mv_col_buf_dma;
-> -			ssize_t		mv_col_buf_field_size;
-> -			ssize_t		mv_col_buf_size;
->  			void		*pic_info_buf;
->  			dma_addr_t	pic_info_buf_dma;
->  			void		*neighbor_info_buf;
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> index b2290f98d81a..758fd0049e8f 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> @@ -54,17 +54,14 @@ static void cedrus_h264_write_sram(struct cedrus_dev *dev,
->  		cedrus_write(dev, VE_AVC_SRAM_PORT_DATA, *buffer++);
->  }
->
-> -static dma_addr_t cedrus_h264_mv_col_buf_addr(struct cedrus_ctx *ctx,
-> -					      unsigned int position,
-> +static dma_addr_t cedrus_h264_mv_col_buf_addr(struct cedrus_buffer *buf,
->  					      unsigned int field)
->  {
-> -	dma_addr_t addr = ctx->codec.h264.mv_col_buf_dma;
-> -
-> -	/* Adjust for the position */
-> -	addr += position * ctx->codec.h264.mv_col_buf_field_size * 2;
-> +	dma_addr_t addr = buf->extra_buf_dma;
->
->  	/* Adjust for the field */
-> -	addr += field * ctx->codec.h264.mv_col_buf_field_size;
-> +	if (field)
-> +		addr += buf->extra_buf_size / 2;
->
->  	return addr;
->  }
-> @@ -76,7 +73,6 @@ static void cedrus_fill_ref_pic(struct cedrus_ctx *ctx,
->  				struct cedrus_h264_sram_ref_pic *pic)
->  {
->  	struct vb2_buffer *vbuf = &buf->m2m_buf.vb.vb2_buf;
-> -	unsigned int position = buf->codec.h264.position;
->
->  	pic->top_field_order_cnt = cpu_to_le32(top_field_order_cnt);
->  	pic->bottom_field_order_cnt = cpu_to_le32(bottom_field_order_cnt);
-> @@ -84,10 +80,8 @@ static void cedrus_fill_ref_pic(struct cedrus_ctx *ctx,
->
->  	pic->luma_ptr = cpu_to_le32(cedrus_buf_addr(vbuf, &ctx->dst_fmt, 0));
->  	pic->chroma_ptr = cpu_to_le32(cedrus_buf_addr(vbuf, &ctx->dst_fmt, 1));
-> -	pic->mv_col_top_ptr =
-> -		cpu_to_le32(cedrus_h264_mv_col_buf_addr(ctx, position, 0));
-> -	pic->mv_col_bot_ptr =
-> -		cpu_to_le32(cedrus_h264_mv_col_buf_addr(ctx, position, 1));
-> +	pic->mv_col_top_ptr = cpu_to_le32(cedrus_h264_mv_col_buf_addr(buf, 0));
-> +	pic->mv_col_bot_ptr = cpu_to_le32(cedrus_h264_mv_col_buf_addr(buf, 1));
->  }
->
->  static void cedrus_write_frame_list(struct cedrus_ctx *ctx,
-> @@ -142,6 +136,28 @@ static void cedrus_write_frame_list(struct cedrus_ctx *ctx,
->  	output_buf = vb2_to_cedrus_buffer(&run->dst->vb2_buf);
->  	output_buf->codec.h264.position = position;
->
-> +	if (!output_buf->extra_buf_size) {
-> +		const struct v4l2_ctrl_h264_sps *sps = run->h264.sps;
-> +		unsigned int field_size;
-> +
-> +		field_size = DIV_ROUND_UP(ctx->src_fmt.width, 16) *
-> +			DIV_ROUND_UP(ctx->src_fmt.height, 16) * 16;
-> +		if (!(sps->flags & V4L2_H264_SPS_FLAG_DIRECT_8X8_INFERENCE))
-> +			field_size = field_size * 2;
-> +		if (!(sps->flags & V4L2_H264_SPS_FLAG_FRAME_MBS_ONLY))
-> +			field_size = field_size * 2;
-> +
-> +		output_buf->extra_buf_size = field_size * 2;
-> +		output_buf->extra_buf =
-> +			dma_alloc_coherent(dev->dev,
-> +					   output_buf->extra_buf_size,
-> +					   &output_buf->extra_buf_dma,
-> +					   GFP_KERNEL);
-> +
-> +		if (!output_buf->extra_buf)
-> +			output_buf->extra_buf_size = 0;
-> +	}
-> +
+If that's not a problem and Peter likes:
 
-That also means that instead of allocating that buffer exactly once,
-you now allocate it for each output buffer?
+   cpu.uclamp.{min,max}
 
-I guess that it will cleaned up by your previous patch at
-buffer_cleanup time, so after it's no longer a reference frame?
+that's ok with me.
 
-What is the average memory usage before, and after that change during
-a playback, and what is the runtime cost of doing it multiple times
-instead of once?
+-- 
+#include <best/regards.h>
 
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---eyhk33onwxqf3gu2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXPURQAAKCRDj7w1vZxhR
-xQTuAQDxJ1RMufUbH3eDRtX9HW0gxGhrJuNi1JtqtOlRUQxP9gEAhrUoGxyQYYQw
-ZarXFHSd/6ngImXRgIlWm5yMFMfIpAg=
-=9+qh
------END PGP SIGNATURE-----
-
---eyhk33onwxqf3gu2--
+Patrick Bellasi
