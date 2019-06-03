@@ -2,118 +2,93 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98494C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D770C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A45925D85
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:47:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="gYR8AN/v"
+	by mail.kernel.org (Postfix) with ESMTP id 47555242DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:48:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbfFCNrI (ORCPT
+        id S1728425AbfFCNsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 09:47:08 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:60195 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726780AbfFCNrI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 09:47:08 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x53DksWe614413
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 3 Jun 2019 06:46:54 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x53DksWe614413
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559569615;
-        bh=KaxlY8gRkqYFbl8qJuKzVYECIMo+aVoMr4I+uFZNfIs=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=gYR8AN/vMe8byeKzHmXO/o67z9VRyx1WknTy36v7dOXviJphQNVIpYtrZkn/NWZJ4
-         75Js9BN/El5Vo8qam6Kn3Zj3wLO6k7Fl23VIrBStY3egX8bO3AAIoUd+qARWlJ0Lkq
-         oOJYq1N1KkpSN2yL/Bt+nAZz34Mfr4v6y6mWzRRc9F9A0PnqlFRRRpzB3o2e+ztN0U
-         Y3T4DPfEwPOfNQEQWjj884qWHhCzJlwBqMDLnNcaId0rKbQavS5Tw1tGRdznD9E/Js
-         v2Bmx2Qt+x/yUUBm5KDbDZ1oSRYxEFKVqTJnFwHfT6VM50VEhAbFb2tWbgsHdcc1BS
-         /Wk3rbD9hSyUw==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x53Dksqb614410;
-        Mon, 3 Jun 2019 06:46:54 -0700
-Date:   Mon, 3 Jun 2019 06:46:54 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Peter Zijlstra <tipbot@zytor.com>
-Message-ID: <tip-fff9b6c7d26943a8eb32b58364b7ec6b9369746a@git.kernel.org>
-Cc:     torvalds@linux-foundation.org, mingo@kernel.org,
-        gregkh@linuxfoundation.org, tglx@linutronix.de, hpa@zytor.com,
-        peterz@infradead.org, linux-kernel@vger.kernel.org,
-        will.deacon@arm.com
-Reply-To: torvalds@linux-foundation.org, mingo@kernel.org,
-          gregkh@linuxfoundation.org, tglx@linutronix.de, hpa@zytor.com,
-          peterz@infradead.org, will.deacon@arm.com,
-          linux-kernel@vger.kernel.org
-In-Reply-To: <20190524115231.GN2623@hirez.programming.kicks-ass.net>
-References: <20190524115231.GN2623@hirez.programming.kicks-ass.net>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:locking/core] Documentation/atomic_t.txt: Clarify pure non-rmw
- usage
-Git-Commit-ID: fff9b6c7d26943a8eb32b58364b7ec6b9369746a
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Mon, 3 Jun 2019 09:48:05 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:51430 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727645AbfFCNsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 09:48:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6583E15A2;
+        Mon,  3 Jun 2019 06:48:04 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 45F5B3F246;
+        Mon,  3 Jun 2019 06:48:03 -0700 (PDT)
+Subject: Re: [PATCH] iommu: replace single-char identifiers in macros
+To:     Qian Cai <cai@lca.pw>, jroedel@suse.de
+Cc:     akpm@linux-foundation.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+References: <1559566783-13627-1-git-send-email-cai@lca.pw>
+ <fe5e8da4-38d2-c663-c2e2-70e6d4f7640f@arm.com>
+ <1559568571.6132.42.camel@lca.pw>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <deedf85a-35bc-e8be-dd94-6acb775af019@arm.com>
+Date:   Mon, 3 Jun 2019 14:48:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <1559568571.6132.42.camel@lca.pw>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  fff9b6c7d26943a8eb32b58364b7ec6b9369746a
-Gitweb:     https://git.kernel.org/tip/fff9b6c7d26943a8eb32b58364b7ec6b9369746a
-Author:     Peter Zijlstra <peterz@infradead.org>
-AuthorDate: Fri, 24 May 2019 13:52:31 +0200
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 3 Jun 2019 12:32:57 +0200
+On 03/06/2019 14:29, Qian Cai wrote:
+> On Mon, 2019-06-03 at 14:07 +0100, Robin Murphy wrote:
+>> On 03/06/2019 13:59, Qian Cai wrote:
+>>> There are a few macros in IOMMU have single-char identifiers make the
+>>> code hard to read and debug. Replace them with meaningful names.
+>>>
+>>> Suggested-by: Andrew Morton <akpm@linux-foundation.org>
+>>> Signed-off-by: Qian Cai <cai@lca.pw>
+>>> ---
+>>>    include/linux/dmar.h | 14 ++++++++------
+>>>    1 file changed, 8 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/include/linux/dmar.h b/include/linux/dmar.h
+>>> index f8af1d770520..eb634912f475 100644
+>>> --- a/include/linux/dmar.h
+>>> +++ b/include/linux/dmar.h
+>>> @@ -104,12 +104,14 @@ static inline bool dmar_rcu_check(void)
+>>>    
+>>>    #define	dmar_rcu_dereference(p)	rcu_dereference_check((p),
+>>> dmar_rcu_check())
+>>>    
+>>> -#define	for_each_dev_scope(a, c, p, d)	\
+>>> -	for ((p) = 0; ((d) = (p) < (c) ? dmar_rcu_dereference((a)[(p)].dev)
+>>> : \
+>>> -			NULL, (p) < (c)); (p)++)
+>>> -
+>>> -#define	for_each_active_dev_scope(a, c, p, d)	\
+>>> -	for_each_dev_scope((a), (c), (p), (d))	if (!(d)) { continue;
+>>> } else
+>>> +#define for_each_dev_scope(devs, cnt, i, tmp)				
+>>> \
+>>> +	for ((i) = 0; ((tmp) = (i) < (cnt) ?				
+>>> \
+>>
+>> Given that "tmp" actually appears to be some sort of device cursor, I'm
+>> not sure that that naming really achieves the stated goal of clarity :/
+> 
+> "tmp" is used in the callers everywhere though, although I suppose something
+> like "tmp_dev" can be used if you prefer.
 
-Documentation/atomic_t.txt: Clarify pure non-rmw usage
+I don't have any preference, I'm just questioning the assertion in the 
+commit message - as a reader not intimately familiar with this code, 
+"tmp" is honestly no more meaningful than "d" was.
 
-Clarify that pure non-RMW usage of atomic_t is pointless, there is
-nothing 'magical' about atomic_set() / atomic_read().
-
-This is something that seems to confuse people, because I happen upon it
-semi-regularly.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Acked-by: Will Deacon <will.deacon@arm.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190524115231.GN2623@hirez.programming.kicks-ass.net
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- Documentation/atomic_t.txt | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/atomic_t.txt b/Documentation/atomic_t.txt
-index dca3fb0554db..89eae7f6b360 100644
---- a/Documentation/atomic_t.txt
-+++ b/Documentation/atomic_t.txt
-@@ -81,9 +81,11 @@ Non-RMW ops:
- 
- The non-RMW ops are (typically) regular LOADs and STOREs and are canonically
- implemented using READ_ONCE(), WRITE_ONCE(), smp_load_acquire() and
--smp_store_release() respectively.
-+smp_store_release() respectively. Therefore, if you find yourself only using
-+the Non-RMW operations of atomic_t, you do not in fact need atomic_t at all
-+and are doing it wrong.
- 
--The one detail to this is that atomic_set{}() should be observable to the RMW
-+A subtle detail of atomic_set{}() is that it should be observable to the RMW
- ops. That is:
- 
-   C atomic-set
+Robin.
