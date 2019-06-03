@@ -2,122 +2,110 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 494CEC28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 11:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC4BC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 11:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2110028160
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 11:46:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="vD2ZSXIt"
+	by mail.kernel.org (Postfix) with ESMTP id 6CCC528167
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 11:46:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbfFCLqE (ORCPT
+        id S1727870AbfFCLqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 07:46:04 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:43326 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbfFCLqE (ORCPT
+        Mon, 3 Jun 2019 07:46:30 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:35157 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbfFCLqa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 07:46:04 -0400
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x53BjrOD005594;
-        Mon, 3 Jun 2019 20:45:53 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x53BjrOD005594
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1559562354;
-        bh=xcdVS2lZM1a48jGewJjV7DieZdVaVvo2sv103QVTF4A=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vD2ZSXItTjKjdiNBHbKw3ZwxymGkS+mFzGNJdILthjozmnTu79/V5i1V8R22/nnLr
-         3Bw8q1gvPjzDonVsJOuFRSuMKPvOQAUdQaZmuCbo0GRiGSBfxaddMQx1ahOH8UJqTx
-         YfHiSmxDHnUIL+meK6FxxCOVklZh415UQpOq1Dp0zXb3EiK/jpR2st9Kjvipf0isXu
-         A5q5swRbapK7hp912uNtA2dqkyZEP2HMa1B5c0V0HrNiot0WqaCOeKEbm0bkGoddoU
-         csou2T6LFFYdEKH87VrsG7p35LArxmFUjTiFl5fSqOU9j7jWNvgLKYgGp4n52MswfN
-         ml+ums0o22Y+Q==
-X-Nifty-SrcIP: [209.85.221.180]
-Received: by mail-vk1-f180.google.com with SMTP id k1so2803503vkb.2;
-        Mon, 03 Jun 2019 04:45:53 -0700 (PDT)
-X-Gm-Message-State: APjAAAW2o2ixN0XDlOCxvgENyQLU56pos+NFFWK8eeRKkM8sW1+L1gAb
-        Dla9sbdsjNZeex+fZGoENQmmtTBpcODboDmwks8=
-X-Google-Smtp-Source: APXvYqxzUHPoQIku6KGXaYa9Qp+9KgMH/y/NROsn43MQouSz1p//qa19a5lw5lYTcOIKJq2hnfSJHM9bQSGQoQwpkgs=
-X-Received: by 2002:ac5:c215:: with SMTP id m21mr8858804vkk.84.1559562352459;
- Mon, 03 Jun 2019 04:45:52 -0700 (PDT)
+        Mon, 3 Jun 2019 07:46:30 -0400
+X-Originating-IP: 90.88.144.139
+Received: from localhost (aaubervilliers-681-1-24-139.w90-88.abo.wanadoo.fr [90.88.144.139])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 6EDBB1BF216;
+        Mon,  3 Jun 2019 11:46:21 +0000 (UTC)
+Date:   Mon, 3 Jun 2019 13:46:20 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     paul.kocialkowski@bootlin.com, wens@csie.org, mchehab@kernel.org,
+        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, nicolas@ndufresne.ca,
+        boris.brezillon@collabora.com, jonas@kwiboo.se
+Subject: Re: [PATCH 2/7] media: cedrus: Fix H264 default reference index count
+Message-ID: <20190603114620.vsvbxz6gyhg3tn7b@flea>
+References: <20190530211516.1891-1-jernej.skrabec@siol.net>
+ <20190530211516.1891-3-jernej.skrabec@siol.net>
 MIME-Version: 1.0
-References: <20190603104902.23799-1-yamada.masahiro@socionext.com> <3dcacca3f71c46cc98fa64b13a405b59@AcuMS.aculab.com>
-In-Reply-To: <3dcacca3f71c46cc98fa64b13a405b59@AcuMS.aculab.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Mon, 3 Jun 2019 20:45:16 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATt=P5rHrnK_8PTmjMb+tdtPg2qBgopRUDBFw_fkP2SsQ@mail.gmail.com>
-Message-ID: <CAK7LNATt=P5rHrnK_8PTmjMb+tdtPg2qBgopRUDBFw_fkP2SsQ@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: use more portable 'command -v' for cc-cross-prefix
-To:     David Laight <David.Laight@aculab.com>
-Cc:     "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Alexey Brodkin <abrodkin@synopsys.com>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>,
-        linux-stable <stable@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="fsayms5djr42vwm2"
+Content-Disposition: inline
+In-Reply-To: <20190530211516.1891-3-jernej.skrabec@siol.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 3, 2019 at 8:16 PM David Laight <David.Laight@aculab.com> wrote:
+
+--fsayms5djr42vwm2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, May 30, 2019 at 11:15:11PM +0200, Jernej Skrabec wrote:
+> Reference index count in VE_H264_PPS reg should come from PPS control.
+> However, this is not really important because reference index count is
+> in our case always overridden by that from slice header.
 >
-> From: Masahiro Yamada
-> > Sent: 03 June 2019 11:49
-> >
-> > To print the pathname that will be used by shell in the current
-> > environment, 'command -v' is a standardized way. [1]
-> >
-> > 'which' is also often used in scripting, but it is not portable.
+> Cc: nicolas@ndufresne.ca
+> Cc: boris.brezillon@collabora.com
+> Cc: jonas@kwiboo.se
 >
-> All uses of 'which' should be expunged.
-> It is a bourne shell script that is trying to emulate a csh builtin.
-> It is doomed to fail in corner cases.
-> ISTR it has serious problems with shell functions and aliases.
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 
-OK, I do not have time to check it treewide.
-I expect somebody will contribute to it.
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
+> ---
+> We have to decide if we drop pps->num_ref_idx_l0_default_active_minus1
+> and pps->num_ref_idx_l1_default_active_minus1 fields or add
+> num_ref_idx_l0_active_override_flag and num_ref_idx_l0_active_override_flag
+> to slice control.
+>
+> Current control doesn't have those two flags, so in Cedrus override flag is
+> always set and we rely on userspace to set slice->num_ref_idx_l0_active_minus1
+> and slice->num_ref_idx_l1_active_minus1 to correct values. This means that
+> values stored in PPS are not needed and always ignored by VPU.
+>
+> If I understand correctly, algorithm is very simple:
+>
+> ref_count = PPS->ref_count
+> if (override_flag)
+> 	ref_count = slice->ref_count
+>
+> It seems that VAAPI provides only final value. In my opinion we should do the
+> same - get rid of PPS default ref index count fields.
 
+The rationale was to be as conservative as possible and just expose
+everything that is in the bitstream in those controls to accomodate
+for as many weird hardware as possible.
 
-BTW, I see yet another way to get the command path.
+Maxime
 
-'type -path' is bash-specific.
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-Maybe, we should do this too:
+--fsayms5djr42vwm2
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/scripts/mkuboot.sh b/scripts/mkuboot.sh
-index 4b1fe09e9042..77829ee4268e 100755
---- a/scripts/mkuboot.sh
-+++ b/scripts/mkuboot.sh
-@@ -1,14 +1,14 @@
--#!/bin/bash
-+#!/bin/sh
- # SPDX-License-Identifier: GPL-2.0
+-----BEGIN PGP SIGNATURE-----
 
- #
- # Build U-Boot image when `mkimage' tool is available.
- #
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXPUIjAAKCRDj7w1vZxhR
+xdm0AP46c7mpa3rFUC3RjFMniXaoNTXWcQ8pPICsPfw3vjCa9gD+KujizJ6uc9di
++fd1bkaTJJCq8ZbqR+3HqBMJe9acIgE=
+=wE3x
+-----END PGP SIGNATURE-----
 
--MKIMAGE=$(type -path "${CROSS_COMPILE}mkimage")
-+MKIMAGE=$(command -v "${CROSS_COMPILE}mkimage")
-
- if [ -z "${MKIMAGE}" ]; then
--       MKIMAGE=$(type -path mkimage)
-+       MKIMAGE=$(command -v mkimage)
-        if [ -z "${MKIMAGE}" ]; then
-                # Doesn't exist
-                echo '"mkimage" command not found - U-Boot images will
-not be built' >&2
-
-
--- 
-Best Regards
-Masahiro Yamada
+--fsayms5djr42vwm2--
