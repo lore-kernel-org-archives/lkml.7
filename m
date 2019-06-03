@@ -2,162 +2,226 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 348D1C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8109EC04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1276C27CB0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A17627CA8
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:26:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbfFCHZ5 (ORCPT
+        id S1727404AbfFCH0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 03:25:57 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:32783 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726520AbfFCHZ5 (ORCPT
+        Mon, 3 Jun 2019 03:26:00 -0400
+Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:36583 "EHLO
+        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726684AbfFCHZ6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 03:25:57 -0400
-Received: by mail-lf1-f68.google.com with SMTP id y17so12748185lfe.0;
-        Mon, 03 Jun 2019 00:25:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xEI6d6G4ess0W+jEsNn0vDwu9Rko+8JiDaoJH/VFBrM=;
-        b=F4w/ife2vndXDKn+53IrMWIDd1CgdBZbC20wiWimxdJFG51kjos8Xo+8Vxy1JDnzMW
-         5THf6+VA7dK7JZEg7PGWG8DTnysgBdcUZ4oHVhLtETnbwsEVeet0wrfDjBDrkCnwsQ8A
-         LnwhfNQc+8C+bMBwJwuqC9S9N5RF4ndS1TwFdejTfUaroYWtSsg59IatAEt80Ol6qd6V
-         NsASFC4SgtPEJIVxc7GZg+LNDu+jRmfauaHeRwdIK8Id7s0JAhCxhs5/kSAGJJcLLqjj
-         lGCLtoMHAcKhiq982wg9Nsi1esWta/GzA79IYCwg/bABzjZ1osv1AZ+5WXpp5qZrbeRs
-         DUCg==
-X-Gm-Message-State: APjAAAXrPpQFjF0o5K8O2GRUNotxkMH7hsyYxOeNXp7iNLCGuROVU1t5
-        b9275CsgbTvg96UzS4st6FI=
-X-Google-Smtp-Source: APXvYqypOwl/RCjalkzYVDQri3/buHiYgx2OxWvxuHbuuMK3HvwoKtDr99P8hWToPrZWtdGLJ2zw1w==
-X-Received: by 2002:a19:1908:: with SMTP id 8mr12529265lfz.171.1559546754283;
-        Mon, 03 Jun 2019 00:25:54 -0700 (PDT)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id z26sm48010ljz.64.2019.06.03.00.25.52
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 03 Jun 2019 00:25:53 -0700 (PDT)
-Date:   Mon, 3 Jun 2019 10:25:39 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     mazziesaccount@gmail.com, matti.vaittinen@fi.rohmeurope.com
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: [PATCH v15 3/7] clk: bd718x7: Support ROHM BD70528 clk block
-Message-ID: <c77c1a0f8ee448876adbfcbf0aec69bd3eeaf0ac.1559546139.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1559546139.git.matti.vaittinen@fi.rohmeurope.com>
+        Mon, 3 Jun 2019 03:25:58 -0400
+Received: from [192.168.2.10] ([46.9.252.75])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id XhLrhJMQjsDWyXhLuhrgWW; Mon, 03 Jun 2019 09:25:55 +0200
+Subject: Re: [PATCH 10/10] venus: dec: make decoder compliant with stateful
+ codec API
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Tomasz Figa <tfiga@chromium.org>
+Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Vikash Garodia <vgarodia@codeaurora.org>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Malathi Gottam <mgottam@codeaurora.org>
+References: <20190117162008.25217-1-stanimir.varbanov@linaro.org>
+ <20190117162008.25217-11-stanimir.varbanov@linaro.org>
+ <60b3efff-31c1-bc04-8af9-deebb8bc013a@xs4all.nl>
+ <fe51ae1e-6d2e-36bd-485a-d85520ad2386@linaro.org>
+ <CAAFQd5Co3G1J4+HOcjtCb7p3rhLcm+1E=mPr2d=AtdOSuF_eKg@mail.gmail.com>
+ <c56930e0-be6f-2ade-fcea-8ee0ff6247ec@linaro.org>
+ <CAAFQd5CNGsnqjpLsWSTf=8r+hSfyOgD8SU-tn5EbHCCuuSgH6A@mail.gmail.com>
+ <01b6683f-9378-e6f2-501f-e2213e6c690d@xs4all.nl>
+ <CAAFQd5Dw-1A2gXuC54Z7808L6Vm9mjPpE7Kbj-TZC18_k_FgVA@mail.gmail.com>
+ <a9b11ba0-adca-f974-67a5-a0fe54689bba@xs4all.nl>
+ <CAAFQd5CMpQ4ODyeBPnOv4w9ktqPsiqJtSkpRhAx+XgQ=Lz9crQ@mail.gmail.com>
+ <ee62fdb0-d8fa-0695-9088-5aaef48e485f@linaro.org>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <0cf25512-97b3-f46a-c266-508368e261d8@xs4all.nl>
+Date:   Mon, 3 Jun 2019 09:25:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1559546139.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <ee62fdb0-d8fa-0695-9088-5aaef48e485f@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfG9uNhP0/Ik5UJJWj+ABfQeyr9NMZ8hLR9srE70Z3CObqO/xuS8hMYLEO9M9/u2kYkho7TaljjYZlxTvSsqu1NPLdXvmPKAJoK03XwWZs6A1tuqokxI5
+ MPoTK2dxHRb3+AzOKhH1OQfmf/g2PPu5RamSI8F+Qe3xUmOTMFpoeflAJcazOCYDB2IP79WRvB0tr0mP8v1y1uK1PY52Q8rjjGvXgdaREvYNyvY//24VdZdb
+ oD07KerHuTlhGJtWsOuh6risX95o7WnnABA3Kx2+nrTl5ipdwRWegRLBmvzGyDYZYU6MszGylVFhvZEeP7cpvAf/2tgB2cWOqUh8f0LHUaToZ8R0KIy1p8ne
+ KC2X3D8xU5E6srl+1SAXBefygUmXacIkwU7WdKJNCgZizBPm+9tC9YoxxBeFxgtDQPUjanelCuj/33j4euCzQPRogXXVzQtZZwRHh0mrnxyRNhbSwZU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ROHM BD70528 is an ultra low power PMIC with similar 32K clk as
-bd718x7. Only difference (from clk perspective) is register address.
-Add support for controlling BD70528 clk using bd718x7 driver.
+On 5/31/19 10:01 AM, Stanimir Varbanov wrote:
+> Hi,
+> 
+> On 5/27/19 11:18 AM, Tomasz Figa wrote:
+>> On Mon, May 27, 2019 at 4:39 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
+>>>
+>>> On 5/27/19 5:51 AM, Tomasz Figa wrote:
+>>>> On Tue, May 21, 2019 at 9:27 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
+>>>>>
+>>>>> On 5/21/19 11:09 AM, Tomasz Figa wrote:
+>>>>>> Hi Stan,
+>>>>>>
+>>>>>> On Mon, May 20, 2019 at 11:47 PM Stanimir Varbanov
+>>>>>> <stanimir.varbanov@linaro.org> wrote:
+>>>>>>>
+>>>>>>> Hi Tomasz,
+>>>>>>>
+>>>>>>> On 4/24/19 3:39 PM, Tomasz Figa wrote:
+>>>>>>>> On Wed, Apr 24, 2019 at 9:15 PM Stanimir Varbanov
+>>>>>>>> <stanimir.varbanov@linaro.org> wrote:
+>>>>>>>>>
+>>>>>>>>> Hi Hans,
+>>>>>>>>>
+>>>>>>>>> On 2/15/19 3:44 PM, Hans Verkuil wrote:
+>>>>>>>>>> Hi Stanimir,
+>>>>>>>>>>
+>>>>>>>>>> I never paid much attention to this patch series since others were busy
+>>>>>>>>>> discussing it and I had a lot of other things on my plate, but then I heard
+>>>>>>>>>> that this patch made G_FMT blocking.
+>>>>>>>>>
+>>>>>>>>> OK, another option could be to block REQBUF(CAPTURE) until event from hw
+>>>>>>>>> is received that the stream is parsed and the resolution is correctly
+>>>>>>>>> set by application. Just to note that I'd think to this like a temporal
+>>>>>>>>> solution until gstreamer implements v4l events.
+>>>>>>>>>
+>>>>>>>>> Is that looks good to you?
+>>>>>>>>
+>>>>>>>> Hmm, I thought we concluded that gstreamer sets the width and height
+>>>>>>>> in OUTPUT queue before querying the CAPTURE queue and so making the
+>>>>>>>> driver calculate the CAPTURE format based on what's set on OUTPUT
+>>>>>>>> would work fine. Did I miss something?
+>>>>>>>
+>>>>>>> Nobody is miss something.
+>>>>>>>
+>>>>>>> First some background about how Venus implements stateful codec API.
+>>>>>>>
+>>>>>>> The Venus firmware can generate two events "sufficient" and
+>>>>>>> "insufficient" buffer requirements (this includes decoder output buffer
+>>>>>>> size and internal/scratch buffer sizes). Presently I always set minimum
+>>>>>>> possible decoder resolution no matter what the user said, and by that
+>>>>>>> way I'm sure that "insufficient" event will always be triggered by the
+>>>>>>> firmware (the other reason to take this path is because this is the
+>>>>>>> least-common-divider for all supported Venus hw/fw versions thus common
+>>>>>>> code in the driver). The reconfiguration (during codec Initialization
+>>>>>>> sequence) is made from STREAMON(CAPTURE) context. Now, to make that
+>>>>>>> re-configuration happen I need to wait for "insufficient" event from
+>>>>>>> firmware in order to know the real coded resolution.
+>>>>>>>
+>>>>>>> In the case of gstreamer where v4l2_events support is missing I have to
+>>>>>>> block (wait for firmware event) REQBUF(CAPTURE) (vb2::queue_setup) or
+>>>>>>> STREAMON(CAPTURE) (vb2::start_streaming).
+>>>>>>>
+>>>>>>> I tried to set the coded resolution to the firmware as-is it set by
+>>>>>>> gstreamer but then I cannot receive the "sufficient" event for VP8 and
+>>>>>>> VP9 codecs. So I return back to the solution with minimum resolution above.
+>>>>>>>
+>>>>>>> I'm open for suggestions.
+>>>>>>
+>>>>>> I think you could still keep setting the minimum size and wait for the
+>>>>>> "insufficient" event. At the same time, you could speculatively
+>>>>>> advertise the expected "sufficient" size on the CAPTURE queue before
+>>>>>> the hardware signals those. Even if you mispredict them, you'll get
+>>>>>> the event, update the CAPTURE resolution and send the source change
+>>>>>> event to the application, which would then give you the correct
+>>>>>> buffers. Would that work for you?
+>>>>>
+>>>>> As I understand it this still would require event support, which gstreamer
+>>>>> doesn't have.
+>>>>
+>>>> I don't think it matches what I remember from the earlier discussion.
+>>>> As long as Gstreamer sets the visible resolution (from the container
+>>>> AFAIR) on OUTPUT, the driver would adjust it to something that is
+>>>> expected to be the right framebuffer resolution and so Gstreamer would
+>>>> be able to continue. Of course if the expected value doesn't match, it
+>>>> wouldn't work, but it's the same as currently for Coda AFAICT.
+>>>>
+>>>>>
+>>>>> I think it is OK to have REQBUFS sleep in this case. However, I would only
+>>>>
+>>>> Why REQBUFS? While that could possibly allow us to allocate the right
+>>>> buffers, Gstreamer wouldn't be able to know the right format, because
+>>>> it would query it before REQBUFS, wouldn't it?
+>>>
+>>> Oops, you are right. It's got to be in G_FMT(CAPTURE), but *only* if
+>>> nobody subscribed to the SOURCE_CHANGE event.
+>>>
+>>>>
+>>>> For this reason, s5p-mfc makes G_FMT(CAPTURE) blocking and if we
+>>>> decide to forcefully keep the compatibility, even with in drivers, we
+>>>> should probably do the same here.
+>>>>
+>>>>> enable this behavior if the application didn't subscribe to the SOURCE_CHANGE
+>>>>> event. That's easy enough to check in the driver. And that means that if the
+>>>>> application is well written, then the driver will behave in a completely
+>>>>> standard way that the compliance test can check.
+>>>>
+>>>> I guess one could have some helpers for this. They would listen to the
+>>>> source change events internally and block / wake-up appropriate ioctls
+>>>> whenever necessary.
+>>>
+>>> I really do not want this for new drivers. gstreamer should be fixed.
+>>> A blocking G_FMT is just plain bad. Only those drivers that do this, can
+>>> still block if nobody subscribed to EVENT_SOURCE_CHANGE.
+>>
+>> Yeah and that's why I just suggested to mimic coda, which doesn't
+>> block, but apparently gstreamer still works with it.
+> 
+> Unfortunately in Venus case that is not an easy task (as I tried to
+> explain why above).
+> 
+> To have an unified and common code for all different SoCs and
+> firmware/hardware versions I decided to set the minimum supported
+> resolution for the decoder (no matter what the user said) and trigger
+> the reconfiguration event always. Something more, I need the event also
+> to retrieve the minimum capture buffers
+> (V4L2_CID_MIN_BUFFERS_FOR_CAPTURE) and sizes for capture and
+> internal/scratch buffers as well, thus I really need to wait for that
+> event.
+> 
+> So, just to confirm - you are fine with blocking G_FMT (not REQBUF) when
+> the user doesn't subscribe for v4l2 events?
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Acked-by: Stephen Boyd <sboyd@kernel.org>
----
-Unchanged from v14
+'Fine' is too strong a word :-)
 
- drivers/clk/Kconfig       |  6 +++---
- drivers/clk/clk-bd718x7.c | 20 ++++++++++++++++----
- 2 files changed, 19 insertions(+), 7 deletions(-)
+But I think this is a reasonable compromise.
 
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index fc1e0cf44995..dd411c86b979 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -293,10 +293,10 @@ config COMMON_CLK_STM32H7
- 
- config COMMON_CLK_BD718XX
- 	tristate "Clock driver for ROHM BD718x7 PMIC"
--	depends on MFD_ROHM_BD718XX
-+	depends on MFD_ROHM_BD718XX || MFD_ROHM_BD70528
- 	help
--	  This driver supports ROHM BD71837 and ROHM BD71847
--	  PMICs clock gates.
-+	  This driver supports ROHM BD71837, ROHM BD71847 and
-+	  ROHM BD70528 PMICs clock gates.
- 
- config COMMON_CLK_FIXED_MMIO
- 	bool "Clock driver for Memory Mapped Fixed values"
-diff --git a/drivers/clk/clk-bd718x7.c b/drivers/clk/clk-bd718x7.c
-index 461228ebf703..ae6e5baee330 100644
---- a/drivers/clk/clk-bd718x7.c
-+++ b/drivers/clk/clk-bd718x7.c
-@@ -8,6 +8,7 @@
- #include <linux/platform_device.h>
- #include <linux/slab.h>
- #include <linux/mfd/rohm-bd718x7.h>
-+#include <linux/mfd/rohm-bd70528.h>
- #include <linux/clk-provider.h>
- #include <linux/clkdev.h>
- #include <linux/regmap.h>
-@@ -86,9 +87,20 @@ static int bd71837_clk_probe(struct platform_device *pdev)
- 		dev_err(&pdev->dev, "No parent clk found\n");
- 		return -EINVAL;
- 	}
--
--	c->reg = BD718XX_REG_OUT32K;
--	c->mask = BD718XX_OUT32K_EN;
-+	switch (mfd->chip_type) {
-+	case ROHM_CHIP_TYPE_BD71837:
-+	case ROHM_CHIP_TYPE_BD71847:
-+		c->reg = BD718XX_REG_OUT32K;
-+		c->mask = BD718XX_OUT32K_EN;
-+		break;
-+	case ROHM_CHIP_TYPE_BD70528:
-+		c->reg = BD70528_REG_CLK_OUT;
-+		c->mask = BD70528_CLK_OUT_EN_MASK;
-+		break;
-+	default:
-+		dev_err(&pdev->dev, "Unknown clk chip\n");
-+		return -EINVAL;
-+	}
- 	c->mfd = mfd;
- 	c->pdev = pdev;
- 	c->hw.init = &init;
-@@ -119,5 +131,5 @@ static struct platform_driver bd71837_clk = {
- module_platform_driver(bd71837_clk);
- 
- MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
--MODULE_DESCRIPTION("BD71837/BD71847 chip clk driver");
-+MODULE_DESCRIPTION("BD71837/BD71847/BD70528 chip clk driver");
- MODULE_LICENSE("GPL");
--- 
-2.17.2
+Document carefully why you are doing this, since it is purely for backwards
+compatibility reasons. And perhaps at some point in the future the workaround
+might be removed again.
 
+Regards,
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+	Hans
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+> 
+>>
+>>>
+>>>> Another question: If we intend this to be implemented in new drivers
+>>>> too, should it be documented in the spec?
+>>>
+>>> We most certainly do NOT want to implement this in new drivers.
+>>>
+>>
+>> Makes sense.
+>>
+>> When venus was merged initially, did it already have a blocking G_FMT?
+> 
+> No it isn't.
+> 
+
