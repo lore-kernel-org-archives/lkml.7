@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C399C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5149C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EE0D25088
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 988EA26907
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:16:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Bm3XqfXz"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ZQaR6WML"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728400AbfFCNPS (ORCPT
+        id S1728357AbfFCNQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 09:15:18 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:52223 "EHLO
+        Mon, 3 Jun 2019 09:16:02 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:38933 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728057AbfFCNPR (ORCPT
+        with ESMTP id S1726516AbfFCNQC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 09:15:17 -0400
+        Mon, 3 Jun 2019 09:16:02 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x53DF7P7606021
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x53DFps2606105
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 3 Jun 2019 06:15:07 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x53DF7P7606021
+        Mon, 3 Jun 2019 06:15:51 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x53DFps2606105
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559567707;
-        bh=p0X1AcJdJsIH9G1aM0A4a9ivY9INZIElMqFTamOmf8A=;
+        s=2019051801; t=1559567752;
+        bh=N3GCtG4qp2uKDPSsWJs9UNW4xxGQ68oAJubnT5rBU1k=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=Bm3XqfXzkExifPlghCK5WVJ1HKcULIBePGjx8gXu/sJYxoFJVVZBKxHDcQ7S7J4F7
-         3kklfYSARpHAyaB7Y+l/bv3jAe14td2b403zF8/xtg/mvPMLUtCilaK4DdVLCyvJK7
-         cPHyQpsrKV2W+cDr4CgQDdSXd6vtsdEoW5QwkZ4YHIdHsHoPZYxlzJAbvnZwcDo9Xa
-         ciriEoCAyNSxkHmKWgOvIMus6+2DwT5f5JYlQP6berbVQzwvrZUN5Is1+sjdOveYcK
-         vkCCKhFP4k+LRzfZhm0oVFAqI7j/IFYiYoYy9/wpWBTBha0KPYrbGLOG4uY1N3zMqf
-         yiAhrE475+Ffw==
+        b=ZQaR6WMLWFQ40j3DCxflUQF+zLpWSp9+kwjxfRLLWF4MkjnmX6cHAjH4jNwyq8GFA
+         oCm/aNJzDhJjWBAWC+DMQpaERMXxoBjPz+IQAd7vPzA9Pp4RT4bN6R4s1KIBHC5LFB
+         BIejbm+vpSJeMjvMvh0m++3FWhkeVhxm+TAsCgyNTZ1LDZaG+3ZzgEl7meeAWe2xu6
+         rOaf/sFvIK+OUcWBS95ufAbPIBO8r/PM0mRkCjmLLz/hOMPRD5GQuy8jmSCgU3OZAN
+         n5JMlYVZLXJ+GEHhwuwaFbLeRwPM243poJHJPDBARqNhYUxPIbNh1QnjTMH6nIjBEn
+         ps123GpLRyJPQ==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x53DF6PX606015;
-        Mon, 3 Jun 2019 06:15:06 -0700
-Date:   Mon, 3 Jun 2019 06:15:06 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x53DFoeF606102;
+        Mon, 3 Jun 2019 06:15:50 -0700
+Date:   Mon, 3 Jun 2019 06:15:50 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Yuyang Du <tipbot@zytor.com>
-Message-ID: <tip-c1661325597f68bc9e632c4fa9c86983d56fba4f@git.kernel.org>
-Cc:     duyuyang@gmail.com, linux-kernel@vger.kernel.org, mingo@kernel.org,
-        tglx@linutronix.de, torvalds@linux-foundation.org,
-        peterz@infradead.org, hpa@zytor.com
+Message-ID: <tip-77a806922cfdebcf3ae89d31a8b592a7f7fbe537@git.kernel.org>
+Cc:     mingo@kernel.org, torvalds@linux-foundation.org,
+        tglx@linutronix.de, hpa@zytor.com, duyuyang@gmail.com,
+        linux-kernel@vger.kernel.org, peterz@infradead.org
 Reply-To: peterz@infradead.org, linux-kernel@vger.kernel.org,
-          torvalds@linux-foundation.org, tglx@linutronix.de,
-          mingo@kernel.org, duyuyang@gmail.com, hpa@zytor.com
-In-Reply-To: <20190506081939.74287-14-duyuyang@gmail.com>
-References: <20190506081939.74287-14-duyuyang@gmail.com>
+          tglx@linutronix.de, hpa@zytor.com, duyuyang@gmail.com,
+          mingo@kernel.org, torvalds@linux-foundation.org
+In-Reply-To: <20190506081939.74287-15-duyuyang@gmail.com>
+References: <20190506081939.74287-15-duyuyang@gmail.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:locking/core] locking/lockdep: Change the return type of
- __cq_dequeue()
-Git-Commit-ID: c1661325597f68bc9e632c4fa9c86983d56fba4f
+Subject: [tip:locking/core] locking/lockdep: Avoid constant checks in __bfs
+ by using offset reference
+Git-Commit-ID: 77a806922cfdebcf3ae89d31a8b592a7f7fbe537
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -70,17 +70,20 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  c1661325597f68bc9e632c4fa9c86983d56fba4f
-Gitweb:     https://git.kernel.org/tip/c1661325597f68bc9e632c4fa9c86983d56fba4f
+Commit-ID:  77a806922cfdebcf3ae89d31a8b592a7f7fbe537
+Gitweb:     https://git.kernel.org/tip/77a806922cfdebcf3ae89d31a8b592a7f7fbe537
 Author:     Yuyang Du <duyuyang@gmail.com>
-AuthorDate: Mon, 6 May 2019 16:19:29 +0800
+AuthorDate: Mon, 6 May 2019 16:19:30 +0800
 Committer:  Ingo Molnar <mingo@kernel.org>
 CommitDate: Mon, 3 Jun 2019 11:55:46 +0200
 
-locking/lockdep: Change the return type of __cq_dequeue()
+locking/lockdep: Avoid constant checks in __bfs by using offset reference
 
-With the change, we can slightly adjust the code to iterate the queue in BFS
-search, which simplifies the code. No functional change.
+In search of a dependency in the lock graph, there is contant checks for
+forward or backward search. Directly reference the field offset of the
+struct that differentiates the type of search to avoid those checks.
+
+No functional change.
 
 Signed-off-by: Yuyang Du <duyuyang@gmail.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
@@ -91,59 +94,85 @@ Cc: bvanassche@acm.org
 Cc: frederic@kernel.org
 Cc: ming.lei@redhat.com
 Cc: will.deacon@arm.com
-Link: https://lkml.kernel.org/r/20190506081939.74287-14-duyuyang@gmail.com
+Link: https://lkml.kernel.org/r/20190506081939.74287-15-duyuyang@gmail.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/locking/lockdep.c | 21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+ kernel/locking/lockdep.c | 33 +++++++++++++++++++++------------
+ 1 file changed, 21 insertions(+), 12 deletions(-)
 
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index d467ba825dca..d23dcb47389e 100644
+index d23dcb47389e..2e8ef6082f72 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -1308,14 +1308,21 @@ static inline int __cq_enqueue(struct circular_queue *cq, struct lock_list *elem
- 	return 0;
+@@ -1367,11 +1367,25 @@ static inline int get_lock_depth(struct lock_list *child)
+ 	return depth;
  }
  
--static inline int __cq_dequeue(struct circular_queue *cq, struct lock_list **elem)
 +/*
-+ * Dequeue an element from the circular_queue, return a lock_list if
-+ * the queue is not empty, or NULL if otherwise.
++ * Return the forward or backward dependency list.
++ *
++ * @lock:   the lock_list to get its class's dependency list
++ * @offset: the offset to struct lock_class to determine whether it is
++ *          locks_after or locks_before
 + */
-+static inline struct lock_list * __cq_dequeue(struct circular_queue *cq)
- {
-+	struct lock_list * lock;
++static inline struct list_head *get_dep_list(struct lock_list *lock, int offset)
++{
++	void *lock_class = lock->class;
 +
- 	if (__cq_empty(cq))
--		return -1;
-+		return NULL;
- 
--	*elem = cq->element[cq->front];
-+	lock = cq->element[cq->front];
- 	cq->front = (cq->front + 1) & CQ_MASK;
--	return 0;
++	return lock_class + offset;
++}
 +
-+	return lock;
- }
- 
- static inline unsigned int  __cq_get_elem_count(struct circular_queue *cq)
-@@ -1367,6 +1374,7 @@ static int __bfs(struct lock_list *source_entry,
- 		 int forward)
+ static int __bfs(struct lock_list *source_entry,
+ 		 void *data,
+ 		 int (*match)(struct lock_list *entry, void *data),
+ 		 struct lock_list **target_entry,
+-		 int forward)
++		 int offset)
  {
  	struct lock_list *entry;
-+	struct lock_list *lock;
- 	struct list_head *head;
- 	struct circular_queue *cq = &lock_cq;
- 	int ret = 1;
-@@ -1388,10 +1396,7 @@ static int __bfs(struct lock_list *source_entry,
- 	__cq_init(cq);
- 	__cq_enqueue(cq, source_entry);
+ 	struct lock_list *lock;
+@@ -1385,11 +1399,7 @@ static int __bfs(struct lock_list *source_entry,
+ 		goto exit;
+ 	}
  
--	while (!__cq_empty(cq)) {
--		struct lock_list *lock;
+-	if (forward)
+-		head = &source_entry->class->locks_after;
+-	else
+-		head = &source_entry->class->locks_before;
 -
--		__cq_dequeue(cq, &lock);
-+	while ((lock = __cq_dequeue(cq))) {
++	head = get_dep_list(source_entry, offset);
+ 	if (list_empty(head))
+ 		goto exit;
  
- 		if (!lock->class) {
- 			ret = -2;
+@@ -1403,10 +1413,7 @@ static int __bfs(struct lock_list *source_entry,
+ 			goto exit;
+ 		}
+ 
+-		if (forward)
+-			head = &lock->class->locks_after;
+-		else
+-			head = &lock->class->locks_before;
++		head = get_dep_list(lock, offset);
+ 
+ 		DEBUG_LOCKS_WARN_ON(!irqs_disabled());
+ 
+@@ -1439,7 +1446,8 @@ static inline int __bfs_forwards(struct lock_list *src_entry,
+ 			int (*match)(struct lock_list *entry, void *data),
+ 			struct lock_list **target_entry)
+ {
+-	return __bfs(src_entry, data, match, target_entry, 1);
++	return __bfs(src_entry, data, match, target_entry,
++		     offsetof(struct lock_class, locks_after));
+ 
+ }
+ 
+@@ -1448,7 +1456,8 @@ static inline int __bfs_backwards(struct lock_list *src_entry,
+ 			int (*match)(struct lock_list *entry, void *data),
+ 			struct lock_list **target_entry)
+ {
+-	return __bfs(src_entry, data, match, target_entry, 0);
++	return __bfs(src_entry, data, match, target_entry,
++		     offsetof(struct lock_class, locks_before));
+ 
+ }
+ 
