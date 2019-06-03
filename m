@@ -2,90 +2,130 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5479FC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:45:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 272FAC28CC6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D8142811D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:45:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0105A217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:47:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="gW9uSA7X"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="PogNKJDo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727888AbfFCMp4 (ORCPT
+        id S1727653AbfFCMrZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 08:45:56 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:50224 "EHLO vps0.lunn.ch"
+        Mon, 3 Jun 2019 08:47:25 -0400
+Received: from mout.web.de ([212.227.17.12]:32831 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726336AbfFCMp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 08:45:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=Et6nrjAK7Pqph5akQJ3YiHQPpWtwaiEJXjZlHEdDEP4=; b=gW9uSA7XvajprKdkIRQxIPUk42
-        6+PQrULX23WSBY0OqId4B9o/oV3KgvYUTUgxCmVxpdTwu+e+refM9CA0pcHKvwyIHWl3Jv3RJDG8B
-        vfSseczgeD1adnOB+pfIT5hi+f9uJc3y/EHm+HKuEgcDVrKr1gbSAzvosuVL6pZdoZGk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hXmLY-0004ki-88; Mon, 03 Jun 2019 14:45:52 +0200
-Date:   Mon, 3 Jun 2019 14:45:52 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 5/5] net: dsa: add support for mv88e6250
-Message-ID: <20190603124552.GC17267@lunn.ch>
-References: <20190501193126.19196-1-rasmus.villemoes@prevas.dk>
- <20190524085921.11108-1-rasmus.villemoes@prevas.dk>
- <20190524085921.11108-6-rasmus.villemoes@prevas.dk>
- <20190524142728.GL2979@lunn.ch>
- <b05a12b8-fe03-e3c4-dbf0-ca29c1931e54@prevas.dk>
+        id S1726635AbfFCMrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 08:47:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1559566036;
+        bh=WueIryAtfWuxgQR2BNozZRjdt4M6NCo/HXvXvqK06XU=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=PogNKJDo6Sdjzc56uXnE77HUNVXXnfuhWfeqJnMR7wzuw0N4ZtPx9VW2XXvM+STFM
+         w4hj6LIpmbkAl2UB/WtdlO39Zm0RiS+wFzD0QlWmqWWmCLbtuRGiYNBv4jKMljdIlZ
+         zyGT7nxSeu6b/TeGyuqUNf12aPPKKiugo6eyTSyg=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.58.28] ([80.130.118.25]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MHY5w-1hYspc2mYW-003Isp; Mon, 03
+ Jun 2019 14:47:16 +0200
+Subject: Re: [PATCH] Revert "usb: core: remove local_irq_save() around
+ ->complete() handler"
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+References: <20190531215340.24539-1-smoch@web.de>
+ <20190531220535.GA16603@kroah.com>
+ <6c03445c-3607-9f33-afee-94613f8d6978@web.de>
+ <20190601105008.zfqrtu6krw4mhisb@linutronix.de>
+From:   =?UTF-8?Q?S=c3=b6ren_Moch?= <smoch@web.de>
+Message-ID: <e4c057c4-218c-31aa-5aee-90dea3552282@web.de>
+Date:   Mon, 3 Jun 2019 14:47:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b05a12b8-fe03-e3c4-dbf0-ca29c1931e54@prevas.dk>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190601105008.zfqrtu6krw4mhisb@linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+X-Provags-ID: V03:K1:gXOSPN+7vYzEmHNWhslARZjMKDQhZ6/0pvmDe55ECK7DDKBtLWK
+ Ny6BHpKf5xEwlpdirjK+i4v6jNEjAs+WX5evt4ApT6JGFO+ftNcHTErL4g10tz2nmIcGhbN
+ Zd0LLkl7arj7ZqPwnSSyaAQbsFrwa2PXCRW/f2EnAe3sEayACqeejWFrVGGyTCrDTOXGygU
+ LLtuxpNUjlDJC8LM31zyw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:zl9WDbOTpIo=:1DVOP8oF2yEb6XjEB4chLv
+ VtTXqjTyGsbh1NPSKnE/gEJ1LFLiSE2AKzCPJLKmppxqsgVU43LlYntyfipsRUFfOxpA9Xk6+
+ d5rSRk3fZljnJxaodF3pebOV/psHPduI11rIxoAUg08N4ZgepFMsijq/aBpTBVe+wOVXW5wKY
+ /cq62s1/gi1f8pCWqeuUxFhmmGJP0RY72seE+gCyLT/rJ3BzPkJTCamNBhXPxHlsQeNi5RJZ7
+ 059NPz1hfQUTIMkHiqJydBtX9/gzhB69aIJQTS5ykol4YG7puFZ1WpkWE1NoFusEWotZ3GQbt
+ UWN4k+6Kn+n2LOBvfyJIJ/ovYbzlN0YdGy3lQ9mStXDUnKYyFyBBFLqWTUqp2khth4sRKCsYw
+ w3OuckZ7Ex3wN50B8lEa7uxNRBwQUN2VoAoh1vezUMglfcY5B3gd4VXCaA2bHUs2BsXxXzUTY
+ Znb4wsl+JWWJEM1SnU6zz5rmzxcgBhc0ixdgQ0FhgCJNipOFeJuIHQa+kq01bbCUu1NtNXbT8
+ DY+nTOX4EKJgiRMHbkg3hZhGQiA8mHtJ4LsmmB9U1POo6lDCh6A3ts901dd1LpA9GlSPIFLpv
+ WWcyhDcHzmdHL2zYFyv78OEeEv1uGmBhazrxraIG9AMv1YNPJHgUlK+3e3t27+p9XZLujaZkD
+ nCqytJn+avoEirPkRhyRhxI6m/uDtb8tIFoliQEeZxjSJzxuy08jIjrYH5BrR9WBPXcc73DA4
+ P0QtWb6EQIirARkwi0eWFF/HMCQ/tecZUwqEMtA7KT/VDW9wMYXikvohIQjZCHOg5fiFUp0Hg
+ GkOoEeBdtFUIQuR8kevbRLBJdfcgfJJb2s+GL3wgZL4338EO42bY2fdigaxthJ1lmaiLb+lrw
+ kCVXB+MJ3vOL/QqE07rUqZfqJ/cCUx+ASS7Zodc9r4JZBTyGPEo7mpKYQ3lWR54GkvfV28O3l
+ gZcvoqBG3sKJJmjyzAuvoQL1KhgZeObM=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 08:52:38AM +0000, Rasmus Villemoes wrote:
-> On 24/05/2019 16.27, Andrew Lunn wrote:
-> >> @@ -4841,6 +4910,10 @@ static const struct of_device_id mv88e6xxx_of_match[] = {
-> >>  		.compatible = "marvell,mv88e6190",
-> >>  		.data = &mv88e6xxx_table[MV88E6190],
-> >>  	},
-> >> +	{
-> >> +		.compatible = "marvell,mv88e6250",
-> >> +		.data = &mv88e6xxx_table[MV88E6250],
-> >> +	},
-> >>  	{ /* sentinel */ },
-> >>  };
-> > 
-> > Ah, yes. I had not thought about that. A device at address 0 would be
-> > found, but a device at address 16 would be missed.
-> 
-> Eh, no? The port registers are at offset 0x8, i.e. at either SMI address
-> 8 or 24, so I don't think a 6250 at address 0 could be detected using
-> either of the existing families?
 
-Even better.
 
-The real problem is, people keep trying to add new compatible strings
-here when they should not. The compatible string is about being able
-to read the ID registers, not to list every single switch chip family.
+On 01.06.19 12:50, Sebastian Andrzej Siewior wrote:
+> On 2019-06-01 01:02:37 [+0200], Soeren Moch wrote:
+>>> Why not just fix that driver?  Wouldn't that be easier?
+>>>
+>> I suspect there are more drivers to fix. I only tested WIFI sticks so
+>> far, RTL8188 drivers also seem to suffer from this. I'm not sure how to
+>> fix all this properly, maybe Sebastian as original patch author can hel=
+p
+>> here.
+> Suspecting isn't helping here.
+Yes, you are right.
+When I encountered this problem half a year ago, I tried some other type
+of wifi stick
+and immediately ran into trouble with this, too.
 
-This is one case where it really is needed, and i had not thought
-about that.
+Now I did a short test with a RTL8188CUS stick, I could not reproduce
+this bug with
+this stick so far.
 
-      Andrew
+>
+>> This patch is mostly for -stable, to get an acceptable solution quickly=
+.
+>> It was really annoying to get such unstable WIFI connection over the
+>> last three kernel releases to my development board.=C2=A0 Since my inte=
+rnet
+>> service provider forcefully updated my router box 3 weeks ago, I
+>> unfortunately see the same symptoms on my primary internet access.
+>> That's even worse, I need to reset this router box every few days. I'm
+>> not sure, however, that this is caused by the same problem, but it feel=
+s
+>> like this.
+>> So can we please fix this regression quickly and workout a proper fix
+>> later? In the original patch there is no reason given, why this patch i=
+s
+>> necessary. With this revert I at least see a stable connection.
+> I will look into this. This patch got in in v4.20-rc1 and the final
+> kernel was released by the end of 2018. This is the first report I am
+> aware of over half year later=E2=80=A6
+It is not easy to reproduce this bug reliably within a reasonable period
+of time. It
+took days to bisect this. And usb core code was for sure not my first
+candidate
+to look at.
+
+Reverting this patch solves the problem, but of course disabling interrupt=
+s
+also can hide a bug elsewhere.
+
+Soeren
