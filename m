@@ -2,122 +2,102 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 945BEC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02541C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 718222741B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD3722741B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:42:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N7C/10lL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729446AbfFCQmQ (ORCPT
+        id S1729465AbfFCQmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 12:42:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53902 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726211AbfFCQmP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 12:42:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B3319AE79;
-        Mon,  3 Jun 2019 16:42:13 +0000 (UTC)
-Subject: Re: [PATCH v3 0/6] Prerequisites for NXP LS104xA SMMU enablement
-To:     Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Madalin-cristian Bucur <madalin.bucur@nxp.com>,
-        Roy Pledge <roy.pledge@nxp.com>,
-        Camelia Alexandra Groza <camelia.groza@nxp.com>,
-        Leo Li <leoyang.li@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jocke@infinera.com" <joakim.tjernlund@infinera.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Mian Yousaf Kaukab <yousaf.kaukab@suse.com>
-References: <20190530141951.6704-1-laurentiu.tudor@nxp.com>
- <d086216f-f3fc-c88a-3891-81e84e8bdb01@suse.de>
- <VI1PR04MB5134BFA391D8FF013762882FEC190@VI1PR04MB5134.eurprd04.prod.outlook.com>
- <19cc3230-33b0-e465-6317-590780b33efa@suse.de>
- <VI1PR04MB5134E4DA6EA052BEBB3C26EFEC190@VI1PR04MB5134.eurprd04.prod.outlook.com>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Openpgp: preference=signencrypt
-Organization: SUSE Linux GmbH
-Message-ID: <c237dd17-ed43-d2d0-c76c-0c1dbf859690@suse.de>
-Date:   Mon, 3 Jun 2019 18:42:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 3 Jun 2019 12:42:19 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:43610 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729427AbfFCQmR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 12:42:17 -0400
+Received: by mail-lj1-f194.google.com with SMTP id 16so3289192ljv.10
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 09:42:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZxdsJUzrzirDV9SoFUmfun9q9AXOSWclIRGIX2baL2Y=;
+        b=N7C/10lLvMRhc2gCSkGs8QaF+cwD/Qcw7BW0cuFy6wQsDwPxn8AmDJJUuIvTaSjEXg
+         SuzZSrENjfTHUoDrJ6gD+eOIU3cpI6oqUldqD9gs2uNz8p7DQdwOTjAg+JMH/x601m7H
+         Esxj/dVD0a+fnLHEKWjDWxB9FvUVdOvgv8KqwpaScBTvTAbmRS3azMY3CwiT4OWn4i6Y
+         dWBL2iKbD9fISePhoUn07PDTAFHu94rMZVQ+81cO+p8GrIJhU6lTdQO7ywMxlzLHz6vS
+         cuTS+gGOJOMt2YW8aJavsWZNikY7/5MZY90WYuuJip/QPnSi9RebnPJjk6zKZH75y4Fb
+         3Oaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZxdsJUzrzirDV9SoFUmfun9q9AXOSWclIRGIX2baL2Y=;
+        b=q5O3Ojsoe+X4M3BrPjCT3dbQpKo+CTW0sTj7L9NW9+LKxaS/pK03MvyYJv4uPlGgvR
+         EIeUDoN616qOo5Xx2TLqgK96J1IHWCTJHKX52lOYbFUOcDJbjLMkgE/CGc0dLBqmUAcg
+         GIZ46V9qiqQGA397kv0x7bAArC1NM5+ydYpcQvmuTwd30znETOB9DFAXKGkFwCgKeLhU
+         WCE3M02nr6t7jpcSY30bKcqUBUZMtQzkW1n71Wi/JDyW5Buyy67bNqjnpNesV+/PDKnb
+         AIlVPRVq7yW7hMQBK9Y6fD9AOiAmUfw6KHDV4PF7V3k/lsFv7mSrhAhYunhWY3qR6VCg
+         mrxw==
+X-Gm-Message-State: APjAAAXK0iPl25ARASKEf34rfbiamJ1wVunSckLee1kpffCgfqALCC9I
+        e7bRyZNh9X/P+PKwQOkWVb0=
+X-Google-Smtp-Source: APXvYqxXFTRtKG8W/wE7vPy3gcwzNZsFCLLCuA9ttno3xoT+sqGIVtk64GC8X0e7QSJHyfZsXHThsg==
+X-Received: by 2002:a2e:4256:: with SMTP id p83mr14154095lja.201.1559580135602;
+        Mon, 03 Jun 2019 09:42:15 -0700 (PDT)
+Received: from krolik-desktop.lan ([91.238.216.6])
+        by smtp.gmail.com with ESMTPSA id d5sm3251109lji.85.2019.06.03.09.42.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 03 Jun 2019 09:42:15 -0700 (PDT)
+From:   Pawel Dembicki <paweldembicki@gmail.com>
+Cc:     Pawel Dembicki <paweldembicki@gmail.com>,
+        Christian Lamparter <chunkeey@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] powerpc: Enable kernel XZ compression option on PPC_85xx
+Date:   Mon,  3 Jun 2019 18:41:14 +0200
+Message-Id: <20190603164115.27471-1-paweldembicki@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <VI1PR04MB5134E4DA6EA052BEBB3C26EFEC190@VI1PR04MB5134.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 31.05.19 um 19:32 schrieb Laurentiu Tudor:
->> -----Original Message-----
->> From: Andreas Färber <afaerber@suse.de>
->> Sent: Friday, May 31, 2019 8:04 PM
->>
->> Hello Laurentiu,
->>
->> Am 31.05.19 um 18:46 schrieb Laurentiu Tudor:
->>>> -----Original Message-----
->>>> From: Andreas Färber <afaerber@suse.de>
->>>> Sent: Friday, May 31, 2019 7:15 PM
->>>>
->>>> Hi Laurentiu,
->>>>
->>>> Am 30.05.19 um 16:19 schrieb laurentiu.tudor@nxp.com:
->>>>> This patch series contains several fixes in preparation for SMMU
->>>>> support on NXP LS1043A and LS1046A chips. Once these get picked up,
->>>>> I'll submit the actual SMMU enablement patches consisting in the
->>>>> required device tree changes.
->>>>
->>>> Have you thought through what will happen if this patch ordering is not
->>>> preserved? In particular, a user installing a future U-Boot update with
->>>> the DTB bits but booting a stable kernel without this patch series -
->>>> wouldn't that regress dpaa then for our customers?
->>>>
->>>
->>> These are fixes for issues that popped out after enabling SMMU.
->>> I do not expect them to break anything.
->>
->> That was not my question! You're missing my point: All your patches are
->> lacking a Fixes header in their commit message, for backporting them, to
->> avoid _your DT patches_ breaking the driver on stable branches!
-> 
-> It does appear that I'm missing your point. For sure, the DT updates solely will
-> break the kernel without these fixes but I'm not sure I understand how this
-> could happen.
+Enable kernel XZ compression option on PPC_85xx. Tested with
+simpleImage on TP-Link TL-WDR4900 (Freescale P1014 processor).
 
-In short, customers rarely run master branch. Kindly have your
-colleagues explain stable branches to you in details.
+Suggested-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+---
+ arch/powerpc/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-With Fixes header I was referring to the syntax explained here:
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html#describe-your-changes
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html#using-reported-by-tested-by-reviewed-by-suggested-by-and-fixes
-
-> My plan was to share the kernel dts patches sometime after this series
-> makes it through.
-
-That's fine. What I'm warning you is that seemingly your DT patches,
-once in one of your LSDK U-Boot releases, will cause a regression for
-distros like our SLES 15 SP1 unless these prereq kernel patches get
-applied on the respective stable branches. Which will not happen
-automatically unless you as patch author take the appropriate action
-before they get merged.
-
-Thanks,
-Andreas
-
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 8c1c636308c8..daf4cb968922 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -196,7 +196,7 @@ config PPC
+ 	select HAVE_IOREMAP_PROT
+ 	select HAVE_IRQ_EXIT_ON_IRQ_STACK
+ 	select HAVE_KERNEL_GZIP
+-	select HAVE_KERNEL_XZ			if PPC_BOOK3S || 44x
++	select HAVE_KERNEL_XZ			if PPC_BOOK3S || 44x || PPC_85xx
+ 	select HAVE_KPROBES
+ 	select HAVE_KPROBES_ON_FTRACE
+ 	select HAVE_KRETPROBES
 -- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG Nürnberg)
+2.20.1
+
