@@ -2,105 +2,140 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B01DC04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FDFC04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07B8A27F50
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:16:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553412;
-	bh=3uhOgWtwXAoAVnDkN0BtdVnEqdI/wKvo3nohKpjXZz4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ot5kyzu+MLwmZsaNNRa9YTmuPzCdf8fXqaKCOXSyEIfwSiPNre9hb3r/8gwly6Jft
-	 ejciU3u9aN8FCSI4W50s6BQAk8lwnH/hCd5hABr5VbRFvAxnTIL8oAF7192JlhXTy8
-	 7nPuiobEbZ4/SGhw9gHF9jswE2MbAAJeS6/OspB4=
+	by mail.kernel.org (Postfix) with ESMTP id 9ADCC27F68
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:16:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="qK7a3Bjr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbfFCJQv (ORCPT
+        id S1728901AbfFCJQy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:16:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57468 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 05:16:54 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:7450 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728048AbfFCJMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:12:02 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BD4327E5C;
-        Mon,  3 Jun 2019 09:12:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553122;
-        bh=3uhOgWtwXAoAVnDkN0BtdVnEqdI/wKvo3nohKpjXZz4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jjMFlVrvTVcwCDLkjtz4OV0HUb2Cu1kzRktr6+3ANjoRKLLLTEcO2zuTLTNl+sBCq
-         TBE5uao9KEwoxiO98+uSn1khgoNiXK3g0HruC0nQnJim5AXuc2k/ISXCpEMSb2mMHI
-         72ygt5sDit75BqlnOL95BZFuniXxsuLXVYzh0hfg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alex Kushnarov <alexanderk@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 09/36] mlxsw: spectrum_acl: Avoid warning after identical rules insertion
-Date:   Mon,  3 Jun 2019 11:08:57 +0200
-Message-Id: <20190603090521.569034163@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190603090520.998342694@linuxfoundation.org>
-References: <20190603090520.998342694@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1728048AbfFCJQw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:16:52 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 45HTvX2c3jz9v0D1;
+        Mon,  3 Jun 2019 11:16:40 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=qK7a3Bjr; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id h-bkbOG883yC; Mon,  3 Jun 2019 11:16:40 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45HTvX1RnFz9v0Cw;
+        Mon,  3 Jun 2019 11:16:40 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1559553400; bh=K6V04fp2wmNbVXlm3f+rVXZBYc12IY9zUHEdy7YPcVY=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=qK7a3Bjr5D25uyATGphCM9C/xx8iCEUSQGdHuU9XkZ6fme6ggDZem5DtAkMj1EdTH
+         yynocMV1TG0Mi6+RMi7USLvmLHcBw1mrY+q/bg1aMBm6F1x8byrpJFvnDw89c54Lt3
+         oLMDPd1y2F/oH5SezRWm9qg2/2wwVHaLZjKqNzr8=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id DFCF68B879;
+        Mon,  3 Jun 2019 11:16:44 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id xrKd7VIqcsZv; Mon,  3 Jun 2019 11:16:44 +0200 (CEST)
+Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id AD5C18B7B1;
+        Mon,  3 Jun 2019 11:16:44 +0200 (CEST)
+Subject: Re: [PATCH v3 14/16] powerpc/32: implement fast entry for syscalls on
+ BOOKE
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, Paul Mackerras <paulus@ozlabs.org>
+References: <cover.1556627571.git.christophe.leroy@c-s.fr>
+ <3e254178a157e7eaeef48f983880f71f97d1f296.1556627571.git.christophe.leroy@c-s.fr>
+ <20190523061427.GA19655@blackberry>
+ <98bf5745-88ae-7f17-fcb9-7d06ba5b9e49@c-s.fr>
+ <58f0e70f-ed9d-965e-e8d2-cc5d13a4c9eb@c-s.fr>
+ <87r28jp2b0.fsf@concordia.ellerman.id.au>
+ <20190528190341.Horde.nTXOule-IO2ReXFiNIqNbg8@messagerie.si.c-s.fr>
+Message-ID: <c4ff97c8-f601-0e62-9408-08bbef409636@c-s.fr>
+Date:   Mon, 3 Jun 2019 09:16:21 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20190528190341.Horde.nTXOule-IO2ReXFiNIqNbg8@messagerie.si.c-s.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Pirko <jiri@mellanox.com>
-
-[ Upstream commit ef74422020aa8c224b00a927e3e47faac4d8fae3 ]
-
-When identical rules are inserted, the latter one goes to C-TCAM. For
-that, a second eRP with the same mask is created. These 2 eRPs by the
-nature cannot be merged and also one cannot be parent of another.
-Teach mlxsw_sp_acl_erp_delta_fill() about this possibility and handle it
-gracefully.
-
-Reported-by: Alex Kushnarov <alexanderk@mellanox.com>
-Fixes: c22291f7cf45 ("mlxsw: spectrum: acl: Implement delta for ERP")
-Signed-off-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_erp.c |   11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
-
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_erp.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_erp.c
-@@ -1169,13 +1169,12 @@ mlxsw_sp_acl_erp_delta_fill(const struct
- 			return -EINVAL;
- 	}
- 	if (si == -1) {
--		/* The masks are the same, this cannot happen.
--		 * That means the caller is broken.
-+		/* The masks are the same, this can happen in case eRPs with
-+		 * the same mask were created in both A-TCAM and C-TCAM.
-+		 * The only possible condition under which this can happen
-+		 * is identical rule insertion. Delta is not possible here.
- 		 */
--		WARN_ON(1);
--		*delta_start = 0;
--		*delta_mask = 0;
--		return 0;
-+		return -EINVAL;
- 	}
- 	pmask = (unsigned char) parent_key->mask[__MASK_IDX(si)];
- 	mask = (unsigned char) key->mask[__MASK_IDX(si)];
 
 
+On 05/28/2019 05:03 PM, Christophe Leroy wrote:
+> Michael Ellerman <mpe@ellerman.id.au> a écrit :
+> 
+>> Christophe Leroy <christophe.leroy@c-s.fr> writes:
+>>> Le 23/05/2019 à 09:00, Christophe Leroy a écrit :
+>>>
+>>> [...]
+>>>
+>>>>> arch/powerpc/kernel/head_fsl_booke.o: In function `SystemCall':
+>>>>> arch/powerpc/kernel/head_fsl_booke.S:416: undefined reference to
+>>>>> `kvmppc_handler_BOOKE_INTERRUPT_SYSCALL_SPRN_SRR1'
+>>>>> Makefile:1052: recipe for target 'vmlinux' failed
+>>>>>
+>>>>>> +.macro SYSCALL_ENTRY trapno intno
+>>>>>> +    mfspr    r10, SPRN_SPRG_THREAD
+>>>>>> +#ifdef CONFIG_KVM_BOOKE_HV
+>>>>>> +BEGIN_FTR_SECTION
+>>>>>> +    mtspr    SPRN_SPRG_WSCRATCH0, r10
+>>>>>> +    stw    r11, THREAD_NORMSAVE(0)(r10)
+>>>>>> +    stw    r13, THREAD_NORMSAVE(2)(r10)
+>>>>>> +    mfcr    r13            /* save CR in r13 for now       */
+>>>>>> +    mfspr    r11, SPRN_SRR1
+>>>>>> +    mtocrf    0x80, r11    /* check MSR[GS] without clobbering 
+>>>>>> reg */
+>>>>>> +    bf    3, 1975f
+>>>>>> +    b    kvmppc_handler_BOOKE_INTERRUPT_\intno\()_SPRN_SRR1
+>>>>>
+>>>>> It seems to me that the "_SPRN_SRR1" on the end of this line
+>>>>> isn't meant to be there...  However, it still fails to link with that
+>>>>> removed.
+>>>
+>>> It looks like I missed the macro expansion.
+>>>
+>>> The called function should be kvmppc_handler_8_0x01B
+>>>
+>>> Seems like kisskb doesn't build any config like this.
+>>
+>> I thought we did, ie:
+>>
+>> http://kisskb.ellerman.id.au/kisskb/buildresult/13817941/
+> 
+> That's a ppc64 config it seems. The problem was on booke32.
+> 
+> Christophe
+> 
+>>
+>> But clearly something is missing to trigger the bug.
+
+I was able to trigger the bug with mpc85xx_defconfig + 
+CONFIG_VIRTUALIZATION + CONFIG_PPC_E500MC
+
+The bug pops up when CONFIG_KVM_BOOKE_HV is set.
+
+Christophe
+
+>>
+>> cheers
+> 
+> 
