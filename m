@@ -2,59 +2,97 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCDEC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0ADC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 395AC2651A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FD6926525
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:19:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QzjQulAQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726354AbfFCXTX (ORCPT
+        id S1726477AbfFCXT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 19:19:23 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:36966 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726173AbfFCXTW (ORCPT
+        Mon, 3 Jun 2019 19:19:58 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45842 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726101AbfFCXT6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 19:19:22 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id D62A9136DF6FB;
-        Mon,  3 Jun 2019 16:19:21 -0700 (PDT)
-Date:   Mon, 03 Jun 2019 16:19:19 -0700 (PDT)
-Message-Id: <20190603.161919.1231780626602694372.davem@davemloft.net>
-To:     olteanv@gmail.com
-Cc:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
-        richardcochran@gmail.com, john.stultz@linaro.org,
-        tglx@linutronix.de, sboyd@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH v2 net-next 00/10] PTP support for the SJA1105 DSA
- driver
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <CA+h21hoOO1apNWXer01LE572pgdnVdmf_e7-Tnp6jgJuTPbGHg@mail.gmail.com>
-References: <20190602213926.2290-1-olteanv@gmail.com>
-        <CA+h21hoOO1apNWXer01LE572pgdnVdmf_e7-Tnp6jgJuTPbGHg@mail.gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 03 Jun 2019 16:19:22 -0700 (PDT)
+        Mon, 3 Jun 2019 19:19:58 -0400
+Received: by mail-pl1-f194.google.com with SMTP id x7so6563412plr.12
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 16:19:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=wUZaTX20lO5SbHm8MIXLE78PHSIeTBs27Rwb+WEEumQ=;
+        b=QzjQulAQyEyEou1aENfn0yzV7aUxGvQgHJ7WtEZ3CbkQKC6PgWZCf/1lZCKScrlCXM
+         TM7Lt2zPzyPrjJ/xEAmG8aTeu2IwDl9S6vh5RUCt9mZc4sXh6kqz6wpbiGue/zxm58jn
+         mAbOOJLJIvyDmXWu6XBh98gcv7GFUVG/NHNRTgQemKIw/qxA5EhhzxTUDJZuCixQaHSO
+         HijrRFJkpf3R0dBo+BC0M6wEv6GzsRfnOzwwyDXOcOl5xvm37Mz288SoxXmdmy/Bv7TP
+         ZLzhzdd2VNg1p7TqmkSUK3sZQDGH7bB3UO9R6xUREs7tUYKr/X/05X9RGyr7kQQ059F2
+         mGrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=wUZaTX20lO5SbHm8MIXLE78PHSIeTBs27Rwb+WEEumQ=;
+        b=okN4m2RnupJVF0KOAn1SwkaW9mm2fQ5n+aW8G98GvGy9yAotiS7Ah4QjGI3Eb0cYAV
+         Z2m2A/UfOXC+i2w1zD43+8yPDmtS8gy8e8opzHzvqwolzRwcfUMuBxWHy1QNwGZk0gjr
+         nqKO5UYxfFaGCbwXz0htMY5Uesv+ytmrbdsWkYZeoQ/RkRnwU6BnNsLArCRYNSVSoJcn
+         oJe41O0M/amMH2dARieKq8ei1ohzSX2U4KjueF5bz1zIIiUbOUV3gj9R/SQ0EuUycOzt
+         kOFF5zvSkS4qz1yPSypkdlsi2eEQGMmFrS1OgKbzBnJLSeKQMif0mUvVXD9EqdVDtIDy
+         ZPnA==
+X-Gm-Message-State: APjAAAUUq6h8yeyfDcPt2ux4Z0X+KeOx52LcU02LQc3iPv1PUsTEa/rB
+        0V8V/vyR1kCOCfgQnLtHfjQ=
+X-Google-Smtp-Source: APXvYqxF6SmFOQ6tt0UoToS74s/iqAalOxlfLDzhjZ8BPPoW/A45I6J1WKUxChGNQ8jSEbgJd0bXiw==
+X-Received: by 2002:a17:902:7e0f:: with SMTP id b15mr24543317plm.237.1559603997494;
+        Mon, 03 Jun 2019 16:19:57 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id a64sm12666564pgc.53.2019.06.03.16.19.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 03 Jun 2019 16:19:56 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     rmk+kernel@armlinux.org.uk,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 0/2] ARM/ARM64: Move cpu_logical_map[] to smp.h
+Date:   Mon,  3 Jun 2019 16:18:28 -0700
+Message-Id: <20190603231830.24129-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <olteanv@gmail.com>
-Date: Tue, 4 Jun 2019 02:13:16 +0300
+Hi all,
 
-> This series appears in patchwork as "superseded":
-> https://patchwork.ozlabs.org/project/netdev/list/?series=111356&state=*
-> Perhaps it got mixed up with another one?
+These two patches make ARM and ARM64 consistent with other
+architectures: sh, sparc, xtensa, mips, etc. to define cpu_logical_map
+under asm/smp.h, which is included by linux/smp.h. This allows other
+pieces of code like irqchip drivers to get access to cpu_logical_map[]
+using linux/smp.h.
 
-No, there was a comment in this thread that there would be a respin with
-some changes.  Anticipating that respin, I mark this as superseded.
+Changes in v2:
+
+- just move __cpu_logical_map[]/cpu_logical_map[] to smp.h
+
+Florian Fainelli (2):
+  arm64: smp: Moved cpu_logical_map[] to smp.h
+  ARM: smp: Moved cpu_logical_map[] to smp.h
+
+ arch/arm/include/asm/smp.h        | 6 ++++++
+ arch/arm/include/asm/smp_plat.h   | 5 -----
+ arch/arm64/include/asm/smp.h      | 6 ++++++
+ arch/arm64/include/asm/smp_plat.h | 5 -----
+ 4 files changed, 12 insertions(+), 10 deletions(-)
+
+-- 
+2.17.1
+
