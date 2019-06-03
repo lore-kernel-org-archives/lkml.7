@@ -2,243 +2,164 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0F6C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A91C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C98527134
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:16:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48BA824698
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:19:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D6wG026h"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="05U6KHBi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfFCSQ4 (ORCPT
+        id S1726623AbfFCSTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 14:16:56 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:46895 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbfFCSQ4 (ORCPT
+        Mon, 3 Jun 2019 14:19:09 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:47388 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbfFCSTJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 14:16:56 -0400
-Received: by mail-io1-f68.google.com with SMTP id i10so5204609iol.13
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 11:16:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gAckVISWLJwv9nm3Aw+n1+y3ZFIECEV9oa3vdFLyLTE=;
-        b=D6wG026hBYH7UsTeDPMStAkv/58a+vTNsbPIbz3WAzGZu2RL/qVcnZc/jDjopmpjnS
-         CzE6ytCMoE4W+T9CeLTY7rSWuLK/+JRSoM0l6XSYUNhT2vb0Uir0tslPJkATfxr/o7yt
-         Ju2Q505tbmUh69B+ukR8BrsWOd3gD7HQQn5N4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gAckVISWLJwv9nm3Aw+n1+y3ZFIECEV9oa3vdFLyLTE=;
-        b=MTjAeKDZ6Q1RJBq+estIGSIrYZ/bkcKRkT5CAis10vBXu5WGPHa9WBTjIcbTkBUSU1
-         yNg1O7rCtZxRp6jgDdrz7f88dkhOSMZmFWoJcKiX/LK79BT+SRyn1MIkXx0w9nCz7dWJ
-         VP20RAYv90P2oGaCYMY2o1hSjaSU4s6j68Dtny2dqjKN4HLFoJv4RK0bMRUXc7jN2wPh
-         AT5Oo73u1HyBi32VXJ654N5MtsScjgh5JdUzcOoUFrpk+s5RsSSWq1a143gLl9vPElK2
-         zH/3OsJrZ4LIn53bdpEJnReiBSJ74jz3mIbXaJSsobpR0acQUdf5gcAdX+MRx84mNtxC
-         tzmw==
-X-Gm-Message-State: APjAAAXG2NFmv5RaNfrmli9lkxP54kiGVYuW0jVXbmnTyOjDEJKyPvKo
-        auafWZwMSzJbtbE8Fdt2+guNkZfYt/k=
-X-Google-Smtp-Source: APXvYqxlZLw7bJiV4E47T0ON1UaWX3pls4Uz7J7KDq5Ang19izfN7+l+Bzvgti4pk4XizNC1RtYSTA==
-X-Received: by 2002:a5d:83d8:: with SMTP id u24mr16726644ior.51.1559585815163;
-        Mon, 03 Jun 2019 11:16:55 -0700 (PDT)
-Received: from localhost ([2620:15c:183:0:20b8:dee7:5447:d05])
-        by smtp.gmail.com with ESMTPSA id b18sm4331209itl.32.2019.06.03.11.16.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Jun 2019 11:16:54 -0700 (PDT)
-From:   Raul E Rangel <rrangel@chromium.org>
-To:     enric.balletbo@collabora.com, ncrews@chromium.org
-Cc:     Raul E Rangel <rrangel@chromium.org>, linux-kernel@vger.kernel.org,
-        Benson Leung <bleung@chromium.org>
-Subject: [PATCH v2] platform/chrome: wilco_ec: Add version sysfs entries
-Date:   Mon,  3 Jun 2019 12:16:49 -0600
-Message-Id: <20190603181649.143640-1-rrangel@chromium.org>
-X-Mailer: git-send-email 2.22.0.rc1.311.g5d7573a151-goog
+        Mon, 3 Jun 2019 14:19:09 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x53I8gIs153035;
+        Mon, 3 Jun 2019 18:17:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=GlaYcvRbXVbYyKKXSyNwJ8tBGJAG2pfqt1R7amaBqEw=;
+ b=05U6KHBi25HCGJeXlllc8lO/7iSw1O36+nkjRk4VyMlhqURaxhzyWEAG56qBArt4ZIXH
+ Rs6H67bbFeXkJ8dNAj/863iIftETrMYapMu/08uwIeo59ZY37LjyfUDhTwYxIuq0apcm
+ mxgbgRIkv1jIFr3D9wbmIYjjONDeqSnJ2Q6OpAFTFQJnXlxeGQP3CRq4pVItc3hsAHhY
+ eyf+kruVixj7mGRtSpX0nUteC3Br6Cqgqf9GkrLjvi8wjVLQ+WKBafILZOHfOiiQNyNp
+ J0U+PSjroYIWCro+VOsKn1DLmMtnqiEQYZkolve4C6NI/cUHUIedA0+lH2Bzv9u6n/N0 Yw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2suj0q8ka1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 03 Jun 2019 18:17:43 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x53IGZGQ023818;
+        Mon, 3 Jun 2019 18:17:42 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2sv36sc445-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 03 Jun 2019 18:17:42 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x53IHbbL010166;
+        Mon, 3 Jun 2019 18:17:37 GMT
+Received: from [192.168.1.16] (/24.9.64.241)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 03 Jun 2019 11:17:36 -0700
+Subject: Re: [PATCH v16 01/16] uaccess: add untagged_addr definition for other
+ arches
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>, enh <enh@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+References: <cover.1559580831.git.andreyknvl@google.com>
+ <097bc300a5c6554ca6fd1886421bb2e0adb03420.1559580831.git.andreyknvl@google.com>
+ <8ff5b0ff-849a-1e0b-18da-ccb5be85dd2b@oracle.com>
+ <CAAeHK+xX2538e674Pz25unkdFPCO_SH0pFwFu=8+DS7RzfYnLQ@mail.gmail.com>
+ <f6711d31-e52c-473a-d7ad-b2d63131d7a5@oracle.com>
+ <20190603172916.GA5390@infradead.org>
+From:   Khalid Aziz <khalid.aziz@oracle.com>
+Organization: Oracle Corp
+Message-ID: <7a687a26-fc3e-2caa-1d6a-464f1f7e684c@oracle.com>
+Date:   Mon, 3 Jun 2019 12:17:33 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190603172916.GA5390@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9277 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=970
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906030124
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9277 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=988 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906030124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the ability to extract version information from the EC.
+On 6/3/19 11:29 AM, Christoph Hellwig wrote:
+> On Mon, Jun 03, 2019 at 11:24:35AM -0600, Khalid Aziz wrote:
+>> On 6/3/19 11:06 AM, Andrey Konovalov wrote:
+>>> On Mon, Jun 3, 2019 at 7:04 PM Khalid Aziz <khalid.aziz@oracle.com> w=
+rote:
+>>>> Andrey,
+>>>>
+>>>> This patch has now become part of the other patch series Chris Hellw=
+ig
+>>>> has sent out -
+>>>> <https://lore.kernel.org/lkml/20190601074959.14036-1-hch@lst.de/>. C=
+an
+>>>> you coordinate with that patch series?
+>>>
+>>> Hi!
+>>>
+>>> Yes, I've seen it. How should I coordinate? Rebase this series on top=
 
-Example Output:
-$ cd /sys/bus/platform/devices/GOOG000C:00
-$ tail build_date build_revision version model_number
-==> build_date <==
-04/25/19
+>>> of that one?
+>>
+>> That would be one way to do it. Better yet, separate this patch from
+>> both patch series, make it standalone and then rebase the two patch
+>> series on top of it.
+>=20
+> I think easiest would be to just ask Linus if he could make an exceptio=
+n
+> and include this trivial prep patch in 5.2-rc.
+>=20
 
-==> build_revision <==
-d2592cae0
+Andrey,
 
-==> version <==
-00.00.14
+Would you mind updating the commit log to make it not arm64 specific and
+sending this patch out by itself. We can then ask Linus if he can
+include just this patch in the next rc.
 
-==> model_number <==
-08B6
-
-Signed-off-by: Raul E Rangel <rrangel@chromium.org>
----
-This patch is rebased on chromeos-platform/for-next. It was originally
-developed on the chromiumos 4.19 kernel which has the following patch
-applied: https://lore.kernel.org/patchwork/patch/1062995/. That patch is
-not currently upstream.
-
-Changes in v2:
-- Removed version directory
-- Renamed label to version
-- Sorted documentation
-
- .../ABI/testing/sysfs-platform-wilco-ec       | 31 ++++++++
- drivers/platform/chrome/wilco_ec/sysfs.c      | 79 +++++++++++++++++++
- 2 files changed, 110 insertions(+)
-
-diff --git a/Documentation/ABI/testing/sysfs-platform-wilco-ec b/Documentation/ABI/testing/sysfs-platform-wilco-ec
-index 8e5d6eee44db2..8827a734f9331 100644
---- a/Documentation/ABI/testing/sysfs-platform-wilco-ec
-+++ b/Documentation/ABI/testing/sysfs-platform-wilco-ec
-@@ -7,3 +7,34 @@ Description:
- 		want to run their device headless or with a dock.
- 
- 		Input should be parseable by kstrtou8() to 0 or 1.
-+
-+What:          /sys/bus/platform/devices/GOOG000C\:00/build_date
-+Date:          May 2019
-+KernelVersion: 5.3
-+Description:
-+               Display Wilco Embedded Controller firmware build date.
-+               Output will a MM/DD/YY string.
-+
-+What:          /sys/bus/platform/devices/GOOG000C\:00/build_revision
-+Date:          May 2019
-+KernelVersion: 5.3
-+Description:
-+               Display Wilco Embedded Controller build revision.
-+               Output will a version string be similar to the example below:
-+               d2592cae0
-+
-+What:          /sys/bus/platform/devices/GOOG000C\:00/model_number
-+Date:          May 2019
-+KernelVersion: 5.3
-+Description:
-+               Display Wilco Embedded Controller model number.
-+               Output will a version string be similar to the example below:
-+               08B6
-+
-+What:          /sys/bus/platform/devices/GOOG000C\:00/version
-+Date:          May 2019
-+KernelVersion: 5.3
-+Description:
-+               Display Wilco Embedded Controller firmware version.
-+               The format of the string is x.y.z. Where x is major, y is minor
-+               and z is the build number. For example: 95.00.06
-diff --git a/drivers/platform/chrome/wilco_ec/sysfs.c b/drivers/platform/chrome/wilco_ec/sysfs.c
-index f84f0480460ae..3b86a21005d3e 100644
---- a/drivers/platform/chrome/wilco_ec/sysfs.c
-+++ b/drivers/platform/chrome/wilco_ec/sysfs.c
-@@ -23,6 +23,25 @@ struct boot_on_ac_request {
- 	u8 reserved7;
- } __packed;
- 
-+#define CMD_EC_INFO			0x38
-+enum get_ec_info_op {
-+	CMD_GET_EC_LABEL	= 0,
-+	CMD_GET_EC_REV		= 1,
-+	CMD_GET_EC_MODEL	= 2,
-+	CMD_GET_EC_BUILD_DATE	= 3,
-+};
-+
-+struct get_ec_info_req {
-+	u8 cmd;			/* Always CMD_EC_INFO */
-+	u8 reserved;
-+	u8 op;			/* One of enum get_ec_info_op */
-+} __packed;
-+
-+struct get_ec_info_resp {
-+	u8 reserved[2];
-+	char value[9]; /* __nonstring: might not be null terminated */
-+} __packed;
-+
- static ssize_t boot_on_ac_store(struct device *dev,
- 				struct device_attribute *attr,
- 				const char *buf, size_t count)
-@@ -57,8 +76,68 @@ static ssize_t boot_on_ac_store(struct device *dev,
- 
- static DEVICE_ATTR_WO(boot_on_ac);
- 
-+static ssize_t get_info(struct device *dev, char *buf, enum get_ec_info_op op)
-+{
-+	struct wilco_ec_device *ec = dev_get_drvdata(dev);
-+	struct get_ec_info_req req = { .cmd = CMD_EC_INFO, .op = op };
-+	struct get_ec_info_resp resp;
-+	int ret;
-+
-+	struct wilco_ec_message msg = {
-+		.type = WILCO_EC_MSG_LEGACY,
-+		.request_data = &req,
-+		.request_size = sizeof(req),
-+		.response_data = &resp,
-+		.response_size = sizeof(resp),
-+	};
-+
-+	ret = wilco_ec_mailbox(ec, &msg);
-+	if (ret < 0)
-+		return ret;
-+
-+	return scnprintf(buf, PAGE_SIZE, "%.*s\n", (int)sizeof(resp.value),
-+			 (char *)&resp.value);
-+}
-+
-+static ssize_t version_show(struct device *dev, struct device_attribute *attr,
-+			  char *buf)
-+{
-+	return get_info(dev, buf, CMD_GET_EC_LABEL);
-+}
-+
-+static DEVICE_ATTR_RO(version);
-+
-+static ssize_t build_revision_show(struct device *dev,
-+				   struct device_attribute *attr, char *buf)
-+{
-+	return get_info(dev, buf, CMD_GET_EC_REV);
-+}
-+
-+static DEVICE_ATTR_RO(build_revision);
-+
-+static ssize_t build_date_show(struct device *dev,
-+			       struct device_attribute *attr, char *buf)
-+{
-+	return get_info(dev, buf, CMD_GET_EC_BUILD_DATE);
-+}
-+
-+static DEVICE_ATTR_RO(build_date);
-+
-+static ssize_t model_number_show(struct device *dev,
-+				 struct device_attribute *attr, char *buf)
-+{
-+	return get_info(dev, buf, CMD_GET_EC_MODEL);
-+}
-+
-+static DEVICE_ATTR_RO(model_number);
-+
-+
- static struct attribute *wilco_dev_attrs[] = {
- 	&dev_attr_boot_on_ac.attr,
-+	&dev_attr_build_date.attr,
-+	&dev_attr_build_revision.attr,
-+	&dev_attr_model_number.attr,
-+	&dev_attr_version.attr,
- 	NULL,
- };
- 
--- 
-2.22.0.rc1.311.g5d7573a151-goog
+Thanks,
+Khalid
 
