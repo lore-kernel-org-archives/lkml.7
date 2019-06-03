@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F25C28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD90C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FB7126E66
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7593F26F6F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:35:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PxfEqanv"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aQ9MPswY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727134AbfFCSfJ (ORCPT
+        id S1727118AbfFCSfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 14:35:09 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45541 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726989AbfFCSer (ORCPT
+        Mon, 3 Jun 2019 14:35:06 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40861 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726974AbfFCSeo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 14:34:47 -0400
-Received: by mail-pf1-f196.google.com with SMTP id s11so11084329pfm.12
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 11:34:46 -0700 (PDT)
+        Mon, 3 Jun 2019 14:34:44 -0400
+Received: by mail-pg1-f194.google.com with SMTP id d30so8763377pgm.7
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 11:34:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=11H9eJ6PsDChSyARkFGWtgFkqyq4bAPSq9amltsDDFQ=;
-        b=PxfEqanv/PRY0M/VY4e1O9gn4s07yciX2RzwRkNeh2FKLAo974fldUJFmzbdHU2msY
-         K3lfwXtSqyTQ4zAiun8HPxjjxJrltz8yAHX07HNCkwUY0jfcMtNFSEFkGliOFj5oLdeF
-         P9dZuni3OAWZrcPdCd1G1IhAEd9Zk+/7Sbpw8=
+        bh=Hz5V6YUUKbQCf9zJopKesHEceG79IQrE8elrPDeqfIA=;
+        b=aQ9MPswYniQYF/VdKEGa83AHZ5RcwOnAiRjnZU9kdPMUKqq4lkWjJfrxGSYaNBSa2M
+         7Ozd1L3YdSwCVfklSjOEq+yoZ3Aq5rcVjPm3TXVn5aD/gT6wAu241TMQdNeNEoRv1W4n
+         UkQo6o4yyGV9LY1WQFNGimqIwNoKhnUVrlciM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=11H9eJ6PsDChSyARkFGWtgFkqyq4bAPSq9amltsDDFQ=;
-        b=O18QqfaF4dUPzPS5/RbClI1nVYNN2KTzjJY8iQyOX7siRIlkT8evKPMDkl9TqIRWQw
-         ksIn3w60hNz1occe69Ev0uuNtDR7o8pda0wxUEdqou7nvYcgn1+VZI0BeXBJbzx13PVv
-         AIrh/C/KQGnp1eLfX7b33aIxz3ZNlMjUi/QGDTVMC8r0jHdB+X/EmP+HIZtI5j6ghrBn
-         DVDVcMJnoizfAxx9VsNGuQHpntE1jRFR14zsJed7zUm4QESeoV04qE1Af9Tlp0HuMyPi
-         geFWaRUuje0PjwL8PPCmS3o0DBA/qcsQD7H/iQ4d7nOOYlvbOBEOJVbTdPow7RqDSeqV
-         ptlQ==
-X-Gm-Message-State: APjAAAXUR7y+RXzvfJuFLyB0tMhQEnf+QieZDpkR28pOtYUsWfqBSsbn
-        GyYV4B9otYkmn5Baga+oP1vDlw==
-X-Google-Smtp-Source: APXvYqwuAAvudQpkCNvX1FttFw+zwQdqr4m3Inozl8aJNBtybkzM7fS5SzEiIecujKL7X9T3XIFYuQ==
-X-Received: by 2002:a62:a508:: with SMTP id v8mr32386909pfm.87.1559586886463;
-        Mon, 03 Jun 2019 11:34:46 -0700 (PDT)
+        bh=Hz5V6YUUKbQCf9zJopKesHEceG79IQrE8elrPDeqfIA=;
+        b=dyrycDKJcjufQh5Enlcxb5+SGoPvdZN25WDWtPqt1nrDUj8D6G7fGk1kAplR4/MnM0
+         ZQrK+HVb7+keemxpXGRdINmPbleuzh+bGC7Ld6Rl6DeltkgAVjiI9OM1Fyk/uVOYq3+9
+         x3zaRpsbyksD1FnLuxZlHLfcLo3NlbF5e6A0YF72NJJ+JSvnWsL31AP/gDSxzOF/rrRB
+         bcFPKKEMGbdyxFxNvPqqeW9NVzgFEpl8u4xf1hJLAFIrdw2ah4i75G3Jd97nCSzttCK7
+         GwiryHivLu+bWNp3os2RW+KkI+EXt5YrN3RPeYK544tOA1VP9y122wdw1jQ3KDuKKAnl
+         Allg==
+X-Gm-Message-State: APjAAAX5OKKKtrlR4kLXfGXavib4A/dtKzFUBXkjLJQTM9xmEsD25Tsp
+        RENdmi/RQm5OadrLiu7U4bDX1w==
+X-Google-Smtp-Source: APXvYqxCgWJ0IzOoKA7UD5Ilf35KswSj9PGa5spcxGeDMhtHufZS+8vOm3xoElqubc+gwOmf6i+aNg==
+X-Received: by 2002:a63:ee12:: with SMTP id e18mr16056124pgi.412.1559586883446;
+        Mon, 03 Jun 2019 11:34:43 -0700 (PDT)
 Received: from localhost ([2620:15c:202:1:3c8f:512b:3522:dfaf])
-        by smtp.gmail.com with ESMTPSA id 12sm5195115pfi.60.2019.06.03.11.34.45
+        by smtp.gmail.com with ESMTPSA id e124sm20964180pfa.135.2019.06.03.11.34.41
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Jun 2019 11:34:45 -0700 (PDT)
+        Mon, 03 Jun 2019 11:34:42 -0700 (PDT)
 From:   Gwendal Grignou <gwendal@chromium.org>
 To:     enric.balletbo@collabora.com, bleung@chromium.org,
         groeck@chromium.org, lee.jones@linaro.org, jic23@kernel.org,
@@ -61,9 +61,9 @@ To:     enric.balletbo@collabora.com, bleung@chromium.org,
 Cc:     linux-iio@vger.kernel.org, alsa-devel@alsa-project.org,
         linux-kernel@vger.kernel.org,
         Gwendal Grignou <gwendal@chromium.org>
-Subject: [RESEND PATCH v3 25/30] mfd: cros_ec: Add API for Touchpad support
-Date:   Mon,  3 Jun 2019 11:33:56 -0700
-Message-Id: <20190603183401.151408-26-gwendal@chromium.org>
+Subject: [RESEND PATCH v3 23/30] mfd: cros_ec: Add I2C passthru protection API
+Date:   Mon,  3 Jun 2019 11:33:54 -0700
+Message-Id: <20190603183401.151408-24-gwendal@chromium.org>
 X-Mailer: git-send-email 2.22.0.rc1.311.g5d7573a151-goog
 In-Reply-To: <20190603183401.151408-1-gwendal@chromium.org>
 References: <20190603183401.151408-1-gwendal@chromium.org>
@@ -74,53 +74,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add API to control touchpad presented by Embedded Controller.
+Prevent direct i2c access to device behind EC when not in development mode.
 
 Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 Acked-by: Benson Leung <bleung@chromium.org>
 Reviewed-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
 Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
 ---
- include/linux/mfd/cros_ec_commands.h | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ include/linux/mfd/cros_ec_commands.h | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
 diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd/cros_ec_commands.h
-index 52fd9bfafc7f..1d0311df44d3 100644
+index 49ea905cfd18..59ad6bae3f9b 100644
 --- a/include/linux/mfd/cros_ec_commands.h
 +++ b/include/linux/mfd/cros_ec_commands.h
-@@ -5043,6 +5043,32 @@ struct ec_response_pd_chip_info_v1 {
- 	};
- } __ec_align2;
+@@ -4316,6 +4316,28 @@ struct ec_params_entering_mode {
+ #define VBOOT_MODE_DEVELOPER 1
+ #define VBOOT_MODE_RECOVERY  2
  
 +/*****************************************************************************/
-+/* Touchpad MCU commands: range 0x0500-0x05FF */
++/*
++ * I2C passthru protection command: Protects I2C tunnels against access on
++ * certain addresses (board-specific).
++ */
++#define EC_CMD_I2C_PASSTHRU_PROTECT 0x00B7
 +
-+/* Perform touchpad self test */
-+#define EC_CMD_TP_SELF_TEST 0x0500
++enum ec_i2c_passthru_protect_subcmd {
++	EC_CMD_I2C_PASSTHRU_PROTECT_STATUS = 0x0,
++	EC_CMD_I2C_PASSTHRU_PROTECT_ENABLE = 0x1,
++};
 +
-+/* Get number of frame types, and the size of each type */
-+#define EC_CMD_TP_FRAME_INFO 0x0501
++struct ec_params_i2c_passthru_protect {
++	uint8_t subcmd;
++	uint8_t port;		/* I2C port number */
++} __ec_align1;
 +
-+struct ec_response_tp_frame_info {
-+	uint32_t n_frames;
-+	uint32_t frame_sizes[0];
-+} __ec_align4;
++struct ec_response_i2c_passthru_protect {
++	uint8_t status;		/* Status flags (0: unlocked, 1: locked) */
++} __ec_align1;
 +
-+/* Create a snapshot of current frame readings */
-+#define EC_CMD_TP_FRAME_SNAPSHOT 0x0502
-+
-+/* Read the frame */
-+#define EC_CMD_TP_FRAME_GET 0x0503
-+
-+struct ec_params_tp_frame_get {
-+	uint32_t frame_index;
-+	uint32_t offset;
-+	uint32_t size;
-+} __ec_align4;
 +
  /*****************************************************************************/
- /* EC-EC communication commands: range 0x0600-0x06FF */
- 
+ /*
+  * HDMI CEC commands
 -- 
 2.21.0.1020.gf2820cf01a-goog
 
