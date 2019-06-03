@@ -2,116 +2,120 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DF7C28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 02:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 684E5C28CC5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 02:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5FE527AC3
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 02:13:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="agocnF72"
+	by mail.kernel.org (Postfix) with ESMTP id 3AC6227AD1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 02:19:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbfFCCNy (ORCPT
+        id S1726830AbfFCCTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 22:13:54 -0400
-Received: from ozlabs.org ([203.11.71.1]:55781 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726561AbfFCCNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 22:13:54 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45HJWf5wY7z9s4V;
-        Mon,  3 Jun 2019 12:13:50 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1559528031;
-        bh=1JH94ZmSjHKzYZuTkVY19kUsmtuB9Vtpca9qYs/ZATw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=agocnF72J/hJERlp06QXvBe/LUaaiHz24Js2nS+4YnJCySpMsXRXwjYCN5i0VkWNE
-         6Htmt/yXEChMzL2sv5V0sCzumKPohN08FDaAcqcnAv3lp9+OBQH3MLugA1HyHUG5UX
-         a9HG8DWyrfRPbR6a/Orknhu0e2xvzL8YWYGlJQpBWC448+o8ipWt3wsK7u+/faALlf
-         HwDMPGLU+U+L27vH3tZezgQWnOZQriY7jGz6z5GOvFH/fNI9XcLqtIkwS0LGR5fAc5
-         7A9MfSqBIE7WQuppawM2K+I6+4jpC+Z+dx33DDDUsepCNvP7NeBTBAfFBjIAenY3gV
-         r4ofKcXH4OJ8Q==
-Date:   Mon, 3 Jun 2019 12:13:50 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: linux-next: build failure after merge of the clockevents tree
-Message-ID: <20190603121350.653cacce@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/uiNiVsT1gh9W9UsmKqw3sG."; protocol="application/pgp-signature"
+        Sun, 2 Jun 2019 22:19:18 -0400
+Received: from twhmllg4.macronix.com ([122.147.135.202]:12474 "EHLO
+        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbfFCCTS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Jun 2019 22:19:18 -0400
+Received: from localhost.localdomain ([172.17.195.96])
+        by TWHMLLG4.macronix.com with ESMTP id x532JBjk041764;
+        Mon, 3 Jun 2019 10:19:11 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+From:   Mason Yang <masonccyang@mxic.com.tw>
+To:     miquel.raynal@bootlin.com, marek.vasut@gmail.com,
+        linux-kernel@vger.kernel.org, bbrezillon@kernel.org,
+        richard@nod.at, dwmw2@infradead.org, computersforpeace@gmail.com,
+        linux-mtd@lists.infradead.org, vigneshr@ti.com, tglx@linutronix.de,
+        frieder.schrempf@kontron.de, allison@lohutok.net
+Cc:     juliensu@mxic.com.tw, masonccyang@mxic.com.tw
+Subject: [PATCH v3] mtd: rawnand: Add Macronix NAND read retry support
+Date:   Mon,  3 Jun 2019 10:42:04 +0800
+Message-Id: <1559529724-5454-1-git-send-email-masonccyang@mxic.com.tw>
+X-Mailer: git-send-email 1.9.1
+X-MAIL: TWHMLLG4.macronix.com x532JBjk041764
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/uiNiVsT1gh9W9UsmKqw3sG.
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Add support for Macronix NAND read retry.
 
-Hi Daniel,
+Macronix NANDs support specific read operation for data recovery,
+which can be enabled with a SET_FEATURE.
+Driver checks byte 167 of Vendor Blocks in ONFI parameter page table
+to see if this high-reliability function is supported.
 
-After merging the clockevents tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+---
+ drivers/mtd/nand/raw/nand_macronix.c | 45 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
 
-drivers/clocksource/timer-atmel-tcb.c: In function 'tcb_clksrc_init':
-drivers/clocksource/timer-atmel-tcb.c:448:17: error: invalid use of undefin=
-ed type 'struct delay_timer'
-   tc_delay_timer.read_current_timer =3D tc_delay_timer_read32;
-                 ^
-drivers/clocksource/timer-atmel-tcb.c:461:17: error: invalid use of undefin=
-ed type 'struct delay_timer'
-   tc_delay_timer.read_current_timer =3D tc_delay_timer_read;
-                 ^
-drivers/clocksource/timer-atmel-tcb.c:476:16: error: invalid use of undefin=
-ed type 'struct delay_timer'
-  tc_delay_timer.freq =3D divided_rate;
-                ^
-drivers/clocksource/timer-atmel-tcb.c:477:2: error: implicit declaration of=
- function 'register_current_timer_delay'; did you mean 'read_current_timer'=
-? [-Werror=3Dimplicit-function-declaration]
-  register_current_timer_delay(&tc_delay_timer);
-  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  read_current_timer
-drivers/clocksource/timer-atmel-tcb.c: At top level:
-drivers/clocksource/timer-atmel-tcb.c:129:27: error: storage size of 'tc_de=
-lay_timer' isn't known
- static struct delay_timer tc_delay_timer;
-                           ^~~~~~~~~~~~~~
-cc1: some warnings being treated as errors
+diff --git a/drivers/mtd/nand/raw/nand_macronix.c b/drivers/mtd/nand/raw/nand_macronix.c
+index fad57c3..58511ae 100644
+--- a/drivers/mtd/nand/raw/nand_macronix.c
++++ b/drivers/mtd/nand/raw/nand_macronix.c
+@@ -8,6 +8,50 @@
+ 
+ #include "internals.h"
+ 
++#define MACRONIX_READ_RETRY_BIT BIT(0)
++#define MACRONIX_NUM_READ_RETRY_MODES 6
++
++struct nand_onfi_vendor_macronix {
++	u8 reserved;
++	u8 reliability_func;
++} __packed;
++
++static int macronix_nand_setup_read_retry(struct nand_chip *chip, int mode)
++{
++	u8 feature[ONFI_SUBFEATURE_PARAM_LEN];
++
++	if (!chip->parameters.supports_set_get_features ||
++	    !test_bit(ONFI_FEATURE_ADDR_READ_RETRY,
++		      chip->parameters.set_feature_list))
++		return -ENOTSUPP;
++
++	feature[0] = mode;
++	return nand_set_features(chip, ONFI_FEATURE_ADDR_READ_RETRY, feature);
++}
++
++static void macronix_nand_onfi_init(struct nand_chip *chip)
++{
++	struct nand_parameters *p = &chip->parameters;
++	struct nand_onfi_vendor_macronix *mxic;
++
++	if (!p->onfi)
++		return;
++
++	mxic = (struct nand_onfi_vendor_macronix *)p->onfi->vendor;
++	if ((mxic->reliability_func & MACRONIX_READ_RETRY_BIT) == 0)
++		return;
++
++	chip->read_retries = MACRONIX_NUM_READ_RETRY_MODES;
++	chip->setup_read_retry = macronix_nand_setup_read_retry;
++
++	if (p->supports_set_get_features) {
++		bitmap_set(p->set_feature_list,
++			   ONFI_FEATURE_ADDR_READ_RETRY, 1);
++		bitmap_set(p->get_feature_list,
++			   ONFI_FEATURE_ADDR_READ_RETRY, 1);
++	}
++}
++
+ /*
+  * Macronix AC series does not support using SET/GET_FEATURES to change
+  * the timings unlike what is declared in the parameter page. Unflag
+@@ -56,6 +100,7 @@ static int macronix_nand_init(struct nand_chip *chip)
+ 		chip->options |= NAND_BBM_FIRSTPAGE | NAND_BBM_SECONDPAGE;
+ 
+ 	macronix_nand_fix_broken_get_timings(chip);
++	macronix_nand_onfi_init(chip);
+ 
+ 	return 0;
+ }
+-- 
+1.9.1
 
-Caused by commit
-
-  dd40f5020581 ("clocksource/drivers/tcb_clksrc: Register delay timer")
-
-I have reverted that commit for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/uiNiVsT1gh9W9UsmKqw3sG.
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz0gl4ACgkQAVBC80lX
-0GymIAf6Am/0TmqRiFkcEGVXjoVYebQ0q9Oufbjgztq39uLYcVx/l/k4lZigNAMG
-RFHwh+Q9M4qZ7Zo/6E5Fo3LUqGMVQehgcd2oQRRCel4Sh3PrVCCvGWPiCoctQ7HQ
-jftHQr1u89MPuv0kHkh/bcpQBJRj0d7JTvPnyzBvcWQGxL70eBtRMX1SyIoFtFus
-z4GsO/sir6pY92ef0UWmhIiFOPm5HFtW5qu6zDOjhorLlaVwTfdz21U1++GyVydU
-tgQoij4cNnUa5zPj7sVsifFpGucTRhejpIlq/mpWdGVmcrHyELCjLphjKuk+KuW+
-IibTnBJbpeUaEJjcRr+1LMqY+RMhQQ==
-=69wL
------END PGP SIGNATURE-----
-
---Sig_/uiNiVsT1gh9W9UsmKqw3sG.--
