@@ -2,177 +2,118 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47594C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2ECC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B8DB23EEE
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78EA124307
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:29:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SAN+/Qb9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rBmKAzm6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729890AbfFCR2E (ORCPT
+        id S1729908AbfFCR3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 13:28:04 -0400
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:34558 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727461AbfFCR2D (ORCPT
+        Mon, 3 Jun 2019 13:29:21 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52402 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727461AbfFCR3V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 13:28:03 -0400
-Received: by mail-yb1-f193.google.com with SMTP id x32so4322670ybh.1;
-        Mon, 03 Jun 2019 10:28:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=/CnmclOqeFitdxQUE9bLrTl+THj0klsLpLvs2FULiUc=;
-        b=SAN+/Qb9AVqYn57ZhyRBvnABldr92BWgtJKUyDxZUVDegfg6Hg/wW2NTGAgFOnyE63
-         dBdT9OM2aaDM6qQbtrdiPqk5pTS3O2IHLuGjFcdRja7a7i0/c34FEWldCJTns/IJpvML
-         LM23y4Y5Aq2EIIUcvbR+MqqHW/tZb2ggEG5WnbMne3zHqowjYDxINP5TEoXckHWZzHwa
-         JpOWMO78/dyuTFrkYsvQNXInVy8WqA6UHCjTZOT8K68WVsNdiGHozgliJY4ZTHfHdMni
-         eq8JyMQ5/LtpsQeMS5Kn6VTelTQadx7VXG9B3JGK4unIGTZaycj9jjsTvfUEz89TGvAa
-         2ZQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/CnmclOqeFitdxQUE9bLrTl+THj0klsLpLvs2FULiUc=;
-        b=KhDm+fDDKNiEeAKrCI1rdcNCGK8Wgzwoobkrxi63htn5ta42cEQxEO8mrNQ3DmS5c1
-         BggjAH4VoHJrGSaloSaC2BKVPuFwKa2NYjVu202TwXG2ABNS2BEkNnWMoBNNnrmNkgiP
-         5jRYgUXuXgfL9B5s6YSwHj5jPWBbZxJtnM7fymaeY865FqWZWwf8dGb2zfmh/dTIDdG8
-         eKeTYMPcx/fAWsyZtQ5bkYAWUqBj6Vbm/udlJWUGjJHqrDcP6l2jaLFKN940T7CQSJQc
-         a1sNwk0q6VriQF25dqV6cY+mwicwtOAuupzPXwTkjxotTXXrlp49c11qCbUd7C9EUJKe
-         oDng==
-X-Gm-Message-State: APjAAAWIu2Xwz1Rom1N+arLBDOTMRB9md5ESXYmlIt09qAJl+sM6fYaM
-        YbVzG+3jso6d+R5iNEqKV/m5tHz4Dp8YPoUsWOw=
-X-Google-Smtp-Source: APXvYqwv36MV1EgjPM95jwDVnT/xOnPPHBe6w8IiRRT+qX6s8O/bgXKCVn5NKbfL9AQHj/f+E9bKbWM0yveHM2T4UZ4=
-X-Received: by 2002:a25:ca8d:: with SMTP id a135mr9276509ybg.438.1559582882942;
- Mon, 03 Jun 2019 10:28:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190521161102.29620-1-peron.clem@gmail.com> <CAL_Jsq+86nNEBzjbf_GLWWrAN91jwU+JQ7zrEoFaT_dxUzVv4A@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+86nNEBzjbf_GLWWrAN91jwU+JQ7zrEoFaT_dxUzVv4A@mail.gmail.com>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Mon, 3 Jun 2019 19:27:51 +0200
-Message-ID: <CAJiuCcchRZZ-Wwy3_fo_aq=GuCaCW8RHS8nBtB2br4n5Qtu-MA@mail.gmail.com>
-Subject: Re: [PATCH v6 0/6] Allwinner H6 Mali GPU support
-To:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Mon, 3 Jun 2019 13:29:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=E3YMznrQvI4XYCbxYdGQLQYRxZ6se0IICAJQI35QmUc=; b=rBmKAzm6VMFiVqBuypdPrNnHG
+        9qR/xC1YUSUo4q1ihLjn3I1k3Z3Zt6ifT4BOE9d8JuD+KANIIdW4jN8PXiVc/rtwsBx2jUqqiusN9
+        XZiJCQFveWwYCiDODxQrw3kCKKimNiQpVcsgEcblb0zsMWY+TexrkRomHsn0JqXwETKx9ELJfGj9q
+        jOQlw3G/UlUJUPhW/UmsBMxDxE09/TlTcCGWjEEy2oiu1YHyvKMt+HBSMRmxLaLtbJMUdKbvkie5m
+        R6xIoJDLFjnWEVIxBVl5q2n4wLYhS96OJs3nOLbuM/ziN5On8QOyJ8ynpVakg7HFTHIHdWMjvK7eX
+        tMuk6CEhg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hXqlo-00025Q-9C; Mon, 03 Jun 2019 17:29:16 +0000
+Date:   Mon, 3 Jun 2019 10:29:16 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Khalid Aziz <khalid.aziz@oracle.com>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
         Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>, enh <enh@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
         Robin Murphy <robin.murphy@arm.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Steven Price <steven.price@arm.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Subject: Re: [PATCH v16 01/16] uaccess: add untagged_addr definition for
+ other arches
+Message-ID: <20190603172916.GA5390@infradead.org>
+References: <cover.1559580831.git.andreyknvl@google.com>
+ <097bc300a5c6554ca6fd1886421bb2e0adb03420.1559580831.git.andreyknvl@google.com>
+ <8ff5b0ff-849a-1e0b-18da-ccb5be85dd2b@oracle.com>
+ <CAAeHK+xX2538e674Pz25unkdFPCO_SH0pFwFu=8+DS7RzfYnLQ@mail.gmail.com>
+ <f6711d31-e52c-473a-d7ad-b2d63131d7a5@oracle.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f6711d31-e52c-473a-d7ad-b2d63131d7a5@oracle.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime, Joerg,
+On Mon, Jun 03, 2019 at 11:24:35AM -0600, Khalid Aziz wrote:
+> On 6/3/19 11:06 AM, Andrey Konovalov wrote:
+> > On Mon, Jun 3, 2019 at 7:04 PM Khalid Aziz <khalid.aziz@oracle.com> wrote:
+> >> Andrey,
+> >>
+> >> This patch has now become part of the other patch series Chris Hellwig
+> >> has sent out -
+> >> <https://lore.kernel.org/lkml/20190601074959.14036-1-hch@lst.de/>. Can
+> >> you coordinate with that patch series?
+> > 
+> > Hi!
+> > 
+> > Yes, I've seen it. How should I coordinate? Rebase this series on top
+> > of that one?
+> 
+> That would be one way to do it. Better yet, separate this patch from
+> both patch series, make it standalone and then rebase the two patch
+> series on top of it.
 
-On Wed, 22 May 2019 at 21:27, Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Tue, May 21, 2019 at 11:11 AM Cl=C3=A9ment P=C3=A9ron <peron.clem@gmai=
-l.com> wrote:
-> >
-> > Hi,
-> >
-> > The Allwinner H6 has a Mali-T720 MP2 which should be supported by
-> > the new panfrost driver. This series fix two issues and introduce the
-> > dt-bindings but a simple benchmark show that it's still NOT WORKING.
-> >
-> > I'm pushing it in case someone want to continue the work.
-> >
-> > This has been tested with Mesa3D 19.1.0-RC2 and a GPU bitness patch[1].
-> >
-> > One patch is from Icenowy Zheng where I changed the order as required
-> > by Rob Herring[2].
-> >
-> > Thanks,
-> > Clement
-> >
-> > [1] https://gitlab.freedesktop.org/kszaq/mesa/tree/panfrost_64_32
-> > [2] https://patchwork.kernel.org/patch/10699829/
-> >
-> >
-> > [  345.204813] panfrost 1800000.gpu: mmu irq status=3D1
-> > [  345.209617] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
-> > 0x0000000002400400
-> > [  345.209617] Reason: TODO
-> > [  345.209617] raw fault status: 0x800002C1
-> > [  345.209617] decoded fault status: SLAVE FAULT
-> > [  345.209617] exception type 0xC1: TRANSLATION_FAULT_LEVEL1
-> > [  345.209617] access type 0x2: READ
-> > [  345.209617] source id 0x8000
-> > [  345.729957] panfrost 1800000.gpu: gpu sched timeout, js=3D0,
-> > status=3D0x8, head=3D0x2400400, tail=3D0x2400400, sched_job=3D000000009=
-e204de9
-> > [  346.055876] panfrost 1800000.gpu: mmu irq status=3D1
-> > [  346.060680] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
-> > 0x0000000002C00A00
-> > [  346.060680] Reason: TODO
-> > [  346.060680] raw fault status: 0x810002C1
-> > [  346.060680] decoded fault status: SLAVE FAULT
-> > [  346.060680] exception type 0xC1: TRANSLATION_FAULT_LEVEL1
-> > [  346.060680] access type 0x2: READ
-> > [  346.060680] source id 0x8100
-> > [  346.561955] panfrost 1800000.gpu: gpu sched timeout, js=3D1,
-> > status=3D0x8, head=3D0x2c00a00, tail=3D0x2c00a00, sched_job=3D00000000b=
-55a9a85
-> > [  346.573913] panfrost 1800000.gpu: mmu irq status=3D1
-> > [  346.578707] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
-> > 0x0000000002C00B80
-> >
-> > Change in v5:
-> >  - Remove fix indent
-> >
-> > Changes in v4:
-> >  - Add bus_clock probe
-> >  - Fix sanity check in io-pgtable
-> >  - Add vramp-delay
-> >  - Merge all boards into one patch
-> >  - Remove upstreamed Neil A. patch
-> >
-> > Change in v3 (Thanks to Maxime Ripard):
-> >  - Reauthor Icenowy for her path
-> >
-> > Changes in v2 (Thanks to Maxime Ripard):
-> >  - Drop GPU OPP Table
-> >  - Add clocks and clock-names in required
-> >
-> > Cl=C3=A9ment P=C3=A9ron (5):
-> >   drm: panfrost: add optional bus_clock
-> >   iommu: io-pgtable: fix sanity check for non 48-bit mali iommu
-> >   dt-bindings: gpu: mali-midgard: Add H6 mali gpu compatible
-> >   arm64: dts: allwinner: Add ARM Mali GPU node for H6
-> >   arm64: dts: allwinner: Add mali GPU supply for H6 boards
-> >
-> > Icenowy Zheng (1):
-> >   dt-bindings: gpu: add bus clock for Mali Midgard GPUs
->
-> I've applied patches 1 and 3 to drm-misc. I was going to do patch 4
-> too, but it doesn't apply.
->
-> Patch 2 can go in via the iommu tree and the rest via the allwinner tree.
-
-Is this OK for you to pick up this series?
-
-Thanks,
-Cl=C3=A9ment
-
->
-> Rob
+I think easiest would be to just ask Linus if he could make an exception
+and include this trivial prep patch in 5.2-rc.
