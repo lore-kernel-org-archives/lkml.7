@@ -4,26 +4,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 104F6C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA694C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3A402741F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:56:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 843782759A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:56:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729815AbfFCQ4q (ORCPT
+        id S1729819AbfFCQ4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 12:56:46 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:35344 "EHLO
+        Mon, 3 Jun 2019 12:56:54 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:35366 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbfFCQ4o (ORCPT
+        with ESMTP id S1727047AbfFCQ4v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 12:56:44 -0400
+        Mon, 3 Jun 2019 12:56:51 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: koike)
-        with ESMTPSA id 73A8F284AD8
+        with ESMTPSA id A58E1284CE3
 From:   Helen Koike <helen.koike@collabora.com>
 To:     dri-devel@lists.freedesktop.org, nicholas.kazlauskas@amd.com
 Cc:     andrey.grodzovsky@amd.com, daniel.vetter@ffwll.ch,
@@ -33,19 +33,20 @@ Cc:     andrey.grodzovsky@amd.com, daniel.vetter@ffwll.ch,
         harry.wentland@amd.com,
         =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu@google.com>,
         Helen Koike <helen.koike@collabora.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        David Francis <David.Francis@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        Anthony Koo <Anthony.Koo@amd.com>,
-        amd-gfx@lists.freedesktop.org,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Mario Kleiner <mario.kleiner.de@gmail.com>,
+        stable@vger.kernel.org, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        linux-arm-msm@vger.kernel.org,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        freedreno@lists.freedesktop.org,
+        Mamta Shukla <mamtashukla555@gmail.com>,
         Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v4 2/5] drm/amd: fix fb references in async update
-Date:   Mon,  3 Jun 2019 13:56:07 -0300
-Message-Id: <20190603165610.24614-3-helen.koike@collabora.com>
+Subject: [PATCH v4 3/5] drm/msm: fix fb references in async update
+Date:   Mon,  3 Jun 2019 13:56:08 -0300
+Message-Id: <20190603165610.24614-4-helen.koike@collabora.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190603165610.24614-1-helen.koike@collabora.com>
 References: <20190603165610.24614-1-helen.koike@collabora.com>
@@ -59,38 +60,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Async update callbacks are expected to set the old_fb in the new_state
 so prepare/cleanup framebuffers are balanced.
 
-Calling drm_atomic_set_fb_for_plane() (which gets a reference of the new
-fb and put the old fb) is not required, as it's taken care by
-drm_mode_cursor_universal() when calling drm_atomic_helper_update_plane().
-
+Cc: <stable@vger.kernel.org> # v4.14+
+Fixes: 224a4c970987 ("drm/msm: update cursors asynchronously through atomic")
 Suggested-by: Boris Brezillon <boris.brezillon@collabora.com>
 Signed-off-by: Helen Koike <helen.koike@collabora.com>
-Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Acked-by: Rob Clark <robdclark@gmail.com>
 
 ---
+Hello,
 
-Changes in v4: None
+This was tested on the dragonboard 410c using igt plane_cursor_legacy and
+kms_cursor_legacy and I didn't see any regressions.
+
+Changes in v4:
+- add acked by tag
+
 Changes in v3: None
 Changes in v2:
-- added reviewed-by tag
+- update CC stable and Fixes tag
 
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index 443b13ec268d..40624b2c630e 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -4347,8 +4347,7 @@ static void dm_plane_atomic_async_update(struct drm_plane *plane,
- 	struct drm_plane_state *old_state =
- 		drm_atomic_get_old_plane_state(new_state->state, plane);
- 
--	if (plane->state->fb != new_state->fb)
--		drm_atomic_set_fb_for_plane(plane->state, new_state->fb);
-+	swap(plane->state->fb, new_state->fb);
- 
+diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c
+index 9d9fb6c5fd68..1105c2433f14 100644
+--- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c
++++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c
+@@ -502,6 +502,8 @@ static int mdp5_plane_atomic_async_check(struct drm_plane *plane,
+ static void mdp5_plane_atomic_async_update(struct drm_plane *plane,
+ 					   struct drm_plane_state *new_state)
+ {
++	struct drm_framebuffer *old_fb = plane->state->fb;
++
  	plane->state->src_x = new_state->src_x;
  	plane->state->src_y = new_state->src_y;
+ 	plane->state->crtc_x = new_state->crtc_x;
+@@ -524,6 +526,8 @@ static void mdp5_plane_atomic_async_update(struct drm_plane *plane,
+ 
+ 	*to_mdp5_plane_state(plane->state) =
+ 		*to_mdp5_plane_state(new_state);
++
++	new_state->fb = old_fb;
+ }
+ 
+ static const struct drm_plane_helper_funcs mdp5_plane_helper_funcs = {
 -- 
 2.20.1
 
