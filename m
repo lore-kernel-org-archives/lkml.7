@@ -2,321 +2,131 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B154C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B88C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F6F327D02
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7392727D04
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:00:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727266AbfFCH7R (ORCPT
+        id S1727412AbfFCIAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 03:59:17 -0400
-Received: from mga02.intel.com ([134.134.136.20]:41010 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725856AbfFCH7R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 03:59:17 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 00:59:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,546,1549958400"; 
-   d="scan'208";a="181072014"
-Received: from xxx.igk.intel.com (HELO xxx) ([10.237.93.170])
-  by fmsmga002.fm.intel.com with ESMTP; 03 Jun 2019 00:59:10 -0700
-Date:   Mon, 3 Jun 2019 10:03:01 +0200
-From:   Amadeusz =?UTF-8?B?U8WCYXdpxYRza2k=?= 
-        <amadeuszx.slawinski@linux.intel.com>
-To:     Cheng-Yi Chiang <cychiang@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        linux-rockchip@lists.infradead.org, dgreid@chromium.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        tzungbi@chromium.org, Philipp Zabel <p.zabel@pengutronix.de>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Rob Herring <robh+dt@kernel.org>,
+        Mon, 3 Jun 2019 04:00:04 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52388 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726272AbfFCIAD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 04:00:03 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x537vRx5139333
+        for <linux-kernel@vger.kernel.org>; Mon, 3 Jun 2019 04:00:02 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2svvpeec8e-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 04:00:01 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <freude@linux.ibm.com>;
+        Mon, 3 Jun 2019 08:59:59 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 3 Jun 2019 08:59:55 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x537xsA146989420
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 3 Jun 2019 07:59:54 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0CEC342045;
+        Mon,  3 Jun 2019 07:59:54 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 870E642042;
+        Mon,  3 Jun 2019 07:59:53 +0000 (GMT)
+Received: from [10.0.2.15] (unknown [9.152.224.114])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  3 Jun 2019 07:59:53 +0000 (GMT)
+Subject: Re: [RFC PATCH 1/2] crypto: Allow working with key references
+To:     Richard Weinberger <richard@nod.at>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
         linux-arm-kernel@lists.infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        dianders@chromium.org, Mark Brown <broonie@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [alsa-devel] [PATCH 2/7] ASoC: hdmi-codec: use HDMI state
- notifier to add jack support
-Message-ID: <20190603100301.00d68690@xxx>
-In-Reply-To: <20190603043251.226549-3-cychiang@chromium.org>
-References: <20190603043251.226549-1-cychiang@chromium.org>
- <20190603043251.226549-3-cychiang@chromium.org>
+        linux-kernel <linux-kernel@vger.kernel.org>, linux-imx@nxp.com,
+        festevam@gmail.com, kernel <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>, shawnguo@kernel.org,
+        davem@davemloft.net, david <david@sigma-star.at>
+References: <20190529224844.25203-1-richard@nod.at>
+ <20190530023357.2mrjtslnka4i6dbl@gondor.apana.org.au>
+ <2084969721.73871.1559201016164.JavaMail.zimbra@nod.at>
+From:   Harald Freudenberger <freude@linux.ibm.com>
+Date:   Mon, 3 Jun 2019 09:59:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <2084969721.73871.1559201016164.JavaMail.zimbra@nod.at>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 19060307-0016-0000-0000-000002830744
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19060307-0017-0000-0000-000032E00F2A
+Message-Id: <14ffcdf2-ed9f-be07-fde5-62dfb1fce4f9@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-03_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906030059
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  3 Jun 2019 12:32:46 +0800
-Cheng-Yi Chiang <cychiang@chromium.org> wrote:
+On 30.05.19 09:23, Richard Weinberger wrote:
+> ----- Ursprüngliche Mail -----
+>> Von: "Herbert Xu" <herbert@gondor.apana.org.au>
+>> An: "richard" <richard@nod.at>
+>> CC: "Linux Crypto Mailing List" <linux-crypto@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, "linux-kernel"
+>> <linux-kernel@vger.kernel.org>, linux-imx@nxp.com, festevam@gmail.com, "kernel" <kernel@pengutronix.de>, "Sascha Hauer"
+>> <s.hauer@pengutronix.de>, shawnguo@kernel.org, davem@davemloft.net, "david" <david@sigma-star.at>
+>> Gesendet: Donnerstag, 30. Mai 2019 04:33:57
+>> Betreff: Re: [RFC PATCH 1/2] crypto: Allow working with key references
+>> On Thu, May 30, 2019 at 12:48:43AM +0200, Richard Weinberger wrote:
+>>> Some crypto accelerators allow working with secure or hidden keys.
+>>> This keys are not exposed to Linux nor main memory. To use them
+>>> for a crypto operation they are referenced with a device specific id.
+>>>
+>>> This patch adds a new flag, CRYPTO_TFM_REQ_REF_KEY.
+>>> If this flag is set, crypto drivers should tread the key as
+>>> specified via setkey as reference and not as regular key.
+>>> Since we reuse the key data structure such a reference is limited
+>>> by the key size of the chiper and is chip specific.
+>>>
+>>> TODO: If the cipher implementation or the driver does not
+>>> support reference keys, we need a way to detect this an fail
+>>> upon setkey.
+>>> How should the driver indicate that it supports this feature?
+>>>
+>>> Signed-off-by: Richard Weinberger <richard@nod.at>
+>> We already have existing drivers doing this.  Please have a look
+>> at how they're doing it and use the same paradigm.  You can grep
+>> for paes under drivers/crypto.
+> Thanks for the pointer.
+> So the preferred way is defining a new crypto algorithm prefixed with
+> "p" and reusing setkey to provide the key reference.
+The "p" in paes is because we call it "protected key aes". I think you are not limited
+to the "p". What Herbert tries to point out is that you may define your own
+cipher with an unique name and there you can handle your secure key references
+as you like. You may use the s390 paes implementation as a starting point.
 
-> From: Philipp Zabel <p.zabel@pengutronix.de>
-> 
-> Use HDMI connection / disconnection notifications to update an ALSA
-> jack object. Also make a copy of the ELD block after every change.
-> 
-> This was posted by Philipp Zabel at
-> 
-> https://patchwork.kernel.org/patch/9430747/
-> 
-> Modified by Cheng-Yi Chiang:
-> - Fix the conflict of removed hdmi_codec_remove ops.
-> - Other minor fix for the conflict with latest hdmi-codec on ASoC
->   for-next tree.
-> 
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
-> ---
-> The original patch is at https://patchwork.kernel.org/patch/9430747/
-> I could not find the LKML link for the patch.
-> 
->  include/sound/hdmi-codec.h    |   7 +++
->  sound/soc/codecs/Kconfig      |   1 +
->  sound/soc/codecs/hdmi-codec.c | 104
-> +++++++++++++++++++++++++++++++++- 3 files changed, 110
-> insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/sound/hdmi-codec.h b/include/sound/hdmi-codec.h
-> index 9483c55f871b..4fa39c93363f 100644
-> --- a/include/sound/hdmi-codec.h
-> +++ b/include/sound/hdmi-codec.h
-> @@ -107,6 +107,13 @@ struct hdmi_codec_pdata {
->  	void *data;
->  };
->  
-> +struct snd_soc_component;
-> +struct snd_soc_jack;
-> +
-> +int hdmi_codec_set_jack_detect(struct snd_soc_component *component,
-> +			       struct snd_soc_jack *jack,
-> +			       struct device *dev);
-> +
->  #define HDMI_CODEC_DRV_NAME "hdmi-audio-codec"
->  
->  #endif /* __HDMI_CODEC_H__ */
-> diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-> index 8f577258080b..f5f6dd04234c 100644
-> --- a/sound/soc/codecs/Kconfig
-> +++ b/sound/soc/codecs/Kconfig
-> @@ -639,6 +639,7 @@ config SND_SOC_HDMI_CODEC
->  	select SND_PCM_ELD
->  	select SND_PCM_IEC958
->  	select HDMI
-> +	select HDMI_NOTIFIERS
->  
->  config SND_SOC_ES7134
->         tristate "Everest Semi ES7134 CODEC"
-> diff --git a/sound/soc/codecs/hdmi-codec.c
-> b/sound/soc/codecs/hdmi-codec.c index 6a0cc8d7e141..fe796a7475a5
-> 100644 --- a/sound/soc/codecs/hdmi-codec.c
-> +++ b/sound/soc/codecs/hdmi-codec.c
-> @@ -12,9 +12,12 @@
->   * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See
-> the GNU
->   * General Public License for more details.
->   */
-> +#include <linux/hdmi-notifier.h>
->  #include <linux/module.h>
-> +#include <linux/notifier.h>
->  #include <linux/string.h>
->  #include <sound/core.h>
-> +#include <sound/jack.h>
->  #include <sound/pcm.h>
->  #include <sound/pcm_params.h>
->  #include <sound/soc.h>
-> @@ -282,6 +285,13 @@ struct hdmi_codec_priv {
->  	struct snd_pcm_chmap *chmap_info;
->  	unsigned int chmap_idx;
->  	struct mutex lock;
-> +	struct snd_soc_jack *jack;
-> +	/* Lock to protect setting and getting eld. */
-> +	struct mutex eld_lock;
-> +	struct device *dev;
-> +	struct hdmi_notifier *notifier;
-> +	struct notifier_block nb;
-> +	unsigned int jack_status;
->  };
->  
->  static const struct snd_soc_dapm_widget hdmi_widgets[] = {
-> @@ -308,7 +318,9 @@ static int hdmi_eld_ctl_get(struct snd_kcontrol
-> *kcontrol, struct snd_soc_component *component =
-> snd_kcontrol_chip(kcontrol); struct hdmi_codec_priv *hcp =
-> snd_soc_component_get_drvdata(component); 
-> +	mutex_lock(&hcp->eld_lock);
->  	memcpy(ucontrol->value.bytes.data, hcp->eld,
-> sizeof(hcp->eld));
-> +	mutex_unlock(&hcp->eld_lock);
->  
->  	return 0;
->  }
-> @@ -393,7 +405,7 @@ static int hdmi_codec_startup(struct
-> snd_pcm_substream *substream, struct snd_soc_dai *dai)
->  {
->  	struct hdmi_codec_priv *hcp = snd_soc_dai_get_drvdata(dai);
-> -	int ret = 0;
-> +	int ret;
->  
->  	ret = mutex_trylock(&hcp->lock);
->  	if (!ret) {
-> @@ -408,9 +420,9 @@ static int hdmi_codec_startup(struct
-> snd_pcm_substream *substream, }
->  
->  	if (hcp->hcd.ops->get_eld) {
-> +		mutex_lock(&hcp->eld_lock);
->  		ret = hcp->hcd.ops->get_eld(dai->dev->parent,
-> hcp->hcd.data, hcp->eld, sizeof(hcp->eld));
-> -
->  		if (!ret) {
->  			ret =
-> snd_pcm_hw_constraint_eld(substream->runtime, hcp->eld);
+regards Harald Freudenberger <freude@linux.ibm.com>
 
-Seems to me like you missed unlock here. There is return inside this
-if().
-
-> @@ -419,6 +431,7 @@ static int hdmi_codec_startup(struct
-> snd_pcm_substream *substream, }
->  		/* Select chmap supported */
->  		hdmi_codec_eld_chmap(hcp);
-> +		mutex_unlock(&hcp->eld_lock);
->  	}
->  	return 0;
->  
-> @@ -747,6 +760,77 @@ static const struct snd_soc_component_driver
-> hdmi_driver = { .non_legacy_dai_naming	= 1,
->  };
->  
-> +static void hdmi_codec_jack_report(struct hdmi_codec_priv *hcp,
-> +				   unsigned int jack_status)
-> +{
-> +	if (!hcp->jack)
-> +		return;
-> +
-> +	if (jack_status != hcp->jack_status) {
-> +		snd_soc_jack_report(hcp->jack, jack_status,
-> SND_JACK_LINEOUT);
-> +		hcp->jack_status = jack_status;
-> +	}
-> +}
-> +
-> +static int hdmi_codec_notify(struct notifier_block *nb, unsigned
-> long event,
-> +			     void *data)
-> +{
-> +	struct hdmi_codec_priv *hcp = container_of(nb, struct
-> hdmi_codec_priv,
-> +						   nb);
-> +	struct hdmi_notifier *n = data;
-> +
-> +	if (!hcp->jack)
-> +		return NOTIFY_OK;
-> +
-> +	switch (event) {
-> +	case HDMI_NEW_ELD:
-> +		mutex_lock(&hcp->eld_lock);
-> +		memcpy(hcp->eld, n->eld, sizeof(hcp->eld));
-> +		mutex_unlock(&hcp->eld_lock);
-> +		/* fall through */
-> +	case HDMI_CONNECTED:
-> +		hdmi_codec_jack_report(hcp, SND_JACK_LINEOUT);
-> +		break;
-> +	case HDMI_DISCONNECTED:
-> +		hdmi_codec_jack_report(hcp, 0);
-> +		break;
-> +	}
-> +
-> +	return NOTIFY_OK;
-> +}
-> +
-> +/**
-> + * hdmi_codec_set_jack_detect - register HDMI state notifier callback
-> + * @component: the hdmi-codec instance
-> + * @jack: ASoC jack to report (dis)connection events on
-> + * @dev: hdmi_notifier device, usually HDMI_TX or CEC device
-> + */
-> +int hdmi_codec_set_jack_detect(struct snd_soc_component *component,
-> +			       struct snd_soc_jack *jack,
-> +			       struct device *dev)
-> +{
-> +	struct hdmi_codec_priv *hcp =
-> snd_soc_component_get_drvdata(component);
-> +	int ret;
-> +
-> +	hcp->notifier = hdmi_notifier_get(dev);
-> +	if (!hcp->notifier)
-> +		return -ENOMEM;
-> +
-> +	hcp->jack = jack;
-> +	hcp->nb.notifier_call = hdmi_codec_notify;
-> +	ret = hdmi_notifier_register(hcp->notifier, &hcp->nb);
-> +	if (ret)
-> +		goto err_notifier_put;
-> +
-> +	return 0;
-> +
-> +err_notifier_put:
-> +	hdmi_notifier_put(hcp->notifier);
-> +	hcp->notifier = NULL;
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(hdmi_codec_set_jack_detect);
-> +
->  static int hdmi_codec_probe(struct platform_device *pdev)
->  {
->  	struct hdmi_codec_pdata *hcd = pdev->dev.platform_data;
-> @@ -774,6 +858,7 @@ static int hdmi_codec_probe(struct
-> platform_device *pdev) 
->  	hcp->hcd = *hcd;
->  	mutex_init(&hcp->lock);
-> +	mutex_init(&hcp->eld_lock);
->  
->  	daidrv = devm_kcalloc(dev, dai_count, sizeof(*daidrv),
-> GFP_KERNEL); if (!daidrv)
-> @@ -797,6 +882,20 @@ static int hdmi_codec_probe(struct
-> platform_device *pdev) __func__, ret);
->  		return ret;
->  	}
-> +
-> +	hcp->dev = dev;
-> +
-> +	return 0;
-> +}
-> +
-> +static int hdmi_codec_remove(struct platform_device *pdev)
-> +{
-> +	struct hdmi_codec_priv *hcp = platform_get_drvdata(pdev);
-> +
-> +	if (hcp->notifier) {
-> +		hdmi_notifier_unregister(hcp->notifier, &hcp->nb);
-> +		hdmi_notifier_put(hcp->notifier);
-> +	}
->  	return 0;
->  }
->  
-> @@ -805,6 +904,7 @@ static struct platform_driver hdmi_codec_driver =
-> { .name = HDMI_CODEC_DRV_NAME,
->  	},
->  	.probe = hdmi_codec_probe,
-> +	.remove = hdmi_codec_remove,
->  };
->  
->  module_platform_driver(hdmi_codec_driver);
+>
+> Thanks,
+> //richard
+>
 
