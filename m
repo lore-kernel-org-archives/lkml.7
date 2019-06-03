@@ -2,430 +2,524 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA12CC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 19:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC4FC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 19:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86496271AC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 19:21:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LZ6JdUYP"
+	by mail.kernel.org (Postfix) with ESMTP id F0A5C26875
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 19:22:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559589778;
+	bh=8oR+yNovf6kh7da44z76KIdK3ZYQpCPI8NCz8Y+7i4A=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=E3OWPP23R+2z+dvtvBd6Sza3ZxsYaGGenDF6m3K/1HrK8xiVYs2uQMt0WQEogDDFR
+	 0PuCTHYw/Y+B0tW9zEkAPV7lwyrPfxrNacjGlIFAW7sDDZTNj7UcgZzs5b+JaPhNbr
+	 3UXhThDHHusdQ1dWH3qwO7x5tmcrL0pY25K+Zzf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbfFCTVz (ORCPT
+        id S1726853AbfFCTW5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 15:21:55 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36732 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfFCTVz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 15:21:55 -0400
-Received: by mail-pf1-f196.google.com with SMTP id u22so11170397pfm.3;
-        Mon, 03 Jun 2019 12:21:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Pu9hCSqx8PysXiFd4y8tfcVLYuTg76vpiN0buypU1s4=;
-        b=LZ6JdUYPvORvpXy9XNPxwkOZCuaMepLoaGd6Ta5FmoLrqsIpNwrFqfyc/MxyEZOgVv
-         1KncqltBjEXiO+p2f8VeqEFHFX5EJyNPaJRwdPR/GG/AsZ1/dEc2UcnSLaUovr3iDYxH
-         bmQutQhzgZze1quTht2vQ66+eKE4BTTwfraNCOgtgv9Y2PRL4f7V3TYNMFeogDmU5lBD
-         GsfYdp03YEJeBUsKCd9IgAVoV+sIvEVcEk1UvrZyxMVYkAcZEaLQmBX7799u2HIOpOZy
-         mH4PtEdQu9laJZw/jWFat0gu2QS+d200Ju7OFQhhL1BX3RhiiH7VTgV6R+BxmIp8xoNB
-         IHFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Pu9hCSqx8PysXiFd4y8tfcVLYuTg76vpiN0buypU1s4=;
-        b=nDtcfJ8sRogd8g3N7Mr9ehEKNCHL8fV3f66WicuvXsjZNek6fxAqM+fVHV7kHbLm5G
-         vKbgQtwePedhtf7Vm3RSKxXAq3OsRIVZzZUJK/lYQOmibB8cgukpaGgObK13x3QqM5tm
-         /gIVW7vy7jLA89KDFHv0Hg+57Oryzx+xIhKxu+/IJ9MyP/wi5yFQt1CrRKtotl+1RFTQ
-         Rcy2RE9Z1wYjqi0ADgsct0DyhygszrpcKKZdPPnU3ecXTCEaV4nTkFNnWjTxusiu3Cv6
-         MrADQra19xdaZkTwyMNtJXf9mLZ+XlyKWLXXr2RZwX7OhrBCTTj1PEKFTYjKGB2xEAd2
-         gFIA==
-X-Gm-Message-State: APjAAAUKsfmKKyqKZ8oSmlBegEa2H0GbRVWb7g/neJOl3T+jfy1qAhZS
-        WLlhwsRCiBOFhJxGjqXzZDdjVPgl
-X-Google-Smtp-Source: APXvYqzbOeWo6skLJnisx00Mmulb/Yd+W+8OZoLdcBaHOn2LkfzFx4N8EBusqEki0OCTNkxSMpGnog==
-X-Received: by 2002:a17:90a:8d09:: with SMTP id c9mr19032878pjo.131.1559589713628;
-        Mon, 03 Jun 2019 12:21:53 -0700 (PDT)
-Received: from ?IPv6:2620:10d:c0a3:10e0::2ed7? ([2620:10d:c091:500::1:27b5])
-        by smtp.gmail.com with ESMTPSA id t187sm16345650pfb.64.2019.06.03.12.21.51
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Jun 2019 12:21:52 -0700 (PDT)
-From:   Jes Sorensen <jes.sorensen@gmail.com>
-X-Google-Original-From: Jes Sorensen <Jes.Sorensen@gmail.com>
-Subject: Re: [RFC PATCH v4] rtl8xxxu: Improve TX performance of RTL8723BU on
- rtl8xxxu driver
-To:     Chris Chiu <chiu@endlessm.com>, kvalo@codeaurora.org,
-        davem@davemloft.net
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux@endlessm.com
-References: <20190531091229.93033-1-chiu@endlessm.com>
-Message-ID: <f1c54f97-16a5-2618-569b-9101f9657fcb@gmail.com>
-Date:   Mon, 3 Jun 2019 15:21:50 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190531091229.93033-1-chiu@endlessm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 3 Jun 2019 15:22:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58774 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726241AbfFCTWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 15:22:55 -0400
+Received: from localhost.localdomain (unknown [194.230.155.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B2FB2673F;
+        Mon,  3 Jun 2019 19:22:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559589774;
+        bh=8oR+yNovf6kh7da44z76KIdK3ZYQpCPI8NCz8Y+7i4A=;
+        h=From:To:Cc:Subject:Date:From;
+        b=jeNxtkhlAu3jqsLKUOkyk+csWouLtZP1ukxvnLSYj8iJFVwVjSH14/wxLtnfz8Chz
+         k5L4/sL78icHURMNmvZSAuYFSk8w79qoZjE3pZksXK5oRTg41kvZXWzxywxNE5LC/6
+         hQeVog2aiHwn7as07SveqFMTPikq4qkaVko7TmiQ=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Russell King <linux@armlinux.org.uk>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Tony Lindgren <tony@atomide.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, arm@kernel.org
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Alexander Shiyan <shc_work@mail.ru>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH] ARM: config: Remove left-over BACKLIGHT_LCD_SUPPORT
+Date:   Mon,  3 Jun 2019 21:22:45 +0200
+Message-Id: <20190603192245.30652-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/31/19 5:12 AM, Chris Chiu wrote:
-> We have 3 laptops which connect the wifi by the same RTL8723BU.
-> The PCI VID/PID of the wifi chip is 10EC:B720 which is supported.
-> They have the same problem with the in-kernel rtl8xxxu driver, the
-> iperf (as a client to an ethernet-connected server) gets ~1Mbps.
-> Nevertheless, the signal strength is reported as around -40dBm,
-> which is quite good. From the wireshark capture, the tx rate for each
-> data and qos data packet is only 1Mbps. Compare to the Realtek driver
-> at https://github.com/lwfinger/rtl8723bu, the same iperf test gets
-> ~12Mbps or better. The signal strength is reported similarly around
-> -40dBm. That's why we want to improve.
-> 
-> After reading the source code of the rtl8xxxu driver and Realtek's, the
-> major difference is that Realtek's driver has a watchdog which will keep
-> monitoring the signal quality and updating the rate mask just like the
-> rtl8xxxu_gen2_update_rate_mask() does if signal quality changes.
-> And this kind of watchdog also exists in rtlwifi driver of some specific
-> chips, ex rtl8192ee, rtl8188ee, rtl8723ae, rtl8821ae...etc. They have
-> the same member function named dm_watchdog and will invoke the
-> corresponding dm_refresh_rate_adaptive_mask to adjust the tx rate
-> mask.
-> 
-> With this commit, the tx rate of each data and qos data packet will
-> be 39Mbps (MCS4) with the 0xF00000 as the tx rate mask. The 20th bit
-> to 23th bit means MCS4 to MCS7. It means that the firmware still picks
-> the lowest rate from the rate mask and explains why the tx rate of
-> data and qos data is always lowest 1Mbps because the default rate mask
-> passed is always 0xFFFFFFF ranges from the basic CCK rate, OFDM rate,
-> and MCS rate. However, with Realtek's driver, the tx rate observed from
-> wireshark under the same condition is almost 65Mbps or 72Mbps.
-> 
-> I believe the firmware of RTL8723BU may need fix. And I think we
-> can still bring in the dm_watchdog as rtlwifi to improve from the
-> driver side. Please leave precious comments for my commits and
-> suggest what I can do better. Or suggest if there's any better idea
-> to fix this. Thanks.
-> 
-> Signed-off-by: Chris Chiu <chiu@endlessm.com>
+The CONFIG_BACKLIGHT_LCD_SUPPORT was removed in commit 8c5dc8d9f19c
+("video: backlight: Remove useless BACKLIGHT_LCD_SUPPORT kernel
+symbol"). Options protected by CONFIG_BACKLIGHT_LCD_SUPPORT are now
+available directly.
 
-I am really pleased to see you're investigating some of these issues,
-since I've been pretty swamped and not had time to work on this driver
-for a long time.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ arch/arm/configs/cm_x2xx_defconfig        | 1 -
+ arch/arm/configs/cm_x300_defconfig        | 1 -
+ arch/arm/configs/colibri_pxa270_defconfig | 1 -
+ arch/arm/configs/colibri_pxa300_defconfig | 1 -
+ arch/arm/configs/collie_defconfig         | 1 -
+ arch/arm/configs/corgi_defconfig          | 1 -
+ arch/arm/configs/em_x270_defconfig        | 1 -
+ arch/arm/configs/eseries_pxa_defconfig    | 1 -
+ arch/arm/configs/ezx_defconfig            | 1 -
+ arch/arm/configs/imote2_defconfig         | 1 -
+ arch/arm/configs/integrator_defconfig     | 1 -
+ arch/arm/configs/jornada720_defconfig     | 1 -
+ arch/arm/configs/lpc18xx_defconfig        | 1 -
+ arch/arm/configs/lpc32xx_defconfig        | 1 -
+ arch/arm/configs/magician_defconfig       | 1 -
+ arch/arm/configs/mmp2_defconfig           | 1 -
+ arch/arm/configs/mxs_defconfig            | 1 -
+ arch/arm/configs/nhk8815_defconfig        | 1 -
+ arch/arm/configs/omap1_defconfig          | 1 -
+ arch/arm/configs/palmz72_defconfig        | 1 -
+ arch/arm/configs/pxa3xx_defconfig         | 1 -
+ arch/arm/configs/pxa_defconfig            | 1 -
+ arch/arm/configs/qcom_defconfig           | 1 -
+ arch/arm/configs/realview_defconfig       | 1 -
+ arch/arm/configs/s3c6400_defconfig        | 1 -
+ arch/arm/configs/sama5_defconfig          | 1 -
+ arch/arm/configs/spear3xx_defconfig       | 1 -
+ arch/arm/configs/spitz_defconfig          | 1 -
+ arch/arm/configs/trizeps4_defconfig       | 1 -
+ arch/arm/configs/u300_defconfig           | 1 -
+ arch/arm/configs/versatile_defconfig      | 1 -
+ arch/arm/configs/vexpress_defconfig       | 1 -
+ arch/arm/configs/viper_defconfig          | 1 -
+ arch/arm/configs/zeus_defconfig           | 1 -
+ 34 files changed, 34 deletions(-)
 
-The firmware should allow for two rate modes, either firmware handled or
-controlled by the driver. Ideally we would want the driver to handle it,
-but I never was able to make that work reliable.
+diff --git a/arch/arm/configs/cm_x2xx_defconfig b/arch/arm/configs/cm_x2xx_defconfig
+index 5344434df652..2789837ea24c 100644
+--- a/arch/arm/configs/cm_x2xx_defconfig
++++ b/arch/arm/configs/cm_x2xx_defconfig
+@@ -103,7 +103,6 @@ CONFIG_FB=y
+ CONFIG_FB_PXA=y
+ CONFIG_FB_PXA_PARAMETERS=y
+ CONFIG_FB_MBX=m
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ # CONFIG_LCD_CLASS_DEVICE is not set
+ # CONFIG_BACKLIGHT_CLASS_DEVICE is not set
+ # CONFIG_VGA_CONSOLE is not set
+diff --git a/arch/arm/configs/cm_x300_defconfig b/arch/arm/configs/cm_x300_defconfig
+index 3707a014cbc4..569a5ed70c55 100644
+--- a/arch/arm/configs/cm_x300_defconfig
++++ b/arch/arm/configs/cm_x300_defconfig
+@@ -86,7 +86,6 @@ CONFIG_REGULATOR=y
+ CONFIG_REGULATOR_DA903X=y
+ CONFIG_FB=y
+ CONFIG_FB_PXA=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ CONFIG_LCD_CLASS_DEVICE=y
+ CONFIG_LCD_TDO24M=y
+ # CONFIG_BACKLIGHT_GENERIC is not set
+diff --git a/arch/arm/configs/colibri_pxa270_defconfig b/arch/arm/configs/colibri_pxa270_defconfig
+index 8d484e4d51cc..a54e1f32139f 100644
+--- a/arch/arm/configs/colibri_pxa270_defconfig
++++ b/arch/arm/configs/colibri_pxa270_defconfig
+@@ -102,7 +102,6 @@ CONFIG_WATCHDOG=y
+ CONFIG_FB=y
+ CONFIG_FIRMWARE_EDID=y
+ CONFIG_FB_PXA=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ CONFIG_LCD_CLASS_DEVICE=y
+ CONFIG_BACKLIGHT_CLASS_DEVICE=y
+ # CONFIG_VGA_CONSOLE is not set
+diff --git a/arch/arm/configs/colibri_pxa300_defconfig b/arch/arm/configs/colibri_pxa300_defconfig
+index d282e8b0bf33..8364407e0abf 100644
+--- a/arch/arm/configs/colibri_pxa300_defconfig
++++ b/arch/arm/configs/colibri_pxa300_defconfig
+@@ -33,7 +33,6 @@ CONFIG_DEBUG_GPIO=y
+ # CONFIG_HWMON is not set
+ CONFIG_FB=y
+ CONFIG_FB_PXA=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ # CONFIG_LCD_CLASS_DEVICE is not set
+ CONFIG_BACKLIGHT_CLASS_DEVICE=y
+ # CONFIG_BACKLIGHT_GENERIC is not set
+diff --git a/arch/arm/configs/collie_defconfig b/arch/arm/configs/collie_defconfig
+index d398ae53aba7..e6df11e906ba 100644
+--- a/arch/arm/configs/collie_defconfig
++++ b/arch/arm/configs/collie_defconfig
+@@ -63,7 +63,6 @@ CONFIG_MCP_UCB1200_TS=y
+ CONFIG_FB=y
+ CONFIG_FB_MODE_HELPERS=y
+ CONFIG_FB_SA1100=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ # CONFIG_VGA_CONSOLE is not set
+ CONFIG_FRAMEBUFFER_CONSOLE=y
+ CONFIG_FRAMEBUFFER_CONSOLE_ROTATION=y
+diff --git a/arch/arm/configs/corgi_defconfig b/arch/arm/configs/corgi_defconfig
+index d99725984947..58d7deec7e1b 100644
+--- a/arch/arm/configs/corgi_defconfig
++++ b/arch/arm/configs/corgi_defconfig
+@@ -132,7 +132,6 @@ CONFIG_SPI=y
+ CONFIG_SPI_PXA2XX=y
+ CONFIG_FB=y
+ CONFIG_FB_W100=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ CONFIG_LCD_CLASS_DEVICE=y
+ CONFIG_LCD_CORGI=y
+ CONFIG_BACKLIGHT_CLASS_DEVICE=y
+diff --git a/arch/arm/configs/em_x270_defconfig b/arch/arm/configs/em_x270_defconfig
+index 61228a25ba8d..858289b7f1de 100644
+--- a/arch/arm/configs/em_x270_defconfig
++++ b/arch/arm/configs/em_x270_defconfig
+@@ -101,7 +101,6 @@ CONFIG_FB=y
+ CONFIG_FB_PXA=y
+ CONFIG_FB_PXA_PARAMETERS=y
+ CONFIG_FB_MBX=m
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ CONFIG_LCD_CLASS_DEVICE=y
+ CONFIG_LCD_TDO24M=y
+ # CONFIG_BACKLIGHT_GENERIC is not set
+diff --git a/arch/arm/configs/eseries_pxa_defconfig b/arch/arm/configs/eseries_pxa_defconfig
+index b85575867d21..bc76cf5399b6 100644
+--- a/arch/arm/configs/eseries_pxa_defconfig
++++ b/arch/arm/configs/eseries_pxa_defconfig
+@@ -74,7 +74,6 @@ CONFIG_MFD_TC6393XB=y
+ CONFIG_FB=y
+ CONFIG_FB_PXA=y
+ CONFIG_FB_W100=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ CONFIG_LCD_CLASS_DEVICE=y
+ CONFIG_BACKLIGHT_CLASS_DEVICE=y
+ # CONFIG_VGA_CONSOLE is not set
+diff --git a/arch/arm/configs/ezx_defconfig b/arch/arm/configs/ezx_defconfig
+index e3afca5bd9d6..eb966ac6de1d 100644
+--- a/arch/arm/configs/ezx_defconfig
++++ b/arch/arm/configs/ezx_defconfig
+@@ -247,7 +247,6 @@ CONFIG_FB=y
+ CONFIG_FB_PXA=y
+ CONFIG_FB_PXA_OVERLAY=y
+ CONFIG_FB_PXA_PARAMETERS=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ # CONFIG_LCD_CLASS_DEVICE is not set
+ CONFIG_BACKLIGHT_CLASS_DEVICE=y
+ CONFIG_BACKLIGHT_PWM=y
+diff --git a/arch/arm/configs/imote2_defconfig b/arch/arm/configs/imote2_defconfig
+index 9b779e13e05d..82f5b938e395 100644
+--- a/arch/arm/configs/imote2_defconfig
++++ b/arch/arm/configs/imote2_defconfig
+@@ -228,7 +228,6 @@ CONFIG_FB=y
+ CONFIG_FB_PXA=y
+ CONFIG_FB_PXA_OVERLAY=y
+ CONFIG_FB_PXA_PARAMETERS=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ # CONFIG_LCD_CLASS_DEVICE is not set
+ CONFIG_BACKLIGHT_CLASS_DEVICE=y
+ # CONFIG_VGA_CONSOLE is not set
+diff --git a/arch/arm/configs/integrator_defconfig b/arch/arm/configs/integrator_defconfig
+index 747550c7af2f..2f0a762dc3a0 100644
+--- a/arch/arm/configs/integrator_defconfig
++++ b/arch/arm/configs/integrator_defconfig
+@@ -61,7 +61,6 @@ CONFIG_FB_MODE_HELPERS=y
+ CONFIG_FB_MATROX=y
+ CONFIG_FB_MATROX_MILLENIUM=y
+ CONFIG_FB_MATROX_MYSTIQUE=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ CONFIG_BACKLIGHT_CLASS_DEVICE=y
+ # CONFIG_VGA_CONSOLE is not set
+ CONFIG_LOGO=y
+diff --git a/arch/arm/configs/jornada720_defconfig b/arch/arm/configs/jornada720_defconfig
+index 65d37ad6e6b8..3dcc2f4ab7b7 100644
+--- a/arch/arm/configs/jornada720_defconfig
++++ b/arch/arm/configs/jornada720_defconfig
+@@ -47,7 +47,6 @@ CONFIG_LEGACY_PTY_COUNT=32
+ # CONFIG_HWMON is not set
+ CONFIG_FB=y
+ CONFIG_FB_S1D13XXX=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ CONFIG_LCD_CLASS_DEVICE=y
+ CONFIG_BACKLIGHT_CLASS_DEVICE=y
+ # CONFIG_BACKLIGHT_GENERIC is not set
+diff --git a/arch/arm/configs/lpc18xx_defconfig b/arch/arm/configs/lpc18xx_defconfig
+index e3d5e15d66d1..e518168a0627 100644
+--- a/arch/arm/configs/lpc18xx_defconfig
++++ b/arch/arm/configs/lpc18xx_defconfig
+@@ -119,7 +119,6 @@ CONFIG_REGULATOR_FIXED_VOLTAGE=y
+ CONFIG_DRM=y
+ CONFIG_DRM_PL111=y
+ CONFIG_FB_MODE_HELPERS=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ CONFIG_USB=y
+ CONFIG_USB_EHCI_HCD=y
+ CONFIG_USB_EHCI_ROOT_HUB_TT=y
+diff --git a/arch/arm/configs/lpc32xx_defconfig b/arch/arm/configs/lpc32xx_defconfig
+index 4b3b2c693c29..6d5a0067e66d 100644
+--- a/arch/arm/configs/lpc32xx_defconfig
++++ b/arch/arm/configs/lpc32xx_defconfig
+@@ -110,7 +110,6 @@ CONFIG_DRM=y
+ CONFIG_DRM_PANEL_SIMPLE=y
+ CONFIG_DRM_PL111=y
+ CONFIG_FB_MODE_HELPERS=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ CONFIG_BACKLIGHT_CLASS_DEVICE=y
+ CONFIG_FRAMEBUFFER_CONSOLE=y
+ CONFIG_LOGO=y
+diff --git a/arch/arm/configs/magician_defconfig b/arch/arm/configs/magician_defconfig
+index de5be2fc7306..6116c44678b9 100644
+--- a/arch/arm/configs/magician_defconfig
++++ b/arch/arm/configs/magician_defconfig
+@@ -96,7 +96,6 @@ CONFIG_FB=y
+ CONFIG_FB_PXA=y
+ CONFIG_FB_PXA_OVERLAY=y
+ CONFIG_FB_W100=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ CONFIG_LCD_CLASS_DEVICE=y
+ CONFIG_BACKLIGHT_CLASS_DEVICE=y
+ # CONFIG_BACKLIGHT_GENERIC is not set
+diff --git a/arch/arm/configs/mmp2_defconfig b/arch/arm/configs/mmp2_defconfig
+index 94deb0ed0541..a5e8d2235a1a 100644
+--- a/arch/arm/configs/mmp2_defconfig
++++ b/arch/arm/configs/mmp2_defconfig
+@@ -50,7 +50,6 @@ CONFIG_MFD_MAX8925=y
+ CONFIG_REGULATOR=y
+ CONFIG_REGULATOR_MAX8649=y
+ CONFIG_REGULATOR_MAX8925=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ CONFIG_LCD_CLASS_DEVICE=y
+ CONFIG_BACKLIGHT_CLASS_DEVICE=y
+ CONFIG_BACKLIGHT_MAX8925=y
+diff --git a/arch/arm/configs/mxs_defconfig b/arch/arm/configs/mxs_defconfig
+index ed570a0d1f2a..2773899c21b3 100644
+--- a/arch/arm/configs/mxs_defconfig
++++ b/arch/arm/configs/mxs_defconfig
+@@ -96,7 +96,6 @@ CONFIG_DRM=y
+ CONFIG_DRM_PANEL_SEIKO_43WVF1G=y
+ CONFIG_DRM_MXSFB=y
+ CONFIG_FB_MODE_HELPERS=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ CONFIG_LCD_CLASS_DEVICE=y
+ CONFIG_BACKLIGHT_CLASS_DEVICE=y
+ CONFIG_BACKLIGHT_PWM=y
+diff --git a/arch/arm/configs/nhk8815_defconfig b/arch/arm/configs/nhk8815_defconfig
+index cfc094189d09..2ecb049daf61 100644
+--- a/arch/arm/configs/nhk8815_defconfig
++++ b/arch/arm/configs/nhk8815_defconfig
+@@ -98,7 +98,6 @@ CONFIG_REGULATOR=y
+ CONFIG_DRM=y
+ CONFIG_DRM_PANEL_TPO_TPG110=y
+ CONFIG_DRM_PL111=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ CONFIG_BACKLIGHT_CLASS_DEVICE=y
+ CONFIG_BACKLIGHT_PWM=y
+ CONFIG_FRAMEBUFFER_CONSOLE=y
+diff --git a/arch/arm/configs/omap1_defconfig b/arch/arm/configs/omap1_defconfig
+index 82af77c093f1..f24a857e8733 100644
+--- a/arch/arm/configs/omap1_defconfig
++++ b/arch/arm/configs/omap1_defconfig
+@@ -154,7 +154,6 @@ CONFIG_FB_OMAP_LCDC_EXTERNAL=y
+ CONFIG_FB_OMAP_LCDC_HWA742=y
+ CONFIG_FB_OMAP_MANUAL_UPDATE=y
+ CONFIG_FB_OMAP_LCD_MIPID=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ CONFIG_LCD_CLASS_DEVICE=y
+ CONFIG_FRAMEBUFFER_CONSOLE=y
+ CONFIG_FRAMEBUFFER_CONSOLE_ROTATION=y
+diff --git a/arch/arm/configs/palmz72_defconfig b/arch/arm/configs/palmz72_defconfig
+index e0a614272561..ade09bfcba56 100644
+--- a/arch/arm/configs/palmz72_defconfig
++++ b/arch/arm/configs/palmz72_defconfig
+@@ -49,7 +49,6 @@ CONFIG_PDA_POWER=y
+ # CONFIG_HWMON is not set
+ CONFIG_FB=y
+ CONFIG_FB_PXA=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ # CONFIG_LCD_CLASS_DEVICE is not set
+ CONFIG_BACKLIGHT_CLASS_DEVICE=y
+ CONFIG_BACKLIGHT_PWM=y
+diff --git a/arch/arm/configs/pxa3xx_defconfig b/arch/arm/configs/pxa3xx_defconfig
+index 7681eea60127..02997bcbfe8a 100644
+--- a/arch/arm/configs/pxa3xx_defconfig
++++ b/arch/arm/configs/pxa3xx_defconfig
+@@ -72,7 +72,6 @@ CONFIG_REGULATOR_DEBUG=y
+ CONFIG_REGULATOR_DA903X=y
+ CONFIG_FB=y
+ CONFIG_FB_PXA=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ CONFIG_LCD_CLASS_DEVICE=y
+ CONFIG_LCD_TDO24M=y
+ CONFIG_BACKLIGHT_CLASS_DEVICE=y
+diff --git a/arch/arm/configs/pxa_defconfig b/arch/arm/configs/pxa_defconfig
+index 07ebbdce3645..a02dd4cf6138 100644
+--- a/arch/arm/configs/pxa_defconfig
++++ b/arch/arm/configs/pxa_defconfig
+@@ -462,7 +462,6 @@ CONFIG_PXA3XX_GCU=m
+ CONFIG_FB_MBX=m
+ CONFIG_FB_VIRTUAL=m
+ CONFIG_FB_SIMPLE=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ CONFIG_LCD_CORGI=m
+ CONFIG_LCD_PLATFORM=m
+ CONFIG_LCD_TOSA=m
+diff --git a/arch/arm/configs/qcom_defconfig b/arch/arm/configs/qcom_defconfig
+index c1854751c99a..e8a17b41b2db 100644
+--- a/arch/arm/configs/qcom_defconfig
++++ b/arch/arm/configs/qcom_defconfig
+@@ -148,7 +148,6 @@ CONFIG_MEDIA_SUPPORT=y
+ CONFIG_DRM=y
+ CONFIG_FB=y
+ CONFIG_FRAMEBUFFER_CONSOLE=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ # CONFIG_LCD_CLASS_DEVICE is not set
+ CONFIG_BACKLIGHT_CLASS_DEVICE=y
+ # CONFIG_BACKLIGHT_GENERIC is not set
+diff --git a/arch/arm/configs/realview_defconfig b/arch/arm/configs/realview_defconfig
+index cc9fa24d4b8f..8884723b827e 100644
+--- a/arch/arm/configs/realview_defconfig
++++ b/arch/arm/configs/realview_defconfig
+@@ -65,7 +65,6 @@ CONFIG_DRM=y
+ CONFIG_DRM_PANEL_SIMPLE=y
+ CONFIG_DRM_PL111=y
+ CONFIG_FB_MODE_HELPERS=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ CONFIG_BACKLIGHT_CLASS_DEVICE=y
+ CONFIG_LOGO=y
+ # CONFIG_LOGO_LINUX_MONO is not set
+diff --git a/arch/arm/configs/s3c6400_defconfig b/arch/arm/configs/s3c6400_defconfig
+index 6e2656567da6..a18be42e5134 100644
+--- a/arch/arm/configs/s3c6400_defconfig
++++ b/arch/arm/configs/s3c6400_defconfig
+@@ -40,7 +40,6 @@ CONFIG_SPI_GPIO=m
+ CONFIG_SPI_S3C64XX=m
+ CONFIG_FB=y
+ CONFIG_FB_S3C=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ CONFIG_LCD_CLASS_DEVICE=y
+ CONFIG_LCD_LTV350QV=y
+ CONFIG_BACKLIGHT_CLASS_DEVICE=y
+diff --git a/arch/arm/configs/sama5_defconfig b/arch/arm/configs/sama5_defconfig
+index d5341b0bd88d..6275f4fb3e5e 100644
+--- a/arch/arm/configs/sama5_defconfig
++++ b/arch/arm/configs/sama5_defconfig
+@@ -154,7 +154,6 @@ CONFIG_SOC_CAMERA_OV2640=m
+ CONFIG_DRM=y
+ CONFIG_DRM_ATMEL_HLCDC=y
+ CONFIG_DRM_PANEL_SIMPLE=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ CONFIG_LCD_CLASS_DEVICE=y
+ CONFIG_BACKLIGHT_CLASS_DEVICE=y
+ # CONFIG_BACKLIGHT_GENERIC is not set
+diff --git a/arch/arm/configs/spear3xx_defconfig b/arch/arm/configs/spear3xx_defconfig
+index ddd73b25f75e..5d88c4817f41 100644
+--- a/arch/arm/configs/spear3xx_defconfig
++++ b/arch/arm/configs/spear3xx_defconfig
+@@ -54,7 +54,6 @@ CONFIG_WATCHDOG=y
+ CONFIG_ARM_SP805_WATCHDOG=y
+ CONFIG_DRM=y
+ CONFIG_DRM_PL111=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ CONFIG_BACKLIGHT_CLASS_DEVICE=y
+ CONFIG_USB=y
+ CONFIG_USB_EHCI_HCD=y
+diff --git a/arch/arm/configs/spitz_defconfig b/arch/arm/configs/spitz_defconfig
+index f6d2f674517c..09f6fe432eef 100644
+--- a/arch/arm/configs/spitz_defconfig
++++ b/arch/arm/configs/spitz_defconfig
+@@ -126,7 +126,6 @@ CONFIG_SPI=y
+ CONFIG_SPI_PXA2XX=y
+ CONFIG_FB=y
+ CONFIG_FB_PXA=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ CONFIG_LCD_CLASS_DEVICE=y
+ CONFIG_LCD_CORGI=y
+ CONFIG_BACKLIGHT_CLASS_DEVICE=y
+diff --git a/arch/arm/configs/trizeps4_defconfig b/arch/arm/configs/trizeps4_defconfig
+index ecad22501b48..d66f0c287d41 100644
+--- a/arch/arm/configs/trizeps4_defconfig
++++ b/arch/arm/configs/trizeps4_defconfig
+@@ -136,7 +136,6 @@ CONFIG_SA1100_WATCHDOG=y
+ CONFIG_FB=y
+ CONFIG_FIRMWARE_EDID=y
+ CONFIG_FB_PXA=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ CONFIG_LCD_CLASS_DEVICE=y
+ CONFIG_BACKLIGHT_CLASS_DEVICE=y
+ # CONFIG_VGA_CONSOLE is not set
+diff --git a/arch/arm/configs/u300_defconfig b/arch/arm/configs/u300_defconfig
+index bedf397c75de..9f16487c0eb0 100644
+--- a/arch/arm/configs/u300_defconfig
++++ b/arch/arm/configs/u300_defconfig
+@@ -43,7 +43,6 @@ CONFIG_WATCHDOG=y
+ CONFIG_REGULATOR=y
+ CONFIG_REGULATOR_FIXED_VOLTAGE=y
+ CONFIG_FB=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ # CONFIG_LCD_CLASS_DEVICE is not set
+ CONFIG_BACKLIGHT_CLASS_DEVICE=y
+ # CONFIG_USB_SUPPORT is not set
+diff --git a/arch/arm/configs/versatile_defconfig b/arch/arm/configs/versatile_defconfig
+index 5282324c7cef..fe4d4b596585 100644
+--- a/arch/arm/configs/versatile_defconfig
++++ b/arch/arm/configs/versatile_defconfig
+@@ -62,7 +62,6 @@ CONFIG_DRM_PANEL_SIMPLE=y
+ CONFIG_DRM_DUMB_VGA_DAC=y
+ CONFIG_DRM_PL111=y
+ CONFIG_FB_MODE_HELPERS=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ CONFIG_BACKLIGHT_CLASS_DEVICE=y
+ CONFIG_LOGO=y
+ CONFIG_SOUND=y
+diff --git a/arch/arm/configs/vexpress_defconfig b/arch/arm/configs/vexpress_defconfig
+index 484d77a7f589..d170da388389 100644
+--- a/arch/arm/configs/vexpress_defconfig
++++ b/arch/arm/configs/vexpress_defconfig
+@@ -86,7 +86,6 @@ CONFIG_DRM_PANEL_SIMPLE=y
+ CONFIG_DRM_SII902X=y
+ CONFIG_DRM_PL111=y
+ CONFIG_FB_MODE_HELPERS=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ CONFIG_BACKLIGHT_CLASS_DEVICE=y
+ CONFIG_LOGO=y
+ # CONFIG_LOGO_LINUX_MONO is not set
+diff --git a/arch/arm/configs/viper_defconfig b/arch/arm/configs/viper_defconfig
+index 070e5074f1ee..218bfb6c9b24 100644
+--- a/arch/arm/configs/viper_defconfig
++++ b/arch/arm/configs/viper_defconfig
+@@ -110,7 +110,6 @@ CONFIG_WATCHDOG=y
+ CONFIG_FB=y
+ CONFIG_FB_PXA=m
+ CONFIG_FB_PXA_PARAMETERS=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ CONFIG_BACKLIGHT_PWM=m
+ # CONFIG_VGA_CONSOLE is not set
+ CONFIG_FRAMEBUFFER_CONSOLE=y
+diff --git a/arch/arm/configs/zeus_defconfig b/arch/arm/configs/zeus_defconfig
+index 09e7050d5653..8c01047801b8 100644
+--- a/arch/arm/configs/zeus_defconfig
++++ b/arch/arm/configs/zeus_defconfig
+@@ -110,7 +110,6 @@ CONFIG_WATCHDOG=y
+ CONFIG_FB=y
+ CONFIG_FB_PXA=m
+ CONFIG_FB_PXA_PARAMETERS=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ # CONFIG_VGA_CONSOLE is not set
+ CONFIG_FRAMEBUFFER_CONSOLE=y
+ CONFIG_LOGO=y
+-- 
+2.17.1
 
-This fix should at least improve the situation, and it may explain some
-of the performance issues with the 8192eu as well?
-
-> diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
-> index 8828baf26e7b..216f603827a8 100644
-> --- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
-> +++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
-> @@ -1195,6 +1195,44 @@ struct rtl8723bu_c2h {
->  
->  struct rtl8xxxu_fileops;
->  
-> +/*mlme related.*/
-> +enum wireless_mode {
-> +	WIRELESS_MODE_UNKNOWN = 0,
-> +	/* Sub-Element */
-> +	WIRELESS_MODE_B = BIT(0),
-> +	WIRELESS_MODE_G = BIT(1),
-> +	WIRELESS_MODE_A = BIT(2),
-> +	WIRELESS_MODE_N_24G = BIT(3),
-> +	WIRELESS_MODE_N_5G = BIT(4),
-> +	WIRELESS_AUTO = BIT(5),
-> +	WIRELESS_MODE_AC = BIT(6),
-> +	WIRELESS_MODE_MAX = 0x7F,
-> +};
-> +
-> +/* from rtlwifi/wifi.h */
-> +enum ratr_table_mode_new {
-> +	RATEID_IDX_BGN_40M_2SS = 0,
-> +	RATEID_IDX_BGN_40M_1SS = 1,
-> +	RATEID_IDX_BGN_20M_2SS_BN = 2,
-> +	RATEID_IDX_BGN_20M_1SS_BN = 3,
-> +	RATEID_IDX_GN_N2SS = 4,
-> +	RATEID_IDX_GN_N1SS = 5,
-> +	RATEID_IDX_BG = 6,
-> +	RATEID_IDX_G = 7,
-> +	RATEID_IDX_B = 8,
-> +	RATEID_IDX_VHT_2SS = 9,
-> +	RATEID_IDX_VHT_1SS = 10,
-> +	RATEID_IDX_MIX1 = 11,
-> +	RATEID_IDX_MIX2 = 12,
-> +	RATEID_IDX_VHT_3SS = 13,
-> +	RATEID_IDX_BGN_3SS = 14,
-> +};
-> +
-> +#define RTL8XXXU_RATR_STA_INIT 0
-> +#define RTL8XXXU_RATR_STA_HIGH 1
-> +#define RTL8XXXU_RATR_STA_MID  2
-> +#define RTL8XXXU_RATR_STA_LOW  3
-> +
-
->  extern struct rtl8xxxu_fileops rtl8192cu_fops;
->  extern struct rtl8xxxu_fileops rtl8192eu_fops;
-> diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
-> index 26b674aca125..2071ab9fd001 100644
-> --- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
-> +++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
-> @@ -1645,6 +1645,148 @@ static void rtl8723bu_init_statistics(struct rtl8xxxu_priv *priv)
->  	rtl8xxxu_write32(priv, REG_OFDM0_FA_RSTC, val32);
->  }
->  
-> +static u8 rtl8723b_signal_to_rssi(int signal)
-> +{
-> +	if (signal < -95)
-> +		signal = -95;
-> +	return (u8)(signal + 95);
-> +}
-
-Could you make this more generic so it can be used by the other sub-drivers?
-
-> +static void rtl8723b_refresh_rate_mask(struct rtl8xxxu_priv *priv,
-> +				       int signal, struct ieee80211_sta *sta)
-> +{
-> +	struct ieee80211_hw *hw = priv->hw;
-> +	u16 wireless_mode;
-> +	u8 rssi_level, ratr_idx;
-> +	u8 txbw_40mhz;
-> +	u8 rssi, rssi_thresh_high, rssi_thresh_low;
-> +
-> +	rssi_level = priv->rssi_level;
-> +	rssi = rtl8723b_signal_to_rssi(signal);
-> +	txbw_40mhz = (hw->conf.chandef.width == NL80211_CHAN_WIDTH_40) ? 1 : 0;
-> +
-> +	switch (rssi_level) {
-> +	case RTL8XXXU_RATR_STA_HIGH:
-> +		rssi_thresh_high = 50;
-> +		rssi_thresh_low = 20;
-> +		break;
-> +	case RTL8XXXU_RATR_STA_MID:
-> +		rssi_thresh_high = 55;
-> +		rssi_thresh_low = 20;
-> +		break;
-> +	case RTL8XXXU_RATR_STA_LOW:
-> +		rssi_thresh_high = 60;
-> +		rssi_thresh_low = 25;
-> +		break;
-> +	default:
-> +		rssi_thresh_high = 50;
-> +		rssi_thresh_low = 20;
-> +		break;
-> +	}
-
-Can we make this use defined values with some explanation rather than
-hard coded values?
-
-> +	if (rssi > rssi_thresh_high)
-> +		rssi_level = RTL8XXXU_RATR_STA_HIGH;
-> +	else if (rssi > rssi_thresh_low)
-> +		rssi_level = RTL8XXXU_RATR_STA_MID;
-> +	else
-> +		rssi_level = RTL8XXXU_RATR_STA_LOW;
-> +
-> +	if (rssi_level != priv->rssi_level) {
-> +		int sgi = 0;
-> +		u32 rate_bitmap = 0;
-> +
-> +		rcu_read_lock();
-> +		rate_bitmap = (sta->supp_rates[0] & 0xfff) |
-> +				(sta->ht_cap.mcs.rx_mask[0] << 12) |
-> +				(sta->ht_cap.mcs.rx_mask[1] << 20);
-> +		if (sta->ht_cap.cap &
-> +		    (IEEE80211_HT_CAP_SGI_40 | IEEE80211_HT_CAP_SGI_20))
-> +			sgi = 1;
-> +		rcu_read_unlock();
-> +
-> +		wireless_mode = rtl8xxxu_wireless_mode(hw, sta);
-> +		switch (wireless_mode) {
-> +		case WIRELESS_MODE_B:
-> +			ratr_idx = RATEID_IDX_B;
-> +			if (rate_bitmap & 0x0000000c)
-> +				rate_bitmap &= 0x0000000d;
-> +			else
-> +				rate_bitmap &= 0x0000000f;
-> +			break;
-> +		case WIRELESS_MODE_A:
-> +		case WIRELESS_MODE_G:
-> +			ratr_idx = RATEID_IDX_G;
-> +			if (rssi_level == RTL8XXXU_RATR_STA_HIGH)
-> +				rate_bitmap &= 0x00000f00;
-> +			else
-> +				rate_bitmap &= 0x00000ff0;
-> +			break;
-> +		case (WIRELESS_MODE_B | WIRELESS_MODE_G):
-> +			ratr_idx = RATEID_IDX_BG;
-> +			if (rssi_level == RTL8XXXU_RATR_STA_HIGH)
-> +				rate_bitmap &= 0x00000f00;
-> +			else if (rssi_level == RTL8XXXU_RATR_STA_MID)
-> +				rate_bitmap &= 0x00000ff0;
-> +			else
-> +				rate_bitmap &= 0x00000ff5;
-> +			break;
-
-It would be nice as well to get all these masks into generic names.
-
-> +		case WIRELESS_MODE_N_24G:
-> +		case WIRELESS_MODE_N_5G:
-> +		case (WIRELESS_MODE_G | WIRELESS_MODE_N_24G):
-> +		case (WIRELESS_MODE_A | WIRELESS_MODE_N_5G):
-> +			if (priv->tx_paths == 2 && priv->rx_paths == 2)
-> +				ratr_idx = RATEID_IDX_GN_N2SS;
-> +			else
-> +				ratr_idx = RATEID_IDX_GN_N1SS;
-> +		case (WIRELESS_MODE_B | WIRELESS_MODE_G | WIRELESS_MODE_N_24G):
-> +		case (WIRELESS_MODE_B | WIRELESS_MODE_N_24G):
-> +			if (txbw_40mhz) {
-> +				if (priv->tx_paths == 2 && priv->rx_paths == 2)
-> +					ratr_idx = RATEID_IDX_BGN_40M_2SS;
-> +				else
-> +					ratr_idx = RATEID_IDX_BGN_40M_1SS;
-> +			} else {
-> +				if (priv->tx_paths == 2 && priv->rx_paths == 2)
-> +					ratr_idx = RATEID_IDX_BGN_20M_2SS_BN;
-> +				else
-> +					ratr_idx = RATEID_IDX_BGN_20M_1SS_BN;
-> +			}
-> +
-> +			if (priv->tx_paths == 2 && priv->rx_paths == 2) {
-> +				if (rssi_level == RTL8XXXU_RATR_STA_HIGH) {
-> +					rate_bitmap &= 0x0f8f0000;
-> +				} else if (rssi_level == RTL8XXXU_RATR_STA_MID) {
-> +					rate_bitmap &= 0x0f8ff000;
-> +				} else {
-> +					if (txbw_40mhz)
-> +						rate_bitmap &= 0x0f8ff015;
-> +					else
-> +						rate_bitmap &= 0x0f8ff005;
-> +				}
-> +			} else {
-> +				if (rssi_level == RTL8XXXU_RATR_STA_HIGH) {
-> +					rate_bitmap &= 0x000f0000;
-> +				} else if (rssi_level == RTL8XXXU_RATR_STA_MID) {
-> +					rate_bitmap &= 0x000ff000;
-> +				} else {
-> +					if (txbw_40mhz)
-> +						rate_bitmap &= 0x000ff015;
-> +					else
-> +						rate_bitmap &= 0x000ff005;
-> +				}
-> +			}
-> +			break;
-> +		default:
-> +			ratr_idx = RATEID_IDX_BGN_40M_2SS;
-> +			rate_bitmap &= 0x0fffffff;
-> +			break;
-> +		}
-> +
-> +		priv->rssi_level = rssi_level;
-> +		priv->fops->update_rate_mask(priv, rate_bitmap, ratr_idx, sgi);
-> +	}
-> +}
-> +
-
-In general I think all of this should be fairly generic and the other
-subdrivers should be able to benefit from it?
-
-
->  struct rtl8xxxu_fileops rtl8723bu_fops = {
->  	.parse_efuse = rtl8723bu_parse_efuse,
->  	.load_firmware = rtl8723bu_load_firmware,
-> @@ -1665,6 +1807,7 @@ struct rtl8xxxu_fileops rtl8723bu_fops = {
->  	.usb_quirks = rtl8xxxu_gen2_usb_quirks,
->  	.set_tx_power = rtl8723b_set_tx_power,
->  	.update_rate_mask = rtl8xxxu_gen2_update_rate_mask,
-> +	.refresh_rate_mask = rtl8723b_refresh_rate_mask,
->  	.report_connect = rtl8xxxu_gen2_report_connect,
->  	.fill_txdesc = rtl8xxxu_fill_txdesc_v2,
->  	.writeN_block_size = 1024,
-> diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-> index 039e5ca9d2e4..be322402ca01 100644
-> --- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-> +++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-> @@ -4311,7 +4311,8 @@ static void rtl8xxxu_sw_scan_complete(struct ieee80211_hw *hw,
->  	rtl8xxxu_write8(priv, REG_BEACON_CTRL, val8);
->  }
->  
-> -void rtl8xxxu_update_rate_mask(struct rtl8xxxu_priv *priv, u32 ramask, int sgi)
-> +void rtl8xxxu_update_rate_mask(struct rtl8xxxu_priv *priv,
-> +			       u32 ramask, u8 rateid, int sgi)
->  {
->  	struct h2c_cmd h2c;
->  
-> @@ -4331,7 +4332,7 @@ void rtl8xxxu_update_rate_mask(struct rtl8xxxu_priv *priv, u32 ramask, int sgi)
->  }
->  
->  void rtl8xxxu_gen2_update_rate_mask(struct rtl8xxxu_priv *priv,
-> -				    u32 ramask, int sgi)
-> +				    u32 ramask, u8 rateid, int sgi)
->  {
->  	struct h2c_cmd h2c;
->  	u8 bw = 0;
-> @@ -4345,7 +4346,7 @@ void rtl8xxxu_gen2_update_rate_mask(struct rtl8xxxu_priv *priv,
->  	h2c.b_macid_cfg.ramask3 = (ramask >> 24) & 0xff;
->  
->  	h2c.ramask.arg = 0x80;
-> -	h2c.b_macid_cfg.data1 = 0;
-> +	h2c.b_macid_cfg.data1 = rateid;
->  	if (sgi)
->  		h2c.b_macid_cfg.data1 |= BIT(7);
->  
-> @@ -4485,6 +4486,40 @@ static void rtl8xxxu_set_basic_rates(struct rtl8xxxu_priv *priv, u32 rate_cfg)
->  	rtl8xxxu_write8(priv, REG_INIRTS_RATE_SEL, rate_idx);
->  }
->  
-> +u16
-> +rtl8xxxu_wireless_mode(struct ieee80211_hw *hw, struct ieee80211_sta *sta)
-> +{
-> +	u16 network_type = WIRELESS_MODE_UNKNOWN;
-> +	u32 rate_mask;
-> +
-> +	rate_mask = (sta->supp_rates[0] & 0xfff) |
-> +		    (sta->ht_cap.mcs.rx_mask[0] << 12) |
-> +		    (sta->ht_cap.mcs.rx_mask[0] << 20);
-> +
-> +	if (hw->conf.chandef.chan->band == NL80211_BAND_5GHZ) {
-> +		if (sta->vht_cap.vht_supported)
-> +			network_type = WIRELESS_MODE_AC;
-> +		else if (sta->ht_cap.ht_supported)
-> +			network_type = WIRELESS_MODE_N_5G;
-> +
-> +		network_type |= WIRELESS_MODE_A;
-> +	} else {
-> +		if (sta->vht_cap.vht_supported)
-> +			network_type = WIRELESS_MODE_AC;
-> +		else if (sta->ht_cap.ht_supported)
-> +			network_type = WIRELESS_MODE_N_24G;
-> +
-> +		if (sta->supp_rates[0] <= 0xf)
-> +			network_type |= WIRELESS_MODE_B;
-> +		else if (sta->supp_rates[0] & 0xf)
-> +			network_type |= (WIRELESS_MODE_B | WIRELESS_MODE_G);
-> +		else
-> +			network_type |= WIRELESS_MODE_G;
-> +	}
-> +
-> +	return network_type;
-> +}
-
-I always hated the wireless_mode nonsense in the realtek driver, but
-maybe we cannot avoid it :(
-
-Cheers,
-Jes
