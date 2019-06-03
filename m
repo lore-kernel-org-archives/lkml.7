@@ -2,124 +2,128 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0701CC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B06C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2EE626F56
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:42:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="NLVEIvLR"
+	by mail.kernel.org (Postfix) with ESMTP id 643F426FF8
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:43:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728475AbfFCRms (ORCPT
+        id S1728630AbfFCRnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 13:42:48 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41180 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726977AbfFCRmr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 13:42:47 -0400
-Received: by mail-lj1-f193.google.com with SMTP id s21so6421176lji.8
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 10:42:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BS0Zh3jyjSb17eotilocZwY1GzUHeKUqjyq+4Kft1pQ=;
-        b=NLVEIvLReVVSzUzdDGbor2dZ8ubeUlpmhNjUd82WAFgUKIBO7BoTaJIz44rPbkJPrM
-         JJz4js2fDKmejIAwjlAnvQUcKyHnNvReqS52dXsAbD52WeR9RocU/fFCzu8ITS9tQb+D
-         sjdkFNrjpp4ImFYc4Kuo0V3DKMhlkSDsj4aV0PqjKBhap8WtjQEFx4oGPrufWt9qZt13
-         IDkqSzV1VP9Tf7KZJTXe3BxwI+so/wNAIi1UwJ/LM5p+TAe/TOZwfJ7kqtY5LqqbxW1q
-         FsUPRQuHOQNPJr0m9+/rAnq/VlACSBwzANEDY+HFEiaFoP6z/PllCBlxwNNdkyJvoWe+
-         4odQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BS0Zh3jyjSb17eotilocZwY1GzUHeKUqjyq+4Kft1pQ=;
-        b=dAafqiHWZydG9OTE5wTFr1FszZytleIDPWbhKMnzDTX0YeeGNSjHAbMJCJ76hHMd9Z
-         s9YOCdTFW42R4zn22Efmp13WP3tz7s4LZLFr1lhQYG3PBcmlZuoqMQscd/GjINCy9zQz
-         3u1+yYNTmLjiclvyNa1jf8RjY6h0H9hQy37/Dmx2fhPOqWiKA8qHZpDKKI+z31dMYRTV
-         ygkncfZA/8bmY1kgoXePXvrrKSCK+NE5tDzD4kadoVKWsntBicJ3Ufp5rTn1VfpYlHZt
-         SSeoyyFtivifS9eLqvCB3QuJQkN9gzsml9BKIH8wBw+MWX6aUMgiL47jU4sxi5ZoqAqQ
-         PiHg==
-X-Gm-Message-State: APjAAAVYLmXAw069bDv+ympoLRKLdW+ZbbXaXHFHtQGIEIe/ZTr0HC21
-        UGoQauMMqjNR2G5RG3/ORxzZ3+9/wNDmF/3rCqDD6A==
-X-Google-Smtp-Source: APXvYqy7436P4CRHoCyJ2XXuGEbIzmE7qmlHxfIe0H476OtQDIN20Vza1a6fj3+LTeOrwhyyTraNzBYtaxJteM56H8U=
-X-Received: by 2002:a2e:8587:: with SMTP id b7mr14668645lji.101.1559583766018;
- Mon, 03 Jun 2019 10:42:46 -0700 (PDT)
+        Mon, 3 Jun 2019 13:43:01 -0400
+Received: from mga04.intel.com ([192.55.52.120]:56237 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726635AbfFCRnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 13:43:01 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 10:43:00 -0700
+X-ExtLoop1: 1
+Received: from linux.intel.com ([10.54.29.200])
+  by FMSMGA003.fm.intel.com with ESMTP; 03 Jun 2019 10:43:00 -0700
+Received: from [10.251.11.94] (kliang2-mobl.ccr.corp.intel.com [10.251.11.94])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 8A84D5801E6;
+        Mon,  3 Jun 2019 10:42:59 -0700 (PDT)
+Subject: Re: [PATCH V2 3/5] perf stat: Support per-die aggregation
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, mingo@redhat.com,
+        linux-kernel@vger.kernel.org, peterz@infradead.org,
+        ak@linux.intel.com
+References: <1559228029-5876-1-git-send-email-kan.liang@linux.intel.com>
+ <1559228029-5876-3-git-send-email-kan.liang@linux.intel.com>
+ <20190603163636.GC12203@krava>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <cc4eea9a-e18e-af7e-2290-98727fce2f6a@linux.intel.com>
+Date:   Mon, 3 Jun 2019 13:42:58 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <1558650258-15050-1-git-send-email-alan.mikhak@sifive.com>
- <305100E33629484CBB767107E4246BBB0A6FAFFD@DE02WEMBXB.internal.synopsys.com>
- <CABEDWGxsQ9NXrN7W_8HVrXQBb9HiBd+d1dNfv+cXmoBpXQnLwA@mail.gmail.com>
- <305100E33629484CBB767107E4246BBB0A6FC308@DE02WEMBXB.internal.synopsys.com>
- <CABEDWGxL-WYz1BY7yXJ6eKULgVtKeo67XhgHZjvtm5Ka5foKiA@mail.gmail.com>
- <192e3a19-8b69-dfaf-aa5c-45c7087548cc@ti.com> <CABEDWGxLeD-K8PjkD5hPSTFGJKs2hxEaAVO+nE5eC9Nx2yw=ig@mail.gmail.com>
- <75d578c2-a98c-d1ef-1633-6dc5dc3b0913@ti.com> <CABEDWGxBxmiKjoPUSUaUBXUhKkUTXVX0U9ooRou8tcWJojb52g@mail.gmail.com>
- <6e692ff6-e64f-e651-c8ae-34d0034ad7b9@ti.com>
-In-Reply-To: <6e692ff6-e64f-e651-c8ae-34d0034ad7b9@ti.com>
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-Date:   Mon, 3 Jun 2019 10:42:34 -0700
-Message-ID: <CABEDWGx2N66L=27JY6Ywbfny78UaxENkxBTqxU37PfuQO-ZMZw@mail.gmail.com>
-Subject: Re: [PATCH] PCI: endpoint: Add DMA to Linux PCI EP Framework
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "wen.yang99@zte.com.cn" <wen.yang99@zte.com.cn>,
-        "kjlu@umn.edu" <kjlu@umn.edu>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "palmer@sifive.com" <palmer@sifive.com>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-        Vinod Koul <vkoul@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190603163636.GC12203@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 2, 2019 at 9:43 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> Hi Alan,
-> On 31/05/19 11:46 PM, Alan Mikhak wrote:
-> > On Thu, May 30, 2019 at 10:08 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> >> Hi Alan,
-> >>> Hi Kishon,
-> >>
-> >> I still have to look closer into your DMA patch but linked-list mode or single
-> >> block mode shouldn't be an user select-able option but should be determined by
-> >> the size of transfer.
-> >
-> > Please consider the following when taking a closer look at this patch.
+
+
+On 6/3/2019 12:36 PM, Jiri Olsa wrote:
+> On Thu, May 30, 2019 at 07:53:47AM -0700, kan.liang@linux.intel.com wrote:
+> 
+> SNIP
+> 
+>> +
+>>   static int perf_env__get_core(struct cpu_map *map, int idx, void *data)
+>>   {
+>>   	struct perf_env *env = data;
+>>   	int core = -1, cpu = perf_env__get_cpu(env, map, idx);
+>>   
+>>   	if (cpu != -1) {
+>> -		int socket_id = env->cpu[cpu].socket_id;
+>> -
+>>   		/*
+>> -		 * Encode socket in upper 16 bits
+>> -		 * core_id is relative to socket, and
+>> +		 * Encode socket in upper 24 bits
+> 
+> please note we use upper 8 bits for socket number,
+> the comments suggests it's 24 bits
+
+I will fix it in v3.
+
+> 
+>> +		 * encode die id in upper 16 bits
+>> +		 * core_id is relative to socket and die,
+>>   		 * we need a global id. So we combine
+>> -		 * socket + core id.
+>> +		 * socket + die id + core id
+>>   		 */
+>> -		core = (socket_id << 16) | (env->cpu[cpu].core_id & 0xffff);
+>> +		if (WARN_ONCE(env->cpu[cpu].socket_id >> 8,
+>> +		    "The socket_id number is too big. Please upgrade the perf tool.\n"))
+> 
+> hum, how's perf tool upgrade going to help in here?
+
+
+I think there is nothing we can do for current encoding, if the socket 
+number or die number is bigger than 8 bits. We have to design a new 
+encoding method, which needs to update the perf tool.
+So I use a similar expression from process_cpu_topology().
+		if (do_core_id_test && nr != (u32)-1 && nr > (u32)cpu_nr) {
+			pr_debug("socket_id number is too big."
+				 "You may need to upgrade the perf tool.\n");
+			goto free_cpu;
+		}
+
+Any suggestions for the warning message?
+
+
+
+> 
+>> +			return -1;
+>> +
+>> +		if (WARN_ONCE(env->cpu[cpu].die_id >> 8,
+>> +		    "The die_id number is too big. Please upgrade the perf tool.\n"))
+>> +			return -1;
+>> +
+>> +		core = (env->cpu[cpu].socket_id << 24) |
+>> +		       (env->cpu[cpu].die_id << 16) |
+>> +		       (env->cpu[cpu].core_id & 0xffff);
+>>   	}
+> 
+> other than comments above, the patchset looks good to me
 >
-> After seeing comments from Vinod and Arnd, it looks like the better way of
-> adding DMA support would be to register DMA within PCI endpoint controller to
-> DMA subsystem (as dmaengine) and use only dmaengine APIs in pci_epf_test.
 
-Thanks Kishon. That makes it clear where these pieces should go.
+Thanks for the review. I will send out V3 after the comments are addressed.
 
-> > In my specific use case, I need to verify that any valid block size,
-> > including a one byte transfer, can be transferred across the PCIe bus
-> > by memcpy_toio/fromio() or by DMA either as a single block or as
-> > linked-list. That is why, instead of deciding based on transfer size,
-> > this patch introduces the '-L' flag for pcitest to communicate the
-> > user intent across the PCIe bus to pci-epf-test so the endpoint can
-> > initiate the DMA transfer using a single block or in linked-list mode.
-> The -L option seems to select an internal DMA configuration which might be
-> specific to one implementation. As Gustavo already pointed, we should have only
-> generic options in pcitest. This would no longer be applicable when we move to
-> dmaengine.
-
-Single-block DMA seemed as generic as linked-list DMA and
-memcpy_toio/fromio. It remains unclear how else to communicate that
-intent to pci_epf_test each time I invoke pcitest.
-
-Regards,
-Alan
+Thanks,
+Kan
