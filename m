@@ -2,131 +2,226 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A897C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 11:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4CCEC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 11:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3002320717
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 11:27:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="Y+yacQIv"
+	by mail.kernel.org (Postfix) with ESMTP id 8AEEA20717
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 11:28:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728332AbfFCL1u (ORCPT
+        id S1728349AbfFCL2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 07:27:50 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33225 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727599AbfFCL1t (ORCPT
+        Mon, 3 Jun 2019 07:28:42 -0400
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:55115 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727599AbfFCL2m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 07:27:49 -0400
-Received: by mail-pf1-f194.google.com with SMTP id x15so650908pfq.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 04:27:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yge3w9rHbWgvobFZbFOeEgA2IlTICZ6Y6fbhlA0nby0=;
-        b=Y+yacQIvPCAiHgjTQHZU0FVoG9I2CbtFWh1hmP9jN5AY8VLFjiX+k6xtFzH0HNGzit
-         O8+HuDE7HRrRPCKpVtBjzFEjUib45UJWNrACrI5dtMn5dhL7BYlOQviAmeCacyysnT/n
-         Xvty8zwlPZ+u8dVb5gfg1+6bj4mdWhGmOj9ZV4LWheZdjBeBpOVrxXrNWXT+AbiGMNl2
-         Yu+vBF4TlQWGZi8Dq4zfPpETqkKfLGxVZb/314XRDJcA/hQwkyrur5b+hi4Dx4U2BziM
-         nnSr7BJ7sU2o9o3B6SunhLofFsrm83s3EU1wt5ZiCI98JrmP0w6INx6y8G5bvgNUiRxA
-         ZVIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yge3w9rHbWgvobFZbFOeEgA2IlTICZ6Y6fbhlA0nby0=;
-        b=iEgFTv2Z4Vqg8nqV9qkbJSlaHlC6pMtQasq/ZPVC2IX82eUcBxbFylWaYsW1lFOtoY
-         yhdAe7yDA09VNjRiG4rLPzhsNVR7BQLA2zqRpq9hmsO1qOH91xd/yHtp/vA16CMkw4tz
-         rFAHAx38opUgt2/DegT0bXQoAbiauhj9/u/1Cxg+IZSqSiPmiv4qu2qqXIZgRS2wLx72
-         u/Hp045rOf8B81V9SUx/WUty9x2fSchC8VLhWqxLoM1mCoq71ckUL0W9PmBPUTLOqo/n
-         SIod5Z7g5niW4T0dlYRtdWIBTr6AOgNgwxHegl5OjQaxQAG/OWnsPQpoIwGk78Gu7XOI
-         E4vQ==
-X-Gm-Message-State: APjAAAVw/f1RLVcZcbqjZtxAY25jVTjAktxy5OT9txMDejZRs8CVkrYE
-        VaBMZnfRdEKzrJxvMzLJydaq3EOTMp0N1jxbRA25tg==
-X-Google-Smtp-Source: APXvYqzSN6KszB00jgSY5jsJHGaLYRRvYWrgtbKYUHrE3f1JWTjJzTyKXde3mFVwC5OO8+m15yXDYPFToKa7arJ98wc=
-X-Received: by 2002:a62:4d03:: with SMTP id a3mr30832487pfb.2.1559561268802;
- Mon, 03 Jun 2019 04:27:48 -0700 (PDT)
+        Mon, 3 Jun 2019 07:28:42 -0400
+Received: from tschai.fritz.box ([46.9.252.75])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id Xl8lhL0iUsDWyXl8ohsnTI; Mon, 03 Jun 2019 13:28:39 +0200
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+To:     linux-media@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, linux-kernel@vger.kernel.org,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Tiffany Lin <tiffany.lin@mediatek.com>,
+        Pawel Osciak <posciak@chromium.org>
+Subject: [PATCHv4 0/2] Document memory-to-memory video codec interfaces
+Date:   Mon,  3 Jun 2019 13:28:33 +0200
+Message-Id: <20190603112835.19661-1-hverkuil-cisco@xs4all.nl>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190506185207.31069-1-tmurphy@arista.com> <20190603105158.GL12745@8bytes.org>
-In-Reply-To: <20190603105158.GL12745@8bytes.org>
-From:   Tom Murphy <tmurphy@arista.com>
-Date:   Mon, 3 Jun 2019 12:27:37 +0100
-Message-ID: <CAPL0++72dekt=re1=sTWpCJtMX=mUOc3Jcq=9d1sr1QO25_zFA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] iommu/amd: Convert the AMD iommu driver to the
- dma-iommu api
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     iommu@lists.linux-foundation.org, Tom Murphy <murphyt7@tcd.ie>,
-        Will Deacon <will.deacon@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfEPTyoh1yAThPyp6qVnqkcIDaqQrh4QjHGR9uEnzFOnNjdJUCXMk8OkYdaSMP7/O9ZfRzopWZedWy95AWlMXzPm7YpGiriybTlghkQZclQmRgV0/mum8
+ RTBaX4t3K6vsqVmU1rQtRFDbf7JMpfYOmnc+HDvVMf/LCpMttppk3VGuJl5rBx6ASSab37SGb6pKdz/VoZlp4zrflyoP5gf6sADY26TBb7ycM2SeShd5WrT4
+ IyxS8fhs5OhECBDqzP7BrDA2HLK75o3aO+uVDXeJciPedF7JjwmWCOyfbDvhmVV/wA9kmTLG6HHImn0XwmGFlKSK+k9WVauQ1HnKFPRURlGc4NPbqM2Ct+YG
+ kEn1nMH8lOtbU1fB5gNq8TN9pZkgocZ2E+Xxzs0T9D7f+DX3WkvAslnrIrzzwm/2P/K+z5cacXhWumSDQNfpgYfR5nUkWqbCIZFPoEzMN1nnxohhnZeE38bf
+ m177luwsffXgtExo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 3, 2019 at 11:52 AM Joerg Roedel <joro@8bytes.org> wrote:
->
-> Hi Tom,
->
-> On Mon, May 06, 2019 at 07:52:02PM +0100, Tom Murphy wrote:
-> > Convert the AMD iommu driver to the dma-iommu api. Remove the iova
-> > handling and reserve region code from the AMD iommu driver.
->
-> Thank you for your work on this! I appreciate that much, but I am not
-> sure we are ready to make that move for the AMD and Intel IOMMU drivers
-> yet.
->
-> My main concern right now is that these changes will add a per-page
-> table lock into the fast-path for dma-mapping operations. There has been
-> much work in the past to remove all locking from these code-paths and
-> make it scalable on x86.
+Since Thomasz was very busy with other things, I've taken over this
+patch series. This v4 includes his draft changes and additional changes
+from me.
 
-Where is the locking introduced? intel doesn't use a lock in it's
-iommu_map function:
-https://github.com/torvalds/linux/blob/f2c7c76c5d0a443053e94adb9f0918fa2fb85c3a/drivers/iommu/intel-iommu.c#L5302
-because it cleverly uses cmpxchg64 to avoid using locks:
-https://github.com/torvalds/linux/blob/f2c7c76c5d0a443053e94adb9f0918fa2fb85c3a/drivers/iommu/intel-iommu.c#L900
-And the locking in AMD's iommu_map function can be removed (and i have
-removed it in my patch set) because it does that same thing as intel:
-https://github.com/torvalds/linux/blob/f2c7c76c5d0a443053e94adb9f0918fa2fb85c3a/drivers/iommu/amd_iommu.c#L1486
+This series attempts to add the documentation of what was discussed
+during Media Workshops at LinuxCon Europe 2012 in Barcelona and then
+later Embedded Linux Conference Europe 2014 in Düsseldorf and then
+eventually written down by Pawel Osciak and tweaked a bit by Chrome OS
+video team (but mostly in a cosmetic way or making the document more
+precise), during the several years of Chrome OS using the APIs in
+production.
 
-Is there something I'm missing?
+Note that most, if not all, of the API is already implemented in
+existing mainline drivers, such as s5p-mfc or mtk-vcodec. Intention of
+this series is just to formalize what we already have.
 
->
-> The dma-ops implementations in the x86 IOMMU drivers have the benefit
-> that they can call their page-table manipulation functions directly and
-> without locks, because they can make the necessary assumptions. The
-> IOMMU-API mapping/unmapping path can't make these assumptions because it
-> is also used for non-DMA-API use-cases.
->
-> So before we can move the AMD and Intel drivers to the generic DMA-API
-> implementation we need to solve this problem to not introduce new
-> scalability regressions.
->
-> Regards,
->
->         Joerg
->
+Thanks everyone for the huge amount of useful comments to previous
+versions of this series. Much of the credits should go to Pawel Osciak
+too, for writing most of the original text of the initial RFC.
+
+This v4 incorporates all known comments (let me know if I missed
+something!) and should be complete for the decoder.
+
+For the encoder there are two remaining TODOs for the API:
+
+1) Setting the frame rate so bitrate control can make sense, since
+   they need to know this information.
+
+   Suggested solution: require support for ENUM_FRAMEINTERVALS for the
+   coded pixelformats and S_PARM(OUTPUT). Open question: some drivers
+   (mediatek, hva, coda) require S_PARM(OUTPUT), some (venus) allow both
+   S_PARM(CAPTURE) and S_PARM(OUTPUT). I am inclined to allow both since
+   this is not a CAPTURE vs OUTPUT thing, it is global to both queues.
+
+2) Interactions between OUTPUT and CAPTURE formats.
+
+   The main problem is what to do if the capture sizeimage is too small
+   for the OUTPUT resolution when streaming starts.
+
+   Proposal: width and height of S_FMT(OUTPUT) are used to
+   calculate a minimum sizeimage (app may request more). This is
+   driver-specific.
+
+   V4L2_FMT_FLAG_FIXED_RESOLUTION is always set for codec formats
+   for the encoder (i.e. we don't support mid-stream resolution
+   changes for now) and V4L2_EVENT_SOURCE_CHANGE is not
+   supported. See https://patchwork.linuxtv.org/patch/56478/ for
+   the patch adding this flag.
+
+   Of course, if we start to support mid-stream resolution
+   changes (or other changes that require a source change event),
+   then this flag should be dropped by the encoder driver and
+   documentation on how to handle the source change event should
+   be documented in the encoder spec. I prefer to postpone this
+   until we have an encoder than can actually do mid-stream
+   resolution changes.
+
+   If sizeimage of the OUTPUT is too small for the CAPTURE
+   resolution and V4L2_EVENT_SOURCE_CHANGE is not supported,
+   then the second STREAMON (either CAPTURE or OUTPUT) will
+   return -ENOMEM since there is not enough memory to do the
+   encode.
+
+   If V4L2_FMT_FLAG_FIXED_RESOLUTION is set (i.e. that should
+   be the case for all current encoders), then any bitrate controls
+   will be limited in range to what the current state (CAPTURE and
+   OUTPUT formats and frame rate) supports.
+
+Comments regarding these two encoder proposals are welcome!
+
+Regards,
+
+	Hans
+
+Changes since v3:
+
+- Lots of stylistic fixes and fixing typos/grammar/etc.
+
+Decoder:
+
+- width/height for S_FMT(OUTPUT):
+
+  Expects that the output width and height is always a valid
+  resolution (i.e. never 0x0), and G/S/TRY_FMT and REQBUFS will use that
+  instead of returning an error. Note that this resolution is a placeholder
+  until the actual resolution is parsed from the stream.
+
+- Dropped step 3 (Query the minimum number of buffers required for the CAPTURE
+  queue via VIDIOC_G_CTRL().) in the Capture Setup section. It seems to be
+  a left-over from earlier versions. The same information is also in Step 10,
+  so no need to have this in two places.
+
+- Added step 5 in the Capture Setup section: set COMPOSE rectangle if needed.
+
+- VIDIO_DECODER_CMD: document EBUSY return while draining the queue.
+
+Encoder:
+
+- width/height for S_FMT(CAPTURE): The width/height for the CAPTURE format
+  are marked as read-only and are based on the encoders current state such
+  as the OUTPUT format.
+
+- Drop TGT_COMPOSE support in the encoder: there are currently
+  no encoders that can do composing/scaling.
+
+- Document corner cases in the Drain sequence
+
+- Document error handling.
+
+- VIDIO_ENCODER_CMD: document EBUSY return while draining the queue.
+
+Changes since v2:
+(https://lore.kernel.org/patchwork/cover/1002474/)
+Decoder:
+ - Specified that the initial source change event is signaled
+   regardless of whether the client-set format matches the
+   stream format.
+ - Dropped V4L2_CID_MIN_BUFFERS_FOR_OUTPUT since it's meaningless
+   for the bitstream input buffers of decoders.
+ - Explicitly stated that VIDIOC_REQBUFS is not allowed on CAPTURE
+   if the stream information is not available.
+ - Described decode error handling.
+ - Mentioned that timestamps can be observed after a seek to
+   determine whether the CAPTURE buffers originated from before
+   or after the seek.
+ - Explicitly stated that after a pair of V4L2_DEC_CMD_STOP and
+   V4L2_DEC_CMD_START, the decoder is not reset and preserves
+   all the state.
+
+Encoder:
+ - Specified that width and height of CAPTURE format are ignored
+   and always zero.
+ - Explicitly noted the common use case for the CROP target with
+   macroblock-unaligned video resolutions.
+ - Added a reference to Request API.
+ - Dropped V4L2_CID_MIN_BUFFERS_FOR_CAPTURE since it's meaningless
+   for the bitstream output buffers of encoders.
+ - Explicitly stated that after a pair of V4L2_ENC_CMD_STOP and
+   V4L2_ENC_CMD_START, the encoder is not reset and preserves
+   all the state.
+
+General:
+ - Dropped format enumeration from "Initialization", since it's already
+   a part of "Querying capabilities".
+ - Many spelling, grammar, stylistic, etc. changes.
+ - Changed the style of note blocks.
+ - Rebased onto Hans' documentation cleanup series.
+   (https://patchwork.kernel.org/cover/10775407/
+    https://patchwork.kernel.org/patch/10776737/)
+ - Moved the interfaces under the "Video Memory-To-Memory Interface"
+   section.
+
+For changes since v1 see the v2:
+https://lore.kernel.org/patchwork/cover/1002474/
+
+For changes since RFC see the v1:
+https://patchwork.kernel.org/cover/10542207/
+
+Tomasz Figa (2):
+  media: docs-rst: Document memory-to-memory video decoder interface
+  media: docs-rst: Document memory-to-memory video encoder interface
+
+ Documentation/media/uapi/v4l/dev-decoder.rst  | 1084 +++++++++++++++++
+ Documentation/media/uapi/v4l/dev-encoder.rst  |  608 +++++++++
+ Documentation/media/uapi/v4l/dev-mem2mem.rst  |    9 +-
+ Documentation/media/uapi/v4l/pixfmt-v4l2.rst  |   10 +
+ Documentation/media/uapi/v4l/v4l2.rst         |   12 +-
+ .../media/uapi/v4l/vidioc-decoder-cmd.rst     |   41 +-
+ .../media/uapi/v4l/vidioc-encoder-cmd.rst     |   51 +-
+ 7 files changed, 1779 insertions(+), 36 deletions(-)
+ create mode 100644 Documentation/media/uapi/v4l/dev-decoder.rst
+ create mode 100644 Documentation/media/uapi/v4l/dev-encoder.rst
+
+-- 
+2.20.1
+
