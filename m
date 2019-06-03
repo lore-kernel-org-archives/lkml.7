@@ -2,103 +2,243 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51793C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C08C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:27:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24849280BE
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3772A25285
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:27:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbfFCM0M (ORCPT
+        id S1727228AbfFCM1e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 08:26:12 -0400
-Received: from static.187.34.201.195.clients.your-server.de ([195.201.34.187]:51190
-        "EHLO sysam.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727008AbfFCM0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 08:26:11 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by sysam.it (Postfix) with ESMTP id EAFA53FE8A;
-        Mon,  3 Jun 2019 14:26:09 +0200 (CEST)
-Received: from sysam.it ([127.0.0.1])
-        by localhost (mail.sysam.it [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 4GK9oelX-c2g; Mon,  3 Jun 2019 14:26:09 +0200 (CEST)
-Received: from jerusalem (host64-211-dynamic.48-82-r.retail.telecomitalia.it [82.48.211.64])
-        by sysam.it (Postfix) with ESMTPSA id 708F83ED96;
-        Mon,  3 Jun 2019 14:26:09 +0200 (CEST)
-Date:   Mon, 3 Jun 2019 14:26:08 +0200
-From:   Angelo Dureghello <angelo@sysam.it>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Greg Ungerer <gerg@linux-m68k.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-m68k@lists.linux-m68k.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] m68k: io: Fix io{read,write}{16,32}be() for Coldfire
- peripherals
-Message-ID: <20190603122608.GA21347@jerusalem>
-References: <20190429081937.7544-1-geert@linux-m68k.org>
+        Mon, 3 Jun 2019 08:27:34 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:50128 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726794AbfFCM1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 08:27:33 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1205B15A2;
+        Mon,  3 Jun 2019 05:27:33 -0700 (PDT)
+Received: from darkstar (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6BE4A3F5AF;
+        Mon,  3 Jun 2019 05:27:28 -0700 (PDT)
+Date:   Mon, 3 Jun 2019 13:27:25 +0100
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH v9 12/16] sched/core: uclamp: Extend CPU's cgroup
+ controller
+Message-ID: <20190603122725.GB19426@darkstar>
+References: <20190515094459.10317-1-patrick.bellasi@arm.com>
+ <20190515094459.10317-13-patrick.bellasi@arm.com>
+ <20190531153545.GE374014@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190429081937.7544-1-geert@linux-m68k.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190531153545.GE374014@devbig004.ftw2.facebook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg (and all),
+On 31-May 08:35, Tejun Heo wrote:
 
-couldn't seen any follow up on this patch. I tested it and at least
-for mcf5441x it works properly and solves all issues.
+[...]
 
-Do you think it may be accepted as an initial fix ?
+> > These attributes:
+> > 
+> > a) are available only for non-root nodes, both on default and legacy
+> >    hierarchies, while system wide clamps are defined by a generic
+> >    interface which does not depends on cgroups. This system wide
+> >    interface enforces constraints on tasks in the root node.
+> 
+> I'd much prefer if they weren't entangled this way.  The system wide
+> limits should work the same regardless of cgroup's existence.  cgroup
+> can put further restriction on top but mere creation of cgroups with
+> cpu controller enabled shouldn't take them out of the system-wide
+> limits.
 
-Regards,
-Angelo
+That's correct and what you describe matches, at least on its
+intents, the current implementation provided in:
 
-On Mon, Apr 29, 2019 at 10:19:37AM +0200, Geert Uytterhoeven wrote:
-> The generic definitions of mmio_{read,write}{16,32}be() in lib/iomap.c
-> assume that the {read,write}[wl]() I/O accessors always use little
-> endian accesses, and swap the result.
+   [PATCH v9 14/16] sched/core: uclamp: Propagate system defaults to root group
+   https://lore.kernel.org/lkml/20190515094459.10317-15-patrick.bellasi@arm.com/
+
+System clamps always work the same way, independently from cgroups:
+they define the upper bound for both min and max clamps.
+
+When cgroups are not available, tasks specific clamps are always
+capped by system clamps.
+
+When cgroups are available, the root task group clamps are capped by
+the system clamps, which affects its "effective" clamps and propagate
+them down the hierarchy to child's "effective" clamps.
+That's done in:
+
+   [PATCH v9 13/16] sched/core: uclamp: Propagate parent clamps
+   https://lore.kernel.org/lkml/20190515094459.10317-14-patrick.bellasi@arm.com/
+
+
+Example 1
+---------
+
+Here is an example of system and groups clamps aggregation:
+
+        	        min                        max
+system defaults         400                        600
+
+cg_name        	        min       min.effective	   max	     max.effective
+ /uclamp               1024       400              500       500
+ /uclamp/app              512       400	             512       500
+ /uclamp/app/pid_smalls	    100	      100              200       200
+ /uclamp/app/pid_bigs       500	      400              700       500
+
+
+The ".effective" clamps are used to define the actual clamp value to
+apply to tasks, according to the aggregation rules defined in:
+
+   [PATCH v9 15/16] sched/core: uclamp: Use TG's clamps to restrict TASK's clamps
+   https://lore.kernel.org/lkml/20190515094459.10317-16-patrick.bellasi@arm.com/
+
+All the above, to me it means that:
+ - cgroups are always capped by system clamps
+ - cgroups can further restrict system clamps
+
+Does that match with your view?
+
+> > b) enforce effective constraints at each level of the hierarchy which
+> >    are a restriction of the group requests considering its parent's
+> >    effective constraints. Root group effective constraints are defined
+> >    by the system wide interface.
+> >    This mechanism allows each (non-root) level of the hierarchy to:
+> >    - request whatever clamp values it would like to get
+> >    - effectively get only up to the maximum amount allowed by its parent
 > 
-> However, the Coldfire versions of the {read,write}[wl]() I/O accessors are
-> special, in that they use native big endian instead of little endian for
-> accesses to the on-SoC peripheral block, thus violating the assumption.
+> I'll come back to this later.
 > 
-> Fix this by providing our own variants, using the raw accessors,
-> reinstating the old behavior.  This is fine on m68k, as no special
-> barriers are needed, and also avoids swapping data twice.
+> > c) have higher priority than task-specific clamps, defined via
+> >    sched_setattr(), thus allowing to control and restrict task requests
 > 
-> Reported-by: Angelo Dureghello <angelo@sysam.it>
-> Fixes: aecc787c06f4300f ("iomap: Use non-raw io functions for io{read|write}XXbe")
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> ---
-> This can be reverted later, after this oddity of the Coldfire I/O
-> support has been fixed, and drivers have been updated.
-> ---
->  arch/m68k/include/asm/io.h | 6 ++++++
->  1 file changed, 6 insertions(+)
+> This sounds good.
 > 
-> diff --git a/arch/m68k/include/asm/io.h b/arch/m68k/include/asm/io.h
-> index aabe6420ead2a599..d47e7384681ab1cd 100644
-> --- a/arch/m68k/include/asm/io.h
-> +++ b/arch/m68k/include/asm/io.h
-> @@ -8,6 +8,12 @@
->  #include <asm/io_mm.h>
->  #endif
->  
-> +#define mmio_read16be(addr)		__raw_readw(addr)
-> +#define mmio_read32be(addr)		__raw_readl(addr)
-> +
-> +#define mmio_write16be(val, port)	__raw_writew((val), (port))
-> +#define mmio_write32be(val, port)	__raw_writel((val), (port))
-> +
->  #include <asm-generic/io.h>
->  
->  #endif /* _M68K_IO_H */
-> -- 
-> 2.17.1
+> > Add two new attributes to the cpu controller to collect "requested"
+> > clamp values. Allow that at each non-root level of the hierarchy.
+> > Validate local consistency by enforcing util.min < util.max.
+> > Keep it simple by do not caring now about "effective" values computation
+> > and propagation along the hierarchy.
 > 
+> So, the followings are what we're doing for hierarchical protection
+> and limit propgations.
+> 
+> * Limits (high / max) default to max.  Protections (low / min) 0.  A
+>   new cgroup by default doesn't constrain itself further and doesn't
+>   have any protection.
+
+Example 2
+---------
+
+Let say we have:
+
+  /tg1:
+        util_min=200 (as a protection)
+        util_max=800 (as a limit)
+
+the moment we create a subgroup /tg1/tg11, in v9 it is initialized
+with the same limits _and protections_ of its father:
+
+  /tg1/tg11:
+        util_min=200 (protection inherited from /tg1)
+        util_max=800 (limit inherited from /tg1)
+
+Do you mean that we should have instead:
+
+  /tg1/tg11:
+        util_min=0   (no protection by default at creation time)
+        util_max=800 (limit inherited from /tg1)
+
+
+i.e. we need to reset the protection of a newly created subgroup?
+
+
+> * A limit defines the upper ceiling for the subtree.  If an ancestor
+>   has a limit of X, none of its descendants can have more than X.
+
+That's correct, however we distinguish between "requested" and
+"effective" values.
+
+
+Example 3
+---------
+
+We can have:
+
+cg_name        	        max       max.effective
+ /uclamp/app            400                 400
+ /uclamp/app/pid_bigs     500	              400
+
+
+Which means that a subgroup can "request" a limit (max=500) higher
+then its father (max=400), while still getting only up to what its
+father allows (max.effective = 400).
+
+
+Example 4
+---------
+
+Tracking the actual requested limit (max=500) it's useful to enforce
+it once the father limit should be relaxed, for example we will have:
+
+cg_name        	        max       max.effective
+ /uclamp/app            600                 600
+ /uclamp/app/pid_bigs     500	              500
+
+where a subgroup gets not more than what it has been configured for.
+
+This is the logic implemented by cpu_util_update_eff() in:
+
+   [PATCH v9 13/16] sched/core: uclamp: Propagate parent clamps
+   https://lore.kernel.org/lkml/20190515094459.10317-14-patrick.bellasi@arm.com/
+
+
+> * A protection defines the upper ceiling of protections for the
+>   subtree.  If an andester has a protection of X, none of its
+>   descendants can have more protection than X.
+
+Right, that's the current behavior in v9.
+
+> Note that there's no way for an ancestor to enforce protection its
+> descendants.  It can only allow them to claim some.  This is
+> intentional as the other end of the spectrum is either descendants
+> losing the ability to further distribute protections as they see fit.
+
+Ok, that means I need to update in v10 the initialization of subgroups
+min clamps to be none by default as discussed in the above Example 2,
+right?
+
+[...]
+
+Cheers,
+Patrick
+
+-- 
+#include <best/regards.h>
+
+Patrick Bellasi
