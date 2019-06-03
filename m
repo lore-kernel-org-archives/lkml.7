@@ -2,222 +2,152 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73522C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C37C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3704927DCA
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:50:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14F4726852
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:50:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="bvI9XwuW"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="qvEmW388"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbfFCIu2 (ORCPT
+        id S1727826AbfFCIut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 04:50:28 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:29804 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbfFCIu1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 04:50:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1559551827; x=1591087827;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=MIAH61ZDoSTIi8UI2nEz3ddvY2H2UI9t9luM6KSxPSM=;
-  b=bvI9XwuWtJ8mGVBhNjtdMlLgv1q78WRWn/tDESnNFLaMQEzgf/JFE81G
-   r9tyY2tGN7Zdf8zMhtICZVgA4uIVFDHbHKOhp0QzTDlo7QfnT/O4KhUAC
-   Nx76IHw0+NbjzA+glcY1TFIHhuvBkFd4m/r078eLGJHLWc0UzFimTTBfh
-   LJSyfhvun2/ThVrwrWRj+vbB07TfWIcndg284xV5MGS4Zm91Netd13ZQf
-   kD2Oym7wa4uKkLL5s9vgCtirqfuyEm+pGTBHKmGsjcSvDgbV2GtQiViy2
-   YC1EhyUmqB7JIoPmE1DVN1u/mQXoDQFrBp76RIGizMfBT+l4+YACFd0OQ
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.60,546,1549900800"; 
-   d="scan'208";a="111325541"
-Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 03 Jun 2019 16:50:27 +0800
-IronPort-SDR: RHUdCOpaCuK+GnHCXgTSr+fTX96tq1gDqW858vt+6S/6Vg4Obk17Ehme7tAduqoFHW+LFZsxKm
- LVCpcXxVW5loEcWHvNSL4cLsFs0VLwOajBZHxHcFwZ7xgIA2NHfYEwzNFju669GkY/f0o8FLdi
- JKpkSyW2j9MH22jq47Chuoo1CnX6R/6Lisqkk44Q9/ngIquZOFY5xwQVyXdG4SkkK2nc+dHK+v
- Gj5m5INYVOEIMB9r/3235DfaMISM7WOs41j5NVuApmRcDUZ12p2jeUTwu0xSOpY5Q+snJuYuqy
- w9mItNJdLH5Rp0a5pZ8CHKJy
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP; 03 Jun 2019 01:27:50 -0700
-IronPort-SDR: BFoXFGYP9juvqbXuMHbRgJh6jvpVhIbp0yQpP2IxiYAHVF0SyJtFKGxa+lYptSpbrh8ATdj/2F
- Uu3ojGhtuBMTdltS2t/r7PY7QW0py++iuHKLIhIzOeyED/NrJJByCIU8tpsacS6wyksSX5u1Nk
- UcjV6Voz5PGI1p8paSbgIZxpp5QgWd8PZU6LjGi43+EQlRDSbV3Kx5/qHa6uajicArdYbArPRi
- v4k7q/8pXcgz6iJXQmenVN0WYlE/ViGNZ3ns1s8Ag8xhwY1EnjEfCUUAFakjmQg99MqTlkE+JW
- UxI=
-Received: from unknown (HELO [10.225.104.42]) ([10.225.104.42])
-  by uls-op-cesaip01.wdc.com with ESMTP; 03 Jun 2019 01:50:26 -0700
-Subject: Re: [PATCH v6 0/7] Unify CPU topology across ARM & RISC-V
-To:     Jeremy Linton <jeremy.linton@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <anup@brainfault.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Otto Sabart <ottosabart@seberm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Mon, 3 Jun 2019 04:50:49 -0400
+Received: from mail-eopbgr1400091.outbound.protection.outlook.com ([40.107.140.91]:64832
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726055AbfFCIus (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 04:50:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9rZRHyp3jPSzd0GL9Ol7rWOVF7X9Mtj8KnP7Eo/m+xg=;
+ b=qvEmW3889jSmNokzcmCfs9nuEBgwGjXD6eH0cFkNziddk88dnrgslmwcv1+b26HeOU9j/u3bjJq+9ctBvJ7Onlz9CFVmNKsR2C77rV5RYcbr94AxQY1E+2CtLVV1+VKOFBD14/XjkttgilEA435sKoSG8e8OwVkOzyTL7093trI=
+Received: from TY1PR01MB1769.jpnprd01.prod.outlook.com (52.133.160.138) by
+ TY1PR01MB1739.jpnprd01.prod.outlook.com (52.133.163.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.17; Mon, 3 Jun 2019 08:50:05 +0000
+Received: from TY1PR01MB1769.jpnprd01.prod.outlook.com
+ ([fe80::14c:9d37:bcf0:1752]) by TY1PR01MB1769.jpnprd01.prod.outlook.com
+ ([fe80::14c:9d37:bcf0:1752%3]) with mapi id 15.20.1943.018; Mon, 3 Jun 2019
+ 08:50:05 +0000
+From:   Phil Edworthy <phil.edworthy@renesas.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Gareth Williams <gareth.williams.jx@renesas.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190529211340.17087-1-atish.patra@wdc.com>
- <1b61e699-79c7-bbfd-c7ed-d51d321ae7ef@arm.com>
-From:   Atish Patra <atish.patra@wdc.com>
-Message-ID: <ed23bed6-91bf-f132-1b8f-03b02c6dd28a@wdc.com>
-Date:   Mon, 3 Jun 2019 01:50:19 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <1b61e699-79c7-bbfd-c7ed-d51d321ae7ef@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3 1/2] dt-bindings: clock: renesas,r9a06g032-sysctrl:
+ Document power Domains
+Thread-Topic: [PATCH v3 1/2] dt-bindings: clock: renesas,r9a06g032-sysctrl:
+ Document power Domains
+Thread-Index: AQHVEkXZL3OHYFrWsEu2221+eWtk7qaAKXeAgAl4K4CAAAlwAIAAARBQ
+Date:   Mon, 3 Jun 2019 08:50:05 +0000
+Message-ID: <TY1PR01MB17696938CCE90983748444E2F5140@TY1PR01MB1769.jpnprd01.prod.outlook.com>
+References: <1558711904-27278-1-git-send-email-gareth.williams.jx@renesas.com>
+ <1558711904-27278-2-git-send-email-gareth.williams.jx@renesas.com>
+ <CAMuHMdV2jmY2u1-Z6cRR1OQcfW8U0HM_ac-xn1gO9nPf41iD+A@mail.gmail.com>
+ <TY1PR01MB1769FB150E0258A8AC76CDB5F5140@TY1PR01MB1769.jpnprd01.prod.outlook.com>
+ <CAMuHMdXiBz6L83sBHXOg=zc0zo4ff37SbLOZc5NwgiTLVG-nTw@mail.gmail.com>
+In-Reply-To: <CAMuHMdXiBz6L83sBHXOg=zc0zo4ff37SbLOZc5NwgiTLVG-nTw@mail.gmail.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=phil.edworthy@renesas.com; 
+x-originating-ip: [193.141.220.21]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 70f36858-83cd-44a4-0e32-08d6e800797e
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:TY1PR01MB1739;
+x-ms-traffictypediagnostic: TY1PR01MB1739:
+x-microsoft-antispam-prvs: <TY1PR01MB17396E7741872962F8EDABD1F5140@TY1PR01MB1739.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2331;
+x-forefront-prvs: 0057EE387C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(396003)(136003)(376002)(346002)(366004)(189003)(199004)(73956011)(76176011)(66946007)(76116006)(5660300002)(66476007)(66556008)(74316002)(99286004)(26005)(53546011)(8936002)(6506007)(86362001)(229853002)(102836004)(316002)(25786009)(52536014)(446003)(11346002)(7696005)(486006)(81156014)(6246003)(44832011)(2906002)(6916009)(305945005)(81166006)(478600001)(14444005)(256004)(68736007)(66066001)(33656002)(9686003)(14454004)(4326008)(6436002)(53936002)(71190400001)(71200400001)(66446008)(3846002)(8676002)(6116002)(7736002)(54906003)(476003)(186003)(55016002)(64756008)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1739;H:TY1PR01MB1769.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 6DDFjwLNRKFMbeGseDKVujBeSkW4Xw469VG4Ol21co8Qrq8cVWoNzoBtGsJCwTo+Z/6gVA+LqZVF3LLFnfxXsDF5IpdwHtdt7ubZtJtEyNU7kyNHEc8eAUiHl6vnEz6XQzt7UFQ9vkxTwjU4rgsEMw9sl7EJHpgrX2Msnozt/Vg0QHwKzXzi5Lt8QPfUZJ2zwgMSEXSlpG84APnfQZAuT8aHBOwa61l0tYEdJmCAn+Y48uga9W8hbEkYdu8bnrMwQ9rpj8JNKLI3o/CCGDebqu5MDSfh21JY72gI5x5n8Ynffir2HU3QPjWl3l/NTqICyzSs/4KNial1dI4TGQJ1ZDDEXvQ2c3NOrb4XKtWh1+C3zpxLEsIXJUrq7hYXYPMJb78unigVUDdmVooZV+0FHvHXxrn5lCJzP5Orp1G/aW0=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 70f36858-83cd-44a4-0e32-08d6e800797e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2019 08:50:05.3213
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: phil.edworthy@renesas.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1739
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/30/19 2:12 PM, Jeremy Linton wrote:
-> Hi,
-> 
-> On 5/29/19 4:13 PM, Atish Patra wrote:
->> The cpu-map DT entry in ARM can describe the CPU topology in much better
->> way compared to other existing approaches. RISC-V can easily adopt this
->> binding to represent its own CPU topology. Thus, both cpu-map DT
->> binding and topology parsing code can be moved to a common location so
->> that RISC-V or any other architecture can leverage that.
->>
->> The relevant discussion regarding unifying cpu topology can be found in
->> [1].
->>
->> arch_topology seems to be a perfect place to move the common code. I
->> have not introduced any significant functional changes in the moved code.
->> The only downside in this approach is that the capacity code will be
->> executed for RISC-V as well. But, it will exit immediately after not
->> able to find the appropriate DT node. If the overhead is considered too
->> much, we can always compile out capacity related functions under a
->> different config for the architectures that do not support them.
->>
->> There was an opportunity to unify topology data structure for ARM32 done
->> by patch 3/4. But, I refrained from making any other changes as I am not
->> very well versed with original intention for some functions that
->> are present in arch_topology.c. I hope this patch series can be served
->> as a baseline for such changes in the future.
->>
->> The patches have been tested for RISC-V and compile tested for ARM64,
->> ARM32 & x86.
->>
-> 
-> I applied these to 5.2rc2, along with my PPTT/MT change and verified the
-> system & scheduler topology/etc on DAWN and ThunderX2 using ACPI on
-> arm64. They appear to be working correctly.
-> 
-> so for the series,
-> Tested-by: Jeremy Linton <jeremy.linton@arm.com>
-> 
-> The code itself looks fine to me as well:
-> 
-> Reviewed-by: Jeremy Linton <jeremy.linton@arm.com>
-> 
-Thank you the review and testing on arm64 server.
-
-> Thanks!
-> 
->> The socket change[2] is also now part of this series.
->>
->> [1] https://lkml.org/lkml/2018/11/6/19
->> [2] https://lkml.org/lkml/2018/11/7/918
->>
->> QEMU changes for RISC-V topology are available at
->>
->> https://github.com/atishp04/qemu/tree/riscv_topology_dt
->>
->> HiFive Unleashed DT with topology node is available here.
->> https://github.com/atishp04/opensbi/tree/HiFive_unleashed_topology
->>
->> It can be verified with OpenSBI with following additional compile time
->> option.
->>
->> FW_PAYLOAD_FDT="unleashed_topology.dtb"
->>
->> Changes from v5->v6
->> 1. Added two more patches from Sudeep about maintainership of arch_topology.c
->>      and Kconfig update.
->> 2. Added Tested-by & Reviewed-by
->> 3. Fixed a nit (reordering of variables)
->>
->> Changes from v4-v5
->> 1. Removed the arch_topology.h header inclusion from topology.c and arch_topology.c
->> file. Added it in linux/topology.h.
->> 2. core_id is set to -1 upon reset. Otherwise, ARM topology store function does not
->> work.
->>
->> Changes from v3->v4
->> 1. Get rid of ARM32 specific information in topology structure.
->> 2. Remove redundant functions from ARM32 and use common code instead.
->>
->> Changes from v2->v3
->> 1. Cover letter update with experiment DT for topology changes.
->> 2. Added the patch for [2].
->>
->> Changes from v1->v2
->> 1. ARM32 can now use the common code as well.
->>
->> Atish Patra (4):
->> dt-binding: cpu-topology: Move cpu-map to a common binding.
->> cpu-topology: Move cpu topology code to common code.
->> arm: Use common cpu_topology structure and functions.
->> RISC-V: Parse cpu topology during boot.
->>
->> Sudeep Holla (3):
->> Documentation: DT: arm: add support for sockets defining package
->> boundaries
->> base: arch_topology: update Kconfig help description
->> MAINTAINERS: Add an entry for generic architecture topology
->>
->> .../topology.txt => cpu/cpu-topology.txt}     | 134 ++++++--
->> MAINTAINERS                                   |   7 +
->> arch/arm/include/asm/topology.h               |  20 --
->> arch/arm/kernel/topology.c                    |  60 +---
->> arch/arm64/include/asm/topology.h             |  23 --
->> arch/arm64/kernel/topology.c                  | 303 +-----------------
->> arch/riscv/Kconfig                            |   1 +
->> arch/riscv/kernel/smpboot.c                   |   3 +
->> drivers/base/Kconfig                          |   2 +-
->> drivers/base/arch_topology.c                  | 298 +++++++++++++++++
->> include/linux/arch_topology.h                 |  26 ++
->> include/linux/topology.h                      |   1 +
->> 12 files changed, 452 insertions(+), 426 deletions(-)
->> rename Documentation/devicetree/bindings/{arm/topology.txt => cpu/cpu-topology.txt} (66%)
->>
->> --
->> 2.21.0
->>
-> 
-> 
-
-
--- 
-Regards,
-Atish
+SGkgR2VlcnQsDQoNCk9uIDAzIEp1bmUgMjAxOSAwOTozOSBHZWVydCBVeXR0ZXJob2V2ZW4gd3Jv
+dGU6DQo+IE9uIE1vbiwgSnVuIDMsIDIwMTkgYXQgMTA6MjkgQU0gUGhpbCBFZHdvcnRoeSB3cm90
+ZToNCj4gPiBPbiAyOCBNYXkgMjAxOSAwODoyOSBHZWVydCBVeXR0ZXJob2V2ZW4gd3JvdGU6DQo+
+ID4gPiBPbiBGcmksIE1heSAyNCwgMjAxOSBhdCA1OjMyIFBNIEdhcmV0aCBXaWxsaWFtcyB3cm90
+ZToNCj4gPiA+ID4gVGhlIGRyaXZlciBpcyBnYWluaW5nIHBvd2VyIGRvbWFpbiBzdXBwb3J0LCBz
+byBhZGQgdGhlIG5ldyBwcm9wZXJ0eSB0bw0KPiA+ID4gPiB0aGUgRFQgYmluZGluZyBhbmQgdXBk
+YXRlIHRoZSBleGFtcGxlcy4NCj4gPiA+ID4NCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogR2FyZXRo
+IFdpbGxpYW1zIDxnYXJldGgud2lsbGlhbXMuanhAcmVuZXNhcy5jb20+DQo+IA0KPiA+ID4gPiAt
+LS0NCj4gPiA+ID4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svcmVu
+ZXNhcyxyOWEwNmcwMzItDQo+IHN5c2N0cmwudHh0DQo+ID4gPiA+ICsrKyBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9yZW5lc2FzLHI5YTA2ZzAzMi0NCj4gc3lzY3Ry
+bC50eHQNCj4gPiA+IEBAIC00MCw0ICs0Miw1IEBAIEV4YW1wbGVzDQo+ID4gPiA+ICAgICAgICAg
+ICAgICAgICByZWctaW8td2lkdGggPSA8ND47DQo+ID4gPiA+ICAgICAgICAgICAgICAgICBjbG9j
+a3MgPSA8JnN5c2N0cmwgUjlBMDZHMDMyX0NMS19VQVJUMD47DQo+ID4gPiA+ICAgICAgICAgICAg
+ICAgICBjbG9jay1uYW1lcyA9ICJiYXVkY2xrIjsNCj4gPiA+ID4gKyAgICAgICAgICAgICAgIHBv
+d2VyLWRvbWFpbnMgPSA8JnN5c2N0cmw+Ow0KPiA+ID4NCj4gPiA+IFRoaXMgaXMgYW4gaW50ZXJl
+c3RpbmcgZXhhbXBsZTogYWNjb3JkaW5nIHRvIHRoZSBkcml2ZXIsDQo+ID4gPiBSOUEwNkcwMzJf
+Q0xLX1VBUlQwLCBpcyBub3QgY2xvY2sgdXNlZCBmb3IgcG93ZXIgbWFuYWdlbWVudD8NCj4gPiA+
+DQo+ID4gPiBPaCwgdGhlIHJlYWwgdWFydDAgbm9kZSBpbiBhcmNoL2FybS9ib290L2R0cy9yOWEw
+NmcwMzIuZHRzaSB1c2VzDQo+ID4gPg0KPiA+ID4gICAgIGNsb2NrcyA9IDwmc3lzY3RybCBSOUEw
+NkcwMzJfQ0xLX1VBUlQwPiwgPCZzeXNjdHJsDQo+ID4gPiBSOUEwNkcwMzJfSENMS19VQVJUMD47
+DQo+ID4gPiAgICAgY2xvY2stbmFtZXMgPSAiYmF1ZGNsayIsICJhcGJfcGNsayI7DQo+ID4gPg0K
+PiA+ID4gVGhhdCBkb2VzIG1ha2Ugc2Vuc2UuLi4NCj4gPiBOb3RlIHRoYXQgdGhlIFN5bm9wc3lz
+IERXIHVhcnQgZHJpdmVyIGFscmVhZHkgZ2V0cyB0aGUgImFwYl9wY2xrIiBjbG9jaywNCj4gc28N
+Cj4gPiB3ZSBkb27igJl0IGFjdHVhbGx5IG5lZWQgdG8gdXNlIGNsb2NrIGRvbWFpbnMgdG8gZW5h
+YmxlIHRoaXMgY2xvY2suDQo+IA0KPiBUaGF0IGlzIG5vdCBuZWNlc3NhcmlseSBhIHByb2JsZW06
+DQo+ICAgMSkgRFQgZGVzY3JpYmVzIGhhcmR3YXJlLCBub3Qgc29mdHdhcmUgcG9saWN5LA0KPiAg
+IDIpIEl0IGRvZXNuJ3QgaHVydCB0byBlbmFibGUgYSBjbG9jayB0d2ljZS4NClllcywgdGhhdCB3
+YXMgbXkgdGFrZSBhcyB3ZWxsLg0KDQo+IFRoZXJlIGFyZSBzdGlsbCBzb21lIFItQ2FyIGRyaXZl
+cnMgdGhhdCBtYW5hZ2UgY2xvY2tzIHRoZW1zZWx2ZXMsIGJ1dA0KPiB3ZSdyZSBzbG93bHkgbWln
+cmF0aW5nIGF3YXkgZnJvbSB0aGF0LCB3aGVyZSBwb3NzaWJsZS4gSWYgdGhlIGRyaXZlcg0KPiBp
+cyBlLmcuIHNoYXJlZCB3aXRoIGEgcGxhdGZvcm0gd2l0aG91dCBjbG9jayBkb21haW5zLCB3ZSBv
+YnZpb3VzbHkgY2Fubm90DQo+IGRvIHRoYXQuDQo+IA0KPiBTbyB5b3UgY2FuIHRha2Ugb3V0IHRo
+YXQgY29kZSBhZ2FpbiwgdGhhdCdzIHVwIHRvIHlvdS4NCkkgdGhpbmsgbGVhdmluZyBpdCBhcyBp
+cyBiZXN0Lg0KDQo+ID4gVGhpcyBpcyBhbHNvIHRydWUgZm9yIG1hbnkgb2YgdGhlIHBlcmlwaGVy
+YWwgZHJpdmVycyB1c2VkIG9uIHJ6bjEgKFN5bm9wc3lzDQo+ID4gZ3BpbyBjb250cm9sbGVyLCBp
+MmMgY29udHJvbGxlciwgZ21hYywgZG1hYywgQXJhc2FuIHNkaW8gY29udHJvbGxlcikuIFRoZQ0K
+PiA+IGNvbW1pdCB0byBhZGQgdGhpcyBjbG9jayB0byB0aGUgaTJjIGNvbnRyb2xsZXIgZHJpdmVy
+IGlzIG15IGZhdWx0LCBhcyBJIHdhcw0KPiA+IGZvbGxvd2luZyB0aGUgcGF0dGVybiBvZiB0aGUg
+b3RoZXJzLg0KPiA+DQo+ID4gT2YgdGhlIGZldyBkcml2ZXJzIHRoYXQgZG9uJ3QgYWxyZWFkeSBn
+ZXQgdGhlIGhjbGsvcGNsayB1c2VkIHRvIGFjY2VzcyB0aGUNCj4gPiBwZXJpcGhlcmFscyBpcyB0
+aGUgU3lub3BzeXMgc3BpIGNvbnRyb2xsZXIgKHRob3VnaCB0aGF0IGN1cnJlbnRseSBkb2VzbuKA
+mXQNCj4gPiBzdXBwb3J0IHJ1bnRpbWUgUE0pIGFuZCB0aGUgVVNCIEhvc3QgY29udHJvbGxlci4N
+Cj4gDQo+IEdvb2QsIHNvIHRoZSBsYXR0ZXIgd2lsbCBzdGFydCB3b3JraW5nIG1hZ2ljYWxseSwg
+SSBhc3N1bWU/IDstKQ0KWWVzLCBleGNlcHQgZm9yIHRoZSB1c2IgUExMLiBUaGUgcnpuMSBoYXMg
+YSBtb2RlIGJpdCB0aGF0IHN3aXRjaGVzIFVTQg0KYmV0d2VlbiAyeEhvc3QgYW5kIDF4SG9zdCAr
+IDF4RnVuYywgaG93ZXZlciB0aGUgUExMIG11c3QgYmUgc3RhcnRlZCBhZnRlcg0KdGhlIG1vZGUg
+Yml0IGhhcyBiZWVuIHNldC4gVGhhdCBzdGlsbCBuZWVkcyB0byBiZSBpbXBsZW1lbnRlZC4uLg0K
+DQpCUg0KUGhpbA0KIA0KPiBHcntvZXRqZSxlZXRpbmd9cywNCj4gDQo+ICAgICAgICAgICAgICAg
+ICAgICAgICAgIEdlZXJ0DQo+IA0KPiAtLQ0KPiBHZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUn
+cyBsb3RzIG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LQ0KPiBtNjhrLm9yZw0K
+PiANCj4gSW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkg
+Y2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1dA0KPiB3aGVuIEknbSB0YWxraW5nIHRvIGpvdXJuYWxp
+c3RzIEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlIHRoYXQuDQo+ICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMNCg==
