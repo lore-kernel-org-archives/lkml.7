@@ -2,159 +2,90 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E32C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5479FC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0FC82810B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D8142811D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:45:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="slkSxFTd"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="gW9uSA7X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727707AbfFCMpU (ORCPT
+        id S1727888AbfFCMp4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 08:45:20 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36173 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727606AbfFCMpU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 08:45:20 -0400
-Received: by mail-wr1-f65.google.com with SMTP id n4so8864523wrs.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 05:45:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=ohIbsv3z1lKkrrdnDFjM2W9vIokFxXA3vkQRstsmaEE=;
-        b=slkSxFTdyq+yqZtFmqzTYUUw3TvG4cgGkZs1YBmcAqyDqFM2ZyhWkEhUvGIMhcCJTv
-         nbSnmaHm65eEPvxsYx90YQUHsjR7t9fc0PZvQjFNzjtiXBUccvGQ2hmXQAL18ylhL4ez
-         ot1TqXSL6eLYTzHLtCJjAJMznp2HCgNkwJDIQarL3cxQYENWygLVaJ3/evUaNAIKJjwS
-         4vNNzqWU9MGwqLTPRolB0ZgRbfPl27/AvUyOOraqHUIDvlcKAw5CiAS7pdFLD4qYVfT0
-         xUYMHbnhuxKidIFfAmcwwYqt0zJK1GcSGGaVC0uSoXL4WETQMElzDKJObUGQEbfTfg6T
-         fpqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=ohIbsv3z1lKkrrdnDFjM2W9vIokFxXA3vkQRstsmaEE=;
-        b=pY7H/qFl7agWxluhnLnkWqFhZAs5tNV4+SusMXOqG86AW9RuEVZNB/3TqjcuZ6fIzD
-         1ZIsKj8kbWocAYu+xH3uWvA+vBzptdm9f3MNndnm+oqUSqikLxZEUTf8C4NbJgsdhnNm
-         XugQNKH6IoWgqBPYC1GV/3GUfdMxbYaUIQuFwJokJk9yOgiH+l4oeB6muCPhmrkMc4lh
-         kIEVDAK+UkJZGSicMOLDs/8Ec/tmykAVCSVOSmQKCvO1Z8Hhcb5cPi6ntxnse40A+gAn
-         f+RojhTsLaCbTtsma+6/ivqfW3X0smHQojqIIgxGURVY/1Qezgcyz0OutKVRD35Mlfji
-         4V7w==
-X-Gm-Message-State: APjAAAVYyfX+qtpjy3Uabi9RrkerEhL9Q/Ls6JQIn2IbQukypk7qto09
-        jtHcumvEayWhgQlpM/b/VZJHsw==
-X-Google-Smtp-Source: APXvYqyhF6LwJHDLqUb0ExmgiI8+ohdkuXJzzdsEuantb3QfJ0ZlgkmWWXRoaqjdRu5HFeDTgQKsGQ==
-X-Received: by 2002:a5d:5747:: with SMTP id q7mr15472311wrw.226.1559565918085;
-        Mon, 03 Jun 2019 05:45:18 -0700 (PDT)
-Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id u5sm12949124wmc.32.2019.06.03.05.45.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 03 Jun 2019 05:45:17 -0700 (PDT)
-Date:   Mon, 3 Jun 2019 13:45:16 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Stefan Mavrodiev <stefan@olimex.com>
-Cc:     Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] mfd: rk808: Check pm_power_off pointer
-Message-ID: <20190603124516.GP4797@dell>
-References: <20190521062449.29410-1-stefan@olimex.com>
- <20190521062449.29410-2-stefan@olimex.com>
+        Mon, 3 Jun 2019 08:45:56 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:50224 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726336AbfFCMp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 08:45:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=Et6nrjAK7Pqph5akQJ3YiHQPpWtwaiEJXjZlHEdDEP4=; b=gW9uSA7XvajprKdkIRQxIPUk42
+        6+PQrULX23WSBY0OqId4B9o/oV3KgvYUTUgxCmVxpdTwu+e+refM9CA0pcHKvwyIHWl3Jv3RJDG8B
+        vfSseczgeD1adnOB+pfIT5hi+f9uJc3y/EHm+HKuEgcDVrKr1gbSAzvosuVL6pZdoZGk=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hXmLY-0004ki-88; Mon, 03 Jun 2019 14:45:52 +0200
+Date:   Mon, 3 Jun 2019 14:45:52 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 5/5] net: dsa: add support for mv88e6250
+Message-ID: <20190603124552.GC17267@lunn.ch>
+References: <20190501193126.19196-1-rasmus.villemoes@prevas.dk>
+ <20190524085921.11108-1-rasmus.villemoes@prevas.dk>
+ <20190524085921.11108-6-rasmus.villemoes@prevas.dk>
+ <20190524142728.GL2979@lunn.ch>
+ <b05a12b8-fe03-e3c4-dbf0-ca29c1931e54@prevas.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190521062449.29410-2-stefan@olimex.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <b05a12b8-fe03-e3c4-dbf0-ca29c1931e54@prevas.dk>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 May 2019, Stefan Mavrodiev wrote:
+On Mon, Jun 03, 2019 at 08:52:38AM +0000, Rasmus Villemoes wrote:
+> On 24/05/2019 16.27, Andrew Lunn wrote:
+> >> @@ -4841,6 +4910,10 @@ static const struct of_device_id mv88e6xxx_of_match[] = {
+> >>  		.compatible = "marvell,mv88e6190",
+> >>  		.data = &mv88e6xxx_table[MV88E6190],
+> >>  	},
+> >> +	{
+> >> +		.compatible = "marvell,mv88e6250",
+> >> +		.data = &mv88e6xxx_table[MV88E6250],
+> >> +	},
+> >>  	{ /* sentinel */ },
+> >>  };
+> > 
+> > Ah, yes. I had not thought about that. A device at address 0 would be
+> > found, but a device at address 16 would be missed.
+> 
+> Eh, no? The port registers are at offset 0x8, i.e. at either SMI address
+> 8 or 24, so I don't think a 6250 at address 0 could be detected using
+> either of the existing families?
 
-> The function pointer pm_power_off may point to function from other
-> module (PSCI for example). If rk808 is removed, pm_power_off is
-> overwritten to NULL and the system cannot be powered off.
-> 
-> This patch checks if pm_power_off points to a module function.
-> 
-> Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
-> ---
-> Changes in v2:
->  - Initial release actually
-> 
->  drivers/mfd/rk808.c       | 13 +++++++------
->  include/linux/mfd/rk808.h |  1 +
->  2 files changed, 8 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
-> index 94377782d208..c0b179792bbf 100644
-> --- a/drivers/mfd/rk808.c
-> +++ b/drivers/mfd/rk808.c
-> @@ -438,7 +438,6 @@ static int rk808_probe(struct i2c_client *client,
->  	struct rk808 *rk808;
->  	const struct rk808_reg_data *pre_init_reg;
->  	const struct mfd_cell *cells;
-> -	void (*pm_pwroff_fn)(void);
->  	int nr_pre_init_regs;
->  	int nr_cells;
->  	int pm_off = 0, msb, lsb;
-> @@ -475,7 +474,7 @@ static int rk808_probe(struct i2c_client *client,
->  		nr_pre_init_regs = ARRAY_SIZE(rk805_pre_init_reg);
->  		cells = rk805s;
->  		nr_cells = ARRAY_SIZE(rk805s);
-> -		pm_pwroff_fn = rk805_device_shutdown;
-> +		rk808->pm_pwroff_fn = rk805_device_shutdown;
->  		break;
->  	case RK808_ID:
->  		rk808->regmap_cfg = &rk808_regmap_config;
-> @@ -484,7 +483,7 @@ static int rk808_probe(struct i2c_client *client,
->  		nr_pre_init_regs = ARRAY_SIZE(rk808_pre_init_reg);
->  		cells = rk808s;
->  		nr_cells = ARRAY_SIZE(rk808s);
-> -		pm_pwroff_fn = rk808_device_shutdown;
-> +		rk808->pm_pwroff_fn = rk808_device_shutdown;
->  		break;
->  	case RK818_ID:
->  		rk808->regmap_cfg = &rk818_regmap_config;
-> @@ -493,7 +492,7 @@ static int rk808_probe(struct i2c_client *client,
->  		nr_pre_init_regs = ARRAY_SIZE(rk818_pre_init_reg);
->  		cells = rk818s;
->  		nr_cells = ARRAY_SIZE(rk818s);
-> -		pm_pwroff_fn = rk818_device_shutdown;
-> +		rk808->pm_pwroff_fn = rk818_device_shutdown;
->  		break;
->  	default:
->  		dev_err(&client->dev, "Unsupported RK8XX ID %lu\n",
-> @@ -548,7 +547,7 @@ static int rk808_probe(struct i2c_client *client,
->  				"rockchip,system-power-controller");
->  	if (pm_off && !pm_power_off) {
->  		rk808_i2c_client = client;
-> -		pm_power_off = pm_pwroff_fn;
-> +		pm_power_off = rk808->pm_pwroff_fn;
->  	}
->  
->  	return 0;
-> @@ -563,7 +562,9 @@ static int rk808_remove(struct i2c_client *client)
->  	struct rk808 *rk808 = i2c_get_clientdata(client);
->  
->  	regmap_del_irq_chip(client->irq, rk808->irq_data);
-> -	pm_power_off = NULL;
-> +
-> +	if (rk808->pm_pwroff_fn && pm_power_off == rk808->pm_pwroff_fn)
-> +		pm_power_off = NULL;
+Even better.
 
-The idea seems sound, but I think you should comment this statement.
+The real problem is, people keep trying to add new compatible strings
+here when they should not. The compatible string is about being able
+to read the ID registers, not to list every single switch chip family.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+This is one case where it really is needed, and i had not thought
+about that.
+
+      Andrew
