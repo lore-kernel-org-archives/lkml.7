@@ -2,140 +2,112 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FDFC04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B38C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ADCC27F68
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D98927F6A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:17:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="qK7a3Bjr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m8TntvGG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbfFCJQy (ORCPT
+        id S1728935AbfFCJRB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:16:54 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:7450 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728048AbfFCJQw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:16:52 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 45HTvX2c3jz9v0D1;
-        Mon,  3 Jun 2019 11:16:40 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=qK7a3Bjr; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id h-bkbOG883yC; Mon,  3 Jun 2019 11:16:40 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 45HTvX1RnFz9v0Cw;
-        Mon,  3 Jun 2019 11:16:40 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1559553400; bh=K6V04fp2wmNbVXlm3f+rVXZBYc12IY9zUHEdy7YPcVY=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=qK7a3Bjr5D25uyATGphCM9C/xx8iCEUSQGdHuU9XkZ6fme6ggDZem5DtAkMj1EdTH
-         yynocMV1TG0Mi6+RMi7USLvmLHcBw1mrY+q/bg1aMBm6F1x8byrpJFvnDw89c54Lt3
-         oLMDPd1y2F/oH5SezRWm9qg2/2wwVHaLZjKqNzr8=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id DFCF68B879;
-        Mon,  3 Jun 2019 11:16:44 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id xrKd7VIqcsZv; Mon,  3 Jun 2019 11:16:44 +0200 (CEST)
-Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id AD5C18B7B1;
-        Mon,  3 Jun 2019 11:16:44 +0200 (CEST)
-Subject: Re: [PATCH v3 14/16] powerpc/32: implement fast entry for syscalls on
- BOOKE
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, Paul Mackerras <paulus@ozlabs.org>
-References: <cover.1556627571.git.christophe.leroy@c-s.fr>
- <3e254178a157e7eaeef48f983880f71f97d1f296.1556627571.git.christophe.leroy@c-s.fr>
- <20190523061427.GA19655@blackberry>
- <98bf5745-88ae-7f17-fcb9-7d06ba5b9e49@c-s.fr>
- <58f0e70f-ed9d-965e-e8d2-cc5d13a4c9eb@c-s.fr>
- <87r28jp2b0.fsf@concordia.ellerman.id.au>
- <20190528190341.Horde.nTXOule-IO2ReXFiNIqNbg8@messagerie.si.c-s.fr>
-Message-ID: <c4ff97c8-f601-0e62-9408-08bbef409636@c-s.fr>
-Date:   Mon, 3 Jun 2019 09:16:21 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Mon, 3 Jun 2019 05:17:01 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:46553 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728531AbfFCJL4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:11:56 -0400
+Received: by mail-lj1-f193.google.com with SMTP id m15so7126030ljg.13
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 02:11:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5XNaoGruNIsOtSVFYVpHUufh5QsS/no9n1jDse4Rp8w=;
+        b=m8TntvGGhp0nYiHzaLLgTeZH1zwY5/yRgl2nyz0ER5PyLel0dSm+tojV8of8NrYXdJ
+         ROgD6B+fEUl11Un8LTOvnK0YL4ds+DV47qkf7zOGLYh6wdxK8n9kXbpwYFjBIFTlaFy/
+         1uCrd7uKIBnt9W56O4f46yzLjALCSg0JRomG/rMTW7uDkv6GC/YbQkPUzHmGgxjnNee4
+         wWqlpepwZGd3i5/tiyZxjndumPxjtBYxA3m6Dl7QX0egpCHIWc3oXuK9c5O9vXTH9ti9
+         zVKRf77SGa+OKdPBJ//O0CfKalF8FMz9GDRFiOvoJffLCLwlwy+ccbi6HjbSDdJj4aVL
+         M31g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5XNaoGruNIsOtSVFYVpHUufh5QsS/no9n1jDse4Rp8w=;
+        b=Oq1nq9tTDdb2OeGpqK8XRWtGnBcrKIII1lhEkxGLNNx2xoABloL3wtL6tcLZ1x0eup
+         //uxTc/3CwLArLtLgMZUkkKnTduybjS0u6xXkWypjxW9IOChq1rsM4fx+mQEeaX0XCZO
+         OBMv2LSoMv+NA2PSDsk6tTACk96O7LAi/w6ewWX8Kqjbldaaer6eZ6lJqDbQgEqCFWIr
+         vYdhpJMt4wVsgGSCs5hPsEQD1Im+9p+Fx8C/dh6bye3Rp4L0W99hEobzC/eDR209+ppC
+         6EuaHO7343DGXft4A3BmF8OTyCwQwX5pJ62RmrO67vEng1p5bMWnvOdsNhLhiHINvPRS
+         151g==
+X-Gm-Message-State: APjAAAXOVtod2Z9nCNz0wjM/Ib8/hLfHlNIlKUCwGozL7v5sUjf/tFP7
+        8bdAYPBWwaT+43UwqQT0i4bzAw==
+X-Google-Smtp-Source: APXvYqz0nK8j9w8+kGKqX2cJgLQC6n+s4vTFl2Evus/yUMhfrH/qQzL0327hx3BN5Ar4ER05Wijy9w==
+X-Received: by 2002:a2e:984a:: with SMTP id e10mr5408494ljj.113.1559553114060;
+        Mon, 03 Jun 2019 02:11:54 -0700 (PDT)
+Received: from localhost (c-1c3670d5.07-21-73746f28.bbcust.telenor.se. [213.112.54.28])
+        by smtp.gmail.com with ESMTPSA id y127sm3040022lff.34.2019.06.03.02.11.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 03 Jun 2019 02:11:53 -0700 (PDT)
+From:   Anders Roxell <anders.roxell@linaro.org>
+To:     aryabinin@virtuozzo.com
+Cc:     kasan-dev@googlegroups.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        Anders Roxell <anders.roxell@linaro.org>
+Subject: [PATCH] mm: kasan: mark file report so ftrace doesn't trace it
+Date:   Mon,  3 Jun 2019 11:11:48 +0200
+Message-Id: <20190603091148.24898-1-anders.roxell@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190528190341.Horde.nTXOule-IO2ReXFiNIqNbg8@messagerie.si.c-s.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+__kasan_report() triggers ftrace and the preempt_count() in ftrace
+causes a call to __asan_load4(), breaking the circular dependency by
+making report as no trace for ftrace.
 
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+---
+ mm/kasan/Makefile | 3 +++
+ 1 file changed, 3 insertions(+)
 
-On 05/28/2019 05:03 PM, Christophe Leroy wrote:
-> Michael Ellerman <mpe@ellerman.id.au> a écrit :
-> 
->> Christophe Leroy <christophe.leroy@c-s.fr> writes:
->>> Le 23/05/2019 à 09:00, Christophe Leroy a écrit :
->>>
->>> [...]
->>>
->>>>> arch/powerpc/kernel/head_fsl_booke.o: In function `SystemCall':
->>>>> arch/powerpc/kernel/head_fsl_booke.S:416: undefined reference to
->>>>> `kvmppc_handler_BOOKE_INTERRUPT_SYSCALL_SPRN_SRR1'
->>>>> Makefile:1052: recipe for target 'vmlinux' failed
->>>>>
->>>>>> +.macro SYSCALL_ENTRY trapno intno
->>>>>> +    mfspr    r10, SPRN_SPRG_THREAD
->>>>>> +#ifdef CONFIG_KVM_BOOKE_HV
->>>>>> +BEGIN_FTR_SECTION
->>>>>> +    mtspr    SPRN_SPRG_WSCRATCH0, r10
->>>>>> +    stw    r11, THREAD_NORMSAVE(0)(r10)
->>>>>> +    stw    r13, THREAD_NORMSAVE(2)(r10)
->>>>>> +    mfcr    r13            /* save CR in r13 for now       */
->>>>>> +    mfspr    r11, SPRN_SRR1
->>>>>> +    mtocrf    0x80, r11    /* check MSR[GS] without clobbering 
->>>>>> reg */
->>>>>> +    bf    3, 1975f
->>>>>> +    b    kvmppc_handler_BOOKE_INTERRUPT_\intno\()_SPRN_SRR1
->>>>>
->>>>> It seems to me that the "_SPRN_SRR1" on the end of this line
->>>>> isn't meant to be there...  However, it still fails to link with that
->>>>> removed.
->>>
->>> It looks like I missed the macro expansion.
->>>
->>> The called function should be kvmppc_handler_8_0x01B
->>>
->>> Seems like kisskb doesn't build any config like this.
->>
->> I thought we did, ie:
->>
->> http://kisskb.ellerman.id.au/kisskb/buildresult/13817941/
-> 
-> That's a ppc64 config it seems. The problem was on booke32.
-> 
-> Christophe
-> 
->>
->> But clearly something is missing to trigger the bug.
+diff --git a/mm/kasan/Makefile b/mm/kasan/Makefile
+index 08b43de2383b..2b2da731483c 100644
+--- a/mm/kasan/Makefile
++++ b/mm/kasan/Makefile
+@@ -3,12 +3,14 @@ KASAN_SANITIZE := n
+ UBSAN_SANITIZE_common.o := n
+ UBSAN_SANITIZE_generic.o := n
+ UBSAN_SANITIZE_generic_report.o := n
++UBSAN_SANITIZE_report.o := n
+ UBSAN_SANITIZE_tags.o := n
+ KCOV_INSTRUMENT := n
+ 
+ CFLAGS_REMOVE_common.o = $(CC_FLAGS_FTRACE)
+ CFLAGS_REMOVE_generic.o = $(CC_FLAGS_FTRACE)
+ CFLAGS_REMOVE_generic_report.o = $(CC_FLAGS_FTRACE)
++CFLAGS_REMOVE_report.o = $(CC_FLAGS_FTRACE)
+ CFLAGS_REMOVE_tags.o = $(CC_FLAGS_FTRACE)
+ 
+ # Function splitter causes unnecessary splits in __asan_load1/__asan_store1
+@@ -17,6 +19,7 @@ CFLAGS_REMOVE_tags.o = $(CC_FLAGS_FTRACE)
+ CFLAGS_common.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+ CFLAGS_generic.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+ CFLAGS_generic_report.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
++CFLAGS_report.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+ CFLAGS_tags.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+ 
+ obj-$(CONFIG_KASAN) := common.o init.o report.o
+-- 
+2.20.1
 
-I was able to trigger the bug with mpc85xx_defconfig + 
-CONFIG_VIRTUALIZATION + CONFIG_PPC_E500MC
-
-The bug pops up when CONFIG_KVM_BOOKE_HV is set.
-
-Christophe
-
->>
->> cheers
-> 
-> 
