@@ -2,39 +2,40 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CBDC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 972A6C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D92927EBE
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66A7F27EBE
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:43:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="Ltb58s6r"
+	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="QPs+4FQd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727629AbfFCMnZ (ORCPT
+        id S1727668AbfFCMn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 08:43:25 -0400
-Received: from mail-eopbgr750051.outbound.protection.outlook.com ([40.107.75.51]:21217
+        Mon, 3 Jun 2019 08:43:28 -0400
+Received: from mail-eopbgr750043.outbound.protection.outlook.com ([40.107.75.43]:46545
         "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727030AbfFCMnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 08:43:24 -0400
+        id S1727030AbfFCMn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 08:43:27 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tUUGMk3MkIrw/PhIngnqJp8/r4yLBUJClqPJHGbfysU=;
- b=Ltb58s6rrL6pZyWiRxY3PSzKbx5rybelOD4D5oQ8JYKZpJ7gQm3+DwPRpR9/XculdMw8gzDmKR9RhR/+GAea4ZrJkyoKmIHxt3kYyxqjp/8JE5kv53tjFWZ1AIKNGTvp5i82S/biteSRnVSealt/fNdzXNB78/G6yWiGqXB6VFs=
+ bh=ZqWGWMZVHJyu/kVx4LtSNU+8fq4JT/Mr6ztQHwBfY4Q=;
+ b=QPs+4FQdzPVzaT75oUXgr3jZ18LIkm0ZmSzgkm5NL+hFUQ/VIMO8donkiLFq8kFGiG5p8FJmI3hQUjEYa0JPd/8PR5m8sIX4dByo1SDaW6n++RYudexDp0KMmAAkMjc2uv8TNW1ePK0vPF6ht6/ySDZO9GTMhZlKHUMXzhOJ4SY=
 Received: from MN2PR08MB5951.namprd08.prod.outlook.com (20.179.85.220) by
  MN2PR08MB5872.namprd08.prod.outlook.com (20.179.86.153) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.18; Mon, 3 Jun 2019 12:43:21 +0000
+ 15.20.1943.18; Mon, 3 Jun 2019 12:43:23 +0000
 Received: from MN2PR08MB5951.namprd08.prod.outlook.com
  ([fe80::f0f7:f262:a3c6:ce23]) by MN2PR08MB5951.namprd08.prod.outlook.com
  ([fe80::f0f7:f262:a3c6:ce23%7]) with mapi id 15.20.1943.018; Mon, 3 Jun 2019
- 12:43:21 +0000
+ 12:43:23 +0000
 From:   "Shivamurthy Shastri (sshivamurthy)" <sshivamurthy@micron.com>
 To:     Miquel Raynal <miquel.raynal@bootlin.com>,
         Richard Weinberger <richard@nod.at>,
@@ -54,11 +55,13 @@ To:     Miquel Raynal <miquel.raynal@bootlin.com>,
         Chuanhong Guo <gch981213@gmail.com>,
         "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 00/12] Introduce generic ONFI support
-Thread-Topic: [PATCH v3 00/12] Introduce generic ONFI support
-Thread-Index: AdUaAtp/ATLriW8VSquJuchLDLomcg==
-Date:   Mon, 3 Jun 2019 12:43:20 +0000
-Message-ID: <MN2PR08MB59514E77250C3F0DA76D4801B8140@MN2PR08MB5951.namprd08.prod.outlook.com>
+Subject: [PATCH v3 01/12] mtd: rawnand: turn nand_onfi_detect to use
+ nand_device
+Thread-Topic: [PATCH v3 01/12] mtd: rawnand: turn nand_onfi_detect to use
+ nand_device
+Thread-Index: AdUaAy8RvNFH7myfRde2bNfDQJf8+g==
+Date:   Mon, 3 Jun 2019 12:43:23 +0000
+Message-ID: <MN2PR08MB5951A1DDC80445E917EAA32DB8140@MN2PR08MB5951.namprd08.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -67,23 +70,23 @@ authentication-results: spf=none (sender IP is )
  smtp.mailfrom=sshivamurthy@micron.com; 
 x-originating-ip: [165.225.81.42]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e97596f8-2c51-45c4-d672-08d6e8210f74
+x-ms-office365-filtering-correlation-id: 2e48ea67-2274-4a22-3377-08d6e8211108
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR08MB5872;
 x-ms-traffictypediagnostic: MN2PR08MB5872:|MN2PR08MB5872:
-x-microsoft-antispam-prvs: <MN2PR08MB5872E557374DAD4810A0F6CDB8140@MN2PR08MB5872.namprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-microsoft-antispam-prvs: <MN2PR08MB5872705FCE1ABCA3C4655F5CB8140@MN2PR08MB5872.namprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3968;
 x-forefront-prvs: 0057EE387C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(136003)(346002)(39860400002)(366004)(189003)(199004)(76116006)(14454004)(99286004)(7696005)(71200400001)(71190400001)(66446008)(5660300002)(9686003)(52536014)(73956011)(66946007)(66476007)(66066001)(66556008)(64756008)(2201001)(55236004)(6116002)(478600001)(316002)(102836004)(110136005)(2906002)(3846002)(6506007)(86362001)(7416002)(53936002)(486006)(26005)(2501003)(8936002)(476003)(33656002)(14444005)(256004)(8676002)(74316002)(81166006)(81156014)(6436002)(68736007)(7736002)(305945005)(186003)(25786009)(55016002)(41533002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR08MB5872;H:MN2PR08MB5951.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(136003)(346002)(39860400002)(366004)(189003)(199004)(76116006)(14454004)(99286004)(7696005)(71200400001)(71190400001)(66446008)(5660300002)(9686003)(52536014)(73956011)(66946007)(66476007)(66066001)(66556008)(64756008)(2201001)(55236004)(6116002)(478600001)(316002)(102836004)(110136005)(2906002)(3846002)(6506007)(86362001)(7416002)(53936002)(486006)(26005)(2501003)(8936002)(476003)(33656002)(14444005)(256004)(8676002)(74316002)(81166006)(81156014)(6436002)(68736007)(7736002)(305945005)(186003)(25786009)(55016002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR08MB5872;H:MN2PR08MB5951.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: micron.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Ro/o3TCaLIO+iKNyLwcyXV12v42Ut+045NvAURHK1X+TeoMHwAhNYlFJTVnT3C+D1z7RZ8C7Seob1kAo5gyhHtt+RF8HNbjqEmdSUwciA0NKFAJMfc/2k+baVpIeZuNbSvDtHvn0dqEt87ApQhVpURIusTND1cZ4z830tj3Pa3Ih+51Q2n0cEHP8PrIphc8rZfVuTkP5EnXMh3q8yneCW9qtK1H7wkm4zo3obXD5z9kKlret+AFFb/LPxB0a44eLmTseefwuRJ022Eiajb470n8A50g4L8l+EnPkFZMmgwayniS98h71tmbAiQ0oKIIxGhxGDr1vVPRE9Q6V2fQcrsUS9fZRYGwxL0o2amCx+BcbdJCoTh4lu2ZT8Xx1pTiAVsmXfzdPg/Ty6MuX9x7sWpoeGtDtARCPWoS33eobcT4=
+x-microsoft-antispam-message-info: R97Kp5fG+znziDSus+uMBjixBdzBXGoL8dgz4yydPXkDaF0CpgEe1x5J3J80F+WXZSGKme490v03GiILzHAwSPxpqW3vSa6jOs6gwPtY/xAbdzQxoOcHXmkY6nWG/AIs3ykDdjKM2o7r0Be7I1ofFk5+JcV6LKdzjhs1DkiDWftfhNTk90OIFGEnMGwHaSD0XdTHB07izT/yUlQY7orjsxab4Y7KQLcs2ynHROqxQvC3K99aImhpEDeJp6NC0V5SMSDV1SVdALBYGvfzZstq2Nu72a61ubbJw91kU2/TPGl/t9inf4Jj9tVOJyLduR77WL3Wet82hmWwgg5V7sTXOGwYjQOHNfuiDzpel8hoOLRNn3q5Rg6KL0586nLTV0u3JAGsx0O/T+fXQ/yO9mD4r+SE6ylQGVHP1aeSFYaCxK4=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: micron.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e97596f8-2c51-45c4-d672-08d6e8210f74
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2019 12:43:20.8355
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2e48ea67-2274-4a22-3377-08d6e8211108
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2019 12:43:23.3910
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
@@ -95,54 +98,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current support to ONFI parameter page is only for raw NAND, this patch
-series turn ONFI support into generic. So that, other NAND devices like
-SPI NAND can use this.
+It is necessary to turn nand_onfi_detect to use nand_device structure,
+to make ONFI related codes generic for all NAND devices.
 
-There are five parts in this series.
-1. Prepare for turning ONFI into generic
-2. Turn ONFI into generic, which can be used by SPI NANDs later
-3. Turn SPI NAND core to use parameter page
-4. Redesign Micron SPI NAND driver implementation
-5. Support for new Micron SPI NAND devices
+Signed-off-by: Shivamurthy Shastri <sshivamurthy@micron.com>
+---
+ drivers/mtd/nand/raw/internals.h | 2 +-
+ drivers/mtd/nand/raw/nand_base.c | 2 +-
+ drivers/mtd/nand/raw/nand_onfi.c | 8 +++++---
+ include/linux/mtd/rawnand.h      | 5 +++++
+ 4 files changed, 12 insertions(+), 5 deletions(-)
 
-Changes in V3
--------------
-
-* Rebased to nand/next
-* Split the patches as per suggestion
-* Addressed the comments
-* Some fixes which I missed in last version
-
-Shivamurthy Shastri (12):
-  mtd: rawnand: turn nand_onfi_detect to use nand_device
-  mtd: rawnand: move ONFI related functions to nand.h
-  mtd: rawnand: move sanitize_strings to nand_onfi.c
-  mtd: rawnand: introduce struct onfi_helper
-  mtd: rawnand: turn ONFI support to generic
-  mtd: nand: Move ONFI code into nand/ directory
-  mtd: spinand: turn SPI NAND to support parameter page detection
-  mtd: spinand: add parameter page fixup function
-  mtd: spinand: micron: prepare for generalizing driver
-  mtd: spinand: micron: Turn driver implementation generic
-  mtd: spinand: micron: Fix read failure in Micron M70A flashes
-  mtd: spinand: micron: Enable micron flashes with multi-die
-
- drivers/mtd/nand/Makefile        |   2 +-
- drivers/mtd/nand/onfi.c          | 180 ++++++++++++++++++
- drivers/mtd/nand/raw/Makefile    |   1 -
- drivers/mtd/nand/raw/internals.h |   4 -
- drivers/mtd/nand/raw/nand_base.c | 236 +++++++++++++++++++++--
- drivers/mtd/nand/raw/nand_onfi.c | 312 -------------------------------
- drivers/mtd/nand/spi/core.c      | 111 ++++++++++-
- drivers/mtd/nand/spi/micron.c    | 107 ++++++++---
- include/linux/mtd/nand.h         |  30 +++
- include/linux/mtd/rawnand.h      |   5 +
- include/linux/mtd/spinand.h      |   6 +
- 11 files changed, 628 insertions(+), 366 deletions(-)
- create mode 100644 drivers/mtd/nand/onfi.c
- delete mode 100644 drivers/mtd/nand/raw/nand_onfi.c
-
+diff --git a/drivers/mtd/nand/raw/internals.h b/drivers/mtd/nand/raw/intern=
+als.h
+index cba6fe7dd8c4..4dc9ae108fa1 100644
+--- a/drivers/mtd/nand/raw/internals.h
++++ b/drivers/mtd/nand/raw/internals.h
+@@ -141,7 +141,7 @@ int nand_legacy_check_hooks(struct nand_chip *chip);
+=20
+ /* ONFI functions */
+ u16 onfi_crc16(u16 crc, u8 const *p, size_t len);
+-int nand_onfi_detect(struct nand_chip *chip);
++int nand_onfi_detect(struct nand_device *base);
+=20
+ /* JEDEC functions */
+ int nand_jedec_detect(struct nand_chip *chip);
+diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_b=
+ase.c
+index 6ecd1c496ce3..96a93481420f 100644
+--- a/drivers/mtd/nand/raw/nand_base.c
++++ b/drivers/mtd/nand/raw/nand_base.c
+@@ -4737,7 +4737,7 @@ static int nand_detect(struct nand_chip *chip, struct=
+ nand_flash_dev *type)
+=20
+ 	if (!type->name || !type->pagesize) {
+ 		/* Check if the chip is ONFI compliant */
+-		ret =3D nand_onfi_detect(chip);
++		ret =3D nand_onfi_detect(&chip->base);
+ 		if (ret < 0)
+ 			return ret;
+ 		else if (ret)
+diff --git a/drivers/mtd/nand/raw/nand_onfi.c b/drivers/mtd/nand/raw/nand_o=
+nfi.c
+index 0b879bd0a68c..e20b60b8dd93 100644
+--- a/drivers/mtd/nand/raw/nand_onfi.c
++++ b/drivers/mtd/nand/raw/nand_onfi.c
+@@ -13,6 +13,7 @@
+  */
+=20
+ #include <linux/slab.h>
++#include <linux/mtd/nand.h>
+=20
+ #include "internals.h"
+=20
+@@ -137,9 +138,10 @@ static void nand_bit_wise_majority(const void **srcbuf=
+s,
+ /*
+  * Check if the NAND chip is ONFI compliant, returns 1 if it is, 0 otherwi=
+se.
+  */
+-int nand_onfi_detect(struct nand_chip *chip)
++int nand_onfi_detect(struct nand_device *base)
+ {
+-	struct mtd_info *mtd =3D nand_to_mtd(chip);
++	struct nand_chip *chip =3D device_to_nand(base);
++	struct mtd_info *mtd =3D &base->mtd;
+ 	struct nand_memory_organization *memorg;
+ 	struct nand_onfi_params *p;
+ 	struct onfi_params *onfi;
+@@ -147,7 +149,7 @@ int nand_onfi_detect(struct nand_chip *chip)
+ 	char id[4];
+ 	int i, ret, val;
+=20
+-	memorg =3D nanddev_get_memorg(&chip->base);
++	memorg =3D nanddev_get_memorg(base);
+=20
+ 	/* Try ONFI for unknown chip or LP */
+ 	ret =3D nand_readid_op(chip, 0x20, id, sizeof(id));
+diff --git a/include/linux/mtd/rawnand.h b/include/linux/mtd/rawnand.h
+index f5bb6f11c36b..87282beee008 100644
+--- a/include/linux/mtd/rawnand.h
++++ b/include/linux/mtd/rawnand.h
+@@ -1154,6 +1154,11 @@ static inline struct mtd_info *nand_to_mtd(struct na=
+nd_chip *chip)
+ 	return &chip->base.mtd;
+ }
+=20
++static inline struct nand_chip *device_to_nand(struct nand_device *base)
++{
++	return container_of(base, struct nand_chip, base);
++}
++
+ static inline void *nand_get_controller_data(struct nand_chip *chip)
+ {
+ 	return chip->priv;
 --=20
 2.17.1
 
