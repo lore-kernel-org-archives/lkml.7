@@ -2,114 +2,117 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 937F4C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 19:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D506C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 19:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6961F26F77
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 19:04:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5404A26E5D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 19:04:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fDtH4dKS"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="e9asATus";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MoQ3CkC5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbfFCTEY (ORCPT
+        id S1726970AbfFCTEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 15:04:24 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:38638 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726816AbfFCTEW (ORCPT
+        Mon, 3 Jun 2019 15:04:45 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:36876 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbfFCTEm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 15:04:22 -0400
-Received: by mail-lj1-f196.google.com with SMTP id o13so17290735lji.5;
-        Mon, 03 Jun 2019 12:04:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=PdWdZJtFLzv4jBGeRTNjR+jpddUaN+iIYYeuiIm2P7U=;
-        b=fDtH4dKSmtMQ6MN6v2gwGTwC3anRHfBwnA+RH5dIEtGTPcO4LWcn1gdY3VPkAMd9Ey
-         9hB/xH7LOL2+/Rx3o3GBLI4s9rvZlkqcFx0mKAkLBzbhlqWv5vTqE5eS3bYSyK8QilCX
-         bzBg9mR5UWRgn9gI352lxR8X5lnh5mUNtZBxfGulzKnUxsP0gmIob9mxlu4KSwC+Asam
-         JpGOamIJxWx2cmJKe/N72WUBjo6ZvgJykBz1gOb9C6IpP+G1LFSSy9Qtqg9Gzw5lKsCJ
-         beA44JAgRwfkb965gwHVLNogeqARzYKPORyFogW516NWMUo1QxR/VvUyPy5d7Ec0UeOg
-         WtNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=PdWdZJtFLzv4jBGeRTNjR+jpddUaN+iIYYeuiIm2P7U=;
-        b=I5XhMTsWC29fNlhT5mjYtZMlt6vZK3+u+QscKp8qaCL5Ay1Ay2n6FWqqTXWXhfQf7v
-         M7bVdYOG8mygDQWO/Ni+S4ZyfSgWPWIl9Dt3Nn+jUd/HiBscNGzV3MbkFcPb5HRKwuf0
-         d6rtvoLeT6/Wa2bmHqk0U2lQvHcyu7KJzhWj+MozSnJcyEkXGbyilsTmg5VgLVMzSpwt
-         w5c22dx8f1JEnKAoDagpvGaLslsjw3Mc8SPRrcLfUj98q/iFdHMb2hrUrNB4D0brTVzb
-         1IA/ga2eRh1Pkx/QwyBDBLj4s9M0cJYNMOBWhIHBot2ilxJiNRXN316noYIQUbDRc9mY
-         ZTiQ==
-X-Gm-Message-State: APjAAAXh760plAi/fPiooGwQo3z/6YZcqGPEWEdx0zk5Q0w7X304vGxy
-        dxJn2wdZnWOwvoHpCNMhIkY=
-X-Google-Smtp-Source: APXvYqzVdZqbt/3xufEe8kXoCpvJZ/T65wAOGOU9isSXFxHE+gLwafoPPLI1WZ6Z2ywjO4A6vAPkNg==
-X-Received: by 2002:a2e:91d7:: with SMTP id u23mr14631935ljg.150.1559588660339;
-        Mon, 03 Jun 2019 12:04:20 -0700 (PDT)
-Received: from localhost.localdomain ([94.29.35.141])
-        by smtp.gmail.com with ESMTPSA id l22sm2768805ljb.39.2019.06.03.12.04.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Jun 2019 12:04:19 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Joseph Lo <josephl@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 07/10] clocksource/drivers/tegra: Use SPDX identifier
-Date:   Mon,  3 Jun 2019 21:59:45 +0300
-Message-Id: <20190603185948.30438-8-digetx@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190603185948.30438-1-digetx@gmail.com>
-References: <20190603185948.30438-1-digetx@gmail.com>
+        Mon, 3 Jun 2019 15:04:42 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id BFD07607C3; Mon,  3 Jun 2019 19:04:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559588681;
+        bh=2fFF2UZ1IMZoss2BdlfTKftG1dBbtIAex7bZx7hQCNA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=e9asATusPcw0LSbghmIwPQkwJg+oAHwQGTHydazcY9tQ/gFD4R4zc69ZFUkWTLl6N
+         EHfjekEeWo6jkd01rCHpfPFf36FY5lJUx6ICYxQfcrni/SbnVoNcA+J0/XNEgUpG03
+         tI4hqzXe7SRakYnfbSamFoqjH5/ujpYtpSMAF6DI=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 639956020A;
+        Mon,  3 Jun 2019 19:04:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559588677;
+        bh=2fFF2UZ1IMZoss2BdlfTKftG1dBbtIAex7bZx7hQCNA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=MoQ3CkC5zUj8smO9TgVqkewwzN+bMdSvy1hwgvlG1qi8GDPxO9pSlf2g2VzGuEgZ7
+         iW1JFRDNNyJGMxrHj2N2KKQJ1R9sOPUWSN2u7qkqOAa3Cy9TTjpL7rWs/BRNAqeBdM
+         IM1gEWYa2IWjjsaxCuJWM6r5brDVUnpN2UWV4XPM=
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 03 Jun 2019 13:04:37 -0600
+From:   Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
+To:     Dan Williams <dcbw@redhat.com>
+Cc:     Alex Elder <elder@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
+        David Miller <davem@davemloft.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        evgreen@chromium.org, Ben Chan <benchan@google.com>,
+        Eric Caruso <ejcaruso@google.com>, cpratapa@codeaurora.org,
+        syadagir@codeaurora.org, abhishek.esse@gmail.com,
+        Networking <netdev@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-soc@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+In-Reply-To: <0fc29577a5c69530145b6095fa1ac1a51949ba8e.camel@redhat.com>
+References: <20190531035348.7194-1-elder@linaro.org>
+ <e75cd1c111233fdc05f47017046a6b0f0c97673a.camel@redhat.com>
+ <065c95a8-7b17-495d-f225-36c46faccdd7@linaro.org>
+ <CAK8P3a05CevRBV3ym+pnKmxv+A0_T+AtURW2L4doPAFzu3QcJw@mail.gmail.com>
+ <a28c5e13-59bc-144d-4153-9d104cfa9188@linaro.org>
+ <3b1e12b145a273dd3ded2864d976bdc5fa90e68a.camel@redhat.com>
+ <87f98f81-8f77-3bc5-374c-f498e07cb1bd@linaro.org>
+ <0fc29577a5c69530145b6095fa1ac1a51949ba8e.camel@redhat.com>
+Message-ID: <c200581b8fc167f3a0c09ef6233b8d81@codeaurora.org>
+X-Sender: subashab@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use SPDX tag for the license identification instead of a free form text
-to aid license-checking automation and for brevity.
+>> I can't (or won't) comment right now on whether IPA needs its own
+>> netdev for rmnet to use.  The IPA endpoints used for the modem
+>> network interfaces are enabled when the netdev is opened and
+>> disabled when closed.  Outside of that, TX and RX are pretty
+>> much immediately passed through to the layer below or above.
+>> IPA currently has no other net device operations.
+> 
+> I don't really have issues with the patchset underneath the netdev
+> layer. I'm interested in how the various bits present themselves to
+> userspace, which is why I am trying to tie this in with Johannes'
+> conversation about WWAN devices, netdevs, channels, and how the various
+> drivers present API for creating data channels that map to different
+> modem contexts.
+> 
+> So let me rephrase. If the control plane has set up the default context
+> and sent a QMI Start Network message (or the network attached the
+> default one) and the resulting IP details are applied to the IPA netdev
+> can things just start sending data? Or do we need to create an rmnet on
+> top to get that working?
+> 
+> Dan
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/clocksource/timer-tegra20.c | 15 ++-------------
- 1 file changed, 2 insertions(+), 13 deletions(-)
+Hi Dan
 
-diff --git a/drivers/clocksource/timer-tegra20.c b/drivers/clocksource/timer-tegra20.c
-index 12784a82fd57..1a3ee928e9a5 100644
---- a/drivers/clocksource/timer-tegra20.c
-+++ b/drivers/clocksource/timer-tegra20.c
-@@ -1,18 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2010 Google, Inc.
-- *
-- * Author:
-- *	Colin Cross <ccross@google.com>
-- *
-- * This software is licensed under the terms of the GNU General Public
-- * License version 2, as published by the Free Software Foundation, and
-- * may be copied, distributed, and modified under those terms.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-+ * Author: Colin Cross <ccross@google.com>
-  */
- 
- #define pr_fmt(fmt)	"tegra-timer: " fmt
+All data from the hardware will have the MAP headers.
+We still need to create rmnet devs over the IPA netdev and use it for 
+the
+data path.
+The IPA netdev will pass on the packets which it receives from the 
+hardware
+and queue it to network stack where it will be intercepted by the
+rmnet rx handler.
+
 -- 
-2.21.0
-
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
