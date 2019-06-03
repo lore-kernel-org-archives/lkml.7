@@ -2,102 +2,103 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F86DC04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4605EC04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A9E827D83
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:29:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B9CB27D8F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:32:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ejkUkIvy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727756AbfFCI3s (ORCPT
+        id S1727621AbfFCIcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 04:29:48 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:55616 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725856AbfFCI3r (ORCPT
+        Mon, 3 Jun 2019 04:32:04 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:52080 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725856AbfFCIcD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 04:29:47 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 7D2FF80295; Mon,  3 Jun 2019 10:29:35 +0200 (CEST)
-Date:   Mon, 3 Jun 2019 10:29:45 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com
-Subject: Re: [PATCHv6 0/4] omapdrm: DSI command mode panel support
-Message-ID: <20190603082945.GA29122@amd>
-References: <20190523200756.25314-1-sebastian.reichel@collabora.com>
- <60c45d23-de2f-d94a-c3d7-146a2bee538f@ti.com>
- <20190527112122.GJ5447@atomide.com>
+        Mon, 3 Jun 2019 04:32:03 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x538VI0P012223;
+        Mon, 3 Jun 2019 10:31:49 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=STMicroelectronics;
+ bh=E3rVaIy9kAIHI7M+214fHf8F4WB/bpg155JaSxbNFQ4=;
+ b=ejkUkIvy9/n+XTOUFTHEic+5n733rjUac84ytlorYMH7sM9c1SEGoeE2tPPOaQQvObQD
+ yKHW5phkhg3z/KcLKjHRxkL/a2TdIbUrf4s6fNWDUlYF2S/IksOnpjntbXPr+2J4THPh
+ uwgX+OYSxOJrOde0FoQ11zD/sLBEgVriYtokLX1paw6Hn+A+yx363N61csMOvWb4d9lM
+ 0RC+r0JlSGZdwKRl6/TH+1121ZGTsAZETdNgu0ghxisDXIazS9WH3mLmX+n6VRk/1Qe2
+ irMiT/VcNhhl9zeQweWl0/93PFNZ00UNPG5PDYzG2K/h8s8Ll/YlRpW4FoXXa3I7mT80 Jw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2sundrs730-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 03 Jun 2019 10:31:49 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id F2F8931;
+        Mon,  3 Jun 2019 08:31:45 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id AE3CF2514;
+        Mon,  3 Jun 2019 08:31:45 +0000 (GMT)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas24.st.com
+ (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 3 Jun 2019
+ 10:31:45 +0200
+Received: from localhost (10.201.23.97) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 3 Jun 2019 10:31:45
+ +0200
+From:   =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>
+To:     Yannick Fertre <yannick.fertre@st.com>,
+        Philippe Cornu <philippe.cornu@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Vincent Abriou <vincent.abriou@st.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] drm/stm: ltdc: No message if probe
+Date:   Mon, 3 Jun 2019 10:31:34 +0200
+Message-ID: <1559550694-14042-1-git-send-email-yannick.fertre@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="WIyZ46R2i8wDzkSu"
-Content-Disposition: inline
-In-Reply-To: <20190527112122.GJ5447@atomide.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.201.23.97]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-03_06:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Print display controller hardware version in debug mode only.
 
---WIyZ46R2i8wDzkSu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
+---
+ drivers/gpu/drm/stm/ltdc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Hi!
+diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
+index a40870b..2fe6c4a 100644
+--- a/drivers/gpu/drm/stm/ltdc.c
++++ b/drivers/gpu/drm/stm/ltdc.c
+@@ -1229,7 +1229,7 @@ int ltdc_load(struct drm_device *ddev)
+ 		goto err;
+ 	}
+ 
+-	DRM_INFO("ltdc hw version 0x%08x - ready\n", ldev->caps.hw_version);
++	DRM_DEBUG_DRIVER("ltdc hw version 0x%08x\n", ldev->caps.hw_version);
+ 
+ 	/* Add endpoints panels or bridges if any */
+ 	for (i = 0; i < MAX_ENDPOINTS; i++) {
+-- 
+2.7.4
 
-> > > Here is another round of the DSI command mode panel patchset
-> > > integrating the feedback from PATCHv5. The patches are based
-> > > on v5.2-rc1 tag. It does not contain the patches required for
-> > > OMAP3 support (it needs a workaround for a hardware bug) and
-> > > for automatic display rotation. They should get their own series,
-> > > once after everything has been moved to DRM panel API. I think
-> > > DRM panel conversion should happen _after_ this series, since
-> > > otherwise there is a high risk of bricking DSI support completely.
-> > > I already started a WIP branch for converting DSI to the DRM panel
-> > > API on top of this patchset.
-> >=20
-> > Looks good to me. For some reason I can't boot 5.2-rc2 (on x15) so I ha=
-ven't
-> > been able to test yet. I'll pick the series up in any case, and I'll te=
-st it
-> > when I get the kernel booting.
->=20
-> Great good to have these merged finally :)
->=20
-> Hmm I wonder if some x15 models are affected by the SoC variant
-> changes queued in my fixes branch?
-
-I still don't see the patches in next-20190603 . Are they expected to
-be there, or should I use different tree?
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---WIyZ46R2i8wDzkSu
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlz02nkACgkQMOfwapXb+vJNjwCgxBzU0XaaaAImhYPAPGMUURue
-jMUAoJpDkOfXt+oO5pGBCMG6SHJyy49H
-=nupB
------END PGP SIGNATURE-----
-
---WIyZ46R2i8wDzkSu--
