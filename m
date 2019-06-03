@@ -2,357 +2,266 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBCBAC04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CEC1C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D73827DD1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:54:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="M5LBwXeW"
+	by mail.kernel.org (Postfix) with ESMTP id 3F1BB27DD2
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:55:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727846AbfFCIyY (ORCPT
+        id S1727857AbfFCIzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 04:54:24 -0400
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:40655 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbfFCIyY (ORCPT
+        Mon, 3 Jun 2019 04:55:12 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59252 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726604AbfFCIzL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 04:54:24 -0400
-Received: by mail-vk1-f193.google.com with SMTP id s16so1321236vke.7
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 01:54:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=wdJEk7xoPcDvx0rL8FHQp9oPvWZRTtNsGybP0RtSagY=;
-        b=M5LBwXeW8e3O+PDSsi9zCXscQ8y1vbRUSJsU1dQVFrSJjRzc0XEsTIijLOFvdIySua
-         +OCo46JIId3hfB8wKxv+MCF7fVRzIDejRA2kyMLDpDQwCzug1Ciird69sGvwMmk1d8Mo
-         XsEJ3E2hVFq6TKZA01pfKGQ+jF0WA1WjOA96Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=wdJEk7xoPcDvx0rL8FHQp9oPvWZRTtNsGybP0RtSagY=;
-        b=IjslDn+fZQL0ve1hToPEqnB9pTAjV0lEKD5MNci6ZFpYadqI7BEvEnL/gImuySo5by
-         R2g0FPnMZvFVMu+yFNhwDE5cPWEQONwaJMpyQtrcMXWMo57otRfwnlIn7K8xw5uyyH/S
-         RCsiZzaxwoHnkrx3RnvE1uE8dS4A6iSo1trQryGR7W/ThZCN5WcQCkrneNnt2N7dnc5B
-         phpTMdvwqAsPYwVKcVUyCWBYjodWVf/ti/srWNNHj4AO7+Zd/UUME8WCFipl/33toFzE
-         B6MNqG24Ok0Zx+/EAbROt3gekZA0+Dacz1E2XNEZMb4u1nnJb+D8FUqDuyXeac1Q8rf1
-         QVfQ==
-X-Gm-Message-State: APjAAAV0s/HDzHjGdzRyyLeWM1gmPF5QEk4lDfmkB5+PtP77JDV/JjyP
-        eEUbxoI8O/orSmVDIUwtbwJoOIKWsDfp3MoGt7DgJg==
-X-Google-Smtp-Source: APXvYqzW5LQtHHySgqxIQwZwXTkV349/aO/EZ86HUpABwdgeY6YY1BGiVYaBh3z0RzEL+55rfLwERjYPN8UokbeRX/Y=
-X-Received: by 2002:a1f:a003:: with SMTP id j3mr5105438vke.74.1559552062071;
- Mon, 03 Jun 2019 01:54:22 -0700 (PDT)
+        Mon, 3 Jun 2019 04:55:11 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x538mBib123877
+        for <linux-kernel@vger.kernel.org>; Mon, 3 Jun 2019 04:55:10 -0400
+Received: from e35.co.us.ibm.com (e35.co.us.ibm.com [32.97.110.153])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2sw02k9342-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 04:55:09 -0400
+Received: from localhost
+        by e35.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ego@linux.vnet.ibm.com>;
+        Mon, 3 Jun 2019 09:55:09 +0100
+Received: from b03cxnp08028.gho.boulder.ibm.com (9.17.130.20)
+        by e35.co.us.ibm.com (192.168.1.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 3 Jun 2019 09:55:06 +0100
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x538t5bn33096164
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 3 Jun 2019 08:55:05 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9883C136053;
+        Mon,  3 Jun 2019 08:55:05 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 48AFF13604F;
+        Mon,  3 Jun 2019 08:55:05 +0000 (GMT)
+Received: from sofia.ibm.com (unknown [9.124.31.17])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon,  3 Jun 2019 08:55:05 +0000 (GMT)
+Received: by sofia.ibm.com (Postfix, from userid 1000)
+        id 511432E36A2; Mon,  3 Jun 2019 14:25:02 +0530 (IST)
+Date:   Mon, 3 Jun 2019 14:25:02 +0530
+From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
+To:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+Cc:     Paul Mackerras <paulus@samba.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] powerpc/pseries: Fix cpu_hotplug_lock acquisition in
+ resize_hpt()
+Reply-To: ego@linux.vnet.ibm.com
+References: <1557906352-29048-1-git-send-email-ego@linux.vnet.ibm.com>
 MIME-Version: 1.0
-References: <20190603043251.226549-1-cychiang@chromium.org>
- <20190603043251.226549-3-cychiang@chromium.org> <20190603100301.00d68690@xxx>
-In-Reply-To: <20190603100301.00d68690@xxx>
-From:   Cheng-yi Chiang <cychiang@chromium.org>
-Date:   Mon, 3 Jun 2019 16:53:55 +0800
-Message-ID: <CAFv8Nw+g2SZ00FTH969AbpPBBm_jeN9C-7_Mz5Vr7xc+qs0UfQ@mail.gmail.com>
-Subject: Re: [alsa-devel] [PATCH 2/7] ASoC: hdmi-codec: use HDMI state
- notifier to add jack support
-To:     =?UTF-8?B?QW1hZGV1c3ogU8WCYXdpxYRza2k=?= 
-        <amadeuszx.slawinski@linux.intel.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>, Heiko Stuebner <heiko@sntech.de>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        linux-rockchip@lists.infradead.org,
-        Dylan Reid <dgreid@chromium.org>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, tzungbi@chromium.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1557906352-29048-1-git-send-email-ego@linux.vnet.ibm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-TM-AS-GCONF: 00
+x-cbid: 19060308-0012-0000-0000-0000173FA0B9
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011207; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01212557; UDB=6.00637236; IPR=6.00993618;
+ MB=3.00027161; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-03 08:55:08
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19060308-0013-0000-0000-0000578415E7
+Message-Id: <20190603085502.GA23270@in.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-03_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906030065
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 3, 2019 at 3:59 PM Amadeusz S=C5=82awi=C5=84ski
-<amadeuszx.slawinski@linux.intel.com> wrote:
->
-> On Mon,  3 Jun 2019 12:32:46 +0800
-> Cheng-Yi Chiang <cychiang@chromium.org> wrote:
->
-> > From: Philipp Zabel <p.zabel@pengutronix.de>
-> >
-> > Use HDMI connection / disconnection notifications to update an ALSA
-> > jack object. Also make a copy of the ELD block after every change.
-> >
-> > This was posted by Philipp Zabel at
-> >
-> > https://patchwork.kernel.org/patch/9430747/
-> >
-> > Modified by Cheng-Yi Chiang:
-> > - Fix the conflict of removed hdmi_codec_remove ops.
-> > - Other minor fix for the conflict with latest hdmi-codec on ASoC
-> >   for-next tree.
-> >
-> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
-> > ---
-> > The original patch is at https://patchwork.kernel.org/patch/9430747/
-> > I could not find the LKML link for the patch.
-> >
-> >  include/sound/hdmi-codec.h    |   7 +++
-> >  sound/soc/codecs/Kconfig      |   1 +
-> >  sound/soc/codecs/hdmi-codec.c | 104
-> > +++++++++++++++++++++++++++++++++- 3 files changed, 110
-> > insertions(+), 2 deletions(-)
-> >
-> > diff --git a/include/sound/hdmi-codec.h b/include/sound/hdmi-codec.h
-> > index 9483c55f871b..4fa39c93363f 100644
-> > --- a/include/sound/hdmi-codec.h
-> > +++ b/include/sound/hdmi-codec.h
-> > @@ -107,6 +107,13 @@ struct hdmi_codec_pdata {
-> >       void *data;
-> >  };
-> >
-> > +struct snd_soc_component;
-> > +struct snd_soc_jack;
-> > +
-> > +int hdmi_codec_set_jack_detect(struct snd_soc_component *component,
-> > +                            struct snd_soc_jack *jack,
-> > +                            struct device *dev);
-> > +
-> >  #define HDMI_CODEC_DRV_NAME "hdmi-audio-codec"
-> >
-> >  #endif /* __HDMI_CODEC_H__ */
-> > diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-> > index 8f577258080b..f5f6dd04234c 100644
-> > --- a/sound/soc/codecs/Kconfig
-> > +++ b/sound/soc/codecs/Kconfig
-> > @@ -639,6 +639,7 @@ config SND_SOC_HDMI_CODEC
-> >       select SND_PCM_ELD
-> >       select SND_PCM_IEC958
-> >       select HDMI
-> > +     select HDMI_NOTIFIERS
-> >
-> >  config SND_SOC_ES7134
-> >         tristate "Everest Semi ES7134 CODEC"
-> > diff --git a/sound/soc/codecs/hdmi-codec.c
-> > b/sound/soc/codecs/hdmi-codec.c index 6a0cc8d7e141..fe796a7475a5
-> > 100644 --- a/sound/soc/codecs/hdmi-codec.c
-> > +++ b/sound/soc/codecs/hdmi-codec.c
-> > @@ -12,9 +12,12 @@
-> >   * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.       See
-> > the GNU
-> >   * General Public License for more details.
-> >   */
-> > +#include <linux/hdmi-notifier.h>
-> >  #include <linux/module.h>
-> > +#include <linux/notifier.h>
-> >  #include <linux/string.h>
-> >  #include <sound/core.h>
-> > +#include <sound/jack.h>
-> >  #include <sound/pcm.h>
-> >  #include <sound/pcm_params.h>
-> >  #include <sound/soc.h>
-> > @@ -282,6 +285,13 @@ struct hdmi_codec_priv {
-> >       struct snd_pcm_chmap *chmap_info;
-> >       unsigned int chmap_idx;
-> >       struct mutex lock;
-> > +     struct snd_soc_jack *jack;
-> > +     /* Lock to protect setting and getting eld. */
-> > +     struct mutex eld_lock;
-> > +     struct device *dev;
-> > +     struct hdmi_notifier *notifier;
-> > +     struct notifier_block nb;
-> > +     unsigned int jack_status;
-> >  };
-> >
-> >  static const struct snd_soc_dapm_widget hdmi_widgets[] =3D {
-> > @@ -308,7 +318,9 @@ static int hdmi_eld_ctl_get(struct snd_kcontrol
-> > *kcontrol, struct snd_soc_component *component =3D
-> > snd_kcontrol_chip(kcontrol); struct hdmi_codec_priv *hcp =3D
-> > snd_soc_component_get_drvdata(component);
-> > +     mutex_lock(&hcp->eld_lock);
-> >       memcpy(ucontrol->value.bytes.data, hcp->eld,
-> > sizeof(hcp->eld));
-> > +     mutex_unlock(&hcp->eld_lock);
-> >
-> >       return 0;
-> >  }
-> > @@ -393,7 +405,7 @@ static int hdmi_codec_startup(struct
-> > snd_pcm_substream *substream, struct snd_soc_dai *dai)
-> >  {
-> >       struct hdmi_codec_priv *hcp =3D snd_soc_dai_get_drvdata(dai);
-> > -     int ret =3D 0;
-> > +     int ret;
-> >
-> >       ret =3D mutex_trylock(&hcp->lock);
-> >       if (!ret) {
-> > @@ -408,9 +420,9 @@ static int hdmi_codec_startup(struct
-> > snd_pcm_substream *substream, }
-> >
-> >       if (hcp->hcd.ops->get_eld) {
-> > +             mutex_lock(&hcp->eld_lock);
-> >               ret =3D hcp->hcd.ops->get_eld(dai->dev->parent,
-> > hcp->hcd.data, hcp->eld, sizeof(hcp->eld));
-> > -
-> >               if (!ret) {
-> >                       ret =3D
-> > snd_pcm_hw_constraint_eld(substream->runtime, hcp->eld);
->
-> Seems to me like you missed unlock here. There is return inside this
-> if().
->
+Hi,
 
-Thanks for checking!
-The latest patch on hdmi-codec.c on ASoC tree has a change to replace
-that return to goto err.
+On Wed, May 15, 2019 at 01:15:52PM +0530, Gautham R. Shenoy wrote:
+> From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+> 
+> The calls to arch_add_memory()/arch_remove_memory() are always made
+> with the read-side cpu_hotplug_lock acquired via
+> memory_hotplug_begin().  On pSeries,
+> arch_add_memory()/arch_remove_memory() eventually call resize_hpt()
+> which in turn calls stop_machine() which acquires the read-side
+> cpu_hotplug_lock again, thereby resulting in the recursive acquisition
+> of this lock.
 
-https://patchwork.kernel.org/patch/10930875/
+A clarification regarding why we hadn't observed this problem earlier.
 
-My patch is based on that so it should be okay.
-Thanks!
+In the absence of CONFIG_PROVE_LOCKING, we hadn't observed a system
+lockup during a memory hotplug operation because cpus_read_lock() is a
+per-cpu rwsem read, which, in the fast-path (in the absence of the
+writer, which in our case is a CPU-hotplug operation) simply
+increments the read_count on the semaphore. Thus a recursive read in
+the fast-path doesn't cause any problems.
 
-> > @@ -419,6 +431,7 @@ static int hdmi_codec_startup(struct
-> > snd_pcm_substream *substream, }
-> >               /* Select chmap supported */
-> >               hdmi_codec_eld_chmap(hcp);
-> > +             mutex_unlock(&hcp->eld_lock);
-> >       }
-> >       return 0;
-> >
-> > @@ -747,6 +760,77 @@ static const struct snd_soc_component_driver
-> > hdmi_driver =3D { .non_legacy_dai_naming        =3D 1,
-> >  };
-> >
-> > +static void hdmi_codec_jack_report(struct hdmi_codec_priv *hcp,
-> > +                                unsigned int jack_status)
-> > +{
-> > +     if (!hcp->jack)
-> > +             return;
-> > +
-> > +     if (jack_status !=3D hcp->jack_status) {
-> > +             snd_soc_jack_report(hcp->jack, jack_status,
-> > SND_JACK_LINEOUT);
-> > +             hcp->jack_status =3D jack_status;
-> > +     }
-> > +}
-> > +
-> > +static int hdmi_codec_notify(struct notifier_block *nb, unsigned
-> > long event,
-> > +                          void *data)
-> > +{
-> > +     struct hdmi_codec_priv *hcp =3D container_of(nb, struct
-> > hdmi_codec_priv,
-> > +                                                nb);
-> > +     struct hdmi_notifier *n =3D data;
-> > +
-> > +     if (!hcp->jack)
-> > +             return NOTIFY_OK;
-> > +
-> > +     switch (event) {
-> > +     case HDMI_NEW_ELD:
-> > +             mutex_lock(&hcp->eld_lock);
-> > +             memcpy(hcp->eld, n->eld, sizeof(hcp->eld));
-> > +             mutex_unlock(&hcp->eld_lock);
-> > +             /* fall through */
-> > +     case HDMI_CONNECTED:
-> > +             hdmi_codec_jack_report(hcp, SND_JACK_LINEOUT);
-> > +             break;
-> > +     case HDMI_DISCONNECTED:
-> > +             hdmi_codec_jack_report(hcp, 0);
-> > +             break;
-> > +     }
-> > +
-> > +     return NOTIFY_OK;
-> > +}
-> > +
-> > +/**
-> > + * hdmi_codec_set_jack_detect - register HDMI state notifier callback
-> > + * @component: the hdmi-codec instance
-> > + * @jack: ASoC jack to report (dis)connection events on
-> > + * @dev: hdmi_notifier device, usually HDMI_TX or CEC device
-> > + */
-> > +int hdmi_codec_set_jack_detect(struct snd_soc_component *component,
-> > +                            struct snd_soc_jack *jack,
-> > +                            struct device *dev)
-> > +{
-> > +     struct hdmi_codec_priv *hcp =3D
-> > snd_soc_component_get_drvdata(component);
-> > +     int ret;
-> > +
-> > +     hcp->notifier =3D hdmi_notifier_get(dev);
-> > +     if (!hcp->notifier)
-> > +             return -ENOMEM;
-> > +
-> > +     hcp->jack =3D jack;
-> > +     hcp->nb.notifier_call =3D hdmi_codec_notify;
-> > +     ret =3D hdmi_notifier_register(hcp->notifier, &hcp->nb);
-> > +     if (ret)
-> > +             goto err_notifier_put;
-> > +
-> > +     return 0;
-> > +
-> > +err_notifier_put:
-> > +     hdmi_notifier_put(hcp->notifier);
-> > +     hcp->notifier =3D NULL;
-> > +     return ret;
-> > +}
-> > +EXPORT_SYMBOL_GPL(hdmi_codec_set_jack_detect);
-> > +
-> >  static int hdmi_codec_probe(struct platform_device *pdev)
-> >  {
-> >       struct hdmi_codec_pdata *hcd =3D pdev->dev.platform_data;
-> > @@ -774,6 +858,7 @@ static int hdmi_codec_probe(struct
-> > platform_device *pdev)
-> >       hcp->hcd =3D *hcd;
-> >       mutex_init(&hcp->lock);
-> > +     mutex_init(&hcp->eld_lock);
-> >
-> >       daidrv =3D devm_kcalloc(dev, dai_count, sizeof(*daidrv),
-> > GFP_KERNEL); if (!daidrv)
-> > @@ -797,6 +882,20 @@ static int hdmi_codec_probe(struct
-> > platform_device *pdev) __func__, ret);
-> >               return ret;
-> >       }
-> > +
-> > +     hcp->dev =3D dev;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int hdmi_codec_remove(struct platform_device *pdev)
-> > +{
-> > +     struct hdmi_codec_priv *hcp =3D platform_get_drvdata(pdev);
-> > +
-> > +     if (hcp->notifier) {
-> > +             hdmi_notifier_unregister(hcp->notifier, &hcp->nb);
-> > +             hdmi_notifier_put(hcp->notifier);
-> > +     }
-> >       return 0;
-> >  }
-> >
-> > @@ -805,6 +904,7 @@ static struct platform_driver hdmi_codec_driver =3D
-> > { .name =3D HDMI_CODEC_DRV_NAME,
-> >       },
-> >       .probe =3D hdmi_codec_probe,
-> > +     .remove =3D hdmi_codec_remove,
-> >  };
-> >
-> >  module_platform_driver(hdmi_codec_driver);
->
+However, we can hit this problem in practice if there is a concurrent
+CPU-Hotplug operation in progress which is waiting to acquire the
+write-side of the lock. This will cause the second recursive read to
+block until the writer finishes. While the writer is blocked since the
+first read holds the lock. Thus both the reader as well as the writers
+fail to make any progress thereby blocking both CPU-Hotplug as well as
+Memory Hotplug operations.
+
+Memory-Hotplug				CPU-Hotplug
+CPU 0					CPU 1
+------                                  ------
+
+1. down_read(cpu_hotplug_lock.rw_sem)  
+   [memory_hotplug_begin]
+					2. down_write(cpu_hotplug_lock.rw_sem)
+					[cpu_up/cpu_down]
+3. down_read(cpu_hotplug_lock.rw_sem)
+   [stop_machine()]
+
+
+> 
+> Lockdep complains as follows in these code-paths.
+> 
+>  swapper/0/1 is trying to acquire lock:
+>  (____ptrval____) (cpu_hotplug_lock.rw_sem){++++}, at: stop_machine+0x2c/0x60
+> 
+> but task is already holding lock:
+> (____ptrval____) (cpu_hotplug_lock.rw_sem){++++}, at: mem_hotplug_begin+0x20/0x50
+> 
+>  other info that might help us debug this:
+>   Possible unsafe locking scenario:
+> 
+>         CPU0
+>         ----
+>    lock(cpu_hotplug_lock.rw_sem);
+>    lock(cpu_hotplug_lock.rw_sem);
+> 
+>   *** DEADLOCK ***
+> 
+>   May be due to missing lock nesting notation
+> 
+>  3 locks held by swapper/0/1:
+>   #0: (____ptrval____) (&dev->mutex){....}, at: __driver_attach+0x12c/0x1b0
+>   #1: (____ptrval____) (cpu_hotplug_lock.rw_sem){++++}, at: mem_hotplug_begin+0x20/0x50
+>   #2: (____ptrval____) (mem_hotplug_lock.rw_sem){++++}, at: percpu_down_write+0x54/0x1a0
+> 
+> stack backtrace:
+>  CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.0.0-rc5-58373-gbc99402235f3-dirty #166
+>  Call Trace:
+>  [c0000000feb03150] [c000000000e32bd4] dump_stack+0xe8/0x164 (unreliable)
+>  [c0000000feb031a0] [c00000000020d6c0] __lock_acquire+0x1110/0x1c70
+>  [c0000000feb03320] [c00000000020f080] lock_acquire+0x240/0x290
+>  [c0000000feb033e0] [c00000000017f554] cpus_read_lock+0x64/0xf0
+>  [c0000000feb03420] [c00000000029ebac] stop_machine+0x2c/0x60
+>  [c0000000feb03460] [c0000000000d7f7c] pseries_lpar_resize_hpt+0x19c/0x2c0
+>  [c0000000feb03500] [c0000000000788d0] resize_hpt_for_hotplug+0x70/0xd0
+>  [c0000000feb03570] [c000000000e5d278] arch_add_memory+0x58/0xfc
+>  [c0000000feb03610] [c0000000003553a8] devm_memremap_pages+0x5e8/0x8f0
+>  [c0000000feb036c0] [c0000000009c2394] pmem_attach_disk+0x764/0x830
+>  [c0000000feb037d0] [c0000000009a7c38] nvdimm_bus_probe+0x118/0x240
+>  [c0000000feb03860] [c000000000968500] really_probe+0x230/0x4b0
+>  [c0000000feb038f0] [c000000000968aec] driver_probe_device+0x16c/0x1e0
+>  [c0000000feb03970] [c000000000968ca8] __driver_attach+0x148/0x1b0
+>  [c0000000feb039f0] [c0000000009650b0] bus_for_each_dev+0x90/0x130
+>  [c0000000feb03a50] [c000000000967dd4] driver_attach+0x34/0x50
+>  [c0000000feb03a70] [c000000000967068] bus_add_driver+0x1a8/0x360
+>  [c0000000feb03b00] [c00000000096a498] driver_register+0x108/0x170
+>  [c0000000feb03b70] [c0000000009a7400] __nd_driver_register+0xd0/0xf0
+>  [c0000000feb03bd0] [c00000000128aa90] nd_pmem_driver_init+0x34/0x48
+>  [c0000000feb03bf0] [c000000000010a10] do_one_initcall+0x1e0/0x45c
+>  [c0000000feb03cd0] [c00000000122462c] kernel_init_freeable+0x540/0x64c
+>  [c0000000feb03db0] [c00000000001110c] kernel_init+0x2c/0x160
+>  [c0000000feb03e20] [c00000000000bed4] ret_from_kernel_thread+0x5c/0x68
+> 
+> Fix this issue by
+>   1) Requiring all the calls to pseries_lpar_resize_hpt() be made
+>      with cpu_hotplug_lock held.
+> 
+>   2) In pseries_lpar_resize_hpt() invoke stop_machine_cpuslocked()
+>      as a consequence of 1)
+> 
+>   3) To satisfy 1), in hpt_order_set(), call mmu_hash_ops.resize_hpt()
+>      with cpu_hotplug_lock held.
+> 
+> Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+> ---
+> v2 -> v3 : Updated the comment for pseries_lpar_resize_hpt()
+>            Updated the commit-log with the full backtrace.
+> v1 -> v2 : Rebased against powerpc/next instead of linux/master
+> 
+>  arch/powerpc/mm/book3s64/hash_utils.c | 9 ++++++++-
+>  arch/powerpc/platforms/pseries/lpar.c | 8 ++++++--
+>  2 files changed, 14 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/powerpc/mm/book3s64/hash_utils.c b/arch/powerpc/mm/book3s64/hash_utils.c
+> index 919a861..d07fcafd 100644
+> --- a/arch/powerpc/mm/book3s64/hash_utils.c
+> +++ b/arch/powerpc/mm/book3s64/hash_utils.c
+> @@ -38,6 +38,7 @@
+>  #include <linux/libfdt.h>
+>  #include <linux/pkeys.h>
+>  #include <linux/hugetlb.h>
+> +#include <linux/cpu.h>
+> 
+>  #include <asm/debugfs.h>
+>  #include <asm/processor.h>
+> @@ -1928,10 +1929,16 @@ static int hpt_order_get(void *data, u64 *val)
+> 
+>  static int hpt_order_set(void *data, u64 val)
+>  {
+> +	int ret;
+> +
+>  	if (!mmu_hash_ops.resize_hpt)
+>  		return -ENODEV;
+> 
+> -	return mmu_hash_ops.resize_hpt(val);
+> +	cpus_read_lock();
+> +	ret = mmu_hash_ops.resize_hpt(val);
+> +	cpus_read_unlock();
+> +
+> +	return ret;
+>  }
+> 
+>  DEFINE_DEBUGFS_ATTRIBUTE(fops_hpt_order, hpt_order_get, hpt_order_set, "%llu\n");
+> diff --git a/arch/powerpc/platforms/pseries/lpar.c b/arch/powerpc/platforms/pseries/lpar.c
+> index 1034ef1..557d592 100644
+> --- a/arch/powerpc/platforms/pseries/lpar.c
+> +++ b/arch/powerpc/platforms/pseries/lpar.c
+> @@ -859,7 +859,10 @@ static int pseries_lpar_resize_hpt_commit(void *data)
+>  	return 0;
+>  }
+> 
+> -/* Must be called in user context */
+> +/*
+> + * Must be called in process context. The caller must hold the
+> + * cpus_lock.
+> + */
+>  static int pseries_lpar_resize_hpt(unsigned long shift)
+>  {
+>  	struct hpt_resize_state state = {
+> @@ -913,7 +916,8 @@ static int pseries_lpar_resize_hpt(unsigned long shift)
+> 
+>  	t1 = ktime_get();
+> 
+> -	rc = stop_machine(pseries_lpar_resize_hpt_commit, &state, NULL);
+> +	rc = stop_machine_cpuslocked(pseries_lpar_resize_hpt_commit,
+> +				     &state, NULL);
+> 
+>  	t2 = ktime_get();
+> 
+> -- 
+> 1.9.4
+> 
+
