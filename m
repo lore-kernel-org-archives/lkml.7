@@ -2,135 +2,152 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA464C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 21:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82BABC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 21:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAB0425ED6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 21:45:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="T42dqUDn"
+	by mail.kernel.org (Postfix) with ESMTP id 5E89E25ED6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 21:46:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726354AbfFCVp6 (ORCPT
+        id S1726336AbfFCVq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 17:45:58 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:42873 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbfFCVp5 (ORCPT
+        Mon, 3 Jun 2019 17:46:57 -0400
+Received: from mail-it1-f200.google.com ([209.85.166.200]:33550 "EHLO
+        mail-it1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726055AbfFCVq5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 17:45:57 -0400
-Received: by mail-qt1-f194.google.com with SMTP id s15so11339559qtk.9
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 14:45:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=gvdrQo5B70PjVzTAGPUvQj7fvSXVzP6mxSVdEzCLASY=;
-        b=T42dqUDnlxUcv42X+xpZZ9Wm2JW57MKk1cKisSf9YDQbjcXzBoFwP6e/stsMbCe6gE
-         0Pzg4myXqP5r5dH2OzSVt2SEs20IPwSCthC4VfPoa+N1i1Jt9yobmyV7hWGXYy1Sdw8c
-         WcIkyT5UcFrW9E5+OOw0rC+EZoB5B5etU3u7D7ed8RRqfekvVMZGlB2ClXH6FEmAxhWN
-         fp1y0jjJ8Gpaim5JLck1meM2kXiodMWkEdomDrzHG1GDm1N8PiXsHqPKf2hO0Ddcec3K
-         s2b+ppo+bQ6P79c2lKKpspngweqqWf5nGWLQ3pIVHVUmD61Ji8D3Vk+OfHM/IHm49KBm
-         GW0g==
+        Mon, 3 Jun 2019 17:46:57 -0400
+Received: by mail-it1-f200.google.com with SMTP id z7so691667itc.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 14:46:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=gvdrQo5B70PjVzTAGPUvQj7fvSXVzP6mxSVdEzCLASY=;
-        b=dFgiwIpzvSMvu1AiB/U37S77/u2IS4fFYeEM4Yzw8dimT2yY6MI739VOmYdbXdKQiu
-         8VyjZzlNBOTD6N6lG60x/rwoHHJQQHArdH/ErwR9DmbbyZ61grbTxi7uHG39EbAXbM9b
-         l01SgeAQ8Ue8ZZlTdPsIdHcKdmMQ7sQYQDX4zStYOLZwClc9hFaqyqu51iIbeLjIMaF5
-         jNjke8X6pirMv3q4bRXasPfmXGCsv7JrhW82Qdq3bqZHsRrgoZTGqWPA14yh4KDACitO
-         c8sTdXKzstf4adlLYOcpiul4BcuIVj4dPnn7yvlVTnRnqFpc7rNjAd5/nv7RH2aazqeK
-         FlbA==
-X-Gm-Message-State: APjAAAUepfP2s8OndyhLkcpayscVpZhrwuv+KF61zIvkKmq6kn2G5kdH
-        VVFvryNxKb614sBDwcNCmB/+j0Ez5tQ=
-X-Google-Smtp-Source: APXvYqxTQ/VyJ9mLBkuhiu277acvqJ0JTn+d00JBzZnk9wtjBACFQ0jxMb87m6w56/kleGG9LYW/dA==
-X-Received: by 2002:ac8:68e:: with SMTP id f14mr11737655qth.366.1559594674546;
-        Mon, 03 Jun 2019 13:44:34 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id e66sm9481525qtb.55.2019.06.03.13.44.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Jun 2019 13:44:33 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     airlied@linux.ie, daniel@ffwll.ch, thellstrom@vmware.com,
-        hch@lst.de, m.szyprowski@samsung.com, robin.murphy@arm.com,
-        linux-graphics-maintainer@vmware.com,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [RESEND PATCH v2] drm/vmwgfx: fix a warning due to missing dma_parms
-Date:   Mon,  3 Jun 2019 16:44:15 -0400
-Message-Id: <1559594655-30324-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=zy+G7CpgELhLwgzs/ScfOsi6z+cOCikk738HcwlNl2M=;
+        b=ktAveZjLvLXAVj7he284zzprV2fxMoOnOkxYbv+8Kh6YKwSxYSyvgK1chgR9Zw5Stc
+         xQPDA0BlPxb44b7tvIfMgiOtQdGoc46FHKCdVpaB6uFsE9k8fhumYJWd5Y6f7k0n+Nve
+         UnClmSOJ1CU6sOxCSwAaM77Bb2S0oGs9mXZVZfTjzOLWaSu/wOiW5WLb/l3UNm01lVCM
+         TTzqEWIt8Cp/+w+LWz4i5LqY2sA3/lvtf6OUK9OmTT15BLjSGLoYdYr+qgFAtY2Urh90
+         Z02DArhQVKpiHVgfkPA+cNuOx7tCUeOGWaovMbEHNf8W7jb4iBjvAGYTU+KIJ3EoXURt
+         M8HQ==
+X-Gm-Message-State: APjAAAXlSQk8GVULdWfDz33G6iyuKf18920vBv2ELWPPwEMD7phdce4Y
+        SVoP441KV5PHIcxlijj9VhUXDNSooWwR6VoYfvgezVJa8/Q6
+X-Google-Smtp-Source: APXvYqwmPGLNecgCGODGKgKJBDEzDLmk5wLcXzOhpW2pvyGFBZA3BINPBhUXmcKOpGkbD6FtVQKBDBIrb1Hwd/5PqbkyAfSsRKsZ
+MIME-Version: 1.0
+X-Received: by 2002:a6b:14c2:: with SMTP id 185mr3504074iou.69.1559594465472;
+ Mon, 03 Jun 2019 13:41:05 -0700 (PDT)
+Date:   Mon, 03 Jun 2019 13:41:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000001bb6d7058a716205@google.com>
+Subject: memory leak in raw_sendmsg
+From:   syzbot <syzbot+a90604060cb40f5bdd16@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, linux-can@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mkl@pengutronix.de,
+        netdev@vger.kernel.org, socketcan@hartkopp.net,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Booting up with DMA_API_DEBUG_SG=y generates a warning due to the driver
-forgot to set dma_parms appropriately. Set it just after vmw_dma_masks()
-in vmw_driver_load().
+Hello,
 
-DMA-API: vmwgfx 0000:00:0f.0: mapping sg segment longer than device
-claims to support [len=2097152] [max=65536]
-WARNING: CPU: 2 PID: 261 at kernel/dma/debug.c:1232
-debug_dma_map_sg+0x360/0x480
-Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop
-Reference Platform, BIOS 6.00 04/13/2018
-RIP: 0010:debug_dma_map_sg+0x360/0x480
-Call Trace:
- vmw_ttm_map_dma+0x3b1/0x5b0 [vmwgfx]
- vmw_bo_map_dma+0x25/0x30 [vmwgfx]
- vmw_otables_setup+0x2a8/0x750 [vmwgfx]
- vmw_request_device_late+0x78/0xc0 [vmwgfx]
- vmw_request_device+0xee/0x4e0 [vmwgfx]
- vmw_driver_load.cold+0x757/0xd84 [vmwgfx]
- drm_dev_register+0x1ff/0x340 [drm]
- drm_get_pci_dev+0x110/0x290 [drm]
- vmw_probe+0x15/0x20 [vmwgfx]
- local_pci_probe+0x7a/0xc0
- pci_device_probe+0x1b9/0x290
- really_probe+0x1b5/0x630
- driver_probe_device+0xa3/0x1a0
- device_driver_attach+0x94/0xa0
- __driver_attach+0xdd/0x1c0
- bus_for_each_dev+0xfe/0x150
- driver_attach+0x2d/0x40
- bus_add_driver+0x290/0x350
- driver_register+0xdc/0x1d0
- __pci_register_driver+0xda/0xf0
- vmwgfx_init+0x34/0x1000 [vmwgfx]
- do_one_initcall+0xe5/0x40a
- do_init_module+0x10f/0x3a0
- load_module+0x16a5/0x1a40
- __se_sys_finit_module+0x183/0x1c0
- __x64_sys_finit_module+0x43/0x50
- do_syscall_64+0xc8/0x606
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+syzbot found the following crash on:
 
-Fixes: fb1d9738ca05 ("drm/vmwgfx: Add DRM driver for VMware Virtual GPU")
-Suggested-by: Thomas Hellstrom <thellstrom@vmware.com>
-Signed-off-by: Qian Cai <cai@lca.pw>
+HEAD commit:    3ab4436f Merge tag 'nfsd-5.2-1' of git://linux-nfs.org/~bf..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=158090a6a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=50393f7bfe444ff6
+dashboard link: https://syzkaller.appspot.com/bug?extid=a90604060cb40f5bdd16
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12e42092a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1327b0a6a00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+a90604060cb40f5bdd16@syzkaller.appspotmail.com
+
+DRCONF(NETDEV_CHANGE): hsr_slave_0: link becomes ready
+executing program
+executing program
+BUG: memory leak
+unreferenced object 0xffff88812af50600 (size 512):
+   comm "syz-executor081", pid 7046, jiffies 4294948162 (age 13.870s)
+   hex dump (first 32 bytes):
+     0d 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
+     9d 92 de d5 ec ad bc 02 6f 66 69 6c 65 3d 30 20  ........ofile=0
+   backtrace:
+     [<00000000c4297f99>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:55 [inline]
+     [<00000000c4297f99>] slab_post_alloc_hook mm/slab.h:439 [inline]
+     [<00000000c4297f99>] slab_alloc_node mm/slab.c:3269 [inline]
+     [<00000000c4297f99>] kmem_cache_alloc_node_trace+0x15b/0x2a0  
+mm/slab.c:3597
+     [<0000000066d13723>] __do_kmalloc_node mm/slab.c:3619 [inline]
+     [<0000000066d13723>] __kmalloc_node_track_caller+0x38/0x50  
+mm/slab.c:3634
+     [<00000000ed0585ca>] __kmalloc_reserve.isra.0+0x40/0xb0  
+net/core/skbuff.c:138
+     [<000000009a9dc318>] __alloc_skb+0xa0/0x210 net/core/skbuff.c:206
+     [<00000000926a7d5b>] alloc_skb include/linux/skbuff.h:1054 [inline]
+     [<00000000926a7d5b>] alloc_skb_with_frags+0x5f/0x250  
+net/core/skbuff.c:5327
+     [<00000000c4ab3faa>] sock_alloc_send_pskb+0x269/0x2a0  
+net/core/sock.c:2219
+     [<00000000723cdeb0>] sock_alloc_send_skb+0x32/0x40 net/core/sock.c:2236
+     [<000000009ba80e2d>] raw_sendmsg+0xce/0x300 net/can/raw.c:761
+     [<0000000000a68d92>] sock_sendmsg_nosec net/socket.c:646 [inline]
+     [<0000000000a68d92>] sock_sendmsg+0x54/0x70 net/socket.c:665
+     [<000000004e3a95f6>] ___sys_sendmsg+0x393/0x3c0 net/socket.c:2286
+     [<00000000ec078bc9>] __sys_sendmsg+0x80/0xf0 net/socket.c:2324
+     [<0000000002d8ab21>] __do_sys_sendmsg net/socket.c:2333 [inline]
+     [<0000000002d8ab21>] __se_sys_sendmsg net/socket.c:2331 [inline]
+     [<0000000002d8ab21>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2331
+     [<0000000007c3590d>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:301
+     [<000000003149a5e4>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff888118308200 (size 224):
+   comm "syz-executor081", pid 7046, jiffies 4294948162 (age 13.870s)
+   hex dump (first 32 bytes):
+     b0 64 19 2a 81 88 ff ff b0 64 19 2a 81 88 ff ff  .d.*.....d.*....
+     00 90 28 24 81 88 ff ff 00 64 19 2a 81 88 ff ff  ..($.....d.*....
+   backtrace:
+     [<0000000085e706a4>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:55 [inline]
+     [<0000000085e706a4>] slab_post_alloc_hook mm/slab.h:439 [inline]
+     [<0000000085e706a4>] slab_alloc mm/slab.c:3326 [inline]
+     [<0000000085e706a4>] kmem_cache_alloc+0x134/0x270 mm/slab.c:3488
+     [<000000005a366403>] skb_clone+0x6e/0x140 net/core/skbuff.c:1321
+     [<00000000854d44b1>] __skb_tstamp_tx+0x19f/0x220 net/core/skbuff.c:4434
+     [<0000000091e53e01>] __dev_queue_xmit+0x920/0xd60 net/core/dev.c:3813
+     [<0000000043e22300>] dev_queue_xmit+0x18/0x20 net/core/dev.c:3910
+     [<0000000091bdc746>] can_send+0x138/0x2b0 net/can/af_can.c:290
+     [<000000002dddbaef>] raw_sendmsg+0x1bb/0x300 net/can/raw.c:780
+     [<0000000000a68d92>] sock_sendmsg_nosec net/socket.c:646 [inline]
+     [<0000000000a68d92>] sock_sendmsg+0x54/0x70 net/socket.c:665
+     [<000000004e3a95f6>] ___sys_sendmsg+0x393/0x3c0 net/socket.c:2286
+     [<00000000ec078bc9>] __sys_sendmsg+0x80/0xf0 net/socket.c:2324
+     [<0000000002d8ab21>] __do_sys_sendmsg net/socket.c:2333 [inline]
+     [<0000000002d8ab21>] __se_sys_sendmsg net/socket.c:2331 [inline]
+     [<0000000002d8ab21>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2331
+     [<0000000007c3590d>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:301
+     [<000000003149a5e4>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+
+
 ---
- drivers/gpu/drm/vmwgfx/vmwgfx_drv.c | 2 ++
- 1 file changed, 2 insertions(+)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
-index 4ff11a0077e1..5f690429eb89 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
-@@ -747,6 +747,8 @@ static int vmw_driver_load(struct drm_device *dev, unsigned long chipset)
- 	if (unlikely(ret != 0))
- 		goto out_err0;
- 
-+	dma_set_max_seg_size(dev->dev, U32_MAX);
-+
- 	if (dev_priv->capabilities & SVGA_CAP_GMR2) {
- 		DRM_INFO("Max GMR ids is %u\n",
- 			 (unsigned)dev_priv->max_gmr_ids);
--- 
-1.8.3.1
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
