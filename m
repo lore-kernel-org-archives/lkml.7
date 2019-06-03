@@ -2,139 +2,127 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0AE6C46470
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E66C28CC6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2FA627CEA
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:40:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8702A27CE7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:41:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbfFCHkP (ORCPT
+        id S1726880AbfFCHlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 03:40:15 -0400
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:55556 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726538AbfFCHkO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 03:40:14 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 08DAC27E6E;
-        Mon,  3 Jun 2019 03:40:11 -0400 (EDT)
-Date:   Mon, 3 Jun 2019 17:40:21 +1000 (AEST)
-From:   Finn Thain <fthain@telegraphics.com.au>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        scsi <linux-scsi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>
-Subject: Re: [PATCH 5/7] scsi: mac_scsi: Fix pseudo DMA implementation, take
- 2
-In-Reply-To: <CAMuHMdUFxQnmJmkr2qm4waTfFA5yfCHAFngyD37cFH6gbbD-Pg@mail.gmail.com>
-Message-ID: <alpine.LNX.2.21.1906031702220.37@nippy.intranet>
-References: <cover.1559438652.git.fthain@telegraphics.com.au> <c56deeb735545c7942607a93f017bb536f581ae5.1559438652.git.fthain@telegraphics.com.au> <CAMuHMdWxRtJU2aRQQjXzR2mvpfpDezCVu42Eo1eXDsQaPb+j6Q@mail.gmail.com> <alpine.LNX.2.21.1906030903510.20@nippy.intranet>
- <CAMuHMdUFxQnmJmkr2qm4waTfFA5yfCHAFngyD37cFH6gbbD-Pg@mail.gmail.com>
+        Mon, 3 Jun 2019 03:41:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35386 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726292AbfFCHlY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 03:41:24 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6FC9A3092650;
+        Mon,  3 Jun 2019 07:41:23 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-18.pek2.redhat.com [10.72.8.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E930760BF1;
+        Mon,  3 Jun 2019 07:41:17 +0000 (UTC)
+Date:   Mon, 3 Jun 2019 15:41:13 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Minwoo Im <minwoo.im.dev@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Minwoo Im <minwoo.im@samsung.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-block@vger.kernel.org
+Subject: Re: [PATCH] genirq/affinity: remove unused arg when building aff mask
+Message-ID: <20190603074112.GB11812@ming.t460p>
+References: <20190602112117.31839-1-minwoo.im.dev@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190602112117.31839-1-minwoo.im.dev@gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Mon, 03 Jun 2019 07:41:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 3 Jun 2019, Geert Uytterhoeven wrote:
+On Sun, Jun 02, 2019 at 08:21:17PM +0900, Minwoo Im wrote:
+> When building affinity masks, the struct irq_affinity *affd is not
+> needed because irq_create_affinity_masks() has already given a cursored
+> current vector after pre_vectors via "curvec".
+> 
+> This patch removes unused argument for irq_build_affinity_masks() and
+> __irq_build_affinity_masks().  No functions changes are included.
+> 
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ming Lei <ming.lei@redhat.com>
+> Cc: linux-block@vger.kernel.org
+> Signed-off-by: Minwoo Im <minwoo.im.dev@gmail.com>
+> ---
+>  kernel/irq/affinity.c | 12 +++++-------
+>  1 file changed, 5 insertions(+), 7 deletions(-)
+> 
+> diff --git a/kernel/irq/affinity.c b/kernel/irq/affinity.c
+> index f18cd5aa33e8..4352b08ae48d 100644
+> --- a/kernel/irq/affinity.c
+> +++ b/kernel/irq/affinity.c
+> @@ -94,8 +94,7 @@ static int get_nodes_in_cpumask(cpumask_var_t *node_to_cpumask,
+>  	return nodes;
+>  }
+>  
+> -static int __irq_build_affinity_masks(const struct irq_affinity *affd,
+> -				      unsigned int startvec,
+> +static int __irq_build_affinity_masks(unsigned int startvec,
+>  				      unsigned int numvecs,
+>  				      unsigned int firstvec,
+>  				      cpumask_var_t *node_to_cpumask,
+> @@ -171,8 +170,7 @@ static int __irq_build_affinity_masks(const struct irq_affinity *affd,
+>   *	1) spread present CPU on these vectors
+>   *	2) spread other possible CPUs on these vectors
+>   */
+> -static int irq_build_affinity_masks(const struct irq_affinity *affd,
+> -				    unsigned int startvec, unsigned int numvecs,
+> +static int irq_build_affinity_masks(unsigned int startvec, unsigned int numvecs,
+>  				    unsigned int firstvec,
+>  				    struct irq_affinity_desc *masks)
+>  {
+> @@ -197,7 +195,7 @@ static int irq_build_affinity_masks(const struct irq_affinity *affd,
+>  	build_node_to_cpumask(node_to_cpumask);
+>  
+>  	/* Spread on present CPUs starting from affd->pre_vectors */
+> -	nr_present = __irq_build_affinity_masks(affd, curvec, numvecs,
+> +	nr_present = __irq_build_affinity_masks(curvec, numvecs,
+>  						firstvec, node_to_cpumask,
+>  						cpu_present_mask, nmsk, masks);
+>  
+> @@ -212,7 +210,7 @@ static int irq_build_affinity_masks(const struct irq_affinity *affd,
+>  	else
+>  		curvec = firstvec + nr_present;
+>  	cpumask_andnot(npresmsk, cpu_possible_mask, cpu_present_mask);
+> -	nr_others = __irq_build_affinity_masks(affd, curvec, numvecs,
+> +	nr_others = __irq_build_affinity_masks(curvec, numvecs,
+>  					       firstvec, node_to_cpumask,
+>  					       npresmsk, nmsk, masks);
+>  	put_online_cpus();
+> @@ -295,7 +293,7 @@ irq_create_affinity_masks(unsigned int nvecs, struct irq_affinity *affd)
+>  		unsigned int this_vecs = affd->set_size[i];
+>  		int ret;
+>  
+> -		ret = irq_build_affinity_masks(affd, curvec, this_vecs,
+> +		ret = irq_build_affinity_masks(curvec, this_vecs,
+>  					       curvec, masks);
+>  		if (ret) {
+>  			kfree(masks);
+> -- 
+> 2.21.0
+> 
 
-> Hi Finn,
-> 
-> On Mon, Jun 3, 2019 at 1:32 AM Finn Thain <fthain@telegraphics.com.au> wrote:
-> > On Sun, 2 Jun 2019, Geert Uytterhoeven wrote:
-> > > On Sun, Jun 2, 2019 at 3:29 AM Finn Thain <fthain@telegraphics.com.au>
-> > > wrote:
-> > > > A system bus error during a PDMA transfer can mess up the calculation
-> > > > of the transfer residual (the PDMA handshaking hardware lacks a byte
-> > > > counter). This results in data corruption.
-> > > >
-> > > > The algorithm in this patch anticipates a bus error by starting each
-> > > > transfer with a MOVE.B instruction. If a bus error is caught the
-> > > > transfer will be retried. If a bus error is caught later in the
-> > > > transfer (for a MOVE.W instruction) the transfer gets failed and
-> > > > subsequent requests for that target will use PIO instead of PDMA.
-> > > >
-> > > > This avoids the "!REQ and !ACK" error so the severity level of that
-> > > > message is reduced to KERN_DEBUG.
-> > > >
-> > > > Cc: Michael Schmitz <schmitzmic@gmail.com>
-> > > > Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> > > > Cc: stable@vger.kernel.org # v4.14+
-> > > > Fixes: 3a0f64bfa907 ("mac_scsi: Fix pseudo DMA implementation")
-> > > > Reported-by: Chris Jones <chris@martin-jones.com>
-> > > > Tested-by: Stan Johnson <userm57@yahoo.com>
-> > > > Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-> > >
-> > > Thanks for your patch!
-> > >
-> > > > ---
-> > > >  arch/m68k/include/asm/mac_pdma.h | 179 +++++++++++++++++++++++++++
-> > > >  drivers/scsi/mac_scsi.c          | 201 ++++++++-----------------------
-> > >
-> > > Why have you moved the PDMA implementation to a header file under
-> > > arch/m68k/? Do you intend to reuse it by other drivers?
-> > >
-> >
-> > There are a couple of reasons: the mac_esp driver also uses PDMA and the
-> > NuBus PowerMac port also uses mac_scsi.c. OTOH, the NuBus PowerMac port is
-> > still out-of-tree, and it is unclear whether the mac_esp driver will ever
-> > benefit from this code.
-> 
-> So you do have future sharing in mind...
-> 
-> > > If not, please keep it in the driver, so (a) you don't need an ack from
-> > > me ;-), and (b) your change may be easier to review.
-> >
-> > I take your wink to mean that you don't want to ask the SCSI maintainers
-> > to review m68k asm. Putting aside the code review process for a moment, do
-> 
-> I meant that apart from the code containing m68k assembler source, it is 
-> not related to arch/m68k/, and thus belongs to the driver.
+Looks fine:
 
-That criterion seems insufficient. It could describe most of arch/m68k/mac 
-(which has headers in arch/m68k/include).
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
-> There are several other drivers that contain pieces of assembler code.
-> 
 
-Does any driver contain assembler code for multiple architectures? I was 
-trying to avoid that -- though admittedly I don't yet have actual code for 
-the PDMA implementation for mac_scsi for Nubus PowerMacs.
-
-However, the existence of that out-of-tree port suggests to me that 
-arch/powerpc/include/mac_scsi.h and arch/m68k/include/mac_scsi.h would be 
-an appropriate layout.
-
-But if there's no clear policy then perhaps we should ignore the whole 
-question until the driver code actually becomes shared code. I don't mind 
-re-working the patch to combine the two files.
-
--- 
-
-> > you have an opinion on the most logical way to organise this sort of 
-> > code, from the point-of-view of maintainability, re-usability, 
-> > readability etc.?
-> 
-> If the code is used by multiple SCSI drivers, you can move it to a header
-> file under drivers/scsi/.
-> If the code is shared by drivers belonging to multiple subsystems, you can
-> move it to a header file under include/linux/.
-> 
-> Anyone who has a better solution?
-> Thanks!
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> 
+Thanks,
+Ming
