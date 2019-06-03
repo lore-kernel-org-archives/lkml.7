@@ -2,101 +2,155 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA50DC46460
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 20:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE0FC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 20:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93DC926894
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 20:08:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDCCD26C77
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 20:13:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbfFCUIq (ORCPT
+        id S1726477AbfFCUN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 16:08:46 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:55892 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726211AbfFCUIq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 16:08:46 -0400
-Received: by linux.microsoft.com (Postfix, from userid 1029)
-        id C311D20B7192; Mon,  3 Jun 2019 13:08:45 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by linux.microsoft.com (Postfix) with ESMTP id C005A300544F;
-        Mon,  3 Jun 2019 13:08:45 -0700 (PDT)
-Date:   Mon, 3 Jun 2019 13:08:45 -0700 (PDT)
-From:   jaskarankhurana@linux.microsoft.com
-X-X-Sender: jaskarankhurana@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net
-To:     linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, gmazyland@gmail.com
-cc:     agk@redhat.com, snitzer@redhat.com, dm-deval@redhat.com,
-        jmorris@namei.org, scottsh@microsoft.com
-Subject: Re:[RFC 1/1] Add dm verity root hash pkcs7 sig validation.
-In-Reply-To: <MN2PR21MB1200327819F4810E82AA6FF38A000@MN2PR21MB1200.namprd21.prod.outlook.com>
-Message-ID: <alpine.LRH.2.21.1906031246001.64221@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
-References: <MN2PR21MB1200327819F4810E82AA6FF38A000@MN2PR21MB1200.namprd21.prod.outlook.com>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Mon, 3 Jun 2019 16:13:29 -0400
+Received: from sauhun.de ([88.99.104.3]:40334 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726173AbfFCUN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 16:13:28 -0400
+Received: from localhost (p5486CC42.dip0.t-ipconnect.de [84.134.204.66])
+        by pokefinder.org (Postfix) with ESMTPSA id 5FA242CF690;
+        Mon,  3 Jun 2019 22:13:26 +0200 (CEST)
+Date:   Mon, 3 Jun 2019 22:13:26 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Asmaa Mnebhi <Asmaa@mellanox.com>
+Cc:     "minyard@acm.org" <minyard@acm.org>,
+        Vadim Pasternak <vadimp@mellanox.com>,
+        Michael Shych <michaelsh@mellanox.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
+Subject: Re: [PATCH v9 1/1] Add support for IPMB driver
+Message-ID: <20190603201325.GC2383@kunai>
+References: <cover.1557322882.git.Asmaa@mellanox.com>
+ <a4d9fe418013b604e7224bf3038c294da42d5534.1557322882.git.Asmaa@mellanox.com>
+ <20190519140231.GA7291@kunai>
+ <VI1PR05MB623971FF6F956A091840716DDA060@VI1PR05MB6239.eurprd05.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="9Ek0hoCL9XbhcSqy"
+Content-Disposition: inline
+In-Reply-To: <VI1PR05MB623971FF6F956A091840716DDA060@VI1PR05MB6239.eurprd05.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--9Ek0hoCL9XbhcSqy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 21 May 2019, Milan Broz wrote:
-> On 20/05/2019 23:54, Jaskaran Khurana wrote:
->> Adds in-kernel pkcs7 signature checking for the roothash of
->> the dm-verity hash tree.
->>
->>
->> Adds DM_VERITY_VERIFY_ROOTHASH_SIG_FORCE: roothash signature *must* be
->> specified for all dm verity volumes and verification must succeed prior
->> to creation of device mapper block device.
->
-> I am not sure this is a good idea. If I understand it correctly, this will
-> block creating another dm-verity mappings without PKCS7 signature, and these
-> are used in many other environments and applications that could possibly
-> run on that system later.
->
-> (But I have no idea how to solve it better though :-)
->
-> ...
->
->> +	/* Root hash signature is  a optional parameter*/
->> +	r = verity_verify_root_hash(root_hash_digest_to_validate,
->> +				    strlen(root_hash_digest_to_validate),
->> +				    verify_args.sig,
->> +				    verify_args.sig_size);
->> +	if (r < 0) {
->> +		ti->error = "Root hash verification failed";
->> +		goto bad;
->> +	}
->
-> You are sending the PKCS7 signature as a (quite large) binary blob inside the mapping table.
->
-> I am not sure if it is possible here (I guess so), but why not put this it kernel keyring
-> and then just reference it from mapping table?
-> (We use kernel keyring in libcryptsetup already for dm-crypt.)
->
-> It will also solve an issue in userspace patch, when you are reading the signature
-> file too late (devices can be suspended in that moment, so I would prefer to download
-> sig file to keyring in advance, and then just reference it in mapping table).
->
-> (I guess you will send merge request for veritysetup userspace part later.)
+Hi Asmaa,
 
-I have made the changes for passing the signature bytes using the keyring 
-and I had sent an updated patch for the same last week. I have given a 
-link to the veritysetup changes which I used to test this in the patch and I will 
-cleanup and send those for review next.
+sorry for the long wait. I missed this mail was still sitting in my
+Drafts folder :(
 
-Please take a look and provide code review feedback for the kernel 
-changes.
+> >> Am I overlooking something? Why are you protecting an atomic_read with=
+ a spinlock?
+>=20
+> A thread would lock the ipmb_dev->lock spinlock (above) for all the code =
+below ONLY IF the atomic_read for the request_queue_len reports a value dif=
+ferent from 0:
 
->
-> Milan
->
-Regards,
-Jaskaran
+Well, not really. The spinlock is taken _before_ the atomic read. But
+the read is atomic, so there should be no need. I am asking if the code
+could look like this?
+
++	while (!atomic_read(&ipmb_dev->request_queue_len)) {
++		if (non_blocking)
++			return -EAGAIN;
++
++		res =3D wait_event_interruptible(ipmb_dev->wait_queue,
++				atomic_read(&ipmb_dev->request_queue_len));
++		if (res)
++			return res;
++	}
++
++	spin_lock_irqsave(&ipmb_dev->lock, flags);
++	if (list_empty(&ipmb_dev->request_queue)) {
+
+> if (list_empty(&ipmb_dev->request_queue)) {
+> 260 +               dev_err(&ipmb_dev->client->dev, "request_queue is emp=
+ty\n");
+> 261 +               spin_unlock_irqrestore(&ipmb_dev->lock, flags);
+
+The unlock operation could come before the dev_err. We don't need to
+protect the printout and save time with the spinlock held.
+
+> > +	rq_sa =3D msg[RQ_SA_8BIT_IDX] >> 1;
+> > +	netf_rq_lun =3D msg[NETFN_LUN_IDX];
+> > +	/*
+> > +	 * subtract rq_sa and netf_rq_lun from the length of the msg passed to
+> > +	 * i2c_smbus_write_block_data_local
+> > +	 */
+> > +	msg_len =3D msg[IPMB_MSG_LEN_IDX] - SMBUS_MSG_HEADER_LENGTH;
+> > +
+> > +	strcpy(rq_client.name, "ipmb_requester");
+> > +	rq_client.adapter =3D ipmb_dev->client->adapter;
+> > +	rq_client.flags =3D ipmb_dev->client->flags;
+> > +	rq_client.addr =3D rq_sa;
+>=20
+> >> Is it possible to determine in a race-free way if rq_sa (which came
+> >> from userspace AFAIU) is really the address from which the request
+> >> came in (again if I understood all this correctly)?
+> Yes there is. I see 2 options:
+>=20
+> 1) This is less explicit than option 2 but uses existing code and is
+> simpler. we can use the ipmb_verify_checksum1 function since the IPMB
+> response format is as follows:
+> Byte 1: rq_sa
+> Byte 2: netfunction/rqLUN
+> Byte 3: checksum1
+
+Hmmm, does that really prove that rq_sa is the same address the request
+came from? Or does it only prove that the response packet is not
+mangled?
+
+> So if checksum1 is verified, it means rq_sa is correct.
+>=20
+> 2) I am not sure we want this but have a global variable which stores
+> the address of the requester once the first request is received. We
+> would compare that address with the one received from userspace in the
+> code above.
+
+Can there be only one requester in the system?
+
+Thanks,
+
+   Wolfram
+
+--9Ek0hoCL9XbhcSqy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlz1f2UACgkQFA3kzBSg
+KbZe1A//dZCx+YmQNFnYXW6fwX4hm2JFolCqtolCDfbAEKvqcqgEf7VwQ0Qoy4wm
+P+RbEvYTBlnvPfk01PM8Kbe3D79xGgjGLAzfaLyVN5khGiQguK1nWND76tSxAkws
+otCtiiNEcVv0z2uRGheJZWZvmANEt9nzbwqcyJzqaCDZKATQNstu1ClkWrIZLxJ4
+rqXP2mPGJHAv7KzquR5dlpAmAz8yxA0uqoUzQoKbWuchg6fSKbIp7JzVePJvGI7o
+7U/pNuhQ7hJ/tAPrj5fWELHjazDsDUkgu/vsQObvps1ixUuCFymFk+7l2tmPCAnX
+OzFNk79jBbh3YgpSAqMLqPi9ftMrn6so7c3JzchzXzrmAvRmLvf/ChBwTIB8fGZi
+f7958PVOdDr5c386w9EOLB0q9MLc5ONLDlKO96SVnvC8kLrq1iylbpRm17xmJywb
+29Aao9YdsjIoijXsuskYV02XxMGh4JxgrewBOq0IcAuit/YWKsJldp1RyMuWESjM
+gdptkXyp69N1Y6wVL72zkDNB2Cd6NWpoCu4mJDgb6XfX/zv2hadXIgL4yq4cZncx
+61wRgMM0F0MZEiXGsC85qlryaZuBUFdlZnKj1sBbkaRdvDbSpykE1NcGvOti1fIM
+UIYYy9E2Vo/VzPxXR4Gx5JO+6UTjvX2onpJgPAbGOTAiC8Yn53s=
+=REap
+-----END PGP SIGNATURE-----
+
+--9Ek0hoCL9XbhcSqy--
