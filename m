@@ -7,57 +7,51 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3362C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81FC2C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B42321923
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:12:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5760521923
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553176;
-	bh=erX6YxDH2r6uXzI9LcRs8ZHxY09bIc1J7b+RmnL8fMQ=;
+	s=default; t=1559553181;
+	bh=VG3xzaa3A1jhxtOHs99V4fP62LFPsrwnGOwBUKvbhmU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RCSH+EQcL06EPDERiETL54oML2cOgyPqxUg9gc9SSm6EB6XAzcY9JSBxZorhYJi+Z
-	 QXcol7N3QxjqsOZIsUsqykBOWopjRMpBT1KjecjOeZBtP68Nx4ea+yox86EgTMw8LI
-	 lic21uDPoUBQXvn0ImLeUPuBbh0/VwELRRHS4hm4=
+	b=0LOceXnvTq5u8qwNHGzLWNN4WTfMAoH5ft6IsTn3uciAaRWGsDpy5ZQq8Ppfokfnx
+	 r5HYWc94QTSJ1z1t/F5ume6X1sdTTZC8ZHaNJNWXmlCwv+dqF1aCGg5vVIN+th3Dwc
+	 dTNnnQGcnvBkTGpyx2NtJiP0D0BYU7AmovTIxVIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728284AbfFCJMz (ORCPT
+        id S1728740AbfFCJM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:12:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60988 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 05:12:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728693AbfFCJMr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:12:47 -0400
+        id S1728727AbfFCJMz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:12:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4856F245B9;
-        Mon,  3 Jun 2019 09:12:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7F1F245DF;
+        Mon,  3 Jun 2019 09:12:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553166;
-        bh=erX6YxDH2r6uXzI9LcRs8ZHxY09bIc1J7b+RmnL8fMQ=;
+        s=default; t=1559553175;
+        bh=VG3xzaa3A1jhxtOHs99V4fP62LFPsrwnGOwBUKvbhmU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aS91T9+Xmh5q7CpqlkXFGskdaGSaVzQkIHi7J9piv3sQRgupXj1aDCh0CS2xxCMqy
-         vKlqJlhRVuGeTaMWIlfaTwGkC1izpru7sfz9fABBamKe4R+fryWzZnwu8wXSdTovyj
-         /5pFSu5wDabtuIL5D1/N+JiPpqcH/bSdmUAU2JWM=
+        b=BpmY4ciLJ9enEOimwMny0oPC7QbhZisX6U8XqkOpr+y89v+LgD/syAQlqpcSyGSAA
+         H/wwbMTZcnb5CvPmW/+GiimNMu1x4rNTa3mPWSRPcmZSBrlj3vhkmh7fGOmuYKg5Tt
+         HtXeqagfX1FPDwfttAbYekQErWAjEgS2VoavWl7o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Heesoon Kim <Heesoon.Kim@stratus.com>,
-        Jarod Wilson <jarod@redhat.com>,
-        Jay Vosburgh <jay.vosburgh@canonical.com>
-Subject: [PATCH 5.1 01/40] bonding/802.3ad: fix slave link initialization transition states
-Date:   Mon,  3 Jun 2019 11:08:54 +0200
-Message-Id: <20190603090522.709589250@linuxfoundation.org>
+        stable@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>,
+        Fugang Duan <fugang.duan@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.1 12/40] net: fec: fix the clk mismatch in failed_reset path
+Date:   Mon,  3 Jun 2019 11:09:05 +0200
+Message-Id: <20190603090523.383697353@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190603090522.617635820@linuxfoundation.org>
 References: <20190603090522.617635820@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -66,67 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jarod Wilson <jarod@redhat.com>
+From: Andy Duan <fugang.duan@nxp.com>
 
-[ Upstream commit 334031219a84b9994594015aab85ed7754c80176 ]
+[ Upstream commit ce8d24f9a5965a58c588f9342689702a1024433c ]
 
-Once in a while, with just the right timing, 802.3ad slaves will fail to
-properly initialize, winding up in a weird state, with a partner system
-mac address of 00:00:00:00:00:00. This started happening after a fix to
-properly track link_failure_count tracking, where an 802.3ad slave that
-reported itself as link up in the miimon code, but wasn't able to get a
-valid speed/duplex, started getting set to BOND_LINK_FAIL instead of
-BOND_LINK_DOWN. That was the proper thing to do for the general "my link
-went down" case, but has created a link initialization race that can put
-the interface in this odd state.
+Fix the clk mismatch in the error path "failed_reset" because
+below error path will disable clk_ahb and clk_ipg directly, it
+should use pm_runtime_put_noidle() instead of pm_runtime_put()
+to avoid to call runtime resume callback.
 
-The simple fix is to instead set the slave link to BOND_LINK_DOWN again,
-if the link has never been up (last_link_up == 0), so the link state
-doesn't bounce from BOND_LINK_DOWN to BOND_LINK_FAIL -- it hasn't failed
-in this case, it simply hasn't been up yet, and this prevents the
-unnecessary state change from DOWN to FAIL and getting stuck in an init
-failure w/o a partner mac.
-
-Fixes: ea53abfab960 ("bonding/802.3ad: fix link_failure_count tracking")
-CC: Jay Vosburgh <j.vosburgh@gmail.com>
-CC: Veaceslav Falico <vfalico@gmail.com>
-CC: Andy Gospodarek <andy@greyhouse.net>
-CC: "David S. Miller" <davem@davemloft.net>
-CC: netdev@vger.kernel.org
-Tested-by: Heesoon Kim <Heesoon.Kim@stratus.com>
-Signed-off-by: Jarod Wilson <jarod@redhat.com>
-Acked-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+Reported-by: Baruch Siach <baruch@tkos.co.il>
+Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
+Tested-by: Baruch Siach <baruch@tkos.co.il>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/bonding/bond_main.c |   15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/freescale/fec_main.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -3122,13 +3122,18 @@ static int bond_slave_netdev_event(unsig
- 	case NETDEV_CHANGE:
- 		/* For 802.3ad mode only:
- 		 * Getting invalid Speed/Duplex values here will put slave
--		 * in weird state. So mark it as link-fail for the time
--		 * being and let link-monitoring (miimon) set it right when
--		 * correct speeds/duplex are available.
-+		 * in weird state. Mark it as link-fail if the link was
-+		 * previously up or link-down if it hasn't yet come up, and
-+		 * let link-monitoring (miimon) set it right when correct
-+		 * speeds/duplex are available.
- 		 */
- 		if (bond_update_speed_duplex(slave) &&
--		    BOND_MODE(bond) == BOND_MODE_8023AD)
--			slave->link = BOND_LINK_FAIL;
-+		    BOND_MODE(bond) == BOND_MODE_8023AD) {
-+			if (slave->last_link_up)
-+				slave->link = BOND_LINK_FAIL;
-+			else
-+				slave->link = BOND_LINK_DOWN;
-+		}
- 
- 		if (BOND_MODE(bond) == BOND_MODE_8023AD)
- 			bond_3ad_adapter_speed_duplex_changed(slave);
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -3556,7 +3556,7 @@ failed_init:
+ 	if (fep->reg_phy)
+ 		regulator_disable(fep->reg_phy);
+ failed_reset:
+-	pm_runtime_put(&pdev->dev);
++	pm_runtime_put_noidle(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
+ failed_regulator:
+ 	clk_disable_unprepare(fep->clk_ahb);
 
 
