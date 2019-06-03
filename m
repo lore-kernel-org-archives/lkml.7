@@ -2,120 +2,124 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3085C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA842C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92259280CB
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B34A1280CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:21:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="lh2B0Lam"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727738AbfFCMVF (ORCPT
+        id S1727841AbfFCMVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 08:21:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56724 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726342AbfFCMVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 08:21:05 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 03AD1AE4B;
-        Mon,  3 Jun 2019 12:21:03 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 12668DA85E; Mon,  3 Jun 2019 14:21:54 +0200 (CEST)
-Date:   Mon, 3 Jun 2019 14:21:52 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Andrey Abramov <st5pub@yandex.ru>
-Cc:     clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] btrfs: Fix -Wunused-but-set-variable warnings
-Message-ID: <20190603122152.GM15290@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Andrey Abramov <st5pub@yandex.ru>,
-        clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190531195349.31129-1-st5pub@yandex.ru>
+        Mon, 3 Jun 2019 08:21:39 -0400
+Received: from mout.web.de ([212.227.17.11]:55411 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726379AbfFCMVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 08:21:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1559564486;
+        bh=H+mYUcCUxLh+PaxmPpuNy/NUK3kvMoT8KgwI5OrJRH0=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=lh2B0LamfEDclMUyxIJw6kQ+/NNtsbJFM8n1xZtbiY3Vp4k8uienlblCXqMBwIhwz
+         8VS3gZ3OIcSB1A4mE3p/hie/ya1Ts7ab5xHGHvSCmnVbV8ODza2GuDJH2Pmp74b+tB
+         Nw/Tmh7Aj38nUk/KYOj5Byv0XcIy8i1pytZG2uV0=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from lab-pc08.sra.uni-hannover.de ([130.75.33.87]) by smtp.web.de
+ (mrweb102 [213.165.67.124]) with ESMTPSA (Nemesis) id
+ 0MK24P-1hWP3L1FS9-001SxR; Mon, 03 Jun 2019 14:21:26 +0200
+From:   =?UTF-8?q?Christian=20M=C3=BCller?= <muellerch-privat@web.de>
+To:     gregkh@linuxfoundation.org
+Cc:     johnfwhitmore@gmail.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, linux-kernel@i4.cs.fau.de,
+        felix.trommer@hotmail.de,
+        =?UTF-8?q?Christian=20M=C3=BCller?= <muellerch-privat@web.de>
+Subject: [PATCH 0/3] Fixing style errors in staging/drivers/rtl8192u
+Date:   Mon,  3 Jun 2019 14:21:01 +0200
+Message-Id: <20190603122104.2564-1-muellerch-privat@web.de>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190531195349.31129-1-st5pub@yandex.ru>
-User-Agent: Mutt/1.5.23.1 (2014-03-12)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:VPSFcTBh0Ipw6QYZ0N/RslXaVNL2v2bwzj2HYaZwVIFdP7fr9Qn
+ UDCcvVCRNAzcxLyxlMHcs7/J78/KIDlSALfG77AQNkLMUFB8DSO8EtpXDoxaV9bqFKFVLE1
+ E6s6VF/3+kJrpD5O4JaAt72tEoqePiDVLMnxC6P9LwYXvi8wtROg6SLfIr3Um+dhnEf0OUx
+ tBxFonv9MgbLFn9UPyv5Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:KTJZ7FqmO1k=:8f/TeISIdn+Z4R21lYXDRs
+ wEFNoc4wEnIYKaq0ALBY2sZ3MzwrDrGnvvQKXabAM5ehXe9hy6hlbWos/UxjryBo582lFZQ4Q
+ Sxo2T8g63yS84bhIol6kJBEY7Wv7iWRFYzoYtR14sqBcpfVf9fg6ufEU4L4r2m0Gz4fLI2L7+
+ b3jmPRQxZmnzNFDQLuBXNG8n9lik0gDntzMq6+Ehm3O/ZG96Bnu+cTydIRP7qOauJGbu6XJ9m
+ AA4swYrbd+zQIQhmEU6MduC4gCYCxIoPF2mXR5wK+XKWZE80B73n/E+OkRkAfuxce3hUJIqb3
+ CFaEU4pthiIMfRIufCCvjthpOlBN7BA/lUgllpTafsfKamoacHCK1D/TNjq+c7IZUQLAlyxUs
+ 3rt5xXxpJX6WZoTlyfQEQVhNeL75bbzaLeBgxcAjEakwYs7mb2XvAYBU7QnBuE59zemvD9f2y
+ wgfiM+143tiSZMCAhO0qI30xoFZD8jjjfKSCkNAAL9Ka9+h2Gem3JhlG8EmqlbLjiJ2LJGhe9
+ kMBgcBEZ3KeaTtubBdHwtyRZChoyssAua21Pa0oNpZ3LAlyTgcw1u9an0mDINgzoySExmHqGq
+ KfhxIei98y5JTOUlTjIcG+CROZNcgTrXuElAx/z7HN+0QUA/S1Hn5NxczsgFnNvtTt719KEjy
+ FoyPuhn8Eq+YLWJctjVGz4uRf+9aN65sdyNHFY/QRwl3Vw2uhn0mXQbVZ359udd2iDdouukq+
+ RvJkSbPAa9GiEuNy5h7XEZMMbEpHGzH4crwOZE+VWuK05+lsTlWYdP535nX0gCazT1wfqZ9IO
+ ipnjWzpwL5dVXuPqZ73vvNECrCeElZA1fCwTSU75ZMro9pk4NZKlzAF0CeYbDbcEtrhHQL0Wu
+ cLkYpKoSdD+wa6U9so2T1vHtmLwI6P+IuNR3RlCMce2TXzH0X6xfMtRVlXNdCWjFtDOWKxye0
+ Devw0xUML8wnqXFI3uYQZ9nYUIhnfm/Wt+/Pt01PPzsGS5GsJzi0O
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 10:53:49PM +0300, Andrey Abramov wrote:
-> Fix -Wunused-but-set-variable warnings in raid56.c and sysfs.c files
+This series of patches fixes various style errors in the rtl8192u
+staging driver. These fixes contain reformatting of code comments,
+changing of indentations, cleaning up commented out code within the
+source-code and fixes for individual errors indicated by the checkpatch to=
+ol.
 
-Please ignore the warnings for now. The RAID56 needs more cleanups than
-that an the sysfs part needs to be reworked. The stale code comes from
-e410e34fad913dd568ec28d2a9949694324c14db that reverted
-14e46e04958df740c6c6a94849f176159a333f13.
+Christian M=C3=BCller (1):
+  drivers/staging/rtl8192u: Fix of checkpatch-errors
 
-> Signed-off-by: Andrey Abramov <st5pub@yandex.ru>
-> ---
->  fs/btrfs/raid56.c | 32 +++++++++++---------------------
->  fs/btrfs/sysfs.c  |  5 +----
->  2 files changed, 12 insertions(+), 25 deletions(-)
-> 
-> diff --git a/fs/btrfs/raid56.c b/fs/btrfs/raid56.c
-> index f3d0576dd327..4ab29eacfdf3 100644
-> --- a/fs/btrfs/raid56.c
-> +++ b/fs/btrfs/raid56.c
-> @@ -1182,22 +1182,17 @@ static noinline void finish_rmw(struct btrfs_raid_bio *rbio)
->  	int nr_data = rbio->nr_data;
->  	int stripe;
->  	int pagenr;
-> -	int p_stripe = -1;
-> -	int q_stripe = -1;
-> +	int is_q_stripe = 0;
->  	struct bio_list bio_list;
->  	struct bio *bio;
->  	int ret;
->  
->  	bio_list_init(&bio_list);
->  
-> -	if (rbio->real_stripes - rbio->nr_data == 1) {
-> -		p_stripe = rbio->real_stripes - 1;
-> -	} else if (rbio->real_stripes - rbio->nr_data == 2) {
-> -		p_stripe = rbio->real_stripes - 2;
-> -		q_stripe = rbio->real_stripes - 1;
-> -	} else {
-> +	if (rbio->real_stripes - rbio->nr_data == 2)
-> +		is_q_stripe = 1;
-> +	else if (rbio->real_stripes - rbio->nr_data != 1)
->  		BUG();
-> -	}
+Felix Trommer (2):
+  drivers/staging/rtl8192u: Reformat comments
+  drivers/staging/rtl8192u: Remove comment-out code
 
-The original code is better structured, enumerates the expected cases
-and leaves a catch-all branch.
+ drivers/staging/rtl8192u/ieee80211/dot11d.c   |   6 +-
+ drivers/staging/rtl8192u/ieee80211/dot11d.h   |   2 +-
+ .../staging/rtl8192u/ieee80211/ieee80211.h    | 311 +++---
+ .../rtl8192u/ieee80211/ieee80211_crypt.c      |   3 +-
+ .../rtl8192u/ieee80211/ieee80211_crypt.h      |  15 +-
+ .../rtl8192u/ieee80211/ieee80211_crypt_ccmp.c |   7 +-
+ .../rtl8192u/ieee80211/ieee80211_crypt_tkip.c |  13 +-
+ .../rtl8192u/ieee80211/ieee80211_crypt_wep.c  |   9 +-
+ .../rtl8192u/ieee80211/ieee80211_module.c     |   6 +-
+ .../staging/rtl8192u/ieee80211/ieee80211_rx.c | 973 ++++++++----------
+ .../rtl8192u/ieee80211/ieee80211_softmac.c    | 336 +++---
+ .../rtl8192u/ieee80211/ieee80211_softmac_wx.c |  21 +-
+ .../staging/rtl8192u/ieee80211/ieee80211_tx.c | 311 +++---
+ .../staging/rtl8192u/ieee80211/ieee80211_wx.c | 115 +--
+ .../staging/rtl8192u/ieee80211/rtl819x_BA.h   |   2 +-
+ .../rtl8192u/ieee80211/rtl819x_BAProc.c       | 169 +--
+ .../staging/rtl8192u/ieee80211/rtl819x_HT.h   | 111 +-
+ .../rtl8192u/ieee80211/rtl819x_HTProc.c       | 264 ++---
+ .../staging/rtl8192u/ieee80211/rtl819x_Qos.h  |  24 +-
+ .../rtl8192u/ieee80211/rtl819x_TSProc.c       | 110 +-
+ drivers/staging/rtl8192u/r8180_93cx6.c        |   3 +-
+ drivers/staging/rtl8192u/r8180_93cx6.h        |   4 +-
+ drivers/staging/rtl8192u/r8190_rtl8256.c      |  36 +-
+ drivers/staging/rtl8192u/r8192U.h             |  47 +-
+ drivers/staging/rtl8192u/r8192U_core.c        | 159 ++-
+ drivers/staging/rtl8192u/r8192U_dm.c          | 232 ++---
+ drivers/staging/rtl8192u/r8192U_dm.h          |  22 +-
+ drivers/staging/rtl8192u/r8192U_hw.h          | 192 ++--
+ drivers/staging/rtl8192u/r8192U_wx.c          |  17 +-
+ drivers/staging/rtl8192u/r819xU_cmdpkt.c      |  77 +-
+ drivers/staging/rtl8192u/r819xU_cmdpkt.h      |  14 +-
+ drivers/staging/rtl8192u/r819xU_firmware.c    |  12 +-
+ drivers/staging/rtl8192u/r819xU_phy.c         |  30 +-
+ drivers/staging/rtl8192u/r819xU_phy.h         |   4 +-
+ drivers/staging/rtl8192u/r819xU_phyreg.h      |   9 +-
+ 35 files changed, 1747 insertions(+), 1919 deletions(-)
 
->  
->  	/* at this point we either have a full stripe,
->  	 * or we've read the full stripe from the drive.
-> @@ -1241,7 +1236,7 @@ static noinline void finish_rmw(struct btrfs_raid_bio *rbio)
->  		SetPageUptodate(p);
->  		pointers[stripe++] = kmap(p);
->  
-> -		if (q_stripe != -1) {
-> +		if (is_q_stripe) {
->  
->  			/*
->  			 * raid6, add the qstripe and call the
-> @@ -2340,8 +2335,7 @@ static noinline void finish_parity_scrub(struct btrfs_raid_bio *rbio,
->  	int nr_data = rbio->nr_data;
->  	int stripe;
->  	int pagenr;
-> -	int p_stripe = -1;
+=2D-
+2.17.1
 
-To get rid of the warning, perhaps just this initialization could be
-removed, the rest of the code untouched.
-
-> -	int q_stripe = -1;
-> +	int is_q_stripe = 0;
->  	struct page *p_page = NULL;
->  	struct page *q_page = NULL;
->  	struct bio_list bio_list;
