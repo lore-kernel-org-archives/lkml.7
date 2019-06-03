@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DBB0C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 781E1C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33482245B9
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:12:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4858A245B9
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:12:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553163;
-	bh=lFZ3PGfZK2qjQolczzZuiGrnCp8ui3kQL4gKKqL5Ufk=;
+	s=default; t=1559553165;
+	bh=JLQiK3KSKpVQgTR2lodTLdBwhQ6GWgllLMuFRDm5qAg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h2FcZiIHvycwV2h0KZbqoK7pJtz+WuDqrovhmIGHV67Ik2KFa/8jZeowj8cYQPUId
-	 XIh12IpP/N65kzfD8b1BUx+BfhrG1m2Z4bTEkBzXELgl/mWSKzzOtdsYekJKZhRgHQ
-	 P70aSomBnRD/jXN7CzG2S7dlMeY6kH/0UNoZ+K9w=
+	b=gesQxdnOG6IxH4PlrVkd998pjRPBLQ2ezloqjBYVw/pQcJ8/kB8pnwhUaZ/6Sq338
+	 rQqlX4UiCRx51EXbOCNXuTpuBTHoyu+5mvZ1qVgYd4/IlWAwLmyqcWSZEyDkRePSxd
+	 3Bem6J210W2jIrVaso0734Bhdq1NLPwiN3SE/J9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728679AbfFCJMl (ORCPT
+        id S1728690AbfFCJMo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:12:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59786 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 05:12:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728652AbfFCJMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:12:34 -0400
+        id S1728652AbfFCJMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:12:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EF4D26121;
-        Mon,  3 Jun 2019 09:12:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28AB021923;
+        Mon,  3 Jun 2019 09:12:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553154;
-        bh=lFZ3PGfZK2qjQolczzZuiGrnCp8ui3kQL4gKKqL5Ufk=;
+        s=default; t=1559553161;
+        bh=JLQiK3KSKpVQgTR2lodTLdBwhQ6GWgllLMuFRDm5qAg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TLb1eIgJbZEDJ1BSUAeJYuIJ24ayY7H7XwDWrawli/HXaeVSnPk3ix8/4AwtvQFvG
-         x/wvK2SfZ3LHPkBOa+gXJ9/IY5BNY+rBFlZjvClsEHVmFRB3dMmcjitbGZmoZmR2+m
-         hAYnxGVZEny3y+WMC8nTo1yX3e6VaZa2fIRyPgfk=
+        b=Bd0M/0eRFJpC6joastPooCMYasKl++Y3lOkostayWAxxIkdkVuqJBmbLxSNcOHFxo
+         D9GFPB4tP+q/4dhRzl5V/eV+sjq3y8haOOTnHcMeOPW1GUpg8oWa39+aG63xfHoqLA
+         DbZNCx54m4mkIfqycg1ddWUnY1az8b4RHCYlq3QQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
+        stable@vger.kernel.org, Vishal Kulkarni <vishal@chelsio.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 28/36] bnxt_en: Reduce memory usage when running in kdump kernel.
-Date:   Mon,  3 Jun 2019 11:09:16 +0200
-Message-Id: <20190603090522.857884217@linuxfoundation.org>
+Subject: [PATCH 5.0 31/36] cxgb4: Revert "cxgb4: Remove SGE_HOST_PAGE_SIZE dependency on page size"
+Date:   Mon,  3 Jun 2019 11:09:19 +0200
+Message-Id: <20190603090523.044809798@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190603090520.998342694@linuxfoundation.org>
 References: <20190603090520.998342694@linuxfoundation.org>
@@ -59,63 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Chan <michael.chan@broadcom.com>
+From: Vishal Kulkarni <vishal@chelsio.com>
 
-[ Upstream commit d629522e1d66561f38e5c8d4f52bb6d254ec0707 ]
+[ Upstream commit ab0610efabb4c4f419a531455708caf1dd29357e ]
 
-Skip RDMA context memory allocations, reduce to 1 ring, and disable
-TPA when running in the kdump kernel.  Without this patch, the driver
-fails to initialize with memory allocation errors when running in a
-typical kdump kernel.
+This reverts commit 2391b0030e241386d710df10e53e2cfc3c5d4fc1 which has
+introduced regression. Now SGE's BAR2 Doorbell/GTS Page Size is
+interpreted correctly in the firmware itself by using actual host
+page size. Hence previous commit needs to be reverted.
 
-Fixes: cf6daed098d1 ("bnxt_en: Increase context memory allocations on 57500 chips for RDMA.")
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: Vishal Kulkarni <vishal@chelsio.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c |    4 ++--
- drivers/net/ethernet/broadcom/bnxt/bnxt.h |    4 +++-
- 2 files changed, 5 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/chelsio/cxgb4/t4_hw.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -6338,7 +6338,7 @@ static int bnxt_alloc_ctx_mem(struct bnx
- 	if (!ctx || (ctx->flags & BNXT_CTX_FLAG_INITED))
- 		return 0;
+--- a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
+@@ -7139,10 +7139,21 @@ int t4_fixup_host_params(struct adapter
+ 			 unsigned int cache_line_size)
+ {
+ 	unsigned int page_shift = fls(page_size) - 1;
++	unsigned int sge_hps = page_shift - 10;
+ 	unsigned int stat_len = cache_line_size > 64 ? 128 : 64;
+ 	unsigned int fl_align = cache_line_size < 32 ? 32 : cache_line_size;
+ 	unsigned int fl_align_log = fls(fl_align) - 1;
  
--	if (bp->flags & BNXT_FLAG_ROCE_CAP) {
-+	if ((bp->flags & BNXT_FLAG_ROCE_CAP) && !is_kdump_kernel()) {
- 		pg_lvl = 2;
- 		extra_qps = 65536;
- 		extra_srqs = 8192;
-@@ -10279,7 +10279,7 @@ static int bnxt_set_dflt_rings(struct bn
- 
- 	if (sh)
- 		bp->flags |= BNXT_FLAG_SHARED_RINGS;
--	dflt_rings = netif_get_num_default_rss_queues();
-+	dflt_rings = is_kdump_kernel() ? 1 : netif_get_num_default_rss_queues();
- 	/* Reduce default rings on multi-port cards so that total default
- 	 * rings do not exceed CPU count.
- 	 */
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.h
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
-@@ -20,6 +20,7 @@
- 
- #include <linux/interrupt.h>
- #include <linux/rhashtable.h>
-+#include <linux/crash_dump.h>
- #include <net/devlink.h>
- #include <net/dst_metadata.h>
- #include <net/switchdev.h>
-@@ -1367,7 +1368,8 @@ struct bnxt {
- #define BNXT_CHIP_TYPE_NITRO_A0(bp) ((bp)->flags & BNXT_FLAG_CHIP_NITRO_A0)
- #define BNXT_RX_PAGE_MODE(bp)	((bp)->flags & BNXT_FLAG_RX_PAGE_MODE)
- #define BNXT_SUPPORTS_TPA(bp)	(!BNXT_CHIP_TYPE_NITRO_A0(bp) &&	\
--				 !(bp->flags & BNXT_FLAG_CHIP_P5))
-+				 !(bp->flags & BNXT_FLAG_CHIP_P5) &&	\
-+				 !is_kdump_kernel())
- 
- /* Chip class phase 5 */
- #define BNXT_CHIP_P5(bp)			\
++	t4_write_reg(adap, SGE_HOST_PAGE_SIZE_A,
++		     HOSTPAGESIZEPF0_V(sge_hps) |
++		     HOSTPAGESIZEPF1_V(sge_hps) |
++		     HOSTPAGESIZEPF2_V(sge_hps) |
++		     HOSTPAGESIZEPF3_V(sge_hps) |
++		     HOSTPAGESIZEPF4_V(sge_hps) |
++		     HOSTPAGESIZEPF5_V(sge_hps) |
++		     HOSTPAGESIZEPF6_V(sge_hps) |
++		     HOSTPAGESIZEPF7_V(sge_hps));
++
+ 	if (is_t4(adap->params.chip)) {
+ 		t4_set_reg_field(adap, SGE_CONTROL_A,
+ 				 INGPADBOUNDARY_V(INGPADBOUNDARY_M) |
 
 
