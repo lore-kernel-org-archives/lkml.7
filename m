@@ -2,146 +2,84 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B86F5C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8996BC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E30E27FB7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:04:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iIlx/qlA"
+	by mail.kernel.org (Postfix) with ESMTP id 557EE27FD8
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:04:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559567083;
+	bh=5o50LdHm3nR94Xxp/EevvTYgj831Yo8VmYlaVsbg47w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YIm56DT1uftfNqk3U3U+PUuwHh6kb02Ls6DNcefLYds1pPw+DUuxbtnVqfoKC1Ugh
+	 8TKaA15Dp5iu3mlXvrZkPwOThP/JnCwcUHE5OeNfrrZRUSPhyxaxpfxwTYmBFrf8SP
+	 p7NPIsLPX+lKXjxhZFAqehQcYTayJs+jf3dZ7Ejo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbfFCNEf (ORCPT
+        id S1728206AbfFCNEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 09:04:35 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:34725 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbfFCNEc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 09:04:32 -0400
-Received: by mail-wm1-f66.google.com with SMTP id w9so3591375wmd.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 06:04:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=03wIuI+95U2k5wsZC8Hm2JFpOnjzC3cBrRUf8IxbDpU=;
-        b=iIlx/qlAtzx4C+kJiByh9KQ/8RYsdZpNtII/z4eZYZqEFIDOqI3yOqbROGVScEIhFg
-         dhIVxFYa8JH/414z6aG+bF8W10a3l0G5I2opFuAeeCIhZ8JG4uEKH3J8lPD+lg6QNR4t
-         9jG3T32ausmHo7QnAhk9TP5XOQQBhCiuMxVKwoK1TGLZYVsdaSsGWmK44dIVFm2iGCoZ
-         FVc0cUPmdmfq7XzWQBCwLAOJZQ8k4pp5NDz5oKyZeco3NmzRvsp26ASWtPnethz/BBIa
-         Sj79C/FFLdVdOvIrgz7iKVSzela8aqrxdRyAPluVPG9ENrCBdAUh9QN7B0jLNsIc7Ols
-         /CDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=03wIuI+95U2k5wsZC8Hm2JFpOnjzC3cBrRUf8IxbDpU=;
-        b=ZyY3C0XfoiAq3H6IaMlqiP65oR5ZrY+7b5J4TwhvHfHliqphrWpuPkMaeEEmhujGAy
-         uzMaIgy9Gwn4L9mvkL1JPM31Q4IaXWObDPEBCUF/a3Vo2UDufRh4BYGyVSkxBFV/BvQd
-         aZ0Sso9h0CpI82tJSFIhipIr4Iv72rswT9GTEiNwcmla1IMH1bK5OAc4es7MG2AmKCyK
-         3Ten/FRZ25OnocwqVfCWHQ9daTjqYp2Z/0vPAdlSBeRLZ4KcRNxlawrs0WbP7LfXPY+S
-         O9LYat5kGz4cp8U1kr8UztXlUEdlO+hYIQEe+PcZ+18V+WjWPN0s+k+Sl3uOL5mluKge
-         kulQ==
-X-Gm-Message-State: APjAAAVHEiFggH7GQUGskyNK6UWFQ4RYdWdovpapVagWp7/jjR8FWAE2
-        NO3BHV8Jk3TFcBusAIXKBj8Bgg==
-X-Google-Smtp-Source: APXvYqzE0Z8unVGrUlHJ6gais9BAMuNRWey3Q/3dVyTPEl/lsPXneHfZZPM8FyhWjW7pcb2cO6NENg==
-X-Received: by 2002:a1c:6a11:: with SMTP id f17mr13444788wmc.110.1559567071120;
-        Mon, 03 Jun 2019 06:04:31 -0700 (PDT)
-Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id b69sm10857016wme.44.2019.06.03.06.04.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 03 Jun 2019 06:04:30 -0700 (PDT)
-Date:   Mon, 3 Jun 2019 14:04:28 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc:     Mason Yang <masonccyang@mxic.com.tw>, broonie@kernel.org,
-        marek.vasut@gmail.com, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, bbrezillon@kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, juliensu@mxic.com.tw,
-        Simon Horman <horms@verge.net.au>, miquel.raynal@bootlin.com
-Subject: Re: [PATCH v13 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
- RPC-IF controller bindings
-Message-ID: <20190603130428.GX4797@dell>
-References: <1558423174-10748-1-git-send-email-masonccyang@mxic.com.tw>
- <1558423174-10748-4-git-send-email-masonccyang@mxic.com.tw>
- <0e2994d6-6efc-9f36-f681-609199f20b9f@cogentembedded.com>
+        Mon, 3 Jun 2019 09:04:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38248 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727957AbfFCNEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 09:04:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B23327FCE;
+        Mon,  3 Jun 2019 13:04:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559567081;
+        bh=5o50LdHm3nR94Xxp/EevvTYgj831Yo8VmYlaVsbg47w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nHYsLOa1+niQjcFrjsnZT8EygUoVc8Nsv4c4oqFFgYUZ2SUlcmxk2Sy1puqQfMkK0
+         1Kanun8sHE3WY9gFz6g4Y5WfpgyHvipjQK2OmuCLPi7sLiKZWyr1RBrAregltfBzt8
+         SblmkUHUu+NKoTX1nlF8yo2OJB9LXko+1NFDY9Jo=
+Date:   Mon, 3 Jun 2019 15:04:37 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Christian =?iso-8859-1?Q?M=FCller?= <muellerch-privat@web.de>
+Cc:     devel@driverdev.osuosl.org, felix.trommer@hotmail.de,
+        linux-kernel@i4.cs.fau.de, linux-kernel@vger.kernel.org,
+        johnfwhitmore@gmail.com
+Subject: Re: [PATCH 1/3] drivers/staging/rtl8192u: Reformat comments
+Message-ID: <20190603130437.GA30732@kroah.com>
+References: <20190603122104.2564-1-muellerch-privat@web.de>
+ <20190603122104.2564-2-muellerch-privat@web.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <0e2994d6-6efc-9f36-f681-609199f20b9f@cogentembedded.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190603122104.2564-2-muellerch-privat@web.de>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 May 2019, Sergei Shtylyov wrote:
-
-> On 05/21/2019 10:19 AM, Mason Yang wrote:
+On Mon, Jun 03, 2019 at 02:21:02PM +0200, Christian M�ller wrote:
+> From: Felix Trommer <felix.trommer@hotmail.de>
 > 
-> > Document the bindings used by the Renesas R-Car Gen3 RPC-IF controller.
-> > 
-> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> > ---
-> >  .../devicetree/bindings/mfd/renesas-rpc-if.txt     | 65 ++++++++++++++++++++++
-> >  1 file changed, 65 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/renesas-rpc-if.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mfd/renesas-rpc-if.txt b/Documentation/devicetree/bindings/mfd/renesas-rpc-if.txt
-> > new file mode 100644
-> > index 0000000..20ec85b
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mfd/renesas-rpc-if.txt
-> > @@ -0,0 +1,65 @@
-> > +Renesas R-Car Gen3 RPC-IF controller Device Tree Bindings
-> > +---------------------------------------------------------
-> > +
-> > +RPC-IF supports both SPI NOR and HyperFlash (CFI-compliant flash)
-> > +
-> > +Required properties:
-> > +- compatible: should be an SoC-specific compatible value, followed by
-> > +		"renesas,rcar-gen3-rpc" as a fallback.
-> > +		supported SoC-specific values are:
-> > +		"renesas,r8a77995-rpc"	(R-Car D3)
-> > +- reg: should contain three register areas:
-> > +	first for RPC-IF registers,
-> > +	second for the direct mapping read mode and
-> > +	third for the write buffer area.
-> > +- reg-names: should contain "regs", "dirmap" and "wbuf"
-> > +- clocks: should contain 1 entries for the module's clock
-> > +- clock-names: should contain "rpc"
-> > +- power-domains: should contain system-controller(sysc) for power-domain-cell
-> > +- resets: should contain clock pulse generator(cpg) for reset-cell,
-> > +	  power-domain-cell and clock-cell
-> 
->    That's just some nonsense, sorry...
->    I suggest that you stop reposting your patches as I'm going to post
-> my version of this patchset RSN (based on your patches, of course) and I'm
-> going to take care of fixing this file as well.
+> Replace C99-Style comments with C89-Style comments.
 
-Why is this necessary?
+What does that mean?
 
-Why not just provide some constructive feedback instead?
+>  		if (MaxChnlNum >= pTriple->first_channel) {
+> -			/* It is not in a monotonically increasing order, so
+> +			/*
+> +			 * It is not in a monotonically increasing order, so
+>  			 * stop processing.
+>  			 */
 
-> > +- #address-cells: should be 1
-> > +- #size-cells: should be 0
-> [...]
-> 
-> MBR, Sergei
+Those are both /* */ style comments.  Where in the C99 or C89 spec does
+it say anything about this type of change?
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Are you sure you are not getting confused about // for a comment marker
+in C99 which is not in C89?
+
+thanks,
+
+greg k-h
