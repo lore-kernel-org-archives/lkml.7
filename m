@@ -2,121 +2,134 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 882D9C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B24F0C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A27C27281
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:19:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94D622740B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:21:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729396AbfFCRTS (ORCPT
+        id S1729510AbfFCRVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 13:19:18 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56306 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726711AbfFCRTQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 13:19:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3258480D;
-        Mon,  3 Jun 2019 10:19:16 -0700 (PDT)
-Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C0D223F5AF;
-        Mon,  3 Jun 2019 10:19:13 -0700 (PDT)
-Date:   Mon, 3 Jun 2019 18:18:56 +0100
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>, <peng.fan@nxp.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <jassisinghbrar@gmail.com>, <kernel@pengutronix.de>,
-        <linux-imx@nxp.com>, <shawnguo@kernel.org>, <festevam@gmail.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <van.freenix@gmail.com>
-Subject: Re: [PATCH V2 1/2] DT: mailbox: add binding doc for the ARM SMC
- mailbox
-Message-ID: <20190603181856.34996aaa@donnerap.cambridge.arm.com>
-In-Reply-To: <20190603165651.GA12196@e107155-lin>
-References: <20190603083005.4304-1-peng.fan@nxp.com>
-        <20190603083005.4304-2-peng.fan@nxp.com>
-        <ae4c79f0-4aec-250e-e312-20aba5554665@gmail.com>
-        <20190603165651.GA12196@e107155-lin>
-Organization: ARM
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+        Mon, 3 Jun 2019 13:21:09 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:44475 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726711AbfFCRVJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 13:21:09 -0400
+Received: by mail-io1-f71.google.com with SMTP id i133so14355081ioa.11
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 10:21:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=aA85r0WK7ovUzBU9dngtfLxX84uudMjhacvFQEgLVO0=;
+        b=L2v9ppG/7hL7lxGGjEbUVZJPInk/oWEhHcDp6hmBw0THvvqfd/Cl5krK6XTL/pIWUJ
+         ZhddVdzG1gsk/+Koy7A5J78SAaHyI8901ZnDobwzZETw+JAzDfNz4MxsLlBsKUDYilr8
+         0lMetEar8OjorNOdBXhqncI5w8L87muB90223sXuKin4ibEI+7gYdPGXlBwcoGSY/VjG
+         vKdOaecw4xXwBjh9l1mzqtcrlMbWsnKSAlOFcQTpMAKEuJiRy4JKXHi3AAekO2h/kDos
+         b/xxi3Hg2qrOaDoJBTrCGVIIvs6oqOXgHfT4maHRUPaIKaHz8mDKBQbBSfKyGrWc1+xs
+         Mu7Q==
+X-Gm-Message-State: APjAAAUaJ0QSA/SJwOsTernHydV5nu82q4A2eOGEu6Uq5nKGU+ystUuK
+        2Lf7cTqG5ZfApasw/H5vPZSmUwT0Wx6itAjk5qggeowtN0YU
+X-Google-Smtp-Source: APXvYqz8VcrKpsEONNybVfgiThOm4wkEFAhEQ1kajfoIpocJ8NzKUb3GZUzFdIJWWCmiA+OPMphErTMbuHXDHkS0dNCp2tyhkNW3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a24:3ce:: with SMTP id e197mr18291143ite.143.1559582468531;
+ Mon, 03 Jun 2019 10:21:08 -0700 (PDT)
+Date:   Mon, 03 Jun 2019 10:21:08 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000008f06d058a6e9783@google.com>
+Subject: KMSAN: uninit-value in ax88772_bind
+From:   syzbot <syzbot+8a3fc6674bbc3978ed4e@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, glider@google.com,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        lynxis@fe80.eu, marcel.ziswiler@toradex.com,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        yang.wei9@zte.com.cn, zhang.run@zte.com.cn
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 3 Jun 2019 17:56:51 +0100
-Sudeep Holla <sudeep.holla@arm.com> wrote:
+Hello,
 
-Hi,
+syzbot found the following crash on:
 
-> On Mon, Jun 03, 2019 at 09:22:16AM -0700, Florian Fainelli wrote:
-> > On 6/3/19 1:30 AM, peng.fan@nxp.com wrote:  
-> > > From: Peng Fan <peng.fan@nxp.com>
-> > >
-> > > The ARM SMC mailbox binding describes a firmware interface to trigger
-> > > actions in software layers running in the EL2 or EL3 exception levels.
-> > > The term "ARM" here relates to the SMC instruction as part of the ARM
-> > > instruction set, not as a standard endorsed by ARM Ltd.
-> > >
-> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > > ---
-> > >
-> > > V2:
-> > > Introduce interrupts as a property.
-> > >
-> > > V1:
-> > > arm,func-ids is still kept as an optional property, because there is no
-> > > defined SMC funciton id passed from SCMI. So in my test, I still use
-> > > arm,func-ids for ARM SIP service.
-> > >
-> > >  .../devicetree/bindings/mailbox/arm-smc.txt        | 101 +++++++++++++++++++++
-> > >  1 file changed, 101 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.txt b/Documentation/devicetree/bindings/mailbox/arm-smc.txt
-> > > new file mode 100644
-> > > index 000000000000..401887118c09
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/mailbox/arm-smc.txt
-> > > @@ -0,0 +1,101 @@  
-> 
-> [...]
-> 
-> > > +Optional properties:
-> > > +- arm,func-ids		An array of 32-bit values specifying the function
-> > > +			IDs used by each mailbox channel. Those function IDs
-> > > +			follow the ARM SMC calling convention standard [1].
-> > > +			There is one identifier per channel and the number
-> > > +			of supported channels is determined by the length
-> > > +			of this array.
-> > > +- interrupts		SPI interrupts may be listed for notification,
-> > > +			each channel should use a dedicated interrupt
-> > > +			line.  
-> >
-> > I would not go about defining a specific kind of interrupt, since SPI is
-> > a GIC terminology, this firmware interface could be used in premise with
-> > any parent interrupt controller, for which the concept of a SPI/PPI/SGI
-> > may not be relevant.
-> >  
-> 
-> While I agree the binding document may not contain specifics, I still
-> don't see how to use SGI with this. Also note it's generally reserved
-> for OS future use(IPC) and using this for other than IPC may be bit
-> challenging IMO. It opens up lots of questions.
+HEAD commit:    f75e4cfe kmsan: use kmsan_handle_urb() in urb.c
+git tree:       kmsan
+console output: https://syzkaller.appspot.com/x/log.txt?x=136d720ea00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=602468164ccdc30a
+dashboard link: https://syzkaller.appspot.com/bug?extid=8a3fc6674bbc3978ed4e
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+06d00afa61eef8f7f501ebdb4e8612ea43ec2d78)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12788316a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=120359aaa00000
 
-Well, a PPI might be possible to use, although it's somewhat dodgy to hijack the GIC's (re-)distributor from EL3 to write to GICD_ISPENDR<n>. Need to ask Marc about his feelings towards this. But it's definitely possible from a hypervisor to inject arbitrary interrupts into a guest.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+8a3fc6674bbc3978ed4e@syzkaller.appspotmail.com
 
-But more importantly: is there any actual reason this needs to be a GIC interrupt? If I understand the code correctly, this could just be any interrupt, including one of an interrupt combiner or a GPIO chip. So why not just use the standard wording of: "exactly one interrupt specifier for each channel"?
+==================================================================
+BUG: KMSAN: uninit-value in is_valid_ether_addr  
+include/linux/etherdevice.h:200 [inline]
+BUG: KMSAN: uninit-value in asix_set_netdev_dev_addr  
+drivers/net/usb/asix_devices.c:73 [inline]
+BUG: KMSAN: uninit-value in ax88772_bind+0x93d/0x11e0  
+drivers/net/usb/asix_devices.c:724
+CPU: 0 PID: 3348 Comm: kworker/0:2 Not tainted 5.1.0+ #1
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+  kmsan_report+0x130/0x2a0 mm/kmsan/kmsan.c:622
+  __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:310
+  is_valid_ether_addr include/linux/etherdevice.h:200 [inline]
+  asix_set_netdev_dev_addr drivers/net/usb/asix_devices.c:73 [inline]
+  ax88772_bind+0x93d/0x11e0 drivers/net/usb/asix_devices.c:724
+  usbnet_probe+0x10f5/0x3940 drivers/net/usb/usbnet.c:1728
+  usb_probe_interface+0xd66/0x1320 drivers/usb/core/driver.c:361
+  really_probe+0xdae/0x1d80 drivers/base/dd.c:513
+  driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
+  __device_attach+0x454/0x730 drivers/base/dd.c:844
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
+  bus_probe_device+0x137/0x390 drivers/base/bus.c:514
+  device_add+0x288d/0x30e0 drivers/base/core.c:2106
+  usb_set_configuration+0x30dc/0x3750 drivers/usb/core/message.c:2027
+  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
+  usb_probe_device+0x14c/0x200 drivers/usb/core/driver.c:266
+  really_probe+0xdae/0x1d80 drivers/base/dd.c:513
+  driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
+  __device_attach+0x454/0x730 drivers/base/dd.c:844
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
+  bus_probe_device+0x137/0x390 drivers/base/bus.c:514
+  device_add+0x288d/0x30e0 drivers/base/core.c:2106
+  usb_new_device+0x23e5/0x2ff0 drivers/usb/core/hub.c:2534
+  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x48d1/0x7290 drivers/usb/core/hub.c:5432
+  process_one_work+0x1572/0x1f00 kernel/workqueue.c:2269
+  process_scheduled_works kernel/workqueue.c:2331 [inline]
+  worker_thread+0x189c/0x2460 kernel/workqueue.c:2417
+  kthread+0x4b5/0x4f0 kernel/kthread.c:254
+  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
 
-By the way: Shouldn't new bindings use the YAML format instead?
 
-Cheers,
-Andre.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
