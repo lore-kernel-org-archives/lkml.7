@@ -2,92 +2,91 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72840C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A80C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5538326647
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:05:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52E6C2677A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:05:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbfFCWFm (ORCPT
+        id S1726880AbfFCWFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 18:05:42 -0400
-Received: from mga11.intel.com ([192.55.52.93]:1031 "EHLO mga11.intel.com"
+        Mon, 3 Jun 2019 18:05:46 -0400
+Received: from mga05.intel.com ([192.55.52.43]:46272 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726205AbfFCWFj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726281AbfFCWFj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 3 Jun 2019 18:05:39 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 15:05:38 -0700
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 13:48:04 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,548,1549958400"; 
-   d="scan'208";a="181310106"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by fmsmga002.fm.intel.com with ESMTP; 03 Jun 2019 15:05:38 -0700
-Date:   Mon, 3 Jun 2019 15:08:42 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc:     joro@8bytes.org, alex.williamson@redhat.com, eric.auger@redhat.com,
-        ashok.raj@intel.com, yi.l.liu@intel.com, robdclark@gmail.com,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        robin.murphy@arm.com, jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v2 2/4] iommu: Introduce device fault data
-Message-ID: <20190603150842.11070cfd@jacob-builder>
-In-Reply-To: <20190603145749.46347-3-jean-philippe.brucker@arm.com>
-References: <20190603145749.46347-1-jean-philippe.brucker@arm.com>
-        <20190603145749.46347-3-jean-philippe.brucker@arm.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+Received: from jgaire-mobl.ger.corp.intel.com (HELO localhost) ([10.252.20.169])
+  by orsmga001.jf.intel.com with ESMTP; 03 Jun 2019 13:47:50 -0700
+Date:   Mon, 3 Jun 2019 23:47:49 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Stephen Smalley <sds@tycho.nsa.gov>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        William Roberts <bill.c.roberts@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+Message-ID: <20190603204749.GD4894@linux.intel.com>
+References: <683B5E3D-AFB6-4B45-8D39-B00847312209@amacapital.net>
+ <960B34DE67B9E140824F1DCDEC400C0F654E965F@ORSMSX116.amr.corp.intel.com>
+ <CALCETrXXVMutX8eZk6nnkOAeS+Tj0sQd0FkW+wk6Rx8hQxCe6w@mail.gmail.com>
+ <960B34DE67B9E140824F1DCDEC400C0F654E9824@ORSMSX116.amr.corp.intel.com>
+ <20190528202407.GB13158@linux.intel.com>
+ <285f279f-b500-27f0-ab42-fb1dbcc5ab18@tycho.nsa.gov>
+ <960B34DE67B9E140824F1DCDEC400C0F654EB487@ORSMSX116.amr.corp.intel.com>
+ <678a37af-797d-7bd5-a406-32548a270e3d@tycho.nsa.gov>
+ <CALCETrWXB9fNNDH7gZxPTx05F78Og6K=ZtAr2aA++BDwY09Wbg@mail.gmail.com>
+ <c1135352-0b5e-4694-b1a9-105876095877@tycho.nsa.gov>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c1135352-0b5e-4694-b1a9-105876095877@tycho.nsa.gov>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  3 Jun 2019 15:57:47 +0100
-Jean-Philippe Brucker <jean-philippe.brucker@arm.com> wrote:
+On Thu, May 30, 2019 at 11:04:24AM -0400, Stephen Smalley wrote:
+> Does this occur for both setting initial permissions and runtime permissions
+> or just runtime? Both userspace- and driver-initiated mmap/mprotect
+> operations or just userspace-initiated ones?  Does the driver use interfaces
+> that call the mmap/mprotect hooks or lower level functions?
 
-> +/**
-> + * struct iommu_fault_page_request - Page Request data
-> + * @flags: encodes whether the corresponding fields are valid and
-> whether this
-> + *         is the last page in group (IOMMU_FAULT_PAGE_REQUEST_*
-> values)
-> + * @pasid: Process Address Space ID
-> + * @grpid: Page Request Group Index
-> + * @perm: requested page permissions (IOMMU_FAULT_PERM_* values)
-> + * @addr: page address
-> + * @private_data: device-specific private information
-> + */
-> +struct iommu_fault_page_request {
-> +#define IOMMU_FAULT_PAGE_REQUEST_PASID_VALID	(1 << 0)
-> +#define IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE	(1 << 1)
-> +#define IOMMU_FAULT_PAGE_REQUEST_PRIV_DATA	(1 << 2)
-> +	__u32	flags;
-> +	__u32	pasid;
-> +	__u32	grpid;
-> +	__u32	perm;
-> +	__u64	addr;
-> +	__u64	private_data[2];
-> +};
-> +
+The driver never initiates mmap() or mprotect().
 
-Just a thought, for non-identity G-H PASID management. We could pass on
-guest PASID in PRQ to save a lookup in QEMU. In this case, QEMU
-allocate a GPASID for vIOMMU then a host PASID for pIOMMU. QEMU has a
-G->H lookup. When PRQ comes in to the pIOMMU with HPASID, IOMMU driver
-can retrieve GPASID from the bind data then report to the guest via
-VFIO. In this case QEMU does not need to do a H->G PASID lookup.
-
-Should we add a gpasid field here? or we can add a flag and field
-later, up to you.
-
-Thanks,
-
-Jacob
+/Jarkko
