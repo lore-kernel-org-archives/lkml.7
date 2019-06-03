@@ -2,322 +2,383 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F111C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F19C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EFE626740
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:36:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EE2B26A01
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:38:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Tq+s2vCS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s9+aMnx6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbfFCWgx (ORCPT
+        id S1726410AbfFCWij (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 18:36:53 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:33684 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbfFCWgv (ORCPT
+        Mon, 3 Jun 2019 18:38:39 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:35642 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726025AbfFCWij (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 18:36:51 -0400
-Received: by mail-qt1-f193.google.com with SMTP id 14so11544317qtf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 15:36:50 -0700 (PDT)
+        Mon, 3 Jun 2019 18:38:39 -0400
+Received: by mail-it1-f196.google.com with SMTP id n189so10844315itd.0;
+        Mon, 03 Jun 2019 15:38:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=e/L03brJhYY8u9Hd3CTKtRq0xjx8/jrNsonVfIlrn3E=;
-        b=Tq+s2vCSOC7yd3OQA0u3sAvdi29LqvQtz5uwvGRpL1OyrbFm8VV53GP8rVBe8tAMrA
-         Vklw+bvJ4Nu4EWxHau/ubbkGPTAqfBrcq0bPu3vC/7VwlOisvCzpUOri/n7nv43qv0ex
-         mmEU3vcEhX+XLPK8B41SYWj1cUv6gtROHH+6k=
+        bh=F/ixDeQhQV0jkM+ZLEc/zUFxrkTvZoI9aB593YmsPiA=;
+        b=s9+aMnx6B3R0hLSkCU1J6r+p1AiMsWy/lS4s0oth8CJJfttuYrqWdaFXKQUggrJ0B/
+         sF3/n1/6QUBSqlLcDes5E5PYyl+oeAsV0DGtwnGzLigTlDdztk1cCIxyrNvQKt9Vo9Zd
+         G7egM7/Mm1B3cChhYLxz7qmiYxEd9ygcusCLtAstLWvOZeX6GzpJLVoa/yyT6fWJ8rEE
+         v4siPNXfVWM79HhrQPBHunnd5GQRrfmWoSQW/tgpbaUz8Bg/S1j4BLFmh01yJEhczXam
+         rtpTOEqIlv8e//gYzQcDQqVG2RBXwnCMbSnSDZ65KAWWS+gZE+UBhQqJQOS+rRCiSn5b
+         YRnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=e/L03brJhYY8u9Hd3CTKtRq0xjx8/jrNsonVfIlrn3E=;
-        b=uWBBtXVMacFghhooSWWv8eFWUAZDQt/IXdNpLKiHDgEdpAoVYijPaiNL4OxdbmzJl8
-         t9UFxz0VnU3/JinHqnAWT/8xpc/NAZVz9S+dYSMy4hEvwzDrOj+Nq6h42ZJUjwQBu3w+
-         Hb5G9qJ8vT2wQaUHfhBrya8gOcrjxMURUVpu2s1mBjOs1IMSPurBa+Nmdh2uAsHPKAN6
-         Ws24QkfsZLDlscP3HxuLweU/LzGGrx8qlm8CyojPDepnAKc1DOe0f8QMKXNpbN2hCetg
-         LVhDeZuuMVH/rY+oemaerWFA0lrQNpPEy2wkWvszoXKjkSysV2Rvu2gDYuo79dljlcdl
-         jdEA==
-X-Gm-Message-State: APjAAAXvl63G4ufXjT1Qe3tUkPAL9GSF3Kia75SqlE+MO0dX8xvp4Obu
-        qhWDiyLYGrBKzpEqcS+iAcfIymKxPXaew7hZ4RbqQA==
-X-Google-Smtp-Source: APXvYqxlCEQeBkuLqEfFteDIX4bB2zq8WUaVaw6un6X2NBiAH+DDI1xY1pmVdGqgRbYiY34sx7gxfE0DyscBh4nsvNs=
-X-Received: by 2002:aed:38a1:: with SMTP id k30mr5469996qte.159.1559601410233;
- Mon, 03 Jun 2019 15:36:50 -0700 (PDT)
+        bh=F/ixDeQhQV0jkM+ZLEc/zUFxrkTvZoI9aB593YmsPiA=;
+        b=NfXSGYats/EAuZLCRlNlRaAMgQwaRkjnV407sVTRce85s9auzlkcqajedi+OvUvwMD
+         W0jGRvfXprQNDVw+1+TnGIekK7707j8lfo6UYh7nWvIg6rbuYopzDAFPdrv4lx4IFYzC
+         Y+93pNqXI6Xs4AeKk9q527eypqZNWk4fN6ADE1RidcWDHwcKQGUkCkiouy/YdGigct9x
+         GgheOljadAeZyCgn7Nk61eEpswQh/KycSQsP2JQ4bSwmruh2MrhlSWoyFSwZZtLsHAdc
+         0zxJVr1g1R2xWFvoH3vhqILibM3x3QsnwnhxHhxLB7z097y3MvOlJDzlo1iNTDOQTdlR
+         V6jw==
+X-Gm-Message-State: APjAAAVlwf77b0eJi732uCL+LV9SzrlwQXI1QcPIddyqkzz+CzzSN8g8
+        79xPGqYfA7S2wy0IQMM9vfeTfcfIXEcwEIQoj9M=
+X-Google-Smtp-Source: APXvYqxE3pqRl68z5nHb341KBeHZIiVFd5DLcpA0OiQW5aDXbSqBg02oNx5KzeRRPXKtMYy6PK+00mxJhVAMM2gxC80=
+X-Received: by 2002:a02:5502:: with SMTP id e2mr18612138jab.87.1559601517930;
+ Mon, 03 Jun 2019 15:38:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190601092615.67917-1-jitao.shi@mediatek.com> <20190601092615.67917-7-jitao.shi@mediatek.com>
-In-Reply-To: <20190601092615.67917-7-jitao.shi@mediatek.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Tue, 4 Jun 2019 06:36:38 +0800
-Message-ID: <CANMq1KDoGO=2yursnB8udJkvMG6GwV=qsW7HFAyTsc93dnBBXQ@mail.gmail.com>
-Subject: Re: [v4 6/7] drm/mediatek: change the dsi phytiming calculate method
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>, stonea168@163.com,
-        dri-devel@lists.freedesktop.org,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Ajay Kumar <ajaykumar.rs@samsung.com>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        cawa cheng <cawa.cheng@mediatek.com>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        Thierry Reding <treding@nvidia.com>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Rahul Sharma <rahul.sharma@samsung.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ryan Case <ryandcase@chromium.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Sean Paul <seanpaul@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>
+References: <20190603170306.49099-1-nitesh@redhat.com> <20190603170306.49099-3-nitesh@redhat.com>
+In-Reply-To: <20190603170306.49099-3-nitesh@redhat.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Mon, 3 Jun 2019 15:38:26 -0700
+Message-ID: <CAKgT0UdtHAvRd++enU3ouxebwV1T4KZbS_JkmyDbJ5jGkA1XaQ@mail.gmail.com>
+Subject: Re: [RFC][Patch v10 2/2] virtio-balloon: page_hinting: reporting to
+ the host
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>,
+        David Hildenbrand <david@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 1, 2019 at 5:26 PM Jitao Shi <jitao.shi@mediatek.com> wrote:
+On Mon, Jun 3, 2019 at 10:04 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
 >
-> Change the method of frame rate calc which can get more accurate
-> frame rate.
+> Enables the kernel to negotiate VIRTIO_BALLOON_F_HINTING feature with the
+> host. If it is available and page_hinting_flag is set to true, page_hinting
+> is enabled and its callbacks are configured along with the max_pages count
+> which indicates the maximum number of pages that can be isolated and hinted
+> at a time. Currently, only free pages of order >= (MAX_ORDER - 2) are
+> reported. To prevent any false OOM max_pages count is set to 16.
 >
-> data rate = pixel_clock * bit_per_pixel / lanes
-> Adjust hfp_wc to adapt the additional phy_data
+> By default page_hinting feature is enabled and gets loaded as soon
+> as the virtio-balloon driver is loaded. However, it could be disabled
+> by writing the page_hinting_flag which is a virtio-balloon parameter.
 >
-> if MIPI_DSI_MODE_VIDEO_BURST
->         hfp_wc = hfp * bpp - data_phy_cycles * lanes - 12 - 6;
-> else
->         hfp_wc = hfp * bpp - data_phy_cycles * lanes - 12;
->
-> Note:
-> //(2: 1 for sync, 1 for phy idle)
-> data_phy_cycles = T_hs_exit + T_lpx + T_hs_prepare + T_hs_zero + 2;
->
-> bpp: bit per pixel
->
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> Tested-by: Ryan Case <ryandcase@chromium.org>
+> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
 > ---
->  drivers/gpu/drm/mediatek/mtk_dsi.c | 122 ++++++++++++++++++++---------
->  1 file changed, 83 insertions(+), 39 deletions(-)
+>  drivers/virtio/virtio_balloon.c     | 112 +++++++++++++++++++++++++++-
+>  include/uapi/linux/virtio_balloon.h |  14 ++++
+>  2 files changed, 125 insertions(+), 1 deletion(-)
 >
-> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> index abf6ddec5db6..558727c60ba3 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> @@ -144,12 +144,6 @@
->  #define DATA_0                         (0xff << 16)
->  #define DATA_1                         (0xff << 24)
+> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+> index f19061b585a4..40f09ea31643 100644
+> --- a/drivers/virtio/virtio_balloon.c
+> +++ b/drivers/virtio/virtio_balloon.c
+> @@ -31,6 +31,7 @@
+>  #include <linux/mm.h>
+>  #include <linux/mount.h>
+>  #include <linux/magic.h>
+> +#include <linux/page_hinting.h>
 >
-> -#define T_LPX          5
-> -#define T_HS_PREP      6
-> -#define T_HS_TRAIL     8
-> -#define T_HS_EXIT      7
-> -#define T_HS_ZERO      10
-> -
->  #define NS_TO_CYCLE(n, c)    ((n) / (c) + (((n) % (c)) ? 1 : 0))
+>  /*
+>   * Balloon device works in 4K page units.  So each page is pointed to by
+> @@ -48,6 +49,7 @@
+>  /* The size of a free page block in bytes */
+>  #define VIRTIO_BALLOON_FREE_PAGE_SIZE \
+>         (1 << (VIRTIO_BALLOON_FREE_PAGE_ORDER + PAGE_SHIFT))
+> +#define VIRTIO_BALLOON_PAGE_HINTING_MAX_PAGES  16
 >
->  #define MTK_DSI_HOST_IS_READ(type) \
-> @@ -158,6 +152,25 @@
->         (type == MIPI_DSI_GENERIC_READ_REQUEST_2_PARAM) || \
->         (type == MIPI_DSI_DCS_READ))
+>  #ifdef CONFIG_BALLOON_COMPACTION
+>  static struct vfsmount *balloon_mnt;
+> @@ -58,6 +60,7 @@ enum virtio_balloon_vq {
+>         VIRTIO_BALLOON_VQ_DEFLATE,
+>         VIRTIO_BALLOON_VQ_STATS,
+>         VIRTIO_BALLOON_VQ_FREE_PAGE,
+> +       VIRTIO_BALLOON_VQ_HINTING,
+>         VIRTIO_BALLOON_VQ_MAX
+>  };
 >
-> +struct mtk_phy_timing {
-> +       u32 lpx;
-> +       u32 da_hs_prepare;
-> +       u32 da_hs_zero;
-> +       u32 da_hs_trail;
+> @@ -67,7 +70,8 @@ enum virtio_balloon_config_read {
+>
+>  struct virtio_balloon {
+>         struct virtio_device *vdev;
+> -       struct virtqueue *inflate_vq, *deflate_vq, *stats_vq, *free_page_vq;
+> +       struct virtqueue *inflate_vq, *deflate_vq, *stats_vq, *free_page_vq,
+> +                        *hinting_vq;
+>
+>         /* Balloon's own wq for cpu-intensive work items */
+>         struct workqueue_struct *balloon_wq;
+> @@ -125,6 +129,9 @@ struct virtio_balloon {
+>
+>         /* To register a shrinker to shrink memory upon memory pressure */
+>         struct shrinker shrinker;
 > +
-> +       u32 ta_go;
-> +       u32 ta_sure;
-> +       u32 ta_get;
-> +       u32 da_hs_exit;
-> +
-> +       u32 clk_hs_zero;
-> +       u32 clk_hs_trail;
-> +
-> +       u32 clk_hs_prepare;
-> +       u32 clk_hs_post;
-> +       u32 clk_hs_exit;
-> +};
-> +
->  struct phy;
->
->  struct mtk_dsi_driver_data {
-> @@ -182,12 +195,13 @@ struct mtk_dsi {
->         struct clk *digital_clk;
->         struct clk *hs_clk;
->
-> -       u32 data_rate;
-> +       u64 data_rate;
+> +       /* object pointing at the array of isolated pages ready for hinting */
+> +       struct hinting_data *hinting_arr;
 
-As highlighted in
-https://patchwork.kernel.org/patch/10949323/#22673829, this change
-causes issues on 32-bit platforms.
+Just make this an array of size VIRTIO_BALLOON_PAGE_HINTING_MAX_PAGES.
+It will save a bunch of complexity later.
 
+>  };
 >
->         unsigned long mode_flags;
->         enum mipi_dsi_pixel_format format;
->         unsigned int lanes;
->         struct videomode vm;
-> +       struct mtk_phy_timing phy_timing;
->         int refcount;
->         bool enabled;
->         u32 irq_data;
-> @@ -221,17 +235,36 @@ static void mtk_dsi_phy_timconfig(struct mtk_dsi *dsi)
->  {
->         u32 timcon0, timcon1, timcon2, timcon3;
->         u32 ui, cycle_time;
-> +       struct mtk_phy_timing *timing = &dsi->phy_timing;
+>  static struct virtio_device_id id_table[] = {
+> @@ -132,6 +139,85 @@ static struct virtio_device_id id_table[] = {
+>         { 0 },
+>  };
+>
+> +#ifdef CONFIG_PAGE_HINTING
+
+Instead of having CONFIG_PAGE_HINTING enable this, maybe we should
+have virtio-balloon enable CONFIG_PAGE_HINTING.
+
+> +struct virtio_balloon *hvb;
+> +bool page_hinting_flag = true;
+> +module_param(page_hinting_flag, bool, 0444);
+> +MODULE_PARM_DESC(page_hinting_flag, "Enable page hinting");
 > +
-> +       ui = 1000000000 / dsi->data_rate;
-> +       cycle_time = 8000000000 / dsi->data_rate;
+> +static bool virtqueue_kick_sync(struct virtqueue *vq)
+> +{
+> +       u32 len;
 > +
-> +       timing->lpx = NS_TO_CYCLE(60, cycle_time);
-> +       timing->da_hs_prepare = NS_TO_CYCLE(40 + 5 * ui, cycle_time);
-> +       timing->da_hs_zero = NS_TO_CYCLE(110 + 6 * ui, cycle_time);
-> +       timing->da_hs_trail = NS_TO_CYCLE(80 + 4 * ui, cycle_time);
->
-> -       ui = 1000 / dsi->data_rate + 0x01;
-> -       cycle_time = 8000 / dsi->data_rate + 0x01;
-> +       timing->ta_go = 4 * timing->lpx;
-> +       timing->ta_sure = 3 * timing->lpx / 2;
-> +       timing->ta_get = 5 * timing->lpx;
-> +       timing->da_hs_exit = 2 * timing->lpx;
->
-> -       timcon0 = T_LPX | T_HS_PREP << 8 | T_HS_ZERO << 16 | T_HS_TRAIL << 24;
-> -       timcon1 = 4 * T_LPX | (3 * T_LPX / 2) << 8 | 5 * T_LPX << 16 |
-> -                 T_HS_EXIT << 24;
-> -       timcon2 = ((NS_TO_CYCLE(0x64, cycle_time) + 0xa) << 24) |
-> -                 (NS_TO_CYCLE(0x150, cycle_time) << 16);
-> -       timcon3 = NS_TO_CYCLE(0x40, cycle_time) | (2 * T_LPX) << 16 |
-> -                 NS_TO_CYCLE(80 + 52 * ui, cycle_time) << 8;
-> +       timing->clk_hs_zero = NS_TO_CYCLE(336, cycle_time);
-> +       timing->clk_hs_trail = NS_TO_CYCLE(100, cycle_time) + 10;
-> +
-> +       timing->clk_hs_prepare = NS_TO_CYCLE(64, cycle_time);
-> +       timing->clk_hs_post = NS_TO_CYCLE(80 + 52 * ui, cycle_time);
-> +       timing->clk_hs_exit = 2 * timing->lpx;
-> +
-> +       timcon0 = timing->lpx | timing->da_hs_prepare << 8 |
-> +                 timing->da_hs_zero << 16 | timing->da_hs_trail << 24;
-> +       timcon1 = timing->ta_go | timing->ta_sure << 8 |
-> +                 timing->ta_get << 16 | timing->da_hs_exit << 24;
-> +       timcon2 = 1 << 8 | timing->clk_hs_zero << 16 |
-> +                 timing->clk_hs_trail << 24;
-> +       timcon3 = timing->clk_hs_prepare | timing->clk_hs_post << 8 |
-> +                 timing->clk_hs_exit << 16;
->
->         writel(timcon0, dsi->regs + DSI_PHY_TIMECON0);
->         writel(timcon1, dsi->regs + DSI_PHY_TIMECON1);
-> @@ -418,7 +451,8 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
->         u32 horizontal_sync_active_byte;
->         u32 horizontal_backporch_byte;
->         u32 horizontal_frontporch_byte;
-> -       u32 dsi_tmp_buf_bpp;
-> +       u32 dsi_tmp_buf_bpp, data_phy_cycles;
-> +       struct mtk_phy_timing *timing = &dsi->phy_timing;
->
->         struct videomode *vm = &dsi->vm;
->
-> @@ -433,7 +467,8 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
->         writel(vm->vactive, dsi->regs + DSI_VACT_NL);
->
->         if (dsi->driver_data->has_size_ctl)
-> -               writel(vm->vactive << 16 | vm->hactive, dsi->regs + DSI_SIZE_CON);
-> +               writel(vm->vactive << 16 | vm->hactive,
-> +                      dsi->regs + DSI_SIZE_CON);
->
->         horizontal_sync_active_byte = (vm->hsync_len * dsi_tmp_buf_bpp - 10);
->
-> @@ -444,7 +479,34 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
->                 horizontal_backporch_byte = ((vm->hback_porch + vm->hsync_len) *
->                         dsi_tmp_buf_bpp - 10);
->
-> -       horizontal_frontporch_byte = (vm->hfront_porch * dsi_tmp_buf_bpp - 12);
-> +       data_phy_cycles = timing->lpx + timing->da_hs_prepare +
-> +                                 timing->da_hs_zero + timing->da_hs_exit + 2;
-> +
-> +       if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_BURST) {
-> +               if (vm->hfront_porch * dsi_tmp_buf_bpp >
-> +                   data_phy_cycles * dsi->lanes + 18) {
-> +                       horizontal_frontporch_byte = vm->hfront_porch *
-> +                                                    dsi_tmp_buf_bpp -
-> +                                                    data_phy_cycles *
-> +                                                    dsi->lanes - 18;
-> +               } else {
-> +                       DRM_WARN("HFP less than d-phy, FPS will under 60Hz\n");
-> +                       horizontal_frontporch_byte = vm->hfront_porch *
-> +                                                    dsi_tmp_buf_bpp;
-> +               }
-> +       } else {
-> +               if (vm->hfront_porch * dsi_tmp_buf_bpp >
-> +                   data_phy_cycles * dsi->lanes + 12) {
-> +                       horizontal_frontporch_byte = vm->hfront_porch *
-> +                                                    dsi_tmp_buf_bpp -
-> +                                                    data_phy_cycles *
-> +                                                    dsi->lanes - 12;
-> +               } else {
-> +                       DRM_WARN("HFP less than d-phy, FPS will under 60Hz\n");
-> +                       horizontal_frontporch_byte = vm->hfront_porch *
-> +                                                    dsi_tmp_buf_bpp;
-> +               }
+> +       if (likely(virtqueue_kick(vq))) {
+> +               while (!virtqueue_get_buf(vq, &len) &&
+> +                      !virtqueue_is_broken(vq))
+> +                       cpu_relax();
+> +               return true;
+
+Is this a synchronous setup? It seems kind of wasteful to have a
+thread busy waiting here like this. It might make more sense to just
+make this work like the other balloon queues and have a wait event
+with a wake up in the interrupt handler for the queue.
+
 > +       }
->
->         writel(horizontal_sync_active_byte, dsi->regs + DSI_HSA_WC);
->         writel(horizontal_backporch_byte, dsi->regs + DSI_HBP_WC);
-> @@ -544,8 +606,7 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
+> +       return false;
+> +}
+> +
+> +static void page_hinting_report(int entries)
+> +{
+> +       struct scatterlist sg;
+> +       struct virtqueue *vq = hvb->hinting_vq;
+> +       int err = 0;
+> +       struct hinting_data *hint_req;
+> +       u64 gpaddr;
+> +
+> +       hint_req = kmalloc(sizeof(*hint_req), GFP_KERNEL);
+> +       if (!hint_req)
+> +               return;
+
+Why do we need another allocation here? Couldn't you just allocate
+hint_req on the stack and then use that? I think we might be doing too
+much here. All this really needs to look like is something along the
+lines of tell_host() minus the wait_event.
+
+> +       gpaddr = virt_to_phys(hvb->hinting_arr);
+> +       hint_req->phys_addr = cpu_to_virtio64(hvb->vdev, gpaddr);
+> +       hint_req->size = cpu_to_virtio32(hvb->vdev, entries);
+> +       sg_init_one(&sg, hint_req, sizeof(*hint_req));
+> +       err = virtqueue_add_outbuf(vq, &sg, 1, hint_req, GFP_KERNEL);
+> +       if (!err)
+> +               virtqueue_kick_sync(hvb->hinting_vq);
+> +
+> +       kfree(hint_req);
+> +}
+> +
+> +int page_hinting_prepare(void)
+> +{
+> +       hvb->hinting_arr = kmalloc_array(VIRTIO_BALLOON_PAGE_HINTING_MAX_PAGES,
+> +                                        sizeof(*hvb->hinting_arr), GFP_KERNEL);
+> +       if (!hvb->hinting_arr)
+> +               return -ENOMEM;
+> +       return 0;
+> +}
+> +
+
+Why make the hinting_arr a dynamic allocation? You should probably
+just make it a static array within the virtio_balloon structure. Then
+you don't have the risk of an allocation failing and messing up the
+hints.
+
+> +void hint_pages(struct list_head *pages)
+> +{
+> +       struct page *page, *next;
+> +       unsigned long pfn;
+> +       int idx = 0, order;
+> +
+> +       list_for_each_entry_safe(page, next, pages, lru) {
+> +               pfn = page_to_pfn(page);
+> +               order = page_private(page);
+> +               hvb->hinting_arr[idx].phys_addr = pfn << PAGE_SHIFT;
+> +               hvb->hinting_arr[idx].size = (1 << order) * PAGE_SIZE;
+> +               idx++;
+> +       }
+> +       page_hinting_report(idx);
+> +}
+> +
+
+Getting back to my suggestion from earlier today. It might make sense
+to not bother with the PAGE_SHIFT or PAGE_SIZE multiplication if you
+just record everything in VIRTIO_BALLOON_PAGES intead of using the
+actual address and size.
+
+> +void page_hinting_cleanup(void)
+> +{
+> +       kfree(hvb->hinting_arr);
+> +}
+> +
+
+Same comment here. Make this array a part of virtio_balloon and you
+don't have to free it.
+
+> +static const struct page_hinting_cb hcb = {
+> +       .prepare = page_hinting_prepare,
+> +       .hint_pages = hint_pages,
+> +       .cleanup = page_hinting_cleanup,
+> +       .max_pages = VIRTIO_BALLOON_PAGE_HINTING_MAX_PAGES,
+> +};
+
+With the above changes prepare and cleanup can be dropped.
+
+> +#endif
+> +
+>  static u32 page_to_balloon_pfn(struct page *page)
 >  {
->         struct device *dev = dsi->dev;
->         int ret;
-> -       u64 pixel_clock, total_bits;
-> -       u32 htotal, htotal_bits, bit_per_pixel, overhead_cycles, overhead_bits;
-> +       u32 bit_per_pixel;
+>         unsigned long pfn = page_to_pfn(page);
+> @@ -488,6 +574,7 @@ static int init_vqs(struct virtio_balloon *vb)
+>         names[VIRTIO_BALLOON_VQ_DEFLATE] = "deflate";
+>         names[VIRTIO_BALLOON_VQ_STATS] = NULL;
+>         names[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
+> +       names[VIRTIO_BALLOON_VQ_HINTING] = NULL;
 >
->         if (++dsi->refcount != 1)
->                 return 0;
-> @@ -564,24 +625,7 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
->                 break;
+>         if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
+>                 names[VIRTIO_BALLOON_VQ_STATS] = "stats";
+> @@ -499,11 +586,18 @@ static int init_vqs(struct virtio_balloon *vb)
+>                 callbacks[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
 >         }
 >
-> -       /**
-> -        * htotal_time = htotal * byte_per_pixel / num_lanes
-> -        * overhead_time = lpx + hs_prepare + hs_zero + hs_trail + hs_exit
-> -        * mipi_ratio = (htotal_time + overhead_time) / htotal_time
-> -        * data_rate = pixel_clock * bit_per_pixel * mipi_ratio / num_lanes;
-> -        */
-> -       pixel_clock = dsi->vm.pixelclock;
-> -       htotal = dsi->vm.hactive + dsi->vm.hback_porch + dsi->vm.hfront_porch +
-> -                       dsi->vm.hsync_len;
-> -       htotal_bits = htotal * bit_per_pixel;
-> -
-> -       overhead_cycles = T_LPX + T_HS_PREP + T_HS_ZERO + T_HS_TRAIL +
-> -                       T_HS_EXIT;
-> -       overhead_bits = overhead_cycles * dsi->lanes * 8;
-> -       total_bits = htotal_bits + overhead_bits;
-> -
-> -       dsi->data_rate = DIV_ROUND_UP_ULL(pixel_clock * total_bits,
-> -                                         htotal * dsi->lanes);
-> +       dsi->data_rate = dsi->vm.pixelclock * bit_per_pixel / dsi->lanes;
+> +       if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_HINTING)) {
+> +               names[VIRTIO_BALLOON_VQ_HINTING] = "hinting_vq";
+> +               callbacks[VIRTIO_BALLOON_VQ_HINTING] = NULL;
+> +       }
+>         err = vb->vdev->config->find_vqs(vb->vdev, VIRTIO_BALLOON_VQ_MAX,
+>                                          vqs, callbacks, names, NULL, NULL);
+>         if (err)
+>                 return err;
 >
->         ret = clk_set_rate(dsi->hs_clk, dsi->data_rate);
->         if (ret < 0) {
+> +       if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_HINTING))
+> +               vb->hinting_vq = vqs[VIRTIO_BALLOON_VQ_HINTING];
+> +
+>         vb->inflate_vq = vqs[VIRTIO_BALLOON_VQ_INFLATE];
+>         vb->deflate_vq = vqs[VIRTIO_BALLOON_VQ_DEFLATE];
+>         if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
+> @@ -942,6 +1036,14 @@ static int virtballoon_probe(struct virtio_device *vdev)
+>                 if (err)
+>                         goto out_del_balloon_wq;
+>         }
+> +
+> +#ifdef CONFIG_PAGE_HINTING
+> +       if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_HINTING) &&
+> +           page_hinting_flag) {
+> +               hvb = vb;
+> +               page_hinting_enable(&hcb);
+> +       }
+> +#endif
+>         virtio_device_ready(vdev);
+>
+>         if (towards_target(vb))
+> @@ -989,6 +1091,12 @@ static void virtballoon_remove(struct virtio_device *vdev)
+>                 destroy_workqueue(vb->balloon_wq);
+>         }
+>
+> +#ifdef CONFIG_PAGE_HINTING
+> +       if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_HINTING)) {
+> +               hvb = NULL;
+> +               page_hinting_disable();
+> +       }
+> +#endif
+>         remove_common(vb);
+>  #ifdef CONFIG_BALLOON_COMPACTION
+>         if (vb->vb_dev_info.inode)
+> @@ -1043,8 +1151,10 @@ static unsigned int features[] = {
+>         VIRTIO_BALLOON_F_MUST_TELL_HOST,
+>         VIRTIO_BALLOON_F_STATS_VQ,
+>         VIRTIO_BALLOON_F_DEFLATE_ON_OOM,
+> +       VIRTIO_BALLOON_F_HINTING,
+>         VIRTIO_BALLOON_F_FREE_PAGE_HINT,
+>         VIRTIO_BALLOON_F_PAGE_POISON,
+> +       VIRTIO_BALLOON_F_HINTING,
+>  };
+>
+>  static struct virtio_driver virtio_balloon_driver = {
+> diff --git a/include/uapi/linux/virtio_balloon.h b/include/uapi/linux/virtio_balloon.h
+> index a1966cd7b677..25e4f817c660 100644
+> --- a/include/uapi/linux/virtio_balloon.h
+> +++ b/include/uapi/linux/virtio_balloon.h
+> @@ -29,6 +29,7 @@
+>  #include <linux/virtio_types.h>
+>  #include <linux/virtio_ids.h>
+>  #include <linux/virtio_config.h>
+> +#include <linux/page_hinting.h>
+>
+>  /* The feature bitmap for virtio balloon */
+>  #define VIRTIO_BALLOON_F_MUST_TELL_HOST        0 /* Tell before reclaiming pages */
+> @@ -36,6 +37,7 @@
+>  #define VIRTIO_BALLOON_F_DEFLATE_ON_OOM        2 /* Deflate balloon on OOM */
+>  #define VIRTIO_BALLOON_F_FREE_PAGE_HINT        3 /* VQ to report free pages */
+>  #define VIRTIO_BALLOON_F_PAGE_POISON   4 /* Guest is using page poisoning */
+> +#define VIRTIO_BALLOON_F_HINTING       5 /* Page hinting virtqueue */
+>
+>  /* Size of a PFN in the balloon interface. */
+>  #define VIRTIO_BALLOON_PFN_SHIFT 12
+> @@ -108,4 +110,16 @@ struct virtio_balloon_stat {
+>         __virtio64 val;
+>  } __attribute__((packed));
+>
+> +#ifdef CONFIG_PAGE_HINTING
+> +/*
+> + * struct hinting_data- holds the information associated with hinting.
+> + * @phys_add:  physical address associated with a page or the array holding
+> + *             the array of isolated pages.
+> + * @size:      total size associated with the phys_addr.
+> + */
+> +struct hinting_data {
+> +       __virtio64 phys_addr;
+> +       __virtio32 size;
+> +};
+
+So in order to avoid errors this should either have
+"__attribute__((packed))" added or it should be changed to a pair of
+u32 or u64 values so that it will always be the same size regardless
+of what platform it is built on.
+
+> +#endif
+>  #endif /* _LINUX_VIRTIO_BALLOON_H */
 > --
 > 2.21.0
 >
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
