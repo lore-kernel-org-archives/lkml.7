@@ -2,129 +2,205 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46485C28CC5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 02:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D248C28CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 02:23:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 245E227AD1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 02:19:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25ADA27ABA
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 02:23:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=anastas.io header.i=@anastas.io header.b="gqRwvu8i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbfFCCTr (ORCPT
+        id S1726786AbfFCCX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 22:19:47 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:48089 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726305AbfFCCTq (ORCPT
+        Sun, 2 Jun 2019 22:23:58 -0400
+Received: from alpha.anastas.io ([104.248.188.109]:39131 "EHLO
+        alpha.anastas.io" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725965AbfFCCX5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 22:19:46 -0400
-X-UUID: 2a27758f1ed445d3ae430e40fa8cbcf4-20190603
-X-UUID: 2a27758f1ed445d3ae430e40fa8cbcf4-20190603
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1566463222; Mon, 03 Jun 2019 10:19:39 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- MTKMBS33N2.mediatek.inc (172.27.4.76) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 3 Jun 2019 10:19:36 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 3 Jun 2019 10:19:34 +0800
-Message-ID: <1559528374.32185.4.camel@mtksdaap41>
-Subject: Re: [v4 3/7] drm/mediatek: add dsi reg commit disable control
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        <linux-pwm@vger.kernel.org>, David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Thierry Reding" <treding@nvidia.com>,
-        Ajay Kumar <ajaykumar.rs@samsung.com>,
-        "Inki Dae" <inki.dae@samsung.com>,
-        Rahul Sharma <rahul.sharma@samsung.com>,
-        "Sean Paul" <seanpaul@chromium.org>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        "Andy Yan" <andy.yan@rock-chips.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
-        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
-        <stonea168@163.com>
-Date:   Mon, 3 Jun 2019 10:19:34 +0800
-In-Reply-To: <20190601092615.67917-4-jitao.shi@mediatek.com>
-References: <20190601092615.67917-1-jitao.shi@mediatek.com>
-         <20190601092615.67917-4-jitao.shi@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Sun, 2 Jun 2019 22:23:57 -0400
+Received: from authenticated-user (alpha.anastas.io [104.248.188.109])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by alpha.anastas.io (Postfix) with ESMTPSA id 015087F6B4;
+        Sun,  2 Jun 2019 21:23:55 -0500 (CDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=anastas.io; s=mail;
+        t=1559528636; bh=+/duAU9XL92ctEZ3sNHy++gGMbn1xWFWJV4PdCXDBhA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=gqRwvu8il7GnTct/LxLSowY39wiUUMkDD7jPiEpdnuJwmcOR66zYMIiwszSDxsXIV
+         MFCh1p95YTFv4nHSS1gSCkxlceCkz8y8YK084uiCVd/HT8cXmYaayjnlWee4aPGN/Y
+         l33Pfb/3cuH4XSwszOcs06ShaHi7AOHnHGUy0AS6o3Kbz7CJ1hpNUWS+cHf0Oa07jL
+         Kj5Iuy57TBqGzsKK+ZoQX6RqnVRvxJkC+XguKZyjemh+3lcKI/k92MvnQDEqSbU1k5
+         PKGzt2goLxkMzBT0RDVWXWE39WJnwhjHbOLnnvDTzPkCS5rUcxnVi/xg1lSq8e3hcp
+         N7bn9y2/NOu4g==
+Subject: Re: [PATCH v3 1/3] PCI: Introduce pcibios_ignore_alignment_request
+To:     Alexey Kardashevskiy <aik@ozlabs.ru>, Oliver <oohall@gmail.com>
+Cc:     Sam Bobroff <sbobroff@linux.ibm.com>, linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        rppt@linux.ibm.com, Paul Mackerras <paulus@samba.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, xyjxie@linux.vnet.ibm.com,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+References: <20190528040313.35582-1-shawn@anastas.io>
+ <20190528040313.35582-2-shawn@anastas.io>
+ <CAOSf1CEFfbmwfvmdqT1xdt8SFb=tYdYXLfXeyZ8=iRnhg4a3Pg@mail.gmail.com>
+ <b0a38504-24c3-77bc-b308-7b498f07760a@ozlabs.ru>
+ <bccfec8f-c8a4-fac1-7e96-be84113b9a73@anastas.io>
+ <3e6b9d7d-5d18-645e-5ef9-6b8a77fa62e9@ozlabs.ru>
+ <985681e4-1236-fff7-e9e7-189a340487dd@anastas.io>
+ <81a015ed-2c99-7ca8-c5ad-cede93aeba97@ozlabs.ru>
+From:   Shawn Anastasio <shawn@anastas.io>
+Message-ID: <bdc914aa-9aab-1377-c036-cca4710ef233@anastas.io>
+Date:   Sun, 2 Jun 2019 21:23:54 -0500
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+In-Reply-To: <81a015ed-2c99-7ca8-c5ad-cede93aeba97@ozlabs.ru>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Jitao:
 
-On Sat, 2019-06-01 at 17:26 +0800, Jitao Shi wrote:
-> New DSI IP has shadow register and working reg. The register
-> values are writen to shadow register. And then trigger with
-> commit reg, the register values will be moved working register.
+
+On 5/30/19 10:56 PM, Alexey Kardashevskiy wrote:
 > 
-> This fucntion is defualt on. But this driver doesn't use this
-> function. So add the disable control.
-
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-
 > 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_dsi.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+> On 31/05/2019 08:49, Shawn Anastasio wrote:
+>> On 5/29/19 10:39 PM, Alexey Kardashevskiy wrote:
+>>>
+>>>
+>>> On 28/05/2019 17:39, Shawn Anastasio wrote:
+>>>>
+>>>>
+>>>> On 5/28/19 1:27 AM, Alexey Kardashevskiy wrote:
+>>>>>
+>>>>>
+>>>>> On 28/05/2019 15:36, Oliver wrote:
+>>>>>> On Tue, May 28, 2019 at 2:03 PM Shawn Anastasio <shawn@anastas.io>
+>>>>>> wrote:
+>>>>>>>
+>>>>>>> Introduce a new pcibios function pcibios_ignore_alignment_request
+>>>>>>> which allows the PCI core to defer to platform-specific code to
+>>>>>>> determine whether or not to ignore alignment requests for PCI
+>>>>>>> resources.
+>>>>>>>
+>>>>>>> The existing behavior is to simply ignore alignment requests when
+>>>>>>> PCI_PROBE_ONLY is set. This is behavior is maintained by the
+>>>>>>> default implementation of pcibios_ignore_alignment_request.
+>>>>>>>
+>>>>>>> Signed-off-by: Shawn Anastasio <shawn@anastas.io>
+>>>>>>> ---
+>>>>>>>     drivers/pci/pci.c   | 9 +++++++--
+>>>>>>>     include/linux/pci.h | 1 +
+>>>>>>>     2 files changed, 8 insertions(+), 2 deletions(-)
+>>>>>>>
+>>>>>>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+>>>>>>> index 8abc843b1615..8207a09085d1 100644
+>>>>>>> --- a/drivers/pci/pci.c
+>>>>>>> +++ b/drivers/pci/pci.c
+>>>>>>> @@ -5882,6 +5882,11 @@ resource_size_t __weak
+>>>>>>> pcibios_default_alignment(void)
+>>>>>>>            return 0;
+>>>>>>>     }
+>>>>>>>
+>>>>>>> +int __weak pcibios_ignore_alignment_request(void)
+>>>>>>> +{
+>>>>>>> +       return pci_has_flag(PCI_PROBE_ONLY);
+>>>>>>> +}
+>>>>>>> +
+>>>>>>>     #define RESOURCE_ALIGNMENT_PARAM_SIZE COMMAND_LINE_SIZE
+>>>>>>>     static char
+>>>>>>> resource_alignment_param[RESOURCE_ALIGNMENT_PARAM_SIZE] = {0};
+>>>>>>>     static DEFINE_SPINLOCK(resource_alignment_lock);
+>>>>>>> @@ -5906,9 +5911,9 @@ static resource_size_t
+>>>>>>> pci_specified_resource_alignment(struct pci_dev *dev,
+>>>>>>>            p = resource_alignment_param;
+>>>>>>>            if (!*p && !align)
+>>>>>>>                    goto out;
+>>>>>>> -       if (pci_has_flag(PCI_PROBE_ONLY)) {
+>>>>>>> +       if (pcibios_ignore_alignment_request()) {
+>>>>>>>                    align = 0;
+>>>>>>> -               pr_info_once("PCI: Ignoring requested alignments
+>>>>>>> (PCI_PROBE_ONLY)\n");
+>>>>>>> +               pr_info_once("PCI: Ignoring requested alignments\n");
+>>>>>>>                    goto out;
+>>>>>>>            }
+>>>>>>
+>>>>>> I think the logic here is questionable to begin with. If the user has
+>>>>>> explicitly requested re-aligning a resource via the command line then
+>>>>>> we should probably do it even if PCI_PROBE_ONLY is set. When it breaks
+>>>>>> they get to keep the pieces.
+>>>>>>
+>>>>>> That said, the real issue here is that PCI_PROBE_ONLY probably
+>>>>>> shouldn't be set under qemu/kvm. Under the other hypervisor (PowerVM)
+>>>>>> hotplugged devices are configured by firmware before it's passed to
+>>>>>> the guest and we need to keep the FW assignments otherwise things
+>>>>>> break. QEMU however doesn't do any BAR assignments and relies on that
+>>>>>> being handled by the guest. At boot time this is done by SLOF, but
+>>>>>> Linux only keeps SLOF around until it's extracted the device-tree.
+>>>>>> Once that's done SLOF gets blown away and the kernel needs to do it's
+>>>>>> own BAR assignments. I'm guessing there's a hack in there to make it
+>>>>>> work today, but it's a little surprising that it works at all...
+>>>>>
+>>>>>
+>>>>> The hack is to run a modified qemu-aware "/usr/sbin/rtas_errd" in the
+>>>>> guest which receives an event from qemu (RAS_EPOW from
+>>>>> /proc/interrupts), fetches device tree chunks (and as I understand it -
+>>>>> they come with BARs from phyp but without from qemu) and writes "1" to
+>>>>> "/sys/bus/pci/rescan" which calls pci_assign_resource() eventually:
+>>>>
+>>>> Interesting. Does this mean that the PHYP hotplug path doesn't
+>>>> call pci_assign_resource?
+>>>
+>>>
+>>> I'd expect dlpar_add_slot() to be called under phyp and eventually
+>>> pci_device_add() which (I think) may or may not trigger later
+>>> reassignment.
+>>>
+>>>
+>>>> If so it means the patch may not
+>>>> break that platform after all, though it still may not be
+>>>> the correct way of doing things.
+>>>
+>>>
+>>> We should probably stop enforcing the PCI_PROBE_ONLY flag - it seems
+>>> that (unless resource_alignment= is used) the pseries guest should just
+>>> walk through all allocated resources and leave them unchanged.
+>>
+>> If we add a pcibios_default_alignment() implementation like was
+>> suggested earlier, then it will behave as if the user has
+>> specified resource_alignment= by default and SLOF's assignments
+>> won't be honored (I think).
 > 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> index a48db056df6c..eea47294079e 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> @@ -131,6 +131,10 @@
->  #define VM_CMD_EN			BIT(0)
->  #define TS_VFP_EN			BIT(5)
->  
-> +#define DSI_SHADOW_DEBUG	0x190U
-> +#define FORCE_COMMIT			BIT(0)
-> +#define BYPASS_SHADOW			BIT(1)
-> +
->  #define CONFIG				(0xff << 0)
->  #define SHORT_PACKET			0
->  #define LONG_PACKET			2
-> @@ -157,6 +161,7 @@ struct phy;
->  
->  struct mtk_dsi_driver_data {
->  	const u32 reg_cmdq_off;
-> +	bool has_shadow_ctl;
->  };
->  
->  struct mtk_dsi {
-> @@ -594,6 +599,11 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
->  	}
->  
->  	mtk_dsi_enable(dsi);
-> +
-> +	if (dsi->driver_data->has_shadow_ctl)
-> +		writel(FORCE_COMMIT | BYPASS_SHADOW,
-> +		       dsi->regs + DSI_SHADOW_DEBUG);
-> +
->  	mtk_dsi_reset_engine(dsi);
->  	mtk_dsi_phy_timconfig(dsi);
->  
+> 
+> I removed pci_add_flags(PCI_PROBE_ONLY) from pSeries_setup_arch and
+> tried booting with and without pci=resource_alignment= and I can see no
+> difference - BARs are still aligned to 64K as programmed in SLOF; if I
+> hack SLOF to align to 4K or 32K - BARs get packed and the guest leaves
+> them unchanged.
+> 
+> 
+>> I guess it boils down to one question - is it important that we
+>> observe SLOF's initial BAR assignments?
+> 
+> It isn't if it's SLOF but it is if it's phyp. It used to not
+> allow/support BAR reassignment and even if it does not, I'd rather avoid
+> touching them.
 
+A quick update. I tried removing pci_add_flags(PCI_PROBE_ONLY) which
+worked, but if I add an implementation of pcibios_default_alignment
+which simply returns PAGE_SIZE, my VM fails to boot and many errors
+from the virtio disk driver are printed to the console.
 
+After some investigation, it seems that with pcibios_default_alignment
+present, Linux will reallocate all resources provided by SLOF on
+boot. I'm still not sure why exactly this causes the virtio driver
+to fail, but it does indicate that there is a reason to keep
+SLOF's initial assignments.
+
+Anybody have an idea what's causing this?
