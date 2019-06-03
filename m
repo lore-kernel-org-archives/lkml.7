@@ -6,35 +6,32 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 223A0C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFEE8C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01300239D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:52:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8208239D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:52:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729575AbfFCPwS (ORCPT
+        id S1729663AbfFCPwv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 11:52:18 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:54048 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729544AbfFCPwN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 11:52:13 -0400
+        Mon, 3 Jun 2019 11:52:51 -0400
+Received: from foss.arm.com ([217.140.101.70]:54074 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729564AbfFCPwR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 11:52:17 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 08C7715AB;
-        Mon,  3 Jun 2019 08:52:13 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4A8ED1A25;
+        Mon,  3 Jun 2019 08:52:17 -0700 (PDT)
 Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A3FD63F246;
-        Mon,  3 Jun 2019 08:52:11 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 548123F246;
+        Mon,  3 Jun 2019 08:52:16 -0700 (PDT)
 From:   Suzuki K Poulose <suzuki.poulose@arm.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
-        suzuki.poulose@arm.com,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-Subject: [RFC PATCH 48/57] drivers: s390: cio: Use driver_find_by_name() helper
-Date:   Mon,  3 Jun 2019 16:50:14 +0100
-Message-Id: <1559577023-558-49-git-send-email-suzuki.poulose@arm.com>
+        suzuki.poulose@arm.com
+Subject: [RFC PATCH 51/57] drivers: Add generic helper to match all devices
+Date:   Mon,  3 Jun 2019 16:50:17 +0100
+Message-Id: <1559577023-558-52-git-send-email-suzuki.poulose@arm.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
 References: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
@@ -43,80 +40,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the new driver_find_by_name() helper.
+Add a generic helper which matches any given device by always
+returning true.
 
-Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/s390/cio/ccwgroup.c | 10 +---------
- drivers/s390/cio/device.c   | 17 +----------------
- 2 files changed, 2 insertions(+), 25 deletions(-)
+ drivers/base/core.c    | 6 ++++++
+ include/linux/device.h | 1 +
+ 2 files changed, 7 insertions(+)
 
-diff --git a/drivers/s390/cio/ccwgroup.c b/drivers/s390/cio/ccwgroup.c
-index c554f16..b1e24fb 100644
---- a/drivers/s390/cio/ccwgroup.c
-+++ b/drivers/s390/cio/ccwgroup.c
-@@ -606,13 +606,6 @@ void ccwgroup_driver_unregister(struct ccwgroup_driver *cdriver)
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 69cba57..dd08bf9 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -3351,3 +3351,9 @@ int device_match_name(struct device *dev, const void *name)
+ 	return sysfs_streq(dev_name(dev), name);
  }
- EXPORT_SYMBOL(ccwgroup_driver_unregister);
+ EXPORT_SYMBOL_GPL(device_match_name);
++
++int device_match_any(struct device *dev, const void *unused)
++{
++	return 1;
++}
++EXPORT_SYMBOL_GPL(device_match_any);
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 68d6e04..7ea15e6 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -168,6 +168,7 @@ int device_match_acpi_dev(struct device *dev, const void *adev);
+ int device_match_fwnode(struct device *dev, const void *fwnode);
+ int device_match_devt(struct device *dev, const void *pdevt);
+ int device_match_name(struct device *dev, const void *name);
++int device_match_any(struct device *dev, const void *unused);
  
--static int __ccwgroupdev_check_busid(struct device *dev, const void *id)
--{
--	char *bus_id = id;
--
--	return (strcmp(bus_id, dev_name(dev)) == 0);
--}
--
- /**
-  * get_ccwgroupdev_by_busid() - obtain device from a bus id
-  * @gdrv: driver the device is owned by
-@@ -629,8 +622,7 @@ struct ccwgroup_device *get_ccwgroupdev_by_busid(struct ccwgroup_driver *gdrv,
- {
- 	struct device *dev;
- 
--	dev = driver_find_device(&gdrv->driver, NULL, bus_id,
--				 __ccwgroupdev_check_busid);
-+	dev = driver_find_device_by_name(&gdrv->driver, NULL, bus_id);
- 
- 	return dev ? to_ccwgroupdev(dev) : NULL;
- }
-diff --git a/drivers/s390/cio/device.c b/drivers/s390/cio/device.c
-index a5c2765..262e81c 100644
---- a/drivers/s390/cio/device.c
-+++ b/drivers/s390/cio/device.c
-@@ -1649,20 +1649,6 @@ int ccw_device_force_console(struct ccw_device *cdev)
- EXPORT_SYMBOL_GPL(ccw_device_force_console);
- #endif
- 
--/*
-- * get ccw_device matching the busid, but only if owned by cdrv
-- */
--static int
--__ccwdev_check_busid(struct device *dev, const void *id)
--{
--	char *bus_id;
--
--	bus_id = id;
--
--	return (strcmp(bus_id, dev_name(dev)) == 0);
--}
--
--
- /**
-  * get_ccwdev_by_busid() - obtain device from a bus id
-  * @cdrv: driver the device is owned by
-@@ -1679,8 +1665,7 @@ struct ccw_device *get_ccwdev_by_busid(struct ccw_driver *cdrv,
- {
- 	struct device *dev;
- 
--	dev = driver_find_device(&cdrv->driver, NULL, (void *)bus_id,
--				 __ccwdev_check_busid);
-+	dev = driver_find_device_by_name(&cdrv->driver, NULL, bus_id);
- 
- 	return dev ? to_ccwdev(dev) : NULL;
- }
+ int bus_for_each_dev(struct bus_type *bus, struct device *start, void *data,
+ 		     int (*fn)(struct device *dev, void *data));
 -- 
 2.7.4
 
