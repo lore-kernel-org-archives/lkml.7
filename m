@@ -2,118 +2,113 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EAD4C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF61DC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6458824367
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:22:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B64D24367
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:23:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729001AbfFCOW6 (ORCPT
+        id S1729043AbfFCOXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 10:22:58 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:34446 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727429AbfFCOW6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 10:22:58 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: koike)
-        with ESMTPSA id A1E642639EE
-From:   Helen Koike <helen.koike@collabora.com>
-To:     linux-rockchip@lists.infradead.org
-Cc:     kernel@collabora.com, ezequiel@collabora.com,
-        laurent.pinchart@ideasonboard.com,
-        manivannan.sadhasivam@linaro.org,
-        Helen Koike <helen.koike@collabora.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Vicente Bergas <vicencb@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org,
-        Klaus Goger <klaus.goger@theobroma-systems.com>,
-        linux-kernel@vger.kernel.org,
-        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
-        Randy Li <ayaka@soulik.info>,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tony Xie <tony.xie@rock-chips.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Subject: [PATCH] arm64: dts: rockchip: fix isp iommu clocks and power domain
-Date:   Mon,  3 Jun 2019 11:22:15 -0300
-Message-Id: <20190603142214.24686-1-helen.koike@collabora.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 3 Jun 2019 10:23:32 -0400
+Received: from mga17.intel.com ([192.55.52.151]:31791 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727429AbfFCOXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 10:23:32 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 07:23:32 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by fmsmga008.fm.intel.com with ESMTP; 03 Jun 2019 07:23:31 -0700
+Date:   Mon, 3 Jun 2019 07:23:31 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Jiri Kosina <jikos@kernel.org>, Andy Lutomirski <luto@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4] x86/power: Fix 'nosmt' vs. hibernation triple fault
+ during resume
+Message-ID: <20190603142330.GA13384@linux.intel.com>
+References: <20190531051456.fzkvn62qlkf6wqra@treble>
+ <nycvar.YFH.7.76.1905311045240.1962@cbobk.fhfr.pm>
+ <5564116.e9OFvgDRbB@kreacher>
+ <CALCETrUpseta+NrhVwzzVFTe-BkBHtDUJBO22ci3mAsVR+XOog@mail.gmail.com>
+ <nycvar.YFH.7.76.1905311628330.1962@cbobk.fhfr.pm>
+ <B7AC83ED-3F11-42B9-8506-C842A5937B50@amacapital.net>
+ <nycvar.YFH.7.76.1905311651450.1962@cbobk.fhfr.pm>
+ <CALCETrUQzZTRnvmOS09UvRM9UCGEDvSdbJtkeeEa2foMf+hF2w@mail.gmail.com>
+ <nycvar.YFH.7.76.1905312251350.1962@cbobk.fhfr.pm>
+ <98E57C7E-24E2-4EB8-A14E-FCA80316F812@amacapital.net>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <98E57C7E-24E2-4EB8-A14E-FCA80316F812@amacapital.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-isp iommu requires wrapper variants of the clocks.
-noc variants are always on and using the wrapper variants will activate
-{A,H}CLK_ISP{0,1} due to the hierarchy.
+On Fri, May 31, 2019 at 02:22:27PM -0700, Andy Lutomirski wrote:
+> 
+> > On May 31, 2019, at 2:05 PM, Jiri Kosina <jikos@kernel.org> wrote:
+> > 
+> >> On Fri, 31 May 2019, Andy Lutomirski wrote:
+> >> 
+> >> The Intel SDM Vol 3 34.10 says:
+> >> 
+> >> If the HLT instruction is restarted, the processor will generate a
+> >> memory access to fetch the HLT instruction (if it is
+> >> not in the internal cache), and execute a HLT bus transaction. This
+> >> behavior results in multiple HLT bus transactions
+> >> for the same HLT instruction.
+> > 
+> > Which basically means that both hibernation and kexec have been broken in 
+> > this respect for gazillions of years, and seems like noone noticed. Makes 
+> > one wonder what the reason for that might be.
+> > 
+> > Either SDM is not precise and the refetch actually never happens for real 
+> > (or is always in these cases satisfied from I$ perhaps?), or ... ?
+> > 
+> > So my patch basically puts things back where they have been for ages 
+> > (while mwait is obviously much worse, as that gets woken up by the write 
+> > to the monitored address, which inevitably does happen during resume), but 
+> > seems like SDM is suggesting that we've been in a grey zone wrt RSM at 
+> > least for all those ages.
+> > 
+> > So perhaps we really should ditch resume_play_dead() altogether 
+> > eventually, and replace it with sending INIT IPI around instead (and then 
+> > waking the CPUs properly via INIT INIT START). I'd still like to do that 
+> > for 5.3 though, as that'd be slightly bigger surgery, and conservatively 
+> > put things basically back to state they have been up to now for 5.2.
+> > 
+> 
+> 
+> Seems reasonable to me.  I would guess that it mostly works because SMI isn’t
+> all that common and the window where it matters is short.  Or maybe the SDM
+> is misleading.
 
-Also add the respective power domain.
+For P6 and later, i.e. all modern CPUs, Intel processors go straight to
+halted state and don't fetch/decode the HLT instruction.
 
-Refer:
- RK3399 TRM v1.4 Fig. 2-4 RK3399 Clock Architecture Diagram
- RK3399 TRM v1.4 Fig. 8-1 RK3399 Power Domain Partition
+P5 actually did a fetch, but from what I can tell that behavior wasn't
+carried forward to KNC, unlike other legacy interrupt crud from P5:
 
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
-
----
-Hello,
-
-I tested this using the isp patch set (which is not upstream
-yet). Without this patch, streaming from the isp stalls.
-
-I'm also enabling the power domain and removing the disable status,
-please let me know if this should be done in a separated patch.
-
-Thanks
-Helen
-
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 196ac9b78076..89594a7276f4 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1706,11 +1706,11 @@
- 		reg = <0x0 0xff914000 0x0 0x100>, <0x0 0xff915000 0x0 0x100>;
- 		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
- 		interrupt-names = "isp0_mmu";
--		clocks = <&cru ACLK_ISP0_NOC>, <&cru HCLK_ISP0_NOC>;
-+		clocks = <&cru ACLK_ISP0_WRAPPER>, <&cru HCLK_ISP0_WRAPPER>;
- 		clock-names = "aclk", "iface";
- 		#iommu-cells = <0>;
-+		power-domains = <&power RK3399_PD_ISP0>;
- 		rockchip,disable-mmu-reset;
--		status = "disabled";
- 	};
- 
- 	isp1_mmu: iommu@ff924000 {
-@@ -1718,11 +1718,11 @@
- 		reg = <0x0 0xff924000 0x0 0x100>, <0x0 0xff925000 0x0 0x100>;
- 		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH 0>;
- 		interrupt-names = "isp1_mmu";
--		clocks = <&cru ACLK_ISP1_NOC>, <&cru HCLK_ISP1_NOC>;
-+		clocks = <&cru ACLK_ISP1_WRAPPER>, <&cru HCLK_ISP1_WRAPPER>;
- 		clock-names = "aclk", "iface";
- 		#iommu-cells = <0>;
-+		power-domains = <&power RK3399_PD_ISP1>;
- 		rockchip,disable-mmu-reset;
--		status = "disabled";
- 	};
- 
- 	hdmi_sound: hdmi-sound {
--- 
-2.20.1
-
+[1] https://lkml.kernel.org/r/20190430004504.GH31379@linux.intel.com
