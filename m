@@ -2,203 +2,135 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81AEAC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2CA3C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:05:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B13627FCE
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:05:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Ny0Nx61a"
+	by mail.kernel.org (Postfix) with ESMTP id A03E527F5E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:05:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728253AbfFCNFS (ORCPT
+        id S1728266AbfFCNFm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 09:05:18 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:59077 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728223AbfFCNFR (ORCPT
+        Mon, 3 Jun 2019 09:05:42 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:33496 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727846AbfFCNFm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 09:05:17 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x53D4wYC604148
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 3 Jun 2019 06:04:58 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x53D4wYC604148
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559567099;
-        bh=D6DpzBwzh/Z+6H+FWVWChRq72LuKqmNRa06S+03s8vE=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=Ny0Nx61a95BmITLLYKedhcPUC6y2qXRQ6+pAbjMMJ2/Fsb12wCoR1tme6Im/UcVdf
-         xpb7nKqjGmflTgup6T8tFOoKW16HwXnA6nrG/g/WATV+0k0GLsvbSIPea9/BfF+n7g
-         JWn4Z3dLnV9AYrjqYosRpFFptIjqvAh0UYky/uUc0K4k6gt9X3E5nSh2nxCzjgxaTl
-         eTtkGF+9dm8hBnm1rsBbW7/ajcezUj0jMH3oTTcuWpSycPlsQBdtxsFWu4BNSh22K7
-         C90ZS6wJJVekI/F84OmX21dSncuwz03jLRVPlbFe6vmT+LpN/Ry6vdrRvbJ8vhCMPk
-         +2GjFb3Z4C9LA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x53D4vHU604145;
-        Mon, 3 Jun 2019 06:04:57 -0700
-Date:   Mon, 3 Jun 2019 06:04:57 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Dietmar Eggemann <tipbot@zytor.com>
-Message-ID: <tip-0e1fef63d92d61ed561e504c3a078a827a0f9bfe@git.kernel.org>
-Cc:     morten.rasmussen@arm.com, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, quentin.perret@arm.com,
-        riel@surriel.com, mingo@kernel.org, dietmar.eggemann@arm.com,
-        tglx@linutronix.de, hpa@zytor.com, peterz@infradead.org,
-        valentin.schneider@arm.com, fweisbec@gmail.com,
-        patrick.bellasi@arm.com, vincent.guittot@linaro.org
-Reply-To: valentin.schneider@arm.com, fweisbec@gmail.com,
-          patrick.bellasi@arm.com, vincent.guittot@linaro.org,
-          tglx@linutronix.de, hpa@zytor.com, peterz@infradead.org,
-          quentin.perret@arm.com, riel@surriel.com, mingo@kernel.org,
-          dietmar.eggemann@arm.com, torvalds@linux-foundation.org,
-          morten.rasmussen@arm.com, linux-kernel@vger.kernel.org
-In-Reply-To: <20190527062116.11512-6-dietmar.eggemann@arm.com>
-References: <20190527062116.11512-6-dietmar.eggemann@arm.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/core] sched/core: Remove sd->*_idx
-Git-Commit-ID: 0e1fef63d92d61ed561e504c3a078a827a0f9bfe
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Mon, 3 Jun 2019 09:05:42 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id BDC3D285189;
+        Mon,  3 Jun 2019 14:05:39 +0100 (BST)
+Date:   Mon, 3 Jun 2019 15:05:37 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     "Shivamurthy Shastri (sshivamurthy)" <sshivamurthy@micron.com>
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Yixun Lan <yixun.lan@amlogic.com>,
+        Lucas Stach <dev@lynxeye.de>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        "Bean Huo (beanhuo)" <beanhuo@micron.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 04/12] mtd: rawnand: introduce struct onfi_helper
+Message-ID: <20190603150537.3ca5ca8a@collabora.com>
+In-Reply-To: <MN2PR08MB5951E35FED92DD502F57B590B8140@MN2PR08MB5951.namprd08.prod.outlook.com>
+References: <MN2PR08MB5951E35FED92DD502F57B590B8140@MN2PR08MB5951.namprd08.prod.outlook.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  0e1fef63d92d61ed561e504c3a078a827a0f9bfe
-Gitweb:     https://git.kernel.org/tip/0e1fef63d92d61ed561e504c3a078a827a0f9bfe
-Author:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-AuthorDate: Mon, 27 May 2019 07:21:14 +0100
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 3 Jun 2019 11:49:40 +0200
+Hi Shivamurthy,
 
-sched/core: Remove sd->*_idx
+On Mon, 3 Jun 2019 12:43:28 +0000
+"Shivamurthy Shastri (sshivamurthy)" <sshivamurthy@micron.com> wrote:
 
-The sched domain per rq load index files also disappear from the
-/proc/sys/kernel/sched_domain/cpuX/domainY directories.
+> Create onfi_helper object. This is base to turn ONFI code to generic.
+> 
+> Signed-off-by: Shivamurthy Shastri <sshivamurthy@micron.com>
+> ---
+>  include/linux/mtd/nand.h | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+> 
+> diff --git a/include/linux/mtd/nand.h b/include/linux/mtd/nand.h
+> index 3cdf06cae8b6..645dde4c5797 100644
+> --- a/include/linux/mtd/nand.h
+> +++ b/include/linux/mtd/nand.h
+> @@ -11,6 +11,7 @@
+>  #define __LINUX_MTD_NAND_H
+>  
+>  #include <linux/mtd/mtd.h>
+> +#include <linux/mtd/onfi.h>
+>  
+>  /**
+>   * struct nand_memory_organization - Memory organization structure
+> @@ -157,6 +158,24 @@ struct nand_ops {
+>  	bool (*isbad)(struct nand_device *nand, const struct nand_pos *pos);
+>  };
+>  
+> +/**
+> + * struct onfi_helper - ONFI helper functions that should be implemented by
+> + * specialized layers (raw NAND, SPI NAND, etc.)
+> + * @page: Page number for ONFI parameter table
+> + * @check_revision: Check ONFI revision number
+> + * @parameter_page_read: Function to read parameter pages
+> + * @init_intf_data: Initialize interface specific data or fixups
+> + */
+> +struct onfi_helper {
+> +	u8 page;
+> +	int (*check_revision)(struct nand_device *base,
+> +			      struct nand_onfi_params *p, int *onfi_version);
+> +	int (*parameter_page_read)(struct nand_device *base, u8 page,
+> +				   void *buf, unsigned int len);
+> +	int (*init_intf_data)(struct nand_device *base,
+> +			      struct nand_onfi_params *p);
+> +};
+> +
+>  /**
+>   * struct nand_device - NAND device
+>   * @mtd: MTD instance attached to the NAND device
+> @@ -165,6 +184,7 @@ struct nand_ops {
+>   * @rowconv: position to row address converter
+>   * @bbt: bad block table info
+>   * @ops: NAND operations attached to the NAND device
+> + * @helper: Helper functions to detect and initialize ONFI NAND
+>   *
+>   * Generic NAND object. Specialized NAND layers (raw NAND, SPI NAND, OneNAND)
+>   * should declare their own NAND object embedding a nand_device struct (that's
+> @@ -183,6 +203,7 @@ struct nand_device {
+>  	struct nand_row_converter rowconv;
+>  	struct nand_bbt bbt;
+>  	const struct nand_ops *ops;
+> +	struct onfi_helper helper;
 
-Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Rik van Riel <riel@surriel.com>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Morten Rasmussen <morten.rasmussen@arm.com>
-Cc: Patrick Bellasi <patrick.bellasi@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Quentin Perret <quentin.perret@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Link: https://lkml.kernel.org/r/20190527062116.11512-6-dietmar.eggemann@arm.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- include/linux/sched/topology.h |  5 -----
- kernel/sched/debug.c           | 25 ++++++++++---------------
- kernel/sched/topology.c        | 10 ----------
- 3 files changed, 10 insertions(+), 30 deletions(-)
+Sorry, but I don't think that's the right solution. When I said we
+should have ONFI code shared I was thinking about the code that parses
+the ONFI struct/data to extract nand_memory_organization bits or other
+generic info, not something that would abstract how to retrieve the
+ONFI param page. Clearly, the generic NAND layer is not supposed to
+handle such protocol/low-level details.
 
-diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
-index cfc0a89a7159..53afbe07354a 100644
---- a/include/linux/sched/topology.h
-+++ b/include/linux/sched/topology.h
-@@ -84,11 +84,6 @@ struct sched_domain {
- 	unsigned int busy_factor;	/* less balancing by factor if busy */
- 	unsigned int imbalance_pct;	/* No balance until over watermark */
- 	unsigned int cache_nice_tries;	/* Leave cache hot tasks for # tries */
--	unsigned int busy_idx;
--	unsigned int idle_idx;
--	unsigned int newidle_idx;
--	unsigned int wake_idx;
--	unsigned int forkexec_idx;
- 
- 	int nohz_idle;			/* NOHZ IDLE status */
- 	int flags;			/* See SD_* */
-diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-index a0b0d6e21e5b..7ffde8ce82fd 100644
---- a/kernel/sched/debug.c
-+++ b/kernel/sched/debug.c
-@@ -251,25 +251,20 @@ set_table_entry(struct ctl_table *entry,
- static struct ctl_table *
- sd_alloc_ctl_domain_table(struct sched_domain *sd)
- {
--	struct ctl_table *table = sd_alloc_ctl_entry(14);
-+	struct ctl_table *table = sd_alloc_ctl_entry(9);
- 
- 	if (table == NULL)
- 		return NULL;
- 
--	set_table_entry(&table[0],  "min_interval",	   &sd->min_interval,	     sizeof(long), 0644, proc_doulongvec_minmax);
--	set_table_entry(&table[1],  "max_interval",	   &sd->max_interval,	     sizeof(long), 0644, proc_doulongvec_minmax);
--	set_table_entry(&table[2],  "busy_idx",		   &sd->busy_idx,	     sizeof(int),  0644, proc_dointvec_minmax);
--	set_table_entry(&table[3],  "idle_idx",		   &sd->idle_idx,	     sizeof(int),  0644, proc_dointvec_minmax);
--	set_table_entry(&table[4],  "newidle_idx",	   &sd->newidle_idx,	     sizeof(int),  0644, proc_dointvec_minmax);
--	set_table_entry(&table[5],  "wake_idx",		   &sd->wake_idx,	     sizeof(int),  0644, proc_dointvec_minmax);
--	set_table_entry(&table[6],  "forkexec_idx",	   &sd->forkexec_idx,	     sizeof(int),  0644, proc_dointvec_minmax);
--	set_table_entry(&table[7],  "busy_factor",	   &sd->busy_factor,	     sizeof(int),  0644, proc_dointvec_minmax);
--	set_table_entry(&table[8],  "imbalance_pct",	   &sd->imbalance_pct,	     sizeof(int),  0644, proc_dointvec_minmax);
--	set_table_entry(&table[9],  "cache_nice_tries",	   &sd->cache_nice_tries,    sizeof(int),  0644, proc_dointvec_minmax);
--	set_table_entry(&table[10], "flags",		   &sd->flags,		     sizeof(int),  0644, proc_dointvec_minmax);
--	set_table_entry(&table[11], "max_newidle_lb_cost", &sd->max_newidle_lb_cost, sizeof(long), 0644, proc_doulongvec_minmax);
--	set_table_entry(&table[12], "name",		   sd->name,		CORENAME_MAX_SIZE, 0444, proc_dostring);
--	/* &table[13] is terminator */
-+	set_table_entry(&table[0], "min_interval",	  &sd->min_interval,	    sizeof(long), 0644, proc_doulongvec_minmax);
-+	set_table_entry(&table[1], "max_interval",	  &sd->max_interval,	    sizeof(long), 0644, proc_doulongvec_minmax);
-+	set_table_entry(&table[2], "busy_factor",	  &sd->busy_factor,	    sizeof(int),  0644, proc_dointvec_minmax);
-+	set_table_entry(&table[3], "imbalance_pct",	  &sd->imbalance_pct,	    sizeof(int),  0644, proc_dointvec_minmax);
-+	set_table_entry(&table[4], "cache_nice_tries",	  &sd->cache_nice_tries,    sizeof(int),  0644, proc_dointvec_minmax);
-+	set_table_entry(&table[5], "flags",		  &sd->flags,		    sizeof(int),  0644, proc_dointvec_minmax);
-+	set_table_entry(&table[6], "max_newidle_lb_cost", &sd->max_newidle_lb_cost, sizeof(long), 0644, proc_doulongvec_minmax);
-+	set_table_entry(&table[7], "name",		  sd->name,	       CORENAME_MAX_SIZE, 0444, proc_dostring);
-+	/* &table[8] is terminator */
- 
- 	return table;
- }
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index f53f89df837d..63184cf0d0d7 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -1344,11 +1344,6 @@ sd_init(struct sched_domain_topology_level *tl,
- 		.imbalance_pct		= 125,
- 
- 		.cache_nice_tries	= 0,
--		.busy_idx		= 0,
--		.idle_idx		= 0,
--		.newidle_idx		= 0,
--		.wake_idx		= 0,
--		.forkexec_idx		= 0,
- 
- 		.flags			= 1*SD_LOAD_BALANCE
- 					| 1*SD_BALANCE_NEWIDLE
-@@ -1400,13 +1395,10 @@ sd_init(struct sched_domain_topology_level *tl,
- 	} else if (sd->flags & SD_SHARE_PKG_RESOURCES) {
- 		sd->imbalance_pct = 117;
- 		sd->cache_nice_tries = 1;
--		sd->busy_idx = 2;
- 
- #ifdef CONFIG_NUMA
- 	} else if (sd->flags & SD_NUMA) {
- 		sd->cache_nice_tries = 2;
--		sd->busy_idx = 3;
--		sd->idle_idx = 2;
- 
- 		sd->flags &= ~SD_PREFER_SIBLING;
- 		sd->flags |= SD_SERIALIZE;
-@@ -1419,8 +1411,6 @@ sd_init(struct sched_domain_topology_level *tl,
- #endif
- 	} else {
- 		sd->cache_nice_tries = 1;
--		sd->busy_idx = 2;
--		sd->idle_idx = 1;
- 	}
- 
- 	/*
+Regards,
+
+Boris
