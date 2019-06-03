@@ -2,124 +2,116 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2DEC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA9EC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE95A274E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFA932750B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:56:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729784AbfFCQ4a (ORCPT
+        id S1729794AbfFCQ4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 12:56:30 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58690 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727866AbfFCQ41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 12:56:27 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 683FE8B947;
-        Mon,  3 Jun 2019 16:56:22 +0000 (UTC)
-Received: from flask (unknown [10.43.2.83])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 456101017E3E;
-        Mon,  3 Jun 2019 16:56:17 +0000 (UTC)
-Received: by flask (sSMTP sendmail emulation); Mon, 03 Jun 2019 18:56:17 +0200
-Date:   Mon, 3 Jun 2019 18:56:17 +0200
-From:   Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-To:     Like Xu <like.xu@linux.intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH v3] KVM: x86: Add Intel CPUID.1F cpuid emulation
- support
-Message-ID: <20190603165616.GA11101@flask>
-References: <20190526133052.4069-1-like.xu@linux.intel.com>
+        Mon, 3 Jun 2019 12:56:35 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:35312 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726958AbfFCQ4d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 12:56:33 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id 82DD527FDB2
+From:   Helen Koike <helen.koike@collabora.com>
+To:     dri-devel@lists.freedesktop.org, nicholas.kazlauskas@amd.com
+Cc:     andrey.grodzovsky@amd.com, daniel.vetter@ffwll.ch,
+        linux-kernel@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
+        boris.brezillon@collabora.com, David Airlie <airlied@linux.ie>,
+        Sean Paul <seanpaul@google.com>, kernel@collabora.com,
+        harry.wentland@amd.com,
+        =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu@google.com>,
+        Helen Koike <helen.koike@collabora.com>,
+        Sean Paul <sean@poorly.run>, Sandy Huang <hjc@rock-chips.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>, eric@anholt.net,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        Anthony Koo <Anthony.Koo@amd.com>,
+        amd-gfx@lists.freedesktop.org, linux-rockchip@lists.infradead.org,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>, Rob Clark <robdclark@gmail.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Leo Li <sunpeng.li@amd.com>, linux-arm-msm@vger.kernel.org,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Francis <David.Francis@amd.com>,
+        Mario Kleiner <mario.kleiner.de@gmail.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        freedreno@lists.freedesktop.org,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH v4 0/5] drm: Fix fb changes for async updates
+Date:   Mon,  3 Jun 2019 13:56:05 -0300
+Message-Id: <20190603165610.24614-1-helen.koike@collabora.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190526133052.4069-1-like.xu@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Mon, 03 Jun 2019 16:56:27 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019-05-26 21:30+0800, Like Xu:
-> Add support to expose Intel V2 Extended Topology Enumeration Leaf for
-> some new systems with multiple software-visible die within each package.
-> 
-> Per Intel's SDM, when CPUID executes with EAX set to 1FH, the processor
-> returns information about extended topology enumeration data. Software
-> must detect the presence of CPUID leaf 1FH by verifying (a) the highest
-> leaf index supported by CPUID is >= 1FH, and (b) CPUID.1FH:EBX[15:0]
-> reports a non-zero value.
-> 
-> Co-developed-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
-> Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
-> Signed-off-by: Like Xu <like.xu@linux.intel.com>
-> Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
-> ==changelog==
-> v3:
-> - Refine commit message and comment
-> 
-> v2: https://lkml.org/lkml/2019/4/25/1246
-> 
-> - Apply cpuid.1f check rule on Intel SDM page 3-222 Vol.2A
-> - Add comment to handle 0x1f anf 0xb in common code
-> - Reduce check time in a descending-break style
-> 
-> v1: https://lkml.org/lkml/2019/4/22/28
-> 
->  arch/x86/kvm/cpuid.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index 80a642a0143d..f9b41f0103b3 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -426,6 +426,11 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
->  
->  	switch (function) {
->  	case 0:
-> +		/* Check if the cpuid leaf 0x1f is actually implemented */
-> +		if (entry->eax >= 0x1f && (cpuid_ebx(0x1f) & 0x0000ffff)) {
-> +			entry->eax = 0x1f;
+Hello,
 
-Sorry for my late reply, but I think this check does more harm than
-good.
+I'm re-sending this series with the acked by in the msm patch and
+updating the docs in the last patch, the rest is the same.
 
-We'll need to change it if we ever add leaf above 0x1f, which also puts
-burden on the new submitter to check that exposing it by an unrelated
-feature doesn't break anything.  Just like you had to see whether the
-leaf 0x14 is still ok when exposing it without f_intel_pt.
+v3 link: https://patchwork.kernel.org/project/dri-devel/list/?series=91353
 
-Also, I don't see anything that would make 0x1f worthy of protection
-when enabling it also exposes unimplemented leaves (0x14;0x1f).
-Zeroing 0x1f.ebx disables it and that is implicitly being done if the
-presence check above would fail.
+Thanks!
+Helen
 
-> +			break;
-> +		}
->  		entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
+Changes in v4:
+- add acked by tag
+- update docs in atomic_async_update callback
 
-Similarly in the existing code.  If we don't have f_intel_pt, then we
-should make sure that leaf 0x14 is not being filled, but we don't really
-have to limit the maximal index.
+Changes in v3:
+- use swap() to swap old and new framebuffers in async_update
+- get the reference to old_fb and set the worker after vop_plane_atomic_update()
+- add a FIXME tag for when we have multiple fbs to be released when
+vblank happens.
+- update commit message
+- Add Reviewed-by tags
+- Add TODO in drm_atomic_helper_async_commit()
 
-Adding a single clamping like
+Changes in v2:
+- added reviewed-by tag
+- update CC stable and Fixes tag
+- Added reviewed-by tag
+- updated CC stable and Fixes tag
+- Change the order of the patch in the series, add this as the last one.
+- Add documentation
+- s/ballanced/balanced
 
-		/* Limited to the highest leaf implemented in KVM. */
-		entry->eax = min(entry->eax, 0x1f);
+Helen Koike (5):
+  drm/rockchip: fix fb references in async update
+  drm/amd: fix fb references in async update
+  drm/msm: fix fb references in async update
+  drm/vc4: fix fb references in async update
+  drm: don't block fb changes for async plane updates
 
-seems sufficient.
+ .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |  3 +-
+ drivers/gpu/drm/drm_atomic_helper.c           | 22 ++++----
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c    |  4 ++
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c   | 51 ++++++++++---------
+ drivers/gpu/drm/vc4/vc4_plane.c               |  2 +-
+ include/drm/drm_modeset_helper_vtables.h      |  8 +++
+ 6 files changed, 52 insertions(+), 38 deletions(-)
 
-(Passing the hardware value is ok in theory, but it is a cheap way to
- avoid future leaves that cannot be simply zeroed for some weird reason.)
+-- 
+2.20.1
 
-Thanks.
