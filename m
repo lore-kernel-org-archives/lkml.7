@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95FF8C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F212FC04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 658F527FA8
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD3E327FA8
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:18:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553490;
-	bh=apmDn9e7EHYtKheI9oJYwY5vH4hfrUYCM5LDOt9D9hs=;
+	s=default; t=1559553494;
+	bh=Lt/qL/eepdqdsjHExYn+iYNXL0BoBGBKCS3gT53fRS4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xYIF9hs+DQgNttmi64qAOzarkBwmKD0tP7gf7QhB7vt3DnB/efG7qJ++d4kfN+XGD
-	 TL+bhis17Nv7i+pVtv1cG8zrTU+kADFG3GkZKN+I30SVQ6p3BkwzrUYXCEKkrpDkaW
-	 Pf8wk6276WLnNHPdQ1p9+FdBi2OMSR00t28q3juY=
+	b=nHEHHbNuGjpPSuVfTKtl5kajt4dRw2RAogMq6RPFsknHUhVdopB7XVSu/d2BKMd8K
+	 9su0q3R30CRADmMafV45alS+Z77LmViE/cCy9U7bDWgXWjnBoKee0hdSGaXyDtr0FY
+	 MNuJ5mm6sBnTBu84XisulexBFqUGfO4yvUrmPW0M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728880AbfFCJSJ (ORCPT
+        id S1728949AbfFCJSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:18:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42512 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 05:18:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728062AbfFCJSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:18:03 -0400
+        id S1728141AbfFCJSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:18:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DCEB27EA1;
-        Mon,  3 Jun 2019 09:18:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BF3327EA1;
+        Mon,  3 Jun 2019 09:18:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553483;
-        bh=apmDn9e7EHYtKheI9oJYwY5vH4hfrUYCM5LDOt9D9hs=;
+        s=default; t=1559553488;
+        bh=Lt/qL/eepdqdsjHExYn+iYNXL0BoBGBKCS3gT53fRS4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1qbkzRU9mwlTPzwj2ZPmcw4pohPGEH4k0NNs2N2cVPKrJhiA1uOPy0mkPT75GOV8B
-         42P2WDi3y041St59k5kwlFoWaGbhSbHYscvosjtBPA5w39I/v5oCSMy9YqF0GAdqcI
-         k42v/XsvqZN9G72G+NRo2yevly7vpll3VKaK6Yhc=
+        b=GdO9HzOakoxdW174s7Kr/KokoheD4dGLn2lm7wJUu4s16k5ZvpBXjb96s22Wakgan
+         Fb2J4RM4L418j/IA4Hp8NqxfLwzoyQSLg1VXPY3yK+AXXJGAMAzlGqlz3wcarHsJw6
+         k4pBNvchN8M92DGAeXJs0jTU+NG6DWfh0/OFZuMk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,12 +46,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Ong Boon Leong <boon.leong.ong@intel.com>,
         Weifeng Voon <weifeng.voon@intel.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 22/32] net: stmmac: dma channel control register need to be init first
-Date:   Mon,  3 Jun 2019 11:08:16 +0200
-Message-Id: <20190603090314.784323813@linuxfoundation.org>
+Subject: [PATCH 5.0 25/36] net: stmmac: dma channel control register need to be init first
+Date:   Mon,  3 Jun 2019 11:09:13 +0200
+Message-Id: <20190603090522.628056197@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190603090308.472021390@linuxfoundation.org>
-References: <20190603090308.472021390@linuxfoundation.org>
+In-Reply-To: <20190603090520.998342694@linuxfoundation.org>
+References: <20190603090520.998342694@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -80,7 +80,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -2195,6 +2195,10 @@ static int stmmac_init_dma_engine(struct
+@@ -2190,6 +2190,10 @@ static int stmmac_init_dma_engine(struct
  	if (priv->plat->axi)
  		stmmac_axi(priv, priv->ioaddr, priv->plat->axi);
  
@@ -91,7 +91,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  	/* DMA RX Channel Configuration */
  	for (chan = 0; chan < rx_channels_count; chan++) {
  		rx_q = &priv->rx_queue[chan];
-@@ -2220,10 +2224,6 @@ static int stmmac_init_dma_engine(struct
+@@ -2215,10 +2219,6 @@ static int stmmac_init_dma_engine(struct
  				       tx_q->tx_tail_addr, chan);
  	}
  
