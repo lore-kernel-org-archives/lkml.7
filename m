@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 188B4C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68606C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4C9626FBA
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:36:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A03127076
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:36:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bfYJ8fj9"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BIdX7caK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbfFCSeg (ORCPT
+        id S1726894AbfFCSed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 14:34:36 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37275 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbfFCSeY (ORCPT
+        Mon, 3 Jun 2019 14:34:33 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39000 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726789AbfFCSeU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 14:34:24 -0400
-Received: by mail-pg1-f195.google.com with SMTP id 20so8776588pgr.4
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 11:34:23 -0700 (PDT)
+        Mon, 3 Jun 2019 14:34:20 -0400
+Received: by mail-pf1-f196.google.com with SMTP id j2so11099631pfe.6
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 11:34:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=xR/DqzMPPrGoxIaTkZ/7kRPuceWz8Gdr8xXSBUOz7TU=;
-        b=bfYJ8fj9wVH1yn5yGINhXXWE1At3YMNb6Y0xeOAjezyruuwiJEQEyG9IXk8/Xyxv/F
-         3bYLBjQSzdXCMBRSaNl6yK65762TU3ktA8kLNcB7IBYJ5YvWNLhLBGc/Y+w9ykDaQKdr
-         4HvGwZEvS27lBIGHp5UFN7PNifNh2xSlHqtug=
+        bh=vfQnQUkcbymUnYq9zMb0kJv+NTlXje9QmmEnTJUZIB0=;
+        b=BIdX7caKuRHVMYefqeW4Twu9W3C7pdvU7/l9jT+rtdRgi8QPqsdOfOuHq06uPiZ8Ra
+         tpCQ47p0IKqIoWYKRDbzqjQta3XzKa7FChluEiAjI2s4JNBFO9FBiz0OUn5DdaB96jyu
+         PBDFYdPiaopQcMT2jcN4MM4L6r4pHhYZ4+zFI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=xR/DqzMPPrGoxIaTkZ/7kRPuceWz8Gdr8xXSBUOz7TU=;
-        b=CLJ0FL0erZWHlEv0QnnPm9gb0vzxqMnDDytMyk+S/ci7naQRktxQaE2Cl9T+wgRyDE
-         0R156G1lOButaxaxh1XeNux490SDCvtJoEBmWLopq2Zqy9cv7luYUcASiBRj28MCssu3
-         wyQg8Py0XeGoTOmvb+rQmCb2eBf3s3vKD2fdTLRc6HH30ZF9oajmivnyN2mb2Tjm4R8G
-         8Jsa491wrFZnjEytyP14daW+g/b7je8mUfOCktb8KI7EJ0+QXYP8L9ywSNHYLOX6u0Gs
-         82Cv3AvFVSLIfR+1MarOPNJo+Lllyz5MMAmPSfaFATuwmM2wql0c3LcOJ9RAkVIyi/Rc
-         ffBw==
-X-Gm-Message-State: APjAAAVLho/gKHUrpMb3CGMd+G+um5D2gVsBSmzBVHXCXxf90bYYFmiw
-        jnkjld/89z6j9L7yNsCocJC04Q==
-X-Google-Smtp-Source: APXvYqygT0XNI8h64SjktMSZPQleURftsQ4W7ozR3Nyn0mjSN4fdixVEnbNaAlewO6HpmWOFMF9v/g==
-X-Received: by 2002:a62:6507:: with SMTP id z7mr33922308pfb.225.1559586863362;
-        Mon, 03 Jun 2019 11:34:23 -0700 (PDT)
+        bh=vfQnQUkcbymUnYq9zMb0kJv+NTlXje9QmmEnTJUZIB0=;
+        b=oL/zHF6uwn3fAGhed55J3MSIjvpdg9QHHxpVvAkPX/ehPJxpsDnUmJ1qad5rsZkzXz
+         pO4ciVEoErHcRDlsDWTpMgfdSktE3mtTQfBGkOrlAJ7tUP0rmgy3cOJW2hvEPfbEADR8
+         7li8Ebvig00RLne0Hc5C2dN/7CDr2ceq/yKLtGHHeoWMpFtU3E0LIuPWeU77lLUoYQ7p
+         6Vm8qJhLuDWADYlA9/jkYSANZ3cYspbB5J8nLAfDGhPvzImQBSYESxoM/2XzJk6iDv+n
+         rl4taR0Al38Q2iAlMcTuJoUPqyGUodRGLf+TnOHS2/sgnSAHrDfi51lz0IXVbvNaj3kv
+         WZ3g==
+X-Gm-Message-State: APjAAAXLO18DF6D00gp+N2E3bLAAB+OZ10T0TqFQsvBvGOFEmdZyVxjt
+        UjH4+AAj2fYrYRyz+yMdI5slRg==
+X-Google-Smtp-Source: APXvYqycEfu4adteuR2rtA04+PLSm/3GnJfoSVrfZM6+95yFEXR5g5XJhtISRN5WCjz37zxYrpGTxQ==
+X-Received: by 2002:a62:87ca:: with SMTP id i193mr6591140pfe.42.1559586859015;
+        Mon, 03 Jun 2019 11:34:19 -0700 (PDT)
 Received: from localhost ([2620:15c:202:1:3c8f:512b:3522:dfaf])
-        by smtp.gmail.com with ESMTPSA id p18sm3267243pff.93.2019.06.03.11.34.22
+        by smtp.gmail.com with ESMTPSA id j5sm15628563pfa.15.2019.06.03.11.34.18
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Jun 2019 11:34:22 -0700 (PDT)
+        Mon, 03 Jun 2019 11:34:18 -0700 (PDT)
 From:   Gwendal Grignou <gwendal@chromium.org>
 To:     enric.balletbo@collabora.com, bleung@chromium.org,
         groeck@chromium.org, lee.jones@linaro.org, jic23@kernel.org,
@@ -61,9 +61,9 @@ To:     enric.balletbo@collabora.com, bleung@chromium.org,
 Cc:     linux-iio@vger.kernel.org, alsa-devel@alsa-project.org,
         linux-kernel@vger.kernel.org,
         Gwendal Grignou <gwendal@chromium.org>
-Subject: [RESEND PATCH v3 11/30] mfd: cros_ec: Add PWM_SET_DUTY API
-Date:   Mon,  3 Jun 2019 11:33:42 -0700
-Message-Id: <20190603183401.151408-12-gwendal@chromium.org>
+Subject: [RESEND PATCH v3 08/30] mfd: cros_ec: move HDMI CEC API definition
+Date:   Mon,  3 Jun 2019 11:33:39 -0700
+Message-Id: <20190603183401.151408-9-gwendal@chromium.org>
 X-Mailer: git-send-email 2.22.0.rc1.311.g5d7573a151-goog
 In-Reply-To: <20190603183401.151408-1-gwendal@chromium.org>
 References: <20190603183401.151408-1-gwendal@chromium.org>
@@ -74,68 +74,182 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add API for fan control.
+Move near the end of file.
 
 Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 Acked-by: Benson Leung <bleung@chromium.org>
 Reviewed-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
 Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
 ---
- include/linux/mfd/cros_ec_commands.h | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
+ include/linux/mfd/cros_ec_commands.h | 148 ++++++++++++++-------------
+ 1 file changed, 75 insertions(+), 73 deletions(-)
 
 diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd/cros_ec_commands.h
-index 3d1d26f62bd3..2b3a94a4f0f4 100644
+index 575066b90bab..d8bde2b5e9ce 100644
 --- a/include/linux/mfd/cros_ec_commands.h
 +++ b/include/linux/mfd/cros_ec_commands.h
-@@ -1521,11 +1521,19 @@ struct ec_response_pwm_get_fan_rpm {
- /* Set target fan RPM */
- #define EC_CMD_PWM_SET_FAN_TARGET_RPM 0x0021
- 
--struct ec_params_pwm_set_fan_target_rpm {
-+/* Version 0 of input params */
-+struct ec_params_pwm_set_fan_target_rpm_v0 {
- 	uint32_t rpm;
-+} __ec_align4;
-+
-+/* Version 1 of input params */
-+struct ec_params_pwm_set_fan_target_rpm_v1 {
-+	uint32_t rpm;
-+	uint8_t fan_idx;
- } __ec_align_size1;
- 
- /* Get keyboard backlight */
-+/* OBSOLETE - Use EC_CMD_PWM_SET_DUTY */
- #define EC_CMD_PWM_GET_KEYBOARD_BACKLIGHT 0x0022
- 
- struct ec_response_pwm_get_keyboard_backlight {
-@@ -1534,6 +1542,7 @@ struct ec_response_pwm_get_keyboard_backlight {
- } __ec_align1;
- 
- /* Set keyboard backlight */
-+/* OBSOLETE - Use EC_CMD_PWM_SET_DUTY */
- #define EC_CMD_PWM_SET_KEYBOARD_BACKLIGHT 0x0023
- 
- struct ec_params_pwm_set_keyboard_backlight {
-@@ -1543,10 +1552,17 @@ struct ec_params_pwm_set_keyboard_backlight {
- /* Set target fan PWM duty cycle */
- #define EC_CMD_PWM_SET_FAN_DUTY 0x0024
- 
--struct ec_params_pwm_set_fan_duty {
-+/* Version 0 of input params */
-+struct ec_params_pwm_set_fan_duty_v0 {
- 	uint32_t percent;
+@@ -3211,6 +3211,81 @@ struct ec_response_battery_vendor_param {
  } __ec_align4;
  
-+/* Version 1 of input params */
-+struct ec_params_pwm_set_fan_duty_v1 {
-+	uint32_t percent;
-+	uint8_t fan_idx;
-+} __ec_align_size1;
+ /*****************************************************************************/
++/*
++ * HDMI CEC commands
++ *
++ * These commands are for sending and receiving message via HDMI CEC
++ */
 +
- #define EC_CMD_PWM_SET_DUTY 0x0025
- /* 16 bit duty cycle, 0xffff = 100% */
- #define EC_PWM_MAX_DUTY 0xffff
++#define MAX_CEC_MSG_LEN 16
++
++/* CEC message from the AP to be written on the CEC bus */
++#define EC_CMD_CEC_WRITE_MSG 0x00B8
++
++/**
++ * struct ec_params_cec_write - Message to write to the CEC bus
++ * @msg: message content to write to the CEC bus
++ */
++struct ec_params_cec_write {
++	uint8_t msg[MAX_CEC_MSG_LEN];
++} __ec_align1;
++
++/* Set various CEC parameters */
++#define EC_CMD_CEC_SET 0x00BA
++
++/**
++ * struct ec_params_cec_set - CEC parameters set
++ * @cmd: parameter type, can be CEC_CMD_ENABLE or CEC_CMD_LOGICAL_ADDRESS
++ * @val: in case cmd is CEC_CMD_ENABLE, this field can be 0 to disable CEC
++ *	or 1 to enable CEC functionality, in case cmd is
++ *	CEC_CMD_LOGICAL_ADDRESS, this field encodes the requested logical
++ *	address between 0 and 15 or 0xff to unregister
++ */
++struct ec_params_cec_set {
++	uint8_t cmd; /* enum cec_command */
++	uint8_t val;
++} __ec_align1;
++
++/* Read various CEC parameters */
++#define EC_CMD_CEC_GET 0x00BB
++
++/**
++ * struct ec_params_cec_get - CEC parameters get
++ * @cmd: parameter type, can be CEC_CMD_ENABLE or CEC_CMD_LOGICAL_ADDRESS
++ */
++struct ec_params_cec_get {
++	uint8_t cmd; /* enum cec_command */
++} __ec_align1;
++
++/**
++ * struct ec_response_cec_get - CEC parameters get response
++ * @val: in case cmd was CEC_CMD_ENABLE, this field will 0 if CEC is
++ *	disabled or 1 if CEC functionality is enabled,
++ *	in case cmd was CEC_CMD_LOGICAL_ADDRESS, this will encode the
++ *	configured logical address between 0 and 15 or 0xff if unregistered
++ */
++struct ec_response_cec_get {
++	uint8_t val;
++} __ec_align1;
++
++/* CEC parameters command */
++enum cec_command {
++	/* CEC reading, writing and events enable */
++	CEC_CMD_ENABLE,
++	/* CEC logical address  */
++	CEC_CMD_LOGICAL_ADDRESS,
++};
++
++/* Events from CEC to AP */
++enum mkbp_cec_event {
++	/* Outgoing message was acknowledged by a follower */
++	EC_MKBP_CEC_SEND_OK			= BIT(0),
++	/* Outgoing message was not acknowledged */
++	EC_MKBP_CEC_SEND_FAILED			= BIT(1),
++};
++
++/*****************************************************************************/
++
+ /* Commands for I2S recording on audio codec. */
+ 
+ #define EC_CMD_CODEC_I2S 0x00BC
+@@ -3339,79 +3414,6 @@ struct ec_params_reboot_ec {
+  */
+ #define EC_CMD_GET_PANIC_INFO 0x00D3
+ 
+-/*****************************************************************************/
+-/*
+- * HDMI CEC commands
+- *
+- * These commands are for sending and receiving message via HDMI CEC
+- */
+-#define EC_MAX_CEC_MSG_LEN 16
+-
+-/* CEC message from the AP to be written on the CEC bus */
+-#define EC_CMD_CEC_WRITE_MSG 0x00B8
+-
+-/**
+- * struct ec_params_cec_write - Message to write to the CEC bus
+- * @msg: message content to write to the CEC bus
+- */
+-struct ec_params_cec_write {
+-	uint8_t msg[EC_MAX_CEC_MSG_LEN];
+-} __ec_align1;
+-
+-/* Set various CEC parameters */
+-#define EC_CMD_CEC_SET 0x00BA
+-
+-/**
+- * struct ec_params_cec_set - CEC parameters set
+- * @cmd: parameter type, can be CEC_CMD_ENABLE or CEC_CMD_LOGICAL_ADDRESS
+- * @val: in case cmd is CEC_CMD_ENABLE, this field can be 0 to disable CEC
+- *	or 1 to enable CEC functionality, in case cmd is CEC_CMD_LOGICAL_ADDRESS,
+- *	this field encodes the requested logical address between 0 and 15
+- *	or 0xff to unregister
+- */
+-struct ec_params_cec_set {
+-	uint8_t cmd; /* enum cec_command */
+-	uint8_t val;
+-} __ec_align1;
+-
+-/* Read various CEC parameters */
+-#define EC_CMD_CEC_GET 0x00BB
+-
+-/**
+- * struct ec_params_cec_get - CEC parameters get
+- * @cmd: parameter type, can be CEC_CMD_ENABLE or CEC_CMD_LOGICAL_ADDRESS
+- */
+-struct ec_params_cec_get {
+-	uint8_t cmd; /* enum cec_command */
+-} __ec_align1;
+-
+-/**
+- * struct ec_response_cec_get - CEC parameters get response
+- * @val: in case cmd was CEC_CMD_ENABLE, this field will 0 if CEC is
+- *	disabled or 1 if CEC functionality is enabled,
+- *	in case cmd was CEC_CMD_LOGICAL_ADDRESS, this will encode the
+- *	configured logical address between 0 and 15 or 0xff if unregistered
+- */
+-struct ec_response_cec_get {
+-	uint8_t val;
+-} __ec_align1;
+-
+-/* CEC parameters command */
+-enum ec_cec_command {
+-	/* CEC reading, writing and events enable */
+-	CEC_CMD_ENABLE,
+-	/* CEC logical address  */
+-	CEC_CMD_LOGICAL_ADDRESS,
+-};
+-
+-/* Events from CEC to AP */
+-enum mkbp_cec_event {
+-	/* Outgoing message was acknowledged by a follower */
+-	EC_MKBP_CEC_SEND_OK			= BIT(0),
+-	/* Outgoing message was not acknowledged */
+-	EC_MKBP_CEC_SEND_FAILED			= BIT(1),
+-};
+-
+ /*****************************************************************************/
+ /*
+  * Special commands
 -- 
 2.21.0.1020.gf2820cf01a-goog
 
