@@ -2,306 +2,183 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF50AC28CC5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 02:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91577C28CC5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 02:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 812FC27347
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 02:46:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7157C27347
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 02:46:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbfFCCqD (ORCPT
+        id S1726934AbfFCCqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 22:46:03 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:33261 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726270AbfFCCqD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 22:46:03 -0400
-X-UUID: ccba8311c7104560a43b0932aced7c1a-20190603
-X-UUID: ccba8311c7104560a43b0932aced7c1a-20190603
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 929432739; Mon, 03 Jun 2019 10:45:55 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- MTKMBS33DR.mediatek.inc (172.27.6.106) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 3 Jun 2019 10:45:52 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 3 Jun 2019 10:45:52 +0800
-Message-ID: <1559529952.32185.7.camel@mtksdaap41>
-Subject: Re: [v4 6/7] drm/mediatek: change the dsi phytiming calculate method
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        <linux-pwm@vger.kernel.org>, David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Thierry Reding" <treding@nvidia.com>,
-        Ajay Kumar <ajaykumar.rs@samsung.com>,
-        "Inki Dae" <inki.dae@samsung.com>,
-        Rahul Sharma <rahul.sharma@samsung.com>,
-        "Sean Paul" <seanpaul@chromium.org>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        "Andy Yan" <andy.yan@rock-chips.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
-        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
-        <stonea168@163.com>, "Ryan Case" <ryandcase@chromium.org>
-Date:   Mon, 3 Jun 2019 10:45:52 +0800
-In-Reply-To: <20190601092615.67917-7-jitao.shi@mediatek.com>
-References: <20190601092615.67917-1-jitao.shi@mediatek.com>
-         <20190601092615.67917-7-jitao.shi@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Sun, 2 Jun 2019 22:46:54 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:44096 "EHLO deadmen.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726270AbfFCCqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Jun 2019 22:46:53 -0400
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1hXczn-0007pq-Vp; Mon, 03 Jun 2019 10:46:48 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1hXczg-0001y1-8M; Mon, 03 Jun 2019 10:46:40 +0800
+Date:   Mon, 3 Jun 2019 10:46:40 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Fengguang Wu <fengguang.wu@intel.com>, LKP <lkp@01.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: rcu_read_lock lost its compiler barrier
+Message-ID: <20190603024640.2soysu4rpkwjuash@gondor.apana.org.au>
+References: <20150910005708.GA23369@wfg-t540p.sh.intel.com>
+ <20150910102513.GA1677@fixme-laptop.cn.ibm.com>
+ <20150910171649.GE4029@linux.vnet.ibm.com>
+ <20150911021933.GA1521@fixme-laptop.cn.ibm.com>
+ <20150921193045.GA13674@lerouge>
+ <20150921204327.GH4029@linux.vnet.ibm.com>
+ <20190602055607.bk5vgmwjvvt4wejd@gondor.apana.org.au>
+ <CAHk-=whLGKOmM++OQi5GX08_dfh8Xfz9Wq7khPo+MVtPYh_8hw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whLGKOmM++OQi5GX08_dfh8Xfz9Wq7khPo+MVtPYh_8hw@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Jitao:
-
-On Sat, 2019-06-01 at 17:26 +0800, Jitao Shi wrote:
-> Change the method of frame rate calc which can get more accurate
-> frame rate.
+On Sun, Jun 02, 2019 at 01:54:12PM -0700, Linus Torvalds wrote:
+> On Sat, Jun 1, 2019 at 10:56 PM Herbert Xu <herbert@gondor.apana.org.au> wrote:
+> >
+> > You can't then go and decide to remove the compiler barrier!  To do
+> > that you'd need to audit every single use of rcu_read_lock in the
+> > kernel to ensure that they're not depending on the compiler barrier.
 > 
-> data rate = pixel_clock * bit_per_pixel / lanes
-> Adjust hfp_wc to adapt the additional phy_data
-> 
-> if MIPI_DSI_MODE_VIDEO_BURST
-> 	hfp_wc = hfp * bpp - data_phy_cycles * lanes - 12 - 6;
-> else
-> 	hfp_wc = hfp * bpp - data_phy_cycles * lanes - 12;
-> 
-> Note:
-> //(2: 1 for sync, 1 for phy idle)
-> data_phy_cycles = T_hs_exit + T_lpx + T_hs_prepare + T_hs_zero + 2;
-> 
-> bpp: bit per pixel
-> 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> Tested-by: Ryan Case <ryandcase@chromium.org>
-> ---
->  drivers/gpu/drm/mediatek/mtk_dsi.c | 122 ++++++++++++++++++++---------
->  1 file changed, 83 insertions(+), 39 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> index abf6ddec5db6..558727c60ba3 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> @@ -144,12 +144,6 @@
->  #define DATA_0				(0xff << 16)
->  #define DATA_1				(0xff << 24)
->  
-> -#define T_LPX		5
-> -#define T_HS_PREP	6
-> -#define T_HS_TRAIL	8
-> -#define T_HS_EXIT	7
-> -#define T_HS_ZERO	10
-> -
->  #define NS_TO_CYCLE(n, c)    ((n) / (c) + (((n) % (c)) ? 1 : 0))
->  
->  #define MTK_DSI_HOST_IS_READ(type) \
-> @@ -158,6 +152,25 @@
->  	(type == MIPI_DSI_GENERIC_READ_REQUEST_2_PARAM) || \
->  	(type == MIPI_DSI_DCS_READ))
->  
-> +struct mtk_phy_timing {
-> +	u32 lpx;
-> +	u32 da_hs_prepare;
-> +	u32 da_hs_zero;
-> +	u32 da_hs_trail;
-> +
-> +	u32 ta_go;
-> +	u32 ta_sure;
-> +	u32 ta_get;
-> +	u32 da_hs_exit;
-> +
-> +	u32 clk_hs_zero;
-> +	u32 clk_hs_trail;
-> +
-> +	u32 clk_hs_prepare;
-> +	u32 clk_hs_post;
-> +	u32 clk_hs_exit;
-> +};
-> +
->  struct phy;
->  
->  struct mtk_dsi_driver_data {
-> @@ -182,12 +195,13 @@ struct mtk_dsi {
->  	struct clk *digital_clk;
->  	struct clk *hs_clk;
->  
-> -	u32 data_rate;
-> +	u64 data_rate;
->  
->  	unsigned long mode_flags;
->  	enum mipi_dsi_pixel_format format;
->  	unsigned int lanes;
->  	struct videomode vm;
-> +	struct mtk_phy_timing phy_timing;
->  	int refcount;
->  	bool enabled;
->  	u32 irq_data;
-> @@ -221,17 +235,36 @@ static void mtk_dsi_phy_timconfig(struct mtk_dsi *dsi)
->  {
->  	u32 timcon0, timcon1, timcon2, timcon3;
->  	u32 ui, cycle_time;
-> +	struct mtk_phy_timing *timing = &dsi->phy_timing;
-> +
-> +	ui = 1000000000 / dsi->data_rate;
-> +	cycle_time = 8000000000 / dsi->data_rate;
-> +
-> +	timing->lpx = NS_TO_CYCLE(60, cycle_time);
-> +	timing->da_hs_prepare = NS_TO_CYCLE(40 + 5 * ui, cycle_time);
-> +	timing->da_hs_zero = NS_TO_CYCLE(110 + 6 * ui, cycle_time);
-> +	timing->da_hs_trail = NS_TO_CYCLE(80 + 4 * ui, cycle_time);
->  
-> -	ui = 1000 / dsi->data_rate + 0x01;
-> -	cycle_time = 8000 / dsi->data_rate + 0x01;
-> +	timing->ta_go = 4 * timing->lpx;
-> +	timing->ta_sure = 3 * timing->lpx / 2;
-> +	timing->ta_get = 5 * timing->lpx;
-> +	timing->da_hs_exit = 2 * timing->lpx;
->  
-> -	timcon0 = T_LPX | T_HS_PREP << 8 | T_HS_ZERO << 16 | T_HS_TRAIL << 24;
-> -	timcon1 = 4 * T_LPX | (3 * T_LPX / 2) << 8 | 5 * T_LPX << 16 |
-> -		  T_HS_EXIT << 24;
-> -	timcon2 = ((NS_TO_CYCLE(0x64, cycle_time) + 0xa) << 24) |
-> -		  (NS_TO_CYCLE(0x150, cycle_time) << 16);
-> -	timcon3 = NS_TO_CYCLE(0x40, cycle_time) | (2 * T_LPX) << 16 |
-> -		  NS_TO_CYCLE(80 + 52 * ui, cycle_time) << 8;
-> +	timing->clk_hs_zero = NS_TO_CYCLE(336, cycle_time);
-> +	timing->clk_hs_trail = NS_TO_CYCLE(100, cycle_time) + 10;
-> +
-> +	timing->clk_hs_prepare = NS_TO_CYCLE(64, cycle_time);
-> +	timing->clk_hs_post = NS_TO_CYCLE(80 + 52 * ui, cycle_time);
-> +	timing->clk_hs_exit = 2 * timing->lpx;
-> +
-> +	timcon0 = timing->lpx | timing->da_hs_prepare << 8 |
-> +		  timing->da_hs_zero << 16 | timing->da_hs_trail << 24;
-> +	timcon1 = timing->ta_go | timing->ta_sure << 8 |
-> +		  timing->ta_get << 16 | timing->da_hs_exit << 24;
-> +	timcon2 = 1 << 8 | timing->clk_hs_zero << 16 |
-> +		  timing->clk_hs_trail << 24;
-> +	timcon3 = timing->clk_hs_prepare | timing->clk_hs_post << 8 |
-> +		  timing->clk_hs_exit << 16;
->  
->  	writel(timcon0, dsi->regs + DSI_PHY_TIMECON0);
->  	writel(timcon1, dsi->regs + DSI_PHY_TIMECON1);
-> @@ -418,7 +451,8 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
->  	u32 horizontal_sync_active_byte;
->  	u32 horizontal_backporch_byte;
->  	u32 horizontal_frontporch_byte;
-> -	u32 dsi_tmp_buf_bpp;
-> +	u32 dsi_tmp_buf_bpp, data_phy_cycles;
-> +	struct mtk_phy_timing *timing = &dsi->phy_timing;
->  
->  	struct videomode *vm = &dsi->vm;
->  
-> @@ -433,7 +467,8 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
->  	writel(vm->vactive, dsi->regs + DSI_VACT_NL);
->  
->  	if (dsi->driver_data->has_size_ctl)
-> -		writel(vm->vactive << 16 | vm->hactive, dsi->regs + DSI_SIZE_CON);
-> +		writel(vm->vactive << 16 | vm->hactive,
-> +		       dsi->regs + DSI_SIZE_CON);
+> What's the possible case where it would matter when there is no preemption?
 
-Except this line,
+The case we were discussing is from net/ipv4/inet_fragment.c from
+the net-next tree:
 
-Reviewed-by: CK Hu: <ck.hu@mediatek.com>
+void fqdir_exit(struct fqdir *fqdir)
+{
+	...
+	fqdir->dead = true;
 
-This line is added in "This line is added in "drm/mediatek: add frame
-size control", maybe this is belong to that patch.
+	/* call_rcu is supposed to provide memory barrier semantics,
+	 * separating the setting of fqdir->dead with the destruction
+	 * work.  This implicit barrier is paired with inet_frag_kill().
+	 */
 
->  
->  	horizontal_sync_active_byte = (vm->hsync_len * dsi_tmp_buf_bpp - 10);
->  
-> @@ -444,7 +479,34 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
->  		horizontal_backporch_byte = ((vm->hback_porch + vm->hsync_len) *
->  			dsi_tmp_buf_bpp - 10);
->  
-> -	horizontal_frontporch_byte = (vm->hfront_porch * dsi_tmp_buf_bpp - 12);
-> +	data_phy_cycles = timing->lpx + timing->da_hs_prepare +
-> +				  timing->da_hs_zero + timing->da_hs_exit + 2;
-> +
-> +	if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_BURST) {
-> +		if (vm->hfront_porch * dsi_tmp_buf_bpp >
-> +		    data_phy_cycles * dsi->lanes + 18) {
-> +			horizontal_frontporch_byte = vm->hfront_porch *
-> +						     dsi_tmp_buf_bpp -
-> +						     data_phy_cycles *
-> +						     dsi->lanes - 18;
-> +		} else {
-> +			DRM_WARN("HFP less than d-phy, FPS will under 60Hz\n");
-> +			horizontal_frontporch_byte = vm->hfront_porch *
-> +						     dsi_tmp_buf_bpp;
-> +		}
-> +	} else {
-> +		if (vm->hfront_porch * dsi_tmp_buf_bpp >
-> +		    data_phy_cycles * dsi->lanes + 12) {
-> +			horizontal_frontporch_byte = vm->hfront_porch *
-> +						     dsi_tmp_buf_bpp -
-> +						     data_phy_cycles *
-> +						     dsi->lanes - 12;
-> +		} else {
-> +			DRM_WARN("HFP less than d-phy, FPS will under 60Hz\n");
-> +			horizontal_frontporch_byte = vm->hfront_porch *
-> +						     dsi_tmp_buf_bpp;
-> +		}
-> +	}
->  
->  	writel(horizontal_sync_active_byte, dsi->regs + DSI_HSA_WC);
->  	writel(horizontal_backporch_byte, dsi->regs + DSI_HBP_WC);
-> @@ -544,8 +606,7 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
->  {
->  	struct device *dev = dsi->dev;
->  	int ret;
-> -	u64 pixel_clock, total_bits;
-> -	u32 htotal, htotal_bits, bit_per_pixel, overhead_cycles, overhead_bits;
-> +	u32 bit_per_pixel;
->  
->  	if (++dsi->refcount != 1)
->  		return 0;
-> @@ -564,24 +625,7 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
->  		break;
->  	}
->  
-> -	/**
-> -	 * htotal_time = htotal * byte_per_pixel / num_lanes
-> -	 * overhead_time = lpx + hs_prepare + hs_zero + hs_trail + hs_exit
-> -	 * mipi_ratio = (htotal_time + overhead_time) / htotal_time
-> -	 * data_rate = pixel_clock * bit_per_pixel * mipi_ratio / num_lanes;
-> -	 */
-> -	pixel_clock = dsi->vm.pixelclock;
-> -	htotal = dsi->vm.hactive + dsi->vm.hback_porch + dsi->vm.hfront_porch +
-> -			dsi->vm.hsync_len;
-> -	htotal_bits = htotal * bit_per_pixel;
-> -
-> -	overhead_cycles = T_LPX + T_HS_PREP + T_HS_ZERO + T_HS_TRAIL +
-> -			T_HS_EXIT;
-> -	overhead_bits = overhead_cycles * dsi->lanes * 8;
-> -	total_bits = htotal_bits + overhead_bits;
-> -
-> -	dsi->data_rate = DIV_ROUND_UP_ULL(pixel_clock * total_bits,
-> -					  htotal * dsi->lanes);
-> +	dsi->data_rate = dsi->vm.pixelclock * bit_per_pixel / dsi->lanes;
->  
->  	ret = clk_set_rate(dsi->hs_clk, dsi->data_rate);
->  	if (ret < 0) {
+	INIT_RCU_WORK(&fqdir->destroy_rwork, fqdir_rwork_fn);
+	queue_rcu_work(system_wq, &fqdir->destroy_rwork);
+}
 
+and
 
+void inet_frag_kill(struct inet_frag_queue *fq)
+{
+		...
+		rcu_read_lock();
+		/* The RCU read lock provides a memory barrier
+		 * guaranteeing that if fqdir->dead is false then
+		 * the hash table destruction will not start until
+		 * after we unlock.  Paired with inet_frags_exit_net().
+		 */
+		if (!fqdir->dead) {
+			rhashtable_remove_fast(&fqdir->rhashtable, &fq->node,
+					       fqdir->f->rhash_params);
+			...
+		}
+		...
+		rcu_read_unlock();
+		...
+}
+
+I simplified this to
+
+Initial values:
+
+a = 0
+b = 0
+
+CPU1				CPU2
+----				----
+a = 1				rcu_read_lock
+synchronize_rcu			if (a == 0)
+b = 2					b = 1
+				rcu_read_unlock
+
+On exit we want this to be true:
+b == 2
+
+Now what Paul was telling me is that unless every memory operation
+is done with READ_ONCE/WRITE_ONCE then his memory model shows that
+the exit constraint won't hold.  IOW, we need
+
+CPU1				CPU2
+----				----
+WRITE_ONCE(a, 1)		rcu_read_lock
+synchronize_rcu			if (READ_ONCE(a) == 0)
+WRITE_ONCE(b, 2)			WRITE_ONCE(b, 1)
+				rcu_read_unlock
+
+Now I think this bullshit because if we really needed these compiler
+barriers then we surely would need real memory barriers to go with
+them.
+
+In fact, the sole purpose of the RCU mechanism is to provide those
+memory barriers.  Quoting from
+Documentation/RCU/Design/Requirements/Requirements.html:
+
+<li>	Each CPU that has an RCU read-side critical section that
+	begins before <tt>synchronize_rcu()</tt> starts is
+	guaranteed to execute a full memory barrier between the time
+	that the RCU read-side critical section ends and the time that
+	<tt>synchronize_rcu()</tt> returns.
+	Without this guarantee, a pre-existing RCU read-side critical section
+	might hold a reference to the newly removed <tt>struct foo</tt>
+	after the <tt>kfree()</tt> on line&nbsp;14 of
+	<tt>remove_gp_synchronous()</tt>.
+<li>	Each CPU that has an RCU read-side critical section that ends
+	after <tt>synchronize_rcu()</tt> returns is guaranteed
+	to execute a full memory barrier between the time that
+	<tt>synchronize_rcu()</tt> begins and the time that the RCU
+	read-side critical section begins.
+	Without this guarantee, a later RCU read-side critical section
+	running after the <tt>kfree()</tt> on line&nbsp;14 of
+	<tt>remove_gp_synchronous()</tt> might
+	later run <tt>do_something_gp()</tt> and find the
+	newly deleted <tt>struct foo</tt>.
+
+My review of the RCU code shows that these memory barriers are
+indeed present (at least when we're not in tiny mode where all
+this discussion would be moot anyway).  For example, in call_rcu
+we eventually get down to rcu_segcblist_enqueue which has an smp_mb.
+On the reader side (correct me if I'm wrong Paul) the memory
+barrier is implicitly coming from the scheduler.
+
+My point is that within our kernel whenever we have a CPU memory
+barrier we always have a compiler barrier too.  Therefore my code
+example above does not need any extra compiler barriers such as
+the ones provided by READ_ONCE/WRITE_ONCE.
+
+I think perhaps Paul was perhaps thinking that I'm expecting
+rcu_read_lock/rcu_read_unlock themselves to provide the memory
+or compiler barriers.  That would indeed be wrong but this is
+not what I need.  All I need is the RCU semantics as documented
+for there to be memory and compiler barriers around the whole
+grace period.
+
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
