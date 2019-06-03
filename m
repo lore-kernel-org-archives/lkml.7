@@ -2,118 +2,85 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB596C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E9FC04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE71F24A6E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:04:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47F4A24A87
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:05:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=prevas.se header.i=@prevas.se header.b="KjNPLVHk"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="ga6bafZC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbfFCIEO (ORCPT
+        id S1727574AbfFCIE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 04:04:14 -0400
-Received: from mail-eopbgr80094.outbound.protection.outlook.com ([40.107.8.94]:20974
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725856AbfFCIEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 04:04:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.se;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=W0EI1mCB1KYrocYqIE5bdD3myKTeyCjqok9MCtjZwkw=;
- b=KjNPLVHkTD9/7sUsvgfiWkS97vzc040gDvRfuqftPp/2jpPr56baoTD7ZrqGlh0FbNwvGr4nmlcucapTtHaJvGBhPjP6/DnaiNW4gZVTShf9qm7iIHYe1G8prccrEJqHTmhgAsMOZH2n59nmfmt5wG4DgiabJCRcw+MtiwKgD1o=
-Received: from VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM (20.178.126.80) by
- VI1PR10MB2783.EURPRD10.PROD.OUTLOOK.COM (20.178.204.85) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.22; Mon, 3 Jun 2019 08:04:09 +0000
-Received: from VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::8844:426d:816b:f5d5]) by VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::8844:426d:816b:f5d5%6]) with mapi id 15.20.1943.018; Mon, 3 Jun 2019
- 08:04:09 +0000
-From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-CC:     Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] net: dsa: mv88e6xxx: make mv88e6xxx_g1_stats_wait static
-Thread-Topic: [PATCH] net: dsa: mv88e6xxx: make mv88e6xxx_g1_stats_wait static
-Thread-Index: AQHVGeLstGN9HejI90yCwDmeLZ5eTg==
-Date:   Mon, 3 Jun 2019 08:04:09 +0000
-Message-ID: <20190603080353.18957-1-rasmus.villemoes@prevas.dk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1P190CA0020.EURP190.PROD.OUTLOOK.COM (2603:10a6:3:bc::30)
- To VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:803:e1::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Rasmus.Villemoes@prevas.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.20.1
-x-originating-ip: [81.216.59.226]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f2b0d3a3-5e12-4c5b-ea7a-08d6e7fa0ecb
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR10MB2783;
-x-ms-traffictypediagnostic: VI1PR10MB2783:
-x-microsoft-antispam-prvs: <VI1PR10MB2783CB85B72F2B85808D74EA8A140@VI1PR10MB2783.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:449;
-x-forefront-prvs: 0057EE387C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(396003)(366004)(39850400004)(346002)(376002)(189003)(199004)(52116002)(8936002)(99286004)(8976002)(50226002)(6116002)(72206003)(3846002)(256004)(478600001)(386003)(1076003)(6506007)(25786009)(102836004)(4326008)(81156014)(81166006)(5660300002)(8676002)(6512007)(53936002)(2906002)(74482002)(14454004)(68736007)(36756003)(44832011)(66476007)(54906003)(486006)(476003)(6436002)(73956011)(66946007)(66446008)(64756008)(66556008)(110136005)(66066001)(316002)(71190400001)(71200400001)(305945005)(7736002)(26005)(2616005)(6486002)(42882007)(186003);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR10MB2783;H:VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: prevas.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: hin0lT+nBTC6DVNPuiXpQT09v6zTXMS+bt5H6DsmVeDkHwc8GCtWalHQ03Nlw1RBejZ2//gFtcoJpLgfB3JiL4b8u8XdYxz7H7eshS3t+Ze3dnPAaqVZEi6trJDHuo8I80hD3qYmv1chqDv91rOEtF9+ftTcKtJJNlWUxIrCOQYki71DqJJBIK5d81HXKBgGNIobj9IiDxGWPhEh8RgcZz2B+lA1LZ+lw6k0Kr4h7A0qurauwt/NY6YEALCmB1MS6IsMFIty5JAbl7pHZbm/g1eynm9RLVv0X6IaTPOufkuehNuVde5gNSyZsh5+7vlTCLXEmetS+zqEP8qPGuWFG+LEx9JugwZHmLXQ5KUEfzlV8kUQJycpPZpT1PtVgIiynm1pOW2uoHvoPp1uP0wjsZnZX5yrflXT6LDem8qb5uE=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 3 Jun 2019 04:04:59 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:43456 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725856AbfFCIE7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 04:04:59 -0400
+Received: by mail-qt1-f194.google.com with SMTP id z24so1161666qtj.10;
+        Mon, 03 Jun 2019 01:04:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RfaSV+pbk7w6/znlXv1qGSq++xp8hdtnx0rwYlptGts=;
+        b=ga6bafZCmHxDV+BcmEwAaQsBBlEZkPFYGOsxhVLqSVdLrMiD8VQTGepUAJnHL2G3wY
+         Aji+SLUEIuw0MSIMC3cBG6nJMELOFarVv7dHMqaO1WN8vDLzJlhClRQjA9PX9dYnQY77
+         ZTEMJ4wNAzhm4f9EYkjt8OoYi9gVeLbnydEao=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RfaSV+pbk7w6/znlXv1qGSq++xp8hdtnx0rwYlptGts=;
+        b=S7qnVrkgAYDY+qPNGEh56Lrall5xKE73DA0EtUbRhz/idJSQYO46KPZxiguyC9H3FN
+         VyA487ZlQ1PmcXDYfwdFqGt2GYTdtd3XA/jKxLsxB3/wqj6ePLlPhGoAeIYtGAg2VPNv
+         RYjbaW8FSpSA9IUcozvb1003saD5lTAgYJBHE4WxcRv6IwAfaTvkUa35tFlISSHV17sO
+         0v2BVE30NL1EaWgTdZkIi9IfOcQG5FyvLDo30PtM1w0pz1l2D2buSmiZ4jGqWDEowleW
+         MOXDOxG61KIQCaivzC0HiLtWt5N1luYz6MgX4YbL48yNg//VSr2NXQvcVPSCIKZgKyDe
+         /ZNA==
+X-Gm-Message-State: APjAAAV3zQW1MKFzkt9JWCiWpciskUbNS9dBGg9qkGVUpNXafKsgxqDm
+        HEktJZpdb2UJT2Lv+XQ/DRQhEidIQ94UtNZHXj0=
+X-Google-Smtp-Source: APXvYqzsF073EvPFX4Takz8KWZ3H1JBY7zZTMY9VElYM72O2DrEKUU55vAn2In2dlmNN7QDVZrx88Z1tiSxYiMYUjoU=
+X-Received: by 2002:ac8:2493:: with SMTP id s19mr1721030qts.220.1559549097905;
+ Mon, 03 Jun 2019 01:04:57 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: prevas.dk
-X-MS-Exchange-CrossTenant-Network-Message-Id: f2b0d3a3-5e12-4c5b-ea7a-08d6e7fa0ecb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2019 08:04:09.8417
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d350cf71-778d-4780-88f5-071a4cb1ed61
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Rasmus.Villemoes@prevas.dk
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB2783
+References: <20190531090950.13466-1-a.filippov@yadro.com> <246c9b25-1c05-4c2f-9185-c438c97ebdec@www.fastmail.com>
+In-Reply-To: <246c9b25-1c05-4c2f-9185-c438c97ebdec@www.fastmail.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Mon, 3 Jun 2019 08:04:46 +0000
+Message-ID: <CACPK8Xf9emq+rYjT=O8kQfc-oMcKZwAwXwZ1bciDr+R3CyWz+g@mail.gmail.com>
+Subject: Re: [PATCH v4] ARM: dts: aspeed: Add YADRO VESNIN BMC
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     "Alexander A. Filippov" <a.filippov@yadro.com>,
+        linux-aspeed@lists.ozlabs.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-bXY4OGU2eHh4X2cxX3N0YXRzX3dhaXQgaGFzIG5vIHVzZXJzIG91dHNpZGUgZ2xvYmFsMS5jLCBz
-byBtYWtlIGl0DQpzdGF0aWMuDQoNClNpZ25lZC1vZmYtYnk6IFJhc211cyBWaWxsZW1vZXMgPHJh
-c211cy52aWxsZW1vZXNAcHJldmFzLmRrPg0KLS0tDQogZHJpdmVycy9uZXQvZHNhL212ODhlNnh4
-eC9nbG9iYWwxLmMgfCAyICstDQogZHJpdmVycy9uZXQvZHNhL212ODhlNnh4eC9nbG9iYWwxLmgg
-fCAxIC0NCiAyIGZpbGVzIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAyIGRlbGV0aW9ucygtKQ0K
-DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvZHNhL212ODhlNnh4eC9nbG9iYWwxLmMgYi9kcml2
-ZXJzL25ldC9kc2EvbXY4OGU2eHh4L2dsb2JhbDEuYw0KaW5kZXggYjVjZWZmMjk0NmZlLi43NzBj
-MDM0MDYwMzMgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL25ldC9kc2EvbXY4OGU2eHh4L2dsb2JhbDEu
-Yw0KKysrIGIvZHJpdmVycy9uZXQvZHNhL212ODhlNnh4eC9nbG9iYWwxLmMNCkBAIC00NjUsNyAr
-NDY1LDcgQEAgaW50IG12ODhlNnh4eF9nMV9zZXRfZGV2aWNlX251bWJlcihzdHJ1Y3QgbXY4OGU2
-eHh4X2NoaXAgKmNoaXAsIGludCBpbmRleCkNCiANCiAvKiBPZmZzZXQgMHgxZDogU3RhdGlzdGlj
-cyBPcGVyYXRpb24gMiAqLw0KIA0KLWludCBtdjg4ZTZ4eHhfZzFfc3RhdHNfd2FpdChzdHJ1Y3Qg
-bXY4OGU2eHh4X2NoaXAgKmNoaXApDQorc3RhdGljIGludCBtdjg4ZTZ4eHhfZzFfc3RhdHNfd2Fp
-dChzdHJ1Y3QgbXY4OGU2eHh4X2NoaXAgKmNoaXApDQogew0KIAlyZXR1cm4gbXY4OGU2eHh4X2cx
-X3dhaXQoY2hpcCwgTVY4OEU2WFhYX0cxX1NUQVRTX09QLA0KIAkJCQkgTVY4OEU2WFhYX0cxX1NU
-QVRTX09QX0JVU1kpOw0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L2RzYS9tdjg4ZTZ4eHgvZ2xv
-YmFsMS5oIGIvZHJpdmVycy9uZXQvZHNhL212ODhlNnh4eC9nbG9iYWwxLmgNCmluZGV4IDJmMTk1
-YTBiZDg5MS4uYmI5MmExMzBjYmVmIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9uZXQvZHNhL212ODhl
-Nnh4eC9nbG9iYWwxLmgNCisrKyBiL2RyaXZlcnMvbmV0L2RzYS9tdjg4ZTZ4eHgvZ2xvYmFsMS5o
-DQpAQCAtMjYzLDcgKzI2Myw2IEBAIGludCBtdjg4ZTYzNTJfZzFfcmVzZXQoc3RydWN0IG12ODhl
-Nnh4eF9jaGlwICpjaGlwKTsNCiBpbnQgbXY4OGU2MTg1X2cxX3BwdV9lbmFibGUoc3RydWN0IG12
-ODhlNnh4eF9jaGlwICpjaGlwKTsNCiBpbnQgbXY4OGU2MTg1X2cxX3BwdV9kaXNhYmxlKHN0cnVj
-dCBtdjg4ZTZ4eHhfY2hpcCAqY2hpcCk7DQogDQotaW50IG12ODhlNnh4eF9nMV9zdGF0c193YWl0
-KHN0cnVjdCBtdjg4ZTZ4eHhfY2hpcCAqY2hpcCk7DQogaW50IG12ODhlNnh4eF9nMV9zdGF0c19z
-bmFwc2hvdChzdHJ1Y3QgbXY4OGU2eHh4X2NoaXAgKmNoaXAsIGludCBwb3J0KTsNCiBpbnQgbXY4
-OGU2MzIwX2cxX3N0YXRzX3NuYXBzaG90KHN0cnVjdCBtdjg4ZTZ4eHhfY2hpcCAqY2hpcCwgaW50
-IHBvcnQpOw0KIGludCBtdjg4ZTYzOTBfZzFfc3RhdHNfc25hcHNob3Qoc3RydWN0IG12ODhlNnh4
-eF9jaGlwICpjaGlwLCBpbnQgcG9ydCk7DQotLSANCjIuMjAuMQ0KDQo=
+On Mon, 3 Jun 2019 at 01:28, Andrew Jeffery <andrew@aj.id.au> wrote:
+> On Fri, 31 May 2019, at 18:40, Alexander Filippov wrote:
+> > VESNIN is an OpenPower machine with an Aspeed 2400 BMC SoC manufactured
+> > by YADRO.
+> >
+> > Signed-off-by: Alexander Filippov <a.filippov@yadro.com>
+>
+> Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+
+Thanks. Applied to the aspeed dt-for-5.3 branch.
+
+Cheers,
+
+Joel
