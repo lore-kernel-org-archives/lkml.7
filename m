@@ -2,116 +2,121 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1067DC04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0DBC04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD9CB27F6F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:17:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553424;
-	bh=Eoqrcd+Jb5+J5XJOqRM1pn5UpfVPaTOv7EbLS0XI0AU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mh+bbKqY+MHeyvvYUqkMJR/nqPOeppyeYT1MXge1osZRi++o4+RxcB5V69e43an5z
-	 iksUKv8BfnRgKK4SKPrg79N+kpaCiYajVon/9dSgthzpFAeqQWk/MzfM1U/ZVDTgxG
-	 PCF0VMfmwLQxUp+D/yxgzHA9Fve7hYVuc4UmRqWA=
+	by mail.kernel.org (Postfix) with ESMTP id ABA8D27F5E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:17:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728533AbfFCJLz (ORCPT
+        id S1728948AbfFCJRH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:11:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57140 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728511AbfFCJLw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:11:52 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD65127E51;
-        Mon,  3 Jun 2019 09:11:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553111;
-        bh=Eoqrcd+Jb5+J5XJOqRM1pn5UpfVPaTOv7EbLS0XI0AU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R9+ke6ZFK/cu6t/tJNUIzJKrFuxeFAgGYdPulFnFI18lL81G9qsuoUQ/RoT3xw180
-         XNWVR6bFqjNaixfPu6bIKn42QZYwLt8ca2+p+0kw2UdqejTTjOPMy4gIRLd3XuLPxi
-         Nm4UCRFhNwio6k/a0L844frNs6pIjoBO6Xtik1c4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        kbuild test robot <lkp@intel.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 05/36] ipv4/igmp: fix build error if !CONFIG_IP_MULTICAST
-Date:   Mon,  3 Jun 2019 11:08:53 +0200
-Message-Id: <20190603090521.307430808@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190603090520.998342694@linuxfoundation.org>
-References: <20190603090520.998342694@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 3 Jun 2019 05:17:07 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:41482 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728522AbfFCJLy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:11:54 -0400
+Received: by mail-ed1-f65.google.com with SMTP id x25so13710888eds.8
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 02:11:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OG+wv3KqwkIxkFn1hvlOhyQJMdD3qAH7uLRblyeIxmw=;
+        b=hGZAYoZqefZdKEh2IvuFHZoH2jMmweH23m7kzh8kBSP0WX+mCvB/axNY+1bYGZ61we
+         h1Su4MTGuQj1N3DgLRHw5lgv9vDnvDl9X4qf3BKOSVYS/qE0ab5z0T6DoDaI47mynVDk
+         gRGir8zIJ9LaGwwMaXoBXWnMB2F1bfsk6pEPOoZyDUyWB01+6arH2iDwn6qy3Xi2xDiM
+         GcTm23daMZrx3nOjb2w7cOm8DUHlDzrS0jaWXB9QHetMvwWGfjmwDKQMVNRh+sPdOlgI
+         mdPZZrlEQBROuma2ORi9Ns6AJaT124nEebmYfszHCu15GuUC0t8bWheXJAuV0kG/CdbU
+         /vYw==
+X-Gm-Message-State: APjAAAX+WGsEaISJ5Tr07h9JAB0LxSuEfe4Tn1Ot5HDJjk07Mm27PjKP
+        PVorkAGWKlhdN/tUEERsQfdoPY1gX9w=
+X-Google-Smtp-Source: APXvYqz1vb/GtNDI0d8P3KGIusxxHGOCkfnzNhDpbmeVWD1r4YyvZTFrjQYsLumEjHBqId5ctx21ww==
+X-Received: by 2002:a50:fc82:: with SMTP id f2mr26823610edq.72.1559553111720;
+        Mon, 03 Jun 2019 02:11:51 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id y8sm2530322ejq.24.2019.06.03.02.11.50
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 03 Jun 2019 02:11:51 -0700 (PDT)
+Subject: Re: hid-related 5.2-rc1 boot hang
+To:     Jiri Kosina <jikos@kernel.org>, Dave Hansen <dave.hansen@intel.com>
+Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <2c1684f6-9def-93dc-54ab-888142fd5e71@intel.com>
+ <nycvar.YFH.7.76.1905281913140.1962@cbobk.fhfr.pm>
+ <CAO-hwJJzNAuFbdMVFZ4+h7J=bh6QHr_MioyK2yTV=M5R6CTm=A@mail.gmail.com>
+ <8a17e6e2-b468-28fd-5b40-0c258ca7efa9@intel.com>
+ <4689a737-6c40-b4ae-cc38-5df60318adce@redhat.com>
+ <a349dfac-be58-93bd-e44c-080ed935ab06@intel.com>
+ <nycvar.YFH.7.76.1906010014150.1962@cbobk.fhfr.pm>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <e158d983-1e7e-4c49-aaab-ff2092d36438@redhat.com>
+Date:   Mon, 3 Jun 2019 11:11:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <nycvar.YFH.7.76.1906010014150.1962@cbobk.fhfr.pm>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+Hi,
 
-[ Upstream commit 903869bd10e6719b9df6718e785be7ec725df59f ]
+On 01-06-19 00:15, Jiri Kosina wrote:
+> On Thu, 30 May 2019, Dave Hansen wrote:
+> 
+>> On 5/29/19 2:17 AM, Hans de Goede wrote:
+>> ...
+>>> Dave, can you try building your initrd without the hid-logitech-dj module
+>>> included in the initrd?
+>>
+>> I did this on a vanilla 5.2-rc2 kernel (without the reverts) and still
+>> experienced the boot hang while the device was inserted.
+>>
+>>> Also can you check if your modprobe is provided by module-init-tools
+>>> or by kmod ?
+>>
+>> $ dpkg -S `which modprobe`
+>> kmod: /sbin/modprobe
+> 
+> Benjamin, Hans, are you looking into this?
 
-ip_sf_list_clear_all() needs to be defined even if !CONFIG_IP_MULTICAST
+Not really, I cannot reproduce the request_module problem. I was hoping some
+of the info from Dave would help to pinpoint it, but it does not :|
 
-Fixes: 3580d04aa674 ("ipv4/igmp: fix another memory leak in igmpv3_del_delrec()")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv4/igmp.c |   22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+> If not, I think we should start reverting (at least the request_module()
+> changes
 
---- a/net/ipv4/igmp.c
-+++ b/net/ipv4/igmp.c
-@@ -187,6 +187,17 @@ static void ip_ma_put(struct ip_mc_list
- 	     pmc != NULL;					\
- 	     pmc = rtnl_dereference(pmc->next_rcu))
- 
-+static void ip_sf_list_clear_all(struct ip_sf_list *psf)
-+{
-+	struct ip_sf_list *next;
-+
-+	while (psf) {
-+		next = psf->sf_next;
-+		kfree(psf);
-+		psf = next;
-+	}
-+}
-+
- #ifdef CONFIG_IP_MULTICAST
- 
- /*
-@@ -632,17 +643,6 @@ static void igmpv3_clear_zeros(struct ip
- 	}
- }
- 
--static void ip_sf_list_clear_all(struct ip_sf_list *psf)
--{
--	struct ip_sf_list *next;
--
--	while (psf) {
--		next = psf->sf_next;
--		kfree(psf);
--		psf = next;
--	}
--}
--
- static void kfree_pmc(struct ip_mc_list *pmc)
- {
- 	ip_sf_list_clear_all(pmc->sources);
+I agree we need to do something about the request_module changes.
 
+I myself was thinking about somehow making them conditional, e.g. we
+could add a (temporary) module option defaulting to false for this
+while we investigate further.
+
+I'm afraid that if we just revert we will never find the root cause and then
+we will be stuck with the suboptimal behavior of first the generic hid driver
+binding followed by a unbind + bind of the new driver shortly afterwards,
+which also leads to a ton of udev events being fired to userspace (well I
+guess this does make for a good stress test of the userspace hotplug code).
+
+> not sure about the rest of logitech issues yet) next week.
+
+The main problem seems to be the request_module patches. Although I also
+have 2 reports of problems with hid-logitech-dj driving the 0xc52f product-id,
+so we may need to drop that product-id from hid-logitech-dj, I'm working on
+that one...
+
+Regards,
+
+Hans
 
