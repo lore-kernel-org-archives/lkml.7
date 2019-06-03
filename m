@@ -2,134 +2,342 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A01BEC04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 06:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F068C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 06:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70BCE27BEE
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 06:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17EE0214D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 06:23:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="usyZjCBM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TqErks0Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbfFCGWU (ORCPT
+        id S1726926AbfFCGXD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 02:22:20 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:37489 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726383AbfFCGWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 02:22:20 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45HQ2K2h3wz9s4Y;
-        Mon,  3 Jun 2019 16:22:17 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1559542937;
-        bh=qtRLL5MmwkVppNQC2HhXBoAeLnIwZD4NL/50uFan5SU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=usyZjCBMTorPhShHFMWkb8U6KufF4zisxKgg93tf98GQElT38ZO/mkJRMLJU0AkAO
-         fvcAnveLGmuIMGSOUt6n8BnmXd4ECIgT3Ii4aJRxXZ4eY8qQ/Ptn81dvmoy4bSvXkP
-         C3PhkBtT34d4GO6x/7U6m0uMAsJS1L3pZ/ofuJj1HhkWFGGmrFJLXRTKDDehOdbQUA
-         KG19z8vZqiuNH209Lkre3yx1bJLqJrgYHPeAY6FqHVfdgtk247eyIzbQg/fW7Rp53C
-         Zt91O6knQIRCZt+n3Yc4nKexRUunh0xFq6/TDlsUSvnkblHekOSv27W2DYKM3rmsvg
-         jnrzghbrpL1xg==
-Date:   Mon, 3 Jun 2019 16:22:15 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: runtime failure of next-20190603
-Message-ID: <20190603162215.6390707f@canb.auug.org.au>
+        Mon, 3 Jun 2019 02:23:03 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41649 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbfFCGXC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 02:23:02 -0400
+Received: by mail-wr1-f65.google.com with SMTP id c2so10650323wrm.8
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 23:23:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=sNivcIC8Igrk6BfZHQq6nCs83U3as9vRIij/ngzJA8M=;
+        b=TqErks0QqKz6hugNUsZQVVqvZGFkrJn392XjeNVWSuWy87fyl3f97/VIt2SrOEgsf5
+         V3L3nD2PGQ89EQhQAMYqYlJnEH4uwBsDBsfuw+2pGgW8y8EJu3lQKHvKQ69n2CWjvFVX
+         2purp7zr/XCbraWaDL3OOLsRleCHUekjsTgh++ctm3q4Grr0PZ2NNKZZWJaVjX9uX2BG
+         8qN2kjdjxxbmNjzc5VclVtp4mvem9Mfkbm67dntk1lGqqYVcDFF9f4WvC9RdNqrMvhvP
+         qRai7RgTMRWgg1L+sWNdd46A6ivmZ2nAaHzT0R45e0NnWiTklWDCDm8A7S4vHWdfXRjt
+         +Htg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=sNivcIC8Igrk6BfZHQq6nCs83U3as9vRIij/ngzJA8M=;
+        b=mxwDJNX1Rn6NO1Em1QOKiuwM12A2ukF33fNL+pURb8mKaEh9pGTP8PDgZGWA0Y+7OA
+         eqYDmFrcuNiy0dnlLJ+bO30XIh7bHnCerf2nJjPJ8jYBE/IJHXz1UGMwVYum/W4pzCgd
+         lwEG75tUwKyFye5HxWUWRfKpN7RzaAN9ucgZVvN0yi9KFSPcvMQanzHVTh36RXWcHRT/
+         zxjMfvaMhTRZi0/8CELpJQtIvJVaRLeeRMpyIx1Fx8zsRftjssN7XMiiJjApk5Nw/aoJ
+         gjBnVvmXw+jVCWGjfqAXl9sXHKLtvXz0/9DPqaZw1v5RyopF8Nzy7qFIaTLIECevk/Hi
+         pKlw==
+X-Gm-Message-State: APjAAAXQKzHC0YhP0r7KL/ECNF76K4AtQtp0cY3csmGnPffgAF3yGG5/
+        xewjhOFVAjd/omBHFVTYt3EJjA==
+X-Google-Smtp-Source: APXvYqwyJhSvEoQDL8Z2YEUR2WX9LHyvIg6PoBKNuD69ZAMWAd7pb0BVlCSGtLdIXdNRtpvDhNrr8w==
+X-Received: by 2002:a5d:694c:: with SMTP id r12mr1237454wrw.214.1559542980301;
+        Sun, 02 Jun 2019 23:23:00 -0700 (PDT)
+Received: from dell ([2.27.167.43])
+        by smtp.gmail.com with ESMTPSA id y12sm5704748wrr.3.2019.06.02.23.22.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 02 Jun 2019 23:22:58 -0700 (PDT)
+Date:   Mon, 3 Jun 2019 07:22:57 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Gwendal Grignou <gwendal@chromium.org>
+Cc:     andy.shevchenko@gmail.com, Guenter Roeck <groeck@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, kernel@collabora.com
+Subject: Re: [PATCH v5] mfd: cros_ec_dev: Register cros_ec_accel_legacy
+ driver as a subdevice
+Message-ID: <20190603062257.GA4797@dell>
+References: <CAMHSBOWZHLnGWXU_z1ouCVuRRWKg_59P5++zwhJOWrWJoNv=GA@mail.gmail.com>
+ <20190228013541.76792-1-gwendal@chromium.org>
+ <20190402034610.GG4187@dell>
+ <CAPUE2usfB3i4J7P4e_XdsMLV+VK7s+nS-mrD=D_WMpOHiouG2w@mail.gmail.com>
+ <20190529114454.GJ4574@dell>
+ <CAPUE2usYa3z3mcxo6fGsBL-FXLcNy1-Pr+WoQsKmTjhNZCZwSA@mail.gmail.com>
+ <20190530074819.GM4574@dell>
+ <CAPUE2usBh5r22Ak3LxLK-hS7wOObAdW4v1r8TDFUWPz=05FGMw@mail.gmail.com>
+ <20190531081353.GQ4574@dell>
+ <CAPUE2uuzVGexaWxy4zLjCZT9=rRfciQB44Fj-7bXhsJQY6uMhA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/+TiVC.xekiq4xkQ7ICT.F+4"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPUE2uuzVGexaWxy4zLjCZT9=rRfciQB44Fj-7bXhsJQY6uMhA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/+TiVC.xekiq4xkQ7ICT.F+4
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, 31 May 2019, Gwendal Grignou wrote:
 
-Hi all,
+> On Fri, May 31, 2019 at 1:13 AM Lee Jones <lee.jones@linaro.org> wrote:
+> >
+> > On Thu, 30 May 2019, Gwendal Grignou wrote:
+> >
+> > > On Thu, May 30, 2019 at 12:48 AM Lee Jones <lee.jones@linaro.org> wrote:
+> > > >
+> > > > On Wed, 29 May 2019, Gwendal Grignou wrote:
+> > > >
+> > > > > On Wed, May 29, 2019 at 4:44 AM Lee Jones <lee.jones@linaro.org> wrote:
+> > > > > >
+> > > > > > On Tue, 28 May 2019, Gwendal Grignou wrote:
+> > > > > >
+> > > > > > > On Mon, Apr 1, 2019 at 8:46 PM Lee Jones <lee.jones@linaro.org> wrote:
+> > > > > > > >
+> > > > > > > > On Wed, 27 Feb 2019, Gwendal Grignou wrote:
+> > > > > > > >
+> > > > > > > > > From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> > > > > > > > >
+> > > > > > > > > With this patch, the cros_ec_ctl driver will register the legacy
+> > > > > > > > > accelerometer driver (named cros_ec_accel_legacy) if it fails to
+> > > > > > > > > register sensors through the usual path cros_ec_sensors_register().
+> > > > > > > > > This legacy device is present on Chromebook devices with older EC
+> > > > > > > > > firmware only supporting deprecated EC commands (Glimmer based devices).
+> > > > > > > > >
+> > > > > > > > > Tested-by: Gwendal Grignou <gwendal@chromium.org>
+> > > > > > > > > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> > > > > > > > > Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
+> > > > > > > > > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > > > > > > > > ---
+> > > > > > > > > Changes in v5:
+> > > > > > > > > - Remove unnecessary white lines.
+> > > > > > > > >
+> > > > > > > > > Changes in v4:
+> > > > > > > > > - [5/8] Nit: EC -> ECs (Lee Jones)
+> > > > > > > > > - [5/8] Statically define cros_ec_accel_legacy_cells (Lee Jones)
+> > > > > > > > >
+> > > > > > > > > Changes in v3:
+> > > > > > > > > - [5/8] Add the Reviewed-by Andy Shevchenko.
+> > > > > > > > >
+> > > > > > > > > Changes in v2:
+> > > > > > > > > - [5/8] Add the Reviewed-by Gwendal.
+> > > > > > > > >
+> > > > > > > > >  drivers/mfd/cros_ec_dev.c | 66 +++++++++++++++++++++++++++++++++++++++
+> > > > > > > > >  1 file changed, 66 insertions(+)
+> > > > > > > > >
+> > > > > > > > > diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+> > > > > > > > > index d275deaecb12..64567bd0a081 100644
+> > > > > > > > > --- a/drivers/mfd/cros_ec_dev.c
+> > > > > > > > > +++ b/drivers/mfd/cros_ec_dev.c
+> > > > > > > > > @@ -376,6 +376,69 @@ static void cros_ec_sensors_register(struct cros_ec_dev *ec)
+> > > > > > > > >       kfree(msg);
+> > > > > > > > >  }
+> > > > > > > > >
+> > > > > > > > > +static struct cros_ec_sensor_platform sensor_platforms[] = {
+> > > > > > > > > +     { .sensor_num = 0 },
+> > > > > > > > > +     { .sensor_num = 1 }
+> > > > > > > > > +};
+> > > > > > > >
+> > > > > > > > I'm still very uncomfortable with this struct.
+> > > > > > > >
+> > > > > > > > Other than these indices, the sensors have no other distinguishing
+> > > > > > > > features, thus there should be no need to identify or distinguish
+> > > > > > > > between them in this way.
+> > > > > > > When initializing the sensors, the IIO driver expect to find in the
+> > > > > > > data  structure pointed by dev_get_platdata(dev), in field sensor_num
+> > > > > > > is stored the index assigned by the embedded controller to talk to a
+> > > > > > > given sensor.
+> > > > > > > cros_ec_sensors_register() use the same mechanism; in that function,
+> > > > > > > the sensor_num field is populated from the output of an EC command
+> > > > > > > MOTIONSENSE_CMD_INFO. In case of legacy mode, that command may not be
+> > > > > > > available and in any case we know the EC has only either 2
+> > > > > > > accelerometers present or nothing.
+> > > > > > >
+> > > > > > > For instance, let's compare a legacy device with a more recent one:
+> > > > > > >
+> > > > > > > legacy:
+> > > > > > > type                  |   id          | sensor_num   | device name
+> > > > > > > accelerometer  |   0           |   0                  | cros-ec-accel.0
+> > > > > > > accelerometer  |   1           |   1                  | cros-ec-accel.1
+> > > > > > >
+> > > > > > > Modern:
+> > > > > > > type                  |   id          | sensor_num   | device name
+> > > > > > > accelerometer  |   0           |   0                  | cros-ec-accel.0
+> > > > > > > accelerometer  |   1           |   1                  | cros-ec-accel.1
+> > > > > > > gyroscope        |    0          |    2                 | cros-ec-gyro.0
+> > > > > > > magnetometer |    0          |   3                  | cros-ec-mag.0
+> > > > > > > light                  |    0          |   4                  | cros-ec-light.0
+> > > > > > > ...
+> > > > > >
+> > > > > > Why can't these numbers be assigned at runtime?
+> > > > > I assume you want to know why IIO drivers need to know "sensor_num"
+> > > > > ahead of time. It is because each IIO driver is independent from the
+> > > > > other.
+> > > > > Let assume there was 2 light sensors in the device:
+> > > > > type                  |   id          | sensor_num   | device name
+> > > > >  light                  |    0          |   4                  | cros-ec-light.0
+> > > > >  light                  |    1          |   5                  | cros-ec-light.1
+> > > > >
+> > > > > In case of sensors of the same type without sensor_num, cros-ec-light
+> > > > > driver has no information at probe time if it should bind to sensors
+> > > > > named by the EC 4 or 5.
+> > > > >
+> > > > > We could get away with cros-ec-accel, as EC always presents
+> > > > > accelerometers with sensor_num  0 and 1, but I don't want to rely on
+> > > > > this property in the general case.
+> > > > > Only cros_ec_dev MFD driver has the global view of all sensors available.
+> > > >
+> > > > Well seeing as this implementation has already been accepted and you're
+> > > > only *using* it, rather than creating it, I think this conversation is
+> > > > moot.  It looks like the original implementation patch was not
+> > > > reviewed by me, which is frustrating since I would have NACKed it.
+> > > >
+> > > > Just so you know, pointlessly enumerating identical devices manually
+> > > > is not a good practice.  It is one we reject all the time.  This
+> > > > imp. should too have been rejected on submission.
+> >
+> > > I wrote the original code, Enric submitted it, so I am not just using it.
+> >
+> > My point was, *this* patch is just using it.  The implementation has
+> > already been applied to the mainline kernel.  Who wrote the initial
+> > commit is not important at this point.
+> >
+> > > We can work on implementing the right way. Which model should I follow?
+> > > The code function is similar to HID sensor hub code which is done in
+> > > driver/hid/hid-sensor-hub.c [sensor_hub_probe()] which calls
+> > > mfd_add_hotplug_devices() with an array of mfd_cell,
+> > > hid_sensor_hub_client_devs. Each cell platfom_data contains  a hsdev
+> > > structure that is shared between the iio driver and the hid sensor hub
+> > > driver. hsdev->usage information is sent back and forth between
+> > > specialized hid IIO device driver and the HID sensor hub driver, for
+> > > example when sensor_hub_input_attr_get_raw_value() is called.
+> > > hsdev->usage has the same usage a sensor_num I am using.
+> >
+> > It looks like the HID Usage implementation is using a set of
+> > pre-defined values to identify sensor *types*:
+> >
+> >   include/linux/hid-sensor-ids.h
+> Yes, hsdev->usage, aka usage_id define the types between 0x00 and 0xFF.
+> For accessing a paritcualre fileds, we use attr_usage_id, between
+> 0x100 and 0x7FF.
+> AFAIK, a sensorhub/collection can not contain to sensor of the same type.
+> >
+> > Where as your implementation is confusing me.  In some instances you
+> > are using it as what looks like an *index* into a register set:
+> >
+> >   ec_cmd_read_u16(st->ec,
+> >                 EC_MEMMAP_ACC_DATA +
+> >                 sizeof(s16) *
+> >                 (1 + i + st->sensor_num * MAX_AXIS),
+> >                 data);
+> >
+> > And at other times it is used for sensor *types*, but in a very
+> > limited way:
+> >
+> >   enum motionsensor_location {
+> >           MOTIONSENSE_LOC_BASE = 0,
+> >           MOTIONSENSE_LOC_LID = 1,
+> >           MOTIONSENSE_LOC_MAX,
+> >   };
+> >
+> >   static char *cros_ec_accel_legacy_loc_strings[] = {
+> >           [MOTIONSENSE_LOC_BASE] = "base",
+> >           [MOTIONSENSE_LOC_LID] = "lid",
+> >           [MOTIONSENSE_LOC_MAX] = "unknown",
+> >   };
+> >
+> >   return sprintf(buf, "%s\n",
+> >                  cros_ec_accel_legacy_loc_strings[st->sensor_num +
+> >                                                 MOTIONSENSE_LOC_BASE]);
+> In the legacy case, the location is hard-coded from sensor_num, the
+> index used by the EC: sensor 0 is in base, 1 is in the lid.
+> This limitation is removed from newer EC implementation, the EC
+> subcommand MOTIONSENSE_CMD_INFO provide that information.
+> >
+> > > I am not enumerating identical devices twice: the embedded controller
+> > > manages a list of sensors:
+> > >
+> > > For instance on pixelbook, it look like:
+> > >        +--------+
+> > >         | EC    |
+> > >        +--------+
+> > >    ( via several i2c/spi buses)
+> > > +--------------------+--------------+-------- ...
+> > > |                         |                  |
+> > > IMU (base)     light/prox    Accelrometer (lid)
+> > > |
+> > > Magnetometer
+> > >
+> > > A given hardware sensor may be composed of multiple logical sensors
+> > > (IMU is a accelerometer and a gyroscope into one package).
+> > >
+> > > The EC firmware list all the (logical) sensors in array, and that
+> > > unique index - sensor_num - points to a single logical sensor.
+> >
+> > What what is 'sensor_num'; is it a channel address/number similar to
+> > what I2C HIDs use to communicate over a specific I2C line, or is it a
+> > type, similar to what HID devices provide on request for
+> > identification purposes?
+> >
+> > > Is it more acceptable if I use PLATFORM_DEVID_AUTO instead of
+> > > assigning .id myself?
+> >
+> > Is this a separate question, or can 'sensor_num' be any unique
+> > arbitrary number?
+> No, it is assigned by the EC.
 
-My qemu powerpc_pseries_le_defconfig boots failed today with the following
-output at shutdown time:
+Is it assigned *by* the EC or *to* the EC.
 
-# halt
-# Stopping network...[   32.109495] watchdog: BUG: soft lockup - CPU#0 stuc=
-k for 22s! [ifdown:97]
-[   32.109794] Modules linked in:
-[   32.110367] CPU: 0 PID: 97 Comm: ifdown Not tainted 5.2.0-rc3 #2
-[   32.110577] NIP:  c000000000bbeb38 LR: c000000000bbf0a0 CTR: 00000000000=
-00000
-[   32.110732] REGS: c00000007c50f4d0 TRAP: 0901   Not tainted  (5.2.0-rc3)
-[   32.110813] MSR:  8000000000009033 <SF,EE,ME,IR,DR,RI,LE>  CR: 24422422 =
- XER: 20000000
-[   32.111162] CFAR: c000000000bbf09c IRQMASK: 0=20
-[   32.111162] GPR00: c0000000002fa540 c00000007c50f760 c00000000119c100 c0=
-0000007c50f7b8=20
-[   32.111162] GPR04: ffffffffffffffff 000000000000000f c00000007c50f8f0 00=
-00000000000003=20
-[   32.111162] GPR08: c00000007d468450 0000000000000003 c00c000000006834 c0=
-0000007ffe7000=20
-[   32.111162] GPR12: c000000001268a90 c000000001380000=20
-[   32.112430] NIP [c000000000bbeb38] xas_load+0x8/0xd0
-[   32.112506] LR [c000000000bbf0a0] xas_find+0x1b0/0x260
-[   32.112737] Call Trace:
-[   32.112859] [c00000007c50f760] [c000000000bbf0a0] xas_find+0x1b0/0x260 (=
-unreliable)
-[   32.113082] [c00000007c50f790] [c0000000002fa540] find_get_entries+0x2e0=
-/0x350
-[   32.113204] [c00000007c50f840] [c00000000031fe08] shmem_undo_range+0x2d8=
-/0xa90
-[   32.113292] [c00000007c50f9f0] [c0000000003205ec] shmem_truncate_range+0=
-x2c/0x60
-[   32.113381] [c00000007c50fa20] [c000000000320ca4] shmem_setattr+0x3a4/0x=
-3e0
-[   32.113467] [c00000007c50fa80] [c00000000040e600] notify_change+0x2d0/0x=
-5c0
-[   32.113596] [c00000007c50fae0] [c0000000003d8f7c] do_truncate+0x9c/0x140
-[   32.113672] [c00000007c50fb70] [c0000000003f66d8] path_openat+0x848/0x16=
-60
-[   32.113747] [c00000007c50fc70] [c0000000003f900c] do_filp_open+0x8c/0x120
-[   32.113816] [c00000007c50fda0] [c0000000003da9e8] do_sys_open+0x248/0x350
-[   32.113956] [c00000007c50fe20] [c00000000000bce4] system_call+0x5c/0x70
-[   32.114123] Instruction dump:
-[   32.114508] 4e800020 60000000 3900c005 7fa94040 409dff60 7d291674 2f8900=
-00 419eff54=20
-[   32.114651] 38600000 4e800020 3c4c005e 3842d5d0 <7c0802a6> fbe1fff8 7c7f=
-1b78 f8010010=20
+If it is assigned *by* the EC, can't you ask the EC for it?
 
-Reverting commit
+I asked this before, but was not given the answer I wanted:
 
-  fa858b6eec3f ("XArray: Add xas_replace")
+> > Why can't these numbers be assigned at runtime?
+> I assume you want to know why IIO drivers need to know "sensor_num"
+> ahead of time. It is because each IIO driver is independent from the
+> other.
 
-made the failure go away.
+Is there a way to call into the EC and request the number?
 
---=20
-Cheers,
-Stephen Rothwell
+int cros_ec_allocate_sensor_id(enum cros_sensor_type);
 
---Sig_/+TiVC.xekiq4xkQ7ICT.F+4
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Which allocates the next available ID of the requested type.
 
------BEGIN PGP SIGNATURE-----
+OR
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz0vJcACgkQAVBC80lX
-0Gxj8gf/VjZVL3NuxGCcA/fQWIZi2QUrNTpQVsVn7/XpqL5ylaAoRCVtsqKvtJ2i
-opCS8iyYyun/S8HOqxe6Su0LCBoeb3gXXo6Vj79hdWkjK5AN49NGpQoZWLd+O7Dw
-Jx4yjHOb9RrLOBHpZFoeJqsjaneRqk3XLgT40TcCgmNF+O9Kr51nPFrbodPan3hY
-R/OzBGrascS0yaK6JQbiIL+iII55G7UgSbtups3u84kOxCJ2ysDpRjNAgsNQAMDl
-TfJ0mIkDMaUnMo6niRoOn1n1ikgWQ2gRA7aUFcjVpAjrLYkRh6ME69WFtGuUrrOY
-TwlcOgW3dwUv3gi6nz+Bgpw9ZIY9aQ==
-=3mjZ
------END PGP SIGNATURE-----
+If this is not possible AND the sensors of the same type are identical
+AND the sensors are always numbered sequentially from the same base
+(i.e. 0, 1, 2 OR 1, 2, 3, etc) then you use the ida_ API
+(include/linux/idr.h) to provide you with a unique ID for your
+sensor(s).
 
---Sig_/+TiVC.xekiq4xkQ7ICT.F+4--
+###
+
+The flip side is a situation where the devices of a same type are not
+identical and are provided different platform data (by the parent MFD
+in this case).  If this true then you may actually need to identify
+the specific sensor ahead of time, in which case it's the chosen
+nomenclature that is misleading.  What you might really be looking for
+is a sensor_id and proper commenting/documentation. 
+
+###
+
+However, looking at this patch, I suspect the former situation to be
+the case here, thus there is no requirement for the parent to
+pre-allocate 'sensor_num's.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
