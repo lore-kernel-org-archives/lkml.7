@@ -2,138 +2,252 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6783C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64681C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C030E27D17
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:54:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UaA55vFX"
+	by mail.kernel.org (Postfix) with ESMTP id 30DF027D1B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:54:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727468AbfFCHyN (ORCPT
+        id S1727499AbfFCHy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 03:54:13 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37394 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726656AbfFCHyK (ORCPT
+        Mon, 3 Jun 2019 03:54:26 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53946 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726656AbfFCHyZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 03:54:10 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 22so1684698wmg.2;
-        Mon, 03 Jun 2019 00:54:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Vxn++X6GnNn7FvRm2GLwCr6U91lHVxlpb9LxLQUYoh8=;
-        b=UaA55vFXUfkwbZG1fE7WZ3BEU/NRz3EniJlHgVBM/EDOoI+hIjRj09/ae1Pl4bHi9b
-         Rh0+ZR+hWmbGNRI24pI29x0wGunvVOsLfbNgkJk1kzx3SVl/klB+IuEyzfp2oY9s9zdF
-         wm5ciRxDVw12GbJ0SfU8YpQl27uoRnFxeaTv4RDr+3Q6F5bf38Oy0djTORRtPA55Q7lr
-         gSJut3+7O3lkELl0qvFS87+AMZQT7i2zBlBXZzjBJJJvIXo7bk1/0mdRz4ZURgGMvLmM
-         IwJdpJ1NpWDp3CdNKNjR0BlaCg5N0atpWN838Y0INAuA8kHuEqYRCBKVDqszMJshdVZK
-         nNcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Vxn++X6GnNn7FvRm2GLwCr6U91lHVxlpb9LxLQUYoh8=;
-        b=DtaPX48hcQUlYuEWXkdpz07zcSieDaVGpViYuavlSEr9IoqXFLcE1hk+chnkAp+a2b
-         pcDbxBNPzb9nl34tfEbu1QHm3zl5cJj+qc4XL3xCKA5bI76vznHNUqm7KB7si5HcNbcK
-         ptEsHLks/AdjSRzIfgMP9oDv33h1rgmPcckXhseklSDL2lF9Oa1F4+xg9f8ZAG2h1384
-         rmqRuqGqQoaZApv/w2CFezjL7e8YbGJ/ksHgWZAg9zaB3nkcYAcrZbH6EhXn9AV3e5vo
-         7jgnvAJzhhMM3ZXPWneOhaicACKId+wrBsHA2y82s2AWycSdholsj/bm/Xmm2EgOBIZu
-         8cqA==
-X-Gm-Message-State: APjAAAWCNnvc4Oky1BFdRnsLrPC6Y1SrkAiWIWAVLM/rgrdO42Hg9KN+
-        CzOB06m+Le335o2fd9JdsYEmrmIhPmwxj9TbZeU=
-X-Google-Smtp-Source: APXvYqw9kMPf+INXeMqlOFlFgNgw0nEIS42SjTDd0sxR9d2hrhqUuyp/FltCIycXfO33ebmylOwNZSqfjQ0mSG0kHZc=
-X-Received: by 2002:a1c:eb16:: with SMTP id j22mr1122553wmh.56.1559548447660;
- Mon, 03 Jun 2019 00:54:07 -0700 (PDT)
+        Mon, 3 Jun 2019 03:54:25 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x537lRLO030319
+        for <linux-kernel@vger.kernel.org>; Mon, 3 Jun 2019 03:54:23 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2svwjcmq70-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 03:54:23 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Mon, 3 Jun 2019 08:54:21 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 3 Jun 2019 08:54:18 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x537sHRi52101374
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 3 Jun 2019 07:54:17 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 96E1EA405C;
+        Mon,  3 Jun 2019 07:54:17 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4B4AAA4062;
+        Mon,  3 Jun 2019 07:54:17 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.152.224.146])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  3 Jun 2019 07:54:17 +0000 (GMT)
+Subject: Re: [KVM] 2ee567d31a: kernel_selftests.kvm.make_fail
+To:     kernel test robot <rong.a.chen@intel.com>
+Cc:     Thomas Huth <thuth@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, lkp@01.org
+References: <20190603023112.GL22325@shao2-debian>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ syiRa+UVlsKmx1hsEg==
+Date:   Mon, 3 Jun 2019 09:54:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <1559532216-12114-1-git-send-email-92siuyang@gmail.com>
-In-Reply-To: <1559532216-12114-1-git-send-email-92siuyang@gmail.com>
-From:   Xin Long <lucien.xin@gmail.com>
-Date:   Mon, 3 Jun 2019 15:53:56 +0800
-Message-ID: <CADvbK_eUYhP=pSLqHdBp8E3-NJP28=jErSSvW5moO9WVK=X8XQ@mail.gmail.com>
-Subject: Re: [PATCH] ipvlan: Don't propagate IFF_ALLMULTI changes on down interfaces.
-To:     Young Xiao <92siuyang@gmail.com>
-Cc:     davem <davem@davemloft.net>,
-        Daniel Borkmann <daniel@iogearbox.net>, petrm@mellanox.com,
-        jiri@mellanox.com, idosch@mellanox.com, uehaibing@huawei.com,
-        Hangbin Liu <liuhangbin@gmail.com>,
-        network dev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190603023112.GL22325@shao2-debian>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: base64
+X-TM-AS-GCONF: 00
+x-cbid: 19060307-4275-0000-0000-0000033B9538
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19060307-4276-0000-0000-0000384B9E8D
+Message-Id: <ca2f7911-43dc-de4c-a9e3-dce7fd8afe9b@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-03_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=647 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906030058
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 3, 2019 at 11:22 AM Young Xiao <92siuyang@gmail.com> wrote:
->
-> Clearing the IFF_ALLMULTI flag on a down interface could cause an allmulti
-> overflow on the underlying interface.
->
-> Attempting the set IFF_ALLMULTI on the underlying interface would cause an
-> error and the log message:
->
-> "allmulti touches root, set allmulti failed."
-s/root/roof
+T24gMDMuMDYuMTkgMDQ6MzEsIGtlcm5lbCB0ZXN0IHJvYm90IHdyb3RlOg0KPiBGWUksIHdl
+IG5vdGljZWQgdGhlIGZvbGxvd2luZyBjb21taXQgKGJ1aWx0IHdpdGggZ2NjLTcpOg0KPiAN
+Cj4gY29tbWl0OiAyZWU1NjdkMzFhNTgxMmNmOTNjMGVjOTQzYjE0MmRlMjUyY2UxY2ZmICgi
+S1ZNOiBzZWxmdGVzdHM6IGVuYWJsZSBwZ3N0ZSBvcHRpb24gZm9yIHRoZSBsaW5rZXIgb24g
+czM5MCIpDQo+IGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvY2dpdC9saW51eC9rZXJuZWwvZ2l0
+L25leHQvbGludXgtbmV4dC5naXQgbWFzdGVyDQo+IA0KPiBpbiB0ZXN0Y2FzZToga2VybmVs
+X3NlbGZ0ZXN0cw0KPiB3aXRoIGZvbGxvd2luZyBwYXJhbWV0ZXJzOg0KPiANCj4gCWdyb3Vw
+OiBrc2VsZnRlc3RzLTAxDQo+IA0KPiB0ZXN0LWRlc2NyaXB0aW9uOiBUaGUga2VybmVsIGNv
+bnRhaW5zIGEgc2V0IG9mICJzZWxmIHRlc3RzIiB1bmRlciB0aGUgdG9vbHMvdGVzdGluZy9z
+ZWxmdGVzdHMvIGRpcmVjdG9yeS4gVGhlc2UgYXJlIGludGVuZGVkIHRvIGJlIHNtYWxsIHVu
+aXQgdGVzdHMgdG8gZXhlcmNpc2UgaW5kaXZpZHVhbCBjb2RlIHBhdGhzIGluIHRoZSBrZXJu
+ZWwuDQo+IHRlc3QtdXJsOiBodHRwczovL3d3dy5rZXJuZWwub3JnL2RvYy9Eb2N1bWVudGF0
+aW9uL2tzZWxmdGVzdC50eHQNCj4gDQo+IA0KPiBvbiB0ZXN0IG1hY2hpbmU6IDggdGhyZWFk
+cyBJbnRlbChSKSBDb3JlKFRNKSBpNy02NzAwIENQVSBAIDMuNDBHSHogd2l0aCA4RyBtZW1v
+cnkNCj4gDQo+IGNhdXNlZCBiZWxvdyBjaGFuZ2VzIChwbGVhc2UgcmVmZXIgdG8gYXR0YWNo
+ZWQgZG1lc2cva21zZyBmb3IgZW50aXJlIGxvZy9iYWNrdHJhY2UpOg0KPiANCj4gDQo+IElm
+IHlvdSBmaXggdGhlIGlzc3VlLCBraW5kbHkgYWRkIGZvbGxvd2luZyB0YWcNCj4gUmVwb3J0
+ZWQtYnk6IGtlcm5lbCB0ZXN0IHJvYm90IDxyb25nLmEuY2hlbkBpbnRlbC5jb20+DQoNCkkg
+Zml4ZWQgdXAgdGhlIG9mZmVuZGluZyBjb21taXQuDQogDQo+IA0KPiAyMDE5LTA1LTMxIDE4
+OjI1OjIxIG1ha2UgcnVuX3Rlc3RzIC1DIGt2bQ0KPiBtYWtlOiBFbnRlcmluZyBkaXJlY3Rv
+cnkgJy91c3Ivc3JjL3BlcmZfc2VsZnRlc3RzLXg4Nl82NC1yaGVsLTcuNi0yZWU1NjdkMzFh
+NTgxMmNmOTNjMGVjOTQzYjE0MmRlMjUyY2UxY2ZmL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3Rz
+L2t2bScNCj4gbWFrZSAtLW5vLWJ1aWx0aW4tcnVsZXMgQVJDSD14ODYgLUMgLi4vLi4vLi4v
+Li4gaGVhZGVyc19pbnN0YWxsDQo+IG1ha2VbMV06IEVudGVyaW5nIGRpcmVjdG9yeSAnL3Vz
+ci9zcmMvcGVyZl9zZWxmdGVzdHMteDg2XzY0LXJoZWwtNy42LTJlZTU2N2QzMWE1ODEyY2Y5
+M2MwZWM5NDNiMTQyZGUyNTJjZTFjZmYnDQo+IG1ha2VbMV06IExlYXZpbmcgZGlyZWN0b3J5
+ICcvdXNyL3NyYy9wZXJmX3NlbGZ0ZXN0cy14ODZfNjQtcmhlbC03LjYtMmVlNTY3ZDMxYTU4
+MTJjZjkzYzBlYzk0M2IxNDJkZTI1MmNlMWNmZicNCj4gZ2NjIC1XYWxsIC1Xc3RyaWN0LXBy
+b3RvdHlwZXMgLVd1bmluaXRpYWxpemVkIC1PMiAtZyAtc3RkPWdudTk5IC1mbm8tc3RhY2st
+cHJvdGVjdG9yIC1mbm8tUElFIC1JLi4vLi4vLi4vLi4vdG9vbHMvaW5jbHVkZSAtSS4uLy4u
+Ly4uLy4uL3Vzci9pbmNsdWRlLyAtSWluY2x1ZGUgLUlsaWIgLUlpbmNsdWRlL3g4Nl82NCAt
+SS4uICAgLWMgbGliL2Fzc2VydC5jIC1vIC91c3Ivc3JjL3BlcmZfc2VsZnRlc3RzLXg4Nl82
+NC1yaGVsLTcuNi0yZWU1NjdkMzFhNTgxMmNmOTNjMGVjOTQzYjE0MmRlMjUyY2UxY2ZmL3Rv
+b2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL2t2bS9saWIvYXNzZXJ0Lm8NCj4gZ2NjIC1XYWxsIC1X
+c3RyaWN0LXByb3RvdHlwZXMgLVd1bmluaXRpYWxpemVkIC1PMiAtZyAtc3RkPWdudTk5IC1m
+bm8tc3RhY2stcHJvdGVjdG9yIC1mbm8tUElFIC1JLi4vLi4vLi4vLi4vdG9vbHMvaW5jbHVk
+ZSAtSS4uLy4uLy4uLy4uL3Vzci9pbmNsdWRlLyAtSWluY2x1ZGUgLUlsaWIgLUlpbmNsdWRl
+L3g4Nl82NCAtSS4uICAgLWMgbGliL2VsZi5jIC1vIC91c3Ivc3JjL3BlcmZfc2VsZnRlc3Rz
+LXg4Nl82NC1yaGVsLTcuNi0yZWU1NjdkMzFhNTgxMmNmOTNjMGVjOTQzYjE0MmRlMjUyY2Ux
+Y2ZmL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL2t2bS9saWIvZWxmLm8NCj4gZ2NjIC1XYWxs
+IC1Xc3RyaWN0LXByb3RvdHlwZXMgLVd1bmluaXRpYWxpemVkIC1PMiAtZyAtc3RkPWdudTk5
+IC1mbm8tc3RhY2stcHJvdGVjdG9yIC1mbm8tUElFIC1JLi4vLi4vLi4vLi4vdG9vbHMvaW5j
+bHVkZSAtSS4uLy4uLy4uLy4uL3Vzci9pbmNsdWRlLyAtSWluY2x1ZGUgLUlsaWIgLUlpbmNs
+dWRlL3g4Nl82NCAtSS4uICAgLWMgbGliL2lvLmMgLW8gL3Vzci9zcmMvcGVyZl9zZWxmdGVz
+dHMteDg2XzY0LXJoZWwtNy42LTJlZTU2N2QzMWE1ODEyY2Y5M2MwZWM5NDNiMTQyZGUyNTJj
+ZTFjZmYvdG9vbHMvdGVzdGluZy9zZWxmdGVzdHMva3ZtL2xpYi9pby5vDQo+IGdjYyAtV2Fs
+bCAtV3N0cmljdC1wcm90b3R5cGVzIC1XdW5pbml0aWFsaXplZCAtTzIgLWcgLXN0ZD1nbnU5
+OSAtZm5vLXN0YWNrLXByb3RlY3RvciAtZm5vLVBJRSAtSS4uLy4uLy4uLy4uL3Rvb2xzL2lu
+Y2x1ZGUgLUkuLi8uLi8uLi8uLi91c3IvaW5jbHVkZS8gLUlpbmNsdWRlIC1JbGliIC1JaW5j
+bHVkZS94ODZfNjQgLUkuLiAgIC1jIGxpYi9rdm1fdXRpbC5jIC1vIC91c3Ivc3JjL3BlcmZf
+c2VsZnRlc3RzLXg4Nl82NC1yaGVsLTcuNi0yZWU1NjdkMzFhNTgxMmNmOTNjMGVjOTQzYjE0
+MmRlMjUyY2UxY2ZmL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL2t2bS9saWIva3ZtX3V0aWwu
+bw0KPiBnY2MgLVdhbGwgLVdzdHJpY3QtcHJvdG90eXBlcyAtV3VuaW5pdGlhbGl6ZWQgLU8y
+IC1nIC1zdGQ9Z251OTkgLWZuby1zdGFjay1wcm90ZWN0b3IgLWZuby1QSUUgLUkuLi8uLi8u
+Li8uLi90b29scy9pbmNsdWRlIC1JLi4vLi4vLi4vLi4vdXNyL2luY2x1ZGUvIC1JaW5jbHVk
+ZSAtSWxpYiAtSWluY2x1ZGUveDg2XzY0IC1JLi4gICAtYyBsaWIvdWNhbGwuYyAtbyAvdXNy
+L3NyYy9wZXJmX3NlbGZ0ZXN0cy14ODZfNjQtcmhlbC03LjYtMmVlNTY3ZDMxYTU4MTJjZjkz
+YzBlYzk0M2IxNDJkZTI1MmNlMWNmZi90b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy9rdm0vbGli
+L3VjYWxsLm8NCj4gZ2NjIC1XYWxsIC1Xc3RyaWN0LXByb3RvdHlwZXMgLVd1bmluaXRpYWxp
+emVkIC1PMiAtZyAtc3RkPWdudTk5IC1mbm8tc3RhY2stcHJvdGVjdG9yIC1mbm8tUElFIC1J
+Li4vLi4vLi4vLi4vdG9vbHMvaW5jbHVkZSAtSS4uLy4uLy4uLy4uL3Vzci9pbmNsdWRlLyAt
+SWluY2x1ZGUgLUlsaWIgLUlpbmNsdWRlL3g4Nl82NCAtSS4uICAgLWMgbGliL3NwYXJzZWJp
+dC5jIC1vIC91c3Ivc3JjL3BlcmZfc2VsZnRlc3RzLXg4Nl82NC1yaGVsLTcuNi0yZWU1Njdk
+MzFhNTgxMmNmOTNjMGVjOTQzYjE0MmRlMjUyY2UxY2ZmL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRl
+c3RzL2t2bS9saWIvc3BhcnNlYml0Lm8NCj4gZ2NjIC1XYWxsIC1Xc3RyaWN0LXByb3RvdHlw
+ZXMgLVd1bmluaXRpYWxpemVkIC1PMiAtZyAtc3RkPWdudTk5IC1mbm8tc3RhY2stcHJvdGVj
+dG9yIC1mbm8tUElFIC1JLi4vLi4vLi4vLi4vdG9vbHMvaW5jbHVkZSAtSS4uLy4uLy4uLy4u
+L3Vzci9pbmNsdWRlLyAtSWluY2x1ZGUgLUlsaWIveDg2XzY0IC1JaW5jbHVkZS94ODZfNjQg
+LUkuLiAgIC1jIGxpYi94ODZfNjQvcHJvY2Vzc29yLmMgLW8gL3Vzci9zcmMvcGVyZl9zZWxm
+dGVzdHMteDg2XzY0LXJoZWwtNy42LTJlZTU2N2QzMWE1ODEyY2Y5M2MwZWM5NDNiMTQyZGUy
+NTJjZTFjZmYvdG9vbHMvdGVzdGluZy9zZWxmdGVzdHMva3ZtL2xpYi94ODZfNjQvcHJvY2Vz
+c29yLm8NCj4gZ2NjIC1XYWxsIC1Xc3RyaWN0LXByb3RvdHlwZXMgLVd1bmluaXRpYWxpemVk
+IC1PMiAtZyAtc3RkPWdudTk5IC1mbm8tc3RhY2stcHJvdGVjdG9yIC1mbm8tUElFIC1JLi4v
+Li4vLi4vLi4vdG9vbHMvaW5jbHVkZSAtSS4uLy4uLy4uLy4uL3Vzci9pbmNsdWRlLyAtSWlu
+Y2x1ZGUgLUlsaWIveDg2XzY0IC1JaW5jbHVkZS94ODZfNjQgLUkuLiAgIC1jIGxpYi94ODZf
+NjQvdm14LmMgLW8gL3Vzci9zcmMvcGVyZl9zZWxmdGVzdHMteDg2XzY0LXJoZWwtNy42LTJl
+ZTU2N2QzMWE1ODEyY2Y5M2MwZWM5NDNiMTQyZGUyNTJjZTFjZmYvdG9vbHMvdGVzdGluZy9z
+ZWxmdGVzdHMva3ZtL2xpYi94ODZfNjQvdm14Lm8NCj4gYXIgY3JzIC91c3Ivc3JjL3BlcmZf
+c2VsZnRlc3RzLXg4Nl82NC1yaGVsLTcuNi0yZWU1NjdkMzFhNTgxMmNmOTNjMGVjOTQzYjE0
+MmRlMjUyY2UxY2ZmL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL2t2bS9saWJrdm0uYSAvdXNy
+L3NyYy9wZXJmX3NlbGZ0ZXN0cy14ODZfNjQtcmhlbC03LjYtMmVlNTY3ZDMxYTU4MTJjZjkz
+YzBlYzk0M2IxNDJkZTI1MmNlMWNmZi90b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy9rdm0vbGli
+L2Fzc2VydC5vIC91c3Ivc3JjL3BlcmZfc2VsZnRlc3RzLXg4Nl82NC1yaGVsLTcuNi0yZWU1
+NjdkMzFhNTgxMmNmOTNjMGVjOTQzYjE0MmRlMjUyY2UxY2ZmL3Rvb2xzL3Rlc3Rpbmcvc2Vs
+ZnRlc3RzL2t2bS9saWIvZWxmLm8gL3Vzci9zcmMvcGVyZl9zZWxmdGVzdHMteDg2XzY0LXJo
+ZWwtNy42LTJlZTU2N2QzMWE1ODEyY2Y5M2MwZWM5NDNiMTQyZGUyNTJjZTFjZmYvdG9vbHMv
+dGVzdGluZy9zZWxmdGVzdHMva3ZtL2xpYi9pby5vIC91c3Ivc3JjL3BlcmZfc2VsZnRlc3Rz
+LXg4Nl82NC1yaGVsLTcuNi0yZWU1NjdkMzFhNTgxMmNmOTNjMGVjOTQzYjE0MmRlMjUyY2Ux
+Y2ZmL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL2t2bS9saWIva3ZtX3V0aWwubyAvdXNyL3Ny
+Yy9wZXJmX3NlbGZ0ZXN0cy14ODZfNjQtcmhlbC03LjYtMmVlNTY3ZDMxYTU4MTJjZjkzYzBl
+Yzk0M2IxNDJkZTI1MmNlMWNmZi90b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy9rdm0vbGliL3Vj
+YWxsLm8gL3Vzci9zcmMvcGVyZl9zZWxmdGVzdHMteDg2XzY0LXJoZWwtNy42LTJlZTU2N2Qz
+MWE1ODEyY2Y5M2MwZWM5NDNiMTQyZGUyNTJjZTFjZmYvdG9vbHMvdGVzdGluZy9zZWxmdGVz
+dHMva3ZtL2xpYi9zcGFyc2ViaXQubyAvdXNyL3NyYy9wZXJmX3NlbGZ0ZXN0cy14ODZfNjQt
+cmhlbC03LjYtMmVlNTY3ZDMxYTU4MTJjZjkzYzBlYzk0M2IxNDJkZTI1MmNlMWNmZi90b29s
+cy90ZXN0aW5nL3NlbGZ0ZXN0cy9rdm0vbGliL3g4Nl82NC9wcm9jZXNzb3IubyAvdXNyL3Ny
+Yy9wZXJmX3NlbGZ0ZXN0cy14ODZfNjQtcmhlbC03LjYtMmVlNTY3ZDMxYTU4MTJjZjkzYzBl
+Yzk0M2IxNDJkZTI1MmNlMWNmZi90b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy9rdm0vbGliL3g4
+Nl82NC92bXgubw0KPiBnY2MgLVdhbGwgLVdzdHJpY3QtcHJvdG90eXBlcyAtV3VuaW5pdGlh
+bGl6ZWQgLU8yIC1nIC1zdGQ9Z251OTkgLWZuby1zdGFjay1wcm90ZWN0b3IgLWZuby1QSUUg
+LUkuLi8uLi8uLi8uLi90b29scy9pbmNsdWRlIC1JLi4vLi4vLi4vLi4vdXNyL2luY2x1ZGUv
+IC1JaW5jbHVkZSAtSXg4Nl82NCAtSWluY2x1ZGUveDg2XzY0IC1JLi4gIC1wdGhyZWFkICAt
+bm8tcGllIC1XbCwtLXMzOTAtcGdzdGUgIHg4Nl82NC9wbGF0Zm9ybV9pbmZvX3Rlc3QuYyAv
+dXNyL3NyYy9wZXJmX3NlbGZ0ZXN0cy14ODZfNjQtcmhlbC03LjYtMmVlNTY3ZDMxYTU4MTJj
+ZjkzYzBlYzk0M2IxNDJkZTI1MmNlMWNmZi90b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy9rdm0v
+bGlia3ZtLmEgIC1vIC91c3Ivc3JjL3BlcmZfc2VsZnRlc3RzLXg4Nl82NC1yaGVsLTcuNi0y
+ZWU1NjdkMzFhNTgxMmNmOTNjMGVjOTQzYjE0MmRlMjUyY2UxY2ZmL3Rvb2xzL3Rlc3Rpbmcv
+c2VsZnRlc3RzL2t2bS94ODZfNjQvcGxhdGZvcm1faW5mb190ZXN0DQo+IC91c3IvYmluL2xk
+OiB1bnJlY29nbml6ZWQgb3B0aW9uICctLXMzOTAtcGdzdGUnDQo+IC91c3IvYmluL2xkOiB1
+c2UgdGhlIC0taGVscCBvcHRpb24gZm9yIHVzYWdlIGluZm9ybWF0aW9uDQo+IGNvbGxlY3Qy
+OiBlcnJvcjogbGQgcmV0dXJuZWQgMSBleGl0IHN0YXR1cw0KPiAuLi9saWIubWs6MTM4OiBy
+ZWNpcGUgZm9yIHRhcmdldCAnL3Vzci9zcmMvcGVyZl9zZWxmdGVzdHMteDg2XzY0LXJoZWwt
+Ny42LTJlZTU2N2QzMWE1ODEyY2Y5M2MwZWM5NDNiMTQyZGUyNTJjZTFjZmYvdG9vbHMvdGVz
+dGluZy9zZWxmdGVzdHMva3ZtL3g4Nl82NC9wbGF0Zm9ybV9pbmZvX3Rlc3QnIGZhaWxlZA0K
+PiBtYWtlOiAqKiogWy91c3Ivc3JjL3BlcmZfc2VsZnRlc3RzLXg4Nl82NC1yaGVsLTcuNi0y
+ZWU1NjdkMzFhNTgxMmNmOTNjMGVjOTQzYjE0MmRlMjUyY2UxY2ZmL3Rvb2xzL3Rlc3Rpbmcv
+c2VsZnRlc3RzL2t2bS94ODZfNjQvcGxhdGZvcm1faW5mb190ZXN0XSBFcnJvciAxDQo+IG1h
+a2U6IExlYXZpbmcgZGlyZWN0b3J5ICcvdXNyL3NyYy9wZXJmX3NlbGZ0ZXN0cy14ODZfNjQt
+cmhlbC03LjYtMmVlNTY3ZDMxYTU4MTJjZjkzYzBlYzk0M2IxNDJkZTI1MmNlMWNmZi90b29s
+cy90ZXN0aW5nL3NlbGZ0ZXN0cy9rdm0nDQo+IA0KPiANCj4gVG8gcmVwcm9kdWNlOg0KPiAN
+Cj4gICAgICAgICBnaXQgY2xvbmUgaHR0cHM6Ly9naXRodWIuY29tL2ludGVsL2xrcC10ZXN0
+cy5naXQNCj4gICAgICAgICBjZCBsa3AtdGVzdHMNCj4gICAgICAgICBiaW4vbGtwIGluc3Rh
+bGwgam9iLnlhbWwgICMgam9iIGZpbGUgaXMgYXR0YWNoZWQgaW4gdGhpcyBlbWFpbA0KPiAg
+ICAgICAgIGJpbi9sa3AgcnVuICAgICBqb2IueWFtbA0KPiANCj4gDQo+IFRoYW5rcywNCj4g
+Um9uZyBDaGVuDQo+IA0K
 
-I guess this patch was inspired by:
-
-commit bbeb0eadcf9fe74fb2b9b1a6fea82cd538b1e556
-Author: Peter Christensen <pch@ordbogen.com>
-Date:   Thu May 8 11:15:37 2014 +0200
-
-    macvlan: Don't propagate IFF_ALLMULTI changes on down interfaces.
-
-I could trigger this error on macvlan prior to this patch with:
-
-  # ip link add mymacvlan1 link eth2 type macvlan mode bridge
-  # ip link set mymacvlan1 up
-  # ip link set mymacvlan1 allmulticast on
-  # ip link set mymacvlan1 down
-  # ip link set mymacvlan1 allmulticast off
-  # ip link set mymacvlan1 allmulticast on
-
-but not on ipvlan, could you?
-
-macvlan had this problem, as lowerdev's allmulticast is cleared when doing
-dev_stop and set when doing dev_open, which doesn't happen on ipvlan.
-
-So I'd think this patch fixes nothing unless you want to add
-dev_set_allmulti(1/-1) in ipvlan_open/stop(), but that's another topic.
-
-did I miss something?
-
->
-> Signed-off-by: Young Xiao <92siuyang@gmail.com>
-> ---
->  drivers/net/ipvlan/ipvlan_main.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/net/ipvlan/ipvlan_main.c b/drivers/net/ipvlan/ipvlan_main.c
-> index bbeb162..523bb83 100644
-> --- a/drivers/net/ipvlan/ipvlan_main.c
-> +++ b/drivers/net/ipvlan/ipvlan_main.c
-> @@ -242,8 +242,10 @@ static void ipvlan_change_rx_flags(struct net_device *dev, int change)
->         struct ipvl_dev *ipvlan = netdev_priv(dev);
->         struct net_device *phy_dev = ipvlan->phy_dev;
->
-> -       if (change & IFF_ALLMULTI)
-> -               dev_set_allmulti(phy_dev, dev->flags & IFF_ALLMULTI? 1 : -1);
-> +       if (dev->flags & IFF_UP) {
-> +               if (change & IFF_ALLMULTI)
-> +                       dev_set_allmulti(phy_dev, dev->flags & IFF_ALLMULTI ? 1 : -1);
-> +       }
->  }
->
->  static void ipvlan_set_multicast_mac_filter(struct net_device *dev)
-> --
-> 2.7.4
->
