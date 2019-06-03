@@ -2,192 +2,641 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 505BCC28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F43C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29E4423F94
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:23:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="QGgQrPwV"
+	by mail.kernel.org (Postfix) with ESMTP id 2CBBF245C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:23:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559579004;
+	bh=TKEEvjMfbj7ovxudhhzgPjF8nlB8tGYkRbPDq8wUvrg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Z2k3pebJBq8OtpNLG9EgoDwWz1Mz2z7afpVu+mlD34LrC9oy5vmN68lnOvVRbv7im
+	 ++JeBgdAFs352wOSBsQV58TqMvbSYQ7p9V86+0s1CoVUDKM06Cr9RxD5kljUWRNSAQ
+	 SUkxfBc9iMoGBocZIcjjBxLXoAdb0E9qK8EM88N0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729191AbfFCQXO (ORCPT
+        id S1729246AbfFCQXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 12:23:14 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46507 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727162AbfFCQXN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 12:23:13 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y11so10880210pfm.13
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 09:23:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=JANRXtNq/OlXEVUckmhj0Gl/WVjY8ue45Pv7dcHW6sM=;
-        b=QGgQrPwVRdf1FporyJuiYg8dww4nmTS56JSFMbwI0B2HL2g870kOaQE9Ywt0x006N6
-         PjQFzmPuMSqVgpLiHGQiHxKi+RNegLkeQbj9M/kqEAraRxIHkA9uTMK+9MY40yM1oNUU
-         5RSFX82A4bupgDJL3ID6O1kJCNBQ58xyApRr93QMRGu7ilTUQKe3S+1NMJg8dP1ccaFA
-         H9LgGRGjK46Hz1/8qSOzwXc4iBACaNU/zFlTIHtoP7vs7a5etSrbMcZ3Xa4KVMiZdd7M
-         27X98Iw/B26uLHcsFuTvb75LvBV0snxsJTFjnQkkPdtn8eciopq44UTkUBjqPGHN3ZFh
-         JbLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JANRXtNq/OlXEVUckmhj0Gl/WVjY8ue45Pv7dcHW6sM=;
-        b=doyUWv0izmqgBU2ekISB12cDkGh1ea8NR9KoR/qCevuEZ2VL/cUeP2dX0oXNFWm652
-         whMRClDoWAPrvR1c8HxkX92FtnsasWvaCGf8dL2m5f6wqdhq7nP4iQKjx9OXGxDl8tXq
-         2q5FjhmAyWUQbOSA2eOmsh8z+Pj/it95slDLGz6Up/N9N8wXiAuM2frWSjrsk+4g6r3F
-         QApPt49I1VjOzEeNQyAk4oPJxyaQ7NzROvQs4FTcTNcCXG4Zlu/aw3n/bl6ESgtom7kA
-         JoKlBRiOrSZPlATSQXHuMVkYoz94IGq8IsIEAHHLtszDgMl2bAFnqwxZ9jZog8hz+bfW
-         U/iw==
-X-Gm-Message-State: APjAAAXqsxBxuHgmByqvLyVI+HTi9g9q318sDpmED7J+9qQizamPkWGs
-        QpomVQzAsYfyNyDWzMNzPiY8GTghTkIaEA==
-X-Google-Smtp-Source: APXvYqwCufEoyFE7wi6ZCH5aXURbYNyTbhnYSnr2KtWTknjUQ1XLoDXrpTilRUIYKKwXpC5/rlOvWQ==
-X-Received: by 2002:a17:90a:195e:: with SMTP id 30mr31687487pjh.116.1559578991519;
-        Mon, 03 Jun 2019 09:23:11 -0700 (PDT)
-Received: from [192.168.1.158] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id d10sm16947450pgh.43.2019.06.03.09.23.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Jun 2019 09:23:10 -0700 (PDT)
-Subject: Re: [PATCH] block: fix a crash in do_task_dead()
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org, hch@lst.de,
-        oleg@redhat.com, gkohli@codeaurora.org, mingo@redhat.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <1559161526-618-1-git-send-email-cai@lca.pw>
- <20190530080358.GG2623@hirez.programming.kicks-ass.net>
- <82e88482-1b53-9423-baad-484312957e48@kernel.dk>
- <20190603123705.GB3419@hirez.programming.kicks-ass.net>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <9a75cc4f-bd14-1d98-6653-b49a2842dd16@kernel.dk>
-Date:   Mon, 3 Jun 2019 10:23:09 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 3 Jun 2019 12:23:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52446 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727162AbfFCQXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 12:23:22 -0400
+Received: from localhost (unknown [104.132.1.68])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 993DA23F94;
+        Mon,  3 Jun 2019 16:23:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559579000;
+        bh=TKEEvjMfbj7ovxudhhzgPjF8nlB8tGYkRbPDq8wUvrg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JmwfSaPSkYd6dtSbWq0Q3Zf9aO6JJj1783GZqLooACG0KJSI8IQv9l/EKWVrO58/P
+         KRniuOa+VoU7WBdUrW6k8oav/Rm4DiktlBWJSvFTFT5RgOQxT+1igvW2GgbsluGUx5
+         XPg8453ddlhBs0y27REEjylSVHWO+XezIyAzFiek=
+Date:   Mon, 3 Jun 2019 09:23:19 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     sunqiuyang <sunqiuyang@huawei.com>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [PATCH v6 1/1] f2fs: ioctl for removing a range from F2FS
+Message-ID: <20190603162319.GA34729@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190524015555.12622-1-sunqiuyang@huawei.com>
+ <20190530160626.GA28719@jaegeuk-macbookpro.roam.corp.google.com>
+ <786721cc-90eb-cf2c-eed8-3be0ef9dff8c@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20190603123705.GB3419@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <786721cc-90eb-cf2c-eed8-3be0ef9dff8c@huawei.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/3/19 6:37 AM, Peter Zijlstra wrote:
-> On Fri, May 31, 2019 at 03:12:13PM -0600, Jens Axboe wrote:
->> On 5/30/19 2:03 AM, Peter Zijlstra wrote:
+On 05/31, Chao Yu wrote:
+> On 2019/5/31 0:06, Jaegeuk Kim wrote:
+> > On 05/24, sunqiuyang wrote:
+> >> From: Qiuyang Sun <sunqiuyang@huawei.com>
+> >>
+> >> This ioctl shrinks a given length (aligned to sections) from end of the
+> >> main area. Any cursegs and valid blocks will be moved out before
+> >> invalidating the range.
+> >>
+> >> This feature can be used for adjusting partition sizes online.
+> >> --
+> >> Changlog v1 ==> v2:
+> >>
+> >> Sahitya Tummala:
+> >>  - Add this ioctl for f2fs_compat_ioctl() as well.
+> >>  - Fix debugfs status to reflect the online resize changes.
+> >>  - Fix potential race between online resize path and allocate new data
+> >>    block path or gc path.
+> >>
+> >> Others:
+> >>  - Rename some identifiers.
+> >>  - Add some error handling branches.
+> >>  - Clear sbi->next_victim_seg[BG_GC/FG_GC] in shrinking range.
+> >> --
+> >> Changelog v2 ==> v3:
+> >> Implement this interface as ext4's, and change the parameter from shrunk
+> >> bytes to new block count of F2FS.
+> >> --
+> >> Changelog v3 ==> v4:
+> >>  - During resizing, force to empty sit_journal and forbid adding new
+> >>    entries to it, in order to avoid invalid segno in journal after resize.
+> >>  - Reduce sbi->user_block_count before resize starts.
+> >>  - Commit the updated superblock first, and then update in-memory metadata
+> >>    only when the former succeeds.
+> >>  - Target block count must align to sections.
+> >> --
+> >> Changelog v4 ==> v5:
+> >> Write checkpoint before and after committing the new superblock, w/o
+> >> CP_FSCK_FLAG respectively, so that the FS can be fixed by fsck even if
+> >> resize fails after the new superblock is committed.
+> >> --
+> >> Changelog v5 ==> v6:
+> >>  - In free_segment_range(), reduce granularity of gc_mutex.
+> >>  - Add protection on curseg migration.
+> >>
+> >> Signed-off-by: Qiuyang Sun <sunqiuyang@huawei.com>
+> >> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> >> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+> >> ---
+> >>  fs/f2fs/checkpoint.c |   5 +-
+> >>  fs/f2fs/debug.c      |   7 +++
+> >>  fs/f2fs/f2fs.h       |   7 +++
+> >>  fs/f2fs/file.c       |  28 +++++++++++
+> >>  fs/f2fs/gc.c         | 134 ++++++++++++++++++++++++++++++++++++++++++++++++++-
+> >>  fs/f2fs/segment.c    |  54 +++++++++++++++++----
+> >>  fs/f2fs/segment.h    |   1 +
+> >>  fs/f2fs/super.c      |   4 ++
+> >>  8 files changed, 228 insertions(+), 12 deletions(-)
+> >>
+> >> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+> >> index ed70b68..4706d0a 100644
+> >> --- a/fs/f2fs/checkpoint.c
+> >> +++ b/fs/f2fs/checkpoint.c
+> >> @@ -1313,8 +1313,11 @@ static void update_ckpt_flags(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+> >>  	else
+> >>  		__clear_ckpt_flags(ckpt, CP_ORPHAN_PRESENT_FLAG);
+> >>  
+> >> -	if (is_sbi_flag_set(sbi, SBI_NEED_FSCK))
+> >> +	if (is_sbi_flag_set(sbi, SBI_NEED_FSCK) ||
+> >> +		is_sbi_flag_set(sbi, SBI_IS_RESIZEFS))
+> >>  		__set_ckpt_flags(ckpt, CP_FSCK_FLAG);
+> >> +	else
+> >> +		__clear_ckpt_flags(ckpt, CP_FSCK_FLAG);
+> > 
+> > We don't need to clear this flag.
 > 
->>> What is the purpose of that patch ?! The Changelog doesn't mention any
->>> benefit or performance gain. So why not revert that?
->>
->> Yeah that is actually pretty weak. There are substantial performance
->> gains for small IOs using this trick, the changelog should have
->> included those. I guess that was left on the list...
+> During resizefs, we may face inconsistent status of filesystem's on-disk data,
+> so I propose to use below flow, so once some thing breaks resizefs, fsck can
+> detect the corruption by the CP_FSCK_FLAG directly.
 > 
-> OK. I've looked at the try_to_wake_up() path for these exact
-> conditions and we're certainly sub-optimal there, and I think we can put
-> much of this special case in there. Please see below.
+> - resizefs()
+>  - set SBI_IS_RESIZEFS
+>  - do_checkpoint()
+>   - if (is_resizing)
+>    - set CP_FSCK_FLAG
 > 
->> I know it's not super kosher, your patch, but I don't think it's that
->> bad hidden in a generic helper.
+>  - clear SBI_IS_RESIZEFS
+>  - do_checkpoint()
+>   - if (!is_resizing && not_need_fsck)
+>    - clear CP_FSCK_FLAG
 > 
-> How about the thing that Oleg proposed? That is, not set a waiter when
-> we know the loop is polling? That would avoid the need for this
-> alltogether, it would also avoid any set_current_state() on the wait
-> side of things.
-> 
-> Anyway, Oleg, do you see anything blatantly buggered with this patch?
-> 
-> (the stats were already dodgy for rq-stats, this patch makes them dodgy
-> for task-stats too)
-> 
-> ---
->   kernel/sched/core.c | 38 ++++++++++++++++++++++++++++++++------
->   1 file changed, 32 insertions(+), 6 deletions(-)
-> 
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 102dfcf0a29a..474aa4c8e9d2 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -1990,6 +1990,28 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
->   	unsigned long flags;
->   	int cpu, success = 0;
->   
-> +	if (p == current) {
-> +		/*
-> +		 * We're waking current, this means 'p->on_rq' and 'task_cpu(p)
-> +		 * == smp_processor_id()'. Together this means we can special
-> +		 * case the whole 'p->on_rq && ttwu_remote()' case below
-> +		 * without taking any locks.
-> +		 *
-> +		 * In particular:
-> +		 *  - we rely on Program-Order guarantees for all the ordering,
-> +		 *  - we're serialized against set_special_state() by virtue of
-> +		 *    it disabling IRQs (this allows not taking ->pi_lock).
-> +		 */
-> +		if (!(p->state & state))
-> +			goto out;
-> +
-> +		success = 1;
-> +		trace_sched_waking(p);
-> +		p->state = TASK_RUNNING;
-> +		trace_sched_woken(p);
-> +		goto out;
-> +	}
-> +
->   	/*
->   	 * If we are going to wake up a thread waiting for CONDITION we
->   	 * need to ensure that CONDITION=1 done by the caller can not be
-> @@ -1999,7 +2021,7 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
->   	raw_spin_lock_irqsave(&p->pi_lock, flags);
->   	smp_mb__after_spinlock();
->   	if (!(p->state & state))
-> -		goto out;
-> +		goto unlock;
->   
->   	trace_sched_waking(p);
->   
-> @@ -2029,7 +2051,7 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
->   	 */
->   	smp_rmb();
->   	if (p->on_rq && ttwu_remote(p, wake_flags))
-> -		goto stat;
-> +		goto unlock;
->   
->   #ifdef CONFIG_SMP
->   	/*
-> @@ -2089,12 +2111,16 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
->   #endif /* CONFIG_SMP */
->   
->   	ttwu_queue(p, cpu, wake_flags);
-> -stat:
-> -	ttwu_stat(p, cpu, wake_flags);
-> -out:
-> +unlock:
->   	raw_spin_unlock_irqrestore(&p->pi_lock, flags);
->   
-> -	return success;
-> +out:
-> +	if (success) {
-> +		ttwu_stat(p, cpu, wake_flags);
-> +		return true;
-> +	}
-> +
-> +	return false;
->   }
->   
->   /**
+> It's safe to clear CP_FSCK_FLAG if there is no resizing and corruption, as once
+> the inconsistency was detected we will keep SBI_NEED_FSCK in memory anyway, then
+> checkpoint can set CP_FSCK_FLAG again.
 
-Let me run some tests with this vs mainline vs blk wakeup hack removed.
+This tries to resize the image and I mostly worried whether fsck is able to fix
+the corrupted metadata area. Moreover, I'm in doubt we really need to do this in
+parallel with FS operations.
 
-
--- 
-Jens Axboe
-
+> 
+> > 
+> >>  
+> >>  	if (is_sbi_flag_set(sbi, SBI_CP_DISABLED))
+> >>  		__set_ckpt_flags(ckpt, CP_DISABLED_FLAG);
+> >> diff --git a/fs/f2fs/debug.c b/fs/f2fs/debug.c
+> >> index 99e9a5c..7706049 100644
+> >> --- a/fs/f2fs/debug.c
+> >> +++ b/fs/f2fs/debug.c
+> >> @@ -27,8 +27,15 @@
+> >>  static void update_general_status(struct f2fs_sb_info *sbi)
+> >>  {
+> >>  	struct f2fs_stat_info *si = F2FS_STAT(sbi);
+> >> +	struct f2fs_super_block *raw_super = F2FS_RAW_SUPER(sbi);
+> >>  	int i;
+> >>  
+> >> +	/* these will be changed if online resize is done */
+> >> +	si->main_area_segs = le32_to_cpu(raw_super->segment_count_main);
+> >> +	si->main_area_sections = le32_to_cpu(raw_super->section_count);
+> >> +	si->main_area_zones = si->main_area_sections /
+> >> +				le32_to_cpu(raw_super->secs_per_zone);
+> >> +
+> >>  	/* validation check of the segment numbers */
+> >>  	si->hit_largest = atomic64_read(&sbi->read_hit_largest);
+> >>  	si->hit_cached = atomic64_read(&sbi->read_hit_cached);
+> >> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> >> index a205d4d..345ccb0 100644
+> >> --- a/fs/f2fs/f2fs.h
+> >> +++ b/fs/f2fs/f2fs.h
+> >> @@ -423,6 +423,7 @@ static inline bool __has_cursum_space(struct f2fs_journal *journal,
+> >>  #define F2FS_IOC_SET_PIN_FILE		_IOW(F2FS_IOCTL_MAGIC, 13, __u32)
+> >>  #define F2FS_IOC_GET_PIN_FILE		_IOR(F2FS_IOCTL_MAGIC, 14, __u32)
+> >>  #define F2FS_IOC_PRECACHE_EXTENTS	_IO(F2FS_IOCTL_MAGIC, 15)
+> >> +#define F2FS_IOC_RESIZE_FS		_IOW(F2FS_IOCTL_MAGIC, 16, __u64)
+> >>  
+> >>  #define F2FS_IOC_SET_ENCRYPTION_POLICY	FS_IOC_SET_ENCRYPTION_POLICY
+> >>  #define F2FS_IOC_GET_ENCRYPTION_POLICY	FS_IOC_GET_ENCRYPTION_POLICY
+> >> @@ -1130,6 +1131,7 @@ enum {
+> >>  	SBI_QUOTA_NEED_FLUSH,			/* need to flush quota info in CP */
+> >>  	SBI_QUOTA_SKIP_FLUSH,			/* skip flushing quota in current CP */
+> >>  	SBI_QUOTA_NEED_REPAIR,			/* quota file may be corrupted */
+> >> +	SBI_IS_RESIZEFS,			/* resizefs is in process */
+> >>  };
+> >>  
+> >>  enum {
+> >> @@ -1309,6 +1311,8 @@ struct f2fs_sb_info {
+> >>  	unsigned int segs_per_sec;		/* segments per section */
+> >>  	unsigned int secs_per_zone;		/* sections per zone */
+> >>  	unsigned int total_sections;		/* total section count */
+> >> +	unsigned int current_total_sections;	/* for shrink resize */
+> >> +	struct mutex resize_mutex;		/* for resize exclusion */
+> >>  	unsigned int total_node_count;		/* total node block count */
+> >>  	unsigned int total_valid_node_count;	/* valid node block count */
+> >>  	loff_t max_file_blocks;			/* max block index of file */
+> >> @@ -3175,6 +3179,8 @@ void f2fs_clear_prefree_segments(struct f2fs_sb_info *sbi,
+> >>  int f2fs_disable_cp_again(struct f2fs_sb_info *sbi, block_t unusable);
+> >>  void f2fs_release_discard_addrs(struct f2fs_sb_info *sbi);
+> >>  int f2fs_npages_for_summary_flush(struct f2fs_sb_info *sbi, bool for_ra);
+> >> +void allocate_segment_for_resize(struct f2fs_sb_info *sbi, int type,
+> >> +					unsigned int start, unsigned int end);
+> >>  void f2fs_allocate_new_segments(struct f2fs_sb_info *sbi);
+> >>  int f2fs_trim_fs(struct f2fs_sb_info *sbi, struct fstrim_range *range);
+> >>  bool f2fs_exist_trim_candidates(struct f2fs_sb_info *sbi,
+> >> @@ -3318,6 +3324,7 @@ int f2fs_migrate_page(struct address_space *mapping, struct page *newpage,
+> >>  int f2fs_gc(struct f2fs_sb_info *sbi, bool sync, bool background,
+> >>  			unsigned int segno);
+> >>  void f2fs_build_gc_manager(struct f2fs_sb_info *sbi);
+> >> +int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count);
+> >>  
+> >>  /*
+> >>   * recovery.c
+> >> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> >> index d05ac21..6d00def 100644
+> >> --- a/fs/f2fs/file.c
+> >> +++ b/fs/f2fs/file.c
+> >> @@ -3013,6 +3013,31 @@ static int f2fs_ioc_precache_extents(struct file *filp, unsigned long arg)
+> >>  	return f2fs_precache_extents(file_inode(filp));
+> >>  }
+> >>  
+> >> +static int f2fs_ioc_resize_fs(struct file *filp, unsigned long arg)
+> >> +{
+> >> +	struct f2fs_sb_info *sbi = F2FS_I_SB(file_inode(filp));
+> >> +	__u64 block_count;
+> >> +	int ret;
+> >> +
+> >> +	if (!capable(CAP_SYS_ADMIN))
+> >> +		return -EPERM;
+> >> +
+> >> +	if (f2fs_readonly(sbi->sb))
+> >> +		return -EROFS;
+> >> +
+> >> +	if (get_user(block_count, (__u64 __user *)arg))
+> >> +		return -EFAULT;
+> >> +
+> >> +	ret = mnt_want_write_file(filp);
+> >> +	if (ret)
+> >> +		return ret;
+> >> +
+> >> +	ret = f2fs_resize_fs(sbi, block_count);
+> >> +	mnt_drop_write_file(filp);
+> >> +
+> >> +	return ret;
+> >> +}
+> >> +
+> >>  long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+> >>  {
+> >>  	if (unlikely(f2fs_cp_error(F2FS_I_SB(file_inode(filp)))))
+> >> @@ -3069,6 +3094,8 @@ long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+> >>  		return f2fs_ioc_set_pin_file(filp, arg);
+> >>  	case F2FS_IOC_PRECACHE_EXTENTS:
+> >>  		return f2fs_ioc_precache_extents(filp, arg);
+> >> +	case F2FS_IOC_RESIZE_FS:
+> >> +		return f2fs_ioc_resize_fs(filp, arg);
+> >>  	default:
+> >>  		return -ENOTTY;
+> >>  	}
+> >> @@ -3182,6 +3209,7 @@ long f2fs_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+> >>  	case F2FS_IOC_GET_PIN_FILE:
+> >>  	case F2FS_IOC_SET_PIN_FILE:
+> >>  	case F2FS_IOC_PRECACHE_EXTENTS:
+> >> +	case F2FS_IOC_RESIZE_FS:
+> >>  		break;
+> >>  	default:
+> >>  		return -ENOIOCTLCMD;
+> >> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+> >> index 963fb45..9b3af4d 100644
+> >> --- a/fs/f2fs/gc.c
+> >> +++ b/fs/f2fs/gc.c
+> >> @@ -311,10 +311,11 @@ static int get_victim_by_default(struct f2fs_sb_info *sbi,
+> >>  	struct sit_info *sm = SIT_I(sbi);
+> >>  	struct victim_sel_policy p;
+> >>  	unsigned int secno, last_victim;
+> >> -	unsigned int last_segment = MAIN_SEGS(sbi);
+> >> +	unsigned int last_segment;
+> >>  	unsigned int nsearched = 0;
+> >>  
+> >>  	mutex_lock(&dirty_i->seglist_lock);
+> >> +	last_segment = CUR_MAIN_SECS(sbi) * sbi->segs_per_sec;
+> >>  
+> >>  	p.alloc_mode = alloc_mode;
+> >>  	select_policy(sbi, gc_type, type, &p);
+> >> @@ -404,7 +405,8 @@ static int get_victim_by_default(struct f2fs_sb_info *sbi,
+> >>  				sm->last_victim[p.gc_mode] = last_victim + 1;
+> >>  			else
+> >>  				sm->last_victim[p.gc_mode] = segno + 1;
+> >> -			sm->last_victim[p.gc_mode] %= MAIN_SEGS(sbi);
+> >> +			sm->last_victim[p.gc_mode] %=
+> >> +				(CUR_MAIN_SECS(sbi) * sbi->segs_per_sec);
+> >>  			break;
+> >>  		}
+> >>  	}
+> >> @@ -1360,3 +1362,131 @@ void f2fs_build_gc_manager(struct f2fs_sb_info *sbi)
+> >>  		SIT_I(sbi)->last_victim[ALLOC_NEXT] =
+> >>  				GET_SEGNO(sbi, FDEV(0).end_blk) + 1;
+> >>  }
+> >> +
+> >> +static int free_segment_range(struct f2fs_sb_info *sbi, unsigned int start,
+> >> +							unsigned int end)
+> >> +{
+> >> +	int type;
+> >> +	unsigned int segno, next_inuse;
+> >> +	int err = 0;
+> >> +
+> >> +	/* Move out cursegs from the target range */
+> >> +	for (type = CURSEG_HOT_DATA; type < NR_CURSEG_TYPE; type++)
+> >> +		allocate_segment_for_resize(sbi, type, start, end);
+> >> +
+> >> +	/* do GC to move out valid blocks in the range */
+> >> +	for (segno = start; segno <= end; segno += sbi->segs_per_sec) {
+> >> +		struct gc_inode_list gc_list = {
+> >> +			.ilist = LIST_HEAD_INIT(gc_list.ilist),
+> >> +			.iroot = RADIX_TREE_INIT(gc_list.iroot, GFP_NOFS),
+> >> +		};
+> >> +
+> >> +		mutex_lock(&sbi->gc_mutex);
+> >> +		do_garbage_collect(sbi, segno, &gc_list, FG_GC);
+> >> +		mutex_unlock(&sbi->gc_mutex);
+> >> +		put_gc_inode(&gc_list);
+> >> +
+> >> +		if (get_valid_blocks(sbi, segno, true))
+> >> +			return -EAGAIN;
+> >> +	}
+> >> +
+> >> +	err = f2fs_sync_fs(sbi->sb, 1);
+> >> +	if (err)
+> >> +		return err;
+> >> +
+> >> +	next_inuse = find_next_inuse(FREE_I(sbi), end + 1, start);
+> >> +	if (next_inuse <= end) {
+> >> +		f2fs_msg(sbi->sb, KERN_ERR,
+> >> +			"segno %u should be free but still inuse!", next_inuse);
+> >> +		f2fs_bug_on(sbi, 1);
+> >> +	}
+> >> +	return err;
+> >> +}
+> >> +
+> >> +int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
+> >> +{
+> >> +	__u64 old_block_count, shrunk_blocks;
+> >> +	unsigned int secs;
+> >> +	int gc_mode, gc_type;
+> >> +	int err = 0;
+> >> +
+> >> +	old_block_count = le64_to_cpu(F2FS_RAW_SUPER(sbi)->block_count);
+> >> +	if (block_count > old_block_count)
+> >> +		return -EINVAL;
+> >> +
+> >> +	/* new fs size should align to section size */
+> >> +	if (block_count % BLKS_PER_SEC(sbi))
+> >> +		return -EINVAL;
+> >> +
+> >> +	if (block_count == old_block_count)
+> >> +		return 0;
+> > 
+> > 	if (is_sbi_flag_set(sbi, SBI_NEED_FSCK)) {
+> > 		f2fs_msg(sbi->sb, KERN_ERR,
+> > 				"Should run fsck to repair first.");
+> > 		return -EINVAL;
+> > 	}
+> > 
+> > 	if (test_opt(sbi, DISABLE_CHECKPOINT)) {
+> > 		f2fs_msg(sbi->sb, KERN_ERR,
+> > 				"Checkpoint should be enabled.");
+> > 		return -EINVAL;
+> > 	}
+> > 
+> > Do we need to freeze_bdev and thaw_bdev for this?
+> 
+> Agreed.
+> 
+> > 
+> >> +
+> >> +	shrunk_blocks = old_block_count - block_count;
+> >> +	secs = shrunk_blocks / BLKS_PER_SEC(sbi);
+> >> +	spin_lock(&sbi->stat_lock);
+> >> +	if (shrunk_blocks + valid_user_blocks(sbi) +
+> >> +		sbi->current_reserved_blocks + sbi->unusable_block_count +
+> >> +		F2FS_OPTION(sbi).root_reserved_blocks > sbi->user_block_count)
+> >> +		err = -ENOSPC;
+> >> +	else
+> >> +		sbi->user_block_count -= shrunk_blocks;
+> >> +	spin_unlock(&sbi->stat_lock);
+> >> +	if (err)
+> >> +		return err;
+> >> +
+> >> +	mutex_lock(&sbi->resize_mutex);
+> >> +	set_sbi_flag(sbi, SBI_IS_RESIZEFS);
+> >> +	mutex_lock(&DIRTY_I(sbi)->seglist_lock);
+> >> +	CUR_MAIN_SECS(sbi) = MAIN_SECS(sbi) - secs;
+> > 
+> > 	OLD_MAIN_SECS(sbi) = MAIN_SECS(sbi);
+> > 	MAIN_SECS(sbi) -= secs;
+> > 
+> >> +	for (gc_mode = 0; gc_mode < MAX_GC_POLICY; gc_mode++)
+> >> +		if (SIT_I(sbi)->last_victim[gc_mode] >=
+> >> +					CUR_MAIN_SECS(sbi) * sbi->segs_per_sec)
+> >> +			SIT_I(sbi)->last_victim[gc_mode] = 0;
+> >> +	for (gc_type = BG_GC; gc_type <= FG_GC; gc_type++)
+> >> +		if (sbi->next_victim_seg[gc_type] >=
+> >> +					CUR_MAIN_SECS(sbi) * sbi->segs_per_sec)
+> >> +			sbi->next_victim_seg[gc_type] = NULL_SEGNO;
+> >> +	mutex_unlock(&DIRTY_I(sbi)->seglist_lock);
+> >> +
+> >> +	err = free_segment_range(sbi, CUR_MAIN_SECS(sbi) * sbi->segs_per_sec,
+> >> +			MAIN_SEGS(sbi) - 1);
+> >> +	if (err)
+> >> +		goto out;
+> >> +
+> >> +	/* Update superblock */
+> >> +	F2FS_RAW_SUPER(sbi)->section_count = cpu_to_le32(CUR_MAIN_SECS(sbi));
+> >> +	F2FS_RAW_SUPER(sbi)->segment_count = cpu_to_le32(le32_to_cpu(
+> >> +		F2FS_RAW_SUPER(sbi)->segment_count) - secs * sbi->segs_per_sec);
+> >> +	F2FS_RAW_SUPER(sbi)->segment_count_main = cpu_to_le32(
+> >> +					CUR_MAIN_SECS(sbi) * sbi->segs_per_sec);
+> >> +	F2FS_RAW_SUPER(sbi)->block_count = cpu_to_le64(block_count);
+> >> +
+> >> +	err = f2fs_commit_super(sbi, false);
+> >> +	if (err)
+> >> +		goto out;
+> >> +
+> >> +	/* Update FS metadata */
+> >> +	SM_I(sbi)->segment_count -= secs * sbi->segs_per_sec;
+> >> +	MAIN_SECS(sbi) = CUR_MAIN_SECS(sbi);
+> >> +	MAIN_SEGS(sbi) = MAIN_SECS(sbi) * sbi->segs_per_sec;
+> >> +	F2FS_CKPT(sbi)->user_block_count = cpu_to_le64(sbi->user_block_count);
+> >> +	FREE_I(sbi)->free_sections -= secs;
+> >> +	FREE_I(sbi)->free_segments -= secs * sbi->segs_per_sec;
+> >> +
+> >> +	clear_sbi_flag(sbi, SBI_IS_RESIZEFS);
+> >> +	err = f2fs_sync_fs(sbi->sb, 1);
+> >> +out:
+> >> +	if (err) {
+> >> +		set_sbi_flag(sbi, SBI_NEED_FSCK);
+> >> +		f2fs_msg(sbi->sb, KERN_ERR,
+> >> +				"resize_fs failed, should run fsck to repair!");
+> >> +
+> >> +		CUR_MAIN_SECS(sbi) = MAIN_SECS(sbi);
+> > 
+> > 		MAIN_SECS(sbi) = OLD_MAIN_SECS(sbi);
+> > 
+> >> +		spin_lock(&sbi->stat_lock);
+> >> +		sbi->user_block_count += shrunk_blocks;
+> >> +		spin_unlock(&sbi->stat_lock);
+> > 
+> > 		Should we recover super_block and FS metadata?
+> 
+> Correct.
+> 
+> > 
+> >> +	}
+> > 
+> > 	if (!err)
+> > 		Need to shrink bitmaps?
+> 
+> You mean sit_nat_ver_bitmap?
+> 
+> > 
+> >> +	clear_sbi_flag(sbi, SBI_IS_RESIZEFS);
+> >> +	mutex_unlock(&sbi->resize_mutex);
+> >> +	return err;
+> >> +}
+> >> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> >> index 07e9235..c70daa5 100644
+> >> --- a/fs/f2fs/segment.c
+> >> +++ b/fs/f2fs/segment.c
+> >> @@ -2360,7 +2360,7 @@ static void get_new_segment(struct f2fs_sb_info *sbi,
+> >>  {
+> >>  	struct free_segmap_info *free_i = FREE_I(sbi);
+> >>  	unsigned int segno, secno, zoneno;
+> >> -	unsigned int total_zones = MAIN_SECS(sbi) / sbi->secs_per_zone;
+> >> +	unsigned int total_zones = CUR_MAIN_SECS(sbi) / sbi->secs_per_zone;
+> > 
+> > These are unnecessary changes. Please remain MAIN_SECS() and modify resize_fs
+> > to use that.
+> > 
+> >>  	unsigned int hint = GET_SEC_FROM_SEG(sbi, *newseg);
+> >>  	unsigned int old_zoneno = GET_ZONE_FROM_SEG(sbi, *newseg);
+> >>  	unsigned int left_start = hint;
+> >> @@ -2377,12 +2377,13 @@ static void get_new_segment(struct f2fs_sb_info *sbi,
+> >>  			goto got_it;
+> >>  	}
+> >>  find_other_zone:
+> >> -	secno = find_next_zero_bit(free_i->free_secmap, MAIN_SECS(sbi), hint);
+> >> -	if (secno >= MAIN_SECS(sbi)) {
+> >> +	secno = find_next_zero_bit(free_i->free_secmap, CUR_MAIN_SECS(sbi),
+> >> +									hint);
+> >> +	if (secno >= CUR_MAIN_SECS(sbi)) {
+> >>  		if (dir == ALLOC_RIGHT) {
+> >>  			secno = find_next_zero_bit(free_i->free_secmap,
+> >> -							MAIN_SECS(sbi), 0);
+> >> -			f2fs_bug_on(sbi, secno >= MAIN_SECS(sbi));
+> >> +							CUR_MAIN_SECS(sbi), 0);
+> >> +			f2fs_bug_on(sbi, secno >= CUR_MAIN_SECS(sbi));
+> >>  		} else {
+> >>  			go_left = 1;
+> >>  			left_start = hint - 1;
+> >> @@ -2397,8 +2398,8 @@ static void get_new_segment(struct f2fs_sb_info *sbi,
+> >>  			continue;
+> >>  		}
+> >>  		left_start = find_next_zero_bit(free_i->free_secmap,
+> >> -							MAIN_SECS(sbi), 0);
+> >> -		f2fs_bug_on(sbi, left_start >= MAIN_SECS(sbi));
+> >> +							CUR_MAIN_SECS(sbi), 0);
+> >> +		f2fs_bug_on(sbi, left_start >= CUR_MAIN_SECS(sbi));
+> >>  		break;
+> >>  	}
+> >>  	secno = left_start;
+> >> @@ -2651,6 +2652,40 @@ static void allocate_segment_by_default(struct f2fs_sb_info *sbi,
+> >>  	stat_inc_seg_type(sbi, curseg);
+> >>  }
+> >>  
+> >> +void allocate_segment_for_resize(struct f2fs_sb_info *sbi, int type,
+> >> +					unsigned int start, unsigned int end)
+> >> +{
+> >> +	struct curseg_info *curseg = CURSEG_I(sbi, type);
+> >> +	unsigned int segno;
+> >> +
+> >> +	down_read(&SM_I(sbi)->curseg_lock);
+> >> +	mutex_lock(&curseg->curseg_mutex);
+> >> +	down_write(&SIT_I(sbi)->sentry_lock);
+> >> +
+> >> +	segno = CURSEG_I(sbi, type)->segno;
+> >> +	if (segno < start || segno > end)
+> >> +		goto unlock;
+> >> +
+> >> +	if (f2fs_need_SSR(sbi) && get_ssr_segment(sbi, type))
+> >> +		change_curseg(sbi, type);
+> >> +	else
+> >> +		new_curseg(sbi, type, true);
+> >> +
+> >> +	stat_inc_seg_type(sbi, curseg);
+> >> +
+> >> +	locate_dirty_segment(sbi, segno);
+> >> +unlock:
+> >> +	up_write(&SIT_I(sbi)->sentry_lock);
+> >> +
+> >> +	if (segno != curseg->segno)
+> >> +		f2fs_msg(sbi->sb, KERN_NOTICE,
+> >> +			"For resize: curseg of type %d: %u ==> %u",
+> >> +			type, segno, curseg->segno);
+> >> +
+> >> +	mutex_unlock(&curseg->curseg_mutex);
+> >> +	up_read(&SM_I(sbi)->curseg_lock);
+> >> +}
+> >> +
+> >>  void f2fs_allocate_new_segments(struct f2fs_sb_info *sbi)
+> >>  {
+> >>  	struct curseg_info *curseg;
+> >> @@ -3774,7 +3809,7 @@ void f2fs_flush_sit_entries(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+> >>  	struct f2fs_journal *journal = curseg->journal;
+> >>  	struct sit_entry_set *ses, *tmp;
+> >>  	struct list_head *head = &SM_I(sbi)->sit_entry_set;
+> >> -	bool to_journal = true;
+> >> +	bool to_journal = !is_sbi_flag_set(sbi, SBI_IS_RESIZEFS);
+> >>  	struct seg_entry *se;
+> >>  
+> >>  	down_write(&sit_i->sentry_lock);
+> >> @@ -3793,7 +3828,8 @@ void f2fs_flush_sit_entries(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+> >>  	 * entries, remove all entries from journal and add and account
+> >>  	 * them in sit entry set.
+> >>  	 */
+> >> -	if (!__has_cursum_space(journal, sit_i->dirty_sentries, SIT_JOURNAL))
+> >> +	if (!__has_cursum_space(journal, sit_i->dirty_sentries, SIT_JOURNAL) ||
+> >> +								!to_journal)
+> >>  		remove_sits_in_journal(sbi);
+> >>  
+> >>  	/*
+> >> diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
+> >> index 429007b..eaa9782 100644
+> >> --- a/fs/f2fs/segment.h
+> >> +++ b/fs/f2fs/segment.h
+> >> @@ -59,6 +59,7 @@
+> >>  
+> >>  #define MAIN_SEGS(sbi)	(SM_I(sbi)->main_segments)
+> >>  #define MAIN_SECS(sbi)	((sbi)->total_sections)
+> >> +#define CUR_MAIN_SECS(sbi)	((sbi)->current_total_sections)
+> >>  
+> >>  #define TOTAL_SEGS(sbi)							\
+> >>  	(SM_I(sbi) ? SM_I(sbi)->segment_count : 				\
+> >> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+> >> index 1f581f0..166a97e 100644
+> >> --- a/fs/f2fs/super.c
+> >> +++ b/fs/f2fs/super.c
+> >> @@ -2843,6 +2843,7 @@ static void init_sb_info(struct f2fs_sb_info *sbi)
+> >>  	sbi->segs_per_sec = le32_to_cpu(raw_super->segs_per_sec);
+> >>  	sbi->secs_per_zone = le32_to_cpu(raw_super->secs_per_zone);
+> >>  	sbi->total_sections = le32_to_cpu(raw_super->section_count);
+> >> +	sbi->current_total_sections = sbi->total_sections;
+> >>  	sbi->total_node_count =
+> >>  		(le32_to_cpu(raw_super->segment_count_nat) / 2)
+> >>  			* sbi->blocks_per_seg * NAT_ENTRY_PER_BLOCK;
+> >> @@ -3296,6 +3297,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+> >>  	mutex_init(&sbi->gc_mutex);
+> >>  	mutex_init(&sbi->writepages);
+> >>  	mutex_init(&sbi->cp_mutex);
+> >> +	mutex_init(&sbi->resize_mutex);
+> >>  	init_rwsem(&sbi->node_write);
+> >>  	init_rwsem(&sbi->node_change);
+> >>  
+> >> @@ -3367,6 +3369,8 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+> >>  		set_sbi_flag(sbi, SBI_CP_DISABLED_QUICK);
+> >>  		sbi->interval_time[DISABLE_TIME] = DEF_DISABLE_QUICK_INTERVAL;
+> >>  	}
+> >> +	if (__is_set_ckpt_flags(F2FS_CKPT(sbi), CP_FSCK_FLAG))
+> >> +		set_sbi_flag(sbi, SBI_NEED_FSCK);
+> >>  
+> > 
+> > Then, we don't need to remove this in init_sb_info().
+> 
+> init_sb_info() removes the flag due to fill_super retrying flow, I think it's
+> okay to remain that removal, as above code will execute later than init_sb_info().
+> 
+> Thanks,
+> 
+> > 
+> >>  	/* Initialize device list */
+> >>  	err = f2fs_scan_devices(sbi);
+> >> -- 
+> >> 1.8.3.1
+> > .
+> > 
