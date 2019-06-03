@@ -2,103 +2,97 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19000C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC8BC28CC6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E66092694A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:29:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nikanor-nu.20150623.gappssmtp.com header.i=@nikanor-nu.20150623.gappssmtp.com header.b="EjM5lDCi"
+	by mail.kernel.org (Postfix) with ESMTP id 8F93225E05
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:30:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbfFCW31 (ORCPT
+        id S1726794AbfFCWaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 18:29:27 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:43274 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbfFCW3Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 18:29:24 -0400
-Received: by mail-lf1-f68.google.com with SMTP id j29so927534lfk.10
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 15:29:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=nikanor-nu.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=knrbzBuDehhtfPEvKniXQQfSPEDHGGizKqNa8Zubbfg=;
-        b=EjM5lDCiMw6pXgAainRP5g/6sW/3yKfXeYL1CNZoC0BQuAktWkxX3dyb5aZUPQJUev
-         UZlr4MdGCD597hOvjCTD3/jxp+mVmm7WTZZDDv24f1W9CVjKOREZWCsIoKhsKMCpYQSF
-         gBxK/bgtj2QQXNZ6srHy9cnbWtRp5R4vbH50vu0azBEUKMn/jY22QdAbEDkSmBqgVG8u
-         s1CxX8yhFvkpc7HQNjgBIlmnk5nIt3Lmqt3e5exmEaNpxtXR90K1Sxh13i8IVl0OIc8y
-         M3Y6/Zodpsr7Pm+YDAFPxsS49ID+HB96VCuBj0hp9RCuvRWJnnO2IyIz5/mw9vkM9GgX
-         5bAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=knrbzBuDehhtfPEvKniXQQfSPEDHGGizKqNa8Zubbfg=;
-        b=J0oV4oQFh88r0iUbNn8LI0u+8AkWswsGINcFY2ri+84B8HZXldVB2XVoZNrhY6R3RO
-         dbkqYgKI6iDrfRlNafeyTf/kao6VdhNt7kmDXSR1H2F6/g1CzmbeqKFBFe4Bi0fC3ybC
-         AGvGF/yhW61DKqaznRsUsAIVbQhDcMsh5XrvXhalFV802niXpptRtDOz7556s9fA3q7T
-         XNVKXzPZTNiCyFikzFlmNj6UtGqokonEUv5565/bU/l9dDSYwqgHS5GT80F991osXZCP
-         yyAcu+cM8+XoQReb2PkRUvWduRk4wJzercUq+sWSCI6aiw1bOxam66I77najEuHKXLZX
-         c+zQ==
-X-Gm-Message-State: APjAAAWI4yy3gvB80se1Jnu/idcq+hvzPloF64Y9jDu2z5shdvD+8g94
-        u1UeA8QbMCgmdqs646FK5lUGbQ==
-X-Google-Smtp-Source: APXvYqxmRVrpJxfb8ZX6pzol8sIO/jZaTkrcussFYhqIEtc8sF9OLnnbp4UPgEp616MGLfhDvHZ5vQ==
-X-Received: by 2002:ac2:51a3:: with SMTP id f3mr10276923lfk.125.1559600962748;
-        Mon, 03 Jun 2019 15:29:22 -0700 (PDT)
-Received: from dev.nikanor.nu (78-72-133-4-no161.tbcn.telia.com. [78.72.133.4])
-        by smtp.gmail.com with ESMTPSA id x20sm2175874ljj.14.2019.06.03.15.29.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Jun 2019 15:29:22 -0700 (PDT)
-From:   =?UTF-8?q?Simon=20Sandstr=C3=B6m?= <simon@nikanor.nu>
-To:     gregkh@linuxfoundation.org
-Cc:     simon@nikanor.nu, jeremy@azazel.net, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/7] staging: kpc2000: remove unnecessary oom message in core.c
-Date:   Tue,  4 Jun 2019 00:29:12 +0200
-Message-Id: <20190603222916.20698-4-simon@nikanor.nu>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190603222916.20698-1-simon@nikanor.nu>
-References: <20190603222916.20698-1-simon@nikanor.nu>
+        Mon, 3 Jun 2019 18:30:20 -0400
+Received: from mga04.intel.com ([192.55.52.120]:8672 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726379AbfFCWaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 18:30:19 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 14:08:36 -0700
+X-ExtLoop1: 1
+Received: from jgaire-mobl.ger.corp.intel.com (HELO localhost) ([10.252.20.169])
+  by fmsmga005.fm.intel.com with ESMTP; 03 Jun 2019 14:08:26 -0700
+Date:   Tue, 4 Jun 2019 00:08:25 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        William Roberts <bill.c.roberts@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+Message-ID: <20190603210825.GG4894@linux.intel.com>
+References: <960B34DE67B9E140824F1DCDEC400C0F654EB487@ORSMSX116.amr.corp.intel.com>
+ <678a37af-797d-7bd5-a406-32548a270e3d@tycho.nsa.gov>
+ <CALCETrWXB9fNNDH7gZxPTx05F78Og6K=ZtAr2aA++BDwY09Wbg@mail.gmail.com>
+ <c1135352-0b5e-4694-b1a9-105876095877@tycho.nsa.gov>
+ <CALCETrWsEXzUC33eJpGCpdMCBO4aYVviZLRD-CLMNaG5Jv-TCA@mail.gmail.com>
+ <20190530180110.GB23930@linux.intel.com>
+ <CALCETrX2PgUc_jetXHqp85aaS0a0jHB8E7=T1rsW+5vyRgwnUA@mail.gmail.com>
+ <20190530211645.GB27551@linux.intel.com>
+ <CALCETrVAoDppmdJzkpwagt3q64M-QpNajXbKGR1yQdqyofeANQ@mail.gmail.com>
+ <20190530213601.GC27551@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190530213601.GC27551@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes checkpatch.pl warning "Possible unnecessary 'out of memory'
-message".
+On Thu, May 30, 2019 at 02:36:01PM -0700, Sean Christopherson wrote:
+> Assuming MRENCLAVE generated by Graphene or any other hosting scheme are
+> stable[1], then avoiding EXEC<whatever> means the user can effectively
+> whitelist what enclaves are runnable by Graphene, even if the kernel
+> doesn't implement security_enclave_create/init().
+> 
+> I agree that it probably isn't all that important, it's more of a "why
+> not" argument, i.e. what is gained by not using sigstruct as a proxy?
+> 
+> [1] What in the world is being attested if MRENCLAVE isn't stable?
 
-Signed-off-by: Simon Sandström <simon@nikanor.nu>
----
- drivers/staging/kpc2000/kpc2000/core.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+If I've understood correctly, Graphene uses a single loader enclave
+that loads the executable in.
 
-diff --git a/drivers/staging/kpc2000/kpc2000/core.c b/drivers/staging/kpc2000/kpc2000/core.c
-index dc6940e6c320..a70665a202c3 100644
---- a/drivers/staging/kpc2000/kpc2000/core.c
-+++ b/drivers/staging/kpc2000/kpc2000/core.c
-@@ -319,11 +319,8 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
- 	 * Step 1: Allocate a struct for the pcard
- 	 */
- 	pcard = kzalloc(sizeof(struct kp2000_device), GFP_KERNEL);
--	if (!pcard) {
--		dev_err(&pdev->dev,
--			"probe: failed to allocate private card data\n");
-+	if (!pcard)
- 		return -ENOMEM;
--	}
- 	dev_dbg(&pdev->dev, "probe: allocated struct kp2000_device @ %p\n",
- 		pcard);
- 
--- 
-2.20.1
-
+/Jarkko
