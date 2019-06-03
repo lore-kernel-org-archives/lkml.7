@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3603C28CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A90DC04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADFB327ECE
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30A0721923
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553212;
-	bh=Yag5q5aS2+NS59gLAB7BzUtRjUWKTMRecEygGQgq704=;
+	s=default; t=1559553217;
+	bh=N1GD6wogL0wc3ROCjL0Tr4+i1aVNnoY969QvokdKYgw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C4s0xWkbHQGI492lwLVxVvC/fzriBfX0YNKFhQDcScV28OPqMBCSNF8q3nK/Mh3xw
-	 CSXs+WxgGkoY8kxUtvHCBAiAhER5q6O8K7QJQZxq+iRTPdnX70Z4nr5Um2JLIOBjTf
-	 vxjtQgHylkwf1nzD48KIf8P7M4IMJqFvjYxzSRMo=
+	b=W4eGtHprC4bJPTZzhWgZKwR7gOrhfwhoa0etotYbFYpnO/x2Xv2fjdIQFZ4y/KaHm
+	 kc88ifo6M7GgcoULYbfMMUW+rXVXYCboo8CBHTWYfXl2Ci9TZo5bQgzQPHvOP/PbvO
+	 dVNgLR9cfGDg0fqmCXHifUwZ6JAFS/rGffO7BhvE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728867AbfFCJNc (ORCPT
+        id S1728843AbfFCJN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:13:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33838 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 05:13:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727961AbfFCJNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:13:30 -0400
+        id S1728394AbfFCJN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:13:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 120F527EB0;
-        Mon,  3 Jun 2019 09:13:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE23B276DB;
+        Mon,  3 Jun 2019 09:13:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553210;
-        bh=Yag5q5aS2+NS59gLAB7BzUtRjUWKTMRecEygGQgq704=;
+        s=default; t=1559553205;
+        bh=N1GD6wogL0wc3ROCjL0Tr4+i1aVNnoY969QvokdKYgw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IzR/gxP9heK5dAlsGHPE5me+POsCCBghX2v9IkHO8o5D3QCZkSGdLoz20jU1UIVNE
-         IQuDVlFsjp8KbLKe5M1kyrb0ilI1bNyI0j7u9Z3U2klFGDVun6xErkd8i0vO3YduT0
-         1ks6Q38e3RmpjzzD1Jajdjql1TgLBXJ3jm72DmNw=
+        b=vWe+tStIlF9TfwDhkKdPpt9jPcwlROqXMQ9poC4KKEMfGJ/9ZNoLaKDoMAO5hfYZB
+         5cCW47QmvEOq6xk/Ln/626oLmYb1gF7y4MHgZ28bRCw+6cYhMI4aSZHzuORFR4o9Xk
+         3zcU5xTcyVaAb8gJ7KHXcI0E1nbN2Sr8NtXt/eWI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.1 24/40] net/mlx5e: Disable rxhash when CQE compress is enabled
-Date:   Mon,  3 Jun 2019 11:09:17 +0200
-Message-Id: <20190603090524.096682349@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.1 22/40] tipc: Avoid copying bytes beyond the supplied data
+Date:   Mon,  3 Jun 2019 11:09:15 +0200
+Message-Id: <20190603090523.981084133@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190603090522.617635820@linuxfoundation.org>
 References: <20190603090522.617635820@linuxfoundation.org>
@@ -58,64 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Saeed Mahameed <saeedm@mellanox.com>
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
 
-[ Upstream commit c0194e2d0ef0e5ce5e21a35640d23a706827ae28 ]
+TLV_SET is called with a data pointer and a len parameter that tells us
+how many bytes are pointed to by data. When invoking memcpy() we need
+to careful to only copy len bytes.
 
-When CQE compression is enabled (Multi-host systems), compressed CQEs
-might arrive to the driver rx, compressed CQEs don't have a valid hash
-offload and the driver already reports a hash value of 0 and invalid hash
-type on the skb for compressed CQEs, but this is not good enough.
+Previously we would copy TLV_LENGTH(len) bytes which would copy an extra
+4 bytes past the end of the data pointer which newer GCC versions
+complain about.
 
-On a congested PCIe, where CQE compression will kick in aggressively,
-gro will deliver lots of out of order packets due to the invalid hash
-and this might cause a serious performance drop.
+ In file included from test.c:17:
+ In function 'TLV_SET',
+     inlined from 'test' at test.c:186:5:
+ /usr/include/linux/tipc_config.h:317:3:
+ warning: 'memcpy' forming offset [33, 36] is out of the bounds [0, 32]
+ of object 'bearer_name' with type 'char[32]' [-Warray-bounds]
+     memcpy(TLV_DATA(tlv_ptr), data, tlv_len);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ test.c: In function 'test':
+ test.c::161:10: note:
+ 'bearer_name' declared here
+     char bearer_name[TIPC_MAX_BEARER_NAME];
+          ^~~~~~~~~~~
 
-The only valid solution, is to disable rxhash offload at all when CQE
-compression is favorable (Multi-host systems).
+We still want to ensure any padding bytes at the end are initialised, do
+this with a explicit memset() rather than copy bytes past the end of
+data. Apply the same logic to TCM_SET.
 
-Fixes: 7219ab34f184 ("net/mlx5e: CQE compression")
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_main.c |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ include/uapi/linux/tipc_config.h |   10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -3750,6 +3750,12 @@ static netdev_features_t mlx5e_fix_featu
- 			netdev_warn(netdev, "Disabling LRO, not supported in legacy RQ\n");
- 	}
- 
-+	if (MLX5E_GET_PFLAG(params, MLX5E_PFLAG_RX_CQE_COMPRESS)) {
-+		features &= ~NETIF_F_RXHASH;
-+		if (netdev->features & NETIF_F_RXHASH)
-+			netdev_warn(netdev, "Disabling rxhash, not supported when CQE compress is active\n");
+--- a/include/uapi/linux/tipc_config.h
++++ b/include/uapi/linux/tipc_config.h
+@@ -307,8 +307,10 @@ static inline int TLV_SET(void *tlv, __u
+ 	tlv_ptr = (struct tlv_desc *)tlv;
+ 	tlv_ptr->tlv_type = htons(type);
+ 	tlv_ptr->tlv_len  = htons(tlv_len);
+-	if (len && data)
+-		memcpy(TLV_DATA(tlv_ptr), data, tlv_len);
++	if (len && data) {
++		memcpy(TLV_DATA(tlv_ptr), data, len);
++		memset(TLV_DATA(tlv_ptr) + len, 0, TLV_SPACE(len) - tlv_len);
 +	}
-+
- 	mutex_unlock(&priv->state_lock);
- 
- 	return features;
-@@ -3875,6 +3881,9 @@ int mlx5e_hwstamp_set(struct mlx5e_priv
- 	memcpy(&priv->tstamp, &config, sizeof(config));
- 	mutex_unlock(&priv->state_lock);
- 
-+	/* might need to fix some features */
-+	netdev_update_features(priv->netdev);
-+
- 	return copy_to_user(ifr->ifr_data, &config,
- 			    sizeof(config)) ? -EFAULT : 0;
+ 	return TLV_SPACE(len);
  }
-@@ -4734,6 +4743,10 @@ static void mlx5e_build_nic_netdev(struc
- 	if (!priv->channels.params.scatter_fcs_en)
- 		netdev->features  &= ~NETIF_F_RXFCS;
  
-+	/* prefere CQE compression over rxhash */
-+	if (MLX5E_GET_PFLAG(&priv->channels.params, MLX5E_PFLAG_RX_CQE_COMPRESS))
-+		netdev->features &= ~NETIF_F_RXHASH;
-+
- #define FT_CAP(f) MLX5_CAP_FLOWTABLE(mdev, flow_table_properties_nic_receive.f)
- 	if (FT_CAP(flow_modify_en) &&
- 	    FT_CAP(modify_root) &&
+@@ -405,8 +407,10 @@ static inline int TCM_SET(void *msg, __u
+ 	tcm_hdr->tcm_len   = htonl(msg_len);
+ 	tcm_hdr->tcm_type  = htons(cmd);
+ 	tcm_hdr->tcm_flags = htons(flags);
+-	if (data_len && data)
++	if (data_len && data) {
+ 		memcpy(TCM_DATA(msg), data, data_len);
++		memset(TCM_DATA(msg) + data_len, 0, TCM_SPACE(data_len) - msg_len);
++	}
+ 	return TCM_SPACE(data_len);
+ }
+ 
 
 
