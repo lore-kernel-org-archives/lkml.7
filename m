@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8661FC04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB38C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6035727ECC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 862C827ECE
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553225;
-	bh=ljkVMiDGnIyN+HweEiPscSIRcNH9hnQsnvTHND46q1w=;
+	s=default; t=1559553232;
+	bh=ThvnHefOggdfHm5JVqIjsm5q+QS3OeoZAquMwoRHieI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OORwY1f+Xcgl/Of43xWI38G31NpmCfN+8bmKg0p+YDT8P1yjVLY5dpTs1OeJjfppT
-	 kYgc3C6Y1VHYBqlB3qrLorQvIePWcNWgHvgMhwoCNsqBjHNVTRhv6igvFs0m0298mK
-	 M/wAlrL5VSLt1+EpnuaWijGpSYsADJILT7+bjbs0=
+	b=tYVP06uxjZ+Btak3gfMVpdTe1O7q2tV6E+PNkH7tr18x7nI5YwjAVtc5+KKqaQ7Zh
+	 //IZELFUNlm/ZjBLVu/2YwimxjMwmVvEbbFKrUYnB4gJoz+b3RqfjvngS5xjV0gS5S
+	 cLdVrpr1UsWXc0qfYuv4aJxZvjaYofoECej2LRfI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728899AbfFCJNo (ORCPT
+        id S1728214AbfFCJNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:13:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34090 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 05:13:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728873AbfFCJNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:13:41 -0400
+        id S1728443AbfFCJNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:13:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3457527EB0;
-        Mon,  3 Jun 2019 09:13:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4C3827EC9;
+        Mon,  3 Jun 2019 09:13:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553220;
-        bh=ljkVMiDGnIyN+HweEiPscSIRcNH9hnQsnvTHND46q1w=;
+        s=default; t=1559553223;
+        bh=ThvnHefOggdfHm5JVqIjsm5q+QS3OeoZAquMwoRHieI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qF6kmIRqHajwsl1N7bGk/zue5JhZ1MXxUK8XUUAVO36pwQGrx7wt8xzWa6I/yPryX
-         aoXqoG2Mq9V0bzgulLClKTwuFhSDGYukahItai+vwateDXjIv861fDKxRp6yQm15qV
-         VUXnUZEFQ+dCrTIujwAPHufICYYSsjHgC9f1gFOE=
+        b=x7dDhlOSViDyAYBfUkeiotWxun0t7IBHXxVl2KXnjqC4ENm3xIG/W4DBinhZOsU3L
+         Ua/5Ow+zOD8eYLAqE16yt7mwkbSsqlgv19L2Mse1ZO2Ytbc4ff/cKPWfjd1tfPDeaQ
+         DaPzbxH9pals7AxaO+8kDvCNZ+rCstp5vLtmryZs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 28/40] bnxt_en: Fix possible BUG() condition when calling pci_disable_msix().
-Date:   Mon,  3 Jun 2019 11:09:21 +0200
-Message-Id: <20190603090524.318771107@linuxfoundation.org>
+Subject: [PATCH 5.1 29/40] bnxt_en: Reduce memory usage when running in kdump kernel.
+Date:   Mon,  3 Jun 2019 11:09:22 +0200
+Message-Id: <20190603090524.363467295@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190603090522.617635820@linuxfoundation.org>
 References: <20190603090522.617635820@linuxfoundation.org>
@@ -61,100 +61,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Michael Chan <michael.chan@broadcom.com>
 
-[ Upstream commit 1b3f0b75c39f534278a895c117282014e9d0ae1f ]
+[ Upstream commit d629522e1d66561f38e5c8d4f52bb6d254ec0707 ]
 
-When making configuration changes, the driver calls bnxt_close_nic()
-and then bnxt_open_nic() for the changes to take effect.  A parameter
-irq_re_init is passed to the call sequence to indicate if IRQ
-should be re-initialized.  This irq_re_init parameter needs to
-be included in the bnxt_reserve_rings() call.  bnxt_reserve_rings()
-can only call pci_disable_msix() if the irq_re_init parameter is
-true, otherwise it may hit BUG() because some IRQs may not have been
-freed yet.
+Skip RDMA context memory allocations, reduce to 1 ring, and disable
+TPA when running in the kdump kernel.  Without this patch, the driver
+fails to initialize with memory allocation errors when running in a
+typical kdump kernel.
 
-Fixes: 41e8d7983752 ("bnxt_en: Modify the ring reservation functions for 57500 series chips.")
+Fixes: cf6daed098d1 ("bnxt_en: Increase context memory allocations on 57500 chips for RDMA.")
 Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c         |   13 +++++++------
- drivers/net/ethernet/broadcom/bnxt/bnxt.h         |    2 +-
- drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c |    2 +-
- drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c     |    2 +-
- 4 files changed, 10 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |    4 ++--
+ drivers/net/ethernet/broadcom/bnxt/bnxt.h |    4 +++-
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
 --- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
 +++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -7514,22 +7514,23 @@ static void bnxt_clear_int_mode(struct b
- 	bp->flags &= ~BNXT_FLAG_USING_MSIX;
- }
- 
--int bnxt_reserve_rings(struct bnxt *bp)
-+int bnxt_reserve_rings(struct bnxt *bp, bool irq_re_init)
- {
- 	int tcs = netdev_get_num_tc(bp->dev);
--	bool reinit_irq = false;
-+	bool irq_cleared = false;
- 	int rc;
- 
- 	if (!bnxt_need_reserve_rings(bp))
+@@ -6342,7 +6342,7 @@ static int bnxt_alloc_ctx_mem(struct bnx
+ 	if (!ctx || (ctx->flags & BNXT_CTX_FLAG_INITED))
  		return 0;
  
--	if (BNXT_NEW_RM(bp) && (bnxt_get_num_msix(bp) != bp->total_irqs)) {
-+	if (irq_re_init && BNXT_NEW_RM(bp) &&
-+	    bnxt_get_num_msix(bp) != bp->total_irqs) {
- 		bnxt_ulp_irq_stop(bp);
- 		bnxt_clear_int_mode(bp);
--		reinit_irq = true;
-+		irq_cleared = true;
- 	}
- 	rc = __bnxt_reserve_rings(bp);
--	if (reinit_irq) {
-+	if (irq_cleared) {
- 		if (!rc)
- 			rc = bnxt_init_int_mode(bp);
- 		bnxt_ulp_irq_restart(bp, rc);
-@@ -8428,7 +8429,7 @@ static int __bnxt_open_nic(struct bnxt *
- 			return rc;
- 		}
- 	}
--	rc = bnxt_reserve_rings(bp);
-+	rc = bnxt_reserve_rings(bp, irq_re_init);
- 	if (rc)
- 		return rc;
- 	if ((bp->flags & BNXT_FLAG_RFS) &&
+-	if (bp->flags & BNXT_FLAG_ROCE_CAP) {
++	if ((bp->flags & BNXT_FLAG_ROCE_CAP) && !is_kdump_kernel()) {
+ 		pg_lvl = 2;
+ 		extra_qps = 65536;
+ 		extra_srqs = 8192;
+@@ -10340,7 +10340,7 @@ static int bnxt_set_dflt_rings(struct bn
+ 
+ 	if (sh)
+ 		bp->flags |= BNXT_FLAG_SHARED_RINGS;
+-	dflt_rings = netif_get_num_default_rss_queues();
++	dflt_rings = is_kdump_kernel() ? 1 : netif_get_num_default_rss_queues();
+ 	/* Reduce default rings on multi-port cards so that total default
+ 	 * rings do not exceed CPU count.
+ 	 */
 --- a/drivers/net/ethernet/broadcom/bnxt/bnxt.h
 +++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
-@@ -1778,7 +1778,7 @@ unsigned int bnxt_get_avail_stat_ctxs_fo
- unsigned int bnxt_get_max_func_cp_rings(struct bnxt *bp);
- unsigned int bnxt_get_avail_cp_rings_for_en(struct bnxt *bp);
- int bnxt_get_avail_msix(struct bnxt *bp, int num);
--int bnxt_reserve_rings(struct bnxt *bp);
-+int bnxt_reserve_rings(struct bnxt *bp, bool irq_re_init);
- void bnxt_tx_disable(struct bnxt *bp);
- void bnxt_tx_enable(struct bnxt *bp);
- int bnxt_hwrm_set_pause(struct bnxt *);
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-@@ -788,7 +788,7 @@ static int bnxt_set_channels(struct net_
- 			 */
- 		}
- 	} else {
--		rc = bnxt_reserve_rings(bp);
-+		rc = bnxt_reserve_rings(bp, true);
- 	}
+@@ -20,6 +20,7 @@
  
- 	return rc;
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c
-@@ -147,7 +147,7 @@ static int bnxt_req_msix_vecs(struct bnx
- 			bnxt_close_nic(bp, true, false);
- 			rc = bnxt_open_nic(bp, true, false);
- 		} else {
--			rc = bnxt_reserve_rings(bp);
-+			rc = bnxt_reserve_rings(bp, true);
- 		}
- 	}
- 	if (rc) {
+ #include <linux/interrupt.h>
+ #include <linux/rhashtable.h>
++#include <linux/crash_dump.h>
+ #include <net/devlink.h>
+ #include <net/dst_metadata.h>
+ #include <net/xdp.h>
+@@ -1367,7 +1368,8 @@ struct bnxt {
+ #define BNXT_CHIP_TYPE_NITRO_A0(bp) ((bp)->flags & BNXT_FLAG_CHIP_NITRO_A0)
+ #define BNXT_RX_PAGE_MODE(bp)	((bp)->flags & BNXT_FLAG_RX_PAGE_MODE)
+ #define BNXT_SUPPORTS_TPA(bp)	(!BNXT_CHIP_TYPE_NITRO_A0(bp) &&	\
+-				 !(bp->flags & BNXT_FLAG_CHIP_P5))
++				 !(bp->flags & BNXT_FLAG_CHIP_P5) &&	\
++				 !is_kdump_kernel())
+ 
+ /* Chip class phase 5 */
+ #define BNXT_CHIP_P5(bp)			\
 
 
