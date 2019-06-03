@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F0FC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 19:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 222C1C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 19:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABDB926875
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 19:23:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA11526A1D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 19:24:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559589825;
-	bh=zSUCZi9f3ute9Iirc/j4KUANDwmTf9ovEvKzD92Z9Bw=;
+	s=default; t=1559589859;
+	bh=/LooAfLWrCT1T8tDGhy1qtaoR6dOFBqW+Qnf0Z9e0n8=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=r0cEnJuXUjzCLE6VE/umyCkK0vGE5F7yNxgWru8nkiFUgqT10iOS3tTX9AMYypv1s
-	 yOBNoqJmOMH5GfHLLvF4dn7RXQvDgKn6Ghx1+EyYpgFVelpn57eMoZgYVPni11hUwG
-	 tvSZ4ft+sqJgEWfHpvilIhXgCvzJm0+3KtWZsFR8=
+	b=rpfmMWuwPM13Er/UEmKMEXuRI7bV4OR391J4pe3ShDi19pShpEBJlpPCel5+2WXBu
+	 gBslyEAmHhXY7MnDGwtk3OpXUMI+xUv8LeNJjMKxAzESnyfjnpUFEHd0foVRYoq5Ba
+	 DenmQZ+v/FICEXJTxsDN4Y64prEvw6YKHg1TFeuk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbfFCTXo (ORCPT
+        id S1726880AbfFCTYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 15:23:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59052 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 15:24:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726136AbfFCTXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 15:23:44 -0400
+        id S1726055AbfFCTYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 15:24:17 -0400
 Received: from localhost.localdomain (unknown [194.230.155.181])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF1A72673F;
-        Mon,  3 Jun 2019 19:23:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB4BE2673F;
+        Mon,  3 Jun 2019 19:24:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559589823;
-        bh=zSUCZi9f3ute9Iirc/j4KUANDwmTf9ovEvKzD92Z9Bw=;
+        s=default; t=1559589857;
+        bh=/LooAfLWrCT1T8tDGhy1qtaoR6dOFBqW+Qnf0Z9e0n8=;
         h=From:To:Cc:Subject:Date:From;
-        b=T8PjXzzg1SsDfZCLz0MQmPvO3vIgdW+Udfpi4RFDHcWOFQF0yb0K4jMMcMQGMSNLn
-         6XlCgTdIvta9rRjbcyuIL3jzEoupRY+LJJ20EjwJXC0nV552BkRcbo9UXF1S7/mTXH
-         lvRF9WJp0kPt1mR9paKvil00fI3n4c5Uo5sq067g=
+        b=WksON4WZd9b9oL9cGzpDmko+SFiAP9FbCRMSD6abTLztlvhl+6S1lipfjh3Pdqfjg
+         h2LefCzBXO1wCsQhdw1o5ONb3kOnbUYLj8Z7V6eFUyMcJIZGueRXECI6owh7RCAjGP
+         v3+nYtmFQ/Sz4lZV2ls+xQfk5TInRDAhKAO2XSw0=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org
 Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Lee Jones <lee.jones@linaro.org>,
         Alexander Shiyan <shc_work@mail.ru>,
-        Sinan Kaya <okaya@kernel.org>,
         Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] platform/x86: Remove left-over BACKLIGHT_LCD_SUPPORT
-Date:   Mon,  3 Jun 2019 21:23:38 +0200
-Message-Id: <20190603192338.30836-1-krzk@kernel.org>
+Subject: [PATCH] config: android: Remove left-over BACKLIGHT_LCD_SUPPORT
+Date:   Mon,  3 Jun 2019 21:24:08 +0200
+Message-Id: <20190603192408.30915-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -64,29 +61,21 @@ available directly.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/platform/x86/Kconfig | 2 --
- 1 file changed, 2 deletions(-)
+ kernel/configs/android-recommended.config | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 5d5cc6111081..bd15b47abcb4 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -906,7 +906,6 @@ config TOSHIBA_WMI
- config ACPI_CMPC
- 	tristate "CMPC Laptop Extras"
- 	depends on ACPI && INPUT
--	depends on BACKLIGHT_LCD_SUPPORT
- 	depends on RFKILL || RFKILL=n
- 	select BACKLIGHT_CLASS_DEVICE
- 	help
-@@ -1130,7 +1129,6 @@ config INTEL_OAKTRAIL
- config SAMSUNG_Q10
- 	tristate "Samsung Q10 Extras"
- 	depends on ACPI
--	depends on BACKLIGHT_LCD_SUPPORT
- 	select BACKLIGHT_CLASS_DEVICE
- 	---help---
- 	  This driver provides support for backlight control on Samsung Q10
+diff --git a/kernel/configs/android-recommended.config b/kernel/configs/android-recommended.config
+index 81e9af7dcec2..c51f4c221ad6 100644
+--- a/kernel/configs/android-recommended.config
++++ b/kernel/configs/android-recommended.config
+@@ -7,7 +7,6 @@
+ # CONFIG_PM_WAKELOCKS_GC is not set
+ # CONFIG_VT is not set
+ CONFIG_ARM64_SW_TTBR0_PAN=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ CONFIG_BLK_DEV_DM=y
+ CONFIG_BLK_DEV_LOOP=y
+ CONFIG_BLK_DEV_RAM=y
 -- 
 2.17.1
 
