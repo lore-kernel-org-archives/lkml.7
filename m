@@ -2,88 +2,135 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66338C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81EFCC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EE2827875
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:24:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U5d1tm81"
+	by mail.kernel.org (Postfix) with ESMTP id 5E49327875
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:26:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727602AbfFCPYr (ORCPT
+        id S1727505AbfFCP0H convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 11:24:47 -0400
-Received: from mail-vs1-f50.google.com ([209.85.217.50]:41477 "EHLO
-        mail-vs1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726343AbfFCPYq (ORCPT
+        Mon, 3 Jun 2019 11:26:07 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:50908 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726989AbfFCP0H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 11:24:46 -0400
-Received: by mail-vs1-f50.google.com with SMTP id g24so9432295vso.8
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 08:24:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=Zseq1GZeTqMaMENYkGCy4nd4edGfJrBEbxocT6fFXUI=;
-        b=U5d1tm81DWwwhYT2aOwrSvimQ7FC2F1idrQyh3secSIYdt/faQPXZc6i7ibf9FtI1g
-         ErDCRIGxNcf6MdfCNk35vinF5q8B5d4gi7hdhXoVNt4IaPUsnFbU19Rkw3Aa0bdTOoqM
-         cYzJvrpF/eAgzzFhs6mNF0F8V+Zytk6tjIPPW7Ns0KyxwEYNO5qKYRThH7APIiHf3dai
-         S2rnxJpiueDD1BiNC8XtBNpKRVX319qq1dFZZjK0WMXZ2CRtDzvhAGvY20BkhIXofTuE
-         bVi/6QmsLKR5bCuBQOfEHjx0O0cYz5O4xC42moamd418S9Rpd9hBc2N99Wj9geU3DgEo
-         VXJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=Zseq1GZeTqMaMENYkGCy4nd4edGfJrBEbxocT6fFXUI=;
-        b=btyYmPRpRAUh7YQ7gmNDkUz/r7BVL4bA5nk1GXdw+dGfdlNzfmvRW8/It3os7Luqy5
-         Kx9w/AQikuDbQJOkWEtAdvBiSf+1qSIH3kefE0WpXAJhfup4JRupOpF5V7D02bVvnm9S
-         ho/dVI9EePMcwLhhx/tn2NgkiGK6YPO1mwfbPvapeOrqCzPOO442KmDdQ1N/zw0C5gWR
-         iGI/fmyXZ3XitLLUFqrlbHREROXi6Eo0kWpN2m0IL4jBrjnNOZL86Lkv5cES8fjSd3Ur
-         ZBPaAG+x5C9rjsOVFGtn7CCscwXdEIpaugjqeow7XOJquWOU9FQU4Zh40QgvTDI9clAk
-         1HPw==
-X-Gm-Message-State: APjAAAVf/ibk62f0nL/MqEzDop1WKVsfhPwWQ+87/k9ma6bu10veTK3z
-        UF7I7/eO95Luo8vn8kbGCzqK2YDRl/BGR+hbXKgaAg==
-X-Google-Smtp-Source: APXvYqz+7Y+FqrheKmfgGO6xhSDbDEGS0G3Mw8mOQLhnYpdBIr2FillGn28kMat6G0UWw+qxiZ6aXG+cEAryoCB7cr8=
-X-Received: by 2002:a67:f3c5:: with SMTP id j5mr12977698vsn.232.1559575485636;
- Mon, 03 Jun 2019 08:24:45 -0700 (PDT)
+        Mon, 3 Jun 2019 11:26:07 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-206-3Kexq_UPNJK4r62qVQ50LA-1; Mon, 03 Jun 2019 16:26:02 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
+ (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon,
+ 3 Jun 2019 16:26:01 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 3 Jun 2019 16:26:01 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     "'paulmck@linux.ibm.com'" <paulmck@linux.ibm.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+CC:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Fengguang Wu <fengguang.wu@intel.com>, LKP <lkp@01.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: RE: rcu_read_lock lost its compiler barrier
+Thread-Topic: rcu_read_lock lost its compiler barrier
+Thread-Index: AQHVGehFXRQXDDgADEmCdQtcecKZ/qaJ/5iA
+Date:   Mon, 3 Jun 2019 15:26:01 +0000
+Message-ID: <9c0a9e2faae7404cb712f57910c8db34@AcuMS.aculab.com>
+References: <20150910171649.GE4029@linux.vnet.ibm.com>
+ <20150911021933.GA1521@fixme-laptop.cn.ibm.com>
+ <20150921193045.GA13674@lerouge> <20150921204327.GH4029@linux.vnet.ibm.com>
+ <20190602055607.bk5vgmwjvvt4wejd@gondor.apana.org.au>
+ <CAHk-=whLGKOmM++OQi5GX08_dfh8Xfz9Wq7khPo+MVtPYh_8hw@mail.gmail.com>
+ <20190603024640.2soysu4rpkwjuash@gondor.apana.org.au>
+ <20190603034707.GG28207@linux.ibm.com>
+ <20190603040114.st646bujtgyu7adn@gondor.apana.org.au>
+ <20190603072339.GH28207@linux.ibm.com> <20190603084214.GA1496@linux.ibm.com>
+In-Reply-To: <20190603084214.GA1496@linux.ibm.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Received: by 2002:a67:efd3:0:0:0:0:0 with HTTP; Mon, 3 Jun 2019 08:24:44 -0700 (PDT)
-From:   Joshua Hudson <joshudson@gmail.com>
-Date:   Mon, 3 Jun 2019 08:24:44 -0700
-Message-ID: <CA+jjjYT6_ZZP5Ucqxvtmcd3d18vAC1LRtruiXojFVaxpJ-HhLA@mail.gmail.com>
-Subject: O_CLOFORK use case
-To:     linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MC-Unique: 3Kexq_UPNJK4r62qVQ50LA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I ran headlong into the use case for O_CLOFORK and got into a locking
-debate over it.
+From: Paul E. McKenney
+> Sent: 03 June 2019 09:42
+...
+> On kissing the kernel goodbye, a reasonable strategy might be to
+> identify the transformations that are actually occuring (like the
+> stores of certain constants called out above) and fix those.
 
-The actual use case involves squashing a thread race between two
-threads. If a file is opened for write in one thread with O_CLOEXEC
-while another thread calls fork(), a race condition can happen where
-the thread that closes the handle misses the out of disk error because
-the child process closed the handle last inside execve().
+> We do
+> occasionally use READ_ONCE() to prevent load-fusing optimizations that
+> would otherwise cause the compiler to turn while-loops into if-statements
+> guarding infinite loops.
 
-The decades old idiom for replacing config files isn't safe in
-multi-threaded code. Yipe.
+In that case the variable ought to be volatile...
 
-    int h = open(".configfile~", O_WRONY | O_EXCL | O_CLOEXEC, 0666);
-    if (h < 0) { perror(".configfile"); return 1; }
-    ssize_t delta = 0;
-    while ((delta = write(h, newconfigdata, newconfiglen)) > 0) {
-        newconfigdata += delta;
-        newconfiglen -= delta;
-    }
-    if (delta < 0) { perror(".configfile"); return 1; }
-    if (close(h)) { perror(".configfile"); return 1; }
-    rename(".configfile~", ".configfile");
+> There is also the possibility of having the
+> compiler guys give us more command-line arguments.
 
-To fix it, we have to put locks around close() and fork()/vfork(). Ugh.
+I wonder how much the code size (of anything) would increase
+if the compiler:
+1) Never read a value into a local more than once.
+2) Never write a value that wasn't requested by the code.
+3) Never used multiple memory accesses for 'machine word' (and
+   smaller) items.
+
+(1) makes all reads READ_ONCE() except that the actual read
+    can be delayed until further down the code.
+    If I have a naive #define bswap32() I'd expect:
+        v = bswap32(foo->bar)
+    to possibly read foo->bar multiple times, but not:
+        int foo_bar = foo->bar;
+        v = bswap32(foo_bar);
+
+(2) makes all writes WRITE_ONCE() except that if there are
+    multiple writes to the same location, only the last need
+    be done.
+    In particular it stops speculative writes and the use of
+    locations that are going to be written to as temporaries.
+    It also stop foo->bar = ~0; being implemented as a clear
+    then decrement.
+
+(3) I'd never imagined the compiler would write the two halves
+    of a word separately!
+
+If the compiler behaved like that (as one might expect it would)
+then READ_ONCE() would be a READ_NOW() for when the sequencing
+mattered.
+
+I was also recently surprised by the code I got from this loop:
+    for (i = 0; i < limit; i++)
+        sum64 += array32[i];
+(as in the IP checksum sum without add carry support).
+The compiler unrolled it to used horrid sequences of sse3/avx
+instructions.
+This might be a gain for large enough buffers and 'hot cache'
+but for small buffer and likely cold cache it is horrid.
+I guess such optimisations are valid, but I wonder how often
+they are an actual win for real programs.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
