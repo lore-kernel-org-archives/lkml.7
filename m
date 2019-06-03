@@ -4,62 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5982C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF321C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F4FA274CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:55:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94E3E274CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:55:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eM3yvxS7"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MjNLlQZl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729568AbfFCQzo (ORCPT
+        id S1729596AbfFCQzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 12:55:44 -0400
-Received: from mail-qk1-f201.google.com ([209.85.222.201]:42998 "EHLO
+        Mon, 3 Jun 2019 12:55:48 -0400
+Received: from mail-qk1-f201.google.com ([209.85.222.201]:46595 "EHLO
         mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729545AbfFCQzn (ORCPT
+        with ESMTP id S1729572AbfFCQzr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 12:55:43 -0400
-Received: by mail-qk1-f201.google.com with SMTP id l16so991976qkk.9
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 09:55:43 -0700 (PDT)
+        Mon, 3 Jun 2019 12:55:47 -0400
+Received: by mail-qk1-f201.google.com with SMTP id 18so979841qkl.13
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 09:55:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=8pgHCk5wEiyaTFCxwJKfncM1f+2WF9g+TqLFqNfWufQ=;
-        b=eM3yvxS7rzZ2nnFYrRtwMpVwIimBA7OeBVGUKG05qqQOYpi+Zis4iOHoCqOn+3sjDh
-         2SabES8eFCAsnon36EZg8qxjmj+CW/08eSPui+O8M8q9qj9EihXzk/kg7mFnv1ofmO2L
-         6gdrPpvdTVeWEXirSohkSFcGd3CTquZjzaE1d3uIrVhOjCiqBdkigRuAKI8/ID1Mi6ud
-         zk8tRRsd3G4px7QGEmRqWs1oq4KZBZQ84TPIW2/PRqcP/P9TeozrBt0HPw3seUNx6jqU
-         wgzokqzg3Z9TB08A/q6k7ggwnJy6GtgW83uc4Qh4qCVWwdITo0WCqdd0x9WCtndSuvUL
-         /u8A==
+        bh=/k2k5Ar8aCCQf+9D9Tu+JwXv9rH7AXQNa2sn1Y51ZQ4=;
+        b=MjNLlQZlNit0qhAOpvEzanta6aMm/HnKYesq3iqhkQTbbVYKucWsuURNV/pZ0fdIgr
+         1ylaKkgQteB/frXQLyR10kOE8zU+ZyRD8TpKfDcQZGCnFFNsjXxOEavz8cj17GKJRCyB
+         J2x5kMGyd9MMKiWAlK7ocfm8aGFbZzr0Rdh98fVFvwjIhfiuVXpvvAuYt2OnDM/XCpZC
+         VWufB4qSPQOsK3r33NC8xnn++nCnsO734V+hLJqo/vulWZ1igyxoTiVpIzF6BQyRc9HL
+         xirXgN3vt5YoqdUqHeQ92rql4obffE5Q5C/gZo+mx+uqLs8kG3FDDu05FA2VnYDjJKl9
+         Kwrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=8pgHCk5wEiyaTFCxwJKfncM1f+2WF9g+TqLFqNfWufQ=;
-        b=HoB8ABQWyeYLc5NFTx9iwAsoIxmKPvfdIW2XZMJSCtlZeV5s8wu+FTmTpOYrHIeQrd
-         ivTpyx3JD8eC10FZUEFUYYI4lCQICB/tJ1dtKQAr0WgMXChKS4zdjeaCdwj0ToXpPsfY
-         thWWdRPWOrXl2hrE9Hn+t4g50S/QvToioUlm5fYhrGNB6SZJ6YCJRahFmntyY7H+cknU
-         eePsS5nPqB7HJ7xn1gn9jFmcoJ6w4PRiNGYzFNWRYYEXmJra/nJ6rlKXh6AWbWfqbN2J
-         yK5eWmm3Q+ptdsddyFcoeTvsCEGITHbyZYpz4PTRvQ/PWTN2GOK+LdFxe/b1rj/+tPtW
-         u4lA==
-X-Gm-Message-State: APjAAAXcxPtNOrCJvpZDpIS5nm/wO1I90bAs8g1G3dnczgb1Q4/1SYRo
-        6wbK136/QCGH0DywMdZAtJxoq6sdJsqSM6y4
-X-Google-Smtp-Source: APXvYqyNatgo8rHVRn4VlhemarHIUF3AdcvyBy1EVpeL8RHKUhqmEsOqMc7TMbe6ArCDJ95BM6gVWf7qKnPTt9YN
-X-Received: by 2002:a0c:9233:: with SMTP id a48mr6236042qva.66.1559580942841;
- Mon, 03 Jun 2019 09:55:42 -0700 (PDT)
-Date:   Mon,  3 Jun 2019 18:55:08 +0200
+        bh=/k2k5Ar8aCCQf+9D9Tu+JwXv9rH7AXQNa2sn1Y51ZQ4=;
+        b=ObEa2/e2ee1oWGpXI45Uxa5jvruTDZNMTi41lAIC54aD5bqyEfWbKcaybEgrrdCYcf
+         lFyRlXBpl63GVuBtQ6GPvXNutROR26+4ShewRyOeq3ZyV+BklOUrYsG7JJPmCqYhT4+t
+         SIy/J3K4I6/HZTJHocEMnx0Z05JhPyKvP2PfU241D2u+rtAMlNVs7myqU9wMZFotx1p3
+         FtbTDGfOBRbUiOpAqJ8RMtDM5eiDJArM8bKINbK1fElkjPYBg71kdgSzpS7A39yyw7Ds
+         PYkiVJvjzhGVzsUoMyrQPuLwYj+sRWNs6jZa7tmE7WdRdUUZVJKLdl6JJxE56ZV6d39o
+         gyow==
+X-Gm-Message-State: APjAAAWzVlztH6MjB/XxRND4uVhYJEyiurO3I4qeNY1JYUWcEe4hPEp7
+        DV/qTTGQAeamT8peEAEd8rhx1fyNs5FClRm8
+X-Google-Smtp-Source: APXvYqwZjlBwbqsUyeG8rZrRtMFJQ4x0s68oHB37CApZiK1GoR+JjJPXBY4ob8DyF+o+kojgj7/dpioneK7jLRPa
+X-Received: by 2002:a0c:b5c5:: with SMTP id o5mr3845483qvf.6.1559580946056;
+ Mon, 03 Jun 2019 09:55:46 -0700 (PDT)
+Date:   Mon,  3 Jun 2019 18:55:09 +0200
 In-Reply-To: <cover.1559580831.git.andreyknvl@google.com>
-Message-Id: <e1f6d268135f683fd70c2af27e75f694d7ffaf48.1559580831.git.andreyknvl@google.com>
+Message-Id: <da1d0e0f6d69c15a12987379e372182f416cbc02.1559580831.git.andreyknvl@google.com>
 Mime-Version: 1.0
 References: <cover.1559580831.git.andreyknvl@google.com>
 X-Mailer: git-send-email 2.22.0.rc1.311.g5d7573a151-goog
-Subject: [PATCH v16 06/16] mm, arm64: untag user pointers in mm/gup.c
+Subject: [PATCH v16 07/16] mm, arm64: untag user pointers in get_vaddr_frames
 From:   Andrey Konovalov <andreyknvl@google.com>
 To:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
@@ -107,41 +106,28 @@ This patch is a part of a series that extends arm64 kernel ABI to allow to
 pass tagged user pointers (with the top byte set to something else other
 than 0x00) as syscall arguments.
 
-mm/gup.c provides a kernel interface that accepts user addresses and
-manipulates user pages directly (for example get_user_pages, that is used
-by the futex syscall). Since a user can provided tagged addresses, we need
-to handle this case.
+get_vaddr_frames uses provided user pointers for vma lookups, which can
+only by done with untagged pointers. Instead of locating and changing
+all callers of this function, perform untagging in it.
 
-Add untagging to gup.c functions that use user addresses for vma lookups.
-
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 ---
- mm/gup.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ mm/frame_vector.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/mm/gup.c b/mm/gup.c
-index ddde097cf9e4..c37df3d455a2 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -802,6 +802,8 @@ static long __get_user_pages(struct task_struct *tsk, struct mm_struct *mm,
- 	if (!nr_pages)
- 		return 0;
+diff --git a/mm/frame_vector.c b/mm/frame_vector.c
+index c64dca6e27c2..c431ca81dad5 100644
+--- a/mm/frame_vector.c
++++ b/mm/frame_vector.c
+@@ -46,6 +46,8 @@ int get_vaddr_frames(unsigned long start, unsigned int nr_frames,
+ 	if (WARN_ON_ONCE(nr_frames > vec->nr_allocated))
+ 		nr_frames = vec->nr_allocated;
  
 +	start = untagged_addr(start);
 +
- 	VM_BUG_ON(!!pages != !!(gup_flags & FOLL_GET));
- 
- 	/*
-@@ -964,6 +966,8 @@ int fixup_user_fault(struct task_struct *tsk, struct mm_struct *mm,
- 	struct vm_area_struct *vma;
- 	vm_fault_t ret, major = 0;
- 
-+	address = untagged_addr(address);
-+
- 	if (unlocked)
- 		fault_flags |= FAULT_FLAG_ALLOW_RETRY;
- 
+ 	down_read(&mm->mmap_sem);
+ 	locked = 1;
+ 	vma = find_vma_intersection(mm, start, start + 1);
 -- 
 2.22.0.rc1.311.g5d7573a151-goog
 
