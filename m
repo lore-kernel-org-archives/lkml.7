@@ -4,151 +4,232 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A4B9C282DC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 01:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25EDBC282DC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 01:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38599278F8
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 01:20:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0511B2790B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 01:20:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbfFCBUO (ORCPT
+        id S1726917AbfFCBUo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 21:20:14 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:17645 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726305AbfFCBUO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 21:20:14 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 507545137AFE3F29BA21;
-        Mon,  3 Jun 2019 09:20:11 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Mon, 3 Jun 2019
- 09:20:00 +0800
-Subject: Re: [PATCH v2 net-next] net: link_watch: prevent starvation when
- processing linkwatch wq
-To:     Salil Mehta <salil.mehta@huawei.com>,
-        "davem@davemloft.net" <davem@davemloft.net>
-CC:     "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "stephen@networkplumber.org" <stephen@networkplumber.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>
-References: <1559293233-43017-1-git-send-email-linyunsheng@huawei.com>
- <0500aaf60c464528b6bae010c7f9994d@huawei.com>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <802fef29-d525-2559-f2fc-d88ac3193f06@huawei.com>
-Date:   Mon, 3 Jun 2019 09:20:00 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        Sun, 2 Jun 2019 21:20:44 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:64559 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726305AbfFCBUo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Jun 2019 21:20:44 -0400
+X-UUID: d58baef425e641cebf8114c8a7d32732-20190603
+X-UUID: d58baef425e641cebf8114c8a7d32732-20190603
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 76009542; Mon, 03 Jun 2019 09:20:33 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ MTKMBS33N2.mediatek.inc (172.27.4.76) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 3 Jun 2019 09:20:30 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 3 Jun 2019 09:20:28 +0800
+Message-ID: <1559524828.14616.0.camel@mtksdaap41>
+Subject: Re: [v4 1/7] drm/mediatek: move mipi_dsi_host_register to probe
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        <linux-pwm@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Thierry Reding" <treding@nvidia.com>,
+        Ajay Kumar <ajaykumar.rs@samsung.com>,
+        "Inki Dae" <inki.dae@samsung.com>,
+        Rahul Sharma <rahul.sharma@samsung.com>,
+        "Sean Paul" <seanpaul@chromium.org>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        "Andy Yan" <andy.yan@rock-chips.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
+        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
+        <stonea168@163.com>
+Date:   Mon, 3 Jun 2019 09:20:28 +0800
+In-Reply-To: <20190601092615.67917-2-jitao.shi@mediatek.com>
+References: <20190601092615.67917-1-jitao.shi@mediatek.com>
+         <20190601092615.67917-2-jitao.shi@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <0500aaf60c464528b6bae010c7f9994d@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/5/31 17:54, Salil Mehta wrote:
->> From: netdev-owner@vger.kernel.org On Behalf Of Yunsheng Lin
->> Sent: Friday, May 31, 2019 10:01 AM
->> To: davem@davemloft.net
->> Cc: hkallweit1@gmail.com; f.fainelli@gmail.com;
->> stephen@networkplumber.org; netdev@vger.kernel.org; linux-
->> kernel@vger.kernel.org; Linuxarm <linuxarm@huawei.com>
->> Subject: [PATCH v2 net-next] net: link_watch: prevent starvation when
->> processing linkwatch wq
->>
->> When user has configured a large number of virtual netdev, such
->> as 4K vlans, the carrier on/off operation of the real netdev
->> will also cause it's virtual netdev's link state to be processed
->> in linkwatch. Currently, the processing is done in a work queue,
->> which may cause cpu and rtnl locking starvation problem.
->>
->> This patch releases the cpu and rtnl lock when link watch worker
->> has processed a fixed number of netdev' link watch event.
->>
->> Currently __linkwatch_run_queue is called with rtnl lock, so
->> enfore it with ASSERT_RTNL();
-> 
-> 
-> Typo enfore --> enforce ?
+Hi, Jitao:
 
-My mistake.
-
-thanks.
-
+On Sat, 2019-06-01 at 17:26 +0800, Jitao Shi wrote:
+> DSI panel driver need attach function which is inculde in
+> mipi_dsi_host_ops.
 > 
+> If mipi_dsi_host_register is not in probe, dsi panel will
+> probe more delay.
 > 
+> So move the mipi_dsi_host_register to probe from bind.
 > 
->> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
->> ---
->> V2: use cond_resched and rtnl_unlock after processing a fixed
->>     number of events
->> ---
->>  net/core/link_watch.c | 17 +++++++++++++++++
->>  1 file changed, 17 insertions(+)
->>
->> diff --git a/net/core/link_watch.c b/net/core/link_watch.c
->> index 7f51efb..07eebfb 100644
->> --- a/net/core/link_watch.c
->> +++ b/net/core/link_watch.c
->> @@ -168,9 +168,18 @@ static void linkwatch_do_dev(struct net_device
->> *dev)
->>
->>  static void __linkwatch_run_queue(int urgent_only)
->>  {
->> +#define MAX_DO_DEV_PER_LOOP	100
->> +
->> +	int do_dev = MAX_DO_DEV_PER_LOOP;
->>  	struct net_device *dev;
->>  	LIST_HEAD(wrk);
->>
->> +	ASSERT_RTNL();
->> +
->> +	/* Give urgent case more budget */
->> +	if (urgent_only)
->> +		do_dev += MAX_DO_DEV_PER_LOOP;
->> +
->>  	/*
->>  	 * Limit the number of linkwatch events to one
->>  	 * per second so that a runaway driver does not
->> @@ -200,6 +209,14 @@ static void __linkwatch_run_queue(int urgent_only)
->>  		}
->>  		spin_unlock_irq(&lweventlist_lock);
->>  		linkwatch_do_dev(dev);
->> +
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_dsi.c | 50 ++++++++++++++++++------------
+>  1 file changed, 30 insertions(+), 20 deletions(-)
 > 
-> 
-> A comment like below would be helpful in explaining the reason of the code.
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> index b00eb2d2e086..6c4ac37f983d 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> @@ -1045,12 +1045,6 @@ static int mtk_dsi_bind(struct device *dev, struct device *master, void *data)
+>  		return ret;
+>  	}
 >  
-> /* This function is called with rtnl_lock held. If excessive events
->  * are present as part of the watch list, their processing could
->  * monopolize the rtnl_lock and which could lead to starvation in
->  * other modules which want to acquire this lock. Hence, co-operative
->  * scheme like below might be helpful in mitigating the problem.
->  * This also tries to be fair CPU wise by conditional rescheduling.
->  */
+> -	ret = mipi_dsi_host_register(&dsi->host);
+> -	if (ret < 0) {
+> -		dev_err(dev, "failed to register DSI host: %d\n", ret);
+> -		goto err_ddp_comp_unregister;
+> -	}
+> -
+>  	ret = mtk_dsi_create_conn_enc(drm, dsi);
+>  	if (ret) {
+>  		DRM_ERROR("Encoder create failed with %d\n", ret);
+> @@ -1060,8 +1054,6 @@ static int mtk_dsi_bind(struct device *dev, struct device *master, void *data)
+>  	return 0;
+>  
+>  err_unregister:
+> -	mipi_dsi_host_unregister(&dsi->host);
+> -err_ddp_comp_unregister:
+>  	mtk_ddp_comp_unregister(drm, &dsi->ddp_comp);
+>  	return ret;
+>  }
+> @@ -1097,31 +1089,37 @@ static int mtk_dsi_probe(struct platform_device *pdev)
+>  
+>  	dsi->host.ops = &mtk_dsi_ops;
+>  	dsi->host.dev = dev;
+> +	dsi->dev = dev;
 
-Yes, thanks for the helpful comment.
+Except this line,
 
-> 
-> 
->> +		if (--do_dev < 0) {
->> +			rtnl_unlock();
->> +			cond_resched();
->> +			do_dev = MAX_DO_DEV_PER_LOOP;
->> +			rtnl_lock();
->> +		}
->> +
->>  		spin_lock_irq(&lweventlist_lock);
->>  	}
-> 
-> .
-> 
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+
+> +	ret = mipi_dsi_host_register(&dsi->host);
+> +	if (ret < 0) {
+> +		dev_err(dev, "failed to register DSI host: %d\n", ret);
+> +		return ret;
+> +	}
+>  
+>  	ret = drm_of_find_panel_or_bridge(dev->of_node, 0, 0,
+>  					  &dsi->panel, &dsi->bridge);
+>  	if (ret)
+> -		return ret;
+> +		goto err_unregister_host;
+>  
+>  	dsi->engine_clk = devm_clk_get(dev, "engine");
+>  	if (IS_ERR(dsi->engine_clk)) {
+>  		ret = PTR_ERR(dsi->engine_clk);
+>  		dev_err(dev, "Failed to get engine clock: %d\n", ret);
+> -		return ret;
+> +		goto err_unregister_host;
+>  	}
+>  
+>  	dsi->digital_clk = devm_clk_get(dev, "digital");
+>  	if (IS_ERR(dsi->digital_clk)) {
+>  		ret = PTR_ERR(dsi->digital_clk);
+>  		dev_err(dev, "Failed to get digital clock: %d\n", ret);
+> -		return ret;
+> +		goto err_unregister_host;
+>  	}
+>  
+>  	dsi->hs_clk = devm_clk_get(dev, "hs");
+>  	if (IS_ERR(dsi->hs_clk)) {
+>  		ret = PTR_ERR(dsi->hs_clk);
+>  		dev_err(dev, "Failed to get hs clock: %d\n", ret);
+> -		return ret;
+> +		goto err_unregister_host;
+>  	}
+>  
+>  	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> @@ -1129,33 +1127,35 @@ static int mtk_dsi_probe(struct platform_device *pdev)
+>  	if (IS_ERR(dsi->regs)) {
+>  		ret = PTR_ERR(dsi->regs);
+>  		dev_err(dev, "Failed to ioremap memory: %d\n", ret);
+> -		return ret;
+> +		goto err_unregister_host;
+>  	}
+>  
+>  	dsi->phy = devm_phy_get(dev, "dphy");
+>  	if (IS_ERR(dsi->phy)) {
+>  		ret = PTR_ERR(dsi->phy);
+>  		dev_err(dev, "Failed to get MIPI-DPHY: %d\n", ret);
+> -		return ret;
+> +		goto err_unregister_host;
+>  	}
+>  
+>  	comp_id = mtk_ddp_comp_get_id(dev->of_node, MTK_DSI);
+>  	if (comp_id < 0) {
+>  		dev_err(dev, "Failed to identify by alias: %d\n", comp_id);
+> -		return comp_id;
+> +		ret = comp_id;
+> +		goto err_unregister_host;
+>  	}
+>  
+>  	ret = mtk_ddp_comp_init(dev, dev->of_node, &dsi->ddp_comp, comp_id,
+>  				&mtk_dsi_funcs);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to initialize component: %d\n", ret);
+> -		return ret;
+> +		goto err_unregister_host;
+>  	}
+>  
+>  	irq_num = platform_get_irq(pdev, 0);
+>  	if (irq_num < 0) {
+> -		dev_err(&pdev->dev, "failed to request dsi irq resource\n");
+> -		return -EPROBE_DEFER;
+> +		dev_err(&pdev->dev, "failed to get dsi irq_num: %d\n", irq_num);
+> +		ret = irq_num;
+> +		goto err_unregister_host;
+>  	}
+>  
+>  	irq_set_status_flags(irq_num, IRQ_TYPE_LEVEL_LOW);
+> @@ -1163,14 +1163,24 @@ static int mtk_dsi_probe(struct platform_device *pdev)
+>  			       IRQF_TRIGGER_LOW, dev_name(&pdev->dev), dsi);
+>  	if (ret) {
+>  		dev_err(&pdev->dev, "failed to request mediatek dsi irq\n");
+> -		return -EPROBE_DEFER;
+> +		goto err_unregister_host;
+>  	}
+>  
+>  	init_waitqueue_head(&dsi->irq_wait_queue);
+>  
+>  	platform_set_drvdata(pdev, dsi);
+>  
+> -	return component_add(&pdev->dev, &mtk_dsi_component_ops);
+> +	ret = component_add(&pdev->dev, &mtk_dsi_component_ops);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to add component: %d\n", ret);
+> +		goto err_unregister_host;
+> +	}
+> +
+> +	return 0;
+> +
+> +err_unregister_host:
+> +	mipi_dsi_host_unregister(&dsi->host);
+> +	return ret;
+>  }
+>  
+>  static int mtk_dsi_remove(struct platform_device *pdev)
+
 
