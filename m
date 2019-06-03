@@ -2,111 +2,122 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE426C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 06:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 992F6C28CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 06:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B08B527C56
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 06:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7229327C68
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 06:57:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QV0cPHPn"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="LDZ3aPZP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727151AbfFCG4Y (ORCPT
+        id S1727247AbfFCG5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 02:56:24 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:50373 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726694AbfFCG4Y (ORCPT
+        Mon, 3 Jun 2019 02:57:04 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:56410 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726565AbfFCG5E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 02:56:24 -0400
-Received: by mail-it1-f196.google.com with SMTP id a186so25631309itg.0
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 23:56:24 -0700 (PDT)
+        Mon, 3 Jun 2019 02:57:04 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ooOZ8aCismIzzPcMY1VTWsTBEe7b7TcB9sjbz4A8RV4=;
-        b=QV0cPHPnK3fS+9Pj30mBk3EJNolqnegqOausWsF3KeigPRW1UDHE4cDmUCt52QGaoG
-         o2DfahDuF3m+7pwHDz9XHj/Yud2N0e3Dej3Yd/lFBl+2qIZEOm3C3PkkSX8NTklthRPD
-         Nm5dv/tgL2lbBbBuckHd+BOS6vaGu7PnnAXIpTZ9AErLVZSB4p/sSnAfha+5YqPfmGaF
-         zRKaeOWwsoRniCJL1dnwriCXZ691hVwHD6ah2afo5iTBy9mi+RQsswozPHsWNHdN/Y2g
-         NIWeFZogW92q4eBLVCTnjKAyt/yOJhsZkTHCswIhaB1Lc/eooWT3G/CGghTy9JVVYpVH
-         orpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ooOZ8aCismIzzPcMY1VTWsTBEe7b7TcB9sjbz4A8RV4=;
-        b=Ar/ybqlnu9Z/1yEn3X0jW0byartkhLNxDpBBAoGx4W0IFof5+MyYrrpyBNCyPBu/fW
-         CHMs32Ec2oGCiJmLhvvzO/L/53w+dJhchRE6NgNknliCVJ3zaUPCpFmZs6Rgl4Gjaukx
-         dwlqqyZOVU7HznVTk1i1S04TXm13lea6CMxk1fUpW2zKwYa5O3MXEtZHk8gqr6LeXK3w
-         vWct2wzg9E6T5rV/RJFP1m57gvQWEh//aTs8HOzhfrSUsHEFl1I3BJ//HKIyCnpVVyNA
-         9t0nV6UoKg1G6UNxL8b5eW68UNZcBi25ZMV0gdfJtx0Dh2vZOdD6NvYFelCojElIILVX
-         UT5w==
-X-Gm-Message-State: APjAAAVzt6h/H4dmAcG9dxRDFQTTVoZjD5Fm9nNSydqytwZIcg0f4nHA
-        vlDK+nC+jhUtoAPcVFnrfk22NBptufPPecc42yWVag==
-X-Google-Smtp-Source: APXvYqzpGauoTJieg32wk37//cRiF4h/aqH1Z79YNWgjJysa7Is5ms6lE/NZf3cE3Fq2u4wFUatF74z5A98JGk90B7I=
-X-Received: by 2002:a24:9083:: with SMTP id x125mr9442626itd.76.1559544983323;
- Sun, 02 Jun 2019 23:56:23 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1559545022; x=1591081022;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=28ubXn7tIxBtQaVuAwhyLsuJAMZSspzvIGvKhunz4Ug=;
+  b=LDZ3aPZPSYJn7p5wjgCoYuxgzyYs9SUDXLoXceSaYUdDlWrBCtcsNvlK
+   BkOZi/kV03VE4hD0M00ql51YzMlvSz7KMPdNAT38RdmCFsVePQi0e6rB/
+   rfTrCH1DYnfhtRZC/G4R22dvzi8Dp/eb0R3R87s6oSMnhZO9a1XfgQkOT
+   8=;
+X-IronPort-AV: E=Sophos;i="5.60,545,1549929600"; 
+   d="scan'208";a="404727797"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 03 Jun 2019 06:56:57 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
+        by email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com (Postfix) with ESMTPS id 582BDA22F8;
+        Mon,  3 Jun 2019 06:56:56 +0000 (UTC)
+Received: from EX13D08UEE001.ant.amazon.com (10.43.62.126) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 3 Jun 2019 06:56:56 +0000
+Received: from EX13MTAUEE001.ant.amazon.com (10.43.62.200) by
+ EX13D08UEE001.ant.amazon.com (10.43.62.126) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 3 Jun 2019 06:56:55 +0000
+Received: from [10.95.119.163] (10.95.119.163) by mail-relay.amazon.com
+ (10.43.62.226) with Microsoft SMTP Server (TLS) id 15.0.1367.3 via Frontend
+ Transport; Mon, 3 Jun 2019 06:56:50 +0000
+Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+To:     "Herrenschmidt, Benjamin" <benh@amazon.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "Shenhar, Talel" <talel@amazon.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Chocron, Jonathan" <jonnyc@amazon.com>,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "Hanoch, Uri" <hanochu@amazon.com>
+References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
+ <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
+ <DB09EE2A-7397-4063-B925-66658D0105A5@alien8.de>
+ <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
+From:   "Hawa, Hanna" <hhhawa@amazon.com>
+Message-ID: <c608e269-e409-cd2b-d421-f185a706bbc5@amazon.com>
+Date:   Mon, 3 Jun 2019 09:56:44 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <000000000000a7776f058a3ce9db@google.com> <178c7ee0-46b7-8334-ef98-e530eb60a2cf@gmail.com>
-In-Reply-To: <178c7ee0-46b7-8334-ef98-e530eb60a2cf@gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 3 Jun 2019 08:56:11 +0200
-Message-ID: <CACT4Y+ZqM84Ny22p7=J6vVXG7XOkqVN_jjkb87DNetNCFQRFBQ@mail.gmail.com>
-Subject: Re: KASAN: user-memory-access Read in ip6_hold_safe (3)
-To:     David Ahern <dsahern@gmail.com>
-Cc:     syzbot <syzbot+a5b6e01ec8116d046842@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 1, 2019 at 7:15 PM David Ahern <dsahern@gmail.com> wrote:
->
-> On 6/1/19 12:05 AM, syzbot wrote:
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    dfb569f2 net: ll_temac: Fix compile error
-> > git tree:       net-next
-> syzbot team:
->
-> Is there any way to know the history of syzbot runs to determine that
-> crash X did not happen at commit Y but does happen at commit Z? That
-> narrows the window when trying to find where a regression occurs.
 
-Hi David,
 
-All info is available on the dashboard:
+On 5/31/2019 4:15 AM, Herrenschmidt, Benjamin wrote:
+> On Thu, 2019-05-30 at 11:19 -0700, Boris Petkov wrote:
+>> On May 30, 2019 3:15:29 AM PDT, Hanna Hawa <hhhawa@amazon.com> wrote:
+>>> Add support for error detection and correction for Amazon's
+>>> Annapurna
+>>> Labs SoCs for L1/L2 caches.
+>>
+>>
+>> So this should be a driver for the whole annapurna platform and not
+>> only about the RAS functionality in an IP like the caches. See other
+>> ARM EDAC drivers in drivers/edac/ for an example.
+> 
+> This isn't terribly helpful, there's nothing telling anybody which of
+> those files corresponds to an ARM SoC :-)
+> 
+> That said ...
+> 
+> You really want a single EDAC driver that contains all the stuff for
+> the caches, the memory controller, etc... ?
+> 
+> The idea here was to separate the core L1/L2 EDAC from the memory
+> controller EDAC I think ... Roben, Hanna, can you describe the long run
+> strategy here ?
+Correct our target to separate the L1/L2 EDAC from mc, and to maintain 
+both in separate drivers.
 
-> dashboard link: https://syzkaller.appspot.com/bug?extid=a5b6e01ec8116d046842
-
-We don't keep any private info on top of that.
-
-This crash happened 129 times in the past 9 days. This suggests this
-is not a previous memory corruption, these usually happen at most few
-times.
-The first one was:
-
-2019/05/24 15:33 net-next dfb569f2
-
-Then it was joined by bpf-next:
-
-ci-upstream-bpf-next-kasan-gce 2019/06/01 15:51 bpf-next 0462eaac
-
-Since it happens a dozen of times per day, most likely it was
-introduced into net-next around dfb569f2 (syzbot should do new builds
-every ~12h, minus broken trees).
+Thanks,
+Hanna
+> 
+> Cheers,
+> Ben.
+> 
