@@ -2,161 +2,128 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3751BC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1D4C28CC6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02A2323A51
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:48:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FBA427888
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:48:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lR82yWXU"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Q6D29Wee";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YYG9f7cy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729143AbfFCOsu (ORCPT
+        id S1729179AbfFCOs4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 10:48:50 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39992 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728988AbfFCOsu (ORCPT
+        Mon, 3 Jun 2019 10:48:56 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:38862 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728988AbfFCOs4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 10:48:50 -0400
-Received: by mail-pl1-f193.google.com with SMTP id g69so7083424plb.7
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 07:48:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Q+sHhqSxZbf8keZOMlJSAWpHXVIafP73qkF/eQ1kaEg=;
-        b=lR82yWXUpVnRwrloRqpoNOP0h28pmhl9RZJEKQG+xRMq6tXSFYRiAwRkNwerYbaYyT
-         mCi4aJWaTlcYDT14orBv5IHGGmzerqXKyNMQDvzQh39isZbQ6oJ36LC8BqeT7yuWXG7f
-         8fyALfgl4w1zSntEm7DRrtKCXvWYtPCRFqSaTSkKeosOkigvtxwR+TDZi1YKPZXgzHsh
-         RVsXsNR+bFFsTarRQfzzr2fbY4nHoHS8WlZfhuvLyQbEWhiscP0/0NcM1yQBh+W/xEdT
-         abcq/hXaFiugkbBaSCcBFR11OfjpYAF4OGmksbpcxHMyqtCA9vbtDRDVQp6zr9w3Y1Fu
-         jWMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Q+sHhqSxZbf8keZOMlJSAWpHXVIafP73qkF/eQ1kaEg=;
-        b=Nihy634E8k5RhoJYVnPPO8GuHSgSIJHkrhPjmTx2cY0uEtFGpGm88z9KEzBlqiyY5c
-         VYg7TANUi92L7iIziaojbenb1ZeN8Lb3BsPIAJnrxq4Kd+lzoO6bPuvA/dLnG684Y4Pn
-         oxTK2ys1DPZ0j5pWiC5vnKKrc17CbfnxjJXx2Bz+CVrQ1QeOZroK9VF8GdE25sAFBJya
-         UeNOWHXsGf4TOc3gOFBd768tgCzZBu7kKAuPE3uit5IWYxN9D8XsnjbGADaQmxCzfNAC
-         PbAPZ9+kawqDW6A+95Ie8FOgMZlpkSxLGjtapqJGBHUJ25fjYsD+73OYfHA+sPNiYDsb
-         X9JA==
-X-Gm-Message-State: APjAAAXZ8MKZtWbkwOB+mhZm8oLkWtIpxQB9JfChAlMVBAUyp7ldQpHD
-        DA+qNtF9yvYLneaSwJ+K782fDizXcg==
-X-Google-Smtp-Source: APXvYqzDCE7HSjzkN8v18+gy/2oC+6Z+r7kTihM1KnbA2Ry1zX6rsvrfzvO37yYwBVRz4RQQxawIEA==
-X-Received: by 2002:a17:902:a982:: with SMTP id bh2mr29907129plb.224.1559573329403;
-        Mon, 03 Jun 2019 07:48:49 -0700 (PDT)
-Received: from mani ([103.59.133.81])
-        by smtp.gmail.com with ESMTPSA id z125sm18266392pfb.75.2019.06.03.07.48.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 03 Jun 2019 07:48:48 -0700 (PDT)
-Date:   Mon, 3 Jun 2019 20:18:38 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Helen Koike <helen.koike@collabora.com>
-Cc:     linux-rockchip@lists.infradead.org, kernel@collabora.com,
-        ezequiel@collabora.com, laurent.pinchart@ideasonboard.com,
-        linux-arm-kernel@lists.infradead.org,
-        Vicente Bergas <vicencb@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org,
-        Klaus Goger <klaus.goger@theobroma-systems.com>,
-        linux-kernel@vger.kernel.org,
-        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
-        Randy Li <ayaka@soulik.info>,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
+        Mon, 3 Jun 2019 10:48:56 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 862FD60F3E; Mon,  3 Jun 2019 14:48:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559573335;
+        bh=wmoyPPaA8jIHMpOlZBcNsMxuLi2MxGFaoo8cyvL/4vc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Q6D29WeeBtajNgR3/diaSCi5G1OQpJ1ET9nzjd9biggspT1oqLnYYXtxlc+1w1dN4
+         E6RCMkzMF7PJsGZYaKgx2m3XTXUH0KFRN7NBaH5D/cJZkqSjrKYGYNe0fK3ZRu+wS1
+         HkbS56XHSHp43YaHJTqLnEkFUgrg9NsaxAT0RVX0=
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0C98C6074F;
+        Mon,  3 Jun 2019 14:48:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559573334;
+        bh=wmoyPPaA8jIHMpOlZBcNsMxuLi2MxGFaoo8cyvL/4vc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YYG9f7cy6p6luyC1AgZvLfOFGLyxCO29eirTTmZjQY4Nx4kCr3Ure3l14036D3gg7
+         JIphsgGXr/l6WnM/RsZEXmr93gIzSj0IA1H4IejYQYEryr3N5T4uD3PFPav4fFRAAV
+         g8lrWkVOl5dtfEIbXdC8hf95q1ikEIc9qAZuDbO4=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0C98C6074F
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Mon, 3 Jun 2019 08:48:51 -0600
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Rob Clark <robdclark@gmail.com>, devicetree@vger.kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Doug Anderson <dianders@chromium.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Tony Xie <tony.xie@rock-chips.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH] arm64: dts: rockchip: fix isp iommu clocks and power
- domain
-Message-ID: <20190603144838.GA27534@mani>
-References: <20190603142214.24686-1-helen.koike@collabora.com>
+        Sean Paul <seanpaul@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] of/device: add blacklist for iommu dma_ops
+Message-ID: <20190603144851.GD23227@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Thierry Reding <thierry.reding@gmail.com>,
+        Rob Clark <robdclark@gmail.com>, devicetree@vger.kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Doug Anderson <dianders@chromium.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <CAL_JsqJmPqis46Un91QyhXgdrVtfATMP_hTp6wSeSAfc8MLFfw@mail.gmail.com>
+ <CAF6AEGs9Nsft8ofZkGz_yWBPBC+prh8dBSkJ4PJr8yk2c5FMdQ@mail.gmail.com>
+ <CAF6AEGt-dhbQS5zZCNVTLT57OiUwO0RiP5bawTSu2RKZ-7W-aw@mail.gmail.com>
+ <CAAFQd5BdrJFL5LKK8O5NPDKWfFgkTX_JU-jU3giEz33tj-jwCA@mail.gmail.com>
+ <CAF6AEGtj+kyXqKeJK2-0e1jw_A4wz-yBEyv5zhf5Vfoi2_p2CA@mail.gmail.com>
+ <401f9948-14bd-27a2-34c1-fb429cae966d@arm.com>
+ <CAF6AEGuGGAThqs9ztTNyGnMyhFc9wbtn=N8A4qqQxcN_PAxsEw@mail.gmail.com>
+ <20190603135408.GE30132@ulmo>
+ <CAF6AEGtrfqYBNyjpHsUy1Tj-FJZ0MybvAJdHQsqb5kqih2BY3A@mail.gmail.com>
+ <20190603144016.GG30132@ulmo>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190603142214.24686-1-helen.koike@collabora.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190603144016.GG30132@ulmo>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 11:22:15AM -0300, Helen Koike wrote:
-> isp iommu requires wrapper variants of the clocks.
-> noc variants are always on and using the wrapper variants will activate
-> {A,H}CLK_ISP{0,1} due to the hierarchy.
+> It shouldn't be a problem to hook something else up to the IOMMU
+> subsystem. Hopefully it's something that people are going to standardize
+> on.
 > 
-> Also add the respective power domain.
+> > 3) The automatic attach of DMA domain is also causing a different
+> >    problem for us on the GPU side, preventing us from supporting per-
+> >    context pagetables (since we end up with a disagreement about
+> >    which context bank is used between arm-smmu and the firmware).
 > 
-> Refer:
->  RK3399 TRM v1.4 Fig. 2-4 RK3399 Clock Architecture Diagram
->  RK3399 TRM v1.4 Fig. 8-1 RK3399 Power Domain Partition
-> 
-> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> I'm not sure I understand this issue. Is the context bank hard-coded in
+> the firmware somehow? Or is it possible to rewrite which one is going to
+> be used at runtime? Do you switch out the actual page tables rather than
+> the IOMMU domains for context switching?
+ 
+We have a rather long history on this but the tl;dr is that the GPU microcode
+switches the pagetables by rewriting TTBR0 on the fly (since this is
+arm-smmu-v2 we have no better option) and yes, unfortunately it is hard coded
+to use context bank 0. [1] is the current patchset to support all this,
+including my own take on avoiding the dma-domain (all the cool kids have one).
 
-Tested on Rock960 with ISP patches.
+Jordan
 
-Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+[1] https://patchwork.freedesktop.org/series/57441/
 
-Thanks,
-Mani
-
-> 
-> ---
-> Hello,
-> 
-> I tested this using the isp patch set (which is not upstream
-> yet). Without this patch, streaming from the isp stalls.
-> 
-> I'm also enabling the power domain and removing the disable status,
-> please let me know if this should be done in a separated patch.
-> 
-> Thanks
-> Helen
-> 
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> index 196ac9b78076..89594a7276f4 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> @@ -1706,11 +1706,11 @@
->  		reg = <0x0 0xff914000 0x0 0x100>, <0x0 0xff915000 0x0 0x100>;
->  		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
->  		interrupt-names = "isp0_mmu";
-> -		clocks = <&cru ACLK_ISP0_NOC>, <&cru HCLK_ISP0_NOC>;
-> +		clocks = <&cru ACLK_ISP0_WRAPPER>, <&cru HCLK_ISP0_WRAPPER>;
->  		clock-names = "aclk", "iface";
->  		#iommu-cells = <0>;
-> +		power-domains = <&power RK3399_PD_ISP0>;
->  		rockchip,disable-mmu-reset;
-> -		status = "disabled";
->  	};
->  
->  	isp1_mmu: iommu@ff924000 {
-> @@ -1718,11 +1718,11 @@
->  		reg = <0x0 0xff924000 0x0 0x100>, <0x0 0xff925000 0x0 0x100>;
->  		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH 0>;
->  		interrupt-names = "isp1_mmu";
-> -		clocks = <&cru ACLK_ISP1_NOC>, <&cru HCLK_ISP1_NOC>;
-> +		clocks = <&cru ACLK_ISP1_WRAPPER>, <&cru HCLK_ISP1_WRAPPER>;
->  		clock-names = "aclk", "iface";
->  		#iommu-cells = <0>;
-> +		power-domains = <&power RK3399_PD_ISP1>;
->  		rockchip,disable-mmu-reset;
-> -		status = "disabled";
->  	};
->  
->  	hdmi_sound: hdmi-sound {
-> -- 
-> 2.20.1
-> 
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
