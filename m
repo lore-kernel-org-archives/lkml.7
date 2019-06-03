@@ -2,183 +2,91 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91577C28CC5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 02:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 650A4C28CC5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 02:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7157C27347
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 02:46:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35ADA27AF8
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 02:48:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="urIYmDUR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726934AbfFCCqy (ORCPT
+        id S1726990AbfFCCsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 22:46:54 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:44096 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726270AbfFCCqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 22:46:53 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hXczn-0007pq-Vp; Mon, 03 Jun 2019 10:46:48 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hXczg-0001y1-8M; Mon, 03 Jun 2019 10:46:40 +0800
-Date:   Mon, 3 Jun 2019 10:46:40 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Fengguang Wu <fengguang.wu@intel.com>, LKP <lkp@01.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: rcu_read_lock lost its compiler barrier
-Message-ID: <20190603024640.2soysu4rpkwjuash@gondor.apana.org.au>
-References: <20150910005708.GA23369@wfg-t540p.sh.intel.com>
- <20150910102513.GA1677@fixme-laptop.cn.ibm.com>
- <20150910171649.GE4029@linux.vnet.ibm.com>
- <20150911021933.GA1521@fixme-laptop.cn.ibm.com>
- <20150921193045.GA13674@lerouge>
- <20150921204327.GH4029@linux.vnet.ibm.com>
- <20190602055607.bk5vgmwjvvt4wejd@gondor.apana.org.au>
- <CAHk-=whLGKOmM++OQi5GX08_dfh8Xfz9Wq7khPo+MVtPYh_8hw@mail.gmail.com>
+        Sun, 2 Jun 2019 22:48:38 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42796 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbfFCCsi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Jun 2019 22:48:38 -0400
+Received: by mail-lj1-f194.google.com with SMTP id t28so3561119lje.9;
+        Sun, 02 Jun 2019 19:48:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=C39z48dT4cw82rVIn1K+CbAu/jegU5y+sxR7gF6uO+I=;
+        b=urIYmDURC0bvf3Ucz7YsBrIWg5eMQIponz+Pxkb/eV9piukxxId/2OWfuKkGH2hkKA
+         r/VBNM5WVI0OxTtlbhbO/t6rspN3eb76pxRhHICiMxRIEdmOfi8nQTfK7ZUULWFw7oaL
+         75wnDH3wxFSfm4QBfscKXjAFxysb/VPBhZZNpO6L1n1vksX785ldOR+Zrb6fGut2XLXt
+         wuwkWKdeydqT6p5WHeBWdNZU++DQ7hDfsu1eNo/0GCJQpRqh0dhSfeBDvLooE/AnyQng
+         8vVN5PIwQt0+Cqq1VTKYAqG5miD8XWcHXi3E8BMCPqwukUqGJ+ccUaVwXDm8pN/Wt1LI
+         Xwkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=C39z48dT4cw82rVIn1K+CbAu/jegU5y+sxR7gF6uO+I=;
+        b=TdOgFk6CPsPTuL6YgvM4gI8J9auhSU+W8QDfsZTXBwI1me4c17ZScO6RPPs/1hy0Q5
+         dwyuMLeTP7HN1vz6JT6mZYgcEvbUnZBslou2ovlRkU3g5IloNzdfmokgOe+208ZyOUls
+         tpr+R9sCGIet26OVaU4zF2RXqbOWLArJwZA3X9W34Fi4qyMW0T1Cxxt2lZM7eZ+d/qnN
+         tzdlRbF7BSZYwYdonV1Ng3A+OfQCC2JwGpdUKDeX4cjrCfLDgYc3UGDssXY689PA/Dz9
+         vM9xqoGbRz11XrX7tn+HAau+soXX/Ovnunn/RrlojHPDUxV6ooX1PVqTaPWtim/gZc1H
+         KNUA==
+X-Gm-Message-State: APjAAAWW16j+IEKJ7qJUu/bky1NL/ARF4GzvY28OuyMp5zoYgwjwMI7m
+        TgdZQ9zZeTWgHHh+4MevNH2oDbTXmlnuPzGdOJo=
+X-Google-Smtp-Source: APXvYqxAyGdiaZ+w+cYB8umtQAviM0JQI2N2QJGsGxd55Saz01+W66hBjgtHwFxEDz5PS3hi/3bkmn3WhI8AIMTuC/U=
+X-Received: by 2002:a2e:9185:: with SMTP id f5mr9457522ljg.51.1559530115662;
+ Sun, 02 Jun 2019 19:48:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whLGKOmM++OQi5GX08_dfh8Xfz9Wq7khPo+MVtPYh_8hw@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20190603004820.36247-1-Anson.Huang@nxp.com>
+In-Reply-To: <20190603004820.36247-1-Anson.Huang@nxp.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Sun, 2 Jun 2019 23:48:33 -0300
+Message-ID: <CAOMZO5B_1HTg6i2Aybv1Hdm4jXg=1R7FRbOnkAXjjG0mk3RZ=A@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: imx8mm: Fix build warnings
+To:     Yongcai Huang <Anson.Huang@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        viresh kumar <viresh.kumar@linaro.org>,
+        Ping Bai <ping.bai@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        NXP Linux Team <Linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 02, 2019 at 01:54:12PM -0700, Linus Torvalds wrote:
-> On Sat, Jun 1, 2019 at 10:56 PM Herbert Xu <herbert@gondor.apana.org.au> wrote:
-> >
-> > You can't then go and decide to remove the compiler barrier!  To do
-> > that you'd need to audit every single use of rcu_read_lock in the
-> > kernel to ensure that they're not depending on the compiler barrier.
-> 
-> What's the possible case where it would matter when there is no preemption?
+Hi Anson,
 
-The case we were discussing is from net/ipv4/inet_fragment.c from
-the net-next tree:
+On Sun, Jun 2, 2019 at 9:46 PM <Anson.Huang@nxp.com> wrote:
+>
+> From: Anson Huang <Anson.Huang@nxp.com>
+>
+> This patch fixes below build warning with "W=1":
 
-void fqdir_exit(struct fqdir *fqdir)
-{
-	...
-	fqdir->dead = true;
-
-	/* call_rcu is supposed to provide memory barrier semantics,
-	 * separating the setting of fqdir->dead with the destruction
-	 * work.  This implicit barrier is paired with inet_frag_kill().
-	 */
-
-	INIT_RCU_WORK(&fqdir->destroy_rwork, fqdir_rwork_fn);
-	queue_rcu_work(system_wq, &fqdir->destroy_rwork);
-}
-
-and
-
-void inet_frag_kill(struct inet_frag_queue *fq)
-{
-		...
-		rcu_read_lock();
-		/* The RCU read lock provides a memory barrier
-		 * guaranteeing that if fqdir->dead is false then
-		 * the hash table destruction will not start until
-		 * after we unlock.  Paired with inet_frags_exit_net().
-		 */
-		if (!fqdir->dead) {
-			rhashtable_remove_fast(&fqdir->rhashtable, &fq->node,
-					       fqdir->f->rhash_params);
-			...
-		}
-		...
-		rcu_read_unlock();
-		...
-}
-
-I simplified this to
-
-Initial values:
-
-a = 0
-b = 0
-
-CPU1				CPU2
-----				----
-a = 1				rcu_read_lock
-synchronize_rcu			if (a == 0)
-b = 2					b = 1
-				rcu_read_unlock
-
-On exit we want this to be true:
-b == 2
-
-Now what Paul was telling me is that unless every memory operation
-is done with READ_ONCE/WRITE_ONCE then his memory model shows that
-the exit constraint won't hold.  IOW, we need
-
-CPU1				CPU2
-----				----
-WRITE_ONCE(a, 1)		rcu_read_lock
-synchronize_rcu			if (READ_ONCE(a) == 0)
-WRITE_ONCE(b, 2)			WRITE_ONCE(b, 1)
-				rcu_read_unlock
-
-Now I think this bullshit because if we really needed these compiler
-barriers then we surely would need real memory barriers to go with
-them.
-
-In fact, the sole purpose of the RCU mechanism is to provide those
-memory barriers.  Quoting from
-Documentation/RCU/Design/Requirements/Requirements.html:
-
-<li>	Each CPU that has an RCU read-side critical section that
-	begins before <tt>synchronize_rcu()</tt> starts is
-	guaranteed to execute a full memory barrier between the time
-	that the RCU read-side critical section ends and the time that
-	<tt>synchronize_rcu()</tt> returns.
-	Without this guarantee, a pre-existing RCU read-side critical section
-	might hold a reference to the newly removed <tt>struct foo</tt>
-	after the <tt>kfree()</tt> on line&nbsp;14 of
-	<tt>remove_gp_synchronous()</tt>.
-<li>	Each CPU that has an RCU read-side critical section that ends
-	after <tt>synchronize_rcu()</tt> returns is guaranteed
-	to execute a full memory barrier between the time that
-	<tt>synchronize_rcu()</tt> begins and the time that the RCU
-	read-side critical section begins.
-	Without this guarantee, a later RCU read-side critical section
-	running after the <tt>kfree()</tt> on line&nbsp;14 of
-	<tt>remove_gp_synchronous()</tt> might
-	later run <tt>do_something_gp()</tt> and find the
-	newly deleted <tt>struct foo</tt>.
-
-My review of the RCU code shows that these memory barriers are
-indeed present (at least when we're not in tiny mode where all
-this discussion would be moot anyway).  For example, in call_rcu
-we eventually get down to rcu_segcblist_enqueue which has an smp_mb.
-On the reader side (correct me if I'm wrong Paul) the memory
-barrier is implicitly coming from the scheduler.
-
-My point is that within our kernel whenever we have a CPU memory
-barrier we always have a compiler barrier too.  Therefore my code
-example above does not need any extra compiler barriers such as
-the ones provided by READ_ONCE/WRITE_ONCE.
-
-I think perhaps Paul was perhaps thinking that I'm expecting
-rcu_read_lock/rcu_read_unlock themselves to provide the memory
-or compiler barriers.  That would indeed be wrong but this is
-not what I need.  All I need is the RCU semantics as documented
-for there to be memory and compiler barriers around the whole
-grace period.
-
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+I have already sent patches to fix these warnings.
