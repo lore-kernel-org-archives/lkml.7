@@ -2,107 +2,329 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06FEBC28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD9EC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5686239CC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:09:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 575AF26EEF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:14:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=draconx-ca.20150623.gappssmtp.com header.i=@draconx-ca.20150623.gappssmtp.com header.b="qKZGGQt+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GtvNLQI0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbfFCSJo (ORCPT
+        id S1726561AbfFCSOv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 14:09:44 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:44304 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbfFCSJn (ORCPT
+        Mon, 3 Jun 2019 14:14:51 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:36326 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726216AbfFCSOv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 14:09:43 -0400
-Received: by mail-lf1-f68.google.com with SMTP id r15so14318943lfm.11
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 11:09:42 -0700 (PDT)
+        Mon, 3 Jun 2019 14:14:51 -0400
+Received: by mail-pl1-f196.google.com with SMTP id d21so7298942plr.3;
+        Mon, 03 Jun 2019 11:14:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=draconx-ca.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc;
-        bh=2MwbLnfgH8HLFZ7YZiwwnwA2Cf4KCn8Tc6YtdsgHXPA=;
-        b=qKZGGQt+lNAAZIuXDYax/S2sBVt0az6QjzM/EiDq+8Qe3QVehyXxTWrSyF3/mWwK0m
-         yuY8Pk0HjXkGLLKrOZL5Iqz9w9MVBwoXIcT2NXQb7jDPnX0uOa8/Z82rnFNCc55B8l0R
-         marr2RegBOgKTNSSHE/KOG+4rhNiFJO+kMeZ9zdOTJHcz1vN0zW1G+XczdJNQhxzrWbX
-         JOvuk6VoBrpZ23mM24J/Us2I/eTkydIPNYyepROkz092O2EyBz9uYhr5O9vVQzFEqNLs
-         g2i0m/ChfmKIya4xs/Lfcki67BSbhu+3HmAm7DRIM7zToKqBeKG/KTmsYiCvgQihNrlw
-         42WA==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=uYFWaQzFQ5snwyuhA5Wo9knUJ+dwDmCG5TOZVT/0Ues=;
+        b=GtvNLQI0UcMuSMxlxW8HfJaW8ruwYroak68XQJT5ZmOGW7u1P8sBpm8wL8BBUoEt6W
+         7FzOBN3oDW6EzvG7h67WBTfUpnha5F011tZ3d00OqSeIYs0YgrNkx7c67FRWOBcq3/6A
+         lKRiJWj36QFBVeRiTQXC8xZdbpOyoMGFZLGGqH1340gBbX4d2yVey7ipvEP1rIluQbMb
+         1KGZDvH1+lOCDqrwAZr7TRYDtMDthdyxPILd+9yDC1bPuV+RgJSqadGY0WyZ0GizQExh
+         9ImCR1RzxozCbp1wSbSqmdgK/VG6f5ZryL60fPKOSAII/h5hSvDJRKYtBzO+xwNSlFl3
+         c3kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc;
-        bh=2MwbLnfgH8HLFZ7YZiwwnwA2Cf4KCn8Tc6YtdsgHXPA=;
-        b=lZvefB8AkcQTSDIQck/BFQBwA9ah3CRxavq+2kicmHxuaRQD9yjUSj/wTyPBzogRf+
-         BvGtnF3dy2lLvAPgyYftZnPnfm4CH8Oplzywn8Tex9p4icHluH85sMY1fDu3wVqY2bBA
-         de1R3Yz5PzbitxKPHD5HlBjPXsb1wcQcN+KYFQ3NkXV4oXDsL+r4KBfwRiRfdXM96wyN
-         4Y1rSAIesyosdi/5Gc/xR+LBI/s9r+3ekDN7U72gXTzWWFjcrphjgYHrDCSa1UXY7BMe
-         FOT4YjinQZIVMtrK/viHmL646mZPn1Hi3koLnu0Z5/s/uzbF7AZGKi9lE2DPh04SA0XR
-         f/nQ==
-X-Gm-Message-State: APjAAAVx00cOM6YKCdGV90JETV9cIj4B2YmBIBBEavAXygPHCfQvCCg+
-        BWBXGIyenrIxZxeoiJ7l7uQJ8Py2ngKgPDB2jNkE+w==
-X-Google-Smtp-Source: APXvYqyPr7/4TQemd244Vw4exuLTEj/1EHObaw55iDbMdmKPtpj+/w7tBGXzQijJ06AMqMENV8O09NxkkL+81raKtiU=
-X-Received: by 2002:ac2:44b1:: with SMTP id c17mr14379583lfm.87.1559585381637;
- Mon, 03 Jun 2019 11:09:41 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uYFWaQzFQ5snwyuhA5Wo9knUJ+dwDmCG5TOZVT/0Ues=;
+        b=W/ADmjxz+JDWUPA0xsWXIw6U5CrOl/GEqf2JaWdu+LDjF0yHUk2NX0G7/JSkBB7BzG
+         uuurxnQsInoYx7Xcmkj3eMfkpQuuzVR6IM8XMCgecU7s754tgrY83OA0K6Bi4KcKxtmR
+         LGsf9/uwVtqKnV+dYH7rSIrAl0HbvnMR/LA8inbE0e3Pdv/l1jzhv6GZjiz5eWMkXmMP
+         Ds8/BL+WxVRd3rBGbNEnrNjyxdyvmoxZ8P/zXc+LNe27bR6Xoh/xaEZeVGoluEG9UEnQ
+         hO+L335E3S8Oj35H54hUoeYkxipqCMyvXeQoC4L+6ApDzsg6GJeB53SWBWawZeF1T1nd
+         GTGw==
+X-Gm-Message-State: APjAAAWq3r8kKY+YuWEdj3ghzdxMy8dbpOfbh5twsxcl+pL308UYsRRI
+        S0XOJJUoedfM28fsTcn1WAg=
+X-Google-Smtp-Source: APXvYqxAq6k0HrANm+sE7CE/NmEXg9rSayXZbcrOQYq8ulhcVLYfja5V3QO7wBNbj8G9SGH4dlUopw==
+X-Received: by 2002:a17:902:2869:: with SMTP id e96mr30606965plb.203.1559585690027;
+        Mon, 03 Jun 2019 11:14:50 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id a5sm12544714pjo.29.2019.06.03.11.14.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 03 Jun 2019 11:14:48 -0700 (PDT)
+Date:   Mon, 3 Jun 2019 11:14:47 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        Kumar Gala <galak@codeaurora.org>, linux-pwm@vger.kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>, stonea168@163.com,
+        dri-devel@lists.freedesktop.org,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Ajay Kumar <ajaykumar.rs@samsung.com>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
+        ck.hu@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>,
+        Thierry Reding <treding@nvidia.com>,
+        devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
+        Inki Dae <inki.dae@samsung.com>,
+        linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com,
+        eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org,
+        Rahul Sharma <rahul.sharma@samsung.com>,
+        srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Sean Paul <seanpaul@chromium.org>
+Subject: Re: [v3 6/7] drm/mediatek: change the dsi phytiming calculate method
+Message-ID: <20190603181447.GA6947@roeck-us.net>
+References: <20190519092537.69053-1-jitao.shi@mediatek.com>
+ <20190519092537.69053-7-jitao.shi@mediatek.com>
 MIME-Version: 1.0
-Received: by 2002:a2e:9d89:0:0:0:0:0 with HTTP; Mon, 3 Jun 2019 11:09:41 -0700 (PDT)
-X-Originating-IP: [162.243.96.244]
-In-Reply-To: <CADyTPEyJRC+Yi1yJb_Vqb+7zsDKvk-5egBVDvFsTLG=kOrffMA@mail.gmail.com>
-References: <20190529151003.hzmesyoiopnbcgkb@aura.draconx.ca>
- <ceecedad1b650f703a12ec3424493c4a73d1e20e.camel@hammerspace.com>
- <CAN-5tyHws9bO5Yuj9FTn6EdcPcY5QGK0419aBbujU7Ugt4_6uQ@mail.gmail.com> <CADyTPEyJRC+Yi1yJb_Vqb+7zsDKvk-5egBVDvFsTLG=kOrffMA@mail.gmail.com>
-From:   Nick Bowler <nbowler@draconx.ca>
-Date:   Mon, 3 Jun 2019 14:09:41 -0400
-Message-ID: <CADyTPEyzKMjFi4Tvp9Tq6JBD9wK6iQKezLb0CYG4Wt_6wKaeCQ@mail.gmail.com>
-Subject: Re: PROBLEM: oops spew with Linux 5.1.5 (NFS regression?)
-To:     Olga Kornievskaia <aglo@umich.edu>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Olga.Kornievskaia@netapp.com" <Olga.Kornievskaia@netapp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190519092537.69053-7-jitao.shi@mediatek.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-06-03, Nick Bowler <nbowler@draconx.ca> wrote:
-> On 2019-05-29, Olga Kornievskaia <aglo@umich.edu> wrote:
->> On Wed, May 29, 2019 at 1:14 PM Trond Myklebust <trondmy@hammerspace.com>
->>> OK, I think this is the same problem that Olga was seeing (Cced), and
->>> it looks like I missed the use-after-free issue when the server returns
->>> a credential error when she asked.
->>
->> I think this is actually different than what I encountered for the
->> umount case but the trigger is the same -- failing validation.
->>
->> I tried to reproduce Nick's oops on 5.2-rc but haven't been able to
->> (but I'm not confident I produced the right trigger conditions. will
->> try 5.1).
->
-> OK, I think I found something that triggers this fault.  This happens
-> when certain local users try to stat a file or directory on an nfs
-> mount.  Presumably these UIDs do not have appropriate permissions on
-> the server but I'm not sure exactly (I do not control the server).
->
-> I can reproduce the oops with a command like this:
->
->   # su -s/bin/sh -c 'stat /path/to/nfs/file' problematic_user
->
-> which oopes every time (and SIGKILLs the stat command).   (I have not yet
-> rebooted since the original report or tried with Trond's patch applied.
-> I will do that next, and also try 5.1.6).
+On Sun, May 19, 2019 at 05:25:36PM +0800, Jitao Shi wrote:
+> Change the method of frame rate calc which can get more accurate
+> frame rate.
+> 
+> data rate = pixel_clock * bit_per_pixel / lanes
+> Adjust hfp_wc to adapt the additional phy_data
+> 
+> if MIPI_DSI_MODE_VIDEO_BURST
+> 	hfp_wc = hfp * bpp - data_phy_cycles * lanes - 12 - 6;
+> else
+> 	hfp_wc = hfp * bpp - data_phy_cycles * lanes - 12;
+> 
+> Note:
+> //(2: 1 for sync, 1 for phy idle)
+> data_phy_cycles = T_hs_exit + T_lpx + T_hs_prepare + T_hs_zero + 2;
+> 
+> bpp: bit per pixel
+> 
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> Tested-by: Ryan Case <ryandcase@chromium.org>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_dsi.c | 119 +++++++++++++++++++++--------
+>  1 file changed, 86 insertions(+), 33 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> index 1165ff944889..3f51b2000c68 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> @@ -158,6 +158,25 @@
+>  	(type == MIPI_DSI_GENERIC_READ_REQUEST_2_PARAM) || \
+>  	(type == MIPI_DSI_DCS_READ))
+>  
+> +struct mtk_phy_timing {
+> +	u32 lpx;
+> +	u32 da_hs_prepare;
+> +	u32 da_hs_zero;
+> +	u32 da_hs_trail;
+> +
+> +	u32 ta_go;
+> +	u32 ta_sure;
+> +	u32 ta_get;
+> +	u32 da_hs_exit;
+> +
+> +	u32 clk_hs_zero;
+> +	u32 clk_hs_trail;
+> +
+> +	u32 clk_hs_prepare;
+> +	u32 clk_hs_post;
+> +	u32 clk_hs_exit;
+> +};
+> +
+>  struct phy;
+>  
+>  struct mtk_dsi_driver_data {
+> @@ -182,12 +201,13 @@ struct mtk_dsi {
+>  	struct clk *digital_clk;
+>  	struct clk *hs_clk;
+>  
+> -	u32 data_rate;
+> +	u64 data_rate;
 
-OK, armed with this reproducer I can confirm that the issue is still
-present in 5.1.6, and that applying Trond's patch on top of 5.1.6
-appears to fix the problem.
+This results in 64-bit divide operations and thus build failures
+with 32-bit builds. More on that below.
 
-Thanks,
-  Nick
+>  
+>  	unsigned long mode_flags;
+>  	enum mipi_dsi_pixel_format format;
+>  	unsigned int lanes;
+>  	struct videomode vm;
+> +	struct mtk_phy_timing phy_timing;
+>  	int refcount;
+>  	bool enabled;
+>  	u32 irq_data;
+> @@ -221,17 +241,39 @@ static void mtk_dsi_phy_timconfig(struct mtk_dsi *dsi)
+>  {
+>  	u32 timcon0, timcon1, timcon2, timcon3;
+>  	u32 ui, cycle_time;
+> +	struct mtk_phy_timing *timing = &dsi->phy_timing;
+> +
+> +	ui = 1000000000 / dsi->data_rate;
+> +	cycle_time = 8000000000 / dsi->data_rate;
+
+This results in 64-bit divide operations. On top of that, 8000000000
+is larger than 0xffffffff, resulting in an integer overflow on 32-bit
+systems; it should be provided as 8000000000ULL. 
+
+> +
+> +	timing->lpx = NS_TO_CYCLE(60, cycle_time);
+> +	timing->da_hs_prepare = NS_TO_CYCLE((40 + 5 * ui), cycle_time);
+> +	timing->da_hs_zero = NS_TO_CYCLE((110 + 6 * ui), cycle_time);
+> +	timing->da_hs_trail = NS_TO_CYCLE(((0x4 * ui) + 80), cycle_time);
+> +
+> +	if (timing->da_hs_zero > timing->da_hs_prepare)
+> +		timing->da_hs_zero -= timing->da_hs_prepare;
+> +
+> +	timing->ta_go = 4 * timing->lpx;
+> +	timing->ta_sure = 3 * timing->lpx / 2;
+> +	timing->ta_get = 5 * timing->lpx;
+> +	timing->da_hs_exit = 2 * timing->lpx;
+> +
+> +	timing->clk_hs_zero = NS_TO_CYCLE(0x150, cycle_time);
+> +	timing->clk_hs_trail = NS_TO_CYCLE(0x64, cycle_time) + 0xa;
+>  
+> -	ui = 1000 / dsi->data_rate + 0x01;
+> -	cycle_time = 8000 / dsi->data_rate + 0x01;
+> +	timing->clk_hs_prepare = NS_TO_CYCLE(0x40, cycle_time);
+> +	timing->clk_hs_post = NS_TO_CYCLE(80 + 52 * ui, cycle_time);
+> +	timing->clk_hs_exit = 2 * timing->lpx;
+>  
+> -	timcon0 = T_LPX | T_HS_PREP << 8 | T_HS_ZERO << 16 | T_HS_TRAIL << 24;
+> -	timcon1 = 4 * T_LPX | (3 * T_LPX / 2) << 8 | 5 * T_LPX << 16 |
+> -		  T_HS_EXIT << 24;
+> -	timcon2 = ((NS_TO_CYCLE(0x64, cycle_time) + 0xa) << 24) |
+> -		  (NS_TO_CYCLE(0x150, cycle_time) << 16);
+> -	timcon3 = NS_TO_CYCLE(0x40, cycle_time) | (2 * T_LPX) << 16 |
+> -		  NS_TO_CYCLE(80 + 52 * ui, cycle_time) << 8;
+> +	timcon0 = timing->lpx | timing->da_hs_prepare << 8 |
+> +		  timing->da_hs_zero << 16 | timing->da_hs_trail << 24;
+> +	timcon1 = timing->ta_go | timing->ta_sure << 8 |
+> +		  timing->ta_get << 16 | timing->da_hs_exit << 24;
+> +	timcon2 = 1 << 8 | timing->clk_hs_zero << 16 |
+> +		  timing->clk_hs_trail << 24;
+> +	timcon3 = timing->clk_hs_prepare | timing->clk_hs_post << 8 |
+> +		  timing->clk_hs_exit << 16;
+>  
+>  	writel(timcon0, dsi->regs + DSI_PHY_TIMECON0);
+>  	writel(timcon1, dsi->regs + DSI_PHY_TIMECON1);
+> @@ -418,7 +460,8 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
+>  	u32 horizontal_sync_active_byte;
+>  	u32 horizontal_backporch_byte;
+>  	u32 horizontal_frontporch_byte;
+> -	u32 dsi_tmp_buf_bpp;
+> +	u32 dsi_tmp_buf_bpp, data_phy_cycles;
+> +	struct mtk_phy_timing *timing = &dsi->phy_timing;
+>  
+>  	struct videomode *vm = &dsi->vm;
+>  
+> @@ -433,7 +476,8 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
+>  	writel(vm->vactive, dsi->regs + DSI_VACT_NL);
+>  
+>  	if (dsi->driver_data->has_size_ctl)
+> -		writel(vm->vactive << 16 | vm->hactive, dsi->regs + DSI_SIZE_CON);
+> +		writel(vm->vactive << 16 | vm->hactive,
+> +		       dsi->regs + DSI_SIZE_CON);
+>  
+>  	horizontal_sync_active_byte = (vm->hsync_len * dsi_tmp_buf_bpp - 10);
+>  
+> @@ -444,7 +488,34 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
+>  		horizontal_backporch_byte = ((vm->hback_porch + vm->hsync_len) *
+>  			dsi_tmp_buf_bpp - 10);
+>  
+> -	horizontal_frontporch_byte = (vm->hfront_porch * dsi_tmp_buf_bpp - 12);
+> +	data_phy_cycles = timing->lpx + timing->da_hs_prepare +
+> +				  timing->da_hs_zero + timing->da_hs_exit + 2;
+> +
+> +	if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_BURST) {
+> +		if (vm->hfront_porch * dsi_tmp_buf_bpp >
+> +		    data_phy_cycles * dsi->lanes + 18) {
+> +			horizontal_frontporch_byte = vm->hfront_porch *
+> +						     dsi_tmp_buf_bpp -
+> +						     data_phy_cycles *
+> +						     dsi->lanes - 18;
+> +		} else {
+> +			DRM_WARN("HFP less than d-phy, FPS will under 60Hz\n");
+> +			horizontal_frontporch_byte = vm->hfront_porch *
+> +						     dsi_tmp_buf_bpp;
+> +		}
+> +	} else {
+> +		if (vm->hfront_porch * dsi_tmp_buf_bpp >
+> +		    data_phy_cycles * dsi->lanes + 12) {
+> +			horizontal_frontporch_byte = vm->hfront_porch *
+> +						     dsi_tmp_buf_bpp -
+> +						     data_phy_cycles *
+> +						     dsi->lanes - 12;
+> +		} else {
+> +			DRM_WARN("HFP less than d-phy, FPS will under 60Hz\n");
+> +			horizontal_frontporch_byte = vm->hfront_porch *
+> +						     dsi_tmp_buf_bpp;
+> +		}
+> +	}
+>  
+>  	writel(horizontal_sync_active_byte, dsi->regs + DSI_HSA_WC);
+>  	writel(horizontal_backporch_byte, dsi->regs + DSI_HBP_WC);
+> @@ -544,8 +615,7 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
+>  {
+>  	struct device *dev = dsi->dev;
+>  	int ret;
+> -	u64 pixel_clock, total_bits;
+> -	u32 htotal, htotal_bits, bit_per_pixel, overhead_cycles, overhead_bits;
+> +	u32 bit_per_pixel;
+>  
+>  	if (++dsi->refcount != 1)
+>  		return 0;
+> @@ -564,24 +634,7 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
+>  		break;
+>  	}
+>  
+> -	/**
+> -	 * htotal_time = htotal * byte_per_pixel / num_lanes
+> -	 * overhead_time = lpx + hs_prepare + hs_zero + hs_trail + hs_exit
+> -	 * mipi_ratio = (htotal_time + overhead_time) / htotal_time
+> -	 * data_rate = pixel_clock * bit_per_pixel * mipi_ratio / num_lanes;
+> -	 */
+> -	pixel_clock = dsi->vm.pixelclock;
+> -	htotal = dsi->vm.hactive + dsi->vm.hback_porch + dsi->vm.hfront_porch +
+> -			dsi->vm.hsync_len;
+> -	htotal_bits = htotal * bit_per_pixel;
+> -
+> -	overhead_cycles = T_LPX + T_HS_PREP + T_HS_ZERO + T_HS_TRAIL +
+> -			T_HS_EXIT;
+> -	overhead_bits = overhead_cycles * dsi->lanes * 8;
+> -	total_bits = htotal_bits + overhead_bits;
+> -
+> -	dsi->data_rate = DIV_ROUND_UP_ULL(pixel_clock * total_bits,
+> -					  htotal * dsi->lanes);
+> +	dsi->data_rate = dsi->vm.pixelclock * bit_per_pixel / dsi->lanes;
+
+pixelclock and bit_per_pixel are not u64, and neither is dsi->lanes.
+The above will thus be a 32-bit operation on 32-bit systems, and never
+really assign a true 64-bit value to data_rate. On top of that,
+clk_set_rate() expects an unsigned long argument. Declaring data_rate
+as anything but unsigned long has therefore no value.
+
+Note that the old code took possible overflow conditions due to interim
+results larger than u32 / unsigned long into account. This is no longer
+the case. I don't know if this is a concern, but it might be worth watching
+out for. If it is not a concern because the code is not anymore expected
+to run on 32-bit systems, it should be restricted to 64-bit builds.
+
+Guenter
+
+>  
+>  	ret = clk_set_rate(dsi->hs_clk, dsi->data_rate);
+>  	if (ret < 0) {
