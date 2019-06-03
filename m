@@ -2,285 +2,192 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70839C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 505BCC28CC6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 304FD24022
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29E4423F94
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:23:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FO3TYOrD"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="QGgQrPwV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729179AbfFCQWb (ORCPT
+        id S1729191AbfFCQXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 12:22:31 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37402 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727162AbfFCQWa (ORCPT
+        Mon, 3 Jun 2019 12:23:14 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46507 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727162AbfFCQXN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 12:22:30 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 22so3520745wmg.2;
-        Mon, 03 Jun 2019 09:22:28 -0700 (PDT)
+        Mon, 3 Jun 2019 12:23:13 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y11so10880210pfm.13
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 09:23:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NC4fC+Zjj4toN18dzTnrQX0pU3xEF/6OCKvzETAHYpw=;
-        b=FO3TYOrDdKS2BZYjR5NDEOL+HHD3fUjB6n2DYfmhf1uOGlYf/Bk9BEtMHxibaREWMh
-         P39W3roO2waUsI3d5OFMkv5AwuQIMDASo6ozJpMd5R0OMY/BqI7DF0OoV9ZJoSiqSPy6
-         mQjkes4Q5n5z8/0PSlSXkMHslIyrfsgH8rT/QXxwtUVccBKz2CLDxcOvvDQZS2hSHaAj
-         tK2dfiR/7EQzB9o4ZAmLVdywH5w9xRo/Q8fLBKoX6pAr78l+3rCjxpOgvG4rhdEY6Nfk
-         typiT5NzjUPvAITDN9UlBNPwBlMY8qekmRnvxTad1GIc50ErpWoVk53WvrIpE+5gjEiS
-         aVFg==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JANRXtNq/OlXEVUckmhj0Gl/WVjY8ue45Pv7dcHW6sM=;
+        b=QGgQrPwVRdf1FporyJuiYg8dww4nmTS56JSFMbwI0B2HL2g870kOaQE9Ywt0x006N6
+         PjQFzmPuMSqVgpLiHGQiHxKi+RNegLkeQbj9M/kqEAraRxIHkA9uTMK+9MY40yM1oNUU
+         5RSFX82A4bupgDJL3ID6O1kJCNBQ58xyApRr93QMRGu7ilTUQKe3S+1NMJg8dP1ccaFA
+         H9LgGRGjK46Hz1/8qSOzwXc4iBACaNU/zFlTIHtoP7vs7a5etSrbMcZ3Xa4KVMiZdd7M
+         27X98Iw/B26uLHcsFuTvb75LvBV0snxsJTFjnQkkPdtn8eciopq44UTkUBjqPGHN3ZFh
+         JbLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=NC4fC+Zjj4toN18dzTnrQX0pU3xEF/6OCKvzETAHYpw=;
-        b=N6PTTNpjrqP0GV+QHP6Qdcdbfo+WOOAdNSfE+nZnrFSxt4wyrIiPy8pysRrrtJ7Ijs
-         d5kRNFyW0irsfqts67q9fymklU/CLI44VOb9ec+1icFfYFxXjDsRxl/H1GF6JhGGJvJ+
-         rW58HghJTUNSK86RB30orjHEuVLcch0C56WNGez21tFPkbVtnl8cmsL4E3cBJdOlttAF
-         YCfnHCNAmTcd3bXGlB9NGvrW333YM7Oz+ZgzvC8AHwpMwKhU1MIUgKhTy/fG+uAxULpc
-         DXZPP5R0PK6Iab5RYoYelcphA4BPeKj6vR51LenVAgiJbqkPhaqf381lsVqXHX6XMHuq
-         iziA==
-X-Gm-Message-State: APjAAAUaOALD/dYRN8ZKGtnDfpftIwCiYe8mU+uD8FUmWWchWMjvZstD
-        I8lQXbWzEkofVkgy2YL7eVU=
-X-Google-Smtp-Source: APXvYqzrUL3Kn4RHjk4QZOm04N3UaNLlLFiONFpQaZx7xhSKQtX8swiv4uYj8qBFbVnQZVC6SDUVtg==
-X-Received: by 2002:a1c:cfc3:: with SMTP id f186mr14053222wmg.134.1559578946980;
-        Mon, 03 Jun 2019 09:22:26 -0700 (PDT)
-Received: from [10.67.49.123] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id o6sm10005718wmc.15.2019.06.03.09.22.23
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JANRXtNq/OlXEVUckmhj0Gl/WVjY8ue45Pv7dcHW6sM=;
+        b=doyUWv0izmqgBU2ekISB12cDkGh1ea8NR9KoR/qCevuEZ2VL/cUeP2dX0oXNFWm652
+         whMRClDoWAPrvR1c8HxkX92FtnsasWvaCGf8dL2m5f6wqdhq7nP4iQKjx9OXGxDl8tXq
+         2q5FjhmAyWUQbOSA2eOmsh8z+Pj/it95slDLGz6Up/N9N8wXiAuM2frWSjrsk+4g6r3F
+         QApPt49I1VjOzEeNQyAk4oPJxyaQ7NzROvQs4FTcTNcCXG4Zlu/aw3n/bl6ESgtom7kA
+         JoKlBRiOrSZPlATSQXHuMVkYoz94IGq8IsIEAHHLtszDgMl2bAFnqwxZ9jZog8hz+bfW
+         U/iw==
+X-Gm-Message-State: APjAAAXqsxBxuHgmByqvLyVI+HTi9g9q318sDpmED7J+9qQizamPkWGs
+        QpomVQzAsYfyNyDWzMNzPiY8GTghTkIaEA==
+X-Google-Smtp-Source: APXvYqwCufEoyFE7wi6ZCH5aXURbYNyTbhnYSnr2KtWTknjUQ1XLoDXrpTilRUIYKKwXpC5/rlOvWQ==
+X-Received: by 2002:a17:90a:195e:: with SMTP id 30mr31687487pjh.116.1559578991519;
+        Mon, 03 Jun 2019 09:23:11 -0700 (PDT)
+Received: from [192.168.1.158] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id d10sm16947450pgh.43.2019.06.03.09.23.09
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Jun 2019 09:22:26 -0700 (PDT)
-Subject: Re: [PATCH V2 1/2] DT: mailbox: add binding doc for the ARM SMC
- mailbox
-To:     peng.fan@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        jassisinghbrar@gmail.com, sudeep.holla@arm.com
-Cc:     kernel@pengutronix.de, linux-imx@nxp.com, shawnguo@kernel.org,
-        festevam@gmail.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        andre.przywara@arm.com, van.freenix@gmail.com
-References: <20190603083005.4304-1-peng.fan@nxp.com>
- <20190603083005.4304-2-peng.fan@nxp.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <ae4c79f0-4aec-250e-e312-20aba5554665@gmail.com>
-Date:   Mon, 3 Jun 2019 09:22:16 -0700
+        Mon, 03 Jun 2019 09:23:10 -0700 (PDT)
+Subject: Re: [PATCH] block: fix a crash in do_task_dead()
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org, hch@lst.de,
+        oleg@redhat.com, gkohli@codeaurora.org, mingo@redhat.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1559161526-618-1-git-send-email-cai@lca.pw>
+ <20190530080358.GG2623@hirez.programming.kicks-ass.net>
+ <82e88482-1b53-9423-baad-484312957e48@kernel.dk>
+ <20190603123705.GB3419@hirez.programming.kicks-ass.net>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <9a75cc4f-bd14-1d98-6653-b49a2842dd16@kernel.dk>
+Date:   Mon, 3 Jun 2019 10:23:09 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190603083005.4304-2-peng.fan@nxp.com>
+In-Reply-To: <20190603123705.GB3419@hirez.programming.kicks-ass.net>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/3/19 1:30 AM, peng.fan@nxp.com wrote:
-> From: Peng Fan <peng.fan@nxp.com>
+On 6/3/19 6:37 AM, Peter Zijlstra wrote:
+> On Fri, May 31, 2019 at 03:12:13PM -0600, Jens Axboe wrote:
+>> On 5/30/19 2:03 AM, Peter Zijlstra wrote:
 > 
-> The ARM SMC mailbox binding describes a firmware interface to trigger
-> actions in software layers running in the EL2 or EL3 exception levels.
-> The term "ARM" here relates to the SMC instruction as part of the ARM
-> instruction set, not as a standard endorsed by ARM Ltd.
+>>> What is the purpose of that patch ?! The Changelog doesn't mention any
+>>> benefit or performance gain. So why not revert that?
+>>
+>> Yeah that is actually pretty weak. There are substantial performance
+>> gains for small IOs using this trick, the changelog should have
+>> included those. I guess that was left on the list...
 > 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> OK. I've looked at the try_to_wake_up() path for these exact
+> conditions and we're certainly sub-optimal there, and I think we can put
+> much of this special case in there. Please see below.
+> 
+>> I know it's not super kosher, your patch, but I don't think it's that
+>> bad hidden in a generic helper.
+> 
+> How about the thing that Oleg proposed? That is, not set a waiter when
+> we know the loop is polling? That would avoid the need for this
+> alltogether, it would also avoid any set_current_state() on the wait
+> side of things.
+> 
+> Anyway, Oleg, do you see anything blatantly buggered with this patch?
+> 
+> (the stats were already dodgy for rq-stats, this patch makes them dodgy
+> for task-stats too)
+> 
 > ---
+>   kernel/sched/core.c | 38 ++++++++++++++++++++++++++++++++------
+>   1 file changed, 32 insertions(+), 6 deletions(-)
 > 
-> V2:
-> Introduce interrupts as a property.
-> 
-> V1:
-> arm,func-ids is still kept as an optional property, because there is no
-> defined SMC funciton id passed from SCMI. So in my test, I still use
-> arm,func-ids for ARM SIP service.
-> 
->  .../devicetree/bindings/mailbox/arm-smc.txt        | 101 +++++++++++++++++++++
->  1 file changed, 101 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.txt b/Documentation/devicetree/bindings/mailbox/arm-smc.txt
-> new file mode 100644
-> index 000000000000..401887118c09
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mailbox/arm-smc.txt
-> @@ -0,0 +1,101 @@
-> +ARM SMC Mailbox Interface
-> +=========================
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 102dfcf0a29a..474aa4c8e9d2 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -1990,6 +1990,28 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+>   	unsigned long flags;
+>   	int cpu, success = 0;
+>   
+> +	if (p == current) {
+> +		/*
+> +		 * We're waking current, this means 'p->on_rq' and 'task_cpu(p)
+> +		 * == smp_processor_id()'. Together this means we can special
+> +		 * case the whole 'p->on_rq && ttwu_remote()' case below
+> +		 * without taking any locks.
+> +		 *
+> +		 * In particular:
+> +		 *  - we rely on Program-Order guarantees for all the ordering,
+> +		 *  - we're serialized against set_special_state() by virtue of
+> +		 *    it disabling IRQs (this allows not taking ->pi_lock).
+> +		 */
+> +		if (!(p->state & state))
+> +			goto out;
 > +
-> +This mailbox uses the ARM smc (secure monitor call) instruction to trigger
-> +a mailbox-connected activity in firmware, executing on the very same core
-> +as the caller.
+> +		success = 1;
+> +		trace_sched_waking(p);
+> +		p->state = TASK_RUNNING;
+> +		trace_sched_woken(p);
+> +		goto out;
+> +	}
+> +
+>   	/*
+>   	 * If we are going to wake up a thread waiting for CONDITION we
+>   	 * need to ensure that CONDITION=1 done by the caller can not be
+> @@ -1999,7 +2021,7 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+>   	raw_spin_lock_irqsave(&p->pi_lock, flags);
+>   	smp_mb__after_spinlock();
+>   	if (!(p->state & state))
+> -		goto out;
+> +		goto unlock;
+>   
+>   	trace_sched_waking(p);
+>   
+> @@ -2029,7 +2051,7 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+>   	 */
+>   	smp_rmb();
+>   	if (p->on_rq && ttwu_remote(p, wake_flags))
+> -		goto stat;
+> +		goto unlock;
+>   
+>   #ifdef CONFIG_SMP
+>   	/*
+> @@ -2089,12 +2111,16 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+>   #endif /* CONFIG_SMP */
+>   
+>   	ttwu_queue(p, cpu, wake_flags);
+> -stat:
+> -	ttwu_stat(p, cpu, wake_flags);
+> -out:
+> +unlock:
+>   	raw_spin_unlock_irqrestore(&p->pi_lock, flags);
+>   
+> -	return success;
+> +out:
+> +	if (success) {
+> +		ttwu_stat(p, cpu, wake_flags);
+> +		return true;
+> +	}
+> +
+> +	return false;
+>   }
+>   
+>   /**
 
-The binding defines both hvc and smc as being valid methods for the mailbox.
+Let me run some tests with this vs mainline vs blk wakeup hack removed.
 
-> By nature this operation is synchronous and this mailbox
-> +provides no way for asynchronous messages to be delivered the other way
-> +round, from firmware to the OS, but asynchronous notification could also
-> +be supported. However the value of r0/w0/x0 the firmware returns after
-> +the smc call is delivered as a received message to the mailbox framework,
-> +so a synchronous communication can be established, for a asynchronous
-> +notification, no value will be returned. The exact meaning of both the
-> +action the mailbox triggers as well as the return value is defined by
-> +their users and is not subject to this binding.
-> +
-> +One use case of this mailbox is the SCMI interface, which uses shared memory
-> +to transfer commands and parameters, and a mailbox to trigger a function
-> +call. This allows SoCs without a separate management processor (or when
-> +such a processor is not available or used) to use this standardized
-> +interface anyway.
-> +
-> +This binding describes no hardware, but establishes a firmware interface.
-> +Upon receiving an SMC using one of the described SMC function identifiers,
-> +the firmware is expected to trigger some mailbox connected functionality.
-> +The communication follows the ARM SMC calling convention[1].
-> +Firmware expects an SMC function identifier in r0 or w0. The supported
-> +identifiers are passed from consumers, or listed in the the arm,func-ids
-> +properties as described below. The firmware can return one value in
-> +the first SMC result register, it is expected to be an error value,
-> +which shall be propagated to the mailbox client.
-> +
-> +Any core which supports the SMC or HVC instruction can be used, as long as
-> +a firmware component running in EL3 or EL2 is handling these calls.
-> +
-> +Mailbox Device Node:
-> +====================
-> +
-> +This node is expected to be a child of the /firmware node.
-> +
-> +Required properties:
-> +--------------------
-> +- compatible:		Shall be "arm,smc-mbox"
-> +- #mbox-cells		Shall be 1 - the index of the channel needed.
-> +- arm,num-chans		The number of channels supported.
-> +- method:		A string, either:
-> +			"hvc": if the driver shall use an HVC call, or
-> +			"smc": if the driver shall use an SMC call.
-> +
-> +Optional properties:
-> +- arm,func-ids		An array of 32-bit values specifying the function
-> +			IDs used by each mailbox channel. Those function IDs
-> +			follow the ARM SMC calling convention standard [1].
-> +			There is one identifier per channel and the number
-> +			of supported channels is determined by the length
-> +			of this array.
-> +- interrupts		SPI interrupts may be listed for notification,
-> +			each channel should use a dedicated interrupt
-> +			line.
 
-I would not go about defining a specific kind of interrupt, since SPI is
-a GIC terminology, this firmware interface could be used in premise with
-any parent interrupt controller, for which the concept of a SPI/PPI/SGI
-may not be relevant.
-
-> +
-> +Example:
-> +--------
-> +
-> +	sram@910000 {
-> +		compatible = "mmio-sram";
-> +		reg = <0x0 0x93f000 0x0 0x1000>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0 0x0 0x93f000 0x1000>;
-> +
-> +		cpu_scp_lpri: scp-shmem@0 {
-> +			compatible = "arm,scmi-shmem";
-> +			reg = <0x0 0x200>;
-> +		};
-> +
-> +		cpu_scp_hpri: scp-shmem@200 {
-> +			compatible = "arm,scmi-shmem";
-> +			reg = <0x200 0x200>;
-> +		};
-> +	};
-> +
-> +	smc_mbox: mailbox {
-> +		#mbox-cells = <1>;
-> +		compatible = "arm,smc-mbox";
-> +		method = "smc";
-> +		arm,num-chans = <0x2>;
-> +		/* Optional */
-> +		arm,func-ids = <0xc20000fe>, <0xc20000ff>;
-> +	};
-> +
-> +	firmware {
-> +		scmi {
-> +			compatible = "arm,scmi";
-> +			mboxes = <&mailbox 0 &mailbox 1>;
-
-It is visually nicer (and more consistent with yoyr arm,func-ids example
-to use:
-			mboxes = <&mailbox 0>, <&mailbox 1>;
-
-> +			mbox-names = "tx", "rx";
-> +			shmem = <&cpu_scp_lpri &cpu_scp_hpri>;
-
-			shmem = <&cpu_scp_lpri>, <&cpu_scp_hpri>;
-
-Other than those, LGTM!
 -- 
-Florian
+Jens Axboe
+
