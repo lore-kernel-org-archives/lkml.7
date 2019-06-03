@@ -2,129 +2,124 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_DR,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E08C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E9DC04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BA6626F51
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553206;
-	bh=R8DPWqvu8iCfeZPI7kR/OftjOwvZZ6W7KEvFFiZ9gVE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wJ802IuOeedi1R2ek/xoIqUS1iNIr82y2xLMvscn5DBVOVquvagHXMTbktOqIKZUI
-	 Vj2aidwDTT3PG4ojL1WuUerIjbcYlzRtVRXuwp9tIl7vofP/HDyBuASDr9Y3nKidqR
-	 9AefbUNdTNuyYHaCKW3UtIndxQm7mEuKIh5ZYBQQ=
+	by mail.kernel.org (Postfix) with ESMTP id A4B53276DB
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728828AbfFCJNZ (ORCPT
+        id S1728854AbfFCJN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:13:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33656 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 05:13:29 -0400
+Received: from wind.enjellic.com ([76.10.64.91]:34382 "EHLO wind.enjellic.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728809AbfFCJNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:13:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5797327EB0;
-        Mon,  3 Jun 2019 09:13:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553202;
-        bh=R8DPWqvu8iCfeZPI7kR/OftjOwvZZ6W7KEvFFiZ9gVE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FqWeQDL66+XOWWw2Zu7m5w1+aWI/T2CUyGPMZW9V/sQmEYzqyM2Vo5pIWYea8gPw+
-         onOpJvoENJo19YEsDMdOHKu2XmlZESsA0Jyuq/Or8IbcyJNFJD42F3lay6ohaMdMO8
-         S5qJuV6Qb3WFLlgo644YAazfBzAP9AyAh7QXBK/o=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
-        Mark Bloch <markb@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.1 21/40] net/mlx5: Avoid double free in fs init error unwinding path
-Date:   Mon,  3 Jun 2019 11:09:14 +0200
-Message-Id: <20190603090523.920086887@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190603090522.617635820@linuxfoundation.org>
-References: <20190603090522.617635820@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S1727961AbfFCJN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:13:27 -0400
+Received: from wind.enjellic.com (localhost [127.0.0.1])
+        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id x539C8O2013972;
+        Mon, 3 Jun 2019 04:12:08 -0500
+Received: (from greg@localhost)
+        by wind.enjellic.com (8.15.2/8.15.2/Submit) id x539C6Fb013971;
+        Mon, 3 Jun 2019 04:12:06 -0500
+Date:   Mon, 3 Jun 2019 04:12:06 -0500
+From:   "Dr. Greg" <greg@enjellic.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        William Roberts <bill.c.roberts@gmail.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+Message-ID: <20190603091206.GA13614@wind.enjellic.com>
+Reply-To: "Dr. Greg" <greg@enjellic.com>
+References: <960B34DE67B9E140824F1DCDEC400C0F654EB487@ORSMSX116.amr.corp.intel.com> <678a37af-797d-7bd5-a406-32548a270e3d@tycho.nsa.gov> <CALCETrWXB9fNNDH7gZxPTx05F78Og6K=ZtAr2aA++BDwY09Wbg@mail.gmail.com> <c1135352-0b5e-4694-b1a9-105876095877@tycho.nsa.gov> <CALCETrWsEXzUC33eJpGCpdMCBO4aYVviZLRD-CLMNaG5Jv-TCA@mail.gmail.com> <20190530180110.GB23930@linux.intel.com> <CALCETrX2PgUc_jetXHqp85aaS0a0jHB8E7=T1rsW+5vyRgwnUA@mail.gmail.com> <20190530211645.GB27551@linux.intel.com> <CALCETrVAoDppmdJzkpwagt3q64M-QpNajXbKGR1yQdqyofeANQ@mail.gmail.com> <20190530213601.GC27551@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190530213601.GC27551@linux.intel.com>
+User-Agent: Mutt/1.4i
+X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Mon, 03 Jun 2019 04:12:08 -0500 (CDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parav Pandit <parav@mellanox.com>
+On Thu, May 30, 2019 at 02:36:01PM -0700, Sean Christopherson wrote:
 
-[ Upstream commit 9414277a5df3669c67e818708c0f881597e0118e ]
+Good morning, I hope everyone had a pleasant weekend.
 
-In below code flow, for ingress acl table root ns memory leads
-to double free.
+> Assuming MRENCLAVE generated by Graphene or any other hosting scheme
+> are stable[1], then avoiding EXEC<whatever> means the user can
+> effectively whitelist what enclaves are runnable by Graphene, even
+> if the kernel doesn't implement security_enclave_create/init().
+>
+> I agree that it probably isn't all that important, it's more of a
+> "why not" argument, i.e. what is gained by not using sigstruct as a
+> proxy?
+>
+> [1] What in the world is being attested if MRENCLAVE isn't stable?
 
-mlx5_init_fs
-  init_ingress_acls_root_ns()
-    init_ingress_acl_root_ns
-       kfree(steering->esw_ingress_root_ns);
-       /* steering->esw_ingress_root_ns is not marked NULL */
-  mlx5_cleanup_fs
-    cleanup_ingress_acls_root_ns
-       steering->esw_ingress_root_ns non NULL check passes.
-       kfree(steering->esw_ingress_root_ns);
-       /* double free */
+The cryptographic identity of the entity that signed the enclave and
+generated the SIGSTRUCT.
 
-Similar issue exist for other tables.
+At the risk of being the monotone in the choir, any relevant SGX
+security controls require verifying the identity of whoever signed the
+identity characteristics (SIGSTRUCT) of the image that initiates the
+execution of an SGX TEE.  Other then verifying the initial execution
+image, the MRENCLAVE value isn't all that relevant.
 
-Hence zero out the pointers to not process the table again.
+This issue is further evidenced by the fact that sealing data to an
+enclave uses the MRSIGNER variant of ENCLU[EGETKEY] key derivation.
 
-Fixes: 9b93ab981e3bf ("net/mlx5: Separate ingress/egress namespaces for each vport")
-Fixes: 40c3eebb49e51 ("net/mlx5: Add support in RDMA RX steering")
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Reviewed-by: Mark Bloch <markb@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/mellanox/mlx5/core/fs_core.c |    4 ++++
- 1 file changed, 4 insertions(+)
+The current work on LSM controls seems to focus on the identity of the
+entity that is requesting the image to be loaded rather then who
+actually signed, and presumably authored, the code.  As I have
+previously noted, with SGX2/EDMM, a platform owner may not even have
+any visibility into the code that an SGX TEE may ultimately load and
+execute.
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
-@@ -2429,6 +2429,7 @@ static void cleanup_egress_acls_root_ns(
- 		cleanup_root_ns(steering->esw_egress_root_ns[i]);
- 
- 	kfree(steering->esw_egress_root_ns);
-+	steering->esw_egress_root_ns = NULL;
- }
- 
- static void cleanup_ingress_acls_root_ns(struct mlx5_core_dev *dev)
-@@ -2443,6 +2444,7 @@ static void cleanup_ingress_acls_root_ns
- 		cleanup_root_ns(steering->esw_ingress_root_ns[i]);
- 
- 	kfree(steering->esw_ingress_root_ns);
-+	steering->esw_ingress_root_ns = NULL;
- }
- 
- void mlx5_cleanup_fs(struct mlx5_core_dev *dev)
-@@ -2611,6 +2613,7 @@ cleanup_root_ns:
- 	for (i--; i >= 0; i--)
- 		cleanup_root_ns(steering->esw_egress_root_ns[i]);
- 	kfree(steering->esw_egress_root_ns);
-+	steering->esw_egress_root_ns = NULL;
- 	return err;
- }
- 
-@@ -2638,6 +2641,7 @@ cleanup_root_ns:
- 	for (i--; i >= 0; i--)
- 		cleanup_root_ns(steering->esw_ingress_root_ns[i]);
- 	kfree(steering->esw_ingress_root_ns);
-+	steering->esw_ingress_root_ns = NULL;
- 	return err;
- }
- 
+Any security relevant LSM control in this space has to focus on
+providing the platform owner the ability to take action based on the
+contents of the SIGSTRUCT of the initiating image.  In addition to the
+identity of who is requesting the image to be loaded.
 
+Have a good week.
 
+Dr. Greg
+
+As always,
+Dr. G.W. Wettstein, Ph.D.   Enjellic Systems Development, LLC.
+4206 N. 19th Ave.           Specializing in information infra-structure
+Fargo, ND  58102            development.
+PH: 701-281-1686
+FAX: 701-281-3949           EMAIL: greg@enjellic.com
+------------------------------------------------------------------------------
+"Experience is something you don't get until just after you need it."
+                                -- Olivier
