@@ -2,289 +2,141 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 962ADC28CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 04:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59904C28CC6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 04:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6535F27B70
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 04:29:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559536166;
-	bh=/7F9KWXB8tGnB7NReFIj1On2bcO9wWYmsnXfJhzSet0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e9A7i61MQsIRKrktKjYizALDlE7WPxHXWuf/ICTPHTM0Po8LZ8quqfytFWw+kysoe
-	 Y8bKWqJNscIqBCW2OCxPM1UD+/SQPJ04RxC0y1BaaJBmj0v1sfHwo4e+I+fQ7N70CQ
-	 +A0cEKkLVl9ZaG66mJ4rpuhi+hDt6xwqIHOcDIus=
+	by mail.kernel.org (Postfix) with ESMTP id 316AC272F3
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 04:30:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hSrYsDPx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727250AbfFCE3Z (ORCPT
+        id S1726860AbfFCEa5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 00:29:25 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:41291 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726221AbfFCE3Z (ORCPT
+        Mon, 3 Jun 2019 00:30:57 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:35610 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726221AbfFCEa4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 00:29:25 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id BF63821FB;
-        Mon,  3 Jun 2019 00:29:23 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Mon, 03 Jun 2019 00:29:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=u3v0eiZffY+v2sn8V9SnXJ0gtCWl1JCgJq73oZGa8dI=; b=LPQlwJrO
-        rlkK/aTKLE3ZbR1UfmcfzlAUCyKPw8waLGQpzkYI/A5+0IKEnsjJYFiMUoD8MDkj
-        vrHDs2Ya0zR7ue81LL1ThhvGv8BimaSnUO9o6q1Lwt09kbSu7ZxchL1OQteUlPRR
-        7TuZ+oS/qf3nJ2oT0uqWSGSaPJ0UWQX4UGcbRHdiRq32EQzkgCpOOYZDWaBxbDAm
-        2oIWR+76Jkwz5DjIXVBUpxmSEWbNUMo35tOH7i4WBJgkm4F0MSBJBY9jmNgjC6g4
-        4zsmGirt8UPn1jynaz2Eei9l2/1GU3t43bhb1qgvnFXaPBS5rbUm90UCcp1+u6CA
-        uhWce+zErqC7jQ==
-X-ME-Sender: <xms:I6L0XFEznNRIUkNHx7UbsZfU9uDOw6Pn3cmv7vgfcRGktT7hz75qaw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrudefiedgkedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpedfvfhosghi
-    nhcuvedrucfjrghrughinhhgfdcuoehtohgsihhnsehkvghrnhgvlhdrohhrgheqnecukf
-    hppeduvdegrddugeelrdduudefrdefieenucfrrghrrghmpehmrghilhhfrhhomhepthho
-    sghinheskhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:I6L0XD6XFsa_C5ICtjyrrqbuwSuHB4fQ37d1hdpdEfYg2uSW9Xc5Yw>
-    <xmx:I6L0XCn8NLLBcNa-_ERRzkHIJbw9gA4n1PciJj_sPM0vmTB55-vVZw>
-    <xmx:I6L0XJx0SX5f1wjC9N1bHp1dsCmOvgZLpMXtQlnbIRYHpl5D5-Ihgg>
-    <xmx:I6L0XGIvyG0fCyoVfFBSyKm10T_BvgTvEyXvbgoULHTtC5W9qnRIUw>
-Received: from eros.localdomain (124-149-113-36.dyn.iinet.net.au [124.149.113.36])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 9CF3C8005B;
-        Mon,  3 Jun 2019 00:29:16 -0400 (EDT)
-From:   "Tobin C. Harding" <tobin@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Roman Gushchin <guro@fb.com>,
-        Alexander Viro <viro@ftp.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Pekka Enberg <penberg@cs.helsinki.fi>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Christopher Lameter <cl@linux.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Andreas Dilger <adilger@dilger.ca>,
-        Waiman Long <longman@redhat.com>,
-        Tycho Andersen <tycho@tycho.ws>, Theodore Ts'o <tytso@mit.edu>,
-        Andi Kleen <ak@linux.intel.com>,
-        David Chinner <david@fromorbit.com>,
-        Nick Piggin <npiggin@gmail.com>,
-        Rik van Riel <riel@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 15/15] slub: Enable balancing slabs across nodes
-Date:   Mon,  3 Jun 2019 14:26:37 +1000
-Message-Id: <20190603042637.2018-16-tobin@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190603042637.2018-1-tobin@kernel.org>
-References: <20190603042637.2018-1-tobin@kernel.org>
+        Mon, 3 Jun 2019 00:30:56 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x534Ui9C000624;
+        Sun, 2 Jun 2019 23:30:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559536244;
+        bh=XCE8FuOjQTKbDWChgZDrjUr4wBNlOAOjCpOOOpmJ1kI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=hSrYsDPxcBPlzQUWOH70qJoZY+D/Ts/UCjeQZs0pY2Kn3Wky8QWE1mbbJbe3sYYhY
+         WM1/dCnPAWOoXR5rFVeETyx3U4C/DxQQb4y5NsR+8RhNdGPUGwt4mdhpm/Wsip3zVl
+         wlWyTT9U2xd0YWIsJEZaIMlVRgwlJgT80fYxTlFg=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x534UitW072751
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sun, 2 Jun 2019 23:30:44 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Sun, 2 Jun
+ 2019 23:30:44 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Sun, 2 Jun 2019 23:30:44 -0500
+Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x534UbmT115561;
+        Sun, 2 Jun 2019 23:30:40 -0500
+Subject: Re: [PATCH] PCI: endpoint: Add DMA to Linux PCI EP Framework
+To:     Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vkoul@kernel.org>
+CC:     Alan Mikhak <alan.mikhak@sifive.com>,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "wen.yang99@zte.com.cn" <wen.yang99@zte.com.cn>,
+        "kjlu@umn.edu" <kjlu@umn.edu>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "palmer@sifive.com" <palmer@sifive.com>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
+References: <1558650258-15050-1-git-send-email-alan.mikhak@sifive.com>
+ <305100E33629484CBB767107E4246BBB0A6FAFFD@DE02WEMBXB.internal.synopsys.com>
+ <CABEDWGxsQ9NXrN7W_8HVrXQBb9HiBd+d1dNfv+cXmoBpXQnLwA@mail.gmail.com>
+ <305100E33629484CBB767107E4246BBB0A6FC308@DE02WEMBXB.internal.synopsys.com>
+ <CABEDWGxL-WYz1BY7yXJ6eKULgVtKeo67XhgHZjvtm5Ka5foKiA@mail.gmail.com>
+ <192e3a19-8b69-dfaf-aa5c-45c7087548cc@ti.com>
+ <20190531050727.GO15118@vkoul-mobl>
+ <d2d8a904-d796-f9f2-8f4a-61e857355a4f@ti.com>
+ <20190531063247.GP15118@vkoul-mobl>
+ <CAK8P3a2jePe7Qfjciq4fdfngAudzCb-cai4fr3_BG_evnbjhvw@mail.gmail.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <b5d5aa64-710b-3fcc-4197-2a2114266385@ti.com>
+Date:   Mon, 3 Jun 2019 09:59:16 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK8P3a2jePe7Qfjciq4fdfngAudzCb-cai4fr3_BG_evnbjhvw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have just implemented Slab Movable Objects (SMO).  On NUMA systems
-slabs can become unbalanced i.e. many slabs on one node while other
-nodes have few slabs.  Using SMO we can balance the slabs across all
-the nodes.
+Hi,
 
-The algorithm used is as follows:
+On 31/05/19 1:19 PM, Arnd Bergmann wrote:
+> On Fri, May 31, 2019 at 8:32 AM Vinod Koul <vkoul@kernel.org> wrote:
+>> On 31-05-19, 10:50, Kishon Vijay Abraham I wrote:
+>>> On 31/05/19 10:37 AM, Vinod Koul wrote:
+>>>> On 30-05-19, 11:16, Kishon Vijay Abraham I wrote:
+>>>>>
+>>>>> right, my initial thought process was to use only dmaengine APIs in
+>>>>> pci-epf-test so that the system DMA or DMA within the PCIe controller can be
+>>>>> used transparently. But can we register DMA within the PCIe controller to the
+>>>>> DMA subsystem? AFAIK only system DMA should register with the DMA subsystem.
+>>>>> (ADMA in SDHCI doesn't use dmaengine). Vinod Koul can confirm.
+>>>>
+>>>> So would this DMA be dedicated for PCI and all PCI devices on the bus?
+>>>
+>>> Yes, this DMA will be used only by PCI ($patch is w.r.t PCIe device mode. So
+>>> all endpoint functions both physical and virtual functions will use the DMA in
+>>> the controller).
+>>>> If so I do not see a reason why this cannot be using dmaengine. The use
+>>>
+>>> Thanks for clarifying. I was under the impression any DMA within a peripheral
+>>> controller shouldn't use DMAengine.
+>>
+>> That is indeed a correct assumption. The dmaengine helps in cases where
+>> we have a dma controller with multiple users, for a single user case it
+>> might be overhead to setup dma driver and then use it thru framework.
+>>
+>> Someone needs to see the benefit and cost of using the framework and
+>> decide.
+> 
+> I think the main question is about how generalized we want this to be.
+> There are lots of difference PCIe endpoint implementations, and in
+> case of some licensable IP cores like the designware PCIe there are
+> many variants, as each SoC will do the implementation in a slightly
+> different way.
+> 
+> If we can have a single endpoint driver than can either have an
+> integrated DMA engine or use an external one, then abstracting that
+> DMA engine helps make the driver work more readily either way.
+> 
+> Similarly, there may be PCIe endpoint implementations that have
+> a dedicated DMA engine in them that is not usable for anything else,
+> but that is closely related to an IP core we already have a dmaengine
+> driver for. In this case, we can avoid duplication.
 
- 1. Move all objects to node 0 (this has the effect of defragmenting the
-    cache).
+right. Either way it makes more sense to register DMA embedded within the PCIe
+endpoint controller instead of creating epc_ops for DMA transfers.
 
- 2. Calculate the desired number of slabs for each node (this is done
-    using the approximation nr_slabs / nr_nodes).
-
- 3. Loop over the nodes moving the desired number of slabs from node 0
-    to the node.
-
-Feature is conditionally built in with CONFIG_SMO_NODE, this is because
-we need the full list (we enable SLUB_DEBUG to get this).  Future
-version may separate final list out of SLUB_DEBUG.
-
-Expose this functionality to userspace via a sysfs entry.  Add sysfs
-entry:
-
-       /sysfs/kernel/slab/<cache>/balance
-
-Write of '1' to this file triggers balance, no other value accepted.
-
-This feature relies on SMO being enable for the cache, this is done with
-a call to, after the isolate/migrate functions have been defined.
-
-	kmem_cache_setup_mobility(s, isolate, migrate)
-
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
----
- mm/slub.c | 130 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 130 insertions(+)
-
-diff --git a/mm/slub.c b/mm/slub.c
-index 23566e5a712b..70e46c4db757 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -4458,6 +4458,119 @@ static unsigned long kmem_cache_move_to_node(struct kmem_cache *s, int node)
- 
- 	return left;
- }
-+
-+/*
-+ * kmem_cache_move_slabs() - Attempt to move @num slabs to target_node,
-+ * @s: The cache we are working on.
-+ * @node: The node to move objects from.
-+ * @target_node: The node to move objects to.
-+ * @num: The number of slabs to move.
-+ *
-+ * Attempts to move @num slabs from @node to @target_node.  This is done
-+ * by migrating objects from slabs on the full_list.
-+ *
-+ * Return: The number of slabs moved or error code.
-+ */
-+static long kmem_cache_move_slabs(struct kmem_cache *s,
-+				  int node, int target_node, long num)
-+{
-+	struct kmem_cache_node *n = get_node(s, node);
-+	LIST_HEAD(move_list);
-+	struct page *page, *page2;
-+	unsigned long flags;
-+	void **scratch;
-+	long done = 0;
-+
-+	if (!s->migrate) {
-+		pr_warn("%s SMO not enabled, cannot move objects\n", s->name);
-+		goto out;
-+	}
-+
-+	if (node == target_node)
-+		return -EINVAL;
-+
-+	scratch = alloc_scratch(s);
-+	if (!scratch)
-+		return -ENOMEM;
-+
-+	spin_lock_irqsave(&n->list_lock, flags);
-+
-+	list_for_each_entry_safe(page, page2, &n->full, lru) {
-+		if (!slab_trylock(page))
-+			/* Busy slab. Get out of the way */
-+			continue;
-+
-+		list_move(&page->lru, &move_list);
-+		page->frozen = 1;
-+		slab_unlock(page);
-+
-+		if (++done >= num)
-+			break;
-+	}
-+	spin_unlock_irqrestore(&n->list_lock, flags);
-+
-+	list_for_each_entry(page, &move_list, lru) {
-+		if (page->inuse)
-+			move_slab_page(page, scratch, target_node);
-+	}
-+	kfree(scratch);
-+
-+	/* Bail here to save taking the list_lock */
-+	if (list_empty(&move_list))
-+		goto out;
-+
-+	/* Inspect results and dispose of pages */
-+	spin_lock_irqsave(&n->list_lock, flags);
-+	list_for_each_entry_safe(page, page2, &move_list, lru) {
-+		list_del(&page->lru);
-+		slab_lock(page);
-+		page->frozen = 0;
-+
-+		if (page->inuse) {
-+			/*
-+			 * This is best effort only, if slab still has
-+			 * objects just put it back on the partial list.
-+			 */
-+			n->nr_partial++;
-+			list_add_tail(&page->lru, &n->partial);
-+			slab_unlock(page);
-+		} else {
-+			slab_unlock(page);
-+			discard_slab(s, page);
-+		}
-+	}
-+	spin_unlock_irqrestore(&n->list_lock, flags);
-+out:
-+	return done;
-+}
-+
-+/*
-+ * kmem_cache_balance_nodes() - Balance slabs across nodes.
-+ * @s: The cache we are working on.
-+ */
-+static void kmem_cache_balance_nodes(struct kmem_cache *s)
-+{
-+	struct kmem_cache_node *n = get_node(s, 0);
-+	unsigned long desired_nr_slabs_per_node;
-+	unsigned long nr_slabs;
-+	int nr_nodes = 0;
-+	int nid;
-+
-+	(void)kmem_cache_move_to_node(s, 0);
-+
-+	for_each_node_state(nid, N_NORMAL_MEMORY)
-+		nr_nodes++;
-+
-+	nr_slabs = atomic_long_read(&n->nr_slabs);
-+	desired_nr_slabs_per_node = nr_slabs / nr_nodes;
-+
-+	for_each_node_state(nid, N_NORMAL_MEMORY) {
-+		if (nid == 0)
-+			continue;
-+
-+		kmem_cache_move_slabs(s, 0, nid, desired_nr_slabs_per_node);
-+	}
-+}
- #endif	/* CONFIG_SLUB_SMO_NODE */
- 
- /*
-@@ -5836,6 +5949,22 @@ static ssize_t move_store(struct kmem_cache *s, const char *buf, size_t length)
- 	return length;
- }
- SLAB_ATTR(move);
-+
-+static ssize_t balance_show(struct kmem_cache *s, char *buf)
-+{
-+	return 0;
-+}
-+
-+static ssize_t balance_store(struct kmem_cache *s,
-+			     const char *buf, size_t length)
-+{
-+	if (buf[0] == '1')
-+		kmem_cache_balance_nodes(s);
-+	else
-+		return -EINVAL;
-+	return length;
-+}
-+SLAB_ATTR(balance);
- #endif	/* CONFIG_SLUB_SMO_NODE */
- 
- #ifdef CONFIG_NUMA
-@@ -5964,6 +6093,7 @@ static struct attribute *slab_attrs[] = {
- 	&shrink_attr.attr,
- #ifdef CONFIG_SLUB_SMO_NODE
- 	&move_attr.attr,
-+	&balance_attr.attr,
- #endif
- 	&slabs_cpu_partial_attr.attr,
- #ifdef CONFIG_SLUB_DEBUG
--- 
-2.21.0
-
+Thanks
+Kishon
