@@ -2,118 +2,522 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2ECC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D44CC46460
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78EA124307
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA47526539
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:29:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rBmKAzm6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J6TIHuj/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729908AbfFCR3V (ORCPT
+        id S1729921AbfFCR35 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 13:29:21 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52402 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727461AbfFCR3V (ORCPT
+        Mon, 3 Jun 2019 13:29:57 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41567 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726784AbfFCR34 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 13:29:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=E3YMznrQvI4XYCbxYdGQLQYRxZ6se0IICAJQI35QmUc=; b=rBmKAzm6VMFiVqBuypdPrNnHG
-        9qR/xC1YUSUo4q1ihLjn3I1k3Z3Zt6ifT4BOE9d8JuD+KANIIdW4jN8PXiVc/rtwsBx2jUqqiusN9
-        XZiJCQFveWwYCiDODxQrw3kCKKimNiQpVcsgEcblb0zsMWY+TexrkRomHsn0JqXwETKx9ELJfGj9q
-        jOQlw3G/UlUJUPhW/UmsBMxDxE09/TlTcCGWjEEy2oiu1YHyvKMt+HBSMRmxLaLtbJMUdKbvkie5m
-        R6xIoJDLFjnWEVIxBVl5q2n4wLYhS96OJs3nOLbuM/ziN5On8QOyJ8ynpVakg7HFTHIHdWMjvK7eX
-        tMuk6CEhg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hXqlo-00025Q-9C; Mon, 03 Jun 2019 17:29:16 +0000
-Date:   Mon, 3 Jun 2019 10:29:16 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Khalid Aziz <khalid.aziz@oracle.com>
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Subject: Re: [PATCH v16 01/16] uaccess: add untagged_addr definition for
- other arches
-Message-ID: <20190603172916.GA5390@infradead.org>
-References: <cover.1559580831.git.andreyknvl@google.com>
- <097bc300a5c6554ca6fd1886421bb2e0adb03420.1559580831.git.andreyknvl@google.com>
- <8ff5b0ff-849a-1e0b-18da-ccb5be85dd2b@oracle.com>
- <CAAeHK+xX2538e674Pz25unkdFPCO_SH0pFwFu=8+DS7RzfYnLQ@mail.gmail.com>
- <f6711d31-e52c-473a-d7ad-b2d63131d7a5@oracle.com>
+        Mon, 3 Jun 2019 13:29:56 -0400
+Received: by mail-pg1-f193.google.com with SMTP id 83so1851533pgg.8;
+        Mon, 03 Jun 2019 10:29:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=m0QyZT1gcRzimHAxp9Z1A2+frwgrpaXDm49S7w8Trfw=;
+        b=J6TIHuj/Z82THR0hwj+ay10xDIZaDvPqw6VLPET/Pxw1v/e458NrfdHkOBfV3PfDyC
+         L9rxHwVz4yclfVIgmYastnfKw4FhUOv8L327whk2Pqnfg/4zpCFNNQVXp/Id1RekFYaM
+         kRLOh+pzsOFCg95iYM4MoElNreEooktKUMrG1wlesZnVpz0AG3d8M0bFcdSKFdpJceMr
+         OzFz//fWq3Ai5YMdSce+rjKZrwWJEw2v7TJMjZkX797IUy3T2oyL4Q0U6CYjbkk9YxeN
+         wjTImFLQivKEneiCsdJbX15M9MfIPXrk+QMKoRUI9f8y7PxicDHqhSJSlWDqAIZU9pes
+         EilQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=m0QyZT1gcRzimHAxp9Z1A2+frwgrpaXDm49S7w8Trfw=;
+        b=XioqCjJIaF2Ce5u4tXFXXwcPvKfBgKIUlHhf3pZA0uBytXZ0xDIeiIzDciM0fzR8R7
+         b8yOe/iJkW3ix3VF2ctAsrvr1ElnJxJOWvQQhhlVCwnPsyw1amnJzR8nVj1GgpVmtNy8
+         yajMYa3njiBkuWr5oCdZVLAcEnwoGEnHD2PKFrrkjSo8zrC5Ga7Xa7pnY21PPJ64xW8f
+         Qs1ckL/iQYSjntrIIesfoyN0bXS4Bd/MrhEVhkfpQzoHdaIXbRYoNuZuPI/UsCUO8APd
+         O245CVO0s6dRLc8erS2veeEebyP6XhoccNXXRjgSDqgKGlISQ3IoC2QecZRZL/oEbRbe
+         UXhA==
+X-Gm-Message-State: APjAAAUC1JrXsQCvCLyRLNJRev5E0VnwnBCxn1QiKCL+uXPVQAVg1zzn
+        lduGYDHbAjFdYQsIdHHY7oTz2Gee
+X-Google-Smtp-Source: APXvYqyoP1YjXvvQJc++kiDsxeOT/Tl2/YlCELrEPyERi/tn9osi3fIIciQTurt3TkqF9eJHdufEYg==
+X-Received: by 2002:a62:5c84:: with SMTP id q126mr6573388pfb.247.1559582996156;
+        Mon, 03 Jun 2019 10:29:56 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id g18sm3063192pfo.136.2019.06.03.10.29.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 03 Jun 2019 10:29:55 -0700 (PDT)
+Date:   Mon, 3 Jun 2019 10:29:54 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     linux-pm@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] power: supply: Add HWMON compatibility layer
+Message-ID: <20190603172954.GA5220@roeck-us.net>
+References: <20190531011620.9383-1-andrew.smirnov@gmail.com>
+ <20190531011620.9383-2-andrew.smirnov@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f6711d31-e52c-473a-d7ad-b2d63131d7a5@oracle.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190531011620.9383-2-andrew.smirnov@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 11:24:35AM -0600, Khalid Aziz wrote:
-> On 6/3/19 11:06 AM, Andrey Konovalov wrote:
-> > On Mon, Jun 3, 2019 at 7:04 PM Khalid Aziz <khalid.aziz@oracle.com> wrote:
-> >> Andrey,
-> >>
-> >> This patch has now become part of the other patch series Chris Hellwig
-> >> has sent out -
-> >> <https://lore.kernel.org/lkml/20190601074959.14036-1-hch@lst.de/>. Can
-> >> you coordinate with that patch series?
-> > 
-> > Hi!
-> > 
-> > Yes, I've seen it. How should I coordinate? Rebase this series on top
-> > of that one?
+On Thu, May 30, 2019 at 06:16:19PM -0700, Andrey Smirnov wrote:
+> Add code implementing HWMON adapter/compatibility layer to allow
+> expositing various sensors present on power supply devices via HWMON
+> subsystem. This is done in order to allow userspace to use single
+> ABI/library(libsensors) to access/manipulate all of the sensors of the
+> system.
 > 
-> That would be one way to do it. Better yet, separate this patch from
-> both patch series, make it standalone and then rebase the two patch
-> series on top of it.
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Sebastian Reichel <sre@kernel.org>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
+> ---
+>  drivers/power/supply/Kconfig              |  14 +
+>  drivers/power/supply/Makefile             |   1 +
+>  drivers/power/supply/power_supply_hwmon.c | 349 ++++++++++++++++++++++
+>  include/linux/power_supply.h              |   9 +
+>  4 files changed, 373 insertions(+)
+>  create mode 100644 drivers/power/supply/power_supply_hwmon.c
+> 
+> diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+> index 26dacdab03cc..1f2252cb95fd 100644
+> --- a/drivers/power/supply/Kconfig
+> +++ b/drivers/power/supply/Kconfig
+> @@ -14,6 +14,20 @@ config POWER_SUPPLY_DEBUG
+>  	  Say Y here to enable debugging messages for power supply class
+>  	  and drivers.
+>  
+> +config POWER_SUPPLY_HWMON
+> +	bool
+> +	prompt "Expose power supply sensors as hwmon device"
+> +	depends on HWMON=y || HWMON=POWER_SUPPLY
+> +	default y
+> +	help
+> +	  This options enables API that allows sensors found on a
+> +	  power supply device (current, voltage, temperature) to be
+> +	  exposed as a hwmon device.
+> +
+> +	  Say 'Y' here if you want power supplies to
+> +	  have hwmon sysfs interface too.
+> +
+> +
+>  config PDA_POWER
+>  	tristate "Generic PDA/phone power driver"
+>  	depends on !S390
+> diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
+> index f208273f9686..c47e88ba16b9 100644
+> --- a/drivers/power/supply/Makefile
+> +++ b/drivers/power/supply/Makefile
+> @@ -6,6 +6,7 @@ power_supply-$(CONFIG_SYSFS)		+= power_supply_sysfs.o
+>  power_supply-$(CONFIG_LEDS_TRIGGERS)	+= power_supply_leds.o
+>  
+>  obj-$(CONFIG_POWER_SUPPLY)	+= power_supply.o
+> +obj-$(CONFIG_POWER_SUPPLY_HWMON) += power_supply_hwmon.o
+>  obj-$(CONFIG_GENERIC_ADC_BATTERY)	+= generic-adc-battery.o
+>  
+>  obj-$(CONFIG_PDA_POWER)		+= pda_power.o
+> diff --git a/drivers/power/supply/power_supply_hwmon.c b/drivers/power/supply/power_supply_hwmon.c
+> new file mode 100644
+> index 000000000000..3451b997367d
+> --- /dev/null
+> +++ b/drivers/power/supply/power_supply_hwmon.c
+> @@ -0,0 +1,349 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + *  power_supply_hwmon.c - power supply hwmon support.
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/hwmon.h>
+> +#include <linux/power_supply.h>
+> +#include <linux/slab.h>
+> +
+> +struct power_supply_hwmon {
+> +	struct power_supply *psy;
+> +	unsigned long *props;
+> +};
+> +
+> +static int power_supply_hwmon_in_to_property(u32 attr)
+> +{
+> +	switch (attr) {
+> +	case hwmon_in_average:
+> +		return POWER_SUPPLY_PROP_VOLTAGE_AVG;
+> +	case hwmon_in_min:
+> +		return POWER_SUPPLY_PROP_VOLTAGE_MIN;
+> +	case hwmon_in_max:
+> +		return POWER_SUPPLY_PROP_VOLTAGE_MAX;
+> +	case hwmon_in_input:
+> +		return POWER_SUPPLY_PROP_VOLTAGE_NOW;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int power_supply_hwmon_curr_to_property(u32 attr)
+> +{
+> +	switch (attr) {
+> +	case hwmon_curr_average:
+> +		return POWER_SUPPLY_PROP_CURRENT_AVG;
+> +	case hwmon_curr_max:
+> +		return POWER_SUPPLY_PROP_CURRENT_MAX;
+> +	case hwmon_curr_input:
+> +		return POWER_SUPPLY_PROP_CURRENT_NOW;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int power_supply_hwmon_temp_to_property(u32 attr, int channel)
+> +{
+> +	if (channel) {
+> +		switch (attr) {
+> +		case hwmon_temp_input:
+> +			return POWER_SUPPLY_PROP_TEMP_AMBIENT;
+> +		case hwmon_temp_min_alarm:
+> +			return POWER_SUPPLY_PROP_TEMP_AMBIENT_ALERT_MIN;
+> +		case hwmon_temp_max_alarm:
+> +			return POWER_SUPPLY_PROP_TEMP_AMBIENT_ALERT_MAX;
+> +		default:
+> +			break;
+> +		}
+> +	} else {
+> +		switch (attr) {
+> +		case hwmon_temp_input:
+> +			return POWER_SUPPLY_PROP_TEMP;
+> +		case hwmon_temp_max:
+> +			return POWER_SUPPLY_PROP_TEMP_MAX;
+> +		case hwmon_temp_min:
+> +			return POWER_SUPPLY_PROP_TEMP_MIN;
+> +		case hwmon_temp_min_alarm:
+> +			return POWER_SUPPLY_PROP_TEMP_ALERT_MIN;
+> +		case hwmon_temp_max_alarm:
+> +			return POWER_SUPPLY_PROP_TEMP_ALERT_MAX;
+> +		default:
+> +			break;
+> +		}
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static int
+> +power_supply_hwmon_to_property(enum hwmon_sensor_types type,
+> +			       u32 attr, int channel)
+> +{
+> +	switch (type) {
+> +	case hwmon_in:
+> +		return power_supply_hwmon_in_to_property(attr);
+> +	case hwmon_curr:
+> +		return power_supply_hwmon_curr_to_property(attr);
+> +	case hwmon_temp:
+> +		return power_supply_hwmon_temp_to_property(attr, channel);
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static bool power_supply_hwmon_is_a_label(enum hwmon_sensor_types type,
+> +					   u32 attr)
+> +{
+> +	return type == hwmon_temp && attr == hwmon_temp_label;
+> +}
+> +
+> +static bool power_supply_hwmon_is_writable(enum hwmon_sensor_types type,
+> +					   u32 attr)
+> +{
+> +	switch (type) {
+> +	case hwmon_in:
+> +		return attr == hwmon_in_min ||
+> +		       attr == hwmon_in_max;
+> +	case hwmon_curr:
+> +		return attr == hwmon_curr_max;
+> +	case hwmon_temp:
+> +		return attr == hwmon_temp_max ||
+> +		       attr == hwmon_temp_min ||
+> +		       attr == hwmon_temp_min_alarm ||
+> +		       attr == hwmon_temp_max_alarm;
+> +	default:
+> +		return false;
+> +	}
+> +}
+> +
+> +static umode_t power_supply_hwmon_is_visible(const void *data,
+> +					     enum hwmon_sensor_types type,
+> +					     u32 attr, int channel)
+> +{
+> +	const struct power_supply_hwmon *psyhw = data;
+> +	int prop;
+> +
+> +
+> +	if (power_supply_hwmon_is_a_label(type, attr))
+> +		return 0444;
+> +
+> +	prop = power_supply_hwmon_to_property(type, attr, channel);
+> +	if (prop < 0 || !test_bit(prop, psyhw->props))
+> +		return 0;
+> +
+> +	if (power_supply_property_is_writeable(psyhw->psy, prop) > 0 &&
+> +	    power_supply_hwmon_is_writable(type, attr))
+> +		return 0644;
+> +
+> +	return 0444;
+> +}
+> +
+> +static int power_supply_hwmon_read_string(struct device *dev,
+> +					  enum hwmon_sensor_types type,
+> +					  u32 attr, int channel,
+> +					  const char **str)
+> +{
+> +	*str = channel ? "temp" : "temp ambient";
+> +	return 0;
+> +}
+> +
+> +static int
+> +power_supply_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+> +			u32 attr, int channel, long *val)
+> +{
+> +	struct power_supply_hwmon *psyhw = dev_get_drvdata(dev);
+> +	struct power_supply *psy = psyhw->psy;
+> +	union power_supply_propval pspval;
+> +	int ret, prop;
+> +
+> +	prop = power_supply_hwmon_to_property(type, attr, channel);
+> +	if (prop < 0)
+> +		return prop;
+> +
+> +	ret  = power_supply_get_property(psy, prop, &pspval);
+> +	if (ret)
+> +		return ret;
+> +
+> +	switch (type) {
+> +	/*
+> +	 * Both voltage and current is reported in units of
+> +	 * microvolts/microamps, so we need to adjust it to
+> +	 * milliamps(volts)
+> +	 */
+> +	case hwmon_curr:
+> +	case hwmon_in:
+> +		pspval.intval = DIV_ROUND_CLOSEST(pspval.intval, 1000);
+> +		break;
+> +	/*
+> +	 * Temp needs to be converted from 1/10 C to milli-C
+> +	 */
+> +	case hwmon_temp:
+> +		if (check_mul_overflow(pspval.intval, 100,
+> +				       &pspval.intval))
+> +			return -EOVERFLOW;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	*val = pspval.intval;
+> +
+> +	return 0;
+> +}
+> +
+> +static int
+> +power_supply_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
+> +			 u32 attr, int channel, long val)
+> +{
+> +	struct power_supply_hwmon *psyhw = dev_get_drvdata(dev);
+> +	struct power_supply *psy = psyhw->psy;
+> +	union power_supply_propval pspval;
+> +	int prop;
+> +
+> +	prop = power_supply_hwmon_to_property(type, attr, channel);
+> +	if (prop < 0)
+> +		return prop;
+> +
+> +	pspval.intval = val;
+> +
+> +	switch (type) {
+> +	/*
+> +	 * Both voltage and current is reported in units of
+> +	 * microvolts/microamps, so we need to adjust it to
+> +	 * milliamps(volts)
+> +	 */
+> +	case hwmon_curr:
+> +	case hwmon_in:
+> +		if (check_mul_overflow(pspval.intval, 1000,
+> +				       &pspval.intval))
+> +			return -EOVERFLOW;
+> +		break;
+> +	/*
+> +	 * Temp needs to be converted from 1/10 C to milli-C
+> +	 */
+> +	case hwmon_temp:
+> +		pspval.intval = DIV_ROUND_CLOSEST(pspval.intval, 100);
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	return power_supply_set_property(psy, prop, &pspval);
+> +}
+> +
+> +static const struct hwmon_ops power_supply_hwmon_ops = {
+> +	.is_visible	= power_supply_hwmon_is_visible,
+> +	.read		= power_supply_hwmon_read,
+> +	.write		= power_supply_hwmon_write,
+> +	.read_string	= power_supply_hwmon_read_string,
+> +};
+> +
+> +static const struct hwmon_channel_info *power_supply_hwmon_info[] = {
+> +	HWMON_CHANNEL_INFO(temp,
+> +			   HWMON_T_LABEL     |
+> +			   HWMON_T_INPUT     |
+> +			   HWMON_T_MAX       |
+> +			   HWMON_T_MIN       |
+> +			   HWMON_T_MIN_ALARM |
+> +			   HWMON_T_MIN_ALARM,
+> +
+> +			   HWMON_T_LABEL     |
+> +			   HWMON_T_INPUT     |
+> +			   HWMON_T_MIN_ALARM |
+> +			   HWMON_T_LABEL     |
+> +			   HWMON_T_MAX_ALARM),
+> +
+> +	HWMON_CHANNEL_INFO(curr,
+> +			   HWMON_C_AVERAGE |
+> +			   HWMON_C_MAX     |
+> +			   HWMON_C_INPUT),
+> +
+> +	HWMON_CHANNEL_INFO(in,
+> +			   HWMON_I_AVERAGE |
+> +			   HWMON_I_MIN     |
+> +			   HWMON_I_MAX     |
+> +			   HWMON_I_INPUT),
+> +	NULL
+> +};
+> +
+> +static const struct hwmon_chip_info power_supply_hwmon_chip_info = {
+> +	.ops = &power_supply_hwmon_ops,
+> +	.info = power_supply_hwmon_info,
+> +};
+> +
+> +static void power_supply_hwmon_bitmap_free(void *data)
+> +{
+> +	bitmap_free(data);
+> +}
+> +
+> +int devm_power_supply_add_hwmon_sysfs(struct power_supply *psy)
+> +{
+> +	const struct power_supply_desc *desc = psy->desc;
+> +	struct power_supply_hwmon *psyhw;
+> +	struct device *dev = &psy->dev;
+> +	struct device *hwmon;
+> +	int ret, i;
+> +
+> +	if (!devres_open_group(dev, NULL, GFP_KERNEL))
+> +		return -ENOMEM;
+> +
+> +	psyhw = devm_kzalloc(dev, sizeof(*psyhw), GFP_KERNEL);
+> +	if (!psyhw) {
+> +		ret = -ENOMEM;
+> +		goto error;
+> +	}
+> +
+> +	psyhw->psy = psy;
+> +	psyhw->props = bitmap_zalloc(POWER_SUPPLY_PROP_TIME_TO_FULL_AVG + 1,
+> +				     GFP_KERNEL);
+> +	if (!psyhw->props) {
+> +		ret = -ENOMEM;
+> +		goto error;
+> +	}
+> +
+> +	ret = devm_add_action(dev, power_supply_hwmon_bitmap_free,
+> +			      psyhw->props);
+> +	if (ret)
+> +		goto error;
+> +
+> +	for (i = 0; i < desc->num_properties; i++) {
+> +		const enum power_supply_property prop = desc->properties[i];
+> +
+> +		switch (prop) {
+> +		case POWER_SUPPLY_PROP_CURRENT_AVG:
+> +		case POWER_SUPPLY_PROP_CURRENT_MAX:
+> +		case POWER_SUPPLY_PROP_CURRENT_NOW:
+> +		case POWER_SUPPLY_PROP_TEMP:
+> +		case POWER_SUPPLY_PROP_TEMP_MAX:
+> +		case POWER_SUPPLY_PROP_TEMP_MIN:
+> +		case POWER_SUPPLY_PROP_TEMP_ALERT_MIN:
+> +		case POWER_SUPPLY_PROP_TEMP_ALERT_MAX:
+> +		case POWER_SUPPLY_PROP_TEMP_AMBIENT:
+> +		case POWER_SUPPLY_PROP_TEMP_AMBIENT_ALERT_MIN:
+> +		case POWER_SUPPLY_PROP_TEMP_AMBIENT_ALERT_MAX:
+> +		case POWER_SUPPLY_PROP_VOLTAGE_AVG:
+> +		case POWER_SUPPLY_PROP_VOLTAGE_MIN:
+> +		case POWER_SUPPLY_PROP_VOLTAGE_MAX:
+> +		case POWER_SUPPLY_PROP_VOLTAGE_NOW:
+> +			set_bit(prop, psyhw->props);
+> +			break;
+> +		default:
+> +			break;
+> +		}
+> +	}
+> +
+> +	hwmon = devm_hwmon_device_register_with_info(dev, psy->desc->name,
+> +						psyhw,
+> +						&power_supply_hwmon_chip_info,
+> +						NULL);
+> +	ret = PTR_ERR_OR_ZERO(hwmon);
+> +	if (ret)
+> +		goto error;
+> +
+> +	devres_remove_group(dev, NULL);
+> +	return 0;
+> +error:
+> +	devres_release_group(dev, NULL);
+> +	return ret;
+> +}
+> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+> index d9c0c094f8a0..e94cdfa797e3 100644
+> --- a/include/linux/power_supply.h
+> +++ b/include/linux/power_supply.h
+> @@ -481,4 +481,13 @@ static inline bool power_supply_is_watt_property(enum power_supply_property psp)
+>  	return 0;
+>  }
+>  
+> +#ifdef CONFIG_POWER_SUPPLY_HWMON
+> +int devm_power_supply_add_hwmon_sysfs(struct power_supply *psy);
+> +#else
+> +int devm_power_supply_add_hwmon_sysfs(struct power_supply *psy)
 
-I think easiest would be to just ask Linus if he could make an exception
-and include this trivial prep patch in 5.2-rc.
+That needs to be static inline int to avoid duplicate symbols.
+
+Otherwise
+
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
+> +{
+> +	return 0;
+> +}
+> +#endif
+> +
+>  #endif /* __LINUX_POWER_SUPPLY_H__ */
+> -- 
+> 2.21.0
+> 
