@@ -2,110 +2,72 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E5CC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 21:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A043FC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 21:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24D3426BFB
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 21:54:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bfXkOXSf"
+	by mail.kernel.org (Postfix) with ESMTP id 7E00326D15
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 21:58:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbfFCVyq (ORCPT
+        id S1726784AbfFCV6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 17:54:46 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40837 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbfFCVyq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 17:54:46 -0400
-Received: by mail-pf1-f196.google.com with SMTP id u17so11367992pfn.7;
-        Mon, 03 Jun 2019 14:54:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=oPgJE3SSPiX3rwzOACtwORs8x/gWd6/IDJ++GUP51Jg=;
-        b=bfXkOXSfNVYnnh16yF2REmi7yZJCVii7QO2C8GoEfLF165QIfQP5OGhUup1x8cHoUQ
-         Z3U/55H+nLoLRJuozE4ILyDjvOzbYQHgzbrpAVopIc7+buaraZZ21Z28FsHlExFQlfkN
-         XgpCGT5Ox6f7MpKZe9/h7cZ3NzHXfyoR6DF0pr8vX8ft8Tj//aOFG7kdQp2WvWn3fnEn
-         g9tfN2xrfjyABTyJyR5oWGumZvvAEklIf8BSUyahMMAA4izG5/ivi1excyBsqCDjA4VO
-         k+Bkk7//oHXdv2bVq2VQVtjEvtB/QByvDZPDwvTJbu3NJUpZkMS+NpO2yW7VqVFemfXk
-         kPFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=oPgJE3SSPiX3rwzOACtwORs8x/gWd6/IDJ++GUP51Jg=;
-        b=mtDIxp3Tr8ls/e0Ca1E8H9B7cqY9rpRv7rUFxjKe8h3gsrDh0jOlpqAqCIudgAuvfC
-         qTef7HC2mBS+VUfijE+mXUmbUl9EyUZ+ft6Ky6lkN4jsHHnTHPEmTLpmT4LfrG8UOtWc
-         YO9+K/7nm74QohKcg/22CCxj37rs3aNUuHYBxMeUHTYhnGEI2ETg2ekr5bIWoFQLp1dH
-         iLhtOYLrLwPEZY0fglk3pz0t0+Q4zV40U7JaSFNP/uq24riDzDUdtOFqHELG5VVYOShN
-         CVvYPMooQeiEE8lDWHtNDWkhdGd4IsTU9sHpV+4007TpJqXtFq2mKXBGIFljgev+JnDa
-         Zl0w==
-X-Gm-Message-State: APjAAAXqtGwyY2t25KwGxHCuCcWi7/Xw012GDGycV+fl3o6wOx100l3W
-        bmVBk9j4qw6xu1CZyNThnuU=
-X-Google-Smtp-Source: APXvYqyeipUplPNCoCJXUVB7Wx50wgvCiYlk9Y54A9DE4CDmrWG2qKZIezaeu1pnxMHa/u7BIZ+HvA==
-X-Received: by 2002:a17:90a:204a:: with SMTP id n68mr32638862pjc.21.1559597157690;
-        Mon, 03 Jun 2019 14:25:57 -0700 (PDT)
-Received: from ?IPv6:2001:df0:0:200c:802d:b772:7767:bf29? ([2001:df0:0:200c:802d:b772:7767:bf29])
-        by smtp.gmail.com with ESMTPSA id j186sm13739673pfg.66.2019.06.03.14.25.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Jun 2019 14:25:56 -0700 (PDT)
-Subject: Re: [PATCH 5/7] scsi: mac_scsi: Fix pseudo DMA implementation, take 2
-To:     Finn Thain <fthain@telegraphics.com.au>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        scsi <linux-scsi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>
-References: <cover.1559438652.git.fthain@telegraphics.com.au>
- <c56deeb735545c7942607a93f017bb536f581ae5.1559438652.git.fthain@telegraphics.com.au>
- <CAMuHMdWxRtJU2aRQQjXzR2mvpfpDezCVu42Eo1eXDsQaPb+j6Q@mail.gmail.com>
- <alpine.LNX.2.21.1906030903510.20@nippy.intranet>
- <CAMuHMdUFxQnmJmkr2qm4waTfFA5yfCHAFngyD37cFH6gbbD-Pg@mail.gmail.com>
- <alpine.LNX.2.21.1906031702220.37@nippy.intranet>
-From:   Michael Schmitz <schmitzmic@gmail.com>
-Message-ID: <247ed79a-75c7-41fd-0932-0b7701ee5d4e@gmail.com>
-Date:   Tue, 4 Jun 2019 09:25:49 +1200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 3 Jun 2019 17:58:19 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:60508 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726141AbfFCV6T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 17:58:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5200CA78;
+        Mon,  3 Jun 2019 14:21:10 -0700 (PDT)
+Received: from mbp (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1326C3F5AF;
+        Mon,  3 Jun 2019 14:21:07 -0700 (PDT)
+Date:   Mon, 3 Jun 2019 22:21:05 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Julien Grall <julien.grall@arm.com>
+Cc:     ard.biesheuvel@linaro.org, julien.thierry@arm.com,
+        marc.zyngier@arm.com, Dave.Martin@arm.com, suzuki.poulose@arm.com,
+        will.deacon@arm.com, christoffer.dall@arm.com,
+        linux-kernel@vger.kernel.org, james.morse@arm.com,
+        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 3/3] arm64/fpsimd: Don't disable softirq when touching
+ FPSIMD/SVE state
+Message-ID: <20190603212104.mhz7vvj7afb2p3yr@mbp>
+References: <20190521172139.21277-1-julien.grall@arm.com>
+ <20190521172139.21277-4-julien.grall@arm.com>
+ <20190603162534.GF63283@arrakis.emea.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.LNX.2.21.1906031702220.37@nippy.intranet>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190603162534.GF63283@arrakis.emea.arm.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Finn,
+On Mon, Jun 03, 2019 at 05:25:34PM +0100, Catalin Marinas wrote:
+> On Tue, May 21, 2019 at 06:21:39PM +0100, Julien Grall wrote:
+> > Since a softirq is supposed to check may_use_simd() anyway before
+> > attempting to use FPSIMD/SVE, there is limited reason to keep softirq
+> > disabled when touching the FPSIMD/SVE context. Instead, we can simply
+> > disable preemption and mark the FPSIMD/SVE context as in use by setting
+> > CPU's fpsimd_context_busy flag.
+> [...]
+> > +static void get_cpu_fpsimd_context(void)
+> > +{
+> > +	preempt_disable();
+> > +	__get_cpu_fpsimd_context();
+> > +}
+> 
+> Is there anything that prevents a softirq being invoked between
+> preempt_disable() and __get_cpu_fpsimd_context()?
 
-On 3/06/19 7:40 PM, Finn Thain wrote:
->
->> There are several other drivers that contain pieces of assembler code.
->>
-> Does any driver contain assembler code for multiple architectures? I was
-> trying to avoid that -- though admittedly I don't yet have actual code for
-> the PDMA implementation for mac_scsi for Nubus PowerMacs.
->
-I've seen that once, for one of the ESP drivers that were supported on 
-both m68k and ppc (APUS, PPC upgrade to Amiga computers). But that 
-driver was removed long ago (after 2.6?).
+Actually, it shouldn't matter as the softirq finishes using the fpsimd
+before the thread is resumed.
 
-In that case, the assembly file did reside in drivers/scsi/. That still 
-appears to be current practice (see drivers/scsi/arm/acornscsi-io.S).
-
-Cheers,
-
-     Michael
-
-
+-- 
+Catalin
