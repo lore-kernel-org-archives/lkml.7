@@ -2,130 +2,132 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D48C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7003BC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D764027F3C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:22:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46EBB25F6D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:22:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="YqTwea3A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728644AbfFCNWV (ORCPT
+        id S1728657AbfFCNWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 09:22:21 -0400
-Received: from www62.your-server.de ([213.133.104.62]:48326 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726516AbfFCNWU (ORCPT
+        Mon, 3 Jun 2019 09:22:35 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:45315 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727403AbfFCNWe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 09:22:20 -0400
-Received: from [78.46.172.2] (helo=sslproxy05.your-server.de)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hXmul-0002lq-S3; Mon, 03 Jun 2019 15:22:15 +0200
-Received: from [2a02:120b:c3fc:feb0:dda7:bd28:a848:50e2] (helo=linux.home)
-        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hXmul-000PGN-IY; Mon, 03 Jun 2019 15:22:15 +0200
-Subject: Re: [PATCH bpf v2] bpf: preallocate a perf_sample_data per event fd
-From:   Daniel Borkmann <daniel@iogearbox.net>
-To:     Matt Mullins <mmullins@fb.com>, hall@fb.com, ast@kernel.org,
-        bpf@vger.kernel.org, netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-References: <20190531223735.4998-1-mmullins@fb.com>
- <6c6a4d47-796a-20e2-eb12-503a00d1fa0b@iogearbox.net>
-Message-ID: <68841715-4d5b-6ad1-5241-4e7199dd63da@iogearbox.net>
-Date:   Mon, 3 Jun 2019 15:22:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Mon, 3 Jun 2019 09:22:34 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x53DMOgF607192
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Mon, 3 Jun 2019 06:22:24 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x53DMOgF607192
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019051801; t=1559568145;
+        bh=kRbNr96VS09F+taGClxc324ZFJY2xCgOU3S9yZzfQ5Q=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=YqTwea3Ag2jAOIEsyHt4SB7VmCTggJALo9PBuoc2Dw57KHRSu7rCyBrqL23lwfG5N
+         4ZRsUfQXSJQgXoIxbLi3UR65JGLaVNsBMAR2uDYJxIdY2sQ+Z+Ec/J9cR3Cv0s9UVq
+         15GcnEZnFJPrgglKA8vtZWZ3eFJ0ER4gtMfOQUG2b2DoLyLZC5ypYbwaKg1RRhth6O
+         xNfjBOCP/I5LnTXYfLDdFc4Cpp3L4tuAym6U505L5HZrKQ29eMAHGKsiJ2ZPx3+NQx
+         nxCerfP+fA0atuaZRvd/A/6Ih3yBt3rgojNKQ7gAjpMx7532/dyO7hGGulkYA/MxQ3
+         I2lyX3d2JWnBg==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x53DMOQI607189;
+        Mon, 3 Jun 2019 06:22:24 -0700
+Date:   Mon, 3 Jun 2019 06:22:24 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Yuyang Du <tipbot@zytor.com>
+Message-ID: <tip-bf998b98f5bce4ebc97b3980016f54fabb7a4958@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
+        duyuyang@gmail.com, tglx@linutronix.de, mingo@kernel.org,
+        hpa@zytor.com, torvalds@linux-foundation.org
+Reply-To: linux-kernel@vger.kernel.org, mingo@kernel.org,
+          peterz@infradead.org, hpa@zytor.com, duyuyang@gmail.com,
+          torvalds@linux-foundation.org, tglx@linutronix.de
+In-Reply-To: <20190506081939.74287-24-duyuyang@gmail.com>
+References: <20190506081939.74287-24-duyuyang@gmail.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:locking/core] locking/lockdep: Remove !dir in lock irq usage
+ check
+Git-Commit-ID: bf998b98f5bce4ebc97b3980016f54fabb7a4958
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <6c6a4d47-796a-20e2-eb12-503a00d1fa0b@iogearbox.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.100.3/25469/Mon Jun  3 09:59:22 2019)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/03/2019 03:08 PM, Daniel Borkmann wrote:
-> On 06/01/2019 12:37 AM, Matt Mullins wrote:
->> It is possible that a BPF program can be called while another BPF
->> program is executing bpf_perf_event_output.  This has been observed with
->> I/O completion occurring as a result of an interrupt:
->>
->> 	bpf_prog_247fd1341cddaea4_trace_req_end+0x8d7/0x1000
->> 	? trace_call_bpf+0x82/0x100
->> 	? sch_direct_xmit+0xe2/0x230
->> 	? blk_mq_end_request+0x1/0x100
->> 	? blk_mq_end_request+0x5/0x100
->> 	? kprobe_perf_func+0x19b/0x240
->> 	? __qdisc_run+0x86/0x520
->> 	? blk_mq_end_request+0x1/0x100
->> 	? blk_mq_end_request+0x5/0x100
->> 	? kprobe_ftrace_handler+0x90/0xf0
->> 	? ftrace_ops_assist_func+0x6e/0xe0
->> 	? ip6_input_finish+0xbf/0x460
->> 	? 0xffffffffa01e80bf
->> 	? nbd_dbg_flags_show+0xc0/0xc0 [nbd]
->> 	? blkdev_issue_zeroout+0x200/0x200
->> 	? blk_mq_end_request+0x1/0x100
->> 	? blk_mq_end_request+0x5/0x100
->> 	? flush_smp_call_function_queue+0x6c/0xe0
->> 	? smp_call_function_single_interrupt+0x32/0xc0
->> 	? call_function_single_interrupt+0xf/0x20
->> 	? call_function_single_interrupt+0xa/0x20
->> 	? swiotlb_map_page+0x140/0x140
->> 	? refcount_sub_and_test+0x1a/0x50
->> 	? tcp_wfree+0x20/0xf0
->> 	? skb_release_head_state+0x62/0xc0
->> 	? skb_release_all+0xe/0x30
->> 	? napi_consume_skb+0xb5/0x100
->> 	? mlx5e_poll_tx_cq+0x1df/0x4e0
->> 	? mlx5e_poll_tx_cq+0x38c/0x4e0
->> 	? mlx5e_napi_poll+0x58/0xc30
->> 	? mlx5e_napi_poll+0x232/0xc30
->> 	? net_rx_action+0x128/0x340
->> 	? __do_softirq+0xd4/0x2ad
->> 	? irq_exit+0xa5/0xb0
->> 	? do_IRQ+0x7d/0xc0
->> 	? common_interrupt+0xf/0xf
->> 	</IRQ>
->> 	? __rb_free_aux+0xf0/0xf0
->> 	? perf_output_sample+0x28/0x7b0
->> 	? perf_prepare_sample+0x54/0x4a0
->> 	? perf_event_output+0x43/0x60
->> 	? bpf_perf_event_output_raw_tp+0x15f/0x180
->> 	? blk_mq_start_request+0x1/0x120
->> 	? bpf_prog_411a64a706fc6044_should_trace+0xad4/0x1000
->> 	? bpf_trace_run3+0x2c/0x80
->> 	? nbd_send_cmd+0x4c2/0x690 [nbd]
->>
->> This also cannot be alleviated by further splitting the per-cpu
->> perf_sample_data structs (as in commit 283ca526a9bd ("bpf: fix
->> corruption on concurrent perf_event_output calls")), as a raw_tp could
->> be attached to the block:block_rq_complete tracepoint and execute during
->> another raw_tp.  Instead, keep a pre-allocated perf_sample_data
->> structure per perf_event_array element and fail a bpf_perf_event_output
->> if that element is concurrently being used.
->>
->> Fixes: 20b9d7ac4852 ("bpf: avoid excessive stack usage for perf_sample_data")
->> Signed-off-by: Matt Mullins <mmullins@fb.com>
-> 
-> You do not elaborate why is this needed for all the networking programs that
-> use this functionality. The bpf_misc_sd should therefore be kept as-is. There
-> cannot be nested occurrences there (xdp, tc ingress/egress). Please explain why
-> non-tracing should be affected here...
+Commit-ID:  bf998b98f5bce4ebc97b3980016f54fabb7a4958
+Gitweb:     https://git.kernel.org/tip/bf998b98f5bce4ebc97b3980016f54fabb7a4958
+Author:     Yuyang Du <duyuyang@gmail.com>
+AuthorDate: Mon, 6 May 2019 16:19:39 +0800
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Mon, 3 Jun 2019 11:55:53 +0200
 
-Aside from that it's also really bad to miss events like this as exporting
-through rb is critical. Why can't you have a per-CPU counter that selects a
-sample data context based on nesting level in tracing? (I don't see a discussion
-of this in your commit message.)
+locking/lockdep: Remove !dir in lock irq usage check
+
+In mark_lock_irq(), the following checks are performed:
+
+   ----------------------------------
+  |   ->      | unsafe | read unsafe |
+  |----------------------------------|
+  | safe      |  F  B  |    F* B*    |
+  |----------------------------------|
+  | read safe |  F? B* |      -      |
+   ----------------------------------
+
+Where:
+F: check_usage_forwards
+B: check_usage_backwards
+*: check enabled by STRICT_READ_CHECKS
+?: check enabled by the !dir condition
+
+From checking point of view, the special F? case does not make sense,
+whereas it perhaps is made for peroformance concern. As later patch will
+address this issue, remove this exception, which makes the checks
+consistent later.
+
+With STRICT_READ_CHECKS = 1 which is default, there is no functional
+change.
+
+Signed-off-by: Yuyang Du <duyuyang@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: bvanassche@acm.org
+Cc: frederic@kernel.org
+Cc: ming.lei@redhat.com
+Cc: will.deacon@arm.com
+Link: https://lkml.kernel.org/r/20190506081939.74287-24-duyuyang@gmail.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ kernel/locking/lockdep.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 9c4e2a7547d3..2168e94715b9 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -3235,7 +3235,7 @@ mark_lock_irq(struct task_struct *curr, struct held_lock *this,
+ 	 * Validate that the lock dependencies don't have conflicting usage
+ 	 * states.
+ 	 */
+-	if ((!read || !dir || STRICT_READ_CHECKS) &&
++	if ((!read || STRICT_READ_CHECKS) &&
+ 			!usage(curr, this, excl_bit, state_name(new_bit & ~LOCK_USAGE_READ_MASK)))
+ 		return 0;
+ 
