@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFADC28CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58991C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85D3427F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:15:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3257327F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:15:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553327;
-	bh=+LOt4TjRkn7igKwk5B5UOFUfZvRSeUUEQE2fUSPJPdw=;
+	s=default; t=1559553335;
+	bh=bOkLfz4pYti8bdqfmRaH2+hbvvt225WbwlfpM02E7Qs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I5gK5UENi+roWSVMQAtdb2ZjDV/WeYTsRXybQ0Eg6zbR3T3EfpWAiY5gnEqEhi+iH
-	 b9QVNzHl2owWcm6+GxCXXKxf9bK2DQeEnwKFkLxMY9g7ZOq3ght9Uc15WkvR2SkOfF
-	 NsSql0RnReQVp5C/mZB8nvPz7+ZJYGAi8XQLq2+w=
+	b=vOdXUUZHwB465Y5nZuCkG3xOeZ43pxpW5gBCjKT3uQ/VlDKKFK54OP/sc6/D4cAxi
+	 9D3QFS4al73TBuIy5/zlpO4bsyqbdSIQ/BEAOQnFJuFIGmdHLEEXUd/7WPVag4cBGs
+	 2WC9G++Awg7PaxU3Pt8uZOsynFWVciySGS8ldeYE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729085AbfFCJP1 (ORCPT
+        id S1729094AbfFCJPe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:15:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34402 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 05:15:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727113AbfFCJN4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:13:56 -0400
+        id S1728417AbfFCJNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:13:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2014C27EC7;
-        Mon,  3 Jun 2019 09:13:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 076F921952;
+        Mon,  3 Jun 2019 09:13:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553234;
-        bh=+LOt4TjRkn7igKwk5B5UOFUfZvRSeUUEQE2fUSPJPdw=;
+        s=default; t=1559553229;
+        bh=bOkLfz4pYti8bdqfmRaH2+hbvvt225WbwlfpM02E7Qs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=taZAqZAm23XC25Y4tQiTnEwIVlTCMoU+5DwQ/DpdReQNADPTw/gL0FpC1pCuQPeAH
-         Pb1x/SC52a0WDKHpyv7p0OKIP+NE0xyp5QagmEkcBrKsx9nszEnLUWVHjrwH/DtLyK
-         VdX67IRh/yKLIQJ+oOiYIMGzmuOQ19CiBqfgtWHE=
+        b=fANSR89BkTMxRgX/Ajnion/p6rpHHEJ8k6PIOVL46GaD+aoL1f6ZzMcjmSqayDt8u
+         wY4gtkZ8CZYDcnkLHd77JO5wd1upmcUPDX2MIEa39y0GPX44niVlbbF90vTPjuEKNw
+         JAp3DnD2k9qn32T6/XAConJEQYq1zFzzQAvrdtEQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Amit Klein <aksecurity@gmail.com>,
-        Benny Pinkas <benny@pinkas.net>,
+        stable@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Dirk van der Merwe <dirk.vandermerwe@netronome.com>,
+        David Beckett <david.beckett@netronome.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 04/40] inet: switch IP ID generator to siphash
-Date:   Mon,  3 Jun 2019 11:08:57 +0200
-Message-Id: <20190603090522.910970273@linuxfoundation.org>
+Subject: [PATCH 5.1 30/40] net/tls: fix lowat calculation if some data came from previous record
+Date:   Mon,  3 Jun 2019 11:09:23 +0200
+Message-Id: <20190603090524.417109218@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190603090522.617635820@linuxfoundation.org>
 References: <20190603090522.617635820@linuxfoundation.org>
@@ -61,152 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-[ Upstream commit df453700e8d81b1bdafdf684365ee2b9431fb702 ]
+[ Upstream commit 46a1695960d0600d58da7af33c65f24f3d839674 ]
 
-According to Amit Klein and Benny Pinkas, IP ID generation is too weak
-and might be used by attackers.
+If some of the data came from the previous record, i.e. from
+the rx_list it had already been decrypted, so it's not counted
+towards the "decrypted" variable, but the "copied" variable.
+Take that into account when checking lowat.
 
-Even with recent net_hash_mix() fix (netns: provide pure entropy for net_hash_mix())
-having 64bit key and Jenkins hash is risky.
+When calculating lowat target we need to pass the original len.
+E.g. if lowat is at 80, len is 100 and we had 30 bytes on rx_list
+target would currently be incorrectly calculated as 70, even though
+we only need 50 more bytes to make up the 80.
 
-It is time to switch to siphash and its 128bit keys.
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: Amit Klein <aksecurity@gmail.com>
-Reported-by: Benny Pinkas <benny@pinkas.net>
+Fixes: 692d7b5d1f91 ("tls: Fix recvmsg() to be able to peek across multiple records")
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reviewed-by: Dirk van der Merwe <dirk.vandermerwe@netronome.com>
+Tested-by: David Beckett <david.beckett@netronome.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/siphash.h  |    5 +++++
- include/net/netns/ipv4.h |    2 ++
- net/ipv4/route.c         |   12 +++++++-----
- net/ipv6/output_core.c   |   30 ++++++++++++++++--------------
- 4 files changed, 30 insertions(+), 19 deletions(-)
+ net/tls/tls_sw.c |   13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
---- a/include/linux/siphash.h
-+++ b/include/linux/siphash.h
-@@ -21,6 +21,11 @@ typedef struct {
- 	u64 key[2];
- } siphash_key_t;
+--- a/net/tls/tls_sw.c
++++ b/net/tls/tls_sw.c
+@@ -1685,13 +1685,12 @@ int tls_sw_recvmsg(struct sock *sk,
+ 		copied = err;
+ 	}
  
-+static inline bool siphash_key_is_zero(const siphash_key_t *key)
-+{
-+	return !(key->key[0] | key->key[1]);
-+}
+-	len = len - copied;
+-	if (len) {
+-		target = sock_rcvlowat(sk, flags & MSG_WAITALL, len);
+-		timeo = sock_rcvtimeo(sk, flags & MSG_DONTWAIT);
+-	} else {
++	if (len <= copied)
+ 		goto recv_end;
+-	}
 +
- u64 __siphash_aligned(const void *data, size_t len, const siphash_key_t *key);
- #ifndef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
- u64 __siphash_unaligned(const void *data, size_t len, const siphash_key_t *key);
---- a/include/net/netns/ipv4.h
-+++ b/include/net/netns/ipv4.h
-@@ -9,6 +9,7 @@
- #include <linux/uidgid.h>
- #include <net/inet_frag.h>
- #include <linux/rcupdate.h>
-+#include <linux/siphash.h>
++	target = sock_rcvlowat(sk, flags & MSG_WAITALL, len);
++	len = len - copied;
++	timeo = sock_rcvtimeo(sk, flags & MSG_DONTWAIT);
  
- struct tcpm_hash_bucket;
- struct ctl_table_header;
-@@ -217,5 +218,6 @@ struct netns_ipv4 {
- 	unsigned int	ipmr_seq;	/* protected by rtnl_mutex */
+ 	do {
+ 		bool retain_skb = false;
+@@ -1826,7 +1825,7 @@ pick_next_record:
+ 		}
  
- 	atomic_t	rt_genid;
-+	siphash_key_t	ip_id_key;
- };
- #endif
---- a/net/ipv4/route.c
-+++ b/net/ipv4/route.c
-@@ -500,15 +500,17 @@ EXPORT_SYMBOL(ip_idents_reserve);
+ 		/* If we have a new message from strparser, continue now. */
+-		if (decrypted >= target && !ctx->recv_pkt)
++		if (decrypted + copied >= target && !ctx->recv_pkt)
+ 			break;
+ 	} while (len);
  
- void __ip_select_ident(struct net *net, struct iphdr *iph, int segs)
- {
--	static u32 ip_idents_hashrnd __read_mostly;
- 	u32 hash, id;
- 
--	net_get_random_once(&ip_idents_hashrnd, sizeof(ip_idents_hashrnd));
-+	/* Note the following code is not safe, but this is okay. */
-+	if (unlikely(siphash_key_is_zero(&net->ipv4.ip_id_key)))
-+		get_random_bytes(&net->ipv4.ip_id_key,
-+				 sizeof(net->ipv4.ip_id_key));
- 
--	hash = jhash_3words((__force u32)iph->daddr,
-+	hash = siphash_3u32((__force u32)iph->daddr,
- 			    (__force u32)iph->saddr,
--			    iph->protocol ^ net_hash_mix(net),
--			    ip_idents_hashrnd);
-+			    iph->protocol,
-+			    &net->ipv4.ip_id_key);
- 	id = ip_idents_reserve(hash, segs);
- 	iph->id = htons(id);
- }
---- a/net/ipv6/output_core.c
-+++ b/net/ipv6/output_core.c
-@@ -10,15 +10,25 @@
- #include <net/secure_seq.h>
- #include <linux/netfilter.h>
- 
--static u32 __ipv6_select_ident(struct net *net, u32 hashrnd,
-+static u32 __ipv6_select_ident(struct net *net,
- 			       const struct in6_addr *dst,
- 			       const struct in6_addr *src)
- {
-+	const struct {
-+		struct in6_addr dst;
-+		struct in6_addr src;
-+	} __aligned(SIPHASH_ALIGNMENT) combined = {
-+		.dst = *dst,
-+		.src = *src,
-+	};
- 	u32 hash, id;
- 
--	hash = __ipv6_addr_jhash(dst, hashrnd);
--	hash = __ipv6_addr_jhash(src, hash);
--	hash ^= net_hash_mix(net);
-+	/* Note the following code is not safe, but this is okay. */
-+	if (unlikely(siphash_key_is_zero(&net->ipv4.ip_id_key)))
-+		get_random_bytes(&net->ipv4.ip_id_key,
-+				 sizeof(net->ipv4.ip_id_key));
-+
-+	hash = siphash(&combined, sizeof(combined), &net->ipv4.ip_id_key);
- 
- 	/* Treat id of 0 as unset and if we get 0 back from ip_idents_reserve,
- 	 * set the hight order instead thus minimizing possible future
-@@ -41,7 +51,6 @@ static u32 __ipv6_select_ident(struct ne
-  */
- __be32 ipv6_proxy_select_ident(struct net *net, struct sk_buff *skb)
- {
--	static u32 ip6_proxy_idents_hashrnd __read_mostly;
- 	struct in6_addr buf[2];
- 	struct in6_addr *addrs;
- 	u32 id;
-@@ -53,11 +62,7 @@ __be32 ipv6_proxy_select_ident(struct ne
- 	if (!addrs)
- 		return 0;
- 
--	net_get_random_once(&ip6_proxy_idents_hashrnd,
--			    sizeof(ip6_proxy_idents_hashrnd));
--
--	id = __ipv6_select_ident(net, ip6_proxy_idents_hashrnd,
--				 &addrs[1], &addrs[0]);
-+	id = __ipv6_select_ident(net, &addrs[1], &addrs[0]);
- 	return htonl(id);
- }
- EXPORT_SYMBOL_GPL(ipv6_proxy_select_ident);
-@@ -66,12 +71,9 @@ __be32 ipv6_select_ident(struct net *net
- 			 const struct in6_addr *daddr,
- 			 const struct in6_addr *saddr)
- {
--	static u32 ip6_idents_hashrnd __read_mostly;
- 	u32 id;
- 
--	net_get_random_once(&ip6_idents_hashrnd, sizeof(ip6_idents_hashrnd));
--
--	id = __ipv6_select_ident(net, ip6_idents_hashrnd, daddr, saddr);
-+	id = __ipv6_select_ident(net, daddr, saddr);
- 	return htonl(id);
- }
- EXPORT_SYMBOL(ipv6_select_ident);
 
 
