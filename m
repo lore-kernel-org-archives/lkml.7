@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB91C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA45C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB83A27B4B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4D9027BB3
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:41:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="gK0vQm6L"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="SoxBGPZT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728903AbfFCNkz (ORCPT
+        id S1728919AbfFCNlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 09:40:55 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:37191 "EHLO
+        Mon, 3 Jun 2019 09:41:22 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:54363 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727506AbfFCNky (ORCPT
+        with ESMTP id S1727506AbfFCNlW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 09:40:54 -0400
+        Mon, 3 Jun 2019 09:41:22 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x53DePpt611816
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x53Df6W7611879
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 3 Jun 2019 06:40:25 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x53DePpt611816
+        Mon, 3 Jun 2019 06:41:06 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x53Df6W7611879
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559569225;
-        bh=VYU0yV3lqUuGFDknFr3qL8pGjIjf+GFkOSn+t7h3la4=;
+        s=2019051801; t=1559569267;
+        bh=ugDYpScCfry1yiNAFZlLVJ4QEvVOEsD3LZccOBLSkX8=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=gK0vQm6LTdDC+dENnXDjWY1uviJCdf3l/mKbvGRKc6xqD2DIqCH4AeOFvKWvLwtRq
-         lck/eSFOxAqNgeVr/iUKsJf/hxMDmRl09jsEsuDhzwsCefzfgk+XaCcuiQYPRYWh9H
-         mG/aCMyecKW9CbIEyVSxR0PqSj/FzwqAWiEEF+8R/P77+rK2eMNXyiLRWMeY8QBYma
-         3gaDV1DhiiKU25xdJXu4vwTccayC0Fl7g5rGPaLQyAHpT+wvqOXG1IUF5v8g4eVY0w
-         zTcxkY7D8uADtD1+//TL7nupusmBZZ63E88wNpLecVf721RGLb1FMmgmeCkhxXh9D6
-         0dBOBhcXAfmHQ==
+        b=SoxBGPZTTDREtENOcZoKx+JKfwOJaSpK/84csvKlXaWf6KpMQlwFT6w0Wa+HOr7P0
+         4cF06h6SDVJM/SqH/WTNOSxB90YBSyYIroqU/lgRMNoB97/1K8VyfYld7mXiExA+kI
+         NSuT/GvZu2QdYhbx3qJ2CQzU/6UTtUcnTvd3BhEbNy2RHQRVyq+/RhpmQNdMalUZnz
+         kgBfFsouVAFiUcfS/JbBTvpP4612fHldDexBMU5PW+OQ8gBP4ew+TCfIF0tQvHYrIv
+         eEpb2GW2vNdGytj8EeO/HvY2ftKc8dZDyAJcYQpz+SANJ4RaN/HG03EOuVsf3NNdWE
+         /qv1V3QvItU9A==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x53DeODn611813;
-        Mon, 3 Jun 2019 06:40:24 -0700
-Date:   Mon, 3 Jun 2019 06:40:24 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x53Df6of611876;
+        Mon, 3 Jun 2019 06:41:06 -0700
+Date:   Mon, 3 Jun 2019 06:41:06 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Mark Rutland <tipbot@zytor.com>
-Message-ID: <tip-8cd8de59748ba71b476d1b7101f9ecaccd5cb8c2@git.kernel.org>
-Cc:     hpa@zytor.com, mark.rutland@arm.com, peterz@infradead.org,
-        mingo@kernel.org, torvalds@linux-foundation.org,
-        will.deacon@arm.com, mpe@ellerman.id.au, tglx@linutronix.de,
-        paulus@samba.org, linux-kernel@vger.kernel.org
-Reply-To: tglx@linutronix.de, will.deacon@arm.com, mpe@ellerman.id.au,
-          paulus@samba.org, linux-kernel@vger.kernel.org,
-          mark.rutland@arm.com, hpa@zytor.com,
-          torvalds@linux-foundation.org, mingo@kernel.org,
-          peterz@infradead.org
-In-Reply-To: <20190522132250.26499-11-mark.rutland@arm.com>
-References: <20190522132250.26499-11-mark.rutland@arm.com>
+Message-ID: <tip-33e42ef571979fe6601ac838d338eb599d842a6d@git.kernel.org>
+Cc:     tglx@linutronix.de, peterz@infradead.org, will.deacon@arm.com,
+        hpa@zytor.com, palmer@sifive.com, mingo@kernel.org,
+        mark.rutland@arm.com, torvalds@linux-foundation.org,
+        aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org
+Reply-To: tglx@linutronix.de, hpa@zytor.com, palmer@sifive.com,
+          peterz@infradead.org, will.deacon@arm.com, mark.rutland@arm.com,
+          mingo@kernel.org, aou@eecs.berkeley.edu,
+          linux-kernel@vger.kernel.org, torvalds@linux-foundation.org
+In-Reply-To: <20190522132250.26499-12-mark.rutland@arm.com>
+References: <20190522132250.26499-12-mark.rutland@arm.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:locking/core] locking/atomic, powerpc: Use s64 for atomic64
-Git-Commit-ID: 8cd8de59748ba71b476d1b7101f9ecaccd5cb8c2
+Subject: [tip:locking/core] locking/atomic, riscv: Fix
+ atomic64_sub_if_positive() offset argument
+Git-Commit-ID: 33e42ef571979fe6601ac838d338eb599d842a6d
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -72,35 +72,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  8cd8de59748ba71b476d1b7101f9ecaccd5cb8c2
-Gitweb:     https://git.kernel.org/tip/8cd8de59748ba71b476d1b7101f9ecaccd5cb8c2
+Commit-ID:  33e42ef571979fe6601ac838d338eb599d842a6d
+Gitweb:     https://git.kernel.org/tip/33e42ef571979fe6601ac838d338eb599d842a6d
 Author:     Mark Rutland <mark.rutland@arm.com>
-AuthorDate: Wed, 22 May 2019 14:22:42 +0100
+AuthorDate: Wed, 22 May 2019 14:22:43 +0100
 Committer:  Ingo Molnar <mingo@kernel.org>
 CommitDate: Mon, 3 Jun 2019 12:32:56 +0200
 
-locking/atomic, powerpc: Use s64 for atomic64
+locking/atomic, riscv: Fix atomic64_sub_if_positive() offset argument
 
-As a step towards making the atomic64 API use consistent types treewide,
-let's have the powerpc atomic64 implementation use s64 as the underlying
-type for atomic64_t, rather than long, matching the generated headers.
+Presently the riscv implementation of atomic64_sub_if_positive() takes
+a 32-bit offset value rather than a 64-bit offset value as it should do.
+Thus, if called with a 64-bit offset, the value will be unexpectedly
+truncated to 32 bits.
 
-As atomic64_read() depends on the generic defintion of atomic64_t, this
-still returns long on 64-bit. This will be converted in a subsequent
-patch.
-
-Otherwise, there should be no functional change as a result of this
-patch.
+Fix this by taking the offset as a long rather than an int.
 
 Signed-off-by: Mark Rutland <mark.rutland@arm.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Michael Ellerman <mpe@ellerman.id.au>
+Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
+Cc: Albert Ou <aou@eecs.berkeley.edu>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul Mackerras <paulus@samba.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Will Deacon <will.deacon@arm.com>
-Cc: aou@eecs.berkeley.edu
 Cc: arnd@arndb.de
 Cc: bp@alien8.de
 Cc: catalin.marinas@arm.com
@@ -112,152 +107,29 @@ Cc: ink@jurassic.park.msu.ru
 Cc: jhogan@kernel.org
 Cc: linux@armlinux.org.uk
 Cc: mattst88@gmail.com
-Cc: palmer@sifive.com
+Cc: mpe@ellerman.id.au
 Cc: paul.burton@mips.com
+Cc: paulus@samba.org
 Cc: ralf@linux-mips.org
 Cc: rth@twiddle.net
 Cc: tony.luck@intel.com
 Cc: vgupta@synopsys.com
-Link: https://lkml.kernel.org/r/20190522132250.26499-11-mark.rutland@arm.com
+Link: https://lkml.kernel.org/r/20190522132250.26499-12-mark.rutland@arm.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/powerpc/include/asm/atomic.h | 44 +++++++++++++++++++--------------------
- 1 file changed, 22 insertions(+), 22 deletions(-)
+ arch/riscv/include/asm/atomic.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/include/asm/atomic.h b/arch/powerpc/include/asm/atomic.h
-index 52eafaf74054..31c231ea56b7 100644
---- a/arch/powerpc/include/asm/atomic.h
-+++ b/arch/powerpc/include/asm/atomic.h
-@@ -297,24 +297,24 @@ static __inline__ int atomic_dec_if_positive(atomic_t *v)
+diff --git a/arch/riscv/include/asm/atomic.h b/arch/riscv/include/asm/atomic.h
+index 9038aeb900a6..9c263bd9d5ad 100644
+--- a/arch/riscv/include/asm/atomic.h
++++ b/arch/riscv/include/asm/atomic.h
+@@ -332,7 +332,7 @@ static __always_inline int atomic_sub_if_positive(atomic_t *v, int offset)
+ #define atomic_dec_if_positive(v)	atomic_sub_if_positive(v, 1)
  
- #define ATOMIC64_INIT(i)	{ (i) }
- 
--static __inline__ long atomic64_read(const atomic64_t *v)
-+static __inline__ s64 atomic64_read(const atomic64_t *v)
+ #ifndef CONFIG_GENERIC_ATOMIC64
+-static __always_inline long atomic64_sub_if_positive(atomic64_t *v, int offset)
++static __always_inline long atomic64_sub_if_positive(atomic64_t *v, long offset)
  {
--	long t;
-+	s64 t;
+        long prev, rc;
  
- 	__asm__ __volatile__("ld%U1%X1 %0,%1" : "=r"(t) : "m"(v->counter));
- 
- 	return t;
- }
- 
--static __inline__ void atomic64_set(atomic64_t *v, long i)
-+static __inline__ void atomic64_set(atomic64_t *v, s64 i)
- {
- 	__asm__ __volatile__("std%U0%X0 %1,%0" : "=m"(v->counter) : "r"(i));
- }
- 
- #define ATOMIC64_OP(op, asm_op)						\
--static __inline__ void atomic64_##op(long a, atomic64_t *v)		\
-+static __inline__ void atomic64_##op(s64 a, atomic64_t *v)		\
- {									\
--	long t;								\
-+	s64 t;								\
- 									\
- 	__asm__ __volatile__(						\
- "1:	ldarx	%0,0,%3		# atomic64_" #op "\n"			\
-@@ -327,10 +327,10 @@ static __inline__ void atomic64_##op(long a, atomic64_t *v)		\
- }
- 
- #define ATOMIC64_OP_RETURN_RELAXED(op, asm_op)				\
--static inline long							\
--atomic64_##op##_return_relaxed(long a, atomic64_t *v)			\
-+static inline s64							\
-+atomic64_##op##_return_relaxed(s64 a, atomic64_t *v)			\
- {									\
--	long t;								\
-+	s64 t;								\
- 									\
- 	__asm__ __volatile__(						\
- "1:	ldarx	%0,0,%3		# atomic64_" #op "_return_relaxed\n"	\
-@@ -345,10 +345,10 @@ atomic64_##op##_return_relaxed(long a, atomic64_t *v)			\
- }
- 
- #define ATOMIC64_FETCH_OP_RELAXED(op, asm_op)				\
--static inline long							\
--atomic64_fetch_##op##_relaxed(long a, atomic64_t *v)			\
-+static inline s64							\
-+atomic64_fetch_##op##_relaxed(s64 a, atomic64_t *v)			\
- {									\
--	long res, t;							\
-+	s64 res, t;							\
- 									\
- 	__asm__ __volatile__(						\
- "1:	ldarx	%0,0,%4		# atomic64_fetch_" #op "_relaxed\n"	\
-@@ -396,7 +396,7 @@ ATOMIC64_OPS(xor, xor)
- 
- static __inline__ void atomic64_inc(atomic64_t *v)
- {
--	long t;
-+	s64 t;
- 
- 	__asm__ __volatile__(
- "1:	ldarx	%0,0,%2		# atomic64_inc\n\
-@@ -409,9 +409,9 @@ static __inline__ void atomic64_inc(atomic64_t *v)
- }
- #define atomic64_inc atomic64_inc
- 
--static __inline__ long atomic64_inc_return_relaxed(atomic64_t *v)
-+static __inline__ s64 atomic64_inc_return_relaxed(atomic64_t *v)
- {
--	long t;
-+	s64 t;
- 
- 	__asm__ __volatile__(
- "1:	ldarx	%0,0,%2		# atomic64_inc_return_relaxed\n"
-@@ -427,7 +427,7 @@ static __inline__ long atomic64_inc_return_relaxed(atomic64_t *v)
- 
- static __inline__ void atomic64_dec(atomic64_t *v)
- {
--	long t;
-+	s64 t;
- 
- 	__asm__ __volatile__(
- "1:	ldarx	%0,0,%2		# atomic64_dec\n\
-@@ -440,9 +440,9 @@ static __inline__ void atomic64_dec(atomic64_t *v)
- }
- #define atomic64_dec atomic64_dec
- 
--static __inline__ long atomic64_dec_return_relaxed(atomic64_t *v)
-+static __inline__ s64 atomic64_dec_return_relaxed(atomic64_t *v)
- {
--	long t;
-+	s64 t;
- 
- 	__asm__ __volatile__(
- "1:	ldarx	%0,0,%2		# atomic64_dec_return_relaxed\n"
-@@ -463,9 +463,9 @@ static __inline__ long atomic64_dec_return_relaxed(atomic64_t *v)
-  * Atomically test *v and decrement if it is greater than 0.
-  * The function returns the old value of *v minus 1.
-  */
--static __inline__ long atomic64_dec_if_positive(atomic64_t *v)
-+static __inline__ s64 atomic64_dec_if_positive(atomic64_t *v)
- {
--	long t;
-+	s64 t;
- 
- 	__asm__ __volatile__(
- 	PPC_ATOMIC_ENTRY_BARRIER
-@@ -502,9 +502,9 @@ static __inline__ long atomic64_dec_if_positive(atomic64_t *v)
-  * Atomically adds @a to @v, so long as it was not @u.
-  * Returns the old value of @v.
-  */
--static __inline__ long atomic64_fetch_add_unless(atomic64_t *v, long a, long u)
-+static __inline__ s64 atomic64_fetch_add_unless(atomic64_t *v, s64 a, s64 u)
- {
--	long t;
-+	s64 t;
- 
- 	__asm__ __volatile__ (
- 	PPC_ATOMIC_ENTRY_BARRIER
-@@ -534,7 +534,7 @@ static __inline__ long atomic64_fetch_add_unless(atomic64_t *v, long a, long u)
-  */
- static __inline__ int atomic64_inc_not_zero(atomic64_t *v)
- {
--	long t1, t2;
-+	s64 t1, t2;
- 
- 	__asm__ __volatile__ (
- 	PPC_ATOMIC_ENTRY_BARRIER
