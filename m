@@ -2,103 +2,103 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A7C6C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 19:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 719C7C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 19:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E44AF270B2
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 19:05:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CY8h8Wmp"
+	by mail.kernel.org (Postfix) with ESMTP id 324DC23D80
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 19:08:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559588905;
+	bh=w74VBwz1842V2tJi9EuRrmeSWfxtE46cMzBtjfw0gFA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2jTSGHnQ+/X38TncBjID4k3/CDHv6mywlfgfgOlcEa/+0TvPO0LGBrJ3BMXYJ0IQu
+	 CAvDTs0UNRk2tzUxHdh/LJY5/wTH4Sd6cRCgLnSqcTlLKSvReGhOqNrhTPWmDRG9Ab
+	 2r8IYgrKdfYwgNuPCEKYM9QFnU+ujiL+CyCQiTxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbfFCTFI (ORCPT
+        id S1726561AbfFCTIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 15:05:08 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43461 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726136AbfFCTEP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 15:04:15 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 16so3710131ljv.10;
-        Mon, 03 Jun 2019 12:04:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ETNkw8fFUbaK1GsH9w3HEMnksKyWiZUE22AHo7ajX+U=;
-        b=CY8h8WmpWp2u0+cokTb39locVU2prxk6QwaH6+0+aw2cBoHKZvL5PEWfiu7JQs3Uo/
-         BsjCLJ2onfdmOrvDTXsmZuHwv8JY0zLOvZY1U2hFAh6cPKLAn3gTrfeN6XWswKhOJ+3M
-         wA+hV3ZR+dsDyh2dt7HsNP9jKQVb0qqjcq7l5xz+1WOEbItJvTJ80GQJw9h5kY6G2Z3Z
-         3kN3MPwV+Z+SDEkFsI7USdOMMwJcrh73g/7p9SNOfTkNBEbmMvwXgW1dJZYOV4jfGvKx
-         +Czzxg1yl/a4Qd1vNJCuEBLwzEnNa0qnJdTW+BL2mOk2qqc03r9d9OSxIsaQqgofAx4R
-         j6wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ETNkw8fFUbaK1GsH9w3HEMnksKyWiZUE22AHo7ajX+U=;
-        b=r2fs7V3DHng37x6R/fzv5jK/tc2xdTDpbnZ12ss/s702tyNjJzHhxC66Nj5qFlfutr
-         o0RUbjWXCyGICrNJfN7epngbS7XNpVfBRIOSGsHZCI/eV64NMWzk63O4j7me23r9TeJc
-         7x3AcmmOItsEgf/SFFqaNRCrmch72L9GdkFjQ18FnSb2or4fmEcCXN3+afqeJsooOd3q
-         A7CANTl/N1Ag1B2w5mh7MNpOhmMcHNbCUx9Q2JjKn/hO+FkSiG5Po7/TiPJnEgBseMun
-         3wodcIzxTDXIDKIj6HRiPbBDHzZ0nxNHGfZgNnCf0Rp1Rn6G+W7d/l4hfZxf4HaaRGzT
-         M1jg==
-X-Gm-Message-State: APjAAAXiH698FKPdJouu1WmMGJb8/qXe4An7AZhfsTpT8Pdet9I1q1kT
-        Jj4C8jGBABOO/SoFFZY4GDA=
-X-Google-Smtp-Source: APXvYqxQRsHEFoS0bcsLgzG562Q4RL+81J3KPPWi4gc2p7n5sDd7pPPiyXedMyERUe0wAZ9eUPKS1w==
-X-Received: by 2002:a2e:9d43:: with SMTP id y3mr13612103ljj.154.1559588653193;
-        Mon, 03 Jun 2019 12:04:13 -0700 (PDT)
-Received: from localhost.localdomain ([94.29.35.141])
-        by smtp.gmail.com with ESMTPSA id l22sm2768805ljb.39.2019.06.03.12.04.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Jun 2019 12:04:12 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Joseph Lo <josephl@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 03/10] clocksource/drivers/tegra: Reset hardware state on init
-Date:   Mon,  3 Jun 2019 21:59:41 +0300
-Message-Id: <20190603185948.30438-4-digetx@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190603185948.30438-1-digetx@gmail.com>
-References: <20190603185948.30438-1-digetx@gmail.com>
+        Mon, 3 Jun 2019 15:08:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45688 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726136AbfFCTIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 15:08:24 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0C7723D66;
+        Mon,  3 Jun 2019 19:08:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559588903;
+        bh=w74VBwz1842V2tJi9EuRrmeSWfxtE46cMzBtjfw0gFA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=z/eT6XScY5Rws2kTIl7Cz3Gg1mNSroVwPvZVUmME7rP/f85znhodsONqdjvULXZNI
+         /4S4ZSt8VIXMJbSXeQ6tOa+CfbojdhT/hZeK08MUL1aapdC7QUzqS4OneNwan7crQq
+         2jX/D7rfXDPXdr2CmghiambNCgH1gYr7mycigCKA=
+Date:   Mon, 3 Jun 2019 21:08:21 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     linux-kernel@vger.kernel.org, rafael@kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [RFC PATCH 03/57] drivers: coresight: Drop device references
+ found via bus_find_device
+Message-ID: <20190603190821.GB6487@kroah.com>
+References: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
+ <1559577023-558-4-git-send-email-suzuki.poulose@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1559577023-558-4-git-send-email-suzuki.poulose@arm.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reset timer's hardware state to ensure that initially it is in a
-predictable state.
+On Mon, Jun 03, 2019 at 04:49:29PM +0100, Suzuki K Poulose wrote:
+> We must drop references to the device found via bus_find_device().
+> 
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> ---
+>  drivers/hwtracing/coresight/coresight.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
+> index 4b13028..37ccd67 100644
+> --- a/drivers/hwtracing/coresight/coresight.c
+> +++ b/drivers/hwtracing/coresight/coresight.c
+> @@ -540,7 +540,7 @@ struct coresight_device *coresight_get_enabled_sink(bool deactivate)
+>  
+>  	dev = bus_find_device(&coresight_bustype, NULL, &deactivate,
+>  			      coresight_enabled_sink);
+> -
+> +	put_device(dev);
+>  	return dev ? to_coresight_device(dev) : NULL;
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/clocksource/timer-tegra20.c | 3 +++
- 1 file changed, 3 insertions(+)
+You drop the reference and then use the pointer?
 
-diff --git a/drivers/clocksource/timer-tegra20.c b/drivers/clocksource/timer-tegra20.c
-index 57e7aa2b80a3..739f83fdb318 100644
---- a/drivers/clocksource/timer-tegra20.c
-+++ b/drivers/clocksource/timer-tegra20.c
-@@ -132,6 +132,9 @@ static int tegra_timer_setup(unsigned int cpu)
- {
- 	struct timer_of *to = per_cpu_ptr(&tegra_to, cpu);
- 
-+	writel(0, timer_of_base(to) + TIMER_PTV);
-+	writel(TIMER_PCR_INTR_CLR, timer_of_base(to) + TIMER_PCR);
-+
- 	irq_force_affinity(to->clkevt.irq, cpumask_of(cpu));
- 	enable_irq(to->clkevt.irq);
- 
--- 
-2.21.0
+Not good :(
 
+>  }
+>  
+> @@ -581,7 +581,7 @@ struct coresight_device *coresight_get_sink_by_id(u32 id)
+>  
+>  	dev = bus_find_device(&coresight_bustype, NULL, &id,
+>  			      coresight_sink_by_id);
+> -
+> +	put_device(dev);
+>  	return dev ? to_coresight_device(dev) : NULL;
+
+Same here, not good :(
+
+Please fix this up and it can go in as a bugfix like any other normal
+patch, outside of this huge series.
+
+thanks,
+
+greg k-h
