@@ -2,174 +2,129 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A00C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85AF0C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E893E26329
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D8ED26329
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:49:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="n/MGNySP";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RD9n5fuH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbfFCXsu convert rfc822-to-8bit (ORCPT
+        id S1726555AbfFCXtU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 19:48:50 -0400
-Received: from mga03.intel.com ([134.134.136.65]:45303 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726101AbfFCXsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 19:48:50 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 16:48:49 -0700
-X-ExtLoop1: 1
-Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
-  by fmsmga001.fm.intel.com with ESMTP; 03 Jun 2019 16:48:48 -0700
-Received: from orsmsx125.amr.corp.intel.com (10.22.240.125) by
- ORSMSX104.amr.corp.intel.com (10.22.225.131) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Mon, 3 Jun 2019 16:48:48 -0700
-Received: from orsmsx116.amr.corp.intel.com ([169.254.7.165]) by
- ORSMSX125.amr.corp.intel.com ([169.254.3.172]) with mapi id 14.03.0415.000;
- Mon, 3 Jun 2019 16:48:47 -0700
-From:   "Xing, Cedric" <cedric.xing@intel.com>
-To:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>
-CC:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        "Roberts, William C" <william.c.roberts@intel.com>,
-        "Tricca, Philip B" <philip.b.tricca@intel.com>
-Subject: RE: [RFC PATCH 3/9] x86/sgx: Allow userspace to add multiple pages
- in single ioctl()
-Thread-Topic: [RFC PATCH 3/9] x86/sgx: Allow userspace to add multiple pages
- in single ioctl()
-Thread-Index: AQHVGAki7TYpY4ZsUk+m4jTej+khLaaK1z+AgAAGRQD//79uoA==
-Date:   Mon, 3 Jun 2019 23:48:47 +0000
-Message-ID: <960B34DE67B9E140824F1DCDEC400C0F654ED499@ORSMSX116.amr.corp.intel.com>
-References: <20190531233159.30992-1-sean.j.christopherson@intel.com>
- <20190531233159.30992-4-sean.j.christopherson@intel.com>
- <beb8ac7a-b580-8ff2-7467-fb2870fb8cf0@intel.com>
- <20190603203712.GI13384@linux.intel.com>
-In-Reply-To: <20190603203712.GI13384@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNTAxNjYzMWQtZDY5OC00ZWI3LTk2OWEtOWJkZjNiZTQyOWEzIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiTUg1cmMzcysxSFhSSFhEb1Z5MGpja250Qzk1SnhVakRIOTFySFNaNXlkQUdaWVh0SmNSNEZMNHZGT3JrdnRubiJ9
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Mon, 3 Jun 2019 19:49:20 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:56259 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726101AbfFCXtU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 19:49:20 -0400
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id CB32C2208A;
+        Mon,  3 Jun 2019 19:49:18 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Mon, 03 Jun 2019 19:49:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
+        :from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=Jim7BdHYS9RK8KAODKzQVSAg1fZ
+        oNCKTLGYojHFLSlM=; b=n/MGNySPj2d2OHVK8uoH4PFT57rO9SEcQhHCyxP0Xog
+        3YPfXBo01tfTywzzpAuJYrAPEyhHFBy2e2jwz4XyZm2lDPv7URIXl/XS0l5Tl6A7
+        hc2TbiW2gF0PXDcQiYO18gJ/CORFMxMYb0YeJypwlpSSDA9KDNLBaz0enHtZE9mj
+        LUNF4l/aWcpPbczXs3LvSlaaEjh4OwB7BB9l3ZHIsHMughwJQhl6bEAFyrpMtG0+
+        P31zJfKP7P8kelfy4iRowZxVWvAYWk3lSm26oiPWoUBjRt32XDkJnSa15pW6YJwf
+        aW57zUIrJG8Z4Hnomg8vx6WE6EJsvPkKNZsNmeE5ShQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=Jim7Bd
+        HYS9RK8KAODKzQVSAg1fZoNCKTLGYojHFLSlM=; b=RD9n5fuHzdInhhKTz/0l/q
+        0OO+yr4axwpReb0AhNvj8yefpEf0gwD1x7IQiTCeu7OGQ3G6rtHhZXDMj8CanRSI
+        BTcPuBY5flm5H0uYwjMotp9y2hQ9hc1HXW8rJjeOABsvaifHAFrYLW0+dabzTIym
+        ohCnJiZHYNWpipUD8frb/fUW90XdEubCC8VdX5zweqCtHQ+uUB6zAVMLx2KPJzpn
+        iR5sEOOJGEnnsri3lY8zuOdm8byJ1rGPFe1pL+KT/feK3iDKo5MySFgdqxE2HHfq
+        zqJtQ/AnHh8W3ne2Gyfl0iXdthG30F3eqes8FUyiL6ovcP2gmXbJ1rUvktR2lPNQ
+        ==
+X-ME-Sender: <xms:_rH1XKra4TaHORNbY6PM5cilPcKjXtyz_imakGvyF5onQ5LoZ520pw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrudefkedgvdejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    gfrhhlucfvnfffucdludehmdenucfjughrpeffhffvuffkfhggtggujgfofgesthdtredt
+    ofervdenucfhrhhomhepfdfvohgsihhnucevrdcujfgrrhguihhnghdfuceomhgvsehtoh
+    gsihhnrdgttgeqnecukfhppeduvddurdeggedrvdeffedrvdeggeenucfrrghrrghmpehm
+    rghilhhfrhhomhepmhgvsehtohgsihhnrdgttgenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:_rH1XIkXuEjKzWT4lowVRy-KT65nQGBISqeotW1tEpEawV4SCws_iA>
+    <xmx:_rH1XKw51OuieiddDEwnkcn1wI6kKw8xrTxps23omkBJzMGskHkb6Q>
+    <xmx:_rH1XO1qhcRN_i3qE1EDbi2O9SMDSDZba3NFKYjnhCVMnmXBSAVkFA>
+    <xmx:_rH1XDI7CWQc3o6uheK_fNyD4vpzhnRUbzMzuyZbNz1Z6dNyYvGP2Q>
+Received: from localhost (ppp121-44-233-244.bras2.syd2.internode.on.net [121.44.233.244])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 9EC18380088;
+        Mon,  3 Jun 2019 19:49:17 -0400 (EDT)
+Date:   Tue, 4 Jun 2019 09:48:34 +1000
+From:   "Tobin C. Harding" <me@tobin.cc>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
+        Neil Brown <neilb@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/9] docs: Convert VFS doc to RST
+Message-ID: <20190603234834.GB13575@eros.localdomain>
+References: <20190515002913.12586-1-tobin@kernel.org>
+ <20190529163052.6ce91581@lwn.net>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190529163052.6ce91581@lwn.net>
+X-Mailer: Mutt 1.12.0 (2019-05-25)
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 29, 2019 at 04:30:52PM -0600, Jonathan Corbet wrote:
+> On Wed, 15 May 2019 10:29:04 +1000
+> "Tobin C. Harding" <tobin@kernel.org> wrote:
+> 
+> > Here is an updated version of the VFS doc conversion.  This series in no
+> > way represents a final point for the VFS documentation rather it is a
+> > small step towards getting VFS docs updated.  This series does not
+> > update the content of vfs.txt, only does formatting.
+> 
+> I've finally gotten to this, sorry for taking so long.  Applying it to
+> docs-next turned out to be a bit of a chore; there have been intervening
+> changes to vfs.txt that we didn't want to lose.  But I did it.
+> 
+> Unfortunately, there's still a remaining issue.  You did a lot of list
+> conversions like this:
+> 
+> > -  struct file_system_type *fs_type: describes the filesystem, partly initialized
+> > +``struct file_system_type *fs_type``: describes the filesystem, partly initialized
+> >  	by the specific filesystem code
+> 
+> but that does not render the way you would like, trust me.  You really
+> want to use the list format, something like:
+> 
+>     ``struct file_system_type *fs_type``
+> 	 describes the filesystem, partly initialized by the specific
+> 	 filesystem code
+> 
+> There are, unfortunately, a lot of these to fix...  I bet it could be done
+> with an elisp function, but I don't have time to beat my head against that
+> wall right now.
+> 
+> Any chance you would have time to send me a followup patch fixing these
+> up?  I'll keep my branch with this set for now so there's no need to
+> rebase those.
 
+Is this branch public Jon?  I'll work on top of this series but if the
+branch is public then I can check it applies, save you having problems.
 
-> -----Original Message-----
-> From: Christopherson, Sean J
-> Sent: Monday, June 03, 2019 1:37 PM
-> To: Hansen, Dave <dave.hansen@intel.com>
-> Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>; Andy Lutomirski
-> <luto@kernel.org>; Xing, Cedric <cedric.xing@intel.com>; Stephen Smalley
-> <sds@tycho.nsa.gov>; James Morris <jmorris@namei.org>; Serge E . Hallyn
-> <serge@hallyn.com>; LSM List <linux-security-module@vger.kernel.org>;
-> Paul Moore <paul@paul-moore.com>; Eric Paris <eparis@parisplace.org>;
-> selinux@vger.kernel.org; Jethro Beekman <jethro@fortanix.com>; Thomas
-> Gleixner <tglx@linutronix.de>; Linus Torvalds <torvalds@linux-
-> foundation.org>; LKML <linux-kernel@vger.kernel.org>; X86 ML
-> <x86@kernel.org>; linux-sgx@vger.kernel.org; Andrew Morton <akpm@linux-
-> foundation.org>; nhorman@redhat.com; npmccallum@redhat.com; Ayoun, Serge
-> <serge.ayoun@intel.com>; Katz-zamir, Shay <shay.katz-zamir@intel.com>;
-> Huang, Haitao <haitao.huang@intel.com>; Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com>; Svahn, Kai <kai.svahn@intel.com>;
-> Borislav Petkov <bp@alien8.de>; Josh Triplett <josh@joshtriplett.org>;
-> Huang, Kai <kai.huang@intel.com>; David Rientjes <rientjes@google.com>;
-> Roberts, William C <william.c.roberts@intel.com>; Tricca, Philip B
-> <philip.b.tricca@intel.com>
-> Subject: Re: [RFC PATCH 3/9] x86/sgx: Allow userspace to add multiple
-> pages in single ioctl()
-> 
-> On Mon, Jun 03, 2019 at 01:14:45PM -0700, Dave Hansen wrote:
-> > On 5/31/19 4:31 PM, Sean Christopherson wrote:
-> > > -struct sgx_enclave_add_page {
-> > > +struct sgx_enclave_add_pages {
-> > >  	__u64	addr;
-> > >  	__u64	src;
-> > >  	__u64	secinfo;
-> > > +	__u32	nr_pages;
-> > >  	__u16	mrmask;
-> > >  } __attribute__((__packed__));
-> >
-> > IMNHO this follows a user interface anti-pattern: exposing page sizes
-> > where not strictly required.
-> >
-> > Think of how this would look to an application if page size was
-> > variable.  With this interface, they always need to scale their
-> > operations by page size instead of just aligning it.
-> 
-> I briefly considered taking size in bytes, but I took a shortcut because
-> EPC pages are architecturally defined to be 4k sized and aligned.  That
-> being said, I don't necessarily disagree, especially if nr_pages isn't
-> squeezed into a u32.
-> 
-> > BTW, why is nr_pages a u32?  Do we never envision a case where you can
-> > add more than 4TB of memory to an enclave? ;)
-> 
-> Heh, fair enough.  IIRC, a while back someone posted about having
-> problems building a 512gb enclave in a 92mb EPC...
-> 
-> How about this for the intermediate patch:
-> 
-> 	struct sgx_enclave_add_region {
-> 		__u64	addr;
-> 		__u64	src;
-> 		__u64	size;
-> 		__u64	secinfo;
-> 		__u16	mrmask;
-> 		__u16	reserved16;
-> 		__u32	reserved;
-> 	}
-> 
-> and with the flags field:
-> 
-> 	struct sgx_enclave_add_region {
-> 		__u64	addr;
-> 		__u64	src;
-> 		__u64	size;
-> 		__u64	secinfo;
-> 		__u16	mrmask;
-> 		__u16	flags;
-
-What is "flags" here?
-
-> 		__u32	reserved;
-> 	}
+Cheers,
+Tobin.
