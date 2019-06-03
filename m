@@ -4,68 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C76C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 03:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4084C46470
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 03:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 401C627B1F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 03:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD4B527B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 03:46:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Waeh71G0"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SaLCmni6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbfFCDqa (ORCPT
+        id S1727106AbfFCDqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 23:46:30 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45785 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726774AbfFCDq2 (ORCPT
+        Sun, 2 Jun 2019 23:46:34 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33072 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726774AbfFCDqd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 23:46:28 -0400
-Received: by mail-pf1-f193.google.com with SMTP id s11so9747771pfm.12
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 20:46:28 -0700 (PDT)
+        Sun, 2 Jun 2019 23:46:33 -0400
+Received: by mail-pg1-f193.google.com with SMTP id h17so7478978pgv.0
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 20:46:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=u2+3ufyPAWIhb1gzUN3AC00i4o3W7fSexVAwlsvXQ3Q=;
-        b=Waeh71G0Ao1gbz1gGuip9FpIHrx26lgkHbAgkR19pHfCu7TvYgueGuaPVx4Mcdy6Ef
-         vQNKz9k9oxD/jly0kskdV8xH2XSdTex2YlfZr4jp7qyThgug7nJcl+DbCT4XvB4BTTVk
-         NspEAHxABmDsYqqJgS4E4rwrHOTXf5aOGXzXQ=
+        bh=2Nsh8lQFYxZ1lBkrz/qlmC7f5LUpUHKswZjElUU2A74=;
+        b=SaLCmni6iGpfWfY98SgX0KEwfmFEgiEJWUJObZVKcEj3JOVhPeqxZOex4hGKOwXyTv
+         ENjJ5tXWEOumRlxS1fbhu9b6ViozkxvrqT9nO3AF1G5bDzlF2qVl+pTkKfGiQltMHy8W
+         qrdt79nnngaGqxMYo4L4aEcCsr3EDMgKR6m3Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=u2+3ufyPAWIhb1gzUN3AC00i4o3W7fSexVAwlsvXQ3Q=;
-        b=p7W0POh7O5UNns4721bBGrE4aUwGUQhZPYSFPZPDBRycClxvMHCOL59YZqXGBwmZ3l
-         qASDhQYDUXowzDHJNrImIopAJzhPbuOKJupGAwucFjMnYlKlQLDcTt5LXgTYLihZp+yu
-         hehm8pQdA/U3NlCzp6l6mEttZnU6K8o1keBe4KD5S7P7hVHmv+93EHN8ZlCVq4QfZ0lR
-         2XoWsmAzlJml0Hh9fk/2WMwzeT+CZNSDBA7m0R2TjrBue6KY8iWeBhcp7tQqNiCN/IHm
-         5ASsF9mH70Y40LvN4XF1j3vV3r9oVGfdGft737odLa5QfWcuhFL8rk2Gt+iGkIR0koQj
-         jG7g==
-X-Gm-Message-State: APjAAAWeILxiJFigxVSFMxjtzH+H7RBc9SAPVoOa0BT0tB88KrhDkJb0
-        Fo03BIIGNfGlU96qDu5gHC2WyQ==
-X-Google-Smtp-Source: APXvYqxA86g7RB5zmpCBeLVzvhTmzexBqmGiaS3L94z+SeYH3BCOZ2TPh9/hptbmEkwx7N5xz9seOw==
-X-Received: by 2002:a62:1692:: with SMTP id 140mr27847686pfw.166.1559533587828;
-        Sun, 02 Jun 2019 20:46:27 -0700 (PDT)
+        bh=2Nsh8lQFYxZ1lBkrz/qlmC7f5LUpUHKswZjElUU2A74=;
+        b=VAGskUmW0OBxrazNrqHWEydx7kBdlKtC/99UBw17aVgItKo15z5koeTMB8BVoYAhjh
+         F5BW++3j1PVAW1NrSxWo/A8A7fdOoH1sRHf+pYL8PJghO/msypBq2v39Ya4e0d9rzEX3
+         egEyrxSJliDJcLgOcS2hERjs/FEpUGXfkbnoFJHqyjphTYmsgl3IrOG+0233ZIsaV+2Y
+         xwyVYwQP9ayoYwQCl3olo9CzQCTa8VhARYbEDFkFgPfB4tDInCI9DpUazKOl9djZGOov
+         sp7CxpC7ySCxXh7CqIFZX/ktdit5fUERSFD3fKiaRYKX4C5woUsSD+maKPPO8duiH1nP
+         qibw==
+X-Gm-Message-State: APjAAAV1LnNqbtRm8cVzL9ouHAyNCinK2IcKCkDc9lPBRooXjkCguYJq
+        wO6io5pm/ijBYYm9SXUzwCWvUA==
+X-Google-Smtp-Source: APXvYqyE4Jqv+EBCxqiCTrbeSFOS+gUnYBAXLVGT25v8uqqhNSMVSxBUaC6uhzdJ8H3eGcBKH1F58w==
+X-Received: by 2002:a17:90a:25af:: with SMTP id k44mr13519004pje.122.1559533592439;
+        Sun, 02 Jun 2019 20:46:32 -0700 (PDT)
 Received: from pihsun-z840.tpe.corp.google.com ([2401:fa00:1:10:7889:7a43:f899:134c])
-        by smtp.googlemail.com with ESMTPSA id i73sm11878960pje.9.2019.06.02.20.46.25
+        by smtp.googlemail.com with ESMTPSA id i73sm11878960pje.9.2019.06.02.20.46.30
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 02 Jun 2019 20:46:27 -0700 (PDT)
+        Sun, 02 Jun 2019 20:46:31 -0700 (PDT)
 From:   Pi-Hsun Shih <pihsun@chromium.org>
-Cc:     Pi-Hsun Shih <pihsun@chromium.org>, Rob Herring <robh@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
+Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Erin Lo <erin.lo@mediatek.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
         devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v10 5/7] dt-bindings: Add binding for cros-ec-rpmsg.
-Date:   Mon,  3 Jun 2019 11:45:10 +0800
-Message-Id: <20190603034529.154969-6-pihsun@chromium.org>
+        DEVICE TREE BINDINGS),
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Mediatek SoC
+        support),
+        linux-mediatek@lists.infradead.org (moderated list:ARM/Mediatek SoC
+        support), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v10 7/7] arm64: dts: mt8183: add scp node
+Date:   Mon,  3 Jun 2019 11:45:12 +0800
+Message-Id: <20190603034529.154969-8-pihsun@chromium.org>
 X-Mailer: git-send-email 2.22.0.rc1.257.g3120a18244-goog
 In-Reply-To: <20190603034529.154969-1-pihsun@chromium.org>
 References: <20190603034529.154969-1-pihsun@chromium.org>
@@ -77,43 +80,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a DT binding documentation for ChromeOS EC driver over rpmsg.
+From: Eddie Huang <eddie.huang@mediatek.com>
 
+Add scp node to mt8183 and mt8183-evb
+
+Signed-off-by: Erin Lo <erin.lo@mediatek.com>
 Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
 ---
-Changes from v9, v8, v7, v6:
- - No change.
+Changes from v9:
+ - Remove extra reserve-memory-vpu_share node.
 
-Changes from v5:
+Changes from v8:
  - New patch.
 ---
- Documentation/devicetree/bindings/mfd/cros-ec.txt | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/mediatek/mt8183-evb.dts | 11 +++++++++++
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 12 ++++++++++++
+ 2 files changed, 23 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/cros-ec.txt b/Documentation/devicetree/bindings/mfd/cros-ec.txt
-index 6245c9b1a68b..4860eabd0f72 100644
---- a/Documentation/devicetree/bindings/mfd/cros-ec.txt
-+++ b/Documentation/devicetree/bindings/mfd/cros-ec.txt
-@@ -3,7 +3,7 @@ ChromeOS Embedded Controller
- Google's ChromeOS EC is a Cortex-M device which talks to the AP and
- implements various function such as keyboard and battery charging.
- 
--The EC can be connect through various means (I2C, SPI, LPC) and the
-+The EC can be connect through various means (I2C, SPI, LPC, RPMSG) and the
- compatible string used depends on the interface. Each connection method has
- its own driver which connects to the top level interface-agnostic EC driver.
- Other Linux driver (such as cros-ec-keyb for the matrix keyboard) connect to
-@@ -17,6 +17,9 @@ Required properties (SPI):
- - compatible: "google,cros-ec-spi"
- - reg: SPI chip select
- 
-+Required properties (RPMSG):
-+- compatible: "google,cros-ec-rpmsg"
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+index d8e555cbb5d3..e46e34ce3159 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
++++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+@@ -24,6 +24,17 @@
+ 	chosen {
+ 		stdout-path = "serial0:921600n8";
+ 	};
 +
- Optional properties (SPI):
- - google,cros-ec-spi-pre-delay: Some implementations of the EC need a little
-   time to wake up from sleep before they can receive SPI transfers at a high
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++		scp_mem_reserved: scp_mem_region {
++			compatible = "shared-dma-pool";
++			reg = <0 0x50000000 0 0x2900000>;
++			no-map;
++		};
++	};
+ };
+ 
+ &auxadc {
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index c2749c4631bc..133146b52904 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -254,6 +254,18 @@
+ 			clock-names = "spi", "wrap";
+ 		};
+ 
++		scp: scp@10500000 {
++			compatible = "mediatek,mt8183-scp";
++			reg = <0 0x10500000 0 0x80000>,
++			      <0 0x105c0000 0 0x5000>;
++			reg-names = "sram", "cfg";
++			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&infracfg CLK_INFRA_SCPSYS>;
++			clock-names = "main";
++			memory-region = <&scp_mem_reserved>;
++			status = "disabled";
++		};
++
+ 		auxadc: auxadc@11001000 {
+ 			compatible = "mediatek,mt8183-auxadc",
+ 				     "mediatek,mt8173-auxadc";
 -- 
 2.22.0.rc1.257.g3120a18244-goog
 
