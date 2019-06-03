@@ -2,140 +2,133 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1518C28CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 048A4C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3C4821473
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1F5F2253C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:45:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="SVJsieYM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbfFCImZ (ORCPT
+        id S1727743AbfFCIpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 04:42:25 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56808 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727710AbfFCImY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 04:42:24 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x538bmRj054065
-        for <linux-kernel@vger.kernel.org>; Mon, 3 Jun 2019 04:42:23 -0400
-Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2svwh0epsk-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 04:42:22 -0400
-Received: from localhost
-        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Mon, 3 Jun 2019 09:42:21 +0100
-Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
-        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 3 Jun 2019 09:42:16 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x538gFPw21299220
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 3 Jun 2019 08:42:15 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A43C3B2065;
-        Mon,  3 Jun 2019 08:42:15 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7303EB2066;
-        Mon,  3 Jun 2019 08:42:15 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.85.160.165])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  3 Jun 2019 08:42:15 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id C316616C5D9E; Mon,  3 Jun 2019 01:42:14 -0700 (PDT)
-Date:   Mon, 3 Jun 2019 01:42:14 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Fengguang Wu <fengguang.wu@intel.com>, LKP <lkp@01.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: rcu_read_lock lost its compiler barrier
-Reply-To: paulmck@linux.ibm.com
-References: <20150910171649.GE4029@linux.vnet.ibm.com>
- <20150911021933.GA1521@fixme-laptop.cn.ibm.com>
- <20150921193045.GA13674@lerouge>
- <20150921204327.GH4029@linux.vnet.ibm.com>
- <20190602055607.bk5vgmwjvvt4wejd@gondor.apana.org.au>
- <CAHk-=whLGKOmM++OQi5GX08_dfh8Xfz9Wq7khPo+MVtPYh_8hw@mail.gmail.com>
- <20190603024640.2soysu4rpkwjuash@gondor.apana.org.au>
- <20190603034707.GG28207@linux.ibm.com>
- <20190603040114.st646bujtgyu7adn@gondor.apana.org.au>
- <20190603072339.GH28207@linux.ibm.com>
+        Mon, 3 Jun 2019 04:45:21 -0400
+Received: from mail-eopbgr60063.outbound.protection.outlook.com ([40.107.6.63]:47052
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726653AbfFCIpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 04:45:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GsRZSm4Q5uwPKH6PCtg57Kl8pOILzAAs4yb0cXdQ9S4=;
+ b=SVJsieYMD3RVfQG3XIh8/o8j3wdB7AJ0XWb/Z0KbqLFJPZZKF/GYRciIAtdlwKs1Nn3Bw0UVgRVccwyJoIbYdkvjeHrln82D9RQCEJsAqxHnj+Ec0G0pgdWP/rUo1BqJoiZZS/CvSeWFAn/iDRE1QaxNot8CxR6x3bGhKh6prkk=
+Received: from VI1PR04MB5055.eurprd04.prod.outlook.com (20.177.50.140) by
+ VI1PR04MB5405.eurprd04.prod.outlook.com (20.178.121.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.21; Mon, 3 Jun 2019 08:45:16 +0000
+Received: from VI1PR04MB5055.eurprd04.prod.outlook.com
+ ([fe80::9577:379c:2078:19a1]) by VI1PR04MB5055.eurprd04.prod.outlook.com
+ ([fe80::9577:379c:2078:19a1%7]) with mapi id 15.20.1943.018; Mon, 3 Jun 2019
+ 08:45:16 +0000
+From:   Leonard Crestez <leonard.crestez@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
+        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "dinguyen@kernel.org" <dinguyen@kernel.org>,
+        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>, Abel Vesa <abel.vesa@nxp.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH V2 2/3] clk: imx: Add support for i.MX8MN clock driver
+Thread-Topic: [PATCH V2 2/3] clk: imx: Add support for i.MX8MN clock driver
+Thread-Index: AQHVGaxdHZzNGD6lS0CX40Io7wcnXg==
+Date:   Mon, 3 Jun 2019 08:45:16 +0000
+Message-ID: <VI1PR04MB5055D6EB38E84E370E881425EE140@VI1PR04MB5055.eurprd04.prod.outlook.com>
+References: <20190603013503.40626-1-Anson.Huang@nxp.com>
+ <20190603013503.40626-2-Anson.Huang@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leonard.crestez@nxp.com; 
+x-originating-ip: [192.88.166.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 20ad664a-a97c-4f7d-92bd-08d6e7ffcd1f
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5405;
+x-ms-traffictypediagnostic: VI1PR04MB5405:
+x-microsoft-antispam-prvs: <VI1PR04MB54057A5A759C2315741C96B9EE140@VI1PR04MB5405.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:85;
+x-forefront-prvs: 0057EE387C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(396003)(39860400002)(366004)(136003)(199004)(189003)(73956011)(66946007)(5660300002)(8936002)(256004)(33656002)(53936002)(110136005)(81166006)(66476007)(64756008)(55016002)(66446008)(68736007)(4326008)(81156014)(66556008)(9686003)(229853002)(6246003)(316002)(186003)(76116006)(91956017)(6436002)(7416002)(26005)(8676002)(52536014)(99286004)(7736002)(53546011)(86362001)(486006)(305945005)(44832011)(14454004)(71200400001)(71190400001)(6506007)(4744005)(7696005)(102836004)(478600001)(2906002)(76176011)(74316002)(25786009)(3846002)(6116002)(446003)(2201001)(476003)(2501003)(66066001)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5405;H:VI1PR04MB5055.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: b+cMDmjrLCiyDc+HtJ7JzACpOq1FoEPFi/g54Ze0MIGQlkBJcTYmhEyksME2cMiIujn+WrYBBroLp/PINgmv36VeS7BobFHKkKyQzkuUZOW7SUnKtcHf7adiJwWBgE3LJSR8IyhMeEIu3Dr6QmJBBwGerjf/nCQXbevFbn992mtIPDaVg7IUXA07lXZDNiWjaZOFkwjyIgWh1c0BBzgoEY35OWC8MUMTzHEixPPw4SqKlENVXAxiHozFghGyvPg7ODHBMKPggXWnkonrx7+5mmz2OkebyHE4/NbU1VZthuYiTiGbpnumN1j1Dn74vt31FsZuKuD8l3biTRKmcv2sEmJhkIpAihJubEaXhe7pjEZuGeSXRXyHBq6X0mgQB7HZ7iIhjc+slQppb8iOkMWafm8zUSTra7xHNt/VI9hENdc=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190603072339.GH28207@linux.ibm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19060308-0072-0000-0000-00000436B2E7
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011207; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01212553; UDB=6.00637233; IPR=6.00993614;
- MB=3.00027161; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-03 08:42:19
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060308-0073-0000-0000-00004C774240
-Message-Id: <20190603084214.GA1496@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-03_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=950 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906030064
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 20ad664a-a97c-4f7d-92bd-08d6e7ffcd1f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2019 08:45:16.2239
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: leonard.crestez@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5405
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 12:23:39AM -0700, Paul E. McKenney wrote:
-> On Mon, Jun 03, 2019 at 12:01:14PM +0800, Herbert Xu wrote:
-> > On Sun, Jun 02, 2019 at 08:47:07PM -0700, Paul E. McKenney wrote:
-> > >
-> > > 	CPU2:         if (b != 1)
-> > > 	CPU2:                 b = 1;
-> > 
-> > Stop right there.  The kernel is full of code that assumes that
-> > assignment to an int/long is atomic.  If your compiler breaks this
-> > assumption that we can kiss the kernel good-bye.
-> 
-> Here you go:
-> 
-> https://gcc.gnu.org/bugzilla/show_bug.cgi?id=55981
-> https://gcc.gnu.org/bugzilla/show_bug.cgi?id=56028
-> 
-> TL;DR: On x86, of you are doing a plain store of a 32-bit constant
-> that has bits set only in the lower few bits of each 16-bit half of
-> that constant, the compiler is plenty happy to use a pair of 16-bit
-> store-immediate instructions to carry out that store.  This is also
-> known as "store tearing".
-> 
-> The two bugs were filed (and after some back and forth, fixed) because
-> someone forgot to exclude C11 atomics and volatile accesses from this
-> store tearing.
-
-I should hasten to add that I have not seen load tearing, nor have I seen
-store tearing when storing a value unknown to the compiler.  However,
-plain C-language loads and stores can be invented, fused, and a few other
-"interesting" optimization can be applied.
-
-On kissing the kernel goodbye, a reasonable strategy might be to
-identify the transformations that are actually occuring (like the
-stores of certain constants called out above) and fix those.  We do
-occasionally use READ_ONCE() to prevent load-fusing optimizations that
-would otherwise cause the compiler to turn while-loops into if-statements
-guarding infinite loops.  There is also the possibility of having the
-compiler guys give us more command-line arguments.
-
-							Thanx, Paul
-
+On 6/3/2019 4:33 AM, Anson.Huang@nxp.com wrote:=0A=
+> From: Anson Huang <Anson.Huang@nxp.com>=0A=
+> =0A=
+> This patch adds i.MX8MN clock driver support. =0A=
+=0A=
+> +#include "clk.h"=0A=
+> +=0A=
+> +#define PLL_1416X_RATE(_rate, _m, _p, _s)		\=0A=
+> +	{						\=0A=
+> +		.rate	=3D	(_rate),		\=0A=
+> +		.mdiv	=3D	(_m),			\=0A=
+> +		.pdiv	=3D	(_p),			\=0A=
+> +		.sdiv	=3D	(_s),			\=0A=
+> +	}=0A=
+> +=0A=
+> +#define PLL_1443X_RATE(_rate, _m, _p, _s, _k)		\=0A=
+> +	{						\=0A=
+> +		.rate	=3D	(_rate),		\=0A=
+> +		.mdiv	=3D	(_m),			\=0A=
+> +		.pdiv	=3D	(_p),			\=0A=
+> +		.sdiv	=3D	(_s),			\=0A=
+> +		.kdiv	=3D	(_k),			\=0A=
+> +	}=0A=
+=0A=
+These macros are shared with clk-imx8mm (and perhaps some future chips) =0A=
+so they should be moved to driver/clk/imx/clk.h=0A=
