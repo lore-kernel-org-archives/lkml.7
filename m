@@ -7,58 +7,57 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E3BC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91958C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC5B32542C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6698D2542C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:46:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ldQ+tNgW"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="SMfc16Kr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbfFCNpo (ORCPT
+        id S1728666AbfFCNq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 09:45:44 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:60429 "EHLO
+        Mon, 3 Jun 2019 09:46:27 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:38627 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726780AbfFCNpn (ORCPT
+        with ESMTP id S1726780AbfFCNq1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 09:45:43 -0400
+        Mon, 3 Jun 2019 09:46:27 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x53DjSoC614326
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x53DkC3g614372
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 3 Jun 2019 06:45:28 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x53DjSoC614326
+        Mon, 3 Jun 2019 06:46:12 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x53DkC3g614372
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559569529;
-        bh=tnCa0VNVmlfW+3+oVVEvRCh2gYklefe4IzvWiy7w82I=;
+        s=2019051801; t=1559569573;
+        bh=bDHxt74Fnq2Ngwtk+dwyw38Uiew9Fi1d3UAGaytTcLU=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=ldQ+tNgWM49Lkd8CRRvzxke/pJSmKJw6fr3w5/qXux2TgASUBQOLt6o1VJzyg+WrH
-         7xdHWFwZukoFrpDwGULztoICZdpxvV2kOq+vjg7DpRsMslVddG2YNy8wndHCOAgLlo
-         07yNzXRI1FMA4NT25vJMzPD8q7N05Ch68KLgtMZ3+3RklRj3hsiaNoOa7k4EkAPpQB
-         bU3Xvh9pfCPHzyX/1cNyDQTRDqZT50pJZpzacsodDitQolQdGcgqHthxGyweaiuv1c
-         53TQS4UtraZbAczEcsueT0BYPTqIRwKgAQnVnYDcJA2pjQenoIXZvVFbpdaY4qtROj
-         GH9rDBZcg1TQA==
+        b=SMfc16KrejFlX8eyRcpvVHsFWCVmJa0XQL2VVOaWw7cpJeDxyYhCqJA4Jpffmu//t
+         vASYTMKwnAc/XpKaQnmhlg2USwDQd0zC/U6hj7+VilD/jMBNZGo7GcM0za6+WloAnx
+         UCTFqm3oVhZe1C90y9O9M11OGdZyU9A0FL9jq3W69txrb1od73sfukO88pHrFBFEK2
+         7vSwbNL4GjJsTMtv33SHHGTeM1Hq2M/dQRTkaJW7vaR3hXIhOptuxLgff7dzO+A3gD
+         4/rEXb0oVSQehvRKuG7TD5UuX2YI2MfG4JstMDpKBGwKBlkw2i1w1YlBQQRDrVBtQi
+         QaGZOstgIZVsA==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x53DjRiw614323;
-        Mon, 3 Jun 2019 06:45:27 -0700
-Date:   Mon, 3 Jun 2019 06:45:27 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x53DkCO6614369;
+        Mon, 3 Jun 2019 06:46:12 -0700
+Date:   Mon, 3 Jun 2019 06:46:12 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Mark Rutland <tipbot@zytor.com>
-Message-ID: <tip-2af7a0f91c3a645ec9f1cd68e41472021746db35@git.kernel.org>
-Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, tglx@linutronix.de, herbert@gondor.apana.org.au,
-        will.deacon@arm.com, peterz@infradead.org, mark.rutland@arm.com,
-        hpa@zytor.com
-Reply-To: mark.rutland@arm.com, hpa@zytor.com, herbert@gondor.apana.org.au,
-          peterz@infradead.org, will.deacon@arm.com,
-          linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-          mingo@kernel.org, tglx@linutronix.de
-In-Reply-To: <20190522132250.26499-18-mark.rutland@arm.com>
-References: <20190522132250.26499-18-mark.rutland@arm.com>
+Message-ID: <tip-6a6a9d5fb9f26d2c2127497f3a42adbeb5ccc2a4@git.kernel.org>
+Cc:     heiko.carstens@de.ibm.com, mingo@kernel.org, will.deacon@arm.com,
+        torvalds@linux-foundation.org, hpa@zytor.com, mark.rutland@arm.com,
+        peterz@infradead.org, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org
+Reply-To: mingo@kernel.org, heiko.carstens@de.ibm.com, will.deacon@arm.com,
+          mark.rutland@arm.com, hpa@zytor.com,
+          torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+          tglx@linutronix.de, peterz@infradead.org
+In-Reply-To: <20190522132250.26499-19-mark.rutland@arm.com>
+References: <20190522132250.26499-19-mark.rutland@arm.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:locking/core] locking/atomic, crypto/nx: Remove redundant
- casts
-Git-Commit-ID: 2af7a0f91c3a645ec9f1cd68e41472021746db35
+Subject: [tip:locking/core] locking/atomic, s390/pci: Remove redundant casts
+Git-Commit-ID: 6a6a9d5fb9f26d2c2127497f3a42adbeb5ccc2a4
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -72,21 +71,21 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  2af7a0f91c3a645ec9f1cd68e41472021746db35
-Gitweb:     https://git.kernel.org/tip/2af7a0f91c3a645ec9f1cd68e41472021746db35
+Commit-ID:  6a6a9d5fb9f26d2c2127497f3a42adbeb5ccc2a4
+Gitweb:     https://git.kernel.org/tip/6a6a9d5fb9f26d2c2127497f3a42adbeb5ccc2a4
 Author:     Mark Rutland <mark.rutland@arm.com>
-AuthorDate: Wed, 22 May 2019 14:22:49 +0100
+AuthorDate: Wed, 22 May 2019 14:22:50 +0100
 Committer:  Ingo Molnar <mingo@kernel.org>
 CommitDate: Mon, 3 Jun 2019 12:32:57 +0200
 
-locking/atomic, crypto/nx: Remove redundant casts
+locking/atomic, s390/pci: Remove redundant casts
 
 Now that atomic64_read() returns s64 consistently, we don't need to
 explicitly cast its return value. Drop the redundant casts.
 
 Signed-off-by: Mark Rutland <mark.rutland@arm.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
@@ -97,7 +96,7 @@ Cc: bp@alien8.de
 Cc: catalin.marinas@arm.com
 Cc: davem@davemloft.net
 Cc: fenghua.yu@intel.com
-Cc: heiko.carstens@de.ibm.com
+Cc: herbert@gondor.apana.org.au
 Cc: ink@jurassic.park.msu.ru
 Cc: jhogan@kernel.org
 Cc: linux@armlinux.org.uk
@@ -110,40 +109,22 @@ Cc: ralf@linux-mips.org
 Cc: rth@twiddle.net
 Cc: tony.luck@intel.com
 Cc: vgupta@synopsys.com
-Link: https://lkml.kernel.org/r/20190522132250.26499-18-mark.rutland@arm.com
+Link: https://lkml.kernel.org/r/20190522132250.26499-19-mark.rutland@arm.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- drivers/crypto/nx/nx-842-pseries.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/s390/pci/pci_debug.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/nx/nx-842-pseries.c b/drivers/crypto/nx/nx-842-pseries.c
-index 938332ce3b60..2de5e3672e42 100644
---- a/drivers/crypto/nx/nx-842-pseries.c
-+++ b/drivers/crypto/nx/nx-842-pseries.c
-@@ -857,7 +857,7 @@ static ssize_t nx842_##_name##_show(struct device *dev,		\
- 	local_devdata = rcu_dereference(devdata);			\
- 	if (local_devdata)						\
- 		p = snprintf(buf, PAGE_SIZE, "%lld\n",			\
--		       (s64)atomic64_read(&local_devdata->counters->_name));	\
-+		       atomic64_read(&local_devdata->counters->_name));	\
- 	rcu_read_unlock();						\
- 	return p;							\
- }
-@@ -911,7 +911,7 @@ static ssize_t nx842_timehist_show(struct device *dev,
- 	for (i = 0; i < (NX842_HIST_SLOTS - 2); i++) {
- 		bytes = snprintf(p, bytes_remain, "%u-%uus:\t%lld\n",
- 			       i ? (2<<(i-1)) : 0, (2<<i)-1,
--			       (s64)atomic64_read(&times[i]));
-+			       atomic64_read(&times[i]));
- 		bytes_remain -= bytes;
- 		p += bytes;
- 	}
-@@ -919,7 +919,7 @@ static ssize_t nx842_timehist_show(struct device *dev,
- 	 * 2<<(NX842_HIST_SLOTS - 2) us */
- 	bytes = snprintf(p, bytes_remain, "%uus - :\t%lld\n",
- 			2<<(NX842_HIST_SLOTS - 2),
--			(s64)atomic64_read(&times[(NX842_HIST_SLOTS - 1)]));
-+			atomic64_read(&times[(NX842_HIST_SLOTS - 1)]));
- 	p += bytes;
+diff --git a/arch/s390/pci/pci_debug.c b/arch/s390/pci/pci_debug.c
+index 45eccf79e990..3408c0df3ebf 100644
+--- a/arch/s390/pci/pci_debug.c
++++ b/arch/s390/pci/pci_debug.c
+@@ -75,7 +75,7 @@ static void pci_sw_counter_show(struct seq_file *m)
  
- 	rcu_read_unlock();
+ 	for (i = 0; i < ARRAY_SIZE(pci_sw_names); i++, counter++)
+ 		seq_printf(m, "%26s:\t%llu\n", pci_sw_names[i],
+-			   (s64)atomic64_read(counter));
++			   atomic64_read(counter));
+ }
+ 
+ static int pci_perf_show(struct seq_file *m, void *v)
