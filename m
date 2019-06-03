@@ -2,78 +2,122 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFDA8C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:42:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 945BEC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9031527412
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:42:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JaGOnQRJ"
+	by mail.kernel.org (Postfix) with ESMTP id 718222741B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:42:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729426AbfFCQmL (ORCPT
+        id S1729446AbfFCQmQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 12:42:11 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38536 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727747AbfFCQmJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 12:42:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=PF/DPANZU4B/91WFDIx5XMAZHVrwBhQKQlUd+pBcvEQ=; b=JaGOnQRJd1s1Tei2klsqm9Xw/
-        K+z8AjG++0f7WOFL/9N6Okkg4uIaPUTec2wS0KZv9WBhCaHl/IlAg12WlNGF9X3X1ne26v6tNfcRm
-        baazZKctsmnFG3aRsZx9tnHSrz9yxqhAKpKpiJ1sfbSRzxS/uDGXrmsE0lPn/YhAz4qbBZrsD3WEp
-        FbTU1Uf+Wizk64U4jhZaOSb/xG1FH0WAO0PocMjrBCWoPs/TFenlK4ecED2g5xHbefvRUt0vQb5Ky
-        fsv04MugJsd7+QypPkbI1we9jNwnpg22UdePuUom2zg4VPZISZ9R3lbk3EDd4sqSVYBhL1ouD3fwO
-        dIMR8XMFg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hXq2A-0002Ps-63; Mon, 03 Jun 2019 16:42:06 +0000
-Date:   Mon, 3 Jun 2019 09:42:06 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Pingfan Liu <kernelfans@gmail.com>
-Cc:     linux-mm@kvack.org, Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Keith Busch <keith.busch@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv2 1/2] mm/gup: fix omission of check on FOLL_LONGTERM in
- get_user_pages_fast()
-Message-ID: <20190603164206.GB29719@infradead.org>
-References: <1559543653-13185-1-git-send-email-kernelfans@gmail.com>
+        Mon, 3 Jun 2019 12:42:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53902 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726211AbfFCQmP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 12:42:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B3319AE79;
+        Mon,  3 Jun 2019 16:42:13 +0000 (UTC)
+Subject: Re: [PATCH v3 0/6] Prerequisites for NXP LS104xA SMMU enablement
+To:     Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Madalin-cristian Bucur <madalin.bucur@nxp.com>,
+        Roy Pledge <roy.pledge@nxp.com>,
+        Camelia Alexandra Groza <camelia.groza@nxp.com>,
+        Leo Li <leoyang.li@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jocke@infinera.com" <joakim.tjernlund@infinera.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Mian Yousaf Kaukab <yousaf.kaukab@suse.com>
+References: <20190530141951.6704-1-laurentiu.tudor@nxp.com>
+ <d086216f-f3fc-c88a-3891-81e84e8bdb01@suse.de>
+ <VI1PR04MB5134BFA391D8FF013762882FEC190@VI1PR04MB5134.eurprd04.prod.outlook.com>
+ <19cc3230-33b0-e465-6317-590780b33efa@suse.de>
+ <VI1PR04MB5134E4DA6EA052BEBB3C26EFEC190@VI1PR04MB5134.eurprd04.prod.outlook.com>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Openpgp: preference=signencrypt
+Organization: SUSE Linux GmbH
+Message-ID: <c237dd17-ed43-d2d0-c76c-0c1dbf859690@suse.de>
+Date:   Mon, 3 Jun 2019 18:42:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1559543653-13185-1-git-send-email-kernelfans@gmail.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <VI1PR04MB5134E4DA6EA052BEBB3C26EFEC190@VI1PR04MB5134.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +#if defined(CONFIG_CMA)
+Am 31.05.19 um 19:32 schrieb Laurentiu Tudor:
+>> -----Original Message-----
+>> From: Andreas Färber <afaerber@suse.de>
+>> Sent: Friday, May 31, 2019 8:04 PM
+>>
+>> Hello Laurentiu,
+>>
+>> Am 31.05.19 um 18:46 schrieb Laurentiu Tudor:
+>>>> -----Original Message-----
+>>>> From: Andreas Färber <afaerber@suse.de>
+>>>> Sent: Friday, May 31, 2019 7:15 PM
+>>>>
+>>>> Hi Laurentiu,
+>>>>
+>>>> Am 30.05.19 um 16:19 schrieb laurentiu.tudor@nxp.com:
+>>>>> This patch series contains several fixes in preparation for SMMU
+>>>>> support on NXP LS1043A and LS1046A chips. Once these get picked up,
+>>>>> I'll submit the actual SMMU enablement patches consisting in the
+>>>>> required device tree changes.
+>>>>
+>>>> Have you thought through what will happen if this patch ordering is not
+>>>> preserved? In particular, a user installing a future U-Boot update with
+>>>> the DTB bits but booting a stable kernel without this patch series -
+>>>> wouldn't that regress dpaa then for our customers?
+>>>>
+>>>
+>>> These are fixes for issues that popped out after enabling SMMU.
+>>> I do not expect them to break anything.
+>>
+>> That was not my question! You're missing my point: All your patches are
+>> lacking a Fixes header in their commit message, for backporting them, to
+>> avoid _your DT patches_ breaking the driver on stable branches!
+> 
+> It does appear that I'm missing your point. For sure, the DT updates solely will
+> break the kernel without these fixes but I'm not sure I understand how this
+> could happen.
 
-You can just use #ifdef here.
+In short, customers rarely run master branch. Kindly have your
+colleagues explain stable branches to you in details.
 
-> +static inline int reject_cma_pages(int nr_pinned, unsigned int gup_flags,
-> +	struct page **pages)
+With Fixes header I was referring to the syntax explained here:
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html#describe-your-changes
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html#using-reported-by-tested-by-reviewed-by-suggested-by-and-fixes
 
-Please use two instead of one tab to indent the continuing line of
-a function declaration.
+> My plan was to share the kernel dts patches sometime after this series
+> makes it through.
 
-> +{
-> +	if (unlikely(gup_flags & FOLL_LONGTERM)) {
+That's fine. What I'm warning you is that seemingly your DT patches,
+once in one of your LSDK U-Boot releases, will cause a regression for
+distros like our SLES 15 SP1 unless these prereq kernel patches get
+applied on the respective stable branches. Which will not happen
+automatically unless you as patch author take the appropriate action
+before they get merged.
 
-IMHO it would be a little nicer if we could move this into the caller.
+Thanks,
+Andreas
+
+-- 
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
+HRB 21284 (AG Nürnberg)
