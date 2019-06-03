@@ -2,163 +2,92 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5613C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DBB7C46470
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BBCF275EA
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:15:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559582158;
-	bh=2h+RgAo0T6Nw45DtDKzzxaVU7MlALt05Scf5Fgt49lk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Er4nfgFub2HqZcgJ9KeRxJezmHicBqAfOgWL6skImHgKwrEGnlgxAq6K9oX+xrJV+
-	 zBfL/zXTaWnRzHCu3P8qFw0MCZQQ8KpJJFxJbhSKxmd/8ZUw1JKVfXE+LW64hcfdzz
-	 wjm4nWctkHNuFtpWnH+IrlILoNbLaiQ01NbZTACc=
+	by mail.kernel.org (Postfix) with ESMTP id 28351275F1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:16:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nV5DjAkU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729071AbfFCRP5 (ORCPT
+        id S1729143AbfFCRQf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 13:15:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58924 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726823AbfFCRP4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 13:15:56 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57F13275EA;
-        Mon,  3 Jun 2019 17:15:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559582154;
-        bh=2h+RgAo0T6Nw45DtDKzzxaVU7MlALt05Scf5Fgt49lk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MvZWeWA/8epHjqHuL6VTVUApc4IZNGyNZsVJltEL26ScletXNr8OHi7br7PtN3ckx
-         +sOtvoXrv3FO3yOIVuol3GsDJeZsQV8opd2LgfOetfr1do6a6tb/72Ogah+znW515S
-         1maFoGxeVbW4jAmBC56rm9Uex3K31EmupO8DqX78=
-Date:   Mon, 3 Jun 2019 12:15:52 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Abhishek Sahu <abhsahu@nvidia.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH 1/2] PCI: Code reorganization for VGA device link
-Message-ID: <20190603171552.GB189360@google.com>
-References: <20190531050109.16211-1-abhsahu@nvidia.com>
- <20190531050109.16211-2-abhsahu@nvidia.com>
+        Mon, 3 Jun 2019 13:16:35 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43810 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726717AbfFCRQf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 13:16:35 -0400
+Received: by mail-pg1-f194.google.com with SMTP id f25so8646052pgv.10;
+        Mon, 03 Jun 2019 10:16:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nWPocyGzr05xZyYak/fsO6uoYX3VCtgY9WiKqwr1Zm0=;
+        b=nV5DjAkUvRpLAqeJdpNXPu2IiC+gNNX79Efnop3tWMlRf65HAtziFVPLw01cNl0G+0
+         q8ms3i62eonvmOg5d/hC2OQvcqprlVYjE7FNXkY08RUZN4f/ckeotM9MFOfKGHYnBFt5
+         E/ez0zL97qP8Z/e6drCRK0nzqLCNSvmZJA1r7hYMRykbZEoEqLKVNYIdgDFjOG0Kccgf
+         QL4odT+ve9k5XXyZlPZLnmJZZqi8g1zhhdraa520uijV5VoVUQ/FNz3PtpaThiQEEAMh
+         9dW16DFy3cnYaHvlah9NOUiLN9w2EAlXqaabjXaQnENSEMSBF1n15KWoF8rHlaInlVXE
+         v2eA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nWPocyGzr05xZyYak/fsO6uoYX3VCtgY9WiKqwr1Zm0=;
+        b=X6mLix5vo76RFk2bICEUrErqtu7a5eMb/Wn1rva3+IEAuKFqfLPB7LzfvzVN1KflMx
+         CiKQAVrTT+NfHrg/so/AqmwDLk9WzPR9dz/Yvy1m2xPMqoUm3J8Al2pzjph8+QcgXshv
+         2rkKyOtnhmw23+pqa8tMkX1AgjYXSdLJciOmWPEhqudmPtyWbve3Eqr0etb2jLnwpy/X
+         0fC9WH+hPyFo+aGi6HDXS9nCsW4MMpaogtP2ebxg4iQ24BwpmmLpgubRn7/vPsoiaySK
+         Sz7qqbMJX55jk3fvUxhqcosuQf+hRUnqdyKMGEd5kNk7FPOz4ORZ6I5AQHB+u6uXnIic
+         3PsQ==
+X-Gm-Message-State: APjAAAWnyVTL2Q49x7cR8rkYMb6AipDvneWnlczs3XmhIgTMiV3EgzIz
+        B6W/4gx1nfX8vJFGIhMr832/AEVU
+X-Google-Smtp-Source: APXvYqzLSjBMMD7RPnG4I2evBnbpWjKAXUBZqf53Z3ltECoZ0r4pqLl4kyGy702m2l/GSsBM5qd94w==
+X-Received: by 2002:a62:e90b:: with SMTP id j11mr31931539pfh.88.1559582194758;
+        Mon, 03 Jun 2019 10:16:34 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id q125sm33239373pfq.62.2019.06.03.10.16.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 03 Jun 2019 10:16:33 -0700 (PDT)
+Date:   Mon, 3 Jun 2019 10:16:31 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 00/32] 4.19.48-stable review
+Message-ID: <20190603171631.GA4704@roeck-us.net>
+References: <20190603090308.472021390@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190531050109.16211-2-abhsahu@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190603090308.472021390@linuxfoundation.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Lukas]
-
-On Fri, May 31, 2019 at 10:31:08AM +0530, Abhishek Sahu wrote:
-> This patch does minor code reorganization. It introduces a helper
-> function which creates device link from the non-VGA controller
-> (consumer) to the VGA (supplier) and uses this helper function for
-> creating device link from integrated HDA controller to VGA. It will
-> help in subsequent patches which require a similar kind of device
-> link from USB/Type-C USCI controller to VGA.
+On Mon, Jun 03, 2019 at 11:07:54AM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.48 release.
+> There are 32 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Signed-off-by: Abhishek Sahu <abhsahu@nvidia.com>
-> ---
->  drivers/pci/quirks.c | 44 +++++++++++++++++++++++++++++---------------
->  1 file changed, 29 insertions(+), 15 deletions(-)
+> Responses should be made by Wed 05 Jun 2019 09:02:49 AM UTC.
+> Anything received after that time might be too late.
 > 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index a077f67fe1da..a20f7771a323 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -4916,36 +4916,50 @@ static void quirk_fsl_no_msi(struct pci_dev *pdev)
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_FREESCALE, PCI_ANY_ID, quirk_fsl_no_msi);
->  
->  /*
-> - * GPUs with integrated HDA controller for streaming audio to attached displays
-> - * need a device link from the HDA controller (consumer) to the GPU (supplier)
-> - * so that the GPU is powered up whenever the HDA controller is accessed.
-> - * The GPU and HDA controller are functions 0 and 1 of the same PCI device.
-> - * The device link stays in place until shutdown (or removal of the PCI device
-> - * if it's hotplugged).  Runtime PM is allowed by default on the HDA controller
-> - * to prevent it from permanently keeping the GPU awake.
-> + * GPUs can be multi-function PCI device which can contain controllers other
-> + * than VGA (like Audio, USB, etc.). Internally in the hardware, these non-VGA
-> + * controllers are tightly coupled with VGA controller. Whenever these
-> + * controllers are runtime active, the VGA controller should also be in active
-> + * state. Normally, in these GPUs, the VGA controller is present at function 0.
-> + *
-> + * This is a helper function which creates device link from the non-VGA
-> + * controller (consumer) to the VGA (supplier). The device link stays in place
-> + * until shutdown (or removal of the PCI device if it's hotplugged).
-> + * Runtime PM is allowed by default on these non-VGA controllers to prevent
-> + * it from permanently keeping the GPU awake.
->   */
-> -static void quirk_gpu_hda(struct pci_dev *hda)
-> +static void
-> +pci_create_device_link_with_vga(struct pci_dev *pdev, unsigned int devfn)
 
-There's nothing in this functionality that depends on VGA, so let's
-remove "GPU, "VGA", etc from the description, the function name, the
-local variable name, and the log message.  Maybe you need to allow the
-caller to supply the class type (PCI_BASE_CLASS_DISPLAY for current
-users, but Lukas mentioned a NIC that might be able to use this too).
+Build results:
+	total: 156 pass: 156 fail: 0
+Qemu test results:
+	total: 349 pass: 349 fail: 0
 
-Follow the prevailing indentation style, with return type and function
-name on the same line, i.e.,
-
-  static void pci_create_device_link(...)
-
->  {
->  	struct pci_dev *gpu;
->  
-> -	if (PCI_FUNC(hda->devfn) != 1)
-> +	if (PCI_FUNC(pdev->devfn) != devfn)
->  		return;
->  
-> -	gpu = pci_get_domain_bus_and_slot(pci_domain_nr(hda->bus),
-> -					  hda->bus->number,
-> -					  PCI_DEVFN(PCI_SLOT(hda->devfn), 0));
-> +	gpu = pci_get_domain_bus_and_slot(pci_domain_nr(pdev->bus),
-> +					  pdev->bus->number,
-> +					  PCI_DEVFN(PCI_SLOT(pdev->devfn), 0));
->  	if (!gpu || (gpu->class >> 16) != PCI_BASE_CLASS_DISPLAY) {
->  		pci_dev_put(gpu);
->  		return;
->  	}
->  
-> -	if (!device_link_add(&hda->dev, &gpu->dev,
-> +	if (!device_link_add(&pdev->dev, &gpu->dev,
->  			     DL_FLAG_STATELESS | DL_FLAG_PM_RUNTIME))
-> -		pci_err(hda, "cannot link HDA to GPU %s\n", pci_name(gpu));
-> +		pci_err(pdev, "cannot link with VGA %s\n", pci_name(gpu));
-
-I think we should emit a message in the success case, too.  There is
-one in device_link_add(), but it's a dev_dbg() so we can't count on it
-being in the log.  I'd like a pci_info() that we can count on.
-
-> -	pm_runtime_allow(&hda->dev);
-> +	pm_runtime_allow(&pdev->dev);
->  	pci_dev_put(gpu);
->  }
-> +
-> +/*
-> + * Create device link for GPUs with integrated HDA controller for streaming
-> + * audio to attached displays.
-> + */
-> +static void quirk_gpu_hda(struct pci_dev *hda)
-> +{
-> +	pci_create_device_link_with_vga(hda, 1);
-> +}
->  DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_ATI, PCI_ANY_ID,
->  			      PCI_CLASS_MULTIMEDIA_HD_AUDIO, 8, quirk_gpu_hda);
->  DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMD, PCI_ANY_ID,
-> -- 
-> 2.17.1
-> 
+Guenter
