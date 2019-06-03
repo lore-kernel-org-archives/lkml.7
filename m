@@ -2,105 +2,113 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C99B0C28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F31C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A569226D67
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:31:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559586687;
-	bh=tKu+9YnqIJM7WkSdcJxKhcrVSljhwHnaTXwK03T/uwU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=sqIcBFP6Jch1tODhzmWFYv20Ih163avzhm7HGVYkl4poPpgAwLcMGV7/EkiSg9glk
-	 lsocLlTVAbSm8+cyjRgQugOA0Y76Mdf42LMYF0CyTyIkhQz7Dj6jTBQf7+G+2RVVm7
-	 j2XDi9e5JTZiqQuhiCpp0okWigQoBPHjEqTJLanw=
+	by mail.kernel.org (Postfix) with ESMTP id E91D726D62
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:31:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="lE/gBTu5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbfFCSbZ (ORCPT
+        id S1726652AbfFCSb5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 14:31:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56634 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726136AbfFCSbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 14:31:24 -0400
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5A7E26DF3;
-        Mon,  3 Jun 2019 18:31:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559586684;
-        bh=tKu+9YnqIJM7WkSdcJxKhcrVSljhwHnaTXwK03T/uwU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=LMV4WcMUZELWXQQR0e73PHu/2quC/Tw33p3nhKKIX9SDsD264VVlQXxMFnBVoxqD5
-         Fmsb20qeZkPxCHDqyXzNe4TG7g6aRe+xd15pqHD41tTsQTAGYhiNUOcnG0lXioNcMs
-         LVc9VItMI6RFTLHtF4Aqe5+2Xt7KX0Q02bRVJ4uk=
-Received: by mail-lj1-f181.google.com with SMTP id a10so13962807ljf.6;
-        Mon, 03 Jun 2019 11:31:23 -0700 (PDT)
-X-Gm-Message-State: APjAAAWycHsDQbLoXt4SfC7oC7/ZRRGUsTpsmbjA59u7529a0h00FX+B
-        ci9vFnaSYWnDtRS6nZjEiH1Sr2SMwW33cZFsukw=
-X-Google-Smtp-Source: APXvYqztKMTjaCNLajYG7cSZz9qvxdLn+E1v/4LiZh5vlmfrNayaC9kf2W0/Ic+i1ixVwYQjuUcOqMbLrwS6Jx67Gmo=
-X-Received: by 2002:a2e:568d:: with SMTP id k13mr14358606lje.194.1559586682175;
- Mon, 03 Jun 2019 11:31:22 -0700 (PDT)
+        Mon, 3 Jun 2019 14:31:57 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:38282 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726241AbfFCSb4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 14:31:56 -0400
+Received: by mail-oi1-f194.google.com with SMTP id 18so12833746oij.5
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 11:31:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=landley-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JB7G7a3obPccO07RyvNY8mElks92DaU5NY5QKwWTZvQ=;
+        b=lE/gBTu5gNk+nG3gMkLC5L1qqMeFZke1tNjNI5xgMMMUPlBG3ZAzppxMiEuBOtKiMI
+         Y6xOk9eUEgPGAqGCVGFZpHU68PsLFNawXTBrG55HWus8sEfa/pbs2FkPH3l9y2eEvDvI
+         iGvFo6MBYyAPDhEBFQ/4NNauvhmdicFzBSZLXBRHikKFhbpLDxXobG2dm7zdUMcMLlR4
+         bLxdEBF7g9pTfKNAUVZBPWJPnMha7n3pUfVeRzY2e9a5BSDSaj0E6B5Lem8uEQQeVdh+
+         wXJNvLH9D4lzgEpF3Pu7V+6V4lfAyFJbr7/0knZSFvSon08cblLXIUE+SrdvBuzGJp3y
+         AyZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JB7G7a3obPccO07RyvNY8mElks92DaU5NY5QKwWTZvQ=;
+        b=POs0rh96i+0G8LLMktYV9Y5EaRw01HRZ8LmmDlLJ2wz3c2x4eP9VNJddl/bp0/OJtw
+         2U7w2ERFwJxhoHELRiNn2+iUDlU5C6LzlMANM7IX+U3Qa5SI/ML3nRpG7p9NEzJDIqeG
+         lTWn0tRdL8xyFfu074T6ufhDWsbklqsCdnDIeMqMunkAJCcnUYL1Tn12I/M9JAH30aw3
+         lR1qPNNpdLm12XG2D6QN542UFCaj9d2dCGDmMyMaPvSJF/XH29+KzccckkEXl9odrfYP
+         4TfQDSPHGTb8Iu71pvZnQTDq7vqsfDDEV0ov6dFbYgZgyclVImhKiW1Oe13JAEazTMat
+         MOxQ==
+X-Gm-Message-State: APjAAAVSCWCBQZAn8/VzX/GHcZhFhdw3V6ddfhFU9htRAeLjbcNErKCp
+        2LwC7i8kcpZ8m02+N/AHBCyPQQ==
+X-Google-Smtp-Source: APXvYqx/JQHKW1RVtJywUChZiZhbYIWjyWjyP52wifJ5hVzfHkQZ9dKculi7hqOvLpAffmvtGewfWA==
+X-Received: by 2002:aca:c382:: with SMTP id t124mr1900442oif.9.1559586715364;
+        Mon, 03 Jun 2019 11:31:55 -0700 (PDT)
+Received: from [192.168.1.5] (072-182-052-210.res.spectrum.com. [72.182.52.210])
+        by smtp.googlemail.com with ESMTPSA id b127sm6172046oih.43.2019.06.03.11.31.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 03 Jun 2019 11:31:54 -0700 (PDT)
+Subject: Re: [PATCH v4 0/3] initramfs: add support for xattrs in the initial
+ ram disk
+To:     Roberto Sassu <roberto.sassu@huawei.com>, viro@zeniv.linux.org.uk
+Cc:     linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, initramfs@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bug-cpio@gnu.org,
+        zohar@linux.vnet.ibm.com, silviu.vlasceanu@huawei.com,
+        dmitry.kasatkin@huawei.com, takondra@cisco.com, kamensky@cisco.com,
+        hpa@zytor.com, arnd@arndb.de, james.w.mcmechan@gmail.com,
+        niveditas98@gmail.com
+References: <20190523121803.21638-1-roberto.sassu@huawei.com>
+ <cf9d08ca-74c7-c945-5bf9-7c3495907d1e@huawei.com>
+From:   Rob Landley <rob@landley.net>
+Message-ID: <541e9ea1-024f-5c22-0b58-f8692e6c1eb1@landley.net>
+Date:   Mon, 3 Jun 2019 13:32:53 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <CAJKOXPcTVpLtSSs=Q0G3fQgXYoVa=kHxWcWXyvS13ie73ByZBw@mail.gmail.com>
- <20190603135939.e2mb7vkxp64qairr@pc636> <CAJKOXPdczUnsaBeXTuutZXCQ70ejDT68xnVm-e+SSdLZi-vyCA@mail.gmail.com>
- <20190604003153.76f33dd2@canb.auug.org.au> <CAJKOXPed=npnfk0H2WUDityHg5cPLH_zwShyRd+B2RS8h6C7SQ@mail.gmail.com>
- <20190604011125.266222a8@canb.auug.org.au>
-In-Reply-To: <20190604011125.266222a8@canb.auug.org.au>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Mon, 3 Jun 2019 20:31:10 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPf3LZuQ5o5sERL_b6+4SfERWyQR0jUaVUJs12m7WdD3gQ@mail.gmail.com>
-Message-ID: <CAJKOXPf3LZuQ5o5sERL_b6+4SfERWyQR0jUaVUJs12m7WdD3gQ@mail.gmail.com>
-Subject: Re: [BUG BISECT] bug mm/vmalloc.c:470 (mm/vmalloc.c: get rid of one
- single unlink_va() when merge)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org,
-        Hillf Danton <hdanton@sina.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tejun Heo <tj@kernel.org>, Andrei Vagin <avagin@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <cf9d08ca-74c7-c945-5bf9-7c3495907d1e@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 3 Jun 2019 at 17:11, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+On 6/3/19 4:31 AM, Roberto Sassu wrote:
+>> This patch set aims at solving the following use case: appraise files from
+>> the initial ram disk. To do that, IMA checks the signature/hash from the
+>> security.ima xattr. Unfortunately, this use case cannot be implemented
+>> currently, as the CPIO format does not support xattrs.
+>>
+>> This proposal consists in including file metadata as additional files named
+>> METADATA!!!, for each file added to the ram disk. The CPIO parser in the
+>> kernel recognizes these special files from the file name, and calls the
+>> appropriate parser to add metadata to the previously extracted file. It has
+>> been proposed to use bit 17:16 of the file mode as a way to recognize files
+>> with metadata, but both the kernel and the cpio tool declare the file mode
+>> as unsigned short.
 >
-> Hi Krzysztof,
->
-> On Mon, 3 Jun 2019 16:35:22 +0200 Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> >
-> > On Mon, 3 Jun 2019 at 16:32, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> > >
-> > > On Mon, 3 Jun 2019 16:10:40 +0200 Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > > >
-> > > > Indeed it looks like effect of merge conflict resolution or applying.
-> > > > When I look at MMOTS, it is the same as yours:
-> > > > http://git.cmpxchg.org/cgit.cgi/linux-mmots.git/commit/?id=b77b8cce67f246109f9d87417a32cd38f0398f2f
-> > > >
-> > > > However in linux-next it is different.
-> > > >
-> > > > Stephen, any thoughts?
-> > >
-> > > Have you had a look at today's linux-next?  It looks correct in
-> > > there.  Andrew updated his patch series over the weekend.
-> >
-> > Yes, I am looking at today's next. Both the source code and the commit
-> > 728e0fbf263e3ed359c10cb13623390564102881 have wrong "if (merged)" (put
-> > in wrong hunk).
->
-> OK, I have replaced that commit with this:
+> Any opinion on this patch set?
+> 
+> Thanks
+> 
+> Roberto
 
-Thank you!
+Sorry, I've had the window open since you posted it but haven't gotten around to
+it. I'll try to build it later today.
 
-Best regards,
-Krzysztof
+It does look interesting, and I have no objections to the basic approach. I
+should be able to add support to toybox cpio over a weekend once I've got the
+kernel doing it to test against.
+
+Rob
