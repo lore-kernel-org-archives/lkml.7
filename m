@@ -2,116 +2,92 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26540C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72840C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:05:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0955126647
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:05:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5538326647
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:05:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfFCWFj (ORCPT
+        id S1726867AbfFCWFm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 18:05:39 -0400
-Received: from mga05.intel.com ([192.55.52.43]:46272 "EHLO mga05.intel.com"
+        Mon, 3 Jun 2019 18:05:42 -0400
+Received: from mga11.intel.com ([192.55.52.93]:1031 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726097AbfFCWFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 18:05:38 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1726205AbfFCWFj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 18:05:39 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 13:44:07 -0700
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 15:05:38 -0700
 X-ExtLoop1: 1
-Received: from jgaire-mobl.ger.corp.intel.com (HELO localhost) ([10.252.20.169])
-  by orsmga004.jf.intel.com with ESMTP; 03 Jun 2019 13:43:54 -0700
-Date:   Mon, 3 Jun 2019 23:43:53 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        William Roberts <bill.c.roberts@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-Message-ID: <20190603204353.GC4894@linux.intel.com>
-References: <20190524224107.GJ365@linux.intel.com>
- <683B5E3D-AFB6-4B45-8D39-B00847312209@amacapital.net>
- <960B34DE67B9E140824F1DCDEC400C0F654E965F@ORSMSX116.amr.corp.intel.com>
- <CALCETrXXVMutX8eZk6nnkOAeS+Tj0sQd0FkW+wk6Rx8hQxCe6w@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F654E9824@ORSMSX116.amr.corp.intel.com>
- <20190528202407.GB13158@linux.intel.com>
- <285f279f-b500-27f0-ab42-fb1dbcc5ab18@tycho.nsa.gov>
- <960B34DE67B9E140824F1DCDEC400C0F654EB487@ORSMSX116.amr.corp.intel.com>
- <678a37af-797d-7bd5-a406-32548a270e3d@tycho.nsa.gov>
- <CALCETrWXB9fNNDH7gZxPTx05F78Og6K=ZtAr2aA++BDwY09Wbg@mail.gmail.com>
+X-IronPort-AV: E=Sophos;i="5.60,548,1549958400"; 
+   d="scan'208";a="181310106"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by fmsmga002.fm.intel.com with ESMTP; 03 Jun 2019 15:05:38 -0700
+Date:   Mon, 3 Jun 2019 15:08:42 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc:     joro@8bytes.org, alex.williamson@redhat.com, eric.auger@redhat.com,
+        ashok.raj@intel.com, yi.l.liu@intel.com, robdclark@gmail.com,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        robin.murphy@arm.com, jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v2 2/4] iommu: Introduce device fault data
+Message-ID: <20190603150842.11070cfd@jacob-builder>
+In-Reply-To: <20190603145749.46347-3-jean-philippe.brucker@arm.com>
+References: <20190603145749.46347-1-jean-philippe.brucker@arm.com>
+        <20190603145749.46347-3-jean-philippe.brucker@arm.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrWXB9fNNDH7gZxPTx05F78Og6K=ZtAr2aA++BDwY09Wbg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 07:31:14AM -0700, Andy Lutomirski wrote:
->  - To create an X mapping of an enclave page that came from EADD, you
-> need EXECUTE on the source file.  Optionally, we could also permit
-> this if you have EXECMOD.
+On Mon,  3 Jun 2019 15:57:47 +0100
+Jean-Philippe Brucker <jean-philippe.brucker@arm.com> wrote:
 
-Source file? EADD ioctl takes memory buffer in right now.
+> +/**
+> + * struct iommu_fault_page_request - Page Request data
+> + * @flags: encodes whether the corresponding fields are valid and
+> whether this
+> + *         is the last page in group (IOMMU_FAULT_PAGE_REQUEST_*
+> values)
+> + * @pasid: Process Address Space ID
+> + * @grpid: Page Request Group Index
+> + * @perm: requested page permissions (IOMMU_FAULT_PERM_* values)
+> + * @addr: page address
+> + * @private_data: device-specific private information
+> + */
+> +struct iommu_fault_page_request {
+> +#define IOMMU_FAULT_PAGE_REQUEST_PASID_VALID	(1 << 0)
+> +#define IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE	(1 << 1)
+> +#define IOMMU_FAULT_PAGE_REQUEST_PRIV_DATA	(1 << 2)
+> +	__u32	flags;
+> +	__u32	pasid;
+> +	__u32	grpid;
+> +	__u32	perm;
+> +	__u64	addr;
+> +	__u64	private_data[2];
+> +};
+> +
 
-> And I have two design proposals.  One is static and one is dynamic.
-> To implement either one, we will probably need a new .may_mprotect vm
-> operation, and that operation can call an LSM hook.  Or we can give
-> LSMs a way to detect that a given vm_area_struct is an enclave.  As I
-> see it, this is an implementation detail that is certainly solveable.
+Just a thought, for non-identity G-H PASID management. We could pass on
+guest PASID in PRQ to save a lookup in QEMU. In this case, QEMU
+allocate a GPASID for vIOMMU then a host PASID for pIOMMU. QEMU has a
+G->H lookup. When PRQ comes in to the pIOMMU with HPASID, IOMMU driver
+can retrieve GPASID from the bind data then report to the guest via
+VFIO. In this case QEMU does not need to do a H->G PASID lookup.
 
-Why VM operation and not file operation?
+Should we add a gpasid field here? or we can add a flag and field
+later, up to you.
 
-> EADD takes an execute_intent flag.  It calls a new hook:
-> 
->   int security_enclave_load(struct vm_area_struct *source, bool execute_intent);
-> 
-> This hook will fail if execute_intent==true and the caller has neither
-> EXECUTE, EXECMOD, nor EXECMEM.
-> 
-> EAUG sets execute_intent = false.
-> 
-> EINIT takes a sigstruct pointer.  SGX can (when initially upstreamed
-> or later on once there's demand) call a new hook:
-> 
->   security_enclave_init(struct sigstruct *sigstruct, struct
-> vm_area_struct *source);
+Thanks,
 
-What is the source VMA in these callbacks? Why is @execute_intent
-needed anyway as a ioctl arugment and not deduced from SECINFO?
-
-/Jarkko
+Jacob
