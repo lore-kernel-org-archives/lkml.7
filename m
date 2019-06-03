@@ -2,198 +2,157 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCBC7C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB45C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3ED02722C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E0932722C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:06:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="0rLthD9o"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XymoGc7J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbfFCRGD (ORCPT
+        id S1728291AbfFCRG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 13:06:03 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:36556 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfFCRGC (ORCPT
+        Mon, 3 Jun 2019 13:06:27 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:39809 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727789AbfFCRG0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 13:06:02 -0400
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x53H5eMA013417;
-        Tue, 4 Jun 2019 02:05:40 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x53H5eMA013417
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1559581541;
-        bh=Wh5AphhhG1/9gl6DKkWi7+nu/0r7jfAo3cQVWcxAvMs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0rLthD9otS2AiG3E5/GnQ9HdNW3XSBUtY1AgtUllZqLGN/GyYtGBzhjPaMSYYa8oL
-         sDYy02WMCIdG1NQAvo8+T+PaBJJpbLqjMOqZ+hKaF6xEsY0PFLaKozs8Oyj66HCNYt
-         YP1X3LRuifgSA6G3eplD7aY+soa6gJbpJIk7dVlo8nl3o59Tt1QLYf2tL8LRyPdlEt
-         +TzudGaRNejOjJEJuOjAQmxAJ5HzlcXbF4J0coFYXo+jwHkLPvPrYBspaaE7XBJ49Y
-         LaVNCbS6574sp9Kp00/9qm8biOMzj7gcG4w9oKxaMXfw5WDeGuRILPexR5MBjuriIW
-         mWseMnvECxqbQ==
-X-Nifty-SrcIP: [209.85.217.48]
-Received: by mail-vs1-f48.google.com with SMTP id l20so11722722vsp.3;
-        Mon, 03 Jun 2019 10:05:40 -0700 (PDT)
-X-Gm-Message-State: APjAAAVSwB/21Kh3ClJv5BQL5H38tUQG4VAvUNP6PxfGwiHK4FpjHKpT
-        J1cD+JGsYWNxUXWoNUxep1c3202zLfke8aTyFtw=
-X-Google-Smtp-Source: APXvYqw1j0h7dPq91qeFgfmPoCwM4xqnEZm+YWjuPynChyFgxLznq6Qu/I8GHSTUygSJrljgMIdoqGz9DwIKMY/Ejiw=
-X-Received: by 2002:a67:1783:: with SMTP id 125mr2680825vsx.54.1559581539601;
- Mon, 03 Jun 2019 10:05:39 -0700 (PDT)
+        Mon, 3 Jun 2019 13:06:26 -0400
+Received: by mail-pf1-f193.google.com with SMTP id j2so10969547pfe.6
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 10:06:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HYJoR/zfyv70Em+OIILglCe3XWuiH6p+K727C24pDAs=;
+        b=XymoGc7JWCRKHtM+wd/9hGi9VWGsUM72Lwa90KnvQJ358uEmtUgcHoKdtU9g/YH4UJ
+         5u34zZdjU4FRJazo1vFuW3Ni1y1DNZVh/alS1ECRtC3BF7TZUH+GUyZUoEV1ZTcu35tt
+         nObul5i9lrx30r8a/e6JYyssLeymB2ctqES0N7//YxV4uMKqEsaUeN3+PzxtLJVdrwsh
+         Z/k985v/01dgnrGjVh59cUp9Nom/0K7l3TgAT4n5WZQPD1vgp3vkfuUimZ+Xh+PsD+fW
+         QdzcgoJaWOtWSqcWc9IK1QohrHJZ7wW5wsfUIytyUhIb0Cs9PUborvrLgVelRcAz9JGB
+         usaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HYJoR/zfyv70Em+OIILglCe3XWuiH6p+K727C24pDAs=;
+        b=LH2tXcknDIHzqTmzFQLZhi/9QbZXFH/tVfXvQfhjfNR0G/nFmqPu0HFTRyvgACMMQI
+         eG937tx94E2jSoRujUOj3Ow1ahGIH/YXqBfszMeo0Ot7OKTvI7d+yVW9FlzKNAX+kniq
+         YYzjCvecap9YxkSkDD4wjJ/1yxyCzE31D6lHR0YwPn7K7iqEyn2R0tGyG6ymv+L4DXVx
+         weozihNmd4HKguNGQGe8cm/YwkykXCPJ1iqIju8w508UH3HI59jJsBHcnrOOO4YV8xDD
+         WxNDu+bimLES7uj+TyUfuoGmAjsbM+j2y3AAh0BtDRt/ljG5hJ7TzunTLvlVlhNL9l3r
+         Oxjw==
+X-Gm-Message-State: APjAAAWdhSv5rV8BxGgptSXifqYLw7OPxSORsBJiUV/K25c0u/5TVb3u
+        ZmX/4Ki+Lsyt2P/OSqGbWlfbgQmBJiUD91AL65lHGw==
+X-Google-Smtp-Source: APXvYqzVD08oLbUBv5TB7pQev79oUx9XvjbFqir2kEseCZEnF7+ERZIlVyBSOpSgKKJ3rEYpDIEwDIElz1nyAoYLJGY=
+X-Received: by 2002:a17:90a:2488:: with SMTP id i8mr23649149pje.123.1559581585869;
+ Mon, 03 Jun 2019 10:06:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190516194818.29230-1-jani.nikula@intel.com> <20190524174011.GA23737@ravnborg.org>
-In-Reply-To: <20190524174011.GA23737@ravnborg.org>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 4 Jun 2019 02:05:01 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARY_L3Oyi7hhCZXVwNRAsf6ceSarTNDrzdfXQGj1tDFJw@mail.gmail.com>
-Message-ID: <CAK7LNARY_L3Oyi7hhCZXVwNRAsf6ceSarTNDrzdfXQGj1tDFJw@mail.gmail.com>
-Subject: Re: [RFC 1/3] kbuild: add support for ensuring headers are self-contained
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Jani Nikula <jani.nikula@intel.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        intel-gfx@lists.freedesktop.org,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Michal Marek <michal.lkml@markovi.net>
+References: <cover.1559580831.git.andreyknvl@google.com> <097bc300a5c6554ca6fd1886421bb2e0adb03420.1559580831.git.andreyknvl@google.com>
+ <8ff5b0ff-849a-1e0b-18da-ccb5be85dd2b@oracle.com>
+In-Reply-To: <8ff5b0ff-849a-1e0b-18da-ccb5be85dd2b@oracle.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Mon, 3 Jun 2019 19:06:14 +0200
+Message-ID: <CAAeHK+xX2538e674Pz25unkdFPCO_SH0pFwFu=8+DS7RzfYnLQ@mail.gmail.com>
+Subject: Re: [PATCH v16 01/16] uaccess: add untagged_addr definition for other arches
+To:     Khalid Aziz <khalid.aziz@oracle.com>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>, enh <enh@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sam,
-
-
-On Sat, May 25, 2019 at 2:40 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+On Mon, Jun 3, 2019 at 7:04 PM Khalid Aziz <khalid.aziz@oracle.com> wrote:
 >
-> Hi Jani
->
-> > Sometimes it's useful to be able to explicitly ensure certain headers
-> > remain self-contained, i.e. that they are compilable as standalone
-> > units, by including and/or forward declaring everything they depend on.
+> On 6/3/19 10:55 AM, Andrey Konovalov wrote:
+> > To allow arm64 syscalls to accept tagged pointers from userspace, we must
+> > untag them when they are passed to the kernel. Since untagging is done in
+> > generic parts of the kernel, the untagged_addr macro needs to be defined
+> > for all architectures.
 > >
-> > Add special target header-test-y where individual Makefiles can add
-> > headers to be tested if CONFIG_HEADER_TEST is enabled. This will
-> > generate a dummy C file per header that gets built as part of extra-y.
->
-> Very useful, thanks.
-> I have cooked up something ad-hoc a couple of times but having it as a
-> standard feature in the build system is much better.
-> The we can let some of our infrastructure pick up an issues
-> automatically.
->
+> > Define it as a noop for architectures other than arm64.
 > >
-> > Cc: Chris Wilson <chris@chris-wilson.co.uk>
-> > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > Cc: Michal Marek <michal.lkml@markovi.net>
-> > Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+> > Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+> > Reviewed-by: Khalid Aziz <khalid.aziz@oracle.com>
+> > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 > > ---
-> >  Documentation/kbuild/makefiles.txt |  7 +++++++
-> >  init/Kconfig                       |  9 +++++++++
-> >  scripts/Makefile.build             | 10 ++++++++++
-> >  scripts/Makefile.lib               |  3 +++
-> >  4 files changed, 29 insertions(+)
+> >  include/linux/mm.h | 4 ++++
+> >  1 file changed, 4 insertions(+)
 > >
-> > diff --git a/Documentation/kbuild/makefiles.txt b/Documentation/kbuild/makefiles.txt
-> > index 03c065855eaf..73df58e5ea0c 100644
-> > --- a/Documentation/kbuild/makefiles.txt
-> > +++ b/Documentation/kbuild/makefiles.txt
-> > @@ -1036,6 +1036,13 @@ When kbuild executes, the following steps are followed (roughly):
-> >       In this example, extra-y is used to list object files that
-> >       shall be built, but shall not be linked as part of built-in.a.
+> > diff --git a/include/linux/mm.h b/include/linux/mm.h
+> > index 0e8834ac32b7..949d43e9c0b6 100644
+> > --- a/include/linux/mm.h
+> > +++ b/include/linux/mm.h
+> > @@ -99,6 +99,10 @@ extern int mmap_rnd_compat_bits __read_mostly;
+> >  #include <asm/pgtable.h>
+> >  #include <asm/processor.h>
 > >
-> > +    header-test-y
+> > +#ifndef untagged_addr
+> > +#define untagged_addr(addr) (addr)
+> > +#endif
 > > +
-> > +     header-test-y specifies headers (*.h) in the current directory that
-> > +     should be compile tested to ensure they are self-contained,
-> > +     i.e. compilable as standalone units. If CONFIG_HEADER_TEST is enabled,
-> > +     this autogenerates dummy sources to include the headers, and builds them
-> > +     as part of extra-y.
-> Do we want to restrict this to current directory only?
-> Sometimes we could use this for headers in include/ but let it
-> trigger for the relevant subsystem.
-> So for example drivers/gpu/drm/Makefile will include the rules
-> for all headers in include/drm/*
+> >  #ifndef __pa_symbol
+> >  #define __pa_symbol(x)  __pa(RELOC_HIDE((unsigned long)(x), 0))
+> >  #endif
+> >
 >
-> The alternative would be Makefiles (of Kbuild files)
-> scattered in the directories with headers and then some
-> infrastructure to visit those.
+> Andrey,
 >
-> Follow patch extend the header-test feature to work with
-> headers in include/
+> This patch has now become part of the other patch series Chris Hellwig
+> has sent out -
+> <https://lore.kernel.org/lkml/20190601074959.14036-1-hch@lst.de/>. Can
+> you coordinate with that patch series?
 
-Following the obj-y pattern,
-I want to make header-test-y relative to $(obj).
+Hi!
 
+Yes, I've seen it. How should I coordinate? Rebase this series on top
+of that one?
 
+Thanks!
 
-> Example:
-> # Header files from this directory
-> header-test-y += drm_crtc_helper_internal.h
-> header-test-y += drm_crtc_internal.h
-
-These are described in drivers/gpu/drm/Makefile.
-
-> ..
-> .
-> # Header files from include/drm
-> header-test-y += drm/amd_asic_type.h
-> header-test-y += drm/ati_pcigart.h
-
-These are described in $(srctree)/include/Makefile.
-
-
-> ...
 >
+> --
+> Khalid
 >
-> In the patch $* is used to get the "stem" from the pattern.
-> This is the filname of the header file without extension.
->
->
->         Sam
->
->
-> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-> index 4d4bf698467a..ca132ab3a551 100644
-> --- a/scripts/Makefile.build
-> +++ b/scripts/Makefile.build
-> @@ -295,11 +295,10 @@ $(obj)/%.lst: $(src)/%.c FORCE
->  # ---------------------------------------------------------------------------
->
->  quiet_cmd_header_test = HDRTEST $@
-> -      cmd_header_test = echo "\#include \"$(<F)\"" > $@
-> +      cmd_header_test = echo "\#include <$(2).h>" > $@
->
-> -# FIXME: would be nice to be able to limit this implicit rule to header-test-y
-> -$(obj)/%.header_test.c: $(src)/%.h FORCE
-> -       $(call if_changed,header_test)
-> +$(obj)/%.header_test.c:
-> +       $(call cmd,header_test,$*)
->
->  # Compile assembler sources (.S)
->  # ---------------------------------------------------------------------------
->
-
-Agree, this is much better,
-and it is what scripts/Makefile.asm-generic does.
-
-But, you do not need to pass '$*' via the argument.
-
-
-
-I prefer this:
-
-quiet_cmd_header_test = HDRTEST $@
-      cmd_header_test = echo "\#include \"$*.h\"" > $@
-
-$(obj)/%.header_test.c:
-        $(call cmd,header_test)
-
-
--- 
-Best Regards
-Masahiro Yamada
