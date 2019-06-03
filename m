@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA26C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4424C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 125DC27ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:14:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3F9127ED9
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:14:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553247;
-	bh=+9FvUUl097hlFjRGGEZfiRxbpeiccsHlXb1z5QkWtc8=;
+	s=default; t=1559553248;
+	bh=EalTZgYLMxKMB+SmBCfQ3J+rYslJYpfRcOIGgXSOiW8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iq9sSWlzXo3j1DoGiK5KSCfzhFFRQEXKp4mV9jZ2Gf15JGljuPdBkFeMTObwcebnP
-	 LVcDsQqAj5Sm95NRpZfOZ5w7xV2n1kj0i6LMRGUfDfIfAzjpdrvyRrmkXq3ssCOFJ/
-	 2l2MfhpLdpdsjDY6NjSgHvfR5IQfVXSFCqStiDw0=
+	b=XaewQC3dKcaOd+X8zvh0IBL+oBG03jHcoD8GR/Ll7TuFRdriC6vQwn+I8EEqIKfxB
+	 RmBA+SiLVI1NtP2lS6WgWOSwRFv0kkw4+UkRqKkW56R8/C8BxCNU5O2GiJRDvxVNNq
+	 MQkTfCETAy74YJXTETfXsJuhT3hFcGbiibBcDBcU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728270AbfFCJOG (ORCPT
+        id S1728953AbfFCJOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:14:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34610 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 05:14:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728019AbfFCJOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:14:02 -0400
+        id S1728223AbfFCJOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:14:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0B7D27ED9;
-        Mon,  3 Jun 2019 09:14:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DB6627EC8;
+        Mon,  3 Jun 2019 09:13:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553242;
-        bh=+9FvUUl097hlFjRGGEZfiRxbpeiccsHlXb1z5QkWtc8=;
+        s=default; t=1559553239;
+        bh=EalTZgYLMxKMB+SmBCfQ3J+rYslJYpfRcOIGgXSOiW8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XGELBgZqikGsNG4+8Zlwk3yeJyBIWN74jySuylf9KUKu8wzn9c5/JD/EQ9AnCbpbR
-         UeK6RSnaPB4CdUiFYRML2Hk18QwK2H0ssxOUOcCM8XgAC8Zsl7cZIP8ffUXArteS+B
-         P4D1f7yTZlngmwX4vY2R4Np+54qIYU8wCgQkBYtU=
+        b=oBqXxow+4luDbYK7wHZLLG4NX6tQuIMB2c1MIwKo1dkR+sPdRu/lyJ+CCUYenUPDa
+         btEYg2znqYiw0vLPYnDAddtNB4zR3TziBXtX31Gd9jDLBylABiDHMgbuNKIIK89ryI
+         gTyQs0wvWF+F8+8bDAzpu/207K2cyEqs96zoGOKE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mike Manning <mmanning@vyatta.att-mail.com>,
-        David Ahern <dsahern@gmail.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        kbuild test robot <lkp@intel.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 07/40] ipv6: Consider sk_bound_dev_if when binding a raw socket to an address
-Date:   Mon,  3 Jun 2019 11:09:00 +0200
-Message-Id: <20190603090523.079661403@linuxfoundation.org>
+Subject: [PATCH 5.1 06/40] ipv4/igmp: fix build error if !CONFIG_IP_MULTICAST
+Date:   Mon,  3 Jun 2019 11:08:59 +0200
+Message-Id: <20190603090523.025416619@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190603090522.617635820@linuxfoundation.org>
 References: <20190603090522.617635820@linuxfoundation.org>
@@ -61,37 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Manning <mmanning@vyatta.att-mail.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 72f7cfab6f93a8ea825fab8ccfb016d064269f7f ]
+[ Upstream commit 903869bd10e6719b9df6718e785be7ec725df59f ]
 
-IPv6 does not consider if the socket is bound to a device when binding
-to an address. The result is that a socket can be bound to eth0 and
-then bound to the address of eth1. If the device is a VRF, the result
-is that a socket can only be bound to an address in the default VRF.
+ip_sf_list_clear_all() needs to be defined even if !CONFIG_IP_MULTICAST
 
-Resolve by considering the device if sk_bound_dev_if is set.
-
-Signed-off-by: Mike Manning <mmanning@vyatta.att-mail.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
-Tested-by: David Ahern <dsahern@gmail.com>
+Fixes: 3580d04aa674 ("ipv4/igmp: fix another memory leak in igmpv3_del_delrec()")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/raw.c |    2 ++
- 1 file changed, 2 insertions(+)
+ net/ipv4/igmp.c |   22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
---- a/net/ipv6/raw.c
-+++ b/net/ipv6/raw.c
-@@ -287,7 +287,9 @@ static int rawv6_bind(struct sock *sk, s
- 			/* Binding to link-local address requires an interface */
- 			if (!sk->sk_bound_dev_if)
- 				goto out_unlock;
-+		}
+--- a/net/ipv4/igmp.c
++++ b/net/ipv4/igmp.c
+@@ -188,6 +188,17 @@ static void ip_ma_put(struct ip_mc_list
+ 	     pmc != NULL;					\
+ 	     pmc = rtnl_dereference(pmc->next_rcu))
  
-+		if (sk->sk_bound_dev_if) {
- 			err = -ENODEV;
- 			dev = dev_get_by_index_rcu(sock_net(sk),
- 						   sk->sk_bound_dev_if);
++static void ip_sf_list_clear_all(struct ip_sf_list *psf)
++{
++	struct ip_sf_list *next;
++
++	while (psf) {
++		next = psf->sf_next;
++		kfree(psf);
++		psf = next;
++	}
++}
++
+ #ifdef CONFIG_IP_MULTICAST
+ 
+ /*
+@@ -633,17 +644,6 @@ static void igmpv3_clear_zeros(struct ip
+ 	}
+ }
+ 
+-static void ip_sf_list_clear_all(struct ip_sf_list *psf)
+-{
+-	struct ip_sf_list *next;
+-
+-	while (psf) {
+-		next = psf->sf_next;
+-		kfree(psf);
+-		psf = next;
+-	}
+-}
+-
+ static void kfree_pmc(struct ip_mc_list *pmc)
+ {
+ 	ip_sf_list_clear_all(pmc->sources);
 
 
