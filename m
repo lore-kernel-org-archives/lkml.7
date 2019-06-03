@@ -2,137 +2,119 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD89C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C90C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D20127FFF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:08:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="kPqR3vnG"
+	by mail.kernel.org (Postfix) with ESMTP id 38E6D28004
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:08:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbfFCNIB (ORCPT
+        id S1728316AbfFCNIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 09:08:01 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:46747 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726343AbfFCNIA (ORCPT
+        Mon, 3 Jun 2019 09:08:17 -0400
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:33087 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726343AbfFCNIQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 09:08:00 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x53D7oQX604683
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 3 Jun 2019 06:07:50 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x53D7oQX604683
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559567271;
-        bh=GRLkO+ZDYhVg+i2YTXLTWgXWujGKHdWWN1O3IXC/BiQ=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=kPqR3vnGHzlQhOnXLJp+WM1Ie6kl4wThTSy+zSMFPcDf/Hdk1pInz9H78XFQwsW8V
-         uZ1hY7NlGNRAzzYjlH0eTjoDDbnmKW9Lp/uI77HnxBxSYyU5UeJcBQQcQn6RAXBMUt
-         6wIRpzO2CeqX9tMmyba27rmUpySH9OsT3tqq2ESm3vRsX1niQoWqn+KpLYWFunjLDZ
-         sFKsxR39SiIh9jWSxYHpkxcJPAPRspH/dLfTvz1hc0DaBNIx5gxQvBMa2Osw/nMUu1
-         7ueAHhEaacYk3a9UzpZCqWpUh/DP76tdf8n88Gg+MflVIkfwjcEX7/nqzBZNcJKGUc
-         0vhxosb0F13mA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x53D7on4604680;
-        Mon, 3 Jun 2019 06:07:50 -0700
-Date:   Mon, 3 Jun 2019 06:07:50 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Yuyang Du <tipbot@zytor.com>
-Message-ID: <tip-c52478f4f38ace598475413a08dba9b9fd827eaf@git.kernel.org>
-Cc:     hpa@zytor.com, duyuyang@gmail.com, mingo@kernel.org,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        peterz@infradead.org, linux-kernel@vger.kernel.org
-Reply-To: hpa@zytor.com, duyuyang@gmail.com, mingo@kernel.org,
-          torvalds@linux-foundation.org, peterz@infradead.org,
-          tglx@linutronix.de, linux-kernel@vger.kernel.org
-In-Reply-To: <20190506081939.74287-4-duyuyang@gmail.com>
-References: <20190506081939.74287-4-duyuyang@gmail.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:locking/core] locking/lockdep: Adjust lock usage bit character
- checks
-Git-Commit-ID: c52478f4f38ace598475413a08dba9b9fd827eaf
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Mon, 3 Jun 2019 09:08:16 -0400
+Received: from [192.168.2.10] ([46.9.252.75])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id Xmh9hLfvDsDWyXmhChtE4r; Mon, 03 Jun 2019 15:08:15 +0200
+Subject: Re: [PATCH] media: stm32-dcmi: fix irq = 0 case
+To:     Fabien DESSENNE <fabien.dessenne@st.com>,
+        Hugues FRUCHET <hugues.fruchet@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Pavel Machek <pavel@denx.de>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+References: <1559294295-20573-1-git-send-email-fabien.dessenne@st.com>
+ <46944972-1f88-ef3b-fef9-8e37753c0ffe@xs4all.nl>
+ <dd4ca76b-9f93-5ddc-e878-25b9905e0cd2@st.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <aa40a88d-9995-8cfc-682a-3c33445199e9@xs4all.nl>
+Date:   Mon, 3 Jun 2019 15:08:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+In-Reply-To: <dd4ca76b-9f93-5ddc-e878-25b9905e0cd2@st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfHHih37cLk8I5B7UWMg29h9+t3yjqMdqAeL1cmDBDScWB9AhtcP4c+T5U0qPVbKT00KNHg2pVihXau+13MBWQo78rkablFd9Va3TEOo3lq/b7D8ShVTF
+ 1dk4Y9ghkLFLuzutb6p9jfN9EHM64jfRmG2XDMxMoR0sERAPgWcj2QJPAwcYV1fumSqr2UC31Vq4upPPihDg+OqFHyln4/equHH8gk3y/Ujgi0qK7loUwmEF
+ 7asWsoHB8XPXfs6gm4n3EHg183Q59pXsQS+QUtZnschVSFFBaKXZz/ckdMk2s816Ue1bmf8tO88FyypzoXOnmb8ikzZXWbHSxEP0dEYoKvTBrqoK91jFyYUA
+ w9FYP35FitxsSSem7++x3S1uZT9HudDm6CP3T8KhEQ4rt1JSiWwe6X0Z3FdItW1VjYaEWJE+9PRORGpuPElzXCj5jgTkgit1dZENMV+fPrgi4bxrg+7mDUjv
+ Y/x1bkC2MF2lT4Vs9vgiFP45BgKgv/boSIWysJfkOzTTc4tuZuXebciu/EP7Nay9quMrDHLVMdCQVaVqykwwNBqJy4lumr8x9l3mUwE1ROoI0XSoPBCPuGKO
+ SAbecdcZ05HgiEQau1DOk57w
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  c52478f4f38ace598475413a08dba9b9fd827eaf
-Gitweb:     https://git.kernel.org/tip/c52478f4f38ace598475413a08dba9b9fd827eaf
-Author:     Yuyang Du <duyuyang@gmail.com>
-AuthorDate: Mon, 6 May 2019 16:19:19 +0800
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 3 Jun 2019 11:55:35 +0200
+On 6/3/19 3:03 PM, Fabien DESSENNE wrote:
+> Hi Hans
+> 
+> 
+> "platform_get_irq() = 0" shall be considered as an error. See these 
+> discussions:
+> https://patchwork.kernel.org/patch/10006651/
+> https://yarchive.net/comp/linux/zero.html
 
-locking/lockdep: Adjust lock usage bit character checks
+Hmm, then many media drivers are wrong since most check for < 0.
 
-The lock usage bit characters are defined and determined with tricks.
-Add some explanation to make it a bit clearer, then adjust the logic to
-check the usage, which optimizes the code a bit.
+In any case, I'll pick up this patch whenever I make a next pull request
+for fixes like this.
 
-No functional change.
+Regards,
 
-Signed-off-by: Yuyang Du <duyuyang@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: bvanassche@acm.org
-Cc: frederic@kernel.org
-Cc: ming.lei@redhat.com
-Cc: will.deacon@arm.com
-Link: https://lkml.kernel.org/r/20190506081939.74287-4-duyuyang@gmail.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- kernel/locking/lockdep.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+	Hans
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 109b56267c8f..a033df00fd1d 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -500,15 +500,26 @@ static inline unsigned long lock_flag(enum lock_usage_bit bit)
- 
- static char get_usage_char(struct lock_class *class, enum lock_usage_bit bit)
- {
-+	/*
-+	 * The usage character defaults to '.' (i.e., irqs disabled and not in
-+	 * irq context), which is the safest usage category.
-+	 */
- 	char c = '.';
- 
--	if (class->usage_mask & lock_flag(bit + LOCK_USAGE_DIR_MASK))
-+	/*
-+	 * The order of the following usage checks matters, which will
-+	 * result in the outcome character as follows:
-+	 *
-+	 * - '+': irq is enabled and not in irq context
-+	 * - '-': in irq context and irq is disabled
-+	 * - '?': in irq context and irq is enabled
-+	 */
-+	if (class->usage_mask & lock_flag(bit + LOCK_USAGE_DIR_MASK)) {
- 		c = '+';
--	if (class->usage_mask & lock_flag(bit)) {
--		c = '-';
--		if (class->usage_mask & lock_flag(bit + LOCK_USAGE_DIR_MASK))
-+		if (class->usage_mask & lock_flag(bit))
- 			c = '?';
--	}
-+	} else if (class->usage_mask & lock_flag(bit))
-+		c = '-';
- 
- 	return c;
- }
+> 
+> BR
+> 
+> Fabien
+> 
+> On 03/06/2019 1:45 PM, Hans Verkuil wrote:
+>> On 5/31/19 11:18 AM, Fabien Dessenne wrote:
+>>> Manage the irq = 0 case, where we shall return an error.
+>>>
+>>> Fixes: b5b5a27bee58 ("media: stm32-dcmi: return appropriate error codes during probe")
+>>> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+>>> ---
+>>>   drivers/media/platform/stm32/stm32-dcmi.c | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
+>>> index b9dad0a..d855e9c 100644
+>>> --- a/drivers/media/platform/stm32/stm32-dcmi.c
+>>> +++ b/drivers/media/platform/stm32/stm32-dcmi.c
+>>> @@ -1702,7 +1702,7 @@ static int dcmi_probe(struct platform_device *pdev)
+>>>   	if (irq <= 0) {
+>> Shouldn't this be 'irq < 0' instead of '<=' ?
+>>
+>> AFAICT irq == 0 can be a valid irq and isn't an error.
+>>
+>> Regards,
+>>
+>> 	Hans
+>>
+>>>   		if (irq != -EPROBE_DEFER)
+>>>   			dev_err(&pdev->dev, "Could not get irq\n");
+>>> -		return irq;
+>>> +		return irq ? irq : -ENXIO;
+>>>   	}
+>>>   
+>>>   	dcmi->res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> >
+
