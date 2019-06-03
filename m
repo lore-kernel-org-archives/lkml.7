@@ -2,141 +2,104 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59904C28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 04:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 859B2C46460
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 04:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 316AC272F3
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 04:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EA5127B81
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 04:31:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hSrYsDPx"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gJtElrek";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gJtElrek"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbfFCEa5 (ORCPT
+        id S1726874AbfFCEbQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 00:30:57 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:35610 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726221AbfFCEa4 (ORCPT
+        Mon, 3 Jun 2019 00:31:16 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:56584 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726221AbfFCEbQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 00:30:56 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x534Ui9C000624;
-        Sun, 2 Jun 2019 23:30:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559536244;
-        bh=XCE8FuOjQTKbDWChgZDrjUr4wBNlOAOjCpOOOpmJ1kI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=hSrYsDPxcBPlzQUWOH70qJoZY+D/Ts/UCjeQZs0pY2Kn3Wky8QWE1mbbJbe3sYYhY
-         WM1/dCnPAWOoXR5rFVeETyx3U4C/DxQQb4y5NsR+8RhNdGPUGwt4mdhpm/Wsip3zVl
-         wlWyTT9U2xd0YWIsJEZaIMlVRgwlJgT80fYxTlFg=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x534UitW072751
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sun, 2 Jun 2019 23:30:44 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Sun, 2 Jun
- 2019 23:30:44 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Sun, 2 Jun 2019 23:30:44 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x534UbmT115561;
-        Sun, 2 Jun 2019 23:30:40 -0500
-Subject: Re: [PATCH] PCI: endpoint: Add DMA to Linux PCI EP Framework
-To:     Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vkoul@kernel.org>
-CC:     Alan Mikhak <alan.mikhak@sifive.com>,
-        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "wen.yang99@zte.com.cn" <wen.yang99@zte.com.cn>,
-        "kjlu@umn.edu" <kjlu@umn.edu>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "palmer@sifive.com" <palmer@sifive.com>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
-References: <1558650258-15050-1-git-send-email-alan.mikhak@sifive.com>
- <305100E33629484CBB767107E4246BBB0A6FAFFD@DE02WEMBXB.internal.synopsys.com>
- <CABEDWGxsQ9NXrN7W_8HVrXQBb9HiBd+d1dNfv+cXmoBpXQnLwA@mail.gmail.com>
- <305100E33629484CBB767107E4246BBB0A6FC308@DE02WEMBXB.internal.synopsys.com>
- <CABEDWGxL-WYz1BY7yXJ6eKULgVtKeo67XhgHZjvtm5Ka5foKiA@mail.gmail.com>
- <192e3a19-8b69-dfaf-aa5c-45c7087548cc@ti.com>
- <20190531050727.GO15118@vkoul-mobl>
- <d2d8a904-d796-f9f2-8f4a-61e857355a4f@ti.com>
- <20190531063247.GP15118@vkoul-mobl>
- <CAK8P3a2jePe7Qfjciq4fdfngAudzCb-cai4fr3_BG_evnbjhvw@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <b5d5aa64-710b-3fcc-4197-2a2114266385@ti.com>
-Date:   Mon, 3 Jun 2019 09:59:16 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <CAK8P3a2jePe7Qfjciq4fdfngAudzCb-cai4fr3_BG_evnbjhvw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Mon, 3 Jun 2019 00:31:16 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id DFA0E60A05; Mon,  3 Jun 2019 04:31:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559536275;
+        bh=ua7F1K+amXXB1vX6cvhC8jKC0nlsfYbYU1UwwZBJmPM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=gJtElrekmixPnR9K5ZhDlNVmZyRCPpGq4u4CjwHrFVC0zAF1GucZKySTVJaEAVRGn
+         Mqn8Xzfq1Sitaq50/b2GpjXfgqXZu269wFoY/mgDpC+VFHzfmHh3/y/popLRYy9D0V
+         W3ZF51OgdklmSNjAaxY2YSHg3CwJVNYKIX7z4KhQ=
+Received: from codeaurora.org (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: pkondeti@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4C1B26077A;
+        Mon,  3 Jun 2019 04:31:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559536275;
+        bh=ua7F1K+amXXB1vX6cvhC8jKC0nlsfYbYU1UwwZBJmPM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=gJtElrekmixPnR9K5ZhDlNVmZyRCPpGq4u4CjwHrFVC0zAF1GucZKySTVJaEAVRGn
+         Mqn8Xzfq1Sitaq50/b2GpjXfgqXZu269wFoY/mgDpC+VFHzfmHh3/y/popLRYy9D0V
+         W3ZF51OgdklmSNjAaxY2YSHg3CwJVNYKIX7z4KhQ=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4C1B26077A
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=pkondeti@codeaurora.org
+From:   Pavankumar Kondeti <pkondeti@codeaurora.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        iri Kosina <jkosina@suse.cz>,
+        Mukesh Ojha <mojha@codeaurora.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Pavankumar Kondeti <pkondeti@codeaurora.org>
+Subject: [PATCH] cpu/hotplug: Abort disabling secondary CPUs if wakeup is pending
+Date:   Mon,  3 Jun 2019 10:01:03 +0530
+Message-Id: <1559536263-16472-1-git-send-email-pkondeti@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+When "deep" suspend is enabled, all CPUs except the primary CPU
+are hotplugged out. Since CPU hotplug is a costly operation,
+check if we have to abort the suspend in between each CPU
+hotplug. This would improve the system suspend abort latency
+upon detecting a wakeup condition.
 
-On 31/05/19 1:19 PM, Arnd Bergmann wrote:
-> On Fri, May 31, 2019 at 8:32 AM Vinod Koul <vkoul@kernel.org> wrote:
->> On 31-05-19, 10:50, Kishon Vijay Abraham I wrote:
->>> On 31/05/19 10:37 AM, Vinod Koul wrote:
->>>> On 30-05-19, 11:16, Kishon Vijay Abraham I wrote:
->>>>>
->>>>> right, my initial thought process was to use only dmaengine APIs in
->>>>> pci-epf-test so that the system DMA or DMA within the PCIe controller can be
->>>>> used transparently. But can we register DMA within the PCIe controller to the
->>>>> DMA subsystem? AFAIK only system DMA should register with the DMA subsystem.
->>>>> (ADMA in SDHCI doesn't use dmaengine). Vinod Koul can confirm.
->>>>
->>>> So would this DMA be dedicated for PCI and all PCI devices on the bus?
->>>
->>> Yes, this DMA will be used only by PCI ($patch is w.r.t PCIe device mode. So
->>> all endpoint functions both physical and virtual functions will use the DMA in
->>> the controller).
->>>> If so I do not see a reason why this cannot be using dmaengine. The use
->>>
->>> Thanks for clarifying. I was under the impression any DMA within a peripheral
->>> controller shouldn't use DMAengine.
->>
->> That is indeed a correct assumption. The dmaengine helps in cases where
->> we have a dma controller with multiple users, for a single user case it
->> might be overhead to setup dma driver and then use it thru framework.
->>
->> Someone needs to see the benefit and cost of using the framework and
->> decide.
-> 
-> I think the main question is about how generalized we want this to be.
-> There are lots of difference PCIe endpoint implementations, and in
-> case of some licensable IP cores like the designware PCIe there are
-> many variants, as each SoC will do the implementation in a slightly
-> different way.
-> 
-> If we can have a single endpoint driver than can either have an
-> integrated DMA engine or use an external one, then abstracting that
-> DMA engine helps make the driver work more readily either way.
-> 
-> Similarly, there may be PCIe endpoint implementations that have
-> a dedicated DMA engine in them that is not usable for anything else,
-> but that is closely related to an IP core we already have a dmaengine
-> driver for. In this case, we can avoid duplication.
+Signed-off-by: Pavankumar Kondeti <pkondeti@codeaurora.org>
+---
+ kernel/cpu.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-right. Either way it makes more sense to register DMA embedded within the PCIe
-endpoint controller instead of creating epc_ops for DMA transfers.
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index f2ef104..784b33d 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -1221,6 +1221,13 @@ int freeze_secondary_cpus(int primary)
+ 	for_each_online_cpu(cpu) {
+ 		if (cpu == primary)
+ 			continue;
++
++		if (pm_wakeup_pending()) {
++			pr_info("Aborting disabling non-boot CPUs..\n");
++			error = -EBUSY;
++			break;
++		}
++
+ 		trace_suspend_resume(TPS("CPU_OFF"), cpu, true);
+ 		error = _cpu_down(cpu, 1, CPUHP_OFFLINE);
+ 		trace_suspend_resume(TPS("CPU_OFF"), cpu, false);
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
-Thanks
-Kishon
