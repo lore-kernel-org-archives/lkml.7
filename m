@@ -2,200 +2,174 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB9EC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D4F2C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C53F272AE
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:30:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F119A27EC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:30:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="AQ5CrqXS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728673AbfFCNaj (ORCPT
+        id S1728689AbfFCNam (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 09:30:39 -0400
-Received: from ozlabs.org ([203.11.71.1]:32983 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726516AbfFCNaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 09:30:39 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45HbXV0k6Kz9s1c;
-        Mon,  3 Jun 2019 23:30:33 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Will Deacon <will.deacon@arm.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Young Xiao <92siuyang@gmail.com>, linux@armlinux.org.uk,
-        mark.rutland@arm.com, mingo@redhat.com, bp@alien8.de,
-        hpa@zytor.com, x86@kernel.org, kan.liang@linux.intel.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        ravi.bangoria@linux.vnet.ibm.com, acme@redhat.com,
-        eranian@google.com, fweisbec@gmail.com, jolsa@redhat.com
-Subject: Re: [PATCH] perf: Fix oops when kthread execs user process
-In-Reply-To: <20190531153703.GA21288@fuggles.cambridge.arm.com>
-References: <1559046689-24091-1-git-send-email-92siuyang@gmail.com> <20190528140103.GT2623@hirez.programming.kicks-ass.net> <20190528153224.GE20758@fuggles.cambridge.arm.com> <20190528173228.GW2623@hirez.programming.kicks-ass.net> <20190529091733.GA4485@fuggles.cambridge.arm.com> <20190529101042.GN2623@hirez.programming.kicks-ass.net> <20190529102022.GC4485@fuggles.cambridge.arm.com> <20190529125557.GU2623@hirez.programming.kicks-ass.net> <efcd5cf4-3501-f3b6-bf47-145a9ef19a53@linux.ibm.com> <8b55f79a-c324-0701-e85f-c7797a60a708@linux.ibm.com> <20190531153703.GA21288@fuggles.cambridge.arm.com>
-Date:   Mon, 03 Jun 2019 23:30:33 +1000
-Message-ID: <875zpmokxy.fsf@concordia.ellerman.id.au>
+        Mon, 3 Jun 2019 09:30:42 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:40269 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726516AbfFCNak (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 09:30:40 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x53DUSfU610066
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Mon, 3 Jun 2019 06:30:28 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x53DUSfU610066
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019051801; t=1559568628;
+        bh=kqqgcIEe9TBckp/rBU3xR7G1MShwxAgAy2c9krmZhP0=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=AQ5CrqXSbbJTNAgH8aYkb/KHvA6ey5lPf4OzSEYPxyH0jyd0smKqr/QPS1fjIVrgv
+         rsxAPEZTs/0K63nTHcWTsSFeGWWqxi3+2aDFfnky+N4RzZFiQ9weqfKut8Uw0umO+C
+         rhPxEIbtdIe5dbxHmoKeVDP//NLNVmBkIL5N1hotphhv91d76ewe2wN72szCBfUek8
+         gumFjiPZkQgt2rRN/mrdYZhIKGewAtomZfgwelePH6CUOubNzIwLqomORNLCuILkHJ
+         7sfsVNB3iMUkSBfRZCqC/pIZnemblua3X+mgmwZNidsZesvFFUh8z+JhFYI4KW+FB7
+         Vqty8NrNhJoog==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x53DURek610060;
+        Mon, 3 Jun 2019 06:30:27 -0700
+Date:   Mon, 3 Jun 2019 06:30:27 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
+Message-ID: <tip-b657688069a24c3c81b6de22e0e57e1785d9211f@git.kernel.org>
+Cc:     hpa@zytor.com, torvalds@linux-foundation.org, acme@kernel.org,
+        tglx@linutronix.de, gregkh@linuxfoundation.org,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        peterz@infradead.org, mingo@kernel.org,
+        linux-kernel@vger.kernel.org, namhyung@kernel.org
+Reply-To: linux-kernel@vger.kernel.org, namhyung@kernel.org,
+          mingo@kernel.org, tglx@linutronix.de, acme@kernel.org,
+          peterz@infradead.org, alexander.shishkin@linux.intel.com,
+          gregkh@linuxfoundation.org, jolsa@kernel.org,
+          torvalds@linux-foundation.org, hpa@zytor.com
+In-Reply-To: <20190512155518.21468-9-jolsa@kernel.org>
+References: <20190512155518.21468-9-jolsa@kernel.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/core] perf/x86/intel: Use update attributes for skylake
+ format
+Git-Commit-ID: b657688069a24c3c81b6de22e0e57e1785d9211f
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Will Deacon <will.deacon@arm.com> writes:
-> On Thu, May 30, 2019 at 03:57:36PM +0530, Ravi Bangoria wrote:
->> On 5/30/19 2:08 PM, Ravi Bangoria wrote:
->> >> ---
->> >> Subject: perf: Fix perf_sample_regs_user()
->> >> From: Peter Zijlstra <peterz@infradead.org>
->> >> Date: Wed May 29 14:37:24 CEST 2019
->> >>
->> >> perf_sample_regs_user() uses 'current->mm' to test for the presence of
->> >> userspace, but this is insufficient, consider use_mm().
->> >>
->> >> A better test is: '!(current->flags & PF_KTHREAD)', exec() clears
->> >> PF_KTHREAD after it sets the new ->mm but before it drops to userspace
->> >> for the first time.
->> > 
->> > This looks correct. I'll give it a try.
->> > 
->> >>
->> >> Possibly obsoletes: bf05fc25f268 ("powerpc/perf: Fix oops when kthread execs user process")
->> >>
->> >> Reported-by: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
->> >> Reported-by: Young Xiao <92siuyang@gmail.com>
->> >> Cc: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
->> >> Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
->> >> Cc: Michael Ellerman <mpe@ellerman.id.au>
->> >> Cc: Jiri Olsa <jolsa@redhat.com>
->> >> Cc: Frederic Weisbecker <fweisbec@gmail.com>
->> >> Cc: Stephane Eranian <eranian@google.com>
->> >> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
->> >> Acked-by: Will Deacon <will.deacon@arm.com>
->> >> Fixes: 4018994f3d87 ("perf: Add ability to attach user level registers dump to sample")
->> >> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
->> >> ---
->> >>  kernel/events/core.c |    2 +-
->> >>  1 file changed, 1 insertion(+), 1 deletion(-)
->> >>
->> >> --- a/kernel/events/core.c
->> >> +++ b/kernel/events/core.c
->> >> @@ -5923,7 +5923,7 @@ static void perf_sample_regs_user(struct
->> >>  	if (user_mode(regs)) {
->> >>  		regs_user->abi = perf_reg_abi(current);
->> >>  		regs_user->regs = regs;
->> >> -	} else if (current->mm) {
->> >> +	} else if (!(current->flags & PF_KTHREAD)) {
->> 
->> With this patch applied and my patch reverted, I still see it crashing
->> because current->flags does not have PF_KTHREAD set. Sample trace with
->> v5.0 kernel:
->> 
->> 
->>    BUG: Kernel NULL pointer dereference at 0x00000000
->>    Faulting instruction address: 0xc0000000000f1a6c
->>    Oops: Kernel access of bad area, sig: 11 [#1]
->>    LE SMP NR_CPUS=2048 NUMA pSeries
->>    CPU: 17 PID: 3241 Comm: systemd-cgroups Kdump: loaded Not tainted 5.0.0+ #7
->>    NIP:  c0000000000f1a6c LR: c0000000002acc7c CTR: c0000000002a8f90
->>    REGS: c0000001e80469a0 TRAP: 0300   Not tainted  (5.0.0+)
->>    MSR:  8000000000001033 <SF,ME,IR,DR,RI,LE>  CR: 48022448  XER: 20000000
->>    CFAR: c00000000000deb4 DAR: 0000000000000000 DSISR: 40000000 IRQMASK: 1 
->>    GPR00: c0000000002acc7c c0000001e8046c30 c000000001607500 0000000000000000 
->>    GPR04: 0000000000000000 0000000000000000 0000000000000000 c000000000128618 
->>    GPR08: 000007ffffffffff 0000000000000000 ffffffffffffffff c00000000001cd40 
->>    GPR12: c000000000446fd8 c00000003ffdf080 00000000ffff0000 0000000000000007 
->>    GPR16: c0000001edd74988 c0000001edd60400 00007fff89801130 000000000005e1b0 
->>    GPR20: c0000001edb77a08 c0000001e8047208 c0000001f03d9800 c0000001e8046e00 
->>    GPR24: 000000000000b1af c000000001126938 c0000001f03d9b28 0000000000010000 
->>    GPR28: c0000001e8046d30 0000000000000000 0000000000000000 0000000000000000 
->>    NIP [c0000000000f1a6c] perf_reg_value+0x5c/0xc0
->>    LR [c0000000002acc7c] perf_output_sample_regs+0x6c/0xd0
->>    Call Trace:
->>    [c0000001e8046c30] [c0000000002acc7c] perf_output_sample_regs+0x6c/0xd0 (unreliable)
->>    [c0000001e8046c80] [c0000000002b9cd0] perf_output_sample+0x620/0x8c0
->>    [c0000001e8046d10] [c0000000002ba6b4] perf_event_output_forward+0x64/0x90
->>    [c0000001e8046d80] [c0000000002b2908] __perf_event_overflow+0x88/0x1e0
->>    [c0000001e8046dd0] [c0000000000f3d18] record_and_restart+0x288/0x670
->>    [c0000001e8047180] [c0000000000f4c18] perf_event_interrupt+0x2b8/0x4b0
->>    [c0000001e8047280] [c00000000002b380] performance_monitor_exception+0x50/0x70
->>    [c0000001e80472a0] [c000000000009ca0] performance_monitor_common+0x110/0x120
->>    --- interrupt: f01 at slice_scan_available+0x20/0xc0
->>        LR = slice_find_area+0x174/0x210
->>    [c0000001e8047630] [c000000000083ea0] slice_get_unmapped_area+0x3d0/0x7f0
->>    [c0000001e8047ae0] [c00000000032d5b0] get_unmapped_area+0xa0/0x170
->>    [c0000001e8047b10] [c00000000001cd40] arch_setup_additional_pages+0xc0/0x1c0
->>    [c0000001e8047b60] [c000000000446fd8] load_elf_binary+0xb48/0x1580
->>    [c0000001e8047c80] [c0000000003c3938] search_binary_handler+0xe8/0x2a0
->>    [c0000001e8047d10] [c0000000003c42f4] __do_execve_file.isra.13+0x694/0x980
->>    [c0000001e8047de0] [c000000000128618] call_usermodehelper_exec_async+0x248/0x290
->>    [c0000001e8047e20] [c00000000000b65c] ret_from_kernel_thread+0x5c/0x80
->>    Instruction dump:
->>    7c9e2378 7c7f1b78 f8010010 f821ffd1 419e0044 3d22ff6b 7bc41764 3929ae10 
->>    7d29202e 2b890150 419d003c 38210030 <7c7f482a> e8010010 ebc1fff0 ebe1fff8 
->>    ---[ end trace 54f3492ad1d403d8 ]---
->
-> Oh, nice! I think this happens because Power doesn't actually initialise
-> the regs after a kthread execs() until late in start_thread().
+Commit-ID:  b657688069a24c3c81b6de22e0e57e1785d9211f
+Gitweb:     https://git.kernel.org/tip/b657688069a24c3c81b6de22e0e57e1785d9211f
+Author:     Jiri Olsa <jolsa@kernel.org>
+AuthorDate: Sun, 12 May 2019 17:55:17 +0200
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Mon, 3 Jun 2019 11:58:26 +0200
 
-Hmm, it's more or less at the top of start_thread(), but that's late vs
-flush_old_exec(), so there's definitely a window there.
+perf/x86/intel: Use update attributes for skylake format
 
-> But the plot thickens somewhat, since current_pt_regs() is different to
-> task_pt_regs(current) on Power (the former cannot return NULL).
+Using the new pmu::update_attrs attribute group for
+skylake specific format attributes.
 
-Ugh.
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190512155518.21468-9-jolsa@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/events/intel/core.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-Mark had convinced me in the other part of the thread that returning
-NULL for kthreads made sense, but having different results depending on
-which similarly named accessor you use is gross.
-
-We used to implement current_pt_regs() without actually looking at
-current via:
-
-	((struct pt_regs *)((unsigned long)current_thread_info() + THREAD_SIZE) - 1)
-
-Where current_thread_info() just masked the stack pointer, so that was a
-nice optimisation.
-
-But now that we have THREAD_INFO_IN_TASK we're going via current anyway,
-so we may as well just get rid of current_pt_regs() and make it a
-synonym for task_pt_regs(current).
-
-Though that will probably cause something else to break :D
-
-
-> So a really hideous hack on top of Peter's patch might be:
->
-> diff --git a/arch/arm64/kernel/perf_regs.c b/arch/arm64/kernel/perf_regs.c
-> index 0bbac612146e..5bde866024b6 100644
-> --- a/arch/arm64/kernel/perf_regs.c
-> +++ b/arch/arm64/kernel/perf_regs.c
-> @@ -57,6 +57,6 @@ void perf_get_regs_user(struct perf_regs *regs_user,
->  			struct pt_regs *regs,
->  			struct pt_regs *regs_user_copy)
->  {
-> -	regs_user->regs = task_pt_regs(current);
-> +	regs_user->regs = current_pt_regs();
->  	regs_user->abi = perf_reg_abi(current);
-
-
-I'd be inclined to stick with what we've got, at least so long as we're
-the only arch that lets task_pt_regs() return NULL.
-
-void perf_get_regs_user(struct perf_regs *regs_user,
-			struct pt_regs *regs,
-			struct pt_regs *regs_user_copy)
-{
-	regs_user->regs = task_pt_regs(current);
-	regs_user->abi = (regs_user->regs) ? perf_reg_abi(current) :
-			 PERF_SAMPLE_REGS_ABI_NONE;
-}
-
-
-cheers
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index de4779f44737..3bc967be7c7b 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -4453,6 +4453,11 @@ static struct attribute_group group_format_extra = {
+ 	.is_visible = exra_is_visible,
+ };
+ 
++static struct attribute_group group_format_extra_skl = {
++	.name       = "format",
++	.is_visible = exra_is_visible,
++};
++
+ static const struct attribute_group *attr_update[] = {
+ 	&group_events_td,
+ 	&group_events_mem,
+@@ -4460,6 +4465,7 @@ static const struct attribute_group *attr_update[] = {
+ 	&group_caps_gen,
+ 	&group_caps_lbr,
+ 	&group_format_extra,
++	&group_format_extra_skl,
+ 	NULL,
+ };
+ 
+@@ -4467,11 +4473,11 @@ static struct attribute *empty_attrs;
+ 
+ __init int intel_pmu_init(void)
+ {
++	struct attribute **extra_skl_attr = &empty_attrs;
+ 	struct attribute **extra_attr = &empty_attrs;
+ 	struct attribute **td_attr    = &empty_attrs;
+ 	struct attribute **mem_attr   = &empty_attrs;
+ 	struct attribute **tsx_attr   = &empty_attrs;
+-	struct attribute **to_free = NULL;
+ 	union cpuid10_edx edx;
+ 	union cpuid10_eax eax;
+ 	union cpuid10_ebx ebx;
+@@ -4959,8 +4965,7 @@ __init int intel_pmu_init(void)
+ 		x86_pmu.get_event_constraints = hsw_get_event_constraints;
+ 		extra_attr = boot_cpu_has(X86_FEATURE_RTM) ?
+ 			hsw_format_attr : nhm_format_attr;
+-		extra_attr = merge_attr(extra_attr, skl_format_attr);
+-		to_free = extra_attr;
++		extra_skl_attr = skl_format_attr;
+ 		td_attr  = hsw_events_attrs;
+ 		mem_attr = hsw_mem_events_attrs;
+ 		tsx_attr = hsw_tsx_events_attrs;
+@@ -4998,7 +5003,7 @@ __init int intel_pmu_init(void)
+ 		x86_pmu.get_event_constraints = icl_get_event_constraints;
+ 		extra_attr = boot_cpu_has(X86_FEATURE_RTM) ?
+ 			hsw_format_attr : nhm_format_attr;
+-		extra_attr = merge_attr(extra_attr, skl_format_attr);
++		extra_skl_attr = skl_format_attr;
+ 		mem_attr = icl_events_attrs;
+ 		tsx_attr = icl_tsx_events_attrs;
+ 		x86_pmu.rtm_abort_event = X86_CONFIG(.event=0xca, .umask=0x02);
+@@ -5033,6 +5038,7 @@ __init int intel_pmu_init(void)
+ 	group_events_mem.attrs = mem_attr;
+ 	group_events_tsx.attrs = tsx_attr;
+ 	group_format_extra.attrs = extra_attr;
++	group_format_extra_skl.attrs = extra_skl_attr;
+ 
+ 	x86_pmu.attr_update = attr_update;
+ 
+@@ -5113,7 +5119,6 @@ __init int intel_pmu_init(void)
+ 	if (x86_pmu.counter_freezing)
+ 		x86_pmu.handle_irq = intel_pmu_handle_irq_v4;
+ 
+-	kfree(to_free);
+ 	return 0;
+ }
+ 
