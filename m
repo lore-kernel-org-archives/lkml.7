@@ -2,125 +2,107 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A8CC28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C6BC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A419427345
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:22:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559582570;
-	bh=m0c/8JcFUckNJFkz15Q5J1w/EVegsKZJsLr7Fax2zA4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ox3OTmkVZZNyiSUyBrVhdDmpxzYjuC/2oe8jnYR5rjmjjA5kxoNvn+CQSWH8Ixq5W
-	 KfBOP8r6/0c4YG87G6LjLRCUKSWUr1fYS6qTAm74Wb2zt3vyJKBlvsXY2eL7HyXbSq
-	 n5/FjsOdbklmSK/iF7o48ZWaeCCpl82iZ2ZkX9I8=
+	by mail.kernel.org (Postfix) with ESMTP id 61B1827332
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:22:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729736AbfFCRWt (ORCPT
+        id S1729820AbfFCRW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 13:22:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39242 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728903AbfFCRWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 13:22:49 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35A6824C34;
-        Mon,  3 Jun 2019 17:22:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559582568;
-        bh=m0c/8JcFUckNJFkz15Q5J1w/EVegsKZJsLr7Fax2zA4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FVBwrdqKBKoPlJXO30OviEZLYdX77wsHDwzw4SIctDxTLeEVYLmHVG5EoOg9NvXdu
-         +iP5zmJOrg/eVs0K0SSz97Eg90OfN71PbpzcGzr6+VH0jQ0ZkM4TalnsxQBdMwFeZa
-         3vurzZmUXDszgBZMC8Zu7Sms2Rd1eHRIfpuTnjOw=
-Date:   Mon, 3 Jun 2019 12:22:47 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Abhishek Sahu <abhsahu@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        linux-pci@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH 2/2] PCI: Create device link for NVIDIA GPU
-Message-ID: <20190603172246.GC189360@google.com>
-References: <20190531050109.16211-1-abhsahu@nvidia.com>
- <20190531050109.16211-3-abhsahu@nvidia.com>
- <20190531203908.GA58810@google.com>
- <d0824334-99f2-d42e-3a5e-3bdc4c1c37c8@nvidia.com>
+        Mon, 3 Jun 2019 13:22:58 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56362 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728903AbfFCRW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 13:22:57 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 16F2CA78;
+        Mon,  3 Jun 2019 10:22:57 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8CDEE3F5AF;
+        Mon,  3 Jun 2019 10:22:54 -0700 (PDT)
+Date:   Mon, 3 Jun 2019 18:22:52 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Sudeep Holla <sudeep.holla@arm.com>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Richard Weinberger <richard@nod.at>, jdike@addtoit.com,
+        Steve Capper <Steve.Capper@arm.com>,
+        Haibo Xu <haibo.xu@arm.com>, Bin Lu <bin.lu@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v4 2/4] x86: simplify _TIF_SYSCALL_EMU handling
+Message-ID: <20190603172251.GG63283@arrakis.emea.arm.com>
+References: <20190523090618.13410-1-sudeep.holla@arm.com>
+ <20190523090618.13410-3-sudeep.holla@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d0824334-99f2-d42e-3a5e-3bdc4c1c37c8@nvidia.com>
+In-Reply-To: <20190523090618.13410-3-sudeep.holla@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Rafael, just FYI]
-
-On Mon, Jun 03, 2019 at 01:30:51PM +0530, Abhishek Sahu wrote:
-> On 6/1/2019 2:09 AM, Bjorn Helgaas wrote:
-> > On Fri, May 31, 2019 at 10:31:09AM +0530, Abhishek Sahu wrote:
-> >> NVIDIA Turing GPUs include hardware support for USB Type-C and
-> >> VirtualLink. It helps in delivering the power, display, and data
-> >> required to power VR headsets through a single USB Type-C connector.
-> >> The Turing GPU is a multi-function PCI device has the following
-> >> four functions:
-> >>
-> >> 	- VGA display controller (Function 0)
-> >> 	- Audio controller (Function 1)
-> >> 	- USB xHCI Host controller (Function 2)
-> >> 	- USB Type-C USCI controller (Function 3)
-> >>
-> >> The function 0 is tightly coupled with other functions in the
-> >> hardware. When function 0 goes in runtime suspended state,
-> >> then it will do power gating for most of the hardware blocks.
-> >> Some of these hardware blocks are used by other functions which
-> >> leads to functional failure. So if any of these functions (1/2/3)
-> >> are active, then function 0 should also be in active state.
-> > 
-> >> 'commit 07f4f97d7b4b ("vga_switcheroo: Use device link for
-> >> HDA controller")' creates the device link from function 1 to
-> >> function 0. A similar kind of device link needs to be created
-> >> between function 0 and functions 2 and 3 for NVIDIA Turing GPU.
-> > 
-> > I can't point to language that addresses this, but this sounds like a
-> > case of the GPU not conforming to the PCI spec.  The general
-> > assumption is that the OS should be able to discover everything it
-> > needs to do power management directly from the architected PCI config
-> > space.
+On Thu, May 23, 2019 at 10:06:16AM +0100, Sudeep Holla wrote:
+> The usage of emulated/_TIF_SYSCALL_EMU flags in syscall_trace_enter
+> seems to be bit overcomplicated than required. Let's simplify it.
 > 
->  The GPU is following PCIe spec but following is the implementation
->  from HW side
+> Cc: Andy Lutomirski <luto@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Acked-by: Oleg Nesterov <oleg@redhat.com>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>  arch/x86/entry/common.c | 17 ++++++-----------
+>  1 file changed, 6 insertions(+), 11 deletions(-)
+> 
+> diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
+> index a986b3c8294c..0a61705d62ec 100644
+> --- a/arch/x86/entry/common.c
+> +++ b/arch/x86/entry/common.c
+> @@ -72,23 +72,18 @@ static long syscall_trace_enter(struct pt_regs *regs)
+>  
+>  	struct thread_info *ti = current_thread_info();
+>  	unsigned long ret = 0;
+> -	bool emulated = false;
+>  	u32 work;
+>  
+>  	if (IS_ENABLED(CONFIG_DEBUG_ENTRY))
+>  		BUG_ON(regs != task_pt_regs(current));
+>  
+> -	work = READ_ONCE(ti->flags) & _TIF_WORK_SYSCALL_ENTRY;
+> +	work = READ_ONCE(ti->flags);
+>  
+> -	if (unlikely(work & _TIF_SYSCALL_EMU))
+> -		emulated = true;
+> -
+> -	if ((emulated || (work & _TIF_SYSCALL_TRACE)) &&
+> -	    tracehook_report_syscall_entry(regs))
+> -		return -1L;
+> -
+> -	if (emulated)
+> -		return -1L;
+> +	if (work & (_TIF_SYSCALL_TRACE | _TIF_SYSCALL_EMU)) {
+> +		ret = tracehook_report_syscall_entry(regs);
+> +		if (ret || (work & _TIF_SYSCALL_EMU))
+> +			return -1L;
+> +	}
 
-Unless you can find spec language that talks about D-state
-dependencies between functions, I claim this is not following the
-PCIe spec.  For example, PCIe r5.0, sec 1.4, says "the PCI/PCIe
-hardware/software model includes architectural constructs necessary to
-discover, configure, and use a Function, without needing Function-
-specific knowledge." Sec 5.1 says "D states are associated with a
-particular Function" and "PM provides ... a mechanism to identify
-power management capabilities of a given Function [and] the ability to
-transition a Function into a certain power management state."
+Andy (or the other x86 folk), could I please get an ack on this patch? I
+plan to queue this series through the arm64 tree (though if you want to
+merge it separately, it looks like an independent clean-up with no
+dependencies on the other patches).
 
-If there *is* something about dependencies between functions in the
-spec, we should improve the generic PCI core to pay attention to that,
-and then we wouldn't need this quirk.
+Thanks.
 
-If the spec doesn't provide a way to discover them, these dependencies
-are exceptions from the spec, and we have to handle them as hardware
-defects, using quirks like this.  That's fine, but let's not pretend
-that this is a conforming device and that adding quirks is the
-expected process.  Just call a spade a spade and say we're working
-around a defect in this particular device.
-
-I think the best path forward would be to add this quirk for the
-existing device, and then pursue a spec change to add something like
-a new PCIe capability to describe the dependencies.  Then we could
-enhance the PCI core once and power management for future devices
-would "Just Work" without having to add quirks.
-
-Bjorn
+-- 
+Catalin
