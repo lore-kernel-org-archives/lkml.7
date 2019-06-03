@@ -2,154 +2,154 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5CD3C28CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83906C28CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F52527CD8
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:38:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559547518;
-	bh=T2JMny2kFt/9IceLjTOY4zcyV5OvxWKmS/QBTDsKWeM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LDuYdqGdkS/slH1y6x4paWQdW6q4rwYekF4DNpPotGTox2A5I1dP7ERLGo/iAH0GN
-	 NlcrZyhO0jf/96ln2yARrY0DMfs6C+TQCr3ul2PVE8QiJNTNz6ozdGDtCyyoVPVDAG
-	 O87ZMokQxtd/Nko777WqWva+YZxdVu5iyH4nNGrY=
+	by mail.kernel.org (Postfix) with ESMTP id 5235A27CD8
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:39:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Gqw/Q3LG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbfFCHih (ORCPT
+        id S1726717AbfFCHjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 03:38:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55580 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725975AbfFCHih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 03:38:37 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AB5727C84;
-        Mon,  3 Jun 2019 07:38:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559547516;
-        bh=T2JMny2kFt/9IceLjTOY4zcyV5OvxWKmS/QBTDsKWeM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uyWte2wXI2BYh317jl8TvSdx+eLeUAOtlGEGOS+j4q/PE/zvsI59CPSEx535xvC7Z
-         5cqpUV721T9PYqd+Z6HrqDT2Hdo5y/ZTuynLCY1n1yw8UbINuPXMvWWNjnS3XW6h5W
-         QjVrkas7Pw/e5mU/MaPqdSw0FDvTp1vM6dk9+rN0=
-Date:   Mon, 3 Jun 2019 09:38:33 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spdx@vger.kernel.org
-Subject: Re: [GIT PULL] SPDX update for 5.2-rc3 - round 2
-Message-ID: <20190603073833.GA20329@kroah.com>
-References: <20190602063905.GA14513@kroah.com>
- <CAK7LNAQf7difmgLo3OmEHCEvODaU3zoXLA8mKcyVL7NdCcZD=w@mail.gmail.com>
- <20190602171531.GF19671@kroah.com>
- <CAK7LNARDyZ1pKHwiHsOntbc9oxbGHgbD+tptEF4a0VC3GvAyTA@mail.gmail.com>
+        Mon, 3 Jun 2019 03:39:22 -0400
+Received: from mail-eopbgr140040.outbound.protection.outlook.com ([40.107.14.40]:16513
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725856AbfFCHjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 03:39:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=a59xJXFODoYoZ2OQ859HEp6YnMugEzWXFGbkK/dNPGI=;
+ b=Gqw/Q3LG3H+9ZIsxmmgfhrD5W9yuVq76AJe0ciR4FX5Xxhe+vModpF4/g6ygQfDbsO8oXMr2YLMeRMCUxPiOE5fHyMmj02wlIpVQoPKLXSxdm7HPs0VcZPhTIcwkJtiIAja9mKUZzgveTmvpKnklZjVkQMSUsb/VKiTFetRxQxM=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3929.eurprd04.prod.outlook.com (52.134.70.31) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.18; Mon, 3 Jun 2019 07:39:16 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::5835:e874:bd94:fec]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::5835:e874:bd94:fec%5]) with mapi id 15.20.1943.018; Mon, 3 Jun 2019
+ 07:39:16 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Abel Vesa <abel.vesa@nxp.com>
+CC:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
+        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "dinguyen@kernel.org" <dinguyen@kernel.org>,
+        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V2 2/3] clk: imx: Add support for i.MX8MN clock driver
+Thread-Topic: [PATCH V2 2/3] clk: imx: Add support for i.MX8MN clock driver
+Thread-Index: AQHVGaxeLRS7zF6kSEqSfwNQzT+zYKaJiQwAgAAB34A=
+Date:   Mon, 3 Jun 2019 07:39:16 +0000
+Message-ID: <DB3PR0402MB3916D2B09BACABB79E8989A2F5140@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20190603013503.40626-1-Anson.Huang@nxp.com>
+ <20190603013503.40626-2-Anson.Huang@nxp.com>
+ <20190603073018.j236j57ooc7t5hp6@fsr-ub1664-175>
+In-Reply-To: <20190603073018.j236j57ooc7t5hp6@fsr-ub1664-175>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d2606a84-a578-4357-dc30-08d6e7f694f2
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DB3PR0402MB3929;
+x-ms-traffictypediagnostic: DB3PR0402MB3929:
+x-microsoft-antispam-prvs: <DB3PR0402MB39297A64556810077704F318F5140@DB3PR0402MB3929.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3173;
+x-forefront-prvs: 0057EE387C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(346002)(39860400002)(366004)(376002)(136003)(13464003)(199004)(189003)(43544003)(2906002)(66946007)(53936002)(66066001)(99286004)(6246003)(7736002)(305945005)(76116006)(74316002)(6436002)(6862004)(68736007)(256004)(6116002)(3846002)(73956011)(86362001)(7416002)(229853002)(71200400001)(66476007)(55016002)(71190400001)(476003)(11346002)(446003)(486006)(52536014)(66446008)(8936002)(186003)(44832011)(478600001)(26005)(64756008)(66556008)(6636002)(316002)(14454004)(6506007)(8676002)(54906003)(25786009)(53546011)(102836004)(81156014)(76176011)(4326008)(9686003)(5660300002)(7696005)(33656002)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3929;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: f/bekEb9A8jyb63/ZEG43qDhtDT5HnUjEML7lxQRO7rGmOiT6ypdR9KmtFFdNvcKyE9ppZO6jkyTI9VFRXbqXEpfIZ/Bs/SMmBi2DNtluC0r4UC3UTdS+RMsr9qgGWQwjYj5FjMGw7TbucHUasHVhlI3PgrODlDXBhxfaAujrUodix8l4bCrjaskAnl5rKdluW/ga1iRHMZw60231J9xqdpVPV6STXaJWpfQd+xYWm53cu6630DIPA8wXgZw7mBVAksqf8mUstW/LYNvB2C1u9YZYgOpYRnoi3I8o5vj7E3ifhCJUY7AhlGQR/fxaMsYwC/Af4xjoHbknlJDNlHM4EQMfEVuinN8POch3QgOKAG3+rn6ElhC/oQ7OK9maoZ4qNs7w6U4VPrsqj0RpVnoyBtCCUKF4pL3Pr75TAIWD2I=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK7LNARDyZ1pKHwiHsOntbc9oxbGHgbD+tptEF4a0VC3GvAyTA@mail.gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d2606a84-a578-4357-dc30-08d6e7f694f2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2019 07:39:16.5609
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: anson.huang@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3929
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 09:15:08AM +0900, Masahiro Yamada wrote:
-> On Mon, Jun 3, 2019 at 2:15 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Sun, Jun 02, 2019 at 09:03:46PM +0900, Masahiro Yamada wrote:
-> > > On Sun, Jun 2, 2019 at 4:17 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > >
-> > > > The following changes since commit 2f4c53349961c8ca480193e47da4d44fdb8335a8:
-> > > >
-> > > >   Merge tag 'spdx-5.2-rc3-1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core (2019-05-31 08:34:32 -0700)
-> > > >
-> > > > are available in the Git repository at:
-> > > >
-> > > >   git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git tags/spdx-5.2-rc3-2
-> > > >
-> > > > for you to fetch changes up to 8e82fe2ab65a80b1526b285c661ab88cc5891e3a:
-> > > >
-> > > >   treewide: fix typos of SPDX-License-Identifier (2019-06-01 18:29:58 +0200)
-> > > >
-> > > > ----------------------------------------------------------------
-> > > > SPDX fixes for 5.2-rc3, round 2
-> > > >
-> > > > Here are just two small patches, that fix up some found SPDX identifier
-> > > > issues.
-> > > >
-> > > > The first patch fixes an error in a previous SPDX fixup patch, that
-> > > > causes build errors when doing 'make clean' on the tree (the fact that
-> > > > almost no one noticed it reflects the fact that kernel developers don't
-> > > > like doing that option very often...)
-> > >
-> > > This paragraph is not precise.
-> > >
-> > > Not only "make clean", but also the normal build is broken.
-> > > In fact, ARCH=arm allmodconfig is broken.
-> > >
-> > >
-> > > $ make -j8 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- allmodconfig
-> > >   [ snip ]
-> > > $ make -j8 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
-> > >   [ snip ]
-> > > drivers/crypto/ux500/cryp/Makefile:5: *** missing separator.  Stop.
-> > > make[3]: *** [scripts/Makefile.build;489: drivers/crypto/ux500/cryp] Error 2
-> > > make[2]: *** [scripts/Makefile.build;489: drivers/crypto/ux500] Error 2
-> > > make[1]: *** [scripts/Makefile.build;489: drivers/crypto] Error 2
-> > > make[1]: *** Waiting for unfinished jobs....
-> > >
-> > >
-> > >
-> > > The 0-day bot should check allmodconfig for all arches,
-> > > but surprisingly it was not caught before the merge.
-> >
-> > Ah, good catch, odd that 0-day missed it.  Maybe it is not building
-> > 32bit builds these days :(
-> 
-> 
-> I noticed the SPDX patches were submitted to
-> linux-spdx@vger.kernel.org
-> but not to linux-kernel@vger.kernel.org
-> 
-> Maybe, the reason is why 0-day bot is not subscribing to
-> linux-spdx@vger.kernel.org
-> 
-> 
-> You picked up them and sent a pull request immediately,
-> so the 0-day bot was not given time to test your branch either.
-
-No, I got a response from the 0-day bot, it said it tested my branch but
-timed out doing more tests because it was busy.  It seems the bot is not
-working that well at the moment as it is giving me this same "limited"
-testing for all of my trees right now :(
-
-> >> Not all developers run scripts/checkpatch.pl before patch submission.
-> >> Not all maintainers run scripts/checkpatch.pl before commit.
-> >
-> >Very true :(
-> 
-> 
-> If we really want to improve the situation,
-> perhaps can we ask Intel to run scripts/checkpatch.pl in the 0-day bot?
-> 
-> checkpatch.pl may warn false positives,
-> but at least "Missing or malformed SPDX-License-Identifier tag"
-> is a good checker.  Just my two cents.
-
-Sounds like something good to be added to 0-day, please propose it to
-the developers.  But let them fix whatever is currently not working with
-it first :)
-
-thanks,
-
-greg k-h
+SGksIEFiZWwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBYmVsIFZl
+c2ENCj4gU2VudDogTW9uZGF5LCBKdW5lIDMsIDIwMTkgMzozMCBQTQ0KPiBUbzogQW5zb24gSHVh
+bmcgPGFuc29uLmh1YW5nQG54cC5jb20+DQo+IENjOiBtdHVycXVldHRlQGJheWxpYnJlLmNvbTsg
+c2JveWRAa2VybmVsLm9yZzsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiBtYXJrLnJ1dGxhbmRAYXJt
+LmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsgcy5oYXVlckBwZW5ndXRyb25peC5kZTsNCj4ga2Vy
+bmVsQHBlbmd1dHJvbml4LmRlOyBmZXN0ZXZhbUBnbWFpbC5jb207IGNhdGFsaW4ubWFyaW5hc0Bh
+cm0uY29tOw0KPiB3aWxsLmRlYWNvbkBhcm0uY29tOyBtYXhpbWUucmlwYXJkQGJvb3RsaW4uY29t
+OyBvbG9mQGxpeG9tLm5ldDsNCj4gaG9ybXMrcmVuZXNhc0B2ZXJnZS5uZXQuYXU7IGphZ2FuQGFt
+YXJ1bGFzb2x1dGlvbnMuY29tOw0KPiBiam9ybi5hbmRlcnNzb25AbGluYXJvLm9yZzsgTGVvbmFy
+ZCBDcmVzdGV6IDxsZW9uYXJkLmNyZXN0ZXpAbnhwLmNvbT47DQo+IGRpbmd1eWVuQGtlcm5lbC5v
+cmc7IGVucmljLmJhbGxldGJvQGNvbGxhYm9yYS5jb207IEFpc2hlbmcgRG9uZw0KPiA8YWlzaGVu
+Zy5kb25nQG54cC5jb20+OyBKYWNreSBCYWkgPHBpbmcuYmFpQG54cC5jb20+Ow0KPiBsLnN0YWNo
+QHBlbmd1dHJvbml4LmRlOyBsaW51eC1jbGtAdmdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVl
+QHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBs
+aW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgZGwtbGludXgtaW14IDxsaW51eC1pbXhA
+bnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCBWMiAyLzNdIGNsazogaW14OiBBZGQgc3Vw
+cG9ydCBmb3IgaS5NWDhNTiBjbG9jayBkcml2ZXINCj4gDQo+IE9uIDE5LTA2LTAzIDA5OjM1OjAy
+LCBBbnNvbi5IdWFuZ0BueHAuY29tIHdyb3RlOg0KPiA+IEZyb206IEFuc29uIEh1YW5nIDxBbnNv
+bi5IdWFuZ0BueHAuY29tPg0KPiA+DQo+ID4gVGhpcyBwYXRjaCBhZGRzIGkuTVg4TU4gY2xvY2sg
+ZHJpdmVyIHN1cHBvcnQuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5z
+b24uSHVhbmdAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiBDaGFuZ2VzIHNpbmNlIFYxOg0KPiA+IAkt
+IGFkZCBHUElPeCBjbG9ja3MuDQo+IA0KPiAuLi4NCj4gDQo+ID4gK3N0YXRpYyBzdHJ1Y3QgaW14
+X3BsbDE0eHhfY2xrIGlteDhtbl9zeXNfcGxsIF9faW5pdGRhdGEgPSB7DQo+ID4gKwkJLnR5cGUg
+PSBQTExfMTQxNlgsDQo+ID4gKwkJLnJhdGVfdGFibGUgPSBpbXg4bW5fcGxsMTQxNnhfdGJsLA0K
+PiA+ICt9Ow0KPiA+ICsNCj4gPiArc3RhdGljIGNvbnN0IGNoYXIgKnBsbF9yZWZfc2Vsc1tdID0g
+eyAib3NjXzI0bSIsICJkdW1teSIsICJkdW1teSIsDQo+ID4gKyJkdW1teSIsIH07DQo+IA0KPiBB
+bGwgb2YgdGhlc2Ugc2hvdWxkIGJlICJzdGF0aWMgY29uc3QgY2hhciAqIGNvbnN0ICIuDQoNCk9L
+Lg0KDQo+IA0KPiA+ICtzdGF0aWMgY29uc3QgY2hhciAqYXVkaW9fcGxsMV9ieXBhc3Nfc2Vsc1td
+ID0geyJhdWRpb19wbGwxIiwNCj4gPiArImF1ZGlvX3BsbDFfcmVmX3NlbCIsIH07IHN0YXRpYyBj
+b25zdCBjaGFyICphdWRpb19wbGwyX2J5cGFzc19zZWxzW10NCj4gPiArPSB7ImF1ZGlvX3BsbDIi
+LCAiYXVkaW9fcGxsMl9yZWZfc2VsIiwgfTsNCj4gDQo+IC4uLg0KPiANCj4gPiArCWNsa19kYXRh
+LmNsa3MgPSBjbGtzOw0KPiA+ICsJY2xrX2RhdGEuY2xrX251bSA9IEFSUkFZX1NJWkUoY2xrcyk7
+DQo+ID4gKwlyZXQgPSBvZl9jbGtfYWRkX3Byb3ZpZGVyKG5wLCBvZl9jbGtfc3JjX29uZWNlbGxf
+Z2V0LCAmY2xrX2RhdGEpOw0KPiA+ICsJaWYgKHJldCA8IDApIHsNCj4gPiArCQlwcl9lcnIoImZh
+aWxlZCB0byByZWdpc3RlciBjbGtzIGZvciBpLk1YOE1OXG4iKTsNCj4gPiArCQlyZXR1cm4gLUVJ
+TlZBTDsNCj4gPiArCX0NCj4gPiArDQo+ID4gKwlpbXhfcmVnaXN0ZXJfdWFydF9jbG9ja3ModWFy
+dF9jbGtzKTsNCj4gPiArDQo+ID4gKwlyZXR1cm4gMDsNCj4gPiArfQ0KPiA+ICtDTEtfT0ZfREVD
+TEFSRV9EUklWRVIoaW14OG1uLCAiZnNsLGlteDhtbi1jY20iLA0KPiBpbXg4bW5fY2xvY2tzX2lu
+aXQpOw0KPiANCj4gQW55IHJlYXNvbiB3aHkgdGhpcyBjYW5ub3QgYmUgYSBwbGF0Zm9ybSBkcml2
+ZXIgPw0KDQpJdCBzaG91bGQgY2FuIGJlLCBJIGp1c3QgZGlkIE5PVCB0YWtlIGNhcmUgb2YgaXQs
+IDhNUSB1c2VzIHBsYXRmb3JtIGRyaXZlciBtb2RlbCwgd2hpbGUNCjhNTSBkb2VzIE5PVCwgSSB3
+aWxsIG1vZGlmeSBib3RoIG9mIHRoZW0gdG8gdXNlIHBsYXRmb3JtIGRyaXZlciBtb2RlbC4NCg0K
+VGhhbmtzLA0KQW5zb24uDQoNCj4gDQo+ID4gLS0NCj4gPiAyLjcuNA0KPiA+DQo=
