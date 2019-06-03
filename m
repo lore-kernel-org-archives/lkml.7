@@ -2,210 +2,116 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2C8C28CC5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 02:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DF7C28CC6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 02:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDA2527AD1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 02:13:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5FE527AC3
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 02:13:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="agocnF72"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbfFCCNk (ORCPT
+        id S1727117AbfFCCNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 22:13:40 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:12130 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726561AbfFCCNj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 22:13:39 -0400
-X-UUID: 7a5dfea062b440a8b7d89b1ba2c134ba-20190603
-X-UUID: 7a5dfea062b440a8b7d89b1ba2c134ba-20190603
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1662302038; Mon, 03 Jun 2019 10:13:33 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- MTKMBS33DR.mediatek.inc (172.27.6.106) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 3 Jun 2019 10:13:30 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 3 Jun 2019 10:13:29 +0800
-Message-ID: <1559528009.32185.3.camel@mtksdaap41>
-Subject: Re: [v4 2/7] drm/mediatek: fixes CMDQ reg address of mt8173 is
- different with mt2701
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        <linux-pwm@vger.kernel.org>, David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Thierry Reding" <treding@nvidia.com>,
-        Ajay Kumar <ajaykumar.rs@samsung.com>,
-        "Inki Dae" <inki.dae@samsung.com>,
-        Rahul Sharma <rahul.sharma@samsung.com>,
-        "Sean Paul" <seanpaul@chromium.org>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        "Andy Yan" <andy.yan@rock-chips.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
-        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
-        <stonea168@163.com>
-Date:   Mon, 3 Jun 2019 10:13:29 +0800
-In-Reply-To: <20190601092615.67917-3-jitao.shi@mediatek.com>
-References: <20190601092615.67917-1-jitao.shi@mediatek.com>
-         <20190601092615.67917-3-jitao.shi@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Sun, 2 Jun 2019 22:13:54 -0400
+Received: from ozlabs.org ([203.11.71.1]:55781 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726561AbfFCCNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Jun 2019 22:13:54 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45HJWf5wY7z9s4V;
+        Mon,  3 Jun 2019 12:13:50 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1559528031;
+        bh=1JH94ZmSjHKzYZuTkVY19kUsmtuB9Vtpca9qYs/ZATw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=agocnF72J/hJERlp06QXvBe/LUaaiHz24Js2nS+4YnJCySpMsXRXwjYCN5i0VkWNE
+         6Htmt/yXEChMzL2sv5V0sCzumKPohN08FDaAcqcnAv3lp9+OBQH3MLugA1HyHUG5UX
+         a9HG8DWyrfRPbR6a/Orknhu0e2xvzL8YWYGlJQpBWC448+o8ipWt3wsK7u+/faALlf
+         HwDMPGLU+U+L27vH3tZezgQWnOZQriY7jGz6z5GOvFH/fNI9XcLqtIkwS0LGR5fAc5
+         7A9MfSqBIE7WQuppawM2K+I6+4jpC+Z+dx33DDDUsepCNvP7NeBTBAfFBjIAenY3gV
+         r4ofKcXH4OJ8Q==
+Date:   Mon, 3 Jun 2019 12:13:50 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: linux-next: build failure after merge of the clockevents tree
+Message-ID: <20190603121350.653cacce@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/uiNiVsT1gh9W9UsmKqw3sG."; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Jitao:
+--Sig_/uiNiVsT1gh9W9UsmKqw3sG.
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 2019-06-01 at 17:26 +0800, Jitao Shi wrote:
-> Config the different CMDQ reg address in driver data.
-> 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_dsi.c | 29 ++++++++++++++++++++++++-----
->  1 file changed, 24 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> index 6c4ac37f983d..a48db056df6c 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> @@ -131,7 +131,6 @@
->  #define VM_CMD_EN			BIT(0)
->  #define TS_VFP_EN			BIT(5)
->  
-> -#define DSI_CMDQ0		0x180
->  #define CONFIG				(0xff << 0)
->  #define SHORT_PACKET			0
->  #define LONG_PACKET			2
-> @@ -156,6 +155,10 @@
->  
->  struct phy;
->  
-> +struct mtk_dsi_driver_data {
-> +	const u32 reg_cmdq_off;
-> +};
-> +
->  struct mtk_dsi {
->  	struct mtk_ddp_comp ddp_comp;
->  	struct device *dev;
-> @@ -182,6 +185,7 @@ struct mtk_dsi {
->  	bool enabled;
->  	u32 irq_data;
->  	wait_queue_head_t irq_wait_queue;
-> +	const struct mtk_dsi_driver_data *driver_data;
->  };
->  
->  static inline struct mtk_dsi *encoder_to_dsi(struct drm_encoder *e)
-> @@ -934,6 +938,7 @@ static void mtk_dsi_cmdq(struct mtk_dsi *dsi, const struct mipi_dsi_msg *msg)
->  	const char *tx_buf = msg->tx_buf;
->  	u8 config, cmdq_size, cmdq_off, type = msg->type;
->  	u32 reg_val, cmdq_mask, i;
-> +	u32 reg_cmdq_off = dsi->driver_data->reg_cmdq_off;
->  
->  	if (MTK_DSI_HOST_IS_READ(type))
->  		config = BTA;
-> @@ -953,9 +958,11 @@ static void mtk_dsi_cmdq(struct mtk_dsi *dsi, const struct mipi_dsi_msg *msg)
->  	}
->  
->  	for (i = 0; i < msg->tx_len; i++)
-> -		writeb(tx_buf[i], dsi->regs + DSI_CMDQ0 + cmdq_off + i);
-> +		mtk_dsi_mask(dsi, (reg_cmdq_off + cmdq_off + i) & (~0x3U),
-> +			     (0xffUL << (((i + cmdq_off) & 3U) * 8U)),
-> +			     tx_buf[i] << (((i + cmdq_off) & 3U) * 8U));
+Hi Daniel,
 
-I've modify this line to
+After merging the clockevents tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-writeb(tx_buf[i], dsi->regs + reg_cmdq_off + cmdq_off + i);
+drivers/clocksource/timer-atmel-tcb.c: In function 'tcb_clksrc_init':
+drivers/clocksource/timer-atmel-tcb.c:448:17: error: invalid use of undefin=
+ed type 'struct delay_timer'
+   tc_delay_timer.read_current_timer =3D tc_delay_timer_read32;
+                 ^
+drivers/clocksource/timer-atmel-tcb.c:461:17: error: invalid use of undefin=
+ed type 'struct delay_timer'
+   tc_delay_timer.read_current_timer =3D tc_delay_timer_read;
+                 ^
+drivers/clocksource/timer-atmel-tcb.c:476:16: error: invalid use of undefin=
+ed type 'struct delay_timer'
+  tc_delay_timer.freq =3D divided_rate;
+                ^
+drivers/clocksource/timer-atmel-tcb.c:477:2: error: implicit declaration of=
+ function 'register_current_timer_delay'; did you mean 'read_current_timer'=
+? [-Werror=3Dimplicit-function-declaration]
+  register_current_timer_delay(&tc_delay_timer);
+  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  read_current_timer
+drivers/clocksource/timer-atmel-tcb.c: At top level:
+drivers/clocksource/timer-atmel-tcb.c:129:27: error: storage size of 'tc_de=
+lay_timer' isn't known
+ static struct delay_timer tc_delay_timer;
+                           ^~~~~~~~~~~~~~
+cc1: some warnings being treated as errors
 
-and this works. The call trace list below
+Caused by commit
 
-[    8.189067] Call trace:
-[    8.191516]  dump_backtrace+0x0/0x164
-[    8.195172]  show_stack+0x20/0x2c
-[    8.198482]  dump_stack+0xc4/0xfc
-[    8.201792]  mtk_dsi_host_transfer+0x248/0x4ac
-[    8.206230]  mipi_dsi_device_transfer+0x50/0x64
-[    8.210753]  mipi_dsi_dcs_exit_sleep_mode+0x5c/0x8c
-[    8.215625]  innolux_panel_prepare+0x128/0x218
-[    8.220061]  mtk_dsi_poweron+0x74c/0x7c8
-[    8.223976]  mtk_dsi_ddp_start+0x1c/0x28
-[    8.227891]  mtk_drm_crtc_atomic_enable+0x310/0x428
-[    8.232765]  drm_atomic_helper_commit_modeset_enables+0xa0/0x200
-[    8.238764]  mtk_atomic_complete+0x84/0xd0
-[    8.242852]  mtk_atomic_commit+0xb8/0xe0
-[    8.246769]  drm_atomic_commit+0x50/0x5c
-[    8.250684]  drm_atomic_helper_set_config+0x98/0xa0
-[    8.255555]  drm_mode_setcrtc+0x280/0x618
-[    8.259558]  drm_ioctl_kernel+0xcc/0x10c
-[    8.263473]  drm_ioctl+0x248/0x3d4
-[    8.266868]  drm_compat_ioctl+0xd8/0xe8
-[    8.270698]  __arm64_compat_sys_ioctl+0xf4/0x25c
-[    8.275309]  el0_svc_common+0x9c/0xfc
-[    8.278965]  el0_svc_compat_handler+0x2c/0x38
-[    8.283314]  el0_svc_compat+0x8/0x18
+  dd40f5020581 ("clocksource/drivers/tcb_clksrc: Register delay timer")
 
-So I think writeb() could work correctly. If you have meet some problem,
-it might be other problem.
+I have reverted that commit for today.
 
-Regards,
-CK
+--=20
+Cheers,
+Stephen Rothwell
 
->  
-> -	mtk_dsi_mask(dsi, DSI_CMDQ0, cmdq_mask, reg_val);
-> +	mtk_dsi_mask(dsi, reg_cmdq_off, cmdq_mask, reg_val);
->  	mtk_dsi_mask(dsi, DSI_CMDQ_SIZE, CMDQ_SIZE, cmdq_size);
->  }
->  
-> @@ -1101,6 +1108,8 @@ static int mtk_dsi_probe(struct platform_device *pdev)
->  	if (ret)
->  		goto err_unregister_host;
->  
-> +	dsi->driver_data = of_device_get_match_data(dev);
-> +
->  	dsi->engine_clk = devm_clk_get(dev, "engine");
->  	if (IS_ERR(dsi->engine_clk)) {
->  		ret = PTR_ERR(dsi->engine_clk);
-> @@ -1193,9 +1202,19 @@ static int mtk_dsi_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +static const struct mtk_dsi_driver_data mt8173_dsi_driver_data = {
-> +	.reg_cmdq_off = 0x200,
-> +};
-> +
-> +static const struct mtk_dsi_driver_data mt2701_dsi_driver_data = {
-> +	.reg_cmdq_off = 0x180,
-> +};
-> +
->  static const struct of_device_id mtk_dsi_of_match[] = {
-> -	{ .compatible = "mediatek,mt2701-dsi" },
-> -	{ .compatible = "mediatek,mt8173-dsi" },
-> +	{ .compatible = "mediatek,mt2701-dsi",
-> +	  .data = &mt2701_dsi_driver_data },
-> +	{ .compatible = "mediatek,mt8173-dsi",
-> +	  .data = &mt8173_dsi_driver_data },
->  	{ },
->  };
->  
+--Sig_/uiNiVsT1gh9W9UsmKqw3sG.
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz0gl4ACgkQAVBC80lX
+0GymIAf6Am/0TmqRiFkcEGVXjoVYebQ0q9Oufbjgztq39uLYcVx/l/k4lZigNAMG
+RFHwh+Q9M4qZ7Zo/6E5Fo3LUqGMVQehgcd2oQRRCel4Sh3PrVCCvGWPiCoctQ7HQ
+jftHQr1u89MPuv0kHkh/bcpQBJRj0d7JTvPnyzBvcWQGxL70eBtRMX1SyIoFtFus
+z4GsO/sir6pY92ef0UWmhIiFOPm5HFtW5qu6zDOjhorLlaVwTfdz21U1++GyVydU
+tgQoij4cNnUa5zPj7sVsifFpGucTRhejpIlq/mpWdGVmcrHyELCjLphjKuk+KuW+
+IibTnBJbpeUaEJjcRr+1LMqY+RMhQQ==
+=69wL
+-----END PGP SIGNATURE-----
+
+--Sig_/uiNiVsT1gh9W9UsmKqw3sG.--
